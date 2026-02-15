@@ -5,7 +5,7 @@ import type {
   GeneratedAnswerThreadItem,
   GeneratedAnswerThreadItemProps,
 } from './generated-answer-thread-item';
-import '@/src/components/search/generated-answer-thread-item/generated-answer-thread-item';
+import '@/src/components/common/generated-answer/generated-answer-thread-item/generated-answer-thread-item';
 
 describe('generated-answer-thread-item', () => {
   const renderComponent = async (
@@ -15,8 +15,8 @@ describe('generated-answer-thread-item', () => {
     const element = await fixture<GeneratedAnswerThreadItem>(html`
       <generated-answer-thread-item
         .title=${props.title ?? 'Title'}
-        .isCollapsible=${props.isCollapsible ?? false}
-        .hideLine=${props.hideLine ?? false}
+        .disableCollapse=${props.disableCollapse ?? false}
+        .hideLineBottom=${props.hideLineBottom ?? false}
         .isExpanded=${props.isExpanded ?? true}
       >
         ${children}
@@ -27,7 +27,9 @@ describe('generated-answer-thread-item', () => {
       element,
       locators: () => ({
         timelineDot: element.shadowRoot?.querySelector('span.h-2.w-2') ?? null,
-        timelineLine: element.shadowRoot?.querySelector('span.w-px') ?? null,
+        timelineLineTop: element.shadowRoot?.querySelector('span.w-px') ?? null,
+        timelineLineBottom:
+          element.shadowRoot?.querySelector('span.w-px') ?? null,
         titleButton: element.shadowRoot?.querySelector('button') ?? null,
         content: element.shadowRoot?.querySelector('div[aria-hidden]') ?? null,
       }),
@@ -41,15 +43,21 @@ describe('generated-answer-thread-item', () => {
     expect(locators().content).toBeInTheDocument();
   });
 
-  it('should hide the timeline line when hideLine is true', async () => {
-    const {locators} = await renderComponent({hideLine: true});
+  it('should hide the timeline line above the dot when hideLineTop is true', async () => {
+    const {locators} = await renderComponent({hideLineTop: true});
 
-    expect(locators().timelineLine).toBeNull();
+    expect(locators().timelineLineTop).toBeNull();
+  });
+
+  it('should hide the timeline line below the dot when hideLineBottom is true', async () => {
+    const {locators} = await renderComponent({hideLineBottom: true});
+
+    expect(locators().timelineLineBottom).toBeNull();
   });
 
   it('should render a title button when collapsible', async () => {
     const {locators} = await renderComponent({
-      isCollapsible: true,
+      disableCollapse: false,
       isExpanded: false,
     });
 
@@ -59,7 +67,7 @@ describe('generated-answer-thread-item', () => {
 
   it('should link the title button to the content region', async () => {
     const {locators} = await renderComponent({
-      isCollapsible: true,
+      disableCollapse: false,
       isExpanded: false,
     });
 
@@ -74,7 +82,7 @@ describe('generated-answer-thread-item', () => {
 
   it('should render a title span when not collapsible', async () => {
     const {locators} = await renderComponent({
-      isCollapsible: false,
+      disableCollapse: true,
       isExpanded: false,
     });
 
@@ -84,7 +92,7 @@ describe('generated-answer-thread-item', () => {
 
   it('should toggle expanded state when the title button is clicked', async () => {
     const {element, locators} = await renderComponent({
-      isCollapsible: true,
+      disableCollapse: false,
       isExpanded: false,
     });
 
@@ -97,7 +105,7 @@ describe('generated-answer-thread-item', () => {
 
   it('should update aria attributes when toggled', async () => {
     const {element, locators} = await renderComponent({
-      isCollapsible: true,
+      disableCollapse: false,
       isExpanded: false,
     });
 
@@ -116,7 +124,7 @@ describe('generated-answer-thread-item', () => {
     const contentSlot = html`<div>Slotted content</div>`;
     const {locators} = await renderComponent(
       {
-        isCollapsible: false,
+        disableCollapse: true,
         isExpanded: true,
       },
       contentSlot
