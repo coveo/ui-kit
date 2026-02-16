@@ -2,7 +2,7 @@ import {readFileSync} from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import type {TestCase} from 'vitest/node';
-import {criterionMetadataMap} from '../data/criterion-metadata.js';
+import {getCriterionMetadata as lookupCriterionMetadata} from '../data/criterion-metadata.js';
 import type {CriterionMetadata, SupportedFramework} from '../shared/types.js';
 
 export interface PackageMetadata {
@@ -316,7 +316,7 @@ export function formatDate(date: Date): string {
 
 export function getCriterionMetadata(criterionId: string): CriterionMetadata {
   return (
-    criterionMetadataMap[criterionId] ?? {
+    lookupCriterionMetadata(criterionId) ?? {
       name: criterionId,
       level: 'unknown',
       wcagVersion: 'unknown',
