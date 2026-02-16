@@ -1,132 +1,108 @@
-# AGENTS.md
+# Root AGENTS.md
+## UI Kit Monorepo Key Commands
 
-Operational commands and conventions for coding agents working in the Coveo UI-Kit monorepo.
+- **Build all UI Kit packages**: `pnpm run build`
+- **Run all unit tests in all UI Kit packages**: `pnpm run test`
+- **Check for linting errors across the UI Kit monorepo**: `pnpm run lint:check`
+- **Fix liting errors across the UI Kit monorepo**: `pnpm run lint:fix`
 
-## About This Document
-
-This guide is for AI coding agents working in this repository. Different tools may handle features like instructions differently, but all the commands and workflows here are universal.
-
-Instructions (`.github/instructions/*.instructions.md`) use `applyTo` frontmatter to specify which files they apply to (e.g., `applyTo: '**/*.ts'`). Some tools auto-apply these, others require explicit reference.
-
-## Quick Build & Test
-
-```bash
-# Install dependencies
-pnpm install
-
-# Build all packages
-pnpm build
-
-# Test specific package
-cd packages/atomic && pnpm test:lit
-cd packages/headless && pnpm test
-
-# E2E tests
-cd packages/atomic && pnpm e2e
-
-# Fix linting
-pnpm lint:fix
-```
-
-## Repository Structure
+## UI Kit Monorepo Structure
 
 ```
 ui-kit/
-├── packages/
-│   ├── atomic/          # UI components (Lit/Stencil)
-│   ├── headless/        # Headless search library
-│   ├── quantic/         # Salesforce Lightning components
-│   └── headless-react/  # React bindings
-└── .github/
-    ├── instructions/    # Coding standards by file type (see Instructions System below)
-    ├── agents/          # Custom agent definitions
-    ├── prompts/         # Reusable task workflows
-    └── skills/          # Agent capabilities
+├── .areas/             # Areas of code ownership
+├── .claude/            # Agent Skills
+├── .deployment.config/ # Deployment pipeline configurations
+├── .devcontainer/      # GitHub Codespaces and VS Code dev containers
+├── .github/            # GitHub workflows, PR templates
+├── .vscode/            # VS Code settings, including MCP servers
+├── internal-docs/      # Internal documentation for contributors
+├── packages/           # Main monorepo packages
+│   ├── atomic/                          # Lit-based Atomic component library
+│   ├── atomic-angular/                  # Angular wrapper for Atomic
+│   ├── atomic-hosted-page/              # Hosted search page implementation
+│   ├── atomic-legacy/                   # Legacy Stencil Atomic components
+│   ├── atomic-react/                    # React wrapper for Atomic
+│   ├── auth/                            # Coveo authentication utilities
+│   ├── bueno/                           # Schema validation library
+│   ├── create-atomic/                   # Tool to scaffold Atomic projects
+│   ├── create-atomic-component/         # Tool to generate Atomic components
+│   ├── create-atomic-component-project/ # Tool to scaffold component projects
+│   ├── create-atomic-result-component/  # Tool to generate result components
+│   ├── create-atomic-rollup-plugin/     # Rollup plugin for Atomic
+│   ├── create-atomic-template/          # Templates for Atomic projects
+│   ├── documentation/                   # Project documentation generator
+│   ├── headless/                        # Redux-based Headless library
+│   ├── headless-react/                  # React bindings for Headless
+│   ├── quantic/                         # Salesforce Lightning component library
+│   └── shopify/                         # Shopify integration package
+├── patches/            # pnpm patch files for dependency fixes
+├── samples/            # Example implementations and demos
+├── scripts/            # Build, deployment, and utility scripts
+└── utils/              # Shared utilities and helpers
 ```
 
-## Technology Stack
+## UI Kit Monorepo Technology
 
-- **TypeScript** - Check `package.json` for current version
-- **Build System** - Turbo (monorepo) + package-specific builds
-- **Package Manager** - pnpm with workspaces
-- **Testing** - Vitest (unit), Playwright (E2E)
-- **UI Frameworks** - Lit (preferred), Stencil (legacy, migrating away)
+- **End-to-end testing**: Playwright v1
+- **Monorepo management**: Turbo v2
+- **Language**: TypeScript v5
+- **Unit testing**: Vitest v4
+- **Runtime**: Node v24
+- **Package management**: pnpm v10
 
-## Instructions System
+## UI Kit Monorepo Coding Principles
 
-Coding standards are in `.github/instructions/*.instructions.md`. Each file has `applyTo` frontmatter specifying which files it covers (e.g., `applyTo: '**/*.ts'`).
+**Favor**:
+- Clear, clean, self-documenting code
+- Defensive programming
+- DRY principle
+- SOLID principles
+- Established, idiomatic practices
+- Strong typing
+- Small, focused changesets
 
-**Reference the appropriate instruction file when working on:**
-- Any file: `general.instructions.md` - Core development principles
-- TypeScript files: `general.typescript.instructions.md` - TypeScript conventions
-- Atomic package: `atomic.instructions.md` - Component patterns and structure
-- Atomic tests: `tests-atomic.instructions.md` - Vitest testing patterns
-- E2E tests: `playwright-typescript.instructions.md` - Playwright conventions
-- API mocking: `msw-api-mocking.instructions.md` - MSW patterns
+**Avoid**:
+- Inline comments that restate the obvious
+- Premature optimization
+- Cargo culting
+- Scope creep
 
-## Agent Skills
+## UI Kit Monorepo Boundaries
 
-Agent-discoverable capabilities are in `.claude/skills/`. Skills follow the [agentskills.io](https://agentskills.io) open standard and contain domain-specific knowledge that agents can discover and load on demand.
+**You must ALWAYS**:
+- Discover all available Agent Skills under `.claude/skills` when beginning a new conversation
+- Ensure that you have read all relevant AGENTS.md files before attempting any work
+- Run `pnpm lint:fix` before committing any work
+- Use the Conventional Commits 1.0.0 specification when composing a commit message
+- Report all contradicting instructions you encounter in AGENTS.md and Agent Skills
 
-**Use these skills when:**
-- `applying-wcag-guidelines` - Creating or modifying UI components or reviewing accessibility
-- `creating-agents` - Building role-based workflows (planner, reviewer, architect) or guided multi-agent sequences
-- `creating-instructions` - Defining coding standards, conventions, or context that should automatically apply to specific file patterns
-- `creating-prompts` - Building repeatable tasks users trigger manually
-- `creating-skills` - Building agent-discoverable capabilities with scripts, references, or assets
+**You must ASK BEFORE**:
+- Adding any new dependency in the monorepo
+- Deleting:
+  - Any file in the monorepo
+  - Any directory in the monorepo
+- Modifying:
+  - Any `.gitignore` in the monorepo
+  - Any `package.json` in the monorepo
+  - Any `tsconfig.json` in the monorepo
+  - Any `tsconfig.*.json` in the monorepo
+  - Any `turbo.json` in the monorepo
+  - Any `vitest.config.js` in the monorepo
+  - The root `.dockerignore`
+  - The root `.npmrc`
+  - The root `.nvmrc`
+  - The root `biome.jsonc`
+  - The root `renovate.json5`
+- Introducing a potentially breaking change
 
-## Common Workflows
-
-### Package-Specific Commands
-
-```bash
-# Atomic package
-cd packages/atomic
-pnpm build:stencil-lit   # Build
-pnpm test:lit            # Unit tests (Lit components)
-pnpm e2e                 # E2E tests
-pnpm storybook           # Dev server
-
-# Headless package
-cd packages/headless
-pnpm build
-pnpm test
-```
-
-### Stencil → Lit Migrations
-
-```bash
-# Use the migration agent or prompts
-# PR template: .github/PULL_REQUEST_TEMPLATE/atomic-stencil-lit-migration.md
-# Follow: atomic.instructions.md conventions
-# Generate tests with: generate-vitest-tests-atomic-lit-components.prompt.md
-```
-
-## PR Standards
-
-**Title format:** `type(scope): description`
-- Types: `feat`, `fix`, `refactor`, `docs`, `test`, `chore`
-- Prefix `WIP:` while in progress
-- Example: `feat(atomic): add search box component`
-
-**Description:**
-- Include `Fixes #Issue_number` when addressing issues
-- Use PR templates when available (e.g., Stencil → Lit migrations)
-
-**Before committing:**
-- Run `pnpm lint:fix` (required)
-- Run `pnpm build` (required)
-- Run `pnpm test` for affected packages
-
-## Common Gotchas
-
-- **Package names:** Check `packages/*/package.json` `name` field, not top-level package.json
-- **Build failures:** If tests pass locally but fail in CI, check Turbo cache with `pnpm build --force`
-- **Coding standards:** See `.github/instructions/*.instructions.md` for detailed rules (type safety, path aliases, testing, accessibility, resource cleanup, etc.)
-
-## For Detailed Documentation
-
-- **Human contributors:** See [README.md](../README.md) for project overview and contribution guidelines
-- **Agents, prompts, skills:** Available in `.github/agents/`, `.github/prompts/`, and `.github/skills/`
-- **Coding standards:** See `.github/instructions/*.instructions.md`
-
+**You must NEVER**:
+- Commit:
+  - Unencrypted API keys
+  - Secrets
+  - Personally Identifiable Information (PII)
+- Modify:
+  - Any `CHANGELOG` in the monorepo directly (automatically updated)
+  - Any `LICENSE` in the monorepo (legal ramifications)
+  - `pnpm-lock.yaml` directly (updated through renovate)
+  - `pnpm-workspace.yaml` directly (updated through renovate)
