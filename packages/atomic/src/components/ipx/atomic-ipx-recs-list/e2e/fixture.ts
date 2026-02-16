@@ -1,11 +1,11 @@
 import {test as base} from '@playwright/test';
 import {AtomicIpxRecsListPageObject as IpxRecsList} from './page-object';
 
-type MyFixtures = {
+type AtomicIpxRecsListFixtures = {
   ipxRecsList: IpxRecsList;
 };
 
-export const test = base.extend<MyFixtures>({
+export const test = base.extend<AtomicIpxRecsListFixtures>({
   ipxRecsList: async ({page}, use) => {
     await use(new IpxRecsList(page));
   },

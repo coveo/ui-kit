@@ -7,8 +7,8 @@ export class AtomicIpxRecsListPageObject extends BasePageObject {
   }
 
   get recommendation() {
-    return this.page.locator(
-      '[part="result-list-grid-clickable-container outline"]'
+    return this.hydrated.locator(
+      '[part~="result-list-grid-clickable-container"]'
     );
   }
 }

@@ -34,6 +34,7 @@ import {
   type ItemDisplayImageSize,
 } from '@/src/components/common/layout/item-layout-utils';
 import type {RecsBindings} from '@/src/components/recommendations/atomic-recs-interface/interfaces';
+import type {RecsStore} from '@/src/components/recommendations/atomic-recs-interface/store';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -53,6 +54,7 @@ import '@/src/components/recommendations/atomic-recs-result/atomic-recs-result';
  * @part result-list - The element containing the list of results.
  * @part result-list-grid-clickable-container - The parent of the result and the clickable link encompassing it.
  * @part result-list-grid-clickable - The clickable link encompassing the result.
+ * @part outline - The outline element around a result in the grid layout.
  * @part label - The label of the result list.
  * @part previous-button - The previous button.
  * @part next-button - The next button.
@@ -530,7 +532,7 @@ export class AtomicIpxRecsList
             .interactiveResult=${props.interactiveResult}
             .result=${props.result}
             .renderingFunction=${props.renderingFunction}
-            .store=${props.store as never}
+            .store=${props.store as RecsStore}
           ></atomic-recs-result>`
         )}`
       );
@@ -545,7 +547,12 @@ export class AtomicIpxRecsList
       return nothing;
     }
 
-    const resultClasses = `${listClasses} ${!this.isEveryResultReady && 'hidden'}`;
+    const resultClasses = [
+      listClasses,
+      !this.isEveryResultReady ? 'hidden' : '',
+    ]
+      .filter(Boolean)
+      .join(' ');
 
     // Results must be rendered immediately (though hidden) to start their initialization and loading processes.
     // If we wait to render results until placeholders are removed, the components won't begin loading until then,
@@ -608,6 +615,9 @@ export class AtomicIpxRecsList
                     nextPage: () => this.nextPage(),
                     numberOfPages: this.numberOfPages,
                     currentPage: this.currentPage,
+                    ariaLabel: this.bindings.i18n.t(
+                      this.label ?? 'recommendations'
+                    ),
                   },
                 })(
                   html`<div class="px-3">${this.renderRecommendationList()}</div>`
