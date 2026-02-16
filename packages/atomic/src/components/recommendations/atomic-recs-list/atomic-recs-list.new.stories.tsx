@@ -22,7 +22,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-recs-list',
-  title: 'Recommendations/RecsList',
+  title: 'Recommendations/Recs List',
   id: 'atomic-recs-list',
   render: (args) => template(args),
   decorators: [decorator],
@@ -45,7 +45,6 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-recs-list',
   decorators: [
     (story) =>
       html` <style>
@@ -63,12 +62,10 @@ const {play: playNoFirstQuery} = wrapInRecommendationInterface({
 });
 
 export const RecsBeforeQuery: Story = {
-  tags: ['test'],
   play: playNoFirstQuery,
 };
 
 export const RecsWithFullTemplate: Story = {
-  tags: ['test'],
   args: {
     'default-slot': `<atomic-recs-result-template>
             <template>
@@ -103,7 +100,6 @@ export const RecsWithFullTemplate: Story = {
 };
 
 export const RecsOpeningInNewTab: Story = {
-  tags: ['test'],
   args: {
     'default-slot': `<atomic-recs-result-template>
             <template slot="link">

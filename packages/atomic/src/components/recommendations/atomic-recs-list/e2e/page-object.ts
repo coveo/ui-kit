@@ -1,30 +1,14 @@
 import type {Page} from '@playwright/test';
-import {BasePageObject} from '@/playwright-utils/base-page-object';
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 
-export class AtomicCommerceRecsListPageObject extends BasePageObject<'atomic-recs-list'> {
+export class AtomicRecsListPageObject extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-recs-list');
   }
 
-  get placeholder() {
-    return this.page.locator('.placeholder');
-  }
-
-  get recommendation() {
+  get recommendations() {
     return this.page.locator(
       '[part="result-list-grid-clickable-container outline"]'
     );
-  }
-
-  get indicators() {
-    return this.page.getByRole('listitem');
-  }
-
-  get nextButton() {
-    return this.page.getByLabel('Next');
-  }
-
-  get prevButton() {
-    return this.page.getByLabel('Previous');
   }
 }

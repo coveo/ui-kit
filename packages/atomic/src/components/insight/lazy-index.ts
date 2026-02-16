@@ -4,6 +4,10 @@ export default {
     await import('./atomic-insight-edit-toggle/atomic-insight-edit-toggle.js'),
   'atomic-insight-facet': async () =>
     await import('./atomic-insight-facet/atomic-insight-facet.js'),
+  'atomic-insight-folded-result-list': async () =>
+    await import(
+      './atomic-insight-folded-result-list/atomic-insight-folded-result-list.js'
+    ),
   'atomic-insight-full-search-button': async () =>
     await import(
       './atomic-insight-full-search-button/atomic-insight-full-search-button.js'
@@ -79,6 +83,10 @@ export default {
   'atomic-insight-smart-snippet-feedback-modal': async () =>
     await import(
       './atomic-insight-smart-snippet-feedback-modal/atomic-insight-smart-snippet-feedback-modal.js'
+    ),
+  'atomic-insight-smart-snippet-suggestions': async () =>
+    await import(
+      './atomic-insight-smart-snippet-suggestions/atomic-insight-smart-snippet-suggestions.js'
     ),
   'atomic-insight-tab': async () =>
     await import('./atomic-insight-tab/atomic-insight-tab.js'),
