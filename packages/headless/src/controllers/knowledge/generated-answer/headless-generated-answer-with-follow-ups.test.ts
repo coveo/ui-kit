@@ -2,6 +2,10 @@ import {answerGenerationApi} from '../../../api/knowledge/answer-generation/answ
 import type {AnswerGenerationApiState} from '../../../api/knowledge/answer-generation/answer-generation-api-state.js';
 import {selectAnswer} from '../../../api/knowledge/answer-generation/endpoints/answer/answer-endpoint.js';
 import {setAgentId} from '../../../features/configuration/configuration-actions.js';
+import {
+  dislikeFollowUp,
+  likeFollowUp,
+} from '../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {followUpAnswersReducer} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import {getFollowUpAnswersInitialState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
 import {selectAnswerApiQueryParams} from '../../../features/generated-answer/answer-api-selectors.js';
@@ -24,6 +28,20 @@ vi.mock('../../../features/configuration/configuration-actions');
 vi.mock(
   '../../../features/generated-answer/generated-answer-analytics-actions'
 );
+
+const mockCoreLike = vi.fn();
+const mockCoreDislike = vi.fn();
+const mockCoreCopy = vi.fn();
+
+vi.mock('../../core/generated-answer/headless-core-generated-answer.js', () => {
+  return {
+    buildCoreGeneratedAnswer: vi.fn(() => ({
+      like: mockCoreLike,
+      dislike: mockCoreDislike,
+      logCopyToClipboard: mockCoreCopy,
+    })),
+  };
+});
 
 vi.mock(
   '../../../features/generated-answer/answer-api-selectors.js',
@@ -86,6 +104,9 @@ describe('GeneratedAnswerWithFollowUps', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockCoreLike.mockClear();
+    mockCoreDislike.mockClear();
+    mockCoreCopy.mockClear();
     engine = buildEngineWithGeneratedAnswer();
     mockSelectAnswerApiQueryParams.mockReturnValue({
       q: 'test query',
@@ -420,6 +441,120 @@ describe('GeneratedAnswerWithFollowUps', () => {
       controller.retry();
 
       expect(generateHeadAnswer).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('like', () => {
+    it('should delegate to core like when no answerId is provided', () => {
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.like();
+
+      expect(mockCoreLike).toHaveBeenCalledTimes(1);
+      expect(engine.dispatch).not.toHaveBeenCalledWith(
+        expect.objectContaining({type: likeFollowUp.type})
+      );
+    });
+
+    it('should delegate to core like when answerId matches head answer', () => {
+      mockSelectAnswer.mockReturnValue({
+        data: {answerId: 'head-id'},
+      } as ReturnType<typeof selectAnswer>);
+
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.like('head-id');
+
+      expect(mockCoreLike).toHaveBeenCalledTimes(1);
+      expect(engine.dispatch).not.toHaveBeenCalledWith(
+        expect.objectContaining({type: likeFollowUp.type})
+      );
+    });
+
+    it('should dispatch likeFollowUp when answerId targets a follow-up answer', () => {
+      mockSelectAnswer.mockReturnValue({
+        data: {answerId: 'head-id'},
+      } as ReturnType<typeof selectAnswer>);
+
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.like('follow-1');
+
+      expect(engine.dispatch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: likeFollowUp.type,
+          payload: {answerId: 'follow-1'},
+        })
+      );
+      expect(mockCoreLike).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('dislike', () => {
+    it('should delegate to core dislike when no answerId is provided', () => {
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.dislike();
+
+      expect(mockCoreDislike).toHaveBeenCalledTimes(1);
+      expect(engine.dispatch).not.toHaveBeenCalledWith(
+        expect.objectContaining({type: dislikeFollowUp.type})
+      );
+    });
+
+    it('should delegate to core dislike when answerId matches head answer', () => {
+      mockSelectAnswer.mockReturnValue({
+        data: {answerId: 'head-id'},
+      } as ReturnType<typeof selectAnswer>);
+
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.dislike('head-id');
+
+      expect(mockCoreDislike).toHaveBeenCalledTimes(1);
+      expect(engine.dispatch).not.toHaveBeenCalledWith(
+        expect.objectContaining({type: dislikeFollowUp.type})
+      );
+    });
+
+    it('should dispatch dislikeFollowUp when answerId targets a follow-up answer', () => {
+      mockSelectAnswer.mockReturnValue({
+        data: {answerId: 'head-id'},
+      } as ReturnType<typeof selectAnswer>);
+
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.dislike('follow-1');
+
+      expect(engine.dispatch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: dislikeFollowUp.type,
+          payload: {answerId: 'follow-1'},
+        })
+      );
+      expect(mockCoreDislike).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('logCopyToClipboard', () => {
+    it('should delegate to core logCopyToClipboard when no answerId is provided', () => {
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.logCopyToClipboard();
+
+      expect(mockCoreCopy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should delegate to core logCopyToClipboard when answerId matches head answer', () => {
+      mockSelectAnswer.mockReturnValue({
+        data: {answerId: 'head-id'},
+      } as ReturnType<typeof selectAnswer>);
+
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.logCopyToClipboard('head-id');
+
+      expect(mockCoreCopy).toHaveBeenCalledTimes(1);
     });
   });
 });

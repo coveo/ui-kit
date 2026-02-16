@@ -6,6 +6,10 @@ import {
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import {setAgentId} from '../../../features/configuration/configuration-actions.js';
+import {
+  dislikeFollowUp,
+  likeFollowUp,
+} from '../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {followUpAnswersReducer as followUpAnswers} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import type {FollowUpAnswersState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
 import {selectAnswerApiQueryParams} from '../../../features/generated-answer/answer-api-selectors.js';
@@ -32,6 +36,26 @@ export interface GeneratedAnswerWithFollowUps extends GeneratedAnswer {
    * The state of the GeneratedAnswer controller.
    */
   state: GeneratedAnswerWithFollowUpsState;
+  /**
+   * Marks the answer as liked.
+   * @param answerId - Optional ID of the answer to like. Defaults to the head answer.
+   */
+  like(): void;
+  like(answerId: string): void;
+
+  /**
+   * Marks the answer as disliked.
+   * @param answerId - Optional ID of the answer to dislike. Defaults to the head answer.
+   */
+  dislike(): void;
+  dislike(answerId: string): void;
+
+  /**
+   * Logs a copy-to-clipboard interaction for analytics.
+   * @param answerId - Optional ID of the copied answer. Defaults to the current answer.
+   */
+  logCopyToClipboard(): void;
+  logCopyToClipboard(answerId: string): void;
 }
 
 export type GeneratedAnswerWithFollowUpsProps = GeneratedAnswerProps &
@@ -112,6 +136,27 @@ export function buildGeneratedAnswerWithFollowUps(
     },
     retry() {
       engine.dispatch(generateHeadAnswer());
+    },
+    like(answerId?: string) {
+      if (!answerId || this.state.answerId === answerId) {
+        controller.like();
+        return;
+      }
+      engine.dispatch(likeFollowUp({answerId: answerId}));
+    },
+    dislike(answerId?: string) {
+      if (!answerId || this.state.answerId === answerId) {
+        controller.dislike();
+        return;
+      }
+      engine.dispatch(dislikeFollowUp({answerId: answerId}));
+    },
+    logCopyToClipboard(answerId?: string) {
+      if (!answerId || this.state.answerId === answerId) {
+        controller.logCopyToClipboard();
+        return;
+      }
+      // Todo: SFINT-6581 implement logCopyFollowUp action and dispatch here
     },
   };
 }
