@@ -6,6 +6,8 @@ export default {
     await import('./atomic-ipx-embedded/atomic-ipx-embedded.js'),
   'atomic-ipx-modal': async () =>
     await import('./atomic-ipx-modal/atomic-ipx-modal.js'),
+  'atomic-ipx-result-link': async () =>
+    await import('./atomic-ipx-result-link/atomic-ipx-result-link.js'),
   'atomic-ipx-tab': async () =>
     await import('./atomic-ipx-tab/atomic-ipx-tab.js'),
   'atomic-ipx-tabs': async () =>

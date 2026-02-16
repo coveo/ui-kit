@@ -39,7 +39,7 @@ describe('endpoint-url-builder', () => {
         'prod'
       );
       expect(result).toBe(
-        `${mockPlatformEndpoint}/rest/organizations/${mockOrganizationId}/answer/v1/configs/${mockAgentId}/generate`
+        `${mockPlatformEndpoint}/api/preview/organizations/${mockOrganizationId}/agents/${mockAgentId}/answer`
       );
     });
 
@@ -55,7 +55,7 @@ describe('endpoint-url-builder', () => {
         'dev'
       );
       expect(result).toBe(
-        `${devEndpoint}/rest/organizations/${mockOrganizationId}/answer/v1/configs/${mockAgentId}/generate`
+        `${devEndpoint}/api/preview/organizations/${mockOrganizationId}/agents/${mockAgentId}/answer`
       );
     });
 

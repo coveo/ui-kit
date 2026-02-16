@@ -1,3 +1,4 @@
+import '@/src/components/common/atomic-icon/atomic-icon';
 import {HighlightUtils} from '@coveo/headless';
 import type {i18n} from 'i18next';
 import {html, render} from 'lit';
