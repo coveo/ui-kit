@@ -1,5 +1,5 @@
 # Root AGENTS.md
-## UI Kit Monorepo Key Commands
+## UI Kit Monorepo Commands
 
 - **Build all UI Kit packages**: `pnpm run build`
 - **Run all unit tests in all UI Kit packages**: `pnpm run test`
