@@ -3,6 +3,7 @@ import type {
   StandaloneSearchBoxState,
 } from '@coveo/headless/commerce';
 import {vi} from 'vitest';
+import {genericSubscribe} from '../common';
 
 export const defaultState = {
   value: '',
@@ -11,17 +12,19 @@ export const defaultState = {
   isLoadingSuggestions: false,
   searchBoxId: 'search-box-id',
   redirectTo: '',
-};
+} satisfies StandaloneSearchBoxState;
 
 export const defaultImplementation = {
-  subscribe: vi.fn((subscribedFunction: () => void) => {
-    subscribedFunction();
-  }) as unknown as StandaloneSearchBox['subscribe'],
+  subscribe: genericSubscribe as unknown as StandaloneSearchBox['subscribe'],
   submit: vi.fn() as StandaloneSearchBox['submit'],
   updateRedirectUrl: vi.fn() as StandaloneSearchBox['updateRedirectUrl'],
   afterRedirection: vi.fn() as StandaloneSearchBox['afterRedirection'],
   state: defaultState,
-};
+  updateText: vi.fn(),
+  clear: vi.fn(),
+  showSuggestions: vi.fn(),
+  selectSuggestion: vi.fn(),
+} satisfies StandaloneSearchBox;
 
 export const buildFakeStandaloneSearchBox = (
   state?: Partial<StandaloneSearchBoxState>,
@@ -29,6 +32,6 @@ export const buildFakeStandaloneSearchBox = (
 ): StandaloneSearchBox =>
   ({
     ...defaultImplementation,
-    ...(state && {state: {...defaultState, ...state}}),
+    ...{state: {...defaultState, ...(state || {})}},
     ...(methods && {...methods}),
   }) as StandaloneSearchBox;

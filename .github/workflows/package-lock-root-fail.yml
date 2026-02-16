@@ -2,13 +2,13 @@ name: 'package-lock.json root validator'
 
 on:
   push:
-    branches: [master]
+    branches: [master, main]
     paths:
       - '**/package-lock.json'
       - '!utils/atomic-storybook/package-lock.json'
       - '!package-lock.json'
   pull_request:
-    branches: [master]
+    branches: [master, main]
     paths:
       - '**/package-lock.json'
       - '!utils/atomic-storybook/package-lock.json'

@@ -1,11 +1,17 @@
 import {FunctionalComponent, h} from '@stencil/core';
 
-export const RefineModalBody: FunctionalComponent = (_, children) => {
+/**
+ * @deprecated should only be used for Stencil components.
+ */
+export const RefineModalBody: FunctionalComponent<{
+  ariaLabel: string;
+}> = ({ariaLabel}, children) => {
   return (
     <aside
       part="content"
       slot="body"
-      class="adjust-for-scroll-bar flex w-full flex-col"
+      class="flex flex-col w-full"
+      aria-label={ariaLabel}
     >
       {children}
     </aside>

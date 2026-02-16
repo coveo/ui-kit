@@ -7,7 +7,7 @@ export class InstantProductPageObject extends BasePageObject {
   }
 
   get instantProducts() {
-    return this.page.getByLabel('instant result');
+    return this.page.getByLabel('instant product');
   }
 
   get productRoots() {
@@ -15,6 +15,6 @@ export class InstantProductPageObject extends BasePageObject {
   }
 
   get showAllButton() {
-    return this.page.getByLabel('See all results');
+    return this.page.getByLabel('See all products');
   }
 }

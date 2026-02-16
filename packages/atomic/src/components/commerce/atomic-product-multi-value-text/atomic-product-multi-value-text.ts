@@ -7,9 +7,9 @@ import {
 } from '@coveo/headless/commerce';
 import {html, LitElement, nothing, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {createProductContextController} from '@/src/components/commerce/product-template-component-utils/context/product-context-controller';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
-import {createProductContextController} from '@/src/decorators/commerce/product-template-decorators';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
@@ -18,8 +18,6 @@ import {titleToKebab} from '../../../utils/utils';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
- * @alpha
- *
  * The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
  *
  * @part product-multi-value-text-list - The list of field values.
@@ -55,7 +53,7 @@ export class AtomicProductMultiValueText
 
   /**
    * The maximum number of field values to display.
-   * If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
+   * If there are `n` more values than the specified maximum, the last displayed value will be "`n` more...".
    */
   @property({reflect: true, type: Number, attribute: 'max-values-to-display'})
   public maxValuesToDisplay = 3;
@@ -189,11 +187,11 @@ export class AtomicProductMultiValueText
   @errorGuard()
   render() {
     if (this.sortedValues.length === 0) {
-      return html`${nothing}`;
+      return nothing;
     }
 
     return html`
-      <ul part="product-multi-value-text-list" class="m-0 flex list-none p-0">
+      <ul part="product-multi-value-text-list" class="m-0 flex list-none p-0 set-font-size-sm">
         ${this.renderListItems(this.sortedValues)}
       </ul>
     `;

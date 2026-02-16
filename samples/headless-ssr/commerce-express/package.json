@@ -1,0 +1,28 @@
+{
+  "name": "@samples/headless-ssr-commerce-express",
+  "description": "Headless Commerce SSR Generic Sample using the new simplified ssr-next API",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm build:client --watch=forever & pnpm build:server --watch & pnpm start -- --watch",
+    "build": "pnpm build:server && pnpm build:client",
+    "build:server": "tsc",
+    "build:client": "esbuild ./src/client.ts --bundle --outfile=dist/client.js --format=esm --target=es2022",
+    "start": "node ./dist/server.js",
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@coveo/headless": "workspace:*",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "catalog:",
+    "@types/express": "^4.17.17",
+    "@types/node": "catalog:",
+    "esbuild": "catalog:",
+    "typescript": "catalog:"
+  },
+  "type": "module"
+}

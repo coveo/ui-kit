@@ -3,6 +3,7 @@ import {
   type CommerceEngine,
   type CommerceEngineConfiguration,
   type Context,
+  VERSION as HEADLESS_VERSION,
   loadConfigurationActions,
   loadContextActions,
 } from '@coveo/headless/commerce';
@@ -16,14 +17,15 @@ import {errorGuard} from '@/src/decorators/error-guard.js';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin.js';
+import {waitForAtomicChildrenToBeDefined} from '@/src/utils/custom-element-tags';
 import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue';
+import {bindingsContext} from '../../common/context/bindings-context.js';
 import {augmentAnalyticsConfigWithAtomicVersion} from '../../common/interface/analytics-config.js';
 import type {CommonBindings} from '../../common/interface/bindings.js';
 import {
   type BaseAtomicInterface,
   InterfaceController,
 } from '../../common/interface/interface-controller.js';
-import {bindingsContext} from '../../context/bindings-context.js';
 import {
   type CommerceRecommendationStore,
   createCommerceRecommendationStore,
@@ -39,8 +41,10 @@ export type CommerceBindings = CommonBindings<
 /**
  * The `atomic-commerce-recommendation-interface` component is meant to be used
  * as the parent of one or more `atomic-commerce-recommendation-list`
- * components. It handles the headless search engine and localization
+ * components. It handles the headless engine and localization
  * configurations.
+ *
+ * @slot default - The default slot where you can add child components to the interface.
  */
 @customElement('atomic-commerce-recommendation-interface')
 @withTailwindStyles
@@ -52,13 +56,13 @@ export class AtomicCommerceRecommendationInterface
   @provide({context: bindingsContext})
   public bindings: CommerceBindings = {} as CommerceBindings;
   @state() public error!: Error;
-
   public context!: Context;
-  public store: CommerceRecommendationStore;
+  private store: CommerceRecommendationStore;
 
   private interfaceController = new InterfaceController<CommerceEngine>(
     this,
-    'CoveoAtomic'
+    'CoveoAtomic',
+    HEADLESS_VERSION
   );
 
   static styles: CSSResultGroup = [
@@ -71,24 +75,24 @@ export class AtomicCommerceRecommendationInterface
           height: inherit;
         }
       }
-    `,
+      `,
   ];
 
   /**
    * The commerce interface i18next instance.
    */
-  @property({type: Object}) i18n: i18n;
+  @property({type: Object, attribute: false}) i18n: i18n;
 
   /**
    * The commerce interface headless engine.
    */
-  @property({type: Object}) engine?: CommerceEngine;
+  @property({type: Object, attribute: false}) engine?: CommerceEngine;
 
   /**
    * The CSS selector for the container the interface will scroll back to.
    */
   @property({type: String, attribute: 'scroll-container', reflect: true})
-  scrollContainer = 'atomic-commerce-recommendation-interface';
+  scrollContainer: string = 'atomic-commerce-recommendation-interface';
 
   /**
    * The language assets path. By default, this will be a relative URL pointing to `./lang`.
@@ -97,7 +101,7 @@ export class AtomicCommerceRecommendationInterface
    *
    */
   @property({type: String, attribute: 'language-assets-path', reflect: true})
-  languageAssetsPath = './lang';
+  languageAssetsPath: string = './lang';
 
   /**
    * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
@@ -106,8 +110,9 @@ export class AtomicCommerceRecommendationInterface
    *
    */
   @property({type: String, attribute: 'icon-assets-path', reflect: true})
-  iconAssetsPath = './assets';
+  iconAssetsPath: string = './assets';
 
+  // TODO - (v4) KIT-4365: Remove (or more likely turn into private state attribute)
   /**
    * The commerce interface language.
    *
@@ -121,6 +126,10 @@ export class AtomicCommerceRecommendationInterface
    */
   @property({type: String, reflect: true}) language?: string;
 
+  // TODO - KIT-4994: Add disableAnalytics property that defaults to false.
+
+  // TODO - KIT-4994: Deprecate in favor of disableAnalytics property.
+  // TODO - (v4) KIT-4990: Remove.
   /**
    * Whether to enable analytics.
    */
@@ -129,8 +138,7 @@ export class AtomicCommerceRecommendationInterface
     converter: booleanConverter,
     reflect: true,
   })
-  analytics = true;
-
+  analytics: boolean = true;
   private i18Initialized: Promise<void>;
 
   public constructor() {
@@ -155,7 +163,7 @@ export class AtomicCommerceRecommendationInterface
   }
 
   /**
-   * Initializes the connection with an already preconfigured [headless commerce engine](https://docs.coveo.com/en/headless/latest/reference/commerce/).
+   * Initializes the connection with an already preconfigured [headless commerce engine](https://docs.coveo.com/en/headless/latest/reference/interfaces/Commerce.CommerceEngine.html).
    */
   public initializeWithEngine(engine: CommerceEngine) {
     engine.dispatch(
@@ -180,9 +188,9 @@ export class AtomicCommerceRecommendationInterface
    * configuration in your Coveo organization, requests made through the
    * commerce engine will start failing.
    *
-   * @param language - (Optional) The IETF language code tag (e.g., `en`).
-   * @param country - (Optional) The ISO-3166-1 country tag (e.g., `US`).
-   * @param currency - (Optional) The ISO-4217 currency code (e.g., `USD`).
+   * @param language - (Optional) The IETF language code tag (for example, `en`).
+   * @param country - (Optional) The ISO-3166-1 country tag (for example, `US`).
+   * @param currency - (Optional) The ISO-4217 currency code (for example, `USD`).
    *
    * @example
    * ```typescript
@@ -203,16 +211,17 @@ export class AtomicCommerceRecommendationInterface
 
     language && this.interfaceController.onLanguageChange(language);
 
-    const {setContext} = loadContextActions(this.engine);
-
-    this.engine.dispatch(
-      setContext({
-        ...this.context.state,
-        ...(language && {language}),
-        ...(country && {country}),
-        ...(currency && {currency}),
-      })
-    );
+    if (this.isNewLocale(language, country, currency)) {
+      const {setContext} = loadContextActions(this.engine);
+      this.engine.dispatch(
+        setContext({
+          ...this.context.state,
+          ...(language && {language}),
+          ...(country && {country}),
+          ...(currency && {currency}),
+        })
+      );
+    }
   }
 
   @watch('analytics')
@@ -225,6 +234,7 @@ export class AtomicCommerceRecommendationInterface
     this.store.state.iconAssetsPath = this.iconAssetsPath;
   }
 
+  // TODO - (v4) KIT-4365: Remove.
   @watch('language')
   public async updateLanguage() {
     if (
@@ -284,10 +294,12 @@ export class AtomicCommerceRecommendationInterface
       this.i18Initialized,
     ]);
     this.initContext();
-    this.language && this.updateLanguage();
+    this.updateLanguage();
     this.bindings = this.getBindings();
     markParentAsReady(this);
     this.initLanguage();
+    await waitForAtomicChildrenToBeDefined(this);
+    await this.getUpdateComplete();
   }
 
   private initContext() {
@@ -302,11 +314,24 @@ export class AtomicCommerceRecommendationInterface
       interfaceElement: this as AtomicCommerceRecommendationInterface,
     };
   }
-
   private initLanguage() {
-    if (!this.language) {
-      this.interfaceController.onLanguageChange(this.context.state.language);
+    if (!this.context || this.language) {
+      return;
     }
+
+    this.interfaceController.onLanguageChange(this.context.state.language);
+  }
+
+  private isNewLocale(language?: string, country?: string, currency?: string) {
+    if (!this.context) {
+      return false;
+    }
+
+    return (
+      (language && language !== this.context.state.language) ||
+      (country && country !== this.context.state.country) ||
+      (currency && currency !== this.context.state.currency)
+    );
   }
 }
 

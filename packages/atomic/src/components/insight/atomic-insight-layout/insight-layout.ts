@@ -1,7 +1,7 @@
 import {
   findSection,
   sectionSelector,
-} from '../../common/atomic-layout-section/sections';
+} from '../../common/atomic-layout-section/atomic-layout-section-utils';
 
 const tabsSelector = 'atomic-insight-tabs';
 const refineModalSelector = 'atomic-insight-refine-modal';
@@ -21,9 +21,13 @@ export function makeDesktopQuery(mobileBreakpoint: string) {
   return `only screen and (min-width: ${mobileBreakpoint})`;
 }
 
-export function buildInsightLayout(element: HTMLElement, widget: boolean) {
+export function buildInsightLayout(
+  element: HTMLElement & {widget?: boolean},
+  _mobileBreakpoint: string
+) {
   const id = element.id;
   const layoutSelector = `atomic-insight-layout#${id}`;
+  const widget = element.widget || false;
 
   const hasTabs = Boolean(
     findSection(element, 'search')?.querySelector(tabsSelector)

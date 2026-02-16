@@ -1,5 +1,4 @@
 import {test as base} from '@playwright/test';
-import {type AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
 import {ProductsPageObject as Product} from '@/src/components/commerce/atomic-product/e2e/page-object';
 import {ProductTextPageObject as ProductText} from './page-object';
 
@@ -8,8 +7,7 @@ type MyFixtures = {
   product: Product;
 };
 
-export const test = base.extend<MyFixtures & AxeFixture>({
-  makeAxeBuilder,
+export const test = base.extend<MyFixtures>({
   productText: async ({page}, use) => {
     await use(new ProductText(page));
   },

@@ -1,0 +1,61 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicFacetStories from './atomic-facet.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={ AtomicFacetStories } />
+
+<AtomicDocTemplate
+  stories={ AtomicFacetStories }
+  githubPath="search/facets/atomic-facet/atomic-facet.ts"
+  tagName="atomic-facet"
+  className="AtomicFacet"
+>
+
+This component is typically placed within the "facets" section of the layout.
+
+You can also place facets inside an `atomic-facet-manager` component to ensure the effective functioning of DNE (Dynamic Navigation Experience). 
+More info here: [atomic-facet-manager](https://docs.coveo.com/en/2918).
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-search-layout>
+    ...
+    <atomic-layout-section section="facets">
+      ...
+        <atomic-facet field="author" label="Authors"></atomic-facet>
+
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+### Display Options
+
+The facet component supports three different display modes by setting the `display-value-as` attribute:
+
+- `checkbox` (default): Display facets as checkboxes.
+This is the most commonly used display and itallows multiple selections.
+- `link`: Display facets as links.
+Single selection only, behaves like navigational links.
+- `box`: Display facets as boxes.
+Multi-select with a more visual appearance, presents more values in compact space.
+
+### Common Use Cases
+
+Facets are useful for large indexes because they provide multiple filters, one for every specific aspect of the content. 
+Faceted navigation helps the user get an overview of the content available, helping them understand how to search for it.
+
+## UX Best Practices
+
+- If you facet values are are long, consider setting `display-values-as` to `link`.
+Otherwise you you risk truncating values when they are displayed to users.
+- It's recommended to use `<atomic-layout-section section="facets">` to control the display of your facets, which will place facets on the left side
+  of the search page.
+- Enabling facet search can help find specific values inside larger sets.
+
+## Reference
+
+[Don’t Lose Face with Facets](https://source.coveo.com/2018/04/18/facets/).
+
+</AtomicDocTemplate>

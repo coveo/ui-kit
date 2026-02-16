@@ -32,7 +32,7 @@ import successTemplate from './templates/success.html';
  * The `QuanticFeedbackModalQna` component overlays a message modal on top of the current app window, the modal contains a form that allows the user to give feedback on a CRGA response.
  *
  * Under the hood, the component relies on a [`lightningModal`](https://developer.salesforce.com/docs/component-library/bundle/lightning-modal/documentation) component.
- * For an example of how to use the `QuanticFeedbackModalQna` component, see the [`quanticGeneratedAnswer`](https://github.com/coveo/ui-kit/blob/master/packages/quantic/force-app/main/default/lwc/quanticGeneratedAnswer/quanticGeneratedAnswer.js) implementation.
+ * For an example of how to use the `QuanticFeedbackModalQna` component, see the [`quanticGeneratedAnswer`](https://github.com/coveo/ui-kit/blob/main/packages/quantic/force-app/main/default/lwc/quanticGeneratedAnswer/quanticGeneratedAnswer.js) implementation.
  *
  * @category Search
  * @category Insight Panel

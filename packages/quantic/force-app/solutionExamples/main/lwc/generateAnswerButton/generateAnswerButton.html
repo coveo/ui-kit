@@ -1,0 +1,16 @@
+<template>
+  <template lwc:if={hasInitializationError}>
+    <c-quantic-component-error component-name={template.host.localName}> </c-quantic-component-error>
+  </template>
+  <template lwc:if={generateAnswerButtonIsDisplayed}>
+    <div class="generate-answer__container slds-align_absolute-center slds-var-p-horizontal_medium">
+      <lightning-button-icon
+        onclick={generateAnswer}
+        icon-name="utility:sparkles"
+        variant="brand"
+        alternative-text={labels.generateAnswer}
+        title={labels.generateAnswer}
+      ></lightning-button-icon>
+    </div>
+  </template>
+</template>

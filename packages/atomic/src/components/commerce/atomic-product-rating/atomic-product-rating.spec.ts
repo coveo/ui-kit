@@ -7,6 +7,7 @@ import {renderInAtomicProduct} from '@/vitest-utils/testing-helpers/fixtures/ato
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {AtomicProductRating} from './atomic-product-rating';
+import './atomic-product-rating';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
@@ -63,6 +64,7 @@ describe('atomic-product-rating', () => {
       bindings: (bindings) => {
         bindings.interfaceElement.type = 'product-listing';
         bindings.i18n = i18n;
+        bindings.engine.logger = {warn: vi.fn()} as never;
         bindings.store = {
           ...bindings.store,
           onChange: vi.fn(),
@@ -78,8 +80,8 @@ describe('atomic-product-rating', () => {
     return element;
   };
 
-  it('should be defined', () => {
-    const el = document.createElement('atomic-product-rating');
+  it('should be defined', async () => {
+    const el = await renderComponent();
     expect(el).toBeInstanceOf(AtomicProductRating);
   });
 

@@ -1,0 +1,135 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicTimeframeFacetStories from './atomic-timeframe-facet.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={ AtomicTimeframeFacetStories } />
+
+<AtomicDocTemplate
+  stories={ AtomicTimeframeFacetStories }
+  githubPath="search/atomic-timeframe-facet/atomic-timeframe-facet.ts"
+  tagName="atomic-timeframe-facet"
+  className="AtomicTimeframeFacet"
+>
+
+Use this component to filter search results by date ranges. The timeframe facet displays predefined time periods (such as "Past Month" or "Past Year") as facet values, allowing users to quickly filter results to specific time ranges.
+
+Place this component within the "facets" section of your search layout. For Dynamic Navigation Experience (DNE) support, nest it inside an `atomic-facet-manager` component (see [DNE documentation](https://docs.coveo.com/en/2918)).
+
+## Usage
+
+### Basic Timeframe Facet
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-search-layout>
+    ...
+    <atomic-layout-section section="facets">
+      ...
+      <atomic-timeframe-facet field="date" label="Date">
+        <atomic-timeframe unit="hour"></atomic-timeframe>
+        <atomic-timeframe unit="day"></atomic-timeframe>
+        <atomic-timeframe unit="week"></atomic-timeframe>
+        <atomic-timeframe unit="month"></atomic-timeframe>
+        <atomic-timeframe unit="quarter"></atomic-timeframe>
+        <atomic-timeframe unit="year"></atomic-timeframe>
+      </atomic-timeframe-facet>
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+### Custom Timeframe Ranges
+
+You can specify custom amounts for each timeframe using the `amount` attribute on `atomic-timeframe` elements:
+
+```html
+<atomic-timeframe-facet field="date" label="Publication Date">
+  <atomic-timeframe unit="day" amount="7"></atomic-timeframe>
+  <atomic-timeframe unit="month" amount="1"></atomic-timeframe>
+  <atomic-timeframe unit="month" amount="3"></atomic-timeframe>
+  <atomic-timeframe unit="month" amount="6"></atomic-timeframe>
+  <atomic-timeframe unit="year" amount="1"></atomic-timeframe>
+</atomic-timeframe-facet>
+```
+
+### Custom Timeframe Labels
+
+You can provide custom labels for timeframes using the `label` attribute:
+
+```html
+<atomic-timeframe-facet field="date" label="Date Range">
+  <atomic-timeframe unit="week" amount="1" label="This Week"></atomic-timeframe>
+  <atomic-timeframe unit="month" amount="1" label="This Month"></atomic-timeframe>
+  <atomic-timeframe unit="month" amount="3" label="Last Quarter"></atomic-timeframe>
+</atomic-timeframe-facet>
+```
+
+### With Date Picker
+
+Enable users to select custom date ranges by setting the `with-date-picker` attribute:
+
+```html
+<atomic-timeframe-facet 
+  field="date" 
+  label="Date" 
+  with-date-picker
+  min="2020-01-01"
+  max="2025-12-31"
+>
+  <atomic-timeframe unit="month"></atomic-timeframe>
+  <atomic-timeframe unit="year"></atomic-timeframe>
+</atomic-timeframe-facet>
+```
+
+When `with-date-picker` is enabled, users can:
+- Choose from predefined timeframes
+- Enter custom start and end dates
+- Apply date range constraints using the `min` and `max` attributes
+
+### Dependent Facet
+
+Make the timeframe facet conditional on another facet's selection using `depends-on`:
+
+```html
+<atomic-facet facet-id="filetype" field="filetype" label="File Type"></atomic-facet>
+
+<atomic-timeframe-facet 
+  field="date" 
+  label="Date" 
+  depends-on-filetype="PDF"
+>
+  <atomic-timeframe unit="month"></atomic-timeframe>
+  <atomic-timeframe unit="year"></atomic-timeframe>
+</atomic-timeframe-facet>
+```
+
+In this example, the timeframe facet only appears when "PDF" is selected in the file type facet.
+
+## Customization
+
+### Sorting
+
+Control the order in which timeframe values appear using the `sort-criteria` attribute:
+
+```html
+<atomic-timeframe-facet 
+  field="date" 
+  label="Date" 
+  sort-criteria="ascending"
+>
+  ...
+</atomic-timeframe-facet>
+```
+
+- `descending` (default): Shows most recent timeframes first
+- `ascending`: Shows oldest timeframes first
+
+## Best Practices
+
+- **Choose meaningful timeframes**: Select time ranges that match your users' search patterns and your content's typical age distribution
+- **Limit the number of timeframes**: Avoid overwhelming users with too many options (5-7 timeframes is typically sufficient)
+- **Use the date picker for flexibility**: Enable `with-date-picker` when users need precise date range control
+- **Set appropriate min/max values**: When using the date picker, constrain the date range to your content's actual date span
+
+</AtomicDocTemplate>

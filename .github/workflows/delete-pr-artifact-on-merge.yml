@@ -2,6 +2,10 @@ name: 'Delete PR artifact on merge'
 on:
   pull_request:
     types: [closed]
+
+permissions:
+  contents: read
+
 jobs:
   delete:
     environment: PR Artifacts

@@ -35,14 +35,14 @@ export interface FacetOptionsActionCreators {
   /**
    * Enables a facet. I.e., undoes the effects of `disable`.
    *
-   * @param facetId - The unique identifier of the facet (e.g., "abcd").
+   * @param facetId - The unique identifier of the facet (for example, "abcd").
    * @returns A dispatchable action.
    */
   enableFacet(facetId: string): PayloadAction<string>;
   /**
    * Disables a facet. I.e., prevents it from filtering results.
    *
-   * @param facetId - The unique identifier of the facet (e.g., "1").
+   * @param facetId - The unique identifier of the facet (for example, "1").
    * @returns A dispatchable action.
    */
   disableFacet(facetId: string): PayloadAction<string>;

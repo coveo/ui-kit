@@ -7,6 +7,7 @@ import {
 import {buildLogger} from '../../../app/logger.js';
 import {stateKey} from '../../../app/state-key.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import {loadConfigurationActions} from '../../../features/commerce/configuration/configuration-actions-loader.js';
 import {
   createWaitForActionMiddleware,
   createWaitForActionMiddlewareForRecommendation,
@@ -34,10 +35,38 @@ export interface SSRCommerceEngine extends CommerceEngine {
   waitForRequestCompletedAction(): Promise<Action>[];
 }
 
+/**
+ * SSR-specific commerce engine options with deprecated context property.
+ */
+export type SSRCommerceEngineOptions = Omit<
+  CommerceEngineOptions,
+  'configuration'
+> & {
+  configuration: Omit<CommerceEngineOptions['configuration'], 'context'> & {
+    /**
+     * @deprecated In the future major release, context should be provided through `fetchStaticState` rather than in the engine definition.
+     *
+     * @example
+     * ```ts
+     * engineDefinition = defineCommerceEngine({...});
+     * engineDefinition.fetchStaticState({
+     *   context: {...},
+     * });
+     * ```
+     */
+    context: CommerceEngineOptions['configuration']['context'];
+  };
+};
+
 export type CommerceEngineDefinitionOptions<
   TControllers extends
     ControllerDefinitionsMap<Controller> = ControllerDefinitionsMap<Controller>,
-> = EngineDefinitionOptions<CommerceEngineOptions, TControllers>;
+> = EngineDefinitionOptions<SSRCommerceEngineOptions, TControllers> & {
+  /**
+   * Callback invoked when the access token changes.
+   */
+  onAccessTokenUpdate?: (updateCallback: (token: string) => void) => void;
+};
 
 function isListingFetchCompletedAction(action: unknown): action is Action {
   return /^commerce\/productListing\/fetch\/(fulfilled|rejected)$/.test(
@@ -63,7 +92,7 @@ function noSearchActionRequired(_action: unknown): _action is Action {
 
 function buildSSRCommerceEngine(
   solutionType: SolutionType,
-  options: CommerceEngineOptions,
+  options: SSRCommerceEngineOptions,
   recommendationCount: number
 ): SSRCommerceEngine {
   let actionCompletionMiddleware: ReturnType<
@@ -170,6 +199,19 @@ export const buildFactory =
         : options,
       enabledRecommendationControllers
     );
+
+    const updateEngineConfiguration = (accessToken: string) => {
+      const {updateBasicConfiguration} = loadConfigurationActions(engine);
+      engine.dispatch(
+        updateBasicConfiguration({
+          accessToken,
+        })
+      );
+    };
+
+    if (options.onAccessTokenUpdate) {
+      options.onAccessTokenUpdate(updateEngineConfiguration);
+    }
 
     const controllers = buildControllerDefinitions({
       definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,

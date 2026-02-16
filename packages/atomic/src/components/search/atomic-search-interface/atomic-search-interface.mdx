@@ -1,0 +1,22 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicSearchInterfaceStories from './atomic-search-interface.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={ AtomicSearchInterfaceStories } />
+
+<AtomicDocTemplate
+  stories={ AtomicSearchInterfaceStories }
+  githubPath="search/atomic-search-interface/atomic-search-interface.ts"
+  tagName="atomic-search-interface"
+  className="AtomicSearchInterface"
+>
+
+This component must wrap the entire search layout and be placed at the root of the application. It is required as a parent for all other components.
+
+```html
+<atomic-search-interface>
+
+</atomic-search-interface>
+```
+
+</AtomicDocTemplate>

@@ -36,6 +36,7 @@ export type {
 };
 
 /**
+ * @deprecated In the future, the parameterManager controller will be included by default in the engine definition. You will no longer need to define it manually
  * Defines a `ParameterManager` controller instance.
  * @group Definers
  *

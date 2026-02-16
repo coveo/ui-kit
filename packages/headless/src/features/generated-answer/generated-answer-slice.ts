@@ -1,5 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client.js';
+import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
 import {
   closeGeneratedAnswerFeedbackModal,
   collapseGeneratedAnswer,
@@ -10,7 +11,10 @@ import {
   registerFieldsToIncludeInCitations,
   resetAnswer,
   sendGeneratedAnswerFeedback,
+  setAnswerApiQueryParams,
   setAnswerContentFormat,
+  setAnswerGenerationMode,
+  setAnswerId,
   setCannotAnswer,
   setId,
   setIsAnswerGenerated,
@@ -129,5 +133,14 @@ export const generatedAnswerReducer = createReducer(
       })
       .addCase(setCannotAnswer, (state, {payload}) => {
         state.cannotAnswer = payload;
+      })
+      .addCase(setAnswerApiQueryParams, (state, {payload}) => {
+        state.answerApiQueryParams = payload as AnswerApiQueryParams;
+      })
+      .addCase(setAnswerId, (state, {payload}) => {
+        state.answerId = payload;
+      })
+      .addCase(setAnswerGenerationMode, (state, {payload}) => {
+        state.answerGenerationMode = payload;
       })
 );

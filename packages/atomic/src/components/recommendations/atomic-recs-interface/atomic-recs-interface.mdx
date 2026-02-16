@@ -1,0 +1,23 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicRecsInterfaceStories from './atomic-recs-interface.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={ AtomicRecsInterfaceStories } />
+
+<AtomicDocTemplate
+  stories={ AtomicRecsInterfaceStories }
+  githubPath="recommendations/atomic-recs-interface/atomic-recs-interface.ts"
+  tagName="atomic-recs-interface"
+  className="AtomicRecsInterface"
+>
+
+ The `atomic-recs-interface` component is the parent to all other atomic components in a recommendation interface. It handles the headless recommendation engine and localization configurations.
+
+```html
+<atomic-recs-interface>
+
+</atomic-recs-interface>
+```
+
+
+</AtomicDocTemplate>

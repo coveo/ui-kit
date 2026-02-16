@@ -7,7 +7,6 @@ import {postcss} from '@stencil-community/postcss';
 import tailwindcss from '@tailwindcss/postcss';
 import postcssNested from 'postcss-nested';
 import type {PluginImpl} from 'rollup';
-import html from 'rollup-plugin-html';
 import {inlineSvg} from 'stencil-inline-svg';
 import {generateExternalPackageMappings} from './scripts/externalPackageMappings.mjs';
 import {generateAngularModuleDefinition as angularModule} from './stencil-plugin/atomic-angular-module';
@@ -83,7 +82,9 @@ export const config: Config = {
           'atomic-recs-result-template',
           'atomic-field-condition',
         ].concat(
-          filterComponentsByUseCaseForReactOutput('src/components/commerce')
+          filterComponentsByUseCaseForReactOutput('src/components/commerce'),
+          filterComponentsByUseCaseForReactOutput('src/components/insight'),
+          filterComponentsByUseCaseForReactOutput('src/components/ipx')
         ),
       }),
     !isDevWatch &&
@@ -100,7 +101,9 @@ export const config: Config = {
           filterComponentsByUseCaseForReactOutput('src/components/search'),
           filterComponentsByUseCaseForReactOutput(
             'src/components/recommendations'
-          )
+          ),
+          filterComponentsByUseCaseForReactOutput('src/components/insight'),
+          filterComponentsByUseCaseForReactOutput('src/components/ipx')
         ),
       }),
     !isDevWatch &&
@@ -124,13 +127,6 @@ export const config: Config = {
       type: 'dist',
       esmLoaderPath: './atomic/loader',
       collectionDir: null,
-      copy: [
-        {src: 'themes'},
-        {
-          src: '../../../node_modules/@salesforce-ux/design-system/assets/icons/{doctype,standard}/*.svg',
-          dest: 'assets',
-        },
-      ],
     },
     {
       type: 'docs-json',
@@ -160,12 +156,7 @@ export const config: Config = {
     replace(),
   ],
   rollupPlugins: {
-    before: [
-      html({
-        include: 'src/templates/**/*.html',
-      }),
-      externalizeDependenciesPlugin(),
-    ],
+    before: [externalizeDependenciesPlugin()],
   },
   extras: {
     enableImportInjection: true,

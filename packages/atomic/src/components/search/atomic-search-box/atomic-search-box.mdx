@@ -1,0 +1,63 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicSearchBoxStories from './atomic-search-box.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicSearchBoxStories} />
+
+<AtomicDocTemplate
+  stories={AtomicSearchBoxStories}
+  githubPath="search/atomic-search-box/atomic-search-box.ts"
+  tagName="atomic-search-box"
+  className="AtomicSearchBox"
+>
+This component is typically placed within the "search" section of the layout.
+```html
+<atomic-search-interface>
+  ...
+  <atomic-search-layout>
+    ...
+    <atomic-layout-section section="search">
+
+        <atomic-search-box></atomic-search-box>
+
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+By default, [atomic-search-box-recent-queries](/docs/atomic-search-box-recent-queries--docs) and [atomic-search-box-query-suggestions](/docs/atomic-search-box-query-suggestions--docs) are enabled.
+You can include them inside the search box to customize their properties.
+
+To enable instant results, you must explicitly include the [atomic-search-box-instant-results](/docs/atomic-search-box-instant-results--docs) component inside the search box.
+
+
+```html
+<atomic-search-box>
+  <atomic-search-box-recent-queries max-queries="8"></atomic-search-box-recent-queries>
+  <atomic-search-box-query-suggestions max-suggestions="6"></atomic-search-box-query-suggestions>
+  <atomic-search-box-instant-results image-size="small">
+    <atomic-result-template>
+       ...
+    </atomic-result-template>
+  </atomic-search-box-instant-results>
+</atomic-search-box>
+```
+
+## Standalone Search Box
+
+You can use the `atomic-search-box` as a standalone search box by setting the `redirection-url` property. This allows you to use the search box on a page that is not a search results page.
+
+```html
+<atomic-search-box redirection-url="/search"></atomic-search-box>
+```
+
+When a user submits a query in the standalone search box, they will be redirected to the URL specified in the `redirection-url` property with the query parameters appended.
+
+## UX Best Practices
+- The search box should be visible and clear to users, with best practices suggesting placement in the top-center or upper-right section of the page.
+
+## Reference
+[Search Best Practices Part 1 - The Search Box^](https://source.coveo.com/2017/09/06/search-best-practices-1/)
+[Search: Visible and Simple^](https://www.nngroup.com/articles/search-visible-and-simple/)
+</AtomicDocTemplate>

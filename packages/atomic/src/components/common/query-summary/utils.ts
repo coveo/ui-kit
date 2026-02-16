@@ -65,7 +65,7 @@ const getQuerySummaryData = (
 
   const ariaLiveMessage = isLoading
     ? i18n.t(loadingStatus)
-    : i18n.t(i18nKey, params);
+    : `${i18n.t('results-loaded')} ${i18n.t(i18nKey, params)}`;
 
   return {i18nKey, highlights, ariaLiveMessage};
 };

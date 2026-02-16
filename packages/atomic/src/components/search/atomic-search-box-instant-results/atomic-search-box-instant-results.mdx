@@ -1,0 +1,26 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicSearchBoxInstantResultsStories from './atomic-search-box-instant-results.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicSearchBoxInstantResultsStories} />
+
+<AtomicDocTemplate
+  stories={AtomicSearchBoxInstantResultsStories}
+  githubPath="search/atomic-search-box-instant-results/atomic-search-box-instant-results.ts"
+  tagName="atomic-search-box-instant-results"
+  className="AtomicSearchBoxInstantResults"
+>
+
+This component is placed inside the [atomic-search-box](/docs/atomic-search-box--docs) to display instant results as the user types.
+
+The `atomic-search-box-instant-results` is not included in the `atomic-search-box` by default.
+
+This component needs the `atomic-search-box-query-suggestions` component to be present in the same `atomic-search-box` component.
+```html
+<atomic-search-box>
+  <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
+  <atomic-search-box-instant-results></atomic-search-box-instant-results>
+</atomic-search-box>
+```
+
+</AtomicDocTemplate>

@@ -42,12 +42,12 @@ describe('atomic-product-field-condition', () => {
     };
   };
 
-  it('should render when no conditions are defined', async () => {
+  it('should render its content when no conditions are defined', async () => {
     const {content} = await renderProductFieldCondition();
     expect(content).toBeInTheDocument();
   });
 
-  it('should render when an if-defined condition is met', async () => {
+  it('should render its content when an if-defined condition is met', async () => {
     const {content} = await renderProductFieldCondition({
       ifDefined: 'ec_brand',
       productState: {ec_brand: 'brand'},
@@ -56,7 +56,7 @@ describe('atomic-product-field-condition', () => {
     expect(content).toBeInTheDocument();
   });
 
-  it('should not render when an if-defined condition is not met', async () => {
+  it('should not render its content when an if-defined condition is not met', async () => {
     const {content} = await renderProductFieldCondition({
       ifDefined: 'ec_brand',
       productState: {ec_brand: undefined},
@@ -65,7 +65,7 @@ describe('atomic-product-field-condition', () => {
     expect(content).toBeUndefined();
   });
 
-  it('should render when an if-not-defined condition is met', async () => {
+  it('should render its content when an if-not-defined condition is met', async () => {
     const {content} = await renderProductFieldCondition({
       ifNotDefined: 'ec_brand',
       productState: {ec_brand: undefined},
@@ -74,7 +74,7 @@ describe('atomic-product-field-condition', () => {
     expect(content).toBeInTheDocument();
   });
 
-  it('should not render when an if-not-defined condition is not met', async () => {
+  it('should not render its content when an if-not-defined condition is not met', async () => {
     const {content} = await renderProductFieldCondition({
       ifNotDefined: 'ec_brand',
       productState: {ec_brand: 'brand'},
@@ -83,7 +83,7 @@ describe('atomic-product-field-condition', () => {
     expect(content).toBeUndefined();
   });
 
-  it('should render when a must-match condition is met', async () => {
+  it('should render its content when a must-match condition is met', async () => {
     const {content} = await renderProductFieldCondition({
       mustMatch: {ec_brand: ['brand']},
       productState: {ec_brand: 'brand'},
@@ -92,7 +92,7 @@ describe('atomic-product-field-condition', () => {
     expect(content).toBeInTheDocument();
   });
 
-  it('should not render when a must-match condition is not met', async () => {
+  it('should not render its content when a must-match condition is not met', async () => {
     const {content} = await renderProductFieldCondition({
       mustMatch: {ec_brand: ['brand']},
       productState: {ec_brand: 'other-brand'},
@@ -101,7 +101,7 @@ describe('atomic-product-field-condition', () => {
     expect(content).toBeUndefined();
   });
 
-  it('should render when a must-not-match condition is met', async () => {
+  it('should render its content when a must-not-match condition is met', async () => {
     const {content} = await renderProductFieldCondition({
       mustNotMatch: {ec_brand: ['other-brand']},
       productState: {ec_brand: 'brand'},
@@ -110,7 +110,7 @@ describe('atomic-product-field-condition', () => {
     expect(content).toBeInTheDocument();
   });
 
-  it('should not render when a must-not-match condition is not met', async () => {
+  it('should not render its content when a must-not-match condition is not met', async () => {
     const {content} = await renderProductFieldCondition({
       mustNotMatch: {ec_brand: ['other-brand']},
       productState: {ec_brand: 'other-brand'},

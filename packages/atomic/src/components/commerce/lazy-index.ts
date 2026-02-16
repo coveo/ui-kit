@@ -2,10 +2,22 @@
 export default {
   'atomic-commerce-breadbox': async () =>
     await import('./atomic-commerce-breadbox/atomic-commerce-breadbox.js'),
+  'atomic-commerce-category-facet': async () =>
+    await import(
+      './atomic-commerce-category-facet/atomic-commerce-category-facet.js'
+    ),
   'atomic-commerce-did-you-mean': async () =>
     await import(
       './atomic-commerce-did-you-mean/atomic-commerce-did-you-mean.js'
     ),
+  'atomic-commerce-facet': async () =>
+    await import('./atomic-commerce-facet/atomic-commerce-facet.js'),
+  'atomic-commerce-facet-number-input': async () =>
+    await import(
+      './atomic-commerce-facet-number-input/atomic-commerce-facet-number-input.js'
+    ),
+  'atomic-commerce-facets': async () =>
+    await import('./atomic-commerce-facets/atomic-commerce-facets.js'),
   'atomic-commerce-interface': async () =>
     await import('./atomic-commerce-interface/atomic-commerce-interface.js'),
   'atomic-commerce-layout': async () =>
@@ -17,6 +29,10 @@ export default {
   'atomic-commerce-no-products': async () =>
     await import(
       './atomic-commerce-no-products/atomic-commerce-no-products.js'
+    ),
+  'atomic-commerce-numeric-facet': async () =>
+    await import(
+      './atomic-commerce-numeric-facet/atomic-commerce-numeric-facet.js'
     ),
   'atomic-commerce-pager': async () =>
     await import('./atomic-commerce-pager/atomic-commerce-pager.js'),
@@ -72,6 +88,10 @@ export default {
     ),
   'atomic-commerce-text': async () =>
     await import('./atomic-commerce-text/atomic-commerce-text.js'),
+  'atomic-commerce-timeframe-facet': async () =>
+    await import(
+      './atomic-commerce-timeframe-facet/atomic-commerce-timeframe-facet.js'
+    ),
   'atomic-product': async () =>
     await import('./atomic-product/atomic-product.js'),
   'atomic-product-children': async () =>

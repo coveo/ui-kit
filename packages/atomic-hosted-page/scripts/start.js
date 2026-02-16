@@ -1,7 +1,7 @@
 import {execSync, spawn} from 'node:child_process';
 
 const startWsServer = () => {
-  const wsServer = spawn('npx', ['ws', '-p', '3333', '-d', 'dev'], {
+  const wsServer = spawn('pnpm', ['exec', 'ws', '-p', '3333', '-d', 'dev'], {
     stdio: 'inherit',
     shell: true,
   });

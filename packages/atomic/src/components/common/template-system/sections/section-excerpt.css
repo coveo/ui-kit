@@ -1,0 +1,104 @@
+@reference './sections-utilities.css';
+
+@utility section-excerpt-row-result-desktop {
+  &.density-comfortable {
+    margin-top: 1.75rem;
+    max-height: 4.5rem;
+  }
+
+  &.density-normal {
+    margin-top: 1.25rem;
+    max-height: 2.5rem;
+  }
+
+  &.density-compact {
+    margin-top: 1rem;
+    max-height: 1.25rem;
+  }
+}
+@utility section-excerpt-row-result-mobile {
+  &.density-comfortable,
+  &.density-normal {
+    max-height: 2.5rem;
+  }
+
+  &.density-comfortable {
+    margin-top: 1.25rem;
+  }
+  &.density-normal {
+    margin-top: 1rem;
+  }
+}
+@utility section-excerpt-cell-result-desktop {
+  &.density-comfortable {
+    margin-top: 2.25rem;
+  }
+
+  &.density-normal {
+    margin-top: 1.75rem;
+  }
+
+  &.density-compact {
+    margin-top: 1.25rem;
+  }
+}
+@utility section-excerpt-cell-result-mobile {
+  &.density-comfortable {
+    margin-top: 1.25rem;
+  }
+
+  &.density-normal {
+    margin-top: 1rem;
+  }
+
+  &.density-compact {
+    margin-top: 0.75rem;
+    @apply line-clamp-1;
+  }
+}
+
+@utility section-excerpt {
+  @apply section-base-overflow;
+  &.with-sections {
+    grid-area: excerpt;
+    @apply text-neutral-dark;
+    @apply line-clamp-2;
+
+    @media (width >= theme(--breakpoint-desktop)) {
+      &.density-comfortable {
+        @apply set-font-size-lg;
+        @apply line-clamp-3;
+      }
+      &.density-compact {
+        @apply line-clamp-1;
+      }
+      &.display-list {
+        @apply section-excerpt-row-result-desktop;
+      }
+      &.display-grid {
+        @apply section-excerpt-cell-result-desktop;
+      }
+    }
+
+    @media not all and (width >= theme(--breakpoint-desktop)) {
+      &.display-list {
+        @apply section-excerpt-row-result-mobile;
+      }
+
+      &.display-grid {
+        &.image-large {
+          @apply section-excerpt-row-result-mobile;
+        }
+
+        &.image-small,
+        &.image-icon,
+        &.image-none {
+          @apply section-excerpt-cell-result-mobile;
+        }
+      }
+    }
+    &.display-table {
+      @apply section-excerpt-row-result-desktop;
+    }
+  }
+}

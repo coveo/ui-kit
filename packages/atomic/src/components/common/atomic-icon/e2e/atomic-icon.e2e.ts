@@ -1,6 +1,6 @@
 import {expect, test} from './fixture';
 
-test.describe('AtomicResultIcon', () => {
+test.describe('atomic-icon', () => {
   test.beforeEach(async ({icon}) => {
     await icon.load();
   });

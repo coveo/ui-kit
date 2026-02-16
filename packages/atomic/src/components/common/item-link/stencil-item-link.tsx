@@ -10,7 +10,7 @@ interface ItemLinkEventProps {
   stopPropagation?: boolean;
 }
 
-export interface ItemLinkProps extends ItemLinkEventProps {
+interface ItemLinkProps extends ItemLinkEventProps {
   href: string;
   className?: string;
   part?: string;
@@ -28,6 +28,9 @@ export interface ItemLinkProps extends ItemLinkEventProps {
   onBlur?: () => void;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const LinkWithItemAnalytics: FunctionalComponent<ItemLinkProps> = (
   {
     href,

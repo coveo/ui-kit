@@ -13,7 +13,7 @@ declare global {
   }
 }
 
-export function insertAtomicSearchBox() {
+export const insertAtomicSearchBox = () => {
   const areFunctionalCookiesEnabled = (): boolean => {
     return document.cookie
       .split('; ')
@@ -54,4 +54,4 @@ export function insertAtomicSearchBox() {
       })();
     }
   });
-}
+};

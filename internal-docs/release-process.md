@@ -77,22 +77,13 @@ This workflow works on the assumption that we can't bump a package's version if 
 
 If a package is already published to NPM, this task will exit without error. After a package is published, this task will repeatedly query NPM until it confirms that the package exists in the registry.
 
-## `release:phase4` (reify `package-lock.json`)
-
-This task is run once at the root of the repository after every package's version was bumped.
-
-The purpose of this task is to re-generate the root `package-lock.json` file using [Arborist](https://www.npmjs.com/package/@npmcli/arborist), which should confirm that the version bumps were successful.
-
-Scheduled releases will commit the new `package-lock.json` to the main branch, which ensures that contributors can run `npm install` without unnecessary changes being made to their `package-lock.json`.
-
-## `release:phase5` (commit version bumps)
+## `release:phase4` (commit version bumps)
 
 This task is only run for the scheduled release.
 
 This task will create a new "version bump" commit, which will contain:
 
 - The new `package.json` files.
-- The new `package-lock.json` file.
 - The new `CHANGELOG.md` files.
 - Git tags for each bumped package version.
 

@@ -7,7 +7,7 @@ export interface QuestionAnsweringRelatedQuestionState
    */
   expanded: boolean;
   /**
-   * The unique identifier for this question & answer.
+   * The unique identifier for this question and answer.
    */
   questionAnswerId: string;
 }
@@ -29,7 +29,7 @@ export interface QuestionAnsweringState {
    */
   feedbackModalOpen: boolean;
   /**
-   * The unique identifier for this question & answer.
+   * The unique identifier for this question and answer.
    */
   questionAnswerId?: string;
   relatedQuestions: QuestionAnsweringRelatedQuestionState[];

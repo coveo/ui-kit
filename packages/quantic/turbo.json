@@ -4,7 +4,7 @@
     "build": {
       "dependsOn": [
         "build:staticresources",
-        "build:docs",
+        "build:doc",
         "babel:headless"
       ],
       "outputs":[]
@@ -15,10 +15,11 @@
         "force-app/main/default/staticresources/coveobueno/**",
         "force-app/main/default/staticresources/coveoheadless/**",
         "force-app/main/default/staticresources/dompurify/**",
-        "force-app/main/default/staticresources/marked/**"
+        "force-app/main/default/staticresources/marked/**",
+        "force-app/solutionExamples/main/staticresources/coveoua/**"
       ]
     },
-    "build:docs": {
+    "build:doc": {
       "dependsOn": ["^build"],
       "outputs": ["docs/out/**"]
     },

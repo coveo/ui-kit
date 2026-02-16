@@ -1,16 +1,12 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
 import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product-template-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 
-const {
-  decorator: commerceInterfaceDecorator,
-  play: initializeCommerceInterface,
-} = wrapInCommerceInterface({
-  skipFirstRequest: false,
+const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
   type: 'product-listing',
   engineConfig: {
     context: {
@@ -21,33 +17,53 @@ const {
       country: 'US',
       currency: 'USD',
     },
+    preprocessRequest: (request) => {
+      const parsed = JSON.parse(request.body as string);
+      parsed.perPage = 1;
+      request.body = JSON.stringify(parsed);
+      return request;
+    },
   },
+  includeCodeRoot: false,
 });
-const {decorator: commerceProductListDecorator} = wrapInCommerceProductList();
+const {decorator: commerceProductListDecorator} = wrapInCommerceProductList(
+  'list',
+  false
+);
 const {decorator: productTemplateDecorator} = wrapInProductTemplate();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-product-link',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-product-link',
-  title: 'Atomic-Commerce/Product Template Components/ProductLink',
+  title: 'Commerce/Product Link',
   id: 'atomic-product-link',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [
     productTemplateDecorator,
     commerceProductListDecorator,
     commerceInterfaceDecorator,
   ],
-  parameters,
-  play: initializeCommerceInterface,
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
+  play,
 };
 
 export default meta;
 
-export const Default: Story = {
-  name: 'atomic-product-link',
-};
+export const Default: Story = {};
 
 export const WithSlotsAttributes: Story = {
-  name: 'opens in a new browser tab',
+  name: 'With a slot for attributes',
   decorators: [
     () => {
       return html`
@@ -60,14 +76,13 @@ export const WithSlotsAttributes: Story = {
 };
 
 export const WithAlternativeContent: Story = {
-  name: 'with alternative content',
+  name: 'With alternative content',
   decorators: [
     () => {
       return html`
         <atomic-product-link>
           <div>
-            Alternative content
-            <img src="https://picsum.photos/350" class="thumbnail" />
+            <img src="https://picsum.photos/seed/picsum/350" alt="Thumbnail" class="thumbnail" />
           </div>
         </atomic-product-link>
       `;
@@ -76,7 +91,7 @@ export const WithAlternativeContent: Story = {
 };
 
 export const WithHrefTemplate: Story = {
-  name: 'with href template',
+  name: 'With an href template',
   decorators: [
     () => {
       return html`

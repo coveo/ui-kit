@@ -1,0 +1,27 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicCommerceFacetsStories from './atomic-commerce-facets.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicCommerceFacetsStories} />
+
+<AtomicDocTemplate
+  stories={AtomicCommerceFacetsStories}
+  githubPath="commerce/atomic-commerce-facets/atomic-commerce-facets.ts"
+  tagName="atomic-commerce-facets"
+  className="AtomicCommerceFacets"
+>
+
+This component is typically placed within the "facets" section of the layout.
+```html
+<atomic-commerce-interface>
+  ...
+  <atomic-commerce-layout>
+    ...
+    <atomic-layout-section section="facets">
+      <atomic-commerce-facets></atomic-commerce-facets>
+    </atomic-layout-section>
+  </atomic-commerce-layout>
+</atomic-commerce-interface>
+```
+</AtomicDocTemplate>

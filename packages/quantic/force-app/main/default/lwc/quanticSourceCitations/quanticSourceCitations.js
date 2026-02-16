@@ -37,6 +37,13 @@ export default class QuanticSourceCitations extends LightningElement {
    * @type {function}
    */
   @api citationHoverHandler;
+  /**
+   * Whether to disable citation anchoring.
+   * @api
+   * @type {boolean}
+   * @default false
+   */
+  @api disableCitationAnchoring = false;
 
   /** @type {AnyHeadless} */
   headless;

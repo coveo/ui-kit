@@ -14,7 +14,7 @@ However, due to the internal project architecture, unnecessary code can sometime
 
 During the building process of Headless bundles using esbuild, `metafiles` are generated simultaneously and saved in the "dist" folder. This configuration can be found in `esbuild.mjs`.
 
-After executing the command `npm run build`, you should find the available `metafiles` in the `dist` folder, such as `cdn/browser.esm.stats.json` or `cdn/case-assist/browser.esm.stats.json`.
+After executing the command `pnpm run build`, you should find the available `metafiles` in the `dist` folder, such as `cdn/browser.esm.stats.json` or `cdn/case-assist/browser.esm.stats.json`.
 
 These files contain metadata about the build process, specifically providing information about the files included in the final bundle and the reasons behind their inclusion.
 

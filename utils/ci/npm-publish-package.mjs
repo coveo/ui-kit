@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 import {readFileSync} from 'node:fs';
-import {describeNpmTag, npmPublish} from '@coveo/semantic-monorepo-tools';
+import {
+  describePnpmTag,
+  pnpmPublishPackage,
+} from '@coveo/semantic-monorepo-tools';
 
 if (!process.env.INIT_CWD) {
-  throw new Error('Should be called using npm run-script');
+  throw new Error('Should be called using pnpm run');
 }
 process.chdir(process.env.INIT_CWD);
 
@@ -14,7 +17,7 @@ process.chdir(process.env.INIT_CWD);
  */
 async function isPublished(name, version, tag = version) {
   try {
-    const publishedVersion = await describeNpmTag(name, tag);
+    const publishedVersion = await describePnpmTag(name, tag);
     return publishedVersion === version;
   } catch (e) {
     const message = /** @type {{stderr?: string}} */ (e).stderr;
@@ -26,11 +29,8 @@ async function isPublished(name, version, tag = version) {
 }
 
 const isPrerelease = process.env.IS_PRERELEASE === 'true';
-const tagSuffix = process.env.TAG_SUFFIX || '';
-const shouldProvideProvenance =
-  !isPrerelease &&
-  process.env.npm_config_registry !== 'https://npm.pkg.github.com';
-/** @type {import('@npmcli/package-json').PackageJson} */
+const tagSuffix = process.env.PR_NUMBER || '';
+/**@type {import('./types.mjs').PackageJson} */
 const {name, version} = JSON.parse(
   readFileSync('package.json', {encoding: 'utf-8'})
 );
@@ -41,9 +41,9 @@ if (!(await isPublished(name, version))) {
   const tagToPublish = isPrerelease
     ? ['alpha', ...(tagSuffix ? [tagSuffix] : [])].join('-')
     : 'beta';
-  await npmPublish('.', {
+  await pnpmPublishPackage('.', {
     tag: tagToPublish,
-    provenance: shouldProvideProvenance,
+    provenance: true,
   });
 } else {
   console.log(`Version ${version} is already published.`);

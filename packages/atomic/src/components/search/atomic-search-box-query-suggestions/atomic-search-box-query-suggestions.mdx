@@ -1,0 +1,32 @@
+import {Meta} from '@storybook/addon-docs/blocks';
+import * as AtomicSearchBoxQuerySuggestionsStories from './atomic-search-box-query-suggestions.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicSearchBoxQuerySuggestionsStories} />
+
+<AtomicDocTemplate
+  stories={AtomicSearchBoxQuerySuggestionsStories}
+  githubPath="search/atomic-search-box-query-suggestions/atomic-search-box-query-suggestions.ts"
+  tagName="atomic-search-box-query-suggestions"
+  className="AtomicSearchBoxQuerySuggestions"
+>
+The `atomic-search-box-query-suggestions` component displays query suggestions as the user types in the search box. It provides autocomplete functionality to help users formulate better queries.
+
+This component is placed inside the [atomic-search-box](/docs/atomic-search-box--docs) and is included by default. You can add it manually to customize its properties.
+
+This component should be placed within an `atomic-search-interface` component, typically in the search box area.
+
+```html
+<atomic-search-interface>
+  <atomic-search-layout>
+    <atomic-layout-section section="search">
+      <atomic-search-box>
+        <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
+      </atomic-search-box>
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+</AtomicDocTemplate>

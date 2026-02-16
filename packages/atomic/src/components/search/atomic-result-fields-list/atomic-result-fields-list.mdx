@@ -1,0 +1,70 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicResultFieldsListStories from './atomic-result-fields-list.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicResultFieldsListStories} />
+
+<AtomicDocTemplate
+  stories={AtomicResultFieldsListStories}
+  githubPath="search/atomic-result-fields-list/atomic-result-fields-list.ts"
+  tagName="atomic-result-fields-list"
+  className="AtomicResultFieldsList"
+>
+
+The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
+
+This component is useful for displaying a list of result fields that adapts to the available space, automatically hiding overflow fields when necessary.
+
+Use inside an `atomic-result-template` to display multiple fields with automatic overflow handling:
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-result-list>
+    <atomic-result-template>
+      <template>
+        <atomic-result-fields-list>
+               <style>
+        .field {
+          display: inline-flex;
+          white-space: nowrap;
+          align-items: center;
+        }
+        .field-label {
+          font-weight: bold;
+          margin-right: 0.25rem;
+        }
+      </style>
+      <span class="field">
+        <span class="field-label"><atomic-text value="author"></atomic-text>:</span>
+        <atomic-result-text field="author"></atomic-result-text>
+      </span>
+
+      <span class="field">
+        <span class="field-label"><atomic-text value="source"></atomic-text>:</span>
+        <atomic-result-text field="source"></atomic-result-text>
+      </span>
+
+      <span class="field">
+        <span class="field-label"><atomic-text value="language"></atomic-text>:</span>
+        <atomic-result-multi-value-text field="language"></atomic-result-multi-value-text>
+      </span>
+
+      <span class="field">
+        <span class="field-label"><atomic-text value="fileType"></atomic-text>:</span>
+        <atomic-result-text field="filetype"></atomic-result-text>
+      </span>
+
+      <span class="field">
+        <span class="field-label">Date:</span>
+      </span>
+        </atomic-result-fields-list>
+      </template>
+    </atomic-result-template>
+  </atomic-result-list>
+  ...
+</atomic-search-interface>
+```
+
+</AtomicDocTemplate>

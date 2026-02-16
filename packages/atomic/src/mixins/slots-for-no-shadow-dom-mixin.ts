@@ -1,20 +1,14 @@
 import type {LitElement, PropertyValues, TemplateResult} from 'lit';
 import type {Constructor} from './mixin-common';
 
-type AdoptedNode = ChildNode & {contentFor?: string};
+type AdoptedNode = ChildNode;
 
 interface SlotMapping {
   [name: string]: AdoptedNode[] | undefined;
 }
 
-interface SlotPlaceholder {
-  slotName: string;
-  placeholder: Comment;
-  originalNodes: AdoptedNode[];
-}
-
 export interface LightDOMWithSlots {
-  slots: SlotMapping;
+  slotContent: SlotMapping;
   renderDefaultSlotContent(
     defaultContent?: unknown
   ): TemplateResult | unknown[];
@@ -24,10 +18,7 @@ export interface LightDOMWithSlots {
  * A mixin class that provides slot functionality for LitElement components
  * that render in the light DOM (no shadow DOM).
  *
- * This class manages child node mapping to named slots, similar to how
- * shadow DOM slots work, but operates in the light DOM. It provides
- * methods to adopt children, map them to slots based on their `slot`
- * attribute, and yield slot content during rendering.
+ * Provides the `renderDefaultSlotContent()` method, which returns the default slot’s content or a fallback if the slot is empty.
  *
  * @example
  * ```typescript
@@ -52,74 +43,58 @@ export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
     /**
      * @internal
      */
-    slots: SlotMapping = {};
+    public slotContent: SlotMapping = {};
     /**
      * @internal
      */
-    private slotsInitialized = false;
-    /**
-     * @internal
-     */
-    private slotPlaceholders: SlotPlaceholder[] = [];
-    /**
-     * @internal
-     */
-    private pendingSlotRelocation = false;
+    private slotPlaceholders: {placeholder: Comment; nodes: AdoptedNode[]}[] =
+      [];
 
     createRenderRoot() {
       return this;
     }
 
-    connectedCallback() {
-      this._initializeSlotState();
-      super.connectedCallback?.();
-    }
-
+    /**
+     * We adopt the children here once, just before the first render.
+     */
     willUpdate(changedProperties: PropertyValues): void {
       super.willUpdate?.(changedProperties);
-      if (!this.hasUpdated && !this.slotsInitialized) {
+      if (!this.hasUpdated) {
         this.adoptChildren();
       }
     }
 
+    /**
+     * After Lit has rendered, we find our placeholders and swap them
+     * with the actual nodes from the slots.
+     */
     public updated(changedProperties: PropertyValues): void {
       super.updated?.(changedProperties);
-      // Relocate slot content after Lit has finished updating the DOM
-      if (!this.pendingSlotRelocation) {
-        return;
+
+      for (const {placeholder, nodes} of this.slotPlaceholders) {
+        placeholder.replaceWith(...nodes);
       }
-      for (const placeholderInfo of this.slotPlaceholders) {
-        this._relocateSingleSlot(placeholderInfo);
-      }
+      // Clear the list for the next render cycle.
       this.slotPlaceholders = [];
-      this.pendingSlotRelocation = false;
     }
 
+    /**
+     * Reads the initial child nodes, sorts them into the `slots` map,
+     * and removes them from the DOM temporarily.
+     */
     private adoptChildren(): void {
-      this.slots = {};
-      this.slotPlaceholders = [];
-      this._mapChildrenToSlots();
-      this.slotsInitialized = true;
-    }
+      const children = Array.from(this.childNodes);
 
-    public renderDefaultSlotContent(
-      defaultContent?: unknown
-    ): TemplateResult | unknown[] {
-      this._ensureSlotsInitialized();
-      if (this._hasDefaultSlotContent()) {
-        return this._createSlotPlaceholder('');
-      }
-      return defaultContent ? [defaultContent] : [];
-    }
+      for (const child of children) {
+        const slotName =
+          child instanceof Element ? child.getAttribute('slot') || '' : '';
 
-    private getSlotNameForChild(child: AdoptedNode): string {
-      if (child instanceof Comment && child.nextSibling instanceof Element) {
-        return this.getSlotNameForChild(child.nextSibling);
+        if (!this.slotContent[slotName]) {
+          this.slotContent[slotName] = [];
+        }
+        this.slotContent[slotName]!.push(child);
+        child.remove();
       }
-      if (child instanceof Element) {
-        return child.getAttribute('slot') || '';
-      }
-      return '';
     }
 
     private isTextNodeEmpty(node: Text): boolean {
@@ -127,7 +102,8 @@ export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
     }
 
     private isSlotEmpty(slot: string): boolean {
-      const content = this.slots[slot];
+      const content = this.slotContent[slot];
+
       return (
         !content ||
         content.every((child: AdoptedNode) => {
@@ -139,77 +115,29 @@ export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
       );
     }
 
-    private _initializeSlotState(): void {
-      this.slots = {};
-      this.slotsInitialized = false;
-      this.slotPlaceholders = [];
-      this.pendingSlotRelocation = false;
-    }
-
-    private _ensureSlotsInitialized(): void {
-      if (!this.slotsInitialized) {
-        this.adoptChildren();
+    /**
+     * Returns the content for the default slot.
+     * If no nodes are assigned to the default slot, returns the provided fallback content.
+     *
+     * @param defaultContent - Optional content to render if the default slot is empty.
+     * @returns A `TemplateResult` representing the slot placeholder if nodes exist, otherwise an array containing the default content or an empty array.
+     */
+    public renderDefaultSlotContent(
+      defaultContent?: unknown
+    ): TemplateResult | unknown[] {
+      if (!this.isSlotEmpty('')) {
+        return this.createSlotPlaceholder(this.slotContent['']!);
       }
+      return defaultContent ? [defaultContent] : [];
     }
 
-    private _hasDefaultSlotContent(): boolean {
-      return !this.isSlotEmpty('');
-    }
-
-    private _mapChildrenToSlots(): void {
-      const children = Array.from(this.childNodes as NodeListOf<ChildNode>);
-      for (const child of children) {
-        const slotName = this.getSlotNameForChild(child as AdoptedNode);
-        this._addChildToSlot(child as AdoptedNode, slotName);
-      }
-    }
-
-    private _addChildToSlot(child: AdoptedNode, slotName: string): void {
-      if (!this.slots[slotName]) {
-        this.slots[slotName] = [];
-      }
-      this.slots[slotName]!.push(child);
-    }
-
-    private _createSlotPlaceholder(slotName: string): unknown[] {
-      const slotContent = this.slots[slotName];
-      if (!slotContent) {
-        return [];
-      }
-      const placeholder = document.createComment(
-        `slot:${slotName || 'default'}`
-      );
-      this.slotPlaceholders.push({
-        slotName,
-        placeholder,
-        originalNodes: slotContent,
-      });
-      this.pendingSlotRelocation = true;
+    /**
+     * Creates a placeholder comment that will be replaced in `updated`.
+     */
+    private createSlotPlaceholder(nodes: AdoptedNode[]): [Comment] {
+      const placeholder = document.createComment('slot');
+      this.slotPlaceholders.push({placeholder, nodes});
       return [placeholder];
-    }
-
-    private _relocateSingleSlot(placeholderInfo: SlotPlaceholder): void {
-      const {placeholder, originalNodes} = placeholderInfo;
-      const parent = placeholder.parentNode;
-      if (!parent) {
-        return;
-      }
-      for (const node of originalNodes) {
-        this._moveNodeIfNeeded(node, parent, placeholder);
-      }
-      placeholder.remove();
-    }
-
-    private _moveNodeIfNeeded(
-      node: AdoptedNode,
-      parent: Node,
-      placeholder: Comment
-    ): void {
-      const needsMove =
-        node.parentNode !== parent || node.nextSibling !== placeholder;
-      if (needsMove) {
-        parent.insertBefore(node, placeholder);
-      }
     }
   }
 

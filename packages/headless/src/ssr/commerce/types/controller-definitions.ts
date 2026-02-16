@@ -25,6 +25,7 @@ import type {
   RecommendationOnlyController,
   SearchAndListingController,
   SearchOnlyController,
+  StandaloneController,
   UniversalController,
 } from './controller-scopes.js';
 import type {Kind} from './kind.js';
@@ -39,8 +40,17 @@ export type {
 
 export type RecommendationControllerSettings = {
   /**
+   * @deprecated In the next major version, recommendation controllers will be enabled by simply including their names in the `recommendations` array when calling `fetchStaticState`, rather than using this `enabled` property.
+   *
    * Toggle to enable or disable the recommendation controller.
    * When set to `true`, the controller will perform a recommendation request server-side.
+   *
+   * @example
+   * ```ts
+   * await recommendationEngineDefinition.fetchStaticState({
+   *   recommendations: ['popularBought', 'popularViewed']
+   * });
+   * ```
    *
    * @default false
    */
@@ -311,6 +321,9 @@ type ConditionalControllerProps<
   ? RecommendationControllerProps<TControllers, TControllersPropsMap, K>
   : DefaultControllerProps<TControllers, TControllersPropsMap, K>;
 
+/**
+ * @deprecated This interface is no longer used and will be removed in next major version.
+ */
 export interface ControllerDefinitionOption {
   /**
    * Whether the controller will be used in a product listing context.
@@ -337,6 +350,11 @@ export type ListingAndStandaloneControllerWithoutProps<
   TController extends Controller,
 > = ControllerDefinitionWithoutProps<TController> &
   ListingAndStandaloneController;
+
+export type StandaloneControllerWithProps<
+  TController extends Controller,
+  TProps,
+> = ControllerDefinitionWithProps<TController, TProps> & StandaloneController;
 
 type ListingOnlyControllerDefinitionWithoutProps<
   TController extends Controller,

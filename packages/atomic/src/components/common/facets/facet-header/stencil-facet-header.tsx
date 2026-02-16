@@ -6,7 +6,7 @@ import CloseIcon from '../../../../images/close.svg';
 import {Button} from '../../stencil-button';
 import {Heading} from '../../stencil-heading';
 
-export interface FacetHeaderProps {
+interface FacetHeaderProps {
   i18n: i18n;
   label: string;
   numberOfActiveValues: number;
@@ -17,6 +17,9 @@ export interface FacetHeaderProps {
   headerRef?: (element?: HTMLButtonElement) => void;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const FacetHeader: FunctionalComponent<FacetHeaderProps> = (props) => {
   const label = props.i18n.t(props.label);
   const expandFacet = props.i18n.t('expand-facet', {label});

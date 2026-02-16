@@ -6,18 +6,19 @@ import {
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
+import {createProductContextController} from '@/src/components/commerce/product-template-component-utils/context/product-context-controller';
+import {renderItemTextFallback} from '@/src/components/common/item-text/item-text-fallback';
+import {renderItemTextHighlighted} from '@/src/components/common/item-text/item-text-highlighted';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
-import {createProductContextController} from '@/src/decorators/commerce/product-template-decorators.js';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
-import {getFieldValueCaption} from '../../../utils/field-utils';
-import {renderItemTextFallback} from '../../common/item-text/item-text-fallback.js';
-import {renderItemTextHighlighted} from '../../common/item-text/item-text-highlighted.js';
+import {getFieldValueCaption} from '@/src/utils/field-utils';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import '../atomic-commerce-text/atomic-commerce-text';
-import {getStringValueFromProductOrNull} from '../product-template-component-utils/product-utils.js';
+import {getStringValueFromProductOrNull} from '@/src/components/commerce/product-template-component-utils/product-utils';
+import {LightDomMixin} from '@/src/mixins/light-dom';
 
 /**
  * The `atomic-product-text` component renders the value of a string field for a given product.
@@ -25,7 +26,7 @@ import {getStringValueFromProductOrNull} from '../product-template-component-uti
 @customElement('atomic-product-text')
 @bindings()
 export class AtomicProductText
-  extends LitElement
+  extends LightDomMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
   /**
@@ -33,9 +34,10 @@ export class AtomicProductText
    * The component will look for the specified field in the product's properties first, and then in the product's `additionalFields` property.
    */
   @property({type: String, reflect: true}) public field!: string;
+
   /**
    * Whether to highlight the string field value.
-   *
+   * @deprecated - replaced by `no-highlight` (this defaults to `true`, while the replacement is the inverse and defaults to `false`).
    * Only works if the `field` property is set to `excerpt` or `ec_name`.
    */
   @property({
@@ -45,6 +47,18 @@ export class AtomicProductText
     converter: booleanConverter,
   })
   public shouldHighlight = true;
+
+  /**
+   * Disable highlighting of the string field value.
+   * Only works if the `field` property is set to `excerpt` or `ec_name`.
+   */
+  @property({
+    type: Boolean,
+    reflect: true,
+    useDefault: true,
+    attribute: 'no-highlight',
+  })
+  public disableHighlight: boolean = false;
   /**
    * The locale key to use for displaying default text when the specified field has no value for the product.
    */
@@ -58,18 +72,30 @@ export class AtomicProductText
 
   @state() public error!: Error;
 
-  protected createRenderRoot() {
-    return this;
-  }
-
   initialize() {
     if (!this.product && this.productController.item) {
       this.product = this.productController.item;
     }
   }
 
+  @bindingGuard()
+  @errorGuard()
+  render() {
+    return html`
+      ${when(
+        this.product && this.field,
+        () => this.renderProductTextValue(),
+        () => nothing
+      )}
+    `;
+  }
+
   private get shouldRenderHighlights(): boolean {
-    return this.shouldHighlight && this.isFieldSupportedForHighlighting();
+    return (
+      !this.disableHighlight &&
+      this.shouldHighlight &&
+      this.isFieldSupportedForHighlighting()
+    );
   }
 
   private isFieldSupportedForHighlighting(): boolean {
@@ -154,18 +180,6 @@ export class AtomicProductText
     }
 
     return this.renderProductText(`${productValueAsString}`);
-  }
-
-  @bindingGuard()
-  @errorGuard()
-  render() {
-    return html`
-      ${when(
-        this.product && this.field,
-        () => this.renderProductTextValue(),
-        () => nothing
-      )}
-    `;
   }
 }
 

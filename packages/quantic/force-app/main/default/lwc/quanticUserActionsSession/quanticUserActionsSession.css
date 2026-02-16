@@ -10,7 +10,7 @@
 }
 
 .session__show-more-actions-button {
-  font-size: 12px;
+  font-size: var(--slds-g-font-scale-neg-1, 12px);
 }
 
 .session-start__icon {

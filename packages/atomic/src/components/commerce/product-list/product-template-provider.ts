@@ -3,7 +3,7 @@ import {
   type Product,
   type Template,
 } from '@coveo/headless/commerce';
-import type {ItemTarget} from '../../common/layout/display-options';
+import type {ItemTarget} from '@/src/components/common/layout/item-layout-utils';
 import {
   TemplateProvider,
   type TemplateProviderProps,

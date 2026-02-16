@@ -79,7 +79,8 @@ export default function svgTransformer(context) {
       const importPath = node.moduleSpecifier.text;
       if (importPath.endsWith('.svg')) {
         console.log('Replacing SVG import:', basename(importPath));
-        const dir = dirname(node.getSourceFile().fileName);
+        const sourceFile = (node.original || node).getSourceFile();
+        const dir = dirname(sourceFile.fileName);
         const svgPath = resolve(dir, importPath);
         const svgContent = readFileSync(svgPath, 'utf8');
         const variableName = node.importClause?.name?.escapedText;
