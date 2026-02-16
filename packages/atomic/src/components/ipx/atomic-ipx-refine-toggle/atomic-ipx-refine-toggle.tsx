@@ -7,6 +7,7 @@ import {
   SearchStatusState,
 } from '@coveo/headless';
 import {Component, h, State, Element, Prop} from '@stencil/core';
+import type {AtomicIpxRefineModal} from '@/src/components/ipx/atomic-ipx-refine-modal/atomic-ipx-refine-modal';
 import FilterIcon from '../../../images/filter.svg';
 import {
   InitializeBindings,
@@ -47,7 +48,7 @@ export class AtomicIPXRefineToggle {
 
   public breadcrumbManager!: BreadcrumbManager;
   public searchStatus!: SearchStatus;
-  private modalRef?: HTMLAtomicIpxRefineModalElement;
+  private modalRef?: AtomicIpxRefineModal;
   private buttonRef?: HTMLButtonElement;
 
   private get numberOfBreadcrumbs(): number {
