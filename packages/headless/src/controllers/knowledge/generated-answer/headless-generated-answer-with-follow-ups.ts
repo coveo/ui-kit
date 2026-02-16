@@ -5,6 +5,7 @@ import {
 } from '../../../api/knowledge/answer-generation/endpoints/answer/answer-endpoint.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
+import {setAgentId} from '../../../features/configuration/configuration-actions.js';
 import {generateFollowUpAnswer} from '../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {followUpAnswersReducer as followUpAnswers} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import type {FollowUpAnswersState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
@@ -27,7 +28,7 @@ interface GeneratedAnswerWithFollowUpsState extends GeneratedAnswerState {
   followUpAnswers: FollowUpAnswersState;
 }
 
-interface GeneratedAnswerWithFollowUps extends GeneratedAnswer {
+export interface GeneratedAnswerWithFollowUps extends GeneratedAnswer {
   /**
    * The state of the GeneratedAnswer controller.
    */
@@ -38,6 +39,9 @@ interface GeneratedAnswerWithFollowUps extends GeneratedAnswer {
    */
   askFollowUp(question: string): void;
 }
+
+export type GeneratedAnswerWithFollowUpsProps = GeneratedAnswerProps &
+  Required<Pick<GeneratedAnswerProps, 'agentId'>>;
 
 /**
  *
@@ -52,8 +56,12 @@ interface GeneratedAnswerWithFollowUps extends GeneratedAnswer {
 export function buildGeneratedAnswerWithFollowUps(
   engine: SearchEngine | InsightEngine,
   analyticsClient: GeneratedAnswerAnalyticsClient,
-  props: GeneratedAnswerProps = {}
+  props: GeneratedAnswerWithFollowUpsProps
 ): GeneratedAnswerWithFollowUps {
+  if (!props.agentId || props.agentId.trim() === '') {
+    throw new Error('agentId is required for GeneratedAnswerWithFollowUps');
+  }
+
   if (!loadReducers(engine)) {
     throw loadReducerError;
   }
@@ -64,7 +72,7 @@ export function buildGeneratedAnswerWithFollowUps(
     props
   );
   const getState = () => engine.state;
-  // TODO SFINT-6583: dispatch action to set agentId when that prop is defined
+  engine.dispatch(setAgentId(props.agentId));
 
   return {
     ...controller,
