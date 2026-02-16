@@ -1,7 +1,3 @@
-export {
-  buildAxeRuleCriteriaMap,
-  extractCriteriaFromTags,
-} from './data/axe-rule-mappings.js';
 export {getCriterionMetadata} from './data/criterion-metadata.js';
 export type {WcagCriterionDefinition} from './data/wcag-criteria.js';
 export {wcagCriteriaDefinitions} from './data/wcag-criteria.js';
