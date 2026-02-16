@@ -8,12 +8,19 @@ import {
 } from '@coveo/headless';
 import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {
+  type BaseFacetElement,
+  collapseFacetsAfter,
+} from '@/src/components/common/facets/facet-common';
+import {popoverClass} from '@/src/components/common/facets/popover/popover-type';
+import {isRefineModalFacet} from '@/src/components/common/interface/store';
 import {renderRefineModalBody} from '@/src/components/common/refine-modal/body';
 import {
   renderRefineModalFiltersClearButton,
   renderRefineModalFiltersSection,
 } from '@/src/components/common/refine-modal/filters';
 import {renderRefineModal} from '@/src/components/common/refine-modal/modal';
+import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -22,13 +29,6 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {
-  type BaseFacetElement,
-  collapseFacetsAfter,
-} from '../../common/facets/facet-common';
-import {popoverClass} from '../../common/facets/popover/popover-type';
-import {isRefineModalFacet} from '../../common/interface/store';
-import type {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-ipx-refine-modal` component is automatically created as a child of the `atomic-search-interface` when the `atomic-ipx-refine-toggle` is initialized.
