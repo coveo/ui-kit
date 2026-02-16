@@ -275,26 +275,6 @@ describe('#renderFeedbackAndCopyButtons', () => {
 
         expect(onCopyToClipboard).toHaveBeenCalledWith(answer);
       });
-
-      // it('should not call onCopyToClipboard when answer is undefined', async () => {
-      //   const onCopyToClipboard = vi.fn();
-
-      //   await renderComponent({
-      //     generatedAnswerActionsState: {
-      //       answer: undefined,
-      //       isStreaming: false,
-      //     } as GeneratedAnswerActionsState,
-      //     onCopyToClipboard,
-      //   });
-
-      //   const copyButtonCall = vi.mocked(copyButton.renderCopyButton).mock
-      //     .calls[0][0];
-      //   const onClickHandler = copyButtonCall.props.onClick;
-
-      //   await onClickHandler();
-
-      //   expect(onCopyToClipboard).not.toHaveBeenCalled();
-      // });
     });
 
     describe('when clipboard is not supported', () => {
