@@ -2,12 +2,15 @@ import {h, FunctionalComponent} from '@stencil/core';
 import {i18n} from 'i18next';
 import {FieldsetGroup} from '../../stencil-fieldset-group';
 
-export interface FacetValuesGroupProps {
+interface FacetValuesGroupProps {
   i18n: i18n;
   label?: string;
   query?: string;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const FacetValuesGroup: FunctionalComponent<FacetValuesGroupProps> = (
   props,
   children

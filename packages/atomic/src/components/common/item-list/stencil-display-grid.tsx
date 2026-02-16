@@ -1,7 +1,7 @@
 // The Lit equivalent of this file is grid-layout.ts
 import {FunctionalComponent, h} from '@stencil/core';
 
-export interface DisplayGridProps {
+interface DisplayGridProps {
   selectorForItem: string;
   item: {clickUri: string; title: string};
   setRef: (element?: HTMLElement) => void;
@@ -10,6 +10,9 @@ export interface DisplayGridProps {
   cancelPendingSelect: () => void;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const DisplayGrid: FunctionalComponent<DisplayGridProps> = (
   {setRef, selectorForItem},
   children

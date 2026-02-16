@@ -44,6 +44,8 @@ export default defineConfig({
   appType: 'mpa',
   server: {
     port: 3333,
+    strictPort: true,
+    host: '127.0.0.1',
   },
   plugins: [configureAssetPaths()],
 });

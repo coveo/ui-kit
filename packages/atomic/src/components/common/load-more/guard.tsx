@@ -1,9 +1,13 @@
 import {Fragment, FunctionalComponent, h} from '@stencil/core';
 
-export interface LoadMoreGuardProps {
+interface LoadMoreGuardProps {
   isLoaded: boolean;
   hasResults: boolean;
 }
+
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const LoadMoreGuard: FunctionalComponent<LoadMoreGuardProps> = (
   {isLoaded, hasResults},
   children

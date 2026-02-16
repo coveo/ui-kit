@@ -1,5 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {createRipple} from '../../utils/ripple';
+import {createRipple} from '../../utils/ripple-utils';
 import {
   ButtonStyle,
   getRippleColorForButtonStyle,
@@ -7,7 +7,7 @@ import {
 } from './stencil-button-style';
 
 /**
- * @deprecated Should only be used for Stencil components; for Lit components, use ButtonProps interface instead
+ * @deprecated should only be used for Stencil components.
  */
 export interface StencilButtonProps {
   style: ButtonStyle;
@@ -32,7 +32,7 @@ export interface StencilButtonProps {
 }
 
 /**
- * @deprecated Should only be used for Stencil components; for Lit components, use the button.ts file instead
+ * @deprecated should only be used for Stencil components.
  */
 export const Button: FunctionalComponent<StencilButtonProps> = (
   props,

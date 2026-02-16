@@ -1,0 +1,38 @@
+{
+  "name": "@samples/headless-commerce-react",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@coveo/headless": "workspace:*",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@playwright/test": "catalog:",
+    "@testing-library/jest-dom": "6.6.3",
+    "@testing-library/react": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "vite": "catalog:",
+    "vite-plugin-static-copy": "3.1.1",
+    "vitest": "catalog:"
+  }
+}

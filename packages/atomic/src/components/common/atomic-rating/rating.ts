@@ -1,9 +1,9 @@
+import '@/src/components/common/atomic-icon/atomic-icon';
 import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {styleMap} from 'lit/directives/style-map.js';
 import {multiClassMap, tw} from '@/src/directives/multi-class-map';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
-import {FieldValueIsNaNError} from '../../commerce/product-template-component-utils/error';
 
 interface RatingProps {
   i18n: i18n;
@@ -81,18 +81,4 @@ export const renderRating: FunctionalComponent<RatingProps> = ({props}) => {
       ${filledIconDisplay()}
     </div>
   </div>`;
-};
-
-export const computeNumberOfStars = (
-  value: unknown,
-  field: string
-): number | null => {
-  if (value === null) {
-    return null;
-  }
-  const valueAsNumber = parseFloat(`${value}`);
-  if (Number.isNaN(valueAsNumber)) {
-    throw new FieldValueIsNaNError(field, value);
-  }
-  return valueAsNumber;
 };

@@ -1,40 +1,52 @@
-import {userEvent} from '@storybook/test';
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
-import {within} from 'shadow-dom-testing-library';
+import {expect, userEvent} from 'storybook/test';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceSearchBox} from '@/storybook-utils/commerce/commerce-search-box-wrapper';
-import {renderComponentWithoutCodeRoot} from '@/storybook-utils/common/render-component';
 import {parameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
 
+const mockCommerceApi = new MockCommerceApi();
+
 const {decorator: commerceInterfaceDecorator, play: commerceInterfacePlay} =
-  wrapInCommerceInterface();
+  wrapInCommerceInterface({includeCodeRoot: false});
 const {decorator: commerceSearchBoxDecorator} = wrapInCommerceSearchBox(html`
   <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
 `);
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-commerce-search-box-instant-products',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-commerce-search-box-instant-products',
-  title: 'Commerce/atomic-commerce-search-box-instant-products',
+  title: 'Commerce/Search Box Instant Products',
   id: 'atomic-commerce-search-box-instant-products',
-  render: renderComponentWithoutCodeRoot,
+  render: (args) => template(args),
   decorators: [commerceSearchBoxDecorator, commerceInterfaceDecorator],
-  parameters,
-  play: async (context) => {
-    await commerceInterfacePlay(context);
-    const canvas = within(context.canvasElement);
-    const searchBox = await canvas.findAllByShadowPlaceholderText('Search');
-    await userEvent.click(searchBox[0]);
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+    msw: {handlers: [...mockCommerceApi.handlers]},
   },
-  argTypes: {
-    'attributes-density': {
-      name: 'density',
-      options: ['normal', 'comfortable', 'compact'],
-    },
-    'attributes-image-size': {
-      name: 'image-size',
-      options: ['icon', 'small', 'large', 'none'],
-    },
+  args,
+  argTypes,
+
+  play: async (context) => {
+    const {canvas, step} = context;
+    await commerceInterfacePlay(context);
+    const searchBox = await canvas.findAllByShadowPlaceholderText('Search');
+    await step('Click on the search box to show instant products', async () => {
+      await userEvent.click(searchBox[0]);
+      await expect(
+        await canvas.findByShadowLabelText(
+          /Zippy Yellow Surfboard, instant product\.( Button\.)? 1 of \d+\. In Right list\./
+        )
+      ).toBeVisible();
+    });
   },
 };
 
@@ -43,17 +55,15 @@ export default meta;
 export const Default: Story = {};
 
 export const WithComfortableDensity: Story = {
-  tags: ['test'],
   name: 'With comfortable density',
   args: {
-    'attributes-density': 'comfortable',
+    density: 'comfortable',
   },
 };
 
 export const WithNoImage: Story = {
-  tags: ['test'],
   name: 'With no image',
   args: {
-    'attributes-image-size': 'none',
+    'image-size': 'none',
   },
 };

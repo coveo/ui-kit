@@ -1,0 +1,13 @@
+description: Headless library package
+file_patterns:
+  - packages/headless/**
+  - packages/headless-react/**
+  - packages/bueno/**
+  - packages/auth/**
+
+  - samples/headless/**
+reviewers:
+  dxui: ~
+
+review_bypass:
+  integration/139346: exempt # Developer eXperience Bot. Important for releases

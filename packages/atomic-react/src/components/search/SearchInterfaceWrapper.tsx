@@ -1,19 +1,23 @@
-import type {i18n, JSX} from '@coveo/atomic';
+import type {i18n} from '@coveo/atomic';
 import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
 } from '@coveo/headless';
 // biome-ignore lint/style/useImportType: <React is needed>
 import React, {useEffect, useRef} from 'react';
-import {AtomicSearchInterface} from '../stencil-generated/search/index.js';
+import {AtomicSearchInterface} from './components';
 
-type ExecuteSearch = HTMLAtomicSearchInterfaceElement['executeFirstSearch'];
+type AtomicSearchInterfaceProps = React.ComponentProps<
+  typeof AtomicSearchInterface
+>;
+
+type ExecuteSearch = AtomicSearchInterfaceProps['executeFirstSearch'];
 /**
  * The properties of the AtomicSearchInterface component
  */
 interface WrapperProps
   extends Omit<
-    JSX.AtomicSearchInterface,
+    AtomicSearchInterfaceProps,
     'i18n' | 'pipeline' | 'searchHub' | 'analytics'
   > {
   /**
@@ -32,8 +36,8 @@ interface WrapperProps
 }
 
 const DefaultProps: Required<Pick<WrapperProps, 'onReady' | 'localization'>> = {
-  onReady: (executeFirstSearch) => {
-    return executeFirstSearch();
+  onReady: (executeFirstRequest) => {
+    return executeFirstRequest ? executeFirstRequest() : Promise.resolve();
   },
   localization: () => {},
 };
@@ -53,7 +57,8 @@ export const SearchInterfaceWrapper = (
     });
   }
   const {engine, localization, onReady, ...allOtherProps} = mergedProps;
-  const searchInterfaceRef = useRef<HTMLAtomicSearchInterfaceElement>(null);
+  const searchInterfaceRef =
+    useRef<React.ElementRef<typeof AtomicSearchInterface>>(null);
   let initialization: Promise<void> | null = null;
 
   useEffect(() => {

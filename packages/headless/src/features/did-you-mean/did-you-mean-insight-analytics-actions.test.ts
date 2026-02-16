@@ -1,3 +1,4 @@
+import {CoveoInsightClient} from 'coveo.analytics';
 import type {InsightEngine} from '../../app/insight-engine/insight-engine.js';
 import type {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {buildMockInsightEngine} from '../../test/mock-engine-v2.js';
@@ -11,17 +12,11 @@ import {
 const mockLogDidYouMeanClick = vi.fn();
 const mockLogDidYouMeanAutomatic = vi.fn();
 
-vi.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = vi.fn(() => ({
-    disable: () => {},
-    logDidYouMeanClick: mockLogDidYouMeanClick,
-    logDidYouMeanAutomatic: mockLogDidYouMeanAutomatic,
-  }));
-
-  return {
-    CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: vi.fn()},
-  };
+vi.mock('coveo.analytics');
+vi.mocked(CoveoInsightClient).mockImplementation(function () {
+  this.disable = () => {};
+  this.logDidYouMeanClick = mockLogDidYouMeanClick;
+  this.logDidYouMeanAutomatic = mockLogDidYouMeanAutomatic;
 });
 
 describe('did you mean insight analytics actions', () => {

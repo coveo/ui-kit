@@ -39,6 +39,7 @@ const foldedItemListStateContextEventName = 'atomic/resolveFoldedResultList';
 /**
  * A [StencilJS property decorator](https://stenciljs.com/) to be used for elements nested within a folded item list.
  * This allows the Stencil component to modify the folded item list rendered levels.
+ * @deprecated use FoldedItemListContextController instead.
  */
 export function FoldedItemListStateContext() {
   return (component: ComponentInterface, foldedListState: string) => {

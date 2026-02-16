@@ -55,7 +55,7 @@ export interface StaticFilterSetActionCreators {
   /**
    * Deselects all values of a filter.
    *
-   * @param id - The unique identifier of the static filter (e.g., `"abc"`).
+   * @param id - The unique identifier of the static filter (for example, `"abc"`).
    * @returns A dispatchable action.
    */
   deselectAllStaticFilterValues(id: string): PayloadAction<string>;

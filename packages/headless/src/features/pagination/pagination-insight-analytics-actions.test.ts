@@ -1,3 +1,4 @@
+import {CoveoInsightClient} from 'coveo.analytics';
 import type {InsightEngine} from '../../app/insight-engine/insight-engine.js';
 import type {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import type {InsightAppState} from '../../state/insight-app-state.js';
@@ -15,18 +16,12 @@ const mockLogPagerNumber = vi.fn();
 const mockLogPagerNext = vi.fn();
 const mockLogPagerPrevious = vi.fn();
 
-vi.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = vi.fn(() => ({
-    disable: () => {},
-    logPagerNumber: mockLogPagerNumber,
-    logPagerNext: mockLogPagerNext,
-    logPagerPrevious: mockLogPagerPrevious,
-  }));
-
-  return {
-    CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: vi.fn()},
-  };
+vi.mock('coveo.analytics');
+vi.mocked(CoveoInsightClient).mockImplementation(function () {
+  this.disable = vi.fn();
+  this.logPagerNumber = mockLogPagerNumber;
+  this.logPagerNext = mockLogPagerNext;
+  this.logPagerPrevious = mockLogPagerPrevious;
 });
 
 describe('pagination insight analytics actions', () => {

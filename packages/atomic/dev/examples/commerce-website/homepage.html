@@ -34,12 +34,20 @@
     <style>
       atomic-commerce-recommendation-list {
         margin-top: var(--atomic-layout-spacing-y);
-        --atomic-recs-number-of-columns: 3;
+        --atomic-recs-number-of-columns: 4;
+      }
+
+      @media only screen and (max-width: 1440px) {
+        atomic-commerce-recommendation-list {
+          --atomic-recs-number-of-columns: 2;
+          --atomic-recs-number-of-rows: 2;
+        }
       }
 
       @media only screen and (max-width: 1024px) {
         atomic-commerce-recommendation-list {
           --atomic-recs-number-of-columns: 1;
+          --atomic-recs-number-of-rows: 4;
         }
       }
     </style>
@@ -55,7 +63,7 @@
               <atomic-commerce-recommendation-list
                 id="popular_bought"
                 slot-id="af4fb7ba-6641-4b67-9cf9-be67e9f30174"
-                products-per-page="3"
+                products-per-page="4"
               >
                 <atomic-product-template>
                   <template>
@@ -92,7 +100,7 @@
               <atomic-commerce-recommendation-list
                 id="popular_viewed"
                 slot-id="d73afbd2-8521-4ee6-a9b8-31f064721e73"
-                products-per-page="3"
+                products-per-page="4"
               >
               </atomic-commerce-recommendation-list>
             </atomic-layout-section>

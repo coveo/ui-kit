@@ -39,7 +39,7 @@ export function getPackagePathFromPackageDir(packageDir) {
 
 /**
  * @param {string} fullPath
- * @returns {import('@npmcli/package-json').PackageJson}
+ * @returns {import('../utils/ci/types.mjs').PackageJson}
  */
 export function getPackageManifestFromPackagePath(fullPath) {
   return JSON.parse(readFileSync(resolve(fullPath, 'package.json')).toString());

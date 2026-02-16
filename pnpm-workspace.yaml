@@ -12,6 +12,7 @@ packages:
   - 'packages/atomic-angular/projects/*'
   - 'packages/atomic-a11y'
   - 'packages/atomic'
+  - 'packages/atomic-legacy'
   - 'packages/shopify'
   - 'packages/create-atomic-template'
   - 'packages/create-atomic'
@@ -65,6 +66,7 @@ catalog:
   vitest: 4.0.10
   '@vitest/coverage-v8': 4.0.10
   '@vitest/browser-playwright': 4.0.10
+
 
 publicHoistPattern:
   - '*eslint*'

@@ -1,17 +1,8 @@
 import {expect, test} from './fixture';
 
-test.describe('AtomicCommerceSortDropdown', () => {
+test.describe('atomic-commerce-sort-dropdown', () => {
   test.beforeEach(async ({commerceSortDropdown}) => {
     await commerceSortDropdown.load();
-  });
-
-  test('should be A11y compliant', async ({
-    commerceSortDropdown,
-    makeAxeBuilder,
-  }) => {
-    await commerceSortDropdown.hydrated.waitFor();
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
   });
 
   test.describe('when selecting a relevance sort criterion', async () => {

@@ -7,8 +7,8 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {IconButton} from '../../common/iconButton';
-import {ResultContext} from '../../search/result-template-components/result-template-decorators';
+import {IconButton} from '../../common/stencil-iconButton';
+import {ResultContext} from '@/src/components/search/result-template-component-utils/context/stencil-result-template-decorators';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 export interface InsightResultAttachToCaseEvent {
@@ -42,6 +42,13 @@ export class AtomicInsightResultAttachToCaseAction
   @State()
   public attachToCaseState!: {};
 
+  /**
+   * @migration Stencil's @Event() decorator defaults to: bubbles=true, composed=true, cancelable=true.
+   * Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false.
+   * When migrating to Lit, explicitly set all three options to preserve behavior:
+   * `new CustomEvent('atomic/insight/attachToCase/attach', { bubbles: true, composed: true, cancelable: true, detail: ... })`
+   * `new CustomEvent('atomic/insight/attachToCase/detach', { bubbles: true, composed: true, cancelable: true, detail: ... })`
+   */
   @Event({
     eventName: 'atomic/insight/attachToCase/attach',
     composed: true,

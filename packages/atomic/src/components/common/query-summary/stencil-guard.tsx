@@ -5,6 +5,10 @@ interface QuerySummaryGuardProps {
   hasError: boolean;
   firstSearchExecuted: boolean;
 }
+
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const QuerySummaryGuard: FunctionalComponent<QuerySummaryGuardProps> = (
   {hasResults, hasError, firstSearchExecuted},
   children

@@ -1,4 +1,5 @@
 import {createRelay} from '@coveo/relay';
+import {CoveoInsightClient} from 'coveo.analytics';
 import type {InsightEngine} from '../../app/insight-engine/insight-engine.js';
 import type {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {buildMockInsightEngine} from '../../test/mock-engine-v2.js';
@@ -17,16 +18,10 @@ vi.mock('coveo.analytics');
 const mockLogDocumentQuickview = vi.fn();
 const emit = vi.fn();
 
-vi.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = vi.fn(() => ({
-    disable: () => {},
-    logDocumentQuickview: mockLogDocumentQuickview,
-  }));
-
-  return {
-    CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: vi.fn()},
-  };
+vi.mock('coveo.analytics');
+vi.mocked(CoveoInsightClient).mockImplementation(function () {
+  this.disable = () => {};
+  this.logDocumentQuickview = mockLogDocumentQuickview;
 });
 
 vi.mocked(createRelay).mockReturnValue({

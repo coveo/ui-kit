@@ -1,0 +1,41 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicResultImageStories from './atomic-result-image.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={ AtomicResultImageStories } />
+
+<AtomicDocTemplate
+  stories={ AtomicResultImageStories }
+  githubPath="search/atomic-result-image/atomic-result-image.ts"
+  tagName="atomic-result-image"
+  className="AtomicResultImage"
+>
+
+Use this component within `atomic-result-template` to display an image from a result field. The component handles image loading errors gracefully and supports fallback images.
+
+For accessibility, you can specify a result field to provide custom alt text for the image using the `image-alt-field` property. If not specified, the component falls back to a default alt text based on the result title.
+
+```html
+<atomic-result-template>
+  <template>
+    <atomic-result-section-visual>
+      <!-- Basic usage -->
+      <atomic-result-image field="thumbnail"></atomic-result-image>
+      
+      <!-- With fallback image -->
+      <atomic-result-image 
+        field="thumbnail" 
+        fallback="https://example.com/placeholder.png">
+      </atomic-result-image>
+      
+      <!-- With custom alt text from a field -->
+      <atomic-result-image 
+        field="thumbnail" 
+        image-alt-field="alt_description">
+      </atomic-result-image>
+    </atomic-result-section-visual>
+  </template>
+</atomic-result-template>
+```
+
+</AtomicDocTemplate>

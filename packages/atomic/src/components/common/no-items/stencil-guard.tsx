@@ -5,6 +5,10 @@ interface NoItemsGuardProps {
   isLoading: boolean;
   hasResults: boolean;
 }
+
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const NoItemsGuard: FunctionalComponent<NoItemsGuardProps> = (
   {firstSearchExecuted, isLoading, hasResults},
   children

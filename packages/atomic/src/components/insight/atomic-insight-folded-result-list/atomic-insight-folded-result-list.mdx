@@ -1,0 +1,102 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicInsightFoldedResultListStories from './atomic-insight-folded-result-list.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicInsightFoldedResultListStories} />
+
+<AtomicDocTemplate
+  stories={AtomicInsightFoldedResultListStories}
+  githubPath="insight/atomic-insight-folded-result-list/atomic-insight-folded-result-list.ts"
+  tagName="atomic-insight-folded-result-list"
+  className="AtomicInsightFoldedResultList"
+>
+
+The `atomic-insight-folded-result-list` component is responsible for displaying folded insight query results by applying one or more result templates. Folded results group related documents together, such as email threads or document versions.
+
+This component should be placed within an `atomic-insight-interface` component, typically inside an `atomic-insight-layout` with a results section.
+
+```html
+<atomic-insight-interface>
+  <atomic-insight-layout>
+    <atomic-layout-section section="results">
+      <atomic-insight-folded-result-list>
+        <atomic-insight-result-template>
+          <template>
+            <atomic-result-section-title>
+              <atomic-result-link></atomic-result-link>
+            </atomic-result-section-title>
+            <atomic-result-section-excerpt>
+              <atomic-result-text field="excerpt"></atomic-result-text>
+            </atomic-result-section-excerpt>
+          </template>
+        </atomic-insight-result-template>
+      </atomic-insight-folded-result-list>
+    </atomic-layout-section>
+  </atomic-insight-layout>
+</atomic-insight-interface>
+```
+
+
+## Result Templates
+
+The component requires at least one `atomic-insight-result-template` child to define how results should be rendered. You can define multiple templates with conditions to display different layouts based on result properties.
+
+```html
+<atomic-insight-folded-result-list>
+  <!-- Template for YouTube results -->
+  <atomic-insight-result-template must-match-sourcetype="YouTube">
+    <template>
+      <atomic-result-badge label="YouTube Video"></atomic-result-badge>
+      <atomic-result-section-title>
+        <atomic-result-link></atomic-result-link>
+      </atomic-result-section-title>
+    </template>
+  </atomic-insight-result-template>
+  
+  <!-- Default template -->
+  <atomic-insight-result-template>
+    <template>
+      <atomic-result-section-title>
+        <atomic-result-link></atomic-result-link>
+      </atomic-result-section-title>
+      <atomic-result-section-excerpt>
+        <atomic-result-text field="excerpt"></atomic-result-text>
+      </atomic-result-section-excerpt>
+    </template>
+  </atomic-insight-result-template>
+</atomic-insight-folded-result-list>
+```
+
+## Folded Results (Children)
+
+To display child results (e.g., replies in an email thread), use the `atomic-insight-result-children` component with a children template:
+
+```html
+<atomic-insight-folded-result-list>
+  <atomic-insight-result-template>
+    <template>
+      <atomic-result-section-title>
+        <atomic-result-link></atomic-result-link>
+      </atomic-result-section-title>
+      <atomic-result-section-excerpt>
+        <atomic-result-text field="excerpt"></atomic-result-text>
+      </atomic-result-section-excerpt>
+      <atomic-result-section-children>
+        <atomic-insight-result-children image-size="icon">
+          <atomic-insight-result-children-template>
+            <template>
+              <atomic-result-section-title>
+                <atomic-result-link></atomic-result-link>
+              </atomic-result-section-title>
+            </template>
+          </atomic-insight-result-children-template>
+        </atomic-insight-result-children>
+      </atomic-result-section-children>
+    </template>
+  </atomic-insight-result-template>
+</atomic-insight-folded-result-list>
+```
+
+For more information on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
+
+</AtomicDocTemplate>

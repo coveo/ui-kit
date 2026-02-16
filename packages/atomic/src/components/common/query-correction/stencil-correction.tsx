@@ -7,6 +7,10 @@ interface CorrectionProps {
   onClick: () => void;
   correctedQuery: string;
 }
+
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const Correction: FunctionalComponent<CorrectionProps> = ({
   i18n,
   onClick,

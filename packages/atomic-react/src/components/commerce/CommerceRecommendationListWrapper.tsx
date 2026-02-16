@@ -5,10 +5,9 @@ import type {
   ItemDisplayImageSize,
 } from '@coveo/atomic/loader';
 import type {Product} from '@coveo/headless/commerce';
-// biome-ignore lint/style/useImportType: <React is needed>
-import React, {useEffect, useRef} from 'react';
+import React, {type JSX, useEffect, useRef} from 'react';
+import {flushSync} from 'react-dom';
 import {createRoot} from 'react-dom/client';
-import {renderToString} from 'react-dom/server';
 import {
   AtomicProductLink,
   AtomicCommerceRecommendationList as LitAtomicCommerceRecommendationList,
@@ -78,18 +77,24 @@ export const ListWrapper: React.FC<WrapperProps> = (props) => {
       (product, root, linkContainer) => {
         const templateResult = template(product as Product);
         if (hasLinkTemplate(templateResult)) {
-          createRoot(linkContainer!).render(templateResult.linkTemplate);
-          createRoot(root).render(templateResult.contentTemplate);
-          return renderToString(templateResult.contentTemplate);
+          const linkRoot = createRoot(linkContainer!);
+          linkRoot.render(templateResult.linkTemplate);
+          const contentRoot = createRoot(root);
+          flushSync(() => {
+            contentRoot.render(templateResult.contentTemplate);
+          });
+          return root.innerHTML;
         } else {
-          createRoot(root).render(templateResult);
-          otherProps.display === 'grid'
-            ? createRoot(linkContainer!).render(
-                <AtomicProductLink></AtomicProductLink>
-              )
-            : // biome-ignore lint/complexity/noUselessFragments: <>
-              createRoot(linkContainer!).render(<></>);
-          return renderToString(templateResult);
+          const contentRoot = createRoot(root);
+          const linkRoot = createRoot(linkContainer!);
+          flushSync(() => {
+            contentRoot.render(templateResult);
+            otherProps.display === 'grid'
+              ? linkRoot.render(<AtomicProductLink></AtomicProductLink>)
+              : // biome-ignore lint/complexity/noUselessFragments: <>
+                linkRoot.render(<></>);
+          });
+          return root.innerHTML;
         }
       }
     );

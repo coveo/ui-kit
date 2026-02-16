@@ -1,3 +1,192 @@
+## <small>3.36.3 (2026-02-04)</small>
+
+* docs(quantic): vale language fixes (#6857) ([26448b5](https://github.com/coveo/ui-kit/commits/26448b5)), closes [#6857](https://github.com/coveo/ui-kit/issues/6857)
+* doc(quantic): link fix (#7033) ([916308c](https://github.com/coveo/ui-kit/commits/916308c)), closes [#7033](https://github.com/coveo/ui-kit/issues/7033)
+
+
+
+## <small>3.36.1 (2026-01-28)</small>
+
+* feat(quantic): Added properties and slot to quanticCitation for actionable citations (#6952) ([94c6df1](https://github.com/coveo/ui-kit/commits/94c6df1)), closes [#6952](https://github.com/coveo/ui-kit/issues/6952)
+
+
+
+## <small>3.35.1 (2026-01-21)</small>
+
+* fix(quantic): HIP overflows to the right issue (#6940) ([1625316](https://github.com/coveo/ui-kit/commits/1625316)), closes [#6940](https://github.com/coveo/ui-kit/issues/6940)
+
+
+
+## 3.35.0 (2026-01-14)
+
+* feat(quantic): Re-add the delay behaviour of tooltip on citation hover (#6775) ([52ccf0e](https://github.com/coveo/ui-kit/commits/52ccf0e)), closes [#6775](https://github.com/coveo/ui-kit/issues/6775)
+* chore: ensuring script samples are correct (#6798) ([884a3c6](https://github.com/coveo/ui-kit/commits/884a3c6)), closes [#6798](https://github.com/coveo/ui-kit/issues/6798)
+
+
+
+## <small>3.34.2 (2026-01-07)</small>
+
+* [Version Bump][skip ci]: ui-kit publish ([b2a83c4](https://github.com/coveo/ui-kit/commits/b2a83c4))
+* Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
+
+
+
+## <small>3.34.1 (2026-01-06)</small>
+
+* Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
+
+
+
+## 3.34.0 (2025-12-10)
+
+* fix(quantic): better handle pushing recent results to avoid salesforce proxy extensibility errors (# ([c0b0b71](https://github.com/coveo/ui-kit/commits/c0b0b71)), closes [#6706](https://github.com/coveo/ui-kit/issues/6706)
+* fix(quantic): fixed issue with generated answer not collapsing in safari for markdown content (#6724 ([ad8307e](https://github.com/coveo/ui-kit/commits/ad8307e)), closes [#6724](https://github.com/coveo/ui-kit/issues/6724)
+* feat(atomic): migrate atomic-rating-facet from Stencil to Lit (#6640) ([5b23931](https://github.com/coveo/ui-kit/commits/5b23931)), closes [#6640](https://github.com/coveo/ui-kit/issues/6640)
+
+
+
+## <small>3.33.6 (2025-12-03)</small>
+
+* [Version Bump][skip ci]: ui-kit publish ([cfc527e](https://github.com/coveo/ui-kit/commits/cfc527e))
+* fix(quantic): optimized the loading of the bueno script in quantic (#6630) ([e392c77](https://github.com/coveo/ui-kit/commits/e392c77)), closes [#6630](https://github.com/coveo/ui-kit/issues/6630)
+
+
+
+## <small>3.33.5 (2025-12-03)</small>
+
+* fix(quantic): optimized the loading of the bueno script in quantic (#6630) ([e392c77](https://github.com/coveo/ui-kit/commits/e392c77)), closes [#6630](https://github.com/coveo/ui-kit/issues/6630)
+
+
+
+## <small>3.33.4 (2025-11-12)</small>
+
+* docs: correct JSDoc grammar and terminology across packages (#6531) ([356975a](https://github.com/coveo/ui-kit/commits/356975a)), closes [#6531](https://github.com/coveo/ui-kit/issues/6531)
+* fix(quantic): making the citation tooltip hoverable  (#6436) ([021a156](https://github.com/coveo/ui-kit/commits/021a156)), closes [#6436](https://github.com/coveo/ui-kit/issues/6436)
+
+
+
+## <small>3.33.3 (2025-11-05)</small>
+
+* enabled recent queries test for insight use case (#6421) ([73fac60](https://github.com/coveo/ui-kit/commits/73fac60)), closes [#6421](https://github.com/coveo/ui-kit/issues/6421)
+* fix(quantic): fix setup scratch org step in CI (#6449) ([8c148c3](https://github.com/coveo/ui-kit/commits/8c148c3)), closes [#6449](https://github.com/coveo/ui-kit/issues/6449)
+
+
+
+## <small>3.33.2 (2025-10-30)</small>
+
+* [Version Bump][skip ci]: ui-kit publish ([b33d02f](https://github.com/coveo/ui-kit/commits/b33d02f))
+* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+
+
+
+## <small>3.33.1 (2025-10-29)</small>
+
+* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+
+
+
+## 3.33.0 (2025-10-28)
+
+* chore(quantic): parallelize scratch org setup (#6169) ([97e664c](https://github.com/coveo/ui-kit/commits/97e664c)), closes [#6169](https://github.com/coveo/ui-kit/issues/6169)
+* feat(quantic): Proposed Spanish Custom Labels for Quantic use. (#5457) ([9b8cae3](https://github.com/coveo/ui-kit/commits/9b8cae3)), closes [#5457](https://github.com/coveo/ui-kit/issues/5457)
+* feat(headless, quantic): recent queries feature made available for the insight use case (#6114) ([3f66527](https://github.com/coveo/ui-kit/commits/3f66527)), closes [#6114](https://github.com/coveo/ui-kit/issues/6114)
+* fix(docs): address missing parameter on insight panel interface (#6198) ([c25378b](https://github.com/coveo/ui-kit/commits/c25378b)), closes [#6198](https://github.com/coveo/ui-kit/issues/6198)
+
+
+
+## 3.32.0 (2025-10-22)
+
+* feat(quantic): ux improvements for quantic generated answer (#6186) ([a417c3f](https://github.com/coveo/ui-kit/commits/a417c3f)), closes [#6186](https://github.com/coveo/ui-kit/issues/6186)
+* fix(quantic): quantic e2e tests fixed (#6187) ([55be436](https://github.com/coveo/ui-kit/commits/55be436)), closes [#6187](https://github.com/coveo/ui-kit/issues/6187)
+
+
+
+## <small>3.31.3 (2025-10-15)</small>
+
+* chore(quantic): salesforce cli version updated (#6164) ([be6ce9c](https://github.com/coveo/ui-kit/commits/be6ce9c)), closes [#6164](https://github.com/coveo/ui-kit/issues/6164)
+
+
+
+## <small>3.31.2 (2025-10-15)</small>
+
+* feat(quantic): contextual CRGA added to example insight panel (#6131) ([e19cc0d](https://github.com/coveo/ui-kit/commits/e19cc0d)), closes [#6131](https://github.com/coveo/ui-kit/issues/6131)
+* fix(headless): fix analytics not logged after submitting a feedback (#6091) ([836ecb8](https://github.com/coveo/ui-kit/commits/836ecb8)), closes [#6091](https://github.com/coveo/ui-kit/issues/6091)
+
+
+
+## <small>3.30.5 (2025-10-08)</small>
+
+* chore: more cleanup of dependencies in multiples packages (#6119) ([ff6c837](https://github.com/coveo/ui-kit/commits/ff6c837)), closes [#6119](https://github.com/coveo/ui-kit/issues/6119)
+* chore(quantic): fixing linter issues related to fonts SLDS 2 migration (#6101) ([96ab0b8](https://github.com/coveo/ui-kit/commits/96ab0b8)), closes [#6101](https://github.com/coveo/ui-kit/issues/6101)
+
+
+
+## <small>3.30.4 (2025-10-01)</small>
+
+* chore: cleanup quantic dependencies (#6077) ([9492ff0](https://github.com/coveo/ui-kit/commits/9492ff0)), closes [#6077](https://github.com/coveo/ui-kit/issues/6077)
+
+
+
+## <small>3.30.3 (2025-09-24)</small>
+
+* fix(headless): fixed and simplified state reset logic generated answer with answer api (#6064) ([3cd6b2e](https://github.com/coveo/ui-kit/commits/3cd6b2e)), closes [#6064](https://github.com/coveo/ui-kit/issues/6064)
+* chore(quantic): improvements to JSDOC in quanticUtils file (#6061) ([82d922a](https://github.com/coveo/ui-kit/commits/82d922a)), closes [#6061](https://github.com/coveo/ui-kit/issues/6061)
+* fixed issue in turbo config that was preventing doc inclusion in npm package (#6065) ([175b4bf](https://github.com/coveo/ui-kit/commits/175b4bf)), closes [#6065](https://github.com/coveo/ui-kit/issues/6065)
+
+
+
+## <small>3.30.2 (2025-09-18)</small>
+
+* [Version Bump][skip ci]: ui-kit publish ([a3fb13e](https://github.com/coveo/ui-kit/commits/a3fb13e))
+* chore: sync-up arborist & npm, add missing vitest.config.js, add missing eslint-parser (#6048) ([7e9ce3b](https://github.com/coveo/ui-kit/commits/7e9ce3b)), closes [#6048](https://github.com/coveo/ui-kit/issues/6048)
+
+
+
+## <small>3.30.1 (2025-09-17)</small>
+
+* chore: sync-up arborist & npm, add missing vitest.config.js, add missing eslint-parser (#6048) ([7e9ce3b](https://github.com/coveo/ui-kit/commits/7e9ce3b)), closes [#6048](https://github.com/coveo/ui-kit/issues/6048)
+
+
+
+## 3.30.0 (2025-09-17)
+
+* fix(quantic): issue with answer api caching state in redux RTK (#5887) ([8c9d1c5](https://github.com/coveo/ui-kit/commits/8c9d1c5)), closes [#5887](https://github.com/coveo/ui-kit/issues/5887)
+* feat(quantic): Add an examplePageViewTracker with unit tests (#5973) ([dacf921](https://github.com/coveo/ui-kit/commits/dacf921)), closes [#5973](https://github.com/coveo/ui-kit/issues/5973)
+
+
+
+## <small>3.29.5 (2025-08-27)</small>
+
+* test(quantic): added tests for generated answer component with the answer API (#5803) ([b99fbdf](https://github.com/coveo/ui-kit/commits/b99fbdf)), closes [#5803](https://github.com/coveo/ui-kit/issues/5803)
+
+
+
+## <small>3.29.4 (2025-08-20)</small>
+
+* fix(headless): analytics with crga (#5857) ([4d1d43d](https://github.com/coveo/ui-kit/commits/4d1d43d)), closes [#5857](https://github.com/coveo/ui-kit/issues/5857) [#5811](https://github.com/coveo/ui-kit/issues/5811)
+* docs: broken links (#5825) ([6976ef9](https://github.com/coveo/ui-kit/commits/6976ef9)), closes [#5825](https://github.com/coveo/ui-kit/issues/5825)
+
+
+
+## <small>3.29.3 (2025-08-13)</small>
+
+* fix(quantic): updated misleading comment around access tokens and platform tokens (#5832) ([f242db4](https://github.com/coveo/ui-kit/commits/f242db4)), closes [#5832](https://github.com/coveo/ui-kit/issues/5832)
+
+
+
+## 3.29.0 (2025-08-07)
+
+* feat: Migrate monorepo build system from NX to Turborepo (#5733) ([e7e1237](https://github.com/coveo/ui-kit/commits/e7e1237)), closes [#5733](https://github.com/coveo/ui-kit/issues/5733)
+* feat(quantic): added citation anchoring logic to the quantic citations (#5718) ([cf4a881](https://github.com/coveo/ui-kit/commits/cf4a881)), closes [#5718](https://github.com/coveo/ui-kit/issues/5718)
+* chore: migrate from master to main (#5822) ([5372fa4](https://github.com/coveo/ui-kit/commits/5372fa4)), closes [#5822](https://github.com/coveo/ui-kit/issues/5822)
+* chore: update dependencies (major) (#5793) ([8cbf5bc](https://github.com/coveo/ui-kit/commits/8cbf5bc)), closes [#5793](https://github.com/coveo/ui-kit/issues/5793)
+* fix: Revert "fix(analytics): generativeQuestionAnsweringId (#5787)" (#5811) ([b3a9f93](https://github.com/coveo/ui-kit/commits/b3a9f93)), closes [#5787](https://github.com/coveo/ui-kit/issues/5787) [#5811](https://github.com/coveo/ui-kit/issues/5811)
+* fix(analytics): generativeQuestionAnsweringId (#5787) ([d50bade](https://github.com/coveo/ui-kit/commits/d50bade)), closes [#5787](https://github.com/coveo/ui-kit/issues/5787)
+* fix(deps): update all dependencies j:kit-282 (#5770) ([214bb00](https://github.com/coveo/ui-kit/commits/214bb00)), closes [#5770](https://github.com/coveo/ui-kit/issues/5770)
+* fix(quantic): made sure that clearFiltersOnTabChange value is properly parsed as boolean (#5774) ([cf7009e](https://github.com/coveo/ui-kit/commits/cf7009e)), closes [#5774](https://github.com/coveo/ui-kit/issues/5774)
+
+
+
 ## <small>3.28.1 (2025-07-30)</small>
 
 * fix(quantic): fixed the console error test that was skipped  (#5759) ([21695c0](https://github.com/coveo/ui-kit/commits/21695c0)), closes [#5759](https://github.com/coveo/ui-kit/issues/5759)
@@ -361,7 +550,7 @@
 
 ## <small>3.2.5 (2024-10-23)</small>
 
-- fix(atomic): broken HTML because of formatting in CRGA markdown heading (#4522) ([9e15c6c](https://github.com/coveo/ui-kit/commits/9e15c6c)), closes [#4522](https://github.com/coveo/ui-kit/issues/4522) [/github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/common/generated-answer/generated-content/markdown-utils.ts#L50](https://github.com//github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/common/generated-answer/generated-content/markdown-utils.ts/issues/L50)
+- fix(atomic): broken HTML because of formatting in CRGA markdown heading (#4522) ([9e15c6c](https://github.com/coveo/ui-kit/commits/9e15c6c)), closes [#4522](https://github.com/coveo/ui-kit/issues/4522) [/github.com/coveo/ui-kit/blob/main/packages/atomic/src/components/common/generated-answer/generated-content/markdown-utils.ts#L50](https://github.com//github.com/coveo/ui-kit/blob/main/packages/atomic/src/components/common/generated-answer/generated-content/markdown-utils.ts/issues/L50)
 
 ## <small>3.2.1 (2024-10-16)</small>
 

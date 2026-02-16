@@ -1,72 +1,80 @@
 /* eslint-disable @cspell/spellchecker */
 
-import {userEvent} from '@storybook/test';
-import type {
-  Decorator,
-  Meta,
-  StoryObj as Story,
-  StoryContext,
-} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
-import {within} from 'shadow-dom-testing-library';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
+const mockSearchApi = new MockSearchApi();
+
 const {decorator, play} = wrapInSearchInterface();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-did-you-mean',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
-  title: 'Atomic/DidYouMean',
+  title: 'Search/Did You Mean',
   id: 'atomic-did-you-mean',
   component: 'atomic-did-you-mean',
-  render: renderComponent,
+  render: (args) => html`
+  <div style="display: flex; justify-content: flex-start;">
+    ${template(args)}
+  </div>`,
   decorators: [decorator],
-  parameters,
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+    msw: {handlers: [...mockSearchApi.handlers]},
+  },
+  args,
+  argTypes,
+  beforeEach: async () => {
+    mockSearchApi.searchEndpoint.clear();
+  },
   play,
 };
 
 export default meta;
 
-const searchBoxDecorator: Decorator = (story) => html`
-  <div style="display: flex; justify-content: flex-start;">
-    <atomic-search-box style="flex-grow:1"></atomic-search-box>
-  </div>
-  ${story()}
-`;
-
-const searchPlay: (context: StoryContext, query: string) => Promise<void> =
-  async (context, query) => {
-    await play(context);
-    const {canvasElement, step} = context;
-    const canvas = within(canvasElement);
-
-    const searchBox = (
-      await canvas.findAllByShadowTitle('Search field with suggestions.', {
-        exact: false,
-      })
-    )?.find(
-      (el) => el.getAttribute('part') === 'textarea'
-    ) as HTMLTextAreaElement;
-
-    const submitButton = (
-      await canvas.findAllByShadowTitle('Search field with suggestions.', {
-        exact: false,
-      })
-    )?.find((el) => el.getAttribute('part') === 'submit-button');
-
-    await step(`Search "${query}"`, async () => {
-      await userEvent.type(searchBox!, query);
-      await userEvent.click(submitButton!);
-    });
-  };
-
-export const Default: Story = {
-  name: 'atomic-did-you-mean',
-  decorators: [searchBoxDecorator],
-  play: (context) => searchPlay(context, 'coveoo'),
+export const WithAutomaticQueryCorrection: Story = {
+  name: 'With automatic query correction',
+  beforeEach: async () => {
+    mockSearchApi.searchEndpoint.mockOnce((response) => ({
+      ...response,
+      queryCorrection: {
+        correctedQuery: 'coveo',
+        originalQuery: 'coveoo',
+        corrections: [],
+      },
+    }));
+  },
 };
 
-export const QueryTrigger: Story = {
-  decorators: [searchBoxDecorator],
-  play: (context) => searchPlay(context, 'Japan'),
+export const WithoutAutomaticQueryCorrection: Story = {
+  name: 'Without automatic query correction',
+  beforeEach: async () => {
+    mockSearchApi.searchEndpoint.mockOnce((response) => ({
+      ...response,
+      queryCorrection: {
+        corrections: [
+          {
+            correctedQuery: 'coveo',
+            wordCorrections: [
+              {
+                offset: 0,
+                length: 5,
+                originalWord: 'ceveo',
+                correctedWord: 'coveo',
+              },
+            ],
+          },
+        ],
+      },
+    }));
+  },
 };

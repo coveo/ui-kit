@@ -1,19 +1,16 @@
-import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicCommerceInterfaceStories from './atomic-commerce-interface.new.stories';
-import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
 
 <Meta of={AtomicCommerceInterfaceStories} />
 
-<Title />
-<Subtitle><Description/></Subtitle>
-
-<CanvasWithGithub
-  of={AtomicCommerceInterfaceStories.Default}
+<AtomicDocTemplate
+  stories={AtomicCommerceInterfaceStories}
   githubPath="commerce/atomic-commerce-interface/atomic-commerce-interface.ts"
-/>
-
-
-## Usage
+  tagName="atomic-commerce-interface"
+  className="AtomicCommerceInterface"
+>
 
 This component must wrap the entire commerce layout and be placed at the root of the application. It is required as a parent for all other components.
 
@@ -25,8 +22,14 @@ This component must wrap the entire commerce layout and be placed at the root of
 </atomic-commerce-interface>
 ```
 
-## Examples
-<Stories title={""}/>
+### Requirements for `type`
 
-## Reference
-<ArgTypes />
+The `type` attribute on `atomic-commerce-interface` can be set to `search` or `product-listing`.
+When set to `product-listing` you need to ensure that the `view` url of the configuration
+[`context`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Commerce.ContextOptions.html) is pointing to a configured listing page.
+
+To see this failure state that will result of using the `product-listing` type without a correct `context` configuration,  change the `type` to
+`product-listing` in the [With Product List](/story/atomic-commerce-interface--with-product-list) story.
+
+</AtomicDocTemplate>
+

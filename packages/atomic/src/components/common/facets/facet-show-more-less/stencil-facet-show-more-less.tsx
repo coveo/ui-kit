@@ -15,6 +15,9 @@ interface FacetShowMoreProps {
   showLessRef?: (element?: HTMLButtonElement) => void;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const FacetShowMoreLess: FunctionalComponent<FacetShowMoreProps> = (
   props
 ) => {

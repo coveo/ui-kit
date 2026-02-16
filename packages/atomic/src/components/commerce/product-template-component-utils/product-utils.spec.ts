@@ -1,10 +1,10 @@
 /** biome-ignore-all lint/suspicious/noTemplateCurlyInString: <> */
 import {type Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import type {CommerceBindings} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
 import {readFromObject} from '@/src/utils/object-utils';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {FieldValueIsNaNError} from './error';
 import {
   buildStringTemplateFromProduct,
@@ -13,10 +13,7 @@ import {
 } from './product-utils';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
-
-vi.mock('@/src/utils/object-utils', () => ({
-  readFromObject: vi.fn(),
-}));
+vi.mock('@/src/utils/object-utils', {spy: true});
 
 describe('product-utils', () => {
   let mockProduct: Product;

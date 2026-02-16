@@ -1,6 +1,6 @@
-import {userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
+import {userEvent} from 'vitest/browser';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import MinusIcon from '../../../images/minus.svg';
 import PlusIcon from '../../../images/plus.svg';

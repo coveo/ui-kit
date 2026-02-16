@@ -1,3 +1,7 @@
+---
+title: Contributing
+---
+
 [![npm version](https://badge.fury.io/js/@coveo%2Fheadless.svg)](https://badge.fury.io/js/@coveo%2Fheadless)
 
 # Coveo Headless
@@ -10,50 +14,52 @@ The `@coveo/headless` package exposes several entry points.
 
 The entry point from which you will import Coveo Headless resources depends on the engine type you are using:
 
-| Engine type                        | Entry point                      |
-| ---------------------------------- | -------------------------------- |
-| Search engine                      | `@coveo/headless`                |
-| Search SSR engine                  | `@coveo/headless/ssr`            |
-| CaseAssist engine                  | `@coveo/headless/case-assist`    |
-| Commerce engine                    | `@coveo/headless/commerce`       |
-| Commerce SSR engine (in open beta) | `@coveo/headless/ssr-commerce`   |
-| Insight engine                     | `@coveo/headless/insight`        |
-| Recommendation engine              | `@coveo/headless/recommendation` |
+| Engine type                         | Entry point                         |
+| ----------------------------------- | ----------------------------------- |
+| Search engine                       | `@coveo/headless`                   |
+| Search SSR engine                   | `@coveo/headless/ssr`               |
+| Search SSR engine (in open alpha)   | `@coveo/headless/ssr-next`          |
+| CaseAssist engine                   | `@coveo/headless/case-assist`       |
+| Commerce engine                     | `@coveo/headless/commerce`          |
+| Commerce SSR engine (in open beta)  | `@coveo/headless/ssr-commerce`      |
+| Commerce SSR engine (in open alpha) | `@coveo/headless/ssr-commerce-next` |
+| Insight engine                      | `@coveo/headless/insight`           |
+| Recommendation engine               | `@coveo/headless/recommendation`    |
 
 ## Contributing
 
 ### Getting started
 
-Once you have cloned the repo, follow the instructions in the top-level [README.md](https://github.com/coveo/ui-kit/src/master/README.md) to install dependencies and link packages.
+Once you have cloned the repo, follow the instructions in the top-level [README.md](https://github.com/coveo/ui-kit/src/main/README.md) to install dependencies and link packages.
 
 To start the project in development mode, run:
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 To build the library for production, run:
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 To run the unit tests, run:
 
 ```bash
-npm test
+pnpm test
 ```
 
 To run the unit tests and watch, run:
 
 ```bash
-npm run test:watch
+pnpm run test:watch
 ```
 
 To use @coveo/headless locally, you have to build the package by running:
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 ### Redux

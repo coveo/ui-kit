@@ -20,7 +20,7 @@ import {LightningElement, api} from 'lwc';
  * @fires CustomEvent#quantic__insightinterfaceinitialized
  * @category Insight Panel
  * @example
- * <c-quantic-insight-interface engine-id={engineId} insight-id={insightId}></c-quantic-insight-interface>
+ * <c-quantic-insight-interface engine-id={engineId} insight-id={insightId} record-id={recordId}></c-quantic-insight-interface>
  */
 export default class QuanticInsightInterface extends LightningElement {
   /**

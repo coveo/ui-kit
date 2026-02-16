@@ -1,4 +1,4 @@
-export function formatTypeDocToolbar() {
+export const formatTypeDocToolbar = () => {
   document.addEventListener('DOMContentLoaded', () => {
     const header = document.getElementsByTagName('header')[0] as HTMLElement;
     if (header) {
@@ -12,4 +12,4 @@ export function formatTypeDocToolbar() {
       typedocThemeSelector.style.display = 'none';
     }
   });
-}
+};

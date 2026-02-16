@@ -1,0 +1,37 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicResultBadgeStories from './atomic-result-badge.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicResultBadgeStories} />
+
+<AtomicDocTemplate
+  stories={AtomicResultBadgeStories}
+  githubPath="search/atomic-result-badge/atomic-result-badge.ts"
+  tagName="atomic-result-badge"
+  className="AtomicResultBadge"
+>
+
+The `atomic-result-badge` component renders a badge to highlight special features of a result.
+
+This component is used within `atomic-result-template` components inside the result list to display badges that emphasize important result attributes.
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-result-list>
+    <atomic-result-template>
+      <template>
+        <atomic-result-section-badges>
+          <atomic-result-badge field="filetype"></atomic-result-badge>
+          <atomic-result-badge label="trending"></atomic-result-badge>
+          <atomic-result-badge icon="assets://star" label="featured"></atomic-result-badge>
+        </atomic-result-section-badges>
+      </template>
+    </atomic-result-template>
+  </atomic-result-list>
+  ...
+</atomic-search-interface>
+```
+
+</AtomicDocTemplate>

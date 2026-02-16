@@ -1,11 +1,14 @@
 import {h, FunctionalComponent} from '@stencil/core';
 import {i18n} from 'i18next';
 
-export interface BreadcrumbContainerProps {
+interface BreadcrumbContainerProps {
   isCollapsed: boolean;
   i18n: i18n;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const BreadcrumbContainer: FunctionalComponent<
   BreadcrumbContainerProps
 > = (props, children) => {

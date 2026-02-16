@@ -29,7 +29,7 @@ UserInterfaceState.xcuserstate
 .env
 
 src/external-builds
-src/components/search/atomic-search-interface/lang/
+src/assets/lang/
 src/generated
 
 cypress/screenshots/*
@@ -40,6 +40,8 @@ cypress/screenshots/*
 /playwright/.cache/
 
 dist-storybook/
+dist-chromatic/
 
 /dev/bueno/
 /dev/headless/
+

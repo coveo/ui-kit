@@ -1,11 +1,11 @@
 type AdvancedSearchQueriesDefaultFiltersState = {
   /**
-   * The initial cq filter (e.g., `((q AND aq) OR dq) AND cq).
+   * The initial cq filter (for example, `((q AND aq) OR dq) AND cq).
    */
   cq: string;
 
   /**
-   * The initial aq filter (e.g., `((q AND aq) OR dq) AND cq).
+   * The initial aq filter (for example, `((q AND aq) OR dq) AND cq).
    */
   aq: string;
 
@@ -15,14 +15,14 @@ type AdvancedSearchQueriesDefaultFiltersState = {
   lq: string;
 
   /**
-   * The initial dq filter, or disjunction query expression filter (e.g., `((q AND aq) OR dq) AND cq).
+   * The initial dq filter, or disjunction query expression filter (for example, `((q AND aq) OR dq) AND cq).
    */
   dq: string;
 };
 
 export interface AdvancedSearchQueriesState {
   /**
-   * The cq filter (e.g., `((q AND aq) OR dq) AND cq).
+   * The cq filter (for example, `((q AND aq) OR dq) AND cq).
    */
   cq: string;
 
@@ -34,7 +34,7 @@ export interface AdvancedSearchQueriesState {
   cqWasSet: boolean;
 
   /**
-   * The aq filter (e.g., `((q AND aq) OR dq) AND cq).
+   * The aq filter (for example, `((q AND aq) OR dq) AND cq).
    */
   aq: string;
 
@@ -63,7 +63,7 @@ export interface AdvancedSearchQueriesState {
   /**
    * The dq filter, or disjunction query expression.
    *
-   * This is the disjunctive part of the query expression that is merged with the other expression parts using an OR boolean operator (e.g., `((q AND aq) OR dq) AND cq).
+   * This is the disjunctive part of the query expression that is merged with the other expression parts using an OR boolean operator (for example, `((q AND aq) OR dq) AND cq).
    */
   dq: string;
   /**

@@ -31,7 +31,7 @@ export interface ContextActionCreators {
   /**
    * Removes a context key-value pair.
    *
-   * @param key - The key to remove from the context (e.g., "age").
+   * @param key - The key to remove from the context (for example, "age").
    * @returns A dispatchable action.
    */
   removeContext(key: string): PayloadAction<string>;

@@ -3,10 +3,8 @@ import {getFacetRequests} from '../features/facets/generic/interfaces/generic-fa
 import type {AnyFacetValue} from '../features/facets/generic/interfaces/generic-facet-response.js';
 import type {RangeFacetSetState} from '../features/facets/range-facets/generic/interfaces/range-facet.js';
 import type {SearchAppState} from '../state/search-app-state.js';
-import type {ConfigurationSection} from '../state/state-sections.js';
 
-type StateNeededBySearchRequest = ConfigurationSection &
-  Partial<SearchAppState>;
+type StateNeededBySearchRequest = Partial<SearchAppState>;
 
 type SortCriteria = {
   type: string;

@@ -173,7 +173,7 @@ export const registerNumericFacet = createAction(
 
 export interface ToggleSelectNumericFacetValueActionCreatorPayload {
   /**
-   * The unique identifier of the facet (e.g., `"1"`).
+   * The unique identifier of the facet (for example, `"1"`).
    */
   facetId: string;
 
@@ -203,7 +203,7 @@ export const toggleExcludeNumericFacetValue = createAction(
 
 export interface UpdateNumericFacetValuesActionCreatorPayload {
   /**
-   * The unique identifier of the facet (e.g., `"1"`).
+   * The unique identifier of the facet (for example, `"1"`).
    */
   facetId: string;
 
@@ -233,7 +233,7 @@ export const updateNumericFacetValues = createAction(
 
 export interface UpdateNumericFacetSortCriterionActionCreatorPayload {
   /**
-   * The unique identifier of the facet (e.g., `"1"`).
+   * The unique identifier of the facet (for example, `"1"`).
    */
   facetId: string;
 

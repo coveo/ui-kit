@@ -1,3 +1,63 @@
+## <small>1.5.13 (2026-01-14)</small>
+
+* fix(deps): Replace catalog:* with workspace:* for @coveo/create-atomic-rollup-plugin (#6808) ([2872e4b](https://github.com/coveo/ui-kit/commits/2872e4b)), closes [#6808](https://github.com/coveo/ui-kit/issues/6808)
+
+
+
+## <small>1.5.12 (2026-01-07)</small>
+
+* [Version Bump][skip ci]: ui-kit publish ([b2a83c4](https://github.com/coveo/ui-kit/commits/b2a83c4))
+* Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
+
+
+
+## <small>1.5.11 (2026-01-06)</small>
+
+* Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
+
+
+
+## <small>1.5.10 (2025-10-30)</small>
+
+* ci: fix pnpm pack including node_modules for create-atomic packages (#6333) ([c9debba](https://github.com/coveo/ui-kit/commits/c9debba)), closes [#6333](https://github.com/coveo/ui-kit/issues/6333)
+* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+* [Version Bump][skip ci]: ui-kit publish ([b33d02f](https://github.com/coveo/ui-kit/commits/b33d02f))
+
+
+
+## <small>1.5.9 (2025-10-29)</small>
+
+* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+
+
+
+## <small>1.5.6 (2025-10-08)</small>
+
+* chore: more cleanup of dependencies in multiples packages (#6119) ([ff6c837](https://github.com/coveo/ui-kit/commits/ff6c837)), closes [#6119](https://github.com/coveo/ui-kit/issues/6119)
+
+
+
+## <small>1.5.3 (2025-09-17)</small>
+
+* chore: deduplicate dependencies in create-atomic-* (#6029) ([ba54e8e](https://github.com/coveo/ui-kit/commits/ba54e8e)), closes [#6029](https://github.com/coveo/ui-kit/issues/6029)
+
+
+
+## 1.5.0 (2025-08-27)
+
+* feat(cli): port over atomic-result-component from cli  (#5919) ([2899a2c](https://github.com/coveo/ui-kit/commits/2899a2c)), closes [#5919](https://github.com/coveo/ui-kit/issues/5919)
+* chore: add missing workspace link (#5897) ([60ff41f](https://github.com/coveo/ui-kit/commits/60ff41f)), closes [#5897](https://github.com/coveo/ui-kit/issues/5897)
+
+
+
+## 1.4.0 (2025-08-07)
+
+* feat: Migrate monorepo build system from NX to Turborepo (#5733) ([e7e1237](https://github.com/coveo/ui-kit/commits/e7e1237)), closes [#5733](https://github.com/coveo/ui-kit/issues/5733)
+* chore: update dependencies (major) (#5793) ([8cbf5bc](https://github.com/coveo/ui-kit/commits/8cbf5bc)), closes [#5793](https://github.com/coveo/ui-kit/issues/5793)
+* fix(deps): update all dependencies j:kit-282 (#5770) ([214bb00](https://github.com/coveo/ui-kit/commits/214bb00)), closes [#5770](https://github.com/coveo/ui-kit/issues/5770)
+
+
+
 ## 1.3.0 (2025-07-30)
 
 * ci(create-atomic): fix release phase 1 for new create-atomic packages (#5751) ([ca79c40](https://github.com/coveo/ui-kit/commits/ca79c40)), closes [#5751](https://github.com/coveo/ui-kit/issues/5751)

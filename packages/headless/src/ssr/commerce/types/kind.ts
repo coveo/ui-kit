@@ -1,8 +1,12 @@
+/**
+ * @deprecated This type will be removed in the next major version.
+ */
 export enum Kind {
   Cart = 'CART',
   Context = 'CONTEXT',
   ParameterManager = 'PARAMETER_MANAGER',
   Recommendations = 'RECOMMENDATIONS',
+  ProductEnrichment = 'PRODUCT_ENRICHMENT',
 }
 
 export function createControllerWithKind<TController, TKind extends Kind>(
