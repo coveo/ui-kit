@@ -59,7 +59,7 @@ export function normalizePath(filePath: string): string {
   return filePath.replaceAll('\\', '/');
 }
 
-export function parseShardDescriptor(
+function parseShardDescriptor(
   descriptor: string | undefined
 ): ShardInfo | null {
   if (!descriptor) {
@@ -82,7 +82,7 @@ export function parseShardDescriptor(
   return {index, total};
 }
 
-export function extractCliShardDescriptor(argv: string[]): string | undefined {
+function extractCliShardDescriptor(argv: string[]): string | undefined {
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index];
     if (argument.startsWith('--shard=')) {
@@ -224,7 +224,7 @@ export function stripAnsiSequences(text: string): string {
   return text.replace(ANSI_ESCAPE_PATTERN, '');
 }
 
-export function extractErrorText(error: unknown): string {
+function extractErrorText(error: unknown): string {
   if (typeof error === 'string') {
     return error;
   }
@@ -246,7 +246,7 @@ export function extractErrorText(error: unknown): string {
   return `${message}\n${stack}`;
 }
 
-export function collectRuleIdMatches(
+function collectRuleIdMatches(
   source: string,
   matcher: RegExp,
   target: Set<string>,

@@ -17,7 +17,6 @@ import type {
   A11yAutomatedResults,
   A11yComponentReport,
   A11yCriterionReport,
-  A11yIncompleteDetail,
   A11yReport,
   A11ySummary,
   SupportedFramework,
@@ -54,7 +53,6 @@ export {
   DEFAULT_WCAG_22_AA_CRITERIA_COUNT,
 };
 export type {
-  A11yIncompleteDetail,
   A11yAutomatedResults,
   A11yComponentReport,
   A11yCriterionReport,
@@ -440,5 +438,3 @@ export const vitestA11yReporterTestUtils = {
   getAutomationCoveragePercentage,
   getCriteriaForRule,
 };
-
-export default VitestA11yReporter;

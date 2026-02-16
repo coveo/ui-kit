@@ -84,7 +84,7 @@ export interface A11yCriterionReport {
 /**
  * Story coverage information.
  */
-export interface StoryCoverage {
+interface StoryCoverage {
   total: number;
   withA11y: number;
   excludedFromA11y: number;
@@ -112,7 +112,7 @@ export interface A11ySummary {
 /**
  * Report metadata.
  */
-export interface A11yReportMetadata {
+interface A11yReportMetadata {
   product: string;
   version: string;
   standard: string;
