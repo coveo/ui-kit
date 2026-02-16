@@ -11,6 +11,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "vitest run",
+    "a11y:vpat": "npx tsx src/reporter/json-to-openacr.ts && npx --yes @openacr/openacr output -f reports/openacr.yaml -o reports/vpat-2.5-coveo-atomic.md -t scripts/vpat-from-openacr.handlebars",
     "a11y:merge-shards": "npx tsx src/reporter/merge-shards.ts"
   },
   "dependencies": {
