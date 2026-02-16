@@ -163,7 +163,7 @@ export class GeneratedAnswerCommon {
     try {
       await navigator.clipboard.writeText(answer);
       this.props.setCopied(true);
-      this.props.getGeneratedAnswer()?.logCopyToClipboard();
+      this.props.getGeneratedAnswer()?.logAnswerCopied();
     } catch (error) {
       this.props.setCopyError(true);
       this.props

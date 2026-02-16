@@ -99,7 +99,7 @@ export interface GeneratedAnswer extends Controller {
   /**
    * Logs a custom event indicating the generated answer was copied to the clipboard.
    */
-  logCopyToClipboard(): void;
+  logAnswerCopied(): void;
   /**
    * Logs a custom event indicating a cited source link was hovered.
    * @param citationId - The ID of the clicked citation.
@@ -285,7 +285,7 @@ export function buildCoreGeneratedAnswer(
       }
     },
 
-    logCopyToClipboard() {
+    logAnswerCopied() {
       dispatch(analyticsClient.logCopyGeneratedAnswer());
     },
 

@@ -33,7 +33,7 @@ export const buildFakeGeneratedAnswer = (
     collapse: vi.fn(),
     enable: vi.fn(),
     disable: vi.fn(),
-    logCopyToClipboard: vi.fn(),
+    logAnswerCopied: vi.fn(),
     logCitationHover: vi.fn(),
     sendFeedback: vi.fn(),
     sendDetailedFeedback: vi.fn(),
