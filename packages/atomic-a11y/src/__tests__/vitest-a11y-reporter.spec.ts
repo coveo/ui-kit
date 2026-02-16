@@ -2,10 +2,10 @@ import {describe, expect, it} from 'vitest';
 import {extractCriteriaFromTags} from '../reporter/axe-integration.js';
 import {stripAnsiSequences} from '../reporter/reporter-utils.js';
 import {
-  type A11yReport,
   VitestA11yReporter,
   vitestA11yReporterTestUtils,
 } from '../reporter/vitest-a11y-reporter.js';
+import type {A11yReport} from '../shared/types.js';
 
 function createRule(id: string, tags: string[] = []): Record<string, unknown> {
   return {

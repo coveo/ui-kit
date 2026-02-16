@@ -4,7 +4,7 @@ import type {
   A11yComponentReport,
   A11yCriterionReport,
   A11yReport,
-} from '../reporter/vitest-a11y-reporter.js';
+} from '../shared/types.js';
 
 function createComponent(
   overrides: Partial<A11yComponentReport> = {}

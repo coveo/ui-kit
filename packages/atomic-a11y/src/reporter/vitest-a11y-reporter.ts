@@ -12,10 +12,11 @@ import {
   DEFAULT_A11Y_REPORT_FILENAME,
   DEFAULT_A11Y_REPORT_OUTPUT_DIR,
   DEFAULT_WCAG_22_AA_CRITERIA_COUNT,
+  UNKNOWN_CATEGORY,
+  UNKNOWN_FRAMEWORK,
 } from '../shared/constants.js';
 import {compareByName, compareByNumericId} from '../shared/sorting.js';
 import type {
-  A11yAutomatedResults,
   A11yComponentReport,
   A11yCriterionReport,
   A11yReport,
@@ -44,23 +45,8 @@ import {
   type ShardInfo,
   type StorybookReport,
   type StorybookTaskMeta,
-  UNKNOWN_CATEGORY,
-  UNKNOWN_FRAMEWORK,
 } from './reporter-utils.js';
 import {createSummary} from './summary.js';
-
-export {
-  DEFAULT_A11Y_REPORT_OUTPUT_DIR,
-  DEFAULT_A11Y_REPORT_FILENAME,
-  DEFAULT_WCAG_22_AA_CRITERIA_COUNT,
-};
-export type {
-  A11yAutomatedResults,
-  A11yComponentReport,
-  A11yCriterionReport,
-  A11ySummary,
-  A11yReport,
-};
 
 const REPORTER_NAME = 'VitestA11yReporter';
 

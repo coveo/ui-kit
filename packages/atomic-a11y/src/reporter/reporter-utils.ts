@@ -3,6 +3,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import type {TestCase} from 'vitest/node';
 import {getCriterionMetadata as lookupCriterionMetadata} from '../data/criterion-metadata.js';
+import {UNKNOWN_CATEGORY, UNKNOWN_FRAMEWORK} from '../shared/constants.js';
 import {compareByNumericId} from '../shared/sorting.js';
 import type {CriterionMetadata, SupportedFramework} from '../shared/types.js';
 
@@ -48,8 +49,6 @@ export interface ComponentAccumulator {
   };
 }
 
-export const UNKNOWN_CATEGORY = 'unknown';
-export const UNKNOWN_FRAMEWORK = 'unknown';
 const AXE_RULE_URL_PATTERN = /rules\/axe\/[\d.]+\/([a-z0-9-]+)/gi;
 const AXE_RULE_TOKEN_PATTERN = /\(([a-z0-9-]+)\)/gi;
 // TODO: Consider using a more robust ANSI escape code parser if needed, such as the 'ansi-regex' package.

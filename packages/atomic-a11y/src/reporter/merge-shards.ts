@@ -1,21 +1,23 @@
 import {mkdir, readdir, readFile, writeFile} from 'node:fs/promises';
 import path from 'node:path';
+import {
+  DEFAULT_A11Y_REPORT_FILENAME,
+  DEFAULT_A11Y_REPORT_OUTPUT_DIR,
+  DEFAULT_WCAG_22_AA_CRITERIA_COUNT,
+  UNKNOWN_CATEGORY,
+  UNKNOWN_FRAMEWORK,
+} from '../shared/constants.js';
 import {wasExecutedDirectly} from '../shared/file-utils.js';
 import {isA11yReport} from '../shared/guards.js';
 import {compareByName, compareByNumericId} from '../shared/sorting.js';
-import {formatDate} from './reporter-utils.js';
-import {createSummary} from './summary.js';
 import type {
   A11yAutomatedResults,
   A11yComponentReport,
   A11yCriterionReport,
   A11yReport,
-} from './vitest-a11y-reporter.js';
-import {
-  DEFAULT_A11Y_REPORT_FILENAME,
-  DEFAULT_A11Y_REPORT_OUTPUT_DIR,
-  DEFAULT_WCAG_22_AA_CRITERIA_COUNT,
-} from './vitest-a11y-reporter.js';
+} from '../shared/types.js';
+import {formatDate} from './reporter-utils.js';
+import {createSummary} from './summary.js';
 
 const SHARD_FILE_PATTERN = /^a11y-report\.shard-(\d+)\.json$/;
 
@@ -167,8 +169,8 @@ function mergeCriteria(
       criteriaById.set(criterionId, {
         id: criterionId,
         name: criterionId,
-        level: 'unknown',
-        wcagVersion: 'unknown',
+        level: UNKNOWN_CATEGORY,
+        wcagVersion: UNKNOWN_FRAMEWORK,
         conformance: 'notEvaluated',
         automatedCoverage: true,
         manualVerified: false,
