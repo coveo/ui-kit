@@ -12,7 +12,7 @@
     "build": "tsc -p tsconfig.json"
   },
   "dependencies": {
-    "axe-core": "catalog:"
+    "axe-core": "4.10.3"
   },
   "devDependencies": {
     "typescript": "catalog:",
