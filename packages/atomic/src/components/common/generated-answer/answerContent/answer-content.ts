@@ -1,0 +1,165 @@
+import type {
+  GeneratedAnswerBase,
+  GeneratedAnswerCitation,
+} from '@coveo/headless';
+import type {i18n} from 'i18next';
+import {html, LitElement, type TemplateResult} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import atomicGeneratedAnswerStyles from '@/src/components/search/atomic-generated-answer/atomic-generated-answer.tw.css.js';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {renderGeneratedContentContainer} from '../generated-content-container';
+import {renderFeedbackAndCopyButtons} from '../render-feedback-and-copy-buttons';
+import {renderSourceCitations} from '../source-citations';
+
+export interface GeneratedAnswer extends GeneratedAnswerBase {
+  question: string;
+  expanded?: boolean;
+}
+
+type CopyState = 'idle' | 'success' | 'error';
+
+@customElement('answer-content')
+@withTailwindStyles
+export class AnswerContent extends LitElement {
+  static styles = [atomicGeneratedAnswerStyles];
+
+  /**
+   * The generated answer object to render.
+   */
+  @property({attribute: false})
+  public generatedAnswer!: GeneratedAnswer;
+
+  /**
+   * The i18next instance used to translate UI labels.
+   */
+  @property({attribute: false})
+  public i18n!: i18n;
+
+  /**
+   * A render function responsible for displaying the answer citations.
+   */
+  @property({attribute: false})
+  public renderCitations: (
+    citations: GeneratedAnswerCitation[]
+  ) => TemplateResult = () => html``;
+
+  /**
+   * Callback invoked when the user clicks the "like" feedback button.
+   */
+  @property({attribute: false})
+  public onClickLike: (answerId?: string) => void = () => {};
+
+  /**
+   * Callback invoked when the user clicks the "dislike" feedback button.
+   */
+  @property({attribute: false})
+  public onClickDislike: (answerId?: string) => void = () => {};
+
+  /**
+   * Callback invoked after the answer text has been successfully copied.
+   */
+  @property({attribute: false})
+  public onCopyToClipboard: (answerId?: string) => void = () => {};
+
+  /**
+   * Internal copy feedback state.
+   */
+  @state()
+  private copyState: CopyState = 'idle';
+
+  private resetCopyTimeout?: number;
+
+  public render() {
+    const {
+      answer,
+      answerContentFormat,
+      isStreaming,
+      citations = [],
+      answerId,
+    } = this.generatedAnswer;
+
+    if (!answer) {
+      return html``;
+    }
+
+    return html`
+      <div>
+        <div>
+          ${renderGeneratedContentContainer({
+            props: {
+              answer,
+              answerContentFormat,
+              isStreaming: Boolean(isStreaming),
+            },
+          })(
+            html`
+              ${renderSourceCitations({
+                props: {
+                  label: this.i18n.t('citations'),
+                  isVisible: citations.length > 0,
+                },
+              })(html`${this.renderCitations(citations)}`)}
+            `
+          )}
+        </div>
+
+        <div class="mt-4" part="feedback-and-copy-buttons">
+          ${renderFeedbackAndCopyButtons({
+            props: {
+              i18n: this.i18n,
+              generatedAnswerActionsState: this.generatedAnswer,
+              copied: this.copyState === 'success',
+              copyError: this.copyState === 'error',
+              getCopyToClipboardTooltip: () => this.getCopyToClipboardTooltip(),
+              onClickLike: () => this.onClickLike(answerId),
+              onClickDislike: () => this.onClickDislike(answerId),
+              onCopyToClipboard: () => this.copyToClipboard(),
+            },
+          })}
+        </div>
+      </div>
+    `;
+  }
+
+  private async copyToClipboard(): Promise<void> {
+    const {answer, answerId} = this.generatedAnswer;
+
+    if (!answer) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(answer);
+      this.copyState = 'success';
+      this.onCopyToClipboard(answerId);
+    } catch (error) {
+      this.copyState = 'error';
+      console.error(`Failed to copy to clipboard: ${error}`);
+    }
+
+    this.scheduleCopyReset();
+  }
+
+  private scheduleCopyReset() {
+    clearTimeout(this.resetCopyTimeout);
+    this.resetCopyTimeout = window.setTimeout(() => {
+      this.copyState = 'idle';
+    }, 2000);
+  }
+
+  private getCopyToClipboardTooltip(): string {
+    switch (this.copyState) {
+      case 'error':
+        return this.i18n.t('failed-to-copy-generated-answer');
+      case 'success':
+        return this.i18n.t('generated-answer-copied');
+      default:
+        return this.i18n.t('copy-generated-answer');
+    }
+  }
+
+  public override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    clearTimeout(this.resetCopyTimeout);
+  }
+}
