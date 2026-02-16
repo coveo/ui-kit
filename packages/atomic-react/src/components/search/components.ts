@@ -1,4 +1,5 @@
 import {
+  AnswerContent as LitAnswerContent,
   AtomicAriaLive as LitAtomicAriaLive,
   AtomicAutomaticFacet as LitAtomicAutomaticFacet,
   AtomicAutomaticFacetGenerator as LitAtomicAutomaticFacetGenerator,
@@ -86,11 +87,18 @@ import {
   AtomicText as LitAtomicText,
   AtomicTimeframe as LitAtomicTimeframe,
   AtomicTimeframeFacet as LitAtomicTimeframeFacet,
+  GeneratedAnswersThread as LitGeneratedAnswersThread,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
 import React from 'react';
 
-export const AtomicAriaLive = /*@__PURE__*/ createComponent({
+export const AnswerContent = createComponent({
+  tagName: 'answer-content',
+  react: React,
+  elementClass: LitAnswerContent,
+});
+
+export const AtomicAriaLive = createComponent({
   tagName: 'atomic-aria-live',
   react: React,
   elementClass: LitAtomicAriaLive,
@@ -612,4 +620,10 @@ export const AtomicTimeframeFacet = /*@__PURE__*/ createComponent({
   tagName: 'atomic-timeframe-facet',
   react: React,
   elementClass: LitAtomicTimeframeFacet,
+});
+
+export const GeneratedAnswersThread = createComponent({
+  tagName: 'generated-answers-thread',
+  react: React,
+  elementClass: LitGeneratedAnswersThread,
 });

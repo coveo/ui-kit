@@ -1,4 +1,5 @@
 import {
+  AnswerContent as LitAnswerContent,
   AtomicAriaLive as LitAtomicAriaLive,
   AtomicCommerceBreadbox as LitAtomicCommerceBreadbox,
   AtomicCommerceCategoryFacet as LitAtomicCommerceCategoryFacet,
@@ -54,11 +55,18 @@ import {
   AtomicProductSectionVisual as LitAtomicProductSectionVisual,
   AtomicProductText as LitAtomicProductText,
   AtomicTimeframe as LitAtomicTimeframe,
+  GeneratedAnswersThread as LitGeneratedAnswersThread,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
 import React from 'react';
 
-export const AtomicAriaLive = /*@__PURE__*/ createComponent({
+export const AnswerContent = createComponent({
+  tagName: 'answer-content',
+  react: React,
+  elementClass: LitAnswerContent,
+});
+
+export const AtomicAriaLive = createComponent({
   tagName: 'atomic-aria-live',
   react: React,
   elementClass: LitAtomicAriaLive,
@@ -394,4 +402,10 @@ export const AtomicTimeframe = /*@__PURE__*/ createComponent({
   tagName: 'atomic-timeframe',
   react: React,
   elementClass: LitAtomicTimeframe,
+});
+
+export const GeneratedAnswersThread = createComponent({
+  tagName: 'generated-answers-thread',
+  react: React,
+  elementClass: LitGeneratedAnswersThread,
 });
