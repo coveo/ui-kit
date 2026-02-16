@@ -5,6 +5,7 @@ import type {
   InsightAction,
   LegacySearchAction,
 } from '../../../features/analytics/analytics-utils.js';
+import {updateQuery} from '../../../features/query/query-actions.js';
 import {logSearchboxSubmit} from '../../../features/query/query-analytics-actions.js';
 import {queryReducer as query} from '../../../features/query/query-slice.js';
 import {
@@ -242,6 +243,9 @@ export function buildCoreSearchBox(
         count: options.numberOfSuggestions,
       })
     );
+  }
+  if (options.enableQuerySyntax) {
+    dispatch(updateQuery({enableQuerySyntax: options.enableQuerySyntax}));
   }
 
   const getValue = () => engine.state.querySet[options.id];
