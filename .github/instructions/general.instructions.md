@@ -10,7 +10,8 @@ When instructions conflict, apply this precedence order:
 2. Package-specific (e.g., `atomic.instructions.md`, `tests-atomic.instructions.md`)
 3. File-type specific (e.g., `general.typescript.instructions.md`)
 4. General (this file)
-5. Language/framework defaults
+5. Docs (e.g., `headless-docs.instructions.md`)
+6. Language/framework defaults
 
 **Example:** Atomic package specifies Tailwind for Lit components → follow that, not general styling preferences.
 
