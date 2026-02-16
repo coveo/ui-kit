@@ -1,8 +1,9 @@
-export {buildAxeRuleCriteriaMap, ruleToWCAG} from './data/axe-rule-mappings.js';
 export {
-  criterionMetadataMap,
-  getCriterionMetadata,
-} from './data/criterion-metadata.js';
+  buildAxeRuleCriteriaMap,
+  extractCriteriaFromTags,
+} from './data/axe-rule-mappings.js';
+export {getCriterionMetadata} from './data/criterion-metadata.js';
+export type {WcagCriterionDefinition} from './data/wcag-criteria.js';
 export {wcagCriteriaDefinitions} from './data/wcag-criteria.js';
 export {mergeA11yShardReports} from './reporter/merge-shards.js';
 export {
