@@ -14,13 +14,9 @@ export interface GeneratedAnswerThreadItemProps {
    */
   disableCollapse: boolean;
   /**
-   * Whether the thread line over the dot should be hidden.
+   * Whether the thread line should be hidden.
    */
-  hideLineTop: boolean;
-  /**
-   * Whether the thread line under the dot should be hidden.
-   */
-  hideLineBottom: boolean;
+  hideLine: boolean;
   /**
    * Whether the thread item is initially expanded.
    */
@@ -54,16 +50,10 @@ export class GeneratedAnswerThreadItem extends LitElement {
   public disableCollapse = false;
 
   /**
-   * Whether the timeline top line should be hidden (e.g., for the first item).
+   * Whether the timeline line should be hidden (e.g., for the last item).
    */
-  @property({type: Boolean, attribute: 'hide-line-top'})
-  public hideLineTop = false;
-
-  /**
-   * Whether the timeline bottom line should be hidden (e.g., for the last item).
-   */
-  @property({type: Boolean, attribute: 'hide-line-bottom'})
-  public hideLineBottom = false;
+  @property({type: Boolean, attribute: 'hide-line'})
+  public hideLine = false;
 
   /**
    * Whether the thread item is initially expanded.
@@ -124,56 +114,14 @@ export class GeneratedAnswerThreadItem extends LitElement {
       'h-2': true,
       'w-2': true,
       'rounded-full': true,
-      'z-10': true,
       'bg-neutral-dark': this.isExpanded,
       'bg-neutral-dim': !this.isExpanded,
-    });
-    const topTrackClasses = classMap({
-      relative: true,
-      flex: true,
-      'w-3': true,
-      'shrink-0': true,
-      'items-center': true,
-      'justify-center': true,
-      'self-stretch': true,
-      "before:content-['']": !this.hideLineTop,
-      'before:absolute': !this.hideLineTop,
-      'before:left-1/2': !this.hideLineTop,
-      'before:top-0': !this.hideLineTop,
-      'before:bottom-1/2': !this.hideLineTop,
-      'before:w-px': !this.hideLineTop,
-      'before:-translate-x-1/2': !this.hideLineTop,
-      'before:bg-neutral': !this.hideLineTop,
-      "after:content-['']": !this.hideLineBottom,
-      'after:absolute': !this.hideLineBottom,
-      'after:left-1/2': !this.hideLineBottom,
-      'after:top-1/2': !this.hideLineBottom,
-      'after:bottom-0': !this.hideLineBottom,
-      'after:w-px': !this.hideLineBottom,
-      'after:-translate-x-1/2': !this.hideLineBottom,
-      'after:bg-neutral': !this.hideLineBottom,
-    });
-    const bottomTrackClasses = classMap({
-      relative: true,
-      flex: true,
-      'w-3': true,
-      'shrink-0': true,
-      'justify-center': true,
-      'self-stretch': true,
-      "before:content-['']": !this.hideLineBottom,
-      'before:absolute': !this.hideLineBottom,
-      'before:left-1/2': !this.hideLineBottom,
-      'before:top-0': !this.hideLineBottom,
-      'before:bottom-0': !this.hideLineBottom,
-      'before:w-px': !this.hideLineBottom,
-      'before:-translate-x-1/2': !this.hideLineBottom,
-      'before:bg-neutral': !this.hideLineBottom,
     });
 
     return html`
       <li class="grid min-w-0">
         <div class="flex min-w-0 items-center gap-3">
-          <div class=${topTrackClasses}>
+          <div class="flex w-[10px] shrink-0 items-center justify-center">
             <span class=${timelineDotClasses}></span>
           </div>
           <div class="flex min-w-0 flex-col">
@@ -198,7 +146,13 @@ export class GeneratedAnswerThreadItem extends LitElement {
           </div>
         </div>
         <div class="flex min-w-0 gap-3">
-          <div class=${bottomTrackClasses}></div>
+          <div class="flex w-[10px] shrink-0 justify-center">
+            ${when(
+              this.hideLine,
+              () => html``,
+              () => html`<span class="w-px bg-neutral h-full"></span>`
+            )}
+          </div>
           <div
             id=${this.contentId}
             class="pl-2 py-2 ml-1"
