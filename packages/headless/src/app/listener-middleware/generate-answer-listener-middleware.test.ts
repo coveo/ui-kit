@@ -64,7 +64,7 @@ describe('generateAnswerListener', () => {
           dispatchSpy = vi.spyOn(store, 'dispatch');
         });
 
-        it('should dispatch head/follow-up resets but not generateHeadAnswer when query is empty', async () => {
+        it('should dispatch head answer reset and follow-up reset but not generateHeadAnswer when query is empty', async () => {
           const searchAction = executeSearch.pending('requestId', {
             legacy: logInsightInterfaceLoad(),
             next: interfaceLoad(),
@@ -102,7 +102,7 @@ describe('generateAnswerListener', () => {
           dispatchSpy = vi.spyOn(store, 'dispatch');
         });
 
-        it('should dispatch head/follow-up resets then generateHeadAnswer when executeSearch.pending is dispatched', async () => {
+        it('should dispatch head answer reset and follow-up reset then generateHeadAnswer when executeSearch.pending is dispatched', async () => {
           const searchAction = executeSearch.pending('requestId', {
             legacy: logInsightInterfaceLoad(),
             next: interfaceLoad(),

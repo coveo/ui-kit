@@ -38,6 +38,10 @@ export interface Message {
   code?: number;
 }
 
+/**
+ * Strategy interface for handling application-specific streaming events.
+ * Defines handlers for connection lifecycle and message processing.
+ */
 export interface StreamingStrategy<TState> {
   handleOpen: (
     response: Response,
