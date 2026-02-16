@@ -1,4 +1,3 @@
-import type {GeneratedAnswerState} from '@coveo/headless';
 import {html} from 'lit';
 import {beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
@@ -6,6 +5,7 @@ import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import * as copyButton from './copy-button';
 import * as feedbackButton from './feedback-button';
 import {
+  type GeneratedAnswerActionsState,
   type RenderFeedbackAndCopyButtonsProps,
   renderFeedbackAndCopyButtons,
 } from './render-feedback-and-copy-buttons';
@@ -36,13 +36,12 @@ describe('#renderFeedbackAndCopyButtons', () => {
   ) => {
     const defaultProps: RenderFeedbackAndCopyButtonsProps = {
       i18n: i18n,
-      generatedAnswerState: {
+      generatedAnswerActionsState: {
         liked: false,
         disliked: false,
         answer: 'Test answer',
         isStreaming: false,
-      } as GeneratedAnswerState,
-      withToggle: false,
+      },
       copied: false,
       copyError: false,
       getCopyToClipboardTooltip: vi.fn().mockReturnValue('Copy answer'),
@@ -65,9 +64,9 @@ describe('#renderFeedbackAndCopyButtons', () => {
   describe('when streaming', () => {
     it('should return nothing', async () => {
       const {element} = await renderComponent({
-        generatedAnswerState: {
+        generatedAnswerActionsState: {
           isStreaming: true,
-        } as GeneratedAnswerState,
+        } as GeneratedAnswerActionsState,
       });
 
       expect(element.children.length).toBe(0);
@@ -75,9 +74,9 @@ describe('#renderFeedbackAndCopyButtons', () => {
 
     it('should not call renderFeedbackButton', async () => {
       await renderComponent({
-        generatedAnswerState: {
+        generatedAnswerActionsState: {
           isStreaming: true,
-        } as GeneratedAnswerState,
+        } as GeneratedAnswerActionsState,
       });
 
       expect(feedbackButton.renderFeedbackButton).not.toHaveBeenCalled();
@@ -85,23 +84,71 @@ describe('#renderFeedbackAndCopyButtons', () => {
 
     it('should not call renderCopyButton', async () => {
       await renderComponent({
-        generatedAnswerState: {
+        generatedAnswerActionsState: {
           isStreaming: true,
-        } as GeneratedAnswerState,
+        } as GeneratedAnswerActionsState,
       });
 
       expect(copyButton.renderCopyButton).not.toHaveBeenCalled();
     });
   });
 
-  describe('when not streaming', () => {
+  describe('when loading', () => {
+    it('should return nothing', async () => {
+      const {element} = await renderComponent({
+        generatedAnswerActionsState: {
+          isLoading: true,
+        } as GeneratedAnswerActionsState,
+      });
+
+      expect(element.children.length).toBe(0);
+    });
+
+    it('should not call renderFeedbackButton or renderCopyButton', async () => {
+      await renderComponent({
+        generatedAnswerActionsState: {
+          isLoading: true,
+        } as GeneratedAnswerActionsState,
+      });
+
+      expect(feedbackButton.renderFeedbackButton).not.toHaveBeenCalled();
+      expect(copyButton.renderCopyButton).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('when there is no answer', () => {
+    it('should return nothing', async () => {
+      const {element} = await renderComponent({
+        generatedAnswerActionsState: {
+          answer: undefined,
+        } as GeneratedAnswerActionsState,
+      });
+
+      expect(element.children.length).toBe(0);
+    });
+
+    it('should not call renderFeedbackButton or renderCopyButton', async () => {
+      await renderComponent({
+        generatedAnswerActionsState: {
+          answer: undefined,
+        } as GeneratedAnswerActionsState,
+      });
+
+      expect(feedbackButton.renderFeedbackButton).not.toHaveBeenCalled();
+      expect(copyButton.renderCopyButton).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('when an answer is available and the response is not streaming or loading', () => {
     it('should call renderFeedbackButton for dislike button with correct props', async () => {
       const onClickDislike = vi.fn();
       await renderComponent({
-        generatedAnswerState: {
+        generatedAnswerActionsState: {
           liked: false,
           isStreaming: false,
-        } as GeneratedAnswerState,
+          isLoading: false,
+          answer: 'Test answer',
+        } as GeneratedAnswerActionsState,
         onClickDislike,
       });
 
@@ -117,10 +164,12 @@ describe('#renderFeedbackAndCopyButtons', () => {
     it('should call renderFeedbackButton for like button with correct props', async () => {
       const onClickLike = vi.fn();
       await renderComponent({
-        generatedAnswerState: {
+        generatedAnswerActionsState: {
           liked: true,
           isStreaming: false,
-        } as GeneratedAnswerState,
+          isLoading: false,
+          answer: 'Test answer',
+        } as GeneratedAnswerActionsState,
         onClickLike,
       });
 
@@ -137,10 +186,12 @@ describe('#renderFeedbackAndCopyButtons', () => {
     it('should call renderFeedbackButton for dislike button with correct props', async () => {
       const onClickDislike = vi.fn();
       await renderComponent({
-        generatedAnswerState: {
+        generatedAnswerActionsState: {
           disliked: true,
           isStreaming: false,
-        } as GeneratedAnswerState,
+          isLoading: false,
+          answer: 'Test answer',
+        } as GeneratedAnswerActionsState,
         onClickDislike,
       });
 
@@ -208,10 +259,10 @@ describe('#renderFeedbackAndCopyButtons', () => {
         const answer = 'Test answer to copy';
 
         await renderComponent({
-          generatedAnswerState: {
+          generatedAnswerActionsState: {
             answer,
             isStreaming: false,
-          } as GeneratedAnswerState,
+          } as GeneratedAnswerActionsState,
           onCopyToClipboard,
         });
 
@@ -224,25 +275,25 @@ describe('#renderFeedbackAndCopyButtons', () => {
         expect(onCopyToClipboard).toHaveBeenCalledWith(answer);
       });
 
-      it('should not call onCopyToClipboard when answer is undefined', async () => {
-        const onCopyToClipboard = vi.fn();
+      // it('should not call onCopyToClipboard when answer is undefined', async () => {
+      //   const onCopyToClipboard = vi.fn();
 
-        await renderComponent({
-          generatedAnswerState: {
-            answer: undefined,
-            isStreaming: false,
-          } as GeneratedAnswerState,
-          onCopyToClipboard,
-        });
+      //   await renderComponent({
+      //     generatedAnswerActionsState: {
+      //       answer: undefined,
+      //       isStreaming: false,
+      //     } as GeneratedAnswerActionsState,
+      //     onCopyToClipboard,
+      //   });
 
-        const copyButtonCall = vi.mocked(copyButton.renderCopyButton).mock
-          .calls[0][0];
-        const onClickHandler = copyButtonCall.props.onClick;
+      //   const copyButtonCall = vi.mocked(copyButton.renderCopyButton).mock
+      //     .calls[0][0];
+      //   const onClickHandler = copyButtonCall.props.onClick;
 
-        await onClickHandler();
+      //   await onClickHandler();
 
-        expect(onCopyToClipboard).not.toHaveBeenCalled();
-      });
+      //   expect(onCopyToClipboard).not.toHaveBeenCalled();
+      // });
     });
 
     describe('when clipboard is not supported', () => {
