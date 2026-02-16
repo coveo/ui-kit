@@ -9,6 +9,7 @@
     "dist"
   ],
   "scripts": {
+    "generate:wcag": "node scripts/generate-wcag-criteria.mjs",
     "build": "tsc -p tsconfig.json"
   },
   "dependencies": {
