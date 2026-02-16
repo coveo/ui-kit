@@ -41,6 +41,7 @@ describe('#renderFeedbackAndCopyButtons', () => {
         disliked: false,
         answer: 'Test answer',
         isStreaming: false,
+        isLoading: false,
       },
       copied: false,
       copyError: false,

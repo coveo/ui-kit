@@ -10,8 +10,8 @@ import {hasClipboardSupport} from './generated-answer-utils';
 export interface GeneratedAnswerActionsState {
   liked: boolean;
   disliked: boolean;
-  isStreaming?: boolean;
-  isLoading?: boolean;
+  isStreaming: boolean;
+  isLoading: boolean;
   answer?: string;
 }
 
