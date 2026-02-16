@@ -16,7 +16,7 @@
     "axe-core": "4.10.3"
   },
   "devDependencies": {
-    "typescript": "catalog:typescript",
-    "vitest": "catalog:vitest"
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   }
 }
