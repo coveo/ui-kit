@@ -28,6 +28,8 @@ describe('generated-answer-thread-item', () => {
       locators: () => ({
         timelineDot: element.shadowRoot?.querySelector('span.h-2.w-2') ?? null,
         timelineLine: element.shadowRoot?.querySelector('span.w-px') ?? null,
+        contentDivider:
+          element.shadowRoot?.querySelector('.thread-content-divider') ?? null,
         titleButton: element.shadowRoot?.querySelector('button') ?? null,
         content: element.shadowRoot?.querySelector('div[aria-hidden]') ?? null,
       }),
@@ -45,6 +47,18 @@ describe('generated-answer-thread-item', () => {
     const {locators} = await renderComponent({hideLine: true});
 
     expect(locators().timelineLine).toBeNull();
+  });
+
+  it('should render a faded divider under content when expanded', async () => {
+    const {locators} = await renderComponent({isExpanded: true});
+
+    expect(locators().contentDivider).toBeInTheDocument();
+  });
+
+  it('should not render a faded divider when collapsed', async () => {
+    const {locators} = await renderComponent({isExpanded: false});
+
+    expect(locators().contentDivider).toBeNull();
   });
 
   it('should render a title button when collapsible', async () => {
