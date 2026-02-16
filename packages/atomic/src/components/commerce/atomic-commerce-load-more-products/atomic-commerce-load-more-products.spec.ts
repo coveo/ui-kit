@@ -3,22 +3,33 @@ import {
   buildSearch,
   type Pagination,
 } from '@coveo/headless/commerce';
-import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, type Mock, vi} from 'vitest';
+import {page} from 'vitest/browser';
+import type {ResultListInfo} from '@/src/components/common/interface/store';
+import {createAppLoadedListener} from '@/src/components/common/interface/store';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
+import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
 import {buildFakePager} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/pager-subcontroller';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
-import './atomic-commerce-load-more-products';
-import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
 import type {AtomicCommerceLoadMoreProducts} from './atomic-commerce-load-more-products';
+import './atomic-commerce-load-more-products';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
+vi.mock('@/src/components/common/interface/store', {spy: true});
 
 describe('atomic-commerce-load-more-products', () => {
   const mockedEngine = buildFakeCommerceEngine();
+  let appLoadedCallback: (isAppLoaded: boolean) => void;
+
+  beforeEach(() => {
+    vi.mocked(createAppLoadedListener).mockImplementation((_store, cb) => {
+      appLoadedCallback = cb;
+    });
+  });
+
   const renderLoadMoreProducts = async ({
     interfaceType = 'product-listing',
     isAppLoaded = true,
@@ -84,13 +95,15 @@ describe('atomic-commerce-load-more-products', () => {
           bindings.engine = mockedEngine;
           bindings.store.state.resultList = {
             focusOnNextNewResult: focusOnNextNewResultSpy,
-          };
+          } as unknown as ResultListInfo;
           bindings.store.state.loadingFlags = isAppLoaded
             ? []
             : ['app-loading'];
           return bindings;
         },
       });
+
+    appLoadedCallback(isAppLoaded);
 
     return {
       element,
@@ -113,6 +126,28 @@ describe('atomic-commerce-load-more-products', () => {
       },
     };
   };
+
+  describe('#initialize', () => {
+    it('should call #createAppLoadedListener with store', async () => {
+      const {element} = await renderLoadMoreProducts();
+      expect(createAppLoadedListener).toHaveBeenCalledWith(
+        element.bindings.store,
+        expect.any(Function)
+      );
+    });
+
+    it('should update #isAppLoaded when app loaded state changes', async () => {
+      const {element} = await renderLoadMoreProducts({
+        isAppLoaded: false,
+      });
+      // biome-ignore lint/complexity/useLiteralKeys: <accessing private property for testing>
+      expect(element['isAppLoaded']).toBe(false);
+
+      appLoadedCallback(true);
+      // biome-ignore lint/complexity/useLiteralKeys: <accessing private property for testing>
+      expect(element['isAppLoaded']).toBe(true);
+    });
+  });
 
   describe("when interface element type is 'product-listing'", () => {
     let element: AtomicCommerceLoadMoreProducts;
@@ -213,7 +248,9 @@ describe('atomic-commerce-load-more-products', () => {
         totalNumberOfProducts: 123,
       });
       const progressBar = locators.progressBar;
-      const progressBarFill = progressBar?.querySelector('.progress-bar');
+      const progressBarFill = progressBar?.querySelector(
+        '[part="progress-bar"] div'
+      );
 
       expect(progressBar).toBeInTheDocument();
       // Math.ceil(Math.min((12 / 123) * 100, 100)) = 10, so width will be 10%

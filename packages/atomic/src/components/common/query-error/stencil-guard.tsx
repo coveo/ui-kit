@@ -4,7 +4,9 @@ interface QueryErrorGuardProps {
   hasError: boolean;
 }
 
-// Replace with the when directive
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const QueryErrorGuard: FunctionalComponent<QueryErrorGuardProps> = (
   {hasError},
   children

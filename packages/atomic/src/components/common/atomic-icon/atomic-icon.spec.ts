@@ -1,17 +1,13 @@
-import {page} from '@vitest/browser/context';
-import * as assetPathUtils from '@/src/utils/asset-path-utils';
-import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import '@vitest/browser/matchers.d.ts';
 import DOMPurify from 'dompurify';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
-import './atomic-icon';
+import {page} from 'vitest/browser';
+import * as assetPathUtils from '@/src/utils/asset-path-utils';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {AtomicIcon} from './atomic-icon';
+import './atomic-icon';
 
-vi.mock('@/src/utils/asset-path-utils', () => ({
-  parseAssetURL: vi.fn(),
-}));
-
+vi.mock('@/src/utils/asset-path-utils', {spy: true});
 vi.mock('@/src/mixins/bindings-mixin', () => ({
   InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
     return class extends superClass {
@@ -29,8 +25,8 @@ vi.mock('@/src/mixins/bindings-mixin', () => ({
   }),
 }));
 
-describe('AtomicIcon', () => {
-  let fetchMock: MockInstance;
+describe('atomic-icon', () => {
+  const fetchMock = vi.fn();
   let parseAssetURLMock: MockInstance;
   let sanitizeMock: MockInstance;
   const locators = {
@@ -46,7 +42,7 @@ describe('AtomicIcon', () => {
   } as Response;
 
   beforeEach(() => {
-    fetchMock = vi.spyOn(window, 'fetch');
+    vi.stubGlobal('fetch', fetchMock);
     parseAssetURLMock = vi.mocked(assetPathUtils.parseAssetURL);
     sanitizeMock = vi.spyOn(DOMPurify, 'sanitize');
   });
@@ -56,13 +52,14 @@ describe('AtomicIcon', () => {
       html` <atomic-icon icon=${icon}></atomic-icon>`
     );
 
-    element.initialize();
-
+    await element.initialize();
+    // The atomic-icon runs asynchronous operation behind a guard, meaning the first render is _not_ the one we ought to assert on
+    await new Promise((resolve) => setTimeout(resolve, 0));
     return element;
   };
 
-  it('is defined', () => {
-    const el = document.createElement('atomic-icon');
+  it('is defined', async () => {
+    const el = await setupElement('assets://user.svg');
     expect(el).toBeInstanceOf(AtomicIcon);
   });
 

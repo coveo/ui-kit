@@ -2,13 +2,16 @@ import type {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
 import type {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client.js';
 import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {productListingReducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice.js';
+import type {
+  FetchProductListingPayload,
+  PromoteChildToParentPayload,
+  QueryCommerceAPIThunkReturn,
+  StateNeededByFetchProductListing,
+} from './product-listing-actions.js';
 import {
   fetchMoreProducts,
   fetchProductListing,
-  type PromoteChildToParentPayload,
   promoteChildToParent,
-  type QueryCommerceAPIThunkReturn,
-  type StateNeededByFetchProductListing,
 } from './product-listing-actions.js';
 
 /**
@@ -23,9 +26,11 @@ export interface ProductListingActionCreators {
    *
    * @returns A dispatchable action.
    */
-  fetchProductListing(): AsyncThunkAction<
+  fetchProductListing(
+    payload?: FetchProductListingPayload
+  ): AsyncThunkAction<
     QueryCommerceAPIThunkReturn,
-    void,
+    FetchProductListingPayload,
     AsyncThunkCommerceOptions<StateNeededByFetchProductListing>
   >;
 
@@ -34,9 +39,11 @@ export interface ProductListingActionCreators {
    *
    * @returns A dispatchable action.
    */
-  fetchMoreProducts(): AsyncThunkAction<
+  fetchMoreProducts(
+    payload?: FetchProductListingPayload
+  ): AsyncThunkAction<
     QueryCommerceAPIThunkReturn | null,
-    void,
+    FetchProductListingPayload,
     AsyncThunkCommerceOptions<StateNeededByFetchProductListing>
   >;
 

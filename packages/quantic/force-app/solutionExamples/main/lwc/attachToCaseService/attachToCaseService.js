@@ -36,7 +36,7 @@
  * It returns a mock success response.
  *
  * @param {{[key: string]: any}} resultToAttach - The result object to attach, typically includes case ID and result metadata.
- * @returns {Promise<string>} A promise that resolves to a JSON stringified response, e.g., `{"succeeded": true}`.
+ * @returns {Promise<string>} A promise that resolves to a JSON stringified response, for example, `{"succeeded": true}`.
  */
 // eslint-disable-next-line no-unused-vars
 export function attachToCase(resultToAttach) {
@@ -53,7 +53,7 @@ export function attachToCase(resultToAttach) {
  * It returns a mock success response.
  *
  * @param {{[key: string]: any}} resultToDetach - The result object to detach, typically includes case ID and result metadata.
- * @returns {Promise<string>} A promise that resolves to a JSON stringified response, e.g., `{"succeeded": true}`.
+ * @returns {Promise<string>} A promise that resolves to a JSON stringified response, for example, `{"succeeded": true}`.
  */
 // eslint-disable-next-line no-unused-vars
 export function detachFromCase(resultToDetach) {

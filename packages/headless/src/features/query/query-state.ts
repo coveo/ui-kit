@@ -1,10 +1,10 @@
 export interface QueryState {
   /**
-   * The basic query expression (e.g., `acme tornado seeds`).
+   * The basic query expression (for example, `acme tornado seeds`).
    */
   q: string;
   /**
-   * Whether to interpret advanced [Coveo Cloud query syntax](https://docs.coveo.com/en/1814/) in the query.
+   * Whether to interpret advanced [Coveo query syntax](https://docs.coveo.com/en/1552/) in the query.
    */
   enableQuerySyntax: boolean;
 }

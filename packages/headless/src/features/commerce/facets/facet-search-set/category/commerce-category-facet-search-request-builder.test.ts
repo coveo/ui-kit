@@ -21,18 +21,20 @@ describe('#buildCategoryFacetSearchRequest', () => {
   let navigatorContext: NavigatorContext;
   const facetId = '1';
   let query: string;
+  let numberOfValues: number;
   let buildFilterableCommerceAPIRequestMock: MockInstance;
 
   beforeEach(() => {
     vi.clearAllMocks();
 
     query = 'test';
+    numberOfValues = 5;
     state = buildMockCommerceState();
 
     state.commerceQuery.query = query;
 
     state.categoryFacetSearchSet[facetId] = buildMockCategoryFacetSearch({
-      options: {...buildMockFacetSearchRequestOptions(), query},
+      options: {...buildMockFacetSearchRequestOptions(), query, numberOfValues},
     });
 
     state.commerceFacetSet[facetId] = buildMockCommerceFacetSlice({
@@ -192,6 +194,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
       facetQuery: `*${query}*`,
       ignorePaths: [],
       query,
+      numberOfValues,
     });
   });
 
@@ -216,6 +219,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
       facetQuery: '*',
       ignorePaths: [],
       query: 'test',
+      numberOfValues,
     });
   });
 });

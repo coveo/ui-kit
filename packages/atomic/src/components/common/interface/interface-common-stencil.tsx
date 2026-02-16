@@ -1,7 +1,7 @@
 import {setCoveoGlobal} from '@/src/global/environment.js';
 import {loadDayjsLocale} from '@/src/utils/dayjs-locales.js';
 import {InitializeEvent} from '@/src/utils/initialization-utils.js';
-import {LogLevel} from '@coveo/headless';
+import {LogLevel, VERSION} from '@coveo/headless';
 import {ComponentInterface, h} from '@stencil/core';
 import {i18n, TFunction} from 'i18next';
 import Backend from 'i18next-http-backend';
@@ -39,7 +39,7 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
     private atomicInterface: StencilBaseAtomicInterface<Engine>,
     globalVariableName: string
   ) {
-    setCoveoGlobal(globalVariableName);
+    setCoveoGlobal(VERSION, globalVariableName);
 
     const {
       connectedCallback: originalConnectedCallback,
@@ -84,8 +84,7 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
   public async onInitialization(initEngine: () => void) {
     if (this.atomicInterface.engine) {
       this.atomicInterface.engine.logger.warn(
-        `The ${this.interfaceTagname} component "initialize" has already been called.`,
-        this.atomicInterface.host
+        `The ${this.interfaceTagname} component "initialize" has already been called.`
       );
       return;
     }

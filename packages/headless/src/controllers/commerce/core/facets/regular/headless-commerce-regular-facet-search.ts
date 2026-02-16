@@ -20,7 +20,7 @@ export type RegularFacetSearchState =
 
 export type RegularFacetSearch = Omit<
   ReturnType<typeof buildFacetSearch>,
-  'showMoreResults' | 'updateCaptions' | 'state'
+  'updateCaptions' | 'state'
 >;
 
 export interface RegularFacetSearchProps
@@ -40,7 +40,6 @@ export function buildRegularFacetSearch(
   }
 
   const {
-    showMoreResults: _showMoreResults,
     state: _state,
     updateCaptions: _updateCaptions,
     ...restOfFacetSearch

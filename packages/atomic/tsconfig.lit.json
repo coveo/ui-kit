@@ -12,13 +12,13 @@
     "outDir": "dist/atomic/components",
     "paths": {
       "@/*": ["./*"]
-    },
-    "typeRoots": ["node_modules/@types", "src/types"]
+    }
   },
   "files": [
     "src/components/index.ts",
     "src/components/lazy-index.ts",
     "src/components.d.ts",
-    "src/lit-components.d.ts"
+    "src/lit-components.d.ts",
+    "src/icons.d.ts"
   ]
 }

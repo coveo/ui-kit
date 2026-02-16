@@ -1,0 +1,40 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicInsightResultQuickviewActionStories from './atomic-insight-result-quickview-action.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicInsightResultQuickviewActionStories} />
+
+<AtomicDocTemplate
+  stories={AtomicInsightResultQuickviewActionStories}
+  githubPath="insight/atomic-insight-result-quickview-action/atomic-insight-result-quickview-action.ts"
+  tagName="atomic-insight-result-quickview-action"
+  className="AtomicInsightResultQuickviewAction"
+>
+The `atomic-insight-result-quickview-action` component renders a button which the end user can click to open a modal box containing a preview of a result.
+
+This component must be used inside an `atomic-insight-result-template` component within an Insight Panel interface.
+
+```html
+<atomic-insight-interface>
+  <atomic-insight-layout>
+    <atomic-layout-section section="results">
+      <atomic-insight-result-list>
+        <atomic-insight-result-template>
+          <template>
+            <atomic-result-section-actions>
+              <atomic-insight-result-quickview-action></atomic-insight-result-quickview-action>
+            </atomic-result-section-actions>
+          </template>
+        </atomic-insight-result-template>
+      </atomic-insight-result-list>
+    </atomic-layout-section>
+  </atomic-insight-layout>
+</atomic-insight-interface>
+```
+
+### Common Use Cases
+* Provide customer service agents a quick preview of document content without leaving the search results.
+* Allow agents to efficiently scan through multiple documents to find relevant information for case resolution.
+* Display PDF or HTML content in a modal for immediate review within the Insight Panel context.
+
+</AtomicDocTemplate>

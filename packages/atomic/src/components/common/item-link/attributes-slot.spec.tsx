@@ -1,4 +1,4 @@
-import {getAttributesFromLinkSlot} from './attributes-slot';
+import {getAttributesFromLinkSlotContent} from './attributes-slot';
 
 describe('getAttributesFromLinkSlot', () => {
   beforeEach(() => {
@@ -18,7 +18,7 @@ describe('getAttributesFromLinkSlot', () => {
 
     const host = document.createElement('div');
     host.appendChild(link);
-    const attributes = getAttributesFromLinkSlot(host, slotName);
+    const attributes = getAttributesFromLinkSlotContent(host, slotName);
     expect(attributes![0]).toMatchObject({
       _name: 'download',
       _value: '',
@@ -36,7 +36,7 @@ describe('getAttributesFromLinkSlot', () => {
 
     const host = document.createElement('div');
     host.appendChild(link);
-    const attributes = getAttributesFromLinkSlot(host, 'not-my-slot');
+    const attributes = getAttributesFromLinkSlotContent(host, 'not-my-slot');
     expect(attributes).toBeUndefined();
   });
 
@@ -47,7 +47,7 @@ describe('getAttributesFromLinkSlot', () => {
 
     const host = document.createElement('div');
     host.appendChild(link);
-    const attributes = getAttributesFromLinkSlot(host, slotName);
+    const attributes = getAttributesFromLinkSlotContent(host, slotName);
     expect(attributes).toBeUndefined();
     expect(console.warn).toHaveBeenCalledTimes(1);
   });
@@ -60,7 +60,7 @@ describe('getAttributesFromLinkSlot', () => {
 
     const host = document.createElement('div');
     host.appendChild(link);
-    const attributes = getAttributesFromLinkSlot(host, slotName);
+    const attributes = getAttributesFromLinkSlotContent(host, slotName);
     expect(attributes).toEqual([]);
     expect(console.warn).toHaveBeenCalledTimes(1);
   });

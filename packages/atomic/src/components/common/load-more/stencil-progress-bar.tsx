@@ -5,6 +5,9 @@ interface LoadMoreProgressBarProps {
   to: number;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const LoadMoreProgressBar: FunctionalComponent<
   LoadMoreProgressBarProps
 > = ({from, to}) => {

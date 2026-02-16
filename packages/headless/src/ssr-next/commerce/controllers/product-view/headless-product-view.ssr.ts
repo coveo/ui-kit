@@ -9,8 +9,8 @@ import {
 } from '../../../../controllers/controller/headless-controller.js';
 import type {NonRecommendationControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
 
-interface ProductViewDefinition
-  extends NonRecommendationControllerDefinitionWithoutProps<ProductView> {}
+export type ProductViewDefinition =
+  NonRecommendationControllerDefinitionWithoutProps<ProductView>;
 
 /**
  * Defines a `ProductView` controller instance.

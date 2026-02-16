@@ -1,0 +1,62 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicSortDropdownStories from './atomic-sort-dropdown.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicSortDropdownStories} />
+
+<AtomicDocTemplate
+  stories={AtomicSortDropdownStories}
+  githubPath="search/atomic-sort-dropdown/atomic-sort-dropdown.ts"
+  tagName="atomic-sort-dropdown"
+  className="AtomicSortDropdown"
+>
+
+This component renders a dropdown that the end user can interact with to select the criteria to use when sorting query results.
+
+It must contain one or more `atomic-sort-expression` child elements, each representing a sort option.
+
+## Usage
+
+This component is typically placed within the status section of the search interface:
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-search-layout>
+    ...
+    <atomic-layout-section section="status">
+
+      <atomic-sort-dropdown>
+        <atomic-sort-expression label="relevance" expression="relevancy"></atomic-sort-expression>
+        <atomic-sort-expression label="most-recent" expression="date descending"></atomic-sort-expression>
+        <atomic-sort-expression label="price-ascending" expression="sncost ascending"></atomic-sort-expression>
+      </atomic-sort-dropdown>
+
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+## Sort Expressions
+
+Each `atomic-sort-expression` child element defines a sort option with:
+- **label**: The display text for the option
+- **expression**: The sort criteria (e.g., "relevancy", "date descending", "field ascending")
+- **tabs-included** (optional): Tabs where this option should be available
+- **tabs-excluded** (optional): Tabs where this option should be hidden
+
+### Supported Sort Criteria
+
+- `relevancy` - Sort by relevance (default)
+- `qre` - Sort by query ranking expression
+- `date ascending` / `date descending` - Sort by date
+- `<FIELD> ascending` / `<FIELD> descending` - Sort by a specific field (e.g., "sncost ascending")
+- Multiple criteria separated by commas (e.g., "sncost ascending, date descending")
+
+## Related Components
+
+- **atomic-sort-expression**: Defines individual sort options
+- **atomic-commerce-sort-dropdown**: Equivalent component for commerce interfaces
+
+</AtomicDocTemplate>

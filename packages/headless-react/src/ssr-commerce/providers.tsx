@@ -15,6 +15,7 @@ import {
   type NavigatorContext,
   type ParameterManager,
   type Parameters,
+  type ProductEnrichment,
   type Recommendations,
   type SolutionType,
 } from '@coveo/headless/ssr-commerce';
@@ -59,6 +60,9 @@ export function buildProviderWithDefinition<
         TSolutionType
       >
     >;
+    /**
+     * @deprecated will be removed in the next major release. The navigator context provider can now be set when fetching the static state
+     */
     navigatorContext: NavigatorContext;
   }>) {
     const [hydratedState, setHydratedState] = useState<
@@ -73,6 +77,7 @@ export function buildProviderWithDefinition<
       for (const [key, controller] of Object.entries(controllers)) {
         const typedController = controller as ControllerWithKind;
 
+        // TODO: KIT-4742: remove state wiring as it is already done in headless
         switch (typedController._kind) {
           case Kind.Cart: {
             const cart = getController<Cart>(controllers, key);
@@ -108,6 +113,19 @@ export function buildProviderWithDefinition<
 
             hydrateArguments[key] = {
               productId: recommendations.state.productId,
+            };
+            break;
+          }
+          case Kind.ProductEnrichment: {
+            const productEnrichment = getController<ProductEnrichment>(
+              controllers,
+              key
+            );
+            hydrateArguments[key] = {
+              options: {
+                productId: productEnrichment.state.productId,
+                placementIds: productEnrichment.state.placementIds,
+              },
             };
             break;
           }

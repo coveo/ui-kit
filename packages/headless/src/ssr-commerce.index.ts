@@ -1,5 +1,5 @@
 /**
- * The Coveo Headless SSR Commerce sub-package exposes exposes the engine, definers, controllers, actions, and utility functions to build a server side rendered commerce experience.
+ * The Coveo Headless SSR Commerce sub-package exposes the engine, definers, controllers, actions, and utility functions to build a server side rendered commerce experience.
  *
  * @example
  * ```typescript
@@ -70,12 +70,10 @@
 export type {Relay} from '@coveo/relay';
 
 export type {Middleware, Unsubscribe} from '@reduxjs/toolkit';
-// Main App
-export type {CommerceEngineOptions} from './app/commerce-engine/commerce-engine.js';
 export type {CommerceEngineConfiguration} from './app/commerce-engine/commerce-engine-configuration.js';
 export {getSampleCommerceEngineConfiguration} from './app/commerce-engine/commerce-engine-configuration.js';
-// export type
 export type {CoreEngineNext, ExternalEngineOptions} from './app/engine.js';
+// export type
 export type {
   AnalyticsConfiguration,
   AnalyticsRuntimeEnvironment,
@@ -118,6 +116,7 @@ export type {
   ContextOptions,
   ContextProps,
   ContextState,
+  CustomContext,
   UserLocation,
   View,
 } from './ssr/commerce/controllers/context/headless-context.ssr.js';
@@ -192,6 +191,13 @@ export type {
 } from './ssr/commerce/controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
 export {defineParameterManager} from './ssr/commerce/controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
 export type {
+  ProductEnrichment,
+  ProductEnrichmentDefinition,
+  ProductEnrichmentProps,
+  ProductEnrichmentState,
+} from './ssr/commerce/controllers/product-enrichment/headless-product-enrichment.ssr.js';
+export {defineProductEnrichment} from './ssr/commerce/controllers/product-enrichment/headless-product-enrichment.ssr.js';
+export type {
   ProductList,
   ProductListing,
   ProductListState,
@@ -264,18 +270,22 @@ export type {
   RedirectionTriggerState,
 } from './ssr/commerce/controllers/triggers/headless-redirection-trigger.ssr.js';
 export {defineRedirectionTrigger} from './ssr/commerce/controllers/triggers/headless-redirection-trigger.ssr.js';
-export type {CommerceEngineDefinition} from './ssr/commerce/engine/commerce-engine.ssr.js';
+export type {
+  CommerceEngineDefinition,
+  CommerceEngineOptions,
+} from './ssr/commerce/engine/commerce-engine.ssr.js';
+// Main App
 export {defineCommerceEngine} from './ssr/commerce/engine/commerce-engine.ssr.js';
 export type {
   CommerceEngineDefinitionOptions,
   SSRCommerceEngine as CommerceEngine,
+  SSRCommerceEngineOptions,
 } from './ssr/commerce/factories/build-factory.js';
 export {SolutionType} from './ssr/commerce/types/controller-constants.js';
 export type {
   ControllerDefinition,
   ControllerDefinitionsMap,
   ControllerWithKind,
-  EngineDefinitionBuildResult,
   EngineDefinitionControllersPropsOption,
   HydratedState,
   InferControllerStaticStateFromController,
@@ -327,6 +337,7 @@ export * from './features/commerce/facets/regular-facet/regular-facet-actions-lo
 export * from './features/commerce/instant-products/instant-products-actions-loader.js';
 export * from './features/commerce/pagination/pagination-actions-loader.js';
 export * from './features/commerce/product/product-actions-loaders.js';
+export * from './features/commerce/product-enrichment/product-enrichment-actions-loader.js';
 export * from './features/commerce/product-listing/product-listing-actions-loader.js';
 export * from './features/commerce/product-listing-parameters/product-listing-parameters-actions-loader.js';
 export * from './features/commerce/query/query-actions-loader.js';
@@ -351,6 +362,7 @@ export type {
   ChildProduct,
   Product,
 } from './api/commerce/common/product.js';
+export {ResultType} from './api/commerce/common/result.js';
 export {
   getAnalyticsNextApiBaseUrl,
   getOrganizationEndpoint,

@@ -19,7 +19,7 @@ const CHATTER = 'Chatter';
  */
 export default class QuanticResultLabel extends LightningElement {
   /**
-   * The [result item](https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#result) to use to infer label and icon.
+   * The [result item](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.Result.html) to use to infer label and icon.
    * @api
    * @type {Result}
    */

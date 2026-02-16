@@ -1,4 +1,4 @@
-import {LitElement} from 'lit';
+import {css, LitElement} from 'lit';
 import {customElement} from 'lit/decorators.js';
 import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 
@@ -9,12 +9,16 @@ import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
  * Behavior:
  * * Has a very large font size.
  * * Is the second closest element beneath the name section.
- *
- * @slot default - The emphasized field to display.
  */
 @customElement('atomic-product-section-emphasized')
 export class AtomicProductSectionEmphasized extends ItemSectionMixin(
-  LitElement
+  LitElement,
+  css`
+      @reference '../../common/template-system/sections/sections.css';
+      atomic-product-section-emphasized {
+        @apply section-emphasized;
+      }
+      `
 ) {}
 
 declare global {

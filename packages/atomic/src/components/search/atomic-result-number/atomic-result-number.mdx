@@ -1,0 +1,46 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicResultNumberStories from './atomic-result-number.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicResultNumberStories} />
+
+<AtomicDocTemplate
+  stories={AtomicResultNumberStories}
+  githubPath="search/atomic-result-number/atomic-result-number.ts"
+  tagName="atomic-result-number"
+  className="AtomicResultNumber"
+>
+
+This component is used within `atomic-result-template` components inside an `atomic-result-list`:
+
+```html
+<atomic-search-interface>
+  <atomic-search-layout>
+    <atomic-layout-section section="main">
+      <atomic-result-list>
+        <atomic-result-template>
+          <template>
+            <atomic-result-number field="size"></atomic-result-number>
+          </template>
+        </atomic-result-template>
+      </atomic-result-list>
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+## Number Formatting
+
+By default, the component formats the value based on the language of the search interface.
+
+For instance, if the language is `fr`, the number `12345.67` will be displayed as `12 345,67`; if the language is `en`, it will be displayed as `12,345.67`.
+
+You can include an `atomic-format-number`, `atomic-format-currency`, or `atomic-format-unit` component as a child of the `atomic-result-number` to customize the format:
+
+```html
+<atomic-result-number field="size">
+  <atomic-format-unit unit="byte" unit-display="long"></atomic-format-unit>
+</atomic-result-number>
+```
+
+</AtomicDocTemplate>

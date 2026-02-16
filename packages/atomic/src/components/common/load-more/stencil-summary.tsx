@@ -8,6 +8,9 @@ interface LoadMoreSummaryProps {
   label?: 'showing-results-of-load-more' | 'showing-products-of-load-more';
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const LoadMoreSummary: FunctionalComponent<LoadMoreSummaryProps> = ({
   i18n,
   from,

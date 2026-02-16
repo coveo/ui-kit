@@ -1,0 +1,96 @@
+<!doctype html>
+<html dir="ltr" lang="en">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Toys</title>
+
+    <script type="module">
+      if (import.meta.env) {
+        const { defineCustomElements } = await import('@coveo/atomic/loader');
+        import('@coveo/atomic/themes/coveo.css');
+        defineCustomElements();
+      } else {
+        import('http://localhost:3000/atomic/v0.0.0/atomic.esm.js');
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'http://localhost:3000/atomic/v0.0.0/themes/coveo.css';
+        document.head.appendChild(link);
+      }
+    </script>
+
+    <script type="module">
+      import { commerceEngine } from './engine.mjs';
+
+      (async () => {
+        await customElements.whenDefined('atomic-commerce-interface');
+        const commerceInterface = document.querySelector('atomic-commerce-interface');
+
+        await commerceInterface.initializeWithEngine(commerceEngine);
+
+        commerceInterface.executeFirstRequest();
+      })();
+    </script>
+  </head>
+
+  <body>
+    <h1>Toys</h1>
+
+    <atomic-commerce-interface type="product-listing" language-assets-path="./lang" icon-assets-path="./assets">
+      <atomic-commerce-layout>
+        <atomic-layout-section section="facets">
+          <atomic-commerce-facets></atomic-commerce-facets>
+        </atomic-layout-section>
+        <atomic-layout-section section="main">
+          <atomic-layout-section section="status">
+            <atomic-commerce-breadbox></atomic-commerce-breadbox>
+            <atomic-commerce-query-summary></atomic-commerce-query-summary>
+            <atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>
+            <atomic-commerce-refine-toggle></atomic-commerce-refine-toggle>
+          </atomic-layout-section>
+          <atomic-layout-section section="products">
+            <atomic-commerce-product-list display="grid" density="compact" image-size="small">
+              <atomic-product-template>
+                <template>
+                  <atomic-product-section-name>
+                    <atomic-product-link class="font-bold"></atomic-product-link>
+                  </atomic-product-section-name>
+                  <atomic-product-section-visual>
+                    <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+                  </atomic-product-section-visual>
+                  <atomic-product-section-children>
+                    <atomic-product-children></atomic-product-children>
+                  </atomic-product-section-children>
+                  <atomic-product-section-metadata>
+                    <atomic-product-text field="ec_brand" class="text-neutral-dark block"></atomic-product-text>
+                    <atomic-product-multi-value-text field="cat_available_sizes"></atomic-product-multi-value-text>
+                    <atomic-product-rating field="ec_rating"></atomic-product-rating>
+                  </atomic-product-section-metadata>
+                  <atomic-product-section-emphasized>
+                    <atomic-product-price></atomic-product-price>
+                  </atomic-product-section-emphasized>
+                  <atomic-product-section-description>
+                    <atomic-product-description></atomic-product-description>
+                  </atomic-product-section-description>
+                </template>
+              </atomic-product-template>
+            </atomic-commerce-product-list>
+            <atomic-commerce-query-error></atomic-commerce-query-error>
+            <atomic-commerce-no-products></atomic-commerce-no-products>
+          </atomic-layout-section>
+          <atomic-layout-section section="pagination">
+            <atomic-commerce-load-more-products></atomic-commerce-load-more-products>
+            <!-- Alternative pagination
+                <atomic-commerce-pager></atomic-commerce-pager>
+                -->
+          </atomic-layout-section>
+        </atomic-layout-section>
+      </atomic-commerce-layout>
+    </atomic-commerce-interface>
+
+    <script src="../../header.js" type="text/javascript"></script>
+    <script src="commerce-nav.mjs" type="module"></script>
+  </body>
+
+</html>

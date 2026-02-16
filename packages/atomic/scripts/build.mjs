@@ -1,7 +1,6 @@
 import {basename, dirname, join, relative} from 'node:path';
 import {argv} from 'node:process';
 import {fileURLToPath} from 'node:url';
-import chalk from 'chalk';
 import {
   createProgram,
   DiagnosticCategory,
@@ -12,10 +11,12 @@ import {
   readConfigFile,
   sys,
 } from 'typescript';
+import colors from '../../../utils/ci/colors.mjs';
 import resourceUrlTransformer from './asset-path-transformer.mjs';
+import {generateCustomElementTags} from './generate-custom-element-tags.mjs';
 import {generateLitExports} from './generate-lit-exports.mjs';
 import pathTransformer from './path-transform.mjs';
-import {processCssFiles} from './process-css.mjs';
+import {processAllCss} from './process-css.mjs';
 import svgTransformer from './svg-transform.mjs';
 import versionTransformer from './version-transform.mjs';
 
@@ -29,8 +30,8 @@ if (configArg === undefined) {
 const tsConfigPath = configArg.split('=')[1];
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 const transformers = [
-  svgTransformer,
   pathTransformer,
+  svgTransformer,
   versionTransformer,
   ...(isCDN ? [resourceUrlTransformer] : []),
 ];
@@ -79,8 +80,8 @@ function emit(program) {
  */
 function compileWithTransformer() {
   console.log(
-    chalk.blue('Using tsconfig:'),
-    chalk.green(basename(tsConfigPath))
+    colors.blue('Using tsconfig:'),
+    colors.green(basename(tsConfigPath))
   );
   const {options, fileNames} = loadTsConfig(tsConfigPath);
   const program = createProgram(fileNames, options);
@@ -104,11 +105,11 @@ function compileWithTransformer() {
       );
 
       console.log(
-        `${chalk.cyan(relative(process.cwd(), diagnostic.file.fileName))}:${chalk.yellow(line + 1)}:${chalk.yellow(character + 1)} - ${chalk.red('error')} ${chalk.gray(message)}`
+        `${colors.cyan(relative(process.cwd(), diagnostic.file.fileName))}:${colors.yellow(line + 1)}:${colors.yellow(character + 1)} - ${colors.red('error')} ${colors.gray(message)}`
       );
     } else {
       console.error(
-        chalk.red(flattenDiagnosticMessageText(diagnostic.messageText, '\n'))
+        colors.red(flattenDiagnosticMessageText(diagnostic.messageText, '\n'))
       );
     }
 
@@ -119,7 +120,7 @@ function compileWithTransformer() {
 
   const exitCode = emitResult.emitSkipped || hasError ? 1 : 0;
   console.log(`Process exiting with code '${exitCode}'.`);
-  process.exit(exitCode);
+  return exitCode;
 }
 
 try {
@@ -128,16 +129,20 @@ try {
   const srcDir = join(__dirname, '../src');
   const outDir = options.outDir;
 
-  console.log(chalk.blue('Starting build process'));
-  console.log(chalk.blue('Generating Lit exports'));
+  console.log(colors.blue('Starting build process'));
+  console.log(colors.blue('Generating custom element tags'));
+  generateCustomElementTags();
+
+  console.log(colors.blue('Generating Lit exports'));
   await generateLitExports();
 
-  console.log(chalk.blue('Starting CSS processing'));
-  await processCssFiles(srcDir, outDir);
+  console.log(colors.blue('Starting TypeScript compilation'));
+  const tsExitCode = compileWithTransformer();
 
-  console.log(chalk.blue('Starting TypeScript compilation'));
-  compileWithTransformer();
+  await processAllCss(srcDir, outDir);
+
+  process.exit(tsExitCode);
 } catch (error) {
-  console.error(chalk.red('Build failed:'), error);
+  console.error(colors.red('Build failed:'), error);
   process.exit(1);
 }

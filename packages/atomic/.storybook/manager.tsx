@@ -1,7 +1,8 @@
-import {IconButton} from '@storybook/components';
-import {STORY_MISSING, STORY_RENDERED} from '@storybook/core-events';
+import {IconButton} from 'storybook/internal/components';
+import {STORY_MISSING, STORY_RENDERED} from 'storybook/internal/core-events';
 import {CogIcon} from '@storybook/icons';
-import {addons, types} from '@storybook/manager-api';
+import {addons, types} from 'storybook/manager-api';
+import {themes} from 'storybook/theming';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import React from 'react';
 
@@ -12,6 +13,14 @@ declare global {
     };
   }
 }
+
+addons.setConfig({
+  theme: {
+    ...themes.dark,
+    brandUrl: '?path=/docs/introduction--default',
+    brandTarget: '_self',
+  },
+});
 
 addons.register('SELECT-FIRST-STORY-BY-DEFAULT-ONCE', (api) => {
   api.once(STORY_MISSING, () => {
@@ -52,14 +61,25 @@ addons.register('custom/onetrust-button', () => {
 });
 
 const observeAndExpandButtons = () => {
-  const observer = new MutationObserver(() => {
-    const buttonsToExpand = document.querySelectorAll(
+  const expandButtons = () => {
+    const buttonsToExpand: NodeListOf<HTMLButtonElement> = document.querySelectorAll(
       'button[data-action="expand-all"][data-expanded="false"]'
     );
-    if (buttonsToExpand.length > 0) {
-      buttonsToExpand.forEach((button) =>
-        (button as HTMLButtonElement).click()
-      );
+    if (!buttonsToExpand.length) return false;
+    buttonsToExpand.forEach((button) => {
+      button.click()
+    });
+    return true;
+  };
+
+  // Check immediately in case buttons are already in the DOM
+  if (expandButtons()) {
+    return;
+  }
+
+  // Otherwise, observe for future DOM mutations
+  const observer = new MutationObserver(() => {
+    if (expandButtons()) {
       observer.disconnect();
     }
   });
@@ -79,13 +99,10 @@ const addNoIndexMetaTag = () => {
   }
 };
 
-addons.register('expand-all-folders-on-intro', () => {
+addons.register('expand-all-folders-on-crawling', () => {
   addons.getChannel().on(STORY_RENDERED, (storyId) => {
-    if (storyId === 'introduction--crawling') {
+    if (storyId === 'crawling--crawling') {
       observeAndExpandButtons();
-      addNoIndexMetaTag();
-    }
-    if (storyId === 'introduction--default') {
       addNoIndexMetaTag();
     }
   });

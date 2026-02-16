@@ -1,26 +1,28 @@
-import type {LitElement} from 'lit';
-import {hideEmptySection} from '@/src/utils/item-section-utils';
+import type {CSSResultGroup, LitElement} from 'lit';
+import {hideEmptySection} from '../utils/item-section-utils.js';
+import {LightDomMixin} from './light-dom.js';
 import type {Constructor} from './mixin-common.js';
 
 /**
- * Mixin for product section components that provides common functionality.
- * All product section components extend LitElement and call hideEmptySection in updated().
+ * Mixin for item section components that provides common functionality.
+ * All item section components extend LitElement and call hideEmptySection in updated().
  *
  * @param superClass - The base class to extend
- * @returns A class that extends the superClass with product section functionality
+ * @param styles - The styles to apply to the section.
+ * @returns A class that extends the superClass with item section functionality
  */
+
 export function ItemSectionMixin<T extends Constructor<LitElement>>(
-  superClass: T
+  superClass: T,
+  styles?: CSSResultGroup
 ) {
-  class ProductSectionMixinClass extends superClass {
-    protected createRenderRoot() {
-      return this;
-    }
+  class ItemSectionMixinClass extends LightDomMixin(superClass) {
+    static styles = styles;
 
     protected updated() {
       hideEmptySection(this);
     }
   }
 
-  return ProductSectionMixinClass as T;
+  return ItemSectionMixinClass as T;
 }

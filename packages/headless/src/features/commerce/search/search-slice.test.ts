@@ -1,4 +1,8 @@
-import type {ChildProduct} from '../../../api/commerce/common/product.js';
+import type {
+  ChildProduct,
+  Product,
+} from '../../../api/commerce/common/product.js';
+import {ResultType} from '../../../api/commerce/common/result.js';
 import {buildMockCommerceRegularFacetResponse} from '../../../test/mock-commerce-facet-response.js';
 import {buildSearchResponse} from '../../../test/mock-commerce-search.js';
 import {
@@ -6,6 +10,10 @@ import {
   buildMockChildProduct,
   buildMockProduct,
 } from '../../../test/mock-product.js';
+import {
+  buildMockBaseSpotlightContent,
+  buildMockSpotlightContent,
+} from '../../../test/mock-spotlight-content.js';
 import {setError} from '../../error/error-actions.js';
 import {setContext, setView} from '../context/context-actions.js';
 import {
@@ -43,11 +51,11 @@ describe('search-slice', () => {
         responseId,
       });
 
-      const action = executeSearch.fulfilled(response, '');
+      const action = executeSearch.fulfilled(response, '', {});
       const finalState = commerceSearchReducer(state, action);
 
       expect(finalState.products).toEqual(
-        products.map((p) => buildMockProduct({ec_name: p.ec_name}))
+        products.map((p) => buildMockProduct({ec_name: p.ec_name, responseId}))
       );
       expect(finalState.facets).toEqual(facets);
       expect(finalState.responseId).toEqual(responseId);
@@ -68,11 +76,29 @@ describe('search-slice', () => {
         },
       });
 
-      const action = executeSearch.fulfilled(response, '');
+      const action = executeSearch.fulfilled(response, '', {});
       const finalState = commerceSearchReducer(state, action);
 
       expect(finalState.products[0].position).toBe(21);
       expect(finalState.products[1].position).toBe(22);
+    });
+
+    it('sets the responseId on each product', () => {
+      const products = [
+        buildMockBaseProduct({ec_name: 'product1'}),
+        buildMockBaseProduct({ec_name: 'product2'}),
+      ];
+      const responseId = 'some-response-id';
+      const response = buildSearchResponse({
+        products,
+        responseId,
+      });
+
+      const action = executeSearch.fulfilled(response, '', {});
+      const finalState = commerceSearchReducer(state, action);
+
+      expect(finalState.products[0].responseId).toBe(responseId);
+      expect(finalState.products[1].responseId).toBe(responseId);
     });
 
     it('sets #error to null', () => {
@@ -80,17 +106,118 @@ describe('search-slice', () => {
 
       const response = buildSearchResponse();
 
-      const action = executeSearch.fulfilled(response, '');
+      const action = executeSearch.fulfilled(response, '', {});
       const finalState = commerceSearchReducer(state, action);
       expect(finalState.error).toBeNull();
+    });
+
+    it('processes results array correctly', () => {
+      const results = [
+        buildMockBaseProduct({ec_name: 'result1'}),
+        buildMockBaseSpotlightContent({name: 'spotlight1'}),
+      ];
+      const responseId = 'some-response-id';
+      const response = buildSearchResponse({
+        results,
+        responseId,
+      });
+
+      const action = executeSearch.fulfilled(response, '', {});
+      const finalState = commerceSearchReducer(state, action);
+
+      expect(finalState.results).toHaveLength(2);
+      expect(finalState.results[0].resultType).toBe(ResultType.PRODUCT);
+      expect(finalState.results[1].resultType).toBe(ResultType.SPOTLIGHT);
+    });
+
+    it('sets the #position of each result to its 1-based position in the unpaginated list', () => {
+      const response = buildSearchResponse({
+        results: [
+          buildMockBaseProduct({ec_name: 'result1'}),
+          buildMockBaseSpotlightContent({name: 'spotlight1'}),
+        ],
+        pagination: {
+          page: 2,
+          perPage: 10,
+          totalEntries: 22,
+          totalPages: 3,
+        },
+      });
+
+      const action = executeSearch.fulfilled(response, '', {});
+      const finalState = commerceSearchReducer(state, action);
+
+      expect(finalState.results[0].position).toBe(21);
+      expect(finalState.results[1].position).toBe(22);
+    });
+
+    it('sets the responseId on each result', () => {
+      const results = [
+        buildMockBaseProduct({ec_name: 'result1'}),
+        buildMockBaseSpotlightContent({name: 'spotlight1'}),
+      ];
+      const responseId = 'some-response-id';
+      const response = buildSearchResponse({
+        results,
+        responseId,
+      });
+
+      const action = executeSearch.fulfilled(response, '', {});
+      const finalState = commerceSearchReducer(state, action);
+
+      expect(finalState.results[0].responseId).toBe(responseId);
+      expect(finalState.results[1].responseId).toBe(responseId);
+    });
+
+    it('preprocesses spotlight content with position and responseId', () => {
+      const spotlight = buildMockBaseSpotlightContent({
+        name: 'Test Spotlight',
+        clickUri: 'https://example.com/spotlight',
+      });
+      const responseId = 'test-response-id';
+      const response = buildSearchResponse({
+        results: [spotlight],
+        responseId,
+      });
+
+      const action = executeSearch.fulfilled(response, '', {});
+      const finalState = commerceSearchReducer(state, action);
+
+      expect(finalState.results[0]).toEqual(
+        buildMockSpotlightContent({
+          ...spotlight,
+          position: 1,
+          responseId,
+        })
+      );
+    });
+
+    it('preprocesses products in results context with position and responseId', () => {
+      const product = buildMockBaseProduct({ec_name: 'Test Product'});
+      const responseId = 'test-response-id';
+      const response = buildSearchResponse({
+        results: [product],
+        responseId,
+      });
+
+      const action = executeSearch.fulfilled(response, '', {});
+      const finalState = commerceSearchReducer(state, action);
+
+      expect(finalState.results[0]).toEqual(
+        buildMockProduct({
+          ...product,
+          position: 1,
+          responseId,
+        })
+      );
     });
   });
 
   describe('on #fetchMoreProducts.fulfilled', () => {
     it('updates the state with the received payload', () => {
       state.products = [
-        buildMockProduct({ec_name: 'product1'}),
-        buildMockProduct({ec_name: 'product2'}),
+        buildMockProduct({ec_name: 'product1', responseId: 'old-response-id'}),
+        buildMockProduct({ec_name: 'product2', responseId: 'old-response-id'}),
       ];
       const newProducts = [
         buildMockBaseProduct({ec_name: 'product3'}),
@@ -104,7 +231,7 @@ describe('search-slice', () => {
         responseId,
       });
 
-      const action = fetchMoreProducts.fulfilled(response, '');
+      const action = fetchMoreProducts.fulfilled(response, '', {});
       const finalState = commerceSearchReducer(state, action);
 
       expect(finalState.products.length).toEqual(4);
@@ -140,7 +267,7 @@ describe('search-slice', () => {
         },
       });
 
-      const action = fetchMoreProducts.fulfilled(response, '');
+      const action = fetchMoreProducts.fulfilled(response, '', {});
       const finalState = commerceSearchReducer(state, action);
 
       expect(finalState.products[0].position).toBe(1);
@@ -148,14 +275,143 @@ describe('search-slice', () => {
       expect(finalState.products[2].position).toBe(3);
     });
 
+    it('sets the responseId on new products while preserving existing products responseId', () => {
+      state.products = [
+        buildMockProduct({
+          ec_name: 'product1',
+          position: 1,
+          responseId: 'old-response-id',
+        }),
+        buildMockProduct({
+          ec_name: 'product2',
+          position: 2,
+          responseId: 'old-response-id',
+        }),
+      ];
+      const newProducts = [buildMockBaseProduct({ec_name: 'product3'})];
+      const responseId = 'new-response-id';
+      const response = buildSearchResponse({
+        products: newProducts,
+        responseId,
+        pagination: {
+          page: 1,
+          perPage: 2,
+          totalEntries: 22,
+          totalPages: 3,
+        },
+      });
+
+      const action = fetchMoreProducts.fulfilled(response, '', {});
+      const finalState = commerceSearchReducer(state, action);
+
+      // Original products keep their responseId
+      expect(finalState.products[0].responseId).toBe('old-response-id');
+      expect(finalState.products[1].responseId).toBe('old-response-id');
+      // New products get the new responseId
+      expect(finalState.products[2].responseId).toBe(responseId);
+    });
+
     it('sets #error to null', () => {
       state.error = {message: 'message', statusCode: 500, type: 'type'};
 
       const response = buildSearchResponse();
 
-      const action = fetchMoreProducts.fulfilled(response, '');
+      const action = fetchMoreProducts.fulfilled(response, '', {});
       const finalState = commerceSearchReducer(state, action);
       expect(finalState.error).toBeNull();
+    });
+
+    it('concatenates new results to existing results', () => {
+      state.results = [
+        buildMockProduct({ec_name: 'result1', responseId: 'old-response-id'}),
+        buildMockSpotlightContent({
+          name: 'spotlight1',
+          responseId: 'old-response-id',
+        }),
+      ];
+      const newResults = [
+        buildMockBaseProduct({ec_name: 'result3'}),
+        buildMockBaseSpotlightContent({name: 'spotlight2'}),
+      ];
+      const responseId = 'new-response-id';
+      const response = buildSearchResponse({
+        results: newResults,
+        responseId,
+      });
+
+      const action = fetchMoreProducts.fulfilled(response, '', {});
+      const finalState = commerceSearchReducer(state, action);
+
+      expect(finalState.results.length).toEqual(4);
+      expect(finalState.results[0].resultType).toBe(ResultType.PRODUCT);
+      expect(finalState.results[1].resultType).toBe(ResultType.SPOTLIGHT);
+      expect(finalState.results[2].resultType).toBe(ResultType.PRODUCT);
+      expect(finalState.results[3].resultType).toBe(ResultType.SPOTLIGHT);
+    });
+
+    it('sets the #position of each new result to its 1-based position in the unpaginated list', () => {
+      state.results = [
+        buildMockProduct({
+          ec_name: 'result1',
+          position: 1,
+        }),
+        buildMockSpotlightContent({
+          name: 'spotlight1',
+          position: 2,
+        }),
+      ];
+      const response = buildSearchResponse({
+        results: [buildMockBaseProduct({ec_name: 'result3'})],
+        pagination: {
+          page: 1,
+          perPage: 2,
+          totalEntries: 22,
+          totalPages: 3,
+        },
+      });
+
+      const action = fetchMoreProducts.fulfilled(response, '', {});
+      const finalState = commerceSearchReducer(state, action);
+
+      expect(finalState.results[0].position).toBe(1);
+      expect(finalState.results[1].position).toBe(2);
+      expect(finalState.results[2].position).toBe(3);
+    });
+
+    it('sets the responseId on new results while preserving existing results responseId', () => {
+      state.results = [
+        buildMockProduct({
+          ec_name: 'result1',
+          position: 1,
+          responseId: 'old-response-id',
+        }),
+        buildMockSpotlightContent({
+          name: 'spotlight1',
+          position: 2,
+          responseId: 'old-response-id',
+        }),
+      ];
+      const newResults = [buildMockBaseProduct({ec_name: 'result3'})];
+      const responseId = 'new-response-id';
+      const response = buildSearchResponse({
+        results: newResults,
+        responseId,
+        pagination: {
+          page: 1,
+          perPage: 2,
+          totalEntries: 22,
+          totalPages: 3,
+        },
+      });
+
+      const action = fetchMoreProducts.fulfilled(response, '', {});
+      const finalState = commerceSearchReducer(state, action);
+
+      // Original results keep their responseId
+      expect(finalState.results[0].responseId).toBe('old-response-id');
+      expect(finalState.results[1].responseId).toBe('old-response-id');
+      // New results get the new responseId
+      expect(finalState.results[2].responseId).toBe(responseId);
     });
   });
 
@@ -215,7 +471,7 @@ describe('search-slice', () => {
     it('sets #isLoading to true', () => {
       state.isLoading = false;
 
-      const pendingAction = executeSearch.pending('');
+      const pendingAction = executeSearch.pending('', {});
       const finalState = commerceSearchReducer(state, pendingAction);
 
       expect(finalState.isLoading).toBe(true);
@@ -224,7 +480,7 @@ describe('search-slice', () => {
     it('sets #requestId', () => {
       const requestId = 'request-id';
 
-      const pendingAction = executeSearch.pending(requestId);
+      const pendingAction = executeSearch.pending(requestId, {});
       const finalState = commerceSearchReducer(state, pendingAction);
 
       expect(finalState.requestId).toBe(requestId);
@@ -235,7 +491,7 @@ describe('search-slice', () => {
     it('sets #isLoading to true', () => {
       state.isLoading = false;
 
-      const pendingAction = fetchMoreProducts.pending('');
+      const pendingAction = fetchMoreProducts.pending('', {});
       const finalState = commerceSearchReducer(state, pendingAction);
 
       expect(finalState.isLoading).toBe(true);
@@ -244,7 +500,7 @@ describe('search-slice', () => {
     it('sets #requestId', () => {
       const requestId = 'request-id';
 
-      const pendingAction = fetchMoreProducts.pending(requestId);
+      const pendingAction = fetchMoreProducts.pending(requestId, {});
       const finalState = commerceSearchReducer(state, pendingAction);
 
       expect(finalState.requestId).toBe(requestId);
@@ -304,6 +560,7 @@ describe('search-slice', () => {
         children: [childProduct],
         totalNumberOfChildren: 1,
         position: 5,
+        responseId: 'test-response-id',
       });
 
       state.products = [parentProduct];
@@ -316,8 +573,144 @@ describe('search-slice', () => {
           children: parentProduct.children,
           totalNumberOfChildren: parentProduct.totalNumberOfChildren,
           position: parentProduct.position,
+          responseId: parentProduct.responseId,
         }),
       ]);
+    });
+
+    it('uses results array when results are populated', () => {
+      const childProduct = buildMockChildProduct({
+        permanentid,
+        ec_name: 'child name',
+      });
+
+      const parentProduct = buildMockProduct({
+        permanentid: parentPermanentId,
+        children: [childProduct],
+        totalNumberOfChildren: 1,
+        position: 5,
+        responseId: 'test-response-id',
+      });
+
+      // Populate results array
+      state.results = [parentProduct];
+      // Keep products empty
+      state.products = [];
+
+      const finalState = commerceSearchReducer(state, action);
+
+      // Verify results array was modified
+      expect(finalState.results).toHaveLength(1);
+      expect((finalState.results[0] as Product).permanentid).toBe(permanentid);
+      expect((finalState.results[0] as Product).children).toEqual(
+        parentProduct.children
+      );
+      // Verify products array was not touched
+      expect(finalState.products).toEqual([]);
+    });
+
+    it('uses products array when results array is empty', () => {
+      const childProduct = buildMockChildProduct({
+        permanentid,
+        ec_name: 'child name',
+      });
+
+      const parentProduct = buildMockProduct({
+        permanentid: parentPermanentId,
+        children: [childProduct],
+        totalNumberOfChildren: 1,
+        position: 5,
+        responseId: 'test-response-id',
+      });
+
+      // Keep results empty
+      state.results = [];
+      // Populate products array
+      state.products = [parentProduct];
+
+      const finalState = commerceSearchReducer(state, action);
+
+      // Verify products array was modified
+      expect(finalState.products).toHaveLength(1);
+      expect(finalState.products[0].permanentid).toBe(permanentid);
+      // Verify results array was not touched
+      expect(finalState.results).toEqual([]);
+    });
+
+    it('skips spotlight content when searching for parent in results', () => {
+      const childProduct = buildMockChildProduct({
+        permanentid,
+        ec_name: 'child name',
+      });
+
+      const parentProduct = buildMockProduct({
+        permanentid: parentPermanentId,
+        children: [childProduct],
+        totalNumberOfChildren: 1,
+        position: 5,
+        responseId: 'test-response-id',
+      });
+
+      const spotlight = buildMockSpotlightContent({
+        name: 'Spotlight',
+        position: 1,
+      });
+
+      // Results with spotlight content before the parent
+      state.results = [spotlight, parentProduct];
+
+      const finalState = commerceSearchReducer(state, action);
+
+      // Verify spotlight was skipped and parent was found
+      expect(finalState.results[0]).toEqual(spotlight); // Unchanged
+      expect((finalState.results[1] as Product).permanentid).toBe(permanentid); // Child promoted
+    });
+
+    it('does not promote when parent is spotlight content', () => {
+      const spotlight = buildMockSpotlightContent({
+        name: 'Spotlight',
+        position: 1,
+      });
+
+      // Try to use spotlight as parent (should not work)
+      state.results = [spotlight];
+
+      const finalState = commerceSearchReducer(state, action);
+
+      // State should remain unchanged
+      expect(finalState.results).toEqual([spotlight]);
+    });
+
+    it('preserves parent children array and totalNumberOfChildren when promoting', () => {
+      const childProduct = buildMockChildProduct({
+        permanentid,
+        ec_name: 'child name',
+      });
+
+      const otherChild = buildMockChildProduct({
+        permanentid: 'other-child-id',
+        ec_name: 'other child',
+      });
+
+      const parentProduct = buildMockProduct({
+        permanentid: parentPermanentId,
+        children: [childProduct, otherChild],
+        totalNumberOfChildren: 5, // More children than in array
+        position: 5,
+        responseId: 'test-response-id',
+      });
+
+      state.results = [parentProduct];
+
+      const finalState = commerceSearchReducer(state, action);
+
+      // Verify children array is preserved
+      expect((finalState.results[0] as Product).children).toEqual([
+        childProduct,
+        otherChild,
+      ]);
+      // Verify totalNumberOfChildren is preserved
+      expect((finalState.results[0] as Product).totalNumberOfChildren).toBe(5);
     });
   });
   it('on #setView, restores the initial state', () => {
@@ -330,6 +723,7 @@ describe('search-slice', () => {
         buildMockProduct({ec_name: 'product1'}),
         buildMockProduct({ec_name: 'product2'}),
       ],
+      results: [],
       queryExecuted: 'query',
       responseId: 'response-id',
     };
@@ -349,6 +743,7 @@ describe('search-slice', () => {
         buildMockProduct({ec_name: 'product1'}),
         buildMockProduct({ec_name: 'product2'}),
       ],
+      results: [],
       queryExecuted: 'query',
       responseId: 'response-id',
     };

@@ -75,7 +75,7 @@ export default defineConfig({
   /* Run your local dev server before starting the tests */
   webServer: [
     {
-      command: 'npm start',
+      command: 'pnpm start',
       timeout: 10 * 60e3,
       port: 3333,
       reuseExistingServer: !process.env.CI,
@@ -83,12 +83,13 @@ export default defineConfig({
       stderr: 'pipe',
     },
     isCDN && {
-      command: 'npx turbo serve --filter=@coveo/cdn',
+      command: 'pnpm exec turbo serve --filter=@coveo/cdn',
       timeout: 10 * 60e3,
       port: 3000,
       reuseExistingServer: !process.env.CI,
       stdout: 'pipe',
       stderr: 'pipe',
+      gracefulShutdown: {signal: 'SIGTERM', timeout: 500},
     },
   ].filter(Boolean),
 });

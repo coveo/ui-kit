@@ -5,18 +5,19 @@ import {
   buildProductListing,
   buildSearch,
 } from '@coveo/headless/commerce';
-import {page, userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {page, userEvent} from 'vitest/browser';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeBreadcrumbManager} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/breadcrumb-manager-subcontroller';
 import {buildFakeContext} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/context-controller';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
-import './atomic-commerce-breadbox';
+import {mockConsole} from '@/vitest-utils/testing-helpers/testing-utils/mock-console';
 import type {AtomicCommerceBreadbox} from './atomic-commerce-breadbox';
+import './atomic-commerce-breadbox';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 vi.mock('@/src/utils/date-utils', () => {
@@ -31,13 +32,13 @@ vi.mock('@/src/utils/date-utils', () => {
   return {parseDate};
 });
 
-describe('AtomicCommerceBreadbox', () => {
+describe('atomic-commerce-breadbox', () => {
   const mockedEngine = buildFakeCommerceEngine();
   let mockedBreadcrumbManager: BreadcrumbManager;
   const mockedDeselectAll = vi.fn();
 
   beforeEach(() => {
-    vi.spyOn(console, 'error').mockImplementation(() => {});
+    mockConsole();
   });
 
   interface RenderBreadboxOptions {
@@ -45,6 +46,7 @@ describe('AtomicCommerceBreadbox', () => {
     pathLimit?: number;
     state?: Partial<BreadcrumbManagerState>;
   }
+
   const renderBreadbox = async ({
     interfaceElementType = 'product-listing',
     pathLimit = 3,
@@ -90,6 +92,7 @@ describe('AtomicCommerceBreadbox', () => {
     return {
       element,
       label: () => page.getByText('Filters:'),
+      noTitle: () => page.getByTitle('No label'),
       regular: () => page.getByTitle('Regular'),
       hierarchical: () => page.getByTitle('Hierarchical'),
       numericalRange: () => page.getByTitle('Numerical Range'),
@@ -136,20 +139,29 @@ describe('AtomicCommerceBreadbox', () => {
     expect(element.breadcrumbManager).toBe(mockedBreadcrumbManager);
   });
 
-  it('should throw when pathLimit is lower than 1', async () => {
-    await expect(() =>
-      renderBreadbox({interfaceElementType: 'product-listing', pathLimit: 0})
-    ).rejects.toThrowError(/pathLimit: minimum value of 1 not respected/i);
-  });
-
-  it('should throw when pathLimit is valid but gets changed to lower than 1', async () => {
+  it('should set error when pathLimit is initially lower than 1', async () => {
     const {element} = await renderBreadbox({
       interfaceElementType: 'product-listing',
-      pathLimit: 3,
+      pathLimit: 0,
     });
 
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(
+      /pathLimit: minimum value of 1 not respected/i
+    );
+  });
+
+  it('should set error when valid pathLimit is updated to a value lower than 1', async () => {
+    const {element} = await renderBreadbox();
+
+    expect(element.error).toBeUndefined();
+
     element.pathLimit = 0;
-    await expect(element.updateComplete).rejects.toThrowError(
+
+    await element.updateComplete;
+
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(
       /pathLimit: minimum value of 1 not respected/i
     );
   });
@@ -202,6 +214,33 @@ describe('AtomicCommerceBreadbox', () => {
     await userEvent.click(regular()!);
 
     expect(mockedDeselect).toHaveBeenCalled();
+  });
+
+  it('should use "no-label" as the label when facetDisplayName is undefined', async () => {
+    await renderBreadbox({
+      state: {
+        facetBreadcrumbs: [
+          {
+            facetId: 'brand',
+            facetDisplayName: undefined as unknown as string,
+            field: 'brand',
+            type: 'regular',
+            values: [
+              {
+                value: {
+                  value: 'Gucci',
+                  numberOfResults: 1,
+                  state: 'selected',
+                },
+                deselect: vi.fn(),
+              },
+            ],
+          },
+        ],
+      },
+    });
+
+    await expect.element(page.getByText('No label')).toBeVisible();
   });
 
   it('should have the correct value as the text on the  regular breadcrumb', async () => {

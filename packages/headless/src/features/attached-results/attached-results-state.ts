@@ -39,6 +39,10 @@ export interface AttachedResult {
    * The uriHash of the attached result.
    */
   uriHash?: string;
+  /**
+   * Whether the attached result is a document that was attached from a citation.
+   */
+  isAttachedFromCitation?: boolean;
 }
 
 export interface AttachedResultsState {
@@ -48,6 +52,7 @@ export interface AttachedResultsState {
   results: AttachedResult[];
   /**
    * A loading state, used to sync loading the attached results between multiple components.
+   * // TODO: SFINT-6404 - Remove the loading property in UI-KIT V4 as its not used.
    */
   loading: boolean;
 }

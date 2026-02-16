@@ -2,6 +2,11 @@ import {defineConfig, devices} from '@playwright/test';
 
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 
+const DEFAULT_STORYBOOK_PORT = 4400;
+const storybookPort = process.env.STORYBOOK_PORT
+  ? parseInt(process.env.STORYBOOK_PORT, 10)
+  : DEFAULT_STORYBOOK_PORT;
+
 const DEFAULT_DESKTOP_VIEWPORT = {
   width: 1920,
   height: 1080,
@@ -13,6 +18,7 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
+  snapshotPathTemplate: '{testDir}/{testFileDir}/__snapshots__/{arg}{ext}',
   workers: process.env.CI ? 1 : undefined,
   reporter: process.env.CI
     ? [['html'], ['list'], ['github'], ['blob']]
@@ -21,7 +27,7 @@ export default defineConfig({
     trace: 'retain-on-failure',
     baseURL: isCDN
       ? 'http://localhost:3000/atomic/v3/storybook/'
-      : 'http://localhost:4400',
+      : `http://localhost:${storybookPort}`,
   },
   projects: [
     {
@@ -46,15 +52,16 @@ export default defineConfig({
   webServer: process.env.CI
     ? {
         command: isCDN
-          ? 'npx turbo serve --filter=@coveo/cdn'
-          : 'npx ws -d ./dist-storybook -p 4400',
+          ? 'pnpm exec turbo serve --filter=@coveo/cdn'
+          : `pnpm exec ws -d ./dist-storybook -p ${storybookPort}`,
 
         stdout: 'pipe',
         url: isCDN
           ? 'http://localhost:3000/atomic/v3/storybook/'
-          : 'http://localhost:4400',
+          : `http://localhost:${storybookPort}`,
         timeout: 120 * 1000,
         reuseExistingServer: !process.env.CI,
+        gracefulShutdown: {signal: 'SIGTERM', timeout: 500},
       }
     : undefined,
 });

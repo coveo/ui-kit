@@ -1,6 +1,6 @@
-import {LitElement} from 'lit';
+import {css, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
-import type {ItemDisplayImageSize} from '@/src/components/common/layout/display-options';
+import type {ItemDisplayImageSize} from '@/src/components/common/layout/item-layout-utils';
 import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 
 /**
@@ -11,15 +11,30 @@ import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
  * * Has a fixed size that depends on the specified image size, the layout, the density, and the screen size.
  * ** You should ensure that elements inside of it take the available space.
  * * Always has a 1:1 aspect ratio.
- *
- * @slot default - The image to display.
  */
 @customElement('atomic-product-section-visual')
-export class AtomicProductSectionVisual extends ItemSectionMixin(LitElement) {
+export class AtomicProductSectionVisual extends ItemSectionMixin(
+  LitElement,
+  css`
+    @reference '../../common/template-system/sections/sections.css';
+    atomic-product-section-visual {
+      @apply section-visual;
+
+      .with-sections {
+        &.image-icon {
+      atomic-product-image::part(previous-button),
+      atomic-product-image::part(next-button),
+      atomic-product-image::part(indicator) {
+        display: none;
+      }
+    }}
+    }
+    `
+) {
   /**
    * How large or small the visual section of product using this template should be.
    */
-  @property({reflect: true, attribute: 'image-size'})
+  @property({reflect: true, attribute: 'image-size', type: Object})
   public imageSize?: Omit<ItemDisplayImageSize, 'icon'>;
 }
 

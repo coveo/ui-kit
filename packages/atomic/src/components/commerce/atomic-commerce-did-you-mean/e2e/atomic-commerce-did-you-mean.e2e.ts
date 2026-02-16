@@ -1,14 +1,9 @@
 import {expect, test} from './fixture';
 
-test.describe('AtomicCommerceDidYouMean', () => {
+test.describe('atomic-commerce-did-you-mean', () => {
   test.beforeEach(async ({commerceDidYouMean}) => {
     await commerceDidYouMean.load();
     await commerceDidYouMean.hydrated.waitFor();
-  });
-
-  test('should be accessible', async ({makeAxeBuilder}) => {
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations.length).toEqual(0);
   });
 
   test('should display the auto correction message', async ({

@@ -1,5 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {createRipple} from '../../../../utils/ripple';
+import {createRipple} from '../../../../utils/ripple-utils';
 import {randomID} from '../../../../utils/utils';
 import {StencilCheckbox} from '../../stencil-checkbox';
 import {TriStateCheckbox} from '../../stencil-triStateCheckbox';
@@ -11,6 +11,9 @@ type TriStateFacetValueProps = Omit<FacetValueProps, 'isSelected'> & {
   onExclude(): void;
 };
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const FacetValueCheckbox: FunctionalComponent<
   FacetValueProps | TriStateFacetValueProps
 > = (props, children) => {

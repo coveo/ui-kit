@@ -1,0 +1,6 @@
+@utility section-base-overflow {
+  &.with-sections {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

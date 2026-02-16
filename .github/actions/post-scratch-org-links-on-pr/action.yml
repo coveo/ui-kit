@@ -1,0 +1,66 @@
+name: 'Post Scratch Org Links to PR'
+description: Publish Scratch Org Links as comments in a given PR
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+      with:
+        pattern: quantic-playwright-env-*
+        path: packages/quantic/.env
+        merge-multiple: true
+
+    - name: Read Org URLs from .env
+      id: read-env
+      shell: bash
+      run: |
+        LWS_ENABLED_URL=$(grep 'Quantic__LWS_enabled_URL' packages/quantic/.env/Quantic__LWS_enabled.env | cut -d '=' -f2-)
+        LWS_DISABLED_URL=$(grep 'Quantic__LWS_disabled_URL' packages/quantic/.env/Quantic__LWS_disabled.env | cut -d '=' -f2-)
+        echo "lws_enabled_url=$LWS_ENABLED_URL" >> $GITHUB_OUTPUT
+        echo "lws_disabled_url=$LWS_DISABLED_URL" >> $GITHUB_OUTPUT
+
+    - name: Post or update PR comment with Scratch Org links
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const lwsEnabledUrl = '${{ steps.read-env.outputs.lws_enabled_url }}';
+          const lwsDisabledUrl = '${{ steps.read-env.outputs.lws_disabled_url }}';
+
+          const commentBody = `
+          <!-- scratch-org-links -->
+          🔗 **Scratch Orgs ready to test this PR**:
+
+          - ✅ LWS **Enabled**: [Open Org](${lwsEnabledUrl})
+          - ✅ LWS **Disabled**: [Open Org](${lwsDisabledUrl})
+          `;
+
+          const prNumber = context.payload.pull_request.number;
+
+          const { data: comments } = await github.rest.issues.listComments({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: prNumber,
+          });
+
+          const existingComment = comments.find(comment =>
+            comment.body.includes('<!-- scratch-org-links -->') &&
+            comment.user.type === 'Bot'
+          );
+
+          if (existingComment) {
+            await github.rest.issues.updateComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: existingComment.id,
+              body: commentBody,
+            });
+            console.log('✅ Updated existing scratch org comment.');
+          } else {
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body: commentBody,
+            });
+            console.log('✅ Created new scratch org comment.');
+          }

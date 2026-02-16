@@ -26,8 +26,8 @@ import {
 import {MapProp} from '../../../utils/props-utils';
 import {FocusTargetController} from '../../../utils/stencil-accessibility-utils';
 import {parseDependsOn} from '../../common/facets/depends-on';
-import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
-import {TimeframeFacetCommon} from '../../common/facets/timeframe-facet-common';
+import {FacetPlaceholder} from '../../common/facets/facet-placeholder/stencil-facet-placeholder';
+import {TimeframeFacetCommon} from '../../common/facets/stencil-timeframe-facet-common';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
@@ -78,7 +78,7 @@ export class AtomicInsightTimeframeFacet
    */
   @Prop({reflect: true}) public field = 'date';
   /**
-   * Whether this facet should contain an datepicker allowing users to set custom ranges.
+   * Whether this facet should contain a date picker allowing users to set custom ranges.
    */
   @Prop({reflect: true}) public withDatePicker = false;
   /**

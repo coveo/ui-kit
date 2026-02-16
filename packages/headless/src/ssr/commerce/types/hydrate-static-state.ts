@@ -41,6 +41,9 @@ export type HydrateStaticState<
     >
   ): Promise<HydratedState<SSRCommerceEngine, TControllers>>;
 
+  /**
+   * @deprecated Use the hydrateStaticState() method instead
+   */
   fromBuildResult: FromBuildResult<
     TControllers,
     HydrateStaticStateOptions<TSearchAction>,

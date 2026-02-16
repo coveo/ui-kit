@@ -17,6 +17,13 @@ import {LightningElement, api, track} from 'lwc';
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 
 /**
+ * @typedef {Object} ResultWithFolding
+ * @mixes Result
+ * @property {Result} parentResult
+ * @property {Result[]} childResults
+ */
+
+/**
  * The `QuanticResultQuickview` component renders a button which the end user can click to open a modal box containing certain information about a result.
  * @category Result Template
  * @fires CustomEvent#quantic__haspreview
@@ -33,7 +40,7 @@ export default class QuanticResultQuickview extends LightningElement {
   /**
    * The result to retrieve a quickview for.
    * @api
-   * @type {Result}
+   * @type {ResultWithFolding}
    */
   @api result;
   /**
@@ -173,10 +180,11 @@ export default class QuanticResultQuickview extends LightningElement {
       this.engine
     );
 
-    // Destructuring transforms the Proxy object created by Salesforce to a normal object so no unexpected behaviour will occur with the Headless library.
-    this.engine.dispatch(
-      pushRecentResult({...this.result, raw: {...this.result.raw}})
-    );
+    // Exclude parentResult and childResults to prevent Salesforce Proxy extensibility errors.
+    // These nested result objects remain proxied after spreading, causing 'isExtensible' trap violations when accessed by the Headless library.
+    // eslint-disable-next-line no-unused-vars
+    const {parentResult, childResults, ...result} = this.result;
+    this.engine.dispatch(pushRecentResult({...result, raw: {...result.raw}}));
   }
 
   closeQuickview() {

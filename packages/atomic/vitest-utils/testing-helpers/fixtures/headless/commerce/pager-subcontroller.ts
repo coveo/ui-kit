@@ -7,7 +7,7 @@ export const defaultState = {
   totalPages: 10,
   pageSize: 10,
   totalEntries: 100,
-};
+} satisfies PaginationState;
 
 export const defaultImplementation = {
   subscribe: genericSubscribe,
@@ -17,7 +17,7 @@ export const defaultImplementation = {
   nextPage: vi.fn(),
   fetchMoreProducts: vi.fn(),
   setPageSize: vi.fn(),
-};
+} satisfies Pagination;
 
 export const buildFakePager = ({
   implementation,
@@ -29,5 +29,5 @@ export const buildFakePager = ({
   ({
     ...defaultImplementation,
     ...implementation,
-    ...(state && {state: {...defaultState, ...state}}),
+    ...{state: {...defaultState, ...(state || {})}},
   }) as Pagination;

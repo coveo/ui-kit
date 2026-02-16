@@ -1,0 +1,288 @@
+{
+  "deployment_config_version": 19,
+  "product": "ui-kit-dev",
+  "team_name": "searchui",
+  "general": {
+    "aws_regions": {
+      "sequential": ["FIRST_MAIN_REGION"]
+    },
+    "environments_order": {
+      "sequential": ["dev"]
+    },
+    "start_environment_automatically": false
+  },
+  "dag_phases": [
+    {
+      "id": "deploy-bueno-patch-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/bueno/v$[BUENO_PATCH_VERSION]",
+        "source": "packages/bueno/cdn",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-bueno-minor-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/bueno/v$[BUENO_MINOR_VERSION]",
+        "source": "packages/bueno/cdn",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-bueno-major-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/bueno/v$[BUENO_MAJOR_VERSION]",
+        "source": "packages/bueno/cdn",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-headless-patch-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/headless/v$[HEADLESS_PATCH_VERSION]",
+        "source": "packages/headless/cdn",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-headless-minor-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/headless/v$[HEADLESS_MINOR_VERSION]",
+        "source": "packages/headless/cdn",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-headless-major-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/headless/v$[HEADLESS_MAJOR_VERSION]",
+        "source": "packages/headless/cdn",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-patch-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_PATCH_VERSION]",
+        "source": "packages/atomic/cdn",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-minor-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MINOR_VERSION]",
+        "source": "packages/atomic/cdn",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-major-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MAJOR_VERSION]",
+        "source": "packages/atomic/cdn",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-major-storybook-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MAJOR_VERSION]/storybook",
+        "source": "packages/atomic/dist-storybook",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-minor-storybook-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MINOR_VERSION]/storybook",
+        "source": "packages/atomic/dist-storybook",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-react-patch-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic-react/v$[ATOMIC_REACT_PATCH_VERSION]",
+        "source": "packages/atomic-react/dist",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-react-minor-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic-react/v$[ATOMIC_REACT_MINOR_VERSION]",
+        "source": "packages/atomic-react/dist",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-react-major-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic-react/v$[ATOMIC_REACT_MAJOR_VERSION]",
+        "source": "packages/atomic-react/dist",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-hosted-page-patch-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic-hosted-page/v$[ATOMIC_HOSTED_PAGE_PATCH_VERSION]/atomic-hosted-page",
+        "source": "packages/atomic-hosted-page/cdn",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-hosted-page-minor-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic-hosted-page/v$[ATOMIC_HOSTED_PAGE_MINOR_VERSION]/atomic-hosted-page",
+        "source": "packages/atomic-hosted-page/cdn",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-hosted-page-major-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic-hosted-page/v$[ATOMIC_HOSTED_PAGE_MAJOR_VERSION]/atomic-hosted-page",
+        "source": "packages/atomic-hosted-page/cdn",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-shopify-patch-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/shopify/v$[SHOPIFY_PATCH_VERSION]",
+        "source": "packages/shopify/cdn",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-shopify-minor-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/shopify/v$[SHOPIFY_MINOR_VERSION]",
+        "source":  "packages/shopify/cdn",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-shopify-major-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/shopify/v$[SHOPIFY_MAJOR_VERSION]",
+        "source": "packages/shopify/cdn",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "invalidate-cloudfront-cache",
+      "terraform": {
+        "terragrunt_path": "",
+        "source": "infrastructure/terraform",
+        "auto_approve": true,
+        "auto_approve_in_production": true,
+        "run_strategy": "always"
+      },
+      "dependencies": [
+        "deploy-bueno-patch-to-s3-version",
+        "deploy-bueno-minor-to-s3-version",
+        "deploy-bueno-major-to-s3-version",
+        "deploy-headless-patch-to-s3-version",
+        "deploy-headless-minor-to-s3-version",
+        "deploy-headless-major-to-s3-version",
+        "deploy-atomic-patch-to-s3-version",
+        "deploy-atomic-minor-to-s3-version",
+        "deploy-atomic-major-to-s3-version",
+        "deploy-atomic-react-patch-to-s3-version",
+        "deploy-atomic-react-minor-to-s3-version",
+        "deploy-atomic-react-major-to-s3-version",
+        "deploy-atomic-hosted-page-patch-to-s3-version",
+        "deploy-atomic-hosted-page-minor-to-s3-version",
+        "deploy-atomic-hosted-page-major-to-s3-version",
+        "deploy-atomic-minor-storybook-to-s3-version",
+        "deploy-atomic-major-storybook-to-s3-version"
+      ]
+    },
+    {
+      "id": "smoke",
+      "github": {
+        "workflow_file": "smoke.yml",
+        "workflow_reference": "main",
+        "workflow_repository": "coveo-platform/ui-kit-cd",
+        "extra_parameters": {
+          "atomic-major": "$[ATOMIC_MAJOR_VERSION]",
+          "atomic-minor": "$[ATOMIC_MINOR_VERSION]",
+          "atomic-patch": "$[ATOMIC_PATCH_VERSION]",
+          "headless-major": "$[HEADLESS_MAJOR_VERSION]",
+          "headless-minor": "$[HEADLESS_MINOR_VERSION]",
+          "headless-patch": "$[HEADLESS_PATCH_VERSION]",
+          "is-nightly": "false"
+        }
+      },
+      "dependencies": ["invalidate-cloudfront-cache"]
+    }
+  ],
+  "certifiers": {
+    "observatory": {
+      "no_endpoint": true
+    }
+  }
+}

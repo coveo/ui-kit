@@ -1,0 +1,63 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicFoldedResultListStories from './atomic-folded-result-list.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicFoldedResultListStories} />
+
+<AtomicDocTemplate
+  stories={AtomicFoldedResultListStories}
+  githubPath="search/atomic-folded-result-list/atomic-folded-result-list.ts"
+  tagName="atomic-folded-result-list"
+  className="AtomicFoldedResultList"
+>
+
+This component is typically placed within the `results` section of the layout to display folded query results. Folded results group related documents together, such as email threads or document versions.
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-search-layout>
+    ...
+    <atomic-layout-section section="main">
+      ...
+      <atomic-layout-section section="results">
+        <atomic-folded-result-list></atomic-folded-result-list>
+      </atomic-layout-section>
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+## Defining Result Templates
+
+You can [define custom templates](https://docs.coveo.com/en/atomic/latest/usage/displaying-results/#defining-a-result-template) for how results and their children are displayed:
+
+```html
+<atomic-folded-result-list>
+  <atomic-result-template>
+    <template>
+      <atomic-result-section-title>
+        <atomic-result-link></atomic-result-link>
+      </atomic-result-section-title>
+      <atomic-result-section-excerpt>
+        <atomic-result-text field="excerpt"></atomic-result-text>
+      </atomic-result-section-excerpt>
+      <atomic-result-section-children>
+        <atomic-result-children>
+          <atomic-result-children-template>
+            <template>
+              <atomic-result-section-title>
+                <atomic-result-link></atomic-result-link>
+              </atomic-result-section-title>
+            </template>
+          </atomic-result-children-template>
+        </atomic-result-children>
+      </atomic-result-section-children>
+    </template>
+  </atomic-result-template>
+</atomic-folded-result-list>
+```
+
+For more information on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
+
+</AtomicDocTemplate>

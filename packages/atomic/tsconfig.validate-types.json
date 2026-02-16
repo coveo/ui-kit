@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "lib": ["dom", "ES2024"],
+    "moduleResolution": "Bundler",
+    "module": "ES2022",
+    "target": "ES2021"
+  },
+  "include": ["./dist/types/components.d.ts"]
+}

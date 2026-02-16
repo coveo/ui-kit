@@ -1,10 +1,3 @@
-import {describe, expect, it, vi} from 'vitest';
-import './atomic-product-multi-value-text';
-import {html} from 'lit';
-import {renderInAtomicProduct} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-product-fixture';
-import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
-import {AtomicProductMultiValueText} from './atomic-product-multi-value-text';
-import '../atomic-product-multi-value-text/atomic-product-multi-value-text';
 import {
   type BreadcrumbManager,
   type BreadcrumbManagerState,
@@ -12,11 +5,17 @@ import {
   buildSearch,
   type Product,
 } from '@coveo/headless/commerce';
+import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
+import {describe, expect, it, vi} from 'vitest';
+import {renderInAtomicProduct} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-product-fixture';
 import {buildFakeBreadcrumbManager} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/breadcrumb-manager-subcontroller';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
+import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
+import {AtomicProductMultiValueText} from './atomic-product-multi-value-text';
+import './atomic-product-multi-value-text';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 

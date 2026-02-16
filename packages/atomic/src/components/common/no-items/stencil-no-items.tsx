@@ -7,6 +7,10 @@ interface NoItemsProps {
   i18n: i18n;
   i18nKey: 'no-results' | 'no-products';
 }
+
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const NoItems: FunctionalComponent<NoItemsProps> = ({
   i18n,
   query,

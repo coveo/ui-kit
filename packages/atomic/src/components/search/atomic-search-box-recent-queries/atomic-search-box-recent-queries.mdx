@@ -1,0 +1,27 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicSearchBoxRecentQueriesStories from './atomic-search-box-recent-queries.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicSearchBoxRecentQueriesStories} />
+
+<AtomicDocTemplate
+  stories={AtomicSearchBoxRecentQueriesStories}
+  githubPath="search/atomic-search-box-recent-queries/atomic-search-box-recent-queries.ts"
+  tagName="atomic-search-box-recent-queries"
+  className="AtomicSearchBoxRecentQueries"
+>
+
+This component is placed inside the [atomic-search-box](/docs/atomic-search-box--docs) to display recent queries as the user types.
+
+By default, atomic-search-box-recent-queries is already included.
+You can add it manually to customize its properties.
+```html
+<atomic-search-box>
+  <atomic-search-box-recent-queries></atomic-search-box-recent-queries>
+</atomic-search-box>
+```
+
+**Note**: This component requires the analytics to be enabled. It will not display any recent queries if analytics are disabled.
+
+</AtomicDocTemplate>

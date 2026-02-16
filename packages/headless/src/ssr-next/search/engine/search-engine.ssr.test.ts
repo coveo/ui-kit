@@ -1,245 +1,190 @@
-import type {Middleware, UnknownAction} from '@reduxjs/toolkit';
-import type {SearchResponseSuccess} from '../../../api/search/search/search-response.js';
-import type {LoggerOptions} from '../../../app/logger.js';
-import {getSampleSearchEngineConfiguration} from '../../../app/search-engine/search-engine.js';
-import {
-  buildController,
-  type Controller,
-} from '../../../controllers/controller/headless-controller.js';
-import {loadPaginationActions} from '../../../features/pagination/pagination-actions-loader.js';
-import type {executeSearch} from '../../../features/search/search-actions.js';
-import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
-import {buildMockResult} from '../../../test/mock-result.js';
-import * as augmentModule from '../../common/augment-preprocess-request.js';
-import type {ControllerDefinitionWithoutProps} from '../../common/types/controllers.js';
-import type {
-  InferBuildResult,
-  InferHydratedState,
-  InferStaticState,
-} from '../../common/types/engine.js';
-import {defineResultList} from '../controllers/result-list/headless-result-list.ssr.js';
-import {
-  defineSearchEngine,
-  type SearchEngineDefinition,
-  type SSRSearchEngine,
-} from './search-engine.ssr.js';
+import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
+import type {SearchEngineConfiguration} from '../../../app/search-engine/search-engine-configuration.js';
+import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
+import {defineMockSearchController} from '../../../test/mock-ssr-controller-definitions.js';
+import type {SearchEngineDefinitionOptions} from '../types/engine.js';
+import {defineSearchEngine} from './search-engine.ssr.js';
 
-interface CustomEngineStateReader<TState extends {}> extends Controller {
-  state: TState;
-}
+describe('Search Engine SSR', () => {
+  let mockNavigatorContext: NavigatorContext;
+  let definitionOptions: SearchEngineDefinitionOptions<{
+    controller1: ReturnType<typeof defineMockSearchController>;
+    controller2: ReturnType<typeof defineMockSearchController>;
+  }>;
 
-type UnknownActionWithPossibleSearchResponsePayload = UnknownAction & {
-  payload: {
-    response: SearchResponseSuccess;
-  };
-  meta: {requestId: string};
-};
+  beforeEach(() => {
+    mockNavigatorContext = buildMockNavigatorContext();
+    const mockConfiguration = {
+      organizationId: 'some-org-id',
+      accessToken: 'some-token',
+      analytics: {
+        trackingId: 'xxx',
+      },
+    } as SearchEngineConfiguration;
 
-function defineCustomEngineStateReader(): ControllerDefinitionWithoutProps<
-  SSRSearchEngine,
-  CustomEngineStateReader<SSRSearchEngine['state']>
-> {
-  return {
-    build(engine) {
-      return {
-        ...buildController(engine),
-        get state() {
-          return engine.state;
-        },
-      };
-    },
-  };
-}
+    definitionOptions = {
+      configuration: mockConfiguration,
+      controllers: {
+        controller1: defineMockSearchController(),
+        controller2: defineMockSearchController(),
+      },
+    };
+  });
 
-function isSearchPendingAction(
-  action: UnknownAction
-): action is ReturnType<(typeof executeSearch)['pending']> {
-  return action.type === 'search/executeSearch/pending';
-}
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
 
-function isSearchFulfilledAction(
-  action: UnknownAction
-): action is ReturnType<(typeof executeSearch)['fulfilled']> {
-  return action.type === 'search/executeSearch/fulfilled';
-}
+  it('should return an object with searchEngineDefinition and standaloneEngineDefinition', () => {
+    const engineDefinitions = defineSearchEngine(definitionOptions);
+    expect(engineDefinitions).toHaveProperty('searchEngineDefinition');
+    expect(engineDefinitions).toHaveProperty('standaloneEngineDefinition');
+  });
 
-function createMockResultsMiddleware(options: {
-  defaultNumberOfResults: number;
-}): Middleware {
-  const numberOfResultsPerRequestId: {[requestId: string]: number | undefined} =
-    {};
-  return (api) => (next) => (action) => {
-    const possibleSearchActionWithPayload =
-      action as UnknownActionWithPossibleSearchResponsePayload;
-    if (isSearchPendingAction(possibleSearchActionWithPayload)) {
-      const state = api.getState() as SSRSearchEngine['state'];
-      numberOfResultsPerRequestId[
-        possibleSearchActionWithPayload.meta.requestId
-      ] = state.pagination?.numberOfResults ?? options.defaultNumberOfResults;
-      return next(action);
-    }
-    if (isSearchFulfilledAction(action as UnknownAction)) {
-      const newAction = JSON.parse(
-        JSON.stringify(possibleSearchActionWithPayload)
-      ) as UnknownActionWithPossibleSearchResponsePayload;
-      newAction.payload.response.results = Array.from(
-        {
-          length:
-            numberOfResultsPerRequestId[
-              possibleSearchActionWithPayload.meta.requestId
-            ]!,
-        },
-        (_, index) => buildMockResult({title: `Result #${index}`})
-      );
-      return next(newAction);
-    }
-    return next(action);
-  };
-}
+  describe('searchEngineDefinition', () => {
+    it('should have all required properties', () => {
+      const {searchEngineDefinition} = defineSearchEngine(definitionOptions);
+      expect(searchEngineDefinition).toHaveProperty('fetchStaticState');
+      expect(searchEngineDefinition).toHaveProperty('hydrateStaticState');
+      expect(searchEngineDefinition).toHaveProperty('getAccessToken');
+      expect(searchEngineDefinition).toHaveProperty('setAccessToken');
+    });
 
-describe('SSR', () => {
-  const mockNavigatorContextProvider = buildMockNavigatorContextProvider();
-  const mockPreprocessRequest = vi.fn(async (req) => req);
+    it('#getAccessToken should return the access token', () => {
+      const {searchEngineDefinition} = defineSearchEngine(definitionOptions);
+      const {getAccessToken} = searchEngineDefinition;
+      expect(getAccessToken()).toBe('some-token');
+    });
 
-  describe('define search engine', () => {
-    type StaticState = InferStaticState<typeof engineDefinition>;
-    type HydratedState = InferHydratedState<typeof engineDefinition>;
-    type BuildResult = InferBuildResult<typeof engineDefinition>;
-    type AnyState = StaticState | HydratedState | BuildResult;
+    it('#setAccessToken should update the access token', () => {
+      const {searchEngineDefinition} = defineSearchEngine(definitionOptions);
+      const {getAccessToken, setAccessToken} = searchEngineDefinition;
+      setAccessToken('new-access-token');
+      expect(getAccessToken()).toBe('new-access-token');
+    });
 
-    const defaultNumberOfResults = 12;
-    let engineDefinition: SearchEngineDefinition<{
-      engineStateReader: ReturnType<typeof defineCustomEngineStateReader>;
-      resultList: ReturnType<typeof defineResultList>;
-    }>;
-
-    function getResultsPerPage(state: AnyState) {
-      return (
-        state.controllers.engineStateReader.state.pagination?.numberOfResults ??
-        defaultNumberOfResults
-      );
-    }
-
-    beforeEach(() => {
-      engineDefinition = defineSearchEngine({
-        configuration: {
-          ...getSampleSearchEngineConfiguration(),
-          analytics: {enabled: false},
-          preprocessRequest: mockPreprocessRequest,
-        },
-        controllers: {
-          engineStateReader: defineCustomEngineStateReader(),
-          resultList: defineResultList(),
-        },
-        navigatorContextProvider: mockNavigatorContextProvider,
-        loggerOptions: {level: 'warn'} as LoggerOptions,
-        middlewares: [createMockResultsMiddleware({defaultNumberOfResults})],
+    it('should always return parameter manager controller as well as the ones provided', async () => {
+      const {searchEngineDefinition} = defineSearchEngine(definitionOptions);
+      const staticState = await searchEngineDefinition.fetchStaticState({
+        navigatorContext: mockNavigatorContext,
+        searchParams: {q: 'test'},
       });
+      expect(staticState.controllers).toHaveProperty('parameterManager');
+      expect(staticState.controllers).toHaveProperty('controller1');
+      expect(staticState.controllers).toHaveProperty('controller2');
     });
 
-    it('returns 3 functions (where two are composite)', () => {
-      const {build, fetchStaticState, hydrateStaticState} = engineDefinition;
-      expect(typeof build).toBe('function');
-      expect(typeof fetchStaticState).toBe('function');
-      expect(typeof hydrateStaticState).toBe('function');
-      expect(typeof fetchStaticState.fromBuildResult).toBe('function');
-      expect(typeof hydrateStaticState.fromBuildResult).toBe('function');
-    });
-
-    it('gets build result', async () => {
-      const {build} = engineDefinition;
-      const buildResult = await build();
-      expect(buildResult.engine).toBeTruthy();
-      expect(buildResult.controllers).toBeTruthy();
-    });
-
-    it('fetches initial state of engine', async () => {
-      const fetchStaticState = vi.mocked(engineDefinition.fetchStaticState);
-      const staticState = await fetchStaticState();
+    it('should fetch static state successfully', async () => {
+      const {searchEngineDefinition} = defineSearchEngine(definitionOptions);
+      const staticState = await searchEngineDefinition.fetchStaticState({
+        navigatorContext: mockNavigatorContext,
+        searchParams: {q: 'test query'},
+      });
       expect(staticState).toBeTruthy();
-      expect(getResultsPerPage(staticState)).toBe(defaultNumberOfResults);
+      expect(staticState.controllers).toBeDefined();
     });
 
-    it('should call augmentPreprocessRequestWithForwardedFor when fetchStaticState is invoked', async () => {
-      const spy = vi.spyOn(
-        augmentModule,
-        'augmentPreprocessRequestWithForwardedFor'
+    it('should hydrate static state successfully', async () => {
+      const {searchEngineDefinition} = defineSearchEngine(definitionOptions);
+      const staticState = await searchEngineDefinition.fetchStaticState({
+        navigatorContext: mockNavigatorContext,
+        searchParams: {q: 'test'},
+      });
+
+      const hydratedState =
+        await searchEngineDefinition.hydrateStaticState(staticState);
+      expect(hydratedState).toBeTruthy();
+      expect(hydratedState.engine).toBeDefined();
+      expect(hydratedState.controllers).toBeDefined();
+      expect(hydratedState.engine.state.configuration.organizationId).toBe(
+        'some-org-id'
       );
+    });
+  });
 
-      const fetchStaticState = engineDefinition.fetchStaticState;
-      await fetchStaticState();
-      expect(spy).toHaveBeenCalledWith({
-        loggerOptions: {level: 'warn'},
-        navigatorContextProvider: mockNavigatorContextProvider,
-        preprocessRequest: mockPreprocessRequest,
-      });
-
-      spy.mockRestore();
+  describe('standaloneEngineDefinition', () => {
+    it('should have all required properties', () => {
+      const {standaloneEngineDefinition} =
+        defineSearchEngine(definitionOptions);
+      expect(standaloneEngineDefinition).toHaveProperty('fetchStaticState');
+      expect(standaloneEngineDefinition).toHaveProperty('hydrateStaticState');
+      expect(standaloneEngineDefinition).toHaveProperty('getAccessToken');
+      expect(standaloneEngineDefinition).toHaveProperty('setAccessToken');
     });
 
-    describe('with a static state', () => {
-      let staticState: StaticState;
-      beforeEach(async () => {
-        const fetchStaticState = vi.mocked(engineDefinition.fetchStaticState);
-        staticState = await fetchStaticState();
-      });
-
-      it('hydrates engine', async () => {
-        const hydrateStaticState = vi.mocked(
-          engineDefinition.hydrateStaticState
-        );
-        const hydratedState = await hydrateStaticState(staticState);
-        expect(hydratedState.engine.state.configuration.organizationId).toEqual(
-          getSampleSearchEngineConfiguration().organizationId
-        );
-        expect(getResultsPerPage(hydratedState)).toBe(defaultNumberOfResults);
-      });
+    it('#getAccessToken should return the access token', () => {
+      const {standaloneEngineDefinition} =
+        defineSearchEngine(definitionOptions);
+      const {getAccessToken} = standaloneEngineDefinition;
+      expect(getAccessToken()).toBe('some-token');
     });
 
-    describe('with a buildResult that has a customized numberOfResults', () => {
-      const newNumberOfResults = 6;
+    it('#setAccessToken should update the access token', () => {
+      const {standaloneEngineDefinition} =
+        defineSearchEngine(definitionOptions);
+      const {getAccessToken, setAccessToken} = standaloneEngineDefinition;
+      setAccessToken('new-standalone-token');
+      expect(getAccessToken()).toBe('new-standalone-token');
+    });
 
-      async function fetchBuildResultWithNewNumberOfResults() {
-        const build = vi.mocked(engineDefinition.build);
-        const buildResult = await build();
-        const {registerNumberOfResults} = loadPaginationActions(
-          buildResult.engine
-        );
-        buildResult.engine.dispatch(
-          registerNumberOfResults(newNumberOfResults)
-        );
-        expect(getResultsPerPage(buildResult)).toBe(newNumberOfResults);
-        return buildResult;
-      }
+    it('should always return parameter manager controller as well as the ones provided', async () => {
+      const {standaloneEngineDefinition} =
+        defineSearchEngine(definitionOptions);
+      const staticState = await standaloneEngineDefinition.fetchStaticState({
+        navigatorContext: mockNavigatorContext,
+      });
+      expect(staticState.controllers).toHaveProperty('parameterManager');
+      expect(staticState.controllers).toHaveProperty('controller1');
+      expect(staticState.controllers).toHaveProperty('controller2');
+    });
 
-      it('fetches initial state of engine from build result', async () => {
-        const fetchStaticState = vi.mocked(engineDefinition.fetchStaticState);
-        const staticState = await fetchStaticState.fromBuildResult({
-          buildResult: await fetchBuildResultWithNewNumberOfResults(),
-        });
-        expect(staticState).toBeTruthy();
-        expect(getResultsPerPage(staticState)).toBe(newNumberOfResults);
+    it('should fetch static state successfully', async () => {
+      const {standaloneEngineDefinition} =
+        defineSearchEngine(definitionOptions);
+      const staticState = await standaloneEngineDefinition.fetchStaticState({
+        navigatorContext: mockNavigatorContext,
+      });
+      expect(staticState).toBeTruthy();
+      expect(staticState.controllers).toBeDefined();
+    });
+
+    it('should hydrate static state successfully', async () => {
+      const {standaloneEngineDefinition} =
+        defineSearchEngine(definitionOptions);
+      const staticState = await standaloneEngineDefinition.fetchStaticState({
+        navigatorContext: mockNavigatorContext,
       });
 
-      describe('with the default static state', () => {
-        let staticState: StaticState;
-        beforeEach(async () => {
-          const fetchStaticState = vi.mocked(engineDefinition.fetchStaticState);
-          staticState = await fetchStaticState();
-        });
+      const hydratedState =
+        await standaloneEngineDefinition.hydrateStaticState(staticState);
+      expect(hydratedState).toBeTruthy();
+      expect(hydratedState.engine).toBeDefined();
+      expect(hydratedState.controllers).toBeDefined();
+      expect(hydratedState.engine.state.configuration.organizationId).toBe(
+        'some-org-id'
+      );
+    });
+  });
 
-        it('hydrates engine from build result', async () => {
-          const hydrateStaticState = vi.mocked(
-            engineDefinition.hydrateStaticState
-          );
-          const buildResult = await fetchBuildResultWithNewNumberOfResults();
-          const hydratedState = await hydrateStaticState.fromBuildResult({
-            buildResult: buildResult,
-            searchAction: staticState.searchAction,
-          });
-          expect(getResultsPerPage(hydratedState)).toBe(newNumberOfResults);
-        });
-      });
+  describe('backward compatibility', () => {
+    it('should allow destructuring only searchEngineDefinition', () => {
+      const {searchEngineDefinition} = defineSearchEngine(definitionOptions);
+      expect(searchEngineDefinition).toBeDefined();
+      expect(searchEngineDefinition.fetchStaticState).toBeDefined();
+    });
+
+    it('should allow destructuring only standaloneEngineDefinition', () => {
+      const {standaloneEngineDefinition} =
+        defineSearchEngine(definitionOptions);
+      expect(standaloneEngineDefinition).toBeDefined();
+      expect(standaloneEngineDefinition.fetchStaticState).toBeDefined();
+    });
+
+    it('should allow destructuring both definitions', () => {
+      const {searchEngineDefinition, standaloneEngineDefinition} =
+        defineSearchEngine(definitionOptions);
+      expect(searchEngineDefinition).toBeDefined();
+      expect(standaloneEngineDefinition).toBeDefined();
     });
   });
 });

@@ -5,27 +5,39 @@ import type {
   RequestMetadata,
 } from '../../api/preprocess-request.js';
 import {buildLogger, type LoggerOptions} from '../../app/logger.js';
-import type {NavigatorContextProvider} from '../../app/navigator-context-provider.js';
+import type {NavigatorContext} from '../../app/navigator-context-provider.js';
 import {isBrowser} from '../../utils/runtime.js';
 
 export interface AugmentPreprocessRequestOptions {
+  navigatorContext: NavigatorContext;
   preprocessRequest?: PreprocessRequest;
-  navigatorContextProvider?: NavigatorContextProvider;
   loggerOptions?: LoggerOptions;
+}
+
+const AUGMENTED_MARKER = Symbol('augmentedWithForwardedFor');
+
+interface AugmentedPreprocessRequest extends PreprocessRequest {
+  [AUGMENTED_MARKER]?: boolean;
 }
 
 export function augmentPreprocessRequestWithForwardedFor(
   options: AugmentPreprocessRequestOptions
 ) {
-  const originalPreprocessRequest = options.preprocessRequest;
-  return async (
+  const originalPreprocessRequest =
+    options.preprocessRequest as AugmentedPreprocessRequest;
+
+  if (originalPreprocessRequest?.[AUGMENTED_MARKER]) {
+    return originalPreprocessRequest;
+  }
+
+  const augmentedFunction: AugmentedPreprocessRequest = async (
     request: PlatformRequestOptions,
     clientOrigin: PlatformClientOrigin,
     metadata?: RequestMetadata
   ) => {
     if (!isBrowser()) {
       const headers = new Headers(request.headers);
-      const forwardedFor = options.navigatorContextProvider?.()?.forwardedFor;
+      const forwardedFor = options.navigatorContext.forwardedFor;
       if (forwardedFor) {
         headers.set('x-forwarded-for', forwardedFor as string);
       } else {
@@ -41,4 +53,8 @@ export function augmentPreprocessRequestWithForwardedFor(
     }
     return request;
   };
+
+  augmentedFunction[AUGMENTED_MARKER] = true;
+
+  return augmentedFunction;
 }

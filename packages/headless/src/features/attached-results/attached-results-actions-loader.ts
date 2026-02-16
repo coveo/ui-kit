@@ -1,13 +1,13 @@
 import type {PayloadAction} from '@reduxjs/toolkit';
 import type {InsightEngine} from '../../app/insight-engine/insight-engine.js';
-import {attachedResultsReducer as attachedResults} from '../../features/attached-results/attached-results-slice.js';
 import {
+  attachResult,
+  detachResult,
   type SetAttachedResultsActionCreatorPayload,
   setAttachedResults,
 } from './attached-results-actions.js';
+import {attachedResultsReducer as attachedResults} from './attached-results-slice.js';
 import type {AttachedResult} from './attached-results-state.js';
-
-export type {SetAttachedResultsActionCreatorPayload, AttachedResult};
 
 /**
  * The attached results action creators.
@@ -35,6 +35,22 @@ export interface AttachedResultsActionCreators {
   setAttachedResults(
     payload: SetAttachedResultsActionCreatorPayload
   ): PayloadAction<SetAttachedResultsActionCreatorPayload>;
+
+  /**
+   * Creates an action that attaches a result to a case.
+   *
+   * @param payload - The action creator payload containing the result to attach.
+   * @returns A dispatchable action.
+   */
+  attachResult(payload: AttachedResult): PayloadAction<AttachedResult>;
+
+  /**
+   * Creates an action that detaches a result from a case.
+   *
+   * @param payload - The action creator payload containing the result to detach.
+   * @returns A dispatchable action.
+   */
+  detachResult(payload: AttachedResult): PayloadAction<AttachedResult>;
 }
 
 /**
@@ -53,5 +69,7 @@ export function loadAttachedResultsActions(
 
   return {
     setAttachedResults,
+    detachResult,
+    attachResult,
   };
 }

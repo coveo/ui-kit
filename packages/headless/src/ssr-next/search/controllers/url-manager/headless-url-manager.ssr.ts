@@ -5,7 +5,7 @@ import {
   type UrlManagerInitialState,
 } from '../../../../controllers/url-manager/headless-url-manager.js';
 import {MissingControllerProps} from '../../../common/errors.js';
-import type {ControllerDefinitionWithProps} from '../../../common/types/controllers.js';
+import type {ControllerDefinitionWithProps} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/url-manager/headless-url-manager.js';
 
@@ -27,6 +27,7 @@ export const defineUrlManager = (): ControllerDefinitionWithProps<
   UrlManagerBuildProps
 > => ({
   buildWithProps: (engine, props) => {
+    // TODO: KIT-5154 - Apply commerce pattern
     if (props === undefined) {
       throw new MissingControllerProps('UrlManager');
     }

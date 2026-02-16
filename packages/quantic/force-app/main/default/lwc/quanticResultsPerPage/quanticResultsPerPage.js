@@ -42,7 +42,7 @@ export default class QuanticResultsPerPage extends LightningElement {
   }
   /**
    * The initial selection for the number of result per page. It must be a positive number and should be part of the `choicesDisplayed` option.
-   * If omited or not part of the `choicesDisplayed` option, it will default to the first value in `choicesDisplayed`.
+   * If omitted or not part of the `choicesDisplayed` option, it will default to the first value in `choicesDisplayed`.
    * @api
    * @type {number}
    * @defaultValue `the first value in 'choicesDisplayed'`

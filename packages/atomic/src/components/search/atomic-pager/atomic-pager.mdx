@@ -1,0 +1,54 @@
+import {Meta} from '@storybook/addon-docs/blocks';
+import * as AtomicPagerStories from './atomic-pager.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicPagerStories} />
+
+<AtomicDocTemplate
+  stories={AtomicPagerStories}
+  githubPath="search/atomic-pager/atomic-pager.ts"
+  tagName="atomic-pager"
+  className="AtomicPager"
+>
+
+The `atomic-pager` component provides buttons that allow the end user to navigate through the different result pages.
+
+This component should be placed within an `atomic-search-interface` component, usually in the "pagination" section of the layout.
+
+**Note:** Use either `atomic-pager` OR `atomic-load-more-results` for pagination, but not both. These components provide alternative pagination approaches:
+- `atomic-pager`: Provides traditional page-based navigation with numbered pages. It is often used along with the `atomic-results-per-page` component.
+- `atomic-load-more-results`: Allows users to incrementally load additional results with a "Load More" button.
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-search-layout>
+    ...
+    <atomic-layout-section section="main">
+      ...
+      <atomic-layout-section section="pagination">
+
+        <atomic-pager></atomic-pager>
+
+      </atomic-layout-section>
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+## Customization
+
+You can customize the number of page buttons displayed and the icons used for the previous/next buttons:
+
+```html
+<atomic-pager 
+  number-of-pages="7" 
+  previous-button-icon="assets://chevron-left.svg"
+  next-button-icon="assets://chevron-right.svg">
+</atomic-pager>
+```
+
+The component automatically hides when there are no search results or when there's an error state.
+
+</AtomicDocTemplate>

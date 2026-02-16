@@ -9,6 +9,9 @@ interface QueryErrorShowMoreProps {
   link?: typeof QueryErrorLink;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const QueryErrorShowMore: FunctionalComponent<
   QueryErrorShowMoreProps
 > = ({i18n, onShowMore, link}) => {

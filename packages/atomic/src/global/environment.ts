@@ -1,6 +1,4 @@
-import {VERSION} from '@coveo/headless';
-
-export interface AtomicEnvironment {
+interface AtomicEnvironment {
   version: string;
   headlessVersion: string;
 }
@@ -15,16 +13,25 @@ function getWindow() {
   return window;
 }
 
-export function getAtomicEnvironment(): AtomicEnvironment {
+export function getAtomicEnvironment(
+  headlessVersion: string
+): AtomicEnvironment {
   return {
     version: process.env.VERSION!,
-    headlessVersion: VERSION,
+    headlessVersion,
   };
 }
 
-export function setCoveoGlobal(globalVariableName: string) {
+export function getAtomicVersion(): string {
+  return getAtomicEnvironment('').version;
+}
+
+export function setCoveoGlobal(
+  globalVariableName: string,
+  headlessVersion: string
+) {
   if (getWindow()[globalVariableName]) {
     return;
   }
-  getWindow()[globalVariableName] = getAtomicEnvironment();
+  getWindow()[globalVariableName] = getAtomicEnvironment(headlessVersion);
 }

@@ -10,11 +10,21 @@
       "outputs": []
     },
     "build:storybook": {
-      "dependsOn": ["build:cem", "build:list-assets"],
+      "dependsOn": ["build:cem"],
       "outputs": ["./dist-storybook/**"]
     },
+    "chromatic": {
+      "dependsOn": ["build:storybook"],
+      "outputs": [],
+      "env": [
+        "CHROMATIC_PROJECT_TOKEN",
+        "CHROMATIC_SHA",
+        "CHROMATIC_BRANCH",
+        "CHROMATIC_SLUG"
+      ]
+    },
     "build:cem": {
-      "dependsOn": ["build:stencil-lit"],
+      "dependsOn": ["build:cdn"],
       "outputs": ["./custom-elements.json"]
     },
     "build:stencil-lit": {
@@ -22,24 +32,33 @@
       "outputs": [
         "dist/**",
         "!dist/atomic/assets/**",
-        "cdn/**",
+        "!dist/atomic/themes/**",
+        "!dist/atomic/lang/**",
         "docs/**",
         "!docs/assets.json",
         "src/components.d.ts",
-        ".stencil/**"
+        ".stencil/**",
+        "projects/atomic-angular/src/lib/stencil-generated/**/*"
       ]
     },
-    "build:locales": {
-      "dependsOn": ["^build"],
-      "outputs": [
-        "src/generated/**",
-        "src/components/search/atomic-search-interface/lang/**"
-      ]
+    "build:copy-assets": {
+      "dependsOn": ["build:stencil-lit", "build:locales"],
+      "outputs": ["dist/atomic/themes/**", "dist/atomic/lang/**"]
     },
     "build:list-assets": {
-      "dependsOn": ["build:stencil-lit"],
+      "dependsOn": ["build:copy-assets"],
       "outputs": ["dist/atomic/assets/**", "docs/assets.json"]
     },
+    "build:cdn": {
+      "dependsOn": ["build:list-assets"],
+      "outputs": ["cdn/**"]
+    },
+
+    "build:locales": {
+      "dependsOn": ["^build"],
+      "outputs": ["src/generated/**", "src/assets/lang/**"]
+    },
+
     "test:stencil": {
       "dependsOn": ["build:locales"],
       "outputs": ["coverage/**"]
@@ -48,8 +67,17 @@
       "dependsOn": ["^build", "build"],
       "outputs": ["coverage/**"]
     },
+    "test:storybook": {
+      "dependsOn": ["^build", "build"],
+      "outputs": []
+    },
     "web:dev": {
       "dependsOn": ["build"],
+      "cache": false,
+      "persistent": true
+    },
+    "web:cdn": {
+      "dependsOn": ["build:cdn"],
       "cache": false,
       "persistent": true
     }

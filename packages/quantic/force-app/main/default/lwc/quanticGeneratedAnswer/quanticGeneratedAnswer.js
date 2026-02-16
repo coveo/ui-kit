@@ -10,6 +10,7 @@ import generatingAnswer from '@salesforce/label/c.quantic_GeneratingAnswer';
 import harmful from '@salesforce/label/c.quantic_Harmful';
 import inaccurate from '@salesforce/label/c.quantic_Inaccurate';
 import irrelevant from '@salesforce/label/c.quantic_Irrelevant';
+import loading from '@salesforce/label/c.quantic_Loading';
 import other from '@salesforce/label/c.quantic_Other';
 import outOfDate from '@salesforce/label/c.quantic_OutOfDate';
 import rgaDisclaimer from '@salesforce/label/c.quantic_RGADisclaimer';
@@ -17,6 +18,7 @@ import thisAnswerWasHelpful from '@salesforce/label/c.quantic_ThisAnswerWasHelpf
 import thisAnswerWasNotHelpful from '@salesforce/label/c.quantic_ThisAnswerWasNotHelpful';
 import tryAgain from '@salesforce/label/c.quantic_TryAgain';
 import whyGeneratedAnswerWasNotHelpful from '@salesforce/label/c.quantic_WhyGeneratedAnswerWasNotHelpful';
+import noGeneratedAnswer from '@salesforce/label/c.quantic_NoGeneratedAnswer';
 import FeedbackModalQna from 'c/quanticFeedbackModalQna';
 import {
   registerComponentForInit,
@@ -29,6 +31,8 @@ import {LightningElement, api} from 'lwc';
 import errorTemplate from './templates/errorTemplate.html';
 // @ts-ignore
 import generatedAnswerTemplate from './templates/generatedAnswer.html';
+// @ts-ignore
+import loadingTemplate from './templates/loading.html';
 // @ts-ignore
 import retryPromptTemplate from './templates/retryPrompt.html';
 
@@ -49,9 +53,10 @@ const MAX_VALID_COLLAPSED_HEIGHT = 500;
 const MIN_VALID_COLLAPSED_HEIGHT = 150;
 
 const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
+const DEFAULT_CITATION_FIELDS = ['sfid', 'sfkbid', 'sfkavid', 'filetype'];
 
 /**
- * The `QuanticGeneratedAnswer` component automatically generates an answer using Coveo machine learning models to answer the query executed by the user.
+ * The `QuanticGeneratedAnswer` component automatically generates an answer using Coveo Machine Learning models to answer the query executed by the user.
  * This component includes a slot, "no-answer-message", which allows for rendering a custom message when no answer is generated.
  * @category Search
  * @slot no-answer-message - Slot that allows the rendering of a custom message when no answer is generated.
@@ -71,9 +76,9 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * A list of fields to fetch with the citations used to generate the answer.
    * @api
    * @type {string}
-   * @defaultValue `'sfid,sfkbid,sfkavid'`
+   * @defaultValue `'sfid,sfkbid,sfkavid,filetype'`
    */
-  @api fieldsToIncludeInCitations = 'sfid,sfkbid,sfkavid';
+  @api fieldsToIncludeInCitations = 'sfid,sfkbid,sfkavid,filetype';
   /**
    * Whether the generated answer should be collapsible when it exceeds the maximum height of 250px.
    * @api
@@ -118,6 +123,13 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       this._maxCollapsedHeight = DEFAULT_COLLAPSED_HEIGHT;
     }
   }
+  /**
+   * Whether to disable citation anchoring.
+   * @api
+   * @type {boolean}
+   * @default false
+   */
+  @api disableCitationAnchoring = false;
 
   labels = {
     generatedAnswerForYou,
@@ -139,6 +151,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     rgaDisclaimer,
     showMore,
     showLess,
+    loading,
+    noGeneratedAnswer,
   };
 
   /** @type {GeneratedAnswer} */
@@ -530,10 +544,17 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get citationFields() {
-    return this.fieldsToIncludeInCitations
-      ?.split(',')
-      .map((field) => field.trim())
-      .filter((field) => field.length > 0);
+    const userCitationFields =
+      this.fieldsToIncludeInCitations
+        ?.split(',')
+        .map((field) => field.trim())
+        .filter((field) => field.length > 0) || [];
+
+    const combinedCitationFields = [
+      ...DEFAULT_CITATION_FIELDS,
+      ...userCitationFields,
+    ];
+    return [...new Set(combinedCitationFields)];
   }
 
   get shouldShowDisclaimer() {
@@ -588,12 +609,16 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return !!slot?.assignedNodes()?.length;
   }
 
-  get shouldDisplayCustomNoAnswerMessage() {
-    return (
-      this.state?.cannotAnswer &&
-      this.searchStatusState?.hasResults &&
-      this.hasCustomNoAnswerMessage
-    );
+  get cannotAnswer() {
+    return this.state?.cannotAnswer && this.searchStatusState?.hasResults;
+  }
+
+  get isLoading() {
+    return this.state?.isLoading;
+  }
+
+  get isManualAnswerGeneration() {
+    return this.state?.answerGenerationMode === 'manual';
   }
 
   /**
@@ -606,6 +631,13 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   render() {
     if (this.hasInitializationError) {
       return errorTemplate;
+    }
+    if (
+      this.isLoading &&
+      this.isManualAnswerGeneration &&
+      !this.state?.cannotAnswer
+    ) {
+      return loadingTemplate;
     }
     if (this.hasRetryableError) {
       return retryPromptTemplate;

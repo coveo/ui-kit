@@ -544,7 +544,16 @@ export const makeAnalyticsAction = makeAnalyticsActionFactory<
   StateNeededBySearchAnalyticsProvider,
   CoveoSearchPageClient,
   SearchPageClientProvider
->(configureLegacyAnalytics, (original) => original, SearchAnalyticsProvider);
+>(
+  (options) =>
+    configureLegacyAnalytics({
+      ...options,
+      provider:
+        options.provider || new SearchAnalyticsProvider(options.getState),
+    }),
+  (original) => original,
+  SearchAnalyticsProvider
+);
 
 export const makeCaseAssistAnalyticsAction = makeAnalyticsActionFactory<
   StateNeededByCaseAssistAnalytics,
@@ -773,6 +782,21 @@ export const analyticsEventItemMetadata = (
   return {
     uniqueFieldName: identifier.contentIDKey,
     uniqueFieldValue: identifier.contentIDValue,
+    title: information.documentTitle,
+    author: information.documentAuthor,
+    url: information.documentUri,
+  };
+};
+
+export const analyticsEventItemMetadataForCitations = (
+  citation: GeneratedAnswerCitation,
+  state: Partial<SearchAppState>
+): ItemMetaData => {
+  const identifier = citationDocumentIdentifier(citation);
+  const information = partialCitationInformation(citation, state);
+  return {
+    uniqueFieldName: identifier.contentIdKey,
+    uniqueFieldValue: identifier.contentIdValue,
     title: information.documentTitle,
     author: information.documentAuthor,
     url: information.documentUri,

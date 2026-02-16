@@ -57,6 +57,8 @@ export interface EngineDefinition<
     InferControllerPropsMapFromDefinitions<TControllers>
   >;
   /**
+   * @deprecated This method will be removed in a future major version. Navigator context should be provided directly when fetching the static state
+   *
    * Sets the navigator context provider.
    * This provider is essential for retrieving navigation-related data such as referrer, userAgent, location, and clientId, which are crucial for handling both server-side and client-side API requests effectively.
    *
@@ -66,6 +68,8 @@ export interface EngineDefinition<
     navigatorContextProvider: NavigatorContextProvider
   ) => void;
   /**
+   * @deprecated This method is deprecated and will be removed in a future major version. Use the `fetchStaticState` method instead.
+   *
    * Builds an engine and its controllers from an engine definition.
    */
   build: Build<
@@ -74,9 +78,22 @@ export interface EngineDefinition<
     InferControllersMapFromDefinition<TControllers>,
     InferControllerPropsMapFromDefinitions<TControllers>
   >;
+
+  /**
+   * Returns the access token.
+   */
+  getAccessToken: () => string;
+
+  /**
+   * Updates the access token.
+   * @param accessToken - The access token to update.
+   */
+  setAccessToken: (accessToken: string) => void;
 }
 
-// TODO: KIT-4610: Remove this type
+/**
+ * @deprecated Use SearchEngineDefinitionBuildResult or CommerceEngineDefinitionBuildResult instead
+ */
 export interface EngineDefinitionBuildResult<
   TEngine extends CoreEngine | CoreEngineNext,
   TControllers extends ControllersMap,
@@ -113,7 +130,10 @@ export type InferHydratedState<
   },
 > = Awaited<ReturnType<T['hydrateStaticState']>>;
 
-// TODO: KIT-4610: Remove this type
+/**
+ * @deprecated This type is deprecated and will be removed in a future version.
+ * {@link EngineDefinition.build} will be removed in a future version.
+ */
 export type InferBuildResult<
   T extends {
     build(...args: unknown[]): Promise<unknown>;

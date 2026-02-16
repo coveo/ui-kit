@@ -1,4 +1,5 @@
 import {createRelay} from '@coveo/relay';
+import type {CaseAssistClient} from 'coveo.analytics';
 import type {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {buildMockCaseAssistState} from '../../test/mock-case-assist-state.js';
 import {
@@ -48,20 +49,20 @@ vi.mocked(createRelay).mockReturnValue({
 });
 
 vi.mock('coveo.analytics', () => {
-  const mockCaseAssistClient = vi.fn(() => ({
-    disable: vi.fn(),
-    logEnterInterface: mockLogEnterInterface,
-    logMoveToNextCaseStep: mockLogMoveToNextCaseStep,
-    logCaseCreated: mockLogCaseCreated,
-    logCaseSolved: mockLogCaseSolved,
-    logCaseCancelled: mockLogCaseCancelled,
-    logUpdateCaseField: mockLogUpdateCaseField,
-    logSelectFieldSuggestion: mockLogSelectFieldSuggestion,
-    logSelectDocumentSuggestion: mockLogSelectDocumentSuggestion,
-    logRateDocumentSuggestion: mockLogRateDocumentSuggestion,
-    logQuickviewDocumentSuggestion: mockLogQuickviewDocumentSuggestion,
-  }));
-
+  const mockCaseAssistClient = vi.fn().mockImplementation(function (
+    this: CaseAssistClient
+  ) {
+    this.logEnterInterface = mockLogEnterInterface;
+    this.logMoveToNextCaseStep = mockLogMoveToNextCaseStep;
+    this.logCaseCreated = mockLogCaseCreated;
+    this.logCaseSolved = mockLogCaseSolved;
+    this.logCaseCancelled = mockLogCaseCancelled;
+    this.logUpdateCaseField = mockLogUpdateCaseField;
+    this.logSelectFieldSuggestion = mockLogSelectFieldSuggestion;
+    this.logSelectDocumentSuggestion = mockLogSelectDocumentSuggestion;
+    this.logRateDocumentSuggestion = mockLogRateDocumentSuggestion;
+    this.logQuickviewDocumentSuggestion = mockLogQuickviewDocumentSuggestion;
+  });
   return {
     CaseAssistClient: mockCaseAssistClient,
     history: {HistoryStore: vi.fn()},

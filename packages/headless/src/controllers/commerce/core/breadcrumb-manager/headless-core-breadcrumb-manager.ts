@@ -99,7 +99,7 @@ export interface BreadcrumbManagerState {
   facetBreadcrumbs: Breadcrumb<AnyFacetValueResponse>[];
 
   /**
-   * Whether any breadcrumbs are available (i.e., if any facet values are currently active).
+   * Whether any breadcrumbs are available (that is, if any facet values are currently active).
    */
   hasBreadcrumbs: boolean;
 }
