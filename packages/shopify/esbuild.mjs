@@ -87,6 +87,8 @@ function browserEsm(base, outfile) {
     outfile: `cdn/${outfile}`,
     format: 'esm',
     watch: isDevMode,
+    minify: isCDN,
+    sourcemap: isCDN,
     external: [buenoPath],
     plugins: isCDN ? [replaceBuenoImport] : [],
   });

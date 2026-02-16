@@ -1,24 +1,21 @@
 import {isUndefined} from '@coveo/bueno';
 import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
-import {html, LitElement, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
-import {getAttributesFromLinkSlot} from '@/src/components/common/item-link/attributes-slot';
+import {createInteractiveProductContextController} from '@/src/components/commerce/product-template-component-utils/context/interactive-product-context-controller.js';
+import {getAttributesFromLinkSlotContent} from '@/src/components/common/item-link/attributes-slot';
 import {renderLinkWithItemAnalytics} from '@/src/components/common/item-link/item-link';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
-import {
-  createInteractiveProductContextController,
-  createProductContextController,
-} from '@/src/decorators/commerce/product-template-decorators.js';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {injectStylesForNoShadowDOM} from '@/src/decorators/inject-styles-for-no-shadow-dom';
 import type {InitializableComponent} from '@/src/decorators/types';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {buildStringTemplateFromProduct} from '../product-template-component-utils/product-utils';
 import '../atomic-product-text/atomic-product-text';
+import {createProductContextController} from '@/src/components/commerce/product-template-component-utils/context/product-context-controller';
+import {LightDomMixin} from '@/src/mixins/light-dom';
 import {
   type LightDOMWithSlots,
   SlotsForNoShadowDOMMixin,
@@ -26,19 +23,18 @@ import {
 import styles from './atomic-product-link.tw.css';
 
 /**
- * The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
+ * The `atomic-product-link` component automatically transforms a product `ec_name` into a clickable link that points to the original item.
+ *
  * @slot default - The content to display inside the link.
  * @slot attributes - Use `<a slot="attributes" target="_blank"></a>` to pass custom attributes to the generated link.
  */
 @customElement('atomic-product-link')
 @bindings()
-@injectStylesForNoShadowDOM
-@withTailwindStyles
 export class AtomicProductLink
-  extends SlotsForNoShadowDOMMixin(LitElement)
+  extends LightDomMixin(SlotsForNoShadowDOMMixin(LitElement))
   implements InitializableComponent<CommerceBindings>
 {
-  static styles = unsafeCSS(styles);
+  static styles: CSSResultGroup = styles;
 
   /**
    * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value
@@ -47,7 +43,7 @@ export class AtomicProductLink
    *
    * For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields.
    * ```html
-   * <atomic-product-link href-template='${clickUri}?id=${permanentId}'></atomic-product-link>
+   * <atomic-product-link href-template='${clickUri}?id=${permanentid}'></atomic-product-link>
    * ```
    */
   @property({type: String, attribute: 'href-template', reflect: true})
@@ -71,28 +67,6 @@ export class AtomicProductLink
     if (warning) {
       this.bindings.engine.logger.warn(warning);
     }
-  }
-
-  private extractAttributesFromSlot() {
-    const slotName = 'attributes';
-    const attributes = getAttributesFromLinkSlot(this, slotName);
-
-    if (!attributes) {
-      this.linkAttributes = undefined;
-      return;
-    }
-
-    const attributesSlot = this.slots.attributes?.[0];
-    if (
-      attributesSlot instanceof Element &&
-      !attributesSlot.hasAttribute('hidden')
-    ) {
-      attributesSlot.setAttribute('hidden', '');
-    }
-
-    this.linkAttributes = attributes.filter(
-      (attr: Attr) => attr.nodeName !== 'hidden'
-    );
   }
 
   initialize() {
@@ -125,6 +99,11 @@ export class AtomicProductLink
     }
   }
 
+  willUpdate(changedProperties: Map<string, unknown>) {
+    super.willUpdate(changedProperties);
+    this.linkAttributes = getAttributesFromLinkSlotContent(this, 'attributes');
+  }
+
   @bindingGuard()
   @errorGuard()
   render() {
@@ -141,7 +120,6 @@ export class AtomicProductLink
           );
 
       const {warningMessage} = interactiveProduct;
-      this.extractAttributesFromSlot();
 
       return renderLinkWithItemAnalytics({
         props: {
@@ -168,13 +146,13 @@ export class AtomicProductLink
           },
         },
       })(html`
-          ${this.renderDefaultSlotContent(
-            html`<atomic-product-text
+        ${this.renderDefaultSlotContent(
+          html`<atomic-product-text
             field="ec_name"
             default="no-title"
           ></atomic-product-text>`
-          )}
-        `);
+        )}
+      `);
     })}`;
   }
 }

@@ -23,7 +23,7 @@ export default class QuanticResult extends LightningElement {
    */
   @api engineId;
   /**
-   * The [result item](https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#result).
+   * The [result item](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.Result.html).
    * @api
    * @type {Result}
    */

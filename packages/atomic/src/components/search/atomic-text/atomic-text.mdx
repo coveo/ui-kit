@@ -1,0 +1,49 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicTextStories from './atomic-text.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicTextStories} />
+
+<AtomicDocTemplate
+  stories={AtomicTextStories}
+  githubPath="search/atomic-text/atomic-text.ts"
+  tagName="atomic-text"
+  className="AtomicText"
+>
+
+The `atomic-text` component leverages the I18n translation module through the atomic-search-interface. It is used to display internationalized text content within your search interface.
+
+This component is typically used within result templates or other parts of your search interface where you need to display translatable text.
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-text value="product-name"></atomic-text>
+  ...
+</atomic-search-interface>
+```
+
+### Basic Usage
+
+```html
+<atomic-text value="your-translation-key"></atomic-text>
+```
+
+### With Pluralization
+
+For text that needs to change based on count (for example, "1 item" vs "5 items"), you can use the `count` attribute:
+
+```html
+<atomic-text value="items-count" count="1"></atomic-text>
+<atomic-text value="items-count" count="5"></atomic-text>
+```
+
+Make sure your translation resources include both singular and plural forms:
+
+```javascript
+{
+  "items-count": "{{count}} item",
+  "items-count_other": "{{count}} items"
+}
+```
+</AtomicDocTemplate>

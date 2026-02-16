@@ -1,13 +1,14 @@
+import '@/src/components/search/atomic-text/atomic-text';
 import {html, type TemplateResult} from 'lit';
 import {keyed} from 'lit/directives/keyed.js';
 import {map} from 'lit/directives/map.js';
 import {ref} from 'lit/directives/ref.js';
 import type {ItemRenderingFunction} from '@/src/components';
+import {tableElementTagName} from '@/src/components/common/table-element-utils';
 import type {
   FunctionalComponent,
   FunctionalComponentWithChildren,
 } from '@/src/utils/functional-component-utils';
-import {tableElementTagName} from '../../search/atomic-table-result/table-element-utils';
 import type {AnyItem} from '../item-list/unfolded-item';
 
 interface TableColumnsProps {
@@ -90,17 +91,32 @@ export const renderTableRow: FunctionalComponentWithChildren<TableRowProps> = ({
 export const renderTableData: FunctionalComponent<TableDataProps> = ({
   props,
 }) => {
-  const {renderItem} = props;
+  const {renderItem, firstItem, itemRenderingFunction} = props;
+
   const fieldColumns = getFieldTableColumns(props);
 
-  return html`${map(
-    fieldColumns,
-    (column) =>
-      html`${keyed(
-        `${column.getAttribute('label')!}${props.key}`,
-        html`<td part="result-table-cell">${renderItem(column)}</td>`
-      )}`
-  )}`;
+  let currentItemColumns = fieldColumns;
+  if (itemRenderingFunction && firstItem) {
+    const contentDiv = document.createElement('div');
+    const renderedHTML = itemRenderingFunction(
+      firstItem,
+      document.createElement('div')
+    );
+    contentDiv.innerHTML = renderedHTML;
+    currentItemColumns = Array.from(
+      contentDiv.querySelectorAll(tableElementTagName)
+    );
+  }
+
+  return html`${map(currentItemColumns, (column, index) => {
+    const label =
+      fieldColumns[index]?.getAttribute('label') ||
+      column.getAttribute('label');
+    return html`${keyed(
+      `${label}${props.key}`,
+      html`<td part="result-table-cell">${renderItem(column)}</td>`
+    )}`;
+  })}`;
 };
 
 const getFieldTableColumns = (props: TableColumnsProps) => {
@@ -130,7 +146,11 @@ const getFieldTableColumnsFromRenderingFunction = (
 
 const getFieldTableColumnsFromHTMLTemplate = (
   props: Pick<TableLayoutProps, 'templateContentForFirstItem'>
-): Element[] =>
-  Array.from(
+): Element[] => {
+  if (!props.templateContentForFirstItem) {
+    return [];
+  }
+  return Array.from(
     props.templateContentForFirstItem.querySelectorAll(tableElementTagName)
   );
+};

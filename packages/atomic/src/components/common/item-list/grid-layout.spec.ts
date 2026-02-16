@@ -1,6 +1,6 @@
-import {userEvent} from '@vitest/browser/context';
 import {html, nothing, type TemplateResult} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
+import {userEvent} from 'vitest/browser';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {type GridLayoutProps, renderGridLayout} from './grid-layout';
 

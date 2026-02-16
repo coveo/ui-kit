@@ -12,18 +12,18 @@ import type {
   ItemDisplayDensity,
   ItemDisplayImageSize,
   ItemDisplayLayout,
-} from '@/src/components/common/layout/display-options';
+} from '@/src/components/common/layout/item-layout-utils';
 import {
   getPartialInstantItemElement,
   getPartialInstantItemShowAllElement,
   renderInstantItemShowAllButton,
 } from '@/src/components/common/suggestions/instant-item';
-import {
-  dispatchSearchBoxSuggestionsEvent,
-  type SearchBoxSuggestionElement,
-  type SearchBoxSuggestions,
-  type SearchBoxSuggestionsBindings,
-} from '@/src/components/common/suggestions/suggestions-common';
+import {dispatchSearchBoxSuggestionsEvent} from '@/src/components/common/suggestions/suggestions-events';
+import type {
+  SearchBoxSuggestionElement,
+  SearchBoxSuggestions,
+  SearchBoxSuggestionsBindings,
+} from '@/src/components/common/suggestions/suggestions-types';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
@@ -37,17 +37,14 @@ export type AriaLabelGenerator = (
 ) => string | undefined;
 
 /**
- * The `atomic-commerce-search-box-instant-products` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant products behavior.
- *
- * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
+ * The `atomic-commerce-search-box-instant-products` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of instant products behavior.
  *
  * This component is not supported on mobile.
  *
- * @part instant-results-show-all-button - The 'See all results' button.
+ * @part instant-results-show-all-button - The 'See all products' button.
  * @part instant-results-item - The individual instant product item.
  *
  * @slot default - The default slot where the instant products are rendered.
- * @alpha
  */
 @customElement('atomic-commerce-search-box-instant-products')
 @withTailwindStyles
@@ -66,8 +63,8 @@ export class AtomicCommerceSearchBoxInstantProducts
   @state() private templateHasError = false;
 
   /**
-   * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
-   * You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.
+   * Sets a rendering function to bypass the standard HTML template mechanism for rendering products.
+   * You can use this function while working with web frameworks that don't use plain HTML syntax such as React, Angular, or Vue.
    *
    * Do not use this method if you integrate Atomic in a plain HTML deployment.
    *
@@ -151,6 +148,7 @@ export class AtomicCommerceSearchBoxInstantProducts
         });
         const partialItem = getPartialInstantItemElement(
           this.bindings.i18n,
+          'instant-products-suggestion-label',
           this.ariaLabelGenerator?.(this.bindings, product) || product.ec_name!,
           product.permanentid
         );
@@ -192,11 +190,15 @@ export class AtomicCommerceSearchBoxInstantProducts
     );
     if (elements.length) {
       const partialItem = getPartialInstantItemShowAllElement(
-        this.bindings.i18n
+        this.bindings.i18n,
+        'show-all-products'
       );
       elements.push({
         ...partialItem,
-        content: renderInstantItemShowAllButton({i18n: this.bindings.i18n}),
+        content: renderInstantItemShowAllButton({
+          i18n: this.bindings.i18n,
+          i18nKey: 'show-all-products',
+        }),
         onSelect: () => {
           this.bindings.clearSuggestions();
           this.bindings.searchBoxController.updateText(
@@ -272,7 +274,7 @@ export class AtomicCommerceSearchBoxInstantProducts
 
   @errorGuard()
   render() {
-    return html`${nothing}`;
+    return nothing;
   }
 }
 

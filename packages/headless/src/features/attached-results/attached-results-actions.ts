@@ -26,33 +26,29 @@ export interface SetAttachedResultsActionCreatorPayload {
   loading?: boolean;
 }
 
-interface SetAttachToCaseAttachActionCreatorPayload {
-  result: AttachedResult;
-}
-
-interface SetAttachToCaseDetachActionCreatorPayload {
-  result: AttachedResult;
-}
+const attachedResultPayloadDefinition = {
+  articleLanguage: nonEmptyString,
+  articlePublishStatus: nonEmptyString,
+  articleVersionNumber: nonEmptyString,
+  caseId: requiredNonEmptyString,
+  knowledgeArticleId: nonEmptyString,
+  name: nonEmptyString,
+  permanentId: nonEmptyString,
+  resultUrl: nonEmptyString,
+  source: nonEmptyString,
+  title: requiredNonEmptyString,
+  uriHash: nonEmptyString,
+  isAttachedFromCitation: new BooleanValue({required: false, default: false}),
+};
 
 const RequiredAttachedResultRecord = new RecordValue({
   options: {
     required: true,
   },
-  values: {
-    articleLanguage: nonEmptyString,
-    articlePublishStatus: nonEmptyString,
-    articleVersionNumber: nonEmptyString,
-    caseId: requiredNonEmptyString,
-    knowledgeArticleId: nonEmptyString,
-    name: nonEmptyString,
-    permanentId: nonEmptyString,
-    resultUrl: nonEmptyString,
-    source: nonEmptyString,
-    title: requiredNonEmptyString,
-    uriHash: nonEmptyString,
-  },
+  values: attachedResultPayloadDefinition,
 });
 
+//TODO: SFINT-6621 - Change type from insight/attachToCase... to insight/attachedResults...
 export const setAttachedResults = createAction(
   'insight/attachToCase/setAttachedResults',
   (payload: SetAttachedResultsActionCreatorPayload) =>
@@ -67,26 +63,22 @@ export const setAttachedResults = createAction(
     })
 );
 
+//TODO: SFINT-6621 - Change type from insight/attachToCase/ to insight/attachedResults/
 export const attachResult = createAction(
   'insight/attachToCase/attach',
-  (payload: SetAttachToCaseAttachActionCreatorPayload) =>
-    validatePayloadAndPermanentIdOrUriHash(payload)
+  (payload: AttachedResult) => validatePayloadAndPermanentIdOrUriHash(payload)
 );
 
+//TODO: SFINT-6621 - Change type from insight/attachToCase/ to insight/attachedResults/
 export const detachResult = createAction(
   'insight/attachToCase/detach',
-  (payload: SetAttachToCaseDetachActionCreatorPayload) =>
-    validatePayloadAndPermanentIdOrUriHash(payload)
+  (payload: AttachedResult) => validatePayloadAndPermanentIdOrUriHash(payload)
 );
 
-const validatePayloadAndPermanentIdOrUriHash = (
-  payload:
-    | SetAttachToCaseAttachActionCreatorPayload
-    | SetAttachToCaseDetachActionCreatorPayload
-) => {
+const validatePayloadAndPermanentIdOrUriHash = (payload: AttachedResult) => {
   if (
-    isNullOrUndefined(payload.result.permanentId) &&
-    isNullOrUndefined(payload.result.uriHash)
+    isNullOrUndefined(payload.permanentId) &&
+    isNullOrUndefined(payload.uriHash)
   ) {
     return {
       payload,
@@ -97,7 +89,5 @@ const validatePayloadAndPermanentIdOrUriHash = (
       ),
     };
   }
-  return validatePayload(payload, {
-    result: RequiredAttachedResultRecord,
-  });
+  return validatePayload(payload, attachedResultPayloadDefinition);
 };

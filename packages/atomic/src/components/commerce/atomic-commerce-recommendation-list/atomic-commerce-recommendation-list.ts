@@ -7,7 +7,7 @@ import {
   type RecommendationsSummaryState,
   type Summary,
 } from '@coveo/headless/commerce';
-import {type CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
+import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
 import {map} from 'lit/directives/map.js';
@@ -28,7 +28,7 @@ import {
   type ItemDisplayBasicLayout,
   type ItemDisplayDensity,
   type ItemDisplayImageSize,
-} from '@/src/components/common/layout/display-options';
+} from '@/src/components/common/layout/item-layout-utils';
 import {bindStateToController} from '@/src/decorators/bind-state.js';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -39,13 +39,12 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {randomID} from '@/src/utils/utils';
+import placeholderStyles from '../../common/item-list/styles/placeholders.tw.css';
 import type {CommerceBindings} from '../atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface';
 import type {SelectChildProductEventArgs} from '../atomic-product-children/select-child-product-event';
-import styles from './atomic-commerce-recommendation-list.tw.css';
 
 /**
  * The `atomic-commerce-recommendation-list` component displays a list of product recommendations by applying one or more product templates.
- * @alpha
  *
  * @part result-list - The element containing the list of product recommendations.
  * @part result-list-grid-clickable-container - The parent of a recommended product and the clickable link encompassing it.
@@ -59,6 +58,9 @@ import styles from './atomic-commerce-recommendation-list.tw.css';
  * @part active-indicator - The active indicator.
  *
  * @slot default - The default slot where the product templates are defined.
+ *
+ * @cssprop --atomic-recs-number-of-columns - The number of columns in the grid.
+ * @cssprop --atomic-recs-number-of-rows - The number of rows in the grid.
  */
 @customElement('atomic-commerce-recommendation-list')
 @bindings()
@@ -67,7 +69,36 @@ export class AtomicCommerceRecommendationList
   extends ChildrenUpdateCompleteMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
-  static styles: CSSResultGroup = [unsafeCSS(styles)];
+  static styles: CSSResultGroup = [
+    placeholderStyles,
+    css`@reference "../../common/item-list/styles/mixins.pcss";
+  
+  :host {
+    @apply atomic-grid-clickable-elements;
+    @apply atomic-grid-display-common;
+  
+    /**
+     * @prop --atomic-recs-number-of-columns: Number of columns for the recommendation list.
+     * @prop --atomic-recs-number-of-rows: Number of rows for the recommendation list.
+     */
+    .list-root {
+      @apply atomic-grid-with-cards;
+      grid-template-columns: repeat(
+          var(--atomic-recs-number-of-columns, 1),
+          minmax(0, 1fr)
+        );
+      grid-template-rows: repeat(
+        var(--atomic-recs-number-of-rows, 1),
+        minmax(0, 1fr)
+      );
+    }
+  
+    [part="label"] {
+      @apply font-sans text-2xl font-bold;
+    }
+  }
+  `,
+  ];
 
   public recommendations!: Recommendations;
   public summary!: Summary<RecommendationsSummaryState>;
@@ -106,7 +137,7 @@ export class AtomicCommerceRecommendationList
    * You can include multiple `atomic-commerce-recommendation-list` components with different slot IDs in the same page to display several recommendation lists.
    */
   @property({reflect: true, attribute: 'slot-id', type: String})
-  public slotId = 'Recommendation';
+  public slotId?: string;
 
   /**
    * The unique identifier of the product to use for seeded recommendations.
@@ -116,7 +147,7 @@ export class AtomicCommerceRecommendationList
 
   /**
    * The layout to apply when displaying the products. This does not affect the display of the surrounding list itself.
-   * To modify the number of products per column, modify the `--atomic-recs-number-of-columns` CSS variable.
+   * To modify the number of products per column and row, modify the `--atomic-recs-number-of-columns` and `--atomic-recs-number-of-rows` CSS variables.
    */
   @property({reflect: true, type: String})
   public display: ItemDisplayBasicLayout = 'list';
@@ -142,6 +173,7 @@ export class AtomicCommerceRecommendationList
 
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
+   * When set to 0, a `div` will be used instead of an Heading Element.
    */
   @property({reflect: true, attribute: 'heading-level', type: Number})
   public headingLevel = 0;
@@ -153,7 +185,7 @@ export class AtomicCommerceRecommendationList
 
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism when rendering products.
-   * You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular, or Vue.
+   * You can use this function while working with web frameworks that don't use plain HTML syntax such as React, Angular, or Vue.
    *
    * Do not use this method if you integrate Atomic in a plain HTML implementation.
    *
@@ -256,11 +288,13 @@ export class AtomicCommerceRecommendationList
         constrainTo: ['small', 'large', 'icon', 'none'],
       }),
       productsPerPage: new NumberValue({min: 0}),
+      slotId: new StringValue({emptyAllowed: false}),
     }).validate({
       density: this.density,
       display: this.display,
       imageSize: this.imageSize,
       productsPerPage: this.productsPerPage,
+      slotId: this.slotId,
     });
   }
 
@@ -336,7 +370,7 @@ export class AtomicCommerceRecommendationList
   private initRecommendations() {
     this.recommendations = buildRecommendations(this.bindings.engine, {
       options: {
-        slotId: this.slotId,
+        slotId: this.slotId!,
         productId: this.productId,
       },
     });

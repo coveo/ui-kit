@@ -1,0 +1,85 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicResultListStories from './atomic-result-list.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicResultListStories} />
+
+<AtomicDocTemplate
+  stories={AtomicResultListStories}
+  githubPath="search/atomic-result-list/atomic-result-list.ts"
+  tagName="atomic-result-list"
+  className="AtomicResultList"
+>
+
+This component is typically placed within the `results` section of the layout.
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-search-layout>
+    ...
+    <atomic-layout-section section="main">
+      ...
+      <atomic-layout-section section="results">
+        <atomic-result-list></atomic-result-list>
+      </atomic-layout-section>
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+The components supports three `display` modes:
+
+- `list` (default)
+- `grid`
+- `table`
+
+When [displaying results as a list or grid](https://docs.coveo.com/en/atomic/latest/usage/displaying-results/list-or-grid/), the component applies a basic template by default. You can also [define custom templates](https://docs.coveo.com/en/atomic/latest/usage/displaying-results/#defining-a-result-template).
+
+```html
+<atomic-result-list>
+  <atomic-result-template>
+    <template>
+      <!-- ... -->
+    </template>
+  </atomic-result-template>
+</atomic-result-list>
+```
+
+When [displaying results as a table](https://docs.coveo.com/en/atomic/latest/usage/displaying-results/table/), there is no default template. You must define a template that includes at least one `atomic-table-element` component, which serve as columns.
+
+```html
+<atomic-result-list display="table">
+  <atomic-result-template>
+    <template>
+      <atomic-table-element label="Result">
+        <atomic-result-link></atomic-result-link>
+      </atomic-table-element>
+      <atomic-table-element label="ID">
+        <atomic-result-text field="permanentid"></atomic-result-text>
+      </atomic-table-element>
+      <atomic-table-element label="Price">
+        <atomic-result-price></atomic-result-price>
+      </atomic-table-element>
+    </template>
+  </atomic-result-template>
+</atomic-result-list>
+```
+
+
+
+## Use Cases and Examples
+
+The following table outlines the key differences and best use cases for grids, lists, and tables, helping you choose the most appropriate format based on your content and user needs.
+
+| Layout | Description |
+|--------|-------------|
+| Grid | Greater emphasis on images than text.  Helps users compare items visually.  Allows displaying more results.  Use when recent, high-quality images are available. |
+| List | Use when content or description is most important.  Helps users compare textually and scan content more easily.  Fewer results but reduced cognitive load, as text is heavier than images.  Use when image quality is uncertain. |
+| Table | Use when data is best presented in a tabular format. |
+
+
+## Reference
+[UI cheat sheet: list vs grid](https://uxdesign.cc/ui-cheat-sheet-list-vs-grids-48151a7262a7)
+</AtomicDocTemplate>

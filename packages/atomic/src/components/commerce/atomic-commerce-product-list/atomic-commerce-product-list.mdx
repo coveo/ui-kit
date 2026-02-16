@@ -1,20 +1,16 @@
-import {Canvas, ArgTypes, Meta, Title, Description, Subtitle} from '@storybook/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicCommerceProductListStories from './atomic-commerce-product-list.new.stories';
-import {CanvasWithGithub} from '../../../../storybook-utils/documentation/canvas-with-github';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
 
 <Meta of={AtomicCommerceProductListStories} />
 
-<Title />
-<Subtitle>
-  <Description />
-</Subtitle>
-
-<CanvasWithGithub
-  of={AtomicCommerceProductListStories.Default}
+<AtomicDocTemplate
+  stories={AtomicCommerceProductListStories}
   githubPath="commerce/atomic-commerce-product-list/atomic-commerce-product-list.ts"
-/>
-
-## Usage
+  tagName="atomic-commerce-product-list"
+  className="AtomicCommerceProductList"
+>
 
 This component is typically placed within the `products` section of the layout.
 
@@ -71,32 +67,38 @@ When [displaying products as a table](https://docs.coveo.com/en/atomic/latest/us
 </atomic-commerce-product-list>
 ```
 
-## Examples
+### Displaying a specific product listing
+If you want `atomic-commerce-product-list` to display a specific product listing, you will need to ensure that the `atomic-commerce-interface` at
+level component of the hierarchy for this interface has its type set to `product-listing`.
 
-### Grid display mode with custom template
+You will also need to ensure that configuration being used to initialize the interface has the `view` url of the configuration
+[`context`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Commerce.ContextOptions.html) set to a configured listing page.
 
-<Canvas of={AtomicCommerceProductListStories.GridDisplayWithTemplate} />
 
-### List display mode with custom template
+For example,
+```html
+<script type="module">
+  const {
+    getSampleSearchEngineConfiguration
+  } = await import('https://static.cloud.coveo.com/headless/v3/headless.esm.js');
+  const {context, ...restOfConfiguration} = getSampleCommerceEngineConfiguration();
 
-<Canvas of={AtomicCommerceProductListStories.ListDisplayWithTemplate} />
+  const configuration = {
+    context: {
+      ...context,
+      view: {
+        url: `${context.view.url}/browse/promotions/ui-kit-testing`,
+      },
+    },
+    ...restOfConfiguration,
+  };
 
-### Table display mode
+  await customElements.whenDefined('atomic-commerce-interface');
+  const commerceInterface = document.querySelector('atomic-commerce-interface');
+  await commerceInterface.initialize(configuration);
+  await commerceInterface.executeFirstRequest();
+</script>
 
-<Canvas of={AtomicCommerceProductListStories.TableDisplay} />
+```
 
-## Reference
-
-<ArgTypes />
-
-### Methods
-
-#### `setRenderFunction`
-
-Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular, or Vue.
-
-Do not use this method if you integrate Atomic in a plain HTML deployment.
-
-**Signature:** `setRenderFunction(resultRenderingFunction: ItemRenderingFunction) => Promise<void>`
-
-**Returns:** `Promise<void>`
+</AtomicDocTemplate>

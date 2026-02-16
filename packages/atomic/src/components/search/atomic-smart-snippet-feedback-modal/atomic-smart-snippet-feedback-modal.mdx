@@ -1,0 +1,59 @@
+import {Meta} from '@storybook/addon-docs/blocks';
+import * as AtomicSmartSnippetFeedbackModalStories from './atomic-smart-snippet-feedback-modal.new.stories';
+import {AtomicDocTemplate} from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicSmartSnippetFeedbackModalStories} />
+
+<AtomicDocTemplate
+  stories={AtomicSmartSnippetFeedbackModalStories}
+  githubPath="search/atomic-smart-snippet-feedback-modal/atomic-smart-snippet-feedback-modal.ts"
+  tagName="atomic-smart-snippet-feedback-modal"
+  className="AtomicSmartSnippetFeedbackModal"
+>
+
+The `atomic-smart-snippet-feedback-modal` component is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` component is initialized. It displays a modal dialog that allows users to provide feedback on why a smart snippet answer was not helpful.
+
+When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
+
+## Key Features
+
+- **Feedback Collection**: Collects user feedback when a smart snippet answer is not helpful
+- **Multiple Reasons**: Provides predefined reasons for why the answer was not useful
+- **Custom Details**: Allows users to provide additional details about their feedback
+- **Modal Dialog**: Displays as a modal overlay with backdrop
+
+## Usage
+
+This component is typically not used directly. It is automatically created and managed by the `atomic-smart-snippet` component when a user clicks the "dislike" button.
+
+```html
+<atomic-search-interface>
+  <atomic-smart-snippet></atomic-smart-snippet>
+</atomic-search-interface>
+```
+
+## Parts
+
+The component exposes the following CSS parts for styling:
+
+- `backdrop` - The transparent backdrop hiding the content behind the modal
+- `container` - The modal's outermost container with the outline and background
+- `header-wrapper` - The wrapper around the header
+- `header` - The header of the modal, containing the title
+- `header-ruler` - The horizontal ruler underneath the header
+- `body-wrapper` - The wrapper around the body
+- `body` - The body of the modal, between the header and the footer
+- `form` - The wrapper around the reason and details
+- `reason-title` - The title above the reason radio buttons
+- `reason` - A wrapper around the radio button and the label of a reason
+- `reason-radio` - A radio button representing a reason
+- `reason-label` - A label linked to a radio button representing a reason
+- `details-title` - The title above the details input
+- `details-input` - The input to specify additional details
+- `footer-wrapper` - The wrapper with a shadow around the footer
+- `footer` - The footer at the bottom of the modal
+- `buttons` - The wrapper around the cancel and submit buttons
+- `cancel-button` - The cancel button
+- `submit-button` - The submit button
+
+</AtomicDocTemplate>

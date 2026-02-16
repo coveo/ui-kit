@@ -26,7 +26,7 @@ const validateEvent = (p: {evt: string; type?: string}) =>
 
 export interface LogSearchEventActionCreatorPayload {
   /**
-   * The identifier of the search action (e.g., `interfaceLoad`).
+   * The identifier of the search action (for example, `interfaceLoad`).
    * */
   evt: string;
   /**
@@ -46,7 +46,7 @@ export const logSearchEvent = (
 
 export interface LogClickEventActionCreatorPayload {
   /**
-   * The identifier of the click action (e.g., `documentOpen`).
+   * The identifier of the click action (for example, `documentOpen`).
    * */
   evt: string;
 

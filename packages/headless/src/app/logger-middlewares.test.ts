@@ -87,9 +87,8 @@ describe('logActionErrorMiddleware', () => {
     const {logger, invoke} = createLogActionErrorMiddleware();
     invoke(action);
     expect(logger.error).toHaveBeenCalledWith(
-      error.stack,
-      `Action dispatch error ${action.type}`,
-      action
+      {error, action},
+      `Action dispatch error ${action.type}`
     );
   });
 });

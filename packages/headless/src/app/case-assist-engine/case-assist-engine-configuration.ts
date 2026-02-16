@@ -30,7 +30,7 @@ export interface CaseAssistEngineConfiguration extends EngineConfiguration {
    */
   searchHub?: string;
   /**
-   * The base URL to use to proxy Coveo case assist requests (e.g., `https://example.com/case-assist`).
+   * The base URL to use to proxy Coveo case assist requests (for example, `https://example.com/case-assist`).
    *
    * This is an advanced option that you only set if you proxy Coveo case assist requests through your own
    * server. In most cases, you should not set this option.

@@ -128,13 +128,6 @@
       "matchPackageNames": ["/^@​salesforce/sfdx-lwc-jest$/"]
     },
     {
-      "groupName": "lightningcss",
-      "groupSlug": "lightningcss",
-      "rangeStrategy": "replace",
-      "description": "Isolate lightningcss",
-      "matchPackageNames": ["lightningcss"]
-    },
-    {
       "groupName": "biome",
       "groupSlug": "biome",
       "rangeStrategy": "replace",
@@ -150,6 +143,7 @@
   "vulnerabilityAlerts": {
     "enabled": false
   },
+  "postUpdateOptions": ["pnpmDedupe"],
   "ignoreDeps": [
     "@salesforce/sfdx-lwc-jest",
     "fix-esm-import-path",
@@ -160,7 +154,7 @@
     "cypress-real-events",
     "cypress-web-vitals",
     "cypress-axe",
-    // Ignore marked to not have a floating PR
+    // Ignore marked to not have a floating PR.
     "marked",
     // Ignore stencil since it is getting removed.
     "@stencil/core",
@@ -171,16 +165,7 @@
     "gts",
     // Ignore storybook since it breaks because of stencil. We will update after migration.
     "@storybook/addon-a11y",
-    "@storybook/addon-essentials",
-    "@storybook/addon-interactions",
-    "@storybook/components",
-    "@storybook/core-events",
-    "@storybook/manager-api",
-    "@storybook/router",
-    "@storybook/test",
-    "@storybook/web-components",
     "@storybook/web-components-vite",
-    "@whitespace/storybook-addon-html",
     "storybook"
   ]
 }

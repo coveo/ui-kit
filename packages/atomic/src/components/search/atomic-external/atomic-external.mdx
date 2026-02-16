@@ -1,0 +1,31 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicExternalStories from './atomic-external.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={ AtomicExternalStories } />
+
+<AtomicDocTemplate
+  stories={ AtomicExternalStories }
+  githubPath="search/atomic-external/atomic-external.ts"
+  tagName="atomic-external"
+  className="AtomicExternal"
+>
+
+The atomic-external component allows components defined outside of an Atomic search interface to initialize with it.
+
+```html
+
+<atomic-external>
+  <atomic-search-box></atomic-search-box>
+</atomic-external>
+ 
+<!-- ... -->
+ 
+<atomic-search-interface>
+  <atomic-result-list>
+    <!-- ... -->
+  </atomic-result-list>
+</atomic-search-interface>
+```
+
+</AtomicDocTemplate>

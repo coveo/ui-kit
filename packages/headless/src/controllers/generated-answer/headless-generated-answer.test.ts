@@ -7,6 +7,9 @@ import {
   type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
+import {buildAnswerApiGeneratedAnswer} from '../knowledge/generated-answer/headless-answerapi-generated-answer.js';
+import {buildGeneratedAnswerWithFollowUps} from '../knowledge/generated-answer/headless-generated-answer-with-follow-ups.js';
+
 import {
   buildGeneratedAnswer,
   type GeneratedAnswerProps,
@@ -15,6 +18,18 @@ import {
 
 vi.mock('../../features/generated-answer/generated-answer-actions');
 vi.mock('../../features/search/search-actions');
+vi.mock(
+  '../knowledge/generated-answer/headless-generated-answer-with-follow-ups',
+  () => ({
+    buildGeneratedAnswerWithFollowUps: vi.fn(),
+  })
+);
+vi.mock(
+  '../knowledge/generated-answer/headless-answerapi-generated-answer',
+  () => ({
+    buildAnswerApiGeneratedAnswer: vi.fn(),
+  })
+);
 
 describe('generated answer', () => {
   let engine: MockedSearchEngine;
@@ -25,6 +40,10 @@ describe('generated answer', () => {
 
   beforeEach(() => {
     engine = buildMockSearchEngine(createMockState());
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
   });
 
   it('initialize the format', () => {
@@ -86,6 +105,83 @@ describe('generated answer', () => {
     it('should not log a warning when the controller is used with the legacy analytics mode', () => {
       initGeneratedAnswer();
       expect(warnSpy).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  describe('the answerConfigurationId prop', () => {
+    describe('when building the controller with answerConfigurationId', () => {
+      it('should call buildAnswerApiGeneratedAnswer when answerConfigurationId is present', () => {
+        const answerConfigurationId = 'test-answer-configuration-id';
+        const props: GeneratedAnswerProps = {answerConfigurationId};
+
+        initGeneratedAnswer(props);
+
+        expect(buildAnswerApiGeneratedAnswer).toHaveBeenCalledWith(
+          engine,
+          expect.anything(),
+          props
+        );
+      });
+    });
+
+    describe('when building the controller without answerConfigurationId', () => {
+      it('should not call buildAnswerApiGeneratedAnswer when answerConfigurationId is absent', () => {
+        const props: GeneratedAnswerProps = {
+          agentId: 'test-agent-id',
+        };
+
+        initGeneratedAnswer(props);
+
+        expect(buildAnswerApiGeneratedAnswer).not.toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('the agentId prop', () => {
+    describe('when building the controller with agentId', () => {
+      it('should call buildGeneratedAnswerWithFollowUps when agentId is present', () => {
+        const agentId = 'test-agent-id';
+        const props: GeneratedAnswerProps = {agentId};
+
+        initGeneratedAnswer(props);
+
+        expect(buildGeneratedAnswerWithFollowUps).toHaveBeenCalledWith(
+          engine,
+          expect.anything(),
+          props
+        );
+      });
+    });
+
+    describe('when building the controller with both agentId and answerConfigurationId', () => {
+      it('should call buildGeneratedAnswerWithFollowUps when agentId is present', () => {
+        const agentId = 'test-agent-id';
+        const props: GeneratedAnswerProps = {
+          agentId,
+          answerConfigurationId: 'test-answer-configuration-id',
+        };
+
+        initGeneratedAnswer(props);
+
+        expect(buildAnswerApiGeneratedAnswer).not.toHaveBeenCalled();
+        expect(buildGeneratedAnswerWithFollowUps).toHaveBeenCalledWith(
+          engine,
+          expect.anything(),
+          props
+        );
+      });
+    });
+
+    describe('when building the controller without agentId', () => {
+      it('should not call buildGeneratedAnswerWithFollowUps when agentId is absent', () => {
+        const props: GeneratedAnswerProps = {
+          answerConfigurationId: 'test-answer-configuration-id',
+        };
+
+        initGeneratedAnswer(props);
+
+        expect(buildGeneratedAnswerWithFollowUps).not.toHaveBeenCalled();
+      });
     });
   });
 });

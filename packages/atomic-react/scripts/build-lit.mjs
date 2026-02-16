@@ -15,7 +15,11 @@ const entries = [
       'atomic-field-condition',
     ],
     declarations: [],
-    excludedComponentDirectories: ['src/components/commerce'],
+    excludedComponentDirectories: [
+      'src/components/commerce',
+      'src/components/insight',
+      'src/components/ipx',
+    ],
     computedComponentImports: [],
   },
   {
@@ -30,6 +34,8 @@ const entries = [
     excludedComponentDirectories: [
       'src/components/search',
       'src/components/recommendations',
+      'src/components/insight',
+      'src/components/ipx',
     ],
     computedComponentImports: [],
   },
@@ -40,7 +46,7 @@ const declarationToLitImport = (declaration) =>
 
 const declarationToComponent = (declaration) =>
   `
-export const ${declaration.name} = createComponent({
+export const ${declaration.name} = /*@__PURE__*/ createComponent({
   tagName: '${declaration.tagName}',
   react: React,
   elementClass: Lit${declaration.name},

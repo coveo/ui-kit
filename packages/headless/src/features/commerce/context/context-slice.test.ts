@@ -1,4 +1,9 @@
-import {setContext, setLocation, setView} from './context-actions.js';
+import {
+  setContext,
+  setCustom,
+  setLocation,
+  setView,
+} from './context-actions.js';
 import {contextReducer} from './context-slice.js';
 import {
   type CommerceContextState,
@@ -55,5 +60,35 @@ describe('context-slice', () => {
     expect(contextReducer(state, setLocation(location)).location).toEqual(
       location
     );
+  });
+
+  it('should allow to set custom context', () => {
+    const custom = {
+      userId: 'user-123',
+      sessionId: 12345,
+      isLoggedIn: true,
+      metadata: {tier: 'premium'},
+    };
+    expect(contextReducer(state, setCustom(custom)).custom).toEqual(custom);
+  });
+
+  it('should return an error when setCustom is called with null', () => {
+    // biome-ignore lint/suspicious/noExplicitAny: Testing invalid input
+    const action = setCustom(null as any);
+    expect('error' in action && action.error).toBeDefined();
+  });
+
+  it('should allow clearing custom context with undefined', () => {
+    state.custom = {existingKey: 'value'};
+    const action = setCustom(undefined);
+    expect('error' in action ? action.error : undefined).toBeUndefined();
+    expect(contextReducer(state, action).custom).toBeUndefined();
+  });
+
+  it('should allow to set an empty object as custom context', () => {
+    const custom = {};
+    const action = setCustom(custom);
+    expect('error' in action ? action.error : undefined).toBeUndefined();
+    expect(contextReducer(state, action).custom).toEqual(custom);
   });
 });

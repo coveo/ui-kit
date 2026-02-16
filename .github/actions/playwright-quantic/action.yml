@@ -1,0 +1,28 @@
+name: 'Quantic Playwright E2E tests'
+description: 'Runs Playwright tests for Quantic'
+inputs:
+  shardIndex:
+    description: 'The shard index to run'
+    required: true
+  shardTotal:
+    description: 'The total number of shards'
+    required: true
+runs:
+  using: composite
+  steps:
+    - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+      with:
+        pattern: quantic-playwright-env-*
+        path: packages/quantic/.env
+        merge-multiple: true
+    - name: Run Playwright Tests
+      run: pnpm exec playwright test --shard=${{ inputs.shardIndex }}/${{ inputs.shardTotal }}
+      shell: bash
+      working-directory: ./packages/quantic
+    - name: Upload blob report to GitHub Actions Artifacts
+      if: cancelled() || failure() || success()
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      with:
+        name: quantic-blob-report-${{ matrix.shardIndex }}
+        path: packages/quantic/blob-report
+        retention-days: 5

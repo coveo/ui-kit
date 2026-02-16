@@ -14,11 +14,23 @@ export interface AugmentPreprocessRequestOptions {
   loggerOptions?: LoggerOptions;
 }
 
+const AUGMENTED_MARKER = Symbol('augmentedWithForwardedFor');
+
+interface AugmentedPreprocessRequest extends PreprocessRequest {
+  [AUGMENTED_MARKER]?: boolean;
+}
+
 export function augmentPreprocessRequestWithForwardedFor(
   options: AugmentPreprocessRequestOptions
 ) {
-  const originalPreprocessRequest = options.preprocessRequest;
-  return async (
+  const originalPreprocessRequest =
+    options.preprocessRequest as AugmentedPreprocessRequest;
+
+  if (originalPreprocessRequest?.[AUGMENTED_MARKER]) {
+    return originalPreprocessRequest;
+  }
+
+  const augmentedFunction: AugmentedPreprocessRequest = async (
     request: PlatformRequestOptions,
     clientOrigin: PlatformClientOrigin,
     metadata?: RequestMetadata
@@ -41,4 +53,8 @@ export function augmentPreprocessRequestWithForwardedFor(
     }
     return request;
   };
+
+  augmentedFunction[AUGMENTED_MARKER] = true;
+
+  return augmentedFunction;
 }

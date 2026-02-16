@@ -16,8 +16,8 @@
     "moduleResolution": "NodeNext",
     "module": "NodeNext",
     "target": "ES2022",
-    "lib": ["dom", "ES2023"],
-    "types": ["vitest/globals"]
+    "lib": ["dom", "ES2023", "esnext.disposable"],
+    "types": ["node", "vitest/globals"]
   },
   "include": ["lib/**/*.ts", "lib/**/*.tsx"]
 }

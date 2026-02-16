@@ -1,3 +1,4 @@
+import '@/src/components/common/atomic-icon/atomic-icon';
 import type {i18n} from 'i18next';
 import {html} from 'lit';
 import type {Ref} from 'lit/directives/ref.js';
@@ -28,7 +29,7 @@ export const renderTextAreaClearButton: FunctionalComponent<Props> = ({
           onClick?.();
           textAreaRef?.value?.focus();
         },
-        ariaLabel: i18n.t('clear'),
+        ariaLabel: i18n.t('clear-searchbox'),
       },
     })(
       html`<atomic-icon

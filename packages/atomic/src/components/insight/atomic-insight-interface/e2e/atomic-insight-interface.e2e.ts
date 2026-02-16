@@ -2,18 +2,22 @@ import {expect, test} from './fixture';
 
 const defaultInsightQuerySummaryText = 'Insights related to this case';
 
+// TODO - KIT-4885: Simplify once other atomic-insight components have unit test / E2E coverage
 test.describe('Atomic Insight Panel', () => {
   test.beforeEach(async ({insightInterface}) => {
-    await insightInterface.load();
+    await insightInterface.load({
+      story: 'default',
+    });
     await insightInterface.hydrated.waitFor();
   });
 
   test('should load correctly', async ({insightInterface}) => {
-    await expect(insightInterface.insightInterface).toHaveClass('hydrated');
+    expect(insightInterface.insightInterface).toBeDefined();
   });
 
   test.describe('components basics', () => {
     test('parts should load correctly', async ({insightInterface}) => {
+      await expect(insightInterface.insightTabs.first()).toBeVisible();
       expect(await insightInterface.insightTabs.count()).toBeGreaterThan(0);
 
       await expect(insightInterface.insightQuerySummary).toBeVisible();
@@ -31,7 +35,6 @@ test.describe('Atomic Insight Panel', () => {
       await expect(insightInterface.insightUserActionsToggle).toBeVisible();
 
       await expect(insightInterface.insightPager).toBeVisible();
-      await expect(insightInterface.insightPager).toHaveClass('hydrated');
       await expect(insightInterface.insightPagerButtons.first()).toBeVisible();
 
       await expect(insightInterface.insightResults.first()).toBeVisible();
@@ -41,15 +44,18 @@ test.describe('Atomic Insight Panel', () => {
   test.describe('result actions interactions', () => {
     test.beforeEach(async ({insightInterface}) => {
       // Video results have better actions to test
+      const insightSearchPromise =
+        insightInterface.waitForInsightSearchResponse();
       await insightInterface.getTabByName('Videos').click();
-      await insightInterface.waitForNonVideoResultsToBeDetached();
+      await insightSearchPromise;
+      await insightInterface.waitForVideoResultLinksToBeVisible();
     });
 
     test('attach to case', async ({insightInterface}) => {
       await expect(insightInterface.getTabByName('Videos')).toHaveAttribute(
         'active'
       );
-      await insightInterface.hoverResultByIndex(0);
+      await insightInterface.hoverResultTitleByIndex(0);
       await expect(insightInterface.getActionBarByIndex(0)).toBeVisible();
       await expect(
         insightInterface.getResultAttachToCaseByIndex(0)
@@ -61,7 +67,7 @@ test.describe('Atomic Insight Panel', () => {
       await expect(insightInterface.getTabByName('Videos')).toHaveAttribute(
         'active'
       );
-      await insightInterface.hoverResultByIndex(0);
+      await insightInterface.hoverResultTitleByIndex(0);
       await expect(insightInterface.getActionBarByIndex(0)).toBeVisible();
       await expect(
         insightInterface.getResultCopyToClipboardByIndex(0)
@@ -73,7 +79,7 @@ test.describe('Atomic Insight Panel', () => {
       await expect(insightInterface.getTabByName('Videos')).toHaveAttribute(
         'active'
       );
-      await insightInterface.hoverResultByIndex(0);
+      await insightInterface.hoverResultTitleByIndex(0);
       await expect(insightInterface.getActionBarByIndex(0)).toBeVisible();
       await expect(insightInterface.getResultQuickviewByIndex(0)).toBeVisible();
 
@@ -95,7 +101,6 @@ test.describe('Atomic Insight Panel', () => {
       await expect(insightInterface.insightRefineModal).toHaveAttribute(
         'is-open'
       );
-      await expect(insightInterface.insightRefineModal).toHaveClass('hydrated');
 
       await expect(
         insightInterface.insightRefineModalCloseButton

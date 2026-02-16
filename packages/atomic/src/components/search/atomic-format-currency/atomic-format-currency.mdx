@@ -1,0 +1,53 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicFormatCurrencyStories from './atomic-format-currency.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicFormatCurrencyStories} />
+
+<AtomicDocTemplate
+  stories={AtomicFormatCurrencyStories}
+  githubPath="search/atomic-format-currency/atomic-format-currency.ts"
+  tagName="atomic-format-currency"
+  className="AtomicFormatCurrency"
+  defaultStory="Facet"
+>
+
+The `atomic-format-currency` component is used for formatting currencies.
+The numerical format of compatible parents will be set according to the currency property of this component.
+
+This component is used within compatible parent components such as `atomic-result-number` or `atomic-numeric-facet`:
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-result-list>
+    <atomic-result-template>
+      <template>
+        <atomic-result-number field="price">
+          <atomic-format-currency currency="USD"></atomic-format-currency>
+        </atomic-result-number>
+      </template>
+    </atomic-result-template>
+  </atomic-result-list>
+  ...
+</atomic-search-interface>
+```
+
+### Within a Numeric Facet
+
+```html
+<atomic-numeric-facet field="price">
+  <atomic-format-currency currency="USD"></atomic-format-currency>
+</atomic-numeric-facet>
+```
+
+### Currency Codes
+
+The `currency` property accepts ISO 4217 currency codes, such as:
+- `"USD"` for the US dollar
+- `"EUR"` for the euro
+- `"GBP"` for the British pound
+- `"CNY"` for the Chinese RMB
+
+</AtomicDocTemplate>

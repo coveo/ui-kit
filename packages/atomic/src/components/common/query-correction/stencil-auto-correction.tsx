@@ -7,6 +7,10 @@ interface AutoCorrectionProps {
   originalQuery: string;
   correctedTo: string;
 }
+
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const AutoCorrection: FunctionalComponent<AutoCorrectionProps> = ({
   i18n,
   correctedTo,

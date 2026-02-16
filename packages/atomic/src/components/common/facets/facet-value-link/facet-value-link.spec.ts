@@ -1,6 +1,6 @@
-import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
+import {page} from 'vitest/browser';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {
@@ -115,6 +115,15 @@ describe('renderFacetValueLink', () => {
     await expect(button).toHaveAttribute(
       'part',
       expect.stringContaining('extra-part')
+    );
+  });
+
+  it('renders the aria-label attribute', async () => {
+    await setupElement();
+    const {button} = locators;
+    await expect(button).toHaveAttribute(
+      'aria-label',
+      'Inclusion filter on Test Value; 42 results'
     );
   });
 });

@@ -110,6 +110,26 @@ export function buildCategoryFacet(
   const getRequest = () =>
     facetRequestSelector(engine[stateKey], facetId)! as CategoryFacetRequest;
 
+  const findSelectedValueChildren = (
+    values: CategoryFacetValueRequest[]
+  ): CategoryFacetValueRequest[] => {
+    const selectedValue = values.find((value) => value.state === 'selected');
+    if (selectedValue) {
+      return selectedValue.children;
+    }
+
+    for (const value of values) {
+      if (value.children.length > 0) {
+        const result = findSelectedValueChildren(value.children);
+        if (result !== value.children) {
+          return result;
+        }
+      }
+    }
+
+    return values;
+  };
+
   return {
     deselectAll,
     isValueSelected,
@@ -118,13 +138,14 @@ export function buildCategoryFacet(
 
     showMoreValues() {
       const {initialNumberOfValues, values, numberOfValues} = getRequest();
+      const currentLevelValues = findSelectedValueChildren(values);
 
       if (!initialNumberOfValues && !numberOfValues) {
         return;
       }
 
       const newNumberOfValues =
-        values.length + (initialNumberOfValues ?? numberOfValues)!;
+        currentLevelValues.length + (initialNumberOfValues ?? numberOfValues)!;
 
       dispatch(
         updateCategoryFacetNumberOfValues({

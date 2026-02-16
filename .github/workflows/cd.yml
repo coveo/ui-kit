@@ -16,6 +16,9 @@ on:
         default: false
         required: false
 
+permissions:
+  contents: read
+
 jobs:
   approve:
     if: ${{ github.event_name == 'workflow_dispatch' }}
@@ -37,6 +40,8 @@ jobs:
       contents: write
       packages: write
       id-token: write
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
@@ -47,6 +52,10 @@ jobs:
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
+        with:
+          load-cache: false
+          save-cache: true
+          cache-retention-days: 7
       - name: Generate a token
         id: generate-token
         uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2
@@ -56,19 +65,18 @@ jobs:
           owner: coveo
           repositories: 'ui-kit'
       - name: Release
-        run: npm run release
+        run: pnpm run release
         env:
           VERSION: ${{ inputs.version }}
           DEBUG: ${{ inputs.debug && '@coveo/semantic-monorepo-tools:*' || '' }}
           GITHUB_INSTALLATION_TOKEN: ${{ steps.generate-token.outputs.token }}
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Call ui-kit-cd
         run: node ./scripts/deploy/trigger-ui-kit-cd.mjs
         env:
           GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
   npm-prod:
-    if: ${{ !cancelled() }}
+    if: ${{ !cancelled() && needs.release.result == 'success' }}
     needs: release
     environment: 'NPM Production'
     runs-on: 'ubuntu-latest'
@@ -88,9 +96,9 @@ jobs:
           ref: 'release/v3'
       - uses: ./.github/actions/setup
       - name: Promote NPM package to production
-        run: npm run promote:npm:latest
+        run: pnpm run promote:npm:latest
   quantic-prod:
-    if: ${{ !cancelled() }}
+    if: ${{ !cancelled() && needs.release.result == 'success' }}
     needs: release
     runs-on: ubuntu-latest
     environment: 'Quantic Production'
@@ -112,7 +120,7 @@ jobs:
       - name: Promote SFDX package to production
         run: |
           echo "${{ secrets.SFDX_AUTH_JWT_KEY }}" > ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
-          npx --no-install turbo run @coveo/quantic#promote:sfdx:ci
+          pnpm exec turbo run @coveo/quantic#promote:sfdx:ci
           rm ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
         env:
           SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
@@ -122,7 +130,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         working-directory: ./packages/quantic
   typedoc-headless:
-    if: ${{ !cancelled() }}
+    if: ${{ !cancelled() && needs.release.result == 'success' }}
     needs: release
     runs-on: ubuntu-latest
     steps:
@@ -140,7 +148,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build typedoc site
-        run: npm run build:typedoc
+        run: pnpm run build:typedoc
         working-directory: packages/headless
         shell: bash
 
@@ -163,7 +171,7 @@ jobs:
           name: headless-docs-${{ env.version }}
           path: typedoc-headless-site/
   typedoc-headless-react:
-    if: ${{ !cancelled() }}
+    if: ${{ !cancelled() && needs.release.result == 'success' }}
     needs: release
     runs-on: ubuntu-latest
     steps:
@@ -181,7 +189,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build typedoc site
-        run: npm run build:typedoc
+        run: pnpm run build:typedoc
         working-directory: packages/headless-react
         shell: bash
 
@@ -204,7 +212,7 @@ jobs:
           name: headless-react-docs-${{ env.version }}
           path: typedoc-headless-react-site/
   docs-prod:
-    if: ${{ !cancelled() }}
+    if: ${{ !cancelled() && needs.release.result == 'success' }}
     needs: release
     runs-on: ubuntu-latest
     environment: 'Docs Production'
@@ -219,6 +227,6 @@ jobs:
           ref: 'release/v3'
       - uses: ./.github/actions/setup
       - name: Notify Docs
-        run: npm run notify:docs
+        run: pnpm run notify:docs
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}

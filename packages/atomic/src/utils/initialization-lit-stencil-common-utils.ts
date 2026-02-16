@@ -1,8 +1,14 @@
+import type {CoreEngine} from '@coveo/headless';
 import type {AnyBindings} from '../components/common/interface/bindings';
 import {closest} from './dom-utils';
 import {buildCustomEvent} from './event-utils';
 import {enqueueOrDispatchInitializationEvent} from './init-queue';
 
+/**
+ * Retrieves `Bindings` or `CommerceBindings` on a configured parent interface.
+ * @param event - The element on which to dispatch the event, which must be the child of a configured Atomic container element.
+ * @returns A promise that resolves upon initialization of the parent container element, and rejects otherwise.
+ */
 export function fetchBindings<SpecificBindings extends AnyBindings>(
   element: Element
 ) {
@@ -39,3 +45,8 @@ export const initializableElements = [
   'atomic-external',
 ];
 export const initializeEventName = 'atomic/initializeComponent';
+
+export type AtomicInterface = HTMLElement & {
+  engine?: CoreEngine;
+  bindings?: AnyBindings;
+};

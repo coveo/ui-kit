@@ -3,7 +3,7 @@ import {ifDefined} from 'lit/directives/if-defined.js';
 import {type RefOrCallback, ref} from 'lit/directives/ref.js';
 import {multiClassMap} from '@/src/directives/multi-class-map';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
-import {createRipple} from '../../utils/ripple';
+import {createRipple} from '../../utils/ripple-utils';
 import {
   type ButtonStyle,
   getClassNameForButtonStyle,
@@ -14,6 +14,7 @@ export interface RadioButtonProps {
   groupName: string;
   selectWhenFocused?: boolean;
   onChecked?(): void;
+  onFocus?(): void;
   style?: ButtonStyle;
   key?: string | number;
   checked?: boolean;
@@ -21,6 +22,7 @@ export interface RadioButtonProps {
   text?: string;
   part?: string;
   ariaLabel?: string;
+  ariaRoleDescription?: string;
   ariaCurrent?:
     | 'page'
     | 'step'
@@ -30,6 +32,11 @@ export interface RadioButtonProps {
     | 'true'
     | 'false';
   ref?: RefOrCallback;
+  onFocusCallback?: (
+    elements: HTMLInputElement[],
+    previousFocus: HTMLInputElement,
+    newFocus: HTMLInputElement
+  ) => Promise<void>;
 }
 
 export const renderRadioButton: FunctionalComponent<RadioButtonProps> = ({
@@ -49,7 +56,7 @@ export const renderRadioButton: FunctionalComponent<RadioButtonProps> = ({
     }
   };
 
-  const handleKeyDown = (event: KeyboardEvent) => {
+  const handleKeyDown = async (event: KeyboardEvent) => {
     if (props.selectWhenFocused !== false) {
       return;
     }
@@ -67,10 +74,19 @@ export const renderRadioButton: FunctionalComponent<RadioButtonProps> = ({
       buttons,
       event.currentTarget as HTMLInputElement
     );
+
     const newIndex = getNewIndex(key, currentIndex, buttons.length);
 
     if (buttons[newIndex]) {
-      buttons[newIndex].focus();
+      if (props.onFocusCallback) {
+        await props.onFocusCallback(
+          buttons,
+          buttons[currentIndex],
+          buttons[newIndex]
+        );
+      } else {
+        buttons[newIndex].focus();
+      }
     }
   };
 
@@ -122,8 +138,11 @@ export const renderRadioButton: FunctionalComponent<RadioButtonProps> = ({
       part=${ifDefined(props.part)}
       aria-label=${ifDefined(props.ariaLabel ?? props.text)}
       aria-current=${ifDefined(props.ariaCurrent)}
+      aria-roledescription=${ifDefined(props.ariaRoleDescription)}
+      .checked=${Boolean(props.checked)}
       ?checked=${Boolean(props.checked)}
       .key=${props.key}
+      @focus=${props.onFocus}
       @change=${onChange}
       @keydown=${handleKeyDown}
       @mousedown=${onMouseDown}

@@ -7,9 +7,7 @@ import {
 } from './item-text-highlighted';
 import {renderWithHighlights} from './render-highlights';
 
-vi.mock('./render-highlights', () => ({
-  renderWithHighlights: vi.fn(),
-}));
+vi.mock('./render-highlights', {spy: true});
 
 describe('#renderItemTextHighlighted', () => {
   let props: ItemTextHighlightedProps;

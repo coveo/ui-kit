@@ -20,6 +20,7 @@ import {getQueryInitialState} from '../features/query/query-state.js';
 import {getQuerySetInitialState} from '../features/query-set/query-set-state.js';
 import {getQuerySuggestSetInitialState} from '../features/query-suggest/query-suggest-state.js';
 import {getQuestionAnsweringInitialState} from '../features/question-answering/question-answering-state.js';
+import {getRecentQueriesInitialState} from '../features/recent-queries/recent-queries-state.js';
 import {getResultPreviewInitialState} from '../features/result-preview/result-preview-state.js';
 import {getSearchInitialState} from '../features/search/search-state.js';
 import {getSearchHubInitialState} from '../features/search-hub/search-hub-state.js';
@@ -63,6 +64,7 @@ export function buildMockInsightState(
     context: getContextInitialState(),
     insightUserActions: getInsightUserActionsInitialState(),
     triggers: getTriggerInitialState(),
+    recentQueries: getRecentQueriesInitialState(),
     ...config,
   };
 }

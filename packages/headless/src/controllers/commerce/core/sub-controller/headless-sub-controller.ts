@@ -38,6 +38,11 @@ import {
   type InteractiveProductProps,
 } from '../interactive-product/headless-core-interactive-product.js';
 import {
+  buildCoreInteractiveSpotlightContent,
+  type InteractiveSpotlightContent,
+  type InteractiveSpotlightContentProps,
+} from '../interactive-spotlight-content/headless-core-interactive-spotlight-content.js';
+import {
   buildCorePagination,
   type Pagination,
   type PaginationProps,
@@ -121,6 +126,15 @@ export interface SearchAndListingSubControllers<
    * @returns A `ParameterManager` sub-controller.
    */
   parameterManager(props?: ParameterManagerProps<P>): ParameterManager<P>;
+
+  /**
+   * Creates an `InteractiveSpotlightContent` sub-controller, for use when `enableResults` is set on the controller.
+   * @param props - The properties for the `InteractiveSpotlightContent` sub-controller.
+   * @returns An `InteractiveSpotlightContent` sub-controller.
+   */
+  interactiveSpotlightContent(
+    props: InteractiveSpotlightContentProps
+  ): InteractiveSpotlightContent;
 }
 
 export interface SearchSubControllers
@@ -214,14 +228,13 @@ export function buildProductListingSubControllers(
     >,
     'facetSearchType'
   >
-): SearchAndListingSubControllers<
-  ProductListingParameters,
-  ProductListingSummaryState
-> {
-  return buildSearchAndListingsSubControllers(engine, {
-    ...subControllerProps,
-    facetSearchType: 'LISTING',
-  });
+): SearchAndListingSubControllers<Parameters, ProductListingSummaryState> {
+  return {
+    ...buildSearchAndListingsSubControllers(engine, {
+      ...subControllerProps,
+      facetSearchType: 'LISTING',
+    }),
+  };
 }
 
 /**
@@ -248,6 +261,7 @@ export function buildSearchAndListingsSubControllers<
     activeParametersSelector,
     restoreActionCreator,
     facetSearchType,
+    responseIdSelector,
   } = subControllerProps;
   return {
     ...buildBaseSubControllers(engine, subControllerProps),
@@ -300,6 +314,12 @@ export function buildSearchAndListingsSubControllers<
         activeParametersSelector,
         restoreActionCreator,
         fetchProductsActionCreator,
+      });
+    },
+    interactiveSpotlightContent(props: InteractiveSpotlightContentProps) {
+      return buildCoreInteractiveSpotlightContent(engine, {
+        ...props,
+        responseIdSelector,
       });
     },
   };

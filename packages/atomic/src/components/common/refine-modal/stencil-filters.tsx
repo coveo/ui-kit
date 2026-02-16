@@ -7,6 +7,10 @@ interface RefineModalFiltersSectionProps {
   withFacets: boolean;
   withAutomaticFacets: boolean;
 }
+
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const RefineModalFiltersSection: FunctionalComponent<
   RefineModalFiltersSectionProps
 > = ({i18n, withAutomaticFacets, withFacets}, children) => {
@@ -31,6 +35,10 @@ interface RefineModalFiltersClearButtonProps {
   i18n: i18n;
   onClick: () => void;
 }
+
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const RefineModalFiltersClearButton: FunctionalComponent<
   RefineModalFiltersClearButtonProps
 > = ({i18n, onClick}) => {

@@ -20,7 +20,7 @@ export const buildBaseCommerceAPIRequest = (
   state: StateNeededForBaseCommerceAPIRequest,
   navigatorContext: NavigatorContext
 ): BaseCommerceAPIRequest => {
-  const {view, location, ...restOfContext} = state.commerceContext;
+  const {view, location, custom, ...restOfContext} = state.commerceContext;
   return {
     accessToken: state.configuration.accessToken,
     url:
@@ -49,9 +49,12 @@ export const buildBaseCommerceAPIRequest = (
           : {}),
       },
       capture:
-        navigatorContext.capture ?? state.configuration.analytics.enabled,
+        navigatorContext.capture ??
+        (state.configuration.analytics.enabled &&
+          navigatorContext.clientId !== ''),
       cart: getProductsFromCartState(state.cart),
       source: getAnalyticsSource(state.configuration.analytics),
+      ...(custom ? {custom} : {}),
     },
   };
 };

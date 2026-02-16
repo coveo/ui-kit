@@ -1,0 +1,19 @@
+name: "Playwright Atomic Angular"
+description: "Run Playwright tests for Atomic Angular"
+inputs:
+  github-token:
+    description: The GitHub token for accurately detecting a build vs a re-run build
+    required: false
+    default: ""
+runs:
+  using: composite
+  steps:
+    - name: Run Playwright tests
+      run: pnpm exec playwright test
+      working-directory: samples/atomic/search-commerce-angular
+      shell: bash
+    - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      if: failure()
+      with:
+        name: angular-screenshots
+        path: samples/atomic/search-commerce-angular/playwright-report/

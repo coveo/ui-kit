@@ -23,7 +23,7 @@ import stringTemplate from './stringTemplate.html';
  */
 export default class QuanticResultField extends LightningElement {
   /**
-   * The [result item](https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#result) to use.
+   * The [result item](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.Result.html) to use.
    * @api
    * @type {Result}
    */

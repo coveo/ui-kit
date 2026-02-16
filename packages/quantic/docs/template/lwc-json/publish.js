@@ -6,9 +6,17 @@
 
 const fs = require('fs');
 const {resolve, dirname} = require('path');
-const paramCase = require('change-case').paramCase;
 const parseString = require('xml2js').parseString;
 const dump = require('jsdoc/util/dumper').dump;
+
+function paramCase(value) {
+  return value
+    .replace(/([A-Z])([A-Z][a-z])/g, '$1-$2')
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replace(/[\s_]+/g, '-')
+    .replace(/-+/g, '-')
+    .toLowerCase();
+}
 
 function formatType(type) {
   return type ? (type.names.length === 1 ? type.names[0] : type.names) : '';
@@ -89,8 +97,8 @@ function parseMember(element, parentNode) {
     type: element.type?.names?.join('|') || '',
   };
   if (prop.type.name === 'function') {
-    (prop.type.params = element.params || ''),
-      (prop.type.returns = element.returns || '');
+    ((prop.type.params = element.params || ''),
+      (prop.type.returns = element.returns || ''));
   }
   parentNode.properties.push(prop);
 }

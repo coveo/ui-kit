@@ -1,9 +1,12 @@
 import {h, FunctionalComponent} from '@stencil/core';
 
-export interface GroupProps {
+interface GroupProps {
   label: string;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const FieldsetGroup: FunctionalComponent<GroupProps> = (
   {label},
   children

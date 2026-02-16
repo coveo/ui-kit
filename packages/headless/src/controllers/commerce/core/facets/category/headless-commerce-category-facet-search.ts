@@ -27,7 +27,7 @@ export type CategoryFacetSearchState =
 
 export type CategoryFacetSearch = Omit<
   ReturnType<typeof buildCoreCategoryFacetSearch>,
-  'showMoreResults' | 'updateCaptions' | 'state'
+  'updateCaptions' | 'state'
 >;
 
 export function buildCategoryFacetSearch(
@@ -39,7 +39,6 @@ export function buildCategoryFacetSearch(
   }
 
   const {
-    showMoreResults: _showMoreResults,
     state: _state,
     updateCaptions: _updateCaptions,
     ...restOfFacetSearch

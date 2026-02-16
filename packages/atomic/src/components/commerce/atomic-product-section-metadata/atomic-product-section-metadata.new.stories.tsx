@@ -1,11 +1,19 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
-import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
-import {wrapInProductTemplateForSections} from '@/storybook-utils/commerce/product-template-section-wrapper';
+import {
+  getProductSectionArgs,
+  getProductSectionArgTypes,
+  getProductSectionDecorators,
+} from '@/storybook-utils/commerce/product-section-story-utils';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 
-const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-product-section-metadata',
+  {excludeCategories: ['methods']}
+);
+
+const {play} = wrapInCommerceInterface({
   engineConfig: {
     preprocessRequest: (request) => {
       const parsed = JSON.parse(request.body as string);
@@ -14,30 +22,36 @@ const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
       return request;
     },
   },
+  includeCodeRoot: false,
 });
-const {decorator: commerceProductListDecorator} =
-  wrapInCommerceProductList('grid');
-const {decorator: productTemplateDecorator} =
-  wrapInProductTemplateForSections();
 const meta: Meta = {
   component: 'atomic-product-section-metadata',
-  title: 'Commerce/Sections',
+  title: 'Commerce/Product Sections',
   id: 'atomic-product-section-metadata',
-  render: renderComponent,
-  parameters,
+  render: (args) => template(args),
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  args: {
+    ...args,
+    ...getProductSectionArgs(),
+  },
+  argTypes: {
+    ...argTypes,
+    ...getProductSectionArgTypes(),
+  },
 };
 
 export default meta;
 
 export const Default: Story = {
   name: 'atomic-product-section-metadata',
-  decorators: [
-    productTemplateDecorator,
-    commerceProductListDecorator,
-    commerceInterfaceDecorator,
-  ],
+  decorators: getProductSectionDecorators(),
   play,
   args: {
-    'slots-default': `<span class="text-sm text-gray-500">SKU: WH-1000XM4</span>`,
+    'default-slot': `<span class="text-sm text-gray-500">SKU: WH-1000XM4</span>`,
   },
 };

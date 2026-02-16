@@ -18,7 +18,7 @@ type StateNeededByAnswerSlice = ConfigurationSection & GeneratedAnswerSection;
  * `dynamicBaseQuery` is passed to the baseQuery of the createApi,
  * but note that the baseQuery will not be used if a queryFn is provided in the createApi endpoint
  */
-const dynamicBaseQuery: BaseQueryFn<
+export const dynamicBaseQuery: BaseQueryFn<
   string | FetchArgs,
   unknown,
   FetchBaseQueryError

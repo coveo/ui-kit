@@ -1,25 +1,50 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInRecommendationInterface} from '@/storybook-utils/search/recs-interface-wrapper';
 
+const mockedSearchApi = new MockSearchApi();
+
+mockedSearchApi.searchEndpoint.mock((response) => ({
+  ...response,
+  results: response.results.slice(0, 30),
+  totalCount: 30,
+  totalCountFiltered: 30,
+}));
+
 const {decorator, play} = wrapInRecommendationInterface();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-recs-list',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-recs-list',
-  title: 'Atomic/RecsList',
+  title: 'Recommendations/Recs List',
   id: 'atomic-recs-list',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
-  play,
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+    msw: {
+      handlers: [...mockedSearchApi.handlers],
+    },
+  },
+  beforeEach: () => {
+    mockedSearchApi.searchEndpoint.clear();
+  },
+  args,
+  argTypes,
 };
 
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-recs-list',
   decorators: [
     (story) =>
       html` <style>
@@ -29,6 +54,7 @@ export const Default: Story = {
         </style>
         ${story()}`,
   ],
+  play,
 };
 
 const {play: playNoFirstQuery} = wrapInRecommendationInterface({
@@ -36,14 +62,12 @@ const {play: playNoFirstQuery} = wrapInRecommendationInterface({
 });
 
 export const RecsBeforeQuery: Story = {
-  tags: ['test'],
   play: playNoFirstQuery,
 };
 
 export const RecsWithFullTemplate: Story = {
-  tags: ['test'],
   args: {
-    'slots-default': `<atomic-recs-result-template>
+    'default-slot': `<atomic-recs-result-template>
             <template>
               <atomic-result-section-visual>
                 <span>Visual Section</span>
@@ -72,12 +96,12 @@ export const RecsWithFullTemplate: Story = {
             </template>
           </atomic-recs-result-template>`,
   },
+  play,
 };
 
 export const RecsOpeningInNewTab: Story = {
-  tags: ['test'],
   args: {
-    'slots-default': `<atomic-recs-result-template>
+    'default-slot': `<atomic-recs-result-template>
             <template slot="link">
               <atomic-result-link>
                 <a slot="attributes" target="_blank"></a>
@@ -90,10 +114,38 @@ export const RecsOpeningInNewTab: Story = {
             </template>
           </atomic-recs-result-template>`,
   },
+  play,
 };
 
 export const RecsAsCarousel: Story = {
   args: {
-    'attributes-number-of-recommendations-per-page': 4,
+    'number-of-recommendations-per-page': 4,
   },
+  play,
+};
+
+export const NotEnoughRecsForCarousel: Story = {
+  name: 'Not enough recommendations for carousel',
+  beforeEach: () => {
+    mockedSearchApi.searchEndpoint.mockOnce((response) => ({
+      ...response,
+      results: response.results.slice(0, 3),
+      totalCount: 3,
+      totalCountFiltered: 3,
+    }));
+  },
+  play,
+};
+
+export const NoRecommendations: Story = {
+  name: 'No recommendations',
+  beforeEach: async () => {
+    mockedSearchApi.searchEndpoint.mockOnce((response) => ({
+      ...response,
+      totalCount: 0,
+      totalCountFiltered: 0,
+      results: [],
+    }));
+  },
+  play,
 };

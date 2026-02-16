@@ -1617,4 +1617,11 @@
     <protected>false</protected>
     <shortDescription>Insights related to this case</shortDescription>
   </labels>
+  <labels>
+    <fullName>quantic_NoGeneratedAnswer</fullName>
+    <value>No generated answer available.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>No generated answer available.</shortDescription>
+  </labels>
 </CustomLabels>

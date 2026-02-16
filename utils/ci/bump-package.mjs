@@ -13,7 +13,7 @@ import {
   parseCommits,
   writeChangelog,
 } from '@coveo/semantic-monorepo-tools';
-// @ts-ignore no dts is ok
+// @ts-expect-error no dts is ok
 import changelogConvention from 'conventional-changelog-conventionalcommits';
 import {gt, SemVer} from 'semver';
 import {
@@ -25,7 +25,7 @@ import {
 } from './common/constants.mjs';
 
 if (!process.env.INIT_CWD) {
-  throw new Error('Should be called using npm run-script');
+  throw new Error('Should be called using pnpm run');
 }
 process.chdir(process.env.INIT_CWD);
 
@@ -53,7 +53,7 @@ const hasPackageJsonChanged = (directoryPath) => {
 };
 
 /**
- * @typedef {import('@npmcli/package-json').PackageJson} PackageJson
+ * @typedef {import('./types.mjs').PackageJson} PackageJson
  */
 
 /**
@@ -75,126 +75,63 @@ const modifyPackageJson = (packageDir, modifyPackageJsonCallback) => {
 const isPrerelease = process.env.IS_PRERELEASE === 'true';
 
 // Run on each package, it generate the changelog, install the latest dependencies that are part of the workspace, publish the package.
-await (async () => {
-  const PATH = '.';
-  const privatePackage = isPrivatePackage();
-  const packageJson = JSON.parse(
-    readFileSync('package.json', {encoding: 'utf-8'})
-  );
-  const versionPrefix = `${packageJson.name}@`;
-  const convention = await changelogConvention();
-  const lastTag = await getLastTag({
-    prefix: versionPrefix,
-    onBranch: `refs/remotes/origin/${REPO_RELEASE_BRANCH}`,
-  });
-  const commits = await getCommits(PATH, lastTag);
-  if (commits.length === 0 && !hasPackageJsonChanged(PATH)) {
-    return;
-  }
-  const parsedCommits = parseCommits(commits, convention.parserOpts);
-  const currentGitVersion = getCurrentVersion(PATH);
-  const currentNpmVersion = new SemVer(
-    privatePackage
-      ? '0.0.0' // private package does not have a npm version, so we default to the 'lowest' possible
-      : await describeNpmTag(packageJson.name, 'beta')
-  );
-  const isRedo = gt(currentNpmVersion, currentGitVersion);
-  const bumpInfo = isRedo
-    ? {type: 'patch'}
-    : convention.whatBump(parsedCommits);
-  const nextGoldVersion = getNextVersion(
-    isRedo ? currentNpmVersion : currentGitVersion,
-    bumpInfo
-  );
-  const newVersion =
-    isPrerelease && !privatePackage
-      ? await getNextBetaVersion(nextGoldVersion)
-      : nextGoldVersion;
+const PATH = '.';
+const privatePackage = isPrivatePackage();
+const packageJson = JSON.parse(
+  readFileSync('package.json', {encoding: 'utf-8'})
+);
+const versionPrefix = `${packageJson.name}@`;
+const convention = await changelogConvention();
+const lastTag = await getLastTag({
+  prefix: versionPrefix,
+  onBranch: `refs/remotes/origin/${REPO_RELEASE_BRANCH}`,
+});
+const commits = await getCommits(PATH, lastTag);
+if (commits.length === 0 && !hasPackageJsonChanged(PATH)) {
+  process.exit(0);
+}
+const parsedCommits = parseCommits(commits, convention.parserOpts);
+const currentGitVersion = getCurrentVersion(PATH);
+const currentNpmVersion = new SemVer(
+  privatePackage
+    ? '0.0.0' // private package does not have a npm version, so we default to the 'lowest' possible
+    : await describeNpmTag(packageJson.name, 'beta')
+);
+const isRedo = gt(currentNpmVersion, currentGitVersion);
+const bumpInfo = isRedo ? {type: 'patch'} : convention.whatBump(parsedCommits);
+const nextGoldVersion = getNextVersion(
+  isRedo ? currentNpmVersion : currentGitVersion,
+  bumpInfo
+);
+const newVersion =
+  isPrerelease && !privatePackage
+    ? await getNextBetaVersion(nextGoldVersion)
+    : nextGoldVersion;
 
-  modifyPackageJson(PATH, (packageJson) => {
-    packageJson.version = newVersion;
-  });
-  await updateWorkspaceDependent(newVersion);
-  if (privatePackage) {
-    return;
-  }
-
-  if (parsedCommits.length > 0) {
-    const changelog = await generateChangelog(
-      parsedCommits,
-      newVersion,
-      {
-        host: REPO_HOST,
-        owner: REPO_OWNER,
-        repository: REPO_NAME,
-      },
-      convention.writerOpts
-    );
-    await writeChangelog(PATH, changelog);
-  }
-  appendFileSync(
-    join(REPO_FS_ROOT, '.git-message'),
-    `${packageJson.name}@${newVersion}\n`
-  );
-})();
-
-/**
- * Update the version of the package in the other packages of the workspace
- * @param {string} version
- */
-async function updateWorkspaceDependent(version) {
-  const topology = JSON.parse(
-    readFileSync(join(REPO_FS_ROOT, 'topology.json'), {encoding: 'utf-8'})
-  );
-  const dependencyPackageJson = JSON.parse(
-    readFileSync('package.json', {encoding: 'utf-8'})
-  );
-  const dependencyPackageName = dependencyPackageJson.name.replace(
-    '@coveo/',
-    ''
-  );
-  const dependentPackages = [];
-  for (const [name, dependencies] of Object.entries(
-    topology.graph.dependencies
-  )) {
-    if (
-      dependencies.find(
-        (/** @type {{target:string}} **/ dependency) =>
-          dependency.target === dependencyPackageName
-      )
-    ) {
-      dependentPackages.push(name);
-    }
-  }
-
-  for (const dependentPackage of dependentPackages) {
-    modifyPackageJson(
-      join(REPO_FS_ROOT, topology.graph.nodes[dependentPackage].data.root),
-      (packageJson) => {
-        updateDependency(packageJson, dependencyPackageJson.name, version);
-      }
-    );
-  }
+modifyPackageJson(PATH, (packageJson) => {
+  packageJson.version = newVersion;
+});
+if (privatePackage) {
+  process.exit(0);
 }
 
-/**
- * Update all instancies of the `dependency` in the `packageJson` to the given `version`.
- * @param {any} packageJson the packageJson object to update
- * @param {string} dependency the dependency to look for and update
- * @param {string} version the version to update to.
- */
-function updateDependency(packageJson, dependency, version) {
-  for (const dependencyType of [
-    'dependencies',
-    'devDependencies',
-    'peerDependencies',
-    'optionalDependencies',
-  ]) {
-    if (packageJson?.[dependencyType]?.[dependency]) {
-      packageJson[dependencyType][dependency] = version;
-    }
-  }
+if (parsedCommits.length > 0) {
+  const changelog = await generateChangelog(
+    parsedCommits,
+    newVersion,
+    {
+      host: REPO_HOST,
+      owner: REPO_OWNER,
+      repository: REPO_NAME,
+    },
+    convention.writerOpts
+  );
+  await writeChangelog(PATH, changelog);
 }
+appendFileSync(
+  join(REPO_FS_ROOT, '.git-message'),
+  `${packageJson.name}@${newVersion}\n`
+);
 
 function isPrivatePackage() {
   const packageJson = JSON.parse(

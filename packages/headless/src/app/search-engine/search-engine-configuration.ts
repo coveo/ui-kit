@@ -72,7 +72,7 @@ export interface SearchConfigurationOptions {
    */
   preprocessQuerySuggestResponseMiddleware?: PostprocessQuerySuggestResponseMiddleware;
   /**
-   * The base URL to use to proxy Coveo search requests (e.g., `https://example.com/search`).
+   * The base URL to use to proxy Coveo search requests (for example, `https://example.com/search`).
    *
    * This is an advanced option that you only set if you proxy Coveo searchrequests through your own
    * server. In most cases, you should not set this option.

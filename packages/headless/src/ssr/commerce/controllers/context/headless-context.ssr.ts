@@ -4,6 +4,7 @@ import {
   type ContextOptions,
   type ContextProps,
   type ContextState,
+  type CustomContext,
   type UserLocation,
   type View,
 } from '../../../../controllers/commerce/context/headless-context.js';
@@ -13,17 +14,19 @@ import {createControllerWithKind, Kind} from '../../types/kind.js';
 
 export type {
   Context,
+  ContextOptions,
   ContextProps,
   ContextState,
-  View,
+  CustomContext,
   UserLocation,
-  ContextOptions,
+  View,
 };
 
 export interface ContextDefinition
   extends UniversalControllerDefinitionWithProps<Context, ContextOptions> {}
 
 /**
+ * @deprecated In the future, the context controller will be included by default in the engine definition. You will no longer need to define it manually
  * Defines a `Context` controller instance.
  * @group Definers
  *

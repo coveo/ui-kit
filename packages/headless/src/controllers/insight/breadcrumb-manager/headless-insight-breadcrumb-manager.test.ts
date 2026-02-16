@@ -10,6 +10,7 @@ import {
 } from '../../../features/facets/facet-set/facet-set-actions.js';
 import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice.js';
 import type {FacetValue} from '../../../features/facets/facet-set/interfaces/response.js';
+import {logClearBreadcrumbs} from '../../../features/facets/generic/facet-generic-insight-analytics-actions.js';
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
@@ -74,6 +75,9 @@ vi.mock(
 );
 vi.mock('../../../features/insight-search/insight-search-actions');
 vi.mock('../../../features/static-filter-set/static-filter-set-actions');
+vi.mock(
+  '../../../features/facets/generic/facet-generic-insight-analytics-actions'
+);
 
 describe('insight breadcrumb manager', () => {
   const facetId = 'abc123';
@@ -318,6 +322,10 @@ describe('insight breadcrumb manager', () => {
       facetBreadcrumbs = breadcrumbManager.state.numericFacetBreadcrumbs;
     });
 
+    afterEach(() => {
+      vi.clearAllMocks();
+    });
+
     it('#state gets numeric facet breadcrumbs correctly', () => {
       expect(facetBreadcrumbs[0].values[0].value).toBe(mockSelectedValue);
       expect(facetBreadcrumbs[0].values[1].value).toBe(mockExcludedValue);
@@ -549,8 +557,16 @@ describe('insight breadcrumb manager', () => {
     });
 
     it('dispatches #executeSearch', () => {
+      vi.clearAllMocks();
       breadcrumbManager.deselectAll();
       expect(executeSearch).toHaveBeenCalled();
+      expect(executeSearch).toHaveBeenCalledTimes(1);
+      expect(executeSearch).toHaveBeenCalledWith({
+        legacy: logClearBreadcrumbs(),
+        next: {
+          actionCause: 'breadcrumbResetAll',
+        },
+      });
     });
   });
 });

@@ -1,28 +1,38 @@
 /* eslint-disable @cspell/spellchecker */
 
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 
 const {decorator, play} = wrapInInsightInterface();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-insight-interface',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-insight-interface',
-  title: 'Atomic/Insight/InsightInterface',
+  title: 'Insight/Interface',
   id: 'atomic-insight-interface',
 
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
   play,
 };
 
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-insight-panel',
   decorators: [
     () =>
       html`<atomic-insight-layout>
@@ -55,12 +65,12 @@ export const Default: Story = {
               label="All"
               expression=""
               active="true"
-            ></atomic-insight-tab
-            ><atomic-insight-tab
+            ></atomic-insight-tab>
+            <atomic-insight-tab
               label="Videos"
               expression="@ytchanneltitle"
-            ></atomic-insight-tab
-            ><atomic-insight-tab
+            ></atomic-insight-tab>
+            <atomic-insight-tab
               label="Documentation"
               expression='@documenttype==("WebPage")'
             ></atomic-insight-tab>
@@ -231,7 +241,7 @@ export const Default: Story = {
                   </atomic-field-condition>
                 </atomic-result-section-badges>
                 <atomic-result-section-title>
-                  <atomic-result-link>
+                  <atomic-result-link data-testid="video-insight-result-link">
                     <a slot="attributes" target="_self"></a>
                   </atomic-result-link>
                 </atomic-result-section-title>

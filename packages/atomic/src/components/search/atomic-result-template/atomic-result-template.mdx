@@ -1,0 +1,151 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicResultTemplateStories from './atomic-result-template.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicResultTemplateStories} />
+
+<AtomicDocTemplate
+  stories={AtomicResultTemplateStories}
+  defaultStory="Default"
+  githubPath="search/atomic-result-template/atomic-result-template.ts"
+  tagName="atomic-result-template"
+  className="AtomicResultTemplate"
+>
+
+This component defines the UI display of your search results. 
+A `template` element must be the child of an `atomic-result-template`. Furthermore, an `atomic-result-list`, `atomic-folded-result-list`, or `atomic-search-box-instant-results` must be the parent of each `atomic-result-template`.
+ * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
+
+Example using the `atomic-result-list`:
+```html
+<atomic-result-list>
+  <atomic-result-template>
+    <template>
+      <atomic-result-section-visual>
+        <atomic-result-image field="ytthumbnailurl" fallback="https://picsum.photos/seed/picsum/350"></atomic-result-image>
+      </atomic-result-section-visual>
+      
+      <atomic-result-section-badges>
+        <atomic-field-condition must-match-sourcetype="YouTube">
+          <atomic-result-badge
+            label="YouTube"
+            class="youtube-badge"
+          ></atomic-result-badge>
+        </atomic-field-condition>
+        
+        <atomic-result-badge
+          icon="https://raw.githubusercontent.com/Rush/Font-Awesome-SVG-PNG/master/black/svg/language.svg"
+        >
+          <atomic-result-multi-value-text
+            field="language"
+          ></atomic-result-multi-value-text>
+        </atomic-result-badge>
+      </atomic-result-section-badges>
+
+      <atomic-result-section-title>
+        <atomic-result-link></atomic-result-link>
+      </atomic-result-section-title>
+
+      <atomic-result-section-excerpt>
+        <atomic-result-text field="excerpt"></atomic-result-text>
+      </atomic-result-section-excerpt>
+
+      <atomic-result-section-bottom-metadata>
+        <atomic-result-fields-list>
+          <atomic-field-condition class="field" if-defined="source">
+            <span class="field-label">
+              <atomic-text value="source"></atomic-text>:
+            </span>
+            <atomic-result-text field="source"></atomic-result-text>
+          </atomic-field-condition>
+          
+          <atomic-field-condition class="field" if-defined="author">
+            <span class="field-label">
+              <atomic-text value="author"></atomic-text>:
+            </span>
+            <atomic-result-text field="author"></atomic-result-text>
+          </atomic-field-condition>
+          
+          <atomic-field-condition class="field" if-defined="date">
+            <span class="field-label">
+              <atomic-text value="date"></atomic-text>:
+            </span>
+            <atomic-result-date></atomic-result-date>
+          </atomic-field-condition>
+        </atomic-result-fields-list>
+      </atomic-result-section-bottom-metadata>
+    </template>
+  </atomic-result-template>
+</atomic-result-list>
+```
+
+## Template Conditions
+
+
+You can use conditions to display different templates based on result properties. You can specify as many `must-match-*` and `must-not-match-*` attributes as you want on a template, each targeting a different field. Each attribute can accept multiple comma-separated values.
+
+**Comma represents OR:** Within a single attribute, comma-separated values represent a logical OR. For example, `must-match-sourcetype="YouTube,Salesforce"` means the sourcetype must be YouTube OR Salesforce.
+
+**Multiple attributes represent AND:** All conditions from different attributes must be met (logical AND) for the template to apply to a result.
+
+If you set both `must-match-*` and `must-not-match-*` for the same field and there is any overlap in values, the template will be ignored (it will never match any result).
+
+**Order of declaration matters:** The first template whose conditions are met will be applied. If a default template (without conditions) is declared first, it will apply to all results, even if other templates with conditions are declared later.
+
+**Examples:**
+
+```html
+<!-- Template applies if sourcetype is YouTube or Salesforce, and language is NOT fr -->
+<atomic-result-template
+  must-match-sourcetype="YouTube,Salesforce"
+  must-not-match-language="fr"
+>
+  <template>
+    <!-- ... -->
+  </template>
+</atomic-result-template>
+
+<!-- This template will never apply, because the same value is required and forbidden -->
+<atomic-result-template
+  must-match-sourcetype="YouTube"
+  must-not-match-sourcetype="YouTube"
+>
+  <template>
+    <!-- ... -->
+  </template>
+</atomic-result-template>
+```
+
+```html
+<atomic-result-list>
+  <!-- Template for YouTube videos -->
+  <atomic-result-template must-match-sourcetype="YouTube">
+    <template>
+      <atomic-result-section-visual>
+        <atomic-result-image field="ytthumbnailurl"></atomic-result-image>
+      </atomic-result-section-visual>
+      <atomic-result-section-title>
+        <atomic-result-link></atomic-result-link>
+      </atomic-result-section-title>
+      <atomic-result-section-excerpt>
+        <atomic-result-text field="excerpt"></atomic-result-text>
+      </atomic-result-section-excerpt>
+    </template>
+  </atomic-result-template>
+
+  <!-- Default template for all other results -->
+  <atomic-result-template>
+    <template>
+      <atomic-result-section-title>
+        <atomic-result-link></atomic-result-link>
+      </atomic-result-section-title>
+      <atomic-result-section-excerpt>
+        <atomic-result-text field="excerpt"></atomic-result-text>
+      </atomic-result-section-excerpt>
+    </template>
+  </atomic-result-template>
+</atomic-result-list>
+```
+
+</AtomicDocTemplate>

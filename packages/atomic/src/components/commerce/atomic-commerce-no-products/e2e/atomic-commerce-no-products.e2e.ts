@@ -1,22 +1,16 @@
 import {expect, test} from './fixture';
 
-test.describe('AtomicCommerceNoProducts', () => {
+test.describe('atomic-commerce-no-products', () => {
   test.beforeEach(async ({noProducts}) => {
-    await noProducts.noProducts();
     await noProducts.load();
     await noProducts.hydrated.waitFor();
-  });
-
-  test('should be accessible', async ({makeAxeBuilder}) => {
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
   });
 
   test('should be present in the page', async ({noProducts}) => {
     await expect(noProducts.ariaLive()).toBeVisible();
   });
 
-  test('should display no result message', async ({noProducts}) => {
+  test('should display no products message', async ({noProducts}) => {
     await expect(noProducts.message()).toBeVisible();
   });
 

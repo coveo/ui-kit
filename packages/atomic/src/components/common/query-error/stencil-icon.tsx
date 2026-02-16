@@ -10,6 +10,9 @@ interface QueryErrorIconProps {
   errorType?: string;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const QueryErrorIcon: FunctionalComponent<QueryErrorIconProps> = ({
   errorType,
 }) => {
