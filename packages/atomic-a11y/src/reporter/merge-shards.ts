@@ -2,12 +2,14 @@ import {mkdir, readdir, readFile, writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import {wasExecutedDirectly} from '../shared/file-utils.js';
 import {isA11yReport} from '../shared/guards.js';
+import {compareByName, compareByNumericId} from '../shared/sorting.js';
+import {formatDate} from './reporter-utils.js';
+import {createSummary} from './summary.js';
 import type {
   A11yAutomatedResults,
   A11yComponentReport,
   A11yCriterionReport,
   A11yReport,
-  A11ySummary,
 } from './vitest-a11y-reporter.js';
 import {
   DEFAULT_A11Y_REPORT_FILENAME,
@@ -58,51 +60,6 @@ function toMutableCriterion(
   return {
     ...criterion,
     affectedComponents: new Set(criterion.affectedComponents),
-  };
-}
-
-function sortByNumericIdentifier(first: string, second: string): number {
-  return first.localeCompare(second, 'en-US', {numeric: true});
-}
-
-function createSummary(
-  components: A11yComponentReport[],
-  criteria: A11yCriterionReport[],
-  totalCriteria: number
-): A11ySummary {
-  const litComponents = components.filter(
-    (component) => component.framework === 'lit'
-  ).length;
-  const stencilComponents = components.filter(
-    (component) => component.framework === 'stencil'
-  ).length;
-  const totalStories = components.reduce(
-    (accumulator, component) => accumulator + component.storyCount,
-    0
-  );
-  const automatedCoverage =
-    totalCriteria > 0
-      ? `${Math.round((criteria.length / totalCriteria) * 100)}%`
-      : '0%';
-
-  return {
-    totalComponents: components.length,
-    litComponents,
-    stencilComponents,
-    stencilExcluded: true,
-    storyCoverage: {
-      total: totalStories,
-      withA11y: totalStories,
-      excludedFromA11y: 0,
-    },
-    totalCriteria,
-    supports: 0,
-    partiallySupports: 0,
-    doesNotSupport: 0,
-    notApplicable: 0,
-    notEvaluated: totalCriteria,
-    automatedCoverage,
-    manualCoverage: '0%',
   };
 }
 
@@ -171,12 +128,12 @@ function mergeComponents(reports: A11yReport[]): A11yComponentReport[] {
         automated: {
           ...component.automated,
           criteriaCovered: [...component.automated.criteriaCovered].sort(
-            sortByNumericIdentifier
+            compareByNumericId
           ),
         },
       };
     })
-    .sort((first, second) => first.name.localeCompare(second.name, 'en-US'));
+    .sort((first, second) => compareByName(first.name, second.name));
 }
 
 function mergeCriteria(
@@ -225,12 +182,12 @@ function mergeCriteria(
     .map((criterion): A11yCriterionReport => {
       return {
         ...criterion,
-        affectedComponents: [...criterion.affectedComponents].sort((a, b) =>
-          a.localeCompare(b, 'en-US')
+        affectedComponents: [...criterion.affectedComponents].sort(
+          compareByName
         ),
       };
     })
-    .sort((first, second) => sortByNumericIdentifier(first.id, second.id));
+    .sort((first, second) => compareByNumericId(first.id, second.id));
 }
 
 export const mergeShardsTestUtils = {
@@ -292,7 +249,7 @@ export async function mergeA11yShardReports(
   const mergedReport: A11yReport = {
     report: {
       ...baseReport.report,
-      reportDate: new Date().toISOString().slice(0, 10),
+      reportDate: formatDate(new Date()),
     },
     components,
     criteria,

@@ -3,6 +3,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import type {TestCase} from 'vitest/node';
 import {getCriterionMetadata as lookupCriterionMetadata} from '../data/criterion-metadata.js';
+import {compareByNumericId} from '../shared/sorting.js';
 import type {CriterionMetadata, SupportedFramework} from '../shared/types.js';
 
 export interface PackageMetadata {
@@ -305,9 +306,7 @@ export function extractA11yRuleIdsFromTestErrors(
     );
   }
 
-  return [...extractedRuleIds].sort((a, b) =>
-    a.localeCompare(b, 'en-US', {numeric: true})
-  );
+  return [...extractedRuleIds].sort(compareByNumericId);
 }
 
 export function formatDate(date: Date): string {

@@ -13,6 +13,7 @@ import {
   DEFAULT_A11Y_REPORT_OUTPUT_DIR,
   DEFAULT_WCAG_22_AA_CRITERIA_COUNT,
 } from '../shared/constants.js';
+import {compareByName, compareByNumericId} from '../shared/sorting.js';
 import type {
   A11yAutomatedResults,
   A11yComponentReport,
@@ -46,6 +47,7 @@ import {
   UNKNOWN_CATEGORY,
   UNKNOWN_FRAMEWORK,
 } from './reporter-utils.js';
+import {createSummary} from './summary.js';
 
 export {
   DEFAULT_A11Y_REPORT_OUTPUT_DIR,
@@ -301,13 +303,13 @@ export class VitestA11yReporter implements Reporter {
             incomplete: component.automated.incomplete,
             inapplicable: component.automated.inapplicable,
             criteriaCovered: [...component.automated.criteriaCovered].sort(
-              (a, b) => a.localeCompare(b, 'en-US', {numeric: true})
+              compareByNumericId
             ),
             incompleteDetails: component.automated.incompleteDetails,
           },
         };
       })
-      .sort((first, second) => first.name.localeCompare(second.name, 'en-US'));
+      .sort((first, second) => compareByName(first.name, second.name));
   }
 
   private buildCriteria(): A11yCriterionReport[] {
@@ -324,53 +326,17 @@ export class VitestA11yReporter implements Reporter {
           automatedCoverage: true,
           manualVerified: false,
           remarks: '',
-          affectedComponents: [...coveredComponents].sort((a, b) =>
-            a.localeCompare(b, 'en-US')
-          ),
+          affectedComponents: [...coveredComponents].sort(compareByName),
         };
       })
-      .sort((first, second) =>
-        first.id.localeCompare(second.id, 'en-US', {numeric: true})
-      );
+      .sort((first, second) => compareByNumericId(first.id, second.id));
   }
 
   private buildSummary(
     components: A11yComponentReport[],
     criteria: A11yCriterionReport[]
   ): A11ySummary {
-    const litComponents = components.filter(
-      (component) => component.framework === 'lit'
-    ).length;
-    const stencilComponents = components.filter(
-      (component) => component.framework === 'stencil'
-    ).length;
-    const totalStories = components.reduce(
-      (total, component) => total + component.storyCount,
-      0
-    );
-
-    return {
-      totalComponents: components.length,
-      litComponents,
-      stencilComponents,
-      stencilExcluded: true,
-      storyCoverage: {
-        total: totalStories,
-        withA11y: totalStories,
-        excludedFromA11y: 0,
-      },
-      totalCriteria: this.totalCriteria,
-      supports: 0,
-      partiallySupports: 0,
-      doesNotSupport: 0,
-      notApplicable: 0,
-      notEvaluated: this.totalCriteria,
-      automatedCoverage: getAutomationCoveragePercentage(
-        criteria.length,
-        this.totalCriteria
-      ),
-      manualCoverage: '0%',
-    };
+    return createSummary(components, criteria, this.totalCriteria);
   }
 
   private buildReport(): A11yReport {

@@ -1,4 +1,5 @@
 import axeCore from 'axe-core';
+import {compareByNumericId} from '../shared/sorting.js';
 
 export function extractCriteriaFromTags(tags: readonly string[]): string[] {
   const criterionTagPattern = /^wcag(\d)(\d)(\d{1,2})$/;
@@ -13,8 +14,8 @@ export function buildAxeRuleCriteriaMap(): Map<string, string[]> {
   const criteriaByRuleId = new Map<string, string[]>();
 
   for (const rule of axeCore.getRules()) {
-    const criteria = extractCriteriaFromTags(rule.tags).sort((a, b) =>
-      a.localeCompare(b, 'en-US', {numeric: true})
+    const criteria = extractCriteriaFromTags(rule.tags).sort(
+      compareByNumericId
     );
 
     if (criteria.length > 0) {

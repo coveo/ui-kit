@@ -4,6 +4,7 @@ import {
   extractCriteriaFromTags,
 } from '../data/axe-rule-mappings.js';
 import {isRecord} from '../shared/guards.js';
+import {compareByNumericId} from '../shared/sorting.js';
 
 export {extractCriteriaFromTags};
 
@@ -23,9 +24,7 @@ export function isAxeResults(value: unknown): value is AxeResults {
 }
 
 export function getCriteriaForRule(rule: AxeRuleResult): string[] {
-  return extractCriteriaFromTags(rule.tags).sort((a, b) =>
-    a.localeCompare(b, 'en-US', {numeric: true})
-  );
+  return extractCriteriaFromTags(rule.tags).sort(compareByNumericId);
 }
 
 export function getCriteriaForRuleId(ruleId: string): string[] {
