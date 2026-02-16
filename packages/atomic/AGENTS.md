@@ -1,19 +1,19 @@
-# Atomic AGENTS.md
-
-When working in the Atomic package, you must follow these instructions in addition to those found in the `AGENTS.md` file at the root of the monorepo.
+# Atomic Package AGENTS.md
 
 ## Atomic Package Commands
+
+The following commands are specific to the Atomic Package:
 
 - **Build the Atomic package**: `pnpm turbo @coveo/atomic#build`
 - **Run all Atomic unit tests**: `pnpm turbo @coveo/atomic#test`
 - **Run a specific unit test suite**: `npx vitest run <relative/path/to/test-suite.spec.ts>`
 - **Run the Atomic and Storybook dev servers**: `pnpm turbo @coveo/atomic#dev`
-
-**Executable only from `/packages/atomic`, and only when the Storybook server is running**:
 - **Run all Atomic end-to-end tests**: `npx playwright test`
 - **Run a specific end-to-end test suite**: `npx playwright test -g <test-suite.e2e.ts>`
 
-**Note**: Atomic unit test and end-to-end tests do not depend on each other. Only end-to-end tests require the Storybook dev server.
+**Notes**:
+- By default, the Atomic and Storybook dev servers run on port 3333 and 4400 respectively
+- End-to-end testing commands must be executed from `/packages/atomic` while the Storybook server is running
 
 ## Atomic Package Structure
 
@@ -61,12 +61,14 @@ atomic-{component-name}/
 │   └── fixture.ts                          # Test fixtures
 └── *.ts                                    # Supporting files (optional)
 
-**Component variations:**
+**Notes**:
 - The `.tw.css.ts` file is only included when complex styles are required; otherwise component styles are usually set directly in the Lit component's static `styles` property
 - Complex components may have multiple `.ts` helper files
 - Internal components may lack the `e2e/` directory
 
 ## Atomic Package Technology
+
+In addition to the technology listed in the root `AGENTS.md` file, the following technology is used in the Atomic package:
 
 - **Visual regression testing**: Chromatic v13
 - **Datetime formatting**: DayJS v1
@@ -78,16 +80,22 @@ atomic-{component-name}/
 
 ## Atomic Package Boundaries
 
-**You must ALWAYS**:
+In addition to the boundaries listed in the root `AGENTS.md` file, the following boundaries apply when working in the Atomic package:
+
+**You must ALWAYS**
 - Add unit tests in the corresponding test suite (`.spec.ts`) when:
   - Adding a new feature or behavior
   - Fixing a bug in an existing feature or behavior
 - Use path aliases for imports (except SVG imports)
 
-**You must ASK BEFORE**:
+---
+
+**You must ASK BEFORE**
 - Modifying:
   - `packages/atomic/playwright.config.ts`
   - `packages/atomic/rollup.config.js`
 
-**You must NEVER**:
+---
+
+**You must NEVER**
 - Modify `packages/atomic/collection-manifest.json` directly (automatically updated)

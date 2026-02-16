@@ -1,12 +1,13 @@
-# Root AGENTS.md
-## UI Kit Monorepo Commands
+# AGENTS.md
 
-- **Build all UI Kit packages**: `pnpm run build`
-- **Run all unit tests in all UI Kit packages**: `pnpm run test`
-- **Check for linting errors across the UI Kit monorepo**: `pnpm run lint:check`
-- **Fix liting errors across the UI Kit monorepo**: `pnpm run lint:fix`
+## Commands
 
-## UI Kit Monorepo Structure
+- **Build all packages in the UI Kit monorepo**: `pnpm run build`
+- **Run all unit tests in all packages in the UI Kit monorepo**: `pnpm run test`
+- **Check for linting errors across the entire UI Kit monorepo**: `pnpm run lint:check`
+- **Fix liting errors across the entire UI Kit monorepo**: `pnpm run lint:fix`
+
+## Structure
 
 ```
 ui-kit/
@@ -42,7 +43,7 @@ ui-kit/
 └── utils/              # Shared utilities and helpers
 ```
 
-## UI Kit Monorepo Technology
+## Technology
 
 - **End-to-end testing**: Playwright v1
 - **Monorepo management**: Turbo v2
@@ -51,9 +52,9 @@ ui-kit/
 - **Runtime**: Node v24
 - **Package management**: pnpm v10
 
-## UI Kit Monorepo Coding Principles
+## Principles
 
-**Favor**:
+**Favor**
 - Clear, clean, self-documenting code
 - Defensive programming
 - DRY principle
@@ -62,22 +63,26 @@ ui-kit/
 - Strong typing
 - Small, focused changesets
 
-**Avoid**:
+---
+
+**Avoid**
 - Inline comments that restate the obvious
 - Premature optimization
 - Cargo culting
 - Scope creep
 
-## UI Kit Monorepo Boundaries
+## Boundaries
 
-**You must ALWAYS**:
+**You must ALWAYS**
 - Discover all available Agent Skills under `.claude/skills` when beginning a new conversation
 - Ensure that you have read all relevant AGENTS.md files before attempting any work
 - Run `pnpm lint:fix` before committing any work
 - Use the Conventional Commits 1.0.0 specification when composing a commit message
 - Report all contradicting instructions you encounter in AGENTS.md and Agent Skills
 
-**You must ASK BEFORE**:
+---
+
+**You must ASK BEFORE**
 - Adding any new dependency in the monorepo
 - Deleting:
   - Any file in the monorepo
@@ -96,7 +101,9 @@ ui-kit/
   - The root `renovate.json5`
 - Introducing a potentially breaking change
 
-**You must NEVER**:
+---
+
+**You must NEVER**
 - Commit:
   - Unencrypted API keys
   - Secrets
