@@ -60,13 +60,6 @@ const storybook = defineConfig({
   ],
   test: {
     name: 'storybook',
-    reporters: [
-      'default',
-      new VitestA11yReporter({
-        outputDir: path.resolve(import.meta.dirname, '../atomic-a11y/reports'),
-        packageJsonPath: path.resolve(import.meta.dirname, 'package.json'),
-      }),
-    ],
     fileParallelism: false,
     browser: {
       fileParallelism: false,
@@ -163,5 +156,14 @@ const atomicDefault = defineConfig({
 });
 
 export default mergeConfig(atomicDefault, {
-  test: {projects: [atomicDefault, storybook]},
+  test: {
+    reporters: [
+      'default',
+      new VitestA11yReporter({
+        outputDir: path.resolve(import.meta.dirname, '../atomic-a11y/reports'),
+        packageJsonPath: path.resolve(import.meta.dirname, 'package.json'),
+      }),
+    ],
+    projects: [atomicDefault, storybook],
+  },
 });
