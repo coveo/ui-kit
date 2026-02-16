@@ -9,6 +9,8 @@
     "dist"
   ],
   "scripts": {
+    "test": "vitest run",
+    "a11y:merge-shards": "npx tsx src/reporter/merge-shards.ts",
     "generate:wcag": "node scripts/generate-wcag-criteria.mjs",
     "build": "pnpm generate:wcag && tsc -p tsconfig.json"
   },
