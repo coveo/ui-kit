@@ -1,7 +1,7 @@
 import type {A11yReport} from './types.js';
 
 export function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null;
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
 export function isA11yReport(value: unknown): value is A11yReport {

@@ -11,7 +11,6 @@ export {
   DEFAULT_A11Y_REPORT_OUTPUT_DIR,
   DEFAULT_WCAG_22_AA_CRITERIA_COUNT,
 } from './shared/constants.js';
-export {readJsonFile} from './shared/file-utils.js';
 export {isA11yReport, isRecord} from './shared/guards.js';
 export type {
   A11yAutomatedResults,
