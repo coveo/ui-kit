@@ -9,6 +9,9 @@ interface Props {
   onClick: () => void;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const SubmitButton: FunctionalComponent<Props> = ({
   bindings,
   disabled,

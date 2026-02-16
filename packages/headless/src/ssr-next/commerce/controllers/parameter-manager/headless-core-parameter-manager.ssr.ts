@@ -17,14 +17,9 @@ import type {CommerceSearchParameters} from '../../../../features/commerce/searc
 import {sortReducer as commerceSort} from '../../../../features/commerce/sort/sort-slice.js';
 import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice.js';
 import {querySetReducer as querySet} from '../../../../features/query-set/query-set-slice.js';
-import {ensureAtLeastOneSolutionType} from '../../../../ssr/commerce/controller-utils.js';
 import {loadReducerError} from '../../../../utils/errors.js';
 import {SolutionType} from '../../types/controller-constants.js';
-import type {
-  ControllerDefinitionOption,
-  SubControllerDefinitionWithProps,
-} from '../../types/controller-definitions.js';
-import {createControllerWithKind, Kind} from '../../types/kind.js';
+import type {SearchAndListingControllerDefinitionWithProps} from '../../types/controller-definitions.js';
 
 export type {
   ParameterManager,
@@ -35,63 +30,51 @@ export type {
   CommerceSearchParameters,
 };
 
+export type ParameterManagerDefinition =
+  SearchAndListingControllerDefinitionWithProps<
+    ParameterManager<ProductListingParameters | CommerceSearchParameters>,
+    SSRParameterManagerProps<
+      ProductListingParameters | CommerceSearchParameters
+    >
+  >;
+
 /**
  * Defines a `ParameterManager` controller instance.
  * @group Definers
  *
  * @returns The `ParameterManager` controller definition.
+ *
+ * Note: This controller is automatically included in all engine definitions. You do not need to add it manually to your engine definition configuration.
  */
-export function defineParameterManager<
-  TOptions extends ControllerDefinitionOption | undefined,
->(options?: TOptions) {
-  ensureAtLeastOneSolutionType(options);
+export function defineParameterManager(): ParameterManagerDefinition {
   return {
     listing: true,
     search: true,
-    ...options,
     buildWithProps: (engine, props, solutionType) => {
       if (solutionType === SolutionType.listing) {
         if (!loadCommerceProductListingParameterReducers(engine)) {
           throw loadReducerError;
         }
-        const controller = buildProductListing(engine).parameterManager({
+        return buildProductListing(engine).parameterManager({
           ...props,
           excludeDefaultParameters: true,
         });
-
-        return createControllerWithKind(controller, Kind.ParameterManager);
       } else {
         if (!loadCommerceSearchParameterReducers(engine)) {
           throw loadReducerError;
         }
 
-        const controller = buildSearch(engine).parameterManager({
+        return buildSearch(engine).parameterManager({
           ...props,
           excludeDefaultParameters: true,
         });
-
-        return createControllerWithKind(controller, Kind.ParameterManager);
       }
     },
-  } as SubControllerDefinitionWithProps<
-    ParameterManager<MappedParameterTypes<TOptions>>,
-    TOptions,
-    SSRParameterManagerProps<MappedParameterTypes<TOptions>>
-  >;
+  };
 }
 
 export interface SSRParameterManagerProps<T extends Parameters>
   extends Omit<ParameterManagerProps<T>, 'excludeDefaultParameters'> {}
-
-type MappedParameterTypes<
-  TOptions extends ControllerDefinitionOption | undefined,
-> = TOptions extends {listing: true; search: true} | undefined
-  ? ProductListingParameters | CommerceSearchParameters
-  : TOptions extends {listing: true; search: false}
-    ? ProductListingParameters
-    : TOptions extends {listing: false; search: true}
-      ? CommerceSearchParameters
-      : never;
 
 function loadCommerceCommonParameterReducers(
   engine: CoreEngineNext

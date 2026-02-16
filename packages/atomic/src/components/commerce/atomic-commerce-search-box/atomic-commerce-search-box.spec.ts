@@ -1,35 +1,39 @@
 import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {isMacOS} from '@/src/utils/device-utils';
-import * as replaceBreakpoint from '@/src/utils/replace-breakpoint';
+import * as replaceBreakpoint from '@/src/utils/replace-breakpoint-utils';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/fake-atomic-commerce-search-box-suggestions-fixture';
 import {
+  buildRecentQueriesList,
   buildSearchBox,
   buildStandaloneSearchBox,
-  type CommerceEngine,
   loadQuerySetActions,
+  loadQuerySuggestActions,
 } from '@coveo/headless/commerce';
-import {userEvent} from '@vitest/browser/context';
-import {html} from 'lit';
+import {html, type TemplateResult} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {describe, expect, it, vi} from 'vitest';
+import {userEvent} from 'vitest/browser';
+import {randomID} from '@/src/utils/utils';
+import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
 import {buildFakeLoadQuerySetActions} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/query-set-actions';
+import {buildFakeLoadQuerySuggestActions} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/query-suggest-actions';
+import {buildFakeRecentQueriesList} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/recent-queries-list-controller';
 import {buildFakeSearchBox} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-box-controller';
 import {buildFakeStandaloneSearchBox} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/standalone-search-box-controller';
-import {randomID} from '../../../utils/utils';
 import {AtomicCommerceSearchBox} from './atomic-commerce-search-box';
 import './atomic-commerce-search-box';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 vi.mock('@/src/utils/device-utils', {spy: true});
-vi.mock(import('../../../utils/utils'), async (importOriginal) => {
+vi.mock(import('@/src/utils/utils'), async (importOriginal) => {
   const mod = await importOriginal();
   return {
     ...mod,
     randomID: vi.fn((prefix?: string, _length?: number) => `${prefix}123`),
   };
 });
-vi.mock('@/src/utils/replace-breakpoint', {spy: true});
+vi.mock('@/src/utils/replace-breakpoint-utils', {spy: true});
 
 const commonSearchBoxOptions = {
   id: 'atomic-commerce-search-box-123',
@@ -46,10 +50,8 @@ const commonSearchBoxOptions = {
   clearFilters: true,
 };
 
-describe('AtomicCommerceSearchBox', () => {
-  const mockedEngine = {
-    dispatch: vi.fn(),
-  } as unknown as CommerceEngine;
+describe('atomic-commerce-search-box', () => {
+  const mockedEngine = buildFakeCommerceEngine({});
   const afterRedirectionMock = vi.fn();
   const updateRedirectUrlMock = vi.fn();
   const submitMock = vi.fn();
@@ -61,6 +63,7 @@ describe('AtomicCommerceSearchBox', () => {
     noSuggestions = false,
     redirectTo = undefined,
     searchBoxValue = '',
+    additionalChildren = html``,
   }: {
     searchBoxProps?: {
       redirectionUrl?: string;
@@ -73,7 +76,14 @@ describe('AtomicCommerceSearchBox', () => {
     noSuggestions?: boolean;
     redirectTo?: string;
     searchBoxValue?: string;
+    additionalChildren?: TemplateResult;
   } = {}) => {
+    vi.mocked(buildRecentQueriesList).mockReturnValue(
+      buildFakeRecentQueriesList()
+    );
+    vi.mocked(loadQuerySuggestActions).mockReturnValue(
+      buildFakeLoadQuerySuggestActions()
+    );
     vi.mocked(buildSearchBox).mockReturnValue(
       buildFakeSearchBox(
         {
@@ -88,7 +98,8 @@ describe('AtomicCommerceSearchBox', () => {
     vi.mocked(buildStandaloneSearchBox).mockReturnValue(
       buildFakeStandaloneSearchBox(
         {
-          redirectTo,
+          ...(redirectTo !== undefined && {redirectTo}),
+          value: searchBoxValue,
         },
         {
           afterRedirection: afterRedirectionMock,
@@ -122,11 +133,11 @@ describe('AtomicCommerceSearchBox', () => {
           clear-filters=${ifDefined(clearFilters)}
         >
           ${suggestions}
+          ${additionalChildren}
         </atomic-commerce-search-box>`,
         selector: 'atomic-commerce-search-box',
         bindings: (bindings) => {
           bindings.engine = mockedEngine;
-
           return bindings;
         },
       });
@@ -154,11 +165,13 @@ describe('AtomicCommerceSearchBox', () => {
 
   it('should replace the children with recent-queries & query-suggestions when there are no children', async () => {
     const {element} = await renderSearchBox({noSuggestions: true});
-    expect(element.children.length).toBe(2);
-    expect(element.children[0].tagName).toBe(
+    expect(element.shadowRoot!.children.length).toBe(4);
+    expect(element.shadowRoot!.children[0].tagName).toBe('TEXTAREA');
+    expect(element.shadowRoot!.children[1].tagName).toBe('DIV');
+    expect(element.shadowRoot!.children[2].tagName).toBe(
       'ATOMIC-COMMERCE-SEARCH-BOX-RECENT-QUERIES'
     );
-    expect(element.children[1].tagName).toBe(
+    expect(element.shadowRoot!.children[3].tagName).toBe(
       'ATOMIC-COMMERCE-SEARCH-BOX-QUERY-SUGGESTIONS'
     );
   });
@@ -535,6 +548,7 @@ describe('AtomicCommerceSearchBox', () => {
   });
 
   it('should call buildSearchBox with clearFilters set to false when clearFilters is set to false', async () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
     await renderSearchBox({
       searchBoxProps: {clearFilters: false},
     });
@@ -544,6 +558,131 @@ describe('AtomicCommerceSearchBox', () => {
         ...commonSearchBoxOptions,
         clearFilters: false,
       },
+    });
+  });
+
+  it('should accept multiple slotted components without warning', async () => {
+    const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    await renderSearchBox({
+      additionalChildren: html`
+        <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
+        <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
+      `,
+    });
+
+    expect(consoleSpy).not.toHaveBeenCalled();
+  });
+
+  describe('when the search box is a standalone search box', () => {
+    it('should not throw when redirectionUrl changes before the search box initializes', async () => {
+      updateRedirectUrlMock.mockClear();
+      const element = document.createElement(
+        'atomic-commerce-search-box'
+      ) as AtomicCommerceSearchBox;
+
+      element.watchRedirectionUrl();
+
+      expect(updateRedirectUrlMock).not.toHaveBeenCalled();
+    });
+
+    it('should initialize the standalone search box controller with the correct options', async () => {
+      await renderSearchBox({
+        searchBoxProps: {redirectionUrl: '/search'},
+      });
+
+      expect(buildStandaloneSearchBox).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.objectContaining({
+          options: expect.objectContaining({
+            ...commonSearchBoxOptions,
+            redirectionUrl: '/search',
+            overwrite: true,
+          }),
+        })
+      );
+    });
+
+    describe('when redirectTo state is set', () => {
+      it('should dispatch a cancelable redirect event with the correct detail', async () => {
+        let capturedEvent: CustomEvent | null = null;
+
+        // Render without redirectTo initially
+        const {element} = await renderSearchBox({
+          searchBoxProps: {redirectionUrl: '/search'},
+          searchBoxValue: 'test',
+        });
+
+        // Get the fake controller that was created during render
+        const fakeStandaloneSearchBox = vi.mocked(buildStandaloneSearchBox).mock
+          .results[0]!.value as ReturnType<typeof buildFakeStandaloneSearchBox>;
+
+        // Add listener BEFORE triggering the redirect AND prevent default to avoid navigation
+        element.addEventListener('redirect', (event) => {
+          event.preventDefault();
+          capturedEvent = event as CustomEvent;
+        });
+
+        // Now update the state to trigger redirect
+        fakeStandaloneSearchBox.state.redirectTo = '/search?q=test';
+        element.requestUpdate();
+        await element.updateComplete;
+
+        expect(capturedEvent).not.toBeNull();
+        expect(capturedEvent!.cancelable).toBe(true);
+        expect(capturedEvent!.detail).toEqual({
+          redirectTo: '/search?q=test',
+          value: 'test',
+        });
+      });
+
+      it('should call afterRedirection when redirectTo is set', async () => {
+        // Render without redirectTo initially
+        const {element} = await renderSearchBox({
+          searchBoxProps: {redirectionUrl: '/search'},
+        });
+
+        // Get the fake controller that was created during render
+        const fakeStandaloneSearchBox = vi.mocked(buildStandaloneSearchBox).mock
+          .results[0]!.value as ReturnType<typeof buildFakeStandaloneSearchBox>;
+
+        // Prevent default to avoid navigation
+        element.addEventListener('redirect', (event) => {
+          event.preventDefault();
+        });
+
+        // Now update the state to trigger redirect
+        fakeStandaloneSearchBox.state.redirectTo = '/search?q=test';
+        element.requestUpdate();
+        await element.updateComplete;
+
+        expect(afterRedirectionMock).toHaveBeenCalled();
+      });
+
+      it('should not redirect when preventDefault is called on the redirect event', async () => {
+        const originalLocation = window.location.href;
+
+        // Render without redirectTo initially
+        const {element} = await renderSearchBox({
+          searchBoxProps: {redirectionUrl: '/search'},
+        });
+
+        // Get the fake controller that was created during render
+        const fakeStandaloneSearchBox = vi.mocked(buildStandaloneSearchBox).mock
+          .results[0]!.value as ReturnType<typeof buildFakeStandaloneSearchBox>;
+
+        // Add event listener BEFORE triggering the redirect
+        element.addEventListener('redirect', (event) => {
+          event.preventDefault();
+        });
+
+        // Now update the state to trigger redirect
+        fakeStandaloneSearchBox.state.redirectTo = '/search?q=test';
+        element.requestUpdate();
+        await element.updateComplete;
+
+        expect(window.location.href).toBe(originalLocation);
+      });
     });
   });
 });

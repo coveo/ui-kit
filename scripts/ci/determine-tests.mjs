@@ -4,6 +4,7 @@ import {EOL} from 'node:os';
 import {basename, dirname, join, relative} from 'node:path';
 import {setOutput} from '@actions/core';
 import {getBaseHeadSHAs, getChangedFiles} from './git-utils.mjs';
+import {getAllHeadlessAffectedEndpoints} from './headless-dependency-tracker.mjs';
 import {ensureFileExists, listImports} from './list-imports.mjs';
 
 class NoRelevantChangesError extends Error {
@@ -137,7 +138,7 @@ function determineTestFilesToRun(changedFiles, testDependencies) {
  * @throws {DependentPackageChangeError} If the file depends on a Coveo package.
  */
 function ensureIsNotCoveoPackage(file) {
-  if (dependsOnCoveoPackage(file)) {
+  if (dependsOnBueno(file)) {
     throw new DependentPackageChangeError(file);
   }
 }
@@ -155,19 +156,8 @@ function ensureIsNotPackageJsonOrPackageLockJson(file) {
   }
 }
 
-/**
- * Checks if a given file depends on any of the specified external Coveo packages.
- *
- * @param {string} file - The path of the file to check.
- * @returns {boolean} - Returns true if the file path includes any of the external package paths, otherwise false.
- */
-function dependsOnCoveoPackage(file) {
-  const externalPackages = ['packages/headless/', 'packages/bueno/'];
-  for (const pkg of externalPackages) {
-    if (file.includes(pkg)) {
-      return true;
-    }
-  }
+function dependsOnBueno(file) {
+  return file.includes(join('packages', 'bueno'));
 }
 
 /**
@@ -186,8 +176,14 @@ function allocateShards(testCount, maximumShards) {
   return [shardIndex, [shardTotal]];
 }
 
+function hasHeadlessChanges(changedFiles) {
+  return changedFiles.some((file) =>
+    file.includes(join('packages', 'headless'))
+  );
+}
+
 const {base, head} = getBaseHeadSHAs();
-const changedFiles = getChangedFiles(base, head).split(EOL);
+let changedFiles = getChangedFiles(base, head).split(EOL);
 const outputNameTestsToRun = process.argv[2];
 const outputNameShardIndex = process.argv[3];
 const outputNameShardTotal = process.argv[4];
@@ -201,6 +197,24 @@ try {
   }
 
   const testFiles = findAllTestFiles(atomicSourceComponents);
+
+  if (hasHeadlessChanges(changedFiles)) {
+    console.log(
+      'Headless file changes detected, computing affected Headless endpoints...'
+    );
+
+    const affectedHeadlessEnpoints = getAllHeadlessAffectedEndpoints(
+      changedFiles,
+      projectRoot
+    );
+
+    console.log('Affected Headless endpoints', affectedHeadlessEnpoints);
+
+    changedFiles = changedFiles
+      .filter((filePath) => !filePath.includes(join('packages', 'headless')))
+      .concat(affectedHeadlessEnpoints);
+  }
+
   const testDependencies = createTestFileMappings(testFiles, projectRoot);
   const testsToRun = determineTestFilesToRun(changedFiles, testDependencies);
 

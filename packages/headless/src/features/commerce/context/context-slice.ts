@@ -1,5 +1,10 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {setContext, setLocation, setView} from './context-actions.js';
+import {
+  setContext,
+  setCustom,
+  setLocation,
+  setView,
+} from './context-actions.js';
 import {getContextInitialState} from './context-state.js';
 
 export const contextReducer = createReducer(
@@ -15,6 +20,9 @@ export const contextReducer = createReducer(
       })
       .addCase(setLocation, (state, {payload}) => {
         state.location = payload;
+      })
+      .addCase(setCustom, (state, {payload}) => {
+        state.custom = payload.custom;
       });
   }
 );

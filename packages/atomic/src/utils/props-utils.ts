@@ -19,6 +19,9 @@ export function mapProperty<Element extends ReactiveElement>(
     propertyKey: K
   ) => {
     const ctor = proto.constructor as typeof ReactiveElement;
+
+    ctor.createProperty(propertyKey, {type: Object});
+
     ctor.addInitializer((instance) => {
       const props = {};
       const prefix =

@@ -1,7 +1,7 @@
-import {userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {createRef, type Ref} from 'lit/directives/ref.js';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
+import {userEvent} from 'vitest/browser';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {renderTextAreaClearButton} from './text-area-clear-button';
@@ -69,7 +69,7 @@ describe('#renderTextAreaClearButton', () => {
 
   it('should have aria-label as "Clear" on the button', async () => {
     const {button} = await renderComponent();
-    expect(button!).toHaveAttribute('aria-label', 'Clear');
+    expect(button!).toHaveAttribute('aria-label', 'Clear search-box');
   });
 
   it('should have the "clear-icon" part on the atomic-icon', async () => {

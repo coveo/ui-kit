@@ -3,6 +3,7 @@ import type {
   ChildProduct,
   Product,
 } from '../../../api/commerce/common/product.js';
+import type {Result} from '../../../api/commerce/common/result.js';
 import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {configuration} from '../../../app/common-reducers.js';
 import {stateKey} from '../../../app/state-key.js';
@@ -16,6 +17,7 @@ import type {Parameters} from '../../../features/commerce/parameters/parameters-
 import {parametersDefinition} from '../../../features/commerce/parameters/parameters-schema.js';
 import {activeParametersSelector} from '../../../features/commerce/parameters/parameters-selectors.js';
 import {productListingSerializer} from '../../../features/commerce/parameters/parameters-serializer.js';
+import type {FetchProductListingPayload} from '../../../features/commerce/product-listing/product-listing-actions.js';
 import {
   fetchMoreProducts,
   fetchProductListing,
@@ -35,10 +37,8 @@ import {
   buildController,
   type Controller,
 } from '../../controller/headless-controller.js';
-import {
-  buildProductListingSubControllers,
-  type SearchAndListingSubControllers,
-} from '../core/sub-controller/headless-sub-controller.js';
+import type {SearchAndListingSubControllers} from '../core/sub-controller/headless-sub-controller.js';
+import {buildProductListingSubControllers} from '../core/sub-controller/headless-sub-controller.js';
 import {
   facetResponseSelector,
   isFacetLoadingResponseSelector,
@@ -48,7 +48,7 @@ import type {ProductListingSummaryState} from './summary/headless-product-listin
 /**
  * The `ProductListing` controller exposes a method for retrieving product listing content in a commerce interface.
  *
- * Example: [product-listing.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/commerce/product-listing.fn.tsx)
+ * Example: [product-listing.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/commerce/product-listing.fn.tsx)
  *
  * @group Buildable controllers
  * @category ProductListing
@@ -73,7 +73,7 @@ export interface ProductListing
    *
    * This method is useful when leveraging the product grouping feature to allow users to select nested products.
    *
-   * E.g., if a product has children (such as color variations), you can call this method when the user selects a child
+   * For example, if a product has children (such as color variations), you can call this method when the user selects a child
    * to make that child the new parent product, and re-render the product as such in the storefront.
    *
    * **Note:** In the controller state, a product that has children will always include itself as its own child so that
@@ -97,21 +97,35 @@ export interface ProductListing
  */
 export interface ProductListingState {
   products: Product[];
+  results: Result[];
   error: CommerceAPIErrorStatusResponse | null;
   isLoading: boolean;
   responseId: string;
 }
 
 /**
+ * Options for configuring the `ProductListing` controller.
+ * @group Buildable controllers
+ * @category ProductListing
+ */
+export interface ProductListingOptions extends FetchProductListingPayload {}
+
+/**
  * Creates a `ProductListing` controller instance.
  *
  * @param engine - The headless commerce engine.
+ * @param options - The configurable `ProductListing` controller options.
  * @returns A `ProductListing` controller instance.
  *
  * @group Buildable controllers
  * @category ProductListing
  */
-export function buildProductListing(engine: CommerceEngine): ProductListing {
+export function buildProductListing(
+  engine: CommerceEngine,
+  {enableResults = false}: ProductListingOptions = {
+    enableResults: false,
+  }
+): ProductListing {
   if (!loadBaseProductListingReducers(engine)) {
     throw loadReducerError;
   }
@@ -119,10 +133,11 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
   const controller = buildController(engine);
   const {dispatch} = engine;
   const getState = () => engine[stateKey];
+
   const subControllers = buildProductListingSubControllers(engine, {
     responseIdSelector,
-    fetchProductsActionCreator: fetchProductListing,
-    fetchMoreProductsActionCreator: fetchMoreProducts,
+    fetchProductsActionCreator: () => fetchProductListing({enableResults}),
+    fetchMoreProductsActionCreator: () => fetchMoreProducts({enableResults}),
     facetResponseSelector,
     isFacetLoadingResponseSelector,
     requestIdSelector,
@@ -143,10 +158,11 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
     ...subControllers,
 
     get state() {
-      const {products, error, isLoading, responseId} =
+      const {products, results, error, isLoading, responseId} =
         getState().productListing;
       return {
         products,
+        results,
         error,
         isLoading,
         responseId,
@@ -157,7 +173,7 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
       dispatch(promoteChildToParent({child}));
     },
 
-    refresh: () => dispatch(fetchProductListing()),
+    refresh: () => dispatch(fetchProductListing({enableResults})),
 
     executeFirstRequest() {
       const firstRequestExecuted = responseIdSelector(getState()) !== '';
@@ -166,7 +182,7 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
         return;
       }
 
-      dispatch(fetchProductListing());
+      dispatch(fetchProductListing({enableResults}));
     },
   };
 }

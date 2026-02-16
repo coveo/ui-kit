@@ -3,15 +3,10 @@ import {html, nothing} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {type ItemTextProps, renderItemTextFallback} from './item-text-fallback';
 
-vi.mock('@coveo/bueno', () => ({
-  isUndefined: vi.fn(),
-}));
+vi.mock('@coveo/bueno', {spy: true});
+vi.mock('./field-warning', {spy: true});
 
-vi.mock('./field-warning', () => ({
-  possiblyWarnOnBadFieldType: vi.fn(),
-}));
-
-describe('ItemTextFallback', () => {
+describe('#renderItemTextFallback', () => {
   let props: ItemTextProps<unknown>;
   let mockHost: HTMLElement;
   let mockLogger: Pick<Console, 'error'>;

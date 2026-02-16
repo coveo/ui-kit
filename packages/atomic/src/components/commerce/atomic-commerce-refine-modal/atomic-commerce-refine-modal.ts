@@ -12,7 +12,7 @@ import {
   type SortState,
   type Summary,
 } from '@coveo/headless/commerce';
-import {type CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
+import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
@@ -31,7 +31,7 @@ import {renderRefineModal} from '../../common/refine-modal/modal';
 import {renderRefineModalSortSection} from '../../common/refine-modal/sort';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {getSortByLabel, renderCommerceSortOption} from '../sort/option';
-import styles from './atomic-commerce-refine-modal.tw.css';
+import '@/src/components/commerce/atomic-commerce-facets/atomic-commerce-facets';
 
 /**
  * The `atomic-commerce-refine-modal` is automatically created as a child of the `atomic-commerce-search-interface` when the `atomic-commerce-refine-toggle` is initialized.
@@ -41,7 +41,7 @@ import styles from './atomic-commerce-refine-modal.tw.css';
  * @part title - The title of the modal.
  * @part close-button - The button in the header that closes the modal.
  * @part close-icon - The icon of the close button.
- * @part footer-content - The wrapper around the content inside the footer of the modal, containing the button to view results.
+ * @part footer-content - The wrapper around the content inside the footer of the modal, containing the button to view the products.
  * @part footer-button - The button in the footer that closes the modal.
  * @part footer-button-text - The text inside the button in the footer that closes the modal.
  * @part footer-button-count - The count inside the button in the footer that closes the modal.
@@ -63,7 +63,13 @@ export class AtomicCommerceRefineModal
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
-  static styles: CSSResultGroup = [unsafeCSS(styles)];
+  static styles: CSSResultGroup = [
+    css`
+      :host {
+        position: absolute;
+      }
+    `,
+  ];
 
   @state()
   bindings!: CommerceBindings;
@@ -217,6 +223,7 @@ export class AtomicCommerceRefineModal
     return html`${renderRefineModal({
       props: {
         i18n: this.bindings.i18n,
+        i18nFooterButtonTextKey: 'view-products',
         host: this,
         isOpen: this.isOpen,
         onClose: () => {
@@ -227,7 +234,7 @@ export class AtomicCommerceRefineModal
         openButton: this.openButton,
       },
     })(
-      renderRefineModalBody()(html`
+      renderRefineModalBody(this.bindings.i18n)(html`
         ${this.renderSort()} ${this.renderFilters()}
       `)
     )}`;

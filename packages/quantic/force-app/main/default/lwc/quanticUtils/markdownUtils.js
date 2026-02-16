@@ -7,6 +7,9 @@ import {loadScript} from 'lightning/platformResourceLoader';
  * Transforms a single line of text that may contain HTML to plain text.
  * @param {string} textWithHtml A single line of text that may contain HTML
  * @returns {string} The value as plain text
+ * @example
+ * toInlinePlainText('<p>Hello <strong>World</strong></p>');
+ * // Returns: 'Hello World'
  */
 const toInlinePlainText = (textWithHtml) => {
   const withoutHtmlTags = textWithHtml.replace(/<[^>]*>/g, ' ');
@@ -21,7 +24,7 @@ const unclosedElement = /(\*{1,3}|`)($|\w[\w\s]*$)/;
 /**
  * Complete unclosed elements such as bold, italic, and code.
  * @param {string} text
- * @returns {string}
+ * @returns {string} The original content with closed tags.
  */
 const completeUnclosedElement = (text) => {
   const match = unclosedElement.exec(text);
@@ -41,6 +44,11 @@ const completeUnclosedElement = (text) => {
   return text;
 };
 
+/**
+ * Escape HTML special characters in a string.
+ * @param {String} text
+ * @returns {string} The escaped HTML string.
+ */
 const escapeHtml = (text) => {
   return text
     .replace(/&/g, '&amp;')
@@ -50,6 +58,10 @@ const escapeHtml = (text) => {
     .replace(/'/g, '&#39;');
 };
 
+/**
+ * Custom Marked renderer to override the default rendering of certain elements.
+ * See: https://marked.js.org/using_pro
+ */
 const customRenderer = {
   code(code) {
     return `<pre><code>${escapeHtml(code)}</code></pre>`;
@@ -59,6 +71,7 @@ const customRenderer = {
    * Custom Marked renderer to replace heading elements with div elements.
    * @param {string} text
    * @param {string} level
+   * @return {string} The heading element to render.
    */
   heading(text, level) {
     const plainText = toInlinePlainText(text);
@@ -69,7 +82,7 @@ const customRenderer = {
   /**
    * Returns escaped HTML.
    * @param {string} text
-   * @returns
+   * @returns {string} The escaped HTML string.
    */
   html(text) {
     return escapeHtml(text);
@@ -119,7 +132,7 @@ const transformMarkdownToHtml = (text, marked) => {
 
 /**
  * Load the libraries Marked and DOMPurify.
- * @param  element
+ * @param element
  * @returns {Promise<any>}
  */
 const loadMarkdownDependencies = (element) => {

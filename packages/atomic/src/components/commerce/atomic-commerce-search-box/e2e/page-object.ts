@@ -19,7 +19,7 @@ export class SearchBoxPageObject extends BasePageObject {
   }
 
   get clearButton() {
-    return this.component.getByLabel('Clear', {exact: true});
+    return this.component.getByLabel('Clear search-box', {exact: true});
   }
 
   get ariaLive() {
@@ -66,7 +66,7 @@ export class SearchBoxPageObject extends BasePageObject {
     );
   }
 
-  instantResult({
+  instantProduct({
     index,
     total,
     listSide,
@@ -77,7 +77,7 @@ export class SearchBoxPageObject extends BasePageObject {
   } = {}) {
     return this.page.getByLabel(
       new RegExp(
-        `instant result\\.(?: Button\\.)? ${index ?? '\\d{1,2}'} of ${total ?? '\\d{1,2}'}\\.${this.listSideAffix(listSide)}`
+        `instant product\\.(?: Button\\.)? ${index ?? '\\d{1,2}'} of ${total ?? '\\d{1,2}'}\\.${this.listSideAffix(listSide)}`
       )
     );
   }

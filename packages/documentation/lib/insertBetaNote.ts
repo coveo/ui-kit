@@ -1,4 +1,4 @@
-export function insertBetaNote() {
+export const insertBetaNote = () => {
   document.addEventListener('DOMContentLoaded', () => {
     const breadcrumbs = document.querySelector('ul.tsd-breadcrumb');
     if (breadcrumbs) {
@@ -14,4 +14,4 @@ export function insertBetaNote() {
       }
     }
   });
-}
+};

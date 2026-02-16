@@ -5,17 +5,10 @@
     "includeFolders": true
   },
   "categorizeByGroup": true,
-  "groupOrder": [
-    "Engine",
-    "Controllers",
-    "Buildable controllers",
-    "Sub-controllers",
-    "Actions",
-    "*"
-  ],
+  "groupOrder": ["*"],
   "name": "Recommendation",
   "readme": "none",
   "entryPoints": ["../src/recommendation.index.ts"],
-  "gitRevision": "master",
+  "gitRevision": "main",
   "plugin": ["@coveo/documentation"]
 }

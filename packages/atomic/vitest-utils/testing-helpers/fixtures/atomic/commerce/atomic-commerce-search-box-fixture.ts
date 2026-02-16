@@ -7,7 +7,7 @@ import type {
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
   SearchBoxSuggestionsEvent,
-} from '@/src/components/common/suggestions/suggestions-common';
+} from '@/src/components/common/suggestions/suggestions-types';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 

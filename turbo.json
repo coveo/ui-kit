@@ -65,6 +65,12 @@
     },
     "promote:npm:latest": {
       "dependsOn": [],
+      "env": [
+        "NODE_AUTH_TOKEN",
+        "NPM_CONFIG_USERCONFIG",
+        "ACTIONS_ID_TOKEN_REQUEST_URL",
+        "ACTIONS_ID_TOKEN_REQUEST_TOKEN"
+      ],
       "cache": false
     },
     "release:phase1": {
@@ -73,13 +79,19 @@
     },
     "release:phase3": {
       "dependsOn": ["^release:phase3"],
-      "env": ["NODE_AUTH_TOKEN", "NPM_CONFIG_USERCONFIG"],
+      "env": [
+        "NODE_AUTH_TOKEN",
+        "NPM_CONFIG_USERCONFIG",
+        "ACTIONS_ID_TOKEN_REQUEST_URL",
+        "ACTIONS_ID_TOKEN_REQUEST_TOKEN"
+      ],
       "cache": false
     }
   },
   "globalDependencies": [
     "package.json",
-    "package-lock.json",
+    "pnpm-lock.yaml",
+    "pnpm-workspace.yaml",
     ".npmrc",
     "tsconfig.json",
     "biome.jsonc",
@@ -91,5 +103,11 @@
     "PR_NUMBER",
     "NODE_ENV",
     "CI"
+  ],
+  "globalPassThroughEnv": [
+    "GITHUB_*",
+    "RUNNER_*",
+    "SFDX_*",
+    "PLAYWRIGHT_BROWSERS_PATH"
   ]
 }

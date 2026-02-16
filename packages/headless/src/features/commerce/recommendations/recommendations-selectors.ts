@@ -6,13 +6,13 @@ import type {
 } from '../../../state/state-sections.js';
 import {totalEntriesRecommendationSelector} from '../pagination/pagination-selectors.js';
 
-export const numberOfRecommendationsSelector = createSelector(
-  (state: Partial<RecommendationsSection>, slotId: string) =>
-    state.recommendations
-      ? state.recommendations[slotId]?.products.length || 0
-      : 0,
-  (len) => len
-);
+export const numberOfRecommendationsSelector = (
+  state: Partial<RecommendationsSection>,
+  slotId: string
+) =>
+  state.recommendations
+    ? state.recommendations[slotId]?.products.length || 0
+    : 0;
 
 export const moreRecommendationsAvailableSelector = createSelector(
   (
@@ -25,8 +25,12 @@ export const moreRecommendationsAvailableSelector = createSelector(
   ({current, total}) => current < total
 );
 
-export const isLoadingSelector = createSelector(
-  (state: Partial<RecommendationsSection>, slotId: string) =>
-    state.recommendations ? state.recommendations[slotId]?.isLoading : false,
-  (isLoading) => (isNullOrUndefined(isLoading) ? false : isLoading)
-);
+export const isLoadingSelector = (
+  state: Partial<RecommendationsSection>,
+  slotId: string
+) => {
+  const isLoading = state.recommendations
+    ? state.recommendations[slotId]?.isLoading
+    : false;
+  return isNullOrUndefined(isLoading) ? false : isLoading;
+};

@@ -8,81 +8,112 @@ import {
   renderInstantItemShowAllButton,
 } from './instant-item';
 
-vi.mock('../../../utils/string-utils', () => ({
-  encodeForDomAttribute: vi.fn((value) => value),
-}));
+vi.mock('@/src/utils/string-utils', {spy: true});
 
-describe('#getPartialInstantItemElement', () => {
-  let i18n: I18n;
+describe('instant-item', () => {
+  describe('#getPartialInstantItemElement', () => {
+    let i18n: I18n;
 
-  beforeAll(async () => {
-    i18n = await createTestI18n();
-  });
+    beforeAll(async () => {
+      i18n = await createTestI18n();
+    });
 
-  it('should return the correct object structure', () => {
-    const result = getPartialInstantItemElement(
-      i18n,
-      'itemTitle',
-      'itemUniqueId'
-    );
+    it('should return the correct object structure', () => {
+      const result = getPartialInstantItemElement(
+        i18n,
+        'instant-products-suggestion-label',
+        'itemTitle',
+        'itemUniqueId'
+      );
 
-    expect(result).toEqual({
-      ariaLabel: 'itemTitle, instant result',
-      key: 'instant-result-itemUniqueId',
-      part: 'instant-results-item',
+      expect(result).toEqual({
+        ariaLabel: 'itemTitle, instant product',
+        key: 'instant-result-itemUniqueId',
+        part: 'instant-results-item',
+      });
+    });
+
+    it('should call encodeForDomAttribute with the itemUniqueId', () => {
+      const itemUniqueId = 'itemUniqueId';
+      getPartialInstantItemElement(
+        i18n,
+        'instant-products-suggestion-label',
+        'itemTitle',
+        itemUniqueId
+      );
+
+      expect(encodeForDomAttribute).toHaveBeenCalledWith(itemUniqueId);
     });
   });
 
-  it('should call encodeForDomAttribute with the itemUniqueId', () => {
-    const itemUniqueId = 'itemUniqueId';
-    getPartialInstantItemElement(i18n, 'itemTitle', itemUniqueId);
+  describe('#getPartialInstantItemShowAllElement', () => {
+    let i18n: I18n;
 
-    expect(encodeForDomAttribute).toHaveBeenCalledWith(itemUniqueId);
-  });
-});
+    beforeAll(async () => {
+      i18n = await createTestI18n();
+    });
 
-describe('#getPartialInstantItemShowAllElement', () => {
-  let i18n: I18n;
+    it('should return the correct object structure', () => {
+      const result = getPartialInstantItemShowAllElement(
+        i18n,
+        'show-all-products'
+      );
 
-  beforeAll(async () => {
-    i18n = await createTestI18n();
-  });
-
-  it('should return the correct object structure', () => {
-    const result = getPartialInstantItemShowAllElement(i18n);
-
-    expect(result).toEqual({
-      key: 'instant-results-show-all-button',
-      part: 'instant-results-show-all',
-      ariaLabel: 'See all results',
+      expect(result).toEqual({
+        key: 'instant-results-show-all-button',
+        part: 'instant-results-show-all',
+        ariaLabel: 'See all products',
+      });
     });
   });
-});
 
-describe('#renderInstantItemShowAllButton', () => {
-  let i18n: I18n;
+  describe('#renderInstantItemShowAllButton', () => {
+    let i18n: I18n;
 
-  beforeAll(async () => {
-    i18n = await createTestI18n();
-  });
+    beforeAll(async () => {
+      i18n = await createTestI18n();
+    });
 
-  it('should render the button with the correct text', () => {
-    const button = renderInstantItemShowAllButton({i18n});
+    it('should render the button with the correct text', () => {
+      const button = renderInstantItemShowAllButton({
+        i18n,
+        i18nKey: 'show-all-products',
+      });
 
-    expect(button).toBeInstanceOf(HTMLElement);
-    expect(button.textContent?.trim()).toBe('See all results');
-    expect(button.getAttribute('part')).toBe('instant-results-show-all-button');
-  });
+      expect(button).toBeInstanceOf(HTMLElement);
+      expect(button.textContent?.trim()).toBe('See all products');
+      expect(button.getAttribute('part')).toBe(
+        'instant-results-show-all-button'
+      );
+    });
 
-  it('should have the correct class for button style', () => {
-    const button = renderInstantItemShowAllButton({i18n});
+    it('should have the correct class for button style', () => {
+      const button = renderInstantItemShowAllButton({
+        i18n,
+        i18nKey: 'show-all-products',
+      });
 
-    expect(button.classList.contains('btn-text-primary')).toBe(true);
-  });
+      expect(button.classList.contains('btn-text-primary')).toBe(true);
+    });
 
-  it('should have the correct part', () => {
-    const button = renderInstantItemShowAllButton({i18n});
+    it('should have the correct part', () => {
+      const button = renderInstantItemShowAllButton({
+        i18n,
+        i18nKey: 'show-all-products',
+      });
 
-    expect(button.getAttribute('part')).toBe('instant-results-show-all-button');
+      expect(button.getAttribute('part')).toBe(
+        'instant-results-show-all-button'
+      );
+    });
+
+    it('should have pointer-events-none class to allow clicks on parent', () => {
+      const button = renderInstantItemShowAllButton({
+        i18n,
+        i18nKey: 'show-all-products',
+      });
+
+      expect(button.classList.contains('pointer-events-none')).toBe(true);
+    });
   });
 });

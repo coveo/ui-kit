@@ -75,6 +75,15 @@ pre > code {
   border: 0;
 }
 
+li > code,
+li > a > code,
+p > a > code,
+p > code {
+  display: inline-block;
+  border-radius: 7px;
+  padding: 0 5px;
+}
+
 .settings-dropdown-menu {
   background: #525296 !important;
   border: 1px solid #e5e8e8 !important;
@@ -1732,4 +1741,20 @@ summary:hover {
 .imageblock.bordered img,
 .image.bordered img {
   border: 1px solid #f9f9f9;
+}
+
+.code-callout-ref {
+  cursor: pointer;
+  user-select: none;
+  display: inline-block;
+  white-space: normal;
+}
+
+.code-callout-ref circle {
+  fill: #fff;
+}
+.code-callout-ref text {
+  fill: #000;
+  user-select: none;
+  -webkit-user-select: none;
 }

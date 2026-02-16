@@ -5,14 +5,14 @@
 }
 
 .quickview__result-title {
-  font-weight: 700;
+  font-weight: var(--slds-g-font-weight-7, 700);
   font-size: 15px;
 }
 
 .quickview__result-date {
   color: #3E3E3C;
-  font-weight: normal;
-  font-size: 15px;
+  font-weight: var(--slds-g-font-weight-4, normal);
+  font-size: var(--slds-g-font-scale-2, 15px);
 }
 
 .quickview__button-base:not([disabled]){

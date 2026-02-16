@@ -17,7 +17,7 @@ import {validateManualNumericRanges} from '../../../facets/range-facets/numeric-
 
 export interface ToggleSelectNumericFacetValuePayload {
   /**
-   * The unique identifier of the facet (e.g., `"1"`).
+   * The unique identifier of the facet (for example, `"1"`).
    */
   facetId: string;
   /**
@@ -25,7 +25,13 @@ export interface ToggleSelectNumericFacetValuePayload {
    */
   selection: NumericRangeRequest;
 }
-
+/**
+ * Action to toggle a facet value of a NumericFacet.
+ *
+ * This is primarily used in facets and in breadcrumbs to select or deselect a facet value.
+ *
+ * @param payload - The payload of type {@link ToggleSelectNumericFacetValuePayload} containing the facet ID and the selection to toggle.
+ */
 export const toggleSelectNumericFacetValue = createAction(
   'commerce/facets/numericFacet/toggleSelectValue',
   (payload: ToggleSelectNumericFacetValuePayload) =>
@@ -53,7 +59,7 @@ export const toggleExcludeNumericFacetValue = createAction(
 
 export interface UpdateNumericFacetValuesPayload {
   /**
-   * The unique identifier of the facet (e.g., `"1"`).
+   * The unique identifier of the facet (for example, `"1"`).
    */
   facetId: string;
   /**
@@ -82,7 +88,7 @@ export const updateNumericFacetValues = createAction(
 
 export type UpdateManualNumericFacetRangePayload = {
   /**
-   * The unique identifier of the facet (e.g., `"1"`).
+   * The unique identifier of the facet (for example, `"1"`).
    */
   facetId: string;
 } & Omit<NumericRangeRequest, 'previousState'>;

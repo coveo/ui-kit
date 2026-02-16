@@ -64,6 +64,9 @@ function expandTextArea(elem: HTMLTextAreaElement) {
   }
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const SearchTextArea: FunctionalComponent<Props> = ({
   textAreaRef,
   loading,

@@ -14,20 +14,29 @@ import type {
   CommerceAPIErrorResponse,
   CommerceAPIErrorStatusResponse,
 } from './commerce-api-error-response.js';
-import {
-  type FilterableCommerceAPIRequest,
-  getRequestOptions,
-} from './common/request.js';
+import {getRequestOptions} from './common/request.js';
 import type {CommerceSuccessResponse} from './common/response.js';
 import type {
   CommerceFacetSearchRequest,
   FacetSearchType,
 } from './facet-search/facet-search-request.js';
+import type {CommerceListingRequest} from './listing/request.js';
+import type {ListingCommerceSuccessResponse} from './listing/response.js';
+import {
+  buildProductEnrichmentBadgesRequest,
+  type ProductEnrichmentBadgesRequest,
+} from './product-enrichment/product-enrichment-request.js';
+import type {ProductEnrichmentSuccessBadgesResponse} from './product-enrichment/product-enrichment-response.js';
 import {
   buildRecommendationsRequest,
   type CommerceRecommendationsRequest,
 } from './recommendations/recommendations-request.js';
 import type {RecommendationsCommerceSuccessResponse} from './recommendations/recommendations-response.js';
+import {
+  type CommercePlanRequest,
+  getPlanRequestOptions,
+} from './search/plan/plan-request.js';
+import type {CommercePlanSuccessResponse} from './search/plan/plan-response.js';
 import {
   getQuerySuggestRequestOptions,
   type QuerySuggestRequest,
@@ -74,10 +83,15 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
   constructor(private options: CommerceAPIClientOptions) {}
 
   async getProductListing(
-    req: FilterableCommerceAPIRequest
-  ): Promise<CommerceAPIResponse<CommerceSuccessResponse>> {
+    req: CommerceListingRequest
+  ): Promise<CommerceAPIResponse<ListingCommerceSuccessResponse>> {
+    const requestOptions = getRequestOptions(req, 'listing');
     return this.query({
-      ...getRequestOptions(req, 'listing'),
+      ...requestOptions,
+      requestParams: {
+        ...requestOptions.requestParams,
+        enableResults: Boolean(req?.enableResults),
+      },
       ...this.options,
     });
   }
@@ -91,6 +105,7 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
       requestParams: {
         ...requestOptions.requestParams,
         query: req?.query,
+        enableResults: Boolean(req?.enableResults),
       },
       ...this.options,
     });
@@ -146,18 +161,26 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
         facetId: req?.facetId,
         facetQuery: req?.facetQuery,
         query: req?.query,
+        numberOfValues: req?.numberOfValues,
       },
       ...this.options,
     });
   }
 
-  // eslint-disable-next-line @cspell/spellchecker
-  // TODO: CAPI-867 - Use Commerce API's equivalent of the /plan endpoint when it becomes available.
+  async getBadges(
+    req: ProductEnrichmentBadgesRequest
+  ): Promise<CommerceAPIResponse<ProductEnrichmentSuccessBadgesResponse>> {
+    return this.query<ProductEnrichmentSuccessBadgesResponse>({
+      ...buildProductEnrichmentBadgesRequest(req),
+      ...this.options,
+    });
+  }
+
   async plan(
-    req: CommerceSearchRequest
-  ): Promise<CommerceAPIResponse<CommerceSuccessResponse>> {
-    const requestOptions = getRequestOptions(req, 'search');
-    return this.query({
+    req: CommercePlanRequest
+  ): Promise<CommerceAPIResponse<CommercePlanSuccessResponse>> {
+    const requestOptions = getPlanRequestOptions(req);
+    return this.query<CommercePlanSuccessResponse>({
       ...requestOptions,
       requestParams: {
         ...requestOptions.requestParams,

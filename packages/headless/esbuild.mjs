@@ -12,6 +12,10 @@ const __dirname = dirname(new URL(import.meta.url).pathname).slice(
 const buenoJsonPath = resolve(__dirname, '../bueno/package.json');
 const buenoJson = JSON.parse(readFileSync(buenoJsonPath, 'utf-8'));
 
+const buildConfigPath = resolve(__dirname, 'build.config.json');
+const buildConfig = JSON.parse(readFileSync(buildConfigPath, 'utf-8'));
+const {useCaseEntries, quanticUseCaseEntries} = buildConfig;
+
 const require = createRequire(import.meta.url);
 const devMode = process.argv[2] === 'dev';
 
@@ -28,26 +32,6 @@ const buenoVersion = isNightly
 const buenoPath = isCDN
   ? `/bueno/${buenoVersion}/bueno.esm.js`
   : '@coveo/bueno';
-
-const useCaseEntries = {
-  search: 'src/index.ts',
-  recommendation: 'src/recommendation.index.ts',
-  'case-assist': 'src/case-assist.index.ts',
-  insight: 'src/insight.index.ts',
-  ssr: 'src/ssr.index.ts',
-  'ssr-commerce': 'src/ssr-commerce.index.ts',
-  'ssr-next': 'src/ssr.index.ts',
-  'ssr-commerce-next': 'src/ssr-commerce.index.ts',
-  commerce: 'src/commerce.index.ts',
-};
-
-const quanticUseCaseEntries = {
-  search: 'src/index.ts',
-  recommendation: 'src/recommendation.index.ts',
-  'case-assist': 'src/case-assist.index.ts',
-  insight: 'src/insight.index.ts',
-  commerce: 'src/commerce.index.ts',
-};
 
 function getUmdGlobalName(useCase) {
   const map = {
@@ -209,7 +193,9 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
         'ponyfills/headers-shim.js',
         'ponyfills/global-this-shim.js',
         'ponyfills/abortable-fetch-shim.js',
-        '../../node_modules/navigator.sendbeacon/dist/navigator.sendbeacon.cjs.js',
+        require.resolve(
+          'navigator.sendbeacon/dist/navigator.sendbeacon.cjs.js'
+        ),
       ],
       plugins: [
         umdWrapper({libraryName: globalName}),

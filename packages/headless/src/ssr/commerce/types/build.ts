@@ -15,11 +15,20 @@ import type {
   EngineDefinitionControllersPropsOption,
 } from './controller-definitions.js';
 
+/**
+ * @deprecated This type should not be used directly. This interface will be removed in the next major release
+ */
 export interface BuildOptions<TEngineOptions> {
+  /**
+   * @deprecated This option will be removed in the next major version.
+   */
   extend?: OptionsExtender<TEngineOptions>;
 }
 
-// TODO: KIT-4610: Remove this type
+/**
+ * This type should not be used directly.
+ * @internal
+ */
 export type Build<
   TEngineOptions,
   TControllersMap extends ControllersMap,

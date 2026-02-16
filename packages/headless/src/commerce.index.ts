@@ -1,5 +1,6 @@
 /**
- * The Coveo Headless Commerce sub-package exposes exposes the engine, controllers, actions, and utility functions to build a commerce search experience.
+ * The Coveo Headless Commerce sub-package exposes the engine, controllers, actions, and utility functions to
+ * build a [commerce search experience](https://docs.coveo.com/en/o6r70022/).
  *
  * @example
  * ```typescript
@@ -26,11 +27,16 @@ export type {
   ChildProduct,
   Product,
 } from './api/commerce/common/product.js';
+export type {
+  BaseResult,
+  Result,
+  SpotlightContent,
+} from './api/commerce/common/result.js';
+export {ResultType} from './api/commerce/common/result.js';
 export {
   getAnalyticsNextApiBaseUrl,
   getOrganizationEndpoint,
 } from './api/platform-client.js';
-
 export type {
   CommerceEngine,
   CommerceEngineConfiguration,
@@ -38,7 +44,6 @@ export type {
 } from './app/commerce-engine/commerce-engine.js';
 export {buildCommerceEngine} from './app/commerce-engine/commerce-engine.js';
 export {getSampleCommerceEngineConfiguration} from './app/commerce-engine/commerce-engine-configuration.js';
-
 export type {
   CoreEngine,
   CoreEngineNext,
@@ -65,6 +70,7 @@ export * from './features/commerce/facets/regular-facet/regular-facet-actions-lo
 export * from './features/commerce/instant-products/instant-products-actions-loader.js';
 export * from './features/commerce/pagination/pagination-actions-loader.js';
 export * from './features/commerce/product/product-actions-loaders.js';
+export * from './features/commerce/product-enrichment/product-enrichment-actions-loader.js';
 export * from './features/commerce/product-listing/product-listing-actions-loader.js';
 export * from './features/commerce/product-listing-parameters/product-listing-parameters-actions-loader.js';
 export * from './features/commerce/query/query-actions-loader.js';
@@ -75,6 +81,7 @@ export * from './features/commerce/recommendations/recommendations-actions-loade
 export * from './features/commerce/search/search-actions-loader.js';
 export * from './features/commerce/search-parameters/search-parameters-actions-loader.js';
 export * from './features/commerce/sort/sort-actions-loader.js';
+export * from './features/commerce/spotlight-content/spotlight-content-actions-loaders.js';
 export * from './features/commerce/standalone-search-box-set/standalone-search-box-set-actions-loader.js';
 export * from './features/commerce/triggers/triggers-actions-loader.js';
 export type {HighlightKeyword} from './utils/highlight.js';
@@ -84,6 +91,16 @@ export type {PlatformEnvironment} from './utils/url-utils.js';
 export {Selectors};
 
 export type {CartItemParam} from './api/commerce/commerce-api-params.js';
+export type {
+  Badge,
+  BadgePlacement,
+  BadgesProduct,
+} from './api/commerce/product-enrichment/product-enrichment-response.js';
+// Types & Helpers
+export {
+  deserializeRelativeDate,
+  validateRelativeDate,
+} from './api/search/date/relative-date.js';
 export type {CategoryFacetSearchResult} from './api/search/facet-search/category-facet-search/category-facet-search-response.js';
 export type {SpecificFacetSearchResult as RegularFacetSearchResult} from './api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
 export type {
@@ -99,6 +116,7 @@ export type {
   ContextOptions,
   ContextProps,
   ContextState,
+  CustomContext,
   UserLocation,
   View,
 } from './controllers/commerce/context/headless-context.js';
@@ -164,6 +182,11 @@ export type {
   InteractiveProductOptions,
   InteractiveProductProps,
 } from './controllers/commerce/core/interactive-product/headless-core-interactive-product.js';
+export type {
+  InteractiveSpotlightContent,
+  InteractiveSpotlightContentOptions,
+  InteractiveSpotlightContentProps,
+} from './controllers/commerce/core/interactive-spotlight-content/headless-core-interactive-spotlight-content.js';
 export type {
   Pagination,
   PaginationOptions,
@@ -237,7 +260,15 @@ export type {
 } from './controllers/commerce/instant-products/headless-instant-products.js';
 export {buildInstantProducts} from './controllers/commerce/instant-products/headless-instant-products.js';
 export type {
+  ProductEnrichment,
+  ProductEnrichmentOptions,
+  ProductEnrichmentProps,
+  ProductEnrichmentState,
+} from './controllers/commerce/product-enrichment/headless-product-enrichment.js';
+export {buildProductEnrichment} from './controllers/commerce/product-enrichment/headless-product-enrichment.js';
+export type {
   ProductListing,
+  ProductListingOptions,
   ProductListingState,
 } from './controllers/commerce/product-listing/headless-product-listing.js';
 export {buildProductListing} from './controllers/commerce/product-listing/headless-product-listing.js';
@@ -268,10 +299,10 @@ export type {
 } from './controllers/commerce/search/did-you-mean/headless-did-you-mean.js';
 export type {
   Search,
+  SearchOptions,
   SearchState,
 } from './controllers/commerce/search/headless-search.js';
 export {buildSearch} from './controllers/commerce/search/headless-search.js';
-
 export type {SearchSummaryState} from './controllers/commerce/search/summary/headless-search-summary.js';
 export type {
   SearchBox,
@@ -287,13 +318,14 @@ export type {
 } from './controllers/commerce/standalone-search-box/headless-standalone-search-box.js';
 export {buildStandaloneSearchBox} from './controllers/commerce/standalone-search-box/headless-standalone-search-box.js';
 export {buildNotifyTrigger} from './controllers/commerce/triggers/headless-notify-trigger.js';
+export type {QueryTriggerOptions} from './controllers/commerce/triggers/headless-query-trigger.js';
 export {buildQueryTrigger} from './controllers/commerce/triggers/headless-query-trigger.js';
 export {buildRedirectionTrigger} from './controllers/commerce/triggers/headless-redirection-trigger.js';
-// Controllers
 export type {
   Controller,
   Subscribable,
 } from './controllers/controller/headless-controller.js';
+// Controllers
 export {buildController} from './controllers/controller/headless-controller.js';
 export type {DateFilterRange} from './controllers/core/facets/range-facet/date-facet/headless-core-date-filter.js';
 export type {InteractiveResultCore} from './controllers/core/interactive-result/headless-core-interactive-result.js';
@@ -327,15 +359,10 @@ export {buildProductTemplatesManager} from './features/commerce/product-template
 export type {CommerceSearchParameters} from './features/commerce/search-parameters/search-parameters-actions.js';
 export type {SearchParameters} from './features/search-parameters/search-parameter-actions.js';
 export type {Template} from './features/templates/templates-manager.ts';
-
-// Types & Helpers
 export {HighlightUtils};
-export {
-  deserializeRelativeDate,
-  validateRelativeDate,
-} from './api/search/date/relative-date.js';
 
 export {
   productListingSerializer,
   searchSerializer,
 } from './features/commerce/parameters/parameters-serializer.js';
+export {VERSION} from './utils/version.js';

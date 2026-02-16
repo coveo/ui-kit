@@ -1,67 +1,42 @@
-import {composeFunction} from '../../common/controller-utils.js';
 import type {SolutionType} from '../types/controller-constants.js';
+import type {AugmentedControllerDefinition} from '../types/controller-definitions.js';
 import type {
-  BuildParameters,
   CommerceControllerDefinitionsMap,
-  HydrateStaticStateFromBuildResultParameters,
-  HydrateStaticStateFunction,
+  CommerceEngineDefinitionOptions,
   HydrateStaticStateParameters,
 } from '../types/engine.js';
-import {
-  buildFactory,
-  type CommerceEngineDefinitionOptions,
-} from './build-factory.js';
+import {buildFactory} from './build-factory.js';
 
-export const hydratedStaticStateFactory: <
+export function hydratedStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 >(
-  controllerDefinitions: TControllerDefinitions | undefined,
+  controllerDefinitions: AugmentedControllerDefinition<TControllerDefinitions>,
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
-) => (
-  solutionType: SolutionType
-) => HydrateStaticStateFunction<TControllerDefinitions> =
-  <TControllerDefinitions extends CommerceControllerDefinitionsMap>(
-    controllerDefinitions: TControllerDefinitions | undefined,
-    options: CommerceEngineDefinitionOptions<TControllerDefinitions>
-  ) =>
-  (solutionType: SolutionType) =>
-    composeFunction(
-      async (
-        ...params: HydrateStaticStateParameters<TControllerDefinitions>
-      ) => {
-        const solutionTypeBuild = await buildFactory(controllerDefinitions, {
-          ...options,
-        })(solutionType);
-        const buildResult = await solutionTypeBuild(
-          ...(params as BuildParameters<TControllerDefinitions>)
-        );
-        const staticStateBuild =
-          await hydratedStaticStateFactory<TControllerDefinitions>(
-            controllerDefinitions,
-            options
-          )(solutionType);
-        const staticState = await staticStateBuild.fromBuildResult({
-          buildResult,
-          searchActions: params[0]!.searchActions,
-        });
-        return staticState;
-      },
-      {
-        fromBuildResult: async (
-          ...params: HydrateStaticStateFromBuildResultParameters<TControllerDefinitions>
-        ) => {
-          const [
-            {
-              buildResult: {engine, controllers},
-              searchActions,
-            },
-          ] = params;
+) {
+  return <TSolutionType extends SolutionType>(solutionType: TSolutionType) =>
+    async (
+      params: HydrateStaticStateParameters<
+        TControllerDefinitions,
+        TSolutionType
+      > & {controllerProps?: Record<string, unknown>}
+    ) => {
+      const {controllerProps, ...restParams} = params;
 
-          searchActions.forEach((action) => {
-            engine.dispatch(action);
-          });
-          await engine.waitForRequestCompletedAction();
-          return {engine, controllers};
-        },
-      }
-    );
+      const paramsWithControllerProps = {
+        ...restParams,
+        ...(controllerProps && {controllers: controllerProps}),
+      } as HydrateStaticStateParameters<TControllerDefinitions, TSolutionType>;
+
+      const solutionTypeBuild = await buildFactory(
+        controllerDefinitions,
+        options
+      )(solutionType);
+      const {engine, controllers} = await solutionTypeBuild(
+        paramsWithControllerProps
+      );
+
+      await engine.waitForRequestCompletedAction();
+
+      return {engine, controllers};
+    };
+}

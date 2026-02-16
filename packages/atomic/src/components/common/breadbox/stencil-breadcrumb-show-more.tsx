@@ -2,7 +2,7 @@ import {h, FunctionalComponent} from '@stencil/core';
 import {i18n} from 'i18next';
 import {Button} from '../stencil-button';
 
-export interface BreadcrumbShowMoreProps {
+interface BreadcrumbShowMoreProps {
   setRef: (el: HTMLButtonElement) => void;
   onShowMore: () => void;
   numberOfCollapsedBreadcrumbs: number;
@@ -10,6 +10,9 @@ export interface BreadcrumbShowMoreProps {
   i18n: i18n;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const BreadcrumbShowMore: FunctionalComponent<
   BreadcrumbShowMoreProps
 > = (props) => {

@@ -327,7 +327,11 @@ describe('c-quantic-search-box-suggestions-list', () => {
   describe('query property', () => {
     it('should filter recent queries based on current query', async () => {
       const element = createTestComponent({
-        recentQueries: mockRecentQueries,
+        recentQueries: [
+          'recent query 1',
+          'recent query 2',
+          'test recent query',
+        ],
         query: 'test',
       });
       await flushPromises();
@@ -335,7 +339,7 @@ describe('c-quantic-search-box-suggestions-list', () => {
       // Should only show recent queries that start with 'test'
       const options = element.shadowRoot.querySelectorAll(selectors.option);
       // Clear button + filtered recent queries
-      expect(options.length).toBe(2); // clear button + 'test recent query'
+      expect(options.length).toBe(2); // clear button + 'test recent query', other recent queries don't start with 'test'
       // The first option should be the clear button
       const clearButton = options.item(0);
       expect(clearButton.querySelector(selectors.lightningIcon)).toBeNull();

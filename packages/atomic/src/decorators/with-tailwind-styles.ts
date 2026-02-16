@@ -1,7 +1,6 @@
 import {type CSSResult, type CSSResultGroup, unsafeCSS} from 'lit';
 import theme from '@/src/utils/coveo.tw.css';
 import styles from '@/src/utils/tailwind.global.tw.css';
-import utilities from '@/src/utils/tailwind-utilities/utilities.tw.css';
 
 const tailwindPropertiesSheet: CSSStyleSheet | null =
   typeof window !== 'undefined'
@@ -34,10 +33,10 @@ function injectTailwindProperties(element: any) {
 
   if (isParentDocumentOrShadowRoot) {
     if (!parent.adoptedStyleSheets.includes(tailwindPropertiesSheet)) {
-      parent.adoptedStyleSheets.push(tailwindPropertiesSheet);
+      parent.adoptedStyleSheets?.push(tailwindPropertiesSheet);
     }
   } else {
-    element.adoptedStyleSheets.push(tailwindPropertiesSheet);
+    element.adoptedStyleSheets?.push(tailwindPropertiesSheet);
   }
 }
 
@@ -59,7 +58,6 @@ export const withTailwindStyles = <
       const baseStyles: Array<CSSStyleSheet | CSSResult> = [
         unsafeCSS(theme),
         unsafeCSS(styles),
-        unsafeCSS(utilities),
       ];
 
       const customStyles = Base.styles;

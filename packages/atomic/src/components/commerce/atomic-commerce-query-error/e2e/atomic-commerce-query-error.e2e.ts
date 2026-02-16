@@ -1,15 +1,8 @@
-import {expect, test, triggerError} from './fixture';
+import {expect, test} from './fixture';
 
-test.describe('AtomicCommerceQueryError', () => {
+test.describe('atomic-commerce-query-error', () => {
   test.beforeEach(async ({queryError}) => {
-    await triggerError(queryError.page);
-    await queryError.load();
-  });
-
-  test('should be A11y compliant', async ({queryError, makeAxeBuilder}) => {
-    await queryError.hydrated.waitFor();
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
+    await queryError.load({story: 'with-418-error'});
   });
 
   test('should update aria-live message', async ({queryError}) => {

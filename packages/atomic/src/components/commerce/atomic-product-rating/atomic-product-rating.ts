@@ -2,17 +2,16 @@ import {type Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
+import {createProductContextController} from '@/src/components/commerce/product-template-component-utils/context/product-context-controller.js';
+import ratingStyles from '@/src/components/common/atomic-rating/atomic-rating.tw.css.js';
+import {computeNumberOfStars} from '@/src/components/common/atomic-rating/rating-utils.js';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings.js';
-import {createProductContextController} from '@/src/decorators/commerce/product-template-decorators.js';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types.js';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {LightDomMixin} from '@/src/mixins/light-dom';
 import Star from '../../../images/star.svg';
-import {
-  computeNumberOfStars,
-  renderRating,
-} from '../../common/atomic-rating/rating.js';
+import {renderRating} from '../../common/atomic-rating/rating';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface.js';
 
 /**
@@ -24,14 +23,11 @@ import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerc
  * @cssprop --atomic-rating-icon-active-color - Color of the icon when active.
  * @cssprop --atomic-rating-icon-inactive-color - Color of the icon when inactive.
  * @cssprop --atomic-rating-icon-outline - Outline color of the icon.
- *
- * @alpha
  */
 @customElement('atomic-product-rating')
 @bindings()
-@withTailwindStyles
 export class AtomicProductRating
-  extends LitElement
+  extends LightDomMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
   @state() public bindings!: CommerceBindings;
@@ -40,6 +36,8 @@ export class AtomicProductRating
   private productController = createProductContextController(this);
 
   @state() private product!: Product;
+
+  static styles = ratingStyles;
 
   /**
    * The numerical field whose values you want to display as a rating.
@@ -119,10 +117,6 @@ export class AtomicProductRating
     }
     this.updateNumberOfStars();
     this.updateRatingDetailsValue();
-  }
-
-  protected createRenderRoot() {
-    return this;
   }
 
   @bindingGuard()

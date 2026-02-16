@@ -17,6 +17,9 @@ interface ResultPlaceholderGuardProps extends ResultPlaceholderProps {
   displayPlaceholders: boolean;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const ResultsPlaceholdersGuard: FunctionalComponent<
   ResultPlaceholderGuardProps
 > = (props) => {
@@ -31,6 +34,9 @@ export const ResultsPlaceholdersGuard: FunctionalComponent<
   }
 };
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const ResultsPlaceholder: FunctionalComponent<ResultPlaceholderProps> = (
   props
 ) => {

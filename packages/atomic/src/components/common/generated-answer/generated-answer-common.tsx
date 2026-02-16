@@ -12,16 +12,16 @@ import {
   SafeStorage,
   StorageItems,
 } from '../../../utils/local-storage-utils';
-import {getNamedSlotFromHost} from '../../../utils/slot-utils';
+import {getNamedSlotContent} from '../../../utils/slot-utils';
 import {AnyBindings} from '../interface/bindings';
 import {Heading} from '../stencil-heading';
-import {Switch} from '../switch';
-import {CopyButton} from './copy-button';
-import {FeedbackButton} from './feedback-button';
-import {GeneratedContentContainer} from './generated-content-container';
-import {RetryPrompt} from './retry-prompt';
-import {ShowButton} from './show-button';
-import {SourceCitations} from './source-citations';
+import {CopyButton} from './stencil-copy-button';
+import {Switch} from '../stencil-switch';
+import {FeedbackButton} from './stencil-feedback-button';
+import {GeneratedContentContainer} from './stencil-generated-content-container';
+import {ShowButton} from './stencil-show-button';
+import {RetryPrompt} from './stencil-retry-prompt';
+import {SourceCitations} from './stencil-source-citations';
 
 interface GeneratedAnswerCommonOptions {
   host: HTMLElement;
@@ -42,10 +42,17 @@ interface GeneratedAnswerCommonOptions {
   ) => InteractiveCitation;
 }
 
+/**
+ * @deprecated use the LitElement version instead: `GeneratedAnswerController`. This class is only meant to be used in legacy Stencil-based components.
+ */
 export class GeneratedAnswerCommon {
   private storage: SafeStorage = new SafeStorage();
   private _data: GeneratedAnswerData;
-  private modalRef?: HTMLAtomicGeneratedAnswerFeedbackModalElement;
+  private modalRef?: HTMLElement & {
+    generatedAnswer?: GeneratedAnswer;
+    isOpen?: boolean;
+    helpful?: boolean;
+  };
 
   constructor(private props: GeneratedAnswerCommonOptions) {
     this._data = this.readStoredData();
@@ -149,8 +156,7 @@ export class GeneratedAnswerCommon {
   }
 
   private get hasCustomNoAnswerMessage() {
-    const slot = getNamedSlotFromHost(this.props.host, 'no-answer-message');
-    return !!slot;
+    return getNamedSlotContent(this.props.host, 'no-answer-message').length > 0;
   }
 
   private async copyToClipboard(answer: string) {
@@ -183,7 +189,9 @@ export class GeneratedAnswerCommon {
     const {title} = citation;
     const {i18n} = this.props.getBindings();
 
-    return title.trim() !== ''
+    const normalizedTitle = (title ?? '').trim();
+
+    return normalizedTitle !== ''
       ? citation
       : {...citation, title: i18n.t('no-title')};
   }
@@ -455,7 +463,7 @@ export class GeneratedAnswerCommon {
     if (this.hasNoAnswerGenerated) {
       return cannotAnswer && this.hasCustomNoAnswerMessage ? (
         <div>
-          <aside class={contentClasses} part="container">
+          <aside class={contentClasses} part="container" aria-label={this.props.getBindings().i18n.t('generated-answer-title')}>
             <article>{this.renderCustomNoAnswerMessage()}</article>
           </aside>
         </div>
@@ -464,7 +472,7 @@ export class GeneratedAnswerCommon {
 
     return (
       <div>
-        <aside class={contentClasses} part="container">
+        <aside class={contentClasses} part="container" aria-label={this.props.getBindings().i18n.t('generated-answer-title')}>
           <article>{this.renderContent()}</article>
         </aside>
       </div>

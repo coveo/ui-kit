@@ -24,7 +24,7 @@
 .citation__title {
   font-weight: var(--lwc-fontWeightRegular, 400);
   color: var(--lwc-colorTextPlaceholder, #747474);
-  font-size: 13px;
+  font-size: var(--slds-g-font-size-base, 13px);
 }
 
 .citation__tooltip-text {
@@ -37,4 +37,16 @@
 .citation__tooltip {
   color: rgb(26, 27, 30);
   cursor: default;
+}
+
+.citation__link--active {
+  border-color: var(--lwc-brandAccessible, #0176d3);
+}
+
+.citation__title--active {
+  color: var(--lwc-brandAccessible, #0176d3);
+}
+
+.citation__icon--active {
+  --slds-c-icon-color-foreground-default: var(--lwc-brandAccessible, #0176d3);
 }

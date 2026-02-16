@@ -54,6 +54,13 @@ export type {
 } from './controllers/insight/attach-to-case/headless-attach-to-case.js';
 export {buildAttachToCase} from './controllers/insight/attach-to-case/headless-attach-to-case.js';
 export type {
+  AttachedResults,
+  AttachedResultsOptions,
+  AttachedResultsProps,
+  AttachedResultsState,
+} from './controllers/insight/attached-results/headless-attached-results.js';
+export {buildAttachedResults} from './controllers/insight/attached-results/headless-attached-results.js';
+export type {
   Breadcrumb,
   BreadcrumbManager,
   BreadcrumbManagerState,
@@ -209,6 +216,14 @@ export type {
 } from './controllers/insight/quickview/headless-insight-quickview.js';
 export {buildQuickview} from './controllers/insight/quickview/headless-insight-quickview.js';
 export type {
+  RecentQueriesList,
+  RecentQueriesListInitialState,
+  RecentQueriesListOptions,
+  RecentQueriesListProps,
+  RecentQueriesState,
+} from './controllers/insight/recent-queries-list/headless-insight-recent-queries-list.js';
+export {buildRecentQueriesList} from './controllers/insight/recent-queries-list/headless-insight-recent-queries-list.js';
+export type {
   InsightInteractiveResultOptions,
   InsightInteractiveResultProps,
   InteractiveResult,
@@ -308,6 +323,7 @@ export {buildInsightInterface} from './controllers/insight-interface/insight-int
 export * from './features/analytics/generic-analytics-actions-loader.js';
 export * from './features/analytics/insight-analytics-actions-loader.js';
 export * from './features/attached-results/attached-results-actions-loader.js';
+export * from './features/attached-results/attached-results-analytics-actions-loader.js';
 export * from './features/case-context/case-context-actions-loader.js';
 export * from './features/context/context-actions-loader.js';
 export type {
@@ -319,7 +335,6 @@ export type {
   FacetValueRequest,
 } from './features/facets/facet-set/interfaces/request.js';
 export * from './features/facets/range-facets/date-facet-set/date-facet-actions-loader.js';
-export * from './features/facets/range-facets/date-facet-set/date-facet-actions-loader.js';
 export type {DateFacetValue} from './features/facets/range-facets/date-facet-set/interfaces/response.js';
 export type {
   RangeFacetRangeAlgorithm,
@@ -329,6 +344,7 @@ export type {NumericFacetValue} from './features/facets/range-facets/numeric-fac
 export * from './features/facets/range-facets/numeric-facet-set/numeric-facet-actions-loader.js';
 export * from './features/fields/fields-actions-loader.js';
 export * from './features/folding/insight-folding-actions-loader.js';
+export * from './features/generated-answer/generated-answer-actions-loader.js';
 // Action loaders
 export * from './features/insight-interface/insight-interface-actions-loader.js';
 export type {InsightInterfaceState} from './features/insight-interface/insight-interface-state.js';
@@ -370,3 +386,4 @@ export {
 } from './features/sort-criteria/criteria.js';
 
 export type {PlatformEnvironment} from './utils/url-utils.js';
+export {VERSION} from './utils/version.js';

@@ -1,16 +1,10 @@
 import {expect, test} from './fixture';
 
-test.describe('default', () => {
+test.describe('atomic-commerce-search-box-instant-products', () => {
   test.beforeEach(async ({instantProduct, searchBox}) => {
     await instantProduct.load();
     await searchBox.hydrated.waitFor();
     await searchBox.searchInput.click();
-  });
-
-  //TODO: This test should pass once KIT-4449 is addressed
-  test.skip('should be accessible', async ({makeAxeBuilder}) => {
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
   });
 
   test('should display instant products', async ({instantProduct}) => {
@@ -20,7 +14,7 @@ test.describe('default', () => {
     }
   });
 
-  test('should be clickable anywhere on the instant result component', async ({
+  test('should be clickable anywhere on the instant product component', async ({
     instantProduct,
     page,
   }) => {
@@ -57,16 +51,16 @@ test.describe('default', () => {
     });
   });
 
-  test.describe('when clicking on "See All Results"', () => {
+  test.describe('when clicking on "See All Products"', () => {
     test.beforeEach(async ({instantProduct, searchBox}) => {
       await instantProduct.load();
+      await searchBox.hydrated.waitFor();
       await searchBox.component.evaluate((node) =>
         node.setAttribute(
           'redirection-url',
-          './iframe.html?id=atomic-commerce-search-box--in-page&viewMode=story'
+          './iframe.html?id=atomic-commerce-interface--with-product-list&viewMode=story'
         )
       );
-      await searchBox.hydrated.waitFor();
       await searchBox.searchInput.click();
     });
     test('should redirect to the specified url after selecting a suggestion', async ({
@@ -75,7 +69,7 @@ test.describe('default', () => {
     }) => {
       await instantProduct.showAllButton.click();
       await page.waitForURL(
-        '**/iframe.html?id=atomic-commerce-search-box--in-page*'
+        '**/iframe.html?id=atomic-commerce-interface--with-product-list*'
       );
     });
   });

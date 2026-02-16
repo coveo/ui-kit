@@ -36,7 +36,7 @@ export interface InsightEngineSearchConfigurationOptions {
    */
   locale?: string;
   /**
-   * The base URL to use to proxy Coveo insight requests (e.g., `https://example.com/insight`).
+   * The base URL to use to proxy Coveo insight requests (for example, `https://example.com/insight`).
    *
    * This is an advanced option that you only set if you proxy Coveo insight requests through your own
    * server. In most cases, you should not set this option.

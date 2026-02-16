@@ -37,24 +37,6 @@ describe('Insight Panel test suites', () => {
         .should('have.length.at.least', 1);
     });
 
-    it('should not add any unexpected style tags', () => {
-      const numTopLevelStyleTags = 4;
-      const numLayoutStyleTags = 1;
-
-      cy.get('style').should(
-        'have.length',
-        numTopLevelStyleTags + numLayoutStyleTags
-      );
-      InsightPanelsSelectors.topLevelStyleTags().should(
-        'have.length',
-        numTopLevelStyleTags
-      );
-      InsightPanelsSelectors.layoutStyleTags().should(
-        'have.length',
-        numLayoutStyleTags
-      );
-    });
-
     it('should display results', () => {
       InsightPanelsSelectors.results()
         .should('exist')
@@ -90,67 +72,6 @@ describe('Insight Panel test suites', () => {
         .shadow()
         .find('[part~="active-page-button"]')
         .should('have.attr', 'value', '2');
-    });
-
-    it('should display query summary', () => {
-      InsightPanelsSelectors.querySummary()
-        .should('exist')
-        .shadow()
-        .should('have.text', 'Insights related to this case');
-    });
-
-    it('should display a search box', () => {
-      InsightPanelsSelectors.searchbox()
-        .should('exist')
-        .shadow()
-        .find('textarea[part="textarea"]')
-        .should('exist')
-        .should('have.attr', 'placeholder', 'Search...');
-
-      InsightPanelsSelectors.searchbox()
-        .shadow()
-        .find('atomic-icon')
-        .should('have.attr', 'icon');
-    });
-
-    it('should display refine-toggle', () => {
-      InsightPanelsSelectors.refineToggle()
-        .should('exist')
-        .shadow()
-        .find('button')
-        .should('exist')
-        .should('have.attr', 'title', 'Filters');
-    });
-
-    it('should display refine-modal', () => {
-      InsightPanelsSelectors.refineToggle().click();
-      InsightPanelsSelectors.refineModal().should('exist');
-      InsightPanelsSelectors.focusTrap().should('exist');
-
-      InsightPanelsSelectors.filtersModal().should('have.attr', 'is-open');
-
-      InsightPanelsSelectors.filtersModal()
-        .find('[slot~="header"]')
-        .should('have.text', 'Filters');
-
-      InsightPanelsSelectors.filters()
-        .find('atomic-insight-facet')
-        .should('be.visible')
-        .should('have.length.at.least', 1);
-
-      InsightPanelsSelectors.filters()
-        .find('atomic-insight-timeframe-facet')
-        .should('be.visible')
-        .should('have.length.at.least', 1);
-
-      InsightPanelsSelectors.filters()
-        .find('atomic-insight-numeric-facet')
-        .should('be.visible')
-        .should('have.length.at.least', 1);
-
-      InsightPanelsSelectors.filtersModal().find('[slot="footer"]').click();
-
-      InsightPanelsSelectors.filtersModal().should('not.have.attr', 'is-open');
     });
 
     it('should display edit toggle', () => {
@@ -200,18 +121,6 @@ describe('Insight Panel test suites', () => {
         .find('atomic-icon')
         .should('exist');
     });
-
-    it('should display tabs', () => {
-      InsightPanelsSelectors.tabs()
-        .should('exist')
-        .find('atomic-insight-tab')
-        .should('have.length.at.least', 1)
-        .eq(1)
-        .click()
-        .shadow()
-        .find('button[aria-pressed="true"]')
-        .should('have.text', 'Youtube');
-    });
   });
 
   describe('when there is something written in the search box', () => {
@@ -234,123 +143,6 @@ describe('Insight Panel test suites', () => {
         .shadow()
         .should('contain.text', 'Results 1-5')
         .should('contain.text', 'for test');
-    });
-  });
-
-  describe('when there is a custom salesforce result template', () => {
-    beforeEach(setupPage);
-
-    it('should display a salesforce result template for salesforce results', () => {
-      const searchAlias = '@tabCausedSearch';
-      interceptInsightSearch(searchAlias);
-
-      InsightPanelsSelectors.tabPopoverButton().click();
-      InsightPanelsSelectors.tabBar()
-        .find('atomic-tab-popover')
-        .find('[part="popover-tab"]')
-        .eq(1)
-        .should('have.text', 'Salesforce')
-        .click();
-
-      cy.wait(searchAlias);
-
-      InsightPanelsSelectors.tabs()
-        .should('exist')
-        .find('atomic-insight-tab[label="Salesforce"]')
-        .shadow()
-        .find('button[aria-pressed="true"]')
-        .should('have.text', 'Salesforce');
-      InsightPanelsSelectors.results()
-        .first()
-        .shadow()
-        .find('atomic-result-text[field="sfid"]')
-        .should('exist');
-    });
-  });
-
-  describe('Smart Snippet Answer', () => {
-    const visitPage = () => {
-      cy.visit(host);
-      cy.injectAxe();
-      cy.wait(insightSearchAlias);
-    };
-
-    describe('when no smart snippet answer is returned', () => {
-      beforeEach(() => {
-        mockSearchWithoutSmartSnippet();
-        visitPage();
-      });
-
-      it('should hide the smart snippets components', () => {
-        InsightPanelsSelectors.smartSnippet().should(
-          'have.class',
-          'atomic-hidden'
-        );
-        InsightPanelsSelectors.smartSnippetExpandableAnswer().should(
-          'not.exist'
-        );
-        InsightPanelsSelectors.smartSnippetSuggestions().should(
-          'have.class',
-          'atomic-hidden'
-        );
-      });
-    });
-
-    describe('when a smart snippet answer is returned', () => {
-      beforeEach(() => {
-        mockSearchWithSmartSnippet();
-        visitPage();
-      });
-
-      it('should show the smart snippet component', () => {
-        InsightPanelsSelectors.smartSnippetExpandableAnswer().should('exist');
-      });
-
-      describe('when giving explanatory feedback', () => {
-        it('should show the feedback modal', () => {
-          InsightPanelsSelectors.smartSnippetFeedbackModal().should(
-            'not.exist'
-          );
-
-          InsightPanelsSelectors.smartSnippetFeedbackNoButton().click();
-          InsightPanelsSelectors.smartSnippetsExplainWhyButton().click();
-
-          InsightPanelsSelectors.smartSnippetFeedbackModal().should('exist');
-        });
-      });
-    });
-  });
-
-  describe('Smart Snippet Suggestions', () => {
-    const visitPage = () => {
-      cy.visit(host);
-      cy.injectAxe();
-      cy.wait(insightSearchAlias);
-    };
-
-    describe('when no smart snippet suggestions are returned', () => {
-      beforeEach(() => {
-        mockSearchWithoutSmartSnippetSuggestions();
-        visitPage();
-      });
-
-      it('should hide the suggestions components', () => {
-        InsightPanelsSelectors.smartSnippetSuggestions().should(
-          'have.class',
-          'atomic-hidden'
-        );
-      });
-    });
-
-    describe('when smart snippet suggestions are returned', () => {
-      beforeEach(() => {
-        mockSearchWithSmartSnippetSuggestions();
-        visitPage();
-      });
-
-      it('should show the smart snippets component', () => {
-        InsightPanelsSelectors.smartSnippetSuggestions().should('be.visible');
-      });
     });
   });
 });

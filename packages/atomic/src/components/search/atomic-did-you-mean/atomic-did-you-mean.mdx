@@ -1,0 +1,40 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicDidYouMeanStories from './atomic-did-you-mean.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicDidYouMeanStories} />
+
+<AtomicDocTemplate
+  stories={AtomicDidYouMeanStories}
+  githubPath="search/atomic-did-you-mean/atomic-did-you-mean.ts"
+  tagName="atomic-did-you-mean"
+  className="AtomicDidYouMean"
+  defaultStory="WithAutomaticQueryCorrection"
+>
+This component is typically placed within the "status" section of the layout.
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-search-layout>
+    ...
+    <atomic-layout-section section="main">
+      ...
+      <atomic-layout-section section="status">
+        
+        <atomic-did-you-mean></atomic-did-you-mean>
+
+      </atomic-layout-section>
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+Using the _Did You Mean_ component with your search page is a best practice, especially if your index has search terms that can be misinterpreted as an error.
+The relevance of the corrections improves with the size of the index, as more terms become available for comparison.
+
+It's possible to define certain phrases or terms in an organization’s thesaurus, which will expand or replace the query expression before executing the query.
+However, the _Did You Mean_ component won’t process queries expanded by the thesaurus.
+
+
+</AtomicDocTemplate>

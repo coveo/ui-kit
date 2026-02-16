@@ -62,6 +62,11 @@ interface PagerPageButtonProps
   page: number;
   isSelected: boolean;
   text: string;
+  onFocusCallback?: (
+    elements: HTMLInputElement[],
+    previousFocus: HTMLInputElement,
+    newFocus: HTMLInputElement
+  ) => Promise<void>;
 }
 
 export const renderPagerPageButton: FunctionalComponent<
@@ -77,6 +82,8 @@ export const renderPagerPageButton: FunctionalComponent<
       ariaCurrent: props.isSelected ? 'page' : 'false',
       class: 'btn-page focus-visible:bg-neutral-light min-h-10 min-w-10 p-1',
       part: `page-button${props.isSelected ? ' active-page-button' : ''}`,
+      onFocusCallback: props.onFocusCallback,
+      ariaRoleDescription: 'link',
     },
   });
 };

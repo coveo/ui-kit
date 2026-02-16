@@ -3,10 +3,10 @@ import {type Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
+import {createProductContextController} from '@/src/components/commerce/product-template-component-utils/context/product-context-controller';
 import {renderImageCarousel} from '@/src/components/common/image-carousel/image-carousel';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
-import {createProductContextController} from '@/src/decorators/commerce/product-template-decorators';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
@@ -93,7 +93,7 @@ export class AtomicProductImage
   }
 
   private logWarning(message: string) {
-    this.bindings.engine.logger.warn(message, this);
+    this.bindings.engine.logger.warn(message);
   }
 
   private handleImageError(event: Event) {
@@ -226,10 +226,10 @@ export class AtomicProductImage
   @errorGuard()
   render() {
     if (this.product === null || this.product === undefined) {
-      return html`${nothing}`;
+      return nothing;
     }
     if (this.isFallbackMissing) {
-      return html`${nothing}`;
+      return nothing;
     }
     const alt = this.imageAlt
       ? this.imageAlt

@@ -30,7 +30,7 @@ export const updateBasicConfiguration = createAction(
 
 export type UpdateProxyBaseUrlPayload = {
   /**
-   * The base URL to use to proxy Coveo commerce requests (e.g., `https://example.com/commerce`).
+   * The base URL to use to proxy Coveo commerce requests (for example, `https://example.com/commerce`).
    *
    * This is an advanced option that you only set if you proxy Coveo commerce requests through your own
    * server. In most cases, you should not set this option.

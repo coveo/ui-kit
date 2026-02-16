@@ -103,6 +103,19 @@ describe('c-quantic-source-citations', () => {
         );
       });
     });
+
+    it('should pass the disableCitationAnchoring property to the citation component', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const citations = element.shadowRoot.querySelectorAll(selectors.citation);
+      expect(citations).not.toBeNull();
+      expect(citations.length).toEqual(mockCitations.length);
+
+      citations.forEach((citationElement) => {
+        expect(citationElement.disableCitationAnchoring).toBe(false);
+      });
+    });
   });
 
   describe('when there are no citations found', () => {

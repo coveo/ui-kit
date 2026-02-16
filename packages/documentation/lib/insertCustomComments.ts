@@ -17,6 +17,7 @@ const comments = [
   },
 ];
 
+// NOTE: cannot be converted into an arrow function `this`
 export function insertCustomComments(
   this: undefined,
   _ctx: Context,

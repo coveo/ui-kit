@@ -18,13 +18,13 @@ export class NumericFacetObject {
   }
 
   get filterMinInput(): Locator {
-    return this.facet.getByRole('textbox', {
+    return this.facet.getByRole('spinbutton', {
       name: /enter a minimum numerical value for the .* facet/i,
     });
   }
 
   get filterMaxInput(): Locator {
-    return this.facet.getByRole('textbox', {
+    return this.facet.getByRole('spinbutton', {
       name: /enter a maximum numerical value for the .* facet/i,
     });
   }

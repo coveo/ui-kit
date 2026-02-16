@@ -6,11 +6,6 @@ test.describe('atomic-product-numeric-field-value', () => {
     await numericFieldValue.hydrated.waitFor();
   });
 
-  test('should be accessible', async ({makeAxeBuilder}) => {
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   test('should render the value', async ({numericFieldValue}) => {
     const value = numericFieldValue.hydrated.first();
     await expect(value).toBeVisible();

@@ -19,35 +19,53 @@ export function parseDependsOn<
     throw "Depending on multiple facets isn't supported";
   }
 
-  return Object.entries(dependsOn).map(([parentFacetId, expectedValue]) => {
-    return {
-      parentFacetId,
-      condition: (values) => {
-        return values.some((value) => {
-          if (isCategoryFacetValue(value)) {
-            const selectedValue = getSelectedCategoryFacetValueRequest(value);
-            if (!selectedValue) {
-              return false;
-            }
-            if (!expectedValue) {
-              return true;
-            }
-            return selectedValue.value === expectedValue;
-          }
-          if (isSimpleFacetValue(value)) {
-            if (value.state !== 'selected') {
-              return false;
-            }
-            if (!expectedValue) {
-              return true;
-            }
-            return value.value === expectedValue;
-          }
-          return false;
-        });
-      },
-    };
-  });
+  const entries = Object.entries(dependsOn);
+  return entries.map(([parentFacetId, expectedValue]) => ({
+    parentFacetId,
+    condition: buildDependsOnCondition<FacetValue>(expectedValue),
+  }));
+}
+
+function buildDependsOnCondition<
+  FacetValue extends SimpleFacetValue | CategoryFacetValue,
+>(expectedValue: string): (values: FacetValue[]) => boolean {
+  return (values: FacetValue[]) =>
+    values.some((value) => {
+      if (isCategoryFacetValue(value)) {
+        return matchesCategoryFacetValue(
+          value as CategoryFacetValue,
+          expectedValue
+        );
+      }
+      if (isSimpleFacetValue(value)) {
+        return matchesSimpleFacetValue(
+          value as SimpleFacetValue,
+          expectedValue
+        );
+      }
+      return false;
+    });
+}
+
+function matchesCategoryFacetValue<FacetValue extends CategoryFacetValue>(
+  value: FacetValue,
+  expectedValue: string
+): boolean {
+  const selectedValue = getSelectedCategoryFacetValueRequest(value);
+  if (!selectedValue) {
+    return false;
+  }
+  return !expectedValue || selectedValue.value === expectedValue;
+}
+
+function matchesSimpleFacetValue(
+  value: SimpleFacetValue,
+  expectedValue: string
+): boolean {
+  if (value.state !== 'selected') {
+    return false;
+  }
+  return !expectedValue || value.value === expectedValue;
 }
 
 function isCategoryFacetValue(request: unknown): request is CategoryFacetValue {

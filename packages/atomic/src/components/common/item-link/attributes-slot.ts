@@ -1,20 +1,32 @@
-import {getNamedSlotFromHost} from '../../../utils/slot-utils';
+import {getNamedSlotContent} from '@/src/utils/slot-utils';
 
-export function getAttributesFromLinkSlot(host: HTMLElement, slotName: string) {
-  const attributesSlot = getNamedSlotFromHost(host, slotName);
-  if (!attributesSlot) {
+export function getAttributesFromLinkSlotContent(
+  host: HTMLElement,
+  slotName: string
+) {
+  const namedSlotContent = getNamedSlotContent(host, slotName);
+  if (namedSlotContent.length === 0) {
     return;
   }
 
-  if (attributesSlot.nodeName !== 'A') {
+  if (namedSlotContent.length > 1) {
+    console.warn(
+      `More than one element found for slot "${slotName}", only the first one will be used.`,
+      host
+    );
+  }
+
+  const attributesSlotContent = namedSlotContent[0];
+
+  if (attributesSlotContent.nodeName !== 'A') {
     console.warn(
       `Slot named "${slotName}" should be an "a" tag`,
-      attributesSlot
+      attributesSlotContent
     );
     return;
   }
 
-  return Array.from(attributesSlot.attributes).filter(({nodeName}) => {
+  return Array.from(attributesSlotContent.attributes).filter(({nodeName}) => {
     if (nodeName === 'slot') {
       return false;
     }

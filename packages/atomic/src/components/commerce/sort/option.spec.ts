@@ -9,11 +9,10 @@ import {
   renderCommerceSortOption,
 } from './option';
 
-vi.mock('@coveo/headless/commerce');
+vi.mock('@coveo/headless/commerce', {spy: true});
+vi.mock('@/src/components/common/sort/option', {spy: true});
 
-vi.mock('../../common/sort/option', {spy: true});
-
-describe('renderCommerceSortOption', () => {
+describe('#renderCommerceSortOption', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
 
   beforeAll(async () => {

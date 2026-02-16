@@ -1,7 +1,7 @@
 .facet__search-results_no-match {
   color: var(--lwc-colorTextLabel, #696969);
   background-color: var(--slds-g-color-surface-2, #F6F7F9);
-  font-size: 12px;
+  font-size: var(--slds-g-font-scale-neg-1, 12px);
   border-radius: 4px;
 }
 
@@ -10,7 +10,7 @@ fieldset {
 }
 
 .facet__show-less {
-  font-size: 12px;
+  font-size: var(--slds-g-font-scale-neg-1, 12px);
   background-color: white;
   color: var(--lwc-colorTextPlaceholder, var(--lwc-colorTextIconDefault, #747474));
   border: none;
@@ -18,7 +18,7 @@ fieldset {
 }
 
 .facet__show-more {
-  font-size: 12px;
+  font-size: var(--slds-g-font-scale-neg-1, 12px);
   background-color: white;
   color: var(--lwc-brandTextLink, dodgerblue);
   border: none;

@@ -4,7 +4,9 @@ interface QueryCorrectionGuardProps {
   hasCorrection: boolean;
 }
 
-// Just use a when directive for Lit. This is an unnecessary component in Lit's context.
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const QueryCorrectionGuard: FunctionalComponent<
   QueryCorrectionGuardProps
 > = ({hasCorrection}, children) => {

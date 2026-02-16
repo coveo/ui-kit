@@ -1,23 +1,26 @@
+import {skipToken} from '@reduxjs/toolkit/query';
+import type {GeneratedAnswerStream} from '../../../api/knowledge/generated-answer-stream.js';
 import {
   type AnswerEvaluationPOSTParams,
   answerEvaluation,
 } from '../../../api/knowledge/post-answer-evaluation.js';
-import {triggerSearchRequest} from '../../../api/knowledge/stream-answer-actions.js';
 import {
   answerApi,
   fetchAnswer,
-  type GeneratedAnswerStream,
-  type StateNeededByAnswerAPI,
   selectAnswer,
-  selectAnswerTriggerParams,
 } from '../../../api/knowledge/stream-answer-api.js';
+import type {StreamAnswerAPIState} from '../../../api/knowledge/stream-answer-api-state.js';
 import {warnIfUsingNextAnalyticsModeForServiceFeature} from '../../../app/engine.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import {
+  selectAnswerApiQueryParams,
+  selectAnswerTriggerParams,
+} from '../../../features/generated-answer/answer-api-selectors.js';
+import {
+  generateAnswer,
   resetAnswer,
   sendGeneratedAnswerFeedback,
-  setCannotAnswer,
   updateAnswerConfigurationId,
 } from '../../../features/generated-answer/generated-answer-actions.js';
 import type {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
@@ -94,34 +97,25 @@ const parseEvaluationArguments = ({
 });
 
 const subscribeToSearchRequest = (
-  engine: SearchEngine<StateNeededByAnswerAPI>
+  engine: SearchEngine<StreamAnswerAPIState>
 ) => {
-  let lastTriggerParams: ReturnType<typeof selectAnswerTriggerParams>;
+  let lastRequestId = '';
+
   const strictListener = () => {
     const state = engine.state;
     const triggerParams = selectAnswerTriggerParams(state);
 
-    if (!lastTriggerParams || triggerParams.q.length === 0) {
-      lastTriggerParams = triggerParams;
-    }
+    const currentRequestId = triggerParams.requestId;
+    const newSearchRequestDetected = currentRequestId !== lastRequestId;
 
-    if (triggerParams.q.length === 0 && !!triggerParams.cannotAnswer) {
-      engine.dispatch(setCannotAnswer(false));
-    }
+    if (newSearchRequestDetected) {
+      lastRequestId = currentRequestId;
+      engine.dispatch(resetAnswer());
 
-    if (
-      triggerParams.q.length === 0 ||
-      triggerParams.requestId.length === 0 ||
-      triggerParams.requestId === lastTriggerParams.requestId ||
-      (triggerParams.analyticsMode === 'next' && !triggerParams.actionCause) // If analytics mode is next, we need to wait for the action cause to be set
-    ) {
-      return;
+      if (triggerParams.q?.length > 0) {
+        engine.dispatch(generateAnswer());
+      }
     }
-
-    lastTriggerParams = triggerParams;
-    engine.dispatch(
-      triggerSearchRequest({state, navigatorContext: engine.navigatorContext})
-    );
   };
 
   engine.subscribe(strictListener);
@@ -155,20 +149,17 @@ export function buildAnswerApiGeneratedAnswer(
     props
   );
   const getState = () => engine.state;
-
   engine.dispatch(updateAnswerConfigurationId(props.answerConfigurationId!));
 
-  subscribeToSearchRequest(engine as SearchEngine<StateNeededByAnswerAPI>);
+  subscribeToSearchRequest(engine as SearchEngine<StreamAnswerAPIState>);
 
   return {
     ...controller,
     get state() {
-      const answerApiState = selectAnswer(
-        engine.state,
-        engine.navigatorContext
-      ).data;
+      const answerApiState = selectAnswer(engine.state).data;
+      const state = getState().generatedAnswer;
       return {
-        ...getState().generatedAnswer,
+        ...state,
         answer: answerApiState?.answer,
         citations: filterOutDuplicatedCitations(
           answerApiState?.citations ?? []
@@ -181,20 +172,26 @@ export function buildAnswerApiGeneratedAnswer(
         isStreaming: answerApiState?.isStreaming ?? false,
         answerContentFormat: answerApiState?.contentFormat ?? 'text/plain',
         isAnswerGenerated: answerApiState?.generated ?? false,
+        cannotAnswer:
+          state.cannotAnswer ||
+          (answerApiState?.generated === false &&
+            !answerApiState?.isLoading &&
+            !answerApiState?.isStreaming),
       };
     },
     retry() {
-      engine.dispatch(fetchAnswer(getState(), engine.navigatorContext));
+      const answerApiQueryParams = selectAnswerApiQueryParams(getState());
+      engine.dispatch(fetchAnswer(answerApiQueryParams ?? skipToken));
     },
     reset() {
       engine.dispatch(resetAnswer());
     },
     async sendFeedback(feedback) {
+      engine.dispatch(analyticsClient.logGeneratedAnswerFeedback(feedback));
       const args = parseEvaluationArguments({
         query: getState().query.q,
         feedback,
-        answerApiState: selectAnswer(engine.state, engine.navigatorContext)
-          .data!,
+        answerApiState: selectAnswer(engine.state).data!,
       });
       engine.dispatch(answerEvaluation.endpoints.post.initiate(args));
       engine.dispatch(sendGeneratedAnswerFeedback());

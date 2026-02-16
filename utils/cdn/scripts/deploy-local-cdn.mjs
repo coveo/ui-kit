@@ -1,15 +1,13 @@
 import fs from 'node:fs/promises';
-import {findPackageJSON} from 'node:module';
 import path from 'node:path';
-import chalk from 'chalk';
-import ncp from 'ncp';
+import colors from '../../ci/colors.mjs';
 
 const currentDir = import.meta.dirname;
+const resolvePackageJsonPath = (packageName) =>
+  path.resolve(currentDir, '../../../packages', packageName, 'package.json');
+
 const getVersionFromPackageJson = async (packageName, versionType) => {
-  const packageJsonPath = findPackageJSON(
-    `@coveo/${packageName}`,
-    import.meta.url
-  );
+  const packageJsonPath = resolvePackageJsonPath(packageName);
   try {
     const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
     const version = packageJson.version;
@@ -80,7 +78,7 @@ const preprocessConfig = async (configContent) => {
 
 const deploymentConfigPath = path.resolve(
   currentDir,
-  '../../../.deployment.config.json'
+  '../../../.deployment.config/prd.json'
 );
 const rawConfigContent = await fs.readFile(deploymentConfigPath, 'utf-8');
 const processedConfigContent = await preprocessConfig(rawConfigContent);
@@ -89,19 +87,13 @@ const deploymentConfig = JSON.parse(processedConfigContent);
 const devCdnDir = path.resolve(currentDir, `../dist`);
 
 const copyFiles = async (source, destination) => {
-  return new Promise((resolve, reject) => {
-    ncp(source, destination, (err) => {
-      if (err) {
-        reject(
-          new Error(
-            `NCP error copying from ${source} to ${destination}: ${err ? err.map((e) => e.message).join(', ') : 'unknown error'}`
-          )
-        );
-      } else {
-        resolve();
-      }
-    });
-  });
+  try {
+    await fs.cp(source, destination, {recursive: true, force: true});
+  } catch (err) {
+    throw new Error(
+      `Error copying from ${source} to ${destination}: ${err.message}`
+    );
+  }
 };
 
 const ensureDirectoryExists = async (directory) => {
@@ -142,7 +134,7 @@ const main = async () => {
 
 main().catch((err) => {
   console.error(
-    chalk.red('An error occurred during local CDN deployment:'),
+    colors.red('An error occurred during local CDN deployment:'),
     err.message
   );
   process.exit(1);

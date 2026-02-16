@@ -1,0 +1,29 @@
+{
+  "name": "@samples/atomic-search-commerce-react",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build:assets": "node ../../../utils/ci/copy-files.mjs ../../../packages/atomic-react/dist/assets public/assets ../../../packages/atomic-react/dist/lang public/lang ../../../packages/atomic/dist/atomic/themes public/themes",
+    "dev": "pnpm run build:assets && pnpm run dev:vite",
+    "dev:vite": "vite",
+    "build": "pnpm run build:ts && pnpm run build:vite",
+    "build:ts": "pnpm --filter @coveo/ci if-not-cdn -- \"tsc -b\"",
+    "build:vite": "pnpm --filter @coveo/ci if-not-cdn -- \"vite build\""
+  },
+  "dependencies": {
+    "@coveo/atomic-react": "workspace:*",
+    "@coveo/headless": "workspace:*",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@playwright/test": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  }
+}

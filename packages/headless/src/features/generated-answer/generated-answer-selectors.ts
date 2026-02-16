@@ -1,43 +1,60 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
-import {
-  type StateNeededByAnswerAPI,
-  selectAnswer,
-} from '../../api/knowledge/stream-answer-api.js';
+import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
 import type {GeneratedAnswerCitation} from '../../controllers/generated-answer/headless-generated-answer.js';
 import type {SearchAppState} from '../../state/search-app-state.js';
 import type {
   GeneratedAnswerSection,
   SearchSection,
 } from '../../state/state-sections.js';
+import {selectAgentId} from '../configuration/configuration-selectors.js';
+import type {ConfigurationState} from '../configuration/configuration-state.js';
 
 export const generativeQuestionAnsweringIdSelector = (
   state: Partial<SearchAppState>
-): {answerAPIEnabled: boolean; id: string | undefined} => {
-  if (isGeneratedAnswerSection(state)) {
-    return {answerAPIEnabled: true, id: selectAnswer(state).data?.answerId};
+): string | undefined => {
+  // If using the AnswerApi or the AgentApi, we return the answerId first.
+  if (
+    isGeneratedAnswerFeatureEnabledWithAnswerAPI(state) ||
+    isGeneratedAnswerFeatureEnabledWithAnswerGenerationAPI(state)
+  ) {
+    return state.generatedAnswer?.answerId;
   }
 
+  // Used for type narrowing.
   if (isSearchSection(state)) {
-    return {
-      answerAPIEnabled: false,
-      id: state.search.response.extendedResults.generativeQuestionAnsweringId,
-    };
+    return state.search?.response?.extendedResults
+      ?.generativeQuestionAnsweringId;
   }
 
-  return {answerAPIEnabled: false, id: undefined};
+  return undefined;
 };
 
-const isSearchSection = (
-  state: Partial<SearchAppState> | StateNeededByAnswerAPI
-): state is SearchSection => 'search' in state;
-
-const isGeneratedAnswerSection = (
+const isGeneratedAnswerFeatureEnabledWithAnswerAPI = (
   state: Partial<SearchAppState>
-): state is StateNeededByAnswerAPI =>
+): state is StreamAnswerAPIState =>
   'answer' in state &&
   'generatedAnswer' in state &&
   !isNullOrUndefined(state.generatedAnswer?.answerConfigurationId);
+
+export const isGeneratedAnswerFeatureEnabledWithAnswerGenerationAPI = (
+  state: Partial<SearchAppState>
+): state is StreamAnswerAPIState => {
+  const agentId = selectAgentId(state as {configuration: ConfigurationState});
+  return (
+    'answerGenerationApi' in state &&
+    'generatedAnswer' in state &&
+    typeof agentId === 'string' &&
+    agentId.trim().length > 0
+  );
+};
+
+const isSearchSection = (
+  state: Partial<SearchAppState> | StreamAnswerAPIState
+): state is SearchSection =>
+  'search' in state &&
+  state.search !== undefined &&
+  typeof state.search === 'object';
 
 export const selectFieldsToIncludeInCitation = (
   state: Partial<GeneratedAnswerSection>

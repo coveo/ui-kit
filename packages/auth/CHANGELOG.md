@@ -1,3 +1,48 @@
+## <small>2.1.6 (2026-01-07)</small>
+
+* [Version Bump][skip ci]: ui-kit publish ([b2a83c4](https://github.com/coveo/ui-kit/commits/b2a83c4))
+* Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
+
+
+
+## <small>2.1.5 (2026-01-06)</small>
+
+* Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
+
+
+
+## <small>2.1.4 (2025-11-12)</small>
+
+* docs: correct JSDoc grammar and terminology across packages (#6531) ([356975a](https://github.com/coveo/ui-kit/commits/356975a)), closes [#6531](https://github.com/coveo/ui-kit/issues/6531)
+
+
+
+## <small>2.1.3 (2025-10-30)</small>
+
+* [Version Bump][skip ci]: ui-kit publish ([b33d02f](https://github.com/coveo/ui-kit/commits/b33d02f))
+* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+
+
+
+## <small>2.1.2 (2025-10-29)</small>
+
+* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+
+
+
+## <small>2.1.1 (2025-10-08)</small>
+
+* chore: more cleanup of dependencies in multiples packages (#6119) ([ff6c837](https://github.com/coveo/ui-kit/commits/ff6c837)), closes [#6119](https://github.com/coveo/ui-kit/issues/6119)
+
+
+
+## 2.1.0 (2025-08-07)
+
+* feat: Migrate monorepo build system from NX to Turborepo (#5733) ([e7e1237](https://github.com/coveo/ui-kit/commits/e7e1237)), closes [#5733](https://github.com/coveo/ui-kit/issues/5733)
+* chore: update dependencies (major) (#5793) ([8cbf5bc](https://github.com/coveo/ui-kit/commits/8cbf5bc)), closes [#5793](https://github.com/coveo/ui-kit/issues/5793)
+
+
+
 ## <small>2.0.25 (2025-07-30)</small>
 
 * chore(atomic-angular, atomic-react, auth, bueno, headless-react): remove unused exports, code and de ([6f8efc1](https://github.com/coveo/ui-kit/commits/6f8efc1)), closes [#5690](https://github.com/coveo/ui-kit/issues/5690)

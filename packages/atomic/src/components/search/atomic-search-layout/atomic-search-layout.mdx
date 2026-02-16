@@ -1,0 +1,26 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicSearchLayoutStories from './atomic-search-layout.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicSearchLayoutStories} />
+
+<AtomicDocTemplate
+  stories={AtomicSearchLayoutStories}
+  githubPath="search/atomic-search-layout/atomic-search-layout.ts"
+  tagName="atomic-search-layout"
+  className="AtomicSearchLayout"
+>
+
+This component organizes the search page layout. 
+Use `atomic-layout-section` to define the different sections of the page, such as **search**, **facets**, and **main**.
+
+```html
+<atomic-search-layout>
+  <atomic-layout-section section="search"></atomic-layout-section>
+  <atomic-layout-section section="facets"></atomic-layout-section>
+  <atomic-layout-section section="main"></atomic-layout-section>
+</atomic-search-layout>
+```
+
+</AtomicDocTemplate>

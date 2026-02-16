@@ -1,0 +1,53 @@
+{
+  "name": "@samples/headless-search-react",
+  "description": "Samples with @coveo/headless & React",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
+  },
+  "dependencies": {
+    "@coveo/auth": "workspace:*",
+    "@coveo/headless": "workspace:*",
+    "@testing-library/jest-dom": "6.6.3",
+    "@testing-library/react": "catalog:",
+    "@types/escape-html": "1.0.4",
+    "@types/express": "5.0.3",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "dayjs": "catalog:",
+    "escape-html": "1.0.3",
+    "express": "5.1.0",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-router": "7.10.1",
+    "typescript": "catalog:"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && vite build --ssr server/server.tsx --outDir dist/server",
+    "serve": "vite preview",
+    "test": "vitest run",
+    "prod:ssr": "node ./dist/server/index.js"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "catalog:",
+    "cypress": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
+  }
+}
