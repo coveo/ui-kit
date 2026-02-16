@@ -1,0 +1,92 @@
+{
+  "$schema": "#a11y-overrides",
+  "description": "Human-authored overrides for WCAG 2.2 AA conformance. These override automated axe-core results in the OpenACR YAML report. Each entry must include a reason explaining the decision.",
+  "lastUpdated": "2026-02-11",
+  "overrides": [
+    {
+      "criterion": "1.2.1",
+      "conformance": "not-applicable",
+      "reason": "Atomic does not include audio-only or video-only media components."
+    },
+    {
+      "criterion": "1.2.2",
+      "conformance": "not-applicable",
+      "reason": "Atomic does not include synchronized media components requiring captions."
+    },
+    {
+      "criterion": "1.2.3",
+      "conformance": "not-applicable",
+      "reason": "Atomic does not include synchronized media components requiring audio descriptions."
+    },
+    {
+      "criterion": "1.2.4",
+      "conformance": "not-applicable",
+      "reason": "Atomic does not include live audio content."
+    },
+    {
+      "criterion": "1.2.5",
+      "conformance": "not-applicable",
+      "reason": "Atomic does not include prerecorded video content requiring audio descriptions."
+    },
+    {
+      "criterion": "1.4.2",
+      "conformance": "not-applicable",
+      "reason": "Atomic does not include components that auto-play audio."
+    },
+    {
+      "criterion": "2.2.1",
+      "conformance": "not-applicable",
+      "reason": "No Atomic component enforces time limits on user interaction."
+    },
+    {
+      "criterion": "2.2.2",
+      "conformance": "not-applicable",
+      "reason": "Atomic does not include moving, blinking, scrolling, or auto-updating content that starts automatically and lasts more than five seconds."
+    },
+    {
+      "criterion": "2.3.1",
+      "conformance": "not-applicable",
+      "reason": "Atomic does not include content that flashes more than three times per second."
+    },
+    {
+      "criterion": "2.4.2",
+      "conformance": "not-applicable",
+      "reason": "Page titles are a host application concern, not a component library concern."
+    },
+    {
+      "criterion": "2.4.5",
+      "conformance": "not-applicable",
+      "reason": "Multiple navigation ways are a host application concern, not a component library concern."
+    },
+    {
+      "criterion": "2.5.4",
+      "conformance": "not-applicable",
+      "reason": "Atomic does not include functionality operated by device or user motion."
+    },
+    {
+      "criterion": "3.1.1",
+      "conformance": "not-applicable",
+      "reason": "The lang attribute on the HTML element is a host application concern, not a component library concern."
+    },
+    {
+      "criterion": "3.2.3",
+      "conformance": "not-applicable",
+      "reason": "Consistent navigation ordering is a host application concern; Atomic components do not control page-level navigation."
+    },
+    {
+      "criterion": "3.2.4",
+      "conformance": "not-applicable",
+      "reason": "Consistent identification across pages is a host application concern; individual Atomic components use consistent internal naming."
+    },
+    {
+      "criterion": "3.3.7",
+      "conformance": "not-applicable",
+      "reason": "Atomic does not include multi-step forms that require redundant data entry."
+    },
+    {
+      "criterion": "3.3.8",
+      "conformance": "not-applicable",
+      "reason": "Atomic does not include authentication flows."
+    }
+  ]
+}
