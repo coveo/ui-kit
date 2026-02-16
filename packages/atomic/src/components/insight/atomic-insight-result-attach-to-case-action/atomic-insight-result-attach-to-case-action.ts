@@ -26,7 +26,11 @@ export interface InsightResultAttachToCaseEvent {
 }
 
 /**
- * The `atomic-insight-result-attach-to-case-action` component can be nested inside a `atomic-insight-result-actions` to render an interactive button that will emit an `atomic/insight/attachToCase/attach` or `atomic/insight/attachToCase/detach` JavaScript event, based on its current state, when clicked.
+ * The `atomic-insight-result-attach-to-case-action` component can be nested
+ * inside a `atomic-insight-result-actions` to render an interactive button
+ * that will emit an `atomic/insight/attachToCase/attach` or
+ * `atomic/insight/attachToCase/detach` JavaScript event, based on its current
+ * state, when clicked.
  *
  * @part result-action-container - The result action container
  * @part result-action-button - The result action button
