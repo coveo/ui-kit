@@ -56,9 +56,11 @@ export function buildResultsPerPage(
       };
     },
 
-    set(num: number) {
-      coreController.set(num);
-      dispatch(fetchPage({legacy: logPagerResize(), next: browseResults()}));
+    set(num: number, options?: {skipFetch?: boolean}) {
+      coreController.set(num, options);
+      if (!options?.skipFetch) {
+        dispatch(fetchPage({legacy: logPagerResize(), next: browseResults()}));
+      }
     },
   };
 }

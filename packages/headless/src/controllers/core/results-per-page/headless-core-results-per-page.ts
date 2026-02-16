@@ -48,8 +48,10 @@ export interface ResultsPerPage extends Controller {
    * Updates the number of results to request per page.
    *
    * @param num - The number of results.
+   * @param options - Optional configuration for the set operation.
+   * @param options.skipFetch - If `true`, updates the number of results without triggering a new search. Useful for batch updates.
    */
-  set(num: number): void;
+  set(num: number, options?: {skipFetch?: boolean}): void;
 
   /** Checks whether the number of results per page is equal to the specified number.
    *
@@ -118,7 +120,7 @@ export function buildCoreResultsPerPage(
       };
     },
 
-    set(num: number) {
+    set(num: number, _options?: {skipFetch?: boolean}) {
       dispatch(updateNumberOfResults(num));
     },
 
