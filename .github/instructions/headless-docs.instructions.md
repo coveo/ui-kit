@@ -119,6 +119,10 @@ The `packages/headless/source_docs/` directory contains usage articles published
 
 Do not modify the prose style of existing articles unless fixing a factual error introduced by an API change.
 
+### Reviewing PRs for documentation drift
+
+When reviewing a PR that modifies public API, check whether `source_docs/` articles, `samples/headless/` code, or other related files reference the changed API — even if those files are not part of the diff. If a stale reference is found in a file that was **not modified in the PR**, post the finding as a **general PR comment** (not an inline file comment), since GitHub only allows inline comments on files included in the diff. The comment should identify the file, line, and the specific stale reference that needs updating.
+
 ## Samples (`samples/headless/`)
 
 The `samples/headless/` directory contains runnable sample projects. When public API changes:
