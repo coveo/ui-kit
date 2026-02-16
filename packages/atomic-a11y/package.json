@@ -9,7 +9,9 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json"
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "a11y:merge-shards": "npx tsx src/reporter/merge-shards.ts"
   },
   "dependencies": {
     "axe-core": "4.10.3"
