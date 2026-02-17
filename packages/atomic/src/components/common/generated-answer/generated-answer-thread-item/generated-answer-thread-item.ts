@@ -83,6 +83,8 @@ export class GeneratedAnswerThreadItem extends LitElement {
       'inline-flex': true,
       'text-left': true,
       'mr-auto': true,
+      'px-2': true,
+      'py-1.5': true,
     };
     const titleWeightClasses = {
       'font-semibold': this.isExpanded,
@@ -94,9 +96,6 @@ export class GeneratedAnswerThreadItem extends LitElement {
       'bg-transparent': true,
       'border-0': true,
       'appearance-none': true,
-      'ml-1': true,
-      'px-2': true,
-      'py-1.5': true,
       'transition-colors': true,
       'hover:bg-neutral-light': true,
       'rounded-md': true,
@@ -117,6 +116,14 @@ export class GeneratedAnswerThreadItem extends LitElement {
       'bg-neutral-dark': this.isExpanded,
       'bg-neutral-dim': !this.isExpanded,
     });
+    const timelineBodyRowClasses = classMap({
+      flex: true,
+      'min-w-0': true,
+      'gap-3': true,
+      'min-h-3': !this.isExpanded,
+    });
+    const timelineConnectorClasses =
+      "relative h-full w-px bg-neutral before:absolute before:left-0 before:top-[-8px] before:h-[8px] before:w-px before:bg-neutral before:content-[''] after:absolute after:bottom-[-8px] after:left-0 after:h-[8px] after:w-px after:bg-neutral after:content-['']";
 
     return html`
       <li class="grid min-w-0">
@@ -137,25 +144,21 @@ export class GeneratedAnswerThreadItem extends LitElement {
                 >
                   ${this.title}
                 </button>`,
-              () =>
-                html`<span
-                  class=${titleTextClasses}
-                  >${this.title}</span
-                >`
+              () => html`<span class=${titleTextClasses}>${this.title}</span>`
             )}
           </div>
         </div>
-        <div class="flex min-w-0 gap-3">
+        <div class=${timelineBodyRowClasses}>
           <div class="flex w-[10px] shrink-0 justify-center">
             ${when(
               this.hideLine,
               () => html``,
-              () => html`<span class="w-px bg-neutral h-full"></span>`
+              () => html`<span class=${timelineConnectorClasses}> </span>`
             )}
           </div>
           <div
             id=${this.contentId}
-            class="pl-2 py-2 ml-1"
+            class="pl-2 py-1.5"
             ?hidden=${!this.isExpanded}
             aria-hidden=${this.isExpanded ? 'false' : 'true'}
           >

@@ -49,6 +49,15 @@ describe('generated-answer-thread-item', () => {
     expect(locators().timelineLine).toBeNull();
   });
 
+  it('should keep the timeline line visible when collapsed', async () => {
+    const {locators} = await renderComponent({
+      hideLine: false,
+      isExpanded: false,
+    });
+
+    expect(locators().timelineLine).toBeInTheDocument();
+  });
+
   it('should render a faded divider under content when expanded', async () => {
     const {locators} = await renderComponent({isExpanded: true});
 
