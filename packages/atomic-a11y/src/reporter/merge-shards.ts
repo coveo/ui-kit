@@ -85,7 +85,7 @@ async function readShardReports(shardFiles: string[]): Promise<A11yReport[]> {
   return reports;
 }
 
-function mergeComponents(reports: A11yReport[]): A11yComponentReport[] {
+export function mergeComponents(reports: A11yReport[]): A11yComponentReport[] {
   const componentsByName = new Map<string, MutableComponentReport>();
 
   for (const report of reports) {
@@ -138,7 +138,7 @@ function mergeComponents(reports: A11yReport[]): A11yComponentReport[] {
     .sort((first, second) => compareByName(first.name, second.name));
 }
 
-function mergeCriteria(
+export function mergeCriteria(
   reports: A11yReport[],
   components: A11yComponentReport[]
 ): A11yCriterionReport[] {
@@ -191,12 +191,6 @@ function mergeCriteria(
     })
     .sort((first, second) => compareByNumericId(first.id, second.id));
 }
-
-export const mergeShardsTestUtils = {
-  createSummary,
-  mergeComponents,
-  mergeCriteria,
-};
 
 export async function mergeA11yShardReports(
   options: MergeShardOptions = {}

@@ -33,7 +33,6 @@ import {extractA11yRuleIdsFromTestErrors} from './error-parsing.js';
 import {
   type ComponentAccumulator,
   formatDate,
-  getAutomationCoveragePercentage,
   getCriterionMetadata,
   type PackageMetadata,
   readPackageMetadata,
@@ -382,12 +381,3 @@ export class VitestA11yReporter implements Reporter {
     console.warn(`[${REPORTER_NAME}] ${message}`);
   }
 }
-
-export const vitestA11yReporterTestUtils = {
-  extractCategory,
-  extractComponentName,
-  extractFramework,
-  formatDate,
-  getAutomationCoveragePercentage,
-  getCriteriaForRule,
-};

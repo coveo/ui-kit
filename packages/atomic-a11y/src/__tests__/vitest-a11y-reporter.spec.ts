@@ -1,10 +1,19 @@
 import {describe, expect, it} from 'vitest';
-import {extractCriteriaFromTags} from '../reporter/axe-integration.js';
+import {
+  extractCriteriaFromTags,
+  getCriteriaForRule,
+} from '../reporter/axe-integration.js';
 import {stripAnsiSequences} from '../reporter/error-parsing.js';
 import {
-  VitestA11yReporter,
-  vitestA11yReporterTestUtils,
-} from '../reporter/vitest-a11y-reporter.js';
+  formatDate,
+  getAutomationCoveragePercentage,
+} from '../reporter/reporter-utils.js';
+import {
+  extractCategory,
+  extractComponentName,
+  extractFramework,
+} from '../reporter/storybook-extraction.js';
+import {VitestA11yReporter} from '../reporter/vitest-a11y-reporter.js';
 import type {A11yReport} from '../shared/types.js';
 
 function createRule(id: string, tags: string[] = []): Record<string, unknown> {
@@ -39,14 +48,14 @@ function createRule(id: string, tags: string[] = []): Record<string, unknown> {
 describe('vitest-a11y-reporter test utilities', () => {
   it('extractComponentName() extracts atomic component names from module path', () => {
     expect(
-      vitestA11yReporterTestUtils.extractComponentName(
+      extractComponentName(
         'src/components/search/atomic-search-box/atomic-search-box.new.stories.tsx',
         'search-atomic-search-box--default'
       )
     ).toBe('atomic-search-box');
 
     expect(
-      vitestA11yReporterTestUtils.extractComponentName(
+      extractComponentName(
         'src/stories/fallback.stories.tsx',
         'search-atomic-result-list'
       )
@@ -55,14 +64,14 @@ describe('vitest-a11y-reporter test utilities', () => {
 
   it('extractCategory() extracts expected category values', () => {
     expect(
-      vitestA11yReporterTestUtils.extractCategory(
+      extractCategory(
         'src/components/commerce/atomic-product/atomic-product.new.stories.tsx',
         'commerce-atomic-product--default'
       )
     ).toBe('commerce');
 
     expect(
-      vitestA11yReporterTestUtils.extractCategory(
+      extractCategory(
         'src/stories/misc.stories.tsx',
         'search-atomic-search-box--default'
       )
@@ -71,20 +80,20 @@ describe('vitest-a11y-reporter test utilities', () => {
 
   it('extractFramework() detects lit and stencil stories', () => {
     expect(
-      vitestA11yReporterTestUtils.extractFramework(
+      extractFramework(
         'src/components/search/atomic-search-box/atomic-search-box.new.stories.tsx'
       )
     ).toBe('lit');
 
     expect(
-      vitestA11yReporterTestUtils.extractFramework(
+      extractFramework(
         'src/components/search/atomic-search-box/atomic-search-box.stories.tsx'
       )
     ).toBe('stencil');
   });
 
   it('getCriteriaForRule() maps axe rules to WCAG criteria', () => {
-    const criteria = vitestA11yReporterTestUtils.getCriteriaForRule(
+    const criteria = getCriteriaForRule(
       createRule('color-contrast', ['wcag131']) as never
     );
 
@@ -104,20 +113,12 @@ describe('vitest-a11y-reporter test utilities', () => {
   });
 
   it('formatDate() formats date as YYYY-MM-DD', () => {
-    expect(
-      vitestA11yReporterTestUtils.formatDate(
-        new Date('2025-02-17T10:00:00.000Z')
-      )
-    ).toBe('2025-02-17');
+    expect(formatDate(new Date('2025-02-17T10:00:00.000Z'))).toBe('2025-02-17');
   });
 
   it('getAutomationCoveragePercentage() returns rounded percentage strings', () => {
-    expect(
-      vitestA11yReporterTestUtils.getAutomationCoveragePercentage(7, 50)
-    ).toBe('14%');
-    expect(
-      vitestA11yReporterTestUtils.getAutomationCoveragePercentage(1, 0)
-    ).toBe('0%');
+    expect(getAutomationCoveragePercentage(7, 50)).toBe('14%');
+    expect(getAutomationCoveragePercentage(1, 0)).toBe('0%');
   });
 });
 

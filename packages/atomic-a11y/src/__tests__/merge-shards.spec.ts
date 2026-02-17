@@ -1,5 +1,6 @@
 import {describe, expect, it} from 'vitest';
-import {mergeShardsTestUtils} from '../reporter/merge-shards.js';
+import {mergeComponents, mergeCriteria} from '../reporter/merge-shards.js';
+import {createSummary} from '../reporter/summary.js';
 import type {
   A11yComponentReport,
   A11yCriterionReport,
@@ -125,10 +126,7 @@ describe('merge-shards test utilities', () => {
       []
     );
 
-    const merged = mergeShardsTestUtils.mergeComponents([
-      firstReport,
-      secondReport,
-    ]);
+    const merged = mergeComponents([firstReport, secondReport]);
 
     expect(merged).toHaveLength(1);
     expect(merged[0]).toMatchObject({
@@ -197,10 +195,7 @@ describe('merge-shards test utilities', () => {
       }),
     ];
 
-    const merged = mergeShardsTestUtils.mergeCriteria(
-      [firstReport, secondReport],
-      mergedComponents
-    );
+    const merged = mergeCriteria([firstReport, secondReport], mergedComponents);
 
     const criterion143 = merged.find((criterion) => criterion.id === '1.4.3');
     const criterion241 = merged.find((criterion) => criterion.id === '2.4.1');
@@ -229,11 +224,7 @@ describe('merge-shards test utilities', () => {
       createCriterion({id: '2.4.1'}),
     ];
 
-    const summary = mergeShardsTestUtils.createSummary(
-      components,
-      criteria,
-      10
-    );
+    const summary = createSummary(components, criteria, 10);
 
     expect(summary).toMatchObject({
       totalComponents: 2,
