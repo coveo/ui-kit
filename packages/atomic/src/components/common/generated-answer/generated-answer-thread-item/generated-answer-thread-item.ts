@@ -160,16 +160,16 @@ export class GeneratedAnswerThreadItem extends LitElement {
             aria-hidden=${this.isExpanded ? 'false' : 'true'}
           >
             <slot></slot>
-            ${when(
-              this.isExpanded,
-              () =>
-                html`<div
-                  class="thread-content-divider mt-4 h-px w-full bg-gradient-to-r from-transparent via-neutral to-transparent"
-                  aria-hidden="true"
-                ></div>`
-            )}
           </div>
         </div>
+        ${when(
+          this.isExpanded,
+          () =>
+            html`<div
+              class="thread-content-divider mt-2 h-px w-full bg-gradient-to-r from-transparent via-neutral to-transparent"
+              aria-hidden="true"
+            ></div>`
+        )}
       </li>
     `;
   }
