@@ -40,22 +40,19 @@ export interface GeneratedAnswerWithFollowUps extends GeneratedAnswer {
    * Marks the answer as liked.
    * @param answerId - Optional ID of the answer to like. Defaults to the head answer.
    */
-  like(): void;
-  like(answerId: string): void;
+  like(answerId?: string): void;
 
   /**
    * Marks the answer as disliked.
    * @param answerId - Optional ID of the answer to dislike. Defaults to the head answer.
    */
-  dislike(): void;
-  dislike(answerId: string): void;
+  dislike(answerId?: string): void;
 
   /**
    * Logs a copy-to-clipboard interaction for analytics.
    * @param answerId - Optional ID of the copied answer. Defaults to the current answer.
    */
-  logCopyToClipboard(): void;
-  logCopyToClipboard(answerId: string): void;
+  logCopyToClipboard(answerId?: string): void;
 }
 
 export type GeneratedAnswerWithFollowUpsProps = GeneratedAnswerProps &
@@ -157,6 +154,9 @@ export function buildGeneratedAnswerWithFollowUps(
         return;
       }
       // Todo: SFINT-6581 implement logCopyFollowUp action and dispatch here
+      console.warn(
+        'Method not yet implemented to send analytics for copy to clipboard on a followup answer'
+      );
     },
   };
 }
