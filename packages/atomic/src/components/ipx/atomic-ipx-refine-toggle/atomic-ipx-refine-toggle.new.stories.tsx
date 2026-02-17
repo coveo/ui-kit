@@ -18,19 +18,29 @@ const meta: Meta = {
   title: 'IPX/Refine Toggle',
   id: 'atomic-ipx-refine-toggle',
   render: (args) => html`
-    <div style="display: flex; justify-content: center; padding: 1rem;">
-      ${template(args)}
-    </div>
-    <atomic-ipx-refine-modal>
-      <atomic-facet field="author" label="Author"></atomic-facet>
-      <atomic-facet field="source" label="Source"></atomic-facet>
-      <atomic-facet field="filetype" label="File Type"></atomic-facet>
-    </atomic-ipx-refine-modal>
+    <style>
+      atomic-ipx-modal {
+        position: relative;
+        inset: auto;
+      }
+    </style>
+    <atomic-ipx-modal is-open>
+      <div slot="header" style="padding-bottom: 0.5rem;">
+        ${template(args)}
+      </div>
+      <atomic-layout-section section="facets">
+        <atomic-facet field="author" label="Author"></atomic-facet>
+        <atomic-facet field="source" label="Source"></atomic-facet>
+        <atomic-facet field="filetype" label="File Type"></atomic-facet>
+      </atomic-layout-section>
+      <div slot="body"></div>
+      <div slot="footer"></div>
+    </atomic-ipx-modal>
   `,
   decorators: [decorator],
   parameters: {
     ...parameters,
-    layout: 'fullscreen',
+    layout: 'centered',
     actions: {
       handles: events,
     },
@@ -38,7 +48,6 @@ const meta: Meta = {
       ...parameters.docs,
       story: {
         ...parameters.docs?.story,
-        height: '150px',
       },
     },
     msw: {handlers: [...mockSearchApi.handlers]},
