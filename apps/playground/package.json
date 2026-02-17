@@ -25,6 +25,9 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "serve": "^14.2.1",
-    "tsconfig": "workspace:*"
+    "tsconfig": "workspace:*",
+    "globals": "17.3.0",
+    "@eslint/js": "^9.26.0",
+    "@eslint/eslintrc": "3.3.3"
   }
 }
