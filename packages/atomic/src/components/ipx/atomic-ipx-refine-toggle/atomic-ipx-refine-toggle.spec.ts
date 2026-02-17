@@ -341,7 +341,7 @@ describe('atomic-ipx-refine-toggle', () => {
   });
 
   describe('when the button is clicked', () => {
-    it('should create and open the modal', async () => {
+    it('should open the modal', async () => {
       const {element, parts} = await renderRefineToggle({
         searchStatusState: {hasResults: true},
       });
@@ -349,7 +349,7 @@ describe('atomic-ipx-refine-toggle', () => {
       const button = parts(element).button!;
       await userEvent.click(button);
 
-      const modal = element.parentElement?.parentElement?.querySelector(
+      const modal = element.parentElement?.querySelector(
         'atomic-ipx-refine-modal'
       );
       expect(modal).toBeTruthy();
@@ -365,7 +365,7 @@ describe('atomic-ipx-refine-toggle', () => {
       const button = parts(element).button!;
       await userEvent.click(button);
 
-      const modal = element.parentElement?.parentElement?.querySelector(
+      const modal = element.parentElement?.querySelector(
         'atomic-ipx-refine-modal'
       );
       expect(modal?.collapseFacetsAfter).toBe(5);

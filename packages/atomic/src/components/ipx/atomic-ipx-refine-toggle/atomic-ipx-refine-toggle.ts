@@ -76,6 +76,7 @@ export class AtomicIpxRefineToggle
 
   private modalRef?: HTMLAtomicIpxRefineModalElement;
   private buttonRef?: HTMLButtonElement;
+  private modalLoaded = false;
 
   private get numberOfBreadcrumbs(): number {
     const state = this.breadcrumbManagerState;
@@ -94,38 +95,27 @@ export class AtomicIpxRefineToggle
     this.searchStatus = buildSearchStatus(this.bindings.engine);
   }
 
-  private ensureModal() {
-    if (this.modalRef) {
+  private loadModal() {
+    if (this.modalLoaded) {
       return;
     }
+    this.modalLoaded = true;
 
-    const searchRoot =
-      this.closest('atomic-search-interface') ?? this.parentElement;
-    const existingModal =
-      searchRoot?.querySelector<HTMLAtomicIpxRefineModalElement>(
-        'atomic-ipx-refine-modal'
-      );
-
-    if (existingModal) {
-      this.modalRef = existingModal;
-    } else {
-      this.modalRef = document.createElement('atomic-ipx-refine-modal');
-      this.parentElement?.parentElement?.insertBefore(
-        this.modalRef,
-        this.parentElement
-      );
-    }
-
+    this.modalRef = document.createElement('atomic-ipx-refine-modal');
+    this.insertAdjacentElement('beforebegin', this.modalRef);
     this.modalRef.openButton = this.buttonRef;
     this.modalRef.collapseFacetsAfter = this.collapseFacetsAfter;
   }
 
+  private openModal() {
+    if (this.modalRef) {
+      this.modalRef.isOpen = true;
+    }
+  }
+
   private handleClick() {
     this.bindings.store.waitUntilAppLoaded(() => {
-      this.ensureModal();
-      if (this.modalRef) {
-        this.modalRef.isOpen = true;
-      }
+      this.openModal();
     });
   }
 
@@ -148,6 +138,7 @@ export class AtomicIpxRefineToggle
             return;
           }
           this.buttonRef = button as HTMLButtonElement;
+          this.loadModal();
         },
         badge: this.breadcrumbManagerState.hasBreadcrumbs
           ? html`<slot>${this.numberOfBreadcrumbs}</slot>`
