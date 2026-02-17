@@ -311,6 +311,93 @@ export const richResponse: InsightResponse = {
   })),
 };
 
+export const smartSnippetSuggestionsResponse: InsightResponse = {
+  ...baseResponse,
+  results: [
+    {
+      ...getNthResult(0),
+      title: 'Nurse Sharks',
+      raw: {
+        ...getNthResult(0).raw,
+        urihash: 'hLSngTdxUj5Upy7r',
+      },
+    },
+    {
+      ...getNthResult(1),
+      title: 'Brine Shrimp',
+      raw: {
+        ...getNthResult(1).raw,
+        urihash: '4L6GEE1jMUNYhoC',
+      },
+    },
+    {
+      ...getNthResult(2),
+      title: 'Dove Snails',
+      raw: {
+        ...getNthResult(2).raw,
+        urihash: 'vrTSILq8VzJAItOq',
+      },
+    },
+  ],
+  questionAnswer: {
+    documentId: {
+      contentIdKey: 'urihash',
+      contentIdValue: 'hLSngTdxUj5Upy7r',
+    },
+    question: 'What are nurse sharks?',
+    answerSnippet:
+      'Nurse sharks are slow-moving bottom-dwellers known for their docile nature.',
+    score: 1337,
+    relatedQuestions: [
+      {
+        question: 'Where does the name "Nurse Sharks" come from?',
+        answerSnippet: `
+              <p>
+                The name nurse shark is thought to be a corruption of <b>nusse</b>, a name which once referred to the <a href="https://fake.local/glossary/catsharks">catsharks</a> of the family Scyliorhinidae.
+              </p>
+              <p>
+                The nurse shark family name, <b>Ginglymostomatidae</b>, derives from old naming roots for "<b>hinge</b>" and "<b>mouth</b>".
+              </p>
+            `,
+        documentId: {
+          contentIdKey: 'urihash',
+          contentIdValue: 'hLSngTdxUj5Upy7r',
+        },
+        score: 100,
+      },
+      {
+        question: 'What are sea monkeys?',
+        answerSnippet: `
+              <p>
+                Breeds of Artemia are sold as novelty gifts under the marketing name <a href="https://fake.local/glossary/sea-monkeys">Sea-Monkeys</a>.
+              </p>
+              <p>
+                <b>Artemia</b> is a genus of aquatic crustaceans also known as <b>brine shrimp</b>.
+              </p>
+            `,
+        documentId: {
+          contentIdKey: 'urihash',
+          contentIdValue: '4L6GEE1jMUNYhoC',
+        },
+        score: 50,
+      },
+      {
+        question: 'What is a dove snail?',
+        answerSnippet: `
+              <p>
+                The <b>Columbellidae</b>, the dove snails or dove shells, are a family of small sea snails in the order <a href="https://fake.local/glossary/neogastropoda">Neogastropoda</a>.
+              </p>
+            `,
+        documentId: {
+          contentIdKey: 'urihash',
+          contentIdValue: 'vrTSILq8VzJAItOq',
+        },
+        score: 25,
+      },
+    ],
+  },
+};
+
 export const baseFoldedResponse: InsightResponse = {
   ...baseResponse,
   totalCount: 2,

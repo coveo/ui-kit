@@ -218,6 +218,73 @@ render() {
 }
 ```
 
+## Interdependent Component Imports
+
+When a component uses another `atomic-*` custom element, you **must explicitly import** that element's module. This ensures bundlers and tree-shakers include the dependency.
+
+### Template Rendering Imports
+
+When rendering `<atomic-*>` elements in Lit `html` templates, add a side-effect import for each custom element used:
+
+```typescript
+// ✅ Correct: Explicit import for custom element used in template
+import '@/src/components/common/atomic-icon/atomic-icon';
+
+render() {
+  return html`<atomic-icon icon="search"></atomic-icon>`;
+}
+```
+
+```typescript
+// ❌ Incorrect: Missing import - bundler won't include atomic-icon
+render() {
+  return html`<atomic-icon icon="search"></atomic-icon>`;
+}
+```
+
+**This applies to functional render helpers too.** If a function like `renderButton()` returns a template containing `<atomic-icon>`, that file must import `atomic-icon`.
+
+### Dynamic Element Creation Imports
+
+When creating elements dynamically with `document.createElement('atomic-*')`, add a side-effect import:
+
+```typescript
+// ✅ Correct: Explicit import for dynamically created element
+import '@/src/components/search/atomic-refine-modal/atomic-refine-modal';
+
+private createModal() {
+  const modal = document.createElement('atomic-refine-modal');
+  this.host.appendChild(modal);
+}
+```
+
+```typescript
+// ❌ Incorrect: Missing import - element may not be defined at runtime
+private createModal() {
+  const modal = document.createElement('atomic-refine-modal');
+  this.host.appendChild(modal);
+}
+```
+
+### Why This Matters
+
+Custom elements are registered globally when their module is imported. Without an explicit import:
+- **Bundlers** won't include the component in the output (tree-shaking removes it)
+- **Runtime errors** occur when the element isn't defined (`Uncaught TypeError: Illegal constructor`)
+- **Inconsistent behavior** if the element happens to be imported elsewhere in some builds but not others
+
+### Type-Only Imports Are Not Sufficient
+
+Type-only imports don't register the custom element:
+
+```typescript
+// ❌ This only imports the TYPE, not the element registration
+import type {AtomicIcon} from '@/src/components/common/atomic-icon/atomic-icon';
+
+// ✅ This imports AND registers the element
+import '@/src/components/common/atomic-icon/atomic-icon';
+```
+
 ## Storybook Integration
 
 **All new and modified Atomic components MUST have Storybook stories.** Use the Storybook MCP tools for story management:

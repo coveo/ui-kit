@@ -1,5 +1,5 @@
 /*
- * Public API Surface of atomic-angular
+ * Public API surface of atomic-angular
  */
 
 export {Bindings, i18n} from '@coveo/atomic';

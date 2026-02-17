@@ -11,6 +11,7 @@ packages:
   - 'packages/documentation'
   - 'packages/atomic-angular/projects/*'
   - 'packages/atomic'
+  - 'packages/atomic-legacy'
   - 'packages/shopify'
   - 'packages/create-atomic-template'
   - 'packages/create-atomic'

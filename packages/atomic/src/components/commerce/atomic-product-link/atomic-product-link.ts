@@ -99,6 +99,11 @@ export class AtomicProductLink
     }
   }
 
+  willUpdate(changedProperties: Map<string, unknown>) {
+    super.willUpdate(changedProperties);
+    this.linkAttributes = getAttributesFromLinkSlotContent(this, 'attributes');
+  }
+
   @bindingGuard()
   @errorGuard()
   render() {
@@ -115,10 +120,6 @@ export class AtomicProductLink
           );
 
       const {warningMessage} = interactiveProduct;
-      this.linkAttributes = getAttributesFromLinkSlotContent(
-        this,
-        'attributes'
-      );
 
       return renderLinkWithItemAnalytics({
         props: {
