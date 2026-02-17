@@ -137,7 +137,7 @@ export class GeneratedAnswerThreadItem extends LitElement {
               () =>
                 html`<button
                   type="button"
-                  aria-expanded=${this.isExpanded ? 'true' : 'false'}
+                  aria-expanded=${this.isExpanded}
                   aria-controls=${this.contentId}
                   class=${titleButtonClasses}
                   @click=${this.toggle}
