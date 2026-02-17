@@ -61,8 +61,7 @@ export interface A11yReporterOptions {
  *
  * ## Lifecycle
  *
- * 1. Vitest calls {@link onTestResult} (or {@link onTestCaseResult}) for each
- *    completed test case.
+ * 1. Vitest calls {@link onTestCaseResult} for each completed test case.
  * 2. The reporter filters for Storybook projects, extracts axe results from
  *    test metadata (or falls back to parsing rule IDs from error messages),
  *    and accumulates per-component violation/pass/incomplete/inapplicable counts.
@@ -72,8 +71,8 @@ export interface A11yReporterOptions {
  * ## Output
  *
  * - `a11y-report.json` — always written.
- * - `a11y-report.shard-N.json` — additionally written when running in a
- *   sharded CI environment (detected via env vars or `--shard` CLI flag).
+ * - `a11y-report.shard-N.json` — additionally written when running with
+ *   the `--shard` CLI flag.
  *
  * @example
  * ```ts
@@ -105,11 +104,15 @@ export class VitestA11yReporter implements Reporter {
     this.packageMetadata = readPackageMetadata(options.packageJsonPath);
   }
 
+  /**
+   * Processes a single Storybook test case. Extracts axe-core results from
+   * test metadata and accumulates per-component accessibility data.
+   *
+   * Silently skips non-Storybook projects, non-atomic components, and
+   * duplicate story IDs. When axe metadata is unavailable, falls back to
+   * parsing rule IDs from test error messages.
+   */
   public onTestCaseResult(testCase: TestCase): void {
-    this.onTestResult(testCase);
-  }
-
-  public onTestResult(testCase: TestCase): void {
     try {
       if (!testCase.project.name.startsWith('storybook')) {
         return;
@@ -191,6 +194,10 @@ export class VitestA11yReporter implements Reporter {
     }
   }
 
+  /**
+   * Builds the {@link A11yReport} from accumulated results and writes it as
+   * JSON to the configured output directory. No-ops if no results were captured.
+   */
   public async onTestRunEnd(
     _testModules: ReadonlyArray<TestModule>,
     _unhandledErrors: ReadonlyArray<SerializedError>,

@@ -150,7 +150,7 @@ describe('VitestA11yReporter buildReport integration', () => {
       },
     };
 
-    reporter.onTestResult(mockTestCase as never);
+    reporter.onTestCaseResult(mockTestCase as never);
 
     const componentResults = (
       reporter as unknown as {
