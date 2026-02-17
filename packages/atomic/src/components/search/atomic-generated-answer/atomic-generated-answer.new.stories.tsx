@@ -46,17 +46,21 @@ const baseConfig = {
   },
 };
 
+const configWithLegacyAnalytics = {
+  ...baseConfig,
+  analytics: {
+    analyticsMode: 'legacy' as const,
+  },
+};
+
+// Use base config for decorator (shared by all stories)
 const {decorator, play} = wrapInSearchInterface({
   config: baseConfig,
 });
 
-const {decorator: legacyDecorator, play: legacyPlay} = wrapInSearchInterface({
-  config: {
-    ...baseConfig,
-    analytics: {
-      analyticsMode: 'legacy',
-    },
-  },
+// Legacy config play function for specific stories
+const {play: playWithLegacyAnalytics} = wrapInSearchInterface({
+  config: configWithLegacyAnalytics,
 });
 
 const meta: Meta = {
@@ -104,9 +108,8 @@ export const DisableCitationAnchoring: Story = {
 
 export const WithLegacyAnalytics: Story = {
   name: 'With Legacy Analytics',
-  decorators: [layoutDecorator, legacyDecorator],
   play: async (storyContext) => {
-    await legacyPlay(storyContext);
+    await playWithLegacyAnalytics(storyContext);
     const searchBox =
       await storyContext.canvas.findAllByShadowPlaceholderText('Search');
     await storyContext.userEvent.type(
