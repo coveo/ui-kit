@@ -41,6 +41,7 @@ import {shouldDisplayOnCurrentTab} from '@/src/utils/tab-utils';
 import {renderFollowUpInput} from '../../common/generated-answer/render-follow-up-input.js';
 import atomicGeneratedAnswerStyles from './atomic-generated-answer.tw.css.js';
 import '@/src/components/common/generated-answer/generated-answers-thread/generated-answers-thread.js';
+import {classMap} from 'lit/directives/class-map.js';
 
 /**
  * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
@@ -287,7 +288,7 @@ export class AtomicGeneratedAnswer
 
     this.controller.insertFeedbackModal();
 
-    if (window.ResizeObserver && this.collapsible) {
+    if (window.ResizeObserver && this.isCollapsibleEnabled) {
       const debouncedAdaptAnswerHeight = debounce(
         () => this.adaptAnswerHeight(),
         100
@@ -328,7 +329,8 @@ export class AtomicGeneratedAnswer
       ) as GeneratedAnswerState | undefined;
       if (
         oldState &&
-        this.generatedAnswerState?.expanded !== oldState?.expanded
+        this.generatedAnswerState?.expanded !== oldState?.expanded &&
+        this.isCollapsibleEnabled
       ) {
         const container = this.getAnswerContainer();
         if (container) {
@@ -339,6 +341,14 @@ export class AtomicGeneratedAnswer
           );
         }
       }
+    }
+
+    if (
+      (changedProperties.has('collapsible' as keyof this) ||
+        changedProperties.has('agentId' as keyof this)) &&
+      !this.isCollapsibleEnabled
+    ) {
+      this.resetCollapsibleStyles();
     }
   }
 
@@ -397,9 +407,18 @@ export class AtomicGeneratedAnswer
             ${when(
               this.isAnswerVisible,
               () =>
-                html` <div part="generated-content-container" class="px-6 pb-6">
-                  <article>${this.renderAnswerContent()}</article>
-                  <div>
+                html` <div
+                    part="generated-content-container"
+                    class=${classMap({
+                      'px-6': true,
+                      'pb-6': true,
+                      'agent-scrollable': this.hasAgentId,
+                    })}
+                  >
+                    <article>${this.renderAnswerContent()}</article>
+                  </div>
+                  <div class="px-6 py-2">
+                    <div class="mb-2">
                     ${renderFollowUpInput({
                       props: {
                         i18n: this.bindings.i18n,
@@ -415,14 +434,18 @@ export class AtomicGeneratedAnswer
                         },
                       },
                     })}
+                    </div>
+                    <div class="mb-2">
+                ${renderDisclaimer({
+                  props: {
+                    i18n: this.bindings.i18n,
+                    isStreaming: !!this.generatedAnswerState.isStreaming,
+                  },
+                })}
+                    </div>
+    
                   </div>
-                  ${renderDisclaimer({
-                    props: {
-                      i18n: this.bindings.i18n,
-                      isStreaming: !!this.generatedAnswerState.isStreaming,
-                    },
-                  })}
-                </div>`
+                  `
             )}
           </div>
         </aside>
@@ -530,6 +553,9 @@ export class AtomicGeneratedAnswer
   }
 
   private adaptAnswerHeight() {
+    if (!this.isCollapsibleEnabled) {
+      return;
+    }
     const answerHeight = this.shadowRoot
       ?.querySelector('[part="generated-text"]')
       ?.getBoundingClientRect().height;
@@ -561,6 +587,9 @@ export class AtomicGeneratedAnswer
   }
 
   private updateAnswerHeight() {
+    if (!this.isCollapsibleEnabled) {
+      return;
+    }
     const container = this.getAnswerContainer() as HTMLElement;
     const footer = this.getAnswerFooter();
     const maxHeight = this.validateMaxCollapsedHeight();
@@ -648,9 +677,12 @@ export class AtomicGeneratedAnswer
         .generatedAnswers=${allGeneratedAnswer}
         .i18n=${this.bindings.i18n}
         .renderCitations=${this.renderCitationsList.bind(this)}
-        .onClickLike=${(answerId: string) => this.generatedAnswer.like(answerId)}
-        .onClickDislike=${(answerId: string) => this.generatedAnswer.dislike(answerId)}
-        .onCopyToClipboard=${(answerId: string) => this.generatedAnswer.logCopyToClipboard(answerId)}
+        .onClickLike=${(answerId: string) =>
+          this.generatedAnswer.like(answerId)}
+        .onClickDislike=${(answerId: string) =>
+          this.generatedAnswer.dislike(answerId)}
+        .onCopyToClipboard=${(answerId: string) =>
+          this.generatedAnswer.logCopyToClipboard(answerId)}
       ></generated-answers-thread>`;
     }
 
@@ -667,6 +699,27 @@ export class AtomicGeneratedAnswer
         onClickShowButton: () => this.clickOnShowButton(),
       },
     });
+  }
+
+  private get hasAgentId() {
+    return Boolean(this.agentId?.trim());
+  }
+
+  private get isCollapsibleEnabled() {
+    return this.collapsible && !this.hasAgentId;
+  }
+
+  private resetCollapsibleStyles() {
+    const container = this.getAnswerContainer();
+    const footer = this.getAnswerFooter();
+
+    if (!container || !footer) {
+      return;
+    }
+
+    this.toggleClass(container, 'answer-collapsed', false);
+    this.toggleClass(footer, 'is-collapsible', false);
+    this.toggleClass(footer, 'generating-label-visible', false);
   }
 
   private renderCardHeaderWrapper() {
