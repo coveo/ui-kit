@@ -45,13 +45,19 @@ const REPORTER_NAME = 'VitestA11yReporter';
  * Configuration options for {@link VitestA11yReporter}.
  */
 export interface A11yReporterOptions {
-  /** Directory where JSON reports are written. Defaults to `'a11y/reports'`. */
+  /** Directory where JSON reports are written.
+   * @default 'a11y/reports' */
   outputDir?: string;
-  /** Report filename. Defaults to `'a11y-report.json'`. */
+
+  /** Report filename.
+   * @default 'a11y-report.json' */
   outputFilename?: string;
-  /** Total WCAG 2.2 AA criteria used to calculate coverage percentages. Defaults to `55`. */
+
+  /** Total WCAG 2.2 AA criteria used to calculate coverage percentages.
+   * @default 55 */
   totalCriteria?: number;
-  /** Path to a `package.json` from which product/tool versions are read. */
+
+  /** Path to a `package.json` from which product/tool versions are read (e.g. atomic package). */
   packageJsonPath?: string;
 }
 
@@ -59,10 +65,11 @@ export interface A11yReporterOptions {
  * Custom Vitest reporter that captures axe-core accessibility results from
  * Storybook test runs and produces a structured WCAG 2.2 AA JSON report.
  *
+ * for more info on Vitest reporters, visit https://vitest.dev/api/advanced/reporters.html
+ *
  * ## Lifecycle
  *
- * 1. Vitest calls {@link onTestResult} (or {@link onTestCaseResult}) for each
- *    completed test case.
+ * 1. Vitest calls {@link onTestCaseResult} for each completed test case.
  * 2. The reporter filters for Storybook projects, extracts axe results from
  *    test metadata (or falls back to parsing rule IDs from error messages),
  *    and accumulates per-component violation/pass/incomplete/inapplicable counts.
@@ -72,8 +79,8 @@ export interface A11yReporterOptions {
  * ## Output
  *
  * - `a11y-report.json` — always written.
- * - `a11y-report.shard-N.json` — additionally written when running in a
- *   sharded CI environment (detected via env vars or `--shard` CLI flag).
+ * - `a11y-report.shard-N.json` — additionally written when running with
+ *   the `--shard` CLI flag.
  *
  * @example
  * ```ts
@@ -105,11 +112,15 @@ export class VitestA11yReporter implements Reporter {
     this.packageMetadata = readPackageMetadata(options.packageJsonPath);
   }
 
+  /**
+   * Processes a single Storybook test case. Extracts axe-core results from
+   * test metadata and accumulates per-component accessibility data.
+   *
+   * Silently skips non-Storybook projects, non-atomic components, and
+   * duplicate story IDs. When axe metadata is unavailable, falls back to
+   * parsing rule IDs from test error messages.
+   */
   public onTestCaseResult(testCase: TestCase): void {
-    this.onTestResult(testCase);
-  }
-
-  public onTestResult(testCase: TestCase): void {
     try {
       if (!testCase.project.name.startsWith('storybook')) {
         return;
@@ -191,6 +202,10 @@ export class VitestA11yReporter implements Reporter {
     }
   }
 
+  /**
+   * Builds the {@link A11yReport} from accumulated results and writes it as
+   * JSON to the configured output directory. No-ops if no results were captured.
+   */
   public async onTestRunEnd(
     _testModules: ReadonlyArray<TestModule>,
     _unhandledErrors: ReadonlyArray<SerializedError>,
