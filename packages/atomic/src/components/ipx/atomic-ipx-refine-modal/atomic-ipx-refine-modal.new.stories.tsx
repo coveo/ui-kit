@@ -5,7 +5,6 @@ import type {
 } from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
-import {within} from 'shadow-dom-testing-library';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -47,25 +46,8 @@ const meta: Meta = {
   argTypes,
   play: async (context) => {
     await play(context);
-    const {canvasElement, step, userEvent} = context;
-    const refineToggleElement = within(
-      canvasElement.querySelector('atomic-ipx-refine-toggle')!
-    );
-    const refineToggleButton = await refineToggleElement.findByShadowRole(
-      'button',
-      {
-        name: 'Filters',
-      }
-    );
-    // Facets call `bindings.store.registerFacet()` during initialization to register themselves with the interface store.
-    // The refine modal uses `bindings.store.getAllFacets()` to retrieve and render these registered facets.
-    // This delay ensures facets have completed initialization and registration before the modal attempts to render them.
+    // Small delay to ensure facets have completed initialization and registration
     await new Promise((resolve) => setTimeout(resolve, 300));
-    await step('Open refine modal', async () => {
-      await userEvent.click(refineToggleButton);
-    });
-    // It's tough to wait exactly for the modal to be visible because of animations. Thus, we add a small delay here.
-    await new Promise((resolve) => setTimeout(resolve, 100));
   },
 };
 
@@ -74,7 +56,10 @@ export default meta;
 export const Default: Story = {
   decorators: [
     () => html`
-      <atomic-ipx-refine-toggle></atomic-ipx-refine-toggle>
+      <atomic-ipx-refine-modal
+        ?is-open=${true}
+        collapse-facets-after="0"
+      ></atomic-ipx-refine-modal>
       <div style="display:none;">
         <atomic-facet field="author" label="Authors"></atomic-facet>
         <atomic-facet field="language" label="Language"></atomic-facet>
