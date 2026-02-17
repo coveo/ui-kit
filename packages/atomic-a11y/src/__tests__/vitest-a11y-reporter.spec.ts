@@ -4,7 +4,9 @@ import {
   getCriteriaForRule,
 } from '../reporter/axe-integration.js';
 import {stripAnsiSequences} from '../reporter/error-parsing.js';
+import {buildA11yReport} from '../reporter/report-builder.js';
 import {
+  type ComponentAccumulator,
   formatDate,
   getAutomationCoveragePercentage,
 } from '../reporter/reporter-utils.js';
@@ -14,7 +16,6 @@ import {
   extractFramework,
 } from '../reporter/storybook-extraction.js';
 import {VitestA11yReporter} from '../reporter/vitest-a11y-reporter.js';
-import type {A11yReport} from '../shared/types.js';
 
 function createRule(id: string, tags: string[] = []): Record<string, unknown> {
   return {
@@ -150,9 +151,15 @@ describe('VitestA11yReporter buildReport integration', () => {
     };
 
     reporter.onTestResult(mockTestCase as never);
-    const report = (
-      reporter as unknown as {buildReport: () => A11yReport}
-    ).buildReport();
+
+    const componentResults = (
+      reporter as unknown as {
+        componentResults: Map<string, ComponentAccumulator>;
+      }
+    ).componentResults;
+    const report = buildA11yReport(componentResults, 10, {
+      devDependencies: {'axe-core': '4.10.0', storybook: '8.0.0'},
+    });
 
     expect(report.components).toHaveLength(1);
     expect(report.components[0]).toMatchObject({
