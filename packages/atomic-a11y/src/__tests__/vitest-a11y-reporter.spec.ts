@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import {extractCriteriaFromTags} from '../reporter/axe-integration.js';
-import {stripAnsiSequences} from '../reporter/reporter-utils.js';
+import {stripAnsiSequences} from '../reporter/error-parsing.js';
 import {
   VitestA11yReporter,
   vitestA11yReporterTestUtils,

@@ -29,23 +29,24 @@ import {
   getIncompleteMessage,
   isAxeResults,
 } from './axe-integration.js';
+import {extractA11yRuleIdsFromTestErrors} from './error-parsing.js';
 import {
   type ComponentAccumulator,
-  extractA11yRuleIdsFromTestErrors,
-  extractCategory,
-  extractComponentName,
-  extractFramework,
   formatDate,
   getAutomationCoveragePercentage,
   getCriterionMetadata,
-  normalizePath,
   type PackageMetadata,
   readPackageMetadata,
-  resolveShardInfo,
-  type ShardInfo,
   type StorybookReport,
   type StorybookTaskMeta,
 } from './reporter-utils.js';
+import {resolveShardInfo, type ShardInfo} from './shard-resolution.js';
+import {
+  extractCategory,
+  extractComponentName,
+  extractFramework,
+  normalizePath,
+} from './storybook-extraction.js';
 import {createSummary} from './summary.js';
 
 const REPORTER_NAME = 'VitestA11yReporter';
