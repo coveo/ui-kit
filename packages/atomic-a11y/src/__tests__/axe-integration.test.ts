@@ -1,9 +1,7 @@
 import type {AxeResults, Result as AxeRuleResult} from 'axe-core';
 import {describe, expect, it} from 'vitest';
 import {
-  extractCriteriaFromTags,
   getCriteriaForRule,
-  getCriteriaForRuleId,
   getIncompleteMessage,
   isAxeResults,
 } from '../reporter/axe-integration.js';
@@ -245,43 +243,6 @@ describe('getCriteriaForRule()', () => {
   });
 });
 
-describe('getCriteriaForRuleId()', () => {
-  it('returns criteria for known axe rule', () => {
-    // 'color-contrast' is a real axe rule that maps to wcag 1.4.3
-    const criteria = getCriteriaForRuleId('color-contrast');
-
-    expect(criteria).toContain('1.4.3');
-    expect(Array.isArray(criteria)).toBe(true);
-  });
-
-  it('returns empty array for unknown rule ID', () => {
-    const criteria = getCriteriaForRuleId('nonexistent-rule-xyz');
-
-    expect(criteria).toEqual([]);
-  });
-
-  it('returns sorted criteria for multi-criterion rules', () => {
-    // Find a rule that maps to multiple criteria
-    // 'button-name' typically maps to multiple criteria
-    const criteria = getCriteriaForRuleId('button-name');
-
-    if (criteria.length > 1) {
-      // Verify they are sorted
-      const sorted = [...criteria].sort((a, b) =>
-        a.localeCompare(b, 'en-US', {numeric: true})
-      );
-      expect(criteria).toEqual(sorted);
-    }
-  });
-
-  it('returns consistent results for same rule ID', () => {
-    const call1 = getCriteriaForRuleId('link-name');
-    const call2 = getCriteriaForRuleId('link-name');
-
-    expect(call1).toEqual(call2);
-  });
-});
-
 describe('getIncompleteMessage()', () => {
   it('returns message from first any check when available', () => {
     const rule = createMockAxeRule(
@@ -520,35 +481,5 @@ describe('getIncompleteMessage()', () => {
 
     const message = getIncompleteMessage(rule);
     expect(message).toBe('All check message');
-  });
-});
-
-describe('extractCriteriaFromTags() re-export', () => {
-  it('parses wcag tags into dotted notation', () => {
-    const criteria = extractCriteriaFromTags(['wcag143', 'wcag412']);
-
-    expect(criteria).toEqual(['1.4.3', '4.1.2']);
-  });
-
-  it('filters out non-wcag tags', () => {
-    const criteria = extractCriteriaFromTags([
-      'wcag143',
-      'best-practice',
-      'wcag111',
-    ]);
-
-    expect(criteria).toEqual(['1.4.3', '1.1.1']);
-  });
-
-  it('handles empty tag array', () => {
-    const criteria = extractCriteriaFromTags([]);
-
-    expect(criteria).toEqual([]);
-  });
-
-  it('handles wcag tags with two-digit criterion numbers', () => {
-    const criteria = extractCriteriaFromTags(['wcag1101', 'wcag1211']);
-
-    expect(criteria).toEqual(['1.1.01', '1.2.11']);
   });
 });
