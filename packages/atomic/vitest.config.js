@@ -1,5 +1,6 @@
 import {readFileSync} from 'node:fs';
 import path, {dirname, resolve} from 'node:path';
+import {VitestA11yReporter} from '@coveo/atomic-a11y';
 import replacePlugin from '@rollup/plugin-replace';
 import {storybookTest} from '@storybook/addon-vitest/vitest-plugin';
 import tailwindcss from '@tailwindcss/vite';
@@ -155,5 +156,14 @@ const atomicDefault = defineConfig({
 });
 
 export default mergeConfig(atomicDefault, {
-  test: {projects: [atomicDefault, storybook]},
+  test: {
+    reporters: [
+      'default',
+      new VitestA11yReporter({
+        outputDir: path.resolve(import.meta.dirname, '../atomic-a11y/reports'),
+        packageJsonPath: path.resolve(import.meta.dirname, 'package.json'),
+      }),
+    ],
+    projects: [atomicDefault, storybook],
+  },
 });
