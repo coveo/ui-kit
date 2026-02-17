@@ -9,15 +9,10 @@
     "dist"
   ],
   "scripts": {
-    "test": "vitest run",
     "generate:wcag": "node scripts/generate-wcag-criteria.mjs",
     "build": "pnpm generate:wcag && tsc -p tsconfig.json"
   },
-  "dependencies": {
-    "axe-core": "4.10.3"
-  },
   "devDependencies": {
-    "typescript": "catalog:",
-    "vitest": "catalog:"
+    "typescript": "catalog:"
   }
 }
