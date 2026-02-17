@@ -452,20 +452,13 @@ importers:
         version: 8.0.4
 
   packages/atomic-a11y:
-    dependencies:
+    devDependencies:
       axe-core:
         specifier: 4.10.3
         version: 4.10.3
-    devDependencies:
-      tsx:
-        specifier: 4.21.0
-        version: 4.21.0
       typescript:
         specifier: 5.8.3
         version: 5.8.3
-      vitest:
-        specifier: 'catalog:'
-        version: 4.0.10(@types/debug@4.1.12)(@types/node@25.0.10)(@vitest/browser-playwright@4.0.10)(jiti@2.6.1)(jsdom@20.0.3)(less@4.5.1)(lightningcss@1.30.1)(msw@2.11.4(@types/node@25.0.10)(typescript@5.8.3))(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
 
   packages/atomic-angular:
     dependencies:
@@ -10423,7 +10416,6 @@ packages:
   keygrip@1.1.0:
     resolution: {integrity: sha512-iYSchDJ+liQ8iwbSI2QqsQOvqv58eJCEanyJPJi+Khyu8smkcKSFUCbPwzFcL7YVtZ6eONjqRX/38caJ7QjRAQ==}
     engines: {node: '>= 0.6'}
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
@@ -20286,10 +20278,10 @@ snapshots:
       - utf-8-validate
       - vite
 
-  '@vitest/browser-playwright@4.0.10(msw@2.11.4(@types/node@25.0.10)(typescript@5.8.3))(playwright@1.58.0-alpha-1763757971000)(vite@6.4.1(@types/node@25.0.10)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.30.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vitest@4.0.10)':
+  '@vitest/browser-playwright@4.0.10(msw@2.11.4(@types/node@25.0.10)(typescript@5.8.3))(playwright@1.58.0-alpha-1763757971000)(vite@7.2.2(@types/node@25.0.10)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.30.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vitest@4.0.10)':
     dependencies:
-      '@vitest/browser': 4.0.10(msw@2.11.4(@types/node@25.0.10)(typescript@5.8.3))(vite@6.4.1(@types/node@25.0.10)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.30.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vitest@4.0.10)
-      '@vitest/mocker': 4.0.10(msw@2.11.4(@types/node@25.0.10)(typescript@5.8.3))(vite@6.4.1(@types/node@25.0.10)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.30.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))
+      '@vitest/browser': 4.0.10(msw@2.11.4(@types/node@25.0.10)(typescript@5.8.3))(vite@7.2.2(@types/node@25.0.10)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.30.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vitest@4.0.10)
+      '@vitest/mocker': 4.0.10(msw@2.11.4(@types/node@25.0.10)(typescript@5.8.3))(vite@7.2.2(@types/node@25.0.10)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.30.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))
       playwright: 1.58.0-alpha-1763757971000
       tinyrainbow: 3.0.3
       vitest: 4.0.10(@types/debug@4.1.12)(@types/node@25.0.10)(@vitest/browser-playwright@4.0.10)(jiti@2.6.1)(jsdom@20.0.3)(less@4.5.1)(lightningcss@1.30.1)(msw@2.11.4(@types/node@25.0.10)(typescript@5.8.3))(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
@@ -20317,9 +20309,9 @@ snapshots:
       - utf-8-validate
       - vite
 
-  '@vitest/browser@4.0.10(msw@2.11.4(@types/node@25.0.10)(typescript@5.8.3))(vite@6.4.1(@types/node@25.0.10)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.30.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vitest@4.0.10)':
+  '@vitest/browser@4.0.10(msw@2.11.4(@types/node@25.0.10)(typescript@5.8.3))(vite@7.2.2(@types/node@25.0.10)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.30.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vitest@4.0.10)':
     dependencies:
-      '@vitest/mocker': 4.0.10(msw@2.11.4(@types/node@25.0.10)(typescript@5.8.3))(vite@6.4.1(@types/node@25.0.10)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.30.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))
+      '@vitest/mocker': 4.0.10(msw@2.11.4(@types/node@25.0.10)(typescript@5.8.3))(vite@7.2.2(@types/node@25.0.10)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.30.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))
       '@vitest/utils': 4.0.10
       magic-string: 0.30.21
       pixelmatch: 7.1.0
@@ -20442,6 +20434,16 @@ snapshots:
     optionalDependencies:
       msw: 2.11.4(@types/node@25.0.10)(typescript@5.8.3)
       vite: 6.4.1(@types/node@25.0.10)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.30.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
+
+  '@vitest/mocker@4.0.10(msw@2.11.4(@types/node@25.0.10)(typescript@5.8.3))(vite@7.2.2(@types/node@25.0.10)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.30.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))':
+    dependencies:
+      '@vitest/spy': 4.0.10
+      estree-walker: 3.0.3
+      magic-string: 0.30.21
+    optionalDependencies:
+      msw: 2.11.4(@types/node@25.0.10)(typescript@5.8.3)
+      vite: 7.2.2(@types/node@25.0.10)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.30.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
+    optional: true
 
   '@vitest/pretty-format@3.1.1':
     dependencies:
@@ -22874,6 +22876,7 @@ snapshots:
       '@esbuild/win32-arm64': 0.27.3
       '@esbuild/win32-ia32': 0.27.3
       '@esbuild/win32-x64': 0.27.3
+    optional: true
 
   escalade@3.2.0: {}
 
@@ -23754,6 +23757,7 @@ snapshots:
   get-tsconfig@4.13.6:
     dependencies:
       resolve-pkg-maps: 1.0.0
+    optional: true
 
   get-uri@6.0.5:
     dependencies:
@@ -28228,7 +28232,8 @@ snapshots:
       http-errors: 1.6.3
       path-is-absolute: 1.0.1
 
-  resolve-pkg-maps@1.0.0: {}
+  resolve-pkg-maps@1.0.0:
+    optional: true
 
   resolve-url-loader@5.0.0:
     dependencies:
@@ -29490,6 +29495,7 @@ snapshots:
       get-tsconfig: 4.13.6
     optionalDependencies:
       fsevents: 2.3.3
+    optional: true
 
   tuf-js@3.1.0:
     dependencies:
@@ -30293,7 +30299,7 @@ snapshots:
     optionalDependencies:
       '@types/debug': 4.1.12
       '@types/node': 25.0.10
-      '@vitest/browser-playwright': 4.0.10(msw@2.11.4(@types/node@25.0.10)(typescript@5.8.3))(playwright@1.58.0-alpha-1763757971000)(vite@6.4.1(@types/node@25.0.10)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.30.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vitest@4.0.10)
+      '@vitest/browser-playwright': 4.0.10(msw@2.11.4(@types/node@25.0.10)(typescript@5.8.3))(playwright@1.58.0-alpha-1763757971000)(vite@7.2.2(@types/node@25.0.10)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.30.1)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vitest@4.0.10)
       jsdom: 20.0.3
     transitivePeerDependencies:
       - jiti

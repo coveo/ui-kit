@@ -18,11 +18,9 @@ import {
 import type {SupportedFramework} from '../shared/types.js';
 import {
   getCriteriaForRule,
-  getCriteriaForRuleId,
   getIncompleteMessage,
   isAxeResults,
 } from './axe-integration.js';
-import {extractA11yRuleIdsFromTestErrors} from './error-parsing.js';
 import {buildA11yReport} from './report-builder.js';
 import {
   type ComponentAccumulator,
@@ -71,8 +69,7 @@ export interface A11yReporterOptions {
  *
  * 1. Vitest calls {@link onTestCaseResult} for each completed test case.
  * 2. The reporter filters for Storybook projects, extracts axe results from
- *    test metadata (or falls back to parsing rule IDs from error messages),
- *    and accumulates per-component violation/pass/incomplete/inapplicable counts.
+ *    test metadata, and accumulates per-component violation/pass/incomplete/inapplicable counts.
  * 3. At the end of the run, {@link onTestRunEnd} builds the final
  *    {@link A11yReport} and writes it to disk.
  *
@@ -117,8 +114,7 @@ export class VitestA11yReporter implements Reporter {
    * test metadata and accumulates per-component accessibility data.
    *
    * Silently skips non-Storybook projects, non-atomic components, and
-   * duplicate story IDs. When axe metadata is unavailable, falls back to
-   * parsing rule IDs from test error messages.
+   * duplicate story IDs.
    */
   public onTestCaseResult(testCase: TestCase): void {
     try {
@@ -135,11 +131,8 @@ export class VitestA11yReporter implements Reporter {
         a11yReport && isAxeResults(a11yReport.result)
           ? a11yReport.result
           : null;
-      const failedRuleIds = axeResults
-        ? []
-        : extractA11yRuleIdsFromTestErrors(testCase, getCriteriaForRuleId);
 
-      if (!axeResults && failedRuleIds.length === 0) {
+      if (!axeResults) {
         return;
       }
 
@@ -170,33 +163,26 @@ export class VitestA11yReporter implements Reporter {
       }
       component.storyIds.add(storyId);
 
-      if (axeResults) {
-        const buckets = [
-          'violations',
-          'passes',
-          'incomplete',
-          'inapplicable',
-        ] as const;
-        for (const bucket of buckets) {
-          component.automated[bucket] += axeResults[bucket].length;
-          this.collectCriteria(component, axeResults[bucket]);
-        }
-
-        for (const incompleteRule of axeResults.incomplete) {
-          component.automated.incompleteDetails.push({
-            ruleId: incompleteRule.id,
-            impact: incompleteRule.impact ?? 'unknown',
-            wcagCriteria: getCriteriaForRule(incompleteRule),
-            nodes: incompleteRule.nodes.length,
-            message: getIncompleteMessage(incompleteRule),
-          });
-        }
-
-        return;
+      const buckets = [
+        'violations',
+        'passes',
+        'incomplete',
+        'inapplicable',
+      ] as const;
+      for (const bucket of buckets) {
+        component.automated[bucket] += axeResults[bucket].length;
+        this.collectCriteria(component, axeResults[bucket]);
       }
 
-      component.automated.violations += failedRuleIds.length;
-      this.collectCriteriaFromRuleIds(component, failedRuleIds);
+      for (const incompleteRule of axeResults.incomplete) {
+        component.automated.incompleteDetails.push({
+          ruleId: incompleteRule.id,
+          impact: incompleteRule.impact ?? 'unknown',
+          wcagCriteria: getCriteriaForRule(incompleteRule),
+          nodes: incompleteRule.nodes.length,
+          message: getIncompleteMessage(incompleteRule),
+        });
+      }
     } catch (error) {
       this.warn('Unable to process Storybook a11y test result.', error);
     }
@@ -284,17 +270,6 @@ export class VitestA11yReporter implements Reporter {
   ): void {
     for (const rule of rules) {
       for (const criterion of getCriteriaForRule(rule)) {
-        component.automated.criteriaCovered.add(criterion);
-      }
-    }
-  }
-
-  private collectCriteriaFromRuleIds(
-    component: ComponentAccumulator,
-    ruleIds: string[]
-  ): void {
-    for (const ruleId of ruleIds) {
-      for (const criterion of getCriteriaForRuleId(ruleId)) {
         component.automated.criteriaCovered.add(criterion);
       }
     }
