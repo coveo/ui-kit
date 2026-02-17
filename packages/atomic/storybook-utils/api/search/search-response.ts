@@ -7,7 +7,9 @@ const getNthResult = (n: number) => ({
     systitle: `Sample Result ${n}`,
     sysdescription: 'This is a sample result excerpt for testing.',
     sysuri: `https://example.com/search/${n}`,
+    urihash: '7oQhK429ñzbuW5c7',
   },
+  uri: `https://example.com/search/${n}`,
 });
 
 export interface SearchResponse {

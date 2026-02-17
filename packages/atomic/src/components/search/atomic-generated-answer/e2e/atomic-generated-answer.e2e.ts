@@ -324,4 +324,22 @@ test.describe('atomic-generated-answer', () => {
       });
     });
   });
+
+  test.describe
+    .only('with legacy analytics', () => {
+      test.beforeEach(async ({generatedAnswer}) => {
+        await generatedAnswer.load({story: 'with-legacy-analytics'});
+      });
+      test('should log an analytics event with the legacy analytics mode', async ({
+        generatedAnswer,
+      }) => {
+        const analyticsRequestPromise =
+          generatedAnswer.waitForLegacyAnalyticsSearchboxSubmitRequest();
+
+        const analyticsRequest = await analyticsRequestPromise;
+        const requestBody = analyticsRequest.postDataJSON();
+
+        expect(requestBody.actionCause).toBe('searchboxSubmit');
+      });
+    });
 });
