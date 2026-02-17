@@ -9,7 +9,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json"
+    "generate:wcag": "node scripts/generate-wcag-criteria.mjs",
+    "build": "pnpm generate:wcag && tsc -p tsconfig.json"
   },
   "devDependencies": {
     "typescript": "catalog:"
