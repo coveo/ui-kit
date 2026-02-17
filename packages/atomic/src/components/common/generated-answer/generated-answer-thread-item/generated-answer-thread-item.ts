@@ -156,20 +156,20 @@ export class GeneratedAnswerThreadItem extends LitElement {
               () => html`<span class=${timelineConnectorClasses}> </span>`
             )}
           </div>
-          <div
-            id=${this.contentId}
-            class="pl-2 py-1.5"
-            ?hidden=${!this.isExpanded}
-            aria-hidden=${this.isExpanded ? 'false' : 'true'}
-          >
-            <slot></slot>
+          <div id=${this.contentId} class="pl-2 py-1.5">
+            <div class="mb-2"
+              ?hidden=${!this.isExpanded}
+              aria-hidden=${this.isExpanded ? 'false' : 'true'}
+            >
+              <slot></slot>
+            </div>
           </div>
         </div>
         ${when(
           this.isExpanded,
           () =>
             html`<div
-              class="thread-content-divider mt-2 h-px w-full bg-gradient-to-r from-transparent via-neutral to-transparent"
+              class="thread-content-divider h-px w-full bg-gradient-to-r from-transparent via-neutral to-transparent"
               aria-hidden="true"
             ></div>`
         )}
