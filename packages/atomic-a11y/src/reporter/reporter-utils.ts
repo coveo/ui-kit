@@ -1,7 +1,7 @@
-import {readFileSync} from 'node:fs';
+import {existsSync, readFileSync} from 'node:fs';
 import path from 'node:path';
-import {fileURLToPath} from 'node:url';
 import {getCriterionMetadata as lookupCriterionMetadata} from '../data/criterion-metadata.js';
+import {isRecord} from '../shared/guards.js';
 import type {CriterionMetadata, SupportedFramework} from '../shared/types.js';
 
 export interface PackageMetadata {
@@ -41,17 +41,42 @@ export interface ComponentAccumulator {
   };
 }
 
-export function readPackageMetadata(packageJsonPath?: string): PackageMetadata {
-  try {
-    const currentFilePath = fileURLToPath(import.meta.url);
-    const resolvedPackageJsonPath =
-      packageJsonPath ??
-      path.resolve(path.dirname(currentFilePath), '../../package.json');
-    const packageJsonContent = readFileSync(resolvedPackageJsonPath, 'utf8');
-    return JSON.parse(packageJsonContent) as PackageMetadata;
-  } catch {
-    return {};
+function resolvePackageJsonPath(packageJsonPath?: string): string {
+  const resolvedPath = packageJsonPath
+    ? path.resolve(packageJsonPath)
+    : path.resolve(process.cwd(), 'package.json');
+
+  if (existsSync(resolvedPath)) {
+    return resolvedPath;
   }
+
+  throw new Error(
+    `[VitestA11yReporter] package.json not found at "${resolvedPath}". ` +
+      'Provide A11yReporterOptions.packageJsonPath explicitly.'
+  );
+}
+
+export function readPackageMetadata(packageJsonPath?: string): PackageMetadata {
+  const resolvedPath = resolvePackageJsonPath(packageJsonPath);
+  const content = readFileSync(resolvedPath, 'utf8');
+
+  let parsedMetadata: unknown;
+  try {
+    parsedMetadata = JSON.parse(content);
+  } catch (error) {
+    throw new Error(
+      `[VitestA11yReporter] Invalid JSON in package metadata file "${resolvedPath}".`,
+      {cause: error}
+    );
+  }
+
+  if (!isRecord(parsedMetadata)) {
+    throw new Error(
+      `[VitestA11yReporter] package.json must contain a JSON object at "${resolvedPath}".`
+    );
+  }
+
+  return parsedMetadata as PackageMetadata;
 }
 
 export function formatDate(date: Date): string {

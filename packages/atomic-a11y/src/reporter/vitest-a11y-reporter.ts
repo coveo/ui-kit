@@ -45,19 +45,27 @@ const REPORTER_NAME = 'VitestA11yReporter';
  * Configuration options for {@link VitestA11yReporter}.
  */
 export interface A11yReporterOptions {
-  /** Directory where JSON reports are written. Defaults to `'a11y/reports'`. */
+  /** Directory where JSON reports are written.
+   * @default 'a11y/reports' */
   outputDir?: string;
-  /** Report filename. Defaults to `'a11y-report.json'`. */
+
+  /** Report filename.
+   * @default 'a11y-report.json' */
   outputFilename?: string;
-  /** Total WCAG 2.2 AA criteria used to calculate coverage percentages. Defaults to `55`. */
+
+  /** Total WCAG 2.2 AA criteria used to calculate coverage percentages.
+   * @default 55 */
   totalCriteria?: number;
-  /** Path to a `package.json` from which product/tool versions are read. */
+
+  /** Path to a `package.json` from which product/tool versions are read (e.g. atomic package). */
   packageJsonPath?: string;
 }
 
 /**
  * Custom Vitest reporter that captures axe-core accessibility results from
  * Storybook test runs and produces a structured WCAG 2.2 AA JSON report.
+ *
+ * for more info on Vitest reporters, visit https://vitest.dev/api/advanced/reporters.html
  *
  * ## Lifecycle
  *
