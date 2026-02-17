@@ -67,7 +67,6 @@ atomic-a11y/
 ## ANTI-PATTERNS (THIS PROJECT)
 
 - **DO NOT** manually edit `src/data/wcag-criteria.ts` — it is auto-generated; run `pnpm generate:wcag` instead
-- **DO NOT** suppress the biome lint warning in `error-parsing.ts` (`ANSI_ESCAPE_PATTERN`) without updating the TODO
 - **DO NOT** throw from reporter lifecycle hooks — use `this.warn()` instead
 - Conformance values on criteria are always `'notEvaluated'` in automated reports — manual audit sets final conformance
 - Stencil components are tracked but `stencilExcluded: true` in summary — Lit is the target framework
@@ -78,7 +77,7 @@ atomic-a11y/
 Storybook Test Run
   → Vitest calls onTestCaseResult() per test case
   → Filter: only project.name.startsWith('storybook')
-  → Extract: axe results from meta.reports OR fallback to error-parsed rule IDs
+  → Extract: axe results from meta.reports (populated by @storybook/addon-a11y)
   → Map: axe rules → WCAG criteria via tag parsing (wcagXYZ → X.Y.Z)
   → Accumulate: per-component violations/passes/incomplete/inapplicable + criteria coverage
   → onTestRunEnd(): buildA11yReport() → components[] + criteria[] + summary → write JSON

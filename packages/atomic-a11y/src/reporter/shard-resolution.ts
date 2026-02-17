@@ -3,7 +3,7 @@ export interface ShardInfo {
   total: number;
 }
 
-export function parseShardDescriptor(
+function parseShardDescriptor(
   descriptor: string | undefined
 ): ShardInfo | null {
   if (!descriptor) {
@@ -26,7 +26,7 @@ export function parseShardDescriptor(
   return {index, total};
 }
 
-export function extractCliShardDescriptor(argv: string[]): string | undefined {
+function extractCliShardDescriptor(argv: string[]): string | undefined {
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index];
     if (argument.startsWith('--shard=')) {

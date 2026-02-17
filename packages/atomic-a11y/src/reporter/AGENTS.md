@@ -9,7 +9,6 @@ reporter/
 ├── vitest-a11y-reporter.ts   # Core class: VitestA11yReporter (implements Vitest Reporter)
 ├── report-builder.ts         # Transforms ComponentAccumulator map → A11yReport JSON
 ├── axe-integration.ts        # Axe results → WCAG criteria bridge
-├── error-parsing.ts          # Fallback: extract axe rule IDs from test error text
 ├── storybook-extraction.ts   # Parse module paths → component name, category, framework
 ├── reporter-utils.ts         # Helpers: package metadata, date formatting, criterion lookup
 ├── shard-resolution.ts       # CLI --shard flag parsing
@@ -22,12 +21,11 @@ reporter/
 |------|------|-------|
 | Understand the main flow | `vitest-a11y-reporter.ts` | `onTestCaseResult()` → accumulate → `onTestRunEnd()` → write JSON |
 | Change how the final report is assembled | `report-builder.ts` | `buildA11yReport()` — builds components[], criteria[], summary |
-| Change axe-to-WCAG mapping | `axe-integration.ts` | `getCriteriaForRule()` uses tag parsing; `getCriteriaForRuleId()` uses prebuilt map |
+| Change axe-to-WCAG mapping | `axe-integration.ts` | `getCriteriaForRule()` uses tag parsing via `extractCriteriaFromTags()` |
 | Support new component naming | `storybook-extraction.ts` | `extractComponentName()` — regex patterns match `atomic-*` |
 | Add new categories | `storybook-extraction.ts` | `extractCategory()` — hardcoded list: commerce, search, insight, ipx, common, recommendations |
 | Handle new CI shard flags | `shard-resolution.ts` | Parses `--shard=N/M` from `process.argv` |
 | Modify summary calculation | `summary.ts` | `createSummary()` — note: `stencilExcluded` is hardcoded `true` |
-| Change error fallback parsing | `error-parsing.ts` | Matches `toHaveNoViolations` and `axeapi` patterns in error text |
 | Read product/tool versions | `reporter-utils.ts` | `readPackageMetadata()` — reads `package.json` for versions used in report metadata |
 
 ## KEY TYPES
@@ -51,6 +49,5 @@ reporter/
 
 - `getCriteriaForRule()` parses `wcagXYZ` tag format from `rule.tags` — axe rules without wcag tags won't map to any criterion
 - `extractComponentName()` returns `null` for non-atomic components — reporter silently skips them
-- `ANSI_ESCAPE_PATTERN` in `error-parsing.ts` has a biome lint suppression with a TODO to consider `ansi-regex` package
 - Shard resolution only reads CLI `--shard` flag (no env var support) — returns `null` if not present
 - `buildA11yReport()` hardcodes `product: 'Coveo Atomic'` and `evaluationMethods` array — not configurable
