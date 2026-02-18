@@ -7,7 +7,7 @@ import {
   setAnswerId,
   setCitations,
 } from '../answer-draft-reducer/answer-draft-reducer.js';
-import type {EventType, Message, StreamPayload} from '../types.js';
+import type {EventType, Message} from '../types.js';
 
 /**
  * Event handler interface for managing answer server state updates during answer streaming.
@@ -53,37 +53,31 @@ export const serverStateEventHandler: ServerStateEventHandler = {
   },
 
   handleMessage: {
-    'genqa.headerMessageType': (message, updateCachedData) => {
-      const payload = parsePayload(message.payload);
-      if (payload?.contentFormat) {
-        updateCachedData((draft) => {
-          initializeStreamingAnswer(draft, payload);
-        });
-      }
-    },
-
-    'genqa.messageType': (message, updateCachedData) => {
-      const payload = parsePayload(message.payload);
-      if (payload.textDelta) {
-        updateCachedData((draft) => {
-          setAnswer(draft, payload);
-        });
-      }
-    },
-
-    'genqa.citationsType': (message, updateCachedData) => {
-      const payload = parsePayload(message.payload);
-      if (payload.citations !== undefined) {
-        updateCachedData((draft) => {
-          setCitations(draft, payload);
-        });
-      }
-    },
-
-    'genqa.endOfStreamType': (message, updateCachedData) => {
-      const payload = parsePayload(message.payload);
+    'agentInteraction.answerHeader': (_message, updateCachedData) => {
       updateCachedData((draft) => {
-        endStreaming(draft, payload);
+        initializeStreamingAnswer(draft, {contentFormat: 'text/markdown'});
+      });
+    },
+
+    'generativeengines.messageType': (message, updateCachedData) => {
+      if (message?.payload?.textDelta) {
+        updateCachedData((draft) => {
+          setAnswer(draft, message.payload);
+        });
+      }
+    },
+
+    'agentInteraction.citations': (message, updateCachedData) => {
+      if (message?.payload?.citations !== undefined) {
+        updateCachedData((draft) => {
+          setCitations(draft, message.payload);
+        });
+      }
+    },
+
+    'generativeengines.endOfStreamType': (message, updateCachedData) => {
+      updateCachedData((draft) => {
+        endStreaming(draft, message.payload);
       });
     },
 
@@ -96,19 +90,3 @@ export const serverStateEventHandler: ServerStateEventHandler = {
     },
   },
 };
-
-function parsePayload(payload?: string): StreamPayload {
-  if (!payload?.length) {
-    return {};
-  }
-
-  try {
-    return JSON.parse(payload) as StreamPayload;
-  } catch (err) {
-    console.warn('Failed to parse stream payload', {
-      payload,
-      error: err,
-    });
-    return {};
-  }
-}

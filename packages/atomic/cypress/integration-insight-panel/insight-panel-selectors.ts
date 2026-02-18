@@ -45,10 +45,6 @@ export const InsightPanelsSelectors = {
   layoutStyleTags: () =>
     InsightPanelsSelectors.interface().find('atomic-insight-layout > style'),
   topLevelStyleTags: () => cy.get('head > style'),
-  smartSnippetSuggestions: () =>
-    InsightPanelsSelectors.interface().find(
-      'atomic-insight-smart-snippet-suggestions'
-    ),
   smartSnippetFeedbackModal: () =>
     InsightPanelsSelectors.interface().find(
       'atomic-insight-smart-snippet-feedback-modal'
