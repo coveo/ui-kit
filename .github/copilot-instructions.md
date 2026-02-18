@@ -1,6 +1,6 @@
 # GitHub Copilot PR Review Instructions
 
-This file contains instructions to help GitHub copilot review PRs specifically in this repository.
+This file contains instructions to help GitHub Copilot review PRs specifically in this repository.
 
 Outside of what is specified in this file, GitHub Copilot should review PRs as it normally does, without any special instructions.
 
