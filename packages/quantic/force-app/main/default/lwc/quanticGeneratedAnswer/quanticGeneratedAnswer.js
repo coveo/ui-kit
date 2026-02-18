@@ -381,7 +381,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   handleGeneratedAnswerCopyToClipboard = (event) => {
     event.stopPropagation();
-    this.generatedAnswer.logCopyToClipboard();
+    this.generatedAnswer.logAnswerCopied();
   };
 
   handleGeneratedAnswerToggle = (event) => {
