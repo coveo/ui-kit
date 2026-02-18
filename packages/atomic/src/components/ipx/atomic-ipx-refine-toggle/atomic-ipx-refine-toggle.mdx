@@ -19,12 +19,12 @@ This component is used inside an `atomic-ipx-modal` or `atomic-ipx-embedded` wit
     <div slot="header">
       <atomic-ipx-refine-toggle></atomic-ipx-refine-toggle>
     </div>
-    <div slot="body">
-      <atomic-layout-section section="facets">
-        <atomic-facet field="author" label="Author"></atomic-facet>
-        <atomic-facet field="source" label="Source"></atomic-facet>
-      </atomic-layout-section>
-    </div>
+    <atomic-layout-section section="facets">
+      <atomic-facet field="author" label="Author"></atomic-facet>
+      <atomic-facet field="source" label="Source"></atomic-facet>
+    </atomic-layout-section>
+    <div slot="body"></div>
+    <div slot="footer"></div>
   </atomic-ipx-modal>
 </atomic-search-interface>
 ```
