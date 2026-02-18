@@ -159,8 +159,8 @@ describe('generated answer', () => {
     );
   });
 
-  it('#logCopyToClipboard dispatches analytics action', () => {
-    generatedAnswer.logCopyToClipboard();
+  it('#logAnswerCopied dispatches analytics action', () => {
+    generatedAnswer.logAnswerCopied();
     expect(logCopyGeneratedAnswer).toHaveBeenCalled();
   });
 

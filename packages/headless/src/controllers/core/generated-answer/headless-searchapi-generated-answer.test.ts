@@ -251,7 +251,7 @@ describe('searchapi-generated-answer', () => {
 
   it('dispatches a log copy to clipboard action', () => {
     const generatedAnswer = createGeneratedAnswer();
-    generatedAnswer.logCopyToClipboard();
+    generatedAnswer.logAnswerCopied();
     expect(
       generatedAnswerAnalyticsClient.logCopyGeneratedAnswer
     ).toHaveBeenCalledTimes(1);

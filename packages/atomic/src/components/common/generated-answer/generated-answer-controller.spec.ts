@@ -29,7 +29,7 @@ describe('GeneratedAnswerController', () => {
     mockGeneratedAnswer = {
       like: vi.fn(),
       dislike: vi.fn(),
-      logCopyToClipboard: vi.fn(),
+      logAnswerCopied: vi.fn(),
       expand: vi.fn(),
       collapse: vi.fn(),
     };
@@ -207,7 +207,7 @@ describe('GeneratedAnswerController', () => {
   });
 
   describe('#copyToClipboard', () => {
-    it('should call navigator.clipboard.writeText and logCopyToClipboard on success', async () => {
+    it('should call navigator.clipboard.writeText and logAnswerCopied on success', async () => {
       const writeTextMock = vi.fn().mockResolvedValue(undefined);
       vi.stubGlobal('navigator', {
         clipboard: {writeText: writeTextMock},
@@ -224,7 +224,7 @@ describe('GeneratedAnswerController', () => {
 
       expect(writeTextMock).toHaveBeenCalledWith('Test answer');
       expect(onCopySuccess).toHaveBeenCalled();
-      expect(mockGeneratedAnswer.logCopyToClipboard).toHaveBeenCalled();
+      expect(mockGeneratedAnswer.logAnswerCopied).toHaveBeenCalled();
       expect(onCopyError).not.toHaveBeenCalled();
 
       vi.unstubAllGlobals();

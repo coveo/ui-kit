@@ -191,7 +191,7 @@ export class GeneratedAnswerController implements ReactiveController {
     try {
       await navigator.clipboard.writeText(answer);
       onCopySuccess();
-      this.options.getGeneratedAnswer()?.logCopyToClipboard();
+      this.options.getGeneratedAnswer()?.logAnswerCopied();
     } catch (error) {
       onCopyError();
       this.options
