@@ -19,12 +19,12 @@ vi.mock('@coveo/headless/insight', async (importOriginal) => {
     await importOriginal<typeof import('@coveo/headless/insight')>();
   return {
     ...actual,
-    buildAttachToCase: vi.fn(() => ({
+    buildAttachedResults: vi.fn(() => ({
       subscribe: vi.fn((cb: () => void) => {
         cb();
         return () => {};
       }),
-      state: {},
+      state: {results: [], loading: false},
       isAttached: vi.fn(() => false),
       attach: vi.fn(),
       detach: vi.fn(),
@@ -34,32 +34,32 @@ vi.mock('@coveo/headless/insight', async (importOriginal) => {
 
 describe('atomic-insight-result-attach-to-case-action', () => {
   const mockedEngine = buildFakeInsightEngine();
-  let mockAttachToCase: {
+  let mockAttachedResults: {
     isAttached: ReturnType<typeof vi.fn>;
     attach: ReturnType<typeof vi.fn>;
     detach: ReturnType<typeof vi.fn>;
     subscribe: ReturnType<typeof vi.fn>;
-    state: Record<string, unknown>;
+    state: {results: unknown[]; loading: boolean};
   };
 
   beforeEach(async () => {
     mockConsole();
 
-    mockAttachToCase = {
+    mockAttachedResults = {
       subscribe: vi.fn((cb: () => void) => {
         cb();
         return () => {};
       }),
-      state: {},
+      state: {results: [], loading: false},
       isAttached: vi.fn(() => false),
       attach: vi.fn(),
       detach: vi.fn(),
     };
 
     const headless = await import('@coveo/headless/insight');
-    vi.mocked(headless.buildAttachToCase).mockReturnValue(
-      mockAttachToCase as unknown as ReturnType<
-        typeof headless.buildAttachToCase
+    vi.mocked(headless.buildAttachedResults).mockReturnValue(
+      mockAttachedResults as unknown as ReturnType<
+        typeof headless.buildAttachedResults
       >
     );
   });
@@ -81,7 +81,7 @@ describe('atomic-insight-result-attach-to-case-action', () => {
     const effectiveResult = result ?? mockFoldedResult.result;
     mockFoldedResult.result = effectiveResult;
 
-    mockAttachToCase.isAttached.mockReturnValue(isAttached);
+    mockAttachedResults.isAttached.mockReturnValue(isAttached);
 
     const {element} =
       await renderInAtomicInsightResult<AtomicInsightResultAttachToCaseAction>({
@@ -157,11 +157,17 @@ describe('atomic-insight-result-attach-to-case-action', () => {
       await button.click();
 
       const event = await eventPromise;
-      expect(event.detail.callback).toBe(mockAttachToCase.attach);
+      expect(event.detail.callback).toBeInstanceOf(Function);
       expect(event.detail.result).toBeDefined();
       expect(event.bubbles).toBe(true);
       expect(event.composed).toBe(true);
       expect(event.cancelable).toBe(true);
+
+      // Verify that calling the callback invokes attach with the result
+      event.detail.callback();
+      expect(mockAttachedResults.attach).toHaveBeenCalledWith(
+        event.detail.result
+      );
     });
   });
 
@@ -194,11 +200,17 @@ describe('atomic-insight-result-attach-to-case-action', () => {
       await button.click();
 
       const event = await eventPromise;
-      expect(event.detail.callback).toBe(mockAttachToCase.detach);
+      expect(event.detail.callback).toBeInstanceOf(Function);
       expect(event.detail.result).toBeDefined();
       expect(event.bubbles).toBe(true);
       expect(event.composed).toBe(true);
       expect(event.cancelable).toBe(true);
+
+      // Verify that calling the callback invokes detach with the result
+      event.detail.callback();
+      expect(mockAttachedResults.detach).toHaveBeenCalledWith(
+        event.detail.result
+      );
     });
   });
 

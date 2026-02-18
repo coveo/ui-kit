@@ -1,6 +1,6 @@
 import {
-  type AttachToCase,
-  buildAttachToCase,
+  type AttachedResults,
+  buildAttachedResults,
   type Result,
 } from '@coveo/headless/insight';
 import {html, LitElement} from 'lit';
@@ -45,11 +45,11 @@ export class AtomicInsightResultAttachToCaseAction
   @state() public bindings!: InsightBindings;
   @state() public error!: Error;
 
-  public attachToCase!: AttachToCase;
+  public attachedResults!: AttachedResults;
 
-  @bindStateToController('attachToCase')
+  @bindStateToController('attachedResults')
   @state()
-  private attachToCaseState!: Record<string, never>;
+  private attachedResultsState!: Record<string, never>;
 
   private itemContextController!: ItemContextController<Result>;
 
@@ -66,15 +66,10 @@ export class AtomicInsightResultAttachToCaseAction
   }
 
   public initialize() {
-    if (!this.result) {
-      return;
-    }
-
     const caseId: string =
       this.bindings.engine.state.insightCaseContext?.caseId || '';
-    this.attachToCase = buildAttachToCase(this.bindings.engine, {
+    this.attachedResults = buildAttachedResults(this.bindings.engine, {
       options: {
-        result: this.result,
         caseId: caseId,
       },
     });
@@ -85,7 +80,7 @@ export class AtomicInsightResultAttachToCaseAction
       return;
     }
 
-    if (this.attachToCase.isAttached()) {
+    if (this.attachedResults.isAttached(this.result)) {
       this.dispatchEvent(
         new CustomEvent<InsightResultAttachToCaseEvent>(
           'atomic/insight/attachToCase/detach',
@@ -94,7 +89,7 @@ export class AtomicInsightResultAttachToCaseAction
             composed: true,
             cancelable: true,
             detail: {
-              callback: this.attachToCase.detach,
+              callback: () => this.attachedResults.detach(this.result!),
               result: this.result,
             },
           }
@@ -109,7 +104,7 @@ export class AtomicInsightResultAttachToCaseAction
             composed: true,
             cancelable: true,
             detail: {
-              callback: this.attachToCase.attach,
+              callback: () => this.attachedResults.attach(this.result!),
               result: this.result,
             },
           }
@@ -119,11 +114,13 @@ export class AtomicInsightResultAttachToCaseAction
   }
 
   private getIcon() {
-    return this.attachToCase?.isAttached() ? DetachIcon : AttachIcon;
+    return this.result && this.attachedResults?.isAttached(this.result)
+      ? DetachIcon
+      : AttachIcon;
   }
 
   private getTooltip() {
-    return this.attachToCase?.isAttached()
+    return this.result && this.attachedResults?.isAttached(this.result)
       ? this.bindings.i18n.t('detach-from-case')
       : this.bindings.i18n.t('attach-to-case');
   }
@@ -131,9 +128,9 @@ export class AtomicInsightResultAttachToCaseAction
   @errorGuard()
   @bindingGuard()
   render() {
-    void this.attachToCaseState;
+    void this.attachedResultsState;
 
-    if (!this.result || !this.attachToCase) {
+    if (!this.result || !this.attachedResults) {
       return html``;
     }
 
