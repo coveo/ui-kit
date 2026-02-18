@@ -1,7 +1,10 @@
 import type {ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import type {AnswerGenerationApiState} from '../../api/knowledge/answer-generation/answer-generation-api-state.js';
-import type {Message} from '../../api/knowledge/answer-generation/streaming/types.js';
+import type {
+  Message,
+  StreamPayload,
+} from '../../api/knowledge/answer-generation/streaming/types.js';
 import {buildMockCitation} from '../../test/mock-citation.js';
 import {createFollowUpAnswerStrategy} from './follow-up-answer-strategy.js';
 import {
@@ -29,7 +32,7 @@ describe('followUpAnswerStrategy', () => {
   });
 
   describe('handleOpen', () => {
-    it('should dispatch setActiveFollowUpAnswerId and setFollowUpIsLoading when x-answer-id header is present', () => {
+    it('should dispatch follow-up initialization actions when x-answer-id header is present', () => {
       const mockResponse = new Response(null, {
         headers: {'x-answer-id': 'test-answer-id-123'},
       });
@@ -43,7 +46,11 @@ describe('followUpAnswerStrategy', () => {
         answerId: 'test-answer-id-123',
         isLoading: true,
       });
-      expect(mockDispatch).toHaveBeenCalledTimes(2);
+      expect(setFollowUpAnswerContentFormat).toHaveBeenCalledWith({
+        contentFormat: 'text/markdown',
+        answerId: 'test-answer-id-123',
+      });
+      expect(mockDispatch).toHaveBeenCalledTimes(3);
     });
 
     it('should not dispatch actions when x-answer-id header is missing', () => {
@@ -76,78 +83,7 @@ describe('followUpAnswerStrategy', () => {
   });
 
   describe('handleMessage', () => {
-    describe('genqa.headerMessageType', () => {
-      it('should dispatch setFollowUpAnswerContentFormat when contentFormat is present', () => {
-        const strategy = createFollowUpAnswerStrategy();
-        const mockResponse = new Response(null, {
-          headers: {'x-answer-id': 'answer-123'},
-        });
-        strategy.handleOpen(mockResponse, mockDispatch);
-        vi.clearAllMocks();
-
-        const message: Message = {
-          payloadType: 'genqa.headerMessageType',
-          payload: JSON.stringify({contentFormat: 'text/markdown'}),
-        };
-
-        strategy.handleMessage['genqa.headerMessageType']?.(
-          message,
-          mockDispatch
-        );
-
-        expect(setFollowUpAnswerContentFormat).toHaveBeenCalledWith({
-          contentFormat: 'text/markdown',
-          answerId: 'answer-123',
-        });
-        expect(mockDispatch).toHaveBeenCalledTimes(1);
-      });
-
-      it('should handle empty payload gracefully', () => {
-        const strategy = createFollowUpAnswerStrategy();
-        const mockResponse = new Response(null, {
-          headers: {'x-answer-id': 'answer-123'},
-        });
-        strategy.handleOpen(mockResponse, mockDispatch);
-        vi.clearAllMocks();
-
-        const message: Message = {
-          payloadType: 'genqa.headerMessageType',
-          payload: '',
-        };
-
-        strategy.handleMessage['genqa.headerMessageType']?.(
-          message,
-          mockDispatch
-        );
-
-        expect(setFollowUpAnswerContentFormat).not.toHaveBeenCalled();
-        expect(mockDispatch).not.toHaveBeenCalled();
-      });
-
-      it('should not dispatch actions when contentFormat is missing from payload', () => {
-        const strategy = createFollowUpAnswerStrategy();
-        const mockResponse = new Response(null, {
-          headers: {'x-answer-id': 'answer-123'},
-        });
-        strategy.handleOpen(mockResponse, mockDispatch);
-        vi.clearAllMocks();
-
-        const message: Message = {
-          payloadType: 'genqa.headerMessageType',
-          payload: JSON.stringify({someOtherField: 'value'}),
-        };
-
-        strategy.handleMessage['genqa.headerMessageType']?.(
-          message,
-          mockDispatch
-        );
-
-        expect(setFollowUpAnswerContentFormat).not.toHaveBeenCalled();
-        expect(mockDispatch).not.toHaveBeenCalled();
-      });
-    });
-
-    describe('genqa.messageType', () => {
+    describe('generativeengines.messageType', () => {
       it('should dispatch followUpMessageChunkReceived when textDelta is present', () => {
         const strategy = createFollowUpAnswerStrategy();
         const mockResponse = new Response(null, {
@@ -156,37 +92,22 @@ describe('followUpAnswerStrategy', () => {
         strategy.handleOpen(mockResponse, mockDispatch);
         vi.clearAllMocks();
 
+        const payload: StreamPayload = {textDelta: 'Hello world'};
         const message: Message = {
-          payloadType: 'genqa.messageType',
-          payload: JSON.stringify({textDelta: 'Hello world'}),
+          payloadType: 'generativeengines.messageType',
+          payload,
         };
 
-        strategy.handleMessage['genqa.messageType']?.(message, mockDispatch);
+        strategy.handleMessage['generativeengines.messageType']?.(
+          message,
+          mockDispatch
+        );
 
         expect(followUpMessageChunkReceived).toHaveBeenCalledWith({
           textDelta: 'Hello world',
           answerId: 'answer-123',
         });
         expect(mockDispatch).toHaveBeenCalledTimes(1);
-      });
-
-      it('should handle empty payload gracefully', () => {
-        const strategy = createFollowUpAnswerStrategy();
-        const mockResponse = new Response(null, {
-          headers: {'x-answer-id': 'answer-123'},
-        });
-        strategy.handleOpen(mockResponse, mockDispatch);
-        vi.clearAllMocks();
-
-        const message: Message = {
-          payloadType: 'genqa.messageType',
-          payload: '',
-        };
-
-        strategy.handleMessage['genqa.messageType']?.(message, mockDispatch);
-
-        expect(followUpMessageChunkReceived).not.toHaveBeenCalled();
-        expect(mockDispatch).not.toHaveBeenCalled();
       });
 
       it('should not dispatch followUpMessageChunkReceived when textDelta is missing', () => {
@@ -198,18 +119,21 @@ describe('followUpAnswerStrategy', () => {
         vi.clearAllMocks();
 
         const message: Message = {
-          payloadType: 'genqa.messageType',
-          payload: JSON.stringify({someOtherField: 'value'}),
+          payloadType: 'generativeengines.messageType',
+          payload: {},
         };
 
-        strategy.handleMessage['genqa.messageType']?.(message, mockDispatch);
+        strategy.handleMessage['generativeengines.messageType']?.(
+          message,
+          mockDispatch
+        );
 
         expect(followUpMessageChunkReceived).not.toHaveBeenCalled();
         expect(mockDispatch).not.toHaveBeenCalled();
       });
     });
 
-    describe('genqa.citationsType', () => {
+    describe('agentInteraction.citations', () => {
       it('should dispatch followUpCitationsReceived when citations are present', () => {
         const strategy = createFollowUpAnswerStrategy();
         const mockResponse = new Response(null, {
@@ -220,11 +144,14 @@ describe('followUpAnswerStrategy', () => {
 
         const mockCitations = [buildMockCitation(), buildMockCitation()];
         const message: Message = {
-          payloadType: 'genqa.citationsType',
-          payload: JSON.stringify({citations: mockCitations}),
+          payloadType: 'agentInteraction.citations',
+          payload: {citations: mockCitations},
         };
 
-        strategy.handleMessage['genqa.citationsType']?.(message, mockDispatch);
+        strategy.handleMessage['agentInteraction.citations']?.(
+          message,
+          mockDispatch
+        );
 
         expect(followUpCitationsReceived).toHaveBeenCalledWith({
           citations: mockCitations,
@@ -242,36 +169,20 @@ describe('followUpAnswerStrategy', () => {
         vi.clearAllMocks();
 
         const message: Message = {
-          payloadType: 'genqa.citationsType',
-          payload: JSON.stringify({citations: []}),
+          payloadType: 'agentInteraction.citations',
+          payload: {citations: []},
         };
 
-        strategy.handleMessage['genqa.citationsType']?.(message, mockDispatch);
+        strategy.handleMessage['agentInteraction.citations']?.(
+          message,
+          mockDispatch
+        );
 
         expect(followUpCitationsReceived).toHaveBeenCalledWith({
           citations: [],
           answerId: 'answer-123',
         });
         expect(mockDispatch).toHaveBeenCalledTimes(1);
-      });
-
-      it('should handle empty payload gracefully', () => {
-        const strategy = createFollowUpAnswerStrategy();
-        const mockResponse = new Response(null, {
-          headers: {'x-answer-id': 'answer-123'},
-        });
-        strategy.handleOpen(mockResponse, mockDispatch);
-        vi.clearAllMocks();
-
-        const message: Message = {
-          payloadType: 'genqa.citationsType',
-          payload: '',
-        };
-
-        strategy.handleMessage['genqa.citationsType']?.(message, mockDispatch);
-
-        expect(followUpCitationsReceived).not.toHaveBeenCalled();
-        expect(mockDispatch).not.toHaveBeenCalled();
       });
 
       it('should not dispatch followUpCitationsReceived when citations are missing', () => {
@@ -283,18 +194,21 @@ describe('followUpAnswerStrategy', () => {
         vi.clearAllMocks();
 
         const message: Message = {
-          payloadType: 'genqa.citationsType',
-          payload: JSON.stringify({someOtherField: 'value'}),
+          payloadType: 'agentInteraction.citations',
+          payload: {},
         };
 
-        strategy.handleMessage['genqa.citationsType']?.(message, mockDispatch);
+        strategy.handleMessage['agentInteraction.citations']?.(
+          message,
+          mockDispatch
+        );
 
         expect(followUpCitationsReceived).not.toHaveBeenCalled();
         expect(mockDispatch).not.toHaveBeenCalled();
       });
     });
 
-    describe('genqa.endOfStreamType', () => {
+    describe('generativeengines.endOfStreamType', () => {
       it('should dispatch followUpCompleted action when answerGenerated is true', () => {
         const strategy = createFollowUpAnswerStrategy();
         const mockResponse = new Response(null, {
@@ -304,11 +218,11 @@ describe('followUpAnswerStrategy', () => {
         vi.clearAllMocks();
 
         const message: Message = {
-          payloadType: 'genqa.endOfStreamType',
-          payload: JSON.stringify({answerGenerated: true}),
+          payloadType: 'generativeengines.endOfStreamType',
+          payload: {answerGenerated: true},
         };
 
-        strategy.handleMessage['genqa.endOfStreamType']?.(
+        strategy.handleMessage['generativeengines.endOfStreamType']?.(
           message,
           mockDispatch
         );
@@ -329,11 +243,11 @@ describe('followUpAnswerStrategy', () => {
         vi.clearAllMocks();
 
         const message: Message = {
-          payloadType: 'genqa.endOfStreamType',
-          payload: JSON.stringify({answerGenerated: false}),
+          payloadType: 'generativeengines.endOfStreamType',
+          payload: {answerGenerated: false},
         };
 
-        strategy.handleMessage['genqa.endOfStreamType']?.(
+        strategy.handleMessage['generativeengines.endOfStreamType']?.(
           message,
           mockDispatch
         );
@@ -354,36 +268,11 @@ describe('followUpAnswerStrategy', () => {
         vi.clearAllMocks();
 
         const message: Message = {
-          payloadType: 'genqa.endOfStreamType',
-          payload: JSON.stringify({}),
+          payloadType: 'generativeengines.endOfStreamType',
+          payload: {},
         };
 
-        strategy.handleMessage['genqa.endOfStreamType']?.(
-          message,
-          mockDispatch
-        );
-
-        expect(followUpCompleted).toHaveBeenCalledWith({
-          cannotAnswer: true,
-          answerId: 'answer-123',
-        });
-        expect(mockDispatch).toHaveBeenCalledTimes(1);
-      });
-
-      it('should handle empty payload gracefully', () => {
-        const strategy = createFollowUpAnswerStrategy();
-        const mockResponse = new Response(null, {
-          headers: {'x-answer-id': 'answer-123'},
-        });
-        strategy.handleOpen(mockResponse, mockDispatch);
-        vi.clearAllMocks();
-
-        const message: Message = {
-          payloadType: 'genqa.endOfStreamType',
-          payload: '',
-        };
-
-        strategy.handleMessage['genqa.endOfStreamType']?.(
+        strategy.handleMessage['generativeengines.endOfStreamType']?.(
           message,
           mockDispatch
         );
@@ -406,8 +295,8 @@ describe('followUpAnswerStrategy', () => {
         vi.clearAllMocks();
 
         const message: Message = {
-          payloadType: 'genqa.messageType',
-          payload: '',
+          payloadType: 'generativeengines.messageType',
+          payload: {},
           finishReason: 'ERROR',
           errorMessage: 'Something went wrong',
           code: 500,
@@ -432,8 +321,8 @@ describe('followUpAnswerStrategy', () => {
         vi.clearAllMocks();
 
         const message: Message = {
-          payloadType: 'genqa.messageType',
-          payload: '',
+          payloadType: 'generativeengines.messageType',
+          payload: {},
           finishReason: 'ERROR',
           code: 500,
         };
@@ -457,8 +346,8 @@ describe('followUpAnswerStrategy', () => {
         vi.clearAllMocks();
 
         const message: Message = {
-          payloadType: 'genqa.messageType',
-          payload: '',
+          payloadType: 'generativeengines.messageType',
+          payload: {},
           finishReason: 'COMPLETED',
           errorMessage: 'Something went wrong',
         };
@@ -478,8 +367,8 @@ describe('followUpAnswerStrategy', () => {
         vi.clearAllMocks();
 
         const message: Message = {
-          payloadType: 'genqa.messageType',
-          payload: '',
+          payloadType: 'generativeengines.messageType',
+          payload: {},
           errorMessage: 'Something went wrong',
         };
 
