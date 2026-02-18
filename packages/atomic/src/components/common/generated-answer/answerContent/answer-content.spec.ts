@@ -158,7 +158,7 @@ describe('answer-content', () => {
     expect(onClickDislike).toHaveBeenCalledWith(generatedAnswer.answerId);
   });
 
-  it('should surface the default copy tooltip label', async () => {
+  it('should pass the default copy tooltip label to the FeedbackAndCopyButtons component', async () => {
     const {getFeedbackProps} = await renderComponent();
 
     expect(getFeedbackProps()?.getCopyToClipboardTooltip()).toBe(
@@ -166,7 +166,7 @@ describe('answer-content', () => {
     );
   });
 
-  it('should copy the answer to the clipboard and expose copied state', async () => {
+  it('should copy the answer to the clipboard and expose copied state when the copy button is clicked', async () => {
     const onCopyToClipboard = vi.fn();
     const {element, generatedAnswer, getFeedbackProps} = await renderComponent({
       onCopyToClipboard,

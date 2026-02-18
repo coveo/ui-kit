@@ -18,6 +18,11 @@ export interface GeneratedAnswer extends GeneratedAnswerBase {
 
 type CopyState = 'idle' | 'success' | 'error';
 
+/**
+ * The `answer-content` component renders the content of a generated answer.
+ *
+ * @internal
+ */
 @customElement('answer-content')
 @withTailwindStyles
 export class AnswerContent extends LitElement {
@@ -69,6 +74,11 @@ export class AnswerContent extends LitElement {
 
   private resetCopyTimeout?: number;
 
+  public override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    clearTimeout(this.resetCopyTimeout);
+  }
+
   public render() {
     const {
       answer,
@@ -76,7 +86,7 @@ export class AnswerContent extends LitElement {
       isStreaming,
       citations = [],
       answerId,
-    } = this.generatedAnswer;
+    } = this.generatedAnswer || {};
 
     if (!answer) {
       return html``;
@@ -156,10 +166,5 @@ export class AnswerContent extends LitElement {
       default:
         return this.i18n.t('copy-generated-answer');
     }
-  }
-
-  public override disconnectedCallback(): void {
-    super.disconnectedCallback();
-    clearTimeout(this.resetCopyTimeout);
   }
 }
