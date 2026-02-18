@@ -8,15 +8,16 @@ const files = [
 
 const oldImport =
   "import { defineCustomElements } from '@coveo/atomic/dist/atomic/loader';";
-const newImport =
-  "import { defineCustomElements } from '@coveo/atomic/loader';";
+const defineCustomElementsCall = `defineCustomElements();`;
 
 const updateFiles = async () => {
   await Promise.all(
     files.map(async (filePath) => {
       try {
         const data = await fs.readFile(filePath, 'utf8');
-        const updatedData = data.replace(oldImport, newImport);
+        const updatedData = data
+          .replace(oldImport, '')
+          .replace(defineCustomElementsCall, '');
         await fs.writeFile(filePath, updatedData, 'utf8');
         console.log(`File updated: ${filePath}`);
       } catch (err) {

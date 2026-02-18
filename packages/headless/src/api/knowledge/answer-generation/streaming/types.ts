@@ -6,21 +6,11 @@ import type {GeneratedAnswerCitation} from '../../../generated-answer/generated-
  * Message types received during answer generation streaming.
  */
 type PayloadType =
-  | 'genqa.headerMessageType'
-  | 'genqa.messageType'
-  | 'genqa.citationsType'
-  | 'genqa.endOfStreamType';
-
-/**
- * Represents a streaming message from the answer generation endpoint.
- */
-export interface Message {
-  payloadType: PayloadType;
-  payload: string;
-  finishReason?: string;
-  errorMessage?: string;
-  code?: number;
-}
+  | 'agentInteraction.answerHeader'
+  | 'generativeengines.messageType'
+  | 'agentInteraction.citations'
+  | 'generativeengines.headerMessageType'
+  | 'generativeengines.endOfStreamType';
 
 /**
  * Event types including standard payload types and error events.
@@ -36,6 +26,16 @@ export interface StreamPayload {
   answerGenerated?: boolean;
   contentFormat?: GeneratedContentFormat;
   citations?: GeneratedAnswerCitation[];
+  conversationId?: string;
+  followUpEnabled?: boolean;
+}
+
+export interface Message {
+  payloadType: PayloadType;
+  payload: StreamPayload;
+  finishReason?: string;
+  errorMessage?: string;
+  code?: number;
 }
 
 /**

@@ -1,3 +1,10 @@
+## 3.11.0 (2026-02-18)
+
+* feat: optimize tree-shaking for Atomic React (#7063) ([108c8ec](https://github.com/coveo/ui-kit/commits/108c8ec)), closes [#7063](https://github.com/coveo/ui-kit/issues/7063)
+* chore(atomic): migrate atomic-recs-list (#7068) ([c335c2d](https://github.com/coveo/ui-kit/commits/c335c2d)), closes [#7068](https://github.com/coveo/ui-kit/issues/7068)
+
+
+
 ## <small>3.10.4 (2026-02-11)</small>
 
 * chore(atomic): migrate atomic-generated-answer-feedback-modal to Lit (#6989) ([9e559f9](https://github.com/coveo/ui-kit/commits/9e559f9)), closes [#6989](https://github.com/coveo/ui-kit/issues/6989)

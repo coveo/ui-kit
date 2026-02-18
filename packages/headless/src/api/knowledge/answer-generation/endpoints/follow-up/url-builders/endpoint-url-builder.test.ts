@@ -39,7 +39,7 @@ describe('endpoint-url-builder', () => {
         'prod'
       );
       expect(result).toBe(
-        `${mockPlatformEndpoint}/api/preview/organizations/${mockOrganizationId}/agents/${mockAgentId}/followup`
+        `${mockPlatformEndpoint}/api/preview/organizations/${mockOrganizationId}/agents/${mockAgentId}/follow-up`
       );
     });
 
@@ -55,7 +55,7 @@ describe('endpoint-url-builder', () => {
         'dev'
       );
       expect(result).toBe(
-        `${devEndpoint}/api/preview/organizations/${mockOrganizationId}/agents/${mockAgentId}/followup`
+        `${devEndpoint}/api/preview/organizations/${mockOrganizationId}/agents/${mockAgentId}/follow-up`
       );
     });
 

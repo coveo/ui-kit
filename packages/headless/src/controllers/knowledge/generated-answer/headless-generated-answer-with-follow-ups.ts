@@ -8,6 +8,7 @@ import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import {setAgentId} from '../../../features/configuration/configuration-actions.js';
 import {
   dislikeFollowUp,
+  generateFollowUpAnswer,
   likeFollowUp,
 } from '../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {followUpAnswersReducer as followUpAnswers} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
@@ -53,6 +54,11 @@ export interface GeneratedAnswerWithFollowUps extends GeneratedAnswer {
    * @param answerId - Optional ID of the copied answer. Defaults to the current answer.
    */
   logCopyToClipboard(answerId?: string): void;
+  /**
+   * Asks a follow-up question.
+   * @param question - The follow-up question to ask.
+   */
+  askFollowUp(question: string): void;
 }
 
 export type GeneratedAnswerWithFollowUpsProps = GeneratedAnswerProps &
@@ -139,14 +145,14 @@ export function buildGeneratedAnswerWithFollowUps(
         controller.like();
         return;
       }
-      engine.dispatch(likeFollowUp({answerId: answerId}));
+      engine.dispatch(likeFollowUp({answerId}));
     },
     dislike(answerId?: string) {
       if (!answerId || this.state.answerId === answerId) {
         controller.dislike();
         return;
       }
-      engine.dispatch(dislikeFollowUp({answerId: answerId}));
+      engine.dispatch(dislikeFollowUp({answerId}));
     },
     logCopyToClipboard(answerId?: string) {
       if (!answerId || this.state.answerId === answerId) {
@@ -157,6 +163,12 @@ export function buildGeneratedAnswerWithFollowUps(
       console.warn(
         'Method not yet implemented to send analytics for copy to clipboard on a followup answer'
       );
+    },
+    askFollowUp(question: string) {
+      if (!question || question.trim() === '') {
+        return;
+      }
+      engine.dispatch(generateFollowUpAnswer(question));
     },
   };
 }

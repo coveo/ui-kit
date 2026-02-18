@@ -4,6 +4,7 @@ import {selectAnswer} from '../../../api/knowledge/answer-generation/endpoints/a
 import {setAgentId} from '../../../features/configuration/configuration-actions.js';
 import {
   dislikeFollowUp,
+  generateFollowUpAnswer,
   likeFollowUp,
 } from '../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {followUpAnswersReducer} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
@@ -23,8 +24,8 @@ import {
 } from './headless-generated-answer-with-follow-ups.js';
 
 vi.mock('../../../features/generated-answer/generated-answer-actions');
+vi.mock('../../../features/follow-up-answers/follow-up-answers-actions');
 vi.mock('../../../features/configuration/configuration-actions');
-
 vi.mock(
   '../../../features/generated-answer/generated-answer-analytics-actions'
 );
@@ -451,9 +452,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
       controller.like();
 
       expect(mockCoreLike).toHaveBeenCalledTimes(1);
-      expect(engine.dispatch).not.toHaveBeenCalledWith(
-        expect.objectContaining({type: likeFollowUp.type})
-      );
+      expect(likeFollowUp).not.toHaveBeenCalled();
     });
 
     it('should delegate to core like when answerId matches head answer', () => {
@@ -466,9 +465,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
       controller.like('head-id');
 
       expect(mockCoreLike).toHaveBeenCalledTimes(1);
-      expect(engine.dispatch).not.toHaveBeenCalledWith(
-        expect.objectContaining({type: likeFollowUp.type})
-      );
+      expect(likeFollowUp).not.toHaveBeenCalled();
     });
 
     it('should dispatch likeFollowUp when answerId targets a follow-up answer', () => {
@@ -480,12 +477,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
 
       controller.like('follow-1');
 
-      expect(engine.dispatch).toHaveBeenCalledWith(
-        expect.objectContaining({
-          type: likeFollowUp.type,
-          payload: {answerId: 'follow-1'},
-        })
-      );
+      expect(likeFollowUp).toHaveBeenCalledWith({answerId: 'follow-1'});
       expect(mockCoreLike).not.toHaveBeenCalled();
     });
   });
@@ -497,9 +489,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
       controller.dislike();
 
       expect(mockCoreDislike).toHaveBeenCalledTimes(1);
-      expect(engine.dispatch).not.toHaveBeenCalledWith(
-        expect.objectContaining({type: dislikeFollowUp.type})
-      );
+      expect(dislikeFollowUp).not.toHaveBeenCalled();
     });
 
     it('should delegate to core dislike when answerId matches head answer', () => {
@@ -512,9 +502,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
       controller.dislike('head-id');
 
       expect(mockCoreDislike).toHaveBeenCalledTimes(1);
-      expect(engine.dispatch).not.toHaveBeenCalledWith(
-        expect.objectContaining({type: dislikeFollowUp.type})
-      );
+      expect(dislikeFollowUp).not.toHaveBeenCalled();
     });
 
     it('should dispatch dislikeFollowUp when answerId targets a follow-up answer', () => {
@@ -526,12 +514,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
 
       controller.dislike('follow-1');
 
-      expect(engine.dispatch).toHaveBeenCalledWith(
-        expect.objectContaining({
-          type: dislikeFollowUp.type,
-          payload: {answerId: 'follow-1'},
-        })
-      );
+      expect(dislikeFollowUp).toHaveBeenCalledWith({answerId: 'follow-1'});
       expect(mockCoreDislike).not.toHaveBeenCalled();
     });
   });
@@ -555,6 +538,24 @@ describe('GeneratedAnswerWithFollowUps', () => {
       controller.logCopyToClipboard('head-id');
 
       expect(mockCoreCopy).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('askFollowUp method', () => {
+    it('should dispatch generateFollowUpAnswer', () => {
+      const controller = createGeneratedAnswerWithFollowUps();
+      controller.askFollowUp('Follow-up?');
+
+      expect(generateFollowUpAnswer).toHaveBeenCalledTimes(1);
+      expect(generateFollowUpAnswer).toHaveBeenCalledWith('Follow-up?');
+    });
+
+    it('should not dispatch when question is empty or whitespace', () => {
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.askFollowUp('   ');
+
+      expect(generateFollowUpAnswer).not.toHaveBeenCalled();
     });
   });
 });
