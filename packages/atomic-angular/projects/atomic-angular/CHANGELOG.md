@@ -1,3 +1,9 @@
+## <small>3.10.1 (2026-02-18)</small>
+
+* cd: trigger an atomic-angular release (#7095) ([ec84341](https://github.com/coveo/ui-kit/commits/ec84341)), closes [#7095](https://github.com/coveo/ui-kit/issues/7095)
+
+
+
 ## 3.10.0 (2026-01-07)
 
 * [Version Bump][skip ci]: ui-kit publish ([b2a83c4](https://github.com/coveo/ui-kit/commits/b2a83c4))
