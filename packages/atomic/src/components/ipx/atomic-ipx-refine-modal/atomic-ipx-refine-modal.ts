@@ -159,9 +159,9 @@ export class AtomicIpxRefineModal
 
   private cloneFacets(facets: BaseFacetElement[]): BaseFacetElement[] {
     return facets.map((facet, i) => {
-      facet.classList.remove(popoverClass);
-      facet.setAttribute(isRefineModalFacet, '');
       const clone = facet.cloneNode(true) as BaseFacetElement;
+      clone.classList.remove(popoverClass);
+      clone.setAttribute(isRefineModalFacet, '');
       clone.isCollapsed =
         this.collapseFacetsAfter === -1
           ? false
