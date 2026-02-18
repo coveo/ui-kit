@@ -15,25 +15,15 @@ import {
   UNKNOWN_CATEGORY,
   UNKNOWN_FRAMEWORK,
 } from '../shared/constants.js';
-import {compareByName, compareByNumericId} from '../shared/sorting.js';
-import type {
-  A11yComponentReport,
-  A11yCriterionReport,
-  A11yReport,
-  A11ySummary,
-  SupportedFramework,
-} from '../shared/types.js';
+import type {SupportedFramework} from '../shared/types.js';
 import {
   getCriteriaForRule,
-  getCriteriaForRuleId,
   getIncompleteMessage,
   isAxeResults,
 } from './axe-integration.js';
-import {extractA11yRuleIdsFromTestErrors} from './error-parsing.js';
+import {buildA11yReport} from './report-builder.js';
 import {
   type ComponentAccumulator,
-  formatDate,
-  getCriterionMetadata,
   type PackageMetadata,
   readPackageMetadata,
   type StorybookReport,
@@ -46,22 +36,63 @@ import {
   extractFramework,
   normalizePath,
 } from './storybook-extraction.js';
-import {createSummary} from './summary.js';
 
 const REPORTER_NAME = 'VitestA11yReporter';
 
+/**
+ * Configuration options for {@link VitestA11yReporter}.
+ */
 export interface A11yReporterOptions {
+  /** Directory where JSON reports are written.
+   * @default 'a11y/reports' */
   outputDir?: string;
+
+  /** Report filename.
+   * @default 'a11y-report.json' */
   outputFilename?: string;
+
+  /** Total WCAG 2.2 AA criteria used to calculate coverage percentages.
+   * @default 55 */
   totalCriteria?: number;
+
+  /** Path to a `package.json` from which product/tool versions are read (e.g. atomic package). */
   packageJsonPath?: string;
 }
 
+/**
+ * Custom Vitest reporter that captures axe-core accessibility results from
+ * Storybook test runs and produces a structured WCAG 2.2 AA JSON report.
+ *
+ * for more info on Vitest reporters, visit https://vitest.dev/api/advanced/reporters.html
+ *
+ * ## Lifecycle
+ *
+ * 1. Vitest calls {@link onTestCaseResult} for each completed test case.
+ * 2. The reporter filters for Storybook projects, extracts axe results from
+ *    test metadata, and accumulates per-component violation/pass/incomplete/inapplicable counts.
+ * 3. At the end of the run, {@link onTestRunEnd} builds the final
+ *    {@link A11yReport} and writes it to disk.
+ *
+ * ## Output
+ *
+ * - `a11y-report.json` — always written.
+ * - `a11y-report.shard-N.json` — additionally written when running with
+ *   the `--shard` CLI flag.
+ *
+ * @example
+ * ```ts
+ * // vitest.config.ts
+ * import {VitestA11yReporter} from '@coveo/atomic-a11y';
+ *
+ * export default defineConfig({
+ *   test: {
+ *     reporters: [new VitestA11yReporter({ outputDir: 'reports' })],
+ *   },
+ * });
+ * ```
+ */
 export class VitestA11yReporter implements Reporter {
   private readonly componentResults = new Map<string, ComponentAccumulator>();
-  private readonly criteriaToComponents = new Map<string, Set<string>>();
-  private readonly seenComponentStoryPairs = new Set<string>();
-  private hasCapturedA11yResult = false;
   private readonly outputDir: string;
   private readonly outputFilename: string;
   private readonly totalCriteria: number;
@@ -78,11 +109,14 @@ export class VitestA11yReporter implements Reporter {
     this.packageMetadata = readPackageMetadata(options.packageJsonPath);
   }
 
+  /**
+   * Processes a single Storybook test case. Extracts axe-core results from
+   * test metadata and accumulates per-component accessibility data.
+   *
+   * Silently skips non-Storybook projects, non-atomic components, and
+   * duplicate story IDs.
+   */
   public onTestCaseResult(testCase: TestCase): void {
-    this.onTestResult(testCase);
-  }
-
-  public onTestResult(testCase: TestCase): void {
     try {
       if (!testCase.project.name.startsWith('storybook')) {
         return;
@@ -97,11 +131,8 @@ export class VitestA11yReporter implements Reporter {
         a11yReport && isAxeResults(a11yReport.result)
           ? a11yReport.result
           : null;
-      const failedRuleIds = axeResults
-        ? []
-        : extractA11yRuleIdsFromTestErrors(testCase, getCriteriaForRuleId);
 
-      if (!axeResults && failedRuleIds.length === 0) {
+      if (!axeResults) {
         return;
       }
 
@@ -119,12 +150,6 @@ export class VitestA11yReporter implements Reporter {
         return;
       }
 
-      const componentStoryKey = `${componentName}:${storyId}`;
-      if (this.seenComponentStoryPairs.has(componentStoryKey)) {
-        return;
-      }
-      this.seenComponentStoryPairs.add(componentStoryKey);
-
       const category = extractCategory(modulePath, storyId);
       const framework = extractFramework(modulePath);
       const component = this.getOrCreateComponent(
@@ -132,56 +157,56 @@ export class VitestA11yReporter implements Reporter {
         category,
         framework
       );
-      this.hasCapturedA11yResult = true;
 
-      component.storyIds.add(storyId);
-
-      if (axeResults) {
-        component.automated.violations += axeResults.violations.length;
-        component.automated.passes += axeResults.passes.length;
-        component.automated.incomplete += axeResults.incomplete.length;
-        component.automated.inapplicable += axeResults.inapplicable.length;
-
-        this.collectCriteria(component, axeResults.violations);
-        this.collectCriteria(component, axeResults.passes);
-        this.collectCriteria(component, axeResults.incomplete);
-        this.collectCriteria(component, axeResults.inapplicable);
-
-        for (const incompleteRule of axeResults.incomplete) {
-          component.automated.incompleteDetails.push({
-            ruleId: incompleteRule.id,
-            impact: incompleteRule.impact ?? 'unknown',
-            wcagCriteria: getCriteriaForRule(incompleteRule),
-            nodes: incompleteRule.nodes.length,
-            message: getIncompleteMessage(incompleteRule),
-          });
-        }
-
+      if (component.storyIds.has(storyId)) {
         return;
       }
+      component.storyIds.add(storyId);
 
-      component.automated.violations += failedRuleIds.length;
-      this.collectCriteriaFromRuleIds(component, failedRuleIds);
+      const buckets = [
+        'violations',
+        'passes',
+        'incomplete',
+        'inapplicable',
+      ] as const;
+      for (const bucket of buckets) {
+        component.automated[bucket] += axeResults[bucket].length;
+        this.collectCriteria(component, axeResults[bucket]);
+      }
+
+      for (const incompleteRule of axeResults.incomplete) {
+        component.automated.incompleteDetails.push({
+          ruleId: incompleteRule.id,
+          impact: incompleteRule.impact ?? 'unknown',
+          wcagCriteria: getCriteriaForRule(incompleteRule),
+          nodes: incompleteRule.nodes.length,
+          message: getIncompleteMessage(incompleteRule),
+        });
+      }
     } catch (error) {
       this.warn('Unable to process Storybook a11y test result.', error);
     }
   }
 
+  /**
+   * Builds the {@link A11yReport} from accumulated results and writes it as
+   * JSON to the configured output directory. No-ops if no results were captured.
+   */
   public async onTestRunEnd(
     _testModules: ReadonlyArray<TestModule>,
     _unhandledErrors: ReadonlyArray<SerializedError>,
     _reason: TestRunEndReason
   ): Promise<void> {
-    await this.onFinished();
-  }
-
-  public async onFinished(): Promise<void> {
     try {
-      if (!this.hasCapturedA11yResult) {
+      if (this.componentResults.size === 0) {
         return;
       }
 
-      const report = this.buildReport();
+      const report = buildA11yReport(
+        this.componentResults,
+        this.totalCriteria,
+        this.packageMetadata
+      );
       const serializedReport = `${JSON.stringify(report, null, 2)}\n`;
       const outputPaths = this.getOutputPaths();
 
@@ -244,117 +269,10 @@ export class VitestA11yReporter implements Reporter {
     rules: AxeRuleResult[]
   ): void {
     for (const rule of rules) {
-      const criteria = getCriteriaForRule(rule);
-
-      this.collectCriterionCoverage(component, criteria);
+      for (const criterion of getCriteriaForRule(rule)) {
+        component.automated.criteriaCovered.add(criterion);
+      }
     }
-  }
-
-  private collectCriteriaFromRuleIds(
-    component: ComponentAccumulator,
-    ruleIds: string[]
-  ): void {
-    for (const ruleId of ruleIds) {
-      const criteria = getCriteriaForRuleId(ruleId);
-
-      this.collectCriterionCoverage(component, criteria);
-    }
-  }
-
-  private collectCriterionCoverage(
-    component: ComponentAccumulator,
-    criteria: string[]
-  ): void {
-    for (const criterion of criteria) {
-      component.automated.criteriaCovered.add(criterion);
-
-      const coveredComponents =
-        this.criteriaToComponents.get(criterion) ?? new Set<string>();
-      coveredComponents.add(component.name);
-      this.criteriaToComponents.set(criterion, coveredComponents);
-    }
-  }
-
-  private buildComponents(): A11yComponentReport[] {
-    return [...this.componentResults.values()]
-      .map((component): A11yComponentReport => {
-        return {
-          name: component.name,
-          category: component.category,
-          framework: component.framework,
-          storyCount: component.storyIds.size,
-          automated: {
-            violations: component.automated.violations,
-            passes: component.automated.passes,
-            incomplete: component.automated.incomplete,
-            inapplicable: component.automated.inapplicable,
-            criteriaCovered: [...component.automated.criteriaCovered].sort(
-              compareByNumericId
-            ),
-            incompleteDetails: component.automated.incompleteDetails,
-          },
-        };
-      })
-      .sort((first, second) => compareByName(first.name, second.name));
-  }
-
-  private buildCriteria(): A11yCriterionReport[] {
-    return [...this.criteriaToComponents.entries()]
-      .map(([criterionId, coveredComponents]): A11yCriterionReport => {
-        const metadata = getCriterionMetadata(criterionId);
-
-        return {
-          id: criterionId,
-          name: metadata.name,
-          level: metadata.level,
-          wcagVersion: metadata.wcagVersion,
-          conformance: 'notEvaluated',
-          automatedCoverage: true,
-          manualVerified: false,
-          remarks: '',
-          affectedComponents: [...coveredComponents].sort(compareByName),
-        };
-      })
-      .sort((first, second) => compareByNumericId(first.id, second.id));
-  }
-
-  private buildSummary(
-    components: A11yComponentReport[],
-    criteria: A11yCriterionReport[]
-  ): A11ySummary {
-    return createSummary(components, criteria, this.totalCriteria);
-  }
-
-  private buildReport(): A11yReport {
-    const components = this.buildComponents();
-    const criteria = this.buildCriteria();
-    const axeCoreVersion =
-      this.packageMetadata.devDependencies?.['axe-core'] ??
-      this.packageMetadata.dependencies?.['axe-core'] ??
-      '4.10.3';
-    const storybookVersion =
-      this.packageMetadata.devDependencies?.storybook ??
-      this.packageMetadata.dependencies?.storybook ??
-      '10.0.8';
-
-    return {
-      report: {
-        product: 'Coveo Atomic',
-        version: this.packageMetadata.version ?? '3.x.x',
-        standard: 'WCAG 2.2 AA',
-        reportDate: formatDate(new Date()),
-        evaluationMethods: [
-          `axe-core ${axeCoreVersion}`,
-          'Storybook addon-a11y',
-          'Manual audit',
-        ],
-        axeCoreVersion,
-        storybookVersion,
-      },
-      components,
-      criteria,
-      summary: this.buildSummary(components, criteria),
-    };
   }
 
   private getOutputPaths(): string[] {

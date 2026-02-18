@@ -3,7 +3,7 @@ export interface ShardInfo {
   total: number;
 }
 
-export function parseShardDescriptor(
+function parseShardDescriptor(
   descriptor: string | undefined
 ): ShardInfo | null {
   if (!descriptor) {
@@ -26,7 +26,7 @@ export function parseShardDescriptor(
   return {index, total};
 }
 
-export function extractCliShardDescriptor(argv: string[]): string | undefined {
+function extractCliShardDescriptor(argv: string[]): string | undefined {
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index];
     if (argument.startsWith('--shard=')) {
@@ -42,55 +42,5 @@ export function extractCliShardDescriptor(argv: string[]): string | undefined {
 }
 
 export function resolveShardInfo(): ShardInfo | null {
-  const byDescriptor = [
-    process.env.A11Y_REPORT_SHARD,
-    process.env.VITEST_SHARD,
-    extractCliShardDescriptor(process.argv),
-  ]
-    .map((descriptor) => parseShardDescriptor(descriptor))
-    .find((parsed): parsed is ShardInfo => parsed !== null);
-
-  if (byDescriptor) {
-    return byDescriptor;
-  }
-
-  const rawIndex =
-    process.env.CI_NODE_INDEX ??
-    process.env.CIRCLE_NODE_INDEX ??
-    process.env.BUILDKITE_PARALLEL_JOB;
-  const rawTotal =
-    process.env.CI_NODE_TOTAL ??
-    process.env.CIRCLE_NODE_TOTAL ??
-    process.env.BUILDKITE_PARALLEL_JOB_COUNT;
-
-  if (!rawIndex || !rawTotal) {
-    return null;
-  }
-
-  const parsedIndex = Number.parseInt(rawIndex, 10);
-  const parsedTotal = Number.parseInt(rawTotal, 10);
-
-  if (
-    Number.isNaN(parsedIndex) ||
-    Number.isNaN(parsedTotal) ||
-    parsedTotal <= 0
-  ) {
-    return null;
-  }
-
-  const normalizedIndex =
-    parsedIndex >= 1 && parsedIndex <= parsedTotal
-      ? parsedIndex
-      : parsedIndex >= 0 && parsedIndex < parsedTotal
-        ? parsedIndex + 1
-        : parsedIndex;
-
-  if (normalizedIndex < 1 || normalizedIndex > parsedTotal) {
-    return null;
-  }
-
-  return {
-    index: normalizedIndex,
-    total: parsedTotal,
-  };
+  return parseShardDescriptor(extractCliShardDescriptor(process.argv));
 }
