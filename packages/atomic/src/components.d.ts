@@ -293,12 +293,6 @@ declare global {
         prototype: HTMLAtomicIpxRefineModalElement;
         new (): HTMLAtomicIpxRefineModalElement;
     };
-    interface HTMLAtomicIpxRefineToggleElement extends Components.AtomicIpxRefineToggle, HTMLStencilElement {
-    }
-    var HTMLAtomicIpxRefineToggleElement: {
-        prototype: HTMLAtomicIpxRefineToggleElement;
-        new (): HTMLAtomicIpxRefineToggleElement;
-    };
     interface HTMLAtomicStencilFacetDateInputElementEventMap {
         "atomic/dateInputApply": any;
     }
@@ -328,7 +322,6 @@ declare global {
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
         "atomic-ipx-recs-list": HTMLAtomicIpxRecsListElement;
         "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
-        "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
     }
 }
@@ -531,7 +524,6 @@ declare namespace LocalJSX {
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
         "atomic-ipx-recs-list": AtomicIpxRecsList;
         "atomic-ipx-refine-modal": AtomicIpxRefineModal;
-        "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
     }
 }
