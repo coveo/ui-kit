@@ -1,11 +1,6 @@
 #!/usr/bin/env node
 import {spawnSync} from 'node:child_process';
-import {
-  appendFileSync,
-  readdirSync,
-  readFileSync,
-  writeFileSync,
-} from 'node:fs';
+import {appendFileSync, existsSync, readFileSync, writeFileSync} from 'node:fs';
 import {join, resolve} from 'node:path';
 import {
   describeNpmTag,
@@ -35,87 +30,11 @@ if (!process.env.INIT_CWD) {
 process.chdir(process.env.INIT_CWD);
 
 /**
- * @typedef {import('./types.mjs').PackageJson} PackageJson
- */
-
-/**
- * Build a map of package names to their filesystem paths by scanning workspace directories.
- * @returns {Map<string, string>}
- */
-const buildPackageNameToPathMap = () => {
-  /** @type {Map<string, string>} */
-  const packageMap = new Map();
-  const packagesDir = join(REPO_FS_ROOT, 'packages');
-
-  /**
-   * @param {string} dir
-   */
-  const scanDirectory = (dir) => {
-    const packageJsonPath = join(dir, 'package.json');
-    try {
-      const packageJson = JSON.parse(
-        readFileSync(packageJsonPath, {encoding: 'utf-8'})
-      );
-      if (packageJson.name) {
-        packageMap.set(packageJson.name, dir);
-      }
-    } catch {
-      // No package.json in this directory, skip
-    }
-
-    // Scan subdirectories for nested packages (e.g., packages/atomic-angular/projects/atomic-angular)
-    try {
-      const entries = readdirSync(dir, {withFileTypes: true});
-      for (const entry of entries) {
-        if (
-          entry.isDirectory() &&
-          entry.name !== 'node_modules' &&
-          entry.name !== 'dist'
-        ) {
-          scanDirectory(join(dir, entry.name));
-        }
-      }
-    } catch {
-      // Cannot read directory, skip
-    }
-  };
-
-  // Scan all package directories
-  try {
-    const topLevelDirs = readdirSync(packagesDir, {withFileTypes: true});
-    for (const entry of topLevelDirs) {
-      if (entry.isDirectory()) {
-        scanDirectory(join(packagesDir, entry.name));
-      }
-    }
-  } catch {
-    // Cannot read packages directory
-  }
-
-  return packageMap;
-};
-
-/** @type {Map<string, string> | null} */
-let packageNameToPathCache = null;
-
-/**
- * Get the filesystem path for a package name.
- * @param {string} packageName
- * @returns {string | undefined}
- */
-const getPackagePath = (packageName) => {
-  if (!packageNameToPathCache) {
-    packageNameToPathCache = buildPackageNameToPathMap();
-  }
-  return packageNameToPathCache.get(packageName);
-};
-
-/**
- * Check if a package.json file has uncommitted changes.
+ * Check if the package json in the provided folder has changed since the last commit
  * @param {string} directoryPath
  * @returns {boolean}
  */
-const hasOwnPackageJsonChanged = (directoryPath) => {
+const hasPackageJsonChanged = (directoryPath) => {
   const {stdout, stderr, status} = spawnSync(
     'git',
     ['diff', '--exit-code', 'package.json'],
@@ -134,17 +53,23 @@ const hasOwnPackageJsonChanged = (directoryPath) => {
 };
 
 /**
- * Get all workspace dependencies from a package.json.
- * @param {string} directoryPath
- * @returns {string[]} Array of package names that are workspace dependencies
+ * @typedef {import('./types.mjs').PackageJson} PackageJson
  */
-const getWorkspaceDependencies = (directoryPath) => {
+
+/**
+ * Check if any workspace dependency has been bumped during this release cycle.
+ * Since release:phase1 runs in topological order (dependencies first),
+ * we can detect bumped dependencies by checking if they appear in .git-message.
+ * @param {string} directoryPath
+ * @returns {boolean}
+ */
+const hasWorkspaceDependencyChanged = (directoryPath) => {
   const packageJsonPath = resolve(directoryPath, 'package.json');
   const packageJson = JSON.parse(
     readFileSync(packageJsonPath, {encoding: 'utf-8'})
   );
 
-  /** @type {string[]} */
+  // Collect all workspace dependencies from dependencies and peerDependencies
   const workspaceDeps = [];
   for (const section of ['dependencies', 'peerDependencies']) {
     const deps = packageJson[section];
@@ -157,34 +82,33 @@ const getWorkspaceDependencies = (directoryPath) => {
       }
     }
   }
-  return workspaceDeps;
-};
 
-/**
- * Check if the package.json in the provided folder has changed, or if any of its
- * workspace dependencies have had their package.json changed (indicating they were
- * bumped in this release cycle).
- *
- * Since release:phase1 runs in topological order (dependencies first), when this
- * function runs for a dependant package, its dependencies have already been processed
- * and their package.json files will have uncommitted version changes if they were bumped.
- *
- * @param {string} directoryPath
- * @returns {boolean}
- */
-const hasPackageJsonChanged = (directoryPath) => {
-  // Check if this package's own package.json has changed
-  if (hasOwnPackageJsonChanged(directoryPath)) {
-    return true;
+  if (workspaceDeps.length === 0) {
+    return false;
   }
 
-  // Check if any workspace dependency's package.json has changed
-  const workspaceDeps = getWorkspaceDependencies(directoryPath);
-  for (const depName of workspaceDeps) {
-    const depPath = getPackagePath(depName);
-    if (depPath && hasOwnPackageJsonChanged(depPath)) {
+  // Check if any of these dependencies were bumped in this release cycle
+  // by looking at the .git-message file which accumulates bumped packages
+  const gitMessagePath = join(REPO_FS_ROOT, '.git-message');
+  if (!existsSync(gitMessagePath)) {
+    return false;
+  }
+
+  const gitMessage = readFileSync(gitMessagePath, {encoding: 'utf-8'});
+  const bumpedPackages = gitMessage
+    .split('\n')
+    .filter(Boolean)
+    .map((line) => {
+      // Format is "packageName@version"
+      const atIndex = line.lastIndexOf('@');
+      return atIndex > 0 ? line.slice(0, atIndex) : line;
+    });
+
+  // Check if any workspace dependency was bumped
+  for (const dep of workspaceDeps) {
+    if (bumpedPackages.includes(dep)) {
       console.log(
-        `Workspace dependency ${depName} was bumped in this release cycle`
+        `Workspace dependency ${dep} was bumped in this release cycle`
       );
       return true;
     }
@@ -224,7 +148,11 @@ const lastTag = await getLastTag({
   onBranch: `refs/remotes/origin/${REPO_RELEASE_BRANCH}`,
 });
 const commits = await getCommits(PATH, lastTag);
-if (commits.length === 0 && !hasPackageJsonChanged(PATH)) {
+if (
+  commits.length === 0 &&
+  !hasPackageJsonChanged(PATH) &&
+  !hasWorkspaceDependencyChanged(PATH)
+) {
   process.exit(0);
 }
 const parsedCommits = parseCommits(commits, convention.parserOpts);
