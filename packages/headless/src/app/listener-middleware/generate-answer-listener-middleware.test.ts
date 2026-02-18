@@ -1,5 +1,6 @@
 import {configureStore} from '@reduxjs/toolkit';
 import {interfaceLoad} from '../../features/analytics/analytics-actions.js';
+import {resetFollowUpAnswers} from '../../features/follow-up-answers/follow-up-answers-actions.js';
 import {
   generateHeadAnswer,
   resetAnswer,
@@ -20,6 +21,16 @@ vi.mock('../../features/generated-answer/generated-answer-actions.js', () => ({
     payload: {},
   })),
 }));
+
+vi.mock(
+  '../../features/follow-up-answers/follow-up-answers-actions.js',
+  () => ({
+    resetFollowUpAnswers: vi.fn(() => ({
+      type: 'followUp/resetFollowUpAnswers',
+      payload: {},
+    })),
+  })
+);
 
 describe('generateAnswerListener', () => {
   let store: Store;
@@ -53,7 +64,7 @@ describe('generateAnswerListener', () => {
           dispatchSpy = vi.spyOn(store, 'dispatch');
         });
 
-        it('should not dispatch generateHeadAnswer action when executeSearch.pending is dispatched', () => {
+        it('should dispatch head answer reset and follow-up reset but not generateHeadAnswer when query is empty', async () => {
           const searchAction = executeSearch.pending('requestId', {
             legacy: logInsightInterfaceLoad(),
             next: interfaceLoad(),
@@ -61,24 +72,11 @@ describe('generateAnswerListener', () => {
 
           store.dispatch(searchAction);
 
-          expect(generateHeadAnswer).not.toHaveBeenCalled();
-          expect(dispatchSpy).toHaveBeenCalledTimes(1);
-          expect(dispatchSpy).toHaveBeenCalledWith(
-            expect.objectContaining({
-              type: executeSearch.pending.type,
-            })
-          );
-        });
-
-        it('should not dispatch resetAnswer action when executeSearch.pending is dispatched and query is empty', () => {
-          const searchAction = executeSearch.pending('requestId', {
-            legacy: logInsightInterfaceLoad(),
-            next: interfaceLoad(),
+          await vi.waitFor(() => {
+            expect(resetAnswer).toHaveBeenCalled();
+            expect(resetFollowUpAnswers).toHaveBeenCalled();
+            expect(generateHeadAnswer).not.toHaveBeenCalled();
           });
-
-          store.dispatch(searchAction);
-
-          expect(resetAnswer).not.toHaveBeenCalled();
         });
       });
 
@@ -104,7 +102,7 @@ describe('generateAnswerListener', () => {
           dispatchSpy = vi.spyOn(store, 'dispatch');
         });
 
-        it('should dispatch generateHeadAnswer action when executeSearch.pending is dispatched', async () => {
+        it('should dispatch head answer reset and follow-up reset then generateHeadAnswer when executeSearch.pending is dispatched', async () => {
           const searchAction = executeSearch.pending('requestId', {
             legacy: logInsightInterfaceLoad(),
             next: interfaceLoad(),
@@ -113,11 +111,13 @@ describe('generateAnswerListener', () => {
           store.dispatch(searchAction);
 
           await vi.waitFor(() => {
+            expect(resetAnswer).toHaveBeenCalled();
+            expect(resetFollowUpAnswers).toHaveBeenCalled();
             expect(generateHeadAnswer).toHaveBeenCalled();
           });
         });
 
-        it('should dispatch resetAnswer action when executeSearch.pending is dispatched', async () => {
+        it('should dispatch head answer reset and follow-up reset when executeSearch.pending is dispatched', async () => {
           const searchAction = executeSearch.pending('requestId', {
             legacy: logInsightInterfaceLoad(),
             next: interfaceLoad(),
@@ -127,10 +127,11 @@ describe('generateAnswerListener', () => {
 
           await vi.waitFor(() => {
             expect(resetAnswer).toHaveBeenCalled();
+            expect(resetFollowUpAnswers).toHaveBeenCalled();
           });
         });
 
-        it('should dispatch resetAnswer before generateHeadAnswer', async () => {
+        it('should dispatch head answer reset and follow-up reset before generateHeadAnswer', async () => {
           const searchAction = executeSearch.pending('requestId', {
             legacy: logInsightInterfaceLoad(),
             next: interfaceLoad(),
@@ -140,6 +141,7 @@ describe('generateAnswerListener', () => {
 
           await vi.waitFor(() => {
             expect(resetAnswer).toHaveBeenCalled();
+            expect(resetFollowUpAnswers).toHaveBeenCalled();
             expect(generateHeadAnswer).toHaveBeenCalled();
           });
 
@@ -147,9 +149,13 @@ describe('generateAnswerListener', () => {
           const resetCallOrder = (resetAnswer as any).mock
             .invocationCallOrder[0];
           // biome-ignore lint/suspicious/noExplicitAny: unit tests
+          const resetFollowUpCallOrder = (resetFollowUpAnswers as any).mock
+            .invocationCallOrder[0];
+          // biome-ignore lint/suspicious/noExplicitAny: unit tests
           const generateCallOrder = (generateHeadAnswer as any).mock
             .invocationCallOrder[0];
           expect(resetCallOrder).toBeLessThan(generateCallOrder);
+          expect(resetFollowUpCallOrder).toBeLessThan(generateCallOrder);
         });
       });
     });
@@ -188,7 +194,7 @@ describe('generateAnswerListener', () => {
         );
       });
 
-      it('should not dispatch resetAnswer action when executeSearch.pending is dispatched', () => {
+      it('should not dispatch head answer reset or follow-up reset when executeSearch.pending is dispatched', () => {
         const searchAction = executeSearch.pending('requestId', {
           legacy: logInsightInterfaceLoad(),
           next: interfaceLoad(),
@@ -197,6 +203,7 @@ describe('generateAnswerListener', () => {
         store.dispatch(searchAction);
 
         expect(resetAnswer).not.toHaveBeenCalled();
+        expect(resetFollowUpAnswers).not.toHaveBeenCalled();
       });
     });
   });
@@ -234,7 +241,7 @@ describe('generateAnswerListener', () => {
       );
     });
 
-    it('should not dispatch resetAnswer action when executeSearch.pending is dispatched', () => {
+    it('should not dispatch head answer reset or follow-up reset when executeSearch.pending is dispatched', () => {
       const searchAction = executeSearch.pending('requestId', {
         legacy: logInsightInterfaceLoad(),
         next: interfaceLoad(),
@@ -243,6 +250,7 @@ describe('generateAnswerListener', () => {
       store.dispatch(searchAction);
 
       expect(resetAnswer).not.toHaveBeenCalled();
+      expect(resetFollowUpAnswers).not.toHaveBeenCalled();
     });
   });
 });
