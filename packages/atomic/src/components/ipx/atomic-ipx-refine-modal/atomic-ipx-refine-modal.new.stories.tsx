@@ -17,7 +17,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 const facetWidthDecorator: Decorator = (story) =>
-  html`<div style="min-width: 470px;">${story()}</div> `;
+  html`<div style="min-width: 470px; margin: auto;">${story()}</div> `;
 
 const meta: Meta = {
   component: 'atomic-ipx-refine-modal',
