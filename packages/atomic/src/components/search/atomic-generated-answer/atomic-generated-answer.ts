@@ -142,6 +142,12 @@ export class AtomicGeneratedAnswer
    */
   @property({type: String, attribute: 'answer-configuration-id'})
   answerConfigurationId?: string;
+  /**
+   * @internal
+   * The unique identifier of the agent to use to generate answers.
+   */
+  @property({type: String, attribute: 'agent-id'})
+  agentId?: string;
 
   /**
    * The unique identifier of the agent used to render the generated answer with a fixed height and scrollable content.
@@ -273,6 +279,9 @@ export class AtomicGeneratedAnswer
       },
       ...(this.answerConfigurationId && {
         answerConfigurationId: this.answerConfigurationId,
+      }),
+      ...(this.agentId && {
+        agentId: this.agentId,
       }),
       fieldsToIncludeInCitations: this.getCitationFields(),
     });

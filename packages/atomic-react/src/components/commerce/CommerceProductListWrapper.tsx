@@ -1,8 +1,8 @@
 import type {AtomicCommerceProductList} from '@coveo/atomic/components';
 import type {Product} from '@coveo/headless/commerce';
 import React, {type JSX, useEffect, useRef} from 'react';
+import {flushSync} from 'react-dom';
 import {createRoot} from 'react-dom/client';
-import {renderToString} from 'react-dom/server';
 import {
   AtomicProductLink,
   AtomicCommerceProductList as LitAtomicCommerceProductList,
@@ -64,23 +64,18 @@ export const ListWrapper: React.FC<WrapperProps> = (props) => {
     useRef<HTMLAtomicCommerceProductListElement>(null);
   useEffect(() => {
     commerceProductListRef.current?.setRenderFunction(
-      (product, root, linkContainer) => {
-        const templateResult = template(product as Product);
-        if (hasLinkTemplate(templateResult)) {
-          createRoot(linkContainer!).render(templateResult.linkTemplate);
-          createRoot(root).render(templateResult.contentTemplate);
-          return renderToString(templateResult.contentTemplate);
+      (result, root, linkContainer) => {
+        const templateResult = template(result as Product);
+        if (isTemplate(templateResult)) {
+          return renderTemplate(linkContainer, templateResult, root);
+        } else {
+          return renderJSXTemplate(
+            linkContainer,
+            root,
+            templateResult,
+            otherProps.display
+          );
         }
-        if (linkContainer !== undefined) {
-          createRoot(root).render(templateResult);
-          otherProps.display === 'grid'
-            ? createRoot(linkContainer).render(
-                <AtomicProductLink></AtomicProductLink>
-              )
-            : // biome-ignore lint/complexity/noUselessFragments: <>
-              createRoot(linkContainer).render(<></>);
-        }
-        return renderToString(templateResult);
       }
     );
   }, [otherProps.display, template]);
@@ -92,8 +87,41 @@ export const ListWrapper: React.FC<WrapperProps> = (props) => {
   );
 };
 
-const hasLinkTemplate = (
-  template: JSX.Element | Template
-): template is Template => {
+const isTemplate = (template: JSX.Element | Template): template is Template => {
   return (template as Template).linkTemplate !== undefined;
 };
+
+function renderJSXTemplate(
+  linkContainer: HTMLElement | undefined,
+  root: HTMLElement,
+  templateResult: JSX.Element,
+  display: WrapperProps['display']
+) {
+  const contentRoot = createRoot(root);
+  const linkRoot = linkContainer ? createRoot(linkContainer!) : null;
+  flushSync(() => {
+    contentRoot.render(templateResult);
+    if (!linkRoot) {
+      return;
+    }
+    display === 'grid'
+      ? linkRoot.render(<AtomicProductLink></AtomicProductLink>)
+      : // biome-ignore lint/complexity/noUselessFragments: <>
+        linkRoot.render(<></>);
+  });
+  return root.innerHTML;
+}
+
+function renderTemplate(
+  linkContainer: HTMLElement | undefined,
+  templateResult: Template,
+  root: HTMLElement
+) {
+  const linkRoot = createRoot(linkContainer!);
+  const contentRoot = createRoot(root);
+  flushSync(() => {
+    linkRoot.render(templateResult.linkTemplate);
+    contentRoot.render(templateResult.contentTemplate);
+  });
+  return root.innerHTML;
+}

@@ -4,6 +4,7 @@ import {
   type UnknownAction,
 } from '@reduxjs/toolkit';
 import type {AnswerGenerationApiState} from '../../api/knowledge/answer-generation/answer-generation-api-state.js';
+import {resetFollowUpAnswers} from '../../features/follow-up-answers/follow-up-answers-actions.js';
 import {
   generateHeadAnswer,
   resetAnswer,
@@ -27,17 +28,18 @@ generateAnswerListener.startListening({
 
   effect: async (_action, listenerApi) => {
     const state = listenerApi.getState();
-
     const q = selectQuery(state)?.q;
     const queryIsEmpty = !q || q.trim() === '';
 
-    if (
-      !isGeneratedAnswerFeatureEnabledWithAnswerGenerationAPI(state) ||
-      queryIsEmpty
-    ) {
+    if (!isGeneratedAnswerFeatureEnabledWithAnswerGenerationAPI(state)) {
       return;
     }
     listenerApi.dispatch(resetAnswer());
+    listenerApi.dispatch(resetFollowUpAnswers());
+
+    if (queryIsEmpty) {
+      return;
+    }
     listenerApi.dispatch(generateHeadAnswer());
   },
 });

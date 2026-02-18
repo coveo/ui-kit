@@ -5,50 +5,21 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize } from "./components/common/layout/display-options";
-import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 import { DateFilterRange, DateRangeRequest, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 import { RangeFacetSortCriterion as InsightRangeFacetSortCriterion } from "@coveo/headless/insight";
+import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize } from "./components/common/layout/display-options";
+import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 import { AnyBindings } from "./components/common/interface/bindings";
-export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize } from "./components/common/layout/display-options";
-export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 export { DateFilterRange, DateRangeRequest, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 export { RangeFacetSortCriterion as InsightRangeFacetSortCriterion } from "@coveo/headless/insight";
+export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize } from "./components/common/layout/display-options";
+export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 export { AnyBindings } from "./components/common/interface/bindings";
 export namespace Components {
-    interface AtomicInsightFoldedResultList {
-        /**
-          * The name of the field that uniquely identifies a result within a collection.
-          * @defaultValue `foldingchild`
-         */
-        "childField"?: string;
-        /**
-          * The name of the field on which to do the folding. The folded result list component will use the values of this field to resolve the collections of result items.
-          * @defaultValue `foldingcollection`
-         */
-        "collectionField"?: string;
-        /**
-          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
-         */
-        "density": ItemDisplayDensity;
-        /**
-          * The expected size of the image displayed in the results.
-         */
-        "imageSize": ItemDisplayImageSize;
-        /**
-          * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
-          * @defaultValue `foldingparent`
-         */
-        "parentField"?: string;
-        /**
-          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax such as React, Angular, or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
-         */
-        "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
-    }
     interface AtomicInsightGeneratedAnswer {
         "answerConfigurationId"?: string;
         /**
@@ -126,16 +97,6 @@ export namespace Components {
     string,
     string[]
   >;
-    }
-    interface AtomicInsightSmartSnippetSuggestions {
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.
-         */
-        "headingLevel": number;
-        /**
-          * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
     }
     interface AtomicInsightTimeframeFacet {
         /**
@@ -244,56 +205,6 @@ export namespace Components {
         "collapseFacetsAfter": number;
     }
     /**
-     * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
-     */
-    interface AtomicRecsList {
-        /**
-          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
-         */
-        "density": ItemDisplayDensity;
-        /**
-          * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
-         */
-        "display": ItemDisplayBasicLayout;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
-         */
-        "headingLevel": number;
-        /**
-          * The expected size of the image displayed in the results.
-         */
-        "imageSize": ItemDisplayImageSize;
-        /**
-          * The non-localized label for the list of recommendations.
-         */
-        "label"?: string;
-        /**
-          * Moves to the next page, when the carousel is activated.
-         */
-        "nextPage": () => Promise<void>;
-        /**
-          * The total number of recommendations to display. This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
-         */
-        "numberOfRecommendations": number;
-        /**
-          * The number of recommendations to display, per page. Setting a value greater than and lower than the numberOfRecommendations value activates the carousel. This does not affect the display of the list itself, only the number of recommendation pages.
-         */
-        "numberOfRecommendationsPerPage"?: number;
-        /**
-          * Moves to the previous page, when the carousel is activated.
-         */
-        "previousPage": () => Promise<void>;
-        /**
-          * The Recommendation identifier used by the Coveo platform to retrieve recommended documents. Make sure to set a different value for each atomic-recs-list in your page.
-         */
-        "recommendation": string;
-        /**
-          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax such as React, Angular, or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
-          * @param resultRenderingFunction
-         */
-        "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
-    }
-    /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
      * Internal component made to be integrated in a TimeframeFacet.
      */
@@ -320,12 +231,6 @@ export interface AtomicStencilFacetDateInputCustomEvent<T> extends CustomEvent<T
     target: HTMLAtomicStencilFacetDateInputElement;
 }
 declare global {
-    interface HTMLAtomicInsightFoldedResultListElement extends Components.AtomicInsightFoldedResultList, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightFoldedResultListElement: {
-        prototype: HTMLAtomicInsightFoldedResultListElement;
-        new (): HTMLAtomicInsightFoldedResultListElement;
-    };
     interface HTMLAtomicInsightGeneratedAnswerElement extends Components.AtomicInsightGeneratedAnswer, HTMLStencilElement {
     }
     var HTMLAtomicInsightGeneratedAnswerElement: {
@@ -373,12 +278,6 @@ declare global {
         prototype: HTMLAtomicInsightResultChildrenTemplateElement;
         new (): HTMLAtomicInsightResultChildrenTemplateElement;
     };
-    interface HTMLAtomicInsightSmartSnippetSuggestionsElement extends Components.AtomicInsightSmartSnippetSuggestions, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightSmartSnippetSuggestionsElement: {
-        prototype: HTMLAtomicInsightSmartSnippetSuggestionsElement;
-        new (): HTMLAtomicInsightSmartSnippetSuggestionsElement;
-    };
     interface HTMLAtomicInsightTimeframeFacetElement extends Components.AtomicInsightTimeframeFacet, HTMLStencilElement {
     }
     var HTMLAtomicInsightTimeframeFacetElement: {
@@ -406,15 +305,6 @@ declare global {
         prototype: HTMLAtomicIpxRefineToggleElement;
         new (): HTMLAtomicIpxRefineToggleElement;
     };
-    /**
-     * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
-     */
-    interface HTMLAtomicRecsListElement extends Components.AtomicRecsList, HTMLStencilElement {
-    }
-    var HTMLAtomicRecsListElement: {
-        prototype: HTMLAtomicRecsListElement;
-        new (): HTMLAtomicRecsListElement;
-    };
     interface HTMLAtomicStencilFacetDateInputElementEventMap {
         "atomic/dateInputApply": any;
     }
@@ -437,46 +327,18 @@ declare global {
         new (): HTMLAtomicStencilFacetDateInputElement;
     };
     interface HTMLElementTagNameMap {
-        "atomic-insight-folded-result-list": HTMLAtomicInsightFoldedResultListElement;
         "atomic-insight-generated-answer": HTMLAtomicInsightGeneratedAnswerElement;
         "atomic-insight-result-action": HTMLAtomicInsightResultActionElement;
         "atomic-insight-result-attach-to-case-action": HTMLAtomicInsightResultAttachToCaseActionElement;
         "atomic-insight-result-children-template": HTMLAtomicInsightResultChildrenTemplateElement;
-        "atomic-insight-smart-snippet-suggestions": HTMLAtomicInsightSmartSnippetSuggestionsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
         "atomic-ipx-recs-list": HTMLAtomicIpxRecsListElement;
         "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
         "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
-        "atomic-recs-list": HTMLAtomicRecsListElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
     }
 }
 declare namespace LocalJSX {
-    interface AtomicInsightFoldedResultList {
-        /**
-          * The name of the field that uniquely identifies a result within a collection.
-          * @defaultValue `foldingchild`
-         */
-        "childField"?: string;
-        /**
-          * The name of the field on which to do the folding. The folded result list component will use the values of this field to resolve the collections of result items.
-          * @defaultValue `foldingcollection`
-         */
-        "collectionField"?: string;
-        /**
-          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
-         */
-        "density"?: ItemDisplayDensity;
-        /**
-          * The expected size of the image displayed in the results.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-        /**
-          * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
-          * @defaultValue `foldingparent`
-         */
-        "parentField"?: string;
-    }
     interface AtomicInsightGeneratedAnswer {
         "answerConfigurationId"?: string;
         /**
@@ -561,16 +423,6 @@ declare namespace LocalJSX {
     string,
     string[]
   >;
-    }
-    interface AtomicInsightSmartSnippetSuggestions {
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.
-         */
-        "headingLevel"?: number;
-        /**
-          * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
     }
     interface AtomicInsightTimeframeFacet {
         /**
@@ -666,43 +518,6 @@ declare namespace LocalJSX {
         "collapseFacetsAfter"?: number;
     }
     /**
-     * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
-     */
-    interface AtomicRecsList {
-        /**
-          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
-         */
-        "density"?: ItemDisplayDensity;
-        /**
-          * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
-         */
-        "display"?: ItemDisplayBasicLayout;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
-         */
-        "headingLevel"?: number;
-        /**
-          * The expected size of the image displayed in the results.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-        /**
-          * The non-localized label for the list of recommendations.
-         */
-        "label"?: string;
-        /**
-          * The total number of recommendations to display. This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
-         */
-        "numberOfRecommendations"?: number;
-        /**
-          * The number of recommendations to display, per page. Setting a value greater than and lower than the numberOfRecommendations value activates the carousel. This does not affect the display of the list itself, only the number of recommendation pages.
-         */
-        "numberOfRecommendationsPerPage"?: number;
-        /**
-          * The Recommendation identifier used by the Coveo platform to retrieve recommended documents. Make sure to set a different value for each atomic-recs-list in your page.
-         */
-        "recommendation"?: string;
-    }
-    /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
      * Internal component made to be integrated in a TimeframeFacet.
      */
@@ -721,17 +536,14 @@ declare namespace LocalJSX {
         "rangeSetter": (range: DateRangeRequest) => void;
     }
     interface IntrinsicElements {
-        "atomic-insight-folded-result-list": AtomicInsightFoldedResultList;
         "atomic-insight-generated-answer": AtomicInsightGeneratedAnswer;
         "atomic-insight-result-action": AtomicInsightResultAction;
         "atomic-insight-result-attach-to-case-action": AtomicInsightResultAttachToCaseAction;
         "atomic-insight-result-children-template": AtomicInsightResultChildrenTemplate;
-        "atomic-insight-smart-snippet-suggestions": AtomicInsightSmartSnippetSuggestions;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
         "atomic-ipx-recs-list": AtomicIpxRecsList;
         "atomic-ipx-refine-modal": AtomicIpxRefineModal;
         "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
-        "atomic-recs-list": AtomicRecsList;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
     }
 }
@@ -739,12 +551,10 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "atomic-insight-folded-result-list": LocalJSX.AtomicInsightFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightFoldedResultListElement>;
             "atomic-insight-generated-answer": LocalJSX.AtomicInsightGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicInsightGeneratedAnswerElement>;
             "atomic-insight-result-action": LocalJSX.AtomicInsightResultAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionElement>;
             "atomic-insight-result-attach-to-case-action": LocalJSX.AtomicInsightResultAttachToCaseAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultAttachToCaseActionElement>;
             "atomic-insight-result-children-template": LocalJSX.AtomicInsightResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenTemplateElement>;
-            "atomic-insight-smart-snippet-suggestions": LocalJSX.AtomicInsightSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetSuggestionsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
             /**
              * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
@@ -752,10 +562,6 @@ declare module "@stencil/core" {
             "atomic-ipx-recs-list": LocalJSX.AtomicIpxRecsList & JSXBase.HTMLAttributes<HTMLAtomicIpxRecsListElement>;
             "atomic-ipx-refine-modal": LocalJSX.AtomicIpxRefineModal & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineModalElement>;
             "atomic-ipx-refine-toggle": LocalJSX.AtomicIpxRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineToggleElement>;
-            /**
-             * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
-             */
-            "atomic-recs-list": LocalJSX.AtomicRecsList & JSXBase.HTMLAttributes<HTMLAtomicRecsListElement>;
             /**
              * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
              * Internal component made to be integrated in a TimeframeFacet.
