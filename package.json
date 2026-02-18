@@ -61,7 +61,6 @@
   },
   "pnpm": {
     "patchedDependencies": {
-      "@stencil/angular-output-target@0.8.4": "patches/@stencil+angular-output-target+0.8.4.patch",
       "@stencil/core@4.20.0": "patches/@stencil+core+4.20.0.patch",
       "@wc-toolkit/storybook-helpers@10.0.0": "patches/@wc-toolkit+storybook-helpers+10.0.0.patch",
       "fix-esm-import-path@1.10.1": "patches/fix-esm-import-path+1.10.1.patch",

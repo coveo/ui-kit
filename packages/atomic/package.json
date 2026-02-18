@@ -121,7 +121,6 @@
     "@rollup/plugin-node-resolve": "16.0.1",
     "@rollup/plugin-replace": "catalog:",
     "@stencil-community/postcss": "2.2.0",
-    "@stencil/angular-output-target": "0.8.4",
     "@stencil/react-output-target": "0.5.3",
     "@storybook/addon-a11y": "10.0.8",
     "@storybook/addon-docs": "10.0.8",

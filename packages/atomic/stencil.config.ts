@@ -1,6 +1,5 @@
 import {readdirSync, readFileSync} from 'node:fs';
 import replacePlugin from '@rollup/plugin-replace';
-import {angularOutputTarget as angular} from '@stencil/angular-output-target';
 import type {Config} from '@stencil/core';
 import {reactOutputTarget as react} from '@stencil/react-output-target';
 import {postcss} from '@stencil-community/postcss';
@@ -9,7 +8,6 @@ import postcssNested from 'postcss-nested';
 import type {PluginImpl} from 'rollup';
 import {inlineSvg} from 'stencil-inline-svg';
 import {generateExternalPackageMappings} from './scripts/externalPackageMappings.mjs';
-import {generateAngularModuleDefinition as angularModule} from './stencil-plugin/atomic-angular-module';
 
 const isProduction = process.env.BUILD === 'production';
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
@@ -105,17 +103,6 @@ export const config: Config = {
           filterComponentsByUseCaseForReactOutput('src/components/insight'),
           filterComponentsByUseCaseForReactOutput('src/components/ipx')
         ),
-      }),
-    !isDevWatch &&
-      angular({
-        componentCorePackage: '@coveo/atomic',
-        directivesProxyFile:
-          '../atomic-angular/projects/atomic-angular/src/lib/stencil-generated/components.ts',
-      }),
-    !isDevWatch &&
-      angularModule({
-        moduleFile:
-          '../atomic-angular/projects/atomic-angular/src/lib/stencil-generated/atomic-angular.module.ts',
       }),
     {
       type: 'dist-custom-elements',

@@ -111,9 +111,6 @@ overrides:
   html-minifier: npm:html-minifier-terser@^7.2.0
 
 patchedDependencies:
-  '@stencil/angular-output-target@0.8.4':
-    hash: ffa6652e9d95e4699aeb937bae0dc81fc675329b4fc1c26251086764254c2e1f
-    path: patches/@stencil+angular-output-target+0.8.4.patch
   '@stencil/core@4.20.0':
     hash: 2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9
     path: patches/@stencil+core+4.20.0.patch
@@ -288,9 +285,6 @@ importers:
       '@stencil-community/postcss':
         specifier: 2.2.0
         version: 2.2.0(@stencil/core@4.20.0(patch_hash=2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9))
-      '@stencil/angular-output-target':
-        specifier: 0.8.4
-        version: 0.8.4(patch_hash=ffa6652e9d95e4699aeb937bae0dc81fc675329b4fc1c26251086764254c2e1f)(@stencil/core@4.20.0(patch_hash=2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9))
       '@stencil/react-output-target':
         specifier: 0.5.3
         version: 0.5.3(patch_hash=bca691c52b3fa2f491c35229af7f145e17fd520326f997c6a15ca31fd19b937e)(@stencil/core@4.20.0(patch_hash=2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9))
@@ -5573,11 +5567,6 @@ packages:
     resolution: {integrity: sha512-PuPdjqgF6HdvSLwS6fpLf1TRzd3bd6zqpsICCUA0u9sxPnwrsIpx1xYyA/K9hSWrmyUg0WhHPvkX9k26N5DCnw==}
     peerDependencies:
       '@stencil/core': '>=2.0.0 || >=3.0.0 || >=4.0.0'
-
-  '@stencil/angular-output-target@0.8.4':
-    resolution: {integrity: sha512-QvmHTueXXs5vB9W2L12uEzFmAuR8sqATJV2b+SCFmYsjJSaymiSqR3dKo2wnr0tZiTgU1t16BWaUKiSh3wPXpw==}
-    peerDependencies:
-      '@stencil/core': '>=2.0.0 || >=3 || >= 4.0.0-beta.0 || >= 4.0.0'
 
   '@stencil/core@4.20.0':
     resolution: {integrity: sha512-WPrTHFngvN081RY+dJPneKQLwnOFD60OMCOQGmmSHfCW0f4ujPMzzhwWU1gcSwXPWXz5O+8cBiiCaxAbJU7kAg==}
@@ -19060,10 +19049,6 @@ snapshots:
     dependencies:
       '@stencil/core': 4.20.0(patch_hash=2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9)
       postcss: 8.4.49
-
-  '@stencil/angular-output-target@0.8.4(patch_hash=ffa6652e9d95e4699aeb937bae0dc81fc675329b4fc1c26251086764254c2e1f)(@stencil/core@4.20.0(patch_hash=2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9))':
-    dependencies:
-      '@stencil/core': 4.20.0(patch_hash=2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9)
 
   '@stencil/core@4.20.0(patch_hash=2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9)': {}
 
