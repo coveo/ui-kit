@@ -88,7 +88,6 @@ describe('generateFollowUpAnswer', () => {
       expect.objectContaining({type: 'followUpAnswers/createFollowUpAnswer'})
     );
     expect(initiateFollowUpEndpoint).not.toHaveBeenCalled();
-    expect(constructGenerateFollowUpAnswerParams).not.toHaveBeenCalled();
   });
 
   it('should warn and avoid dispatching follow-up actions when agentId is an empty string', async () => {
@@ -105,6 +104,28 @@ describe('generateFollowUpAnswer', () => {
       expect.objectContaining({type: 'followUpAnswers/createFollowUpAnswer'})
     );
     expect(initiateFollowUpEndpoint).not.toHaveBeenCalled();
-    expect(constructGenerateFollowUpAnswerParams).not.toHaveBeenCalled();
+  });
+
+  it('should warn and avoid dispatching follow-up actions when conversationId is missing', async () => {
+    vi.mocked(constructGenerateFollowUpAnswerParams).mockReturnValue({
+      q: question,
+      conversationId: '',
+    });
+
+    const thunk = generateFollowUpAnswer(question);
+    await thunk(mockDispatch, getState, extra);
+
+    expect(mockLogger.warn).toHaveBeenCalledWith(
+      'Missing conversationId when generating a follow-up answer. ' +
+        'The generateFollowUpAnswer action requires an existing conversation.'
+    );
+    expect(mockDispatch).not.toHaveBeenCalledWith(
+      expect.objectContaining({type: 'followUpAnswers/createFollowUpAnswer'})
+    );
+    expect(initiateFollowUpEndpoint).not.toHaveBeenCalled();
+    expect(constructGenerateFollowUpAnswerParams).toHaveBeenCalledWith(
+      question,
+      state
+    );
   });
 });

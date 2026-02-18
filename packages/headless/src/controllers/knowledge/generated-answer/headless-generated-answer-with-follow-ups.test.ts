@@ -433,5 +433,13 @@ describe('GeneratedAnswerWithFollowUps', () => {
       expect(generateFollowUpAnswer).toHaveBeenCalledTimes(1);
       expect(generateFollowUpAnswer).toHaveBeenCalledWith('Follow-up?');
     });
+
+    it('should not dispatch when question is empty or whitespace', () => {
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.askFollowUp('   ');
+
+      expect(generateFollowUpAnswer).not.toHaveBeenCalled();
+    });
   });
 });

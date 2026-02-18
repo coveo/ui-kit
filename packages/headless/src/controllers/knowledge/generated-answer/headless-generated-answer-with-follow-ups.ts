@@ -120,6 +120,9 @@ export function buildGeneratedAnswerWithFollowUps(
       engine.dispatch(generateHeadAnswer());
     },
     askFollowUp(question: string) {
+      if (!question || question.trim() === '') {
+        return;
+      }
       engine.dispatch(generateFollowUpAnswer(question));
     },
   };

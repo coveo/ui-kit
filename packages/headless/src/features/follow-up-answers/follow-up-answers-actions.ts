@@ -151,6 +151,10 @@ export const generateFollowUpAnswer = createAsyncThunk<
   async (question, {getState, dispatch, extra: {logger}}) => {
     const state = getState();
     const agentId = selectAgentId(state)?.trim();
+    const generateFollowUpAnswerParams = constructGenerateFollowUpAnswerParams(
+      question,
+      state
+    );
 
     if (!agentId) {
       logger.warn(
@@ -160,11 +164,15 @@ export const generateFollowUpAnswer = createAsyncThunk<
       return;
     }
 
+    if (!generateFollowUpAnswerParams.conversationId) {
+      logger.warn(
+        'Missing conversationId when generating a follow-up answer. ' +
+          'The generateFollowUpAnswer action requires an existing conversation.'
+      );
+      return;
+    }
+
     dispatch(createFollowUpAnswer({question}));
-    const generateFollowUpAnswerParams = constructGenerateFollowUpAnswerParams(
-      question,
-      state
-    );
     await dispatch(
       initiateFollowUpEndpoint({
         strategyKey: 'follow-up-answer',
