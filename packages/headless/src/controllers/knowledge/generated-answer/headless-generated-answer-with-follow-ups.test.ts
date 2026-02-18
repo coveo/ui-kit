@@ -2,6 +2,7 @@ import {answerGenerationApi} from '../../../api/knowledge/answer-generation/answ
 import type {AnswerGenerationApiState} from '../../../api/knowledge/answer-generation/answer-generation-api-state.js';
 import {selectAnswer} from '../../../api/knowledge/answer-generation/endpoints/answer/answer-endpoint.js';
 import {setAgentId} from '../../../features/configuration/configuration-actions.js';
+import {generateFollowUpAnswer} from '../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {followUpAnswersReducer} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import {getFollowUpAnswersInitialState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
 import {selectAnswerApiQueryParams} from '../../../features/generated-answer/answer-api-selectors.js';
@@ -19,6 +20,7 @@ import {
 } from './headless-generated-answer-with-follow-ups.js';
 
 vi.mock('../../../features/generated-answer/generated-answer-actions');
+vi.mock('../../../features/follow-up-answers/follow-up-answers-actions');
 vi.mock('../../../features/configuration/configuration-actions');
 
 vi.mock(
@@ -420,6 +422,24 @@ describe('GeneratedAnswerWithFollowUps', () => {
       controller.retry();
 
       expect(generateHeadAnswer).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('askFollowUp method', () => {
+    it('should dispatch generateFollowUpAnswer', () => {
+      const controller = createGeneratedAnswerWithFollowUps();
+      controller.askFollowUp('Follow-up?');
+
+      expect(generateFollowUpAnswer).toHaveBeenCalledTimes(1);
+      expect(generateFollowUpAnswer).toHaveBeenCalledWith('Follow-up?');
+    });
+
+    it('should not dispatch when question is empty or whitespace', () => {
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.askFollowUp('   ');
+
+      expect(generateFollowUpAnswer).not.toHaveBeenCalled();
     });
   });
 });
