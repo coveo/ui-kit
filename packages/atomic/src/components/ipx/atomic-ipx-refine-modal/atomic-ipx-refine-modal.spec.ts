@@ -8,7 +8,7 @@ import {
 } from '@coveo/headless';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import {userEvent} from 'vitest/browser';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeBreadcrumbManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/breadcrumb-manager';
@@ -115,10 +115,6 @@ describe('atomic-ipx-refine-modal', () => {
       ),
     };
   };
-
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
 
   it('should build breadcrumb manager with engine', async () => {
     const {element} = await renderIpxRefineModal();
@@ -296,8 +292,8 @@ describe('atomic-ipx-refine-modal', () => {
         breadcrumbManagerState: {hasBreadcrumbs: true},
       });
 
-      Object.entries(parts(element)).forEach(([_key, el]) => {
-        expect(el).toBeInTheDocument();
+      Object.entries(parts(element)).forEach(([key, el]) => {
+        expect(el, `Part "${key}" should be in document`).toBeInTheDocument();
       });
     });
   });
