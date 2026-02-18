@@ -143,10 +143,12 @@ const packageJson = JSON.parse(
 );
 const versionPrefix = `${packageJson.name}@`;
 const convention = await changelogConvention();
+console.log('boop');
 const lastTag = await getLastTag({
   prefix: versionPrefix,
   onBranch: `refs/remotes/origin/${REPO_RELEASE_BRANCH}`,
-});
+}).catch(() => REPO_RELEASE_BRANCH); // if no tag is found, we consider all commits since the release branch as part of this release, which is the expected behavior for the first release or when a new package is added.
+console.log('beep');
 const commits = await getCommits(PATH, lastTag);
 if (
   commits.length === 0 &&
