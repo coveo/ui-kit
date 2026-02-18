@@ -1,3 +1,12 @@
+## 3.44.0 (2026-02-18)
+
+* feat(headless): answer generation endpoints updated to target the kgas service (#7075) ([9682fef](https://github.com/coveo/ui-kit/commits/9682fef)), closes [#7075](https://github.com/coveo/ui-kit/issues/7075)
+* feat(headless): Update messages handler in strategies to support new events from Kepler (#7118) ([512e9d4](https://github.com/coveo/ui-kit/commits/512e9d4)), closes [#7118](https://github.com/coveo/ui-kit/issues/7118)
+* feat(headless): wired generatedAnswerWithFollowUps controller with the main generated answer control ([1087fb5](https://github.com/coveo/ui-kit/commits/1087fb5)), closes [#7094](https://github.com/coveo/ui-kit/issues/7094)
+* fix(headless): apply enableQuerySyntax option at search box construction (#7089) ([05dcd8c](https://github.com/coveo/ui-kit/commits/05dcd8c)), closes [#7089](https://github.com/coveo/ui-kit/issues/7089)
+
+
+
 ## 3.43.0 (2026-02-11)
 
 * fix(deps): update dependency @coveo/relay to v1.2.15 j:kit-282 (#7052) ([a614dca](https://github.com/coveo/ui-kit/commits/a614dca)), closes [#7052](https://github.com/coveo/ui-kit/issues/7052)
