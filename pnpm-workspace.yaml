@@ -7,3 +7,5 @@ minimumReleaseAge: 10080
 minimumReleaseAgeExclude:
   - "@coveo/*"
   - "@coveo-platform/*"
+  # Renovate security update: next@16.1.5
+  - next@16.1.5
