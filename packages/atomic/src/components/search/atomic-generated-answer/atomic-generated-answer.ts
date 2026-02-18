@@ -587,7 +587,13 @@ export class AtomicGeneratedAnswer
     return renderFeedbackAndCopyButtons({
       props: {
         i18n: this.bindings.i18n,
-        generatedAnswerActionsState: this.generatedAnswerState,
+        generatedAnswerActionsState: {
+          liked: this.generatedAnswerState.liked,
+          disliked: this.generatedAnswerState.disliked,
+          isStreaming: this.generatedAnswerState.isStreaming,
+          isLoading: this.generatedAnswerState.isLoading,
+          answer: this.generatedAnswerState.answer,
+        },
         copied: this.copied,
         copyError: this.copyError,
         getCopyToClipboardTooltip: () => this.copyToClipboardTooltip,
