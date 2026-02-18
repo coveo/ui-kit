@@ -143,7 +143,6 @@ const packageJson = JSON.parse(
 );
 const versionPrefix = `${packageJson.name}@`;
 const convention = await changelogConvention();
-console.log('boop');
 const lastTag = await getLastTag({
   prefix: versionPrefix,
   onBranch: `refs/remotes/origin/${REPO_RELEASE_BRANCH}`,
