@@ -1,19 +1,22 @@
-import {answerGenerationApi} from '../../../api/knowledge/answer-generation/answer-generation-api.js';
 import {
-  type AnswerEndpointArgs,
-  selectAnswer,
-} from '../../../api/knowledge/answer-generation/endpoints/answer/answer-endpoint.js';
+  createFollowUpAgent,
+  createFollowUpStrategy,
+} from '../../../api/knowledge/answer-generation/agents/follow-up-agent.js';
+import {answerGenerationApi} from '../../../api/knowledge/answer-generation/answer-generation-api.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import {setAgentId} from '../../../features/configuration/configuration-actions.js';
 import {
+  selectAccessToken,
+  selectOrganizationId,
+} from '../../../features/configuration/configuration-selectors.js';
+import {
+  createFollowUpAnswer,
   dislikeFollowUp,
-  generateFollowUpAnswer,
   likeFollowUp,
 } from '../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {followUpAnswersReducer as followUpAnswers} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import type {FollowUpAnswersState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
-import {selectAnswerApiQueryParams} from '../../../features/generated-answer/answer-api-selectors.js';
 import {
   dislikeGeneratedAnswer,
   generateHeadAnswer,
@@ -81,45 +84,19 @@ export function buildGeneratedAnswerWithFollowUps(
   const getState = () => engine.state;
   engine.dispatch(setAgentId(props.agentId!));
 
+  const organizationId = selectOrganizationId(getState());
+  const accessToken = selectAccessToken(getState());
+
+  const followUpAgent = createFollowUpAgent(organizationId, props.agentId!);
+  const followUpStrategy = createFollowUpStrategy(engine.dispatch);
+
   return {
     ...controller,
     get state() {
-      const clientState = getState().generatedAnswer;
-      const answerApiQueryParams =
-        selectAnswerApiQueryParams(engine.state) ?? {};
-      const headAnswerArgs: AnswerEndpointArgs = {
-        ...answerApiQueryParams,
-        strategyKey: 'head-answer',
-      };
-      const serverState = selectAnswer(headAnswerArgs, engine.state)?.data;
       const followUpAnswersState = getState().followUpAnswers;
 
       return {
-        /** Server-owned (RTK Query) */
-        answer: serverState?.answer,
-        answerContentFormat: serverState?.contentFormat ?? 'text/plain',
-        citations: serverState?.citations ?? [],
-        isLoading: serverState?.isLoading ?? false,
-        isStreaming: serverState?.isStreaming ?? false,
-        ...(serverState?.error && {error: serverState.error}),
-        answerId: serverState?.answerId,
-        isAnswerGenerated: Boolean(serverState?.generated),
-        cannotAnswer: serverState?.generated === false,
-
-        /** Client-owned (Redux) */
-        isVisible: clientState.isVisible,
-        expanded: clientState.expanded,
-        liked: clientState.liked,
-        disliked: clientState.disliked,
-        feedbackSubmitted: clientState.feedbackSubmitted,
-        feedbackModalOpen: clientState.feedbackModalOpen,
-        isEnabled: clientState.isEnabled,
-        responseFormat: clientState.responseFormat,
-        fieldsToIncludeInCitations: clientState.fieldsToIncludeInCitations,
-        answerGenerationMode: clientState.answerGenerationMode,
-        id: clientState.id,
-
-        /** Follow-up answers state */
+        ...getState().generatedAnswer,
         followUpAnswers: followUpAnswersState,
       };
     },
@@ -127,7 +104,17 @@ export function buildGeneratedAnswerWithFollowUps(
       engine.dispatch(generateHeadAnswer());
     },
     askFollowUp(question: string) {
-      engine.dispatch(generateFollowUpAnswer(question));
+      engine.dispatch(createFollowUpAnswer({question}));
+      followUpAgent.runAgent(
+        {
+          forwardedProps: {
+            q: question,
+            conversationId: getState().followUpAnswers.conversationId,
+            accessToken,
+          },
+        },
+        followUpStrategy
+      );
     },
     like(answerId?: string) {
       if (!answerId || this.state.answerId === answerId) {

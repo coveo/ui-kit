@@ -1,45 +1,71 @@
+import {createListenerMiddleware, type Dispatch} from '@reduxjs/toolkit';
 import {
-  createListenerMiddleware,
-  type ThunkDispatch,
-  type UnknownAction,
-} from '@reduxjs/toolkit';
+  createAnswerAgent,
+  createHeadAnswerStrategy,
+} from '../../api/knowledge/answer-generation/agents/answer-agent.js';
 import type {AnswerGenerationApiState} from '../../api/knowledge/answer-generation/answer-generation-api-state.js';
-import {resetFollowUpAnswers} from '../../features/follow-up-answers/follow-up-answers-actions.js';
 import {
-  generateHeadAnswer,
-  resetAnswer,
-} from '../../features/generated-answer/generated-answer-actions.js';
+  selectAccessToken,
+  selectAgentId,
+  selectOrganizationId,
+} from '../../features/configuration/configuration-selectors.js';
+import {resetFollowUpAnswers} from '../../features/follow-up-answers/follow-up-answers-actions.js';
+import {resetAnswer} from '../../features/generated-answer/generated-answer-actions.js';
+import {constructGenerateHeadAnswerParams} from '../../features/generated-answer/generated-answer-request.js';
 import {isGeneratedAnswerFeatureEnabledWithAnswerGenerationAPI} from '../../features/generated-answer/generated-answer-selectors.js';
 import {selectQuery} from '../../features/query/query-selectors.js';
 import {executeSearch} from '../../features/search/search-actions.js';
-import type {SearchThunkExtraArguments} from '../search-thunk-extra-arguments.js';
+import type {NavigatorContext} from '../navigator-context-provider.js';
 
-export const generateAnswerListener = createListenerMiddleware<
-  AnswerGenerationApiState,
-  ThunkDispatch<
+export const createGenerateAnswerListener = (extra: {
+  getNavigatorContext: () => NavigatorContext;
+}) => {
+  const generateAnswerListener = createListenerMiddleware<
     AnswerGenerationApiState,
-    SearchThunkExtraArguments,
-    UnknownAction
-  >
->();
+    Dispatch,
+    {getNavigatorContext: () => NavigatorContext}
+  >({extra});
 
-generateAnswerListener.startListening({
-  actionCreator: executeSearch.pending,
+  generateAnswerListener.startListening({
+    actionCreator: executeSearch.pending,
 
-  effect: async (_action, listenerApi) => {
-    const state = listenerApi.getState();
-    const q = selectQuery(state)?.q;
-    const queryIsEmpty = !q || q.trim() === '';
+    effect: async (_action, listenerApi) => {
+      const state = listenerApi.getState();
 
-    if (!isGeneratedAnswerFeatureEnabledWithAnswerGenerationAPI(state)) {
-      return;
-    }
-    listenerApi.dispatch(resetAnswer());
-    listenerApi.dispatch(resetFollowUpAnswers());
+      if (!isGeneratedAnswerFeatureEnabledWithAnswerGenerationAPI(state)) {
+        return;
+      }
+      listenerApi.dispatch(resetAnswer());
+      listenerApi.dispatch(resetFollowUpAnswers());
 
-    if (queryIsEmpty) {
-      return;
-    }
-    listenerApi.dispatch(generateHeadAnswer());
-  },
-});
+      const q = selectQuery(state)?.q;
+      const queryIsEmpty = !q || q.trim() === '';
+      if (queryIsEmpty) {
+        return;
+      }
+
+      const organizationId = selectOrganizationId(state);
+      const accessToken = selectAccessToken(state);
+      const agentId = selectAgentId(state);
+
+      const answerAgent = createAnswerAgent(organizationId, agentId!);
+      const headAnswerStrategy = createHeadAnswerStrategy(listenerApi.dispatch);
+      const headAnswerParams = constructGenerateHeadAnswerParams(
+        state,
+        listenerApi.extra.getNavigatorContext()
+      );
+
+      answerAgent.runAgent(
+        {
+          forwardedProps: {
+            params: headAnswerParams,
+            accessToken,
+          },
+        },
+        headAnswerStrategy
+      );
+    },
+  });
+
+  return generateAnswerListener;
+};

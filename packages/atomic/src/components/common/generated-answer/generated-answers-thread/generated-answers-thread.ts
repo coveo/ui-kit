@@ -2,7 +2,13 @@ import type {
   GeneratedAnswerBase,
   GeneratedAnswerCitation,
 } from '@coveo/headless';
-import {html, LitElement, type PropertyValues, type TemplateResult} from 'lit';
+import {
+  css,
+  html,
+  LitElement,
+  type PropertyValues,
+  type TemplateResult,
+} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import '@/src/components/search/generated-answer-thread-item/generated-answer-thread-item';
@@ -32,6 +38,65 @@ export class GeneratedAnswersThread extends LitElement {
   @property({attribute: false})
   onCopyToClipboard: (answerId: string) => void = () => {};
 
+  static styles = css`
+    .item-header {
+      display: flex;
+    }
+
+    .dot-container {
+      width: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .dot {
+      border-radius: 50%;
+      height: 8px;
+      width: 8px;
+      background: #adb5bd;
+    }
+
+    .item-title {
+      margin-left: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      padding-right: 4px;
+      padding-left: 4px;
+      padding-top: 2px;
+      padding-bottom: 2px;
+    }
+
+    .hoverable:hover {
+      background-color: #f3f3f3;
+      border-radius: 8px;
+    }
+
+    .item-body {
+      display: flex;
+    }
+
+    .line-container {
+      width: 10px;
+      display: flex;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .line {
+      width: 1px;
+      background: #e5e5e5;
+    }
+
+    .item-content {
+      margin-left: 12px;
+      padding-bottom: 12px;
+      padding-top: 8px;
+    }
+  `;
+
   @state()
   private allGeneratedAnswerDisplayed: boolean = false;
 
@@ -46,7 +111,7 @@ export class GeneratedAnswersThread extends LitElement {
   }
 
   public render() {
-    if (this.generatedAnswers.length > 1 && !this.allGeneratedAnswerDisplayed) {
+    if (this.generatedAnswers.length > 2 && !this.allGeneratedAnswerDisplayed) {
       const lastGeneratedAnswer =
         this.generatedAnswers[this.generatedAnswers.length - 1];
 
@@ -67,12 +132,13 @@ export class GeneratedAnswersThread extends LitElement {
   }
 
   private renderThread(generatedAnswers: GeneratedAnswer[]) {
-    return html` ${generatedAnswers.map((answer) => {
+    return html` ${generatedAnswers.map((answer, index) => {
+      const isLast = index === generatedAnswers.length - 1;
       return html`<generated-answer-thread-item
         .title=${answer.question}
-        .hideLine=${true}
-        .isCollapsible=${false}
-        .isExpanded=${true}
+        .hideLine=${isLast}
+        .disableCollapse=${isLast}
+        .isExpanded=${isLast}
       >
         <answer-content
           .generatedAnswer=${answer}
@@ -97,7 +163,6 @@ export class GeneratedAnswersThread extends LitElement {
     };
     const titleButtonClasses = classMap({
       ...titleBaseClasses,
-      'font-normal': true,
       'bg-transparent': true,
       'border-0': true,
       'appearance-none': true,
@@ -113,30 +178,42 @@ export class GeneratedAnswersThread extends LitElement {
       'focus-visible:ring-primary': true,
       'focus-visible:ring-offset-2': true,
     });
-
     const timelineDotClasses = classMap({
-      'mt-3': true,
       'h-2': true,
       'w-2': true,
       'rounded-full': true,
       'bg-neutral-dim': true,
     });
 
-    return html` <li class="grid grid-cols-[10px_1fr]">
-      <div class="flex flex-col items-center row-span-2">
-        <span class=${timelineDotClasses}></span>
-        <span class="w-px bg-neutral flex-1"></span>
-      </div>
-      <div class="flex items-start">
+    return html` <li class="grid min-w-0">
+      <div class="flex min-w-0 items-center gap-3">
+        <div class="flex w-[10px] shrink-0 items-center justify-center">
+          <span class=${timelineDotClasses}></span>
+        </div>
         <div class="flex min-w-0 flex-col">
           <button
             type="button"
             class=${titleButtonClasses}
             @click=${this.showAllGeneratedAnswer}
           >
-            Show all answers
+            Show all previous answers
           </button>
         </div>
+      </div>
+      <div class="flex min-w-0 gap-3">
+        <div class="flex w-[10px] shrink-0 justify-center">
+          <span
+            class="relative w-px bg-neutral h-full
+               before:content-['']
+               before:absolute before:top-[-8px] before:left-0
+               before:w-px before:h-[8px] before:bg-neutral
+               after:content-['']
+               after:absolute after:bottom-[-8px] after:left-0
+               after:w-px after:h-[8px] after:bg-neutral"
+          >
+          </span>
+        </div>
+        <div class="pl-2 py-2 ml-1"></div>
       </div>
     </li>`;
   }

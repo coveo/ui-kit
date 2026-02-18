@@ -51,7 +51,7 @@ export class AnswerContent extends LitElement {
     } = this.generatedAnswer || {};
 
     if (this.generatedAnswer?.isLoading) {
-      return html`Loading...`;
+      return html`<div class="text-xs text-gray-400">Loading...</div>`;
     }
 
     if (!this.generatedAnswer?.answer) {
