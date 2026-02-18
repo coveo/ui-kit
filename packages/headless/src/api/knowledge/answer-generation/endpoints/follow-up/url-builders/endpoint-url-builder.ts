@@ -20,5 +20,5 @@ export const buildFollowUpEndpointUrl = (
     throw new Error('Missing required parameters for follow up endpoint');
   }
   const basePath = `/api/preview/organizations/${organizationId}/agents`;
-  return `${platformEndpoint}${basePath}/${trimmedAgentId}/followup`;
+  return `${platformEndpoint}${basePath}/${trimmedAgentId}/follow-up`;
 };
