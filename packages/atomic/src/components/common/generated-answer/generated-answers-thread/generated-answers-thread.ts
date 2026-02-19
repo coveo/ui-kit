@@ -63,7 +63,7 @@ export class GeneratedAnswersThread extends LitElement {
 
   public render() {
     if (
-      this.generatedAnswers.length > 1 &&
+      this.generatedAnswers.length > 2 &&
       !this.allGeneratedAnswersDisplayed
     ) {
       const lastGeneratedAnswer =
@@ -119,28 +119,46 @@ export class GeneratedAnswersThread extends LitElement {
 
   private renderShowPreviousAnswersButton() {
     const label =
-      this.i18n?.t?.('show-previous-answers') ?? 'Show previous answers';
+      this.i18n?.t?.('show-previous-questions', {
+        count: this.generatedAnswers.length - 1,
+      }) ?? 'Show previous questions';
+
+    const showPreviousButtonClasses = `
+      text-on-background text-base min-w-0 inline-flex text-left mr-auto
+      px-2 py-1.5 font-normal bg-transparent border-0 appearance-none
+      transition-colors hover:bg-neutral-light rounded-md cursor-pointer
+      focus-visible:outline-none focus-visible:ring-2
+      focus-visible:ring-primary focus-visible:ring-offset-2
+    `;
+    const timelineDotClasses = `
+      h-2 w-2 rounded-full bg-neutral-dim
+    `;
+    const timelineConnectorClasses = `
+    relative h-full w-px bg-neutral
+    before:absolute before:left-0 before:top-[-8px]
+    before:h-[8px] before:w-px before:bg-neutral before:content-['']
+    after:absolute after:bottom-[-8px] after:left-0
+    after:h-[8px] after:w-px after:bg-neutral after:content-['']
+    `;
 
     return html`
-      <li class="grid grid-cols-[10px_1fr]">
-        <div class="flex flex-col items-center row-span-2">
-          <span class="mt-3 h-2 w-2 rounded-full bg-neutral-dim"></span>
-          <span class="w-px bg-neutral flex-1"></span>
-        </div>
-        <div class="flex items-start">
+      <li class="grid min-w-0">
+        <div class="flex min-w-0 items-center gap-3">
+          <div class="flex w-[10px] shrink-0 items-center justify-center">
+            <span class=${timelineDotClasses}></span>
+          </div>
           <div class="flex min-w-0 flex-col">
             <button
               type="button"
-              class="text-on-background text-base min-w-0 inline-flex text-left mr-auto
-                   font-normal bg-transparent border-0 appearance-none ml-1 px-2 py-1.5
-                   transition-colors hover:bg-neutral-light rounded-md cursor-pointer
-                   focus-visible:outline-none focus-visible:ring-2
-                   focus-visible:ring-primary focus-visible:ring-offset-2"
+              class=${showPreviousButtonClasses}
               @click=${this.handleShowAllClick}
             >
               ${label}
             </button>
           </div>
+        </div>
+        <div class="flex h-3 w-[10px] shrink-0 justify-center">
+          <span class=${timelineConnectorClasses}> </span>
         </div>
       </li>
     `;

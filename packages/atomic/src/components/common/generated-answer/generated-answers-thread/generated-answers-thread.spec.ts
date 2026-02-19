@@ -5,7 +5,7 @@ import type {
   AnswerContent,
   GeneratedAnswer,
 } from '@/src/components/common/generated-answer/answerContent/answer-content';
-import type {GeneratedAnswerThreadItem} from '@/src/components/search/generated-answer-thread-item/generated-answer-thread-item';
+import type {GeneratedAnswerThreadItem} from '@/src/components/common/generated-answer/generated-answer-thread-item/generated-answer-thread-item';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import type {GeneratedAnswersThread} from './generated-answers-thread';
@@ -100,6 +100,20 @@ describe('generated-answers-thread', () => {
     expect(locators().showPreviousAnswersButton).toBeNull();
   });
 
+  it('should render every answer when exactly two generated answers are provided', async () => {
+    const generatedAnswers = createGeneratedAnswers(2);
+    const {locators} = await renderComponent({generatedAnswers});
+
+    expect(locators().threadItems).toHaveLength(2);
+    expect(locators().answerContents[0]?.generatedAnswer.question).toBe(
+      'Question 1'
+    );
+    expect(locators().answerContents[1]?.generatedAnswer.question).toBe(
+      'Question 2'
+    );
+    expect(locators().showPreviousAnswersButton).toBeNull();
+  });
+
   it('should not render thread items when the generated answers list is empty', async () => {
     const {locators} = await renderComponent({generatedAnswers: []});
 
@@ -167,7 +181,7 @@ describe('generated-answers-thread', () => {
 
   it('should collapse back to the latest answer when the generated answers list changes', async () => {
     const {element, locators} = await renderComponent({
-      generatedAnswers: createGeneratedAnswers(2),
+      generatedAnswers: createGeneratedAnswers(3),
     });
 
     const button = locators().showPreviousAnswersButton as HTMLButtonElement;
@@ -188,7 +202,7 @@ describe('generated-answers-thread', () => {
 
   it('should keep all answers visible when the list updates with the same length', async () => {
     const {element, locators} = await renderComponent({
-      generatedAnswers: createGeneratedAnswers(2),
+      generatedAnswers: createGeneratedAnswers(3),
     });
 
     const button = locators().showPreviousAnswersButton as HTMLButtonElement;
@@ -198,11 +212,12 @@ describe('generated-answers-thread', () => {
     element.generatedAnswers = [
       createGeneratedAnswer(10),
       createGeneratedAnswer(11),
+      createGeneratedAnswer(12),
     ];
     await element.updateComplete;
 
     const updatedLocators = locators();
-    expect(updatedLocators.threadItems).toHaveLength(2);
+    expect(updatedLocators.threadItems).toHaveLength(3);
     expect(updatedLocators.showPreviousAnswersButton).toBeNull();
   });
 
@@ -227,23 +242,25 @@ describe('generated-answers-thread', () => {
     expect(lastItem?.isExpanded).toBe(true);
   });
 
-  it('should translate the show previous answers label using the provided i18n instance', async () => {
+  it('should translate the show previous questions label using the provided i18n instance', async () => {
     const translate = vi
       .fn()
       .mockImplementation((key: string) =>
-        key === 'show-previous-answers'
-          ? 'Afficher les réponses précédentes'
+        key === 'show-previous-questions'
+          ? 'Afficher les questions précédentes'
           : key
       );
     const translatedI18n = {t: translate} as unknown as i18n;
 
     const {locators} = await renderComponent({
-      generatedAnswers: createGeneratedAnswers(2),
+      generatedAnswers: createGeneratedAnswers(3),
       i18nInstance: translatedI18n,
     });
 
     const button = locators().showPreviousAnswersButton as HTMLButtonElement;
-    expect(button).toHaveTextContent('Afficher les réponses précédentes');
-    expect(translate).toHaveBeenCalledWith('show-previous-answers');
+    expect(button).toHaveTextContent('Afficher les questions précédentes');
+    expect(translate).toHaveBeenCalledWith('show-previous-questions', {
+      count: 2,
+    });
   });
 });
