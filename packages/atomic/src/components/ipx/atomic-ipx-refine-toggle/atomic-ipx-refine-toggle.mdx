@@ -1,0 +1,44 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicIpxRefineToggleStories from './atomic-ipx-refine-toggle.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicIpxRefineToggleStories} name="Docs" />
+
+<AtomicDocTemplate
+  stories={AtomicIpxRefineToggleStories}
+  githubPath="ipx/atomic-ipx-refine-toggle/atomic-ipx-refine-toggle.ts"
+  tagName="atomic-ipx-refine-toggle"
+  className="AtomicIpxRefineToggle"
+>
+
+This component is used inside an `atomic-ipx-modal` or `atomic-ipx-embedded` within an `atomic-search-interface`. When clicked, it automatically creates and opens an `atomic-ipx-refine-modal` populated with cloned facets from the interface.
+
+```html
+<atomic-search-interface>
+  <atomic-ipx-modal>
+    <div slot="header">
+      <atomic-ipx-refine-toggle></atomic-ipx-refine-toggle>
+    </div>
+    <atomic-layout-section section="facets">
+      <atomic-facet field="author" label="Author"></atomic-facet>
+      <atomic-facet field="source" label="Source"></atomic-facet>
+    </atomic-layout-section>
+    <div slot="body"></div>
+    <div slot="footer"></div>
+  </atomic-ipx-modal>
+</atomic-search-interface>
+```
+
+## Facet Management
+
+You can control how many facets are expanded by default in the refine modal using the `collapse-facets-after` attribute:
+
+```html
+<!-- Expand the first 3 facets, collapse the rest -->
+<atomic-ipx-refine-toggle collapse-facets-after="3"></atomic-ipx-refine-toggle>
+
+<!-- Collapse all facets by default (default behavior) -->
+<atomic-ipx-refine-toggle collapse-facets-after="0"></atomic-ipx-refine-toggle>
+```
+
+</AtomicDocTemplate>
