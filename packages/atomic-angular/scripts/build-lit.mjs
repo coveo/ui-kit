@@ -30,7 +30,7 @@ const declarationToProxyCmp = (declaration, defineCustomElementFn) =>
 @ProxyCmp({
   inputs: [${(declaration.members || [])
     .flatMap((member) => {
-      if (!member.privacy === 'public' || member.kind !== 'field') {
+      if (member.privacy !== 'public' || member.kind !== 'field') {
         return [];
       }
       const inputs = [`'${member.name}'`];
