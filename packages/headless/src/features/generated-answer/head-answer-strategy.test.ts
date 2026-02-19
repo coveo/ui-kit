@@ -1,8 +1,15 @@
 import type {ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import type {AnswerGenerationApiState} from '../../api/knowledge/answer-generation/answer-generation-api-state.js';
-import type {Message} from '../../api/knowledge/answer-generation/streaming/types.js';
+import type {
+  Message,
+  StreamPayload,
+} from '../../api/knowledge/answer-generation/streaming/types.js';
 import {buildMockCitation} from '../../test/mock-citation.js';
+import {
+  setFollowUpAnswersConversationId,
+  setIsEnabled,
+} from '../follow-up-answers/follow-up-answers-actions.js';
 import {
   setAnswerContentFormat,
   setAnswerId,
@@ -22,6 +29,7 @@ import {createHeadAnswerStrategy} from './head-answer-strategy.js';
 
 vi.mock('./generated-answer-actions.js');
 vi.mock('./generated-answer-analytics-actions.js');
+vi.mock('../follow-up-answers/follow-up-answers-actions.js');
 
 describe('headAnswerStrategy', () => {
   let mockDispatch: ThunkDispatch<
@@ -76,114 +84,92 @@ describe('headAnswerStrategy', () => {
   });
 
   describe('handleMessage', () => {
-    describe('genqa.headerMessageType', () => {
-      it('should dispatch contentFormat actions when contentFormat is present', () => {
+    describe('agentInteraction.answerHeader', () => {
+      it('should dispatch conversation and follow-up flags then streaming state', () => {
+        const payload: StreamPayload = {
+          conversationId: 'conv-123',
+          followUpEnabled: true,
+        };
         const message: Message = {
-          payloadType: 'genqa.headerMessageType',
-          payload: JSON.stringify({contentFormat: 'text/markdown'}),
+          payloadType: 'agentInteraction.answerHeader',
+          payload,
         };
 
-        createHeadAnswerStrategy().handleMessage['genqa.headerMessageType']?.(
-          message,
-          mockDispatch
-        );
+        createHeadAnswerStrategy().handleMessage[
+          'agentInteraction.answerHeader'
+        ]?.(message, mockDispatch);
 
+        expect(setFollowUpAnswersConversationId).toHaveBeenCalledWith(
+          'conv-123'
+        );
+        expect(setIsEnabled).toHaveBeenCalledWith(true);
+        expect(setAnswerContentFormat).toHaveBeenCalledWith('text/markdown');
+        expect(setIsStreaming).toHaveBeenCalledWith(true);
+        expect(setIsLoading).toHaveBeenCalledWith(false);
+        expect(mockDispatch).toHaveBeenCalledTimes(5);
+      });
+
+      it('should still set streaming state when optional fields are missing', () => {
+        const message: Message = {
+          payloadType: 'agentInteraction.answerHeader',
+          payload: {},
+        };
+
+        createHeadAnswerStrategy().handleMessage[
+          'agentInteraction.answerHeader'
+        ]?.(message, mockDispatch);
+
+        expect(setFollowUpAnswersConversationId).not.toHaveBeenCalled();
+        expect(setIsEnabled).not.toHaveBeenCalled();
         expect(setAnswerContentFormat).toHaveBeenCalledWith('text/markdown');
         expect(setIsStreaming).toHaveBeenCalledWith(true);
         expect(setIsLoading).toHaveBeenCalledWith(false);
         expect(mockDispatch).toHaveBeenCalledTimes(3);
       });
-
-      it('should handle empty payload gracefully', () => {
-        const message: Message = {
-          payloadType: 'genqa.headerMessageType',
-          payload: '',
-        };
-
-        createHeadAnswerStrategy().handleMessage['genqa.headerMessageType']?.(
-          message,
-          mockDispatch
-        );
-
-        expect(setAnswerContentFormat).not.toHaveBeenCalled();
-        expect(mockDispatch).not.toHaveBeenCalled();
-      });
-
-      it('should not dispatch actions when contentFormat is missing from payload', () => {
-        const message: Message = {
-          payloadType: 'genqa.headerMessageType',
-          payload: JSON.stringify({someOtherField: 'value'}),
-        };
-
-        createHeadAnswerStrategy().handleMessage['genqa.headerMessageType']?.(
-          message,
-          mockDispatch
-        );
-
-        expect(setAnswerContentFormat).not.toHaveBeenCalled();
-        expect(mockDispatch).not.toHaveBeenCalled();
-      });
     });
 
-    describe('genqa.messageType', () => {
+    describe('generativeengines.messageType', () => {
       it('should dispatch updateMessage when textDelta is present', () => {
+        const payload: StreamPayload = {textDelta: 'Hello world'};
         const message: Message = {
-          payloadType: 'genqa.messageType',
-          payload: JSON.stringify({textDelta: 'Hello world'}),
+          payloadType: 'generativeengines.messageType',
+          payload,
         };
 
-        createHeadAnswerStrategy().handleMessage['genqa.messageType']?.(
-          message,
-          mockDispatch
-        );
+        createHeadAnswerStrategy().handleMessage[
+          'generativeengines.messageType'
+        ]?.(message, mockDispatch);
 
         expect(updateMessage).toHaveBeenCalledWith({textDelta: 'Hello world'});
         expect(mockDispatch).toHaveBeenCalledTimes(1);
       });
 
-      it('should handle empty payload gracefully', () => {
-        const message: Message = {
-          payloadType: 'genqa.messageType',
-          payload: '',
-        };
-
-        createHeadAnswerStrategy().handleMessage['genqa.messageType']?.(
-          message,
-          mockDispatch
-        );
-
-        expect(updateMessage).not.toHaveBeenCalled();
-        expect(mockDispatch).not.toHaveBeenCalled();
-      });
-
       it('should not dispatch updateMessage when textDelta is missing', () => {
         const message: Message = {
-          payloadType: 'genqa.messageType',
-          payload: JSON.stringify({someOtherField: 'value'}),
+          payloadType: 'generativeengines.messageType',
+          payload: {},
         };
 
-        createHeadAnswerStrategy().handleMessage['genqa.messageType']?.(
-          message,
-          mockDispatch
-        );
+        createHeadAnswerStrategy().handleMessage[
+          'generativeengines.messageType'
+        ]?.(message, mockDispatch);
 
         expect(updateMessage).not.toHaveBeenCalled();
         expect(mockDispatch).not.toHaveBeenCalled();
       });
     });
 
-    describe('genqa.citationsType', () => {
+    describe('agentInteraction.citations', () => {
       it('should dispatch updateCitations when citations are present', () => {
         const mockCitations = [buildMockCitation(), buildMockCitation()];
         const message: Message = {
-          payloadType: 'genqa.citationsType',
-          payload: JSON.stringify({citations: mockCitations}),
+          payloadType: 'agentInteraction.citations',
+          payload: {citations: mockCitations},
         };
 
-        createHeadAnswerStrategy().handleMessage['genqa.citationsType']?.(
-          message,
-          mockDispatch
-        );
+        createHeadAnswerStrategy().handleMessage[
+          'agentInteraction.citations'
+        ]?.(message, mockDispatch);
 
         expect(updateCitations).toHaveBeenCalledWith({
           citations: mockCitations,
@@ -191,48 +177,45 @@ describe('headAnswerStrategy', () => {
         expect(mockDispatch).toHaveBeenCalledTimes(1);
       });
 
-      it('should handle empty payload gracefully', () => {
+      it('should not dispatch updateCitations when citations are missing', () => {
         const message: Message = {
-          payloadType: 'genqa.citationsType',
-          payload: '',
+          payloadType: 'agentInteraction.citations',
+          payload: {},
         };
 
-        createHeadAnswerStrategy().handleMessage['genqa.citationsType']?.(
-          message,
-          mockDispatch
-        );
+        createHeadAnswerStrategy().handleMessage[
+          'agentInteraction.citations'
+        ]?.(message, mockDispatch);
 
         expect(updateCitations).not.toHaveBeenCalled();
         expect(mockDispatch).not.toHaveBeenCalled();
       });
 
-      it('should not dispatch updateCitations when citations are missing', () => {
+      it('should dispatch updateCitations when citations array is empty', () => {
         const message: Message = {
-          payloadType: 'genqa.citationsType',
-          payload: JSON.stringify({someOtherField: 'value'}),
+          payloadType: 'agentInteraction.citations',
+          payload: {citations: []},
         };
 
-        createHeadAnswerStrategy().handleMessage['genqa.citationsType']?.(
-          message,
-          mockDispatch
-        );
+        createHeadAnswerStrategy().handleMessage[
+          'agentInteraction.citations'
+        ]?.(message, mockDispatch);
 
-        expect(updateCitations).not.toHaveBeenCalled();
-        expect(mockDispatch).not.toHaveBeenCalled();
+        expect(updateCitations).toHaveBeenCalledWith({citations: []});
+        expect(mockDispatch).toHaveBeenCalledTimes(1);
       });
     });
 
-    describe('genqa.endOfStreamType', () => {
+    describe('generativeengines.endOfStreamType', () => {
       it('should dispatch all end-of-stream actions when answerGenerated is true', () => {
         const message: Message = {
-          payloadType: 'genqa.endOfStreamType',
-          payload: JSON.stringify({answerGenerated: true}),
+          payloadType: 'generativeengines.endOfStreamType',
+          payload: {answerGenerated: true},
         };
 
-        createHeadAnswerStrategy().handleMessage['genqa.endOfStreamType']?.(
-          message,
-          mockDispatch
-        );
+        createHeadAnswerStrategy().handleMessage[
+          'generativeengines.endOfStreamType'
+        ]?.(message, mockDispatch);
 
         expect(setIsAnswerGenerated).toHaveBeenCalledWith(true);
         expect(setCannotAnswer).toHaveBeenCalledWith(false);
@@ -245,14 +228,13 @@ describe('headAnswerStrategy', () => {
 
       it('should dispatch all end-of-stream actions when answerGenerated is false', () => {
         const message: Message = {
-          payloadType: 'genqa.endOfStreamType',
-          payload: JSON.stringify({answerGenerated: false}),
+          payloadType: 'generativeengines.endOfStreamType',
+          payload: {answerGenerated: false},
         };
 
-        createHeadAnswerStrategy().handleMessage['genqa.endOfStreamType']?.(
-          message,
-          mockDispatch
-        );
+        createHeadAnswerStrategy().handleMessage[
+          'generativeengines.endOfStreamType'
+        ]?.(message, mockDispatch);
 
         expect(setIsAnswerGenerated).toHaveBeenCalledWith(false);
         expect(setCannotAnswer).toHaveBeenCalledWith(true);
@@ -265,34 +247,13 @@ describe('headAnswerStrategy', () => {
 
       it('should handle missing answerGenerated field gracefully', () => {
         const message: Message = {
-          payloadType: 'genqa.endOfStreamType',
-          payload: JSON.stringify({}),
+          payloadType: 'generativeengines.endOfStreamType',
+          payload: {},
         };
 
-        createHeadAnswerStrategy().handleMessage['genqa.endOfStreamType']?.(
-          message,
-          mockDispatch
-        );
-
-        expect(setIsAnswerGenerated).toHaveBeenCalledWith(false);
-        expect(setCannotAnswer).toHaveBeenCalledWith(true);
-        expect(setIsStreaming).toHaveBeenCalledWith(false);
-        expect(setIsLoading).toHaveBeenCalledWith(false);
-        expect(logGeneratedAnswerStreamEnd).toHaveBeenCalledWith(false);
-        expect(logGeneratedAnswerResponseLinked).toHaveBeenCalled();
-        expect(mockDispatch).toHaveBeenCalledTimes(6);
-      });
-
-      it('should handle empty payload gracefully', () => {
-        const message: Message = {
-          payloadType: 'genqa.endOfStreamType',
-          payload: '',
-        };
-
-        createHeadAnswerStrategy().handleMessage['genqa.endOfStreamType']?.(
-          message,
-          mockDispatch
-        );
+        createHeadAnswerStrategy().handleMessage[
+          'generativeengines.endOfStreamType'
+        ]?.(message, mockDispatch);
 
         expect(setIsAnswerGenerated).toHaveBeenCalledWith(false);
         expect(setCannotAnswer).toHaveBeenCalledWith(true);
@@ -305,10 +266,10 @@ describe('headAnswerStrategy', () => {
     });
 
     describe('error', () => {
-      it('should dispatch updateError when finishReason is ERROR and errorMessage exists', () => {
+      it('should dispatch updateError when finishReason is ERROR', () => {
         const message: Message = {
-          payloadType: 'genqa.messageType',
-          payload: '',
+          payloadType: 'generativeengines.messageType',
+          payload: {},
           finishReason: 'ERROR',
           errorMessage: 'Something went wrong',
           code: 500,
@@ -322,8 +283,8 @@ describe('headAnswerStrategy', () => {
 
       it('should not dispatch updateError when finishReason is not ERROR', () => {
         const message: Message = {
-          payloadType: 'genqa.messageType',
-          payload: '',
+          payloadType: 'generativeengines.messageType',
+          payload: {},
           finishReason: 'COMPLETED',
           errorMessage: 'Something went wrong',
         };
@@ -334,23 +295,10 @@ describe('headAnswerStrategy', () => {
         expect(mockDispatch).not.toHaveBeenCalled();
       });
 
-      it('should not dispatch updateError when errorMessage is missing', () => {
+      it('should not dispatch updateError when finishReason is missing', () => {
         const message: Message = {
-          payloadType: 'genqa.messageType',
-          payload: '',
-          finishReason: 'ERROR',
-        };
-
-        createHeadAnswerStrategy().handleMessage.error?.(message, mockDispatch);
-
-        expect(updateError).not.toHaveBeenCalled();
-        expect(mockDispatch).not.toHaveBeenCalled();
-      });
-
-      it('should not dispatch updateError when both finishReason and errorMessage are missing', () => {
-        const message: Message = {
-          payloadType: 'genqa.messageType',
-          payload: '',
+          payloadType: 'generativeengines.messageType',
+          payload: {},
         };
 
         createHeadAnswerStrategy().handleMessage.error?.(message, mockDispatch);

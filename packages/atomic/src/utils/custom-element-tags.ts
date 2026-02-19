@@ -94,7 +94,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-ipx-button',
   'atomic-ipx-embedded',
   'atomic-ipx-modal',
-  'atomic-ipx-refine-modal',
+  'atomic-ipx-refine-toggle',
   'atomic-ipx-result-link',
   'atomic-ipx-tab',
   'atomic-ipx-tabs',
@@ -200,6 +200,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-text',
   'atomic-timeframe',
   'atomic-timeframe-facet',
+  'generated-answer-thread-item',
 ]);
 
 /**

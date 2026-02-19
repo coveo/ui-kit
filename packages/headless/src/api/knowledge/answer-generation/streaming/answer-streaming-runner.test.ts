@@ -43,10 +43,10 @@ describe('answer-streaming-runner', () => {
       handleClose: vi.fn(),
       handleError: vi.fn(),
       handleMessage: {
-        'genqa.headerMessageType': vi.fn(),
-        'genqa.messageType': vi.fn(),
-        'genqa.citationsType': vi.fn(),
-        'genqa.endOfStreamType': vi.fn(),
+        'agentInteraction.answerHeader': vi.fn(),
+        'generativeengines.messageType': vi.fn(),
+        'agentInteraction.citations': vi.fn(),
+        'generativeengines.endOfStreamType': vi.fn(),
         error: vi.fn(),
       },
     };
@@ -64,10 +64,10 @@ describe('answer-streaming-runner', () => {
       throw error;
     });
     vi.mocked(serverStateEventHandler).handleMessage = {
-      'genqa.headerMessageType': vi.fn(),
-      'genqa.messageType': vi.fn(),
-      'genqa.citationsType': vi.fn(),
-      'genqa.endOfStreamType': vi.fn(),
+      'agentInteraction.answerHeader': vi.fn(),
+      'generativeengines.messageType': vi.fn(),
+      'agentInteraction.citations': vi.fn(),
+      'generativeengines.endOfStreamType': vi.fn(),
       error: vi.fn(),
     };
   });
@@ -212,8 +212,8 @@ describe('answer-streaming-runner', () => {
       expect(capturedOnMessage).toBeDefined();
 
       const message: Required<Message> = {
-        payloadType: 'genqa.messageType',
-        payload: JSON.stringify({textDelta: 'test'}),
+        payloadType: 'generativeengines.messageType',
+        payload: {textDelta: 'test'},
         finishReason: 'ERROR',
         errorMessage: 'Test error',
         code: 500,
@@ -252,8 +252,8 @@ describe('answer-streaming-runner', () => {
       );
 
       const message: Required<Message> = {
-        payloadType: 'genqa.messageType',
-        payload: JSON.stringify({textDelta: 'test'}),
+        payloadType: 'generativeengines.messageType',
+        payload: {textDelta: 'test'},
         finishReason: 'COMPLETED',
         errorMessage: '',
         code: 200,
@@ -262,10 +262,10 @@ describe('answer-streaming-runner', () => {
       capturedOnMessage!({data: JSON.stringify(message)});
 
       expect(
-        serverStateEventHandler.handleMessage['genqa.messageType']
+        serverStateEventHandler.handleMessage['generativeengines.messageType']
       ).toHaveBeenCalledWith(message, mockUpdateCachedData);
       expect(
-        mockStrategy.handleMessage['genqa.messageType']
+        mockStrategy.handleMessage['generativeengines.messageType']
       ).toHaveBeenCalledWith(message, mockDispatch);
     });
 
@@ -290,8 +290,8 @@ describe('answer-streaming-runner', () => {
       );
 
       const message: Required<Message> = {
-        payloadType: 'genqa.headerMessageType',
-        payload: JSON.stringify({contentFormat: 'text/markdown'}),
+        payloadType: 'agentInteraction.answerHeader',
+        payload: {contentFormat: 'text/markdown'},
         finishReason: '',
         errorMessage: '',
         code: 200,
@@ -300,10 +300,10 @@ describe('answer-streaming-runner', () => {
       capturedOnMessage!({data: JSON.stringify(message)});
 
       expect(
-        serverStateEventHandler.handleMessage['genqa.headerMessageType']
+        serverStateEventHandler.handleMessage['agentInteraction.answerHeader']
       ).toHaveBeenCalledWith(message, mockUpdateCachedData);
       expect(
-        mockStrategy.handleMessage['genqa.headerMessageType']
+        mockStrategy.handleMessage['agentInteraction.answerHeader']
       ).toHaveBeenCalledWith(message, mockDispatch);
     });
 
@@ -328,8 +328,8 @@ describe('answer-streaming-runner', () => {
       );
 
       const message: Required<Message> = {
-        payloadType: 'genqa.citationsType',
-        payload: JSON.stringify({citations: []}),
+        payloadType: 'agentInteraction.citations',
+        payload: {citations: []},
         finishReason: '',
         errorMessage: '',
         code: 200,
@@ -338,10 +338,10 @@ describe('answer-streaming-runner', () => {
       capturedOnMessage!({data: JSON.stringify(message)});
 
       expect(
-        serverStateEventHandler.handleMessage['genqa.citationsType']
+        serverStateEventHandler.handleMessage['agentInteraction.citations']
       ).toHaveBeenCalledWith(message, mockUpdateCachedData);
       expect(
-        mockStrategy.handleMessage['genqa.citationsType']
+        mockStrategy.handleMessage['agentInteraction.citations']
       ).toHaveBeenCalledWith(message, mockDispatch);
     });
 
@@ -366,8 +366,8 @@ describe('answer-streaming-runner', () => {
       );
 
       const message: Required<Message> = {
-        payloadType: 'genqa.endOfStreamType',
-        payload: JSON.stringify({answerGenerated: true}),
+        payloadType: 'generativeengines.endOfStreamType',
+        payload: {answerGenerated: true},
         finishReason: '',
         errorMessage: '',
         code: 200,
@@ -376,11 +376,48 @@ describe('answer-streaming-runner', () => {
       capturedOnMessage!({data: JSON.stringify(message)});
 
       expect(
-        serverStateEventHandler.handleMessage['genqa.endOfStreamType']
+        serverStateEventHandler.handleMessage[
+          'generativeengines.endOfStreamType'
+        ]
       ).toHaveBeenCalledWith(message, mockUpdateCachedData);
       expect(
-        mockStrategy.handleMessage['genqa.endOfStreamType']
+        mockStrategy.handleMessage['generativeengines.endOfStreamType']
       ).toHaveBeenCalledWith(message, mockDispatch);
+    });
+
+    it('should ignore messages that fail to parse or are empty', async () => {
+      let capturedOnMessage: ((event: {data: string}) => void) | undefined;
+
+      vi.mocked(fetchEventSource).mockImplementation(
+        async (_url, options: any) => {
+          capturedOnMessage = options.onmessage;
+        }
+      );
+
+      await streamAnswerWithStrategy(
+        endpointUrl,
+        mockArgs,
+        {
+          getState: mockGetState,
+          dispatch: mockDispatch,
+          updateCachedData: mockUpdateCachedData,
+        },
+        mockStrategy
+      );
+
+      expect(capturedOnMessage).toBeDefined();
+      capturedOnMessage!({data: ''});
+
+      expect(
+        serverStateEventHandler.handleMessage.error
+      ).not.toHaveBeenCalled();
+      expect(mockStrategy.handleMessage.error).not.toHaveBeenCalled();
+      expect(
+        serverStateEventHandler.handleMessage['generativeengines.messageType']
+      ).not.toHaveBeenCalled();
+      expect(
+        mockStrategy.handleMessage['generativeengines.messageType']
+      ).not.toHaveBeenCalled();
     });
   });
 });
