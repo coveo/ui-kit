@@ -8,6 +8,10 @@ import type {i18n} from 'i18next';
 import {repeat} from 'lit/directives/repeat.js';
 import type {GeneratedAnswer} from '@/src/components/common/generated-answer/answerContent/answer-content';
 
+/**
+ * The `generated-answers-thread` component is responsible for rendering a thread of generated answers.
+ * @internal
+ */
 @customElement('generated-answers-thread')
 @withTailwindStyles
 export class GeneratedAnswersThread extends LitElement {

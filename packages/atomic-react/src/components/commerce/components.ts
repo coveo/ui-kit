@@ -1,5 +1,4 @@
 import {
-  AnswerContent as LitAnswerContent,
   AtomicAriaLive as LitAtomicAriaLive,
   AtomicCommerceBreadbox as LitAtomicCommerceBreadbox,
   AtomicCommerceCategoryFacet as LitAtomicCommerceCategoryFacet,
@@ -58,12 +57,6 @@ import {
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
 import React from 'react';
-
-export const AnswerContent = /*@__PURE__*/ createComponent({
-  tagName: 'answer-content',
-  react: React,
-  elementClass: LitAnswerContent,
-});
 
 export const AtomicAriaLive = /*@__PURE__*/ createComponent({
   tagName: 'atomic-aria-live',
