@@ -1,8 +1,8 @@
 import type {Bindings} from '@coveo/atomic';
 import type {Result} from '@coveo/headless';
 import React, {type JSX, useEffect, useRef} from 'react';
+import {flushSync} from 'react-dom';
 import {createRoot} from 'react-dom/client';
-import {renderToString} from 'react-dom/server';
 import {AtomicSearchBoxInstantResults} from './components.js';
 
 interface WrapperProps {
@@ -38,8 +38,12 @@ export const SearchBoxInstantResultsWrapper: React.FC<WrapperProps> = ({
   useEffect(() => {
     if (ref.current?.setRenderFunction) {
       ref.current.setRenderFunction((result: Result, root: HTMLElement) => {
-        createRoot(root).render(template(result));
-        return renderToString(template(result));
+        const templateResult = template(result);
+        const contentRoot = createRoot(root);
+        flushSync(() => {
+          contentRoot.render(templateResult);
+        });
+        return root.innerHTML;
       });
     }
   }, [template]);
