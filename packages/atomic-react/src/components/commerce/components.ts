@@ -55,7 +55,6 @@ import {
   AtomicProductSectionVisual as LitAtomicProductSectionVisual,
   AtomicProductText as LitAtomicProductText,
   AtomicTimeframe as LitAtomicTimeframe,
-  GeneratedAnswersThread as LitGeneratedAnswersThread,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
 import React from 'react';
@@ -402,10 +401,4 @@ export const AtomicTimeframe = /*@__PURE__*/ createComponent({
   tagName: 'atomic-timeframe',
   react: React,
   elementClass: LitAtomicTimeframe,
-});
-
-export const GeneratedAnswersThread = /*@__PURE__*/ createComponent({
-  tagName: 'generated-answers-thread',
-  react: React,
-  elementClass: LitGeneratedAnswersThread,
 });
