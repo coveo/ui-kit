@@ -92,13 +92,13 @@ import {
 import {createComponent} from '@lit/react';
 import React from 'react';
 
-export const AnswerContent = createComponent({
+export const AnswerContent = /*@__PURE__*/ createComponent({
   tagName: 'answer-content',
   react: React,
   elementClass: LitAnswerContent,
 });
 
-export const AtomicAriaLive = createComponent({
+export const AtomicAriaLive = /*@__PURE__*/ createComponent({
   tagName: 'atomic-aria-live',
   react: React,
   elementClass: LitAtomicAriaLive,
@@ -622,7 +622,7 @@ export const AtomicTimeframeFacet = /*@__PURE__*/ createComponent({
   elementClass: LitAtomicTimeframeFacet,
 });
 
-export const GeneratedAnswersThread = createComponent({
+export const GeneratedAnswersThread = /*@__PURE__*/ createComponent({
   tagName: 'generated-answers-thread',
   react: React,
   elementClass: LitGeneratedAnswersThread,

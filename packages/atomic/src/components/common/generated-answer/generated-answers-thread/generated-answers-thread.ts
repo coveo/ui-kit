@@ -2,7 +2,7 @@ import type {GeneratedAnswerCitation} from '@coveo/headless';
 import {html, LitElement, type PropertyValues, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import '@/src/components/search/generated-answer-thread-item/generated-answer-thread-item';
+import '@/src/components/common/generated-answer/generated-answer-thread-item/generated-answer-thread-item';
 import '@/src/components/common/generated-answer/answerContent/answer-content';
 import type {i18n} from 'i18next';
 import {repeat} from 'lit/directives/repeat.js';
