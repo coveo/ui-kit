@@ -34,6 +34,6 @@
     "globals": "17.3.0"
   },
   "name": "relay",
-  "packageManager": "pnpm@10.28.2",
+  "packageManager": "pnpm@10.29.3",
   "version": "3.0.2"
 }
