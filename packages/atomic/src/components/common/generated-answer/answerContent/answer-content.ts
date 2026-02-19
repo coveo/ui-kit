@@ -11,6 +11,8 @@ import {renderGeneratedContentContainer} from '../generated-content-container';
 import {renderFeedbackAndCopyButtons} from '../render-feedback-and-copy-buttons';
 import {renderSourceCitations} from '../source-citations';
 
+const COPY_RESET_DURATION_MS = 2000;
+
 export interface GeneratedAnswer extends GeneratedAnswerBase {
   question: string;
   expanded?: boolean;
@@ -117,7 +119,13 @@ export class AnswerContent extends LitElement {
           ${renderFeedbackAndCopyButtons({
             props: {
               i18n: this.i18n,
-              generatedAnswerActionsState: this.generatedAnswer,
+              generatedAnswerActionsState: {
+                liked: this.generatedAnswer.liked,
+                disliked: this.generatedAnswer.disliked,
+                isStreaming: this.generatedAnswer.isStreaming,
+                isLoading: this.generatedAnswer.isLoading,
+                answer: this.generatedAnswer.answer,
+              },
               copied: this.copyState === 'success',
               copyError: this.copyState === 'error',
               getCopyToClipboardTooltip: () => this.getCopyToClipboardTooltip(),
@@ -154,7 +162,7 @@ export class AnswerContent extends LitElement {
     clearTimeout(this.resetCopyTimeout);
     this.resetCopyTimeout = window.setTimeout(() => {
       this.copyState = 'idle';
-    }, 2000);
+    }, COPY_RESET_DURATION_MS);
   }
 
   private getCopyToClipboardTooltip(): string {
