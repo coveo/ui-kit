@@ -21,6 +21,7 @@ export function createRenewAccessTokenMiddleware(
 ): Middleware {
   let accessTokenRenewalsAttempts = 0;
   let pendingTokenRenewal: Promise<string | null> | null = null;
+  const hasRenewFunction = typeof renewToken === 'function';
   const resetRenewalTriesAfterDelay = debounce(() => {
     accessTokenRenewalsAttempts = 0;
   }, 500);
@@ -29,9 +30,13 @@ export function createRenewAccessTokenMiddleware(
     store: MiddlewareAPI,
     handleErrors = false
   ): Promise<string | null> => {
+    if (!hasRenewFunction) {
+      return null;
+    }
+
     const shouldInitiateRenewal = !pendingTokenRenewal;
 
-    if (shouldInitiateRenewal && renewToken) {
+    if (shouldInitiateRenewal) {
       pendingTokenRenewal = (async () => {
         try {
           return await renewToken();
@@ -107,7 +112,6 @@ export function createRenewAccessTokenMiddleware(
 
   return (store) => (next) => async (action) => {
     const isThunk = typeof action === 'function';
-    const hasRenewFunction = typeof renewToken === 'function';
 
     if (!isThunk) {
       return next(action);
