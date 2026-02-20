@@ -547,12 +547,7 @@ export class AtomicIpxRecsList
       return nothing;
     }
 
-    const resultClasses = [
-      listClasses,
-      !this.isEveryResultReady ? 'hidden' : '',
-    ]
-      .filter(Boolean)
-      .join(' ');
+    const resultClasses = `${listClasses} ${!this.isEveryResultReady && 'hidden'}`;
 
     // Results must be rendered immediately (though hidden) to start their initialization and loading processes.
     // If we wait to render results until placeholders are removed, the components won't begin loading until then,
@@ -588,7 +583,6 @@ export class AtomicIpxRecsList
       return false;
     }
     if (this.hasNoResults) {
-      this.bindings.store.unsetLoadingFlag(this.loadingFlag);
       return false;
     }
     return true;
@@ -597,35 +591,37 @@ export class AtomicIpxRecsList
   @bindingGuard()
   @errorGuard()
   render() {
+    if (!this.shouldRender) {
+      if (this.hasNoResults) {
+        this.bindings.store.unsetLoadingFlag(this.loadingFlag);
+      }
+      return nothing;
+    }
+
     return html`${when(
-      this.shouldRender,
+      this.templateHasError,
+      () => html`<slot></slot>`,
       () =>
-        html`${when(
-          this.templateHasError,
-          () => html`<slot></slot>`,
+        html`${this.renderHeading()}
+        ${when(
+          this.shouldRenderPagination,
           () =>
-            html`${this.renderHeading()}
-            ${when(
-              this.shouldRenderPagination,
-              () =>
-                renderCarousel({
-                  props: {
-                    bindings: this.bindings,
-                    previousPage: () => this.previousPage(),
-                    nextPage: () => this.nextPage(),
-                    numberOfPages: this.numberOfPages,
-                    currentPage: this.currentPage,
-                    ariaLabel: this.bindings.i18n.t(
-                      this.label ?? 'recommendations'
-                    ),
-                  },
-                })(
-                  html`<div class="px-3">${this.renderRecommendationList()}</div>`
+            renderCarousel({
+              props: {
+                bindings: this.bindings,
+                previousPage: () => this.previousPage(),
+                nextPage: () => this.nextPage(),
+                numberOfPages: this.numberOfPages,
+                currentPage: this.currentPage,
+                ariaLabel: this.bindings.i18n.t(
+                  this.label ?? 'recommendations'
                 ),
-              () => this.renderRecommendationList()
-            )}`
-        )}`,
-      () => nothing
+              },
+            })(
+              html`<div class="px-3">${this.renderRecommendationList()}</div>`
+            ),
+          () => this.renderRecommendationList()
+        )}`
     )}`;
   }
 }
