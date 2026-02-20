@@ -1,9 +1,9 @@
 import {expect, test} from './fixture';
 
 test.describe('atomic-ipx-refine-modal', () => {
-  test.beforeEach(async ({refineModal, page}) => {
+  test.beforeEach(async ({refineModal}) => {
     await refineModal.load();
-    await page.locator('atomic-ipx-refine-toggle').waitFor();
+    await refineModal.title.waitFor();
   });
 
   test('should render the modal properly after the user opens it', async ({

@@ -33,7 +33,6 @@ const meta: Meta = {
       ...commonParameters.docs,
       story: {
         ...commonParameters.docs?.story,
-        height: '600px',
       },
     },
     msw: {
@@ -57,14 +56,10 @@ const meta: Meta = {
         name: 'Filters',
       }
     );
-    // Facets call `bindings.store.registerFacet()` during initialization to register themselves with the interface store.
-    // The refine modal uses `bindings.store.getAllFacets()` to retrieve and render these registered facets.
-    // This delay ensures facets have completed initialization and registration before the modal attempts to render them.
     await new Promise((resolve) => setTimeout(resolve, 300));
     await step('Open refine modal', async () => {
       await userEvent.click(refineToggleButton);
     });
-    // It's tough to wait exactly for the modal to be visible because of animations. Thus, we add a small delay here.
     await new Promise((resolve) => setTimeout(resolve, 100));
   },
 };
@@ -72,25 +67,27 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  decorators: [
-    () => html`
-      <atomic-ipx-refine-toggle></atomic-ipx-refine-toggle>
-      <div style="display:none;">
-        <atomic-facet field="author" label="Authors"></atomic-facet>
-        <atomic-facet field="language" label="Language"></atomic-facet>
-        <atomic-facet
-          field="objecttype"
-          label="Type"
-          display-values-as="link"
-        ></atomic-facet>
-        <atomic-facet
-          field="year"
-          label="Year"
-          display-values-as="box"
-        ></atomic-facet>
+  render: () => html`
+    <style>
+      atomic-ipx-modal {
+        position: relative;
+        inset: auto;
+      }
+    </style>
+    <atomic-ipx-modal is-open>
+      <div slot="header" style="padding-bottom: 0.875rem;">
+        <atomic-layout-section section="search">
+          <atomic-ipx-refine-toggle></atomic-ipx-refine-toggle>
+        </atomic-layout-section>
       </div>
-    `,
-    decorator,
-    facetWidthDecorator,
-  ],
+      <atomic-layout-section section="facets">
+        <atomic-facet field="author" label="Author"></atomic-facet>
+        <atomic-facet field="source" label="Source"></atomic-facet>
+        <atomic-facet field="filetype" label="File Type"></atomic-facet>
+      </atomic-layout-section>
+      <div slot="body"></div>
+      <div slot="footer"></div>
+    </atomic-ipx-modal>
+  `,
+  decorators: [decorator, facetWidthDecorator],
 };

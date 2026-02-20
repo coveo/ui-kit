@@ -7,7 +7,7 @@ export class IpxRefineModalPageObject extends BasePageObject {
   }
 
   get title() {
-    return this.page.getByRole('heading', {name: 'Filters'});
+    return this.page.getByRole('heading', {name: 'Filters', level: 1});
   }
 
   get closeButton() {
