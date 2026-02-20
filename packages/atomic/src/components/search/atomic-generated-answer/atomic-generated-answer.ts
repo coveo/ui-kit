@@ -54,6 +54,7 @@ import atomicGeneratedAnswerStyles from './atomic-generated-answer.tw.css.js';
  * @part toggle - The switch to toggle the visibility of the generated answer.
  * @part copy-button - The "Copy answer" button.
  * @part generated-content-container - The container for the generated answer content.
+ * @part agent-scrollable-content - The scrollable content container when follow-up mode is enabled.
  * @part generated-content - The main content of the generated answer.
  * @part retry-container - The container for the "retry" section.
  * @part generated-text - The text of the generated answer.
@@ -145,12 +146,6 @@ export class AtomicGeneratedAnswer
   /**
    * @internal
    * The unique identifier of the agent to use to generate answers.
-   */
-  @property({type: String, attribute: 'agent-id'})
-  agentId?: string;
-
-  /**
-   * The unique identifier of the agent used to render the generated answer with a fixed height and scrollable content.
    */
   @property({type: String, attribute: 'agent-id'})
   agentId?: string;
@@ -409,22 +404,23 @@ export class AtomicGeneratedAnswer
             ${when(
               this.isAnswerVisible,
               () =>
-                html` <div
-                  part="generated-content-container"
-                  class=${classMap({
-                    'px-6': true,
-                    'pb-6': true,
-                    'agent-scrollable': this.hasAgentId,
-                  })}
-                >
-                  <article>${this.renderAnswerContent()}</article>
-                  ${renderDisclaimer({
-                    props: {
-                      i18n: this.bindings.i18n,
-                      isStreaming: !!this.generatedAnswerState.isStreaming,
-                    },
-                  })}
-                </div>`
+                html`
+                  <div
+                    part=${this.generatedContentContainerPart}
+                    class=${classMap({
+                      'px-6': true,
+                      'pb-6': true,
+                      'agent-scrollable': this.isScrollableContentEnabled,
+                    })}
+                  >
+                    <article>${this.renderAnswerContent()}</article>
+                    ${renderDisclaimer({
+                      props: {
+                        i18n: this.bindings.i18n,
+                        isStreaming: !!this.generatedAnswerState.isStreaming,
+                      },
+                    })}
+                  </div>`
             )}
           </div>
         </aside>
@@ -659,8 +655,32 @@ export class AtomicGeneratedAnswer
     return Boolean(this.agentId?.trim());
   }
 
+  private get isFollowUpEnabled() {
+    if (!this.hasAgentId) {
+      return false;
+    }
+
+    return Boolean(
+      (
+        this.bindings.engine.state as {
+          followUpAnswers?: {isEnabled?: boolean};
+        }
+      ).followUpAnswers?.isEnabled
+    );
+  }
+
+  private get isScrollableContentEnabled() {
+    return this.hasAgentId && this.isFollowUpEnabled;
+  }
+
+  private get generatedContentContainerPart() {
+    return this.isScrollableContentEnabled
+      ? 'generated-content-container agent-scrollable-content'
+      : 'generated-content-container';
+  }
+
   private get isCollapsibleEnabled() {
-    return this.collapsible && !this.hasAgentId;
+    return this.collapsible && !this.isScrollableContentEnabled;
   }
 
   private resetCollapsibleStyles() {

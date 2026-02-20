@@ -33,11 +33,13 @@ describe('atomic-generated-answer', () => {
     generatedAnswerState = {},
     searchStatusState = {},
     tabManagerState = {},
+    followUpAnswersState = {isEnabled: false},
   }: {
     props?: Partial<AtomicGeneratedAnswer>;
     generatedAnswerState?: Partial<GeneratedAnswerState>;
     searchStatusState?: {hasError?: boolean};
     tabManagerState?: {activeTab?: string};
+    followUpAnswersState?: {isEnabled?: boolean};
   } = {}) => {
     mockedGeneratedAnswer = buildFakeGeneratedAnswer({
       answer: 'Test answer',
@@ -67,6 +69,16 @@ describe('atomic-generated-answer', () => {
       beginDelayedSelect: vi.fn(),
       cancelPendingSelect: vi.fn(),
     } as ReturnType<typeof buildInteractiveCitation>);
+
+    mockedEngine.state = {
+      ...mockedEngine.state,
+      followUpAnswers: {
+        conversationId: '',
+        followUpAnswers: [],
+        isEnabled: false,
+        ...followUpAnswersState,
+      },
+    };
 
     const {element} =
       await renderInAtomicSearchInterface<AtomicGeneratedAnswer>({
@@ -110,8 +122,11 @@ describe('atomic-generated-answer', () => {
       },
       get generatedContentContainer() {
         return element.shadowRoot?.querySelector(
-          '[part="generated-content-container"]'
+          '[part~="generated-content-container"]'
         );
+      },
+      get followUpInput() {
+        return element.shadowRoot?.querySelector('[part="input-field"]');
       },
       get feedbackButtons() {
         return element.shadowRoot?.querySelectorAll(
@@ -629,9 +644,10 @@ describe('atomic-generated-answer', () => {
   });
 
   describe('when agentId is provided', () => {
-    it('should render a scrollable content container', async () => {
+    it('should render a scrollable content container when follow-up is enabled', async () => {
       const {generatedContentContainer} = await renderGeneratedAnswer({
         props: {agentId: 'agent-123'},
+        followUpAnswersState: {isEnabled: true},
         generatedAnswerState: {
           isVisible: true,
           answer: 'Test answer',
@@ -641,9 +657,10 @@ describe('atomic-generated-answer', () => {
       expect(generatedContentContainer).toHaveClass('agent-scrollable');
     });
 
-    it('should not render show more button even when collapsible is true', async () => {
+    it('should not render show more button when follow-up is enabled and collapsible is true', async () => {
       const {showMoreButton} = await renderGeneratedAnswer({
         props: {agentId: 'agent-123', collapsible: true},
+        followUpAnswersState: {isEnabled: true},
         generatedAnswerState: {
           isVisible: true,
           answer: 'A'.repeat(1000),
@@ -651,6 +668,33 @@ describe('atomic-generated-answer', () => {
       });
 
       expect(showMoreButton).not.toBeInTheDocument();
+    });
+
+    it('should not render a scrollable content container when follow-up is disabled', async () => {
+      const {generatedContentContainer} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-123'},
+        followUpAnswersState: {isEnabled: false},
+        generatedAnswerState: {
+          isVisible: true,
+          answer: 'Test answer',
+        },
+      });
+
+      expect(generatedContentContainer).not.toHaveClass('agent-scrollable');
+    });
+  });
+
+  describe('when agentId is not provided', () => {
+    it('should not render a scrollable content container even when follow-up is enabled', async () => {
+      const {generatedContentContainer} = await renderGeneratedAnswer({
+        followUpAnswersState: {isEnabled: true},
+        generatedAnswerState: {
+          isVisible: true,
+          answer: 'Test answer',
+        },
+      });
+
+      expect(generatedContentContainer).not.toHaveClass('agent-scrollable');
     });
   });
 
