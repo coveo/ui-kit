@@ -10,6 +10,7 @@ import {
   type TabManager,
 } from '@coveo/headless';
 import {html} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
@@ -87,7 +88,9 @@ describe('atomic-generated-answer', () => {
           .collapsible=${props.collapsible ?? false}
           .disableCitationAnchoring=${props.disableCitationAnchoring ?? false}
           .answerConfigurationId=${props.answerConfigurationId}
-          fields-to-include-in-citations=${props.fieldsToIncludeInCitations}
+          fields-to-include-in-citations=${ifDefined(
+            props.fieldsToIncludeInCitations
+          )}
           .maxCollapsedHeight=${props.maxCollapsedHeight ?? 16}
           .tabsIncluded=${props.tabsIncluded ?? []}
           .tabsExcluded=${props.tabsExcluded ?? []}
@@ -255,7 +258,9 @@ describe('atomic-generated-answer', () => {
             .disableCitationAnchoring=${props.disableCitationAnchoring ?? false}
             .answerConfigurationId=${props.answerConfigurationId}
             .agentId=${props.agentId}
-            fields-to-include-in-citations=${props.fieldsToIncludeInCitations}
+            fields-to-include-in-citations=${ifDefined(
+              props.fieldsToIncludeInCitations
+            )}
             .maxCollapsedHeight=${props.maxCollapsedHeight ?? 16}
             .tabsIncluded=${props.tabsIncluded ?? []}
             .tabsExcluded=${props.tabsExcluded ?? []}

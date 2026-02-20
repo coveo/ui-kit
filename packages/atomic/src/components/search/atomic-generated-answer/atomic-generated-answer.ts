@@ -660,6 +660,10 @@ export class AtomicGeneratedAnswer
       return false;
     }
 
+    if (!this.bindings?.engine) {
+      return false;
+    }
+
     return Boolean(
       (
         this.bindings.engine.state as {
