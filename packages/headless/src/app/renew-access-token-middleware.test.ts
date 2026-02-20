@@ -283,6 +283,22 @@ describe('createRenewAccessTokenMiddleware', () => {
     );
   });
 
+  it('should re-dispatch the original action when renewToken fails in the reactive path', async () => {
+    const {shouldRenewJWT} = await import('../utils/jwt-utils.js');
+    (shouldRenewJWT as Mock).mockReturnValue(false);
+
+    const payload = buildExpiredTokenPayload();
+    const action = () => Promise.resolve(payload);
+    const renewFn = vi
+      .fn()
+      .mockRejectedValue(new Error('renewal service down'));
+    const middleware = createRenewAccessTokenMiddleware(logger, renewFn);
+
+    await callMiddleware(middleware, action);
+
+    expect(store.dispatch).toHaveBeenCalledWith(action);
+  });
+
   it('should dispatch actions on the store on the third call when 500ms pass after the second call with no invocations', async () => {
     const payload = buildExpiredTokenPayload();
     const action = () => Promise.resolve(payload);
