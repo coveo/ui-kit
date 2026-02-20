@@ -1,6 +1,7 @@
 // Auto-generated file
 export {AtomicInsightEditToggle} from './atomic-insight-edit-toggle/atomic-insight-edit-toggle.js';
 export {AtomicInsightFacet} from './atomic-insight-facet/atomic-insight-facet.js';
+export {AtomicInsightFoldedResultList} from './atomic-insight-folded-result-list/atomic-insight-folded-result-list.js';
 export {AtomicInsightFullSearchButton} from './atomic-insight-full-search-button/atomic-insight-full-search-button.js';
 export {AtomicInsightGenerateAnswerButton} from './atomic-insight-generate-answer-button/atomic-insight-generate-answer-button.js';
 export {AtomicInsightHistoryToggle} from './atomic-insight-history-toggle/atomic-insight-history-toggle.js';
@@ -23,6 +24,7 @@ export {AtomicInsightResultTemplate} from './atomic-insight-result-template/atom
 export {AtomicInsightSearchBox} from './atomic-insight-search-box/atomic-insight-search-box.js';
 export {AtomicInsightSmartSnippet} from './atomic-insight-smart-snippet/atomic-insight-smart-snippet.js';
 export {AtomicInsightSmartSnippetFeedbackModal} from './atomic-insight-smart-snippet-feedback-modal/atomic-insight-smart-snippet-feedback-modal.js';
+export {AtomicInsightSmartSnippetSuggestions} from './atomic-insight-smart-snippet-suggestions/atomic-insight-smart-snippet-suggestions.js';
 export {AtomicInsightTab} from './atomic-insight-tab/atomic-insight-tab.js';
 export {AtomicInsightTabs} from './atomic-insight-tabs/atomic-insight-tabs.js';
 export {AtomicInsightUserActionsModal} from './atomic-insight-user-actions-modal/atomic-insight-user-actions-modal.js';

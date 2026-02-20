@@ -7,6 +7,7 @@
  * Stencil components are excluded as they lazy-load.
  */
 export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
+  'answer-content',
   'atomic-aria-live',
   'atomic-automatic-facet',
   'atomic-automatic-facet-generator',
@@ -61,6 +62,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-icon',
   'atomic-insight-edit-toggle',
   'atomic-insight-facet',
+  'atomic-insight-folded-result-list',
   'atomic-insight-full-search-button',
   'atomic-insight-generate-answer-button',
   'atomic-insight-history-toggle',
@@ -83,6 +85,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-insight-search-box',
   'atomic-insight-smart-snippet',
   'atomic-insight-smart-snippet-feedback-modal',
+  'atomic-insight-smart-snippet-suggestions',
   'atomic-insight-tab',
   'atomic-insight-tabs',
   'atomic-insight-user-actions-modal',
@@ -92,6 +95,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-ipx-button',
   'atomic-ipx-embedded',
   'atomic-ipx-modal',
+  'atomic-ipx-refine-toggle',
   'atomic-ipx-result-link',
   'atomic-ipx-tab',
   'atomic-ipx-tabs',
@@ -134,6 +138,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-rating-range-facet',
   'atomic-recs-error',
   'atomic-recs-interface',
+  'atomic-recs-list',
   'atomic-recs-result',
   'atomic-recs-result-template',
   'atomic-refine-modal',
@@ -196,6 +201,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-text',
   'atomic-timeframe',
   'atomic-timeframe-facet',
+  'generated-answer-thread-item',
 ]);
 
 /**
