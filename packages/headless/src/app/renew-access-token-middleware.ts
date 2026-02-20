@@ -20,16 +20,13 @@ export function createRenewAccessTokenMiddleware(
   renewToken?: () => Promise<string>
 ): Middleware {
   let accessTokenRenewalsAttempts = 0;
-  let pendingTokenRenewal: Promise<string | null> | null = null;
+  let pendingTokenRenewal: Promise<string> | null = null;
   const hasRenewFunction = typeof renewToken === 'function';
   const resetRenewalTriesAfterDelay = debounce(() => {
     accessTokenRenewalsAttempts = 0;
   }, 500);
 
-  const handleTokenRenewal = async (
-    store: MiddlewareAPI,
-    handleErrors = false
-  ): Promise<string | null> => {
+  const handleTokenRenewal = async (store: MiddlewareAPI): Promise<string | null> => {
     if (!hasRenewFunction) {
       return null;
     }
@@ -38,14 +35,7 @@ export function createRenewAccessTokenMiddleware(
 
     if (shouldInitiateRenewal) {
       pendingTokenRenewal = (async () => {
-        try {
-          return await renewToken();
-        } catch (error) {
-          if (!handleErrors) {
-            throw error;
-          }
-          return null;
-        }
+        return await renewToken();
       })().finally(() => {
         pendingTokenRenewal = null;
       });
@@ -105,7 +95,12 @@ export function createRenewAccessTokenMiddleware(
     accessTokenRenewalsAttempts++;
     resetRenewalTriesAfterDelay();
 
-    await handleTokenRenewal(store, true);
+    try {
+      await handleTokenRenewal(store);
+    } catch (_) {
+      // Ignore
+    }
+
     store.dispatch(action as unknown as UnknownAction);
     return;
   };
