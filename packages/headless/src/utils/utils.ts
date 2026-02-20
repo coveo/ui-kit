@@ -228,3 +228,18 @@ export function debounce<T extends (...args: unknown[]) => unknown>(
     }
   }) as T;
 }
+
+export function deduplicatePendingPromise<T>(
+  fn: () => Promise<T>
+): () => Promise<T> {
+  let pending: Promise<T> | null = null;
+
+  return async (): Promise<T> => {
+    if (!pending) {
+      pending = fn().finally(() => {
+        pending = null;
+      });
+    }
+    return pending;
+  };
+}

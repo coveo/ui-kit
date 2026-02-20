@@ -1,4 +1,8 @@
-import {debounce, removeDuplicates} from './utils.js';
+import {
+  debounce,
+  deduplicatePendingPromise,
+  removeDuplicates,
+} from './utils.js';
 
 describe('removeDuplicates', () => {
   it('should return reduced array based on received predicate', () => {
@@ -215,5 +219,74 @@ describe('debounce', () => {
 
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockFn).toHaveBeenCalledWith('second');
+  });
+});
+
+describe('deduplicatePendingPromise', () => {
+  const createDeferred = <T>() => {
+    let resolve: (value: T) => void;
+    let reject: (error: unknown) => void;
+    const promise = new Promise<T>((promiseResolve, promiseReject) => {
+      resolve = promiseResolve;
+      reject = promiseReject;
+    });
+    return {promise, resolve: resolve!, reject: reject!};
+  };
+
+  it('should return the same pending promise for concurrent calls', async () => {
+    const deferred = createDeferred<string>();
+    const fn = vi.fn(() => deferred.promise);
+    const deduplicated = deduplicatePendingPromise(fn);
+
+    const firstCall = deduplicated();
+    const secondCall = deduplicated();
+
+    expect(fn).toHaveBeenCalledTimes(1);
+    expect(firstCall).toBe(secondCall);
+
+    deferred.resolve('done');
+
+    await expect(firstCall).resolves.toBe('done');
+    await expect(secondCall).resolves.toBe('done');
+  });
+
+  it('should call the function again after the pending promise resolves', async () => {
+    const firstDeferred = createDeferred<string>();
+    const secondDeferred = createDeferred<string>();
+    const fn = vi
+      .fn()
+      .mockImplementationOnce(() => firstDeferred.promise)
+      .mockImplementationOnce(() => secondDeferred.promise);
+    const deduplicated = deduplicatePendingPromise(fn);
+
+    const firstCall = deduplicated();
+    firstDeferred.resolve('first');
+    await expect(firstCall).resolves.toBe('first');
+
+    const secondCall = deduplicated();
+    secondDeferred.resolve('second');
+    await expect(secondCall).resolves.toBe('second');
+
+    expect(fn).toHaveBeenCalledTimes(2);
+  });
+
+  it('should reset pending state after rejection', async () => {
+    const firstDeferred = createDeferred<string>();
+    const secondDeferred = createDeferred<string>();
+    const fn = vi
+      .fn()
+      .mockImplementationOnce(() => firstDeferred.promise)
+      .mockImplementationOnce(() => secondDeferred.promise);
+    const deduplicated = deduplicatePendingPromise(fn);
+
+    const firstCall = deduplicated();
+    firstDeferred.reject(new Error('boom'));
+    await expect(firstCall).rejects.toThrow('boom');
+
+    const secondCall = deduplicated();
+    secondDeferred.resolve('recovered');
+    await expect(secondCall).resolves.toBe('recovered');
+
+    expect(fn).toHaveBeenCalledTimes(2);
   });
 });
