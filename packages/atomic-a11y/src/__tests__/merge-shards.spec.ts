@@ -206,8 +206,8 @@ describe('merge-shards test utilities', () => {
     ]);
     expect(criterion241).toMatchObject({
       id: '2.4.1',
-      name: '2.4.1',
-      level: 'unknown',
+      name: 'Bypass Blocks',
+      level: 'A',
       conformance: 'notEvaluated',
     });
   });

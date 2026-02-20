@@ -1,8 +1,8 @@
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
-export function wasExecutedDirectly(): boolean {
-  const currentFilePath = fileURLToPath(import.meta.url);
+export function wasExecutedDirectly(callerMetaUrl: string): boolean {
+  const currentFilePath = fileURLToPath(callerMetaUrl);
   const entryFile = process.argv[1];
 
   if (!entryFile) {
