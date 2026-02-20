@@ -20,7 +20,7 @@ export function createRenewAccessTokenMiddleware(
   renewToken?: () => Promise<string>
 ): Middleware {
   let accessTokenRenewalsAttempts = 0;
-  let pendingTokenRenewal: Promise<string> | null = null;
+  let pendingTokenRenewal: Promise<string | null> | null = null;
   const resetRenewalTriesAfterDelay = debounce(() => {
     accessTokenRenewalsAttempts = 0;
   }, 500);
@@ -33,10 +33,14 @@ export function createRenewAccessTokenMiddleware(
 
     if (shouldInitiateRenewal && renewToken) {
       pendingTokenRenewal = (async () => {
-        if (handleErrors) {
-          return await attempt(renewToken);
+        try {
+          return await renewToken();
+        } catch (error) {
+          if (!handleErrors) {
+            throw error;
+          }
+          return null;
         }
-        return await renewToken();
       })().finally(() => {
         pendingTokenRenewal = null;
       });
@@ -168,14 +172,6 @@ function dispatchError(
       type: error.name,
     })
   );
-}
-
-async function attempt(fn: () => Promise<string>) {
-  try {
-    return await fn();
-  } catch (_) {
-    return '';
-  }
 }
 
 type EngineStateWithAccessToken =
