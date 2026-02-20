@@ -5,7 +5,7 @@
 - **Build all packages in the UI Kit monorepo**: `pnpm run build`
 - **Run all unit tests in all packages in the UI Kit monorepo**: `pnpm run test`
 - **Check for linting errors across the entire UI Kit monorepo**: `pnpm run lint:check`
-- **Fix liting errors across the entire UI Kit monorepo**: `pnpm run lint:fix`
+- **Fix linting errors across the entire UI Kit monorepo**: `pnpm run lint:fix`
 
 ## Structure
 

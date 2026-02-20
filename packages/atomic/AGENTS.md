@@ -4,10 +4,10 @@
 
 The following commands are specific to the Atomic Package:
 
-- **Build the Atomic package**: `pnpm turbo @coveo/atomic#build`
-- **Run all Atomic unit tests**: `pnpm turbo @coveo/atomic#test`
+- **Build the Atomic package**: `pnpm turbo build --filter=@coveo/atomic`
+- **Run all Atomic unit tests**: `pnpm turbo test --filter=@coveo/atomic`
 - **Run a specific unit test suite**: `npx vitest run <relative/path/to/test-suite.spec.ts>`
-- **Run the Atomic and Storybook dev servers**: `pnpm turbo @coveo/atomic#dev`
+- **Run the Atomic and Storybook dev servers**: `pnpm turbo dev --filter=@coveo/atomic`
 - **Run all Atomic end-to-end tests**: `npx playwright test`
 - **Run a specific end-to-end test suite**: `npx playwright test -g <test-suite.e2e.ts>`
 
