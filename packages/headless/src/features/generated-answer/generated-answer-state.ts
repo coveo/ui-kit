@@ -6,8 +6,8 @@ import type {
 } from './generated-response-format.js';
 
 type StepStatus = 'active' | 'completed';
-export type StepName = 'search' | 'think';
-export const STEP_NAMES = ['search', 'think'] as const;
+export type StepName = 'search' | 'think' | 'generate';
+export const STEP_NAMES = ['search', 'think', 'generate'] as const;
 
 interface Step {
   name: StepName;
