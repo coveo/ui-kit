@@ -190,14 +190,6 @@ export namespace Components {
          */
         "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
-    interface AtomicIpxRefineModal {
-        /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
-         */
-        "collapseFacetsAfter": number;
-        "isOpen": boolean;
-        "openButton"?: HTMLElement;
-    }
     /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
      * Internal component made to be integrated in a TimeframeFacet.
@@ -287,12 +279,6 @@ declare global {
         prototype: HTMLAtomicIpxRecsListElement;
         new (): HTMLAtomicIpxRecsListElement;
     };
-    interface HTMLAtomicIpxRefineModalElement extends Components.AtomicIpxRefineModal, HTMLStencilElement {
-    }
-    var HTMLAtomicIpxRefineModalElement: {
-        prototype: HTMLAtomicIpxRefineModalElement;
-        new (): HTMLAtomicIpxRefineModalElement;
-    };
     interface HTMLAtomicStencilFacetDateInputElementEventMap {
         "atomic/dateInputApply": any;
     }
@@ -321,7 +307,6 @@ declare global {
         "atomic-insight-result-children-template": HTMLAtomicInsightResultChildrenTemplateElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
         "atomic-ipx-recs-list": HTMLAtomicIpxRecsListElement;
-        "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
     }
 }
@@ -490,14 +475,6 @@ declare namespace LocalJSX {
          */
         "recommendation"?: string;
     }
-    interface AtomicIpxRefineModal {
-        /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
-         */
-        "collapseFacetsAfter"?: number;
-        "isOpen"?: boolean;
-        "openButton"?: HTMLElement;
-    }
     /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
      * Internal component made to be integrated in a TimeframeFacet.
@@ -523,7 +500,6 @@ declare namespace LocalJSX {
         "atomic-insight-result-children-template": AtomicInsightResultChildrenTemplate;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
         "atomic-ipx-recs-list": AtomicIpxRecsList;
-        "atomic-ipx-refine-modal": AtomicIpxRefineModal;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
     }
 }
@@ -540,7 +516,6 @@ declare module "@stencil/core" {
              * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
              */
             "atomic-ipx-recs-list": LocalJSX.AtomicIpxRecsList & JSXBase.HTMLAttributes<HTMLAtomicIpxRecsListElement>;
-            "atomic-ipx-refine-modal": LocalJSX.AtomicIpxRefineModal & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineModalElement>;
             /**
              * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
              * Internal component made to be integrated in a TimeframeFacet.

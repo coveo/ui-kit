@@ -2,6 +2,7 @@
 export {AtomicIpxButton} from './atomic-ipx-button/atomic-ipx-button.js';
 export {AtomicIpxEmbedded} from './atomic-ipx-embedded/atomic-ipx-embedded.js';
 export {AtomicIpxModal} from './atomic-ipx-modal/atomic-ipx-modal.js';
+export {AtomicIpxRefineModal} from './atomic-ipx-refine-modal/atomic-ipx-refine-modal.js';
 export {AtomicIpxRefineToggle} from './atomic-ipx-refine-toggle/atomic-ipx-refine-toggle.js';
 export {AtomicIpxResultLink} from './atomic-ipx-result-link/atomic-ipx-result-link.js';
 export {AtomicIpxTab} from './atomic-ipx-tab/atomic-ipx-tab.js';
