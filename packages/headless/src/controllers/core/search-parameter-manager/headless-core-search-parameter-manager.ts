@@ -7,7 +7,6 @@ import type {
   BaseFacetValueRequest,
   CurrentValues,
 } from '../../../features/facets/facet-api/request.js';
-import type {FacetRequest} from '../../../features/facets/facet-set/interfaces/request.js';
 import {
   getFacets,
   getQ,
@@ -187,18 +186,7 @@ export function getCoreActiveSearchParameters(
       (sortCriteria) => sortCriteria,
       getSortCriteriaInitialState()
     ),
-    ...getFacets(
-      state.facetSet,
-      facetIsEnabledAndVisibleOnTab(state),
-      getSelectedValues,
-      'f'
-    ),
-    ...getFacets(
-      state.facetSet,
-      facetIsEnabledAndVisibleOnTab(state),
-      getExcludedValues,
-      'fExcluded'
-    ),
+    ...getRegularFacetParams(state),
     ...getCategoryFacets(state),
     ...getNumericFacets(state),
     ...getDateFacets(state),
@@ -225,20 +213,44 @@ function facetIsEnabledAndVisibleOnTab(state: CoreEngine['state']) {
   };
 }
 
-function getSelectedValues(request: FacetRequest) {
-  return request.currentValues
-    .filter((fv) => fv.state === 'selected')
-    .map((fv) => fv.value);
-}
-
 function getSelectedRangeValues(request: CurrentValues<BaseFacetValueRequest>) {
   return request.currentValues.filter((fv) => fv.state === 'selected');
 }
 
-function getExcludedValues(request: FacetRequest) {
-  return request.currentValues
-    .filter((fv) => fv.state === 'excluded')
-    .map((fv) => fv.value);
+function getRegularFacetParams(state: CoreEngine['state']) {
+  const section = state.facetSet;
+  if (section === undefined) {
+    return {};
+  }
+
+  const isEnabled = facetIsEnabledAndVisibleOnTab(state);
+  const f: Record<string, string[]> = {};
+  const fExcluded: Record<string, string[]> = {};
+
+  for (const [facetId, {request}] of Object.entries(section)) {
+    if (!isEnabled(facetId)) {
+      continue;
+    }
+
+    const selectedValues = request.currentValues
+      .filter((fv) => fv.state === 'selected')
+      .map((fv) => fv.value);
+    const excludedValues = request.currentValues
+      .filter((fv) => fv.state === 'excluded')
+      .map((fv) => fv.value);
+
+    if (selectedValues.length) {
+      f[facetId] = selectedValues;
+    }
+    if (excludedValues.length) {
+      fExcluded[facetId] = excludedValues;
+    }
+  }
+
+  return {
+    ...(Object.keys(f).length ? {f} : {}),
+    ...(Object.keys(fExcluded).length ? {fExcluded} : {}),
+  };
 }
 
 function getCategoryFacets(state: CoreEngine['state']) {
