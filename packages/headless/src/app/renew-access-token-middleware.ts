@@ -13,35 +13,26 @@ import type {
 } from '../state/state-sections.js';
 import {UnauthorizedTokenError} from '../utils/errors.js';
 import {shouldRenewJWT as shouldRenewAccessToken} from '../utils/jwt-utils.js';
-import {debounce} from '../utils/utils.js';
+import {debounce, deduplicatePendingPromise} from '../utils/utils.js';
 
 export function createRenewAccessTokenMiddleware(
   logger: Logger,
   renewToken?: () => Promise<string>
 ): Middleware {
   let accessTokenRenewalsAttempts = 0;
-  let pendingTokenRenewal: Promise<string> | null = null;
-  const hasRenewFunction = typeof renewToken === 'function';
   const resetRenewalTriesAfterDelay = debounce(() => {
     accessTokenRenewalsAttempts = 0;
   }, 500);
 
-  const handleTokenRenewal = async (store: MiddlewareAPI): Promise<string | null> => {
-    if (!hasRenewFunction) {
-      return null;
-    }
+  const hasRenewFunction = typeof renewToken === 'function';
+  const dedupedRenewToken = hasRenewFunction
+    ? deduplicatePendingPromise(renewToken)
+    : () => Promise.resolve(null);
 
-    const shouldInitiateRenewal = !pendingTokenRenewal;
-
-    if (shouldInitiateRenewal) {
-      pendingTokenRenewal = (async () => {
-        return await renewToken();
-      })().finally(() => {
-        pendingTokenRenewal = null;
-      });
-    }
-
-    const accessToken = await pendingTokenRenewal;
+  const handleTokenRenewal = async (
+    store: MiddlewareAPI
+  ): Promise<string | null> => {
+    const accessToken = await dedupedRenewToken();
 
     if (accessToken) {
       store.dispatch(updateBasicConfiguration({accessToken}));
