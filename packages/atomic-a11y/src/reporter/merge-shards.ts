@@ -4,10 +4,7 @@ import {
   DEFAULT_A11Y_REPORT_FILENAME,
   DEFAULT_A11Y_REPORT_OUTPUT_DIR,
   DEFAULT_WCAG_22_AA_CRITERIA_COUNT,
-  UNKNOWN_CATEGORY,
-  UNKNOWN_FRAMEWORK,
 } from '../shared/constants.js';
-import {wasExecutedDirectly} from '../shared/file-utils.js';
 import {isA11yReport} from '../shared/guards.js';
 import {compareByName, compareByNumericId} from '../shared/sorting.js';
 import type {
@@ -24,7 +21,6 @@ const SHARD_FILE_PATTERN = /^a11y-report\.shard-(\d+)\.json$/;
 interface MergeShardOptions {
   inputDir?: string;
   outputFile?: string;
-  expectedShards?: number;
   totalCriteria?: number;
 }
 
@@ -118,20 +114,6 @@ export function mergeComponents(reports: A11yReport[]): A11yComponentReport[] {
       existing.automated.incompleteDetails.push(
         ...component.automated.incompleteDetails
       );
-
-      if (
-        existing.category === UNKNOWN_CATEGORY &&
-        component.category !== UNKNOWN_CATEGORY
-      ) {
-        existing.category = component.category;
-      }
-
-      if (
-        existing.framework === UNKNOWN_FRAMEWORK &&
-        component.framework !== UNKNOWN_FRAMEWORK
-      ) {
-        existing.framework = component.framework;
-      }
     }
   }
 
@@ -223,9 +205,10 @@ export async function mergeA11yShardReports(
   const outputFile = path.resolve(
     options.outputFile ?? path.join(inputDir, DEFAULT_A11Y_REPORT_FILENAME)
   );
-  const expectedShards = options.expectedShards;
   const totalCriteria =
     options.totalCriteria ?? DEFAULT_WCAG_22_AA_CRITERIA_COUNT;
+
+  console.log(`[merge-shards] Scanning for shard reports in ${inputDir}`);
 
   let directoryEntries: string[];
   try {
@@ -249,17 +232,19 @@ export async function mergeA11yShardReports(
     return null;
   }
 
-  if (expectedShards && shardFiles.length !== expectedShards) {
-    console.warn(
-      `[merge-shards] Expected ${expectedShards} shard reports, found ${shardFiles.length}.`
-    );
-  }
+  console.log(
+    `[merge-shards] Found ${shardFiles.length} shard files, reading...`
+  );
 
   const shardReports = await readShardReports(shardFiles);
   if (shardReports.length === 0) {
     console.warn('[merge-shards] No valid shard report could be loaded.');
     return null;
   }
+
+  console.log(
+    `[merge-shards] Loaded ${shardReports.length} valid shard reports, merging...`
+  );
 
   const components = mergeComponents(shardReports);
   const criteria = mergeCriteria(shardReports, components);
@@ -281,25 +266,9 @@ export async function mergeA11yShardReports(
     'utf8'
   );
 
+  console.log(
+    `[merge-shards] Merged ${components.length} components and ${criteria.length} criteria into ${outputFile}`
+  );
+
   return mergedReport;
-}
-
-function parseExpectedShards(): number | undefined {
-  const value = process.env.A11Y_EXPECTED_SHARDS;
-  if (!value) {
-    return undefined;
-  }
-
-  const parsed = Number.parseInt(value, 10);
-  return Number.isInteger(parsed) && parsed > 0 ? parsed : undefined;
-}
-
-async function runFromCli(): Promise<void> {
-  await mergeA11yShardReports({
-    expectedShards: parseExpectedShards(),
-  });
-}
-
-if (wasExecutedDirectly(import.meta.url)) {
-  void runFromCli();
 }
