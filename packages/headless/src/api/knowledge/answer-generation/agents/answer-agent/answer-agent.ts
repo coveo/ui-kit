@@ -1,6 +1,6 @@
-import {HttpAgent, type RunAgentInput} from '@ag-ui/client';
 import type {PlatformEnvironment} from '../../../../../utils/url-utils.js';
 import {buildBaseAnswerGenerationUrl} from '../endpoint-url-builder.js';
+import {HttpAgent, type RunAgentInput} from '../sse-agent/index.js';
 
 /**
  * Custom HTTP Agent for answer requests

@@ -1,4 +1,3 @@
-import type {AgentSubscriber} from '@ag-ui/client';
 import type {Dispatch} from '@reduxjs/toolkit';
 import {
   followUpCitationsReceived,
@@ -9,6 +8,7 @@ import {
   setFollowUpAnswerContentFormat,
   setFollowUpIsLoading,
 } from '../../../../../features/follow-up-answers/follow-up-answers-actions.js';
+import type {AgentSubscriber} from '../sse-agent/index.js';
 
 /**
  * Creates an AgentSubscriber that handles follow-up answer streaming events

@@ -1,6 +1,5 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: unit test */
 
-import type {AgentSubscriber} from '@ag-ui/client';
 import type {Dispatch} from '@reduxjs/toolkit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {
@@ -12,6 +11,7 @@ import {
   setFollowUpAnswerContentFormat,
   setFollowUpIsLoading,
 } from '../../../../../features/follow-up-answers/follow-up-answers-actions.js';
+import type {AgentSubscriber} from '../sse-agent/index.js';
 import {createFollowUpStrategy} from './follow-up-answer-strategy.js';
 
 describe('createFollowUpStrategy', () => {

@@ -1,4 +1,3 @@
-import type {AgentSubscriber} from '@ag-ui/client';
 import type {Dispatch} from '@reduxjs/toolkit';
 import {
   setFollowUpAnswersConversationId,
@@ -15,6 +14,7 @@ import {
   updateError,
   updateMessage,
 } from '../../../../../features/generated-answer/generated-answer-actions.js';
+import type {AgentSubscriber} from '../sse-agent/index.js';
 
 /**
  * Creates an AgentSubscriber that handles answer streaming events

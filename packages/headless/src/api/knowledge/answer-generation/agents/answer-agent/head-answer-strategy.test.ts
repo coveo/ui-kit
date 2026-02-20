@@ -1,6 +1,5 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: unit test */
 
-import type {AgentSubscriber} from '@ag-ui/client';
 import type {Dispatch} from '@reduxjs/toolkit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {
@@ -18,6 +17,7 @@ import {
   updateError,
   updateMessage,
 } from '../../../../../features/generated-answer/generated-answer-actions.js';
+import type {AgentSubscriber} from '../sse-agent/index.js';
 import {createHeadAnswerStrategy} from './head-answer-strategy.js';
 
 describe('createHeadAnswerStrategy', () => {
