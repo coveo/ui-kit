@@ -1,3 +1,10 @@
+/**
+ * Auto-generated from https://www.w3.org/WAI/WCAG22/wcag.json
+ * Run `pnpm generate:wcag` to regenerate.
+ *
+ * DO NOT EDIT MANUALLY.
+ */
+
 import type {CriterionLevel, WCAGVersion} from '../shared/types.js';
 
 type ChapterId = 'success_criteria_level_a' | 'success_criteria_level_aa';
@@ -219,13 +226,6 @@ export const wcagCriteriaDefinitions: WcagCriterionDefinition[] = [
     handle: 'Redundant Entry',
     level: 'A',
     wcagVersion: '2.2',
-    chapterId: 'success_criteria_level_a',
-  },
-  {
-    id: '4.1.1',
-    handle: 'Parsing',
-    level: 'A',
-    wcagVersion: '2.0',
     chapterId: 'success_criteria_level_a',
   },
   {

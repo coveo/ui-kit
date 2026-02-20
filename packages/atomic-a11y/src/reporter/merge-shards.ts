@@ -1,26 +1,26 @@
 import {mkdir, readdir, readFile, writeFile} from 'node:fs/promises';
 import path from 'node:path';
-import {wasExecutedDirectly} from '../shared/file-utils.js';
+import {
+  DEFAULT_A11Y_REPORT_FILENAME,
+  DEFAULT_A11Y_REPORT_OUTPUT_DIR,
+  DEFAULT_WCAG_22_AA_CRITERIA_COUNT,
+} from '../shared/constants.js';
 import {isA11yReport} from '../shared/guards.js';
+import {compareByName, compareByNumericId} from '../shared/sorting.js';
 import type {
   A11yAutomatedResults,
   A11yComponentReport,
   A11yCriterionReport,
   A11yReport,
-  A11ySummary,
-} from './vitest-a11y-reporter.js';
-import {
-  DEFAULT_A11Y_REPORT_FILENAME,
-  DEFAULT_A11Y_REPORT_OUTPUT_DIR,
-  DEFAULT_WCAG_22_AA_CRITERIA_COUNT,
-} from './vitest-a11y-reporter.js';
+} from '../shared/types.js';
+import {formatDate, getCriterionMetadata} from './reporter-utils.js';
+import {createSummary} from './summary.js';
 
 const SHARD_FILE_PATTERN = /^a11y-report\.shard-(\d+)\.json$/;
 
 interface MergeShardOptions {
   inputDir?: string;
   outputFile?: string;
-  expectedShards?: number;
   totalCriteria?: number;
 }
 
@@ -61,72 +61,36 @@ function toMutableCriterion(
   };
 }
 
-function sortByNumericIdentifier(first: string, second: string): number {
-  return first.localeCompare(second, 'en-US', {numeric: true});
-}
-
-function createSummary(
-  components: A11yComponentReport[],
-  criteria: A11yCriterionReport[],
-  totalCriteria: number
-): A11ySummary {
-  const litComponents = components.filter(
-    (component) => component.framework === 'lit'
-  ).length;
-  const stencilComponents = components.filter(
-    (component) => component.framework === 'stencil'
-  ).length;
-  const totalStories = components.reduce(
-    (accumulator, component) => accumulator + component.storyCount,
-    0
-  );
-  const automatedCoverage =
-    totalCriteria > 0
-      ? `${Math.round((criteria.length / totalCriteria) * 100)}%`
-      : '0%';
-
-  return {
-    totalComponents: components.length,
-    litComponents,
-    stencilComponents,
-    stencilExcluded: true,
-    storyCoverage: {
-      total: totalStories,
-      withA11y: totalStories,
-      excludedFromA11y: 0,
-    },
-    totalCriteria,
-    supports: 0,
-    partiallySupports: 0,
-    doesNotSupport: 0,
-    notApplicable: 0,
-    notEvaluated: totalCriteria,
-    automatedCoverage,
-    manualCoverage: '0%',
-  };
-}
-
 async function readShardReports(shardFiles: string[]): Promise<A11yReport[]> {
+  const results = await Promise.allSettled(
+    shardFiles.map(async (shardFile) => {
+      const content = await readFile(shardFile, 'utf8');
+      const parsed = JSON.parse(content) as unknown;
+
+      if (!isA11yReport(parsed)) {
+        throw new Error('Invalid report structure');
+      }
+
+      return parsed;
+    })
+  );
+
   const reports: A11yReport[] = [];
-
-  for (const shardFile of shardFiles) {
-    const shardReportContent = await readFile(shardFile, 'utf8');
-    const parsedShardReport = JSON.parse(shardReportContent) as unknown;
-
-    if (!isA11yReport(parsedShardReport)) {
+  for (let i = 0; i < results.length; i++) {
+    const result = results[i];
+    if (result.status === 'fulfilled') {
+      reports.push(result.value);
+    } else {
       console.warn(
-        `[merge-shards] Skipping invalid shard file: ${path.basename(shardFile)}`
+        `[merge-shards] Skipping shard file: ${path.basename(shardFiles[i])} — ${result.reason instanceof Error ? result.reason.message : 'unknown error'}`
       );
-      continue;
     }
-
-    reports.push(parsedShardReport);
   }
 
   return reports;
 }
 
-function mergeComponents(reports: A11yReport[]): A11yComponentReport[] {
+export function mergeComponents(reports: A11yReport[]): A11yComponentReport[] {
   const componentsByName = new Map<string, MutableComponentReport>();
 
   for (const report of reports) {
@@ -150,17 +114,6 @@ function mergeComponents(reports: A11yReport[]): A11yComponentReport[] {
       existing.automated.incompleteDetails.push(
         ...component.automated.incompleteDetails
       );
-
-      if (existing.category === 'unknown' && component.category !== 'unknown') {
-        existing.category = component.category;
-      }
-
-      if (
-        existing.framework === 'unknown' &&
-        component.framework !== 'unknown'
-      ) {
-        existing.framework = component.framework;
-      }
     }
   }
 
@@ -171,15 +124,15 @@ function mergeComponents(reports: A11yReport[]): A11yComponentReport[] {
         automated: {
           ...component.automated,
           criteriaCovered: [...component.automated.criteriaCovered].sort(
-            sortByNumericIdentifier
+            compareByNumericId
           ),
         },
       };
     })
-    .sort((first, second) => first.name.localeCompare(second.name, 'en-US'));
+    .sort((first, second) => compareByName(first.name, second.name));
 }
 
-function mergeCriteria(
+export function mergeCriteria(
   reports: A11yReport[],
   components: A11yComponentReport[]
 ): A11yCriterionReport[] {
@@ -199,6 +152,8 @@ function mergeCriteria(
     }
   }
 
+  let inferredCriteriaCount = 0;
+
   for (const component of components) {
     for (const criterionId of component.automated.criteriaCovered) {
       const existing = criteriaById.get(criterionId);
@@ -207,11 +162,13 @@ function mergeCriteria(
         continue;
       }
 
+      inferredCriteriaCount++;
+      const metadata = getCriterionMetadata(criterionId);
       criteriaById.set(criterionId, {
         id: criterionId,
-        name: criterionId,
-        level: 'unknown',
-        wcagVersion: 'unknown',
+        name: metadata.name,
+        level: metadata.level,
+        wcagVersion: metadata.wcagVersion,
         conformance: 'notEvaluated',
         automatedCoverage: true,
         manualVerified: false,
@@ -221,23 +178,23 @@ function mergeCriteria(
     }
   }
 
+  if (inferredCriteriaCount > 0) {
+    console.warn(
+      `[merge-shards] ${inferredCriteriaCount} criteria were inferred from component coverage but not present in any shard's criteria list.`
+    );
+  }
+
   return [...criteriaById.values()]
     .map((criterion): A11yCriterionReport => {
       return {
         ...criterion,
-        affectedComponents: [...criterion.affectedComponents].sort((a, b) =>
-          a.localeCompare(b, 'en-US')
+        affectedComponents: [...criterion.affectedComponents].sort(
+          compareByName
         ),
       };
     })
-    .sort((first, second) => sortByNumericIdentifier(first.id, second.id));
+    .sort((first, second) => compareByNumericId(first.id, second.id));
 }
-
-export const mergeShardsTestUtils = {
-  createSummary,
-  mergeComponents,
-  mergeCriteria,
-};
 
 export async function mergeA11yShardReports(
   options: MergeShardOptions = {}
@@ -248,37 +205,36 @@ export async function mergeA11yShardReports(
   const outputFile = path.resolve(
     options.outputFile ?? path.join(inputDir, DEFAULT_A11Y_REPORT_FILENAME)
   );
-  const expectedShards = options.expectedShards;
   const totalCriteria =
     options.totalCriteria ?? DEFAULT_WCAG_22_AA_CRITERIA_COUNT;
 
-  const directoryEntries = await readdir(inputDir);
-  const shardFiles = directoryEntries
-    .filter((entry) => SHARD_FILE_PATTERN.test(entry))
-    .sort((first, second) => {
-      const firstShardIndex = Number.parseInt(
-        first.match(SHARD_FILE_PATTERN)?.[1] ?? '0',
-        10
-      );
-      const secondShardIndex = Number.parseInt(
-        second.match(SHARD_FILE_PATTERN)?.[1] ?? '0',
-        10
-      );
+  console.log(`[merge-shards] Scanning for shard reports in ${inputDir}`);
 
-      return firstShardIndex - secondShardIndex;
+  let directoryEntries: string[];
+  try {
+    directoryEntries = await readdir(inputDir);
+  } catch {
+    console.warn(`[merge-shards] Could not read directory: ${inputDir}`);
+    return null;
+  }
+
+  const shardFiles = directoryEntries
+    .map((entry) => {
+      const match = entry.match(SHARD_FILE_PATTERN);
+      return match ? {entry, index: Number.parseInt(match[1], 10)} : null;
     })
-    .map((entry) => path.join(inputDir, entry));
+    .filter((item): item is {entry: string; index: number} => item !== null)
+    .sort((first, second) => first.index - second.index)
+    .map(({entry}) => path.join(inputDir, entry));
 
   if (shardFiles.length === 0) {
     console.warn(`[merge-shards] No shard reports were found in ${inputDir}`);
     return null;
   }
 
-  if (expectedShards && shardFiles.length !== expectedShards) {
-    console.warn(
-      `[merge-shards] Expected ${expectedShards} shard reports, found ${shardFiles.length}.`
-    );
-  }
+  console.log(
+    `[merge-shards] Found ${shardFiles.length} shard files, reading...`
+  );
 
   const shardReports = await readShardReports(shardFiles);
   if (shardReports.length === 0) {
@@ -286,13 +242,17 @@ export async function mergeA11yShardReports(
     return null;
   }
 
+  console.log(
+    `[merge-shards] Loaded ${shardReports.length} valid shard reports, merging...`
+  );
+
   const components = mergeComponents(shardReports);
   const criteria = mergeCriteria(shardReports, components);
   const baseReport = shardReports[0];
   const mergedReport: A11yReport = {
     report: {
       ...baseReport.report,
-      reportDate: new Date().toISOString().slice(0, 10),
+      reportDate: formatDate(new Date()),
     },
     components,
     criteria,
@@ -306,23 +266,9 @@ export async function mergeA11yShardReports(
     'utf8'
   );
 
+  console.log(
+    `[merge-shards] Merged ${components.length} components and ${criteria.length} criteria into ${outputFile}`
+  );
+
   return mergedReport;
-}
-
-async function runFromCli(): Promise<void> {
-  const expectedShardsValue = process.env.A11Y_EXPECTED_SHARDS;
-  const expectedShards = expectedShardsValue
-    ? Number.parseInt(expectedShardsValue, 10)
-    : undefined;
-
-  await mergeA11yShardReports({
-    expectedShards:
-      expectedShards && Number.isInteger(expectedShards)
-        ? expectedShards
-        : undefined,
-  });
-}
-
-if (wasExecutedDirectly()) {
-  void runFromCli();
 }
