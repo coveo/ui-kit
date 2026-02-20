@@ -657,7 +657,7 @@ describe('generated answer slice', () => {
         },
         {
           name: 'think',
-          status: 'active',
+          status: 'completed',
           startedAt: 10,
         },
         {
