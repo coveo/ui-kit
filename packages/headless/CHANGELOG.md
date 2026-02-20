@@ -1,3 +1,10 @@
+## 3.45.0 (2026-02-18)
+
+* feat(headless): added askFollowUp method to generated answer with follow ups controller (kepler) (#7 ([441238f](https://github.com/coveo/ui-kit/commits/441238f)), closes [#7127](https://github.com/coveo/ui-kit/issues/7127)
+* feat(headless): introduced like, dislike and logCopyToClipboard methods to generated answer with fol ([f3fac36](https://github.com/coveo/ui-kit/commits/f3fac36)), closes [#7120](https://github.com/coveo/ui-kit/issues/7120)
+
+
+
 ## 3.44.0 (2026-02-18)
 
 * feat(headless): answer generation endpoints updated to target the kgas service (#7075) ([9682fef](https://github.com/coveo/ui-kit/commits/9682fef)), closes [#7075](https://github.com/coveo/ui-kit/issues/7075)

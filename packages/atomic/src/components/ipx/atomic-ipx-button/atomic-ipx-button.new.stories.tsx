@@ -19,7 +19,7 @@ async function initializeInterface(canvasElement: HTMLElement) {
 
 const meta: Meta = {
   component: 'atomic-ipx-button',
-  title: 'IPX/IpxButton',
+  title: 'IPX/Button',
   id: 'atomic-ipx-button',
   render: (args) => html`
     <style>
