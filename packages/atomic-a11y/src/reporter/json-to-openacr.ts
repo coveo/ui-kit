@@ -11,14 +11,14 @@ import {loadOverrides} from '../openacr/overrides.js';
 import {buildOpenAcrReport} from '../openacr/report-builder.js';
 import type {OpenAcrReport} from '../openacr/types.js';
 import {toYAML} from '../openacr/yaml-serializer.js';
-import {wasExecutedDirectly} from '../shared/file-utils.js';
-import {isA11yReport, isRecord} from '../shared/guards.js';
-import type {A11yReport} from '../shared/types.js';
 import {
   DEFAULT_A11Y_REPORT_FILENAME,
   DEFAULT_A11Y_REPORT_OUTPUT_DIR,
-} from './vitest-a11y-reporter.js';
+} from '../shared/constants.js';
+import {isA11yReport, isRecord} from '../shared/guards.js';
+import type {A11yReport} from '../shared/types.js';
 
+// TODO: revisit these constants
 const DEFAULT_OPENACR_OUTPUT_FILENAME = 'openacr.yaml';
 const DEFAULT_OVERRIDES_FILENAME = 'a11y-overrides.json';
 const DEFAULT_OVERRIDES_DIR = 'a11y';
@@ -104,14 +104,6 @@ export async function transformJsonToOpenAcr(
   return openAcrReport;
 }
 
-async function runFromCli(): Promise<void> {
-  const result = await transformJsonToOpenAcr();
-
-  console.log(
-    `[json-to-openacr] Wrote ${result.summary.total_criteria} WCAG criteria to ${path.join(DEFAULT_A11Y_REPORT_OUTPUT_DIR, DEFAULT_OPENACR_OUTPUT_FILENAME)}.`
-  );
-}
-
 export {
   buildRemarks,
   resolveConformance,
@@ -131,7 +123,3 @@ export const jsonToOpenAcrTestUtils = {
   resolveConformance,
   resolveManualConformance,
 };
-
-if (wasExecutedDirectly()) {
-  void runFromCli();
-}
