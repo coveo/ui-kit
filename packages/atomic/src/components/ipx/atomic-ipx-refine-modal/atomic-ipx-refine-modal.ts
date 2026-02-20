@@ -33,9 +33,9 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 /**
  * The `atomic-ipx-refine-modal` component is automatically created as a child of the `atomic-search-interface` when the `atomic-ipx-refine-toggle` is initialized.
  *
- * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
+ * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body.
  *
- * @slot facets - Slot for facet elements to be displayed in the modal.
+ * @slot facets - Slot for facet elements to be displayed in the modal. This slot is managed internally by the component and should not be used directly.
  *
  * @part title - The title of the modal.
  * @part close-button - The button in the header that closes the modal.
