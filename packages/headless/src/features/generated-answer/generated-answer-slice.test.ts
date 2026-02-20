@@ -6,6 +6,7 @@ import {
   collapseGeneratedAnswer,
   dislikeGeneratedAnswer,
   expandGeneratedAnswer,
+  finishStep,
   likeGeneratedAnswer,
   openGeneratedAnswerFeedbackModal,
   registerFieldsToIncludeInCitations,
@@ -21,6 +22,7 @@ import {
   setIsLoading,
   setIsStreaming,
   setIsVisible,
+  startStep,
   updateCitations,
   updateError,
   updateMessage,
@@ -577,6 +579,115 @@ describe('generated answer slice', () => {
       );
 
       expect(finalState.answerGenerationMode).toEqual('manual');
+    });
+  });
+
+  describe('#startStep', () => {
+    it('should append a new active step with the provided payload', () => {
+      const startedAt = 123;
+      const initialState = {
+        ...baseState,
+        steps: [
+          {
+            name: 'search' as const,
+            status: 'completed' as const,
+            startedAt: 1,
+            finishedAt: 2,
+          },
+        ],
+      };
+
+      const finalState = generatedAnswerReducer(
+        initialState,
+        startStep({name: 'think', startedAt})
+      );
+
+      expect(finalState.steps).toEqual([
+        {
+          name: 'search',
+          status: 'completed',
+          startedAt: 1,
+          finishedAt: 2,
+        },
+        {
+          name: 'think',
+          status: 'active',
+          startedAt,
+        },
+      ]);
+    });
+  });
+
+  describe('#finishStep', () => {
+    it('should mark the most recent matching active step as completed', () => {
+      const finishedAt = 999;
+      const initialState = {
+        ...baseState,
+        steps: [
+          {
+            name: 'search' as const,
+            status: 'completed' as const,
+            startedAt: 1,
+            finishedAt: 2,
+          },
+          {
+            name: 'think' as const,
+            status: 'completed' as const,
+            startedAt: 10,
+          },
+          {
+            name: 'search' as const,
+            status: 'active' as const,
+            startedAt: 20,
+          },
+        ],
+      };
+
+      const finalState = generatedAnswerReducer(
+        initialState,
+        finishStep({name: 'search', finishedAt})
+      );
+
+      expect(finalState.steps).toEqual([
+        {
+          name: 'search',
+          status: 'completed',
+          startedAt: 1,
+          finishedAt: 2,
+        },
+        {
+          name: 'think',
+          status: 'active',
+          startedAt: 10,
+        },
+        {
+          name: 'search',
+          status: 'completed',
+          startedAt: 20,
+          finishedAt,
+        },
+      ]);
+    });
+
+    it('should leave steps unchanged when no matching active step is found', () => {
+      const initialState = {
+        ...baseState,
+        steps: [
+          {
+            name: 'search' as const,
+            status: 'completed' as const,
+            startedAt: 1,
+            finishedAt: 2,
+          },
+        ],
+      };
+
+      const finalState = generatedAnswerReducer(
+        initialState,
+        finishStep({name: 'think', finishedAt: 50})
+      );
+
+      expect(finalState.steps).toEqual(initialState.steps);
     });
   });
 });

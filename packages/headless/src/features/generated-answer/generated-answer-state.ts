@@ -5,6 +5,17 @@ import type {
   GeneratedResponseFormat,
 } from './generated-response-format.js';
 
+type StepStatus = 'active' | 'completed';
+export type StepName = 'search' | 'think';
+export const STEP_NAMES = ['search', 'think'] as const;
+
+interface Step {
+  name: StepName;
+  status: StepStatus;
+  startedAt: number;
+  finishedAt?: number;
+}
+
 /**
  * Base interface for generated answer structures.
  * Contains core properties shared across different generated answer implementations.
@@ -58,6 +69,10 @@ export interface GeneratedAnswerBase {
    * Determines if the generated answer feedback was submitted.
    */
   feedbackSubmitted: boolean;
+  /**
+   * The list of steps involved in generating the answer, along with their status and timestamps.
+   */
+  steps: Step[];
 }
 
 /**
@@ -130,5 +145,6 @@ export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
     answerApiQueryParams: undefined,
     answerId: undefined,
     answerGenerationMode: 'automatic',
+    steps: [],
   };
 }

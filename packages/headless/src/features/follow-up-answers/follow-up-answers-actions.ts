@@ -19,6 +19,10 @@ import {
   answerContentFormatSchema,
   citationSchema,
 } from '../generated-answer/generated-answer-actions.js';
+import {
+  STEP_NAMES,
+  type StepName,
+} from '../generated-answer/generated-answer-state.js';
 import type {GeneratedContentFormat} from '../generated-answer/generated-response-format.js';
 import {
   constructGenerateFollowUpAnswerParams,
@@ -137,6 +141,32 @@ export const submitFollowUpFeedback = createAction(
 
 export const resetFollowUpAnswers = createAction(
   'followUpAnswers/resetFollowUpAnswers'
+);
+
+export const followUpStepStarted = createAction(
+  'followUpAnswers/stepStarted',
+  (payload: {answerId: string; name: StepName; startedAt: number}) =>
+    validatePayload(payload, {
+      answerId: requiredNonEmptyString,
+      name: new StringValue<StepName>({
+        required: true,
+        constrainTo: STEP_NAMES,
+      }),
+      startedAt: new NumberValue({min: 0, required: true}),
+    })
+);
+
+export const followUpStepFinished = createAction(
+  'followUpAnswers/stepFinished',
+  (payload: {answerId: string; name: StepName; finishedAt: number}) =>
+    validatePayload(payload, {
+      answerId: requiredNonEmptyString,
+      name: new StringValue<StepName>({
+        required: true,
+        constrainTo: STEP_NAMES,
+      }),
+      finishedAt: new NumberValue({min: 0, required: true}),
+    })
 );
 
 export const generateFollowUpAnswer = createAsyncThunk<

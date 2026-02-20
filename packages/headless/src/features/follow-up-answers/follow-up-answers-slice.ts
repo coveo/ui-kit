@@ -1,4 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
+import type {StepName} from '../generated-answer/generated-answer-state.js';
 import {filterOutDuplicatedCitations} from '../generated-answer/utils/generated-answer-citation-utils.js';
 import {
   createFollowUpAnswer,
@@ -7,6 +8,8 @@ import {
   followUpCompleted,
   followUpFailed,
   followUpMessageChunkReceived,
+  followUpStepFinished,
+  followUpStepStarted,
   likeFollowUp,
   resetFollowUpAnswers,
   setActiveFollowUpAnswerId,
@@ -153,6 +156,37 @@ export const followUpAnswersReducer = createReducer(
         }
 
         followUpAnswer.feedbackSubmitted = true;
+      })
+      .addCase(followUpStepStarted, (state, {payload}) => {
+        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
+        if (!followUpAnswer) {
+          return;
+        }
+
+        followUpAnswer.steps = [
+          ...followUpAnswer.steps,
+          {
+            name: payload.name as StepName,
+            status: 'active',
+            startedAt: payload.startedAt,
+          },
+        ];
+      })
+      .addCase(followUpStepFinished, (state, {payload}) => {
+        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
+        if (!followUpAnswer) {
+          return;
+        }
+
+        for (let i = followUpAnswer.steps.length - 1; i >= 0; i--) {
+          const step = followUpAnswer.steps[i];
+
+          if (step.name === payload.name && step.status === 'active') {
+            step.status = 'completed';
+            step.finishedAt = payload.finishedAt;
+            break;
+          }
+        }
       })
       .addCase(resetFollowUpAnswers, (state) => {
         state.followUpAnswers = [];

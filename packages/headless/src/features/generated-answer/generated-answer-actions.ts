@@ -49,6 +49,7 @@ import {
   constructAnswerAPIQueryParams,
   constructGenerateHeadAnswerParams,
 } from './generated-answer-request.js';
+import {STEP_NAMES, type StepName} from './generated-answer-state.js';
 import {
   type GeneratedContentFormat,
   type GeneratedResponseFormat,
@@ -223,6 +224,30 @@ export const setAnswerApiQueryParams = createAction(
   'generatedAnswer/setAnswerApiQueryParams',
   (payload: Partial<AnswerApiQueryParams>) =>
     validatePayload(payload, new RecordValue({}))
+);
+
+export const startStep = createAction(
+  'generatedAnswer/startStep',
+  (payload: {name: StepName; startedAt: number}) =>
+    validatePayload(payload, {
+      name: new StringValue<StepName>({
+        required: true,
+        constrainTo: STEP_NAMES,
+      }),
+      startedAt: new NumberValue({min: 0, required: true}),
+    })
+);
+
+export const finishStep = createAction(
+  'generatedAnswer/finishStep',
+  (payload: {name: StepName; finishedAt: number}) =>
+    validatePayload(payload, {
+      name: new StringValue<StepName>({
+        required: true,
+        constrainTo: STEP_NAMES,
+      }),
+      finishedAt: new NumberValue({min: 0, required: true}),
+    })
 );
 
 interface StreamAnswerArgs {
