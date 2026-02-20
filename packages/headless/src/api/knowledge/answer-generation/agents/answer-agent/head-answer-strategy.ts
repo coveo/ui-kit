@@ -6,6 +6,7 @@ import {
 } from '../../../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {
   setAnswerContentFormat,
+  setAnswerId,
   setCannotAnswer,
   setIsAnswerGenerated,
   setIsLoading,
@@ -22,7 +23,8 @@ export const createHeadAnswerStrategy = (
   dispatch: Dispatch
 ): AgentSubscriber => {
   return {
-    onRunStartedEvent: () => {
+    onRunStartedEvent: (param) => {
+      dispatch(setAnswerId(param.event.runId));
       dispatch(setIsLoading(true));
     },
     onTextMessageStartEvent: () => {

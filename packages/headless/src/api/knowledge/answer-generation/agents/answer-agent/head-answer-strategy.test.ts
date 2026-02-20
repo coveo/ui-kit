@@ -9,6 +9,7 @@ import {
 } from '../../../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {
   setAnswerContentFormat,
+  setAnswerId,
   setCannotAnswer,
   setIsAnswerGenerated,
   setIsLoading,
@@ -29,8 +30,9 @@ describe('createHeadAnswerStrategy', () => {
   });
 
   it('sets the loading state when a run starts', () => {
-    strategy.onRunStartedEvent!({} as any);
+    strategy.onRunStartedEvent!({event: {runId: 'run-001'}} as any);
 
+    expect(dispatch).toHaveBeenCalledWith(setAnswerId('run-001'));
     expect(dispatch).toHaveBeenCalledWith(setIsLoading(true));
   });
 
