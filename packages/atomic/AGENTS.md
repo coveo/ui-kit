@@ -49,6 +49,7 @@ packages/atomic/
 
 ### Atomic Component Structure
 
+```
 atomic-{component-name}/
 ├── atomic-{component-name}.ts              # Main component (Lit)
 ├── atomic-{component-name}.tw.css.ts       # Styles (Tailwind; optional)
@@ -60,6 +61,7 @@ atomic-{component-name}/
 │   ├── page-object.ts                      # Page object
 │   └── fixture.ts                          # Test fixtures
 └── *.ts                                    # Supporting files (optional)
+```
 
 **Notes**:
 - The `.tw.css.ts` file is only included when complex styles are required; otherwise component styles are usually set directly in the Lit component's static `styles` property
