@@ -87,7 +87,6 @@ describe('atomic-generated-answer', () => {
           .collapsible=${props.collapsible ?? false}
           .disableCitationAnchoring=${props.disableCitationAnchoring ?? false}
           .answerConfigurationId=${props.answerConfigurationId}
-          .agentId=${props.agentId}
           fields-to-include-in-citations=${props.fieldsToIncludeInCitations}
           .maxCollapsedHeight=${props.maxCollapsedHeight ?? 16}
           .tabsIncluded=${props.tabsIncluded ?? []}
@@ -655,6 +654,25 @@ describe('atomic-generated-answer', () => {
       });
 
       expect(generatedContentContainer).toHaveClass('agent-scrollable');
+    });
+
+    it('should apply a default 50vh height to the scrollable part when follow-up is enabled', async () => {
+      const {element, generatedContentContainer} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-123'},
+        followUpAnswersState: {isEnabled: true},
+        generatedAnswerState: {
+          isVisible: true,
+          answer: 'Test answer',
+        },
+      });
+
+      await element.updateComplete;
+
+      const heightInPixels = parseFloat(
+        getComputedStyle(generatedContentContainer as HTMLElement).height
+      );
+
+      expect(heightInPixels).toBeCloseTo(window.innerHeight * 0.5, 0);
     });
 
     it('should not render show more button when follow-up is enabled and collapsible is true', async () => {

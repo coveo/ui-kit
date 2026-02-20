@@ -114,9 +114,9 @@ const baseStyle = css`
   /**
    * @prop --atomic-generated-answer-fixed-height: The fixed height of the generated answer content when agent-id is set.
    */
-  [part='generated-content-container'].agent-scrollable {
+  [part~='generated-content-container'].agent-scrollable {
     @apply overflow-y-auto;
-    height: var(--atomic-generated-answer-fixed-height, 24rem);
+    height: var(--atomic-generated-answer-fixed-height, 50vh);
   }
 
   /* Allow query label up to 3 lines before truncating */
