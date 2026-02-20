@@ -43,7 +43,7 @@ export function createRenewAccessTokenMiddleware(
 
     const accessToken = await pendingTokenRenewal;
 
-    if (shouldInitiateRenewal && accessToken) {
+    if (accessToken) {
       store.dispatch(updateBasicConfiguration({accessToken}));
     }
 
