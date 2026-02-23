@@ -1,12 +1,12 @@
 import {RecordValue, Schema} from '@coveo/bueno';
 import type {CoreEngine} from '../../../app/engine.js';
+import {isFacetVisibleOnTab} from '../../../features/facet-options/facet-options-utils.js';
 import type {AutomaticFacetResponse} from '../../../features/facets/automatic-facet-set/interfaces/response.js';
 import {findActiveValueAncestry} from '../../../features/facets/category-facet-set/category-facet-utils.js';
 import type {
   BaseFacetValueRequest,
   CurrentValues,
 } from '../../../features/facets/facet-api/request.js';
-import type {FacetRequest} from '../../../features/facets/facet-set/interfaces/request.js';
 import {
   getFacets,
   getQ,
@@ -186,13 +186,7 @@ export function getCoreActiveSearchParameters(
       (sortCriteria) => sortCriteria,
       getSortCriteriaInitialState()
     ),
-    ...getFacets(state.facetSet, facetIsEnabled(state), getSelectedValues, 'f'),
-    ...getFacets(
-      state.facetSet,
-      facetIsEnabled(state),
-      getExcludedValues,
-      'fExcluded'
-    ),
+    ...getRegularFacetParams(state),
     ...getCategoryFacets(state),
     ...getNumericFacets(state),
     ...getDateFacets(state),
@@ -200,32 +194,69 @@ export function getCoreActiveSearchParameters(
   };
 }
 
-function facetIsEnabled(state: CoreEngine['state']) {
-  return (facetId: string) => {
-    return state.facetOptions?.facets[facetId]?.enabled ?? true;
-  };
+function getActiveTab(state: CoreEngine['state']): string | undefined {
+  const tabSet = state.tabSet;
+  if (!tabSet) {
+    return undefined;
+  }
+  const activeTab = Object.values(tabSet).find((tab) => tab.isActive);
+  return activeTab?.id;
 }
 
-function getSelectedValues(request: FacetRequest) {
-  return request.currentValues
-    .filter((fv) => fv.state === 'selected')
-    .map((fv) => fv.value);
+function facetIsEnabledAndVisibleOnTab(state: CoreEngine['state']) {
+  const activeTab = getActiveTab(state);
+  return (facetId: string) => {
+    const facetOptions = state.facetOptions?.facets[facetId];
+    const isEnabled = facetOptions?.enabled ?? true;
+    const isVisibleOnTab = isFacetVisibleOnTab(facetOptions?.tabs, activeTab);
+    return isEnabled && isVisibleOnTab;
+  };
 }
 
 function getSelectedRangeValues(request: CurrentValues<BaseFacetValueRequest>) {
   return request.currentValues.filter((fv) => fv.state === 'selected');
 }
 
-function getExcludedValues(request: FacetRequest) {
-  return request.currentValues
-    .filter((fv) => fv.state === 'excluded')
-    .map((fv) => fv.value);
+function getRegularFacetParams(state: CoreEngine['state']) {
+  const section = state.facetSet;
+  if (section === undefined) {
+    return {};
+  }
+
+  const isEnabled = facetIsEnabledAndVisibleOnTab(state);
+  const f: Record<string, string[]> = {};
+  const fExcluded: Record<string, string[]> = {};
+
+  for (const [facetId, {request}] of Object.entries(section)) {
+    if (!isEnabled(facetId)) {
+      continue;
+    }
+
+    const selectedValues = request.currentValues
+      .filter((fv) => fv.state === 'selected')
+      .map((fv) => fv.value);
+    const excludedValues = request.currentValues
+      .filter((fv) => fv.state === 'excluded')
+      .map((fv) => fv.value);
+
+    if (selectedValues.length) {
+      f[facetId] = selectedValues;
+    }
+    if (excludedValues.length) {
+      fExcluded[facetId] = excludedValues;
+    }
+  }
+
+  return {
+    ...(Object.keys(f).length ? {f} : {}),
+    ...(Object.keys(fExcluded).length ? {fExcluded} : {}),
+  };
 }
 
 function getCategoryFacets(state: CoreEngine['state']) {
   return getFacets(
     state.categoryFacetSet,
-    facetIsEnabled(state),
+    facetIsEnabledAndVisibleOnTab(state),
     (request) =>
       findActiveValueAncestry(request.currentValues).map((v) => v.value),
     'cf'
@@ -235,7 +266,7 @@ function getCategoryFacets(state: CoreEngine['state']) {
 function getNumericFacets(state: CoreEngine['state']) {
   return getFacets(
     state.numericFacetSet,
-    facetIsEnabled(state),
+    facetIsEnabledAndVisibleOnTab(state),
     getSelectedRangeValues,
     'nf'
   );
@@ -244,7 +275,7 @@ function getNumericFacets(state: CoreEngine['state']) {
 function getDateFacets(state: CoreEngine['state']) {
   return getFacets(
     state.dateFacetSet,
-    facetIsEnabled(state),
+    facetIsEnabledAndVisibleOnTab(state),
     getSelectedRangeValues,
     'df'
   );
