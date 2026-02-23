@@ -1,7 +1,7 @@
 import type {Result as InsightResult} from '@coveo/headless/insight';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {page} from 'vitest/browser';
+import {page, userEvent} from 'vitest/browser';
 import {
   buildMockInsightFoldedResult,
   renderInAtomicInsightResult,
@@ -98,13 +98,9 @@ describe('atomic-insight-result-attach-to-case-action', () => {
       element,
       button: page.getByRole('button'),
       parts: {
-        container: element.shadowRoot?.querySelector(
-          '[part="result-action-container"]'
-        ),
-        button: element.shadowRoot?.querySelector(
-          '[part="result-action-button"]'
-        ),
-        icon: element.shadowRoot?.querySelector('[part="result-action-icon"]'),
+        container: element.querySelector('[part="result-action-container"]'),
+        button: element.querySelector('[part="result-action-button"]'),
+        icon: element.querySelector('[part="result-action-icon"]'),
       },
     };
   };
@@ -115,16 +111,31 @@ describe('atomic-insight-result-attach-to-case-action', () => {
       await expect.element(button).toBeInTheDocument();
     });
 
-    it('should render all shadow parts', async () => {
+    it('should render all exposed parts', async () => {
       const {parts} = await renderComponent();
       expect(parts.container).toBeTruthy();
       expect(parts.button).toBeTruthy();
       expect(parts.icon).toBeTruthy();
     });
 
-    it('should have appropriate role', async () => {
-      const {button} = await renderComponent();
-      await expect.element(button).toHaveRole('button');
+    it('should display different icons for attached and detached states', async () => {
+      const {element: detachedElement} = await renderComponent({
+        isAttached: false,
+      });
+      const detachedIcon = detachedElement
+        .querySelector('atomic-icon')
+        ?.getAttribute('icon');
+
+      const {element: attachedElement} = await renderComponent({
+        isAttached: true,
+      });
+      const attachedIcon = attachedElement
+        .querySelector('atomic-icon')
+        ?.getAttribute('icon');
+
+      expect(detachedIcon).toBeTruthy();
+      expect(attachedIcon).toBeTruthy();
+      expect(detachedIcon).not.toBe(attachedIcon);
     });
   });
 
@@ -214,10 +225,24 @@ describe('atomic-insight-result-attach-to-case-action', () => {
     });
   });
 
-  describe('accessibility', () => {
-    it('should be keyboard accessible', async () => {
-      const {button} = await renderComponent();
-      await expect.element(button).toBeEnabled();
+  it('should emit event when activated via keyboard', async () => {
+    const {element} = await renderComponent({isAttached: false});
+
+    const eventPromise = new Promise<
+      CustomEvent<InsightResultAttachToCaseEvent>
+    >((resolve) => {
+      element.addEventListener(
+        'atomic/insight/attachToCase/attach',
+        (e) => resolve(e as CustomEvent<InsightResultAttachToCaseEvent>),
+        {once: true}
+      );
     });
+
+    element.querySelector('button')!.focus();
+    await userEvent.keyboard('{Enter}');
+
+    const event = await eventPromise;
+    expect(event.detail.callback).toBeInstanceOf(Function);
+    expect(event.detail.result).toBeDefined();
   });
 });
