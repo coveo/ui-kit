@@ -138,6 +138,36 @@ describe('atomic-ipx-refine-modal', () => {
     expect(element.querySummaryState.total).toBe(42);
   });
 
+  it('should bind breadcrumb manager state to controller', async () => {
+    const {element} = await renderIpxRefineModal({
+      breadcrumbManagerState: {hasBreadcrumbs: true},
+    });
+
+    expect(element.breadcrumbManagerState?.hasBreadcrumbs).toBe(true);
+  });
+
+  describe('facet slot', () => {
+    it('should populate facet slot when isOpen is true', async () => {
+      const {element} = await renderIpxRefineModal({isOpen: true});
+
+      const facetSlotContainer = element.querySelector('[slot="facets"]');
+      expect(facetSlotContainer).toBeInTheDocument();
+      expect(facetSlotContainer?.children.length).toBe(2);
+    });
+
+    it('should not duplicate facet slot when reopened', async () => {
+      const {element} = await renderIpxRefineModal({isOpen: true});
+
+      element.isOpen = false;
+      await element.updateComplete;
+      element.isOpen = true;
+      await element.updateComplete;
+
+      const facetSlotContainers = element.querySelectorAll('[slot="facets"]');
+      expect(facetSlotContainers.length).toBe(1);
+    });
+  });
+
   describe('rendering', () => {
     it('should render modal when isOpen is true', async () => {
       const {atomicModal} = await renderIpxRefineModal({isOpen: true});
