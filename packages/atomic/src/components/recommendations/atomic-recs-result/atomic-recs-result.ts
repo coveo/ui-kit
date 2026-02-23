@@ -24,6 +24,7 @@ import {booleanConverter} from '@/src/converters/boolean-converter';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {parentNodeToString} from '@/src/utils/dom-utils';
+import '@/src/components/search/atomic-result-link/atomic-result-link';
 
 /**
  * The `atomic-recs-result` component is used internally by the `atomic-recs-list` component.
