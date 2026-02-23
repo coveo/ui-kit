@@ -6,10 +6,7 @@ import {
 import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {renderIconButton} from '@/src/components/common/icon-button';
-import {
-  ItemContextController,
-  type ItemContextEvent,
-} from '@/src/components/common/item-list/context/item-context-controller';
+import {ItemContextController} from '@/src/components/common/item-list/context/item-context-controller';
 import type {InsightBindings} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -146,8 +143,6 @@ export class AtomicInsightResultAttachToCaseAction
     });
   }
 }
-
-export type ResultContextEvent = ItemContextEvent<Result>;
 
 declare global {
   interface HTMLElementTagNameMap {
