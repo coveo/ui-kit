@@ -24,6 +24,7 @@ export const wrapInInsightInterface = (
         margin-left: auto;
         margin-right: auto;
         box-shadow: 0px 3px 24px 0px #0000001a;
+        overflow: auto;
       }
     </style>
     <atomic-insight-interface ${spreadProps(includeCodeRoot ? { id: "code-root" } : {})}>
