@@ -28,7 +28,10 @@ const meta: Meta = {
   },
   beforeEach: async () => {
     insightApiHarness.searchEndpoint.clear();
-    insightApiHarness.searchEndpoint.mockOnce(() => baseSearchResponse);
+    insightApiHarness.searchEndpoint.mockOnce(() => ({
+      ...baseSearchResponse,
+      results: baseSearchResponse.results.slice(0, 8),
+    }));
   },
   play,
 };
