@@ -81,7 +81,6 @@ describe('atomic-ipx-refine-modal', () => {
       sectionFiltersTitle: element.shadowRoot?.querySelector(
         '[part*="section-filters-title"]'
       ),
-      facetSlot: element.shadowRoot?.querySelector('slot[name="facets"]'),
       filterClearAllButton: element.shadowRoot?.querySelector(
         '[part="filter-clear-all"]'
       ),
