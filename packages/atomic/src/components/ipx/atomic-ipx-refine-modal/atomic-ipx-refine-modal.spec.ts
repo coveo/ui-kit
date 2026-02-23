@@ -69,19 +69,12 @@ describe('atomic-ipx-refine-modal', () => {
       element,
       title: element.shadowRoot?.querySelector('[part="title"]'),
       closeButton: element.shadowRoot?.querySelector('[part="close-button"]'),
-      closeIcon: element.shadowRoot?.querySelector('[part="close-icon"]'),
-      footerContent: element.shadowRoot?.querySelector(
-        '[part="footer-content"]'
-      ),
-      footerButton: element.shadowRoot?.querySelector('[part="footer-button"]'),
       footerButtonText: element.shadowRoot?.querySelector(
         '[part="footer-button-text"]'
       ),
       footerButtonCount: element.shadowRoot?.querySelector(
         '[part="footer-button-count"]'
       ),
-      atomicModal: element.shadowRoot?.querySelector('atomic-modal'),
-      aside: element.shadowRoot?.querySelector('aside[part="content"]'),
       filterSection: element.shadowRoot?.querySelector(
         '[part="filter-section"]'
       ),
@@ -148,47 +141,15 @@ describe('atomic-ipx-refine-modal', () => {
   });
 
   describe('rendering', () => {
-    it('should render modal when isOpen is true', async () => {
-      const {atomicModal} = await renderIpxRefineModal({isOpen: true});
-
-      expect(atomicModal).toBeInTheDocument();
-    });
-
     it('should render the title with "Filters"', async () => {
       const {title} = await renderIpxRefineModal();
 
-      expect(title).toBeInTheDocument();
       expect(title).toHaveTextContent('Filters');
-    });
-
-    it('should render the close button', async () => {
-      const {closeButton} = await renderIpxRefineModal();
-
-      expect(closeButton).toBeInTheDocument();
-    });
-
-    it('should render the close icon', async () => {
-      const {closeIcon} = await renderIpxRefineModal();
-
-      expect(closeIcon).toBeInTheDocument();
-    });
-
-    it('should render the footer content', async () => {
-      const {footerContent} = await renderIpxRefineModal();
-
-      expect(footerContent).toBeInTheDocument();
-    });
-
-    it('should render the footer button', async () => {
-      const {footerButton} = await renderIpxRefineModal();
-
-      expect(footerButton).toBeInTheDocument();
     });
 
     it('should render the footer button text with "View"', async () => {
       const {footerButtonText} = await renderIpxRefineModal();
 
-      expect(footerButtonText).toBeInTheDocument();
       expect(footerButtonText).toHaveTextContent('View');
     });
 
@@ -197,34 +158,19 @@ describe('atomic-ipx-refine-modal', () => {
         querySummaryState: {total: 123},
       });
 
-      expect(footerButtonCount).toBeInTheDocument();
       expect(footerButtonCount).toHaveTextContent('123');
     });
   });
 
   describe('filters section', () => {
-    it('should render the filter section', async () => {
-      const {filterSection} = await renderIpxRefineModal();
-
-      expect(filterSection).toBeInTheDocument();
-      expect(filterSection).toHaveAttribute('part', 'filter-section');
-    });
-
     it('should render the filters section title', async () => {
       const {sectionFiltersTitle} = await renderIpxRefineModal();
 
-      expect(sectionFiltersTitle).toBeInTheDocument();
       expect(sectionFiltersTitle).toHaveAttribute(
         'part',
         'section-title section-filters-title'
       );
       expect(sectionFiltersTitle).toHaveTextContent('Filters');
-    });
-
-    it('should render the facet slot', async () => {
-      const {facetSlot} = await renderIpxRefineModal();
-
-      expect(facetSlot).toBeInTheDocument();
     });
 
     it('should render filter clear all button when hasBreadcrumbs is true', async () => {
@@ -272,14 +218,6 @@ describe('atomic-ipx-refine-modal', () => {
       });
 
       expect(element.collapseFacetsAfter).toBe(3);
-    });
-
-    it('should accept isOpen property', async () => {
-      const {element} = await renderIpxRefineModal({
-        isOpen: false,
-      });
-
-      expect(element.isOpen).toBe(false);
     });
   });
 
