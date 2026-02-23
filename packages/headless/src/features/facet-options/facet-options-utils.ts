@@ -22,5 +22,10 @@ export const isFacetVisibleOnTab = (
     return true;
   }
 
+  // If only excluded is defined and the tab is not in the excluded list, the facet is visible
+  if (facetTabs.excluded && !facetTabs.included) {
+    return true;
+  }
+
   return false;
 };
