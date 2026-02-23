@@ -7,6 +7,6 @@ test.describe('atomic-ipx-recs-list', () => {
   });
 
   test('should render recommendations', async ({ipxRecsList}) => {
-    await expect(ipxRecsList.recommendation.first()).toBeVisible();
+    await expect(ipxRecsList.recommendations.first()).toBeVisible();
   });
 });
