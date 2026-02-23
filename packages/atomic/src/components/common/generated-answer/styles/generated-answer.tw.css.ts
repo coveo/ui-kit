@@ -111,6 +111,11 @@ const baseStyle = css`
     @apply hidden;
   }
 
+  [part='generated-content-container'].agent-scrollable {
+    @apply overflow-y-auto;
+    height: var(--atomic-generated-answer-fixed-height, 50vh);
+  }
+
   /* Allow query label up to 3 lines before truncating */
   .query-text {
     display: -webkit-box;

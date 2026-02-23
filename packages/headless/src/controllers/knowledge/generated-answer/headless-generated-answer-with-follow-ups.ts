@@ -28,7 +28,8 @@ import {
   type GeneratedAnswerProps,
 } from '../../core/generated-answer/headless-core-generated-answer.js';
 
-interface GeneratedAnswerWithFollowUpsState extends GeneratedAnswerState {
+export interface GeneratedAnswerWithFollowUpsState
+  extends GeneratedAnswerState {
   followUpAnswers: FollowUpAnswersState;
 }
 

@@ -226,6 +226,7 @@ export type {
   GeneratedAnswerPropsInitialState,
   GeneratedAnswerState,
   GeneratedAnswerWithFollowUps,
+  GeneratedAnswerWithFollowUpsState,
   GeneratedResponseFormat,
 } from './controllers/generated-answer/headless-generated-answer.js';
 export {buildGeneratedAnswer} from './controllers/generated-answer/headless-generated-answer.js';

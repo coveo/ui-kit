@@ -5,6 +5,7 @@ import {
   buildTabManager,
   type GeneratedAnswer,
   type GeneratedAnswerState,
+  type GeneratedAnswerWithFollowUpsState,
   type InteractiveCitation,
   type SearchStatus,
   type TabManager,
@@ -27,24 +28,37 @@ describe('atomic-generated-answer', () => {
   let mockedGeneratedAnswer: GeneratedAnswer;
   let mockedSearchStatus: SearchStatus;
   let mockedTabManager: TabManager;
+  type FollowUpAnswersState = NonNullable<
+    GeneratedAnswerWithFollowUpsState['followUpAnswers']
+  >;
+  type FollowUpAnswerEntry = NonNullable<
+    FollowUpAnswersState['followUpAnswers']
+  >[number];
+  type RenderGeneratedAnswerOptions = {
+    props?: Partial<AtomicGeneratedAnswer>;
+    generatedAnswerState?: Partial<GeneratedAnswerState>;
+    searchStatusState?: {hasError?: boolean};
+    tabManagerState?: {activeTab?: string};
+    generatedAnswerOverrides?: Partial<GeneratedAnswer> &
+      Record<string, unknown>;
+  };
 
   const renderGeneratedAnswer = async ({
     props = {},
     generatedAnswerState = {},
     searchStatusState = {},
     tabManagerState = {},
-  }: {
-    props?: Partial<AtomicGeneratedAnswer>;
-    generatedAnswerState?: Partial<GeneratedAnswerState>;
-    searchStatusState?: {hasError?: boolean};
-    tabManagerState?: {activeTab?: string};
-  } = {}) => {
-    mockedGeneratedAnswer = buildFakeGeneratedAnswer({
-      answer: 'Test answer',
-      citations: [],
-      isVisible: true,
-      ...generatedAnswerState,
-    });
+    generatedAnswerOverrides = {},
+  }: RenderGeneratedAnswerOptions = {}) => {
+    mockedGeneratedAnswer = Object.assign(
+      buildFakeGeneratedAnswer({
+        answer: 'Test answer',
+        citations: [],
+        isVisible: true,
+        ...generatedAnswerState,
+      }),
+      generatedAnswerOverrides
+    );
 
     mockedSearchStatus = buildFakeSearchStatus({
       hasError: false,
@@ -151,6 +165,22 @@ describe('atomic-generated-answer', () => {
         return element.shadowRoot?.querySelector(
           '[part="answer-show-button"]'
         ) as HTMLButtonElement;
+      },
+      get generatedAnswersThread() {
+        return element.shadowRoot?.querySelector('generated-answers-thread');
+      },
+      get followUpInputContainer() {
+        return element.shadowRoot?.querySelector('[part="input-container"]');
+      },
+      get followUpInputField() {
+        return element.shadowRoot?.querySelector(
+          '[part="input-field"]'
+        ) as HTMLInputElement | null;
+      },
+      get followUpSubmitButton() {
+        return element.shadowRoot?.querySelector(
+          '[part="submit-button"]'
+        ) as HTMLButtonElement | null;
       },
     };
   };
@@ -737,6 +767,138 @@ describe('atomic-generated-answer', () => {
     await element.updateComplete;
     // Popover exists in the DOM structure
     expect(element).toBeInTheDocument();
+  });
+
+  describe('follow-up answers', () => {
+    const buildFollowUpAnswerEntry = (
+      overrides: Partial<FollowUpAnswerEntry> = {}
+    ): FollowUpAnswerEntry =>
+      ({
+        answer: 'Follow up answer',
+        citations: [],
+        isVisible: true,
+        isStreaming: false,
+        isLoading: false,
+        liked: false,
+        disliked: false,
+        feedbackSubmitted: false,
+        error: undefined,
+        expanded: true,
+        cannotAnswer: false,
+        answerContentFormat: 'text/plain',
+        ...overrides,
+      }) as FollowUpAnswerEntry;
+
+    const createFollowUpState = ({
+      isEnabled = true,
+      followUpAnswers = [buildFollowUpAnswerEntry()],
+      stateOverrides = {},
+    }: {
+      isEnabled?: boolean;
+      followUpAnswers?: FollowUpAnswerEntry[];
+      stateOverrides?: Partial<GeneratedAnswerState>;
+    } = {}) => ({
+      isVisible: true,
+      answer: 'Test answer',
+      ...stateOverrides,
+      followUpAnswers: {
+        isEnabled,
+        followUpAnswers,
+      } as FollowUpAnswersState,
+    });
+
+    it('should render generated answers thread when follow ups are enabled', async () => {
+      const askFollowUp = vi.fn().mockResolvedValue(undefined);
+      const {generatedAnswersThread} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createFollowUpState(),
+        generatedAnswerOverrides: {askFollowUp},
+      });
+
+      expect(generatedAnswersThread).toBeInTheDocument();
+      const threadComponent = generatedAnswersThread as HTMLElement & {
+        generatedAnswers?: unknown[];
+      };
+      expect(threadComponent.generatedAnswers).toBeDefined();
+      expect(threadComponent.generatedAnswers).toHaveLength(2);
+    });
+
+    it('should not render generated answers thread when follow ups are disabled', async () => {
+      const {generatedAnswersThread} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createFollowUpState({isEnabled: false}),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(generatedAnswersThread).toBeNull();
+    });
+
+    it('should render the follow up input when follow ups are enabled', async () => {
+      const {followUpInputContainer} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createFollowUpState(),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(followUpInputContainer).toBeInTheDocument();
+    });
+
+    it('should not render the follow up input when follow ups are disabled', async () => {
+      const {followUpInputContainer} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createFollowUpState({isEnabled: false}),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(followUpInputContainer).toBeNull();
+    });
+
+    it('should disable the follow up submit button when a follow up is streaming', async () => {
+      const {followUpSubmitButton} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createFollowUpState({
+          followUpAnswers: [buildFollowUpAnswerEntry({isStreaming: true})],
+        }),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(followUpSubmitButton).not.toBeNull();
+      expect((followUpSubmitButton as HTMLButtonElement).disabled).toBe(true);
+    });
+
+    it('should disable the follow up submit button when a follow up is loading', async () => {
+      const {followUpSubmitButton} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createFollowUpState({
+          followUpAnswers: [buildFollowUpAnswerEntry({isLoading: true})],
+        }),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(followUpSubmitButton).not.toBeNull();
+      expect((followUpSubmitButton as HTMLButtonElement).disabled).toBe(true);
+    });
+
+    it('should call askFollowUp when a follow up question is submitted', async () => {
+      const askFollowUp = vi.fn().mockResolvedValue(undefined);
+      const {element, followUpInputField, followUpSubmitButton} =
+        await renderGeneratedAnswer({
+          props: {agentId: 'agent-id'},
+          generatedAnswerState: createFollowUpState(),
+          generatedAnswerOverrides: {askFollowUp},
+        });
+
+      await element.updateComplete;
+      const input = followUpInputField as HTMLInputElement;
+      expect(input).not.toBeNull();
+      input.value = 'Follow up question';
+      expect(followUpSubmitButton).not.toBeNull();
+      followUpSubmitButton!.click();
+
+      await vi.waitFor(() => {
+        expect(askFollowUp).toHaveBeenCalledWith('Follow up question');
+      });
+    });
   });
 
   describe('answerConfigurationId property', () => {

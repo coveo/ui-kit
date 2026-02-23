@@ -17,6 +17,7 @@ import {buildAnswerApiGeneratedAnswer} from '../knowledge/generated-answer/headl
 import {
   buildGeneratedAnswerWithFollowUps,
   type GeneratedAnswerWithFollowUps,
+  type GeneratedAnswerWithFollowUpsState,
 } from '../knowledge/generated-answer/headless-generated-answer-with-follow-ups.js';
 
 export type {
@@ -25,6 +26,7 @@ export type {
   GeneratedAnswerState,
   GeneratedAnswer,
   GeneratedAnswerWithFollowUps,
+  GeneratedAnswerWithFollowUpsState,
   GeneratedAnswerBase,
   GeneratedAnswerProps,
   GeneratedAnswerPropsInitialState,
