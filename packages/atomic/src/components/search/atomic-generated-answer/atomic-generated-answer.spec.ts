@@ -127,9 +127,6 @@ describe('atomic-generated-answer', () => {
           '[part~="generated-content-container"]'
         );
       },
-      get followUpInput() {
-        return element.shadowRoot?.querySelector('[part="input-field"]');
-      },
       get feedbackButtons() {
         return element.shadowRoot?.querySelectorAll(
           '[part="feedback-button"]'
@@ -647,80 +644,6 @@ describe('atomic-generated-answer', () => {
     await expect.element(showMoreButton).toBeInTheDocument();
   });
 
-  describe('when agentId is provided', () => {
-    it('should render a scrollable content container when follow-up is enabled', async () => {
-      const {generatedContentContainer} = await renderGeneratedAnswer({
-        props: {agentId: 'agent-123'},
-        followUpAnswersState: {isEnabled: true},
-        generatedAnswerState: {
-          isVisible: true,
-          answer: 'Test answer',
-        },
-      });
-
-      expect(generatedContentContainer).toHaveClass('agent-scrollable');
-    });
-
-    it('should apply a default 50vh height to the scrollable part when follow-up is enabled', async () => {
-      const {element, generatedContentContainer} = await renderGeneratedAnswer({
-        props: {agentId: 'agent-123'},
-        followUpAnswersState: {isEnabled: true},
-        generatedAnswerState: {
-          isVisible: true,
-          answer: 'Test answer',
-        },
-      });
-
-      await element.updateComplete;
-
-      const heightInPixels = parseFloat(
-        getComputedStyle(generatedContentContainer as HTMLElement).height
-      );
-
-      expect(heightInPixels).toBeCloseTo(window.innerHeight * 0.5, 0);
-    });
-
-    it('should not render show more button when follow-up is enabled and collapsible is true', async () => {
-      const {showMoreButton} = await renderGeneratedAnswer({
-        props: {agentId: 'agent-123', collapsible: true},
-        followUpAnswersState: {isEnabled: true},
-        generatedAnswerState: {
-          isVisible: true,
-          answer: 'A'.repeat(1000),
-        },
-      });
-
-      expect(showMoreButton).not.toBeInTheDocument();
-    });
-
-    it('should not render a scrollable content container when follow-up is disabled', async () => {
-      const {generatedContentContainer} = await renderGeneratedAnswer({
-        props: {agentId: 'agent-123'},
-        followUpAnswersState: {isEnabled: false},
-        generatedAnswerState: {
-          isVisible: true,
-          answer: 'Test answer',
-        },
-      });
-
-      expect(generatedContentContainer).not.toHaveClass('agent-scrollable');
-    });
-  });
-
-  describe('when agentId is not provided', () => {
-    it('should not render a scrollable content container even when follow-up is enabled', async () => {
-      const {generatedContentContainer} = await renderGeneratedAnswer({
-        followUpAnswersState: {isEnabled: true},
-        generatedAnswerState: {
-          isVisible: true,
-          answer: 'Test answer',
-        },
-      });
-
-      expect(generatedContentContainer).not.toHaveClass('agent-scrollable');
-    });
-  });
-
   it('should toggle visibility when toggle is clicked when toggle is activated and deactivated', async () => {
     const {toggle} = await renderGeneratedAnswer({
       props: {withToggle: true},
@@ -896,6 +819,79 @@ describe('atomic-generated-answer', () => {
           agentId: expect.anything(),
         })
       );
+    });
+
+    describe('when follow-up answers are enabled', () => {
+      it('should render a scrollable content container when agentId is provided', async () => {
+        const {generatedContentContainer} = await renderGeneratedAnswer({
+          props: {agentId: 'agent-123'},
+          followUpAnswersState: {isEnabled: true},
+          generatedAnswerState: {
+            isVisible: true,
+            answer: 'Test answer',
+          },
+        });
+
+        expect(generatedContentContainer).toHaveClass('agent-scrollable');
+      });
+
+      it('should apply a default 50vh height to the scrollable part when agentId is provided', async () => {
+        const {element, generatedContentContainer} =
+          await renderGeneratedAnswer({
+            props: {agentId: 'agent-123'},
+            followUpAnswersState: {isEnabled: true},
+            generatedAnswerState: {
+              isVisible: true,
+              answer: 'Test answer',
+            },
+          });
+
+        await element.updateComplete;
+
+        const heightInPixels = parseFloat(
+          getComputedStyle(generatedContentContainer as HTMLElement).height
+        );
+
+        expect(heightInPixels).toBeCloseTo(window.innerHeight * 0.5, 0);
+      });
+
+      it('should not render show more button when agentId is provided and collapsible is true', async () => {
+        const {showMoreButton} = await renderGeneratedAnswer({
+          props: {agentId: 'agent-123', collapsible: true},
+          followUpAnswersState: {isEnabled: true},
+          generatedAnswerState: {
+            isVisible: true,
+            answer: 'A'.repeat(1000),
+          },
+        });
+
+        expect(showMoreButton).not.toBeInTheDocument();
+      });
+
+      it('should not render a scrollable content container when agentId is not provided', async () => {
+        const {generatedContentContainer} = await renderGeneratedAnswer({
+          followUpAnswersState: {isEnabled: true},
+          generatedAnswerState: {
+            isVisible: true,
+            answer: 'Test answer',
+          },
+        });
+
+        expect(generatedContentContainer).not.toHaveClass('agent-scrollable');
+      });
+    });
+
+    it('should not render a scrollable content container when follow-up is disabled even if agentId is provided', async () => {
+      const {generatedContentContainer} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-123'},
+        followUpAnswersState: {isEnabled: false},
+        generatedAnswerState: {
+          isVisible: true,
+          answer: 'Test answer',
+        },
+      });
+
+      expect(generatedContentContainer).not.toHaveClass('agent-scrollable');
     });
   });
 

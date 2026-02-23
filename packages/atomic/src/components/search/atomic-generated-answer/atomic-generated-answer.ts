@@ -6,6 +6,7 @@ import {
   buildTabManager,
   type GeneratedAnswer,
   type GeneratedAnswerState,
+  type GeneratedAnswerWithFollowUps,
   type SearchStatus,
   type SearchStatusState,
   type TabManager,
@@ -522,9 +523,6 @@ export class AtomicGeneratedAnswer
   }
 
   private adaptAnswerHeight() {
-    if (!this.isCollapsibleEnabled) {
-      return;
-    }
     const answerHeight = this.shadowRoot
       ?.querySelector('[part="generated-text"]')
       ?.getBoundingClientRect().height;
@@ -556,9 +554,6 @@ export class AtomicGeneratedAnswer
   }
 
   private updateAnswerHeight() {
-    if (!this.isCollapsibleEnabled) {
-      return;
-    }
     const container = this.getAnswerContainer() as HTMLElement;
     const footer = this.getAnswerFooter();
     const maxHeight = this.validateMaxCollapsedHeight();
@@ -658,29 +653,26 @@ export class AtomicGeneratedAnswer
   }
 
   private get hasAgentId() {
-    return Boolean(this.agentId?.trim());
+    return Boolean(this.agentId);
   }
 
-  private get isFollowUpEnabled() {
-    if (!this.hasAgentId) {
-      return false;
-    }
+  private supportsFollowUps(): this is this & {
+    generatedAnswer: GeneratedAnswerWithFollowUps;
+  } {
+    return this.hasAgentId && 'askFollowUp' in this.generatedAnswer;
+  }
 
-    if (!this.bindings?.engine) {
-      return false;
-    }
-
-    return Boolean(
-      (
-        this.bindings.engine.state as {
-          followUpAnswers?: {isEnabled?: boolean};
-        }
-      ).followUpAnswers?.isEnabled
+  private areFollowUpsEnabled(): this is this & {
+    generatedAnswer: GeneratedAnswerWithFollowUps;
+  } {
+    return (
+      this.supportsFollowUps() &&
+      this.generatedAnswer.state.followUpAnswers?.isEnabled === true
     );
   }
 
   private get isScrollableContentEnabled() {
-    return this.hasAgentId && this.isFollowUpEnabled;
+    return this.areFollowUpsEnabled();
   }
 
   private get generatedContentContainerPart() {
