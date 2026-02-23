@@ -41,7 +41,6 @@ const meta: Meta = {
   },
   args: {
     ...args,
-    'collapse-facets-after': '0',
   },
   argTypes,
   play: async (context) => {
