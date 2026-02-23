@@ -46,6 +46,8 @@ function CoveoDocsSearchBox() {
       }
       searchInterface
         .initialize({
+          // Public API key with only anonymous search + UA logging permissions.
+          // Safe to expose in client-side code
           accessToken: 'xx6ac9d08f-eb9a-48d5-9240-d7c251470c93',
           organizationId: 'coveosearch',
         })
@@ -59,6 +61,9 @@ function CoveoDocsSearchBox() {
     };
   }, []);
 
+  // Uses dangerouslySetInnerHTML to inject Atomic custom elements as raw HTML,
+  // keeping them outside React's virtual DOM reconciliation. This prevents React
+  // from interfering with the custom elements' shadow DOM and internal lifecycle.
   return (
     <div
       id="coveo-docs-search-container"
