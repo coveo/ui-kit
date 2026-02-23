@@ -800,7 +800,7 @@ describe('atomic-generated-answer', () => {
           isEnabled,
           followUpAnswers: [],
         } as FollowUpAnswersState,
-      }) as unknown as GeneratedAnswerState;
+      }) as GeneratedAnswerWithFollowUps['state'];
 
     it('should pass agentId to buildGeneratedAnswer when provided', async () => {
       const {element} = await renderGeneratedAnswer({
@@ -839,6 +839,27 @@ describe('atomic-generated-answer', () => {
             state: buildFollowUpState(true),
           },
         });
+
+        expect(generatedContentContainer).toHaveClass('agent-scrollable');
+      });
+
+      it('should transition from non-scrollable to scrollable when follow-up answers become enabled', async () => {
+        const {element, generatedContentContainer} =
+          await renderGeneratedAnswer({
+            props: {agentId: 'agent-123'},
+            generatedAnswerOverrides: {
+              askFollowUp: vi.fn(),
+              state: buildFollowUpState(false),
+            },
+          });
+
+        expect(generatedContentContainer).not.toHaveClass('agent-scrollable');
+
+        const generatedAnswerWithFollowUps =
+          element.generatedAnswer as GeneratedAnswerWithFollowUps;
+        generatedAnswerWithFollowUps.state = buildFollowUpState(true);
+        element.requestUpdate();
+        await element.updateComplete;
 
         expect(generatedContentContainer).toHaveClass('agent-scrollable');
       });

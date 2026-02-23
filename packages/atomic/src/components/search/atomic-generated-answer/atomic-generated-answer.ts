@@ -55,7 +55,6 @@ import atomicGeneratedAnswerStyles from './atomic-generated-answer.tw.css.js';
  * @part toggle - The switch to toggle the visibility of the generated answer.
  * @part copy-button - The "Copy answer" button.
  * @part generated-content-container - The container for the generated answer content.
- * @part agent-scrollable-content - The scrollable content container when follow-up mode is enabled.
  * @part generated-content - The main content of the generated answer.
  * @part retry-container - The container for the "retry" section.
  * @part generated-text - The text of the generated answer.
@@ -342,8 +341,8 @@ export class AtomicGeneratedAnswer
     }
 
     if (
-      (changedProperties.has('collapsible' as keyof this) ||
-        changedProperties.has('agentId' as keyof this)) &&
+      (changedProperties.has('collapsible') ||
+        changedProperties.has('agentId')) &&
       !this.isCollapsibleEnabled
     ) {
       this.resetCollapsibleStyles();
@@ -407,7 +406,7 @@ export class AtomicGeneratedAnswer
               () =>
                 html`
                   <div
-                    part=${this.generatedContentContainerPart}
+                    part="generated-content-container"
                     class=${classMap({
                       'px-6': true,
                       'pb-6': true,
@@ -656,33 +655,25 @@ export class AtomicGeneratedAnswer
     return Boolean(this.agentId);
   }
 
-  private supportsFollowUps(): this is this & {
-    generatedAnswer: GeneratedAnswerWithFollowUps;
-  } {
-    return (
-      this.hasAgentId &&
-      this.generatedAnswer !== undefined &&
-      'askFollowUp' in this.generatedAnswer
-    );
-  }
+  private get generatedAnswerWithFollowUps():
+    | GeneratedAnswerWithFollowUps
+    | undefined {
+    if (
+      !this.hasAgentId ||
+      !this.generatedAnswer ||
+      !('askFollowUp' in this.generatedAnswer)
+    ) {
+      return undefined;
+    }
 
-  private areFollowUpsEnabled(): this is this & {
-    generatedAnswer: GeneratedAnswerWithFollowUps;
-  } {
-    return (
-      this.supportsFollowUps() &&
-      this.generatedAnswer.state.followUpAnswers?.isEnabled === true
-    );
+    return this.generatedAnswer as GeneratedAnswerWithFollowUps;
   }
 
   private get isScrollableContentEnabled() {
-    return this.areFollowUpsEnabled();
-  }
-
-  private get generatedContentContainerPart() {
-    return this.isScrollableContentEnabled
-      ? 'generated-content-container agent-scrollable-content'
-      : 'generated-content-container';
+    return (
+      this.generatedAnswerWithFollowUps?.state.followUpAnswers?.isEnabled ===
+      true
+    );
   }
 
   private get isCollapsibleEnabled() {
