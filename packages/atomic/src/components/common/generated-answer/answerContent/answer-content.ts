@@ -54,19 +54,19 @@ export class AnswerContent extends LitElement {
    * Callback invoked when the user clicks the "like" feedback button.
    */
   @property({attribute: false})
-  public onClickLike: (answerId?: string) => void = () => {};
+  public onClickLike: (answerId: string) => void = () => {};
 
   /**
    * Callback invoked when the user clicks the "dislike" feedback button.
    */
   @property({attribute: false})
-  public onClickDislike: (answerId?: string) => void = () => {};
+  public onClickDislike: (answerId: string) => void = () => {};
 
   /**
    * Callback invoked after the answer text has been successfully copied.
    */
   @property({attribute: false})
-  public onCopyToClipboard: (answerId?: string) => void = () => {};
+  public onCopyToClipboard: (answerId: string) => void = () => {};
 
   /**
    * Internal copy feedback state.
@@ -90,7 +90,7 @@ export class AnswerContent extends LitElement {
       answerId,
     } = this.generatedAnswer || {};
 
-    if (!answer) {
+    if (!answer || !answerId) {
       return html``;
     }
 
@@ -142,7 +142,7 @@ export class AnswerContent extends LitElement {
   private async copyToClipboard(): Promise<void> {
     const {answer, answerId} = this.generatedAnswer;
 
-    if (!answer) {
+    if (!answer || !answerId) {
       return;
     }
 

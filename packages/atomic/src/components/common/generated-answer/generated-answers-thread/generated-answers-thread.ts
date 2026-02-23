@@ -8,6 +8,8 @@ import type {i18n} from 'i18next';
 import {repeat} from 'lit/directives/repeat.js';
 import type {GeneratedAnswer} from '@/src/components/common/generated-answer/answerContent/answer-content';
 
+const MIN_ANSWERS_TO_COLLAPSE = 2;
+
 /**
  * The `generated-answers-thread` component is responsible for rendering a thread of generated answers.
  * @internal
@@ -38,19 +40,19 @@ export class GeneratedAnswersThread extends LitElement {
    * Callback invoked when the user clicks the "like" feedback button of a specific answer.
    */
   @property({attribute: false})
-  public onClickLike: (answerId?: string) => void = () => {};
+  public onClickLike: (answerId: string) => void = () => {};
 
   /**
    * Callback invoked when the user clicks the "dislike" feedback button of a specific answer.
    */
   @property({attribute: false})
-  public onClickDislike: (answerId?: string) => void = () => {};
+  public onClickDislike: (answerId: string) => void = () => {};
 
   /**
    * Callback invoked after the text of a specific answer has been successfully copied.
    */
   @property({attribute: false})
-  public onCopyToClipboard: (answerId?: string) => void = () => {};
+  public onCopyToClipboard: (answerId: string) => void = () => {};
 
   @state()
   private allGeneratedAnswersDisplayed: boolean = false;
@@ -67,7 +69,7 @@ export class GeneratedAnswersThread extends LitElement {
 
   public render() {
     if (
-      this.generatedAnswers.length > 2 &&
+      this.generatedAnswers.length > MIN_ANSWERS_TO_COLLAPSE &&
       !this.allGeneratedAnswersDisplayed
     ) {
       const lastGeneratedAnswer =
@@ -138,11 +140,11 @@ export class GeneratedAnswersThread extends LitElement {
       h-2 w-2 rounded-full bg-neutral-dim
     `;
     const timelineConnectorClasses = `
-    relative h-full w-px bg-neutral
-    before:absolute before:left-0 before:top-[-8px]
-    before:h-[8px] before:w-px before:bg-neutral before:content-['']
-    after:absolute after:bottom-[-8px] after:left-0
-    after:h-[8px] after:w-px after:bg-neutral after:content-['']
+      relative h-full w-px bg-neutral
+      before:absolute before:left-0 before:top-[-8px]
+      before:h-[8px] before:w-px before:bg-neutral before:content-['']
+      after:absolute after:bottom-[-8px] after:left-0
+      after:h-[8px] after:w-px after:bg-neutral after:content-['']
     `;
 
     return html`
