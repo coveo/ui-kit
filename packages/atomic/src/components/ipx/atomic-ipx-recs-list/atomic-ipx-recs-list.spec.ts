@@ -4,7 +4,7 @@ import {
   buildInteractiveResult as buildRecsInteractiveResult,
   loadConfigurationActions,
 } from '@coveo/headless/recommendation';
-import {html, LitElement} from 'lit';
+import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {page} from 'vitest/browser';
 import type {
@@ -204,7 +204,7 @@ describe('atomic-ipx-recs-list', () => {
     });
   });
 
-  describe('#updated', () => {
+  describe('#willUpdate', () => {
     it('should reset currentPage when numberOfRecommendationsPerPage changes', async () => {
       vi.mocked(buildRecommendationList).mockImplementation(() =>
         buildFakeRecommendationList({
@@ -227,13 +227,52 @@ describe('atomic-ipx-recs-list', () => {
       expect(element['currentPage']).toBe(0);
     });
 
-    it('should call super.disconnectedCallback', async () => {
+    it.each([
+      {
+        description:
+          'should set isEveryResultReady to false when transitioning from not loading to loading',
+        oldState: false,
+        newState: true,
+        expectedResult: false,
+      },
+      {
+        description:
+          'should not change isEveryResultReady when transitioning from loading to not loading',
+        oldState: true,
+        newState: false,
+        expectedResult: true,
+      },
+      {
+        description:
+          'should not change isEveryResultReady when staying in loading state',
+        oldState: true,
+        newState: true,
+        expectedResult: true,
+      },
+      {
+        description:
+          'should not change isEveryResultReady when staying in not loading state',
+        oldState: false,
+        newState: false,
+        expectedResult: true,
+      },
+    ])('$description', async ({oldState, newState, expectedResult}) => {
       const element = await setupElement();
-      const superSpy = vi.spyOn(LitElement.prototype, 'disconnectedCallback');
+      // biome-ignore lint/suspicious/noExplicitAny: accessing private property in test
+      (element as any).isEveryResultReady = true;
 
-      element.disconnectedCallback();
+      element.recommendationListState = {
+        isLoading: newState,
+        recommendations: [buildFakeResult()],
+        searchResponseId: 'test-response-id',
+        error: null,
+      };
+      element.willUpdate(
+        new Map([['recommendationListState', {isLoading: oldState}]])
+      );
 
-      expect(superSpy).toHaveBeenCalledOnce();
+      // biome-ignore lint/suspicious/noExplicitAny: accessing private property in test
+      expect((element as any).isEveryResultReady).toBe(expectedResult);
     });
   });
 
@@ -682,6 +721,26 @@ describe('atomic-ipx-recs-list', () => {
 
       const templates = element.querySelectorAll('atomic-recs-result-template');
       expect(templates.length).toBe(1);
+    });
+  });
+
+  describe('#setRenderFunction', () => {
+    it('should set the rendering function on atomic-recs-result', async () => {
+      const element = await setupElement();
+
+      const mockRenderingFunction = vi.fn();
+
+      element.setRenderFunction(mockRenderingFunction);
+
+      element.requestUpdate();
+      await element.updateComplete;
+
+      const atomicRecsResultElement =
+        element.shadowRoot?.querySelector('atomic-recs-result');
+
+      expect(atomicRecsResultElement?.renderingFunction).toBe(
+        mockRenderingFunction
+      );
     });
   });
 });

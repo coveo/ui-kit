@@ -1,4 +1,4 @@
-import {NumberValue} from '@coveo/bueno';
+import {NumberValue, Schema, StringValue} from '@coveo/bueno';
 import {
   type IPXActionsHistoryActionCreators,
   loadIPXActionsHistoryActions,
@@ -33,6 +33,7 @@ import {
   type ItemDisplayDensity,
   type ItemDisplayImageSize,
 } from '@/src/components/common/layout/item-layout-utils';
+import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {RecsBindings} from '@/src/components/recommendations/atomic-recs-interface/interfaces';
 import type {RecsStore} from '@/src/components/recommendations/atomic-recs-interface/store';
 import {bindStateToController} from '@/src/decorators/bind-state';
@@ -40,7 +41,6 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
-import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
@@ -53,11 +53,13 @@ import '@/src/components/recommendations/atomic-recs-result/atomic-recs-result';
  *
  * @part result-list - The element containing the list of results.
  * @part result-list-grid-clickable-container - The parent of the result and the clickable link encompassing it.
- * @part result-list-grid-clickable - The clickable link encompassing the result.
  * @part outline - The outline element around a result in the grid layout.
  * @part label - The label of the result list.
  * @part previous-button - The previous button.
  * @part next-button - The next button.
+ * @part previous-icon - The previous button icon.
+ * @part next-icon - The next button icon.
+ * @part carousel - The carousel container.
  * @part indicators - The list of indicators.
  * @part indicator - A single indicator.
  * @part active-indicator - The active indicator.
@@ -103,6 +105,16 @@ export class AtomicIpxRecsList
 }
     `,
   ];
+
+  private static readonly propsSchema = new Schema({
+    density: new StringValue({
+      constrainTo: ['normal', 'comfortable', 'compact'],
+    }),
+    display: new StringValue({constrainTo: ['grid', 'list']}),
+    imageSize: new StringValue({
+      constrainTo: ['small', 'large', 'icon', 'none'],
+    }),
+  });
 
   public recommendationList!: RecommendationList;
 
@@ -183,6 +195,7 @@ export class AtomicIpxRecsList
 
   /**
    * The non-localized label for the list of recommendations.
+   * This will also set the `originLevel2` (tab) of the analytics requests.
    */
   @property({reflect: true, type: String})
   public label?: string;
@@ -194,9 +207,19 @@ export class AtomicIpxRecsList
   @property({reflect: true, attribute: 'heading-level', type: Number})
   public headingLevel = 0;
 
-  @watch('numberOfRecommendationsPerPage')
-  public watchNumberOfRecommendationsPerPage() {
-    this.currentPage = 0;
+  constructor() {
+    super();
+
+    new ValidatePropsController(
+      this,
+      () => ({
+        density: this.density,
+        display: this.display,
+        imageSize: this.imageSize,
+      }),
+      AtomicIpxRecsList.propsSchema,
+      false
+    );
   }
 
   /**
@@ -276,18 +299,25 @@ export class AtomicIpxRecsList
     });
   }
 
-  public disconnectedCallback() {
-    super.disconnectedCallback();
-  }
+  public async willUpdate(changedProperties: Map<string, unknown>) {
+    super.willUpdate(changedProperties);
 
-  public async updated(changedProperties: Map<string, unknown>) {
-    super.updated(changedProperties);
-    if (
-      changedProperties.has('recommendationListState') &&
-      this.isEveryResultReady
-    ) {
-      this.isEveryResultReady = false;
+    if (changedProperties.has('numberOfRecommendationsPerPage')) {
+      this.currentPage = 0;
     }
+
+    if (changedProperties.has('recommendationListState')) {
+      const oldState = changedProperties.get(
+        'recommendationListState'
+      ) as RecommendationListState;
+      if (this.recommendationListState.searchResponseId !== '') {
+        this.bindings.store.unsetLoadingFlag(this.loadingFlag);
+      }
+      if (!oldState?.isLoading && this.recommendationListState.isLoading) {
+        this.isEveryResultReady = false;
+      }
+    }
+
     await this.updateResultsReadyState();
   }
 
@@ -295,7 +325,7 @@ export class AtomicIpxRecsList
     if (
       this.isAppLoaded &&
       !this.isEveryResultReady &&
-      this.recommendationListStateWithAugment.firstRequestExecuted &&
+      this.recommendationListState?.searchResponseId !== '' &&
       this.recommendationListState?.recommendations?.length > 0
     ) {
       await this.getUpdateComplete();
@@ -547,21 +577,19 @@ export class AtomicIpxRecsList
       return nothing;
     }
 
-    const resultClasses = `${listClasses} ${!this.isEveryResultReady && 'hidden'}`;
+    const resultClasses = [listClasses, !this.isEveryResultReady && 'hidden']
+      .filter(Boolean)
+      .join(' ');
 
-    // Results must be rendered immediately (though hidden) to start their initialization and loading processes.
-    // If we wait to render results until placeholders are removed, the components won't begin loading until then,
-    // causing a longer delay. The `isEveryResultReady` flag hides results while preserving placeholders,
-    // then removes placeholders once results are fully loaded to prevent content flash.
     return html`
       ${when(this.isAppLoaded, () =>
         renderDisplayWrapper({
-          props: {listClasses: resultClasses, display: 'list'},
+          props: {listClasses: resultClasses, display: 'grid'},
         })(html`${this.renderAsGrid()}`)
       )}
       ${when(!this.isEveryResultReady, () =>
         renderDisplayWrapper({
-          props: {listClasses, display: 'list'},
+          props: {listClasses, display: 'grid'},
         })(
           renderItemPlaceholders({
             props: {

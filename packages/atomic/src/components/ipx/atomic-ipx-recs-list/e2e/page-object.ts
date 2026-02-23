@@ -6,7 +6,7 @@ export class AtomicIpxRecsListPageObject extends BasePageObject {
     super(page, 'atomic-ipx-recs-list');
   }
 
-  get recommendation() {
+  get recommendations() {
     return this.hydrated.locator(
       '[part~="result-list-grid-clickable-container"]'
     );
