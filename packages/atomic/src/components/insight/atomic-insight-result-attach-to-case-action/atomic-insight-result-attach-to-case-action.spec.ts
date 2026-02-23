@@ -1,4 +1,8 @@
-import type {Result as InsightResult} from '@coveo/headless/insight';
+import type {
+  AttachedResults,
+  AttachedResultsState,
+  Result as InsightResult,
+} from '@coveo/headless/insight';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {page, userEvent} from 'vitest/browser';
@@ -6,6 +10,7 @@ import {
   buildMockInsightFoldedResult,
   renderInAtomicInsightResult,
 } from '@/vitest-utils/testing-helpers/fixtures/atomic/insight/atomic-insight-result-fixture';
+import {buildFakeAttachedResults} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/attached-results-controller';
 import {buildFakeInsightEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/engine';
 import {mockConsole} from '@/vitest-utils/testing-helpers/testing-utils/mock-console';
 import type {
@@ -14,74 +19,44 @@ import type {
 } from './atomic-insight-result-attach-to-case-action';
 import './atomic-insight-result-attach-to-case-action';
 
-vi.mock('@coveo/headless/insight', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('@coveo/headless/insight')>();
-  return {
-    ...actual,
-    buildAttachedResults: vi.fn(() => ({
-      subscribe: vi.fn((cb: () => void) => {
-        cb();
-        return () => {};
-      }),
-      state: {results: [], loading: false},
-      isAttached: vi.fn(() => false),
-      attach: vi.fn(),
-      detach: vi.fn(),
-    })),
-  };
-});
+vi.mock('@coveo/headless/insight', {spy: true});
 
 describe('atomic-insight-result-attach-to-case-action', () => {
   const mockedEngine = buildFakeInsightEngine();
-  let mockAttachedResults: {
-    isAttached: ReturnType<typeof vi.fn>;
-    attach: ReturnType<typeof vi.fn>;
-    detach: ReturnType<typeof vi.fn>;
-    subscribe: ReturnType<typeof vi.fn>;
-    state: {results: unknown[]; loading: boolean};
-  };
+  let mockedAttachedResults: AttachedResults;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     mockConsole();
+  });
 
-    mockAttachedResults = {
-      subscribe: vi.fn((cb: () => void) => {
-        cb();
-        return () => {};
-      }),
-      state: {results: [], loading: false},
-      isAttached: vi.fn(() => false),
-      attach: vi.fn(),
-      detach: vi.fn(),
-    };
+  const renderComponent = async (
+    options: {
+      result?: InsightResult;
+      isAttached?: boolean;
+      attachedResultsState?: Partial<AttachedResultsState>;
+    } = {}
+  ) => {
+    const {isAttached = false, attachedResultsState} = options;
+
+    mockedAttachedResults = buildFakeAttachedResults({
+      state: attachedResultsState,
+      implementation: {
+        isAttached: vi.fn(() => isAttached),
+      },
+    });
 
     const headless = await import('@coveo/headless/insight');
     vi.mocked(headless.buildAttachedResults).mockReturnValue(
-      mockAttachedResults as unknown as ReturnType<
-        typeof headless.buildAttachedResults
-      >
+      mockedAttachedResults
     );
-  });
 
-  interface RenderOptions {
-    result?: InsightResult;
-    isAttached?: boolean;
-  }
-
-  const renderComponent = async ({
-    result,
-    isAttached = false,
-  }: RenderOptions = {}) => {
     const mockFoldedResult = buildMockInsightFoldedResult({
       uniqueId: 'test-result-id',
       title: 'Test Result',
     });
 
-    const effectiveResult = result ?? mockFoldedResult.result;
+    const effectiveResult = options.result ?? mockFoldedResult.result;
     mockFoldedResult.result = effectiveResult;
-
-    mockAttachedResults.isAttached.mockReturnValue(isAttached);
 
     const {element} =
       await renderInAtomicInsightResult<AtomicInsightResultAttachToCaseAction>({
@@ -105,17 +80,42 @@ describe('atomic-insight-result-attach-to-case-action', () => {
     };
   };
 
-  describe('rendering', () => {
+  describe('when initializing (#initialize)', () => {
+    it('should build attached results controller with engine', async () => {
+      const headless = await import('@coveo/headless/insight');
+      const {element} = await renderComponent();
+
+      expect(headless.buildAttachedResults).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.objectContaining({
+          options: expect.objectContaining({caseId: expect.any(String)}),
+        })
+      );
+      expect(element.attachedResults).toBe(mockedAttachedResults);
+    });
+  });
+
+  describe('when rendering (#render)', () => {
+    it('should render all exposed parts', async () => {
+      const {element} = await renderComponent();
+
+      const expectedParts = [
+        'result-action-container',
+        'result-action-button',
+        'result-action-icon',
+      ];
+
+      for (const part of expectedParts) {
+        expect(
+          element.querySelector(`[part="${part}"]`),
+          `Part "${part}" should be in document`
+        ).toBeInTheDocument();
+      }
+    });
+
     it('should render the action button', async () => {
       const {button} = await renderComponent();
       await expect.element(button).toBeInTheDocument();
-    });
-
-    it('should render all exposed parts', async () => {
-      const {parts} = await renderComponent();
-      expect(parts.container).toBeTruthy();
-      expect(parts.button).toBeTruthy();
-      expect(parts.icon).toBeTruthy();
     });
 
     it('should display different icons for attached and detached states', async () => {
@@ -176,7 +176,7 @@ describe('atomic-insight-result-attach-to-case-action', () => {
 
       // Verify that calling the callback invokes attach with the result
       event.detail.callback();
-      expect(mockAttachedResults.attach).toHaveBeenCalledWith(
+      expect(mockedAttachedResults.attach).toHaveBeenCalledWith(
         event.detail.result
       );
     });
@@ -219,7 +219,7 @@ describe('atomic-insight-result-attach-to-case-action', () => {
 
       // Verify that calling the callback invokes detach with the result
       event.detail.callback();
-      expect(mockAttachedResults.detach).toHaveBeenCalledWith(
+      expect(mockedAttachedResults.detach).toHaveBeenCalledWith(
         event.detail.result
       );
     });
