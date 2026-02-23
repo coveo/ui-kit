@@ -659,7 +659,11 @@ export class AtomicGeneratedAnswer
   private supportsFollowUps(): this is this & {
     generatedAnswer: GeneratedAnswerWithFollowUps;
   } {
-    return this.hasAgentId && 'askFollowUp' in this.generatedAnswer;
+    return (
+      this.hasAgentId &&
+      this.generatedAnswer !== undefined &&
+      'askFollowUp' in this.generatedAnswer
+    );
   }
 
   private areFollowUpsEnabled(): this is this & {
