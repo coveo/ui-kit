@@ -10,6 +10,7 @@ import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {describe, expect, it, vi} from 'vitest';
 import {userEvent} from 'vitest/browser';
+import type {BaseFacetElement} from '@/src/components/common/facets/facet-common';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeBreadcrumbManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/breadcrumb-manager';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
@@ -87,152 +88,91 @@ describe('atomic-ipx-refine-modal', () => {
     };
   };
 
-  it('should build breadcrumb manager with engine', async () => {
-    const {element} = await renderIpxRefineModal();
+  describe('when initializing (#initialize)', () => {
+    it('should build breadcrumb manager with engine', async () => {
+      const {element} = await renderIpxRefineModal();
 
-    expect(buildBreadcrumbManager).toHaveBeenCalledWith(mockedEngine);
-    expect(element.breadcrumbManager).toBe(mockedBreadcrumbManager);
-  });
-
-  it('should build query summary with engine', async () => {
-    const {element} = await renderIpxRefineModal();
-
-    expect(buildQuerySummary).toHaveBeenCalledWith(mockedEngine);
-    expect(element.querySummary).toBe(mockedQuerySummary);
-  });
-
-  it('should bind query summary state to controller', async () => {
-    const {element} = await renderIpxRefineModal({
-      querySummaryState: {total: 42},
+      expect(buildBreadcrumbManager).toHaveBeenCalledWith(mockedEngine);
+      expect(element.breadcrumbManager).toBe(mockedBreadcrumbManager);
     });
 
-    expect(element.querySummaryState.total).toBe(42);
-  });
+    it('should build query summary with engine', async () => {
+      const {element} = await renderIpxRefineModal();
 
-  it('should bind breadcrumb manager state to controller', async () => {
-    const {element} = await renderIpxRefineModal({
-      breadcrumbManagerState: {hasBreadcrumbs: true},
+      expect(buildQuerySummary).toHaveBeenCalledWith(mockedEngine);
+      expect(element.querySummary).toBe(mockedQuerySummary);
     });
 
-    expect(element.breadcrumbManagerState?.hasBreadcrumbs).toBe(true);
-  });
+    it('should bind query summary state to controller', async () => {
+      const {element} = await renderIpxRefineModal({
+        querySummaryState: {total: 42},
+      });
 
-  describe('facet slot', () => {
-    it('should populate facet slot when isOpen is true', async () => {
-      const {element} = await renderIpxRefineModal({isOpen: true});
-
-      const facetSlotContainer = element.querySelector('[slot="facets"]');
-      expect(facetSlotContainer).toBeInTheDocument();
-      expect(facetSlotContainer?.children.length).toBe(2);
+      expect(element.querySummaryState.total).toBe(42);
     });
 
-    it('should not duplicate facet slot when reopened', async () => {
+    it('should bind breadcrumb manager state to controller', async () => {
+      const {element} = await renderIpxRefineModal({
+        breadcrumbManagerState: {hasBreadcrumbs: true},
+      });
+
+      expect(element.breadcrumbManagerState?.hasBreadcrumbs).toBe(true);
+    });
+  });
+
+  describe('when isOpen changes (#watchEnabled)', () => {
+    it('should not create a facet slot when isOpen changes to false', async () => {
       const {element} = await renderIpxRefineModal({isOpen: true});
 
       element.isOpen = false;
-      await element.updateComplete;
-      element.isOpen = true;
       await element.updateComplete;
 
       const facetSlotContainers = element.querySelectorAll('[slot="facets"]');
       expect(facetSlotContainers.length).toBe(1);
     });
-  });
 
-  describe('rendering', () => {
-    it('should render the title with "Filters"', async () => {
-      const {title} = await renderIpxRefineModal();
+    describe('when isOpen changes to true', () => {
+      it('should not duplicate facet slot when one already exists', async () => {
+        const {element} = await renderIpxRefineModal({isOpen: true});
 
-      expect(title).toHaveTextContent('Filters');
-    });
+        element.isOpen = false;
+        await element.updateComplete;
+        element.isOpen = true;
+        await element.updateComplete;
 
-    it('should render the footer button text with "View"', async () => {
-      const {footerButtonText} = await renderIpxRefineModal();
-
-      expect(footerButtonText).toHaveTextContent('View');
-    });
-
-    it('should render the footer button count', async () => {
-      const {footerButtonCount} = await renderIpxRefineModal({
-        querySummaryState: {total: 123},
+        const facetSlotContainers = element.querySelectorAll('[slot="facets"]');
+        expect(facetSlotContainers.length).toBe(1);
       });
 
-      expect(footerButtonCount).toHaveTextContent('123');
-    });
-  });
+      describe('when there is no facet slot', () => {
+        it('should create a facet slot with cloned facets', async () => {
+          const {element} = await renderIpxRefineModal({isOpen: true});
 
-  describe('filters section', () => {
-    it('should render the filters section title', async () => {
-      const {sectionFiltersTitle} = await renderIpxRefineModal();
+          const facetSlotContainer = element.querySelector('[slot="facets"]');
+          expect(facetSlotContainer).toBeInTheDocument();
+          expect(facetSlotContainer?.children.length).toBe(2);
+        });
 
-      expect(sectionFiltersTitle).toHaveAttribute(
-        'part',
-        'section-title section-filters-title'
-      );
-      expect(sectionFiltersTitle).toHaveTextContent('Filters');
-    });
+        it('should collapse cloned facets beyond the collapseFacetsAfter threshold', async () => {
+          const {element} = await renderIpxRefineModal({
+            isOpen: true,
+            collapseFacetsAfter: 1,
+          });
 
-    it('should render filter clear all button when hasBreadcrumbs is true', async () => {
-      const {filterClearAllButton} = await renderIpxRefineModal({
-        breadcrumbManagerState: {hasBreadcrumbs: true},
+          const facetSlot = element.querySelector('[slot="facets"]');
+          const clonedFacets = Array.from(
+            facetSlot?.children ?? []
+          ) as BaseFacetElement[];
+
+          expect(clonedFacets).toHaveLength(2);
+          expect(clonedFacets[0].isCollapsed).toBe(false);
+          expect(clonedFacets[1].isCollapsed).toBe(true);
+        });
       });
-
-      expect(filterClearAllButton).toBeInTheDocument();
-      expect(filterClearAllButton).toHaveAttribute('part', 'filter-clear-all');
-      expect(filterClearAllButton).toHaveTextContent('Clear');
-    });
-
-    it('should not render filter clear all button when hasBreadcrumbs is false', async () => {
-      const {filterClearAllButton} = await renderIpxRefineModal({
-        breadcrumbManagerState: {hasBreadcrumbs: false},
-      });
-
-      expect(filterClearAllButton).not.toBeInTheDocument();
-    });
-
-    it('should call breadcrumbManager.deselectAll when clear button is clicked', async () => {
-      const {filterClearAllButton} = await renderIpxRefineModal({
-        breadcrumbManagerState: {hasBreadcrumbs: true},
-      });
-
-      await userEvent.click(filterClearAllButton!);
-
-      expect(mockedBreadcrumbManager.deselectAll).toHaveBeenCalled();
-    });
-
-    it('should not render filters section when no facets', async () => {
-      const {element, filterSection} = await renderIpxRefineModal();
-      element.bindings.store.getFacetElements = () => [];
-      element.requestUpdate();
-      await element.updateComplete;
-
-      expect(filterSection).not.toBeInTheDocument();
     });
   });
 
-  describe('properties', () => {
-    it('should accept collapseFacetsAfter property', async () => {
-      const {element} = await renderIpxRefineModal({
-        collapseFacetsAfter: 3,
-      });
-
-      expect(element.collapseFacetsAfter).toBe(3);
-    });
-  });
-
-  describe('close behavior', () => {
-    it('should set isOpen to false when close button is clicked', async () => {
-      const {element, closeButton} = await renderIpxRefineModal({isOpen: true});
-
-      expect(element.isOpen).toBe(true);
-
-      await userEvent.click(closeButton!);
-
-      expect(element.isOpen).toBe(false);
-    });
-  });
-
-  describe('parts', () => {
+  describe('when rendering (#render)', () => {
     it('should render all parts', async () => {
       const {element} = await renderIpxRefineModal({
         breadcrumbManagerState: {hasBreadcrumbs: true},
@@ -266,6 +206,92 @@ describe('atomic-ipx-refine-modal', () => {
           `Part "${part}" should be in document`
         ).toBeInTheDocument();
       }
+    });
+
+    it('should render the title with "Filters"', async () => {
+      const {title} = await renderIpxRefineModal();
+
+      expect(title).toHaveTextContent('Filters');
+    });
+
+    it('should render the footer button text with "View"', async () => {
+      const {footerButtonText} = await renderIpxRefineModal();
+
+      expect(footerButtonText).toHaveTextContent('View');
+    });
+
+    it('should render the footer button count', async () => {
+      const {footerButtonCount} = await renderIpxRefineModal({
+        querySummaryState: {total: 123},
+      });
+
+      expect(footerButtonCount).toHaveTextContent('123');
+    });
+
+    it('should set isOpen to false when close button is clicked', async () => {
+      const {element, closeButton} = await renderIpxRefineModal({
+        isOpen: true,
+      });
+
+      expect(element.isOpen).toBe(true);
+
+      await userEvent.click(closeButton!);
+
+      expect(element.isOpen).toBe(false);
+    });
+
+    it('should not render filters section when there are no facets', async () => {
+      const {element, filterSection} = await renderIpxRefineModal();
+      element.bindings.store.getFacetElements = () => [];
+      element.requestUpdate();
+      await element.updateComplete;
+
+      expect(filterSection).not.toBeInTheDocument();
+    });
+
+    describe('when there are facets', () => {
+      it('should render the filters section title', async () => {
+        const {sectionFiltersTitle} = await renderIpxRefineModal();
+
+        expect(sectionFiltersTitle).toHaveAttribute(
+          'part',
+          'section-title section-filters-title'
+        );
+        expect(sectionFiltersTitle).toHaveTextContent('Filters');
+      });
+
+      it('should not render filter clear all button when hasBreadcrumbs is false', async () => {
+        const {filterClearAllButton} = await renderIpxRefineModal({
+          breadcrumbManagerState: {hasBreadcrumbs: false},
+        });
+
+        expect(filterClearAllButton).not.toBeInTheDocument();
+      });
+
+      describe('when hasBreadcrumbs is true', () => {
+        it('should render filter clear all button', async () => {
+          const {filterClearAllButton} = await renderIpxRefineModal({
+            breadcrumbManagerState: {hasBreadcrumbs: true},
+          });
+
+          expect(filterClearAllButton).toBeInTheDocument();
+          expect(filterClearAllButton).toHaveAttribute(
+            'part',
+            'filter-clear-all'
+          );
+          expect(filterClearAllButton).toHaveTextContent('Clear');
+        });
+
+        it('should call breadcrumbManager.deselectAll when clear button is clicked', async () => {
+          const {filterClearAllButton} = await renderIpxRefineModal({
+            breadcrumbManagerState: {hasBreadcrumbs: true},
+          });
+
+          await userEvent.click(filterClearAllButton!);
+
+          expect(mockedBreadcrumbManager.deselectAll).toHaveBeenCalled();
+        });
+      });
     });
   });
 });
