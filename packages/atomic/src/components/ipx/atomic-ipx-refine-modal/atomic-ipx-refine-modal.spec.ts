@@ -24,27 +24,6 @@ describe('atomic-ipx-refine-modal', () => {
   let mockedBreadcrumbManager: BreadcrumbManager;
   let mockedQuerySummary: QuerySummary;
 
-  const parts = (element: AtomicIpxRefineModal) => {
-    const qs = (part: string) =>
-      element.shadowRoot?.querySelector(`[part="${part}"]`);
-    const qsStar = (part: string) =>
-      element.shadowRoot?.querySelector(`[part*="${part}"]`);
-    return {
-      title: qs('title'),
-      closeButton: qs('close-button'),
-      closeIcon: qs('close-icon'),
-      footerContent: qs('footer-content'),
-      footerButton: qs('footer-button'),
-      footerButtonText: qs('footer-button-text'),
-      footerButtonCount: qs('footer-button-count'),
-      content: qs('content'),
-      filterSection: qs('filter-section'),
-      sectionFiltersTitle: qsStar('section-filters-title'),
-      filterClearAll: qs('filter-clear-all'),
-      sectionTitle: qsStar('section-title'),
-    };
-  };
-
   const renderIpxRefineModal = async (
     options: {
       isOpen?: boolean;
@@ -322,9 +301,34 @@ describe('atomic-ipx-refine-modal', () => {
         breadcrumbManagerState: {hasBreadcrumbs: true},
       });
 
-      Object.entries(parts(element)).forEach(([key, el]) => {
-        expect(el, `Part "${key}" should be in document`).toBeInTheDocument();
-      });
+      const expectedParts = [
+        'title',
+        'close-button',
+        'close-icon',
+        'footer-content',
+        'footer-button',
+        'footer-button-text',
+        'footer-button-count',
+        'content',
+        'filter-section',
+        'filter-clear-all',
+      ];
+
+      const expectedWildcardParts = ['section-filters-title', 'section-title'];
+
+      for (const part of expectedParts) {
+        expect(
+          element.shadowRoot?.querySelector(`[part="${part}"]`),
+          `Part "${part}" should be in document`
+        ).toBeInTheDocument();
+      }
+
+      for (const part of expectedWildcardParts) {
+        expect(
+          element.shadowRoot?.querySelector(`[part*="${part}"]`),
+          `Part "${part}" should be in document`
+        ).toBeInTheDocument();
+      }
     });
   });
 });
