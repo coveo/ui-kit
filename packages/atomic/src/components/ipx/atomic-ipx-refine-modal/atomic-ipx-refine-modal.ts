@@ -57,6 +57,7 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
  * @part header-wrapper - The wrapper around the header.
  * @part header - The header of the modal, containing the title.
  * @part container - The modal's outermost container.
+ * @part backdrop - The transparent backdrop hiding the content behind the modal.
  *
  * @cssprop --atomic-refine-modal-facet-margin - The margin between facets in the refine modal. Default is `20px`.
  */
@@ -113,7 +114,7 @@ export class AtomicIpxRefineModal
   public breadcrumbManager!: BreadcrumbManager;
   @bindStateToController('breadcrumbManager')
   @state()
-  private breadcrumbManagerState!: BreadcrumbManagerState;
+  public breadcrumbManagerState!: BreadcrumbManagerState;
 
   public querySummary!: QuerySummary;
   @bindStateToController('querySummary')
@@ -129,12 +130,16 @@ export class AtomicIpxRefineModal
   @watch('isOpen')
   watchEnabled() {
     if (this.isOpen) {
-      if (this.querySelector('div[slot="facets"]')) {
-        return;
-      }
-
-      this.appendChild(this.createFacetSlot());
+      this.createFacetSlotIfAbsent();
     }
+  }
+
+  private createFacetSlotIfAbsent() {
+    if (this.querySelector('div[slot="facets"]')) {
+      return;
+    }
+
+    this.appendChild(this.createFacetSlot());
   }
 
   /**
