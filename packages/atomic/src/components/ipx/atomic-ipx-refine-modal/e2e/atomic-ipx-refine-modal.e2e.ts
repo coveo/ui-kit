@@ -6,15 +6,13 @@ test.describe('atomic-ipx-refine-modal', () => {
     await refineModal.title.waitFor();
   });
 
-  test('should render the modal properly after the user opens it', async ({
-    refineModal,
-  }) => {
+  test('should show the modal when it is opened', async ({refineModal}) => {
     await expect(refineModal.title).toBeVisible();
     await expect(refineModal.closeButton).toBeVisible();
     await expect(refineModal.viewResultsButton).toBeVisible();
   });
 
-  test('should close the modal properly after the user closes it', async ({
+  test('should hide the modal properly when it is closed', async ({
     refineModal,
   }) => {
     await expect(refineModal.title).toBeVisible();
