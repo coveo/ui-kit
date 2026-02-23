@@ -5,6 +5,7 @@ import {
   buildTabManager,
   type GeneratedAnswer,
   type GeneratedAnswerState,
+  type GeneratedAnswerWithFollowUps,
   type InteractiveCitation,
   type SearchStatus,
   type TabManager,
@@ -28,26 +29,33 @@ describe('atomic-generated-answer', () => {
   let mockedGeneratedAnswer: GeneratedAnswer;
   let mockedSearchStatus: SearchStatus;
   let mockedTabManager: TabManager;
+  type FollowUpAnswersState = NonNullable<
+    GeneratedAnswerWithFollowUps['state']['followUpAnswers']
+  >;
 
   const renderGeneratedAnswer = async ({
     props = {},
     generatedAnswerState = {},
     searchStatusState = {},
     tabManagerState = {},
-    followUpAnswersState = {isEnabled: false},
+    generatedAnswerOverrides = {},
   }: {
     props?: Partial<AtomicGeneratedAnswer>;
     generatedAnswerState?: Partial<GeneratedAnswerState>;
     searchStatusState?: {hasError?: boolean};
     tabManagerState?: {activeTab?: string};
-    followUpAnswersState?: {isEnabled?: boolean};
+    generatedAnswerOverrides?: Partial<GeneratedAnswer> &
+      Record<string, unknown>;
   } = {}) => {
-    mockedGeneratedAnswer = buildFakeGeneratedAnswer({
-      answer: 'Test answer',
-      citations: [],
-      isVisible: true,
-      ...generatedAnswerState,
-    });
+    mockedGeneratedAnswer = Object.assign(
+      buildFakeGeneratedAnswer({
+        answer: 'Test answer',
+        citations: [],
+        isVisible: true,
+        ...generatedAnswerState,
+      }),
+      generatedAnswerOverrides
+    );
 
     mockedSearchStatus = buildFakeSearchStatus({
       hasError: false,
@@ -70,16 +78,6 @@ describe('atomic-generated-answer', () => {
       beginDelayedSelect: vi.fn(),
       cancelPendingSelect: vi.fn(),
     } as ReturnType<typeof buildInteractiveCitation>);
-
-    mockedEngine.state = {
-      ...mockedEngine.state,
-      followUpAnswers: {
-        conversationId: '',
-        followUpAnswers: [],
-        isEnabled: false,
-        ...followUpAnswersState,
-      },
-    };
 
     const {element} =
       await renderInAtomicSearchInterface<AtomicGeneratedAnswer>({
@@ -793,6 +791,17 @@ describe('atomic-generated-answer', () => {
   });
 
   describe('agentId property', () => {
+    const buildFollowUpState = (isEnabled: boolean) =>
+      ({
+        isVisible: true,
+        answer: 'Test answer',
+        followUpAnswers: {
+          conversationId: '',
+          isEnabled,
+          followUpAnswers: [],
+        } as FollowUpAnswersState,
+      }) as unknown as GeneratedAnswerState;
+
     it('should pass agentId to buildGeneratedAnswer when provided', async () => {
       const {element} = await renderGeneratedAnswer({
         props: {agentId: 'test-agent-id'},
@@ -825,10 +834,9 @@ describe('atomic-generated-answer', () => {
       it('should render a scrollable content container when agentId is provided', async () => {
         const {generatedContentContainer} = await renderGeneratedAnswer({
           props: {agentId: 'agent-123'},
-          followUpAnswersState: {isEnabled: true},
-          generatedAnswerState: {
-            isVisible: true,
-            answer: 'Test answer',
+          generatedAnswerOverrides: {
+            askFollowUp: vi.fn(),
+            state: buildFollowUpState(true),
           },
         });
 
@@ -839,10 +847,9 @@ describe('atomic-generated-answer', () => {
         const {element, generatedContentContainer} =
           await renderGeneratedAnswer({
             props: {agentId: 'agent-123'},
-            followUpAnswersState: {isEnabled: true},
-            generatedAnswerState: {
-              isVisible: true,
-              answer: 'Test answer',
+            generatedAnswerOverrides: {
+              askFollowUp: vi.fn(),
+              state: buildFollowUpState(true),
             },
           });
 
@@ -858,10 +865,13 @@ describe('atomic-generated-answer', () => {
       it('should not render show more button when agentId is provided and collapsible is true', async () => {
         const {showMoreButton} = await renderGeneratedAnswer({
           props: {agentId: 'agent-123', collapsible: true},
-          followUpAnswersState: {isEnabled: true},
-          generatedAnswerState: {
-            isVisible: true,
-            answer: 'A'.repeat(1000),
+          generatedAnswerState: {answer: 'A'.repeat(1000)},
+          generatedAnswerOverrides: {
+            askFollowUp: vi.fn(),
+            state: {
+              ...buildFollowUpState(true),
+              answer: 'A'.repeat(1000),
+            },
           },
         });
 
@@ -870,10 +880,8 @@ describe('atomic-generated-answer', () => {
 
       it('should not render a scrollable content container when agentId is not provided', async () => {
         const {generatedContentContainer} = await renderGeneratedAnswer({
-          followUpAnswersState: {isEnabled: true},
-          generatedAnswerState: {
-            isVisible: true,
-            answer: 'Test answer',
+          generatedAnswerOverrides: {
+            state: buildFollowUpState(true),
           },
         });
 
@@ -884,10 +892,9 @@ describe('atomic-generated-answer', () => {
     it('should not render a scrollable content container when follow-up is disabled even if agentId is provided', async () => {
       const {generatedContentContainer} = await renderGeneratedAnswer({
         props: {agentId: 'agent-123'},
-        followUpAnswersState: {isEnabled: false},
-        generatedAnswerState: {
-          isVisible: true,
-          answer: 'Test answer',
+        generatedAnswerOverrides: {
+          askFollowUp: vi.fn(),
+          state: buildFollowUpState(false),
         },
       });
 
