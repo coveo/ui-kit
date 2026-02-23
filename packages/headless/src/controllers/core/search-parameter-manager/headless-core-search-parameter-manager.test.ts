@@ -260,6 +260,105 @@ describe('search parameter manager', () => {
       engine.state.categoryFacetSet = {author: buildMockCategoryFacetSlice()};
       expect(manager.state.parameters).not.toContain('cf');
     });
+
+    it('excludes category facets that are not visible on the active tab due to tabsIncluded', () => {
+      const selected = buildMockCategoryFacetValueRequest({
+        value: 'a',
+        state: 'selected',
+      });
+      const request = buildMockCategoryFacetRequest({
+        currentValues: [selected],
+      });
+
+      engine.state.categoryFacetSet = {
+        author: buildMockCategoryFacetSlice({request}),
+      };
+
+      // Set up tabs - Products is active
+      const allTab = buildMockTabSlice({id: 'All', isActive: false});
+      const productsTab = buildMockTabSlice({id: 'Products', isActive: true});
+      engine.state.tabSet = {All: allTab, Products: productsTab};
+
+      // Set up facet options with tabsIncluded that doesn't include Products
+      engine.state.facetOptions = {
+        freezeFacetOrder: false,
+        facets: {
+          author: {
+            enabled: true,
+            tabs: {included: ['All', 'Downloads']},
+          },
+        },
+      };
+
+      // The category facet should be excluded from parameters because Products is not in tabsIncluded
+      expect(manager.state.parameters.cf).toBeUndefined();
+    });
+
+    it('includes category facets that are visible on the active tab based on tabsIncluded', () => {
+      const selected = buildMockCategoryFacetValueRequest({
+        value: 'a',
+        state: 'selected',
+      });
+      const request = buildMockCategoryFacetRequest({
+        currentValues: [selected],
+      });
+
+      engine.state.categoryFacetSet = {
+        author: buildMockCategoryFacetSlice({request}),
+      };
+
+      // Set up tabs - All is active
+      const allTab = buildMockTabSlice({id: 'All', isActive: true});
+      const productsTab = buildMockTabSlice({id: 'Products', isActive: false});
+      engine.state.tabSet = {All: allTab, Products: productsTab};
+
+      // Set up facet options with tabsIncluded that includes All
+      engine.state.facetOptions = {
+        freezeFacetOrder: false,
+        facets: {
+          author: {
+            enabled: true,
+            tabs: {included: ['All', 'Downloads']},
+          },
+        },
+      };
+
+      // The category facet should be included because All is in tabsIncluded
+      expect(manager.state.parameters.cf).toEqual({author: ['a']});
+    });
+
+    it('excludes category facets that are excluded on the active tab based on tabsExcluded', () => {
+      const selected = buildMockCategoryFacetValueRequest({
+        value: 'a',
+        state: 'selected',
+      });
+      const request = buildMockCategoryFacetRequest({
+        currentValues: [selected],
+      });
+
+      engine.state.categoryFacetSet = {
+        author: buildMockCategoryFacetSlice({request}),
+      };
+
+      // Set up tabs - Products is active
+      const allTab = buildMockTabSlice({id: 'All', isActive: false});
+      const productsTab = buildMockTabSlice({id: 'Products', isActive: true});
+      engine.state.tabSet = {All: allTab, Products: productsTab};
+
+      // Set up facet options with tabsExcluded that includes Products
+      engine.state.facetOptions = {
+        freezeFacetOrder: false,
+        facets: {
+          author: {
+            enabled: true,
+            tabs: {excluded: ['Products']},
+          },
+        },
+      };
+
+      // The category facet should be excluded because Products is in tabsExcluded
+      expect(manager.state.parameters.cf).toBeUndefined();
+    });
   });
 
   describe('#state.parameters.nf', () => {
