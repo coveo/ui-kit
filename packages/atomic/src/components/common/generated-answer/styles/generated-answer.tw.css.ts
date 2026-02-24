@@ -14,6 +14,20 @@ const baseStyle = css`
     }
   }
 
+  @keyframes rolodex-roll-in {
+    0% {
+      transform: translateY(105%) rotateX(-82deg);
+    }
+
+    72% {
+      transform: translateY(-5%) rotateX(6deg);
+    }
+
+    100% {
+      transform: translateY(0) rotateX(0deg);
+    }
+  }
+
   /* Container part styles */
   [part='container'] {
     container-type: inline-size;
@@ -90,6 +104,28 @@ const baseStyle = css`
   /* Generating label visibility */
   .generating-label-visible [part='is-generating'] {
     @apply flex;
+  }
+
+  [part='is-generating'] .generation-steps-container {
+    @apply inline-flex overflow-hidden;
+    line-height: 1.35;
+    min-height: 1.35em;
+    perspective: 700px;
+  }
+
+  [part='is-generating'] .generation-steps-value {
+    @apply inline-block whitespace-nowrap;
+    transform-origin: 50% 100%;
+    animation: rolodex-roll-in 1520ms cubic-bezier(0.16, 0.84, 0.24, 1) both;
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [part='is-generating'] .generation-steps-value {
+      animation: none;
+      transform: none;
+    }
   }
 
   /* Collapsed answer container styles */
