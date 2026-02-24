@@ -1,17 +1,16 @@
-import type {QuerySuggestCompletion} from '../../api/search/query-suggest/query-suggest-response.js';
-import {buildMockQuerySuggest} from '../../test/mock-query-suggest.js';
-import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion.js';
-import {buildMockSearchApiErrorWithStatusCode} from '../../test/mock-search-api-error-with-status-code.js';
-import {setError} from '../error/error-actions.js';
+import type {QuerySuggestCompletion} from '../../../api/search/query-suggest/query-suggest-response.js';
+import {buildMockQuerySuggest} from '../../../test/mock-query-suggest.js';
+import {buildMockQuerySuggestCompletion} from '../../../test/mock-query-suggest-completion.js';
+import {buildMockSearchApiErrorWithStatusCode} from '../../../test/mock-search-api-error-with-status-code.js';
+import type {QuerySuggestSet} from '../../query-suggest/query-suggest-state.js';
+import {commerceQuerySuggestReducer} from './commerce-query-suggest-slice.js';
 import {
   clearQuerySuggest,
   fetchQuerySuggestions,
   registerQuerySuggest,
 } from './query-suggest-actions.js';
-import {querySuggestReducer} from './query-suggest-slice.js';
-import type {QuerySuggestSet} from './query-suggest-state.js';
 
-describe('querySuggest slice', () => {
+describe('Commerce querySuggest slice', () => {
   let state: QuerySuggestSet;
   const id = 'searchBox_1234';
   const anotherId = 'searchBox_6789';
@@ -41,21 +40,23 @@ describe('querySuggest slice', () => {
   });
 
   it('should have initial state', () => {
-    expect(querySuggestReducer(undefined, {type: 'randomAction'})).toEqual({});
+    expect(
+      commerceQuerySuggestReducer(undefined, {type: 'randomAction'})
+    ).toEqual({});
   });
 
   describe('#registerQuerySuggest', () => {
     it('when the id does not exist, it adds an entry with the correct state', () => {
       const expectedState = buildMockQuerySuggest({id, count: 10});
       const action = registerQuerySuggest({id, count: 10});
-      const finalState = querySuggestReducer(undefined, action);
+      const finalState = commerceQuerySuggestReducer(undefined, action);
 
       expect(finalState[id]).toEqual(expectedState);
     });
 
     it('when the id exists, it does not modify the registered state', () => {
       const action = registerQuerySuggest({id, count: 10});
-      const finalState = querySuggestReducer(state, action);
+      const finalState = commerceQuerySuggestReducer(state, action);
 
       expect(state[id]).toEqual(finalState[id]);
     });
@@ -75,13 +76,16 @@ describe('querySuggest slice', () => {
         responseId: '',
       });
 
-      const finalState = querySuggestReducer(state, clearQuerySuggest({id}));
+      const finalState = commerceQuerySuggestReducer(
+        state,
+        clearQuerySuggest({id})
+      );
       expect(finalState[id]).toEqual(expectedState);
     });
 
     it('when the id is invalid, it does not throw', () => {
       const action = clearQuerySuggest({id: 'invalid id'});
-      expect(() => querySuggestReducer(state, action)).not.toThrow();
+      expect(() => commerceQuerySuggestReducer(state, action)).not.toThrow();
     });
   });
 
@@ -90,26 +94,26 @@ describe('querySuggest slice', () => {
       it('sets the currentRequestId to the the payload value', () => {
         const requestId = 'the_right_id';
         const action = fetchQuerySuggestions.pending(requestId, {id});
-        const finalState = querySuggestReducer(state, action);
+        const finalState = commerceQuerySuggestReducer(state, action);
 
         expect(finalState[id]?.currentRequestId).toBe(requestId);
       });
 
       it('sets isLoading to true', () => {
         const action = fetchQuerySuggestions.pending('', {id});
-        const finalState = querySuggestReducer(state, action);
+        const finalState = commerceQuerySuggestReducer(state, action);
         expect(finalState[id]?.isLoading).toBe(true);
       });
 
       it('when dispatching an id that is not registered, it does not throw', () => {
         const action = fetchQuerySuggestions.pending('', {id: 'invalid id'});
-        expect(() => querySuggestReducer(state, action)).not.toThrow();
+        expect(() => commerceQuerySuggestReducer(state, action)).not.toThrow();
       });
     });
 
     describe('#fetchQuerySuggestions.fulfilled', () => {
       const responseId = 'response-uuid';
-      const completions = getCompletions();
+      const completions = getCompletions(0, 0);
       const fetchQuerySuggestionsFulfilledAction =
         buildFetchQuerySuggestFulfilledAction();
 
@@ -121,7 +125,8 @@ describe('querySuggest slice', () => {
             completions,
             id,
             responseId,
-            q: 'abc',
+            query: 'abc',
+            fieldSuggestionsFacets: [],
           },
           '',
           {
@@ -134,14 +139,14 @@ describe('querySuggest slice', () => {
         const action = buildFetchQuerySuggestFulfilledAction();
         action.meta.arg.id = 'invalid id';
 
-        expect(() => querySuggestReducer(state, action)).not.toThrow();
+        expect(() => commerceQuerySuggestReducer(state, action)).not.toThrow();
       });
 
       it(`when #fetchQuerySuggestions.fulfilled has the right request id
       should update the completions`, () => {
         state[id]!.currentRequestId = 'the_right_id';
 
-        const finalState = querySuggestReducer(
+        const finalState = commerceQuerySuggestReducer(
           state,
           fetchQuerySuggestionsFulfilledAction
         );
@@ -156,7 +161,7 @@ describe('querySuggest slice', () => {
           isLoading: true,
         });
 
-        const finalState = querySuggestReducer(
+        const finalState = commerceQuerySuggestReducer(
           state,
           fetchQuerySuggestionsFulfilledAction
         );
@@ -168,7 +173,7 @@ describe('querySuggest slice', () => {
       it sets the responseId`, () => {
         state[id]!.currentRequestId = 'the_right_id';
 
-        const finalState = querySuggestReducer(
+        const finalState = commerceQuerySuggestReducer(
           state,
           fetchQuerySuggestionsFulfilledAction
         );
@@ -183,7 +188,7 @@ describe('querySuggest slice', () => {
           currentRequestId: 'the_right_id',
         });
 
-        const finalState = querySuggestReducer(
+        const finalState = commerceQuerySuggestReducer(
           state,
           fetchQuerySuggestionsFulfilledAction
         );
@@ -196,34 +201,39 @@ describe('querySuggest slice', () => {
         state[id]!.currentRequestId = 'the_wrong_id';
 
         expect(
-          querySuggestReducer(state, fetchQuerySuggestionsFulfilledAction)
+          commerceQuerySuggestReducer(
+            state,
+            fetchQuerySuggestionsFulfilledAction
+          )
         ).toMatchObject(state);
       });
 
       it('should add the executed query to the list of partialQueries', () => {
         state[id] = buildMockQuerySuggest({currentRequestId: 'the_right_id'});
 
-        const nextState = querySuggestReducer(
+        const nextState = commerceQuerySuggestReducer(
           state,
           fetchQuerySuggestionsFulfilledAction
         );
 
-        const {q} = fetchQuerySuggestionsFulfilledAction.payload;
-        expect(nextState[id]?.partialQueries).toEqual([q]);
+        const {query} = fetchQuerySuggestionsFulfilledAction.payload;
+        expect(nextState[id]?.partialQueries).toEqual([query]);
       });
 
       it('should encode `;` characters in the list of partialQueries', () => {
-        fetchQuerySuggestionsFulfilledAction.payload.q = ';';
+        fetchQuerySuggestionsFulfilledAction.payload.query = ';';
 
         state[id] = buildMockQuerySuggest({currentRequestId: 'the_right_id'});
 
-        const nextState = querySuggestReducer(
+        const nextState = commerceQuerySuggestReducer(
           state,
           fetchQuerySuggestionsFulfilledAction
         );
 
-        const {q} = fetchQuerySuggestionsFulfilledAction.payload;
-        expect(nextState[id]?.partialQueries).toEqual([encodeURIComponent(q)]);
+        const {query} = fetchQuerySuggestionsFulfilledAction.payload;
+        expect(nextState[id]?.partialQueries).toEqual([
+          encodeURIComponent(query),
+        ]);
       });
     });
 
@@ -232,7 +242,7 @@ describe('querySuggest slice', () => {
         state[id]!.isLoading = true;
 
         const action = fetchQuerySuggestions.rejected(null, '', {id});
-        const finalState = querySuggestReducer(state, action);
+        const finalState = commerceQuerySuggestReducer(state, action);
         expect(finalState[id]?.isLoading).toBe(false);
       });
 
@@ -240,7 +250,7 @@ describe('querySuggest slice', () => {
         const action = fetchQuerySuggestions.rejected(null, 'hello', {id});
         action.payload = buildMockSearchApiErrorWithStatusCode();
 
-        const finalState = querySuggestReducer(state, action);
+        const finalState = commerceQuerySuggestReducer(state, action);
         expect(finalState[id]?.error).toEqual(action.payload);
       });
 
@@ -248,25 +258,8 @@ describe('querySuggest slice', () => {
         const action = fetchQuerySuggestions.rejected(null, 'hello', {
           id: 'invalid id',
         });
-        expect(() => querySuggestReducer(state, action)).not.toThrow();
+        expect(() => commerceQuerySuggestReducer(state, action)).not.toThrow();
       });
-    });
-  });
-
-  describe('#setError', () => {
-    it('should set the error state and set isLoading to false', () => {
-      const error = {
-        message: 'Something went wrong',
-        statusCode: 401,
-        status: 401,
-        type: 'BadRequest',
-      };
-      state[id]!.isLoading = true;
-
-      const finalState = querySuggestReducer(state, setError(error));
-
-      expect(finalState[id]?.error).toEqual(error);
-      expect(finalState[id]?.isLoading).toBe(false);
     });
   });
 });

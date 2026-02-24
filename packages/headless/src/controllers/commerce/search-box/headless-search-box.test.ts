@@ -5,6 +5,7 @@ import {
   registerQuerySetQuery,
   updateQuerySetQuery,
 } from '../../../features/commerce/query-set/query-set-actions.js';
+import {commerceQuerySuggestReducer as querySuggest} from '../../../features/commerce/query-suggest/commerce-query-suggest-slice.js';
 import {
   clearQuerySuggest,
   fetchQuerySuggestions,
@@ -16,7 +17,6 @@ import {
   prepareForSearchWithQuery,
 } from '../../../features/commerce/search/search-actions.js';
 import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice.js';
-import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice.js';
 import type {CommerceAppState} from '../../../state/commerce-app-state.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {
