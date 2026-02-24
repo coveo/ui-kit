@@ -6,6 +6,7 @@ import type {
 } from '../../../../controllers/commerce/core/parameter-manager/headless-core-parameter-manager.js';
 import {buildProductListing} from '../../../../controllers/commerce/product-listing/headless-product-listing.js';
 import {buildSearch} from '../../../../controllers/commerce/search/headless-search.js';
+import {commerceFacetOrderReducer as facetOrder} from '../../../../features/commerce/facets/facet-order/commerce-facet-order-slice.js';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice.js';
 import {manualNumericFacetReducer as manualNumericFacetSet} from '../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-slice.js';
 import {paginationReducer as commercePagination} from '../../../../features/commerce/pagination/pagination-slice.js';
@@ -15,7 +16,6 @@ import type {ProductListingParameters} from '../../../../features/commerce/produ
 import {queryReducer as query} from '../../../../features/commerce/query/query-slice.js';
 import type {CommerceSearchParameters} from '../../../../features/commerce/search-parameters/search-parameters-actions.js';
 import {sortReducer as commerceSort} from '../../../../features/commerce/sort/sort-slice.js';
-import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice.js';
 import {querySetReducer as querySet} from '../../../../features/query-set/query-set-slice.js';
 import {loadReducerError} from '../../../../utils/errors.js';
 import {SolutionType} from '../../types/controller-constants.js';

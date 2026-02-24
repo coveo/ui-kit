@@ -14,6 +14,7 @@ import {cartReducer} from '../../features/commerce/context/cart/cart-slice.js';
 import {setContext} from '../../features/commerce/context/context-actions.js';
 import {contextReducer} from '../../features/commerce/context/context-slice.js';
 import {didYouMeanReducer} from '../../features/commerce/did-you-mean/did-you-mean-slice.js';
+import {commerceFacetOrderReducer} from '../../features/commerce/facets/facet-order/commerce-facet-order-slice.js';
 import {commerceCategoryFacetSearchSetReducer} from '../../features/commerce/facets/facet-search-set/category/commerce-category-facet-search-set-slice.js';
 import {commerceSpecificFacetSearchSetReducer} from '../../features/commerce/facets/facet-search-set/regular/commerce-specific-facet-search-set-slice.js';
 import {commerceFacetSetReducer} from '../../features/commerce/facets/facet-set/facet-set-slice.js';
@@ -27,7 +28,6 @@ import {commerceSearchReducer} from '../../features/commerce/search/search-slice
 import {sortReducer} from '../../features/commerce/sort/sort-slice.js';
 import {commerceTriggersReducer} from '../../features/commerce/triggers/triggers-slice.js';
 import {versionReducer} from '../../features/debug/version-slice.js';
-import {facetOrderReducer} from '../../features/facets/facet-order/facet-order-slice.js';
 import type {CommerceAppState} from '../../state/commerce-app-state.js';
 import type {CommerceThunkExtraArguments} from '../commerce-thunk-extra-arguments.js';
 import {
@@ -53,7 +53,7 @@ const commerceEngineReducers = {
   commerceSearch: commerceSearchReducer,
   commercePagination: paginationReducer,
   commerceSort: sortReducer,
-  facetOrder: facetOrderReducer,
+  facetOrder: commerceFacetOrderReducer,
   fieldSuggestionsOrder: fieldSuggestionsOrderReducer,
   facetSearchSet: commerceSpecificFacetSearchSetReducer,
   categoryFacetSearchSet: commerceCategoryFacetSearchSetReducer,
