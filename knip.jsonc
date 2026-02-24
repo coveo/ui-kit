@@ -48,7 +48,6 @@
     "packages/atomic-angular/projects/atomic-angular": {
       "entry": ["src/public-api.ts"],
       "ignore": [
-        "src/lib/stencil-generated/**/*.ts",
         "src/utils.ts" // Only used by generated files, so it 'seems' to have unused exports, but it's actually used.
       ]
     },
