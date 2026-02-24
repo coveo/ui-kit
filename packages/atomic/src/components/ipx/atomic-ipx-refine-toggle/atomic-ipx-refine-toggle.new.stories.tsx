@@ -25,8 +25,10 @@ const meta: Meta = {
       }
     </style>
     <atomic-ipx-modal is-open>
-      <div slot="header" style="padding-bottom: 0.5rem;">
-        ${template(args)}
+      <div slot="header" style="padding-bottom: 0.875rem;">
+        <atomic-layout-section section="search">
+          ${template(args)}
+        </atomic-layout-section>
       </div>
       <atomic-layout-section section="facets">
         <atomic-facet field="author" label="Author"></atomic-facet>
