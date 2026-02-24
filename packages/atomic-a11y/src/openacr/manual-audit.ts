@@ -2,15 +2,14 @@ import {readdir, readFile} from 'node:fs/promises';
 import path from 'node:path';
 import {BASELINE_FILE_PATTERN} from '../shared/constants.js';
 import {isRecord} from '../shared/guards.js';
-import {createLogger} from './logger.js';
 import type {
   ManualAuditAggregate,
   ManualAuditBaselineEntry,
   OpenAcrConformance,
 } from './types.js';
-import {manualStatusToConformance} from './types.js';
+import {countManualConformances, manualStatusToConformance} from './types.js';
 
-const logger = createLogger('json-to-openacr');
+const LOG_PREFIX = '[json-to-openacr]';
 
 const CRITERION_KEY_REGEX = /^(\d+(?:\.\d+)+)-/;
 
@@ -37,12 +36,16 @@ export function parseManualBaseline(
   try {
     parsed = JSON.parse(content);
   } catch {
-    logger.warn(`Unable to parse manual baseline file ${filePath} as JSON.`);
+    console.warn(
+      LOG_PREFIX,
+      `Unable to parse manual baseline file ${filePath} as JSON.`
+    );
     return aggregates;
   }
 
   if (!Array.isArray(parsed)) {
-    logger.warn(
+    console.warn(
+      LOG_PREFIX,
       `Manual baseline file ${filePath} does not contain a valid array of entries.`
     );
     return aggregates;
@@ -50,7 +53,11 @@ export function parseManualBaseline(
 
   for (const entry of parsed) {
     if (!isValidManualBaselineEntry(entry)) {
-      logger.warn(`Skipping invalid manual baseline entry:`, entry);
+      console.warn(
+        LOG_PREFIX,
+        `Skipping invalid manual baseline entry:`,
+        entry
+      );
       continue;
     }
 
@@ -74,7 +81,8 @@ export function parseManualBaseline(
       const conformance = manualStatusToConformance[statusValue];
 
       if (!conformance) {
-        logger.warn(
+        console.warn(
+          LOG_PREFIX,
           `Unknown manual status "${statusValue}" for criterion ${criterionId} in component ${entry.name}.`
         );
         continue;
@@ -121,7 +129,11 @@ export async function loadManualAuditData(
           loadedCount += entries.length;
         }
       } catch (error) {
-        logger.warn(`Unable to read manual baseline file ${filePath}.`, error);
+        console.warn(
+          LOG_PREFIX,
+          `Unable to read manual baseline file ${filePath}.`,
+          error
+        );
       }
     }
   } catch (error) {
@@ -134,7 +146,11 @@ export async function loadManualAuditData(
       return new Map();
     }
 
-    logger.warn(`Unable to read manual audit directory ${dirPath}.`, error);
+    console.warn(
+      LOG_PREFIX,
+      `Unable to read manual audit directory ${dirPath}.`,
+      error
+    );
     return new Map();
   }
 
@@ -144,7 +160,8 @@ export async function loadManualAuditData(
       const [, criterionId] = key.split(':');
       criteriaSet.add(criterionId);
     }
-    logger.log(
+    console.log(
+      LOG_PREFIX,
       `Loaded ${loadedCount} manual audit entries across ${criteriaSet.size} criteria from ${fileCount} baseline file(s).`
     );
   }
@@ -159,42 +176,13 @@ export function resolveManualConformance(
     return undefined;
   }
 
-  // Count conformances to apply precedence: fail > partial > pass > not-applicable
-  let failCount = 0;
-  let partialCount = 0;
-  let passCount = 0;
-  let notApplicableCount = 0;
+  const {fail, partial, pass, notApplicable} =
+    countManualConformances(manualAggregates);
 
-  for (const aggregate of manualAggregates) {
-    switch (aggregate.conformance) {
-      case 'does-not-support':
-        failCount++;
-        break;
-      case 'partially-supports':
-        partialCount++;
-        break;
-      case 'supports':
-        passCount++;
-        break;
-      case 'not-applicable':
-        notApplicableCount++;
-        break;
-    }
-  }
-
-  // Apply resolution precedence
-  if (failCount > 0) {
-    return 'does-not-support';
-  }
-  if (partialCount > 0) {
-    return 'partially-supports';
-  }
-  if (passCount > 0) {
-    return 'supports';
-  }
-  if (notApplicableCount > 0) {
-    return 'not-applicable';
-  }
+  if (fail > 0) return 'does-not-support';
+  if (partial > 0) return 'partially-supports';
+  if (pass > 0) return 'supports';
+  if (notApplicable > 0) return 'not-applicable';
 
   return undefined;
 }

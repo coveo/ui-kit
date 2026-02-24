@@ -7,15 +7,13 @@ import {
 } from '../shared/constants.js';
 import {isA11yReport, isRecord} from '../shared/guards.js';
 import type {A11yReport} from '../shared/types.js';
-import {createLogger} from './logger.js';
 import {loadManualAuditData} from './manual-audit.js';
 import {loadOverrides} from './overrides.js';
 import {buildOpenAcrReport} from './report-builder.js';
 import type {OpenAcrReport} from './types.js';
 
-const logger = createLogger('json-to-openacr');
+const LOG_PREFIX = '[json-to-openacr]';
 
-// TODO: revisit these constants
 const DEFAULT_OPENACR_OUTPUT_FILENAME = 'openacr.yaml';
 const DEFAULT_OVERRIDES_FILENAME = 'a11y-overrides.json';
 const DEFAULT_OVERRIDES_DIR = 'a11y';
@@ -29,7 +27,8 @@ async function readInputReport(
     const parsed = JSON.parse(fileContents) as unknown;
 
     if (!isA11yReport(parsed)) {
-      logger.warn(
+      console.warn(
+        LOG_PREFIX,
         `Invalid JSON structure in ${inputFilePath}. Falling back to placeholders.`
       );
       return null;
@@ -43,13 +42,15 @@ async function readInputReport(
         : undefined;
 
     if (errorCode === 'ENOENT') {
-      logger.warn(
+      console.warn(
+        LOG_PREFIX,
         `Input report not found at ${inputFilePath}. Writing placeholder OpenACR output.`
       );
       return null;
     }
 
-    logger.warn(
+    console.warn(
+      LOG_PREFIX,
       `Unable to read input report ${inputFilePath}. Falling back to placeholders.`,
       error
     );
@@ -85,12 +86,14 @@ export async function transformJsonToOpenAcr(
   const overrides = await loadOverrides(overridesFile);
 
   if (overrides.size > 0) {
-    logger.log(
+    console.log(
+      LOG_PREFIX,
       `Loaded ${overrides.size} conformance override(s) from ${overridesFile}.`
     );
   }
 
-  const manualAggregates = await loadManualAuditData(DEFAULT_MANUAL_AUDIT_DIR);
+  const manualAuditDir = options.manualAuditDir ?? DEFAULT_MANUAL_AUDIT_DIR;
+  const manualAggregates = await loadManualAuditData(manualAuditDir);
 
   const openAcrReport = buildOpenAcrReport(report, overrides, manualAggregates);
   const serialized = yaml.dump(openAcrReport);

@@ -7,7 +7,7 @@ import type {
   ManualAuditAggregate,
   OpenAcrConformance,
 } from './types.js';
-import {reportConformanceToOpenAcr} from './types.js';
+import {countManualConformances, reportConformanceToOpenAcr} from './types.js';
 
 export function mapCriterionConformance(
   criterion: A11yCriterionReport | undefined
@@ -76,38 +76,17 @@ export function buildRemarks(
   }
 
   if (manualAggregates && manualAggregates.length > 0) {
-    let passCount = 0;
-    let failCount = 0;
-    let partialCount = 0;
-    let notApplicableCount = 0;
+    const {pass, fail, partial, notApplicable} =
+      countManualConformances(manualAggregates);
 
-    for (const aggregate of manualAggregates) {
-      switch (aggregate.conformance) {
-        case 'supports':
-          passCount++;
-          break;
-        case 'does-not-support':
-          failCount++;
-          break;
-        case 'partially-supports':
-          partialCount++;
-          break;
-        case 'not-applicable':
-          notApplicableCount++;
-          break;
-      }
-    }
-
-    const componentsCount = manualAggregates.length;
     const summaryParts: string[] = [];
-    if (passCount > 0) summaryParts.push(`${passCount} pass`);
-    if (failCount > 0) summaryParts.push(`${failCount} fail`);
-    if (partialCount > 0) summaryParts.push(`${partialCount} partial`);
-    if (notApplicableCount > 0)
-      summaryParts.push(`${notApplicableCount} not-applicable`);
+    if (pass > 0) summaryParts.push(`${pass} pass`);
+    if (fail > 0) summaryParts.push(`${fail} fail`);
+    if (partial > 0) summaryParts.push(`${partial} partial`);
+    if (notApplicable > 0) summaryParts.push(`${notApplicable} not-applicable`);
 
     const summary = summaryParts.join(', ');
-    return `Manual audit: ${summary} across ${componentsCount} component(s).`;
+    return `Manual audit: ${summary} across ${manualAggregates.length} component(s).`;
   }
 
   const coveredCount = coveredComponents.length;

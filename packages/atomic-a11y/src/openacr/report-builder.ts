@@ -12,6 +12,7 @@ import type {
   ChapterId,
   CriterionAggregate,
   ManualAuditAggregate,
+  OpenAcrConformance,
   OpenAcrCriterion,
   OpenAcrCriterionComponent,
   OpenAcrReport,
@@ -29,11 +30,8 @@ function buildCriterionAggregates(
   criteria: A11yCriterionReport[]
 ): Map<string, CriterionAggregate> {
   const aggregates = new Map<string, CriterionAggregate>();
-  const componentByName = new Map<string, A11yComponentReport>();
 
   for (const component of components) {
-    componentByName.set(component.name, component);
-
     for (const criterionId of component.automated.criteriaCovered) {
       const aggregate = aggregates.get(criterionId) ?? {
         coveredComponents: new Set<string>(),
@@ -41,10 +39,6 @@ function buildCriterionAggregates(
       };
 
       aggregate.coveredComponents.add(component.name);
-      if (component.automated.violations > 0) {
-        aggregate.violatingComponents.add(component.name);
-      }
-
       aggregates.set(criterionId, aggregate);
     }
   }
@@ -57,10 +51,7 @@ function buildCriterionAggregates(
 
     for (const componentName of criterion.affectedComponents) {
       aggregate.coveredComponents.add(componentName);
-      const matchedComponent = componentByName.get(componentName);
-      if (matchedComponent && matchedComponent.automated.violations > 0) {
-        aggregate.violatingComponents.add(componentName);
-      }
+      aggregate.violatingComponents.add(componentName);
     }
 
     aggregates.set(criterion.id, aggregate);
@@ -71,30 +62,29 @@ function buildCriterionAggregates(
 
 function buildCriterionComponents(
   conformance: OpenAcrCriterion['conformance'],
-  remarks: string,
-  coveredComponents: string[]
+  remarks: string
 ): OpenAcrCriterionComponent[] {
-  if (coveredComponents.length === 0) {
-    return [
-      {
-        name: 'web',
-        adherence: {
-          level: conformance,
-          notes: remarks,
-        },
-      },
-    ];
-  }
-
-  return coveredComponents.map((componentName) => {
-    return {
-      name: componentName,
+  return [
+    {
+      name: 'web',
       adherence: {
         level: conformance,
         notes: remarks,
       },
-    };
-  });
+    },
+  ];
+}
+
+function buildManualAggregateIndex(
+  manualAggregates: Map<string, ManualAuditAggregate[]>
+): Map<string, ManualAuditAggregate[]> {
+  const index = new Map<string, ManualAuditAggregate[]>();
+  for (const [key, entries] of manualAggregates) {
+    const criterionId = key.split(':')[1];
+    const existing = index.get(criterionId) ?? [];
+    index.set(criterionId, [...existing, ...entries]);
+  }
+  return index;
 }
 
 function buildOpenAcrCriteria(
@@ -112,6 +102,7 @@ function buildOpenAcrCriteria(
     report?.components ?? [],
     report?.criteria ?? []
   );
+  const manualByCriterion = buildManualAggregateIndex(manualAggregates);
 
   const criteriaByChapter: Record<ChapterId, OpenAcrCriterion[]> = {
     success_criteria_level_a: [],
@@ -128,17 +119,12 @@ function buildOpenAcrCriteria(
     const violatingComponents = [
       ...(aggregate?.violatingComponents ?? []),
     ].sort(compareByNumericId);
-
-    const manualAggregatesForCriterion = Array.from(manualAggregates.entries())
-      .filter(([key]) => key.endsWith(`:${definition.id}`))
-      .flatMap(([, entries]) => entries);
+    const manualForCriterion = manualByCriterion.get(definition.id);
 
     const conformance = resolveConformance(
       criterionFromReport,
       aggregate,
-      manualAggregatesForCriterion.length > 0
-        ? manualAggregatesForCriterion
-        : undefined,
+      manualForCriterion,
       override
     );
     const remarks = buildRemarks(
@@ -146,18 +132,11 @@ function buildOpenAcrCriteria(
       conformance,
       coveredComponents,
       violatingComponents,
-      manualAggregatesForCriterion.length > 0
-        ? manualAggregatesForCriterion
-        : undefined,
+      manualForCriterion,
       override
     );
 
-    const manualResultStatus =
-      manualAggregatesForCriterion.length > 0 ? 'evaluated' : 'not-evaluated';
-    const manualResultNotes =
-      manualAggregatesForCriterion.length > 0
-        ? remarks
-        : DEFAULT_MANUAL_PLACEHOLDER_NOTE;
+    const hasManualData = manualForCriterion !== undefined;
 
     criteriaByChapter[definition.chapterId].push({
       num: definition.id,
@@ -177,19 +156,30 @@ function buildOpenAcrCriteria(
         violating_components: violatingComponents,
       },
       manual_result: {
-        status: manualResultStatus,
-        notes: manualResultNotes,
+        status: hasManualData ? 'evaluated' : 'not-evaluated',
+        notes: hasManualData ? remarks : DEFAULT_MANUAL_PLACEHOLDER_NOTE,
       },
-      components: buildCriterionComponents(
-        conformance,
-        remarks,
-        coveredComponents
-      ),
+      components: buildCriterionComponents(conformance, remarks),
     });
   }
 
   return criteriaByChapter;
 }
+
+const CONFORMANCE_TO_SUMMARY_KEY: Record<
+  OpenAcrConformance,
+  | 'supports'
+  | 'partially_supports'
+  | 'does_not_support'
+  | 'not_applicable'
+  | 'not_evaluated'
+> = {
+  supports: 'supports',
+  'partially-supports': 'partially_supports',
+  'does-not-support': 'does_not_support',
+  'not-applicable': 'not_applicable',
+  'not-evaluated': 'not_evaluated',
+};
 
 function buildSummary(
   levelA: OpenAcrCriterion[],
@@ -210,28 +200,7 @@ function buildSummary(
     if (criterion.automated_result.status !== 'not-covered') {
       summary.automated_covered_criteria += 1;
     }
-
-    if (criterion.conformance === 'supports') {
-      summary.supports += 1;
-      continue;
-    }
-
-    if (criterion.conformance === 'partially-supports') {
-      summary.partially_supports += 1;
-      continue;
-    }
-
-    if (criterion.conformance === 'does-not-support') {
-      summary.does_not_support += 1;
-      continue;
-    }
-
-    if (criterion.conformance === 'not-applicable') {
-      summary.not_applicable += 1;
-      continue;
-    }
-
-    summary.not_evaluated += 1;
+    summary[CONFORMANCE_TO_SUMMARY_KEY[criterion.conformance]] += 1;
   }
 
   return summary;
