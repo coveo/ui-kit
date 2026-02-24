@@ -21,22 +21,6 @@ export function handleRegisterQuerySuggest(
   state[id] = buildQuerySuggest(payload);
 }
 
-export function buildQuerySuggest(
-  config: Partial<QuerySuggestState>
-): QuerySuggestState {
-  return {
-    id: '',
-    completions: [],
-    responseId: '',
-    count: 5,
-    currentRequestId: '',
-    error: null,
-    partialQueries: [],
-    isLoading: false,
-    ...config,
-  };
-}
-
 export function handleFetchPending(
   state: WritableDraft<QuerySuggestSet>,
   action: AnyAction
@@ -78,4 +62,20 @@ export function handleClearQuerySuggest(
   querySuggest.responseId = '';
   querySuggest.completions = [];
   querySuggest.partialQueries = [];
+}
+
+function buildQuerySuggest(
+  config: Partial<QuerySuggestState>
+): QuerySuggestState {
+  return {
+    id: '',
+    completions: [],
+    responseId: '',
+    count: 5,
+    currentRequestId: '',
+    error: null,
+    partialQueries: [],
+    isLoading: false,
+    ...config,
+  };
 }
