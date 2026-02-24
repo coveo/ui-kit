@@ -98,6 +98,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-ipx-embedded',
   'atomic-ipx-modal',
   'atomic-ipx-recs-list',
+  'atomic-ipx-refine-modal',
   'atomic-ipx-refine-toggle',
   'atomic-ipx-result-link',
   'atomic-ipx-tab',
