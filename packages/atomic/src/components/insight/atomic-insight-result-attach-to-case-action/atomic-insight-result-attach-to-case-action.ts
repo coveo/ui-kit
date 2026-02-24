@@ -46,6 +46,7 @@ export class AtomicInsightResultAttachToCaseAction
 
   @bindStateToController('attachedResults')
   @state()
+  // biome-ignore lint/correctness/noUnusedPrivateClassMembers: Binds headless state to trigger Lit re-renders.
   private attachedResultsState!: Record<string, never>;
 
   private itemContextController!: ItemContextController<Result>;
@@ -125,8 +126,6 @@ export class AtomicInsightResultAttachToCaseAction
   @errorGuard()
   @bindingGuard()
   render() {
-    void this.attachedResultsState;
-
     if (!this.result || !this.attachedResults) {
       return html``;
     }
