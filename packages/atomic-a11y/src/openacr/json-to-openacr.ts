@@ -13,7 +13,6 @@ import {buildOpenAcrReport} from './report-builder.js';
 import type {OpenAcrReport} from './types.js';
 
 const LOG_PREFIX = '[json-to-openacr]';
-
 const DEFAULT_OPENACR_OUTPUT_FILENAME = 'openacr.yaml';
 const DEFAULT_OVERRIDES_FILENAME = 'a11y-overrides.json';
 const DEFAULT_OVERRIDES_DIR = 'a11y';
@@ -59,13 +58,46 @@ async function readInputReport(
   }
 }
 
+/**
+ * Options for {@link transformJsonToOpenAcr}.
+ */
 export interface JsonToOpenAcrOptions {
+  /** Path to the input `a11y-report.json` file.
+   * @default 'reports/a11y-report.json' */
   inputFile?: string;
+  /** Path where the OpenACR YAML output is written.
+   * @default 'reports/openacr.yaml' */
   outputFile?: string;
+  /** Path to a JSON file with per-criterion conformance overrides.
+   * @default 'a11y/a11y-overrides.json' */
   overridesFile?: string;
+  /** Directory containing `manual-audit-*.json` baseline files.
+   * @default 'a11y/reports' */
   manualAuditDir?: string;
 }
 
+/**
+ * Converts an `a11y-report.json` into an OpenACR-compliant YAML document.
+ *
+ * Reads the input report, loads optional manual audit baselines and conformance
+ * overrides, resolves per-criterion conformance using a priority chain
+ * (override → manual → existing → automated), and writes the result as YAML.
+ *
+ * If the input report is missing or invalid, a placeholder report with all
+ * criteria set to `'not-evaluated'` is produced.
+ *
+ * @returns The assembled {@link OpenAcrReport} object (also written to disk as YAML).
+ *
+ * @example
+ * ```ts
+ * import { transformJsonToOpenAcr } from '@coveo/atomic-a11y';
+ *
+ * const report = await transformJsonToOpenAcr({
+ *   inputFile: 'reports/a11y-report.json',
+ *   outputFile: 'reports/openacr.yaml',
+ * });
+ * ```
+ */
 export async function transformJsonToOpenAcr(
   options: JsonToOpenAcrOptions = {}
 ): Promise<OpenAcrReport> {
