@@ -141,6 +141,12 @@ export class AtomicGeneratedAnswer
    */
   @property({type: String, attribute: 'answer-configuration-id'})
   answerConfigurationId?: string;
+  /**
+   * @internal
+   * The unique identifier of the agent to use to generate answers.
+   */
+  @property({type: String, attribute: 'agent-id'})
+  agentId?: string;
 
   /**
    * A list of fields to include with the citations used to generate the answer.
@@ -266,6 +272,9 @@ export class AtomicGeneratedAnswer
       },
       ...(this.answerConfigurationId && {
         answerConfigurationId: this.answerConfigurationId,
+      }),
+      ...(this.agentId && {
+        agentId: this.agentId,
       }),
       fieldsToIncludeInCitations: this.getCitationFields(),
     });
@@ -587,7 +596,13 @@ export class AtomicGeneratedAnswer
     return renderFeedbackAndCopyButtons({
       props: {
         i18n: this.bindings.i18n,
-        generatedAnswerState: this.generatedAnswerState,
+        generatedAnswerActionsState: {
+          liked: this.generatedAnswerState.liked,
+          disliked: this.generatedAnswerState.disliked,
+          isStreaming: this.generatedAnswerState.isStreaming,
+          isLoading: this.generatedAnswerState.isLoading,
+          answer: this.generatedAnswerState.answer,
+        },
         copied: this.copied,
         copyError: this.copyError,
         getCopyToClipboardTooltip: () => this.copyToClipboardTooltip,

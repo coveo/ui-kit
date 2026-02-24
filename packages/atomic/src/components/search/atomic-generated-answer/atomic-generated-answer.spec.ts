@@ -79,6 +79,7 @@ describe('atomic-generated-answer', () => {
           .maxCollapsedHeight=${props.maxCollapsedHeight ?? 16}
           .tabsIncluded=${props.tabsIncluded ?? []}
           .tabsExcluded=${props.tabsExcluded ?? []}
+          .agentId=${props.agentId}
         ></atomic-generated-answer>`,
         selector: 'atomic-generated-answer',
         bindings: (bindings) => {
@@ -763,6 +764,36 @@ describe('atomic-generated-answer', () => {
         mockedEngine,
         expect.not.objectContaining({
           answerConfigurationId: expect.anything(),
+        })
+      );
+    });
+  });
+
+  describe('agentId property', () => {
+    it('should pass agentId to buildGeneratedAnswer when provided', async () => {
+      const {element} = await renderGeneratedAnswer({
+        props: {agentId: 'test-agent-id'},
+        generatedAnswerState: {isVisible: true, answer: 'Test'},
+      });
+      await element.updateComplete;
+
+      expect(buildGeneratedAnswer).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.objectContaining({
+          agentId: 'test-agent-id',
+        })
+      );
+    });
+
+    it('should not pass agentId when not provided', async () => {
+      await renderGeneratedAnswer({
+        generatedAnswerState: {isVisible: true, answer: 'Test'},
+      });
+
+      expect(buildGeneratedAnswer).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.not.objectContaining({
+          agentId: expect.anything(),
         })
       );
     });

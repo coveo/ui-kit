@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import {spawnSync} from 'node:child_process';
-import {appendFileSync, readFileSync, writeFileSync} from 'node:fs';
+import {appendFileSync, existsSync, readFileSync, writeFileSync} from 'node:fs';
 import {join, resolve} from 'node:path';
 import {
   describeNpmTag,
@@ -57,6 +57,67 @@ const hasPackageJsonChanged = (directoryPath) => {
  */
 
 /**
+ * Check if any workspace dependency has been bumped during this release cycle.
+ * Since release:phase1 runs in topological order (dependencies first),
+ * we can detect bumped dependencies by checking if they appear in .git-message.
+ * @param {string} directoryPath
+ * @returns {boolean}
+ */
+const hasWorkspaceDependencyChanged = (directoryPath) => {
+  const packageJsonPath = resolve(directoryPath, 'package.json');
+  const packageJson = JSON.parse(
+    readFileSync(packageJsonPath, {encoding: 'utf-8'})
+  );
+
+  // Collect all workspace dependencies from dependencies and peerDependencies
+  const workspaceDeps = [];
+  for (const section of ['dependencies', 'peerDependencies']) {
+    const deps = packageJson[section];
+    if (!deps) {
+      continue;
+    }
+    for (const [name, version] of Object.entries(deps)) {
+      if (typeof version === 'string' && version.startsWith('workspace:')) {
+        workspaceDeps.push(name);
+      }
+    }
+  }
+
+  if (workspaceDeps.length === 0) {
+    return false;
+  }
+
+  // Check if any of these dependencies were bumped in this release cycle
+  // by looking at the .git-message file which accumulates bumped packages
+  const gitMessagePath = join(REPO_FS_ROOT, '.git-message');
+  if (!existsSync(gitMessagePath)) {
+    return false;
+  }
+
+  const gitMessage = readFileSync(gitMessagePath, {encoding: 'utf-8'});
+  const bumpedPackages = gitMessage
+    .split('\n')
+    .filter(Boolean)
+    .map((line) => {
+      // Format is "packageName@version"
+      const atIndex = line.lastIndexOf('@');
+      return atIndex > 0 ? line.slice(0, atIndex) : line;
+    });
+
+  // Check if any workspace dependency was bumped
+  for (const dep of workspaceDeps) {
+    if (bumpedPackages.includes(dep)) {
+      console.log(
+        `Workspace dependency ${dep} was bumped in this release cycle`
+      );
+      return true;
+    }
+  }
+
+  return false;
+};
+
+/**
  * @param {string} packageDir
  * @param {(packageJson: PackageJson) => PackageJson | void} modifyPackageJsonCallback
  */
@@ -85,9 +146,13 @@ const convention = await changelogConvention();
 const lastTag = await getLastTag({
   prefix: versionPrefix,
   onBranch: `refs/remotes/origin/${REPO_RELEASE_BRANCH}`,
-});
+}).catch(() => `refs/remotes/origin/${REPO_RELEASE_BRANCH}`); // if no tag is found, we consider all commits since the release branch as part of this release, which is the expected behavior for the first release or when a new package is added.
 const commits = await getCommits(PATH, lastTag);
-if (commits.length === 0 && !hasPackageJsonChanged(PATH)) {
+if (
+  commits.length === 0 &&
+  !hasPackageJsonChanged(PATH) &&
+  !hasWorkspaceDependencyChanged(PATH)
+) {
   process.exit(0);
 }
 const parsedCommits = parseCommits(commits, convention.parserOpts);
