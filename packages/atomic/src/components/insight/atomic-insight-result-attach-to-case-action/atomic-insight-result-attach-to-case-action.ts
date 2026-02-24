@@ -46,6 +46,7 @@ export class AtomicInsightResultAttachToCaseAction
 
   @bindStateToController('attachedResults')
   @state()
+  // @ts-ignore - Binds headless state to trigger Lit re-renders.
   // biome-ignore lint/correctness/noUnusedPrivateClassMembers: Binds headless state to trigger Lit re-renders.
   private attachedResultsState!: Record<string, never>;
 
