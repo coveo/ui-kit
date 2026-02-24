@@ -28,16 +28,23 @@ const declarationToLitImport = (declaration) =>
 const declarationToProxyCmp = (declaration, defineCustomElementFn) =>
   `
 @ProxyCmp({
-  inputs: [${(declaration.members || [])
-    .flatMap((member) => {
-      if (member.privacy !== 'public' || member.kind !== 'field') {
+  inputs: [${(declaration.attributes || [])
+    .flatMap((attribute) => {
+      if (!attribute.fieldName) {
         return [];
       }
-      const inputs = [`'${member.name}'`];
-      if (member.attribute) {
-        inputs.push(`'${member.attribute}'`);
+      const member = declaration.members?.find(
+        (m) => m.name === attribute.fieldName
+      );
+      if (
+        !member ||
+        member.privacy === 'private' ||
+        member.privacy === 'protected' ||
+        member.kind !== 'field'
+      ) {
+        return [];
       }
-      return inputs;
+      return [`'${attribute.fieldName}'`];
     })
     .join(', ')}],
   methods: [${(declaration.members || [])
@@ -117,7 +124,7 @@ import {
 if (litDeclarations.length > 0) {
   const atomicAngularModuleFileContent = `
 import {CommonModule} from '@angular/common';
-import {APP_INITIALIZER, ModuleWithProviders, NgModule, Provider} from '@angular/core';
+import {ModuleWithProviders, NgModule} from '@angular/core';
 
 import {
   ${[...litDeclarations].sort().join(',\n  ')}
@@ -127,7 +134,6 @@ const DECLARATIONS = [
   ${[...litDeclarations].sort().join(',\n  ')}
 ];
 
-        
 @NgModule({
   declarations: DECLARATIONS,
   exports: DECLARATIONS,
