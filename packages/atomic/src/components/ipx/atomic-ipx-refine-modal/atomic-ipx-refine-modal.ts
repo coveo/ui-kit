@@ -29,6 +29,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {sortByDocumentPosition} from '@/src/utils/utils';
 
 /**
  * The `atomic-ipx-refine-modal` component is automatically created as a child of the `atomic-search-interface` when the `atomic-ipx-refine-toggle` is initialized.
@@ -153,7 +154,9 @@ export class AtomicIpxRefineModal
     divSlot.setAttribute('slot', 'facets');
     this.addFacetColumnStyling(divSlot);
 
-    const facets = this.bindings.store.getFacetElements() as BaseFacetElement[];
+    const facets = (
+      this.bindings.store.getFacetElements() as BaseFacetElement[]
+    ).sort(sortByDocumentPosition);
     const clonedFacets = this.cloneFacets(facets);
 
     collapseFacetsAfter(clonedFacets, this.collapseFacetsAfter);
