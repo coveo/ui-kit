@@ -1,4 +1,4 @@
-import type {A11yCriterionReport, CriterionLevel} from '../shared/types.js';
+import type {A11yCriterionReport} from '../shared/types.js';
 
 export type ChapterId =
   | 'success_criteria_level_a'
@@ -47,10 +47,6 @@ export interface OpenAcrCriterionComponent {
 
 export interface OpenAcrCriterion {
   num: string;
-  handle: string;
-  level: CriterionLevel;
-  conformance: OpenAcrConformance;
-  remarks: string;
   components: OpenAcrCriterionComponent[];
 }
 

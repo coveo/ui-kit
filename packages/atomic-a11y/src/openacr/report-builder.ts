@@ -11,6 +11,7 @@ import type {
   ChapterId,
   CriterionAggregate,
   ManualAuditAggregate,
+  OpenAcrConformance,
   OpenAcrCriterion,
   OpenAcrCriterionComponent,
   OpenAcrReport,
@@ -57,7 +58,7 @@ function buildCriterionAggregates(
 }
 
 function buildCriterionComponents(
-  conformance: OpenAcrCriterion['conformance'],
+  conformance: OpenAcrConformance,
   remarks: string
 ): OpenAcrCriterionComponent[] {
   return [
@@ -134,10 +135,6 @@ function buildOpenAcrCriteria(
 
     criteriaByChapter[definition.chapterId].push({
       num: definition.id,
-      handle: definition.handle,
-      level: definition.level,
-      conformance,
-      remarks,
       components: buildCriterionComponents(conformance, remarks),
     });
   }
