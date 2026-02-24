@@ -100,7 +100,7 @@ async function main() {
     ``,
     `type ChapterId = 'success_criteria_level_a' | 'success_criteria_level_aa';`,
     ``,
-    `export interface WcagCriterionDefinition {`,
+    `interface WcagCriterionDefinition {`,
     `  id: string;`,
     `  handle: string;`,
     `  level: CriterionLevel;`,
