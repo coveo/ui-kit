@@ -11,7 +11,7 @@
   "scripts": {
     "generate:wcag": "node scripts/generate-wcag-criteria.mjs",
     "build": "pnpm generate:wcag && tsc -p tsconfig.json",
-    "a11y:merge-shards": "node scripts/merge-shards-cli.mjs"
+    "a11y:merge-shards": "pnpm build && node scripts/merge-shards-cli.mjs"
   },
   "devDependencies": {
     "axe-core": "4.10.3",
