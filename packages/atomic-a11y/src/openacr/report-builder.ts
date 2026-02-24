@@ -1,15 +1,21 @@
 import {wcagCriteriaDefinitions} from '../data/wcag-criteria.js';
-import type {A11yReport} from '../shared/types.js';
+import {DEFAULT_MANUAL_PLACEHOLDER_NOTE} from '../shared/constants.js';
+import {compareByNumericId} from '../shared/sorting.js';
+import type {
+  A11yComponentReport,
+  A11yCriterionReport,
+  A11yReport,
+} from '../shared/types.js';
 import {buildRemarks, resolveConformance} from './conformance.js';
 import type {
   A11yOverrideEntry,
   ChapterId,
+  CriterionAggregate,
   ManualAuditAggregate,
   OpenAcrCriterion,
   OpenAcrCriterionComponent,
   OpenAcrReport,
 } from './types.js';
-import {buildCriterionAggregates} from './types.js';
 
 const DEFAULT_REPORT_TITLE = 'Coveo Accessibility Conformance Report';
 const DEFAULT_REPORT_PRODUCT_NAME = 'Coveo Atomic';
@@ -17,11 +23,50 @@ const DEFAULT_REPORT_PRODUCT_VERSION = '3.x.x';
 const DEFAULT_REPORT_DATE = new Date().toISOString().slice(0, 10);
 const DEFAULT_REPORT_STANDARD = 'WCAG 2.2 AA';
 const DEFAULT_REPORT_STANDARD_REFERENCE = 'https://www.w3.org/TR/WCAG22/';
-const DEFAULT_MANUAL_PLACEHOLDER_NOTE =
-  'Manual audit pending. Phase 3 results will be merged into this report.';
 
-function sortStrings(first: string, second: string): number {
-  return first.localeCompare(second, 'en-US', {numeric: true});
+function buildCriterionAggregates(
+  components: A11yComponentReport[],
+  criteria: A11yCriterionReport[]
+): Map<string, CriterionAggregate> {
+  const aggregates = new Map<string, CriterionAggregate>();
+  const componentByName = new Map<string, A11yComponentReport>();
+
+  for (const component of components) {
+    componentByName.set(component.name, component);
+
+    for (const criterionId of component.automated.criteriaCovered) {
+      const aggregate = aggregates.get(criterionId) ?? {
+        coveredComponents: new Set<string>(),
+        violatingComponents: new Set<string>(),
+      };
+
+      aggregate.coveredComponents.add(component.name);
+      if (component.automated.violations > 0) {
+        aggregate.violatingComponents.add(component.name);
+      }
+
+      aggregates.set(criterionId, aggregate);
+    }
+  }
+
+  for (const criterion of criteria) {
+    const aggregate = aggregates.get(criterion.id) ?? {
+      coveredComponents: new Set<string>(),
+      violatingComponents: new Set<string>(),
+    };
+
+    for (const componentName of criterion.affectedComponents) {
+      aggregate.coveredComponents.add(componentName);
+      const matchedComponent = componentByName.get(componentName);
+      if (matchedComponent && matchedComponent.automated.violations > 0) {
+        aggregate.violatingComponents.add(componentName);
+      }
+    }
+
+    aggregates.set(criterion.id, aggregate);
+  }
+
+  return aggregates;
 }
 
 function buildCriterionComponents(
@@ -78,11 +123,11 @@ function buildOpenAcrCriteria(
     const criterionFromReport = criteriaById.get(definition.id);
     const override = overrides.get(definition.id);
     const coveredComponents = [...(aggregate?.coveredComponents ?? [])].sort(
-      sortStrings
+      compareByNumericId
     );
     const violatingComponents = [
       ...(aggregate?.violatingComponents ?? []),
-    ].sort(sortStrings);
+    ].sort(compareByNumericId);
 
     const manualAggregatesForCriterion = Array.from(manualAggregates.entries())
       .filter(([key]) => key.endsWith(`:${definition.id}`))

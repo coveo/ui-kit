@@ -1,22 +1,19 @@
 import {mkdir, readFile, writeFile} from 'node:fs/promises';
 import path from 'node:path';
-import {buildRemarks, resolveConformance} from '../openacr/conformance.js';
-import {
-  isValidManualBaselineEntry,
-  loadManualAuditData,
-  parseManualBaseline,
-  resolveManualConformance,
-} from '../openacr/manual-audit.js';
-import {loadOverrides} from '../openacr/overrides.js';
-import {buildOpenAcrReport} from '../openacr/report-builder.js';
-import type {OpenAcrReport} from '../openacr/types.js';
-import {toYAML} from '../openacr/yaml-serializer.js';
+import yaml from 'js-yaml';
 import {
   DEFAULT_A11Y_REPORT_FILENAME,
   DEFAULT_A11Y_REPORT_OUTPUT_DIR,
 } from '../shared/constants.js';
 import {isA11yReport, isRecord} from '../shared/guards.js';
 import type {A11yReport} from '../shared/types.js';
+import {createLogger} from './logger.js';
+import {loadManualAuditData} from './manual-audit.js';
+import {loadOverrides} from './overrides.js';
+import {buildOpenAcrReport} from './report-builder.js';
+import type {OpenAcrReport} from './types.js';
+
+const logger = createLogger('json-to-openacr');
 
 // TODO: revisit these constants
 const DEFAULT_OPENACR_OUTPUT_FILENAME = 'openacr.yaml';
@@ -32,8 +29,8 @@ async function readInputReport(
     const parsed = JSON.parse(fileContents) as unknown;
 
     if (!isA11yReport(parsed)) {
-      console.warn(
-        `[json-to-openacr] Invalid JSON structure in ${inputFilePath}. Falling back to placeholders.`
+      logger.warn(
+        `Invalid JSON structure in ${inputFilePath}. Falling back to placeholders.`
       );
       return null;
     }
@@ -46,14 +43,14 @@ async function readInputReport(
         : undefined;
 
     if (errorCode === 'ENOENT') {
-      console.warn(
-        `[json-to-openacr] Input report not found at ${inputFilePath}. Writing placeholder OpenACR output.`
+      logger.warn(
+        `Input report not found at ${inputFilePath}. Writing placeholder OpenACR output.`
       );
       return null;
     }
 
-    console.warn(
-      `[json-to-openacr] Unable to read input report ${inputFilePath}. Falling back to placeholders.`,
+    logger.warn(
+      `Unable to read input report ${inputFilePath}. Falling back to placeholders.`,
       error
     );
 
@@ -88,38 +85,18 @@ export async function transformJsonToOpenAcr(
   const overrides = await loadOverrides(overridesFile);
 
   if (overrides.size > 0) {
-    console.log(
-      `[json-to-openacr] Loaded ${overrides.size} conformance override(s) from ${overridesFile}.`
+    logger.log(
+      `Loaded ${overrides.size} conformance override(s) from ${overridesFile}.`
     );
   }
 
   const manualAggregates = await loadManualAuditData(DEFAULT_MANUAL_AUDIT_DIR);
 
   const openAcrReport = buildOpenAcrReport(report, overrides, manualAggregates);
-  const serialized = toYAML(openAcrReport);
+  const serialized = yaml.dump(openAcrReport);
 
   await mkdir(path.dirname(outputFile), {recursive: true});
   await writeFile(outputFile, serialized, 'utf8');
 
   return openAcrReport;
 }
-
-export {
-  buildRemarks,
-  resolveConformance,
-} from '../openacr/conformance.js';
-export {
-  isValidManualBaselineEntry,
-  loadManualAuditData as readManualAuditBaselines,
-  parseManualBaseline,
-  resolveManualConformance,
-} from '../openacr/manual-audit.js';
-
-export const jsonToOpenAcrTestUtils = {
-  buildRemarks,
-  isValidManualBaselineEntry,
-  parseManualBaseline,
-  readManualAuditBaselines: loadManualAuditData,
-  resolveConformance,
-  resolveManualConformance,
-};

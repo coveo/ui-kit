@@ -1,3 +1,4 @@
+import {DEFAULT_MANUAL_PLACEHOLDER_NOTE} from '../shared/constants.js';
 import type {A11yCriterionReport} from '../shared/types.js';
 import {resolveManualConformance} from './manual-audit.js';
 import type {
@@ -7,9 +8,6 @@ import type {
   OpenAcrConformance,
 } from './types.js';
 import {reportConformanceToOpenAcr} from './types.js';
-
-const DEFAULT_MANUAL_PLACEHOLDER_NOTE =
-  'Manual audit pending. Phase 3 results will be merged into this report.';
 
 export function mapCriterionConformance(
   criterion: A11yCriterionReport | undefined

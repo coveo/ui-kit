@@ -2,12 +2,15 @@ import {readdir, readFile} from 'node:fs/promises';
 import path from 'node:path';
 import {BASELINE_FILE_PATTERN} from '../shared/constants.js';
 import {isRecord} from '../shared/guards.js';
+import {createLogger} from './logger.js';
 import type {
   ManualAuditAggregate,
   ManualAuditBaselineEntry,
   OpenAcrConformance,
 } from './types.js';
 import {manualStatusToConformance} from './types.js';
+
+const logger = createLogger('json-to-openacr');
 
 const CRITERION_KEY_REGEX = /^(\d+(?:\.\d+)+)-/;
 
@@ -34,25 +37,20 @@ export function parseManualBaseline(
   try {
     parsed = JSON.parse(content);
   } catch {
-    console.warn(
-      `[json-to-openacr] Unable to parse manual baseline file ${filePath} as JSON.`
-    );
+    logger.warn(`Unable to parse manual baseline file ${filePath} as JSON.`);
     return aggregates;
   }
 
   if (!Array.isArray(parsed)) {
-    console.warn(
-      `[json-to-openacr] Manual baseline file ${filePath} does not contain a valid array of entries.`
+    logger.warn(
+      `Manual baseline file ${filePath} does not contain a valid array of entries.`
     );
     return aggregates;
   }
 
   for (const entry of parsed) {
     if (!isValidManualBaselineEntry(entry)) {
-      console.warn(
-        `[json-to-openacr] Skipping invalid manual baseline entry:`,
-        entry
-      );
+      logger.warn(`Skipping invalid manual baseline entry:`, entry);
       continue;
     }
 
@@ -76,8 +74,8 @@ export function parseManualBaseline(
       const conformance = manualStatusToConformance[statusValue];
 
       if (!conformance) {
-        console.warn(
-          `[json-to-openacr] Unknown manual status "${statusValue}" for criterion ${criterionId} in component ${entry.name}.`
+        logger.warn(
+          `Unknown manual status "${statusValue}" for criterion ${criterionId} in component ${entry.name}.`
         );
         continue;
       }
@@ -123,10 +121,7 @@ export async function loadManualAuditData(
           loadedCount += entries.length;
         }
       } catch (error) {
-        console.warn(
-          `[json-to-openacr] Unable to read manual baseline file ${filePath}.`,
-          error
-        );
+        logger.warn(`Unable to read manual baseline file ${filePath}.`, error);
       }
     }
   } catch (error) {
@@ -139,10 +134,7 @@ export async function loadManualAuditData(
       return new Map();
     }
 
-    console.warn(
-      `[json-to-openacr] Unable to read manual audit directory ${dirPath}.`,
-      error
-    );
+    logger.warn(`Unable to read manual audit directory ${dirPath}.`, error);
     return new Map();
   }
 
@@ -152,8 +144,8 @@ export async function loadManualAuditData(
       const [, criterionId] = key.split(':');
       criteriaSet.add(criterionId);
     }
-    console.log(
-      `[json-to-openacr] Loaded ${loadedCount} manual audit entries across ${criteriaSet.size} criteria from ${fileCount} baseline file(s).`
+    logger.log(
+      `Loaded ${loadedCount} manual audit entries across ${criteriaSet.size} criteria from ${fileCount} baseline file(s).`
     );
   }
 

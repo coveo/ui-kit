@@ -2,11 +2,15 @@ import {mkdir, mkdtemp, readFile, rm, writeFile} from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import {describe, expect, it} from 'vitest';
+import {buildRemarks, resolveConformance} from '../openacr/conformance.js';
+import {transformJsonToOpenAcr} from '../openacr/json-to-openacr.js';
 import {
-  jsonToOpenAcrTestUtils,
-  transformJsonToOpenAcr,
-} from '../reporter/json-to-openacr.js';
-import type {A11yReport} from '../reporter/vitest-a11y-reporter.js';
+  isValidManualBaselineEntry,
+  loadManualAuditData,
+  parseManualBaseline,
+  resolveManualConformance,
+} from '../openacr/manual-audit.js';
+import type {A11yReport} from '../shared/types.js';
 
 async function createTempDirectory(prefix: string): Promise<string> {
   return mkdtemp(path.join(os.tmpdir(), `atomic-a11y-${prefix}-`));
@@ -94,16 +98,18 @@ describe('json-to-openacr conversion', () => {
         overridesFile: overridesPath,
       });
 
-      const yaml = await readFile(outputPath, 'utf8');
+      const yamlContent = await readFile(outputPath, 'utf8');
 
       expect(result.summary.total_criteria).toBeGreaterThan(0);
       expect(result.summary.automated_covered_criteria).toBeGreaterThan(0);
       expect(
         result.chapters.success_criteria_level_a.criteria.length
       ).toBeGreaterThan(0);
-      expect(yaml).toContain('title: "Coveo Accessibility Conformance Report"');
-      expect(yaml).toContain('summary:');
-      expect(yaml).toContain('chapters:');
+      expect(yamlContent).toContain(
+        'title: Coveo Accessibility Conformance Report'
+      );
+      expect(yamlContent).toContain('summary:');
+      expect(yamlContent).toContain('chapters:');
     } finally {
       await rm(tempDir, {recursive: true, force: true});
     }
@@ -130,12 +136,8 @@ describe('json-to-openacr manual baseline pipeline', () => {
       },
     };
 
-    expect(jsonToOpenAcrTestUtils.isValidManualBaselineEntry(validEntry)).toBe(
-      true
-    );
-    expect(
-      jsonToOpenAcrTestUtils.isValidManualBaselineEntry(invalidEntry)
-    ).toBe(false);
+    expect(isValidManualBaselineEntry(validEntry)).toBe(true);
+    expect(isValidManualBaselineEntry(invalidEntry)).toBe(false);
   });
 
   it('parseManualBaseline() parses completed manual baseline entries', () => {
@@ -163,7 +165,7 @@ describe('json-to-openacr manual baseline pipeline', () => {
       },
     ]);
 
-    const parsed = jsonToOpenAcrTestUtils.parseManualBaseline(
+    const parsed = parseManualBaseline(
       content,
       '/tmp/manual-audit-search.json'
     );
@@ -178,7 +180,7 @@ describe('json-to-openacr manual baseline pipeline', () => {
     expect(parsed.has('atomic-result-list:1.1.1')).toBe(false);
   });
 
-  it('readManualAuditBaselines() reads and aggregates baseline files', async () => {
+  it('loadManualAuditData() reads and aggregates baseline files', async () => {
     const tempDir = await createTempDirectory('manual-baselines');
 
     try {
@@ -203,8 +205,7 @@ describe('json-to-openacr manual baseline pipeline', () => {
         JSON.stringify([])
       );
 
-      const aggregates =
-        await jsonToOpenAcrTestUtils.readManualAuditBaselines(tempDir);
+      const aggregates = await loadManualAuditData(tempDir);
 
       expect(aggregates.size).toBe(1);
       expect(aggregates.get('atomic-product:2.4.1')?.[0].conformance).toBe(
@@ -217,86 +218,86 @@ describe('json-to-openacr manual baseline pipeline', () => {
 
   it('resolveManualConformance() applies fail > partial > pass > not-applicable precedence', () => {
     expect(
-      jsonToOpenAcrTestUtils.resolveManualConformance([
+      resolveManualConformance([
         {componentName: 'a', criterionId: '1.1.1', conformance: 'supports'},
         {
           componentName: 'b',
           criterionId: '1.1.1',
           conformance: 'does-not-support',
         },
-      ] as never)
+      ])
     ).toBe('does-not-support');
 
     expect(
-      jsonToOpenAcrTestUtils.resolveManualConformance([
+      resolveManualConformance([
         {
           componentName: 'a',
           criterionId: '1.1.1',
           conformance: 'partially-supports',
         },
         {componentName: 'b', criterionId: '1.1.1', conformance: 'supports'},
-      ] as never)
+      ])
     ).toBe('partially-supports');
 
     expect(
-      jsonToOpenAcrTestUtils.resolveManualConformance([
+      resolveManualConformance([
         {
           componentName: 'a',
           criterionId: '1.1.1',
           conformance: 'not-applicable',
         },
-      ] as never)
+      ])
     ).toBe('not-applicable');
   });
 
   it('resolveConformance() applies override > manual > automated precedence', () => {
     expect(
-      jsonToOpenAcrTestUtils.resolveConformance(
+      resolveConformance(
         undefined,
         {
           coveredComponents: new Set(['atomic-search-box']),
           violatingComponents: new Set(['atomic-search-box']),
-        } as never,
+        },
         [
           {
             componentName: 'atomic-search-box',
             criterionId: '1.1.1',
             conformance: 'supports',
           },
-        ] as never,
+        ],
         {
           criterion: '1.1.1',
           conformance: 'not-applicable',
           reason: 'Overridden by policy',
-        } as never
+        }
       )
     ).toBe('not-applicable');
 
     expect(
-      jsonToOpenAcrTestUtils.resolveConformance(
+      resolveConformance(
         undefined,
         {
           coveredComponents: new Set(['atomic-search-box']),
           violatingComponents: new Set(['atomic-search-box']),
-        } as never,
+        },
         [
           {
             componentName: 'atomic-search-box',
             criterionId: '1.1.1',
             conformance: 'supports',
           },
-        ] as never,
+        ],
         undefined
       )
     ).toBe('supports');
 
     expect(
-      jsonToOpenAcrTestUtils.resolveConformance(
+      resolveConformance(
         undefined,
         {
           coveredComponents: new Set(['atomic-search-box']),
           violatingComponents: new Set(['atomic-search-box']),
-        } as never,
+        },
         undefined,
         undefined
       )
@@ -304,7 +305,7 @@ describe('json-to-openacr manual baseline pipeline', () => {
   });
 
   it('buildRemarks() generates manual audit summaries when manual aggregates exist', () => {
-    const remarks = jsonToOpenAcrTestUtils.buildRemarks(
+    const remarks = buildRemarks(
       '1.1.1',
       'partially-supports',
       ['atomic-search-box', 'atomic-result-list'],
@@ -320,7 +321,7 @@ describe('json-to-openacr manual baseline pipeline', () => {
           criterionId: '1.1.1',
           conformance: 'does-not-support',
         },
-      ] as never,
+      ],
       undefined
     );
 
