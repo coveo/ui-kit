@@ -1,23 +1,22 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
-import {change} from '../history/history-actions.js';
-import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions.js';
-import {executeSearch} from '../search/search-actions.js';
-import {
-  restoreSearchParameters,
-  type SearchParameters,
-} from '../search-parameters/search-parameter-actions.js';
-import {
-  type RegisterQuerySetQueryActionCreatorPayload,
-  registerQuerySetQuery,
-  updateQuerySetQuery,
-} from './query-set-actions.js';
 import {
   getQuerySetInitialState,
   type QuerySetState,
-} from './query-set-state.js';
+} from '../../query-set/query-set-state.js';
+import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions.js';
+import {executeSearch} from '../search/search-actions.js';
+import {
+  type CommerceSearchParameters,
+  restoreSearchParameters,
+} from '../search-parameters/search-parameters-actions.js';
+import {
+  type RegisterQuerySetQueryPayload,
+  registerQuerySetQuery,
+  updateQuerySetQuery,
+} from './query-set-actions.js';
 
-export const querySetReducer = createReducer(
+export const commerceQuerySetReducer = createReducer(
   getQuerySetInitialState(),
   (builder) => {
     builder
@@ -36,23 +35,14 @@ export const querySetReducer = createReducer(
         const {queryExecuted} = action.payload;
         updateAllQuerySetQuery(state, queryExecuted);
       })
-      .addCase(restoreSearchParameters, handleRestoreSearchParameters)
-      .addCase(change.fulfilled, (state, action) => {
-        if (!action.payload) {
-          return;
-        }
-
-        for (const [id, query] of Object.entries(action.payload.querySet)) {
-          updateQuery(state, id, query);
-        }
-      });
+      .addCase(restoreSearchParameters, handleRestoreSearchParameters);
   }
 );
 
 function handleRestoreSearchParameters(
   state: QuerySetState,
   action: {
-    payload: SearchParameters;
+    payload: CommerceSearchParameters;
   }
 ) {
   if (!isNullOrUndefined(action.payload.q)) {
@@ -74,7 +64,7 @@ const updateQuery = (state: QuerySetState, id: string, query: string) => {
 
 const registerQuery = (
   state: QuerySetState,
-  actionPayload: RegisterQuerySetQueryActionCreatorPayload
+  actionPayload: RegisterQuerySetQueryPayload
 ) => {
   const {id, query} = actionPayload;
   if (id in state) {
