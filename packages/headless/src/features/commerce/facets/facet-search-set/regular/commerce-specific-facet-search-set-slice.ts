@@ -2,9 +2,6 @@ import {createReducer} from '@reduxjs/toolkit';
 import type {SpecificFacetSearchResponse} from '../../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
 import {setView} from '../../../../commerce/context/context-actions.js';
 import {
-  handleCommerceFacetFieldSuggestionsFulfilled,
-  handleCommerceFacetSearchFulfilled,
-  handleCommerceFetchQuerySuggestionsFulfilledForRegularFacet,
   handleFacetSearchClear,
   handleFacetSearchPending,
   handleFacetSearchRegistration,
@@ -26,6 +23,11 @@ import {
   executeCommerceFieldSuggest,
   getFacetIdWithCommerceFieldSuggestionNamespace,
 } from '../commerce-facet-search-actions.js';
+import {
+  handleCommerceFacetFieldSuggestionsFulfilled,
+  handleCommerceFacetSearchFulfilled,
+  handleCommerceFetchQuerySuggestionsFulfilledForRegularFacet,
+} from '../commerce-facet-search-reducer-helpers.js';
 
 export const commerceSpecificFacetSearchSetReducer = createReducer(
   getFacetSearchSetInitialState(),

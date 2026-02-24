@@ -3,9 +3,6 @@ import type {CategoryFacetSearchResponse} from '../../../../../api/search/facet-
 import {registerCategoryFacetSearch} from '../../../../facets/facet-search-set/category/category-facet-search-actions.js';
 import {getCategoryFacetSearchSetInitialState} from '../../../../facets/facet-search-set/category/category-facet-search-set-state.js';
 import {
-  handleCommerceFacetFieldSuggestionsFulfilled,
-  handleCommerceFacetSearchFulfilled,
-  handleCommerceFetchQuerySuggestionsFulfilledForCategoryFacet,
   handleFacetSearchClear,
   handleFacetSearchPending,
   handleFacetSearchRegistration,
@@ -23,6 +20,11 @@ import {
   executeCommerceFieldSuggest,
   getFacetIdWithCommerceFieldSuggestionNamespace,
 } from '../commerce-facet-search-actions.js';
+import {
+  handleCommerceFacetFieldSuggestionsFulfilled,
+  handleCommerceFacetSearchFulfilled,
+  handleCommerceFetchQuerySuggestionsFulfilledForCategoryFacet,
+} from '../commerce-facet-search-reducer-helpers.js';
 
 export const commerceCategoryFacetSearchSetReducer = createReducer(
   getCategoryFacetSearchSetInitialState(),

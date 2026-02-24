@@ -20,6 +20,7 @@ import {
   executeCommerceFacetSearch,
   executeCommerceFieldSuggest,
 } from '../commerce-facet-search-actions.js';
+import * as CommerceFacetSearchReducerHelpers from '../commerce-facet-search-reducer-helpers.js';
 import {commerceCategoryFacetSearchSetReducer} from './commerce-category-facet-search-set-slice.js';
 
 describe('Commerce CategoryFacetSearchSet slice', () => {
@@ -109,7 +110,10 @@ describe('Commerce CategoryFacetSearchSet slice', () => {
   });
 
   it('#executeCommerceFacetSearch.fulfilled calls #handleCommerceFacetSearchFulfilled', () => {
-    vi.spyOn(FacetSearchReducerHelpers, 'handleCommerceFacetSearchFulfilled');
+    vi.spyOn(
+      CommerceFacetSearchReducerHelpers,
+      'handleCommerceFacetSearchFulfilled'
+    );
     const response = buildMockFacetSearchResponse();
     const action = executeCommerceFacetSearch.fulfilled(
       {facetId, response: {success: response}},
@@ -119,13 +123,13 @@ describe('Commerce CategoryFacetSearchSet slice', () => {
 
     facetSearchSetReducer(state, action);
     expect(
-      FacetSearchReducerHelpers.handleCommerceFacetSearchFulfilled
+      CommerceFacetSearchReducerHelpers.handleCommerceFacetSearchFulfilled
     ).toHaveBeenCalledTimes(1);
   });
 
   it('#executeCommerceFieldSuggest.fulfilled calls #handleCommerceFacetFieldSuggestionsFulfilled', () => {
     vi.spyOn(
-      FacetSearchReducerHelpers,
+      CommerceFacetSearchReducerHelpers,
       'handleCommerceFacetFieldSuggestionsFulfilled'
     );
     const response = buildMockFacetSearchResponse();
@@ -137,13 +141,13 @@ describe('Commerce CategoryFacetSearchSet slice', () => {
 
     facetSearchSetReducer(state, action);
     expect(
-      FacetSearchReducerHelpers.handleCommerceFacetFieldSuggestionsFulfilled
+      CommerceFacetSearchReducerHelpers.handleCommerceFacetFieldSuggestionsFulfilled
     ).toHaveBeenCalledTimes(1);
   });
 
   it('#fetchQuerySuggestions.fulfilled calls #handleCommerceFetchQuerySuggestionsFulfilledForCategoryFacet', () => {
     vi.spyOn(
-      FacetSearchReducerHelpers,
+      CommerceFacetSearchReducerHelpers,
       'handleCommerceFetchQuerySuggestionsFulfilledForCategoryFacet'
     );
     const action = fetchQuerySuggestions.fulfilled(
@@ -162,7 +166,7 @@ describe('Commerce CategoryFacetSearchSet slice', () => {
 
     facetSearchSetReducer(state, action);
     expect(
-      FacetSearchReducerHelpers.handleCommerceFetchQuerySuggestionsFulfilledForCategoryFacet
+      CommerceFacetSearchReducerHelpers.handleCommerceFetchQuerySuggestionsFulfilledForCategoryFacet
     ).toHaveBeenCalledTimes(1);
   });
 
