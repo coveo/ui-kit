@@ -42,13 +42,11 @@ describe('atomic-insight-generated-answer', () => {
     });
 
     mockedSearchStatus = buildFakeSearchStatus({
-      state: {
-        hasError: false,
-        firstSearchExecuted: true,
-        isLoading: false,
-        hasResults: true,
-        ...searchStatusState,
-      },
+      hasError: false,
+      firstSearchExecuted: true,
+      isLoading: false,
+      hasResults: true,
+      ...searchStatusState,
     });
 
     vi.mocked(buildGeneratedAnswer).mockReturnValue(mockedGeneratedAnswer);
@@ -124,7 +122,7 @@ describe('atomic-insight-generated-answer', () => {
       },
       get retryButton() {
         return element.shadowRoot!.querySelector(
-          '[part="retry-button"]'
+          '[part="retry-container"] button'
         ) as HTMLButtonElement;
       },
       get citationElements() {
