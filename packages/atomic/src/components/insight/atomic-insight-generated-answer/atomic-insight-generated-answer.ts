@@ -258,7 +258,7 @@ export class AtomicInsightGeneratedAnswer
   @errorGuard()
   render() {
     const contentClasses =
-      'mx-auto mt-0 mb-4 border border-neutral shadow-lg p-6 bg-background rounded-lg p-6 text-on-background';
+      'mx-auto mt-0 mb-4 border border-neutral shadow-lg bg-background rounded-lg text-on-background';
 
     if (this.hasNoAnswerGenerated) {
       if (
@@ -277,7 +277,7 @@ export class AtomicInsightGeneratedAnswer
           </div>
         `;
       }
-      return html`${nothing}`;
+      return nothing;
     }
 
     return html`

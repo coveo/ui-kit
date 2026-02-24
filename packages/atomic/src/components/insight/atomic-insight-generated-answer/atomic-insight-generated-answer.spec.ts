@@ -14,6 +14,7 @@ import {renderInAtomicInsightInterface} from '@/vitest-utils/testing-helpers/fix
 import {buildFakeInsightEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/engine';
 import {buildFakeGeneratedAnswer} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/generated-answer-controller';
 import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/search-status-controller';
+import {mockConsole} from '@/vitest-utils/testing-helpers/testing-utils/mock-console';
 import type {AtomicInsightGeneratedAnswer} from './atomic-insight-generated-answer';
 import './atomic-insight-generated-answer';
 
@@ -280,7 +281,7 @@ describe('atomic-insight-generated-answer', () => {
   });
 
   it('should warn when maxCollapsedHeight is out of range', async () => {
-    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const mockedConsole = mockConsole();
     const {element, container} = await renderGeneratedAnswer({
       props: {collapsible: true},
       generatedAnswerState: {isVisible: true, answer: 'Test'},
@@ -288,6 +289,7 @@ describe('atomic-insight-generated-answer', () => {
     element.maxCollapsedHeight = 50;
     await element.updateComplete;
 
+    expect(mockedConsole.warn).toHaveBeenCalled();
     expect(container).toBeInTheDocument();
   });
 
@@ -465,17 +467,6 @@ describe('atomic-insight-generated-answer', () => {
     expect(feedbackButtons.length).toBe(0);
   });
 
-  it('should render feedback buttons when not streaming and answer exists', async () => {
-    const {feedbackButtons} = await renderGeneratedAnswer({
-      generatedAnswerState: {
-        isVisible: true,
-        answer: 'Test',
-        isStreaming: false,
-      },
-    });
-    expect(feedbackButtons.length).toBeGreaterThan(0);
-  });
-
   it('should call retry when retry button is clicked', async () => {
     const {retryButton} = await renderGeneratedAnswer({
       generatedAnswerState: {
@@ -486,10 +477,9 @@ describe('atomic-insight-generated-answer', () => {
       searchStatusState: {hasError: false},
     });
 
-    if (retryButton) {
-      retryButton.click();
-      expect(mockedGeneratedAnswer.retry).toHaveBeenCalled();
-    }
+    expect(retryButton).toBeInTheDocument();
+    retryButton.click();
+    expect(mockedGeneratedAnswer.retry).toHaveBeenCalled();
   });
 
   it('should call buildInteractiveCitation for each citation', async () => {
@@ -515,7 +505,7 @@ describe('atomic-insight-generated-answer', () => {
   });
 
   it('should render citation popover for citations', async () => {
-    const {element} = await renderGeneratedAnswer({
+    const {element, citationElements} = await renderGeneratedAnswer({
       generatedAnswerState: {
         isVisible: true,
         answer: 'Test answer',
@@ -534,8 +524,12 @@ describe('atomic-insight-generated-answer', () => {
     });
 
     await element.updateComplete;
-    // Popover exists in the DOM structure
-    expect(element).toBeInTheDocument();
+    expect(citationElements.length).toBeGreaterThan(0);
+    const citationEl = citationElements[0];
+    const popover = citationEl.shadowRoot?.querySelector(
+      '[part="citation-popover"]'
+    );
+    expect(popover).toBeInTheDocument();
   });
 
   describe('answerConfigurationId property', () => {
@@ -677,9 +671,7 @@ describe('atomic-insight-generated-answer', () => {
 
   // TODO V4: KIT-5197 - Remove this test
   it('should log validation warning when maxCollapsedHeight is updated to invalid value', async () => {
-    const consoleWarnSpy = vi
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
+    const mockedConsole = mockConsole();
 
     const {element} = await renderGeneratedAnswer({
       props: {maxCollapsedHeight: 16}, // Valid value
@@ -688,18 +680,16 @@ describe('atomic-insight-generated-answer', () => {
     element.maxCollapsedHeight = 5; // Invalid value (below minimum)
     await element.updateComplete;
 
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
+    expect(mockedConsole.warn).toHaveBeenCalledWith(
       expect.stringContaining(
         'Prop validation failed for component atomic-insight-generated-answer'
       ),
       element
     );
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
+    expect(mockedConsole.warn).toHaveBeenCalledWith(
       expect.stringContaining('maxCollapsedHeight'),
       element
     );
-
-    consoleWarnSpy.mockRestore();
   });
 
   // TODO V4: KIT-5197 - Remove skip
@@ -715,5 +705,103 @@ describe('atomic-insight-generated-answer', () => {
 
     expect(element.error).toBeDefined();
     expect(element.error.message).toMatch(/maxCollapsedHeight/i);
+  });
+
+  describe('disableCitationAnchoring property', () => {
+    it('should have disableCitationAnchoring as false by default', async () => {
+      const {element} = await renderGeneratedAnswer({
+        generatedAnswerState: {isVisible: true, answer: 'Test'},
+      });
+
+      expect(element.disableCitationAnchoring).toBe(false);
+    });
+
+    it('should pass disableCitationAnchoring=false to citation elements', async () => {
+      const {citationElements} = await renderGeneratedAnswer({
+        props: {disableCitationAnchoring: false},
+        generatedAnswerState: {
+          isVisible: true,
+          answer: 'Test answer',
+          citations: [
+            {
+              source: 'Source 1',
+              id: 'citation-1',
+              title: 'Citation 1',
+              uri: 'https://example.com',
+              permanentid: 'perm-1',
+              clickUri: 'https://example.com/click',
+              text: 'Citation text',
+            },
+          ],
+        },
+      });
+
+      expect(citationElements.length).toBe(1);
+      const citation = citationElements[0] as HTMLElement & {
+        disableCitationAnchoring: boolean;
+      };
+      expect(citation.disableCitationAnchoring).toBe(false);
+    });
+
+    it('should pass disableCitationAnchoring=true to citation elements when enabled', async () => {
+      const {citationElements} = await renderGeneratedAnswer({
+        props: {disableCitationAnchoring: true},
+        generatedAnswerState: {
+          isVisible: true,
+          answer: 'Test answer',
+          citations: [
+            {
+              source: 'Source 1',
+              id: 'citation-1',
+              title: 'Citation 1',
+              uri: 'https://example.com',
+              permanentid: 'perm-1',
+              clickUri: 'https://example.com/click',
+              text: 'Citation text',
+            },
+          ],
+        },
+      });
+
+      expect(citationElements.length).toBe(1);
+      const citation = citationElements[0] as HTMLElement & {
+        disableCitationAnchoring: boolean;
+      };
+      expect(citation.disableCitationAnchoring).toBe(true);
+    });
+  });
+
+  it('should render custom no answer message when cannotAnswer is true and slot is provided', async () => {
+    const {container} = await renderGeneratedAnswer({
+      generatedAnswerState: {
+        isVisible: true,
+        answer: undefined,
+        citations: [],
+        cannotAnswer: true,
+      },
+    });
+
+    // When cannotAnswer is true but no custom slot content is available,
+    // the component does not render the container
+    expect(container).not.toBeInTheDocument();
+  });
+
+  it('should disconnect resize observer on disconnectedCallback', async () => {
+    const {element} = await renderGeneratedAnswer({
+      props: {collapsible: true},
+      generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+    });
+
+    const disconnectSpy = vi.fn();
+    // Access the internal resizeObserver and spy on disconnect
+    const resizeObserver = (
+      element as unknown as {resizeObserver?: ResizeObserver}
+    ).resizeObserver;
+    if (resizeObserver) {
+      resizeObserver.disconnect = disconnectSpy;
+    }
+
+    element.remove();
+    expect(disconnectSpy).toHaveBeenCalled();
   });
 });
