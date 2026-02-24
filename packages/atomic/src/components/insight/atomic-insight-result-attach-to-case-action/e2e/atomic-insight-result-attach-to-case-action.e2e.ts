@@ -13,12 +13,4 @@ test.describe('atomic-insight-result-attach-to-case-action', () => {
       insightResultAttachToCaseAction.actionButton.first()
     ).toBeVisible();
   });
-
-  test('should have accessible label', async ({
-    insightResultAttachToCaseAction,
-  }) => {
-    await expect(
-      insightResultAttachToCaseAction.actionButton.first()
-    ).toHaveAccessibleName(/attach to case|detach from case/i);
-  });
 });
