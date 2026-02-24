@@ -9,7 +9,7 @@ import type {CriterionLevel, WCAGVersion} from '../shared/types.js';
 
 type ChapterId = 'success_criteria_level_a' | 'success_criteria_level_aa';
 
-interface WcagCriterionDefinition {
+export interface WcagCriterionDefinition {
   id: string;
   handle: string;
   level: CriterionLevel;
