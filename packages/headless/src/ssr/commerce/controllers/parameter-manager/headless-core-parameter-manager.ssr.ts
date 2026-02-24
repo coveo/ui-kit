@@ -14,9 +14,9 @@ import type {Parameters} from '../../../../features/commerce/parameters/paramete
 import {parametersReducer as commerceParameters} from '../../../../features/commerce/parameters/parameters-slice.js';
 import type {ProductListingParameters} from '../../../../features/commerce/product-listing-parameters/product-listing-parameters-actions.js';
 import {queryReducer as query} from '../../../../features/commerce/query/query-slice.js';
+import {commerceQuerySetReducer as querySet} from '../../../../features/commerce/query-set/commerce-query-set-slice.js';
 import type {CommerceSearchParameters} from '../../../../features/commerce/search-parameters/search-parameters-actions.js';
 import {sortReducer as commerceSort} from '../../../../features/commerce/sort/sort-slice.js';
-import {querySetReducer as querySet} from '../../../../features/query-set/query-set-slice.js';
 import {ensureAtLeastOneSolutionType} from '../../../../ssr/commerce/controller-utils.js';
 import {loadReducerError} from '../../../../utils/errors.js';
 import {SolutionType} from '../../types/controller-constants.js';
