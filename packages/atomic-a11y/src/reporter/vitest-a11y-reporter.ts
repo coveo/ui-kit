@@ -44,7 +44,7 @@ const REPORTER_NAME = 'VitestA11yReporter';
  */
 export interface A11yReporterOptions {
   /** Directory where JSON reports are written.
-   * @default 'a11y/reports' */
+   * @default 'reports' */
   outputDir?: string;
 
   /** Report filename.
