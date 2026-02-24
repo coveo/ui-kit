@@ -6,12 +6,10 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
-import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 import { DateFilterRange, DateRangeRequest, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 import { RangeFacetSortCriterion as InsightRangeFacetSortCriterion } from "@coveo/headless/insight";
 import { AnyBindings } from "./components/common/interface/bindings";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
-export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 export { DateFilterRange, DateRangeRequest, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 export { RangeFacetSortCriterion as InsightRangeFacetSortCriterion } from "@coveo/headless/insight";
 export { AnyBindings } from "./components/common/interface/bindings";
@@ -33,8 +31,6 @@ export namespace Components {
           * The text tooltip to show on the result action icon for some time after clicking the button.
          */
         "tooltipOnClick": string;
-    }
-    interface AtomicInsightResultAttachToCaseAction {
     }
     interface AtomicInsightResultChildrenTemplate {
         /**
@@ -128,10 +124,6 @@ export interface AtomicInsightResultActionCustomEvent<T> extends CustomEvent<T> 
     detail: T;
     target: HTMLAtomicInsightResultActionElement;
 }
-export interface AtomicInsightResultAttachToCaseActionCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicInsightResultAttachToCaseActionElement;
-}
 export interface AtomicStencilFacetDateInputCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicStencilFacetDateInputElement;
@@ -153,24 +145,6 @@ declare global {
     var HTMLAtomicInsightResultActionElement: {
         prototype: HTMLAtomicInsightResultActionElement;
         new (): HTMLAtomicInsightResultActionElement;
-    };
-    interface HTMLAtomicInsightResultAttachToCaseActionElementEventMap {
-        "atomic/insight/attachToCase/attach": InsightResultAttachToCaseEvent;
-        "atomic/insight/attachToCase/detach": InsightResultAttachToCaseEvent;
-    }
-    interface HTMLAtomicInsightResultAttachToCaseActionElement extends Components.AtomicInsightResultAttachToCaseAction, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicInsightResultAttachToCaseActionElementEventMap>(type: K, listener: (this: HTMLAtomicInsightResultAttachToCaseActionElement, ev: AtomicInsightResultAttachToCaseActionCustomEvent<HTMLAtomicInsightResultAttachToCaseActionElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicInsightResultAttachToCaseActionElementEventMap>(type: K, listener: (this: HTMLAtomicInsightResultAttachToCaseActionElement, ev: AtomicInsightResultAttachToCaseActionCustomEvent<HTMLAtomicInsightResultAttachToCaseActionElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicInsightResultAttachToCaseActionElement: {
-        prototype: HTMLAtomicInsightResultAttachToCaseActionElement;
-        new (): HTMLAtomicInsightResultAttachToCaseActionElement;
     };
     interface HTMLAtomicInsightResultChildrenTemplateElement extends Components.AtomicInsightResultChildrenTemplate, HTMLStencilElement {
     }
@@ -207,7 +181,6 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "atomic-insight-result-action": HTMLAtomicInsightResultActionElement;
-        "atomic-insight-result-attach-to-case-action": HTMLAtomicInsightResultAttachToCaseActionElement;
         "atomic-insight-result-children-template": HTMLAtomicInsightResultChildrenTemplateElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
@@ -236,14 +209,6 @@ declare namespace LocalJSX {
           * The text tooltip to show on the result action icon for some time after clicking the button.
          */
         "tooltipOnClick"?: string;
-    }
-    interface AtomicInsightResultAttachToCaseAction {
-        /**
-          * @migration Stencil's
-          * @Event () decorator defaults to: bubbles=true, composed=true, cancelable=true. Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false. When migrating to Lit, explicitly set all three options to preserve behavior: `new CustomEvent('atomic/insight/attachToCase/attach', { bubbles: true, composed: true, cancelable: true, detail: ... })` `new CustomEvent('atomic/insight/attachToCase/detach', { bubbles: true, composed: true, cancelable: true, detail: ... })`
-         */
-        "onAtomic/insight/attachToCase/attach"?: (event: AtomicInsightResultAttachToCaseActionCustomEvent<InsightResultAttachToCaseEvent>) => void;
-        "onAtomic/insight/attachToCase/detach"?: (event: AtomicInsightResultAttachToCaseActionCustomEvent<InsightResultAttachToCaseEvent>) => void;
     }
     interface AtomicInsightResultChildrenTemplate {
         /**
@@ -335,7 +300,6 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "atomic-insight-result-action": AtomicInsightResultAction;
-        "atomic-insight-result-attach-to-case-action": AtomicInsightResultAttachToCaseAction;
         "atomic-insight-result-children-template": AtomicInsightResultChildrenTemplate;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
@@ -346,7 +310,6 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "atomic-insight-result-action": LocalJSX.AtomicInsightResultAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionElement>;
-            "atomic-insight-result-attach-to-case-action": LocalJSX.AtomicInsightResultAttachToCaseAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultAttachToCaseActionElement>;
             "atomic-insight-result-children-template": LocalJSX.AtomicInsightResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenTemplateElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
             /**
