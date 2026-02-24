@@ -14,6 +14,8 @@ import {cartReducer} from '../../features/commerce/context/cart/cart-slice.js';
 import {setContext} from '../../features/commerce/context/context-actions.js';
 import {contextReducer} from '../../features/commerce/context/context-slice.js';
 import {didYouMeanReducer} from '../../features/commerce/did-you-mean/did-you-mean-slice.js';
+import {commerceCategoryFacetSearchSetReducer} from '../../features/commerce/facets/facet-search-set/category/commerce-category-facet-search-set-slice.js';
+import {commerceSpecificFacetSearchSetReducer} from '../../features/commerce/facets/facet-search-set/regular/commerce-specific-facet-search-set-slice.js';
 import {commerceFacetSetReducer} from '../../features/commerce/facets/facet-set/facet-set-slice.js';
 import {fieldSuggestionsOrderReducer} from '../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice.js';
 import {manualNumericFacetReducer} from '../../features/commerce/facets/numeric-facet/manual-numeric-facet-slice.js';
@@ -26,8 +28,6 @@ import {sortReducer} from '../../features/commerce/sort/sort-slice.js';
 import {commerceTriggersReducer} from '../../features/commerce/triggers/triggers-slice.js';
 import {versionReducer} from '../../features/debug/version-slice.js';
 import {facetOrderReducer} from '../../features/facets/facet-order/facet-order-slice.js';
-import {categoryFacetSearchSetReducer} from '../../features/facets/facet-search-set/category/category-facet-search-set-slice.js';
-import {specificFacetSearchSetReducer} from '../../features/facets/facet-search-set/specific/specific-facet-search-set-slice.js';
 import type {CommerceAppState} from '../../state/commerce-app-state.js';
 import type {CommerceThunkExtraArguments} from '../commerce-thunk-extra-arguments.js';
 import {
@@ -55,8 +55,8 @@ const commerceEngineReducers = {
   commerceSort: sortReducer,
   facetOrder: facetOrderReducer,
   fieldSuggestionsOrder: fieldSuggestionsOrderReducer,
-  facetSearchSet: specificFacetSearchSetReducer,
-  categoryFacetSearchSet: categoryFacetSearchSetReducer,
+  facetSearchSet: commerceSpecificFacetSearchSetReducer,
+  categoryFacetSearchSet: commerceCategoryFacetSearchSetReducer,
   commerceFacetSet: commerceFacetSetReducer,
   manualNumericFacetSet: manualNumericFacetReducer,
   commerceContext: contextReducer,
