@@ -14,7 +14,7 @@ const baseStyle = css`
     }
   }
 
-  @keyframes rolodex-roll-in {
+  @keyframes generation-steps-rolodex {
     0% {
       transform: translateY(105%) rotateX(-82deg);
     }
@@ -116,7 +116,7 @@ const baseStyle = css`
   [part='is-generating'] .generation-steps-value {
     @apply inline-block whitespace-nowrap;
     transform-origin: 50% 100%;
-    animation: rolodex-roll-in 1520ms cubic-bezier(0.16, 0.84, 0.24, 1) both;
+    animation: generation-steps-rolodex 1500ms cubic-bezier(0.16, 0.84, 0.24, 1) both;
     will-change: transform;
     backface-visibility: hidden;
   }
