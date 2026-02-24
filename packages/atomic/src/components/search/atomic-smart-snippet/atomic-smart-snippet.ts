@@ -31,6 +31,7 @@ import {shouldDisplayOnCurrentTab} from '@/src/utils/tab-utils';
 import {randomID} from '@/src/utils/utils';
 import styles from './atomic-smart-snippet.tw.css';
 import '@/src/components/common/atomic-smart-snippet-source/atomic-smart-snippet-source';
+import '@/src/components/search/atomic-smart-snippet-feedback-modal/atomic-smart-snippet-feedback-modal';
 import type {AtomicSmartSnippetFeedbackModal} from '@/src/components/search/atomic-smart-snippet-feedback-modal/atomic-smart-snippet-feedback-modal.js';
 
 /**

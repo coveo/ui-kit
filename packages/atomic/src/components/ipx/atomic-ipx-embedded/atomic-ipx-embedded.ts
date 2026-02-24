@@ -1,7 +1,11 @@
 import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import type {AnyBindings} from '@/src/components/common/interface/bindings.js';
+import {renderIpxBody} from '@/src/components/ipx/atomic-ipx-body/ipx-body.js';
+import {ipxBodyStyles} from '@/src/components/ipx/atomic-ipx-body/ipx-body-styles.js';
+import {bindingGuard} from '@/src/decorators/binding-guard.js';
 import {bindings} from '@/src/decorators/bindings.js';
+import {errorGuard} from '@/src/decorators/error-guard.js';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils.js';
@@ -15,6 +19,14 @@ import {once, randomID} from '@/src/utils/utils.js';
  * @slot footer - Content to display in the footer section.
  *
  * @part backdrop - The backdrop container element.
+ * @part container - The content container element.
+ * @part header-wrapper - The wrapper around the header section.
+ * @part header - The header content container.
+ * @part header-ruler - The horizontal rule separating header and body.
+ * @part body-wrapper - The wrapper around the body section (scrollable).
+ * @part body - The body content container.
+ * @part footer-wrapper - The wrapper around the footer section.
+ * @part footer - The footer content container.
  */
 @customElement('atomic-ipx-embedded')
 @bindings()
@@ -24,6 +36,7 @@ export class AtomicIpxEmbedded
   implements InitializableComponent<AnyBindings>
 {
   static styles: CSSResultGroup = [
+    ipxBodyStyles,
     css`
       :host {
         box-shadow: rgb(0 0 0 / 50%) 0 0 0.5rem;
@@ -73,16 +86,23 @@ export class AtomicIpxEmbedded
     }
   }
 
+  @bindingGuard()
+  @errorGuard()
   render() {
     this.updateBreakpoints();
 
     return html`
       <div part="backdrop">
-        <atomic-ipx-body .displayFooterSlot=${this.hasFooterSlotElements}>
-          <slot name="header" slot="header"></slot>
-          <slot name="body" slot="body"></slot>
-          <slot name="footer" slot="footer"></slot>
-        </atomic-ipx-body>
+        ${renderIpxBody({
+          props: {
+            i18n: this.bindings.i18n,
+            visibility: 'embedded',
+            displayFooterSlot: this.hasFooterSlotElements,
+            header: html`<slot name="header"></slot>`,
+            body: html`<slot name="body"></slot>`,
+            footer: html`<slot name="footer"></slot>`,
+          },
+        })}
       </div>
     `;
   }

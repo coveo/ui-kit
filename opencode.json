@@ -1,6 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "autoupdate": true,
+  "autoupdate": false,
   "share": "manual",
   "instructions": [
     ".github/instructions/general.instructions.md",
@@ -27,7 +27,20 @@
       "type": "local",
       "command": ["npx", "@playwright/mcp"],
       "enabled": true
+    },
+    "context7": {
+      "enabled": false
     }
+  },
+  "permission": {
+    "bash": {
+      "*": "ask",
+      "git diff *": "allow",
+      "git log *": "allow",
+      "git show *": "allow",
+      "git status *": "allow"
+    },
+    "webfetch": "ask"
   },
   "compaction": {
     "auto": true,

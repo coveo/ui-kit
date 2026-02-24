@@ -20,7 +20,7 @@ export function createRenewAccessTokenMiddleware(
   renewToken?: () => Promise<string>
 ): Middleware {
   let accessTokenRenewalsAttempts = 0;
-  let pendingTokenRenewal: Promise<string> | null = null;
+  let pendingTokenRenewal: Promise<string | null> | null = null;
   const resetRenewalTriesAfterDelay = debounce(() => {
     accessTokenRenewalsAttempts = 0;
   }, 500);
@@ -29,14 +29,18 @@ export function createRenewAccessTokenMiddleware(
     store: MiddlewareAPI,
     handleErrors = false
   ): Promise<string | null> => {
-    const isTokenRenewalPending = !pendingTokenRenewal;
+    const shouldInitiateRenewal = !pendingTokenRenewal;
 
-    if (isTokenRenewalPending && renewToken) {
+    if (shouldInitiateRenewal && renewToken) {
       pendingTokenRenewal = (async () => {
-        if (handleErrors) {
-          attempt(renewToken);
+        try {
+          return await renewToken();
+        } catch (error) {
+          if (!handleErrors) {
+            throw error;
+          }
+          return null;
         }
-        return await renewToken();
       })().finally(() => {
         pendingTokenRenewal = null;
       });
@@ -44,7 +48,7 @@ export function createRenewAccessTokenMiddleware(
 
     const accessToken = await pendingTokenRenewal;
 
-    if (isTokenRenewalPending && accessToken) {
+    if (shouldInitiateRenewal && accessToken) {
       store.dispatch(updateBasicConfiguration({accessToken}));
     }
 
@@ -168,14 +172,6 @@ function dispatchError(
       type: error.name,
     })
   );
-}
-
-async function attempt(fn: () => Promise<string>) {
-  try {
-    return await fn();
-  } catch (_) {
-    return '';
-  }
 }
 
 type EngineStateWithAccessToken =

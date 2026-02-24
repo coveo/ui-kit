@@ -68,7 +68,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "3.42.1",
+  "version": "3.45.0",
   "files": [
     "dist/"
   ],
@@ -110,7 +110,7 @@
   },
   "dependencies": {
     "@coveo/bueno": "workspace:*",
-    "@coveo/relay": "1.2.7",
+    "@coveo/relay": "1.2.15",
     "@coveo/relay-event-types": "catalog:",
     "@reduxjs/toolkit": "2.6.0",
     "abortcontroller-polyfill": "1.7.8",

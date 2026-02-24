@@ -13,10 +13,13 @@ import {
 } from '@coveo/headless';
 import {html, LitElement, nothing, type PropertyValueMap} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {when} from 'lit/directives/when.js';
 import {GeneratedAnswerController} from '@/src/components/common/generated-answer/generated-answer-controller';
 import {renderAnswerContent} from '@/src/components/common/generated-answer/render-answer-content';
+import {renderCardHeader} from '@/src/components/common/generated-answer/render-card-header';
 import {renderCitations} from '@/src/components/common/generated-answer/render-citations';
 import {renderCustomNoAnswerMessage} from '@/src/components/common/generated-answer/render-custom-no-answer-message';
+import {renderDisclaimer} from '@/src/components/common/generated-answer/render-disclaimer';
 import {renderFeedbackAndCopyButtons} from '@/src/components/common/generated-answer/render-feedback-and-copy-buttons';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
@@ -42,11 +45,15 @@ import atomicGeneratedAnswerStyles from './atomic-generated-answer.tw.css.js';
  * @slot no-answer-message - Lets you pass a custom sorry message when no answer is generated.
  *
  * @part container - The container displaying the generated answer.
- * @part header-label - The header of the generated answer container.
+ * @part header -   The header container of the generated answer card.
+ * @part header-icon - The icon in the header of the generated answer card.
+ * @part header-label - The header label of the generated answer card.
  * @part feedback-button - The "like" and "dislike" buttons.
  * @part feedback-and-copy-buttons - The container for the feedback and copy buttons.
  * @part toggle - The switch to toggle the visibility of the generated answer.
  * @part copy-button - The "Copy answer" button.
+ * @part generated-content-container - The container for the generated answer content.
+ * @part generated-content - The main content of the generated answer.
  * @part retry-container - The container for the "retry" section.
  * @part generated-text - The text of the generated answer.
  * @part citations-label - The header of the citations list.
@@ -134,6 +141,12 @@ export class AtomicGeneratedAnswer
    */
   @property({type: String, attribute: 'answer-configuration-id'})
   answerConfigurationId?: string;
+  /**
+   * @internal
+   * The unique identifier of the agent to use to generate answers.
+   */
+  @property({type: String, attribute: 'agent-id'})
+  agentId?: string;
 
   /**
    * A list of fields to include with the citations used to generate the answer.
@@ -260,6 +273,9 @@ export class AtomicGeneratedAnswer
       ...(this.answerConfigurationId && {
         answerConfigurationId: this.answerConfigurationId,
       }),
+      ...(this.agentId && {
+        agentId: this.agentId,
+      }),
       fieldsToIncludeInCitations: this.getCitationFields(),
     });
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -350,7 +366,14 @@ export class AtomicGeneratedAnswer
               part="container"
               aria-label=${this.bindings.i18n.t('generated-answer-title')}
             >
-              <article>${this.renderCustomNoAnswerMessageWrapper()}</article>
+              <div part="generated-content">
+                ${this.renderCardHeaderWrapper()}
+                ${when(
+                  this.isAnswerVisible,
+                  () =>
+                    html`<article>${renderCustomNoAnswerMessage()}</article>`
+                )}
+              </div>
             </aside>
           </div>
         `;
@@ -365,7 +388,22 @@ export class AtomicGeneratedAnswer
           part="container"
           aria-label=${this.bindings.i18n.t('generated-answer-title')}
         >
-          <article>${this.renderContent()}</article>
+          <div part="generated-content">
+            ${this.renderCardHeaderWrapper()}
+            ${when(
+              this.isAnswerVisible,
+              () =>
+                html` <div part="generated-content-container" class="px-6 pb-6">
+                  <article>${this.renderAnswerContent()}</article>
+                  ${renderDisclaimer({
+                    props: {
+                      i18n: this.bindings.i18n,
+                      isStreaming: !!this.generatedAnswerState.isStreaming,
+                    },
+                  })}
+                </div>`
+            )}
+          </div>
         </aside>
       </div>
     `;
@@ -385,10 +423,6 @@ export class AtomicGeneratedAnswer
 
     this.ariaMessage.message = this.controller.getGeneratedAnswerStatus();
   };
-
-  private get hasRetryableError() {
-    return this.controller.hasRetryableError;
-  }
 
   private get hasNoAnswerGenerated() {
     return this.controller.hasNoAnswerGenerated;
@@ -562,7 +596,13 @@ export class AtomicGeneratedAnswer
     return renderFeedbackAndCopyButtons({
       props: {
         i18n: this.bindings.i18n,
-        generatedAnswerState: this.generatedAnswerState,
+        generatedAnswerActionsState: {
+          liked: this.generatedAnswerState.liked,
+          disliked: this.generatedAnswerState.disliked,
+          isStreaming: this.generatedAnswerState.isStreaming,
+          isLoading: this.generatedAnswerState.isLoading,
+          answer: this.generatedAnswerState.answer,
+        },
         copied: this.copied,
         copyError: this.copyError,
         getCopyToClipboardTooltip: () => this.copyToClipboardTooltip,
@@ -573,33 +613,35 @@ export class AtomicGeneratedAnswer
     });
   }
 
-  private renderContent() {
+  private renderAnswerContent() {
+    const generatedAnswer = {
+      ...this.generatedAnswerState,
+      question: this.bindings.engine.state.query?.q ?? '',
+    };
     return renderAnswerContent({
       props: {
         i18n: this.bindings.i18n,
-        generatedAnswerState: this.generatedAnswerState,
-        isAnswerVisible: this.isAnswerVisible,
-        hasRetryableError: this.hasRetryableError,
-        toggleTooltip: this.toggleTooltip,
-        withToggle: this.withToggle,
+        generatedAnswer: generatedAnswer,
         collapsible: this.collapsible,
-        question: this.bindings.engine.state.query?.q ?? '',
         renderFeedbackAndCopyButtonsSlot: () =>
           this.renderFeedbackAndCopyButtonsWrapper(),
         renderCitationsSlot: () => html`${this.renderCitationsList()}`,
-        onToggle: (checked: boolean) => {
-          checked ? this.generatedAnswer?.show() : this.generatedAnswer?.hide();
-        },
         onRetry: () => this.generatedAnswer?.retry(),
         onClickShowButton: () => this.clickOnShowButton(),
       },
     });
   }
 
-  private renderCustomNoAnswerMessageWrapper() {
-    return renderCustomNoAnswerMessage({
+  private renderCardHeaderWrapper() {
+    return renderCardHeader({
       props: {
         i18n: this.bindings.i18n,
+        isAnswerVisible: this.isAnswerVisible,
+        toggleTooltip: this.toggleTooltip,
+        withToggle: this.withToggle,
+        onToggle: (checked: boolean) => {
+          checked ? this.generatedAnswer?.show() : this.generatedAnswer?.hide();
+        },
       },
     });
   }
