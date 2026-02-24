@@ -1,5 +1,4 @@
 import {wcagCriteriaDefinitions} from '../data/wcag-criteria.js';
-import {DEFAULT_MANUAL_PLACEHOLDER_NOTE} from '../shared/constants.js';
 import {compareByNumericId} from '../shared/sorting.js';
 import type {
   A11yComponentReport,
@@ -12,7 +11,6 @@ import type {
   ChapterId,
   CriterionAggregate,
   ManualAuditAggregate,
-  OpenAcrConformance,
   OpenAcrCriterion,
   OpenAcrCriterionComponent,
   OpenAcrReport,
@@ -22,8 +20,6 @@ const DEFAULT_REPORT_TITLE = 'Coveo Accessibility Conformance Report';
 const DEFAULT_REPORT_PRODUCT_NAME = 'Coveo Atomic';
 const DEFAULT_REPORT_PRODUCT_VERSION = '3.x.x';
 const DEFAULT_REPORT_DATE = new Date().toISOString().slice(0, 10);
-const DEFAULT_REPORT_STANDARD = 'WCAG 2.2 AA';
-const DEFAULT_REPORT_STANDARD_REFERENCE = 'https://www.w3.org/TR/WCAG22/';
 
 function buildCriterionAggregates(
   components: A11yComponentReport[],
@@ -136,74 +132,17 @@ function buildOpenAcrCriteria(
       override
     );
 
-    const hasManualData = manualForCriterion !== undefined;
-
     criteriaByChapter[definition.chapterId].push({
       num: definition.id,
       handle: definition.handle,
       level: definition.level,
       conformance,
       remarks,
-      affected_components: coveredComponents,
-      automated_result: {
-        status:
-          coveredComponents.length === 0
-            ? 'not-covered'
-            : violatingComponents.length > 0
-              ? 'covered-with-violations'
-              : 'covered-no-violations',
-        covered_components: coveredComponents,
-        violating_components: violatingComponents,
-      },
-      manual_result: {
-        status: hasManualData ? 'evaluated' : 'not-evaluated',
-        notes: hasManualData ? remarks : DEFAULT_MANUAL_PLACEHOLDER_NOTE,
-      },
       components: buildCriterionComponents(conformance, remarks),
     });
   }
 
   return criteriaByChapter;
-}
-
-const CONFORMANCE_TO_SUMMARY_KEY: Record<
-  OpenAcrConformance,
-  | 'supports'
-  | 'partially_supports'
-  | 'does_not_support'
-  | 'not_applicable'
-  | 'not_evaluated'
-> = {
-  supports: 'supports',
-  'partially-supports': 'partially_supports',
-  'does-not-support': 'does_not_support',
-  'not-applicable': 'not_applicable',
-  'not-evaluated': 'not_evaluated',
-};
-
-function buildSummary(
-  levelA: OpenAcrCriterion[],
-  levelAA: OpenAcrCriterion[]
-): OpenAcrReport['summary'] {
-  const criteria = [...levelA, ...levelAA];
-  const summary = {
-    total_criteria: criteria.length,
-    supports: 0,
-    partially_supports: 0,
-    does_not_support: 0,
-    not_applicable: 0,
-    not_evaluated: 0,
-    automated_covered_criteria: 0,
-  };
-
-  for (const criterion of criteria) {
-    if (criterion.automated_result.status !== 'not-covered') {
-      summary.automated_covered_criteria += 1;
-    }
-    summary[CONFORMANCE_TO_SUMMARY_KEY[criterion.conformance]] += 1;
-  }
-
-  return summary;
 }
 
 export function buildOpenAcrReport(
@@ -234,10 +173,6 @@ export function buildOpenAcrReport(
     overrides,
     manualAggregates
   );
-  const summary = buildSummary(
-    criteriaByChapter.success_criteria_level_a,
-    criteriaByChapter.success_criteria_level_aa
-  );
 
   return {
     title: DEFAULT_REPORT_TITLE,
@@ -267,23 +202,6 @@ export function buildOpenAcrReport(
     repository: 'https://github.com/coveo/ui-kit',
     feedback: 'https://github.com/coveo/ui-kit/issues',
     catalog: '2.5-edition-wcag-2.2-en',
-    standards: [
-      {
-        standard_name: DEFAULT_REPORT_STANDARD,
-        standard_ref: DEFAULT_REPORT_STANDARD_REFERENCE,
-        chapters: [
-          {
-            chapter_id: 'success_criteria_level_a',
-            chapter_name: 'Table 1: Success Criteria, Level A',
-          },
-          {
-            chapter_id: 'success_criteria_level_aa',
-            chapter_name: 'Table 2: Success Criteria, Level AA',
-          },
-        ],
-      },
-    ],
-    summary,
     chapters: {
       success_criteria_level_a: {
         notes:

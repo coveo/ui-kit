@@ -51,16 +51,6 @@ export interface OpenAcrCriterion {
   level: CriterionLevel;
   conformance: OpenAcrConformance;
   remarks: string;
-  affected_components: string[];
-  automated_result: {
-    status: 'not-covered' | 'covered-no-violations' | 'covered-with-violations';
-    covered_components: string[];
-    violating_components: string[];
-  };
-  manual_result: {
-    status: string;
-    notes: string;
-  };
   components: OpenAcrCriterionComponent[];
 }
 
@@ -95,20 +85,6 @@ export interface OpenAcrReport {
   repository: string;
   feedback: string;
   catalog: string;
-  standards: Array<{
-    standard_name: string;
-    standard_ref: string;
-    chapters: Array<{chapter_id: ChapterId; chapter_name: string}>;
-  }>;
-  summary: {
-    total_criteria: number;
-    supports: number;
-    partially_supports: number;
-    does_not_support: number;
-    not_applicable: number;
-    not_evaluated: number;
-    automated_covered_criteria: number;
-  };
   chapters: {
     success_criteria_level_a: OpenAcrChapter;
     success_criteria_level_aa: OpenAcrChapter;
