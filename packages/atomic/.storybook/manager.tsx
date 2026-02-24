@@ -7,37 +7,53 @@ import {COVEO_PRIMARY, FONT_BASE, FONT_CODE} from './theme';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import React, {useEffect, useRef} from 'react';
 
+type AtomicSearchInterfaceElement = HTMLElement & {
+  initialize: (options: {
+    accessToken: string;
+    organizationId: string;
+  }) => Promise<void>;
+};
+
 declare global {
   interface Window {
     OneTrust: {
       ToggleInfoDisplay: () => void;
     };
   }
+
+  namespace JSX {
+    interface IntrinsicElements {
+      'atomic-search-interface': React.DetailedHTMLProps<
+        React.HTMLAttributes<AtomicSearchInterfaceElement>,
+        AtomicSearchInterfaceElement
+      > & {
+        analytics?: string;
+        'search-hub'?: string;
+        ref?: React.Ref<AtomicSearchInterfaceElement>;
+      };
+      'atomic-search-box': React.DetailedHTMLProps<
+        React.HTMLAttributes<HTMLElement>,
+        HTMLElement
+      > & {
+        'redirection-url'?: string;
+        ref?: React.Ref<HTMLElement>;
+      };
+    }
+  }
 }
 
 function CoveoDocsSearchBox() {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const searchInterfaceRef = useRef<AtomicSearchInterfaceElement>(null);
+  const searchBoxRef = useRef<HTMLElement>(null);
   const initializedRef = useRef(false);
 
   useEffect(() => {
-    if (initializedRef.current || !containerRef.current) {
+    if (initializedRef.current || !searchInterfaceRef.current) {
       return;
     }
     initializedRef.current = true;
 
-    const searchInterface = containerRef.current.querySelector(
-      'atomic-search-interface'
-    ) as HTMLElement & {
-      initialize: (options: {
-        accessToken: string;
-        organizationId: string;
-      }) => Promise<void>;
-    };
-
-    if (!searchInterface) {
-      return;
-    }
-
+    const searchInterface = searchInterfaceRef.current;
     let cancelled = false;
 
     customElements.whenDefined('atomic-search-interface').then(() => {
@@ -56,31 +72,39 @@ function CoveoDocsSearchBox() {
         });
     });
 
+    // Intercept the redirect event to append the query as a URL hash parameter.
+    // By default, atomic-search-box stores the query in localStorage before
+    // redirecting, but localStorage is origin-scoped — the destination page
+    // (docs.coveo.com) can't read data written by the Storybook origin.
+    const searchBox = searchBoxRef.current;
+    const handleRedirect = (e: Event) => {
+      const {redirectTo, value} = (e as CustomEvent).detail;
+      e.preventDefault();
+      const url = new URL(redirectTo);
+      url.hash = `#q=${encodeURIComponent(value)}`;
+      window.location.href = url.toString();
+    };
+    searchBox?.addEventListener('redirect', handleRedirect);
+
     return () => {
       cancelled = true;
+      searchBox?.removeEventListener('redirect', handleRedirect);
     };
   }, []);
 
-  // Uses dangerouslySetInnerHTML to inject Atomic custom elements as raw HTML,
-  // keeping them outside React's virtual DOM reconciliation. This prevents React
-  // from interfering with the custom elements' shadow DOM and internal lifecycle.
   return (
-    <div
-      id="coveo-docs-search-container"
-      ref={containerRef}
-      dangerouslySetInnerHTML={{
-        __html: `
-          <atomic-search-interface
-            analytics="false"
-            search-hub="Coveo Docs Unified Search"
-          >
-            <atomic-search-box
-              redirection-url="https://docs.coveo.com/en/search/"
-            ></atomic-search-box>
-          </atomic-search-interface>
-        `,
-      }}
-    />
+    <div id="coveo-docs-search-container">
+      <atomic-search-interface
+        ref={searchInterfaceRef}
+        analytics="false"
+        search-hub="Coveo Docs Unified Search"
+      >
+        <atomic-search-box
+          ref={searchBoxRef}
+          redirection-url="https://docs.coveo.com/en/search/"
+        ></atomic-search-box>
+      </atomic-search-interface>
+    </div>
   );
 }
 
