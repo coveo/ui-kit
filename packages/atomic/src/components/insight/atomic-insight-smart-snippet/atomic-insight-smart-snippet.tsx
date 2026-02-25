@@ -21,9 +21,6 @@ import {
 } from '@/src/utils/initialization-utils';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
-/**
- * @internal
- */
 @Component({
   tag: 'atomic-insight-smart-snippet',
   styleUrl: 'atomic-insight-smart-snippet.pcss',
