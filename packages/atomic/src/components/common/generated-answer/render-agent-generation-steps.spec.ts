@@ -66,6 +66,24 @@ describe('#renderAgentGenerationSteps', () => {
     ...overrides,
   });
 
+  const mockedSteps = [
+    buildStep({
+      name: AGENTS_STEPS.search,
+      status: STEP_STATUS.completed,
+      startedAt: BASE_TIME,
+    }),
+    buildStep({
+      name: AGENTS_STEPS.think,
+      status: STEP_STATUS.completed,
+      startedAt: BASE_TIME + 100,
+    }),
+    buildStep({
+      name: AGENTS_STEPS.answering,
+      status: STEP_STATUS.active,
+      startedAt: BASE_TIME + 200,
+    }),
+  ];
+
   describe('#getCurrentStepKey', () => {
     it('should return undefined when no steps are provided', () => {
       expect(getCurrentStepKey([])).toBeUndefined();
@@ -101,72 +119,15 @@ describe('#renderAgentGenerationSteps', () => {
     });
 
     it('should keep showing the first step when later steps arrive quickly', () => {
-      const key = getCurrentStepKey(
-        [
-          buildStep({
-            name: AGENTS_STEPS.search,
-            status: STEP_STATUS.completed,
-            startedAt: BASE_TIME,
-          }),
-          buildStep({
-            name: AGENTS_STEPS.think,
-            status: STEP_STATUS.completed,
-            startedAt: BASE_TIME + 100,
-          }),
-          buildStep({
-            name: AGENTS_STEPS.answering,
-            status: STEP_STATUS.active,
-            startedAt: BASE_TIME + 200,
-          }),
-        ],
-        BASE_TIME + 500
-      );
+      const key = getCurrentStepKey(mockedSteps, BASE_TIME + 500);
 
       expect(key).toBe('agent-generation-step-search');
     });
 
     it('should advance one step only after 1500ms elapsed', () => {
-      getCurrentStepKey(
-        [
-          buildStep({
-            name: AGENTS_STEPS.search,
-            status: STEP_STATUS.completed,
-            startedAt: BASE_TIME,
-          }),
-          buildStep({
-            name: AGENTS_STEPS.think,
-            status: STEP_STATUS.completed,
-            startedAt: BASE_TIME + 100,
-          }),
-          buildStep({
-            name: AGENTS_STEPS.answering,
-            status: STEP_STATUS.active,
-            startedAt: BASE_TIME + 200,
-          }),
-        ],
-        BASE_TIME
-      );
+      getCurrentStepKey(mockedSteps, BASE_TIME);
 
-      const key = getCurrentStepKey(
-        [
-          buildStep({
-            name: AGENTS_STEPS.search,
-            status: STEP_STATUS.completed,
-            startedAt: BASE_TIME,
-          }),
-          buildStep({
-            name: AGENTS_STEPS.think,
-            status: STEP_STATUS.completed,
-            startedAt: BASE_TIME + 100,
-          }),
-          buildStep({
-            name: AGENTS_STEPS.answering,
-            status: STEP_STATUS.active,
-            startedAt: BASE_TIME + 200,
-          }),
-        ],
-        BASE_TIME + 1_550
-      );
+      const key = getCurrentStepKey(mockedSteps, BASE_TIME + 1_550);
 
       expect(key).toBe('agent-generation-step-think');
     });
