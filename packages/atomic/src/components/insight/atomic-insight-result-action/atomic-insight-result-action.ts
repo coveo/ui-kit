@@ -33,9 +33,8 @@ export enum Actions {
 }
 
 /**
- * The `atomic-insight-result-action` component can be nested inside an
- * `atomic-insight-result-action-bar` to render an interactive button that
- * emits an `atomicInsightResultActionClicked` JavaScript event when clicked.
+ * The `atomic-insight-result-action` component renders an interactive button
+ * that emits an `atomicInsightResultActionClicked` event when clicked.
  *
  * @part result-action-container - The result action container
  * @part result-action-button - The result action button

@@ -12,20 +12,37 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   className="AtomicInsightResultAction"
 >
 
-This is a result template component that should be nested inside an `atomic-result-section-actions` element within an `atomic-insight-result-template`:
+Place this component directly inside `atomic-result-section-actions` for always-visible actions, or inside an `atomic-insight-result-action-bar` for actions that appear on hover.
+
+### Always visible
 
 ```html
 <atomic-insight-result-template>
   <template>
-    <atomic-result-section-title>
-      <atomic-result-link></atomic-result-link>
-    </atomic-result-section-title>
     <atomic-result-section-actions>
       <atomic-insight-result-action
         action="copyToClipboard"
         tooltip="Copy"
         tooltip-on-click="Copied!"
       ></atomic-insight-result-action>
+    </atomic-result-section-actions>
+  </template>
+</atomic-insight-result-template>
+```
+
+### Visible on hover
+
+```html
+<atomic-insight-result-template>
+  <template>
+    <atomic-result-section-actions>
+      <atomic-insight-result-action-bar>
+        <atomic-insight-result-action
+          action="copyToClipboard"
+          tooltip="Copy"
+          tooltip-on-click="Copied!"
+        ></atomic-insight-result-action>
+      </atomic-insight-result-action-bar>
     </atomic-result-section-actions>
   </template>
 </atomic-insight-result-template>

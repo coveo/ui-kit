@@ -95,3 +95,18 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {};
+
+export const InActionBar: Story = {
+  render: (args) => html`
+    <atomic-result-section-actions id="code-root">
+      <atomic-insight-result-action-bar>
+        <atomic-insight-result-action
+          action=${args.action}
+          tooltip=${args.tooltip}
+          tooltip-on-click=${args.tooltipOnClick}
+          icon=${args.icon}
+        ></atomic-insight-result-action>
+      </atomic-insight-result-action-bar>
+    </atomic-result-section-actions>
+  `,
+};
