@@ -4,6 +4,7 @@ export {AtomicInsightFacet} from './atomic-insight-facet/atomic-insight-facet.js
 export {AtomicInsightFoldedResultList} from './atomic-insight-folded-result-list/atomic-insight-folded-result-list.js';
 export {AtomicInsightFullSearchButton} from './atomic-insight-full-search-button/atomic-insight-full-search-button.js';
 export {AtomicInsightGenerateAnswerButton} from './atomic-insight-generate-answer-button/atomic-insight-generate-answer-button.js';
+export {AtomicInsightGeneratedAnswer} from './atomic-insight-generated-answer/atomic-insight-generated-answer.js';
 export {AtomicInsightHistoryToggle} from './atomic-insight-history-toggle/atomic-insight-history-toggle.js';
 export {AtomicInsightInterface} from './atomic-insight-interface/atomic-insight-interface.js';
 export {AtomicInsightLayout} from './atomic-insight-layout/atomic-insight-layout.js';
@@ -16,6 +17,7 @@ export {AtomicInsightRefineModal} from './atomic-insight-refine-modal/atomic-ins
 export {AtomicInsightRefineToggle} from './atomic-insight-refine-toggle/atomic-insight-refine-toggle.js';
 export {AtomicInsightResult} from './atomic-insight-result/atomic-insight-result.js';
 export {AtomicInsightResultActionBar} from './atomic-insight-result-action-bar/atomic-insight-result-action-bar.js';
+export {AtomicInsightResultAttachToCaseAction} from './atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action.js';
 export {AtomicInsightResultAttachToCaseIndicator} from './atomic-insight-result-attach-to-case-indicator/atomic-insight-result-attach-to-case-indicator.js';
 export {AtomicInsightResultChildren} from './atomic-insight-result-children/atomic-insight-result-children.js';
 export {AtomicInsightResultList} from './atomic-insight-result-list/atomic-insight-result-list.js';

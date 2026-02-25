@@ -2,6 +2,7 @@ import {
   type BreadcrumbManager,
   type BreadcrumbManagerState,
   buildBreadcrumbManager,
+  buildQuerySummary,
   buildSearchStatus,
   type SearchStatus,
   type SearchStatusState,
@@ -14,6 +15,7 @@ import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixt
 import {buildFakeBreadcrumbManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/breadcrumb-manager';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
 import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/headless/search/search-status-controller';
+import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/search/summary-controller';
 import type {AtomicIpxRefineToggle} from './atomic-ipx-refine-toggle';
 import './atomic-ipx-refine-toggle';
 
@@ -43,6 +45,9 @@ describe('atomic-ipx-refine-toggle', () => {
     vi.mocked(buildBreadcrumbManager).mockReturnValue(mockedBreadcrumbManager);
     vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
 
+    // Mock controllers used by atomic-ipx-refine-modal (which is dynamically created)
+    vi.mocked(buildQuerySummary).mockReturnValue(buildFakeSummary());
+
     const {element} =
       await renderInAtomicSearchInterface<AtomicIpxRefineToggle>({
         template: html`<atomic-ipx-refine-toggle
@@ -54,6 +59,7 @@ describe('atomic-ipx-refine-toggle', () => {
           bindings.store = {
             ...bindings.store,
             waitUntilAppLoaded: (cb: () => void) => cb(),
+            getFacetElements: () => [],
           };
           return bindings;
         },

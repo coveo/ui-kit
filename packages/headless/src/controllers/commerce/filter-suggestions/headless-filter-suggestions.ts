@@ -8,13 +8,13 @@ import type {
 import {stateKey} from '../../../app/state-key.js';
 import {clearAllCoreFacets} from '../../../features/commerce/facets/core-facet/core-facet-actions.js';
 import {getFacetIdWithCommerceFieldSuggestionNamespace} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions.js';
+import {commerceSpecificFacetSearchSetReducer as facetSearchSet} from '../../../features/commerce/facets/facet-search-set/regular/commerce-specific-facet-search-set-slice.js';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice.js';
 import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice.js';
 import {searchSerializer} from '../../../features/commerce/parameters/parameters-serializer.js';
 import {updateQuery} from '../../../features/commerce/query/query-actions.js';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice.js';
 import {selectFacetSearchResult} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
-import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice.js';
 import type {
   CommerceFacetSetSection,
   CommerceQuerySection,
