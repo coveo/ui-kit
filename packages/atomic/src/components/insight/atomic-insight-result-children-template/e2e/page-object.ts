@@ -10,14 +10,6 @@ export class InsightResultChildrenTemplateObject extends BasePageObject {
     return this.page.locator('atomic-insight-result').first();
   }
 
-  get error() {
-    return this.page.locator('atomic-component-error').first();
-  }
-
-  get resultChildren() {
-    return this.page.locator('atomic-insight-result-children');
-  }
-
   get childrenRoot() {
     return this.page.locator('[part="children-root"]');
   }
