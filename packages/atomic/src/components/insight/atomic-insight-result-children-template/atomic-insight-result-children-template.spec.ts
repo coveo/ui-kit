@@ -86,6 +86,9 @@ describe('atomic-insight-result-children-template', () => {
       const template = await element.getTemplate();
       expect(template).not.toBeNull();
       expect(template!.conditions).toHaveLength(expected.length);
+      for (const condition of template!.conditions) {
+        expect(condition).toBeTypeOf('function');
+      }
     });
   });
 
@@ -106,6 +109,7 @@ describe('atomic-insight-result-children-template', () => {
 
       expect(spy).toHaveBeenCalledWith([titleConditions]);
       expect(result).toBe(fakeTemplate);
+      spy.mockRestore();
     });
   });
 
@@ -136,7 +140,7 @@ describe('atomic-insight-result-children-template', () => {
     const errorComponent = element.shadowRoot?.querySelector(
       'atomic-component-error'
     );
-    expect(errorComponent).toBeDefined();
+    expect(errorComponent).not.toBeNull();
     mockedConsoleError.mockRestore();
   });
 });
