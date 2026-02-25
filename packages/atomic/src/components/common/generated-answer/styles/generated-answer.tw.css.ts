@@ -19,10 +19,6 @@ const baseStyle = css`
       transform: translateY(105%) rotateX(-82deg);
     }
 
-    72% {
-      transform: translateY(-5%) rotateX(6deg);
-    }
-
     100% {
       transform: translateY(0) rotateX(0deg);
     }
