@@ -16,6 +16,10 @@ export default {
     await import(
       './atomic-insight-generate-answer-button/atomic-insight-generate-answer-button.js'
     ),
+  'atomic-insight-generated-answer': async () =>
+    await import(
+      './atomic-insight-generated-answer/atomic-insight-generated-answer.js'
+    ),
   'atomic-insight-history-toggle': async () =>
     await import(
       './atomic-insight-history-toggle/atomic-insight-history-toggle.js'
@@ -51,6 +55,10 @@ export default {
   'atomic-insight-result-action-bar': async () =>
     await import(
       './atomic-insight-result-action-bar/atomic-insight-result-action-bar.js'
+    ),
+  'atomic-insight-result-attach-to-case-action': async () =>
+    await import(
+      './atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action.js'
     ),
   'atomic-insight-result-attach-to-case-indicator': async () =>
     await import(
