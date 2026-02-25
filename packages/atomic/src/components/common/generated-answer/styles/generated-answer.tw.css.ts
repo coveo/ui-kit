@@ -104,8 +104,6 @@ const baseStyle = css`
 
   [part='is-generating'] .generation-steps-container {
     @apply inline-flex overflow-hidden;
-    line-height: 1.35;
-    min-height: 1.35em;
     perspective: 700px;
   }
 
@@ -115,13 +113,6 @@ const baseStyle = css`
     animation: generation-steps-rolodex 1500ms cubic-bezier(0.16, 0.84, 0.24, 1) both;
     will-change: transform;
     backface-visibility: hidden;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    [part='is-generating'] .generation-steps-value {
-      animation: none;
-      transform: none;
-    }
   }
 
   /* Collapsed answer container styles */

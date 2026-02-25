@@ -1,20 +1,11 @@
+import type {AgentStep, StepName} from '@coveo/headless';
+import {STEP_NAMES} from '@coveo/headless';
 import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {keyed} from 'lit/directives/keyed.js';
 import {when} from 'lit/directives/when.js';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
-// import type {AgentStep, StepName} from '@coveo/headless';
-// import {STEP_NAMES} from '@coveo/headless';
 
-export type AgentStep = {
-  name: 'search' | 'think' | 'generate';
-  status: 'active' | 'completed';
-  startedAt: number;
-  finishedAt?: number;
-};
-
-type StepName = AgentStep['name'];
-const STEP_NAMES: StepName[] = ['search', 'think', 'generate'];
 const MIN_STEP_DISPLAY_DURATION_MS = 1500;
 let lastDisplayedStepKey: string | undefined;
 let lastDisplayedStepAt: number = 0;
@@ -22,7 +13,7 @@ let lastDisplayedStepAt: number = 0;
 const stepLabelKeys: Record<StepName, string> = {
   search: 'agent-generation-step-search',
   think: 'agent-generation-step-think',
-  generate: 'generating-answer',
+  answering: 'generating-answer',
 };
 
 export interface RenderAgentGenerationStepsProps {
@@ -105,7 +96,7 @@ export function getActiveStepKey(agentSteps: AgentStep[]): string | undefined {
 
 /**
  * Returns the label key for the latest completed step using step priority.
- * Priority order is `generate` > `think` > `search`.
+ * Priority order is `answering` > `think` > `search`.
  */
 export function getLatestCompletedStepKey(
   agentSteps: AgentStep[]
