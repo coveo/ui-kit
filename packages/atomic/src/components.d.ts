@@ -5,33 +5,13 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { DateFilterRange, DateRangeRequest, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 import { RangeFacetSortCriterion as InsightRangeFacetSortCriterion } from "@coveo/headless/insight";
 import { AnyBindings } from "./components/common/interface/bindings";
-export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { DateFilterRange, DateRangeRequest, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 export { RangeFacetSortCriterion as InsightRangeFacetSortCriterion } from "@coveo/headless/insight";
 export { AnyBindings } from "./components/common/interface/bindings";
 export namespace Components {
-    interface AtomicInsightResultAction {
-        /**
-          * The type of action to perform when the result action is clicked. This will be sent along the event fired when the button is clicked.
-         */
-        "action": Actions | string;
-        /**
-          * Specify the result action icon to display.
-         */
-        "icon": string;
-        /**
-          * The text tooltip to show on the result action icon.
-         */
-        "tooltip": string;
-        /**
-          * The text tooltip to show on the result action icon for some time after clicking the button.
-         */
-        "tooltipOnClick": string;
-    }
     interface AtomicInsightResultChildrenTemplate {
         /**
           * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
@@ -120,32 +100,11 @@ export namespace Components {
         "rangeSetter": (range: DateRangeRequest) => void;
     }
 }
-export interface AtomicInsightResultActionCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicInsightResultActionElement;
-}
 export interface AtomicStencilFacetDateInputCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicStencilFacetDateInputElement;
 }
 declare global {
-    interface HTMLAtomicInsightResultActionElementEventMap {
-        "atomicInsightResultActionClicked": InsightResultActionClickedEvent;
-    }
-    interface HTMLAtomicInsightResultActionElement extends Components.AtomicInsightResultAction, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicInsightResultActionElementEventMap>(type: K, listener: (this: HTMLAtomicInsightResultActionElement, ev: AtomicInsightResultActionCustomEvent<HTMLAtomicInsightResultActionElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicInsightResultActionElementEventMap>(type: K, listener: (this: HTMLAtomicInsightResultActionElement, ev: AtomicInsightResultActionCustomEvent<HTMLAtomicInsightResultActionElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicInsightResultActionElement: {
-        prototype: HTMLAtomicInsightResultActionElement;
-        new (): HTMLAtomicInsightResultActionElement;
-    };
     interface HTMLAtomicInsightResultChildrenTemplateElement extends Components.AtomicInsightResultChildrenTemplate, HTMLStencilElement {
     }
     var HTMLAtomicInsightResultChildrenTemplateElement: {
@@ -180,36 +139,12 @@ declare global {
         new (): HTMLAtomicStencilFacetDateInputElement;
     };
     interface HTMLElementTagNameMap {
-        "atomic-insight-result-action": HTMLAtomicInsightResultActionElement;
         "atomic-insight-result-children-template": HTMLAtomicInsightResultChildrenTemplateElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
     }
 }
 declare namespace LocalJSX {
-    interface AtomicInsightResultAction {
-        /**
-          * The type of action to perform when the result action is clicked. This will be sent along the event fired when the button is clicked.
-         */
-        "action"?: Actions | string;
-        /**
-          * Specify the result action icon to display.
-         */
-        "icon"?: string;
-        /**
-          * @migration Stencil's
-          * @Event () decorator defaults to: bubbles=true, composed=true, cancelable=true. Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false. When migrating to Lit, explicitly set all three options to preserve behavior: `new CustomEvent('atomicInsightResultActionClicked', { bubbles: true, composed: true, cancelable: true, detail: ... })`
-         */
-        "onAtomicInsightResultActionClicked"?: (event: AtomicInsightResultActionCustomEvent<InsightResultActionClickedEvent>) => void;
-        /**
-          * The text tooltip to show on the result action icon.
-         */
-        "tooltip"?: string;
-        /**
-          * The text tooltip to show on the result action icon for some time after clicking the button.
-         */
-        "tooltipOnClick"?: string;
-    }
     interface AtomicInsightResultChildrenTemplate {
         /**
           * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
@@ -299,7 +234,6 @@ declare namespace LocalJSX {
         "rangeSetter": (range: DateRangeRequest) => void;
     }
     interface IntrinsicElements {
-        "atomic-insight-result-action": AtomicInsightResultAction;
         "atomic-insight-result-children-template": AtomicInsightResultChildrenTemplate;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
@@ -309,7 +243,6 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "atomic-insight-result-action": LocalJSX.AtomicInsightResultAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionElement>;
             "atomic-insight-result-children-template": LocalJSX.AtomicInsightResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenTemplateElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
             /**

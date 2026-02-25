@@ -52,6 +52,10 @@ export default {
     ),
   'atomic-insight-result': async () =>
     await import('./atomic-insight-result/atomic-insight-result.js'),
+  'atomic-insight-result-action': async () =>
+    await import(
+      './atomic-insight-result-action/atomic-insight-result-action.js'
+    ),
   'atomic-insight-result-action-bar': async () =>
     await import(
       './atomic-insight-result-action-bar/atomic-insight-result-action-bar.js'
