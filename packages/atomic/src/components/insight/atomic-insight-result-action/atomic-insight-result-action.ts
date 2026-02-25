@@ -55,7 +55,7 @@ export class AtomicInsightResultAction
   private tooltipResetTimeout?: ReturnType<typeof setTimeout>;
 
   /**
-   * Specify the result action icon to display.
+   * The result action icon to display.
    */
   @property({type: String}) icon = '';
 
