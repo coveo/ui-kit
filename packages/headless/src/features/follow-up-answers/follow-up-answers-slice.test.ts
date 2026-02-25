@@ -12,6 +12,7 @@ import {
   setFollowUpAnswerContentFormat,
   setFollowUpAnswersConversationId,
   setFollowUpIsLoading,
+  setFollowUpIsStreaming,
   setIsEnabled,
   submitFollowUpFeedback,
 } from './follow-up-answers-actions.js';
@@ -72,7 +73,7 @@ describe('follow-up answers slice', () => {
       expect(finalState.followUpAnswers[0]).toEqual({
         question: 'What is ABC?',
         isActive: true,
-        isLoading: false,
+        isLoading: true,
         isStreaming: false,
         citations: [],
         liked: false,
@@ -227,7 +228,11 @@ describe('follow-up answers slice', () => {
 
     it('does nothing when answerId does not match', () => {
       state.followUpAnswers = [
-        {...createInitialFollowUpAnswer('Question?'), answerId: 'answer-123'},
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          isLoading: false,
+        },
       ];
 
       const finalState = followUpAnswersReducer(
@@ -242,6 +247,47 @@ describe('follow-up answers slice', () => {
       const finalState = followUpAnswersReducer(
         state,
         setFollowUpIsLoading({answerId: 'answer-123', isLoading: true})
+      );
+
+      expect(finalState).toEqual(state);
+    });
+  });
+
+  describe('#setFollowUpIsStreaming', () => {
+    it('sets isStreaming for matching answerId', () => {
+      state.followUpAnswers = [
+        {...createInitialFollowUpAnswer('Question?'), answerId: 'answer-123'},
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        setFollowUpIsStreaming({answerId: 'answer-123', isStreaming: true})
+      );
+
+      expect(finalState.followUpAnswers[0].isStreaming).toBe(true);
+    });
+
+    it('does nothing when answerId does not match', () => {
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          isLoading: false,
+        },
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        setFollowUpIsStreaming({answerId: 'different-id', isStreaming: true})
+      );
+
+      expect(finalState.followUpAnswers[0].isStreaming).toBe(false);
+    });
+
+    it('does nothing when no follow-ups exist', () => {
+      const finalState = followUpAnswersReducer(
+        state,
+        setFollowUpIsStreaming({answerId: 'answer-123', isStreaming: true})
       );
 
       expect(finalState).toEqual(state);
@@ -283,27 +329,6 @@ describe('follow-up answers slice', () => {
       );
 
       expect(finalState.followUpAnswers[0].answer).toBe('Hello world');
-    });
-
-    it('sets isLoading to false and isStreaming to true', () => {
-      state.followUpAnswers = [
-        {
-          ...createInitialFollowUpAnswer('Question?'),
-          answerId: 'answer-123',
-          isLoading: true,
-        },
-      ];
-
-      const finalState = followUpAnswersReducer(
-        state,
-        followUpMessageChunkReceived({
-          answerId: 'answer-123',
-          textDelta: 'text',
-        })
-      );
-
-      expect(finalState.followUpAnswers[0].isLoading).toBe(false);
-      expect(finalState.followUpAnswers[0].isStreaming).toBe(true);
     });
 
     it('deletes error when message is received', () => {
@@ -424,24 +449,6 @@ describe('follow-up answers slice', () => {
 
       expect(finalState.followUpAnswers[0].citations).toHaveLength(1);
       expect(finalState.followUpAnswers[0].citations[0].id).toBe('c1');
-    });
-
-    it('sets isLoading to false and isStreaming to true', () => {
-      state.followUpAnswers = [
-        {
-          ...createInitialFollowUpAnswer('Question?'),
-          answerId: 'answer-123',
-          isLoading: true,
-        },
-      ];
-
-      const finalState = followUpAnswersReducer(
-        state,
-        followUpCitationsReceived({answerId: 'answer-123', citations: []})
-      );
-
-      expect(finalState.followUpAnswers[0].isLoading).toBe(false);
-      expect(finalState.followUpAnswers[0].isStreaming).toBe(true);
     });
 
     it('deletes error when citations are received', () => {

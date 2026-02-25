@@ -8,6 +8,7 @@ import {
   setActiveFollowUpAnswerId,
   setFollowUpAnswerContentFormat,
   setFollowUpIsLoading,
+  setFollowUpIsStreaming,
 } from '../../../../../features/follow-up-answers/follow-up-answers-actions.js';
 
 /**
@@ -20,20 +21,19 @@ export const createFollowUpStrategy = (dispatch: Dispatch): AgentSubscriber => {
     onRunStartedEvent: ({event}) => {
       runId = event.runId;
       dispatch(setActiveFollowUpAnswerId(runId));
-      dispatch(setFollowUpIsLoading({answerId: runId, isLoading: true}));
+      dispatch(setFollowUpIsLoading({answerId: runId, isLoading: false}));
+      dispatch(setFollowUpIsStreaming({answerId: runId, isStreaming: true}));
     },
-    onTextMessageContentEvent: (param) => {
+    onTextMessageContentEvent: ({event}) => {
       dispatch(
         followUpMessageChunkReceived({
-          textDelta: param.event.delta,
+          textDelta: event.delta,
           answerId: runId,
         })
       );
     },
-    onCustomEvent: (param) => {
-      const {
-        event: {name, value},
-      } = param;
+    onCustomEvent: ({event}) => {
+      const {name, value} = event;
       switch (name) {
         case 'header': {
           if (value?.contentFormat) {
@@ -57,24 +57,26 @@ export const createFollowUpStrategy = (dispatch: Dispatch): AgentSubscriber => {
         }
       }
     },
-    onRunErrorEvent: (param) => {
-      const code = param.event.code;
+    onRunErrorEvent: ({event}) => {
+      const code = event.code;
       dispatch(
         followUpFailed({
-          message: param.event.message,
+          message: event.message,
           code: code ? Number(code) : undefined,
           answerId: runId,
         })
       );
+      runId = '';
     },
-    onRunFinishedEvent: (param) => {
-      const answerGenerated = param.event.result?.answerGenerated ?? false;
+    onRunFinishedEvent: ({event}) => {
+      const answerGenerated = event.result?.answerGenerated ?? false;
       dispatch(
         followUpCompleted({
           cannotAnswer: !answerGenerated,
           answerId: runId,
         })
       );
+      runId = '';
     },
   };
 };

@@ -29,17 +29,17 @@ describe('createHeadAnswerStrategy', () => {
     strategy = createHeadAnswerStrategy(dispatch);
   });
 
-  it('sets the loading state when a run starts', () => {
-    strategy.onRunStartedEvent!({event: {runId: 'run-001'}} as any);
+  it('initializes identifiers and streaming state when a run starts', () => {
+    strategy.onRunStartedEvent!({
+      event: {runId: 'run-001', threadId: 'thread-007'},
+    } as any);
 
     expect(dispatch).toHaveBeenCalledWith(setAnswerId('run-001'));
-    expect(dispatch).toHaveBeenCalledWith(setIsLoading(true));
-  });
-
-  it('marks the stream as active when text streaming begins', () => {
-    strategy.onTextMessageStartEvent!({} as any);
-
+    expect(dispatch).toHaveBeenCalledWith(setIsLoading(false));
     expect(dispatch).toHaveBeenCalledWith(setIsStreaming(true));
+    expect(dispatch).toHaveBeenCalledWith(
+      setFollowUpAnswersConversationId('thread-007')
+    );
   });
 
   it('appends incoming text deltas to the answer message', () => {
@@ -53,22 +53,16 @@ describe('createHeadAnswerStrategy', () => {
       event: {
         name: 'header',
         value: {
-          conversationId: 'conv-001',
           contentFormat: 'text/markdown',
           followUpEnabled: true,
         },
       },
     } as any);
 
-    expect(dispatch).toHaveBeenNthCalledWith(
-      1,
-      setFollowUpAnswersConversationId('conv-001')
-    );
-    expect(dispatch).toHaveBeenNthCalledWith(
-      2,
+    expect(dispatch).toHaveBeenCalledWith(
       setAnswerContentFormat('text/markdown')
     );
-    expect(dispatch).toHaveBeenNthCalledWith(3, setIsEnabled(true));
+    expect(dispatch).toHaveBeenCalledWith(setIsEnabled(true));
   });
 
   it('updates citations when the server sends citation data', () => {

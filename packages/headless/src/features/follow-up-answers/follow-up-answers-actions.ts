@@ -69,6 +69,15 @@ export const setFollowUpIsLoading = createAction(
     })
 );
 
+export const setFollowUpIsStreaming = createAction(
+  'followUpAnswers/setFollowUpIsStreaming',
+  (payload: {answerId: string; isStreaming: boolean}) =>
+    validatePayload(payload, {
+      isStreaming: new BooleanValue({required: true}),
+      answerId: requiredNonEmptyString,
+    })
+);
+
 export const followUpMessageChunkReceived = createAction(
   'followUpAnswers/followUpMessageChunkReceived',
   (payload: {answerId: string; textDelta: string}) =>

@@ -6,6 +6,7 @@ import {
   selectEnvironment,
   selectOrganizationId,
 } from '../../../../../features/configuration/configuration-selectors.js';
+import {setIsLoading} from '../../../../../features/generated-answer/generated-answer-actions.js';
 import {
   constructGenerateHeadAnswerParams,
   type StateNeededForHeadAnswerParams,
@@ -59,6 +60,7 @@ export const createAnswerRunner = () => {
       },
       strategy
     );
+    dispatch(setIsLoading(true));
   };
 
   return {

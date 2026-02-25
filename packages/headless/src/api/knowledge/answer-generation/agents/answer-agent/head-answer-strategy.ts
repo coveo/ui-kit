@@ -23,25 +23,19 @@ export const createHeadAnswerStrategy = (
   dispatch: Dispatch
 ): AgentSubscriber => {
   return {
-    onRunStartedEvent: (param) => {
-      dispatch(setAnswerId(param.event.runId));
-      dispatch(setIsLoading(true));
-    },
-    onTextMessageStartEvent: () => {
+    onRunStartedEvent: ({event}) => {
+      dispatch(setAnswerId(event.runId));
+      dispatch(setIsLoading(false));
       dispatch(setIsStreaming(true));
+      dispatch(setFollowUpAnswersConversationId(event.threadId));
     },
-    onTextMessageContentEvent: (param) => {
-      dispatch(updateMessage({textDelta: param.event.delta}));
+    onTextMessageContentEvent: ({event}) => {
+      dispatch(updateMessage({textDelta: event.delta}));
     },
-    onCustomEvent: (param) => {
-      const {
-        event: {name, value},
-      } = param;
+    onCustomEvent: ({event}) => {
+      const {name, value} = event;
       switch (name) {
         case 'header': {
-          if (value?.conversationId) {
-            dispatch(setFollowUpAnswersConversationId(value.conversationId));
-          }
           if (value?.contentFormat) {
             dispatch(setAnswerContentFormat(value.contentFormat));
           }
@@ -56,17 +50,17 @@ export const createHeadAnswerStrategy = (
         }
       }
     },
-    onRunErrorEvent: (param) => {
-      const code = param.event.code;
+    onRunErrorEvent: ({event}) => {
+      const code = event.code;
       dispatch(
         updateError({
-          message: param.event.message,
+          message: event.message,
           code: code ? Number(code) : undefined,
         })
       );
     },
-    onRunFinishedEvent: (param) => {
-      const answerGenerated = param.event.result?.answerGenerated ?? false;
+    onRunFinishedEvent: ({event}) => {
+      const answerGenerated = event.result?.answerGenerated ?? false;
       dispatch(setIsAnswerGenerated(answerGenerated));
       dispatch(setCannotAnswer(!answerGenerated));
       dispatch(setIsStreaming(false));

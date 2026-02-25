@@ -9,6 +9,7 @@ import {
   selectEnvironment,
   selectOrganizationId,
 } from '../../../../../features/configuration/configuration-selectors.js';
+import {setIsLoading} from '../../../../../features/generated-answer/generated-answer-actions.js';
 import {constructGenerateHeadAnswerParams} from '../../../../../features/generated-answer/generated-answer-request.js';
 import {type AnswerAgent, createAnswerAgent} from './answer-agent.js';
 import {createAnswerRunner} from './answer-agent-runner.js';
@@ -120,5 +121,13 @@ describe('createAnswerRunner', () => {
     runner.abortRun();
 
     expect(mockAgent.abortRun).toHaveBeenCalledTimes(1);
+  });
+
+  it('dispatches the loading state when a run starts', () => {
+    const runner = buildRunner();
+
+    runner.run(state, dispatch, navigatorProvider);
+
+    expect(dispatch).toHaveBeenCalledWith(setIsLoading(true));
   });
 });

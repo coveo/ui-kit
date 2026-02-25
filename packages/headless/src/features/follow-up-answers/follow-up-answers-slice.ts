@@ -13,6 +13,7 @@ import {
   setFollowUpAnswerContentFormat,
   setFollowUpAnswersConversationId,
   setFollowUpIsLoading,
+  setFollowUpIsStreaming,
   setIsEnabled,
   submitFollowUpFeedback,
 } from './follow-up-answers-actions.js';
@@ -76,14 +77,19 @@ export const followUpAnswersReducer = createReducer(
         }
         followUpAnswer.isLoading = payload.isLoading;
       })
+      .addCase(setFollowUpIsStreaming, (state, {payload}) => {
+        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
+        if (!followUpAnswer) {
+          return;
+        }
+        followUpAnswer.isStreaming = payload.isStreaming;
+      })
       .addCase(followUpMessageChunkReceived, (state, {payload}) => {
         const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
         if (!followUpAnswer) {
           return;
         }
 
-        followUpAnswer.isLoading = false;
-        followUpAnswer.isStreaming = true;
         if (!followUpAnswer.answer) {
           followUpAnswer.answer = '';
         }
@@ -97,8 +103,6 @@ export const followUpAnswersReducer = createReducer(
           return;
         }
 
-        followUpAnswer.isLoading = false;
-        followUpAnswer.isStreaming = true;
         followUpAnswer.citations = filterOutDuplicatedCitations([
           ...followUpAnswer.citations,
           ...payload.citations,

@@ -11,6 +11,7 @@ import {
   setActiveFollowUpAnswerId,
   setFollowUpAnswerContentFormat,
   setFollowUpIsLoading,
+  setFollowUpIsStreaming,
 } from '../../../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {createFollowUpStrategy} from './follow-up-answer-strategy.js';
 
@@ -27,7 +28,7 @@ describe('createFollowUpStrategy', () => {
     vi.clearAllMocks();
   });
 
-  it('tracks the active follow-up answer when a run starts', () => {
+  it('tracks the active follow-up answer and toggles loading flags when a run starts', () => {
     strategy.onRunStartedEvent!({event: {runId}} as any);
 
     expect(dispatch).toHaveBeenNthCalledWith(
@@ -36,7 +37,11 @@ describe('createFollowUpStrategy', () => {
     );
     expect(dispatch).toHaveBeenNthCalledWith(
       2,
-      setFollowUpIsLoading({answerId: runId, isLoading: true})
+      setFollowUpIsLoading({answerId: runId, isLoading: false})
+    );
+    expect(dispatch).toHaveBeenNthCalledWith(
+      3,
+      setFollowUpIsStreaming({answerId: runId, isStreaming: true})
     );
   });
 
@@ -101,6 +106,26 @@ describe('createFollowUpStrategy', () => {
     );
   });
 
+  it('resets the tracked run identifier after failures', () => {
+    strategy.onRunErrorEvent!({
+      event: {
+        message: 'Failure',
+      },
+    } as any);
+
+    vi.clearAllMocks();
+
+    const nextRunId = 'run-456';
+    strategy.onRunStartedEvent!({event: {runId: nextRunId}} as any);
+    (dispatch as ReturnType<typeof vi.fn>).mockClear();
+
+    strategy.onTextMessageContentEvent!({event: {delta: 'Chunk'}} as any);
+
+    expect(dispatch).toHaveBeenCalledWith(
+      followUpMessageChunkReceived({answerId: nextRunId, textDelta: 'Chunk'})
+    );
+  });
+
   it('marks a completed run as answerable when the agent responds', () => {
     strategy.onRunFinishedEvent!({
       event: {
@@ -122,6 +147,26 @@ describe('createFollowUpStrategy', () => {
 
     expect(dispatch).toHaveBeenCalledWith(
       followUpCompleted({answerId: runId, cannotAnswer: true})
+    );
+  });
+
+  it('resets the tracked run identifier after completion', () => {
+    strategy.onRunFinishedEvent!({
+      event: {
+        result: {answerGenerated: true},
+      },
+    } as any);
+
+    vi.clearAllMocks();
+
+    const nextRunId = 'run-789';
+    strategy.onRunStartedEvent!({event: {runId: nextRunId}} as any);
+    (dispatch as ReturnType<typeof vi.fn>).mockClear();
+
+    strategy.onTextMessageContentEvent!({event: {delta: 'Chunk'}} as any);
+
+    expect(dispatch).toHaveBeenCalledWith(
+      followUpMessageChunkReceived({answerId: nextRunId, textDelta: 'Chunk'})
     );
   });
 });
