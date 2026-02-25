@@ -10,39 +10,23 @@ export class AtomicInsightTimeframeFacetPageObject extends BasePageObject {
     return this.page.locator('[part="facet"]');
   }
 
-  get facetValues() {
-    return this.facet.locator('[part~="value-link"]');
-  }
-
-  get selectedValues() {
-    return this.facet.locator('[part~="value-link-selected"]');
-  }
-
-  get facetValueLabels() {
-    return this.facet.locator('[part="value-label"]');
+  get labelButton() {
+    return this.page.locator('[part="label-button"]').first();
   }
 
   get clearButton() {
     return this.facet.locator('[part="clear-button"]');
   }
 
-  get labelButton() {
-    return this.page.locator('[part="label-button"]').first();
-  }
-
   get valuesContainer() {
     return this.facet.locator('[part="values"]');
   }
 
-  get startDateInput() {
-    return this.facet.locator('[part="input-start"]');
+  get facetValues() {
+    return this.facet.locator('[part~="value-link"]');
   }
 
-  get endDateInput() {
-    return this.facet.locator('[part="input-end"]');
-  }
-
-  get applyButton() {
-    return this.facet.locator('[part="input-apply-button"]');
+  get selectedValues() {
+    return this.facet.locator('[part~="value-link-selected"]');
   }
 }

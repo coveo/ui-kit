@@ -15,8 +15,6 @@ Use this component to filter insight panel results by date ranges. The timeframe
 
 Place this component within the facets section of your insight panel layout.
 
-## Usage
-
 ### Basic Timeframe Facet
 
 ```html
@@ -31,32 +29,6 @@ Place this component within the facets section of your insight panel layout.
     <atomic-timeframe unit="year"></atomic-timeframe>
   </atomic-insight-timeframe-facet>
 </atomic-insight-interface>
-```
-
-### Custom Timeframe Ranges
-
-You can specify custom amounts for each timeframe using the `amount` attribute on `atomic-timeframe` elements:
-
-```html
-<atomic-insight-timeframe-facet field="date" label="Publication Date">
-  <atomic-timeframe unit="day" amount="7"></atomic-timeframe>
-  <atomic-timeframe unit="month" amount="1"></atomic-timeframe>
-  <atomic-timeframe unit="month" amount="3"></atomic-timeframe>
-  <atomic-timeframe unit="month" amount="6"></atomic-timeframe>
-  <atomic-timeframe unit="year" amount="1"></atomic-timeframe>
-</atomic-insight-timeframe-facet>
-```
-
-### Custom Timeframe Labels
-
-You can provide custom labels for timeframes using the `label` attribute:
-
-```html
-<atomic-insight-timeframe-facet field="date" label="Date Range">
-  <atomic-timeframe unit="week" amount="1" label="This Week"></atomic-timeframe>
-  <atomic-timeframe unit="month" amount="1" label="This Month"></atomic-timeframe>
-  <atomic-timeframe unit="month" amount="3" label="Last Quarter"></atomic-timeframe>
-</atomic-insight-timeframe-facet>
 ```
 
 ### With Date Picker
@@ -77,49 +49,5 @@ Enable users to select custom date ranges by setting the `with-date-picker` attr
 When `with-date-picker` is enabled, users can:
 - Choose from predefined timeframes
 - Enter custom start and end dates
-
-### Dependent Facet
-
-Make the timeframe facet conditional on another facet's selection using `depends-on`:
-
-```html
-<atomic-insight-facet facet-id="filetype" field="filetype" label="File Type"></atomic-insight-facet>
-
-<atomic-insight-timeframe-facet 
-  field="date" 
-  label="Date" 
-  depends-on-filetype="PDF"
->
-  <atomic-timeframe unit="month"></atomic-timeframe>
-  <atomic-timeframe unit="year"></atomic-timeframe>
-</atomic-insight-timeframe-facet>
-```
-
-In this example, the timeframe facet only appears when "PDF" is selected in the file type facet.
-
-## Customization
-
-### Sorting
-
-Control the order in which timeframe values appear using the `sort-criteria` attribute:
-
-```html
-<atomic-insight-timeframe-facet 
-  field="date" 
-  label="Date" 
-  sort-criteria="ascending"
->
-  ...
-</atomic-insight-timeframe-facet>
-```
-
-- `descending` (default): Shows most recent timeframes first
-- `ascending`: Shows oldest timeframes first
-
-## Best Practices
-
-- **Choose meaningful timeframes**: Select time ranges that match your users' search patterns and your content's typical age distribution
-- **Limit the number of timeframes**: Avoid overwhelming users with too many options (5-7 timeframes is typically sufficient)
-- **Use the date picker for flexibility**: Enable `with-date-picker` when users need precise date range control
 
 </AtomicDocTemplate>

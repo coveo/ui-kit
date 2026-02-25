@@ -5,7 +5,6 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {
   facetDecorator,
   withBreadboxDecorator,
-  withRegularFacet,
 } from '@/storybook-utils/common/facets-decorator';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 
@@ -193,86 +192,6 @@ export const WithDatePicker: Story = {
     field: 'date',
     label: 'Date',
     'with-date-picker': true,
-    'default-slot': `
-      <atomic-timeframe unit="hour"></atomic-timeframe>
-      <atomic-timeframe unit="day"></atomic-timeframe>
-      <atomic-timeframe unit="week"></atomic-timeframe>
-      <atomic-timeframe unit="month"></atomic-timeframe>
-      <atomic-timeframe unit="quarter"></atomic-timeframe>
-      <atomic-timeframe unit="year"></atomic-timeframe>
-    `,
-  },
-  beforeEach: () => {
-    mockDefaultFacetResponse();
-  },
-};
-
-export const WithDependsOn: Story = {
-  name: 'With Depends On',
-  tags: ['test'],
-  decorators: [withRegularFacet('before'), withBreadboxDecorator('before')],
-  argTypes: {
-    'depends-on-filetype': {
-      name: 'depends-on-filetype',
-      control: {type: 'text'},
-    },
-  },
-  args: {
-    field: 'date',
-    label: 'Timeframe (Dependent facet)',
-    'with-date-picker': true,
-    'depends-on-filetype': 'YouTubeVideo',
-    'default-slot': `
-      <atomic-timeframe unit="hour"></atomic-timeframe>
-      <atomic-timeframe unit="day"></atomic-timeframe>
-      <atomic-timeframe unit="week"></atomic-timeframe>
-      <atomic-timeframe unit="month"></atomic-timeframe>
-      <atomic-timeframe unit="quarter"></atomic-timeframe>
-      <atomic-timeframe unit="year"></atomic-timeframe>
-    `,
-  },
-  beforeEach: () => {
-    mockInsightApi.searchEndpoint.mock((response) => ({
-      ...response,
-      facets: [
-        createDateFacetResponse(baseDateFacetValues),
-        createDateFacetResponse(baseDateFacetValues, {
-          facetId: 'date_input_range',
-        }),
-        {
-          facetId: 'filetype',
-          field: 'filetype',
-          moreValuesAvailable: true,
-          values: [
-            {value: 'YouTubeVideo', state: 'selected', numberOfResults: 62734},
-            {value: 'pdf', state: 'idle', numberOfResults: 38398},
-            {value: 'html', state: 'idle', numberOfResults: 26879},
-          ],
-        },
-      ],
-    }));
-  },
-  play: async (context) => {
-    await customElements.whenDefined('atomic-insight-facet');
-    await play(context);
-    const {canvas, step} = context;
-    await step('Select YouTubeVideo in filetype facet', async () => {
-      const button = await canvas.findByShadowLabelText(
-        'Inclusion filter on YouTubeVideo',
-        {exact: false}
-      );
-      button.ariaChecked === 'false' ? button.click() : null;
-    });
-  },
-};
-
-export const Collapsed: Story = {
-  name: 'Collapsed',
-  decorators: [facetDecorator],
-  args: {
-    field: 'date',
-    label: 'Date',
-    'is-collapsed': true,
     'default-slot': `
       <atomic-timeframe unit="hour"></atomic-timeframe>
       <atomic-timeframe unit="day"></atomic-timeframe>

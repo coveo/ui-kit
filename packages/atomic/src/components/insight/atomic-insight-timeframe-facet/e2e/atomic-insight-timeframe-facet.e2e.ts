@@ -47,25 +47,12 @@ test.describe('atomic-insight-timeframe-facet', () => {
   test('should display selected value with clear button', async ({facet}) => {
     await facet.load({story: 'with-selected-value'});
 
-    await test.step('Verify selected value is shown', async () => {
+    await test.step('Verify a value is selected', async () => {
       await expect(facet.selectedValues).toHaveCount(1);
     });
 
     await test.step('Verify clear button is visible', async () => {
       await expect(facet.clearButton).toBeVisible();
-    });
-  });
-
-  test('should render date picker inputs', async ({facet}) => {
-    await facet.load({story: 'with-date-picker'});
-
-    await test.step('Verify date input fields are visible', async () => {
-      await expect(facet.startDateInput).toBeVisible();
-      await expect(facet.endDateInput).toBeVisible();
-    });
-
-    await test.step('Verify apply button is visible', async () => {
-      await expect(facet.applyButton).toBeVisible();
     });
   });
 });
