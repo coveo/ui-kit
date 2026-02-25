@@ -398,6 +398,30 @@ export const smartSnippetSuggestionsResponse: InsightResponse = {
   },
 };
 
+const insightChildResult1 = {
+  title: 'Related Article: Network Setup',
+  excerpt: 'Guide for network configuration',
+  clickUri: 'https://support.example.com/article/network',
+  uniqueId: 'insight-child-1',
+  raw: {
+    foldingcollection: 'ConnectionIssues',
+    foldingchild: ['network-setup'],
+    foldingparent: 'connection-parent',
+  },
+};
+
+const insightChildResult2 = {
+  title: 'Related Article: Firewall Settings',
+  excerpt: 'Guide for firewall configuration',
+  clickUri: 'https://support.example.com/article/firewall',
+  uniqueId: 'insight-child-2',
+  raw: {
+    foldingcollection: 'ConnectionIssues',
+    foldingchild: ['firewall-settings'],
+    foldingparent: 'connection-parent',
+  },
+};
+
 export const baseFoldedResponse: InsightResponse = {
   ...baseResponse,
   totalCount: 2,
@@ -425,30 +449,7 @@ export const baseFoldedResponse: InsightResponse = {
       printableUriHighlights: [],
       summaryHighlights: [],
       parentResult: null,
-      childResults: [
-        {
-          title: 'Related Article: Network Setup',
-          excerpt: 'Guide for network configuration',
-          clickUri: 'https://support.example.com/article/network',
-          uniqueId: 'insight-child-1',
-          raw: {
-            foldingcollection: 'ConnectionIssues',
-            foldingchild: ['network-setup'],
-            foldingparent: 'connection-parent',
-          },
-        },
-        {
-          title: 'Related Article: Firewall Settings',
-          excerpt: 'Guide for firewall configuration',
-          clickUri: 'https://support.example.com/article/firewall',
-          uniqueId: 'insight-child-2',
-          raw: {
-            foldingcollection: 'ConnectionIssues',
-            foldingchild: ['firewall-settings'],
-            foldingparent: 'connection-parent',
-          },
-        },
-      ],
+      childResults: [insightChildResult1, insightChildResult2],
       totalNumberOfChildResults: 2,
       absentTerms: [],
       raw: {
@@ -506,5 +507,39 @@ export const baseFoldedResponse: InsightResponse = {
       Excerpt: 'Collection of quick troubleshooting tips',
       FirstSentences: null,
     },
+  ],
+};
+
+/**
+ * Folded response with grandchildren: children themselves contain nested child results.
+ * Useful for testing `inherit-templates` and deeply nested result hierarchies.
+ */
+export const nestedFoldedResponse: InsightResponse = {
+  ...baseFoldedResponse,
+  results: [
+    {
+      ...baseFoldedResponse.results[0],
+      childResults: [
+        {
+          ...insightChildResult1,
+          childResults: [
+            {
+              title: 'Grandchild: Router Configuration',
+              excerpt: 'Detailed router setup instructions',
+              clickUri: 'https://support.example.com/article/router',
+              uniqueId: 'insight-grandchild-1',
+              raw: {
+                foldingcollection: 'ConnectionIssues',
+                foldingchild: ['router-config'],
+                foldingparent: 'network-setup',
+              },
+            },
+          ],
+          totalNumberOfChildResults: 1,
+        },
+        insightChildResult2,
+      ],
+    },
+    baseFoldedResponse.results[1],
   ],
 };

@@ -4,6 +4,7 @@ import {html} from 'lit';
 import {
   baseFoldedResponse,
   MockInsightApi,
+  nestedFoldedResponse,
 } from '@/storybook-utils/api/insight/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
@@ -11,6 +12,7 @@ import {wrapInInsightFoldedResultList} from '@/storybook-utils/insight/insight-r
 import {wrapInInsightResultTemplate} from '@/storybook-utils/insight/insight-result-template-wrapper';
 
 const insightApiHarness = new MockInsightApi();
+insightApiHarness.searchEndpoint.mock(() => baseFoldedResponse);
 
 const CHILDREN_TEMPLATE_EXAMPLE = `<template>
   <atomic-result-section-title>
@@ -83,17 +85,46 @@ const meta: Meta = {
       control: false,
     },
   },
-  beforeEach: async () => {
-    insightApiHarness.searchEndpoint.clear();
-    insightApiHarness.searchEndpoint.mockOnce(() => baseFoldedResponse);
-  },
   play,
 };
 
 export default meta;
 
-export const Default: Story = {
-  name: 'In result children',
+export const Default: Story = {};
+
+export const WithNestedChildren: Story = {
+  name: 'With nested children',
+  render: () => html`
+    <atomic-result-section-title>
+      <atomic-result-link></atomic-result-link>
+    </atomic-result-section-title>
+    <atomic-result-section-children id="code-root">
+      <atomic-insight-result-children image-size="icon">
+        <atomic-insight-result-children-template>
+          <template>
+            <atomic-result-section-title>
+              <atomic-result-link></atomic-result-link>
+            </atomic-result-section-title>
+            <atomic-result-section-excerpt>
+              <atomic-result-text field="excerpt"></atomic-result-text>
+            </atomic-result-section-excerpt>
+            <atomic-result-section-children>
+              <atomic-insight-result-children
+                inherit-templates
+              ></atomic-insight-result-children>
+            </atomic-result-section-children>
+          </template>
+        </atomic-insight-result-children-template>
+      </atomic-insight-result-children>
+    </atomic-result-section-children>
+  `,
+  beforeEach: async () => {
+    insightApiHarness.searchEndpoint.mock(() => nestedFoldedResponse);
+    return () => {
+      insightApiHarness.searchEndpoint.reset();
+      insightApiHarness.searchEndpoint.mock(() => baseFoldedResponse);
+    };
+  },
 };
 
 export const WithConditions: Story = {
@@ -126,33 +157,6 @@ export const WithConditions: Story = {
             <atomic-result-section-excerpt>
               <atomic-result-text field="excerpt"></atomic-result-text>
             </atomic-result-section-excerpt>
-          </template>
-        </atomic-insight-result-children-template>
-      </atomic-insight-result-children>
-    </atomic-result-section-children>
-  `,
-};
-
-export const WithNestedChildren: Story = {
-  name: 'With nested children',
-  render: () => html`
-    <atomic-result-section-title>
-      <atomic-result-link></atomic-result-link>
-    </atomic-result-section-title>
-    <atomic-result-section-children id="code-root">
-      <atomic-insight-result-children image-size="icon">
-        <atomic-insight-result-children-template>
-          <template>
-            <atomic-result-section-title>
-              <atomic-result-link></atomic-result-link>
-            </atomic-result-section-title>
-            <atomic-result-section-excerpt>
-              <atomic-result-text field="excerpt"></atomic-result-text>
-            </atomic-result-section-excerpt>
-            <atomic-result-section-children>
-              <atomic-insight-result-children inherit-templates>
-              </atomic-insight-result-children>
-            </atomic-result-section-children>
           </template>
         </atomic-insight-result-children-template>
       </atomic-insight-result-children>
