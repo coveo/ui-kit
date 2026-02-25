@@ -3,24 +3,38 @@ import {EndpointHarness, type MockApi} from '../_base.js';
 import {baseResponse as baseGeneratedAnswer} from './generate-response.js';
 
 export class MockAgentApi implements MockApi {
-  readonly generateEndPoint;
+  readonly answerEndpoint;
+  readonly followUpEndpoint;
 
   constructor(basePath: string = 'https://:orgId.org.coveo.com') {
-    this.generateEndPoint = new EndpointHarness<
+    this.answerEndpoint = new EndpointHarness<
       () => HttpResponse<DefaultBodyType>
     >(
       'POST',
-      `${basePath}/rest/organizations/:orgId/agent/v1/:agentId/generate`,
+      `${basePath}/api/preview/organizations/:orgId/agents/:agentId/answer`,
+      baseGeneratedAnswer,
+      (response) => response()
+    );
+
+    this.followUpEndpoint = new EndpointHarness<
+      () => HttpResponse<DefaultBodyType>
+    >(
+      'POST',
+      `${basePath}/api/preview/organizations/:orgId/agents/:agentId/follow-up`,
       baseGeneratedAnswer,
       (response) => response()
     );
   }
 
   get handlers(): HttpHandler[] {
-    return [this.generateEndPoint.generateHandler()];
+    return [
+      this.answerEndpoint.generateHandler(),
+      this.followUpEndpoint.generateHandler(),
+    ];
   }
 
   clearAll(): void {
-    this.generateEndPoint.clear();
+    this.answerEndpoint.clear();
+    this.followUpEndpoint.clear();
   }
 }
