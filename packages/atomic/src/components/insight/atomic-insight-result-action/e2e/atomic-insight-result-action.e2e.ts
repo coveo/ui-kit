@@ -6,15 +6,9 @@ test.describe('atomic-insight-result-action', () => {
     await insightResultAction.hydrated.first().waitFor();
   });
 
-  test('should render the action button', async ({insightResultAction}) => {
+  test('should render all exposed parts', async ({insightResultAction}) => {
     await expect(insightResultAction.actionButton.first()).toBeVisible();
-  });
-
-  test('should render the action icon', async ({insightResultAction}) => {
     await expect(insightResultAction.actionIcon.first()).toBeVisible();
-  });
-
-  test('should render the action container', async ({insightResultAction}) => {
     await expect(insightResultAction.actionContainer.first()).toBeVisible();
   });
 });
