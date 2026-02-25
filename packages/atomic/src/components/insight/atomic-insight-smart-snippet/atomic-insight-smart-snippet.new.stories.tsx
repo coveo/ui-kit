@@ -76,6 +76,4 @@ const meta: Meta = {
 
 export default meta;
 
-export const Default: Story = {
-  tags: ['!dev'],
-};
+export const Default: Story = {};
