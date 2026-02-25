@@ -1,16 +1,14 @@
 import {expect, test} from './fixture';
 
 test.describe('atomic-insight-result-children-template', () => {
-  test('should display child results when a child of result children', async ({
-    resultChildrenTemplate,
-  }) => {
+  test('should display child results', async ({resultChildrenTemplate}) => {
     await resultChildrenTemplate.load({story: 'default'});
 
     await expect(resultChildrenTemplate.childrenRoot.first()).toBeVisible();
     await expect(resultChildrenTemplate.childResult).toBeVisible();
   });
 
-  test('should display child results with conditions applied', async ({
+  test('should display child results when conditions are applied', async ({
     resultChildrenTemplate,
   }) => {
     await resultChildrenTemplate.load({story: 'with-conditions'});
