@@ -22,6 +22,9 @@ export interface RenderAgentGenerationStepsProps {
   isStreaming: boolean;
 }
 
+/**
+ * @internal
+ */
 export const renderAgentGenerationSteps: FunctionalComponent<
   RenderAgentGenerationStepsProps
 > = ({props}) => {
