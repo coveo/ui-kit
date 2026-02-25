@@ -1,5 +1,4 @@
 import {createReducer} from '@reduxjs/toolkit';
-import type {StepName} from '../generated-answer/generated-answer-state.js';
 import {filterOutDuplicatedCitations} from '../generated-answer/utils/generated-answer-citation-utils.js';
 import {
   createFollowUpAnswer,
@@ -163,10 +162,10 @@ export const followUpAnswersReducer = createReducer(
           return;
         }
 
-        followUpAnswer.steps = [
-          ...followUpAnswer.steps,
+        followUpAnswer.generationSteps = [
+          ...followUpAnswer.generationSteps,
           {
-            name: payload.name as StepName,
+            name: payload.name,
             status: 'active',
             startedAt: payload.startedAt,
           },
@@ -178,14 +177,12 @@ export const followUpAnswersReducer = createReducer(
           return;
         }
 
-        for (let i = followUpAnswer.steps.length - 1; i >= 0; i--) {
-          const step = followUpAnswer.steps[i];
-
-          if (step.name === payload.name && step.status === 'active') {
-            step.status = 'completed';
-            step.finishedAt = payload.finishedAt;
-            break;
-          }
+        const step = followUpAnswer.generationSteps.findLast(
+          (step) => step.name === payload.name && step.status === 'active'
+        );
+        if (step) {
+          step.status = 'completed';
+          step.finishedAt = payload.finishedAt;
         }
       })
       .addCase(resetFollowUpAnswers, (state) => {

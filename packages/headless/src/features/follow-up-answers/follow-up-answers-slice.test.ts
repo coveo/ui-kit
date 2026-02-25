@@ -81,7 +81,7 @@ describe('follow-up answers slice', () => {
         disliked: false,
         feedbackSubmitted: false,
         cannotAnswer: false,
-        steps: [],
+        generationSteps: [],
       });
     });
 
@@ -846,16 +846,16 @@ describe('follow-up answers slice', () => {
     });
   });
 
-  describe('#startStep', () => {
+  describe('#followUpStepStarted', () => {
     it('should append a new active step with the provided payload', () => {
       const startedAt = 123;
       state.followUpAnswers = [
         {
           ...createInitialFollowUpAnswer('Question?'),
           answerId: 'answer-123',
-          steps: [
+          generationSteps: [
             {
-              name: 'search',
+              name: 'searching',
               status: 'completed',
               startedAt: 1,
               finishedAt: 2,
@@ -868,20 +868,20 @@ describe('follow-up answers slice', () => {
         state,
         followUpStepStarted({
           answerId: 'answer-123',
-          name: 'think',
+          name: 'thinking',
           startedAt,
         })
       );
 
-      expect(finalState.followUpAnswers[0].steps).toEqual([
+      expect(finalState.followUpAnswers[0].generationSteps).toEqual([
         {
-          name: 'search',
+          name: 'searching',
           status: 'completed',
           startedAt: 1,
           finishedAt: 2,
         },
         {
-          name: 'think',
+          name: 'thinking',
           status: 'active',
           startedAt,
         },
@@ -889,28 +889,28 @@ describe('follow-up answers slice', () => {
     });
   });
 
-  describe('#finishStep', () => {
+  describe('#followUpStepFinished', () => {
     it('should mark the most recent matching active step as completed', () => {
       const finishedAt = 999;
       state.followUpAnswers = [
         {
           ...createInitialFollowUpAnswer('Question?'),
           answerId: 'answer-123',
-          steps: [
+          generationSteps: [
             {
-              name: 'search' as const,
-              status: 'completed' as const,
+              name: 'searching',
+              status: 'active',
               startedAt: 1,
               finishedAt: 2,
             },
             {
-              name: 'think' as const,
-              status: 'completed' as const,
+              name: 'thinking',
+              status: 'completed',
               startedAt: 10,
             },
             {
-              name: 'search' as const,
-              status: 'active' as const,
+              name: 'searching',
+              status: 'active',
               startedAt: 20,
             },
           ],
@@ -921,25 +921,25 @@ describe('follow-up answers slice', () => {
         state,
         followUpStepFinished({
           answerId: 'answer-123',
-          name: 'search',
+          name: 'searching',
           finishedAt,
         })
       );
 
-      expect(finalState.followUpAnswers[0].steps).toEqual([
+      expect(finalState.followUpAnswers[0].generationSteps).toEqual([
         {
-          name: 'search',
-          status: 'completed',
+          name: 'searching',
+          status: 'active',
           startedAt: 1,
           finishedAt: 2,
         },
         {
-          name: 'think',
+          name: 'thinking',
           status: 'completed',
           startedAt: 10,
         },
         {
-          name: 'search',
+          name: 'searching',
           status: 'completed',
           startedAt: 20,
           finishedAt,
@@ -952,10 +952,10 @@ describe('follow-up answers slice', () => {
         {
           ...createInitialFollowUpAnswer('Question?'),
           answerId: 'answer-123',
-          steps: [
+          generationSteps: [
             {
-              name: 'search' as const,
-              status: 'completed' as const,
+              name: 'searching',
+              status: 'completed',
               startedAt: 1,
               finishedAt: 2,
             },
@@ -967,13 +967,13 @@ describe('follow-up answers slice', () => {
         state,
         followUpStepFinished({
           answerId: 'answer-123',
-          name: 'think',
+          name: 'thinking',
           finishedAt: 50,
         })
       );
 
-      expect(finalState.followUpAnswers[0].steps).toEqual(
-        state.followUpAnswers[0].steps
+      expect(finalState.followUpAnswers[0].generationSteps).toEqual(
+        state.followUpAnswers[0].generationSteps
       );
     });
   });

@@ -28,7 +28,8 @@ import {
   type GeneratedAnswerProps,
 } from '../../core/generated-answer/headless-core-generated-answer.js';
 
-interface GeneratedAnswerWithFollowUpsState extends GeneratedAnswerState {
+export interface GeneratedAnswerWithFollowUpsState
+  extends GeneratedAnswerState {
   followUpAnswers: FollowUpAnswersState;
 }
 
@@ -131,7 +132,7 @@ export function buildGeneratedAnswerWithFollowUps(
         responseFormat: clientState.responseFormat,
         fieldsToIncludeInCitations: clientState.fieldsToIncludeInCitations,
         answerGenerationMode: clientState.answerGenerationMode,
-        steps: clientState.steps,
+        generationSteps: clientState.generationSteps,
         id: clientState.id,
 
         /** Follow-up answers state */

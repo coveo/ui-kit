@@ -587,9 +587,9 @@ describe('generated answer slice', () => {
       const startedAt = 123;
       const initialState = {
         ...baseState,
-        steps: [
+        generationSteps: [
           {
-            name: 'search' as const,
+            name: 'searching' as const,
             status: 'completed' as const,
             startedAt: 1,
             finishedAt: 2,
@@ -599,18 +599,18 @@ describe('generated answer slice', () => {
 
       const finalState = generatedAnswerReducer(
         initialState,
-        startStep({name: 'think', startedAt})
+        startStep({name: 'thinking', startedAt})
       );
 
-      expect(finalState.steps).toEqual([
+      expect(finalState.generationSteps).toEqual([
         {
-          name: 'search',
+          name: 'searching',
           status: 'completed',
           startedAt: 1,
           finishedAt: 2,
         },
         {
-          name: 'think',
+          name: 'thinking',
           status: 'active',
           startedAt,
         },
@@ -623,20 +623,20 @@ describe('generated answer slice', () => {
       const finishedAt = 999;
       const initialState = {
         ...baseState,
-        steps: [
+        generationSteps: [
           {
-            name: 'search' as const,
-            status: 'completed' as const,
+            name: 'searching' as const,
+            status: 'active' as const,
             startedAt: 1,
             finishedAt: 2,
           },
           {
-            name: 'think' as const,
+            name: 'thinking' as const,
             status: 'completed' as const,
             startedAt: 10,
           },
           {
-            name: 'search' as const,
+            name: 'searching' as const,
             status: 'active' as const,
             startedAt: 20,
           },
@@ -645,23 +645,23 @@ describe('generated answer slice', () => {
 
       const finalState = generatedAnswerReducer(
         initialState,
-        finishStep({name: 'search', finishedAt})
+        finishStep({name: 'searching', finishedAt})
       );
 
-      expect(finalState.steps).toEqual([
+      expect(finalState.generationSteps).toEqual([
         {
-          name: 'search',
-          status: 'completed',
+          name: 'searching',
+          status: 'active',
           startedAt: 1,
           finishedAt: 2,
         },
         {
-          name: 'think',
+          name: 'thinking',
           status: 'completed',
           startedAt: 10,
         },
         {
-          name: 'search',
+          name: 'searching',
           status: 'completed',
           startedAt: 20,
           finishedAt,
@@ -672,9 +672,9 @@ describe('generated answer slice', () => {
     it('should leave steps unchanged when no matching active step is found', () => {
       const initialState = {
         ...baseState,
-        steps: [
+        generationSteps: [
           {
-            name: 'search' as const,
+            name: 'searching' as const,
             status: 'completed' as const,
             startedAt: 1,
             finishedAt: 2,
@@ -684,10 +684,10 @@ describe('generated answer slice', () => {
 
       const finalState = generatedAnswerReducer(
         initialState,
-        finishStep({name: 'think', finishedAt: 50})
+        finishStep({name: 'thinking', finishedAt: 50})
       );
 
-      expect(finalState.steps).toEqual(initialState.steps);
+      expect(finalState.generationSteps).toEqual(initialState.generationSteps);
     });
   });
 });

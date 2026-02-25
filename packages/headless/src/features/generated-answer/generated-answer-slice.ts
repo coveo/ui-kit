@@ -30,10 +30,7 @@ import {
   updateMessage,
   updateResponseFormat,
 } from './generated-answer-actions.js';
-import {
-  getGeneratedAnswerInitialState,
-  type StepName,
-} from './generated-answer-state.js';
+import {getGeneratedAnswerInitialState} from './generated-answer-state.js';
 import {filterOutDuplicatedCitations} from './utils/generated-answer-citation-utils.js';
 
 export const generatedAnswerReducer = createReducer(
@@ -149,24 +146,19 @@ export const generatedAnswerReducer = createReducer(
         state.answerGenerationMode = payload;
       })
       .addCase(startStep, (state, {payload}) => {
-        state.steps = [
-          ...state.steps,
-          {
-            name: payload.name as StepName,
-            status: 'active',
-            startedAt: payload.startedAt,
-          },
-        ];
+        state.generationSteps.push({
+          name: payload.name,
+          status: 'active',
+          startedAt: payload.startedAt,
+        });
       })
       .addCase(finishStep, (state, {payload}) => {
-        for (let i = state.steps.length - 1; i >= 0; i--) {
-          const step = state.steps[i];
-
-          if (step.name === payload.name && step.status === 'active') {
-            step.status = 'completed';
-            step.finishedAt = payload.finishedAt;
-            break;
-          }
+        const step = state.generationSteps.findLast(
+          (step) => step.name === payload.name && step.status === 'active'
+        );
+        if (step) {
+          step.status = 'completed';
+          step.finishedAt = payload.finishedAt;
         }
       })
 );

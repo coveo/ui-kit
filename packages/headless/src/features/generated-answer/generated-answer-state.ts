@@ -5,13 +5,17 @@ import type {
   GeneratedResponseFormat,
 } from './generated-response-format.js';
 
-type StepStatus = 'active' | 'completed';
-export type StepName = 'search' | 'think' | 'generate';
-export const STEP_NAMES = ['search', 'think', 'generate'] as const;
+type GenerationStepStatus = 'active' | 'completed';
+export type GenerationStepName = (typeof GENERATION_STEP_NAMES)[number];
+export const GENERATION_STEP_NAMES = [
+  'searching',
+  'thinking',
+  'answering',
+] as const;
 
-interface Step {
-  name: StepName;
-  status: StepStatus;
+export interface GenerationStep {
+  name: GenerationStepName;
+  status: GenerationStepStatus;
   startedAt: number;
   finishedAt?: number;
 }
@@ -72,7 +76,7 @@ export interface GeneratedAnswerBase {
   /**
    * The list of steps involved in generating the answer, along with their status and timestamps.
    */
-  steps: Step[];
+  generationSteps: GenerationStep[];
 }
 
 /**
@@ -145,6 +149,6 @@ export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
     answerApiQueryParams: undefined,
     answerId: undefined,
     answerGenerationMode: 'automatic',
-    steps: [],
+    generationSteps: [],
   };
 }

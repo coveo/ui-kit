@@ -49,5 +49,5 @@ export const createInitialFollowUpAnswer = (
   feedbackSubmitted: false,
   cannotAnswer: false,
   isActive: true,
-  steps: [],
+  generationSteps: [],
 });
