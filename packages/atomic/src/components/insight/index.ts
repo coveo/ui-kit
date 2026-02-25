@@ -30,6 +30,7 @@ export {AtomicInsightSmartSnippetFeedbackModal} from './atomic-insight-smart-sni
 export {AtomicInsightSmartSnippetSuggestions} from './atomic-insight-smart-snippet-suggestions/atomic-insight-smart-snippet-suggestions.js';
 export {AtomicInsightTab} from './atomic-insight-tab/atomic-insight-tab.js';
 export {AtomicInsightTabs} from './atomic-insight-tabs/atomic-insight-tabs.js';
+export {AtomicInsightTimeframeFacet} from './atomic-insight-timeframe-facet/atomic-insight-timeframe-facet.js';
 export {AtomicInsightUserActionsModal} from './atomic-insight-user-actions-modal/atomic-insight-user-actions-modal.js';
 export {AtomicInsightUserActionsSession} from './atomic-insight-user-actions-session/atomic-insight-user-actions-session.js';
 export {AtomicInsightUserActionsTimeline} from './atomic-insight-user-actions-timeline/atomic-insight-user-actions-timeline.js';

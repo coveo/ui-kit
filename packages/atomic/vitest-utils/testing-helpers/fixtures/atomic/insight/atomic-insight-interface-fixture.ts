@@ -88,6 +88,7 @@ export const defaultBindings = {
   } as Partial<InsightStore> as InsightStore,
   engine: {
     subscribe: genericSubscribe,
+    dispatch: vi.fn(),
   } as Partial<InsightEngine> as InsightEngine,
 } as const;
 
