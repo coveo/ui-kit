@@ -60,11 +60,9 @@ export class AtomicInsightResultChildrenTemplate
   constructor() {
     super();
     const validParents = ['atomic-insight-result-children'];
-    const allowEmpty = true;
     this.resultTemplateController = new ResultTemplateController(
       this,
-      validParents,
-      allowEmpty
+      validParents
     );
   }
 
