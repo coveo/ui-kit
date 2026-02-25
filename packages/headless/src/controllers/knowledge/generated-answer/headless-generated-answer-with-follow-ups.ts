@@ -10,6 +10,7 @@ import {
   selectOrganizationId,
 } from '../../../features/configuration/configuration-selectors.js';
 import {
+  activeFollowUpStartFailed,
   createFollowUpAnswer,
   dislikeFollowUp,
   likeFollowUp,
@@ -146,7 +147,7 @@ export function buildGeneratedAnswerWithFollowUps(
       );
     },
 
-    askFollowUp(question: string) {
+    async askFollowUp(question: string) {
       if (!question || question.trim() === '') {
         return;
       }
@@ -160,16 +161,26 @@ export function buildGeneratedAnswerWithFollowUps(
       }
 
       engine.dispatch(createFollowUpAnswer({question}));
-      followUpAgent.runAgent(
-        {
-          forwardedProps: {
-            q: question,
-            conversationId,
-            accessToken,
+      try {
+        await followUpAgent.runAgent(
+          {
+            forwardedProps: {
+              q: question,
+              conversationId,
+              accessToken,
+            },
           },
-        },
-        followUpStrategy
-      );
+          followUpStrategy
+        );
+      } catch (error) {
+        engine.dispatch(
+          activeFollowUpStartFailed({
+            message:
+              'An error occurred while starting the follow-up answer generation.',
+          })
+        );
+        console.error('Error running the follow-up agent:', error);
+      }
     },
   };
 }

@@ -9,7 +9,10 @@ import {
   selectEnvironment,
   selectOrganizationId,
 } from '../../../../../features/configuration/configuration-selectors.js';
-import {setIsLoading} from '../../../../../features/generated-answer/generated-answer-actions.js';
+import {
+  setIsLoading,
+  updateError,
+} from '../../../../../features/generated-answer/generated-answer-actions.js';
 import {constructGenerateHeadAnswerParams} from '../../../../../features/generated-answer/generated-answer-request.js';
 import {type AnswerAgent, createAnswerAgent} from './answer-agent.js';
 import {createAnswerRunner} from './answer-agent-runner.js';
@@ -41,9 +44,11 @@ vi.mock('./head-answer-strategy.js', () => ({
 }));
 
 describe('createAnswerRunner', () => {
+  const runAgentMock = vi.fn();
+  const abortRunMock = vi.fn();
   const mockAgent = {
-    runAgent: vi.fn(),
-    abortRun: vi.fn(),
+    runAgent: runAgentMock,
+    abortRun: abortRunMock,
   } as unknown as AnswerAgent;
   const state = {mock: 'state'} as any;
   const dispatch = vi.fn() as unknown as Dispatch;
@@ -58,6 +63,9 @@ describe('createAnswerRunner', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    runAgentMock.mockReset();
+    runAgentMock.mockResolvedValue(undefined);
+    abortRunMock.mockReset();
     vi.mocked(selectAgentId).mockReturnValue('agent-123');
     vi.mocked(selectOrganizationId).mockReturnValue('org-123');
     vi.mocked(selectEnvironment).mockReturnValue('prod');
@@ -71,19 +79,21 @@ describe('createAnswerRunner', () => {
 
   const buildRunner = () => createAnswerRunner();
 
-  it('aborts the previous run before starting a new one', () => {
+  it('aborts the previous run before starting a new one', async () => {
     const runner = buildRunner();
 
-    runner.run(state, dispatch, navigatorProvider);
-    runner.run(state, dispatch, navigatorProvider);
+    await Promise.all([
+      runner.run(state, dispatch, navigatorProvider),
+      runner.run(state, dispatch, navigatorProvider),
+    ]);
 
-    expect(mockAgent.abortRun).toHaveBeenCalledTimes(1);
+    expect(abortRunMock).toHaveBeenCalledTimes(1);
   });
 
-  it('creates the agent using configuration selectors', () => {
+  it('creates the agent using configuration selectors', async () => {
     const runner = buildRunner();
 
-    runner.run(state, dispatch, navigatorProvider);
+    await runner.run(state, dispatch, navigatorProvider);
 
     expect(createAnswerAgent).toHaveBeenCalledWith(
       'agent-123',
@@ -92,10 +102,10 @@ describe('createAnswerRunner', () => {
     );
   });
 
-  it('builds the strategy and executes the agent with forwarded props', () => {
+  it('builds the strategy and executes the agent with forwarded props', async () => {
     const runner = buildRunner();
 
-    runner.run(state, dispatch, navigatorProvider);
+    await runner.run(state, dispatch, navigatorProvider);
 
     expect(createHeadAnswerStrategy).toHaveBeenCalledWith(dispatch);
     expect(constructGenerateHeadAnswerParams).toHaveBeenCalledWith(
@@ -114,20 +124,42 @@ describe('createAnswerRunner', () => {
     );
   });
 
-  it('exposes an abortRun helper that cancels the active agent', () => {
+  it('exposes an abortRun helper that cancels the active agent', async () => {
     const runner = buildRunner();
 
-    runner.run(state, dispatch, navigatorProvider);
+    await runner.run(state, dispatch, navigatorProvider);
     runner.abortRun();
 
-    expect(mockAgent.abortRun).toHaveBeenCalledTimes(1);
+    expect(abortRunMock).toHaveBeenCalledTimes(1);
   });
 
-  it('dispatches the loading state when a run starts', () => {
+  it('dispatches the loading state when a run starts', async () => {
     const runner = buildRunner();
 
-    runner.run(state, dispatch, navigatorProvider);
+    await runner.run(state, dispatch, navigatorProvider);
 
     expect(dispatch).toHaveBeenCalledWith(setIsLoading(true));
+  });
+
+  it('dispatches an error when the agent fails to start', async () => {
+    const runner = buildRunner();
+    const error = new Error('Network hiccup');
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    runAgentMock.mockRejectedValueOnce(error);
+
+    await runner.run(state, dispatch, navigatorProvider);
+
+    expect(dispatch).toHaveBeenCalledWith(
+      updateError({
+        message: 'An error occurred while starting the answer generation.',
+      })
+    );
+    expect(dispatch).not.toHaveBeenCalledWith(setIsLoading(true));
+    expect(consoleSpy).toHaveBeenCalledWith(
+      'Error running the answer agent:',
+      error
+    );
+
+    consoleSpy.mockRestore();
   });
 });

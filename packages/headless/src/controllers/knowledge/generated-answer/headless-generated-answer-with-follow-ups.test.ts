@@ -5,6 +5,7 @@ import type {AnswerGenerationApiState} from '../../../api/knowledge/answer-gener
 import {setAgentId} from '../../../features/configuration/configuration-actions.js';
 import {getConfigurationInitialState} from '../../../features/configuration/configuration-state.js';
 import {
+  activeFollowUpStartFailed,
   createFollowUpAnswer,
   dislikeFollowUp,
   likeFollowUp,
@@ -47,6 +48,7 @@ const mockCreateFollowUpStrategy = vi.spyOn(
   'createFollowUpStrategy'
 );
 const mockCreateFollowUpAnswer = vi.mocked(createFollowUpAnswer);
+const mockActiveFollowUpStartFailed = vi.mocked(activeFollowUpStartFailed);
 
 vi.mock('../../core/generated-answer/headless-core-generated-answer.js', () => {
   return {
@@ -411,6 +413,37 @@ describe('GeneratedAnswerWithFollowUps', () => {
 
       expect(mockCreateFollowUpAnswer).not.toHaveBeenCalled();
       expect(mockFollowUpAgent.runAgent).not.toHaveBeenCalled();
+    });
+
+    it('dispatches activeFollowUpStartFailed and logs when the agent fails to start', async () => {
+      engine = buildEngineWithGeneratedAnswer({
+        followUpAnswers: {
+          ...getFollowUpAnswersInitialState(),
+          conversationId,
+        },
+      });
+      const controller = createGeneratedAnswerWithFollowUps();
+      const consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      const failureAction = {type: 'follow-up/startFailed'};
+      const error = new Error('network down');
+      mockActiveFollowUpStartFailed.mockReturnValue(failureAction as never);
+      mockFollowUpAgent.runAgent.mockRejectedValueOnce(error);
+
+      await controller.askFollowUp(question);
+
+      expect(mockFollowUpAgent.runAgent).toHaveBeenCalled();
+      expect(mockActiveFollowUpStartFailed).toHaveBeenCalledWith({
+        message:
+          'An error occurred while starting the follow-up answer generation.',
+      });
+      expect(engine.dispatch).toHaveBeenCalledWith(failureAction);
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        'Error running the follow-up agent:',
+        error
+      );
+      consoleErrorSpy.mockRestore();
     });
   });
 });

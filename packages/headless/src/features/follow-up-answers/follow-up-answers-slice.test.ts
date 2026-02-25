@@ -1,5 +1,6 @@
 import {buildMockCitation} from '../../test/mock-citation.js';
 import {
+  activeFollowUpStartFailed,
   createFollowUpAnswer,
   dislikeFollowUp,
   followUpCitationsReceived,
@@ -653,6 +654,45 @@ describe('follow-up answers slice', () => {
       const finalState = followUpAnswersReducer(
         state,
         followUpFailed({answerId: 'answer-123', message: 'error'})
+      );
+
+      expect(finalState).toEqual(state);
+    });
+  });
+
+  describe('#activeFollowUpStartFailed', () => {
+    it('resets the active follow-up when the run fails to start', () => {
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answer: 'Partial answer',
+          citations: [buildMockCitation()],
+          isLoading: true,
+          isStreaming: true,
+        },
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        activeFollowUpStartFailed({message: 'failure'})
+      );
+
+      const [activeFollowUp] = finalState.followUpAnswers;
+      expect(activeFollowUp.isLoading).toBe(false);
+      expect(activeFollowUp.isStreaming).toBe(false);
+      expect(activeFollowUp.error).toEqual({message: 'failure'});
+      expect(activeFollowUp.citations).toEqual([]);
+      expect(activeFollowUp.answer).toBeUndefined();
+    });
+
+    it('does nothing when there is no active follow-up', () => {
+      state.followUpAnswers = [
+        {...createInitialFollowUpAnswer('Question?'), isActive: false},
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        activeFollowUpStartFailed({message: 'failure'})
       );
 
       expect(finalState).toEqual(state);

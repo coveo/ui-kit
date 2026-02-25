@@ -6,7 +6,10 @@ import {
   selectEnvironment,
   selectOrganizationId,
 } from '../../../../../features/configuration/configuration-selectors.js';
-import {setIsLoading} from '../../../../../features/generated-answer/generated-answer-actions.js';
+import {
+  setIsLoading,
+  updateError,
+} from '../../../../../features/generated-answer/generated-answer-actions.js';
 import {
   constructGenerateHeadAnswerParams,
   type StateNeededForHeadAnswerParams,
@@ -29,7 +32,7 @@ export const createAnswerRunner = () => {
     currentAgent = undefined;
   };
 
-  const run = (
+  const run = async (
     state: StateNeededForHeadAnswerParams,
     dispatch: Dispatch,
     getNavigatorContext: () => NavigatorContext
@@ -50,17 +53,25 @@ export const createAnswerRunner = () => {
       state,
       getNavigatorContext()
     );
-
-    agent.runAgent(
-      {
-        forwardedProps: {
-          params,
-          accessToken,
+    try {
+      await agent.runAgent(
+        {
+          forwardedProps: {
+            params,
+            accessToken,
+          },
         },
-      },
-      strategy
-    );
-    dispatch(setIsLoading(true));
+        strategy
+      );
+      dispatch(setIsLoading(true));
+    } catch (error) {
+      dispatch(
+        updateError({
+          message: 'An error occurred while starting the answer generation.',
+        })
+      );
+      console.error('Error running the answer agent:', error);
+    }
   };
 
   return {

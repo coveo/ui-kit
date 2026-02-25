@@ -120,6 +120,14 @@ export const followUpFailed = createAction(
     })
 );
 
+export const activeFollowUpStartFailed = createAction(
+  'followUpAnswers/activeFollowUpStartFailed',
+  (payload: {message?: string}) =>
+    validatePayload(payload, {
+      message: new StringValue(),
+    })
+);
+
 export const likeFollowUp = createAction(
   'followUpAnswers/likeFollowUp',
   (payload: {answerId: string}) =>
