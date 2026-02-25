@@ -655,24 +655,23 @@ export class AtomicGeneratedAnswer
     return Boolean(this.agentId);
   }
 
-  private get generatedAnswerWithFollowUps():
-    | GeneratedAnswerWithFollowUps
-    | undefined {
-    if (
-      !this.hasAgentId ||
-      !this.generatedAnswer ||
-      !('askFollowUp' in this.generatedAnswer)
-    ) {
-      return undefined;
-    }
-
-    return this.generatedAnswer as GeneratedAnswerWithFollowUps;
+  private get isGeneratedAnswerWithFollowUps() {
+    return (
+      this.hasAgentId &&
+      !!this.generatedAnswer &&
+      'askFollowUp' in this.generatedAnswer
+    );
   }
 
   private get isScrollableContentEnabled() {
+    if (!this.isGeneratedAnswerWithFollowUps) {
+      return false;
+    }
+
+    const generatedAnswerWithFollowUps = this
+      .generatedAnswer as GeneratedAnswerWithFollowUps;
     return (
-      this.generatedAnswerWithFollowUps?.state.followUpAnswers?.isEnabled ===
-      true
+      generatedAnswerWithFollowUps.state.followUpAnswers?.isEnabled === true
     );
   }
 
