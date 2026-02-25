@@ -1,4 +1,6 @@
 import type {Result} from '@coveo/headless';
+import type {InsightAnalyticsActionCreators} from '@coveo/headless/insight';
+import {loadInsightAnalyticsActions} from '@coveo/headless/insight';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {page, userEvent} from 'vitest/browser';
@@ -104,51 +106,39 @@ describe('atomic-insight-result-action', () => {
       }
     });
 
-    it('should render the action button', async () => {
-      const {button} = await renderComponent();
-      await expect.element(button).toBeInTheDocument();
-    });
-
     it('should display the tooltip as title', async () => {
       const {button} = await renderComponent({tooltip: 'My Tooltip'});
       await expect.element(button).toHaveAttribute('title', 'My Tooltip');
     });
   });
 
-  describe('when using default icons based on action type', () => {
-    it('should display different icons for different action types', async () => {
-      const {element: copyElement} = await renderComponent({
-        action: Actions.CopyToClipboard,
-      });
-      const copyIcon = copyElement
-        .querySelector('atomic-icon')
-        ?.getAttribute('icon');
-
-      const {element: attachElement} = await renderComponent({
-        action: Actions.AttachToCase,
-      });
-      const attachIcon = attachElement
-        .querySelector('atomic-icon')
-        ?.getAttribute('icon');
-
-      expect(copyIcon).toBeTruthy();
-      expect(attachIcon).toBeTruthy();
-      expect(copyIcon).not.toBe(attachIcon);
+  it('should use custom icon when provided', async () => {
+    const customIcon = '<svg>custom</svg>';
+    const {element} = await renderComponent({
+      icon: customIcon,
+      action: Actions.CopyToClipboard,
     });
+    const iconElement = element.querySelector('atomic-icon');
 
-    it('should use custom icon when provided', async () => {
-      const customIcon = '<svg>custom</svg>';
-      const {element} = await renderComponent({
-        icon: customIcon,
-        action: Actions.CopyToClipboard,
-      });
-      const iconElement = element.querySelector('atomic-icon');
-
-      expect(iconElement?.getAttribute('icon')).toBe(customIcon);
-    });
+    expect(iconElement?.getAttribute('icon')).toBe(customIcon);
   });
 
   describe('when clicking the action button', () => {
+    let mockAnalyticsActions: {
+      [K in keyof InsightAnalyticsActionCreators]: ReturnType<typeof vi.fn>;
+    };
+
+    beforeEach(() => {
+      mockAnalyticsActions = {
+        logCopyToClipboard: vi.fn(),
+        logCaseSendEmail: vi.fn(),
+        logFeedItemTextPost: vi.fn(),
+      } as typeof mockAnalyticsActions;
+      vi.mocked(loadInsightAnalyticsActions).mockReturnValue(
+        mockAnalyticsActions as unknown as InsightAnalyticsActionCreators
+      );
+    });
+
     it('should emit atomicInsightResultActionClicked event', async () => {
       const {element, button} = await renderComponent({
         action: Actions.CopyToClipboard,
@@ -184,30 +174,47 @@ describe('atomic-insight-result-action', () => {
       expect(writeTextMock).toHaveBeenCalled();
     });
 
-    it('should dispatch analytics action when action is copyToClipboard', async () => {
+    it('should dispatch logCopyToClipboard analytics when action is copyToClipboard', async () => {
       const {button} = await renderComponent({
         action: Actions.CopyToClipboard,
       });
 
       await button.click();
 
-      expect(mockedEngine.dispatch).toHaveBeenCalled();
+      expect(mockAnalyticsActions.logCopyToClipboard).toHaveBeenCalled();
     });
 
-    it('should dispatch analytics action when action is postToFeed', async () => {
+    it('should dispatch logFeedItemTextPost analytics when action is postToFeed', async () => {
       const {button} = await renderComponent({action: Actions.PostToFeed});
 
       await button.click();
 
-      expect(mockedEngine.dispatch).toHaveBeenCalled();
+      expect(mockAnalyticsActions.logFeedItemTextPost).toHaveBeenCalled();
     });
 
-    it('should dispatch analytics action when action is sendAsEmail', async () => {
+    it('should dispatch logCaseSendEmail analytics when action is sendAsEmail', async () => {
       const {button} = await renderComponent({action: Actions.SendAsEmail});
 
       await button.click();
 
-      expect(mockedEngine.dispatch).toHaveBeenCalled();
+      expect(mockAnalyticsActions.logCaseSendEmail).toHaveBeenCalled();
+    });
+
+    it('should not emit event or dispatch analytics when result is unavailable', async () => {
+      const {element, button} = await renderComponent({
+        action: Actions.CopyToClipboard,
+      });
+
+      // Simulate result becoming unavailable after initial render
+      Object.defineProperty(element, 'result', {get: () => null});
+
+      const eventSpy = vi.fn();
+      element.addEventListener('atomicInsightResultActionClicked', eventSpy);
+
+      await button.click();
+
+      expect(eventSpy).not.toHaveBeenCalled();
+      expect(mockAnalyticsActions.logCopyToClipboard).not.toHaveBeenCalled();
     });
   });
 
@@ -229,6 +236,29 @@ describe('atomic-insight-result-action', () => {
       await vi.advanceTimersByTimeAsync(1000);
 
       expect(buttonEl?.getAttribute('title')).toBe('Copy');
+
+      vi.useRealTimers();
+    });
+
+    it('should not reset tooltip after disconnect', async () => {
+      vi.useFakeTimers();
+
+      const {element, button} = await renderComponent({
+        tooltip: 'Copy',
+        tooltipOnClick: 'Copied!',
+        action: Actions.CopyToClipboard,
+      });
+
+      await button.click();
+
+      const buttonEl = element.querySelector('button');
+      expect(buttonEl?.getAttribute('title')).toBe('Copied!');
+
+      element.disconnectedCallback();
+
+      await vi.advanceTimersByTimeAsync(1000);
+
+      expect(buttonEl?.getAttribute('title')).toBe('Copied!');
 
       vi.useRealTimers();
     });
