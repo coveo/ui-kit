@@ -12,10 +12,9 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   className="AtomicInsightResultChildrenTemplate"
 >
 
-This component defines the UI display of child results within an `atomic-insight-result-children` component.
-A `template` element must be the child of an `atomic-insight-result-children-template`. Furthermore, an `atomic-insight-result-children` must be the parent of each `atomic-insight-result-children-template`.
+Each `atomic-insight-result-children-template` must contain a `<template>` element as a direct child, and must itself be a direct child of `atomic-insight-result-children`.
 
-**Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
+**Note:** Any `<script>` tags inside a `<template>` element will not be executed when results are rendered.
 
 Example usage within a folded result list:
 

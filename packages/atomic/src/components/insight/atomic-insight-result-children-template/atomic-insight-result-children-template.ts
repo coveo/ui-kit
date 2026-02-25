@@ -14,9 +14,9 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {mapProperty} from '@/src/utils/props-utils';
 
 /**
- * The `atomic-insight-result-children-template` component determines the format of child results within an `atomic-insight-result-children` component.
+ * The `atomic-insight-result-children-template` component determines the display format of child results within an `atomic-insight-result-children` component.
  *
- * @slot default - The default slot where to insert the template element.
+ * @slot default - The `<template>` element defining the layout of child results.
  */
 @customElement('atomic-insight-result-children-template')
 @withTailwindStyles
@@ -28,19 +28,19 @@ export class AtomicInsightResultChildrenTemplate
   @state() error!: Error;
 
   /**
-   * A function that must return true on results for the result template to apply.
+   * An array of functions that must each return `true` for this template to apply to a child result.
    * Set programmatically before initialization, not via attribute.
    *
-   * For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`:
+   * For example, the following targets a template and sets a condition to make it apply only to child results whose `title` contains `singapore`:
    * `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
    */
   @property({attribute: false, type: Array, converter: arrayConverter})
   conditions: InsightResultTemplateCondition[] = [];
 
   /**
-   * The field and values that define which result items the condition must be applied to.
+   * The field and values that define which child results this template applies to.
    *
-   * For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`
+   * For example, a template with the following attribute only applies to child results whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`
    * @type {Record<string, string[]>}
    * @default {}
    */
@@ -48,9 +48,9 @@ export class AtomicInsightResultChildrenTemplate
   mustMatch!: Record<string, string[]>;
 
   /**
-   * The field and values that define which result items the condition must not be applied to.
+   * The field and values that exclude child results from this template.
    *
-   * For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage"`
+   * For example, a template with the following attribute only applies to child results whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage"`
    * @type {Record<string, string[]>}
    * @default {}
    */
@@ -81,7 +81,7 @@ export class AtomicInsightResultChildrenTemplate
   }
 
   /**
-   * Gets the appropriate result template based on conditions applied.
+   * Returns the result template to apply to a child result, based on all defined conditions.
    */
   public async getTemplate(): Promise<InsightResultTemplate<DocumentFragment> | null> {
     const template = this.resultTemplateController?.getTemplate(
