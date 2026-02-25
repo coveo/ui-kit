@@ -53,6 +53,7 @@ export class AtomicInsightResultAction
 
   private itemContextController!: ItemContextController<Result>;
   private actions!: InsightAnalyticsActionCreators;
+  private tooltipResetTimeout?: ReturnType<typeof setTimeout>;
 
   /**
    * Specify the result action icon to display.
@@ -93,6 +94,11 @@ export class AtomicInsightResultAction
     });
   }
 
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    clearTimeout(this.tooltipResetTimeout);
+  }
+
   private get result(): Result | null {
     return this.itemContextController.item;
   }
@@ -110,7 +116,8 @@ export class AtomicInsightResultAction
     if (this.tooltipOnClick) {
       const originalTooltip = this.tooltip;
       this.currentTooltip = this.tooltipOnClick;
-      setTimeout(() => {
+      clearTimeout(this.tooltipResetTimeout);
+      this.tooltipResetTimeout = setTimeout(() => {
         this.currentTooltip = originalTooltip;
       }, 1000);
     }
