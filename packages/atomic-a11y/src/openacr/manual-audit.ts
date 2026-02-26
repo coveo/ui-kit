@@ -44,6 +44,8 @@ export function countManualConformances(
   return {pass, fail, partial, notApplicable};
 }
 const LOG_PREFIX = '[json-to-openacr]';
+const BASELINE_FILE_PREFIX = 'manual-audit-';
+const BASELINE_FILE_EXTENSION = '.json';
 
 const CRITERION_KEY_REGEX = /^(\d+(?:\.\d+)+)-/;
 
@@ -143,12 +145,11 @@ export async function loadManualAuditData(
   const allAggregates = new Map<string, ManualAuditAggregate[]>();
   let loadedCount = 0;
   let fileCount = 0;
+  let baselineFiles: string[] = [];
 
   try {
     const files = await readdir(dirPath);
-    const baselineFiles = files.filter((file) =>
-      BASELINE_FILE_PATTERN.test(file)
-    );
+    baselineFiles = files.filter((file) => BASELINE_FILE_PATTERN.test(file));
     fileCount = baselineFiles.length;
 
     for (const file of baselineFiles) {
@@ -194,9 +195,18 @@ export async function loadManualAuditData(
       const [, criterionId] = key.split(':');
       criteriaSet.add(criterionId);
     }
+    const baselineNames = baselineFiles
+      .map((file) => file.replace(BASELINE_FILE_PREFIX, ''))
+      .map((file) =>
+        file.endsWith(BASELINE_FILE_EXTENSION)
+          ? file.slice(0, -BASELINE_FILE_EXTENSION.length)
+          : file
+      )
+      .filter(Boolean);
+    const baselineList = baselineNames.join(', ');
     console.log(
       LOG_PREFIX,
-      `Loaded ${loadedCount} manual audit entries across ${criteriaSet.size} criteria from ${fileCount} baseline file(s).`
+      `Loaded ${loadedCount} manual audit entries across ${criteriaSet.size} criteria from ${fileCount} baseline file(s): ${baselineList}.`
     );
   }
 
