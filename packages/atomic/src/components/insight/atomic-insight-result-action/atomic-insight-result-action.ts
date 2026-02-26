@@ -33,12 +33,12 @@ export enum Actions {
 }
 
 /**
- * The `atomic-insight-result-action` component renders an interactive button
- * that emits an `atomicInsightResultActionClicked` event when clicked.
+ * The `atomic-insight-result-action` component renders an interactive action button for insight results.
  *
  * @part result-action-container - The result action container
  * @part result-action-button - The result action button
  * @part result-action-icon - The result action icon
+ * @event atomicInsightResultActionClicked - Fired when the action button is clicked. The event detail contains the action type and the result object.
  */
 @customElement('atomic-insight-result-action')
 @bindings()
