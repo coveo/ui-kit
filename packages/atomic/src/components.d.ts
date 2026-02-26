@@ -5,31 +5,11 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilterRange, DateRangeRequest } from "@coveo/headless";
-export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { DateFilterRange, DateRangeRequest } from "@coveo/headless";
 export namespace Components {
-    interface AtomicInsightResultAction {
-        /**
-          * The type of action to perform when the result action is clicked. This will be sent along the event fired when the button is clicked.
-         */
-        "action": Actions | string;
-        /**
-          * Specify the result action icon to display.
-         */
-        "icon": string;
-        /**
-          * The text tooltip to show on the result action icon.
-         */
-        "tooltip": string;
-        /**
-          * The text tooltip to show on the result action icon for some time after clicking the button.
-         */
-        "tooltipOnClick": string;
-    }
     /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
      * Internal component made to be integrated in a TimeframeFacet.
@@ -49,23 +29,6 @@ export interface AtomicStencilFacetDateInputCustomEvent<T> extends CustomEvent<T
     target: HTMLAtomicStencilFacetDateInputElement;
 }
 declare global {
-    interface HTMLAtomicInsightResultActionElementEventMap {
-        "atomicInsightResultActionClicked": InsightResultActionClickedEvent;
-    }
-    interface HTMLAtomicInsightResultActionElement extends Components.AtomicInsightResultAction, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicInsightResultActionElementEventMap>(type: K, listener: (this: HTMLAtomicInsightResultActionElement, ev: AtomicInsightResultActionCustomEvent<HTMLAtomicInsightResultActionElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicInsightResultActionElementEventMap>(type: K, listener: (this: HTMLAtomicInsightResultActionElement, ev: AtomicInsightResultActionCustomEvent<HTMLAtomicInsightResultActionElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicInsightResultActionElement: {
-        prototype: HTMLAtomicInsightResultActionElement;
-        new (): HTMLAtomicInsightResultActionElement;
-    };
     interface HTMLAtomicStencilFacetDateInputElementEventMap {
         "atomic/dateInputApply": any;
     }
@@ -88,34 +51,10 @@ declare global {
         new (): HTMLAtomicStencilFacetDateInputElement;
     };
     interface HTMLElementTagNameMap {
-        "atomic-insight-result-action": HTMLAtomicInsightResultActionElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
     }
 }
 declare namespace LocalJSX {
-    interface AtomicInsightResultAction {
-        /**
-          * The type of action to perform when the result action is clicked. This will be sent along the event fired when the button is clicked.
-         */
-        "action"?: Actions | string;
-        /**
-          * Specify the result action icon to display.
-         */
-        "icon"?: string;
-        /**
-          * @migration Stencil's
-          * @Event () decorator defaults to: bubbles=true, composed=true, cancelable=true. Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false. When migrating to Lit, explicitly set all three options to preserve behavior: `new CustomEvent('atomicInsightResultActionClicked', { bubbles: true, composed: true, cancelable: true, detail: ... })`
-         */
-        "onAtomicInsightResultActionClicked"?: (event: AtomicInsightResultActionCustomEvent<InsightResultActionClickedEvent>) => void;
-        /**
-          * The text tooltip to show on the result action icon.
-         */
-        "tooltip"?: string;
-        /**
-          * The text tooltip to show on the result action icon for some time after clicking the button.
-         */
-        "tooltipOnClick"?: string;
-    }
     /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
      * Internal component made to be integrated in a TimeframeFacet.
@@ -135,7 +74,6 @@ declare namespace LocalJSX {
         "rangeSetter": (range: DateRangeRequest) => void;
     }
     interface IntrinsicElements {
-        "atomic-insight-result-action": AtomicInsightResultAction;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
     }
 }
@@ -143,7 +81,6 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "atomic-insight-result-action": LocalJSX.AtomicInsightResultAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionElement>;
             /**
              * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
              * Internal component made to be integrated in a TimeframeFacet.
