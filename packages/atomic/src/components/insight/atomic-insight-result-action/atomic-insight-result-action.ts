@@ -46,13 +46,15 @@ export class AtomicInsightResultAction
   extends LightDomMixin(LitElement)
   implements InitializableComponent<InsightBindings>
 {
-  @state() public bindings!: InsightBindings;
-  @state() public error!: Error;
-  @state() private currentTooltip = '';
-
-  private itemContextController!: ItemContextController<Result>;
-  private actions!: InsightAnalyticsActionCreators;
-  private tooltipResetTimeout?: ReturnType<typeof setTimeout>;
+  static styles = css`
+    [part='result-action-button'] {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 2rem;
+      width: 2rem;
+    }
+  `;
 
   /**
    * Specify the result action icon to display.
@@ -75,15 +77,13 @@ export class AtomicInsightResultAction
    */
   @property({type: String}) action: Actions | string = '';
 
-  static styles = css`
-    [part='result-action-button'] {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 2rem;
-      width: 2rem;
-    }
-  `;
+  @state() public bindings!: InsightBindings;
+  @state() public error!: Error;
+  @state() private currentTooltip = '';
+
+  private itemContextController!: ItemContextController<Result>;
+  private actions!: InsightAnalyticsActionCreators;
+  private tooltipResetTimeout?: ReturnType<typeof setTimeout>;
 
   constructor() {
     super();
