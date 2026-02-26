@@ -808,7 +808,7 @@ describe('atomic-generated-answer', () => {
         ...overrides,
       }) as FollowUpAnswerEntry;
 
-    const createFollowUpState = ({
+    const createGeneratedAnswerWithFollowUpsState = ({
       isEnabled = true,
       followUpAnswers = [buildFollowUpAnswerEntry()],
       stateOverrides = {},
@@ -830,7 +830,7 @@ describe('atomic-generated-answer', () => {
       const askFollowUp = vi.fn().mockResolvedValue(undefined);
       const {generatedAnswersThread} = await renderGeneratedAnswer({
         props: {agentId: 'agent-id'},
-        generatedAnswerState: createFollowUpState(),
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState(),
         generatedAnswerOverrides: {askFollowUp},
       });
 
@@ -845,7 +845,9 @@ describe('atomic-generated-answer', () => {
     it('should not render generated answers thread when follow ups are disabled', async () => {
       const {generatedAnswersThread} = await renderGeneratedAnswer({
         props: {agentId: 'agent-id'},
-        generatedAnswerState: createFollowUpState({isEnabled: false}),
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          isEnabled: false,
+        }),
         generatedAnswerOverrides: {askFollowUp: vi.fn()},
       });
 
@@ -855,7 +857,7 @@ describe('atomic-generated-answer', () => {
     it('should render the follow up input when follow ups are enabled', async () => {
       const {followUpInputContainer} = await renderGeneratedAnswer({
         props: {agentId: 'agent-id'},
-        generatedAnswerState: createFollowUpState(),
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState(),
         generatedAnswerOverrides: {askFollowUp: vi.fn()},
       });
 
@@ -865,17 +867,64 @@ describe('atomic-generated-answer', () => {
     it('should not render the follow up input when follow ups are disabled', async () => {
       const {followUpInputContainer} = await renderGeneratedAnswer({
         props: {agentId: 'agent-id'},
-        generatedAnswerState: createFollowUpState({isEnabled: false}),
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          isEnabled: false,
+        }),
         generatedAnswerOverrides: {askFollowUp: vi.fn()},
       });
 
       expect(followUpInputContainer).toBeNull();
     });
 
+    it('should disable the follow up submit button when the initial answer is streaming', async () => {
+      const {followUpSubmitButton} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          isEnabled: true,
+          stateOverrides: {isStreaming: true},
+          followUpAnswers: [],
+        }),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(followUpSubmitButton).not.toBeNull();
+      expect((followUpSubmitButton as HTMLButtonElement).disabled).toBe(true);
+    });
+
+    it('should disable the follow up submit button when the initial answer is loading', async () => {
+      const {followUpSubmitButton} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          isEnabled: true,
+          stateOverrides: {isLoading: true},
+          followUpAnswers: [],
+        }),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(followUpSubmitButton).not.toBeNull();
+      expect((followUpSubmitButton as HTMLButtonElement).disabled).toBe(true);
+    });
+
+    it('should not disable the follow up submit button when the initial answer is completed', async () => {
+      const {followUpSubmitButton} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          isEnabled: true,
+          stateOverrides: {isLoading: false, isStreaming: false},
+          followUpAnswers: [],
+        }),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(followUpSubmitButton).not.toBeNull();
+      expect((followUpSubmitButton as HTMLButtonElement).disabled).toBe(false);
+    });
+
     it('should disable the follow up submit button when a follow up is streaming', async () => {
       const {followUpSubmitButton} = await renderGeneratedAnswer({
         props: {agentId: 'agent-id'},
-        generatedAnswerState: createFollowUpState({
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
           followUpAnswers: [buildFollowUpAnswerEntry({isStreaming: true})],
         }),
         generatedAnswerOverrides: {askFollowUp: vi.fn()},
@@ -888,7 +937,7 @@ describe('atomic-generated-answer', () => {
     it('should disable the follow up submit button when a follow up is loading', async () => {
       const {followUpSubmitButton} = await renderGeneratedAnswer({
         props: {agentId: 'agent-id'},
-        generatedAnswerState: createFollowUpState({
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
           followUpAnswers: [buildFollowUpAnswerEntry({isLoading: true})],
         }),
         generatedAnswerOverrides: {askFollowUp: vi.fn()},
@@ -898,12 +947,27 @@ describe('atomic-generated-answer', () => {
       expect((followUpSubmitButton as HTMLButtonElement).disabled).toBe(true);
     });
 
+    it('should not disable the follow up submit button when a follow up is completed', async () => {
+      const {followUpSubmitButton} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          followUpAnswers: [
+            buildFollowUpAnswerEntry({isLoading: false, isStreaming: false}),
+          ],
+        }),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(followUpSubmitButton).not.toBeNull();
+      expect((followUpSubmitButton as HTMLButtonElement).disabled).toBe(false);
+    });
+
     it('should call askFollowUp when a follow up question is submitted', async () => {
       const askFollowUp = vi.fn().mockResolvedValue(undefined);
       const {element, followUpInputField, followUpSubmitButton} =
         await renderGeneratedAnswer({
           props: {agentId: 'agent-id'},
-          generatedAnswerState: createFollowUpState(),
+          generatedAnswerState: createGeneratedAnswerWithFollowUpsState(),
           generatedAnswerOverrides: {askFollowUp},
         });
 
