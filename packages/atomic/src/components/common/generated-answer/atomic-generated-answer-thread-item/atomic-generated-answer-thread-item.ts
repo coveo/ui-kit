@@ -4,7 +4,7 @@ import {classMap} from 'lit/directives/class-map.js';
 import {when} from 'lit/directives/when.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 
-export interface GeneratedAnswerThreadItemProps {
+export interface AtomicGeneratedAnswerThreadItemProps {
   /**
    * The title displayed for the thread item.
    */
@@ -24,19 +24,18 @@ export interface GeneratedAnswerThreadItemProps {
 }
 
 /**
- * The `generated-answer-thread-item` component renders a generated answer
+ * The `atomic-generated-answer-thread-item` component renders a generated answer
  * thread item with timeline visuals and collapsible content.
  *
  * @internal
  *
  * @slot (default) - The content rendered when the item is expanded.
  */
-@customElement('generated-answer-thread-item')
+@customElement('atomic-generated-answer-thread-item')
 @withTailwindStyles
-export class GeneratedAnswerThreadItem extends LitElement {
+export class AtomicGeneratedAnswerThreadItem extends LitElement {
   private readonly contentId =
-    `generated-answer-thread-item-content-${crypto.randomUUID()}`;
-
+    `atomic-generated-answer-thread-item-content-${crypto.randomUUID()}`;
   /**
    * The title displayed for the thread item.
    */
