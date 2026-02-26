@@ -5,11 +5,11 @@ import type {
 } from '../../../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../../../app/state-key.js';
 import {clearAllCoreFacets} from '../../../../../features/commerce/facets/core-facet/core-facet-actions.js';
+import {commerceFacetOrderReducer as facetOrder} from '../../../../../features/commerce/facets/facet-order/commerce-facet-order-slice.js';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../../features/commerce/facets/facet-set/facet-set-slice.js';
 import type {CommerceFacetSetState} from '../../../../../features/commerce/facets/facet-set/facet-set-state.js';
 import type {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common.js';
 import type {AnyFacetValueResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response.js';
-import {facetOrderReducer as facetOrder} from '../../../../../features/facets/facet-order/facet-order-slice.js';
 import type {AnyFacetValueRequest} from '../../../../../features/facets/generic/interfaces/generic-facet-request.js';
 import type {
   CommerceFacetSetSection,

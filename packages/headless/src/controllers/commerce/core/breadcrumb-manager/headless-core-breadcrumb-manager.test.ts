@@ -8,6 +8,7 @@ import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
 } from '../../../../features/commerce/facets/date-facet/date-facet-actions.js';
+import {commerceFacetOrderReducer as facetOrder} from '../../../../features/commerce/facets/facet-order/commerce-facet-order-slice.js';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice.js';
 import type {
   AnyFacetResponse,
@@ -28,7 +29,6 @@ import {
   toggleSelectFacetValue,
 } from '../../../../features/commerce/facets/regular-facet/regular-facet-actions.js';
 import type {FacetValueState} from '../../../../features/facets/facet-api/value.js';
-import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice.js';
 import type {CommerceAppState} from '../../../../state/commerce-app-state.js';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request.js';
 import {
