@@ -329,7 +329,8 @@ export class AtomicGeneratedAnswer
       ) as GeneratedAnswerState | undefined;
       if (
         oldState &&
-        this.generatedAnswerState?.expanded !== oldState?.expanded
+        this.generatedAnswerState?.expanded !== oldState?.expanded &&
+        this.isCollapsibleEnabled
       ) {
         const container = this.getAnswerContainer();
         if (container) {
@@ -340,6 +341,14 @@ export class AtomicGeneratedAnswer
           );
         }
       }
+    }
+
+    if (
+      (changedProperties.has('collapsible') ||
+        changedProperties.has('agentId')) &&
+      !this.isCollapsibleEnabled
+    ) {
+      this.resetCollapsibleStyles();
     }
   }
 
@@ -397,26 +406,25 @@ export class AtomicGeneratedAnswer
             ${this.renderCardHeaderWrapper()}
             ${when(
               this.isAnswerVisible,
-              () => html`
-                <div
-                  part="generated-content-container"
-                  class=${classMap({
-                    'px-6': true,
-                    'agent-scrollable': this.areFollowUpsEnabled(),
-                  })}
-                >
-                  <article>${this.renderAnswerContent()}</article>
-                </div>
-                <div class="px-6 pb-6">
-                  ${this.renderAskFollowUpWrapper()}
-                  ${renderDisclaimer({
-                    props: {
-                      i18n: this.bindings.i18n,
-                      isStreaming: !!this.generatedAnswerState.isStreaming,
-                    },
-                  })}
-                </div>
-              `
+              () =>
+                html`
+                  <div
+                    part="generated-content-container"
+                    class=${classMap({
+                      'px-6': true,
+                      'pb-6': true,
+                      'agent-scrollable': this.areFollowUpsEnabled,
+                    })}
+                  >
+                    <article>${this.renderAnswerContent()}</article>
+                    ${this.renderAskFollowUpWrapper()}
+                    ${renderDisclaimer({
+                      props: {
+                        i18n: this.bindings.i18n,
+                        isStreaming: !!this.generatedAnswerState.isStreaming,
+                      },
+                    })}
+                  </div>`
             )}
           </div>
         </aside>
@@ -632,10 +640,11 @@ export class AtomicGeneratedAnswer
       question: this.bindings.engine.state.query?.q ?? '',
     };
 
-    if (this.areFollowUpsEnabled()) {
+    if (this.areFollowUpsEnabled) {
       const allGeneratedAnswer = [
         generatedAnswer,
-        ...(this.generatedAnswer.state.followUpAnswers.followUpAnswers ?? []),
+        ...(this.generatedAnswerWithFollowUps?.state.followUpAnswers
+          .followUpAnswers ?? []),
       ];
 
       return html`<atomic-generated-answers-thread
@@ -655,7 +664,7 @@ export class AtomicGeneratedAnswer
       props: {
         i18n: this.bindings.i18n,
         generatedAnswer: generatedAnswer,
-        collapsible: this.collapsible,
+        collapsible: this.isCollapsibleEnabled,
         renderFeedbackAndCopyButtonsSlot: () =>
           this.renderFeedbackAndCopyButtonsWrapper(),
         renderCitationsSlot: () =>
@@ -664,6 +673,48 @@ export class AtomicGeneratedAnswer
         onClickShowButton: () => this.clickOnShowButton(),
       },
     });
+  }
+
+  private get hasAgentId() {
+    return Boolean(this.agentId);
+  }
+
+  private get generatedAnswerWithFollowUps():
+    | GeneratedAnswerWithFollowUps
+    | undefined {
+    if (
+      !this.hasAgentId ||
+      !this.generatedAnswer ||
+      !('askFollowUp' in this.generatedAnswer)
+    ) {
+      return undefined;
+    }
+
+    return this.generatedAnswer as GeneratedAnswerWithFollowUps;
+  }
+
+  private get areFollowUpsEnabled() {
+    return (
+      this.generatedAnswerWithFollowUps?.state.followUpAnswers?.isEnabled ===
+      true
+    );
+  }
+
+  private get isCollapsibleEnabled() {
+    return this.collapsible && !this.areFollowUpsEnabled;
+  }
+
+  private resetCollapsibleStyles() {
+    const container = this.getAnswerContainer();
+    const footer = this.getAnswerFooter();
+
+    if (!container || !footer) {
+      return;
+    }
+
+    this.toggleClass(container, 'answer-collapsed', false);
+    this.toggleClass(footer, 'is-collapsible', false);
+    this.toggleClass(footer, 'generating-label-visible', false);
   }
 
   private renderCardHeaderWrapper() {
@@ -680,42 +731,23 @@ export class AtomicGeneratedAnswer
     });
   }
 
-  private supportsFollowUps(): this is this & {
-    generatedAnswer: GeneratedAnswerWithFollowUps;
-  } {
-    return !!this.agentId && 'askFollowUp' in this.generatedAnswer;
-  }
-
-  private areFollowUpsEnabled(): this is this & {
-    generatedAnswer: GeneratedAnswerWithFollowUps;
-  } {
-    return (
-      this.supportsFollowUps() &&
-      this.generatedAnswer.state.followUpAnswers?.isEnabled
-    );
-  }
-
-  private get isCollapsibleEnabled() {
-    return this.collapsible && !this.areFollowUpsEnabled();
-  }
-
   private get hasPendingFollowUp() {
-    if (!this.areFollowUpsEnabled()) {
+    if (!this.areFollowUpsEnabled) {
       return false;
     }
-    return this.generatedAnswer.state.followUpAnswers?.followUpAnswers?.some(
+    return this.generatedAnswerWithFollowUps?.state.followUpAnswers?.followUpAnswers?.some(
       (answer) => answer.isStreaming || answer.isLoading
     );
   }
 
   private async handleAskFollowUp(question: string) {
-    if (this.areFollowUpsEnabled()) {
-      await this.generatedAnswer.askFollowUp(question);
+    if (this.areFollowUpsEnabled) {
+      await this.generatedAnswerWithFollowUps?.askFollowUp(question);
     }
   }
 
   private renderAskFollowUpWrapper() {
-    if (!this.areFollowUpsEnabled()) {
+    if (!this.areFollowUpsEnabled) {
       return nothing;
     }
     return html` <div class="mb-2">
