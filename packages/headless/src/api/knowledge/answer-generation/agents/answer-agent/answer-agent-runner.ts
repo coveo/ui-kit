@@ -54,6 +54,7 @@ export const createAnswerRunner = () => {
       getNavigatorContext()
     );
     try {
+      dispatch(setIsLoading(true));
       await agent.runAgent(
         {
           forwardedProps: {
@@ -63,7 +64,6 @@ export const createAnswerRunner = () => {
         },
         strategy
       );
-      dispatch(setIsLoading(true));
     } catch (error) {
       dispatch(
         updateError({
