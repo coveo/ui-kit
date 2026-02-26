@@ -11,28 +11,32 @@ metadata:
 
 ## Process
 
-### Step 1: Gather Facts
-
-Run the script to collect ground-truth data for each AGENTS.md:
+### Step 1: Discover AGENTS.md Files
 
 ```bash
-node .claude/skills/maintaining-agents-files/scripts/validate_agents_files.mjs
+find . -name AGENTS.md -not -path '*/node_modules/*'
 ```
 
-The script outputs, for each AGENTS.md:
-- All `package.json` scripts
-- All directories on disk (top-level, and packages/ for root)
-- All dependency names and version specifiers
-- Engine constraints and package manager version
-- The full AGENTS.md content
+### Step 2: Gather Facts for Each File
 
-Use `--json` for structured output.
+For each AGENTS.md, collect ground-truth data from the sources below. Only fetch what you need per section — no need to gather everything upfront.
 
-### Step 2: Verify Each Section
+#### Data Sources
 
-For each AGENTS.md, compare the script output against the documented content. Check every section described below.
+| What you need | How to get it |
+|---|---|
+| Scripts in package.json | Read the `scripts` keys from `package.json` in the same directory |
+| Directories on disk | List `ls` the directory (ignore `node_modules`, `dist`, `.git`, `.turbo`, `coverage`) |
+| Packages in monorepo | `ls packages/` from the repo root |
+| Dependency versions (resolved) | `pnpm list --depth=0 --json` in the package directory (resolves `catalog:` and `workspace:*`) |
+| Node/pnpm version constraints | Read `engines` and `packageManager` fields from `package.json` |
+| File existence (for Boundaries) | Check if referenced paths exist on disk |
 
-### Step 3: Report Findings
+### Step 3: Verify Each Section
+
+For each AGENTS.md, compare gathered facts against the documented content. Check every section using the rules below.
+
+### Step 4: Report Findings
 
 Present findings grouped by file and section. For each finding:
 
@@ -40,7 +44,7 @@ Present findings grouped by file and section. For each finding:
 2. Suggest a **minimal correction** (do not rewrite entire sections)
 3. Flag **uncertainty** — if something may be intentionally omitted, say so
 
-### Step 4: Wait for Human Decision
+### Step 5: Wait for Human Decision
 
 Do not apply changes. Present the report and wait for the human to decide.
 
@@ -67,7 +71,7 @@ Section headings in package files are prefixed with the package name (e.g., `## 
 
 **Format:** Bullet list. Each item: `- **Description**: \`command\``
 
-**Check against script output:**
+**Verify:**
 - Each documented command still exists in `package.json` scripts
 - Command syntax is correct (`pnpm run X`, `npx X`, `pnpm turbo X --filter=...`)
 - Essential scripts (`build`, `test`, `dev`, `lint:check`, `lint:fix`, `e2e`) present in `package.json` but missing from the section warrant a mention
@@ -78,7 +82,7 @@ Section headings in package files are prefixed with the package name (e.g., `## 
 
 **Format:** Fenced code block containing an indented tree diagram with `├──`, `└──` connectors. Each entry has a brief `# comment` description.
 
-**Check against script output:**
+**Verify:**
 - Each listed directory actually exists on disk
 - No listed directory has been renamed or removed
 - Significant directories present on disk but absent from the tree — mention them, but they may be intentionally omitted
@@ -90,11 +94,10 @@ Section headings in package files are prefixed with the package name (e.g., `## 
 
 **Format:** Bullet list. Each item: `- **Category**: ToolName vN` where N is the **major** version only.
 
-**Check against script output:**
+**Verify:**
 - Each listed tool/library appears in `dependencies` or `devDependencies`
-- Major version matches (compare `vN` against the version specifier in `package.json`)
+- Major version matches (use `pnpm list --depth=0 --json` for fully resolved versions including `catalog:` and `workspace:*`)
 - Runtime items (Node, pnpm) are checked against `engines` / `packageManager` fields instead
-- Versions are fully resolved (including `catalog:` and `workspace:*`) — compare directly
 
 **Not expected:** Listing every dependency. Only core/defining technology. No minor/patch versions.
 
@@ -102,15 +105,15 @@ Section headings in package files are prefixed with the package name (e.g., `## 
 
 **Format:** Two labeled groups: **Favor** (bullet list) and **Avoid** (bullet list), separated by `---`.
 
-**Check:** Section exists, both groups present. Do not evaluate whether principles are "correct" — they are human-authored values.
+**Verify:** Section exists, both groups present. Do not evaluate whether principles are "correct" — they are human-authored values.
 
 ### Boundaries
 
 **Format:** Three labeled groups: **You must ALWAYS**, **You must ASK BEFORE**, **You must NEVER**, separated by `---`.
 
-**Check against script output:**
+**Verify:**
 - All three groups present
-- File paths referenced in rules actually exist on disk (e.g., `packages/atomic/rollup.config.js`)
+- File paths referenced in rules actually exist on disk
 - No obviously stale file references
 
 **Not expected:** Evaluating whether boundaries are reasonable.
@@ -122,9 +125,3 @@ Section headings in package files are prefixed with the package name (e.g., `## 
 - Each AGENTS.md should be **under 200 lines**
 - Written for AI agents — concise, scannable, not prose
 - Package files reference the root for shared context, not duplicate it
-
-## Scripts
-
-| Script | Purpose |
-|--------|---------|
-| `validate_agents_files.mjs` | Gathers ground-truth data (scripts, dirs, deps, content) for each AGENTS.md |
