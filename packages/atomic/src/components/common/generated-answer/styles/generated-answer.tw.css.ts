@@ -114,7 +114,7 @@ const baseStyle = css`
   /**
    * @prop --atomic-generated-answer-content-fixed-height: The fixed height of the generated answer content when agent-id is set.
    */
-  [part='generated-content-container'].agent-scrollable {
+  .agent-scrollable {
     @apply overflow-y-auto;
     height: var(--atomic-generated-answer-content-fixed-height, 50vh);
   }

@@ -27,7 +27,7 @@ export const renderFollowUpInput: FunctionalComponent<
 
   let isSubmitting = false;
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     const input = inputRef.value;
     if (!input || isSubmitting) return;
 
@@ -38,7 +38,7 @@ export const renderFollowUpInput: FunctionalComponent<
 
     isSubmitting = true;
     try {
-      await askFollowUp(inputValue);
+      askFollowUp(inputValue);
       input.value = '';
     } finally {
       isSubmitting = false;
