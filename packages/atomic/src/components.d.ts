@@ -44,10 +44,6 @@ export namespace Components {
         "rangeSetter": (range: DateRangeRequest) => void;
     }
 }
-export interface AtomicInsightResultActionCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicInsightResultActionElement;
-}
 export interface AtomicStencilFacetDateInputCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicStencilFacetDateInputElement;

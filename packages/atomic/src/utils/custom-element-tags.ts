@@ -79,6 +79,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-insight-refine-modal',
   'atomic-insight-refine-toggle',
   'atomic-insight-result',
+  'atomic-insight-result-action',
   'atomic-insight-result-action-bar',
   'atomic-insight-result-attach-to-case-action',
   'atomic-insight-result-attach-to-case-indicator',

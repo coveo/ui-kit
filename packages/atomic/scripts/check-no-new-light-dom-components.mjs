@@ -74,6 +74,7 @@ const ALLOWED_LIGHT_DOM_COMPONENTS = new Set([
   'src/components/insight/atomic-insight-tabs/atomic-insight-tabs.ts',
   'src/components/insight/atomic-insight-result-quickview-action/atomic-insight-result-quickview-action.ts',
   'src/components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action.ts',
+  'src/components/insight/atomic-insight-result-action/atomic-insight-result-action.ts',
 
   // IPX components
   'src/components/ipx/atomic-ipx-tabs/atomic-ipx-tabs.ts',
