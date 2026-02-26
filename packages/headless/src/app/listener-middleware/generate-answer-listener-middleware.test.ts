@@ -1,21 +1,15 @@
-import {configureStore} from '@reduxjs/toolkit';
+import {configureStore, type Middleware} from '@reduxjs/toolkit';
 import {interfaceLoad} from '../../features/analytics/analytics-actions.js';
 import {resetFollowUpAnswers} from '../../features/follow-up-answers/follow-up-answers-actions.js';
-import {
-  generateHeadAnswer,
-  resetAnswer,
-} from '../../features/generated-answer/generated-answer-actions.js';
+import {resetAnswer} from '../../features/generated-answer/generated-answer-actions.js';
 import {getGeneratedAnswerInitialState} from '../../features/generated-answer/generated-answer-state.js';
 import {logInsightInterfaceLoad} from '../../features/insight-search/insight-search-analytics-actions.js';
 import {executeSearch} from '../../features/search/search-actions.js';
+import {buildMockNavigatorContextProvider} from '../../test/mock-navigator-context-provider.js';
 import type {Store} from '../store.js';
-import {generateAnswerListener} from './generate-answer-listener-middleware.js';
+import {createGenerateAnswerListener} from './generate-answer-listener-middleware.js';
 
 vi.mock('../../features/generated-answer/generated-answer-actions.js', () => ({
-  generateHeadAnswer: vi.fn(() => ({
-    type: 'generatedAnswer/generateHeadAnswer',
-    payload: {},
-  })),
   resetAnswer: vi.fn(() => ({
     type: 'generatedAnswer/resetAnswer',
     payload: {},
@@ -32,9 +26,19 @@ vi.mock(
   })
 );
 
+const answerRunnerRun = vi.fn();
+
+vi.mock(
+  '../../api/knowledge/answer-generation/agents/answer-agent/answer-agent-runner.js',
+  () => ({
+    createAnswerRunner: vi.fn(() => ({
+      run: answerRunnerRun,
+    })),
+  })
+);
+
 describe('generateAnswerListener', () => {
   let store: Store;
-  let dispatchSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -58,13 +62,16 @@ describe('generateAnswerListener', () => {
               query: (state = {q: ''}) => state,
             },
             middleware: (getDefaultMiddleware) =>
-              getDefaultMiddleware().prepend(generateAnswerListener.middleware),
+              getDefaultMiddleware().prepend(
+                createGenerateAnswerListener({
+                  getNavigatorContext: buildMockNavigatorContextProvider(),
+                  // biome-ignore lint/suspicious/noExplicitAny: unit test
+                }).middleware as Middleware<{}, any>
+              ),
           });
-
-          dispatchSpy = vi.spyOn(store, 'dispatch');
         });
 
-        it('should dispatch head answer reset and follow-up reset but not generateHeadAnswer when query is empty', async () => {
+        it('should dispatch head answer reset and follow-up reset but not run the answer agent when query is empty', async () => {
           const searchAction = executeSearch.pending('requestId', {
             legacy: logInsightInterfaceLoad(),
             next: interfaceLoad(),
@@ -75,7 +82,7 @@ describe('generateAnswerListener', () => {
           await vi.waitFor(() => {
             expect(resetAnswer).toHaveBeenCalled();
             expect(resetFollowUpAnswers).toHaveBeenCalled();
-            expect(generateHeadAnswer).not.toHaveBeenCalled();
+            expect(answerRunnerRun).not.toHaveBeenCalled();
           });
         });
       });
@@ -96,24 +103,12 @@ describe('generateAnswerListener', () => {
               query: (state = {q: 'test'}) => state,
             },
             middleware: (getDefaultMiddleware) =>
-              getDefaultMiddleware().prepend(generateAnswerListener.middleware),
-          });
-
-          dispatchSpy = vi.spyOn(store, 'dispatch');
-        });
-
-        it('should dispatch head answer reset and follow-up reset then generateHeadAnswer when executeSearch.pending is dispatched', async () => {
-          const searchAction = executeSearch.pending('requestId', {
-            legacy: logInsightInterfaceLoad(),
-            next: interfaceLoad(),
-          });
-
-          store.dispatch(searchAction);
-
-          await vi.waitFor(() => {
-            expect(resetAnswer).toHaveBeenCalled();
-            expect(resetFollowUpAnswers).toHaveBeenCalled();
-            expect(generateHeadAnswer).toHaveBeenCalled();
+              getDefaultMiddleware().prepend(
+                createGenerateAnswerListener({
+                  getNavigatorContext: buildMockNavigatorContextProvider(),
+                  // biome-ignore lint/suspicious/noExplicitAny: unit test
+                }).middleware as Middleware<{}, any>
+              ),
           });
         });
 
@@ -131,7 +126,7 @@ describe('generateAnswerListener', () => {
           });
         });
 
-        it('should dispatch head answer reset and follow-up reset before generateHeadAnswer', async () => {
+        it('should dispatch head answer reset and follow-up reset before running the answer agent', async () => {
           const searchAction = executeSearch.pending('requestId', {
             legacy: logInsightInterfaceLoad(),
             next: interfaceLoad(),
@@ -142,7 +137,7 @@ describe('generateAnswerListener', () => {
           await vi.waitFor(() => {
             expect(resetAnswer).toHaveBeenCalled();
             expect(resetFollowUpAnswers).toHaveBeenCalled();
-            expect(generateHeadAnswer).toHaveBeenCalled();
+            expect(answerRunnerRun).toHaveBeenCalled();
           });
 
           // biome-ignore lint/suspicious/noExplicitAny: unit tests
@@ -151,11 +146,9 @@ describe('generateAnswerListener', () => {
           // biome-ignore lint/suspicious/noExplicitAny: unit tests
           const resetFollowUpCallOrder = (resetFollowUpAnswers as any).mock
             .invocationCallOrder[0];
-          // biome-ignore lint/suspicious/noExplicitAny: unit tests
-          const generateCallOrder = (generateHeadAnswer as any).mock
-            .invocationCallOrder[0];
-          expect(resetCallOrder).toBeLessThan(generateCallOrder);
-          expect(resetFollowUpCallOrder).toBeLessThan(generateCallOrder);
+          const runCallOrder = answerRunnerRun.mock.invocationCallOrder[0];
+          expect(resetCallOrder).toBeLessThan(runCallOrder);
+          expect(resetFollowUpCallOrder).toBeLessThan(runCallOrder);
         });
       });
     });
@@ -171,13 +164,16 @@ describe('generateAnswerListener', () => {
             query: (state = {q: 'test'}) => state,
           },
           middleware: (getDefaultMiddleware) =>
-            getDefaultMiddleware().prepend(generateAnswerListener.middleware),
+            getDefaultMiddleware().prepend(
+              createGenerateAnswerListener({
+                getNavigatorContext: buildMockNavigatorContextProvider(),
+                // biome-ignore lint/suspicious/noExplicitAny: unit test
+              }).middleware as Middleware<{}, any>
+            ),
         });
-
-        dispatchSpy = vi.spyOn(store, 'dispatch');
       });
 
-      it('should not dispatch generateHeadAnswer action when executeSearch.pending is dispatched', () => {
+      it('should not run the answer agent when executeSearch.pending is dispatched', () => {
         const searchAction = executeSearch.pending('requestId', {
           legacy: logInsightInterfaceLoad(),
           next: interfaceLoad(),
@@ -185,13 +181,7 @@ describe('generateAnswerListener', () => {
 
         store.dispatch(searchAction);
 
-        expect(generateHeadAnswer).not.toHaveBeenCalled();
-        expect(dispatchSpy).toHaveBeenCalledTimes(1);
-        expect(dispatchSpy).toHaveBeenCalledWith(
-          expect.objectContaining({
-            type: executeSearch.pending.type,
-          })
-        );
+        expect(answerRunnerRun).not.toHaveBeenCalled();
       });
 
       it('should not dispatch head answer reset or follow-up reset when executeSearch.pending is dispatched', () => {
@@ -218,13 +208,16 @@ describe('generateAnswerListener', () => {
           query: (state = {q: 'test'}) => state,
         },
         middleware: (getDefaultMiddleware) =>
-          getDefaultMiddleware().prepend(generateAnswerListener.middleware),
+          getDefaultMiddleware().prepend(
+            createGenerateAnswerListener({
+              getNavigatorContext: buildMockNavigatorContextProvider(),
+              // biome-ignore lint/suspicious/noExplicitAny: unit test
+            }).middleware as Middleware<{}, any>
+          ),
       });
-
-      dispatchSpy = vi.spyOn(store, 'dispatch');
     });
 
-    it('should not dispatch generateHeadAnswer action when executeSearch.pending is dispatched', () => {
+    it('should not run the answer agent when executeSearch.pending is dispatched', () => {
       const searchAction = executeSearch.pending('requestId', {
         legacy: logInsightInterfaceLoad(),
         next: interfaceLoad(),
@@ -232,13 +225,7 @@ describe('generateAnswerListener', () => {
 
       store.dispatch(searchAction);
 
-      expect(generateHeadAnswer).not.toHaveBeenCalled();
-      expect(dispatchSpy).toHaveBeenCalledTimes(1);
-      expect(dispatchSpy).toHaveBeenCalledWith(
-        expect.objectContaining({
-          type: executeSearch.pending.type,
-        })
-      );
+      expect(answerRunnerRun).not.toHaveBeenCalled();
     });
 
     it('should not dispatch head answer reset or follow-up reset when executeSearch.pending is dispatched', () => {
