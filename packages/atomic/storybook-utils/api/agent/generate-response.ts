@@ -1,62 +1,44 @@
 import {delay, HttpResponse} from 'msw';
 
+// Local EventType enum to match @ag-ui/core structure
+// TODO: Replace with import from '@ag-ui/core' once added as dependency
+enum EventType {
+  RUN_STARTED = 'RUN_STARTED',
+  RUN_FINISHED = 'RUN_FINISHED',
+  STEP_STARTED = 'STEP_STARTED',
+  STEP_FINISHED = 'STEP_FINISHED',
+  TEXT_MESSAGE_CHUNK = 'TEXT_MESSAGE_CHUNK',
+  CUSTOM = 'CUSTOM',
+}
+
 const THREAD_ID = 'thread-1';
 const RUN_ID = 'run-1';
 
-enum EventType {
-  TEXT_MESSAGE_START = 'TEXT_MESSAGE_START',
-  TEXT_MESSAGE_CONTENT = 'TEXT_MESSAGE_CONTENT',
-  TEXT_MESSAGE_END = 'TEXT_MESSAGE_END',
-  TEXT_MESSAGE_CHUNK = 'TEXT_MESSAGE_CHUNK',
-  THINKING_TEXT_MESSAGE_START = 'THINKING_TEXT_MESSAGE_START',
-  THINKING_TEXT_MESSAGE_CONTENT = 'THINKING_TEXT_MESSAGE_CONTENT',
-  THINKING_TEXT_MESSAGE_END = 'THINKING_TEXT_MESSAGE_END',
-  TOOL_CALL_START = 'TOOL_CALL_START',
-  TOOL_CALL_ARGS = 'TOOL_CALL_ARGS',
-  TOOL_CALL_END = 'TOOL_CALL_END',
-  TOOL_CALL_CHUNK = 'TOOL_CALL_CHUNK',
-  TOOL_CALL_RESULT = 'TOOL_CALL_RESULT',
-  THINKING_START = 'THINKING_START',
-  THINKING_END = 'THINKING_END',
-  STATE_SNAPSHOT = 'STATE_SNAPSHOT',
-  STATE_DELTA = 'STATE_DELTA',
-  MESSAGES_SNAPSHOT = 'MESSAGES_SNAPSHOT',
-  ACTIVITY_SNAPSHOT = 'ACTIVITY_SNAPSHOT',
-  ACTIVITY_DELTA = 'ACTIVITY_DELTA',
-  RAW = 'RAW',
-  CUSTOM = 'CUSTOM',
-  RUN_STARTED = 'RUN_STARTED',
-  RUN_FINISHED = 'RUN_FINISHED',
-  RUN_ERROR = 'RUN_ERROR',
-  STEP_STARTED = 'STEP_STARTED',
-  STEP_FINISHED = 'STEP_FINISHED',
-}
-
-interface MessagePayload {
-  type: string;
+interface AgentEvent {
+  type: EventType;
   threadId?: string;
   runId?: string;
   timestamp?: number;
   name?: string;
-  value?: Object;
+  value?: unknown;
   stepName?: string;
   messageId?: string;
   delta?: string;
-}
-
-interface MessagePayloadStringified {
-  type: string;
-  payload: string;
-  errorMessage?: string | null;
-  statusCode?: number | null;
-  delayMs?: number;
+  delayMs?: number; // Internal property for mock delays, stripped before sending
 }
 
 const buildMessage = (
-  {type, name, value, stepName, messageId, delta}: MessagePayload,
+  {
+    type,
+    name,
+    value,
+    stepName,
+    messageId,
+    delta,
+  }: Omit<AgentEvent, 'threadId' | 'runId' | 'timestamp' | 'delayMs'>,
   delayMs?: number
-): MessagePayloadStringified => {
-  const payloadObj: MessagePayload = {
+): AgentEvent => {
+  return {
     type,
     threadId: THREAD_ID,
     runId: RUN_ID,
@@ -66,13 +48,6 @@ const buildMessage = (
     ...(stepName !== undefined && {stepName}),
     ...(messageId !== undefined && {messageId}),
     ...(delta !== undefined && {delta}),
-  };
-
-  return {
-    type: 'message',
-    payload: JSON.stringify(payloadObj),
-    errorMessage: null,
-    statusCode: null,
     ...(delayMs !== undefined && {delayMs}),
   };
 };
@@ -132,7 +107,7 @@ const ANSWER = [
   ' modem and Internet service are functioning properly.\\n- If necessary, bypass your router by connecting your TiVo directly to the modem using an Ethernet cable to identify if the router is the issue.\\n\\nFollowing these steps should help resolve your Netflix connection issues with TiVo.',
 ];
 
-const agentMessages: MessagePayloadStringified[] = [
+const agentMessages: AgentEvent[] = [
   // Run starts
   buildMessage({
     type: EventType.RUN_STARTED,
@@ -177,10 +152,8 @@ const agentMessages: MessagePayloadStringified[] = [
   ...ANSWER.map((textDelta) =>
     buildMessage({
       type: EventType.TEXT_MESSAGE_CHUNK,
-      value: {
-        messageId: 'msg-1',
-        delta: textDelta,
-      },
+      messageId: 'msg-1',
+      delta: textDelta,
     })
   ),
   buildMessage({
@@ -201,7 +174,7 @@ const buildAnsweringStreamingResponse = (
     messages = agentMessages,
     delayBetweenMessages = 'real',
   }: {
-    messages?: MessagePayloadStringified[];
+    messages?: AgentEvent[];
     delayBetweenMessages?: number | 'real' | 'infinite';
   } = {messages: agentMessages, delayBetweenMessages: 'real'}
 ) => {
