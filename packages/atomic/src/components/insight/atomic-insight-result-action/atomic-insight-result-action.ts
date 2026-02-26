@@ -47,12 +47,11 @@ export class AtomicInsightResultAction
   implements InitializableComponent<InsightBindings>
 {
   static styles = css`
+    @reference '../../../utils/tailwind.global.tw.css';
+
     [part='result-action-button'] {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 2rem;
-      width: 2rem;
+      @apply flex items-center justify-center;
+      @apply h-8 w-8;
     }
   `;
 
