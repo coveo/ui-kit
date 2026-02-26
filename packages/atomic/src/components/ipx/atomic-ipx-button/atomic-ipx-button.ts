@@ -14,7 +14,7 @@ import '@/src/components/common/atomic-icon/atomic-icon';
 const numberOrPixelValuePattern = new RegExp(/^(?=.*(?:\d+|px)$).*$/);
 
 /**
- * The `atomic-ipx-button` component represents a button that toggles the IPX modal.
+ * The `atomic-ipx-button` component renders a button that toggles the IPX modal.
  *
  * @part ipx-button - The main button element.
  * @part button-icon - The icon container within the button.
