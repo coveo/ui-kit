@@ -407,19 +407,24 @@ export class AtomicGeneratedAnswer
                 html`
                   <div
                     part="generated-content-container"
-                    class=${classMap({
-                      'px-6': true,
-                      'pb-6': true,
-                      'agent-scrollable': this.isScrollableContentEnabled,
-                    })}
+                    class="pb-6"
                   >
-                    <article>${this.renderAnswerContent()}</article>
-                    ${renderDisclaimer({
-                      props: {
-                        i18n: this.bindings.i18n,
-                        isStreaming: !!this.generatedAnswerState.isStreaming,
-                      },
-                    })}
+                    <div
+                      class=${classMap({
+                        'px-6': true,
+                        'agent-scrollable': this.isScrollableContentEnabled,
+                      })}
+                    >
+                      <article>${this.renderAnswerContent()}</article>
+                    </div>
+                    <div class="px-6 pt-2">
+                      ${renderDisclaimer({
+                        props: {
+                          i18n: this.bindings.i18n,
+                          isStreaming: !!this.generatedAnswerState.isStreaming,
+                        },
+                      })}
+                    </div>
                   </div>`
             )}
           </div>
