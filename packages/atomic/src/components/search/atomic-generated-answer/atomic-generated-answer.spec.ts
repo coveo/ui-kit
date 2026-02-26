@@ -1010,17 +1010,6 @@ describe('atomic-generated-answer', () => {
   });
 
   describe('agentId property', () => {
-    // const buildFollowUpState = (isEnabled: boolean) =>
-    //   ({
-    //     isVisible: true,
-    //     answer: 'Test answer',
-    //     followUpAnswers: {
-    //       conversationId: '',
-    //       isEnabled,
-    //       followUpAnswers: [],
-    //     } as FollowUpAnswersState,
-    //   }) as GeneratedAnswerWithFollowUps['state'];
-
     it('should pass agentId to buildGeneratedAnswer when provided', async () => {
       const {element} = await renderGeneratedAnswer({
         props: {agentId: 'test-agent-id'},
