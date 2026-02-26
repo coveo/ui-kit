@@ -7,9 +7,45 @@ import type {
   ManualAuditBaselineEntry,
   OpenAcrConformance,
 } from './types.js';
-import {countManualConformances, manualStatusToConformance} from './types.js';
+import {manualStatusToConformance} from './types.js';
 
+export interface ManualConformanceCounts {
+  pass: number;
+  fail: number;
+  partial: number;
+  notApplicable: number;
+}
+
+export function countManualConformances(
+  aggregates: ManualAuditAggregate[]
+): ManualConformanceCounts {
+  let pass = 0;
+  let fail = 0;
+  let partial = 0;
+  let notApplicable = 0;
+
+  for (const aggregate of aggregates) {
+    switch (aggregate.conformance) {
+      case 'supports':
+        pass++;
+        break;
+      case 'does-not-support':
+        fail++;
+        break;
+      case 'partially-supports':
+        partial++;
+        break;
+      case 'not-applicable':
+        notApplicable++;
+        break;
+    }
+  }
+
+  return {pass, fail, partial, notApplicable};
+}
 const LOG_PREFIX = '[json-to-openacr]';
+const BASELINE_FILE_PREFIX = 'manual-audit-';
+const BASELINE_FILE_EXTENSION = '.json';
 
 const CRITERION_KEY_REGEX = /^(\d+(?:\.\d+)+)-/;
 
@@ -109,12 +145,11 @@ export async function loadManualAuditData(
   const allAggregates = new Map<string, ManualAuditAggregate[]>();
   let loadedCount = 0;
   let fileCount = 0;
+  let baselineFiles: string[] = [];
 
   try {
     const files = await readdir(dirPath);
-    const baselineFiles = files.filter((file) =>
-      BASELINE_FILE_PATTERN.test(file)
-    );
+    baselineFiles = files.filter((file) => BASELINE_FILE_PATTERN.test(file));
     fileCount = baselineFiles.length;
 
     for (const file of baselineFiles) {
@@ -160,9 +195,18 @@ export async function loadManualAuditData(
       const [, criterionId] = key.split(':');
       criteriaSet.add(criterionId);
     }
+    const baselineNames = baselineFiles
+      .map((file) => file.replace(BASELINE_FILE_PREFIX, ''))
+      .map((file) =>
+        file.endsWith(BASELINE_FILE_EXTENSION)
+          ? file.slice(0, -BASELINE_FILE_EXTENSION.length)
+          : file
+      )
+      .filter(Boolean);
+    const baselineList = baselineNames.join(', ');
     console.log(
       LOG_PREFIX,
-      `Loaded ${loadedCount} manual audit entries across ${criteriaSet.size} criteria from ${fileCount} baseline file(s).`
+      `Loaded ${loadedCount} manual audit entries across ${criteriaSet.size} criteria from ${fileCount} baseline file(s): ${baselineList}.`
     );
   }
 

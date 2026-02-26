@@ -1,15 +1,32 @@
 import {DEFAULT_MANUAL_PLACEHOLDER_NOTE} from '../shared/constants.js';
 import type {A11yCriterionReport} from '../shared/types.js';
-import {resolveManualConformance} from './manual-audit.js';
+import {
+  countManualConformances,
+  resolveManualConformance,
+} from './manual-audit.js';
 import type {
   A11yOverrideEntry,
   CriterionAggregate,
   ManualAuditAggregate,
   OpenAcrConformance,
 } from './types.js';
-import {countManualConformances, reportConformanceToOpenAcr} from './types.js';
+import {reportConformanceToOpenAcr} from './types.js';
 
-export function mapCriterionConformance(
+export interface ConformanceContext {
+  criterion: A11yCriterionReport | undefined;
+  aggregate: CriterionAggregate | undefined;
+  manualAggregates: ManualAuditAggregate[] | undefined;
+  override: A11yOverrideEntry | undefined;
+}
+
+export interface RemarksContext extends ConformanceContext {
+  criterionId: string;
+  conformance: OpenAcrConformance;
+  coveredComponents: string[];
+  violatingComponents: string[];
+}
+
+function mapCriterionConformance(
   criterion: A11yCriterionReport | undefined
 ): OpenAcrConformance | null {
   if (!criterion) {
@@ -40,16 +57,15 @@ function resolveAutomatedConformance(
 }
 
 export function resolveConformance(
-  criterion: A11yCriterionReport | undefined,
-  aggregate: CriterionAggregate | undefined,
-  manualAggregate: ManualAuditAggregate[] | undefined,
-  override: A11yOverrideEntry | undefined
+  context: ConformanceContext
 ): OpenAcrConformance {
+  const {override, manualAggregates, criterion, aggregate} = context;
+
   if (override) {
     return override.conformance;
   }
 
-  const manualConformance = resolveManualConformance(manualAggregate);
+  const manualConformance = resolveManualConformance(manualAggregates);
   if (manualConformance) {
     return manualConformance;
   }
@@ -63,14 +79,16 @@ export function resolveConformance(
   return resolveAutomatedConformance(aggregate);
 }
 
-export function buildRemarks(
-  criterionId: string,
-  conformance: OpenAcrConformance,
-  coveredComponents: string[],
-  violatingComponents: string[],
-  manualAggregates: ManualAuditAggregate[] | undefined,
-  override: A11yOverrideEntry | undefined
-): string {
+export function buildRemarks(context: RemarksContext): string {
+  const {
+    criterionId,
+    conformance,
+    coveredComponents,
+    violatingComponents,
+    manualAggregates,
+    override,
+  } = context;
+
   if (override) {
     return `[Override] ${override.reason}`;
   }

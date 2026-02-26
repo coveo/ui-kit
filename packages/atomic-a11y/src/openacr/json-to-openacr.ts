@@ -124,7 +124,9 @@ export async function transformJsonToOpenAcr(
     );
   }
 
-  const manualAuditDir = options.manualAuditDir ?? DEFAULT_MANUAL_AUDIT_DIR;
+  const manualAuditDir = path.resolve(
+    options.manualAuditDir ?? DEFAULT_MANUAL_AUDIT_DIR
+  );
   const manualAggregates = await loadManualAuditData(manualAuditDir);
 
   const openAcrReport = buildOpenAcrReport(report, overrides, manualAggregates);
