@@ -96,6 +96,10 @@ export default {
     await import('./atomic-insight-tab/atomic-insight-tab.js'),
   'atomic-insight-tabs': async () =>
     await import('./atomic-insight-tabs/atomic-insight-tabs.js'),
+  'atomic-insight-timeframe-facet': async () =>
+    await import(
+      './atomic-insight-timeframe-facet/atomic-insight-timeframe-facet.js'
+    ),
   'atomic-insight-user-actions-modal': async () =>
     await import(
       './atomic-insight-user-actions-modal/atomic-insight-user-actions-modal.js'
