@@ -732,12 +732,18 @@ export class AtomicGeneratedAnswer
     });
   }
 
-  private get hasPendingFollowUp() {
+  private get isAnswerGenerationOngoing() {
     if (!this.areFollowUpsEnabled) {
       return false;
     }
-    return this.generatedAnswerWithFollowUps?.state.followUpAnswers?.followUpAnswers?.some(
-      (answer) => answer.isStreaming || answer.isLoading
+    const initialAnswerPending =
+      this.generatedAnswerState.isStreaming ||
+      this.generatedAnswerState.isLoading;
+    return (
+      initialAnswerPending ||
+      this.generatedAnswerWithFollowUps?.state.followUpAnswers?.followUpAnswers?.some(
+        (answer) => answer.isStreaming || answer.isLoading
+      )
     );
   }
 
@@ -755,7 +761,7 @@ export class AtomicGeneratedAnswer
       ${renderFollowUpInput({
         props: {
           i18n: this.bindings.i18n,
-          submitButtonDisabled: this.hasPendingFollowUp,
+          submitButtonDisabled: this.isAnswerGenerationOngoing,
           askFollowUp: this.handleAskFollowUp.bind(this),
         },
       })}
