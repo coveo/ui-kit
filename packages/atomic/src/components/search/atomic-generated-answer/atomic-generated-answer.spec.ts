@@ -125,11 +125,6 @@ describe('atomic-generated-answer', () => {
       get generatedContent() {
         return element.shadowRoot?.querySelector('[part="generated-content"]')!;
       },
-      get generatedContentContainer() {
-        return element.shadowRoot?.querySelector(
-          '[part~="generated-content-container"]'
-        );
-      },
       get scrollableContainer() {
         return element.shadowRoot?.querySelector(
           '[part="generated-content-container"] > .agent-scrollable'
