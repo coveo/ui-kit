@@ -7,7 +7,7 @@
  * Stencil components are excluded as they lazy-load.
  */
 export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
-  'answer-content',
+  'atomic-answer-content',
   'atomic-aria-live',
   'atomic-automatic-facet',
   'atomic-automatic-facet-generator',
@@ -58,6 +58,8 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-format-unit',
   'atomic-generated-answer',
   'atomic-generated-answer-feedback-modal',
+  'atomic-generated-answer-thread-item',
+  'atomic-generated-answers-thread',
   'atomic-html',
   'atomic-icon',
   'atomic-insight-edit-toggle',
@@ -91,6 +93,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-insight-smart-snippet-suggestions',
   'atomic-insight-tab',
   'atomic-insight-tabs',
+  'atomic-insight-timeframe-facet',
   'atomic-insight-user-actions-modal',
   'atomic-insight-user-actions-session',
   'atomic-insight-user-actions-timeline',
@@ -206,7 +209,6 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-text',
   'atomic-timeframe',
   'atomic-timeframe-facet',
-  'generated-answer-thread-item',
 ]);
 
 /**

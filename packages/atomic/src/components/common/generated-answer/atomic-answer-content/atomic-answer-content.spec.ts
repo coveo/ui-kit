@@ -5,8 +5,11 @@ import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {renderGeneratedContentContainer} from '../generated-content-container';
 import {renderFeedbackAndCopyButtons} from '../render-feedback-and-copy-buttons';
 import {renderSourceCitations} from '../source-citations';
-import type {AnswerContent, GeneratedAnswer} from './answer-content';
-import './answer-content';
+import type {
+  AtomicAnswerContent,
+  GeneratedAnswer,
+} from './atomic-answer-content';
+import './atomic-answer-content';
 
 vi.mock('../render-feedback-and-copy-buttons', () => ({
   renderFeedbackAndCopyButtons: vi.fn(() => html``),
@@ -20,7 +23,7 @@ vi.mock('../source-citations', () => ({
   renderSourceCitations: vi.fn(() => (slot?: unknown) => html`${slot ?? ''}`),
 }));
 
-describe('answer-content', () => {
+describe('atomic-answer-content', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
   let writeTextMock: ReturnType<typeof vi.fn>;
 
@@ -56,15 +59,15 @@ describe('answer-content', () => {
     const onClickDislike = options.onClickDislike ?? vi.fn();
     const onCopyToClipboard = options.onCopyToClipboard ?? vi.fn();
 
-    const {element} = await renderInAtomicSearchInterface<AnswerContent>({
-      template: html`<answer-content
+    const {element} = await renderInAtomicSearchInterface<AtomicAnswerContent>({
+      template: html`<atomic-answer-content
         .generatedAnswer=${generatedAnswer}
         .i18n=${i18n}
         .onClickLike=${onClickLike}
         .onClickDislike=${onClickDislike}
         .onCopyToClipboard=${onCopyToClipboard}
-      ></answer-content>`,
-      selector: 'answer-content',
+      ></atomic-answer-content>`,
+      selector: 'atomic-answer-content',
     });
 
     return {
