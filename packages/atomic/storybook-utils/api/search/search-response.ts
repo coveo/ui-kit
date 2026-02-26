@@ -286,6 +286,30 @@ export const baseResponse: SearchResponse = {
   },
 };
 
+const searchChildResult1 = {
+  title: 'Cats',
+  excerpt: 'Cat species',
+  clickUri: 'https://example.com/cats',
+  uniqueId: 'cats-child',
+  raw: {
+    foldingcollection: 'Animals',
+    foldingchild: ['cats'],
+    foldingparent: 'animals',
+  },
+};
+
+const searchChildResult2 = {
+  title: 'Dogs',
+  excerpt: 'Dog species',
+  clickUri: 'https://example.com/dogs',
+  uniqueId: 'dogs-child',
+  raw: {
+    foldingcollection: 'Animals',
+    foldingchild: ['dogs'],
+    foldingparent: 'animals',
+  },
+};
+
 // Ultra-minimal folded response inspired by getNthResult
 export const baseFoldedResponse: SearchResponse = {
   totalCount: 2,
@@ -322,30 +346,7 @@ export const baseFoldedResponse: SearchResponse = {
       excerpt: 'Collection of animals',
       clickUri: 'https://example.com/animals',
       uniqueId: 'animals-parent',
-      childResults: [
-        {
-          title: 'Cats',
-          excerpt: 'Cat species',
-          clickUri: 'https://example.com/cats',
-          uniqueId: 'cats-child',
-          raw: {
-            foldingcollection: 'Animals',
-            foldingchild: ['cats'],
-            foldingparent: 'animals',
-          },
-        },
-        {
-          title: 'Dogs',
-          excerpt: 'Dog species',
-          clickUri: 'https://example.com/dogs',
-          uniqueId: 'dogs-child',
-          raw: {
-            foldingcollection: 'Animals',
-            foldingchild: ['dogs'],
-            foldingparent: 'animals',
-          },
-        },
-      ],
+      childResults: [searchChildResult1, searchChildResult2],
       totalNumberOfChildResults: 2,
       raw: {
         foldingcollection: 'Animals',
@@ -378,6 +379,40 @@ export const baseFoldedResponse: SearchResponse = {
     relatedQuestions: [],
   },
   extendedResults: {},
+};
+
+/**
+ * Folded response with grandchildren: children themselves contain nested child results.
+ * Useful for testing `inherit-templates` and deeply nested result hierarchies.
+ */
+export const nestedFoldedResponse: SearchResponse = {
+  ...baseFoldedResponse,
+  results: [
+    {
+      ...baseFoldedResponse.results[0],
+      childResults: [
+        {
+          ...searchChildResult1,
+          childResults: [
+            {
+              title: 'Persian Cats',
+              excerpt: 'Persian cat breed details',
+              clickUri: 'https://example.com/cats/persian',
+              uniqueId: 'persian-grandchild',
+              raw: {
+                foldingcollection: 'Animals',
+                foldingchild: ['persian'],
+                foldingparent: 'cats',
+              },
+            },
+          ],
+          totalNumberOfChildResults: 1,
+        },
+        searchChildResult2,
+      ],
+    },
+    baseFoldedResponse.results[1],
+  ],
 };
 
 export const richResponse = {

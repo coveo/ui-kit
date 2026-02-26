@@ -3,7 +3,10 @@ import {ResultTemplatesHelpers as InsightResultTemplatesHelpers} from '@coveo/he
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
 import {ResultTemplateController} from '@/src/components/common/result-templates/result-template-controller.js';
-import {makeMatchConditions} from '@/src/components/common/template-controller/template-utils';
+import {
+  makeDefinedConditions,
+  makeMatchConditions,
+} from '@/src/components/common/template-controller/template-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {sanitizeHtml} from '@/vitest-utils/testing-helpers/testing-utils/sanitize-html';
 import {AtomicInsightResultChildrenTemplate} from './atomic-insight-result-children-template.js';
@@ -19,9 +22,13 @@ describe('atomic-insight-result-children-template', () => {
     'conditions' | 'mustMatch' | 'mustNotMatch'
   >;
 
-  const setupElement = async (
-    options: Partial<AtomicInsightResultChildrenTemplateProps> = {}
-  ) => {
+  interface SetupOptions
+    extends Partial<AtomicInsightResultChildrenTemplateProps> {
+    ifDefined?: string;
+    ifNotDefined?: string;
+  }
+
+  const setupElement = async (options: SetupOptions = {}) => {
     const defaultProps: AtomicInsightResultChildrenTemplateProps = {
       conditions: [],
       mustMatch: {},
@@ -35,6 +42,8 @@ describe('atomic-insight-result-children-template', () => {
           .conditions=${options.conditions || defaultProps.conditions}
           .mustMatch=${options.mustMatch || defaultProps.mustMatch}
           .mustNotMatch=${options.mustNotMatch || defaultProps.mustNotMatch}
+          if-defined=${options.ifDefined ?? ''}
+          if-not-defined=${options.ifNotDefined ?? ''}
         >
           <template>
             <div>Result Template Content</div>
@@ -59,7 +68,7 @@ describe('atomic-insight-result-children-template', () => {
   });
 
   describe('when added to the DOM (#connectedCallback)', () => {
-    it('should call the #makeMatchConditions util function with the correct arguments', async () => {
+    it('should call #makeMatchConditions with the correct arguments', async () => {
       const mockMakeMatchConditions = vi.mocked(makeMatchConditions);
       await setupElement({
         mustMatch: {filetype: ['pdf']},
@@ -68,6 +77,19 @@ describe('atomic-insight-result-children-template', () => {
       expect(mockMakeMatchConditions).toHaveBeenCalledExactlyOnceWith(
         {filetype: ['pdf']},
         {source: ['spam']},
+        InsightResultTemplatesHelpers
+      );
+    });
+
+    it('should call #makeDefinedConditions with the correct arguments', async () => {
+      const mockMakeDefinedConditions = vi.mocked(makeDefinedConditions);
+      await setupElement({
+        ifDefined: 'filetype,sourcetype',
+        ifNotDefined: 'author',
+      });
+      expect(mockMakeDefinedConditions).toHaveBeenCalledExactlyOnceWith(
+        'filetype,sourcetype',
+        'author',
         InsightResultTemplatesHelpers
       );
     });
@@ -89,6 +111,57 @@ describe('atomic-insight-result-children-template', () => {
       for (const condition of template!.conditions) {
         expect(condition).toBeTypeOf('function');
       }
+    });
+
+    it('should include defined conditions in template conditions when if-defined is set', async () => {
+      const element = await setupElement({ifDefined: 'filetype'});
+      const template = await element.getTemplate();
+
+      expect(template).not.toBeNull();
+      expect(template!.conditions.length).toBeGreaterThanOrEqual(1);
+
+      const definedConditions = makeDefinedConditions(
+        'filetype',
+        undefined,
+        InsightResultTemplatesHelpers
+      );
+      expect(template!.conditions).toHaveLength(definedConditions.length);
+    });
+
+    it('should include defined conditions in template conditions when if-not-defined is set', async () => {
+      const element = await setupElement({ifNotDefined: 'author'});
+      const template = await element.getTemplate();
+
+      expect(template).not.toBeNull();
+      expect(template!.conditions.length).toBeGreaterThanOrEqual(1);
+
+      const definedConditions = makeDefinedConditions(
+        undefined,
+        'author',
+        InsightResultTemplatesHelpers
+      );
+      expect(template!.conditions).toHaveLength(definedConditions.length);
+    });
+
+    it('should combine if-defined, if-not-defined, and custom conditions', async () => {
+      const customCondition = (result: InsightResult) =>
+        result.title === 'Coveo';
+      const element = await setupElement({
+        ifDefined: 'filetype',
+        ifNotDefined: 'author',
+        conditions: [customCondition],
+      });
+      const template = await element.getTemplate();
+
+      expect(template).not.toBeNull();
+
+      const definedConditions = makeDefinedConditions(
+        'filetype',
+        'author',
+        InsightResultTemplatesHelpers
+      );
+      // 1 custom + defined conditions from ifDefined + ifNotDefined
+      expect(template!.conditions).toHaveLength(1 + definedConditions.length);
     });
   });
 

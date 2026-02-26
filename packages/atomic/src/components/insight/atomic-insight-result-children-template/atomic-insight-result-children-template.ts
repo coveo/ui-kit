@@ -6,7 +6,10 @@ import {ResultTemplatesHelpers as InsightResultTemplatesHelpers} from '@coveo/he
 import {LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ResultTemplateController} from '@/src/components/common/result-templates/result-template-controller';
-import {makeMatchConditions} from '@/src/components/common/template-controller/template-utils';
+import {
+  makeDefinedConditions,
+  makeMatchConditions,
+} from '@/src/components/common/template-controller/template-utils';
 import {arrayConverter} from '@/src/converters/array-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {LitElementWithError} from '@/src/decorators/types';
@@ -36,6 +39,22 @@ export class AtomicInsightResultChildrenTemplate
    */
   @property({attribute: false, type: Array, converter: arrayConverter})
   conditions: InsightResultTemplateCondition[] = [];
+
+  /**
+   * The field that, when defined on a child result, allows this template to be applied.
+   *
+   * For example, a template with the following attribute only applies to child results whose `filetype` and `sourcetype` fields are defined:
+   * `if-defined="filetype,sourcetype"`
+   */
+  @property({type: String, attribute: 'if-defined'}) ifDefined?: string;
+
+  /**
+   * The field that, when defined on a child result, prevents this template from being applied.
+   *
+   * For example, a template with the following attribute only applies to child results whose `filetype` and `sourcetype` fields are NOT defined:
+   * `if-not-defined="filetype,sourcetype"`
+   */
+  @property({type: String, attribute: 'if-not-defined'}) ifNotDefined?: string;
 
   /**
    * The field and values that define which child results this template applies to.
@@ -68,6 +87,14 @@ export class AtomicInsightResultChildrenTemplate
 
   connectedCallback() {
     super.connectedCallback();
+    this.conditions = [
+      ...this.conditions,
+      ...makeDefinedConditions(
+        this.ifDefined,
+        this.ifNotDefined,
+        InsightResultTemplatesHelpers
+      ),
+    ];
     this.resultTemplateController.matchConditions = makeMatchConditions(
       this.mustMatch,
       this.mustNotMatch,
