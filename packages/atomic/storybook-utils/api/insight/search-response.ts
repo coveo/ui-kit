@@ -510,15 +510,11 @@ export const baseFoldedResponse: InsightResponse = {
   ],
 };
 
-/**
- * Folded response with grandchildren: children themselves contain nested child results.
- * Useful for testing `inherit-templates` and deeply nested result hierarchies.
- */
 export const nestedFoldedResponse: InsightResponse = {
   ...baseFoldedResponse,
   results: [
     {
-      ...baseFoldedResponse.results[0],
+      ...baseFoldedResponse.results[0]!,
       childResults: [
         {
           ...insightChildResult1,
@@ -540,6 +536,6 @@ export const nestedFoldedResponse: InsightResponse = {
         insightChildResult2,
       ],
     },
-    baseFoldedResponse.results[1],
+    baseFoldedResponse.results[1]!,
   ],
 };
