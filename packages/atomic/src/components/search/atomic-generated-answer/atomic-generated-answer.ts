@@ -40,7 +40,7 @@ import {debounce} from '@/src/utils/debounce-utils';
 import {getNamedSlotContent} from '@/src/utils/slot-utils';
 import {shouldDisplayOnCurrentTab} from '@/src/utils/tab-utils';
 import atomicGeneratedAnswerStyles from './atomic-generated-answer.tw.css.js';
-import '@/src/components/common/generated-answer/generated-answers-thread/generated-answers-thread.js';
+import '@/src/components/common/generated-answer/atomic-generated-answers-thread/atomic-generated-answers-thread.js';
 import {renderFollowUpInput} from '../../common/generated-answer/render-follow-up-input.js';
 
 /**
@@ -638,7 +638,7 @@ export class AtomicGeneratedAnswer
         ...(this.generatedAnswer.state.followUpAnswers.followUpAnswers ?? []),
       ];
 
-      return html`<generated-answers-thread
+      return html`<atomic-generated-answers-thread
         .generatedAnswers=${allGeneratedAnswer}
         .i18n=${this.bindings.i18n}
         .renderCitations=${this.renderCitationsList.bind(this)}
@@ -648,7 +648,7 @@ export class AtomicGeneratedAnswer
           this.generatedAnswer.dislike(answerId)}
         .onCopyToClipboard=${(answerId: string) =>
           this.generatedAnswer.logCopyToClipboard(answerId)}
-      ></generated-answers-thread>`;
+      ></atomic-generated-answers-thread>`;
     }
 
     return renderAnswerContent({

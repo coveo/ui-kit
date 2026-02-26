@@ -167,7 +167,9 @@ describe('atomic-generated-answer', () => {
         ) as HTMLButtonElement;
       },
       get generatedAnswersThread() {
-        return element.shadowRoot?.querySelector('generated-answers-thread');
+        return element.shadowRoot?.querySelector(
+          'atomic-generated-answers-thread'
+        );
       },
       get followUpInputContainer() {
         return element.shadowRoot?.querySelector('[part="input-container"]');
