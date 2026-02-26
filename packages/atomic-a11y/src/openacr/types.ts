@@ -50,7 +50,7 @@ export interface OpenAcrCriterion {
   components: OpenAcrCriterionComponent[];
 }
 
-export interface OpenAcrChapter {
+interface OpenAcrChapter {
   notes: string;
   criteria: OpenAcrCriterion[];
 }

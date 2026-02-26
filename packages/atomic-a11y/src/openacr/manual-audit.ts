@@ -9,7 +9,7 @@ import type {
 } from './types.js';
 import {manualStatusToConformance} from './types.js';
 
-export interface ManualConformanceCounts {
+interface ManualConformanceCounts {
   pass: number;
   fail: number;
   partial: number;
@@ -49,7 +49,7 @@ const BASELINE_FILE_EXTENSION = '.json';
 
 const CRITERION_KEY_REGEX = /^(\d+(?:\.\d+)+)-/;
 
-export function isValidManualBaselineEntry(
+function isValidManualBaselineEntry(
   entry: unknown
 ): entry is ManualAuditBaselineEntry {
   return (
@@ -62,7 +62,7 @@ export function isValidManualBaselineEntry(
   );
 }
 
-export function parseManualBaseline(
+function parseManualBaseline(
   content: string,
   filePath: string
 ): Map<string, ManualAuditAggregate[]> {
