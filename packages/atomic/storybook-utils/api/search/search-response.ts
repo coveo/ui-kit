@@ -310,7 +310,6 @@ const searchChildResult2 = {
   },
 };
 
-// Ultra-minimal folded response inspired by getNthResult
 export const baseFoldedResponse: SearchResponse = {
   totalCount: 2,
   totalCountFiltered: 2,
@@ -340,7 +339,6 @@ export const baseFoldedResponse: SearchResponse = {
   suggestedFacets: [],
   categoryFacets: [],
   results: [
-    // Parent result with children - minimal fields only
     {
       title: 'Animals',
       excerpt: 'Collection of animals',
@@ -353,7 +351,6 @@ export const baseFoldedResponse: SearchResponse = {
         foldingchild: ['animals'],
       },
     },
-    // Standalone result - minimal fields only
     {
       title: 'Plants',
       excerpt: 'Plant collection',
@@ -381,15 +378,11 @@ export const baseFoldedResponse: SearchResponse = {
   extendedResults: {},
 };
 
-/**
- * Folded response with grandchildren: children themselves contain nested child results.
- * Useful for testing `inherit-templates` and deeply nested result hierarchies.
- */
 export const nestedFoldedResponse: SearchResponse = {
   ...baseFoldedResponse,
   results: [
     {
-      ...baseFoldedResponse.results[0],
+      ...baseFoldedResponse.results[0]!,
       childResults: [
         {
           ...searchChildResult1,
@@ -411,7 +404,7 @@ export const nestedFoldedResponse: SearchResponse = {
         searchChildResult2,
       ],
     },
-    baseFoldedResponse.results[1],
+    baseFoldedResponse.results[1]!,
   ],
 };
 
