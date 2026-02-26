@@ -2,25 +2,25 @@ import {html} from 'lit';
 import {describe, expect, it} from 'vitest';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import type {
-  GeneratedAnswerThreadItem,
-  GeneratedAnswerThreadItemProps,
-} from './generated-answer-thread-item';
-import '@/src/components/common/generated-answer/generated-answer-thread-item/generated-answer-thread-item';
+  AtomicGeneratedAnswerThreadItem,
+  AtomicGeneratedAnswerThreadItemProps,
+} from './atomic-generated-answer-thread-item';
+import '@/src/components/common/generated-answer/atomic-generated-answer-thread-item/atomic-generated-answer-thread-item';
 
-describe('generated-answer-thread-item', () => {
+describe('atomic-generated-answer-thread-item', () => {
   const renderComponent = async (
-    props: Partial<GeneratedAnswerThreadItemProps> = {},
+    props: Partial<AtomicGeneratedAnswerThreadItemProps> = {},
     children = html`<div>Thread item content</div>`
   ) => {
-    const element = await fixture<GeneratedAnswerThreadItem>(html`
-      <generated-answer-thread-item
+    const element = await fixture<AtomicGeneratedAnswerThreadItem>(html`
+      <atomic-generated-answer-thread-item
         .title=${props.title ?? 'Title'}
         .disableCollapse=${props.disableCollapse ?? false}
         .hideLine=${props.hideLine ?? false}
         .isExpanded=${props.isExpanded ?? true}
       >
         ${children}
-      </generated-answer-thread-item>
+      </atomic-generated-answer-thread-item>
     `);
 
     return {
@@ -33,11 +33,11 @@ describe('generated-answer-thread-item', () => {
         titleButton: element.shadowRoot?.querySelector('button') ?? null,
         contentRegion:
           element.shadowRoot?.querySelector(
-            'div[id^="generated-answer-thread-item-content-"]'
+            'div[id^="atomic-generated-answer-thread-item-content-"]'
           ) ?? null,
         contentState:
           element.shadowRoot?.querySelector(
-            'div[id^="generated-answer-thread-item-content-"] > div[aria-hidden]'
+            'div[id^="atomic-generated-answer-thread-item-content-"] > div[aria-hidden]'
           ) ?? null,
       }),
     };
