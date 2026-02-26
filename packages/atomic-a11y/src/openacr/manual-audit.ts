@@ -7,8 +7,42 @@ import type {
   ManualAuditBaselineEntry,
   OpenAcrConformance,
 } from './types.js';
-import {countManualConformances, manualStatusToConformance} from './types.js';
+import {manualStatusToConformance} from './types.js';
 
+export interface ManualConformanceCounts {
+  pass: number;
+  fail: number;
+  partial: number;
+  notApplicable: number;
+}
+
+export function countManualConformances(
+  aggregates: ManualAuditAggregate[]
+): ManualConformanceCounts {
+  let pass = 0;
+  let fail = 0;
+  let partial = 0;
+  let notApplicable = 0;
+
+  for (const aggregate of aggregates) {
+    switch (aggregate.conformance) {
+      case 'supports':
+        pass++;
+        break;
+      case 'does-not-support':
+        fail++;
+        break;
+      case 'partially-supports':
+        partial++;
+        break;
+      case 'not-applicable':
+        notApplicable++;
+        break;
+    }
+  }
+
+  return {pass, fail, partial, notApplicable};
+}
 const LOG_PREFIX = '[json-to-openacr]';
 
 const CRITERION_KEY_REGEX = /^(\d+(?:\.\d+)+)-/;

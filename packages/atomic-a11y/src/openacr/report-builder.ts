@@ -118,20 +118,21 @@ function buildOpenAcrCriteria(
     ].sort(compareByNumericId);
     const manualForCriterion = manualByCriterion.get(definition.id);
 
-    const conformance = resolveConformance(
-      criterionFromReport,
+    const conformanceContext = {
+      criterion: criterionFromReport,
       aggregate,
-      manualForCriterion,
-      override
-    );
-    const remarks = buildRemarks(
-      definition.id,
+      manualAggregates: manualForCriterion,
+      override,
+    };
+
+    const conformance = resolveConformance(conformanceContext);
+    const remarks = buildRemarks({
+      ...conformanceContext,
+      criterionId: definition.id,
       conformance,
       coveredComponents,
       violatingComponents,
-      manualForCriterion,
-      override
-    );
+    });
 
     criteriaByChapter[definition.chapterId].push({
       num: definition.id,
