@@ -91,6 +91,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-insight-smart-snippet-suggestions',
   'atomic-insight-tab',
   'atomic-insight-tabs',
+  'atomic-insight-timeframe-facet',
   'atomic-insight-user-actions-modal',
   'atomic-insight-user-actions-session',
   'atomic-insight-user-actions-timeline',

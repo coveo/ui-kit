@@ -6,11 +6,9 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
-import { RangeFacetSortCriterion as InsightRangeFacetSortCriterion } from "@coveo/headless/insight";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilterRange, DateRangeRequest } from "@coveo/headless";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
-export { RangeFacetSortCriterion as InsightRangeFacetSortCriterion } from "@coveo/headless/insight";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { DateFilterRange, DateRangeRequest } from "@coveo/headless";
 export namespace Components {
@@ -31,48 +29,6 @@ export namespace Components {
           * The text tooltip to show on the result action icon for some time after clicking the button.
          */
         "tooltipOnClick": string;
-    }
-    interface AtomicInsightTimeframeFacet {
-        /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-timeframe-facet   depends-on-abc   ... ></atomic-insight-timeframe-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-timeframe-facet   depends-on-abc="doc"   ... ></atomic-insight-timeframe-facet> ```
-         */
-        "dependsOn": Record<string, string>;
-        /**
-          * Specifies a unique identifier for the facet.
-         */
-        "facetId"?: string;
-        /**
-          * The field whose values you want to display in the facet.
-         */
-        "field": string;
-        /**
-          * Whether to exclude the parents of folded results when estimating the result count for each facet value.   Note: Resulting count is only an estimation, in some cases this value could be incorrect.
-         */
-        "filterFacetCount": boolean;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
-         */
-        "headingLevel": number;
-        /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
-         */
-        "injectionDepth": number;
-        /**
-          * Specifies if the facet is collapsed.
-         */
-        "isCollapsed": boolean;
-        /**
-          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
-         */
-        "label": string;
-        /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
-         */
-        "sortCriteria": InsightRangeFacetSortCriterion;
-        /**
-          * Whether this facet should contain a date picker allowing users to set custom ranges.
-         */
-        "withDatePicker": boolean;
     }
     /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
@@ -114,12 +70,6 @@ declare global {
         prototype: HTMLAtomicInsightResultActionElement;
         new (): HTMLAtomicInsightResultActionElement;
     };
-    interface HTMLAtomicInsightTimeframeFacetElement extends Components.AtomicInsightTimeframeFacet, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightTimeframeFacetElement: {
-        prototype: HTMLAtomicInsightTimeframeFacetElement;
-        new (): HTMLAtomicInsightTimeframeFacetElement;
-    };
     interface HTMLAtomicStencilFacetDateInputElementEventMap {
         "atomic/dateInputApply": any;
     }
@@ -143,7 +93,6 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "atomic-insight-result-action": HTMLAtomicInsightResultActionElement;
-        "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
     }
 }
@@ -171,48 +120,6 @@ declare namespace LocalJSX {
          */
         "tooltipOnClick"?: string;
     }
-    interface AtomicInsightTimeframeFacet {
-        /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-timeframe-facet   depends-on-abc   ... ></atomic-insight-timeframe-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-timeframe-facet   depends-on-abc="doc"   ... ></atomic-insight-timeframe-facet> ```
-         */
-        "dependsOn"?: Record<string, string>;
-        /**
-          * Specifies a unique identifier for the facet.
-         */
-        "facetId"?: string;
-        /**
-          * The field whose values you want to display in the facet.
-         */
-        "field"?: string;
-        /**
-          * Whether to exclude the parents of folded results when estimating the result count for each facet value.   Note: Resulting count is only an estimation, in some cases this value could be incorrect.
-         */
-        "filterFacetCount"?: boolean;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
-         */
-        "headingLevel"?: number;
-        /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
-         */
-        "injectionDepth"?: number;
-        /**
-          * Specifies if the facet is collapsed.
-         */
-        "isCollapsed"?: boolean;
-        /**
-          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
-         */
-        "label"?: string;
-        /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
-         */
-        "sortCriteria"?: InsightRangeFacetSortCriterion;
-        /**
-          * Whether this facet should contain a date picker allowing users to set custom ranges.
-         */
-        "withDatePicker"?: boolean;
-    }
     /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
      * Internal component made to be integrated in a TimeframeFacet.
@@ -233,7 +140,6 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "atomic-insight-result-action": AtomicInsightResultAction;
-        "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
     }
 }
@@ -242,7 +148,6 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "atomic-insight-result-action": LocalJSX.AtomicInsightResultAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionElement>;
-            "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
             /**
              * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
              * Internal component made to be integrated in a TimeframeFacet.
