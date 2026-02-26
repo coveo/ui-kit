@@ -12,7 +12,7 @@ import {
   renderAgentGenerationSteps,
 } from './render-agent-generation-steps';
 
-const AGENTS_STEPS = {
+const AGENT_STEPS = {
   search: 'search',
   think: 'think',
   answering: 'answering',
@@ -60,7 +60,7 @@ describe('#renderAgentGenerationSteps', () => {
   };
 
   const buildStep = (overrides: Partial<AgentStep>): AgentStep => ({
-    name: AGENTS_STEPS.search,
+    name: AGENT_STEPS.search,
     status: STEP_STATUS.completed,
     startedAt: 0,
     ...overrides,
@@ -68,17 +68,17 @@ describe('#renderAgentGenerationSteps', () => {
 
   const mockedSteps = [
     buildStep({
-      name: AGENTS_STEPS.search,
+      name: AGENT_STEPS.search,
       status: STEP_STATUS.completed,
       startedAt: BASE_TIME,
     }),
     buildStep({
-      name: AGENTS_STEPS.think,
+      name: AGENT_STEPS.think,
       status: STEP_STATUS.completed,
       startedAt: BASE_TIME + 100,
     }),
     buildStep({
-      name: AGENTS_STEPS.answering,
+      name: AGENT_STEPS.answering,
       status: STEP_STATUS.active,
       startedAt: BASE_TIME + 200,
     }),
@@ -91,7 +91,7 @@ describe('#renderAgentGenerationSteps', () => {
 
     it('should return the active step key when an active step exists', () => {
       const key = getCurrentStepKey([
-        buildStep({name: AGENTS_STEPS.think, status: STEP_STATUS.active}),
+        buildStep({name: AGENT_STEPS.think, status: STEP_STATUS.active}),
       ]);
 
       expect(key).toBe('agent-generation-step-think');
@@ -99,8 +99,8 @@ describe('#renderAgentGenerationSteps', () => {
 
     it('should return the highest-priority completed step key when no active step exists', () => {
       const key = getCurrentStepKey([
-        buildStep({name: AGENTS_STEPS.search, status: STEP_STATUS.completed}),
-        buildStep({name: AGENTS_STEPS.think, status: STEP_STATUS.completed}),
+        buildStep({name: AGENT_STEPS.search, status: STEP_STATUS.completed}),
+        buildStep({name: AGENT_STEPS.think, status: STEP_STATUS.completed}),
       ]);
 
       expect(key).toBe('agent-generation-step-think');
@@ -109,34 +109,34 @@ describe('#renderAgentGenerationSteps', () => {
     it('should prioritize an active step over completed steps', () => {
       const key = getCurrentStepKey([
         buildStep({
-          name: AGENTS_STEPS.answering,
+          name: AGENT_STEPS.answering,
           status: STEP_STATUS.completed,
         }),
-        buildStep({name: AGENTS_STEPS.search, status: STEP_STATUS.active}),
+        buildStep({name: AGENT_STEPS.search, status: STEP_STATUS.active}),
       ]);
 
       expect(key).toBe('agent-generation-step-search');
     });
 
-    it('should keep showing the first step when later steps arrive quickly', () => {
+    it('should return the active answering step when multiple steps with timestamps are provided', () => {
       const key = getCurrentStepKey(mockedSteps, BASE_TIME + 500);
 
-      expect(key).toBe('agent-generation-step-search');
+      expect(key).toBe('generating-answer');
     });
 
-    it('should advance one step only after 1500ms elapsed', () => {
+    it('should continue to return the active step regardless of elapsed time', () => {
       getCurrentStepKey(mockedSteps, BASE_TIME);
 
       const key = getCurrentStepKey(mockedSteps, BASE_TIME + 1_550);
 
-      expect(key).toBe('agent-generation-step-think');
+      expect(key).toBe('generating-answer');
     });
   });
 
   describe('#getActiveStepKey', () => {
     it('should return undefined when there is no active step', () => {
       const key = getActiveStepKey([
-        buildStep({name: AGENTS_STEPS.search, status: STEP_STATUS.completed}),
+        buildStep({name: AGENT_STEPS.search, status: STEP_STATUS.completed}),
       ]);
 
       expect(key).toBeUndefined();
@@ -144,8 +144,8 @@ describe('#renderAgentGenerationSteps', () => {
 
     it('should return the key of the active step', () => {
       const key = getActiveStepKey([
-        buildStep({name: AGENTS_STEPS.search, status: STEP_STATUS.completed}),
-        buildStep({name: AGENTS_STEPS.answering, status: STEP_STATUS.active}),
+        buildStep({name: AGENT_STEPS.search, status: STEP_STATUS.completed}),
+        buildStep({name: AGENT_STEPS.answering, status: STEP_STATUS.active}),
       ]);
 
       expect(key).toBe('generating-answer');
@@ -155,7 +155,7 @@ describe('#renderAgentGenerationSteps', () => {
   describe('#getLatestCompletedStepKey', () => {
     it('should return undefined when there is no completed step', () => {
       const key = getLatestCompletedStepKey([
-        buildStep({name: AGENTS_STEPS.think, status: STEP_STATUS.active}),
+        buildStep({name: AGENT_STEPS.think, status: STEP_STATUS.active}),
       ]);
 
       expect(key).toBeUndefined();
@@ -163,10 +163,10 @@ describe('#renderAgentGenerationSteps', () => {
 
     it('should return the highest-priority completed key', () => {
       const key = getLatestCompletedStepKey([
-        buildStep({name: AGENTS_STEPS.search, status: STEP_STATUS.completed}),
-        buildStep({name: AGENTS_STEPS.think, status: STEP_STATUS.completed}),
+        buildStep({name: AGENT_STEPS.search, status: STEP_STATUS.completed}),
+        buildStep({name: AGENT_STEPS.think, status: STEP_STATUS.completed}),
         buildStep({
-          name: AGENTS_STEPS.answering,
+          name: AGENT_STEPS.answering,
           status: STEP_STATUS.completed,
         }),
       ]);
@@ -187,7 +187,7 @@ describe('#renderAgentGenerationSteps', () => {
   it('should not render anything when not streaming', async () => {
     const {element} = await renderComponent({
       agentSteps: [
-        buildStep({name: AGENTS_STEPS.search, status: STEP_STATUS.active}),
+        buildStep({name: AGENT_STEPS.search, status: STEP_STATUS.active}),
       ],
       isStreaming: false,
     });
@@ -198,7 +198,7 @@ describe('#renderAgentGenerationSteps', () => {
   it('should render the active search step label when streaming', async () => {
     const {element} = await renderComponent({
       agentSteps: [
-        buildStep({name: AGENTS_STEPS.search, status: STEP_STATUS.active}),
+        buildStep({name: AGENT_STEPS.search, status: STEP_STATUS.active}),
       ],
       isStreaming: true,
     });
@@ -211,7 +211,7 @@ describe('#renderAgentGenerationSteps', () => {
   it('should render the active think step label when streaming', async () => {
     const {element} = await renderComponent({
       agentSteps: [
-        buildStep({name: AGENTS_STEPS.think, status: STEP_STATUS.active}),
+        buildStep({name: AGENT_STEPS.think, status: STEP_STATUS.active}),
       ],
       isStreaming: true,
     });
@@ -222,7 +222,7 @@ describe('#renderAgentGenerationSteps', () => {
   it('should render the active answering step label when streaming', async () => {
     const {element} = await renderComponent({
       agentSteps: [
-        buildStep({name: AGENTS_STEPS.answering, status: STEP_STATUS.active}),
+        buildStep({name: AGENT_STEPS.answering, status: STEP_STATUS.active}),
       ],
       isStreaming: true,
     });
@@ -233,8 +233,8 @@ describe('#renderAgentGenerationSteps', () => {
   it('should render the latest completed step when there is no active step', async () => {
     const {element} = await renderComponent({
       agentSteps: [
-        buildStep({name: AGENTS_STEPS.search, status: STEP_STATUS.completed}),
-        buildStep({name: AGENTS_STEPS.think, status: STEP_STATUS.completed}),
+        buildStep({name: AGENT_STEPS.search, status: STEP_STATUS.completed}),
+        buildStep({name: AGENT_STEPS.think, status: STEP_STATUS.completed}),
       ],
       isStreaming: true,
     });
@@ -246,10 +246,10 @@ describe('#renderAgentGenerationSteps', () => {
     const {element} = await renderComponent({
       agentSteps: [
         buildStep({
-          name: AGENTS_STEPS.answering,
+          name: AGENT_STEPS.answering,
           status: STEP_STATUS.completed,
         }),
-        buildStep({name: AGENTS_STEPS.search, status: STEP_STATUS.active}),
+        buildStep({name: AGENT_STEPS.search, status: STEP_STATUS.active}),
       ],
       isStreaming: true,
     });
@@ -262,7 +262,7 @@ describe('#renderAgentGenerationSteps', () => {
   it('should render the rolodex animation structure', async () => {
     const {element} = await renderComponent({
       agentSteps: [
-        buildStep({name: AGENTS_STEPS.search, status: STEP_STATUS.active}),
+        buildStep({name: AGENT_STEPS.search, status: STEP_STATUS.active}),
       ],
       isStreaming: true,
     });

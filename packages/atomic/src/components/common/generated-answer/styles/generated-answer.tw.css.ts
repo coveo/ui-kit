@@ -110,6 +110,7 @@ const baseStyle = css`
   [part='is-generating'] .generation-steps-value {
     @apply inline-block whitespace-nowrap;
     transform-origin: 50% 100%;
+    /* Keep duration in sync with MIN_STEP_DISPLAY_DURATION_MS in the generated-answer TS logic. */
     animation: generation-steps-rolodex 1500ms cubic-bezier(0.16, 0.84, 0.24, 1) both;
     will-change: transform;
     backface-visibility: hidden;

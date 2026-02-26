@@ -35,7 +35,7 @@ export const renderAgentGenerationSteps: FunctionalComponent<
 
   return html`${when(canRender, () =>
     keyed(
-      currentStepLabel,
+      currentStepKey,
       html`
         <div
           part="is-generating"
