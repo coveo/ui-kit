@@ -30,12 +30,9 @@ describe('atomic-generated-answer', () => {
   let mockedGeneratedAnswer: GeneratedAnswer;
   let mockedSearchStatus: SearchStatus;
   let mockedTabManager: TabManager;
-  type FollowUpAnswersState = NonNullable<
-    GeneratedAnswerWithFollowUpsState['followUpAnswers']
-  >;
-  type FollowUpAnswerEntry = NonNullable<
-    FollowUpAnswersState['followUpAnswers']
-  >[number];
+  type FollowUpAnswersState =
+    GeneratedAnswerWithFollowUpsState['followUpAnswers'];
+  type FollowUpAnswerEntry = FollowUpAnswersState['followUpAnswers'][number];
   type RenderGeneratedAnswerOptions = {
     props?: Partial<AtomicGeneratedAnswer>;
     generatedAnswerState?: Partial<GeneratedAnswerState>;
@@ -198,7 +195,7 @@ describe('atomic-generated-answer', () => {
 
   const buildFollowUpAnswerEntry = (
     overrides: Partial<FollowUpAnswerEntry> = {}
-  ): FollowUpAnswerEntry =>
+  ) =>
     ({
       answer: 'Follow up answer',
       citations: [],
