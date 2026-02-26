@@ -1,5 +1,9 @@
+import {DEFAULT_MANUAL_PLACEHOLDER_NOTE} from '../shared/constants.js';
 import type {A11yCriterionReport} from '../shared/types.js';
-import {resolveManualConformance} from './manual-audit.js';
+import {
+  countManualConformances,
+  resolveManualConformance,
+} from './manual-audit.js';
 import type {
   A11yOverrideEntry,
   CriterionAggregate,
@@ -8,10 +12,21 @@ import type {
 } from './types.js';
 import {reportConformanceToOpenAcr} from './types.js';
 
-const DEFAULT_MANUAL_PLACEHOLDER_NOTE =
-  'Manual audit pending. Phase 3 results will be merged into this report.';
+interface ConformanceContext {
+  criterion: A11yCriterionReport | undefined;
+  aggregate: CriterionAggregate | undefined;
+  manualAggregates: ManualAuditAggregate[] | undefined;
+  override: A11yOverrideEntry | undefined;
+}
 
-export function mapCriterionConformance(
+interface RemarksContext extends ConformanceContext {
+  criterionId: string;
+  conformance: OpenAcrConformance;
+  coveredComponents: string[];
+  violatingComponents: string[];
+}
+
+function mapCriterionConformance(
   criterion: A11yCriterionReport | undefined
 ): OpenAcrConformance | null {
   if (!criterion) {
@@ -42,16 +57,15 @@ function resolveAutomatedConformance(
 }
 
 export function resolveConformance(
-  criterion: A11yCriterionReport | undefined,
-  aggregate: CriterionAggregate | undefined,
-  manualAggregate: ManualAuditAggregate[] | undefined,
-  override: A11yOverrideEntry | undefined
+  context: ConformanceContext
 ): OpenAcrConformance {
+  const {override, manualAggregates, criterion, aggregate} = context;
+
   if (override) {
     return override.conformance;
   }
 
-  const manualConformance = resolveManualConformance(manualAggregate);
+  const manualConformance = resolveManualConformance(manualAggregates);
   if (manualConformance) {
     return manualConformance;
   }
@@ -65,51 +79,32 @@ export function resolveConformance(
   return resolveAutomatedConformance(aggregate);
 }
 
-export function buildRemarks(
-  criterionId: string,
-  conformance: OpenAcrConformance,
-  coveredComponents: string[],
-  violatingComponents: string[],
-  manualAggregates: ManualAuditAggregate[] | undefined,
-  override: A11yOverrideEntry | undefined
-): string {
+export function buildRemarks(context: RemarksContext): string {
+  const {
+    criterionId,
+    conformance,
+    coveredComponents,
+    violatingComponents,
+    manualAggregates,
+    override,
+  } = context;
+
   if (override) {
     return `[Override] ${override.reason}`;
   }
 
   if (manualAggregates && manualAggregates.length > 0) {
-    let passCount = 0;
-    let failCount = 0;
-    let partialCount = 0;
-    let notApplicableCount = 0;
+    const {pass, fail, partial, notApplicable} =
+      countManualConformances(manualAggregates);
 
-    for (const aggregate of manualAggregates) {
-      switch (aggregate.conformance) {
-        case 'supports':
-          passCount++;
-          break;
-        case 'does-not-support':
-          failCount++;
-          break;
-        case 'partially-supports':
-          partialCount++;
-          break;
-        case 'not-applicable':
-          notApplicableCount++;
-          break;
-      }
-    }
-
-    const componentsCount = manualAggregates.length;
     const summaryParts: string[] = [];
-    if (passCount > 0) summaryParts.push(`${passCount} pass`);
-    if (failCount > 0) summaryParts.push(`${failCount} fail`);
-    if (partialCount > 0) summaryParts.push(`${partialCount} partial`);
-    if (notApplicableCount > 0)
-      summaryParts.push(`${notApplicableCount} not-applicable`);
+    if (pass > 0) summaryParts.push(`${pass} pass`);
+    if (fail > 0) summaryParts.push(`${fail} fail`);
+    if (partial > 0) summaryParts.push(`${partial} partial`);
+    if (notApplicable > 0) summaryParts.push(`${notApplicable} not-applicable`);
 
     const summary = summaryParts.join(', ');
-    return `Manual audit: ${summary} across ${componentsCount} component(s).`;
+    return `Manual audit: ${summary} across ${manualAggregates.length} component(s).`;
   }
 
   const coveredCount = coveredComponents.length;

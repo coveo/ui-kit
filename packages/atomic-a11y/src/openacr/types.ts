@@ -1,8 +1,4 @@
-import type {
-  A11yComponentReport,
-  A11yCriterionReport,
-  CriterionLevel,
-} from '../shared/types.js';
+import type {A11yCriterionReport} from '../shared/types.js';
 
 export type ChapterId =
   | 'success_criteria_level_a'
@@ -51,24 +47,10 @@ export interface OpenAcrCriterionComponent {
 
 export interface OpenAcrCriterion {
   num: string;
-  handle: string;
-  level: CriterionLevel;
-  conformance: OpenAcrConformance;
-  remarks: string;
-  affected_components: string[];
-  automated_result: {
-    status: 'not-covered' | 'covered-no-violations' | 'covered-with-violations';
-    covered_components: string[];
-    violating_components: string[];
-  };
-  manual_result: {
-    status: string;
-    notes: string;
-  };
   components: OpenAcrCriterionComponent[];
 }
 
-export interface OpenAcrChapter {
+interface OpenAcrChapter {
   notes: string;
   criteria: OpenAcrCriterion[];
 }
@@ -99,20 +81,6 @@ export interface OpenAcrReport {
   repository: string;
   feedback: string;
   catalog: string;
-  standards: Array<{
-    standard_name: string;
-    standard_ref: string;
-    chapters: Array<{chapter_id: ChapterId; chapter_name: string}>;
-  }>;
-  summary: {
-    total_criteria: number;
-    supports: number;
-    partially_supports: number;
-    does_not_support: number;
-    not_applicable: number;
-    not_evaluated: number;
-    automated_covered_criteria: number;
-  };
   chapters: {
     success_criteria_level_a: OpenAcrChapter;
     success_criteria_level_aa: OpenAcrChapter;
@@ -148,48 +116,3 @@ export const reportConformanceToOpenAcr: Record<
   notApplicable: 'not-applicable',
   notEvaluated: 'not-evaluated',
 };
-
-export function buildCriterionAggregates(
-  components: A11yComponentReport[],
-  criteria: A11yCriterionReport[]
-): Map<string, CriterionAggregate> {
-  const aggregates = new Map<string, CriterionAggregate>();
-  const componentByName = new Map<string, A11yComponentReport>();
-
-  for (const component of components) {
-    componentByName.set(component.name, component);
-
-    for (const criterionId of component.automated.criteriaCovered) {
-      const aggregate = aggregates.get(criterionId) ?? {
-        coveredComponents: new Set<string>(),
-        violatingComponents: new Set<string>(),
-      };
-
-      aggregate.coveredComponents.add(component.name);
-      if (component.automated.violations > 0) {
-        aggregate.violatingComponents.add(component.name);
-      }
-
-      aggregates.set(criterionId, aggregate);
-    }
-  }
-
-  for (const criterion of criteria) {
-    const aggregate = aggregates.get(criterion.id) ?? {
-      coveredComponents: new Set<string>(),
-      violatingComponents: new Set<string>(),
-    };
-
-    for (const componentName of criterion.affectedComponents) {
-      aggregate.coveredComponents.add(componentName);
-      const matchedComponent = componentByName.get(componentName);
-      if (matchedComponent && matchedComponent.automated.violations > 0) {
-        aggregate.violatingComponents.add(componentName);
-      }
-    }
-
-    aggregates.set(criterion.id, aggregate);
-  }
-
-  return aggregates;
-}

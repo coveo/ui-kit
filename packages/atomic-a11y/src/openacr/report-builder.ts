@@ -1,55 +1,87 @@
 import {wcagCriteriaDefinitions} from '../data/wcag-criteria.js';
-import type {A11yReport} from '../shared/types.js';
+import {compareByNumericId} from '../shared/sorting.js';
+import type {
+  A11yComponentReport,
+  A11yCriterionReport,
+  A11yReport,
+} from '../shared/types.js';
 import {buildRemarks, resolveConformance} from './conformance.js';
 import type {
   A11yOverrideEntry,
   ChapterId,
+  CriterionAggregate,
   ManualAuditAggregate,
+  OpenAcrConformance,
   OpenAcrCriterion,
   OpenAcrCriterionComponent,
   OpenAcrReport,
 } from './types.js';
-import {buildCriterionAggregates} from './types.js';
 
 const DEFAULT_REPORT_TITLE = 'Coveo Accessibility Conformance Report';
 const DEFAULT_REPORT_PRODUCT_NAME = 'Coveo Atomic';
 const DEFAULT_REPORT_PRODUCT_VERSION = '3.x.x';
 const DEFAULT_REPORT_DATE = new Date().toISOString().slice(0, 10);
-const DEFAULT_REPORT_STANDARD = 'WCAG 2.2 AA';
-const DEFAULT_REPORT_STANDARD_REFERENCE = 'https://www.w3.org/TR/WCAG22/';
-const DEFAULT_MANUAL_PLACEHOLDER_NOTE =
-  'Manual audit pending. Phase 3 results will be merged into this report.';
 
-function sortStrings(first: string, second: string): number {
-  return first.localeCompare(second, 'en-US', {numeric: true});
+function buildCriterionAggregates(
+  components: A11yComponentReport[],
+  criteria: A11yCriterionReport[]
+): Map<string, CriterionAggregate> {
+  const aggregates = new Map<string, CriterionAggregate>();
+
+  for (const component of components) {
+    for (const criterionId of component.automated.criteriaCovered) {
+      const aggregate = aggregates.get(criterionId) ?? {
+        coveredComponents: new Set<string>(),
+        violatingComponents: new Set<string>(),
+      };
+
+      aggregate.coveredComponents.add(component.name);
+      aggregates.set(criterionId, aggregate);
+    }
+  }
+
+  for (const criterion of criteria) {
+    const aggregate = aggregates.get(criterion.id) ?? {
+      coveredComponents: new Set<string>(),
+      violatingComponents: new Set<string>(),
+    };
+
+    for (const componentName of criterion.affectedComponents) {
+      aggregate.coveredComponents.add(componentName);
+      aggregate.violatingComponents.add(componentName);
+    }
+
+    aggregates.set(criterion.id, aggregate);
+  }
+
+  return aggregates;
 }
 
 function buildCriterionComponents(
-  conformance: OpenAcrCriterion['conformance'],
-  remarks: string,
-  coveredComponents: string[]
+  conformance: OpenAcrConformance,
+  remarks: string
 ): OpenAcrCriterionComponent[] {
-  if (coveredComponents.length === 0) {
-    return [
-      {
-        name: 'web',
-        adherence: {
-          level: conformance,
-          notes: remarks,
-        },
-      },
-    ];
-  }
-
-  return coveredComponents.map((componentName) => {
-    return {
-      name: componentName,
+  return [
+    {
+      name: 'web',
       adherence: {
         level: conformance,
         notes: remarks,
       },
-    };
-  });
+    },
+  ];
+}
+
+function buildManualAggregateIndex(
+  manualAggregates: Map<string, ManualAuditAggregate[]>
+): Map<string, ManualAuditAggregate[]> {
+  const index = new Map<string, ManualAuditAggregate[]>();
+  for (const [key, entries] of manualAggregates) {
+    const criterionId = key.split(':')[1];
+    const existing = index.get(criterionId) ?? [];
+    index.set(criterionId, [...existing, ...entries]);
+  }
+  return index;
 }
 
 function buildOpenAcrCriteria(
@@ -67,6 +99,7 @@ function buildOpenAcrCriteria(
     report?.components ?? [],
     report?.criteria ?? []
   );
+  const manualByCriterion = buildManualAggregateIndex(manualAggregates);
 
   const criteriaByChapter: Record<ChapterId, OpenAcrCriterion[]> = {
     success_criteria_level_a: [],
@@ -78,118 +111,36 @@ function buildOpenAcrCriteria(
     const criterionFromReport = criteriaById.get(definition.id);
     const override = overrides.get(definition.id);
     const coveredComponents = [...(aggregate?.coveredComponents ?? [])].sort(
-      sortStrings
+      compareByNumericId
     );
     const violatingComponents = [
       ...(aggregate?.violatingComponents ?? []),
-    ].sort(sortStrings);
+    ].sort(compareByNumericId);
+    const manualForCriterion = manualByCriterion.get(definition.id);
 
-    const manualAggregatesForCriterion = Array.from(manualAggregates.entries())
-      .filter(([key]) => key.endsWith(`:${definition.id}`))
-      .flatMap(([, entries]) => entries);
-
-    const conformance = resolveConformance(
-      criterionFromReport,
+    const conformanceContext = {
+      criterion: criterionFromReport,
       aggregate,
-      manualAggregatesForCriterion.length > 0
-        ? manualAggregatesForCriterion
-        : undefined,
-      override
-    );
-    const remarks = buildRemarks(
-      definition.id,
+      manualAggregates: manualForCriterion,
+      override,
+    };
+
+    const conformance = resolveConformance(conformanceContext);
+    const remarks = buildRemarks({
+      ...conformanceContext,
+      criterionId: definition.id,
       conformance,
       coveredComponents,
       violatingComponents,
-      manualAggregatesForCriterion.length > 0
-        ? manualAggregatesForCriterion
-        : undefined,
-      override
-    );
-
-    const manualResultStatus =
-      manualAggregatesForCriterion.length > 0 ? 'evaluated' : 'not-evaluated';
-    const manualResultNotes =
-      manualAggregatesForCriterion.length > 0
-        ? remarks
-        : DEFAULT_MANUAL_PLACEHOLDER_NOTE;
+    });
 
     criteriaByChapter[definition.chapterId].push({
       num: definition.id,
-      handle: definition.handle,
-      level: definition.level,
-      conformance,
-      remarks,
-      affected_components: coveredComponents,
-      automated_result: {
-        status:
-          coveredComponents.length === 0
-            ? 'not-covered'
-            : violatingComponents.length > 0
-              ? 'covered-with-violations'
-              : 'covered-no-violations',
-        covered_components: coveredComponents,
-        violating_components: violatingComponents,
-      },
-      manual_result: {
-        status: manualResultStatus,
-        notes: manualResultNotes,
-      },
-      components: buildCriterionComponents(
-        conformance,
-        remarks,
-        coveredComponents
-      ),
+      components: buildCriterionComponents(conformance, remarks),
     });
   }
 
   return criteriaByChapter;
-}
-
-function buildSummary(
-  levelA: OpenAcrCriterion[],
-  levelAA: OpenAcrCriterion[]
-): OpenAcrReport['summary'] {
-  const criteria = [...levelA, ...levelAA];
-  const summary = {
-    total_criteria: criteria.length,
-    supports: 0,
-    partially_supports: 0,
-    does_not_support: 0,
-    not_applicable: 0,
-    not_evaluated: 0,
-    automated_covered_criteria: 0,
-  };
-
-  for (const criterion of criteria) {
-    if (criterion.automated_result.status !== 'not-covered') {
-      summary.automated_covered_criteria += 1;
-    }
-
-    if (criterion.conformance === 'supports') {
-      summary.supports += 1;
-      continue;
-    }
-
-    if (criterion.conformance === 'partially-supports') {
-      summary.partially_supports += 1;
-      continue;
-    }
-
-    if (criterion.conformance === 'does-not-support') {
-      summary.does_not_support += 1;
-      continue;
-    }
-
-    if (criterion.conformance === 'not-applicable') {
-      summary.not_applicable += 1;
-      continue;
-    }
-
-    summary.not_evaluated += 1;
-  }
-
-  return summary;
 }
 
 export function buildOpenAcrReport(
@@ -220,10 +171,6 @@ export function buildOpenAcrReport(
     overrides,
     manualAggregates
   );
-  const summary = buildSummary(
-    criteriaByChapter.success_criteria_level_a,
-    criteriaByChapter.success_criteria_level_aa
-  );
 
   return {
     title: DEFAULT_REPORT_TITLE,
@@ -253,23 +200,6 @@ export function buildOpenAcrReport(
     repository: 'https://github.com/coveo/ui-kit',
     feedback: 'https://github.com/coveo/ui-kit/issues',
     catalog: '2.5-edition-wcag-2.2-en',
-    standards: [
-      {
-        standard_name: DEFAULT_REPORT_STANDARD,
-        standard_ref: DEFAULT_REPORT_STANDARD_REFERENCE,
-        chapters: [
-          {
-            chapter_id: 'success_criteria_level_a',
-            chapter_name: 'Table 1: Success Criteria, Level A',
-          },
-          {
-            chapter_id: 'success_criteria_level_aa',
-            chapter_name: 'Table 2: Success Criteria, Level AA',
-          },
-        ],
-      },
-    ],
-    summary,
     chapters: {
       success_criteria_level_a: {
         notes:

@@ -9,16 +9,17 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "test": "vitest run",
-    "a11y:vpat": "npx tsx src/reporter/json-to-openacr.ts && npx --yes @openacr/openacr output -f reports/openacr.yaml -o reports/vpat-2.5-coveo-atomic.md -t scripts/vpat-from-openacr.handlebars",
-    "a11y:merge-shards": "npx tsx src/reporter/merge-shards.ts"
+    "generate:wcag": "node scripts/generate-wcag-criteria.mjs",
+    "build": "pnpm generate:wcag && tsc -p tsconfig.json",
+    "a11y:vpat": "pnpm build && node scripts/json-to-openacr.mjs && npx --yes @openacr/openacr output -f reports/openacr.yaml -o reports/vpat-2.5-coveo-atomic.md -t scripts/vpat-from-openacr.handlebars",
+    "a11y:merge-shards": "pnpm build && node scripts/merge-shards-cli.mjs"
   },
   "dependencies": {
-    "axe-core": "4.10.3"
+    "js-yaml": "^4.1.0"
   },
   "devDependencies": {
-    "typescript": "5.8.3",
-    "vitest": "4.0.10"
+    "@types/js-yaml": "^4.0.9",
+    "axe-core": "4.10.3",
+    "typescript": "catalog:"
   }
 }

@@ -1,0 +1,9 @@
+{
+  "overrides": [
+    {
+      "criterion": "1.4.2",
+      "conformance": "not-applicable",
+      "reason": "Atomic components do not produce audio output."
+    }
+  ]
+}

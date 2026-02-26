@@ -1,13 +1,7 @@
 import type {AxeResults, Result as AxeRuleResult} from 'axe-core';
-import {
-  buildAxeRuleCriteriaMap,
-  extractCriteriaFromTags,
-} from '../data/axe-rule-mappings.js';
+import {extractCriteriaFromTags} from '../data/axe-rule-mappings.js';
 import {isRecord} from '../shared/guards.js';
-
-export {extractCriteriaFromTags};
-
-const axeRuleCriteriaMap = buildAxeRuleCriteriaMap();
+import {compareByNumericId} from '../shared/sorting.js';
 
 export function isAxeResults(value: unknown): value is AxeResults {
   if (!isRecord(value)) {
@@ -23,13 +17,7 @@ export function isAxeResults(value: unknown): value is AxeResults {
 }
 
 export function getCriteriaForRule(rule: AxeRuleResult): string[] {
-  return extractCriteriaFromTags(rule.tags).sort((a, b) =>
-    a.localeCompare(b, 'en-US', {numeric: true})
-  );
-}
-
-export function getCriteriaForRuleId(ruleId: string): string[] {
-  return axeRuleCriteriaMap.get(ruleId) ?? [];
+  return extractCriteriaFromTags(rule.tags).sort(compareByNumericId);
 }
 
 export function getIncompleteMessage(rule: AxeRuleResult): string {
