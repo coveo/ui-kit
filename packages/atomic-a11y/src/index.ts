@@ -1,3 +1,7 @@
+export {
+  type JsonToOpenAcrOptions,
+  transformJsonToOpenAcr,
+} from './openacr/json-to-openacr.js';
 export {mergeA11yShardReports} from './reporter/merge-shards.js';
 export {
   type A11yReporterOptions,
