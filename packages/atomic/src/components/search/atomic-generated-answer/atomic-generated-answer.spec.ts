@@ -130,6 +130,11 @@ describe('atomic-generated-answer', () => {
           '[part~="generated-content-container"]'
         );
       },
+      get scrollableContainer() {
+        return element.shadowRoot?.querySelector(
+          '[part="generated-content-container"] > .agent-scrollable'
+        );
+      },
       get feedbackButtons() {
         return element.shadowRoot?.querySelectorAll(
           '[part="feedback-button"]'
@@ -987,7 +992,7 @@ describe('atomic-generated-answer', () => {
 
     describe('when follow-up answers are enabled', () => {
       it('should render a scrollable content container when agentId is provided', async () => {
-        const {generatedContentContainer} = await renderGeneratedAnswer({
+        const {scrollableContainer} = await renderGeneratedAnswer({
           props: {agentId: 'agent-123'},
           generatedAnswerOverrides: {
             askFollowUp: vi.fn(),
@@ -995,20 +1000,20 @@ describe('atomic-generated-answer', () => {
           },
         });
 
-        expect(generatedContentContainer).toHaveClass('agent-scrollable');
+        expect(scrollableContainer).not.toBeNull();
       });
 
       it('should transition from non-scrollable to scrollable when follow-up answers become enabled', async () => {
-        const {element, generatedContentContainer} =
-          await renderGeneratedAnswer({
-            props: {agentId: 'agent-123'},
-            generatedAnswerOverrides: {
-              askFollowUp: vi.fn(),
-              state: buildFollowUpState(false),
-            },
-          });
+        const result = await renderGeneratedAnswer({
+          props: {agentId: 'agent-123'},
+          generatedAnswerOverrides: {
+            askFollowUp: vi.fn(),
+            state: buildFollowUpState(false),
+          },
+        });
 
-        expect(generatedContentContainer).not.toHaveClass('agent-scrollable');
+        const {element} = result;
+        expect(result.scrollableContainer).toBeNull();
 
         const generatedAnswerWithFollowUps =
           element.generatedAnswer as GeneratedAnswerWithFollowUps;
@@ -1016,23 +1021,23 @@ describe('atomic-generated-answer', () => {
         element.requestUpdate();
         await element.updateComplete;
 
-        expect(generatedContentContainer).toHaveClass('agent-scrollable');
+        const updatedScrollableContainer = result.scrollableContainer;
+        expect(updatedScrollableContainer).not.toBeNull();
       });
 
       it('should apply a default 50vh height to the scrollable part when agentId is provided', async () => {
-        const {element, generatedContentContainer} =
-          await renderGeneratedAnswer({
-            props: {agentId: 'agent-123'},
-            generatedAnswerOverrides: {
-              askFollowUp: vi.fn(),
-              state: buildFollowUpState(true),
-            },
-          });
+        const {element, scrollableContainer} = await renderGeneratedAnswer({
+          props: {agentId: 'agent-123'},
+          generatedAnswerOverrides: {
+            askFollowUp: vi.fn(),
+            state: buildFollowUpState(true),
+          },
+        });
 
         await element.updateComplete;
 
         const heightInPixels = parseFloat(
-          getComputedStyle(generatedContentContainer as HTMLElement).height
+          getComputedStyle(scrollableContainer as HTMLElement).height
         );
 
         expect(heightInPixels).toBeCloseTo(window.innerHeight * 0.5, 0);
@@ -1055,18 +1060,18 @@ describe('atomic-generated-answer', () => {
       });
 
       it('should not render a scrollable content container when agentId is not provided', async () => {
-        const {generatedContentContainer} = await renderGeneratedAnswer({
+        const {scrollableContainer} = await renderGeneratedAnswer({
           generatedAnswerOverrides: {
             state: buildFollowUpState(true),
           },
         });
 
-        expect(generatedContentContainer).not.toHaveClass('agent-scrollable');
+        expect(scrollableContainer).toBeNull();
       });
     });
 
     it('should not render a scrollable content container when follow-up is disabled even if agentId is provided', async () => {
-      const {generatedContentContainer} = await renderGeneratedAnswer({
+      const {scrollableContainer} = await renderGeneratedAnswer({
         props: {agentId: 'agent-123'},
         generatedAnswerOverrides: {
           askFollowUp: vi.fn(),
@@ -1074,7 +1079,7 @@ describe('atomic-generated-answer', () => {
         },
       });
 
-      expect(generatedContentContainer).not.toHaveClass('agent-scrollable');
+      expect(scrollableContainer).toBeNull();
     });
   });
 

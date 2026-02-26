@@ -407,16 +407,16 @@ export class AtomicGeneratedAnswer
             ${when(
               this.isAnswerVisible,
               () =>
-                html`
+                html` <div part="generated-content-container" class="pb-6">
                   <div
-                    part="generated-content-container"
                     class=${classMap({
                       'px-6': true,
-                      'pb-6': true,
                       'agent-scrollable': this.areFollowUpsEnabled,
                     })}
                   >
                     <article>${this.renderAnswerContent()}</article>
+                  </div>
+                  <div class="px-6 pt-2">
                     ${this.renderAskFollowUpWrapper()}
                     ${renderDisclaimer({
                       props: {
@@ -424,7 +424,8 @@ export class AtomicGeneratedAnswer
                         isStreaming: !!this.generatedAnswerState.isStreaming,
                       },
                     })}
-                  </div>`
+                  </div>
+                </div>`
             )}
           </div>
         </aside>
