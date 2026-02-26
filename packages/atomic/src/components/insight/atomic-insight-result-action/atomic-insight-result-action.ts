@@ -33,12 +33,12 @@ export enum Actions {
 }
 
 /**
- * The `atomic-insight-result-action` component renders an interactive button
- * that emits an `atomicInsightResultActionClicked` event when clicked.
+ * The `atomic-insight-result-action` component renders an interactive action button for insight results.
  *
  * @part result-action-container - The result action container
  * @part result-action-button - The result action button
  * @part result-action-icon - The result action icon
+ * @event atomicInsightResultActionClicked - Fired when the action button is clicked. The event detail contains the action type and the result object.
  */
 @customElement('atomic-insight-result-action')
 @bindings()
@@ -46,13 +46,15 @@ export class AtomicInsightResultAction
   extends LightDomMixin(LitElement)
   implements InitializableComponent<InsightBindings>
 {
-  @state() public bindings!: InsightBindings;
-  @state() public error!: Error;
-  @state() private currentTooltip = '';
-
-  private itemContextController!: ItemContextController<Result>;
-  private actions!: InsightAnalyticsActionCreators;
-  private tooltipResetTimeout?: ReturnType<typeof setTimeout>;
+  static styles = css`
+    [part='result-action-button'] {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 2rem;
+      width: 2rem;
+    }
+  `;
 
   /**
    * The result action icon to display.
@@ -75,15 +77,13 @@ export class AtomicInsightResultAction
    */
   @property({type: String}) action: Actions | string = '';
 
-  static styles = css`
-    [part='result-action-button'] {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 2rem;
-      width: 2rem;
-    }
-  `;
+  @state() public bindings!: InsightBindings;
+  @state() public error!: Error;
+  @state() private currentTooltip = '';
+
+  private itemContextController!: ItemContextController<Result>;
+  private actions!: InsightAnalyticsActionCreators;
+  private tooltipResetTimeout?: ReturnType<typeof setTimeout>;
 
   constructor() {
     super();
