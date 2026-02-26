@@ -1,19 +1,22 @@
+import {createFollowUpAgent} from '../../../api/knowledge/answer-generation/agents/follow-up-agent/follow-up-agent.js';
+import {createFollowUpStrategy} from '../../../api/knowledge/answer-generation/agents/follow-up-agent/follow-up-answer-strategy.js';
 import {answerGenerationApi} from '../../../api/knowledge/answer-generation/answer-generation-api.js';
-import {
-  type AnswerEndpointArgs,
-  selectAnswer,
-} from '../../../api/knowledge/answer-generation/endpoints/answer/answer-endpoint.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import {setAgentId} from '../../../features/configuration/configuration-actions.js';
 import {
+  selectAccessToken,
+  selectEnvironment,
+  selectOrganizationId,
+} from '../../../features/configuration/configuration-selectors.js';
+import {
+  activeFollowUpStartFailed,
+  createFollowUpAnswer,
   dislikeFollowUp,
-  generateFollowUpAnswer,
   likeFollowUp,
 } from '../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {followUpAnswersReducer as followUpAnswers} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import type {FollowUpAnswersState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
-import {selectAnswerApiQueryParams} from '../../../features/generated-answer/answer-api-selectors.js';
 import {generateHeadAnswer} from '../../../features/generated-answer/generated-answer-actions.js';
 import type {GeneratedAnswerState} from '../../../index.js';
 import type {
@@ -28,7 +31,8 @@ import {
   type GeneratedAnswerProps,
 } from '../../core/generated-answer/headless-core-generated-answer.js';
 
-interface GeneratedAnswerWithFollowUpsState extends GeneratedAnswerState {
+export interface GeneratedAnswerWithFollowUpsState
+  extends GeneratedAnswerState {
   followUpAnswers: FollowUpAnswersState;
 }
 
@@ -95,45 +99,24 @@ export function buildGeneratedAnswerWithFollowUps(
   const getState = () => engine.state;
   engine.dispatch(setAgentId(props.agentId));
 
+  const organizationId = selectOrganizationId(getState());
+  const accessToken = selectAccessToken(getState());
+  const environment = selectEnvironment(getState());
+
+  const followUpAgent = createFollowUpAgent(
+    props.agentId,
+    organizationId,
+    environment
+  );
+  const followUpStrategy = createFollowUpStrategy(engine.dispatch);
+
   return {
     ...controller,
     get state() {
-      const clientState = getState().generatedAnswer;
-      const answerApiQueryParams =
-        selectAnswerApiQueryParams(engine.state) ?? {};
-      const headAnswerArgs: AnswerEndpointArgs = {
-        ...answerApiQueryParams,
-        strategyKey: 'head-answer',
-      };
-      const serverState = selectAnswer(headAnswerArgs, engine.state)?.data;
       const followUpAnswersState = getState().followUpAnswers;
 
       return {
-        /** Server-owned (RTK Query) */
-        answer: serverState?.answer,
-        answerContentFormat: serverState?.contentFormat ?? 'text/plain',
-        citations: serverState?.citations ?? [],
-        isLoading: serverState?.isLoading ?? false,
-        isStreaming: serverState?.isStreaming ?? false,
-        ...(serverState?.error && {error: serverState.error}),
-        answerId: serverState?.answerId,
-        isAnswerGenerated: Boolean(serverState?.generated),
-        cannotAnswer: serverState?.generated === false,
-
-        /** Client-owned (Redux) */
-        isVisible: clientState.isVisible,
-        expanded: clientState.expanded,
-        liked: clientState.liked,
-        disliked: clientState.disliked,
-        feedbackSubmitted: clientState.feedbackSubmitted,
-        feedbackModalOpen: clientState.feedbackModalOpen,
-        isEnabled: clientState.isEnabled,
-        responseFormat: clientState.responseFormat,
-        fieldsToIncludeInCitations: clientState.fieldsToIncludeInCitations,
-        answerGenerationMode: clientState.answerGenerationMode,
-        id: clientState.id,
-
-        /** Follow-up answers state */
+        ...getState().generatedAnswer,
         followUpAnswers: followUpAnswersState,
       };
     },
@@ -164,11 +147,41 @@ export function buildGeneratedAnswerWithFollowUps(
         'Method not yet implemented to send analytics for copy to clipboard on a followup answer'
       );
     },
-    askFollowUp(question: string) {
+
+    async askFollowUp(question: string) {
       if (!question || question.trim() === '') {
         return;
       }
-      engine.dispatch(generateFollowUpAnswer(question));
+      const conversationId = this.state.followUpAnswers.conversationId;
+      if (!conversationId) {
+        console.warn(
+          'Missing conversationId when generating a follow-up answer. ' +
+            'The generateFollowUpAnswer action requires an existing conversation.'
+        );
+        return;
+      }
+
+      engine.dispatch(createFollowUpAnswer({question}));
+      try {
+        await followUpAgent.runAgent(
+          {
+            forwardedProps: {
+              q: question,
+              conversationId,
+              accessToken,
+            },
+          },
+          followUpStrategy
+        );
+      } catch (error) {
+        engine.dispatch(
+          activeFollowUpStartFailed({
+            message:
+              'An error occurred while starting the follow-up answer generation.',
+          })
+        );
+        console.error('Error running the follow-up agent:', error);
+      }
     },
   };
 }
