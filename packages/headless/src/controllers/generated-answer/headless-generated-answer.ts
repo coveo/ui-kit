@@ -5,6 +5,7 @@ import {generatedAnswerAnalyticsClient} from '../../features/generated-answer/ge
 import type {
   GeneratedAnswerBase,
   GeneratedAnswerState,
+  GenerationStep,
 } from '../../features/generated-answer/generated-answer-state.js';
 import type {GeneratedResponseFormat} from '../../features/generated-answer/generated-response-format.js';
 import type {
@@ -30,6 +31,7 @@ export type {
   GeneratedAnswerBase,
   GeneratedAnswerProps,
   GeneratedAnswerPropsInitialState,
+  GenerationStep,
 };
 
 /**

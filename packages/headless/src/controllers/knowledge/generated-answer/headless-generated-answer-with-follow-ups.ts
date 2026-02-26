@@ -132,6 +132,7 @@ export function buildGeneratedAnswerWithFollowUps(
         responseFormat: clientState.responseFormat,
         fieldsToIncludeInCitations: clientState.fieldsToIncludeInCitations,
         answerGenerationMode: clientState.answerGenerationMode,
+        generationSteps: clientState.generationSteps,
         id: clientState.id,
 
         /** Follow-up answers state */

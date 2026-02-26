@@ -7,6 +7,8 @@ import {
   followUpCompleted,
   followUpFailed,
   followUpMessageChunkReceived,
+  followUpStepFinished,
+  followUpStepStarted,
   likeFollowUp,
   resetFollowUpAnswers,
   setActiveFollowUpAnswerId,
@@ -153,6 +155,35 @@ export const followUpAnswersReducer = createReducer(
         }
 
         followUpAnswer.feedbackSubmitted = true;
+      })
+      .addCase(followUpStepStarted, (state, {payload}) => {
+        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
+        if (!followUpAnswer) {
+          return;
+        }
+
+        followUpAnswer.generationSteps = [
+          ...followUpAnswer.generationSteps,
+          {
+            name: payload.name,
+            status: 'active',
+            startedAt: payload.startedAt,
+          },
+        ];
+      })
+      .addCase(followUpStepFinished, (state, {payload}) => {
+        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
+        if (!followUpAnswer) {
+          return;
+        }
+
+        const step = followUpAnswer.generationSteps.findLast(
+          (step) => step.name === payload.name && step.status === 'active'
+        );
+        if (step) {
+          step.status = 'completed';
+          step.finishedAt = payload.finishedAt;
+        }
       })
       .addCase(resetFollowUpAnswers, (state) => {
         state.followUpAnswers = [];
