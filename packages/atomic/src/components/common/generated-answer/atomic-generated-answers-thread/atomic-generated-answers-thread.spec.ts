@@ -2,14 +2,14 @@ import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
 import type {
-  AnswerContent,
+  AtomicAnswerContent,
   GeneratedAnswer,
-} from '@/src/components/common/generated-answer/answerContent/answer-content';
-import type {GeneratedAnswerThreadItem} from '@/src/components/common/generated-answer/generated-answer-thread-item/generated-answer-thread-item';
+} from '@/src/components/common/generated-answer/atomic-answer-content/atomic-answer-content';
+import type {AtomicGeneratedAnswerThreadItem} from '@/src/components/common/generated-answer/atomic-generated-answer-thread-item/atomic-generated-answer-thread-item';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import type {GeneratedAnswersThread} from './generated-answers-thread';
-import './generated-answers-thread';
+import type {AtomicGeneratedAnswersThread} from './atomic-generated-answers-thread';
+import './atomic-generated-answers-thread';
 
 const createGeneratedAnswer = (
   index: number,
@@ -40,10 +40,10 @@ describe('generated-answers-thread', () => {
     options: {
       generatedAnswers?: GeneratedAnswer[];
       i18nInstance?: i18n;
-      renderCitations?: GeneratedAnswersThread['renderCitations'];
-      onClickLike?: GeneratedAnswersThread['onClickLike'];
-      onClickDislike?: GeneratedAnswersThread['onClickDislike'];
-      onCopyToClipboard?: GeneratedAnswersThread['onCopyToClipboard'];
+      renderCitations?: AtomicGeneratedAnswersThread['renderCitations'];
+      onClickLike?: AtomicGeneratedAnswersThread['onClickLike'];
+      onClickDislike?: AtomicGeneratedAnswersThread['onClickDislike'];
+      onCopyToClipboard?: AtomicGeneratedAnswersThread['onCopyToClipboard'];
     } = {}
   ) => {
     const {
@@ -58,15 +58,15 @@ describe('generated-answers-thread', () => {
     const defaultRenderCitations = () => html``;
     const noop = () => {};
 
-    const element = await fixture<GeneratedAnswersThread>(html`
-      <generated-answers-thread
+    const element = await fixture<AtomicGeneratedAnswersThread>(html`
+      <atomic-generated-answers-thread
         .generatedAnswers=${generatedAnswers}
         .i18n=${i18nInstance}
         .renderCitations=${renderCitations ?? defaultRenderCitations}
         .onClickLike=${onClickLike ?? noop}
         .onClickDislike=${onClickDislike ?? noop}
         .onCopyToClipboard=${onCopyToClipboard ?? noop}
-      ></generated-answers-thread>
+      ></atomic-generated-answers-thread>
     `);
 
     await element.updateComplete;
@@ -76,12 +76,12 @@ describe('generated-answers-thread', () => {
       locators: () => ({
         threadItems: Array.from(
           element.shadowRoot?.querySelectorAll(
-            'generated-answer-thread-item'
+            'atomic-generated-answer-thread-item'
           ) ?? []
-        ) as GeneratedAnswerThreadItem[],
+        ) as AtomicGeneratedAnswerThreadItem[],
         answerContents: Array.from(
-          element.shadowRoot?.querySelectorAll('answer-content') ?? []
-        ) as AnswerContent[],
+          element.shadowRoot?.querySelectorAll('atomic-answer-content') ?? []
+        ) as AtomicAnswerContent[],
         showPreviousAnswersButton:
           element.shadowRoot?.querySelector('button') ?? null,
       }),

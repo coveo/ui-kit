@@ -21,13 +21,13 @@ export interface GeneratedAnswer extends GeneratedAnswerBase {
 type CopyState = 'idle' | 'success' | 'error';
 
 /**
- * The `answer-content` component renders the content of a generated answer.
+ * The `atomic-answer-content` component renders the content of a generated answer.
  *
  * @internal
  */
-@customElement('answer-content')
+@customElement('atomic-answer-content')
 @withTailwindStyles
-export class AnswerContent extends LitElement {
+export class AtomicAnswerContent extends LitElement {
   static styles = [atomicGeneratedAnswerStyles];
 
   /**

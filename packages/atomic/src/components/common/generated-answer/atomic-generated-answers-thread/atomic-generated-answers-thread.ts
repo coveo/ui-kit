@@ -2,21 +2,21 @@ import type {GeneratedAnswerCitation} from '@coveo/headless';
 import {html, LitElement, type PropertyValues, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import '@/src/components/common/generated-answer/generated-answer-thread-item/generated-answer-thread-item';
-import '@/src/components/common/generated-answer/answerContent/answer-content';
+import '@/src/components/common/generated-answer/atomic-generated-answer-thread-item/atomic-generated-answer-thread-item';
+import '@/src/components/common/generated-answer/atomic-answer-content/atomic-answer-content';
 import type {i18n} from 'i18next';
 import {repeat} from 'lit/directives/repeat.js';
-import type {GeneratedAnswer} from '@/src/components/common/generated-answer/answerContent/answer-content';
+import type {GeneratedAnswer} from '@/src/components/common/generated-answer/atomic-answer-content/atomic-answer-content';
 
 const MIN_ANSWERS_TO_COLLAPSE = 2;
 
 /**
- * The `generated-answers-thread` component is responsible for rendering a thread of generated answers.
+ * The `atomic-generated-answers-thread` component is responsible for rendering a thread of generated answers.
  * @internal
  */
-@customElement('generated-answers-thread')
+@customElement('atomic-generated-answers-thread')
 @withTailwindStyles
-export class GeneratedAnswersThread extends LitElement {
+export class AtomicGeneratedAnswersThread extends LitElement {
   /**
    * The list of generated answers to render in the thread.
    */
@@ -98,21 +98,21 @@ export class GeneratedAnswersThread extends LitElement {
           const isLastAnswer = index === generatedAnswers.length - 1;
 
           return html`
-            <generated-answer-thread-item
+            <atomic-generated-answer-thread-item
               .title=${answer.question}
               .hideLine=${isLastAnswer}
               .disableCollapse=${isLastAnswer}
               .isExpanded=${isLastAnswer}
             >
-              <answer-content
+              <atomic-answer-content
                 .generatedAnswer=${answer}
                 .i18n=${this.i18n}
                 .renderCitations=${this.renderCitations}
                 .onClickLike=${this.onClickLike}
                 .onClickDislike=${this.onClickDislike}
                 .onCopyToClipboard=${this.onCopyToClipboard}
-              ></answer-content>
-            </generated-answer-thread-item>
+              ></atomic-answer-content>
+            </atomic-generated-answer-thread-item>
           `;
         }
       )}
