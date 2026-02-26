@@ -120,14 +120,9 @@ describe('atomic-generated-answer', () => {
       get generatedContent() {
         return element.shadowRoot?.querySelector('[part="generated-content"]')!;
       },
-      get generatedContentContainer() {
-        return element.shadowRoot?.querySelector(
-          '[part~="generated-content-container"]'
-        );
-      },
       get scrollableContent() {
         return element.shadowRoot?.querySelector(
-          '[part~="generated-content-container"] .agent-scrollable'
+          '[part="generated-content-container"] .agent-scrollable'
         );
       },
       get feedbackButtons() {
@@ -858,7 +853,7 @@ describe('atomic-generated-answer', () => {
         });
 
         let scrollableContent = element.shadowRoot?.querySelector(
-          '[part~="generated-content-container"] .agent-scrollable'
+          '[part="generated-content-container"] .agent-scrollable'
         );
         expect(scrollableContent).not.toBeInTheDocument();
 
@@ -869,7 +864,7 @@ describe('atomic-generated-answer', () => {
         await element.updateComplete;
 
         scrollableContent = element.shadowRoot?.querySelector(
-          '[part~="generated-content-container"] .agent-scrollable'
+          '[part="generated-content-container"] .agent-scrollable'
         );
         expect(scrollableContent).toBeInTheDocument();
       });
