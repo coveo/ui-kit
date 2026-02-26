@@ -733,9 +733,6 @@ export class AtomicGeneratedAnswer
   }
 
   private get isAnswerGenerationOngoing() {
-    if (!this.areFollowUpsEnabled) {
-      return false;
-    }
     const initialAnswerPending =
       this.generatedAnswerState.isStreaming ||
       this.generatedAnswerState.isLoading;

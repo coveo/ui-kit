@@ -127,7 +127,7 @@ describe('atomic-generated-answer', () => {
       },
       get scrollableContainer() {
         return element.shadowRoot?.querySelector(
-          '[part="generated-content-container"] > .agent-scrollable'
+          '[part="generated-content-container"] .agent-scrollable'
         );
       },
       get feedbackButtons() {
