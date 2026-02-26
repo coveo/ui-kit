@@ -27,7 +27,6 @@ export class AtomicInsightResultChildrenTemplate
   extends LitElement
   implements LitElementWithError
 {
-  private resultTemplateController: ResultTemplateController;
   @state() error!: Error;
 
   /**
@@ -75,6 +74,8 @@ export class AtomicInsightResultChildrenTemplate
    */
   @mapProperty({splitValues: true, attributePrefix: 'must-not-match'})
   mustNotMatch!: Record<string, string[]>;
+
+  private resultTemplateController: ResultTemplateController;
 
   constructor() {
     super();
