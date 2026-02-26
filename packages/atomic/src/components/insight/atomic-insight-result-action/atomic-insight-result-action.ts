@@ -55,7 +55,7 @@ export class AtomicInsightResultAction
   private tooltipResetTimeout?: ReturnType<typeof setTimeout>;
 
   /**
-   * Specify the result action icon to display.
+   * The result action icon to display.
    */
   @property({type: String}) icon = '';
 
@@ -126,7 +126,7 @@ export class AtomicInsightResultAction
         this.bindings.engine.dispatch(
           this.actions.logCopyToClipboard(this.result)
         );
-        navigator.clipboard.writeText(this.result?.clickUri);
+        navigator.clipboard.writeText(this.result.clickUri);
         break;
       case Actions.PostToFeed:
         this.bindings.engine.dispatch(
