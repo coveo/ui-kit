@@ -123,53 +123,61 @@ export const logHoverCitation = (
     },
   });
 
-export const logLikeGeneratedAnswer = (): CustomAction =>
-  makeAnalyticsAction({
+// Overloading the function here for backward compatibility because #logLikeGeneratedAnswer will eventually take an answerId.
+export function logLikeGeneratedAnswer(): CustomAction;
+export function logLikeGeneratedAnswer(answerId: string): CustomAction;
+export function logLikeGeneratedAnswer(answerId?: string): CustomAction {
+  return makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/like',
     __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
+      const resolvedAnswerId =
+        answerId ?? generativeQuestionAnsweringIdSelector(state);
+      if (!resolvedAnswerId) {
         return null;
       }
       return client.makeLikeGeneratedAnswer({
-        generativeQuestionAnsweringId,
+        generativeQuestionAnsweringId: resolvedAnswerId,
       });
     },
     analyticsType: 'Rga.AnswerAction',
     analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
+      const resolvedAnswerId =
+        answerId ?? generativeQuestionAnsweringIdSelector(state);
       return {
-        answerId: generativeQuestionAnsweringId ?? '',
+        answerId: resolvedAnswerId ?? '',
         action: 'like',
       };
     },
   });
+}
 
-export const logDislikeGeneratedAnswer = (): CustomAction =>
-  makeAnalyticsAction({
+// Overloading the function here for backward compatibility because #logDislikeGeneratedAnswer will eventually take an answerId.
+export function logDislikeGeneratedAnswer(): CustomAction;
+export function logDislikeGeneratedAnswer(answerId: string): CustomAction;
+export function logDislikeGeneratedAnswer(answerId?: string): CustomAction {
+  return makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/dislike',
     __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
+      const resolvedAnswerId =
+        answerId ?? generativeQuestionAnsweringIdSelector(state);
+      if (!resolvedAnswerId) {
         return null;
       }
       return client.makeDislikeGeneratedAnswer({
-        generativeQuestionAnsweringId,
+        generativeQuestionAnsweringId: resolvedAnswerId,
       });
     },
     analyticsType: 'Rga.AnswerAction',
     analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
+      const resolvedAnswerId =
+        answerId ?? generativeQuestionAnsweringIdSelector(state);
       return {
-        answerId: generativeQuestionAnsweringId ?? '',
+        answerId: resolvedAnswerId ?? '',
         action: 'dislike',
       };
     },
   });
+}
 
 export const logGeneratedAnswerFeedback = (
   feedback: GeneratedAnswerFeedback

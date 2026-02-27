@@ -93,6 +93,7 @@ const exampleFeedback: GeneratedAnswerFeedback = {
 };
 const exampleGenerativeQuestionAnsweringId =
   '94b77748-2479-4e4b-a4e8-010fa62b04a0';
+const exampleProvidedAnswerId = 'explicit-answer-id';
 const exampleSearchUid = '456';
 
 const exampleCitation: GeneratedAnswerCitation = {
@@ -257,6 +258,22 @@ describe('generated answer analytics actions', () => {
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
+    it('should log #logLikeGeneratedAnswer with a provided answerId', async () => {
+      await logLikeGeneratedAnswer(exampleProvidedAnswerId)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockMakeLikeGeneratedAnswer;
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith({
+        generativeQuestionAnsweringId: exampleProvidedAnswerId,
+      });
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
+    });
+
     it('should log #logDislikeGeneratedAnswer with the right payload', async () => {
       await logDislikeGeneratedAnswer()()(
         engine.dispatch,
@@ -269,6 +286,22 @@ describe('generated answer analytics actions', () => {
       expect(mockToUse).toHaveBeenCalledTimes(1);
       expect(mockToUse).toHaveBeenCalledWith({
         generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
+      });
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
+    });
+
+    it('should log #logDislikeGeneratedAnswer with a provided answerId', async () => {
+      await logDislikeGeneratedAnswer(exampleProvidedAnswerId)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockMakeDislikeGeneratedAnswer;
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith({
+        generativeQuestionAnsweringId: exampleProvidedAnswerId,
       });
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
@@ -424,6 +457,22 @@ describe('generated answer analytics actions', () => {
       });
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
+
+    it('should log #logCopyGeneratedAnswer with a provided answerId', async () => {
+      await logCopyGeneratedAnswer(exampleProvidedAnswerId)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockMakeGeneratedAnswerCopyToClipboard;
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith({
+        generativeQuestionAnsweringId: exampleProvidedAnswerId,
+      });
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe('when analyticsMode is `next`', () => {
@@ -478,6 +527,23 @@ describe('generated answer analytics actions', () => {
       expect(emit.mock.calls[0]).toMatchSnapshot();
     });
 
+    it('should log #logLikeGeneratedAnswer with a provided answerId', async () => {
+      await logLikeGeneratedAnswer(exampleProvidedAnswerId)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toStrictEqual([
+        'Rga.AnswerAction',
+        {
+          action: 'like',
+          answerId: exampleProvidedAnswerId,
+        },
+      ]);
+    });
+
     it('should log #logDislikeGeneratedAnswer with the right payload', async () => {
       await logDislikeGeneratedAnswer()()(
         engine.dispatch,
@@ -487,6 +553,23 @@ describe('generated answer analytics actions', () => {
 
       expect(emit).toHaveBeenCalledTimes(1);
       expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
+
+    it('should log #logDislikeGeneratedAnswer with a provided answerId', async () => {
+      await logDislikeGeneratedAnswer(exampleProvidedAnswerId)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toStrictEqual([
+        'Rga.AnswerAction',
+        {
+          action: 'dislike',
+          answerId: exampleProvidedAnswerId,
+        },
+      ]);
     });
 
     it('should log #logGeneratedAnswerFeedback with the right payload', async () => {
@@ -553,6 +636,23 @@ describe('generated answer analytics actions', () => {
 
       expect(emit).toHaveBeenCalledTimes(1);
       expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
+
+    it('should log #logCopyGeneratedAnswer with a provided answerId', async () => {
+      await logCopyGeneratedAnswer(exampleProvidedAnswerId)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toStrictEqual([
+        'Rga.AnswerAction',
+        {
+          action: 'copyToClipboard',
+          answerId: exampleProvidedAnswerId,
+        },
+      ]);
     });
 
     [false, true].map((answerGenerated) => {

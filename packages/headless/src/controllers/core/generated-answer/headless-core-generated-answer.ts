@@ -115,8 +115,10 @@ export interface GeneratedAnswer extends Controller {
 }
 
 export interface GeneratedAnswerAnalyticsClient {
-  logLikeGeneratedAnswer: () => CustomAction;
-  logDislikeGeneratedAnswer: () => CustomAction;
+  logLikeGeneratedAnswer(): CustomAction;
+  logLikeGeneratedAnswer(answerId: string): CustomAction;
+  logDislikeGeneratedAnswer(): CustomAction;
+  logDislikeGeneratedAnswer(answerId: string): CustomAction;
   logGeneratedAnswerFeedback: (
     feedback: GeneratedAnswerFeedback
   ) => CustomAction;

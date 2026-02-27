@@ -146,6 +146,7 @@ export function buildGeneratedAnswerWithFollowUps(
         return;
       }
       engine.dispatch(likeFollowUp({answerId}));
+      engine.dispatch(analyticsClient.logLikeGeneratedAnswer(answerId));
     },
     dislike(answerId?: string) {
       if (!answerId || this.state.answerId === answerId) {
@@ -153,6 +154,7 @@ export function buildGeneratedAnswerWithFollowUps(
         return;
       }
       engine.dispatch(dislikeFollowUp({answerId}));
+      engine.dispatch(analyticsClient.logDislikeGeneratedAnswer(answerId));
     },
     logCopyToClipboard(answerId?: string) {
       if (!answerId || this.state.answerId === answerId) {
