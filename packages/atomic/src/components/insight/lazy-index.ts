@@ -16,6 +16,10 @@ export default {
     await import(
       './atomic-insight-generate-answer-button/atomic-insight-generate-answer-button.js'
     ),
+  'atomic-insight-generated-answer': async () =>
+    await import(
+      './atomic-insight-generated-answer/atomic-insight-generated-answer.js'
+    ),
   'atomic-insight-history-toggle': async () =>
     await import(
       './atomic-insight-history-toggle/atomic-insight-history-toggle.js'
@@ -48,9 +52,17 @@ export default {
     ),
   'atomic-insight-result': async () =>
     await import('./atomic-insight-result/atomic-insight-result.js'),
+  'atomic-insight-result-action': async () =>
+    await import(
+      './atomic-insight-result-action/atomic-insight-result-action.js'
+    ),
   'atomic-insight-result-action-bar': async () =>
     await import(
       './atomic-insight-result-action-bar/atomic-insight-result-action-bar.js'
+    ),
+  'atomic-insight-result-attach-to-case-action': async () =>
+    await import(
+      './atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action.js'
     ),
   'atomic-insight-result-attach-to-case-indicator': async () =>
     await import(
@@ -59,6 +71,10 @@ export default {
   'atomic-insight-result-children': async () =>
     await import(
       './atomic-insight-result-children/atomic-insight-result-children.js'
+    ),
+  'atomic-insight-result-children-template': async () =>
+    await import(
+      './atomic-insight-result-children-template/atomic-insight-result-children-template.js'
     ),
   'atomic-insight-result-list': async () =>
     await import('./atomic-insight-result-list/atomic-insight-result-list.js'),
@@ -88,6 +104,10 @@ export default {
     await import('./atomic-insight-tab/atomic-insight-tab.js'),
   'atomic-insight-tabs': async () =>
     await import('./atomic-insight-tabs/atomic-insight-tabs.js'),
+  'atomic-insight-timeframe-facet': async () =>
+    await import(
+      './atomic-insight-timeframe-facet/atomic-insight-timeframe-facet.js'
+    ),
   'atomic-insight-user-actions-modal': async () =>
     await import(
       './atomic-insight-user-actions-modal/atomic-insight-user-actions-modal.js'

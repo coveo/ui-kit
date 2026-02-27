@@ -1,3 +1,17 @@
+## 3.51.0 (2026-02-25)
+
+* chore: rework AGENTS.md files (#7133) ([ebfc712](https://github.com/coveo/ui-kit/commits/ebfc712)), closes [#7133](https://github.com/coveo/ui-kit/issues/7133)
+* chore(atomic): add a legacy analytics story for atomic-generated-answer (#7135) ([b7deb5b](https://github.com/coveo/ui-kit/commits/b7deb5b)), closes [#7135](https://github.com/coveo/ui-kit/issues/7135)
+* chore(atomic): migrate atomic-insight-generated-answer to Lit (#6934) ([165ad93](https://github.com/coveo/ui-kit/commits/165ad93)), closes [#6934](https://github.com/coveo/ui-kit/issues/6934)
+* chore(atomic): migrate atomic-insight-result-attach-to-case-action to lit (#7056) ([9f6671a](https://github.com/coveo/ui-kit/commits/9f6671a)), closes [#7056](https://github.com/coveo/ui-kit/issues/7056)
+* chore(atomic): migrate atomic-ipx-recs-list (#7069) ([64be4a6](https://github.com/coveo/ui-kit/commits/64be4a6)), closes [#7069](https://github.com/coveo/ui-kit/issues/7069)
+* chore(atomic): migrate atomic-ipx-refine-modal (#7070) ([919bab0](https://github.com/coveo/ui-kit/commits/919bab0)), closes [#7070](https://github.com/coveo/ui-kit/issues/7070)
+* feat(atomic): answer-content custom element created (#7121) ([1bd3025](https://github.com/coveo/ui-kit/commits/1bd3025)), closes [#7121](https://github.com/coveo/ui-kit/issues/7121)
+* feat(atomic): refactored property accepted by renderFeedbackAndCopyButtons (#7119) ([25f5077](https://github.com/coveo/ui-kit/commits/25f5077)), closes [#7119](https://github.com/coveo/ui-kit/issues/7119)
+* refactor(atomic): migrate atomic-ipx-refine-toggle to Lit (#7012) ([5051d8d](https://github.com/coveo/ui-kit/commits/5051d8d)), closes [#7012](https://github.com/coveo/ui-kit/issues/7012)
+
+
+
 ## 3.50.0 (2026-02-18)
 
 * feat(atomic): creation of generated-answer-thread-item component (#7086) ([306ec58](https://github.com/coveo/ui-kit/commits/306ec58)), closes [#7086](https://github.com/coveo/ui-kit/issues/7086)
