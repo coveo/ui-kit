@@ -1,3 +1,4 @@
+export * from '@coveo/atomic-legacy/item-decorators';
 export type {i18n} from 'i18next';
 export {Components, JSX} from './components';
 export {CommerceBindings} from './components/commerce/atomic-commerce-interface/atomic-commerce-interface';
