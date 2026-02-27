@@ -149,12 +149,12 @@ describe('createAnswerRunner', () => {
 
     await runner.run(state, dispatch, navigatorProvider);
 
+    expect(dispatch).toHaveBeenCalledWith(setIsLoading(true));
     expect(dispatch).toHaveBeenCalledWith(
       updateError({
         message: 'An error occurred while starting the answer generation.',
       })
     );
-    expect(dispatch).not.toHaveBeenCalledWith(setIsLoading(true));
     expect(consoleSpy).toHaveBeenCalledWith(
       'Error running the answer agent:',
       error
