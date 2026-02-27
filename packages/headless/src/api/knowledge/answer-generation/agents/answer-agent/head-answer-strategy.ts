@@ -5,16 +5,19 @@ import {
   setIsEnabled,
 } from '../../../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {
+  finishStep,
   setAnswerContentFormat,
   setAnswerId,
   setCannotAnswer,
   setIsAnswerGenerated,
   setIsLoading,
   setIsStreaming,
+  startStep,
   updateCitations,
   updateError,
   updateMessage,
 } from '../../../../../features/generated-answer/generated-answer-actions.js';
+import type {GenerationStepName} from '../../../../../features/generated-answer/generated-answer-state.js';
 
 /**
  * Creates an AgentSubscriber that handles answer streaming events
@@ -28,6 +31,22 @@ export const createHeadAnswerStrategy = (
       dispatch(setIsLoading(false));
       dispatch(setIsStreaming(true));
       dispatch(setFollowUpAnswersConversationId(event.threadId));
+    },
+    onStepStartedEvent: ({event}) => {
+      dispatch(
+        startStep({
+          name: event.stepName as GenerationStepName,
+          startedAt: event.timestamp ?? Date.now(),
+        })
+      );
+    },
+    onStepFinishedEvent: ({event}) => {
+      dispatch(
+        finishStep({
+          name: event.stepName as GenerationStepName,
+          finishedAt: event.timestamp ?? Date.now(),
+        })
+      );
     },
     onTextMessageContentEvent: ({event}) => {
       dispatch(updateMessage({textDelta: event.delta}));

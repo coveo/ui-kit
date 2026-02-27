@@ -8,12 +8,14 @@ import {
   setIsEnabled,
 } from '../../../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {
+  finishStep,
   setAnswerContentFormat,
   setAnswerId,
   setCannotAnswer,
   setIsAnswerGenerated,
   setIsLoading,
   setIsStreaming,
+  startStep,
   updateCitations,
   updateError,
   updateMessage,
@@ -40,6 +42,30 @@ describe('createHeadAnswerStrategy', () => {
     expect(dispatch).toHaveBeenCalledWith(
       setFollowUpAnswersConversationId('thread-007')
     );
+  });
+
+  it('dispatches a new generation step start when a step starts', () => {
+    strategy.onStepStartedEvent!({
+      event: {stepName: 'searching', timestamp: 123},
+    } as any);
+
+    expect(dispatch).toHaveBeenCalledWith(
+      startStep({name: 'searching', startedAt: 123})
+    );
+  });
+
+  it('records the completion of a generation step and falls back to Date.now()', () => {
+    const nowSpy = vi.spyOn(Date, 'now').mockReturnValue(456);
+
+    strategy.onStepFinishedEvent!({
+      event: {stepName: 'answering'},
+    } as any);
+
+    expect(dispatch).toHaveBeenCalledWith(
+      finishStep({name: 'answering', finishedAt: 456})
+    );
+
+    nowSpy.mockRestore();
   });
 
   it('appends incoming text deltas to the answer message', () => {

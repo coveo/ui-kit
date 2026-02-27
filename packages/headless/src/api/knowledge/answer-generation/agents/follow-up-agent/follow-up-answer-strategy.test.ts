@@ -8,6 +8,8 @@ import {
   followUpCompleted,
   followUpFailed,
   followUpMessageChunkReceived,
+  followUpStepFinished,
+  followUpStepStarted,
   setActiveFollowUpAnswerId,
   setFollowUpAnswerContentFormat,
   setFollowUpIsLoading,
@@ -43,6 +45,38 @@ describe('createFollowUpStrategy', () => {
       3,
       setFollowUpIsStreaming({answerId: runId, isStreaming: true})
     );
+  });
+
+  it('records follow-up step starts with the tracked answer id', () => {
+    strategy.onStepStartedEvent!({
+      event: {stepName: 'searching', timestamp: 321},
+    } as any);
+
+    expect(dispatch).toHaveBeenCalledWith(
+      followUpStepStarted({
+        name: 'searching',
+        startedAt: 321,
+        answerId: runId,
+      })
+    );
+  });
+
+  it('records follow-up step completion and falls back to Date.now()', () => {
+    const nowSpy = vi.spyOn(Date, 'now').mockReturnValue(654);
+
+    strategy.onStepFinishedEvent!({
+      event: {stepName: 'answering'},
+    } as any);
+
+    expect(dispatch).toHaveBeenCalledWith(
+      followUpStepFinished({
+        name: 'answering',
+        finishedAt: 654,
+        answerId: runId,
+      })
+    );
+
+    nowSpy.mockRestore();
   });
 
   it('appends streaming chunks with the tracked run identifier', () => {

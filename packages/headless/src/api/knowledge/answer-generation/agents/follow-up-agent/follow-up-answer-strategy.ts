@@ -5,11 +5,14 @@ import {
   followUpCompleted,
   followUpFailed,
   followUpMessageChunkReceived,
+  followUpStepFinished,
+  followUpStepStarted,
   setActiveFollowUpAnswerId,
   setFollowUpAnswerContentFormat,
   setFollowUpIsLoading,
   setFollowUpIsStreaming,
 } from '../../../../../features/follow-up-answers/follow-up-answers-actions.js';
+import type {GenerationStepName} from '../../../../../features/generated-answer/generated-answer-state.js';
 
 /**
  * Creates an AgentSubscriber that handles follow-up answer streaming events
@@ -23,6 +26,24 @@ export const createFollowUpStrategy = (dispatch: Dispatch): AgentSubscriber => {
       dispatch(setActiveFollowUpAnswerId(runId));
       dispatch(setFollowUpIsLoading({answerId: runId, isLoading: false}));
       dispatch(setFollowUpIsStreaming({answerId: runId, isStreaming: true}));
+    },
+    onStepStartedEvent: ({event}) => {
+      dispatch(
+        followUpStepStarted({
+          name: event.stepName as GenerationStepName,
+          startedAt: event.timestamp ?? Date.now(),
+          answerId: runId,
+        })
+      );
+    },
+    onStepFinishedEvent: ({event}) => {
+      dispatch(
+        followUpStepFinished({
+          name: event.stepName as GenerationStepName,
+          finishedAt: event.timestamp ?? Date.now(),
+          answerId: runId,
+        })
+      );
     },
     onTextMessageContentEvent: ({event}) => {
       dispatch(
