@@ -21,6 +21,7 @@ export {AtomicInsightResultActionBar} from './atomic-insight-result-action-bar/a
 export {AtomicInsightResultAttachToCaseAction} from './atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action.js';
 export {AtomicInsightResultAttachToCaseIndicator} from './atomic-insight-result-attach-to-case-indicator/atomic-insight-result-attach-to-case-indicator.js';
 export {AtomicInsightResultChildren} from './atomic-insight-result-children/atomic-insight-result-children.js';
+export {AtomicInsightResultChildrenTemplate} from './atomic-insight-result-children-template/atomic-insight-result-children-template.js';
 export {AtomicInsightResultList} from './atomic-insight-result-list/atomic-insight-result-list.js';
 export {AtomicInsightResultQuickviewAction} from './atomic-insight-result-quickview-action/atomic-insight-result-quickview-action.js';
 export {AtomicInsightResultTemplate} from './atomic-insight-result-template/atomic-insight-result-template.js';

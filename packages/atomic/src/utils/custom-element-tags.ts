@@ -84,6 +84,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-insight-result-attach-to-case-action',
   'atomic-insight-result-attach-to-case-indicator',
   'atomic-insight-result-children',
+  'atomic-insight-result-children-template',
   'atomic-insight-result-list',
   'atomic-insight-result-quickview-action',
   'atomic-insight-result-template',
