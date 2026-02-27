@@ -138,7 +138,6 @@ describe('createHeadAnswerStrategy', () => {
     expect(dispatch).toHaveBeenNthCalledWith(1, setIsAnswerGenerated(true));
     expect(dispatch).toHaveBeenNthCalledWith(2, setCannotAnswer(false));
     expect(dispatch).toHaveBeenNthCalledWith(3, setIsStreaming(false));
-    expect(dispatch).toHaveBeenNthCalledWith(4, setIsLoading(false));
   });
 
   it('disables answer flags when no answer was generated', () => {
@@ -147,6 +146,5 @@ describe('createHeadAnswerStrategy', () => {
     expect(dispatch).toHaveBeenNthCalledWith(1, setIsAnswerGenerated(false));
     expect(dispatch).toHaveBeenNthCalledWith(2, setCannotAnswer(true));
     expect(dispatch).toHaveBeenNthCalledWith(3, setIsStreaming(false));
-    expect(dispatch).toHaveBeenNthCalledWith(4, setIsLoading(false));
   });
 });

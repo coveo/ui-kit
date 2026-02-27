@@ -83,7 +83,6 @@ export const createHeadAnswerStrategy = (
       dispatch(setIsAnswerGenerated(answerGenerated));
       dispatch(setCannotAnswer(!answerGenerated));
       dispatch(setIsStreaming(false));
-      dispatch(setIsLoading(false));
     },
   };
 };

@@ -37,6 +37,7 @@ const mockCoreDislike = vi.fn();
 const mockCoreCopy = vi.fn();
 const mockFollowUpAgent = {
   runAgent: vi.fn(),
+  abortRun: vi.fn(),
 };
 const mockFollowUpStrategy = {};
 const mockCreateFollowUpAgent = vi.spyOn(
@@ -384,6 +385,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
 
       controller.askFollowUp(question);
 
+      expect(mockFollowUpAgent.abortRun).toHaveBeenCalledTimes(1);
       expect(mockCreateFollowUpAnswer).toHaveBeenCalledWith({question});
       expect(mockFollowUpAgent.runAgent).toHaveBeenCalledWith(
         {

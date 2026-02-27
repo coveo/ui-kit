@@ -18,7 +18,7 @@ import type {GenerationStepName} from '../../../../../features/generated-answer/
  * Creates an AgentSubscriber that handles follow-up answer streaming events
  */
 export const createFollowUpStrategy = (dispatch: Dispatch): AgentSubscriber => {
-  let runId: string;
+  let runId = '';
 
   return {
     onRunStartedEvent: ({event}) => {

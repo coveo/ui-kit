@@ -159,7 +159,7 @@ describe('createAnswerRunner', () => {
       'Error running the answer agent:',
       error
     );
-
+    expect(dispatch).toHaveBeenCalledWith(setIsLoading(false));
     consoleSpy.mockRestore();
   });
 });

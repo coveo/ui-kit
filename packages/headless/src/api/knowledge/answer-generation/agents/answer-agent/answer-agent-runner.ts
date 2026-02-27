@@ -65,6 +65,7 @@ export const createAnswerRunner = () => {
         strategy
       );
     } catch (error) {
+      dispatch(setIsLoading(false));
       dispatch(
         updateError({
           message: 'An error occurred while starting the answer generation.',

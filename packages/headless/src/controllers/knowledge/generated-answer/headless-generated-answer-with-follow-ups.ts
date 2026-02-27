@@ -161,6 +161,7 @@ export function buildGeneratedAnswerWithFollowUps(
         return;
       }
 
+      followUpAgent.abortRun();
       engine.dispatch(createFollowUpAnswer({question}));
       try {
         await followUpAgent.runAgent(
