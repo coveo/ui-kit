@@ -6,6 +6,7 @@ import {
   buildTabManager,
   type GeneratedAnswer,
   type GeneratedAnswerState,
+  type GeneratedAnswerWithFollowUps,
   type SearchStatus,
   type SearchStatusState,
   type TabManager,
@@ -13,6 +14,7 @@ import {
 } from '@coveo/headless';
 import {html, LitElement, nothing, type PropertyValueMap} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {classMap} from 'lit/directives/class-map.js';
 import {when} from 'lit/directives/when.js';
 import {GeneratedAnswerController} from '@/src/components/common/generated-answer/generated-answer-controller';
 import {renderAnswerContent} from '@/src/components/common/generated-answer/render-answer-content';
@@ -283,7 +285,7 @@ export class AtomicGeneratedAnswer
 
     this.controller.insertFeedbackModal();
 
-    if (window.ResizeObserver && this.collapsible) {
+    if (window.ResizeObserver && this.isCollapsibleEnabled) {
       const debouncedAdaptAnswerHeight = debounce(
         () => this.adaptAnswerHeight(),
         100
@@ -324,7 +326,8 @@ export class AtomicGeneratedAnswer
       ) as GeneratedAnswerState | undefined;
       if (
         oldState &&
-        this.generatedAnswerState?.expanded !== oldState?.expanded
+        this.generatedAnswerState?.expanded !== oldState?.expanded &&
+        this.isCollapsibleEnabled
       ) {
         const container = this.getAnswerContainer();
         if (container) {
@@ -335,6 +338,14 @@ export class AtomicGeneratedAnswer
           );
         }
       }
+    }
+
+    if (
+      (changedProperties.has('collapsible') ||
+        changedProperties.has('agentId')) &&
+      !this.isCollapsibleEnabled
+    ) {
+      this.resetCollapsibleStyles();
     }
   }
 
@@ -393,15 +404,28 @@ export class AtomicGeneratedAnswer
             ${when(
               this.isAnswerVisible,
               () =>
-                html` <div part="generated-content-container" class="px-6 pb-6">
-                  <article>${this.renderAnswerContent()}</article>
-                  ${renderDisclaimer({
-                    props: {
-                      i18n: this.bindings.i18n,
-                      isStreaming: !!this.generatedAnswerState.isStreaming,
-                    },
-                  })}
-                </div>`
+                html`
+                  <div
+                    part="generated-content-container"
+                    class="pb-6"
+                  >
+                    <div
+                      class=${classMap({
+                        'px-6': true,
+                        'agent-scrollable': this.isScrollableContentEnabled,
+                      })}
+                    >
+                      <article>${this.renderAnswerContent()}</article>
+                    </div>
+                    <div class="px-6 pt-2">
+                      ${renderDisclaimer({
+                        props: {
+                          i18n: this.bindings.i18n,
+                          isStreaming: !!this.generatedAnswerState.isStreaming,
+                        },
+                      })}
+                    </div>
+                  </div>`
             )}
           </div>
         </aside>
@@ -622,7 +646,7 @@ export class AtomicGeneratedAnswer
       props: {
         i18n: this.bindings.i18n,
         generatedAnswer: generatedAnswer,
-        collapsible: this.collapsible,
+        collapsible: this.isCollapsibleEnabled,
         renderFeedbackAndCopyButtonsSlot: () =>
           this.renderFeedbackAndCopyButtonsWrapper(),
         renderCitationsSlot: () => html`${this.renderCitationsList()}`,
@@ -630,6 +654,47 @@ export class AtomicGeneratedAnswer
         onClickShowButton: () => this.clickOnShowButton(),
       },
     });
+  }
+
+  private get hasAgentId() {
+    return Boolean(this.agentId);
+  }
+
+  private get isGeneratedAnswerWithFollowUps() {
+    return (
+      this.hasAgentId &&
+      !!this.generatedAnswer &&
+      'askFollowUp' in this.generatedAnswer
+    );
+  }
+
+  private get isScrollableContentEnabled() {
+    if (!this.isGeneratedAnswerWithFollowUps) {
+      return false;
+    }
+
+    const generatedAnswerWithFollowUps = this
+      .generatedAnswer as GeneratedAnswerWithFollowUps;
+    return (
+      generatedAnswerWithFollowUps.state.followUpAnswers?.isEnabled === true
+    );
+  }
+
+  private get isCollapsibleEnabled() {
+    return this.collapsible && !this.isScrollableContentEnabled;
+  }
+
+  private resetCollapsibleStyles() {
+    const container = this.getAnswerContainer();
+    const footer = this.getAnswerFooter();
+
+    if (!container || !footer) {
+      return;
+    }
+
+    this.toggleClass(container, 'answer-collapsed', false);
+    this.toggleClass(footer, 'is-collapsible', false);
+    this.toggleClass(footer, 'generating-label-visible', false);
   }
 
   private renderCardHeaderWrapper() {

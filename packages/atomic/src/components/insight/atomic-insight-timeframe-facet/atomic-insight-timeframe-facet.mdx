@@ -1,0 +1,53 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicInsightTimeframeFacetStories from './atomic-insight-timeframe-facet.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={ AtomicInsightTimeframeFacetStories } />
+
+<AtomicDocTemplate
+  stories={ AtomicInsightTimeframeFacetStories }
+  githubPath="insight/atomic-insight-timeframe-facet/atomic-insight-timeframe-facet.ts"
+  tagName="atomic-insight-timeframe-facet"
+  className="AtomicInsightTimeframeFacet"
+>
+
+Use this component to filter insight panel results by date ranges. The timeframe facet displays predefined time periods (such as "Past Month" or "Past Year") as facet values, allowing users to quickly filter results to specific time ranges.
+
+Place this component within the facets section of your insight panel layout.
+
+### Basic Timeframe Facet
+
+```html
+<atomic-insight-interface>
+  ...
+  <atomic-insight-timeframe-facet field="date" label="Date">
+    <atomic-timeframe unit="hour"></atomic-timeframe>
+    <atomic-timeframe unit="day"></atomic-timeframe>
+    <atomic-timeframe unit="week"></atomic-timeframe>
+    <atomic-timeframe unit="month"></atomic-timeframe>
+    <atomic-timeframe unit="quarter"></atomic-timeframe>
+    <atomic-timeframe unit="year"></atomic-timeframe>
+  </atomic-insight-timeframe-facet>
+</atomic-insight-interface>
+```
+
+### With Date Picker
+
+Enable users to select custom date ranges by setting the `with-date-picker` attribute:
+
+```html
+<atomic-insight-timeframe-facet 
+  field="date" 
+  label="Date" 
+  with-date-picker
+>
+  <atomic-timeframe unit="month"></atomic-timeframe>
+  <atomic-timeframe unit="year"></atomic-timeframe>
+</atomic-insight-timeframe-facet>
+```
+
+When `with-date-picker` is enabled, users can:
+- Choose from predefined timeframes
+- Enter custom start and end dates
+
+</AtomicDocTemplate>
