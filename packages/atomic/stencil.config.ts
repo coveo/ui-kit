@@ -45,12 +45,6 @@ const externalizeDependenciesPlugin: PluginImpl = () => {
   };
 };
 
-const isDevWatch: boolean =
-  process.argv &&
-  process.argv.indexOf('--dev') > -1 &&
-  process.argv.indexOf('--watch') > -1 &&
-  process.env.IS_DEV === 'true';
-
 export const config: Config = {
   tsconfig: 'tsconfig.stencil.json',
   namespace: 'atomic',
