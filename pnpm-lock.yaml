@@ -117,15 +117,9 @@ patchedDependencies:
   '@stencil/core@4.20.0':
     hash: 2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9
     path: patches/@stencil+core+4.20.0.patch
-  '@stencil/react-output-target@0.5.3':
-    hash: bca691c52b3fa2f491c35229af7f145e17fd520326f997c6a15ca31fd19b937e
-    path: patches/@stencil__react-output-target@0.5.3.patch
   '@wc-toolkit/storybook-helpers@10.0.0':
     hash: faa3d80e4fe5c26a948e0387112f223337748e98d4e1537126dddddf2569576a
     path: patches/@wc-toolkit+storybook-helpers+10.0.0.patch
-  fix-esm-import-path@1.10.1:
-    hash: d8c4a243b0a6082b2f2f0dedd8551ff16da1e9adcda2a63b337f2664708a7f7d
-    path: patches/fix-esm-import-path+1.10.1.patch
   jest-environment-jsdom@29.7.0:
     hash: b419a992476c3323e67ee6c86f3f9ecf6f4f073127cb572aa9af3b9c6550751d
     path: patches/jest-environment-jsdom+29.7.0.patch
@@ -291,9 +285,6 @@ importers:
       '@stencil/angular-output-target':
         specifier: 0.8.4
         version: 0.8.4(patch_hash=ffa6652e9d95e4699aeb937bae0dc81fc675329b4fc1c26251086764254c2e1f)(@stencil/core@4.20.0(patch_hash=2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9))
-      '@stencil/react-output-target':
-        specifier: 0.5.3
-        version: 0.5.3(patch_hash=bca691c52b3fa2f491c35229af7f145e17fd520326f997c6a15ca31fd19b937e)(@stencil/core@4.20.0(patch_hash=2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9))
       '@storybook/addon-a11y':
         specifier: 10.0.8
         version: 10.0.8(storybook@10.0.8(@testing-library/dom@10.4.1)(msw@2.11.4(@types/node@22.16.5)(typescript@5.8.3))(prettier@3.6.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vite@7.2.2(@types/node@22.16.5)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.30.1)(sass@1.97.3)(terser@5.46.0)(yaml@2.8.2)))
@@ -568,9 +559,6 @@ importers:
       '@types/react-dom':
         specifier: 'catalog:'
         version: 19.2.3(@types/react@19.2.7)
-      fix-esm-import-path:
-        specifier: 1.10.1
-        version: 1.10.1(patch_hash=d8c4a243b0a6082b2f2f0dedd8551ff16da1e9adcda2a63b337f2664708a7f7d)
       react:
         specifier: 19.2.3
         version: 19.2.3
@@ -5606,11 +5594,6 @@ packages:
     engines: {node: '>=16.0.0', npm: '>=7.10.0'}
     hasBin: true
 
-  '@stencil/react-output-target@0.5.3':
-    resolution: {integrity: sha512-68jwRp35CjAcwhTJ9yFD/3n+jrHOqvEH2jreVuPVvZK+4tkhPlYlwz0d1E1RlF3jyifUSfdkWUGgXIEy8Fo3yw==}
-    peerDependencies:
-      '@stencil/core': '>=2.0.0 || >=3 || >= 4.0.0-beta.0 || >= 4.0.0'
-
   '@stoplight/json@3.21.7':
     resolution: {integrity: sha512-xcJXgKFqv/uCEgtGlPxy3tPA+4I+ZI4vAuMJ885+ThkTHFVkC+0Fm58lA9NlsyjnkpxFh4YiQWpH+KefHdbA0A==}
     engines: {node: '>=8.3.0'}
@@ -8928,10 +8911,6 @@ packages:
   fined@2.0.0:
     resolution: {integrity: sha512-OFRzsL6ZMHz5s0JrsEr+TpdGNCtrVtnuG3x1yzGNiQHT0yaDnXAj8V/lWcpJVrnoDpcwXcASxAZYbuXda2Y82A==}
     engines: {node: '>= 10.13.0'}
-
-  fix-esm-import-path@1.10.1:
-    resolution: {integrity: sha512-9PyPwTRujdf6UWDWMz4W1HUlPVHliD68aOC2tpRO+XvRfM1lQjJb8eo1yNVo8G9XZfYoWLPstoXxaUnnpP3TIA==}
-    hasBin: true
 
   flagged-respawn@2.0.0:
     resolution: {integrity: sha512-Gq/a6YCi8zexmGHMuJwahTGzXlAZAOsbCVKduWXC6TlLCjjFRlExMJc4GC2NYPYZ0r/brw9P7CpRgQmlPVeOoA==}
@@ -19138,10 +19117,6 @@ snapshots:
 
   '@stencil/core@4.20.0(patch_hash=2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9)': {}
 
-  '@stencil/react-output-target@0.5.3(patch_hash=bca691c52b3fa2f491c35229af7f145e17fd520326f997c6a15ca31fd19b937e)(@stencil/core@4.20.0(patch_hash=2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9))':
-    dependencies:
-      '@stencil/core': 4.20.0(patch_hash=2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9)
-
   '@stoplight/json@3.21.7':
     dependencies:
       '@stoplight/ordered-object-literal': 1.0.5
@@ -23348,12 +23323,6 @@ snapshots:
       object.defaults: 1.1.0
       object.pick: 1.3.0
       parse-filepath: 1.0.2
-
-  fix-esm-import-path@1.10.1(patch_hash=d8c4a243b0a6082b2f2f0dedd8551ff16da1e9adcda2a63b337f2664708a7f7d):
-    dependencies:
-      debug: 4.4.3(supports-color@8.1.1)
-    transitivePeerDependencies:
-      - supports-color
 
   flagged-respawn@2.0.0: {}
 
