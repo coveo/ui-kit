@@ -1,11 +1,15 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
-import {MockSearchApi} from '@/storybook-utils/api/search/mock';
-import {baseFoldedResponse} from '@/storybook-utils/api/search/search-response';
+import {
+  baseFoldedResponse,
+  MockSearchApi,
+  nestedFoldedResponse,
+} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
 const searchApiHarness = new MockSearchApi();
+searchApiHarness.searchEndpoint.mock(() => baseFoldedResponse);
 
 const {decorator, play} = wrapInSearchInterface();
 
@@ -19,10 +23,6 @@ const meta: Meta = {
     msw: {
       handlers: [...searchApiHarness.handlers],
     },
-  },
-  beforeEach: async () => {
-    searchApiHarness.searchEndpoint.clear();
-    searchApiHarness.searchEndpoint.mockOnce(() => baseFoldedResponse);
   },
   play,
 };
@@ -59,6 +59,13 @@ export const Default: Story = {
 
 export const WithInheritTemplates: Story = {
   name: 'With inherit-templates',
+  beforeEach: async () => {
+    searchApiHarness.searchEndpoint.mock(() => nestedFoldedResponse);
+    return () => {
+      searchApiHarness.searchEndpoint.reset();
+      searchApiHarness.searchEndpoint.mock(() => baseFoldedResponse);
+    };
+  },
   render: () => html`
     <atomic-folded-result-list>
       <atomic-result-template>
