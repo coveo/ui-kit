@@ -1,7 +1,6 @@
-import {readdirSync, readFileSync} from 'node:fs';
+import {readFileSync} from 'node:fs';
 import replacePlugin from '@rollup/plugin-replace';
 import type {Config} from '@stencil/core';
-import {reactOutputTarget as react} from '@stencil/react-output-target';
 import {postcss} from '@stencil-community/postcss';
 import tailwindcss from '@tailwindcss/postcss';
 import postcssNested from 'postcss-nested';
@@ -14,15 +13,6 @@ const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 
 const packageMappings = generateExternalPackageMappings(__dirname);
 
-function filterComponentsByUseCaseForReactOutput(useCasePath: string) {
-  return readdirSync(useCasePath, {
-    recursive: true,
-  })
-    .toSorted() // Sort the filenames to ensure deterministic output
-    .map((fileName) => /(atomic-[a-z-]+)\.tsx$/.exec(fileName.toString()))
-    .filter((m) => m !== null)
-    .flatMap((m) => m![1]);
-}
 function getPackageVersion(): string {
   return JSON.parse(readFileSync('package.json', 'utf-8')).version;
 }
@@ -67,43 +57,6 @@ export const config: Config = {
   taskQueue: 'async',
   sourceMap: true,
   outputTargets: [
-    !isDevWatch &&
-      react({
-        componentCorePackage: '@coveo/atomic',
-        proxiesFile:
-          '../atomic-react/src/components/stencil-generated/search/index.ts',
-        includeDefineCustomElements: true,
-        excludeComponents: [
-          'atomic-result-template',
-          'atomic-result-children',
-          'atomic-result-children-template',
-          'atomic-recs-result-template',
-          'atomic-field-condition',
-        ].concat(
-          filterComponentsByUseCaseForReactOutput('src/components/commerce'),
-          filterComponentsByUseCaseForReactOutput('src/components/insight'),
-          filterComponentsByUseCaseForReactOutput('src/components/ipx')
-        ),
-      }),
-    !isDevWatch &&
-      react({
-        componentCorePackage: '@coveo/atomic',
-        proxiesFile:
-          '../atomic-react/src/components/stencil-generated/commerce/index.ts',
-        includeDefineCustomElements: true,
-        excludeComponents: [
-          'atomic-product-template',
-          'atomic-recs-result-template',
-          'atomic-field-condition',
-        ].concat(
-          filterComponentsByUseCaseForReactOutput('src/components/search'),
-          filterComponentsByUseCaseForReactOutput(
-            'src/components/recommendations'
-          ),
-          filterComponentsByUseCaseForReactOutput('src/components/insight'),
-          filterComponentsByUseCaseForReactOutput('src/components/ipx')
-        ),
-      }),
     {
       type: 'dist-custom-elements',
       generateTypeDeclarations: false,
