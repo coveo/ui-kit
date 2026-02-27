@@ -12,7 +12,7 @@ import {
   type StateNeededByQuerySuggest,
   selectQuerySuggestion,
 } from '../../../features/commerce/query-suggest/query-suggest-actions.js';
-import {querySuggestReducer as querySuggest} from '../../query-suggest/query-suggest-slice.js';
+import {commerceQuerySuggestReducer as querySuggest} from './commerce-query-suggest-slice.js';
 import {fetchQuerySuggestions} from './query-suggest-actions.js';
 
 export type {

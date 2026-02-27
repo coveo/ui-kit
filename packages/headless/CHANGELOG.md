@@ -1,3 +1,11 @@
+## <small>3.45.1 (2026-02-25)</small>
+
+* fix(headless): clear tab-restricted facet values synchronously on tab switch (#7092) ([8adad48](https://github.com/coveo/ui-kit/commits/8adad48)), closes [#7092](https://github.com/coveo/ui-kit/issues/7092)
+* fix(headless): eliminate commerce subpackage imports from search subpackage (#7166) ([19bbdd5](https://github.com/coveo/ui-kit/commits/19bbdd5)), closes [#7166](https://github.com/coveo/ui-kit/issues/7166)
+* fix(headless): renew access token middleware calls renewToken 2x in parallel & skips error handling  ([bbac7dd](https://github.com/coveo/ui-kit/commits/bbac7dd)), closes [#7109](https://github.com/coveo/ui-kit/issues/7109)
+
+
+
 ## 3.45.0 (2026-02-18)
 
 * feat(headless): added askFollowUp method to generated answer with follow ups controller (kepler) (#7 ([441238f](https://github.com/coveo/ui-kit/commits/441238f)), closes [#7127](https://github.com/coveo/ui-kit/issues/7127)
