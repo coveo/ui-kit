@@ -364,29 +364,32 @@ export const logGeneratedAnswerCollapse = (): CustomAction =>
     },
   });
 
-export const logCopyGeneratedAnswer = (): CustomAction =>
-  makeAnalyticsAction({
+export function logCopyGeneratedAnswer(): CustomAction;
+export function logCopyGeneratedAnswer(answerId: string): CustomAction;
+export function logCopyGeneratedAnswer(answerId?: string): CustomAction {
+  return makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/copy',
     __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
+      const resolvedAnswerId =
+        answerId ?? generativeQuestionAnsweringIdSelector(state);
+      if (!resolvedAnswerId) {
         return null;
       }
       return client.makeGeneratedAnswerCopyToClipboard({
-        generativeQuestionAnsweringId,
+        generativeQuestionAnsweringId: resolvedAnswerId,
       });
     },
     analyticsType: 'Rga.AnswerAction',
-    analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
+    analyticsPayloadBuilder: (state): Rga.AnswerAction => {
+      const resolvedAnswerId =
+        answerId ?? generativeQuestionAnsweringIdSelector(state);
       return {
-        answerId: generativeQuestionAnsweringId ?? '',
+        answerId: resolvedAnswerId ?? '',
         action: 'copyToClipboard',
       };
     },
   });
+}
 
 export const retryGeneratedAnswer = (): SearchAction => ({
   actionCause: SearchPageEvents.retryGeneratedAnswer,

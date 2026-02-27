@@ -98,8 +98,14 @@ export interface GeneratedAnswer extends Controller {
   disable(): void;
   /**
    * Logs a custom event indicating the generated answer was copied to the clipboard.
+   * @deprecated The `logCopyToClipboard` method is deprecated and will be removed in a future major version.
    */
   logCopyToClipboard(): void;
+  /**
+   * Logs a custom event indicating the generated answer was copied to the clipboard.
+   * @param answerId - Answer Id of the copied answer.
+   */
+  logCopyToClipboard(answerId: string): void;
   /**
    * Logs a custom event indicating a cited source link was hovered.
    * @param citationId - The ID of the clicked citation.
@@ -121,7 +127,8 @@ export interface GeneratedAnswerAnalyticsClient {
   ) => CustomAction;
   logGeneratedAnswerShowAnswers: () => CustomAction;
   logGeneratedAnswerHideAnswers: () => CustomAction;
-  logCopyGeneratedAnswer: () => CustomAction;
+  logCopyGeneratedAnswer(): CustomAction;
+  logCopyGeneratedAnswer(answerId: string): CustomAction;
   logRetryGeneratedAnswer: () => LegacySearchAction;
   logGeneratedAnswerExpand: () => CustomAction;
   logGeneratedAnswerCollapse: () => CustomAction;

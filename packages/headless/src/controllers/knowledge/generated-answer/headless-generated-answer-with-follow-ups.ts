@@ -159,10 +159,7 @@ export function buildGeneratedAnswerWithFollowUps(
         controller.logCopyToClipboard();
         return;
       }
-      // Todo: SFINT-6581 implement logCopyFollowUp action and dispatch here
-      console.warn(
-        'Method not yet implemented to send analytics for copy to clipboard on a followup answer'
-      );
+      engine.dispatch(analyticsClient.logCopyGeneratedAnswer(answerId));
     },
     askFollowUp(question: string) {
       if (!question || question.trim() === '') {
