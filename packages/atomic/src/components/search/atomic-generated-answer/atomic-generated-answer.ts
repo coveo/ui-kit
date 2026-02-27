@@ -41,7 +41,7 @@ import {getNamedSlotContent} from '@/src/utils/slot-utils';
 import {shouldDisplayOnCurrentTab} from '@/src/utils/tab-utils';
 import atomicGeneratedAnswerStyles from './atomic-generated-answer.tw.css.js';
 import '@/src/components/common/generated-answer/atomic-generated-answers-thread/atomic-generated-answers-thread.js';
-import {renderFollowUpInput} from '../../common/generated-answer/render-follow-up-input.js';
+import {renderFollowUpInput} from '@/src/components/common/generated-answer/render-follow-up-input.js';
 
 /**
  * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
@@ -417,7 +417,7 @@ export class AtomicGeneratedAnswer
                     <article>${this.renderAnswerContent()}</article>
                   </div>
                   <div class="px-6 pt-2">
-                    ${this.renderAskFollowUpWrapper()}
+                    ${this.renderAskFollowUpInputWrapper()}
                     ${renderDisclaimer({
                       props: {
                         i18n: this.bindings.i18n,
@@ -642,14 +642,14 @@ export class AtomicGeneratedAnswer
     };
 
     if (this.areFollowUpsEnabled) {
-      const allGeneratedAnswer = [
+      const allGeneratedAnswers = [
         generatedAnswer,
         ...(this.generatedAnswerWithFollowUps?.state.followUpAnswers
           .followUpAnswers ?? []),
       ];
 
       return html`<atomic-generated-answers-thread
-        .generatedAnswers=${allGeneratedAnswer}
+        .generatedAnswers=${allGeneratedAnswers}
         .i18n=${this.bindings.i18n}
         .renderCitations=${this.renderCitationsList.bind(this)}
         .onClickLike=${(answerId: string) =>
@@ -738,9 +738,10 @@ export class AtomicGeneratedAnswer
       this.generatedAnswerState.isLoading;
     return (
       initialAnswerPending ||
-      this.generatedAnswerWithFollowUps?.state.followUpAnswers?.followUpAnswers?.some(
+      (this.generatedAnswerWithFollowUps?.state.followUpAnswers?.followUpAnswers?.some(
         (answer) => answer.isStreaming || answer.isLoading
-      )
+      ) ??
+        false)
     );
   }
 
@@ -750,7 +751,7 @@ export class AtomicGeneratedAnswer
     }
   }
 
-  private renderAskFollowUpWrapper() {
+  private renderAskFollowUpInputWrapper() {
     if (!this.areFollowUpsEnabled) {
       return nothing;
     }
