@@ -83,22 +83,33 @@ export const logOpenGeneratedAnswerSource = (
     },
   });
 
-export const logHoverCitation = (
+// Overloading the function here for backward compatibility because #logHoverCitation will eventually take an answerId.
+export function logHoverCitation(
   citationId: string,
   citationHoverTimeInMs: number
-): CustomAction =>
-  makeAnalyticsAction({
+): CustomAction;
+export function logHoverCitation(
+  citationId: string,
+  citationHoverTimeInMs: number,
+  answerId: string
+): CustomAction;
+export function logHoverCitation(
+  citationId: string,
+  citationHoverTimeInMs: number,
+  answerId?: string
+): CustomAction {
+  return makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/hoverCitation',
     __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
+      const resolvedAnswerId =
+        answerId ?? generativeQuestionAnsweringIdSelector(state);
       const citation = citationSourceSelector(state, citationId);
 
-      if (!generativeQuestionAnsweringId || !citation) {
+      if (!resolvedAnswerId || !citation) {
         return null;
       }
       return client.makeGeneratedAnswerSourceHover({
-        generativeQuestionAnsweringId,
+        generativeQuestionAnsweringId: resolvedAnswerId,
         permanentId: citation.permanentid,
         citationId: citation.id,
         citationHoverTimeMs: citationHoverTimeInMs,
@@ -107,10 +118,10 @@ export const logHoverCitation = (
     analyticsType: 'Rga.CitationHover',
     analyticsPayloadBuilder: (state): Rga.CitationHover | undefined => {
       const citation = citationSourceSelector(state, citationId);
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
+      const resolvedAnswerId =
+        answerId ?? generativeQuestionAnsweringIdSelector(state);
       return {
-        answerId: generativeQuestionAnsweringId ?? '',
+        answerId: resolvedAnswerId ?? '',
         citationId,
         itemMetadata: {
           uniqueFieldName: 'permanentid',
@@ -122,6 +133,7 @@ export const logHoverCitation = (
       };
     },
   });
+}
 
 // Overloading the function here for backward compatibility because #logLikeGeneratedAnswer will eventually take an answerId.
 export function logLikeGeneratedAnswer(): CustomAction;

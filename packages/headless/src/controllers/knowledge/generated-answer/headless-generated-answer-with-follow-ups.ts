@@ -50,10 +50,23 @@ export interface GeneratedAnswerWithFollowUps extends GeneratedAnswer {
   dislike(answerId?: string): void;
 
   /**
+   * Logs a custom event indicating a cited source link was hovered.
+   * @param citationId - The ID of the clicked citation.
+   * @param citationHoverTimeMs - The number of milliseconds spent hovering over the citation.
+   * @param answerId - Optional ID of the answer for which the citation was hovered. Defaults to the head answer.
+   */
+  logCitationHover(
+    citationId: string,
+    citationHoverTimeMs: number,
+    answerId?: string
+  ): void;
+
+  /**
    * Logs a copy-to-clipboard interaction for analytics.
    * @param answerId - Optional ID of the copied answer. Defaults to the current answer.
    */
   logCopyToClipboard(answerId?: string): void;
+
   /**
    * Asks a follow-up question.
    * @param question - The follow-up question to ask.
@@ -162,6 +175,23 @@ export function buildGeneratedAnswerWithFollowUps(
         return;
       }
       engine.dispatch(analyticsClient.logCopyGeneratedAnswer(answerId));
+    },
+    logCitationHover(
+      citationId: string,
+      citationHoverTimeMs: number,
+      answerId?: string
+    ) {
+      if (!answerId || this.state.answerId === answerId) {
+        controller.logCitationHover(citationId, citationHoverTimeMs);
+        return;
+      }
+      engine.dispatch(
+        analyticsClient.logHoverCitation(
+          citationId,
+          citationHoverTimeMs,
+          answerId
+        )
+      );
     },
     askFollowUp(question: string) {
       if (!question || question.trim() === '') {

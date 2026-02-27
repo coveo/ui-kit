@@ -110,8 +110,20 @@ export interface GeneratedAnswer extends Controller {
    * Logs a custom event indicating a cited source link was hovered.
    * @param citationId - The ID of the clicked citation.
    * @param citationHoverTimeMs - The number of milliseconds spent hovering over the citation.
+   * @deprecated The `logCitationHover` method is deprecated and will be removed in a future major version.
    */
   logCitationHover(citationId: string, citationHoverTimeMs: number): void;
+  /**
+   * Logs a custom event indicating a cited source link was hovered.
+   * @param citationId - The ID of the clicked citation.
+   * @param citationHoverTimeMs - The number of milliseconds spent hovering over the citation.
+   * @param answerId - Answer Id of the hovered citation's answer.
+   */
+  logCitationHover(
+    citationId: string,
+    citationHoverTimeMs: number,
+    answerId: string
+  ): void;
 }
 
 export interface GeneratedAnswerAnalyticsClient {
@@ -123,10 +135,15 @@ export interface GeneratedAnswerAnalyticsClient {
     feedback: GeneratedAnswerFeedback
   ) => CustomAction;
   logOpenGeneratedAnswerSource: (citationId: string) => CustomAction;
-  logHoverCitation: (
+  logHoverCitation(
     citationId: string,
     citationHoverTimeMs: number
-  ) => CustomAction;
+  ): CustomAction;
+  logHoverCitation(
+    citationId: string,
+    citationHoverTimeMs: number,
+    answerId: string
+  ): CustomAction;
   logGeneratedAnswerShowAnswers: () => CustomAction;
   logGeneratedAnswerHideAnswers: () => CustomAction;
   logCopyGeneratedAnswer(): CustomAction;

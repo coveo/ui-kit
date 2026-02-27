@@ -242,6 +242,27 @@ describe('generated answer analytics actions', () => {
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
+    it('should log #logHoverCitation with a provided answerId', async () => {
+      const hoverDuration = 1234;
+
+      await logHoverCitation(
+        exampleCitation.id,
+        hoverDuration,
+        exampleProvidedAnswerId
+      )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+
+      const mockToUse = mockMakeGeneratedAnswerSourceHover;
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith({
+        generativeQuestionAnsweringId: exampleProvidedAnswerId,
+        citationId: exampleCitation.id,
+        permanentId: exampleCitation.permanentid,
+        citationHoverTimeMs: hoverDuration,
+      });
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
+    });
+
     it('should log #logLikeGeneratedAnswer with the right payload', async () => {
       await logLikeGeneratedAnswer()()(
         engine.dispatch,
@@ -514,6 +535,32 @@ describe('generated answer analytics actions', () => {
 
       expect(emit).toHaveBeenCalledTimes(1);
       expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
+
+    it('should log #logHoverCitation with a provided answerId', async () => {
+      const hoverDuration = 1234;
+
+      await logHoverCitation(
+        exampleCitation.id,
+        hoverDuration,
+        exampleProvidedAnswerId
+      )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toStrictEqual([
+        'Rga.CitationHover',
+        {
+          answerId: exampleProvidedAnswerId,
+          citationId: exampleCitation.id,
+          itemMetadata: {
+            uniqueFieldName: 'permanentid',
+            uniqueFieldValue: exampleCitation.permanentid,
+            title: exampleCitation.title,
+            url: exampleCitation.clickUri,
+          },
+          citationHoverTimeInMs: hoverDuration,
+        },
+      ]);
     });
 
     it('should log #logLikeGeneratedAnswer with the right payload', async () => {
