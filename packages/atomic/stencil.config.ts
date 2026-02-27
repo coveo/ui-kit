@@ -1,6 +1,5 @@
 import {readFileSync} from 'node:fs';
 import replacePlugin from '@rollup/plugin-replace';
-import {angularOutputTarget as angular} from '@stencil/angular-output-target';
 import type {Config} from '@stencil/core';
 import {postcss} from '@stencil-community/postcss';
 import tailwindcss from '@tailwindcss/postcss';
@@ -8,7 +7,6 @@ import postcssNested from 'postcss-nested';
 import type {PluginImpl} from 'rollup';
 import {inlineSvg} from 'stencil-inline-svg';
 import {generateExternalPackageMappings} from './scripts/externalPackageMappings.mjs';
-import {generateAngularModuleDefinition as angularModule} from './stencil-plugin/atomic-angular-module';
 
 const isProduction = process.env.BUILD === 'production';
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
@@ -47,29 +45,12 @@ const externalizeDependenciesPlugin: PluginImpl = () => {
   };
 };
 
-const isDevWatch: boolean =
-  process.argv &&
-  process.argv.indexOf('--dev') > -1 &&
-  process.argv.indexOf('--watch') > -1 &&
-  process.env.IS_DEV === 'true';
-
 export const config: Config = {
   tsconfig: 'tsconfig.stencil.json',
   namespace: 'atomic',
   taskQueue: 'async',
   sourceMap: true,
   outputTargets: [
-    !isDevWatch &&
-      angular({
-        componentCorePackage: '@coveo/atomic',
-        directivesProxyFile:
-          '../atomic-angular/projects/atomic-angular/src/lib/stencil-generated/components.ts',
-      }),
-    !isDevWatch &&
-      angularModule({
-        moduleFile:
-          '../atomic-angular/projects/atomic-angular/src/lib/stencil-generated/atomic-angular.module.ts',
-      }),
     {
       type: 'dist-custom-elements',
       generateTypeDeclarations: false,
