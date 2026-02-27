@@ -5,6 +5,7 @@ import {generatedAnswerAnalyticsClient} from '../../features/generated-answer/ge
 import type {
   GeneratedAnswerBase,
   GeneratedAnswerState,
+  GenerationStep,
 } from '../../features/generated-answer/generated-answer-state.js';
 import type {GeneratedResponseFormat} from '../../features/generated-answer/generated-response-format.js';
 import type {
@@ -17,6 +18,7 @@ import {buildAnswerApiGeneratedAnswer} from '../knowledge/generated-answer/headl
 import {
   buildGeneratedAnswerWithFollowUps,
   type GeneratedAnswerWithFollowUps,
+  type GeneratedAnswerWithFollowUpsState,
 } from '../knowledge/generated-answer/headless-generated-answer-with-follow-ups.js';
 
 export type {
@@ -25,9 +27,11 @@ export type {
   GeneratedAnswerState,
   GeneratedAnswer,
   GeneratedAnswerWithFollowUps,
+  GeneratedAnswerWithFollowUpsState,
   GeneratedAnswerBase,
   GeneratedAnswerProps,
   GeneratedAnswerPropsInitialState,
+  GenerationStep,
 };
 
 /**
