@@ -7,6 +7,8 @@ import {
   followUpCompleted,
   followUpFailed,
   followUpMessageChunkReceived,
+  followUpStepFinished,
+  followUpStepStarted,
   likeFollowUp,
   resetFollowUpAnswers,
   setActiveFollowUpAnswerId,
@@ -81,6 +83,7 @@ describe('follow-up answers slice', () => {
         disliked: false,
         feedbackSubmitted: false,
         cannotAnswer: false,
+        generationSteps: [],
       });
     });
 
@@ -134,7 +137,10 @@ describe('follow-up answers slice', () => {
 
     it('does nothing when active follow-up already has an answerId', () => {
       state.followUpAnswers = [
-        {...createInitialFollowUpAnswer('Question?'), answerId: 'existing-id'},
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'existing-id',
+        },
       ];
 
       const finalState = followUpAnswersReducer(
@@ -884,6 +890,138 @@ describe('follow-up answers slice', () => {
 
       expect(finalState.followUpAnswers).toEqual([]);
       expect(finalState.conversationId).toBe('');
+    });
+  });
+
+  describe('#followUpStepStarted', () => {
+    it('should append a new active step with the provided payload', () => {
+      const startedAt = 123;
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          generationSteps: [
+            {
+              name: 'searching',
+              status: 'completed',
+              startedAt: 1,
+              finishedAt: 2,
+            },
+          ],
+        },
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        followUpStepStarted({
+          answerId: 'answer-123',
+          name: 'thinking',
+          startedAt,
+        })
+      );
+
+      expect(finalState.followUpAnswers[0].generationSteps).toEqual([
+        {
+          name: 'searching',
+          status: 'completed',
+          startedAt: 1,
+          finishedAt: 2,
+        },
+        {
+          name: 'thinking',
+          status: 'active',
+          startedAt,
+        },
+      ]);
+    });
+  });
+
+  describe('#followUpStepFinished', () => {
+    it('should mark the most recent matching active step as completed', () => {
+      const finishedAt = 999;
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          generationSteps: [
+            {
+              name: 'searching',
+              status: 'active',
+              startedAt: 1,
+              finishedAt: 2,
+            },
+            {
+              name: 'thinking',
+              status: 'completed',
+              startedAt: 10,
+            },
+            {
+              name: 'searching',
+              status: 'active',
+              startedAt: 20,
+            },
+          ],
+        },
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        followUpStepFinished({
+          answerId: 'answer-123',
+          name: 'searching',
+          finishedAt,
+        })
+      );
+
+      expect(finalState.followUpAnswers[0].generationSteps).toEqual([
+        {
+          name: 'searching',
+          status: 'active',
+          startedAt: 1,
+          finishedAt: 2,
+        },
+        {
+          name: 'thinking',
+          status: 'completed',
+          startedAt: 10,
+        },
+        {
+          name: 'searching',
+          status: 'completed',
+          startedAt: 20,
+          finishedAt,
+        },
+      ]);
+    });
+
+    it('should leave steps unchanged when no matching active step is found', () => {
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          generationSteps: [
+            {
+              name: 'searching',
+              status: 'completed',
+              startedAt: 1,
+              finishedAt: 2,
+            },
+          ],
+        },
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        followUpStepFinished({
+          answerId: 'answer-123',
+          name: 'thinking',
+          finishedAt: 50,
+        })
+      );
+
+      expect(finalState.followUpAnswers[0].generationSteps).toEqual(
+        state.followUpAnswers[0].generationSteps
+      );
     });
   });
 });
