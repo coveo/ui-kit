@@ -1,5 +1,5 @@
 import type {ReactiveController, ReactiveControllerHost} from 'lit';
-import type {AnyBindings} from '../components';
+import type {AnyBindings} from '@/src/components/common/interface/bindings';
 import type {AtomicAriaLive} from '../components/common/atomic-aria-live/atomic-aria-live';
 import {buildCustomEvent} from './event-utils';
 import {defer} from './utils';

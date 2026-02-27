@@ -5,87 +5,20 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { AnyBindings } from "./components/common/interface/bindings";
-import { DateFilterRange, DateRangeRequest } from "@coveo/headless";
-export { AnyBindings } from "./components/common/interface/bindings";
-export { DateFilterRange, DateRangeRequest } from "@coveo/headless";
 export namespace Components {
-    /**
-     * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
-     * Internal component made to be integrated in a TimeframeFacet.
-     */
-    interface AtomicStencilFacetDateInput {
-        "bindings": AnyBindings;
-        "facetId": string;
-        "label": string;
-        "max"?: string;
-        "min"?: string;
-        "rangeGetter": () => DateFilterRange | undefined;
-        "rangeSetter": (range: DateRangeRequest) => void;
-    }
-}
-export interface AtomicStencilFacetDateInputCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicStencilFacetDateInputElement;
 }
 declare global {
-    interface HTMLAtomicStencilFacetDateInputElementEventMap {
-        "atomic/dateInputApply": any;
-    }
-    /**
-     * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
-     * Internal component made to be integrated in a TimeframeFacet.
-     */
-    interface HTMLAtomicStencilFacetDateInputElement extends Components.AtomicStencilFacetDateInput, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicStencilFacetDateInputElementEventMap>(type: K, listener: (this: HTMLAtomicStencilFacetDateInputElement, ev: AtomicStencilFacetDateInputCustomEvent<HTMLAtomicStencilFacetDateInputElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicStencilFacetDateInputElementEventMap>(type: K, listener: (this: HTMLAtomicStencilFacetDateInputElement, ev: AtomicStencilFacetDateInputCustomEvent<HTMLAtomicStencilFacetDateInputElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicStencilFacetDateInputElement: {
-        prototype: HTMLAtomicStencilFacetDateInputElement;
-        new (): HTMLAtomicStencilFacetDateInputElement;
-    };
     interface HTMLElementTagNameMap {
-        "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
     }
 }
 declare namespace LocalJSX {
-    /**
-     * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
-     * Internal component made to be integrated in a TimeframeFacet.
-     */
-    interface AtomicStencilFacetDateInput {
-        "bindings": AnyBindings;
-        "facetId": string;
-        "label": string;
-        "max"?: string;
-        "min"?: string;
-        /**
-          * @migration Stencil's
-          * @Event () decorator defaults to: bubbles=true, composed=true, cancelable=true. Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false. When migrating to Lit, explicitly set all three options to preserve behavior: `new CustomEvent('atomic/dateInputApply', { bubbles: true, composed: true, cancelable: true, detail: ... })`
-         */
-        "onAtomic/dateInputApply"?: (event: AtomicStencilFacetDateInputCustomEvent<any>) => void;
-        "rangeGetter": () => DateFilterRange | undefined;
-        "rangeSetter": (range: DateRangeRequest) => void;
-    }
     interface IntrinsicElements {
-        "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            /**
-             * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
-             * Internal component made to be integrated in a TimeframeFacet.
-             */
-            "atomic-stencil-facet-date-input": LocalJSX.AtomicStencilFacetDateInput & JSXBase.HTMLAttributes<HTMLAtomicStencilFacetDateInputElement>;
         }
     }
 }
