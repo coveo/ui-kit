@@ -5,6 +5,21 @@ import type {
   GeneratedResponseFormat,
 } from './generated-response-format.js';
 
+type GenerationStepStatus = 'active' | 'completed';
+export type GenerationStepName = (typeof GENERATION_STEP_NAMES)[number];
+export const GENERATION_STEP_NAMES = [
+  'searching',
+  'thinking',
+  'answering',
+] as const;
+
+export interface GenerationStep {
+  name: GenerationStepName;
+  status: GenerationStepStatus;
+  startedAt: number;
+  finishedAt?: number;
+}
+
 /**
  * Base interface for generated answer structures.
  * Contains core properties shared across different generated answer implementations.
@@ -58,6 +73,10 @@ export interface GeneratedAnswerBase {
    * Determines if the generated answer feedback was submitted.
    */
   feedbackSubmitted: boolean;
+  /**
+   * The list of steps involved in generating the answer, along with their status and timestamps.
+   */
+  generationSteps: GenerationStep[];
 }
 
 /**
@@ -130,5 +149,6 @@ export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
     answerApiQueryParams: undefined,
     answerId: undefined,
     answerGenerationMode: 'automatic',
+    generationSteps: [],
   };
 }
