@@ -43,23 +43,30 @@ export const logRetryGeneratedAnswer = (): LegacySearchAction =>
     client.makeRetryGeneratedAnswer()
   );
 
-export const logOpenGeneratedAnswerSource = (
-  citationId: string
-): CustomAction =>
-  makeAnalyticsAction({
+// Overloading the function here for backward compatibility because #logOpenGeneratedAnswerSource will eventually take an answerId.
+export function logOpenGeneratedAnswerSource(citationId: string): CustomAction;
+export function logOpenGeneratedAnswerSource(
+  citationId: string,
+  answerId: string
+): CustomAction;
+export function logOpenGeneratedAnswerSource(
+  citationId: string,
+  answerId?: string
+): CustomAction {
+  return makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/openAnswerSource',
     __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
+      const resolvedAnswerId =
+        answerId ?? generativeQuestionAnsweringIdSelector(state);
       const citation = citationSourceSelector(state, citationId);
-      if (!generativeQuestionAnsweringId || !citation) {
+      if (!resolvedAnswerId || !citation) {
         return null;
       }
 
       return client.makeGeneratedAnswerCitationClick(
         partialCitationInformation(citation, state),
         {
-          generativeQuestionAnsweringId,
+          generativeQuestionAnsweringId: resolvedAnswerId,
           citationId: citation.id,
           documentId: citationDocumentIdentifier(citation),
         }
@@ -68,10 +75,10 @@ export const logOpenGeneratedAnswerSource = (
     analyticsType: 'Rga.CitationClick',
     analyticsPayloadBuilder: (state): Rga.CitationClick | undefined => {
       const citation = citationSourceSelector(state, citationId);
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
+      const resolvedAnswerId =
+        answerId ?? generativeQuestionAnsweringIdSelector(state);
       return {
-        answerId: generativeQuestionAnsweringId ?? '',
+        answerId: resolvedAnswerId ?? '',
         citationId,
         itemMetadata: {
           uniqueFieldName: 'permanentid',
@@ -82,6 +89,7 @@ export const logOpenGeneratedAnswerSource = (
       };
     },
   });
+}
 
 // Overloading the function here for backward compatibility because #logHoverCitation will eventually take an answerId.
 export function logHoverCitation(

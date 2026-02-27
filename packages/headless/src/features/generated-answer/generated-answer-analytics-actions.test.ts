@@ -221,6 +221,29 @@ describe('generated answer analytics actions', () => {
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
+    it('should log #logOpenGeneratedAnswerSource with a provided answerId', async () => {
+      await logOpenGeneratedAnswerSource(
+        exampleCitation.id,
+        exampleProvidedAnswerId
+      )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+
+      const mockToUse = mockMakeGeneratedAnswerCitationClick;
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+
+      expect(mockToUse.mock.calls[0][0]).toStrictEqual(
+        expectedCitationDocumentInfo
+      );
+
+      expect(mockToUse.mock.calls[0][1]).toStrictEqual({
+        generativeQuestionAnsweringId: exampleProvidedAnswerId,
+        citationId: exampleCitation.id,
+        documentId: exampleDocumentId,
+      });
+
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
+    });
+
     it('should log #logHoverCitation with the right payload', async () => {
       const hoverDuration = 1234;
 
@@ -522,6 +545,28 @@ describe('generated answer analytics actions', () => {
 
       expect(emit).toHaveBeenCalledTimes(1);
       expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
+
+    it('should log #logOpenGeneratedAnswerSource with a provided answerId', async () => {
+      await logOpenGeneratedAnswerSource(
+        exampleCitation.id,
+        exampleProvidedAnswerId
+      )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toStrictEqual([
+        'Rga.CitationClick',
+        {
+          answerId: exampleProvidedAnswerId,
+          citationId: exampleCitation.id,
+          itemMetadata: {
+            uniqueFieldName: 'permanentid',
+            uniqueFieldValue: exampleCitation.permanentid,
+            title: exampleCitation.title,
+            url: exampleCitation.clickUri,
+          },
+        },
+      ]);
     });
 
     it('should log #logHoverCitation with the right payload', async () => {

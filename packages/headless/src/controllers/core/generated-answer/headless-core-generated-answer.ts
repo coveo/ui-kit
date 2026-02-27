@@ -68,11 +68,6 @@ export interface GeneratedAnswer extends Controller {
    */
   sendFeedback(feedback: GeneratedAnswerFeedback): void;
   /**
-   * Logs a custom event indicating a cited source link was clicked.
-   * @param id - The ID of the clicked citation.
-   */
-  logCitationClick(id: string): void;
-  /**
    * Displays the generated answer.
    */
   show(): void;
@@ -107,6 +102,18 @@ export interface GeneratedAnswer extends Controller {
    */
   logCopyToClipboard(answerId: string): void;
   /**
+   * Logs a custom event indicating a cited source link was clicked.
+   * @param citationId - The ID of the clicked citation.
+   * @deprecated The `logCitationClick` method is deprecated and will be removed in a future major version.
+   */
+  logCitationClick(citationId: string): void;
+  /**
+   * Logs a custom event indicating a cited source link was clicked.
+   * @param citationId - The ID of the clicked citation.
+   * @deprecated The `logCitationClick` method is deprecated and will be removed in a future major version.
+   */
+  logCitationClick(citationId: string, answerId: string): void;
+  /**
    * Logs a custom event indicating a cited source link was hovered.
    * @param citationId - The ID of the clicked citation.
    * @param citationHoverTimeMs - The number of milliseconds spent hovering over the citation.
@@ -134,7 +141,11 @@ export interface GeneratedAnswerAnalyticsClient {
   logGeneratedAnswerFeedback: (
     feedback: GeneratedAnswerFeedback
   ) => CustomAction;
-  logOpenGeneratedAnswerSource: (citationId: string) => CustomAction;
+  logOpenGeneratedAnswerSource(citationId: string): CustomAction;
+  logOpenGeneratedAnswerSource(
+    citationId: string,
+    answerId: string
+  ): CustomAction;
   logHoverCitation(
     citationId: string,
     citationHoverTimeMs: number

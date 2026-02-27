@@ -176,6 +176,15 @@ export function buildGeneratedAnswerWithFollowUps(
       }
       engine.dispatch(analyticsClient.logCopyGeneratedAnswer(answerId));
     },
+    logCitationClick(citationId: string, answerId?: string) {
+      if (!answerId || this.state.answerId === answerId) {
+        controller.logCitationClick(citationId);
+        return;
+      }
+      engine.dispatch(
+        analyticsClient.logOpenGeneratedAnswerSource(citationId, answerId)
+      );
+    },
     logCitationHover(
       citationId: string,
       citationHoverTimeMs: number,
