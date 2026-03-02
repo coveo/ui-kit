@@ -61,4 +61,4 @@ In addition to the boundaries listed in the root `AGENTS.md` file, the following
 - Add unit tests in the corresponding test suite (`.spec.ts`) when:
   - Adding a new feature or behavior
   - Fixing a bug in an existing feature or behavior
-- Use path aliases for imports (except SVG imports)
+- Use path aliases (i.e., **NOT** relative paths) in module imports (except SVG imports)
