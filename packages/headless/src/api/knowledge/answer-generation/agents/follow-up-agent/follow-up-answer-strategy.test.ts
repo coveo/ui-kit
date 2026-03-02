@@ -15,6 +15,7 @@ import {
   setFollowUpIsLoading,
   setFollowUpIsStreaming,
 } from '../../../../../features/follow-up-answers/follow-up-answers-actions.js';
+import {GeneratedAnswerSseErrorCode} from '../../../../../features/generated-answer/sse-generated-answer-errors.js';
 import {createFollowUpStrategy} from './follow-up-answer-strategy.js';
 
 describe('createFollowUpStrategy', () => {
@@ -131,12 +132,16 @@ describe('createFollowUpStrategy', () => {
     strategy.onRunErrorEvent!({
       event: {
         message: 'Failure',
-        code: '500',
+        code: 'KNOWLEDGE:SSE_MODELS_NOT_AVAILABLE',
       },
     } as any);
 
     expect(dispatch).toHaveBeenCalledWith(
-      followUpFailed({answerId: runId, message: 'Failure', code: 500})
+      followUpFailed({
+        answerId: runId,
+        message: 'Failure',
+        code: GeneratedAnswerSseErrorCode.SseModelsNotAvailable,
+      })
     );
   });
 

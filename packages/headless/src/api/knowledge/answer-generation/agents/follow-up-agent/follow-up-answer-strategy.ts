@@ -13,6 +13,7 @@ import {
   setFollowUpIsStreaming,
 } from '../../../../../features/follow-up-answers/follow-up-answers-actions.js';
 import type {GenerationStepName} from '../../../../../features/generated-answer/generated-answer-state.js';
+import {mapRunErrorCode} from '../../../../../features/generated-answer/sse-generated-answer-errors.js';
 
 /**
  * Creates an AgentSubscriber that handles follow-up answer streaming events
@@ -79,11 +80,11 @@ export const createFollowUpStrategy = (dispatch: Dispatch): AgentSubscriber => {
       }
     },
     onRunErrorEvent: ({event}) => {
-      const code = event.code;
+      const mappedCode = mapRunErrorCode(event.code);
       dispatch(
         followUpFailed({
           message: event.message,
-          code: code ? Number(code) : undefined,
+          code: mappedCode,
           answerId: runId,
         })
       );

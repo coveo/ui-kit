@@ -88,7 +88,12 @@ export class AtomicAnswerContent extends LitElement {
       isStreaming,
       citations = [],
       answerId,
+      error,
     } = this.generatedAnswer || {};
+
+    if (error) {
+      return this.renderError();
+    }
 
     if (!answer || !answerId) {
       return html``;
@@ -174,5 +179,15 @@ export class AtomicAnswerContent extends LitElement {
       default:
         return this.i18n.t('copy-generated-answer');
     }
+  }
+
+  private renderError(): TemplateResult {
+    return html`
+    <div part="generated-answer-error">
+      <p>
+        ${this.i18n.t('generated-answer-error-generic')}
+      </p>
+    </div>
+  `;
   }
 }
