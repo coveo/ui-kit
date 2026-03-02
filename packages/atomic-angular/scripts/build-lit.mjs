@@ -1,26 +1,23 @@
-import {readFileSync, writeFileSync} from 'node:fs';
+import {mkdirSync, writeFileSync} from 'node:fs';
+import {join} from 'node:path';
 import cem from '@coveo/atomic/custom-elements-manifest' with {type: 'json'};
 
-const atomicAngularModuleFilePath =
-  'projects/atomic-angular/src/lib/stencil-generated/atomic-angular.module.ts';
-const atomicAngularComponentFilePath =
-  'projects/atomic-angular/src/lib/stencil-generated/components.ts';
-const atomicAngularModuleFileContent = readFileSync(
-  atomicAngularModuleFilePath,
-  'utf-8'
+const stencilGeneratedDir = 'projects/atomic-angular/src/lib/stencil-generated';
+
+const atomicAngularModuleFilePath = join(
+  stencilGeneratedDir,
+  'atomic-angular.module.ts'
 );
-let atomicAngularComponentFileContent = readFileSync(
-  atomicAngularComponentFilePath,
-  'utf-8'
+const atomicAngularComponentFilePath = join(
+  stencilGeneratedDir,
+  'components.ts'
 );
 
-const startTag = '//#region Lit Declarations';
-const endTag = '//#endregion Lit Declarations';
+mkdirSync(stencilGeneratedDir, {recursive: true});
 
 const litDeclarations = [];
 const litImports = new Set();
 const defineCustomElementImports = new Set();
-let hasLitComponentsWithEvents = false;
 
 const isLitDeclaration = (declaration) =>
   declaration?.superclass?.name === 'LitElement';
@@ -28,13 +25,28 @@ const isLitDeclaration = (declaration) =>
 const declarationToLitImport = (declaration) =>
   `${declaration.name} as Lit${declaration.name}`;
 
-const declarationToDefineCustomElementImport = (declaration) =>
-  `defineCustomElement${declaration.name}`;
-
 const declarationToProxyCmp = (declaration, defineCustomElementFn) =>
   `
 @ProxyCmp({
-  inputs: [${(declaration.attributes || []).map((attr) => `'${attr.fieldName}'`).join(', ')}],
+  inputs: [${(declaration.attributes || [])
+    .flatMap((attribute) => {
+      if (!attribute.fieldName) {
+        return [];
+      }
+      const member = declaration.members?.find(
+        (m) => m.name === attribute.fieldName
+      );
+      if (
+        !member ||
+        member.privacy === 'private' ||
+        member.privacy === 'protected' ||
+        member.kind !== 'field'
+      ) {
+        return [];
+      }
+      return [`'${attribute.fieldName}'`];
+    })
+    .join(', ')}],
   methods: [${(declaration.members || [])
     .filter((member) => member.privacy === 'public' && member.kind === 'method')
     .map((method) => `'${method.name}'`)
@@ -65,7 +77,10 @@ ${(declaration.events || [])
 }
 `;
 
-atomicAngularComponentFileContent = `${atomicAngularComponentFileContent.replace(new RegExp(`${startTag.replaceAll('/', '\\/')}.*?${endTag.replaceAll('/', '\\/')}`, 'gms'), '').trimEnd()}\n\n${startTag}\n`;
+let atomicAngularComponentFileContent = `
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, NgZone } from '@angular/core';
+import { ProxyCmp, proxyOutputs, proxyInputs, proxyMethods, defineCustomElement } from '../../utils';
+`;
 
 function processLitDeclaration(declaration) {
   atomicAngularComponentFileContent += declarationToProxyCmp(
@@ -74,39 +89,6 @@ function processLitDeclaration(declaration) {
   );
   litImports.add(declarationToLitImport(declaration));
   litDeclarations.push(`${declaration.name}`);
-  if (declaration.events?.length) {
-    hasLitComponentsWithEvents = true;
-  }
-}
-
-function processNonLitDeclaration(declaration) {
-  const defineCustomElementFn = `defineCustomElement${declaration.name}`;
-
-  const regex = new RegExp(
-    `@ProxyCmp\\(\\{([^}]*)\\}\\)\\s*\\n@Component\\(\\{([^}]*)\\}\\)\\s*\\nexport class\\s+${declaration.name}\\b`,
-    'gms'
-  );
-
-  if (!regex.test(atomicAngularComponentFileContent)) {
-    return;
-  }
-
-  atomicAngularComponentFileContent =
-    atomicAngularComponentFileContent.replaceAll(regex, (_match, p1, p2) => {
-      let newP1;
-      if (p1.includes('defineCustomElementFn')) {
-        newP1 = p1;
-      } else if (p1.trim()) {
-        newP1 = `${p1}, defineCustomElementFn: ${defineCustomElementFn}`;
-      } else {
-        newP1 = `defineCustomElementFn: ${defineCustomElementFn}`;
-      }
-      return `@ProxyCmp({${newP1}})\n@Component({standalone:false,${p2}})\nexport class ${declaration.name}`;
-    });
-
-  defineCustomElementImports.add(
-    declarationToDefineCustomElementImport(declaration)
-  );
 }
 
 // Sort modules by path to ensure deterministic processing order
@@ -121,64 +103,51 @@ for (const module of sortedModules) {
   for (const declaration of sortedDeclarations) {
     if (isLitDeclaration(declaration)) {
       processLitDeclaration(declaration);
-    } else {
-      processNonLitDeclaration(declaration);
     }
   }
 }
 
 if (litImports.size > 0) {
-  atomicAngularComponentFileContent += `\nimport {${[...litImports].sort().join(', ')}} from '@coveo/atomic/components';\n`;
+  atomicAngularComponentFileContent += `\n
+import {
+  ${[...litImports].sort().join(',\n  ')}
+} from '@coveo/atomic/components';\n`;
 }
 
 if (defineCustomElementImports.size > 0) {
-  atomicAngularComponentFileContent += `\nimport {${[...defineCustomElementImports].sort().join(', ')}} from '@coveo/atomic/components';\n`;
+  atomicAngularComponentFileContent += `
+import {
+  ${[...defineCustomElementImports].sort().join(',\n  ')}
+} from '@coveo/atomic/components';\n`;
 }
-
-// If any Lit components have events, ensure proxyOutputs and EventEmitter imports are present
-if (hasLitComponentsWithEvents) {
-  // Add proxyOutputs to the utils import if not already present in the import statement
-  if (
-    !/import\s*\{[^}]*proxyOutputs[^}]*\}\s*from\s*['"]\.\/angular-component-lib\/utils['"]/.test(
-      atomicAngularComponentFileContent
-    )
-  ) {
-    atomicAngularComponentFileContent =
-      atomicAngularComponentFileContent.replace(
-        /import \{ ProxyCmp \} from '\.\/angular-component-lib\/utils';/,
-        "import { ProxyCmp, proxyOutputs } from './angular-component-lib/utils';"
-      );
-  }
-
-  // Add EventEmitter type import from @angular/core if not already present
-  if (
-    !/import\s+type\s*\{[^}]*EventEmitter[^}]*\}\s*from\s*['"]@angular\/core['"]/.test(
-      atomicAngularComponentFileContent
-    )
-  ) {
-    atomicAngularComponentFileContent =
-      atomicAngularComponentFileContent.replace(
-        /import \{ Components \} from '@coveo\/atomic';/,
-        "import { Components } from '@coveo/atomic';\nimport type { EventEmitter } from '@angular/core';"
-      );
-  }
-}
-
-atomicAngularComponentFileContent += `${endTag}`;
 
 if (litDeclarations.length > 0) {
-  writeFileSync(
-    atomicAngularModuleFilePath,
-    atomicAngularModuleFileContent
-      .replace(
-        /const DECLARATIONS = \[\n/m,
-        `const DECLARATIONS = [\n${[...litDeclarations].sort().join(',\n')},\n`
-      )
-      .replace(
-        /^import \{$/m,
-        `import {\n${[...litDeclarations].sort().join(',\n')},`
-      )
-  );
+  const atomicAngularModuleFileContent = `
+import {CommonModule} from '@angular/common';
+import {ModuleWithProviders, NgModule} from '@angular/core';
+
+import {
+  ${[...litDeclarations].sort().join(',\n  ')}
+} from './components';
+
+const DECLARATIONS = [
+  ${[...litDeclarations].sort().join(',\n  ')}
+];
+
+@NgModule({
+  declarations: DECLARATIONS,
+  exports: DECLARATIONS,
+  imports: [CommonModule],
+})
+export class AtomicAngularModule {
+  static forRoot(): ModuleWithProviders<AtomicAngularModule> {
+    return {
+      ngModule: AtomicAngularModule,
+      providers: [],
+    };
+  }
+}`;
+  writeFileSync(atomicAngularModuleFilePath, atomicAngularModuleFileContent);
 }
 
 writeFileSync(

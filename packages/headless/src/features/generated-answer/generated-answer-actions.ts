@@ -50,6 +50,10 @@ import {
   constructGenerateHeadAnswerParams,
 } from './generated-answer-request.js';
 import {
+  GENERATION_STEP_NAMES,
+  type GenerationStepName,
+} from './generated-answer-state.js';
+import {
   type GeneratedContentFormat,
   type GeneratedResponseFormat,
   generatedContentFormat,
@@ -223,6 +227,30 @@ export const setAnswerApiQueryParams = createAction(
   'generatedAnswer/setAnswerApiQueryParams',
   (payload: Partial<AnswerApiQueryParams>) =>
     validatePayload(payload, new RecordValue({}))
+);
+
+export const startStep = createAction(
+  'generatedAnswer/startStep',
+  (payload: {name: GenerationStepName; startedAt: number}) =>
+    validatePayload(payload, {
+      name: new StringValue<GenerationStepName>({
+        required: true,
+        constrainTo: GENERATION_STEP_NAMES,
+      }),
+      startedAt: new NumberValue({min: 0, required: true}),
+    })
+);
+
+export const finishStep = createAction(
+  'generatedAnswer/finishStep',
+  (payload: {name: GenerationStepName; finishedAt: number}) =>
+    validatePayload(payload, {
+      name: new StringValue<GenerationStepName>({
+        required: true,
+        constrainTo: GENERATION_STEP_NAMES,
+      }),
+      finishedAt: new NumberValue({min: 0, required: true}),
+    })
 );
 
 interface StreamAnswerArgs {
