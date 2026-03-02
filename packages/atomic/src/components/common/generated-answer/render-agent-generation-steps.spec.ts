@@ -50,7 +50,7 @@ describe('#renderAgentGenerationSteps', () => {
 
     return {
       element,
-      label: element.querySelector('[part="is-generating"]'),
+      label: element.querySelector('[part="agent-generation-status"]'),
     };
   };
 

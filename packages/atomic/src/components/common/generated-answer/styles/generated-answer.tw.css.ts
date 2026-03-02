@@ -102,12 +102,12 @@ const baseStyle = css`
     @apply flex;
   }
 
-  [part='is-generating'] .generation-steps-container {
+  [part='agent-generation-status'] .generation-steps-container {
     @apply inline-flex overflow-hidden;
     perspective: 700px;
   }
 
-  [part='is-generating'] .generation-steps-value {
+  [part='agent-generation-status'] .generation-steps-value {
     @apply inline-block whitespace-nowrap;
     transform-origin: 50% 100%;
     /* Keep duration in sync with MIN_STEP_DISPLAY_DURATION_MS in the generated-answer TS logic. */

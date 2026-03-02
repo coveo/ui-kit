@@ -11,8 +11,8 @@ let lastDisplayedStepKey: string | undefined;
 let lastDisplayedStepAt: number = 0;
 
 const stepLabelKeys: Record<StepName, string> = {
-  search: 'agent-generation-step-search',
-  think: 'agent-generation-step-think',
+  searching: 'agent-generation-step-search',
+  thinking: 'agent-generation-step-think',
   answering: 'generating-answer',
 };
 
@@ -38,7 +38,7 @@ export const renderAgentGenerationSteps: FunctionalComponent<
       currentStepKey,
       html`
         <div
-          part="is-generating"
+          part="agent-generation-status"
           class="text-neutral-dark flex text-base font-light"
         >
           <span class="generation-steps-container">
@@ -99,7 +99,7 @@ export function getActiveStepKey(agentSteps: AgentStep[]): string | undefined {
 
 /**
  * Returns the label key for the latest completed step using step priority.
- * Priority order is `answering` > `think` > `search`.
+ * Priority order is `answering` > `thinking` > `searching`.
  */
 export function getLatestCompletedStepKey(
   agentSteps: AgentStep[]
