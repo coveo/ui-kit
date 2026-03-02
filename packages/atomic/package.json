@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic",
   "type": "module",
-  "version": "3.50.0",
+  "version": "3.51.0",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -80,8 +80,6 @@
     "e2e:hsp:watch": "cypress open --config-file cypress-hsp.config.mjs",
     "e2e:snapshots": "cypress run --config-file cypress-screenshots.config.mjs --browser chrome",
     "e2e:snapshots:watch": "cypress open --config-file cypress-screenshots.config.mjs --browser chrome",
-    "e2e:insight": "cypress run --config-file cypress-insight-panel.config.mjs --browser chrome",
-    "e2e:insight:watch": "cypress open --config-file cypress-insight-panel.config.mjs --browser chrome",
     "generate-component": "node ./scripts/generate-component.mjs",
     "release:phase3": "pnpm --filter @coveo/ci npm-publish",
     "release:phase1": "pnpm --filter @coveo/ci bump",
@@ -121,8 +119,6 @@
     "@rollup/plugin-node-resolve": "16.0.1",
     "@rollup/plugin-replace": "catalog:",
     "@stencil-community/postcss": "2.2.0",
-    "@stencil/angular-output-target": "0.8.4",
-    "@stencil/react-output-target": "0.5.3",
     "@storybook/addon-a11y": "10.0.8",
     "@storybook/addon-docs": "10.0.8",
     "@storybook/addon-mcp": "0.1.3",
