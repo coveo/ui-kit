@@ -38,8 +38,8 @@ export const renderFollowUpInput: FunctionalComponent<
 
     isSubmitting = true;
     try {
-      await askFollowUp(inputValue);
       input.value = '';
+      await askFollowUp(inputValue);
     } finally {
       isSubmitting = false;
     }
