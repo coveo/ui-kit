@@ -48,12 +48,24 @@ export interface GeneratedAnswer extends Controller {
   retry(): void;
   /**
    * Indicates that the generated answer met the user expectations.
+   * @deprecated The no-argument `like` method is deprecated and will be removed in a future major version.
    */
   like(): void;
   /**
+   * Indicates that the generated answer met the user expectations.
+   * @param answerId - Answer Id of the liked answer.
+   */
+  like(answerId: string): void;
+  /**
    * Marks the generated answer as not relevant to the end user.
+   * @deprecated The no-argument `dislike` method is deprecated and will be removed in a future major version.
    */
   dislike(): void;
+  /**
+   * Marks the generated answer as not relevant to the end user.
+   * @param answerId - Answer Id of the disliked answer.
+   */
+  dislike(answerId: string): void;
   /**
    * Opens the modal to provide feedback about why the generated answer was not relevant.
    */
@@ -110,7 +122,6 @@ export interface GeneratedAnswer extends Controller {
   /**
    * Logs a custom event indicating a cited source link was clicked.
    * @param citationId - The ID of the clicked citation.
-   * @deprecated The `logCitationClick` method is deprecated and will be removed in a future major version.
    */
   logCitationClick(citationId: string, answerId: string): void;
   /**
@@ -249,17 +260,27 @@ export function buildCoreGeneratedAnswer(
       return getState().generatedAnswer;
     },
 
-    like() {
+    // TODO: SFINT-6665
+    like(answerId?: string) {
       if (!this.state.liked) {
         dispatch(likeGeneratedAnswer());
-        dispatch(analyticsClient.logLikeGeneratedAnswer());
+        dispatch(
+          answerId
+            ? analyticsClient.logLikeGeneratedAnswer(answerId)
+            : analyticsClient.logLikeGeneratedAnswer()
+        );
       }
     },
 
-    dislike() {
+    // TODO: SFINT-6665
+    dislike(answerId?: string) {
       if (!this.state.disliked) {
         dispatch(dislikeGeneratedAnswer());
-        dispatch(analyticsClient.logDislikeGeneratedAnswer());
+        dispatch(
+          answerId
+            ? analyticsClient.logDislikeGeneratedAnswer(answerId)
+            : analyticsClient.logDislikeGeneratedAnswer()
+        );
       }
     },
 
@@ -276,13 +297,29 @@ export function buildCoreGeneratedAnswer(
       dispatch(sendGeneratedAnswerFeedback());
     },
 
-    logCitationClick(citationId: string) {
-      dispatch(analyticsClient.logOpenGeneratedAnswerSource(citationId));
+    // TODO: SFINT-6665
+    logCitationClick(citationId: string, answerId?: string) {
+      dispatch(
+        answerId
+          ? analyticsClient.logOpenGeneratedAnswerSource(citationId, answerId)
+          : analyticsClient.logOpenGeneratedAnswerSource(citationId)
+      );
     },
 
-    logCitationHover(citationId: string, citationHoverTimeMs: number) {
+    // TODO: SFINT-6665
+    logCitationHover(
+      citationId: string,
+      citationHoverTimeMs: number,
+      answerId?: string
+    ) {
       dispatch(
-        analyticsClient.logHoverCitation(citationId, citationHoverTimeMs)
+        answerId
+          ? analyticsClient.logHoverCitation(
+              citationId,
+              citationHoverTimeMs,
+              answerId
+            )
+          : analyticsClient.logHoverCitation(citationId, citationHoverTimeMs)
       );
     },
 
@@ -326,8 +363,13 @@ export function buildCoreGeneratedAnswer(
       }
     },
 
-    logCopyToClipboard() {
-      dispatch(analyticsClient.logCopyGeneratedAnswer());
+    // TODO: SFINT-6665
+    logCopyToClipboard(answerId?: string) {
+      dispatch(
+        answerId
+          ? analyticsClient.logCopyGeneratedAnswer(answerId)
+          : analyticsClient.logCopyGeneratedAnswer()
+      );
     },
 
     retry() {},

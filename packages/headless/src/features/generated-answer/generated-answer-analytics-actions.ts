@@ -43,6 +43,7 @@ export const logRetryGeneratedAnswer = (): LegacySearchAction =>
     client.makeRetryGeneratedAnswer()
   );
 
+// TODO: SFINT-6665
 // Overloading the function here for backward compatibility because #logOpenGeneratedAnswerSource will eventually take an answerId.
 export function logOpenGeneratedAnswerSource(citationId: string): CustomAction;
 export function logOpenGeneratedAnswerSource(
@@ -91,6 +92,7 @@ export function logOpenGeneratedAnswerSource(
   });
 }
 
+// SFINT-6665
 // Overloading the function here for backward compatibility because #logHoverCitation will eventually take an answerId.
 export function logHoverCitation(
   citationId: string,
@@ -143,6 +145,7 @@ export function logHoverCitation(
   });
 }
 
+// SFINT-6665
 // Overloading the function here for backward compatibility because #logLikeGeneratedAnswer will eventually take an answerId.
 export function logLikeGeneratedAnswer(): CustomAction;
 export function logLikeGeneratedAnswer(answerId: string): CustomAction;
@@ -171,6 +174,7 @@ export function logLikeGeneratedAnswer(answerId?: string): CustomAction {
   });
 }
 
+// SFINT-6665
 // Overloading the function here for backward compatibility because #logDislikeGeneratedAnswer will eventually take an answerId.
 export function logDislikeGeneratedAnswer(): CustomAction;
 export function logDislikeGeneratedAnswer(answerId: string): CustomAction;
@@ -392,6 +396,8 @@ export const logGeneratedAnswerCollapse = (): CustomAction =>
     },
   });
 
+// TODO: SFINT-6665
+// Overloading the function here for backward compatibility because #logOpenGeneratedAnswerSource will eventually take an answerId.
 export function logCopyGeneratedAnswer(): CustomAction;
 export function logCopyGeneratedAnswer(answerId: string): CustomAction;
 export function logCopyGeneratedAnswer(answerId?: string): CustomAction {

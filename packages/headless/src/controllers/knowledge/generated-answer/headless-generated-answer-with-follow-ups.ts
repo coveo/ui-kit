@@ -62,6 +62,13 @@ export interface GeneratedAnswerWithFollowUps extends GeneratedAnswer {
   ): void;
 
   /**
+   * Logs a click on a cited source link for analytics.
+   * @param citationId - The ID of the clicked citation.
+   * @param answerId - Optional ID of the answer for which the citation was clicked. Defaults to the head answer.
+   */
+  logCitationClick(citationId: string, answerId?: string): void;
+
+  /**
    * Logs a copy-to-clipboard interaction for analytics.
    * @param answerId - Optional ID of the copied answer. Defaults to the current answer.
    */
@@ -150,9 +157,12 @@ export function buildGeneratedAnswerWithFollowUps(
         followUpAnswers: followUpAnswersState,
       };
     },
+
     retry() {
       engine.dispatch(generateHeadAnswer());
     },
+
+    // TODO: SFINT-6665
     like(answerId?: string) {
       if (!answerId || this.state.answerId === answerId) {
         controller.like();
@@ -161,6 +171,8 @@ export function buildGeneratedAnswerWithFollowUps(
       engine.dispatch(likeFollowUp({answerId}));
       engine.dispatch(analyticsClient.logLikeGeneratedAnswer(answerId));
     },
+
+    // TODO: SFINT-6665
     dislike(answerId?: string) {
       if (!answerId || this.state.answerId === answerId) {
         controller.dislike();
@@ -169,6 +181,8 @@ export function buildGeneratedAnswerWithFollowUps(
       engine.dispatch(dislikeFollowUp({answerId}));
       engine.dispatch(analyticsClient.logDislikeGeneratedAnswer(answerId));
     },
+
+    // TODO: SFINT-6665
     logCopyToClipboard(answerId?: string) {
       if (!answerId || this.state.answerId === answerId) {
         controller.logCopyToClipboard();
@@ -176,6 +190,8 @@ export function buildGeneratedAnswerWithFollowUps(
       }
       engine.dispatch(analyticsClient.logCopyGeneratedAnswer(answerId));
     },
+
+    // TODO: SFINT-6665
     logCitationClick(citationId: string, answerId?: string) {
       if (!answerId || this.state.answerId === answerId) {
         controller.logCitationClick(citationId);
@@ -185,6 +201,8 @@ export function buildGeneratedAnswerWithFollowUps(
         analyticsClient.logOpenGeneratedAnswerSource(citationId, answerId)
       );
     },
+
+    // TODO: SFINT-6665
     logCitationHover(
       citationId: string,
       citationHoverTimeMs: number,
@@ -202,6 +220,7 @@ export function buildGeneratedAnswerWithFollowUps(
         )
       );
     },
+
     askFollowUp(question: string) {
       if (!question || question.trim() === '') {
         return;
