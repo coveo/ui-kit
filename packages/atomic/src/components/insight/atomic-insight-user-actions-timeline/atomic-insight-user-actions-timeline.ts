@@ -43,7 +43,7 @@ export class AtomicInsightUserActionsTimeline
   implements InitializableComponent<InsightBindings>
 {
   static styles = css`
-    @reference '../../../../utils/tailwind.global.tw.css';
+    @reference '../../../utils/tailwind.global.tw.css';
 
     .separator {
       height: 1px;

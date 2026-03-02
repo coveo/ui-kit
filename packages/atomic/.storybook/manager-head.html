@@ -1,5 +1,105 @@
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<script
+  type="module"
+  src="https://static.cloud.coveo.com/atomic/v3/atomic.esm.js"
+></script>
+<link
+  rel="stylesheet"
+  href="https://static.cloud.coveo.com/atomic/v3/themes/coveo.css"
+/>
+<style>
+  /* Storybook-internal selectors — not part of Storybook's public API.
+     These may break on Storybook upgrades. Validated by:
+     src/storybook-manager/e2e/storybook-manager.e2e.ts */
+  section.sb-bar {
+    overflow: visible;
+    height: 58px;
+    display: flex;
+    align-items: center;
+  }
+
+  section.sb-bar > div > div:first-child {
+    flex: 1;
+  }
+
+  #coveo-docs-search-container {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    flex: 1;
+    position: relative;
+  }
+
+  #coveo-docs-search-container atomic-search-interface {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #coveo-docs-search-container atomic-search-box {
+    --atomic-search-box-height: 34px;
+    --atomic-search-box-border-radius: 17px;
+    --atomic-text-base: 13px;
+    height: 34px;
+    width: min(380px, 100%);
+  }
+
+  @media (min-width: 1500px) {
+    #coveo-docs-search-container atomic-search-box {
+      width: 50%;
+    }
+  }
+
+  #coveo-docs-search-container atomic-search-box::part(wrapper) {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    height: 34px;
+    align-items: center;
+  }
+
+  #coveo-docs-search-container atomic-search-box::part(textarea-expander)::after,
+  #coveo-docs-search-container atomic-search-box::part(textarea) {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  #coveo-docs-search-container atomic-search-box::part(wrapper):focus-within {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+
+  #coveo-docs-search-container atomic-search-box::part(input) {
+    color: #fff;
+    line-height: 34px;
+    padding: 0 12px;
+  }
+
+  #coveo-docs-search-container atomic-search-box::part(input)::placeholder,
+  #coveo-docs-search-container atomic-search-box::part(textarea)::placeholder {
+    color: transparent;
+  }
+
+  #coveo-docs-search-container atomic-search-box::part(submit-icon),
+  #coveo-docs-search-container atomic-search-box::part(clear-icon) {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  #coveo-docs-search-container atomic-search-box::part(submit-button) {
+    width: 34px;
+    height: 34px;
+    background: transparent;
+  }
+
+  #coveo-docs-search-container atomic-search-box::part(suggestions-wrapper) {
+    z-index: 9999;
+  }
+
+  #coveo-docs-search-container atomic-search-box::part(suggestions-single-list) {
+    white-space: normal;
+  }
+</style>
 <script type="module">
-  import {disableBlockedKeys, getOptanonConsentCookie, updateCookieSettings } from './cookieManager.js';
+  import {disableBlockedKeys, updateCookieSettings } from './cookieManager.js';
 
   updateCookieSettings();
   disableBlockedKeys();

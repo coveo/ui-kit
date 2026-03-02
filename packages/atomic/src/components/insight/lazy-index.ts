@@ -52,6 +52,10 @@ export default {
     ),
   'atomic-insight-result': async () =>
     await import('./atomic-insight-result/atomic-insight-result.js'),
+  'atomic-insight-result-action': async () =>
+    await import(
+      './atomic-insight-result-action/atomic-insight-result-action.js'
+    ),
   'atomic-insight-result-action-bar': async () =>
     await import(
       './atomic-insight-result-action-bar/atomic-insight-result-action-bar.js'
@@ -67,6 +71,10 @@ export default {
   'atomic-insight-result-children': async () =>
     await import(
       './atomic-insight-result-children/atomic-insight-result-children.js'
+    ),
+  'atomic-insight-result-children-template': async () =>
+    await import(
+      './atomic-insight-result-children-template/atomic-insight-result-children-template.js'
     ),
   'atomic-insight-result-list': async () =>
     await import('./atomic-insight-result-list/atomic-insight-result-list.js'),
