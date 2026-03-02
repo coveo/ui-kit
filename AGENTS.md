@@ -9,9 +9,9 @@
 
 ## Structure
 
-- `packages/atomic/`: Lit-based Atomic component library
-- `packages/headles/`: Redux-based Headless library
-- `packages/quantic/`: Salesforce Lightning component library
+- `packages/atomic/`: Lit-based Atomic component library; built on top of headless
+- `packages/headles/`: Redux-based Headless library; built on top of the Coveo REST APIs
+- `packages/quantic/`: Salesforce Lightning component library; built on top of headless
 
 ## Technology
 
