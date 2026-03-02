@@ -9,6 +9,7 @@ import {
 import {css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {renderIconButton} from '@/src/components/common/icon-button';
+import type {AtomicIpxRefineModal} from '@/src/components/ipx/atomic-ipx-refine-modal/atomic-ipx-refine-modal';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -17,7 +18,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import FilterIcon from '../../../images/filter.svg';
-// import '@/src/components/ipx/atomic-ipx-refine-modal/atomic-ipx-refine-modal'; // TODO: uncomment when KIT-5352 is done
+import '@/src/components/ipx/atomic-ipx-refine-modal/atomic-ipx-refine-modal';
 
 /**
  * The `atomic-ipx-refine-toggle` component displays a button that, when clicked, opens a refine modal containing facets.
@@ -74,7 +75,7 @@ export class AtomicIpxRefineToggle
   private searchStatusState!: SearchStatusState;
   public searchStatus!: SearchStatus;
 
-  private modalRef?: HTMLAtomicIpxRefineModalElement;
+  private modalRef?: AtomicIpxRefineModal;
   private buttonRef?: HTMLButtonElement;
   private modalLoaded = false;
 

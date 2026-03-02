@@ -13,6 +13,7 @@ import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
 } from '../../../../features/commerce/facets/date-facet/date-facet-actions.js';
+import {commerceFacetOrderReducer as facetOrder} from '../../../../features/commerce/facets/facet-order/commerce-facet-order-slice.js';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice.js';
 import type {FacetType} from '../../../../features/commerce/facets/facet-set/interfaces/common.js';
 import type {
@@ -35,7 +36,6 @@ import {
   toggleSelectFacetValue,
 } from '../../../../features/commerce/facets/regular-facet/regular-facet-actions.js';
 import {findActiveValueAncestry} from '../../../../features/facets/category-facet-set/category-facet-utils.js';
-import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice.js';
 import type {
   CommerceFacetSetSection,
   FacetOrderSection,
