@@ -15,12 +15,12 @@
 
 ## Atomic Package Structure
 
-- `src/components/commerce/`: Commerce components (`atomic-commerce-*`)
-- `src/components/common/`: Shared components (mainly functional components)
-- `src/components/insight/`: Insight panel components (`atomic-insight-*`)
-- `src/components/ipx/`: In-Product Experience components (`atomic-ipx-*`)
-- `src/components/recommendations/`: Recommendations components (`atomic-recs-*`)
-- `src/components/search/`: Search components (`atomic-*`)
+- `src/components/commerce/` - Components exclusive to the commerce use-case
+- `src/components/common/` - Shared components across all interfaces
+- `src/components/insight/` - Components exclusive to the Insight use-case
+- `src/components/ipx/` - Components exclusive to the In-Product Experience use case
+- `src/components/recommendations/` - Components exclusive to the Recommendations use case
+- `src/components/search/` - Components exclusive to the search use-case
 
 ### Atomic Component Folder Structure
 
