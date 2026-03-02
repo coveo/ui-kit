@@ -48,7 +48,7 @@ export interface GeneratedAnswer extends Controller {
   retry(): void;
   /**
    * Indicates that the generated answer met the user expectations.
-   * @deprecated The no-argument `like` method is deprecated and will be removed in a future major version.
+   * @deprecated The no-argument `like` method is deprecated and will be removed in a future major version. The method will now take a required `answerId` parameter to specify which answer is being liked, and will log the like action with the provided `answerId` for analytics.
    */
   like(): void;
   /**
@@ -58,7 +58,7 @@ export interface GeneratedAnswer extends Controller {
   like(answerId: string): void;
   /**
    * Marks the generated answer as not relevant to the end user.
-   * @deprecated The no-argument `dislike` method is deprecated and will be removed in a future major version.
+   * @deprecated The no-argument `dislike` method is deprecated and will be removed in a future major version. The method will now take a required `answerId` parameter to specify which answer is being disliked, and will log the dislike action with the provided `answerId` for analytics.
    */
   dislike(): void;
   /**
@@ -105,7 +105,7 @@ export interface GeneratedAnswer extends Controller {
   disable(): void;
   /**
    * Logs a custom event indicating the generated answer was copied to the clipboard.
-   * @deprecated The `logCopyToClipboard` method is deprecated and will be removed in a future major version.
+   * @deprecated The `logCopyToClipboard` method is deprecated and will be removed in a future major version. The method will now take a required `answerId` parameter to specify which answer is being copied, and will log the copy action with the provided `answerId` for analytics.
    */
   logCopyToClipboard(): void;
   /**
@@ -116,7 +116,7 @@ export interface GeneratedAnswer extends Controller {
   /**
    * Logs a custom event indicating a cited source link was clicked.
    * @param citationId - The ID of the clicked citation.
-   * @deprecated The `logCitationClick` method is deprecated and will be removed in a future major version.
+   * @deprecated The `logCitationClick` method is deprecated and will be removed in a future major version. The method will now take a required `answerId` parameter to specify which answer is being clicked, and will log the click action with the provided `answerId` for analytics.
    */
   logCitationClick(citationId: string): void;
   /**
@@ -128,7 +128,7 @@ export interface GeneratedAnswer extends Controller {
    * Logs a custom event indicating a cited source link was hovered.
    * @param citationId - The ID of the clicked citation.
    * @param citationHoverTimeMs - The number of milliseconds spent hovering over the citation.
-   * @deprecated The `logCitationHover` method is deprecated and will be removed in a future major version.
+   * @deprecated The `logCitationHover` method is deprecated and will be removed in a future major version. The method will now take a required `answerId` parameter to specify which answer is being hovered, and will log the hover action with the provided `answerId` for analytics.
    */
   logCitationHover(citationId: string, citationHoverTimeMs: number): void;
   /**

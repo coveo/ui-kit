@@ -39,13 +39,13 @@ export interface GeneratedAnswerWithFollowUps extends GeneratedAnswer {
   state: GeneratedAnswerWithFollowUpsState;
   /**
    * Marks the answer as liked.
-   * @param answerId - Optional ID of the answer to like. Defaults to the head answer.
+   * @param answerId - Optional ID of the answer to like. Defaults to the first answer.
    */
   like(answerId?: string): void;
 
   /**
    * Marks the answer as disliked.
-   * @param answerId - Optional ID of the answer to dislike. Defaults to the head answer.
+   * @param answerId - Optional ID of the answer to dislike. Defaults to the first answer.
    */
   dislike(answerId?: string): void;
 
@@ -53,7 +53,7 @@ export interface GeneratedAnswerWithFollowUps extends GeneratedAnswer {
    * Logs a custom event indicating a cited source link was hovered.
    * @param citationId - The ID of the clicked citation.
    * @param citationHoverTimeMs - The number of milliseconds spent hovering over the citation.
-   * @param answerId - Optional ID of the answer for which the citation was hovered. Defaults to the head answer.
+   * @param answerId - Optional ID of the answer for which the citation was hovered. Defaults to the first answer.
    */
   logCitationHover(
     citationId: string,
@@ -64,13 +64,13 @@ export interface GeneratedAnswerWithFollowUps extends GeneratedAnswer {
   /**
    * Logs a click on a cited source link for analytics.
    * @param citationId - The ID of the clicked citation.
-   * @param answerId - Optional ID of the answer for which the citation was clicked. Defaults to the head answer.
+   * @param answerId - Optional ID of the answer for which the citation was clicked. Defaults to the first answer.
    */
   logCitationClick(citationId: string, answerId?: string): void;
 
   /**
    * Logs a copy-to-clipboard interaction for analytics.
-   * @param answerId - Optional ID of the copied answer. Defaults to the current answer.
+   * @param answerId - Optional ID of the copied answer. Defaults to the first answer.
    */
   logCopyToClipboard(answerId?: string): void;
 
