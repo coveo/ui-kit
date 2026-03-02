@@ -131,3 +131,59 @@ export interface A11yReport {
   criteria: A11yCriterionReport[];
   summary: A11ySummary;
 }
+
+// ── Script shared types ──────────────────────────────────────────────────────
+
+/** Valid manual audit status values. */
+export type AuditStatus = 'pass' | 'fail' | 'partial' | 'not-applicable';
+
+/**
+ * A single component entry in a delta file.
+ * Used by manual-audit-delta, generate-a11y-issues, and ai-wcag-audit scripts.
+ */
+export interface DeltaEntry {
+  name: string;
+  surface: string;
+  auditor: string;
+  auditDate?: string;
+  results: {
+    keyboardNav?: string;
+    screenReader?: string;
+    focusManagement?: string;
+    wcag22Criteria?: Record<string, string>;
+    notes: string;
+  };
+}
+
+/**
+ * Complete delta file structure written by audit scripts.
+ */
+export interface DeltaFile {
+  file: string;
+  filePath: string;
+  data: {
+    date: string;
+    pr: string | number;
+    auditor: string;
+    entries: DeltaEntry[];
+  };
+}
+
+/**
+ * A single component entry in a baseline manual-audit JSON file.
+ */
+export interface BaselineEntry {
+  name: string;
+  category: string;
+  manual: {
+    status: string;
+    tier: number;
+    keyboardNav: string;
+    screenReader: string;
+    focusManagement: string;
+    wcag22Criteria: Record<string, string>;
+    notes: string;
+    lastAuditDate?: string;
+    auditor?: string;
+  };
+}
