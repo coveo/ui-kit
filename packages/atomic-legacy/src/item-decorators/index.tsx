@@ -1,2 +1,2 @@
-export * from './product.js';
-export * from './result.js';
+export {productContext} from './product.js';
+export {resultContext} from './result.js';
