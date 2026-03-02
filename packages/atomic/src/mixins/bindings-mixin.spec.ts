@@ -12,10 +12,10 @@ import {
 } from 'vitest';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import type {InitializableComponent} from '@/src/decorators/types';
-import {fetchBindings} from '@/src/utils/initialization-lit-stencil-common-utils';
+import {fetchBindings} from '@/src/utils/initialization-common-utils';
 import {InitializeBindingsMixin} from './bindings-mixin';
 
-vi.mock('@/src/utils/initialization-lit-stencil-common-utils', {spy: true});
+vi.mock('@/src/utils/initialization-common-utils', {spy: true});
 
 const mockBindings = () =>
   ({

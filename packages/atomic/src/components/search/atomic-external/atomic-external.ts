@@ -14,7 +14,7 @@ import {
 import {
   type AtomicInterface,
   initializeEventName,
-} from '@/src/utils/initialization-lit-stencil-common-utils';
+} from '@/src/utils/initialization-common-utils';
 
 /**
  * The `atomic-external` component allows components defined outside of the `atomic-search-interface` to initialize.
