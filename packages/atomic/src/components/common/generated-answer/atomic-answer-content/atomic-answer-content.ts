@@ -183,11 +183,11 @@ export class AtomicAnswerContent extends LitElement {
 
   private renderError(): TemplateResult {
     return html`
-    <div part="generated-answer-error">
-      <p>
-        ${this.i18n.t('generated-answer-error-generic')}
-      </p>
-    </div>
-  `;
+      <div part="generated-answer-error">
+        <p>
+          ${this.i18n.t('generated-answer-error-generic')}
+        </p>
+      </div>
+    `;
   }
 }
