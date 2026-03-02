@@ -79,7 +79,10 @@ const meta: Meta = {
   argTypes,
   beforeEach: async () => {
     insightApiHarness.searchEndpoint.clear();
-    insightApiHarness.searchEndpoint.mockOnce(() => baseFoldedResponse);
+    insightApiHarness.searchEndpoint.mock(() => baseFoldedResponse);
+    return () => {
+      insightApiHarness.searchEndpoint.reset();
+    };
   },
   play,
 };

@@ -8,7 +8,9 @@ import {
 import {baseResponse as baseHtmlResponse} from './html-response.js';
 import {baseResponse as baseQuerySuggestResponse} from './querySuggest-response.js';
 import {
+  baseFoldedResponse,
   baseResponse as baseSearchResponse,
+  nestedFoldedResponse,
   type SearchResponse,
 } from './search-response.js';
 
@@ -62,4 +64,4 @@ export class MockSearchApi implements MockApi {
 }
 
 // TODO: Remove exports once the concept is fully internalized.
-export {baseSearchResponse};
+export {baseSearchResponse, baseFoldedResponse, nestedFoldedResponse};

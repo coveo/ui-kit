@@ -1,0 +1,108 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicInsightResultActionStories from './atomic-insight-result-action.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicInsightResultActionStories} />
+
+<AtomicDocTemplate
+  stories={AtomicInsightResultActionStories}
+  defaultStory="Default"
+  githubPath="insight/atomic-insight-result-action/atomic-insight-result-action.ts"
+  tagName="atomic-insight-result-action"
+  className="AtomicInsightResultAction"
+>
+
+Place this component directly inside `atomic-result-section-actions` for always-visible actions, or inside an `atomic-insight-result-action-bar` for actions that appear on hover.
+
+### Always visible
+
+```html
+<atomic-insight-result-template>
+  <template>
+    <atomic-result-section-actions>
+      <atomic-insight-result-action
+        action="copyToClipboard"
+        tooltip="Copy"
+        tooltip-on-click="Copied!"
+      ></atomic-insight-result-action>
+    </atomic-result-section-actions>
+  </template>
+</atomic-insight-result-template>
+```
+
+### Visible on hover
+
+```html
+<atomic-insight-result-template>
+  <template>
+    <atomic-result-section-actions>
+      <atomic-insight-result-action-bar>
+        <atomic-insight-result-action
+          action="copyToClipboard"
+          tooltip="Copy"
+          tooltip-on-click="Copied!"
+        ></atomic-insight-result-action>
+      </atomic-insight-result-action-bar>
+    </atomic-result-section-actions>
+  </template>
+</atomic-insight-result-template>
+```
+
+## Available actions
+
+The component supports the following built-in action types, each with a default icon:
+
+| Action | Description | Default Icon |
+|--------|-------------|--------------|
+| `copyToClipboard` | Copies the result's click URI to the clipboard | Copy icon |
+| `attachToCase` | Attaches the result to a case | Attach icon |
+| `quickview` | Opens a quickview of the result | Preview icon |
+| `postToFeed` | Posts the result to a feed | Share icon |
+| `sendAsEmail` | Sends the result as an email | Email icon |
+
+## Handling events
+
+Listen for the `atomicInsightResultActionClicked` event to implement custom logic:
+
+```javascript
+document.addEventListener('atomicInsightResultActionClicked', (event) => {
+  const { action, result } = event.detail;
+  
+  switch (action) {
+    case 'copyToClipboard':
+      // The component automatically copies to clipboard,
+      // but you can add additional logic here
+      console.log('Copied:', result.clickUri);
+      break;
+    case 'attachToCase':
+      // Implement your attach-to-case logic
+      break;
+    case 'quickview':
+      // Implement your quickview logic
+      break;
+    case 'postToFeed':
+      // Implement your post-to-feed logic
+      break;
+    case 'sendAsEmail':
+      // Implement your send-as-email logic
+      break;
+    default:
+      // Handle custom actions
+      console.log('Custom action:', action);
+  }
+});
+```
+
+## Custom icons
+
+You can provide a custom SVG icon using the `icon` property:
+
+```html
+<atomic-insight-result-action
+  action="customAction"
+  tooltip="Custom action"
+  icon="<svg>...</svg>"
+></atomic-insight-result-action>
+```
+
+</AtomicDocTemplate>
