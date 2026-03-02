@@ -1,16 +1,20 @@
-import type {AgentStep, StepName} from '@coveo/headless';
-import {STEP_NAMES} from '@coveo/headless';
+import type {GenerationStep, GenerationStepName} from '@coveo/headless';
 import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {keyed} from 'lit/directives/keyed.js';
 import {when} from 'lit/directives/when.js';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 
+export const GENERATION_STEP_NAMES = [
+  'searching',
+  'thinking',
+  'answering',
+] as const;
 const MIN_STEP_DISPLAY_DURATION_MS = 1500;
 let lastDisplayedStepKey: string | undefined;
 let lastDisplayedStepAt: number = 0;
 
-const stepLabelKeys: Record<StepName, string> = {
+const stepLabelKeys: Record<GenerationStepName, string> = {
   searching: 'agent-generation-step-search',
   thinking: 'agent-generation-step-think',
   answering: 'generating-answer',
@@ -18,7 +22,7 @@ const stepLabelKeys: Record<StepName, string> = {
 
 export interface RenderAgentGenerationStepsProps {
   i18n: i18n;
-  agentSteps: AgentStep[];
+  agentSteps: GenerationStep[];
   isStreaming: boolean;
 }
 
@@ -59,12 +63,12 @@ export const renderAgentGenerationSteps: FunctionalComponent<
  * 3) Latest completed step by step priority.
  */
 export function getCurrentStepKey(
-  agentSteps: AgentStep[],
+  generationSteps: GenerationStep[],
   now = Date.now()
 ): string | undefined {
   const nextStepKey =
-    getActiveStepKey(agentSteps) ?? getLatestCompletedStepKey(agentSteps);
-
+    getActiveStepKey(generationSteps) ??
+    getLatestCompletedStepKey(generationSteps);
   if (!nextStepKey) {
     lastDisplayedStepKey = undefined;
     lastDisplayedStepAt = 0;
@@ -92,8 +96,10 @@ export function getCurrentStepKey(
 /**
  * Returns the label key for the currently active step, when present.
  */
-export function getActiveStepKey(agentSteps: AgentStep[]): string | undefined {
-  const activeStep = agentSteps.find((step) => step.status === 'active');
+export function getActiveStepKey(
+  generationSteps: GenerationStep[]
+): string | undefined {
+  const activeStep = generationSteps.find((step) => step.status === 'active');
   return activeStep ? stepLabelKeys[activeStep.name] : undefined;
 }
 
@@ -102,10 +108,10 @@ export function getActiveStepKey(agentSteps: AgentStep[]): string | undefined {
  * Priority order is `answering` > `thinking` > `searching`.
  */
 export function getLatestCompletedStepKey(
-  agentSteps: AgentStep[]
+  generationStep: GenerationStep[]
 ): string | undefined {
-  for (const stepName of [...STEP_NAMES].reverse()) {
-    const completedStep = agentSteps.find(
+  for (const stepName of [...GENERATION_STEP_NAMES].reverse()) {
+    const completedStep = generationStep.find(
       (step) => step.name === stepName && step.status === 'completed'
     );
 
