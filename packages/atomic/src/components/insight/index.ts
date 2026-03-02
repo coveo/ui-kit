@@ -16,10 +16,12 @@ export {AtomicInsightQuerySummary} from './atomic-insight-query-summary/atomic-i
 export {AtomicInsightRefineModal} from './atomic-insight-refine-modal/atomic-insight-refine-modal.js';
 export {AtomicInsightRefineToggle} from './atomic-insight-refine-toggle/atomic-insight-refine-toggle.js';
 export {AtomicInsightResult} from './atomic-insight-result/atomic-insight-result.js';
+export {AtomicInsightResultAction} from './atomic-insight-result-action/atomic-insight-result-action.js';
 export {AtomicInsightResultActionBar} from './atomic-insight-result-action-bar/atomic-insight-result-action-bar.js';
 export {AtomicInsightResultAttachToCaseAction} from './atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action.js';
 export {AtomicInsightResultAttachToCaseIndicator} from './atomic-insight-result-attach-to-case-indicator/atomic-insight-result-attach-to-case-indicator.js';
 export {AtomicInsightResultChildren} from './atomic-insight-result-children/atomic-insight-result-children.js';
+export {AtomicInsightResultChildrenTemplate} from './atomic-insight-result-children-template/atomic-insight-result-children-template.js';
 export {AtomicInsightResultList} from './atomic-insight-result-list/atomic-insight-result-list.js';
 export {AtomicInsightResultQuickviewAction} from './atomic-insight-result-quickview-action/atomic-insight-result-quickview-action.js';
 export {AtomicInsightResultTemplate} from './atomic-insight-result-template/atomic-insight-result-template.js';
