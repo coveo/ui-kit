@@ -111,9 +111,6 @@ overrides:
   html-minifier: npm:html-minifier-terser@^7.2.0
 
 patchedDependencies:
-  '@stencil/angular-output-target@0.8.4':
-    hash: ffa6652e9d95e4699aeb937bae0dc81fc675329b4fc1c26251086764254c2e1f
-    path: patches/@stencil+angular-output-target+0.8.4.patch
   '@stencil/core@4.20.0':
     hash: 2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9
     path: patches/@stencil+core+4.20.0.patch
@@ -282,9 +279,6 @@ importers:
       '@stencil-community/postcss':
         specifier: 2.2.0
         version: 2.2.0(@stencil/core@4.20.0(patch_hash=2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9))
-      '@stencil/angular-output-target':
-        specifier: 0.8.4
-        version: 0.8.4(patch_hash=ffa6652e9d95e4699aeb937bae0dc81fc675329b4fc1c26251086764254c2e1f)(@stencil/core@4.20.0(patch_hash=2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9))
       '@storybook/addon-a11y':
         specifier: 10.0.8
         version: 10.0.8(storybook@10.0.8(@testing-library/dom@10.4.1)(msw@2.11.4(@types/node@22.16.5)(typescript@5.8.3))(prettier@3.6.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vite@7.2.2(@types/node@22.16.5)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.30.1)(sass@1.97.3)(terser@5.46.0)(yaml@2.8.2)))
@@ -5583,11 +5577,6 @@ packages:
     resolution: {integrity: sha512-PuPdjqgF6HdvSLwS6fpLf1TRzd3bd6zqpsICCUA0u9sxPnwrsIpx1xYyA/K9hSWrmyUg0WhHPvkX9k26N5DCnw==}
     peerDependencies:
       '@stencil/core': '>=2.0.0 || >=3.0.0 || >=4.0.0'
-
-  '@stencil/angular-output-target@0.8.4':
-    resolution: {integrity: sha512-QvmHTueXXs5vB9W2L12uEzFmAuR8sqATJV2b+SCFmYsjJSaymiSqR3dKo2wnr0tZiTgU1t16BWaUKiSh3wPXpw==}
-    peerDependencies:
-      '@stencil/core': '>=2.0.0 || >=3 || >= 4.0.0-beta.0 || >= 4.0.0'
 
   '@stencil/core@4.20.0':
     resolution: {integrity: sha512-WPrTHFngvN081RY+dJPneKQLwnOFD60OMCOQGmmSHfCW0f4ujPMzzhwWU1gcSwXPWXz5O+8cBiiCaxAbJU7kAg==}
@@ -19110,10 +19099,6 @@ snapshots:
     dependencies:
       '@stencil/core': 4.20.0(patch_hash=2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9)
       postcss: 8.4.49
-
-  '@stencil/angular-output-target@0.8.4(patch_hash=ffa6652e9d95e4699aeb937bae0dc81fc675329b4fc1c26251086764254c2e1f)(@stencil/core@4.20.0(patch_hash=2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9))':
-    dependencies:
-      '@stencil/core': 4.20.0(patch_hash=2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9)
 
   '@stencil/core@4.20.0(patch_hash=2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9)': {}
 
