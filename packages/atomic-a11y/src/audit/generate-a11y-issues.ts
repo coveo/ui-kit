@@ -16,14 +16,15 @@
 import {execSync} from 'node:child_process';
 import {readdir} from 'node:fs/promises';
 import path from 'node:path';
-import {readJsonFile} from '../src/shared/file-utils.js';
-
-const REPORTS_DIR = 'a11y/reports';
-const DELTAS_DIR = path.join(REPORTS_DIR, 'deltas');
-const DELTA_PATTERN = /^delta-(\d{4}-\d{2}-\d{2})-([\w-]+)\.json$/;
-const AUDIT_FILE_PATTERN = /^manual-audit-(.+)\.json$/;
-const VIOLATIONS_FILE_PATTERN = /^manual-audit-(.+)-violations\.json$/;
-const REPO = 'coveo/ui-kit';
+import {
+  AUDIT_FILE_PATTERN,
+  DELTA_PATTERN,
+  DELTAS_DIR,
+  GITHUB_REPO,
+  REPORTS_DIR,
+  VIOLATIONS_FILE_PATTERN,
+} from '../shared/constants.js';
+import {readJsonFile} from '../shared/file-utils.js';
 
 interface CriterionInfo {
   criterion: string;
@@ -138,24 +139,23 @@ async function extractFromViolationsFile(
   return issues;
 }
 
-interface DeltaEntry {
-  name: string;
-  surface: string;
-  results?: {
-    keyboardNav?: string;
-    screenReader?: string;
-    focusManagement?: string;
-    wcag22Criteria?: Record<string, string>;
-    notes?: string;
-  };
-}
-
-interface DeltaFile {
-  entries?: DeltaEntry[];
+/** Loose shape for reading delta file content (fields may be missing in real data). */
+interface DeltaFileContent {
+  entries?: Array<{
+    name: string;
+    surface: string;
+    results?: {
+      keyboardNav?: string;
+      screenReader?: string;
+      focusManagement?: string;
+      wcag22Criteria?: Record<string, string>;
+      notes?: string;
+    };
+  }>;
 }
 
 async function extractFromDeltaFile(filePath: string): Promise<Issue[]> {
-  const content = await readJsonFile<DeltaFile>(filePath);
+  const content = await readJsonFile<DeltaFileContent>(filePath);
   if (!content || !Array.isArray(content.entries)) {
     return [];
   }
@@ -357,7 +357,7 @@ function buildGhCommand(issue: Issue): string {
 
   return [
     `gh issue create \\`,
-    `  --repo "${REPO}" \\`,
+    `  --repo "${GITHUB_REPO}" \\`,
     `  --title "${title.replace(/"/g, '\\"')}" \\`,
     `  --label "${labels}" \\`,
     `  --body "$(cat <<'ISSUE_EOF'`,
@@ -367,7 +367,7 @@ function buildGhCommand(issue: Issue): string {
   ].join('\n');
 }
 
-async function main(): Promise<void> {
+export async function main(): Promise<void> {
   const args = process.argv.slice(2);
   const execute = args.includes('--execute');
   const jsonOutput = args.includes('--json');
@@ -468,7 +468,7 @@ async function main(): Promise<void> {
       try {
         const body = buildIssueBody(issue);
         execSync(
-          `gh issue create --repo "${REPO}" --title "${title.replace(/"/g, '\\"')}" --label "a11y" --body-file -`,
+          `gh issue create --repo "${GITHUB_REPO}" --title "${title.replace(/"/g, '\\"')}" --label "a11y" --body-file -`,
           {input: body, stdio: ['pipe', 'inherit', 'inherit']}
         );
         console.log(`  ✅ Created\n`);
@@ -487,8 +487,3 @@ async function main(): Promise<void> {
     );
   }
 }
-
-main().catch((error) => {
-  console.error('Failed to generate issues:', error);
-  process.exit(1);
-});

@@ -18,57 +18,19 @@
 import {mkdir, readdir, readFile, rename, writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import {
+  ARCHIVE_DIR,
   BASELINE_FILE_PATTERN,
   DELTA_PATTERN,
+  DELTAS_DIR,
+  REPORTS_DIR,
   VALID_STATUSES,
-} from '../src/shared/constants.js';
-import {readJsonFile} from '../src/shared/file-utils.js';
-import {isRecord} from '../src/shared/guards.js';
+  VALID_SURFACES,
+  VALID_WCAG_KEYS,
+} from '../shared/constants.js';
+import {readJsonFile} from '../shared/file-utils.js';
+import {isRecord} from '../shared/guards.js';
 
-const REPORTS_DIR = 'a11y/reports';
-const DELTAS_DIR = path.join(REPORTS_DIR, 'deltas');
-const ARCHIVE_DIR = path.join(DELTAS_DIR, 'archived');
-
-const VALID_SURFACES = new Set([
-  'commerce',
-  'search',
-  'insight',
-  'ipx',
-  'common',
-  'recommendations',
-]);
-
-const VALID_WCAG_KEYS = new Set([
-  '2.4.11-focus-not-obscured',
-  '2.5.7-dragging-movements',
-  '2.5.8-target-size',
-  '3.2.6-consistent-help',
-  '3.3.7-redundant-entry',
-  '3.3.8-accessible-auth',
-  '1.3.2-meaningful-sequence',
-  '1.3.3-sensory-characteristics',
-  '1.3.4-orientation',
-  '1.4.5-images-of-text',
-  '1.4.10-reflow',
-  '1.4.11-non-text-contrast',
-  '1.4.13-content-on-hover-focus',
-  '3.3.3-error-suggestion',
-  '3.3.4-error-prevention',
-]);
-
-interface DeltaEntry {
-  name: string;
-  surface: string;
-  auditor: string;
-  auditDate?: string;
-  results: {
-    keyboardNav?: string;
-    screenReader?: string;
-    focusManagement?: string;
-    wcag22Criteria?: Record<string, string>;
-    notes: string;
-  };
-}
+import type {BaselineEntry, DeltaEntry, DeltaFile} from '../shared/types.js';
 
 function validateDeltaEntry(entry: unknown, index: number): string[] {
   const errors: string[] = [];
@@ -185,22 +147,6 @@ function validateDeltaFile(content: string, filePath: string): string[] {
   return errors;
 }
 
-interface BaselineEntry {
-  name: string;
-  category: string;
-  manual: {
-    status: string;
-    tier: number;
-    keyboardNav: string;
-    screenReader: string;
-    focusManagement: string;
-    wcag22Criteria: Record<string, string>;
-    notes: string;
-    lastAuditDate?: string;
-    auditor?: string;
-  };
-}
-
 interface Baseline {
   filePath: string;
   entries: BaselineEntry[];
@@ -223,17 +169,6 @@ async function loadBaselines(): Promise<Map<string, Baseline>> {
   }
 
   return baselines;
-}
-
-interface DeltaFile {
-  file: string;
-  filePath: string;
-  data: {
-    date: string;
-    pr: string | number;
-    auditor: string;
-    entries: DeltaEntry[];
-  };
 }
 
 async function loadDeltas(): Promise<DeltaFile[]> {
@@ -291,7 +226,7 @@ function applyDelta(
     }
     existing.manual.notes = results.notes;
     existing.manual.status = 'complete';
-    existing.manual.lastAuditDate = deltaEntry.auditDate ?? results.notes;
+    existing.manual.lastAuditDate = deltaEntry.auditDate;
     existing.manual.auditor = deltaEntry.auditor;
     return 'updated';
   }
@@ -303,7 +238,7 @@ function applyDelta(
       status: 'complete',
       tier: 2,
       keyboardNav: results.keyboardNav ?? 'not-applicable',
-      screenReader: results.screenReader ?? 'pass',
+      screenReader: results.screenReader ?? 'not-applicable',
       focusManagement: results.focusManagement ?? 'not-applicable',
       wcag22Criteria: {
         '2.4.11-focus-not-obscured': 'not-applicable',
@@ -315,7 +250,7 @@ function applyDelta(
         ...(results.wcag22Criteria ?? {}),
       },
       notes: results.notes,
-      lastAuditDate: deltaEntry.auditDate ?? results.notes,
+      lastAuditDate: deltaEntry.auditDate,
       auditor: deltaEntry.auditor,
     },
   });
@@ -489,29 +424,21 @@ async function runStatus(): Promise<void> {
   console.log(`\n=== Archived Deltas: ${archivedCount} ===`);
 }
 
-const [command, ...args] = process.argv.slice(2);
+export async function main(): Promise<void> {
+  const [command, ...args] = process.argv.slice(2);
 
-switch (command) {
-  case 'validate':
-    runValidate(args[0]).catch((error) => {
-      console.error(error);
-      process.exit(1);
-    });
-    break;
-  case 'merge':
-    runMerge(args.includes('--dry-run')).catch((error) => {
-      console.error(error);
-      process.exit(1);
-    });
-    break;
-  case 'status':
-    runStatus().catch((error) => {
-      console.error(error);
-      process.exit(1);
-    });
-    break;
-  default:
-    console.log(`Usage:
+  switch (command) {
+    case 'validate':
+      await runValidate(args[0]);
+      break;
+    case 'merge':
+      await runMerge(args.includes('--dry-run'));
+      break;
+    case 'status':
+      await runStatus();
+      break;
+    default:
+      console.log(`Usage:
   node a11y/scripts/manual-audit-delta.mjs validate <delta-file>
   node a11y/scripts/manual-audit-delta.mjs merge [--dry-run]
   node a11y/scripts/manual-audit-delta.mjs status
@@ -538,5 +465,6 @@ Delta file format (a11y/reports/deltas/delta-YYYY-MM-DD-<context>.json):
     }
   ]
 }`);
-    break;
+      break;
+  }
 }

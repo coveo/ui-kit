@@ -20,6 +20,20 @@
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",
     "axe-core": "4.10.3",
+    "openai": "6.22.0",
+    "playwright": "catalog:",
     "typescript": "catalog:"
+  },
+  "peerDependencies": {
+    "openai": ">=4.0.0",
+    "playwright": ">=1.40.0"
+  },
+  "peerDependenciesMeta": {
+    "openai": {
+      "optional": true
+    },
+    "playwright": {
+      "optional": true
+    }
   }
 }
