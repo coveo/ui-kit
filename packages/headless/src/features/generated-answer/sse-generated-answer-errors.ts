@@ -9,19 +9,18 @@ export enum GeneratedAnswerSseErrorCode {
   SseInternalError = 1004,
 }
 
-export const generatedAnswerSseErrorMap: Record<
-  string,
-  GeneratedAnswerSseErrorCode
-> = {
-  'KNOWLEDGE:SSE_MAX_DURATION_EXCEEDED':
-    GeneratedAnswerSseErrorCode.SseMaxDurationExceeded,
-  'KNOWLEDGE:SSE_FOLLOW_UP_NOT_SUPPORTED':
-    GeneratedAnswerSseErrorCode.SseFollowUpNotSupported,
-  'KNOWLEDGE:NOT_FOUND': GeneratedAnswerSseErrorCode.ConversationNotFound,
-  'KNOWLEDGE:SSE_MODELS_NOT_AVAILABLE':
-    GeneratedAnswerSseErrorCode.SseModelsNotAvailable,
-  'KNOWLEDGE:SSE_INTERNAL_ERROR': GeneratedAnswerSseErrorCode.SseInternalError,
-};
+const generatedAnswerSseErrorMap: Record<string, GeneratedAnswerSseErrorCode> =
+  {
+    'KNOWLEDGE:SSE_MAX_DURATION_EXCEEDED':
+      GeneratedAnswerSseErrorCode.SseMaxDurationExceeded,
+    'KNOWLEDGE:SSE_FOLLOW_UP_NOT_SUPPORTED':
+      GeneratedAnswerSseErrorCode.SseFollowUpNotSupported,
+    'KNOWLEDGE:NOT_FOUND': GeneratedAnswerSseErrorCode.ConversationNotFound,
+    'KNOWLEDGE:SSE_MODELS_NOT_AVAILABLE':
+      GeneratedAnswerSseErrorCode.SseModelsNotAvailable,
+    'KNOWLEDGE:SSE_INTERNAL_ERROR':
+      GeneratedAnswerSseErrorCode.SseInternalError,
+  };
 
 /**
  * Maps backend error codes to frontend error codes for generated answer SSE errors.
