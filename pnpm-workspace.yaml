@@ -9,3 +9,5 @@ minimumReleaseAgeExclude:
   - "@coveo-platform/*"
   # Renovate security update: next@16.1.5
   - next@16.1.5
+  # Renovate security update: rollup@4.59.0
+  - rollup@4.59.0
