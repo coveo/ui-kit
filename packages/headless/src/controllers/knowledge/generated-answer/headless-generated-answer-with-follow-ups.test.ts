@@ -237,6 +237,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
           question: 'What about X?',
           answer: 'Answer about X',
           citations: [],
+          generationSteps: [],
           answerId: 'follow-up-1',
           isLoading: false,
           isStreaming: false,
@@ -308,10 +309,6 @@ describe('GeneratedAnswerWithFollowUps', () => {
     });
 
     it('should delegate to core like when answerId matches head answer', () => {
-      mockSelectAnswer.mockReturnValue({
-        data: {answerId: headAnswerId},
-      } as ReturnType<typeof selectAnswer>);
-
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.like(headAnswerId);
@@ -323,10 +320,6 @@ describe('GeneratedAnswerWithFollowUps', () => {
     });
 
     it('should dispatch likeFollowUp when answerId targets a follow-up answer', () => {
-      mockSelectAnswer.mockReturnValue({
-        data: {answerId: headAnswerId},
-      } as ReturnType<typeof selectAnswer>);
-
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.like(followUpAnswerId);
@@ -359,10 +352,6 @@ describe('GeneratedAnswerWithFollowUps', () => {
     });
 
     it('should delegate to core dislike when answerId matches head answer', () => {
-      mockSelectAnswer.mockReturnValue({
-        data: {answerId: headAnswerId},
-      } as ReturnType<typeof selectAnswer>);
-
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.dislike(headAnswerId);
@@ -374,10 +363,6 @@ describe('GeneratedAnswerWithFollowUps', () => {
     });
 
     it('should dispatch dislikeFollowUp when answerId targets a follow-up answer', () => {
-      mockSelectAnswer.mockReturnValue({
-        data: {answerId: headAnswerId},
-      } as ReturnType<typeof selectAnswer>);
-
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.dislike(followUpAnswerId);
@@ -411,10 +396,6 @@ describe('GeneratedAnswerWithFollowUps', () => {
     });
 
     it('should delegate to core logCopyToClipboard when answerId matches head answer', () => {
-      mockSelectAnswer.mockReturnValue({
-        data: {answerId: headAnswerId},
-      } as ReturnType<typeof selectAnswer>);
-
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.logCopyToClipboard(headAnswerId);
@@ -425,10 +406,6 @@ describe('GeneratedAnswerWithFollowUps', () => {
     });
 
     it('should dispatch copy analytics when answerId targets a follow-up answer', () => {
-      mockSelectAnswer.mockReturnValue({
-        data: {answerId: headAnswerId},
-      } as ReturnType<typeof selectAnswer>);
-
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.logCopyToClipboard(followUpAnswerId);
@@ -439,6 +416,15 @@ describe('GeneratedAnswerWithFollowUps', () => {
   });
 
   describe('logCitationClick', () => {
+    beforeEach(() => {
+      engine = buildEngineWithGeneratedAnswer({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          answerId: 'head-id',
+        },
+      });
+    });
+
     it('should delegate to core logCitationClick when no answerId is provided', () => {
       const controller = createGeneratedAnswerWithFollowUps();
 
@@ -449,9 +435,12 @@ describe('GeneratedAnswerWithFollowUps', () => {
     });
 
     it('should delegate to core logCitationClick when answerId matches head answer', () => {
-      mockSelectAnswer.mockReturnValue({
-        data: {answerId: headAnswerId},
-      } as ReturnType<typeof selectAnswer>);
+      engine = buildEngineWithGeneratedAnswer({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          answerId: headAnswerId,
+        },
+      });
 
       const controller = createGeneratedAnswerWithFollowUps();
 
@@ -462,10 +451,6 @@ describe('GeneratedAnswerWithFollowUps', () => {
     });
 
     it('should dispatch citation click analytics when answerId targets a follow-up answer', () => {
-      mockSelectAnswer.mockReturnValue({
-        data: {answerId: headAnswerId},
-      } as ReturnType<typeof selectAnswer>);
-
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.logCitationClick(citationId, followUpAnswerId);
@@ -479,6 +464,15 @@ describe('GeneratedAnswerWithFollowUps', () => {
   });
 
   describe('logCitationHover', () => {
+    beforeEach(() => {
+      engine = buildEngineWithGeneratedAnswer({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          answerId: 'head-id',
+        },
+      });
+    });
+
     it('should delegate to core logCitationHover when no answerId is provided', () => {
       const controller = createGeneratedAnswerWithFollowUps();
 
@@ -489,9 +483,12 @@ describe('GeneratedAnswerWithFollowUps', () => {
     });
 
     it('should delegate to core logCitationHover when answerId matches head answer', () => {
-      mockSelectAnswer.mockReturnValue({
-        data: {answerId: headAnswerId},
-      } as ReturnType<typeof selectAnswer>);
+      engine = buildEngineWithGeneratedAnswer({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          answerId: headAnswerId,
+        },
+      });
 
       const controller = createGeneratedAnswerWithFollowUps();
 
@@ -502,10 +499,6 @@ describe('GeneratedAnswerWithFollowUps', () => {
     });
 
     it('should dispatch citation hover analytics when answerId targets a follow-up answer', () => {
-      mockSelectAnswer.mockReturnValue({
-        data: {answerId: headAnswerId},
-      } as ReturnType<typeof selectAnswer>);
-
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.logCitationHover(citationId, 10, followUpAnswerId);
