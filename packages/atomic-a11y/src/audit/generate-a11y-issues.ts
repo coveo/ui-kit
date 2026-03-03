@@ -6,9 +6,9 @@
  * --execute mode.
  *
  * Usage:
- *   node a11y/scripts/generate-a11y-issues.mjs            # Dry run — prints commands
- *   node a11y/scripts/generate-a11y-issues.mjs --execute   # Files issues via gh CLI
- *   node a11y/scripts/generate-a11y-issues.mjs --json      # Output structured JSON
+ *   node ./script/generate-a11y-issues.mjs            # Dry run — prints commands
+ *   node ./script/generate-a11y-issues.mjs --execute   # Files issues via gh CLI
+ *   node ./script/generate-a11y-issues.mjs --json      # Output structured JSON
  *
  * CWD assumption: run from a package root that contains ./a11y/reports.
  */
@@ -483,7 +483,7 @@ export async function main(): Promise<void> {
 
   if (!execute) {
     console.log(
-      `\n💡 To file these ${deduplicated.length} issues, run:\n   node a11y/scripts/generate-a11y-issues.mjs --execute\n`
+      `\n💡 To file these ${deduplicated.length} issues, run:\n   node ./script/generate-a11y-issues.mjs --execute\n`
     );
   }
 }

@@ -4,9 +4,9 @@
  * QA workflow tool for maintaining manual accessibility audits.
  *
  * Commands:
- *   node a11y/scripts/manual-audit-delta.mjs validate <delta-file>
- *   node a11y/scripts/manual-audit-delta.mjs merge [--dry-run]
- *   node a11y/scripts/manual-audit-delta.mjs status
+ *   node ./script/manual-audit-delta.mjs validate <delta-file>
+ *   node ./script/manual-audit-delta.mjs merge [--dry-run]
+ *   node ./script/manual-audit-delta.mjs status
  *
  * Delta files live in a11y/reports/deltas/ and follow a strict schema.
  * The merge command folds all deltas into the baseline audit files,
@@ -260,7 +260,7 @@ function applyDelta(
 async function runValidate(filePath: string | undefined): Promise<void> {
   if (!filePath) {
     console.error(
-      'Usage: node a11y/scripts/manual-audit-delta.mjs validate <delta-file>'
+      'Usage: node ./script/manual-audit-delta.mjs validate <delta-file>'
     );
     process.exit(1);
   }
@@ -439,9 +439,9 @@ export async function main(): Promise<void> {
       break;
     default:
       console.log(`Usage:
-  node a11y/scripts/manual-audit-delta.mjs validate <delta-file>
-  node a11y/scripts/manual-audit-delta.mjs merge [--dry-run]
-  node a11y/scripts/manual-audit-delta.mjs status
+  node ./script/manual-audit-delta.mjs validate <delta-file>
+  node ./script/manual-audit-delta.mjs merge [--dry-run]
+  node ./script/manual-audit-delta.mjs status
 
 Delta file format (a11y/reports/deltas/delta-YYYY-MM-DD-<context>.json):
 {

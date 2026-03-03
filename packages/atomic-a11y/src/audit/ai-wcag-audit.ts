@@ -56,6 +56,7 @@ interface Config {
   storybookUrl: string;
   help: boolean;
   batch: boolean;
+  showGroups: boolean;
 }
 
 function parseArgs(): Config {
@@ -72,6 +73,7 @@ function parseArgs(): Config {
       'storybook-url': {type: 'string', default: 'http://localhost:4400'},
       help: {type: 'boolean', default: false},
       batch: {type: 'boolean', default: false},
+      'show-groups': {type: 'boolean', default: false},
     },
     strict: false,
     allowPositionals: false,
@@ -89,6 +91,7 @@ function parseArgs(): Config {
     storybookUrl: (values['storybook-url'] as string).replace(/\/$/, ''),
     help: values.help as boolean,
     batch: values.batch as boolean,
+    showGroups: values['show-groups'] as boolean,
   };
 
   const validSurfaces = [
@@ -114,7 +117,7 @@ function printHelp(): void {
 Evaluates Storybook components against 21 WCAG 2.2 criteria using LLM vision analysis.
 
 Usage:
-  node a11y/scripts/ai-wcag-audit.mjs [options]
+  node scripts/ai-wcag-audit.mjs [options]
 
 Options:
   --surface <name>        Surface to audit: commerce, search, insight, ipx, recommendations, all (default: all)
@@ -126,23 +129,25 @@ Options:
   --concurrency <n>       Number of parallel LLM calls (default: 1)
   --verbose               Print raw LLM responses for debugging
   --batch                 Group similar components and use differential audits for variants
+  --show-groups           Print batch groupings and exit (requires --batch)
   --help                  Show this help message
 
 Environment:
   GITHUB_TOKEN            Required. GitHub PAT with 'models' scope for GitHub Models API.
 
 Examples:
-  node a11y/scripts/ai-wcag-audit.mjs --surface commerce
-  node a11y/scripts/ai-wcag-audit.mjs --component atomic-commerce-facet --verbose
-  node a11y/scripts/ai-wcag-audit.mjs --surface commerce --max-components 25
-  node a11y/scripts/ai-wcag-audit.mjs --surface commerce --resume
-  node a11y/scripts/ai-wcag-audit.mjs --surface search --model gpt-4o-mini
-  node a11y/scripts/ai-wcag-audit.mjs --surface commerce --batch
+  node scripts/ai-wcag-audit.mjs --surface commerce
+  node scripts/ai-wcag-audit.mjs --component atomic-commerce-facet --verbose
+  node scripts/ai-wcag-audit.mjs --surface commerce --max-components 25
+  node scripts/ai-wcag-audit.mjs --surface commerce --resume
+  node scripts/ai-wcag-audit.mjs --surface search --model gpt-4o-mini
+  node scripts/ai-wcag-audit.mjs --surface commerce --batch
+  node scripts/ai-wcag-audit.mjs --surface commerce --batch --show-groups
 
 Output:
   Delta files in a11y/reports/deltas/delta-YYYY-MM-DD-ai-audit-<surface>.json
-  Validate with: node a11y/scripts/manual-audit-delta.mjs validate <delta-file>
-  Merge with:    node a11y/scripts/manual-audit-delta.mjs merge --dry-run`);
+  Validate with: node scripts/manual-audit-delta.mjs validate <delta-file>
+  Merge with:    node scripts/manual-audit-delta.mjs merge --dry-run`);
   process.exit(0);
 }
 
@@ -606,6 +611,30 @@ export async function main(): Promise<void> {
     estimatedCalls = remaining.length * 2;
   }
 
+  if (config.showGroups) {
+    if (!config.batch) {
+      console.error('Error: --show-groups requires --batch.');
+      process.exit(1);
+    }
+
+    if (groups.length === 0) {
+      console.log('No batch groups found for the selected components.');
+      process.exit(0);
+    }
+
+    console.log('Batch groups (archetype → members):\n');
+    for (const group of groups) {
+      const members = group.members
+        .filter((member) => member !== group.archetypeComponent)
+        .sort((a, b) => a.localeCompare(b, 'en-US'));
+      const memberList =
+        members.length > 0 ? members.join(', ') : '(no variants)';
+      console.log(`  ${group.archetypeComponent} → ${memberList}`);
+    }
+
+    process.exit(0);
+  }
+
   console.log(`Model:       ${config.model}`);
   console.log(`Surface:     ${config.surface}`);
   console.log(`Storybook:   ${config.storybookUrl}`);
@@ -903,7 +932,7 @@ export async function main(): Promise<void> {
       `Progress saved: ${progressState.completedComponents.size} of ${stories.length} components completed.`
     );
     console.log(
-      `Resume with: node a11y/scripts/ai-wcag-audit.mjs` +
+      `Resume with: node scripts/ai-wcag-audit.mjs` +
         (config.surface !== 'all' ? ` --surface ${config.surface}` : '') +
         ` --resume`
     );
@@ -956,7 +985,7 @@ export async function main(): Promise<void> {
   console.log('');
   console.log('Next steps:');
   for (const f of writtenFiles) {
-    console.log(`  node a11y/scripts/manual-audit-delta.mjs validate ${f}`);
+    console.log(`  node scripts/manual-audit-delta.mjs validate ${f}`);
   }
-  console.log('  node a11y/scripts/manual-audit-delta.mjs merge --dry-run');
+  console.log('  node scripts/manual-audit-delta.mjs merge --dry-run');
 }
