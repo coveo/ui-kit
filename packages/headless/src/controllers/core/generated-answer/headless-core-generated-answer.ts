@@ -126,14 +126,14 @@ export interface GeneratedAnswer extends Controller {
   logCitationClick(citationId: string, answerId: string): void;
   /**
    * Logs a custom event indicating a cited source link was hovered.
-   * @param citationId - The ID of the clicked citation.
+   * @param citationId - The ID of the hovered citation.
    * @param citationHoverTimeMs - The number of milliseconds spent hovering over the citation.
    * @deprecated The `logCitationHover` method is deprecated and will be removed in a future major version. The method will now take a required `answerId` parameter to specify which answer is being hovered, and will log the hover action with the provided `answerId` for analytics.
    */
   logCitationHover(citationId: string, citationHoverTimeMs: number): void;
   /**
    * Logs a custom event indicating a cited source link was hovered.
-   * @param citationId - The ID of the clicked citation.
+   * @param citationId - The ID of the hovered citation.
    * @param citationHoverTimeMs - The number of milliseconds spent hovering over the citation.
    * @param answerId - Answer Id of the hovered citation's answer.
    */

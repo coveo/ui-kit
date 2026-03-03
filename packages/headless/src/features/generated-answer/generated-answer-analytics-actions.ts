@@ -397,7 +397,7 @@ export const logGeneratedAnswerCollapse = (): CustomAction =>
   });
 
 // TODO: SFINT-6665
-// Overloading the function here for backward compatibility because #logOpenGeneratedAnswerSource will eventually take an answerId.
+// Overloading the function here for backward compatibility because #logCopyGeneratedAnswer will eventually take an answerId.
 export function logCopyGeneratedAnswer(): CustomAction;
 export function logCopyGeneratedAnswer(answerId: string): CustomAction;
 export function logCopyGeneratedAnswer(answerId?: string): CustomAction {

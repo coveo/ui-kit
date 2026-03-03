@@ -51,7 +51,7 @@ export interface GeneratedAnswerWithFollowUps extends GeneratedAnswer {
 
   /**
    * Logs a custom event indicating a cited source link was hovered.
-   * @param citationId - The ID of the clicked citation.
+   * @param citationId - The ID of the hovered citation.
    * @param citationHoverTimeMs - The number of milliseconds spent hovering over the citation.
    * @param answerId - Optional ID of the answer for which the citation was hovered. Defaults to the first answer.
    */
