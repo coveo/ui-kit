@@ -512,6 +512,9 @@ importers:
 
   packages/atomic-legacy:
     dependencies:
+      '@coveo/headless':
+        specifier: workspace:*
+        version: link:../headless
       '@stencil/core':
         specifier: 'catalog:'
         version: 4.20.0(patch_hash=2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9)
