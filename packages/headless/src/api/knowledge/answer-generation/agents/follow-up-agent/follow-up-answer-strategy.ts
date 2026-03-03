@@ -66,7 +66,7 @@ export const createFollowUpStrategy = (dispatch: Dispatch): AgentSubscriber => {
               })
             );
           }
-          break;
+          return;
         }
         case 'citations': {
           dispatch(
@@ -75,7 +75,7 @@ export const createFollowUpStrategy = (dispatch: Dispatch): AgentSubscriber => {
               answerId: runId,
             })
           );
-          break;
+          return;
         }
       }
     },

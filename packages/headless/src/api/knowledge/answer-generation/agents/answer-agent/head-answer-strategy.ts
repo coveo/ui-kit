@@ -62,11 +62,11 @@ export const createHeadAnswerStrategy = (
           if (value?.followUpEnabled) {
             dispatch(setIsEnabled(value.followUpEnabled));
           }
-          break;
+          return;
         }
         case 'citations': {
           dispatch(updateCitations({citations: value.citations}));
-          break;
+          return;
         }
       }
     },
