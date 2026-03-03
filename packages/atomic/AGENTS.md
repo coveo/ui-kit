@@ -47,27 +47,6 @@ packages/atomic/
 └── vitest-utils/            # Test setup & helpers
 ```
 
-### Atomic Component Structure
-
-```
-atomic-{component-name}/
-├── atomic-{component-name}.ts              # Main component (Lit)
-├── atomic-{component-name}.tw.css.ts       # Styles (Tailwind; optional)
-├── atomic-{component-name}.spec.ts         # Unit tests (Vitest)
-├── atomic-{component-name}.mdx             # Public documentation (Storybook)
-├── atomic-{component-name}.new.stories.tsx # Stories (Storybook)
-├── e2e/                                    # E2E tests (Playwright)
-│   ├── atomic-{component-name}.e2e.ts      # Test suite
-│   ├── page-object.ts                      # Page object
-│   └── fixture.ts                          # Test fixtures
-└── *.ts                                    # Supporting files (optional)
-```
-
-**Notes**:
-- The `.tw.css.ts` file is only included when complex styles are required; otherwise component styles are usually set directly in the Lit component's static `styles` property
-- Complex components may have multiple `.ts` helper files
-- Internal components may lack the `e2e/` directory
-
 ## Atomic Package Technology
 
 In addition to the technology listed in the root `AGENTS.md` file, the following technology is used in the Atomic package:
