@@ -22,16 +22,7 @@ When instructions conflict, apply this precedence order:
 
 ## Documentation
 
-**Self-documenting code over inline comments.** Use descriptive names and clear structure.
-
 **Public API documentation is required.** Use JSDoc for components, exported functions, and public methods.
-
-**Inline comments only for:**
-- Complex business logic that isn't obvious from code
-- Non-obvious technical decisions or workarounds
-- Lint/type violation justifications (`// biome-ignore`, etc.)
-
-**Never write comments that restate what code does.**
 
 ## Code Review & Quality
 
@@ -70,46 +61,6 @@ Don't suggest boilerplate unless necessary and relevant.
 
 **Trade-offs:** Choose clarity over compact/clever code. Document performance-critical code with brief rationale.
 
-## Testing
-
-**Test one behavior per test case.** Avoid monolithic tests verifying multiple unrelated behaviors.
-
-**Descriptive test names** starting with "should" that explain expected behavior.
-
-**Focused assertions** - one logical assertion per test (multiple calls for same behavior are acceptable).
-
-**Follow package-specific conventions** (see `.github/instructions/tests-*.instructions.md`).
-
-## Path References
-
-**Always use project-relative paths.** Omit everything before the `ui-kit` segment.
-
-**Examples:**
-
-❌ **Bad - Absolute paths with username:**
-```
-/Users/username/Projects/ui-kit/packages/headless/...
-/home/user/workspace/ui-kit/...
-C:\Users\username\projects\ui-kit\packages\...
-```
-
-✅ **Good - Project-relative paths:**
-```
-packages/headless/src/controllers/...
-.github/instructions/general.instructions.md
-samples/headless-react/src/components/...
-```
-
-**In generated files and scripts**, use relative paths from the file's location:
-```typescript
-// From a skill directory to packages
-../../../../packages/headless/...
-
-// Within same package
-../../controllers/...
-```
-
-**Rationale:** Absolute paths expose usernames, break portability across environments (local, CI, Codespaces, different operating systems), and create maintenance issues.
 
 ## Communication
 

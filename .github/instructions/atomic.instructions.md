@@ -2,8 +2,6 @@
 applyTo: 'packages/atomic/**'
 ---
 
-**All new Atomic components must be Lit components, not Stencil.** This document describes structure and conventions for Atomic components.
-
 **Generate new components from `packages/atomic` directory:**
 
 ```bash
@@ -12,40 +10,6 @@ node scripts/generate-component.mjs component-name src/components/common
 
 The generated boilerplate demonstrates established patterns. Follow these conventions for consistency.
 
-## Component Directory Structure
-
-Atomic components live in `src/components/` organized by use case:
-
-- `/commerce` - Components exclusive to the commerce use-case
-- `/common` - Shared components across all interfaces
-- `/search` - Components exclusive to the search use-case
-- `/insight` - Components exclusive to the Insight use-case
-- `/ipx` - Components exclusive to the In-Product Experience use case
-- `/recommendations` - Components exclusive to the Recommendations use case
-
-### Lit Component Files (New Standard)
-
-Each component has an `atomic-*` directory with:
-
-- `atomic-name.ts` - Main component (TypeScript)
-- `atomic-name.tw.css.ts` - Styles (Optional; Tailwind CSS)
-- `atomic-name.spec.ts` - Unit tests
-- `atomic-name.mdx` - Documentation
-- `atomic-name.new.stories.tsx` - Storybook stories
-- `e2e/atomic-name.e2e.ts` - End-to-end tests (happy path + accessibility)
-- `e2e/fixture.ts` - E2E test setup
-- `e2e/page-object.ts` - E2E interaction layer
-
-### Stencil Component Files (Legacy)
-
-Legacy components use `.tsx` (Stencil) and `.pcss` (PostCSS). Same structure otherwise. Gradually migrating to Lit.
-
-## Naming Conventions
-
-- Component tag: `atomic-kebab-case` (e.g., `atomic-search-box`)
-- File names: `atomic-kebab-case.ts` (match tag name)
-- Class names: `AtomicPascalCase` (e.g., `AtomicSearchBox`)
-- All component files share the same base name
 
 ## Lit Component Implementation
 
