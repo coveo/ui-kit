@@ -134,9 +134,6 @@ export interface A11yReport {
 
 // ── Script shared types ──────────────────────────────────────────────────────
 
-/** Valid manual audit status values. */
-export type AuditStatus = 'pass' | 'fail' | 'partial' | 'not-applicable';
-
 /**
  * A single component entry in a delta file.
  * Used by manual-audit-delta, generate-a11y-issues, and ai-wcag-audit scripts.
