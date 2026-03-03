@@ -41,7 +41,7 @@ export const createInitialFollowUpAnswer = (
   question: string
 ): FollowUpAnswer => ({
   question: question,
-  isLoading: false,
+  isLoading: true,
   isStreaming: false,
   citations: [],
   liked: false,
