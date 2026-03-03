@@ -32,7 +32,7 @@ import {analyticsMiddleware} from './analytics-middleware.js';
 import {configuration} from './common-reducers.js';
 import type {EngineConfiguration} from './engine-configuration.js';
 import {instantlyCallableThunkActionMiddleware} from './instantly-callable-middleware.js';
-import {generateAnswerListener} from './listener-middleware/generate-answer-listener-middleware.js';
+import {createGenerateAnswerListener} from './listener-middleware/generate-answer-listener-middleware.js';
 import type {LoggerOptions} from './logger.js';
 import {logActionErrorMiddleware} from './logger-middlewares.js';
 import {
@@ -348,7 +348,11 @@ function createStore<
 ) {
   const {preloadedState, configuration} = options;
   const name = configuration.name || 'coveo-headless';
-  const middlewares = createMiddleware(options, thunkExtraArguments.logger);
+  const middlewares = createMiddleware(
+    options,
+    thunkExtraArguments.logger,
+    () => thunkExtraArguments.navigatorContext
+  );
 
   return configureStore({
     preloadedState,
@@ -361,13 +365,17 @@ function createStore<
 
 function createMiddleware<Reducers extends ReducersMapObject>(
   options: EngineOptions<Reducers>,
-  logger: Logger
+  logger: Logger,
+  getNavigatorContext: () => NavigatorContext
 ) {
   const {renewAccessToken} = options.configuration;
   const renewTokenMiddleware = createRenewAccessTokenMiddleware(
     logger,
     renewAccessToken
   );
+  const generateAnswerListener = createGenerateAnswerListener({
+    getNavigatorContext,
+  });
 
   return [
     instantlyCallableThunkActionMiddleware,

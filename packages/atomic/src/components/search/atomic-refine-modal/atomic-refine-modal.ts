@@ -38,7 +38,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import type {AtomicInterface} from '@/src/utils/initialization-lit-stencil-common-utils';
+import type {AtomicInterface} from '@/src/utils/initialization-common-utils';
 import {shouldDisplayOnCurrentTab} from '@/src/utils/tab-utils';
 import {sortByDocumentPosition} from '@/src/utils/utils';
 import {

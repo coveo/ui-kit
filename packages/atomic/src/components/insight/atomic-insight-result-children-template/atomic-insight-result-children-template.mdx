@@ -1,0 +1,107 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicInsightResultChildrenTemplateStories from './atomic-insight-result-children-template.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicInsightResultChildrenTemplateStories} />
+
+<AtomicDocTemplate
+  stories={AtomicInsightResultChildrenTemplateStories}
+  defaultStory="Default"
+  githubPath="insight/atomic-insight-result-children-template/atomic-insight-result-children-template.ts"
+  tagName="atomic-insight-result-children-template"
+  className="AtomicInsightResultChildrenTemplate"
+>
+
+Each `atomic-insight-result-children-template` must contain a `<template>` element as a direct child, and must itself be a direct child of `atomic-insight-result-children`.
+
+**Note:** Any `<script>` tags inside a `<template>` element will not be executed when results are rendered.
+
+Example usage within a folded result list:
+
+```html
+<atomic-insight-folded-result-list>
+  <atomic-insight-result-template>
+    <template>
+      <atomic-result-section-title>
+        <atomic-result-link></atomic-result-link>
+      </atomic-result-section-title>
+      <atomic-result-section-excerpt>
+        <atomic-result-text field="excerpt"></atomic-result-text>
+      </atomic-result-section-excerpt>
+      <atomic-result-section-children>
+        <atomic-insight-result-children image-size="icon">
+          <atomic-insight-result-children-template>
+            <template>
+              <atomic-result-section-title>
+                <atomic-result-link></atomic-result-link>
+              </atomic-result-section-title>
+              <atomic-result-section-excerpt>
+                <atomic-result-text field="excerpt"></atomic-result-text>
+              </atomic-result-section-excerpt>
+            </template>
+          </atomic-insight-result-children-template>
+        </atomic-insight-result-children>
+      </atomic-result-section-children>
+    </template>
+  </atomic-insight-result-template>
+</atomic-insight-folded-result-list>
+```
+
+## Template Conditions
+
+You can use conditions to display different templates based on child result properties. You can specify as many `must-match-*` and `must-not-match-*` attributes as you want on a template, each targeting a different field. Each attribute can accept multiple comma-separated values.
+
+**Comma represents OR:** Within a single attribute, comma-separated values represent a logical OR. For example, `must-match-sourcetype="YouTube,Salesforce"` means the sourcetype must be YouTube OR Salesforce.
+
+**Multiple attributes represent AND:** All conditions from different attributes must be met (logical AND) for the template to apply to a result.
+
+### Example with Conditions
+
+```html
+<atomic-insight-result-children image-size="icon">
+  <!-- Template for YouTube children -->
+  <atomic-insight-result-children-template must-match-sourcetype="YouTube">
+    <template>
+      <atomic-result-section-visual>
+        <atomic-result-image field="ytthumbnailurl"></atomic-result-image>
+      </atomic-result-section-visual>
+      <atomic-result-section-title>
+        <atomic-result-link></atomic-result-link>
+      </atomic-result-section-title>
+    </template>
+  </atomic-insight-result-children-template>
+  
+  <!-- Default template for all other children -->
+  <atomic-insight-result-children-template>
+    <template>
+      <atomic-result-section-title>
+        <atomic-result-link></atomic-result-link>
+      </atomic-result-section-title>
+      <atomic-result-section-excerpt>
+        <atomic-result-text field="excerpt"></atomic-result-text>
+      </atomic-result-section-excerpt>
+    </template>
+  </atomic-insight-result-children-template>
+</atomic-insight-result-children>
+```
+
+## Nested Children
+
+For deeply nested result hierarchies, child result templates can include their own `atomic-insight-result-children` with `inherit-templates` to reuse the same template structure:
+
+```html
+<atomic-insight-result-children image-size="icon">
+  <atomic-insight-result-children-template>
+    <template>
+      <atomic-result-section-title>
+        <atomic-result-link></atomic-result-link>
+      </atomic-result-section-title>
+      <atomic-result-section-children>
+        <atomic-insight-result-children inherit-templates></atomic-insight-result-children>
+      </atomic-result-section-children>
+    </template>
+  </atomic-insight-result-children-template>
+</atomic-insight-result-children>
+```
+
+</AtomicDocTemplate>
