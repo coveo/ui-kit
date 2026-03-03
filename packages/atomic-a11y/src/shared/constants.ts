@@ -36,6 +36,15 @@ export const VALID_SURFACES = new Set([
   'recommendations',
 ]);
 
+/** Surface name prefix mapping for story path detection. */
+export const SURFACE_PREFIXES: Record<string, string> = {
+  commerce: 'commerce',
+  search: 'search',
+  insight: 'insight',
+  ipx: 'ipx',
+  recommendations: 'recommendations',
+};
+
 /**
  * WCAG 2.2 criteria keys that require manual or AI audit.
  * These are criteria not covered by axe-core automated testing.
@@ -88,6 +97,46 @@ export const ALL_AI_CRITERIA = [
   '3.3.7-redundant-entry',
   '3.3.8-accessible-auth',
 ] as const;
+
+/**
+ * Criteria that are always 'not-applicable' for isolated Storybook components.
+ * These are site-wide consistency criteria that cannot be evaluated in isolation:
+ * - 3.2.6 Consistent Help: requires cross-page help placement comparison
+ * - 3.3.7 Redundant Entry: requires multi-step process context
+ * - 3.3.8 Accessible Auth: requires authentication flow context
+ *
+ * Kept in VALID_WCAG_KEYS (for manual-audit-delta validation) and ALL_AI_CRITERIA
+ * (for mergeResults), but skipped during AI LLM calls to save API quota.
+ */
+export const STATIC_NA_CRITERIA: ReadonlyMap<
+  string,
+  {status: 'not-applicable'; evidence: string}
+> = new Map([
+  [
+    '3.2.6-consistent-help',
+    {
+      status: 'not-applicable',
+      evidence:
+        'Storybook renders components in isolation; cross-page help placement cannot be evaluated.',
+    },
+  ],
+  [
+    '3.3.7-redundant-entry',
+    {
+      status: 'not-applicable',
+      evidence:
+        'Storybook renders components in isolation; multi-step redundant entry cannot be evaluated.',
+    },
+  ],
+  [
+    '3.3.8-accessible-auth',
+    {
+      status: 'not-applicable',
+      evidence:
+        'Storybook renders components in isolation; authentication flows cannot be evaluated.',
+    },
+  ],
+]);
 
 /** Audit file pattern for matching baseline manual-audit JSON files. */
 export const AUDIT_FILE_PATTERN = /^manual-audit-(.+)\.json$/;
