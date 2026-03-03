@@ -20,6 +20,7 @@ import {
   updateError,
   updateMessage,
 } from '../../../../../features/generated-answer/generated-answer-actions.js';
+import {GeneratedAnswerSseErrorCode} from '../../../../../features/generated-answer/sse-generated-answer-errors.js';
 import {createHeadAnswerStrategy} from './head-answer-strategy.js';
 
 describe('createHeadAnswerStrategy', () => {
@@ -117,12 +118,15 @@ describe('createHeadAnswerStrategy', () => {
     strategy.onRunErrorEvent!({
       event: {
         message: 'Something went wrong',
-        code: '400',
+        code: 'KNOWLEDGE:SSE_MAX_DURATION_EXCEEDED',
       },
     } as any);
 
     expect(dispatch).toHaveBeenCalledWith(
-      updateError({message: 'Something went wrong', code: 400})
+      updateError({
+        message: 'Something went wrong',
+        code: GeneratedAnswerSseErrorCode.SseMaxDurationExceeded,
+      })
     );
   });
 

@@ -18,6 +18,7 @@ import {
   updateMessage,
 } from '../../../../../features/generated-answer/generated-answer-actions.js';
 import type {GenerationStepName} from '../../../../../features/generated-answer/generated-answer-state.js';
+import {mapRunErrorCode} from '../../../../../features/generated-answer/sse-generated-answer-errors.js';
 
 /**
  * Creates an AgentSubscriber that handles answer streaming events
@@ -70,11 +71,11 @@ export const createHeadAnswerStrategy = (
       }
     },
     onRunErrorEvent: ({event}) => {
-      const code = event.code;
+      const mappedCode = mapRunErrorCode(event.code);
       dispatch(
         updateError({
           message: event.message,
-          code: code ? Number(code) : undefined,
+          code: mappedCode,
         })
       );
     },
