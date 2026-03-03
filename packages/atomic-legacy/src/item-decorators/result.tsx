@@ -1,11 +1,11 @@
-import {FoldedResult, Result} from '@coveo/headless';
+import type {FoldedResult, Result} from '@coveo/headless';
 import {
   InteractiveItemContext,
   InteractiveItemContextEvent,
   ItemContext,
   ItemContextEvent,
   itemContext,
-} from '@/src/components/common/item-list/stencil-item-decorators';
+} from './common.js';
 
 /**
  * A [StencilJS property decorator](https://stenciljs.com/) to be used for result template components.

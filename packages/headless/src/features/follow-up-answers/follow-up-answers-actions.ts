@@ -73,6 +73,15 @@ export const setFollowUpIsLoading = createAction(
     })
 );
 
+export const setFollowUpIsStreaming = createAction(
+  'followUpAnswers/setFollowUpIsStreaming',
+  (payload: {answerId: string; isStreaming: boolean}) =>
+    validatePayload(payload, {
+      isStreaming: new BooleanValue({required: true}),
+      answerId: requiredNonEmptyString,
+    })
+);
+
 export const followUpMessageChunkReceived = createAction(
   'followUpAnswers/followUpMessageChunkReceived',
   (payload: {answerId: string; textDelta: string}) =>
@@ -112,6 +121,14 @@ export const followUpFailed = createAction(
       message: new StringValue(),
       code: new NumberValue({min: 0}),
       answerId: requiredNonEmptyString,
+    })
+);
+
+export const activeFollowUpStartFailed = createAction(
+  'followUpAnswers/activeFollowUpStartFailed',
+  (payload: {message?: string}) =>
+    validatePayload(payload, {
+      message: new StringValue(),
     })
 );
 
