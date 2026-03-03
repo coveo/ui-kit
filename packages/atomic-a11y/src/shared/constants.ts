@@ -64,6 +64,31 @@ export const VALID_WCAG_KEYS = new Set([
   '3.3.8-accessible-auth',
 ]);
 
+/** All 21 WCAG criteria evaluated by the AI audit agent. */
+export const ALL_AI_CRITERIA = [
+  '1.3.2-meaningful-sequence',
+  '1.3.3-sensory-characteristics',
+  '1.3.4-orientation',
+  '1.3.5-identify-input-purpose',
+  '1.4.4-resize-text',
+  '1.4.5-images-of-text',
+  '1.4.10-reflow',
+  '1.4.11-non-text-contrast',
+  '1.4.12-text-spacing',
+  '1.4.13-content-on-hover-focus',
+  '2.4.4-link-purpose',
+  '2.4.6-headings-and-labels',
+  '2.4.7-focus-visible',
+  '2.4.11-focus-not-obscured',
+  '2.5.7-dragging-movements',
+  '2.5.8-target-size',
+  '3.2.6-consistent-help',
+  '3.3.3-error-suggestion',
+  '3.3.4-error-prevention',
+  '3.3.7-redundant-entry',
+  '3.3.8-accessible-auth',
+] as const;
+
 /** Audit file pattern for matching baseline manual-audit JSON files. */
 export const AUDIT_FILE_PATTERN = /^manual-audit-(.+)\.json$/;
 
