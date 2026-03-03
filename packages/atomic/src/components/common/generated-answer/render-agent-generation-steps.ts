@@ -5,12 +5,6 @@ import {keyed} from 'lit/directives/keyed.js';
 import {when} from 'lit/directives/when.js';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 
-export const GENERATION_STEP_NAMES = [
-  'searching',
-  'thinking',
-  'answering',
-] as const;
-
 const stepLabelKeys: Record<GenerationStepName, string> = {
   searching: 'agent-generation-step-search',
   thinking: 'agent-generation-step-think',
@@ -40,7 +34,7 @@ export const renderAgentGenerationSteps: FunctionalComponent<
       html`
         <div
           part="agent-generation-status"
-          class="text-neutral-dark flex text-base font-light"
+          class="text-neutral-dark flex text-sm font-light"
         >
           <span class="generation-steps-container">
             <span class="generation-steps-value">${currentStepLabel}</span>

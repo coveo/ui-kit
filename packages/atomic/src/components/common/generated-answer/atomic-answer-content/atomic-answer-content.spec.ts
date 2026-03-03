@@ -194,31 +194,6 @@ describe('atomic-answer-content', () => {
     );
   });
 
-  it('should pass generation steps and streaming state to renderAgentGenerationSteps', async () => {
-    const generationSteps = [
-      {
-        name: 'thinking' as const,
-        status: 'active' as const,
-        startedAt: 1,
-      },
-    ];
-
-    await renderComponent({
-      generatedAnswer: {
-        isStreaming: true,
-        generationSteps,
-      },
-    });
-
-    expect(renderAgentGenerationSteps).toHaveBeenCalledWith({
-      props: expect.objectContaining({
-        i18n,
-        agentSteps: generationSteps,
-        isStreaming: true,
-      }),
-    });
-  });
-
   it('should render source citations with visibility based on citations length', async () => {
     const citations = [
       {

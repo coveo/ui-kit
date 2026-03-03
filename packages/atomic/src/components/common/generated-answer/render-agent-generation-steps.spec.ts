@@ -10,7 +10,7 @@ import {
   renderAgentGenerationSteps,
 } from './render-agent-generation-steps';
 
-const AGENT_STEPS = {
+const GENERATION_STEPS = {
   searching: 'searching',
   thinking: 'thinking',
   answering: 'answering',
@@ -56,7 +56,7 @@ describe('#renderAgentGenerationSteps', () => {
   };
 
   const buildStep = (overrides: Partial<GenerationStep>): GenerationStep => ({
-    name: AGENT_STEPS.searching,
+    name: GENERATION_STEPS.searching,
     status: STEP_STATUS.completed,
     startedAt: 0,
     ...overrides,
@@ -69,7 +69,10 @@ describe('#renderAgentGenerationSteps', () => {
 
     it('should return the active step key when an active step exists', () => {
       const key = getCurrentStepKey([
-        buildStep({name: AGENT_STEPS.thinking, status: STEP_STATUS.active}),
+        buildStep({
+          name: GENERATION_STEPS.thinking,
+          status: STEP_STATUS.active,
+        }),
       ]);
 
       expect(key).toBe('agent-generation-step-think');
@@ -78,10 +81,13 @@ describe('#renderAgentGenerationSteps', () => {
     it('should return undefined when no active step exists', () => {
       const key = getCurrentStepKey([
         buildStep({
-          name: AGENT_STEPS.answering,
+          name: GENERATION_STEPS.answering,
           status: STEP_STATUS.completed,
         }),
-        buildStep({name: AGENT_STEPS.searching, status: STEP_STATUS.completed}),
+        buildStep({
+          name: GENERATION_STEPS.searching,
+          status: STEP_STATUS.completed,
+        }),
       ]);
 
       expect(key).toBeUndefined();
@@ -100,7 +106,10 @@ describe('#renderAgentGenerationSteps', () => {
   it('should not render anything when not streaming', async () => {
     const {element} = await renderComponent({
       agentSteps: [
-        buildStep({name: AGENT_STEPS.searching, status: STEP_STATUS.active}),
+        buildStep({
+          name: GENERATION_STEPS.searching,
+          status: STEP_STATUS.active,
+        }),
       ],
       isStreaming: false,
     });
@@ -111,7 +120,10 @@ describe('#renderAgentGenerationSteps', () => {
   it('should render the active search step label when streaming', async () => {
     const {element} = await renderComponent({
       agentSteps: [
-        buildStep({name: AGENT_STEPS.searching, status: STEP_STATUS.active}),
+        buildStep({
+          name: GENERATION_STEPS.searching,
+          status: STEP_STATUS.active,
+        }),
       ],
       isStreaming: true,
     });
@@ -124,7 +136,10 @@ describe('#renderAgentGenerationSteps', () => {
   it('should render the active think step label when streaming', async () => {
     const {element} = await renderComponent({
       agentSteps: [
-        buildStep({name: AGENT_STEPS.thinking, status: STEP_STATUS.active}),
+        buildStep({
+          name: GENERATION_STEPS.thinking,
+          status: STEP_STATUS.active,
+        }),
       ],
       isStreaming: true,
     });
@@ -135,7 +150,10 @@ describe('#renderAgentGenerationSteps', () => {
   it('should render the active answering step label when streaming', async () => {
     const {element} = await renderComponent({
       agentSteps: [
-        buildStep({name: AGENT_STEPS.answering, status: STEP_STATUS.active}),
+        buildStep({
+          name: GENERATION_STEPS.answering,
+          status: STEP_STATUS.active,
+        }),
       ],
       isStreaming: true,
     });
@@ -146,8 +164,14 @@ describe('#renderAgentGenerationSteps', () => {
   it('should not render anything when there is no active step', async () => {
     const {element} = await renderComponent({
       agentSteps: [
-        buildStep({name: AGENT_STEPS.searching, status: STEP_STATUS.completed}),
-        buildStep({name: AGENT_STEPS.thinking, status: STEP_STATUS.completed}),
+        buildStep({
+          name: GENERATION_STEPS.searching,
+          status: STEP_STATUS.completed,
+        }),
+        buildStep({
+          name: GENERATION_STEPS.thinking,
+          status: STEP_STATUS.completed,
+        }),
       ],
       isStreaming: true,
     });
@@ -159,10 +183,13 @@ describe('#renderAgentGenerationSteps', () => {
     const {element} = await renderComponent({
       agentSteps: [
         buildStep({
-          name: AGENT_STEPS.answering,
+          name: GENERATION_STEPS.answering,
           status: STEP_STATUS.completed,
         }),
-        buildStep({name: AGENT_STEPS.searching, status: STEP_STATUS.active}),
+        buildStep({
+          name: GENERATION_STEPS.searching,
+          status: STEP_STATUS.active,
+        }),
       ],
       isStreaming: true,
     });
@@ -175,7 +202,10 @@ describe('#renderAgentGenerationSteps', () => {
   it('should render the rolodex animation structure', async () => {
     const {element} = await renderComponent({
       agentSteps: [
-        buildStep({name: AGENT_STEPS.searching, status: STEP_STATUS.active}),
+        buildStep({
+          name: GENERATION_STEPS.searching,
+          status: STEP_STATUS.active,
+        }),
       ],
       isStreaming: true,
     });

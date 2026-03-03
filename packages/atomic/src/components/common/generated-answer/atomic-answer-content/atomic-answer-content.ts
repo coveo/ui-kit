@@ -5,7 +5,6 @@ import type {
 import type {i18n} from 'i18next';
 import {html, LitElement, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {when} from 'lit/directives/when.js';
 import atomicGeneratedAnswerStyles from '@/src/components/search/atomic-generated-answer/atomic-generated-answer.tw.css.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {renderGeneratedContentContainer} from '../generated-content-container';
@@ -92,9 +91,8 @@ export class AtomicAnswerContent extends LitElement {
       citations = [],
       answerId,
     } = this.generatedAnswer || {};
-    const canRenderAnswerContent = Boolean(answer);
 
-    if (!canRenderAnswerContent && !isStreaming) {
+    if (!answerId) {
       return html``;
     }
 
@@ -108,34 +106,22 @@ export class AtomicAnswerContent extends LitElement {
           },
         })}
         <div>
-          ${
-            canRenderAnswerContent
-              ? renderGeneratedContentContainer({
-                  props: {
-                    answer,
-                    answerContentFormat,
-                    isStreaming: Boolean(isStreaming),
-                  },
-                })(
-                  html`
-                  ${renderSourceCitations({
-                    props: {
-                      label: this.i18n.t('citations'),
-                      isVisible: citations.length > 0,
-                    },
-                  })(html`${this.renderCitations(citations)}`)}
-                `
-                )
-              : html``
-          }
+          ${renderGeneratedContentContainer({
+            props: {
+              answer,
+              answerContentFormat,
+              isStreaming: Boolean(isStreaming),
+            },
+          })(html`
+            ${renderSourceCitations({
+              props: {
+                label: this.i18n.t('citations'),
+                isVisible: citations.length > 0,
+              },
+            })(html`${this.renderCitations(citations)}`)}
+          `)}
         </div>
-        ${when(canRenderAnswerContent && typeof answerId === 'string', () => {
-          if (typeof answerId !== 'string') {
-            return html``;
-          }
-
-          return this.renderFeedbackAndCopyButtons(answerId);
-        })}
+        ${this.renderFeedbackAndCopyButtons(answerId)}
       </div>
     `;
   }
