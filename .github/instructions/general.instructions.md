@@ -7,7 +7,7 @@ applyTo: '**'
 When instructions conflict, apply this precedence order:
 
 1. Workspace prompts (e.g., `workspace-prompts.instructions.md` for `.github/prompts/*.prompt.md`)
-2. Package-specific (e.g., `atomic.instructions.md`, `tests-atomic.instructions.md`)
+2. Package-specific (e.g., `tests-atomic.instructions.md`)
 3. File-type specific (e.g., `general.typescript.instructions.md`)
 4. General (this file)
 5. Language/framework defaults
@@ -69,4 +69,3 @@ Be **cautious, not pedantic**. Be **collaborative, not submissive**. Be **helpfu
 ## References
 
 **TypeScript files:** `.github/instructions/general.typescript.instructions.md`
-**Atomic package:** `.github/instructions/atomic.instructions.md`

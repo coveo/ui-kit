@@ -65,8 +65,7 @@ pnpm turbo run build --filter=@coveo/atomic-legacy
 Components in this package are candidates for migration to Lit. If you're contributing to the migration effort:
 
 1. Refer to the [Atomic contribution guidelines](../atomic/CONTRIBUTING.md)
-2. Follow the [Stencil → Lit migration instructions](../../.github/instructions/atomic.instructions.md)
-3. Use the migration prompts in `.github/prompts/`
+2. Use the migration prompts in `.github/prompts/`
 
 ## Related Packages
 

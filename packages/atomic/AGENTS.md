@@ -22,25 +22,6 @@
 - `src/components/recommendations/` - Components exclusive to the Recommendations use case
 - `src/components/search/` - Components exclusive to the search use-case
 
-### Atomic Component Folder Structure
-
-`atomic-{component-name}/`
-- `atomic-{component-name}.ts`: Main component (Lit)
-- `atomic-{component-name}.tw.css.ts`: Styles (Tailwind; optional)
-- `atomic-{component-name}.spec.ts`: Unit tests (Vitest)
-- `atomic-{component-name}.mdx`: Public Docs page (Storybook)
-- `atomic-{component-name}.new.stories.tsx`: Stories (Storybook)
-- `e2e/`: End-to-end tests (Playwright; optional)
-  - `atomic-{component-name}.e2e.ts`: E2E test suite
-  - `page-object.ts`: Page object for E2E test suite
-  - `fixture.ts`: Fixture for E2E test suite   
-- `*.ts`: Supporting files (optional)
-
-**Notes**:
-- The `.tw.css.ts` file is only included when complex styles are required; otherwise component styles are usually set directly in the Lit component's static `styles` property
-- Internal components may lack the `e2e/` directory
-- Complex components may have one or more `.ts` helper files
-
 ## Atomic Package Technology
 
 In addition to the technology listed in the root `AGENTS.md` file, the following technology is used in the Atomic package:
