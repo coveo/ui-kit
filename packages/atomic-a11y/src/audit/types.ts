@@ -5,7 +5,13 @@
  * They avoid requiring the packages at compile time while providing type safety.
  */
 
-import type {AccessibilityNode} from './accessibility-tree.js';
+export interface AccessibilityNode {
+  role?: string;
+  name?: string;
+  value?: string | number;
+  description?: string;
+  children?: AccessibilityNode[];
+}
 
 // ---------------------------------------------------------------------------
 // Playwright
