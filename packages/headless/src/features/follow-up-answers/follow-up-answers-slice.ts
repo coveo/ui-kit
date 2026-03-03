@@ -1,6 +1,7 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {filterOutDuplicatedCitations} from '../generated-answer/utils/generated-answer-citation-utils.js';
 import {
+  activeFollowUpStartFailed,
   createFollowUpAnswer,
   dislikeFollowUp,
   followUpCitationsReceived,
@@ -15,6 +16,7 @@ import {
   setFollowUpAnswerContentFormat,
   setFollowUpAnswersConversationId,
   setFollowUpIsLoading,
+  setFollowUpIsStreaming,
   setIsEnabled,
   submitFollowUpFeedback,
 } from './follow-up-answers-actions.js';
@@ -78,14 +80,19 @@ export const followUpAnswersReducer = createReducer(
         }
         followUpAnswer.isLoading = payload.isLoading;
       })
+      .addCase(setFollowUpIsStreaming, (state, {payload}) => {
+        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
+        if (!followUpAnswer) {
+          return;
+        }
+        followUpAnswer.isStreaming = payload.isStreaming;
+      })
       .addCase(followUpMessageChunkReceived, (state, {payload}) => {
         const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
         if (!followUpAnswer) {
           return;
         }
 
-        followUpAnswer.isLoading = false;
-        followUpAnswer.isStreaming = true;
         if (!followUpAnswer.answer) {
           followUpAnswer.answer = '';
         }
@@ -99,8 +106,6 @@ export const followUpAnswersReducer = createReducer(
           return;
         }
 
-        followUpAnswer.isLoading = false;
-        followUpAnswer.isStreaming = true;
         followUpAnswer.citations = filterOutDuplicatedCitations([
           ...followUpAnswer.citations,
           ...payload.citations,
@@ -129,6 +134,20 @@ export const followUpAnswersReducer = createReducer(
         followUpAnswer.error = {message: payload.message, code: payload.code};
         followUpAnswer.citations = [];
         delete followUpAnswer.answer;
+      })
+      .addCase(activeFollowUpStartFailed, (state, {payload}) => {
+        const activeFollowUp = getActiveFollowUp(state);
+        if (!activeFollowUp) {
+          return;
+        }
+
+        activeFollowUp.isLoading = false;
+        activeFollowUp.isStreaming = false;
+        activeFollowUp.error = {
+          message: payload.message,
+        };
+        activeFollowUp.citations = [];
+        delete activeFollowUp.answer;
       })
       .addCase(likeFollowUp, (state, {payload}) => {
         const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);

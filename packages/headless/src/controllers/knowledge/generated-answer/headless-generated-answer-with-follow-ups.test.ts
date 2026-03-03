@@ -1,15 +1,17 @@
+import * as followUpAgentModule from '../../../api/knowledge/answer-generation/agents/follow-up-agent/follow-up-agent.js';
+import * as followUpStrategyModule from '../../../api/knowledge/answer-generation/agents/follow-up-agent/follow-up-answer-strategy.js';
 import {answerGenerationApi} from '../../../api/knowledge/answer-generation/answer-generation-api.js';
 import type {AnswerGenerationApiState} from '../../../api/knowledge/answer-generation/answer-generation-api-state.js';
-import {selectAnswer} from '../../../api/knowledge/answer-generation/endpoints/answer/answer-endpoint.js';
 import {setAgentId} from '../../../features/configuration/configuration-actions.js';
+import {getConfigurationInitialState} from '../../../features/configuration/configuration-state.js';
 import {
+  activeFollowUpStartFailed,
+  createFollowUpAnswer,
   dislikeFollowUp,
-  generateFollowUpAnswer,
   likeFollowUp,
 } from '../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {followUpAnswersReducer} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import {getFollowUpAnswersInitialState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
-import {selectAnswerApiQueryParams} from '../../../features/generated-answer/answer-api-selectors.js';
 import {generateHeadAnswer} from '../../../features/generated-answer/generated-answer-actions.js';
 import {generatedAnswerAnalyticsClient} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
 import {getGeneratedAnswerInitialState} from '../../../features/generated-answer/generated-answer-state.js';
@@ -33,6 +35,21 @@ vi.mock(
 const mockCoreLike = vi.fn();
 const mockCoreDislike = vi.fn();
 const mockCoreCopy = vi.fn();
+const mockFollowUpAgent = {
+  runAgent: vi.fn(),
+  abortRun: vi.fn(),
+};
+const mockFollowUpStrategy = {};
+const mockCreateFollowUpAgent = vi.spyOn(
+  followUpAgentModule,
+  'createFollowUpAgent'
+);
+const mockCreateFollowUpStrategy = vi.spyOn(
+  followUpStrategyModule,
+  'createFollowUpStrategy'
+);
+const mockCreateFollowUpAnswer = vi.mocked(createFollowUpAnswer);
+const mockActiveFollowUpStartFailed = vi.mocked(activeFollowUpStartFailed);
 
 vi.mock('../../core/generated-answer/headless-core-generated-answer.js', () => {
   return {
@@ -44,33 +61,8 @@ vi.mock('../../core/generated-answer/headless-core-generated-answer.js', () => {
   };
 });
 
-vi.mock(
-  '../../../features/generated-answer/answer-api-selectors.js',
-  async () => {
-    return {
-      selectAnswerApiQueryParams: vi.fn(),
-    };
-  }
-);
-
-vi.mock(
-  '../../../api/knowledge/answer-generation/endpoints/answer/answer-endpoint',
-  async () => {
-    const original = await vi.importActual(
-      '../../../api/knowledge/answer-generation/endpoints/answer/answer-endpoint'
-    );
-    return {
-      ...original,
-      selectAnswer: vi.fn(),
-    };
-  }
-);
-
 describe('GeneratedAnswerWithFollowUps', () => {
   let engine: MockedSearchEngine;
-  const mockSelectAnswer = vi.mocked(selectAnswer);
-  const mockSelectAnswerApiQueryParams = vi.mocked(selectAnswerApiQueryParams);
-
   const createGeneratedAnswerWithFollowUps = (
     props: GeneratedAnswerWithFollowUpsProps = {agentId: 'default-agent-id'}
   ) =>
@@ -85,6 +77,12 @@ describe('GeneratedAnswerWithFollowUps', () => {
   ) => {
     const state = createMockState({
       ...initialState,
+      configuration: {
+        ...getConfigurationInitialState(),
+        organizationId: 'org-123',
+        environment: 'prod',
+        accessToken: 'foo',
+      },
       generatedAnswer: {
         ...getGeneratedAnswerInitialState(),
         ...initialState.generatedAnswer,
@@ -105,13 +103,9 @@ describe('GeneratedAnswerWithFollowUps', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockCoreLike.mockClear();
-    mockCoreDislike.mockClear();
-    mockCoreCopy.mockClear();
+    mockCreateFollowUpAgent.mockReturnValue(mockFollowUpAgent as never);
+    mockCreateFollowUpStrategy.mockReturnValue(mockFollowUpStrategy as never);
     engine = buildEngineWithGeneratedAnswer();
-    mockSelectAnswerApiQueryParams.mockReturnValue({
-      q: 'test query',
-    });
   });
 
   it('initializes', () => {
@@ -152,160 +146,18 @@ describe('GeneratedAnswerWithFollowUps', () => {
     expect(setAgentId).toHaveBeenCalledWith('test-agent-id');
   });
 
+  it('creates a follow-up agent with the configuration context', () => {
+    createGeneratedAnswerWithFollowUps({agentId: 'agent-xyz'});
+
+    expect(mockCreateFollowUpAgent).toHaveBeenCalledWith(
+      'agent-xyz',
+      'org-123',
+      'prod'
+    );
+    expect(mockCreateFollowUpStrategy).toHaveBeenCalledWith(engine.dispatch);
+  });
+
   describe('state getter', () => {
-    describe('RTK Query server state', () => {
-      it('should map answer from RTK Query data', () => {
-        mockSelectAnswer.mockReturnValue({
-          data: {answer: 'This is the answer'},
-        } as ReturnType<typeof selectAnswer>);
-
-        const controller = createGeneratedAnswerWithFollowUps();
-
-        expect(controller.state.answer).toBe('This is the answer');
-      });
-
-      it('should map citations from RTK Query data', () => {
-        mockSelectAnswer.mockReturnValue({
-          data: {
-            citations: [
-              {id: 'c1', uri: 'http://example.com/1'},
-              {id: 'c2', uri: 'http://example.com/2'},
-            ],
-          },
-        } as ReturnType<typeof selectAnswer>);
-
-        const controller = createGeneratedAnswerWithFollowUps();
-
-        expect(controller.state.citations).toEqual([
-          {id: 'c1', uri: 'http://example.com/1'},
-          {id: 'c2', uri: 'http://example.com/2'},
-        ]);
-      });
-
-      it('should default to empty array when citations is undefined', () => {
-        mockSelectAnswer.mockReturnValue({
-          data: {},
-        } as ReturnType<typeof selectAnswer>);
-
-        const controller = createGeneratedAnswerWithFollowUps();
-
-        expect(controller.state.citations).toEqual([]);
-      });
-
-      it('should map isLoading from RTK Query data', () => {
-        mockSelectAnswer.mockReturnValue({
-          data: {isLoading: true},
-        } as ReturnType<typeof selectAnswer>);
-
-        const controller = createGeneratedAnswerWithFollowUps();
-
-        expect(controller.state.isLoading).toBe(true);
-      });
-
-      it('should map isStreaming from RTK Query data', () => {
-        mockSelectAnswer.mockReturnValue({
-          data: {isStreaming: true},
-        } as ReturnType<typeof selectAnswer>);
-
-        const controller = createGeneratedAnswerWithFollowUps();
-
-        expect(controller.state.isStreaming).toBe(true);
-      });
-
-      it('should map error from RTK Query data', () => {
-        mockSelectAnswer.mockReturnValue({
-          data: {error: {message: 'Server error', code: 500}},
-        } as ReturnType<typeof selectAnswer>);
-
-        const controller = createGeneratedAnswerWithFollowUps();
-
-        expect(controller.state.error).toEqual({
-          message: 'Server error',
-          code: 500,
-        });
-      });
-
-      it('should not include error when it is undefined', () => {
-        mockSelectAnswer.mockReturnValue({
-          data: {},
-        } as ReturnType<typeof selectAnswer>);
-
-        const controller = createGeneratedAnswerWithFollowUps();
-
-        expect(controller.state.error).toBeUndefined();
-      });
-
-      it('should map answerId from RTK Query data', () => {
-        mockSelectAnswer.mockReturnValue({
-          data: {answerId: 'answer-123'},
-        } as ReturnType<typeof selectAnswer>);
-
-        const controller = createGeneratedAnswerWithFollowUps();
-
-        expect(controller.state.answerId).toBe('answer-123');
-      });
-
-      it('should map contentFormat from RTK Query data', () => {
-        mockSelectAnswer.mockReturnValue({
-          data: {contentFormat: 'text/markdown'},
-        } as ReturnType<typeof selectAnswer>);
-
-        const controller = createGeneratedAnswerWithFollowUps();
-
-        expect(controller.state.answerContentFormat).toBe('text/markdown');
-      });
-
-      it('should default to text/plain when contentFormat is undefined', () => {
-        mockSelectAnswer.mockReturnValue({
-          data: {},
-        } as ReturnType<typeof selectAnswer>);
-
-        const controller = createGeneratedAnswerWithFollowUps();
-
-        expect(controller.state.answerContentFormat).toBe('text/plain');
-      });
-
-      it('should set isAnswerGenerated to true when generated is true', () => {
-        mockSelectAnswer.mockReturnValue({
-          data: {generated: true},
-        } as ReturnType<typeof selectAnswer>);
-
-        const controller = createGeneratedAnswerWithFollowUps();
-
-        expect(controller.state.isAnswerGenerated).toBe(true);
-      });
-
-      it('should set isAnswerGenerated to false when generated is false', () => {
-        mockSelectAnswer.mockReturnValue({
-          data: {generated: false},
-        } as ReturnType<typeof selectAnswer>);
-
-        const controller = createGeneratedAnswerWithFollowUps();
-
-        expect(controller.state.isAnswerGenerated).toBe(false);
-      });
-
-      it('should set cannotAnswer to true when generated is false', () => {
-        mockSelectAnswer.mockReturnValue({
-          data: {generated: false},
-        } as ReturnType<typeof selectAnswer>);
-
-        const controller = createGeneratedAnswerWithFollowUps();
-
-        expect(controller.state.cannotAnswer).toBe(true);
-      });
-
-      it('should set cannotAnswer to false when generated is true', () => {
-        mockSelectAnswer.mockReturnValue({
-          data: {generated: true},
-        } as ReturnType<typeof selectAnswer>);
-
-        const controller = createGeneratedAnswerWithFollowUps();
-
-        expect(controller.state.cannotAnswer).toBe(false);
-      });
-    });
-
     describe('Redux client state', () => {
       it('should map isVisible from Redux state', () => {
         engine = buildEngineWithGeneratedAnswer({
@@ -362,10 +214,6 @@ describe('GeneratedAnswerWithFollowUps', () => {
 
     describe('follow-up answers state', () => {
       it('should expose follow-up answers from Redux state', () => {
-        mockSelectAnswer.mockReturnValue({
-          data: {generated: true, answer: 'main answer'},
-        } as ReturnType<typeof selectAnswer>);
-
         const exampleFollowUpAnswers = {
           question: 'What about X?',
           answer: 'Answer about X',
@@ -399,10 +247,6 @@ describe('GeneratedAnswerWithFollowUps', () => {
       });
 
       it('should expose empty follow-up answers when none exist', () => {
-        mockSelectAnswer.mockReturnValue({
-          data: {generated: true, answer: 'main answer'},
-        } as ReturnType<typeof selectAnswer>);
-
         const controller = createGeneratedAnswerWithFollowUps();
 
         expect(controller.state.followUpAnswers).toEqual({
@@ -410,28 +254,6 @@ describe('GeneratedAnswerWithFollowUps', () => {
           isEnabled: false,
           followUpAnswers: [],
         });
-      });
-    });
-
-    describe('selectAnswer with head-answer strategy', () => {
-      it('should call selectAnswer with head-answer strategyKey', () => {
-        mockSelectAnswerApiQueryParams.mockReturnValue({
-          q: 'test query',
-          searchHub: 'test-hub',
-        });
-
-        const controller = createGeneratedAnswerWithFollowUps();
-        // Access state to trigger the getter
-        controller.state;
-
-        expect(mockSelectAnswer).toHaveBeenCalledWith(
-          {
-            q: 'test query',
-            searchHub: 'test-hub',
-            strategyKey: 'head-answer',
-          },
-          engine.state
-        );
       });
     });
   });
@@ -446,6 +268,15 @@ describe('GeneratedAnswerWithFollowUps', () => {
   });
 
   describe('like', () => {
+    beforeEach(() => {
+      engine = buildEngineWithGeneratedAnswer({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          answerId: 'head-id',
+        },
+      });
+    });
+
     it('should delegate to core like when no answerId is provided', () => {
       const controller = createGeneratedAnswerWithFollowUps();
 
@@ -456,10 +287,6 @@ describe('GeneratedAnswerWithFollowUps', () => {
     });
 
     it('should delegate to core like when answerId matches head answer', () => {
-      mockSelectAnswer.mockReturnValue({
-        data: {answerId: 'head-id'},
-      } as ReturnType<typeof selectAnswer>);
-
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.like('head-id');
@@ -469,10 +296,6 @@ describe('GeneratedAnswerWithFollowUps', () => {
     });
 
     it('should dispatch likeFollowUp when answerId targets a follow-up answer', () => {
-      mockSelectAnswer.mockReturnValue({
-        data: {answerId: 'head-id'},
-      } as ReturnType<typeof selectAnswer>);
-
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.like('follow-1');
@@ -483,6 +306,15 @@ describe('GeneratedAnswerWithFollowUps', () => {
   });
 
   describe('dislike', () => {
+    beforeEach(() => {
+      engine = buildEngineWithGeneratedAnswer({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          answerId: 'head-id',
+        },
+      });
+    });
+
     it('should delegate to core dislike when no answerId is provided', () => {
       const controller = createGeneratedAnswerWithFollowUps();
 
@@ -493,10 +325,6 @@ describe('GeneratedAnswerWithFollowUps', () => {
     });
 
     it('should delegate to core dislike when answerId matches head answer', () => {
-      mockSelectAnswer.mockReturnValue({
-        data: {answerId: 'head-id'},
-      } as ReturnType<typeof selectAnswer>);
-
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.dislike('head-id');
@@ -506,10 +334,6 @@ describe('GeneratedAnswerWithFollowUps', () => {
     });
 
     it('should dispatch dislikeFollowUp when answerId targets a follow-up answer', () => {
-      mockSelectAnswer.mockReturnValue({
-        data: {answerId: 'head-id'},
-      } as ReturnType<typeof selectAnswer>);
-
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.dislike('follow-1');
@@ -520,6 +344,15 @@ describe('GeneratedAnswerWithFollowUps', () => {
   });
 
   describe('logCopyToClipboard', () => {
+    beforeEach(() => {
+      engine = buildEngineWithGeneratedAnswer({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          answerId: 'head-id',
+        },
+      });
+    });
+
     it('should delegate to core logCopyToClipboard when no answerId is provided', () => {
       const controller = createGeneratedAnswerWithFollowUps();
 
@@ -529,10 +362,6 @@ describe('GeneratedAnswerWithFollowUps', () => {
     });
 
     it('should delegate to core logCopyToClipboard when answerId matches head answer', () => {
-      mockSelectAnswer.mockReturnValue({
-        data: {answerId: 'head-id'},
-      } as ReturnType<typeof selectAnswer>);
-
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.logCopyToClipboard('head-id');
@@ -542,20 +371,81 @@ describe('GeneratedAnswerWithFollowUps', () => {
   });
 
   describe('askFollowUp method', () => {
-    it('should dispatch generateFollowUpAnswer', () => {
-      const controller = createGeneratedAnswerWithFollowUps();
-      controller.askFollowUp('Follow-up?');
+    const question = 'Could you elaborate?';
+    const conversationId = 'conversation-123';
 
-      expect(generateFollowUpAnswer).toHaveBeenCalledTimes(1);
-      expect(generateFollowUpAnswer).toHaveBeenCalledWith('Follow-up?');
+    it('dispatches createFollowUpAnswer and runs the follow-up agent', () => {
+      engine = buildEngineWithGeneratedAnswer({
+        followUpAnswers: {
+          ...getFollowUpAnswersInitialState(),
+          conversationId,
+        },
+      });
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.askFollowUp(question);
+
+      expect(mockFollowUpAgent.abortRun).toHaveBeenCalledTimes(1);
+      expect(mockCreateFollowUpAnswer).toHaveBeenCalledWith({question});
+      expect(mockFollowUpAgent.runAgent).toHaveBeenCalledWith(
+        {
+          forwardedProps: {
+            q: question,
+            conversationId,
+            accessToken: 'foo',
+          },
+        },
+        mockFollowUpStrategy
+      );
     });
 
-    it('should not dispatch when question is empty or whitespace', () => {
+    it('does not run the agent when the question is empty', () => {
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.askFollowUp('   ');
 
-      expect(generateFollowUpAnswer).not.toHaveBeenCalled();
+      expect(mockCreateFollowUpAnswer).not.toHaveBeenCalled();
+      expect(mockFollowUpAgent.runAgent).not.toHaveBeenCalled();
+    });
+
+    it('does not run the agent when the conversationId is missing', () => {
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.askFollowUp(question);
+
+      expect(mockCreateFollowUpAnswer).not.toHaveBeenCalled();
+      expect(mockFollowUpAgent.runAgent).not.toHaveBeenCalled();
+    });
+
+    it('dispatches activeFollowUpStartFailed and logs when the agent fails to start', async () => {
+      engine = buildEngineWithGeneratedAnswer({
+        followUpAnswers: {
+          ...getFollowUpAnswersInitialState(),
+          conversationId,
+        },
+      });
+      const controller = createGeneratedAnswerWithFollowUps();
+      const consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      const failureAction = {type: 'follow-up/startFailed'};
+      const error = new Error('network down');
+      mockActiveFollowUpStartFailed.mockReturnValue(failureAction as never);
+      mockFollowUpAgent.runAgent.mockRejectedValueOnce(error);
+
+      await controller.askFollowUp(question);
+
+      expect(mockFollowUpAgent.runAgent).toHaveBeenCalled();
+      expect(mockActiveFollowUpStartFailed).toHaveBeenCalledWith({
+        message:
+          'An error occurred while starting the follow-up answer generation.',
+      });
+      expect(engine.dispatch).toHaveBeenCalledWith(failureAction);
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        'Error running the follow-up agent:',
+        error
+      );
+      consoleErrorSpy.mockRestore();
     });
   });
 });
