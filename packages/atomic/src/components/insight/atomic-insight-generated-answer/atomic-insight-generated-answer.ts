@@ -532,6 +532,9 @@ export class AtomicInsightGeneratedAnswer
         i18n: this.bindings.i18n,
         generatedAnswer: generatedAnswer,
         collapsible: this.collapsible,
+        isOverCollapseThreshold:
+          this.collapsible &&
+          (this.fullAnswerHeight ?? 0) > this.validateMaxCollapsedHeight(),
         renderFeedbackAndCopyButtonsSlot: () =>
           this.renderFeedbackAndCopyButtonsWrapper(),
         renderCitationsSlot: () => html`${this.renderCitationsList()}`,

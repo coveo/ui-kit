@@ -9,6 +9,7 @@ import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {
   type RenderAnswerContentProps,
   renderAnswerContent,
+  shouldRenderFeedbackAndCopyButtons,
 } from './render-answer-content';
 import {renderGeneratingAnswerLabel} from './render-generating-answer-label';
 
@@ -38,6 +39,7 @@ describe('#renderAnswerContent', () => {
     isStreaming: false,
     answer: 'Test answer',
     citations: [],
+    generationSteps: [],
     answerContentFormat: 'text/markdown' as const,
     expanded: true,
     question: 'Test question',
@@ -52,12 +54,17 @@ describe('#renderAnswerContent', () => {
   const renderComponent = async (
     overrides: Partial<RenderAnswerContentProps> = {}
   ) => {
+    const generatedAnswer = {
+      ...defaultGeneratedAnswer,
+      ...overrides.generatedAnswer,
+      generationSteps:
+        overrides.generatedAnswer?.generationSteps ??
+        defaultGeneratedAnswer.generationSteps,
+    };
+
     const defaultProps: RenderAnswerContentProps = {
       i18n,
-      generatedAnswer: {
-        ...defaultGeneratedAnswer,
-        ...overrides.generatedAnswer,
-      },
+      generatedAnswer,
       collapsible: false,
       renderFeedbackAndCopyButtonsSlot: () => html``,
       renderCitationsSlot: () => html``,
@@ -264,6 +271,7 @@ describe('#renderAnswerContent', () => {
 
         await renderComponent({
           collapsible: true,
+          isOverCollapseThreshold: true,
           renderFeedbackAndCopyButtonsSlot,
           generatedAnswer: {
             ...defaultGeneratedAnswer,
@@ -272,6 +280,22 @@ describe('#renderAnswerContent', () => {
         });
 
         expect(renderFeedbackAndCopyButtonsSlot).not.toHaveBeenCalled();
+      });
+
+      it('should render feedback and copy buttons when the answer is not over collapse threshold (short answer)', async () => {
+        const renderFeedbackAndCopyButtonsSlot = vi.fn(() => html``);
+
+        await renderComponent({
+          collapsible: true,
+          isOverCollapseThreshold: false,
+          renderFeedbackAndCopyButtonsSlot,
+          generatedAnswer: {
+            ...defaultGeneratedAnswer,
+            expanded: false,
+          },
+        });
+
+        expect(renderFeedbackAndCopyButtonsSlot).toHaveBeenCalled();
       });
     });
 
@@ -387,6 +411,44 @@ describe('#renderAnswerContent', () => {
           });
         });
       });
+    });
+  });
+
+  describe('#shouldRenderFeedbackAndCopyButtons', () => {
+    it('should not display feedback buttons when collapsible and over collapse threshold', () => {
+      const result = shouldRenderFeedbackAndCopyButtons({
+        hasRetryableError: false,
+        collapsible: true,
+        isOverCollapseThreshold: true,
+        isStreaming: false,
+        expanded: false,
+      });
+
+      expect(result).toBe(false);
+    });
+
+    it('should display feedback buttons when collapsible and not over collapse threshold', () => {
+      const result = shouldRenderFeedbackAndCopyButtons({
+        hasRetryableError: false,
+        collapsible: true,
+        isOverCollapseThreshold: false,
+        isStreaming: false,
+        expanded: false,
+      });
+
+      expect(result).toBe(true);
+    });
+
+    it('should display feedback buttons when not collapsible', () => {
+      const result = shouldRenderFeedbackAndCopyButtons({
+        hasRetryableError: false,
+        collapsible: false,
+        isOverCollapseThreshold: undefined,
+        isStreaming: false,
+        expanded: false,
+      });
+
+      expect(result).toBe(true);
     });
   });
 });

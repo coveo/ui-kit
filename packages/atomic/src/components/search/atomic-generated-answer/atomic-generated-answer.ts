@@ -666,6 +666,9 @@ export class AtomicGeneratedAnswer
         i18n: this.bindings.i18n,
         generatedAnswer: generatedAnswer,
         collapsible: this.isCollapsibleEnabled,
+        isOverCollapseThreshold:
+          this.isCollapsibleEnabled &&
+          (this.fullAnswerHeight ?? 0) > this.validateMaxCollapsedHeight(),
         renderFeedbackAndCopyButtonsSlot: () =>
           this.renderFeedbackAndCopyButtonsWrapper(),
         renderCitationsSlot: () =>
