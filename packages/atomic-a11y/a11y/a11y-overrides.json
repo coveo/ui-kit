@@ -56,11 +56,6 @@
       "reason": "Atomic components do not require dragging movements — all interactions have single-pointer alternatives."
     },
     {
-      "criterion": "3.1.1",
-      "conformance": "not-applicable",
-      "reason": "Language of page is set via the html lang attribute by the consuming application, not by embedded components."
-    },
-    {
       "criterion": "3.2.6",
       "conformance": "not-applicable",
       "reason": "Consistent help mechanisms are an application-level concern — Atomic provides UI primitives, not help systems."
