@@ -81,8 +81,7 @@
       "ignoreDependencies": ["@coveo/bueno", "local-web-server"]
     },
     "packages/atomic-a11y": {
-      "entry": ["scripts/*.mjs", "src/index.ts", "src/audit/*.ts"],
-      "ignoreDependencies": ["openai", "playwright"]
+      "entry": ["scripts/*.mjs", "src/index.ts", "src/audit/*.ts"]
     },
 
     // Projects to enable bunch by bunch.

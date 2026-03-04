@@ -136,7 +136,7 @@ export interface A11yReport {
 
 /**
  * A single component entry in a delta file.
- * Used by manual-audit-delta, generate-a11y-issues, and ai-wcag-audit scripts.
+ * Used by manual-audit-delta and ai-wcag-audit scripts.
  */
 export interface DeltaEntry {
   name: string;
