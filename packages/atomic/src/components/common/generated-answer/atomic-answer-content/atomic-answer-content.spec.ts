@@ -3,6 +3,7 @@ import {beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {renderGeneratedContentContainer} from '../generated-content-container';
+import {renderAgentGenerationSteps} from '../render-agent-generation-steps';
 import {renderFeedbackAndCopyButtons} from '../render-feedback-and-copy-buttons';
 import {renderSourceCitations} from '../source-citations';
 import type {
@@ -19,6 +20,9 @@ vi.mock('../generated-content-container', () => ({
     () => (slot?: unknown) => html`${slot ?? ''}`
   ),
 }));
+vi.mock('../render-agent-generation-steps', () => ({
+  renderAgentGenerationSteps: vi.fn(() => html``),
+}));
 vi.mock('../source-citations', () => ({
   renderSourceCitations: vi.fn(() => (slot?: unknown) => html`${slot ?? ''}`),
 }));
@@ -33,6 +37,7 @@ describe('atomic-answer-content', () => {
     answerId: 'answer-id',
     answerContentFormat: 'text/markdown',
     citations: [],
+    generationSteps: [],
     isStreaming: false,
     liked: false,
     disliked: false,
@@ -105,6 +110,74 @@ describe('atomic-answer-content', () => {
       },
     });
 
+    expect(renderAgentGenerationSteps).not.toHaveBeenCalled();
+    expect(renderGeneratedContentContainer).not.toHaveBeenCalled();
+    expect(renderFeedbackAndCopyButtons).not.toHaveBeenCalled();
+  });
+
+  it('should call renderAgentGenerationSteps with an empty list when generation steps are missing', async () => {
+    await renderComponent({
+      generatedAnswer: {
+        generationSteps: undefined,
+      },
+    });
+
+    expect(renderAgentGenerationSteps).toHaveBeenCalledWith({
+      props: expect.objectContaining({
+        i18n,
+        agentSteps: [],
+        isStreaming: false,
+      }),
+    });
+  });
+
+  it('should call renderAgentGenerationSteps with isStreaming false when not streaming', async () => {
+    const generationSteps = [
+      {
+        name: 'searching' as const,
+        status: 'active' as const,
+        startedAt: 1,
+      },
+    ];
+
+    await renderComponent({
+      generatedAnswer: {
+        isStreaming: false,
+        generationSteps,
+      },
+    });
+
+    expect(renderAgentGenerationSteps).toHaveBeenCalledWith({
+      props: expect.objectContaining({
+        i18n,
+        agentSteps: generationSteps,
+        isStreaming: false,
+      }),
+    });
+  });
+
+  it('should render generation-step state when streaming without answer content', async () => {
+    await renderComponent({
+      generatedAnswer: {
+        answer: undefined,
+        answerId: undefined,
+        isStreaming: true,
+        generationSteps: [
+          {
+            name: 'thinking',
+            status: 'active',
+            startedAt: 1,
+          },
+        ],
+      },
+    });
+
+    expect(renderAgentGenerationSteps).toHaveBeenCalledWith({
+      props: expect.objectContaining({
+        i18n,
+        isStreaming: true,
+      }),
+    });
     expect(renderGeneratedContentContainer).not.toHaveBeenCalled();
     expect(renderFeedbackAndCopyButtons).not.toHaveBeenCalled();
   });
