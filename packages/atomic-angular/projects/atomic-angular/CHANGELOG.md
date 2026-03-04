@@ -1,3 +1,9 @@
+## <small>3.10.4 (2026-03-04)</small>
+
+* chore: eject angular build from Stencil (#7149) ([2c4d509](https://github.com/coveo/ui-kit/commits/2c4d509)), closes [#7149](https://github.com/coveo/ui-kit/issues/7149)
+
+
+
 ## <small>3.10.1 (2026-02-18)</small>
 
 * cd: trigger an atomic-angular release (#7095) ([ec84341](https://github.com/coveo/ui-kit/commits/ec84341)), closes [#7095](https://github.com/coveo/ui-kit/issues/7095)
