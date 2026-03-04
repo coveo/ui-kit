@@ -1,12 +1,147 @@
-import {closest} from '@/src/utils/dom-utils';
 import {ComponentInterface, getElement} from '@stencil/core';
-import {buildCustomEvent} from '../../../utils/event-utils';
-import {AnyItem} from './unfolded-item';
-import {
-  ItemDisplayDensity,
-  ItemDisplayImageSize,
-} from '../layout/display-options';
-import {ResultTemplateProvider} from './result-template-provider';
+
+import type {FoldedResult, Result} from '@coveo/headless';
+import type {Product} from '@coveo/headless/commerce';
+import type {Result as InsightResult} from '@coveo/headless/insight';
+
+import type {Template, TemplatesManager} from '@coveo/headless';
+
+export interface TemplateElement<ItemType> extends HTMLElement {
+  getTemplate(): Promise<Template<ItemType, DocumentFragment> | null>;
+}
+
+export interface TemplateProviderProps<ItemType> {
+  getResultTemplateRegistered(): boolean;
+  setResultTemplateRegistered(value: boolean): void;
+  getTemplateHasError(): boolean;
+  setTemplateHasError(value: boolean): void;
+  templateElements: TemplateElement<ItemType>[];
+  includeDefaultTemplate: boolean;
+}
+
+export abstract class TemplateProvider<ItemType> {
+  private templateManager: TemplatesManager<
+    ItemType,
+    DocumentFragment,
+    DocumentFragment
+  >;
+
+  protected abstract makeDefaultTemplate(): Template<
+    ItemType,
+    DocumentFragment,
+    DocumentFragment
+  >;
+
+  constructor(
+    private props: TemplateProviderProps<ItemType>,
+    private buildManager: () => TemplatesManager<
+      ItemType,
+      DocumentFragment,
+      DocumentFragment
+    >
+  ) {
+    this.templateManager = this.buildManager();
+    this.registerResultTemplates();
+  }
+
+  private async registerResultTemplates() {
+    const customTemplates = await Promise.all(
+      this.props.templateElements.map(async (resultTemplateElement) => {
+        if (!('getTemplate' in resultTemplateElement)) {
+          await customElements.whenDefined(
+            (resultTemplateElement as HTMLElement).tagName.toLowerCase()
+          );
+        }
+
+        const template = await resultTemplateElement.getTemplate();
+        if (!template) {
+          this.props.setTemplateHasError(true);
+        }
+        return template;
+      })
+    );
+
+    const templates = (
+      !customTemplates.length && this.props.includeDefaultTemplate
+        ? [this.makeDefaultTemplate()]
+        : []
+    ).concat(
+      customTemplates.filter((template) => template) as Template<
+        ItemType,
+        DocumentFragment,
+        DocumentFragment
+      >[]
+    );
+
+    this.templateManager.registerTemplates(...templates);
+    this.props.setResultTemplateRegistered(true);
+  }
+
+  public getTemplateContent(item: ItemType) {
+    return this.templateManager.selectTemplate(item)!;
+  }
+
+  public getLinkTemplateContent(item: ItemType) {
+    return this.templateManager.selectLinkTemplate(item)!;
+  }
+
+  public getEmptyLinkTemplateContent() {
+    return document.createDocumentFragment();
+  }
+
+  public get templatesRegistered() {
+    return this.props.getResultTemplateRegistered();
+  }
+
+  public get hasError() {
+    return this.props.getTemplateHasError();
+  }
+}
+
+type ItemDisplayDensity = 'comfortable' | 'normal' | 'compact';
+type ItemDisplayImageSize = 'large' | 'small' | 'icon' | 'none';
+type AnyItem = FoldedResult | AnyUnfoldedItem | Product;
+type AnyUnfoldedItem = Result | InsightResult;
+
+function closest<K extends keyof HTMLElementTagNameMap>(
+  element: Element | null,
+  selector: K
+): HTMLElementTagNameMap[K] | null;
+function closest<K extends keyof SVGElementTagNameMap>(
+  element: Element | null,
+  selector: K
+): SVGElementTagNameMap[K] | null;
+function closest<E extends Element = Element>(
+  element: Element | null,
+  selector: string
+): E | null;
+function closest(
+  element: Element | null,
+  selector: string
+): HTMLElement | null {
+  if (!element) {
+    return null;
+  }
+  if (element.matches(selector)) {
+    return element as HTMLElement;
+  }
+  if (element.parentNode instanceof ShadowRoot) {
+    return closest(element.parentNode.host, selector);
+  }
+  return closest(element.parentElement, selector);
+}
+
+function buildCustomEvent<T = undefined>(name: string, detail?: T) {
+  return new CustomEvent(name, {
+    detail,
+    // Event will bubble up the DOM until it is caught
+    bubbles: true,
+    // Allows to verify if event is caught (cancelled). If it's not caught, it won't be initialized.
+    cancelable: true,
+    // Allows to compose Atomic components inside one another, event will go across DOM/Shadow DOM
+    composed: true,
+  });
+}
 
 export class MissingParentError extends Error {
   constructor(elementName: string, parentName: string) {
@@ -135,48 +270,7 @@ function extractFolded(item: Record<string, unknown>, returnFolded: boolean) {
   return item;
 }
 
-type ChildTemplatesContextEventHandler = (
-  itemTemplateProvider?: ResultTemplateProvider
-) => void;
-export type ChildTemplatesContextEvent =
-  CustomEvent<ChildTemplatesContextEventHandler>;
-const childTemplatesContextEventName = 'atomic/resolveChildTemplates';
-
-interface AtomicItemChildren {
-  itemTemplateProvider?: ResultTemplateProvider;
-}
-
-/**
- * @deprecated should only be used for Stencil components. For Lit components, use `ChildTemplatesContext` from \@/src/decorators/item-list/child-templates-context.js.
- */
-export function ChildTemplatesContext() {
-  return (component: ComponentInterface, itemTemplateProviderProp: string) => {
-    const {componentWillRender} = component;
-    component.componentWillRender = function () {
-      const element = getElement(this);
-      const event = buildCustomEvent(
-        childTemplatesContextEventName,
-        (itemTemplateProvider?: ResultTemplateProvider) => {
-          const component = this as AtomicItemChildren;
-          if (component.itemTemplateProvider) {
-            return;
-          }
-
-          this[itemTemplateProviderProp] = itemTemplateProvider;
-        }
-      );
-
-      const canceled = element.dispatchEvent(event);
-      if (canceled) {
-        this[itemTemplateProviderProp] = null;
-        return;
-      }
-      return componentWillRender && componentWillRender.call(this);
-    };
-  };
-}
-
-export type DisplayConfig = {
+type DisplayConfig = {
   density: ItemDisplayDensity;
   imageSize: ItemDisplayImageSize;
 };

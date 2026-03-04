@@ -1,5 +1,5 @@
-import {Product} from '@coveo/headless/commerce';
-import {itemContext} from '@/src/components/common/item-list/stencil-item-decorators';
+import type {Product} from '@coveo/headless/commerce';
+import {itemContext} from './common.js';
 
 /**
  * Retrieves `Product` on a rendered `atomic-product`.

@@ -190,6 +190,26 @@ describe('atomic-answer-content', () => {
     expect(renderFeedbackAndCopyButtons).not.toHaveBeenCalled();
   });
 
+  it('should render the error template when the generated answer has an error', async () => {
+    const {element} = await renderComponent({
+      generatedAnswer: {
+        error: {message: 'error'},
+      },
+    });
+
+    await element.updateComplete;
+
+    const errorContainer = element.shadowRoot?.querySelector(
+      '[part="generated-answer-error"]'
+    );
+
+    expect(renderGeneratedContentContainer).not.toHaveBeenCalled();
+    expect(errorContainer).not.toBeNull();
+    expect(errorContainer?.textContent).toContain(
+      i18n.t('generated-answer-error-generic')
+    );
+  });
+
   it('should render the generated content container with answer data', async () => {
     const {getGeneratedContentProps} = await renderComponent();
 

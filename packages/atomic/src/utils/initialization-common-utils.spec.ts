@@ -2,7 +2,7 @@ import {describe, expect, it} from 'vitest';
 import {
   fetchBindings,
   MissingInterfaceParentError,
-} from './initialization-lit-stencil-common-utils';
+} from './initialization-common-utils';
 import '@/src/components/search/atomic-search-interface/atomic-search-interface.js';
 
 describe('fetchBindings', () => {
