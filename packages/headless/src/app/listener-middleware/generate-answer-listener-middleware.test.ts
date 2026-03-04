@@ -27,12 +27,14 @@ vi.mock(
 );
 
 const answerRunnerRun = vi.fn();
+const answerRunnerAbortRun = vi.fn();
 
 vi.mock(
   '../../api/knowledge/answer-generation/agents/answer-agent/answer-agent-runner.js',
   () => ({
     createAnswerRunner: vi.fn(() => ({
       run: answerRunnerRun,
+      abortRun: answerRunnerAbortRun,
     })),
   })
 );
@@ -71,7 +73,7 @@ describe('generateAnswerListener', () => {
           });
         });
 
-        it('should dispatch head answer reset and follow-up reset but not run the answer agent when query is empty', async () => {
+        it('should abort current run, dispatch head answer, reset and follow-up reset but not run the answer agent when query is empty', async () => {
           const searchAction = executeSearch.pending('requestId', {
             legacy: logInsightInterfaceLoad(),
             next: interfaceLoad(),
@@ -82,6 +84,7 @@ describe('generateAnswerListener', () => {
           await vi.waitFor(() => {
             expect(resetAnswer).toHaveBeenCalled();
             expect(resetFollowUpAnswers).toHaveBeenCalled();
+            expect(answerRunnerAbortRun).toHaveBeenCalled();
             expect(answerRunnerRun).not.toHaveBeenCalled();
           });
         });
@@ -112,7 +115,7 @@ describe('generateAnswerListener', () => {
           });
         });
 
-        it('should dispatch head answer reset and follow-up reset when executeSearch.pending is dispatched', async () => {
+        it('should abort current run, dispatch head answer reset and follow-up reset when executeSearch.pending is dispatched', async () => {
           const searchAction = executeSearch.pending('requestId', {
             legacy: logInsightInterfaceLoad(),
             next: interfaceLoad(),
@@ -123,10 +126,11 @@ describe('generateAnswerListener', () => {
           await vi.waitFor(() => {
             expect(resetAnswer).toHaveBeenCalled();
             expect(resetFollowUpAnswers).toHaveBeenCalled();
+            expect(answerRunnerAbortRun).toHaveBeenCalled();
           });
         });
 
-        it('should dispatch head answer reset and follow-up reset before running the answer agent', async () => {
+        it('should abort current run, dispatch head answer reset and follow-up reset before running the answer agent', async () => {
           const searchAction = executeSearch.pending('requestId', {
             legacy: logInsightInterfaceLoad(),
             next: interfaceLoad(),
@@ -137,9 +141,12 @@ describe('generateAnswerListener', () => {
           await vi.waitFor(() => {
             expect(resetAnswer).toHaveBeenCalled();
             expect(resetFollowUpAnswers).toHaveBeenCalled();
+            expect(answerRunnerAbortRun).toHaveBeenCalled();
             expect(answerRunnerRun).toHaveBeenCalled();
           });
 
+          const abortCallOrder =
+            answerRunnerAbortRun.mock.invocationCallOrder[0];
           // biome-ignore lint/suspicious/noExplicitAny: unit tests
           const resetCallOrder = (resetAnswer as any).mock
             .invocationCallOrder[0];
@@ -147,7 +154,9 @@ describe('generateAnswerListener', () => {
           const resetFollowUpCallOrder = (resetFollowUpAnswers as any).mock
             .invocationCallOrder[0];
           const runCallOrder = answerRunnerRun.mock.invocationCallOrder[0];
+          expect(abortCallOrder).toBeLessThan(resetCallOrder);
           expect(resetCallOrder).toBeLessThan(runCallOrder);
+          expect(abortCallOrder).toBeLessThan(resetFollowUpCallOrder);
           expect(resetFollowUpCallOrder).toBeLessThan(runCallOrder);
         });
       });
@@ -182,6 +191,7 @@ describe('generateAnswerListener', () => {
         store.dispatch(searchAction);
 
         expect(answerRunnerRun).not.toHaveBeenCalled();
+        expect(answerRunnerAbortRun).not.toHaveBeenCalled();
       });
 
       it('should not dispatch head answer reset or follow-up reset when executeSearch.pending is dispatched', () => {
@@ -194,6 +204,7 @@ describe('generateAnswerListener', () => {
 
         expect(resetAnswer).not.toHaveBeenCalled();
         expect(resetFollowUpAnswers).not.toHaveBeenCalled();
+        expect(answerRunnerAbortRun).not.toHaveBeenCalled();
       });
     });
   });
@@ -226,6 +237,7 @@ describe('generateAnswerListener', () => {
       store.dispatch(searchAction);
 
       expect(answerRunnerRun).not.toHaveBeenCalled();
+      expect(answerRunnerAbortRun).not.toHaveBeenCalled();
     });
 
     it('should not dispatch head answer reset or follow-up reset when executeSearch.pending is dispatched', () => {
@@ -238,6 +250,7 @@ describe('generateAnswerListener', () => {
 
       expect(resetAnswer).not.toHaveBeenCalled();
       expect(resetFollowUpAnswers).not.toHaveBeenCalled();
+      expect(answerRunnerAbortRun).not.toHaveBeenCalled();
     });
   });
 });

@@ -8,16 +8,19 @@ import {
   setIsEnabled,
 } from '../../../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {
+  finishStep,
   setAnswerContentFormat,
   setAnswerId,
   setCannotAnswer,
   setIsAnswerGenerated,
   setIsLoading,
   setIsStreaming,
+  startStep,
   updateCitations,
   updateError,
   updateMessage,
 } from '../../../../../features/generated-answer/generated-answer-actions.js';
+import {GeneratedAnswerSseErrorCode} from '../../../../../features/generated-answer/sse-generated-answer-errors.js';
 import {createHeadAnswerStrategy} from './head-answer-strategy.js';
 
 describe('createHeadAnswerStrategy', () => {
@@ -29,17 +32,41 @@ describe('createHeadAnswerStrategy', () => {
     strategy = createHeadAnswerStrategy(dispatch);
   });
 
-  it('sets the loading state when a run starts', () => {
-    strategy.onRunStartedEvent!({event: {runId: 'run-001'}} as any);
+  it('initializes identifiers and streaming state when a run starts', () => {
+    strategy.onRunStartedEvent!({
+      event: {runId: 'run-001', threadId: 'thread-007'},
+    } as any);
 
     expect(dispatch).toHaveBeenCalledWith(setAnswerId('run-001'));
-    expect(dispatch).toHaveBeenCalledWith(setIsLoading(true));
+    expect(dispatch).toHaveBeenCalledWith(setIsLoading(false));
+    expect(dispatch).toHaveBeenCalledWith(setIsStreaming(true));
+    expect(dispatch).toHaveBeenCalledWith(
+      setFollowUpAnswersConversationId('thread-007')
+    );
   });
 
-  it('marks the stream as active when text streaming begins', () => {
-    strategy.onTextMessageStartEvent!({} as any);
+  it('dispatches a new generation step start when a step starts', () => {
+    strategy.onStepStartedEvent!({
+      event: {stepName: 'searching', timestamp: 123},
+    } as any);
 
-    expect(dispatch).toHaveBeenCalledWith(setIsStreaming(true));
+    expect(dispatch).toHaveBeenCalledWith(
+      startStep({name: 'searching', startedAt: 123})
+    );
+  });
+
+  it('records the completion of a generation step and falls back to Date.now()', () => {
+    const nowSpy = vi.spyOn(Date, 'now').mockReturnValue(456);
+
+    strategy.onStepFinishedEvent!({
+      event: {stepName: 'answering'},
+    } as any);
+
+    expect(dispatch).toHaveBeenCalledWith(
+      finishStep({name: 'answering', finishedAt: 456})
+    );
+
+    nowSpy.mockRestore();
   });
 
   it('appends incoming text deltas to the answer message', () => {
@@ -53,22 +80,16 @@ describe('createHeadAnswerStrategy', () => {
       event: {
         name: 'header',
         value: {
-          conversationId: 'conv-001',
           contentFormat: 'text/markdown',
           followUpEnabled: true,
         },
       },
     } as any);
 
-    expect(dispatch).toHaveBeenNthCalledWith(
-      1,
-      setFollowUpAnswersConversationId('conv-001')
-    );
-    expect(dispatch).toHaveBeenNthCalledWith(
-      2,
+    expect(dispatch).toHaveBeenCalledWith(
       setAnswerContentFormat('text/markdown')
     );
-    expect(dispatch).toHaveBeenNthCalledWith(3, setIsEnabled(true));
+    expect(dispatch).toHaveBeenCalledWith(setIsEnabled(true));
   });
 
   it('updates citations when the server sends citation data', () => {
@@ -97,12 +118,15 @@ describe('createHeadAnswerStrategy', () => {
     strategy.onRunErrorEvent!({
       event: {
         message: 'Something went wrong',
-        code: '400',
+        code: 'KNOWLEDGE:SSE_MAX_DURATION_EXCEEDED',
       },
     } as any);
 
     expect(dispatch).toHaveBeenCalledWith(
-      updateError({message: 'Something went wrong', code: 400})
+      updateError({
+        message: 'Something went wrong',
+        code: GeneratedAnswerSseErrorCode.SseMaxDurationExceeded,
+      })
     );
   });
 
@@ -118,7 +142,6 @@ describe('createHeadAnswerStrategy', () => {
     expect(dispatch).toHaveBeenNthCalledWith(1, setIsAnswerGenerated(true));
     expect(dispatch).toHaveBeenNthCalledWith(2, setCannotAnswer(false));
     expect(dispatch).toHaveBeenNthCalledWith(3, setIsStreaming(false));
-    expect(dispatch).toHaveBeenNthCalledWith(4, setIsLoading(false));
   });
 
   it('disables answer flags when no answer was generated', () => {
@@ -127,6 +150,5 @@ describe('createHeadAnswerStrategy', () => {
     expect(dispatch).toHaveBeenNthCalledWith(1, setIsAnswerGenerated(false));
     expect(dispatch).toHaveBeenNthCalledWith(2, setCannotAnswer(true));
     expect(dispatch).toHaveBeenNthCalledWith(3, setIsStreaming(false));
-    expect(dispatch).toHaveBeenNthCalledWith(4, setIsLoading(false));
   });
 });

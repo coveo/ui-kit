@@ -12,7 +12,7 @@ import {
   type InitializeEvent,
   markParentAsReady,
 } from '@/src/utils/init-queue.js';
-import {initializeEventName} from '@/src/utils/initialization-lit-stencil-common-utils.js';
+import {initializeEventName} from '@/src/utils/initialization-common-utils.js';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture.js';
 import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common.js';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils.js';

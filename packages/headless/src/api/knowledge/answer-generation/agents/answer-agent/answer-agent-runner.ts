@@ -7,6 +7,10 @@ import {
   selectOrganizationId,
 } from '../../../../../features/configuration/configuration-selectors.js';
 import {
+  setIsLoading,
+  updateError,
+} from '../../../../../features/generated-answer/generated-answer-actions.js';
+import {
   constructGenerateHeadAnswerParams,
   type StateNeededForHeadAnswerParams,
 } from '../../../../../features/generated-answer/generated-answer-request.js';
@@ -28,7 +32,7 @@ export const createAnswerRunner = () => {
     currentAgent = undefined;
   };
 
-  const run = (
+  const run = async (
     state: StateNeededForHeadAnswerParams,
     dispatch: Dispatch,
     getNavigatorContext: () => NavigatorContext
@@ -49,16 +53,26 @@ export const createAnswerRunner = () => {
       state,
       getNavigatorContext()
     );
-
-    agent.runAgent(
-      {
-        forwardedProps: {
-          params,
-          accessToken,
+    try {
+      dispatch(setIsLoading(true));
+      await agent.runAgent(
+        {
+          forwardedProps: {
+            params,
+            accessToken,
+          },
         },
-      },
-      strategy
-    );
+        strategy
+      );
+    } catch (error) {
+      dispatch(setIsLoading(false));
+      dispatch(
+        updateError({
+          message: 'An error occurred while starting the answer generation.',
+        })
+      );
+      console.error('Error running the answer agent:', error);
+    }
   };
 
   return {

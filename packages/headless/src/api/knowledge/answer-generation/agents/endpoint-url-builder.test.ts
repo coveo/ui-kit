@@ -1,4 +1,4 @@
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import type {PlatformEnvironment} from '../../../../utils/url-utils.js';
 import {getOrganizationEndpoint} from '../../../platform-client.js';
 import {buildBaseAnswerGenerationUrl} from './endpoint-url-builder.js';

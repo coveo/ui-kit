@@ -27,6 +27,7 @@ export const createGenerateAnswerListener = (extra: {
       if (!isGeneratedAnswerFeatureEnabledWithAnswerGenerationAPI(state)) {
         return;
       }
+      answerRunner.abortRun();
       listenerApi.dispatch(resetAnswer());
       listenerApi.dispatch(resetFollowUpAnswers());
 

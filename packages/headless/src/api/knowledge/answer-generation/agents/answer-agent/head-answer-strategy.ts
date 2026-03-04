@@ -5,16 +5,20 @@ import {
   setIsEnabled,
 } from '../../../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {
+  finishStep,
   setAnswerContentFormat,
   setAnswerId,
   setCannotAnswer,
   setIsAnswerGenerated,
   setIsLoading,
   setIsStreaming,
+  startStep,
   updateCitations,
   updateError,
   updateMessage,
 } from '../../../../../features/generated-answer/generated-answer-actions.js';
+import type {GenerationStepName} from '../../../../../features/generated-answer/generated-answer-state.js';
+import {mapRunErrorCode} from '../../../../../features/generated-answer/sse-generated-answer-errors.js';
 
 /**
  * Creates an AgentSubscriber that handles answer streaming events
@@ -23,54 +27,63 @@ export const createHeadAnswerStrategy = (
   dispatch: Dispatch
 ): AgentSubscriber => {
   return {
-    onRunStartedEvent: (param) => {
-      dispatch(setAnswerId(param.event.runId));
-      dispatch(setIsLoading(true));
-    },
-    onTextMessageStartEvent: () => {
+    onRunStartedEvent: ({event}) => {
+      dispatch(setAnswerId(event.runId));
+      dispatch(setIsLoading(false));
       dispatch(setIsStreaming(true));
+      dispatch(setFollowUpAnswersConversationId(event.threadId));
     },
-    onTextMessageContentEvent: (param) => {
-      dispatch(updateMessage({textDelta: param.event.delta}));
+    onStepStartedEvent: ({event}) => {
+      dispatch(
+        startStep({
+          name: event.stepName as GenerationStepName,
+          startedAt: event.timestamp ?? Date.now(),
+        })
+      );
     },
-    onCustomEvent: (param) => {
-      const {
-        event: {name, value},
-      } = param;
+    onStepFinishedEvent: ({event}) => {
+      dispatch(
+        finishStep({
+          name: event.stepName as GenerationStepName,
+          finishedAt: event.timestamp ?? Date.now(),
+        })
+      );
+    },
+    onTextMessageContentEvent: ({event}) => {
+      dispatch(updateMessage({textDelta: event.delta}));
+    },
+    onCustomEvent: ({event}) => {
+      const {name, value} = event;
       switch (name) {
         case 'header': {
-          if (value?.conversationId) {
-            dispatch(setFollowUpAnswersConversationId(value.conversationId));
-          }
           if (value?.contentFormat) {
             dispatch(setAnswerContentFormat(value.contentFormat));
           }
           if (value?.followUpEnabled) {
             dispatch(setIsEnabled(value.followUpEnabled));
           }
-          break;
+          return;
         }
         case 'citations': {
           dispatch(updateCitations({citations: value.citations}));
-          break;
+          return;
         }
       }
     },
-    onRunErrorEvent: (param) => {
-      const code = param.event.code;
+    onRunErrorEvent: ({event}) => {
+      const mappedCode = mapRunErrorCode(event.code);
       dispatch(
         updateError({
-          message: param.event.message,
-          code: code ? Number(code) : undefined,
+          message: event.message,
+          code: mappedCode,
         })
       );
     },
-    onRunFinishedEvent: (param) => {
-      const answerGenerated = param.event.result?.answerGenerated ?? false;
+    onRunFinishedEvent: ({event}) => {
+      const answerGenerated = event.result?.answerGenerated ?? false;
       dispatch(setIsAnswerGenerated(answerGenerated));
       dispatch(setCannotAnswer(!answerGenerated));
       dispatch(setIsStreaming(false));
-      dispatch(setIsLoading(false));
     },
   };
 };
