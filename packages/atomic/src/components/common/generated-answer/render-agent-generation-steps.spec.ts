@@ -130,7 +130,7 @@ describe('#renderAgentGenerationSteps', () => {
 
     await expect
       .element(element)
-      .toHaveTextContent('Searching for relevant results...');
+      .toHaveTextContent(i18n.t('agent-generation-step-search'));
   });
 
   it('should render the active think step label when streaming', async () => {
@@ -144,7 +144,9 @@ describe('#renderAgentGenerationSteps', () => {
       isStreaming: true,
     });
 
-    await expect.element(element).toHaveTextContent('Thinking...');
+    await expect
+      .element(element)
+      .toHaveTextContent(i18n.t('agent-generation-step-think'));
   });
 
   it('should render the active answering step label when streaming', async () => {
@@ -158,7 +160,9 @@ describe('#renderAgentGenerationSteps', () => {
       isStreaming: true,
     });
 
-    await expect.element(element).toHaveTextContent('Generating answer');
+    await expect
+      .element(element)
+      .toHaveTextContent(i18n.t('generating-answer'));
   });
 
   it('should not render anything when there is no active step', async () => {
@@ -196,7 +200,7 @@ describe('#renderAgentGenerationSteps', () => {
 
     await expect
       .element(element)
-      .toHaveTextContent('Searching for relevant results...');
+      .toHaveTextContent(i18n.t('agent-generation-step-search'));
   });
 
   it('should render the rolodex animation structure', async () => {

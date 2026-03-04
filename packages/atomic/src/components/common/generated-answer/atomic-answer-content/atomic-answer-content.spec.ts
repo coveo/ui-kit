@@ -186,8 +186,21 @@ describe('atomic-answer-content', () => {
         ],
       }),
     });
-    expect(renderGeneratedContentContainer).not.toHaveBeenCalled();
-    expect(renderFeedbackAndCopyButtons).not.toHaveBeenCalled();
+    expect(renderGeneratedContentContainer).toHaveBeenCalledWith({
+      props: expect.objectContaining({
+        answer: undefined,
+        answerContentFormat: 'text/markdown',
+        isStreaming: true,
+      }),
+    });
+    expect(renderFeedbackAndCopyButtons).toHaveBeenCalledWith({
+      props: expect.objectContaining({
+        generatedAnswerActionsState: expect.objectContaining({
+          isStreaming: true,
+          answer: undefined,
+        }),
+      }),
+    });
   });
 
   it('should render the error template when the generated answer has an error', async () => {
