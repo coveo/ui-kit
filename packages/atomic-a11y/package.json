@@ -15,7 +15,10 @@
     "a11y:merge-shards": "pnpm build && node scripts/merge-shards-cli.mjs"
   },
   "dependencies": {
-    "js-yaml": "^4.1.0"
+    "exponential-backoff": "^3.1.1",
+    "js-yaml": "^4.1.0",
+    "openai": "^4.77.0",
+    "playwright": "^1.49.1"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",

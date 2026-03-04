@@ -1,18 +1,53 @@
+/**
+ * Browser capture utilities for accessibility auditing.
+ *
+ * Provides Playwright-based browser automation for capturing screenshots,
+ * accessibility trees, and interaction states from Storybook stories.
+ */
+
+import {type Browser, chromium, type Page} from 'playwright';
 import {
   type AccessibilityNode,
   diffAccessibilityTrees,
 } from './accessibility-tree.js';
-import type {PlaywrightBrowser, PlaywrightPage} from './types.js';
 
+export type {Browser as PlaywrightBrowser, Page as PlaywrightPage};
+
+/**
+ * CSS selectors for interactive elements that should be tested
+ * for hover, focus, and target size requirements.
+ */
+const INTERACTIVE_SELECTORS = [
+  'button',
+  'a[href]',
+  '[role="button"]',
+  '[role="link"]',
+  '[role="tab"]',
+  '[role="menuitem"]',
+  '[role="combobox"]',
+  'input:not([type="hidden"])',
+  'select',
+  '[tabindex="0"]',
+] as const;
+
+/** Combined selector string for querying all interactive elements. */
+const INTERACTIVE_SELECTOR = INTERACTIVE_SELECTORS.join(', ');
+
+/** Browser instance and page pool for concurrent auditing. */
 export interface BrowserContext {
-  browser: PlaywrightBrowser;
-  pages: PlaywrightPage[];
+  browser: Browser;
+  pages: Page[];
 }
 
+/**
+ * Initializes a headless browser with a pool of pages for concurrent auditing.
+ *
+ * @param concurrency - Number of pages to create for parallel processing
+ * @returns Browser context with page pool
+ */
 export async function initBrowser(
   concurrency: number
 ): Promise<BrowserContext> {
-  const {chromium} = await import('playwright' as string);
   const browser = await chromium.launch({headless: true});
   const pages = await Promise.all(
     Array.from({length: concurrency}, async () => {
@@ -24,8 +59,15 @@ export async function initBrowser(
   return {browser, pages};
 }
 
+/**
+ * Navigates to a Storybook story in iframe mode.
+ *
+ * @param page - Playwright page instance
+ * @param storybookUrl - Base URL of the Storybook instance
+ * @param storyId - Story identifier (e.g., "components-button--primary")
+ */
 export async function navigateToStory(
-  page: PlaywrightPage,
+  page: Page,
   storybookUrl: string,
   storyId: string
 ): Promise<void> {
@@ -35,13 +77,22 @@ export async function navigateToStory(
   await page.waitForTimeout(1000);
 }
 
+/** Screenshot and accessibility tree capture result. */
 export interface CaptureResult {
+  /** Base64-encoded PNG screenshot. */
   screenshot: string;
+  /** Accessibility tree snapshot, or null if unavailable. */
   accessibilityTree: AccessibilityNode | null;
 }
 
+/**
+ * Captures a screenshot and accessibility tree at the default viewport size.
+ *
+ * @param page - Playwright page instance
+ * @returns Screenshot and accessibility tree data
+ */
 export async function captureDefaultViewport(
-  page: PlaywrightPage
+  page: Page
 ): Promise<CaptureResult> {
   await page.setViewportSize({width: 1024, height: 768});
   await page.waitForTimeout(300);
@@ -56,33 +107,33 @@ export async function captureDefaultViewport(
   return {screenshot, accessibilityTree};
 }
 
+/** Result from hover state detection. */
 export interface HoverCaptureResult {
+  /** Whether any hover state changes were detected. */
   hoverDetected: boolean;
+  /** Base64-encoded screenshot showing hover state, or null if none detected. */
   hoverScreenshot: string | null;
+  /** Description of detected hover state changes. */
   hoverDetails: string;
 }
 
+/**
+ * Tests interactive elements for hover state accessibility tree changes.
+ *
+ * Hovers over up to 5 interactive elements and captures any accessibility
+ * tree changes (e.g., tooltips, dropdowns) that appear on hover.
+ *
+ * @param page - Playwright page instance
+ * @returns Hover detection results with optional screenshot
+ */
 export async function captureHoverState(
-  page: PlaywrightPage
+  page: Page
 ): Promise<HoverCaptureResult> {
   const treeBefore = await page.accessibility.snapshot({
     interestingOnly: false,
   });
 
-  const interactiveSelector = [
-    'button',
-    'a[href]',
-    '[role="button"]',
-    '[role="link"]',
-    '[role="tab"]',
-    '[role="menuitem"]',
-    '[role="combobox"]',
-    'input:not([type="hidden"])',
-    'select',
-    '[tabindex="0"]',
-  ].join(', ');
-
-  const interactiveLocators = page.locator(interactiveSelector);
+  const interactiveLocators = page.locator(INTERACTIVE_SELECTOR);
   const totalCount = await interactiveLocators.count();
   const testCount = Math.min(totalCount, 5);
 
@@ -124,7 +175,12 @@ export async function captureHoverState(
 
         break;
       }
-    } catch {}
+    } catch (error) {
+      console.warn(
+        '[browser-capture] captureHoverState element hover failed:',
+        error
+      );
+    }
   }
 
   await page.mouse.move(0, 0);
@@ -133,14 +189,27 @@ export async function captureHoverState(
   return {hoverDetected, hoverScreenshot, hoverDetails};
 }
 
+/** Screenshots captured at multiple viewport sizes. */
 export interface MultiViewportResult {
+  /** Reflow test at 320px width (simulates 400% zoom). */
   reflow: {screenshot: string; hasHorizontalScroll: boolean};
+  /** Portrait mobile screenshot (375x812). */
   portrait: string;
+  /** Landscape mobile screenshot (812x375). */
   landscape: string;
 }
 
+/**
+ * Captures screenshots at multiple viewport sizes for responsive testing.
+ *
+ * Tests WCAG 1.4.10 Reflow by checking for horizontal scrolling at 320px width,
+ * and captures portrait/landscape mobile views.
+ *
+ * @param page - Playwright page instance
+ * @returns Screenshots and reflow test results
+ */
 export async function captureMultiViewport(
-  page: PlaywrightPage
+  page: Page
 ): Promise<MultiViewportResult> {
   // Reflow test - 320px wide (simulates 400% zoom on 1280px display)
   await page.setViewportSize({width: 320, height: 480});
@@ -179,14 +248,27 @@ export async function captureMultiViewport(
   };
 }
 
+/** Focus navigation test results. */
 export interface FocusCaptureResult {
+  /** Screenshots captured at each focus position. */
   focusScreenshots: string[];
+  /** Description of focus navigation path. */
   focusDetails: string;
+  /** Whether any focusable elements were found. */
   hasFocusableElements: boolean;
 }
 
+/**
+ * Tests keyboard focus navigation by tabbing through the component.
+ *
+ * Captures screenshots at each focus position to verify focus visibility
+ * (WCAG 2.4.7) and logical focus order (WCAG 2.4.3).
+ *
+ * @param page - Playwright page instance
+ * @returns Focus navigation results with screenshots
+ */
 export async function captureFocusStates(
-  page: PlaywrightPage
+  page: Page
 ): Promise<FocusCaptureResult> {
   try {
     await page.mouse.click(0, 0);
@@ -237,7 +319,8 @@ export async function captureFocusStates(
       focusDetails: focusSteps.join(', '),
       hasFocusableElements: focusMoved,
     };
-  } catch {
+  } catch (error) {
+    console.warn('[browser-capture] captureFocusStates failed:', error);
     return {
       focusScreenshots: [],
       focusDetails: 'Focus capture failed',
@@ -246,12 +329,23 @@ export async function captureFocusStates(
   }
 }
 
+/** Text spacing test result. */
 export interface TextSpacingResult {
+  /** Base64-encoded screenshot with WCAG text spacing applied. */
   textSpacingScreenshot: string;
 }
 
+/**
+ * Applies WCAG 1.4.12 text spacing requirements and captures a screenshot.
+ *
+ * Applies line-height 1.5, letter-spacing 0.12em, word-spacing 0.16em,
+ * and paragraph spacing 2em to test content reflow without loss of information.
+ *
+ * @param page - Playwright page instance
+ * @returns Screenshot with text spacing applied
+ */
 export async function captureTextSpacing(
-  page: PlaywrightPage
+  page: Page
 ): Promise<TextSpacingResult> {
   try {
     await page.evaluate(() => {
@@ -277,33 +371,33 @@ export async function captureTextSpacing(
     await page.waitForTimeout(1000);
 
     return {textSpacingScreenshot};
-  } catch {
+  } catch (error) {
+    console.warn('[browser-capture] captureTextSpacing failed:', error);
     return {textSpacingScreenshot: ''};
   }
 }
 
+/** Target size measurement result. */
 export interface TargetSizeResult {
+  /** Description of interactive element sizes. */
   targetSizeData: string;
+  /** Screenshot for visual verification. */
   targetSizeScreenshot: string;
 }
 
+/**
+ * Measures interactive element target sizes for WCAG 2.5.8 compliance.
+ *
+ * Collects dimensions of all interactive elements including those in
+ * shadow DOM to verify minimum 24x24px target size requirement.
+ *
+ * @param page - Playwright page instance
+ * @returns Element size data and screenshot
+ */
 export async function captureTargetSizes(
-  page: PlaywrightPage
+  page: Page
 ): Promise<TargetSizeResult> {
   try {
-    const interactiveSelector = [
-      'button',
-      'a[href]',
-      '[role="button"]',
-      '[role="link"]',
-      '[role="tab"]',
-      '[role="menuitem"]',
-      '[role="combobox"]',
-      'input:not([type="hidden"])',
-      'select',
-      '[tabindex="0"]',
-    ].join(', ');
-
     const elements = await page.evaluate((selector: string) => {
       function findInteractive(root: Document | ShadowRoot) {
         const results: {
@@ -331,7 +425,7 @@ export async function captureTargetSizes(
         return results;
       }
       return findInteractive(document);
-    }, interactiveSelector);
+    }, INTERACTIVE_SELECTOR);
 
     const targetSizeData =
       elements.length > 0
@@ -346,7 +440,8 @@ export async function captureTargetSizes(
     ).toString('base64');
 
     return {targetSizeData, targetSizeScreenshot};
-  } catch {
+  } catch (error) {
+    console.warn('[browser-capture] captureTargetSizes failed:', error);
     return {
       targetSizeData: 'Target size capture failed',
       targetSizeScreenshot: '',
