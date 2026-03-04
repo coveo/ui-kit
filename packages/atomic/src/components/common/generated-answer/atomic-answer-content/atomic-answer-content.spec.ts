@@ -103,10 +103,11 @@ describe('atomic-answer-content', () => {
     });
   });
 
-  it('should render nothing when the answer is missing', async () => {
+  it('should render nothing when the answer id is missing', async () => {
     await renderComponent({
       generatedAnswer: {
         answer: undefined,
+        answerId: undefined,
       },
     });
 
@@ -160,7 +161,7 @@ describe('atomic-answer-content', () => {
     await renderComponent({
       generatedAnswer: {
         answer: undefined,
-        answerId: undefined,
+        answerId: 'answer-id',
         isStreaming: true,
         generationSteps: [
           {
@@ -176,6 +177,13 @@ describe('atomic-answer-content', () => {
       props: expect.objectContaining({
         i18n,
         isStreaming: true,
+        agentSteps: [
+          {
+            name: 'thinking',
+            status: 'active',
+            startedAt: 1,
+          },
+        ],
       }),
     });
     expect(renderGeneratedContentContainer).not.toHaveBeenCalled();
