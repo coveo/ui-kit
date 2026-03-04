@@ -71,9 +71,10 @@ export const VALID_WCAG_KEYS = new Set([
   '3.3.4-error-prevention',
   '3.3.7-redundant-entry',
   '3.3.8-accessible-auth',
+  '4.1.3-status-messages',
 ]);
 
-/** All 21 WCAG criteria evaluated by the AI audit agent. */
+/** All 22 WCAG criteria evaluated by the AI audit agent. */
 export const ALL_AI_CRITERIA = [
   '1.3.2-meaningful-sequence',
   '1.3.3-sensory-characteristics',
@@ -96,6 +97,7 @@ export const ALL_AI_CRITERIA = [
   '3.3.4-error-prevention',
   '3.3.7-redundant-entry',
   '3.3.8-accessible-auth',
+  '4.1.3-status-messages',
 ] as const;
 
 /**
