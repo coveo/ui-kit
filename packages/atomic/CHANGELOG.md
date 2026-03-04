@@ -1,3 +1,23 @@
+## 3.52.0 (2026-03-04)
+
+* chore: eject angular build from Stencil (#7149) ([2c4d509](https://github.com/coveo/ui-kit/commits/2c4d509)), closes [#7149](https://github.com/coveo/ui-kit/issues/7149)
+* chore: eject react build from Stencil (#7160) ([76aae89](https://github.com/coveo/ui-kit/commits/76aae89)), closes [#7160](https://github.com/coveo/ui-kit/issues/7160)
+* chore: remove more stencil files (#7183) ([c5f0e5c](https://github.com/coveo/ui-kit/commits/c5f0e5c)), closes [#7183](https://github.com/coveo/ui-kit/issues/7183)
+* chore: remove unused stencil files (#7168) ([609991d](https://github.com/coveo/ui-kit/commits/609991d)), closes [#7168](https://github.com/coveo/ui-kit/issues/7168)
+* chore(agents): add managing-atomic-components Agent Skill (#7190) ([30362a6](https://github.com/coveo/ui-kit/commits/30362a6)), closes [#7190](https://github.com/coveo/ui-kit/issues/7190)
+* chore(agents): simplify AGENTS.md (#7180) ([49990e1](https://github.com/coveo/ui-kit/commits/49990e1)), closes [#7180](https://github.com/coveo/ui-kit/issues/7180)
+* chore(atomic): migrate atomic-insight-result-action to Lit (#7172) ([b18fbc1](https://github.com/coveo/ui-kit/commits/b18fbc1)), closes [#7172](https://github.com/coveo/ui-kit/issues/7172)
+* chore(atomic): migrate atomic-insight-result-children-template to Lit (#7171) ([2a33af4](https://github.com/coveo/ui-kit/commits/2a33af4)), closes [#7171](https://github.com/coveo/ui-kit/issues/7171)
+* chore(atomic): migrate atomic-insight-timeframe-facet to Lit (#7170) ([2df4fe7](https://github.com/coveo/ui-kit/commits/2df4fe7)), closes [#7170](https://github.com/coveo/ui-kit/issues/7170)
+* chore(atomic): remove legacy Stencil files for atomic-insight-smart-snippet (#7169) ([01e84d3](https://github.com/coveo/ui-kit/commits/01e84d3)), closes [#7169](https://github.com/coveo/ui-kit/issues/7169)
+* feat(atomic): generated answer thread component created (#7130) ([7a50658](https://github.com/coveo/ui-kit/commits/7a50658)), closes [#7130](https://github.com/coveo/ui-kit/issues/7130)
+* feat(atomic): integration of follow up ui in atomic generated answer (#7159) ([d6200b3](https://github.com/coveo/ui-kit/commits/d6200b3)), closes [#7159](https://github.com/coveo/ui-kit/issues/7159)
+* feat(atomic): make the Atomic Generated Answer component scrollable (#7105) ([de1d32f](https://github.com/coveo/ui-kit/commits/de1d32f)), closes [#7105](https://github.com/coveo/ui-kit/issues/7105)
+* feat(headless): integration of ag-ui client to generate head and follow up answers (#7153) ([c8b6d3c](https://github.com/coveo/ui-kit/commits/c8b6d3c)), closes [#7153](https://github.com/coveo/ui-kit/issues/7153)
+* feat(storybook): theming and search box integration (#7113) ([9a736b8](https://github.com/coveo/ui-kit/commits/9a736b8)), closes [#7113](https://github.com/coveo/ui-kit/issues/7113)
+
+
+
 ## 3.51.0 (2026-02-25)
 
 * chore: rework AGENTS.md files (#7133) ([ebfc712](https://github.com/coveo/ui-kit/commits/ebfc712)), closes [#7133](https://github.com/coveo/ui-kit/issues/7133)
