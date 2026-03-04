@@ -1,4 +1,8 @@
-import {ALL_AI_CRITERIA, VALID_STATUSES} from '../shared/constants.js';
+import {readFileSync} from 'node:fs';
+import {
+  A11Y_MANUAL_CRITERIA_FILE,
+  VALID_STATUSES,
+} from '../shared/constants.js';
 import type {OpenAIClient} from './types.js';
 
 export class RateLimitExhaustedError extends Error {
@@ -214,6 +218,42 @@ export interface MergedResults {
   evidenceParts: string[];
 }
 
+let cachedAiCriteria: string[] | null = null;
+
+function loadAiCriteria(): string[] {
+  if (cachedAiCriteria) {
+    return cachedAiCriteria;
+  }
+
+  try {
+    const content = readFileSync(A11Y_MANUAL_CRITERIA_FILE, 'utf8');
+    const parsed = JSON.parse(content) as Record<string, unknown>;
+    const criteria = Array.isArray(parsed.criteria)
+      ? parsed.criteria.filter(
+          (entry): entry is string => typeof entry === 'string'
+        )
+      : [];
+
+    if (criteria.length === 0) {
+      console.warn(
+        '[llm-client]',
+        `${A11Y_MANUAL_CRITERIA_FILE} must contain a "criteria" array.`
+      );
+    }
+
+    cachedAiCriteria = criteria;
+  } catch (error) {
+    console.warn(
+      '[llm-client]',
+      `Unable to read ${A11Y_MANUAL_CRITERIA_FILE}.`,
+      error
+    );
+    cachedAiCriteria = [];
+  }
+
+  return cachedAiCriteria;
+}
+
 export function mergeResults(
   ...callResults: LLMValidatedResponse[]
 ): MergedResults {
@@ -225,7 +265,8 @@ export function mergeResults(
     Object.assign(allCriteria, result.criteria);
   }
 
-  for (const key of ALL_AI_CRITERIA) {
+  const aiCriteria = loadAiCriteria();
+  for (const key of aiCriteria) {
     const entry = allCriteria[key];
     if (entry) {
       wcag22Criteria[key] = entry.status;
