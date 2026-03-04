@@ -4,9 +4,9 @@
  * QA workflow tool for maintaining manual accessibility audits.
  *
  * Commands:
- *   node a11y/scripts/manual-audit-delta.mjs validate <delta-file>
- *   node a11y/scripts/manual-audit-delta.mjs merge [--dry-run]
- *   node a11y/scripts/manual-audit-delta.mjs status
+ *   node ./scripts/manual-audit-delta.mjs validate <delta-file>
+ *   node ./scripts/manual-audit-delta.mjs merge [--dry-run]
+ *   node ./scripts/manual-audit-delta.mjs status
  *
  * Delta files live in a11y/reports/deltas/ and follow a strict schema.
  * The merge command folds all deltas into the baseline audit files,
@@ -18,6 +18,8 @@
 import {mkdir, readdir, readFile, rename, writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import {
+  A11Y_MANUAL_CRITERIA_FILE,
+  A11Y_OVERRIDES_FILE,
   ARCHIVE_DIR,
   BASELINE_FILE_PATTERN,
   DELTA_PATTERN,
@@ -25,14 +27,111 @@ import {
   REPORTS_DIR,
   VALID_STATUSES,
   VALID_SURFACES,
-  VALID_WCAG_KEYS,
 } from '../shared/constants.js';
 import {readJsonFile} from '../shared/file-utils.js';
 import {isRecord} from '../shared/guards.js';
 
 import type {BaselineEntry, DeltaEntry, DeltaFile} from '../shared/types.js';
 
-function validateDeltaEntry(entry: unknown, index: number): string[] {
+const LOG_PREFIX = '[manual-audit-delta]';
+
+/** Maps OpenACR conformance values to manual audit status values. */
+const CONFORMANCE_TO_STATUS: Record<string, string> = {
+  supports: 'pass',
+  'does-not-support': 'fail',
+  'partially-supports': 'partial',
+  'not-applicable': 'not-applicable',
+};
+
+/**
+ * Loads default WCAG criteria values for new baseline entries from
+ * the a11y overrides JSON file (`a11y/a11y-overrides.json`).
+ *
+ * Reads the `overrides` array and extracts criteria with their conformance
+ * values, converting them to manual audit status format. This ensures a
+ * single source of truth for product-wide criterion exceptions.
+ *
+ * Falls back to an empty object if the file is missing or malformed,
+ * so the merge command never fails due to missing defaults.
+ */
+async function loadNewComponentDefaults(
+  manualCriteriaKeys: Set<string>
+): Promise<Record<string, string>> {
+  try {
+    const content = await readFile(A11Y_OVERRIDES_FILE, 'utf8');
+    const parsed: unknown = JSON.parse(content);
+
+    if (!isRecord(parsed) || !Array.isArray(parsed.overrides)) {
+      return {};
+    }
+
+    const criteria: Record<string, string> = {};
+    for (const entry of parsed.overrides) {
+      if (!isRecord(entry)) continue;
+
+      const criterion = entry.criterion;
+      const conformance = entry.conformance;
+
+      if (typeof criterion !== 'string' || typeof conformance !== 'string') {
+        continue;
+      }
+
+      const status = CONFORMANCE_TO_STATUS[conformance];
+      if (!status) {
+        console.warn(
+          LOG_PREFIX,
+          `Skipping override for "${criterion}": unknown conformance "${conformance}".`
+        );
+        continue;
+      }
+
+      for (const key of manualCriteriaKeys) {
+        if (key.startsWith(`${criterion}-`)) {
+          criteria[key] = status;
+          break;
+        }
+      }
+    }
+
+    return criteria;
+  } catch {
+    return {};
+  }
+}
+
+async function loadManualCriteriaKeys(): Promise<Set<string>> {
+  try {
+    const parsed = await readJsonFile<Record<string, unknown>>(
+      A11Y_MANUAL_CRITERIA_FILE
+    );
+
+    if (!Array.isArray(parsed.criteria)) {
+      console.warn(
+        LOG_PREFIX,
+        `${A11Y_MANUAL_CRITERIA_FILE} must contain a "criteria" array.`
+      );
+      return new Set();
+    }
+
+    const keys = parsed.criteria.filter(
+      (entry): entry is string => typeof entry === 'string'
+    );
+    return new Set(keys);
+  } catch (error) {
+    console.warn(
+      LOG_PREFIX,
+      `Unable to read ${A11Y_MANUAL_CRITERIA_FILE}.`,
+      error
+    );
+    return new Set();
+  }
+}
+
+function validateDeltaEntry(
+  entry: unknown,
+  index: number,
+  manualCriteriaKeys: Set<string>
+): string[] {
   const errors: string[] = [];
   const prefix = `entries[${index}]`;
 
@@ -77,7 +176,7 @@ function validateDeltaEntry(entry: unknown, index: number): string[] {
 
   if (isRecord(results.wcag22Criteria)) {
     for (const [key, value] of Object.entries(results.wcag22Criteria)) {
-      if (!VALID_WCAG_KEYS.has(key)) {
+      if (manualCriteriaKeys.size > 0 && !manualCriteriaKeys.has(key)) {
         errors.push(
           `${prefix}.results.wcag22Criteria.${key}: unknown criterion key`
         );
@@ -99,7 +198,11 @@ function validateDeltaEntry(entry: unknown, index: number): string[] {
   return errors;
 }
 
-function validateDeltaFile(content: string, filePath: string): string[] {
+function validateDeltaFile(
+  content: string,
+  filePath: string,
+  manualCriteriaKeys: Set<string>
+): string[] {
   const errors: string[] = [];
 
   let parsed: unknown;
@@ -138,7 +241,11 @@ function validateDeltaFile(content: string, filePath: string): string[] {
   }
 
   for (let i = 0; i < parsed.entries.length; i++) {
-    const entryErrors = validateDeltaEntry(parsed.entries[i], i);
+    const entryErrors = validateDeltaEntry(
+      parsed.entries[i],
+      i,
+      manualCriteriaKeys
+    );
     for (const error of entryErrors) {
       errors.push(`${filePath}: ${error}`);
     }
@@ -171,7 +278,9 @@ async function loadBaselines(): Promise<Map<string, Baseline>> {
   return baselines;
 }
 
-async function loadDeltas(): Promise<DeltaFile[]> {
+async function loadDeltas(
+  manualCriteriaKeys: Set<string>
+): Promise<DeltaFile[]> {
   let files: string[];
   try {
     files = await readdir(DELTAS_DIR);
@@ -185,7 +294,7 @@ async function loadDeltas(): Promise<DeltaFile[]> {
 
     const filePath = path.join(DELTAS_DIR, file);
     const content = await readFile(filePath, 'utf8');
-    const errors = validateDeltaFile(content, filePath);
+    const errors = validateDeltaFile(content, filePath, manualCriteriaKeys);
 
     if (errors.length > 0) {
       console.error(`Skipping invalid delta ${file}:`);
@@ -204,7 +313,8 @@ async function loadDeltas(): Promise<DeltaFile[]> {
 
 function applyDelta(
   baseline: BaselineEntry[],
-  deltaEntry: DeltaEntry
+  deltaEntry: DeltaEntry,
+  newComponentDefaults: Record<string, string>
 ): 'updated' | 'added' {
   const existing = baseline.find((entry) => entry.name === deltaEntry.name);
   const {results} = deltaEntry;
@@ -241,12 +351,7 @@ function applyDelta(
       screenReader: results.screenReader ?? 'not-applicable',
       focusManagement: results.focusManagement ?? 'not-applicable',
       wcag22Criteria: {
-        '2.4.11-focus-not-obscured': 'not-applicable',
-        '2.5.7-dragging-movements': 'not-applicable',
-        '2.5.8-target-size': 'not-applicable',
-        '3.2.6-consistent-help': 'not-applicable',
-        '3.3.7-redundant-entry': 'not-applicable',
-        '3.3.8-accessible-auth': 'not-applicable',
+        ...newComponentDefaults,
         ...(results.wcag22Criteria ?? {}),
       },
       notes: results.notes,
@@ -260,13 +365,14 @@ function applyDelta(
 async function runValidate(filePath: string | undefined): Promise<void> {
   if (!filePath) {
     console.error(
-      'Usage: node a11y/scripts/manual-audit-delta.mjs validate <delta-file>'
+      'Usage: node ./scripts/manual-audit-delta.mjs validate <delta-file>'
     );
     process.exit(1);
   }
 
+  const manualCriteriaKeys = await loadManualCriteriaKeys();
   const content = await readFile(filePath, 'utf8');
-  const errors = validateDeltaFile(content, filePath);
+  const errors = validateDeltaFile(content, filePath, manualCriteriaKeys);
 
   if (errors.length === 0) {
     console.log(`✅ ${filePath} is valid`);
@@ -292,13 +398,22 @@ interface Change {
 
 async function runMerge(dryRun: boolean): Promise<void> {
   const baselines = await loadBaselines();
-  const deltas = await loadDeltas();
+  const manualCriteriaKeys = await loadManualCriteriaKeys();
+  const deltas = await loadDeltas(manualCriteriaKeys);
 
   if (deltas.length === 0) {
     console.log(
       'No delta files found in a11y/reports/deltas/. Nothing to merge.'
     );
     return;
+  }
+
+  const newComponentDefaults =
+    await loadNewComponentDefaults(manualCriteriaKeys);
+  if (Object.keys(newComponentDefaults).length > 0) {
+    console.log(
+      `Loaded ${Object.keys(newComponentDefaults).length} default criteria value(s) from ${A11Y_OVERRIDES_FILE}.`
+    );
   }
 
   console.log(`Found ${deltas.length} delta file(s) to merge.\n`);
@@ -329,7 +444,11 @@ async function runMerge(dryRun: boolean): Promise<void> {
         auditDate: delta.data.date,
         auditor: entry.auditor || delta.data.auditor,
       };
-      const action = applyDelta(baseline.entries, entryWithMeta);
+      const action = applyDelta(
+        baseline.entries,
+        entryWithMeta,
+        newComponentDefaults
+      );
       changes.push({
         component: entry.name,
         surface,
@@ -375,7 +494,8 @@ async function runMerge(dryRun: boolean): Promise<void> {
 
 async function runStatus(): Promise<void> {
   const baselines = await loadBaselines();
-  const deltas = await loadDeltas();
+  const manualCriteriaKeys = await loadManualCriteriaKeys();
+  const deltas = await loadDeltas(manualCriteriaKeys);
 
   console.log('=== Baseline Audit Files ===\n');
   if (baselines.size === 0) {
@@ -439,9 +559,9 @@ export async function main(): Promise<void> {
       break;
     default:
       console.log(`Usage:
-  node a11y/scripts/manual-audit-delta.mjs validate <delta-file>
-  node a11y/scripts/manual-audit-delta.mjs merge [--dry-run]
-  node a11y/scripts/manual-audit-delta.mjs status
+  node ./scripts/manual-audit-delta.mjs validate <delta-file>
+  node ./scripts/manual-audit-delta.mjs merge [--dry-run]
+  node ./scripts/manual-audit-delta.mjs status
 
 Delta file format (a11y/reports/deltas/delta-YYYY-MM-DD-<context>.json):
 {
