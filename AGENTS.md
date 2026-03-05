@@ -23,7 +23,7 @@
 ## Boundaries
 
 **You must ALWAYS**:
-- Discover available Agent Skills under `.claude/skills` when beginning a new session
+- Discover available Agent Skills under `.agents/skills` when beginning a new session
 - Run `pnpm lint:fix` before committing work
 - Use the Conventional Commits 1.0.0 specification when composing a commit message
 
