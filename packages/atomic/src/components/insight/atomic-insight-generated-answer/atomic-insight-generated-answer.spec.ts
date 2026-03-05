@@ -11,6 +11,7 @@ import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {userEvent} from 'vitest/browser';
+import {renderAnswerContent} from '@/src/components/common/generated-answer/render-answer-content';
 import {renderInAtomicInsightInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/insight/atomic-insight-interface-fixture';
 import {buildFakeInsightEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/engine';
 import {buildFakeGeneratedAnswer} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/generated-answer-controller';
@@ -20,6 +21,9 @@ import type {AtomicInsightGeneratedAnswer} from './atomic-insight-generated-answ
 import './atomic-insight-generated-answer';
 
 vi.mock('@coveo/headless/insight', {spy: true});
+vi.mock('@/src/components/common/generated-answer/render-answer-content', {
+  spy: true,
+});
 
 describe('atomic-insight-generated-answer', () => {
   const mockedEngine = buildFakeInsightEngine();
@@ -425,6 +429,24 @@ describe('atomic-insight-generated-answer', () => {
     });
 
     await expect.element(showMoreButton).not.toBeInTheDocument();
+  });
+
+  it('should pass collapsible as false to renderAnswerContent when content is short', async () => {
+    const renderedAnswer = await renderGeneratedAnswer({
+      props: {collapsible: true, maxCollapsedHeight: 16},
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Short text',
+      },
+    });
+
+    Reflect.set(renderedAnswer.element, 'fullAnswerHeight', 8);
+    await renderedAnswer.element.requestUpdate();
+    await renderedAnswer.element.updateComplete;
+
+    const lastCall = vi.mocked(renderAnswerContent).mock.calls.at(-1);
+    expect(lastCall).toBeDefined();
+    expect(lastCall?.[0].props.collapsible).toBe(false);
   });
 
   it('should call hide when toggle is clicked', async () => {

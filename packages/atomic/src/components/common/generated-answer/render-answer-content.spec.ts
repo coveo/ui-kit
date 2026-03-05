@@ -280,7 +280,7 @@ describe('#renderAnswerContent', () => {
         expect(renderFeedbackAndCopyButtonsSlot).not.toHaveBeenCalled();
       });
 
-      it('should render feedback and copy buttons when the answer is not over collapse threshold (short answer)', async () => {
+      it('should render feedback and copy buttons when collapsible is false (ie: short answer)', async () => {
         const renderFeedbackAndCopyButtonsSlot = vi.fn(() => html``);
 
         await renderComponent({

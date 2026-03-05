@@ -54,7 +54,7 @@ export const renderAnswerContent: FunctionalComponent<
   const trimmedQuestion = question.trim();
   const hasRetryableError = error?.isRetryable === true;
   const shouldDisplayFeedbackButtons =
-    !hasRetryableError && (collapsible ? expanded === true : !isStreaming);
+    !hasRetryableError && (collapsible ? expanded : true);
 
   return html`
     <div>
