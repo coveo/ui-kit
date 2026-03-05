@@ -108,6 +108,7 @@ export function buildGeneratedAnswerWithFollowUps(
     environment
   );
   const followUpStrategy = createFollowUpStrategy(engine.dispatch);
+  const answerRunner = createAnswerRunner();
 
   return {
     ...controller,
@@ -120,7 +121,6 @@ export function buildGeneratedAnswerWithFollowUps(
       };
     },
     retry() {
-      const answerRunner = createAnswerRunner();
       answerRunner.run(
         engine.state,
         engine.dispatch,
