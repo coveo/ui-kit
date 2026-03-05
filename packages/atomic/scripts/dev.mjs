@@ -147,10 +147,6 @@ async function nextTask(text, command) {
   return new Promise((resolve, reject) => {
     const childProcess = exec(command);
 
-    if (childProcess.stdout) {
-      childProcess.stdout.pipe(process.stdout);
-    }
-
     if (childProcess.stderr) {
       childProcess.stderr.pipe(process.stderr);
     }
