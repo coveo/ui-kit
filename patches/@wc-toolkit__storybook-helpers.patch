@@ -1,0 +1,78 @@
+diff --git a/dist/index.js b/dist/index.js
+index eeb64e9e0fa8bc5819922b453bab438b8226a009..d6cb1875ca90ce28927aaeb8b912d2594f01e9ee 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -569,7 +569,7 @@ var options2 = {};
+ setTimeout(() => {
+   options2 = globalThis?.__WC_STORYBOOK_HELPERS_CONFIG__ || {};
+ });
+-function getTemplate(component, args, slot, argTypes, excludeCategories, setComponentVariable) {
++function getTemplate(component, args, slot, argTypes, excludeCategories, setComponentVariable, containerSelector) {
+   if (!args) {
+     return html`<${unsafeStatic(component.tagName)}></${unsafeStatic(component.tagName)}>`;
+   }
+@@ -580,12 +580,22 @@ function getTemplate(component, args, slot, argTypes, excludeCategories, setComp
+   const { attrOperators, propOperators, additionalAttrs } = getTemplateOperators(component, args, argTypes);
+   const operators = { ...attrOperators, ...propOperators, ...additionalAttrs };
+   const slotsTemplate = getSlotsTemplate(component, args, excludeCategories);
+-  syncControls(component);
++  syncControls(component, containerSelector);
+   return html`${getStyleTemplate(component, args, excludeCategories)}
+ <${unsafeStatic(component.tagName)} ${spread(operators)}>${slotsTemplate}${slot || ""}</${unsafeStatic(component.tagName)}>
+-${options2.setComponentVariable || setComponentVariable ? unsafeHTML(
+-    "<script>\n  window.component = document.querySelector('" + component.tagName + "');\n</script>"
+-  ) : ""}
++${options2.setComponentVariable || setComponentVariable ? unsafeHTML(`
++      <script>
++        let containerElement = ${containerSelector ? `document.querySelector('${containerSelector}')` : 'document'}
++        containerElement ??= document;
++        if (containerElement instanceof HTMLTemplateElement) {
++          containerElement = containerElement.content;
++        }
++        if (containerElement.shadowRoot) {
++          containerElement = containerElement.shadowRoot;
++        } 
++        window.component = containerElement.querySelector('" +component!.tagName! +"');
++      </script>
++    `.trim()) : ""}
+ `;
+ }
+ function getStyleTemplate(component, args, excludeCategories) {
+@@ -723,10 +733,25 @@ function getSlotsTemplate(component, args, excludeCategories) {
+ ${slotTemplates}
+ `) : "";
+ }
+-function syncControls(component) {
++function getContainerElement(containerSelector) {
++  let containerElement = containerSelector
++    ? document.querySelector(containerSelector)
++    : document;
++
++  if (containerElement instanceof HTMLTemplateElement) {
++    return containerElement.content;
++  }
++
++  if ("shadowRoot" in containerElement) {
++    return containerElement.shadowRoot;
++  }
++  return containerElement
++}
++function syncControls(component, containerSelector) {
+   setArgObserver(component);
+   setTimeout(() => {
+-    const selectedComponent = document.querySelector(component.tagName);
++    const containerElement = getContainerElement(containerSelector);
++    const selectedComponent = containerElement.querySelector(component.tagName);
+     argObserver?.observe(selectedComponent, {
+       attributes: true
+     });
+@@ -800,7 +825,8 @@ function getStorybookHelpers(tagName, options3) {
+       slot,
+       argTypes,
+       options3?.excludeCategories || [],
+-      options3?.setComponentVariable
++      options3?.setComponentVariable,
++      options3?.containerSelector,
+     )
+   };
+   return helpers;
