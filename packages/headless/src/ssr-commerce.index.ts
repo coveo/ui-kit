@@ -362,6 +362,11 @@ export type {
   ChildProduct,
   Product,
 } from './api/commerce/common/product.js';
+export type {
+  BaseSpotlightContent,
+  Result,
+  SpotlightContent,
+} from './api/commerce/common/result.js';
 export {ResultType} from './api/commerce/common/result.js';
 export {
   getAnalyticsNextApiBaseUrl,
