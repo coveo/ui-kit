@@ -31,7 +31,7 @@ export default {
   },
   controllers: {
     summary: defineSummary(),
-    productList: defineProductList({enableResults: true}),
+    productList: defineProductList(),
     popularViewed: defineRecommendations({
       options: {
         slotId: 'd73afbd2-8521-4ee6-a9b8-31f064721e73',

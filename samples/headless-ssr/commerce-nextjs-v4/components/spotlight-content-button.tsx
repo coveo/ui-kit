@@ -1,7 +1,7 @@
 import type {
   ProductList,
   SpotlightContent,
-} from '@coveo/headless-react/ssr-commerce';
+} from '@coveo/headless-react/ssr-commerce-next';
 
 interface SpotlightContentButtonProps {
   methods: Omit<ProductList, 'state' | 'subscribe'> | undefined;
