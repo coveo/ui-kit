@@ -271,6 +271,8 @@ await startServers();
 let debounceTimer = null;
 let buildInProgress = false;
 const DEBOUNCE_MS = 300;
+let pendingChangeCount = 0;
+let lastChangedFile = '';
 
 async function runBuild() {
   if (buildInProgress) {
@@ -378,13 +380,29 @@ watch('src', {recursive: true}, (_, filename) => {
   // Debounce: coalesce rapid file changes (e.g., branch switches) into a single build.
   // Without this, fs.watch fires concurrent async callbacks for each changed file,
   // causing a thundering herd of parallel build processes.
+  pendingChangeCount += 1;
+  lastChangedFile = filename;
+
   if (debounceTimer) {
     clearTimeout(debounceTimer);
   }
 
   debounceTimer = setTimeout(() => {
     debounceTimer = null;
-    console.log(colors.cyanBright(`📂 File changed: ${filename}`));
+    const changeCount = pendingChangeCount;
+    const changedFile = lastChangedFile;
+    pendingChangeCount = 0;
+    lastChangedFile = '';
+
+    if (changeCount > 1) {
+      console.log(
+        colors.yellow(
+          `⚡ Detected ${changeCount} rapid file changes; coalescing into a single rebuild (e.g., branch checkout).`
+        )
+      );
+    }
+
+    console.log(colors.cyanBright(`📂 File changed: ${changedFile}`));
     runBuild();
   }, DEBOUNCE_MS);
 });
