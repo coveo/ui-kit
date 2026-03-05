@@ -58,6 +58,12 @@ Automated testing covers ~30-40% of WCAG criteria. The rest requires human revie
 
 **→ [Manual Audit Guide](docs/manual-audit-guide.md)**
 
+## AI audits
+
+The AI audit agent evaluates components against 21 WCAG 2.2 criteria that axe-core cannot automate — visual layout, focus visibility, semantic text quality, and more. Requires a GitHub token with Copilot access.
+
+**→ [AI Audit Guide](docs/ai-audit-guide.md)**
+
 ## Structure
 
 ```
