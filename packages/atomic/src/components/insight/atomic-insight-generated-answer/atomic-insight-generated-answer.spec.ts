@@ -8,6 +8,7 @@ import {
   type SearchStatus,
 } from '@coveo/headless/insight';
 import {html} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {userEvent} from 'vitest/browser';
 import {renderInAtomicInsightInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/insight/atomic-insight-interface-fixture';
@@ -64,7 +65,9 @@ describe('atomic-insight-generated-answer', () => {
           .collapsible=${props.collapsible ?? false}
           .disableCitationAnchoring=${props.disableCitationAnchoring ?? false}
           .answerConfigurationId=${props.answerConfigurationId}
-          fields-to-include-in-citations=${props.fieldsToIncludeInCitations}
+          fields-to-include-in-citations=${ifDefined(
+            props.fieldsToIncludeInCitations
+          )}
           .maxCollapsedHeight=${props.maxCollapsedHeight ?? 16}
         ></atomic-insight-generated-answer>`,
         selector: 'atomic-insight-generated-answer',
@@ -397,7 +400,7 @@ describe('atomic-insight-generated-answer', () => {
   });
 
   it('should render show more button when collapsible and content is tall', async () => {
-    const {showMoreButton} = await renderGeneratedAnswer({
+    const renderedAnswer = await renderGeneratedAnswer({
       props: {collapsible: true},
       generatedAnswerState: {
         isVisible: true,
@@ -405,10 +408,14 @@ describe('atomic-insight-generated-answer', () => {
       },
     });
 
-    expect(showMoreButton).toBeInTheDocument();
+    Reflect.set(renderedAnswer.element, 'fullAnswerHeight', 100);
+    await renderedAnswer.element.requestUpdate();
+    await renderedAnswer.element.updateComplete;
+
+    expect(renderedAnswer.showMoreButton).toBeInTheDocument();
   });
 
-  it('should render show more button when collapsible is enabled and content is short', async () => {
+  it('should not render show more button when content is short', async () => {
     const {showMoreButton} = await renderGeneratedAnswer({
       props: {collapsible: true},
       generatedAnswerState: {
@@ -417,7 +424,7 @@ describe('atomic-insight-generated-answer', () => {
       },
     });
 
-    await expect.element(showMoreButton).toBeInTheDocument();
+    await expect.element(showMoreButton).not.toBeInTheDocument();
   });
 
   it('should call hide when toggle is clicked', async () => {

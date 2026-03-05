@@ -676,7 +676,7 @@ describe('atomic-generated-answer', () => {
   });
 
   it('should render show more button when collapsible and content is tall', async () => {
-    const {showMoreButton} = await renderGeneratedAnswer({
+    const renderedAnswer = await renderGeneratedAnswer({
       props: {collapsible: true},
       generatedAnswerState: {
         isVisible: true,
@@ -684,10 +684,14 @@ describe('atomic-generated-answer', () => {
       },
     });
 
-    expect(showMoreButton).toBeInTheDocument();
+    Reflect.set(renderedAnswer.element, 'fullAnswerHeight', 100);
+    await renderedAnswer.element.requestUpdate();
+    await renderedAnswer.element.updateComplete;
+
+    expect(renderedAnswer.showMoreButton).toBeInTheDocument();
   });
 
-  it('should show button even when content is short', async () => {
+  it('should not show button when content is short', async () => {
     const {showMoreButton} = await renderGeneratedAnswer({
       props: {collapsible: true},
       generatedAnswerState: {
@@ -696,7 +700,7 @@ describe('atomic-generated-answer', () => {
       },
     });
 
-    await expect.element(showMoreButton).toBeInTheDocument();
+    await expect.element(showMoreButton).not.toBeInTheDocument();
   });
 
   it('should toggle visibility when toggle is clicked when toggle is activated and deactivated', async () => {
