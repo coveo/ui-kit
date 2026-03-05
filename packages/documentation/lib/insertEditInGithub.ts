@@ -186,6 +186,11 @@ export function insertEditInGithub(page: PageEvent<Reflection>) {
   const buttonHtml = buildButtonHtml(githubUrl);
 
   if (page.contents.includes('class="tsd-page-title"')) {
+    // Note: this regex uses a non-greedy match and stops at the first </div>.
+    // This is safe because TypeDoc's .tsd-page-title block currently contains
+    // only inline elements (e.g. <h1>). If a future TypeDoc version introduces
+    // nested <div> elements inside .tsd-page-title, this regex will need to be
+    // replaced with a balanced-tag scanner or DOM parser.
     page.contents = page.contents.replace(
       /(<div\s+class="tsd-page-title">)([\s\S]*?)(<\/div>)/i,
       (_match, openTag, innerContent, closeTag) =>
