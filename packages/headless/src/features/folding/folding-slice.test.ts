@@ -675,5 +675,156 @@ describe('folding slice', () => {
         /Unable to create collection totally_does_not_exists/
       );
     });
+
+    describe('moreResultsAvailable', () => {
+      it('should be false when totalNumberOfChildResults equals resolved children count + 1', () => {
+        const indexedResults = buildMockResultsFromHierarchy(
+          'thread',
+          testThreadHierarchy
+        );
+        const rootResult = emulateAPIFolding(indexedResults);
+        // testThreadHierarchy root has 2 direct children, so children.length = 2
+        // moreResultsAvailable = totalNumberOfChildResults > 2 + 1 = 3
+        rootResult.totalNumberOfChildResults = 3;
+
+        dispatchSearch([rootResult]);
+
+        expect(state.collections.thread.moreResultsAvailable).toBe(false);
+      });
+
+      it('should be true when totalNumberOfChildResults exceeds resolved children count + 1', () => {
+        const indexedResults = buildMockResultsFromHierarchy(
+          'thread',
+          testThreadHierarchy
+        );
+        const rootResult = emulateAPIFolding(indexedResults);
+        rootResult.totalNumberOfChildResults = 100;
+
+        dispatchSearch([rootResult]);
+
+        expect(state.collections.thread.moreResultsAvailable).toBe(true);
+      });
+
+      it('should be false when totalNumberOfChildResults is less than resolved children count + 1', () => {
+        const indexedResults = buildMockResultsFromHierarchy(
+          'thread',
+          testThreadHierarchy
+        );
+        const rootResult = emulateAPIFolding(indexedResults);
+        rootResult.totalNumberOfChildResults = 0;
+
+        dispatchSearch([rootResult]);
+
+        expect(state.collections.thread.moreResultsAvailable).toBe(false);
+      });
+
+      it('should be false when there are no resolved children and totalNumberOfChildResults is 1', () => {
+        const result = buildMockResultWithFolding({
+          uniqueId: 'lonely',
+          title: 'lonely',
+          raw: {
+            urihash: '',
+            collection: 'solo',
+            id: 'lonely',
+            parent: 'lonely',
+          },
+        });
+        const rootResult: ResultWithFolding = {
+          ...result,
+          childResults: [],
+          totalNumberOfChildResults: 1,
+        };
+
+        dispatchSearch([rootResult]);
+
+        expect(state.collections.solo.moreResultsAvailable).toBe(false);
+      });
+
+      it('should be true when there are no resolved children but totalNumberOfChildResults indicates more exist', () => {
+        const result = buildMockResultWithFolding({
+          uniqueId: 'lonely',
+          title: 'lonely',
+          raw: {
+            urihash: '',
+            collection: 'solo',
+            id: 'lonely',
+            parent: 'lonely',
+          },
+        });
+        const rootResult: ResultWithFolding = {
+          ...result,
+          childResults: [],
+          totalNumberOfChildResults: 5,
+        };
+
+        dispatchSearch([rootResult]);
+
+        expect(state.collections.solo.moreResultsAvailable).toBe(true);
+      });
+
+      it('should be false when a single child is resolved and totalNumberOfChildResults is 2', () => {
+        const parent = buildMockResultWithFolding({
+          uniqueId: 'parent',
+          title: 'parent',
+          raw: {
+            urihash: '',
+            collection: 'pair',
+            id: 'parent',
+            parent: 'parent',
+          },
+        });
+        const child = buildMockResultWithFolding({
+          uniqueId: 'child',
+          title: 'child',
+          raw: {
+            urihash: '',
+            collection: 'pair',
+            id: 'child',
+            parent: 'parent',
+          },
+        });
+        const rootResult: ResultWithFolding = {
+          ...parent,
+          childResults: [child],
+          totalNumberOfChildResults: 2,
+        };
+
+        dispatchSearch([rootResult]);
+
+        expect(state.collections.pair.moreResultsAvailable).toBe(false);
+      });
+
+      it('should be true when a single child is resolved but totalNumberOfChildResults exceeds count + 1', () => {
+        const parent = buildMockResultWithFolding({
+          uniqueId: 'parent',
+          title: 'parent',
+          raw: {
+            urihash: '',
+            collection: 'pair',
+            id: 'parent',
+            parent: 'parent',
+          },
+        });
+        const child = buildMockResultWithFolding({
+          uniqueId: 'child',
+          title: 'child',
+          raw: {
+            urihash: '',
+            collection: 'pair',
+            id: 'child',
+            parent: 'parent',
+          },
+        });
+        const rootResult: ResultWithFolding = {
+          ...parent,
+          childResults: [child],
+          totalNumberOfChildResults: 3,
+        };
+
+        dispatchSearch([rootResult]);
+
+        expect(state.collections.pair.moreResultsAvailable).toBe(true);
+      });
+    });
   });
 });
