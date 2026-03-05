@@ -193,14 +193,7 @@ describe('atomic-answer-content', () => {
         isStreaming: true,
       }),
     });
-    expect(renderFeedbackAndCopyButtons).toHaveBeenCalledWith({
-      props: expect.objectContaining({
-        generatedAnswerActionsState: expect.objectContaining({
-          isStreaming: true,
-          answer: undefined,
-        }),
-      }),
-    });
+    expect(renderFeedbackAndCopyButtons).not.toHaveBeenCalled();
   });
 
   it('should render the error template when the generated answer has an error', async () => {
