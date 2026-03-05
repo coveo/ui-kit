@@ -27,7 +27,7 @@ Answer these questions:
 
 ### Step 2: Generate Template
 
-This skill includes a small generator that renders Handlebars templates from `.agents/skills/creating-stories/assets/`.
+This skill includes a small generator that renders Handlebars templates from `assets/`.
 
 ```bash
 # Component story
