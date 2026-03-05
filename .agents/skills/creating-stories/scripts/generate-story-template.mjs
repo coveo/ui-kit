@@ -7,7 +7,7 @@
  * Run from repository root or ensure handlebars is available.
  *
  * Usage:
- *   node .claude/skills/creating-stories/scripts/generate-story-template.mjs <name> [options]
+ *   node .agents/skills/creating-stories/scripts/generate-story-template.mjs <name> [options]
  *
  * Options:
  *   --type       Type of story: component (default) or page
@@ -15,9 +15,9 @@
  *   --result     For result template components (adds result wrappers)
  *
  * Examples:
- *   node .claude/skills/creating-stories/scripts/generate-story-template.mjs atomic-my-component
- *   node .claude/skills/creating-stories/scripts/generate-story-template.mjs my-page --type page --category commerce
- *   node .claude/skills/creating-stories/scripts/generate-story-template.mjs atomic-result-field --result
+ *   node .agents/skills/creating-stories/scripts/generate-story-template.mjs atomic-my-component
+ *   node .agents/skills/creating-stories/scripts/generate-story-template.mjs my-page --type page --category commerce
+ *   node .agents/skills/creating-stories/scripts/generate-story-template.mjs atomic-result-field --result
  */
 
 import {readFileSync} from 'node:fs';
@@ -59,7 +59,7 @@ function printHelp() {
 Generate Storybook story template for Atomic components or sample pages.
 
 Usage:
-  node .claude/skills/creating-stories/scripts/generate-story-template.mjs <name> [options]
+  node .agents/skills/creating-stories/scripts/generate-story-template.mjs <name> [options]
 
 Options:
   --type       Type of story: component (default) or page
@@ -67,9 +67,9 @@ Options:
   --result     For result template components (adds result wrappers)
 
 Examples:
-  node .claude/skills/creating-stories/scripts/generate-story-template.mjs atomic-my-component
-  node .claude/skills/creating-stories/scripts/generate-story-template.mjs my-page --type page --category commerce
-  node .claude/skills/creating-stories/scripts/generate-story-template.mjs atomic-result-field --result
+  node .agents/skills/creating-stories/scripts/generate-story-template.mjs atomic-my-component
+  node .agents/skills/creating-stories/scripts/generate-story-template.mjs my-page --type page --category commerce
+  node .agents/skills/creating-stories/scripts/generate-story-template.mjs atomic-result-field --result
   `);
 }
 
