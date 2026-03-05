@@ -18,8 +18,8 @@ export class AtomicAngularPageComponent implements AfterViewInit {
   async ngAfterViewInit(): Promise<void> {
     this.searchInterface
       ?.initialize({
-        accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
-        organizationId: 'electronicscoveodemocomo0n2fu8v',
+        accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+        organizationId: 'searchuisamples',
         analytics: {
           analyticsMode: 'legacy',
         },
