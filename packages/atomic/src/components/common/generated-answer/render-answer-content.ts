@@ -63,17 +63,6 @@ export const renderAnswerContent: FunctionalComponent<
         >
           ${trimmedQuestion}
         </p>
-        ${when(
-          !hasRetryableError && isExpanded,
-          () => html`
-            <div
-              part="feedback-and-copy-buttons"
-              class="flex h-9 shrink-0 items-center justify-end gap-2"
-            >
-              ${renderFeedbackAndCopyButtonsSlot()}
-            </div>
-          `
-        )}
       </div>
       ${
         hasRetryableError
@@ -104,6 +93,14 @@ export const renderAnswerContent: FunctionalComponent<
           `)
           : nothing
       }
+      ${when(
+        !hasRetryableError && isExpanded,
+        () => html`
+          <div class="mt-4" part="feedback-and-copy-buttons">
+            ${renderFeedbackAndCopyButtonsSlot()}
+          </div>
+        `
+      )}
       ${
         !hasRetryableError
           ? html`

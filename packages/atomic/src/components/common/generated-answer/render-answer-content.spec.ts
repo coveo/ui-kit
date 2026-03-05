@@ -38,6 +38,7 @@ describe('#renderAnswerContent', () => {
     isStreaming: false,
     answer: 'Test answer',
     citations: [],
+    generationSteps: [],
     answerContentFormat: 'text/markdown' as const,
     expanded: true,
     question: 'Test question',
@@ -74,6 +75,7 @@ describe('#renderAnswerContent', () => {
       element,
       props: defaultProps,
       questionText: element.querySelector('.question-text'),
+      generatedContent: element.querySelector('[part="generated-container"]'),
       feedbackAndCopyButtons: element.querySelector(
         '[part="feedback-and-copy-buttons"]'
       ),
@@ -244,6 +246,30 @@ describe('#renderAnswerContent', () => {
         });
 
         expect(renderFeedbackAndCopyButtonsSlot).toHaveBeenCalled();
+      });
+
+      it('should render feedback and copy buttons after the answer content', async () => {
+        const {feedbackAndCopyButtons, generatedContent} =
+          await renderComponent({
+            generatedAnswer: {
+              ...defaultGeneratedAnswer,
+              expanded: true,
+            },
+          });
+
+        expect(generatedContent).toBeInTheDocument();
+        expect(feedbackAndCopyButtons).toBeInTheDocument();
+
+        const documentPosition = generatedContent?.compareDocumentPosition(
+          feedbackAndCopyButtons as Node
+        );
+
+        expect(
+          Boolean(
+            documentPosition &&
+              documentPosition & Node.DOCUMENT_POSITION_FOLLOWING
+          )
+        ).toBe(true);
       });
 
       it('should render feedback and copy buttons when not collapsible', async () => {
