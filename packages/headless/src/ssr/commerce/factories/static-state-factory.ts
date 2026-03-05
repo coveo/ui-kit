@@ -1,4 +1,6 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
+import {buildProductListing} from '../../../controllers/commerce/product-listing/headless-product-listing.js';
+import {buildSearch} from '../../../controllers/commerce/search/headless-search.js';
 import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
 import {composeFunction} from '../../common/controller-utils.js';
 import {createStaticState} from '../controller-utils.js';
@@ -15,27 +17,6 @@ import {
   buildFactory,
   type CommerceEngineDefinitionOptions,
 } from './build-factory.js';
-
-interface ProductListController {
-  executeFirstRequest?: () => void;
-  executeFirstSearch?: () => void;
-}
-
-function findProductListController(
-  controllers: Record<string, unknown>
-): ProductListController | undefined {
-  for (const controller of Object.values(controllers)) {
-    if (
-      controller &&
-      typeof controller === 'object' &&
-      ('executeFirstRequest' in controller ||
-        'executeFirstSearch' in controller)
-    ) {
-      return controller as ProductListController;
-    }
-  }
-  return undefined;
-}
 
 export const fetchStaticStateFactory: <
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
@@ -83,20 +64,13 @@ export const fetchStaticStateFactory: <
             },
           ] = params;
 
-          const productListController = findProductListController(controllers);
-
-          if (productListController) {
-            if (
-              solutionType === SolutionType.listing &&
-              productListController.executeFirstRequest
-            ) {
-              productListController.executeFirstRequest();
-            } else if (
-              solutionType === SolutionType.search &&
-              productListController.executeFirstSearch
-            ) {
-              productListController.executeFirstSearch();
-            }
+          switch (solutionType) {
+            case SolutionType.listing:
+              buildProductListing(engine).executeFirstRequest();
+              break;
+            case SolutionType.search:
+              buildSearch(engine).executeFirstSearch();
+              break;
           }
 
           const searchActions = await Promise.all(

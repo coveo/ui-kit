@@ -18,45 +18,26 @@ export type {Search, ProductListing, ProductListingState as ProductListState};
 
 export type ProductList = Pick<
   ProductListing | Search,
-  | 'state'
-  | 'subscribe'
-  | 'interactiveProduct'
-  | 'promoteChildToParent'
-  | 'interactiveSpotlightContent'
+  'state' | 'subscribe' | 'interactiveProduct' | 'promoteChildToParent'
 >;
-
-/**
- * Options for configuring the `ProductList` controller.
- */
-export interface ProductListOptions {
-  /**
-   * When set to true, fills the `results` field rather than the `products` field
-   * in the response. It may also include Spotlight Content in the results.
-   * @default false
-   */
-  enableResults?: boolean;
-}
 
 /**
  * Defines a `ProductList` controller instance.
  * @group Definers
  *
- * @param options - The configurable `ProductList` controller options.
  * @returns The `ProductList` controller definition.
  */
 export function defineProductList<
   TOptions extends ControllerDefinitionOption | undefined,
->(options?: TOptions & ProductListOptions) {
+>(options?: TOptions) {
   ensureAtLeastOneSolutionType(options);
-  const {enableResults = false, ...restOptions} = options || {};
-
   return {
     listing: true,
     search: true,
-    ...restOptions,
+    ...options,
     build: (engine, solutionType) =>
       solutionType === SolutionType.listing
-        ? (buildProductListing(engine, {enableResults}) as ProductList)
-        : (buildSearch(engine, {enableResults}) as ProductList),
+        ? (buildProductListing(engine) as ProductList)
+        : (buildSearch(engine) as ProductList),
   } as SubControllerDefinitionWithoutProps<ProductList, TOptions>;
 }

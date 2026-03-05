@@ -183,6 +183,29 @@ export const buildFactory =
       });
     }
 
+    const executeFirstRequest = () => {
+      for (const controller of Object.values(controllers)) {
+        if (controller && typeof controller === 'object') {
+          if (
+            solutionType === SolutionType.listing &&
+            'executeFirstRequest' in controller &&
+            typeof controller.executeFirstRequest === 'function'
+          ) {
+            controller.executeFirstRequest();
+            return;
+          }
+          if (
+            solutionType === SolutionType.search &&
+            'executeFirstSearch' in controller &&
+            typeof controller.executeFirstSearch === 'function'
+          ) {
+            controller.executeFirstSearch();
+            return;
+          }
+        }
+      }
+    };
+
     return {
       engine,
       controllers: controllers as InferControllersMapFromDefinition<
@@ -190,5 +213,6 @@ export const buildFactory =
         TSolutionType
       > &
         BakedInControllers,
+      executeFirstRequest,
     };
   };
