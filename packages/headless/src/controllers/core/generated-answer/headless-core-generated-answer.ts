@@ -122,6 +122,7 @@ export interface GeneratedAnswer extends Controller {
   /**
    * Logs a custom event indicating a cited source link was clicked.
    * @param citationId - The ID of the clicked citation.
+   * @param answerId - Answer Id of the clicked citation's answer.
    */
   logCitationClick(citationId: string, answerId: string): void;
   /**

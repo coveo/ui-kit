@@ -328,6 +328,23 @@ describe('GeneratedAnswerWithFollowUps', () => {
       expect(mockCoreLike).not.toHaveBeenCalled();
       expect(logLikeGeneratedAnswer).toHaveBeenCalledWith(followUpAnswerId);
     });
+
+    it('should not dispatch follow-up like actions when already liked', () => {
+      engine = buildEngineWithGeneratedAnswer({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          answerId: headAnswerId,
+          liked: true,
+        },
+      });
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.like(followUpAnswerId);
+
+      expect(likeFollowUp).not.toHaveBeenCalled();
+      expect(logLikeGeneratedAnswer).not.toHaveBeenCalled();
+      expect(mockCoreLike).not.toHaveBeenCalled();
+    });
   });
 
   describe('dislike', () => {
@@ -372,6 +389,23 @@ describe('GeneratedAnswerWithFollowUps', () => {
       });
       expect(mockCoreDislike).not.toHaveBeenCalled();
       expect(logDislikeGeneratedAnswer).toHaveBeenCalledWith(followUpAnswerId);
+    });
+
+    it('should not dispatch follow-up dislike actions when already disliked', () => {
+      engine = buildEngineWithGeneratedAnswer({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          answerId: headAnswerId,
+          disliked: true,
+        },
+      });
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.dislike(followUpAnswerId);
+
+      expect(dislikeFollowUp).not.toHaveBeenCalled();
+      expect(logDislikeGeneratedAnswer).not.toHaveBeenCalled();
+      expect(mockCoreDislike).not.toHaveBeenCalled();
     });
   });
 

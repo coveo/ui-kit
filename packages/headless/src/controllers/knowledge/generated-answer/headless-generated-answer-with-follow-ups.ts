@@ -151,8 +151,11 @@ export function buildGeneratedAnswerWithFollowUps(
         controller.like();
         return;
       }
-      engine.dispatch(likeFollowUp({answerId}));
-      engine.dispatch(analyticsClient.logLikeGeneratedAnswer(answerId));
+
+      if (!this.state.liked) {
+        engine.dispatch(likeFollowUp({answerId}));
+        engine.dispatch(analyticsClient.logLikeGeneratedAnswer(answerId));
+      }
     },
 
     // TODO: SFINT-6665
@@ -161,8 +164,11 @@ export function buildGeneratedAnswerWithFollowUps(
         controller.dislike();
         return;
       }
-      engine.dispatch(dislikeFollowUp({answerId}));
-      engine.dispatch(analyticsClient.logDislikeGeneratedAnswer(answerId));
+
+      if (!this.state.disliked) {
+        engine.dispatch(dislikeFollowUp({answerId}));
+        engine.dispatch(analyticsClient.logDislikeGeneratedAnswer(answerId));
+      }
     },
 
     // TODO: SFINT-6665
