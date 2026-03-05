@@ -6,13 +6,11 @@
  */
 
 import {readFileSync} from 'node:fs';
-import {backOff} from 'exponential-backoff';
 import OpenAI from 'openai';
 import {
   A11Y_MANUAL_CRITERIA_FILE,
   VALID_STATUSES,
 } from '../shared/constants.js';
-
 /** Thrown when rate limits are exhausted after all retry attempts. */
 export class RateLimitExhaustedError extends Error {
   constructor(message: string) {
@@ -58,7 +56,10 @@ export const DEFAULT_LLM_BASE_URL = 'https://models.github.ai/inference';
  * @returns Client wrapper for making LLM requests
  * @throws Error if no API key is available
  */
-export function initLLMClient(config: LLMConfig): LLMClientWrapper {
+export function initLLMClient(
+  config: LLMConfig,
+  maxRetries: number = 5
+): LLMClientWrapper {
   const baseURL = process.env.LLM_BASE_URL || DEFAULT_LLM_BASE_URL;
   const apiKey = process.env.LLM_API_KEY || process.env.GITHUB_TOKEN;
 
@@ -69,7 +70,7 @@ export function initLLMClient(config: LLMConfig): LLMClientWrapper {
     );
   }
 
-  const client = new OpenAI({baseURL, apiKey});
+  const client = new OpenAI({baseURL, apiKey, maxRetries});
 
   return {
     getClient: () => client,
@@ -86,25 +87,14 @@ export interface LLMMessage {
 }
 
 /**
- * Determines if an error is retryable (rate limit or server error).
- */
-function isRetryableError(error: unknown): boolean {
-  const err = error as {status?: number; code?: string};
-  if (err.status === 429 || err.code === 'rate_limit_exceeded') return true;
-  if ((err.status ?? 0) >= 500) return true;
-  return false;
-}
-
-/**
- * Calls the LLM with automatic retry and exponential backoff.
+ * Calls the LLM with automatic retry via the OpenAI SDK's built-in backoff.
  *
- * Handles rate limiting, server errors, and JSON parsing with configurable retries.
- * Uses the exponential-backoff library for consistent retry behavior.
+ * The SDK automatically retries on rate limits (429), server errors (500+),
+ * connection errors, and timeouts with exponential backoff.
  *
  * @param clientWrapper - Initialized LLM client wrapper
  * @param messages - Chat messages to send
  * @param config - LLM configuration
- * @param maxRetries - Maximum retry attempts (default: 5)
  * @returns Parsed JSON response from LLM
  * @throws RateLimitExhaustedError if rate limits exceeded after all retries
  * @throws LLMParseError if response is not valid JSON
@@ -113,85 +103,54 @@ function isRetryableError(error: unknown): boolean {
 export async function callLLMWithRetry(
   clientWrapper: LLMClientWrapper,
   messages: LLMMessage[],
-  config: LLMConfig,
-  maxRetries: number = 5
+  config: LLMConfig
 ): Promise<unknown> {
   const client = clientWrapper.getClient();
 
   try {
-    return await backOff(
-      async () => {
-        const response = await client.chat.completions.create({
-          model: config.model,
-          messages: messages as OpenAI.ChatCompletionMessageParam[],
-          response_format: {type: 'json_object'},
-          temperature: 0.1,
-        });
+    const response = await client.chat.completions.create({
+      model: config.model,
+      messages: messages as OpenAI.ChatCompletionMessageParam[],
+      response_format: {type: 'json_object'},
+      temperature: 0.1,
+    });
 
-        const content = response.choices?.[0]?.message?.content;
+    const content = response.choices?.[0]?.message?.content;
 
-        if (config.verbose) {
-          console.log('\n--- Raw LLM response ---');
-          console.log(content);
-          console.log('--- End LLM response ---\n');
-        }
+    if (config.verbose) {
+      console.log('\n--- Raw LLM response ---');
+      console.log(content);
+      console.log('--- End LLM response ---\n');
+    }
 
-        if (!content) {
-          throw new Error('LLM returned empty content');
-        }
+    if (!content) {
+      throw new Error('LLM returned empty content');
+    }
 
-        try {
-          return JSON.parse(content);
-        } catch (parseError) {
-          throw new LLMParseError(
-            `LLM returned invalid JSON: ${parseError instanceof Error ? parseError.message : String(parseError)}`
-          );
-        }
-      },
-      {
-        numOfAttempts: maxRetries + 1,
-        startingDelay: 2000,
-        timeMultiple: 2,
-        maxDelay: 32000,
-        jitter: 'full',
-        retry: (error: unknown, attemptNumber: number) => {
-          const err = error as {status?: number; message?: string};
-
-          // Don't retry auth failures
-          if (err.status === 401 || err.status === 403) {
-            throw new Error(
-              'Authentication failed. Check that LLM_API_KEY (or GITHUB_TOKEN) is set and valid.\n' +
-                'For GitHub Models, the PAT needs the "models: read" permission.\n' +
-                `API error: ${err.message}`
-            );
-          }
-
-          // Don't retry parse errors (LLM gave bad output)
-          if (error instanceof LLMParseError) {
-            return false;
-          }
-
-          if (isRetryableError(error)) {
-            console.log(
-              `  Retrying (attempt ${attemptNumber}/${maxRetries + 1}): ${err.status === 429 ? 'rate limited' : `server error ${err.status}`}`
-            );
-            return true;
-          }
-
-          return false;
-        },
-      }
-    );
+    try {
+      return JSON.parse(content);
+    } catch (parseError) {
+      throw new LLMParseError(
+        `LLM returned invalid JSON: ${parseError instanceof Error ? parseError.message : String(parseError)}`
+      );
+    }
   } catch (error) {
     if (error instanceof LLMParseError) {
       throw error;
     }
 
-    const err = error as {status?: number; code?: string};
-    if (err.status === 429 || err.code === 'rate_limit_exceeded') {
+    if (error instanceof OpenAI.RateLimitError) {
       throw new RateLimitExhaustedError(
-        `Rate limit exceeded after ${maxRetries + 1} attempts. ` +
+        'Rate limit exceeded after all retry attempts. ' +
           'Save progress and resume later with --resume.'
+      );
+    }
+
+    if (error instanceof OpenAI.AuthenticationError) {
+      throw new Error(
+        'Authentication failed. Check that LLM_API_KEY (or GITHUB_TOKEN) is set and valid.\n' +
+          'For GitHub Models, the PAT needs the "models: read" permission.\n' +
+          `API error: ${error.message}`
       );
     }
 

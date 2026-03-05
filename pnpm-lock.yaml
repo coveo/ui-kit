@@ -453,9 +453,6 @@ importers:
 
   packages/atomic-a11y:
     dependencies:
-      exponential-backoff:
-        specifier: ^3.1.1
-        version: 3.1.3
       js-yaml:
         specifier: ^4.1.0
         version: 4.1.1
