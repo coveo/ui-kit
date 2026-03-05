@@ -173,7 +173,7 @@ export type StateNeededForHeadAnswerParams = ConfigurationSection &
 /**
  * Parameters for answer generation requests.
  */
-export type AnswerParams = {
+type AnswerParams = {
   q: string;
   facets?: AnyFacetRequest[];
   searchHub?: string;
