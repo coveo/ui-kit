@@ -1,7 +1,7 @@
 ---
 title: SAML authentication
 group: Usage
-slug : usage/saml-authentication
+slug: usage/saml-authentication
 ---
 # Configure SAML authentication
 The [Search API](https://docs.coveo.com/en/52/) supports SAML authentication, and the [`@coveo/auth`](https://github.com/coveo/ui-kit/tree/master/packages/auth) package lets you easily enable SAML authentication in a search page built with the [Coveo Headless library](https://docs.coveo.com/en/lcdf0493/).

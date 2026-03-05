@@ -1,0 +1,88 @@
+[data-theme="dark"] {
+  --edit-gh-bg: #8787db;
+  --edit-gh-color: #f9f9f9;
+}
+
+[data-theme="light"] {
+  --edit-gh-bg: #e5e8e8;
+  --edit-gh-color: rgba(0, 0, 0, 0.72);
+}
+
+.tsd-page-title {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.tsd-page-title-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.typedoc-edit-github {
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.typedoc-edit-github a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+  box-sizing: border-box;
+  justify-content: center;
+  overflow: hidden;
+  font-size: 0.875rem;
+  line-height: 1;
+  font-family: inherit;
+  font-weight: 500;
+  padding: 0.25rem;
+  color: var(--edit-gh-color);
+  background-color: var(--edit-gh-bg);
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: none;
+  backdrop-filter: none;
+  transition:
+    width 160ms ease,
+    min-width 160ms ease,
+    padding 160ms ease,
+    gap 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.typedoc-edit-github a svg {
+  flex-shrink: 0;
+  display: block;
+  width: 14px;
+  height: 14px;
+}
+
+.typedoc-edit-github-label {
+  display: none;
+}
+
+.typedoc-edit-github a:hover,
+.typedoc-edit-github a:focus-visible {
+  width: auto;
+  min-width: 36px;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  color: var(--edit-gh-color);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  backdrop-filter: saturate(120%) blur(4px);
+}
+
+.typedoc-edit-github a:hover .typedoc-edit-github-label,
+.typedoc-edit-github a:focus-visible .typedoc-edit-github-label {
+  display: inline;
+}

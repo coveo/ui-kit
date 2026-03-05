@@ -6,6 +6,8 @@ import {render} from 'lit';
 import {initialize, mswLoader} from 'msw-storybook-addon';
 import {within} from 'shadow-dom-testing-library';
 import {create} from 'storybook/theming';
+import {createEditInGithubElement} from '@/storybook-utils/documentation/edit-in-github-button';
+import {resolveGithubPath} from '@/storybook-utils/documentation/resolve-github-path';
 import customElements from '../custom-elements.json';
 import {defineCustomElements} from '../dist/atomic/loader/index.js';
 import {COVEO_PRIMARY, FONT_BASE, FONT_CODE} from './theme';
@@ -32,12 +34,31 @@ setStorybookHelpersConfig({
   hideArgRef: true,
 });
 
-function disableAnalytics(container, selectors) {
+function disableAnalytics(container: HTMLElement, selectors: string[]) {
   selectors.forEach((selector) => {
     container.querySelectorAll(selector).forEach((element) => {
       element.setAttribute('analytics', 'false');
     });
   });
+}
+
+function ensureGlobalEditButton(): HTMLAnchorElement | null {
+  if (typeof document === 'undefined') return null;
+  let btn = document.getElementById(
+    'sb-edit-in-github-global'
+  ) as HTMLAnchorElement | null;
+  if (btn) return btn;
+  btn = createEditInGithubElement();
+  btn.id = 'sb-edit-in-github-global';
+  Object.assign(btn.style, {
+    position: 'fixed',
+    top: '1rem',
+    right: '1rem',
+    zIndex: '10000',
+    display: 'none',
+  });
+  document.body.appendChild(btn);
+  return btn;
 }
 
 const preview: Preview = {
@@ -66,9 +87,6 @@ const preview: Preview = {
       expanded: true,
     },
     a11y: {
-      // 'todo' - show a11y violations in the test UI only
-      // 'error' - fail CI on a11y violations
-      // 'off' - skip a11y checks entirely
       test: 'error',
     },
     docs: {
@@ -90,7 +108,6 @@ const preview: Preview = {
 
       if (story?._$litType$) {
         const container = document.createElement('div');
-
         render(story, container);
 
         const isTestMode =
@@ -106,9 +123,37 @@ const preview: Preview = {
             'atomic-commerce-recommendation-interface',
           ]);
         }
-
-        return story;
       }
+
+      return story;
+    },
+
+    // Global "Edit in GitHub" button — auto-derives source path from story file,
+    // hidden on Docs pages where AtomicDocTemplate renders its own button.
+    (Story, context) => {
+      const storyResult = Story();
+      const isDocs = context?.viewMode === 'docs';
+      const isIntroduction =
+        context?.title?.endsWith('/Introduction') ||
+        context?.title === 'Introduction';
+
+      // Priority: explicit parameter > auto-derived from story file path
+      const githubPath =
+        context?.parameters?.githubPath ??
+        context?.parameters?.docs?.githubPath ??
+        resolveGithubPath(context?.parameters?.fileName) ??
+        null;
+
+      const btn = ensureGlobalEditButton();
+      if (btn) {
+        if (githubPath && !isDocs && !isIntroduction) {
+          btn.href = `https://github.com/coveo/ui-kit/blob/main/packages/atomic/src/components/${githubPath}`;
+          btn.style.display = '';
+        } else {
+          btn.style.display = 'none';
+        }
+      }
+      return storyResult;
     },
   ],
   beforeEach({canvasElement, canvas}) {
