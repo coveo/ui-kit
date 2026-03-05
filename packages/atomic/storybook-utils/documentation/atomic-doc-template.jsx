@@ -9,6 +9,7 @@ import {
 // biome-ignore lint/correctness/noUnusedImports: Storybook needs this import
 import React from 'react';
 import {CanvasWithGithub} from './canvas-with-github';
+import {EditInGithubButton} from './edit-in-github-button';
 
 /**
  * Reusable documentation template for Atomic Commerce components
@@ -37,20 +38,36 @@ export const AtomicDocTemplate = ({
 
   return (
     <>
-      <Title />
-      {tagName && className && (
-        <div
-          style={{
-            fontSize: '14px',
-            color: '#6b7280',
-            marginBottom: '16px',
-            fontFamily:
-              'ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace',
-          }}
-        >
-          &lt;{tagName}&gt; | {className}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'space-between',
+          gap: '1rem',
+          marginBottom: '1rem',
+          width: '100%',
+        }}
+      >
+        <div style={{display: 'flex', flexDirection: 'column', gap: '0.25rem'}}>
+          <Title />
+          {tagName && className && (
+            <div
+              style={{
+                fontSize: '14px',
+                color: '#6b7280',
+                fontFamily:
+                  'ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace',
+              }}
+            >
+              &lt;{tagName}&gt; | {className}
+            </div>
+          )}
         </div>
-      )}
+
+        <div style={{display: 'flex', alignItems: 'center'}}>
+          <EditInGithubButton githubPath={githubPath} />
+        </div>
+      </div>
       <Subtitle>
         <Description />
       </Subtitle>
