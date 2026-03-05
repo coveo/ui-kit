@@ -1,3 +1,80 @@
+## 3.52.0 (2026-03-04)
+
+* chore: eject angular build from Stencil (#7149) ([2c4d509](https://github.com/coveo/ui-kit/commits/2c4d509)), closes [#7149](https://github.com/coveo/ui-kit/issues/7149)
+* chore: eject react build from Stencil (#7160) ([76aae89](https://github.com/coveo/ui-kit/commits/76aae89)), closes [#7160](https://github.com/coveo/ui-kit/issues/7160)
+* chore: remove more stencil files (#7183) ([c5f0e5c](https://github.com/coveo/ui-kit/commits/c5f0e5c)), closes [#7183](https://github.com/coveo/ui-kit/issues/7183)
+* chore: remove unused stencil files (#7168) ([609991d](https://github.com/coveo/ui-kit/commits/609991d)), closes [#7168](https://github.com/coveo/ui-kit/issues/7168)
+* chore(agents): add managing-atomic-components Agent Skill (#7190) ([30362a6](https://github.com/coveo/ui-kit/commits/30362a6)), closes [#7190](https://github.com/coveo/ui-kit/issues/7190)
+* chore(agents): simplify AGENTS.md (#7180) ([49990e1](https://github.com/coveo/ui-kit/commits/49990e1)), closes [#7180](https://github.com/coveo/ui-kit/issues/7180)
+* chore(atomic): migrate atomic-insight-result-action to Lit (#7172) ([b18fbc1](https://github.com/coveo/ui-kit/commits/b18fbc1)), closes [#7172](https://github.com/coveo/ui-kit/issues/7172)
+* chore(atomic): migrate atomic-insight-result-children-template to Lit (#7171) ([2a33af4](https://github.com/coveo/ui-kit/commits/2a33af4)), closes [#7171](https://github.com/coveo/ui-kit/issues/7171)
+* chore(atomic): migrate atomic-insight-timeframe-facet to Lit (#7170) ([2df4fe7](https://github.com/coveo/ui-kit/commits/2df4fe7)), closes [#7170](https://github.com/coveo/ui-kit/issues/7170)
+* chore(atomic): remove legacy Stencil files for atomic-insight-smart-snippet (#7169) ([01e84d3](https://github.com/coveo/ui-kit/commits/01e84d3)), closes [#7169](https://github.com/coveo/ui-kit/issues/7169)
+* feat(atomic): generated answer thread component created (#7130) ([7a50658](https://github.com/coveo/ui-kit/commits/7a50658)), closes [#7130](https://github.com/coveo/ui-kit/issues/7130)
+* feat(atomic): integration of follow up ui in atomic generated answer (#7159) ([d6200b3](https://github.com/coveo/ui-kit/commits/d6200b3)), closes [#7159](https://github.com/coveo/ui-kit/issues/7159)
+* feat(atomic): make the Atomic Generated Answer component scrollable (#7105) ([de1d32f](https://github.com/coveo/ui-kit/commits/de1d32f)), closes [#7105](https://github.com/coveo/ui-kit/issues/7105)
+* feat(headless): integration of ag-ui client to generate head and follow up answers (#7153) ([c8b6d3c](https://github.com/coveo/ui-kit/commits/c8b6d3c)), closes [#7153](https://github.com/coveo/ui-kit/issues/7153)
+* feat(storybook): theming and search box integration (#7113) ([9a736b8](https://github.com/coveo/ui-kit/commits/9a736b8)), closes [#7113](https://github.com/coveo/ui-kit/issues/7113)
+
+
+
+## 3.51.0 (2026-02-25)
+
+* chore: rework AGENTS.md files (#7133) ([ebfc712](https://github.com/coveo/ui-kit/commits/ebfc712)), closes [#7133](https://github.com/coveo/ui-kit/issues/7133)
+* chore(atomic): add a legacy analytics story for atomic-generated-answer (#7135) ([b7deb5b](https://github.com/coveo/ui-kit/commits/b7deb5b)), closes [#7135](https://github.com/coveo/ui-kit/issues/7135)
+* chore(atomic): migrate atomic-insight-generated-answer to Lit (#6934) ([165ad93](https://github.com/coveo/ui-kit/commits/165ad93)), closes [#6934](https://github.com/coveo/ui-kit/issues/6934)
+* chore(atomic): migrate atomic-insight-result-attach-to-case-action to lit (#7056) ([9f6671a](https://github.com/coveo/ui-kit/commits/9f6671a)), closes [#7056](https://github.com/coveo/ui-kit/issues/7056)
+* chore(atomic): migrate atomic-ipx-recs-list (#7069) ([64be4a6](https://github.com/coveo/ui-kit/commits/64be4a6)), closes [#7069](https://github.com/coveo/ui-kit/issues/7069)
+* chore(atomic): migrate atomic-ipx-refine-modal (#7070) ([919bab0](https://github.com/coveo/ui-kit/commits/919bab0)), closes [#7070](https://github.com/coveo/ui-kit/issues/7070)
+* feat(atomic): answer-content custom element created (#7121) ([1bd3025](https://github.com/coveo/ui-kit/commits/1bd3025)), closes [#7121](https://github.com/coveo/ui-kit/issues/7121)
+* feat(atomic): refactored property accepted by renderFeedbackAndCopyButtons (#7119) ([25f5077](https://github.com/coveo/ui-kit/commits/25f5077)), closes [#7119](https://github.com/coveo/ui-kit/issues/7119)
+* refactor(atomic): migrate atomic-ipx-refine-toggle to Lit (#7012) ([5051d8d](https://github.com/coveo/ui-kit/commits/5051d8d)), closes [#7012](https://github.com/coveo/ui-kit/issues/7012)
+
+
+
+## 3.50.0 (2026-02-18)
+
+* feat(atomic): creation of generated-answer-thread-item component (#7086) ([306ec58](https://github.com/coveo/ui-kit/commits/306ec58)), closes [#7086](https://github.com/coveo/ui-kit/issues/7086)
+
+
+
+## 3.49.0 (2026-02-18)
+
+* feat: optimize tree-shaking for Atomic React (#7063) ([108c8ec](https://github.com/coveo/ui-kit/commits/108c8ec)), closes [#7063](https://github.com/coveo/ui-kit/issues/7063)
+* feat(atomic): creation of new render-follow-up-input component for multi-turn support (#7076) ([015669a](https://github.com/coveo/ui-kit/commits/015669a)), closes [#7076](https://github.com/coveo/ui-kit/issues/7076)
+* feat(atomic): exposed agentId in the atomic generated answer component (#7114) ([c18a6fd](https://github.com/coveo/ui-kit/commits/c18a6fd)), closes [#7114](https://github.com/coveo/ui-kit/issues/7114)
+* chore(atomic): migrate atomic-insight-folded-result-list (#7065) ([35a6012](https://github.com/coveo/ui-kit/commits/35a6012)), closes [#7065](https://github.com/coveo/ui-kit/issues/7065)
+* chore(atomic): migrate atomic-insight-smart-snippet-suggestions to Lit (#6936) ([37863c0](https://github.com/coveo/ui-kit/commits/37863c0)), closes [#6936](https://github.com/coveo/ui-kit/issues/6936)
+* chore(atomic): migrate atomic-recs-list (#7068) ([c335c2d](https://github.com/coveo/ui-kit/commits/c335c2d)), closes [#7068](https://github.com/coveo/ui-kit/issues/7068)
+
+
+
+## 3.48.0 (2026-02-11)
+
+* refactor(atomic): migrate atomic-insight-user-actions-session to Lit (#6979) ([ab6a973](https://github.com/coveo/ui-kit/commits/ab6a973)), closes [#6979](https://github.com/coveo/ui-kit/issues/6979)
+* refactor(atomic): migrate atomic-insight-user-actions-timeline to Lit (#6976) ([94f94fd](https://github.com/coveo/ui-kit/commits/94f94fd)), closes [#6976](https://github.com/coveo/ui-kit/issues/6976)
+* refactor(atomic): rework atomic-ipx-body into a Lit functional component (#7010) ([a715bff](https://github.com/coveo/ui-kit/commits/a715bff)), closes [#7010](https://github.com/coveo/ui-kit/issues/7010)
+* feat(atomic): made renderAnswerContent responsible of only displaying a single answer (#7077) ([4787a57](https://github.com/coveo/ui-kit/commits/4787a57)), closes [#7077](https://github.com/coveo/ui-kit/issues/7077)
+* feat(atomic): migrate atomic-insight-user-actions-modal to Lit (#7018) ([2e4f183](https://github.com/coveo/ui-kit/commits/2e4f183)), closes [#7018](https://github.com/coveo/ui-kit/issues/7018)
+* feat(atomic): migrate atomic-ipx-result-link to Lit (#7014) ([540c105](https://github.com/coveo/ui-kit/commits/540c105)), closes [#7014](https://github.com/coveo/ui-kit/issues/7014)
+* fix(atomic): add missing interdependent imports in Atomic (#7084) ([2580e91](https://github.com/coveo/ui-kit/commits/2580e91)), closes [#7084](https://github.com/coveo/ui-kit/issues/7084)
+* fix(atomic): include custom-elements.json in npm package (#7080) ([48e788e](https://github.com/coveo/ui-kit/commits/48e788e)), closes [#7080](https://github.com/coveo/ui-kit/issues/7080)
+* fix(atomic): multi-class-map should handle empty class gracefuly (#7090) ([3c04374](https://github.com/coveo/ui-kit/commits/3c04374)), closes [#7090](https://github.com/coveo/ui-kit/issues/7090)
+* chore: externalize atomic-suggestion-renderer (#7041) ([8534fd2](https://github.com/coveo/ui-kit/commits/8534fd2)), closes [#7041](https://github.com/coveo/ui-kit/issues/7041)
+* chore: migrate atomic-insight-result-action-bar to Lit (#7057) ([8fe85d0](https://github.com/coveo/ui-kit/commits/8fe85d0)), closes [#7057](https://github.com/coveo/ui-kit/issues/7057)
+* chore: migrate atomic-insight-result-attach-to-case-indicator to Lit (#7058) ([2bf54d2](https://github.com/coveo/ui-kit/commits/2bf54d2)), closes [#7058](https://github.com/coveo/ui-kit/issues/7058)
+* chore: remove shim (#7045) ([c1ea712](https://github.com/coveo/ui-kit/commits/c1ea712)), closes [#7045](https://github.com/coveo/ui-kit/issues/7045)
+* chore(atomic): allow multiple dev servers running at the same time (#7067) ([e4a152f](https://github.com/coveo/ui-kit/commits/e4a152f)), closes [#7067](https://github.com/coveo/ui-kit/issues/7067)
+* chore(atomic): migrate atomic-generated-answer-feedback-modal to Lit (#6989) ([9e559f9](https://github.com/coveo/ui-kit/commits/9e559f9)), closes [#6989](https://github.com/coveo/ui-kit/issues/6989)
+* chore(atomic): migrate atomic-insight-refine-modal to Lit (#6966) ([285d5df](https://github.com/coveo/ui-kit/commits/285d5df)), closes [#6966](https://github.com/coveo/ui-kit/issues/6966)
+* chore(atomic): migrate atomic-insight-result-list (#7066) ([082366b](https://github.com/coveo/ui-kit/commits/082366b)), closes [#7066](https://github.com/coveo/ui-kit/issues/7066)
+* chore(atomic): migrate atomic-insight-result-quickview-action to Lit (#7031) ([ec26e28](https://github.com/coveo/ui-kit/commits/ec26e28)), closes [#7031](https://github.com/coveo/ui-kit/issues/7031)
+* chore(atomic): migrate atomic-insight-smart-snippet to Lit (#6893) ([bcab381](https://github.com/coveo/ui-kit/commits/bcab381)), closes [#6893](https://github.com/coveo/ui-kit/issues/6893)
+* chore(atomic): migrate atomic-ipx-modal to Lit and make it public (#6967) ([9d2d295](https://github.com/coveo/ui-kit/commits/9d2d295)), closes [#6967](https://github.com/coveo/ui-kit/issues/6967)
+* test: decommission cypress for core atomic (#7081) ([12d867e](https://github.com/coveo/ui-kit/commits/12d867e)), closes [#7081](https://github.com/coveo/ui-kit/issues/7081)
+
+
+
 ## <small>3.47.1 (2026-02-04)</small>
 
 * fix(atomic): make standalone search box redirect event cancelable (#6982) ([965235b](https://github.com/coveo/ui-kit/commits/965235b)), closes [#6982](https://github.com/coveo/ui-kit/issues/6982)

@@ -60,18 +60,14 @@ describe('serverStateEventHandler', () => {
   });
 
   describe('#handleMessage', () => {
-    describe('genqa.headerMessageType', () => {
-      it('should call initializeStreamingAnswer when contentFormat is present', () => {
-        const payload: StreamPayload = {
-          contentFormat: 'text/markdown',
-          citations: [],
-        };
+    describe('agentInteraction.answerHeader', () => {
+      it('should call initializeStreamingAnswer with markdown content format', () => {
         const message: Message = {
-          payloadType: 'genqa.headerMessageType',
-          payload: JSON.stringify(payload),
+          payloadType: 'agentInteraction.answerHeader',
+          payload: {},
         };
 
-        serverStateEventHandler.handleMessage['genqa.headerMessageType']!(
+        serverStateEventHandler.handleMessage['agentInteraction.answerHeader']!(
           message,
           mockUpdateCachedData
         );
@@ -79,43 +75,21 @@ describe('serverStateEventHandler', () => {
         expect(mockUpdateCachedData).toHaveBeenCalledTimes(1);
         expect(
           answerDraftReducer.initializeStreamingAnswer
-        ).toHaveBeenCalledWith(mockDraft, payload);
-      });
-
-      it('should not call initializeStreamingAnswer when contentFormat is missing', () => {
-        const payload: Partial<StreamPayload> = {
-          citations: [],
-        };
-        const message: Message = {
-          payloadType: 'genqa.headerMessageType',
-          payload: JSON.stringify(payload),
-        };
-
-        serverStateEventHandler.handleMessage['genqa.headerMessageType']!(
-          message,
-          mockUpdateCachedData
-        );
-
-        expect(mockUpdateCachedData).not.toHaveBeenCalled();
-        expect(
-          answerDraftReducer.initializeStreamingAnswer
-        ).not.toHaveBeenCalled();
+        ).toHaveBeenCalledWith(mockDraft, {contentFormat: 'text/markdown'});
       });
     });
 
-    describe('genqa.messageType', () => {
-      it('should call setAnswer when textDelta is present', () => {
+    describe('generativeengines.messageType', () => {
+      it('should call setAnswer when textDelta is present in the payload', () => {
         const payload: StreamPayload = {
           textDelta: 'Test answer chunk',
-          contentFormat: 'text/markdown',
-          citations: [],
         };
         const message: Message = {
-          payloadType: 'genqa.messageType',
-          payload: JSON.stringify(payload),
+          payloadType: 'generativeengines.messageType',
+          payload,
         };
 
-        serverStateEventHandler.handleMessage['genqa.messageType']!(
+        serverStateEventHandler.handleMessage['generativeengines.messageType']!(
           message,
           mockUpdateCachedData
         );
@@ -128,16 +102,13 @@ describe('serverStateEventHandler', () => {
       });
 
       it('should not call setAnswer when textDelta is missing', () => {
-        const payload: Partial<StreamPayload> = {
-          contentFormat: 'text/markdown',
-          citations: [],
-        };
+        const payload: Partial<StreamPayload> = {};
         const message: Message = {
-          payloadType: 'genqa.messageType',
-          payload: JSON.stringify(payload),
+          payloadType: 'generativeengines.messageType',
+          payload,
         };
 
-        serverStateEventHandler.handleMessage['genqa.messageType']!(
+        serverStateEventHandler.handleMessage['generativeengines.messageType']!(
           message,
           mockUpdateCachedData
         );
@@ -147,28 +118,25 @@ describe('serverStateEventHandler', () => {
       });
     });
 
-    describe('genqa.citationsType', () => {
+    describe('agentInteraction.citations', () => {
       it('should call setCitations when citations are present', () => {
-        const citations = [
-          {
-            id: 'citation-1',
-            title: 'Test Citation',
-            uri: 'https://example.com',
-            source: 'Example Source',
-            permanentid: 'perm-1',
-            clickUri: 'https://example.com/click',
-          },
-        ];
         const payload: StreamPayload = {
-          citations,
-          contentFormat: 'text/markdown',
+          citations: [
+            {
+              id: 'citation-1',
+              title: 'Test Citation',
+              uri: 'https://example.com',
+              permanentid: 'perm-id-123',
+              source: 'Example Source',
+            },
+          ],
         };
         const message: Message = {
-          payloadType: 'genqa.citationsType',
-          payload: JSON.stringify(payload),
+          payloadType: 'agentInteraction.citations',
+          payload,
         };
 
-        serverStateEventHandler.handleMessage['genqa.citationsType']!(
+        serverStateEventHandler.handleMessage['agentInteraction.citations']!(
           message,
           mockUpdateCachedData
         );
@@ -181,15 +149,13 @@ describe('serverStateEventHandler', () => {
       });
 
       it('should not call setCitations when citations are missing', () => {
-        const payload: Partial<StreamPayload> = {
-          contentFormat: 'text/markdown',
-        };
+        const payload: Partial<StreamPayload> = {};
         const message: Message = {
-          payloadType: 'genqa.citationsType',
-          payload: JSON.stringify(payload),
+          payloadType: 'agentInteraction.citations',
+          payload,
         };
 
-        serverStateEventHandler.handleMessage['genqa.citationsType']!(
+        serverStateEventHandler.handleMessage['agentInteraction.citations']!(
           message,
           mockUpdateCachedData
         );
@@ -198,22 +164,21 @@ describe('serverStateEventHandler', () => {
         expect(answerDraftReducer.setCitations).not.toHaveBeenCalled();
       });
 
-      it('should not call setCitations when citations is an empty array', () => {
-        const payload: Partial<StreamPayload> = {
+      it('should call setCitations when citations is an empty array', () => {
+        const payload: StreamPayload = {
           citations: [],
-          contentFormat: 'text/markdown',
         };
         const message: Message = {
-          payloadType: 'genqa.citationsType',
-          payload: JSON.stringify(payload),
+          payloadType: 'agentInteraction.citations',
+          payload,
         };
 
-        serverStateEventHandler.handleMessage['genqa.citationsType']!(
+        serverStateEventHandler.handleMessage['agentInteraction.citations']!(
           message,
           mockUpdateCachedData
         );
 
-        expect(mockUpdateCachedData).toHaveBeenCalled();
+        expect(mockUpdateCachedData).toHaveBeenCalledTimes(1);
         expect(answerDraftReducer.setCitations).toHaveBeenCalledWith(
           mockDraft,
           payload
@@ -221,22 +186,19 @@ describe('serverStateEventHandler', () => {
       });
     });
 
-    describe('genqa.endOfStreamType', () => {
-      it('should call endStreaming with parsed payload', () => {
+    describe('generativeengines.endOfStreamType', () => {
+      it('should call endStreaming with the payload', () => {
         const payload: StreamPayload = {
           answerGenerated: true,
-          contentFormat: 'text/markdown',
-          citations: [],
         };
         const message: Message = {
-          payloadType: 'genqa.endOfStreamType',
-          payload: JSON.stringify(payload),
+          payloadType: 'generativeengines.endOfStreamType',
+          payload,
         };
 
-        serverStateEventHandler.handleMessage['genqa.endOfStreamType']!(
-          message,
-          mockUpdateCachedData
-        );
+        serverStateEventHandler.handleMessage[
+          'generativeengines.endOfStreamType'
+        ]!(message, mockUpdateCachedData);
 
         expect(mockUpdateCachedData).toHaveBeenCalledTimes(1);
         expect(answerDraftReducer.endStreaming).toHaveBeenCalledWith(
@@ -247,13 +209,11 @@ describe('serverStateEventHandler', () => {
     });
 
     describe('error', () => {
-      it('should call setAnswerError when finishReason is ERROR and errorMessage is present', () => {
+      it('should call setAnswerError when finishReason is ERROR', () => {
         const message: Message = {
-          payloadType: 'genqa.messageType',
-          payload: '',
+          payloadType: 'generativeengines.messageType',
+          payload: {},
           finishReason: 'ERROR',
-          errorMessage: 'Test error message',
-          code: 500,
         };
 
         serverStateEventHandler.handleMessage.error!(
@@ -270,10 +230,9 @@ describe('serverStateEventHandler', () => {
 
       it('should not call setAnswerError when finishReason is not ERROR', () => {
         const message: Message = {
-          payloadType: 'genqa.messageType',
-          payload: '',
+          payloadType: 'generativeengines.messageType',
+          payload: {},
           finishReason: 'SUCCESS',
-          errorMessage: 'Some message',
         };
 
         serverStateEventHandler.handleMessage.error!(

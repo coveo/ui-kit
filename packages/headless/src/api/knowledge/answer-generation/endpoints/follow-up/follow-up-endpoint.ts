@@ -11,7 +11,7 @@ import {buildFollowUpEndpointUrl} from './url-builders/endpoint-url-builder.js';
 /**
  * Parameters for follow-up answer generation requests.
  */
-type FollowUpAnswerParams = {
+export type FollowUpAnswerParams = {
   q: string;
   conversationId: string;
 };

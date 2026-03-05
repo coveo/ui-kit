@@ -1,3 +1,45 @@
+## 3.46.0 (2026-03-04)
+
+* feat(headless): added logic to support agent steps in the state (#7155) ([fe4a57e](https://github.com/coveo/ui-kit/commits/fe4a57e)), closes [#7155](https://github.com/coveo/ui-kit/issues/7155)
+* feat(headless): integration of ag-ui client to generate head and follow up answers (#7153) ([c8b6d3c](https://github.com/coveo/ui-kit/commits/c8b6d3c)), closes [#7153](https://github.com/coveo/ui-kit/issues/7153)
+
+
+
+## <small>3.45.1 (2026-02-25)</small>
+
+* fix(headless): clear tab-restricted facet values synchronously on tab switch (#7092) ([8adad48](https://github.com/coveo/ui-kit/commits/8adad48)), closes [#7092](https://github.com/coveo/ui-kit/issues/7092)
+* fix(headless): eliminate commerce subpackage imports from search subpackage (#7166) ([19bbdd5](https://github.com/coveo/ui-kit/commits/19bbdd5)), closes [#7166](https://github.com/coveo/ui-kit/issues/7166)
+* fix(headless): renew access token middleware calls renewToken 2x in parallel & skips error handling  ([bbac7dd](https://github.com/coveo/ui-kit/commits/bbac7dd)), closes [#7109](https://github.com/coveo/ui-kit/issues/7109)
+
+
+
+## 3.45.0 (2026-02-18)
+
+* feat(headless): added askFollowUp method to generated answer with follow ups controller (kepler) (#7 ([441238f](https://github.com/coveo/ui-kit/commits/441238f)), closes [#7127](https://github.com/coveo/ui-kit/issues/7127)
+* feat(headless): introduced like, dislike and logCopyToClipboard methods to generated answer with fol ([f3fac36](https://github.com/coveo/ui-kit/commits/f3fac36)), closes [#7120](https://github.com/coveo/ui-kit/issues/7120)
+
+
+
+## 3.44.0 (2026-02-18)
+
+* feat(headless): answer generation endpoints updated to target the kgas service (#7075) ([9682fef](https://github.com/coveo/ui-kit/commits/9682fef)), closes [#7075](https://github.com/coveo/ui-kit/issues/7075)
+* feat(headless): Update messages handler in strategies to support new events from Kepler (#7118) ([512e9d4](https://github.com/coveo/ui-kit/commits/512e9d4)), closes [#7118](https://github.com/coveo/ui-kit/issues/7118)
+* feat(headless): wired generatedAnswerWithFollowUps controller with the main generated answer control ([1087fb5](https://github.com/coveo/ui-kit/commits/1087fb5)), closes [#7094](https://github.com/coveo/ui-kit/issues/7094)
+* fix(headless): apply enableQuerySyntax option at search box construction (#7089) ([05dcd8c](https://github.com/coveo/ui-kit/commits/05dcd8c)), closes [#7089](https://github.com/coveo/ui-kit/issues/7089)
+
+
+
+## 3.43.0 (2026-02-11)
+
+* fix(deps): update dependency @coveo/relay to v1.2.15 j:kit-282 (#7052) ([a614dca](https://github.com/coveo/ui-kit/commits/a614dca)), closes [#7052](https://github.com/coveo/ui-kit/issues/7052)
+* feat(atomic): made renderAnswerContent responsible of only displaying a single answer (#7077) ([4787a57](https://github.com/coveo/ui-kit/commits/4787a57)), closes [#7077](https://github.com/coveo/ui-kit/issues/7077)
+* feat(headless): added redux analytics actions for attach citations feature (#6805) ([1e19331](https://github.com/coveo/ui-kit/commits/1e19331)), closes [#6805](https://github.com/coveo/ui-kit/issues/6805)
+* feat(headless): creation of Generate Answer Listener Middleware (#7038) ([e2fa794](https://github.com/coveo/ui-kit/commits/e2fa794)), closes [#7038](https://github.com/coveo/ui-kit/issues/7038)
+* feat(headless): generated answer with follow ups controller created (#7037) ([3c4ef70](https://github.com/coveo/ui-kit/commits/3c4ef70)), closes [#7037](https://github.com/coveo/ui-kit/issues/7037)
+* feat(headless): implement Commerce Redirect endpoint for standalone search box COMHUB2-1211 (#7071) ([d0485ee](https://github.com/coveo/ui-kit/commits/d0485ee)), closes [#7071](https://github.com/coveo/ui-kit/issues/7071)
+
+
+
 ## <small>3.42.1 (2026-02-04)</small>
 
 * feat(headless commerce): implement events for Spotlight Content for Search COMHUB2-1374 (#7039) ([bcc6137](https://github.com/coveo/ui-kit/commits/bcc6137)), closes [#7039](https://github.com/coveo/ui-kit/issues/7039)

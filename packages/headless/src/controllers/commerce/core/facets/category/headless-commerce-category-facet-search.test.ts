@@ -1,10 +1,9 @@
 import {stateKey} from '../../../../../app/state-key.js';
+import {commerceCategoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../../../features/commerce/facets/facet-search-set/category/commerce-category-facet-search-set-slice.js';
 import {
   executeCommerceFacetSearch,
   executeCommerceFieldSuggest,
 } from '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions.js';
-
-import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../../../features/facets/facet-search-set/category/category-facet-search-set-slice.js';
 import type {CategoryFacetSearchState} from '../../../../../features/facets/facet-search-set/category/category-facet-search-set-state.js';
 import {updateFacetSearch} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
 import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search.js';

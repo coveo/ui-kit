@@ -73,9 +73,12 @@ const ALLOWED_LIGHT_DOM_COMPONENTS = new Set([
   'src/components/insight/atomic-insight-layout/atomic-insight-layout.ts',
   'src/components/insight/atomic-insight-tabs/atomic-insight-tabs.ts',
   'src/components/insight/atomic-insight-result-quickview-action/atomic-insight-result-quickview-action.ts',
+  'src/components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action.ts',
+  'src/components/insight/atomic-insight-result-action/atomic-insight-result-action.ts',
 
   // IPX components
   'src/components/ipx/atomic-ipx-tabs/atomic-ipx-tabs.ts',
+  'src/components/ipx/atomic-ipx-result-link/atomic-ipx-result-link.ts',
 
   // Search result section components
   'src/components/search/atomic-result-section-actions/atomic-result-section-actions.ts',

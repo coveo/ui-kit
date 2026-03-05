@@ -1,3 +1,4 @@
+import '@/src/components/common/atomic-icon/atomic-icon';
 import '@/src/components/common/atomic-modal/atomic-modal';
 import type {
   GeneratedAnswer,

@@ -5,7 +5,9 @@ import {
   buildSearchStatus,
   buildTabManager,
   type GeneratedAnswer,
+  type GeneratedAnswerCitation,
   type GeneratedAnswerState,
+  type GeneratedAnswerWithFollowUps,
   type SearchStatus,
   type SearchStatusState,
   type TabManager,
@@ -13,6 +15,7 @@ import {
 } from '@coveo/headless';
 import {html, LitElement, nothing, type PropertyValueMap} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {classMap} from 'lit/directives/class-map.js';
 import {when} from 'lit/directives/when.js';
 import {GeneratedAnswerController} from '@/src/components/common/generated-answer/generated-answer-controller';
 import {renderAnswerContent} from '@/src/components/common/generated-answer/render-answer-content';
@@ -37,6 +40,8 @@ import {debounce} from '@/src/utils/debounce-utils';
 import {getNamedSlotContent} from '@/src/utils/slot-utils';
 import {shouldDisplayOnCurrentTab} from '@/src/utils/tab-utils';
 import atomicGeneratedAnswerStyles from './atomic-generated-answer.tw.css.js';
+import '@/src/components/common/generated-answer/atomic-generated-answers-thread/atomic-generated-answers-thread.js';
+import {renderFollowUpInput} from '@/src/components/common/generated-answer/render-follow-up-input.js';
 
 /**
  * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
@@ -141,6 +146,12 @@ export class AtomicGeneratedAnswer
    */
   @property({type: String, attribute: 'answer-configuration-id'})
   answerConfigurationId?: string;
+  /**
+   * @internal
+   * The unique identifier of the agent to use to generate answers.
+   */
+  @property({type: String, attribute: 'agent-id'})
+  agentId?: string;
 
   /**
    * A list of fields to include with the citations used to generate the answer.
@@ -210,7 +221,7 @@ export class AtomicGeneratedAnswer
   })
   @state()
   private generatedAnswerState!: GeneratedAnswerState;
-  public generatedAnswer!: GeneratedAnswer;
+  public generatedAnswer!: GeneratedAnswer | GeneratedAnswerWithFollowUps;
 
   @bindStateToController('searchStatus')
   @state()
@@ -267,6 +278,9 @@ export class AtomicGeneratedAnswer
       ...(this.answerConfigurationId && {
         answerConfigurationId: this.answerConfigurationId,
       }),
+      ...(this.agentId && {
+        agentId: this.agentId,
+      }),
       fieldsToIncludeInCitations: this.getCitationFields(),
     });
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -274,7 +288,7 @@ export class AtomicGeneratedAnswer
 
     this.controller.insertFeedbackModal();
 
-    if (window.ResizeObserver && this.collapsible) {
+    if (window.ResizeObserver && this.isCollapsibleEnabled) {
       const debouncedAdaptAnswerHeight = debounce(
         () => this.adaptAnswerHeight(),
         100
@@ -315,7 +329,8 @@ export class AtomicGeneratedAnswer
       ) as GeneratedAnswerState | undefined;
       if (
         oldState &&
-        this.generatedAnswerState?.expanded !== oldState?.expanded
+        this.generatedAnswerState?.expanded !== oldState?.expanded &&
+        this.isCollapsibleEnabled
       ) {
         const container = this.getAnswerContainer();
         if (container) {
@@ -326,6 +341,14 @@ export class AtomicGeneratedAnswer
           );
         }
       }
+    }
+
+    if (
+      (changedProperties.has('collapsible') ||
+        changedProperties.has('agentId')) &&
+      !this.isCollapsibleEnabled
+    ) {
+      this.resetCollapsibleStyles();
     }
   }
 
@@ -384,14 +407,24 @@ export class AtomicGeneratedAnswer
             ${when(
               this.isAnswerVisible,
               () =>
-                html` <div part="generated-content-container" class="px-6 pb-6">
-                  <article>${this.renderAnswerContent()}</article>
-                  ${renderDisclaimer({
-                    props: {
-                      i18n: this.bindings.i18n,
-                      isStreaming: !!this.generatedAnswerState.isStreaming,
-                    },
-                  })}
+                html` <div part="generated-content-container" class="pb-6">
+                  <div
+                    class=${classMap({
+                      'px-6': true,
+                      'agent-scrollable': this.areFollowUpsEnabled,
+                    })}
+                  >
+                    <article>${this.renderAnswerContent()}</article>
+                  </div>
+                  <div class="px-6 pt-2">
+                    ${this.renderAskFollowUpInputWrapper()}
+                    ${renderDisclaimer({
+                      props: {
+                        i18n: this.bindings.i18n,
+                        isStreaming: !!this.generatedAnswerState.isStreaming,
+                      },
+                    })}
+                  </div>
                 </div>`
             )}
           </div>
@@ -561,9 +594,7 @@ export class AtomicGeneratedAnswer
     this.controller.clickLike();
   }
 
-  private renderCitationsList() {
-    const {citations} = this.generatedAnswerState ?? {};
-
+  private renderCitationsList(citations: GeneratedAnswerCitation[]) {
     return renderCitations({
       props: {
         citations,
@@ -587,7 +618,13 @@ export class AtomicGeneratedAnswer
     return renderFeedbackAndCopyButtons({
       props: {
         i18n: this.bindings.i18n,
-        generatedAnswerState: this.generatedAnswerState,
+        generatedAnswerActionsState: {
+          liked: this.generatedAnswerState.liked,
+          disliked: this.generatedAnswerState.disliked,
+          isStreaming: this.generatedAnswerState.isStreaming,
+          isLoading: this.generatedAnswerState.isLoading,
+          answer: this.generatedAnswerState.answer,
+        },
         copied: this.copied,
         copyError: this.copyError,
         getCopyToClipboardTooltip: () => this.copyToClipboardTooltip,
@@ -603,18 +640,82 @@ export class AtomicGeneratedAnswer
       ...this.generatedAnswerState,
       question: this.bindings.engine.state.query?.q ?? '',
     };
+
+    if (this.areFollowUpsEnabled) {
+      const allGeneratedAnswers = [
+        generatedAnswer,
+        ...(this.generatedAnswerWithFollowUps?.state.followUpAnswers
+          .followUpAnswers ?? []),
+      ];
+
+      return html`<atomic-generated-answers-thread
+        .generatedAnswers=${allGeneratedAnswers}
+        .i18n=${this.bindings.i18n}
+        .renderCitations=${this.renderCitationsList.bind(this)}
+        .onClickLike=${(answerId: string) =>
+          this.generatedAnswer.like(answerId)}
+        .onClickDislike=${(answerId: string) =>
+          this.generatedAnswer.dislike(answerId)}
+        .onCopyToClipboard=${(answerId: string) =>
+          this.generatedAnswer.logCopyToClipboard(answerId)}
+      ></atomic-generated-answers-thread>`;
+    }
+
     return renderAnswerContent({
       props: {
         i18n: this.bindings.i18n,
         generatedAnswer: generatedAnswer,
-        collapsible: this.collapsible,
+        collapsible: this.isCollapsibleEnabled,
         renderFeedbackAndCopyButtonsSlot: () =>
           this.renderFeedbackAndCopyButtonsWrapper(),
-        renderCitationsSlot: () => html`${this.renderCitationsList()}`,
+        renderCitationsSlot: () =>
+          html`${this.renderCitationsList(generatedAnswer.citations)}`,
         onRetry: () => this.generatedAnswer?.retry(),
         onClickShowButton: () => this.clickOnShowButton(),
       },
     });
+  }
+
+  private get hasAgentId() {
+    return Boolean(this.agentId);
+  }
+
+  private get generatedAnswerWithFollowUps():
+    | GeneratedAnswerWithFollowUps
+    | undefined {
+    if (
+      !this.hasAgentId ||
+      !this.generatedAnswer ||
+      !('askFollowUp' in this.generatedAnswer)
+    ) {
+      return undefined;
+    }
+
+    return this.generatedAnswer as GeneratedAnswerWithFollowUps;
+  }
+
+  private get areFollowUpsEnabled() {
+    return (
+      this.generatedAnswerWithFollowUps?.state.followUpAnswers?.isEnabled ===
+      true
+    );
+  }
+
+  private get isCollapsibleEnabled() {
+    return this.collapsible && !this.areFollowUpsEnabled;
+  }
+
+  private resetCollapsibleStyles() {
+    const container = this.getAnswerContainer();
+    const footer = this.getAnswerFooter();
+
+    if (!container || !footer) {
+      return;
+    }
+
+    this.toggleClass(container, 'answer-collapsed', false);
+    this.toggleClass(footer, 'is-collapsible', false);
+    this.toggleClass(footer, 'generating-label-visible', false);
   }
 
   private renderCardHeaderWrapper() {
@@ -629,6 +730,40 @@ export class AtomicGeneratedAnswer
         },
       },
     });
+  }
+
+  private get isAnswerGenerationOngoing() {
+    const initialAnswerPending =
+      this.generatedAnswerState.isStreaming ||
+      this.generatedAnswerState.isLoading;
+    return (
+      initialAnswerPending ||
+      (this.generatedAnswerWithFollowUps?.state.followUpAnswers?.followUpAnswers?.some(
+        (answer) => answer.isStreaming || answer.isLoading
+      ) ??
+        false)
+    );
+  }
+
+  private async handleAskFollowUp(question: string) {
+    if (this.areFollowUpsEnabled) {
+      await this.generatedAnswerWithFollowUps?.askFollowUp(question);
+    }
+  }
+
+  private renderAskFollowUpInputWrapper() {
+    if (!this.areFollowUpsEnabled) {
+      return nothing;
+    }
+    return html` <div class="mb-2">
+      ${renderFollowUpInput({
+        props: {
+          i18n: this.bindings.i18n,
+          submitButtonDisabled: this.isAnswerGenerationOngoing,
+          askFollowUp: this.handleAskFollowUp.bind(this),
+        },
+      })}
+    </div>`;
   }
 }
 

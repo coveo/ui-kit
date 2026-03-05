@@ -151,6 +151,10 @@ class MultiClassMapDirective extends Directive {
     for (const [key, value] of Object.entries(classInfo)) {
       if (value) {
         key.split(/\s+/).forEach((cls) => {
+          // Skip empty class names
+          if (!cls) {
+            return;
+          }
           processedClassMap[cls] = true;
         });
       }
