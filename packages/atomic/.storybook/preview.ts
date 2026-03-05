@@ -42,13 +42,13 @@ function disableAnalytics(container: HTMLElement, selectors: string[]) {
   });
 }
 
-function ensureGlobalEditButton(): HTMLAnchorElement | null {
+function ensureGlobalEditButton(): (HTMLDivElement & {href?: string}) | null {
   if (typeof document === 'undefined') return null;
-  let btn = document.getElementById(
-    'sb-edit-in-github-global'
-  ) as HTMLAnchorElement | null;
-  if (btn) return btn;
-  btn = createEditInGithubElement();
+
+  const existing = document.getElementById('sb-edit-in-github-global');
+  if (existing) return existing as HTMLDivElement & {href?: string};
+
+  const btn = createEditInGithubElement() as HTMLDivElement & {href?: string};
   btn.id = 'sb-edit-in-github-global';
   Object.assign(btn.style, {
     position: 'fixed',

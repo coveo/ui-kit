@@ -30,7 +30,10 @@ function buildMarkdownSourceMap(): Map<string, string> {
   if (mdSourceMap) return mdSourceMap;
   mdSourceMap = new Map();
 
-  const sourceDocsDir = path.resolve(process.cwd(), 'source_docs');
+  const sourceDocsDir = path.resolve(
+    process.cwd(),
+    path.basename(SOURCE_DOCS_REPO_PATH)
+  );
 
   if (!fs.existsSync(sourceDocsDir)) {
     return mdSourceMap;
@@ -89,8 +92,8 @@ function inferSourceDocPath(pageUrl: string): string | null {
   let normalized = normalizeKey(pageUrl);
 
   // Strip the TypeDoc "documents/" prefix so URLs align with frontmatter slugs
-  if (normalized.startsWith('documents/')) {
-    normalized = normalized.slice('documents/'.length);
+  if (normalized.startsWith(DOCUMENT_PAGE_PREFIX)) {
+    normalized = normalized.slice(DOCUMENT_PAGE_PREFIX.length);
   }
 
   const map = buildMarkdownSourceMap();
@@ -157,10 +160,21 @@ export function insertEditInGithub(page: PageEvent<Reflection>) {
     return;
   }
 
+  /** Escape string for use inside HTML attribute values */
+  function escapeHtmlAttr(s: string): string {
+    return s
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
   function buildButtonHtml(url: string): string {
+    const safeHref = escapeHtmlAttr(encodeURI(String(url)));
     return `
     <div class="typedoc-edit-github">
-      <a href="${url}" target="_blank" rel="noopener noreferrer" aria-label="Edit in GitHub">
+      <a href="${safeHref}" target="_blank" rel="noopener noreferrer" aria-label="Edit in GitHub">
         <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
           <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
         </svg>

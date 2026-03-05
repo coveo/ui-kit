@@ -77,6 +77,8 @@ export const EditInGithubButton = ({githubPath}) => {
         style={anchorStyle}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
+        onFocus={() => setHovered(true)}
+        onBlur={() => setHovered(false)}
       >
         <GitHubIcon />
         {hovered && 'Edit in GitHub'}
@@ -154,6 +156,26 @@ export function createEditInGithubElement() {
     if (!a.textContent.includes('Edit in GitHub')) a.appendChild(document.createTextNode('Edit in GitHub'));
   });
   a.addEventListener('mouseleave', () => {
+    a.style.width = '36px';
+    a.style.padding = '0.25rem';
+    a.style.boxShadow = 'none';
+    a.style.border = '1px solid transparent';
+    a.style.backdropFilter = 'none';
+    a.style.color = 'rgba(0,0,0,0.72)';
+    Array.from(a.childNodes).filter(n => n.nodeType === Node.TEXT_NODE).forEach(t => a.removeChild(t));
+  });
+
+  // keyboard focus/blur mirror mouse behaviour so keyboard users see label
+  a.addEventListener('focus', () => {
+    a.style.width = 'auto';
+    a.style.padding = '0.375rem 0.75rem';
+    a.style.boxShadow = '0 2px 6px rgba(0,0,0,0.06)';
+    a.style.border = '1px solid rgba(0,0,0,0.12)';
+    a.style.backdropFilter = 'saturate(120%) blur(4px)';
+    a.style.color = 'rgba(0,0,0,0.85)';
+    if (!a.textContent.includes('Edit in GitHub')) a.appendChild(document.createTextNode('Edit in GitHub'));
+  });
+  a.addEventListener('blur', () => {
     a.style.width = '36px';
     a.style.padding = '0.25rem';
     a.style.boxShadow = 'none';
