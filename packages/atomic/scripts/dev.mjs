@@ -145,11 +145,7 @@ async function nextTask(text, command) {
   const spinner = createSpinner(text).start();
 
   return new Promise((resolve, reject) => {
-    const childProcess = exec(command);
-
-    if (childProcess.stderr) {
-      childProcess.stderr.pipe(process.stderr);
-    }
+    const childProcess = exec(command, {stdio: 'inherit'});
 
     // Add the process to the list of running processes to be able to stop them
     runningProcesses.push(childProcess);
@@ -162,7 +158,6 @@ async function nextTask(text, command) {
         resolve();
       } else {
         spinner.fail(colors.red.bold(`${text}`));
-        reject(new Error(`${text} failed with exit code ${code}`));
       }
     });
 
@@ -274,52 +269,18 @@ await startServers();
 // Watch the src folder for changes
 /** @type {ReturnType<typeof setTimeout> | null} */
 let debounceTimer = null;
+let buildInProgress = false;
 const DEBOUNCE_MS = 300;
-let pendingChangeCount = 0;
-watch('src', {recursive: true}, (_, filename) => {
-  // Ignore irrelevant files
-  if (
-    filename.endsWith('.mdx') ||
-    filename.endsWith('.new.stories.tsx') ||
-    filename.endsWith('.spec.ts') ||
-    filename.includes('e2e') ||
-    filename.endsWith('index.ts') ||
-    filename.endsWith('lazy-index.ts') ||
-    filename.endsWith('.DS_Store') ||
-    filename.endsWith('custom-element-tags.ts')
-  ) {
-    return;
-  }
 
-  pendingChangeCount += 1;
-
-  // Debounce: coalesce rapid file changes (e.g., branch switches) into a single build.
-  // Without this, fs.watch fires concurrent async callbacks for each changed file,
-  // causing a thundering herd of parallel build processes.
-  if (debounceTimer) {
-    clearTimeout(debounceTimer);
-  }
-
-  debounceTimer = setTimeout(async () => {
-    debounceTimer = null;
-
-    if (pendingChangeCount > 1) {
-      console.log(
-        colors.yellow(
-          `⚡ Detected ${pendingChangeCount} rapid file changes; coalescing into a single rebuild (e.g., branch checkout).`
-        )
-      );
-    }
-
-    pendingChangeCount = 0;
-
-    // Stop all processes if a file changes to prevent multiple builds at once
+async function runBuild() {
+  if (buildInProgress) {
     await stopAllProcesses();
-    console.log(colors.cyanBright(`📂 File changed: ${filename}`));
+  }
 
-    // Flag to stop the build process if a file changes during the build
-    isStopped = false;
+  buildInProgress = true;
+  isStopped = false;
 
+  try {
     if (isStencil) {
       await nextTask(
         'Rebuilding Stencil...',
@@ -394,5 +355,36 @@ watch('src', {recursive: true}, (_, filename) => {
     }
 
     console.log(colors.magenta.bold(' 🎇 Build process completed! 🎇 '));
+  } finally {
+    buildInProgress = false;
+  }
+}
+
+watch('src', {recursive: true}, (_, filename) => {
+  // Ignore irrelevant files
+  if (
+    filename.endsWith('.mdx') ||
+    filename.endsWith('.new.stories.tsx') ||
+    filename.endsWith('.spec.ts') ||
+    filename.includes('e2e') ||
+    filename.endsWith('index.ts') ||
+    filename.endsWith('lazy-index.ts') ||
+    filename.endsWith('.DS_Store') ||
+    filename.endsWith('custom-element-tags.ts')
+  ) {
+    return;
+  }
+
+  // Debounce: coalesce rapid file changes (e.g., branch switches) into a single build.
+  // Without this, fs.watch fires concurrent async callbacks for each changed file,
+  // causing a thundering herd of parallel build processes.
+  if (debounceTimer) {
+    clearTimeout(debounceTimer);
+  }
+
+  debounceTimer = setTimeout(() => {
+    debounceTimer = null;
+    console.log(colors.cyanBright(`📂 File changed: ${filename}`));
+    runBuild();
   }, DEBOUNCE_MS);
 });
