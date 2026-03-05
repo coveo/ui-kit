@@ -1,6 +1,4 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
-import {buildProductListing} from '../../../controllers/commerce/product-listing/headless-product-listing.js';
-import {buildSearch} from '../../../controllers/commerce/search/headless-search.js';
 import {createStaticState} from '../controller-utils.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {AugmentedControllerDefinition} from '../types/controller-definitions.js';
@@ -10,6 +8,27 @@ import type {
   FetchStaticStateParameters,
 } from '../types/engine.js';
 import {buildFactory} from './build-factory.js';
+
+interface ProductListController {
+  executeFirstRequest?: () => void;
+  executeFirstSearch?: () => void;
+}
+
+function findProductListController(
+  controllers: Record<string, unknown>
+): ProductListController | undefined {
+  for (const controller of Object.values(controllers)) {
+    if (
+      controller &&
+      typeof controller === 'object' &&
+      ('executeFirstRequest' in controller ||
+        'executeFirstSearch' in controller)
+    ) {
+      return controller as ProductListController;
+    }
+  }
+  return undefined;
+}
 
 export function fetchStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
@@ -27,13 +46,22 @@ export function fetchStaticStateFactory<
       )(solutionType);
       const {engine, controllers} = await solutionTypeBuild(params);
 
-      switch (solutionType) {
-        case SolutionType.listing:
-          buildProductListing(engine).executeFirstRequest();
-          break;
-        case SolutionType.search:
-          buildSearch(engine).executeFirstSearch();
-          break;
+      const productListController = findProductListController(
+        controllers as Record<string, unknown>
+      );
+
+      if (productListController) {
+        if (
+          solutionType === SolutionType.listing &&
+          productListController.executeFirstRequest
+        ) {
+          productListController.executeFirstRequest();
+        } else if (
+          solutionType === SolutionType.search &&
+          productListController.executeFirstSearch
+        ) {
+          productListController.executeFirstSearch();
+        }
       }
 
       const searchActions = await Promise.all(
