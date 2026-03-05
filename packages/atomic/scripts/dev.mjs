@@ -145,7 +145,15 @@ async function nextTask(text, command) {
   const spinner = createSpinner(text).start();
 
   return new Promise((resolve, reject) => {
-    const childProcess = exec(command, {stdio: 'inherit'});
+    const childProcess = exec(command);
+
+    if (childProcess.stdout) {
+      childProcess.stdout.pipe(process.stdout);
+    }
+
+    if (childProcess.stderr) {
+      childProcess.stderr.pipe(process.stderr);
+    }
 
     // Add the process to the list of running processes to be able to stop them
     runningProcesses.push(childProcess);
@@ -158,6 +166,7 @@ async function nextTask(text, command) {
         resolve();
       } else {
         spinner.fail(colors.red.bold(`${text}`));
+        reject(new Error(`${text} failed with exit code ${code}`));
       }
     });
 
