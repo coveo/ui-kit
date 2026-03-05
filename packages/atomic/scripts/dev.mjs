@@ -268,101 +268,10 @@ await startServers();
 
 // Watch the src folder for changes
 /** @type {ReturnType<typeof setTimeout> | null} */
-let debounceTimer = null;
-let buildInProgress = false;
-const DEBOUNCE_MS = 300;
+let changeLogTimer = null;
+const CHANGE_LOG_WINDOW_MS = 300;
 let pendingChangeCount = 0;
-let lastChangedFile = '';
-
-async function runBuild() {
-  if (buildInProgress) {
-    await stopAllProcesses();
-  }
-
-  buildInProgress = true;
-  isStopped = false;
-
-  try {
-    if (isStencil) {
-      await nextTask(
-        'Rebuilding Stencil...',
-        'node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json'
-      );
-
-      if (isStopped) {
-        return;
-      }
-
-      await nextTask(
-        'Placing the Stencil Proxy...',
-        'node ./scripts/stencil-proxy.mjs'
-      );
-
-      if (isStopped) {
-        return;
-      }
-    }
-
-    await nextTask(
-      'Rebuilding Lit...',
-      'node ./scripts/build.mjs --config=tsconfig.lit.json'
-    );
-
-    if (isStopped) {
-      return;
-    }
-
-    await nextTask(
-      'Running esbuild for autoloader ESM...',
-      'esbuild src/autoloader/index.ts --format=esm --outfile=dist/atomic/autoloader/index.esm.js'
-    );
-
-    if (isStopped) {
-      return;
-    }
-
-    await nextTask(
-      'Running esbuild for autoloader CJS...',
-      'esbuild src/autoloader/index.ts --format=cjs --outfile=dist/atomic/autoloader/index.cjs.js'
-    );
-
-    if (isStopped) {
-      return;
-    }
-
-    await nextTask('Building the custom elements manifest...', 'cem analyze');
-
-    if (isStopped) {
-      return;
-    }
-
-    await nextTask(
-      'Building storybook...',
-      'npx storybook build -o dist-storybook'
-    );
-
-    // Restart storybook server
-    // Somehow even after a build, the dev server doesn't pick up the changes.
-    // It needs a dev restart to pick them up.
-    storybookServer.kill('SIGTERM');
-    storybookServer = exec(
-      `npx storybook dev -p ${activePorts.storybook} --no-open`,
-      {
-        stdio: 'ignore',
-      }
-    );
-
-    if (isStopped) {
-      return;
-    }
-
-    console.log(colors.magenta.bold(' 🎇 Build process completed! 🎇 '));
-  } finally {
-    buildInProgress = false;
-  }
-}
-
-watch('src', {recursive: true}, (_, filename) => {
+watch('src', {recursive: true}, async (_, filename) => {
   // Ignore irrelevant files
   if (
     filename.endsWith('.mdx') ||
@@ -377,32 +286,103 @@ watch('src', {recursive: true}, (_, filename) => {
     return;
   }
 
-  // Debounce: coalesce rapid file changes (e.g., branch switches) into a single build.
-  // Without this, fs.watch fires concurrent async callbacks for each changed file,
-  // causing a thundering herd of parallel build processes.
   pendingChangeCount += 1;
-  lastChangedFile = filename;
 
-  if (debounceTimer) {
-    clearTimeout(debounceTimer);
+  if (changeLogTimer) {
+    clearTimeout(changeLogTimer);
   }
 
-  debounceTimer = setTimeout(() => {
-    debounceTimer = null;
-    const changeCount = pendingChangeCount;
-    const changedFile = lastChangedFile;
-    pendingChangeCount = 0;
-    lastChangedFile = '';
-
-    if (changeCount > 1) {
+  changeLogTimer = setTimeout(() => {
+    if (pendingChangeCount > 1) {
       console.log(
         colors.yellow(
-          `⚡ Detected ${changeCount} rapid file changes; coalescing into a single rebuild (e.g., branch checkout).`
+          `⚡ Detected ${pendingChangeCount} rapid file changes; coalescing into a single rebuild (e.g., branch checkout).`
         )
       );
     }
 
-    console.log(colors.cyanBright(`📂 File changed: ${changedFile}`));
-    runBuild();
-  }, DEBOUNCE_MS);
+    pendingChangeCount = 0;
+  }, CHANGE_LOG_WINDOW_MS);
+
+  // Stop all processes if a file changes to prevent multiple builds at once
+  await stopAllProcesses();
+  console.log(colors.cyanBright(`📂 File changed: ${filename}`));
+
+  // Flag to stop the build process if a file changes during the build
+  isStopped = false;
+
+  if (isStencil) {
+    await nextTask(
+      'Rebuilding Stencil...',
+      'node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json'
+    );
+
+    if (isStopped) {
+      return;
+    }
+
+    await nextTask(
+      'Placing the Stencil Proxy...',
+      'node ./scripts/stencil-proxy.mjs'
+    );
+
+    if (isStopped) {
+      return;
+    }
+  }
+
+  await nextTask(
+    'Rebuilding Lit...',
+    'node ./scripts/build.mjs --config=tsconfig.lit.json'
+  );
+
+  if (isStopped) {
+    return;
+  }
+
+  await nextTask(
+    'Running esbuild for autoloader ESM...',
+    'esbuild src/autoloader/index.ts --format=esm --outfile=dist/atomic/autoloader/index.esm.js'
+  );
+
+  if (isStopped) {
+    return;
+  }
+
+  await nextTask(
+    'Running esbuild for autoloader CJS...',
+    'esbuild src/autoloader/index.ts --format=cjs --outfile=dist/atomic/autoloader/index.cjs.js'
+  );
+
+  if (isStopped) {
+    return;
+  }
+
+  await nextTask('Building the custom elements manifest...', 'cem analyze');
+
+  if (isStopped) {
+    return;
+  }
+
+  await nextTask(
+    'Building storybook...',
+    'npx storybook build -o dist-storybook'
+  );
+
+  // Restart storybook server
+  // Somehow even after a build, the dev server doesn't pick up the changes.
+  // It needs a dev restart to pick them up.
+  storybookServer.kill('SIGTERM');
+  storybookServer = exec(
+    `npx storybook dev -p ${activePorts.storybook} --no-open`,
+    {
+      stdio: 'ignore',
+    }
+  );
+
+  if (isStopped) {
+    return;
+  }
+
+  console.log(colors.magenta.bold(' 🎇 Build process completed! 🎇 '));
 });
