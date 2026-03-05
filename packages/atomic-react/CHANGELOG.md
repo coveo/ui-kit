@@ -1,3 +1,9 @@
+## <small>3.11.3 (2026-03-04)</small>
+
+* chore: eject react build from Stencil (#7160) ([76aae89](https://github.com/coveo/ui-kit/commits/76aae89)), closes [#7160](https://github.com/coveo/ui-kit/issues/7160)
+
+
+
 ## <small>3.11.2 (2026-02-25)</small>
 
 * chore(atomic): migrate atomic-ipx-recs-list (#7069) ([64be4a6](https://github.com/coveo/ui-kit/commits/64be4a6)), closes [#7069](https://github.com/coveo/ui-kit/issues/7069)
