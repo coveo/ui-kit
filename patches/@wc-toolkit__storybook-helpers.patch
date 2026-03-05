@@ -1,5 +1,5 @@
 diff --git a/dist/index.js b/dist/index.js
-index eeb64e9e0fa8bc5819922b453bab438b8226a009..d6cb1875ca90ce28927aaeb8b912d2594f01e9ee 100644
+index eeb64e9e0fa8bc5819922b453bab438b8226a009..87a25ccdaf9fbfb19fc0d0e0d36eb5c112c4c96b 100644
 --- a/dist/index.js
 +++ b/dist/index.js
 @@ -569,7 +569,7 @@ var options2 = {};
@@ -38,7 +38,7 @@ index eeb64e9e0fa8bc5819922b453bab438b8226a009..d6cb1875ca90ce28927aaeb8b912d259
  `;
  }
  function getStyleTemplate(component, args, excludeCategories) {
-@@ -723,10 +733,25 @@ function getSlotsTemplate(component, args, excludeCategories) {
+@@ -723,13 +733,30 @@ function getSlotsTemplate(component, args, excludeCategories) {
  ${slotTemplates}
  `) : "";
  }
@@ -61,12 +61,20 @@ index eeb64e9e0fa8bc5819922b453bab438b8226a009..d6cb1875ca90ce28927aaeb8b912d259
    setArgObserver(component);
    setTimeout(() => {
 -    const selectedComponent = document.querySelector(component.tagName);
+-    argObserver?.observe(selectedComponent, {
+-      attributes: true
+-    });
 +    const containerElement = getContainerElement(containerSelector);
 +    const selectedComponent = containerElement.querySelector(component.tagName);
-     argObserver?.observe(selectedComponent, {
-       attributes: true
-     });
-@@ -800,7 +825,8 @@ function getStorybookHelpers(tagName, options3) {
++    if (selectedComponent && argsObserver) {
++      argObserver.observe(selectedComponent, {
++        attributes: true
++      });
++    }
+   });
+ }
+ function setArgObserver(component) {
+@@ -800,7 +827,8 @@ function getStorybookHelpers(tagName, options3) {
        slot,
        argTypes,
        options3?.excludeCategories || [],
