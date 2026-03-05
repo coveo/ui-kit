@@ -9,7 +9,6 @@ import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {
   type RenderAnswerContentProps,
   renderAnswerContent,
-  shouldRenderFeedbackAndCopyButtons,
 } from './render-answer-content';
 import {renderGeneratingAnswerLabel} from './render-generating-answer-label';
 
@@ -271,7 +270,6 @@ describe('#renderAnswerContent', () => {
 
         await renderComponent({
           collapsible: true,
-          isOverCollapseThreshold: true,
           renderFeedbackAndCopyButtonsSlot,
           generatedAnswer: {
             ...defaultGeneratedAnswer,
@@ -286,8 +284,7 @@ describe('#renderAnswerContent', () => {
         const renderFeedbackAndCopyButtonsSlot = vi.fn(() => html``);
 
         await renderComponent({
-          collapsible: true,
-          isOverCollapseThreshold: false,
+          collapsible: false,
           renderFeedbackAndCopyButtonsSlot,
           generatedAnswer: {
             ...defaultGeneratedAnswer,
@@ -411,44 +408,6 @@ describe('#renderAnswerContent', () => {
           });
         });
       });
-    });
-  });
-
-  describe('#shouldRenderFeedbackAndCopyButtons', () => {
-    it('should not display feedback buttons when collapsible and over collapse threshold', () => {
-      const result = shouldRenderFeedbackAndCopyButtons({
-        hasRetryableError: false,
-        collapsible: true,
-        isOverCollapseThreshold: true,
-        isStreaming: false,
-        expanded: false,
-      });
-
-      expect(result).toBe(false);
-    });
-
-    it('should display feedback buttons when collapsible and not over collapse threshold', () => {
-      const result = shouldRenderFeedbackAndCopyButtons({
-        hasRetryableError: false,
-        collapsible: true,
-        isOverCollapseThreshold: false,
-        isStreaming: false,
-        expanded: false,
-      });
-
-      expect(result).toBe(true);
-    });
-
-    it('should display feedback buttons when not collapsible', () => {
-      const result = shouldRenderFeedbackAndCopyButtons({
-        hasRetryableError: false,
-        collapsible: false,
-        isOverCollapseThreshold: undefined,
-        isStreaming: false,
-        expanded: false,
-      });
-
-      expect(result).toBe(true);
     });
   });
 });

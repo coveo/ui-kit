@@ -20,7 +20,6 @@ export interface RenderAnswerContentProps {
   i18n: i18n;
   generatedAnswer: GeneratedAnswer;
   collapsible: boolean;
-  isOverCollapseThreshold?: boolean;
   renderFeedbackAndCopyButtonsSlot: () => TemplateResult | typeof nothing;
   renderCitationsSlot: () => TemplateResult | typeof nothing;
   onRetry: () => void;
@@ -37,7 +36,6 @@ export const renderAnswerContent: FunctionalComponent<
     i18n,
     generatedAnswer,
     collapsible,
-    isOverCollapseThreshold,
     renderFeedbackAndCopyButtonsSlot,
     renderCitationsSlot,
     onRetry,
@@ -55,13 +53,8 @@ export const renderAnswerContent: FunctionalComponent<
   } = generatedAnswer;
   const trimmedQuestion = question.trim();
   const hasRetryableError = error?.isRetryable === true;
-  const shouldDisplayFeedbackButtons = shouldRenderFeedbackAndCopyButtons({
-    hasRetryableError,
-    collapsible,
-    isOverCollapseThreshold,
-    isStreaming: !!isStreaming,
-    expanded,
-  });
+  const shouldDisplayFeedbackButtons =
+    !hasRetryableError && (collapsible ? expanded === true : !isStreaming);
 
   return html`
     <div>
@@ -137,35 +130,3 @@ export const renderAnswerContent: FunctionalComponent<
     </div>
   `;
 };
-
-export function shouldRenderFeedbackAndCopyButtons({
-  hasRetryableError,
-  collapsible,
-  isOverCollapseThreshold,
-  isStreaming,
-  expanded,
-}: {
-  hasRetryableError: boolean;
-  collapsible: boolean;
-  isOverCollapseThreshold: boolean | undefined;
-  isStreaming: boolean;
-  expanded: boolean | undefined;
-}) {
-  if (hasRetryableError) {
-    return false;
-  }
-
-  if (collapsible) {
-    // When the answer is short and doesn't exceed the collapse threshold.
-    if (isOverCollapseThreshold === false) {
-      return true;
-    }
-    // When the answer is long and exceeds the collapse threshold, only show the buttons when the answer is expanded.
-    if (isOverCollapseThreshold === true) {
-      return expanded === true;
-    }
-    return false;
-  }
-
-  return !isStreaming;
-}
