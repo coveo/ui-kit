@@ -19,11 +19,11 @@
     "build:bundles": "node esbuild.mjs",
     "build:definitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "node ../../utils/ci/rm-rf.mjs dist/*",
-    "release:phase3": "pnpm --filter @coveo/ci npm-publish",
     "release:phase1": "pnpm --filter @coveo/ci bump",
     "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod",
     "e2e": "pnpm run e2e:saml",
-    "e2e:saml": "vite manual-e2e/saml/"
+    "e2e:saml": "vite manual-e2e/saml/",
+    "npm:publish": "pnpm --filter @coveo/ci npm-publish"
   },
   "repository": {
     "type": "git",

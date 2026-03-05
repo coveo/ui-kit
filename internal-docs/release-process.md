@@ -71,13 +71,17 @@ The purpose of this sub-phase is to re-build a project right after it was bumped
 
 This phase bumps the root package.json version. This is used by the deployment-package `--version` attribute.
 
-## `release:phase3` (publish npm)
+## `npm:publish` (publish to npm)
 
-This workflow works on the assumption that we can't bump a package's version if any of its dependencies isn't published to NPM. The purpose of this task is to publish packages to NPM before dependant packages bump their versions.
+This task is run individually on every package, in topological order (dependencies first, then dependants).
 
-If a package is already published to NPM, this task will exit without error. After a package is published, this task will repeatedly query NPM until it confirms that the package exists in the registry.
+The purpose of this task is to publish packages to npm. This task is executed **after** the CDN production deployment is complete.
 
-## `release:phase4` (commit version bumps)
+If a package is already published to npm, this task will exit without error. After a package is published, this task will repeatedly query npm until it confirms that the package exists in the registry.
+
+Packages are published directly to the `@latest` tag using OIDC-based authentication (npm trusted publishing).
+
+## `release:phase3` (commit version bumps)
 
 This task is only run for the scheduled release.
 
