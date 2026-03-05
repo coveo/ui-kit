@@ -15,19 +15,15 @@ export const DEFAULT_MANUAL_PLACEHOLDER_NOTE =
 export const UNKNOWN_CATEGORY = 'unknown';
 export const UNKNOWN_FRAMEWORK = 'unknown';
 
-/** Root directory for a11y report artifacts (relative to package root). */
 export const REPORTS_DIR = 'a11y/reports';
 
-/** Directory for delta files. */
 export const DELTAS_DIR = 'a11y/reports/deltas';
 
-/** Directory for archived delta files. */
 export const ARCHIVE_DIR = 'a11y/reports/deltas/archived';
 
 export const A11Y_OVERRIDES_FILE = 'a11y/a11y-overrides.json';
 export const A11Y_MANUAL_CRITERIA_FILE = 'a11y/a11y-manual-criteria.json';
 
-/** Valid surface areas for component categorization. */
 export const VALID_SURFACES = new Set([
   'commerce',
   'search',
@@ -36,3 +32,9 @@ export const VALID_SURFACES = new Set([
   'common',
   'recommendations',
 ]);
+
+export const AUDIT_FILE_PATTERN = /^manual-audit-(.+)\.json$/;
+
+export const VIOLATIONS_FILE_PATTERN = /^manual-audit-(.+)-violations\.json$/;
+
+export const GITHUB_REPO = 'coveo/ui-kit';
