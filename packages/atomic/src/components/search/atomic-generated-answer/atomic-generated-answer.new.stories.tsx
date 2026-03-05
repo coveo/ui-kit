@@ -112,11 +112,15 @@ export const DisableCitationAnchoring: Story = {
   name: 'Citation anchoring disabled',
   args: {
     'disable-citation-anchoring': true,
+    'answer-configuration-id': 'fc581be0-6e61-4039-ab26-a3f2f52f308f',
   },
 };
 
 export const WithLegacyAnalytics: Story = {
   name: 'With Legacy Analytics',
+  args: {
+    'answer-configuration-id': 'fc581be0-6e61-4039-ab26-a3f2f52f308f',
+  },
   play: async (storyContext) => {
     await playWithLegacyAnalytics(storyContext);
     const searchBox =
