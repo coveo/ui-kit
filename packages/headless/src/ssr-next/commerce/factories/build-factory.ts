@@ -5,6 +5,8 @@ import {
   type CommerceEngineOptions,
 } from '../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../app/state-key.js';
+import {buildProductListing} from '../../../controllers/commerce/product-listing/headless-product-listing.js';
+import {buildSearch} from '../../../controllers/commerce/search/headless-search.js';
 import {loadConfigurationActions} from '../../../features/commerce/configuration/configuration-actions-loader.js';
 import {
   createWaitForActionMiddleware,
@@ -195,13 +197,21 @@ export const buildFactory =
           typeof controller.executeFirstRequest === 'function'
         ) {
           controller.executeFirstRequest();
+          return;
         } else if (
           solutionType === SolutionType.search &&
           'executeFirstSearch' in controller &&
           typeof controller.executeFirstSearch === 'function'
         ) {
           controller.executeFirstSearch();
+          return;
         }
+      }
+
+      if (solutionType === SolutionType.listing) {
+        buildProductListing(engine).executeFirstRequest();
+      } else if (solutionType === SolutionType.search) {
+        buildSearch(engine).executeFirstSearch();
       }
     };
 
