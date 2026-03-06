@@ -42,7 +42,7 @@ import {mapProperty} from '@/src/utils/props-utils';
 /**
  * The `atomic-timeframe-facet` component displays a facet of results for the current query as date intervals.
  *
- * @slot (default) - The atomic-timeframe components defining the timeframes to display.
+ * @slot default - The atomic-timeframe components defining the timeframes to display.
  *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.

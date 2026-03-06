@@ -47,7 +47,9 @@
     },
     "packages/atomic-angular/projects/atomic-angular": {
       "entry": ["src/public-api.ts"],
-      "ignore": ["src/lib/stencil-generated/**/*.ts"]
+      "ignore": [
+        "src/utils.ts" // Only used by generated files, so it 'seems' to have unused exports, but it's actually used.
+      ]
     },
     "packages/atomic-react": {
       "entry": ["src/*index.ts"],
@@ -86,6 +88,9 @@
     "packages/atomic": {
       "ignore": ["**/*"],
       "ignoreDependencies": ["cypress-repeat"]
+    },
+    "packages/atomic-legacy": {
+      "ignore": ["**/*"]
     },
     "packages/create-atomic": {
       "ignore": ["**/*"]

@@ -2,7 +2,10 @@ import {getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+
+const commerceApiHarness = new MockCommerceApi();
 
 async function initializeCommerceInterface(canvasElement: HTMLElement) {
   await customElements.whenDefined('atomic-commerce-interface');
@@ -24,11 +27,17 @@ const meta: Meta = {
   render: (args) => template(args),
   parameters: {
     ...parameters,
+    msw: {
+      handlers: [...commerceApiHarness.handlers],
+    },
     actions: {
       handles: events,
     },
   },
   decorators: [(story) => html`<div id="code-root">${story()}</div>`],
+  beforeEach: () => {
+    commerceApiHarness.clearAll();
+  },
 
   play: async (context) => {
     await initializeCommerceInterface(context.canvasElement);
@@ -81,19 +90,45 @@ export default meta;
 
 export const Default: Story = {};
 
-export const SearchBeforeInit: Story = {
-  tags: ['!dev'],
-  play: async (context) => {
-    const commerceInterface = context.canvasElement.querySelector(
-      'atomic-commerce-interface'
-    );
-    await customElements.whenDefined('atomic-commerce-interface');
-    await commerceInterface!.executeFirstRequest();
+export const WithProductList: Story = {
+  args: {
+    type: 'product-listing',
+    'default-slot': `
+      <atomic-commerce-layout>
+        <atomic-layout-section section="search">
+          <atomic-commerce-search-box></atomic-commerce-search-box>
+        </atomic-layout-section>
+        <atomic-layout-section section="facets">
+          <atomic-commerce-facets></atomic-commerce-facets>
+        </atomic-layout-section>
+        <atomic-layout-section section="main">
+          <atomic-layout-section section="status">
+            <atomic-commerce-breadbox></atomic-commerce-breadbox>
+            <atomic-commerce-query-summary></atomic-commerce-query-summary>
+            <atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>
+          </atomic-layout-section>
+          <atomic-layout-section section="products">
+            <atomic-commerce-product-list
+              display="grid"
+              density="compact"
+              image-size="small"
+            ></atomic-commerce-product-list>
+            <atomic-commerce-query-error></atomic-commerce-query-error>
+          </atomic-layout-section>
+          <atomic-layout-section section="pagination">
+            <atomic-commerce-pager></atomic-commerce-pager>
+            <atomic-commerce-products-per-page>
+            </atomic-commerce-products-per-page>
+          </atomic-layout-section>
+        </atomic-layout-section>
+      </atomic-commerce-layout>
+    `,
   },
 };
 
-export const WithProductList: Story = {
+export const WithSearch: Story = {
   args: {
+    type: 'search',
     'default-slot': `
       <atomic-commerce-layout>
         <atomic-layout-section section="search">

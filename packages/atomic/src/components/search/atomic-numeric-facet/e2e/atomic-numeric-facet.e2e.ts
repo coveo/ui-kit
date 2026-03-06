@@ -43,9 +43,7 @@ test.describe('atomic-numeric-facet', () => {
       await expect(facet.valuesContainer).toBeVisible();
     });
   });
-});
 
-test.describe('atomic-numeric-facet with selected value', () => {
   test('should display selected value with clear button', async ({facet}) => {
     await facet.load({story: 'with-selected-value'});
 
@@ -57,9 +55,7 @@ test.describe('atomic-numeric-facet with selected value', () => {
       await expect(facet.clearButton).toBeVisible();
     });
   });
-});
 
-test.describe('atomic-numeric-facet with input', () => {
   test('should render input fields', async ({facet}) => {
     await facet.load({story: 'with-input-integer'});
 
@@ -72,9 +68,7 @@ test.describe('atomic-numeric-facet with input', () => {
       await expect(facet.applyButton).toBeVisible();
     });
   });
-});
 
-test.describe('atomic-numeric-facet display as link', () => {
   test('should render values as links', async ({facet}) => {
     await facet.load({story: 'display-as-link'});
 
@@ -82,9 +76,7 @@ test.describe('atomic-numeric-facet display as link', () => {
       await expect(facet.facetLinkValues.first()).toBeVisible();
     });
   });
-});
 
-test.describe('atomic-numeric-facet with depends-on', () => {
   test('should show facet when dependency is met', async ({facet}) => {
     await facet.load({story: 'with-depends-on'});
     await facet.hydrated.waitFor({state: 'visible'});

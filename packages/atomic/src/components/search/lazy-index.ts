@@ -49,6 +49,8 @@ export default {
     await import('./atomic-query-summary/atomic-query-summary.js'),
   'atomic-quickview': async () =>
     await import('./atomic-quickview/atomic-quickview.js'),
+  'atomic-quickview-modal': async () =>
+    await import('./atomic-quickview-modal/atomic-quickview-modal.js'),
   'atomic-rating-facet': async () =>
     await import('./atomic-rating-facet/atomic-rating-facet.js'),
   'atomic-rating-range-facet': async () =>

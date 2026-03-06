@@ -23,6 +23,7 @@
       // atomic excluded files.
       "!**/packages/atomic/**/cypress/**/*",
       "!**/packages/atomic/**/*.tsx", // Exclude tsx files during Lit migration.
+      "!**/packages/atomic-legacy/**/*.tsx", // Exclude tsx files during Lit migration.
       "**/packages/atomic/**/*.stories.tsx", // Reinclude storybook stories.
       "!**/packages/atomic/**/*.d.ts",
 

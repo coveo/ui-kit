@@ -38,7 +38,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import type {AtomicInterface} from '@/src/utils/initialization-lit-stencil-common-utils';
+import type {AtomicInterface} from '@/src/utils/initialization-common-utils';
 import {shouldDisplayOnCurrentTab} from '@/src/utils/tab-utils';
 import {sortByDocumentPosition} from '@/src/utils/utils';
 import {
@@ -49,11 +49,12 @@ import {
 } from '../../common/facets/facet-common';
 import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import type {SortDropdownOption} from '../atomic-search-interface/store';
+import '@/src/components/search/atomic-automatic-facet-generator/atomic-automatic-facet-generator';
 
 /**
  * The `atomic-refine-modal` component is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
  *
- * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
+ * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body.
  *
  * @part title - The title of the modal.
  * @part close-button - The button in the header that closes the modal.
@@ -80,6 +81,7 @@ import type {SortDropdownOption} from '../atomic-search-interface/store';
  * @part header-wrapper - The wrapper around the header.
  * @part header - The header of the modal, containing the title.
  * @part container - The modal's outermost container.
+ * @part backdrop - The transparent backdrop hiding the content behind the modal.
  *
  * @cssprop --atomic-refine-modal-facet-margin - The margin between facets in the refine modal. Default is `20px`.
  */
@@ -92,6 +94,8 @@ export class AtomicRefineModal
 {
   static styles: CSSResultGroup = [
     css`
+    @reference '../../../utils/tailwind.global.tw.css';
+
     select:hover + div,
     select:focus-visible + div {
       @apply text-primary-light;
@@ -139,7 +143,7 @@ export class AtomicRefineModal
   public breadcrumbManager!: BreadcrumbManager;
   @bindStateToController('breadcrumbManager')
   @state()
-  private breadcrumbManagerState!: BreadcrumbManagerState;
+  public breadcrumbManagerState!: BreadcrumbManagerState;
 
   public querySummary!: QuerySummary;
   @bindStateToController('querySummary')

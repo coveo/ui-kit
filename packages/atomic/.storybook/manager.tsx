@@ -2,9 +2,17 @@ import {IconButton} from 'storybook/internal/components';
 import {STORY_MISSING, STORY_RENDERED} from 'storybook/internal/core-events';
 import {CogIcon} from '@storybook/icons';
 import {addons, types} from 'storybook/manager-api';
-import {themes} from 'storybook/theming';
+import {create} from 'storybook/theming';
+import {COVEO_PRIMARY, FONT_BASE, FONT_CODE} from './theme';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
+
+type AtomicSearchInterfaceElement = HTMLElement & {
+  initialize: (options: {
+    accessToken: string;
+    organizationId: string;
+  }) => Promise<void>;
+};
 
 declare global {
   interface Window {
@@ -12,14 +20,138 @@ declare global {
       ToggleInfoDisplay: () => void;
     };
   }
+
+  namespace JSX {
+    interface IntrinsicElements {
+      'atomic-search-interface': React.DetailedHTMLProps<
+        React.HTMLAttributes<AtomicSearchInterfaceElement>,
+        AtomicSearchInterfaceElement
+      > & {
+        analytics?: string;
+        'search-hub'?: string;
+        ref?: React.Ref<AtomicSearchInterfaceElement>;
+      };
+      'atomic-search-box': React.DetailedHTMLProps<
+        React.HTMLAttributes<HTMLElement>,
+        HTMLElement
+      > & {
+        'redirection-url'?: string;
+        ref?: React.Ref<HTMLElement>;
+      };
+    }
+  }
 }
 
+function CoveoDocsSearchBox() {
+  const searchInterfaceRef = useRef<AtomicSearchInterfaceElement>(null);
+  const searchBoxRef = useRef<HTMLElement>(null);
+  const initializedRef = useRef(false);
+
+  useEffect(() => {
+    if (initializedRef.current || !searchInterfaceRef.current) {
+      return;
+    }
+    initializedRef.current = true;
+
+    const searchInterface = searchInterfaceRef.current;
+    let cancelled = false;
+
+    customElements.whenDefined('atomic-search-interface').then(() => {
+      if (cancelled) {
+        return;
+      }
+      searchInterface
+        .initialize({
+          // Public API key with only anonymous search + UA logging permissions.
+          // Safe to expose in client-side code
+          accessToken: 'xx6ac9d08f-eb9a-48d5-9240-d7c251470c93',
+          organizationId: 'coveosearch',
+        })
+        .catch((err) => {
+          console.warn('Coveo Docs search initialization failed:', err);
+        });
+    });
+
+    // Intercept the redirect event to append the query as a URL hash parameter.
+    // By default, atomic-search-box stores the query in localStorage before
+    // redirecting, but localStorage is origin-scoped — the destination page
+    // (docs.coveo.com) can't read data written by the Storybook origin.
+    const searchBox = searchBoxRef.current;
+    const handleRedirect = (e: Event) => {
+      const {redirectTo, value} = (e as CustomEvent).detail;
+      e.preventDefault();
+      const url = new URL(redirectTo);
+      url.hash = `#q=${encodeURIComponent(value)}`;
+      window.location.href = url.toString();
+    };
+    searchBox?.addEventListener('redirect', handleRedirect);
+
+    return () => {
+      cancelled = true;
+      searchBox?.removeEventListener('redirect', handleRedirect);
+    };
+  }, []);
+
+  return (
+    <div id="coveo-docs-search-container">
+      <atomic-search-interface
+        ref={searchInterfaceRef}
+        analytics="false"
+        search-hub="Coveo Docs Unified Search"
+      >
+        <atomic-search-box
+          ref={searchBoxRef}
+          redirection-url="https://docs.coveo.com/en/search/"
+        ></atomic-search-box>
+      </atomic-search-interface>
+    </div>
+  );
+}
+
+const coveoTheme = create({
+  base: 'dark',
+
+  // Branding
+  brandTitle: 'Coveo Docs',
+  brandUrl: 'https://docs.coveo.com/en/0',
+  brandTarget: '_blank',
+  brandImage: '/coveo-logo.svg',
+
+  // Colors
+  colorPrimary: COVEO_PRIMARY,
+  colorSecondary: COVEO_PRIMARY,
+
+  // UI
+  appBg: '#1b2631',
+  appContentBg: '#1e2a35',
+  appPreviewBg: '#ffffff',
+  appBorderColor: '#3a4a5a',
+  appBorderRadius: 4,
+
+  // Typography
+  fontBase: FONT_BASE,
+  fontCode: FONT_CODE,
+
+  // Text
+  textColor: '#e8eaed',
+  textInverseColor: '#1b2631',
+  textMutedColor: '#9aa5b1',
+
+  // Toolbar
+  barBg: '#1b2631',
+  barTextColor: '#9aa5b1',
+  barSelectedColor: '#ffffff',
+  barHoverColor: '#e8eaed',
+
+  // Form
+  inputBg: '#263544',
+  inputBorder: '#3a4a5a',
+  inputTextColor: '#e8eaed',
+  inputBorderRadius: 4,
+});
+
 addons.setConfig({
-  theme: {
-    ...themes.dark,
-    brandUrl: '?path=/docs/introduction--default',
-    brandTarget: '_self',
-  },
+  theme: coveoTheme,
 });
 
 addons.register('SELECT-FIRST-STORY-BY-DEFAULT-ONCE', (api) => {
@@ -34,11 +166,20 @@ addons.register('SELECT-FIRST-STORY-BY-DEFAULT-ONCE', (api) => {
   });
 });
 
+addons.register('coveo-docs-search', () => {
+  addons.add('coveo-docs-search/toolbar', {
+    type: types.TOOL,
+    title: 'Search Coveo Docs',
+    match: () => true,
+    render: () => <CoveoDocsSearchBox />,
+  });
+});
+
 addons.register('custom/onetrust-button', () => {
   addons.add('custom/onetrust-button/toolbar', {
     type: types.TOOL,
     title: 'Cookie Preferences',
-    match: ({viewMode}) => viewMode === 'story',
+    match: () => true,
     render: () => (
       <IconButton
         key="onetrust-button"

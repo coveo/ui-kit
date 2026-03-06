@@ -22,6 +22,7 @@ import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {hasKeyboard, isMacOS} from '@/src/utils/device-utils';
+import {buildCustomEvent} from '@/src/utils/event-utils';
 import {
   SafeStorage,
   type StandaloneSearchBoxData,
@@ -51,6 +52,7 @@ import type {SelectChildProductEventArgs} from '../atomic-product-children/selec
 import '../atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products';
 import '../atomic-commerce-search-box-query-suggestions/atomic-commerce-search-box-query-suggestions';
 import '../atomic-commerce-search-box-recent-queries/atomic-commerce-search-box-recent-queries';
+import '@coveo/atomic-legacy/atomic-suggestion-renderer';
 
 /**
  * The `atomic-commerce-search-box` component enables users to perform product searches with built-in query suggestions and optional redirection to a search page.
@@ -249,7 +251,10 @@ export class AtomicCommerceSearchBox
 
     this.searchBox.afterRedirection();
 
-    const event = new CustomEvent<RedirectionPayload>('redirect');
+    const event = buildCustomEvent<RedirectionPayload>('redirect', {
+      redirectTo,
+      value,
+    });
     this.dispatchEvent(event);
     if (!event.defaultPrevented) {
       window.location.href = redirectTo;
@@ -296,6 +301,9 @@ export class AtomicCommerceSearchBox
 
   @watch('redirectionUrl')
   watchRedirectionUrl() {
+    if (!this.searchBox) {
+      return;
+    }
     if (this.isStandaloneSearchBox(this.searchBox) && this.redirectionUrl) {
       this.searchBox.updateRedirectUrl(this.redirectionUrl);
     } else {
@@ -690,7 +698,7 @@ export class AtomicCommerceSearchBox
 
           this.isExpanded = false;
         }}
-        .onMouseOver=${async () => {
+        .onMouseEnter=${async () => {
           await this.suggestionManager.onSuggestionMouseOver(item, side, id);
         }}
       ></atomic-suggestion-renderer>

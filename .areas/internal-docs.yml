@@ -1,0 +1,9 @@
+description: Internal Documentation
+file_patterns:
+  - "internal-docs/**"
+reviewers:
+  dev-writers: ~
+  dxui: ~
+
+review_bypass:
+  integration/139346: exempt # Developer eXperience Bot. Important for releases

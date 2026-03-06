@@ -1,4 +1,3 @@
-import type {GeneratedAnswerState} from '@coveo/headless';
 import type {i18n} from 'i18next';
 import {html, nothing} from 'lit';
 import {classMap} from 'lit/directives/class-map.js';
@@ -8,10 +7,17 @@ import {renderFeedbackButton} from '@/src/components/common/generated-answer/fee
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {hasClipboardSupport} from './generated-answer-utils';
 
+export interface GeneratedAnswerActionsState {
+  liked: boolean;
+  disliked: boolean;
+  isStreaming: boolean;
+  isLoading: boolean;
+  answer?: string;
+}
+
 export interface RenderFeedbackAndCopyButtonsProps {
   i18n: i18n;
-  generatedAnswerState: GeneratedAnswerState | undefined;
-  withToggle?: boolean;
+  generatedAnswerActionsState: GeneratedAnswerActionsState;
   copied: boolean;
   copyError: boolean;
   getCopyToClipboardTooltip: () => string;
@@ -28,8 +34,7 @@ export const renderFeedbackAndCopyButtons: FunctionalComponent<
 > = ({props}) => {
   const {
     i18n,
-    generatedAnswerState,
-    withToggle,
+    generatedAnswerActionsState,
     copied,
     copyError,
     getCopyToClipboardTooltip,
@@ -38,16 +43,16 @@ export const renderFeedbackAndCopyButtons: FunctionalComponent<
     onCopyToClipboard,
   } = props;
 
-  const {liked, disliked, answer, isStreaming} = generatedAnswerState ?? {};
+  const {liked, disliked, answer, isStreaming, isLoading} =
+    generatedAnswerActionsState ?? {};
 
+  const shouldShowButtons = !!answer && !isStreaming && !isLoading;
   return html`${when(
-    !isStreaming,
+    shouldShowButtons,
     () => html`
       <div
         class="${classMap({
-          'feedback-buttons flex h-9 absolute top-6 shrink-0 gap-2': true,
-          'right-20': !!withToggle,
-          'right-6': !withToggle,
+          'feedback-buttons flex h-9 items-center shrink-0 gap-2': true,
         })}"
       >
         ${renderFeedbackButton({

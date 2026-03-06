@@ -34,6 +34,7 @@ import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {hasKeyboard, isMacOS} from '@/src/utils/device-utils';
+import {buildCustomEvent} from '@/src/utils/event-utils';
 import {
   SafeStorage,
   type StandaloneSearchBoxData,
@@ -49,6 +50,7 @@ import {
 } from '@/src/utils/utils';
 import '@/src/components/search/atomic-search-box-query-suggestions/atomic-search-box-query-suggestions';
 import '@/src/components/search/atomic-search-box-recent-queries/atomic-search-box-recent-queries';
+import '@coveo/atomic-legacy/atomic-suggestion-renderer';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -269,8 +271,9 @@ export class AtomicSearchBox
     storage.setJSON(StorageItems.STANDALONE_SEARCH_BOX_DATA, data);
 
     this.searchBox.afterRedirection();
-    const event = new CustomEvent<RedirectionPayload>('redirect', {
-      detail: {redirectTo, value},
+    const event = buildCustomEvent<RedirectionPayload>('redirect', {
+      redirectTo,
+      value,
     });
     this.dispatchEvent(event);
     if (!event.defaultPrevented) {
@@ -318,6 +321,9 @@ export class AtomicSearchBox
 
   @watch('redirectionUrl')
   watchRedirectionUrl() {
+    if (!this.searchBox) {
+      return;
+    }
     if (this.isStandaloneSearchBox(this.searchBox) && this.redirectionUrl) {
       this.searchBox.updateRedirectUrl(this.redirectionUrl);
     } else {
@@ -714,7 +720,7 @@ export class AtomicSearchBox
 
           this.isExpanded = false;
         }}
-        .onMouseOver=${async () => {
+        .onMouseEnter=${async () => {
           await this.suggestionManager.onSuggestionMouseOver(item, side, id);
         }}
       ></atomic-suggestion-renderer>

@@ -26,7 +26,7 @@ export interface ContextParam {
 }
 
 export interface EnableResultsParam {
-  enableResults: boolean;
+  enableResults?: boolean;
 }
 
 type ProductParam = {

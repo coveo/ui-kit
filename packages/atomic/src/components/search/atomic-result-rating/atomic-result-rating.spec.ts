@@ -63,6 +63,7 @@ describe('atomic-result-rating', () => {
       result: resultToUse === null ? undefined : resultToUse,
       bindings: (bindings) => {
         bindings.i18n = i18n;
+        bindings.engine.logger = {warn: vi.fn()} as never;
         return bindings;
       },
     });

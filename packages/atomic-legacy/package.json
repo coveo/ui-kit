@@ -1,0 +1,34 @@
+{
+  "name": "@coveo/atomic-legacy",
+  "version": "0.0.2",
+  "description": "Package used internally by @coveo/atomic for components using legacy technologies (e.g., Stencil). This package is not intended for public use.",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
+    "directory": "packages/atomic-legacy"
+  },
+  "exports": {
+    "./atomic-suggestion-renderer": {
+      "types": "./dist/components/atomic-suggestion-renderer.d.ts",
+      "import": "./dist/components/atomic-suggestion-renderer.js"
+    },
+    "./item-decorators": {
+      "types": "./dist/item-decorators/index.d.ts",
+      "import": "./dist/item-decorators/index.js"
+    }
+  },
+  "dependencies": {
+    "@stencil/core": "catalog:",
+    "@coveo/headless": "workspace:*"
+  },
+  "devDependencies": {
+    "i18next": "25.3.2"
+  },
+  "scripts": {
+    "build": "pnpm exec node --max_old_space_size=6144 ./node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.json && tsc -b tsconfig.decorators.json",
+    "release:phase3": "pnpm --filter @coveo/ci npm-publish",
+    "release:phase1": "pnpm --filter @coveo/ci bump",
+    "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod"
+  }
+}

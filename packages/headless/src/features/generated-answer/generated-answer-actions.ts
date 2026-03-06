@@ -16,11 +16,18 @@ import type {
   GeneratedAnswerStreamEventData,
 } from '../../api/generated-answer/generated-answer-event-payload.js';
 import type {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
+import {
+  type AnswerEndpointArgs,
+  initiateAnswerEndpoint,
+} from '../../api/knowledge/answer-generation/endpoints/answer/answer-endpoint.js';
 import {fetchAnswer} from '../../api/knowledge/stream-answer-api.js';
 import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
 import type {AsyncThunkOptions} from '../../app/async-thunk-options.js';
 import type {SearchThunkExtraArguments} from '../../app/search-thunk-extra-arguments.js';
-import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
+import type {
+  AnswerApiQueryParams,
+  StateNeededForHeadAnswerParams,
+} from '../../features/generated-answer/generated-answer-request.js';
 import type {
   ConfigurationSection,
   DebugSection,
@@ -32,6 +39,7 @@ import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../utils/validate-payload.js';
+import {selectAgentId} from '../configuration/configuration-selectors.js';
 import {
   logGeneratedAnswerResponseLinked,
   logGeneratedAnswerStreamEnd,
@@ -39,7 +47,12 @@ import {
 import {
   buildStreamingRequest,
   constructAnswerAPIQueryParams,
+  constructGenerateHeadAnswerParams,
 } from './generated-answer-request.js';
+import {
+  GENERATION_STEP_NAMES,
+  type GenerationStepName,
+} from './generated-answer-state.js';
 import {
   type GeneratedContentFormat,
   type GeneratedResponseFormat,
@@ -54,7 +67,7 @@ type StateNeededByGeneratedAnswerStream = ConfigurationSection &
 const stringValue = new StringValue({required: true});
 const optionalStringValue = new StringValue();
 const booleanValue = new BooleanValue({required: true});
-const citationSchema = {
+export const citationSchema = {
   id: stringValue,
   title: stringValue,
   uri: stringValue,
@@ -62,10 +75,11 @@ const citationSchema = {
   clickUri: optionalStringValue,
 };
 
-const answerContentFormatSchema = new StringValue<GeneratedContentFormat>({
-  required: true,
-  constrainTo: generatedContentFormat,
-});
+export const answerContentFormatSchema =
+  new StringValue<GeneratedContentFormat>({
+    required: true,
+    constrainTo: generatedContentFormat,
+  });
 
 export interface GeneratedAnswerErrorPayload {
   message?: string;
@@ -211,8 +225,32 @@ export const setCannotAnswer = createAction(
 
 export const setAnswerApiQueryParams = createAction(
   'generatedAnswer/setAnswerApiQueryParams',
-  (payload: AnswerApiQueryParams) =>
+  (payload: Partial<AnswerApiQueryParams>) =>
     validatePayload(payload, new RecordValue({}))
+);
+
+export const startStep = createAction(
+  'generatedAnswer/startStep',
+  (payload: {name: GenerationStepName; startedAt: number}) =>
+    validatePayload(payload, {
+      name: new StringValue<GenerationStepName>({
+        required: true,
+        constrainTo: GENERATION_STEP_NAMES,
+      }),
+      startedAt: new NumberValue({min: 0, required: true}),
+    })
+);
+
+export const finishStep = createAction(
+  'generatedAnswer/finishStep',
+  (payload: {name: GenerationStepName; finishedAt: number}) =>
+    validatePayload(payload, {
+      name: new StringValue<GenerationStepName>({
+        required: true,
+        constrainTo: GENERATION_STEP_NAMES,
+      }),
+      finishedAt: new NumberValue({min: 0, required: true}),
+    })
 );
 
 interface StreamAnswerArgs {
@@ -359,5 +397,45 @@ export const generateAnswer = createAsyncThunk<
           'The generateAnswer action requires an answer configuration ID to use CRGA with the Answer API.'
       );
     }
+  }
+);
+
+/**
+ * Thunk to generate the head answer as part of the generated answer with follow-ups feature.
+ *
+ * This action initiates the generation of the main answer when using the Answer Generation API
+ * with an agent configuration. It requires an **agent ID** to be present in the engine configuration.
+ *
+ * @internal
+ */
+export const generateHeadAnswer = createAsyncThunk<
+  void,
+  void,
+  AsyncThunkOptions<StateNeededForHeadAnswerParams, SearchThunkExtraArguments>
+>(
+  'generatedAnswerWithFollowUps/generateHeadAnswer',
+  async (_, {getState, dispatch, extra: {navigatorContext, logger}}) => {
+    const state = getState();
+    const agentId = selectAgentId(state);
+
+    if (!agentId) {
+      logger.warn(
+        'Missing agentId in engine configuration. ' +
+          'The generateHeadAnswer action requires an agent ID.'
+      );
+      return;
+    }
+
+    dispatch(resetAnswer());
+    const generateHeadAnswerParams = constructGenerateHeadAnswerParams(
+      state,
+      navigatorContext
+    );
+    const headAnswerEndpointArgs: AnswerEndpointArgs = {
+      ...generateHeadAnswerParams,
+      strategyKey: 'head-answer',
+    };
+    dispatch(setAnswerApiQueryParams(generateHeadAnswerParams));
+    await dispatch(initiateAnswerEndpoint(headAnswerEndpointArgs));
   }
 );

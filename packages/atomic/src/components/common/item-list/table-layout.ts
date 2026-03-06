@@ -1,8 +1,9 @@
+import '@/src/components/search/atomic-text/atomic-text';
 import {html, type TemplateResult} from 'lit';
 import {keyed} from 'lit/directives/keyed.js';
 import {map} from 'lit/directives/map.js';
 import {ref} from 'lit/directives/ref.js';
-import type {ItemRenderingFunction} from '@/src/components';
+import type {ItemRenderingFunction} from '@/src/components/common/item-list/item-list-common';
 import {tableElementTagName} from '@/src/components/common/table-element-utils';
 import type {
   FunctionalComponent,

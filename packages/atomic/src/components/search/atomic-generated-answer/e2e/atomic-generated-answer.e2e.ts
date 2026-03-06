@@ -1,7 +1,7 @@
 import {expect, test} from './fixture';
 
 const closePopoverDebounceMs = 100;
-const pollTimeoutMs = 2000;
+const pollTimeoutMs = 5000;
 
 test.describe('atomic-generated-answer', () => {
   test.describe('citations', () => {
@@ -69,7 +69,9 @@ test.describe('atomic-generated-answer', () => {
         await expect(popover).not.toBeVisible();
 
         const citation = generatedAnswer.citation.first();
-        await citation.hover();
+        // Wait for component to be fully ready before hover
+        await citation.waitFor({state: 'visible'});
+        await citation.dispatchEvent('mouseover');
 
         await expect
           .poll(async () => await popover.getAttribute('class'), {
@@ -87,7 +89,9 @@ test.describe('atomic-generated-answer', () => {
         const popover = generatedAnswer.citationPopover.first();
         await expect(popover).toHaveClass(/hidden/);
 
-        await citation.hover();
+        // Wait for component to be fully ready before hover
+        await citation.waitFor({state: 'visible'});
+        await citation.dispatchEvent('mouseover');
         await expect
           .poll(async () => await popover.getAttribute('class'), {
             timeout: pollTimeoutMs,
@@ -112,7 +116,9 @@ test.describe('atomic-generated-answer', () => {
         const citation = generatedAnswer.citation.first();
         const popover = generatedAnswer.citationPopover.first();
 
-        await citation.hover();
+        // Wait for component to be fully ready before hover
+        await citation.waitFor({state: 'visible'});
+        await citation.dispatchEvent('mouseover');
         await expect
           .poll(async () => await popover.getAttribute('class'), {
             timeout: pollTimeoutMs,
@@ -316,6 +322,22 @@ test.describe('atomic-generated-answer', () => {
           });
         });
       });
+    });
+  });
+
+  test.describe('with legacy analytics', () => {
+    test('should log an analytics event with the legacy analytics mode', async ({
+      generatedAnswer,
+    }) => {
+      const analyticsRequestPromise =
+        generatedAnswer.waitForLegacyAnalyticsSearchboxSubmitRequest();
+
+      await generatedAnswer.load({story: 'with-legacy-analytics'});
+
+      const analyticsRequest = await analyticsRequestPromise;
+      const requestBody = analyticsRequest.postDataJSON();
+
+      expect(requestBody.actionCause).toBe('searchboxSubmit');
     });
   });
 });

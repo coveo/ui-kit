@@ -15,4 +15,8 @@ export class MockRecommendationApi implements MockApi {
   get handlers(): HttpHandler[] {
     return [this.searchEndpoint.generateHandler()];
   }
+
+  clearAll(): void {
+    this.searchEndpoint.clear();
+  }
 }

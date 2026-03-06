@@ -7,10 +7,13 @@ import {
   type CommerceAPIClient,
   getCommerceApiBaseUrl,
 } from './commerce-api-client.js';
+import type {CommerceAPIErrorStatusResponse} from './commerce-api-error-response.js';
 import type {FilterableCommerceAPIRequest} from './common/request.js';
-import type {CommerceResponse} from './common/response.js';
 import type {CommerceListingRequest} from './listing/request.js';
+import type {ListingCommerceSuccessResponse} from './listing/response.js';
 import type {CommerceRecommendationsRequest} from './recommendations/recommendations-request.js';
+import type {CommercePlanRequest} from './search/plan/plan-request.js';
+import type {CommercePlanSuccessResponse} from './search/plan/plan-response.js';
 
 describe('commerce api client', () => {
   const organizationId = 'organization';
@@ -92,7 +95,7 @@ describe('commerce api client', () => {
   it('#getProductListing should call the platform endpoint with the correct arguments', async () => {
     const request: CommerceListingRequest = {
       ...(await buildCommerceAPIRequest()),
-      enableResults: false,
+      enableResults: true,
     };
 
     mockPlatformCall({
@@ -116,6 +119,7 @@ describe('commerce api client', () => {
         context: request.context,
         language: request.language,
         currency: request.currency,
+        enableResults: request.enableResults,
       },
       requestMetadata: {method: 'listing'},
     });
@@ -125,6 +129,7 @@ describe('commerce api client', () => {
     const request = {
       ...(await buildCommerceAPIRequest()),
       query: 'some query',
+      enableResults: true,
     };
 
     mockPlatformCall({
@@ -144,11 +149,13 @@ describe('commerce api client', () => {
       origin: 'commerceApiFetch',
       requestParams: {
         query: 'some query',
+        enableResults: request.enableResults,
         trackingId: request.trackingId,
         clientId: request.clientId,
         context: request.context,
         language: request.language,
         currency: request.currency,
+        country: request.country,
       },
       requestMetadata: {method: 'search'},
     });
@@ -328,7 +335,7 @@ describe('commerce api client', () => {
       enableResults: false,
     };
 
-    const expectedError = {
+    const expectedError: CommerceAPIErrorStatusResponse = {
       statusCode: 401,
       message: 'Unauthorized',
       type: 'authorization',
@@ -352,10 +359,18 @@ describe('commerce api client', () => {
       enableResults: false,
     };
 
-    const expectedBody: CommerceResponse = {
+    const expectedBody: ListingCommerceSuccessResponse = {
       products: [],
+      results: [],
       facets: [],
-      pagination: {page: 0, perPage: 0, totalEntries: 0, totalPages: 0},
+      pagination: {
+        page: 0,
+        perPage: 0,
+        totalEntries: 0,
+        totalPages: 0,
+        totalProducts: 0,
+        totalSpotlights: 0,
+      },
       responseId: '',
       sort: {
         appliedSort: {sortCriteria: SortBy.Relevance},
@@ -373,6 +388,109 @@ describe('commerce api client', () => {
 
     expect(response).toMatchObject({
       success: expectedBody,
+    });
+  });
+
+  describe('#plan', () => {
+    it('should call the platform endpoint with the correct arguments', async () => {
+      const request: CommercePlanRequest = {
+        ...(await buildCommerceAPIRequest()),
+        query: 'test query',
+      };
+
+      mockPlatformCall({
+        ok: true,
+        json: () => Promise.resolve({redirect: 'https://example.com/redirect'}),
+      });
+
+      await client.plan(request);
+
+      expect(platformCallMock).toHaveBeenCalled();
+      const mockRequest = platformCallMock.mock.calls[0][0];
+      expect(mockRequest).toMatchObject({
+        method: 'POST',
+        contentType: 'application/json',
+        url: `${getCommerceApiBaseUrl(organizationId)}/search/redirect`,
+        accessToken: request.accessToken,
+        origin: 'commerceApiFetch',
+        requestParams: {
+          query: 'test query',
+          trackingId: request.trackingId,
+          clientId: request.clientId,
+          context: request.context,
+          language: request.language,
+          currency: request.currency,
+        },
+        requestMetadata: {method: 'search/redirect'},
+      });
+    });
+
+    it('should return success response with redirect URL', async () => {
+      const request: CommercePlanRequest = {
+        ...(await buildCommerceAPIRequest()),
+        query: 'test query',
+      };
+
+      const expectedBody: CommercePlanSuccessResponse = {
+        redirect: 'https://example.com/redirect-url',
+      };
+
+      mockPlatformCall({
+        ok: true,
+        json: () => Promise.resolve(expectedBody),
+      });
+
+      const response = await client.plan(request);
+
+      expect(response).toMatchObject({
+        success: expectedBody,
+      });
+    });
+
+    it('should return success response with null redirect', async () => {
+      const request: CommercePlanRequest = {
+        ...(await buildCommerceAPIRequest()),
+        query: 'test query',
+      };
+
+      const expectedBody: CommercePlanSuccessResponse = {
+        redirect: null,
+      };
+
+      mockPlatformCall({
+        ok: true,
+        json: () => Promise.resolve(expectedBody),
+      });
+
+      const response = await client.plan(request);
+
+      expect(response).toMatchObject({
+        success: {redirect: null},
+      });
+    });
+
+    it('should return error response on failure', async () => {
+      const request: CommercePlanRequest = {
+        ...(await buildCommerceAPIRequest()),
+        query: 'test query',
+      };
+
+      const expectedError: CommerceAPIErrorStatusResponse = {
+        statusCode: 500,
+        message: 'Internal Server Error',
+        type: 'error',
+      };
+
+      mockPlatformCall({
+        ok: false,
+        json: () => Promise.resolve(expectedError),
+      });
+
+      const response = await client.plan(request);
+
+      expect(response).toMatchObject({
+        error: expectedError,
+      });
     });
   });
 });

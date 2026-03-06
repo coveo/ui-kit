@@ -1,3 +1,34 @@
+## <small>3.11.3 (2026-03-04)</small>
+
+* chore: eject react build from Stencil (#7160) ([76aae89](https://github.com/coveo/ui-kit/commits/76aae89)), closes [#7160](https://github.com/coveo/ui-kit/issues/7160)
+
+
+
+## <small>3.11.2 (2026-02-25)</small>
+
+* chore(atomic): migrate atomic-ipx-recs-list (#7069) ([64be4a6](https://github.com/coveo/ui-kit/commits/64be4a6)), closes [#7069](https://github.com/coveo/ui-kit/issues/7069)
+
+
+
+## 3.11.0 (2026-02-18)
+
+* feat: optimize tree-shaking for Atomic React (#7063) ([108c8ec](https://github.com/coveo/ui-kit/commits/108c8ec)), closes [#7063](https://github.com/coveo/ui-kit/issues/7063)
+* chore(atomic): migrate atomic-recs-list (#7068) ([c335c2d](https://github.com/coveo/ui-kit/commits/c335c2d)), closes [#7068](https://github.com/coveo/ui-kit/issues/7068)
+
+
+
+## <small>3.10.4 (2026-02-11)</small>
+
+* chore(atomic): migrate atomic-generated-answer-feedback-modal to Lit (#6989) ([9e559f9](https://github.com/coveo/ui-kit/commits/9e559f9)), closes [#6989](https://github.com/coveo/ui-kit/issues/6989)
+
+
+
+## <small>3.10.3 (2026-01-28)</small>
+
+* chore(atomic): migrate atomic-quickview-modal to Lit (#6949) ([222ce5f](https://github.com/coveo/ui-kit/commits/222ce5f)), closes [#6949](https://github.com/coveo/ui-kit/issues/6949)
+
+
+
 ## <small>3.10.1 (2026-01-21)</small>
 
 * chore(atomic): migrate atomic-ipx-button to Lit (#6894) ([fe95e69](https://github.com/coveo/ui-kit/commits/fe95e69)), closes [#6894](https://github.com/coveo/ui-kit/issues/6894)

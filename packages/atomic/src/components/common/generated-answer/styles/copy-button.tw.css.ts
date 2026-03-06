@@ -12,6 +12,10 @@ const styles = css`
   [part='copy-button'].error .icon-container atomic-icon {
     color: var(--atomic-error);
   }
+
+  [part='copy-button'] .icon-container {
+    line-height: 0;
+  }
 `;
 
 export default styles;

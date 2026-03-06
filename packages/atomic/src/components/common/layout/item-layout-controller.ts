@@ -24,6 +24,12 @@ export interface ItemLayoutOptions {
   content: () => ParentNode | undefined;
   layoutConfig: () => LayoutDisplayConfig;
   itemClasses: () => string;
+  /**
+   * When true, the controller only computes classes without automatically
+   * applying them to child elements during hostUpdated.
+   * Useful for components that don't need class propagation to child elements.
+   */
+  classesOnly?: boolean;
 }
 
 /**
@@ -37,6 +43,7 @@ export class ItemLayoutController implements ReactiveController {
   constructor(host: ItemLayoutHost & LitElement, options: ItemLayoutOptions) {
     this.host = host;
     this.options = {
+      classesOnly: false,
       ...options,
     };
     host.addController(this);
@@ -47,7 +54,9 @@ export class ItemLayoutController implements ReactiveController {
   }
 
   hostUpdated(): void {
-    this.applyLayoutClasses();
+    if (!this.options.classesOnly) {
+      this.applyLayoutClasses();
+    }
   }
 
   /**
