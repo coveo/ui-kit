@@ -16,15 +16,14 @@
     "pr:report": "echo 'TODO KIT-5109: pr:report must be reactivated after pnpm has been merged in main'",
     "report:bundle-size:time-series": "node ./scripts/reports/bundle-size/time-series.mjs",
     "pre-commit": "lint-staged",
-    "promote:npm:latest": "turbo promote:npm:latest",
+    "publish:npm:latest": "turbo npm:publish --concurrency=1",
     "notify:docs": "node ./scripts/notify-docs/published-ui-kit.mjs",
-    "release": "pnpm run nx:graph && pnpm run release:phase0 && pnpm run release:phase1 && pnpm run release:phase2 && pnpm run release:phase3 && pnpm run release:phase4",
+    "release": "pnpm run nx:graph && pnpm run release:phase0 && pnpm run release:phase1 && pnpm run release:phase2 && pnpm run release:phase3",
     "nx:graph": "turbo release:phase1 --dry-run=json > topology-raw.json && node scripts/transform-topology.mjs topology-raw.json topology.json",
     "release:phase0": "pnpm --filter @coveo/ci git-lock",
     "release:phase1": "turbo release:phase1 --concurrency=1 && pnpm run build",
     "release:phase2": "pnpm --filter @coveo/ci bump:root",
-    "release:phase3": "turbo release:phase3 --concurrency=1",
-    "release:phase4": "pnpm --filter @coveo/ci git-publish-all",
+    "release:phase3": "pnpm --filter @coveo/ci git-publish-all",
     "knip": "knip"
   },
   "devDependencies": {

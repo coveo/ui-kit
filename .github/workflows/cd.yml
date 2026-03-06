@@ -39,9 +39,7 @@ jobs:
     permissions:
       contents: write
       packages: write
-      id-token: write
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      id-token: write 
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
@@ -83,8 +81,7 @@ jobs:
     permissions:
       contents: read
       discussions: write
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      id-token: write 
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
@@ -95,8 +92,10 @@ jobs:
         with:
           ref: 'release/v3'
       - uses: ./.github/actions/setup
-      - name: Promote NPM package to production
-        run: pnpm run promote:npm:latest
+      - name: Publish NPM packages to latest
+        run: pnpm run publish:npm:latest
+        env:
+          NPM_TAG: latest
   quantic-prod:
     if: ${{ !cancelled() && needs.release.result == 'success' }}
     needs: release

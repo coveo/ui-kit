@@ -81,13 +81,13 @@
     "e2e:snapshots": "cypress run --config-file cypress-screenshots.config.mjs --browser chrome",
     "e2e:snapshots:watch": "cypress open --config-file cypress-screenshots.config.mjs --browser chrome",
     "generate-component": "node ./scripts/generate-component.mjs",
-    "release:phase3": "pnpm --filter @coveo/ci npm-publish",
     "release:phase1": "pnpm --filter @coveo/ci bump",
     "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod",
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
     "chromatic": "chromatic -d=dist-storybook",
     "validate:light-dom-styles": "node ./scripts/check-light-dom-host-selectors.mjs",
-    "validate:no-new-light-dom": "node ./scripts/check-no-new-light-dom-components.mjs"
+    "validate:no-new-light-dom": "node ./scripts/check-no-new-light-dom-components.mjs",
+    "npm:publish": "pnpm --filter @coveo/ci npm-publish"
   },
   "dependencies": {
     "@coveo/bueno": "workspace:*",
