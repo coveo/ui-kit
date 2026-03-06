@@ -21,19 +21,42 @@ export function fetchStaticStateFactory<
     async (
       params: FetchStaticStateParameters<TControllerDefinitions, TSolutionType>
     ) => {
-      const solutionTypeBuild = await buildFactory(
+      const solutionTypeBuild = buildFactory(
         controllerDefinitions,
         options
       )(solutionType);
       const {engine, controllers} = await solutionTypeBuild(params);
 
-      switch (solutionType) {
-        case SolutionType.listing:
+      if (solutionType === SolutionType.listing) {
+        const executed = Object.values(controllers).some((c) => {
+          if (
+            'executeFirstRequest' in c &&
+            typeof c.executeFirstRequest === 'function'
+          ) {
+            c.executeFirstRequest();
+            return true;
+          }
+          return false;
+        });
+
+        if (!executed) {
           buildProductListing(engine).executeFirstRequest();
-          break;
-        case SolutionType.search:
+        }
+      } else if (solutionType === SolutionType.search) {
+        const executed = Object.values(controllers).some((c) => {
+          if (
+            'executeFirstSearch' in c &&
+            typeof c.executeFirstSearch === 'function'
+          ) {
+            c.executeFirstSearch();
+            return true;
+          }
+          return false;
+        });
+
+        if (!executed) {
           buildSearch(engine).executeFirstSearch();
-          break;
+        }
       }
 
       const searchActions = await Promise.all(
