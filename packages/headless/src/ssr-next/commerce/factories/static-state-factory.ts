@@ -27,35 +27,34 @@ export function fetchStaticStateFactory<
       )(solutionType);
       const {engine, controllers} = await solutionTypeBuild(params);
 
-      let executedFirstRequest = false;
-      for (const controller of Object.values(controllers)) {
-        if (!controller || typeof controller !== 'object') {
-          continue;
-        }
+      if (solutionType === SolutionType.listing) {
+        const executed = Object.values(controllers).some((c) => {
+          if (
+            'executeFirstRequest' in c &&
+            typeof c.executeFirstRequest === 'function'
+          ) {
+            c.executeFirstRequest();
+            return true;
+          }
+          return false;
+        });
 
-        if (
-          solutionType === SolutionType.listing &&
-          'executeFirstRequest' in controller &&
-          typeof controller.executeFirstRequest === 'function'
-        ) {
-          controller.executeFirstRequest();
-          executedFirstRequest = true;
-          break;
-        } else if (
-          solutionType === SolutionType.search &&
-          'executeFirstSearch' in controller &&
-          typeof controller.executeFirstSearch === 'function'
-        ) {
-          controller.executeFirstSearch();
-          executedFirstRequest = true;
-          break;
-        }
-      }
-
-      if (!executedFirstRequest) {
-        if (solutionType === SolutionType.listing) {
+        if (!executed) {
           buildProductListing(engine).executeFirstRequest();
-        } else if (solutionType === SolutionType.search) {
+        }
+      } else if (solutionType === SolutionType.search) {
+        const executed = Object.values(controllers).some((c) => {
+          if (
+            'executeFirstSearch' in c &&
+            typeof c.executeFirstSearch === 'function'
+          ) {
+            c.executeFirstSearch();
+            return true;
+          }
+          return false;
+        });
+
+        if (!executed) {
           buildSearch(engine).executeFirstSearch();
         }
       }
