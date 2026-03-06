@@ -5,8 +5,6 @@ import {
   type CommerceEngineOptions,
 } from '../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../app/state-key.js';
-import {buildProductListing} from '../../../controllers/commerce/product-listing/headless-product-listing.js';
-import {buildSearch} from '../../../controllers/commerce/search/headless-search.js';
 import {loadConfigurationActions} from '../../../features/commerce/configuration/configuration-actions-loader.js';
 import {
   createWaitForActionMiddleware,
@@ -185,36 +183,6 @@ export const buildFactory =
       });
     }
 
-    const executeFirstRequest = () => {
-      for (const controller of Object.values(controllers)) {
-        if (!controller || typeof controller !== 'object') {
-          continue;
-        }
-
-        if (
-          solutionType === SolutionType.listing &&
-          'executeFirstRequest' in controller &&
-          typeof controller.executeFirstRequest === 'function'
-        ) {
-          controller.executeFirstRequest();
-          return;
-        } else if (
-          solutionType === SolutionType.search &&
-          'executeFirstSearch' in controller &&
-          typeof controller.executeFirstSearch === 'function'
-        ) {
-          controller.executeFirstSearch();
-          return;
-        }
-      }
-
-      if (solutionType === SolutionType.listing) {
-        buildProductListing(engine).executeFirstRequest();
-      } else if (solutionType === SolutionType.search) {
-        buildSearch(engine).executeFirstSearch();
-      }
-    };
-
     return {
       engine,
       controllers: controllers as InferControllersMapFromDefinition<
@@ -222,6 +190,5 @@ export const buildFactory =
         TSolutionType
       > &
         BakedInControllers,
-      executeFirstRequest,
     };
   };
