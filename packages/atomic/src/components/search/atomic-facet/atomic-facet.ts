@@ -210,6 +210,7 @@ export class AtomicFacet
   @property({
     type: Boolean,
     attribute: 'no-facet-search',
+    reflect: true,
   })
   public noFacetSearch = false;
 
