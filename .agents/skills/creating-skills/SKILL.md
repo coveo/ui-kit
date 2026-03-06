@@ -17,7 +17,7 @@ Skills following the [Agent Skills open standard](https://agentskills.io) can be
 - **`.skills/`** or `skills/`** - Alternative workspace conventions
 - **`~/.claude/skills/`** - User-level personal skills
 
-This skill recommends `.claude/skills/` for workspace development as it's compatible with multiple AI tools (GitHub Copilot, Claude Code, OpenCode, etc.).
+This skill recommends `.agents/skills/` for workspace development as it's compatible with multiple AI tools (GitHub Copilot, Claude Code, OpenCode, etc.).
 
 ## Process
 

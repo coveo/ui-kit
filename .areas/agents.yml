@@ -3,7 +3,7 @@ file_patterns:
   - .github/agents/**
   - .github/instructions/**
   - .github/prompts/**
-  - .claude/**
+  - .agents/**
   - AGENTS.md
   - opencode.json
 
