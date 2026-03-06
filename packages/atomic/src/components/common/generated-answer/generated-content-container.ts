@@ -20,7 +20,7 @@ export const renderGeneratedContentContainer: FunctionalComponentWithChildren<
 > = ({props}) => {
   return (children) =>
     html`
-      <div part="generated-container">
+      <div part="generated-container" class="mt-6">
         ${
           props.answerContentFormat === 'text/markdown'
             ? renderGeneratedMarkdownContent({
