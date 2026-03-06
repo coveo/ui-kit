@@ -13,7 +13,14 @@ import {
 import {followUpAnswersReducer} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import {getFollowUpAnswersInitialState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
 import {generateHeadAnswer} from '../../../features/generated-answer/generated-answer-actions.js';
-import {generatedAnswerAnalyticsClient} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
+import {
+  generatedAnswerAnalyticsClient,
+  logCopyGeneratedAnswer,
+  logDislikeGeneratedAnswer,
+  logHoverCitation,
+  logLikeGeneratedAnswer,
+  logOpenGeneratedAnswerSource,
+} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
 import {getGeneratedAnswerInitialState} from '../../../features/generated-answer/generated-answer-state.js';
 import {
   buildMockSearchEngine,
@@ -35,6 +42,11 @@ vi.mock(
 const mockCoreLike = vi.fn();
 const mockCoreDislike = vi.fn();
 const mockCoreCopy = vi.fn();
+const mockCoreCitationClick = vi.fn();
+const mockCoreCitationHover = vi.fn();
+const headAnswerId = 'head-id';
+const followUpAnswerId = 'follow-1';
+const citationId = 'citation-1';
 const mockFollowUpAgent = {
   runAgent: vi.fn(),
   abortRun: vi.fn(),
@@ -57,6 +69,8 @@ vi.mock('../../core/generated-answer/headless-core-generated-answer.js', () => {
       like: mockCoreLike,
       dislike: mockCoreDislike,
       logCopyToClipboard: mockCoreCopy,
+      logCitationClick: mockCoreCitationClick,
+      logCitationHover: mockCoreCitationHover,
     })),
   };
 });
@@ -103,6 +117,11 @@ describe('GeneratedAnswerWithFollowUps', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockCoreLike.mockClear();
+    mockCoreDislike.mockClear();
+    mockCoreCopy.mockClear();
+    mockCoreCitationClick.mockClear();
+    mockCoreCitationHover.mockClear();
     mockCreateFollowUpAgent.mockReturnValue(mockFollowUpAgent as never);
     mockCreateFollowUpStrategy.mockReturnValue(mockFollowUpStrategy as never);
     engine = buildEngineWithGeneratedAnswer();
@@ -218,6 +237,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
           question: 'What about X?',
           answer: 'Answer about X',
           citations: [],
+          generationSteps: [],
           answerId: 'follow-up-1',
           isLoading: false,
           isStreaming: false,
@@ -283,24 +303,46 @@ describe('GeneratedAnswerWithFollowUps', () => {
       controller.like();
 
       expect(mockCoreLike).toHaveBeenCalledTimes(1);
+      expect(mockCoreLike).toHaveBeenCalledWith();
       expect(likeFollowUp).not.toHaveBeenCalled();
+      expect(logLikeGeneratedAnswer).not.toHaveBeenCalled();
     });
 
     it('should delegate to core like when answerId matches head answer', () => {
       const controller = createGeneratedAnswerWithFollowUps();
 
-      controller.like('head-id');
+      controller.like(headAnswerId);
 
       expect(mockCoreLike).toHaveBeenCalledTimes(1);
+      expect(mockCoreLike).toHaveBeenCalledWith();
       expect(likeFollowUp).not.toHaveBeenCalled();
+      expect(logLikeGeneratedAnswer).not.toHaveBeenCalled();
     });
 
     it('should dispatch likeFollowUp when answerId targets a follow-up answer', () => {
       const controller = createGeneratedAnswerWithFollowUps();
 
-      controller.like('follow-1');
+      controller.like(followUpAnswerId);
 
-      expect(likeFollowUp).toHaveBeenCalledWith({answerId: 'follow-1'});
+      expect(likeFollowUp).toHaveBeenCalledWith({answerId: followUpAnswerId});
+      expect(mockCoreLike).not.toHaveBeenCalled();
+      expect(logLikeGeneratedAnswer).toHaveBeenCalledWith(followUpAnswerId);
+    });
+
+    it('should not dispatch follow-up like actions when already liked', () => {
+      engine = buildEngineWithGeneratedAnswer({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          answerId: headAnswerId,
+          liked: true,
+        },
+      });
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.like(followUpAnswerId);
+
+      expect(likeFollowUp).not.toHaveBeenCalled();
+      expect(logLikeGeneratedAnswer).not.toHaveBeenCalled();
       expect(mockCoreLike).not.toHaveBeenCalled();
     });
   });
@@ -321,24 +363,48 @@ describe('GeneratedAnswerWithFollowUps', () => {
       controller.dislike();
 
       expect(mockCoreDislike).toHaveBeenCalledTimes(1);
+      expect(mockCoreDislike).toHaveBeenCalledWith();
       expect(dislikeFollowUp).not.toHaveBeenCalled();
+      expect(logDislikeGeneratedAnswer).not.toHaveBeenCalled();
     });
 
     it('should delegate to core dislike when answerId matches head answer', () => {
       const controller = createGeneratedAnswerWithFollowUps();
 
-      controller.dislike('head-id');
+      controller.dislike(headAnswerId);
 
       expect(mockCoreDislike).toHaveBeenCalledTimes(1);
+      expect(mockCoreDislike).toHaveBeenCalledWith();
       expect(dislikeFollowUp).not.toHaveBeenCalled();
+      expect(logDislikeGeneratedAnswer).not.toHaveBeenCalled();
     });
 
     it('should dispatch dislikeFollowUp when answerId targets a follow-up answer', () => {
       const controller = createGeneratedAnswerWithFollowUps();
 
-      controller.dislike('follow-1');
+      controller.dislike(followUpAnswerId);
 
-      expect(dislikeFollowUp).toHaveBeenCalledWith({answerId: 'follow-1'});
+      expect(dislikeFollowUp).toHaveBeenCalledWith({
+        answerId: followUpAnswerId,
+      });
+      expect(mockCoreDislike).not.toHaveBeenCalled();
+      expect(logDislikeGeneratedAnswer).toHaveBeenCalledWith(followUpAnswerId);
+    });
+
+    it('should not dispatch follow-up dislike actions when already disliked', () => {
+      engine = buildEngineWithGeneratedAnswer({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          answerId: headAnswerId,
+          disliked: true,
+        },
+      });
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.dislike(followUpAnswerId);
+
+      expect(dislikeFollowUp).not.toHaveBeenCalled();
+      expect(logDislikeGeneratedAnswer).not.toHaveBeenCalled();
       expect(mockCoreDislike).not.toHaveBeenCalled();
     });
   });
@@ -359,14 +425,124 @@ describe('GeneratedAnswerWithFollowUps', () => {
       controller.logCopyToClipboard();
 
       expect(mockCoreCopy).toHaveBeenCalledTimes(1);
+      expect(mockCoreCopy).toHaveBeenCalledWith();
+      expect(logCopyGeneratedAnswer).not.toHaveBeenCalled();
     });
 
     it('should delegate to core logCopyToClipboard when answerId matches head answer', () => {
       const controller = createGeneratedAnswerWithFollowUps();
 
-      controller.logCopyToClipboard('head-id');
+      controller.logCopyToClipboard(headAnswerId);
 
       expect(mockCoreCopy).toHaveBeenCalledTimes(1);
+      expect(mockCoreCopy).toHaveBeenCalledWith();
+      expect(logCopyGeneratedAnswer).not.toHaveBeenCalled();
+    });
+
+    it('should dispatch copy analytics when answerId targets a follow-up answer', () => {
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.logCopyToClipboard(followUpAnswerId);
+
+      expect(logCopyGeneratedAnswer).toHaveBeenCalledWith(followUpAnswerId);
+      expect(mockCoreCopy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('logCitationClick', () => {
+    beforeEach(() => {
+      engine = buildEngineWithGeneratedAnswer({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          answerId: 'head-id',
+        },
+      });
+    });
+
+    it('should delegate to core logCitationClick when no answerId is provided', () => {
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.logCitationClick(citationId);
+
+      expect(mockCoreCitationClick).toHaveBeenCalledWith(citationId);
+      expect(logOpenGeneratedAnswerSource).not.toHaveBeenCalled();
+    });
+
+    it('should delegate to core logCitationClick when answerId matches head answer', () => {
+      engine = buildEngineWithGeneratedAnswer({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          answerId: headAnswerId,
+        },
+      });
+
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.logCitationClick(citationId, headAnswerId);
+
+      expect(mockCoreCitationClick).toHaveBeenCalledWith(citationId);
+      expect(logOpenGeneratedAnswerSource).not.toHaveBeenCalled();
+    });
+
+    it('should dispatch citation click analytics when answerId targets a follow-up answer', () => {
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.logCitationClick(citationId, followUpAnswerId);
+
+      expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(
+        citationId,
+        followUpAnswerId
+      );
+      expect(mockCoreCitationClick).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('logCitationHover', () => {
+    beforeEach(() => {
+      engine = buildEngineWithGeneratedAnswer({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          answerId: 'head-id',
+        },
+      });
+    });
+
+    it('should delegate to core logCitationHover when no answerId is provided', () => {
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.logCitationHover(citationId, 10);
+
+      expect(mockCoreCitationHover).toHaveBeenCalledWith(citationId, 10);
+      expect(logHoverCitation).not.toHaveBeenCalled();
+    });
+
+    it('should delegate to core logCitationHover when answerId matches head answer', () => {
+      engine = buildEngineWithGeneratedAnswer({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          answerId: headAnswerId,
+        },
+      });
+
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.logCitationHover(citationId, 10, headAnswerId);
+
+      expect(mockCoreCitationHover).toHaveBeenCalledWith(citationId, 10);
+      expect(logHoverCitation).not.toHaveBeenCalled();
+    });
+
+    it('should dispatch citation hover analytics when answerId targets a follow-up answer', () => {
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.logCitationHover(citationId, 10, followUpAnswerId);
+
+      expect(logHoverCitation).toHaveBeenCalledWith(
+        citationId,
+        10,
+        followUpAnswerId
+      );
+      expect(mockCoreCitationHover).not.toHaveBeenCalled();
     });
   });
 
