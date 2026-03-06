@@ -24,15 +24,17 @@ export default function SpotlightContentButton({
       type="button"
       disabled={!methods}
       onClick={handleClick}
-      style={{border: '2px solid gold', padding: '1rem'}}
+      style={{border: '2px solid gold', maxWidth: '200px'}}
     >
       <img
         src={spotlightContent.desktopImage}
         alt={spotlightContent.name || 'Spotlight content'}
-        style={{maxWidth: '100%', height: 'auto'}}
+        style={{height: 'auto', maxHeight: '120px', objectFit: 'contain'}}
       />
-      {spotlightContent.name && <h3>{spotlightContent.name}</h3>}
-      {spotlightContent.description && <p>{spotlightContent.description}</p>}
+      {spotlightContent.name && <h4>{spotlightContent.name}</h4>}
+      {spotlightContent.description && (
+        <span>{spotlightContent.description}</span>
+      )}
     </button>
   );
 }
