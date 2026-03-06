@@ -222,7 +222,7 @@ describe('atomic-facet', () => {
       await expect.element(locators.searchInput).not.toBeInTheDocument();
     });
 
-    it('should render search parts when both noFacetSearch and withSearch are false', async () => {
+    it('should not render search parts when both noFacetSearch and withSearch are false', async () => {
       const {locators} = await setupElement({
         noFacetSearch: false,
         withSearch: false,
