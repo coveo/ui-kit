@@ -27,7 +27,7 @@ export interface RenderAnswerContentProps {
 }
 
 /**
- * Renders the answer content of a given generated answer including question, answer text, and citations.
+ * Renders the answer content of a given generated answer including answer text and citations.
  */
 export const renderAnswerContent: FunctionalComponent<
   RenderAnswerContentProps
@@ -42,28 +42,13 @@ export const renderAnswerContent: FunctionalComponent<
     onClickShowButton,
   } = props;
 
-  const {
-    answer,
-    question,
-    isStreaming,
-    citations,
-    answerContentFormat,
-    expanded,
-    error,
-  } = generatedAnswer;
+  const {answer, isStreaming, citations, answerContentFormat, expanded, error} =
+    generatedAnswer;
   const isExpanded = collapsible ? expanded : true;
-  const trimmedQuestion = question.trim();
   const hasRetryableError = error?.isRetryable === true;
 
   return html`
     <div>
-      <div class="mt-6 flex gap-3">
-        <p
-          class="question-text min-w-0 flex-1 text-base font-semibold leading-6"
-        >
-          ${trimmedQuestion}
-        </p>
-      </div>
       ${
         hasRetryableError
           ? renderRetryPrompt({

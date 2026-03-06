@@ -83,17 +83,6 @@ describe('#renderAnswerContent', () => {
     };
   };
 
-  it('should display the question text', async () => {
-    const {questionText} = await renderComponent({
-      generatedAnswer: {
-        ...defaultGeneratedAnswer,
-        question: '  user query  ',
-      },
-    });
-
-    expect(questionText?.textContent?.trim()).toBe('user query');
-  });
-
   describe('when there is a retryable error', () => {
     it('should call renderRetryPrompt with correct arguments', async () => {
       const onRetry = vi.fn();
