@@ -28,12 +28,22 @@ export default function SpotlightContentButton({
     >
       <img
         src={spotlightContent.desktopImage}
-        alt={spotlightContent.name || 'Spotlight content'}
+        alt={
+          spotlightContent.altText ||
+          spotlightContent.name ||
+          'Spotlight content'
+        }
         style={{height: 'auto', maxHeight: '120px', objectFit: 'contain'}}
       />
-      {spotlightContent.name && <h4>{spotlightContent.name}</h4>}
+      {spotlightContent.name && (
+        <h4 style={{color: spotlightContent.nameFontColor}}>
+          {spotlightContent.name}
+        </h4>
+      )}
       {spotlightContent.description && (
-        <span>{spotlightContent.description}</span>
+        <span style={{color: spotlightContent.descriptionFontColor}}>
+          {spotlightContent.description}
+        </span>
       )}
     </button>
   );
