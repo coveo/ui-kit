@@ -22,6 +22,7 @@ import {hoistOtherCategoryInArray, hoistOtherCategoryInNav} from './hoist.js';
 import {insertAtomicSearchBox} from './insertAtomicSearchBox.js';
 import {insertBetaNote} from './insertBetaNote.js';
 import {insertCustomComments} from './insertCustomComments.js';
+import {insertEditInGithub} from './insertEditInGithub.js';
 import {insertMetaTags} from './insertMetaTags.js';
 import {insertSiteHeaderBar} from './insertSiteHeaderBar.js';
 import {applyTopLevelRenameArray} from './renaming.js';
@@ -224,6 +225,10 @@ export const load = (app: Application) => {
         rel="stylesheet"
         href={event.relativeURL('assets/css/main-new.css')}
       />
+      <link
+        rel="stylesheet"
+        href={event.relativeURL('assets/css/edit-in-github.css')}
+      />
       <script
         type="module"
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
@@ -261,6 +266,7 @@ export const load = (app: Application) => {
   app.renderer.on(RendererEvent.END, () => {
     const baseAssetsPath = '../../documentation/assets';
     const filesToCopy = [
+      'css/edit-in-github.css',
       'css/docs-style.css',
       'css/main-new.css',
       'css/light-theme.css',
@@ -300,6 +306,7 @@ export const load = (app: Application) => {
   });
 
   app.renderer.on(PageEvent.END, insertMetaTags);
+  app.renderer.on(PageEvent.END, insertEditInGithub);
   app.renderer.on(Renderer.EVENT_END_PAGE, handleRendererEndPage);
 
   app.renderer.defineRouter('kebab', KebabRouter);

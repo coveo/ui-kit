@@ -1,4 +1,5 @@
 import '@coveo/atomic/themes/coveo.css';
+import '../storybook-utils/documentation/edit-in-github.css';
 import type {Preview} from '@storybook/web-components-vite';
 import {setCustomElementsManifest} from '@storybook/web-components-vite';
 import {setStorybookHelpersConfig} from '@wc-toolkit/storybook-helpers';
@@ -6,6 +7,8 @@ import {render} from 'lit';
 import {initialize, mswLoader} from 'msw-storybook-addon';
 import {within} from 'shadow-dom-testing-library';
 import {create} from 'storybook/theming';
+import {createEditInGithubElement} from '@/storybook-utils/documentation/create-edit-in-github-element';
+import {resolveGithubPath} from '@/storybook-utils/documentation/resolve-github-path';
 import customElements from '../custom-elements.json';
 import {defineCustomElements} from '../dist/atomic/loader/index.js';
 import {COVEO_PRIMARY, FONT_BASE, FONT_CODE} from './theme';
@@ -32,12 +35,47 @@ setStorybookHelpersConfig({
   hideArgRef: true,
 });
 
-function disableAnalytics(container, selectors) {
+function disableAnalytics(container: HTMLElement, selectors: string[]) {
   selectors.forEach((selector) => {
     container.querySelectorAll(selector).forEach((element) => {
       element.setAttribute('analytics', 'false');
     });
   });
+}
+
+function ensureGlobalEditButton(
+  githubPath?: string | null
+): (HTMLDivElement & {href?: string}) | null {
+  if (typeof document === 'undefined') return null;
+
+  const existing = document.getElementById('sb-edit-in-github-global') as
+    | (HTMLDivElement & {href?: string})
+    | null;
+
+  if (existing) {
+    if (!githubPath) {
+      existing.remove();
+      return null;
+    }
+    existing.href = `https://github.com/coveo/ui-kit/blob/main/packages/atomic/src/components/${githubPath}`;
+    return existing;
+  }
+
+  if (!githubPath) return null;
+
+  const btn = createEditInGithubElement() as HTMLDivElement & {href?: string};
+  btn.id = 'sb-edit-in-github-global';
+  Object.assign(btn.style, {
+    position: 'fixed',
+    top: '1rem',
+    right: '1rem',
+    zIndex: '10000',
+    display: '',
+  });
+  btn.href =
+    btn.href = `https://github.com/coveo/ui-kit/blob/main/packages/atomic/src/components/${githubPath}`;
+  document.body.appendChild(btn);
+  return btn;
 }
 
 const preview: Preview = {
@@ -66,9 +104,6 @@ const preview: Preview = {
       expanded: true,
     },
     a11y: {
-      // 'todo' - show a11y violations in the test UI only
-      // 'error' - fail CI on a11y violations
-      // 'off' - skip a11y checks entirely
       test: 'error',
     },
     docs: {
@@ -90,7 +125,6 @@ const preview: Preview = {
 
       if (story?._$litType$) {
         const container = document.createElement('div');
-
         render(story, container);
 
         const isTestMode =
@@ -106,9 +140,29 @@ const preview: Preview = {
             'atomic-commerce-recommendation-interface',
           ]);
         }
-
-        return story;
       }
+
+      return story;
+    },
+
+    (Story, context) => {
+      const storyResult = Story();
+      const isDocs = context?.viewMode === 'docs';
+      const isIntroduction =
+        context?.title?.endsWith('/Introduction') ||
+        context?.title === 'Introduction';
+
+      const githubPath =
+        context?.parameters?.githubPath ??
+        context?.parameters?.docs?.githubPath ??
+        resolveGithubPath(context?.parameters?.fileName) ??
+        null;
+
+      ensureGlobalEditButton(
+        githubPath && !isDocs && !isIntroduction ? githubPath : null
+      );
+
+      return storyResult;
     },
   ],
   beforeEach({canvasElement, canvas}) {
