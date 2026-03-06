@@ -11,7 +11,7 @@ runs:
     - run: pnpm exec cypress install
       shell: bash
       working-directory: packages/atomic
-    - uses: cypress-io/github-action@248bde77443c376edc45906ede03a1aba9da0462 # v5.8.4
+    - uses: cypress-io/github-action@bc22e01685c56e89e7813fd8e26f33dc47f87e15 # v7.1.5
       name: Run Cypress
       with:
         browser: chrome
@@ -22,7 +22,7 @@ runs:
         wait-on-timeout: 600000
         install: false
         record: false
-    - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+    - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
       if: cancelled() || failure() || success()
       with:
         name: result-lists-screenshots
