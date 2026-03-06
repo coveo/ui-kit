@@ -115,7 +115,7 @@ patchedDependencies:
     hash: 2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9
     path: patches/@stencil+core+4.20.0.patch
   '@wc-toolkit/storybook-helpers':
-    hash: a4497beb397b419e52f474a1ad2a81891e7ad107f5b4a0ad73fd0e8db152e940
+    hash: 3b611036bd40968dd1049a983a12a1ecb717bcd1c21e80029db060f3dd80943c
     path: patches/@wc-toolkit__storybook-helpers.patch
   jest-environment-jsdom@29.7.0:
     hash: b419a992476c3323e67ee6c86f3f9ecf6f4f073127cb572aa9af3b9c6550751d
@@ -326,7 +326,7 @@ importers:
         version: 4.0.10(@vitest/browser@4.0.10(msw@2.11.4(@types/node@22.16.5)(typescript@5.8.3))(vite@7.2.2(@types/node@22.16.5)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.30.1)(sass@1.97.3)(terser@5.46.0)(yaml@2.8.2))(vitest@4.0.10))(vitest@4.0.10)
       '@wc-toolkit/storybook-helpers':
         specifier: 10.2.0
-        version: 10.2.0(patch_hash=a4497beb397b419e52f474a1ad2a81891e7ad107f5b4a0ad73fd0e8db152e940)(lit@3.3.1)(storybook@10.2.15(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))
+        version: 10.2.0(patch_hash=3b611036bd40968dd1049a983a12a1ecb717bcd1c21e80029db060f3dd80943c)(lit@3.3.1)(storybook@10.2.15(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))
       axe-core:
         specifier: 4.10.3
         version: 4.10.3
@@ -20615,7 +20615,7 @@ snapshots:
 
   '@vue/shared@3.5.29': {}
 
-  '@wc-toolkit/storybook-helpers@10.2.0(patch_hash=a4497beb397b419e52f474a1ad2a81891e7ad107f5b4a0ad73fd0e8db152e940)(lit@3.3.1)(storybook@10.2.15(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))':
+  '@wc-toolkit/storybook-helpers@10.2.0(patch_hash=3b611036bd40968dd1049a983a12a1ecb717bcd1c21e80029db060f3dd80943c)(lit@3.3.1)(storybook@10.2.15(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))':
     dependencies:
       lit: 3.3.1
       storybook: 10.2.15(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)

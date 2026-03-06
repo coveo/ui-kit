@@ -1,5 +1,5 @@
 diff --git a/dist/index.js b/dist/index.js
-index eeb64e9e0fa8bc5819922b453bab438b8226a009..87a25ccdaf9fbfb19fc0d0e0d36eb5c112c4c96b 100644
+index eeb64e9e0fa8bc5819922b453bab438b8226a009..59a4fc02a28a33b760a517904876bbf7b60520e5 100644
 --- a/dist/index.js
 +++ b/dist/index.js
 @@ -569,7 +569,7 @@ var options2 = {};
@@ -66,7 +66,7 @@ index eeb64e9e0fa8bc5819922b453bab438b8226a009..87a25ccdaf9fbfb19fc0d0e0d36eb5c1
 -    });
 +    const containerElement = getContainerElement(containerSelector);
 +    const selectedComponent = containerElement.querySelector(component.tagName);
-+    if (selectedComponent && argsObserver) {
++    if (selectedComponent && argObserver) {
 +      argObserver.observe(selectedComponent, {
 +        attributes: true
 +      });
