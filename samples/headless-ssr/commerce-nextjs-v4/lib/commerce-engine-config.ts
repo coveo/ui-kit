@@ -44,7 +44,7 @@ export default {
         slotId: 'ff5d8804-d398-4dd5-b68c-6a729c66454b',
       },
     }),
-    searchBox: defineSearchBox(),
+    searchBox: defineSearchBox({options: {enableResults: true}}),
     recentQueriesList: defineRecentQueriesList(),
     notifyTrigger: defineNotifyTrigger(),
     queryTrigger: defineQueryTrigger(),
