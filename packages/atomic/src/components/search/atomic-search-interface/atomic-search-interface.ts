@@ -71,7 +71,7 @@ export type Bindings = CommonBindings<
   NonceBindings;
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
-
+//hi
 /**
  * The `atomic-search-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
  *
