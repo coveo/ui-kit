@@ -38,6 +38,7 @@ describe('#renderAnswerContent', () => {
     isStreaming: false,
     answer: 'Test answer',
     citations: [],
+    generationSteps: [],
     answerContentFormat: 'text/markdown' as const,
     expanded: true,
     question: 'Test question',
@@ -52,12 +53,17 @@ describe('#renderAnswerContent', () => {
   const renderComponent = async (
     overrides: Partial<RenderAnswerContentProps> = {}
   ) => {
+    const generatedAnswer = {
+      ...defaultGeneratedAnswer,
+      ...overrides.generatedAnswer,
+      generationSteps:
+        overrides.generatedAnswer?.generationSteps ??
+        defaultGeneratedAnswer.generationSteps,
+    };
+
     const defaultProps: RenderAnswerContentProps = {
       i18n,
-      generatedAnswer: {
-        ...defaultGeneratedAnswer,
-        ...overrides.generatedAnswer,
-      },
+      generatedAnswer,
       collapsible: false,
       renderFeedbackAndCopyButtonsSlot: () => html``,
       renderCitationsSlot: () => html``,
@@ -272,6 +278,21 @@ describe('#renderAnswerContent', () => {
         });
 
         expect(renderFeedbackAndCopyButtonsSlot).not.toHaveBeenCalled();
+      });
+
+      it('should render feedback and copy buttons when collapsible is false (ie: short answer)', async () => {
+        const renderFeedbackAndCopyButtonsSlot = vi.fn(() => html``);
+
+        await renderComponent({
+          collapsible: false,
+          renderFeedbackAndCopyButtonsSlot,
+          generatedAnswer: {
+            ...defaultGeneratedAnswer,
+            expanded: false,
+          },
+        });
+
+        expect(renderFeedbackAndCopyButtonsSlot).toHaveBeenCalled();
       });
     });
 

@@ -51,9 +51,10 @@ export const renderAnswerContent: FunctionalComponent<
     expanded,
     error,
   } = generatedAnswer;
-  const isExpanded = collapsible ? expanded : true;
   const trimmedQuestion = question.trim();
   const hasRetryableError = error?.isRetryable === true;
+  const shouldDisplayFeedbackButtons =
+    !hasRetryableError && (collapsible ? expanded : true);
 
   return html`
     <div>
@@ -64,7 +65,7 @@ export const renderAnswerContent: FunctionalComponent<
           ${trimmedQuestion}
         </p>
         ${when(
-          !hasRetryableError && isExpanded,
+          shouldDisplayFeedbackButtons,
           () => html`
             <div
               part="feedback-and-copy-buttons"
@@ -117,7 +118,7 @@ export const renderAnswerContent: FunctionalComponent<
                       props: {
                         i18n,
                         onClick: onClickShowButton,
-                        isCollapsed: !expanded,
+                        isCollapsed: expanded === false,
                       },
                     })
                   : nothing
