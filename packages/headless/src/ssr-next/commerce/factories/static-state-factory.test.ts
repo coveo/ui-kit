@@ -34,8 +34,7 @@ describe('fetchStaticStateFactory', () => {
   let engineSpy: MockInstance;
   const mockBuildProductListing = vi.mocked(buildProductListing);
   const mockBuildSearch = vi.mocked(buildSearch);
-  const mockExecuteFirstRequest = vi.fn();
-  const mockedExecuteFirstSearch = vi.fn();
+  const mockExecuteFirstRequestFromBuildResult = vi.fn();
   const mockEngine = buildMockSSRCommerceEngine(buildMockCommerceState());
   const mockEngineOptions = {
     configuration: getSampleCommerceEngineConfiguration(),
@@ -52,14 +51,14 @@ describe('fetchStaticStateFactory', () => {
     mockBuildProductListing.mockImplementation(
       () =>
         ({
-          executeFirstRequest: mockExecuteFirstRequest,
+          executeFirstRequest: vi.fn(),
         }) as unknown as ProductListing
     );
 
     mockBuildSearch.mockImplementation(
       () =>
         ({
-          executeFirstSearch: mockedExecuteFirstSearch,
+          executeFirstSearch: vi.fn(),
         }) as unknown as Search
     );
 
@@ -73,11 +72,10 @@ describe('fetchStaticStateFactory', () => {
               T
             > &
               BakedInControllers,
+            executeFirstRequest: mockExecuteFirstRequestFromBuildResult,
           })
     );
 
-    mockExecuteFirstRequest.mockReturnValue(Promise.resolve());
-    mockedExecuteFirstSearch.mockReturnValue(Promise.resolve());
     (mockEngine.waitForRequestCompletedAction as Mock).mockReturnValue([]);
   });
 
@@ -104,6 +102,16 @@ describe('fetchStaticStateFactory', () => {
     });
   });
 
+  it('should call executeFirstRequest from build result', async () => {
+    // @ts-expect-error: do not care about baked-in controller initial state
+    const factory = fetchStaticStateFactory(definition, mockEngineOptions);
+    await factory(SolutionType.listing)({
+      navigatorContext: mockNavigatorContext,
+      context: mockContext,
+    });
+    expect(mockExecuteFirstRequestFromBuildResult).toHaveBeenCalledTimes(1);
+  });
+
   describe('when solution type is listing', () => {
     beforeEach(async () => {
       // @ts-expect-error: do not care about baked-in controller initial state
@@ -114,16 +122,8 @@ describe('fetchStaticStateFactory', () => {
       });
     });
 
-    it('should build a product listing controller', async () => {
-      expect(buildProductListing).toHaveBeenCalledTimes(1);
-    });
-
-    it('should perform a listing request ', async () => {
-      expect(mockExecuteFirstRequest).toHaveBeenCalledTimes(1);
-    });
-
-    it('should not perform a search request ', async () => {
-      expect(mockedExecuteFirstSearch).toHaveBeenCalledTimes(0);
+    it('should call executeFirstRequest from build result', async () => {
+      expect(mockExecuteFirstRequestFromBuildResult).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -145,16 +145,8 @@ describe('fetchStaticStateFactory', () => {
       });
     });
 
-    it('should build a search controller', async () => {
-      expect(buildSearch).toHaveBeenCalledTimes(1);
-    });
-
-    it('should perform a search request ', async () => {
-      expect(mockedExecuteFirstSearch).toHaveBeenCalledTimes(1);
-    });
-
-    it('should not perform a listing request ', async () => {
-      expect(mockExecuteFirstRequest).toHaveBeenCalledTimes(0);
+    it('should call executeFirstRequest from build result', async () => {
+      expect(mockExecuteFirstRequestFromBuildResult).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -168,14 +160,8 @@ describe('fetchStaticStateFactory', () => {
       });
     });
 
-    it('should not build search or listing controllers', async () => {
-      expect(buildSearch).toHaveBeenCalledTimes(0);
-      expect(buildProductListing).toHaveBeenCalledTimes(0);
-    });
-
-    it('should not perform any request ', async () => {
-      expect(mockedExecuteFirstSearch).toHaveBeenCalledTimes(0);
-      expect(mockExecuteFirstRequest).toHaveBeenCalledTimes(0);
+    it('should call executeFirstRequest from build result', async () => {
+      expect(mockExecuteFirstRequestFromBuildResult).toHaveBeenCalledTimes(1);
     });
   });
 });
