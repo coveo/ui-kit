@@ -17,7 +17,6 @@ import {
   initBrowser,
   navigateToStory,
 } from './browser-capture.js';
-import {type ComponentGroup, groupComponents} from './component-groups.js';
 import {
   callLLMWithRetry,
   initLLMClient,
@@ -36,7 +35,6 @@ import {
 } from './progress.js';
 import {
   buildCall2Messages,
-  buildDifferentialCallMessages,
   buildMergedCall1_3Messages,
   CALL2_KEYS,
   MERGED_CALL1_3_KEYS,
@@ -54,8 +52,6 @@ interface Config {
   verbose: boolean;
   storybookUrl: string;
   help: boolean;
-  batch: boolean;
-  showGroups: boolean;
 }
 
 function parseArgs(): Config {
@@ -71,8 +67,6 @@ function parseArgs(): Config {
       verbose: {type: 'boolean', default: false},
       'storybook-url': {type: 'string', default: 'http://localhost:4400'},
       help: {type: 'boolean', default: false},
-      batch: {type: 'boolean', default: false},
-      'show-groups': {type: 'boolean', default: false},
     },
     strict: false,
     allowPositionals: false,
@@ -89,8 +83,6 @@ function parseArgs(): Config {
     verbose: values.verbose as boolean,
     storybookUrl: (values['storybook-url'] as string).replace(/\/$/, ''),
     help: values.help as boolean,
-    batch: values.batch as boolean,
-    showGroups: values['show-groups'] as boolean,
   };
 
   const validSurfaces = [
@@ -127,8 +119,6 @@ Options:
   --model <id>            LLM model to use (default: gpt-4o)
   --concurrency <n>       Number of parallel LLM calls (default: 1)
   --verbose               Print raw LLM responses for debugging
-  --batch                 Group similar components and use differential audits for variants
-  --show-groups           Print batch groupings and exit (requires --batch)
   --help                  Show this help message
 
 Environment:
@@ -140,8 +130,6 @@ Examples:
   node scripts/ai-wcag-audit.mjs --surface commerce --max-components 25
   node scripts/ai-wcag-audit.mjs --surface commerce --resume
   node scripts/ai-wcag-audit.mjs --surface search --model gpt-4o-mini
-  node scripts/ai-wcag-audit.mjs --surface commerce --batch
-  node scripts/ai-wcag-audit.mjs --surface commerce --batch --show-groups
 
 Output:
   Delta files in a11y/reports/deltas/delta-YYYY-MM-DD-ai-audit-<surface>.json
@@ -457,79 +445,6 @@ async function evaluateComponent(
   );
 }
 
-/**
- * Evaluate a variant component using a differential audit.
- * Instead of a full 15-criteria LLM call, references the archetype's results
- * and asks the LLM to only flag differences. Still runs Call 2 (viewport)
- * independently since viewport behavior can differ per surface.
- */
-async function evaluateComponentDifferential(
-  page: PlaywrightPage,
-  clientWrapper: LLMClientWrapper,
-  story: Story,
-  archetypeComponentName: string,
-  archetypeResults: Record<string, {status: string; evidence: string}>,
-  config: Config
-): Promise<DeltaEntry> {
-  await navigateToStory(page, config.storybookUrl, story.storyId);
-
-  // Capture phase — minimal captures for differential audit
-  const {screenshot: defaultScreenshot, accessibilityTree} =
-    await captureDefaultViewport(page);
-
-  const {hoverDetected, hoverScreenshot, hoverDetails} =
-    await captureHoverState(page);
-
-  const {reflow, portrait, landscape} = await captureMultiViewport(page);
-
-  // Differential LLM call: references archetype results
-  const diffMessages = buildDifferentialCallMessages(
-    story.componentName,
-    archetypeComponentName,
-    archetypeResults,
-    defaultScreenshot,
-    accessibilityTree,
-    hoverDetected,
-    hoverScreenshot,
-    hoverDetails
-  );
-  const diffResponse = await callLLMWithRetry(
-    clientWrapper,
-    diffMessages,
-    config
-  );
-  const diffValidated = validateLLMResponse(diffResponse, MERGED_CALL1_3_KEYS);
-
-  // Call 2: viewport-dependent criteria (always independent)
-  const call2Messages = buildCall2Messages(
-    story.componentName,
-    reflow.screenshot,
-    reflow.hasHorizontalScroll,
-    portrait,
-    landscape
-  );
-  const call2Response = await callLLMWithRetry(
-    clientWrapper,
-    call2Messages,
-    config
-  );
-  const call2Validated = validateLLMResponse(call2Response, CALL2_KEYS);
-
-  // Static Call 4: always not-applicable in isolated Storybook
-  const staticCall4 = {
-    criteria: Object.fromEntries(STATIC_NA_CRITERIA),
-  };
-
-  const merged = mergeResults(diffValidated, call2Validated, staticCall4);
-
-  return buildDeltaEntry(
-    story.componentName,
-    story.surface,
-    config.model,
-    merged
-  );
-}
-
 interface CriteriaCounts {
   pass: number;
   fail: number;
@@ -597,42 +512,7 @@ export async function main(): Promise<void> {
     (s) => !existingProgress?.completedComponents.has(s.componentName)
   );
 
-  // Estimate API calls based on batch mode
-  let estimatedCalls: number;
-  let groups: ComponentGroup[] = [];
-  if (config.batch && remaining.length > 1) {
-    groups = groupComponents(remaining.map((s) => s.componentName));
-    const archetypeCount = groups.length;
-    const variantCount = remaining.length - archetypeCount;
-    // Archetypes: 2 calls each (merged + call2), variants: 2 calls each (differential + call2)
-    estimatedCalls = archetypeCount * 2 + variantCount * 2;
-  } else {
-    estimatedCalls = remaining.length * 2;
-  }
-
-  if (config.showGroups) {
-    if (!config.batch) {
-      console.error('Error: --show-groups requires --batch.');
-      process.exit(1);
-    }
-
-    if (groups.length === 0) {
-      console.log('No batch groups found for the selected components.');
-      process.exit(0);
-    }
-
-    console.log('Batch groups (archetype → members):\n');
-    for (const group of groups) {
-      const members = group.members
-        .filter((member) => member !== group.archetypeComponent)
-        .sort((a, b) => a.localeCompare(b, 'en-US'));
-      const memberList =
-        members.length > 0 ? members.join(', ') : '(no variants)';
-      console.log(`  ${group.archetypeComponent} → ${memberList}`);
-    }
-
-    process.exit(0);
-  }
+  const estimatedCalls = remaining.length * 2;
 
   console.log(`Model:       ${config.model}`);
   console.log(`Surface:     ${config.surface}`);
@@ -642,13 +522,6 @@ export async function main(): Promise<void> {
       (alreadyDone > 0 ? ` (${alreadyDone} already completed)` : '')
   );
   console.log(`API calls:   ${estimatedCalls} estimated (2 per component)`);
-  if (config.batch && groups.length > 0) {
-    const archetypeCount = groups.length;
-    const variantCount = remaining.length - archetypeCount;
-    console.log(
-      `  Batch mode: ${archetypeCount} archetypes + ${variantCount} variants (differential)`
-    );
-  }
   if (config.concurrency > 1) {
     console.log(`Concurrency: ${config.concurrency} parallel workers`);
   }
@@ -728,66 +601,16 @@ export async function main(): Promise<void> {
   }
 
   // ── Build processing queue ──────────────────────────────────────────────
-  //
-  // In batch mode, archetypes must be processed before their variants so we
-  // have results to reference. We split into two phases.
 
-  const storyByName = new Map(stories.map((s) => [s.componentName, s]));
-
-  // Map from component name → validated merged criteria (for differential refs)
-  const archetypeResultsMap = new Map<
-    string,
-    Record<string, {status: string; evidence: string}>
-  >();
-
-  // Queue items carry optional archetype info for differential audits
   interface QueueItem {
     index: number;
     story: Story;
-    archetypeComponent?: string;
   }
 
-  let archetypeQueue: QueueItem[] = [];
-  const variantQueue: QueueItem[] = [];
-
-  if (config.batch && groups.length > 0) {
-    // Build index lookup: componentName → story index in stories[]
-    const indexByName = new Map<string, number>();
-    for (let i = 0; i < stories.length; i++) {
-      indexByName.set(stories[i].componentName, i);
-    }
-
-    for (const group of groups) {
-      const arcStory = storyByName.get(group.archetypeComponent);
-      if (!arcStory) continue;
-
-      if (!progressState.completedComponents.has(group.archetypeComponent)) {
-        archetypeQueue.push({
-          index: indexByName.get(group.archetypeComponent) ?? 0,
-          story: arcStory,
-        });
-      }
-
-      for (const member of group.members) {
-        if (member === group.archetypeComponent) continue;
-        const varStory = storyByName.get(member);
-        if (!varStory) continue;
-        if (progressState.completedComponents.has(member)) continue;
-
-        variantQueue.push({
-          index: indexByName.get(member) ?? 0,
-          story: varStory,
-          archetypeComponent: group.archetypeComponent,
-        });
-      }
-    }
-  } else {
-    // No batching — all items go through full audit
-    archetypeQueue = toProcess.map((item) => ({
-      index: item.index,
-      story: item.story,
-    }));
-  }
+  const queue: QueueItem[] = toProcess.map((item) => ({
+    index: item.index,
+    story: item.story,
+  }));
 
   // ── Worker function ────────────────────────────────────────────────────
 
@@ -798,74 +621,18 @@ export async function main(): Promise<void> {
     const {index, story} = item;
 
     try {
-      let entry: DeltaEntry;
-
-      if (item.archetypeComponent) {
-        // Differential audit — reference archetype results
-        const arcResults = archetypeResultsMap.get(item.archetypeComponent);
-        if (!arcResults) {
-          // Archetype failed or was skipped — fall back to full audit
-          entry = await evaluateComponent(page, clientWrapper, story, config);
-        } else {
-          entry = await evaluateComponentDifferential(
-            page,
-            clientWrapper,
-            story,
-            item.archetypeComponent,
-            arcResults,
-            config
-          );
-        }
-      } else {
-        // Full audit (archetype or non-batch)
-        entry = await evaluateComponent(page, clientWrapper, story, config);
-      }
+      const entry = await evaluateComponent(page, clientWrapper, story, config);
 
       progressState.entries.push(entry);
       progressState.completedComponents.add(story.componentName);
       await saveProgressSafe(progressState, config);
 
-      // Store criteria results if this is an archetype (for variant references)
-      if (!item.archetypeComponent && config.batch) {
-        const criteriaWithEvidence: Record<
-          string,
-          {status: string; evidence: string}
-        > = {};
-        const wcag = entry.results.wcag22Criteria ?? {};
-        for (const [key, status] of Object.entries(wcag)) {
-          criteriaWithEvidence[key] = {
-            status,
-            evidence: '',
-          };
-        }
-        // Extract evidence from the notes field
-        const evidenceParts = (entry.results.notes ?? '')
-          .split(' | ')
-          .filter((p) => p.includes(': '));
-        for (const part of evidenceParts) {
-          const colonIdx = part.indexOf(': ');
-          const key = part.slice(0, colonIdx);
-          const evidence = part.slice(colonIdx + 2);
-          if (criteriaWithEvidence[key]) {
-            criteriaWithEvidence[key].evidence = evidence;
-          }
-        }
-        archetypeResultsMap.set(story.componentName, criteriaWithEvidence);
-      }
-
       const counts = summarizeCriteria(entry.results.wcag22Criteria ?? {});
-      const mode = item.archetypeComponent
-        ? 'diff'
-        : config.batch
-          ? 'arch'
-          : '';
-      const modeTag = mode ? ` [${mode}]` : '';
       console.log(
         formatProgress(
           index,
           story.componentName,
-          `${counts.pass} pass, ${counts.fail} fail, ` +
-            `${counts.partial} partial, ${counts.na} n/a${modeTag}`
+          `${counts.pass} pass, ${counts.fail} fail, ${counts.partial} partial, ${counts.na} n/a`
         )
       );
     } catch (error) {
@@ -913,16 +680,7 @@ export async function main(): Promise<void> {
     await Promise.all(pages.map((page) => qWorker(page)));
   }
 
-  // Phase 1: Process archetypes (or all components if not batching)
-  await runQueue(archetypeQueue);
-
-  // Phase 2: Process variants (differential audits, only in batch mode)
-  if (!abortError && variantQueue.length > 0) {
-    console.log(
-      `\nPhase 2: ${variantQueue.length} variant(s) using differential audits...`
-    );
-    await runQueue(variantQueue);
-  }
+  await runQueue(queue);
 
   // Handle rate limit abort
   if (abortError) {
