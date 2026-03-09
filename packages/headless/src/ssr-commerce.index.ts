@@ -363,7 +363,6 @@ export type {
   Product,
 } from './api/commerce/common/product.js';
 export type {
-  BaseSpotlightContent,
   Result,
   SpotlightContent,
 } from './api/commerce/common/result.js';
