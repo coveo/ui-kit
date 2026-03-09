@@ -14,6 +14,8 @@ import type {
 import {
   buildMockController,
   buildMockControllerWithInitialState,
+  buildMockProductListingController,
+  buildMockSearchController,
 } from './mock-controller.js';
 
 interface MockController {
@@ -138,5 +140,33 @@ export function defineMockSearchParameterManager(): MockSearchControllerDefiniti
         initialState: props?.initialState,
       });
     }),
+  };
+}
+
+export function defineMockProductListController(
+  options?: SolutionTypeAvailabilities
+) {
+  return {
+    build: vi.fn((_engine) => {
+      return buildMockProductListingController();
+    }),
+    listing: options?.listing ?? true,
+    search: options?.search ?? true,
+    standalone: options?.standalone ?? false,
+    recommendation: options?.recommendation ?? false,
+  };
+}
+
+export function defineMockSearchProductListController(
+  options?: SolutionTypeAvailabilities
+) {
+  return {
+    build: vi.fn((_engine) => {
+      return buildMockSearchController();
+    }),
+    listing: options?.listing ?? true,
+    search: options?.search ?? true,
+    standalone: options?.standalone ?? false,
+    recommendation: options?.recommendation ?? false,
   };
 }
