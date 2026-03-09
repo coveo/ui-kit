@@ -48,7 +48,7 @@ export default {
       },
     }),
     cart: defineCart(),
-    searchBox: defineSearchBox(),
+    searchBox: defineSearchBox({options: {enableResults: true}}),
     context: defineContext(),
     recentQueriesList: defineRecentQueriesList(),
     notifyTrigger: defineNotifyTrigger(),
