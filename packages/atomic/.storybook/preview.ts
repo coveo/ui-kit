@@ -65,15 +65,7 @@ function ensureGlobalEditButton(
 
   const btn = createEditInGithubElement() as HTMLDivElement & {href?: string};
   btn.id = 'sb-edit-in-github-global';
-  Object.assign(btn.style, {
-    position: 'fixed',
-    top: '1rem',
-    right: '1rem',
-    zIndex: '10000',
-    display: '',
-  });
-  btn.href =
-    btn.href = `https://github.com/coveo/ui-kit/blob/main/packages/atomic/src/components/${githubPath}`;
+  btn.href = `https://github.com/coveo/ui-kit/blob/main/packages/atomic/src/components/${githubPath}`;
   document.body.appendChild(btn);
   return btn;
 }

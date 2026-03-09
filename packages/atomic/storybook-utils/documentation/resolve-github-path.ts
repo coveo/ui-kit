@@ -1,6 +1,3 @@
-const GITHUB_BASE =
-  'https://github.com/coveo/ui-kit/blob/main/packages/atomic/src/components/';
-
 /**
  * Derives the relative component source path from a Storybook story's import path.
  *
@@ -31,22 +28,4 @@ export function resolveGithubPath(
     .replace(/\.new\.stories\.tsx$/, '.ts')
     .replace(/\.stories\.tsx$/, '.ts')
     .replace(/\.mdx$/, '.ts');
-}
-
-/**
- * Derives the full GitHub URL for a component source file from a Storybook
- * story's import path.
- *
- * @example
- * resolveGithubUrl('./src/components/search/atomic-pager/atomic-pager.new.stories.tsx')
- * // => 'https://github.com/coveo/ui-kit/blob/main/packages/atomic/src/components/search/atomic-pager/atomic-pager.ts'
- */
-export function resolveGithubUrl(
-  importPath: string | undefined
-): string | null {
-  const path = resolveGithubPath(importPath);
-  if (!path) {
-    return null;
-  }
-  return `${GITHUB_BASE}${path}`;
 }
