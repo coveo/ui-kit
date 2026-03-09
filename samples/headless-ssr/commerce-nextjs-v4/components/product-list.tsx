@@ -10,7 +10,6 @@ export default function ProductList() {
   const {state, methods} = useProductList();
   const {state: cartState, methods: cartMethods} = useCart();
 
-  // When enableResults is true, use results array; otherwise use products array
   const items = state.results.length > 0 ? state.results : state.products;
 
   return (
