@@ -7,6 +7,8 @@ export class ProductLinkPageObject extends BasePageObject {
   }
 
   anchor() {
-    return this.page.getByRole('link');
+    // Scope the link lookup to the component to avoid matching global overlays
+    // (e.g. the Storybook "Edit in GitHub" link) which also use <a>.
+    return this.page.locator(`${this.tag}`).getByRole('link');
   }
 }

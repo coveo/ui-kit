@@ -29,6 +29,7 @@
   border-radius: 0.5rem;
   text-decoration: none;
   white-space: nowrap;
+  flex-wrap: nowrap;
   cursor: pointer;
   border: 1px solid transparent;
 }
@@ -68,7 +69,7 @@
 }
 
 .atomic-edit-github-link:hover .atomic-edit-github-label,
-.atomic-edit-github-link:focus,
+.atomic-edit-github-link:focus .atomic-edit-github-label,
 .atomic-edit-github-link:focus-visible .atomic-edit-github-label {
   display: inline-block;
 }

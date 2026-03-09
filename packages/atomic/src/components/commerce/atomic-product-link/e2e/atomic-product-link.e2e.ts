@@ -8,7 +8,6 @@ test.describe('atomic-product-link', () => {
 
   test('should render as links', async ({productLink, page}) => {
     await expect(productLink.anchor().first()).toHaveAttribute('href');
-
     await productLink.anchor().first().click({force: true});
     expect(page.url()).toContain('barca');
   });

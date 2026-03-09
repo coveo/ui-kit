@@ -15,17 +15,24 @@ export function resolveGithubPath(
     return null;
   }
 
-  const componentsIndex = importPath.indexOf('src/components/');
-  if (componentsIndex === -1) {
+  // Normalize Windows backslashes and ensure we can find `src/components/`
+  const normalized = importPath.replace(/\\/g, '/');
+
+  // Match common path shapes emitted by Storybook / bundlers, e.g.:
+  // - ./src/components/...
+  // - /Users/.../repo/packages/atomic/src/components/...
+  // - packages/atomic/src/components/...
+  const m = normalized.match(
+    /(?:.*?)(?:packages\/[^/]+\/)?src\/components\/(.+)$/
+  );
+  if (!m) {
     return null;
   }
 
-  const relativePath = importPath.substring(
-    componentsIndex + 'src/components/'.length
-  );
+  const relativePath = m[1];
 
   return relativePath
-    .replace(/\.new\.stories\.tsx$/, '.ts')
-    .replace(/\.stories\.tsx$/, '.ts')
-    .replace(/\.mdx$/, '.ts');
+    .replace(/\.new\.stories\.tsx?$/i, '.ts')
+    .replace(/\.stories\.tsx?$/i, '.ts')
+    .replace(/\.mdx$/i, '.ts');
 }
