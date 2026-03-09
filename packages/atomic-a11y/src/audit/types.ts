@@ -22,6 +22,8 @@ export interface PlaywrightLocator {
   nth(index: number): PlaywrightLocator;
   isVisible(): Promise<boolean>;
   hover(options?: {timeout?: number; force?: boolean}): Promise<void>;
+  focus(): Promise<void>;
+  click(options?: {timeout?: number; force?: boolean}): Promise<void>;
   evaluate<R>(fn: (el: Element) => R): Promise<R>;
 }
 
