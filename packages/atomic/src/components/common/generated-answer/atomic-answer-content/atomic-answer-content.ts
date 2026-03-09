@@ -5,9 +5,11 @@ import type {
 import type {i18n} from 'i18next';
 import {html, LitElement, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {when} from 'lit/directives/when.js';
 import atomicGeneratedAnswerStyles from '@/src/components/search/atomic-generated-answer/atomic-generated-answer.tw.css.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {renderGeneratedContentContainer} from '../generated-content-container';
+import {renderAgentGenerationSteps} from '../render-agent-generation-steps';
 import {renderFeedbackAndCopyButtons} from '../render-feedback-and-copy-buttons';
 import {renderSourceCitations} from '../source-citations';
 
@@ -86,6 +88,7 @@ export class AtomicAnswerContent extends LitElement {
       answer,
       answerContentFormat,
       isStreaming,
+      generationSteps,
       citations = [],
       answerId,
       error,
@@ -95,12 +98,21 @@ export class AtomicAnswerContent extends LitElement {
       return this.renderError();
     }
 
-    if (!answer || !answerId) {
+    if (!answerId) {
       return html``;
     }
 
+    const shouldRenderFeedbackAndCopyButtons = Boolean(answer) && !isStreaming;
+
     return html`
       <div>
+        ${renderAgentGenerationSteps({
+          props: {
+            i18n: this.i18n,
+            agentSteps: generationSteps ?? [],
+            isStreaming: Boolean(isStreaming),
+          },
+        })}
         <div>
           ${renderGeneratedContentContainer({
             props: {
@@ -108,38 +120,43 @@ export class AtomicAnswerContent extends LitElement {
               answerContentFormat,
               isStreaming: Boolean(isStreaming),
             },
-          })(
-            html`
-              ${renderSourceCitations({
-                props: {
-                  label: this.i18n.t('citations'),
-                  isVisible: citations.length > 0,
-                },
-              })(html`${this.renderCitations(citations)}`)}
-            `
-          )}
-        </div>
-
-        <div class="mt-4" part="feedback-and-copy-buttons">
-          ${renderFeedbackAndCopyButtons({
-            props: {
-              i18n: this.i18n,
-              generatedAnswerActionsState: {
-                liked: this.generatedAnswer.liked,
-                disliked: this.generatedAnswer.disliked,
-                isStreaming: this.generatedAnswer.isStreaming,
-                isLoading: this.generatedAnswer.isLoading,
-                answer: this.generatedAnswer.answer,
+          })(html`
+            ${renderSourceCitations({
+              props: {
+                label: this.i18n.t('citations'),
+                isVisible: citations.length > 0,
               },
-              copied: this.copyState === 'success',
-              copyError: this.copyState === 'error',
-              getCopyToClipboardTooltip: () => this.getCopyToClipboardTooltip(),
-              onClickLike: () => this.onClickLike(answerId),
-              onClickDislike: () => this.onClickDislike(answerId),
-              onCopyToClipboard: () => this.copyToClipboard(),
-            },
-          })}
+            })(html`${this.renderCitations(citations)}`)}
+          `)}
         </div>
+        ${when(shouldRenderFeedbackAndCopyButtons, () =>
+          this.renderFeedbackAndCopyButtons(answerId)
+        )}
+      </div>
+    `;
+  }
+
+  private renderFeedbackAndCopyButtons(answerId: string) {
+    return html`
+      <div class="mt-4" part="feedback-and-copy-buttons">
+        ${renderFeedbackAndCopyButtons({
+          props: {
+            i18n: this.i18n,
+            generatedAnswerActionsState: {
+              liked: this.generatedAnswer.liked,
+              disliked: this.generatedAnswer.disliked,
+              isStreaming: this.generatedAnswer.isStreaming,
+              isLoading: this.generatedAnswer.isLoading,
+              answer: this.generatedAnswer.answer,
+            },
+            copied: this.copyState === 'success',
+            copyError: this.copyState === 'error',
+            getCopyToClipboardTooltip: () => this.getCopyToClipboardTooltip(),
+            onClickLike: () => this.onClickLike(answerId),
+            onClickDislike: () => this.onClickDislike(answerId),
+            onCopyToClipboard: () => this.copyToClipboard(),
+          },
+        })}
       </div>
     `;
   }

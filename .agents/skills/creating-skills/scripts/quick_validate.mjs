@@ -6,7 +6,7 @@
  *     node quick_validate.mjs <skill_directory>
  *
  * Example:
- *     node quick_validate.mjs .claude/skills/my-skill
+ *     node quick_validate.mjs .agents/skills/my-skill
  */
 
 import {existsSync, readFileSync, statSync} from 'node:fs';
@@ -265,7 +265,7 @@ function main() {
     console.log('Usage: node quick_validate.mjs <skill_directory>');
     console.log('');
     console.log('Example:');
-    console.log('  node quick_validate.mjs .claude/skills/my-skill');
+    console.log('  node quick_validate.mjs .agents/skills/my-skill');
     console.log('  node quick_validate.mjs .skills/my-skill');
     process.exit(1);
   }
