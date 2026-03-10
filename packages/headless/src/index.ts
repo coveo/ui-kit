@@ -229,6 +229,7 @@ export type {
   GeneratedAnswerWithFollowUpsState,
   GeneratedResponseFormat,
   GenerationStep,
+  GenerationStepName,
 } from './controllers/generated-answer/headless-generated-answer.js';
 export {buildGeneratedAnswer} from './controllers/generated-answer/headless-generated-answer.js';
 export type {
