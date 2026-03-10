@@ -9,7 +9,51 @@ import type {
   CommerceEngineDefinitionOptions,
   FetchStaticStateParameters,
 } from '../types/engine.js';
-import {buildFactory} from './build-factory.js';
+import {buildFactory, type SSRCommerceEngine} from './build-factory.js';
+
+function findAndExecuteMethod(
+  controllers: Record<string, unknown>,
+  methodName: string
+): boolean {
+  for (const controller of Object.values(controllers)) {
+    if (
+      controller &&
+      typeof controller === 'object' &&
+      methodName in controller &&
+      typeof (controller as Record<string, unknown>)[methodName] === 'function'
+    ) {
+      (controller as Record<string, () => void>)[methodName]();
+      return true;
+    }
+  }
+  return false;
+}
+
+function executeFirstRequestForListing(
+  controllers: Record<string, unknown>,
+  engine: SSRCommerceEngine
+) {
+  const controllerExecuted = findAndExecuteMethod(
+    controllers,
+    'executeFirstRequest'
+  );
+  if (!controllerExecuted) {
+    buildProductListing(engine).executeFirstRequest();
+  }
+}
+
+function executeFirstRequestForSearch(
+  controllers: Record<string, unknown>,
+  engine: SSRCommerceEngine
+) {
+  const controllerExecuted = findAndExecuteMethod(
+    controllers,
+    'executeFirstSearch'
+  );
+  if (!controllerExecuted) {
+    buildSearch(engine).executeFirstSearch();
+  }
+}
 
 export function fetchStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
@@ -27,36 +71,13 @@ export function fetchStaticStateFactory<
       )(solutionType);
       const {engine, controllers} = await solutionTypeBuild(params);
 
-      if (solutionType === SolutionType.listing) {
-        const executed = Object.values(controllers).some((c) => {
-          if (
-            'executeFirstRequest' in c &&
-            typeof c.executeFirstRequest === 'function'
-          ) {
-            c.executeFirstRequest();
-            return true;
-          }
-          return false;
-        });
-
-        if (!executed) {
-          buildProductListing(engine).executeFirstRequest();
-        }
-      } else if (solutionType === SolutionType.search) {
-        const executed = Object.values(controllers).some((c) => {
-          if (
-            'executeFirstSearch' in c &&
-            typeof c.executeFirstSearch === 'function'
-          ) {
-            c.executeFirstSearch();
-            return true;
-          }
-          return false;
-        });
-
-        if (!executed) {
-          buildSearch(engine).executeFirstSearch();
-        }
+      switch (solutionType) {
+        case SolutionType.listing:
+          executeFirstRequestForListing(controllers, engine);
+          break;
+        case SolutionType.search:
+          executeFirstRequestForSearch(controllers, engine);
+          break;
       }
 
       const searchActions = await Promise.all(
