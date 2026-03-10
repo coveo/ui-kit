@@ -4,7 +4,7 @@ import {
 } from './accessibility-tree.js';
 import type {LLMMessage} from './llm-client.js';
 
-export const SYSTEM_PROMPT = `You are an accessibility expert evaluating WCAG 2.2 Level AA compliance for a web component rendered in isolation in Storybook. You will be shown screenshots and/or accessibility tree data captured from the component. Evaluate ONLY the specific criteria listed in each request. Respond ONLY with valid JSON matching the exact schema provided. Do not include markdown fences, explanations, or any text outside the JSON object.
+export const SYSTEM_PROMPT = `You are an accessibility expert evaluating WCAG 2.2 Level AA compliance for a web component or assembled page rendered in Storybook. You will be shown screenshots and/or accessibility tree data captured from the component. Evaluate ONLY the specific criteria listed in each request. Respond ONLY with valid JSON matching the exact schema provided. Do not include markdown fences, explanations, or any text outside the JSON object.
 
 Evaluation rules:
 - "pass": The component clearly meets the criterion requirements based on the evidence provided.
@@ -28,7 +28,7 @@ export function buildCall2UserPrompt(
   componentName: string,
   hasHorizontalScroll: boolean
 ): string {
-  return `Evaluate the Storybook component "${componentName}" for viewport-dependent WCAG 2.2 Level AA criteria.
+  return `Evaluate the Storybook story "${componentName}" for viewport-dependent WCAG 2.2 Level AA criteria.
 
 ## Data Provided
 
@@ -165,7 +165,7 @@ Evaluate 1.4.13 based on the hover state screenshot and details above. Consider:
     : `
 **Focus state data**: No focusable elements detected. Mark 2.4.7 and 2.4.11 as "not-applicable".`;
 
-  return `Evaluate the Storybook component "${componentName}" for WCAG 2.2 Level AA compliance.
+  return `Evaluate the Storybook story "${componentName}" for WCAG 2.2 Level AA compliance.
 
 ## Data Provided
 

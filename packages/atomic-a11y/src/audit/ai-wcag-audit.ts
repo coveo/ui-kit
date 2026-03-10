@@ -124,7 +124,7 @@ Usage:
 
 Options:
   --surface <name>        Surface to audit: commerce, search, insight, ipx, recommendations, all (default: all)
-  --component <name>      Audit a single component by tag name (e.g., atomic-commerce-facet)
+  --component <name>      Audit a single component or page by name (e.g., atomic-commerce-facet, search-page)
   --dry-run               Show what would be audited without making LLM calls
   --resume                Resume from a previous interrupted run
   --max-components <n>    Maximum number of components to audit (default: all)
@@ -226,14 +226,19 @@ function detectSurface(storyTitle: string | undefined): string | null {
   return SURFACE_PREFIXES[prefix] || null;
 }
 
-function extractComponentName(importPath: string | undefined): string | null {
+/** @internal */
+export function extractComponentName(
+  importPath: string | undefined
+): string | null {
   if (!importPath) return null;
-  // Match the last directory segment before the filename — this is the component dir.
-  // Handles nested paths like search/facets/atomic-facet/atomic-facet.stories.tsx
-  const pattern =
+  const pagePattern =
+    /storybook-pages\/[^/]+\/([a-z0-9-]+)\.new\.stories\.[jt]sx?$/i;
+  const pageMatch = importPath.match(pagePattern);
+  if (pageMatch) return `${pageMatch[1].toLowerCase()}-page`;
+  const componentPattern =
     /\/src\/components\/(?:commerce|search|insight|ipx|recommendations)\/(?:.+\/)?([^/]+)\/[^/]+$/;
-  const match = importPath.match(pattern);
-  return match ? match[1] : null;
+  const componentMatch = importPath.match(componentPattern);
+  return componentMatch ? componentMatch[1] : null;
 }
 
 interface Story {
@@ -329,7 +334,8 @@ async function saveStoryCaptures(
   return outputDir;
 }
 
-function selectStories(
+/** @internal */
+export function selectStories(
   indexEntries: Record<string, StoryEntry>,
   config: Config
 ): Map<string, Story[]> {
@@ -337,7 +343,6 @@ function selectStories(
 
   for (const [storyId, entry] of Object.entries(indexEntries)) {
     if (entry.type !== 'story') continue;
-    if (entry.title?.includes('Example Pages')) continue;
 
     const surface = detectSurface(entry.title);
     if (!surface) continue;
@@ -349,7 +354,8 @@ function selectStories(
 
     if (config.component && componentName !== config.component) continue;
 
-    const stories = byComponent.get(componentName) ?? [];
+    const compositeKey = `${surface}/${componentName}`;
+    const stories = byComponent.get(compositeKey) ?? [];
     stories.push({
       storyId,
       componentName,
@@ -357,7 +363,7 @@ function selectStories(
       storyTitle: entry.title!,
       storyName: entry.name!,
     });
-    byComponent.set(componentName, stories);
+    byComponent.set(compositeKey, stories);
   }
 
   for (const stories of byComponent.values()) {
