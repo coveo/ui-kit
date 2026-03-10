@@ -161,7 +161,10 @@ describe('generated answer', () => {
   it('#logCitationClick dispatches analytics action', () => {
     const testCitation = buildMockCitation();
     generatedAnswer.logCitationClick(testCitation.id);
-    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(testCitation.id);
+    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(
+      testCitation.id,
+      undefined
+    );
   });
 
   it('#logCitationClick dispatches analytics action with provided answerId', () => {
@@ -181,7 +184,8 @@ describe('generated answer', () => {
     generatedAnswer.logCitationHover(testCitation.id, exampleDuration);
     expect(logHoverCitation).toHaveBeenCalledWith(
       testCitation.id,
-      exampleDuration
+      exampleDuration,
+      undefined
     );
   });
 

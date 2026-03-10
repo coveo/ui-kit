@@ -265,11 +265,7 @@ export function buildCoreGeneratedAnswer(
     like(answerId?: string) {
       if (!this.state.liked) {
         dispatch(likeGeneratedAnswer());
-        dispatch(
-          answerId
-            ? analyticsClient.logLikeGeneratedAnswer(answerId)
-            : analyticsClient.logLikeGeneratedAnswer()
-        );
+        dispatch(analyticsClient.logLikeGeneratedAnswer(answerId));
       }
     },
 
@@ -277,11 +273,7 @@ export function buildCoreGeneratedAnswer(
     dislike(answerId?: string) {
       if (!this.state.disliked) {
         dispatch(dislikeGeneratedAnswer());
-        dispatch(
-          answerId
-            ? analyticsClient.logDislikeGeneratedAnswer(answerId)
-            : analyticsClient.logDislikeGeneratedAnswer()
-        );
+        dispatch(analyticsClient.logDislikeGeneratedAnswer(answerId));
       }
     },
 
@@ -301,9 +293,7 @@ export function buildCoreGeneratedAnswer(
     // TODO: SFINT-6665
     logCitationClick(citationId: string, answerId?: string) {
       dispatch(
-        answerId
-          ? analyticsClient.logOpenGeneratedAnswerSource(citationId, answerId)
-          : analyticsClient.logOpenGeneratedAnswerSource(citationId)
+        analyticsClient.logOpenGeneratedAnswerSource(citationId, answerId)
       );
     },
 
@@ -314,13 +304,11 @@ export function buildCoreGeneratedAnswer(
       answerId?: string
     ) {
       dispatch(
-        answerId
-          ? analyticsClient.logHoverCitation(
-              citationId,
-              citationHoverTimeMs,
-              answerId
-            )
-          : analyticsClient.logHoverCitation(citationId, citationHoverTimeMs)
+        analyticsClient.logHoverCitation(
+          citationId,
+          citationHoverTimeMs,
+          answerId
+        )
       );
     },
 
@@ -366,11 +354,7 @@ export function buildCoreGeneratedAnswer(
 
     // TODO: SFINT-6665
     logCopyToClipboard(answerId?: string) {
-      dispatch(
-        answerId
-          ? analyticsClient.logCopyGeneratedAnswer(answerId)
-          : analyticsClient.logCopyGeneratedAnswer()
-      );
+      dispatch(analyticsClient.logCopyGeneratedAnswer(answerId));
     },
 
     retry() {},

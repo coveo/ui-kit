@@ -147,7 +147,7 @@ describe('searchapi-generated-answer', () => {
     generatedAnswer.logCitationClick(citationId);
     expect(
       generatedAnswerAnalyticsClient.logOpenGeneratedAnswerSource
-    ).toHaveBeenCalledWith(citationId);
+    ).toHaveBeenCalledWith(citationId, undefined);
   });
 
   it('dispatches a log citation hover action', () => {
@@ -157,7 +157,7 @@ describe('searchapi-generated-answer', () => {
     generatedAnswer.logCitationHover(citationId, citationHoverTimeMs);
     expect(
       generatedAnswerAnalyticsClient.logHoverCitation
-    ).toHaveBeenCalledWith(citationId, citationHoverTimeMs);
+    ).toHaveBeenCalledWith(citationId, citationHoverTimeMs, undefined);
   });
 
   it('dispatches a show action if the component is not already visible', () => {
