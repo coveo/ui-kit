@@ -146,18 +146,22 @@ export interface GeneratedAnswer extends Controller {
 }
 
 export interface GeneratedAnswerAnalyticsClient {
+  /** @deprecated */
   logLikeGeneratedAnswer(): CustomAction;
   logLikeGeneratedAnswer(answerId?: string): CustomAction;
+  /** @deprecated */
   logDislikeGeneratedAnswer(): CustomAction;
   logDislikeGeneratedAnswer(answerId?: string): CustomAction;
   logGeneratedAnswerFeedback: (
     feedback: GeneratedAnswerFeedback
   ) => CustomAction;
+  /** @deprecated */
   logOpenGeneratedAnswerSource(citationId: string): CustomAction;
   logOpenGeneratedAnswerSource(
     citationId: string,
     answerId?: string
   ): CustomAction;
+  /** @deprecated */
   logHoverCitation(
     citationId: string,
     citationHoverTimeMs: number
@@ -169,6 +173,7 @@ export interface GeneratedAnswerAnalyticsClient {
   ): CustomAction;
   logGeneratedAnswerShowAnswers: () => CustomAction;
   logGeneratedAnswerHideAnswers: () => CustomAction;
+  /** @deprecated */
   logCopyGeneratedAnswer(): CustomAction;
   logCopyGeneratedAnswer(answerId?: string): CustomAction;
   logRetryGeneratedAnswer: () => LegacySearchAction;
