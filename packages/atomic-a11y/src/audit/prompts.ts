@@ -136,7 +136,8 @@ export function buildMergedCall1_3UserPrompt(
   textSpacingApplied: boolean,
   focusDetails: string,
   hasFocusableElements: boolean,
-  targetSizeData: string
+  targetSizeData: string,
+  interactionSummary: string
 ): string {
   const truncatedTree = truncateAccessibilityTree(accessibilityTree, 2000);
 
@@ -174,6 +175,8 @@ ${textSpacingSection}
 ${focusSection}
 
 **Target size data**: ${targetSizeData}
+
+**APG keyboard interaction data**: ${interactionSummary}
 
 **Accessibility tree (JSON)**:
 \`\`\`json
@@ -222,13 +225,13 @@ Additionally, labels should use plain, user-friendly language. Flag technical ja
 If jargon is present, mark "partial" and cite the specific terms. If the component has no headings or labels, mark "not-applicable".
 
 ### 2.4.7 Focus Visible
-${hasFocusableElements ? 'Focus state data was captured. ' + focusDetails + '. Based on the focus screenshot(s), is there a clearly visible focus indicator when keyboard focus lands on interactive elements? The focus indicator must be distinguishable from the unfocused state — a visible outline, ring, or highlight. If focus is invisible or extremely subtle (no visible change), mark "fail".' : 'No focusable elements were detected. Mark "not-applicable".'}
+${hasFocusableElements ? 'Focus state data was captured. ' + focusDetails + '. Based on the focus screenshot(s), is there a clearly visible focus indicator when keyboard focus lands on interactive elements? The focus indicator must be distinguishable from the unfocused state — a visible outline, ring, or highlight. If focus is invisible or extremely subtle (no visible change), mark "fail". Additionally, APG keyboard interaction data was collected: ' + interactionSummary + '. If keyboard interactions triggered state changes on ARIA widgets (e.g., combobox open, tab selection, checkbox toggle), consider whether focus remained visible throughout those interactions.' : 'No focusable elements were detected. Mark "not-applicable".'}
 
 ### 2.4.11 Focus Not Obscured
 ${hasFocusableElements ? 'When a focused element receives keyboard focus (see focus screenshots), is the focused element at least partially visible — not completely covered by sticky headers, fixed footers, overlays, cookie banners, or other layered content? This is a component rendered in isolation in Storybook, so sticky UI is unlikely. If the focused element appears visible in the focus screenshot, mark "pass". If obscured, describe what covers it.' : 'No focusable elements detected. Mark "not-applicable".'}
 
 ### 2.5.7 Dragging Movements
-If the component requires dragging to accomplish any action (sliders, drag-and-drop lists, resizable panels, carousel swipes), is there a single-pointer alternative (e.g., clicking +/- buttons on a slider, keyboard alternatives, tap-to-select instead of drag-to-reorder)? For components with no dragging interactions (most search facets, result lists, pagination), mark "not-applicable".
+If the component requires dragging to accomplish any action (sliders, drag-and-drop lists, resizable panels, carousel swipes), is there a single-pointer alternative (e.g., clicking +/- buttons on a slider, keyboard alternatives, tap-to-select instead of drag-to-reorder)? APG keyboard interaction data: ${interactionSummary}. If keyboard-driven state changes were detected for slider or draggable roles, that demonstrates a keyboard alternative exists. For components with no dragging interactions (most search facets, result lists, pagination), mark "not-applicable".
 
 ### 2.5.8 Target Size (Minimum)
 Based on the target size data: ${targetSizeData}. Interactive targets (buttons, links, checkboxes, radio buttons) should have a minimum size of 24×24 CSS pixels. Inline links within text are exempt. If most targets meet the 24×24 minimum or have sufficient spacing around them, mark "pass". If multiple targets are smaller than 24×24 with inadequate spacing, mark "fail". If the component has no interactive elements, mark "not-applicable".
@@ -286,7 +289,8 @@ export function buildMergedCall1_3Messages(
   textSpacingApplied: boolean,
   focusDetails: string,
   hasFocusableElements: boolean,
-  targetSizeData: string
+  targetSizeData: string,
+  interactionSummary: string
 ): LLMMessage[] {
   const userText = buildMergedCall1_3UserPrompt(
     componentName,
@@ -296,7 +300,8 @@ export function buildMergedCall1_3Messages(
     textSpacingApplied,
     focusDetails,
     hasFocusableElements,
-    targetSizeData
+    targetSizeData,
+    interactionSummary
   );
 
   const imageContent: Array<{

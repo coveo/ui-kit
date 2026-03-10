@@ -11,6 +11,7 @@ import {
   captureDefaultViewport,
   captureFocusStates,
   captureHoverState,
+  captureInteractionStates,
   captureMultiViewport,
   captureTargetSizes,
   captureTextSpacing,
@@ -21,12 +22,14 @@ import {
   callLLMWithRetry,
   initLLMClient,
   type LLMClientWrapper,
+  type LLMMessage,
   LLMParseError,
   type MergedResults,
   mergeResults,
   RateLimitExhaustedError,
   validateLLMResponse,
 } from './llm-client.js';
+import {Logger} from './logger.js';
 import {
   clearProgress,
   loadProgress,
@@ -49,6 +52,7 @@ interface Config {
   maxComponents: number;
   model: string;
   concurrency: number;
+  logSteps: boolean;
   verbose: boolean;
   storybookUrl: string;
   help: boolean;
@@ -64,6 +68,7 @@ function parseArgs(): Config {
       'max-components': {type: 'string', default: 'Infinity'},
       model: {type: 'string', default: 'gpt-4o'},
       concurrency: {type: 'string', default: '1'},
+      'log-steps': {type: 'boolean', default: false},
       verbose: {type: 'boolean', default: false},
       'storybook-url': {type: 'string', default: 'http://localhost:4400'},
       help: {type: 'boolean', default: false},
@@ -80,6 +85,7 @@ function parseArgs(): Config {
     maxComponents: parseInt(values['max-components'] as string, 10) || Infinity,
     model: values.model as string,
     concurrency: Math.max(1, parseInt(values.concurrency as string, 10) || 1),
+    logSteps: (values['log-steps'] as boolean) || (values.verbose as boolean),
     verbose: values.verbose as boolean,
     storybookUrl: (values['storybook-url'] as string).replace(/\/$/, ''),
     help: values.help as boolean,
@@ -118,7 +124,8 @@ Options:
   --max-components <n>    Maximum number of components to audit (default: all)
   --model <id>            LLM model to use (default: gpt-4o)
   --concurrency <n>       Number of parallel LLM calls (default: 1)
-  --verbose               Print raw LLM responses for debugging
+  --log-steps             Print detailed pipeline steps
+  --verbose               Print raw LLM responses (implies --log-steps)
   --help                  Show this help message
 
 Environment:
@@ -129,6 +136,7 @@ Examples:
   node scripts/ai-wcag-audit.mjs --component atomic-commerce-facet --verbose
   node scripts/ai-wcag-audit.mjs --surface commerce --max-components 25
   node scripts/ai-wcag-audit.mjs --surface commerce --resume
+  node scripts/ai-wcag-audit.mjs --component atomic-search-box --log-steps
   node scripts/ai-wcag-audit.mjs --surface search --model gpt-4o-mini
 
 Output:
@@ -365,28 +373,148 @@ async function evaluateComponent(
   page: PlaywrightPage,
   clientWrapper: LLMClientWrapper,
   story: Story,
-  config: Config
+  config: Config,
+  logger: Logger
 ): Promise<DeltaEntry> {
+  const interactiveSelector = [
+    'button',
+    'a[href]',
+    '[role="button"]',
+    '[role="link"]',
+    '[role="tab"]',
+    '[role="menuitem"]',
+    '[role="combobox"]',
+    'input:not([type="hidden"])',
+    'select',
+    '[tabindex="0"]',
+  ].join(', ');
+
+  const countAccessibilityNodes = (node: unknown): number => {
+    if (!node || typeof node !== 'object') {
+      return 0;
+    }
+    const children = (node as {children?: unknown[]}).children ?? [];
+    let total = 1;
+    for (const child of children) {
+      total += countAccessibilityNodes(child);
+    }
+    return total;
+  };
+
+  const countImageParts = (messages: LLMMessage[]): number =>
+    messages.reduce((total, message) => {
+      if (!Array.isArray(message.content)) {
+        return total;
+      }
+      return (
+        total +
+        message.content.filter(
+          (part) =>
+            part.type === 'image_url' &&
+            !!part.image_url?.url &&
+            part.image_url.url.length > 0
+        ).length
+      );
+    }, 0);
+
+  const navigationTimer = logger.timer();
   await navigateToStory(page, config.storybookUrl, story.storyId);
+  logger.step(
+    'branch',
+    'Navigate',
+    `iframe.html?id=${story.storyId}`,
+    navigationTimer()
+  );
 
   // ── Capture phase (all captures upfront) ──────────────────────────────────
+  const defaultCaptureTimer = logger.timer();
   const {screenshot: defaultScreenshot, accessibilityTree} =
     await captureDefaultViewport(page);
+  const a11yNodeCount = countAccessibilityNodes(accessibilityTree);
+  logger.step(
+    'branch',
+    'Capture',
+    `default-viewport (a11y tree: ${a11yNodeCount} nodes)`,
+    defaultCaptureTimer()
+  );
 
   // Hover MUST run before textSpacing (textSpacing reloads the page)
+  const hoverCandidates = await page.locator(interactiveSelector).count();
+  const hoverTestCount = Math.min(hoverCandidates, 5);
+  const hoverCaptureTimer = logger.timer();
   const {hoverDetected, hoverScreenshot, hoverDetails} =
     await captureHoverState(page);
+  logger.step(
+    'branch',
+    'Capture',
+    `hover-state (${hoverTestCount} elements tested, ${hoverDetected ? 'hover detected' : 'no hover changes'})`,
+    hoverCaptureTimer()
+  );
+  if (hoverDetected && hoverDetails) {
+    logger.substep(`Hover details: ${hoverDetails}`);
+  }
 
   // Multi-viewport restores to 1024x768 — safe between hover and textSpacing
+  const multiViewportTimer = logger.timer();
   const {reflow, portrait, landscape} = await captureMultiViewport(page);
+  logger.step(
+    'branch',
+    'Capture',
+    `multi-viewport (reflow: ${reflow.hasHorizontalScroll ? 'has h-scroll' : 'no h-scroll'})`,
+    multiViewportTimer()
+  );
 
+  const textSpacingTimer = logger.timer();
   const {textSpacingScreenshot} = await captureTextSpacing(page);
   const textSpacingApplied = textSpacingScreenshot.length > 0;
+  logger.step(
+    'branch',
+    'Capture',
+    `text-spacing (${textSpacingApplied ? 'CSS injected + page reload' : 'capture failed'})`,
+    textSpacingTimer()
+  );
 
+  const focusTimer = logger.timer();
   const {focusScreenshots, focusDetails, hasFocusableElements} =
     await captureFocusStates(page);
+  const focusPath = focusDetails
+    .split(', ')
+    .map((step) => step.split(': ')[1])
+    .filter((tag): tag is string => !!tag)
+    .join('→');
+  logger.step(
+    'branch',
+    'Capture',
+    `focus-states (${hasFocusableElements ? focusScreenshots.length : 0} focusable${focusPath ? `, tabs: ${focusPath}` : ''})`,
+    focusTimer()
+  );
 
+  const targetSizeElements = await page.locator(interactiveSelector).count();
+  const targetSizeTimer = logger.timer();
   const {targetSizeData} = await captureTargetSizes(page);
+  logger.step(
+    'branch',
+    'Capture',
+    `target-sizes (${targetSizeElements} interactive elements)`,
+    targetSizeTimer()
+  );
+
+  // APG interaction protocols — MUST run last (mutates component state via keyboard)
+  const interactionTimer = logger.timer();
+  const {interactions, summary: interactionSummary} =
+    await captureInteractionStates(page);
+  const matchedProtocols = interactions
+    .map((i) => i.role)
+    .filter((v, i, a) => a.indexOf(v) === i);
+  logger.step(
+    'branch',
+    'Capture',
+    `interaction-protocols (${matchedProtocols.length} roles matched, ${interactions.length} actions, ${interactions.filter((i) => i.stateChanged).length} state changes)`,
+    interactionTimer()
+  );
+  if (interactions.length > 0) {
+    logger.substep(`Roles: ${matchedProtocols.join(', ')}`);
+  }
 
   // ── LLM call phase (2 calls + 1 static) ─────────────────────────────────
 
@@ -403,12 +531,21 @@ async function evaluateComponent(
     textSpacingApplied,
     focusDetails,
     hasFocusableElements,
-    targetSizeData
+    targetSizeData,
+    interactionSummary
   );
+  const mergedImageCount = countImageParts(mergedMessages);
+  const mergedCallTimer = logger.timer();
   const mergedResponse = await callLLMWithRetry(
     clientWrapper,
     mergedMessages,
     config
+  );
+  logger.step(
+    'branch',
+    'LLM Call 2',
+    `${MERGED_CALL1_3_KEYS.length} criteria (${mergedImageCount} images sent)`,
+    mergedCallTimer()
   );
   const mergedValidated = validateLLMResponse(
     mergedResponse,
@@ -423,10 +560,18 @@ async function evaluateComponent(
     portrait,
     landscape
   );
+  const call2ImageCount = countImageParts(call2Messages);
+  const call2Timer = logger.timer();
   const call2Response = await callLLMWithRetry(
     clientWrapper,
     call2Messages,
     config
+  );
+  logger.step(
+    'branch',
+    'LLM Call 2 (viewport)',
+    `${CALL2_KEYS.length} criteria (${call2ImageCount} images sent)`,
+    call2Timer()
   );
   const call2Validated = validateLLMResponse(call2Response, CALL2_KEYS);
 
@@ -434,8 +579,19 @@ async function evaluateComponent(
   const staticCall4 = {
     criteria: Object.fromEntries(STATIC_NA_CRITERIA),
   };
+  logger.step(
+    'branch',
+    'Static assignment',
+    `${STATIC_NA_CRITERIA.size} criteria (not-applicable)`
+  );
 
   const merged = mergeResults(mergedValidated, call2Validated, staticCall4);
+  const counts = summarizeCriteria(merged.wcag22Criteria);
+  logger.step(
+    'last',
+    'Result',
+    `${counts.pass} pass, ${counts.fail} fail, ${counts.partial} partial, ${counts.na} n/a`
+  );
 
   return buildDeltaEntry(
     story.componentName,
@@ -470,6 +626,7 @@ function pct(n: number, total: number): string {
 
 export async function main(): Promise<void> {
   const config = parseArgs();
+  const logger = new Logger(config.logSteps);
   if (config.help) printHelp();
 
   console.log('AI WCAG 2.2 Audit Agent');
@@ -621,20 +778,34 @@ export async function main(): Promise<void> {
     const {index, story} = item;
 
     try {
-      const entry = await evaluateComponent(page, clientWrapper, story, config);
+      if (logger.isVerbose()) {
+        logger.line(
+          `[${String(index + 1).padStart(pad)}/${stories.length}] ${story.componentName} (${story.surface})`
+        );
+      }
+
+      const entry = await evaluateComponent(
+        page,
+        clientWrapper,
+        story,
+        config,
+        logger
+      );
 
       progressState.entries.push(entry);
       progressState.completedComponents.add(story.componentName);
       await saveProgressSafe(progressState, config);
 
       const counts = summarizeCriteria(entry.results.wcag22Criteria ?? {});
-      console.log(
-        formatProgress(
-          index,
-          story.componentName,
-          `${counts.pass} pass, ${counts.fail} fail, ${counts.partial} partial, ${counts.na} n/a`
-        )
-      );
+      if (!logger.isVerbose()) {
+        console.log(
+          formatProgress(
+            index,
+            story.componentName,
+            `${counts.pass} pass, ${counts.fail} fail, ${counts.partial} partial, ${counts.na} n/a`
+          )
+        );
+      }
     } catch (error) {
       if (error instanceof RateLimitExhaustedError) {
         abortError = error;

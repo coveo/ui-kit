@@ -395,7 +395,8 @@ export interface InteractionProtocol {
 export const INTERACTION_PROTOCOLS: InteractionProtocol[] = [
   {
     role: 'combobox',
-    selector: '[role="combobox"], input[role="combobox"]',
+    selector:
+      '[role="combobox"], input[role="combobox"], textarea[aria-autocomplete], input[aria-autocomplete]',
     stateAttributes: ['aria-expanded', 'aria-activedescendant'],
     apgPattern: 'combobox',
     actions: [
