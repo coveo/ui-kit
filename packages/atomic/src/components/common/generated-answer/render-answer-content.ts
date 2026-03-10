@@ -43,10 +43,7 @@ export const renderAnswerContent: FunctionalComponent<
 
   const {answer, isStreaming, citations, answerContentFormat, expanded, error} =
     generatedAnswer;
-  const isExpanded = collapsible ? expanded : true;
   const hasRetryableError = error?.isRetryable === true;
-  const shouldDisplayFeedbackButtons =
-    !hasRetryableError && (collapsible ? expanded : true);
 
   return html`
     <div>
@@ -80,7 +77,7 @@ export const renderAnswerContent: FunctionalComponent<
           : nothing
       }
       ${when(
-        !hasRetryableError && isExpanded,
+        !hasRetryableError && (collapsible ? expanded : true),
         () => html`
           <div class="mt-4" part="feedback-and-copy-buttons">
             ${renderFeedbackAndCopyButtonsSlot()}
@@ -100,7 +97,7 @@ export const renderAnswerContent: FunctionalComponent<
                       props: {
                         i18n,
                         onClick: onClickShowButton,
-                        isCollapsed: expanded === false,
+                        isCollapsed: !expanded,
                       },
                     })
                   : nothing

@@ -725,6 +725,64 @@ describe('atomic-generated-answer', () => {
     expect(lastCall?.[0].props.collapsible).toBe(false);
   });
 
+  it('should pass collapsible as true to renderAnswerContent when content is taller than maxCollapsedHeight', async () => {
+    const renderedAnswer = await renderGeneratedAnswer({
+      props: {collapsible: true, maxCollapsedHeight: 16},
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Long text',
+      },
+    });
+
+    Reflect.set(renderedAnswer.element, 'fullAnswerHeight', 20);
+    await renderedAnswer.element.requestUpdate();
+    await renderedAnswer.element.updateComplete;
+
+    const lastCall = vi.mocked(renderAnswerContent).mock.calls.at(-1);
+    expect(lastCall).toBeDefined();
+    expect(lastCall?.[0].props.collapsible).toBe(true);
+  });
+
+  it('should request re-render when adaptAnswerHeight updates measured height', async () => {
+    const renderedAnswer = await renderGeneratedAnswer({
+      props: {collapsible: true, maxCollapsedHeight: 16},
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Test answer',
+      },
+    });
+
+    const generatedText = renderedAnswer.element.shadowRoot?.querySelector(
+      '[part="generated-text"]'
+    ) as HTMLElement | null;
+    expect(generatedText).not.toBeNull();
+
+    vi.spyOn(
+      generatedText as HTMLElement,
+      'getBoundingClientRect'
+    ).mockReturnValue({
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 320,
+      top: 0,
+      right: 0,
+      bottom: 320,
+      left: 0,
+      toJSON: () => ({}),
+    } as DOMRect);
+
+    const requestUpdateSpy = vi.spyOn(renderedAnswer.element, 'requestUpdate');
+    const adaptAnswerHeight = Reflect.get(
+      renderedAnswer.element,
+      'adaptAnswerHeight'
+    ) as () => void;
+
+    adaptAnswerHeight.call(renderedAnswer.element);
+
+    expect(requestUpdateSpy).toHaveBeenCalled();
+  });
+
   it('should toggle visibility when toggle is clicked when toggle is activated and deactivated', async () => {
     const {toggle} = await renderGeneratedAnswer({
       props: {withToggle: true},
