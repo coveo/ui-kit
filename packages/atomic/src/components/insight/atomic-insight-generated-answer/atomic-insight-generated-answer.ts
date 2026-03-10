@@ -525,7 +525,6 @@ export class AtomicInsightGeneratedAnswer
   private renderContent() {
     const generatedAnswer = {
       ...this.generatedAnswerState,
-      question: this.bindings.engine.state.query?.q ?? '',
     };
     return renderAnswerContent({
       props: {
