@@ -11,10 +11,9 @@ import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {renderGeneratingAnswerLabel} from './render-generating-answer-label';
 import '@/src/components/common/atomic-icon/atomic-icon';
 
-interface GeneratedAnswer extends GeneratedAnswerBase {
-  question: string;
+type GeneratedAnswer = GeneratedAnswerBase & {
   expanded?: boolean;
-}
+};
 
 export interface RenderAnswerContentProps {
   i18n: i18n;
@@ -27,7 +26,7 @@ export interface RenderAnswerContentProps {
 }
 
 /**
- * Renders the answer content of a given generated answer including question, answer text, and citations.
+ * Renders the answer content of a given generated answer including answer text and citations.
  */
 export const renderAnswerContent: FunctionalComponent<
   RenderAnswerContentProps
@@ -42,40 +41,15 @@ export const renderAnswerContent: FunctionalComponent<
     onClickShowButton,
   } = props;
 
-  const {
-    answer,
-    question,
-    isStreaming,
-    citations,
-    answerContentFormat,
-    expanded,
-    error,
-  } = generatedAnswer;
-  const trimmedQuestion = question.trim();
+  const {answer, isStreaming, citations, answerContentFormat, expanded, error} =
+    generatedAnswer;
+  const isExpanded = collapsible ? expanded : true;
   const hasRetryableError = error?.isRetryable === true;
   const shouldDisplayFeedbackButtons =
     !hasRetryableError && (collapsible ? expanded : true);
 
   return html`
     <div>
-      <div class="mt-6 flex gap-3">
-        <p
-          class="question-text min-w-0 flex-1 text-base font-semibold leading-6"
-        >
-          ${trimmedQuestion}
-        </p>
-        ${when(
-          shouldDisplayFeedbackButtons,
-          () => html`
-            <div
-              part="feedback-and-copy-buttons"
-              class="flex h-9 shrink-0 items-center justify-end gap-2"
-            >
-              ${renderFeedbackAndCopyButtonsSlot()}
-            </div>
-          `
-        )}
-      </div>
       ${
         hasRetryableError
           ? renderRetryPrompt({
@@ -105,6 +79,14 @@ export const renderAnswerContent: FunctionalComponent<
           `)
           : nothing
       }
+      ${when(
+        !hasRetryableError && isExpanded,
+        () => html`
+          <div class="mt-4" part="feedback-and-copy-buttons">
+            ${renderFeedbackAndCopyButtonsSlot()}
+          </div>
+        `
+      )}
       ${
         !hasRetryableError
           ? html`

@@ -34,14 +34,13 @@ describe('#renderAnswerContent', () => {
     vi.clearAllMocks();
   });
 
-  const defaultGeneratedAnswer = {
+  const defaultGeneratedAnswer: RenderAnswerContentProps['generatedAnswer'] = {
     isStreaming: false,
     answer: 'Test answer',
     citations: [],
     generationSteps: [],
     answerContentFormat: 'text/markdown' as const,
     expanded: true,
-    question: 'Test question',
     liked: false,
     disliked: false,
     answerId: 'test-answer-id',
@@ -79,24 +78,13 @@ describe('#renderAnswerContent', () => {
     return {
       element,
       props: defaultProps,
-      questionText: element.querySelector('.question-text'),
+      generatedContent: element.querySelector('[part="generated-container"]'),
       feedbackAndCopyButtons: element.querySelector(
         '[part="feedback-and-copy-buttons"]'
       ),
       footer: element.querySelector('[part="generated-answer-footer"]'),
     };
   };
-
-  it('should display the question text', async () => {
-    const {questionText} = await renderComponent({
-      generatedAnswer: {
-        ...defaultGeneratedAnswer,
-        question: '  user query  ',
-      },
-    });
-
-    expect(questionText?.textContent?.trim()).toBe('user query');
-  });
 
   describe('when there is a retryable error', () => {
     it('should call renderRetryPrompt with correct arguments', async () => {
@@ -250,6 +238,30 @@ describe('#renderAnswerContent', () => {
         });
 
         expect(renderFeedbackAndCopyButtonsSlot).toHaveBeenCalled();
+      });
+
+      it('should render feedback and copy buttons after the answer content', async () => {
+        const {feedbackAndCopyButtons, generatedContent} =
+          await renderComponent({
+            generatedAnswer: {
+              ...defaultGeneratedAnswer,
+              expanded: true,
+            },
+          });
+
+        expect(generatedContent).toBeInTheDocument();
+        expect(feedbackAndCopyButtons).toBeInTheDocument();
+
+        const documentPosition = generatedContent?.compareDocumentPosition(
+          feedbackAndCopyButtons as Node
+        );
+
+        expect(
+          Boolean(
+            documentPosition &&
+              documentPosition & Node.DOCUMENT_POSITION_FOLLOWING
+          )
+        ).toBe(true);
       });
 
       it('should render feedback and copy buttons when not collapsible', async () => {

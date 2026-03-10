@@ -6,6 +6,7 @@ import type {
   GeneratedAnswerBase,
   GeneratedAnswerState,
   GenerationStep,
+  GenerationStepName,
 } from '../../features/generated-answer/generated-answer-state.js';
 import type {GeneratedResponseFormat} from '../../features/generated-answer/generated-response-format.js';
 import type {
@@ -32,6 +33,7 @@ export type {
   GeneratedAnswerProps,
   GeneratedAnswerPropsInitialState,
   GenerationStep,
+  GenerationStepName,
 };
 
 /**
