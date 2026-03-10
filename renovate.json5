@@ -6,5 +6,12 @@
     "group:allNonMajor",
     "github>coveo-platform/renovate-presets//auto-merge.json"
   ],
+  "packageRules": [
+    {
+      // Completely disable auto merge for major versions of any dependency
+      "matchUpdateType": ["major"],
+      "automerge": false
+    }
+  ]
   "prHeader": "UA-5791"
 }
