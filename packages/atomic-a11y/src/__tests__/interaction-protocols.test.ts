@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
-import type {InteractionProtocol} from '../audit/browser-capture.js';
-import {INTERACTION_PROTOCOLS} from '../audit/browser-capture.js';
+import type {InteractionProtocol} from '../audit/interaction-protocols.js';
+import {INTERACTION_PROTOCOLS} from '../audit/interaction-protocols.js';
 
 describe('INTERACTION_PROTOCOLS', () => {
   it('should contain exactly 30 entries', () => {
