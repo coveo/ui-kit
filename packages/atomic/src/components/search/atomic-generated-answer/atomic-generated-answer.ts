@@ -536,7 +536,11 @@ export class AtomicGeneratedAnswer
         getComputedStyle(document.documentElement).fontSize
       );
 
-      this.fullAnswerHeight = answerHeight / rootFontSize;
+      const nextFullAnswerHeight = answerHeight / rootFontSize;
+      if (this.fullAnswerHeight !== nextFullAnswerHeight) {
+        this.fullAnswerHeight = nextFullAnswerHeight;
+        this.requestUpdate();
+      }
 
       this.updateAnswerHeight();
     }
@@ -702,7 +706,11 @@ export class AtomicGeneratedAnswer
   }
 
   private get isCollapsibleEnabled() {
-    return this.collapsible && !this.areFollowUpsEnabled;
+    return (
+      this.collapsible &&
+      !this.areFollowUpsEnabled &&
+      (this.fullAnswerHeight ?? 0) > this.validateMaxCollapsedHeight()
+    );
   }
 
   private resetCollapsibleStyles() {
