@@ -37,7 +37,7 @@
     },
     "./components": {
       "types": "./dist/atomic/components/index.d.ts",
-      "import": "./dist/atomic/components/index.js"
+      "import": "./dist/atomic/components/components/index.js"
     },
     "./custom-elements-manifest": "./custom-elements.json"
   },
@@ -56,7 +56,7 @@
     "clean": "node ../../utils/ci/rm-rf.mjs dist/* dist-storybook/* www/* docs/* playwright-report/*",
     "build:storybook": "storybook build -o dist-storybook --stats-json",
     "build:cem": "cem analyze",
-    "build:stencil-lit": "pnpm exec node --max_old_space_size=6144 ./node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json && node ./scripts/stencil-proxy.mjs && node ./scripts/build.mjs --config=tsconfig.lit.json && esbuild src/autoloader/index.ts --format=esm --outfile=dist/atomic/autoloader/index.esm.js && esbuild src/autoloader/index.ts --format=cjs --outfile=dist/atomic/autoloader/index.cjs.js && node ../../utils/ci/rm-rf.mjs ./dist/atomic/loader/package.json && tsc --project tsconfig.validate-types.json",
+    "build:stencil-lit": "node ./scripts/stencil-proxy.mjs && node ./scripts/build.mjs --config=tsconfig.lit.json && esbuild src/autoloader/index.ts --format=esm --outfile=dist/atomic/autoloader/index.esm.js && esbuild src/autoloader/index.ts --format=cjs --outfile=dist/atomic/autoloader/index.cjs.js",
     "build:cdn": "rollup -c rollup.config.js",
     "build:angular": "npx turbo gen:lit --filter=@coveo/atomic-angular-builder",
     "build:react": "npx turbo gen:lit --filter=@coveo/atomic-react",
@@ -107,7 +107,6 @@
     "i18next-http-backend": "3.0.2",
     "lit": "3.3.1",
     "marked": "12.0.2",
-    "stencil-inline-svg": "1.1.0",
     "@coveo/atomic-legacy": "workspace:*"
   },
   "devDependencies": {
@@ -118,7 +117,6 @@
     "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "16.0.1",
     "@rollup/plugin-replace": "catalog:",
-    "@stencil-community/postcss": "2.2.0",
     "@storybook/addon-a11y": "10.0.8",
     "@storybook/addon-docs": "10.0.8",
     "@storybook/addon-mcp": "0.1.3",
@@ -154,7 +152,6 @@
     "playwright": "catalog:",
     "postcss": "8.5.6",
     "postcss-load-config": "6.0.1",
-    "postcss-nested": "7.0.2",
     "prettier": "catalog:",
     "puppeteer": "catalog:",
     "react": "catalog:",

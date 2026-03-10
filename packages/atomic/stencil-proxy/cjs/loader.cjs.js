@@ -1,4 +1,3 @@
-const exportModule = require('./_loader.cjs.js');
 const searchComponents = import(
   '../atomic/components/components/search/lazy-index.js'
 );
@@ -27,12 +26,10 @@ const allComponents = Promise.all([
   recommendationsComponents,
 ]);
 
-const originalDefineCustomElements = exportModule.defineCustomElements;
 exportModule.defineCustomElements = (...args) => {
   allComponents.then((module) =>
     Object.values(module).forEach((importFunction) => importFunction())
   );
-  originalDefineCustomElements(...args);
 };
 Object.assign(exportModule, require('./version.cjs.js'));
 module.exports = exportModule;
