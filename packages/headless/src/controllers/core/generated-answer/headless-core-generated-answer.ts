@@ -147,16 +147,16 @@ export interface GeneratedAnswer extends Controller {
 
 export interface GeneratedAnswerAnalyticsClient {
   logLikeGeneratedAnswer(): CustomAction;
-  logLikeGeneratedAnswer(answerId: string): CustomAction;
+  logLikeGeneratedAnswer(answerId?: string): CustomAction;
   logDislikeGeneratedAnswer(): CustomAction;
-  logDislikeGeneratedAnswer(answerId: string): CustomAction;
+  logDislikeGeneratedAnswer(answerId?: string): CustomAction;
   logGeneratedAnswerFeedback: (
     feedback: GeneratedAnswerFeedback
   ) => CustomAction;
   logOpenGeneratedAnswerSource(citationId: string): CustomAction;
   logOpenGeneratedAnswerSource(
     citationId: string,
-    answerId: string
+    answerId?: string
   ): CustomAction;
   logHoverCitation(
     citationId: string,
@@ -165,12 +165,12 @@ export interface GeneratedAnswerAnalyticsClient {
   logHoverCitation(
     citationId: string,
     citationHoverTimeMs: number,
-    answerId: string
+    answerId?: string
   ): CustomAction;
   logGeneratedAnswerShowAnswers: () => CustomAction;
   logGeneratedAnswerHideAnswers: () => CustomAction;
   logCopyGeneratedAnswer(): CustomAction;
-  logCopyGeneratedAnswer(answerId: string): CustomAction;
+  logCopyGeneratedAnswer(answerId?: string): CustomAction;
   logRetryGeneratedAnswer: () => LegacySearchAction;
   logGeneratedAnswerExpand: () => CustomAction;
   logGeneratedAnswerCollapse: () => CustomAction;
