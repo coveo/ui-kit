@@ -207,5 +207,6 @@ export const followUpAnswersReducer = createReducer(
       .addCase(resetFollowUpAnswers, (state) => {
         state.followUpAnswers = [];
         state.conversationId = '';
+        state.isEnabled = false;
       })
 );
