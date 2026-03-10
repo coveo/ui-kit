@@ -154,26 +154,40 @@ export const Default: Story = {
     'default-slot': SLOTS_DEFAULT,
   },
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mockOnce(() => baseFoldedResponse);
-    mockSearchApi.searchEndpoint.mockOnce(() => {
-      const results = baseFoldedResponse.results;
-      results[0]!.childResults.push({
-        title: 'Birds',
-        excerpt: 'Bird species',
-        clickUri: 'https://example.com/birds',
-        uniqueId: 'birds-child',
-        raw: {
-          foldingcollection: 'Animals',
-          foldingchild: ['birds'],
-          foldingparent: 'animals',
+    mockSearchApi.searchEndpoint.mockOnce(() => ({
+      ...baseFoldedResponse,
+      results: [
+        {
+          ...baseFoldedResponse.results[0]!,
+          totalNumberOfChildResults: 5,
         },
-      });
-      results[0].totalNumberOfChildResults = 1;
-      return {
-        ...baseFoldedResponse,
-        results,
-      };
-    });
+        baseFoldedResponse.results[1]!,
+      ],
+    }));
+    mockSearchApi.searchEndpoint.mockOnce(() => ({
+      ...baseFoldedResponse,
+      results: [
+        {
+          ...baseFoldedResponse.results[0]!,
+          childResults: [
+            ...baseFoldedResponse.results[0]!.childResults,
+            {
+              title: 'Birds',
+              excerpt: 'Bird species',
+              clickUri: 'https://example.com/birds',
+              uniqueId: 'birds-child',
+              raw: {
+                foldingcollection: 'Animals',
+                foldingchild: ['birds'],
+                foldingparent: 'animals',
+              },
+            },
+          ],
+          totalNumberOfChildResults: 3,
+        },
+        baseFoldedResponse.results[1]!,
+      ],
+    }));
   },
   play,
 };
