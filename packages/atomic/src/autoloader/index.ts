@@ -49,13 +49,8 @@ export function registerAutoloader(
   const discover = async (root: Element | ShadowRoot | DocumentFragment) => {
     visitedNodes.add(root);
 
-    // TODO: KIT-5085 remove once we get rid of cypress
     const rootTagName =
-      (root.ownerDocument.defaultView &&
-        root instanceof root.ownerDocument.defaultView.Element) ||
-      root instanceof Element
-        ? root.tagName.toLowerCase()
-        : '';
+      root instanceof Element ? root.tagName.toLowerCase() : '';
     const rootIsCustomElement = rootTagName?.includes('-');
     const allCustomElements = [...root.querySelectorAll('*')].filter((el) =>
       el.tagName.toLowerCase().includes('-')
