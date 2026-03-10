@@ -1,3 +1,4 @@
+import {Buffer} from 'node:buffer';
 import {mkdir, writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import {parseArgs as nodeParseArgs} from 'node:util';
@@ -26,7 +27,9 @@ import {
   LLMParseError,
   type MergedResults,
   mergeResults,
+  mergeStoryResults,
   RateLimitExhaustedError,
+  type StoryResult,
   validateLLMResponse,
 } from './llm-client.js';
 import {Logger} from './logger.js';
@@ -54,6 +57,7 @@ interface Config {
   concurrency: number;
   logSteps: boolean;
   verbose: boolean;
+  saveCaptures: boolean;
   storybookUrl: string;
   help: boolean;
 }
@@ -69,6 +73,7 @@ function parseArgs(): Config {
       model: {type: 'string', default: 'gpt-4o'},
       concurrency: {type: 'string', default: '1'},
       'log-steps': {type: 'boolean', default: false},
+      'save-captures': {type: 'boolean', default: false},
       verbose: {type: 'boolean', default: false},
       'storybook-url': {type: 'string', default: 'http://localhost:4400'},
       help: {type: 'boolean', default: false},
@@ -87,6 +92,7 @@ function parseArgs(): Config {
     concurrency: Math.max(1, parseInt(values.concurrency as string, 10) || 1),
     logSteps: (values['log-steps'] as boolean) || (values.verbose as boolean),
     verbose: values.verbose as boolean,
+    saveCaptures: values['save-captures'] as boolean,
     storybookUrl: (values['storybook-url'] as string).replace(/\/$/, ''),
     help: values.help as boolean,
   };
@@ -125,6 +131,7 @@ Options:
   --model <id>            LLM model to use (default: gpt-4o)
   --concurrency <n>       Number of parallel LLM calls (default: 1)
   --log-steps             Print detailed pipeline steps
+  --save-captures         Save capture PNGs to a11y/reports/captures/<date>/...
   --verbose               Print raw LLM responses (implies --log-steps)
   --help                  Show this help message
 
@@ -141,6 +148,7 @@ Examples:
 
 Output:
   Delta files in a11y/reports/deltas/delta-YYYY-MM-DD-ai-audit-<surface>.json
+  Captures (optional): a11y/reports/captures/YYYY-MM-DD/<surface>/<component>/<story>/
   Validate with: node scripts/manual-audit-delta.mjs validate <delta-file>
   Merge with:    node scripts/manual-audit-delta.mjs merge --dry-run`);
   process.exit(0);
@@ -236,11 +244,96 @@ interface Story {
   storyName: string;
 }
 
+interface StoryCaptureAssets {
+  defaultScreenshot: string;
+  hoverScreenshot: string | null;
+  textSpacingScreenshot: string;
+  focusScreenshots: string[];
+  targetSizeScreenshot: string;
+  reflowScreenshot: string;
+  portraitScreenshot: string;
+  landscapeScreenshot: string;
+}
+
+function sanitizePathSegment(value: string): string {
+  const normalized = value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  return normalized || 'unknown';
+}
+
+function buildCaptureDir(captureDate: string, story: Story): string {
+  return path.join(
+    'a11y',
+    'reports',
+    'captures',
+    captureDate,
+    sanitizePathSegment(story.surface),
+    sanitizePathSegment(story.componentName),
+    sanitizePathSegment(story.storyId)
+  );
+}
+
+async function saveCapturePng(
+  base64: string,
+  outputDir: string,
+  fileName: string
+): Promise<void> {
+  if (!base64) return;
+  const filePath = path.join(outputDir, fileName);
+  await writeFile(filePath, Buffer.from(base64, 'base64'));
+}
+
+async function saveStoryCaptures(
+  captureDate: string,
+  story: Story,
+  assets: StoryCaptureAssets
+): Promise<string> {
+  const outputDir = buildCaptureDir(captureDate, story);
+  await mkdir(outputDir, {recursive: true});
+
+  await saveCapturePng(
+    assets.defaultScreenshot,
+    outputDir,
+    'default-viewport.png'
+  );
+  if (assets.hoverScreenshot) {
+    await saveCapturePng(assets.hoverScreenshot, outputDir, 'hover-state.png');
+  }
+  await saveCapturePng(
+    assets.textSpacingScreenshot,
+    outputDir,
+    'text-spacing.png'
+  );
+  for (const [index, screenshot] of assets.focusScreenshots.entries()) {
+    await saveCapturePng(screenshot, outputDir, `focus-${index + 1}.png`);
+  }
+  await saveCapturePng(
+    assets.targetSizeScreenshot,
+    outputDir,
+    'target-sizes.png'
+  );
+  await saveCapturePng(assets.reflowScreenshot, outputDir, 'reflow-320.png');
+  await saveCapturePng(
+    assets.portraitScreenshot,
+    outputDir,
+    'portrait-375x812.png'
+  );
+  await saveCapturePng(
+    assets.landscapeScreenshot,
+    outputDir,
+    'landscape-812x375.png'
+  );
+
+  return outputDir;
+}
+
 function selectStories(
   indexEntries: Record<string, StoryEntry>,
   config: Config
-): Story[] {
-  const byComponent = new Map<string, Story>();
+): Map<string, Story[]> {
+  const byComponent = new Map<string, Story[]>();
 
   for (const [storyId, entry] of Object.entries(indexEntries)) {
     if (entry.type !== 'story') continue;
@@ -256,36 +349,41 @@ function selectStories(
 
     if (config.component && componentName !== config.component) continue;
 
-    const existing = byComponent.get(componentName);
-    if (!existing) {
-      byComponent.set(componentName, {
-        storyId,
-        componentName,
-        surface,
-        storyTitle: entry.title!,
-        storyName: entry.name!,
-      });
-    }
-    if (entry.name?.toLowerCase() === 'default') {
-      byComponent.set(componentName, {
-        storyId,
-        componentName,
-        surface,
-        storyTitle: entry.title!,
-        storyName: entry.name!,
-      });
-    }
+    const stories = byComponent.get(componentName) ?? [];
+    stories.push({
+      storyId,
+      componentName,
+      surface,
+      storyTitle: entry.title!,
+      storyName: entry.name!,
+    });
+    byComponent.set(componentName, stories);
   }
 
-  const stories = [...byComponent.values()].sort((a, b) =>
-    a.componentName.localeCompare(b.componentName, 'en-US')
+  for (const stories of byComponent.values()) {
+    stories.sort((a, b) => {
+      if (a.storyName.toLowerCase() === 'default') return -1;
+      if (b.storyName.toLowerCase() === 'default') return 1;
+      return a.storyName.localeCompare(b.storyName, 'en-US');
+    });
+  }
+
+  const sortedKeys = [...byComponent.keys()].sort((a, b) =>
+    a.localeCompare(b, 'en-US')
   );
 
-  if (config.maxComponents < stories.length) {
-    return stories.slice(0, config.maxComponents);
+  if (config.maxComponents < sortedKeys.length) {
+    const removed = sortedKeys.splice(config.maxComponents);
+    for (const key of removed) {
+      byComponent.delete(key);
+    }
   }
 
-  return stories;
+  const result = new Map<string, Story[]>();
+  for (const key of sortedKeys) {
+    result.set(key, byComponent.get(key)!);
+  }
+  return result;
 }
 
 function buildDeltaEntry(
@@ -372,10 +470,15 @@ async function writeDeltaFiles(
 async function evaluateComponent(
   page: PlaywrightPage,
   clientWrapper: LLMClientWrapper,
-  story: Story,
+  stories: Story[],
   config: Config,
   logger: Logger
 ): Promise<DeltaEntry> {
+  if (stories.length === 0) {
+    throw new Error('No stories provided for component evaluation');
+  }
+
+  const firstStory = stories[0];
   const interactiveSelector = [
     'button',
     'a[href]',
@@ -385,6 +488,7 @@ async function evaluateComponent(
     '[role="menuitem"]',
     '[role="combobox"]',
     'input:not([type="hidden"])',
+    'textarea',
     'select',
     '[tabindex="0"]',
   ].join(', ');
@@ -417,176 +521,192 @@ async function evaluateComponent(
       );
     }, 0);
 
-  const navigationTimer = logger.timer();
-  await navigateToStory(page, config.storybookUrl, story.storyId);
-  logger.step(
-    'branch',
-    'Navigate',
-    `iframe.html?id=${story.storyId}`,
-    navigationTimer()
-  );
+  const storyResults: StoryResult[] = [];
+  const captureDate = new Date().toISOString().slice(0, 10);
 
-  // ── Capture phase (all captures upfront) ──────────────────────────────────
-  const defaultCaptureTimer = logger.timer();
-  const {screenshot: defaultScreenshot, accessibilityTree} =
-    await captureDefaultViewport(page);
-  const a11yNodeCount = countAccessibilityNodes(accessibilityTree);
-  logger.step(
-    'branch',
-    'Capture',
-    `default-viewport (a11y tree: ${a11yNodeCount} nodes)`,
-    defaultCaptureTimer()
-  );
+  for (const story of stories) {
+    const navigationTimer = logger.timer();
+    await navigateToStory(page, config.storybookUrl, story.storyId);
+    logger.step(
+      'branch',
+      'Navigate',
+      `iframe.html?id=${story.storyId} (${story.storyName})`,
+      navigationTimer()
+    );
 
-  // Hover MUST run before textSpacing (textSpacing reloads the page)
-  const hoverCandidates = await page.locator(interactiveSelector).count();
-  const hoverTestCount = Math.min(hoverCandidates, 5);
-  const hoverCaptureTimer = logger.timer();
-  const {hoverDetected, hoverScreenshot, hoverDetails} =
-    await captureHoverState(page);
-  logger.step(
-    'branch',
-    'Capture',
-    `hover-state (${hoverTestCount} elements tested, ${hoverDetected ? 'hover detected' : 'no hover changes'})`,
-    hoverCaptureTimer()
-  );
-  if (hoverDetected && hoverDetails) {
-    logger.substep(`Hover details: ${hoverDetails}`);
+    const defaultCaptureTimer = logger.timer();
+    const {screenshot: defaultScreenshot, accessibilityTree} =
+      await captureDefaultViewport(page);
+    const a11yNodeCount = countAccessibilityNodes(accessibilityTree);
+    logger.step(
+      'branch',
+      'Capture',
+      `default-viewport (a11y tree: ${a11yNodeCount} nodes)`,
+      defaultCaptureTimer()
+    );
+
+    const hoverCandidates = await page.locator(interactiveSelector).count();
+    const hoverTestCount = Math.min(hoverCandidates, 5);
+    const hoverCaptureTimer = logger.timer();
+    const {hoverDetected, hoverScreenshot, hoverDetails} =
+      await captureHoverState(page);
+    logger.step(
+      'branch',
+      'Capture',
+      `hover-state (${hoverTestCount} elements tested, ${hoverDetected ? 'hover detected' : 'no hover changes'})`,
+      hoverCaptureTimer()
+    );
+    if (hoverDetected && hoverDetails) {
+      logger.substep(`Hover details: ${hoverDetails}`);
+    }
+
+    const multiViewportTimer = logger.timer();
+    const {reflow, portrait, landscape} = await captureMultiViewport(page);
+    logger.step(
+      'branch',
+      'Capture',
+      `multi-viewport (reflow: ${reflow.hasHorizontalScroll ? 'has h-scroll' : 'no h-scroll'})`,
+      multiViewportTimer()
+    );
+
+    const textSpacingTimer = logger.timer();
+    const {textSpacingScreenshot} = await captureTextSpacing(page);
+    const textSpacingApplied = textSpacingScreenshot.length > 0;
+    logger.step(
+      'branch',
+      'Capture',
+      `text-spacing (${textSpacingApplied ? 'CSS injected + page reload' : 'capture failed'})`,
+      textSpacingTimer()
+    );
+
+    const focusTimer = logger.timer();
+    const {focusScreenshots, focusDetails, hasFocusableElements} =
+      await captureFocusStates(page);
+    const focusPath = focusDetails
+      .split(', ')
+      .map((step) => step.split(': ')[1])
+      .filter((tag): tag is string => !!tag)
+      .join('→');
+    logger.step(
+      'branch',
+      'Capture',
+      `focus-states (${hasFocusableElements ? focusScreenshots.length : 0} focusable${focusPath ? `, tabs: ${focusPath}` : ''})`,
+      focusTimer()
+    );
+
+    const targetSizeElements = await page.locator(interactiveSelector).count();
+    const targetSizeTimer = logger.timer();
+    const {targetSizeData, targetSizeScreenshot} =
+      await captureTargetSizes(page);
+    logger.step(
+      'branch',
+      'Capture',
+      `target-sizes (${targetSizeElements} interactive elements)`,
+      targetSizeTimer()
+    );
+
+    const interactionTimer = logger.timer();
+    const {interactions, summary: interactionSummary} =
+      await captureInteractionStates(page);
+    const matchedProtocols = interactions
+      .map((i) => i.role)
+      .filter((v, i, a) => a.indexOf(v) === i);
+    logger.step(
+      'branch',
+      'Capture',
+      `interaction-protocols (${matchedProtocols.length} roles matched, ${interactions.length} actions, ${interactions.filter((i) => i.stateChanged).length} state changes)`,
+      interactionTimer()
+    );
+    if (interactions.length > 0) {
+      logger.substep(`Roles: ${matchedProtocols.join(', ')}`);
+    }
+
+    if (config.saveCaptures) {
+      const outputDir = await saveStoryCaptures(captureDate, story, {
+        defaultScreenshot,
+        hoverScreenshot,
+        textSpacingScreenshot,
+        focusScreenshots,
+        targetSizeScreenshot,
+        reflowScreenshot: reflow.screenshot,
+        portraitScreenshot: portrait,
+        landscapeScreenshot: landscape,
+      });
+      if (logger.isVerbose()) {
+        logger.substep(`Saved capture PNGs to ${outputDir}`);
+      }
+    }
+
+    const mergedMessages = buildMergedCall1_3Messages(
+      story.componentName,
+      defaultScreenshot,
+      accessibilityTree,
+      hoverDetected,
+      hoverScreenshot,
+      hoverDetails,
+      textSpacingApplied ? textSpacingScreenshot : null,
+      focusScreenshots,
+      textSpacingApplied,
+      focusDetails,
+      hasFocusableElements,
+      targetSizeData,
+      interactionSummary
+    );
+    const mergedImageCount = countImageParts(mergedMessages);
+    const mergedCallTimer = logger.timer();
+    const mergedResponse = await callLLMWithRetry(
+      clientWrapper,
+      mergedMessages,
+      config
+    );
+    logger.step(
+      'branch',
+      'LLM Call 2',
+      `${MERGED_CALL1_3_KEYS.length} criteria (${mergedImageCount} images sent)`,
+      mergedCallTimer()
+    );
+    const mergedValidated = validateLLMResponse(
+      mergedResponse,
+      MERGED_CALL1_3_KEYS
+    );
+
+    const call2Messages = buildCall2Messages(
+      story.componentName,
+      reflow.screenshot,
+      reflow.hasHorizontalScroll,
+      portrait,
+      landscape
+    );
+    const call2ImageCount = countImageParts(call2Messages);
+    const call2Timer = logger.timer();
+    const call2Response = await callLLMWithRetry(
+      clientWrapper,
+      call2Messages,
+      config
+    );
+    logger.step(
+      'branch',
+      'LLM Call 2 (viewport)',
+      `${CALL2_KEYS.length} criteria (${call2ImageCount} images sent)`,
+      call2Timer()
+    );
+    const call2Validated = validateLLMResponse(call2Response, CALL2_KEYS);
+
+    const staticCall4 = {
+      criteria: Object.fromEntries(STATIC_NA_CRITERIA),
+    };
+    logger.step(
+      'branch',
+      'Static assignment',
+      `${STATIC_NA_CRITERIA.size} criteria (not-applicable)`
+    );
+
+    const merged = mergeResults(mergedValidated, call2Validated, staticCall4);
+    storyResults.push({storyName: story.storyName, mergedResults: merged});
   }
 
-  // Multi-viewport restores to 1024x768 — safe between hover and textSpacing
-  const multiViewportTimer = logger.timer();
-  const {reflow, portrait, landscape} = await captureMultiViewport(page);
-  logger.step(
-    'branch',
-    'Capture',
-    `multi-viewport (reflow: ${reflow.hasHorizontalScroll ? 'has h-scroll' : 'no h-scroll'})`,
-    multiViewportTimer()
-  );
-
-  const textSpacingTimer = logger.timer();
-  const {textSpacingScreenshot} = await captureTextSpacing(page);
-  const textSpacingApplied = textSpacingScreenshot.length > 0;
-  logger.step(
-    'branch',
-    'Capture',
-    `text-spacing (${textSpacingApplied ? 'CSS injected + page reload' : 'capture failed'})`,
-    textSpacingTimer()
-  );
-
-  const focusTimer = logger.timer();
-  const {focusScreenshots, focusDetails, hasFocusableElements} =
-    await captureFocusStates(page);
-  const focusPath = focusDetails
-    .split(', ')
-    .map((step) => step.split(': ')[1])
-    .filter((tag): tag is string => !!tag)
-    .join('→');
-  logger.step(
-    'branch',
-    'Capture',
-    `focus-states (${hasFocusableElements ? focusScreenshots.length : 0} focusable${focusPath ? `, tabs: ${focusPath}` : ''})`,
-    focusTimer()
-  );
-
-  const targetSizeElements = await page.locator(interactiveSelector).count();
-  const targetSizeTimer = logger.timer();
-  const {targetSizeData} = await captureTargetSizes(page);
-  logger.step(
-    'branch',
-    'Capture',
-    `target-sizes (${targetSizeElements} interactive elements)`,
-    targetSizeTimer()
-  );
-
-  // APG interaction protocols — MUST run last (mutates component state via keyboard)
-  const interactionTimer = logger.timer();
-  const {interactions, summary: interactionSummary} =
-    await captureInteractionStates(page);
-  const matchedProtocols = interactions
-    .map((i) => i.role)
-    .filter((v, i, a) => a.indexOf(v) === i);
-  logger.step(
-    'branch',
-    'Capture',
-    `interaction-protocols (${matchedProtocols.length} roles matched, ${interactions.length} actions, ${interactions.filter((i) => i.stateChanged).length} state changes)`,
-    interactionTimer()
-  );
-  if (interactions.length > 0) {
-    logger.substep(`Roles: ${matchedProtocols.join(', ')}`);
-  }
-
-  // ── LLM call phase (2 calls + 1 static) ─────────────────────────────────
-
-  // Merged Call 1+3: 15 criteria, up to 6 images
-  const mergedMessages = buildMergedCall1_3Messages(
-    story.componentName,
-    defaultScreenshot,
-    accessibilityTree,
-    hoverDetected,
-    hoverScreenshot,
-    hoverDetails,
-    textSpacingApplied ? textSpacingScreenshot : null,
-    focusScreenshots,
-    textSpacingApplied,
-    focusDetails,
-    hasFocusableElements,
-    targetSizeData,
-    interactionSummary
-  );
-  const mergedImageCount = countImageParts(mergedMessages);
-  const mergedCallTimer = logger.timer();
-  const mergedResponse = await callLLMWithRetry(
-    clientWrapper,
-    mergedMessages,
-    config
-  );
-  logger.step(
-    'branch',
-    'LLM Call 2',
-    `${MERGED_CALL1_3_KEYS.length} criteria (${mergedImageCount} images sent)`,
-    mergedCallTimer()
-  );
-  const mergedValidated = validateLLMResponse(
-    mergedResponse,
-    MERGED_CALL1_3_KEYS
-  );
-
-  // Call 2: 3 viewport-dependent criteria
-  const call2Messages = buildCall2Messages(
-    story.componentName,
-    reflow.screenshot,
-    reflow.hasHorizontalScroll,
-    portrait,
-    landscape
-  );
-  const call2ImageCount = countImageParts(call2Messages);
-  const call2Timer = logger.timer();
-  const call2Response = await callLLMWithRetry(
-    clientWrapper,
-    call2Messages,
-    config
-  );
-  logger.step(
-    'branch',
-    'LLM Call 2 (viewport)',
-    `${CALL2_KEYS.length} criteria (${call2ImageCount} images sent)`,
-    call2Timer()
-  );
-  const call2Validated = validateLLMResponse(call2Response, CALL2_KEYS);
-
-  // Static Call 4: 3 criteria always not-applicable in isolated Storybook
-  const staticCall4 = {
-    criteria: Object.fromEntries(STATIC_NA_CRITERIA),
-  };
-  logger.step(
-    'branch',
-    'Static assignment',
-    `${STATIC_NA_CRITERIA.size} criteria (not-applicable)`
-  );
-
-  const merged = mergeResults(mergedValidated, call2Validated, staticCall4);
-  const counts = summarizeCriteria(merged.wcag22Criteria);
+  const finalMerged = mergeStoryResults(storyResults);
+  const counts = summarizeCriteria(finalMerged.wcag22Criteria);
   logger.step(
     'last',
     'Result',
@@ -594,10 +714,10 @@ async function evaluateComponent(
   );
 
   return buildDeltaEntry(
-    story.componentName,
-    story.surface,
+    firstStory.componentName,
+    firstStory.surface,
     config.model,
-    merged
+    finalMerged
   );
 }
 
@@ -653,32 +773,40 @@ export async function main(): Promise<void> {
   }
 
   // StoryIndex might be the entries record itself in some versions
-  const stories = selectStories(
+  const storyMap = selectStories(
     (index.entries ?? index) as Record<string, StoryEntry>,
     config
   );
+  const componentNames = [...storyMap.keys()];
+  const totalStories = [...storyMap.values()].reduce(
+    (sum, stories) => sum + stories.length,
+    0
+  );
 
-  if (stories.length === 0) {
+  if (componentNames.length === 0) {
     console.log('No components found matching the specified filters.');
     process.exit(0);
   }
 
   const existingProgress = await loadProgress({resume: config.resume});
   const alreadyDone = existingProgress?.completedComponents?.size ?? 0;
-  const remaining = stories.filter(
-    (s) => !existingProgress?.completedComponents.has(s.componentName)
+  const remainingComponents = componentNames.filter(
+    (name) => !existingProgress?.completedComponents.has(name)
   );
 
-  const estimatedCalls = remaining.length * 2;
+  const estimatedCalls = remainingComponents.reduce(
+    (sum, name) => sum + (storyMap.get(name)?.length ?? 0) * 2,
+    0
+  );
 
   console.log(`Model:       ${config.model}`);
   console.log(`Surface:     ${config.surface}`);
   console.log(`Storybook:   ${config.storybookUrl}`);
   console.log(
-    `Components:  ${stories.length} found, ${remaining.length} to audit` +
+    `Components:  ${componentNames.length} found (${totalStories} stories), ${remainingComponents.length} to audit` +
       (alreadyDone > 0 ? ` (${alreadyDone} already completed)` : '')
   );
-  console.log(`API calls:   ${estimatedCalls} estimated (2 per component)`);
+  console.log(`API calls:   ${estimatedCalls} estimated (2 per story)`);
   if (config.concurrency > 1) {
     console.log(`Concurrency: ${config.concurrency} parallel workers`);
   }
@@ -693,12 +821,11 @@ export async function main(): Promise<void> {
 
   if (config.dryRun) {
     console.log('[DRY RUN] Components that would be audited:\n');
-    for (const story of stories) {
-      const done = existingProgress?.completedComponents.has(
-        story.componentName
-      );
+    for (const name of componentNames) {
+      const stories = storyMap.get(name)!;
+      const done = existingProgress?.completedComponents.has(name);
       console.log(
-        `  ${done ? 'done' : '    '} ${story.componentName} (${story.surface}) - ${story.storyTitle}`
+        `  ${done ? 'done' : '    '} ${name} (${stories[0].surface}) - ${stories.length} stories`
       );
     }
     console.log(
@@ -720,8 +847,8 @@ export async function main(): Promise<void> {
     entries: existingProgress?.entries ?? [],
   };
 
-  const maxNameLen = Math.max(...stories.map((s) => s.componentName.length));
-  const pad = String(stories.length).length;
+  const maxNameLen = Math.max(...componentNames.map((name) => name.length));
+  const pad = String(componentNames.length).length;
 
   // Track whether a fatal error (e.g. rate limit) requires aborting all workers
   let abortError: Error | null = null;
@@ -740,20 +867,27 @@ export async function main(): Promise<void> {
 
   function formatProgress(idx: number, name: string, suffix: string): string {
     return (
-      `[${String(idx + 1).padStart(pad)}/${stories.length}] ` +
+      `[${String(idx + 1).padStart(pad)}/${componentNames.length}] ` +
       `${name} ` +
       `${'·'.repeat(maxNameLen - name.length + 2)} ${suffix}`
     );
   }
 
-  // Filter to stories that still need processing
-  const toProcess: Array<{index: number; story: Story}> = [];
-  for (let i = 0; i < stories.length; i++) {
-    const story = stories[i];
-    if (progressState.completedComponents.has(story.componentName)) {
-      console.log(formatProgress(i, story.componentName, 'already completed'));
+  const toProcess: Array<{
+    index: number;
+    componentName: string;
+    stories: Story[];
+  }> = [];
+  for (let i = 0; i < componentNames.length; i++) {
+    const name = componentNames[i];
+    if (progressState.completedComponents.has(name)) {
+      console.log(formatProgress(i, name, 'already completed'));
     } else {
-      toProcess.push({index: i, story});
+      toProcess.push({
+        index: i,
+        componentName: name,
+        stories: storyMap.get(name)!,
+      });
     }
   }
 
@@ -761,12 +895,14 @@ export async function main(): Promise<void> {
 
   interface QueueItem {
     index: number;
-    story: Story;
+    componentName: string;
+    stories: Story[];
   }
 
   const queue: QueueItem[] = toProcess.map((item) => ({
     index: item.index,
-    story: item.story,
+    componentName: item.componentName,
+    stories: item.stories,
   }));
 
   // ── Worker function ────────────────────────────────────────────────────
@@ -775,25 +911,26 @@ export async function main(): Promise<void> {
     page: PlaywrightPage,
     item: QueueItem
   ): Promise<void> {
-    const {index, story} = item;
+    const {index, componentName, stories} = item;
+    const firstStory = stories[0];
 
     try {
       if (logger.isVerbose()) {
         logger.line(
-          `[${String(index + 1).padStart(pad)}/${stories.length}] ${story.componentName} (${story.surface})`
+          `[${String(index + 1).padStart(pad)}/${componentNames.length}] ${componentName} (${firstStory.surface})`
         );
       }
 
       const entry = await evaluateComponent(
         page,
         clientWrapper,
-        story,
+        stories,
         config,
         logger
       );
 
       progressState.entries.push(entry);
-      progressState.completedComponents.add(story.componentName);
+      progressState.completedComponents.add(componentName);
       await saveProgressSafe(progressState, config);
 
       const counts = summarizeCriteria(entry.results.wcag22Criteria ?? {});
@@ -801,7 +938,7 @@ export async function main(): Promise<void> {
         console.log(
           formatProgress(
             index,
-            story.componentName,
+            componentName,
             `${counts.pass} pass, ${counts.fail} fail, ${counts.partial} partial, ${counts.na} n/a`
           )
         );
@@ -816,13 +953,13 @@ export async function main(): Promise<void> {
         console.log(
           formatProgress(
             index,
-            story.componentName,
+            componentName,
             'LLM parse error - defaulting to not-applicable'
           )
         );
-        const fallback = buildFallbackEntry(story, config.model);
+        const fallback = buildFallbackEntry(firstStory, config.model);
         progressState.entries.push(fallback);
-        progressState.completedComponents.add(story.componentName);
+        progressState.completedComponents.add(componentName);
         await saveProgressSafe(progressState, config);
         return;
       }
@@ -830,7 +967,7 @@ export async function main(): Promise<void> {
       console.error(
         formatProgress(
           index,
-          story.componentName,
+          componentName,
           `Error: ${(error as Error).message}`
         )
       );
@@ -857,7 +994,7 @@ export async function main(): Promise<void> {
   if (abortError) {
     console.log(`\n${(abortError as unknown as Error).message}`);
     console.log(
-      `Progress saved: ${progressState.completedComponents.size} of ${stories.length} components completed.`
+      `Progress saved: ${progressState.completedComponents.size} of ${componentNames.length} components completed.`
     );
     console.log(
       `Resume with: node scripts/ai-wcag-audit.mjs` +

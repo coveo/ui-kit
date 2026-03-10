@@ -239,3 +239,91 @@ export function mergeResults(
 
   return {wcag22Criteria, evidenceParts};
 }
+
+export interface StoryResult {
+  storyName: string;
+  mergedResults: MergedResults;
+}
+
+/**
+ * Merge results from multiple stories into a single MergedResults for one component.
+ * Uses worst-case-wins: fail > partial > pass > not-applicable.
+ * If a criterion has 'pass' in any story, it overrides 'not-applicable'.
+ */
+export function mergeStoryResults(storyResults: StoryResult[]): MergedResults {
+  if (storyResults.length === 0) {
+    const wcag22Criteria: Record<string, string> = {};
+    for (const key of ALL_AI_CRITERIA) {
+      wcag22Criteria[key] = 'not-applicable';
+    }
+    return {wcag22Criteria, evidenceParts: []};
+  }
+
+  if (storyResults.length === 1) {
+    return storyResults[0].mergedResults;
+  }
+
+  const STATUS_PRIORITY: Record<string, number> = {
+    fail: 3,
+    partial: 2,
+    pass: 1,
+    'not-applicable': 0,
+  };
+
+  const wcag22Criteria: Record<string, string> = {};
+  const evidenceParts: string[] = [];
+
+  for (const key of ALL_AI_CRITERIA) {
+    let worstStatus = 'not-applicable';
+    let worstPriority = 0;
+    let worstStoryName = '';
+    let worstEvidence = '';
+
+    for (const {storyName, mergedResults} of storyResults) {
+      const status = mergedResults.wcag22Criteria[key] ?? 'not-applicable';
+      const priority = STATUS_PRIORITY[status] ?? 0;
+
+      if (priority > worstPriority) {
+        worstPriority = priority;
+        worstStatus = status;
+        worstStoryName = storyName;
+        worstEvidence = findEvidence(mergedResults.evidenceParts, key);
+      } else if (priority === worstPriority && priority > 0) {
+        const additionalEvidence = findEvidence(
+          mergedResults.evidenceParts,
+          key
+        );
+        if (additionalEvidence && worstEvidence) {
+          worstEvidence = `${worstStoryName}: ${worstEvidence} | ${storyName}: ${additionalEvidence}`;
+        }
+      }
+    }
+
+    if (worstStatus === 'not-applicable') {
+      for (const {mergedResults} of storyResults) {
+        if (
+          (mergedResults.wcag22Criteria[key] ?? 'not-applicable') === 'pass'
+        ) {
+          worstStatus = 'pass';
+          break;
+        }
+      }
+    }
+
+    wcag22Criteria[key] = worstStatus;
+    if (worstStatus !== 'not-applicable' && worstEvidence) {
+      evidenceParts.push(`${key}: ${worstEvidence}`);
+    }
+  }
+
+  return {wcag22Criteria, evidenceParts};
+}
+
+export function findEvidence(
+  evidenceParts: string[],
+  criterionKey: string
+): string {
+  const prefix = `${criterionKey}: `;
+  const match = evidenceParts.find((p) => p.startsWith(prefix));
+  return match ? match.slice(prefix.length) : '';
+}

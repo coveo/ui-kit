@@ -79,6 +79,7 @@ export async function captureHoverState(
     '[role="menuitem"]',
     '[role="combobox"]',
     'input:not([type="hidden"])',
+    'textarea',
     'select',
     '[tabindex="0"]',
   ].join(', ');
@@ -301,6 +302,7 @@ export async function captureTargetSizes(
       '[role="menuitem"]',
       '[role="combobox"]',
       'input:not([type="hidden"])',
+      'textarea',
       'select',
       '[tabindex="0"]',
     ].join(', ');
@@ -313,15 +315,17 @@ export async function captureTargetSizes(
           height: number;
           text: string;
         }[] = [];
-        root.querySelectorAll(selector).forEach((el) => {
-          const rect = el.getBoundingClientRect();
-          if (rect.width > 0 && rect.height > 0) {
-            results.push({
-              tag: el.tagName.toLowerCase(),
-              width: Math.round(rect.width),
-              height: Math.round(rect.height),
-              text: (el.textContent || '').trim().slice(0, 30),
-            });
+        root.querySelectorAll('*').forEach((el) => {
+          if (el.matches(selector)) {
+            const rect = el.getBoundingClientRect();
+            if (rect.width > 0 && rect.height > 0) {
+              results.push({
+                tag: el.tagName.toLowerCase(),
+                width: Math.round(rect.width),
+                height: Math.round(rect.height),
+                text: (el.textContent || '').trim().slice(0, 30),
+              });
+            }
           }
           const htmlEl = el as unknown as {
             shadowRoot: Document | ShadowRoot | null;
