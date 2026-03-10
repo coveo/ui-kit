@@ -11,10 +11,9 @@ import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {renderGeneratingAnswerLabel} from './render-generating-answer-label';
 import '@/src/components/common/atomic-icon/atomic-icon';
 
-interface GeneratedAnswer extends GeneratedAnswerBase {
-  question: string;
+type GeneratedAnswer = GeneratedAnswerBase & {
   expanded?: boolean;
-}
+};
 
 export interface RenderAnswerContentProps {
   i18n: i18n;

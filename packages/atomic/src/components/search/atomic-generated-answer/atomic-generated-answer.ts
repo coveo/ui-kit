@@ -638,12 +638,16 @@ export class AtomicGeneratedAnswer
   private renderAnswerContent() {
     const generatedAnswer = {
       ...this.generatedAnswerState,
-      question: this.bindings.engine.state.query?.q ?? '',
     };
 
     if (this.areFollowUpsEnabled) {
+      const generatedAnswerWithQuestion = {
+        ...generatedAnswer,
+        question: this.bindings.engine.state.query?.q ?? '',
+      };
+
       const allGeneratedAnswers = [
-        generatedAnswer,
+        generatedAnswerWithQuestion,
         ...(this.generatedAnswerWithFollowUps?.state.followUpAnswers
           .followUpAnswers ?? []),
       ];

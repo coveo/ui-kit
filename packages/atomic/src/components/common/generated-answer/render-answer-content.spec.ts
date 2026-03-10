@@ -34,14 +34,13 @@ describe('#renderAnswerContent', () => {
     vi.clearAllMocks();
   });
 
-  const defaultGeneratedAnswer = {
+  const defaultGeneratedAnswer: RenderAnswerContentProps['generatedAnswer'] = {
     isStreaming: false,
     answer: 'Test answer',
     citations: [],
     generationSteps: [],
     answerContentFormat: 'text/markdown' as const,
     expanded: true,
-    question: 'Test question',
     liked: false,
     disliked: false,
     answerId: 'test-answer-id',
@@ -74,7 +73,6 @@ describe('#renderAnswerContent', () => {
     return {
       element,
       props: defaultProps,
-      questionText: element.querySelector('.question-text'),
       generatedContent: element.querySelector('[part="generated-container"]'),
       feedbackAndCopyButtons: element.querySelector(
         '[part="feedback-and-copy-buttons"]'
