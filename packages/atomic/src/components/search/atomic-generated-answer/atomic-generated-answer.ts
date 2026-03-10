@@ -636,13 +636,9 @@ export class AtomicGeneratedAnswer
   }
 
   private renderAnswerContent() {
-    const generatedAnswer = {
-      ...this.generatedAnswerState,
-    };
-
     if (this.areFollowUpsEnabled) {
       const generatedAnswerWithQuestion = {
-        ...generatedAnswer,
+        ...this.generatedAnswerState,
         question: this.bindings.engine.state.query?.q ?? '',
       };
 
