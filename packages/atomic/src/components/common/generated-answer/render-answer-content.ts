@@ -59,7 +59,7 @@ export const renderAnswerContent: FunctionalComponent<
     <div>
       <div class="mt-6 flex gap-3">
         <p
-          class="question-text min-w-0 flex-1 text-base font-semibold leading-6"
+          class="question-text min-w-0 flex items-center flex-1 text-base font-semibold leading-6"
         >
           ${trimmedQuestion}
         </p>
