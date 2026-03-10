@@ -6,8 +6,8 @@
  *     node init_skill.mjs <skill-name> --path <output-directory>
  *
  * Example:
- *     node init_skill.mjs generate-vitest-tests --path .claude/skills
- *     node init_skill.mjs accessibility-audit --path .claude/skills
+ *     node init_skill.mjs generate-vitest-tests --path .agents/skills
+ *     node init_skill.mjs accessibility-audit --path .agents/skills
  */
 
 import {chmodSync, existsSync, mkdirSync, writeFileSync} from 'node:fs';
@@ -272,17 +272,17 @@ function main() {
     console.log('');
     console.log('Path options:');
     console.log(
-      '  - .claude/skills (workspace-level, recommended for local dev)'
+      '  - .agents/skills (workspace-level, recommended for local dev)'
     );
     console.log('  - .skills or skills/ (alternative workspace conventions)');
-    console.log('  - ~/.claude/skills (user-level)');
+    console.log('  - ~/.agents/skills (user-level)');
     console.log('');
     console.log('Examples:');
     console.log(
-      '  node init_skill.mjs generate-vitest-tests --path .claude/skills'
+      '  node init_skill.mjs generate-vitest-tests --path .agents/skills'
     );
     console.log(
-      '  node init_skill.mjs accessibility-audit --path .claude/skills'
+      '  node init_skill.mjs accessibility-audit --path .agents/skills'
     );
     console.log(
       '  node init_skill.mjs stencil-to-lit-migration --path .skills'

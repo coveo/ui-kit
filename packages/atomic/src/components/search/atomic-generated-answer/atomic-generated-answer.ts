@@ -636,14 +636,14 @@ export class AtomicGeneratedAnswer
   }
 
   private renderAnswerContent() {
-    const generatedAnswer = {
-      ...this.generatedAnswerState,
-      question: this.bindings.engine.state.query?.q ?? '',
-    };
-
     if (this.areFollowUpsEnabled) {
+      const generatedAnswerWithQuestion = {
+        ...this.generatedAnswerState,
+        question: this.bindings.engine.state.query?.q ?? '',
+      };
+
       const allGeneratedAnswers = [
-        generatedAnswer,
+        generatedAnswerWithQuestion,
         ...(this.generatedAnswerWithFollowUps?.state.followUpAnswers
           .followUpAnswers ?? []),
       ];
@@ -664,12 +664,12 @@ export class AtomicGeneratedAnswer
     return renderAnswerContent({
       props: {
         i18n: this.bindings.i18n,
-        generatedAnswer: generatedAnswer,
+        generatedAnswer: this.generatedAnswerState,
         collapsible: this.isCollapsibleEnabled,
         renderFeedbackAndCopyButtonsSlot: () =>
           this.renderFeedbackAndCopyButtonsWrapper(),
         renderCitationsSlot: () =>
-          html`${this.renderCitationsList(generatedAnswer.citations)}`,
+          html`${this.renderCitationsList(this.generatedAnswerState.citations)}`,
         onRetry: () => this.generatedAnswer?.retry(),
         onClickShowButton: () => this.clickOnShowButton(),
       },
