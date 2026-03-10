@@ -26,6 +26,13 @@ export function extractComponentName(
     return storyIdMatch[1].toLowerCase();
   }
 
+  const pageStoryMatch = modulePath.match(
+    /storybook-pages\/[^/]+\/([a-z0-9-]+)\.new\.stories\.[jt]sx?$/i
+  );
+  if (pageStoryMatch?.[1]) {
+    return `${pageStoryMatch[1].toLowerCase()}-page`;
+  }
+
   return null;
 }
 
@@ -44,6 +51,14 @@ export function extractCategory(modulePath: string, storyId: string): string {
 
   if (categoryFromStoryId?.[1]) {
     return categoryFromStoryId[1].toLowerCase();
+  }
+
+  const categoryFromPagePath = modulePath.match(
+    /storybook-pages\/([a-z0-9-]+)\//i
+  );
+
+  if (categoryFromPagePath?.[1]) {
+    return categoryFromPagePath[1].toLowerCase();
   }
 
   return UNKNOWN_CATEGORY;
