@@ -246,7 +246,7 @@ describe('generated-answers-thread', () => {
     const translate = vi
       .fn()
       .mockImplementation((key: string) =>
-        key === 'show-previous-questions'
+        key === 'show-previous-question'
           ? 'Afficher les questions précédentes'
           : key
       );
@@ -259,7 +259,7 @@ describe('generated-answers-thread', () => {
 
     const button = locators().showPreviousAnswersButton as HTMLButtonElement;
     expect(button).toHaveTextContent('Afficher les questions précédentes');
-    expect(translate).toHaveBeenCalledWith('show-previous-questions', {
+    expect(translate).toHaveBeenCalledWith('show-previous-question', {
       count: 2,
     });
   });
