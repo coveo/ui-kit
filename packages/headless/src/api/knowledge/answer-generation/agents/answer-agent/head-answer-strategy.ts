@@ -1,5 +1,5 @@
 import type {AgentSubscriber} from '@ag-ui/client';
-import type {Dispatch} from '@reduxjs/toolkit';
+import type {Dispatch, UnknownAction} from '@reduxjs/toolkit';
 import {
   setFollowUpAnswersConversationId,
   setIsEnabled,
@@ -17,14 +17,23 @@ import {
   updateError,
   updateMessage,
 } from '../../../../../features/generated-answer/generated-answer-actions.js';
+import {
+  logGeneratedAnswerResponseLinked,
+  logGeneratedAnswerStreamEnd,
+} from '../../../../../features/generated-answer/generated-answer-analytics-actions.js';
 import type {GenerationStepName} from '../../../../../features/generated-answer/generated-answer-state.js';
 import {mapRunErrorCode} from '../../../../../features/generated-answer/sse-generated-answer-errors.js';
+
+type HeadAnswerDispatch = Dispatch<UnknownAction> & {
+  (action: ReturnType<typeof logGeneratedAnswerStreamEnd>): unknown;
+  (action: ReturnType<typeof logGeneratedAnswerResponseLinked>): unknown;
+};
 
 /**
  * Creates an AgentSubscriber that handles answer streaming events
  */
 export const createHeadAnswerStrategy = (
-  dispatch: Dispatch
+  dispatch: HeadAnswerDispatch
 ): AgentSubscriber => {
   return {
     onRunStartedEvent: ({event}) => {
@@ -84,6 +93,8 @@ export const createHeadAnswerStrategy = (
       dispatch(setIsAnswerGenerated(answerGenerated));
       dispatch(setCannotAnswer(!answerGenerated));
       dispatch(setIsStreaming(false));
+      dispatch(logGeneratedAnswerStreamEnd(answerGenerated));
+      dispatch(logGeneratedAnswerResponseLinked());
     },
   };
 };
