@@ -25,11 +25,17 @@ const allComponents = Promise.all([
   ipxComponents,
   recommendationsComponents,
 ]);
-
+const exportModule = {};
 exportModule.defineCustomElements = (...args) => {
   allComponents.then((module) =>
     Object.values(module).forEach((importFunction) => importFunction())
   );
+};
+exportModule.applyPolyfills = () => {
+  throw new Error('The applyPolyfills function has been removed. It always been a no-op, and should not be used.');
+};
+exportModule.setNonce = () => {
+  console.warn('Since v3.52.0, `@coveo/atomic` does not longer add script or style tags. The setNonce function is now a no-op and can be safely removed from your codebase.');
 };
 Object.assign(exportModule, require('./version.cjs.js'));
 module.exports = exportModule;

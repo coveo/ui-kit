@@ -1,3 +1,3 @@
 export * from '../../types/components/index.js';
-
-export type {Components as LitComponents} from '../../types/lit-components.d.ts';
+export * as Components from '../../types/components/index.js';
+export * as JSX from '../../types/components/index.js';

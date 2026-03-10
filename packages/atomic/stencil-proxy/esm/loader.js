@@ -5,5 +5,12 @@ const defineCustomElements = async (...args) => {
   registerAutoloader(rootElementAutoloader);
 };
 
+const applyPolyfills = () => {
+  throw new Error('The applyPolyfills function has been removed. It always been a no-op, and should not be used.');
+};
+const setNonce = () => {
+  console.warn('Since v3.52.0, `@coveo/atomic` does not longer add script or style tags. The setNonce function is now a no-op and can be safely removed from your codebase.');
+};
+
 export * from './version.js';
-export {defineCustomElements};
+export {defineCustomElements, applyPolyfills, setNonce};
