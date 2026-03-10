@@ -43,23 +43,31 @@ export const logRetryGeneratedAnswer = (): LegacySearchAction =>
     client.makeRetryGeneratedAnswer()
   );
 
-export const logOpenGeneratedAnswerSource = (
-  citationId: string
-): CustomAction =>
-  makeAnalyticsAction({
+// TODO: SFINT-6665
+// Overloading the function here for backward compatibility because #logOpenGeneratedAnswerSource will eventually take an answerId.
+export function logOpenGeneratedAnswerSource(citationId: string): CustomAction;
+export function logOpenGeneratedAnswerSource(
+  citationId: string,
+  answerId: string
+): CustomAction;
+export function logOpenGeneratedAnswerSource(
+  citationId: string,
+  answerId?: string
+): CustomAction {
+  return makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/openAnswerSource',
     __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
+      const resolvedAnswerId =
+        answerId ?? generativeQuestionAnsweringIdSelector(state);
       const citation = citationSourceSelector(state, citationId);
-      if (!generativeQuestionAnsweringId || !citation) {
+      if (!resolvedAnswerId || !citation) {
         return null;
       }
 
       return client.makeGeneratedAnswerCitationClick(
         partialCitationInformation(citation, state),
         {
-          generativeQuestionAnsweringId,
+          generativeQuestionAnsweringId: resolvedAnswerId,
           citationId: citation.id,
           documentId: citationDocumentIdentifier(citation),
         }
@@ -68,10 +76,10 @@ export const logOpenGeneratedAnswerSource = (
     analyticsType: 'Rga.CitationClick',
     analyticsPayloadBuilder: (state): Rga.CitationClick | undefined => {
       const citation = citationSourceSelector(state, citationId);
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
+      const resolvedAnswerId =
+        answerId ?? generativeQuestionAnsweringIdSelector(state);
       return {
-        answerId: generativeQuestionAnsweringId ?? '',
+        answerId: resolvedAnswerId ?? '',
         citationId,
         itemMetadata: {
           uniqueFieldName: 'permanentid',
@@ -82,23 +90,36 @@ export const logOpenGeneratedAnswerSource = (
       };
     },
   });
+}
 
-export const logHoverCitation = (
+// TODO: SFINT-6665
+// Overloading the function here for backward compatibility because #logHoverCitation will eventually take an answerId.
+export function logHoverCitation(
   citationId: string,
   citationHoverTimeInMs: number
-): CustomAction =>
-  makeAnalyticsAction({
+): CustomAction;
+export function logHoverCitation(
+  citationId: string,
+  citationHoverTimeInMs: number,
+  answerId: string
+): CustomAction;
+export function logHoverCitation(
+  citationId: string,
+  citationHoverTimeInMs: number,
+  answerId?: string
+): CustomAction {
+  return makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/hoverCitation',
     __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
+      const resolvedAnswerId =
+        answerId ?? generativeQuestionAnsweringIdSelector(state);
       const citation = citationSourceSelector(state, citationId);
 
-      if (!generativeQuestionAnsweringId || !citation) {
+      if (!resolvedAnswerId || !citation) {
         return null;
       }
       return client.makeGeneratedAnswerSourceHover({
-        generativeQuestionAnsweringId,
+        generativeQuestionAnsweringId: resolvedAnswerId,
         permanentId: citation.permanentid,
         citationId: citation.id,
         citationHoverTimeMs: citationHoverTimeInMs,
@@ -107,10 +128,10 @@ export const logHoverCitation = (
     analyticsType: 'Rga.CitationHover',
     analyticsPayloadBuilder: (state): Rga.CitationHover | undefined => {
       const citation = citationSourceSelector(state, citationId);
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
+      const resolvedAnswerId =
+        answerId ?? generativeQuestionAnsweringIdSelector(state);
       return {
-        answerId: generativeQuestionAnsweringId ?? '',
+        answerId: resolvedAnswerId ?? '',
         citationId,
         itemMetadata: {
           uniqueFieldName: 'permanentid',
@@ -122,54 +143,65 @@ export const logHoverCitation = (
       };
     },
   });
+}
 
-export const logLikeGeneratedAnswer = (): CustomAction =>
-  makeAnalyticsAction({
+// TODO: SFINT-6665
+// Overloading the function here for backward compatibility because #logLikeGeneratedAnswer will eventually take an answerId.
+export function logLikeGeneratedAnswer(): CustomAction;
+export function logLikeGeneratedAnswer(answerId: string): CustomAction;
+export function logLikeGeneratedAnswer(answerId?: string): CustomAction {
+  return makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/like',
     __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
+      const resolvedAnswerId =
+        answerId ?? generativeQuestionAnsweringIdSelector(state);
+      if (!resolvedAnswerId) {
         return null;
       }
       return client.makeLikeGeneratedAnswer({
-        generativeQuestionAnsweringId,
+        generativeQuestionAnsweringId: resolvedAnswerId,
       });
     },
     analyticsType: 'Rga.AnswerAction',
     analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
+      const resolvedAnswerId =
+        answerId ?? generativeQuestionAnsweringIdSelector(state);
       return {
-        answerId: generativeQuestionAnsweringId ?? '',
+        answerId: resolvedAnswerId ?? '',
         action: 'like',
       };
     },
   });
+}
 
-export const logDislikeGeneratedAnswer = (): CustomAction =>
-  makeAnalyticsAction({
+// TODO: SFINT-6665
+// Overloading the function here for backward compatibility because #logDislikeGeneratedAnswer will eventually take an answerId.
+export function logDislikeGeneratedAnswer(): CustomAction;
+export function logDislikeGeneratedAnswer(answerId: string): CustomAction;
+export function logDislikeGeneratedAnswer(answerId?: string): CustomAction {
+  return makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/dislike',
     __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
+      const resolvedAnswerId =
+        answerId ?? generativeQuestionAnsweringIdSelector(state);
+      if (!resolvedAnswerId) {
         return null;
       }
       return client.makeDislikeGeneratedAnswer({
-        generativeQuestionAnsweringId,
+        generativeQuestionAnsweringId: resolvedAnswerId,
       });
     },
     analyticsType: 'Rga.AnswerAction',
     analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
+      const resolvedAnswerId =
+        answerId ?? generativeQuestionAnsweringIdSelector(state);
       return {
-        answerId: generativeQuestionAnsweringId ?? '',
+        answerId: resolvedAnswerId ?? '',
         action: 'dislike',
       };
     },
   });
+}
 
 export const logGeneratedAnswerFeedback = (
   feedback: GeneratedAnswerFeedback
@@ -364,29 +396,34 @@ export const logGeneratedAnswerCollapse = (): CustomAction =>
     },
   });
 
-export const logCopyGeneratedAnswer = (): CustomAction =>
-  makeAnalyticsAction({
+// TODO: SFINT-6665
+// Overloading the function here for backward compatibility because #logCopyGeneratedAnswer will eventually take an answerId.
+export function logCopyGeneratedAnswer(): CustomAction;
+export function logCopyGeneratedAnswer(answerId: string): CustomAction;
+export function logCopyGeneratedAnswer(answerId?: string): CustomAction {
+  return makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/copy',
     __legacy__getBuilder: (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
+      const resolvedAnswerId =
+        answerId ?? generativeQuestionAnsweringIdSelector(state);
+      if (!resolvedAnswerId) {
         return null;
       }
       return client.makeGeneratedAnswerCopyToClipboard({
-        generativeQuestionAnsweringId,
+        generativeQuestionAnsweringId: resolvedAnswerId,
       });
     },
     analyticsType: 'Rga.AnswerAction',
     analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
+      const resolvedAnswerId =
+        answerId ?? generativeQuestionAnsweringIdSelector(state);
       return {
-        answerId: generativeQuestionAnsweringId ?? '',
+        answerId: resolvedAnswerId ?? '',
         action: 'copyToClipboard',
       };
     },
   });
+}
 
 export const retryGeneratedAnswer = (): SearchAction => ({
   actionCause: SearchPageEvents.retryGeneratedAnswer,
