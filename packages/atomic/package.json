@@ -9,19 +9,19 @@
     "url": "git+https://github.com/coveo/ui-kit.git",
     "directory": "packages/atomic"
   },
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.js",
+  "main": "dist/cjs/index.cjs.js",
+  "module": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
   "exports": {
     "./loader": {
       "types": "./dist/atomic/loader/index.d.ts",
-      "import": "./dist/atomic/loader/index.js",
-      "require": "./dist/atomic/loader/index.cjs.js"
+      "import": "./dist/esm/loader.js",
+      "require": "./dist/cjs/loader.cjs.js"
     },
     ".": {
       "types": "./dist/types/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs.js"
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.cjs.js"
     },
     "./themes/*": {
       "import": "./dist/atomic/themes/*",

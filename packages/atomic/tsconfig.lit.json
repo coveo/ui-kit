@@ -18,8 +18,6 @@
     "src/index.ts",
     "src/components/index.ts",
     "src/components/lazy-index.ts",
-    "src/components.d.ts",
-    "src/lit-components.d.ts",
     "src/icons.d.ts"
   ]
 }
