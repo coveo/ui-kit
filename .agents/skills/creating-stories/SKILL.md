@@ -27,19 +27,19 @@ Answer these questions:
 
 ### Step 2: Generate Template
 
-This skill includes a small generator that renders Handlebars templates from `.claude/skills/creating-stories/assets/`.
+This skill includes a small generator that renders Handlebars templates from `assets/`.
 
 ```bash
 # Component story
-node .claude/skills/creating-stories/scripts/generate-story-template.mjs \
+node .agents/skills/creating-stories/scripts/generate-story-template.mjs \
   atomic-component-name --category search
 
 # Result template component
-node .claude/skills/creating-stories/scripts/generate-story-template.mjs \
+node .agents/skills/creating-stories/scripts/generate-story-template.mjs \
   atomic-result-field --category search --result
 
 # Sample page
-node .claude/skills/creating-stories/scripts/generate-story-template.mjs \
+node .agents/skills/creating-stories/scripts/generate-story-template.mjs \
   page-name --type page --category commerce
 ```
 
@@ -67,7 +67,7 @@ For page examples, see [sample-page-examples.md](references/sample-page-examples
 
 ```bash
 # Validate the story file
-node .claude/skills/creating-stories/scripts/validate_story.mjs packages/atomic/src/components/.../component.new.stories.tsx
+node .agents/skills/creating-stories/scripts/validate_story.mjs packages/atomic/src/components/.../component.new.stories.tsx
 
 # Run Storybook to verify visually
 cd packages/atomic && pnpm storybook
