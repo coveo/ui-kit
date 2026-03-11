@@ -27,4 +27,14 @@ test.describe('atomic-commerce-search-box-recent-queries', () => {
     await commerceSearchBoxRecentQueries.clearButton.click();
     await expect(commerceSearchBoxRecentQueries.recentQuery).toHaveCount(0);
   });
+
+  test('should announce that recent searches were cleared in the aria-live region when the clear button is clicked', async ({
+    commerceSearchBoxRecentQueries,
+  }) => {
+    await commerceSearchBoxRecentQueries.clearButton.click();
+    await expect(commerceSearchBoxRecentQueries.ariaLiveRegion).toContainText(
+      'cleared',
+      {timeout: 3000}
+    );
+  });
 });

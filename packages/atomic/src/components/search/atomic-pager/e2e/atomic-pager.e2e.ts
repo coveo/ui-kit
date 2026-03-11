@@ -36,4 +36,13 @@ test.describe('atomic-pager', () => {
       'Page 4'
     );
   });
+
+  test('should announce the new page number in the aria-live region when clicking a page button', async ({
+    pager,
+  }) => {
+    await pager.pageButton(2).click();
+    await expect(pager.ariaLiveRegion).toContainText('page 2', {
+      timeout: 3000,
+    });
+  });
 });

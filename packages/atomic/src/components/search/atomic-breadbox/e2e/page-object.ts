@@ -1,4 +1,4 @@
-import type {Page} from '@playwright/test';
+import type {Locator, Page} from '@playwright/test';
 import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 
 export class AtomicBreadboxPageObject extends BasePageObject {
@@ -41,5 +41,9 @@ export class AtomicBreadboxPageObject extends BasePageObject {
 
   getShowLessButton() {
     return this.page.getByRole('button').filter({hasText: /Show less/});
+  }
+
+  get ariaLiveRegion(): Locator {
+    return this.page.locator('atomic-aria-live div[id*="breadbox"]');
   }
 }

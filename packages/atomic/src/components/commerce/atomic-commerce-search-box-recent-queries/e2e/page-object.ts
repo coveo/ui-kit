@@ -1,4 +1,4 @@
-import type {Page} from '@playwright/test';
+import type {Locator, Page} from '@playwright/test';
 import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 
 export class AtomicCommerceSearchBoxRecentQueriesPageObject extends BasePageObject {
@@ -12,5 +12,9 @@ export class AtomicCommerceSearchBoxRecentQueriesPageObject extends BasePageObje
 
   get clearButton() {
     return this.page.getByLabel('Clear recent searches.');
+  }
+
+  get ariaLiveRegion(): Locator {
+    return this.page.locator('atomic-aria-live div[id*="search-box"]');
   }
 }

@@ -26,6 +26,10 @@ export class SearchBoxPageObject extends BasePageObject {
     return this.page.locator('atomic-aria-live');
   }
 
+  get ariaLiveRegion() {
+    return this.page.locator('atomic-aria-live div[id*="search-box"]');
+  }
+
   get clearRecentQueriesButton() {
     return this.component.getByLabel('Clear recent searches.');
   }

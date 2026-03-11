@@ -10,6 +10,17 @@ test.describe('atomic-search-box', () => {
       await expect(searchBox.submitButton).toBeEnabled();
     });
 
+    test('should announce that the search was cleared in the aria-live region when the clear button is clicked', async ({
+      searchBox,
+    }) => {
+      await searchBox.searchInput.fill('test query');
+      await searchBox.clearButton.waitFor({state: 'visible'});
+      await searchBox.clearButton.click();
+      await expect(searchBox.ariaLiveRegion).toContainText('cleared', {
+        timeout: 3000,
+      });
+    });
+
     test.describe('after clicking the searchbox input', () => {
       test.beforeEach(async ({searchBox}) => {
         await searchBox.searchInput.waitFor({state: 'visible'});

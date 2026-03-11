@@ -23,4 +23,8 @@ export class PagerPageObject extends BasePageObject {
   get currentPageButton(): Locator {
     return this.page.locator('atomic-pager input[type="radio"][checked]');
   }
+
+  get ariaLiveRegion(): Locator {
+    return this.page.locator('atomic-aria-live div[id*="atomic-pager"]');
+  }
 }

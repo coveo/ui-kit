@@ -104,4 +104,15 @@ test.describe('atomic-breadbox', () => {
       await expect(breadbox.getShowMoreButton()).toBeVisible();
     }
   });
+
+  test('should announce that a filter was removed in the aria-live region when a breadcrumb is removed', async ({
+    breadbox,
+  }) => {
+    await breadbox.getFacetValue('objecttype').first().click();
+    await breadbox.getBreadcrumbButtons().first().waitFor({state: 'visible'});
+    await breadbox.getBreadcrumbButtons().first().click();
+    await expect(breadbox.ariaLiveRegion).toContainText('removed', {
+      timeout: 3000,
+    });
+  });
 });
