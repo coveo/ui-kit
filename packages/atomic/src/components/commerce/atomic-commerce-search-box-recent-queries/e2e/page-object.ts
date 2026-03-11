@@ -15,6 +15,8 @@ export class AtomicCommerceSearchBoxRecentQueriesPageObject extends BasePageObje
   }
 
   get ariaLiveRegion(): Locator {
-    return this.page.locator('atomic-aria-live div[id*="search-box"]');
+    return this.page.locator(
+      'atomic-aria-live div[id*="recent-search-cleared"]'
+    );
   }
 }

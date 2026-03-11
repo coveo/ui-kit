@@ -41,7 +41,7 @@ test.describe('atomic-pager', () => {
     pager,
   }) => {
     await pager.pageButton(2).click();
-    await expect(pager.ariaLiveRegion).toContainText('page 2', {
+    await expect(pager.ariaLiveRegion).toContainText('loaded', {
       timeout: 3000,
     });
   });

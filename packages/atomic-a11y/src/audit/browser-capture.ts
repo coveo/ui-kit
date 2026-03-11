@@ -541,7 +541,15 @@ export async function captureLiveRegionAnnouncements(
       .first()
       .click();
 
-    await page.waitForTimeout(800);
+    // Poll for live region text change (covers 500ms debounce + Lit render cycle) — up to 1500ms
+    const deadline = Date.now() + 1500;
+    while (Date.now() < deadline) {
+      await new Promise<void>((resolve) => setTimeout(resolve, 100));
+      const current = await page
+        .locator(protocol.liveRegionSelector!)
+        .textContent();
+      if (current !== beforeText) break;
+    }
 
     const afterText = await page
       .locator(protocol.liveRegionSelector!)
