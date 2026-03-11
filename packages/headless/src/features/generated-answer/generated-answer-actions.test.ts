@@ -2,7 +2,6 @@
 import {buildMockCitation} from '../../test/mock-citation.js';
 import {
   generateAnswer,
-  generateHeadAnswer,
   registerFieldsToIncludeInCitations,
   setAnswerContentFormat,
   setIsEnabled,
@@ -222,123 +221,6 @@ describe('generated answer', () => {
         expect.stringContaining(
           'Missing answerConfigurationId in engine configuration'
         )
-      );
-    });
-  });
-
-  describe('#generateHeadAnswer', () => {
-    const mockDispatch = vi.fn().mockImplementation((action) => {
-      if (typeof action === 'function') {
-        return Promise.resolve({type: 'mock/resolved'});
-      }
-      return action;
-    });
-
-    const mockLogger = {warn: vi.fn()};
-    const mockExtra = {
-      navigatorContext: {},
-      logger: mockLogger,
-    } as any;
-
-    const mockGetState = vi.fn(
-      () =>
-        ({
-          configuration: {
-            knowledge: {
-              agentId: 'test-agent-id',
-            },
-          },
-        }) as any
-    );
-
-    beforeEach(() => {
-      vi.clearAllMocks();
-    });
-
-    it('should dispatch resetAnswer when agentId is present', async () => {
-      const thunk = generateHeadAnswer();
-      await thunk(mockDispatch, mockGetState, mockExtra);
-
-      const resetAnswerCall = mockDispatch.mock.calls.find(
-        (call) => call[0]?.type === 'generatedAnswer/resetAnswer'
-      );
-      expect(resetAnswerCall).toBeDefined();
-    });
-
-    it('should dispatch setAnswerApiQueryParams with constructed parameters', async () => {
-      const thunk = generateHeadAnswer();
-      await thunk(mockDispatch, mockGetState, mockExtra);
-
-      const setAnswerApiQueryParamsCall = mockDispatch.mock.calls.find(
-        (call) => call[0]?.type === 'generatedAnswer/setAnswerApiQueryParams'
-      );
-      expect(setAnswerApiQueryParamsCall).toBeDefined();
-      expect(setAnswerApiQueryParamsCall?.[0].payload).toHaveProperty(
-        'q',
-        'test query'
-      );
-      expect(setAnswerApiQueryParamsCall?.[0].payload).toHaveProperty(
-        'locale',
-        'en'
-      );
-    });
-
-    it('should dispatch initiateAnswerEndpoint with correct arguments', async () => {
-      const thunk = generateHeadAnswer();
-      await thunk(mockDispatch, mockGetState, mockExtra);
-
-      const initiateAnswerEndpointCall = mockDispatch.mock.calls.find(
-        (call) => call[0]?.type === 'mocked/initiateAnswerEndpoint'
-      );
-      expect(initiateAnswerEndpointCall).toBeDefined();
-    });
-
-    it('should log warning and not dispatch actions when agentId is missing', async () => {
-      const mockGetStateNoAgentId = vi.fn(
-        () =>
-          ({
-            configuration: {
-              knowledge: {
-                answerConfigurationId: '',
-                agentId: undefined,
-              },
-            },
-          }) as any
-      );
-
-      const thunk = generateHeadAnswer();
-      await thunk(mockDispatch, mockGetStateNoAgentId, mockExtra);
-
-      expect(mockLogger.warn).toHaveBeenCalledWith(
-        'Missing agentId in engine configuration. ' +
-          'The generateHeadAnswer action requires an agent ID.'
-      );
-
-      const resetAnswerCall = mockDispatch.mock.calls.find(
-        (call) => call[0]?.type === 'generatedAnswer/resetAnswer'
-      );
-      expect(resetAnswerCall).toBeUndefined();
-    });
-
-    it('should log warning when agentId is empty string', async () => {
-      const mockGetStateEmptyAgentId = vi.fn(
-        () =>
-          ({
-            configuration: {
-              knowledge: {
-                answerConfigurationId: '',
-                agentId: '',
-              },
-            },
-          }) as any
-      );
-
-      const thunk = generateHeadAnswer();
-      await thunk(mockDispatch, mockGetStateEmptyAgentId, mockExtra);
-
-      expect(mockLogger.warn).toHaveBeenCalledWith(
-        'Missing agentId in engine configuration. ' +
-          'The generateHeadAnswer action requires an agent ID.'
       );
     });
   });
