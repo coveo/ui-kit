@@ -1,7 +1,6 @@
+import * as answerAgentRunnerModule from '../../../api/knowledge/answer-generation/agents/answer-agent/answer-agent-runner.js';
 import * as followUpAgentModule from '../../../api/knowledge/answer-generation/agents/follow-up-agent/follow-up-agent.js';
 import * as followUpStrategyModule from '../../../api/knowledge/answer-generation/agents/follow-up-agent/follow-up-answer-strategy.js';
-import {answerGenerationApi} from '../../../api/knowledge/answer-generation/answer-generation-api.js';
-import type {AnswerGenerationApiState} from '../../../api/knowledge/answer-generation/answer-generation-api-state.js';
 import {setAgentId} from '../../../features/configuration/configuration-actions.js';
 import {getConfigurationInitialState} from '../../../features/configuration/configuration-state.js';
 import {
@@ -12,7 +11,6 @@ import {
 } from '../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {followUpAnswersReducer} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import {getFollowUpAnswersInitialState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
-import {generateHeadAnswer} from '../../../features/generated-answer/generated-answer-actions.js';
 import {
   generatedAnswerAnalyticsClient,
   logCopyGeneratedAnswer,
@@ -22,6 +20,7 @@ import {
   logOpenGeneratedAnswerSource,
 } from '../../../features/generated-answer/generated-answer-analytics-actions.js';
 import {getGeneratedAnswerInitialState} from '../../../features/generated-answer/generated-answer-state.js';
+import type {SearchAppState} from '../../../index.js';
 import {
   buildMockSearchEngine,
   type MockedSearchEngine,
@@ -42,6 +41,9 @@ vi.mock(
 const mockCoreLike = vi.fn();
 const mockCoreDislike = vi.fn();
 const mockCoreCopy = vi.fn();
+const mockAnswerRunner = {
+  run: vi.fn(),
+};
 const mockCoreCitationClick = vi.fn();
 const mockCoreCitationHover = vi.fn();
 const headAnswerId = 'head-id';
@@ -52,6 +54,10 @@ const mockFollowUpAgent = {
   abortRun: vi.fn(),
 };
 const mockFollowUpStrategy = {};
+const mockCreateAnswerRunner = vi.spyOn(
+  answerAgentRunnerModule,
+  'createAnswerRunner'
+);
 const mockCreateFollowUpAgent = vi.spyOn(
   followUpAgentModule,
   'createFollowUpAgent'
@@ -87,7 +93,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
     );
 
   const buildEngineWithGeneratedAnswer = (
-    initialState: Partial<AnswerGenerationApiState> = {}
+    initialState: Partial<SearchAppState> = {}
   ) => {
     const state = createMockState({
       ...initialState,
@@ -117,6 +123,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockCreateAnswerRunner.mockReturnValue(mockAnswerRunner as never);
     mockCoreLike.mockClear();
     mockCoreDislike.mockClear();
     mockCoreCopy.mockClear();
@@ -150,10 +157,9 @@ describe('GeneratedAnswerWithFollowUps', () => {
     ).not.toThrow();
   });
 
-  it('adds the answerGenerationApi and followUpAnswers reducers to engine', () => {
+  it('adds the followUpAnswers reducers to engine', () => {
     createGeneratedAnswerWithFollowUps();
     expect(engine.addReducers).toHaveBeenCalledWith({
-      [answerGenerationApi.reducerPath]: answerGenerationApi.reducer,
       followUpAnswers: followUpAnswersReducer,
     });
   });
@@ -279,11 +285,18 @@ describe('GeneratedAnswerWithFollowUps', () => {
   });
 
   describe('retry method', () => {
-    it('should dispatch generateHeadAnswer', () => {
+    it('should rerun the head answer generation', () => {
       const controller = createGeneratedAnswerWithFollowUps();
       controller.retry();
 
-      expect(generateHeadAnswer).toHaveBeenCalledTimes(1);
+      expect(mockCreateAnswerRunner).toHaveBeenCalledTimes(1);
+      expect(mockAnswerRunner.run).toHaveBeenCalledWith(
+        engine.state,
+        engine.dispatch,
+        expect.any(Function)
+      );
+      const navigatorContextProvider = mockAnswerRunner.run.mock.calls[0][2];
+      expect(navigatorContextProvider()).toBe(engine.navigatorContext);
     });
   });
 

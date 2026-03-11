@@ -1,6 +1,6 @@
+import {createAnswerRunner} from '../../../api/knowledge/answer-generation/agents/answer-agent/answer-agent-runner.js';
 import {createFollowUpAgent} from '../../../api/knowledge/answer-generation/agents/follow-up-agent/follow-up-agent.js';
 import {createFollowUpStrategy} from '../../../api/knowledge/answer-generation/agents/follow-up-agent/follow-up-answer-strategy.js';
-import {answerGenerationApi} from '../../../api/knowledge/answer-generation/answer-generation-api.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import {setAgentId} from '../../../features/configuration/configuration-actions.js';
@@ -17,7 +17,6 @@ import {
 } from '../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {followUpAnswersReducer as followUpAnswers} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import type {FollowUpAnswersState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
-import {generateHeadAnswer} from '../../../features/generated-answer/generated-answer-actions.js';
 import type {GeneratedAnswerState} from '../../../index.js';
 import type {
   FollowUpAnswersSection,
@@ -129,6 +128,7 @@ export function buildGeneratedAnswerWithFollowUps(
     environment
   );
   const followUpStrategy = createFollowUpStrategy(engine.dispatch);
+  const answerRunner = createAnswerRunner();
 
   return {
     ...controller,
@@ -142,7 +142,11 @@ export function buildGeneratedAnswerWithFollowUps(
     },
 
     retry() {
-      engine.dispatch(generateHeadAnswer());
+      answerRunner.run(
+        engine.state,
+        engine.dispatch,
+        () => engine.navigatorContext
+      );
     },
 
     // TODO: SFINT-6665
@@ -251,14 +255,8 @@ export function buildGeneratedAnswerWithFollowUps(
 
 function loadReducers(
   engine: SearchEngine | InsightEngine
-): engine is SearchEngine<
-  GeneratedAnswerSection &
-    FollowUpAnswersSection & {
-      answerGenerationApi: ReturnType<typeof answerGenerationApi.reducer>;
-    }
-> {
+): engine is SearchEngine<GeneratedAnswerSection & FollowUpAnswersSection> {
   engine.addReducers({
-    [answerGenerationApi.reducerPath]: answerGenerationApi.reducer,
     followUpAnswers,
   });
   return true;
