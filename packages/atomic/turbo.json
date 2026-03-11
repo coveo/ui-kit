@@ -36,8 +36,6 @@
         "!dist/atomic/lang/**",
         "docs/**",
         "!docs/assets.json",
-        "src/components.d.ts",
-        ".stencil/**",
         "projects/atomic-angular/src/lib/stencil-generated/**/*"
       ]
     },
