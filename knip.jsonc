@@ -18,7 +18,7 @@
   "workspaces": {
     ".": {
       "entry": [
-        ".claude/skills/**/scripts/*.mjs",
+        ".agents/skills/**/scripts/*.mjs",
         "hooks/*.js",
         "scripts/**/*.{js,mjs}"
       ],

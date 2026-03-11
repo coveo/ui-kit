@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic-legacy",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Package used internally by @coveo/atomic for components using legacy technologies (e.g., Stencil). This package is not intended for public use.",
   "type": "module",
   "repository": {

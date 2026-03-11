@@ -1,3 +1,18 @@
+## <small>3.46.1 (2026-03-11)</small>
+
+* feat(atomic) creation of agent generation steps component (#7165) ([901ed24](https://github.com/coveo/ui-kit/commits/901ed24)), closes [#7165](https://github.com/coveo/ui-kit/issues/7165)
+* feat(headless) Extend internal Generated Answer With Follow Ups controller analytics methods to supp ([e6c79f2](https://github.com/coveo/ui-kit/commits/e6c79f2)), closes [#7182](https://github.com/coveo/ui-kit/issues/7182)
+* fix(headless): properly reset isEnabled property representing follow up capability (#7209) ([1701efe](https://github.com/coveo/ui-kit/commits/1701efe)), closes [#7209](https://github.com/coveo/ui-kit/issues/7209)
+
+
+
+## 3.46.0 (2026-03-04)
+
+* feat(headless): added logic to support agent steps in the state (#7155) ([fe4a57e](https://github.com/coveo/ui-kit/commits/fe4a57e)), closes [#7155](https://github.com/coveo/ui-kit/issues/7155)
+* feat(headless): integration of ag-ui client to generate head and follow up answers (#7153) ([c8b6d3c](https://github.com/coveo/ui-kit/commits/c8b6d3c)), closes [#7153](https://github.com/coveo/ui-kit/issues/7153)
+
+
+
 ## <small>3.45.1 (2026-02-25)</small>
 
 * fix(headless): clear tab-restricted facet values synchronously on tab switch (#7092) ([8adad48](https://github.com/coveo/ui-kit/commits/8adad48)), closes [#7092](https://github.com/coveo/ui-kit/issues/7092)

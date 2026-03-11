@@ -1,7 +1,7 @@
 import type {GenerationStep} from '@coveo/headless';
 import type {i18n} from 'i18next';
 import {html} from 'lit';
-import {beforeAll, beforeEach, describe, expect, it} from 'vitest';
+import {beforeAll, describe, expect, it} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {
@@ -21,10 +21,6 @@ const STEP_STATUS = {
 } as const;
 describe('#renderAgentGenerationSteps', () => {
   let i18n: i18n;
-
-  beforeEach(() => {
-    getCurrentStepKey([]);
-  });
 
   beforeAll(async () => {
     i18n = await createTestI18n();
@@ -130,7 +126,7 @@ describe('#renderAgentGenerationSteps', () => {
 
     await expect
       .element(element)
-      .toHaveTextContent('Searching for relevant results...');
+      .toHaveTextContent(i18n.t('agent-generation-step-search'));
   });
 
   it('should render the active think step label when streaming', async () => {
@@ -144,7 +140,9 @@ describe('#renderAgentGenerationSteps', () => {
       isStreaming: true,
     });
 
-    await expect.element(element).toHaveTextContent('Thinking...');
+    await expect
+      .element(element)
+      .toHaveTextContent(i18n.t('agent-generation-step-think'));
   });
 
   it('should render the active answering step label when streaming', async () => {
@@ -158,7 +156,9 @@ describe('#renderAgentGenerationSteps', () => {
       isStreaming: true,
     });
 
-    await expect.element(element).toHaveTextContent('Generating answer');
+    await expect
+      .element(element)
+      .toHaveTextContent(i18n.t('generating-answer'));
   });
 
   it('should not render anything when there is no active step', async () => {
@@ -196,7 +196,7 @@ describe('#renderAgentGenerationSteps', () => {
 
     await expect
       .element(element)
-      .toHaveTextContent('Searching for relevant results...');
+      .toHaveTextContent(i18n.t('agent-generation-step-search'));
   });
 
   it('should render the rolodex animation structure', async () => {
