@@ -307,7 +307,6 @@ export class AtomicInsightGeneratedAnswer
                   ${renderDisclaimer({
                     props: {
                       i18n: this.bindings.i18n,
-                      isStreaming: !!this.generatedAnswerState.isStreaming,
                     },
                   })}
                 </div>`
@@ -421,7 +420,11 @@ export class AtomicInsightGeneratedAnswer
         getComputedStyle(document.documentElement).fontSize
       );
 
-      this.fullAnswerHeight = answerHeight / rootFontSize;
+      const nextFullAnswerHeight = answerHeight / rootFontSize;
+      if (this.fullAnswerHeight !== nextFullAnswerHeight) {
+        this.fullAnswerHeight = nextFullAnswerHeight;
+        this.requestUpdate();
+      }
 
       this.updateAnswerHeight();
     }
@@ -530,7 +533,9 @@ export class AtomicInsightGeneratedAnswer
       props: {
         i18n: this.bindings.i18n,
         generatedAnswer: generatedAnswer,
-        collapsible: this.collapsible,
+        collapsible:
+          this.collapsible &&
+          (this.fullAnswerHeight ?? 0) > this.validateMaxCollapsedHeight(),
         renderFeedbackAndCopyButtonsSlot: () =>
           this.renderFeedbackAndCopyButtonsWrapper(),
         renderCitationsSlot: () => html`${this.renderCitationsList()}`,

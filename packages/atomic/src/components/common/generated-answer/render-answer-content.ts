@@ -43,7 +43,6 @@ export const renderAnswerContent: FunctionalComponent<
 
   const {answer, isStreaming, citations, answerContentFormat, expanded, error} =
     generatedAnswer;
-  const isExpanded = collapsible ? expanded : true;
   const hasRetryableError = error?.isRetryable === true;
 
   return html`
@@ -78,7 +77,7 @@ export const renderAnswerContent: FunctionalComponent<
           : nothing
       }
       ${when(
-        !hasRetryableError && isExpanded,
+        !hasRetryableError && (collapsible ? expanded : true),
         () => html`
           <div class="mt-4" part="feedback-and-copy-buttons">
             ${renderFeedbackAndCopyButtonsSlot()}
