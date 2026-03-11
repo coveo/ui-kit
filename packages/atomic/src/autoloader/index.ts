@@ -59,9 +59,7 @@ export function registerAutoloader(
     // If the root element is an undefined Atomic component, add it to the list
     if (
       rootIsCustomElement &&
-      ((root.ownerDocument.defaultView &&
-        root instanceof root.ownerDocument.defaultView.Element) ||
-        root instanceof Element) &&
+      root instanceof Element &&
       !customElements.get(rootTagName) &&
       !allCustomElements.includes(root)
     ) {
