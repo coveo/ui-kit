@@ -1,2 +1,5 @@
-module.exports = require('./_index.cjs.js');
-require('../atomic/autoloader/index.cjs.js').registerAutoloader();
+const atomic = require('../atomic/autoloader/index.cjs.js');
+
+atomic.registerAutoloader();
+
+module.exports = atomic;
