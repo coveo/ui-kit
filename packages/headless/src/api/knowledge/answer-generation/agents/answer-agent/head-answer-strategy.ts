@@ -1,5 +1,5 @@
 import type {AgentSubscriber} from '@ag-ui/client';
-import type {Dispatch, UnknownAction} from '@reduxjs/toolkit';
+import type {ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
 import {
   setFollowUpAnswersConversationId,
   setIsEnabled,
@@ -24,16 +24,11 @@ import {
 import type {GenerationStepName} from '../../../../../features/generated-answer/generated-answer-state.js';
 import {mapRunErrorCode} from '../../../../../features/generated-answer/sse-generated-answer-errors.js';
 
-type HeadAnswerDispatch = Dispatch<UnknownAction> & {
-  (action: ReturnType<typeof logGeneratedAnswerStreamEnd>): unknown;
-  (action: ReturnType<typeof logGeneratedAnswerResponseLinked>): unknown;
-};
-
 /**
  * Creates an AgentSubscriber that handles answer streaming events
  */
 export const createHeadAnswerStrategy = (
-  dispatch: HeadAnswerDispatch
+  dispatch: ThunkDispatch<unknown, unknown, UnknownAction>
 ): AgentSubscriber => {
   return {
     onRunStartedEvent: ({event}) => {
