@@ -43,8 +43,9 @@
   },
   "sideEffects": [
     "./dist/atomic/components/components/*/*/*.js",
-    "./dist/index.js",
-    "./dist/atomic/loader/index.js"
+    "./dist/esm/index.js",
+    "./dist/esm/loader.js",
+    "./dist/cjs/loader.cjs.js"
   ],
   "files": [
     "custom-elements.json",

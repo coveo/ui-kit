@@ -32,10 +32,10 @@ exportModule.defineCustomElements = (...args) => {
   );
 };
 exportModule.applyPolyfills = () => {
-  throw new Error('The applyPolyfills function has been removed. It always been a no-op, and should not be used.');
+  throw new Error('The applyPolyfills function has been removed. It has always been a no-op and should not be used.');
 };
 exportModule.setNonce = () => {
-  console.warn('Since v3.52.0, `@coveo/atomic` does not longer add script or style tags. The setNonce function is now a no-op and can be safely removed from your codebase.');
+  console.warn('Since v3.52.0, `@coveo/atomic` no longer adds script or style tags. The setNonce function is now a no-op and can be safely removed from your codebase.');
 };
 Object.assign(exportModule, require('./version.cjs.js'));
 module.exports = exportModule;
