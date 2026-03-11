@@ -208,49 +208,4 @@ describe('generateAnswerListener', () => {
       });
     });
   });
-
-  describe('when answerGenerationApi reducer is NOT present in state', () => {
-    beforeEach(() => {
-      store = configureStore({
-        reducer: {
-          generatedAnswer: (state = getGeneratedAnswerInitialState()) => state,
-          configuration: (state = {knowledge: {agentId: 'some-agent-id'}}) =>
-            state,
-          query: (state = {q: 'test'}) => state,
-        },
-        middleware: (getDefaultMiddleware) =>
-          getDefaultMiddleware().prepend(
-            createGenerateAnswerListener({
-              getNavigatorContext: buildMockNavigatorContextProvider(),
-              // biome-ignore lint/suspicious/noExplicitAny: unit test
-            }).middleware as Middleware<{}, any>
-          ),
-      });
-    });
-
-    it('should not run the answer agent when executeSearch.pending is dispatched', () => {
-      const searchAction = executeSearch.pending('requestId', {
-        legacy: logInsightInterfaceLoad(),
-        next: interfaceLoad(),
-      });
-
-      store.dispatch(searchAction);
-
-      expect(answerRunnerRun).not.toHaveBeenCalled();
-      expect(answerRunnerAbortRun).not.toHaveBeenCalled();
-    });
-
-    it('should not dispatch head answer reset or follow-up reset when executeSearch.pending is dispatched', () => {
-      const searchAction = executeSearch.pending('requestId', {
-        legacy: logInsightInterfaceLoad(),
-        next: interfaceLoad(),
-      });
-
-      store.dispatch(searchAction);
-
-      expect(resetAnswer).not.toHaveBeenCalled();
-      expect(resetFollowUpAnswers).not.toHaveBeenCalled();
-      expect(answerRunnerAbortRun).not.toHaveBeenCalled();
-    });
-  });
 });

@@ -2,7 +2,7 @@ import type {SearchAppState} from '../../state/search-app-state.js';
 import {streamAnswerAPIStateMock} from './generated-answer-mocks.js';
 import {
   generativeQuestionAnsweringIdSelector,
-  isGeneratedAnswerFeatureEnabledWithAnswerGenerationAPI,
+  isGeneratedAnswerFeatureEnabledWithAgentAPI,
 } from './generated-answer-selectors.js';
 
 describe('generated-answer-selectors', () => {
@@ -130,24 +130,8 @@ describe('generated-answer-selectors', () => {
     });
   });
 
-  describe('isGeneratedAnswerFeatureEnabledWithAnswerGenerationAPI', () => {
-    it('should return true when answerGenerationApi and generatedAnswer and valid agentId are present', () => {
-      const state = {
-        answerGenerationApi: {},
-        generatedAnswer: {},
-        configuration: {
-          knowledge: {
-            agentId: 'valid-agent-id',
-          },
-        },
-      } as unknown as Partial<SearchAppState>;
-
-      expect(
-        isGeneratedAnswerFeatureEnabledWithAnswerGenerationAPI(state)
-      ).toBe(true);
-    });
-
-    it('should return false when answerGenerationApi is missing', () => {
+  describe('isGeneratedAnswerFeatureEnabledWithAgentAPI', () => {
+    it('should return true when generatedAnswer and valid agentId are present', () => {
       const state = {
         generatedAnswer: {},
         configuration: {
@@ -157,14 +141,11 @@ describe('generated-answer-selectors', () => {
         },
       } as unknown as Partial<SearchAppState>;
 
-      expect(
-        isGeneratedAnswerFeatureEnabledWithAnswerGenerationAPI(state)
-      ).toBe(false);
+      expect(isGeneratedAnswerFeatureEnabledWithAgentAPI(state)).toBe(true);
     });
 
     it('should return false when generatedAnswer is missing', () => {
       const state = {
-        answerGenerationApi: {},
         configuration: {
           knowledge: {
             agentId: 'valid-agent-id',
@@ -172,28 +153,22 @@ describe('generated-answer-selectors', () => {
         },
       } as unknown as Partial<SearchAppState>;
 
-      expect(
-        isGeneratedAnswerFeatureEnabledWithAnswerGenerationAPI(state)
-      ).toBe(false);
+      expect(isGeneratedAnswerFeatureEnabledWithAgentAPI(state)).toBe(false);
     });
 
     it('should return false when agentId is undefined', () => {
       const state = {
-        answerGenerationApi: {},
         generatedAnswer: {},
         configuration: {
           knowledge: {},
         },
       } as unknown as Partial<SearchAppState>;
 
-      expect(
-        isGeneratedAnswerFeatureEnabledWithAnswerGenerationAPI(state)
-      ).toBe(false);
+      expect(isGeneratedAnswerFeatureEnabledWithAgentAPI(state)).toBe(false);
     });
 
     it('should return false when agentId is an empty string', () => {
       const state = {
-        answerGenerationApi: {},
         generatedAnswer: {},
         configuration: {
           knowledge: {
@@ -202,14 +177,11 @@ describe('generated-answer-selectors', () => {
         },
       } as unknown as Partial<SearchAppState>;
 
-      expect(
-        isGeneratedAnswerFeatureEnabledWithAnswerGenerationAPI(state)
-      ).toBe(false);
+      expect(isGeneratedAnswerFeatureEnabledWithAgentAPI(state)).toBe(false);
     });
 
     it('should return false when agentId is only whitespace', () => {
       const state = {
-        answerGenerationApi: {},
         generatedAnswer: {},
         configuration: {
           knowledge: {
@@ -218,9 +190,7 @@ describe('generated-answer-selectors', () => {
         },
       } as unknown as Partial<SearchAppState>;
 
-      expect(
-        isGeneratedAnswerFeatureEnabledWithAnswerGenerationAPI(state)
-      ).toBe(false);
+      expect(isGeneratedAnswerFeatureEnabledWithAgentAPI(state)).toBe(false);
     });
   });
 });
