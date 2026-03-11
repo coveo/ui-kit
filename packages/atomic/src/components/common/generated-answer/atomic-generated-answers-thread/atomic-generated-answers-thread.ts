@@ -131,7 +131,7 @@ export class AtomicGeneratedAnswersThread extends LitElement {
 
   private renderShowPreviousAnswersButton() {
     const label =
-      this.i18n?.t?.('show-previous-question', {
+      this.i18n?.t?.('show-previous-questions', {
         count: this.generatedAnswers.length - 1,
       }) ?? 'Show previous questions';
 
