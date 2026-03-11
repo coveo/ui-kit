@@ -17,10 +17,8 @@ function findAndExecuteMethod(
 ): boolean {
   for (const controller of Object.values(controllers)) {
     if (
-      controller &&
-      typeof controller === 'object' &&
-      methodName in controller &&
-      typeof (controller as Record<string, unknown>)[methodName] === 'function'
+      typeof Object.getOwnPropertyDescriptor(controller, methodName)?.value ===
+      'function'
     ) {
       (controller as Record<string, () => void>)[methodName]();
       return true;
