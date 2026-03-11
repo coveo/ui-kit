@@ -13,12 +13,14 @@ import {
   captureFocusStates,
   captureHoverState,
   captureInteractionStates,
+  captureLiveRegionAnnouncements,
   captureMultiViewport,
   captureTargetSizes,
   captureTextSpacing,
   initBrowser,
   navigateToStory,
 } from './browser-capture.js';
+import {INTERACTION_PROTOCOLS} from './interaction-protocols.js';
 import {
   callLLMWithRetry,
   initLLMClient,
@@ -45,7 +47,7 @@ import {
   CALL2_KEYS,
   MERGED_CALL1_3_KEYS,
 } from './prompts.js';
-import type {PlaywrightPage} from './types.js';
+import type {LiveRegionCaptureResult, PlaywrightPage} from './types.js';
 
 interface Config {
   surface: string;
@@ -627,6 +629,30 @@ async function evaluateComponent(
       logger.substep(`Roles: ${matchedProtocols.join(', ')}`);
     }
 
+    const liveRegionTimer = logger.timer();
+    const liveRegionProtocols = INTERACTION_PROTOCOLS.filter(
+      (p) => p.expectsLiveRegion === true
+    );
+    const liveRegionResults: LiveRegionCaptureResult[] = [];
+    for (const protocol of liveRegionProtocols) {
+      const result = await captureLiveRegionAnnouncements(page, protocol);
+      liveRegionResults.push(result);
+    }
+    const allChanges = liveRegionResults.flatMap((r) => r.liveRegionChanges);
+    const combinedLiveRegion: LiveRegionCaptureResult = {
+      liveRegionChanges: allChanges,
+      summary:
+        allChanges.length > 0
+          ? `Captured ${allChanges.length} live region announcement(s)`
+          : 'No live region announcements captured',
+    };
+    logger.step(
+      'branch',
+      'Capture',
+      `live-region (${allChanges.length} announcements captured)`,
+      liveRegionTimer()
+    );
+
     if (config.saveCaptures) {
       const outputDir = await saveStoryCaptures(captureDate, story, {
         defaultScreenshot,
@@ -656,7 +682,8 @@ async function evaluateComponent(
       focusDetails,
       hasFocusableElements,
       targetSizeData,
-      interactionSummary
+      interactionSummary,
+      combinedLiveRegion
     );
     const mergedImageCount = countImageParts(mergedMessages);
     const mergedCallTimer = logger.timer();

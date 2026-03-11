@@ -3,6 +3,8 @@ export interface InteractionProtocol {
   selector: string;
   stateAttributes: string[];
   apgPattern?: string;
+  expectsLiveRegion?: boolean;
+  liveRegionSelector?: string;
   actions: Array<{
     name: string;
     keys: string[];
@@ -349,5 +351,37 @@ export const INTERACTION_PROTOCOLS: InteractionProtocol[] = [
     stateAttributes: ['aria-valuenow', 'aria-valuemin', 'aria-valuemax'],
     apgPattern: 'meter',
     actions: [],
+  },
+  {
+    role: 'pagination',
+    selector: 'atomic-pager button[aria-label="Next"]',
+    stateAttributes: [],
+    expectsLiveRegion: true,
+    liveRegionSelector: 'atomic-aria-live div[id*="atomic-pager"]',
+    actions: [{name: 'click-next', keys: [], focusFirst: false}],
+  },
+  {
+    role: 'breadcrumb-removal',
+    selector: 'atomic-breadbox button[aria-label*="Remove"]',
+    stateAttributes: [],
+    expectsLiveRegion: true,
+    liveRegionSelector: 'atomic-aria-live div[id*="breadbox"]',
+    actions: [{name: 'remove-filter', keys: [], focusFirst: false}],
+  },
+  {
+    role: 'search-clear',
+    selector: 'atomic-search-box button[aria-label*="clear" i]',
+    stateAttributes: [],
+    expectsLiveRegion: true,
+    liveRegionSelector: 'atomic-aria-live div[id*="search-box"]',
+    actions: [{name: 'clear-search', keys: [], focusFirst: false}],
+  },
+  {
+    role: 'recent-queries-clear',
+    selector: '[aria-label*="Clear recent searches"]',
+    stateAttributes: [],
+    expectsLiveRegion: true,
+    liveRegionSelector: 'atomic-aria-live div[id*="search-box"]',
+    actions: [{name: 'clear-recent-queries', keys: [], focusFirst: false}],
   },
 ];

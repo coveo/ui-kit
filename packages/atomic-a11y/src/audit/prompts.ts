@@ -3,6 +3,7 @@ import {
   truncateAccessibilityTree,
 } from './accessibility-tree.js';
 import type {LLMMessage} from './llm-client.js';
+import type {LiveRegionCaptureResult} from './types.js';
 
 export const SYSTEM_PROMPT = `You are an accessibility expert evaluating WCAG 2.2 Level AA compliance for a web component or assembled page rendered in Storybook. You will be shown screenshots and/or accessibility tree data captured from the component. Evaluate ONLY the specific criteria listed in each request. Respond ONLY with valid JSON matching the exact schema provided. Do not include markdown fences, explanations, or any text outside the JSON object.
 
@@ -137,7 +138,8 @@ export function buildMergedCall1_3UserPrompt(
   focusDetails: string,
   hasFocusableElements: boolean,
   targetSizeData: string,
-  interactionSummary: string
+  interactionSummary: string,
+  liveRegionData?: LiveRegionCaptureResult
 ): string {
   const truncatedTree = truncateAccessibilityTree(accessibilityTree, 2000);
 
@@ -177,6 +179,14 @@ ${focusSection}
 **Target size data**: ${targetSizeData}
 
 **APG keyboard interaction data**: ${interactionSummary}
+${
+  liveRegionData && liveRegionData.liveRegionChanges.length > 0
+    ? `
+
+## Live Region Announcements
+${liveRegionData.liveRegionChanges.map((c) => `- After [${c.action}]: region "${c.regionName}" announced "${c.announcementText}" (aria-live=${c.ariaLive})`).join('\n')}`
+    : ''
+}
 
 **Accessibility tree (JSON)**:
 \`\`\`json
@@ -290,7 +300,8 @@ export function buildMergedCall1_3Messages(
   focusDetails: string,
   hasFocusableElements: boolean,
   targetSizeData: string,
-  interactionSummary: string
+  interactionSummary: string,
+  liveRegionData?: LiveRegionCaptureResult
 ): LLMMessage[] {
   const userText = buildMergedCall1_3UserPrompt(
     componentName,
@@ -301,7 +312,8 @@ export function buildMergedCall1_3Messages(
     focusDetails,
     hasFocusableElements,
     targetSizeData,
-    interactionSummary
+    interactionSummary,
+    liveRegionData
   );
 
   const imageContent: Array<{

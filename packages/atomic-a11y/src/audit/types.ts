@@ -25,6 +25,21 @@ export interface PlaywrightLocator {
   focus(): Promise<void>;
   click(options?: {timeout?: number; force?: boolean}): Promise<void>;
   evaluate<R>(fn: (el: Element) => R): Promise<R>;
+  textContent(): Promise<string | null>;
+  allTextContents(): Promise<string[]>;
+}
+
+export interface LiveRegionChange {
+  action: string;
+  selector: string;
+  regionName: string;
+  announcementText: string;
+  ariaLive: 'polite' | 'assertive';
+}
+
+export interface LiveRegionCaptureResult {
+  liveRegionChanges: LiveRegionChange[];
+  summary: string;
 }
 
 export interface PlaywrightKeyboard {
