@@ -2,8 +2,17 @@ import {
   type AccessibilityNode,
   diffAccessibilityTrees,
 } from './accessibility-tree.js';
-import {INTERACTION_PROTOCOLS} from './interaction-protocols.js';
-import type {PlaywrightBrowser, PlaywrightPage} from './types.js';
+import {
+  INTERACTION_PROTOCOLS,
+  type InteractionProtocol,
+} from './interaction-protocols.js';
+import type {
+  LiveRegionCaptureResult,
+  LiveRegionChange,
+  PlaywrightBrowser,
+  PlaywrightLocator,
+  PlaywrightPage,
+} from './types.js';
 
 export interface BrowserContext {
   browser: PlaywrightBrowser;
@@ -513,4 +522,54 @@ export async function captureInteractionStates(
       : 'No interactive ARIA widgets found on page';
 
   return {interactions, summary};
+}
+
+export async function captureLiveRegionAnnouncements(
+  page: PlaywrightPage,
+  protocol: InteractionProtocol
+): Promise<LiveRegionCaptureResult> {
+  try {
+    const beforeText = await page
+      .locator(protocol.liveRegionSelector!)
+      .textContent();
+
+    await (
+      page.locator(protocol.selector) as PlaywrightLocator & {
+        first(): PlaywrightLocator;
+      }
+    )
+      .first()
+      .click();
+
+    await page.waitForTimeout(800);
+
+    const afterText = await page
+      .locator(protocol.liveRegionSelector!)
+      .textContent();
+
+    const liveRegionChanges: LiveRegionChange[] = [];
+    if (afterText !== beforeText && afterText) {
+      liveRegionChanges.push({
+        action: protocol.selector,
+        selector: protocol.liveRegionSelector!,
+        regionName:
+          protocol.liveRegionSelector!.match(/\[id\*="([^"]+)"\]/)?.[1] ??
+          'unknown',
+        announcementText: afterText,
+        ariaLive: 'polite',
+      });
+    }
+
+    const summary =
+      liveRegionChanges.length > 0
+        ? `Captured ${liveRegionChanges.length} live region announcement(s)`
+        : 'No live region announcement changes detected';
+
+    return {liveRegionChanges, summary};
+  } catch (error) {
+    return {
+      liveRegionChanges: [],
+      summary: `Live region capture failed: ${String(error)}`,
+    };
+  }
 }
