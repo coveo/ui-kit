@@ -20,8 +20,8 @@
     "gen:lit": {
       "dependsOn": ["@coveo/atomic#build:cem"],
       "outputs": [
-        "src/components/search/component.ts",
-        "src/components/commerce/component.ts"
+        "src/components/search/components.ts",
+        "src/components/commerce/components.ts"
       ]
     },
     "release:phase1": {
