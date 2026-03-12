@@ -15,6 +15,7 @@ import {
   captureInteractionStates,
   captureLiveRegionAnnouncements,
   captureMultiViewport,
+  captureOnLoadLiveRegions,
   captureTargetSizes,
   captureTextSpacing,
   initBrowser,
@@ -634,22 +635,43 @@ async function evaluateComponent(
       (p) => p.expectsLiveRegion === true
     );
     const liveRegionResults: LiveRegionCaptureResult[] = [];
+    const onLoadTimer = logger.timer();
+    const onLoadChanges = await captureOnLoadLiveRegions(
+      page,
+      liveRegionProtocols
+    );
+    logger.step(
+      'branch',
+      'Capture',
+      `on-load live regions (${onLoadChanges.length} entries)`,
+      onLoadTimer()
+    );
     for (const protocol of liveRegionProtocols) {
       const result = await captureLiveRegionAnnouncements(page, protocol);
       liveRegionResults.push(result);
     }
-    const allChanges = liveRegionResults.flatMap((r) => r.liveRegionChanges);
+    const allChanges = [
+      ...onLoadChanges,
+      ...liveRegionResults.flatMap((r) => r.liveRegionChanges),
+    ];
+    const offsetValues = allChanges
+      .map((c) => c.offsetMs)
+      .filter((ms) => ms > 0);
+    const temporalRange =
+      offsetValues.length > 0
+        ? ` over ${Math.min(...offsetValues)}-${Math.max(...offsetValues)}ms`
+        : '';
     const combinedLiveRegion: LiveRegionCaptureResult = {
       liveRegionChanges: allChanges,
       summary:
         allChanges.length > 0
-          ? `Captured ${allChanges.length} live region announcement(s)`
+          ? `Captured ${allChanges.length} live region announcement(s)${temporalRange}`
           : 'No live region announcements captured',
     };
     logger.step(
       'branch',
       'Capture',
-      `live-region (${allChanges.length} announcements captured)`,
+      `live-region temporal (${allChanges.length} announcements${temporalRange})`,
       liveRegionTimer()
     );
 

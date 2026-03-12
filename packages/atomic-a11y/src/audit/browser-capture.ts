@@ -436,6 +436,7 @@ export async function captureInteractionStates(
 
   for (const protocol of INTERACTION_PROTOCOLS) {
     try {
+      if (protocol.expectsLiveRegion) continue;
       const locator = page.locator(protocol.selector);
       const count = await locator.count();
       if (count === 0) continue;
@@ -575,7 +576,8 @@ export async function startLiveRegionObserver(
 }
 
 export async function collectLiveRegionMutations(
-  page: PlaywrightPage
+  page: PlaywrightPage,
+  actionName: string = 'live-region-update'
 ): Promise<LiveRegionChange[]> {
   try {
     const raw = await page.evaluate(() => {
@@ -596,12 +598,13 @@ export async function collectLiveRegionMutations(
       }>;
     });
     return raw.map((m) => ({
-      action: 'live-region-update',
+      action: actionName,
       selector: `[id="${m.regionId}"]`,
       regionName: m.regionName,
       announcementText: m.text,
       ariaLive: m.ariaLive as 'polite' | 'assertive',
       offsetMs: Math.round(m.offsetMs),
+      source: 'interaction' as const,
     }));
   } catch {
     return [];
@@ -614,14 +617,47 @@ export async function captureLiveRegionAnnouncements(
 ): Promise<LiveRegionCaptureResult> {
   try {
     await startLiveRegionObserver(page);
-    await page.locator(protocol.selector).nth(0).click();
+    const action = protocol.actions[0];
+    if (action && action.name === 'observe-load') {
+      // On-load protocols are handled by captureOnLoadLiveRegions(), not here
+      return {liveRegionChanges: [], summary: 'On-load protocol — skipped in interaction capture'};
+    }
+    if (action && action.keys.length > 0) {
+      const el = page.locator(protocol.selector).nth(0);
+      await el.focus();
+      await page.waitForTimeout(200);
+      for (const key of action.keys) {
+        await page.keyboard.press(key);
+        await page.waitForTimeout(150);
+      }
+    } else {
+      await page.locator(protocol.selector).nth(0).click();
+    }
     await new Promise<void>((r) => setTimeout(r, 800));
-    const liveRegionChanges = await collectLiveRegionMutations(page);
+    let liveRegionChanges = await collectLiveRegionMutations(
+      page,
+      `${protocol.role}/${protocol.actions[0]?.name ?? 'unknown'}`
+    );
+
+    if (liveRegionChanges.length === 0) {
+      liveRegionChanges = [
+        {
+          action: `${protocol.role}/${protocol.actions[0]?.name ?? 'unknown'}`,
+          selector: protocol.liveRegionSelector ?? protocol.selector,
+          regionName: protocol.role,
+          announcementText: '',
+          ariaLive: 'polite',
+          offsetMs: 0,
+          noAnnouncement: true,
+          source: 'interaction',
+        },
+      ];
+    }
 
     const summary =
-      liveRegionChanges.length > 0
+      liveRegionChanges.length > 0 && !liveRegionChanges[0].noAnnouncement
         ? `Captured ${liveRegionChanges.length} live region announcement(s)`
-        : 'No live region announcement changes detected';
+        : `No live region announcement detected after ${protocol.role}/${protocol.actions[0]?.name ?? 'unknown'}`;
 
     return {liveRegionChanges, summary};
   } catch (error) {
@@ -629,5 +665,84 @@ export async function captureLiveRegionAnnouncements(
       liveRegionChanges: [],
       summary: `Live region capture failed: ${String(error)}`,
     };
+  }
+}
+
+export async function captureOnLoadLiveRegions(
+  page: PlaywrightPage,
+  protocols: InteractionProtocol[]
+): Promise<LiveRegionChange[]> {
+  try {
+    const results: LiveRegionChange[] = [];
+    const onLoadProtocols = protocols.filter(
+      (p) => p.actions.length > 0 && p.actions[0].name === 'observe-load'
+    );
+
+    for (const protocol of onLoadProtocols) {
+      const selector = protocol.liveRegionSelector ?? protocol.selector;
+      const locator = page.locator(selector);
+      const count = await locator.count();
+
+      if (count === 0) {
+        results.push({
+          action: `${protocol.role}/observe-load`,
+          selector,
+          regionName: protocol.role,
+          announcementText: '',
+          ariaLive: 'polite',
+          offsetMs: 0,
+          noAnnouncement: true,
+          source: 'on-load',
+        });
+        continue;
+      }
+
+      const el = locator.nth(0);
+      const isVisible = await el.isVisible();
+
+      if (!isVisible) {
+        results.push({
+          action: `${protocol.role}/observe-load`,
+          selector,
+          regionName: protocol.role,
+          announcementText: '',
+          ariaLive: 'polite',
+          offsetMs: 0,
+          noAnnouncement: true,
+          source: 'on-load',
+        });
+        continue;
+      }
+
+      const textContent = (await el.textContent()) ?? '';
+
+      if (textContent.trim() === '') {
+        results.push({
+          action: `${protocol.role}/observe-load`,
+          selector,
+          regionName: protocol.role,
+          announcementText: '',
+          ariaLive: 'polite',
+          offsetMs: 0,
+          noAnnouncement: true,
+          source: 'on-load',
+        });
+      } else {
+        results.push({
+          action: `${protocol.role}/observe-load`,
+          selector,
+          regionName: protocol.role,
+          announcementText: textContent.trim(),
+          ariaLive: 'polite',
+          offsetMs: 0,
+          noAnnouncement: false,
+          source: 'on-load',
+        });
+      }
+    }
+
+    return results;
+  } catch (error) {
+    return [];
   }
 }

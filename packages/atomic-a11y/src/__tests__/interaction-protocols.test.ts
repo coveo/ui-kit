@@ -3,8 +3,8 @@ import type {InteractionProtocol} from '../audit/interaction-protocols.js';
 import {INTERACTION_PROTOCOLS} from '../audit/interaction-protocols.js';
 
 describe('INTERACTION_PROTOCOLS', () => {
-  it('should contain exactly 30 entries', () => {
-    expect(INTERACTION_PROTOCOLS).toHaveLength(30);
+  it('should contain exactly 44 entries', () => {
+    expect(INTERACTION_PROTOCOLS).toHaveLength(44);
   });
 
   it('should have a non-empty role string on every entry', () => {
@@ -21,15 +21,21 @@ describe('INTERACTION_PROTOCOLS', () => {
     }
   });
 
-  it('should have a non-empty apgPattern string on every entry', () => {
-    for (const protocol of INTERACTION_PROTOCOLS) {
+  it('should have a non-empty apgPattern string on every keyboard protocol', () => {
+    const keyboardProtocols = INTERACTION_PROTOCOLS.filter(
+      (p) => !p.expectsLiveRegion
+    );
+    for (const protocol of keyboardProtocols) {
       expect(protocol.apgPattern).toBeTruthy();
       expect(typeof protocol.apgPattern).toBe('string');
     }
   });
 
-  it('should have a non-empty stateAttributes array on every entry', () => {
-    for (const protocol of INTERACTION_PROTOCOLS) {
+  it('should have a non-empty stateAttributes array on every keyboard protocol', () => {
+    const keyboardProtocols = INTERACTION_PROTOCOLS.filter(
+      (p) => !p.expectsLiveRegion
+    );
+    for (const protocol of keyboardProtocols) {
       expect(Array.isArray(protocol.stateAttributes)).toBe(true);
       expect(protocol.stateAttributes.length).toBeGreaterThan(0);
     }
@@ -54,12 +60,12 @@ describe('INTERACTION_PROTOCOLS', () => {
     }
   });
 
-  it('should have at least one action with focusFirst: true for every interactive entry', () => {
-    const interactiveProtocols = INTERACTION_PROTOCOLS.filter(
-      (p) => p.actions.length > 0
+  it('should have at least one action with focusFirst: true for every interactive keyboard entry', () => {
+    const interactiveKeyboard = INTERACTION_PROTOCOLS.filter(
+      (p) => p.actions.length > 0 && !p.expectsLiveRegion
     );
 
-    for (const protocol of interactiveProtocols) {
+    for (const protocol of interactiveKeyboard) {
       const hasFocusFirst = protocol.actions.some(
         (action) => action.focusFirst === true
       );
@@ -79,8 +85,11 @@ describe('INTERACTION_PROTOCOLS', () => {
     }
   });
 
-  it('should have a non-empty keys array with at least one key on every action', () => {
-    for (const protocol of INTERACTION_PROTOCOLS) {
+  it('should have a non-empty keys array with at least one key on every keyboard protocol action', () => {
+    const keyboardProtocols = INTERACTION_PROTOCOLS.filter(
+      (p) => !p.expectsLiveRegion
+    );
+    for (const protocol of keyboardProtocols) {
       for (const action of protocol.actions) {
         expect(Array.isArray(action.keys)).toBe(true);
         expect(
@@ -88,6 +97,20 @@ describe('INTERACTION_PROTOCOLS', () => {
           `action "${action.name}" in protocol "${protocol.role}" should have at least one key`
         ).toBeGreaterThan(0);
       }
+    }
+  });
+
+  it('should have expectsLiveRegion and liveRegionSelector on every live-region protocol', () => {
+    const liveRegionProtocols = INTERACTION_PROTOCOLS.filter(
+      (p) => p.expectsLiveRegion === true
+    );
+    expect(liveRegionProtocols.length).toBeGreaterThanOrEqual(14);
+    for (const protocol of liveRegionProtocols) {
+      expect(
+        protocol.liveRegionSelector,
+        `"${protocol.role}" needs liveRegionSelector`
+      ).toBeTruthy();
+      expect(protocol.stateAttributes).toEqual([]);
     }
   });
 

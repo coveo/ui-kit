@@ -36,6 +36,8 @@ export interface LiveRegionChange {
   announcementText: string;
   ariaLive: 'polite' | 'assertive';
   offsetMs: number;
+  noAnnouncement?: boolean;
+  source?: 'interaction' | 'on-load';
 }
 
 export interface LiveRegionCaptureResult {
