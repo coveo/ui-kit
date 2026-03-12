@@ -8,8 +8,10 @@ import {
   type SearchStatus,
 } from '@coveo/headless/insight';
 import {html} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {userEvent} from 'vitest/browser';
+import {renderAnswerContent} from '@/src/components/common/generated-answer/render-answer-content';
 import {renderInAtomicInsightInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/insight/atomic-insight-interface-fixture';
 import {buildFakeInsightEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/engine';
 import {buildFakeGeneratedAnswer} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/generated-answer-controller';
@@ -19,6 +21,9 @@ import type {AtomicInsightGeneratedAnswer} from './atomic-insight-generated-answ
 import './atomic-insight-generated-answer';
 
 vi.mock('@coveo/headless/insight', {spy: true});
+vi.mock('@/src/components/common/generated-answer/render-answer-content', {
+  spy: true,
+});
 
 describe('atomic-insight-generated-answer', () => {
   const mockedEngine = buildFakeInsightEngine();
@@ -64,7 +69,9 @@ describe('atomic-insight-generated-answer', () => {
           .collapsible=${props.collapsible ?? false}
           .disableCitationAnchoring=${props.disableCitationAnchoring ?? false}
           .answerConfigurationId=${props.answerConfigurationId}
-          fields-to-include-in-citations=${props.fieldsToIncludeInCitations}
+          fields-to-include-in-citations=${ifDefined(
+            props.fieldsToIncludeInCitations
+          )}
           .maxCollapsedHeight=${props.maxCollapsedHeight ?? 16}
         ></atomic-insight-generated-answer>`,
         selector: 'atomic-insight-generated-answer',
@@ -397,7 +404,7 @@ describe('atomic-insight-generated-answer', () => {
   });
 
   it('should render show more button when collapsible and content is tall', async () => {
-    const {showMoreButton} = await renderGeneratedAnswer({
+    const renderedAnswer = await renderGeneratedAnswer({
       props: {collapsible: true},
       generatedAnswerState: {
         isVisible: true,
@@ -405,10 +412,14 @@ describe('atomic-insight-generated-answer', () => {
       },
     });
 
-    expect(showMoreButton).toBeInTheDocument();
+    Reflect.set(renderedAnswer.element, 'fullAnswerHeight', 100);
+    await renderedAnswer.element.requestUpdate();
+    await renderedAnswer.element.updateComplete;
+
+    expect(renderedAnswer.showMoreButton).toBeInTheDocument();
   });
 
-  it('should render show more button when collapsible is enabled and content is short', async () => {
+  it('should not render show more button when content is short', async () => {
     const {showMoreButton} = await renderGeneratedAnswer({
       props: {collapsible: true},
       generatedAnswerState: {
@@ -417,7 +428,65 @@ describe('atomic-insight-generated-answer', () => {
       },
     });
 
-    await expect.element(showMoreButton).toBeInTheDocument();
+    await expect.element(showMoreButton).not.toBeInTheDocument();
+  });
+
+  it('should pass collapsible as false to renderAnswerContent when content is short', async () => {
+    const renderedAnswer = await renderGeneratedAnswer({
+      props: {collapsible: true, maxCollapsedHeight: 16},
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Short text',
+      },
+    });
+
+    Reflect.set(renderedAnswer.element, 'fullAnswerHeight', 8);
+    await renderedAnswer.element.requestUpdate();
+    await renderedAnswer.element.updateComplete;
+
+    const lastCall = vi.mocked(renderAnswerContent).mock.calls.at(-1);
+    expect(lastCall).toBeDefined();
+    expect(lastCall?.[0].props.collapsible).toBe(false);
+  });
+
+  it('should request re-render when adaptAnswerHeight updates measured height', async () => {
+    const renderedAnswer = await renderGeneratedAnswer({
+      props: {collapsible: true, maxCollapsedHeight: 16},
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Test answer',
+      },
+    });
+
+    const generatedText = renderedAnswer.element.shadowRoot?.querySelector(
+      '[part="generated-text"]'
+    ) as HTMLElement | null;
+    expect(generatedText).not.toBeNull();
+
+    vi.spyOn(
+      generatedText as HTMLElement,
+      'getBoundingClientRect'
+    ).mockReturnValue({
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 320,
+      top: 0,
+      right: 0,
+      bottom: 320,
+      left: 0,
+      toJSON: () => ({}),
+    } as DOMRect);
+
+    const requestUpdateSpy = vi.spyOn(renderedAnswer.element, 'requestUpdate');
+    const adaptAnswerHeight = Reflect.get(
+      renderedAnswer.element,
+      'adaptAnswerHeight'
+    ) as () => void;
+
+    adaptAnswerHeight.call(renderedAnswer.element);
+
+    expect(requestUpdateSpy).toHaveBeenCalled();
   });
 
   it('should call hide when toggle is clicked', async () => {

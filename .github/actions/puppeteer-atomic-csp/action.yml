@@ -1,5 +1,5 @@
 name: 'Atomic E2E tests'
-description: 'Runs Cypress tests for Atomic'
+description: 'Runs CSP Playwright tests for Atomic'
 runs:
   using: composite
   steps:
