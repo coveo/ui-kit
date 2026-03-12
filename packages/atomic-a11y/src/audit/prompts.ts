@@ -180,11 +180,24 @@ ${focusSection}
 
 **APG keyboard interaction data**: ${interactionSummary}
 ${
-  liveRegionData && liveRegionData.liveRegionChanges.length > 0
+  liveRegionData
     ? `
 
 ## Live Region Announcements
-${liveRegionData.liveRegionChanges.map((c) => `- ${c.offsetMs ? `At +${c.offsetMs}ms after` : 'After'} [${c.action}]: region "${c.regionName}" announced "${c.announcementText}" (aria-live=${c.ariaLive})`).join('\n')}`
+${liveRegionData.liveRegionChanges
+  .map((c) => {
+    if (c.noAnnouncement) {
+      return `- After [${c.action}]: region "${c.regionName}" — **No announcement detected** (aria-live=${c.ariaLive})`;
+    }
+    const prefix =
+      c.source === 'on-load'
+        ? '[On page load]'
+        : c.offsetMs
+          ? `At +${c.offsetMs}ms after [${c.action}]`
+          : `After [${c.action}]`;
+    return `- ${prefix}: region "${c.regionName}" announced "${c.announcementText}" (aria-live=${c.ariaLive})`;
+  })
+  .join('\n')}`
     : ''
 }
 
