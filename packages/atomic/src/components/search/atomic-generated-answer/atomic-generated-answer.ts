@@ -421,7 +421,6 @@ export class AtomicGeneratedAnswer
                     ${renderDisclaimer({
                       props: {
                         i18n: this.bindings.i18n,
-                        isStreaming: !!this.generatedAnswerState.isStreaming,
                       },
                     })}
                   </div>

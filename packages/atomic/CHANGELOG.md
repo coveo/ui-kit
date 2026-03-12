@@ -1,3 +1,12 @@
+## <small>3.52.1 (2026-03-11)</small>
+
+* feat(atomic) creation of agent generation steps component (#7165) ([901ed24](https://github.com/coveo/ui-kit/commits/901ed24)), closes [#7165](https://github.com/coveo/ui-kit/issues/7165)
+* feat(atomic) move feedback and copy buttons under the citations and removed question when followUps  ([9ab5dcf](https://github.com/coveo/ui-kit/commits/9ab5dcf)), closes [#7212](https://github.com/coveo/ui-kit/issues/7212)
+* fix(atomic) feedback buttons missing when the generated answer is short (#7193) ([6c515a0](https://github.com/coveo/ui-kit/commits/6c515a0)), closes [#7193](https://github.com/coveo/ui-kit/issues/7193)
+* fix(storybook): brand images issue (#7208) ([ea03987](https://github.com/coveo/ui-kit/commits/ea03987)), closes [#7208](https://github.com/coveo/ui-kit/issues/7208)
+
+
+
 ## 3.52.0 (2026-03-04)
 
 * chore: eject angular build from Stencil (#7149) ([2c4d509](https://github.com/coveo/ui-kit/commits/2c4d509)), closes [#7149](https://github.com/coveo/ui-kit/issues/7149)
