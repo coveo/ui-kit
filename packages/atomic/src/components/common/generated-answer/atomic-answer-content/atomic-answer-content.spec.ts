@@ -1,4 +1,4 @@
-import {html} from 'lit';
+import {html, type TemplateResult} from 'lit';
 import {beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
@@ -11,6 +11,7 @@ import type {
   GeneratedAnswer,
 } from './atomic-answer-content';
 import './atomic-answer-content';
+import type {GeneratedAnswerCitation} from '@coveo/headless';
 
 vi.mock('../render-feedback-and-copy-buttons', () => ({
   renderFeedbackAndCopyButtons: vi.fn(() => html``),
@@ -53,6 +54,10 @@ describe('atomic-answer-content', () => {
       onClickLike?: (answerId?: string) => void;
       onClickDislike?: (answerId?: string) => void;
       onCopyToClipboard?: (answerId?: string) => void;
+      renderCitations?: (
+        citations: GeneratedAnswerCitation[],
+        answerId?: string
+      ) => TemplateResult;
     } = {}
   ) => {
     const generatedAnswer = {
@@ -63,15 +68,17 @@ describe('atomic-answer-content', () => {
     const onClickLike = options.onClickLike ?? vi.fn();
     const onClickDislike = options.onClickDislike ?? vi.fn();
     const onCopyToClipboard = options.onCopyToClipboard ?? vi.fn();
+    const renderCitations = options.renderCitations ?? vi.fn(() => html``);
 
     const {element} = await renderInAtomicSearchInterface<AtomicAnswerContent>({
       template: html`<atomic-answer-content
-        .generatedAnswer=${generatedAnswer}
-        .i18n=${i18n}
-        .onClickLike=${onClickLike}
-        .onClickDislike=${onClickDislike}
-        .onCopyToClipboard=${onCopyToClipboard}
-      ></atomic-answer-content>`,
+          .generatedAnswer=${generatedAnswer}
+          .i18n=${i18n}
+          .onClickLike=${onClickLike}
+          .onClickDislike=${onClickDislike}
+          .onCopyToClipboard=${onCopyToClipboard}
+          .renderCitations=${renderCitations}
+        ></atomic-answer-content>`,
       selector: 'atomic-answer-content',
     });
 
@@ -81,6 +88,7 @@ describe('atomic-answer-content', () => {
       onClickLike,
       onClickDislike,
       onCopyToClipboard,
+      renderCitations,
       getFeedbackProps: () =>
         vi.mocked(renderFeedbackAndCopyButtons).mock.calls.at(-1)?.[0].props,
       getGeneratedContentProps: () =>
@@ -248,6 +256,29 @@ describe('atomic-answer-content', () => {
         label: i18n.t('citations'),
         isVisible: true,
       })
+    );
+  });
+
+  it('should call renderCitations with citations and answer id', async () => {
+    const citations = [
+      {
+        title: 'citation',
+        id: '1',
+        uri: 'uri',
+        permanentid: '1',
+        source: 'source',
+      },
+    ];
+    const renderCitations = vi.fn(() => html``);
+
+    const {generatedAnswer} = await renderComponent({
+      generatedAnswer: {citations},
+      renderCitations,
+    });
+
+    expect(renderCitations).toHaveBeenCalledWith(
+      citations,
+      generatedAnswer.answerId
     );
   });
 
