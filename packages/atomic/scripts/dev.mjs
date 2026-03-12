@@ -260,9 +260,6 @@ async function startServers() {
   );
 }
 
-// Get the stencil flag
-const isStencil = process.argv.includes('--stencil');
-
 // Start the servers (vite & storybook) first
 await startServers();
 
@@ -288,26 +285,6 @@ watch('src', {recursive: true}, async (_, filename) => {
 
   // Flag to stop the build process if a file changes during the build
   isStopped = false;
-
-  if (isStencil) {
-    await nextTask(
-      'Rebuilding Stencil...',
-      'node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json'
-    );
-
-    if (isStopped) {
-      return;
-    }
-
-    await nextTask(
-      'Placing the Stencil Proxy...',
-      'node ./scripts/stencil-proxy.mjs'
-    );
-
-    if (isStopped) {
-      return;
-    }
-  }
 
   await nextTask(
     'Rebuilding Lit...',

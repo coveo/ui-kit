@@ -28,9 +28,21 @@ export interface BaseSpotlightContent {
    */
   name?: string;
   /**
+   * The font color for the name text in hex format (e.g. `#ffffff`).
+   */
+  nameFontColor?: string;
+  /**
    * The description of the spotlight content.
    */
   description?: string;
+  /**
+   * The font color for the description text in hex format (e.g. `#ffffff`).
+   */
+  descriptionFontColor?: string;
+  /**
+   * The accessibility text for the image.
+   */
+  altText?: string;
   /**
    * The ID of the response that returned the spotlight content.
    */

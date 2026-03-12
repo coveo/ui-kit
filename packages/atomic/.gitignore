@@ -1,6 +1,5 @@
 dist/
 www/
-loader/
 docs/
 cdn/
 
@@ -31,8 +30,6 @@ UserInterfaceState.xcuserstate
 src/external-builds
 src/assets/lang/
 src/generated
-
-cypress/screenshots/*
 
 /test-results/
 /playwright-report/

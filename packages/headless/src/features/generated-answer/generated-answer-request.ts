@@ -1,14 +1,15 @@
 import type {HistoryElement} from '../../api/analytics/coveo.analytics/history-store.js';
 import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import type {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
-import type {AnswerParams} from '../../api/knowledge/answer-generation/endpoints/answer/answer-endpoint.js';
 import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
 import {getOrganizationEndpoint} from '../../api/platform-client.js';
 import type {BaseParam} from '../../api/platform-service-params.js';
 import type {SearchRequest} from '../../api/search/search/search-request.js';
 import type {
+  AnalyticsParam,
   AuthenticationParam,
   AutomaticFacetsParams,
+  PipelineRuleParameters,
 } from '../../api/search/search-api-params.js';
 import type {CaseContextParam} from '../../api/service/insight/query/query-request.js';
 import type {NavigatorContext} from '../../app/navigator-context-provider.js';
@@ -168,6 +169,18 @@ export type StateNeededForHeadAnswerParams = ConfigurationSection &
   Partial<SearchAppState> &
   GeneratedAnswerSection &
   Partial<TabSection>;
+
+/**
+ * Parameters for answer generation requests.
+ */
+type AnswerParams = {
+  q: string;
+  facets?: AnyFacetRequest[];
+  searchHub?: string;
+  pipeline?: string;
+  pipelineRuleParameters: PipelineRuleParameters;
+  locale: string;
+} & AnalyticsParam;
 
 export const constructGenerateHeadAnswerParams = (
   state: StateNeededForHeadAnswerParams,
