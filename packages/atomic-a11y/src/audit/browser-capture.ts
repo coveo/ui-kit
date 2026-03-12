@@ -1,5 +1,7 @@
 import {
   type AccessibilityNode,
+  annotateBoundingBoxes,
+  collectBoundingBoxes,
   diffAccessibilityTrees,
 } from './accessibility-tree.js';
 import {
@@ -18,6 +20,13 @@ export interface BrowserContext {
   pages: PlaywrightPage[];
 }
 
+/**
+ * Launch a headless Chromium browser and create reusable page instances for
+ * parallel story evaluation. Each page is pre-configured with a 1024×768
+ * desktop viewport.
+ *
+ * @param concurrency - Number of parallel browser pages to create.
+ */
 export async function initBrowser(
   concurrency: number
 ): Promise<BrowserContext> {
@@ -33,6 +42,15 @@ export async function initBrowser(
   return {browser, pages};
 }
 
+/**
+ * Navigate a Playwright page to a specific Storybook story rendered in
+ * isolation via the iframe endpoint. Waits for network idle and an additional
+ * 1 s for component hydration.
+ *
+ * @param page - Playwright page instance.
+ * @param storybookUrl - Base URL of the running Storybook server.
+ * @param storyId - Storybook story ID (e.g. `commerce-atomic-product--default`).
+ */
 export async function navigateToStory(
   page: PlaywrightPage,
   storybookUrl: string,
@@ -49,6 +67,27 @@ export interface CaptureResult {
   accessibilityTree: AccessibilityNode | null;
 }
 
+/**
+ * Capture the baseline visual and semantic state of the component at the
+ * default desktop viewport (1024×768).
+ *
+ * Returns a full-page screenshot (base64 PNG) and the complete accessibility
+ * tree snapshot. Together these provide the LLM with both visual and semantic
+ * evidence for evaluating criteria that rely on layout-vs-DOM-order comparison,
+ * role/name/state inspection, and visual content analysis.
+ *
+ * **WCAG 2.2 criteria supported:**
+ * - 1.3.2 Meaningful Sequence — compare a11y tree order vs. visual layout
+ * - 1.3.3 Sensory Characteristics — inspect visible text for sensory-only cues
+ * - 1.3.5 Identify Input Purpose — check a11y tree for `autocomplete` on inputs
+ * - 1.4.5 Images of Text — detect text rendered as images
+ * - 1.4.11 Non-text Contrast — assess UI boundary contrast from screenshot
+ * - 2.4.4 Link Purpose — inspect link/button accessible names in the a11y tree
+ * - 2.4.6 Headings and Labels — check heading/label text quality in the a11y tree
+ * - 3.3.3 Error Suggestion — look for error states and suggestion text
+ * - 3.3.4 Error Prevention — look for confirmation/undo patterns
+ * - 4.1.3 Status Messages — check a11y tree for `aria-live` regions
+ */
 export async function captureDefaultViewport(
   page: PlaywrightPage
 ): Promise<CaptureResult> {
@@ -62,6 +101,11 @@ export async function captureDefaultViewport(
     interestingOnly: false,
   });
 
+  // Annotate a11y tree nodes with visual bounding boxes so consumers can
+  // compare DOM reading order (tree sequence) vs visual layout order (bbox y,x).
+  const domBoxes = await collectBoundingBoxes(page);
+  annotateBoundingBoxes(accessibilityTree, domBoxes);
+
   return {screenshot, accessibilityTree};
 }
 
@@ -71,6 +115,21 @@ export interface HoverCaptureResult {
   hoverDetails: string;
 }
 
+/**
+ * Detect hover-triggered supplementary content (tooltips, popovers, menus).
+ *
+ * Snapshots the accessibility tree before interaction, then hovers up to 5
+ * interactive elements. After each hover, a second tree snapshot is diffed
+ * against the baseline. If new nodes appear, a screenshot is captured and a
+ * human-readable description is generated for the LLM.
+ *
+ * Resets the mouse position to (0, 0) after testing to avoid polluting
+ * subsequent captures.
+ *
+ * **WCAG 2.2 criteria supported:**
+ * - 1.4.13 Content on Hover/Focus — the LLM evaluates whether revealed content
+ *   is dismissible, hoverable, and persistent based on the screenshot and details
+ */
 export async function captureHoverState(
   page: PlaywrightPage
 ): Promise<HoverCaptureResult> {
@@ -149,6 +208,22 @@ export interface MultiViewportResult {
   landscape: string;
 }
 
+/**
+ * Capture responsive behaviour across three viewport sizes:
+ *
+ * 1. **Reflow (320×480)** — simulates 400% zoom on a 1280 px display. Also
+ *    measures `scrollWidth > clientWidth` to programmatically detect horizontal
+ *    overflow.
+ * 2. **Portrait (375×812)** — iPhone-sized portrait orientation.
+ * 3. **Landscape (812×375)** — same device rotated to landscape.
+ *
+ * Restores the viewport to 1024×768 before returning.
+ *
+ * **WCAG 2.2 criteria supported:**
+ * - 1.3.4 Orientation — portrait vs. landscape usability comparison
+ * - 1.4.4 Resize Text — 320 px screenshot shows text legibility at effective 400% zoom
+ * - 1.4.10 Reflow — 320 px viewport + horizontal-scroll flag tests content reflow
+ */
 export async function captureMultiViewport(
   page: PlaywrightPage
 ): Promise<MultiViewportResult> {
@@ -195,6 +270,20 @@ export interface FocusCaptureResult {
   hasFocusableElements: boolean;
 }
 
+/**
+ * Capture keyboard focus indicator visibility by tabbing through the component.
+ *
+ * Clicks at (0, 0) to clear any existing focus, then presses Tab up to 5 times.
+ * After each Tab press, a screenshot is taken and the focused element's tag name
+ * is recorded (including shadow DOM active elements). If the first Tab does not
+ * move focus, the component is considered to have no focusable elements.
+ *
+ * **WCAG 2.2 criteria supported:**
+ * - 2.4.7 Focus Visible — screenshots show whether focused elements have a
+ *   distinguishable indicator (outline, ring, highlight)
+ * - 2.4.11 Focus Not Obscured — screenshots show whether focused elements are
+ *   at least partially visible and not covered by overlays or sticky elements
+ */
 export async function captureFocusStates(
   page: PlaywrightPage
 ): Promise<FocusCaptureResult> {
@@ -260,6 +349,22 @@ export interface TextSpacingResult {
   textSpacingScreenshot: string;
 }
 
+/**
+ * Apply WCAG 1.4.12 text-spacing overrides and capture the result.
+ *
+ * Injects CSS into every element (traversing shadow DOMs) with:
+ * - `line-height: 1.5`
+ * - `letter-spacing: 0.12em`
+ * - `word-spacing: 0.16em`
+ * - `margin-bottom: 2em` (paragraph spacing)
+ *
+ * Takes a full-page screenshot after injection, then reloads the page to
+ * restore the original state for subsequent captures.
+ *
+ * **WCAG 2.2 criteria supported:**
+ * - 1.4.12 Text Spacing — the LLM compares this screenshot against the default
+ *   to detect text overflow, truncation, overlapping, or broken layout
+ */
 export async function captureTextSpacing(
   page: PlaywrightPage
 ): Promise<TextSpacingResult> {
@@ -297,6 +402,20 @@ export interface TargetSizeResult {
   targetSizeScreenshot: string;
 }
 
+/**
+ * Measure the bounding-box dimensions of all interactive elements on the page,
+ * including those inside shadow DOMs.
+ *
+ * Returns a human-readable summary of each element's tag, text label, and
+ * `width×height` in CSS pixels, plus a viewport screenshot. The data allows the
+ * LLM to compare measured sizes against the 24×24 px minimum threshold.
+ *
+ * **WCAG 2.2 criteria supported:**
+ * - 2.5.8 Target Size (Minimum) — element dimensions vs. 24×24 px threshold
+ * - 2.5.7 Dragging Movements — interactive element inventory helps identify
+ *   sliders and draggable widgets that need keyboard alternatives
+ */
+// TODO: ensure this function captures a representative sample of interactive elements.
 export async function captureTargetSizes(
   page: PlaywrightPage
 ): Promise<TargetSizeResult> {
@@ -385,6 +504,11 @@ export interface InteractionCaptureResult {
   summary: string;
 }
 
+/**
+ * Read the current ARIA state attributes and focused-element info for a
+ * single element matching `selector`. Used as the before/after snapshot
+ * helper for {@link captureInteractionStates}.
+ */
 async function getElementState(
   page: PlaywrightPage,
   selector: string,
@@ -424,10 +548,27 @@ async function getElementState(
 }
 
 /**
- * Capture interaction states by executing deterministic keyboard protocols
- * for each ARIA role found on the page. Returns before/after state snapshots
- * for each interaction, enabling the LLM to evaluate WCAG criteria related
- * to keyboard operability, state management, and focus handling.
+ * Execute deterministic APG keyboard protocols for every ARIA role found on
+ * the page and record before/after state snapshots.
+ *
+ * Iterates {@link INTERACTION_PROTOCOLS} (25+ patterns: combobox, tab,
+ * accordion, checkbox, slider, dialog, etc.). For each role present on the
+ * page, the first visible matching element is focused and the protocol's
+ * prescribed key sequences are executed (Enter, Space, Arrow keys, Escape,
+ * Tab). State attributes (`aria-expanded`, `aria-selected`, `aria-checked`,
+ * `aria-activedescendant`, etc.) are captured before and after each action.
+ *
+ * Protocols marked `expectsLiveRegion` are skipped here — they are handled
+ * by {@link captureLiveRegionAnnouncements} instead.
+ *
+ * **WCAG 2.2 criteria supported:**
+ * - 2.4.7 Focus Visible — interaction data shows whether focus remained
+ *   visible during widget state changes
+ * - 2.5.7 Dragging Movements — state changes on slider roles demonstrate
+ *   keyboard alternatives to dragging
+ * - 1.4.13 Content on Hover/Focus — tooltip show/dismiss state via Escape
+ * - 4.1.3 Status Messages — interaction-triggered state changes inform
+ *   whether status updates propagate correctly
  */
 export async function captureInteractionStates(
   page: PlaywrightPage
@@ -524,6 +665,18 @@ export async function captureInteractionStates(
   return {interactions, summary};
 }
 
+/**
+ * Install a `MutationObserver` on every `[aria-live]` element in the page.
+ *
+ * The observer records text changes (both `childList` and `characterData`
+ * mutations) with millisecond timestamps into `window.__ariaLiveMutations`.
+ * Call {@link collectLiveRegionMutations} after triggering an interaction to
+ * retrieve and clean up recorded mutations.
+ *
+ * **WCAG 2.2 criteria supported:**
+ * - 4.1.3 Status Messages — provides the temporal mutation data that proves
+ *   whether `aria-live` regions actually update after user actions
+ */
 export async function startLiveRegionObserver(
   page: PlaywrightPage
 ): Promise<void> {
@@ -575,6 +728,17 @@ export async function startLiveRegionObserver(
   } catch {}
 }
 
+/**
+ * Collect all live-region mutations recorded by {@link startLiveRegionObserver},
+ * disconnect the observer, and clean up global state.
+ *
+ * Returns an array of {@link LiveRegionChange} entries, each including the
+ * announcement text, region name, `aria-live` politeness, and time offset.
+ *
+ * **WCAG 2.2 criteria supported:**
+ * - 4.1.3 Status Messages — collected mutations are fed to the LLM as evidence
+ *   of whether interactions triggered the expected announcements
+ */
 export async function collectLiveRegionMutations(
   page: PlaywrightPage,
   actionName: string = 'live-region-update'
@@ -611,38 +775,75 @@ export async function collectLiveRegionMutations(
   }
 }
 
+/**
+ * Capture live-region announcements triggered by a single interaction protocol.
+ *
+ * For protocols with key sequences, the target element is focused and the keys
+ * are pressed. For click-based protocols, the element is clicked. After an
+ * 800 ms settle window, recorded mutations are collected. If no announcements
+ * are detected, a sentinel entry with `noAnnouncement: true` is returned so
+ * the LLM can evaluate whether an announcement was expected but missing.
+ *
+ * On-load protocols (`observe-load`) are skipped here — they are handled by
+ * {@link captureOnLoadLiveRegions}.
+ *
+ * **WCAG 2.2 criteria supported:**
+ * - 4.1.3 Status Messages — verifies that user interactions (pagination,
+ *   filter removal, search clear, etc.) trigger `aria-live` announcements
+ */
 export async function captureLiveRegionAnnouncements(
   page: PlaywrightPage,
   protocol: InteractionProtocol
 ): Promise<LiveRegionCaptureResult> {
+  const actionName = `${protocol.role}/${protocol.actions[0]?.name ?? 'unknown'}`;
   try {
-    await startLiveRegionObserver(page);
     const action = protocol.actions[0];
     if (action && action.name === 'observe-load') {
       // On-load protocols are handled by captureOnLoadLiveRegions(), not here
-      return {liveRegionChanges: [], summary: 'On-load protocol — skipped in interaction capture'};
+      return {liveRegionChanges: [], summary: 'On-load protocol \u2014 skipped in interaction capture'};
     }
+
+    // Check if the target element exists before attempting interaction
+    const locator = page.locator(protocol.selector).nth(0);
+    const elementCount = await locator.count();
+    if (elementCount === 0) {
+      return {
+        liveRegionChanges: [{
+          action: actionName,
+          selector: protocol.liveRegionSelector ?? protocol.selector,
+          regionName: protocol.role,
+          announcementText: '',
+          ariaLive: 'polite',
+          offsetMs: 0,
+          noAnnouncement: true,
+          source: 'interaction',
+        }],
+        summary: `Element not found: ${protocol.selector}`,
+      };
+    }
+
+    await startLiveRegionObserver(page);
+
     if (action && action.keys.length > 0) {
-      const el = page.locator(protocol.selector).nth(0);
-      await el.focus();
+      await locator.focus();
       await page.waitForTimeout(200);
       for (const key of action.keys) {
         await page.keyboard.press(key);
         await page.waitForTimeout(150);
       }
     } else {
-      await page.locator(protocol.selector).nth(0).click();
+      await locator.click({timeout: 5000});
     }
     await new Promise<void>((r) => setTimeout(r, 800));
     let liveRegionChanges = await collectLiveRegionMutations(
       page,
-      `${protocol.role}/${protocol.actions[0]?.name ?? 'unknown'}`
+      actionName
     );
 
     if (liveRegionChanges.length === 0) {
       liveRegionChanges = [
         {
-          action: `${protocol.role}/${protocol.actions[0]?.name ?? 'unknown'}`,
+          action: actionName,
           selector: protocol.liveRegionSelector ?? protocol.selector,
           regionName: protocol.role,
           announcementText: '',
@@ -657,17 +858,31 @@ export async function captureLiveRegionAnnouncements(
     const summary =
       liveRegionChanges.length > 0 && !liveRegionChanges[0].noAnnouncement
         ? `Captured ${liveRegionChanges.length} live region announcement(s)`
-        : `No live region announcement detected after ${protocol.role}/${protocol.actions[0]?.name ?? 'unknown'}`;
+        : `No live region announcement detected after ${actionName}`;
 
     return {liveRegionChanges, summary};
   } catch (error) {
     return {
       liveRegionChanges: [],
-      summary: `Live region capture failed: ${String(error)}`,
+      summary: `Live region capture failed for ${actionName}: ${String(error)}`,
     };
   }
 }
 
+/**
+ * Check whether on-load live regions already contain text content after the
+ * page has finished rendering (no interaction required).
+ *
+ * Filters the provided protocols for `observe-load` actions (e.g.
+ * `query-summary`, `no-results`, `query-error`, `generated-answer`,
+ * `notifications`) and checks each associated live-region selector for
+ * visible, non-empty text content.
+ *
+ * **WCAG 2.2 criteria supported:**
+ * - 4.1.3 Status Messages — confirms that server-rendered status content
+ *   (result counts, error messages) is present inside `aria-live` containers
+ *   on initial page load
+ */
 export async function captureOnLoadLiveRegions(
   page: PlaywrightPage,
   protocols: InteractionProtocol[]

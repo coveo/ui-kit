@@ -14,6 +14,7 @@ interface StoryEntry {
 function makeConfig(overrides: Record<string, unknown> = {}): {
   surface: string;
   component: string | null;
+  criteria: string[];
   dryRun: boolean;
   resume: boolean;
   maxComponents: number;
@@ -22,6 +23,7 @@ function makeConfig(overrides: Record<string, unknown> = {}): {
   logSteps: boolean;
   verbose: boolean;
   saveCaptures: boolean;
+  captureOnly: boolean;
   storybookUrl: string;
   help: boolean;
 } {
@@ -31,13 +33,15 @@ function makeConfig(overrides: Record<string, unknown> = {}): {
     dryRun: false,
     resume: false,
     maxComponents: Infinity,
-    model: 'gpt-4o',
+    model: 'gpt-4o', // default model
     concurrency: 1,
     logSteps: false,
     verbose: false,
     saveCaptures: false,
     storybookUrl: 'http://localhost:4400',
     help: false,
+    criteria: [],
+    captureOnly: false,
     ...overrides,
   };
 }

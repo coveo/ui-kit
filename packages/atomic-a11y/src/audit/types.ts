@@ -5,11 +5,19 @@
  * They avoid requiring the packages at compile time while providing type safety.
  */
 
+export interface BoundingBox {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
 export interface AccessibilityNode {
   role?: string;
   name?: string;
   value?: string | number;
   description?: string;
+  bbox?: BoundingBox;
   children?: AccessibilityNode[];
 }
 

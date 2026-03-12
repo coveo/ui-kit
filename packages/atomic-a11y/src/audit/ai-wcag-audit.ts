@@ -28,6 +28,7 @@ import {
   type LLMClientWrapper,
   type LLMMessage,
   LLMParseError,
+  type LLMValidatedResponse,
   type MergedResults,
   mergeResults,
   mergeStoryResults,
@@ -48,11 +49,12 @@ import {
   CALL2_KEYS,
   MERGED_CALL1_3_KEYS,
 } from './prompts.js';
-import type {LiveRegionCaptureResult, PlaywrightPage} from './types.js';
+import type {AccessibilityNode, LiveRegionCaptureResult, PlaywrightPage} from './types.js';
 
 interface Config {
   surface: string;
   component: string | null;
+  criteria: string[];
   dryRun: boolean;
   resume: boolean;
   maxComponents: number;
@@ -61,8 +63,46 @@ interface Config {
   logSteps: boolean;
   verbose: boolean;
   saveCaptures: boolean;
+  captureOnly: boolean;
   storybookUrl: string;
   help: boolean;
+}
+
+
+/**
+ * Resolve user-provided criteria keys. Accepts either full keys (e.g. '1.3.2-meaningful-sequence')
+ * or short numeric IDs (e.g. '1.3.2'). Validates against the known criteria sets.
+ */
+function resolveCriteriaKeys(raw: string[]): string[] {
+  if (raw.length === 0) return [];
+
+  // Flatten comma-separated values: --criteria 1.3.2,1.4.11
+  const tokens = raw.flatMap((v) => v.split(',').map((s) => s.trim()).filter(Boolean));
+
+  const allKeys = [...MERGED_CALL1_3_KEYS, ...CALL2_KEYS];
+  const resolved: string[] = [];
+
+  for (const token of tokens) {
+    // Try exact match first
+    if (allKeys.includes(token)) {
+      resolved.push(token);
+      continue;
+    }
+    // Try matching by numeric prefix (e.g. '1.3.2' matches '1.3.2-meaningful-sequence')
+    const match = allKeys.find((k) => k.startsWith(`${token}-`));
+    if (match) {
+      resolved.push(match);
+      continue;
+    }
+    console.error(
+      `Error: Unknown criterion "${token}".\n` +
+        `Valid criteria: ${allKeys.map((k) => k.split('-')[0]).join(', ')}\n` +
+        `Full keys: ${allKeys.join(', ')}`
+    );
+    process.exit(1);
+  }
+
+  return [...new Set(resolved)];
 }
 
 function parseArgs(): Config {
@@ -70,7 +110,9 @@ function parseArgs(): Config {
     options: {
       surface: {type: 'string', default: 'all'},
       component: {type: 'string', default: ''},
+      criteria: {type: 'string', multiple: true, default: []},
       'dry-run': {type: 'boolean', default: false},
+      'capture-only': {type: 'boolean', default: false},
       resume: {type: 'boolean', default: false},
       'max-components': {type: 'string', default: 'Infinity'},
       model: {type: 'string', default: 'gpt-4o'},
@@ -85,9 +127,13 @@ function parseArgs(): Config {
     allowPositionals: false,
   });
 
+  const rawCriteria = (values.criteria as string[]) ?? [];
+  const criteria = resolveCriteriaKeys(rawCriteria);
+
   const config: Config = {
     surface: values.surface as string,
     component: (values.component as string) || null,
+    criteria,
     dryRun: values['dry-run'] as boolean,
     resume: values.resume as boolean,
     maxComponents: parseInt(values['max-components'] as string, 10) || Infinity,
@@ -96,6 +142,7 @@ function parseArgs(): Config {
     logSteps: (values['log-steps'] as boolean) || (values.verbose as boolean),
     verbose: values.verbose as boolean,
     saveCaptures: values['save-captures'] as boolean,
+    captureOnly: values['capture-only'] as boolean,
     storybookUrl: (values['storybook-url'] as string).replace(/\/$/, ''),
     help: values.help as boolean,
   };
@@ -128,13 +175,16 @@ Usage:
 Options:
   --surface <name>        Surface to audit: commerce, search, insight, ipx, recommendations, all (default: all)
   --component <name>      Audit a single component or page by name (e.g., atomic-commerce-facet, search-page)
+  --criteria <ids>        Evaluate only specific criteria (comma-separated). Accepts full keys or numeric IDs.
+                          Skips LLM calls for criterion groups with no matching criteria.
   --dry-run               Show what would be audited without making LLM calls
+  --capture-only          Run the full capture pipeline but skip LLM evaluation
   --resume                Resume from a previous interrupted run
   --max-components <n>    Maximum number of components to audit (default: all)
   --model <id>            LLM model to use (default: gpt-4o)
   --concurrency <n>       Number of parallel LLM calls (default: 1)
   --log-steps             Print detailed pipeline steps
-  --save-captures         Save capture PNGs to a11y/reports/captures/<date>/...
+  --save-captures         Save capture PNGs and all LLM inputs (prompts, a11y tree, target sizes, etc.)
   --verbose               Print raw LLM responses (implies --log-steps)
   --help                  Show this help message
 
@@ -144,14 +194,19 @@ Environment:
 Examples:
   node scripts/ai-wcag-audit.mjs --surface commerce
   node scripts/ai-wcag-audit.mjs --component atomic-commerce-facet --verbose
+  node scripts/ai-wcag-audit.mjs --component search-page --criteria 1.3.2 --save-captures
+  node scripts/ai-wcag-audit.mjs --criteria 1.3.2,1.4.11,2.5.8 --component search-page
   node scripts/ai-wcag-audit.mjs --surface commerce --max-components 25
   node scripts/ai-wcag-audit.mjs --surface commerce --resume
   node scripts/ai-wcag-audit.mjs --component atomic-search-box --log-steps
   node scripts/ai-wcag-audit.mjs --surface search --model gpt-4o-mini
+  node scripts/ai-wcag-audit.mjs --surface commerce --capture-only --save-captures
 
 Output:
   Delta files in a11y/reports/deltas/delta-YYYY-MM-DD-ai-audit-<surface>.json
   Captures (optional): a11y/reports/captures/YYYY-MM-DD/<surface>/<component>/<story>/
+    With --save-captures: also saves prompt-merged.txt, prompt-call2.txt, accessibility-tree.json,
+    target-sizes.txt, interaction-summary.txt, live-region-data.json
   Validate with: node scripts/manual-audit-delta.mjs validate <delta-file>
   Merge with:    node scripts/manual-audit-delta.mjs merge --dry-run`);
   process.exit(0);
@@ -476,6 +531,95 @@ async function writeDeltaFiles(
   return writtenFiles;
 }
 
+
+function buildSkippedResponse(keys: string[]): LLMValidatedResponse {
+  const criteria: Record<string, {status: string; evidence: string}> = {};
+  for (const key of keys) {
+    criteria[key] = {
+      status: 'not-applicable',
+      evidence: 'Skipped — criterion not included in --criteria filter.',
+    };
+  }
+  return {criteria};
+}
+
+/**
+ * Extract the text portion of an LLM message array (strips base64 images).
+ */
+function extractPromptText(messages: LLMMessage[]): string {
+  const parts: string[] = [];
+  for (const msg of messages) {
+    parts.push(`[${msg.role}]`);
+    if (typeof msg.content === 'string') {
+      parts.push(msg.content);
+    } else if (Array.isArray(msg.content)) {
+      for (const part of msg.content) {
+        if (part.type === 'text' && part.text) {
+          parts.push(part.text);
+        } else if (part.type === 'image_url') {
+          parts.push('[image: PNG screenshot]');
+        }
+      }
+    }
+    parts.push('');
+  }
+  return parts.join('\n');
+}
+
+interface LLMInputDump {
+  promptText: string;
+  accessibilityTree?: AccessibilityNode | null;
+  targetSizeData?: string;
+  interactionSummary?: string;
+  liveRegionData?: LiveRegionCaptureResult;
+  callName: string;
+}
+
+async function saveLLMInputs(
+  captureDir: string,
+  inputs: LLMInputDump
+): Promise<void> {
+  await mkdir(captureDir, {recursive: true});
+
+  await writeFile(
+    path.join(captureDir, `prompt-${inputs.callName}.txt`),
+    inputs.promptText,
+    'utf8'
+  );
+
+  if (inputs.accessibilityTree) {
+    await writeFile(
+      path.join(captureDir, 'accessibility-tree.json'),
+      JSON.stringify(inputs.accessibilityTree, null, 2),
+      'utf8'
+    );
+  }
+
+  if (inputs.targetSizeData) {
+    await writeFile(
+      path.join(captureDir, 'target-sizes.txt'),
+      inputs.targetSizeData,
+      'utf8'
+    );
+  }
+
+  if (inputs.interactionSummary) {
+    await writeFile(
+      path.join(captureDir, 'interaction-summary.txt'),
+      inputs.interactionSummary,
+      'utf8'
+    );
+  }
+
+  if (inputs.liveRegionData) {
+    await writeFile(
+      path.join(captureDir, 'live-region-data.json'),
+      JSON.stringify(inputs.liveRegionData, null, 2),
+      'utf8'
+    );
+  }
+}
+
 async function evaluateComponent(
   page: PlaywrightPage,
   clientWrapper: LLMClientWrapper,
@@ -647,7 +791,15 @@ async function evaluateComponent(
       onLoadTimer()
     );
     for (const protocol of liveRegionProtocols) {
+      const protocolTimer = logger.timer();
       const result = await captureLiveRegionAnnouncements(page, protocol);
+      const actionName = protocol.actions[0]?.name ?? 'unknown';
+      const announcementCount = result.liveRegionChanges.filter((c) => !c.noAnnouncement).length;
+      const noAnnouncement = result.liveRegionChanges.every((c) => c.noAnnouncement);
+      const statusIcon = actionName === 'observe-load' ? 'skipped (on-load)' :
+        noAnnouncement ? 'no announcement' :
+        `${announcementCount} announcement(s)`;
+      logger.substep(`${protocol.role}/${actionName} → ${statusIcon} ${logger.isVerbose() ? `[${(protocolTimer() / 1000).toFixed(1)}s]` : ''}`);
       liveRegionResults.push(result);
     }
     const allChanges = [
@@ -691,61 +843,103 @@ async function evaluateComponent(
       }
     }
 
-    const mergedMessages = buildMergedCall1_3Messages(
-      story.componentName,
-      defaultScreenshot,
-      accessibilityTree,
-      hoverDetected,
-      hoverScreenshot,
-      hoverDetails,
-      textSpacingApplied ? textSpacingScreenshot : null,
-      focusScreenshots,
-      textSpacingApplied,
-      focusDetails,
-      hasFocusableElements,
-      targetSizeData,
-      interactionSummary,
-      combinedLiveRegion
-    );
-    const mergedImageCount = countImageParts(mergedMessages);
-    const mergedCallTimer = logger.timer();
-    const mergedResponse = await callLLMWithRetry(
-      clientWrapper,
-      mergedMessages,
-      config
-    );
-    logger.step(
-      'branch',
-      'LLM Call 2',
-      `${MERGED_CALL1_3_KEYS.length} criteria (${mergedImageCount} images sent)`,
-      mergedCallTimer()
-    );
-    const mergedValidated = validateLLMResponse(
-      mergedResponse,
-      MERGED_CALL1_3_KEYS
-    );
+    // --capture-only: skip LLM evaluation, just collect captures
+    if (config.captureOnly) {
+      logger.step('last', 'Capture only', 'LLM evaluation skipped');
+      continue;
+    }
 
-    const call2Messages = buildCall2Messages(
-      story.componentName,
-      reflow.screenshot,
-      reflow.hasHorizontalScroll,
-      portrait,
-      landscape
-    );
-    const call2ImageCount = countImageParts(call2Messages);
-    const call2Timer = logger.timer();
-    const call2Response = await callLLMWithRetry(
-      clientWrapper,
-      call2Messages,
-      config
-    );
-    logger.step(
-      'branch',
-      'LLM Call 2 (viewport)',
-      `${CALL2_KEYS.length} criteria (${call2ImageCount} images sent)`,
-      call2Timer()
-    );
-    const call2Validated = validateLLMResponse(call2Response, CALL2_KEYS);
+    // Determine which LLM calls are needed based on criteria filter
+    const hasCriteriaFilter = config.criteria.length > 0;
+    const needsMergedCall = !hasCriteriaFilter || config.criteria.some((c) => MERGED_CALL1_3_KEYS.includes(c));
+    const needsCall2 = !hasCriteriaFilter || config.criteria.some((c) => CALL2_KEYS.includes(c));
+
+    let mergedValidated: LLMValidatedResponse;
+    if (needsMergedCall) {
+      const mergedMessages = buildMergedCall1_3Messages(
+        story.componentName,
+        defaultScreenshot,
+        accessibilityTree,
+        hoverDetected,
+        hoverScreenshot,
+        hoverDetails,
+        textSpacingApplied ? textSpacingScreenshot : null,
+        focusScreenshots,
+        textSpacingApplied,
+        focusDetails,
+        hasFocusableElements,
+        targetSizeData,
+        interactionSummary,
+        combinedLiveRegion
+      );
+
+      if (config.saveCaptures) {
+        const captureDir = buildCaptureDir(captureDate, story);
+        await saveLLMInputs(captureDir, {
+          promptText: extractPromptText(mergedMessages),
+          accessibilityTree,
+          targetSizeData,
+          interactionSummary,
+          liveRegionData: combinedLiveRegion,
+          callName: 'merged',
+        });
+      }
+
+      const mergedImageCount = countImageParts(mergedMessages);
+      const mergedCallTimer = logger.timer();
+      const mergedResponse = await callLLMWithRetry(
+        clientWrapper,
+        mergedMessages,
+        config
+      );
+      logger.step(
+        'branch',
+        'LLM Call 1',
+        `${MERGED_CALL1_3_KEYS.length} criteria (${mergedImageCount} images sent)`,
+        mergedCallTimer()
+      );
+      mergedValidated = validateLLMResponse(mergedResponse, MERGED_CALL1_3_KEYS);
+    } else {
+      logger.step('branch', 'LLM Call 1', 'skipped (no matching criteria)');
+      mergedValidated = buildSkippedResponse(MERGED_CALL1_3_KEYS);
+    }
+
+    let call2Validated: LLMValidatedResponse;
+    if (needsCall2) {
+      const call2Messages = buildCall2Messages(
+        story.componentName,
+        reflow.screenshot,
+        reflow.hasHorizontalScroll,
+        portrait,
+        landscape
+      );
+
+      if (config.saveCaptures) {
+        const captureDir = buildCaptureDir(captureDate, story);
+        await saveLLMInputs(captureDir, {
+          promptText: extractPromptText(call2Messages),
+          callName: 'call2',
+        });
+      }
+
+      const call2ImageCount = countImageParts(call2Messages);
+      const call2Timer = logger.timer();
+      const call2Response = await callLLMWithRetry(
+        clientWrapper,
+        call2Messages,
+        config
+      );
+      logger.step(
+        'branch',
+        'LLM Call 2 (viewport)',
+        `${CALL2_KEYS.length} criteria (${call2ImageCount} images sent)`,
+        call2Timer()
+      );
+      call2Validated = validateLLMResponse(call2Response, CALL2_KEYS);
+    } else {
+      logger.step('branch', 'LLM Call 2 (viewport)', 'skipped (no matching criteria)');
+      call2Validated = buildSkippedResponse(CALL2_KEYS);
+    }
 
     const staticCall4 = {
       criteria: Object.fromEntries(STATIC_NA_CRITERIA),
@@ -761,6 +955,19 @@ async function evaluateComponent(
   }
 
   const finalMerged = mergeStoryResults(storyResults);
+
+  // If criteria filter is active, keep only requested criteria in the output
+  if (config.criteria.length > 0) {
+    for (const key of Object.keys(finalMerged.wcag22Criteria)) {
+      if (!config.criteria.includes(key)) {
+        delete finalMerged.wcag22Criteria[key];
+      }
+    }
+    finalMerged.evidenceParts = finalMerged.evidenceParts.filter((part) =>
+      config.criteria.some((c) => part.startsWith(`${c}: `))
+    );
+  }
+
   const counts = summarizeCriteria(finalMerged.wcag22Criteria);
   logger.step(
     'last',
@@ -823,7 +1030,7 @@ export async function main(): Promise<void> {
     throw error;
   }
 
-  if (!config.dryRun) {
+  if (!config.dryRun && !config.captureOnly) {
     await validateEnvironment(config);
   }
 
@@ -849,24 +1056,36 @@ export async function main(): Promise<void> {
     (name) => !existingProgress?.completedComponents.has(name)
   );
 
-  const estimatedCalls = remainingComponents.reduce(
-    (sum, name) => sum + (storyMap.get(name)?.length ?? 0) * 2,
-    0
-  );
 
   console.log(`Model:       ${config.model}`);
   console.log(`Surface:     ${config.surface}`);
+  if (config.criteria.length > 0) {
+    console.log(`Criteria:    ${config.criteria.map((c) => c.split('-')[0]).join(', ')} (${config.criteria.length} of 19)`);
+  }
   console.log(`Storybook:   ${config.storybookUrl}`);
   console.log(
     `Components:  ${componentNames.length} found (${totalStories} stories), ${remainingComponents.length} to audit` +
       (alreadyDone > 0 ? ` (${alreadyDone} already completed)` : '')
   );
-  console.log(`API calls:   ${estimatedCalls} estimated (2 per story)`);
+  const callsPerStory = config.criteria.length > 0
+    ? (config.criteria.some((c) => MERGED_CALL1_3_KEYS.includes(c)) ? 1 : 0) +
+      (config.criteria.some((c) => CALL2_KEYS.includes(c)) ? 1 : 0)
+    : 2;
+  const estimatedCallsAdj = remainingComponents.reduce(
+    (sum, name) => sum + (storyMap.get(name)?.length ?? 0) * callsPerStory,
+    0
+  );
+  if (config.captureOnly) {
+    console.log('Mode:        capture-only (no LLM calls)');
+  }
+  if (!config.captureOnly) {
+    console.log(`API calls:   ${estimatedCallsAdj} estimated (${callsPerStory} per story)`);
+  }
   if (config.concurrency > 1) {
     console.log(`Concurrency: ${config.concurrency} parallel workers`);
   }
 
-  if (estimatedCalls > 50) {
+  if (estimatedCallsAdj > 50) {
     console.log(
       `  Note: Free tier has a 50 calls/day limit. Use --max-components ${Math.floor(50 / 2)} ` +
         `to stay within daily quota.`
@@ -884,9 +1103,14 @@ export async function main(): Promise<void> {
       );
     }
     console.log(
-      `\nRemove --dry-run to execute. Estimated API calls: ${estimatedCalls}`
+      `\nRemove --dry-run to execute. Estimated API calls: ${estimatedCallsAdj}`
     );
     process.exit(0);
+  }
+
+  // --capture-only implies --save-captures
+  if (config.captureOnly) {
+    config.saveCaptures = true;
   }
 
   const {browser, pages} = await initBrowser(config.concurrency);
@@ -1065,6 +1289,18 @@ export async function main(): Promise<void> {
   }
 
   await browser.close();
+
+  if (config.captureOnly) {
+    await clearProgress();
+    const captureDate = new Date().toISOString().slice(0, 10);
+    console.log(`\n${'='.repeat(50)}`);
+    console.log('[CAPTURE ONLY] Pipeline completed — LLM evaluation was skipped.');
+    console.log(`  Components:  ${progressState.completedComponents.size}`);
+    console.log(`  Captures:    a11y/reports/captures/${captureDate}/`);
+    console.log('\nRun without --capture-only to evaluate with LLM.');
+    return;
+  }
+
   const writtenFiles = await writeDeltaFiles(progressState.entries, config);
   await clearProgress();
 

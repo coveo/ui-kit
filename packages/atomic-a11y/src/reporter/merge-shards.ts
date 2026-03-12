@@ -4,6 +4,8 @@ import {
   DEFAULT_A11Y_REPORT_FILENAME,
   DEFAULT_A11Y_REPORT_OUTPUT_DIR,
   DEFAULT_WCAG_22_AA_CRITERIA_COUNT,
+  UNKNOWN_CATEGORY,
+  UNKNOWN_FRAMEWORK,
 } from '../shared/constants.js';
 import {isA11yReport} from '../shared/guards.js';
 import {compareByName, compareByNumericId} from '../shared/sorting.js';
@@ -99,6 +101,20 @@ export function mergeComponents(reports: A11yReport[]): A11yComponentReport[] {
       if (!existing) {
         componentsByName.set(component.name, toMutableComponent(component));
         continue;
+      }
+
+      if (
+        existing.category === UNKNOWN_CATEGORY &&
+        component.category !== UNKNOWN_CATEGORY
+      ) {
+        existing.category = component.category;
+      }
+
+      if (
+        existing.framework === UNKNOWN_FRAMEWORK &&
+        component.framework !== UNKNOWN_FRAMEWORK
+      ) {
+        existing.framework = component.framework;
       }
 
       existing.storyCount += component.storyCount;

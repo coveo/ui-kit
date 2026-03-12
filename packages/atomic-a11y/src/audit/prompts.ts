@@ -13,6 +13,12 @@ Evaluation rules:
 - "partial": Some aspects pass but others need improvement. Cite what passes and what does not.
 - "not-applicable": The criterion does not apply to this component (e.g., no images of text exist to evaluate for 1.4.5, no error states are visible for 3.3.3, no hover-triggered content exists for 1.4.13).
 
+Evidence rules:
+- Evidence MUST be specific and actionable. Name the exact elements, accessible names, pixel sizes, or text content that led to your assessment.
+- For "fail" or "partial": list every offending element by its accessible name, role, or selector (e.g., "button 'Show more' is 16×16px", "link 'Read more' lacks context", "label 'Inclusion filter on objecttype' uses jargon").
+- For "pass": briefly state what you verified (e.g., "All 12 interactive targets exceed 24×24px").
+- Never write generic evidence like "some elements are too small" — always specify WHICH elements.
+
 Conservatism rules:
 - If you cannot determine compliance from the provided data, use "not-applicable" rather than guessing "pass".
 - Prefer "not-applicable" for criteria that genuinely do not apply (e.g., error prevention for a display-only facet component).
@@ -64,9 +70,9 @@ Data tables, maps, toolbars, and complex spatial layouts that inherently require
 Respond with ONLY this JSON structure, no other text:
 {
   "criteria": {
-    "1.3.4-orientation": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<one sentence explaining your assessment>" },
-    "1.4.4-resize-text": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<one sentence>" },
-    "1.4.10-reflow": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<one sentence>" }
+    "1.3.4-orientation": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<specific evidence citing element names, measurements, or observations>" },
+    "1.4.4-resize-text": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<specific evidence>" },
+    "1.4.10-reflow": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<specific evidence>" }
   }
 }`;
 }
@@ -209,13 +215,17 @@ ${truncatedTree}
 ## Criteria to Evaluate (16 criteria)
 
 ### 1.3.2 Meaningful Sequence
-Does the DOM/accessibility tree reading order match the visual layout order shown in the screenshot? A mismatch means screen reader users would hear content in a confusing or illogical sequence. Compare the top-to-bottom, left-to-right visual order of elements in the screenshot against the sequential order of nodes in the accessibility tree.
+Is the reading order of the accessibility tree meaningful and logical? WCAG 1.3.2 requires that the DOM order preserves a sequence that makes sense — NOT that it pixel-matches the visual layout. Key guidance:
+- **Sequential order matters, not nesting depth.** A node appearing deeper in the tree does NOT mean it comes later in reading order. Evaluate the top-to-bottom sequence of nodes as they appear in the tree (i.e., the order a screen reader would announce them), not their indentation level.
+- **Multi-column layouts linearize correctly when sidebar content (e.g., filters, facets, navigation) precedes main content (e.g., search results) in the DOM.** This is the standard accessible pattern — do NOT flag it as a mismatch.
+- **The test is: would a screen reader user lose meaning or become confused by the DOM reading order?** Minor differences from visual layout (e.g., sidebar before main content, or header elements grouped differently) are acceptable if the sequence remains coherent and understandable.
+Mark "pass" if the reading order is logical and preserves meaning. Mark "fail" only if the DOM order would genuinely confuse a screen reader user (e.g., a table caption appearing after table data, or answer text appearing before its question).
 
 ### 1.3.3 Sensory Characteristics
 Does any visible text in the component rely SOLELY on sensory characteristics (shape, color, size, visual location, orientation, or sound) to convey instructions or identify controls? Examples of failure: "click the round button", "use the red link", "see the sidebar on the right". If no instructional text is present in the component, mark "not-applicable".
 
 ### 1.3.5 Identify Input Purpose
-If the component contains form inputs (text fields, dropdowns, checkboxes, radio buttons, password fields, email fields), do the inputs use the HTML \`autocomplete\` attribute with the appropriate token (e.g., "email", "username", "current-password", "given-name")? Check the accessibility tree for autocomplete attributes on input-role elements. If the component has no form inputs that collect personal data, mark "not-applicable". If inputs exist but lack autocomplete attributes, mark "fail".
+If the component contains form inputs that collect personal data about the user (e.g., name, email, address, payment, account credentials), do the inputs use the HTML \`autocomplete\` attribute with the appropriate token (e.g., "email", "username", "current-password", "given-name")? Check the accessibility tree for autocomplete attributes on input-role elements. If inputs are only for search or filtering (search box, facet search, price min/max, date filters), mark "not-applicable". If personal-data inputs exist but lack autocomplete attributes, mark "fail".
 
 ### 1.4.5 Images of Text
 Are there any images (<img> elements, CSS background images, or SVGs with embedded text bitmaps) that render readable text which should instead be real HTML text? Logos and brand marks are exempt. Decorative images without readable text are exempt. Check for text-containing images in the screenshot that do not appear as text nodes in the accessibility tree.
@@ -280,22 +290,22 @@ If status messages exist WITHOUT proper aria-live or role markup, mark "fail". I
 Respond with ONLY this JSON structure, no other text:
 {
   "criteria": {
-    "1.3.2-meaningful-sequence": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<one sentence>" },
-    "1.3.3-sensory-characteristics": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<one sentence>" },
-    "1.3.5-identify-input-purpose": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<one sentence>" },
-    "1.4.5-images-of-text": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<one sentence>" },
-    "1.4.11-non-text-contrast": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<one sentence>" },
-    "1.4.12-text-spacing": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<one sentence>" },
-    "1.4.13-content-on-hover-focus": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<one sentence>" },
-    "2.4.4-link-purpose": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<one sentence>" },
-    "2.4.6-headings-and-labels": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<one sentence>" },
-    "2.4.7-focus-visible": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<one sentence>" },
-    "2.4.11-focus-not-obscured": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<one sentence>" },
-    "2.5.7-dragging-movements": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<one sentence>" },
-    "2.5.8-target-size": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<one sentence>" },
-    "3.3.3-error-suggestion": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<one sentence>" },
-    "3.3.4-error-prevention": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<one sentence>" },
-    "4.1.3-status-messages": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<one sentence>" }
+    "1.3.2-meaningful-sequence": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<specific evidence citing element names or tree order issues>" },
+    "1.3.3-sensory-characteristics": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<specific evidence>" },
+    "1.3.5-identify-input-purpose": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<specific evidence listing input names and missing autocomplete values>" },
+    "1.4.5-images-of-text": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<specific evidence>" },
+    "1.4.11-non-text-contrast": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<specific evidence naming which UI component boundaries appear low-contrast>" },
+    "1.4.12-text-spacing": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<specific evidence>" },
+    "1.4.13-content-on-hover-focus": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<specific evidence>" },
+    "2.4.4-link-purpose": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<specific evidence listing each vague link/button by accessible name>" },
+    "2.4.6-headings-and-labels": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<specific evidence listing each jargon term and the label it appears in>" },
+    "2.4.7-focus-visible": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<specific evidence>" },
+    "2.4.11-focus-not-obscured": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<specific evidence>" },
+    "2.5.7-dragging-movements": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<specific evidence>" },
+    "2.5.8-target-size": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<specific evidence listing each undersized target by name and measured size>" },
+    "3.3.3-error-suggestion": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<specific evidence>" },
+    "3.3.4-error-prevention": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<specific evidence>" },
+    "4.1.3-status-messages": { "status": "<pass|fail|partial|not-applicable>", "evidence": "<specific evidence listing each live region and its announcement text>" }
   }
 }`;
 }
