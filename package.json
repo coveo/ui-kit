@@ -26,14 +26,14 @@
     "conventional-changelog-angular": "^8.0.0",
     "eslint": "^10.0.0",
     "@eslint/js": "^10.0.0",
-    "@eslint/eslintrc": "3.3.3",
+    "@eslint/eslintrc": "3.3.4",
     "prettier": "^3.0.0",
     "ts-dedent": "^2.2.0",
     "turbo": "latest",
     "typescript": "^5.9.3",
-    "globals": "17.3.0"
+    "globals": "17.4.0"
   },
   "name": "relay",
-  "packageManager": "pnpm@10.30.0",
+  "packageManager": "pnpm@10.30.3",
   "version": "2.0.4"
 }
