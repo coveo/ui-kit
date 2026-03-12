@@ -2,12 +2,31 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["build:bundles", "build:assets"],
       "outputs": ["projects/atomic-angular/dist/**/*"]
     },
     "gen:lit": {
       "dependsOn": ["@coveo/atomic#build:cem"],
-      "outputs": ["projects/atomic-angular/src/lib/stencil-generated/**/*"]
+      "outputs": ["projects/atomic-angular/src/lib/generated/**/*"]
+    },
+    "release:phase1": {
+      "dependsOn": ["^release:phase1", "@coveo/headless#release:phase1"],
+      "outputs": []
+    },
+    "build:assets": {
+      "dependsOn": ["@coveo/atomic#build:list-assets"],
+      "outputs": [
+        "projects/atomic-angular/dist/assets/**",
+        "projects/atomic-angular/dist/lang/**"
+      ]
+    },
+    "build:bundles": {
+      "dependsOn": ["gen:lit"],
+      "outputs": [
+        "projects/atomic-angular/dist/**/*",
+        "!projects/atomic-angular/dist/assets/**",
+        "!projects/atomic-angular/dist/lang/**"
+      ]
     }
   }
 }

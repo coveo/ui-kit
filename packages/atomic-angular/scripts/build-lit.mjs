@@ -2,7 +2,7 @@ import {mkdirSync, writeFileSync} from 'node:fs';
 import {join} from 'node:path';
 import cem from '@coveo/atomic/custom-elements-manifest' with {type: 'json'};
 
-const stencilGeneratedDir = 'projects/atomic-angular/src/lib/stencil-generated';
+const stencilGeneratedDir = 'projects/atomic-angular/src/lib/generated';
 
 const atomicAngularModuleFilePath = join(
   stencilGeneratedDir,
