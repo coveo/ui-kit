@@ -31,7 +31,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
 import {encodeForDomAttribute} from '@/src/utils/string-utils';
 
-export type AriaLabelGenerator = (
+type AriaLabelGenerator = (
   bindings: Bindings,
   result: Result
 ) => string | undefined;

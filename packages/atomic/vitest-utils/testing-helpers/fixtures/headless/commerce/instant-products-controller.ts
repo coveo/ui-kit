@@ -4,7 +4,7 @@ import type {
 } from '@coveo/headless/commerce';
 import {vi} from 'vitest';
 
-export const defaultState = {
+const defaultState = {
   query: 'the query',
   products: [
     {
@@ -85,7 +85,7 @@ export const defaultState = {
   totalCount: 3,
 } satisfies InstantProductsState;
 
-export const defaultImplementation = {
+const defaultImplementation = {
   updateQuery: vi.fn(),
   clearExpired: vi.fn(),
   promoteChildToParent: vi.fn(),

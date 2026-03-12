@@ -27,8 +27,7 @@
     "dist/"
   ],
   "dependencies": {
-    "@coveo/atomic": "workspace:*",
-    "@lit/react": "1.0.8"
+    "@coveo/atomic": "workspace:*"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "28.0.6",

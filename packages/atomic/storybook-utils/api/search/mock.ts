@@ -64,4 +64,4 @@ export class MockSearchApi implements MockApi {
 }
 
 // TODO: Remove exports once the concept is fully internalized.
-export {baseSearchResponse, baseFoldedResponse, nestedFoldedResponse};
+export {baseFoldedResponse, nestedFoldedResponse};

@@ -5,7 +5,7 @@ import type {
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 
-export const defaultState = {
+const defaultState = {
   value: '',
   suggestions: [],
   isLoading: false,
@@ -14,7 +14,7 @@ export const defaultState = {
   redirectTo: '',
 } satisfies StandaloneSearchBoxState;
 
-export const defaultImplementation = {
+const defaultImplementation = {
   subscribe: genericSubscribe as unknown as StandaloneSearchBox['subscribe'],
   submit: vi.fn() as StandaloneSearchBox['submit'],
   updateRedirectUrl: vi.fn() as StandaloneSearchBox['updateRedirectUrl'],

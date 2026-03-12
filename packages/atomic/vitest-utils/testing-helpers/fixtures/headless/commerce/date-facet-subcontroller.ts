@@ -29,7 +29,7 @@ const defaultValues: DateFacetValue[] = [
   },
 ];
 
-export const defaultState = {
+const defaultState = {
   canShowLessValues: true,
   canShowMoreValues: true,
   facetId: 'some-date-facet-id',
@@ -41,7 +41,7 @@ export const defaultState = {
   hasActiveValues: false,
 } satisfies DateFacetState;
 
-export const defaultImplementation = {
+const defaultImplementation = {
   type: 'dateRange' as const,
   toggleSelect: vi.fn(),
   toggleExclude: vi.fn(),

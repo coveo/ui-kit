@@ -43,23 +43,15 @@ export function randomID(prepend?: string, length = 5) {
   return prepend + randomStr;
 }
 
-export function getRandomArbitrary(min: number, max: number) {
-  return Math.random() * (max - min) + min;
-}
-
 export function parseXML(string: string) {
   return new window.DOMParser().parseFromString(string, 'text/xml');
-}
-
-export function parseHTML(string: string) {
-  return new window.DOMParser().parseFromString(string, 'text/html');
 }
 
 export function isElementNode(node: Node): node is Element {
   return node.nodeType === Node.ELEMENT_NODE;
 }
 
-export function isTextNode(node: Node): node is Text {
+function isTextNode(node: Node): node is Text {
   return node.nodeType === Node.TEXT_NODE;
 }
 
@@ -141,14 +133,6 @@ export function isInDocument(element: Node) {
     }
   }
   return false;
-}
-
-export function isPropValuesEqual<ObjectWithProperties extends object>(
-  subject: ObjectWithProperties,
-  target: ObjectWithProperties,
-  propNames: (keyof ObjectWithProperties)[]
-) {
-  return propNames.every((propName) => subject[propName] === target[propName]);
 }
 
 export function getParent(element: Element | ShadowRoot) {

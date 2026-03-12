@@ -9,7 +9,7 @@ import {vi} from 'vitest';
 import {genericSubscribe} from '../common.js';
 import {buildFakeResult} from './result.js';
 
-export const defaultState = {
+const defaultState = {
   firstSearchExecuted: true,
   hasError: false,
   hasResults: true,
@@ -19,7 +19,7 @@ export const defaultState = {
   moreResultsAvailable: false,
 } satisfies FoldedResultListState;
 
-export const defaultImplementation = {
+const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
   fetchMoreResults: vi.fn(),

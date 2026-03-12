@@ -52,7 +52,7 @@ function initializeBindings<
  * ```
  *
  */
-export class BindingController implements ReactiveController {
+class BindingController implements ReactiveController {
   host: ReactiveControllerHost;
 
   private unsubscribeLanguage = () => {};

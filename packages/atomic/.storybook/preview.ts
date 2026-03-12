@@ -7,7 +7,7 @@ import {initialize, mswLoader} from 'msw-storybook-addon';
 import {within} from 'shadow-dom-testing-library';
 import {create} from 'storybook/theming';
 import customElements from '../custom-elements.json';
-import {defineCustomElements} from '../dist/atomic/loader/index.js';
+import {defineCustomElements} from '../dist/atomic/components/loader.js';
 import {COVEO_PRIMARY, FONT_BASE, FONT_CODE} from './theme';
 
 initialize(

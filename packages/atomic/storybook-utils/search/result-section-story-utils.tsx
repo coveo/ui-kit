@@ -1,6 +1,6 @@
 import type {Decorator, StoryContext} from '@storybook/web-components-vite';
 import {html} from 'lit';
-import type {ItemDisplayLayout} from '@/src/components/common/layout/display-options';
+import type {ItemDisplayLayout} from '@/src/components/common/layout/item-layout-utils';
 import type {SearchEngineConfiguration} from '@coveo/headless';
 import {wrapInResultList} from './result-list-wrapper';
 import {wrapInSearchInterface} from './search-interface-wrapper';
@@ -36,7 +36,7 @@ const createSectionLayoutDecorator = (): Decorator => {
   };
 };
 
-export interface ResultSectionStoryConfig {
+interface ResultSectionStoryConfig {
   includeCodeRoot?: boolean;
   config?: Partial<SearchEngineConfiguration>;
   skipFirstSearch?: boolean;

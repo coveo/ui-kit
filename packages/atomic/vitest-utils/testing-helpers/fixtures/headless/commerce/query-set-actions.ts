@@ -1,7 +1,7 @@
 import type {loadQuerySetActions} from '@coveo/headless/commerce';
 import {vi} from 'vitest';
 
-export const defaultMockedActions = {
+const defaultMockedActions = {
   registerQuerySetQuery: vi.fn() as unknown as ReturnType<
     typeof loadQuerySetActions
   >['registerQuerySetQuery'],

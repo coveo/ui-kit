@@ -60,7 +60,7 @@ import '@/src/components/search/atomic-result/atomic-result';
 import {augmentAnalyticsConfigWithAtomicVersion} from '@/src/components/common/interface/analytics-config';
 import {arrayConverter} from '@/src/converters/array-converter';
 
-export type InitializationOptions = SearchEngineConfiguration;
+type InitializationOptions = SearchEngineConfiguration;
 
 export type Bindings = CommonBindings<
   SearchEngine,

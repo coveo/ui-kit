@@ -4,12 +4,12 @@ import type {
 } from '@coveo/headless/insight';
 import {vi} from 'vitest';
 
-export const defaultState = {
+const defaultState = {
   results: [],
   loading: false,
 } satisfies AttachedResultsState;
 
-export const defaultImplementation = {
+const defaultImplementation = {
   subscribe: (subscribedFunction: () => void) => {
     subscribedFunction();
     return vi.fn();

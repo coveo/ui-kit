@@ -2,13 +2,13 @@ import type {QueryTrigger, QueryTriggerState} from '@coveo/headless/commerce';
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 
-export const defaultState = {
+const defaultState = {
   wasQueryModified: false,
   originalQuery: '',
   newQuery: '',
 } satisfies QueryTriggerState;
 
-export const defaultImplementation = {
+const defaultImplementation = {
   undo: vi.fn() as () => void,
   subscribe: genericSubscribe,
   state: defaultState,

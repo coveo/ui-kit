@@ -194,10 +194,4 @@ const baseResponse = () =>
 const slowDelayedBaseResponse = () =>
   buildAnsweringStreamingResponse({delayBetweenMessages: 1000});
 
-export {
-  rgaMessages,
-  immediateBaseResponse,
-  baseResponse,
-  slowDelayedBaseResponse,
-  buildAnsweringStreamingResponse,
-};
+export {slowDelayedBaseResponse, immediateBaseResponse, baseResponse};

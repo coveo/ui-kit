@@ -4,8 +4,9 @@
     "module": "ES2022",
     "target": "ES2021",
     "moduleResolution": "bundler",
-    "lib": ["dom", "ES2024"],
+    "lib": ["dom", "ES2024", "DOM.Iterable"],
     "declaration": true,
+    "resolveJsonModule": true,
     "declarationDir": "dist/types",
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
@@ -16,8 +17,8 @@
   },
   "files": [
     "src/index.ts",
+    "src/loader.ts",
     "src/components/index.ts",
-    "src/components/lazy-index.ts",
     "src/icons.d.ts"
   ]
 }

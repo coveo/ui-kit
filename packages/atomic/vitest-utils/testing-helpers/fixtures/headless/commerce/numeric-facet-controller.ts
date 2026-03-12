@@ -29,7 +29,7 @@ const defaultValues: NumericFacetValue[] = [
   },
 ];
 
-export const defaultState = {
+const defaultState = {
   canShowLessValues: true,
   canShowMoreValues: true,
   facetId: 'some-facet-id',
@@ -42,7 +42,7 @@ export const defaultState = {
   hasActiveValues: false,
 } satisfies NumericFacetState;
 
-export const defaultImplementation = {
+const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
   deselectAll: vi.fn(),

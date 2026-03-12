@@ -1,11 +1,11 @@
 import type {NotifyTrigger, NotifyTriggerState} from '@coveo/headless';
 import {genericSubscribe} from '../common';
 
-export const defaultState = {
+const defaultState = {
   notifications: [],
 } satisfies NotifyTriggerState;
 
-export const defaultImplementation = {
+const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
 } satisfies NotifyTrigger;

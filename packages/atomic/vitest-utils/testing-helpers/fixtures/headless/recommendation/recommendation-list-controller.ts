@@ -5,14 +5,14 @@ import type {
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 
-export const defaultState = {
+const defaultState = {
   error: null,
   isLoading: false,
   recommendations: [],
   searchResponseId: '',
 } satisfies RecommendationListState;
 
-export const defaultImplementation = {
+const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
   refresh: vi.fn(),

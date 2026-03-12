@@ -14,13 +14,13 @@
   "types": "dist/types/index.d.ts",
   "exports": {
     "./loader": {
-      "types": "./dist/atomic/loader/index.d.ts",
-      "import": "./dist/esm/loader.js",
+      "types": "./dist/types/loader.d.ts",
+      "import": "./dist/atomic/components/loader.js",
       "require": "./dist/cjs/loader.cjs.js"
     },
     ".": {
       "types": "./dist/types/index.d.ts",
-      "import": "./dist/esm/index.js",
+      "import": "./dist/atomic/components/index.js",
       "require": "./dist/cjs/index.cjs.js"
     },
     "./themes/*": {
@@ -36,7 +36,7 @@
       "require": "./dist/atomic/lang/*"
     },
     "./components": {
-      "types": "./dist/atomic/components/index.d.ts",
+      "types": "./dist/types/components/index.d.ts",
       "import": "./dist/atomic/components/components/index.js"
     },
     "./custom-elements-manifest": "./custom-elements.json"
@@ -57,7 +57,7 @@
     "clean": "node ../../utils/ci/rm-rf.mjs dist/* dist-storybook/* www/* docs/* playwright-report/*",
     "build:storybook": "storybook build -o dist-storybook --stats-json",
     "build:cem": "cem analyze",
-    "build:stencil-lit": "node ./scripts/stencil-proxy.mjs && node ./scripts/build.mjs --config=tsconfig.lit.json && esbuild src/autoloader/index.ts --format=esm --outfile=dist/atomic/autoloader/index.esm.js && esbuild src/autoloader/index.ts --format=cjs --outfile=dist/atomic/autoloader/index.cjs.js",
+    "build:stencil-lit": "node ./scripts/build.mjs --config=tsconfig.lit.json",
     "build:cdn": "rollup -c rollup.config.js",
     "build:angular": "npx turbo gen:lit --filter=@coveo/atomic-angular-builder",
     "build:react": "npx turbo gen:lit --filter=@coveo/atomic-react",
@@ -67,7 +67,6 @@
     "dev": "node ./scripts/dev.mjs",
     "web:dev": "npx vite serve dev",
     "web:cdn": "node ./scripts/start-cdn.mjs",
-    "prod": "npx serve www -l 3333 --no-request-logging",
     "test": "pnpm run test:lit",
     "test:stencil": "stencil test --spec -- src/utils/initialization-utils.spec.ts",
     "test:lit": "vitest run --project=atomic-default",
@@ -83,8 +82,7 @@
     "validate:no-new-light-dom": "node ./scripts/check-no-new-light-dom-components.mjs"
   },
   "dependencies": {
-    "@coveo/bueno": "workspace:*",
-    "@coveo/headless": "workspace:*",
+    "@coveo/atomic-legacy": "workspace:*",
     "@coveo/relay-event-types": "catalog:",
     "@lit/context": "1.1.6",
     "@open-wc/lit-helpers": "0.7.0",
@@ -94,17 +92,14 @@
     "cssnano": "7.1.1",
     "dayjs": "catalog:",
     "dompurify": "3.2.6",
-    "encoding": "^0.1.13",
     "escape-html": "1.0.3",
     "i18next": "25.3.2",
     "i18next-http-backend": "3.0.2",
     "lit": "3.3.1",
-    "marked": "12.0.2",
-    "@coveo/atomic-legacy": "workspace:*"
+    "marked": "12.0.2"
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "0.10.4",
-    "@mswjs/source": "0.5.0",
     "@playwright/test": "catalog:",
     "@rollup/plugin-commonjs": "28.0.6",
     "@rollup/plugin-json": "6.1.0",
@@ -120,24 +115,14 @@
     "@tailwindcss/vite": "4.1.13",
     "@types/escape-html": "1.0.4",
     "@types/jest": "catalog:",
-    "@types/minimatch": "5.1.2",
     "@types/node": "catalog:",
     "@vitest/browser-playwright": "catalog:",
-    "@vitest/coverage-v8": "catalog:",
     "@wc-toolkit/storybook-helpers": "10.0.0",
-    "axe-core": "4.10.3",
     "chromatic": "13.3.4",
     "handlebars": "4.7.8",
-    "html-loader-jest": "0.2.1",
-    "jest": "catalog:",
-    "jest-cli": "catalog:",
-    "jest-localstorage-mock": "2.4.26",
     "lit-html": "3.3.1",
-    "local-web-server": "catalog:",
     "msw": "2.11.4",
     "msw-storybook-addon": "2.0.5",
-    "natural-orderby": "5.0.0",
-    "openapi-types": "12.1.3",
     "playwright": "catalog:",
     "postcss": "8.5.6",
     "postcss-load-config": "6.0.1",

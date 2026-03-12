@@ -107,7 +107,7 @@ async function generateLitExportsForDir(dir) {
   fs.writeFileSync(outputLazyIndexFile, lazyIndexFileContent);
 }
 
-export async function formatAllGeneratedLitExports() {
+async function formatAllGeneratedLitExports() {
   const files = directories.flatMap((dir) => {
     const componentsDir = path.join(baseComponentsDir, dir);
     return [

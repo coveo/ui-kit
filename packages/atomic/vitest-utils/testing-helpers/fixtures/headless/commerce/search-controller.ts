@@ -3,13 +3,13 @@ import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 import {buildFakeProduct} from './product';
 
-export const defaultState = {
+const defaultState = {
   responseId: 'some-id',
   products: [buildFakeProduct()],
   isLoading: false,
   error: null,
 } satisfies SearchState;
-export const defaultImplementation = {
+const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
   executeFirstSearch: vi.fn(),

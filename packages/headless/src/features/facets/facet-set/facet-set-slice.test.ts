@@ -868,7 +868,7 @@ describe('facet-set slice', () => {
     it('should deselect values for a facet with tabsIncluded when switching to a non-included tab', () => {
       vi.spyOn(FacetReducers, 'handleFacetDeselectAll').mockReset();
 
-      state['facet1'] = buildMockFacetSlice({
+      state.facet1 = buildMockFacetSlice({
         request: buildMockFacetRequest({
           currentValues: [buildMockFacetValueRequest({state: 'selected'})],
         }),
@@ -883,7 +883,7 @@ describe('facet-set slice', () => {
     it('should not deselect values for a facet with tabsIncluded when switching to an included tab', () => {
       vi.spyOn(FacetReducers, 'handleFacetDeselectAll').mockReset();
 
-      state['facet1'] = buildMockFacetSlice({
+      state.facet1 = buildMockFacetSlice({
         request: buildMockFacetRequest({
           currentValues: [buildMockFacetValueRequest({state: 'selected'})],
         }),
@@ -898,7 +898,7 @@ describe('facet-set slice', () => {
     it('should deselect values for a facet with tabsExcluded when switching to an excluded tab', () => {
       vi.spyOn(FacetReducers, 'handleFacetDeselectAll').mockReset();
 
-      state['facet1'] = buildMockFacetSlice({
+      state.facet1 = buildMockFacetSlice({
         request: buildMockFacetRequest({
           currentValues: [buildMockFacetValueRequest({state: 'selected'})],
         }),
@@ -913,7 +913,7 @@ describe('facet-set slice', () => {
     it('should not deselect values for a facet with tabsExcluded when switching to a non-excluded tab', () => {
       vi.spyOn(FacetReducers, 'handleFacetDeselectAll').mockReset();
 
-      state['facet1'] = buildMockFacetSlice({
+      state.facet1 = buildMockFacetSlice({
         request: buildMockFacetRequest({
           currentValues: [buildMockFacetValueRequest({state: 'selected'})],
         }),
@@ -928,7 +928,7 @@ describe('facet-set slice', () => {
     it('should not deselect values for a facet without tabs configuration', () => {
       vi.spyOn(FacetReducers, 'handleFacetDeselectAll').mockReset();
 
-      state['facet1'] = buildMockFacetSlice({
+      state.facet1 = buildMockFacetSlice({
         request: buildMockFacetRequest({
           currentValues: [buildMockFacetValueRequest({state: 'selected'})],
         }),
@@ -942,19 +942,19 @@ describe('facet-set slice', () => {
     it('should only deselect values for facets not visible on the new tab', () => {
       vi.spyOn(FacetReducers, 'handleFacetDeselectAll').mockReset();
 
-      state['facet1'] = buildMockFacetSlice({
+      state.facet1 = buildMockFacetSlice({
         request: buildMockFacetRequest({
           currentValues: [buildMockFacetValueRequest({state: 'selected'})],
         }),
         tabs: {included: ['tab1']},
       });
-      state['facet2'] = buildMockFacetSlice({
+      state.facet2 = buildMockFacetSlice({
         request: buildMockFacetRequest({
           currentValues: [buildMockFacetValueRequest({state: 'selected'})],
         }),
         tabs: {included: ['tab1', 'tab2']},
       });
-      state['facet3'] = buildMockFacetSlice({
+      state.facet3 = buildMockFacetSlice({
         request: buildMockFacetRequest({
           currentValues: [buildMockFacetValueRequest({state: 'selected'})],
         }),

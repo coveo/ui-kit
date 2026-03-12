@@ -35,7 +35,7 @@ export class MissingInterfaceParentError extends Error {
     );
   }
 }
-export const initializableElements = [
+const initializableElements = [
   'atomic-recs-interface',
   'atomic-search-interface',
   'atomic-commerce-interface',

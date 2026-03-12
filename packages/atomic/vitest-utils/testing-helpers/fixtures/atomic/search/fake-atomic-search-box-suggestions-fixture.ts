@@ -11,7 +11,8 @@ import type {Bindings} from '@/src/components/search/atomic-search-interface/ato
 import type {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
 
 @customElement('fake-atomic-search-box-suggestions')
-export class FixtureFakeAtomicSearchBoxSuggestions
+// biome-ignore lint/correctness/noUnusedVariables: Used through tag.
+class FixtureFakeAtomicSearchBoxSuggestions
   extends LitElement
   implements SearchBoxSuggestionsComponent<Bindings>
 {

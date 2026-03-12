@@ -76,7 +76,7 @@ export class FixtureAtomicRecsInterface
   }
 }
 
-export const defaultBindings = {
+const defaultBindings = {
   interfaceElement: {} as AtomicRecsInterface,
   store: {
     state: {

@@ -6,7 +6,7 @@ import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import MinimizeIcon from '../../../../images/menu.svg';
 import {identifierKeywordsSection} from './keywords';
 
-export interface MinimizeButtonProps {
+interface MinimizeButtonProps {
   i18n: i18n;
   minimized: boolean;
   onMinimize: (minimize: boolean) => void;

@@ -5,11 +5,11 @@ import type {
 } from '@coveo/headless';
 import {genericSubscribe} from '../common';
 
-export const defaultState: AutomaticFacetGeneratorState = {
+const defaultState: AutomaticFacetGeneratorState = {
   automaticFacets: [],
 };
 
-export const defaultImplementation = {
+const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
 } satisfies AutomaticFacetGenerator;

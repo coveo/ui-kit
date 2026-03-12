@@ -1,7 +1,7 @@
 import type {BreadcrumbManager, BreadcrumbManagerState} from '@coveo/headless';
 import {vi} from 'vitest';
 
-export const defaultState = {
+const defaultState = {
   facetBreadcrumbs: [],
   categoryFacetBreadcrumbs: [],
   numericFacetBreadcrumbs: [],
@@ -11,7 +11,7 @@ export const defaultState = {
   automaticFacetBreadcrumbs: [],
 } satisfies BreadcrumbManagerState;
 
-export const defaultImplementation = {
+const defaultImplementation = {
   subscribe: (subscribedFunction: () => void) => {
     subscribedFunction();
     return vi.fn();

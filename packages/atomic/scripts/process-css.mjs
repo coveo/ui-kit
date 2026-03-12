@@ -109,7 +109,7 @@ async function convertCssToJs(srcPath, distPath, file) {
   }
 }
 
-export async function processCssFiles(srcDir, distDir) {
+async function processCssFiles(srcDir, distDir) {
   let entries;
   try {
     entries = readdirSync(srcDir, {withFileTypes: true}).toSorted((a, b) =>

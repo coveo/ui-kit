@@ -77,7 +77,7 @@ export class FixtureAtomicResult extends LitElement {
   }
 }
 
-export const defaultBindings = {
+const defaultBindings = {
   ...searchDefaultBindings,
 } as const;
 

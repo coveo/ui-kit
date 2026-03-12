@@ -2,11 +2,7 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "dependsOn": [
-        "build:storybook",
-        "@coveo/atomic-angular-builder#gen:lit",
-        "@coveo/atomic-react#gen:lit"
-      ],
+      "dependsOn": ["build:storybook"],
       "outputs": []
     },
     "build:storybook": {

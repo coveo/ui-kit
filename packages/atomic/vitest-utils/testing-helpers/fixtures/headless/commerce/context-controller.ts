@@ -2,7 +2,7 @@ import type {Context, ContextState} from '@coveo/headless/commerce';
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 
-export const defaultState = {
+const defaultState = {
   language: 'en',
   country: 'US',
   currency: 'USD',
@@ -11,7 +11,7 @@ export const defaultState = {
   },
 } satisfies ContextState;
 
-export const defaultImplementation = {
+const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
   setLanguage: vi.fn(),

@@ -2,7 +2,7 @@ import {type Sort, SortBy, type SortState} from '@coveo/headless/commerce';
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 
-export const defaultState = {
+const defaultState = {
   availableSorts: [
     {by: SortBy.Fields, fields: [{name: 'foo'}]},
     {by: SortBy.Fields, fields: [{name: 'bar'}]},
@@ -12,7 +12,7 @@ export const defaultState = {
   },
 } satisfies SortState;
 
-export const defaultImplementation = {
+const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
   sortBy: vi.fn(),

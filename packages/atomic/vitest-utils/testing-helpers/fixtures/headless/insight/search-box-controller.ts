@@ -5,14 +5,14 @@ import type {
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 
-export const defaultState = {
+const defaultState = {
   value: '',
   suggestions: [],
   isLoading: false,
   isLoadingSuggestions: false,
 } satisfies InsightSearchBoxState;
 
-export const defaultImplementation = {
+const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
   updateText: vi.fn(),

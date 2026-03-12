@@ -52,7 +52,7 @@ import {
 import {getAnalyticsConfig} from './analytics-config';
 import {type CommerceStore, createCommerceStore} from './store';
 
-export type CommerceInitializationOptions = CommerceEngineConfiguration;
+type CommerceInitializationOptions = CommerceEngineConfiguration;
 export type CommerceBindings = CommonBindings<
   CommerceEngine,
   CommerceStore,

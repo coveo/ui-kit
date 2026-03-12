@@ -25,7 +25,7 @@ const defaultValues: RegularFacetValue[] = [
   },
 ];
 
-export const defaultState = {
+const defaultState = {
   canShowLessValues: true,
   canShowMoreValues: true,
   facetId: 'some-facet-id',
@@ -43,7 +43,7 @@ export const defaultState = {
   hasActiveValues: false,
 } satisfies RegularFacetState;
 
-export const defaultImplementation = {
+const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
   deselectAll: vi.fn(),

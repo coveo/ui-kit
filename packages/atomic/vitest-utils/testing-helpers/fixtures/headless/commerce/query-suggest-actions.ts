@@ -1,7 +1,7 @@
 import type {loadQuerySuggestActions} from '@coveo/headless/commerce';
 import {vi} from 'vitest';
 
-export const defaultMockedActions = {
+const defaultMockedActions = {
   selectQuerySuggestion: vi.fn(),
   clearQuerySuggest: vi.fn(),
   registerQuerySuggest: vi.fn(),

@@ -2,7 +2,7 @@ import type {DidYouMean, DidYouMeanState} from '@coveo/headless';
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 
-export const defaultState = {
+const defaultState = {
   hasQueryCorrection: false,
   originalQuery: '',
   wasCorrectedTo: '',
@@ -13,7 +13,7 @@ export const defaultState = {
   },
 } satisfies DidYouMeanState;
 
-export const defaultImplementation = {
+const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
   applyCorrection: vi.fn() as () => void,

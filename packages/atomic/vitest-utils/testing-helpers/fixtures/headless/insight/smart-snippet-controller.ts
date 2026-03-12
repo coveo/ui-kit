@@ -2,7 +2,7 @@ import type {SmartSnippet, SmartSnippetState} from '@coveo/headless/insight';
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 
-export const defaultState = {
+const defaultState = {
   answerFound: false,
   liked: false,
   disliked: false,
@@ -17,7 +17,7 @@ export const defaultState = {
   source: undefined,
 } satisfies SmartSnippetState;
 
-export const defaultImplementation = {
+const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
   expand: vi.fn() as SmartSnippet['expand'],

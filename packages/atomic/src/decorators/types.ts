@@ -17,7 +17,7 @@ export type RenderGuardDecorator<Component, _T extends TemplateResultType> = (
  * Base interface for any Atomic component that needs to be initialized with bindings
  * and supports error handling and cleanup.
  */
-export interface BaseInitializableComponent<
+interface BaseInitializableComponent<
   SpecificBindings extends AnyBindings = AnyBindings,
   ReturnType = void,
 > {
