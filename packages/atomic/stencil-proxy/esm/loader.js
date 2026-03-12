@@ -1,12 +1,16 @@
 import {registerAutoloader} from '../atomic/autoloader/index.esm.js';
-import {defineCustomElements as stencilDefineCustomElements} from './_loader.js';
 
-const defineCustomElements = async (...args) => {
+const defineCustomElements = (...args) => {
   const rootElementAutoloader = args.length > 2 ? args.pop() : undefined;
   registerAutoloader(rootElementAutoloader);
-  stencilDefineCustomElements(...args);
 };
 
-export * from './_loader.js';
+const applyPolyfills = () => {
+  throw new Error('The applyPolyfills function has been removed. It has always been a no-op and should not be used.');
+};
+const setNonce = () => {
+  console.warn('Since v3.52.0, `@coveo/atomic` no longer adds script or style tags. The setNonce function is now a no-op and can be safely removed from your codebase.');
+};
+
 export * from './version.js';
-export {defineCustomElements};
+export {defineCustomElements, applyPolyfills, setNonce};
