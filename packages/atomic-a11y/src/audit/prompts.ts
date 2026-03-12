@@ -184,7 +184,7 @@ ${
     ? `
 
 ## Live Region Announcements
-${liveRegionData.liveRegionChanges.map((c) => `- After [${c.action}]: region "${c.regionName}" announced "${c.announcementText}" (aria-live=${c.ariaLive})`).join('\n')}`
+${liveRegionData.liveRegionChanges.map((c) => `- ${c.offsetMs ? `At +${c.offsetMs}ms after` : 'After'} [${c.action}]: region "${c.regionName}" announced "${c.announcementText}" (aria-live=${c.ariaLive})`).join('\n')}`
     : ''
 }
 

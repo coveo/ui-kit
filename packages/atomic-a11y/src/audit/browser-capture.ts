@@ -10,7 +10,6 @@ import type {
   LiveRegionCaptureResult,
   LiveRegionChange,
   PlaywrightBrowser,
-  PlaywrightLocator,
   PlaywrightPage,
 } from './types.js';
 
@@ -406,11 +405,11 @@ async function getElementState(
         }
         // Also capture the focused element info
         const active = document.activeElement;
-        result['__focusedRole'] =
+        result.__focusedRole =
           active?.getAttribute('role') ??
           active?.tagName?.toLowerCase() ??
           'none';
-        result['__focusedName'] =
+        result.__focusedName =
           active?.getAttribute('aria-label') ??
           active?.textContent?.trim().slice(0, 40) ??
           '';
@@ -524,49 +523,100 @@ export async function captureInteractionStates(
   return {interactions, summary};
 }
 
+export async function startLiveRegionObserver(
+  page: PlaywrightPage
+): Promise<void> {
+  try {
+    await page.evaluate(() => {
+      // biome-ignore lint/suspicious/noExplicitAny: accessing Playwright browser context globals
+      (window as any).__ariaLiveMutations = [];
+      const startTime = performance.now();
+      const elements = Array.from(document.querySelectorAll('[aria-live]'));
+      if (elements.length === 0) return;
+      const observer = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+          let target: Element | null = null;
+          if (mutation.type === 'characterData') {
+            target = (mutation.target as Text).parentElement;
+          } else {
+            target = mutation.target as Element;
+          }
+          if (!target) continue;
+          const ariaLive =
+            target.getAttribute('aria-live') ??
+            target.closest('[aria-live]')?.getAttribute('aria-live') ??
+            'polite';
+          const text = target.textContent?.trim() ?? '';
+          if (!text) continue;
+          const id = target.id || target.closest('[id]')?.id || '';
+          const regionName =
+            id.match(/atomic-aria-live-[^-]+-(.+)/)?.[1] ?? 'unknown';
+          // biome-ignore lint/suspicious/noExplicitAny: accessing Playwright browser context globals
+          (window as any).__ariaLiveMutations.push({
+            text,
+            regionId: id,
+            regionName,
+            ariaLive,
+            offsetMs: performance.now() - startTime,
+          });
+        }
+      });
+      elements.forEach((el) =>
+        observer.observe(el, {
+          childList: true,
+          characterData: true,
+          subtree: true,
+        })
+      );
+      // biome-ignore lint/suspicious/noExplicitAny: accessing Playwright browser context globals
+      (window as any).__ariaLiveObserver = observer;
+    });
+  } catch {}
+}
+
+export async function collectLiveRegionMutations(
+  page: PlaywrightPage
+): Promise<LiveRegionChange[]> {
+  try {
+    const raw = await page.evaluate(() => {
+      // biome-ignore lint/suspicious/noExplicitAny: accessing Playwright browser context globals
+      const mutations = (window as any).__ariaLiveMutations ?? [];
+      // biome-ignore lint/suspicious/noExplicitAny: accessing Playwright browser context globals
+      (window as any).__ariaLiveObserver?.disconnect();
+      // biome-ignore lint/suspicious/noExplicitAny: accessing Playwright browser context globals
+      delete (window as any).__ariaLiveMutations;
+      // biome-ignore lint/suspicious/noExplicitAny: accessing Playwright browser context globals
+      delete (window as any).__ariaLiveObserver;
+      return mutations as Array<{
+        text: string;
+        regionId: string;
+        regionName: string;
+        ariaLive: string;
+        offsetMs: number;
+      }>;
+    });
+    return raw.map((m) => ({
+      action: 'live-region-update',
+      selector: `[id="${m.regionId}"]`,
+      regionName: m.regionName,
+      announcementText: m.text,
+      ariaLive: m.ariaLive as 'polite' | 'assertive',
+      offsetMs: Math.round(m.offsetMs),
+    }));
+  } catch {
+    return [];
+  }
+}
+
 export async function captureLiveRegionAnnouncements(
   page: PlaywrightPage,
   protocol: InteractionProtocol
 ): Promise<LiveRegionCaptureResult> {
   try {
-    const beforeText = await page
-      .locator(protocol.liveRegionSelector!)
-      .textContent();
-
-    await (
-      page.locator(protocol.selector) as PlaywrightLocator & {
-        first(): PlaywrightLocator;
-      }
-    )
-      .first()
-      .click();
-
-    // Poll for live region text change (covers 500ms debounce + Lit render cycle) — up to 1500ms
-    const deadline = Date.now() + 1500;
-    while (Date.now() < deadline) {
-      await new Promise<void>((resolve) => setTimeout(resolve, 100));
-      const current = await page
-        .locator(protocol.liveRegionSelector!)
-        .textContent();
-      if (current !== beforeText) break;
-    }
-
-    const afterText = await page
-      .locator(protocol.liveRegionSelector!)
-      .textContent();
-
-    const liveRegionChanges: LiveRegionChange[] = [];
-    if (afterText !== beforeText && afterText) {
-      liveRegionChanges.push({
-        action: protocol.selector,
-        selector: protocol.liveRegionSelector!,
-        regionName:
-          protocol.liveRegionSelector!.match(/\[id\*="([^"]+)"\]/)?.[1] ??
-          'unknown',
-        announcementText: afterText,
-        ariaLive: 'polite',
-      });
-    }
+    await startLiveRegionObserver(page);
+    await page.locator(protocol.selector).nth(0).click();
+    await new Promise<void>((r) => setTimeout(r, 800));
+    const liveRegionChanges = await collectLiveRegionMutations(page);
 
     const summary =
       liveRegionChanges.length > 0

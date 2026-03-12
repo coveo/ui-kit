@@ -35,6 +35,7 @@ export interface LiveRegionChange {
   regionName: string;
   announcementText: string;
   ariaLive: 'polite' | 'assertive';
+  offsetMs: number;
 }
 
 export interface LiveRegionCaptureResult {
