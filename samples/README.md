@@ -33,6 +33,7 @@ Samples demonstrating server-side rendering (SSR) with Headless controllers for 
 | Sample | Description | Framework | Use Case |
 |--------|-------------|-----------|----------|
 | [commerce-express](./headless-ssr/commerce-express/) | Generic SSR implementation with Express server | Express + TypeScript | Commerce |
+| [search-express](./headless-ssr/search-express/) | Generic SSR implementation with Express server | Express + TypeScript | Search |
 | [commerce-nextjs](./headless-ssr/commerce-nextjs/) | Commerce SSR with Next.js App Router (current version) | Next.js (App Router) | Commerce |
 | [commerce-nextjs-v4](./headless-ssr/commerce-nextjs-v4/) | Commerce SSR with Next.js App Router (preview - Headless V4) | Next.js (App Router) | Commerce |
 | [commerce-react-router](./headless-ssr/commerce-react-router/) | Commerce SSR with React Router | React Router | Commerce |
