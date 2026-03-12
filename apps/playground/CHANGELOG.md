@@ -1,3 +1,9 @@
+# 3.1.0 (2026-03-12)
+
+### Features
+
+- Add rules to prevent auto merge for major updates [UA-10931] ([#242](https://github.com/coveo/relay/issues/242)) ([2e72d72](https://github.com/coveo/relay/commits/))
+
 ## 3.0.4 (2026-02-24)
 
 ## 3.0.3 (2026-02-19)
