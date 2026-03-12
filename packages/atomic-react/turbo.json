@@ -7,15 +7,15 @@
     },
     "build:bundles": {
       "dependsOn": ["gen:lit"],
-      "outputs": ["./dist/esm", "./dist/cjs"]
+      "outputs": ["./dist/esm/**", "./dist/cjs/**"]
     },
     "build:types": {
       "dependsOn": ["gen:lit"],
-      "outputs": ["./dist/types"]
+      "outputs": ["./dist/types/**"]
     },
     "build:assets": {
       "dependsOn": ["@coveo/atomic#build:list-assets"],
-      "outputs": ["./dist/assets", "./dist/lang"]
+      "outputs": ["./dist/assets/**", "./dist/lang/**"]
     },
     "gen:lit": {
       "dependsOn": ["@coveo/atomic#build:cem"],
