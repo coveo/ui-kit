@@ -1,7 +1,7 @@
-import {execSync} from 'node:child_process';
-import fs from 'node:fs';
+import {existsSync, readdirSync, readFileSync, writeFileSync} from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {dedent} from 'ts-dedent';
 import colors from '../../../utils/ci/colors.mjs';
 
 /**
@@ -40,10 +40,10 @@ const baseComponentsDir = path.resolve(
 );
 
 function isLitComponent(filePath) {
-  if (!fs.existsSync(filePath)) {
+  if (!existsSync(filePath)) {
     return false;
   }
-  const content = fs.readFileSync(filePath, 'utf-8');
+  const content = readFileSync(filePath, 'utf-8');
   return content.includes('LitElement');
 }
 
@@ -59,7 +59,7 @@ async function generateLitExportsForDir(dir) {
   const outputIndexFile = path.join(componentsDir, 'index.ts');
   const outputLazyIndexFile = path.join(componentsDir, 'lazy-index.ts');
 
-  const files = fs.readdirSync(componentsDir, {withFileTypes: true});
+  const files = readdirSync(componentsDir, {withFileTypes: true});
   const litComponents = files
     .filter((file) => {
       const componentPath = path.join(
@@ -69,54 +69,42 @@ async function generateLitExportsForDir(dir) {
       );
       return (
         file.isDirectory() &&
-        fs.existsSync(componentPath) &&
+        existsSync(componentPath) &&
         isLitComponent(componentPath)
       );
     })
     .map((file) => file.name)
     .sort();
 
-  const indexFileContent = `
-    // Auto-generated file
-    ${
-      litComponents.length > 0
-        ? litComponents
-            .map(
-              (component) =>
-                `export {${toPascalCase(component)}} from './${component}/${component}.js';`
-            )
-            .join('\n')
-        : 'export {};'
-    }
+  const indexFileContent = dedent`
+  // Auto-generated file
+  ${
+    litComponents.length > 0
+      ? litComponents
+          .map(
+            (component) =>
+              `export {${toPascalCase(component)}} from './${component}/${component}.js';`
+          )
+          .join('\n')
+      : 'export {};'
+  }
   `;
-  const lazyIndexFileContent = `
+  const lazyIndexFileContent = dedent`
     // Auto-generated file
     export default {
-       ${litComponents
-         .map(
-           (component) =>
-             `'${component}': async () => await import('./${component}/${component}.js'),`
-         )
-         .join('\n  ')}
+      ${litComponents
+        .map(
+          (component) =>
+            `'${component}': async () => await import('./${component}/${component}.js'),`
+        )
+        .join('\n  ')}
     } as Record<string, () => Promise<unknown>>;
  
     export type * from './index.js';
   `;
 
-  fs.writeFileSync(outputIndexFile, indexFileContent);
-  fs.writeFileSync(outputLazyIndexFile, lazyIndexFileContent);
-}
-
-export async function formatAllGeneratedLitExports() {
-  const files = directories.flatMap((dir) => {
-    const componentsDir = path.join(baseComponentsDir, dir);
-    return [
-      path.join(componentsDir, 'index.ts'),
-      path.join(componentsDir, 'lazy-index.ts'),
-    ];
-  });
-
-  execSync(`npx @biomejs/biome format --write ${files.join(' ')}`);
+  writeFileSync(outputIndexFile, indexFileContent);
+  writeFileSync(outputLazyIndexFile, lazyIndexFileContent);
 }
 
 export async function generateLitExports() {
@@ -124,5 +112,4 @@ export async function generateLitExports() {
     console.log(colors.blue('Directory:'), colors.green(dir));
     await generateLitExportsForDir(dir);
   }
-  await formatAllGeneratedLitExports();
 }
