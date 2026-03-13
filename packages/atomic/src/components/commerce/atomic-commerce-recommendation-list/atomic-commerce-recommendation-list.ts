@@ -71,7 +71,7 @@ export class AtomicCommerceRecommendationList
 {
   static styles: CSSResultGroup = [
     placeholderStyles,
-    css`@reference "../../common/item-list/styles/mixins.pcss";
+    css`@reference "../../common/item-list/styles/mixins.css";
   
   :host {
     @apply atomic-grid-clickable-elements;

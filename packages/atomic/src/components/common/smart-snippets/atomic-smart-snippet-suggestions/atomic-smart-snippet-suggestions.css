@@ -1,4 +1,4 @@
-@import '../../../../global/global.pcss';
+@import '../../../../global/global.css';
 @reference '../../../../utils/tailwind-utilities/link-style.css';
 @reference '../../../../utils/tailwind-utilities/set-font-size.css';
 

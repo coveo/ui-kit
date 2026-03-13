@@ -2,7 +2,7 @@ import {css} from 'lit';
 
 const styles = css`
 @reference '../../../utils/tailwind.global.tw.css';
-@reference '../../../components/common/item-list/styles/mixins.pcss';
+@reference '../../../components/common/item-list/styles/mixins.css';
 
 [part~='divider'] {
   &:not(:last-child) {

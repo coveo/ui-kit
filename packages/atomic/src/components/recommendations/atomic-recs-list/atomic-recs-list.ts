@@ -40,6 +40,7 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {randomID} from '@/src/utils/utils';
+import placeholderStyles from '../../common/item-list/styles/placeholders.tw.css';
 import '../atomic-recs-result/atomic-recs-result';
 
 /**
@@ -63,11 +64,12 @@ export class AtomicRecsList
   extends ChildrenUpdateCompleteMixin(LitElement)
   implements InitializableComponent<RecsBindings>
 {
-  static styles: CSSResultGroup = css`
+  static styles: CSSResultGroup = [
+    placeholderStyles,
+    css`
   @reference '../../../utils/tailwind.global.tw.css';
   
-  @import '../../common/item-list/styles/mixins.pcss';
-@import '../../common/item-list/styles/placeholders.pcss';
+  @import '../../common/item-list/styles/mixins.css';
 
 :host {
   @apply atomic-grid-clickable-elements;
@@ -90,7 +92,8 @@ export class AtomicRecsList
     visibility: hidden;
   }
 }
-  `;
+  `,
+  ];
 
   private static readonly propsSchema = new Schema({
     density: new StringValue({
