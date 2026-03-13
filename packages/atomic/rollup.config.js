@@ -39,10 +39,7 @@ const externalizeDependenciesPlugin = () => {
 };
 
 export default {
-  input: [
-    resolvePath('dist/atomic/components/loader.js'),
-    resolvePath('dist/atomic/components/index.js'),
-  ],
+  input: [resolvePath('dist/esm/loader.js'), resolvePath('dist/esm/index.js')],
   output: {
     dir: 'cdn',
     format: 'esm',
@@ -64,15 +61,15 @@ export default {
           dest: 'cdn',
         },
         {
-          src: 'dist/atomic/lang/*',
+          src: 'dist/lang/*',
           dest: 'cdn/lang',
         },
         {
-          src: 'dist/atomic/assets/*',
+          src: 'dist/assets/*',
           dest: 'cdn/assets',
         },
         {
-          src: 'dist/atomic/themes/*',
+          src: 'dist/themes/*',
           dest: 'cdn/themes',
         },
       ],

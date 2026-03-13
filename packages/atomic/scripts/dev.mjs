@@ -297,7 +297,7 @@ watch('src', {recursive: true}, async (_, filename) => {
 
   await nextTask(
     'Running esbuild for autoloader ESM...',
-    'esbuild src/autoloader/index.ts --format=esm --outfile=dist/atomic/autoloader/index.esm.js'
+    'esbuild src/autoloader/index.ts --format=esm --outfile=dist/autoloader/index.esm.js'
   );
 
   if (isStopped) {
@@ -306,7 +306,7 @@ watch('src', {recursive: true}, async (_, filename) => {
 
   await nextTask(
     'Running esbuild for autoloader CJS...',
-    'esbuild src/autoloader/index.ts --format=cjs --outfile=dist/atomic/autoloader/index.cjs.js'
+    'esbuild src/autoloader/index.ts --format=cjs --outfile=dist/autoloader/index.cjs.js'
   );
 
   if (isStopped) {

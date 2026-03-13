@@ -6,7 +6,7 @@
       "outputs": []
     },
     "build:storybook": {
-      "dependsOn": ["build:cem"],
+      "dependsOn": ["build:cem", "build:lit"],
       "outputs": ["./dist-storybook/**"]
     },
     "chromatic": {
@@ -20,45 +20,23 @@
       ]
     },
     "build:cem": {
-      "dependsOn": ["build:cdn"],
       "outputs": ["./custom-elements.json"]
     },
-    "build:stencil-lit": {
-      "dependsOn": ["^build", "build:locales"],
+    "build:lit": {
+      "dependsOn": ["^build"],
       "outputs": [
         "dist/**",
-        "!dist/atomic/assets/**",
-        "!dist/atomic/themes/**",
-        "!dist/atomic/lang/**",
         "docs/**",
-        "!docs/assets.json",
-        "projects/atomic-angular/src/lib/stencil-generated/**/*"
+        "src/generated/**",
+        "src/assets/lang/**"
       ]
     },
-    "build:copy-assets": {
-      "dependsOn": ["build:stencil-lit", "build:locales"],
-      "outputs": ["dist/atomic/themes/**", "dist/atomic/lang/**"]
-    },
-    "build:list-assets": {
-      "dependsOn": ["build:copy-assets"],
-      "outputs": ["dist/atomic/assets/**", "docs/assets.json"]
-    },
     "build:cdn": {
-      "dependsOn": ["build:list-assets"],
+      "dependsOn": [],
       "outputs": ["cdn/**"]
     },
-
-    "build:locales": {
-      "dependsOn": ["^build"],
-      "outputs": ["src/generated/**", "src/assets/lang/**"]
-    },
-
-    "test:stencil": {
-      "dependsOn": ["build:locales"],
-      "outputs": ["coverage/**"]
-    },
     "test:lit": {
-      "dependsOn": ["^build", "build"],
+      "dependsOn": ["^build"],
       "outputs": ["coverage/**"]
     },
     "test:storybook": {

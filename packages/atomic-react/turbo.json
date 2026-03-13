@@ -14,7 +14,7 @@
       "outputs": ["./dist/types"]
     },
     "build:assets": {
-      "dependsOn": ["@coveo/atomic#build:list-assets"],
+      "dependsOn": ["@coveo/atomic#build:stencil-lit"],
       "outputs": ["./dist/assets", "./dist/lang"]
     },
     "gen:lit": {

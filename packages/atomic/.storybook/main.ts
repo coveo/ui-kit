@@ -3,14 +3,14 @@ import path, {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import type {StorybookConfig} from '@storybook/web-components-vite';
 import remarkGfm from 'remark-gfm';
-import type {PluginImpl} from 'rollup';
+import type {Plugin} from 'vite';
 import {mergeConfig} from 'vite';
 import {generateExternalPackageMappings} from '../scripts/externalPackageMappings.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const virtualOpenApiModules: PluginImpl = () => {
+const virtualOpenApiModules = (): Plugin => {
   const virtualModules = new Map<string, string>();
 
   return {
@@ -104,10 +104,10 @@ const config: StorybookConfig = {
     '../storybook-pages/**/*.mdx',
   ],
   staticDirs: [
-    {from: '../dist/atomic/assets', to: '/assets'},
-    {from: '../dist/atomic/lang', to: '/lang'},
-    {from: '../dist/atomic', to: './assets'},
-    {from: '../dist/atomic/lang', to: './lang'},
+    {from: '../dist/assets', to: '/assets'},
+    {from: '../dist/lang', to: '/lang'},
+    {from: '../dist', to: './assets'},
+    {from: '../dist/lang', to: './lang'},
     {from: './public', to: '/'},
   ],
   addons: [

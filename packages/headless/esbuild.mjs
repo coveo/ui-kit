@@ -19,7 +19,6 @@ const {useCaseEntries, quanticUseCaseEntries} = buildConfig;
 const require = createRequire(import.meta.url);
 const devMode = process.argv[2] === 'dev';
 
-const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 const isNightly = process.env.IS_NIGHTLY === 'true';
 const isPrRelease =
   process.env.IS_PRERELEASE === 'true' && process.env.PR_NUMBER;
@@ -29,9 +28,6 @@ const buenoVersion = isNightly
   : isPrRelease
     ? `v${buenoJson.version.split('-').shift()}.${process.env.PR_NUMBER}`
     : `v${buenoJson.version}`;
-const buenoPath = isCDN
-  ? `/bueno/${buenoVersion}/bueno.esm.js`
-  : '@coveo/bueno';
 
 function getUmdGlobalName(useCase) {
   const map = {
@@ -88,6 +84,7 @@ const browserEsm = Object.entries(useCaseEntries).map((entry) => {
     entryPoints: [entryPoint],
     outfile,
     format: 'esm',
+    plugins: [getBuenoReplacePlugin(`/bueno/${buenoVersion}/bueno.esm.js`)],
   };
 
   if (devMode) {
@@ -117,7 +114,10 @@ const browserUmd = Object.entries(useCaseEntries).map((entry) => {
       banner: {
         js: `${base.banner.js}`,
       },
-      plugins: [umdWrapper({libraryName: globalName})],
+      plugins: [
+        getBuenoReplacePlugin('@coveo/bueno'),
+        umdWrapper({libraryName: globalName}),
+      ],
     },
     outDir
   );
@@ -198,6 +198,7 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
         ),
       ],
       plugins: [
+        getBuenoReplacePlugin('@coveo/bueno'),
         umdWrapper({libraryName: globalName}),
         codeReplacerPlugin(
           'src/api/knowledge/answer-slice.ts',
@@ -231,28 +232,29 @@ function resolveBrowser(moduleName) {
   );
 }
 
+function getBuenoReplacePlugin(buenoPath) {
+  return {
+    name: 'replace-bueno-import',
+    setup(build) {
+      build.onResolve({filter: /^@coveo\/bueno$/}, () => {
+        return {path: buenoPath, external: true};
+      });
+    },
+  };
+}
+
 /**
  * @param {import('esbuild').BuildOptions} options
  * @returns {Promise<import('esbuild').BuildResult>}
  */
 async function buildBrowserConfig(options, outDir) {
-  const replaceBuenoImport = [
-    {
-      name: 'replace-bueno-import',
-      setup(build) {
-        build.onResolve({filter: /^@coveo\/bueno$/}, () => {
-          return {path: buenoPath, external: true};
-        });
-      },
-    },
-  ];
   const out = await build({
     ...base,
     platform: 'browser',
     minify: true,
     sourcemap: true,
     metafile: true,
-    external: ['crypto', buenoPath],
+    external: ['crypto'],
     ...options,
 
     plugins: [
@@ -260,7 +262,6 @@ async function buildBrowserConfig(options, outDir) {
         'coveo.analytics': resolveEsm('coveo.analytics'),
         pino: resolveBrowser('pino'),
       }),
-      ...(isCDN ? replaceBuenoImport : []),
       ...(options.plugins || []),
     ],
   });

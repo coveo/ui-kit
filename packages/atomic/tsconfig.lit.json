@@ -10,7 +10,7 @@
     "declarationDir": "dist/types",
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
-    "outDir": "dist/atomic/components",
+    "outDir": "dist/esm",
     "paths": {
       "@/*": ["./*"]
     }
