@@ -48,19 +48,13 @@ import {
   StorageItems,
 } from '@/src/utils/local-storage-utils';
 import '@/src/components/search/atomic-relevance-inspector/atomic-relevance-inspector';
+import {augmentAnalyticsConfigWithAtomicVersion} from '@/src/components/common/interface/analytics-config';
 import type {AtomicRelevanceInspector} from '@/src/components/search/atomic-relevance-inspector/atomic-relevance-inspector';
+import {arrayConverter} from '@/src/converters/array-converter';
 import {getAnalyticsConfig} from './analytics-config';
 import {createSearchStore, type SearchStore} from './store';
-// TODO - Remove once all components that use atomic-modal have been migrated.
-import '@/src/components/common/atomic-modal/atomic-modal';
-// TODO - KIT-4989: Remove once atomic-result-icon is migrated
-import '@/src/components/common/atomic-icon/atomic-icon';
-// TODO - KIT-5056: Remove once atomic-result-list has been migrated.
-import '@/src/components/search/atomic-result/atomic-result';
-import {augmentAnalyticsConfigWithAtomicVersion} from '@/src/components/common/interface/analytics-config';
-import {arrayConverter} from '@/src/converters/array-converter';
 
-export type InitializationOptions = SearchEngineConfiguration;
+type InitializationOptions = SearchEngineConfiguration;
 
 export type Bindings = CommonBindings<
   SearchEngine,
