@@ -90,17 +90,17 @@ async function generateLitExportsForDir(dir) {
   }
   `;
   const lazyIndexFileContent = dedent`
-    // Auto-generated file
-    export default {
-      ${litComponents
-        .map(
-          (component) =>
-            `'${component}': async () => await import('./${component}/${component}.js'),`
-        )
-        .join('\n  ')}
-    } as Record<string, () => Promise<unknown>>;
- 
-    export type * from './index.js';
+  // Auto-generated file
+  export default {
+    ${litComponents
+      .map(
+        (component) =>
+          `'${component}': async () => await import('./${component}/${component}.js'),`
+      )
+      .join('\n')}
+  } as Record<string, () => Promise<unknown>>;
+
+  export type * from './index.js';
   `;
 
   writeFileSync(outputIndexFile, indexFileContent);
