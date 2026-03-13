@@ -2,5 +2,5 @@ node_modules/
 dist
 
 # Generated files
-src/components/search/components.ts
-src/components/commerce/components.ts
+# src/components/search/components.ts
+# src/components/commerce/components.ts
