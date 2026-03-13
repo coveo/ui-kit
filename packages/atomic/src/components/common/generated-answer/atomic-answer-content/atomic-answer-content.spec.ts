@@ -224,6 +224,27 @@ describe('atomic-answer-content', () => {
     );
   });
 
+  it('should render the cannot answer template when the generated answer cannot be answered', async () => {
+    const {element} = await renderComponent({
+      generatedAnswer: {
+        cannotAnswer: true,
+      },
+    });
+
+    await element.updateComplete;
+
+    const cannotAnswerContainer = element.shadowRoot?.querySelector(
+      '[part="generated-answer-cannot-answer"]'
+    );
+
+    expect(renderGeneratedContentContainer).not.toHaveBeenCalled();
+    expect(renderFeedbackAndCopyButtons).not.toHaveBeenCalled();
+    expect(cannotAnswerContainer).not.toBeNull();
+    expect(cannotAnswerContainer?.textContent).toContain(
+      i18n.t('generated-answer-cannot-generate-answer')
+    );
+  });
+
   it('should render the generated content container with answer data', async () => {
     const {getGeneratedContentProps} = await renderComponent();
 
