@@ -6,13 +6,16 @@
       "outputs": []
     },
     "build:locales": {
-      "outputs": ["dist/lang/**", "src/assets/lang/**", "src/generated/**"]
+      "outputs": ["dist/lang/**", "src/assets/lang/**", "src/generated/**"],
+      "inputs": ["src/locales.json"]
     },
     "build:assets": {
-      "outputs": ["dist/assets/**"]
+      "outputs": ["dist/assets/**"],
+      "inputs": ["scripts/build-assets.mjs"]
     },
     "build:themes": {
-      "outputs": ["dist/themes/**"]
+      "outputs": ["dist/themes/**"],
+      "inputs": ["src/themes/**"]
     },
     "build:storybook": {
       "dependsOn": ["^build", "build:cem"],
@@ -29,11 +32,23 @@
       ]
     },
     "build:cem": {
-      "outputs": ["./custom-elements.json"]
+      "outputs": ["./custom-elements.json"],
+      "inputs": [
+        "./src/**/*.ts",
+        "!./src/**/*.spec.ts",
+        "!./src/**/*.d.ts",
+        "!./src/**/e2e/**"
+      ]
     },
     "build:lit": {
       "dependsOn": ["^build", "build:locales"],
-      "outputs": ["dist/esm/**", "dist/cjs/**", "dist/types/**", "docs/**"]
+      "outputs": ["dist/esm/**", "dist/cjs/**", "dist/types/**", "docs/**"],
+      "inputs": [
+        "./src/**/*.ts",
+        "!./src/**/*.spec.ts",
+        "!./src/**/*.d.ts",
+        "!./src/**/e2e/**"
+      ]
     },
     "build:cdn": {
       "dependsOn": [
@@ -43,7 +58,16 @@
         "build:assets",
         "build:themes"
       ],
-      "outputs": ["cdn/**"]
+      "outputs": ["cdn/**"],
+      "inputs": [
+        "./src/**/*.ts",
+        "!./src/**/*.spec.ts",
+        "!./src/**/*.d.ts",
+        "!./src/**/e2e/**",
+        "./dist/assets/**",
+        "./dist/lang/**",
+        "./dist/themes/**"
+      ]
     },
     "test:lit": {
       "dependsOn": ["^build"],
