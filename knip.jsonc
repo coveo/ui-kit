@@ -53,7 +53,10 @@
     },
     "packages/atomic-react": {
       "entry": ["src/*index.ts"],
-      "ignore": ["src/components/stencil-generated/**/*.{ts,tsx}"]
+      "ignore": ["src/components/stencil-generated/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        "@lit/react" // Only used in generated files.
+      ]
     },
     "packages/headless-react": {
       "ignoreDependencies": ["@types/react-dom", "@types/react", "jsdom"]
