@@ -61,7 +61,7 @@
     "build:cdn": "node rsbuild.cdn.mjs",
     "build:angular": "npx turbo gen:lit --filter=@coveo/atomic-angular-builder",
     "build:react": "npx turbo gen:lit --filter=@coveo/atomic-react",
-    "dev": "node ./scripts/dev.mjs",
+    "dev:storybook": "storybook dev -p 4400",
     "web:dev": "npx vite serve dev",
     "web:cdn": "node ./scripts/start-cdn.mjs",
     "test": "pnpm run test:lit",

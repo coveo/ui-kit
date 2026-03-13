@@ -1,3 +1,7 @@
+import '@/src/components/insight/atomic-insight-layout/atomic-insight-layout.js';
+import '@/src/components/insight/atomic-insight-refine-modal/atomic-insight-refine-modal.js';
+import '@/src/components/common/atomic-layout-section/atomic-layout-section.js';
+import '@/src/components/search/atomic-quickview-modal/atomic-quickview-modal.js';
 import {spreadProps} from '@open-wc/lit-helpers';
 import {Decorator} from '@storybook/web-components-vite';
 import {html} from 'lit';

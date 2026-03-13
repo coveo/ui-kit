@@ -7,6 +7,8 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import '@/src/components/commerce/atomic-commerce-breadbox/atomic-commerce-breadbox.js';
+import '@/src/components/commerce/atomic-commerce-facets/atomic-commerce-facets.js';
 
 const {context, ...restOfConfiguration} =
   getSampleCommerceEngineConfiguration();

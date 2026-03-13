@@ -1,4 +1,4 @@
-import '@coveo/atomic/themes/coveo.css';
+import '@/src/themes/coveo.css';
 import type {Preview} from '@storybook/web-components-vite';
 import {setCustomElementsManifest} from '@storybook/web-components-vite';
 import {setStorybookHelpersConfig} from '@wc-toolkit/storybook-helpers';
@@ -7,7 +7,6 @@ import {initialize, mswLoader} from 'msw-storybook-addon';
 import {within} from 'shadow-dom-testing-library';
 import {create} from 'storybook/theming';
 import customElements from '../custom-elements.json';
-import {defineCustomElements} from '../dist/esm/loader.js';
 import {COVEO_PRIMARY, FONT_BASE, FONT_CODE} from './theme';
 
 initialize(
@@ -18,7 +17,6 @@ initialize(
 
 setCustomElementsManifest(customElements);
 
-defineCustomElements();
 setStorybookHelpersConfig({
   categoryOrder: [
     'attributes',

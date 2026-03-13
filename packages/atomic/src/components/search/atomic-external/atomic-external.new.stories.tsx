@@ -3,6 +3,13 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import type {AtomicSearchInterface} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import '@/src/components/search/atomic-external/atomic-external.js';
+import '@/src/components/search/atomic-facet/atomic-facet.js';
+import '@/src/components/search/atomic-format-currency/atomic-format-currency.js';
+import '@/src/components/search/atomic-numeric-facet/atomic-numeric-facet.js';
+import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
+import '@/src/components/search/atomic-result-list/atomic-result-list.js';
+import '@/src/components/search/atomic-search-box/atomic-search-box.js';
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-external',

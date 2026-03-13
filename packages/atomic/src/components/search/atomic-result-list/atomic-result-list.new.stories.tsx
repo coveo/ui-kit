@@ -5,6 +5,28 @@ import {
   playExecuteFirstSearch,
   wrapInSearchInterface,
 } from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-field-condition/atomic-field-condition.js';
+import '@/src/components/search/atomic-quickview/atomic-quickview.js';
+import '@/src/components/search/atomic-result-badge/atomic-result-badge.js';
+import '@/src/components/search/atomic-result-date/atomic-result-date.js';
+import '@/src/components/search/atomic-result-fields-list/atomic-result-fields-list.js';
+import '@/src/components/search/atomic-result-icon/atomic-result-icon.js';
+import '@/src/components/search/atomic-result-link/atomic-result-link.js';
+import '@/src/components/search/atomic-result-list/atomic-result-list.js';
+import '@/src/components/search/atomic-result-multi-value-text/atomic-result-multi-value-text.js';
+import '@/src/components/search/atomic-result-printable-uri/atomic-result-printable-uri.js';
+import '@/src/components/search/atomic-result-rating/atomic-result-rating.js';
+import '@/src/components/search/atomic-result-section-actions/atomic-result-section-actions.js';
+import '@/src/components/search/atomic-result-section-badges/atomic-result-section-badges.js';
+import '@/src/components/search/atomic-result-section-bottom-metadata/atomic-result-section-bottom-metadata.js';
+import '@/src/components/search/atomic-result-section-excerpt/atomic-result-section-excerpt.js';
+import '@/src/components/search/atomic-result-section-title/atomic-result-section-title.js';
+import '@/src/components/search/atomic-result-section-title-metadata/atomic-result-section-title-metadata.js';
+import '@/src/components/search/atomic-result-section-visual/atomic-result-section-visual.js';
+import '@/src/components/search/atomic-result-template/atomic-result-template.js';
+import '@/src/components/search/atomic-result-text/atomic-result-text.js';
+import '@/src/components/search/atomic-table-element/atomic-table-element.js';
+import '@/src/components/search/atomic-text/atomic-text.js';
 
 const defaultTemplateContent = `<atomic-result-template>
   <template>

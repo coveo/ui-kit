@@ -1,5 +1,13 @@
-import {readFileSync} from 'node:fs';
-import path, {dirname, resolve} from 'node:path';
+import {
+  copyFileSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
+import {createRequire} from 'node:module';
+import path, {dirname, extname, join, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import type {StorybookConfig} from '@storybook/web-components-vite';
 import remarkGfm from 'remark-gfm';
@@ -104,10 +112,9 @@ const config: StorybookConfig = {
     '../storybook-pages/**/*.mdx',
   ],
   staticDirs: [
-    {from: '../dist/assets', to: '/assets'},
-    {from: '../dist/lang', to: '/lang'},
-    {from: '../dist', to: './assets'},
-    {from: '../dist/lang', to: './lang'},
+    {from: './static/assets', to: '/assets'},
+    {from: '../src/assets/lang', to: '/lang'},
+    {from: '../src/assets/lang', to: './lang'},
     {from: './public', to: '/'},
   ],
   addons: [
@@ -146,8 +153,10 @@ const config: StorybookConfig = {
         virtualOpenApiModules(),
         tailwindcss(),
         resolvePathAliases(),
+        processInlineCssImports(),
         forceInlineCssImports(),
         svgTransform(),
+        prepareStorybookAssets(),
         configType === 'PRODUCTION' && isCDN && externalizeDependencies(),
       ],
     });
@@ -208,6 +217,159 @@ const svgTransform: PluginImpl = () => {
         );
       }
       return null;
+    },
+  };
+};
+
+/**
+ * Process Tailwind CSS directives inside Lit `css` tagged template literals.
+ *
+ * Components use `@import`, `@reference`, and `@apply` in `css\`...\`` templates
+ * for their shadow DOM styles. In production builds, the `litCssPlugin`
+ * post-processes these through PostCSS. In dev mode (Storybook), we need this
+ * Vite plugin to do the same — constructable stylesheets don't support these
+ * directives, so the CSS must be fully resolved before reaching the browser.
+ */
+const processInlineCssImports: PluginImpl = () => {
+  // biome-ignore lint/suspicious/noExplicitAny: PostCSS plugin types are complex
+  let postcssPlugins: any[];
+  let initialized = false;
+
+  return {
+    name: 'process-inline-css-imports',
+    enforce: 'pre',
+    async transform(code, id) {
+      const cleanId = id.split('?')[0];
+      if (!cleanId.endsWith('.ts')) return null;
+
+      const cssPattern = /css\s*`([\s\S]*?)`/g;
+      const matches = [...code.matchAll(cssPattern)];
+      const tailwindMatches = matches.filter(
+        (m) =>
+          m[1].includes('@import') ||
+          m[1].includes('@reference') ||
+          m[1].includes('@apply')
+      );
+      if (tailwindMatches.length === 0) return null;
+
+      if (!initialized) {
+        const {default: tailwindPostcss} = await import('@tailwindcss/postcss');
+        postcssPlugins = [tailwindPostcss()];
+        initialized = true;
+      }
+
+      const {default: postcss} = await import('postcss');
+      let result = code;
+
+      for (const match of tailwindMatches.reverse()) {
+        const processed = await postcss(postcssPlugins).process(match[1], {
+          from: id,
+        });
+        // Escape backticks and template expression markers so the
+        // processed CSS can safely live inside a tagged template literal.
+        const escaped = processed.css
+          .replace(/\\/g, '\\\\')
+          .replace(/`/g, '\\`')
+          .replace(/\$\{/g, '\\${');
+        result =
+          result.slice(0, match.index) +
+          `css\`${escaped}\`` +
+          result.slice(match.index! + match[0].length);
+      }
+
+      return {code: result, map: null};
+    },
+  };
+};
+
+/**
+ * Generate static assets that Storybook needs at startup:
+ * 1. Salesforce Design System icons → .storybook/static/assets/
+ * 2. Per-locale JSON files from src/locales.json → src/assets/lang/
+ * 3. dayjs locale import map → src/generated/dayjs-locales-data.ts
+ */
+const prepareStorybookAssets: PluginImpl = () => {
+  const require = createRequire(import.meta.url);
+
+  return {
+    name: 'prepare-storybook-assets',
+    buildStart() {
+      const srcDir = resolve(__dirname, '../src');
+      const assetsDir = resolve(__dirname, 'static/assets');
+
+      // ── 1. Copy Salesforce icons ──
+      const salesforceDir = dirname(
+        require.resolve('@salesforce-ux/design-system/package.json')
+      );
+      mkdirSync(assetsDir, {recursive: true});
+
+      for (const subpath of ['doctype', 'standard']) {
+        const icons = readdirSync(
+          join(salesforceDir, 'assets/icons', subpath),
+          {recursive: true, withFileTypes: true}
+        );
+        for (const icon of icons) {
+          if (icon.isFile() && extname(icon.name) === '.svg') {
+            copyFileSync(
+              join(salesforceDir, 'assets/icons', subpath, icon.name),
+              join(assetsDir, icon.name)
+            );
+          }
+        }
+      }
+      copyFileSync(
+        join(salesforceDir, 'assets/icons/utility/sparkles.svg'),
+        join(assetsDir, 'sparkles.svg')
+      );
+
+      // ── 2. Generate locale files ──
+      const localesData = JSON.parse(
+        readFileSync(join(srcDir, 'locales.json'), 'utf8')
+      );
+      const localesMap: Record<string, Record<string, string>> = {dev: {}};
+      for (const [stringKey, stringValues] of Object.entries(localesData)) {
+        for (const [localeKey, localeStringValue] of Object.entries(
+          stringValues as Record<string, string>
+        )) {
+          if (!localesMap[localeKey]) localesMap[localeKey] = {};
+          localesMap[localeKey][stringKey] = localeStringValue;
+          localesMap.dev[stringKey] = stringKey;
+        }
+      }
+
+      const langDir = join(srcDir, 'assets/lang');
+      rmSync(langDir, {recursive: true, force: true});
+      mkdirSync(langDir, {recursive: true});
+      for (const [localeKey, localeData] of Object.entries(localesMap)) {
+        writeFileSync(
+          join(langDir, `${localeKey}.json`),
+          JSON.stringify(localeData)
+        );
+      }
+
+      const generatedDir = join(srcDir, 'generated');
+      mkdirSync(generatedDir, {recursive: true});
+      writeFileSync(
+        join(generatedDir, 'availableLocales.json'),
+        JSON.stringify(Object.keys(localesMap).map((k) => k.toLowerCase()))
+      );
+
+      // ── 3. Generate dayjs locale imports ──
+      const dayJsLocales = JSON.parse(
+        readFileSync(require.resolve('dayjs/locale.json'), 'utf8')
+      );
+      let fileContent =
+        'export const locales: Record<string, () => Promise<unknown>> = {';
+      for (const locale of dayJsLocales) {
+        const key = locale.key;
+        const parts = key.split('-');
+        const i18nKey =
+          parts.length > 1 ? `${parts[0]}-${parts[1].toUpperCase()}` : key;
+        const mapKey = i18nKey.includes('-') ? `'${i18nKey}'` : i18nKey;
+        fileContent += `\n  ${mapKey}: () => import('dayjs/locale/${key}'),`;
+      }
+      fileContent += '\n};\n';
+      writeFileSync(join(generatedDir, 'dayjs-locales-data.ts'), fileContent);
     },
   };
 };

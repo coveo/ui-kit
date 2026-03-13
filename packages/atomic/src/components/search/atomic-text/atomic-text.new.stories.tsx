@@ -3,6 +3,7 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import type {AtomicSearchInterface} from '../atomic-search-interface/atomic-search-interface';
+import '@/src/components/search/atomic-text/atomic-text.js';
 
 const {decorator, play} = wrapInSearchInterface({
   skipFirstSearch: true,

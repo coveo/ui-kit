@@ -39,6 +39,9 @@ src/generated
 dist-storybook/
 dist-chromatic/
 
+.storybook/static/
+storybook-static/
+
 /dev/bueno/
 /dev/headless/
 
