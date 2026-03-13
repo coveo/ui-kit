@@ -359,7 +359,7 @@ function copyAssets() {
 }
 
 /**
- * Copy Salesforce Design System icons to dist/assets/ and write docs/assets.json.
+ * Copy Salesforce Design System icons to dist/assets.
  */
 function listAssets() {
   const salesforceDesignSystem = dirname(
@@ -401,15 +401,7 @@ function listAssets() {
     join(assetsDir, 'sparkles.svg')
   );
 
-  const files = readdirSync(assetsDir).toSorted();
-  const docsDir = join(packageDir, 'docs');
-  mkdirSync(docsDir, {recursive: true});
-  writeFileSync(join(docsDir, 'assets.json'), JSON.stringify({assets: files}));
-
-  console.log(
-    colors.bgGreen(`Copied ${files.length} asset icons and wrote`),
-    colors.green('docs/assets.json')
-  );
+  console.log(colors.bgGreen(`Copied ${files.length} asset icons`));
 }
 
 // ── Rsbuild plugin ────────────────────────────────────────────────────────────

@@ -18,6 +18,11 @@ import {generateExternalPackageMappings} from '../scripts/externalPackageMapping
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+// Ensure directories referenced in staticDirs exist before Storybook validates them.
+// The prepareStorybookAssets plugin populates these during buildStart, which runs later.
+mkdirSync(resolve(__dirname, 'static/assets'), {recursive: true});
+mkdirSync(resolve(__dirname, '../src/assets/lang'), {recursive: true});
+
 const virtualOpenApiModules = (): Plugin => {
   const virtualModules = new Map<string, string>();
 
@@ -320,6 +325,14 @@ const prepareStorybookAssets: PluginImpl = () => {
       copyFileSync(
         join(salesforceDir, 'assets/icons/utility/sparkles.svg'),
         join(assetsDir, 'sparkles.svg')
+      );
+
+      // Write docs/assets.json (consumed by atomic-icon stories)
+      const docsDir = resolve(__dirname, '../docs');
+      mkdirSync(docsDir, {recursive: true});
+      writeFileSync(
+        join(docsDir, 'assets.json'),
+        JSON.stringify({assets: readdirSync(assetsDir).sort()})
       );
 
       // ── 2. Generate locale files ──
