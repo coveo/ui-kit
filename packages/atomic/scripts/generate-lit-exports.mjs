@@ -2,6 +2,7 @@ import {execSync} from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {dedent} from 'ts-dedent';
 import colors from '../../../utils/ci/colors.mjs';
 
 /**
@@ -76,35 +77,35 @@ async function generateLitExportsForDir(dir) {
     .map((file) => file.name)
     .sort();
 
-  const indexFileContent = `
-    // Auto-generated file
-    ${
-      litComponents.length > 0
-        ? litComponents
-            .map(
-              (component) =>
-                `export {${toPascalCase(component)}} from './${component}/${component}.js';`
-            )
-            .join('\n')
-        : 'export {};'
-    }
+  const indexFileContent = dedent`
+  // Auto-generated file
+  ${
+    litComponents.length > 0
+      ? litComponents
+          .map(
+            (component) =>
+              `export {${toPascalCase(component)}} from './${component}/${component}.js';`
+          )
+          .join('\n')
+      : 'export {};'
+  }
   `;
-  const lazyIndexFileContent = `
+  const lazyIndexFileContent = dedent`
     // Auto-generated file
     export default {
-       ${litComponents
-         .map(
-           (component) =>
-             `'${component}': async () => await import('./${component}/${component}.js'),`
-         )
-         .join('\n  ')}
+      ${litComponents
+        .map(
+          (component) =>
+            `'${component}': async () => await import('./${component}/${component}.js'),`
+        )
+        .join('\n  ')}
     } as Record<string, () => Promise<unknown>>;
  
     export type * from './index.js';
   `;
 
-  fs.writeFileSync(outputIndexFile, indexFileContent);
-  fs.writeFileSync(outputLazyIndexFile, lazyIndexFileContent);
+  fs.writeFileSync(outputIndexFile, indexFileContent.trimStart());
+  fs.writeFileSync(outputLazyIndexFile, lazyIndexFileContent.trimStart());
 }
 
 async function formatAllGeneratedLitExports() {

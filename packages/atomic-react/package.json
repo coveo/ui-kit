@@ -15,7 +15,7 @@
     "gen:lit": "node ./scripts/build-lit.mjs",
     "build:bundles": "rollup --config rollup.config.js",
     "build:types": "tsc --project tsconfig.types.json",
-    "build:assets": "node ../../utils/ci/copy-files.mjs ../atomic/dist/atomic/assets dist/assets ../atomic/dist/atomic/lang dist/lang",
+    "build:assets": "node ../../utils/ci/copy-files.mjs ../atomic/dist/assets dist/assets ../atomic/dist/lang dist/lang",
     "release:phase3": "pnpm --filter @coveo/ci npm-publish",
     "release:phase1": "pnpm --filter @coveo/ci bump",
     "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod"
@@ -27,7 +27,8 @@
     "dist/"
   ],
   "dependencies": {
-    "@coveo/atomic": "workspace:*"
+    "@coveo/atomic": "workspace:*",
+    "@lit/react": "1.0.8"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "28.0.6",

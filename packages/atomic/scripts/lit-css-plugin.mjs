@@ -1,22 +1,11 @@
 import {
-  copyFileSync,
-  cpSync,
   mkdirSync,
   readdirSync,
   readFileSync,
-  rmSync,
   statSync,
   writeFileSync,
 } from 'node:fs';
-import {
-  basename,
-  dirname,
-  extname,
-  join,
-  posix,
-  relative,
-  sep,
-} from 'node:path';
+import {basename, dirname, join, posix, relative, sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import cssnano from 'cssnano';
 import postcss from 'postcss';
@@ -29,7 +18,6 @@ const packageDir = join(__dirname, '..');
 const srcDir = join(packageDir, 'src');
 const esmDir = join(packageDir, 'dist/esm');
 const cjsDir = join(packageDir, 'dist/cjs');
-const distRoot = join(packageDir, 'dist');
 
 function moduleExport(value, format) {
   return format === 'cjs'
@@ -265,145 +253,6 @@ function getAllDtsFiles(dir) {
   return results;
 }
 
-// ── Locale generation ──────────────────────────────────────────────────────────
-
-/**
- * Split src/locales.json into per-locale JSON files under src/assets/lang/
- * and write src/generated/availableLocales.json.
- */
-function generateLocales() {
-  const generatedDir = join(srcDir, 'generated');
-  rmSync(generatedDir, {recursive: true, force: true});
-  mkdirSync(generatedDir, {recursive: true});
-
-  const localesData = JSON.parse(
-    readFileSync(join(srcDir, 'locales.json'), 'utf8')
-  );
-
-  const localesMap = {dev: {}};
-  for (const [stringKey, stringValues] of Object.entries(localesData)) {
-    for (const [localeKey, localeStringValue] of Object.entries(stringValues)) {
-      if (!localesMap[localeKey]) {
-        localesMap[localeKey] = {};
-      }
-      localesMap[localeKey][stringKey] = localeStringValue;
-      localesMap.dev[stringKey] = stringKey;
-    }
-  }
-
-  const langDir = join(srcDir, 'assets/lang');
-  rmSync(langDir, {recursive: true, force: true});
-  mkdirSync(langDir, {recursive: true});
-
-  for (const [localeKey, localeData] of Object.entries(localesMap)) {
-    writeFileSync(
-      join(langDir, `${localeKey}.json`),
-      JSON.stringify(localeData)
-    );
-  }
-
-  const localesArray = Object.keys(localesMap).map((k) => k.toLowerCase());
-  writeFileSync(
-    join(generatedDir, 'availableLocales.json'),
-    JSON.stringify(localesArray)
-  );
-
-  console.log(
-    colors.bgGreen(`Generated ${Object.keys(localesMap).length} locale files`)
-  );
-}
-
-/**
- * Generate src/generated/dayjs-locales-data.ts with dynamic imports for all dayjs locales.
- */
-function generateDayjsLocales() {
-  const dayJsPath = fileURLToPath(import.meta.resolve('dayjs/locale.json'));
-  const localesData = JSON.parse(readFileSync(dayJsPath, 'utf8'));
-
-  let fileContent =
-    'export const locales: Record<string, () => Promise<unknown>> = {';
-  for (const locale of localesData) {
-    const key = locale.key;
-    const parts = key.split('-');
-    const i18nKey =
-      parts.length > 1 ? `${parts[0]}-${parts[1].toUpperCase()}` : key;
-    const mapKey = i18nKey.includes('-') ? `'${i18nKey}'` : i18nKey;
-    fileContent += `\n  ${mapKey}: () => import('dayjs/locale/${key}'),`;
-  }
-  fileContent += '\n};\n';
-
-  writeFileSync(join(srcDir, 'generated/dayjs-locales-data.ts'), fileContent);
-  console.log(
-    colors.bgGreen('Generated'),
-    colors.green('dayjs-locales-data.ts')
-  );
-}
-
-// ── Asset copying ──────────────────────────────────────────────────────────────
-
-/**
- * Copy themes and lang files to dist.
- */
-function copyAssets() {
-  mkdirSync(join(distRoot, 'themes'), {recursive: true});
-  cpSync(join(srcDir, 'themes'), join(distRoot, 'themes'), {
-    recursive: true,
-  });
-  console.log(colors.bgGreen('Copied'), colors.green('themes/'));
-
-  mkdirSync(join(distRoot, 'lang'), {recursive: true});
-  cpSync(join(srcDir, 'assets/lang'), join(distRoot, 'lang'), {
-    recursive: true,
-  });
-  console.log(colors.bgGreen('Copied'), colors.green('lang/'));
-}
-
-/**
- * Copy Salesforce Design System icons to dist/assets.
- */
-function listAssets() {
-  const salesforceDesignSystem = dirname(
-    fileURLToPath(
-      import.meta.resolve('@salesforce-ux/design-system/package.json')
-    )
-  );
-
-  const salesforceDocTypeIcons = readdirSync(
-    `${salesforceDesignSystem}/assets/icons/doctype`,
-    {recursive: true, withFileTypes: true}
-  ).toSorted((a, b) => a.name.localeCompare(b.name));
-
-  const salesforceStandardIcons = readdirSync(
-    `${salesforceDesignSystem}/assets/icons/standard`,
-    {recursive: true, withFileTypes: true}
-  ).toSorted((a, b) => a.name.localeCompare(b.name));
-
-  const assetsDir = join(distRoot, 'assets');
-  mkdirSync(assetsDir, {recursive: true});
-
-  for (const [icons, subpath] of [
-    [salesforceDocTypeIcons, 'doctype'],
-    [salesforceStandardIcons, 'standard'],
-  ]) {
-    for (const icon of icons) {
-      if (icon.isFile() && extname(icon.name) === '.svg') {
-        copyFileSync(
-          `${salesforceDesignSystem}/assets/icons/${subpath}/${icon.name}`,
-          join(assetsDir, icon.name)
-        );
-      }
-    }
-  }
-
-  // Copy sparkles icon
-  copyFileSync(
-    `${salesforceDesignSystem}/assets/icons/utility/sparkles.svg`,
-    join(assetsDir, 'sparkles.svg')
-  );
-
-  console.log(colors.bgGreen(`Copied ${files.length} asset icons`));
-}
-
 // ── Rsbuild plugin ────────────────────────────────────────────────────────────
 
 /**
@@ -417,8 +266,6 @@ export function litCssPlugin() {
     name: 'lit-css-plugin',
     setup(api) {
       api.onBeforeBuild(async () => {
-        generateLocales();
-        generateDayjsLocales();
         console.log(colors.blue('Generating Lit exports'));
         await generateLitExports();
       });
@@ -434,8 +281,6 @@ export function litCssPlugin() {
           await processInlineCss(dir, format);
         }
         resolvePathAliasesInDts(join(packageDir, 'dist/types'));
-        copyAssets();
-        listAssets();
 
         console.log(colors.bold.blue('Post-build processing complete'));
       });

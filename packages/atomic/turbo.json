@@ -5,6 +5,15 @@
       "dependsOn": ["build:storybook", "build:lit", "build:cdn"],
       "outputs": []
     },
+    "build:locales": {
+      "outputs": ["dist/lang/**", "src/assets/lang/**", "src/generated/**"]
+    },
+    "build:assets": {
+      "outputs": ["dist/assets/**"]
+    },
+    "build:themes": {
+      "outputs": ["dist/themes/**"]
+    },
     "build:storybook": {
       "dependsOn": ["^build", "build:cem"],
       "outputs": ["./dist-storybook/**"]
@@ -23,16 +32,17 @@
       "outputs": ["./custom-elements.json"]
     },
     "build:lit": {
-      "dependsOn": ["^build"],
-      "outputs": [
-        "dist/**",
-        "docs/**",
-        "src/generated/**",
-        "src/assets/lang/**"
-      ]
+      "dependsOn": ["^build", "build:locales"],
+      "outputs": ["dist/esm/**", "dist/cjs/**", "dist/types/**", "docs/**"]
     },
     "build:cdn": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build",
+        "build:lit",
+        "build:locales",
+        "build:assets",
+        "build:themes"
+      ],
       "outputs": ["cdn/**"]
     },
     "test:lit": {
