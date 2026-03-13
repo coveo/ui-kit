@@ -7,21 +7,21 @@
     },
     "build:bundles": {
       "dependsOn": ["gen:lit"],
-      "outputs": ["./dist/esm", "./dist/cjs"]
+      "outputs": ["./dist/esm/**", "./dist/cjs/**"]
     },
     "build:types": {
       "dependsOn": ["gen:lit"],
-      "outputs": ["./dist/types"]
+      "outputs": ["./dist/types/**"]
     },
     "build:assets": {
-      "dependsOn": ["@coveo/atomic#build:stencil-lit"],
-      "outputs": ["./dist/assets", "./dist/lang"]
+      "dependsOn": ["@coveo/atomic#build:lit"],
+      "outputs": ["./dist/assets/**", "./dist/lang/**"]
     },
     "gen:lit": {
       "dependsOn": ["@coveo/atomic#build:cem"],
       "outputs": [
-        "src/components/search/component.ts",
-        "src/components/commerce/component.ts"
+        "src/components/search/components.ts",
+        "src/components/commerce/components.ts"
       ]
     },
     "release:phase1": {

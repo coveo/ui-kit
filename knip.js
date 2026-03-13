@@ -51,6 +51,9 @@ export default {
       entry: ['src/*index.ts'],
       ignore: ['src/components/stencil-generated/**/*.{ts,tsx}'],
       ignoreUnresolved: [/\.{1,2}\/([\w.]*?\/)?components\.js/],
+      ignoreDependencies: [
+        '@lit/react', // Only used in generated files.
+      ],
     },
     'packages/headless-react': {
       ignoreDependencies: ['@types/react-dom', '@types/react', 'jsdom'],

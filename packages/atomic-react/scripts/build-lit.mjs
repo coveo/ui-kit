@@ -1,4 +1,3 @@
-import {execSync} from 'node:child_process';
 import {writeFileSync} from 'node:fs';
 import cem from '@coveo/atomic/custom-elements-manifest' with {type: 'json'};
 
@@ -90,11 +89,6 @@ for (const entry of entries) {
 for (const entry of entries) {
   if (entry.computedComponentImports.length === 0) {
     writeFileSync(entry.path, 'export {}');
-    // Format with Biome, like the original prettier.format() calls
-    execSync(`npx @biomejs/biome format --write "${entry.path}"`, {
-      stdio: 'pipe',
-    });
-    continue;
   }
 
   // Sort imports deterministically to ensure consistent output across environments
@@ -111,6 +105,4 @@ for (const entry of entries) {
       entry.content,
     ].join('\n')
   );
-  // Format with Biome, like the original prettier.format() calls
-  execSync(`npx @biomejs/biome check --write "${entry.path}"`, {stdio: 'pipe'});
 }

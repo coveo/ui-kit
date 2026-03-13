@@ -14,7 +14,7 @@
       "outputs": []
     },
     "build:assets": {
-      "dependsOn": ["@coveo/atomic#build:stencil-lit"],
+      "dependsOn": ["@coveo/atomic#build:lit"],
       "outputs": [
         "projects/atomic-angular/dist/assets/**",
         "projects/atomic-angular/dist/lang/**"
