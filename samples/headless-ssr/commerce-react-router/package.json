@@ -11,9 +11,9 @@
   },
   "dependencies": {
     "@coveo/headless-react": "workspace:*",
-    "@react-router/fs-routes": "7.10.1",
-    "@react-router/node": "7.10.1",
-    "@react-router/serve": "7.10.1",
+    "@react-router/fs-routes": "7.12.0",
+    "@react-router/node": "7.12.0",
+    "@react-router/serve": "7.12.0",
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-router": "7.12.0",
@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@coveo/relay-event-types": "catalog:",
-    "@react-router/dev": "7.10.1",
+    "@react-router/dev": "7.12.0",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "typescript": "catalog:",
