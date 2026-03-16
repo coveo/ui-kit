@@ -65,7 +65,7 @@ for (const route of routes) {
 
       await page.goto(`/${route}`);
       await waitForHydration(page);
-      await page.waitForTimeout(1000);
+      await page.waitForLoadState('networkidle');
 
       expect(errors).toHaveLength(0);
       expect(warnings).toHaveLength(0);
@@ -80,7 +80,7 @@ for (const route of routes) {
       await page.locator(searchBoxSelector).focus();
       await page.locator(searchBoxSelector).fill('abc');
       await page.locator(searchBoxSelector).press('Enter');
-      await page.waitForTimeout(1000);
+      await page.waitForLoadState('networkidle');
 
       const updatedResults = await getResultTitles(page);
       expect(updatedResults.length).toBe(numResults);

@@ -21,7 +21,7 @@ for (const route of routes) {
           const initialResults = await getResultTitles(page);
           expect(initialResults.length).toBeGreaterThan(0);
 
-          await page.waitForTimeout(1000);
+          await page.waitForLoadState('networkidle');
           await page.locator(searchBoxSelector).focus();
           await page.locator(searchBoxSelector).fill(query);
           await page.locator(searchBoxSelector).press('Enter');
@@ -36,7 +36,7 @@ for (const route of routes) {
           await page.goto(`/${route}`);
           await waitForHydration(page);
 
-          await page.waitForTimeout(1000);
+          await page.waitForLoadState('networkidle');
           await page.locator(searchBoxSelector).focus();
           await page.locator(searchBoxSelector).fill(query);
           await page.locator(searchBoxSelector).press('Enter');
@@ -53,7 +53,7 @@ for (const route of routes) {
             await page.goto(`/${route}`);
             await waitForHydration(page);
 
-            await page.waitForTimeout(1000);
+            await page.waitForLoadState('networkidle');
             await page.locator(searchBoxSelector).focus();
             await page.locator(searchBoxSelector).fill(query);
             await page.locator(searchBoxSelector).press('Enter');
@@ -71,7 +71,7 @@ for (const route of routes) {
             await waitForHydration(page);
             const initialResults = await getResultTitles(page);
 
-            await page.waitForTimeout(1000);
+            await page.waitForLoadState('networkidle');
             await page.locator(searchBoxSelector).focus();
             await page.locator(searchBoxSelector).fill(query);
             await page.locator(searchBoxSelector).press('Enter');
@@ -96,7 +96,7 @@ for (const route of routes) {
             await page.goto(`/${route}`);
             await waitForHydration(page);
 
-            await page.waitForTimeout(1000);
+            await page.waitForLoadState('networkidle');
             await page.locator(searchBoxSelector).focus();
             await page.locator(searchBoxSelector).fill(query);
             await page.locator(searchBoxSelector).press('Enter');
@@ -128,14 +128,14 @@ for (const route of routes) {
         test("doesn't update the page", async ({page}) => {
           await page.goto(getInitialUrl());
           await waitForHydration(page);
-          await page.waitForTimeout(1000);
+          await page.waitForLoadState('networkidle');
           await expect(page.locator(searchBoxSelector)).toHaveValue(query);
         });
 
         test('should not update the parameters', async ({page}) => {
           await page.goto(getInitialUrl());
           await waitForHydration(page);
-          await page.waitForTimeout(1000);
+          await page.waitForLoadState('networkidle');
 
           const url = new URL(page.url());
           expect(url.searchParams.size).toBe(3);
@@ -169,7 +169,7 @@ for (const route of routes) {
         test("doesn't update the page", async ({page}) => {
           await page.goto(getInitialUrl());
           await waitForHydration(page);
-          await page.waitForTimeout(1000);
+          await page.waitForLoadState('networkidle');
           await expect(page.locator(searchBoxSelector)).toHaveValue('');
         });
 
