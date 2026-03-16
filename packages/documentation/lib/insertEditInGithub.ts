@@ -153,6 +153,14 @@ function buildButtonHtml(url: string): string {
  * corresponding file under `packages/headless/source_docs/`.
  */
 export function insertEditInGithub(page: PageEvent<Reflection>) {
+  // For Headless-React builds the sources are generated from `dist/` and
+  // don't point to repo-editable files. We still want the header wrapper
+  // CSS applied, so set a flag to skip only the button injection.
+  let skipButton = false;
+  try {
+    skipButton = process.cwd().includes('packages/headless-react');
+  } catch {}
+
   const model = page.model as Reflection & {
     sources?: Array<{fullFileName?: string; line?: number}>;
   };
@@ -192,7 +200,7 @@ export function insertEditInGithub(page: PageEvent<Reflection>) {
       /(<div\s+class="tsd-page-title">)([\s\S]*?)(<\/div>)/i,
       (_match, openTag, innerContent, closeTag) => {
         let content = `${openTag}<div class="tsd-page-title-content">${innerContent}</div>`;
-        if (githubUrl) {
+        if (githubUrl && !skipButton) {
           content += buildButtonHtml(githubUrl);
         }
         return content + closeTag;
@@ -202,7 +210,7 @@ export function insertEditInGithub(page: PageEvent<Reflection>) {
   }
 
   // If not a page with a .tsd-page-title, only inject the button if it exists
-  if (githubUrl) {
+  if (githubUrl && !skipButton) {
     const buttonHtml = buildButtonHtml(githubUrl);
     if (page.contents.includes('</body>')) {
       page.contents = page.contents.replace('</body>', `${buttonHtml}</body>`);
