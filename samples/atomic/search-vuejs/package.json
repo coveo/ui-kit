@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "6.0.1",
-    "cypress": "catalog:",
+    "@playwright/test": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:"
   }
