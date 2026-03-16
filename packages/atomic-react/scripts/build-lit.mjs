@@ -89,6 +89,7 @@ for (const entry of entries) {
 for (const entry of entries) {
   if (entry.computedComponentImports.length === 0) {
     writeFileSync(entry.path, 'export {}');
+    continue;
   }
 
   // Sort imports deterministically to ensure consistent output across environments
