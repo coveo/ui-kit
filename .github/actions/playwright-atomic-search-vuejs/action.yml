@@ -1,10 +1,5 @@
 name: "Playwright Atomic Vue.js"
 description: "Run Playwright tests for Atomic Vue.js"
-inputs:
-  github-token:
-    description: The GitHub token for accurately detecting a build vs a re-run build
-    required: false
-    default: ""
 runs:
   using: composite
   steps:
