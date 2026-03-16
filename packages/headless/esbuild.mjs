@@ -192,7 +192,6 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
       banner: {
         js: `${base.banner.js}`,
       },
-      external: [buenoPath],
       inject: [
         'ponyfills/headers-shim.js',
         'ponyfills/global-this-shim.js',
