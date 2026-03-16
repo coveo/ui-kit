@@ -53,10 +53,7 @@
     },
     "packages/atomic-react": {
       "entry": ["src/*index.ts"],
-      "ignore": [
-        "src/components/search/components.ts",
-        "src/components/commerce/components.ts"
-      ],
+      "ignore": ["src/components/stencil-generated/**/*.{ts,tsx}"],
       "ignoreDependencies": [
         "@lit/react" // Only used in generated files.
       ]

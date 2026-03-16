@@ -597,19 +597,23 @@ export class AtomicGeneratedAnswer
     this.controller.clickLike();
   }
 
-  private renderCitationsList(citations: GeneratedAnswerCitation[]) {
+  private renderCitationsList(
+    citations: GeneratedAnswerCitation[],
+    answerId?: string
+  ) {
     return renderCitations({
       props: {
         citations,
         i18n: this.bindings.i18n,
         buildInteractiveCitation: (citation) =>
           buildInteractiveCitation(this.bindings.engine, {
-            options: {citation},
+            options: {citation, answerId},
           }),
         logCitationHover: (citationId, citationHoverTimeMs) => {
           this.generatedAnswer?.logCitationHover(
             citationId,
-            citationHoverTimeMs
+            citationHoverTimeMs,
+            answerId
           );
         },
         disableCitationAnchoring: this.disableCitationAnchoring,
