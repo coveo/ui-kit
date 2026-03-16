@@ -77,6 +77,17 @@
         "ACTIONS_ID_TOKEN_REQUEST_TOKEN"
       ],
       "cache": false
+    },
+    "npm:publish": {
+      "dependsOn": [],
+      "env": [
+        "NPM_TAG",
+        "IS_PRERELEASE",
+        "PR_NUMBER",
+        "ACTIONS_ID_TOKEN_REQUEST_URL",
+        "ACTIONS_ID_TOKEN_REQUEST_TOKEN"
+      ],
+      "cache": false
     }
   },
   "globalDependencies": [

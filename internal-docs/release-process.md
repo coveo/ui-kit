@@ -114,8 +114,6 @@ sequenceDiagram
    participant AWS
    participant TeamJenkins
    end
-   GitHub-public->>+NPM: Publish package on beta tag
-   GitHub-public->>+SFDC: Publish package
    GitHub-public->>+GitHub-coveo: Continue GitHub workflow on Coveo Hosted Runner
    GitHub-coveo-)DepPipeline: Trigger Deployment Pipeline
    GitHub-coveo->>+GitHub-public: Continue GitHub workflow on GitHub Hosted runner
