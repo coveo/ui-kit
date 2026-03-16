@@ -168,7 +168,7 @@ describe('createFollowUpStrategy', () => {
   it('marks a completed run as answerable when the agent responds', () => {
     strategy.onRunFinishedEvent!({
       event: {
-        result: {answerGenerated: true},
+        result: {completionReason: 'ANSWERED'},
       },
     } as any);
 
@@ -180,7 +180,7 @@ describe('createFollowUpStrategy', () => {
   it('marks a completed run as unanswered when no answer is generated', () => {
     strategy.onRunFinishedEvent!({
       event: {
-        result: {answerGenerated: false},
+        result: {completionReason: 'NO_RESULTS'},
       },
     } as any);
 
@@ -192,7 +192,7 @@ describe('createFollowUpStrategy', () => {
   it('resets the tracked run identifier after completion', () => {
     strategy.onRunFinishedEvent!({
       event: {
-        result: {answerGenerated: true},
+        result: {completionReason: 'ANSWERED'},
       },
     } as any);
 

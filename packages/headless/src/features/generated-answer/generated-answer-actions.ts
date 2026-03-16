@@ -43,6 +43,7 @@ import {
 import {
   GENERATION_STEP_NAMES,
   type GenerationStepName,
+  normalizeGenerationStepName,
 } from './generated-answer-state.js';
 import {
   type GeneratedContentFormat,
@@ -71,6 +72,18 @@ export const answerContentFormatSchema =
     required: true,
     constrainTo: generatedContentFormat,
   });
+
+const generationStepNameValue = new StringValue<GenerationStepName>({
+  required: true,
+  constrainTo: GENERATION_STEP_NAMES,
+});
+
+const normalizeGenerationStepPayload = <T extends {name: string}>(
+  payload: T
+): Omit<T, 'name'> & {name: GenerationStepName} => ({
+  ...payload,
+  name: normalizeGenerationStepName(payload.name),
+});
 
 export interface GeneratedAnswerErrorPayload {
   message?: string;
@@ -222,24 +235,18 @@ export const setAnswerApiQueryParams = createAction(
 
 export const startStep = createAction(
   'generatedAnswer/startStep',
-  (payload: {name: GenerationStepName; startedAt: number}) =>
-    validatePayload(payload, {
-      name: new StringValue<GenerationStepName>({
-        required: true,
-        constrainTo: GENERATION_STEP_NAMES,
-      }),
+  (payload: {name: string; startedAt: number}) =>
+    validatePayload(normalizeGenerationStepPayload(payload), {
+      name: generationStepNameValue,
       startedAt: new NumberValue({min: 0, required: true}),
     })
 );
 
 export const finishStep = createAction(
   'generatedAnswer/finishStep',
-  (payload: {name: GenerationStepName; finishedAt: number}) =>
-    validatePayload(payload, {
-      name: new StringValue<GenerationStepName>({
-        required: true,
-        constrainTo: GENERATION_STEP_NAMES,
-      }),
+  (payload: {name: string; finishedAt: number}) =>
+    validatePayload(normalizeGenerationStepPayload(payload), {
+      name: generationStepNameValue,
       finishedAt: new NumberValue({min: 0, required: true}),
     })
 );
