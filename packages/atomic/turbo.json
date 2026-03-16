@@ -35,8 +35,7 @@
         "!dist/atomic/themes/**",
         "!dist/atomic/lang/**",
         "docs/**",
-        "!docs/assets.json",
-        "projects/atomic-angular/src/lib/stencil-generated/**/*"
+        "!docs/assets.json"
       ]
     },
     "build:copy-assets": {
