@@ -132,7 +132,11 @@ const atomicDefault = defineConfig({
   test: {
     name: 'atomic-default',
     css: true,
-    include: ['src/**/*.spec.ts', 'scripts/stencil-proxy.spec.mjs'],
+    include: [
+      'src/**/*.spec.ts',
+      'scripts/stencil-proxy.spec.mjs',
+      'storybook-utils/**/*.spec.ts',
+    ],
     exclude: [
       ...configDefaults.exclude,
       'src/**/initialization-utils.spec.ts',
