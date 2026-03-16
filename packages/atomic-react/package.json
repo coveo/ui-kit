@@ -1,6 +1,7 @@
 {
   "name": "@coveo/atomic-react",
   "sideEffects": false,
+  "license": "Apache-2.0",
   "type": "module",
   "version": "3.11.4",
   "description": "React specific wrapper for the Atomic component library",
@@ -12,7 +13,6 @@
   "scripts": {
     "clean": "node ../../utils/ci/rm-rf.mjs dist",
     "gen:lit": "node ./scripts/build-lit.mjs",
-    "build": "pnpm run build:bundles && pnpm run build:types && pnpm run build:assets",
     "build:bundles": "rollup --config rollup.config.js",
     "build:types": "tsc --project tsconfig.types.json",
     "build:assets": "node ../../utils/ci/copy-files.mjs ../atomic/dist/atomic/assets dist/assets ../atomic/dist/atomic/lang dist/lang",
@@ -24,9 +24,7 @@
   "main": "./dist/cjs/atomic-react.cjs",
   "types": "./dist/types/index.d.ts",
   "files": [
-    "dist/",
-    "recommendation/",
-    "commerce/"
+    "dist/"
   ],
   "dependencies": {
     "@coveo/atomic": "workspace:*",
