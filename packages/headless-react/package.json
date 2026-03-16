@@ -31,7 +31,6 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "release:phase1": "pnpm --filter @coveo/ci bump",
-    "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod",
     "build:typedoc": "pnpm run build:typedoc:docs && pnpm run build:typedoc:merge",
     "build:typedoc:docs": "concurrently \"pnpm run build:typedoc:ssr\" \"pnpm run build:typedoc:ssr-commerce\"",
     "build:typedoc:ssr": "typedoc --json ./temp/ssr.json --tsconfig tsconfig.json --options typedoc-configs/ssr.typedoc.json",

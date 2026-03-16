@@ -127,6 +127,6 @@ sequenceDiagram
    Note right of GitHub-public: Wait for ✅
    deactivate GitHub-public
    TeamJenkins->>+GitHub-public: Approve Production GitHub Environment usage
-   GitHub-public->>+NPM: Promote package to latest
+   GitHub-public->>+NPM: Publish package to latest
    GitHub-public->>+SFDC: Promote package to latest
 ```

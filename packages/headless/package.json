@@ -95,7 +95,6 @@
     "build:typedoc:ssr": "typedoc --json ./temp/ssr.json --tsconfig tsconfig.typedoc.json --options typedoc-configs/ssr.typedoc.json",
     "build:typedoc:ssr-commerce": "typedoc --json ./temp/ssr-commerce.json --tsconfig tsconfig.typedoc.json --options typedoc-configs/ssr-commerce.typedoc.json",
     "serve:typedoc": "live-server ./docs",
-    "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod",
     "npm:publish": "pnpm --filter @coveo/ci npm-publish"
   },
   "peerDependencies": {

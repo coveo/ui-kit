@@ -31,7 +31,6 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "release:phase1": "pnpm --filter @coveo/ci bump",
-    "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod",
     "npm:publish": "pnpm --filter @coveo/ci npm-publish"
   },
   "devDependencies": {

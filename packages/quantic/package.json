@@ -40,7 +40,6 @@
     "promote:sfdx": "pnpm run publish:sfdx -- --promote",
     "promote:sfdx:ci": "pnpm run publish:sfdx -- --promote --ci",
     "release:phase1": "pnpm --filter @coveo/ci bump",
-    "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod",
     "preinstall": "node scripts/npm/check-sfdx-project.js",
     "postinstall": "node scripts/npm/setup-quantic.js",
     "babel:headless": "babel ./node_modules/@coveo/headless/dist/quantic --delete-dir-on-start --out-dir .tmp/quantic-compiled --extensions .js --minified",

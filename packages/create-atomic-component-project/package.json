@@ -18,7 +18,6 @@
   "scripts": {
     "publish:bump": "pnpm --filter @coveo/ci bump",
     "release:phase1": "pnpm run publish:bump",
-    "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod",
     "npm:publish": "pnpm --filter @coveo/ci npm-publish"
   },
   "keywords": [

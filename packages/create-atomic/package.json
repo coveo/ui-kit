@@ -36,7 +36,6 @@
     "build:ts": "tsc -p tsconfig.json",
     "lint": "prettier --check . && eslint .",
     "release:phase1": "pnpm --filter @coveo/ci bump",
-    "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod",
     "npm:publish": "pnpm --filter @coveo/ci npm-publish"
   },
   "keywords": [

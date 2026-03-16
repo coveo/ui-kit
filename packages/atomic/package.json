@@ -82,7 +82,6 @@
     "e2e:snapshots:watch": "cypress open --config-file cypress-screenshots.config.mjs --browser chrome",
     "generate-component": "node ./scripts/generate-component.mjs",
     "release:phase1": "pnpm --filter @coveo/ci bump",
-    "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod",
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
     "chromatic": "chromatic -d=dist-storybook",
     "validate:light-dom-styles": "node ./scripts/check-light-dom-host-selectors.mjs",
