@@ -121,6 +121,29 @@ function inferSourceDocPath(pageUrl: string): string | null {
   return null;
 }
 
+/** Escape string for use inside HTML attribute values */
+function escapeHtmlAttr(s: string): string {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function buildButtonHtml(url: string): string {
+  const safeHref = escapeHtmlAttr(encodeURI(String(url)));
+  return `
+    <div class="typedoc-edit-github">
+      <a href="${safeHref}" target="_blank" rel="noopener noreferrer" aria-label="Edit in GitHub">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+        </svg>
+        <span class="typedoc-edit-github-label">Edit in GitHub</span>
+      </a>
+    </div>`;
+}
+
 /**
  * TypeDoc `PageEvent.END` handler that injects a floating
  * "Edit in GitHub" button into each rendered page.
@@ -143,8 +166,11 @@ export function insertEditInGithub(page: PageEvent<Reflection>) {
     const idx = src.fullFileName.indexOf('packages/');
     if (idx !== -1) {
       const relativePath = src.fullFileName.substring(idx).replace(/\\/g, '/');
-      const line = src.line ?? 1;
-      githubUrl = `${GITHUB_BASE}${relativePath}#L${line}`;
+      // Only show the button for source files, not build output
+      if (relativePath.includes('/src/') && !relativePath.includes('/dist/')) {
+        const line = src.line ?? 1;
+        githubUrl = `${GITHUB_BASE}${relativePath}#L${line}`;
+      }
     }
   }
 
@@ -156,52 +182,32 @@ export function insertEditInGithub(page: PageEvent<Reflection>) {
     }
   }
 
-  if (!githubUrl || !page.contents) {
+  if (!page.contents) {
     return;
   }
 
-  /** Escape string for use inside HTML attribute values */
-  function escapeHtmlAttr(s: string): string {
-    return s
-      .replace(/&/g, '&amp;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
-  }
-
-  function buildButtonHtml(url: string): string {
-    const safeHref = escapeHtmlAttr(encodeURI(String(url)));
-    return `
-    <div class="typedoc-edit-github">
-      <a href="${safeHref}" target="_blank" rel="noopener noreferrer" aria-label="Edit in GitHub">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
-        </svg>
-        <span class="typedoc-edit-github-label">Edit in GitHub</span>
-      </a>
-    </div>`;
-  }
-
-  const buttonHtml = buildButtonHtml(githubUrl);
-
+  // Always wrap the page title in .tsd-page-title-content for consistent styling
   if (page.contents.includes('class="tsd-page-title"')) {
-    // Note: this regex uses a non-greedy match and stops at the first </div>.
-    // This is safe because TypeDoc's .tsd-page-title block currently contains
-    // only inline elements (e.g. <h1>). If a future TypeDoc version introduces
-    // nested <div> elements inside .tsd-page-title, this regex will need to be
-    // replaced with a balanced-tag scanner or DOM parser.
     page.contents = page.contents.replace(
       /(<div\s+class="tsd-page-title">)([\s\S]*?)(<\/div>)/i,
-      (_match, openTag, innerContent, closeTag) =>
-        `${openTag}<div class="tsd-page-title-content">${innerContent}</div>${buttonHtml}${closeTag}`
+      (_match, openTag, innerContent, closeTag) => {
+        let content = `${openTag}<div class="tsd-page-title-content">${innerContent}</div>`;
+        if (githubUrl) {
+          content += buildButtonHtml(githubUrl);
+        }
+        return content + closeTag;
+      }
     );
     return;
   }
 
-  if (page.contents.includes('</body>')) {
-    page.contents = page.contents.replace('</body>', `${buttonHtml}</body>`);
-  } else {
-    page.contents += buttonHtml;
+  // If not a page with a .tsd-page-title, only inject the button if it exists
+  if (githubUrl) {
+    const buttonHtml = buildButtonHtml(githubUrl);
+    if (page.contents.includes('</body>')) {
+      page.contents = page.contents.replace('</body>', `${buttonHtml}</body>`);
+    } else {
+      page.contents += buttonHtml;
+    }
   }
 }
