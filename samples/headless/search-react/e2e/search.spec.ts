@@ -6,9 +6,8 @@ test.describe('Search Page', () => {
     await expect(page).toHaveTitle(/Coveo Headless React Samples/);
   });
 
-  test('should display the search box', async ({page}) => {
+  test('should display navigation links', async ({page}) => {
     await page.goto('/');
-    const searchBox = page.locator('input');
-    await expect(searchBox.first()).toBeVisible();
+    await expect(page.getByRole('link', {name: 'Search'})).toBeVisible();
   });
 });
