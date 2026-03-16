@@ -49,7 +49,8 @@ export class AtomicAnswerContent extends LitElement {
    */
   @property({attribute: false})
   public renderCitations: (
-    citations: GeneratedAnswerCitation[]
+    citations: GeneratedAnswerCitation[],
+    answerId?: string
   ) => TemplateResult = () => html``;
 
   /**
@@ -92,10 +93,15 @@ export class AtomicAnswerContent extends LitElement {
       citations = [],
       answerId,
       error,
+      cannotAnswer,
     } = this.generatedAnswer || {};
 
     if (error) {
       return this.renderError();
+    }
+
+    if (cannotAnswer) {
+      return this.renderCannotAnswer();
     }
 
     if (!answerId) {
@@ -126,7 +132,7 @@ export class AtomicAnswerContent extends LitElement {
                 label: this.i18n.t('citations'),
                 isVisible: citations.length > 0,
               },
-            })(html`${this.renderCitations(citations)}`)}
+            })(html`${this.renderCitations(citations, answerId)}`)}
           `)}
         </div>
         ${when(shouldRenderFeedbackAndCopyButtons, () =>
@@ -203,6 +209,16 @@ export class AtomicAnswerContent extends LitElement {
       <div part="generated-answer-error">
         <p>
           ${this.i18n.t('generated-answer-error-generic')}
+        </p>
+      </div>
+    `;
+  }
+
+  private renderCannotAnswer(): TemplateResult {
+    return html`
+      <div part="generated-answer-cannot-answer">
+        <p>
+          ${this.i18n.t('generated-answer-cannot-generate-answer')}
         </p>
       </div>
     `;

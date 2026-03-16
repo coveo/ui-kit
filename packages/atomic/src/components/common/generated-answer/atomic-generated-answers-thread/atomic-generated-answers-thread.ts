@@ -39,7 +39,8 @@ export class AtomicGeneratedAnswersThread extends LitElement {
    */
   @property({attribute: false})
   public renderCitations: (
-    citations: GeneratedAnswerCitation[]
+    citations: GeneratedAnswerCitation[],
+    answerId?: string
   ) => TemplateResult | typeof nothing = () => html``;
 
   /**

@@ -16,7 +16,7 @@ export const generativeQuestionAnsweringIdSelector = (
   // If using the AnswerApi or the AgentApi, we return the answerId first.
   if (
     isGeneratedAnswerFeatureEnabledWithAnswerAPI(state) ||
-    isGeneratedAnswerFeatureEnabledWithAnswerGenerationAPI(state)
+    isGeneratedAnswerFeatureEnabledWithAgentAPI(state)
   ) {
     return state.generatedAnswer?.answerId;
   }
@@ -37,12 +37,11 @@ const isGeneratedAnswerFeatureEnabledWithAnswerAPI = (
   'generatedAnswer' in state &&
   !isNullOrUndefined(state.generatedAnswer?.answerConfigurationId);
 
-export const isGeneratedAnswerFeatureEnabledWithAnswerGenerationAPI = (
+export const isGeneratedAnswerFeatureEnabledWithAgentAPI = (
   state: Partial<SearchAppState>
 ): state is StreamAnswerAPIState => {
   const agentId = selectAgentId(state as {configuration: ConfigurationState});
   return (
-    'answerGenerationApi' in state &&
     'generatedAnswer' in state &&
     typeof agentId === 'string' &&
     agentId.trim().length > 0
