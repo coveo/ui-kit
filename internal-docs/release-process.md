@@ -1,31 +1,46 @@
 # Release processes
 
-This repository contains two release processes, which are triggered on Git commits:
+This repository contains two release processes:
 
-## 1. The pre-release process
+## 1. Canary releases
 
-The purpose of the pre-release process is to publish new changes from the main branch as frequently as possible. This has two main benefits:
+Canary releases publish packages to npm with the `@canary` tag on every commit entering the main branch via the merge queue.
 
-1. This tests whether we broke some parts of the release process so we don't get surprises when we need a scheduled release.
-2. This enables implementers to test a new feature or fix before we trigger a scheduled release.
+**Purpose:**
 
-To achieve its purpose, the pre-release process is executed on every new commit on the main branch. Additionally, pre-releases do not commit anything to the main branch, which allows them to be deployed even if multiple features are merged on the main branch faster than the CI can release them.
+1. Test the release pipeline continuously so scheduled releases don't surface surprises.
+2. Allow implementers to test new features or fixes before a scheduled release.
 
-## 2. The scheduled release process
+Canary releases do not commit anything to the main branch — they bump versions and publish only within the ephemeral merge queue workspace. This allows them to run even if multiple features are merged in quick succession.
 
-The purpose of the scheduled release process is to deploy versions of our packages that we feel confident are safe for implementers to use.
+**Trigger:** `merge_group` event in `cd.yml` → `canary.yml`
 
-To achieve that purpose, every Wednesday, a scheduled release is triggered, which will request approval to deploy. Additionally, whenever we feel like the version currently on the main branch is safe, we may trigger a scheduled release by triggering the "Create release" workflow.
+## 2. Scheduled releases
 
-Whenever a scheduled release is successful, a commit is pushed to the main branch which bumps the version of every publishable package in the repo.
+Scheduled releases deploy stable versions of packages that are safe for implementers to use.
+
+Every Wednesday, a scheduled release is triggered automatically. Additionally, a release can be triggered manually via the "CD" workflow dispatch.
+
+When a scheduled release succeeds, a version bump commit is pushed directly to the main branch.
+
+**Trigger:** `schedule` or `workflow_dispatch` event in `cd.yml` → `release.yml`
+
+# Workflow architecture
+
+`cd.yml` acts as a thin orchestrator registered as the npm trusted publisher for all `@coveo/*` packages. It routes events to reusable workflows:
+
+- `schedule` / `workflow_dispatch` → `release.yml` (full release pipeline)
+- `merge_group` → `canary.yml` (canary npm publish)
+
+All npm publishing uses OIDC-based authentication (npm trusted publishing). The `id-token: write` permission in `cd.yml` enables short-lived credentials for each publish job.
 
 # Versioning & publishing to NPM
 
-Versions for any given commit are determined based on the [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) specification.
+Versions are determined based on [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/).
 
-Specifically, a commit will determine its version by looking for the last scheduled release version and bumping it based on how breaking the changes are between then and the current commit. This ensures that implementers can safely update their dependencies on our packages without unexpectedly causing errors.
+A commit determines its version by looking for the last scheduled release version and bumping it based on how breaking the changes are. This ensures implementers can safely update their dependencies.
 
-When triggered, releases processes will execute a series of [Turborepo tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks). Some tasks are run at the root of the repository, and some will be run on each individual package.
+When triggered, release processes execute [Turborepo tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks). Some tasks run at the root, some run on each individual package.
 
 ## `release:phase0` (lock the main branch)
 
@@ -33,12 +48,7 @@ This task is only run for the scheduled release.
 
 The purpose of this task is to lock the main branch, preventing users from merging pull requests while the release is in progress.
 
-Specifically, this prevents new fixes or features from getting merged between the current release and the version bump commit we're about to push. If fixes or features were merged before the upcoming version bump, they would not be taken into account when calculating versions for the next releases.
-
-This task accomplishes its purpose by:
-
-1. Committing a `.git-lock` file to the main branch.
-2. Updating the repository's settings to enable "Require branches to be up to date before merging" for the main branch.
+This prevents new changes from getting merged between the release and the version bump commit. If changes were merged before the version bump, they would not be taken into account when calculating versions for subsequent releases.
 
 ## `release:phase1`
 
@@ -48,58 +58,53 @@ This task is run individually on every package, in topological order (dependenci
 
 The purpose of this sub-phase is to update the `package.json` file of every package to contain their new version and their new dependencies. This serves multiple purposes:
 
-1. NPM publishing.
-   - When publishing packages to NPM, NPM determines the version of the package by looking at its `package.json` file.
-2. NPM Workspaces linking.
-   - NPM Workspaces creates a [symbolic link](https://en.wikipedia.org/wiki/Symbolic_link) between a package and its dependencies when they are part of the same repository. NPM Workspaces won't link packages if the `version` field of the dependency doesn't match the version specified in the `dependencies` field of the dependant package.
-3. Waterfall bumping.
-   - Bumping dependencies directly in `package.json` means that packages can determine whether they need to be bumped by just looking at their own `package.json`.
+1. NPM publishing — NPM determines the version from `package.json`.
+2. pnpm workspace linking — pnpm creates symbolic links between packages when versions match.
+3. Waterfall bumping — packages determine whether they need a bump by inspecting their own `package.json`.
 
-On pre-releases, the first ten digits of the commit hash will be appended to the version like so:
+On canary releases, the first ten digits of the commit hash are appended to the version:
 
-- `1.2.3` -> `1.2.3-pre.abcdef1234`
+- `1.2.3` → `1.2.3-pre.abcdef1234`
 
-Additionally, this task will update the `CHANGELOG.md` file of the package to contain the changes that were taken into account when bumping its version.
-
-This task does not make any changes to the `package-lock.json` file at the root of the repository, since doing so would cause [an error with NPM Workspaces](https://github.com/npm/cli/issues/5506).
+Additionally, this task updates the `CHANGELOG.md` file of each package.
 
 ### Sub-phase 2: build
 
-The purpose of this sub-phase is to re-build a project right after it was bumped and before it gets published. This is needed because many packages contain information about their own version in their compiled code.
+Re-builds packages after bumping, since many packages embed their own version in compiled code.
 
 ## `release:phase2` (bump the root version)
 
-This phase bumps the root package.json version. This is used by the deployment-package `--version` attribute.
+This phase bumps the root `package.json` version. Used by the deployment-package `--version` attribute.
 
 ## `npm:publish` (publish to npm)
 
 This task is run individually on every package, in topological order (dependencies first, then dependants).
 
-The purpose of this task is to publish packages to npm. This task is executed **after** the CDN production deployment is complete.
+Publishes packages to npm using OIDC-based authentication (npm trusted publishing).
 
-If a package is already published to npm, this task will exit without error. After a package is published, this task will repeatedly query npm until it confirms that the package exists in the registry.
+- **Scheduled releases:** publishes to the `@latest` tag after CDN production deployment is approved.
+- **Canary releases:** publishes to the `@canary` tag during the merge queue.
 
-Packages are published directly to the `@latest` tag using OIDC-based authentication (npm trusted publishing).
+If a package version is already published, the task exits without error.
 
 ## `release:phase3` (commit version bumps)
 
 This task is only run for the scheduled release.
 
-This task will create a new "version bump" commit, which will contain:
+Creates a version bump commit containing:
 
-- The new `package.json` files.
-- The new `CHANGELOG.md` files.
-- Git tags for each bumped package version.
+- Updated `package.json` files
+- Updated `CHANGELOG.md` files
+- Git tags for each bumped package version
 
-This task will also revert the changes from `release:phase0` to allow merging new features and fixes.
+This task also reverts the branch lock from `release:phase0`.
 
 # Deploying
 
 > [!NOTE]
 > Probably out-of-date
 
-After the release is completed on Git, GitHub and NPM, the release workflow will start a job on a Coveo-Hosted-runners to trigger the deployment pipeline.
-From there on, the process then follows this diagram (starting with 'Continue GitHub workflow on Coveo Hosted Runner):
+After the release is completed on Git, GitHub and NPM, the release workflow triggers the deployment pipeline.
 
 ```mermaid
 sequenceDiagram
@@ -125,6 +130,6 @@ sequenceDiagram
    Note right of GitHub-public: Wait for ✅
    deactivate GitHub-public
    TeamJenkins->>+GitHub-public: Approve Production GitHub Environment usage
-   GitHub-public->>+NPM: Publish package to latest
+   GitHub-public->>+NPM: Publish packages to @latest
    GitHub-public->>+SFDC: Promote package to latest
 ```

@@ -2,11 +2,38 @@ name: Canary
 on:
   workflow_call:
 
-# Stub workflow for canary npm releases.
-# Implementation will be added in KIT-5501.
+permissions:
+  contents: read
 
 jobs:
-  placeholder:
+  canary:
+    name: Publish canary npm packages
     runs-on: ubuntu-latest
+    timeout-minutes: 40
+    environment: 'Prerelease'
+    permissions:
+      contents: read
+      id-token: write
     steps:
-      - run: echo "Canary publishing not yet implemented"
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup
+      - name: Bump versions and build
+        run: |
+          pnpm run nx:graph
+          pnpm run release:phase1
+        env:
+          IS_PRERELEASE: 'true'
+      - name: Publish canary packages to npm
+        # publish:npm:latest is a generic entry point — the actual npm tag
+        # is determined by IS_PRERELEASE and NPM_TAG env vars below.
+        run: pnpm run publish:npm:latest
+        env:
+          IS_PRERELEASE: 'true'
+          NPM_TAG: canary
