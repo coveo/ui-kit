@@ -8,10 +8,7 @@ const atomicAngularModuleFilePath = join(
   generatedDir,
   'atomic-angular.module.ts'
 );
-const atomicAngularComponentFilePath = join(
-  generatedDir,
-  'components.ts'
-);
+const atomicAngularComponentFilePath = join(generatedDir, 'components.ts');
 
 mkdirSync(generatedDir, {recursive: true});
 
