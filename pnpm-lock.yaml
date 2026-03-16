@@ -54,9 +54,6 @@ catalogs:
     cypress:
       specifier: 13.7.3
       version: 13.7.3
-    cypress-repeat:
-      specifier: 2.3.9
-      version: 2.3.9
     dayjs:
       specifier: 1.11.13
       version: 1.11.13
@@ -922,10 +919,10 @@ importers:
         version: 1.56.1
       '@salesforce/eslint-config-lwc':
         specifier: 3.7.2
-        version: 3.7.2(@lwc/eslint-plugin-lwc@2.2.0(@babel/eslint-parser@7.24.8(@babel/core@7.28.6)(eslint@8.57.1))(eslint@8.57.1))(@salesforce/eslint-plugin-lightning@1.0.1(eslint@8.57.1))(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.44.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1))(eslint-plugin-jest@29.12.1(eslint@8.57.1)(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.9.3)))(typescript@5.9.3))(eslint@8.57.1)
+        version: 3.7.2(@lwc/eslint-plugin-lwc@2.2.0(@babel/eslint-parser@7.24.8(@babel/core@7.28.6)(eslint@8.57.1))(eslint@8.57.1))(@salesforce/eslint-plugin-lightning@1.0.1(eslint@8.57.1))(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.44.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1))(eslint-plugin-jest@29.12.1(eslint@8.57.1)(jest@29.7.0(@types/node@25.0.10)(ts-node@10.9.2(@types/node@25.0.10)(typescript@5.9.3)))(typescript@5.9.3))(eslint@8.57.1)
       '@salesforce/sfdx-lwc-jest':
         specifier: 6.0.0
-        version: 6.0.0(@types/node@22.16.5)(eslint@8.57.1)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.9.3))(typescript@5.9.3)
+        version: 6.0.0(@types/node@25.0.10)(eslint@8.57.1)(ts-node@10.9.2(@types/node@25.0.10)(typescript@5.9.3))(typescript@5.9.3)
       '@types/wait-on':
         specifier: 5.3.4
         version: 5.3.4
@@ -946,7 +943,7 @@ importers:
         version: 3.1.2
       jest:
         specifier: 'catalog:'
-        version: 29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.9.3))
+        version: 29.7.0(@types/node@25.0.10)(ts-node@10.9.2(@types/node@25.0.10)(typescript@5.9.3))
       jest-junit:
         specifier: 16.0.0
         version: 16.0.0
@@ -961,7 +958,7 @@ importers:
         version: 2.2.6(prettier@3.8.1)
       ts-node:
         specifier: 10.9.2
-        version: 10.9.2(@types/node@22.16.5)(typescript@5.9.3)
+        version: 10.9.2(@types/node@25.0.10)(typescript@5.9.3)
       wait-on:
         specifier: 8.0.4
         version: 8.0.4
@@ -1290,6 +1287,9 @@ importers:
         specifier: 19.2.3
         version: 19.2.3(react@19.2.3)
     devDependencies:
+      '@playwright/test':
+        specifier: 'catalog:'
+        version: 1.56.1
       '@types/node':
         specifier: 'catalog:'
         version: 22.16.5
@@ -1299,15 +1299,6 @@ importers:
       '@types/react-dom':
         specifier: 'catalog:'
         version: 19.2.3(@types/react@19.2.7)
-      cypress:
-        specifier: 'catalog:'
-        version: 13.7.3
-      cypress-repeat:
-        specifier: 'catalog:'
-        version: 2.3.9(cypress@13.7.3)
-      cypress-web-vitals:
-        specifier: 4.2.0
-        version: 4.2.0(cypress-real-events@1.15.0(cypress@13.7.3))(cypress@13.7.3)
       typescript:
         specifier: 5.9.3
         version: 5.9.3
@@ -8001,23 +7992,6 @@ packages:
   custom-elements-manifest@1.0.0:
     resolution: {integrity: sha512-j59k0ExGCKA8T6Mzaq+7axc+KVHwpEphEERU7VZ99260npu/p/9kd+Db+I3cGKxHkM5y6q5gnlXn00mzRQkX2A==}
 
-  cypress-real-events@1.15.0:
-    resolution: {integrity: sha512-in98xxTnnM9Z7lZBvvVozm99PBT2eEOjXRG5LKWyYvQnj9mGWXMiPNpfw7e7WiraBFh7XlXIxnE9Cu5o+52kQQ==}
-    peerDependencies:
-      cypress: ^4.x || ^5.x || ^6.x || ^7.x || ^8.x || ^9.x || ^10.x || ^11.x || ^12.x || ^13.x || ^14.x || ^15.x
-
-  cypress-repeat@2.3.9:
-    resolution: {integrity: sha512-YFNG9uwQJDMe/JQ+bYCbb3EMMLm6fKuZV6TaqDTg+FyJXSDgcOjdiN0u1E894RNvoPJg8cTY0427nHir5rImXw==}
-    hasBin: true
-    peerDependencies:
-      cypress: '>=5.3.0'
-
-  cypress-web-vitals@4.2.0:
-    resolution: {integrity: sha512-KNQ3f8Axgbc/Otrsk2DIEjBfVvyec2wr3FRYQGrNafkUmM4urQoVhNrPktMJ18kqQ4iDsSM9OZPcYwv4DXQjyw==}
-    peerDependencies:
-      cypress: ^4.x || ^5.x || ^6.x || ^7.x || ^8.x || ^9.x || ^10.x || ^11.x || ^12.x || ^13.x || ^14.x
-      cypress-real-events: ^1.x
-
   cypress@13.7.3:
     resolution: {integrity: sha512-uoecY6FTCAuIEqLUYkTrxamDBjMHTYak/1O7jtgwboHiTnS1NaMOoR08KcTrbRZFCBvYOiS4tEkQRmsV+xcrag==}
     engines: {node: ^16.0.0 || ^18.0.0 || >=20.0.0}
@@ -8074,15 +8048,6 @@ packages:
 
   debug@3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
-
-  debug@4.4.1:
-    resolution: {integrity: sha512-KcKCqiftBJcZr++7ykoDIEwSa3XWowTfNPo92BYxjXiyYEVrUQh2aLyhxBCwww+heortUFxEJYcRzosstTEBYQ==}
-    engines: {node: '>=6.0'}
     peerDependencies:
       supports-color: '*'
     peerDependenciesMeta:
@@ -8312,10 +8277,6 @@ packages:
   dotenv@17.2.1:
     resolution: {integrity: sha512-kQhDYKZecqnM0fCnzI5eIv5L4cAe/iRI+HqMbO/hbRdTAeXDG+M9FjipUxNfbARuEg4iHIbhnhs78BCHNbSxEQ==}
     engines: {node: '>=12'}
-
-  dotenv@8.2.0:
-    resolution: {integrity: sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==}
-    engines: {node: '>=8'}
 
   drange@1.1.1:
     resolution: {integrity: sha512-pYxfDYpued//QpnLIm4Avk7rsNtAtQkUES2cwAYSvD/wd2pKD71gN2Ebj3e7klzXwjocvE8c5vx/1fxwpqmSxA==}
@@ -18085,33 +18046,33 @@ snapshots:
       globals: 13.24.0
       minimatch: 9.0.5
 
-  '@lwc/jest-preset@16.0.0(@lwc/compiler@7.1.2)(@lwc/engine-dom@7.1.2)(@lwc/engine-server@7.1.2)(@lwc/synthetic-shadow@7.1.2)(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.9.3)))':
+  '@lwc/jest-preset@16.0.0(@lwc/compiler@7.1.2)(@lwc/engine-dom@7.1.2)(@lwc/engine-server@7.1.2)(@lwc/synthetic-shadow@7.1.2)(jest@29.7.0(@types/node@25.0.10)(ts-node@10.9.2(@types/node@25.0.10)(typescript@5.9.3)))':
     dependencies:
       '@lwc/compiler': 7.1.2
       '@lwc/engine-dom': 7.1.2
       '@lwc/engine-server': 7.1.2
-      '@lwc/jest-resolver': 16.0.0(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.9.3)))
-      '@lwc/jest-serializer': 16.0.0(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.9.3)))
-      '@lwc/jest-transformer': 16.0.0(@lwc/compiler@7.1.2)(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.9.3)))
+      '@lwc/jest-resolver': 16.0.0(jest@29.7.0(@types/node@25.0.10)(ts-node@10.9.2(@types/node@25.0.10)(typescript@5.9.3)))
+      '@lwc/jest-serializer': 16.0.0(jest@29.7.0(@types/node@25.0.10)(ts-node@10.9.2(@types/node@25.0.10)(typescript@5.9.3)))
+      '@lwc/jest-transformer': 16.0.0(@lwc/compiler@7.1.2)(jest@29.7.0(@types/node@25.0.10)(ts-node@10.9.2(@types/node@25.0.10)(typescript@5.9.3)))
       '@lwc/synthetic-shadow': 7.1.2
-      jest: 29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.9.3))
+      jest: 29.7.0(@types/node@25.0.10)(ts-node@10.9.2(@types/node@25.0.10)(typescript@5.9.3))
     transitivePeerDependencies:
       - supports-color
 
-  '@lwc/jest-resolver@16.0.0(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.9.3)))':
+  '@lwc/jest-resolver@16.0.0(jest@29.7.0(@types/node@25.0.10)(ts-node@10.9.2(@types/node@25.0.10)(typescript@5.9.3)))':
     dependencies:
       '@lwc/jest-shared': 16.0.0
-      jest: 29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.9.3))
+      jest: 29.7.0(@types/node@25.0.10)(ts-node@10.9.2(@types/node@25.0.10)(typescript@5.9.3))
 
-  '@lwc/jest-serializer@16.0.0(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.9.3)))':
+  '@lwc/jest-serializer@16.0.0(jest@29.7.0(@types/node@25.0.10)(ts-node@10.9.2(@types/node@25.0.10)(typescript@5.9.3)))':
     dependencies:
       '@lwc/jest-shared': 16.0.0
-      jest: 29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.9.3))
+      jest: 29.7.0(@types/node@25.0.10)(ts-node@10.9.2(@types/node@25.0.10)(typescript@5.9.3))
       pretty-format: 29.7.0
 
   '@lwc/jest-shared@16.0.0': {}
 
-  '@lwc/jest-transformer@16.0.0(@lwc/compiler@7.1.2)(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.9.3)))':
+  '@lwc/jest-transformer@16.0.0(@lwc/compiler@7.1.2)(jest@29.7.0(@types/node@25.0.10)(ts-node@10.9.2(@types/node@25.0.10)(typescript@5.9.3)))':
     dependencies:
       '@babel/core': 7.28.6
       '@babel/plugin-proposal-dynamic-import': 7.18.6(@babel/core@7.28.6)
@@ -18122,7 +18083,7 @@ snapshots:
       '@lwc/compiler': 7.1.2
       '@lwc/jest-shared': 16.0.0
       babel-preset-jest: 29.6.3(@babel/core@7.28.6)
-      jest: 29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.9.3))
+      jest: 29.7.0(@types/node@25.0.10)(ts-node@10.9.2(@types/node@25.0.10)(typescript@5.9.3))
       magic-string: 0.30.21
       semver: 7.7.2
     transitivePeerDependencies:
@@ -19248,7 +19209,7 @@ snapshots:
     dependencies:
       postcss: 8.5.6
 
-  '@salesforce/eslint-config-lwc@3.7.2(@lwc/eslint-plugin-lwc@2.2.0(@babel/eslint-parser@7.24.8(@babel/core@7.28.6)(eslint@8.57.1))(eslint@8.57.1))(@salesforce/eslint-plugin-lightning@1.0.1(eslint@8.57.1))(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.44.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1))(eslint-plugin-jest@29.12.1(eslint@8.57.1)(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.9.3)))(typescript@5.9.3))(eslint@8.57.1)':
+  '@salesforce/eslint-config-lwc@3.7.2(@lwc/eslint-plugin-lwc@2.2.0(@babel/eslint-parser@7.24.8(@babel/core@7.28.6)(eslint@8.57.1))(eslint@8.57.1))(@salesforce/eslint-plugin-lightning@1.0.1(eslint@8.57.1))(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.44.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1))(eslint-plugin-jest@29.12.1(eslint@8.57.1)(jest@29.7.0(@types/node@25.0.10)(ts-node@10.9.2(@types/node@25.0.10)(typescript@5.9.3)))(typescript@5.9.3))(eslint@8.57.1)':
     dependencies:
       '@babel/core': 7.24.9
       '@babel/eslint-parser': 7.24.8(@babel/core@7.24.9)(eslint@8.57.1)
@@ -19256,7 +19217,7 @@ snapshots:
       '@salesforce/eslint-plugin-lightning': 1.0.1(eslint@8.57.1)
       eslint: 8.57.1
       eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.44.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)
-      eslint-plugin-jest: 29.12.1(eslint@8.57.1)(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.9.3)))(typescript@5.9.3)
+      eslint-plugin-jest: 29.12.1(eslint@8.57.1)(jest@29.7.0(@types/node@25.0.10)(ts-node@10.9.2(@types/node@25.0.10)(typescript@5.9.3)))(typescript@5.9.3)
       eslint-restricted-globals: 0.2.0
       semver: 7.7.2
     transitivePeerDependencies:
@@ -19266,21 +19227,21 @@ snapshots:
     dependencies:
       eslint: 8.57.1
 
-  '@salesforce/sfdx-lwc-jest@6.0.0(@types/node@22.16.5)(eslint@8.57.1)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.9.3))(typescript@5.9.3)':
+  '@salesforce/sfdx-lwc-jest@6.0.0(@types/node@25.0.10)(eslint@8.57.1)(ts-node@10.9.2(@types/node@25.0.10)(typescript@5.9.3))(typescript@5.9.3)':
     dependencies:
       '@lwc/compiler': 7.1.2
       '@lwc/engine-dom': 7.1.2
       '@lwc/engine-server': 7.1.2
-      '@lwc/jest-preset': 16.0.0(@lwc/compiler@7.1.2)(@lwc/engine-dom@7.1.2)(@lwc/engine-server@7.1.2)(@lwc/synthetic-shadow@7.1.2)(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.9.3)))
-      '@lwc/jest-resolver': 16.0.0(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.9.3)))
-      '@lwc/jest-serializer': 16.0.0(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.9.3)))
-      '@lwc/jest-transformer': 16.0.0(@lwc/compiler@7.1.2)(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.9.3)))
+      '@lwc/jest-preset': 16.0.0(@lwc/compiler@7.1.2)(@lwc/engine-dom@7.1.2)(@lwc/engine-server@7.1.2)(@lwc/synthetic-shadow@7.1.2)(jest@29.7.0(@types/node@25.0.10)(ts-node@10.9.2(@types/node@25.0.10)(typescript@5.9.3)))
+      '@lwc/jest-resolver': 16.0.0(jest@29.7.0(@types/node@25.0.10)(ts-node@10.9.2(@types/node@25.0.10)(typescript@5.9.3)))
+      '@lwc/jest-serializer': 16.0.0(jest@29.7.0(@types/node@25.0.10)(ts-node@10.9.2(@types/node@25.0.10)(typescript@5.9.3)))
+      '@lwc/jest-transformer': 16.0.0(@lwc/compiler@7.1.2)(jest@29.7.0(@types/node@25.0.10)(ts-node@10.9.2(@types/node@25.0.10)(typescript@5.9.3)))
       '@lwc/module-resolver': 7.1.2
       '@lwc/synthetic-shadow': 7.1.2
       '@lwc/wire-service': 7.1.2
       '@salesforce/wire-service-jest-util': 4.1.4(@lwc/engine-dom@7.1.2)(eslint@8.57.1)(typescript@5.9.3)
       fast-glob: 3.3.3
-      jest: 29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.9.3))
+      jest: 29.7.0(@types/node@25.0.10)(ts-node@10.9.2(@types/node@25.0.10)(typescript@5.9.3))
       jest-environment-jsdom: 29.7.0(patch_hash=b419a992476c3323e67ee6c86f3f9ecf6f4f073127cb572aa9af3b9c6550751d)
       yargs: 17.7.2
     transitivePeerDependencies:
@@ -20402,11 +20363,11 @@ snapshots:
       - utf-8-validate
       - vite
 
-  '@vitest/browser-playwright@4.0.10(msw@2.11.4(@types/node@25.0.10)(typescript@5.9.3))(playwright@1.56.1)(vite@7.2.2(@types/node@25.0.10)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.30.1)(sass@1.97.3)(terser@5.46.0)(yaml@2.8.2))(vitest@4.0.10)':
+  '@vitest/browser-playwright@4.0.10(msw@2.11.4(@types/node@25.0.10)(typescript@5.9.3))(playwright@1.58.0-alpha-1763757971000)(vite@7.2.2(@types/node@25.0.10)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.30.1)(sass@1.97.3)(terser@5.46.0)(yaml@2.8.2))(vitest@4.0.10)':
     dependencies:
       '@vitest/browser': 4.0.10(msw@2.11.4(@types/node@25.0.10)(typescript@5.9.3))(vite@7.2.2(@types/node@25.0.10)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.30.1)(sass@1.97.3)(terser@5.46.0)(yaml@2.8.2))(vitest@4.0.10)
       '@vitest/mocker': 4.0.10(msw@2.11.4(@types/node@25.0.10)(typescript@5.9.3))(vite@7.2.2(@types/node@25.0.10)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.30.1)(sass@1.97.3)(terser@5.46.0)(yaml@2.8.2))
-      playwright: 1.56.1
+      playwright: 1.58.0-alpha-1763757971000
       tinyrainbow: 3.0.3
       vitest: 4.0.10(@types/debug@4.1.12)(@types/node@25.0.10)(@vitest/browser-playwright@4.0.10)(jiti@2.6.1)(jsdom@20.0.3)(less@4.5.1)(lightningcss@1.30.1)(msw@2.11.4(@types/node@25.0.10)(typescript@5.9.3))(sass@1.97.3)(terser@5.46.0)(yaml@2.8.2)
     transitivePeerDependencies:
@@ -22255,25 +22216,6 @@ snapshots:
 
   custom-elements-manifest@1.0.0: {}
 
-  cypress-real-events@1.15.0(cypress@13.7.3):
-    dependencies:
-      cypress: 13.7.3
-
-  cypress-repeat@2.3.9(cypress@13.7.3):
-    dependencies:
-      arg: 5.0.2
-      bluebird: 3.7.2
-      cypress: 13.7.3
-      debug: 4.4.1
-      dotenv: 8.2.0
-    transitivePeerDependencies:
-      - supports-color
-
-  cypress-web-vitals@4.2.0(cypress-real-events@1.15.0(cypress@13.7.3))(cypress@13.7.3):
-    dependencies:
-      cypress: 13.7.3
-      cypress-real-events: 1.15.0(cypress@13.7.3)
-
   cypress@13.7.3:
     dependencies:
       '@cypress/request': 3.0.10
@@ -22368,10 +22310,6 @@ snapshots:
       ms: 2.1.3
     optionalDependencies:
       supports-color: 8.1.1
-
-  debug@4.4.1:
-    dependencies:
-      ms: 2.1.3
 
   debug@4.4.3(supports-color@8.1.1):
     dependencies:
@@ -22554,8 +22492,6 @@ snapshots:
   dotenv@16.6.1: {}
 
   dotenv@17.2.1: {}
-
-  dotenv@8.2.0: {}
 
   drange@1.1.1: {}
 
@@ -22932,12 +22868,12 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-plugin-jest@29.12.1(eslint@8.57.1)(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.9.3)))(typescript@5.9.3):
+  eslint-plugin-jest@29.12.1(eslint@8.57.1)(jest@29.7.0(@types/node@25.0.10)(ts-node@10.9.2(@types/node@25.0.10)(typescript@5.9.3)))(typescript@5.9.3):
     dependencies:
       '@typescript-eslint/utils': 8.53.1(eslint@8.57.1)(typescript@5.9.3)
       eslint: 8.57.1
     optionalDependencies:
-      jest: 29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.9.3))
+      jest: 29.7.0(@types/node@25.0.10)(ts-node@10.9.2(@types/node@25.0.10)(typescript@5.9.3))
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -29614,6 +29550,7 @@ snapshots:
       typescript: 5.9.3
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
+    optional: true
 
   ts-node@10.9.2(@types/node@25.0.10)(typescript@5.9.3):
     dependencies:
@@ -29632,7 +29569,6 @@ snapshots:
       typescript: 5.9.3
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
-    optional: true
 
   ts-simple-type@2.0.0-next.0: {}
 
@@ -30478,7 +30414,7 @@ snapshots:
     optionalDependencies:
       '@types/debug': 4.1.12
       '@types/node': 25.0.10
-      '@vitest/browser-playwright': 4.0.10(msw@2.11.4(@types/node@25.0.10)(typescript@5.9.3))(playwright@1.56.1)(vite@7.2.2(@types/node@25.0.10)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.30.1)(sass@1.97.3)(terser@5.46.0)(yaml@2.8.2))(vitest@4.0.10)
+      '@vitest/browser-playwright': 4.0.10(msw@2.11.4(@types/node@25.0.10)(typescript@5.9.3))(playwright@1.58.0-alpha-1763757971000)(vite@7.2.2(@types/node@25.0.10)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.30.1)(sass@1.97.3)(terser@5.46.0)(yaml@2.8.2))(vitest@4.0.10)
       jsdom: 20.0.3
     transitivePeerDependencies:
       - jiti

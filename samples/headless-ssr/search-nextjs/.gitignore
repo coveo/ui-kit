@@ -7,8 +7,12 @@
 
 # testing
 /coverage
-/cypress/screenshots
-/cypress/downloads
+
+# playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
 
 # next.js
 /.next/
