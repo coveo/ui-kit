@@ -1,0 +1,12 @@
+name: Canary
+on:
+  workflow_call:
+
+# Stub workflow for canary npm releases.
+# Implementation will be added in KIT-5501.
+
+jobs:
+  placeholder:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Canary publishing not yet implemented"
