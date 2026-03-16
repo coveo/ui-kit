@@ -2,18 +2,18 @@ import {mkdirSync, writeFileSync} from 'node:fs';
 import {join} from 'node:path';
 import cem from '@coveo/atomic/custom-elements-manifest' with {type: 'json'};
 
-const stencilGeneratedDir = 'projects/atomic-angular/src/lib/generated';
+const generatedDir = 'projects/atomic-angular/src/lib/generated';
 
 const atomicAngularModuleFilePath = join(
-  stencilGeneratedDir,
+  generatedDir,
   'atomic-angular.module.ts'
 );
 const atomicAngularComponentFilePath = join(
-  stencilGeneratedDir,
+  generatedDir,
   'components.ts'
 );
 
-mkdirSync(stencilGeneratedDir, {recursive: true});
+mkdirSync(generatedDir, {recursive: true});
 
 const litDeclarations = [];
 const litImports = new Set();
