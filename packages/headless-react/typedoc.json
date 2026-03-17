@@ -1,7 +1,12 @@
 {
   "name": "Coveo Headless React",
   "entryPointStrategy": "merge",
-  "projectDocuments": ["documents/headless-react/hooks.md", "README.md"],
+  "projectDocuments": [
+    "source_docs/getting-started-with-search-ssr.md",
+    "source_docs/getting-started-with-commerce-ssr.md",
+    "documents/headless-react/hooks.md",
+    "README.md"
+  ],
   "navigation": {
     "includeCategories": true,
     "includeGroups": true,
@@ -9,6 +14,7 @@
   },
   "hoistOther.topLevelOrder": [
     "Home",
+    "Getting Started",
     "Usage",
     "Commerce Controller hooks",
     "Reference"

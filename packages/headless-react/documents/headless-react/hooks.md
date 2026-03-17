@@ -60,7 +60,7 @@ export const {
 
 Access controller methods and state in your components through the hooks.
 The controller methods and state attributes exposed through controller hooks are the same as the ones exposed by the controllers.
-For details, see the relevant controller [reference documentation](../../modules/SSR_Commerce.index.html).
+For details, see the relevant controller [reference documentation](../../modules/SSR_Commerce.html).
 
 ```
 export default function ProductList() {
