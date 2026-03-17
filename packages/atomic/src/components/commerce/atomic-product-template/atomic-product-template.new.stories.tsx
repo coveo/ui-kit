@@ -1,5 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
 import {wrapInCommerceRecommendationInterface} from '@/storybook-utils/commerce/commerce-recommendation-interface-wrapper';
@@ -7,6 +8,8 @@ import {wrapInCommerceRecommendationList} from '@/storybook-utils/commerce/comme
 import {wrapInCommerceSearchBoxInstantProducts} from '@/storybook-utils/commerce/commerce-searchbox-instant-products-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {parameters as searchBoxParameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
+
+const commerceApiHarness = new MockCommerceApi();
 
 const TEMPLATE_EXAMPLE = `<template>
   <atomic-product-section-name>
@@ -54,9 +57,15 @@ const meta: Meta = {
   render: (args) => template(args),
   parameters: {
     ...parameters,
+    msw: {
+      handlers: [...commerceApiHarness.handlers],
+    },
     actions: {
       handles: events,
     },
+  },
+  beforeEach: () => {
+    commerceApiHarness.clearAll();
   },
   args: {
     ...args,
