@@ -150,7 +150,6 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
   const outDir = getUseCaseDir('dist/quantic/', useCase);
   const outfile = `${outDir}/headless.js`;
   const globalName = getUmdGlobalName(useCase);
-  const buenoPath = '@coveo/bueno';
 
   const target = /}\)\(updatedArgs, api, extraOptions\);/g;
 
