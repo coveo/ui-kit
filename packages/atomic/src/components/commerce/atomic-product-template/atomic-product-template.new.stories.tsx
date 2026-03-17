@@ -60,6 +60,12 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
+    msw: {
+      handlers: [...commerceApiHarness.handlers],
+    },
+  },
+  beforeEach: () => {
+    commerceApiHarness.clearAll();
   },
   args: {
     ...args,
@@ -105,14 +111,6 @@ const {decorator: commerceProductListDecorator} =
 export const InAProductList: Story = {
   name: 'In a product list',
   decorators: [commerceProductListDecorator, commerceInterfaceDecorator],
-  parameters: {
-    msw: {
-      handlers: [...commerceApiHarness.handlers],
-    },
-  },
-  beforeEach: () => {
-    commerceApiHarness.clearAll();
-  },
   play: initializeCommerceInterface,
 };
 
@@ -129,14 +127,6 @@ export const InARecommendationList: Story = {
     commerceRecommendationListDecorator,
     commerceRecommendationInterfaceDecorator,
   ],
-  parameters: {
-    msw: {
-      handlers: [...commerceApiHarness.handlers],
-    },
-  },
-  beforeEach: () => {
-    commerceApiHarness.clearAll();
-  },
   play: initializeCommerceRecommendationInterface,
 };
 
@@ -151,12 +141,6 @@ export const InASearchBoxInstantProducts: Story = {
   ],
   parameters: {
     ...searchBoxParameters,
-    msw: {
-      handlers: [...commerceApiHarness.handlers],
-    },
-  },
-  beforeEach: () => {
-    commerceApiHarness.clearAll();
   },
   play: async (context) => {
     await initializeCommerceInterface(context);
