@@ -91,7 +91,7 @@ export const createFollowUpStrategy = (dispatch: Dispatch): AgentSubscriber => {
       runId = '';
     },
     onRunFinishedEvent: ({event}) => {
-      const answerGenerated = event.result?.answerGenerated ?? false;
+      const answerGenerated = event.result?.completionReason === 'ANSWERED';
       dispatch(
         followUpCompleted({
           cannotAnswer: !answerGenerated,

@@ -1,5 +1,6 @@
 ---
 title: Commerce Controller hooks
+group: Usage
 ---
 
 # Hooks
@@ -11,7 +12,7 @@ See [Headless commerce usage (SSR): Define the commerce engine and controllers](
 
 ## Usage
 
-1. Create an engine configuration
+### 1. Create an engine configuration
 
 Define the controllers you need in your engine configuration. This example includes `Summary`, `ProductList` and `Cart` controllers:
 
@@ -36,7 +37,7 @@ const config : CommerceEngineDefinitionOptions {
 }
 ```
 
-2. Define the engine
+### 2. Define the engine
 
 Use `defineCommerceEngine` to define the engine with your configuration:
 
@@ -44,7 +45,7 @@ Use `defineCommerceEngine` to define the engine with your configuration:
 export const engineDefinition = defineCommerceEngine(engineConfig);
 ```
 
-3. Export hooks
+### 3. Export hooks
 
 Extract hooks for each controller from the engine definition.
 
@@ -56,11 +57,11 @@ export const {
 } = engineDefinition.controllers;
 ```
 
-4. Use Hooks in Components
+### 4. Use Hooks in Components
 
 Access controller methods and state in your components through the hooks.
 The controller methods and state attributes exposed through controller hooks are the same as the ones exposed by the controllers.
-For details, see the relevant controller [reference documentation](../../modules/SSR_Commerce.index.html).
+For details, see the relevant controller [reference documentation](../../modules/SSR_Commerce.html).
 
 ```
 export default function ProductList() {

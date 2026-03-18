@@ -1,3 +1,10 @@
+## <small>3.11.5 (2026-03-18)</small>
+
+* chore(atomic-angular): turbod atomic-angular build (#7228) ([b803043](https://github.com/coveo/ui-kit/commits/b803043)), closes [#7228](https://github.com/coveo/ui-kit/issues/7228)
+* chore(atomic-react): turbod atomic-react build (#7227) ([700aaa5](https://github.com/coveo/ui-kit/commits/700aaa5)), closes [#7227](https://github.com/coveo/ui-kit/issues/7227)
+
+
+
 ## <small>3.11.3 (2026-03-04)</small>
 
 * chore: eject react build from Stencil (#7160) ([76aae89](https://github.com/coveo/ui-kit/commits/76aae89)), closes [#7160](https://github.com/coveo/ui-kit/issues/7160)

@@ -916,7 +916,7 @@ describe('follow-up answers slice', () => {
         state,
         followUpStepStarted({
           answerId: 'answer-123',
-          name: 'thinking',
+          name: 'Thinking',
           startedAt,
         })
       );
@@ -969,7 +969,7 @@ describe('follow-up answers slice', () => {
         state,
         followUpStepFinished({
           answerId: 'answer-123',
-          name: 'searching',
+          name: 'SEARCHING',
           finishedAt,
         })
       );

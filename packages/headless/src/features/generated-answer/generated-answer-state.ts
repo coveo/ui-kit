@@ -13,6 +13,10 @@ export const GENERATION_STEP_NAMES = [
   'answering',
 ] as const;
 
+export function normalizeGenerationStepName(name: string): GenerationStepName {
+  return name.toLowerCase() as GenerationStepName;
+}
+
 export interface GenerationStep {
   name: GenerationStepName;
   status: GenerationStepStatus;
