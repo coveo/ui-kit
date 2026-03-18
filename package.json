@@ -66,6 +66,9 @@
       "jest-environment-jsdom@29.7.0": "patches/jest-environment-jsdom+29.7.0.patch"
     },
     "overrides": {
+      "@angular/common": "20.3.18",
+      "@angular/compiler": "20.3.18",
+      "@angular/core": "20.3.18",
       "braces": "3.0.3",
       "react": "catalog:",
       "react-dom": "catalog:",

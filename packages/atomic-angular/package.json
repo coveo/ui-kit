@@ -20,8 +20,11 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "20.3.13",
-    "@angular/cli": "20.3.13",
-    "@angular/compiler-cli": "20.3.16",
+    "@angular/cli": "20.3.18",
+    "@angular/common": "20.3.18",
+    "@angular/compiler": "20.3.18",
+    "@angular/compiler-cli": "20.3.18",
+    "@angular/core": "20.3.18",
     "@types/node": "catalog:",
     "@coveo/headless": "workspace:*",
     "ng-packagr": "20.3.2",
