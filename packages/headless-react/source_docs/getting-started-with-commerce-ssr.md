@@ -172,4 +172,3 @@ export default async function ListingPage() {
 
 * [Commerce SSR documentation](https://docs.coveo.com/en/obif0156/) — Advanced commerce SSR topics such as product listing pages, recommendations, and facets.
 * [Commerce controller hooks](../Commerce_Controller_hooks.html) — Detailed reference for all available commerce controller hooks.
-* [Getting started with Search SSR](search-ssr.html) — Set up a search interface instead.

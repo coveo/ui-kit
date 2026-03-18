@@ -219,6 +219,6 @@ export default async function SearchPage() {
 
 ## What's next?
 
+* [Search controller hooks](../Search_Controller_hooks.html) — Detailed reference for all available search controller hooks.
 * [Extend engine definitions](https://docs.coveo.com/en/headless/latest/reference/documents/usage/server-side-rendering/extend-engine-definitions.html) — Dispatch actions or interact with the engine on the server side.
 * [Implement search parameter support](https://docs.coveo.com/en/headless/latest/reference/documents/usage/server-side-rendering/implement-search-parameter-support.html) — Synchronize search parameters with the URL.
-* [Getting started with Commerce SSR](commerce-ssr.html) — Set up a commerce storefront instead.

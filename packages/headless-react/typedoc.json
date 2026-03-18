@@ -4,7 +4,8 @@
   "projectDocuments": [
     "source_docs/getting-started-with-search-ssr.md",
     "source_docs/getting-started-with-commerce-ssr.md",
-    "documents/headless-react/hooks.md",
+    "source_docs/search-hooks.md",
+    "source_docs/commerce-hooks.md",
     "README.md"
   ],
   "navigation": {
@@ -12,13 +13,7 @@
     "includeGroups": true,
     "includeFolders": true
   },
-  "hoistOther.topLevelOrder": [
-    "Home",
-    "Getting Started",
-    "Usage",
-    "Commerce Controller hooks",
-    "Reference"
-  ],
+  "hoistOther.topLevelOrder": ["Home", "Getting Started", "Usage", "Reference"],
   "categorizeByGroup": true,
   "entryPoints": ["./temp/ssr-commerce.json", "./temp/ssr.json"],
   "gitRevision": "main",
