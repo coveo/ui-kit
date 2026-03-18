@@ -1,3 +1,13 @@
+## 3.47.0 (2026-03-18)
+
+* fix(headless, atomic): log correct answer ID in analytics for citations in follow-up answers. (#7226 ([b112e7f](https://github.com/coveo/ui-kit/commits/b112e7f)), closes [#7226](https://github.com/coveo/ui-kit/issues/7226)
+* fix: compare totalNumberofChildResults to returned results, not 0 (offset by 1) (#7201) ([3332ec6](https://github.com/coveo/ui-kit/commits/3332ec6)), closes [#7201](https://github.com/coveo/ui-kit/issues/7201)
+* feat(headless): add `enableResults` option to SSR commerce controllers COMHUB2-1472 (#7204) ([fd29c19](https://github.com/coveo/ui-kit/commits/fd29c19)), closes [#7204](https://github.com/coveo/ui-kit/issues/7204)
+* feat(headless): start sending stream end and response linked when generating initial answer with age ([567e311](https://github.com/coveo/ui-kit/commits/567e311)), closes [#7214](https://github.com/coveo/ui-kit/issues/7214)
+* chore(headless): cleaned up rtk q implementation for agent api (#7195) ([5c8d8fd](https://github.com/coveo/ui-kit/commits/5c8d8fd)), closes [#7195](https://github.com/coveo/ui-kit/issues/7195)
+
+
+
 ## <small>3.46.1 (2026-03-11)</small>
 
 * feat(atomic) creation of agent generation steps component (#7165) ([901ed24](https://github.com/coveo/ui-kit/commits/901ed24)), closes [#7165](https://github.com/coveo/ui-kit/issues/7165)
