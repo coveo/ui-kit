@@ -4380,6 +4380,7 @@ packages:
 
   '@lwc/engine-server@7.1.2':
     resolution: {integrity: sha512-R/Cgo1TwioOeR1F+1nQxR9oE+Au9479iOkk6jtn2GvPrcQm1X+YidLXQssus/YHdz2BuYa2/t5OJmpguJIwhJw==}
+    deprecated: This package has been replaced by @lwc/ssr-runtime
 
   '@lwc/errors@7.1.2':
     resolution: {integrity: sha512-1b933ONUijzJl72VVY5shiTDVN38ilB0RcljBH+ztJzxxr8umy2YEJYA9oGFacXP+zfox+kpOfWjrXlfqZ5ueA==}
