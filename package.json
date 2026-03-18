@@ -28,11 +28,12 @@
     "knip": "knip"
   },
   "devDependencies": {
-    "@actions/core": "1.11.1",
-    "@actions/github": "6.0.1",
+    "@actions/core": "2.0.3",
+    "@actions/github": "8.0.1",
     "@biomejs/biome": "2.1.4",
     "@coveo/ci": "workspace:*",
     "@cspell/dict-fr-fr": "2.3.2",
+    "@playwright/mcp": "catalog:",
     "@tsconfig/node20": "20.1.6",
     "@types/jest": "catalog:",
     "@types/node": "catalog:",
@@ -44,7 +45,6 @@
     "husky": "9.1.7",
     "knip": "5.62.0",
     "lint-staged": "16.1.2",
-    "@playwright/mcp": "catalog:",
     "playwright": "catalog:",
     "publint": "0.3.12",
     "semver": "7.7.2",
