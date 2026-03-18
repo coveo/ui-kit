@@ -104,9 +104,6 @@ catalogs:
       version: 4.0.10
 
 overrides:
-  '@angular/common': 20.3.18
-  '@angular/compiler': 20.3.18
-  '@angular/core': 20.3.18
   braces: 3.0.3
   react: 19.2.3
   react-dom: 19.2.3
@@ -464,10 +461,10 @@ importers:
   packages/atomic-angular/projects/atomic-angular:
     dependencies:
       '@angular/common':
-        specifier: 20.3.18
+        specifier: 14 - 20
         version: 20.3.18(@angular/core@20.3.18(@angular/compiler@20.3.18)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
       '@angular/core':
-        specifier: 20.3.18
+        specifier: 14 - 20
         version: 20.3.18(@angular/compiler@20.3.18)(rxjs@7.8.2)(zone.js@0.15.1)
       '@coveo/atomic':
         specifier: workspace:*
@@ -1652,7 +1649,7 @@ packages:
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
     peerDependencies:
       '@angular/compiler-cli': ^20.0.0
-      '@angular/core': 20.3.18
+      '@angular/core': ^20.0.0
       '@angular/localize': ^20.0.0
       '@angular/platform-browser': ^20.0.0
       '@angular/platform-server': ^20.0.0
@@ -1736,9 +1733,9 @@ packages:
     resolution: {integrity: sha512-/5pM3ZS+lLkZgA+n6TMmNV8I6t9Ow1C6Vkj6bXqWeOgFDH5LwnIEZFAKzEDBkCGos0m2gPKPcREcDD5tfp9h4g==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
     peerDependencies:
-      '@angular/compiler': 20.3.18
+      '@angular/compiler': ^20.0.0
       '@angular/compiler-cli': ^20.0.0
-      '@angular/core': 20.3.18
+      '@angular/core': ^20.0.0
       '@angular/localize': ^20.0.0
       '@angular/platform-browser': ^20.0.0
       '@angular/platform-server': ^20.0.0
@@ -1782,9 +1779,9 @@ packages:
     resolution: {integrity: sha512-t+Bg0uxnyrbm5ADa8Ka5rz4bSdf8ScCnY8Hua3bLnIPITzeuuunV7a14zMSOcPL6eLu0760CvszHsGX1k6aN7A==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
     peerDependencies:
-      '@angular/compiler': 20.3.18
+      '@angular/compiler': ^20.0.0
       '@angular/compiler-cli': ^20.0.0
-      '@angular/core': 20.3.18
+      '@angular/core': ^20.0.0
       '@angular/localize': ^20.0.0
       '@angular/platform-browser': ^20.0.0
       '@angular/platform-server': ^20.0.0
