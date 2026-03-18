@@ -150,7 +150,7 @@ describe('createHeadAnswerStrategy', () => {
     strategy.onRunFinishedEvent!({
       event: {
         result: {
-          answerGenerated: true,
+          completionReason: 'ANSWERED',
         },
       },
     } as any);
@@ -175,7 +175,13 @@ describe('createHeadAnswerStrategy', () => {
     ).mockReturnValue(responseLinkedAction);
     strategy = createHeadAnswerStrategy(dispatch);
 
-    strategy.onRunFinishedEvent!({event: {}} as any);
+    strategy.onRunFinishedEvent!({
+      event: {
+        result: {
+          completionReason: 'NO_RESULTS',
+        },
+      },
+    } as any);
 
     expect(dispatch).toHaveBeenNthCalledWith(1, setIsAnswerGenerated(false));
     expect(dispatch).toHaveBeenNthCalledWith(2, setCannotAnswer(true));

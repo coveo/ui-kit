@@ -84,7 +84,7 @@ export const createHeadAnswerStrategy = (
       );
     },
     onRunFinishedEvent: ({event}) => {
-      const answerGenerated = event.result?.answerGenerated ?? false;
+      const answerGenerated = event.result?.completionReason === 'ANSWERED';
       dispatch(setIsAnswerGenerated(answerGenerated));
       dispatch(setCannotAnswer(!answerGenerated));
       dispatch(setIsStreaming(false));

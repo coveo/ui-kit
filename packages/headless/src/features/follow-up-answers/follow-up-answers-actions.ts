@@ -18,10 +18,22 @@ import {
 import {
   GENERATION_STEP_NAMES,
   type GenerationStepName,
+  normalizeGenerationStepName,
 } from '../generated-answer/generated-answer-state.js';
 import type {GeneratedContentFormat} from '../generated-answer/generated-response-format.js';
 
 const stringValue = new StringValue({required: true});
+const generationStepNameValue = new StringValue<GenerationStepName>({
+  required: true,
+  constrainTo: GENERATION_STEP_NAMES,
+});
+
+const normalizeGenerationStepPayload = <T extends {name: string}>(
+  payload: T
+): Omit<T, 'name'> & {name: GenerationStepName} => ({
+  ...payload,
+  name: normalizeGenerationStepName(payload.name),
+});
 
 export const setIsEnabled = createAction(
   'followUpAnswers/setIsEnabled',
@@ -154,26 +166,20 @@ export const resetFollowUpAnswers = createAction(
 
 export const followUpStepStarted = createAction(
   'followUpAnswers/stepStarted',
-  (payload: {answerId: string; name: GenerationStepName; startedAt: number}) =>
-    validatePayload(payload, {
+  (payload: {answerId: string; name: string; startedAt: number}) =>
+    validatePayload(normalizeGenerationStepPayload(payload), {
       answerId: requiredNonEmptyString,
-      name: new StringValue<GenerationStepName>({
-        required: true,
-        constrainTo: GENERATION_STEP_NAMES,
-      }),
+      name: generationStepNameValue,
       startedAt: new NumberValue({min: 0, required: true}),
     })
 );
 
 export const followUpStepFinished = createAction(
   'followUpAnswers/stepFinished',
-  (payload: {answerId: string; name: GenerationStepName; finishedAt: number}) =>
-    validatePayload(payload, {
+  (payload: {answerId: string; name: string; finishedAt: number}) =>
+    validatePayload(normalizeGenerationStepPayload(payload), {
       answerId: requiredNonEmptyString,
-      name: new StringValue<GenerationStepName>({
-        required: true,
-        constrainTo: GENERATION_STEP_NAMES,
-      }),
+      name: generationStepNameValue,
       finishedAt: new NumberValue({min: 0, required: true}),
     })
 );
