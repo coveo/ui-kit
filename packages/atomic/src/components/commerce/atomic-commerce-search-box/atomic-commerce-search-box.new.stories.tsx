@@ -6,8 +6,11 @@ import type {
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {HttpResponse, http} from 'msw';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+
+const commerceApiHarness = new MockCommerceApi();
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-commerce-search-box',
@@ -29,9 +32,15 @@ const meta: Meta = {
   decorators: [normalWidthDecorator, decorator],
   parameters: {
     ...parameters,
+    msw: {
+      handlers: [...commerceApiHarness.handlers],
+    },
     actions: {
       handles: events,
     },
+  },
+  beforeEach: () => {
+    commerceApiHarness.clearAll();
   },
   args: {
     ...args,
