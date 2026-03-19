@@ -13,6 +13,8 @@ import type {
 import './atomic-answer-content';
 import type {GeneratedAnswerCitation} from '@coveo/headless';
 
+const SSE_TURN_LIMIT_REACHED_CODE = 1005;
+
 vi.mock('../render-feedback-and-copy-buttons', () => ({
   renderFeedbackAndCopyButtons: vi.fn(() => html``),
 }));
@@ -242,6 +244,28 @@ describe('atomic-answer-content', () => {
     expect(cannotAnswerContainer).not.toBeNull();
     expect(cannotAnswerContainer?.textContent).toContain(
       i18n.t('generated-answer-cannot-generate-answer')
+    );
+  });
+
+  it('should render the turn limit reached error label when the conversation turn limit is reached', async () => {
+    const {element} = await renderComponent({
+      generatedAnswer: {
+        error: {
+          message: 'turn limit reached',
+          code: SSE_TURN_LIMIT_REACHED_CODE,
+        },
+      },
+    });
+
+    await element.updateComplete;
+
+    const errorContainer = element.shadowRoot?.querySelector(
+      '[part="generated-answer-error"]'
+    );
+
+    expect(errorContainer).not.toBeNull();
+    expect(errorContainer?.textContent).toContain(
+      i18n.t('conversation-turn-limit-reached')
     );
   });
 

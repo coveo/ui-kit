@@ -7,6 +7,7 @@ export enum GeneratedAnswerSseErrorCode {
   ConversationNotFound = 1002,
   SseModelsNotAvailable = 1003,
   SseInternalError = 1004,
+  SseTurnLimitReached = 1005,
 }
 
 const generatedAnswerSseErrorMap: Record<string, GeneratedAnswerSseErrorCode> =
@@ -20,6 +21,8 @@ const generatedAnswerSseErrorMap: Record<string, GeneratedAnswerSseErrorCode> =
       GeneratedAnswerSseErrorCode.SseModelsNotAvailable,
     'KNOWLEDGE:SSE_INTERNAL_ERROR':
       GeneratedAnswerSseErrorCode.SseInternalError,
+    'KNOWLEDGE:TURN_LIMIT_REACHED':
+      GeneratedAnswerSseErrorCode.SseTurnLimitReached,
   };
 
 /**

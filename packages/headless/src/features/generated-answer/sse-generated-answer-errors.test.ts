@@ -29,6 +29,10 @@ describe('sse-generated-answer-errors', () => {
         'KNOWLEDGE:SSE_INTERNAL_ERROR',
         GeneratedAnswerSseErrorCode.SseInternalError,
       ],
+      [
+        'KNOWLEDGE:TURN_LIMIT_REACHED',
+        GeneratedAnswerSseErrorCode.SseTurnLimitReached,
+      ],
     ])(
       'maps %s to the expected frontend error code',
       (backendCode, expected) => {
