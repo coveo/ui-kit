@@ -265,7 +265,7 @@ describe('atomic-answer-content', () => {
 
     expect(errorContainer).not.toBeNull();
     expect(errorContainer?.textContent).toContain(
-      i18n.t('conversation-turn-limit-reached')
+      i18n.t('generated-answer-error-turn-limit-reached')
     );
   });
 

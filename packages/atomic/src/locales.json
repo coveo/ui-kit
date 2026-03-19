@@ -8265,7 +8265,7 @@
     "zh-CN": "正在思考...",
     "zh-TW": "正在思考..."
   },
-  "conversation-turn-limit-reached": {
+  "generated-answer-error-turn-limit-reached": {
     "en": "Conversation turn limit reached. Please start a new conversation.",
     "fr": "Limite de tours de conversation atteinte. Veuillez commencer une nouvelle conversation.",
     "cs": "Dosaženo limitu kol konverzace. Začněte prosím novou konverzaci.",

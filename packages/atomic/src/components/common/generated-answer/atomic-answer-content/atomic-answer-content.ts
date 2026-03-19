@@ -223,7 +223,7 @@ export class AtomicAnswerContent extends LitElement {
     return html`
       <div part="generated-answer-error">
         <p>
-          ${this.i18n.t('conversation-turn-limit-reached')}
+          ${this.i18n.t('generated-answer-error-turn-limit-reached')}
         </p>
       </div>
     `;
