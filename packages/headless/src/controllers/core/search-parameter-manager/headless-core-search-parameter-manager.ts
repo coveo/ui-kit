@@ -154,8 +154,7 @@ function ensureTabIsValid(
   }
 
   if (parameters.tab === '') {
-    const firstTab = Object.keys(tabSet)[0];
-    return {...parameters, tab: firstTab ?? ''};
+    return {...parameters, tab: getFallbackTabId(tabSet)};
   }
 
   const tabExists = Object.values(tabSet).some(
@@ -164,11 +163,18 @@ function ensureTabIsValid(
 
   if (!tabExists) {
     const currentActiveTab = Object.values(tabSet).find((tab) => tab.isActive);
-    const firstTab = Object.keys(tabSet)[0];
-    return {...parameters, tab: currentActiveTab?.id ?? firstTab ?? ''};
+    return {
+      ...parameters,
+      tab: currentActiveTab?.id ?? getFallbackTabId(tabSet),
+    };
   }
 
   return parameters;
+}
+
+function getFallbackTabId(tabSet: TabSetState): string {
+  const firstTabId = Object.keys(tabSet)[0];
+  return firstTabId ?? '';
 }
 
 export function getCoreActiveSearchParameters(
