@@ -31,4 +31,11 @@ export const insertMetaTags = (page: PageEvent) => {
     /<\/head>/,
     `${metaTags.join('\n')}\n</head>`
   );
+
+  if (isHandwrittenDoc) {
+    page.contents = page.contents.replace(
+      /<div class="tsd-navigation settings">[\s\S]*?<\/details>\s*<\/div>/,
+      ''
+    );
+  }
 };

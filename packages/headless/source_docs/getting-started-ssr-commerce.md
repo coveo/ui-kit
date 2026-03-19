@@ -7,8 +7,8 @@ slug: getting-started/getting-started-ssr-commerce
 
 > [!NOTE]
 >
-> If you are using a React framework, use [`@coveo/headless-react`](https://docs.coveo.com/en/headless-react/latest/reference/index.html) instead.
-> It provides React-specific SSR utilities (hooks, context providers, and hydration helpers) built on top of `@coveo/headless`.
+> If you are using a React framework, use [`@coveo/headless-react/ssr-commerce`](https://docs.coveo.com/en/headless-react/latest/reference/documents/getting-started/commerce-ssr/) instead.
+> It provides React-specific SSR utilities (hooks, context providers, and hydration helpers) built on top of `@coveo/headless/ssr-commerce`.
 
 The SSR Commerce engine enables server-side rendering of commerce interfaces — including product listing and search.
 

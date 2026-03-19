@@ -7,8 +7,8 @@ slug: getting-started/getting-started-ssr-search
 
 > [!NOTE]
 >
-> If you are using a React framework, use [`@coveo/headless-react`](https://docs.coveo.com/en/headless-react/latest/reference/index.html) instead.
-> It provides React-specific SSR utilities (hooks, context providers, and hydration helpers) built on top of `@coveo/headless`.
+> If you are using a React framework, use [`@coveo/headless-react/ssr`](https://docs.coveo.com/en/headless-react/latest/reference/documents/getting-started/search-ssr/) instead.
+> It provides React-specific SSR utilities (hooks, context providers, and hydration helpers) built on top of `@coveo/headless/ssr`.
 
 The SSR Search engine enables server-side rendering of search interfaces.
 
