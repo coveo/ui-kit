@@ -75,11 +75,12 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
   };
 
   public render() {
+    const clampedTitleStyles =
+      'display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; max-height: calc(4.5rem + 1px);';
     const titleBaseClasses = {
       'text-on-background': true,
       'text-base': true,
       'min-w-0': true,
-      'inline-flex': true,
       'text-left': true,
       'mr-auto': true,
       'px-2': true,
@@ -141,9 +142,19 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
                   class=${titleButtonClasses}
                   @click=${this.toggle}
                 >
-                  ${this.title}
+                  <span
+                    part="thread-item-title"
+                    style=${clampedTitleStyles}
+                    >${this.title}</span
+                  >
                 </button>`,
-              () => html`<span class=${titleTextClasses}>${this.title}</span>`
+              () =>
+                html`<span
+                  class=${titleTextClasses}
+                  part="thread-item-title"
+                  style=${clampedTitleStyles}
+                  >${this.title}</span
+                >`
             )}
           </div>
         </div>
