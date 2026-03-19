@@ -25,8 +25,8 @@ This sample includes multiple page examples:
 
 ## Prerequisites
 
-- Node.js 18+ (LTS recommended)
-- pnpm 8+
+- Node.js 24+ (LTS recommended)
+- pnpm 10+
 
 ## Getting Started
 
