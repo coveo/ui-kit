@@ -172,11 +172,10 @@ describe('atomic-generated-answer-thread-item', () => {
     const {locators} = await renderComponent();
     const title = locators().threadItemTitle as HTMLElement;
 
-    expect(title).toHaveStyle({
-      display: '-webkit-box',
-      '-webkit-line-clamp': '3',
-      '-webkit-box-orient': 'vertical',
-      overflow: 'hidden',
-    });
+    const style = title.getAttribute('style') ?? '';
+    expect(style).toContain('display: -webkit-box');
+    expect(style).toContain('-webkit-line-clamp: 3');
+    expect(style).toContain('-webkit-box-orient: vertical');
+    expect(style).toContain('overflow: hidden');
   });
 });
