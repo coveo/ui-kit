@@ -1,7 +1,7 @@
 ---
 title: Home
 ---
-# Headless React Utils for SSR
+# Use the Headless React library for Server Side Rendering
 
 
 `@coveo/headless-react` provides React utilities for server-side rendering with headless controllers. This package includes several sub-packages:
