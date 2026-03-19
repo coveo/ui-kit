@@ -8,8 +8,8 @@ import {useEffect, useState} from 'react';
 import BreadcrumbManager from '../../breadcrumb-manager/breadcrumb-manager.js';
 import FacetGenerator from '../../facets/facet-generator/facet-generator.js';
 import Pagination from '../../pagination/pagination.js';
-import ProductList from '../../product-list/product-list.js';
 import ProductsPerPage from '../../products-per-page/products-per-page.js';
+import ResultList from '../../result-list/result-list.js';
 import Sort from '../../sort/sort.js';
 import Summary from '../../summary/summary.js';
 import './search-and-listing-interface.css';
@@ -55,15 +55,20 @@ export default function SearchAndListingInterface(
           controller={searchOrListingController.breadcrumbManager()}
         />
 
-        <ProductList
-          products={searchOrListingState.products}
-          controllerBuilder={searchOrListingController.interactiveProduct}
+        <ResultList
+          results={searchOrListingState.results}
+          productControllerBuilder={
+            searchOrListingController.interactiveProduct
+          }
+          spotlightContentControllerBuilder={
+            searchOrListingController.interactiveSpotlightContent
+          }
           cartController={cartController}
           promoteChildToParent={(child: ChildProduct) =>
             searchOrListingController.promoteChildToParent(child)
           }
           navigate={navigate}
-        ></ProductList>
+        />
         <ProductsPerPage controller={paginationController} />
         <ShowMore
           controller={paginationController}

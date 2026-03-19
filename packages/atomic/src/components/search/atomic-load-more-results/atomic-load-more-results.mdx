@@ -18,6 +18,8 @@ This component is typically placed within the "pagination" section of the layout
 - `atomic-pager`: Provides traditional page-based navigation with numbered pages. It is often used along with the `atomic-results-per-page` component.
 - `atomic-load-more-results`: Allows users to incrementally load additional results with a "Load More" button.
 
+
+
 ```html
 <atomic-search-interface>
   ...
@@ -34,5 +36,22 @@ This component is typically placed within the "pagination" section of the layout
   </atomic-search-layout>
 </atomic-search-interface>
 ```
+
+## UX Best Practices
+
+### Usage Notes
+
+- The Load More Results component is especially useful when you want your user to browse more results, rather than return to and refine facets or reconsider their query. 
+- Users browse longer than with Load More than with Pagination.
+- Load More is less effective when the items in a source are highly specific or when they require comparison.
+
+### Use Cases and Examples
+
+- On an ecommerce site, users will often view more products using a Load More button than with a Pager.
+- When designing for mobile, a Load More button can provide a better experience for many users.
+
+## Reference
+
+[Pagination vs. Infinite Scroll vs. Load More Explained](https://crocoblock.com/blog/pagination-vs-infinite-scroll/)
 
 </AtomicDocTemplate>

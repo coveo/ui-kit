@@ -1,9 +1,9 @@
 import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
+import type {HighlightKeywords} from '@/src/components/search/atomic-quickview-modal/highlight-keywords';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import type {HighlightKeywords} from '../atomic-quickview-modal/atomic-quickview-modal';
 import {renderHighlightKeywordsCheckbox} from './highlight-keywords-checkbox';
 
 describe('HighlightKeywordsCheckbox (Lit)', () => {

@@ -1,6 +1,5 @@
 dist/
 www/
-loader/
 docs/
 cdn/
 
@@ -32,7 +31,8 @@ src/external-builds
 src/assets/lang/
 src/generated
 
-cypress/screenshots/*
+src/components/*/lazy-index.ts
+src/components/*/index.ts
 
 /test-results/
 /playwright-report/

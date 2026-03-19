@@ -1,4 +1,4 @@
-import dayjs from 'dayjs/esm/index.js';
+import dayjs from 'dayjs';
 import {locales} from '../generated/dayjs-locales-data';
 
 const warn = (language: string) =>

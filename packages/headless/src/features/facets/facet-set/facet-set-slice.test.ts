@@ -19,6 +19,7 @@ import {
   fetchFacetValues,
 } from '../../search/search-actions.js';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions.js';
+import {updateActiveTab} from '../../tab-set/tab-set-actions.js';
 import {type FacetValueState, facetValueStates} from './../facet-api/value.js';
 import {
   excludeFacetSearchResult,
@@ -860,6 +861,110 @@ describe('facet-set slice', () => {
       const finalState = facetSetReducer(state, restoreSearchParameters({f}));
       expect(finalState[a]?.request.preventAutoSelect).toBe(false);
       expect(finalState[b]?.request.preventAutoSelect).toBe(true);
+    });
+  });
+
+  describe('#updateActiveTab', () => {
+    it('should deselect values for a facet with tabsIncluded when switching to a non-included tab', () => {
+      vi.spyOn(FacetReducers, 'handleFacetDeselectAll').mockReset();
+
+      state['facet1'] = buildMockFacetSlice({
+        request: buildMockFacetRequest({
+          currentValues: [buildMockFacetValueRequest({state: 'selected'})],
+        }),
+        tabs: {included: ['tab1', 'tab2']},
+      });
+
+      facetSetReducer(state, updateActiveTab('tab3'));
+
+      expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not deselect values for a facet with tabsIncluded when switching to an included tab', () => {
+      vi.spyOn(FacetReducers, 'handleFacetDeselectAll').mockReset();
+
+      state['facet1'] = buildMockFacetSlice({
+        request: buildMockFacetRequest({
+          currentValues: [buildMockFacetValueRequest({state: 'selected'})],
+        }),
+        tabs: {included: ['tab1', 'tab2']},
+      });
+
+      facetSetReducer(state, updateActiveTab('tab1'));
+
+      expect(FacetReducers.handleFacetDeselectAll).not.toHaveBeenCalled();
+    });
+
+    it('should deselect values for a facet with tabsExcluded when switching to an excluded tab', () => {
+      vi.spyOn(FacetReducers, 'handleFacetDeselectAll').mockReset();
+
+      state['facet1'] = buildMockFacetSlice({
+        request: buildMockFacetRequest({
+          currentValues: [buildMockFacetValueRequest({state: 'selected'})],
+        }),
+        tabs: {excluded: ['tab3']},
+      });
+
+      facetSetReducer(state, updateActiveTab('tab3'));
+
+      expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not deselect values for a facet with tabsExcluded when switching to a non-excluded tab', () => {
+      vi.spyOn(FacetReducers, 'handleFacetDeselectAll').mockReset();
+
+      state['facet1'] = buildMockFacetSlice({
+        request: buildMockFacetRequest({
+          currentValues: [buildMockFacetValueRequest({state: 'selected'})],
+        }),
+        tabs: {excluded: ['tab3']},
+      });
+
+      facetSetReducer(state, updateActiveTab('tab1'));
+
+      expect(FacetReducers.handleFacetDeselectAll).not.toHaveBeenCalled();
+    });
+
+    it('should not deselect values for a facet without tabs configuration', () => {
+      vi.spyOn(FacetReducers, 'handleFacetDeselectAll').mockReset();
+
+      state['facet1'] = buildMockFacetSlice({
+        request: buildMockFacetRequest({
+          currentValues: [buildMockFacetValueRequest({state: 'selected'})],
+        }),
+      });
+
+      facetSetReducer(state, updateActiveTab('anyTab'));
+
+      expect(FacetReducers.handleFacetDeselectAll).not.toHaveBeenCalled();
+    });
+
+    it('should only deselect values for facets not visible on the new tab', () => {
+      vi.spyOn(FacetReducers, 'handleFacetDeselectAll').mockReset();
+
+      state['facet1'] = buildMockFacetSlice({
+        request: buildMockFacetRequest({
+          currentValues: [buildMockFacetValueRequest({state: 'selected'})],
+        }),
+        tabs: {included: ['tab1']},
+      });
+      state['facet2'] = buildMockFacetSlice({
+        request: buildMockFacetRequest({
+          currentValues: [buildMockFacetValueRequest({state: 'selected'})],
+        }),
+        tabs: {included: ['tab1', 'tab2']},
+      });
+      state['facet3'] = buildMockFacetSlice({
+        request: buildMockFacetRequest({
+          currentValues: [buildMockFacetValueRequest({state: 'selected'})],
+        }),
+      });
+
+      facetSetReducer(state, updateActiveTab('tab2'));
+
+      // Only facet1 should be deselected (not included in tab2)
+      // facet2 is included in tab2, facet3 has no tabs config
+      expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(1);
     });
   });
 });

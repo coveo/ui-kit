@@ -15,6 +15,10 @@ const styles = css`
   gap: var(--atomic-facet-boxes-gap, 0.5rem);
 }
 
+.value-box {
+  @apply relative overflow-hidden;
+}
+
 .value-box .value-label,
 .value-box-count {
   @apply block w-full;

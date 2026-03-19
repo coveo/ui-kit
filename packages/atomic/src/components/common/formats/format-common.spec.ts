@@ -1,3 +1,4 @@
+import {LitElement} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import type {NumberFormatter} from './format-common';
 import {
@@ -9,13 +10,16 @@ import {
 describe('format-common', () => {
   describe('#dispatchNumberFormatEvent', () => {
     let element: Element;
+    let parentElement: Element;
     const formatter: NumberFormatter = vi.fn();
 
     beforeEach(() => {
+      parentElement = document.createElement('div');
       element = document.createElement('div');
+      parentElement.appendChild(element);
     });
 
-    it('should dispatch a custom event with correct type and detail', () => {
+    it('should dispatch a custom event with correct type and detail', async () => {
       const dispatchSpy = vi
         .spyOn(element, 'dispatchEvent')
         .mockImplementation((event) => {
@@ -25,16 +29,86 @@ describe('format-common', () => {
           return false;
         });
 
-      expect(() => dispatchNumberFormatEvent(formatter, element)).not.toThrow();
+      await expect(
+        dispatchNumberFormatEvent(formatter, element)
+      ).resolves.not.toThrow();
       dispatchSpy.mockRestore();
     });
 
-    it('should throw if dispatchEvent returns true', () => {
+    it('should throw if dispatchEvent returns true', async () => {
       vi.spyOn(element, 'dispatchEvent').mockReturnValue(true);
 
-      expect(() => dispatchNumberFormatEvent(formatter, element)).toThrowError(
+      await expect(
+        dispatchNumberFormatEvent(formatter, element)
+      ).rejects.toThrowError(
         'The Atomic number format component was not handled, as it is not a child of a compatible component'
       );
+    });
+
+    it('should wait for LitElement parent updateComplete before dispatching', async () => {
+      const mockLitParent = document.createElement('div') as Element;
+      Object.setPrototypeOf(mockLitParent, LitElement.prototype);
+
+      let updateCompleteCalled = false;
+      Object.defineProperty(mockLitParent, 'updateComplete', {
+        get: () => {
+          updateCompleteCalled = true;
+          return Promise.resolve(true);
+        },
+      });
+
+      const childElement = document.createElement('div');
+      mockLitParent.appendChild(childElement);
+
+      const dispatchSpy = vi
+        .spyOn(childElement, 'dispatchEvent')
+        .mockReturnValue(false);
+
+      await dispatchNumberFormatEvent(formatter, childElement);
+
+      expect(updateCompleteCalled).toBe(true);
+      expect(dispatchSpy).toHaveBeenCalled();
+      dispatchSpy.mockRestore();
+    });
+
+    it('should wait for Stencil element componentOnReady before dispatching', async () => {
+      const mockStencilParent = document.createElement('div') as Element & {
+        componentOnReady: () => Promise<void>;
+      };
+      let componentOnReadyCalled = false;
+      mockStencilParent.componentOnReady = vi.fn(() => {
+        componentOnReadyCalled = true;
+        return Promise.resolve();
+      });
+
+      const childElement = document.createElement('div');
+      mockStencilParent.appendChild(childElement);
+
+      const dispatchSpy = vi
+        .spyOn(childElement, 'dispatchEvent')
+        .mockReturnValue(false);
+
+      await dispatchNumberFormatEvent(formatter, childElement);
+
+      expect(componentOnReadyCalled).toBe(true);
+      expect(mockStencilParent.componentOnReady).toHaveBeenCalled();
+      expect(dispatchSpy).toHaveBeenCalled();
+      dispatchSpy.mockRestore();
+    });
+
+    it('should dispatch immediately for regular DOM elements', async () => {
+      const regularParent = document.createElement('div');
+      const childElement = document.createElement('div');
+      regularParent.appendChild(childElement);
+
+      const dispatchSpy = vi
+        .spyOn(childElement, 'dispatchEvent')
+        .mockReturnValue(false);
+
+      await dispatchNumberFormatEvent(formatter, childElement);
+
+      expect(dispatchSpy).toHaveBeenCalled();
+      dispatchSpy.mockRestore();
     });
   });
 

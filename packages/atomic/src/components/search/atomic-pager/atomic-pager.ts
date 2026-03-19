@@ -33,6 +33,7 @@ import {
   AriaLiveRegionController,
   FocusTargetController,
 } from '@/src/utils/accessibility-utils';
+import {buildCustomEvent} from '@/src/utils/event-utils';
 import {randomID} from '@/src/utils/utils';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
@@ -58,6 +59,10 @@ export class AtomicPager
   extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<Bindings>
 {
+  private static readonly propsSchema = new Schema({
+    numberOfPages: new NumberValue({min: 0}),
+  });
+
   @state() public bindings!: Bindings;
   @state() public error!: Error;
   @state() private isAppLoaded = false;
@@ -119,9 +124,7 @@ export class AtomicPager
       () => ({
         numberOfPages: this.numberOfPages,
       }),
-      new Schema({
-        numberOfPages: new NumberValue({min: 0}),
-      })
+      AtomicPager.propsSchema
     );
   }
 
@@ -144,7 +147,7 @@ export class AtomicPager
     const pagesRange = getCurrentPagesRange(
       this.pagerState.currentPage - 1,
       this.numberOfPages,
-      this.pagerState.maxPage
+      this.pagerState.maxPage - 1
     );
 
     return html`${when(
@@ -239,7 +242,7 @@ export class AtomicPager
 
   private async focusOnFirstResultAndScrollToTop() {
     await this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
-    this.dispatchEvent(new CustomEvent('atomic/scrollToTop'));
+    this.dispatchEvent(buildCustomEvent('atomic/scrollToTop'));
     this.announcePageLoaded();
   }
 

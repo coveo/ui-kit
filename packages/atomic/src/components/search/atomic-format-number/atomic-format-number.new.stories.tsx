@@ -1,8 +1,8 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
-import type {baseSearchResponse} from '@/storybook-utils/api/search/mock';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import type {SearchResponse} from '@/storybook-utils/api/search/search-response';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
 import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
@@ -55,7 +55,7 @@ export const Facet: Story = {
   beforeEach: () => {
     searchApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
-      results: (response as typeof baseSearchResponse).results
+      results: (response as SearchResponse).results
         // biome-ignore lint/suspicious/noExplicitAny: raw fields are dynamically added
         .filter((result: any) => result.raw.size && result.raw.size > 0)
         .slice(0, 1),
@@ -109,7 +109,7 @@ export const Result: Story = {
   beforeEach: () => {
     searchApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
-      results: (response as typeof baseSearchResponse).results
+      results: (response as SearchResponse).results
         .slice(0, 1)
         // biome-ignore lint/suspicious/noExplicitAny: raw fields are dynamically added
         .map((result: any) => ({

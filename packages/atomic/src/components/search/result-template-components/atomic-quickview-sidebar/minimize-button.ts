@@ -1,7 +1,7 @@
 import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {renderIconButton} from '@/src/components/common/icon-button';
-import type {HighlightKeywords} from '@/src/components/search/result-template-components/atomic-quickview-modal/atomic-quickview-modal';
+import type {HighlightKeywords} from '@/src/components/search/atomic-quickview-modal/highlight-keywords';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import MinimizeIcon from '../../../../images/menu.svg';
 import {identifierKeywordsSection} from './keywords';

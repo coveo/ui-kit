@@ -1,6 +1,9 @@
 import type {SearchAppState} from '../../state/search-app-state.js';
 import {streamAnswerAPIStateMock} from './generated-answer-mocks.js';
-import {generativeQuestionAnsweringIdSelector} from './generated-answer-selectors.js';
+import {
+  generativeQuestionAnsweringIdSelector,
+  isGeneratedAnswerFeatureEnabledWithAgentAPI,
+} from './generated-answer-selectors.js';
 
 describe('generated-answer-selectors', () => {
   describe('generativeQuestionAnsweringIdSelector', () => {
@@ -124,6 +127,70 @@ describe('generated-answer-selectors', () => {
 
       const result = generativeQuestionAnsweringIdSelector(state);
       expect(result).toEqual(undefined);
+    });
+  });
+
+  describe('isGeneratedAnswerFeatureEnabledWithAgentAPI', () => {
+    it('should return true when generatedAnswer and valid agentId are present', () => {
+      const state = {
+        generatedAnswer: {},
+        configuration: {
+          knowledge: {
+            agentId: 'valid-agent-id',
+          },
+        },
+      } as unknown as Partial<SearchAppState>;
+
+      expect(isGeneratedAnswerFeatureEnabledWithAgentAPI(state)).toBe(true);
+    });
+
+    it('should return false when generatedAnswer is missing', () => {
+      const state = {
+        configuration: {
+          knowledge: {
+            agentId: 'valid-agent-id',
+          },
+        },
+      } as unknown as Partial<SearchAppState>;
+
+      expect(isGeneratedAnswerFeatureEnabledWithAgentAPI(state)).toBe(false);
+    });
+
+    it('should return false when agentId is undefined', () => {
+      const state = {
+        generatedAnswer: {},
+        configuration: {
+          knowledge: {},
+        },
+      } as unknown as Partial<SearchAppState>;
+
+      expect(isGeneratedAnswerFeatureEnabledWithAgentAPI(state)).toBe(false);
+    });
+
+    it('should return false when agentId is an empty string', () => {
+      const state = {
+        generatedAnswer: {},
+        configuration: {
+          knowledge: {
+            agentId: '',
+          },
+        },
+      } as unknown as Partial<SearchAppState>;
+
+      expect(isGeneratedAnswerFeatureEnabledWithAgentAPI(state)).toBe(false);
+    });
+
+    it('should return false when agentId is only whitespace', () => {
+      const state = {
+        generatedAnswer: {},
+        configuration: {
+          knowledge: {
+            agentId: '   ',
+          },
+        },
+      } as unknown as Partial<SearchAppState>;
+
+      expect(isGeneratedAnswerFeatureEnabledWithAgentAPI(state)).toBe(false);
     });
   });
 });

@@ -36,6 +36,12 @@ export default async function Search() {
         view: {
           url: 'https://sports.barca.group/cart',
         },
+        custom: defaultContext.custom,
+      },
+      productEnrichment: {
+        options: {
+          placementIds: ['70b493b2-a1f1-4049-ad70-16695cef39cd'],
+        },
       },
     },
   });

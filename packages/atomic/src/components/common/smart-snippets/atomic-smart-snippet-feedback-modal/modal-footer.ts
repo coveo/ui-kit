@@ -17,7 +17,8 @@ export const renderModalFooter: FunctionalComponent<ModalFooterProps> = ({
       props: {
         part: 'cancel-button',
         style: 'outline-neutral',
-        class: 'text-primary',
+
+        class: 'text-primary flex justify-center p-2 text-sm leading-4',
         onClick,
       },
     })(html`${i18n.t('cancel')}`)}
@@ -27,6 +28,8 @@ export const renderModalFooter: FunctionalComponent<ModalFooterProps> = ({
         style: 'primary',
         type: 'submit',
         form: formId,
+
+        class: 'flex justify-center p-2 text-sm leading-4',
       },
     })(html`${i18n.t('feedback-send')}`)}
   </div>`;

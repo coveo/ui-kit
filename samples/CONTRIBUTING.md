@@ -41,9 +41,9 @@ All samples follow this standardized folder and package naming pattern:
 * Folder: `atomic/commerce-angular` 
 
   Package: `@samples/atomic/commerce-angular`
-* Folder: `headless-ssr/search-nextjs-app-router`
+* Folder: `headless-ssr/search-nextjs`
 
-  Package: `@samples/headless-ssr/search-nextjs-app-router`
+  Package: `@samples/headless-ssr-search-nextjs`
 * Folder: `atomic/search-react-vite`
 
   Package: `@samples/atomic/search-react-vite`

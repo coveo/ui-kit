@@ -4,7 +4,7 @@ import {repeat} from 'lit/directives/repeat.js';
 import {styleMap} from 'lit/directives/style-map.js';
 import {renderFieldsetGroup} from '@/src/components/common/fieldset-group';
 import {renderIconButton} from '@/src/components/common/icon-button';
-import type {HighlightKeywords} from '@/src/components/search/result-template-components/atomic-quickview-modal/atomic-quickview-modal';
+import type {HighlightKeywords} from '@/src/components/search/atomic-quickview-modal/highlight-keywords';
 import type {QuickviewWordHighlight} from '@/src/components/search/result-template-components/quickview-word-highlight/quickview-word-highlight';
 import {multiClassMap, tw} from '@/src/directives/multi-class-map';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';

@@ -22,7 +22,9 @@ export default function ProductListingPage(props: IProductListingPageProps) {
   const {engine, cartController, contextController, url, pageName, navigate} =
     props;
 
-  const productListingController = buildProductListing(engine);
+  const productListingController = buildProductListing(engine, {
+    enableResults: true,
+  });
 
   const bindUrlManager = useCallback(() => {
     const fragment = () => window.location.hash.slice(1);

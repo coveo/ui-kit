@@ -95,7 +95,7 @@ export class AtomicResultIcon
   @errorGuard()
   protected render() {
     if (this.resultController.hasError) {
-      return html`${nothing}`;
+      return nothing;
     }
 
     return when(

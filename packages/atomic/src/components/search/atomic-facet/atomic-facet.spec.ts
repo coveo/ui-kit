@@ -1004,7 +1004,7 @@ describe('atomic-facet', () => {
         tabsExcluded: ['tab2'],
       });
       expect(consoleWarnSpy).toHaveBeenCalledWith(
-        'Values for both \"tabs-included\" and \"tabs-excluded\" have been provided. This is could lead to unexpected behaviors.'
+        'Values for both "tabs-included" and "tabs-excluded" have been provided. This is could lead to unexpected behaviors.'
       );
       consoleWarnSpy.mockRestore();
     });
@@ -1018,7 +1018,7 @@ describe('atomic-facet', () => {
         enableExclusion: true,
       });
       expect(consoleWarnSpy).toHaveBeenCalledWith(
-        'The \"enableExclusion\" property is only available when \"displayValuesAs\" is set to \"checkbox\".'
+        'The "enableExclusion" property is only available when "displayValuesAs" is set to "checkbox".'
       );
       consoleWarnSpy.mockRestore();
     });

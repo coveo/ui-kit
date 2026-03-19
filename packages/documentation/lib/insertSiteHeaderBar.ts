@@ -1,4 +1,4 @@
-export function insertSiteHeaderBar(assetsPath: string) {
+export const insertSiteHeaderBar = (assetsPath: string) => {
   const isDefaultUserDarkTheme =
     window.matchMedia('(prefers-color-scheme: dark)').matches ||
     window.matchMedia('(prefers-color-scheme:dark)').matches;
@@ -91,4 +91,4 @@ export function insertSiteHeaderBar(assetsPath: string) {
       document.head.appendChild(faviconLink);
     }
   });
-}
+};

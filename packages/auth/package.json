@@ -1,6 +1,6 @@
 {
   "name": "@coveo/auth",
-  "version": "2.1.4",
+  "version": "2.1.6",
   "description": "Functions to help authenticate with the Coveo platform.",
   "main": "./dist/auth.js",
   "module": "./dist/auth.esm.js",
@@ -46,7 +46,7 @@
     "vite": "catalog:"
   },
   "engines": {
-    "node": "^20.9.0 || ^22.11.0"
+    "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
   },
   "publishConfig": {
     "access": "public"

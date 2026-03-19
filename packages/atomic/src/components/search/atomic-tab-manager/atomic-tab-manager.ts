@@ -7,6 +7,7 @@ import {
 } from '@coveo/headless';
 import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import '@/src/components/common/atomic-tab-button/atomic-tab-button';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
@@ -16,6 +17,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import styles from './atomic-tab-manager.tw.css';
+import '@/src/components/common/atomic-tab-bar/atomic-tab-bar';
 
 interface TabInfo {
   label: string;
@@ -40,7 +42,7 @@ interface TabInfo {
  * @part overflow-tabs - The list of tabs shown when the "More" button is clicked.
  * @part popover-tab - The individual tab buttons shown when the "More" button is clicked.
  * @part backdrop - The backdrop shown when the "More" button is clicked.
- * @slot (default) - The `atomic-tab` elements that represent the tabs.
+ * @slot default - The `atomic-tab` elements that represent the tabs.
  */
 @customElement('atomic-tab-manager')
 @bindings()
@@ -85,7 +87,11 @@ export class AtomicTabManager
     }
 
     tabElements.forEach((tabElement) => {
-      if (!tabElement.name) {
+      const name = tabElement.getAttribute('name') || '';
+      const expression = tabElement.getAttribute('expression') ?? '';
+      const label = tabElement.getAttribute('label') || '';
+
+      if (!name) {
         this.error = new Error(
           'The "name" attribute must be defined on all "atomic-tab" children.'
         );
@@ -93,15 +99,15 @@ export class AtomicTabManager
       }
       const tabController = buildTab(this.bindings.engine, {
         options: {
-          expression: tabElement.expression,
-          id: tabElement.name,
+          expression,
+          id: name,
           clearFiltersOnTabChange: this.clearFiltersOnTabChange,
         },
       });
 
       this.tabs.push({
-        label: tabElement.label,
-        name: tabElement.name,
+        label,
+        name,
         tabController,
       });
     });
@@ -111,7 +117,9 @@ export class AtomicTabManager
   @errorGuard()
   render() {
     return html`
-      <atomic-tab-bar>
+      <atomic-tab-bar
+        exportparts="popover-button, value-label, arrow-icon, backdrop, overflow-tabs, popover-tab"
+      >
         <div
           role="list"
           aria-label="tab-area"

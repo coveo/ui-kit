@@ -5,20 +5,8 @@
     "includeFolders": true
   },
   "categorizeByGroup": true,
-  "groupOrder": [
-    "Engine",
-    "Providers",
-    "Definers",
-    "Controllers",
-    "Buildable controllers",
-    "Sub-controllers",
-    "Actions",
-    "*"
-  ],
   "name": "SSR Commerce",
-  "readme": "../COMMERCEREADME.md",
   "entryPoints": ["../src/ssr-commerce/index.ts"],
   "gitRevision": "main",
-  "plugin": ["@coveo/documentation"],
-  "projectDocuments": ["../documents/headless-react/*.md"]
+  "plugin": ["@coveo/documentation"]
 }

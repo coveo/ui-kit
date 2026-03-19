@@ -2,6 +2,7 @@ import {readFileSync} from 'node:fs';
 import path, {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import type {StorybookConfig} from '@storybook/web-components-vite';
+import remarkGfm from 'remark-gfm';
 import type {PluginImpl} from 'rollup';
 import {mergeConfig} from 'vite';
 import {generateExternalPackageMappings} from '../scripts/externalPackageMappings.mjs';
@@ -86,7 +87,6 @@ const externalizeDependencies: PluginImpl = () => {
   };
 };
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
-const isChromatic = process.env.IS_CHROMATIC === 'true';
 
 function getPackageVersion(): string {
   return JSON.parse(
@@ -95,15 +95,14 @@ function getPackageVersion(): string {
 }
 
 const config: StorybookConfig = {
-  stories: isChromatic
-    ? ['../storybook-pages/**/*.new.stories.tsx']
-    : [
-        './Introduction.stories.tsx',
-        '../src/**/*.new.stories.tsx',
-        '../src/**/*.mdx',
-        '../storybook-pages/**/*.new.stories.tsx',
-        '../storybook-pages/**/*.mdx',
-      ],
+  stories: [
+    './Introduction.mdx',
+    './Crawling.stories.tsx',
+    '../src/**/*.new.stories.tsx',
+    '../src/**/*.mdx',
+    '../storybook-pages/**/*.new.stories.tsx',
+    '../storybook-pages/**/*.mdx',
+  ],
   staticDirs: [
     {from: '../dist/atomic/assets', to: '/assets'},
     {from: '../dist/atomic/lang', to: '/lang'},
@@ -113,7 +112,16 @@ const config: StorybookConfig = {
   ],
   addons: [
     '@storybook/addon-a11y',
-    '@storybook/addon-docs',
+    {
+      name: '@storybook/addon-docs',
+      options: {
+        mdxPluginOptions: {
+          mdxCompileOptions: {
+            remarkPlugins: [remarkGfm],
+          },
+        },
+      },
+    },
     '@storybook/addon-vitest',
     '@storybook/addon-mcp',
   ],
@@ -192,7 +200,9 @@ const svgTransform: PluginImpl = () => {
             const svgContent = readFileSync(
               resolve(dirname(id), importPath),
               'utf8'
-            ).replace(/'/g, "\\'");
+            )
+              .replace(/\r?\n/g, '')
+              .replace(/'/g, "\\'");
             return `const ${importName} = '${svgContent}';`;
           }
         );

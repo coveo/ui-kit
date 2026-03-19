@@ -6,6 +6,7 @@ export enum Kind {
   Context = 'CONTEXT',
   ParameterManager = 'PARAMETER_MANAGER',
   Recommendations = 'RECOMMENDATIONS',
+  ProductEnrichment = 'PRODUCT_ENRICHMENT',
 }
 
 export function createControllerWithKind<TController, TKind extends Kind>(

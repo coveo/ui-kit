@@ -1,8 +1,8 @@
 import type {i18n} from 'i18next';
 import {html, nothing} from 'lit';
 import {when} from 'lit/directives/when.js';
+import type {HighlightKeywords} from '@/src/components/search/atomic-quickview-modal/highlight-keywords';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
-import type {HighlightKeywords} from '../atomic-quickview-modal/atomic-quickview-modal';
 import type {QuickviewWordHighlight} from '../quickview-word-highlight/quickview-word-highlight';
 import {renderHighlightKeywordsCheckbox} from './highlight-keywords-checkbox';
 import {renderKeywords} from './keywords';

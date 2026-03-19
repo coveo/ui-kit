@@ -1,8 +1,8 @@
 import {Schema, StringValue} from '@coveo/bueno';
 import {type Result, ResultTemplatesHelpers} from '@coveo/headless';
-import dayjs from 'dayjs/esm/index.js';
-import calendar from 'dayjs/esm/plugin/calendar/index.js';
-import updateLocale from 'dayjs/esm/plugin/updateLocale/index.js';
+import dayjs from 'dayjs';
+import calendar from 'dayjs/plugin/calendar';
+import updateLocale from 'dayjs/plugin/updateLocale';
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
@@ -28,6 +28,11 @@ export class AtomicResultDate
   extends LightDomMixin(LitElement)
   implements InitializableComponent<Bindings>
 {
+  private static readonly propsSchema = new Schema({
+    field: new StringValue({required: true, emptyAllowed: false}),
+    format: new StringValue({required: false, emptyAllowed: false}),
+  });
+
   /**
    * The result field which the component should use.
    * This will look for the field in the Result object first, and then in the Result.raw object.
@@ -66,10 +71,7 @@ export class AtomicResultDate
         field: this.field,
         format: this.format,
       }),
-      new Schema({
-        field: new StringValue({required: true, emptyAllowed: false}),
-        format: new StringValue({required: false, emptyAllowed: false}),
-      }),
+      AtomicResultDate.propsSchema,
       false
     );
   }

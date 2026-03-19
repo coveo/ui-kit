@@ -5,32 +5,15 @@ import {LightningElement, api} from 'lwc';
 /** @typedef {import("coveo").InteractiveCitation} InteractiveCitation */
 
 const minimumTooltipDisplayDurationMs = 1000;
-const tooltipHideDelayMs = 200;
+const tooltipDelayMsShow = 200;
+const tooltipDelayMsHide = 100;
 const supportedFileTypesForTextFragment = ['html', 'SalesforceItem'];
-
-/**
- * Debounce function that delays invoking func until after wait milliseconds
- * have elapsed since the last time the debounced function was invoked.
- * Includes a cancel method to clear any pending timeout.
- * @param {Function} fn - The function to debounce
- * @param {number} delay - The number of milliseconds to delay
- * @returns {Function} The debounced function with cancel method
- */
-export function debounce(fn, delay) {
-  let timeout;
-  const debounced = (...args) => {
-    clearTimeout(timeout);
-    // eslint-disable-next-line @lwc/lwc/no-async-operation
-    timeout = setTimeout(() => fn(...args), delay);
-  };
-  debounced.cancel = () => clearTimeout(timeout);
-  return debounced;
-}
 
 /**
  * The `QuanticCitation` component renders an individual citation.
  * @fires CustomEvent#quantic__citationhover
  * @category Internal
+ * @slot actions Slot for action controls (e.g., lightning-button-icon) rendered inside the citation tooltip.
  * @example
  * <c-quantic-citation citation={citation} interactive-citation={interactiveCitation} onclick={handleClick} onquantic__citationhover={handleHover}></c-quantic-citation>
  */
@@ -54,6 +37,22 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
    * @default false
    */
   @api disableCitationAnchoring = false;
+  /**
+   * Whether the citation is in an active state.
+   * A citation in an active state is displayed with a different title and border color based on the theme set on the community.
+   * @api
+   * @type {boolean}
+   * @default false
+   */
+  @api isActive = false;
+  /**
+   * The name of the Salesforce icon to display before the citation title.
+   * See https://www.lightningdesignsystem.com/2e1ef8501/p/83309d-icons for a list of valid icon names.
+   * @api
+   * @example 'utility:attach'
+   * @type {string}
+   */
+  @api iconName;
 
   /** @type {Object} */
   timeout;
@@ -69,8 +68,14 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   salesforceRecordUrl;
   /** @type {boolean} */
   isHrefWithTextFragment = false;
+  /** @type {boolean} */
+  isCitationHovered = false;
+  /** @type {boolean} */
+  isTooltipHovered = false;
   /** @type {Object} */
-  hideTooltipDebounced;
+  showTimer = null;
+  /** @type {Object} */
+  hideTimer = null;
 
   connectedCallback() {
     const fileType = this.citation?.fields?.filetype;
@@ -78,15 +83,6 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
       !this.disableCitationAnchoring &&
       supportedFileTypesForTextFragment.includes(fileType) &&
       !!this.text;
-
-    // Initialize the debounced hide tooltip function
-    this.hideTooltipDebounced = debounce(() => {
-      if (this.tooltipIsDisplayed) {
-        this.dispatchCitationHoverEvent();
-      }
-      this.tooltipIsDisplayed = false;
-      this.tooltipComponent?.hideTooltip();
-    }, tooltipHideDelayMs);
   }
 
   renderedCallback() {
@@ -111,34 +107,89 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   disconnectedCallback() {
     this.removeBindings?.();
     clearTimeout(this.timeout);
-    this.hideTooltipDebounced?.cancel();
+    this.cancelShow();
+    this.cancelHide();
   }
 
   handleCitationMouseEnter() {
-    this.showTooltip();
+    this.isCitationHovered = true;
+    this.updateTooltipHideShow();
   }
 
   handleCitationMouseLeave() {
-    this.hideTooltipDebounced();
+    this.isCitationHovered = false;
+    this.updateTooltipHideShow();
   }
 
   handleTooltipMouseEnter() {
-    this.hideTooltipDebounced.cancel();
+    this.isTooltipHovered = true;
+    this.updateTooltipHideShow();
   }
 
   handleTooltipMouseLeave() {
-    this.hideTooltipDebounced();
+    this.isTooltipHovered = false;
+    this.updateTooltipHideShow();
   }
 
-  /**
-   * Shows the tooltip immediately and cancels any pending hide.
-   */
+  isHovering() {
+    return this.isCitationHovered || this.isTooltipHovered;
+  }
+
+  updateTooltipHideShow() {
+    if (this.isHovering()) {
+      this.cancelHide();
+      this.scheduleShow();
+    } else {
+      this.cancelShow();
+      this.scheduleHide();
+    }
+  }
+
+  scheduleShow() {
+    if (this.showTimer !== null) return;
+
+    // eslint-disable-next-line @lwc/lwc/no-async-operation
+    this.showTimer = setTimeout(() => {
+      this.showTimer = null;
+      if (this.isHovering()) this.showTooltip();
+    }, tooltipDelayMsShow);
+  }
+
+  scheduleHide() {
+    if (this.hideTimer !== null) return;
+
+    // eslint-disable-next-line @lwc/lwc/no-async-operation
+    this.hideTimer = setTimeout(() => {
+      this.hideTimer = null;
+      if (!this.isHovering()) this.hideTooltip();
+    }, tooltipDelayMsHide);
+  }
+
+  cancelShow() {
+    if (this.showTimer === null) return;
+    clearTimeout(this.showTimer);
+    this.showTimer = null;
+  }
+
+  cancelHide() {
+    if (this.hideTimer === null) return;
+    clearTimeout(this.hideTimer);
+    this.hideTimer = null;
+  }
+
   showTooltip() {
-    this.hideTooltipDebounced.cancel();
     if (!this.tooltipIsDisplayed) {
       this.hoverStartTimestamp = Date.now();
       this.tooltipIsDisplayed = true;
       this.tooltipComponent?.showTooltip();
+    }
+  }
+
+  hideTooltip() {
+    if (this.tooltipIsDisplayed) {
+      this.dispatchCitationHoverEvent();
+      this.tooltipIsDisplayed = false;
+      this.tooltipComponent?.hideTooltip();
     }
   }
 
@@ -246,5 +297,42 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
     return this.isSalesforceLink
       ? this.salesforceRecordUrl
       : (this.clickUri ?? this.citation?.uri);
+  }
+
+  get citationTitleClasses() {
+    return [
+      'citation__title',
+      'slds-m-left_x-small',
+      'slds-truncate',
+      'slds-has-flexi-truncate',
+      {
+        'citation__title--active': this.isActive,
+      },
+    ];
+  }
+
+  get citationLinkClasses() {
+    return [
+      'citation__link',
+      'slds-badge',
+      'slds-badge_lightest',
+      'slds-align_absolute-center',
+      'slds-text-link_reset',
+      'slds-p-left_xx-small',
+      'slds-p-right_x-small',
+      {
+        'citation__link--active': this.isActive,
+      },
+    ];
+  }
+
+  get citationIconClasses() {
+    return [
+      'citation__icon',
+      'slds-m-left_x-small',
+      {
+        'citation__icon--active': this.isActive,
+      },
+    ];
   }
 }

@@ -1,9 +1,9 @@
 import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
+import type {HighlightKeywords} from '@/src/components/search/atomic-quickview-modal/highlight-keywords';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import type {HighlightKeywords} from '../atomic-quickview-modal/atomic-quickview-modal';
 import {identifierKeywordsSection} from './keywords';
 import {renderMinimizeButton} from './minimize-button';
 
@@ -80,7 +80,7 @@ describe('MinimizeButton (Lit)', () => {
     });
 
     const badge = container.querySelector(
-      '[part=\"sidebar-minimize-badge\"]'
+      '[part="sidebar-minimize-badge"]'
     ) as HTMLElement | null;
 
     expect(badge).toBeTruthy();
@@ -94,7 +94,7 @@ describe('MinimizeButton (Lit)', () => {
       highlightKeywords: baseHighlightKeywords,
     });
 
-    const badge = container.querySelector('[part=\"sidebar-minimize-badge\"]');
+    const badge = container.querySelector('[part="sidebar-minimize-badge"]');
 
     expect(badge).toBeNull();
   });

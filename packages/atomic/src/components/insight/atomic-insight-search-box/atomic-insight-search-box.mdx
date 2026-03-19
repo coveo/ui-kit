@@ -1,0 +1,25 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicInsightSearchBoxStories from './atomic-insight-search-box.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicInsightSearchBoxStories} />
+
+<AtomicDocTemplate
+  stories={AtomicInsightSearchBoxStories}
+  githubPath="insight/atomic-insight-search-box/atomic-insight-search-box.ts"
+  tagName="atomic-insight-search-box"
+  className="AtomicInsightSearchBox"
+>
+This component is used within the Insight interface to allow users to enter and submit search queries.
+It provides query suggestions as the user types.
+
+```html
+<atomic-insight-interface>
+  <atomic-insight-layout>
+    <atomic-layout-section section="search">
+      <atomic-insight-search-box></atomic-insight-search-box>
+    </atomic-layout-section>
+  </atomic-insight-layout>
+</atomic-insight-interface>
+```
+</AtomicDocTemplate>

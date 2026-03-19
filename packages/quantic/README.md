@@ -110,15 +110,15 @@ https://your-salesforce-lws-disabled-scratch-org-instance.force.com/examples
 Once the community has been deployed, you can deploy the `main` or `example` components to a specific org only when needed by running the corresponding commands:
 
 ```bash
-pnpm run deploy:main --target-org Quantic__LWS_enabled
-pnpm run deploy:examples --target-org Quantic__LWS_enabled
+pnpm run deploy:main Quantic__LWS_enabled
+pnpm run deploy:examples Quantic__LWS_enabled
 ```
 
 You can replace Quantic\_\_LWS_enabled with your target org alias. For example:
 
 ```bash
-pnpm run deploy:main --target-org MyCustomOrg
-pnpm run deploy:examples --target-org MyCustomOrg
+pnpm run deploy:main MyCustomOrg
+pnpm run deploy:examples MyCustomOrg
 ```
 
 ### Run Playwright for Quantic Components

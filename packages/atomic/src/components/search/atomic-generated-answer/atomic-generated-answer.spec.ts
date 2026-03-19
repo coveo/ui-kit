@@ -1,0 +1,1762 @@
+import {
+  buildGeneratedAnswer,
+  buildInteractiveCitation,
+  buildSearchStatus,
+  buildTabManager,
+  type GeneratedAnswer,
+  type GeneratedAnswerState,
+  type GeneratedAnswerWithFollowUps,
+  type GeneratedAnswerWithFollowUpsState,
+  type InteractiveCitation,
+  type SearchStatus,
+  type TabManager,
+} from '@coveo/headless';
+import {html} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined.js';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {renderAnswerContent} from '@/src/components/common/generated-answer/render-answer-content';
+import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
+import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
+import {buildFakeGeneratedAnswer} from '@/vitest-utils/testing-helpers/fixtures/headless/search/generated-answer-controller';
+import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/headless/search/search-status-controller';
+import {buildFakeTabManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/tab-manager-controller';
+import type {AtomicGeneratedAnswer} from './atomic-generated-answer';
+import './atomic-generated-answer';
+import {userEvent} from 'vitest/browser';
+
+vi.mock('@coveo/headless', {spy: true});
+vi.mock('@/src/components/common/generated-answer/render-answer-content', {
+  spy: true,
+});
+
+describe('atomic-generated-answer', () => {
+  const mockedEngine = buildFakeSearchEngine();
+  let mockedGeneratedAnswer: GeneratedAnswer;
+  let mockedSearchStatus: SearchStatus;
+  let mockedTabManager: TabManager;
+  type FollowUpAnswersState =
+    GeneratedAnswerWithFollowUpsState['followUpAnswers'];
+  type FollowUpAnswerEntry = FollowUpAnswersState['followUpAnswers'][number];
+  type RenderGeneratedAnswerOptions = {
+    props?: Partial<AtomicGeneratedAnswer>;
+    generatedAnswerState?: Partial<GeneratedAnswerState>;
+    searchStatusState?: {hasError?: boolean};
+    tabManagerState?: {activeTab?: string};
+    generatedAnswerOverrides?: Partial<GeneratedAnswer> &
+      Record<string, unknown>;
+  };
+
+  const renderGeneratedAnswer = async ({
+    props = {},
+    generatedAnswerState = {},
+    searchStatusState = {},
+    tabManagerState = {},
+    generatedAnswerOverrides = {},
+  }: RenderGeneratedAnswerOptions = {}) => {
+    mockedGeneratedAnswer = Object.assign(
+      buildFakeGeneratedAnswer({
+        answer: 'Test answer',
+        citations: [],
+        isVisible: true,
+        ...generatedAnswerState,
+      }),
+      generatedAnswerOverrides
+    );
+
+    mockedSearchStatus = buildFakeSearchStatus({
+      hasError: false,
+      firstSearchExecuted: true,
+      isLoading: false,
+      hasResults: true,
+      ...searchStatusState,
+    });
+
+    mockedTabManager = buildFakeTabManager({
+      activeTab: 'All',
+      ...tabManagerState,
+    });
+
+    vi.mocked(buildGeneratedAnswer).mockReturnValue(mockedGeneratedAnswer);
+    vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
+    vi.mocked(buildTabManager).mockReturnValue(mockedTabManager);
+    vi.mocked(buildInteractiveCitation).mockReturnValue({
+      select: vi.fn(),
+      beginDelayedSelect: vi.fn(),
+      cancelPendingSelect: vi.fn(),
+    } as ReturnType<typeof buildInteractiveCitation>);
+
+    const {element} =
+      await renderInAtomicSearchInterface<AtomicGeneratedAnswer>({
+        template: html`<atomic-generated-answer
+          .withToggle=${props.withToggle ?? false}
+          .collapsible=${props.collapsible ?? false}
+          .disableCitationAnchoring=${props.disableCitationAnchoring ?? false}
+          .answerConfigurationId=${props.answerConfigurationId}
+          fields-to-include-in-citations=${ifDefined(
+            props.fieldsToIncludeInCitations
+          )}
+          .maxCollapsedHeight=${props.maxCollapsedHeight ?? 16}
+          .tabsIncluded=${props.tabsIncluded ?? []}
+          .tabsExcluded=${props.tabsExcluded ?? []}
+          .agentId=${props.agentId}
+        ></atomic-generated-answer>`,
+        selector: 'atomic-generated-answer',
+        bindings: (bindings) => {
+          bindings.engine = mockedEngine;
+          return bindings;
+        },
+      });
+
+    return {
+      element,
+      get container() {
+        return element.shadowRoot?.querySelector('[part="container"]')!;
+      },
+      get headerLabel() {
+        return element.shadowRoot?.querySelector('[part="header-label"]')!;
+      },
+      get toggle() {
+        return element.shadowRoot?.querySelector('[part="toggle"]')!;
+      },
+      get generatedContainer() {
+        return element.shadowRoot?.querySelector(
+          '[part="generated-container"]'
+        );
+      },
+      get generatedContent() {
+        return element.shadowRoot?.querySelector('[part="generated-content"]')!;
+      },
+      get scrollableContainer() {
+        return element.shadowRoot?.querySelector(
+          '[part="generated-content-container"] .agent-scrollable'
+        );
+      },
+      get feedbackButtons() {
+        return element.shadowRoot?.querySelectorAll(
+          '[part="feedback-button"]'
+        )!;
+      },
+      get copyButton() {
+        return element.shadowRoot?.querySelector('[part="copy-button"]')!;
+      },
+      get citationsLabel() {
+        return element.shadowRoot?.querySelector('[part="citations-label"]')!;
+      },
+      get generatedAnswerFooter() {
+        return element.shadowRoot?.querySelector(
+          '[part="generated-answer-footer"]'
+        );
+      },
+      get likeButton() {
+        return element.shadowRoot?.querySelector(
+          '[part="feedback-button"]:first-child'
+        ) as HTMLButtonElement;
+      },
+      get dislikeButton() {
+        return element.shadowRoot?.querySelector(
+          '[part="feedback-button"].dislike'
+        ) as HTMLButtonElement;
+      },
+      get retryContainer() {
+        return element.shadowRoot?.querySelector('[part="retry-container"]')!;
+      },
+      get retryButton() {
+        return element.shadowRoot?.querySelector(
+          '[part="retry-button"]'
+        ) as HTMLButtonElement;
+      },
+      get citationElements() {
+        return element.shadowRoot?.querySelectorAll('atomic-citation')!;
+      },
+      get disclaimer() {
+        return element.shadowRoot?.querySelector('slot[name="disclaimer"]')!;
+      },
+      get showMoreButton() {
+        return element.shadowRoot?.querySelector(
+          '[part="answer-show-button"]'
+        ) as HTMLButtonElement;
+      },
+      get generatedAnswersThread() {
+        return element.shadowRoot?.querySelector(
+          'atomic-generated-answers-thread'
+        );
+      },
+      get followUpInputContainer() {
+        return element.shadowRoot?.querySelector('[part="input-container"]');
+      },
+      get followUpInputField() {
+        return element.shadowRoot?.querySelector(
+          '[part="input-field"]'
+        ) as HTMLInputElement | null;
+      },
+      get followUpSubmitButton() {
+        return element.shadowRoot?.querySelector(
+          '[part="submit-button"]'
+        ) as HTMLButtonElement | null;
+      },
+    };
+  };
+
+  const buildFollowUpAnswerEntry = (
+    overrides: Partial<FollowUpAnswerEntry> = {}
+  ) =>
+    ({
+      answer: 'Follow up answer',
+      citations: [],
+      isVisible: true,
+      isStreaming: false,
+      isLoading: false,
+      liked: false,
+      disliked: false,
+      feedbackSubmitted: false,
+      error: undefined,
+      expanded: true,
+      cannotAnswer: false,
+      answerContentFormat: 'text/plain',
+      ...overrides,
+    }) as FollowUpAnswerEntry;
+
+  const createGeneratedAnswerWithFollowUpsState = ({
+    isEnabled = true,
+    followUpAnswers = [buildFollowUpAnswerEntry()],
+    stateOverrides = {},
+  }: {
+    isEnabled?: boolean;
+    followUpAnswers?: FollowUpAnswerEntry[];
+    stateOverrides?: Partial<GeneratedAnswerState>;
+  } = {}) => ({
+    isVisible: true,
+    answer: 'Test answer',
+    ...stateOverrides,
+    followUpAnswers: {
+      isEnabled,
+      followUpAnswers,
+    } as FollowUpAnswersState,
+  });
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  describe('when answer is available', () => {
+    it('should render the container', async () => {
+      const {container} = await renderGeneratedAnswer();
+      expect(container).toBeInTheDocument();
+    });
+
+    it('should render the header label', async () => {
+      const {headerLabel} = await renderGeneratedAnswer();
+      expect(headerLabel).toBeInTheDocument();
+    });
+
+    it('should call buildGeneratedAnswer with the engine', async () => {
+      await renderGeneratedAnswer();
+      expect(buildGeneratedAnswer).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.any(Object)
+      );
+    });
+
+    it('should call buildSearchStatus with the engine', async () => {
+      await renderGeneratedAnswer();
+      expect(buildSearchStatus).toHaveBeenCalledWith(mockedEngine);
+    });
+
+    it('should call buildTabManager with the engine', async () => {
+      await renderGeneratedAnswer();
+      expect(buildTabManager).toHaveBeenCalledWith(mockedEngine);
+    });
+  });
+
+  it('should not render the container when answer is undefined when no answer is generated', async () => {
+    const {container} = await renderGeneratedAnswer({
+      generatedAnswerState: {answer: undefined, citations: []},
+    });
+    expect(container).not.toBeInTheDocument();
+  });
+
+  describe('when cannotAnswer is true with custom no-answer message', () => {
+    const renderGeneratedAnswerWithCustomMessage = async ({
+      props = {},
+      generatedAnswerState = {},
+    }: {
+      props?: Partial<AtomicGeneratedAnswer>;
+      generatedAnswerState?: Partial<GeneratedAnswerState>;
+    } = {}) => {
+      mockedGeneratedAnswer = buildFakeGeneratedAnswer({
+        answer: undefined,
+        cannotAnswer: true,
+        citations: [],
+        isVisible: true,
+        ...generatedAnswerState,
+      });
+
+      mockedSearchStatus = buildFakeSearchStatus({
+        hasError: false,
+        firstSearchExecuted: true,
+        isLoading: false,
+        hasResults: true,
+      });
+
+      mockedTabManager = buildFakeTabManager({
+        activeTab: 'All',
+      });
+
+      vi.mocked(buildGeneratedAnswer).mockReturnValue(mockedGeneratedAnswer);
+      vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
+      vi.mocked(buildTabManager).mockReturnValue(mockedTabManager);
+
+      const {element} =
+        await renderInAtomicSearchInterface<AtomicGeneratedAnswer>({
+          template: html`<atomic-generated-answer
+            .withToggle=${props.withToggle ?? false}
+            .collapsible=${props.collapsible ?? false}
+            .disableCitationAnchoring=${props.disableCitationAnchoring ?? false}
+            .answerConfigurationId=${props.answerConfigurationId}
+            .agentId=${props.agentId}
+            fields-to-include-in-citations=${ifDefined(
+              props.fieldsToIncludeInCitations
+            )}
+            .maxCollapsedHeight=${props.maxCollapsedHeight ?? 16}
+            .tabsIncluded=${props.tabsIncluded ?? []}
+            .tabsExcluded=${props.tabsExcluded ?? []}
+          >
+            <div slot="no-answer-message">Sorry, no answer available.</div>
+          </atomic-generated-answer>`,
+          selector: 'atomic-generated-answer',
+          bindings: (bindings) => {
+            bindings.engine = mockedEngine;
+            return bindings;
+          },
+        });
+
+      return {
+        element,
+        get container() {
+          return element.shadowRoot?.querySelector('[part="container"]')!;
+        },
+        get headerLabel() {
+          return element.shadowRoot?.querySelector('[part="header-label"]')!;
+        },
+        get toggle() {
+          return element.shadowRoot?.querySelector('[part="toggle"]')!;
+        },
+        get generatedContent() {
+          return element.shadowRoot?.querySelector(
+            '[part="generated-content"]'
+          )!;
+        },
+        get generatedContainer() {
+          return element.shadowRoot?.querySelector(
+            '[part="generated-container"]'
+          );
+        },
+        get article() {
+          return element.shadowRoot?.querySelector('article')!;
+        },
+        get customMessageSlot() {
+          return element.shadowRoot?.querySelector(
+            'slot[name="no-answer-message"]'
+          )!;
+        },
+      };
+    };
+
+    it('should render the container with custom no-answer message', async () => {
+      const {container} = await renderGeneratedAnswerWithCustomMessage();
+      expect(container).toBeInTheDocument();
+    });
+
+    it('should render the card header', async () => {
+      const {headerLabel} = await renderGeneratedAnswerWithCustomMessage();
+      expect(headerLabel).toBeInTheDocument();
+    });
+
+    it('should render the generated content container', async () => {
+      const {generatedContent} = await renderGeneratedAnswerWithCustomMessage();
+      expect(generatedContent).toBeInTheDocument();
+    });
+
+    it('should render the custom no-answer message slot when visible', async () => {
+      const {customMessageSlot, article} =
+        await renderGeneratedAnswerWithCustomMessage({
+          generatedAnswerState: {isVisible: true},
+        });
+      expect(article).toBeInTheDocument();
+      expect(customMessageSlot).toBeInTheDocument();
+    });
+
+    it('should not render the custom no-answer message when hidden', async () => {
+      const {article} = await renderGeneratedAnswerWithCustomMessage({
+        generatedAnswerState: {isVisible: false},
+      });
+      expect(article).not.toBeInTheDocument();
+    });
+
+    describe('with toggle functionality', () => {
+      it('should render the toggle button when withToggle is true', async () => {
+        const {toggle} = await renderGeneratedAnswerWithCustomMessage({
+          props: {withToggle: true},
+        });
+        expect(toggle).toBeInTheDocument();
+        expect(toggle).not.toHaveClass('hidden');
+      });
+
+      it('should show custom message when toggle is checked', async () => {
+        const {article, toggle} = await renderGeneratedAnswerWithCustomMessage({
+          props: {withToggle: true},
+          generatedAnswerState: {isVisible: true},
+        });
+        expect(toggle).toBeChecked();
+        expect(article).toBeInTheDocument();
+      });
+
+      it('should call show() when toggle is checked', async () => {
+        const {element, toggle} = await renderGeneratedAnswerWithCustomMessage({
+          props: {withToggle: true},
+          generatedAnswerState: {isVisible: false},
+        });
+
+        const showSpy = vi.spyOn(element.generatedAnswer, 'show');
+
+        await userEvent.click(toggle);
+        await element.updateComplete;
+
+        expect(showSpy).toHaveBeenCalled();
+      });
+
+      it('should call hide() when toggle is unchecked', async () => {
+        const {element, toggle} = await renderGeneratedAnswerWithCustomMessage({
+          props: {withToggle: true},
+          generatedAnswerState: {isVisible: true},
+        });
+
+        const hideSpy = vi.spyOn(element.generatedAnswer, 'hide');
+
+        await userEvent.click(toggle);
+        await element.updateComplete;
+
+        expect(hideSpy).toHaveBeenCalled();
+      });
+    });
+
+    it('should render the generated-container part with custom message slot', async () => {
+      const {generatedContainer, customMessageSlot} =
+        await renderGeneratedAnswerWithCustomMessage();
+      expect(generatedContainer).toBeInTheDocument();
+      expect(generatedContainer).toContainElement(
+        customMessageSlot as HTMLElement
+      );
+    });
+  });
+
+  describe('when withToggle is true', () => {
+    it('should render the toggle button', async () => {
+      const {toggle} = await renderGeneratedAnswer({
+        props: {withToggle: true},
+      });
+      expect(toggle).toBeInTheDocument();
+      expect(toggle).not.toHaveClass('hidden');
+    });
+
+    it('should have the toggle checked by default', async () => {
+      const {toggle} = await renderGeneratedAnswer({
+        props: {withToggle: true},
+      });
+      expect(toggle).toBeChecked();
+    });
+  });
+
+  it('should hide the toggle button when withToggle is false', async () => {
+    const {toggle} = await renderGeneratedAnswer({
+      props: {withToggle: false},
+    });
+    expect(toggle).toHaveClass('hidden');
+  });
+
+  describe('when answer is visible', () => {
+    it('should render the generated container', async () => {
+      const {generatedContainer} = await renderGeneratedAnswer({
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+      expect(generatedContainer).toBeInTheDocument();
+    });
+
+    it('should render the generated content', async () => {
+      const {generatedContent} = await renderGeneratedAnswer({
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+      expect(generatedContent).toBeInTheDocument();
+    });
+
+    it('should render the feedback buttons when not streaming', async () => {
+      const {feedbackButtons} = await renderGeneratedAnswer({
+        generatedAnswerState: {
+          isVisible: true,
+          isStreaming: false,
+          answer: 'Test',
+        },
+      });
+      expect(feedbackButtons.length).toBeGreaterThan(0);
+    });
+  });
+
+  it('should not render the generated container when answer is hidden', async () => {
+    const {generatedContainer} = await renderGeneratedAnswer({
+      generatedAnswerState: {isVisible: false, answer: 'Test answer'},
+    });
+    expect(generatedContainer).not.toBeInTheDocument();
+  });
+
+  it('should render the retry button when there is a retryable error', async () => {
+    const {retryContainer} = await renderGeneratedAnswer({
+      generatedAnswerState: {
+        isVisible: true,
+        answer: undefined,
+        error: {isRetryable: true, message: 'Error'},
+      },
+      searchStatusState: {hasError: false},
+    });
+    expect(retryContainer).toBeInTheDocument();
+  });
+
+  it('should not render when active tab is in tabsExcluded', async () => {
+    const {element, container} = await renderGeneratedAnswer({
+      tabManagerState: {activeTab: 'ExcludedTab'},
+    });
+    element.tabsExcluded = ['ExcludedTab'];
+    await element.updateComplete;
+    expect(container).not.toBeInTheDocument();
+  });
+
+  it('should render citations label when citations are available', async () => {
+    const {citationsLabel} = await renderGeneratedAnswer({
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Test answer',
+        citations: [
+          {
+            source: 'Source 1',
+            id: 'citation-1',
+            title: 'Citation 1',
+            uri: 'https://example.com',
+            permanentid: 'perm-1',
+            clickUri: 'https://example.com/click',
+            text: 'Citation text',
+          },
+        ],
+      },
+    });
+    expect(citationsLabel).toBeInTheDocument();
+  });
+
+  it('should call like when like button is clicked', async () => {
+    const {likeButton} = await renderGeneratedAnswer({
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Test',
+        isStreaming: false,
+      },
+    });
+    likeButton.click();
+    expect(mockedGeneratedAnswer.like).toHaveBeenCalled();
+  });
+
+  it('should warn when maxCollapsedHeight is out of range', async () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const {element, container} = await renderGeneratedAnswer({
+      props: {collapsible: true},
+      generatedAnswerState: {isVisible: true, answer: 'Test'},
+    });
+    element.maxCollapsedHeight = 50;
+    await element.updateComplete;
+
+    expect(container).toBeInTheDocument();
+  });
+
+  it('should call dislike when dislike button is clicked', async () => {
+    const {dislikeButton} = await renderGeneratedAnswer({
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Test',
+        isStreaming: false,
+      },
+    });
+    dislikeButton.click();
+    expect(mockedGeneratedAnswer.dislike).toHaveBeenCalled();
+  });
+
+  it('should render copy button when answer is present', async () => {
+    const {copyButton} = await renderGeneratedAnswer({
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Test answer',
+        isStreaming: false,
+      },
+    });
+    expect(copyButton).toBeInTheDocument();
+  });
+
+  it('should not render copy button when streaming', async () => {
+    const {copyButton} = await renderGeneratedAnswer({
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Test answer',
+        isStreaming: true,
+      },
+    });
+    expect(copyButton).not.toBeInTheDocument();
+  });
+
+  it('should handle citations with empty title', async () => {
+    const {element, citationElements} = await renderGeneratedAnswer({
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Test answer',
+        citations: [
+          {
+            source: 'Source 1',
+            id: 'citation-1',
+            title: '',
+            uri: 'https://example.com',
+            permanentid: 'perm-1',
+            clickUri: 'https://example.com/click',
+            text: 'Citation text',
+          },
+        ],
+      },
+    });
+    await element.updateComplete;
+    expect(citationElements.length).toBeGreaterThan(0);
+  });
+
+  it('should pass interactiveCitation to atomic-citation component', async () => {
+    const mockCitation = {
+      select: vi.fn(),
+      beginDelayedSelect: vi.fn(),
+      cancelPendingSelect: vi.fn(),
+    } as unknown as InteractiveCitation;
+    vi.mocked(buildInteractiveCitation).mockReturnValue(mockCitation);
+    const {citationElements} = await renderGeneratedAnswer({
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Test answer',
+        citations: [
+          {
+            source: 'Source 1',
+            id: 'citation-1',
+            title: 'Citation 1',
+            uri: 'https://example.com',
+            permanentid: 'perm-1',
+            clickUri: 'https://example.com/click',
+            text: 'Citation text',
+          },
+        ],
+      },
+    });
+
+    expect(citationElements.length).toBeGreaterThan(0);
+  });
+
+  it('should render disclaimer when answer is visible', async () => {
+    const {disclaimer} = await renderGeneratedAnswer({
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Test answer',
+        isStreaming: false,
+      },
+    });
+    expect(disclaimer).toBeInTheDocument();
+  });
+
+  it('should not render disclaimer when answer is hidden', async () => {
+    const {disclaimer} = await renderGeneratedAnswer({
+      generatedAnswerState: {
+        isVisible: false,
+        answer: 'Test answer',
+      },
+    });
+    expect(disclaimer).not.toBeInTheDocument();
+  });
+
+  it('should render show more button when collapsible and content is tall', async () => {
+    const renderedAnswer = await renderGeneratedAnswer({
+      props: {collapsible: true},
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'A'.repeat(1000), // Long text
+      },
+    });
+
+    Reflect.set(renderedAnswer.element, 'fullAnswerHeight', 100);
+    await renderedAnswer.element.requestUpdate();
+    await renderedAnswer.element.updateComplete;
+
+    expect(renderedAnswer.showMoreButton).toBeInTheDocument();
+  });
+
+  it('should not show button when content is short', async () => {
+    const {showMoreButton} = await renderGeneratedAnswer({
+      props: {collapsible: true},
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Short text',
+      },
+    });
+
+    await expect.element(showMoreButton).not.toBeInTheDocument();
+  });
+
+  it('should pass collapsible as false to renderAnswerContent when collapsible is disabled', async () => {
+    await renderGeneratedAnswer({
+      props: {collapsible: false, maxCollapsedHeight: 16},
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Short text',
+      },
+    });
+
+    const lastCall = vi.mocked(renderAnswerContent).mock.calls.at(-1);
+    expect(lastCall).toBeDefined();
+    expect(lastCall?.[0].props.collapsible).toBe(false);
+  });
+
+  it('should pass collapsible as true to renderAnswerContent when collapsible is enabled and content is tall', async () => {
+    const renderedAnswer = await renderGeneratedAnswer({
+      props: {collapsible: true, maxCollapsedHeight: 16},
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Long text',
+      },
+    });
+
+    Reflect.set(renderedAnswer.element, 'fullAnswerHeight', 100);
+    await renderedAnswer.element.requestUpdate();
+    await renderedAnswer.element.updateComplete;
+
+    const lastCall = vi.mocked(renderAnswerContent).mock.calls.at(-1);
+    expect(lastCall).toBeDefined();
+    expect(lastCall?.[0].props.collapsible).toBe(true);
+  });
+
+  it('should request re-render when adaptAnswerHeight updates measured height', async () => {
+    const renderedAnswer = await renderGeneratedAnswer({
+      props: {collapsible: true, maxCollapsedHeight: 16},
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Test answer',
+      },
+    });
+
+    const generatedText = renderedAnswer.element.shadowRoot?.querySelector(
+      '[part="generated-text"]'
+    ) as HTMLElement | null;
+    expect(generatedText).not.toBeNull();
+
+    vi.spyOn(
+      generatedText as HTMLElement,
+      'getBoundingClientRect'
+    ).mockReturnValue({
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 320,
+      top: 0,
+      right: 0,
+      bottom: 320,
+      left: 0,
+      toJSON: () => ({}),
+    } as DOMRect);
+
+    const requestUpdateSpy = vi.spyOn(renderedAnswer.element, 'requestUpdate');
+    const adaptAnswerHeight = Reflect.get(
+      renderedAnswer.element,
+      'adaptAnswerHeight'
+    ) as () => void;
+
+    adaptAnswerHeight.call(renderedAnswer.element);
+
+    expect(requestUpdateSpy).toHaveBeenCalled();
+  });
+
+  it('should toggle visibility when toggle is clicked when toggle is activated and deactivated', async () => {
+    const {toggle} = await renderGeneratedAnswer({
+      props: {withToggle: true},
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Test answer',
+      },
+    });
+
+    expect(toggle).toBeChecked();
+    await userEvent.click(toggle);
+    await expect(mockedGeneratedAnswer.hide).toHaveBeenCalled();
+  });
+
+  it('should not render component when error is not retryable', async () => {
+    const {container} = await renderGeneratedAnswer({
+      generatedAnswerState: {
+        isVisible: true,
+        answer: undefined,
+        error: {isRetryable: false, message: 'Non-retryable error'},
+      },
+    });
+    expect(container).not.toBeInTheDocument();
+  });
+
+  it('should not render when no search has been executed', async () => {
+    const {generatedContent} = await renderGeneratedAnswer({
+      generatedAnswerState: {
+        answer: undefined,
+      },
+    });
+    expect(generatedContent).not.toBeInTheDocument();
+  });
+
+  it('should not render feedback buttons when streaming', async () => {
+    const {feedbackButtons} = await renderGeneratedAnswer({
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Test',
+        isStreaming: true,
+      },
+    });
+    expect(feedbackButtons.length).toBe(0);
+  });
+
+  it('should render feedback buttons when not streaming and answer exists', async () => {
+    const {feedbackButtons} = await renderGeneratedAnswer({
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Test',
+        isStreaming: false,
+      },
+    });
+    expect(feedbackButtons.length).toBeGreaterThan(0);
+  });
+
+  it('should call retry when retry button is clicked', async () => {
+    const {retryButton} = await renderGeneratedAnswer({
+      generatedAnswerState: {
+        isVisible: true,
+        answer: undefined,
+        error: {isRetryable: true, message: 'Error'},
+      },
+      searchStatusState: {hasError: false},
+    });
+
+    if (retryButton) {
+      retryButton.click();
+      expect(mockedGeneratedAnswer.retry).toHaveBeenCalled();
+    }
+  });
+
+  it('should call buildInteractiveCitation for each citation', async () => {
+    await renderGeneratedAnswer({
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Test answer',
+        citations: [
+          {
+            source: 'Source 1',
+            id: 'citation-1',
+            title: 'Citation 1',
+            uri: 'https://example.com',
+            permanentid: 'perm-1',
+            clickUri: 'https://example.com/click',
+            text: 'Citation text',
+          },
+        ],
+      },
+    });
+
+    expect(buildInteractiveCitation).toHaveBeenCalled();
+  });
+
+  it('should render citation popover for citations', async () => {
+    const {element} = await renderGeneratedAnswer({
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Test answer',
+        citations: [
+          {
+            source: 'Source 1',
+            id: 'citation-1',
+            title: 'Citation 1',
+            uri: 'https://example.com',
+            permanentid: 'perm-1',
+            clickUri: 'https://example.com/click',
+            text: 'Citation text',
+          },
+        ],
+      },
+    });
+
+    await element.updateComplete;
+    // Popover exists in the DOM structure
+    expect(element).toBeInTheDocument();
+  });
+
+  describe('answerConfigurationId property', () => {
+    it('should pass answerConfigurationId to buildGeneratedAnswer when provided', async () => {
+      const {element} = await renderGeneratedAnswer({
+        props: {answerConfigurationId: 'test-config-id'},
+        generatedAnswerState: {isVisible: true, answer: 'Test'},
+      });
+      await element.updateComplete;
+
+      expect(buildGeneratedAnswer).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.objectContaining({
+          answerConfigurationId: 'test-config-id',
+        })
+      );
+    });
+
+    it('should not pass answerConfigurationId when not provided', async () => {
+      await renderGeneratedAnswer({
+        generatedAnswerState: {isVisible: true, answer: 'Test'},
+      });
+
+      expect(buildGeneratedAnswer).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.not.objectContaining({
+          answerConfigurationId: expect.anything(),
+        })
+      );
+    });
+  });
+
+  describe('agentId property', () => {
+    it('should pass agentId to buildGeneratedAnswer when provided', async () => {
+      const {element} = await renderGeneratedAnswer({
+        props: {agentId: 'test-agent-id'},
+        generatedAnswerState: {isVisible: true, answer: 'Test'},
+      });
+      await element.updateComplete;
+
+      expect(buildGeneratedAnswer).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.objectContaining({
+          agentId: 'test-agent-id',
+        })
+      );
+    });
+
+    it('should not pass agentId when not provided', async () => {
+      await renderGeneratedAnswer({
+        generatedAnswerState: {isVisible: true, answer: 'Test'},
+      });
+
+      expect(buildGeneratedAnswer).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.not.objectContaining({
+          agentId: expect.anything(),
+        })
+      );
+    });
+  });
+
+  describe('follow up capability', () => {
+    it('should render a scrollable content container when agentId is provided', async () => {
+      const {scrollableContainer} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-123'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          isEnabled: true,
+        }),
+        generatedAnswerOverrides: {
+          askFollowUp: vi.fn(),
+        },
+      });
+
+      expect(scrollableContainer).not.toBeNull();
+    });
+
+    it('should transition from non-scrollable to scrollable when follow-up answers become enabled', async () => {
+      const result = await renderGeneratedAnswer({
+        props: {agentId: 'agent-123'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          isEnabled: false,
+        }),
+        generatedAnswerOverrides: {
+          askFollowUp: vi.fn(),
+        },
+      });
+
+      const {element} = result;
+      expect(result.scrollableContainer).toBeNull();
+
+      const generatedAnswerWithFollowUps =
+        element.generatedAnswer as GeneratedAnswerWithFollowUps;
+      generatedAnswerWithFollowUps.state.followUpAnswers.isEnabled = true;
+      element.requestUpdate();
+      await element.updateComplete;
+
+      const updatedScrollableContainer = result.scrollableContainer;
+      expect(updatedScrollableContainer).not.toBeNull();
+    });
+
+    it('should apply a default 50vh height to the scrollable part when agentId is provided', async () => {
+      const {element, scrollableContainer} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-123'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          isEnabled: true,
+        }),
+        generatedAnswerOverrides: {
+          askFollowUp: vi.fn(),
+        },
+      });
+
+      await element.updateComplete;
+
+      const heightInPixels = parseFloat(
+        getComputedStyle(scrollableContainer as HTMLElement).height
+      );
+
+      expect(heightInPixels).toBeCloseTo(window.innerHeight * 0.5, 0);
+    });
+
+    it('should not render show more button when agentId is provided and collapsible is true', async () => {
+      const {showMoreButton} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-123', collapsible: true},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          isEnabled: true,
+          stateOverrides: {answer: 'A'.repeat(1000)},
+        }),
+        generatedAnswerOverrides: {
+          askFollowUp: vi.fn(),
+        },
+      });
+
+      expect(showMoreButton).not.toBeInTheDocument();
+    });
+
+    it('should not render a scrollable content container when agentId is not provided', async () => {
+      const {scrollableContainer} = await renderGeneratedAnswer({
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          isEnabled: true,
+        }),
+      });
+
+      expect(scrollableContainer).toBeNull();
+    });
+
+    it('should not render a scrollable content container when follow-up is disabled even if agentId is provided', async () => {
+      const {scrollableContainer} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-123'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          isEnabled: false,
+        }),
+        generatedAnswerOverrides: {
+          askFollowUp: vi.fn(),
+        },
+      });
+
+      expect(scrollableContainer).toBeNull();
+    });
+
+    it('should render generated answers thread when follow ups are enabled', async () => {
+      const askFollowUp = vi.fn().mockResolvedValue(undefined);
+      const {generatedAnswersThread} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState(),
+        generatedAnswerOverrides: {askFollowUp},
+      });
+
+      expect(generatedAnswersThread).toBeInTheDocument();
+      const threadComponent = generatedAnswersThread as HTMLElement & {
+        generatedAnswers?: unknown[];
+      };
+      expect(threadComponent.generatedAnswers).toBeDefined();
+      expect(threadComponent.generatedAnswers).toHaveLength(2);
+    });
+
+    it('should not render generated answers thread when follow ups are disabled', async () => {
+      const {generatedAnswersThread} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          isEnabled: false,
+        }),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(generatedAnswersThread).toBeNull();
+    });
+
+    it('should render the follow up input when follow ups are enabled', async () => {
+      const {followUpInputContainer} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState(),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(followUpInputContainer).toBeInTheDocument();
+    });
+
+    it('should not render the follow up input when follow ups are disabled', async () => {
+      const {followUpInputContainer} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          isEnabled: false,
+        }),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(followUpInputContainer).toBeNull();
+    });
+
+    it('should disable the follow up submit button when the initial answer is streaming', async () => {
+      const {followUpSubmitButton} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          isEnabled: true,
+          stateOverrides: {isStreaming: true},
+          followUpAnswers: [],
+        }),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(followUpSubmitButton).not.toBeNull();
+      expect((followUpSubmitButton as HTMLButtonElement).disabled).toBe(true);
+    });
+
+    it('should disable the follow up submit button when the initial answer is loading', async () => {
+      const {followUpSubmitButton} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          isEnabled: true,
+          stateOverrides: {isLoading: true},
+          followUpAnswers: [],
+        }),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(followUpSubmitButton).not.toBeNull();
+      expect((followUpSubmitButton as HTMLButtonElement).disabled).toBe(true);
+    });
+
+    it('should not disable the follow up submit button when the initial answer is completed', async () => {
+      const {followUpSubmitButton} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          isEnabled: true,
+          stateOverrides: {isLoading: false, isStreaming: false},
+          followUpAnswers: [],
+        }),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(followUpSubmitButton).not.toBeNull();
+      expect((followUpSubmitButton as HTMLButtonElement).disabled).toBe(false);
+    });
+
+    it('should disable the follow up submit button when a follow up is streaming', async () => {
+      const {followUpSubmitButton} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          followUpAnswers: [buildFollowUpAnswerEntry({isStreaming: true})],
+        }),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(followUpSubmitButton).not.toBeNull();
+      expect((followUpSubmitButton as HTMLButtonElement).disabled).toBe(true);
+    });
+
+    it('should disable the follow up submit button when a follow up is loading', async () => {
+      const {followUpSubmitButton} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          followUpAnswers: [buildFollowUpAnswerEntry({isLoading: true})],
+        }),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(followUpSubmitButton).not.toBeNull();
+      expect((followUpSubmitButton as HTMLButtonElement).disabled).toBe(true);
+    });
+
+    it('should not disable the follow up submit button when a follow up is completed', async () => {
+      const {followUpSubmitButton} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          followUpAnswers: [
+            buildFollowUpAnswerEntry({isLoading: false, isStreaming: false}),
+          ],
+        }),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(followUpSubmitButton).not.toBeNull();
+      expect((followUpSubmitButton as HTMLButtonElement).disabled).toBe(false);
+    });
+
+    it('should call askFollowUp when a follow up question is submitted', async () => {
+      const askFollowUp = vi.fn().mockResolvedValue(undefined);
+      const {element, followUpInputField, followUpSubmitButton} =
+        await renderGeneratedAnswer({
+          props: {agentId: 'agent-id'},
+          generatedAnswerState: createGeneratedAnswerWithFollowUpsState(),
+          generatedAnswerOverrides: {askFollowUp},
+        });
+
+      await element.updateComplete;
+      const input = followUpInputField as HTMLInputElement;
+      expect(input).not.toBeNull();
+      input.value = 'Follow up question';
+      expect(followUpSubmitButton).not.toBeNull();
+      followUpSubmitButton!.click();
+
+      await vi.waitFor(() => {
+        expect(askFollowUp).toHaveBeenCalledWith('Follow up question');
+      });
+    });
+  });
+
+  describe('fieldsToIncludeInCitations property', () => {
+    // TODO V4 (KIT-5306): Remove legacy comma-separated string support and update tests
+    it('should parse comma-separated fields and pass to buildGeneratedAnswer', async () => {
+      await renderGeneratedAnswer({
+        props: {fieldsToIncludeInCitations: 'author,date,custom_field'},
+        generatedAnswerState: {isVisible: true, answer: 'Test'},
+      });
+
+      expect(buildGeneratedAnswer).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.objectContaining({
+          fieldsToIncludeInCitations: expect.arrayContaining([
+            'author',
+            'date',
+            'custom_field',
+          ]),
+        })
+      );
+    });
+
+    it('should handle empty fieldsToIncludeInCitations', async () => {
+      await renderGeneratedAnswer({
+        props: {fieldsToIncludeInCitations: ''},
+        generatedAnswerState: {isVisible: true, answer: 'Test'},
+      });
+
+      expect(buildGeneratedAnswer).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.objectContaining({
+          fieldsToIncludeInCitations: expect.any(Array),
+        })
+      );
+    });
+
+    it('should trim whitespace from field names', async () => {
+      await renderGeneratedAnswer({
+        props: {fieldsToIncludeInCitations: ' field1 , field2 , field3 '},
+        generatedAnswerState: {isVisible: true, answer: 'Test'},
+      });
+
+      expect(buildGeneratedAnswer).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.objectContaining({
+          fieldsToIncludeInCitations: expect.arrayContaining([
+            'field1',
+            'field2',
+            'field3',
+          ]),
+        })
+      );
+    });
+  });
+
+  describe('maxCollapsedHeight property', () => {
+    it('should use maxCollapsedHeight when collapsible is true', async () => {
+      const {element} = await renderGeneratedAnswer({
+        props: {collapsible: true, maxCollapsedHeight: 20},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(element.maxCollapsedHeight).toBe(20);
+    });
+
+    it('should warn when maxCollapsedHeight is below minimum', async () => {
+      const {element} = await renderGeneratedAnswer({
+        props: {collapsible: true, maxCollapsedHeight: 5},
+        generatedAnswerState: {isVisible: true, answer: 'Test'},
+      });
+      await element.updateComplete;
+
+      expect(console.warn).toHaveBeenCalled();
+    });
+
+    it('should warn when maxCollapsedHeight is above maximum', async () => {
+      const {element} = await renderGeneratedAnswer({
+        props: {collapsible: true, maxCollapsedHeight: 35},
+        generatedAnswerState: {isVisible: true, answer: 'Test'},
+      });
+      await element.updateComplete;
+
+      expect(console.warn).toHaveBeenCalled();
+    });
+
+    it('should not warn when maxCollapsedHeight is within valid range', async () => {
+      const {element} = await renderGeneratedAnswer({
+        props: {collapsible: true, maxCollapsedHeight: 16},
+        generatedAnswerState: {isVisible: true, answer: 'Test'},
+      });
+      await element.updateComplete;
+
+      expect(console.warn).not.toHaveBeenCalled();
+    });
+  });
+
+  // TODO V4: KIT-5197 - Remove skip
+  it.skip('should set error when maxCollapsedHeight is invalid', async () => {
+    const {element} = await renderGeneratedAnswer();
+
+    expect(element.error).toBeUndefined();
+
+    element.maxCollapsedHeight = 5; // Below minimum
+    await element.updateComplete;
+
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(/maxCollapsedHeight/i);
+  });
+
+  // TODO V4: KIT-5197 - Remove this test
+  it('should log validation warning when maxCollapsedHeight is updated to invalid value', async () => {
+    const consoleWarnSpy = vi
+      .spyOn(console, 'warn')
+      .mockImplementation(() => {});
+
+    const {element} = await renderGeneratedAnswer({
+      props: {maxCollapsedHeight: 16}, // Valid value
+    });
+
+    element.maxCollapsedHeight = 5; // Invalid value (below minimum)
+    await element.updateComplete;
+
+    expect(consoleWarnSpy).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'Prop validation failed for component atomic-generated-answer'
+      ),
+      element
+    );
+    expect(consoleWarnSpy).toHaveBeenCalledWith(
+      expect.stringContaining('maxCollapsedHeight'),
+      element
+    );
+
+    consoleWarnSpy.mockRestore();
+  });
+
+  // TODO V4: KIT-5197 - Remove skip
+  it.skip('should throw error when maxCollapsedHeight is invalid after valid value', async () => {
+    const {element} = await renderGeneratedAnswer({
+      props: {maxCollapsedHeight: 16}, // Valid value
+    });
+
+    expect(element.error).toBeUndefined();
+
+    element.maxCollapsedHeight = 35; // Invalid value (above maximum)
+    await element.updateComplete;
+
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(/maxCollapsedHeight/i);
+  });
+
+  describe('disableCitationAnchoring property', () => {
+    it('should have disableCitationAnchoring as false by default', async () => {
+      const {element} = await renderGeneratedAnswer({
+        generatedAnswerState: {isVisible: true, answer: 'Test'},
+      });
+
+      expect(element.disableCitationAnchoring).toBe(false);
+    });
+
+    it('should pass disableCitationAnchoring=false to citation elements', async () => {
+      const {citationElements} = await renderGeneratedAnswer({
+        props: {disableCitationAnchoring: false},
+        generatedAnswerState: {
+          isVisible: true,
+          answer: 'Test answer',
+          citations: [
+            {
+              source: 'Source 1',
+              id: 'citation-1',
+              title: 'Citation 1',
+              uri: 'https://example.com',
+              permanentid: 'perm-1',
+              clickUri: 'https://example.com/click',
+              text: 'Citation text',
+            },
+          ],
+        },
+      });
+
+      expect(citationElements.length).toBe(1);
+      const citation = citationElements[0] as HTMLElement & {
+        disableCitationAnchoring: boolean;
+      };
+      expect(citation.disableCitationAnchoring).toBe(false);
+    });
+
+    it('should pass disableCitationAnchoring=true to citation elements when enabled', async () => {
+      const {citationElements} = await renderGeneratedAnswer({
+        props: {disableCitationAnchoring: true},
+        generatedAnswerState: {
+          isVisible: true,
+          answer: 'Test answer',
+          citations: [
+            {
+              source: 'Source 1',
+              id: 'citation-1',
+              title: 'Citation 1',
+              uri: 'https://example.com',
+              permanentid: 'perm-1',
+              clickUri: 'https://example.com/click',
+              text: 'Citation text',
+            },
+          ],
+        },
+      });
+
+      expect(citationElements.length).toBe(1);
+      const citation = citationElements[0] as HTMLElement & {
+        disableCitationAnchoring: boolean;
+      };
+      expect(citation.disableCitationAnchoring).toBe(true);
+    });
+
+    it('should pass disableCitationAnchoring to all citations when multiple exist', async () => {
+      const {citationElements} = await renderGeneratedAnswer({
+        props: {disableCitationAnchoring: true},
+        generatedAnswerState: {
+          isVisible: true,
+          answer: 'Test answer',
+          citations: [
+            {
+              source: 'Source 1',
+              id: 'citation-1',
+              title: 'Citation 1',
+              uri: 'https://example.com/1',
+              permanentid: 'perm-1',
+              clickUri: 'https://example.com/click/1',
+              text: 'Citation text 1',
+            },
+            {
+              source: 'Source 2',
+              id: 'citation-2',
+              title: 'Citation 2',
+              uri: 'https://example.com/2',
+              permanentid: 'perm-2',
+              clickUri: 'https://example.com/click/2',
+              text: 'Citation text 2',
+            },
+            {
+              source: 'Source 3',
+              id: 'citation-3',
+              title: 'Citation 3',
+              uri: 'https://example.com/3',
+              permanentid: 'perm-3',
+              clickUri: 'https://example.com/click/3',
+              text: 'Citation text 3',
+            },
+          ],
+        },
+      });
+
+      expect(citationElements.length).toBe(3);
+      citationElements.forEach((citationEl) => {
+        const citation = citationEl as HTMLElement & {
+          disableCitationAnchoring: boolean;
+        };
+        expect(citation.disableCitationAnchoring).toBe(true);
+      });
+    });
+  });
+
+  describe('tabsExcluded property', () => {
+    it('should render when tabsExcluded is empty', async () => {
+      const {container} = await renderGeneratedAnswer({
+        props: {tabsExcluded: []},
+        tabManagerState: {activeTab: 'AnyTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(container).toBeInTheDocument();
+    });
+
+    it('should render when active tab is not in tabsExcluded', async () => {
+      const {container} = await renderGeneratedAnswer({
+        props: {tabsExcluded: ['ExcludedTab1', 'ExcludedTab2']},
+        tabManagerState: {activeTab: 'AllowedTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(container).toBeInTheDocument();
+    });
+
+    it('should not render when active tab is in tabsExcluded', async () => {
+      const {container} = await renderGeneratedAnswer({
+        props: {tabsExcluded: ['ExcludedTab1', 'ExcludedTab2']},
+        tabManagerState: {activeTab: 'ExcludedTab1'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(container).not.toBeInTheDocument();
+    });
+
+    it('should handle single excluded tab', async () => {
+      const {container} = await renderGeneratedAnswer({
+        props: {tabsExcluded: ['OnlyExcludedTab']},
+        tabManagerState: {activeTab: 'OnlyExcludedTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(container).not.toBeInTheDocument();
+    });
+
+    it('should hide when switching to an excluded tab', async () => {
+      const {element, container} = await renderGeneratedAnswer({
+        props: {tabsExcluded: ['ExcludedTab']},
+        tabManagerState: {activeTab: 'AllowedTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(container).toBeInTheDocument();
+
+      // Simulate tab change
+      element.tabManagerState = {activeTab: 'ExcludedTab'};
+      await element.updateComplete;
+
+      expect(container).not.toBeInTheDocument();
+    });
+
+    it('should show when switching from excluded to allowed tab', async () => {
+      const {element} = await renderGeneratedAnswer({
+        props: {tabsExcluded: ['ExcludedTab']},
+        tabManagerState: {activeTab: 'ExcludedTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      const containerBefore =
+        element.shadowRoot?.querySelector('[part="container"]');
+      expect(containerBefore).not.toBeInTheDocument();
+
+      // Simulate tab change to allowed tab
+      element.tabManagerState = {activeTab: 'AllowedTab'};
+      await element.updateComplete;
+
+      const containerAfter =
+        element.shadowRoot?.querySelector('[part="container"]');
+      expect(containerAfter).toBeInTheDocument();
+    });
+
+    it('should call disable() when switching to excluded tab', async () => {
+      const {element} = await renderGeneratedAnswer({
+        props: {tabsExcluded: ['ExcludedTab']},
+        tabManagerState: {activeTab: 'AllowedTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      const disableSpy = vi.spyOn(element.generatedAnswer, 'disable');
+
+      // Simulate tab change to excluded tab
+      element.tabManagerState = {activeTab: 'ExcludedTab'};
+      await element.updateComplete;
+
+      expect(disableSpy).toHaveBeenCalled();
+    });
+
+    it('should call enable() when switching to allowed tab', async () => {
+      const {element} = await renderGeneratedAnswer({
+        props: {tabsExcluded: ['ExcludedTab']},
+        tabManagerState: {activeTab: 'ExcludedTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      const enableSpy = vi.spyOn(element.generatedAnswer, 'enable');
+
+      // Simulate tab change to allowed tab
+      element.tabManagerState = {activeTab: 'AllowedTab'};
+      await element.updateComplete;
+
+      expect(enableSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('tabsIncluded property', () => {
+    it('should render when tabsIncluded is empty (all tabs allowed)', async () => {
+      const {container} = await renderGeneratedAnswer({
+        props: {tabsIncluded: []},
+        tabManagerState: {activeTab: 'AnyTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(container).toBeInTheDocument();
+    });
+
+    it('should render when active tab is in tabsIncluded', async () => {
+      const {container} = await renderGeneratedAnswer({
+        props: {tabsIncluded: ['IncludedTab1', 'IncludedTab2']},
+        tabManagerState: {activeTab: 'IncludedTab1'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(container).toBeInTheDocument();
+    });
+
+    it('should not render when active tab is not in tabsIncluded', async () => {
+      const {container} = await renderGeneratedAnswer({
+        props: {tabsIncluded: ['IncludedTab1', 'IncludedTab2']},
+        tabManagerState: {activeTab: 'OtherTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(container).not.toBeInTheDocument();
+    });
+
+    it('should handle single included tab', async () => {
+      const {container} = await renderGeneratedAnswer({
+        props: {tabsIncluded: ['OnlyIncludedTab']},
+        tabManagerState: {activeTab: 'OnlyIncludedTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(container).toBeInTheDocument();
+    });
+
+    it('should hide when switching to a non-included tab', async () => {
+      const {element, container} = await renderGeneratedAnswer({
+        props: {tabsIncluded: ['IncludedTab']},
+        tabManagerState: {activeTab: 'IncludedTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(container).toBeInTheDocument();
+
+      // Simulate tab change to non-included tab
+      element.tabManagerState = {activeTab: 'OtherTab'};
+      await element.updateComplete;
+
+      expect(container).not.toBeInTheDocument();
+    });
+
+    it('should show when switching to an included tab', async () => {
+      const {element} = await renderGeneratedAnswer({
+        props: {tabsIncluded: ['IncludedTab1', 'IncludedTab2']},
+        tabManagerState: {activeTab: 'OtherTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      const containerBefore =
+        element.shadowRoot?.querySelector('[part="container"]');
+      expect(containerBefore).not.toBeInTheDocument();
+
+      // Simulate tab change to included tab
+      element.tabManagerState = {activeTab: 'IncludedTab2'};
+      await element.updateComplete;
+
+      const containerAfter =
+        element.shadowRoot?.querySelector('[part="container"]');
+      expect(containerAfter).toBeInTheDocument();
+    });
+
+    it('should call disable() when switching to non-included tab', async () => {
+      const {element} = await renderGeneratedAnswer({
+        props: {tabsIncluded: ['IncludedTab']},
+        tabManagerState: {activeTab: 'IncludedTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      const disableSpy = vi.spyOn(element.generatedAnswer, 'disable');
+
+      // Simulate tab change to non-included tab
+      element.tabManagerState = {activeTab: 'OtherTab'};
+      await element.updateComplete;
+
+      expect(disableSpy).toHaveBeenCalled();
+    });
+
+    it('should call enable() when switching to included tab', async () => {
+      const {element} = await renderGeneratedAnswer({
+        props: {tabsIncluded: ['IncludedTab']},
+        tabManagerState: {activeTab: 'OtherTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      const enableSpy = vi.spyOn(element.generatedAnswer, 'enable');
+
+      // Simulate tab change to included tab
+      element.tabManagerState = {activeTab: 'IncludedTab'};
+      await element.updateComplete;
+
+      expect(enableSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('tabs properties conflict', () => {
+    let consoleWarnSpy: ReturnType<typeof vi.spyOn>;
+
+    beforeEach(() => {
+      consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    });
+
+    it('should log warning when both tabsIncluded and tabsExcluded are set', async () => {
+      await renderGeneratedAnswer({
+        props: {
+          tabsIncluded: ['IncludedTab'],
+          tabsExcluded: ['ExcludedTab'],
+        },
+        tabManagerState: {activeTab: 'AnyTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        'Values for both "tabs-included" and "tabs-excluded" have been provided. This could lead to unexpected behaviors.'
+      );
+    });
+
+    it('should prioritize tabsExcluded when both properties are set', async () => {
+      const {container} = await renderGeneratedAnswer({
+        props: {
+          tabsIncluded: ['IncludedTab'],
+          tabsExcluded: ['IncludedTab'], // Same tab in both - excluded should win
+        },
+        tabManagerState: {activeTab: 'IncludedTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      // According to shouldDisplayOnCurrentTab, excludes take precedence
+      expect(container).not.toBeInTheDocument();
+    });
+
+    it('should not log warning when only tabsIncluded is set', async () => {
+      await renderGeneratedAnswer({
+        props: {tabsIncluded: ['IncludedTab']},
+        tabManagerState: {activeTab: 'IncludedTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(consoleWarnSpy).not.toHaveBeenCalled();
+    });
+
+    it('should not log warning when only tabsExcluded is set', async () => {
+      await renderGeneratedAnswer({
+        props: {tabsExcluded: ['ExcludedTab']},
+        tabManagerState: {activeTab: 'AllowedTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(consoleWarnSpy).not.toHaveBeenCalled();
+    });
+
+    it('should not log warning when both properties are empty', async () => {
+      await renderGeneratedAnswer({
+        props: {tabsIncluded: [], tabsExcluded: []},
+        tabManagerState: {activeTab: 'AnyTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(consoleWarnSpy).not.toHaveBeenCalled();
+    });
+  });
+});

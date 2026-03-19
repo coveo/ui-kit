@@ -5,6 +5,7 @@ import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 import {SlotsForNoShadowDOMMixin} from '../../../mixins/slots-for-no-shadow-dom-mixin';
+import '@/src/components/common/atomic-tab-bar/atomic-tab-bar';
 
 /**
  * @internal

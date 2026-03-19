@@ -54,6 +54,8 @@ export class AtomicBreadbox
 {
   static styles: CSSResultGroup = [
     css`
+      @reference '../../../utils/tailwind.global.tw.css';
+
       [part='breadcrumb-label'].excluded,
       [part='breadcrumb-value'].excluded {
         text-decoration: line-through;
@@ -61,6 +63,14 @@ export class AtomicBreadbox
       }
     `,
   ];
+
+  private static readonly propsSchema = new Schema({
+    pathLimit: new NumberValue({
+      default: 3,
+      min: 1,
+      required: false,
+    }),
+  });
 
   private resizeObserver?: ResizeObserver;
   private lastRemovedBreadcrumbIndex = 0;
@@ -115,13 +125,7 @@ export class AtomicBreadbox
     new ValidatePropsController(
       this,
       () => ({pathLimit: this.pathLimit}),
-      new Schema({
-        pathLimit: new NumberValue({
-          default: 3,
-          min: 1,
-          required: false,
-        }),
-      })
+      AtomicBreadbox.propsSchema
     );
   }
 
@@ -158,7 +162,7 @@ export class AtomicBreadbox
     const breadcrumbs = this.allBreadcrumbs;
 
     if (!breadcrumbs.length) {
-      return html`${nothing}`;
+      return nothing;
     }
 
     return html`${renderBreadcrumbContainer({

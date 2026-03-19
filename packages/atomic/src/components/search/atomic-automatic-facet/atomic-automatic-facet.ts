@@ -184,7 +184,7 @@ export class AtomicAutomaticFacet
   @errorGuard()
   render() {
     if (this.searchStatus.state.hasError) {
-      return html`${nothing}`;
+      return nothing;
     }
 
     return renderFacetContainer()(html`

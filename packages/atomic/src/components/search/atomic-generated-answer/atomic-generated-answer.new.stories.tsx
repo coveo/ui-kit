@@ -38,14 +38,29 @@ const layoutDecorator: Decorator = (story) => html`
   </atomic-search-layout>
 `;
 
-const {decorator, play} = wrapInSearchInterface({
-  config: {
-    accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-    organizationId: 'searchuisamples',
-    search: {
-      pipeline: 'genqatest',
-    },
+const baseConfig = {
+  accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+  organizationId: 'searchuisamples',
+  search: {
+    pipeline: 'genqatest',
   },
+};
+
+const configWithLegacyAnalytics = {
+  ...baseConfig,
+  analytics: {
+    analyticsMode: 'legacy' as const,
+  },
+};
+
+// Use base config for decorator (shared by all stories)
+const {decorator, play} = wrapInSearchInterface({
+  config: baseConfig,
+});
+
+// Legacy config play function for specific stories
+const {play: playWithLegacyAnalytics} = wrapInSearchInterface({
+  config: configWithLegacyAnalytics,
 });
 
 const meta: Meta = {
@@ -88,5 +103,18 @@ export const DisableCitationAnchoring: Story = {
   name: 'Citation anchoring disabled',
   args: {
     'disable-citation-anchoring': true,
+  },
+};
+
+export const WithLegacyAnalytics: Story = {
+  name: 'With Legacy Analytics',
+  play: async (storyContext) => {
+    await playWithLegacyAnalytics(storyContext);
+    const searchBox =
+      await storyContext.canvas.findAllByShadowPlaceholderText('Search');
+    await storyContext.userEvent.type(
+      searchBox[0],
+      'how to resolve netflix connection with tivo{enter}'
+    );
   },
 };

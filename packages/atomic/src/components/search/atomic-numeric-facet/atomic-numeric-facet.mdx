@@ -1,0 +1,41 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicNumericFacetStories from './atomic-numeric-facet.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={ AtomicNumericFacetStories } />
+
+<AtomicDocTemplate
+  stories={ AtomicNumericFacetStories }
+  githubPath="search/atomic-numeric-facet/atomic-numeric-facet.ts"
+  tagName="atomic-numeric-facet"
+  className="AtomicNumericFacet"
+>
+
+This component is typically placed within the "facets" section of the layout. It displays numeric ranges as checkboxes or links, commonly used for filtering by price, ratings, or view counts.
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-layout-section section="facets">
+    <atomic-facet-manager>
+
+      <atomic-numeric-facet
+        field="ec_price"
+        label="Price"
+        with-input="integer"
+      ></atomic-numeric-facet>
+
+    </atomic-facet-manager>
+  </atomic-layout-section>
+</atomic-search-interface>
+```
+
+## UX Best Practices
+
+- Checkboxes let users select multiple values and are the most commonly used selection, being more visual and presenting more values in small spaces.
+- Links allow the user to select only one value at a time, behaving like a normal navigational link.
+- Best used in cases where the value has units, such as height, width, screen sizes, etc.
+
+## Reference
+[Don't Lose Face with Facets](https://source.coveo.com/2018/04/18/facets/)
+</AtomicDocTemplate>

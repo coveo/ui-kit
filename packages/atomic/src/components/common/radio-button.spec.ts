@@ -15,7 +15,7 @@ describe('#renderRadioButton', () => {
     );
   };
 
-  it('should render a radio button with the correct attributes', async () => {
+  it('should render a radio button with the correct attributes & properties', async () => {
     const props = {
       text: 'Test Radio Button',
       checked: true,
@@ -30,6 +30,7 @@ describe('#renderRadioButton', () => {
     expect(input).toBeInTheDocument();
     expect(input.name).toBe('test-group');
     expect(input.checked).toBe(true);
+    expect(input.getAttribute('checked')).toBe('');
     expect(input.getAttribute('aria-label')).toBe('Test Radio Button');
     expect(input.value).toBe('Test Radio Button');
     expect(input.classList.contains('selected')).toBe(true);
@@ -42,7 +43,9 @@ describe('#renderRadioButton', () => {
     };
 
     const element = await renderComponent(props);
-    const input = element.querySelector('input[type="radio"]')!;
+    const input = element.querySelector<HTMLInputElement>(
+      'input[type="radio"]'
+    )!;
     input.click();
 
     expect(onChecked).toHaveBeenCalled();
@@ -92,11 +95,6 @@ describe('#renderRadioButton', () => {
       new KeyboardEvent('keydown', {key: 'ArrowLeft', bubbles: true})
     );
     expect(document.activeElement).toBe(inputs[3]);
-
-    inputs[3].dispatchEvent(
-      new KeyboardEvent('keydown', {key: 'Tab', shiftKey: true, bubbles: true})
-    );
-    expect(document.activeElement).toBe(inputs[2]);
   });
 
   it('should create a ripple effect on mousedown', async () => {

@@ -12,7 +12,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-refine-toggle',
-  title: 'Search/RefineToggle',
+  title: 'Search/Refine Toggle',
   id: 'atomic-refine-toggle',
   render: (args) => template(args),
   parameters: {
@@ -30,7 +30,6 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-refine-toggle',
   decorators: [
     (story) => html`
       ${story()}
@@ -77,17 +76,7 @@ export const WithAtomicExternals: Story = {
         </atomic-layout-section>
         <atomic-facet field="author" label="facet8"></atomic-facet>
       </atomic-external>
-      <atomic-external selector="#bar">
-        <h1>External 2</h1>
-        <p>Not bound to the search interface</p>
-        <atomic-layout-section section="horizontal-facets">
-          <atomic-facet field="author" label="facet01"></atomic-facet>
-        </atomic-layout-section>
-        <atomic-layout-section section="facets">
-          <atomic-facet field="author" label="facet02"></atomic-facet>
-        </atomic-layout-section>
-        <atomic-facet field="author" label="facet03"></atomic-facet>
-      </atomic-external>
+ 
       <atomic-external selector="#foo">
         <h1>External 3</h1>
         <atomic-layout-section section="horizontal-facets">

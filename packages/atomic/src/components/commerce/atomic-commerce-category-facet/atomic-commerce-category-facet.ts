@@ -444,7 +444,7 @@ export class AtomicCommerceCategoryFacet
     const {hasError, firstRequestExecuted} = this.summaryState;
 
     if (!firstRequestExecuted || hasError || values.length === 0) {
-      return html`${nothing}`;
+      return nothing;
     }
 
     return renderFacetContainer()(html`

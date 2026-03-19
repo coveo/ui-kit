@@ -1,4 +1,4 @@
-import {html, LitElement, nothing} from 'lit';
+import {LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {
   defaultCurrencyFormatter,
@@ -31,19 +31,17 @@ export class AtomicFormatCurrency
   connectedCallback() {
     super.connectedCallback();
     this.format = defaultCurrencyFormatter(this.currency);
-    try {
-      dispatchNumberFormatEvent(
-        (value, languages) => this.format(value, languages),
-        this
-      );
-    } catch (error) {
+    dispatchNumberFormatEvent(
+      (value, languages) => this.format(value, languages),
+      this
+    ).catch((error) => {
       this.error = error as Error;
-    }
+    });
   }
 
   @errorGuard()
   render() {
-    return html`${nothing}`;
+    return nothing;
   }
 }
 

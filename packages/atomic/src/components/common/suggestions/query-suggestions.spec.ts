@@ -94,6 +94,29 @@ describe('#renderQuerySuggestion', () => {
     expect(icon).not.toBeInTheDocument();
   });
 
+  it('should render the icon when alwaysShowIcon is true even if hasMultipleKindOfSuggestions is false', async () => {
+    const suggestion = await renderSuggestion({
+      hasMultipleKindOfSuggestions: false,
+      alwaysShowIcon: true,
+    });
+
+    const icon = suggestion.querySelector('atomic-icon');
+
+    expect(icon).toBeInTheDocument();
+    expect(icon).toHaveAttribute('part', 'query-suggestion-icon');
+  });
+
+  it('should not render the icon when alwaysShowIcon is false and hasMultipleKindOfSuggestions is false', async () => {
+    const suggestion = await renderSuggestion({
+      hasMultipleKindOfSuggestions: false,
+      alwaysShowIcon: false,
+    });
+
+    const icon = suggestion.querySelector('atomic-icon');
+
+    expect(icon).not.toBeInTheDocument();
+  });
+
   it('should render the highlighted value if hasQuery is true', async () => {
     const suggestion = await renderSuggestion({hasQuery: true});
 

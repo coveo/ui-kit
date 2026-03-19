@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noExplicitAny: unit tests */
 import {buildMockCitation} from '../../test/mock-citation.js';
 import {
   generateAnswer,
@@ -26,11 +27,30 @@ vi.mock('./generated-answer-request.js', () => ({
       clientId: 'test-client-id',
     },
   })),
+  constructGenerateHeadAnswerParams: vi.fn(() => ({
+    q: 'test query',
+    searchHub: 'default',
+    pipeline: 'default',
+    locale: 'en',
+    analytics: {
+      actionCause: 'searchboxSubmit',
+      clientId: 'test-client-id',
+    },
+  })),
 }));
 
 vi.mock('../../api/knowledge/stream-answer-api.js', () => ({
   fetchAnswer: vi.fn(() => ({type: 'mocked/fetchAnswer'})),
 }));
+
+vi.mock(
+  '../../api/knowledge/answer-generation/endpoints/answer/answer-endpoint.js',
+  () => ({
+    initiateAnswerEndpoint: vi.fn(() => ({
+      type: 'mocked/initiateAnswerEndpoint',
+    })),
+  })
+);
 
 vi.mock('../search/search-actions.js', () => ({
   updateSearchAction: vi.fn(() => ({type: 'search/updateSearchAction'})),
@@ -137,20 +157,28 @@ describe('generated answer', () => {
       return action;
     });
 
+    const mockNavigatorContext = {};
+    const mockLogger = {warn: vi.fn()};
+    const mockExtra = {
+      navigatorContext: mockNavigatorContext,
+      logger: mockLogger,
+    } as any;
+    const mockGetState = vi.fn(
+      () =>
+        ({
+          generatedAnswer: {
+            answerConfigurationId: 'test-config-id',
+          },
+          searchHub: 'default',
+          pipeline: 'default',
+        }) as any
+    );
+
+    beforeEach(() => {
+      vi.clearAllMocks();
+    });
+
     it('should dispatch resetAnswer', async () => {
-      const mockGetState = vi.fn(() => ({
-        generatedAnswer: {
-          answerConfigurationId: 'test-config-id',
-        },
-      }));
-
-      const mockNavigatorContext = {};
-      const mockLogger = {warn: vi.fn()};
-      const mockExtra = {
-        navigatorContext: mockNavigatorContext,
-        logger: mockLogger,
-      };
-
       const thunk = generateAnswer();
       await thunk(mockDispatch, mockGetState, mockExtra);
 
@@ -161,19 +189,6 @@ describe('generated answer', () => {
     });
 
     it('should dispatch setAnswerApiQueryParams with constructed parameters when answerConfigurationId is present', async () => {
-      const mockGetState = vi.fn(() => ({
-        generatedAnswer: {
-          answerConfigurationId: 'test-config-id',
-        },
-      }));
-
-      const mockNavigatorContext = {};
-      const mockLogger = {warn: vi.fn()};
-      const mockExtra = {
-        navigatorContext: mockNavigatorContext,
-        logger: mockLogger,
-      };
-
       const thunk = generateAnswer();
       await thunk(mockDispatch, mockGetState, mockExtra);
 
@@ -188,14 +203,16 @@ describe('generated answer', () => {
     });
 
     it('should log warning when answerConfigurationId is missing', async () => {
-      const mockDispatch = vi.fn();
-      const mockGetState = vi.fn(() => ({
-        generatedAnswer: {
-          answerConfigurationId: undefined,
-        },
-      }));
-      const mockLogger = {warn: vi.fn()};
-      const mockExtra = {navigatorContext: {}, logger: mockLogger};
+      const mockGetState = vi.fn(
+        () =>
+          ({
+            generatedAnswer: {
+              answerConfigurationId: undefined,
+            },
+            searchHub: 'default',
+            pipeline: 'default',
+          }) as any
+      );
 
       const thunk = generateAnswer();
       await thunk(mockDispatch, mockGetState, mockExtra);

@@ -1,7 +1,7 @@
 {
   "name": "ui-kit",
   "private": true,
-  "version": "3.0.80",
+  "version": "3.0.94",
   "scripts": {
     "postinstall": "husky install",
     "reset:install": "git checkout origin/main pnpm-lock.yaml && pnpm install",
@@ -48,7 +48,7 @@
     "playwright": "catalog:",
     "publint": "0.3.12",
     "semver": "7.7.2",
-    "turbo": "2.5.5",
+    "turbo": "2.8.15",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },
@@ -61,13 +61,9 @@
   },
   "pnpm": {
     "patchedDependencies": {
-      "@stencil/angular-output-target@0.8.4": "patches/@stencil+angular-output-target+0.8.4.patch",
       "@stencil/core@4.20.0": "patches/@stencil+core+4.20.0.patch",
       "@wc-toolkit/storybook-helpers@10.0.0": "patches/@wc-toolkit+storybook-helpers+10.0.0.patch",
-      "fix-esm-import-path@1.10.1": "patches/fix-esm-import-path+1.10.1.patch",
-      "jest-environment-jsdom@29.7.0": "patches/jest-environment-jsdom+29.7.0.patch",
-      "@stencil/react-output-target@0.5.3": "patches/@stencil__react-output-target@0.5.3.patch",
-      "dayjs": "patches/dayjs.patch"
+      "jest-environment-jsdom@29.7.0": "patches/jest-environment-jsdom+29.7.0.patch"
     },
     "overrides": {
       "braces": "3.0.3",
@@ -78,7 +74,7 @@
     }
   },
   "engines": {
-    "node": "^22.14.0",
+    "node": "^22.14.0 || ^24.11.0",
     "pnpm": ">=10.0.0"
   },
   "packageManager": "pnpm@10.24.0"

@@ -99,5 +99,12 @@
     "observatory": {
       "no_endpoint": true
     }
+  },
+  "hooks": {
+    "post":{
+      "tag_after_deployment": {
+        "enabled": false
+      }
+    }
   }
 }

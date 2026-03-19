@@ -1,13 +1,8 @@
 import type {AtomicCommerceRecommendationList} from '@coveo/atomic/components';
-import type {
-  ItemDisplayBasicLayout,
-  ItemDisplayDensity,
-  ItemDisplayImageSize,
-} from '@coveo/atomic/loader';
 import type {Product} from '@coveo/headless/commerce';
 import React, {type JSX, useEffect, useRef} from 'react';
+import {flushSync} from 'react-dom';
 import {createRoot} from 'react-dom/client';
-import {renderToString} from 'react-dom/server';
 import {
   AtomicProductLink,
   AtomicCommerceRecommendationList as LitAtomicCommerceRecommendationList,
@@ -22,15 +17,15 @@ interface AtomicCommerceRecommendationListProps {
   /**
    * The spacing of various elements in the recommendation list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
    */
-  density?: ItemDisplayDensity;
+  density?: AtomicCommerceRecommendationList['density'];
   /**
    * The desired layout to use when displaying recommendations. Layouts affect how many products to display per row and how visually distinct they are from each other.
    */
-  display?: ItemDisplayBasicLayout;
+  display?: AtomicCommerceRecommendationList['display'];
   /**
    * The expected size of the image displayed for recommendations.
    */
-  imageSize?: ItemDisplayImageSize;
+  imageSize?: AtomicCommerceRecommendationList['imageSize'];
   /**
    * The desired number of placeholders to display while the recommendation list is loading.
    */
@@ -77,18 +72,24 @@ export const ListWrapper: React.FC<WrapperProps> = (props) => {
       (product, root, linkContainer) => {
         const templateResult = template(product as Product);
         if (hasLinkTemplate(templateResult)) {
-          createRoot(linkContainer!).render(templateResult.linkTemplate);
-          createRoot(root).render(templateResult.contentTemplate);
-          return renderToString(templateResult.contentTemplate);
+          const linkRoot = createRoot(linkContainer!);
+          linkRoot.render(templateResult.linkTemplate);
+          const contentRoot = createRoot(root);
+          flushSync(() => {
+            contentRoot.render(templateResult.contentTemplate);
+          });
+          return root.innerHTML;
         } else {
-          createRoot(root).render(templateResult);
-          otherProps.display === 'grid'
-            ? createRoot(linkContainer!).render(
-                <AtomicProductLink></AtomicProductLink>
-              )
-            : // biome-ignore lint/complexity/noUselessFragments: <>
-              createRoot(linkContainer!).render(<></>);
-          return renderToString(templateResult);
+          const contentRoot = createRoot(root);
+          const linkRoot = createRoot(linkContainer!);
+          flushSync(() => {
+            contentRoot.render(templateResult);
+            otherProps.display === 'grid'
+              ? linkRoot.render(<AtomicProductLink></AtomicProductLink>)
+              : // biome-ignore lint/complexity/noUselessFragments: <>
+                linkRoot.render(<></>);
+          });
+          return root.innerHTML;
         }
       }
     );

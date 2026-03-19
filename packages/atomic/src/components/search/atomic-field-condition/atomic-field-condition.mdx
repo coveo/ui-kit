@@ -27,22 +27,45 @@ If you set both `must-match-*` and `must-not-match-*` for the same field with ov
   <atomic-field-condition if-defined="author">
     <span>Written by: <atomic-result-text field="author"></atomic-result-text></span>
   </atomic-field-condition>
-  
+
   <!-- Show badge for PDF or Word documents -->
   <atomic-field-condition must-match-filetype="pdf,docx">
     <span class="document-badge">Document</span>
   </atomic-field-condition>
-  
+
   <!-- Show if author exists AND source is not internal -->
   <atomic-field-condition if-defined="author" must-not-match-source="internal">
     <span>External author: <atomic-result-text field="author"></atomic-result-text></span>
   </atomic-field-condition>
-  
+
   <!-- This will never render (conflicting conditions) -->
   <atomic-field-condition must-match-filetype="pdf" must-not-match-filetype="pdf">
     <span>Impossible</span>
   </atomic-field-condition>
 </atomic-result-template>
+```
+
+**Casing:** Kebab-case attribute names for camelCase result properties in `must-match-*` and `must-not-match-*`. For example, when targeting the `isRecommendation` property, use `must-match-is-recommendation`:
+
+```html
+<atomic-field-condition must-match-is-recommendation="true">
+  <!-- ... -->
+</atomic-field-condition>
+```
+
+**Rendering behavior:** The component initially renders itself and its children regardless of whether the condition is satisfied. If the condition isn't met, it removes itself and its children from the DOM. Be mindful when nesting components that expect defined fields, as they may briefly render and then be removed, potentially logging warnings if a referenced field is undefined.
+
+```html
+<atomic-field-condition if-not-defined="thumbnailurl">
+  <atomic-result-icon class="icon"></atomic-result-icon>
+  <!-- Renders and stays when thumbnailurl isn't defined -->
+  <!-- Nested component is safe here because it doesn't reference thumbnailurl -->
+</atomic-field-condition>
+
+<atomic-field-condition if-defined="thumbnailurl">
+  <!-- This first renders and is removed if thumbnailurl isn't defined, which can produce a console warning -->
+  <atomic-result-image field="thumbnailurl"></atomic-result-image>
+</atomic-field-condition>
 ```
 
 </AtomicDocTemplate>

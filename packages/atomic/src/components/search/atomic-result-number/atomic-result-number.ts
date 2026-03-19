@@ -26,6 +26,13 @@ export class AtomicResultNumber
   extends LightDomMixin(InitializeBindingsMixin(LitElement))
   implements InitializableComponent<Bindings>
 {
+  private static readonly propsSchema = new Schema({
+    field: new StringValue({
+      emptyAllowed: false,
+      required: true,
+    }),
+  });
+
   /**
    * The name of the numeric result field whose value to display.
    * The component looks for this field in the `Result` object, then in `Result.raw` if not found.
@@ -46,12 +53,7 @@ export class AtomicResultNumber
     new ValidatePropsController(
       this,
       () => ({field: this.field}),
-      new Schema({
-        field: new StringValue({
-          emptyAllowed: false,
-          required: true,
-        }),
-      })
+      AtomicResultNumber.propsSchema
     );
   }
 

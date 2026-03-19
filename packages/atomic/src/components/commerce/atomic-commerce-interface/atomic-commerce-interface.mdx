@@ -22,4 +22,14 @@ This component must wrap the entire commerce layout and be placed at the root of
 </atomic-commerce-interface>
 ```
 
+### Requirements for `type`
+
+The `type` attribute on `atomic-commerce-interface` can be set to `search` or `product-listing`.
+When set to `product-listing` you need to ensure that the `view` url of the configuration
+[`context`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Commerce.ContextOptions.html) is pointing to a configured listing page.
+
+To see this failure state that will result of using the `product-listing` type without a correct `context` configuration,  change the `type` to
+`product-listing` in the [With Product List](/story/atomic-commerce-interface--with-product-list) story.
+
 </AtomicDocTemplate>
+

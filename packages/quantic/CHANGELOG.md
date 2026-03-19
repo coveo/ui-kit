@@ -1,3 +1,42 @@
+## <small>3.36.3 (2026-02-04)</small>
+
+* docs(quantic): vale language fixes (#6857) ([26448b5](https://github.com/coveo/ui-kit/commits/26448b5)), closes [#6857](https://github.com/coveo/ui-kit/issues/6857)
+* doc(quantic): link fix (#7033) ([916308c](https://github.com/coveo/ui-kit/commits/916308c)), closes [#7033](https://github.com/coveo/ui-kit/issues/7033)
+
+
+
+## <small>3.36.1 (2026-01-28)</small>
+
+* feat(quantic): Added properties and slot to quanticCitation for actionable citations (#6952) ([94c6df1](https://github.com/coveo/ui-kit/commits/94c6df1)), closes [#6952](https://github.com/coveo/ui-kit/issues/6952)
+
+
+
+## <small>3.35.1 (2026-01-21)</small>
+
+* fix(quantic): HIP overflows to the right issue (#6940) ([1625316](https://github.com/coveo/ui-kit/commits/1625316)), closes [#6940](https://github.com/coveo/ui-kit/issues/6940)
+
+
+
+## 3.35.0 (2026-01-14)
+
+* feat(quantic): Re-add the delay behaviour of tooltip on citation hover (#6775) ([52ccf0e](https://github.com/coveo/ui-kit/commits/52ccf0e)), closes [#6775](https://github.com/coveo/ui-kit/issues/6775)
+* chore: ensuring script samples are correct (#6798) ([884a3c6](https://github.com/coveo/ui-kit/commits/884a3c6)), closes [#6798](https://github.com/coveo/ui-kit/issues/6798)
+
+
+
+## <small>3.34.2 (2026-01-07)</small>
+
+* [Version Bump][skip ci]: ui-kit publish ([b2a83c4](https://github.com/coveo/ui-kit/commits/b2a83c4))
+* Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
+
+
+
+## <small>3.34.1 (2026-01-06)</small>
+
+* Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
+
+
+
 ## 3.34.0 (2025-12-10)
 
 * fix(quantic): better handle pushing recent results to avoid salesforce proxy extensibility errors (# ([c0b0b71](https://github.com/coveo/ui-kit/commits/c0b0b71)), closes [#6706](https://github.com/coveo/ui-kit/issues/6706)

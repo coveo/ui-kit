@@ -14,6 +14,14 @@ export interface ProductEnrichmentState {
    * The error message if the request failed.
    */
   error: CommerceAPIErrorStatusResponse | null;
+  /**
+   * The product ID used for fetching badges.
+   */
+  productId?: string;
+  /**
+   * The placement IDs used for fetching badges.
+   */
+  placementIds: string[];
 }
 
 export function getProductEnrichmentInitialState(): ProductEnrichmentState {
@@ -21,5 +29,7 @@ export function getProductEnrichmentInitialState(): ProductEnrichmentState {
     products: [],
     isLoading: false,
     error: null,
+    productId: undefined,
+    placementIds: [],
   };
 }

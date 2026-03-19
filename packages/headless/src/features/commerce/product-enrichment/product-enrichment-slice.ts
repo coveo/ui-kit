@@ -1,6 +1,9 @@
 import {createReducer} from '@reduxjs/toolkit';
 import type {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
-import {fetchBadges} from './product-enrichment-actions.js';
+import {
+  fetchBadges,
+  registerProductEnrichmentOptions,
+} from './product-enrichment-actions.js';
 import {
   getProductEnrichmentInitialState,
   type ProductEnrichmentState,
@@ -10,6 +13,10 @@ export const productEnrichmentReducer = createReducer(
   getProductEnrichmentInitialState(),
   (builder) => {
     builder
+      .addCase(registerProductEnrichmentOptions, (state, action) => {
+        state.productId = action.payload.productId;
+        state.placementIds = action.payload.placementIds ?? [];
+      })
       .addCase(fetchBadges.pending, (state) => {
         state.isLoading = true;
         state.error = null;

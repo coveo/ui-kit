@@ -68,6 +68,7 @@ export class AtomicFacetDateInput
   private validateParentComponent(): void {
     const validParents = [
       'atomic-commerce-timeframe-facet',
+      'atomic-insight-timeframe-facet',
       'atomic-timeframe-facet',
     ];
     const parentElement = this.parentElement;
@@ -126,6 +127,8 @@ export class AtomicFacetDateInput
         endInclusive: rangeRequest.endInclusive,
       },
       bubbles: true,
+      composed: true,
+      cancelable: true,
     };
 
     this.dispatchEvent(

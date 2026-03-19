@@ -86,7 +86,7 @@ export class TabManagerPageObject extends BasePageObject {
   }
 
   tabButtons(value?: string) {
-    const baseLocator = this.page.getByLabel(/tab for .*/);
+    const baseLocator = this.page.getByRole('listitem');
     return value ? baseLocator.filter({hasText: value}) : baseLocator;
   }
 

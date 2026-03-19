@@ -1,4 +1,4 @@
-import {html, LitElement, nothing} from 'lit';
+import {LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {
   dispatchNumberFormatEvent,
@@ -69,19 +69,17 @@ export class AtomicFormatNumber
 
   connectedCallback() {
     super.connectedCallback();
-    try {
-      dispatchNumberFormatEvent(
-        (value, languages) => this.format(value, languages),
-        this
-      );
-    } catch (error) {
+    dispatchNumberFormatEvent(
+      (value, languages) => this.format(value, languages),
+      this
+    ).catch((error) => {
       this.error = error as Error;
-    }
+    });
   }
 
   @errorGuard()
   render() {
-    return html`${nothing}`;
+    return nothing;
   }
 }
 

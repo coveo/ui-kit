@@ -7,6 +7,7 @@ import {change} from '../../../history/history-actions.js';
 import {getHistoryInitialState} from '../../../history/history-state.js';
 import {executeSearch} from '../../../search/search-actions.js';
 import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions.js';
+import {updateActiveTab} from '../../../tab-set/tab-set-actions.js';
 import * as FacetReducers from '../../generic/facet-reducer-helpers.js';
 import * as RangeFacetReducers from '../generic/range-facet-reducers.js';
 import {
@@ -186,5 +187,61 @@ describe('numeric-facet-set slice', () => {
     expect(
       RangeFacetReducers.onRangeFacetRequestFulfilled
     ).toHaveBeenCalledTimes(1);
+  });
+
+  describe('#updateActiveTab', () => {
+    it('should deselect values for a facet with tabsIncluded when switching to a non-included tab', () => {
+      vi.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll').mockReset();
+
+      state['facet1'] = buildMockNumericFacetSlice({
+        tabs: {included: ['tab1', 'tab2']},
+      });
+
+      numericFacetSetReducer(state, updateActiveTab('tab3'));
+
+      expect(
+        RangeFacetReducers.handleRangeFacetDeselectAll
+      ).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not deselect values for a facet with tabsIncluded when switching to an included tab', () => {
+      vi.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll').mockReset();
+
+      state['facet1'] = buildMockNumericFacetSlice({
+        tabs: {included: ['tab1', 'tab2']},
+      });
+
+      numericFacetSetReducer(state, updateActiveTab('tab1'));
+
+      expect(
+        RangeFacetReducers.handleRangeFacetDeselectAll
+      ).not.toHaveBeenCalled();
+    });
+
+    it('should deselect values for a facet with tabsExcluded when switching to an excluded tab', () => {
+      vi.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll').mockReset();
+
+      state['facet1'] = buildMockNumericFacetSlice({
+        tabs: {excluded: ['tab3']},
+      });
+
+      numericFacetSetReducer(state, updateActiveTab('tab3'));
+
+      expect(
+        RangeFacetReducers.handleRangeFacetDeselectAll
+      ).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not deselect values for a facet without tabs configuration', () => {
+      vi.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll').mockReset();
+
+      state['facet1'] = buildMockNumericFacetSlice();
+
+      numericFacetSetReducer(state, updateActiveTab('anyTab'));
+
+      expect(
+        RangeFacetReducers.handleRangeFacetDeselectAll
+      ).not.toHaveBeenCalled();
+    });
   });
 });

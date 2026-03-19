@@ -17,6 +17,11 @@ export class AtomicText
   extends LitElement
   implements InitializableComponent<Bindings>
 {
+  private static readonly propsSchema = new Schema({
+    value: new StringValue({required: true, emptyAllowed: false}),
+    count: new NumberValue({required: false}),
+  });
+
   @state() public bindings!: Bindings;
   @state() public error!: Error;
 
@@ -39,10 +44,7 @@ export class AtomicText
         value: this.value,
         count: this.count,
       }),
-      new Schema({
-        value: new StringValue({required: true, emptyAllowed: false}),
-        count: new NumberValue({required: false}),
-      })
+      AtomicText.propsSchema
     );
   }
 

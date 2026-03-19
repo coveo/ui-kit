@@ -1,3 +1,36 @@
+## <small>3.10.6 (2026-03-18)</small>
+
+* chore(atomic-angular): turbod atomic-angular build (#7228) ([b803043](https://github.com/coveo/ui-kit/commits/b803043)), closes [#7228](https://github.com/coveo/ui-kit/issues/7228)
+
+
+
+## <small>3.10.4 (2026-03-04)</small>
+
+* chore: eject angular build from Stencil (#7149) ([2c4d509](https://github.com/coveo/ui-kit/commits/2c4d509)), closes [#7149](https://github.com/coveo/ui-kit/issues/7149)
+
+
+
+## <small>3.10.1 (2026-02-18)</small>
+
+* cd: trigger an atomic-angular release (#7095) ([ec84341](https://github.com/coveo/ui-kit/commits/ec84341)), closes [#7095](https://github.com/coveo/ui-kit/issues/7095)
+
+
+
+## 3.10.0 (2026-01-07)
+
+* [Version Bump][skip ci]: ui-kit publish ([b2a83c4](https://github.com/coveo/ui-kit/commits/b2a83c4))
+* Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
+* feat(atomic-angular): support angular 20 (#6813) ([caa0b39](https://github.com/coveo/ui-kit/commits/caa0b39)), closes [#6813](https://github.com/coveo/ui-kit/issues/6813)
+
+
+
+## 3.9.0 (2026-01-06)
+
+* Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
+* feat(atomic-angular): support angular 20 (#6813) ([caa0b39](https://github.com/coveo/ui-kit/commits/caa0b39)), closes [#6813](https://github.com/coveo/ui-kit/issues/6813)
+
+
+
 ## 3.8.0 (2025-11-12)
 
 * chore: remove stencil-generated build artifacts from git tracking (#6500) ([e9f418f](https://github.com/coveo/ui-kit/commits/e9f418f)), closes [#6500](https://github.com/coveo/ui-kit/issues/6500)

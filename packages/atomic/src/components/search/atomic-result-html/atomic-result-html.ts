@@ -28,6 +28,11 @@ export class AtomicResultHtml
   extends LightDomMixin(LitElement)
   implements InitializableComponent<Bindings>
 {
+  private static readonly propsSchema = new Schema({
+    field: new StringValue({required: true, emptyAllowed: false}),
+    sanitize: new BooleanValue(),
+  });
+
   /**
    * The result field which the component should use.
    * Searches for the specified field in the property of `Result` then `Result.raw`.
@@ -60,10 +65,7 @@ export class AtomicResultHtml
         field: this.field,
         sanitize: this.sanitize,
       }),
-      new Schema({
-        field: new StringValue({required: true, emptyAllowed: false}),
-        sanitize: new BooleanValue(),
-      })
+      AtomicResultHtml.propsSchema
     );
   }
 

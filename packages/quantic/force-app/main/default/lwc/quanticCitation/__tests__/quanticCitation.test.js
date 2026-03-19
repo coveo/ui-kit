@@ -5,7 +5,6 @@ import {
 // @ts-ignore
 import {createElement} from 'lwc';
 import QuanticCitation from '../quanticCitation';
-import {debounce} from '../quanticCitation';
 
 const functionsMocks = {
   eventHandler: jest.fn((event) => event),
@@ -47,6 +46,11 @@ const exampleSalesforceLink = 'https://www.example-salesforce.com';
 const urlFragment = '#:~:text=text%2001';
 const exampleCitationUrl = 'https://example.com/';
 
+const activeCitationLinkClass = 'citation__link--active';
+const activeCitationTitleClass = 'citation__title--active';
+const activeCitationIconClass = 'citation__icon--active';
+const testIconName = 'utility:attach';
+
 const defaultOptions = {
   citation: exampleCitation,
   interactiveCitation: {
@@ -63,9 +67,23 @@ const selectors = {
   citationTitle: '.citation__title',
   citationTooltip: 'c-quantic-tooltip',
   citationTooltipUrl: '[data-testid="citation__tooltip-uri"]',
+  citationIcon: '.citation__icon',
+  actionsSlot: 'slot[name="actions"]',
 };
 
-function createTestComponent(options = defaultOptions) {
+/**
+ * Mocks the return value of the assignedNodes method.
+ * @param {Array<Element>} assignedElements
+ */
+function mockSlotAssignedNodes(assignedElements) {
+  HTMLSlotElement.prototype.assignedNodes = function () {
+    return assignedElements;
+  };
+}
+
+function createTestComponent(options = defaultOptions, assignedElements = []) {
+  mockSlotAssignedNodes(assignedElements);
+
   const element = createElement('c-quantic-citation', {
     is: QuanticCitation,
   });
@@ -111,67 +129,6 @@ describe('c-quantic-citation', () => {
 
   afterEach(() => {
     cleanup();
-  });
-
-  describe('debounce function', () => {
-    let mockFnToDebounce;
-    const DEBOUNCE_DELAY = 200;
-
-    beforeEach(() => {
-      jest.useFakeTimers();
-      mockFnToDebounce = jest.fn();
-    });
-
-    afterEach(() => {
-      jest.useRealTimers();
-    });
-
-    // Ensures that rapid calls result in only one execution
-    test('should execute once after the delay and use the arguments from the last call', () => {
-      const debouncedFn = debounce(mockFnToDebounce, DEBOUNCE_DELAY);
-
-      debouncedFn('first');
-      expect(mockFnToDebounce).not.toHaveBeenCalled();
-
-      jest.advanceTimersByTime(DEBOUNCE_DELAY - 100);
-      debouncedFn('middle');
-
-      jest.advanceTimersByTime(DEBOUNCE_DELAY - 100);
-      debouncedFn('last');
-
-      expect(mockFnToDebounce).not.toHaveBeenCalled();
-      jest.advanceTimersByTime(DEBOUNCE_DELAY);
-
-      expect(mockFnToDebounce).toHaveBeenCalledTimes(1);
-      expect(mockFnToDebounce).toHaveBeenCalledWith('last');
-    });
-
-    // Ensures calls separated by more than the delay execute independently.
-    test('should execute multiple times if calls are spaced outside the delay', () => {
-      const debouncedFn = debounce(mockFnToDebounce, DEBOUNCE_DELAY);
-
-      debouncedFn(100);
-      jest.advanceTimersByTime(DEBOUNCE_DELAY);
-      expect(mockFnToDebounce).toHaveBeenCalledTimes(1);
-      expect(mockFnToDebounce).toHaveBeenCalledWith(100);
-
-      debouncedFn(200, {data: 'second'});
-      jest.advanceTimersByTime(DEBOUNCE_DELAY);
-      expect(mockFnToDebounce).toHaveBeenCalledTimes(2);
-      expect(mockFnToDebounce).toHaveBeenCalledWith(200, {data: 'second'});
-    });
-
-    // Ensures that the execution can be canceled before the delay expires.
-    test('should not execute the function if cancel is called before the delay', () => {
-      const debouncedFn = debounce(mockFnToDebounce, DEBOUNCE_DELAY);
-
-      debouncedFn('should not run');
-      jest.advanceTimersByTime(DEBOUNCE_DELAY / 2);
-      debouncedFn.cancel();
-
-      jest.advanceTimersByTime(DEBOUNCE_DELAY * 2);
-      expect(mockFnToDebounce).not.toHaveBeenCalled();
-    });
   });
 
   it('should properly display the citation', async () => {
@@ -222,7 +179,7 @@ describe('c-quantic-citation', () => {
       jest.useRealTimers();
     });
 
-    it('should display the citation tooltip', async () => {
+    it('should display the citation tooltip after 200ms delay', async () => {
       const element = createTestComponent();
       await flushPromises();
 
@@ -236,18 +193,17 @@ describe('c-quantic-citation', () => {
       expect(citationLink).not.toBeNull();
       expect(citationTooltip).not.toBeNull();
 
-      // Spy on the tooltip's showTooltip method to verify it gets called
       const showTooltipSpy = jest.spyOn(citationTooltip, 'showTooltip');
 
       await citationLink.dispatchEvent(
         new CustomEvent('mouseenter', {bubbles: true})
       );
+      expect(showTooltipSpy).toHaveBeenCalledTimes(0);
       jest.advanceTimersByTime(200);
-
       expect(showTooltipSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('should dispatch a citation hover event after hovering over the the citation for more than 1200ms, 200ms debounce duration before hover + 1000ms minimum hover duration', async () => {
+    it('should dispatch a citation hover event after hovering over the the citation for more than 1200ms, 200ms delay before hover + 1000ms minimum hover duration', async () => {
       const element = createTestComponent();
       await flushPromises();
       setupEventDispatchTest('quantic__citationhover');
@@ -260,16 +216,19 @@ describe('c-quantic-citation', () => {
       await citationLink.dispatchEvent(
         new CustomEvent('mouseenter', {bubbles: true})
       );
+      // Wait for show delay - this triggers the tooltip to show and sets hoverStartTimestamp
+      jest.advanceTimersByTime(200);
+      // Now wait for minimum hover time
       jest.advanceTimersByTime(1000);
       await citationLink.dispatchEvent(
         new CustomEvent('mouseleave', {bubbles: true})
       );
-      // Additional 200ms delay for the new hide tooltip logic
+      // Additional 200ms delay for the hide tooltip logic
       jest.advanceTimersByTime(200);
 
       expect(functionsMocks.eventHandler).toHaveBeenCalledTimes(1);
       expect(functionsMocks.eventHandler).toHaveBeenCalledWith({
-        citationHoverTimeMs: 1200,
+        citationHoverTimeMs: 1100,
       });
     });
 
@@ -313,32 +272,32 @@ describe('c-quantic-citation', () => {
 
         const hideTooltipSpy = jest.spyOn(citationTooltip, 'hideTooltip');
 
-        // Hover over the citation
+        // Hover over the citation - tooltip shows after 200ms delay
         await citationLink.dispatchEvent(
           new CustomEvent('mouseenter', {bubbles: true})
         );
         jest.advanceTimersByTime(200);
 
-        // Move cursor to tooltip in less than 200ms
+        // Move cursor to tooltip quickly (before hide delay expires)
         await citationLink.dispatchEvent(
           new CustomEvent('mouseleave', {bubbles: true})
         );
-        jest.advanceTimersByTime(100);
+
         await citationTooltip.dispatchEvent(
           new CustomEvent('mouseenter', {bubbles: true})
         );
 
-        // Move cursor back to citation in less than 200ms
+        // Move cursor back to citation quickly (before hide delay expires)
         await citationTooltip.dispatchEvent(
           new CustomEvent('mouseleave', {bubbles: true})
         );
-        jest.advanceTimersByTime(100);
+
         await citationLink.dispatchEvent(
           new CustomEvent('mouseenter', {bubbles: true})
         );
 
-        // Advance time beyond 200ms to see if tooltip is hidden
-        jest.advanceTimersByTime(300);
+        // Advance time beyond 100ms to see if tooltip is hidden
+        jest.advanceTimersByTime(200);
 
         expect(hideTooltipSpy).toHaveBeenCalledTimes(0);
       });
@@ -505,6 +464,118 @@ describe('c-quantic-citation', () => {
           expect(link.href).toBe(`${exampleSalesforceLink}/`);
         });
       });
+    });
+  });
+
+  describe('when the citation is active', () => {
+    it('should apply the active styles to the citation link, title and icon', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        citation: exampleCitation,
+        isActive: true,
+        iconName: testIconName,
+      });
+      await flushPromises();
+
+      const citationLink = element.shadowRoot.querySelector(
+        selectors.citationLink
+      );
+      const citationTitle = element.shadowRoot.querySelector(
+        selectors.citationTitle
+      );
+      const citationIcon = element.shadowRoot.querySelector(
+        selectors.citationIcon
+      );
+
+      expect(citationLink.classList).toContain(activeCitationLinkClass);
+      expect(citationTitle.classList).toContain(activeCitationTitleClass);
+      expect(citationIcon.classList).toContain(activeCitationIconClass);
+    });
+  });
+
+  describe('when the citation is not active', () => {
+    it('should not apply the active styles to the citation link, title and icon', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        citation: exampleCitation,
+        isActive: false,
+        iconName: testIconName,
+      });
+      await flushPromises();
+
+      const citationLink = element.shadowRoot.querySelector(
+        selectors.citationLink
+      );
+      const citationTitle = element.shadowRoot.querySelector(
+        selectors.citationTitle
+      );
+      const citationIcon = element.shadowRoot.querySelector(
+        selectors.citationIcon
+      );
+
+      expect(citationLink.classList).not.toContain(activeCitationLinkClass);
+      expect(citationTitle.classList).not.toContain(activeCitationTitleClass);
+      expect(citationIcon.classList).not.toContain(activeCitationIconClass);
+    });
+  });
+
+  describe('when an icon name is provided', () => {
+    it('should set the icon name on the citation icon', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        citation: exampleCitation,
+        iconName: testIconName,
+      });
+      await flushPromises();
+
+      const citationIcon = element.shadowRoot.querySelector('lightning-icon');
+      expect(citationIcon.iconName).toBe(testIconName);
+    });
+  });
+
+  describe('when no icon name is provided', () => {
+    it('should not display any icon in the citation', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        citation: exampleCitation,
+        iconName: undefined,
+      });
+      await flushPromises();
+
+      const citationIcon = element.shadowRoot.querySelector('lightning-icon');
+      expect(citationIcon).toBeNull();
+    });
+  });
+
+  describe('citation actions slot', () => {
+    it('should render provided actions in the slot', async () => {
+      const exampleAction = document.createElement('span');
+      exampleAction.textContent = 'Test Action';
+      const exampleAssignedElements = [exampleAction];
+
+      const element = createTestComponent(
+        defaultOptions,
+        exampleAssignedElements
+      );
+      await flushPromises();
+
+      const slot = element.shadowRoot.querySelector(selectors.actionsSlot);
+      expect(slot).not.toBeNull();
+
+      const assignedActions = slot.assignedNodes();
+      expect(assignedActions).toHaveLength(1);
+      expect(assignedActions[0].textContent).toBe('Test Action');
+    });
+
+    it('should have no assigned actions when none are provided', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const slot = element.shadowRoot.querySelector(selectors.actionsSlot);
+      expect(slot).not.toBeNull();
+
+      const assignedActions = element.querySelectorAll('[slot="actions"]');
+      expect(assignedActions).toHaveLength(0);
     });
   });
 });

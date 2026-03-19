@@ -37,6 +37,10 @@ export class AtomicResultPrintableUri
 {
   static styles = styles;
 
+  private static readonly propsSchema = new Schema({
+    maxNumberOfParts: new NumberValue({min: 3}),
+  });
+
   /**
    * The maximum number of Uri parts to display. This has to be over the minimum of `3` in order to be effective. Putting `Infinity` will disable the ellipsis.
    */
@@ -60,9 +64,7 @@ export class AtomicResultPrintableUri
     new ValidatePropsController(
       this,
       () => ({maxNumberOfParts: this.maxNumberOfParts}),
-      new Schema({
-        maxNumberOfParts: new NumberValue({min: 3}),
-      })
+      AtomicResultPrintableUri.propsSchema
     );
   }
 
@@ -208,8 +210,8 @@ export class AtomicResultPrintableUri
           this.interactiveResult.cancelPendingSelect(),
         attributes: this.linkAttributes,
         ref: shouldSetTarget
-          ? (el?: HTMLAnchorElement) => {
-              if (el) {
+          ? (el?: Element) => {
+              if (el instanceof HTMLAnchorElement) {
                 this.expandedPartElement = el;
               }
             }
