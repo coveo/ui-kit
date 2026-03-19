@@ -32,6 +32,7 @@
       "outputs": [
         "src/components/*/index.ts",
         "src/components/*/lazy-index.ts",
+        "src/utils/custom-element-tags.ts",
         "dist/**",
         "!dist/atomic/assets/**",
         "!dist/atomic/themes/**",
