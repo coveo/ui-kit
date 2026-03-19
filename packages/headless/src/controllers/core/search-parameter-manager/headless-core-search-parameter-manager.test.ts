@@ -131,6 +131,26 @@ describe('search parameter manager', () => {
     });
   });
 
+  it('should dispatch #restoreSearchParameters with the original tab parameter when the tabSet is undefined', () => {
+    props.initialState.parameters = {tab: 'a'};
+    engine.state.tabSet = undefined;
+    initSearchParameterManager();
+
+    expect(restoreSearchParameters).toHaveBeenCalledWith({
+      tab: 'a',
+    });
+  });
+
+  it('should dispatch #restoreSearchParameters with an empty tab when tab is empty and the tabSet is empty', () => {
+    props.initialState.parameters = {tab: ''};
+    engine.state.tabSet = {};
+    initSearchParameterManager();
+
+    expect(restoreSearchParameters).toHaveBeenCalledWith({
+      tab: '',
+    });
+  });
+
   it('throws an error when #parameters is not an object', () => {
     props.initialState.parameters = true as never;
     expect(() => initSearchParameterManager()).toThrow(
@@ -575,6 +595,28 @@ describe('search parameter manager', () => {
 
       expect(restoreSearchParameters).toHaveBeenCalledWith({
         ...initialParameters,
+        ...params,
+      });
+    });
+
+    it('should dispatch #restoreSearchParameters with the original tab parameter when the tabSet is undefined', () => {
+      const params = {tab: 'a'};
+      engine.state.tabSet = undefined;
+      manager.synchronize(params);
+
+      expect(restoreSearchParameters).toHaveBeenCalledWith({
+        ...initialSearchParameterSelector(engine.state),
+        ...params,
+      });
+    });
+
+    it('should dispatch #restoreSearchParameters with an empty tab when tab is empty and the tabSet is empty', () => {
+      const params = {tab: ''};
+      engine.state.tabSet = {};
+      manager.synchronize(params);
+
+      expect(restoreSearchParameters).toHaveBeenCalledWith({
+        ...initialSearchParameterSelector(engine.state),
         ...params,
       });
     });
