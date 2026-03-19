@@ -580,7 +580,7 @@ describe('search parameter manager', () => {
     });
 
     describe('when there is a tab parameter and a tabSet', () => {
-      it('should dispatches #restoreSearchParameters with the tab parameter as the active tab when the tab does not exist in the tabSet and there is an active tab', () => {
+      it('should dispatch #restoreSearchParameters with the tab parameter as the active tab when the tab does not exist in the tabSet and there is an active tab', () => {
         const id1 = 'a';
         const id2 = 'b';
         const tab1 = buildMockTabSlice({id: id1, isActive: false});
@@ -597,7 +597,7 @@ describe('search parameter manager', () => {
         });
       });
 
-      it('should dispatches #restoreSearchParameters with the first tab when there is no active tab and the tab does not exist', () => {
+      it('should dispatch #restoreSearchParameters with the first tab when there is no active tab and the tab does not exist', () => {
         const id1 = 'a';
         const id2 = 'b';
         const tab1 = buildMockTabSlice({id: id1, isActive: false});
@@ -614,7 +614,7 @@ describe('search parameter manager', () => {
         });
       });
 
-      it('should dispatches #restoreSearchParameters with the first tab when tab is an empty string', () => {
+      it('should dispatch #restoreSearchParameters with the first tab when tab is an empty string', () => {
         const id1 = 'a';
         const id2 = 'b';
         const tab1 = buildMockTabSlice({id: id1, isActive: false});
