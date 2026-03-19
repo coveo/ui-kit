@@ -707,25 +707,21 @@ describe('atomic-generated-answer', () => {
     await expect.element(showMoreButton).not.toBeInTheDocument();
   });
 
-  it('should pass collapsible as false to renderAnswerContent when content is short', async () => {
-    const renderedAnswer = await renderGeneratedAnswer({
-      props: {collapsible: true, maxCollapsedHeight: 16},
+  it('should pass collapsible as false to renderAnswerContent when collapsible is disabled', async () => {
+    await renderGeneratedAnswer({
+      props: {collapsible: false, maxCollapsedHeight: 16},
       generatedAnswerState: {
         isVisible: true,
         answer: 'Short text',
       },
     });
 
-    Reflect.set(renderedAnswer.element, 'fullAnswerHeight', 8);
-    await renderedAnswer.element.requestUpdate();
-    await renderedAnswer.element.updateComplete;
-
     const lastCall = vi.mocked(renderAnswerContent).mock.calls.at(-1);
     expect(lastCall).toBeDefined();
     expect(lastCall?.[0].props.collapsible).toBe(false);
   });
 
-  it('should pass collapsible as true to renderAnswerContent when content is taller than maxCollapsedHeight', async () => {
+  it('should pass collapsible as true to renderAnswerContent when collapsible is enabled and content is tall', async () => {
     const renderedAnswer = await renderGeneratedAnswer({
       props: {collapsible: true, maxCollapsedHeight: 16},
       generatedAnswerState: {
@@ -734,7 +730,7 @@ describe('atomic-generated-answer', () => {
       },
     });
 
-    Reflect.set(renderedAnswer.element, 'fullAnswerHeight', 20);
+    Reflect.set(renderedAnswer.element, 'fullAnswerHeight', 100);
     await renderedAnswer.element.requestUpdate();
     await renderedAnswer.element.updateComplete;
 

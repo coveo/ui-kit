@@ -4271,6 +4271,7 @@ packages:
 
   '@lwc/engine-server@7.1.2':
     resolution: {integrity: sha512-R/Cgo1TwioOeR1F+1nQxR9oE+Au9479iOkk6jtn2GvPrcQm1X+YidLXQssus/YHdz2BuYa2/t5OJmpguJIwhJw==}
+    deprecated: This package has been replaced by @lwc/ssr-runtime
 
   '@lwc/errors@7.1.2':
     resolution: {integrity: sha512-1b933ONUijzJl72VVY5shiTDVN38ilB0RcljBH+ztJzxxr8umy2YEJYA9oGFacXP+zfox+kpOfWjrXlfqZ5ueA==}
@@ -4392,6 +4393,7 @@ packages:
   '@mswjs/source@0.5.0':
     resolution: {integrity: sha512-0zZT5wHnutBWInb/IAl2wGCy9M4i5nm4mRdunw7Pe5tyei07MvLATZEckC/uvNVTSEJMgJ0Kgj5GKzL/I9ZIMQ==}
     engines: {node: '>=20'}
+    deprecated: This package is renamed to . It will no longer receive any updates. Please migrate to the new package name. Thank you.
     peerDependencies:
       msw: ^2.10.0
 
