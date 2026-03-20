@@ -10,11 +10,15 @@ import '@/src/components/search/atomic-numeric-facet/atomic-numeric-facet.js';
 import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 import '@/src/components/search/atomic-result-list/atomic-result-list.js';
 import '@/src/components/search/atomic-search-box/atomic-search-box.js';
+import '@/src/components/search/atomic-search-interface/atomic-search-interface.js';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-external',
   {excludeCategories: ['methods']}
 );
+
+const searchApiHarness = new MockSearchApi();
 
 const externalComponentDecorator = (story: () => unknown) => html`
  <style>
@@ -82,6 +86,9 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
+    msw: {
+      handlers: [...searchApiHarness.handlers],
+    },
   },
   argTypes: {
     ...argTypes,
@@ -95,6 +102,7 @@ const meta: Meta = {
       <atomic-facet field="author" label="Author"></atomic-facet>
     `,
   },
+
   play: async (context) => {
     await customElements.whenDefined('atomic-search-interface');
 
