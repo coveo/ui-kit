@@ -39,7 +39,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-result-localized-text',
-  title: 'Search/Result Localized Text',
+  title: 'Reference/Search/Result Localized Text',
   id: 'atomic-result-localized-text',
 
   render: (args) => template(args),

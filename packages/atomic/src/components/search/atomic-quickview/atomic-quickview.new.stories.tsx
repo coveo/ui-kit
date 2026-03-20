@@ -59,7 +59,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-quickview',
-  title: 'Search/Quickview',
+  title: 'Reference/Search/Quickview',
   id: 'atomic-quickview',
 
   render: (args) => template(args),

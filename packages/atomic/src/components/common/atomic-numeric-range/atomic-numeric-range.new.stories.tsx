@@ -14,7 +14,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-numeric-range',
-  title: 'Common/Numeric Range',
+  title: 'Reference/Common/Numeric Range',
   id: 'atomic-numeric-range',
 
   render: (args) => template(args),

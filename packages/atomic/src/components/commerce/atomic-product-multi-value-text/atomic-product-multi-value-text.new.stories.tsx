@@ -29,7 +29,7 @@ const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
 
 const meta: Meta = {
   component: 'atomic-product-multi-value-text',
-  title: 'Commerce/Product Multi-Value Text',
+  title: 'Reference/Commerce/Product Multi-Value Text',
   id: 'atomic-product-multi-value-text',
   render: (args) => template(args),
   parameters: {

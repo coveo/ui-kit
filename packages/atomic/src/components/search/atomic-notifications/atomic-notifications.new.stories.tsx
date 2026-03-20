@@ -16,7 +16,7 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-notifications',
-  title: 'Search/Notifications',
+  title: 'Reference/Search/Notifications',
   id: 'atomic-notifications',
 
   render: (args) => template(args),

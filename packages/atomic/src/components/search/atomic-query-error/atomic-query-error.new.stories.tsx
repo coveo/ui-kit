@@ -21,7 +21,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-query-error',
-  title: 'Search/Query Error',
+  title: 'Reference/Search/Query Error',
   id: 'atomic-query-error',
   render: (args) => template(args),
   decorators: [decorator],

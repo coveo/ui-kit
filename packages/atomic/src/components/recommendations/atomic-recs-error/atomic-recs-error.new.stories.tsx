@@ -21,7 +21,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-recs-error',
-  title: 'Recommendations/Recs Error',
+  title: 'Reference/Recommendations/Recs Error',
   id: 'atomic-recs-error',
   render: (args) => template(args),
   decorators: [decorator],

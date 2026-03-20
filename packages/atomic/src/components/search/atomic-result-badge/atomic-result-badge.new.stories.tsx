@@ -29,7 +29,7 @@ const {decorator: resultTemplateDecorator} = wrapInResultTemplate();
 
 const meta: Meta = {
   component: 'atomic-result-badge',
-  title: 'Search/Result Badge',
+  title: 'Reference/Search/Result Badge',
   id: 'atomic-result-badge',
   render: (args) => template(args),
   decorators: [

@@ -19,7 +19,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-ipx-refine-toggle',
-  title: 'IPX/Refine Toggle',
+  title: 'Reference/IPX/Refine Toggle',
   id: 'atomic-ipx-refine-toggle',
   render: (args) => html`
     <style>

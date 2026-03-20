@@ -58,7 +58,7 @@ const {template} = getStorybookHelpers('atomic-color-facet', {
 
 const meta: Meta = {
   component: 'atomic-color-facet',
-  title: 'Search/Facet (Color)',
+  title: 'Reference/Search/Facet (Color)',
   id: 'atomic-color-facet',
   render: (args) => template(args),
   decorators: [decorator],

@@ -12,7 +12,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-commerce-refine-toggle',
-  title: 'Commerce/Refine Toggle',
+  title: 'Reference/Commerce/Refine Toggle',
   id: 'atomic-commerce-refine-toggle',
   render: (args) => template(args),
   decorators: [decorator],

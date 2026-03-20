@@ -16,7 +16,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-search-box-recent-queries',
-  title: 'Search/Search Box Recent Queries',
+  title: 'Reference/Search/Search Box Recent Queries',
   id: 'atomic-search-box-recent-queries',
   render: (args) => template(args),
   decorators: [searchBoxDecorator, searchInterfaceDecorator],

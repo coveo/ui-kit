@@ -59,7 +59,7 @@ const defaultSlotContent = `
 
 const meta: Meta = {
   component: 'atomic-commerce-recommendation-list',
-  title: 'Commerce/Recommendation List',
+  title: 'Reference/Commerce/Recommendation List',
   id: 'atomic-commerce-recommendation-list',
   render: (args) => template(args),
   play,

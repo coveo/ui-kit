@@ -41,7 +41,7 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-smart-snippet-feedback-modal',
-  title: 'Search/Smart Snippet Feedback Modal',
+  title: 'Reference/Search/Smart Snippet Feedback Modal',
   id: 'atomic-smart-snippet-feedback-modal',
   render: (args) => template(args),
   decorators: [openModalDecorator, decorator],

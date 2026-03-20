@@ -29,7 +29,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-product-field-condition',
-  title: 'Commerce/Product Field Condition',
+  title: 'Reference/Commerce/Product Field Condition',
   id: 'atomic-product-field-condition',
   render: (args) => template(args),
   decorators: [

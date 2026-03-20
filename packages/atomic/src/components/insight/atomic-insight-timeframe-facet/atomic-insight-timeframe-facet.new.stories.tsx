@@ -107,7 +107,7 @@ const {decorator, play} = wrapInInsightInterface();
 
 const meta: Meta = {
   component: 'atomic-insight-timeframe-facet',
-  title: 'Insight/Facet (Timeframe)',
+  title: 'Reference/Insight/Facet (Timeframe)',
   id: 'atomic-insight-timeframe-facet',
   render: (args) => template(args),
   decorators: [decorator],

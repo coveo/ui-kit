@@ -49,7 +49,7 @@ const {decorator: insightResultTemplateDecorator} =
 
 const meta: Meta = {
   component: 'atomic-insight-result-children-template',
-  title: 'Insight/Result Children Template',
+  title: 'Reference/Insight/Result Children Template',
   id: 'atomic-insight-result-children-template',
   render: (args) => html`
     <atomic-result-section-title>

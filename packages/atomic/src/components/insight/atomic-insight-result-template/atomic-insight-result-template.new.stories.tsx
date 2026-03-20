@@ -159,7 +159,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-insight-result-template',
-  title: 'Insight/Result Template',
+  title: 'Reference/Insight/Result Template',
   id: 'atomic-insight-result-template',
   render: (args) => template(args),
   parameters: {

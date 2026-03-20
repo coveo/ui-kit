@@ -16,7 +16,7 @@ const {decorator: commerceInterfaceDecorator, play: commerceInterfacePlay} =
 const {decorator: commerceSearchBoxDecorator} = wrapInCommerceSearchBox();
 const meta: Meta = {
   component: 'atomic-commerce-search-box-query-suggestions',
-  title: 'Commerce/Search Box Query Suggestions',
+  title: 'Reference/Commerce/Search Box Query Suggestions',
   id: 'atomic-commerce-search-box-query-suggestions',
   render: (args) => template(args),
   decorators: [commerceSearchBoxDecorator, commerceInterfaceDecorator],

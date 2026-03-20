@@ -64,7 +64,7 @@ const {events, args, argTypes, styleTemplate} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-quickview-modal',
-  title: 'Search/Quickview Modal',
+  title: 'Reference/Search/Quickview Modal',
   id: 'atomic-quickview-modal',
   render: () => html`<atomic-quickview></atomic-quickview>`,
   decorators: [

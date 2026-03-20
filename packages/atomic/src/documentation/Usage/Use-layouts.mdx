@@ -1,0 +1,46 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Usage/Use layouts" />
+
+[An Atomic layout](https://docs.coveo.com/en/atomic/latest/reference/common-components/atomic-layout-section/) is an out-of-the-box way of positioning Atomic components in a webpage.
+Instead of writing CSS, you can define a parent layout and a number of child sections
+(for example, search, facets, pagination, etc.). Child sections can also serve as parents as they can nest other sections.
+Each section can nest only specific components, as shown in the diagram below.
+
+It's important to carefully define the layout structure.
+However, some optional sections can be left out.
+
+> **Tip**
+>
+> Atomic currently includes only the search layout.
+> Atomic will include more layouts in the future for agent panels, commerce pages, etc.
+
+
+## [The Search Layout](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-layout/)
+
+![A diagram that shows the search layout](../assets/images/layouts.jpg)
+
+
+Here are the possible sections for your search layout:
+
+* `search`: an optional section to be used at the top of the layout.
+It will be aligned with the results.
+  * [`atomic-search-box`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-box/)
+* `facets`: an optional section that will display all facet types in the left column. If you omit this section, the `search` and `main` sections will take up the whole space.
+  * [`atomic-facet-manager`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-facet-manager/)
+  * all facet types
+* `main`: a parent section which takes up most of the space.
+* `status`: a section at the top of the `main` one, containing all components that display or allow users to interact with the search status.
+  * [`atomic-breadbox`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-breadbox/)
+  * [`atomic-query-summary`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-query-summary/)
+  * [`atomic-refine-toggle`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-refine-toggle/)
+  * [`atomic-sort-dropdown`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-sort-dropdown/)
+  * [`atomic-did-you-mean`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-did-you-mean/)
+* `results`: a section that contains the result list and alternative states.
+  * [`atomic-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-list/)
+  * [`atomic-query-error`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-query-error/)
+  * [`atomic-no-results`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-no-results/)
+* `pagination`: the bottom section containing pagination components.
+  * [`atomic-load-more-results`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-load-more-results/)
+  * [`atomic-pager`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-pager/)
+  * [`atomic-results-per-page`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-results-per-page/)

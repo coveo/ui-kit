@@ -12,7 +12,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-insight-full-search-button',
-  title: 'Insight/Full Search Button',
+  title: 'Reference/Insight/Full Search Button',
   id: 'atomic-insight-full-search-button',
   render: (args) => template(args),
   decorators: [decorator],

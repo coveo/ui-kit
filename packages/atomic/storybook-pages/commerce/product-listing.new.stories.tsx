@@ -64,7 +64,7 @@ async function initializeCommerceInterface(canvasElement: HTMLElement) {
 
 const meta: Meta = {
   component: 'product-listing-page',
-  title: 'Commerce/Example Pages',
+  title: 'Reference/Commerce/Example Pages',
   id: 'product-listing-page',
   parameters: {
     ...parameters,

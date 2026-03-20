@@ -39,7 +39,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-result-printable-uri',
-  title: 'Search/Result Printable URI',
+  title: 'Reference/Search/Result Printable URI',
   id: 'atomic-result-printable-uri',
 
   render: (args) => template(args),

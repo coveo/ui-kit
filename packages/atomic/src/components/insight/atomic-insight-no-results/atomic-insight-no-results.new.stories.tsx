@@ -23,7 +23,7 @@ const {decorator, play} = wrapInInsightInterface();
 
 const meta: Meta = {
   component: 'atomic-insight-no-results',
-  title: 'Insight/No Results',
+  title: 'Reference/Insight/No Results',
   id: 'atomic-insight-no-results',
   render: (args) => template(args),
   decorators: [decorator],

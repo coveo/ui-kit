@@ -11,7 +11,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 );
 const meta: Meta = {
   component: 'atomic-search-layout',
-  title: 'Search/Search Layout',
+  title: 'Reference/Search/Search Layout',
   id: 'atomic-search-layout',
   render: (args) => template(args),
   decorators: [decorator],

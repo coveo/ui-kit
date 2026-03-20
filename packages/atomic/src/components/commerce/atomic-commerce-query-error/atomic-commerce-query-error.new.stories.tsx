@@ -15,7 +15,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-commerce-query-error',
-  title: 'Commerce/Query Error',
+  title: 'Reference/Commerce/Query Error',
   id: 'atomic-commerce-query-error',
   render: (args) => template(args),
   decorators: [decorator],

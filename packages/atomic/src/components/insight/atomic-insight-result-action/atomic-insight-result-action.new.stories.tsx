@@ -31,7 +31,7 @@ const {decorator: insightResultTemplateDecorator} =
 
 const meta: Meta = {
   component: 'atomic-insight-result-action',
-  title: 'Insight/Result Action',
+  title: 'Reference/Insight/Result Action',
   id: 'atomic-insight-result-action',
   render: (args) => html`
     <atomic-result-section-actions id="code-root">

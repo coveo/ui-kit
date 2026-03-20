@@ -12,7 +12,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-layout-section',
-  title: 'Common/Layout Section',
+  title: 'Reference/Common/Layout Section',
   id: 'atomic-layout-section',
   render: (args) => template(args),
   decorators: [decorator],

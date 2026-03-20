@@ -70,7 +70,7 @@ const {play: playWithLegacyAnalytics} = wrapInSearchInterface({
 
 const meta: Meta = {
   component: 'atomic-generated-answer',
-  title: 'Search/Generated Answer',
+  title: 'Reference/Search/Generated Answer',
   id: 'atomic-generated-answer',
   render: (args) => template(args),
   decorators: [layoutDecorator, decorator],

@@ -20,7 +20,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-commerce-category-facet',
-  title: 'Commerce/Facet (Category)',
+  title: 'Reference/Commerce/Facet (Category)',
   id: 'atomic-commerce-category-facet',
   render: (args) => template(args),
   decorators: [commerceFacetWidthDecorator, decorator],

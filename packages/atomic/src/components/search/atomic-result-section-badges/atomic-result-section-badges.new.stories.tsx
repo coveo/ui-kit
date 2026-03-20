@@ -27,7 +27,7 @@ const {play} = wrapInSearchInterface({
 });
 const meta: Meta = {
   component: 'atomic-result-section-badges',
-  title: 'Search/Result Sections',
+  title: 'Reference/Search/Result Sections',
   id: 'atomic-result-section-badges',
   render: (args) => template(args),
   parameters: {

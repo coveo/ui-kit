@@ -49,7 +49,7 @@ const childrenTemplate = html`
 
 const meta: Meta = {
   component: 'atomic-insight-result-children',
-  title: 'Insight/Result Children',
+  title: 'Reference/Insight/Result Children',
   id: 'atomic-insight-result-children',
   render: (args) => html`
     ${styleTemplate(args)}

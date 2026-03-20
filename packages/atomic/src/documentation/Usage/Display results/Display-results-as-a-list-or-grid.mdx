@@ -1,0 +1,117 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Usage/Display results/Display results as a list or grid" />
+
+Using the [`atomic-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-list/) component, results can be displayed as a list or grid.
+
+![An `atomic-result-list` component with `display="list"`](/assets/images/result-list.png)
+![An `atomic-result-list` component with `display="grid"`](/assets/images/result-grid.png)
+
+## Choose a layout
+
+The layout defines whether results are going to be displayed as a list or a grid.
+You can choose a layout by setting the `display` attribute on the `atomic-result-list` component.
+
+### List
+
+List is the default layout.
+The list layout displays a single column containing all the results, taking the full available width.
+On a desktop browser, a divider separates the list results.
+On mobile, they're generally displayed as cards surrounded by outlines.
+
+```html
+<atomic-result-list
+  display="list"
+>
+  ...
+</atomic-result-list>
+```
+
+![Atomic List Layout](https://docs.coveo.com/en/assets/images/atomic/layout-list-default.png)
+
+### Grid
+
+The grid layout displays a number of columns containing all of the results.
+The number of columns varies based on the available space.
+
+Grid results are clickable.
+On the desktop, they display an outline when hovered.
+
+```html
+<atomic-result-list
+  display="grid"
+>
+  ...
+</atomic-result-list>
+```
+
+![Atomic Grid Layout](https://docs.coveo.com/en/assets/images/atomic/layout-grid-default.png)
+
+## Optional: Choosing a density
+
+The `density` attribute defines the spacing of various elements in the result list, including the gap between results.
+When the [result sections](https://docs.coveo.com/en/atomic/latest/usage/displaying-results/result-sections/) are used, the gap between parts of a result and the font sizes of different parts of a result are also adjusted.
+
+The possible values of `density` are:
+
+* `comfortable`
+
+* `normal` (default)
+
+* `compact`
+
+## Optional: Choosing an image size
+
+The `image-size` attribute defines the expected size of images in the list, and has four possible values:
+
+* `none`
+
+* `icon` (default)
+
+* `small`
+
+* `large`
+
+This affects how many results should be displayed horizontally.
+
+On mobile, this also affects whether results should have an outline or dividers:
+
+* When this is set to `none`, `icon`, or `small`, the results on mobile have an outline.
+
+* When this is set to `large`, the results on mobile are separated by dividers.
+
+![A mobile result list with no sections and a non-large image size](../../assets/images/result-list-mobile-not-large-no-sections.png)
+![A mobile result list with no sections and a large image size](../../assets/images/result-list-mobile-large-no-sections.png)
+
+When the [result sections](https://docs.coveo.com/en/atomic/latest/usage/displaying-results/result-sections/) are used, they also change the size of the `atomic-result-section-visual` section.
+
+## Advanced customization
+
+### Customizing the divider
+
+The divider above each result can be customized as follows:
+
+```html
+<style>
+  atomic-result-list::part(outline)::before {
+    background-color: blue;
+  }
+</style>
+```
+
+![A result list with a custom divider on the desktop](../../assets/images/result-list-custom-divider.png)
+
+### Customizing the outline
+
+The outline around each result can be customized as follows:
+
+```html
+<style>
+  atomic-result-list::part(outline) {
+    border-color: red;
+  }
+</style>
+```
+
+![A result grid with a custom outline on the desktop](../../assets/images/result-list-custom-outline-desktop.png)
+![A result grid with a custom outline on a mobile device](../../assets/images/result-list-custom-outline-mobile.png)

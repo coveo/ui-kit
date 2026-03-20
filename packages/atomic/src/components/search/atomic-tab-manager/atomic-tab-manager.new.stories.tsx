@@ -27,7 +27,7 @@ const widthDecorator: Decorator = (story) =>
 
 const meta: Meta = {
   component: 'atomic-tab-manager',
-  title: 'Search/Tab Manager',
+  title: 'Reference/Search/Tab Manager',
   id: 'atomic-tab-manager',
   render: (args) => template(args),
   decorators: [widthDecorator, decorator],

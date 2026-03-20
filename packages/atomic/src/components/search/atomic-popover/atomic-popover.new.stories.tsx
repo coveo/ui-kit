@@ -66,7 +66,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-popover',
-  title: 'Search/Popover',
+  title: 'Reference/Search/Popover',
   id: 'atomic-popover',
   render: (args) => template(args),
   decorators: [decorator],

@@ -93,7 +93,7 @@ const layoutDecorator = (story: () => unknown) => html`
 
 const meta: Meta = {
   component: 'atomic-insight-result-list',
-  title: 'Insight/Result List',
+  title: 'Reference/Insight/Result List',
   id: 'atomic-insight-result-list',
 
   render: (args) => template(args),

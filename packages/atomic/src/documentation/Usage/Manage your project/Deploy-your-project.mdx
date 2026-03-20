@@ -1,0 +1,85 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Usage/Manage your project/Deploy your project" />
+
+> **Important**
+> Requires Coveo CLI v2.3.0
+
+The [Coveo CLI](https://docs.coveo.com/en/cli/) leverages the [Hosted Page API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/Hosted%20Page) to bundle and upload [Atomic](https://docs.coveo.com/en/lcdf0264/) projects to the [Coveo Platform](https://docs.coveo.com/en/186/) infrastructure.
+It can then be consumed from anywhere on the web using the [`atomic-hosted-page`](https://www.npmjs.com/package/@coveo/atomic-hosted-page) web component.
+
+> **Important**
+>
+> Before v2.3.0, the Coveo CLI used the 3rd-party [Netlify](https://docs.netlify.com/site-deploys/overview/) tool for deployment.
+
+
+Regardless of how you [generated your Atomic search page](https://docs.coveo.com/en/atomic/latest/usage/manage-project/create-an-atomic-project/), the root of the project will include a `coveo.deploy.json` file which defines the content to upload.
+This file is required for deployment.
+
+It will also include a `deployment.esbuild.mjs` file, which takes your [Stencil Custom Elements build](https://stenciljs.com/docs/custom-elements) and bundles it using [esbuild](https://esbuild.github.io/).
+This bundle will match the accompanying JSON configuration.
+
+## Upload a new hosted page
+
+If you created your search page using the Coveo CLI, you'll deploy it to the [Coveo Platform](https://docs.coveo.com/en/186/) infrastructure as a new hosted page.
+
+1. Run `coveo auth:login` to connect to your [organization](https://docs.coveo.com/en/185/).
+
+> **Tip**
+>
+> By default, this command connects to whichever [organization](https://docs.coveo.com/en/185/) you're currently logged in with.
+> If you belong to multiple [organizations](https://docs.coveo.com/en/185/), you can append the `-o=<ORG_ID>` flag to connect to a specific one.
+
+
+2. Run `npm run deploy`.
+
+This will upload your bundled application as a new hosted page.
+
+## Update an existing hosted page
+
+If you created your search page in the [Coveo Administration Console](https://docs.coveo.com/en/183/) and downloaded it using the Coveo CLI, or if you have already uploaded it, you'll deploy it to the [Coveo Platform](https://docs.coveo.com/en/186/) infrastructure as an update to an existing hosted page.
+
+3. On the [**Search Pages**](https://platform.cloud.coveo.com/admin/#/orgid/search/search-pages/) ([platform-ca](https://platform-ca.cloud.coveo.com/admin/#/orgid/search/search-pages/) | [platform-eu](https://platform-eu.cloud.coveo.com/admin/#/orgid/search/search-pages/) | [platform-au](https://platform-au.cloud.coveo.com/admin/#/orgid/search/search-pages/)) page of the [Coveo Administration Console](https://docs.coveo.com/en/183/), [get the ID of the hosted page](#manage-your-deployments) that you want to update.
+
+4. Run `coveo auth:login` to connect to your [organization](https://docs.coveo.com/en/185/).
+
+> **Tip**
+>
+> By default, this command connects to whichever [organization](https://docs.coveo.com/en/185/) you're currently logged in with.
+> If you belong to multiple [organizations](https://docs.coveo.com/en/185/), you can append the `-o=<ORG_ID>` flag to connect to a specific one.
+
+
+5. Run `coveo ui:deploy -p <HOSTED_PAGE_ID>`.
+
+This will update the target page with your bundled application.
+
+## Deploy your own project
+
+You can use the `coveo ui:deploy` command to deploy any project that meets the following requirements:
+
+* It has a [deployment configuration file](https://github.com/coveo/cli/blob/master/.deployment.config.json).
+
+* It bundles all JavaScript files into one or more entry files, or provides URLs for external JavaScript files.
+Dynamic imports aren't supported.
+
+* It bundles all CSS files into one or more entry files, or provides URLs for external CSS files.
+Dynamic imports aren't supported.
+
+* It contains a single piece of HTML content.
+
+## Manage your deployments
+
+The **Custom Deployment** tab on the [**Search Pages**](https://platform.cloud.coveo.com/admin/#/orgid/search/search-pages/) ([platform-ca](https://platform-ca.cloud.coveo.com/admin/#/orgid/search/search-pages/) | [platform-eu](https://platform-eu.cloud.coveo.com/admin/#/orgid/search/search-pages/) | [platform-au](https://platform-au.cloud.coveo.com/admin/#/orgid/search/search-pages/)) page of the [Administration Console](https://docs.coveo.com/en/183/) lets you view and manage your deployments.
+You can use it to do the following:
+
+* Get Coveo CLI commands to deploy a new page or update an existing one.
+
+* Get the ID of a hosted page.
+
+* View a live version of a hosted page.
+
+* Delete a hosted page.
+
+## What's next?
+
+You can use the `atomic-hosted-page` web component to [consume a hosted page](https://docs.coveo.com/en/atomic/latest/usage/manage-project/use-hosted-page/) which is listed on the **Custom Deployment** tab from anywhere on the web.

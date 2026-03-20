@@ -111,7 +111,7 @@ const {play: playNoResults} = wrapInSearchInterface({
 
 const meta: Meta = {
   component: 'atomic-result-list',
-  title: 'Search/Result List',
+  title: 'Reference/Search/Result List',
   id: 'atomic-result-list',
   render: (args) => template(args),
   decorators: [decorator],

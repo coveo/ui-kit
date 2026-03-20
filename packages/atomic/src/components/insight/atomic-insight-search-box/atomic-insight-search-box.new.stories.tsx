@@ -23,7 +23,7 @@ const normalWidthDecorator: Decorator = (story) =>
 
 const meta: Meta = {
   component: 'atomic-insight-search-box',
-  title: 'Insight/Search Box',
+  title: 'Reference/Insight/Search Box',
   id: 'atomic-insight-search-box',
   render: (args) => template(args),
   decorators: [normalWidthDecorator, decorator],

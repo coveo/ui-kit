@@ -21,7 +21,7 @@ const {events, args, argTypes, template} = getStorybookHelpers('atomic-icon', {
 
 const meta: Meta = {
   component: 'atomic-icon',
-  title: 'Common/Icon',
+  title: 'Reference/Common/Icon',
   id: 'atomic-icon',
 
   render: (args) => template(args),

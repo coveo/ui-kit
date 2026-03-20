@@ -73,7 +73,7 @@ const TEMPLATE_WITH_INDICATOR = `<template>
 
 const meta: Meta = {
   component: 'atomic-insight-result-attach-to-case-indicator',
-  title: 'Insight/Result Attach To Case Indicator',
+  title: 'Reference/Insight/Result Attach To Case Indicator',
   id: 'atomic-insight-result-attach-to-case-indicator',
   parameters: {
     ...parameters,

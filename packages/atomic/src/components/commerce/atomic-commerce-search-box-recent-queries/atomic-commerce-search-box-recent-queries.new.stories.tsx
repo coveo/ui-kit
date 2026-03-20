@@ -16,7 +16,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-commerce-search-box-recent-queries',
-  title: 'Commerce/Search Box Recent Queries',
+  title: 'Reference/Commerce/Search Box Recent Queries',
   id: 'atomic-commerce-search-box-recent-queries',
   render: (args) => template(args),
   decorators: [commerceSearchBoxDecorator, commerceInterfaceDecorator],

@@ -46,7 +46,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-result-fields-list',
-  title: 'Search/Result Fields List',
+  title: 'Reference/Search/Result Fields List',
   id: 'atomic-result-fields-list',
 
   render: (args) => template(args),

@@ -33,7 +33,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-ipx-recs-list',
-  title: 'IPX/Recs List',
+  title: 'Reference/IPX/Recs List',
   id: 'atomic-ipx-recs-list',
   render: (args) => template(args),
   decorators: [decorator],

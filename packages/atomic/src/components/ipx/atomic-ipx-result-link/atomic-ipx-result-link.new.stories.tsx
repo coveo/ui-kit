@@ -36,7 +36,7 @@ const resultSectionDecorator: Decorator = (story) => html`
 
 const meta: Meta = {
   component: 'atomic-ipx-result-link',
-  title: 'IPX/Ipx Result Link',
+  title: 'Reference/IPX/Ipx Result Link',
   id: 'atomic-ipx-result-link',
   render: () => html`<atomic-ipx-result-link></atomic-ipx-result-link>`,
   decorators: [

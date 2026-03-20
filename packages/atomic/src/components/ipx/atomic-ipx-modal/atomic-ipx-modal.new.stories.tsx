@@ -13,7 +13,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-ipx-modal',
-  title: 'IPX/Modal',
+  title: 'Reference/IPX/Modal',
   id: 'atomic-ipx-modal',
   render: (args) => template(args),
   decorators: [

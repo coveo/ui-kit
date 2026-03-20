@@ -30,7 +30,7 @@ const {decorator, play: preprocessedPlayed} = wrapInCommerceInterface({
 
 const meta: Meta = {
   component: 'atomic-commerce-no-products',
-  title: 'Commerce/No Products',
+  title: 'Reference/Commerce/No Products',
   id: 'atomic-commerce-no-products',
   render: (args) => template(args),
   decorators: [decorator],

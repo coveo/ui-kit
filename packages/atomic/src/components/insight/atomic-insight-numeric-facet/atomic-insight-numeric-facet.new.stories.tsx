@@ -141,7 +141,7 @@ const {decorator, play} = wrapInInsightInterface();
 
 const meta: Meta = {
   component: 'atomic-insight-numeric-facet',
-  title: 'Insight/Facet (Numeric)',
+  title: 'Reference/Insight/Facet (Numeric)',
   id: 'atomic-insight-numeric-facet',
   render: (args) => template(args),
   decorators: [decorator],

@@ -15,7 +15,7 @@ const mockInsightApi = new MockInsightApi();
 
 const meta: Meta = {
   component: 'atomic-insight-query-summary',
-  title: 'Insight/Query Summary',
+  title: 'Reference/Insight/Query Summary',
   id: 'atomic-insight-query-summary',
 
   render: (args) => template(args),

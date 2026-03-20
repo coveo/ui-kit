@@ -1,0 +1,271 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Usage/Display results/Introduction" />
+
+Displaying results in [Coveo Atomic](https://docs.coveo.com/en/lcdf0264/) is done by adding a result list component anywhere in the `atomic-search-interface` and giving it result templates to define how results are rendered.
+
+**HTML**
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-result-list display="grid">
+    <atomic-result-template>
+      <template>
+        <p>
+          Title: <atomic-result-link></atomic-result-link>
+        </p>
+        <p>
+          Description: <atomic-result-text field="excerpt"></atomic-result-text>
+        </p>
+        <atomic-field-condition must-match-visibility="confidential">
+          <p><b>CONFIDENTIAL</b></p>
+        </atomic-field-condition>
+      </template>
+    </atomic-result-template>
+  </atomic-result-list>
+  ...
+</atomic-search-interface>
+```
+
+**React**
+
+```jsx
+<AtomicSearchInterface>
+  ...
+  <AtomicResultList
+    display="grid"
+    template={(result) => (
+      <>
+        <p>
+          {"Title: "}
+          <AtomicResultLink></AtomicResultLink>
+        </p>
+        <p>
+          {"Description: "}
+          <AtomicResultText field="excerpt"></AtomicResultText>
+        </p>
+        {result.raw.visibility === "confidential" && (
+          <p>
+            <b>{"CONFIDENTIAL"}</b>
+          </p>
+        )}
+      </>
+    )}
+  />
+  ...
+</AtomicSearchInterface>
+```
+
+![The results displayed by the template above](../assets/images/result-list-example-outcome.png)
+The results displayed by the template above.
+
+## Result list components
+
+[Atomic](https://docs.coveo.com/en/lcdf0264/) includes two different result components you can choose between:
+
+### `atomic-result-list`
+
+The [`atomic-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-list/) component can display results as a list, grid, or table.
+
+You can find extended documentation on how to use this component in the following:
+
+* [Displaying results as a list or grid](https://docs.coveo.com/en/atomic/latest/usage/displaying-results/list-or-grid/)
+
+* [Displaying results as a table](https://docs.coveo.com/en/atomic/latest/usage/displaying-results/table/)
+
+![An `atomic-result-list` component with `display="list"`](../assets/images/result-list.png)
+An `atomic-result-list` component with `display="list"`.
+
+![An `atomic-result-list` component with `display="grid"`](../assets/images/result-grid.png)
+An `atomic-result-list` component with `display="grid"`.
+
+![An `atomic-result-list` component with `display="table"`](../assets/images/result-table.png)
+An `atomic-result-list` component with `display="table"`.
+
+### `atomic-folded-result-list`
+
+The [`atomic-folded-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-folded-result-list/) component can display results hierarchically.
+
+To display results hierarchically, see [Implement folding](https://docs.coveo.com/en/atomic/latest/usage/displaying-results/folding/).
+
+![An `atomic-folded-result-list` component with some "folded" results](../assets/images/result-hierarchy.png)
+An `atomic-folded-result-list` component with some "folded" results.
+
+## Defining a result template
+
+Result templates define what HTML content should be displayed for each result returned by the user's [query](https://docs.coveo.com/en/231/).
+
+In HTML, they're defined by adding an `atomic-result-template` element inside the result list and adding a `template` element in the `atomic-result-template` element, like so:
+
+```html
+<atomic-result-template>
+  <template>
+    <span>Title: </span><atomic-result-link></atomic-result-link>
+  </template>
+</atomic-result-template>
+```
+
+In React, they're defined by passing a callback to the `template` attribute of the result list, like so:
+
+```jsx
+<AtomicResultList
+  template={(result) => (
+    <>
+      <p>
+        {"Excerpt with highlighting: "}
+        <AtomicResultText field="excerpt" />
+      </p>
+      <p>
+        {"Excerpt using JSX, without highlighting: "}
+        {result.excerpt}
+      </p>
+    </>
+  )}
+/>
+```
+
+### Result template components
+
+To display result-specific information, use [result template components](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/).
+
+```html
+<atomic-result-template>
+  <template>
+    <atomic-result-image field="thumbnail"></atomic-result-image>
+    <atomic-result-link></atomic-result-link>
+    <atomic-result-number field="price">
+      <atomic-format-currency currency="USD"></atomic-format-currency>
+    </atomic-result-number>
+  </template>
+</atomic-result-template>
+```
+
+### Styling
+
+The contents of a template can be styled by adding a `<style>` tag inside of it.
+
+**HTML**
+
+```html
+<atomic-result-template>
+  <template>
+    <style>
+      atomic-result-badge[label="On sale!"]::part(result-badge-element) {
+        background-color: #44a1da;
+        color: white;
+      }
+    </style>
+    <atomic-field-condition must-match-on-sale="true">
+      <atomic-result-badge label="On sale!"></atomic-result-badge>
+    </atomic-field-condition>
+    <atomic-result-link></atomic-result-link>
+    <atomic-result-number field="price">
+      <atomic-format-currency currency="USD"></atomic-format-currency>
+    </atomic-result-number>
+  </template>
+</atomic-result-template>
+```
+
+**React**
+
+```jsx
+const templateStyle = `
+  atomic-result-badge[label="On sale!"]::part(result-badge-element) {
+    background-color: #44a1da;
+    color: white;
+  }
+`;
+// ...
+<AtomicResultList
+  template={(result) => (
+    <>
+      <style>{templateStyle}</style>
+      {result.raw["on-sale"] === "true" && (
+        <AtomicResultBadge label="On sale!"></AtomicResultBadge>
+      )}
+      <AtomicResultLink></AtomicResultLink>
+      <AtomicResultNumber field="price">
+        <AtomicFormatCurrency currency="USD"></AtomicFormatCurrency>
+      </AtomicResultNumber>
+    </>
+  )}
+/>
+```
+
+### Result sections
+
+If you don't need a deep level of customization and want to render results following Coveo's mobile-friendly design, use [result sections](https://docs.coveo.com/en/atomic/latest/usage/displaying-results/result-sections/).
+
+When a result section element (prefixed with `atomic-result-section-`) is present at the root of the `<template>` element of a result template, its styling will automatically adapt.
+
+```html
+<atomic-result-template>
+  <template>
+    <atomic-result-section-badges>
+      <atomic-result-badge field="objecttype"></atomic-result-badge>
+    </atomic-result-section-badges>
+    <atomic-result-section-title>
+      <atomic-result-link></atomic-result-link>
+    </atomic-result-section-title>
+    <atomic-result-section-visual image-size="icon">
+      <atomic-result-icon></atomic-result-icon>
+    </atomic-result-section-visual>
+    <atomic-result-section-excerpt>
+      <atomic-result-text field="excerpt"></atomic-result-text>
+    </atomic-result-section-excerpt>
+  </template>
+</atomic-result-template>
+```
+
+![A result list with sections on a mobile device](../assets/images/result-list-with-sections.png)
+A result list with sections on a mobile device.
+
+### Result template conditions
+
+It's also possible to define multiple different result templates that are displayed conditionally to a [field](https://docs.coveo.com/en/200/) containing a particular value.
+
+**HTML**
+
+```html
+<atomic-result-list>
+  <atomic-result-template must-match-sourcetype="YouTube" must-match-author="Coveo">
+    <!-- I am displayed when the field `source` matches exactly `YouTube` and `author` matches exactly `Coveo`. -->
+  </atomic-result-template>
+  <atomic-result-template must-match-sourcetype="YouTube">
+    <!-- I am displayed for all other results where the field `source` matches exactly `YouTube`. -->
+  </atomic-result-template>
+  <atomic-result-template must-match-sourcetype="Documentation" must-not-match-status="Outdated">
+    <!-- I am displayed for all results where `source` matches exactly `Documentation` and `status` does not match `Outdated`. -->
+  </atomic-result-template>
+  <atomic-result-template>
+    <!-- I am the default template, when no other condition is met. -->
+  </atomic-result-template>
+</atomic-result-list>
+```
+
+**React**
+
+```jsx
+const YoutubeTemplate = ({ result }) => <>{/* Some template content */}</>;
+const DefaultTemplate = ({ result }) => <>{/* Some template content */}</>;
+// ...
+<AtomicResultList
+  template={(result) =>
+    result.raw.source === "YouTube" ? (
+      <YoutubeTemplate result={result} />
+    ) : (
+      <DefaultTemplate result={result} />
+    )
+  }
+/>
+```
+
+### Table result templates and folded result templates
+
+Table result templates and folded result templates are defined slightly differently.
+See:
+
+* [Display results as a table](https://docs.coveo.com/en/atomic/latest/usage/displaying-results/table/)
+
+* [Implement folding](https://docs.coveo.com/en/atomic/latest/usage/displaying-results/folding/)

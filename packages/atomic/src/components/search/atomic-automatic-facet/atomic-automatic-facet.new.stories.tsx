@@ -19,7 +19,7 @@ const facetWidthDecorator: Decorator = (story) =>
 
 const meta: Meta = {
   component: 'atomic-automatic-facet',
-  title: 'Search/Automatic Facet',
+  title: 'Reference/Search/Automatic Facet',
   id: 'atomic-automatic-facet',
   render: () =>
     html`<atomic-automatic-facet-generator></atomic-automatic-facet-generator>`,

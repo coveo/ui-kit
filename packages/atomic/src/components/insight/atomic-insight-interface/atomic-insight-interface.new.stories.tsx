@@ -52,7 +52,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-insight-interface',
-  title: 'Insight/Interface',
+  title: 'Reference/Insight/Interface',
   id: 'atomic-insight-interface',
 
   render: (args) => template(args),

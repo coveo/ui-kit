@@ -163,7 +163,7 @@ const {decorator, play} = wrapInSearchInterface({
 
 const meta: Meta = {
   component: 'atomic-smart-snippet-suggestions',
-  title: 'Search/Smart Snippet Suggestions',
+  title: 'Reference/Search/Smart Snippet Suggestions',
   id: 'atomic-smart-snippet-suggestions',
   render: (args) => template(args),
   decorators: [decorator],

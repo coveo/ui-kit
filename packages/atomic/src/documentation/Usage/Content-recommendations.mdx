@@ -1,0 +1,184 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Usage/Content recommendations" />
+
+The _Coveo Atomic_ library provides a set of customizable UI components that can be used to leverage [content recommendations](https://docs.coveo.com/en/1016/) powered by [Coveo Machine Learning (Coveo ML)](https://docs.coveo.com/en/188/).
+This article provides an overview of the core Atomic concepts needed to implement recommendations.
+
+> **Note**
+>
+> CR models depend on [view](https://docs.coveo.com/en/2949#view) [events](https://docs.coveo.com/en/260/) and the user's action history.
+> To display recommendations with Atomic, configure a [CR model](https://docs.coveo.com/en/3387/) and [logged the required usage analytics events](https://docs.coveo.com/en/atomic/latest/usage/atomic-usage-analytics/atomic-view-events/).
+
+
+## Implement recommendations
+
+### Initialize recommendations
+
+Assemble the target Atomic recommendation components to display recommendations:
+
+```html
+<body>
+    <atomic-recs-interface id="recs"> (1)
+        <atomic-recs-list label="List of Recommendations" recommendation="recommendations"> (2)
+            <atomic-recs-result-template> (3)
+                <template>
+                    <atomic-result-section-title>
+                        <atomic-result-link></atomic-result-link>
+                    </atomic-result-section-title>
+                </template>
+            </atomic-recs-result-template>
+        </atomic-recs-list>
+    </atomic-recs-interface>
+</body>
+```
+
+
+1. The `atomic-recs-interface` component is the parent of all other atomic components in a recommendation interface and needs to be initialized to enable recommendations.
+
+We will cover initialization below.
+
+
+2. `atomics-recs-list` displays recommendations by applying the templates provided to it.
+
+Here, we provide a `label` for the recommendations along with a `recommendation` identifier used by Coveo ML to scope the recommendation interface.
+
+
+3. The format of the query results is defined by a `template` component that needs to placed within `atomic-recs-result-template`.
+
+
+Similar to how a [search interface is initialized](https://docs.coveo.com/en/atomic/latest/usage#use-components-to-create-a-search-interface) with an overarching `atomic-search-interface` component, recommendations require you to initialize the [`atomic-recs-interface`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface) component using a script:
+
+```html
+<head>
+    <script>
+    (async () => {
+        await customElements.whenDefined('atomic-recs-interface');
+        const recommendInterface = document.querySelector('#recs');
+
+        await recommendInterface.initialize({ (1)
+            accessToken:'<ACCESS_TOKEN>',
+            organizationId: '<ORGANIZATION_ID>'
+        });
+
+        recommendInterface.getRecommendations(); (2)
+    })();
+    </script>
+</head>
+```
+
+
+1. The [`initialize`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface#initialize) method initializes the interface.
+
+In this case, use the `await` operator to wait for the interface initialization to complete before moving on.
+
+
+2. The [`getRecommendations`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface#getrecommendations) method retrieves recommendations after the interface is initialized.
+
+
+> **Warning**
+>
+> Atomic provides recommendations based on the history of actions that a user has taken on the webpage.
+> It considers the URLs of the web pages they visit to provide recommendations from your indexed content.
+> As a result, no recommendations will be returned to you during local development.
+
+
+A complete code example implementing recommendations can be found in the [Atomic project repository](https://github.com/coveo/ui-kit/blob/master/packages/atomic/dev/examples/recommendations.html).
+
+### Set context
+
+To provide [custom context](https://docs.coveo.com/en/3389/) information, you can do so after you initialize your recommendation components.
+Custom context allows Coveo ML to favor content that matches or is accessed more in a specific context.
+This can lead to more personalized recommendations.
+Familiarizing yourself with how to access [Headless through Atomic](https://docs.coveo.com/en/atomic/latest/usage/headless-through-atomic) will help you better understand the example below, which showcases how to set the custom context.
+
+```html
+<script>
+import {loadContextActions} from '/build/headless/recommendation/headless.esm.js';
+
+(async () => {
+    await customElements.whenDefined('atomic-recs-interface');
+    const recommendInterface = document.querySelector('#recs');
+
+    await recommendInterface.initialize({
+    accessToken:'<ACCESS_TOKEN>',
+    organizationId: '<ORGANIZATION_ID>'
+    });
+
+    const context = { (1)
+        website: 'support',
+    };
+    const engine = recInterface.engine; (2)
+    engine.dispatch(loadContextActions(engine).setContext(context)); (3)
+
+    recommendInterface.getRecommendations();
+})();
+</script>
+```
+
+
+1. Define the `context`.
+
+In this scenario, if you have correctly [set up your CR model](https://docs.coveo.com/en/3387/), Coveo ML will favour content which matches the `support` context, or which is popular in that context, when fetching recommendations.
+
+
+2. Access and store the engine variable.
+
+
+
+3. Use the engine and the Headless action creator you imported above to create a [`setContext`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Recommendation.ContextActionCreators.html#setContext) action creator.
+
+Pass in the defined `context` and dispatch the action.
+
+## Style your components
+
+You can style recommendation components in the same manner as other Atomic components.
+The following is an example of how you could style the `label` associated with the provided list of recommendations by accessing the shadow DOM part:
+
+```html
+<style>
+    atomic-recs-list::part(label) {
+        padding-top: 4rem;
+        font-size: 1.125rem;
+        font-weight: 400;
+    }
+</style>
+```
+
+For a more detailed guide on how to customize your components, see [Themes and visual customization](https://docs.coveo.com/en/atomic/latest/usage/themes-and-visual-customization).
+
+## Display results
+
+To display recommendation results, add a result list component.
+Instead of using `atomic-result-list`, you can use `atomic-recs-list` and provide it with result templates to define how results are rendered.
+This means that a `template` element must be the child of an `atomic-recs-result-template`, and an `atomic-recs-list` must be the parent of each `atomic-recs-result-template`.
+
+Unlike regular search components, there's no recommendation component that supports folding (that is, displaying results hierarchically).
+
+To display result-specific information, use [Result Template components](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/).
+
+## In a framework
+
+Recommendation components can be used [out of the box](https://docs.coveo.com/en/atomic/latest/usage/frameworks/atomic-vue/) in a [Vue.js](https://vuejs.org/) project.
+
+To use recommendations in others frameworks such as [React](https://reactjs.org/) or [Angular](https://angular.io/), the [Atomic React wrapper](https://docs.coveo.com/en/atomic/latest/usage/frameworks/atomic-react-wrapper/) and [Atomic Angular wrapper](https://docs.coveo.com/en/atomic/latest/usage/frameworks/atomic-angular-wrapper/) expose the components described in this article.
+The only thing that changes is the name of the component during implementation, as shown in the Atomic React example below:
+
+```html
+<AtomicRecsInterface engine={engine}>
+    <AtomicRecsList
+    numberOfRecommendations={3}
+    label="List of Recommendations"
+    template={(result) => (
+        <>
+            <p>
+            {"Title: "}
+            <AtomicResultLink></AtomicResultLink>
+            </p>
+        </>
+    )}
+    />
+</AtomicRecsInterface>
+```
+
+A complete code example implementing recommendations in Atomic React can be found in the [Atomic project repository](https://github.com/coveo/ui-kit/tree/master/packages/atomic-react/src/components/recommendation).

@@ -1,0 +1,109 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Usage/Manage your project/Use a hosted page in your infrastructure" />
+
+If your [Atomic](https://docs.coveo.com/en/lcdf0264/) search page is hosted on [Coveo Platform](https://docs.coveo.com/en/186/) infrastructure, you can use the `atomic-hosted-ui` component to consume it from anywhere on the web.
+
+This component leverages the [Hosted Page API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/Hosted%20Page) to retrieve the hosted content and insert it into the target web page.
+
+> **Important**
+>
+> **Legacy** search pages were created using the [Coveo JavaScript Search Framework](https://docs.coveo.com/en/187/).
+> They aren't compatible with [Atomic](https://docs.coveo.com/en/lcdf0264/).
+
+
+## Install the components
+
+The `atomic-hosted-ui` component is published in the [`atomic-hosted-page`](https://www.npmjs.com/package/@coveo/atomic-hosted-page) npm package.
+You can install it by including a CDN link or using npm.
+
+### CDN
+
+The simplest way to get the component is through a content delivery network (CDN).
+
+Include the following script in the target HTML page:
+
+```html
+<script
+    type="module"
+    src="https://static.cloud.coveo.com/atomic-hosted-page/v1/atomic-hosted-page/atomic-hosted-page.esm.js">
+</script>
+```
+
+### NPM
+
+The component is also available as an [npm](https://www.npmjs.com/package/@coveo/atomic) package:
+
+```bash
+npm install @coveo/atomic-hosted-page
+```
+
+All the resources will be available under `/node_modules/@coveo/atomic-hosted-page/dist/atomic-hosted-page`.
+You can include these in target pages with `<script>` tags.
+
+If you're using a module bundler (such as Browserify, Webpack, or Rollup), you can use `require('@coveo/atomic-hosted-page')` or `import '@coveo/atomic-hosted-page'`.
+
+## Use `atomic-hosted-ui`
+
+Once you've installed the `atomic-hosted-page` package, you'll need to add a script like the following to initialize the `atomic-hosted-ui` component:
+
+```html
+<head>
+  <!-- ... -->
+  <script>
+    (async () => {
+      await customElements.whenDefined('atomic-hosted-ui');
+      const atomicHostedUIPage = document.querySelector('atomic-hosted-ui');
+
+      await atomicHostedUIPage.initialize({
+        accessToken: '<ACCESS_TOKEN>', (1)
+        organizationId: '<ORGANIZATION_ID>', (2)
+        pageId: '<PAGE_ID>' (3)
+      });
+    })();
+  </script>
+  <!-- ... -->
+  <atomic-hosted-ui hosted-type="builder"></atomic-hosted-ui> (4)
+  <!-- ... -->
+</head>
+```
+
+
+1. `<ACCESS_TOKEN>` (string) is an [API key](https://docs.coveo.com/en/1718/) that was created using the **Search pages** [template](https://docs.coveo.com/en/1718#api-key-templates) or a [platform token](https://docs.coveo.com/en/n3ge0020/) that grants the **View** [access level](https://docs.coveo.com/en/2818/) on the [**Search pages and IPX**](https://docs.coveo.com/en/1707#search-pages-and-ipx-domain) domain in the target [Coveo organization](https://docs.coveo.com/en/185/).
+
+
+
+2. `<ORGANIZATION_ID>` (string) is the unique identifier of your [organization](https://docs.coveo.com/en/185/) (for example, `mycoveoorganizationa1b23c`).
+
+
+
+3. `<PAGE_ID>` (string) is the unique identifier of the hosted page, which you can copy from the [**Search Pages**](https://platform.cloud.coveo.com/admin/#/orgid/search/search-pages/) ([platform-ca](https://platform-ca.cloud.coveo.com/admin/#/orgid/search/search-pages/) | [platform-eu](https://platform-eu.cloud.coveo.com/admin/#/orgid/search/search-pages/) | [platform-au](https://platform-au.cloud.coveo.com/admin/#/orgid/search/search-pages/)) page of the [Administration Console](https://docs.coveo.com/en/183/).
+
+
+
+4. The `hosted-type` attribute lets you specify the kind of hosted page you want to fetch.
+
+Possible values:
+
+* `builder`: A **Simple Builder** page.
+
+* `trial`: A **Trial** simple builder page.
+
+* `code`: A page that you coded yourself using the Coveo CLI or manually.
+
+> **Important**
+>
+> An API key with this [access level](https://docs.coveo.com/en/2818/) will give access to the HTML, CSS, and JavaScript code for every search page in your [organization](https://docs.coveo.com/en/185/).
+> Make sure that you follow all client-side development best practices, and don't put sensitive information in your search page code.
+
+
+On initialization, the component performs the following actions:
+
+1. [Retrieve the hosted page configuration](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/Hosted%20Page/get-hostedpage).
+
+2. Insert the contents of the HTML parameter as `innerHTML`.
+
+3. Insert the contents of each JavaScript parameter as a `script` tag in the header of the page.
+
+4. Insert the contents of each CSS parameter as a `link` tag in the header of the page.
+

@@ -121,7 +121,7 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-numeric-facet',
-  title: 'Search/Facet (Numeric)',
+  title: 'Reference/Search/Facet (Numeric)',
   id: 'atomic-numeric-facet',
   render: (args) => template(args),
   decorators: [decorator],

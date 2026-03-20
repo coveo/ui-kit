@@ -24,7 +24,7 @@ const sortCriteriaOptions: FacetSortCriterion[] = [
 
 const meta: Meta = {
   component: 'atomic-facet',
-  title: 'Search/Facet',
+  title: 'Reference/Search/Facet',
   id: 'atomic-facet',
 
   render: (args) => template(args),

@@ -1,0 +1,236 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Usage/Accessibility" />
+
+Coveo designed [Atomic](https://docs.coveo.com/en/lcdf0264/) with accessibility in mind.
+It adheres to the [Accessible Rich Internet Applications (ARIA)](https://www.w3.org/WAI/standards-guidelines/aria/) standards and follows the [Web Content Accessibility Guidelines (WCAG)](https://www.w3.org/WAI/standards-guidelines/wcag/).
+
+In November 2022, [Atomic](https://docs.coveo.com/en/lcdf0264/) was evaluated by [Deque Systems](https://www.deque.com/), an accessibility testing company.
+Their report, which is based on the [Voluntary Product Accessibility Template (VPAT)](https://www.section508.gov/sell/vpat/), is available for [download](https://docs.coveo.com/en/assets/PDF/VPAT-WCAG21-Coveo-Atomic.pdf).
+
+While developing [Atomic](https://docs.coveo.com/en/lcdf0264/), we've tried to make the user experience with screen readers as comfortable and consistent as possible.
+We've tested it with the following screen readers:
+
+* [NVDA](https://www.nvaccess.org/)
+
+* [JAWS](https://www.freedomscientific.com/products/software/jaws/)
+
+* [TalkBack](https://play.google.com/store/apps/details?id=com.google.android.marvin.talkback)
+
+* VoiceOver for iOS
+
+* VoiceOver for macOS (in Safari)
+
+[Atomic](https://docs.coveo.com/en/lcdf0264/) controls specific elements of a web page to ensure those parts of the user experience adhere to accessibility standards.
+The complete accessibility of your [search interfaces](https://docs.coveo.com/en/2741/) depends on additional implementation steps.
+This article provides guidance for improving the accessibility of your [search interfaces](https://docs.coveo.com/en/2741/) when using [Atomic](https://docs.coveo.com/en/lcdf0264/).
+
+## Improve contrast ratios
+
+We recommend that the color contrast ratios in your interface conform to [WCAG Level AA](https://www.w3.org/WAI/WCAG2AA-Conformance) (see [Success Criterion 1.4.3: Contrast (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html)).
+
+If you're using the theme that's included with [Atomic](https://docs.coveo.com/en/lcdf0264/) (`coveo.css`), you can ensure that [Atomic](https://docs.coveo.com/en/lcdf0264/) conforms to accessibility standards by replacing it with the accessibility theme (`accessible.css`).
+
+If you're using a custom theme, [customize the colors and font sizes](https://docs.coveo.com/en/atomic/latest/usage/themes-and-visual-customization/) in your interface to conform to accessibility standards.
+
+## Add headings
+
+According to a [survey by WebAIM](https://webaim.org/projects/screenreadersurvey9/#finding), 67.7% of respondents were likely to navigate by headings first when trying to find information on a lengthy web page.
+[Atomic](https://docs.coveo.com/en/lcdf0264/) is a component-based library that lets you divide your [search interfaces](https://docs.coveo.com/en/2741/) to suit your needs, so its components don't include headings.
+Add headings to allow screen reader users to jump between relevant sections of your page.
+
+```html
+<body>
+  <style>
+    .screen-reader-only {
+      height: 0;
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+  <atomic-search-interface>
+    <h1 class="screen-reader-only">Product Search Interface</h1>
+
+    <h2 class="screen-reader-only">Search</h2>
+    <atomic-search-box></atomic-search-box>
+    <h2 class="screen-reader-only">Summary</h2>
+    <atomic-query-summary></atomic-query-summary>
+    <h2 class="screen-reader-only">Facets</h2>
+    <atomic-facet-manager>
+      <h3 class="screen-reader-only">Brand</h3>
+      <atomic-facet field="ec_brand" label="Brand"></atomic-facet>
+      <h3 class="screen-reader-only">Rating</h3>
+      <atomic-rating-facet field="ec_rating" label="Rating"></atomic-rating-facet>
+    </atomic-facet-manager>
+    <h2 class="screen-reader-only">Results</h2>
+    <atomic-result-list display="grid">
+      <atomic-result-template>
+        <template>
+          <atomic-result-section-title>
+            <h3><atomic-result-link></atomic-result-link></h3>
+          </atomic-result-section-title>
+        </template>
+      </atomic-result-template>
+    </atomic-result-list>
+  </atomic-search-interface>
+</body>
+```
+
+## Improve result accessibility
+
+Since results are highly customizable, the relevant components offer limited out-of-the-box accessibility support.
+We recommend the following guidelines to help you provide an accessible experience for your users.
+
+### Reorder result sections
+
+> **Note**
+>
+> This is only relevant if you use [result sections](https://docs.coveo.com/en/atomic/latest/usage/displaying-results/result-sections/) in your result template.
+
+
+Screen readers read sections in the order they are defined in the template, regardless of their visual arrangement.
+To improve accessibility, define result sections from most important to least important, starting with the title section.
+This order depends on your use case, so review other accessible search pages with similar purposes for guidance.
+
+```html
+<atomic-result-section-title>...</atomic-result-section-title>
+<atomic-result-section-emphasized>...</atomic-result-section-emphasized>
+<atomic-result-section-title-metadata>...</atomic-result-section-title-metadata>
+<atomic-result-section-badges>...</atomic-result-section-badges>
+<atomic-result-section-visual>...</atomic-result-section-visual>
+<atomic-result-section-excerpt>...</atomic-result-section-excerpt>
+<atomic-result-section-bottom-metadata>...</atomic-result-section-bottom-metadata>
+```
+
+### Hide the thumbnail
+
+Your results may include a thumbnail as well as a detailed title.
+If your title accurately describes the content which is depicted in a thumbnail, it means that the thumbnail doesn't contain additional information for screen readers.
+
+In such a case, the thumbnail would slow down navigation for screen reader users, so hide the thumbnail from screen readers.
+
+Achieve this by setting its [`aria-hidden`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-hidden) property to `true`.
+
+```html
+<atomic-result-image
+  field="ec_images"
+  aria-hidden="true"
+></atomic-result-image>
+```
+
+### Add roles
+
+Add semantic [roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles) to certain result components to better communicate to screen readers what they represent in your particular template.
+However, be aware that adding a role to a component overwrites its original role and that screen readers may expect some roles to have specific children or support specific keyboard shortcuts.
+
+In general, make the following adjustments:
+
+* Add the `role="grid"` (if the fields are interactive) or the `role="table"` (if the fields are not interactive) property to the element containing all your fields and:
+
+    * Wrap each field label-value pair in an element with the `role="row"` property.
+  
+    * Add the `role="rowheader"` property to each field label.
+  
+    * Add the `role="cell"` property to each field value.
+
+```html
+<atomic-result-section-bottom-metadata>
+  <atomic-result-fields-list role="table">
+    <div role="row">
+      <span role="rowheader">Priority:&nbsp;</span>
+      <atomic-result-text field="priority" role="cell"></atomic-result-text>
+    </div>
+    <atomic-field-condition if-defined="deadline" role="row">
+      <span role="rowheader">Deadline:&nbsp;</span>
+      <atomic-result-date field="deadline" role="cell"></atomic-result-date>
+    </atomic-field-condition>
+    ...
+  </atomic-result-fields-list>
+</atomic-result-section-bottom-metadata>
+```
+
+* Add the `role="note"` property to `atomic-result-badge` components.
+
+```html
+<atomic-result-badge field="special" role="note"></atomic-result-badge>
+```
+
+## Instant results accessibility
+
+Out of the box, the [`atomic-search-box-instant-results`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-box-instant-results/) component doesn't support accessibility.
+Implement it yourself using the [`ariaLabelGenerator` property](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-box-instant-results#properties), as in the following code sample.
+
+> **Warning**
+>
+> The following is merely an example.
+> Details depend heavily on the way you implemented your instant results.
+> Assume that instant results are [non-text content](https://www.w3.org/WAI/WCAG21/Understanding/non-text-content.html), and make sure to test your implementation to validate that all the visible content is described by the string you return.
+
+
+```javascript
+// index.html
+// ...
+document.querySelector('atomic-search-box-instant-results').ariaLabelGenerator = ({i18n}, result) => { (1)
+    const information = [result.raw.ec_name]; (2)
+
+  if ('ec_rating' in result.raw) { (3)
+    information.push(
+      i18n.t('stars', {
+        count: result.raw.ec_rating,
+        max: 5,
+      })
+    );
+  } else {
+    information.push(i18n.t('no-ratings-available'));
+  }
+
+  if ('ec_price' in result.raw) { (4)
+    information.push(
+      result.raw.ec_price.toLocaleString(i18n.language, {
+        style: 'currency',
+        currency: 'USD',
+      })
+    );
+  }
+
+  return information.join(', ');
+};
+```
+
+
+1. The `ariaLabelGenerator` function takes in the `i18next` bindings and the target result.
+
+The `i18next` bindings are required when you want to support [localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
+
+
+2. Create an array of strings that your function will concatenate and return.
+
+The first thing you include is the item name.
+You'll add other strings below.
+
+
+3. If the field you want to add is populated, add it to the `information` array, using `i18n` [dynamic values](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization#use-dynamic-values) for localization.
+
+Turn the field into a string as in the `locales.json` file below.
+
+```json
+// locales.json
+{
+  // ...
+  "stars": {
+    "en": "{{count}} stars out of {{max}}",
+    "fr": "{{count}} étoiles sur {{max}}"
+  },
+  // ...
+}
+```
+
+
+4. If the price field is populated, turn it into a string using the [`toLocaleString`](https://www.w3schools.com/jsref/jsref_tolocalestring_number.asp) function, and add it to the `information` array.
+
+
+You can find full examples in the [Atomic](https://docs.coveo.com/en/lcdf0264/) project [repository](https://docs.coveo.com/en/2739/).
+
+* [`commerce-full.html`](https://github.com/coveo/ui-kit/blob/fc72655/packages/atomic/src/pages/accessibility/commerce-full.html)
+
+* [`AtomicPageWrapper.tsx`](https://github.com/coveo/ui-kit/blob/fc72655e3524e76c6d7409e94e6e388457e60312/packages/samples/atomic-react/src/components/AtomicPageWrapper.tsx)

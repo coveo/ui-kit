@@ -28,7 +28,7 @@ const facetWidthDecorator: Decorator = (story) =>
 
 const meta: Meta = {
   component: 'atomic-insight-refine-modal',
-  title: 'Insight/Refine Modal',
+  title: 'Reference/Insight/Refine Modal',
   id: 'atomic-insight-refine-modal',
   render: (args) => html`${styleTemplate(args)}`,
   parameters: {

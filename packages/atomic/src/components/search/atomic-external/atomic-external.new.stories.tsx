@@ -77,7 +77,7 @@ const externalComponentDecorator = (story: () => unknown) => html`
 
 const meta: Meta = {
   component: 'atomic-external',
-  title: 'Search/External',
+  title: 'Reference/Search/External',
   id: 'atomic-external',
   render: (args) => template(args),
   decorators: [externalComponentDecorator],
