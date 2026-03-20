@@ -26,6 +26,7 @@ const {fetchMock, fetchMockBeforeEach} = mockFetch();
 describe('SearchPageClient', () => {
     const fakeDocInfo = {
         collectionName: 'collection',
+        documentCategory: 'category',
         documentAuthor: 'author',
         documentPosition: 1,
         documentTitle: 'title',

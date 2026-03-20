@@ -84,6 +84,7 @@ export interface DocumentInformation {
     documentAuthor?: string;
     queryPipeline?: string;
     rankingModifier?: string;
+    documentCategory?: string;
 }
 
 export interface ClickEventRequest extends EventBaseRequest, DocumentInformation {}
