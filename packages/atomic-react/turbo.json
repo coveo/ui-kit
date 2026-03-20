@@ -18,7 +18,7 @@
       "outputs": ["./dist/assets/**", "./dist/lang/**"]
     },
     "gen:lit": {
-      "dependsOn": ["@coveo/atomic#build:cem"],
+      "dependsOn": ["@coveo/atomic#build:cem", "@coveo/atomic#build:lit"],
       "outputs": [
         "src/components/search/components.ts",
         "src/components/commerce/components.ts"

@@ -23,6 +23,32 @@ const __dirname = dirname(__filename);
 mkdirSync(resolve(__dirname, 'static/assets'), {recursive: true});
 mkdirSync(resolve(__dirname, '../src/assets/lang'), {recursive: true});
 
+const virtualCustomElementTags = (): Plugin => {
+  return {
+    name: 'virtual-custom-element-tags',
+    enforce: 'pre',
+    resolveId(id, importer) {
+      if (
+        importer &&
+        resolve(dirname(importer), id) ===
+          resolve(import.meta.dirname, '../src/utils/custom-element-tags.js')
+      ) {
+        return `virtual:custom-element-tags`;
+      }
+      return null;
+    },
+    async load(id) {
+      if (id === 'virtual:custom-element-tags') {
+        return `
+          import elementMap from '@/src/components/lazy-index.js';
+          export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>(Object.keys(elementMap));
+        `;
+      }
+      return null;
+    },
+  };
+};
+
 const virtualOpenApiModules = (): Plugin => {
   const virtualModules = new Map<string, string>();
 
@@ -155,6 +181,7 @@ const config: StorybookConfig = {
         'process.env.NODE_ENV': JSON.stringify('development'),
       },
       plugins: [
+        virtualCustomElementTags(),
         virtualOpenApiModules(),
         tailwindcss(),
         resolvePathAliases(),
