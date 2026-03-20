@@ -1,5 +1,4 @@
 import '@/src/themes/coveo.css';
-import '../storybook-utils/documentation/edit-in-github.css';
 import '../storybook-utils/documentation/docs-layout.css';
 import type {Preview} from '@storybook/web-components-vite';
 import {setCustomElementsManifest} from '@storybook/web-components-vite';
