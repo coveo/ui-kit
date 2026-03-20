@@ -18,12 +18,14 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {when} from 'lit/directives/when.js';
 import {GeneratedAnswerController} from '@/src/components/common/generated-answer/generated-answer-controller';
+import '@/src/components/common/atomic-generated-answer-thread/atomic-generated-answer-thread.js';
 import {renderAnswerContent} from '@/src/components/common/generated-answer/render-answer-content';
 import {renderCardHeader} from '@/src/components/common/generated-answer/render-card-header';
 import {renderCitations} from '@/src/components/common/generated-answer/render-citations';
 import {renderCustomNoAnswerMessage} from '@/src/components/common/generated-answer/render-custom-no-answer-message';
 import {renderDisclaimer} from '@/src/components/common/generated-answer/render-disclaimer';
 import {renderFeedbackAndCopyButtons} from '@/src/components/common/generated-answer/render-feedback-and-copy-buttons';
+import {renderFollowUpInput} from '@/src/components/common/generated-answer/render-follow-up-input.js';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {arrayConverter} from '@/src/converters/array-converter';
@@ -40,8 +42,6 @@ import {debounce} from '@/src/utils/debounce-utils';
 import {getNamedSlotContent} from '@/src/utils/slot-utils';
 import {shouldDisplayOnCurrentTab} from '@/src/utils/tab-utils';
 import atomicGeneratedAnswerStyles from './atomic-generated-answer.tw.css.js';
-import '@/src/components/common/generated-answer/atomic-generated-answers-thread/atomic-generated-answers-thread.js';
-import {renderFollowUpInput} from '@/src/components/common/generated-answer/render-follow-up-input.js';
 
 /**
  * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
@@ -655,7 +655,7 @@ export class AtomicGeneratedAnswer
           .followUpAnswers ?? []),
       ];
 
-      return html`<atomic-generated-answers-thread
+      return html`<atomic-generated-answer-thread
         .generatedAnswers=${allGeneratedAnswers}
         .i18n=${this.bindings.i18n}
         .renderCitations=${this.renderCitationsList.bind(this)}
@@ -665,7 +665,7 @@ export class AtomicGeneratedAnswer
           this.generatedAnswer.dislike(answerId)}
         .onCopyToClipboard=${(answerId: string) =>
           this.generatedAnswer.logCopyToClipboard(answerId)}
-      ></atomic-generated-answers-thread>`;
+      ></atomic-generated-answer-thread>`;
     }
 
     return renderAnswerContent({
