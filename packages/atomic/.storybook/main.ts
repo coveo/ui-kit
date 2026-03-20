@@ -181,7 +181,13 @@ const config: StorybookConfig = {
         'process.env.NODE_ENV': JSON.stringify('development'),
       },
       optimizeDeps: {
-        exclude: ['dayjs/plugin/quarterOfYear.js'],
+        include: [
+          'dayjs',
+          'dayjs/plugin/quarterOfYear.js',
+          'dayjs/plugin/customParseFormat.js',
+          'dayjs/plugin/timezone.js',
+          'dayjs/plugin/utc.js',
+        ],
       },
       plugins: [
         virtualCustomElementTags(),
