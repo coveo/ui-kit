@@ -249,13 +249,14 @@ export const logGeneratedAnswerFeedback = (
 
 //TODO: SFINT-5435
 export const logGeneratedAnswerStreamEnd = (
-  answerGenerated: boolean
+  answerGenerated: boolean,
+  answerId?: string
 ): CustomAction =>
   makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/streamEnd',
     __legacy__getBuilder: (client, state) => {
       const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
+        answerId ?? generativeQuestionAnsweringIdSelector(state);
       const answerTextIsEmpty = answerGenerated
         ? !state.generatedAnswer?.answer ||
           !state.generatedAnswer?.answer.length
@@ -272,7 +273,7 @@ export const logGeneratedAnswerStreamEnd = (
     analyticsType: 'Rga.AnswerReceived',
     analyticsPayloadBuilder: (state): Rga.AnswerReceived | undefined => {
       const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
+        answerId ?? generativeQuestionAnsweringIdSelector(state);
       return {
         answerId: generativeQuestionAnsweringId ?? '',
         answerGenerated: answerGenerated ?? false,
@@ -280,7 +281,9 @@ export const logGeneratedAnswerStreamEnd = (
     },
   });
 
-export const logGeneratedAnswerResponseLinked = (): CustomAction =>
+export const logGeneratedAnswerResponseLinked = (
+  answerId?: string
+): CustomAction =>
   makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/responseLinked',
     __legacy__getBuilder: () => {
@@ -289,7 +292,7 @@ export const logGeneratedAnswerResponseLinked = (): CustomAction =>
     analyticsType: 'Rga.ResponseLinked',
     analyticsPayloadBuilder: (state): Rga.ResponseLinked | undefined => {
       const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
+        answerId ?? generativeQuestionAnsweringIdSelector(state);
       return {
         answerId: generativeQuestionAnsweringId ?? '',
         responseId:

@@ -104,8 +104,8 @@ export const createFollowUpStrategy = (
           answerId: runId,
         })
       );
-      dispatch(logGeneratedAnswerStreamEnd(answerGenerated));
-      dispatch(logGeneratedAnswerResponseLinked());
+      dispatch(logGeneratedAnswerStreamEnd(answerGenerated, runId));
+      dispatch(logGeneratedAnswerResponseLinked(runId));
       runId = '';
     },
   };

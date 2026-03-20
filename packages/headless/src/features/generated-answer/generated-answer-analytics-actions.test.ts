@@ -422,6 +422,24 @@ describe('generated answer analytics actions', () => {
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
+    it('should log #logGeneratedAnswerStreamEnd with a provided answerId', async () => {
+      await logGeneratedAnswerStreamEnd(true, exampleProvidedAnswerId)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockMakeGeneratedAnswerStreamEnd;
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith({
+        generativeQuestionAnsweringId: exampleProvidedAnswerId,
+        answerGenerated: true,
+        answerTextIsEmpty: true,
+      });
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
+    });
+
     it('should log #logGeneratedAnswerShowAnswers with the right payload', async () => {
       await logGeneratedAnswerShowAnswers()()(
         engine.dispatch,
@@ -760,6 +778,23 @@ describe('generated answer analytics actions', () => {
       });
     });
 
+    it('should log #logGeneratedAnswerStreamEnd with a provided answerId', async () => {
+      await logGeneratedAnswerStreamEnd(true, exampleProvidedAnswerId)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toStrictEqual([
+        'Rga.AnswerReceived',
+        {
+          answerId: exampleProvidedAnswerId,
+          answerGenerated: true,
+        },
+      ]);
+    });
+
     it('should log #logGeneratedAnswerResponseLinked with the response id and answer id', async () => {
       await logGeneratedAnswerResponseLinked()()(
         engine.dispatch,
@@ -769,6 +804,23 @@ describe('generated answer analytics actions', () => {
 
       expect(emit).toHaveBeenCalledTimes(1);
       expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
+
+    it('should log #logGeneratedAnswerResponseLinked with a provided answer id', async () => {
+      await logGeneratedAnswerResponseLinked(exampleProvidedAnswerId)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toStrictEqual([
+        'Rga.ResponseLinked',
+        {
+          answerId: exampleProvidedAnswerId,
+          responseId: exampleSearchUid,
+        },
+      ]);
     });
   });
 });
