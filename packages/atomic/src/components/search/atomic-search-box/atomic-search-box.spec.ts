@@ -417,10 +417,24 @@ describe('atomic-search-box', () => {
       );
     });
 
-    it('should keep the same search box id when redirectionUrl changes', async () => {
+    it('should keep the same search box id when redirectionUrl changes during initial lifecycle', async () => {
       vi.mocked(randomID).mockClear();
 
-      const {element} = await renderSearchBox();
+      const {atomicInterface} = await renderInAtomicSearchInterface({
+        template: html`<atomic-search-box>
+          <fake-atomic-search-box-suggestions
+            suggestion-count="3"
+          ></fake-atomic-search-box-suggestions>
+        </atomic-search-box>`,
+        selector: undefined,
+        bindings: (bindings) => {
+          bindings.engine = mockedEngine;
+          return bindings;
+        },
+      });
+
+      const element =
+        atomicInterface.querySelector<AtomicSearchBox>('atomic-search-box')!;
       const initialId = element.id;
 
       element.redirectionUrl = '/search';
@@ -431,6 +445,8 @@ describe('atomic-search-box', () => {
 
       expect(element.id).toBe(initialId);
       expect(randomID).toHaveBeenCalledTimes(1);
+
+      element.remove();
     });
 
     describe('when redirectTo state is set', () => {
