@@ -253,7 +253,7 @@ export class AtomicSegmentedFacet
   })
   customSort: string[] = [];
 
-  private dependenciesManager!: FacetConditionsManager;
+  private dependenciesManager?: FacetConditionsManager;
 
   static styles: CSSResultGroup = [
     facetCommonStyles,
