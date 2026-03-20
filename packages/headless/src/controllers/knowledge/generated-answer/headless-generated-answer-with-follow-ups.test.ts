@@ -579,7 +579,12 @@ describe('GeneratedAnswerWithFollowUps', () => {
       expect(mockFollowUpAgent.runAgent).toHaveBeenCalledWith(
         {
           forwardedProps: {
-            q: question,
+            params: expect.objectContaining({
+              q: question,
+              analytics: expect.objectContaining({
+                actionCause: 'searchboxSubmit',
+              }),
+            }),
             conversationId,
             accessToken: 'foo',
           },

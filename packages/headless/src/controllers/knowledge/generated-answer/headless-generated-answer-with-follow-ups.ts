@@ -17,6 +17,7 @@ import {
 } from '../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {followUpAnswersReducer as followUpAnswers} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import type {FollowUpAnswersState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
+import {constructGenerateHeadAnswerParams} from '../../../features/generated-answer/generated-answer-request.js';
 import {withGeneratedAnswerSseErrorHelpers} from '../../../features/generated-answer/sse-generated-answer-errors.js';
 import type {GeneratedAnswerState} from '../../../index.js';
 import type {
@@ -240,11 +241,18 @@ export function buildGeneratedAnswerWithFollowUps(
 
       followUpAgent.abortRun();
       engine.dispatch(createFollowUpAnswer({question}));
+      const params = {
+        ...constructGenerateHeadAnswerParams(
+          getState(),
+          engine.navigatorContext
+        ),
+        q: question,
+      };
       try {
         await followUpAgent.runAgent(
           {
             forwardedProps: {
-              q: question,
+              params,
               conversationId,
               accessToken,
             },
