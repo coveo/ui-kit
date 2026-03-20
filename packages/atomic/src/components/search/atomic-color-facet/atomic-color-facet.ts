@@ -442,7 +442,9 @@ export class AtomicColorFacet
 
   public disconnectedCallback() {
     super.disconnectedCallback();
-    this.facetConditionsManager?.stopWatching();
+    if (!this.isConnected) {
+      this.facetConditionsManager?.stopWatching();
+    }
   }
 
   public shouldUpdate(changedProperties: Map<string, unknown>) {
