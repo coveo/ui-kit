@@ -1,5 +1,5 @@
 import type {AgentSubscriber} from '@ag-ui/client';
-import type {Dispatch} from '@reduxjs/toolkit';
+import type {ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
 import {
   followUpCitationsReceived,
   followUpCompleted,
@@ -12,13 +12,19 @@ import {
   setFollowUpIsLoading,
   setFollowUpIsStreaming,
 } from '../../../../../features/follow-up-answers/follow-up-answers-actions.js';
+import {
+  logGeneratedAnswerResponseLinked,
+  logGeneratedAnswerStreamEnd,
+} from '../../../../../features/generated-answer/generated-answer-analytics-actions.js';
 import type {GenerationStepName} from '../../../../../features/generated-answer/generated-answer-state.js';
 import {mapRunErrorCode} from '../../../../../features/generated-answer/sse-generated-answer-errors.js';
 
 /**
  * Creates an AgentSubscriber that handles follow-up answer streaming events
  */
-export const createFollowUpStrategy = (dispatch: Dispatch): AgentSubscriber => {
+export const createFollowUpStrategy = (
+  dispatch: ThunkDispatch<unknown, unknown, UnknownAction>
+): AgentSubscriber => {
   let runId = '';
 
   return {
@@ -98,6 +104,8 @@ export const createFollowUpStrategy = (dispatch: Dispatch): AgentSubscriber => {
           answerId: runId,
         })
       );
+      dispatch(logGeneratedAnswerStreamEnd(answerGenerated));
+      dispatch(logGeneratedAnswerResponseLinked());
       runId = '';
     },
   };
