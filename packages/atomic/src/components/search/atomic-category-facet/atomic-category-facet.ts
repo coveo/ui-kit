@@ -425,9 +425,7 @@ export class AtomicCategoryFacet
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    if (!this.isConnected) {
-      this.dependenciesManager?.stopWatching();
-    }
+    this.dependenciesManager?.stopWatching();
   }
 
   private get focusTargets() {

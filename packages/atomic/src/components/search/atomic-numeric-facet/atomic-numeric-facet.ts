@@ -303,14 +303,12 @@ export class AtomicNumericFacet
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    if (!this.isConnected) {
-      this.filterDependenciesManager?.stopWatching();
-      this.removeNumberFormatListener?.();
-      this.removeNumberInputApplyListener?.();
-      this.unsubscribeFacetForRange?.();
-      this.unsubscribeFacetForInput?.();
-      this.unsubscribeFilter?.();
-    }
+    this.filterDependenciesManager?.stopWatching();
+    this.removeNumberFormatListener?.();
+    this.removeNumberInputApplyListener?.();
+    this.unsubscribeFacetForRange?.();
+    this.unsubscribeFacetForInput?.();
+    this.unsubscribeFilter?.();
   }
 
   private get focusTarget(): FocusTargetController {

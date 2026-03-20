@@ -315,9 +315,7 @@ export class AtomicSegmentedFacet
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    if (!this.isConnected) {
-      this.dependenciesManager?.stopWatching();
-    }
+    this.dependenciesManager?.stopWatching();
   }
 
   private renderValuesContainer(children: unknown) {

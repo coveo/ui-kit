@@ -260,15 +260,13 @@ export class AtomicInsightNumericFacet
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    if (!this.isConnected) {
-      this.dependenciesManager?.stopWatching();
-      this.filterDependenciesManager?.stopWatching();
-      this.removeNumberFormatListener?.();
-      this.removeNumberInputApplyListener?.();
-      this.unsubscribeFacetForRange?.();
-      this.unsubscribeFacetForInput?.();
-      this.unsubscribeFilter?.();
-    }
+    this.dependenciesManager?.stopWatching();
+    this.filterDependenciesManager?.stopWatching();
+    this.removeNumberFormatListener?.();
+    this.removeNumberInputApplyListener?.();
+    this.unsubscribeFacetForRange?.();
+    this.unsubscribeFacetForInput?.();
+    this.unsubscribeFilter?.();
   }
 
   private get focusTarget(): FocusTargetController {

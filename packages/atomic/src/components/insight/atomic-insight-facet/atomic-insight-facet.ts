@@ -218,9 +218,7 @@ export class AtomicInsightFacet
 
   public disconnectedCallback() {
     super.disconnectedCallback();
-    if (!this.isConnected) {
-      this.facetConditionsManager?.stopWatching();
-    }
+    this.facetConditionsManager?.stopWatching();
   }
 
   private get focusTargets(): {

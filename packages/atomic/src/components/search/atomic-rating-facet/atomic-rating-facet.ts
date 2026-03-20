@@ -343,9 +343,7 @@ export class AtomicRatingFacet
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    if (!this.isConnected) {
-      this.dependenciesManager?.stopWatching();
-    }
+    this.dependenciesManager?.stopWatching();
   }
 
   private initializeFacet() {
