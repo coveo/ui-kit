@@ -34,7 +34,10 @@
     "build:cem": {
       "outputs": ["./custom-elements.json"],
       "inputs": [
-        "./src/**/*.ts",
+        "!./src/**/*.ts",
+        "!./src/components/*/index.ts",
+        "!./src/components/*/lazy-index.ts",
+        "!./src/utils/custom-element-tags.ts",
         "!./src/**/*.spec.ts",
         "!./src/**/*.d.ts",
         "!./src/**/e2e/**"
@@ -52,10 +55,10 @@
         "docs/**"
       ],
       "inputs": [
-        "!./src/**/*.ts",
-        "!src/components/*/index.ts",
-        "!src/components/*/lazy-index.ts",
-        "!src/utils/custom-element-tags.ts",
+        "./src/**/*.ts",
+        "!./src/components/*/index.ts",
+        "!./src/components/*/lazy-index.ts",
+        "!./src/utils/custom-element-tags.ts",
         "!./src/**/*.spec.ts",
         "!./src/**/*.d.ts",
         "!./src/**/e2e/**"
