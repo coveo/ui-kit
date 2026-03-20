@@ -13,8 +13,6 @@ import type {
 import './atomic-answer-content';
 import type {GeneratedAnswerCitation} from '@coveo/headless';
 
-const SSE_TURN_LIMIT_REACHED_CODE = 1005;
-
 vi.mock('../render-feedback-and-copy-buttons', () => ({
   renderFeedbackAndCopyButtons: vi.fn(() => html``),
 }));
@@ -252,7 +250,7 @@ describe('atomic-answer-content', () => {
       generatedAnswer: {
         error: {
           message: 'turn limit reached',
-          code: SSE_TURN_LIMIT_REACHED_CODE,
+          isSseTurnLimitReachedError: () => true,
         },
       },
     });

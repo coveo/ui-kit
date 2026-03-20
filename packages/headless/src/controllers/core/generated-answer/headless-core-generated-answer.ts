@@ -20,6 +20,7 @@ import type {GeneratedAnswerFeedback} from '../../../features/generated-answer/g
 import {generatedAnswerReducer as generatedAnswer} from '../../../features/generated-answer/generated-answer-slice.js';
 import type {GeneratedAnswerState} from '../../../features/generated-answer/generated-answer-state.js';
 import type {GeneratedResponseFormat} from '../../../features/generated-answer/generated-response-format.js';
+import {withGeneratedAnswerSseErrorHelpers} from '../../../features/generated-answer/sse-generated-answer-errors.js';
 import type {
   DebugSection,
   GeneratedAnswerSection,
@@ -263,7 +264,11 @@ export function buildCoreGeneratedAnswer(
     ...controller,
 
     get state() {
-      return getState().generatedAnswer;
+      const state = getState().generatedAnswer;
+      return {
+        ...state,
+        error: withGeneratedAnswerSseErrorHelpers(state.error),
+      };
     },
 
     // TODO: SFINT-6665

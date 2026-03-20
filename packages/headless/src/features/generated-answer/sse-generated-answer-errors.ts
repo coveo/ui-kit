@@ -10,6 +10,18 @@ export enum GeneratedAnswerSseErrorCode {
   SseTurnLimitReached = 1005,
 }
 
+export interface GeneratedAnswerErrorWithSseHelpers {
+  message?: string;
+  code?: number;
+  isRetryable?: boolean;
+  isMaxDurationExceededError(): boolean;
+  isFollowupNotSupportedError(): boolean;
+  isConversationNotFoundError(): boolean;
+  isSseModelNotAvailableError(): boolean;
+  isSseInternalError(): boolean;
+  isSseTurnLimitReachedError(): boolean;
+}
+
 const generatedAnswerSseErrorMap: Record<string, GeneratedAnswerSseErrorCode> =
   {
     'KNOWLEDGE:SSE_MAX_DURATION_EXCEEDED':
@@ -34,4 +46,54 @@ export function mapRunErrorCode(code?: string): GeneratedAnswerSseErrorCode {
     generatedAnswerSseErrorMap[code] ??
     GeneratedAnswerSseErrorCode.SseInternalError
   );
+}
+
+function attachErrorHelpers<T extends {code?: number}>(error: T) {
+  const isCode = (value: GeneratedAnswerSseErrorCode) => error.code === value;
+
+  Object.defineProperties(error, {
+    isMaxDurationExceededError: {
+      value: () => isCode(GeneratedAnswerSseErrorCode.SseMaxDurationExceeded),
+      enumerable: false,
+    },
+    isFollowupNotSupportedError: {
+      value: () => isCode(GeneratedAnswerSseErrorCode.SseFollowUpNotSupported),
+      enumerable: false,
+    },
+    isConversationNotFoundError: {
+      value: () => isCode(GeneratedAnswerSseErrorCode.ConversationNotFound),
+      enumerable: false,
+    },
+    isSseModelNotAvailableError: {
+      value: () => isCode(GeneratedAnswerSseErrorCode.SseModelsNotAvailable),
+      enumerable: false,
+    },
+    isSseInternalError: {
+      value: () => isCode(GeneratedAnswerSseErrorCode.SseInternalError),
+      enumerable: false,
+    },
+    isSseTurnLimitReachedError: {
+      value: () => isCode(GeneratedAnswerSseErrorCode.SseTurnLimitReached),
+      enumerable: false,
+    },
+  });
+
+  return error as T & GeneratedAnswerErrorWithSseHelpers;
+}
+
+/**
+ * Decorates a generated answer error with helper predicates for SSE error codes.
+ */
+export function withGeneratedAnswerSseErrorHelpers<
+  T extends {
+    message?: string;
+    code?: number;
+    isRetryable?: boolean;
+  },
+>(error?: T): (T & GeneratedAnswerErrorWithSseHelpers) | undefined {
+  if (!error) {
+    return undefined;
+  }
+
+  return attachErrorHelpers({...error});
 }

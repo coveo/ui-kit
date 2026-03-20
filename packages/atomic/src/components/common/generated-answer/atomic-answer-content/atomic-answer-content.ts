@@ -14,7 +14,6 @@ import {renderFeedbackAndCopyButtons} from '../render-feedback-and-copy-buttons'
 import {renderSourceCitations} from '../source-citations';
 
 const COPY_RESET_DURATION_MS = 2000;
-const SSE_TURN_LIMIT_REACHED_CODE = 1005;
 
 export interface GeneratedAnswer extends GeneratedAnswerBase {
   question: string;
@@ -206,24 +205,15 @@ export class AtomicAnswerContent extends LitElement {
   }
 
   private renderError(): TemplateResult {
-    if (this.generatedAnswer.error?.code === SSE_TURN_LIMIT_REACHED_CODE) {
-      return this.renderTurnLimitReachedError();
-    }
+    const errorMessageKey =
+      this.generatedAnswer.error?.isSseTurnLimitReachedError?.()
+        ? 'generated-answer-error-turn-limit-reached'
+        : 'generated-answer-error-generic';
 
     return html`
       <div part="generated-answer-error">
         <p>
-          ${this.i18n.t('generated-answer-error-generic')}
-        </p>
-      </div>
-    `;
-  }
-
-  private renderTurnLimitReachedError(): TemplateResult {
-    return html`
-      <div part="generated-answer-error">
-        <p>
-          ${this.i18n.t('generated-answer-error-turn-limit-reached')}
+          ${this.i18n.t(errorMessageKey)}
         </p>
       </div>
     `;
