@@ -99,7 +99,7 @@ export default {
         'custom-elements-manifest.config.mjs',
         'fake-loader/**/*',
       ],
-      ignoreDependencies: ['tailwindcss'],
+      ignoreDependencies: ['tailwindcss', 'local-web-server'],
       entry: ['src/index.ts', 'src/loader.ts', 'src/components/index.ts'],
     },
     'packages/atomic-legacy': {

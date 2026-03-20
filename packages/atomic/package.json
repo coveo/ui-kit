@@ -119,6 +119,7 @@
     "chromatic": "13.3.4",
     "handlebars": "4.7.8",
     "lit-html": "3.3.1",
+    "local-web-server": "catalog:",
     "msw": "2.11.4",
     "msw-storybook-addon": "2.0.5",
     "playwright": "catalog:",

@@ -50,7 +50,6 @@ catalog:
   '@react-router/fs-routes': 7.13.1
   '@react-router/node': 7.13.1
   '@react-router/serve': 7.13.1
-  'react-router': 7.13.1
   '@rollup/plugin-replace': 6.0.2
   '@rollup/plugin-url': 8.0.2
   '@stencil/core': 4.20.0
@@ -77,6 +76,7 @@ catalog:
   puppeteer: 24.15.0
   react: 19.2.3
   react-dom: 19.2.3
+  react-router: 7.13.1
   rollup-plugin-node-polyfills: 0.2.1
   rollup-plugin-string: 3.0.0
   typedoc: 0.28.13
