@@ -1,3 +1,9 @@
+## 3.1.1 (2026-03-20)
+
+### Bug Fixes
+
+- **relay:** remove postinstall script ([#244](https://github.com/coveo/relay/issues/244)) ([5a70693](https://github.com/coveo/relay/commits/))
+
 # 3.1.0 (2026-03-12)
 
 ### Features
