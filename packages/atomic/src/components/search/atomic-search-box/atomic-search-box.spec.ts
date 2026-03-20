@@ -417,6 +417,22 @@ describe('atomic-search-box', () => {
       );
     });
 
+    it('should keep the same search box id when redirectionUrl changes', async () => {
+      vi.mocked(randomID).mockClear();
+
+      const {element} = await renderSearchBox();
+      const initialId = element.id;
+
+      element.redirectionUrl = '/search';
+      await element.updateComplete;
+
+      element.redirectionUrl = undefined;
+      await element.updateComplete;
+
+      expect(element.id).toBe(initialId);
+      expect(randomID).toHaveBeenCalledTimes(1);
+    });
+
     describe('when redirectTo state is set', () => {
       it('should dispatch a cancelable redirect event with the correct detail', async () => {
         let capturedEvent: CustomEvent | null = null;
