@@ -54,6 +54,7 @@ vi.mock('@coveo/headless/commerce', {spy: true});
 vi.mock('@/src/utils/init-queue', {spy: true});
 vi.mock('./analytics-config', {spy: true});
 vi.mock('./store', {spy: true});
+vi.mock('@/src/utils/initialization-common-utils', {spy: true});
 
 @customElement('test-element')
 @bindings()
