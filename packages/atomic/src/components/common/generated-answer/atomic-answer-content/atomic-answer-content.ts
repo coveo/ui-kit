@@ -205,10 +205,15 @@ export class AtomicAnswerContent extends LitElement {
   }
 
   private renderError(): TemplateResult {
+    const errorMessageKey =
+      this.generatedAnswer.error?.isSseTurnLimitReachedError?.()
+        ? 'generated-answer-error-turn-limit-reached'
+        : 'generated-answer-error-generic';
+
     return html`
       <div part="generated-answer-error">
         <p>
-          ${this.i18n.t('generated-answer-error-generic')}
+          ${this.i18n.t(errorMessageKey)}
         </p>
       </div>
     `;

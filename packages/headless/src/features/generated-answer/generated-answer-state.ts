@@ -60,6 +60,12 @@ export interface GeneratedAnswerBase {
     message?: string;
     code?: number;
     isRetryable?: boolean;
+    isMaxDurationExceededError?(): boolean;
+    isFollowupNotSupportedError?(): boolean;
+    isConversationNotFoundError?(): boolean;
+    isSseModelNotAvailableError?(): boolean;
+    isSseInternalError?(): boolean;
+    isSseTurnLimitReachedError?(): boolean;
   };
   /**
    * Whether an answer cannot be generated after a query is executed.
