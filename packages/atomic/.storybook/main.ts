@@ -180,6 +180,9 @@ const config: StorybookConfig = {
         'process.env.VERSION': JSON.stringify(version),
         'process.env.NODE_ENV': JSON.stringify('development'),
       },
+      optimizeDeps: {
+        exclude: ['dayjs/plugin/quarterOfYear.js'],
+      },
       plugins: [
         virtualCustomElementTags(),
         virtualOpenApiModules(),
