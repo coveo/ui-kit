@@ -17,6 +17,7 @@ import {
 } from '../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {followUpAnswersReducer as followUpAnswers} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import type {FollowUpAnswersState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
+import {withGeneratedAnswerSseErrorHelpers} from '../../../features/generated-answer/sse-generated-answer-errors.js';
 import type {GeneratedAnswerState} from '../../../index.js';
 import type {
   FollowUpAnswersSection,
@@ -134,10 +135,20 @@ export function buildGeneratedAnswerWithFollowUps(
     ...controller,
     get state() {
       const followUpAnswersState = getState().followUpAnswers;
+      const generatedAnswerState = getState().generatedAnswer;
 
       return {
-        ...getState().generatedAnswer,
-        followUpAnswers: followUpAnswersState,
+        ...generatedAnswerState,
+        error: withGeneratedAnswerSseErrorHelpers(generatedAnswerState.error),
+        followUpAnswers: {
+          ...followUpAnswersState,
+          followUpAnswers: followUpAnswersState.followUpAnswers.map(
+            (followUpAnswer) => ({
+              ...followUpAnswer,
+              error: withGeneratedAnswerSseErrorHelpers(followUpAnswer.error),
+            })
+          ),
+        },
       };
     },
 

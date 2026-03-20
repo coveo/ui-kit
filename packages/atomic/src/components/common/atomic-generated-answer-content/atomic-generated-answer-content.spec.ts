@@ -1,4 +1,3 @@
-import type {GeneratedAnswerCitation} from '@coveo/headless';
 import {html, type TemplateResult} from 'lit';
 import {beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
@@ -12,6 +11,7 @@ import type {
   GeneratedAnswer,
 } from './atomic-generated-answer-content';
 import './atomic-generated-answer-content';
+import type {GeneratedAnswerCitation} from '@coveo/headless';
 
 vi.mock('../generated-answer/render-feedback-and-copy-buttons', () => ({
   renderFeedbackAndCopyButtons: vi.fn(() => html``),
@@ -73,19 +73,23 @@ describe('atomic-generated-answer-content', () => {
     const {element} =
       await renderInAtomicSearchInterface<AtomicGeneratedAnswerContent>({
         template: html`<atomic-generated-answer-content
-            .generatedAnswer=${generatedAnswer}
-            .i18n=${i18n}
-            .onClickLike=${onClickLike}
-            .onClickDislike=${onClickDislike}
-            .onCopyToClipboard=${onCopyToClipboard}
-            .renderCitations=${renderCitations}
-          ></atomic-generated-answer-content>`,
+          .generatedAnswer=${generatedAnswer}
+          .i18n=${i18n}
+          .onClickLike=${onClickLike}
+          .onClickDislike=${onClickDislike}
+          .onCopyToClipboard=${onCopyToClipboard}
+          .renderCitations=${renderCitations}
+        ></atomic-generated-answer-content>`,
         selector: 'atomic-generated-answer-content',
       });
 
     return {
       element,
       generatedAnswer,
+      onClickLike,
+      onClickDislike,
+      onCopyToClipboard,
+      renderCitations,
       getFeedbackProps: () =>
         vi.mocked(renderFeedbackAndCopyButtons).mock.calls.at(-1)?.[0].props,
       getGeneratedContentProps: () =>
@@ -110,7 +114,10 @@ describe('atomic-generated-answer-content', () => {
 
   it('should render nothing when the answer id is missing', async () => {
     await renderComponent({
-      generatedAnswer: {answer: undefined, answerId: undefined},
+      generatedAnswer: {
+        answer: undefined,
+        answerId: undefined,
+      },
     });
 
     expect(renderAgentGenerationSteps).not.toHaveBeenCalled();
@@ -120,7 +127,9 @@ describe('atomic-generated-answer-content', () => {
 
   it('should call renderAgentGenerationSteps with an empty list when generation steps are missing', async () => {
     await renderComponent({
-      generatedAnswer: {generationSteps: undefined},
+      generatedAnswer: {
+        generationSteps: undefined,
+      },
     });
 
     expect(renderAgentGenerationSteps).toHaveBeenCalledWith({
@@ -130,6 +139,133 @@ describe('atomic-generated-answer-content', () => {
         isStreaming: false,
       }),
     });
+  });
+
+  it('should call renderAgentGenerationSteps with isStreaming false when not streaming', async () => {
+    const generationSteps = [
+      {
+        name: 'searching' as const,
+        status: 'active' as const,
+        startedAt: 1,
+      },
+    ];
+
+    await renderComponent({
+      generatedAnswer: {
+        isStreaming: false,
+        generationSteps,
+      },
+    });
+
+    expect(renderAgentGenerationSteps).toHaveBeenCalledWith({
+      props: expect.objectContaining({
+        i18n,
+        agentSteps: generationSteps,
+        isStreaming: false,
+      }),
+    });
+  });
+
+  it('should render generation-step state when streaming without answer content', async () => {
+    await renderComponent({
+      generatedAnswer: {
+        answer: undefined,
+        answerId: 'answer-id',
+        isStreaming: true,
+        generationSteps: [
+          {
+            name: 'thinking',
+            status: 'active',
+            startedAt: 1,
+          },
+        ],
+      },
+    });
+
+    expect(renderAgentGenerationSteps).toHaveBeenCalledWith({
+      props: expect.objectContaining({
+        i18n,
+        isStreaming: true,
+        agentSteps: [
+          {
+            name: 'thinking',
+            status: 'active',
+            startedAt: 1,
+          },
+        ],
+      }),
+    });
+    expect(renderGeneratedContentContainer).toHaveBeenCalledWith({
+      props: expect.objectContaining({
+        answer: undefined,
+        answerContentFormat: 'text/markdown',
+        isStreaming: true,
+      }),
+    });
+    expect(renderFeedbackAndCopyButtons).not.toHaveBeenCalled();
+  });
+
+  it('should render the error template when the generated answer has an error', async () => {
+    const {element} = await renderComponent({
+      generatedAnswer: {
+        error: {message: 'error'},
+      },
+    });
+
+    await element.updateComplete;
+
+    const errorContainer = element.shadowRoot?.querySelector(
+      '[part="generated-answer-error"]'
+    );
+
+    expect(renderGeneratedContentContainer).not.toHaveBeenCalled();
+    expect(errorContainer).not.toBeNull();
+    expect(errorContainer?.textContent).toContain(
+      i18n.t('generated-answer-error-generic')
+    );
+  });
+
+  it('should render the cannot answer template when the generated answer cannot be answered', async () => {
+    const {element} = await renderComponent({
+      generatedAnswer: {
+        cannotAnswer: true,
+      },
+    });
+
+    await element.updateComplete;
+
+    const cannotAnswerContainer = element.shadowRoot?.querySelector(
+      '[part="generated-answer-cannot-answer"]'
+    );
+
+    expect(renderGeneratedContentContainer).not.toHaveBeenCalled();
+    expect(renderFeedbackAndCopyButtons).not.toHaveBeenCalled();
+    expect(cannotAnswerContainer).not.toBeNull();
+    expect(cannotAnswerContainer?.textContent).toContain(
+      i18n.t('generated-answer-cannot-generate-answer')
+    );
+  });
+
+  it('should render the turn limit reached error label when the conversation turn limit is reached', async () => {
+    const {element} = await renderComponent({
+      generatedAnswer: {
+        error: {
+          message: 'turn limit reached',
+          isSseTurnLimitReachedError: () => true,
+        },
+      },
+    });
+
+    await element.updateComplete;
+
+    const errorContainer = element.shadowRoot?.querySelector(
+      '[part="generated-answer-error"]'
+    );
+
+    expect(errorContainer).not.toBeNull();
+    expect(errorContainer?.textContent).toContain(
+      i18n.t('generated-answer-error-turn-limit-reached')
+    );
   });
 
   it('should render the generated content container with answer data', async () => {
@@ -160,7 +296,33 @@ describe('atomic-generated-answer-content', () => {
     });
 
     expect(getSourceCitationsProps()).toEqual(
-      expect.objectContaining({label: i18n.t('citations'), isVisible: true})
+      expect.objectContaining({
+        label: i18n.t('citations'),
+        isVisible: true,
+      })
+    );
+  });
+
+  it('should call renderCitations with citations and answer id', async () => {
+    const citations = [
+      {
+        title: 'citation',
+        id: '1',
+        uri: 'uri',
+        permanentid: '1',
+        source: 'source',
+      },
+    ];
+    const renderCitations = vi.fn(() => html``);
+
+    const {generatedAnswer} = await renderComponent({
+      generatedAnswer: {citations},
+      renderCitations,
+    });
+
+    expect(renderCitations).toHaveBeenCalledWith(
+      citations,
+      generatedAnswer.answerId
     );
   });
 
@@ -179,5 +341,66 @@ describe('atomic-generated-answer-content', () => {
 
     expect(onClickLike).toHaveBeenCalledWith(generatedAnswer.answerId);
     expect(onClickDislike).toHaveBeenCalledWith(generatedAnswer.answerId);
+  });
+
+  it('should pass the default copy tooltip label to the FeedbackAndCopyButtons component', async () => {
+    const {getFeedbackProps} = await renderComponent();
+
+    expect(getFeedbackProps()?.getCopyToClipboardTooltip()).toBe(
+      i18n.t('copy-generated-answer')
+    );
+  });
+
+  it('should copy the answer to the clipboard and expose copied state when the copy button is clicked', async () => {
+    const onCopyToClipboard = vi.fn();
+    const {element, generatedAnswer, getFeedbackProps} = await renderComponent({
+      onCopyToClipboard,
+    });
+
+    const feedbackProps = getFeedbackProps();
+    await feedbackProps?.onCopyToClipboard('example answer');
+    await element.updateComplete;
+
+    const latestFeedbackProps = getFeedbackProps();
+    expect(writeTextMock).toHaveBeenCalledWith(generatedAnswer.answer);
+    expect(onCopyToClipboard).toHaveBeenCalledWith(generatedAnswer.answerId);
+    expect(latestFeedbackProps).toEqual(
+      expect.objectContaining({
+        copied: true,
+        copyError: false,
+      })
+    );
+    expect(latestFeedbackProps?.getCopyToClipboardTooltip()).toBe(
+      i18n.t('generated-answer-copied')
+    );
+  });
+
+  it('should set copy error state when clipboard write fails', async () => {
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+    writeTextMock.mockRejectedValueOnce(new Error('copy failed'));
+
+    const {element, getFeedbackProps, onCopyToClipboard} =
+      await renderComponent();
+
+    const feedbackProps = getFeedbackProps();
+    await feedbackProps?.onCopyToClipboard('example answer');
+    await element.updateComplete;
+
+    const latestFeedbackProps = getFeedbackProps();
+    expect(onCopyToClipboard).not.toHaveBeenCalled();
+    expect(latestFeedbackProps).toEqual(
+      expect.objectContaining({
+        copied: false,
+        copyError: true,
+      })
+    );
+    expect(latestFeedbackProps?.getCopyToClipboardTooltip()).toBe(
+      i18n.t('failed-to-copy-generated-answer')
+    );
+    expect(consoleErrorSpy).toHaveBeenCalled();
+
+    consoleErrorSpy.mockRestore();
   });
 });

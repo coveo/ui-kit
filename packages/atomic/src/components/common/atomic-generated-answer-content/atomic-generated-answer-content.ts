@@ -184,9 +184,18 @@ export class AtomicGeneratedAnswerContent extends LitElement {
   }
 
   private renderError(): TemplateResult {
-    return html`<div part="generated-answer-error"><p>${this.i18n.t(
-      'generated-answer-error-generic'
-    )}</p></div>`;
+    const errorMessageKey =
+      this.generatedAnswer.error?.isSseTurnLimitReachedError?.()
+        ? 'generated-answer-error-turn-limit-reached'
+        : 'generated-answer-error-generic';
+
+    return html`
+      <div part="generated-answer-error">
+        <p>
+          ${this.i18n.t(errorMessageKey)}
+        </p>
+      </div>
+    `;
   }
 
   private renderCannotAnswer(): TemplateResult {
