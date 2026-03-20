@@ -369,6 +369,9 @@ importers:
       msw-storybook-addon:
         specifier: 2.0.5
         version: 2.0.5(msw@2.11.4(@types/node@22.16.5)(typescript@5.9.3))
+      natural-orderby:
+        specifier: 5.0.0
+        version: 5.0.0
       playwright:
         specifier: 'catalog:'
         version: 1.56.1
@@ -11486,6 +11489,10 @@ packages:
 
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
+
+  natural-orderby@5.0.0:
+    resolution: {integrity: sha512-kKHJhxwpR/Okycz4HhQKKlhWe4ASEfPgkSWNmKFHd7+ezuQlxkA5cM3+XkBPvm1gmHen3w53qsYAv+8GwRrBlg==}
+    engines: {node: '>=18'}
 
   navigator.sendbeacon@0.0.20:
     resolution: {integrity: sha512-a2fmNpIMnA9pN8Jv9f4FQZaakEWwdln+YBPydawxnYo6vzlUvYLlRUnPagF++29+rdgVpAtK6hXVSmTgkRgRJw==}
@@ -27128,6 +27135,8 @@ snapshots:
     optional: true
 
   natural-compare@1.4.0: {}
+
+  natural-orderby@5.0.0: {}
 
   navigator.sendbeacon@0.0.20: {}
 
