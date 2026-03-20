@@ -46,6 +46,7 @@ import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {randomID} from '@/src/utils/utils';
 import placeholderStyles from '../../common/item-list/styles/placeholders.tw.css';
+import '@/src/components/recommendations/atomic-recs-result-template/atomic-recs-result-template';
 import '@/src/components/recommendations/atomic-recs-result/atomic-recs-result';
 
 /**

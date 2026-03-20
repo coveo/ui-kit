@@ -41,7 +41,8 @@ import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {randomID} from '@/src/utils/utils';
 import placeholderStyles from '../../common/item-list/styles/placeholders.tw.css';
-import '../atomic-recs-result/atomic-recs-result';
+import '@/src/components/recommendations/atomic-recs-result/atomic-recs-result';
+import '@/src/components/recommendations/atomic-recs-result-template/atomic-recs-result-template';
 
 /**
  * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
