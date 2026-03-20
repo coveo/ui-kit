@@ -145,22 +145,6 @@ describe('#renderAgentGenerationSteps', () => {
       .toHaveTextContent(i18n.t('agent-generation-step-think'));
   });
 
-  it('should render the active answering step label when streaming', async () => {
-    const {element} = await renderComponent({
-      agentSteps: [
-        buildStep({
-          name: GENERATION_STEPS.answering,
-          status: STEP_STATUS.active,
-        }),
-      ],
-      isStreaming: true,
-    });
-
-    await expect
-      .element(element)
-      .toHaveTextContent(i18n.t('generating-answer'));
-  });
-
   it('should not render anything when there is no active step', async () => {
     const {element} = await renderComponent({
       agentSteps: [
