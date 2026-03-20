@@ -41,7 +41,7 @@ const virtualCustomElementTags = (): Plugin => {
       if (id === 'virtual:custom-element-tags') {
         return `
           import elementMap from '@/src/components/lazy-index.js';
-          export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>(Object.keys(elementMap));
+          export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set(Object.keys(elementMap));
         `;
       }
       return null;
