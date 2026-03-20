@@ -10,7 +10,7 @@ export enum GeneratedAnswerSseErrorCode {
   SseTurnLimitReached = 1005,
 }
 
-export interface GeneratedAnswerErrorWithSseHelpers {
+interface GeneratedAnswerErrorWithSseHelpers {
   message?: string;
   code?: number;
   isRetryable?: boolean;
