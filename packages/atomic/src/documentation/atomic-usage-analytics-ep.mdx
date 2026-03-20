@@ -1,0 +1,164 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Atomic usage analytics ep" />
+
+> **Important**
+>
+> [Event Protocol](https://docs.coveo.com/en/o9je0592/) is currently in open beta.
+> If you're interested in using Event Protocol, reach out to your Customer Success Manager (CSM).
+
+
+Since the Atomic V3 release, [Event Protocol](https://docs.coveo.com/en/o3r90189/) is the default tracking protocol.
+
+> **Important**
+>
+> Only [Coveo for Commerce](https://docs.coveo.com/en/1499/) supports EP at the moment.
+> For every other kind of implementation, set `analyticsMode` to `legacy` for the time being.
+
+
+```javascript
+const searchInterface = document.querySelector('atomic-search-interface');
+
+await searchInterface.initialize({
+    // ...
+    analytics: {analyticsMode: 'legacy'},
+});
+// ...
+```
+
+To learn more about whether you should migrate to EP, see [Migrate to Event Protocol](https://docs.coveo.com/en/o88d0509/).
+
+## Log events
+
+EP is simpler to use and more streamlined than the legacy Coveo UA protocol.
+EP doesn't support custom events, custom data, or custom context.
+Search events are sent server-side, so you don't need to log them client-side.
+Atomic components, when used correctly, also log click events for you.
+
+As a result, you generally won't need to tinker with search or click events yourself.
+
+> **Warning**
+>
+> We strongly recommend using the [`InteractiveResult`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.InteractiveResult.html) controller if you need to send extra click events.
+> The controller can automatically extract relevant data from result items and log click events for you, as in the following [custom Atomic component](https://docs.coveo.com/en/atomic/latest/usage/custom-web-components/) example.
+
+
+```html
+<script type="module">
+import { initializeBindings, resultContext } from "https://static.cloud.coveo.com/atomic/v3/index.esm.js";
+import { buildInteractiveResult} from 'https://static.cloud.coveo.com/headless/v3/headless.esm.js';
+
+class DocumentAuthor extends HTMLElement {
+  shadow;
+  result;
+  initialized = false;
+
+  async connectedCallback() {
+    if (this.initialized) {
+      return;
+    }
+
+    this.initialized = true;
+    this.shadow = this.attachShadow({ mode: "closed" });
+
+    try {
+      this.result = await resultContext(this); (1)
+      this.bindings = await initializeBindings(this);
+      this.interactiveResult = buildInteractiveResult(this.bindings.engine, { (2)
+        options: { result: this.result }
+      });
+      this.render();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  render() {
+    const author = this.result.raw["author"] || "anonymous";
+    this.shadow.innerHTML = `<button>Written by: <b>${author}</b></button>`;
+    this.shadow.querySelector('button').onclick = () => this.interactiveResult.select(); (3)
+  }
+}
+
+window.customElements.define("document-author", DocumentAuthor);
+</script>
+<!-- ... -->
+<atomic-result-template>
+  <template>
+    <!-- ... -->
+    <atomic-result-fields-list>
+      <atomic-field-condition class="field" if-defined="author">
+        <document-author></document-author> (4)
+      </atomic-field-condition>
+    </atomic-result-fields-list>
+  </template>
+</atomic-result-template>
+<!-- ... -->
+```
+
+
+1. Retrieve the active result item.
+
+
+
+2. Use the [`buildInteractiveResult`](https://docs.coveo.com/en/headless/latest/reference/functions/Search.buildInteractiveResult.html) function to initialize an `InteractiveResult` controller.
+
+
+
+3. Let the `InteractiveResult` controller handle click events for you.
+
+
+
+4. Use your custom component in the target result template.
+
+
+> **Note**
+>
+> For the purpose of using [content recommendations](https://docs.coveo.com/en/1016/) models however, log [view events](https://docs.coveo.com/en/atomic/latest/usage/atomic-usage-analytics/atomic-view-events-ep/).
+> Atomic components or Headless controllers won't log view events for you.
+> Use the [Relay library](https://docs.coveo.com/en/atomic/latest/usage/atomic-usage-analytics/atomic-view-events-ep/).
+
+
+## Disable and Enable Analytics
+
+Coveo UA uses the `coveo_visitorId` cookie to track individual users and sessions.
+When implementing a cookie policy, you may need to disable UA tracking for users under specific circumstances (for example, when a user opts out of functionality cookies).
+
+To do so, you can use the `analytics` property of the `atomic-search-interface`.
+
+To re-enable UA tracking, you can set this property to `true.`
+
+```html
+<atomic-search-interface analytics="false">
+```
+
+or
+
+```javascript
+const searchInterface = document.querySelector('atomic-search-interface');
+// ... init and later on
+searchInterface.analytics = false;
+```
+
+## doNotTrack property
+
+[`doNotTrack`](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/doNotTrack) is a browser property which reflects the value of the [`DNT`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/DNT) HTTP header.
+It's used to indicate whether the user is requesting sites and advertisers not to track them.
+
+> **Note**
+>
+> This property is deprecated, but it's still supported in many browsers.
+
+
+Atomic v2 complies with the value of this property.
+It automatically disables analytics tracking whenever `DNT` is enabled.
+
+> **Important**
+>
+> Atomic v3 will no longer support this property.
+
+
+> **Note**
+>
+> To understand how Coveo Analytics tracks users and sessions, see [What's a user visit?](https://docs.coveo.com/en/1873/).
+

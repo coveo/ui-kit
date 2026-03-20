@@ -33,7 +33,7 @@ const sortCriteriaOptions: FacetSortCriterion[] = [
 
 const meta: Meta = {
   component: 'atomic-insight-facet',
-  title: 'Insight/Facet',
+  title: 'Reference/Insight/Facet',
   id: 'atomic-insight-facet',
 
   render: (args) => template(args),

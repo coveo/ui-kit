@@ -1,0 +1,19 @@
+/* Inline code baseline adjustment */
+code {
+  vertical-align: -0.36em;
+}
+
+/* Constrain Storybook docs column to 750px without affecting story canvases */
+.sbdocs .sbdocs-wrapper,
+.sbdocs .sbdocs-preview,
+.sbdocs .sbdocs-content,
+.sbdocs .markdown,
+.docs-root .sbdocs-wrapper,
+.docs-root .sbdocs-content {
+  box-sizing: border-box;
+  max-width: 750px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}

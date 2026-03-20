@@ -1,0 +1,301 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Usage/Display results/Implement folding" />
+
+[Coveo Atomic](https://docs.coveo.com/en/lcdf0264/) lets you display search results that have a parent-child relationship with any level of nesting.
+This article explains how to build hierarchical result lists using the [`atomic-folded-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-folded-result-list/) component.
+
+## Prerequisites
+
+Before pushing any data to the Coveo [index](https://docs.coveo.com/en/204/), make sure that the data you're working with has established parent-child relationships.
+Some data may already have these relationships when you collected it.
+If not, you'll need to build a relationship graph yourself.
+
+> **Note**
+>
+> You can't create parent-child relationships via the [Coveo Administration Console](https://docs.coveo.com/en/183/), which means you must implement such data processing in your own infrastructure.
+
+
+Once your data has established parent-child relationships, push the data to your [Coveo organization](https://docs.coveo.com/en/185/) and then create the proper [folding fields](https://docs.coveo.com/en/1884/) for the target items.
+
+## Main features
+
+The `atomic-folded-result-list` component is similar to the [`atomic-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-list/) component, but provides extra functionality.
+This component requires no extra configuration apart from specifying the three folding fields:
+
+* [`collection-field`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-folded-result-list#properties)
+
+* [`parent-field`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-folded-result-list#properties)
+
+* [`child-field`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-folded-result-list#properties)
+
+The `atomic-folded-result-list` requires one or more [`atomic-result-template`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-template/) components to display the results.
+This result template can include an [`atomic-result-children`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-children/) component with nested [`atomic-result-children-template`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-children-template/) components to render the child results.
+
+The `atomic-result-children` component also offers two slots named `before-children` and `after-children`.
+They're available via the attributes `slot="before-children"` and `slot="after-children"`.
+These slots let you insert a list of children only when children are available for that specific result.
+The slots let you insert a component **inside** `atomic-result-children` but **outside** any templates.
+
+## Child elements
+
+The following sample shows the basic structure to fold results with one child.
+
+```html
+<atomic-folded-result-list>
+  <atomic-result-template>
+    <!-- RESULT template defined here -->
+    <atomic-result-children>
+      <atomic-result-children-template>
+        <!-- CHILD template defined here -->
+      </atomic-result-children-template>
+    </atomic-result-children>
+  </atomic-result-template>
+</atomic-folded-result-list>
+```
+
+> **Important**
+>
+> The `atomic-result-children-template` component doesn't let you leave templates empty.
+> You have to specify elements inside of them.
+
+
+## Grandchild elements
+
+To render grandchildren, add an extra layer, as in the following example:
+
+```html
+<atomic-folded-result-list>
+  <atomic-result-template>
+    <!-- RESULT template defined here -->
+    <atomic-result-children>
+      <atomic-result-children-template>
+        <!-- CHILD template defined  here -->
+          <atomic-result-children>
+            <atomic-result-children-template inherit-templates="true"> (1)
+              <!-- GRANDCHILD template defined here -->
+            </atomic-result-children-template>
+          </atomic-result-children>
+      </atomic-result-children-template>
+    </atomic-result-children>
+  </atomic-result-template>
+</atomic-folded-result-list>
+```
+
+
+1. If you want the grandchildren to be the same as the children, you can set `inherit-templates` attribute to `true` on the grandchild level and omit the templates.
+
+With that option, you can either leave the `atomic-result-children-template` empty or still specify its own templates which will take priority over children (or inherited) templates.
+
+The grandchild rendering depends on templates and the value of the `inherit-templates` option.
+For example:
+
+* The child defines template 1 and template 2; the grandchild defines template 3 and has `inherit-templates="true"`.
+The grandchild will use the templates in the following order:
+
+   a. Template 3 (defined at the grandchild level)
+
+   b. Template 1 and template 2 (both defined at the child level, in this order)
+
+* The child defines template 1 and template 2; the grandchild defines template 3 and `inherit-templates` is set to `"false"` or not specified.
+The grandchild will only use template 3 and ignore the other two.
+
+## Comprehensive example
+
+The following example uses all the features mentioned in the previous sections.
+
+Note that templates are only available within the scope in which they're defined.
+For example, an `atomic-result-children-template` child defined inside an `atomic-result-template` will only be available for results that match both templates.
+An `atomic-result-children-template` that's a child of another `atomic-result-children-template` will similarly only be available for results that match both these templates.
+
+To reuse templates, define them outside of the scope of the results and refer to them by ID anywhere you want to place them.
+
+```html
+<atomic-folded-result-list>
+  <atomic-result-template must-match-sourcetype="YouTube">
+    <template> (1)
+      <img src="https://www.youtube.com/s/desktop/406de18b/img/favicon_32x32.png" class="thumbnail" />
+      <atomic-result-link></atomic-result-link>
+    </template>
+  </atomic-result-template>
+  <atomic-result-template must-match-sourcetype="Slack">
+    <template>
+      <img src="https://cdn.bfldr.com/5H442O3W/at/pl546j-7le8zk-6gwiyo/Slack_Mark.svg?auto=webp&format=svg&width=32&height=32" class="thumbnail" />
+      <atomic-result-link></atomic-result-link>
+      <atomic-result-fields-list>
+        <atomic-result-text field="excerpt"></atomic-result-text>
+        <span class="field-label"><atomic-text value="author"></atomic-text>:</span>
+        <atomic-result-text field="author"></atomic-result-text>
+      </atomic-result-fields-list>
+      <div class="thread">
+        <atomic-result-children> (2)
+          <p slot="before-children">Available files:</p> (3)
+          <atomic-result-children-template must-match-type="uploadedFile">
+            <template>
+              <atomic-result-icon class="icon"></atomic-result-icon>
+            </template>
+          </atomic-result-children-template>
+        </atomic-result-children>
+      </div>
+    </template>
+  </atomic-result-template>
+</atomic-folded-result-list>
+```
+
+
+1. YouTube results will ignore any children as no `atomic-result-children` components are present here.
+2. Slack results will only show children that are uploaded files and ignore grandchildren.
+3. The `p` element will only be rendered when a Slack result has children.
+
+
+## Folding in rendering functions
+
+The `atomic-folded-result-list` component lets you set the templates by passing it to a `renderingFunction` that will return a `FoldedResult`, which you can then use to render its children or grandchildren as well.
+
+> **Warning**
+>
+> Rendering functions are necessary when using [Atomic React](https://docs.coveo.com/en/atomic/latest/usage/frameworks/atomic-react-wrapper/), which doesn't support `atomic-result-children`, `atomic-result-children-template`, or any other Atomic components in child results.
+
+
+The following is an [example](https://github.com/coveo/ui-kit/blob/master/packages/samples/atomic-react/src/pages/FoldedResultListPage.tsx) that leverages rendering functions to perform folding in Atomic React:
+
+```js
+import {
+  AtomicResultBadge,
+  AtomicResultFieldsList,
+  AtomicResultLink,
+  AtomicResultMultiValueText,
+  AtomicResultPrintableUri,
+  AtomicResultSectionBadges,
+  AtomicResultSectionBottomMetadata,
+  AtomicResultSectionExcerpt,
+  AtomicResultSectionTitle,
+  AtomicResultSectionTitleMetadata,
+  AtomicResultSectionVisual,
+  AtomicResultText,
+  AtomicText,
+  AtomicResultSectionChildren,
+  AtomicFoldedResultList,
+  AtomicResultImage,
+} from '@coveo/atomic-react';
+import {FoldedResult} from '@coveo/headless';
+import {FunctionComponent} from 'react';
+import {AtomicPageWrapper} from '../components/AtomicPageWrapper';
+
+export const FoldedResultListPage: FunctionComponent = () => {
+  return (
+    <AtomicPageWrapper
+      sample="service"
+      options={{advancedQuery: '@source=iNaturalistTaxons'}}
+    >
+      <AtomicFoldedResultList imageSize="large" template={MyTemplate} />
+    </AtomicPageWrapper>
+  );
+};
+
+function MyTemplate(result: FoldedResult) {
+  return (
+    <>
+      <style>{`
+        .salesforce-badge::part(result-badge-element) {
+          background-color: #44a1da;
+          color: white;
+        }
+
+        .field {
+          display: inline-flex;
+          align-items: center;
+        }
+
+        .field-label {
+          font-weight: bold;
+          margin-right: 0.25rem;
+        }
+      `}</style>
+      <AtomicResultSectionBadges>
+        <AtomicResultBadge label="Salesforce" class="salesforce-badge" />
+        {result.result.raw.language && (
+          <AtomicResultBadge icon="https://raw.githubusercontent.com/Rush/Font-Awesome-SVG-PNG/master/black/svg/language.svg">
+            <AtomicResultMultiValueText field="language" />
+          </AtomicResultBadge>
+        )}
+      </AtomicResultSectionBadges>
+      <AtomicResultSectionVisual>
+        <AtomicResultImage
+          field="ec_images"
+          fallback="https://picsum.photos/350"
+        />
+      </AtomicResultSectionVisual>
+      <AtomicResultSectionTitle>
+        <AtomicResultLink />
+      </AtomicResultSectionTitle>
+      <AtomicResultSectionTitleMetadata>
+        <AtomicResultPrintableUri
+          maxNumberOfParts={3}
+        ></AtomicResultPrintableUri>
+      </AtomicResultSectionTitleMetadata>
+      <AtomicResultSectionExcerpt>
+        <AtomicResultText field="excerpt" />
+      </AtomicResultSectionExcerpt>
+      <AtomicResultSectionChildren> (1)
+        {!!result.children.length && (
+          <div>
+            <b>This result has children:</b>
+            <ul>
+              {result.children.map((child, i) => (
+                <li>
+                  <b>Child {i + 1}: </b>
+                  <a href={child.result.clickUri}>{child.result.title}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </AtomicResultSectionChildren>
+      <AtomicResultSectionBottomMetadata>
+        <AtomicResultFieldsList>
+          <>
+            {result.result.raw.author && (
+              <div className="field">
+                <span className="field-label">
+                  <AtomicText value="Author" />
+                </span>
+                <AtomicResultText field="author" />
+              </div>
+            )}
+            {result.result.raw.source && (
+              <div className="field">
+                <span className="field-label">
+                  <AtomicText value="Source" />
+                </span>
+                <AtomicResultText field="source" />
+              </div>
+            )}
+            {result.result.raw.language && (
+              <div className="field">
+                <span className="field-label">
+                  <AtomicText value="Language" />
+                </span>
+                <AtomicResultMultiValueText field="language" />
+              </div>
+            )}
+            {result.result.raw.filetype && (
+              <div className="field">
+                <span className="field-label">
+                  <AtomicText value="Filetype" />
+                </span>
+                <AtomicResultText field="filetype" />
+              </div>
+            )}
+          </>
+        </AtomicResultFieldsList>
+      </AtomicResultSectionBottomMetadata>
+    </>
+  );
+}
+```
+
+
+1. This is where you define children.
+
+`FoldedResult` offers you the `children` prop where you have access to the child result data.

@@ -26,7 +26,7 @@ const facetWidthDecorator: Decorator = (story) =>
 
 const meta: Meta = {
   component: 'atomic-ipx-refine-modal',
-  title: 'IPX/Refine Modal',
+  title: 'Reference/IPX/Refine Modal',
   id: 'atomic-ipx-refine-modal',
   render: (args) => template(args),
   parameters: {

@@ -1,0 +1,414 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Usage/In a framework/Use the React wrapper" />
+
+The integration of [JSX](https://reactjs.org/docs/introducing-jsx.html) in [React](https://reactjs.org/) projects with Atomic [web components](https://developer.mozilla.org/en-US/docs/Web/Web_Components) can be tricky.
+Atomic React is a wrapper around the core [Atomic](https://docs.coveo.com/en/atomic/latest/) library meant to address this issue.
+
+Since Atomic React is built on top of the core Atomic component library, most concepts that apply to the core Atomic library apply directly to Atomic React.
+The goal of this article is to go over the few areas where the use of Atomic React differs from the use of the core Atomic library.
+
+> **Tip**
+>
+> For a concrete example you may want to start from or refer to throughout this article, see this [Atomic React page](https://github.com/coveo/ui-kit/tree/master/packages/samples/atomic-react).
+
+
+## Install Atomic React
+
+### NPM
+
+Install Atomic React using the [npm](https://www.npmjs.com/get-npm) package.
+
+```
+npm i @coveo/atomic-react
+```
+
+You can import components in your React application from the three entry points:
+
+* `@coveo/atomic-react` for the core Atomic React components.
+* `@coveo/atomic-react/commerce` for the commerce components.
+* `@coveo/atomic-react/recommendation` for the recommendation components.
+
+```jsx
+import { AtomicSearchInterface } from '@coveo/atomic-react';
+// import { AtomicCommerceInterface } from '@coveo/atomic-react/commerce';
+// import { AtomicRecsInterface } from '@coveo/atomic-react/recommendation';
+```
+
+
+
+
+
+
+## Static assets
+
+For performance reasons, the generated Atomic React JavaScript bundle does not automatically include static assets that are loaded on demand.
+This impacts language support, as well as the use of included SVG icons.
+
+Make external assets distributed with Atomic React available by including them in the public directory of your app.
+Without this, you'll face various issues.
+For example, labels in the app will appear as temporary placeholders.
+
+The location of the public directory depends on how you build, configure and distribute your app.
+For example, for any project created with [Create React App](https://github.com/facebook/create-react-app), this would mean copying language and icon assets to the `./public` directory.
+
+```bash
+cp -r node_modules/@coveo/atomic-react/dist/assets public/assets
+cp -r node_modules/@coveo/atomic-react/dist/lang public/lang
+```
+
+> **Note**
+>
+> Be sure to respect the folder hierarchy, with SVG icons under the `assets` subdirectory and labels and languages under the `lang` subdirectory of the public folder.
+
+
+## Result templates
+
+The way to [define result templates](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) for an HTML project using the core Atomic library involves defining one or multiple [`atomic-result-template`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-template/) components, configured with HTML properties, adding conditions on the attributes and metadata of each result.
+
+Coupled with the [`<template>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template) HTML tag, this approach works very well in a plain HTML project.
+However, it can be limiting and awkward to use in a React project using JSX.
+
+Atomic React exposes [`atomic-folded-result-list`](#atomic-folded-result-list), [`atomic-result-list`](#atomic-result-list), and [`atomic-search-box-instant-results`](#atomic-search-box-instant-results) components with a `template` property that can be used in a more straightforward manner when coupled with JSX.
+The `template` property accepts a function with a [`Result`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.Result.html) parameter in the case of the `atomic-result-list` and `atomic-search-box-instant-results` components, and a [`FoldedResult`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.FoldedResult.html) in the case of the `atomic-folded-result-list` component.
+Use those parameters to conditionally render different templates based on properties and fields available in result items.
+The `template` function must then simply return a valid JSX Element.
+
+The following is an example of how to create a fictitious search page with predefined templates for YouTube videos and Salesforce cases:
+
+```jsx
+const MyResultTemplateForYouTubeVideos: React.FC<{result: Result}> = ({
+  result,
+}) => {
+  return (
+    <>
+      <AtomicResultSectionVisual>
+        <AtomicResultImage field="ytthumbnailurl" />
+      </AtomicResultSectionVisual>
+      <AtomicResultSectionTitle>
+        <AtomicResultLink />
+      </AtomicResultSectionTitle>
+      {result.raw.ytvideoduration !== undefined && (
+        <AtomicResultSectionBottomMetadata>
+          <AtomicText value="Duration" />
+          <AtomicResultNumber field="ytvideoduration">
+            <AtomicFormatUnit unit="minute" />
+          </AtomicResultNumber>
+        </AtomicResultSectionBottomMetadata>
+      )}
+    </>
+  );
+};
+
+const MyResultTemplateForSalesforceCases: React.FC<{result: Result}> = ({
+  result,
+}) => {
+  return (
+    <>
+      <AtomicResultSectionTitle>
+        <AtomicResultLink />
+      </AtomicResultSectionTitle>
+      <AtomicResultSectionExcerpt>
+        <AtomicResultText field="excerpt" />
+      </AtomicResultSectionExcerpt>
+      <AtomicResultSectionEmphasized>
+        {result.raw.sfpriority !== undefined && (
+          <>
+            <AtomicText value="Priority" />
+            <AtomicResultText field="sfpriority" />
+          </>
+        )}
+        {result.raw.sfstatus !== undefined && (
+          <>
+            <AtomicText value="Status" />
+            <AtomicResultText field="sfstatus" />
+          </>
+        )}
+      </AtomicResultSectionEmphasized>
+    </>
+  );
+};
+ 
+const MyDefaultTemplate: React.FC<{}> = () => {
+  return (
+    <>
+      <AtomicResultSectionTitle>
+        <AtomicResultLink />
+      </AtomicResultSectionTitle>
+      <AtomicResultSectionExcerpt>
+        <AtomicResultText field="excerpt" />
+      </AtomicResultSectionExcerpt>
+    </>
+  );
+};
+ 
+const MyResultTemplateFunction = (result: Result) => {
+  if (result.raw.filetype === 'YoutubeVideo') {
+    return <MyResultTemplateForYouTubeVideos result={result} />;
+  }
+ 
+  if (result.raw.objecttype === 'Case') {
+    return <MyResultTemplateForSalesforceCases result={result} />;
+  }
+ 
+  return <MyDefaultTemplate />;
+};
+ 
+const MyPage = () => {
+  const engine = buildSearchEngine({
+    configuration: getSampleSearchEngineConfiguration(),
+  });
+  return (
+    <AtomicSearchInterface engine={engine}>
+      <AtomicResultList template={MyResultTemplateFunction} /> (1)
+    </AtomicSearchInterface>
+  );
+};
+```
+
+1. Use the `template` property of the [`atomic-result-list`](#atomic-result-list) component to invoke your result template function in your search interface.
+
+
+> **Warning**
+>
+> When implementing [folding](https://docs.coveo.com/en/atomic/latest/usage/displaying-results/folding) in result templates, you must use [rendering functions](https://docs.coveo.com/en/atomic/latest/usage/displaying-results/folding#folding-in-rendering-functions).
+> Atomic React doesn't support `atomic-result-children`, `atomic-result-children-template`, or any other Atomic components in child results.
+
+
+## Result template component styling
+
+Due to the way Atomic web components use [Shadow Dom](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM) and [CSS parts](https://developer.mozilla.org/en-US/docs/Web/CSS/::part) to provide encapsulation, follow the guidelines below to style elements inside any result template.
+
+### Higher-order components
+
+This approach consists in wrapping any core Atomic component inside a styled one, which you can then reuse in one or more result templates.
+You can do so by using inline styling as shown in the example below, or using more advanced techniques such as [CSS modules](https://create-react-app.dev/docs/adding-a-css-modules-stylesheet/).
+
+This option works well if you don't have to create any CSS rule that would target the shadow parts of an Atomic result component.
+
+The following example sets the color of all result links in a template to pink.
+
+```jsx
+const MyStyledResultLink: React.FC<
+  React.ComponentProps<typeof AtomicResultLink> (1)
+> = (props) => {
+  return (
+    <AtomicResultLink {...props} style={{color: 'pink'}}>
+      {props.children}
+    </AtomicResultLink>
+  );
+};
+ 
+const MyPage = () => {
+  const engine = buildSearchEngine({
+    configuration: getSampleSearchEngineConfiguration(),
+  });
+  return (
+    <AtomicSearchInterface engine={engine}>
+      <AtomicResultList
+        template={(result) => { (2)
+          return <MyStyledResultLink />;
+        }}
+      />
+    </AtomicSearchInterface>
+  );
+};
+```
+
+1. This line allows you to extract all props exposed by the `AtomicResultLink` component and to reuse them in your higher-order component.
+
+You could also extend those props.
+
+2. Use the `template` property of the [`atomic-result-list`](#atomic-result-list) component to display your higher-order component.
+
+
+### `<style>` tag
+
+Using `<style>` tags works in all scenarios, and allows you to target any Shadow parts that an Atomic result component exposes, similarly to what you would do using plain HTML.
+
+The following is an example that sets the text color of an `AtomicResultBadge` to pink:
+
+```jsx
+const myStyles = `
+atomic-result-badge::part(result-badge-element) {
+    color: pink;
+}
+`;
+ 
+const MyPage = () => {
+  const engine = buildSearchEngine({
+    configuration: getSampleSearchEngineConfiguration(),
+  });
+  return (
+    <AtomicSearchInterface engine={engine}>
+      <AtomicResultList template={(result)=> { (1)
+          <style>{myStyles}</style>
+          <AtomicResultBadge />
+        }} />
+    </AtomicSearchInterface>
+  );
+};
+```
+
+1. Use the `template` property of the [`AtomicResultList`](#atomic-result-list) component to display your styled component.
+
+
+## JSX
+
+Rather than accepting JSON as in the core Atomic library, the following Atomic React component properties support JSX:
+
+* [`atomic-facet`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-facet#properties) `allowed-values`
+
+* [`atomic-category-facet`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-category-facet#properties) `base-path`
+
+* [`atomic-search-interface`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface#properties) `fields-to-include`
+
+* [`atomic-recs-interface`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface#properties) `fields-to-include`
+
+Example:
+
+```jsx
+<AtomicFacet allowedValues={["in progress", "completed"]}></AtomicFacet>
+```
+
+## Localization (i18n)
+
+The Atomic React [search interface](#atomic-search-interface) component exposes an optional `localization` option, which takes a callback function that lets you handle [localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
+
+```jsx
+<AtomicSearchInterface
+  localization={(i18n) => {
+    i18n.addResourceBundle('en', 'translation', {
+      search: "I'm feeling lucky!",
+    });
+  }}
+></AtomicSearchInterface>
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Reference
+
+All [components](https://docs.coveo.com/en/atomic/latest/reference/) available in the core Atomic library are available in the Atomic React wrapper.
+Additionally, the following Atomic React components expose options not available in the equivalent core Atomic components.
+
+### atomic-search-interface
+
+In addition to the properties and methods available in the core [`atomic-search-interface`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/) component, the Atomic React `atomic-search-interface` component exposes the following properties:
+
+  |===
+  | Property | Attribute | Description | Type | Default
+  
+  | `localization`
+  | `localization`
+  | An optional callback that lets you control the interface localization.
+  The function receives the search interface i18n instance, which you can then modify (see [Localization](#localization-i18n)).
+  | `(i18n: i18n) => void`
+  |
+  
+  | `onReady`
+  | `on-ready`
+  | An optional callback function that can be used to control the execution of the first query.
+  | `(executeFirstSearch: ExecuteSearch) => Promise<void>`
+  | If not provided, a default function will be used, which executes the first query immediately after initialization.
+  
+  |===
+Also, the following two properties exposed through the core [`atomic-search-interface`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/) component are deprecated in the Atomic React `atomic-search-interface` component.
+Using them would have no effect.
+
+* `pipeline`
+* `searchHub`
+
+Rather, set the pipeline and search hub [in the target `engine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface#initializewithsearchengine) [`search`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchEngineConfiguration.html) configuration.
+For example:
+
+```jsx
+const MyPage = () => {
+  const engine = buildSearchEngine({
+    configuration: {
+      accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
+      organizationId: 'electronicscoveodemocomo0n2fu8v',
+      pipeline: 'Search',
+      searchHub: 'MainSearch',
+    },
+  });
+  return (
+    <AtomicSearchInterface engine={engine}>
+      {/* ... */}
+    </AtomicSearchInterface>
+  );
+};
+```
+
+### atomic-folded-result-list
+
+In addition to the properties and methods available in the core [`atomic-folded-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-folded-result-list/) component, the Atomic React `atomic-folded-result-list` component exposes the following property:
+
+  |===
+  | Property | Attribute | Description | Type | Default
+  
+  | `template`
+  | `template`
+  | A template function that takes a folded result item and outputs its target rendering as a JSX element.
+  It can be used to conditionally render different types of result templates based on the properties of each result.
+  | `(result: FoldedResult) => JSX.Element`
+  |
+  
+  |===
+### atomic-result-list
+
+In addition to the properties and methods available in the core [`atomic-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-list/) component, the Atomic React `atomic-search-interface` component exposes the following property:
+
+  |===
+  | Property | Attribute | Description | Type | Default
+  
+  | `template`
+  | `template`
+  | A template function that takes a result item and outputs its target rendering as a JSX element.
+  It can be used to conditionally render different types of result templates based on the properties of each result.
+  | `(result: Result) => JSX.Element`
+  |
+  
+  |===
+### atomic-search-box-instant-results
+
+In addition to the properties and methods available in the core [`atomic-search-box-instant-results`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-box-instant-results/) component, the Atomic React `atomic-search-box-instant-results` component exposes the following property:
+
+  |===
+  | Property | Attribute | Description | Type | Default
+  
+  | `template`
+  | `template`
+  | A template function that takes a result item and outputs its target rendering as a JSX element.
+  It can be used to conditionally render different types of result templates based on the properties of each result.
+  | `(result: Result) => JSX.Element`
+  |
+  
+  |===

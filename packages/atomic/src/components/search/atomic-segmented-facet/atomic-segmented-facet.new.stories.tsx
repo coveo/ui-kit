@@ -17,7 +17,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-segmented-facet',
-  title: 'Search/SegmentedFacet',
+  title: 'Reference/Search/SegmentedFacet',
   id: 'atomic-segmented-facet',
 
   render: (args) => template(args),

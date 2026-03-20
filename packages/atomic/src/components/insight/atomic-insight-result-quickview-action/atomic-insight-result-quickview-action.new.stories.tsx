@@ -52,7 +52,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-insight-result-quickview-action',
-  title: 'Insight/Result Quickview Action',
+  title: 'Reference/Insight/Result Quickview Action',
   id: 'atomic-insight-result-quickview-action',
   render: (args) => html`
     <atomic-result-section-actions id="code-root">

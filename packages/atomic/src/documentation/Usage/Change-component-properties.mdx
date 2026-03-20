@@ -1,0 +1,50 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Usage/Change component properties" />
+
+You can programmatically change the properties of an initialized Atomic component.
+In the following example, the `display` property of the `atomic-result-list` component updates based on the width of the window.
+
+```html
+<head>
+  <!--- ... --->
+  <script>
+    (async () => {
+        await customElements.whenDefined('atomic-search-interface');
+        const searchInterface = document.querySelector('#search');
+
+        await searchInterface.initialize({
+            accessToken:'<ACCESS_TOKEN>',
+            organizationId: '<ORGANIZATION_ID>'
+        });
+
+        const { engine } = searchInterface;
+        const resultList = document.querySelector('atomic-result-list');
+        const body = document.getElementsByTagName('body')[0];
+
+        const resizeObserver = new ResizeObserver(() => { (1)
+          if (window.innerWidth < 700) {
+              resultList.setAttribute('display', 'grid'); (2)
+          } else {
+              resultList.setAttribute('display', 'table');
+          }
+        });
+        resizeObserver.observe(body); (3)
+​
+      searchInterface.executeFirstSearch();
+    })();
+  </script>
+  <!--- ... --->
+</head>
+```
+
+
+1. Create a [`ResizeObserver`](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver).
+
+
+
+2. Compare the window width to a threshold.
+
+Change the `display` property of the `atomic-result-list` component accordingly.
+
+(3) Set the resize observer object to observe the `body` element.

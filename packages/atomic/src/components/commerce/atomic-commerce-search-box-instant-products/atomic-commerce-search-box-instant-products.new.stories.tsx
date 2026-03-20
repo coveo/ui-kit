@@ -23,7 +23,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-commerce-search-box-instant-products',
-  title: 'Commerce/Search Box Instant Products',
+  title: 'Reference/Commerce/Search Box Instant Products',
   id: 'atomic-commerce-search-box-instant-products',
   render: (args) => template(args),
   decorators: [commerceSearchBoxDecorator, commerceInterfaceDecorator],

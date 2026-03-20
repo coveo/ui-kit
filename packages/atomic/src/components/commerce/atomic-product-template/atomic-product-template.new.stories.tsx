@@ -66,7 +66,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-product-template',
-  title: 'Commerce/Product Template',
+  title: 'Reference/Commerce/Product Template',
   id: 'atomic-product-template',
   render: (args) => template(args),
   parameters: {

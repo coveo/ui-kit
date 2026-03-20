@@ -12,7 +12,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-aria-live',
-  title: 'Common/Aria Live',
+  title: 'Reference/Common/Aria Live',
   id: 'atomic-aria-live',
   render: (args) => template(args),
   decorators: [decorator],

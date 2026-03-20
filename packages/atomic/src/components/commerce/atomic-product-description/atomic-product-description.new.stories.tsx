@@ -39,7 +39,7 @@ const wrapperDecorator: Decorator = (story) => {
 
 const meta: Meta = {
   component: 'atomic-product-description',
-  title: 'Commerce/Product Description',
+  title: 'Reference/Commerce/Product Description',
   id: 'atomic-product-description',
   render: (args) => template(args),
   parameters: {

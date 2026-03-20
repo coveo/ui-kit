@@ -1,0 +1,82 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Usage/Access Headless through Atomic" />
+
+The Atomic library uses [Coveo Headless](https://docs.coveo.com/en/headless/latest/) to interface with Coveo.
+For advanced customizations not possible in Atomic components, you can leverage the Headless library directly through Atomic.
+
+The following example code shows how to use Headless to modify the [advanced query expression](https://docs.coveo.com/en/175/) in an Atomic search interface.
+
+```html
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <script type="module" src="https://static.cloud.coveo.com/atomic/v3/atomic.esm.js"></script>
+    <link rel="stylesheet" href="https://static.cloud.coveo.com/atomic/v3/themes/coveo.css" />
+    <script type="module">
+      import {
+        buildRedirectionTrigger,
+        loadAdvancedSearchQueryActions
+      } from 'https://static.cloud.coveo.com/headless/v3/headless.esm.js'; (1)
+
+      (async () => {
+        await customElements.whenDefined('atomic-search-interface');
+        const searchInterface = document.querySelector('atomic-search-interface');
+        await searchInterface.initialize({
+          accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+          organizationId: 'searchuisamples'
+        });
+ 
+        const engine = searchInterface.engine; (2)
+
+        const controller = buildRedirectionTrigger(engine); (3)
+        controller.subscribe(() => { (4)
+          const { redirectTo } = controller.state;
+          if (redirectTo) {
+            window.location.replace(redirectTo);
+          }
+        });
+
+        const action = loadAdvancedSearchQueryActions(engine).updateAdvancedSearchQueries({ (5)
+          aq: '@author="BBC News"',
+        });
+        engine.dispatch(action); (6)
+ 
+        searchInterface.executeFirstSearch();
+      })();
+    </script>
+  </head>
+  <body>
+    <atomic-search-interface id="search">
+      <atomic-search-box></atomic-search-box>
+      <atomic-query-summary></atomic-query-summary>
+      <atomic-result-list>
+        <!-- ... -->
+      </atomic-result-list>
+    </atomic-search-interface>
+  </body>
+</html>
+```
+
+1. Import the target Headless controllers or methods via CDN.
+2. After initializing the search interface, access and store the engine in a variable.
+
+You'll need it to use Headless.
+
+3. Use the engine and the Headless controller builder you imported above in order to create a controller that can subscribe to the engine and dispatch actions.
+4. Subscribe to the engine and handle the redirection triggers.
+5. Use the engine and the Headless action creator you imported above in order to create an action that modifies the advanced query.
+6. Dispatch the action.
+
+
+In your browser developer tools, if you inspect the search request sent to the `https://platform.cloud.coveo.com/rest/search/v2` endpoint, you'll see that the request payload includes the following search request parameter, as desired.
+
+```json
+{
+  ...
+  "aq": "@author=\"BBC News\"",
+  ...
+}
+```
+
+You can find a more complex example in the [Atomic project repository](https://github.com/coveo/ui-kit/blob/master/packages/atomic/dev/examples/headless.html).

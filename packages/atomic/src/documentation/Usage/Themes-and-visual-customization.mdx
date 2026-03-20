@@ -1,0 +1,171 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Usage/Themes and visual customization" />
+
+The Atomic project leverages a recent web technology called the [Shadow DOM](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM).
+The [Document Object Model (DOM)](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction) is an interface for web documents, while a Shadow DOM is a hidden interface which encapsulates sections of the page from the rest.
+The styling and behavior of these encapsulated sections remains intact, preventing Atomic components from clashing with the page they're in.
+
+Atomic users can customize the components visually through the Shadow DOM.
+Atomic components can be manipulated using custom properties or shadow parts.
+
+## CSS custom properties
+
+Custom properties are also known as [CSS Variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties).
+These properties start with a double hyphen (--) and can be set, like any other CSS rule.
+The property values can then be reused inside of the component protected by the Shadow DOM.
+
+The example below shows that you can set the property value on the [`:root`](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties#using_the_root_pseudo-class) pseudo-class to affect the variable globally.
+
+The `:root` is set to a maroon color, and we can see that it applies the color to multiple elements on the search page.
+```css
+:root {
+ --atomic-primary: #B6254F;
+}
+```
+
+![Atomic Custom CSS Property Value set on :root pseudo-class - example 2](https://docs.coveo.com/en/assets/images/atomic/custom-properties-2.png)
+
+The next example shows that you can also set the property value for a specific component using any CSS selector.
+In this case, only `atomic-search-box` is set to the maroon color, so only that component is affected.
+```css
+atomic-search-box {
+ --atomic-primary: #B6254F;
+}
+```
+
+![Atomic Custom CSS Property Value set on any CSS selector - example 1](https://docs.coveo.com/en/assets/images/atomic/custom-properties-3.png)
+
+### Theme variables
+
+The following set of variables are the global custom properties used by many Atomic components.
+Define these properties to differentiate your search page.
+
+> **Important**
+>
+> To ensure that the components render correctly, set all of the variables listed below.
+> We suggest making your own theme.
+> However, you can alternatively use [`coveo.css`](https://github.com/coveo/ui-kit/blob/master/packages/atomic/src/themes/coveo.css) or [`accessible.css`](https://github.com/coveo/ui-kit/blob/master/packages/atomic/src/themes/accessible.css) as a base and override only the desired variables.
+
+
+
+| Custom property |Description |Example value |
+| --- | --- | --- |
+| `--atomic-primary` | A frequently used color for interactive elements of the interface. | `#B6254F` |
+| `--atomic-primary-light` | A lighter variant of the primary color, often used for states such as hover and focus. | `#E04E79` |
+| `--atomic-primary-dark` | A darker variant of the primary color. | `#B6254F` |
+| `--atomic-on-primary` | The color used for contrast in elements that use the primary color (for example, the color of text on a button). | `#FFFFFF` |
+| `--atomic-ring-primary` | The color used to indicate the focus state of inputs and some buttons. | `rgba(224, 78, 121, 0.5)` |
+| `--atomic-neutral` | The color used for borders, backgrounds, and effects. | `#E7E3E3` |
+| `--atomic-neutral-light` | A lighter variant of the neutral color. | `#F5F2F2` |
+| `--atomic-neutral-dark` | A darker variant of the neutral color. | `#7E7573` |
+| `--atomic-background` | The background color of the interface components. | `#FFFFFF` |
+| `--atomic-on-background` | The text color used throughout most of the interface. | `#2F2C2B` |
+| `--atomic-success` | The color generally representing a success or positive state. | `#12a244` |
+| `--atomic-error` | The color generally representing an error or negative state. | `#ce3f00` |
+| `--atomic-visited` | The color of a visited link. | `#752e9c` |
+| `--atomic-disabled` | The color generally representing a disabled or read-only state. | `#c5cacf` |
+| `--atomic-border-radius` | The border radius gives rounded corners to various elements, including inputs and buttons. | `0.25rem` |
+| `--atomic-border-radius-md` | A medium border radius. | `0.5rem` |
+| `--atomic-border-radius-lg` | A larger border radius. | `0.75rem` |
+| `--atomic-border-radius-xl` | The biggest border radius. | `1rem` |
+| `--atomic-font-family` | The font family used throughout the interface. | `Helvetica` |
+| `--atomic-font-normal` | The normal font weight. | `400` |
+| `--atomic-font-bold` | The bold font weight. | `700` |
+| `--atomic-text-base` | The base font size. | `0.875rem` |
+| `--atomic-text-sm` | A smaller font size. | `0.75rem` |
+| `--atomic-text-lg` | A larger font size. | `1rem` |
+| `--atomic-text-xl` | A very large font size. | `1.125rem` |
+| `--atomic-text-2xl` | The largest font size. | `1.5rem` |
+| `--atomic-line-height-ratio` | The ratio to multiply `font-size` values by when calculating `line-height` throughout the interface. | `1.5` |
+| `--atomic-layout-spacing-x` | The value of the gap between columns, `column-gap`. | `1.5rem` |
+| `--atomic-layout-spacing-y` | The value for the gap between rows, `row-gap`. | `1rem` |
+
+
+The [Material Design Color Tool](https://material.io/resources/color) is useful for picking theme colors.
+
+### Component variables
+
+Component-specific custom properties are also available for components.
+These custom properties are defined in the [reference documentation](https://docs.coveo.com/en/atomic/latest/reference/) of the components.
+
+## Shadow parts
+
+Shadow parts (also known as CSS parts) allow Atomic users to style any CSS property of a specific element inside of the Shadow DOM.
+The parts are carefully exposed by the Atomic developers to ensure a controlled and maintainable customization of the components.
+Each component's shadow parts are documented in the reference documentation.
+
+To style a component's shadow part, use the [`::part()` pseudo-element](https://developer.mozilla.org/en-US/docs/Web/CSS/::part).
+For example, the `atomic-facet` part `label-button`, which targets the clickable facet label, can be modified as follows:
+
+```css
+atomic-facet::part(label-button) {
+ justify-content: center;
+ padding-bottom: 1rem;
+ border-bottom: 2px solid var(--atomic-neutral)
+}
+```
+
+![Atomic Shadow ::part - Example 1](https://docs.coveo.com/en/assets/images/atomic/shadow-parts-1.png)
+
+Most of a part's [pseudo-elements](https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-elements) and [pseudo-classes](https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes) can also be styled.
+
+Child elements of shadow parts are inaccessible if they're not themselves exposed.
+For example, the following styling won't work:
+
+```css
+atomic-facet::part(label-button) span {
+ color: var(--atomic-primary)
+}
+```
+
+![Atomic Shadow ::part pseudo-classes - Example 2](https://docs.coveo.com/en/assets/images/atomic/shadow-parts-2.png)
+
+## Layout
+
+Use the Atomic layout components to position elements in
+ your webpage (see [Use layouts](https://docs.coveo.com/en/atomic/latest/usage/layouts/)).
+
+You can also create your own layouts using a [CSS grid](https://developer.mozilla.org/en-US/docs/Web/CSS/grid):
+
+```html
+<head>
+  <!-- ... -->
+  <style>
+    .interface-container {
+      width: 100%;
+      max-width: 1250px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 25% 1fr;
+      gap: 20px;
+    }
+
+    .search-box-item {
+      grid-column-start: 2;
+    }
+
+    .footer-item {
+      grid-column-start: 2;
+      grid-row-start: 3;
+    }
+    <!-- ... -->
+  </style>
+</head>
+<body>
+  <atomic-search-interface>
+    <div class="interface-container">
+      <atomic-search-box class="search-box-item"></atomic-search-box>
+      <!-- ... -->
+      <div class="footer-item">
+        <atomic-pager></atomic-pager>
+        <atomic-results-per-page></atomic-results-per-page>
+      </div>
+    </div>
+  </atomic-search-interface>
+</body>
+```
+
+## Further Customization
+
+You can build custom Atomic components to extend the use cases covered by the current components, see [Create custom components](https://docs.coveo.com/en/atomic/latest/usage/custom-web-components/).

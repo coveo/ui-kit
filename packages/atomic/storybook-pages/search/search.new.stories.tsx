@@ -76,7 +76,7 @@ const mockSearchApi = new MockSearchApi();
 
 const meta: Meta = {
   component: 'rich-search-page',
-  title: 'Search/Example Pages',
+  title: 'Reference/Search/Example Pages',
   id: 'rich-search-page',
   parameters: {
     ...parameters,

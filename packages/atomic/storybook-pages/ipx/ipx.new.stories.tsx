@@ -55,7 +55,7 @@ const mockSearchApi = new MockSearchApi();
 
 const meta: Meta = {
   component: 'ipx-page',
-  title: 'IPX/Example Pages',
+  title: 'Reference/IPX/Example Pages',
   id: 'ipx-page',
   parameters: {
     ...parameters,

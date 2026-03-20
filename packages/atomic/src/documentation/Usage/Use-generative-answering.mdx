@@ -1,0 +1,110 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Usage/Use generative answering" />
+
+The [atomic-generated-answer](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-generated-answer/) component lets you use Coveo's [Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/) feature to automatically generate answers to users' [queries](https://docs.coveo.com/en/231/).
+
+> **Important**
+>
+> You must [create your RGA model](https://docs.coveo.com/en/nb6a0085/) and associate it with a [query pipeline](https://docs.coveo.com/en/180/) before you can use the [atomic-generated-answer](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-generated-answer/) component.
+
+
+The generated answer panel includes the following features:
+
+![Example generated answer panel | Coveo RGA](https://docs.coveo.com/en/assets/images/coveo-platform/rga-panel-example-atomic-3-33-plus.png)
+
+1. The title of the [RGA](https://docs.coveo.com/en/nbtb6010/) panel.
+
+2. Clicking **Dislike** brings up a modal which asks the user to specify why they didn't find the information helpful.
+
+3. A **Copy to clipboard** button.
+
+4. A toggle to hide or show the [RGA](https://docs.coveo.com/en/nbtb6010/) panel.
+
+5. A disclaimer that advises the user to verify important information in the generated answer.
+
+6. Citations highlight the [items](https://docs.coveo.com/en/210/) that contain the text segments ([chunks](https://docs.coveo.com/en/n9de0370#chunking)) that were used to generate the answer.
+Hover over a citation to view the chunk, or click a citation to open the item.
+An HTML item opens at the exact location of the chunk, which appears highlighted.
+
+> **Notes**
+>
+> * Set [disableCitationAnchoring](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-generated-answer#properties) to `true` if you want items to open without pointing to the chunk location.
+>
+> * An item may appear more than once in the citations if different chunks from the same item were used to generate the answer.
+
+
+## Implement the RGA component
+
+In the search page HTML, add the `atomic-generated-answer` component to the `main` layout section.
+You'll probably want to place it before the `status` layout section, if present.
+
+```html
+  <body>
+    <atomic-search-interface id="search" search-hub="<YOUR_SEARCH_HUB>"> (1)
+      <atomic-search-layout>
+        <atomic-layout-section section="search">
+          <atomic-search-box></atomic-search-box>
+        </atomic-layout-section>
+        <atomic-layout-section section="facets">
+          <atomic-facet-manager>
+            <atomic-facet
+              field="objecttype"
+              label="Type"
+            ></atomic-facet>
+            <atomic-facet
+              field="filetype"
+              label="File Type"
+            ></atomic-facet>
+          </atomic-facet-manager>
+        </atomic-layout-section>
+        <atomic-layout-section section="main">
+          <atomic-generated-answer></atomic-generated-answer>
+          <atomic-layout-section section="results">
+            <atomic-result-list></atomic-result-list>
+          </atomic-layout-section>
+          <atomic-layout-section section="pagination">
+            <atomic-load-more-results></atomic-load-more-results>
+          </atomic-layout-section>
+        </atomic-layout-section>
+      </atomic-search-layout>
+    </atomic-search-interface>
+  </body>
+```
+
+
+1. For the [Atomic](https://docs.coveo.com/en/lcdf0264/) [RGA](https://docs.coveo.com/en/nbtb6010/) component to work, your search interface must use the pipeline with which the [RGA](https://docs.coveo.com/en/nbtb6010/) [model](https://docs.coveo.com/en/1012/) is [associated](https://docs.coveo.com/en/nb6a0104/).
+
+
+You can do one of the following:
+
+* Set the [search hub](https://docs.coveo.com/en/1342/) on the [`atomic-search-interface`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/) component, as shown in the example.
+Then you need to set up [condition-based routing](https://docs.coveo.com/en/1666#condition-based-routing-recommended).
+
+> **Important**
+>
+> This is the recommended approach.
+
+
+
+* Omit the `search-hub` property and use [search interface-enforced routing](https://docs.coveo.com/en/1666#search-interface-enforced-routing) by setting the `pipeline` property.
+
+This example produces the following search page:
+
+![Example search page with generated answer | Coveo RGA](https://docs.coveo.com/en/assets/images/coveo-platform/rga-search-page-example-atomic-3-33-plus.png)
+
+> **Important**
+>
+> If your search interface includes a sorting option, [Relevance Generative Answering (RGA)](https://docs.coveo.com/en/nbtb6010/) works best when results are sorted by relevance, which is the default sorting option.
+> Otherwise, an answer may not be generated.
+>
+> ![Search page sorting option | Coveo](https://docs.coveo.com/en/assets/images/leverage-machine-learning/rga-relevance-sorting-option.png)
+> For more information on the reasons why an answer wouldn't be generated, see [When is an answer not generated?](https://docs.coveo.com/en/nb6a0008#when-is-an-answer-not-generated).
+
+
+## Use an expandable search box
+
+After you implement generative answering, your users may begin to use longer [queries](https://docs.coveo.com/en/231/).
+Enable the `textarea` property on your [`atomic-search-box`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-box/) component so that it can expand to support multi-line [queries](https://docs.coveo.com/en/231/).
+
+![Expandable search box | Coveo RGA](https://docs.coveo.com/en/assets/images/coveo-platform/rga-expandable-search-box-atomic.png)

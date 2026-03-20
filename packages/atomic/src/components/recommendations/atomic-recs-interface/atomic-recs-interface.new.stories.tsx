@@ -31,7 +31,7 @@ const {events, args, argTypes} = getStorybookHelpers('atomic-recs-interface', {
 
 const meta: Meta = {
   component: 'atomic-recs-interface',
-  title: 'Recommendations/Interface',
+  title: 'Reference/Recommendations/Interface',
   id: 'atomic-recs-interface',
   render: (args) => html`${unsafeHTML(args['default-slot'] || '')}`,
   decorators: [decorator],

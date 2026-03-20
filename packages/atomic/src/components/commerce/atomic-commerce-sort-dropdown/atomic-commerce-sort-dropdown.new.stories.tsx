@@ -12,7 +12,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-commerce-sort-dropdown',
-  title: 'Commerce/Sort Dropdown',
+  title: 'Reference/Commerce/Sort Dropdown',
   id: 'atomic-commerce-sort-dropdown',
   render: (args) => template(args),
   decorators: [decorator],

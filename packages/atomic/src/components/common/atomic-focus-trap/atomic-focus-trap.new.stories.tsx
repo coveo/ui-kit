@@ -10,7 +10,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-focus-trap',
-  title: 'Common/Focus Trap',
+  title: 'Reference/Common/Focus Trap',
   id: 'atomic-focus-trap',
   render: (args) => template(args),
   parameters: {

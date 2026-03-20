@@ -1,0 +1,60 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Usage/Use external components" />
+
+Usually, all Atomic components are children of the [`atomic-search-interface`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/) component, as in the following markup.
+
+```html
+<atomic-search-interface>
+  <atomic-search-box></atomic-search-box>
+  <atomic-result-list>
+    <!-- ... -->
+  </atomic-result-list>
+</atomic-search-interface>
+```
+
+In more complex implementations, this is not always possible.
+You may want the search box or facets to be in a different part of the DOM, for example.
+We provide the [`atomic-external`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-external/) component to handle such scenarios.
+
+```html
+<atomic-external>
+  <atomic-search-box></atomic-search-box>
+</atomic-external>
+ 
+<!-- ... -->
+ 
+<atomic-search-interface>
+  <atomic-result-list>
+    <!-- ... -->
+  </atomic-result-list>
+</atomic-search-interface>
+```
+
+The `atomic-external` component acts as a proxy for the `atomic-search-interface` component.
+
+If there are multiple search interfaces in a page, use the `selector` property, which takes a [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors) as an argument, to specify which search interface to link to.
+
+```html
+<atomic-external selector="#interface-2">
+  <atomic-search-box></atomic-search-box>
+</atomic-external>
+ 
+<!-- ... -->
+ 
+<atomic-search-interface id="interface-1">
+  <atomic-result-list>
+    <!-- ... -->
+  </atomic-result-list>
+</atomic-search-interface>
+ 
+<!-- ... -->
+ 
+<atomic-search-interface id="interface-2">
+  <atomic-result-list>
+    <!-- ... -->
+  </atomic-result-list>
+</atomic-search-interface>
+```
+
+You can find a complete example in the [Atomic project repository](https://github.com/coveo/ui-kit/blob/master/packages/atomic/dev/examples/external.html).

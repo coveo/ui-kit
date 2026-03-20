@@ -26,7 +26,7 @@ const commerceFacetWidthDecorator: Decorator = (story) =>
 
 const meta: Meta = {
   component: 'atomic-refine-modal',
-  title: 'Search/Refine Modal',
+  title: 'Reference/Search/Refine Modal',
   id: 'atomic-refine-modal',
   render: (args) => template(args),
   parameters: {

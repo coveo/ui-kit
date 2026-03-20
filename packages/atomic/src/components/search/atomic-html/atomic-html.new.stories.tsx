@@ -11,7 +11,7 @@ const {events, args, argTypes, template} = getStorybookHelpers('atomic-html', {
 
 const meta: Meta = {
   component: 'atomic-html',
-  title: 'Search/HTML',
+  title: 'Reference/Search/HTML',
   id: 'atomic-html',
 
   render: (args) => template(args),

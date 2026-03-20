@@ -28,7 +28,7 @@ const {play} = wrapInSearchInterface({
 
 const meta: Meta = {
   component: 'atomic-result-section-title',
-  title: 'Search/Result Sections',
+  title: 'Reference/Search/Result Sections',
   id: 'atomic-result-section-title',
   render: (args) => template(args),
   parameters: {

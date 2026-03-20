@@ -17,7 +17,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-facet-manager',
-  title: 'Search/Facet Manager',
+  title: 'Reference/Search/Facet Manager',
   id: 'atomic-facet-manager',
 
   render: (args) => template(args),

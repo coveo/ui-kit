@@ -1,0 +1,381 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Usage/Display results/Use result sections" />
+
+> **Important**
+>
+> If you need a high level of customization, such as choosing exactly where the image is shown relative to the title, then using sections is not recommended.
+>
+> Sections have limitations by design and they are intended to help you quickly create a template that works well on desktop and mobile.
+
+
+The result sections help you build desktop- and mobile-friendly result templates faster.
+
+Most sections have a font size and a line height that vary based on the configuration of the [`atomic-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-list/) and [`atomic-folded-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-folded-result-list/).
+
+The result sections are rearranged and resized based on:
+
+* The layout (list, grid, etc.)
+* The density
+* The image size
+* The screen size (mobile or desktop)
+
+Atomic supports nine result sections, each of which has a different purpose and behavior:
+
+* visual
+* badges
+* actions
+* title
+* title metadata
+* emphasized
+* excerpt
+* bottom metadata
+* children (only for [`atomic-folded-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-folded-result-list/), see [Implement folding](https://docs.coveo.com/en/atomic/latest/usage/displaying-results/folding))
+
+![Atomic Grid or List Template Layout](https://docs.coveo.com/en/assets/images/atomic/defining-list-or-grid.png)
+
+#### [.highlight]
+```html
+<atomic-result-list display="list" image-size="icon" density="normal">
+  <atomic-result-template>
+    <template>
+      <atomic-result-section-badges>
+        <atomic-result-badge field="objecttype"></atomic-result-badge>
+      </atomic-result-section-badges>
+      <atomic-result-section-title>
+        <atomic-result-link></atomic-result-link>
+      </atomic-result-section-title>
+      <atomic-result-section-visual>
+        <atomic-result-icon></atomic-result-icon>
+      </atomic-result-section-visual>
+      <atomic-result-section-excerpt>
+        <atomic-result-text field="excerpt"></atomic-result-text>
+      </atomic-result-section-excerpt>
+    </template>
+  </atomic-result-template>
+<atomic-result-list>
+```
+#### ![A result list with sections on a mobile device.](../../assets/images/result-list-with-sections.png)
+A result list with sections on a mobile device.
+
+## The Available Sections
+
+### Visual Section
+
+**Element:** [`atomic-result-section-visual`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-section-visual/)
+
+**Attributes:**
+
+* `image-size`: Enforces a different image size than otherwise specified in the result list.
+
+**Purpose:** This section provides visual information about the item.
+For example, in Commerce, an image is a great shorthand for a product category.
+An icon can quickly show the item type, or an avatar can quickly show the target customer.
+
+**Behavior:**
+
+* Has a fixed size that depends on the specified image size, the layout, the density, and the screen size.
+  * When the image size is set to icon, this section stays very small.
+  * You should ensure that elements inside of it take the available space.
+* Always has a 1:1 aspect ratio.
+
+**Recommended child elements**
+
+* [`atomic-result-image`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-image/)
+* [`atomic-result-icon`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-icon/)
+* [`atomic-icon`](https://docs.coveo.com/en/atomic/latest/reference/common-components/atomic-icon/)
+  * Some of the icons included with Atomic can't be recolored, use your own icons or add a background color.
+  * Adding the following CSS is recommended: `width: 100%; height: auto;`
+* `img`
+  * Adding the `loading="lazy"` property is recommended
+  * Adding the following CSS is recommended: `width: 100%; height: 100%;`
+  * If you intend to use an svg image, use it in `atomic-icon` instead of `img`.
+
+### Badges Section
+
+**Element:** [`atomic-result-section-badges`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-section-badges/)
+
+**Purpose:** This section provides badges that highlight special features of the item.
+
+**Behavior:**
+
+* Exposes the `--row-height` CSS variable so that child elements adjust according to the current line height.
+  * You should ensure that elements inside of it have `height: var(--row-height)`.
+* Is a wrapping flexbox with a gap.
+* May appear over, next to, or beneath the visual section.
+
+**Recommended child elements**
+
+* [`atomic-result-badge`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-badge/)
+* `div`
+  * Adding the following CSS is recommended: `height: var(--row-height)`
+
+### Actions Section
+
+**Element:** [`atomic-result-section-actions`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-section-actions/)
+
+**Purpose:** This section allows the information seeker to perform an action on an item without having to view its details.
+For example, in Commerce you can add an item to the cart directly or add it to a wish list to view at a later time.
+
+**Behavior:**
+
+* Exposes the `--row-height` CSS variable so that child elements adjust according to the current line height.
+  * You should ensure that elements inside of it have `height: var(--row-height)`.
+* Is a wrapping flexbox with a gap.
+* May appear over, next to, or beneath the visual section.
+
+**Recommended child elements**
+
+* `button` (using a [custom result component](https://docs.coveo.com/en/atomic/latest/usage/custom-web-components#custom-result-template-component-example))
+  * Adding the following CSS is recommended: `height: var(--row-height)`
+
+### Title Section
+
+**Element:** [`atomic-result-section-title`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-section-title/)
+
+**Purpose:** This section identifies the item by its name, and its main use is to make the result list scannable.
+This is usually the page title.
+
+**Behavior:**
+
+* Has a fixed height of two lines on grid layouts.
+* Exposes the `--line-height` variable so child elements can adjust to the current line height.
+* Has a defined CSS `color` property for text.
+
+**Recommended child elements**
+
+* [`atomic-result-link`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-link/)
+
+### Title Metadata Section
+
+**Element:** [`atomic-result-section-title-metadata`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-section-title-metadata/)
+
+**Purpose:** This section surfaces some fields that are directly related to the title of the item.
+For example, in Commerce, this could be the item's rating, which is tied to the nature of the product itself, rather than to the product's description.
+
+**Behavior:**
+
+* Has a very small font size.
+* Is the closest element beneath the title section.
+
+**Recommended child elements**
+
+* [`atomic-result-rating`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-rating/)
+* Anything
+
+### Emphasized Section
+
+**Element:** [`atomic-result-section-emphasized`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-section-emphasized/)
+
+**Purpose:** This section displays the field that's important for its search criteria.
+For example, in Commerce, a product's cost is often more important than the title itself.
+
+**Behavior:**
+
+* Has a very large font size.
+* Is the second closest element beneath the title section.
+
+**Recommended child elements**
+
+* [`atomic-result-number`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-number/) (for example, the price of a product)
+* Anything
+
+### Excerpt Section
+
+**Element:** [`atomic-result-section-excerpt`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-section-excerpt/)
+
+**Purpose:** This section contains an informative summary of the item's content.
+
+**Behavior:**
+
+* Has a fixed height of one to three lines, depending on the layout and density.
+* Ellipses overflowing text.
+* Exposes the `--line-height` variable so that child elements can adjust to the current line height.
+* Has a defined CSS `color` property for text.
+
+**Recommended child elements**
+
+* [`atomic-result-text`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-text/)
+
+### Bottom Metadata Section
+
+**Element:** [`atomic-result-section-bottom-metadata`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-section-bottom-metadata/)
+
+**Purpose:** This section displays additional descriptive information about the item.
+
+**Behavior:**
+
+* Has a maximum height of two lines.
+  * Use `atomic-result-fields-list` to ensure that the fields in this section don't overflow.
+* Exposes the `--line-height` variable so child elements can adjust to the current line height.
+* Has a defined CSS `color` property for text.
+* Has a font weight.
+
+**Recommended child elements**
+
+* [`atomic-result-fields-list`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-fields-list/)
+  * This component will automatically add dividers between all its children and hide overflowing elements or wrap them to the next line. It's recommended to wrap elements that should not be separated like a field label and a field value in a `span` element.
+* [`atomic-result-text`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-text/)
+* Anything
+
+### Children Section
+
+> **Important**
+>
+> This section should only be used inside [`atomic-folded-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-folded-result-list/) (see [Implement folding](https://docs.coveo.com/en/atomic/latest/usage/displaying-results/folding)), not [`atomic-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-list/).
+
+
+**Element:** [`atomic-result-section-children`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-section-children/)
+
+**Purpose:** This section displays the folded results, available when using the [`atomic-result-children`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-children/) component.
+
+**Behavior:**
+
+* Will give a margin, padding, border and border radius to its child [`atomic-result-children`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-children/).
+
+**Recommended child element**
+
+* [`atomic-result-children`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-children/)
+
+## Choosing an Image Size
+
+The `image-size` attribute defines the expected size of the image, and has four possible values:
+
+* `none`
+* `icon` (default)
+* `small`
+* `large`
+
+The `image-size` attribute can either be set on the result list, or on the visual section.
+
+### None
+
+```html
+<atomic-result-list
+  image-size="none"
+>
+  ...
+</atomic-result-list>
+```
+
+```html
+<atomic-result-list>
+  <atomic-result-template>
+    <template>
+      <atomic-result-section-visual image-size="none">
+        ...
+      </atomic-result-section-visual>
+      ...
+    </template>
+  </atomic-result-template>
+</atomic-result-list>
+```
+
+![Atomic Image Size - "none"](https://docs.coveo.com/en/assets/images/atomic/img-size-none.png)
+
+### Icon
+
+```html
+<atomic-result-list
+  image-size="icon"
+>
+  ...
+</atomic-result-list>
+```
+
+```html
+<atomic-result-list>
+  <atomic-result-template>
+    <template>
+      <atomic-result-section-visual image-size="icon">
+        ...
+      </atomic-result-section-visual>
+      ...
+    </template>
+  </atomic-result-template>
+</atomic-result-list>
+```
+
+![Atomic Image Size - "icon"](https://docs.coveo.com/en/assets/images/atomic/img-size-icon.png)
+
+### Small
+
+```html
+<atomic-result-list
+  image-size="small"
+>
+  ...
+</atomic-result-list>
+```
+
+```html
+<atomic-result-list>
+  <atomic-result-template>
+    <template>
+      <atomic-result-section-visual image-size="small">
+        ...
+      </atomic-result-section-visual>
+      ...
+    </template>
+  </atomic-result-template>
+</atomic-result-list>
+```
+
+![Atomic Image Size - "small"](https://docs.coveo.com/en/assets/images/atomic/img-size-small.png)
+
+### Large
+
+```html
+<atomic-result-list
+  image-size="large"
+>
+  ...
+</atomic-result-list>
+```
+
+![Atomic Image Size - "large"](https://docs.coveo.com/en/assets/images/atomic/img-size-large.png)
+
+## Choosing a Density
+
+The `density` attribute defines the spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts of a result.
+This has three possible values:
+
+* `comfortable`
+* `normal` (default)
+* `compact`
+
+### Comfortable
+
+```html
+<atomic-result-list
+  density="comfortable"
+>
+  ...
+</atomic-result-list>
+```
+
+![Atomic Comfortable Result Density](https://docs.coveo.com/en/assets/images/atomic/density-comfortable.png)
+
+### Normal (default)
+
+```html
+<atomic-result-list
+  density="normal"
+>
+  ...
+</atomic-result-list>
+```
+
+![Atomic Normal Result Density](https://docs.coveo.com/en/assets/images/atomic/density-normal.png)
+
+### Compact
+
+```html
+<atomic-result-list
+  density="compact"
+>
+  ...
+</atomic-result-list>
+```
+
+![Atomic Compact Result Density](https://docs.coveo.com/en/assets/images/atomic/density-compact.png)
