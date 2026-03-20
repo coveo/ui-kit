@@ -42,9 +42,20 @@
     },
     "build:lit": {
       "dependsOn": ["^build", "build:locales"],
-      "outputs": ["dist/esm/**", "dist/cjs/**", "dist/types/**", "docs/**"],
+      "outputs": [
+        "src/components/*/index.ts",
+        "src/components/*/lazy-index.ts",
+        "src/utils/custom-element-tags.ts",
+        "dist/esm/**",
+        "dist/cjs/**",
+        "dist/types/**",
+        "docs/**"
+      ],
       "inputs": [
-        "./src/**/*.ts",
+        "!./src/**/*.ts",
+        "!src/components/*/index.ts",
+        "!src/components/*/lazy-index.ts",
+        "!src/utils/custom-element-tags.ts",
         "!./src/**/*.spec.ts",
         "!./src/**/*.d.ts",
         "!./src/**/e2e/**"

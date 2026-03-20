@@ -6,18 +6,15 @@
       "outputs": []
     },
     "build:bundles": {
-      "dependsOn": ["gen:lit", "@coveo/atomic#build:lit"],
+      "dependsOn": ["gen:lit"],
       "outputs": ["./dist/esm/**", "./dist/cjs/**"]
     },
     "build:types": {
-      "dependsOn": ["@coveo/atomic#build:lit"],
+      "dependsOn": ["gen:lit"],
       "outputs": ["./dist/types/**"]
     },
     "build:assets": {
-      "dependsOn": [
-        "@coveo/atomic#build:locales",
-        "@coveo/atomic#build:assets"
-      ],
+      "dependsOn": ["@coveo/atomic#build:assets"],
       "outputs": ["./dist/assets/**", "./dist/lang/**"]
     },
     "gen:lit": {

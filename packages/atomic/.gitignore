@@ -31,6 +31,10 @@ src/external-builds
 src/assets/lang/
 src/generated
 
+src/components/*/lazy-index.ts
+src/components/*/index.ts
+src/utils/custom-element-tags.ts
+
 /test-results/
 /playwright-report/
 /blob-report/

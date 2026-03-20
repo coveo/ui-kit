@@ -3,7 +3,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["build:bundles", "build:assets"],
-      "outputs": [""]
+      "outputs": []
     },
     "gen:lit": {
       "dependsOn": ["@coveo/atomic#build:cem"],

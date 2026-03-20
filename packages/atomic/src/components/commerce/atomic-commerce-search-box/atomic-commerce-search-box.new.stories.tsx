@@ -6,12 +6,15 @@ import type {
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {HttpResponse, http} from 'msw';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/commerce/atomic-commerce-search-box/atomic-commerce-search-box.js';
 import '@/src/components/commerce/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products.js';
 import '@/src/components/commerce/atomic-commerce-search-box-query-suggestions/atomic-commerce-search-box-query-suggestions.js';
 import '@/src/components/commerce/atomic-commerce-search-box-recent-queries/atomic-commerce-search-box-recent-queries.js';
+
+const commerceApiHarness = new MockCommerceApi();
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-commerce-search-box',
@@ -33,9 +36,15 @@ const meta: Meta = {
   decorators: [normalWidthDecorator, decorator],
   parameters: {
     ...parameters,
+    msw: {
+      handlers: [...commerceApiHarness.handlers],
+    },
     actions: {
       handles: events,
     },
+  },
+  beforeEach: () => {
+    commerceApiHarness.clearAll();
   },
   args: {
     ...args,

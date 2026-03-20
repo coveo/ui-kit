@@ -29,10 +29,28 @@ packages:
   - utils/ci
 
 catalog:
+  '@angular-devkit/build-angular': 20.3.13
+  '@angular/animations': 20.3.16
+  '@angular/build': 20.3.13
+  '@angular/cli': 20.3.13
+  '@angular/common': 20.3.16
+  '@angular/compiler': 20.3.16
+  '@angular/compiler-cli': 20.3.16
+  '@angular/core': 20.3.16
+  '@angular/forms': 20.3.16
+  '@angular/platform-browser': 20.3.16
+  '@angular/platform-browser-dynamic': 20.3.16
+  '@angular/platform-server': 20.3.16
+  '@angular/router': 20.3.16
   '@coveo/create-atomic-rollup-plugin': 1.2.1
   '@coveo/relay-event-types': 15.1.0
   '@playwright/mcp': 0.0.48
   '@playwright/test': 1.56.1
+  '@react-router/dev': 7.13.1
+  '@react-router/fs-routes': 7.13.1
+  '@react-router/node': 7.13.1
+  '@react-router/serve': 7.13.1
+  'react-router': 7.13.1
   '@rollup/plugin-replace': 6.0.2
   '@rollup/plugin-url': 8.0.2
   '@stencil/core': 4.20.0
@@ -62,7 +80,7 @@ catalog:
   rollup-plugin-node-polyfills: 0.2.1
   rollup-plugin-string: 3.0.0
   typedoc: 0.28.13
-  typescript: 5.8.3
+  typescript: 5.9.3
   vite: 7.2.2
   vitest: 4.0.10
 

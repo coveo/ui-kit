@@ -80,11 +80,14 @@ const browserEsm = Object.entries(useCaseEntries).map((entry) => {
   const outDir = getUseCaseDir('cdn', useCase);
   const outfile = `${outDir}/headless.esm.js`;
 
+  const buenoPath = `/bueno/${buenoVersion}/bueno.esm.js`;
+
   let config = {
     entryPoints: [entryPoint],
     outfile,
     format: 'esm',
-    plugins: [getBuenoReplacePlugin(`/bueno/${buenoVersion}/bueno.esm.js`)],
+    external: [buenoPath],
+    plugins: [getBuenoReplacePlugin(buenoPath)],
   };
 
   if (devMode) {
@@ -103,7 +106,7 @@ const browserUmd = Object.entries(useCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
   const outDir = getUseCaseDir('cdn', useCase);
   const outfile = `${outDir}/headless.js`;
-
+  const buenoPath = `/bueno/${buenoVersion}/bueno.esm.js`;
   const globalName = getUmdGlobalName(useCase);
 
   return buildBrowserConfig(
@@ -114,8 +117,9 @@ const browserUmd = Object.entries(useCaseEntries).map((entry) => {
       banner: {
         js: `${base.banner.js}`,
       },
+      external: ['crypto', buenoPath],
       plugins: [
-        getBuenoReplacePlugin('@coveo/bueno'),
+        getBuenoReplacePlugin(buenoPath),
         umdWrapper({libraryName: globalName}),
       ],
     },
@@ -145,7 +149,6 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
   const outDir = getUseCaseDir('dist/quantic/', useCase);
   const outfile = `${outDir}/headless.js`;
-
   const globalName = getUmdGlobalName(useCase);
 
   const target = /}\)\(updatedArgs, api, extraOptions\);/g;
@@ -188,7 +191,6 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
       banner: {
         js: `${base.banner.js}`,
       },
-      external: ['crypto'],
       inject: [
         'ponyfills/headers-shim.js',
         'ponyfills/global-this-shim.js',
@@ -254,9 +256,8 @@ async function buildBrowserConfig(options, outDir) {
     minify: true,
     sourcemap: true,
     metafile: true,
-    external: ['crypto'],
     ...options,
-
+    external: ['crypto', ...(options.external || [])],
     plugins: [
       alias({
         'coveo.analytics': resolveEsm('coveo.analytics'),

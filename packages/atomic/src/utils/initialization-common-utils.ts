@@ -1,5 +1,7 @@
 import type {CoreEngine} from '@coveo/headless';
 import type {AnyBindings} from '../components/common/interface/bindings';
+//@ts-ignore - Import from a generated file, _might_ be missing if the build hasn't been run yet, but this file is only used at runtime, so it should be fine.
+import {ATOMIC_CUSTOM_ELEMENT_TAGS} from './custom-element-tags.js';
 import {closest} from './dom-utils';
 import {buildCustomEvent} from './event-utils';
 import {enqueueOrDispatchInitializationEvent} from './init-queue';
@@ -50,3 +52,20 @@ export type AtomicInterface = HTMLElement & {
   engine?: CoreEngine;
   bindings?: AnyBindings;
 };
+
+/**
+ * Waits for all Atomic custom element children to be defined.
+ * This ensures that all vanilla (non-framework) Atomic components have been
+ * registered with the custom elements registry before proceeding.
+ *
+ * @param host - The host element to scan for Atomic children
+ */
+export async function waitForAtomicChildrenToBeDefined(
+  host: Element
+): Promise<void> {
+  await Promise.all(
+    Array.from(host.querySelectorAll('*'))
+      .filter((el) => ATOMIC_CUSTOM_ELEMENT_TAGS.has(el.tagName.toLowerCase()))
+      .map((el) => customElements.whenDefined(el.tagName.toLowerCase()))
+  );
+}
