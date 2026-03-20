@@ -257,7 +257,7 @@ export class AtomicCitation extends LitElement {
         @mouseleave=${this.delayedClosePopover}
       >
         <div class="text-neutral-dark truncate text-sm">
-          ${this.citation.uri}
+          ${this.citation.clickUri ?? this.citation.uri}
         </div>
         ${renderHeading({
           props: {
