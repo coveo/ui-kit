@@ -30,6 +30,9 @@ describe('atomic-generated-answer-thread-item', () => {
         timelineLine: element.shadowRoot?.querySelector('span.w-px') ?? null,
         contentDivider:
           element.shadowRoot?.querySelector('.thread-content-divider') ?? null,
+        threadItemTitle:
+          element.shadowRoot?.querySelector('[part="thread-item-title"]') ??
+          null,
         titleButton: element.shadowRoot?.querySelector('button') ?? null,
         contentRegion:
           element.shadowRoot?.querySelector(
@@ -163,5 +166,16 @@ describe('atomic-generated-answer-thread-item', () => {
 
     expect(assignedElements.length).toBe(1);
     expect(assignedElements[0]).toHaveTextContent('Slotted content');
+  });
+
+  it('should clamp title to 3 lines', async () => {
+    const {locators} = await renderComponent();
+    const title = locators().threadItemTitle as HTMLElement;
+
+    const style = title.getAttribute('style') ?? '';
+    expect(style).toContain('display: -webkit-box');
+    expect(style).toContain('-webkit-line-clamp: 3');
+    expect(style).toContain('-webkit-box-orient: vertical');
+    expect(style).toContain('overflow: hidden');
   });
 });
