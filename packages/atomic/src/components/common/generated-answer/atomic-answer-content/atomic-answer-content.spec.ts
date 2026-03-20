@@ -245,6 +245,28 @@ describe('atomic-answer-content', () => {
     );
   });
 
+  it('should render the turn limit reached error label when the conversation turn limit is reached', async () => {
+    const {element} = await renderComponent({
+      generatedAnswer: {
+        error: {
+          message: 'turn limit reached',
+          isSseTurnLimitReachedError: () => true,
+        },
+      },
+    });
+
+    await element.updateComplete;
+
+    const errorContainer = element.shadowRoot?.querySelector(
+      '[part="generated-answer-error"]'
+    );
+
+    expect(errorContainer).not.toBeNull();
+    expect(errorContainer?.textContent).toContain(
+      i18n.t('generated-answer-error-turn-limit-reached')
+    );
+  });
+
   it('should render the generated content container with answer data', async () => {
     const {getGeneratedContentProps} = await renderComponent();
 
