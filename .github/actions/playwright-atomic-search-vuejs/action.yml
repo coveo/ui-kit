@@ -1,0 +1,14 @@
+name: "Playwright Atomic Vue.js"
+description: "Run Playwright tests for Atomic Vue.js"
+runs:
+  using: composite
+  steps:
+    - name: Run Playwright tests
+      run: pnpm exec playwright test
+      working-directory: samples/atomic/search-vuejs
+      shell: bash
+    - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      if: failure()
+      with:
+        name: vuejs-screenshots
+        path: samples/atomic/search-vuejs/playwright-report/
