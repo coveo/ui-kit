@@ -364,6 +364,12 @@ describe('atomic-commerce-search-box', () => {
         'There are no search suggestions.'
       );
     });
+
+    it('should be focusable', async () => {
+      const {element} = await renderSearchBox();
+      element.focus();
+      expect(element).toHaveFocus();
+    });
   });
 
   describe('when inputting text in the search box', () => {

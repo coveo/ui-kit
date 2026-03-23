@@ -103,6 +103,10 @@ export class AtomicSearchBox
   extends LitElement
   implements InitializableComponent<Bindings>
 {
+  static shadowRootOptions = {
+    ...LitElement.shadowRootOptions,
+    delegatesFocus: true,
+  };
   static styles: CSSResultGroup =
     css`@import "../atomic-search-box/atomic-search-box.pcss";`;
 

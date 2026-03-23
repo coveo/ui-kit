@@ -105,6 +105,10 @@ export class AtomicCommerceSearchBox
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
+  static shadowRootOptions = {
+    ...LitElement.shadowRootOptions,
+    delegatesFocus: true,
+  };
   static styles: CSSResultGroup =
     css`@import "../../search/atomic-search-box/atomic-search-box.pcss";`;
 
@@ -439,7 +443,7 @@ export class AtomicCommerceSearchBox
     this.announceNewSuggestionsToScreenReader();
   }
 
-  private async onFocus() {
+  private async _onFocus() {
     if (this.isExpanded) {
       return;
     }
@@ -573,7 +577,7 @@ export class AtomicCommerceSearchBox
         value: this.searchBoxState.value,
         title: this.textAreaLabel,
         ariaLabel: this.textAreaLabel,
-        onFocus: () => this.onFocus(),
+        onFocus: () => this._onFocus(),
         onInput: (e: Event) =>
           this.onInput((e.target as HTMLTextAreaElement).value),
         onKeyDown: (e: KeyboardEvent) => this.onKeyDown(e),

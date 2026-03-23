@@ -214,6 +214,12 @@ describe('atomic-insight-search-box', () => {
     });
   });
 
+  it('should be focusable', async () => {
+    const {element} = await renderComponent();
+    element.focus();
+    expect(element).toHaveFocus();
+  });
+
   it('should have aria-label for the textarea', async () => {
     const {textArea} = await renderComponent();
     expect(textArea).toHaveAttribute('aria-label');

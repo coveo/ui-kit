@@ -348,6 +348,12 @@ describe('atomic-search-box', () => {
         'There are no search suggestions.'
       );
     });
+
+    it('should be focusable', async () => {
+      const {element} = await renderSearchBox();
+      element.focus();
+      expect(element).toHaveFocus();
+    });
   });
 
   describe('when the clear button is clicked', () => {
