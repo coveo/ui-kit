@@ -105,9 +105,6 @@ catalogs:
     cypress:
       specifier: 13.7.3
       version: 13.7.3
-    cypress-repeat:
-      specifier: 2.3.9
-      version: 2.3.9
     dayjs:
       specifier: 1.11.13
       version: 1.11.13
@@ -1344,6 +1341,9 @@ importers:
         specifier: 19.2.3
         version: 19.2.3(react@19.2.3)
     devDependencies:
+      '@playwright/test':
+        specifier: 'catalog:'
+        version: 1.56.1
       '@types/node':
         specifier: 'catalog:'
         version: 22.16.5
@@ -1353,15 +1353,6 @@ importers:
       '@types/react-dom':
         specifier: 'catalog:'
         version: 19.2.3(@types/react@19.2.7)
-      cypress:
-        specifier: 'catalog:'
-        version: 13.7.3
-      cypress-repeat:
-        specifier: 'catalog:'
-        version: 2.3.9(cypress@13.7.3)
-      cypress-web-vitals:
-        specifier: 4.2.0
-        version: 4.2.0(cypress-real-events@1.15.0(cypress@13.7.3))(cypress@13.7.3)
       typescript:
         specifier: 5.9.3
         version: 5.9.3
@@ -8059,23 +8050,6 @@ packages:
   custom-elements-manifest@1.0.0:
     resolution: {integrity: sha512-j59k0ExGCKA8T6Mzaq+7axc+KVHwpEphEERU7VZ99260npu/p/9kd+Db+I3cGKxHkM5y6q5gnlXn00mzRQkX2A==}
 
-  cypress-real-events@1.15.0:
-    resolution: {integrity: sha512-in98xxTnnM9Z7lZBvvVozm99PBT2eEOjXRG5LKWyYvQnj9mGWXMiPNpfw7e7WiraBFh7XlXIxnE9Cu5o+52kQQ==}
-    peerDependencies:
-      cypress: ^4.x || ^5.x || ^6.x || ^7.x || ^8.x || ^9.x || ^10.x || ^11.x || ^12.x || ^13.x || ^14.x || ^15.x
-
-  cypress-repeat@2.3.9:
-    resolution: {integrity: sha512-YFNG9uwQJDMe/JQ+bYCbb3EMMLm6fKuZV6TaqDTg+FyJXSDgcOjdiN0u1E894RNvoPJg8cTY0427nHir5rImXw==}
-    hasBin: true
-    peerDependencies:
-      cypress: '>=5.3.0'
-
-  cypress-web-vitals@4.2.0:
-    resolution: {integrity: sha512-KNQ3f8Axgbc/Otrsk2DIEjBfVvyec2wr3FRYQGrNafkUmM4urQoVhNrPktMJ18kqQ4iDsSM9OZPcYwv4DXQjyw==}
-    peerDependencies:
-      cypress: ^4.x || ^5.x || ^6.x || ^7.x || ^8.x || ^9.x || ^10.x || ^11.x || ^12.x || ^13.x || ^14.x
-      cypress-real-events: ^1.x
-
   cypress@13.7.3:
     resolution: {integrity: sha512-uoecY6FTCAuIEqLUYkTrxamDBjMHTYak/1O7jtgwboHiTnS1NaMOoR08KcTrbRZFCBvYOiS4tEkQRmsV+xcrag==}
     engines: {node: ^16.0.0 || ^18.0.0 || >=20.0.0}
@@ -8132,15 +8106,6 @@ packages:
 
   debug@3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
-
-  debug@4.4.1:
-    resolution: {integrity: sha512-KcKCqiftBJcZr++7ykoDIEwSa3XWowTfNPo92BYxjXiyYEVrUQh2aLyhxBCwww+heortUFxEJYcRzosstTEBYQ==}
-    engines: {node: '>=6.0'}
     peerDependencies:
       supports-color: '*'
     peerDependenciesMeta:
@@ -8370,10 +8335,6 @@ packages:
   dotenv@17.2.1:
     resolution: {integrity: sha512-kQhDYKZecqnM0fCnzI5eIv5L4cAe/iRI+HqMbO/hbRdTAeXDG+M9FjipUxNfbARuEg4iHIbhnhs78BCHNbSxEQ==}
     engines: {node: '>=12'}
-
-  dotenv@8.2.0:
-    resolution: {integrity: sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==}
-    engines: {node: '>=8'}
 
   drange@1.1.1:
     resolution: {integrity: sha512-pYxfDYpued//QpnLIm4Avk7rsNtAtQkUES2cwAYSvD/wd2pKD71gN2Ebj3e7klzXwjocvE8c5vx/1fxwpqmSxA==}
@@ -22314,25 +22275,6 @@ snapshots:
 
   custom-elements-manifest@1.0.0: {}
 
-  cypress-real-events@1.15.0(cypress@13.7.3):
-    dependencies:
-      cypress: 13.7.3
-
-  cypress-repeat@2.3.9(cypress@13.7.3):
-    dependencies:
-      arg: 5.0.2
-      bluebird: 3.7.2
-      cypress: 13.7.3
-      debug: 4.4.1
-      dotenv: 8.2.0
-    transitivePeerDependencies:
-      - supports-color
-
-  cypress-web-vitals@4.2.0(cypress-real-events@1.15.0(cypress@13.7.3))(cypress@13.7.3):
-    dependencies:
-      cypress: 13.7.3
-      cypress-real-events: 1.15.0(cypress@13.7.3)
-
   cypress@13.7.3:
     dependencies:
       '@cypress/request': 3.0.10
@@ -22427,10 +22369,6 @@ snapshots:
       ms: 2.1.3
     optionalDependencies:
       supports-color: 8.1.1
-
-  debug@4.4.1:
-    dependencies:
-      ms: 2.1.3
 
   debug@4.4.3(supports-color@8.1.1):
     dependencies:
@@ -22613,8 +22551,6 @@ snapshots:
   dotenv@16.6.1: {}
 
   dotenv@17.2.1: {}
-
-  dotenv@8.2.0: {}
 
   drange@1.1.1: {}
 

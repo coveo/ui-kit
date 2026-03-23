@@ -1,0 +1,9 @@
+name: "Playwright Headless SSR Search"
+description: "Run Playwright tests for Headless SSR Search"
+runs:
+  using: composite
+  steps:
+    - name: Run Playwright tests
+      run: pnpm exec playwright test
+      working-directory: samples/headless-ssr/search-nextjs
+      shell: bash

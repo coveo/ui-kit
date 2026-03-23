@@ -8,8 +8,8 @@
     "build": "next build",
     "prod": "next start",
     "lint": "next lint",
-    "e2e": "cypress run --browser chrome --e2e",
-    "e2e:watch": "cypress open --browser chrome --e2e"
+    "e2e": "playwright test",
+    "e2e:watch": "playwright test --ui"
   },
   "dependencies": {
     "@coveo/headless-react": "workspace:*",
@@ -22,9 +22,7 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "cypress": "catalog:",
-    "cypress-web-vitals": "4.2.0",
-    "cypress-repeat": "catalog:",
+    "@playwright/test": "catalog:",
     "typescript": "catalog:"
   }
 }
