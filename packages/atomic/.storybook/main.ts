@@ -124,6 +124,7 @@ const config: StorybookConfig = {
     },
     '@storybook/addon-vitest',
     '@storybook/addon-mcp',
+    '@github-ui/storybook-addon-performance-panel/universal',
   ],
   framework: {
     name: '@storybook/web-components-vite',
