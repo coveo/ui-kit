@@ -1530,12 +1530,12 @@ importers:
         specifier: 5.9.3
         version: 5.9.3
     devDependencies:
+      '@playwright/test':
+        specifier: 'catalog:'
+        version: 1.56.1
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 5.1.1(vite@7.2.2(@types/node@22.16.5)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.30.1)(sass@1.97.3)(terser@5.46.0)(yaml@2.8.2))
-      cypress:
-        specifier: 'catalog:'
-        version: 13.7.3
       vite:
         specifier: 'catalog:'
         version: 7.2.2(@types/node@22.16.5)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.30.1)(sass@1.97.3)(terser@5.46.0)(yaml@2.8.2)

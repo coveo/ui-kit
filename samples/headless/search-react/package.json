@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "catalog:",
-    "cypress": "catalog:",
+    "@playwright/test": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:"
   }
