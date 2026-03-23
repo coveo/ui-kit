@@ -11,10 +11,10 @@ By rendering the HTML on the server, the client can receive a fully formed page 
 The [`@coveo/headless-react`](https://www.npmjs.com/package/@coveo/headless-react) package includes utilities for [React](https://react.dev/) which are compatible with [Next.js](https://nextjs.org/) in the `@coveo/headless-react/ssr` sub-package.
 These utilities enable SSR with the [Headless](https://docs.coveo.com/en/lcdf0493/) framework.
 
-<dl><dt><strong>📌 Note</strong></dt><dd>
 
-For a Coveo Commerce implementation, see [Headless for Commerce: Server-side rendering](https://docs.coveo.com/en/obif0156/).
-</dd></dl>
+> [!NOTE]
+> 
+> For a Coveo Commerce implementation, see [Headless for Commerce: Server-side rendering](https://docs.coveo.com/en/obif0156/).
 
 ## Prerequisites
 

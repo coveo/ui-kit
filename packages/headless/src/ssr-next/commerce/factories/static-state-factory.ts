@@ -9,7 +9,49 @@ import type {
   CommerceEngineDefinitionOptions,
   FetchStaticStateParameters,
 } from '../types/engine.js';
-import {buildFactory} from './build-factory.js';
+import {buildFactory, type SSRCommerceEngine} from './build-factory.js';
+
+function findAndExecuteMethod(
+  controllers: Record<string, unknown>,
+  methodName: string
+): boolean {
+  for (const controller of Object.values(controllers)) {
+    if (
+      typeof Object.getOwnPropertyDescriptor(controller, methodName)?.value ===
+      'function'
+    ) {
+      (controller as Record<string, () => void>)[methodName]();
+      return true;
+    }
+  }
+  return false;
+}
+
+function executeFirstRequestForListing(
+  controllers: Record<string, unknown>,
+  engine: SSRCommerceEngine
+) {
+  const controllerExecuted = findAndExecuteMethod(
+    controllers,
+    'executeFirstRequest'
+  );
+  if (!controllerExecuted) {
+    buildProductListing(engine).executeFirstRequest();
+  }
+}
+
+function executeFirstRequestForSearch(
+  controllers: Record<string, unknown>,
+  engine: SSRCommerceEngine
+) {
+  const controllerExecuted = findAndExecuteMethod(
+    controllers,
+    'executeFirstSearch'
+  );
+  if (!controllerExecuted) {
+    buildSearch(engine).executeFirstSearch();
+  }
+}
 
 export function fetchStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
@@ -21,7 +63,7 @@ export function fetchStaticStateFactory<
     async (
       params: FetchStaticStateParameters<TControllerDefinitions, TSolutionType>
     ) => {
-      const solutionTypeBuild = await buildFactory(
+      const solutionTypeBuild = buildFactory(
         controllerDefinitions,
         options
       )(solutionType);
@@ -29,10 +71,10 @@ export function fetchStaticStateFactory<
 
       switch (solutionType) {
         case SolutionType.listing:
-          buildProductListing(engine).executeFirstRequest();
+          executeFirstRequestForListing(controllers, engine);
           break;
         case SolutionType.search:
-          buildSearch(engine).executeFirstSearch();
+          executeFirstRequestForSearch(controllers, engine);
           break;
       }
 
@@ -49,9 +91,14 @@ export function fetchStaticStateFactory<
         controllers,
       });
 
+      const {controllers: controllerProps, ...restParams} = params as {
+        controllers?: Record<string, unknown>;
+      } & typeof params;
+
       return {
-        ...params,
+        ...restParams,
         ...staticState,
+        ...(controllerProps && {controllerProps}),
       };
     };
 }

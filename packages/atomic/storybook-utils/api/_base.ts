@@ -8,6 +8,12 @@ import {
 
 export abstract class MockApi {
   abstract get handlers(): HttpHandler[];
+
+  /**
+   * Clears all endpoint harnesses, removing any queued responses.
+   * This resets endpoints to their base response state without modifying the base response itself.
+   */
+  abstract clearAll(): void;
 }
 
 type HttpMethod = 'GET' | 'POST';

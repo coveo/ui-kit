@@ -31,6 +31,12 @@ export class AtomicResultText
   extends LightDomMixin(LitElement)
   implements InitializableComponent<Bindings>
 {
+  private static readonly propsSchema = new Schema({
+    field: new StringValue({required: true, emptyAllowed: false}),
+    shouldHighlight: new BooleanValue(),
+    disableHighlight: new BooleanValue(),
+  });
+
   /**
    * The result field which the component should use.
    * This will look in the Result object first, and then in the Result.raw object for the fields.
@@ -86,11 +92,7 @@ export class AtomicResultText
         shouldHighlight: this.shouldHighlight,
         disableHighlight: this.disableHighlight,
       }),
-      new Schema({
-        field: new StringValue({required: true, emptyAllowed: false}),
-        shouldHighlight: new BooleanValue(),
-        disableHighlight: new BooleanValue(),
-      })
+      AtomicResultText.propsSchema
     );
   }
 

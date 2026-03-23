@@ -5,7 +5,9 @@ import {
   buildSearchStatus,
   buildTabManager,
   type GeneratedAnswer,
+  type GeneratedAnswerCitation,
   type GeneratedAnswerState,
+  type GeneratedAnswerWithFollowUps,
   type SearchStatus,
   type SearchStatusState,
   type TabManager,
@@ -13,11 +15,17 @@ import {
 } from '@coveo/headless';
 import {html, LitElement, nothing, type PropertyValueMap} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {classMap} from 'lit/directives/class-map.js';
+import {when} from 'lit/directives/when.js';
 import {GeneratedAnswerController} from '@/src/components/common/generated-answer/generated-answer-controller';
+import '@/src/components/common/atomic-generated-answer-thread/atomic-generated-answer-thread.js';
 import {renderAnswerContent} from '@/src/components/common/generated-answer/render-answer-content';
+import {renderCardHeader} from '@/src/components/common/generated-answer/render-card-header';
 import {renderCitations} from '@/src/components/common/generated-answer/render-citations';
 import {renderCustomNoAnswerMessage} from '@/src/components/common/generated-answer/render-custom-no-answer-message';
+import {renderDisclaimer} from '@/src/components/common/generated-answer/render-disclaimer';
 import {renderFeedbackAndCopyButtons} from '@/src/components/common/generated-answer/render-feedback-and-copy-buttons';
+import {renderFollowUpInput} from '@/src/components/common/generated-answer/render-follow-up-input.js';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {arrayConverter} from '@/src/converters/array-converter';
@@ -42,10 +50,15 @@ import atomicGeneratedAnswerStyles from './atomic-generated-answer.tw.css.js';
  * @slot no-answer-message - Lets you pass a custom sorry message when no answer is generated.
  *
  * @part container - The container displaying the generated answer.
- * @part header-label - The header of the generated answer container.
+ * @part header -   The header container of the generated answer card.
+ * @part header-icon - The icon in the header of the generated answer card.
+ * @part header-label - The header label of the generated answer card.
  * @part feedback-button - The "like" and "dislike" buttons.
+ * @part feedback-and-copy-buttons - The container for the feedback and copy buttons.
  * @part toggle - The switch to toggle the visibility of the generated answer.
  * @part copy-button - The "Copy answer" button.
+ * @part generated-content-container - The container for the generated answer content.
+ * @part generated-content - The main content of the generated answer.
  * @part retry-container - The container for the "retry" section.
  * @part generated-text - The text of the generated answer.
  * @part citations-label - The header of the citations list.
@@ -133,6 +146,12 @@ export class AtomicGeneratedAnswer
    */
   @property({type: String, attribute: 'answer-configuration-id'})
   answerConfigurationId?: string;
+  /**
+   * @internal
+   * The unique identifier of the agent to use to generate answers.
+   */
+  @property({type: String, attribute: 'agent-id'})
+  agentId?: string;
 
   /**
    * A list of fields to include with the citations used to generate the answer.
@@ -202,7 +221,7 @@ export class AtomicGeneratedAnswer
   })
   @state()
   private generatedAnswerState!: GeneratedAnswerState;
-  public generatedAnswer!: GeneratedAnswer;
+  public generatedAnswer!: GeneratedAnswer | GeneratedAnswerWithFollowUps;
 
   @bindStateToController('searchStatus')
   @state()
@@ -259,6 +278,9 @@ export class AtomicGeneratedAnswer
       ...(this.answerConfigurationId && {
         answerConfigurationId: this.answerConfigurationId,
       }),
+      ...(this.agentId && {
+        agentId: this.agentId,
+      }),
       fieldsToIncludeInCitations: this.getCitationFields(),
     });
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -307,7 +329,8 @@ export class AtomicGeneratedAnswer
       ) as GeneratedAnswerState | undefined;
       if (
         oldState &&
-        this.generatedAnswerState?.expanded !== oldState?.expanded
+        this.generatedAnswerState?.expanded !== oldState?.expanded &&
+        this.isCollapsibleEnabled
       ) {
         const container = this.getAnswerContainer();
         if (container) {
@@ -318,6 +341,14 @@ export class AtomicGeneratedAnswer
           );
         }
       }
+    }
+
+    if (
+      (changedProperties.has('collapsible') ||
+        changedProperties.has('agentId')) &&
+      !this.isCollapsibleEnabled
+    ) {
+      this.resetCollapsibleStyles();
     }
   }
 
@@ -331,11 +362,11 @@ export class AtomicGeneratedAnswer
         this.tabManagerState?.activeTab
       )
     ) {
-      return html`${nothing}`;
+      return nothing;
     }
 
     const contentClasses =
-      'mx-auto mt-0 mb-4 border border-neutral shadow-lg p-6 bg-background rounded-lg p-6 text-on-background';
+      'mx-auto mt-0 mb-4 border border-neutral shadow-lg bg-background rounded-lg text-on-background';
 
     if (this.hasNoAnswerGenerated) {
       if (
@@ -349,12 +380,19 @@ export class AtomicGeneratedAnswer
               part="container"
               aria-label=${this.bindings.i18n.t('generated-answer-title')}
             >
-              <article>${this.renderCustomNoAnswerMessageWrapper()}</article>
+              <div part="generated-content">
+                ${this.renderCardHeaderWrapper()}
+                ${when(
+                  this.isAnswerVisible,
+                  () =>
+                    html`<article>${renderCustomNoAnswerMessage()}</article>`
+                )}
+              </div>
             </aside>
           </div>
         `;
       }
-      return html`${nothing}`;
+      return nothing;
     }
 
     return html`
@@ -364,7 +402,31 @@ export class AtomicGeneratedAnswer
           part="container"
           aria-label=${this.bindings.i18n.t('generated-answer-title')}
         >
-          <article>${this.renderContent()}</article>
+          <div part="generated-content">
+            ${this.renderCardHeaderWrapper()}
+            ${when(
+              this.isAnswerVisible,
+              () =>
+                html` <div part="generated-content-container" class="pb-6">
+                  <div
+                    class=${classMap({
+                      'px-6': true,
+                      'agent-scrollable': this.areFollowUpsEnabled,
+                    })}
+                  >
+                    <article>${this.renderAnswerContent()}</article>
+                  </div>
+                  <div class="px-6 pt-2">
+                    ${this.renderAskFollowUpInputWrapper()}
+                    ${renderDisclaimer({
+                      props: {
+                        i18n: this.bindings.i18n,
+                      },
+                    })}
+                  </div>
+                </div>`
+            )}
+          </div>
         </aside>
       </div>
     `;
@@ -384,10 +446,6 @@ export class AtomicGeneratedAnswer
 
     this.ariaMessage.message = this.controller.getGeneratedAnswerStatus();
   };
-
-  private get hasRetryableError() {
-    return this.controller.hasRetryableError;
-  }
 
   private get hasNoAnswerGenerated() {
     return this.controller.hasNoAnswerGenerated;
@@ -477,7 +535,11 @@ export class AtomicGeneratedAnswer
         getComputedStyle(document.documentElement).fontSize
       );
 
-      this.fullAnswerHeight = answerHeight / rootFontSize;
+      const nextFullAnswerHeight = answerHeight / rootFontSize;
+      if (this.fullAnswerHeight !== nextFullAnswerHeight) {
+        this.fullAnswerHeight = nextFullAnswerHeight;
+        this.requestUpdate();
+      }
 
       this.updateAnswerHeight();
     }
@@ -535,21 +597,23 @@ export class AtomicGeneratedAnswer
     this.controller.clickLike();
   }
 
-  private renderCitationsList() {
-    const {citations} = this.generatedAnswerState ?? {};
-
+  private renderCitationsList(
+    citations: GeneratedAnswerCitation[],
+    answerId?: string
+  ) {
     return renderCitations({
       props: {
         citations,
         i18n: this.bindings.i18n,
         buildInteractiveCitation: (citation) =>
           buildInteractiveCitation(this.bindings.engine, {
-            options: {citation},
+            options: {citation, answerId},
           }),
         logCitationHover: (citationId, citationHoverTimeMs) => {
           this.generatedAnswer?.logCitationHover(
             citationId,
-            citationHoverTimeMs
+            citationHoverTimeMs,
+            answerId
           );
         },
         disableCitationAnchoring: this.disableCitationAnchoring,
@@ -561,8 +625,13 @@ export class AtomicGeneratedAnswer
     return renderFeedbackAndCopyButtons({
       props: {
         i18n: this.bindings.i18n,
-        generatedAnswerState: this.generatedAnswerState,
-        withToggle: this.withToggle,
+        generatedAnswerActionsState: {
+          liked: this.generatedAnswerState.liked,
+          disliked: this.generatedAnswerState.disliked,
+          isStreaming: this.generatedAnswerState.isStreaming,
+          isLoading: this.generatedAnswerState.isLoading,
+          answer: this.generatedAnswerState.answer,
+        },
         copied: this.copied,
         copyError: this.copyError,
         getCopyToClipboardTooltip: () => this.copyToClipboardTooltip,
@@ -573,34 +642,139 @@ export class AtomicGeneratedAnswer
     });
   }
 
-  private renderContent() {
+  private renderAnswerContent() {
+    if (this.areFollowUpsEnabled) {
+      const generatedAnswerWithQuestion = {
+        ...this.generatedAnswerState,
+        question: this.bindings.engine.state.query?.q ?? '',
+      };
+
+      const allGeneratedAnswers = [
+        generatedAnswerWithQuestion,
+        ...(this.generatedAnswerWithFollowUps?.state.followUpAnswers
+          .followUpAnswers ?? []),
+      ];
+
+      return html`<atomic-generated-answer-thread
+        .generatedAnswers=${allGeneratedAnswers}
+        .i18n=${this.bindings.i18n}
+        .renderCitations=${this.renderCitationsList.bind(this)}
+        .onClickLike=${(answerId: string) =>
+          this.generatedAnswer.like(answerId)}
+        .onClickDislike=${(answerId: string) =>
+          this.generatedAnswer.dislike(answerId)}
+        .onCopyToClipboard=${(answerId: string) =>
+          this.generatedAnswer.logCopyToClipboard(answerId)}
+      ></atomic-generated-answer-thread>`;
+    }
+
     return renderAnswerContent({
       props: {
         i18n: this.bindings.i18n,
-        generatedAnswerState: this.generatedAnswerState,
-        isAnswerVisible: this.isAnswerVisible,
-        hasRetryableError: this.hasRetryableError,
-        toggleTooltip: this.toggleTooltip,
-        withToggle: this.withToggle,
-        collapsible: this.collapsible,
+        generatedAnswer: this.generatedAnswerState,
+        collapsible: this.isCollapsibleEnabled,
         renderFeedbackAndCopyButtonsSlot: () =>
           this.renderFeedbackAndCopyButtonsWrapper(),
-        renderCitationsSlot: () => html`${this.renderCitationsList()}`,
-        onToggle: (checked: boolean) => {
-          checked ? this.generatedAnswer?.show() : this.generatedAnswer?.hide();
-        },
+        renderCitationsSlot: () =>
+          html`${this.renderCitationsList(this.generatedAnswerState.citations)}`,
         onRetry: () => this.generatedAnswer?.retry(),
         onClickShowButton: () => this.clickOnShowButton(),
       },
     });
   }
 
-  private renderCustomNoAnswerMessageWrapper() {
-    return renderCustomNoAnswerMessage({
+  private get hasAgentId() {
+    return Boolean(this.agentId);
+  }
+
+  private get generatedAnswerWithFollowUps():
+    | GeneratedAnswerWithFollowUps
+    | undefined {
+    if (
+      !this.hasAgentId ||
+      !this.generatedAnswer ||
+      !('askFollowUp' in this.generatedAnswer)
+    ) {
+      return undefined;
+    }
+
+    return this.generatedAnswer as GeneratedAnswerWithFollowUps;
+  }
+
+  private get areFollowUpsEnabled() {
+    return (
+      this.generatedAnswerWithFollowUps?.state.followUpAnswers?.isEnabled ===
+      true
+    );
+  }
+
+  private get isCollapsibleEnabled() {
+    return (
+      this.collapsible &&
+      !this.areFollowUpsEnabled &&
+      (this.fullAnswerHeight ?? 0) > this.validateMaxCollapsedHeight()
+    );
+  }
+
+  private resetCollapsibleStyles() {
+    const container = this.getAnswerContainer();
+    const footer = this.getAnswerFooter();
+
+    if (!container || !footer) {
+      return;
+    }
+
+    this.toggleClass(container, 'answer-collapsed', false);
+    this.toggleClass(footer, 'is-collapsible', false);
+    this.toggleClass(footer, 'generating-label-visible', false);
+  }
+
+  private renderCardHeaderWrapper() {
+    return renderCardHeader({
       props: {
         i18n: this.bindings.i18n,
+        isAnswerVisible: this.isAnswerVisible,
+        toggleTooltip: this.toggleTooltip,
+        withToggle: this.withToggle,
+        onToggle: (checked: boolean) => {
+          checked ? this.generatedAnswer?.show() : this.generatedAnswer?.hide();
+        },
       },
     });
+  }
+
+  private get isAnswerGenerationOngoing() {
+    const initialAnswerPending =
+      this.generatedAnswerState.isStreaming ||
+      this.generatedAnswerState.isLoading;
+    return (
+      initialAnswerPending ||
+      (this.generatedAnswerWithFollowUps?.state.followUpAnswers?.followUpAnswers?.some(
+        (answer) => answer.isStreaming || answer.isLoading
+      ) ??
+        false)
+    );
+  }
+
+  private async handleAskFollowUp(question: string) {
+    if (this.areFollowUpsEnabled) {
+      await this.generatedAnswerWithFollowUps?.askFollowUp(question);
+    }
+  }
+
+  private renderAskFollowUpInputWrapper() {
+    if (!this.areFollowUpsEnabled) {
+      return nothing;
+    }
+    return html` <div class="mb-2">
+      ${renderFollowUpInput({
+        props: {
+          i18n: this.bindings.i18n,
+          submitButtonDisabled: this.isAnswerGenerationOngoing,
+          askFollowUp: this.handleAskFollowUp.bind(this),
+        },
+      })}
+    </div>`;
   }
 }
 

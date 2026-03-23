@@ -6,7 +6,7 @@ import type {
 } from 'lit';
 import type {AnyBindings} from '../components/common/interface/bindings';
 import type {InitializableComponent} from '../decorators/types';
-import {fetchBindings} from '../utils/initialization-lit-stencil-common-utils';
+import {fetchBindings} from '../utils/initialization-common-utils';
 import type {Constructor} from './mixin-common';
 
 function initializeBindings<

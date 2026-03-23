@@ -15,10 +15,9 @@ The output of a CR model depends on [view](https://docs.coveo.com/en/2949#view) 
 Headless doesn’t
 log these events for you, so you should ensure that you’re [sending view events](#send-view-events) for each page that you want to be able to recommend.
 
-<dl><dt><strong>💡 TIP: Leading practice</strong></dt><dd>
-
-Start sending view events as soon as you can to gather data that your CR models can learn from.
-</dd></dl>
+> [!TIP] **Leading practice**
+> 
+> Start sending view events as soon as you can to gather data that your CR models can learn from.
 
 ## Send view events
 
@@ -62,10 +61,10 @@ The following code sample leverages the open source `coveoua.js` script to send 
 1. `<PAGE_LANGUAGE>`: The language identifier of the tracked page.
 Coveo UA uses this value to populate the `language` metadata when sending view events.
 
-   <dl><dt><strong>❗ IMPORTANT</strong></dt><dd>
+> [!IMPORTANT]
+> 
+> Coveo ML models are split into distinct submodels for [each language](https://docs.coveo.com/en/1803#what-languages-do-coveo-ml-models-support), so you should set the `lang` HTML attribute for each page that you’re tracking.
 
-   Coveo ML models are split into distinct submodels for [each language](https://docs.coveo.com/en/1803#what-languages-do-coveo-ml-models-support), so you should set the `lang` HTML attribute for each page that you’re tracking.
-   </dd></dl>
 2. `PAGE_TITLE`: The title of the tracked page.
 Coveo UA uses this value to populate the `title` metadata when sending view events.
 3. `<ACCESS_TOKEN>`: A [public API key](https://docs.coveo.com/en/1718#api-key-templates) or a valid [search token](https://docs.coveo.com/en/1346/) if the page requires user authentication (see [Choose and implement a search authentication method](https://docs.coveo.com/en/1369/), [Search token authentication](https://docs.coveo.com/en/56/), [Execute queries domain](https://docs.coveo.com/en/1707#execute-queries-domain), and [Analytics data domain](https://docs.coveo.com/en/1707#analytics-data-domain)).
@@ -108,10 +107,9 @@ When you log view events with Coveo UA, all user context key names must be prefi
    context_userRole: getUserRole();
    ```
 
-   <dl><dt><strong>📌 Note</strong></dt><dd>
-
-   If you’re passing user context key-values along with view events, you’ll likely want to ensure that your recommendation interface [does so as well](https://docs.coveo.com/en/1934#leverage-user-context-data-in-a-recommendation-interface) when it sends [queries](https://docs.coveo.com/en/231/).
-   </dd></dl>
+> [!NOTE]
+>
+> If you’re passing user context key-values along with view events, you’ll likely want to ensure that your recommendation interface [does so as well](https://docs.coveo.com/en/1934#leverage-user-context-data-in-a-recommendation-interface) when it sends [queries](https://docs.coveo.com/en/231/).
 
 ### NPM
 

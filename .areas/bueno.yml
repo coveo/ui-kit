@@ -1,0 +1,8 @@
+description: Bueno library package
+file_patterns:
+  - packages/bueno/**
+reviewers:
+  dxui: ~
+
+review_bypass:
+  integration/139346: exempt # Developer eXperience Bot. Important for releases

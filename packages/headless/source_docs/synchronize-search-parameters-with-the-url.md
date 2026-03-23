@@ -7,10 +7,9 @@ slug: usage/synchronize-search-parameters-with-the-url
 Headless provides two controllers to help you keep the URL of your application in sync with your [Headless engine](https://docs.coveo.com/en/headless/latest/usage#configure-a-headless-engine) state.
 This article explains how to use those controllers, and why you would choose one over the other.
 
-<dl><dt><strong>📌 Note</strong></dt><dd>
-
-The context where you would make use of those controllers is during the initialization of your Headless application, so you may want to [review how to do so](https://docs.coveo.com/en/headless/latest/usage#initialize-your-interface) before reading this article.
-</dd></dl>
+> [!NOTE]
+> 
+> The context where you would make use of those controllers is during the initialization of your Headless application, so you may want to [review how to do so](https://docs.coveo.com/en/headless/latest/usage#initialize-your-interface) before reading this article.
 
 ## `buildUrlManager`
 

@@ -26,7 +26,7 @@ export interface ContextParam {
 }
 
 export interface EnableResultsParam {
-  enableResults: boolean;
+  enableResults?: boolean;
 }
 
 type ProductParam = {
@@ -41,6 +41,7 @@ type ContextParams = {
   purchased?: CartItemParam[];
   capture: boolean;
   source: string[];
+  custom?: Record<string, unknown>;
 };
 
 export interface ViewParams {

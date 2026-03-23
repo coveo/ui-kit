@@ -19,6 +19,8 @@ import {
 } from '@/src/utils/accessibility-utils';
 import QuickviewIcon from '../../../images/quickview.svg';
 import '@/src/components/common/atomic-icon/atomic-icon';
+import '@/src/components/search/atomic-quickview-modal/atomic-quickview-modal';
+import type {AtomicQuickviewModal} from '../atomic-quickview-modal/atomic-quickview-modal';
 
 /**
  * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
@@ -37,6 +39,13 @@ export class AtomicQuickview
   extends LitElement
   implements InitializableComponent<Bindings>
 {
+  private static readonly propsSchema = new Schema({
+    sandbox: new StringValue({
+      required: true,
+      regex: /allow-same-origin/,
+    }),
+  });
+
   /**
    * The sandbox attribute to apply to the iframe containing the quickview content.
    * This attribute restricts the capabilities of the iframe for security reasons (e.g., to prevent XSS attacks).
@@ -59,7 +68,7 @@ export class AtomicQuickview
   private resultContext = createResultContextController(this);
   private buttonFocusTarget!: FocusTargetController;
   private ariaLiveRegion = new AriaLiveRegionController(this, 'quickview');
-  private quickviewModalRef?: HTMLAtomicQuickviewModalElement;
+  private quickviewModalRef?: AtomicQuickviewModal;
   private buttonRef: Ref<HTMLButtonElement> = createRef();
 
   private nextQuickviewHandler = (evt: Event) => {
@@ -78,12 +87,7 @@ export class AtomicQuickview
     new ValidatePropsController(
       this,
       () => ({sandbox: this.sandbox}),
-      new Schema({
-        sandbox: new StringValue({
-          required: true,
-          regex: /allow-same-origin/,
-        }),
-      })
+      AtomicQuickview.propsSchema
     );
   }
 

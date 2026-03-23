@@ -95,10 +95,11 @@ describe('ControllerBuilder', () => {
         mockEngine,
         mockProps
       );
-      expect(result).toEqual({
-        ...mockController,
-        initialState: {someProperty: 'test'},
-      });
+      expect(result.state).toEqual({someProperty: 'test'});
+      expect(
+        (result as Controller & {initialState: unknown}).initialState
+      ).toEqual({someProperty: 'test'});
+      expect(typeof result.subscribe).toBe('function');
     });
 
     it('should pass additional args to buildWithProps method', () => {
@@ -126,10 +127,11 @@ describe('ControllerBuilder', () => {
 
       const result = builder.build();
 
-      expect(result).toEqual({
-        ...controllerWithState,
-        initialState: {customProperty: 'value'},
-      });
+      expect(result.state).toEqual({customProperty: 'value'});
+      expect(
+        (result as Controller & {initialState: unknown}).initialState
+      ).toEqual({customProperty: 'value'});
+      expect(typeof result.subscribe).toBe('function');
     });
   });
 

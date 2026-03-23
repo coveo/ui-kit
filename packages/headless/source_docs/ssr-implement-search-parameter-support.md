@@ -7,17 +7,16 @@ slug: usage/server-side-rendering/implement-search-parameter-support
 # Implement search parameter support
 
 We recommend that you use the [Coveo Headless](https://docs.coveo.com/en/lcdf0493/) SSR utilities with the latest [Next.js](https://nextjs.org/) [App Router](https://nextjs.org/docs/app).
-We don’t fully support the [Pages Router](https://nextjs.org/docs/pages).
+We don't fully support the [Pages Router](https://nextjs.org/docs/pages).
 This article uses the App Router paradigm.
 
 If you decide to use the Pages Router paradigm, there are potential issues which might lead to server reruns during client-side navigation.
 This would cause both the client and server to execute search requests to the [Coveo Platform](https://docs.coveo.com/en/186/).
 For more details on the root cause of this behavior, refer to [this GitHub issue](https://github.com/vercel/next.js/discussions/19611).
 
-<dl><dt><strong>💡 TIP</strong></dt><dd>
-
-Although you could read this article without being familiar with Next.js, we recommend that you follow the Next.js [Getting Started](https://nextjs.org/docs) documentation first.
-</dd></dl>
+> [!TIP]
+> 
+> Although you could read this article without being familiar with Next.js, we recommend that you follow the Next.js [Getting Started](https://nextjs.org/docs) documentation first.
 
 ## Define the engine and controllers
 
@@ -114,10 +113,9 @@ export function useAppHistoryRouter() {
 
 The `SearchParameterManager` component uses the [`useEffect`](https://react.dev/reference/react/useEffect) hook to synchronize the [search interface](https://docs.coveo.com/en/2741/) with the current URL whenever its search parameter changes.
 
-<dl><dt><strong>💡 TIP</strong></dt><dd>
-
-For more info about `useEffect`, see [Synchronizing with Effects](https://react.dev/learn/synchronizing-with-effects).
-</dd></dl>
+> [!TIP]
+> 
+> For more info about `useEffect`, see [Synchronizing with Effects](https://react.dev/learn/synchronizing-with-effects).
 
 Any search filter (such as [facet](https://docs.coveo.com/en/198/) value, [query](https://docs.coveo.com/en/231/), or sort criteria) in the URL will automatically be reflected in the interface when loading the search page with specific parameters in the URL.
 Add the following code in `src/components/search-parameter-manager.tsx`:
@@ -172,7 +170,7 @@ Whenever there’s a change, the state’s parameters are serialized (using the 
 
 <dl><dt><strong>📌 Note</strong></dt><dd>
 
-You can consult a [working demo](https://github.com/coveo/ui-kit/tree/master/samples/headless-ssr/search-nextjs/app-router) of the component.
+You can consult a [working demo](https://github.com/coveo/ui-kit/tree/master/samples/headless-ssr/search-nextjs) of the component.
 </dd></dl>
 
 ## Add the component to the search page

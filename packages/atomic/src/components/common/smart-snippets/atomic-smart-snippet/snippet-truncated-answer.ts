@@ -1,6 +1,7 @@
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
+import '@/src/components/common/atomic-smart-snippet-answer/atomic-smart-snippet-answer.js';
 
 export interface SnippetTruncatedAnswerProps {
   answer: string;

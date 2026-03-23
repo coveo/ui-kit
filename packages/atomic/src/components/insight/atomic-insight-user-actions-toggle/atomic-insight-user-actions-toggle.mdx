@@ -1,0 +1,31 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicInsightUserActionsToggleStories from './atomic-insight-user-actions-toggle.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={ AtomicInsightUserActionsToggleStories } />
+
+<AtomicDocTemplate
+  stories={ AtomicInsightUserActionsToggleStories }
+  githubPath="insight/atomic-insight-user-actions-toggle/atomic-insight-user-actions-toggle.ts"
+  tagName="atomic-insight-user-actions-toggle"
+  className="AtomicInsightUserActionsToggle"
+>
+
+The `atomic-insight-user-actions-toggle` component displays a button that, when clicked, opens a modal containing a user actions timeline. This component is designed for Insight Panel interfaces where agents need to view customer activity history related to a support case.
+
+When this component is clicked, an `atomic-insight-user-actions-modal` is created and displayed, showing the timeline of user actions.
+
+This component should be placed within the `atomic-insight-interface`. You must provide the `user-id` and `ticket-creation-date-time` properties to identify the user and case context:
+
+```html
+<atomic-insight-interface>
+  <atomic-insight-user-actions-toggle
+    user-id="user123@example.com"
+    ticket-creation-date-time="2024-01-15T10:30:00Z"
+  ></atomic-insight-user-actions-toggle>
+</atomic-insight-interface>
+```
+
+
+
+</AtomicDocTemplate>

@@ -12,7 +12,7 @@
     "@stencil/core": "catalog:"
   },
   "devDependencies": {
-    "@coveo/create-atomic-rollup-plugin": "catalog:",
+    "@coveo/create-atomic-rollup-plugin": "workspace:*",
     "@rollup/plugin-replace": "catalog:",
     "esbuild": "catalog:",
     "gts": "3.1.1",

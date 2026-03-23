@@ -1,3 +1,22 @@
+## <small>1.41.8 (2026-02-11)</small>
+
+* fix(create-atomic): resolve workspace: and catalog: placeholders in template (#7079) ([ad7b703](https://github.com/coveo/ui-kit/commits/ad7b703)), closes [#7079](https://github.com/coveo/ui-kit/issues/7079)
+
+
+
+## <small>1.41.7 (2026-01-07)</small>
+
+* [Version Bump][skip ci]: ui-kit publish ([b2a83c4](https://github.com/coveo/ui-kit/commits/b2a83c4))
+* Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
+
+
+
+## <small>1.41.6 (2026-01-06)</small>
+
+* Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
+
+
+
 ## <small>1.41.5 (2025-10-30)</small>
 
 * ci: fix pnpm pack including node_modules for create-atomic packages (#6333) ([c9debba](https://github.com/coveo/ui-kit/commits/c9debba)), closes [#6333](https://github.com/coveo/ui-kit/issues/6333)

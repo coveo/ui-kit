@@ -63,7 +63,9 @@ export class AtomicSortDropdown
   private searchStatusState!: SearchStatusState;
 
   public tabManager!: TabManager;
-  @bindStateToController('tabManager')
+  @bindStateToController('tabManager', {
+    onUpdateCallbackMethod: 'onTabManagerStateChange',
+  })
   @state()
   public tabManagerState!: TabManagerState;
 
@@ -138,18 +140,21 @@ export class AtomicSortDropdown
     option && this.sort.sortBy(option.criteria);
   }
 
-  updated() {
+  public onTabManagerStateChange = () => {
+    this.resetSortIfInvalidForCurrentTab();
+  };
+
+  private resetSortIfInvalidForCurrentTab() {
     if (!this.bindings || !this.sortState) {
       return;
     }
 
-    if (
-      this.options.some(
-        (option) =>
-          option.expression.trim().replace(/\s*,\s*/g, ',') ===
-          this.sortState.sortCriteria.replace(/@/g, '')
-      )
-    ) {
+    if (this.isSortValid()) {
+      return;
+    }
+
+    const criterion = this.options[0]?.criteria;
+    if (!criterion) {
       return;
     }
 
@@ -158,6 +163,14 @@ export class AtomicSortDropdown
     ).updateSortCriterion(this.options[0]?.criteria);
 
     this.bindings.engine.dispatch(action);
+  }
+
+  private isSortValid(): boolean {
+    return this.options.some(
+      (option) =>
+        option.expression.trim().replace(/\s*,\s*/g, ',') ===
+        this.sortState.sortCriteria.replace(/@/g, '')
+    );
   }
 
   private renderSortLabelTemplate() {

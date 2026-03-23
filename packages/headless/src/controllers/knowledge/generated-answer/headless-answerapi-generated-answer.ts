@@ -1,3 +1,4 @@
+import {skipToken} from '@reduxjs/toolkit/query';
 import type {GeneratedAnswerStream} from '../../../api/knowledge/generated-answer-stream.js';
 import {
   type AnswerEvaluationPOSTParams,
@@ -23,6 +24,7 @@ import {
   updateAnswerConfigurationId,
 } from '../../../features/generated-answer/generated-answer-actions.js';
 import type {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
+import {withGeneratedAnswerSseErrorHelpers} from '../../../features/generated-answer/sse-generated-answer-errors.js';
 import {filterOutDuplicatedCitations} from '../../../features/generated-answer/utils/generated-answer-citation-utils.js';
 import {queryReducer as query} from '../../../features/query/query-slice.js';
 import type {
@@ -163,10 +165,10 @@ export function buildAnswerApiGeneratedAnswer(
         citations: filterOutDuplicatedCitations(
           answerApiState?.citations ?? []
         ),
-        error: {
+        error: withGeneratedAnswerSseErrorHelpers({
           message: answerApiState?.error?.message,
-          statusCode: answerApiState?.error?.code,
-        },
+          code: answerApiState?.error?.code,
+        }),
         isLoading: answerApiState?.isLoading ?? false,
         isStreaming: answerApiState?.isStreaming ?? false,
         answerContentFormat: answerApiState?.contentFormat ?? 'text/plain',
@@ -180,7 +182,7 @@ export function buildAnswerApiGeneratedAnswer(
     },
     retry() {
       const answerApiQueryParams = selectAnswerApiQueryParams(getState());
-      engine.dispatch(fetchAnswer(answerApiQueryParams));
+      engine.dispatch(fetchAnswer(answerApiQueryParams ?? skipToken));
     },
     reset() {
       engine.dispatch(resetAnswer());

@@ -7,6 +7,8 @@ A web-component library for building modern UIs interfacing with the Coveo platf
 
 Using the library: [Coveo Atomic Library Official Documentation](https://docs.coveo.com/en/atomic/latest/).
 
+**Contributing**: See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on developing Atomic components, running tests, and using development tools.
+
 ## Entry points
 
 The `@coveo/atomic` package exposes the following entry points:
@@ -76,32 +78,6 @@ pnpm turbo run test --filter=@coveo/atomic
 ### Storybook MCP (Model Context Protocol)
 
 This Storybook instance is configured with the MCP addon, which enables AI agents to programmatically interact with component stories. When Storybook is running, the MCP server is accessible at `http://localhost:4400/mcp`.
-
-## Run Cypress for Atomic components
-
-Ref: https://docs.cypress.io/
-
-- All the tests will need to be under folder cypress\integration
-
-### Open
-
-To open cypress, run:
-
-```sh
-pnpm turbo run e2e:watch --filter=@coveo/atomic
-```
-
-To run all the test, run:
-
-```sh
-pnpm turbo run e2e  --filter=@coveo/atomic
-```
-
-To run all the test in Firefox:
-
-```sh
-pnpm turbo run e2e:firefox --filter=@coveo/atomic
-```
 
 ## Utilities
 

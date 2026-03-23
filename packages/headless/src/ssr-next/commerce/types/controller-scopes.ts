@@ -69,3 +69,10 @@ export interface ListingAndStandaloneController {
    */
   [SolutionType.standalone]: true;
 }
+
+export interface StandaloneController {
+  /**
+   * @internal
+   */
+  [SolutionType.standalone]: true;
+}

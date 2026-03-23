@@ -41,6 +41,11 @@ import {
   constructAnswerAPIQueryParams,
 } from './generated-answer-request.js';
 import {
+  GENERATION_STEP_NAMES,
+  type GenerationStepName,
+  normalizeGenerationStepName,
+} from './generated-answer-state.js';
+import {
   type GeneratedContentFormat,
   type GeneratedResponseFormat,
   generatedContentFormat,
@@ -54,7 +59,7 @@ type StateNeededByGeneratedAnswerStream = ConfigurationSection &
 const stringValue = new StringValue({required: true});
 const optionalStringValue = new StringValue();
 const booleanValue = new BooleanValue({required: true});
-const citationSchema = {
+export const citationSchema = {
   id: stringValue,
   title: stringValue,
   uri: stringValue,
@@ -62,9 +67,22 @@ const citationSchema = {
   clickUri: optionalStringValue,
 };
 
-const answerContentFormatSchema = new StringValue<GeneratedContentFormat>({
+export const answerContentFormatSchema =
+  new StringValue<GeneratedContentFormat>({
+    required: true,
+    constrainTo: generatedContentFormat,
+  });
+
+const generationStepNameValue = new StringValue<GenerationStepName>({
   required: true,
-  constrainTo: generatedContentFormat,
+  constrainTo: GENERATION_STEP_NAMES,
+});
+
+const normalizeGenerationStepPayload = <T extends {name: string}>(
+  payload: T
+): Omit<T, 'name'> & {name: GenerationStepName} => ({
+  ...payload,
+  name: normalizeGenerationStepName(payload.name),
 });
 
 export interface GeneratedAnswerErrorPayload {
@@ -211,8 +229,26 @@ export const setCannotAnswer = createAction(
 
 export const setAnswerApiQueryParams = createAction(
   'generatedAnswer/setAnswerApiQueryParams',
-  (payload: AnswerApiQueryParams) =>
+  (payload: Partial<AnswerApiQueryParams>) =>
     validatePayload(payload, new RecordValue({}))
+);
+
+export const startStep = createAction(
+  'generatedAnswer/startStep',
+  (payload: {name: string; startedAt: number}) =>
+    validatePayload(normalizeGenerationStepPayload(payload), {
+      name: generationStepNameValue,
+      startedAt: new NumberValue({min: 0, required: true}),
+    })
+);
+
+export const finishStep = createAction(
+  'generatedAnswer/finishStep',
+  (payload: {name: string; finishedAt: number}) =>
+    validatePayload(normalizeGenerationStepPayload(payload), {
+      name: generationStepNameValue,
+      finishedAt: new NumberValue({min: 0, required: true}),
+    })
 );
 
 interface StreamAnswerArgs {

@@ -1,3 +1,4 @@
+import '@/src/components/common/atomic-icon/atomic-icon';
 import {NumberValue, Schema} from '@coveo/bueno';
 import {
   buildNotifyTrigger,
@@ -127,7 +128,7 @@ export class AtomicNotifications
   @errorGuard()
   render() {
     if (!this.notifications.length) {
-      return html`${nothing}`;
+      return nothing;
     }
 
     this.ariaMessage.message = this.generateAriaMessage();

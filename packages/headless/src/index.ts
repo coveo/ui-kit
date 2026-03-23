@@ -220,11 +220,16 @@ export type {
 export {buildFoldedResultList} from './controllers/folded-result-list/headless-folded-result-list.js';
 export type {
   GeneratedAnswer,
+  GeneratedAnswerBase,
   GeneratedAnswerCitation,
   GeneratedAnswerProps,
   GeneratedAnswerPropsInitialState,
   GeneratedAnswerState,
+  GeneratedAnswerWithFollowUps,
+  GeneratedAnswerWithFollowUpsState,
   GeneratedResponseFormat,
+  GenerationStep,
+  GenerationStepName,
 } from './controllers/generated-answer/headless-generated-answer.js';
 export {buildGeneratedAnswer} from './controllers/generated-answer/headless-generated-answer.js';
 export type {

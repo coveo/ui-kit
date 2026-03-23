@@ -7,10 +7,12 @@ const getNthResult = (n: number) => ({
     systitle: `Sample Result ${n}`,
     sysdescription: 'This is a sample result excerpt for testing.',
     sysuri: `https://example.com/search/${n}`,
+    urihash: `7oQhK429ñzbuW5c${n}`,
   },
+  uri: `https://example.com/search/${n}`,
 });
 
-interface Response {
+export interface SearchResponse {
   totalCount: number;
   totalCountFiltered: number;
   duration: number;
@@ -47,7 +49,7 @@ interface Response {
   extendedResults?: Record<string, unknown>;
 }
 
-export const baseResponse: Response = {
+export const baseResponse: SearchResponse = {
   totalCount: 120,
   totalCountFiltered: 120,
   duration: 175,
@@ -117,6 +119,100 @@ export const baseResponse: Response = {
       ],
       indexScore: 0.08949005905806505,
       label: 'Object type',
+    },
+    {
+      facetId: 'author',
+      field: 'author',
+      moreValuesAvailable: true,
+      values: [
+        {
+          value: 'BBC News',
+          state: 'idle',
+          numberOfResults: 62794,
+        },
+        {
+          value: 'Susan Cook',
+          state: 'idle',
+          numberOfResults: 124,
+        },
+        {
+          value: 'Martin Laporte',
+          state: 'idle',
+          numberOfResults: 71,
+        },
+        {
+          value: 'BBCPanorama',
+          state: 'idle',
+          numberOfResults: 40,
+        },
+        {
+          value: 'democ',
+          state: 'idle',
+          numberOfResults: 34,
+        },
+      ],
+      indexScore: 0.1,
+    },
+    {
+      facetId: 'source',
+      field: 'source',
+      moreValuesAvailable: true,
+      values: [
+        {
+          value: 'Coveo Samples - Youtube BBC News',
+          state: 'idle',
+          numberOfResults: 62898,
+        },
+        {
+          value: 'Coveo Sample - Lithium Community',
+          state: 'idle',
+          numberOfResults: 161203,
+        },
+        {
+          value: 'Coveo Samples - Dynamics 365',
+          state: 'idle',
+          numberOfResults: 184232,
+        },
+        {
+          value: 'Sports',
+          state: 'idle',
+          numberOfResults: 34545,
+        },
+      ],
+      indexScore: 0.1,
+    },
+    {
+      facetId: 'year',
+      field: 'year',
+      moreValuesAvailable: true,
+      values: [
+        {
+          value: '2025',
+          state: 'idle',
+          numberOfResults: 175222,
+        },
+        {
+          value: '2019',
+          state: 'idle',
+          numberOfResults: 199094,
+        },
+        {
+          value: '2024',
+          state: 'idle',
+          numberOfResults: 13407,
+        },
+        {
+          value: '2022',
+          state: 'idle',
+          numberOfResults: 11290,
+        },
+        {
+          value: '2020',
+          state: 'idle',
+          numberOfResults: 8011,
+        },
+      ],
+      indexScore: 0.1,
     },
   ],
   suggestedFacets: [],
@@ -190,8 +286,31 @@ export const baseResponse: Response = {
   },
 };
 
-// Ultra-minimal folded response inspired by getNthResult
-export const baseFoldedResponse: Response = {
+const searchChildResult1 = {
+  title: 'Cats',
+  excerpt: 'Cat species',
+  clickUri: 'https://example.com/cats',
+  uniqueId: 'cats-child',
+  raw: {
+    foldingcollection: 'Animals',
+    foldingchild: ['cats'],
+    foldingparent: 'animals',
+  },
+};
+
+const searchChildResult2 = {
+  title: 'Dogs',
+  excerpt: 'Dog species',
+  clickUri: 'https://example.com/dogs',
+  uniqueId: 'dogs-child',
+  raw: {
+    foldingcollection: 'Animals',
+    foldingchild: ['dogs'],
+    foldingparent: 'animals',
+  },
+};
+
+export const baseFoldedResponse: SearchResponse = {
   totalCount: 2,
   totalCountFiltered: 2,
   duration: 15,
@@ -220,43 +339,18 @@ export const baseFoldedResponse: Response = {
   suggestedFacets: [],
   categoryFacets: [],
   results: [
-    // Parent result with children - minimal fields only
     {
       title: 'Animals',
       excerpt: 'Collection of animals',
       clickUri: 'https://example.com/animals',
       uniqueId: 'animals-parent',
-      childResults: [
-        {
-          title: 'Cats',
-          excerpt: 'Cat species',
-          clickUri: 'https://example.com/cats',
-          uniqueId: 'cats-child',
-          raw: {
-            foldingcollection: 'Animals',
-            foldingchild: ['cats'],
-            foldingparent: 'animals',
-          },
-        },
-        {
-          title: 'Dogs',
-          excerpt: 'Dog species',
-          clickUri: 'https://example.com/dogs',
-          uniqueId: 'dogs-child',
-          raw: {
-            foldingcollection: 'Animals',
-            foldingchild: ['dogs'],
-            foldingparent: 'animals',
-          },
-        },
-      ],
+      childResults: [searchChildResult1, searchChildResult2],
       totalNumberOfChildResults: 2,
       raw: {
         foldingcollection: 'Animals',
         foldingchild: ['animals'],
       },
     },
-    // Standalone result - minimal fields only
     {
       title: 'Plants',
       excerpt: 'Plant collection',
@@ -284,9 +378,39 @@ export const baseFoldedResponse: Response = {
   extendedResults: {},
 };
 
+export const nestedFoldedResponse: SearchResponse = {
+  ...baseFoldedResponse,
+  results: [
+    {
+      ...baseFoldedResponse.results[0]!,
+      childResults: [
+        {
+          ...searchChildResult1,
+          childResults: [
+            {
+              title: 'Persian Cats',
+              excerpt: 'Persian cat breed details',
+              clickUri: 'https://example.com/cats/persian',
+              uniqueId: 'persian-grandchild',
+              raw: {
+                foldingcollection: 'Animals',
+                foldingchild: ['persian'],
+                foldingparent: 'cats',
+              },
+            },
+          ],
+          totalNumberOfChildResults: 1,
+        },
+        searchChildResult2,
+      ],
+    },
+    baseFoldedResponse.results[1]!,
+  ],
+};
+
 export const richResponse = {
-  totalCount: 458475,
-  totalCountFiltered: 458475,
+  totalCount: 20,
+  totalCountFiltered: 20,
   duration: 93,
   indexDuration: 66,
   requestDuration: 87,

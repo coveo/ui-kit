@@ -1,83 +1,54 @@
-import type {GeneratedAnswerState} from '@coveo/headless';
+import type {GeneratedAnswerBase} from '@coveo/headless';
 import type {i18n} from 'i18next';
 import type {TemplateResult} from 'lit';
 import {html, nothing} from 'lit';
+import {when} from 'lit/directives/when.js';
 import {renderGeneratedContentContainer} from '@/src/components/common/generated-answer/generated-content-container';
 import {renderRetryPrompt} from '@/src/components/common/generated-answer/retry-prompt';
 import {renderShowButton} from '@/src/components/common/generated-answer/show-button';
 import {renderSourceCitations} from '@/src/components/common/generated-answer/source-citations';
-import {renderHeading} from '@/src/components/common/heading';
-import {renderSwitch} from '@/src/components/common/switch';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
-import {renderDisclaimer} from './render-disclaimer';
 import {renderGeneratingAnswerLabel} from './render-generating-answer-label';
+import '@/src/components/common/atomic-icon/atomic-icon';
+
+type GeneratedAnswer = GeneratedAnswerBase & {
+  expanded?: boolean;
+};
 
 export interface RenderAnswerContentProps {
   i18n: i18n;
-  generatedAnswerState: GeneratedAnswerState | undefined;
-  isAnswerVisible: boolean;
-  hasRetryableError: boolean;
-  toggleTooltip: string;
-  withToggle: boolean;
+  generatedAnswer: GeneratedAnswer;
   collapsible: boolean;
   renderFeedbackAndCopyButtonsSlot: () => TemplateResult | typeof nothing;
   renderCitationsSlot: () => TemplateResult | typeof nothing;
-  onToggle: (checked: boolean) => void;
   onRetry: () => void;
   onClickShowButton: () => void;
 }
 
 /**
- * Renders the main content of the generated answer including header, toggle, answer text, and citations.
+ * Renders the answer content of a given generated answer including answer text and citations.
  */
 export const renderAnswerContent: FunctionalComponent<
   RenderAnswerContentProps
 > = ({props}) => {
   const {
     i18n,
-    generatedAnswerState,
-    isAnswerVisible,
-    hasRetryableError,
-    toggleTooltip,
-    withToggle,
+    generatedAnswer,
     collapsible,
     renderFeedbackAndCopyButtonsSlot,
     renderCitationsSlot,
-    onToggle,
     onRetry,
     onClickShowButton,
   } = props;
 
-  const {isStreaming, answer, citations, answerContentFormat, expanded} =
-    generatedAnswerState ?? {};
+  const {answer, isStreaming, citations, answerContentFormat, expanded, error} =
+    generatedAnswer;
+  const hasRetryableError = error?.isRetryable === true;
 
   return html`
-    <div part="generated-content">
-      <div class="flex items-center">
-        ${renderHeading({
-          props: {
-            level: 0,
-            part: 'header-label',
-            class:
-              'text-primary bg-primary-background inline-block rounded-md px-2.5 py-2 font-medium',
-          },
-        })(html`${i18n.t('generated-answer-title')}`)}
-        <div class="ml-auto flex h-9 items-center">
-          ${renderSwitch({
-            props: {
-              part: 'toggle',
-              checked: isAnswerVisible,
-              onToggle,
-              ariaLabel: i18n.t('generated-answer-title'),
-              title: toggleTooltip,
-              withToggle,
-              tabIndex: 0,
-            },
-          })}
-        </div>
-      </div>
+    <div>
       ${
-        hasRetryableError && isAnswerVisible
+        hasRetryableError
           ? renderRetryPrompt({
               props: {
                 onClick: onRetry,
@@ -88,7 +59,7 @@ export const renderAnswerContent: FunctionalComponent<
           : nothing
       }
       ${
-        !hasRetryableError && isAnswerVisible
+        !hasRetryableError
           ? renderGeneratedContentContainer({
               props: {
                 answer,
@@ -96,7 +67,6 @@ export const renderAnswerContent: FunctionalComponent<
                 isStreaming: !!isStreaming,
               },
             })(html`
-            ${renderFeedbackAndCopyButtonsSlot()}
             ${renderSourceCitations({
               props: {
                 label: i18n.t('citations'),
@@ -106,11 +76,21 @@ export const renderAnswerContent: FunctionalComponent<
           `)
           : nothing
       }
+      ${when(
+        !hasRetryableError && (collapsible ? expanded : true),
+        () => html`
+          <div class="mt-4" part="feedback-and-copy-buttons">
+            ${renderFeedbackAndCopyButtonsSlot()}
+          </div>
+        `
+      )}
       ${
-        !hasRetryableError && isAnswerVisible
+        !hasRetryableError
           ? html`
-            <div part="generated-answer-footer" class="mt-6 flex justify-end">
-              ${renderGeneratingAnswerLabel({props: {i18n, isStreaming: !!isStreaming, collapsible}})}
+            <div part="generated-answer-footer" class="mt-6">
+              ${renderGeneratingAnswerLabel({
+                props: {i18n, isStreaming: !!isStreaming, collapsible},
+              })}
               ${
                 collapsible && !isStreaming
                   ? renderShowButton({
@@ -122,7 +102,6 @@ export const renderAnswerContent: FunctionalComponent<
                     })
                   : nothing
               }
-              ${renderDisclaimer({props: {i18n, isStreaming: !!isStreaming}})}
             </div>
           `
           : nothing

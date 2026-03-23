@@ -19,4 +19,8 @@ export class MockMachineLearningApi implements MockApi {
   get handlers(): HttpHandler[] {
     return [this.userActionsEndpoint.generateHandler()];
   }
+
+  clearAll(): void {
+    this.userActionsEndpoint.clear();
+  }
 }

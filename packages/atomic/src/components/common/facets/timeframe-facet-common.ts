@@ -27,6 +27,8 @@ import {renderFacetValueLabelHighlight} from './facet-value-label-highlight/face
 import {renderFacetValueLink} from './facet-value-link/facet-value-link';
 import {renderFacetValuesGroup} from './facet-values-group/facet-values-group';
 import {initializePopover} from './popover/popover-type';
+import '@/src/components/common/atomic-facet-date-input/atomic-facet-date-input';
+import '@/src/components/common/atomic-timeframe/atomic-timeframe';
 
 export interface Timeframe {
   period: RelativeDatePeriod;

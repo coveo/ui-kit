@@ -6,15 +6,24 @@
     "packages/quantic",
     "packages/create-atomic-component-project/template"
   ],
-  "ignore": ["packages/quantic/**"],
+  "ignore": [
+    "packages/quantic/**",
+    "samples/headless/rga-react/src/components/Quickstart.tsx",
+    "samples/headless/rga-react/src/components/Citation.tsx",
+    "samples/headless/rga-react/src/components/CitationsList.tsx"
+  ],
 
   // Enable back the plugin once https://github.com/webpro-nl/knip/issues/1154 is resolved.
   "biome": false,
   "workspaces": {
     ".": {
-      "entry": ["hooks/*.js", "scripts/**/*.{js,mjs}"],
+      "entry": [
+        ".agents/skills/**/scripts/*.mjs",
+        "hooks/*.js",
+        "scripts/**/*.{js,mjs}"
+      ],
       "ignoreBinaries": ["ts-node", "dev"],
-      "ignoreDependencies": ["@playwright/mcp"]
+      "ignoreDependencies": ["@playwright/mcp", "handlebars"]
     },
     "packages/headless": {
       "entry": ["src/*index.ts", "ponyfills/*.js"],
@@ -38,11 +47,16 @@
     },
     "packages/atomic-angular/projects/atomic-angular": {
       "entry": ["src/public-api.ts"],
-      "ignore": ["src/lib/stencil-generated/**/*.ts"]
+      "ignore": [
+        "src/utils.ts" // Only used by generated files, so it 'seems' to have unused exports, but it's actually used.
+      ]
     },
     "packages/atomic-react": {
       "entry": ["src/*index.ts"],
-      "ignore": ["src/components/stencil-generated/**/*.{ts,tsx}"]
+      "ignore": ["src/components/stencil-generated/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        "@lit/react" // Only used in generated files.
+      ]
     },
     "packages/headless-react": {
       "ignoreDependencies": ["@types/react-dom", "@types/react", "jsdom"]
@@ -78,6 +92,9 @@
       "ignore": ["**/*"],
       "ignoreDependencies": ["cypress-repeat"]
     },
+    "packages/atomic-legacy": {
+      "ignore": ["**/*"]
+    },
     "packages/create-atomic": {
       "ignore": ["**/*"]
     },
@@ -89,9 +106,6 @@
     },
     "samples/atomic/search-stencil": {
       "ignore": ["**/*"],
-      "ignoreDependencies": ["cypress-repeat"]
-    },
-    "samples/atomic/search-nextjs-pages-router": {
       "ignoreDependencies": ["cypress-repeat"]
     },
     "samples/headless-ssr/search-nextjs": {

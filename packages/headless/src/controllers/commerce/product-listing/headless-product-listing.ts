@@ -37,10 +37,8 @@ import {
   buildController,
   type Controller,
 } from '../../controller/headless-controller.js';
-import {
-  buildProductListingSubControllers,
-  type SearchAndListingSubControllers,
-} from '../core/sub-controller/headless-sub-controller.js';
+import type {SearchAndListingSubControllers} from '../core/sub-controller/headless-sub-controller.js';
+import {buildProductListingSubControllers} from '../core/sub-controller/headless-sub-controller.js';
 import {
   facetResponseSelector,
   isFacetLoadingResponseSelector,

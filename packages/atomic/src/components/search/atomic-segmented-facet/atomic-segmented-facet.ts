@@ -143,6 +143,7 @@ export class AtomicSegmentedFacet
    *
    *
    * Note: Resulting count is only an estimation, in some cases this value could be incorrect.
+   * The target folding field must be a facet field with the **Use cache for nested queries** options enabled (see [Manage fields](https://docs.coveo.com/en/1833/)).
    */
   @property({
     type: Boolean,

@@ -7,7 +7,7 @@ import {deepEqual} from '@/src/utils/compare-utils';
  * provided Bueno schema.
  *
  * It validates the props when the host is connected to the DOM and whenever
- * the host updates, revalidating only if the props have changed since the last
+ * the host updates, re-validating only if the props have changed since the last
  * validation.
  *
  * If validation fails, the controller either sets the `error` property on the host
@@ -18,7 +18,7 @@ export class ValidatePropsController<TProps extends Record<string, unknown>>
 {
   private currentProps?: TProps;
   private previousProps?: TProps;
-
+  private lastValidationError?: Error;
   /**
    * Creates a `ValidatePropsController`.
    *
@@ -37,15 +37,16 @@ export class ValidatePropsController<TProps extends Record<string, unknown>>
   }
 
   hostConnected() {
-    this.currentProps = this.getProps();
     if (this.host.error === null) {
       // @ts-expect-error: we need to set the error to undefined if it was null.
       this.host.error = undefined;
     }
-    this.validateProps();
   }
 
   hostUpdate() {
+    if (this.host.error && this.host.error !== this.lastValidationError) {
+      return;
+    }
     this.currentProps = this.getProps();
 
     if (deepEqual(this.currentProps, this.previousProps)) {
@@ -63,6 +64,7 @@ export class ValidatePropsController<TProps extends Record<string, unknown>>
     } catch (error) {
       if (this.throwOnError) {
         this.host.error = error as Error;
+        this.lastValidationError = error as Error;
       } else {
         const message = `Prop validation failed for component ${this.host.tagName?.toLowerCase()}: ${(error as Error).message}`;
         console.warn(message, this.host);

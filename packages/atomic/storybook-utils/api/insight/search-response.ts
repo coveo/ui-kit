@@ -1,3 +1,6 @@
+// Fixed reference timestamp (2025-12-18T00:00:00Z) for consistent snapshots
+const REFERENCE_TIMESTAMP = 1766054400000;
+
 const getNthResult = (n: number) => ({
   title: `Support Article ${n}: Troubleshooting Guide`,
   excerpt: `This article provides step-by-step instructions for resolving common issues. Follow the guidance below to troubleshoot problem #${n}.`,
@@ -33,10 +36,10 @@ const getNthResult = (n: number) => ({
     urihash: `insight-hash-${n}`,
     permanentid: `insight-perm-id-${n}`,
     syslanguage: ['English'],
-    date: Date.now() - n * 86400000,
+    date: REFERENCE_TIMESTAMP - n * 86400000,
     sourcetype: 'KnowledgeBase',
     syssource: 'Support Knowledge Base',
-    sysdate: Date.now() - n * 86400000,
+    sysdate: REFERENCE_TIMESTAMP - n * 86400000,
     author: ['Support Team'],
     source: 'Support Knowledge Base',
     collection: 'default',
@@ -56,7 +59,7 @@ const getNthResult = (n: number) => ({
   FirstSentences: null,
 });
 
-interface InsightResponse {
+export interface InsightResponse {
   totalCount: number;
   totalCountFiltered: number;
   duration: number;
@@ -121,6 +124,34 @@ export const baseResponse: InsightResponse = {
   phrasesToHighlight: {},
   groupByResults: [],
   facets: [
+    {
+      facetId: 'objecttype',
+      field: 'objecttype',
+      moreValuesAvailable: false,
+      values: [
+        {
+          value: 'Case',
+          state: 'idle',
+          numberOfResults: 12,
+        },
+        {
+          value: 'Article',
+          state: 'idle',
+          numberOfResults: 8,
+        },
+        {
+          value: 'Ticket',
+          state: 'idle',
+          numberOfResults: 3,
+        },
+        {
+          value: 'FAQ',
+          state: 'idle',
+          numberOfResults: 2,
+        },
+      ],
+      indexScore: 0.1,
+    },
     {
       facetId: 'source',
       field: 'source',
@@ -278,4 +309,233 @@ export const richResponse: InsightResponse = {
       snrating: n < 5 ? 4.5 - n * 0.5 : undefined,
     },
   })),
+};
+
+export const smartSnippetSuggestionsResponse: InsightResponse = {
+  ...baseResponse,
+  results: [
+    {
+      ...getNthResult(0),
+      title: 'Nurse Sharks',
+      raw: {
+        ...getNthResult(0).raw,
+        urihash: 'hLSngTdxUj5Upy7r',
+      },
+    },
+    {
+      ...getNthResult(1),
+      title: 'Brine Shrimp',
+      raw: {
+        ...getNthResult(1).raw,
+        urihash: '4L6GEE1jMUNYhoC',
+      },
+    },
+    {
+      ...getNthResult(2),
+      title: 'Dove Snails',
+      raw: {
+        ...getNthResult(2).raw,
+        urihash: 'vrTSILq8VzJAItOq',
+      },
+    },
+  ],
+  questionAnswer: {
+    documentId: {
+      contentIdKey: 'urihash',
+      contentIdValue: 'hLSngTdxUj5Upy7r',
+    },
+    question: 'What are nurse sharks?',
+    answerSnippet:
+      'Nurse sharks are slow-moving bottom-dwellers known for their docile nature.',
+    score: 1337,
+    relatedQuestions: [
+      {
+        question: 'Where does the name "Nurse Sharks" come from?',
+        answerSnippet: `
+              <p>
+                The name nurse shark is thought to be a corruption of <b>nusse</b>, a name which once referred to the <a href="https://fake.local/glossary/catsharks">catsharks</a> of the family Scyliorhinidae.
+              </p>
+              <p>
+                The nurse shark family name, <b>Ginglymostomatidae</b>, derives from old naming roots for "<b>hinge</b>" and "<b>mouth</b>".
+              </p>
+            `,
+        documentId: {
+          contentIdKey: 'urihash',
+          contentIdValue: 'hLSngTdxUj5Upy7r',
+        },
+        score: 100,
+      },
+      {
+        question: 'What are sea monkeys?',
+        answerSnippet: `
+              <p>
+                Breeds of Artemia are sold as novelty gifts under the marketing name <a href="https://fake.local/glossary/sea-monkeys">Sea-Monkeys</a>.
+              </p>
+              <p>
+                <b>Artemia</b> is a genus of aquatic crustaceans also known as <b>brine shrimp</b>.
+              </p>
+            `,
+        documentId: {
+          contentIdKey: 'urihash',
+          contentIdValue: '4L6GEE1jMUNYhoC',
+        },
+        score: 50,
+      },
+      {
+        question: 'What is a dove snail?',
+        answerSnippet: `
+              <p>
+                The <b>Columbellidae</b>, the dove snails or dove shells, are a family of small sea snails in the order <a href="https://fake.local/glossary/neogastropoda">Neogastropoda</a>.
+              </p>
+            `,
+        documentId: {
+          contentIdKey: 'urihash',
+          contentIdValue: 'vrTSILq8VzJAItOq',
+        },
+        score: 25,
+      },
+    ],
+  },
+};
+
+const insightChildResult1 = {
+  title: 'Related Article: Network Setup',
+  excerpt: 'Guide for network configuration',
+  clickUri: 'https://support.example.com/article/network',
+  uniqueId: 'insight-child-1',
+  raw: {
+    foldingcollection: 'ConnectionIssues',
+    foldingchild: ['network-setup'],
+    foldingparent: 'connection-parent',
+  },
+};
+
+const insightChildResult2 = {
+  title: 'Related Article: Firewall Settings',
+  excerpt: 'Guide for firewall configuration',
+  clickUri: 'https://support.example.com/article/firewall',
+  uniqueId: 'insight-child-2',
+  raw: {
+    foldingcollection: 'ConnectionIssues',
+    foldingchild: ['firewall-settings'],
+    foldingparent: 'connection-parent',
+  },
+};
+
+export const baseFoldedResponse: InsightResponse = {
+  ...baseResponse,
+  totalCount: 2,
+  totalCountFiltered: 2,
+  results: [
+    {
+      title: 'Parent Case: Connection Issues',
+      excerpt: 'Main case about connection troubleshooting',
+      clickUri: 'https://support.example.com/case/parent',
+      printableUri: 'https://support.example.com/case/parent',
+      uri: 'support://case/parent',
+      uniqueId: 'insight-parent-1',
+      flags: 'HasHtmlVersion',
+      hasHtmlVersion: true,
+      hasMobileHtmlVersion: false,
+      score: 100,
+      percentScore: 95,
+      rankingInfo: null,
+      rating: 0.0,
+      isTopResult: true,
+      isRecommendation: false,
+      titleHighlights: [],
+      firstSentencesHighlights: [],
+      excerptHighlights: [],
+      printableUriHighlights: [],
+      summaryHighlights: [],
+      parentResult: null,
+      childResults: [insightChildResult1, insightChildResult2],
+      totalNumberOfChildResults: 2,
+      absentTerms: [],
+      raw: {
+        systitle: 'Parent Case: Connection Issues',
+        sysdescription: 'Main case about connection troubleshooting',
+        sysuri: 'https://support.example.com/case/parent',
+        foldingcollection: 'ConnectionIssues',
+        foldingchild: ['connection-parent'],
+      },
+      Title: 'Parent Case: Connection Issues',
+      Uri: 'support://case/parent',
+      PrintableUri: 'https://support.example.com/case/parent',
+      ClickUri: 'https://support.example.com/case/parent',
+      UniqueId: 'insight-parent-1',
+      Excerpt: 'Main case about connection troubleshooting',
+      FirstSentences: null,
+    },
+    {
+      title: 'Standalone Article: Quick Tips',
+      excerpt: 'Collection of quick troubleshooting tips',
+      clickUri: 'https://support.example.com/article/tips',
+      printableUri: 'https://support.example.com/article/tips',
+      uri: 'support://article/tips',
+      uniqueId: 'insight-standalone-1',
+      flags: 'HasHtmlVersion',
+      hasHtmlVersion: true,
+      hasMobileHtmlVersion: false,
+      score: 80,
+      percentScore: 75,
+      rankingInfo: null,
+      rating: 0.0,
+      isTopResult: false,
+      isRecommendation: false,
+      titleHighlights: [],
+      firstSentencesHighlights: [],
+      excerptHighlights: [],
+      printableUriHighlights: [],
+      summaryHighlights: [],
+      parentResult: null,
+      childResults: [],
+      totalNumberOfChildResults: 0,
+      absentTerms: [],
+      raw: {
+        systitle: 'Standalone Article: Quick Tips',
+        sysdescription: 'Collection of quick troubleshooting tips',
+        sysuri: 'https://support.example.com/article/tips',
+        foldingcollection: 'QuickTips',
+        foldingchild: ['quick-tips'],
+      },
+      Title: 'Standalone Article: Quick Tips',
+      Uri: 'support://article/tips',
+      PrintableUri: 'https://support.example.com/article/tips',
+      ClickUri: 'https://support.example.com/article/tips',
+      UniqueId: 'insight-standalone-1',
+      Excerpt: 'Collection of quick troubleshooting tips',
+      FirstSentences: null,
+    },
+  ],
+};
+
+export const nestedFoldedResponse: InsightResponse = {
+  ...baseFoldedResponse,
+  results: [
+    {
+      ...baseFoldedResponse.results[0]!,
+      childResults: [
+        {
+          ...insightChildResult1,
+          childResults: [
+            {
+              title: 'Grandchild: Router Configuration',
+              excerpt: 'Detailed router setup instructions',
+              clickUri: 'https://support.example.com/article/router',
+              uniqueId: 'insight-grandchild-1',
+              raw: {
+                foldingcollection: 'ConnectionIssues',
+                foldingchild: ['router-config'],
+                foldingparent: 'network-setup',
+              },
+            },
+          ],
+          totalNumberOfChildResults: 1,
+        },
+        insightChildResult2,
+      ],
+    },
+    baseFoldedResponse.results[1]!,
+  ],
 };

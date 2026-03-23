@@ -111,7 +111,7 @@ export class AtomicProductExcerpt
     const productExcerpt = this.product?.excerpt ?? null;
 
     if (!productExcerpt) {
-      return html`${nothing}`;
+      return nothing;
     }
 
     return html`${renderExpandableText({

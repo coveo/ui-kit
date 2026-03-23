@@ -1,9 +1,11 @@
 import {configuration} from '../../../app/common-reducers.js';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice.js';
+import {commerceQuerySetReducer as querySet} from '../../../features/commerce/query-set/commerce-query-set-slice.js';
 import {
   registerQuerySetQuery,
   updateQuerySetQuery,
 } from '../../../features/commerce/query-set/query-set-actions.js';
+import {commerceQuerySuggestReducer as querySuggest} from '../../../features/commerce/query-suggest/commerce-query-suggest-slice.js';
 import {
   clearQuerySuggest,
   fetchQuerySuggestions,
@@ -15,8 +17,6 @@ import {
   prepareForSearchWithQuery,
 } from '../../../features/commerce/search/search-actions.js';
 import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice.js';
-import {querySetReducer as querySet} from '../../../features/query-set/query-set-slice.js';
-import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice.js';
 import type {CommerceAppState} from '../../../state/commerce-app-state.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {
@@ -244,6 +244,57 @@ describe('headless search box', () => {
     it('dispatches #clearQuerySuggest', () => {
       searchBox.submit();
       expect(clearQuerySuggest).toHaveBeenCalledWith({id});
+    });
+
+    it('when enableResults is true, dispatches #executeSearch with enableResults: true', () => {
+      searchBox = buildSearchBox(engine, {
+        ...props,
+        options: {...props.options, enableResults: true},
+      });
+
+      searchBox.submit();
+      expect(executeSearch).toHaveBeenCalledWith({enableResults: true});
+    });
+
+    it('when enableResults is false, dispatches #executeSearch with enableResults: false', () => {
+      searchBox = buildSearchBox(engine, {
+        ...props,
+        options: {...props.options, enableResults: false},
+      });
+
+      searchBox.submit();
+      expect(executeSearch).toHaveBeenCalledWith({enableResults: false});
+    });
+
+    it('when enableResults is not specified, dispatches #executeSearch with enableResults: false (default)', () => {
+      searchBox = buildSearchBox(engine, props);
+
+      searchBox.submit();
+      expect(executeSearch).toHaveBeenCalledWith({enableResults: false});
+    });
+  });
+
+  describe('#selectSuggestion with enableResults', () => {
+    it('when enableResults is true, dispatches #executeSearch with enableResults: true', () => {
+      searchBox = buildSearchBox(engine, {
+        ...props,
+        options: {...props.options, enableResults: true},
+      });
+
+      const suggestion = 'a';
+      searchBox.selectSuggestion(suggestion);
+      expect(executeSearch).toHaveBeenCalledWith({enableResults: true});
+    });
+
+    it('when enableResults is false, dispatches #executeSearch with enableResults: false', () => {
+      searchBox = buildSearchBox(engine, {
+        ...props,
+        options: {...props.options, enableResults: false},
+      });
+
+      const suggestion = 'a';
+      searchBox.selectSuggestion(suggestion);
+      expect(executeSearch).toHaveBeenCalledWith({enableResults: false});
     });
   });
 });

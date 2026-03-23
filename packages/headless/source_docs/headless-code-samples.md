@@ -17,6 +17,6 @@ You can find controller-specific implementation examples in the controller [refe
 
 Finally, you can find more code samples in the following:
 
-* [Headless React](https://github.com/coveo/ui-kit/tree/master/samples/headless/search-react)
-* [Headless Commerce React](https://github.com/coveo/ui-kit/tree/master/samples/headless/commerce-react)
-* [Headless Next.js](https://github.com/olamothe/demo-next-js-headless)
+* [Headless React](https://github.com/coveo/ui-kit/tree/main/samples/headless/search-react)
+* [Headless Commerce React](https://github.com/coveo/ui-kit/tree/main/samples/headless/commerce-react)
+* [Headless SSR Next.js](https://github.com/coveo/ui-kit/tree/main/samples/headless-ssr/search-nextjs)

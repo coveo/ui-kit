@@ -12,6 +12,11 @@ import {LightDomMixin} from '@/src/mixins/light-dom';
  */
 @customElement('atomic-tab')
 export class AtomicTab extends LightDomMixin(LitElement) {
+  private static readonly propsSchema = new Schema({
+    label: new StringValue({required: true, emptyAllowed: false}),
+    name: new StringValue({required: true, emptyAllowed: false}),
+  });
+
   /**
    * The label to display on the tab.
    */
@@ -38,10 +43,7 @@ export class AtomicTab extends LightDomMixin(LitElement) {
         label: this.label,
         name: this.name,
       }),
-      new Schema({
-        label: new StringValue({required: true, emptyAllowed: false}),
-        name: new StringValue({required: true, emptyAllowed: false}),
-      })
+      AtomicTab.propsSchema
     );
   }
 

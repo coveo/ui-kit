@@ -53,7 +53,7 @@ export class AtomicProductMultiValueText
 
   /**
    * The maximum number of field values to display.
-   * If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
+   * If there are `n` more values than the specified maximum, the last displayed value will be "`n` more...".
    */
   @property({reflect: true, type: Number, attribute: 'max-values-to-display'})
   public maxValuesToDisplay = 3;
@@ -187,7 +187,7 @@ export class AtomicProductMultiValueText
   @errorGuard()
   render() {
     if (this.sortedValues.length === 0) {
-      return html`${nothing}`;
+      return nothing;
     }
 
     return html`

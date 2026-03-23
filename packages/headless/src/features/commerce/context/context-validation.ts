@@ -19,6 +19,18 @@ export const locationDefinition = {
   longitude: new NumberValue({min: -180, max: 180, required: true}),
 };
 
+/**
+ * Custom context for passing additional JSON-serializable data.
+ * Values should be primitives (string, number, boolean, null) or nested objects/arrays.
+ * Pass undefined to clear custom context.
+ * Detailed validation is performed by the backend.
+ */
+export const customDefinition = {
+  custom: new RecordValue({
+    options: {required: false},
+  }),
+};
+
 export const contextDefinition = {
   language: requiredNonEmptyString,
   country: requiredNonEmptyString,
@@ -30,6 +42,9 @@ export const contextDefinition = {
   location: new RecordValue({
     options: {required: false},
     values: locationDefinition,
+  }),
+  custom: new RecordValue({
+    options: {required: false},
   }),
 };
 

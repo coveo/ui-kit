@@ -46,6 +46,10 @@ export class AtomicTabButton
   updated(changedProperties: PropertyValues<this>) {
     if (changedProperties.has('active')) {
       this.setAttribute('aria-current', this.active ? 'true' : 'false');
+      this.setAttribute(
+        'part',
+        this.active ? 'button-container-active' : 'button-container'
+      );
       this.updateHostClasses();
     }
   }

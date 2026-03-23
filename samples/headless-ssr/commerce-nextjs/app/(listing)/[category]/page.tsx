@@ -70,6 +70,7 @@ export default async function Listing({
         view: {
           url: `https://sports.barca.group/browse/promotions/${category}`,
         },
+        custom: defaultContext.custom,
       },
       parameterManager: {initialState: {parameters}},
     },

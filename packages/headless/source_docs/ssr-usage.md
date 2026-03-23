@@ -7,12 +7,12 @@ slug: usage/server-side-rendering/implement-server-side-rendering
 # Implement server-side rendering
 
 We recommend using the [Coveo Headless](https://docs.coveo.com/en/lcdf0493/) SSR utilities with the latest [Next.js](https://nextjs.org/) [App Router](https://nextjs.org/docs/app).
-We don’t fully support the [Pages Router](https://nextjs.org/docs/pages) and using it may result in unexpected behavior.
+We don't fully support the [Pages Router](https://nextjs.org/docs/pages) and using it may result in unexpected behavior.
 This article uses the App Router paradigm.
 
 **Notes**
 
-* You can also consult a [working demo](https://github.com/coveo/ui-kit/tree/master/samples/headless-ssr/search-nextjs/app-router) of a [Headless](https://docs.coveo.com/en/lcdf0493/) SSR search page.
+* You can also consult a [working demo](https://github.com/coveo/ui-kit/tree/master/samples/headless-ssr/search-nextjs) of a [Headless](https://docs.coveo.com/en/lcdf0493/) SSR search page.
 * For a Coveo Commerce implementation, see [Headless for Commerce: Server-side rendering](https://docs.coveo.com/en/obif0156/).
 
 ## Overview
@@ -93,10 +93,9 @@ Engine definitions contain different kinds of hooks for React and Next.js.
 
 The following is an example of how you would build [facet](https://docs.coveo.com/en/198/) components for the same engine definition used in the previous examples.
 
-<dl><dt><strong>❗ IMPORTANT</strong></dt><dd>
-
-If you’re using Next.js with the [App Router](https://nextjs.org/docs/app), any file which uses these hooks must begin with the [’use client'`](https://nextjs.org/docs/app/building-your-application/rendering/client-components#using-client-components-in-nextjs) directive.
-</dd></dl>
+> [!IMPORTANT]
+> 
+> If you’re using Next.js with the [App Router](https://nextjs.org/docs/app), any file which uses these hooks must begin with the [’use client'`](https://nextjs.org/docs/app/building-your-application/rendering/client-components#using-client-components-in-nextjs) directive.
 
 ```tsx
 'use client';
@@ -148,10 +147,9 @@ Using these new providers, we have the necessary components to complete the full
 
 The following example demonstrates how to replace the `StaticStateProvider` with the `HydratedStateProvider` once you have the hydrated state, by making a custom component that takes on the responsibility of hydration and choosing the provider.
 
-<dl><dt><strong>❗ IMPORTANT</strong></dt><dd>
-
-If you’re using Next.js with the [App Router](https://nextjs.org/docs/app), any file which uses these hooks must begin with the [’use client'`](https://nextjs.org/docs/app/building-your-application/rendering/client-components#using-client-components-in-nextjs) directive.
-</dd></dl>
+> [!IMPORTANT]
+> 
+> If you’re using Next.js with the [App Router](https://nextjs.org/docs/app), any file which uses these hooks must begin with the [’use client'`](https://nextjs.org/docs/app/building-your-application/rendering/client-components#using-client-components-in-nextjs) directive.
 
 ```tsx
 'use client';

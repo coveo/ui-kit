@@ -17,14 +17,14 @@ export class AtomicLayoutSection extends LightDomMixin(LitElement) {
 
   /**
    * For column sections, the minimum horizontal space it should take.
-   * E.g. '300px'
+   * For example, '300px'
    */
   @property({type: String, reflect: true, attribute: 'min-width'})
   minWidth?: string;
 
   /**
    * For column sections, the maximum horizontal space it should take.
-   * E.g. '300px'
+   * For example, '300px'
    */
   @property({type: String, reflect: true, attribute: 'max-width'})
   maxWidth?: string;

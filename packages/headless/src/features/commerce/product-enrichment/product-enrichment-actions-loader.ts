@@ -1,14 +1,17 @@
-import type {AsyncThunkAction} from '@reduxjs/toolkit';
+import type {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
 import type {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client.js';
 import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {
   type FetchBadgesPayload,
   type FetchBadgesThunkReturn,
   fetchBadges,
+  type RegisterProductEnrichmentOptionsPayload,
+  registerProductEnrichmentOptions,
   type StateNeededByFetchBadges,
 } from './product-enrichment-actions.js';
 import {productEnrichmentReducer as productEnrichment} from './product-enrichment-slice.js';
 
+export type {RegisterProductEnrichmentOptionsPayload, FetchBadgesPayload};
 /**
  * The product enrichment action creators.
  *
@@ -28,6 +31,15 @@ export interface ProductEnrichmentActionCreators {
     FetchBadgesPayload,
     AsyncThunkCommerceOptions<StateNeededByFetchBadges>
   >;
+
+  /**
+   * Registers the product enrichment options.
+   *
+   * @returns A dispatchable action.
+   */
+  registerProductEnrichmentOptions(
+    payload: RegisterProductEnrichmentOptionsPayload
+  ): PayloadAction<RegisterProductEnrichmentOptionsPayload>;
 }
 
 /**
@@ -46,5 +58,6 @@ export function loadProductEnrichmentActions(
 
   return {
     fetchBadges,
+    registerProductEnrichmentOptions,
   };
 }

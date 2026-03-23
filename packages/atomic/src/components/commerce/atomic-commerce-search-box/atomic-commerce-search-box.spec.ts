@@ -98,7 +98,8 @@ describe('atomic-commerce-search-box', () => {
     vi.mocked(buildStandaloneSearchBox).mockReturnValue(
       buildFakeStandaloneSearchBox(
         {
-          redirectTo,
+          ...(redirectTo !== undefined && {redirectTo}),
+          value: searchBoxValue,
         },
         {
           afterRedirection: afterRedirectionMock,
@@ -571,6 +572,118 @@ describe('atomic-commerce-search-box', () => {
     });
 
     expect(consoleSpy).not.toHaveBeenCalled();
+  });
+
+  describe('when the search box is a standalone search box', () => {
+    it('should not throw when redirectionUrl changes before the search box initializes', async () => {
+      updateRedirectUrlMock.mockClear();
+      const element = document.createElement(
+        'atomic-commerce-search-box'
+      ) as AtomicCommerceSearchBox;
+
+      element.watchRedirectionUrl();
+
+      expect(updateRedirectUrlMock).not.toHaveBeenCalled();
+    });
+
+    it('should initialize the standalone search box controller with the correct options', async () => {
+      await renderSearchBox({
+        searchBoxProps: {redirectionUrl: '/search'},
+      });
+
+      expect(buildStandaloneSearchBox).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.objectContaining({
+          options: expect.objectContaining({
+            ...commonSearchBoxOptions,
+            redirectionUrl: '/search',
+            overwrite: true,
+          }),
+        })
+      );
+    });
+
+    describe('when redirectTo state is set', () => {
+      it('should dispatch a cancelable redirect event with the correct detail', async () => {
+        let capturedEvent: CustomEvent | null = null;
+
+        // Render without redirectTo initially
+        const {element} = await renderSearchBox({
+          searchBoxProps: {redirectionUrl: '/search'},
+          searchBoxValue: 'test',
+        });
+
+        // Get the fake controller that was created during render
+        const fakeStandaloneSearchBox = vi.mocked(buildStandaloneSearchBox).mock
+          .results[0]!.value as ReturnType<typeof buildFakeStandaloneSearchBox>;
+
+        // Add listener BEFORE triggering the redirect AND prevent default to avoid navigation
+        element.addEventListener('redirect', (event) => {
+          event.preventDefault();
+          capturedEvent = event as CustomEvent;
+        });
+
+        // Now update the state to trigger redirect
+        fakeStandaloneSearchBox.state.redirectTo = '/search?q=test';
+        element.requestUpdate();
+        await element.updateComplete;
+
+        expect(capturedEvent).not.toBeNull();
+        expect(capturedEvent!.cancelable).toBe(true);
+        expect(capturedEvent!.detail).toEqual({
+          redirectTo: '/search?q=test',
+          value: 'test',
+        });
+      });
+
+      it('should call afterRedirection when redirectTo is set', async () => {
+        // Render without redirectTo initially
+        const {element} = await renderSearchBox({
+          searchBoxProps: {redirectionUrl: '/search'},
+        });
+
+        // Get the fake controller that was created during render
+        const fakeStandaloneSearchBox = vi.mocked(buildStandaloneSearchBox).mock
+          .results[0]!.value as ReturnType<typeof buildFakeStandaloneSearchBox>;
+
+        // Prevent default to avoid navigation
+        element.addEventListener('redirect', (event) => {
+          event.preventDefault();
+        });
+
+        // Now update the state to trigger redirect
+        fakeStandaloneSearchBox.state.redirectTo = '/search?q=test';
+        element.requestUpdate();
+        await element.updateComplete;
+
+        expect(afterRedirectionMock).toHaveBeenCalled();
+      });
+
+      it('should not redirect when preventDefault is called on the redirect event', async () => {
+        const originalLocation = window.location.href;
+
+        // Render without redirectTo initially
+        const {element} = await renderSearchBox({
+          searchBoxProps: {redirectionUrl: '/search'},
+        });
+
+        // Get the fake controller that was created during render
+        const fakeStandaloneSearchBox = vi.mocked(buildStandaloneSearchBox).mock
+          .results[0]!.value as ReturnType<typeof buildFakeStandaloneSearchBox>;
+
+        // Add event listener BEFORE triggering the redirect
+        element.addEventListener('redirect', (event) => {
+          event.preventDefault();
+        });
+
+        // Now update the state to trigger redirect
+        fakeStandaloneSearchBox.state.redirectTo = '/search?q=test';
+        element.requestUpdate();
+        await element.updateComplete;
+
+        expect(window.location.href).toBe(originalLocation);
+      });
+    });
   });
 });
 

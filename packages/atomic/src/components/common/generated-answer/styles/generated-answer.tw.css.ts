@@ -14,6 +14,18 @@ const baseStyle = css`
     }
   }
 
+  @keyframes generation-steps-rolodex {
+    0% {
+      transform: translateY(105%) rotateX(-82deg);
+      opacity: 0.75;
+    }
+
+    100% {
+      transform: translateY(0) rotateX(0deg);
+      opacity: 1;
+    }
+  }
+
   /* Container part styles */
   [part='container'] {
     container-type: inline-size;
@@ -71,9 +83,38 @@ const baseStyle = css`
     @apply flex;
   }
 
+  /* Ensure header icon inherits and applies the primary text color */
+  [part='header-icon'] {
+    color: var(--atomic-primary);
+  }
+
+  /* Reserve space so the query text doesn't reflow when action buttons appear */
+  [part='feedback-and-copy-buttons'] {
+    min-width: var(--atomic-generated-answer-actions-reserved-width, 8rem);
+  }
+
+  [part='header-icon'] svg,
+  [part='header-icon'] svg * {
+    fill: currentColor;
+    stroke: currentColor;
+  }
+
   /* Generating label visibility */
   .generating-label-visible [part='is-generating'] {
     @apply flex;
+  }
+
+  [part='agent-generation-status'] .generation-steps-container {
+    @apply inline-flex overflow-hidden;
+    perspective: 700px;
+  }
+
+  [part='agent-generation-status'] .generation-steps-value {
+    @apply inline-block whitespace-nowrap;
+    transform-origin: 50% 100%;
+    animation: generation-steps-rolodex 1000ms cubic-bezier(0.22, 0.9, 0.26, 1) both;
+    will-change: transform;
+    backface-visibility: hidden;
   }
 
   /* Collapsed answer container styles */
@@ -93,6 +134,23 @@ const baseStyle = css`
 
   [part='generated-container'].answer-collapsed .feedback-buttons {
     @apply hidden;
+  }
+
+  /**
+   * @prop --atomic-generated-answer-content-fixed-height: The fixed height of the generated answer content when agent-id is set.
+   */
+  [part='generated-content-container'] .agent-scrollable {
+    @apply overflow-y-auto;
+    height: var(--atomic-generated-answer-content-fixed-height, 50vh);
+  }
+
+  /* Allow query label up to 3 lines before truncating */
+  .query-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 `;
 

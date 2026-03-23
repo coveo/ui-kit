@@ -135,7 +135,7 @@ export class AtomicProductDescription
     const productDescription = this.product?.[this.field] ?? null;
 
     if (!productDescription) {
-      return html`${nothing}`;
+      return nothing;
     }
 
     return html`${renderExpandableText({
