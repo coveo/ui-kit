@@ -1,11 +1,5 @@
 import type {GeneratedAnswerCitation} from '@coveo/headless';
-import {
-  html,
-  LitElement,
-  type nothing,
-  type PropertyValues,
-  type TemplateResult,
-} from 'lit';
+import {html, LitElement, type PropertyValues, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {repeat} from 'lit/directives/repeat.js';
 import '@/src/components/common/atomic-generated-answer-content/atomic-generated-answer-content';
@@ -41,7 +35,7 @@ export class AtomicGeneratedAnswerThread extends LitElement {
   public renderCitations: (
     citations: GeneratedAnswerCitation[],
     answerId?: string
-  ) => TemplateResult | typeof nothing = () => html``;
+  ) => TemplateResult = () => html``;
 
   /**
    * Callback invoked when the user clicks the "like" feedback button of a specific answer.

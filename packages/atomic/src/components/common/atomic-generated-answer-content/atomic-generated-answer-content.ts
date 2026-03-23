@@ -32,24 +32,42 @@ type CopyState = 'idle' | 'success' | 'error';
 export class AtomicGeneratedAnswerContent extends LitElement {
   static styles = [atomicGeneratedAnswerStyles];
 
+  /**
+   * The generated answer object to render.
+   */
   @property({attribute: false})
   public generatedAnswer!: GeneratedAnswer;
 
+  /**
+   * The i18next instance used to translate UI labels.
+   */
   @property({attribute: false})
   public i18n!: i18n;
 
+  /**
+   * A render function responsible for displaying the answer citations.
+   */
   @property({attribute: false})
   public renderCitations: (
     citations: GeneratedAnswerCitation[],
     answerId?: string
   ) => TemplateResult = () => html``;
 
+  /**
+   * Callback invoked when the user clicks the "like" feedback button.
+   */
   @property({attribute: false})
   public onClickLike: (answerId: string) => void = () => {};
 
+  /**
+   * Callback invoked when the user clicks the "dislike" feedback button.
+   */
   @property({attribute: false})
   public onClickDislike: (answerId: string) => void = () => {};
 
+  /**
+   * Callback invoked after the answer text has been successfully copied.
+   */
   @property({attribute: false})
   public onCopyToClipboard: (answerId: string) => void = () => {};
 
@@ -199,8 +217,12 @@ export class AtomicGeneratedAnswerContent extends LitElement {
   }
 
   private renderCannotAnswer(): TemplateResult {
-    return html`<div part="generated-answer-cannot-answer"><p>${this.i18n.t(
-      'generated-answer-cannot-generate-answer'
-    )}</p></div>`;
+    return html`
+      <div part="generated-answer-cannot-answer">
+        <p>
+          ${this.i18n.t('generated-answer-cannot-generate-answer')}
+        </p>
+      </div>
+    `;
   }
 }

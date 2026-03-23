@@ -261,5 +261,8 @@ describe('generated-answer-thread', () => {
 
     const button = locators().showPreviousAnswersButton as HTMLButtonElement;
     expect(button).toHaveTextContent('Afficher les questions précédentes');
+    expect(translate).toHaveBeenCalledWith('show-previous-questions', {
+      count: 2,
+    });
   });
 });
