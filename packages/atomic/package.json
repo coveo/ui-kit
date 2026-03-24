@@ -82,6 +82,7 @@
     "npm:publish": "pnpm --filter @coveo/ci npm-publish"
   },
   "dependencies": {
+    "@coveo/atomic-legacy": "workspace:*",
     "@coveo/bueno": "workspace:*",
     "@coveo/headless": "workspace:*",
     "@coveo/relay-event-types": "catalog:",
@@ -98,8 +99,7 @@
     "i18next": "25.7.3",
     "i18next-http-backend": "3.0.2",
     "lit": "3.3.2",
-    "marked": "12.0.2",
-    "@coveo/atomic-legacy": "workspace:*"
+    "marked": "12.0.2"
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "0.11.0",
@@ -119,7 +119,6 @@
     "@tailwindcss/vite": "4.1.13",
     "@types/escape-html": "1.0.4",
     "@types/jest": "catalog:",
-    "@types/minimatch": "6.0.0",
     "@types/node": "catalog:",
     "@vitest/browser-playwright": "catalog:",
     "@vitest/coverage-v8": "catalog:",
