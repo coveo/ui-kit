@@ -15,10 +15,10 @@ import type {
 } from '../../types/controller-definitions.js';
 
 export type {
-  Summary,
   ProductListingSummaryState,
   RecommendationsSummaryState,
   SearchSummaryState,
+  Summary,
   SummaryState,
 };
 

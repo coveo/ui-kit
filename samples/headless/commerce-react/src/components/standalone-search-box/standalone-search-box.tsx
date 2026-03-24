@@ -174,7 +174,6 @@ export default function StandaloneSearchBox(props: IStandaloneSearchBoxProps) {
                     onMouseOver={() => onFocusSuggestion(suggestion)}
                     onFocus={() => onFocusSuggestion(suggestion)}
                     onClick={() => onSelectSuggestion(suggestion)}
-                    // biome-ignore lint/security/noDangerouslySetInnerHtml: <>
                     dangerouslySetInnerHTML={{
                       __html: suggestion.highlightedValue,
                     }}

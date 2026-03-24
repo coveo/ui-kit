@@ -5,7 +5,7 @@ import {
   type SearchStatusState,
 } from '../core/status/headless-core-status.js';
 
-export type {SearchStatusState, SearchStatus};
+export type {SearchStatus, SearchStatusState};
 
 /**
  * Creates a `SearchStatus` controller instance.

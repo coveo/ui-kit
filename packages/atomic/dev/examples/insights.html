@@ -71,7 +71,7 @@
   </head>
 
   <body>
-    <button id="widget-view">Toggle widget view</button>
+    <button type="button" id="widget-view">Toggle widget view</button>
     <atomic-insight-interface
       fields-to-include='["sfid", "inat_kingdom", "inat_family", "inat_class"]'
       language-assets-path="./lang"
@@ -505,7 +505,7 @@
     <script type="text/javascript">
       let widgetView = true;
       const widgetButton = document.getElementById('widget-view');
-      const wrapper = document.getElementById('wrapper');
+      const _wrapper = document.getElementById('wrapper');
       widgetButton.addEventListener('click', () => {
         widgetView = !widgetView;
         updateWrapper(widgetView);
@@ -530,13 +530,13 @@
 
       document.addEventListener('atomic/insight/attachToCase/attach', (event) => {
         console.log('attach', event.detail);
-        const {controller, result} = event.detail;
+        const {controller} = event.detail;
         controller.attach();
       });
 
       document.addEventListener('atomic/insight/attachToCase/detach', (event) => {
         console.log('detach', event.detail);
-        const {controller, result} = event.detail;
+        const {controller} = event.detail;
         controller.detach();
       });
     </script>

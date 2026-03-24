@@ -83,16 +83,16 @@ import {
 } from '../core/breadcrumb-manager/headless-core-breadcrumb-manager.js';
 
 export type {
-  NumericFacetBreadcrumb,
-  FacetBreadcrumb,
-  DateFacetBreadcrumb,
-  CategoryFacetBreadcrumb,
-  StaticFilterBreadcrumb,
   Breadcrumb,
   BreadcrumbValue,
-  DeselectableValue,
+  CategoryFacetBreadcrumb,
   CoreBreadcrumbManager,
   CoreBreadcrumbManagerState,
+  DateFacetBreadcrumb,
+  DeselectableValue,
+  FacetBreadcrumb,
+  NumericFacetBreadcrumb,
+  StaticFilterBreadcrumb,
 };
 
 /**

@@ -35,7 +35,7 @@ import {
   standaloneSearchBoxSchema,
 } from './headless-standalone-search-box-options.js';
 
-export type {StandaloneSearchBoxOptions, StandaloneSearchBoxAnalytics};
+export type {StandaloneSearchBoxAnalytics, StandaloneSearchBoxOptions};
 
 export interface StandaloneSearchBoxProps {
   options: StandaloneSearchBoxOptions;

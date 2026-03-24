@@ -152,11 +152,7 @@ export const load = (app: Application) => {
         }
 
         hoistOtherCategoryInNav(nav as TNavNode, fallback);
-        if (
-          (nav as TNavNode).children &&
-          topLevelOrder &&
-          topLevelOrder.length
-        ) {
+        if ((nav as TNavNode).children && topLevelOrder?.length) {
           applyTopLevelOrderingNode(nav as TNavNode, topLevelOrder);
         }
         applyNestedOrderingNode(nav as TNavNode, typedNestedOrder);

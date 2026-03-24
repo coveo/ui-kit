@@ -221,7 +221,7 @@ function cast<K extends keyof Parameters>(pair: [K, string]): [K, unknown] {
   const [key, value] = pair;
 
   if (key === 'page' || key === 'perPage') {
-    return [key, parseInt(value)];
+    return [key, parseInt(value, 10)];
   }
 
   if (keyHasObjectValue(key)) {

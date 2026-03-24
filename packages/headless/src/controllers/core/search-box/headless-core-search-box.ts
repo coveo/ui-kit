@@ -56,7 +56,7 @@ import {
   searchBoxOptionsSchema,
 } from './headless-core-search-box-options.js';
 
-export type {SearchBoxOptions, SuggestionHighlightingOptions, Delimiters};
+export type {Delimiters, SearchBoxOptions, SuggestionHighlightingOptions};
 
 export type SearchBoxProps = SearchBoxPropsBase &
   (NextSearchBoxProps | LegacySearchBoxProps);

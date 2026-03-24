@@ -22,11 +22,11 @@ import {
 } from '../core/search-parameter-manager/headless-core-search-parameter-manager.js';
 
 export type {
-  SearchParameters,
   SearchParameterManager,
   SearchParameterManagerInitialState,
-  SearchParameterManagerState,
   SearchParameterManagerProps,
+  SearchParameterManagerState,
+  SearchParameters,
 };
 
 /**
