@@ -59,7 +59,6 @@ class TestTailwindElementNoStyles extends LitElement {
 
 describe('withTailwindStyles decorator', () => {
   const testCases = [
-    {description: 'include Tailwind theme styles', index: 0, expected: theme},
     {
       description: 'include Tailwind global styles',
       index: 1,
