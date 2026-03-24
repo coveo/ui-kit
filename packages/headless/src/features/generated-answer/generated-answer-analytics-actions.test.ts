@@ -370,11 +370,11 @@ describe('generated answer analytics actions', () => {
 
     [false, true].map((answerGenerated) => {
       it(`should log #logGeneratedAnswerStreamEnd with ${answerGenerated ? 'generated' : 'not generated'} and 'empty' answer`, async () => {
-        await logGeneratedAnswerStreamEnd(
-          answerGenerated,
-          undefined,
-          answerGenerated ? true : undefined
-        )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+        await logGeneratedAnswerStreamEnd(answerGenerated)()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
+        );
 
         const mockToUse = mockMakeGeneratedAnswerStreamEnd;
 
@@ -386,6 +386,24 @@ describe('generated answer analytics actions', () => {
         });
         expect(mockLogFunction).toHaveBeenCalledTimes(1);
       });
+    });
+
+    it('should prefer a provided answerTextIsEmpty over the state fallback', async () => {
+      await logGeneratedAnswerStreamEnd(true, undefined, false)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockMakeGeneratedAnswerStreamEnd;
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith({
+        generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
+        answerGenerated: true,
+        answerTextIsEmpty: false,
+      });
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
     it("should log #logGeneratedAnswerStreamEnd with 'non empty' answer", async () => {
