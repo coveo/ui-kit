@@ -30,9 +30,8 @@
     "clean": "node ../../utils/ci/rm-rf.mjs dist/*",
     "test": "vitest run",
     "test:watch": "vitest",
-    "release:phase3": "pnpm --filter @coveo/ci npm-publish",
     "release:phase1": "pnpm --filter @coveo/ci bump",
-    "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod"
+    "npm:publish": "pnpm --filter @coveo/ci npm-publish"
   },
   "devDependencies": {
     "vitest": "catalog:"

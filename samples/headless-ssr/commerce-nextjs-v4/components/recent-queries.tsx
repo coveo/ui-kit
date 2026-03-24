@@ -15,7 +15,6 @@ export default function RecentQueries() {
               type="button"
               onMouseEnter={() => instantProductsController?.updateQuery(query)}
               onClick={() => methods?.executeRecentQuery(index)}
-              // biome-ignore lint/security/noDangerouslySetInnerHtml: <>
               dangerouslySetInnerHTML={{__html: query}}
             ></button>
           </li>

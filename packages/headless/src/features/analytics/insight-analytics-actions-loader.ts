@@ -53,19 +53,19 @@ import {logInsightStaticFilterDeselect} from '../static-filter-set/static-filter
 import type {InsightAction} from './analytics-utils.js';
 
 export type {
-  LogStaticFilterToggleValueActionCreatorPayload,
+  CreateArticleMetadata,
   LogCategoryFacetBreadcrumbActionCreatorPayload,
-  LogNumericFacetBreadcrumbActionCreatorPayload,
   LogDateFacetBreadcrumbActionCreatorPayload,
   LogFacetBreadcrumbActionCreatorPayload,
-  LogFacetUpdateSortActionCreatorPayload,
   LogFacetDeselectActionCreatorPayload,
-  LogFacetUnexcludeActionCreatorPayload,
   LogFacetExcludeActionCreatorPayload,
   LogFacetSelectActionCreatorPayload,
+  LogFacetUnexcludeActionCreatorPayload,
+  LogFacetUpdateSortActionCreatorPayload,
+  LogNumericFacetBreadcrumbActionCreatorPayload,
+  LogStaticFilterToggleValueActionCreatorPayload,
   SmartSnippetFeedback,
   StaticFilterValueMetadata,
-  CreateArticleMetadata,
 };
 
 /**

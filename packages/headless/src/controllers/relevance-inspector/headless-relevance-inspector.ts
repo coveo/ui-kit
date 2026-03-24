@@ -40,14 +40,14 @@ import {
 } from '../controller/headless-controller.js';
 
 export type {
-  RankingInformation,
   DocumentWeights,
-  TermWeightReport,
-  QueryRankingExpressionWeights,
   ExecutionReport,
   ExecutionStep,
-  SecurityIdentity,
   QueryRankingExpression,
+  QueryRankingExpressionWeights,
+  RankingInformation,
+  SecurityIdentity,
+  TermWeightReport,
 };
 
 export interface RelevanceInspectorProps {

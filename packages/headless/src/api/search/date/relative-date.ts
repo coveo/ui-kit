@@ -143,7 +143,7 @@ export function isRelativeDateFormat(date: string) {
     return false;
   }
 
-  const intAmount = parseInt(amount);
+  const intAmount = parseInt(amount, 10);
   if (Number.isNaN(intAmount) || intAmount <= 0) {
     return false;
   }
@@ -165,7 +165,7 @@ function parseRelativeDate(date: string): RelativeDate {
 
   return {
     period: period as RelativeDatePeriod,
-    amount: amount ? parseInt(amount) : undefined,
+    amount: amount ? parseInt(amount, 10) : undefined,
     unit: unit ? (unit as RelativeDateUnit) : undefined,
   };
 }

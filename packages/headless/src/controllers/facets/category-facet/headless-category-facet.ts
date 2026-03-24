@@ -51,14 +51,14 @@ import type {
 import {buildCategoryFacetSearch} from './headless-category-facet-search.js';
 
 export type {
-  CategoryFacetOptions,
-  CategoryFacetSearchOptions,
-  CategoryFacetProps,
   CategoryFacet,
-  CategoryFacetState,
+  CategoryFacetOptions,
+  CategoryFacetProps,
   CategoryFacetSearch,
-  CategoryFacetSearchState,
+  CategoryFacetSearchOptions,
   CategoryFacetSearchResult,
+  CategoryFacetSearchState,
+  CategoryFacetState,
   CoreCategoryFacet,
   CoreCategoryFacetState,
 };

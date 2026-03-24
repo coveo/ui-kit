@@ -33,8 +33,8 @@ import {
 
 export type {
   StaticFilterValue,
-  StaticFilterValueState,
   StaticFilterValueOptions,
+  StaticFilterValueState,
 };
 export {buildStaticFilterValue};
 
