@@ -113,13 +113,6 @@
       "matchPackageNames": ["marked"]
     },
     {
-      "groupName": "relay",
-      "groupSlug": "relay",
-      "rangeStrategy": "replace",
-      "description": "Isolate relay since it is causing issues with stencil projetcs",
-      "matchPackageNames": ["@coveo/relay"]
-    },
-    {
       "matchFileNames": ["packages/quantic/package.json"],
       "groupSlug": "sfdx-lwc-jest",
       "rangeStrategy": "replace",
@@ -141,13 +134,6 @@
       "description": "Isolate knip since updates can break CI",
       "matchPackageNames": ["knip"]
     },
-    {
-      "groupName": "publint",
-      "groupSlug": "publint",
-      "rangeStrategy": "replace",
-      "description": "Isolate publint since updates can break CI",
-      "matchPackageNames": ["publint"]
-    }
   ],
   "lockFileMaintenance": {
     "enabled": true
