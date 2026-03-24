@@ -54,14 +54,14 @@ catalog:
   '@rollup/plugin-replace': 6.0.3
   '@rollup/plugin-url': 8.0.2
   '@stencil/core': 4.20.0
-  '@testing-library/react': 16.3.0
+  '@testing-library/react': 16.3.2
   '@types/jest': 29.5.14
   '@types/node': 22.19.3
-  '@types/react': 19.2.7
+  '@types/react': 19.2.14
   '@types/react-dom': 19.2.3
-  '@vitejs/plugin-react': 5.1.1
-  '@vitest/browser-playwright': 4.0.10
-  '@vitest/coverage-v8': 4.0.10
+  '@vitejs/plugin-react': 5.2.0
+  '@vitest/browser-playwright': 4.0.16
+  '@vitest/coverage-v8': 4.0.16
   coveo.analytics: 2.30.52
   cypress: 13.7.3
   cypress-repeat: 2.3.9
@@ -71,15 +71,15 @@ catalog:
   jest: 29.7.0
   jest-cli: 29.7.0
   local-web-server: 5.4.0
-  next: 15.5.9
-  playwright: 1.57.0
+  next: 15.5.13
   prettier: 3.7.4
   puppeteer: 24.34.0
-  react: 19.2.3
-  react-dom: 19.2.3
-  rollup-plugin-node-polyfills: 0.2.1
+  playwright: 1.57.0
+  react: 19.2.4
+  react-dom: 19.2.4
   rollup-plugin-string: 3.0.0
-  typedoc: 0.28.13
+  rollup-plugin-node-polyfills: 0.2.1
+  typedoc: 0.28.17
   typescript: 5.9.3
   vite: 7.3.0
   vitest: 4.0.16
