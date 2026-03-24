@@ -118,7 +118,6 @@
     "@tailwindcss/postcss": "4.1.13",
     "@tailwindcss/vite": "4.1.13",
     "@types/escape-html": "1.0.4",
-    "@types/jest": "catalog:",
     "@types/node": "catalog:",
     "@vitest/browser-playwright": "catalog:",
     "@vitest/coverage-v8": "catalog:",
