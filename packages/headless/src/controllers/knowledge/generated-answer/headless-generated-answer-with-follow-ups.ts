@@ -1,6 +1,6 @@
+import {createAnswerRunner} from '../../../api/knowledge/answer-generation/agents/answer-agent/answer-agent-runner.js';
 import {createFollowUpAgent} from '../../../api/knowledge/answer-generation/agents/follow-up-agent/follow-up-agent.js';
 import {createFollowUpStrategy} from '../../../api/knowledge/answer-generation/agents/follow-up-agent/follow-up-answer-strategy.js';
-import {answerGenerationApi} from '../../../api/knowledge/answer-generation/answer-generation-api.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import {setAgentId} from '../../../features/configuration/configuration-actions.js';
@@ -17,7 +17,7 @@ import {
 } from '../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {followUpAnswersReducer as followUpAnswers} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import type {FollowUpAnswersState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
-import {generateHeadAnswer} from '../../../features/generated-answer/generated-answer-actions.js';
+import {withGeneratedAnswerSseErrorHelpers} from '../../../features/generated-answer/sse-generated-answer-errors.js';
 import type {GeneratedAnswerState} from '../../../index.js';
 import type {
   FollowUpAnswersSection,
@@ -43,21 +43,41 @@ export interface GeneratedAnswerWithFollowUps extends GeneratedAnswer {
   state: GeneratedAnswerWithFollowUpsState;
   /**
    * Marks the answer as liked.
-   * @param answerId - Optional ID of the answer to like. Defaults to the head answer.
+   * @param answerId - Optional ID of the answer to like. Defaults to the first answer.
    */
   like(answerId?: string): void;
 
   /**
    * Marks the answer as disliked.
-   * @param answerId - Optional ID of the answer to dislike. Defaults to the head answer.
+   * @param answerId - Optional ID of the answer to dislike. Defaults to the first answer.
    */
   dislike(answerId?: string): void;
 
   /**
+   * Logs a custom event indicating a cited source link was hovered.
+   * @param citationId - The ID of the hovered citation.
+   * @param citationHoverTimeMs - The number of milliseconds spent hovering over the citation.
+   * @param answerId - Optional ID of the answer for which the citation was hovered. Defaults to the first answer.
+   */
+  logCitationHover(
+    citationId: string,
+    citationHoverTimeMs: number,
+    answerId?: string
+  ): void;
+
+  /**
+   * Logs a click on a cited source link for analytics.
+   * @param citationId - The ID of the clicked citation.
+   * @param answerId - Optional ID of the answer for which the citation was clicked. Defaults to the first answer.
+   */
+  logCitationClick(citationId: string, answerId?: string): void;
+
+  /**
    * Logs a copy-to-clipboard interaction for analytics.
-   * @param answerId - Optional ID of the copied answer. Defaults to the current answer.
+   * @param answerId - Optional ID of the copied answer. Defaults to the first answer.
    */
   logCopyToClipboard(answerId?: string): void;
+
   /**
    * Asks a follow-up question.
    * @param question - The follow-up question to ask.
@@ -109,42 +129,99 @@ export function buildGeneratedAnswerWithFollowUps(
     environment
   );
   const followUpStrategy = createFollowUpStrategy(engine.dispatch);
+  const answerRunner = createAnswerRunner();
 
   return {
     ...controller,
     get state() {
       const followUpAnswersState = getState().followUpAnswers;
+      const generatedAnswerState = getState().generatedAnswer;
 
       return {
-        ...getState().generatedAnswer,
-        followUpAnswers: followUpAnswersState,
+        ...generatedAnswerState,
+        error: withGeneratedAnswerSseErrorHelpers(generatedAnswerState.error),
+        followUpAnswers: {
+          ...followUpAnswersState,
+          followUpAnswers: followUpAnswersState.followUpAnswers.map(
+            (followUpAnswer) => ({
+              ...followUpAnswer,
+              error: withGeneratedAnswerSseErrorHelpers(followUpAnswer.error),
+            })
+          ),
+        },
       };
     },
+
     retry() {
-      engine.dispatch(generateHeadAnswer());
+      answerRunner.run(
+        engine.state,
+        engine.dispatch,
+        () => engine.navigatorContext
+      );
     },
+
+    // TODO: SFINT-6665
     like(answerId?: string) {
       if (!answerId || this.state.answerId === answerId) {
         controller.like();
         return;
       }
-      engine.dispatch(likeFollowUp({answerId}));
+
+      if (!this.state.liked) {
+        engine.dispatch(likeFollowUp({answerId}));
+        engine.dispatch(analyticsClient.logLikeGeneratedAnswer(answerId));
+      }
     },
+
+    // TODO: SFINT-6665
     dislike(answerId?: string) {
       if (!answerId || this.state.answerId === answerId) {
         controller.dislike();
         return;
       }
-      engine.dispatch(dislikeFollowUp({answerId}));
+
+      if (!this.state.disliked) {
+        engine.dispatch(dislikeFollowUp({answerId}));
+        engine.dispatch(analyticsClient.logDislikeGeneratedAnswer(answerId));
+      }
     },
+
+    // TODO: SFINT-6665
     logCopyToClipboard(answerId?: string) {
       if (!answerId || this.state.answerId === answerId) {
         controller.logCopyToClipboard();
         return;
       }
-      // Todo: SFINT-6581 implement logCopyFollowUp action and dispatch here
-      console.warn(
-        'Method not yet implemented to send analytics for copy to clipboard on a followup answer'
+      engine.dispatch(analyticsClient.logCopyGeneratedAnswer(answerId));
+    },
+
+    // TODO: SFINT-6665
+    logCitationClick(citationId: string, answerId?: string) {
+      if (!answerId || this.state.answerId === answerId) {
+        controller.logCitationClick(citationId);
+        return;
+      }
+      engine.dispatch(
+        analyticsClient.logOpenGeneratedAnswerSource(citationId, answerId)
+      );
+    },
+
+    // TODO: SFINT-6665
+    logCitationHover(
+      citationId: string,
+      citationHoverTimeMs: number,
+      answerId?: string
+    ) {
+      if (!answerId || this.state.answerId === answerId) {
+        controller.logCitationHover(citationId, citationHoverTimeMs);
+        return;
+      }
+      engine.dispatch(
+        analyticsClient.logHoverCitation(
+          citationId,
+          citationHoverTimeMs,
+          answerId
+        )
       );
     },
 
@@ -189,14 +266,8 @@ export function buildGeneratedAnswerWithFollowUps(
 
 function loadReducers(
   engine: SearchEngine | InsightEngine
-): engine is SearchEngine<
-  GeneratedAnswerSection &
-    FollowUpAnswersSection & {
-      answerGenerationApi: ReturnType<typeof answerGenerationApi.reducer>;
-    }
-> {
+): engine is SearchEngine<GeneratedAnswerSection & FollowUpAnswersSection> {
   engine.addReducers({
-    [answerGenerationApi.reducerPath]: answerGenerationApi.reducer,
     followUpAnswers,
   });
   return true;

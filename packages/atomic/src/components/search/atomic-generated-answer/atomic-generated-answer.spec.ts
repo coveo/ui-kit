@@ -14,6 +14,7 @@ import {
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {renderAnswerContent} from '@/src/components/common/generated-answer/render-answer-content';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
 import {buildFakeGeneratedAnswer} from '@/vitest-utils/testing-helpers/fixtures/headless/search/generated-answer-controller';
@@ -24,6 +25,9 @@ import './atomic-generated-answer';
 import {userEvent} from 'vitest/browser';
 
 vi.mock('@coveo/headless', {spy: true});
+vi.mock('@/src/components/common/generated-answer/render-answer-content', {
+  spy: true,
+});
 
 describe('atomic-generated-answer', () => {
   const mockedEngine = buildFakeSearchEngine();
@@ -174,7 +178,7 @@ describe('atomic-generated-answer', () => {
       },
       get generatedAnswersThread() {
         return element.shadowRoot?.querySelector(
-          'atomic-generated-answers-thread'
+          'atomic-generated-answer-thread'
         );
       },
       get followUpInputContainer() {
@@ -676,7 +680,7 @@ describe('atomic-generated-answer', () => {
   });
 
   it('should render show more button when collapsible and content is tall', async () => {
-    const {showMoreButton} = await renderGeneratedAnswer({
+    const renderedAnswer = await renderGeneratedAnswer({
       props: {collapsible: true},
       generatedAnswerState: {
         isVisible: true,
@@ -684,10 +688,14 @@ describe('atomic-generated-answer', () => {
       },
     });
 
-    expect(showMoreButton).toBeInTheDocument();
+    Reflect.set(renderedAnswer.element, 'fullAnswerHeight', 100);
+    await renderedAnswer.element.requestUpdate();
+    await renderedAnswer.element.updateComplete;
+
+    expect(renderedAnswer.showMoreButton).toBeInTheDocument();
   });
 
-  it('should show button even when content is short', async () => {
+  it('should not show button when content is short', async () => {
     const {showMoreButton} = await renderGeneratedAnswer({
       props: {collapsible: true},
       generatedAnswerState: {
@@ -696,7 +704,79 @@ describe('atomic-generated-answer', () => {
       },
     });
 
-    await expect.element(showMoreButton).toBeInTheDocument();
+    await expect.element(showMoreButton).not.toBeInTheDocument();
+  });
+
+  it('should pass collapsible as false to renderAnswerContent when collapsible is disabled', async () => {
+    await renderGeneratedAnswer({
+      props: {collapsible: false, maxCollapsedHeight: 16},
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Short text',
+      },
+    });
+
+    const lastCall = vi.mocked(renderAnswerContent).mock.calls.at(-1);
+    expect(lastCall).toBeDefined();
+    expect(lastCall?.[0].props.collapsible).toBe(false);
+  });
+
+  it('should pass collapsible as true to renderAnswerContent when collapsible is enabled and content is tall', async () => {
+    const renderedAnswer = await renderGeneratedAnswer({
+      props: {collapsible: true, maxCollapsedHeight: 16},
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Long text',
+      },
+    });
+
+    Reflect.set(renderedAnswer.element, 'fullAnswerHeight', 100);
+    await renderedAnswer.element.requestUpdate();
+    await renderedAnswer.element.updateComplete;
+
+    const lastCall = vi.mocked(renderAnswerContent).mock.calls.at(-1);
+    expect(lastCall).toBeDefined();
+    expect(lastCall?.[0].props.collapsible).toBe(true);
+  });
+
+  it('should request re-render when adaptAnswerHeight updates measured height', async () => {
+    const renderedAnswer = await renderGeneratedAnswer({
+      props: {collapsible: true, maxCollapsedHeight: 16},
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Test answer',
+      },
+    });
+
+    const generatedText = renderedAnswer.element.shadowRoot?.querySelector(
+      '[part="generated-text"]'
+    ) as HTMLElement | null;
+    expect(generatedText).not.toBeNull();
+
+    vi.spyOn(
+      generatedText as HTMLElement,
+      'getBoundingClientRect'
+    ).mockReturnValue({
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 320,
+      top: 0,
+      right: 0,
+      bottom: 320,
+      left: 0,
+      toJSON: () => ({}),
+    } as DOMRect);
+
+    const requestUpdateSpy = vi.spyOn(renderedAnswer.element, 'requestUpdate');
+    const adaptAnswerHeight = Reflect.get(
+      renderedAnswer.element,
+      'adaptAnswerHeight'
+    ) as () => void;
+
+    adaptAnswerHeight.call(renderedAnswer.element);
+
+    expect(requestUpdateSpy).toHaveBeenCalled();
   });
 
   it('should toggle visibility when toggle is clicked when toggle is activated and deactivated', async () => {

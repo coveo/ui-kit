@@ -5,16 +5,12 @@ import {
   RecordValue,
   StringValue,
 } from '@coveo/bueno';
-import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
+import {createAction} from '@reduxjs/toolkit';
 import type {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload.js';
-import {initiateFollowUpEndpoint} from '../../api/knowledge/answer-generation/endpoints/follow-up/follow-up-endpoint.js';
-import type {AsyncThunkOptions} from '../../app/async-thunk-options.js';
-import type {SearchThunkExtraArguments} from '../../app/search-thunk-extra-arguments.js';
 import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../utils/validate-payload.js';
-import {selectAgentId} from '../configuration/configuration-selectors.js';
 import {
   answerContentFormatSchema,
   citationSchema,
@@ -22,14 +18,22 @@ import {
 import {
   GENERATION_STEP_NAMES,
   type GenerationStepName,
+  normalizeGenerationStepName,
 } from '../generated-answer/generated-answer-state.js';
 import type {GeneratedContentFormat} from '../generated-answer/generated-response-format.js';
-import {
-  constructGenerateFollowUpAnswerParams,
-  type StateNeededForFollowUpAnswerParams,
-} from './follow-up-answer-request.js';
 
 const stringValue = new StringValue({required: true});
+const generationStepNameValue = new StringValue<GenerationStepName>({
+  required: true,
+  constrainTo: GENERATION_STEP_NAMES,
+});
+
+const normalizeGenerationStepPayload = <T extends {name: string}>(
+  payload: T
+): Omit<T, 'name'> & {name: GenerationStepName} => ({
+  ...payload,
+  name: normalizeGenerationStepName(payload.name),
+});
 
 export const setIsEnabled = createAction(
   'followUpAnswers/setIsEnabled',
@@ -162,69 +166,20 @@ export const resetFollowUpAnswers = createAction(
 
 export const followUpStepStarted = createAction(
   'followUpAnswers/stepStarted',
-  (payload: {answerId: string; name: GenerationStepName; startedAt: number}) =>
-    validatePayload(payload, {
+  (payload: {answerId: string; name: string; startedAt: number}) =>
+    validatePayload(normalizeGenerationStepPayload(payload), {
       answerId: requiredNonEmptyString,
-      name: new StringValue<GenerationStepName>({
-        required: true,
-        constrainTo: GENERATION_STEP_NAMES,
-      }),
+      name: generationStepNameValue,
       startedAt: new NumberValue({min: 0, required: true}),
     })
 );
 
 export const followUpStepFinished = createAction(
   'followUpAnswers/stepFinished',
-  (payload: {answerId: string; name: GenerationStepName; finishedAt: number}) =>
-    validatePayload(payload, {
+  (payload: {answerId: string; name: string; finishedAt: number}) =>
+    validatePayload(normalizeGenerationStepPayload(payload), {
       answerId: requiredNonEmptyString,
-      name: new StringValue<GenerationStepName>({
-        required: true,
-        constrainTo: GENERATION_STEP_NAMES,
-      }),
+      name: generationStepNameValue,
       finishedAt: new NumberValue({min: 0, required: true}),
     })
-);
-
-export const generateFollowUpAnswer = createAsyncThunk<
-  void,
-  string,
-  AsyncThunkOptions<
-    StateNeededForFollowUpAnswerParams,
-    SearchThunkExtraArguments
-  >
->(
-  'generatedAnswerWithFollowUps/generateFollowUpAnswer',
-  async (question, {getState, dispatch, extra: {logger}}) => {
-    const state = getState();
-    const agentId = selectAgentId(state)?.trim();
-    const generateFollowUpAnswerParams = constructGenerateFollowUpAnswerParams(
-      question,
-      state
-    );
-
-    if (!agentId) {
-      logger.warn(
-        'Missing agentId in engine configuration. ' +
-          'The generateFollowUpAnswer action requires an agent ID.'
-      );
-      return;
-    }
-
-    if (!generateFollowUpAnswerParams.conversationId) {
-      logger.warn(
-        'Missing conversationId when generating a follow-up answer. ' +
-          'The generateFollowUpAnswer action requires an existing conversation.'
-      );
-      return;
-    }
-
-    dispatch(createFollowUpAnswer({question}));
-    await dispatch(
-      initiateFollowUpEndpoint({
-        strategyKey: 'follow-up-answer',
-        ...generateFollowUpAnswerParams,
-      })
-    );
-  }
 );

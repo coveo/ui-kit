@@ -68,7 +68,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "3.46.0",
+  "version": "3.47.0",
   "files": [
     "dist/"
   ],
@@ -117,7 +117,7 @@
     "coveo.analytics": "catalog:",
     "dayjs": "catalog:",
     "exponential-backoff": "catalog:",
-    "fast-equals": "5.2.2",
+    "fast-equals": "5.4.0",
     "headers-polyfill": "4.0.3",
     "navigator.sendbeacon": "0.0.20",
     "pino": "10.1.0",

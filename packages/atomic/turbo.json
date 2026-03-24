@@ -30,15 +30,15 @@
     "build:stencil-lit": {
       "dependsOn": ["^build", "build:locales"],
       "outputs": [
+        "src/components/*/index.ts",
+        "src/components/*/lazy-index.ts",
+        "src/utils/custom-element-tags.ts",
         "dist/**",
         "!dist/atomic/assets/**",
         "!dist/atomic/themes/**",
         "!dist/atomic/lang/**",
         "docs/**",
-        "!docs/assets.json",
-        "src/components.d.ts",
-        ".stencil/**",
-        "projects/atomic-angular/src/lib/stencil-generated/**/*"
+        "!docs/assets.json"
       ]
     },
     "build:copy-assets": {

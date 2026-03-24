@@ -1,3 +1,29 @@
+## 3.53.0 (2026-03-18)
+
+* chore: cleaning atomic generated files (#7233) ([38add47](https://github.com/coveo/ui-kit/commits/38add47)), closes [#7233](https://github.com/coveo/ui-kit/issues/7233)
+* chore: fix sb import (#7232) ([9ff04cf](https://github.com/coveo/ui-kit/commits/9ff04cf)), closes [#7232](https://github.com/coveo/ui-kit/issues/7232)
+* chore: integrate MockCommerceApi for enhanced storybook testing (#7250) ([dcf1aa3](https://github.com/coveo/ui-kit/commits/dcf1aa3)), closes [#7250](https://github.com/coveo/ui-kit/issues/7250)
+* chore: remove cypress from atomic (#7218) ([e9facf1](https://github.com/coveo/ui-kit/commits/e9facf1)), closes [#7218](https://github.com/coveo/ui-kit/issues/7218)
+* chore: teardown stencil from @coveo/atomic (#7217) ([8bc6d9d](https://github.com/coveo/ui-kit/commits/8bc6d9d)), closes [#7217](https://github.com/coveo/ui-kit/issues/7217)
+* chore(atomic-angular): turbod atomic-angular build (#7228) ([b803043](https://github.com/coveo/ui-kit/commits/b803043)), closes [#7228](https://github.com/coveo/ui-kit/issues/7228)
+* fix(atomic) dislike button doesn't keep its red color after being clicked for Single turn CRGA and M ([18170d0](https://github.com/coveo/ui-kit/commits/18170d0)), closes [#7225](https://github.com/coveo/ui-kit/issues/7225)
+* fix(headless, atomic): log correct answer ID in analytics for citations in follow-up answers. (#7226 ([b112e7f](https://github.com/coveo/ui-kit/commits/b112e7f)), closes [#7226](https://github.com/coveo/ui-kit/issues/7226)
+* fix(SFINT-6672) made the generated answer disclaimer rendering no longer rely on streaming end (#722 ([6960537](https://github.com/coveo/ui-kit/commits/6960537)), closes [#7220](https://github.com/coveo/ui-kit/issues/7220)
+* fix: compare totalNumberofChildResults to returned results, not 0 (offset by 1) (#7201) ([3332ec6](https://github.com/coveo/ui-kit/commits/3332ec6)), closes [#7201](https://github.com/coveo/ui-kit/issues/7201)
+* fix(atomic): show previous questions label improved for a11y purposes  (#7210) ([f599745](https://github.com/coveo/ui-kit/commits/f599745)), closes [#7210](https://github.com/coveo/ui-kit/issues/7210)
+* feat(atomic): added support for when the agent cannot answer (#7215) ([e303aeb](https://github.com/coveo/ui-kit/commits/e303aeb)), closes [#7215](https://github.com/coveo/ui-kit/issues/7215)
+
+
+
+## <small>3.52.1 (2026-03-11)</small>
+
+* feat(atomic) creation of agent generation steps component (#7165) ([901ed24](https://github.com/coveo/ui-kit/commits/901ed24)), closes [#7165](https://github.com/coveo/ui-kit/issues/7165)
+* feat(atomic) move feedback and copy buttons under the citations and removed question when followUps  ([9ab5dcf](https://github.com/coveo/ui-kit/commits/9ab5dcf)), closes [#7212](https://github.com/coveo/ui-kit/issues/7212)
+* fix(atomic) feedback buttons missing when the generated answer is short (#7193) ([6c515a0](https://github.com/coveo/ui-kit/commits/6c515a0)), closes [#7193](https://github.com/coveo/ui-kit/issues/7193)
+* fix(storybook): brand images issue (#7208) ([ea03987](https://github.com/coveo/ui-kit/commits/ea03987)), closes [#7208](https://github.com/coveo/ui-kit/issues/7208)
+
+
+
 ## 3.52.0 (2026-03-04)
 
 * chore: eject angular build from Stencil (#7149) ([2c4d509](https://github.com/coveo/ui-kit/commits/2c4d509)), closes [#7149](https://github.com/coveo/ui-kit/issues/7149)

@@ -12,7 +12,6 @@ import type {
 } from '@reduxjs/toolkit';
 import type {Logger} from 'pino';
 import {getRelayInstanceFromState} from '../api/analytics/analytics-relay-client.js';
-import {answerGenerationApi} from '../api/knowledge/answer-generation/answer-generation-api.js';
 import {answerApi} from '../api/knowledge/stream-answer-api.js';
 import {
   disableAnalytics,
@@ -384,7 +383,6 @@ function createMiddleware<Reducers extends ReducersMapObject>(
     analyticsMiddleware,
   ].concat(
     answerApi.middleware,
-    answerGenerationApi.middleware,
     generateAnswerListener.middleware,
     options.middlewares || []
   );

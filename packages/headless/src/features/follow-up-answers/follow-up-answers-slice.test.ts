@@ -875,13 +875,13 @@ describe('follow-up answers slice', () => {
       expect(finalState.conversationId).toBe('');
     });
 
-    it('preserves isEnabled', () => {
+    it('clears isEnabled', () => {
       state.isEnabled = true;
       state.followUpAnswers = [createInitialFollowUpAnswer('Question?')];
 
       const finalState = followUpAnswersReducer(state, resetFollowUpAnswers());
 
-      expect(finalState.isEnabled).toBe(true);
+      expect(finalState.isEnabled).toBe(false);
       expect(finalState.followUpAnswers).toEqual([]);
     });
 
@@ -890,6 +890,7 @@ describe('follow-up answers slice', () => {
 
       expect(finalState.followUpAnswers).toEqual([]);
       expect(finalState.conversationId).toBe('');
+      expect(finalState.isEnabled).toBe(false);
     });
   });
 
@@ -915,7 +916,7 @@ describe('follow-up answers slice', () => {
         state,
         followUpStepStarted({
           answerId: 'answer-123',
-          name: 'thinking',
+          name: 'Thinking',
           startedAt,
         })
       );
@@ -968,7 +969,7 @@ describe('follow-up answers slice', () => {
         state,
         followUpStepFinished({
           answerId: 'answer-123',
-          name: 'searching',
+          name: 'SEARCHING',
           finishedAt,
         })
       );
