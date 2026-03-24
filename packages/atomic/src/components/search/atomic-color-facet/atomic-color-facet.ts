@@ -466,8 +466,7 @@ export class AtomicColorFacet
     return (
       this.searchStatusState &&
       !this.searchStatusState.hasError &&
-      this.facetState &&
-      this.facetState.enabled &&
+      this.facetState?.enabled &&
       (!this.searchStatusState.firstSearchExecuted ||
         this.facetState.values.length > 0)
     );

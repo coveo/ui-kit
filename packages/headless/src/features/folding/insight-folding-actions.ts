@@ -19,8 +19,8 @@ import {fetchFromAPI} from '../insight-search/insight-search-actions.js';
 import {buildInsightLoadCollectionRequest} from '../insight-search/insight-search-request.js';
 
 export type {
-  RegisterFoldingActionCreatorPayload,
   LoadCollectionFulfilledReturn,
+  RegisterFoldingActionCreatorPayload,
 };
 
 export const registerFolding = createAction(

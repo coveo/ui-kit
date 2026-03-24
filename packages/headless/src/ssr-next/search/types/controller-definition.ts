@@ -11,10 +11,10 @@ import type {
 import type {SearchParameterManagerDefinition} from '../controllers/search-parameter-manager/headless-search-parameter-manager.ssr.js';
 
 export type {
-  InferStaticState,
-  InferHydratedState,
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
+  InferHydratedState,
+  InferStaticState,
 };
 
 export interface ControllerDefinitionWithoutProps<

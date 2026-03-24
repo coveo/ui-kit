@@ -514,12 +514,18 @@ describe('search-parameter-serializer', () => {
       expect(isValidBasicKey(key)).toBe(true);
     });
 
-    it.each(['f', 'fExcluded', 'cf', 'nf', 'df', 'sf', 'af', 'invalid'])(
-      'should return false for an invalid basic key: %s',
-      (key) => {
-        expect(isValidBasicKey(key)).toBe(false);
-      }
-    );
+    it.each([
+      'f',
+      'fExcluded',
+      'cf',
+      'nf',
+      'df',
+      'sf',
+      'af',
+      'invalid',
+    ])('should return false for an invalid basic key: %s', (key) => {
+      expect(isValidBasicKey(key)).toBe(false);
+    });
   });
 
   describe('#keyHasObjectValue', () => {
@@ -538,12 +544,17 @@ describe('search-parameter-serializer', () => {
       expect(keyHasObjectValue(key)).toBe(false);
     });
 
-    it.each(['f', 'fExcluded', 'cf', 'nf', 'df', 'sf', 'af'])(
-      'should return true for an invalid basic key: %s',
-      (key) => {
-        expect(keyHasObjectValue(key)).toBe(true);
-      }
-    );
+    it.each([
+      'f',
+      'fExcluded',
+      'cf',
+      'nf',
+      'df',
+      'sf',
+      'af',
+    ])('should return true for an invalid basic key: %s', (key) => {
+      expect(keyHasObjectValue(key)).toBe(true);
+    });
   });
 
   describe('#isValidKey', () => {

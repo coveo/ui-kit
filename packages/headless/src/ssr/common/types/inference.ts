@@ -15,18 +15,19 @@ export type InferControllerPropsFromDefinition<
     CoreEngine | CoreEngineNext,
     Controller
   >,
-> = TController extends ControllerDefinitionWithProps<
-  CoreEngine | CoreEngineNext,
-  Controller,
-  infer Props
->
-  ? Props
-  : TController extends ControllerDefinitionWithoutProps<
-        CoreEngine | CoreEngineNext,
-        Controller
-      >
-    ? {}
-    : unknown;
+> =
+  TController extends ControllerDefinitionWithProps<
+    CoreEngine | CoreEngineNext,
+    Controller,
+    infer Props
+  >
+    ? Props
+    : TController extends ControllerDefinitionWithoutProps<
+          CoreEngine | CoreEngineNext,
+          Controller
+        >
+      ? {}
+      : unknown;
 
 export type InferControllerPropsMapFromDefinitions<
   TControllers extends ControllerDefinitionsMap<
@@ -46,9 +47,10 @@ export type InferControllerFromDefinition<
     CoreEngine | CoreEngineNext,
     Controller
   >,
-> = TDefinition extends ControllerDefinition<infer _, infer TController>
-  ? TController
-  : never;
+> =
+  TDefinition extends ControllerDefinition<infer _, infer TController>
+    ? TController
+    : never;
 
 export type InferControllersMapFromDefinition<
   TControllers extends ControllerDefinitionsMap<

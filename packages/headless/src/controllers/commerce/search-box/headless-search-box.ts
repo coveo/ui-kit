@@ -44,7 +44,7 @@ import {
   searchBoxOptionsSchema,
 } from './headless-search-box-options.js';
 
-export type {SearchBoxOptions, SearchBoxState, Suggestion, CoreSearchBox};
+export type {CoreSearchBox, SearchBoxOptions, SearchBoxState, Suggestion};
 
 export interface SearchBoxProps {
   /**

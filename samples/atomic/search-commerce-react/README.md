@@ -25,19 +25,19 @@ This sample includes multiple page examples:
 
 ## Prerequisites
 
-- Node.js 18+ (LTS recommended)
-- npm 9+
+- Node.js 24+ (LTS recommended)
+- pnpm 10+
 
 ## Getting Started
 
 1. Install dependencies:
    ```bash
-   npm install
+   pnpm install
    ```
 
 2. Start the development server:
    ```bash
-   npm run dev
+   pnpm dev
    ```
 
 3. Open your browser to `http://localhost:5173`
@@ -47,10 +47,10 @@ The application will display navigation links allowing you to switch between dif
 ## Available Scripts
 
 ```bash
-npm run dev           # Start development server with hot reload
-npm run build         # Build for production
-npm run build:ts      # TypeScript compilation
-npm run build:vite    # Vite production build
+pnpm dev           # Start development server with hot reload
+pnpm build         # Build for production
+pnpm build:ts      # TypeScript compilation
+pnpm build:vite    # Vite production build
 ```
 
 ## Key Implementation Details
