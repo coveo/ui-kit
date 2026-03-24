@@ -7,7 +7,6 @@ import {
 } from 'lit';
 import {customElement} from 'lit/decorators.js';
 import {beforeAll, beforeEach, describe, expect, it} from 'vitest';
-import theme from '@/src/utils/coveo.tw.css';
 import globalStyles from '@/src/utils/tailwind.global.tw.css';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {withTailwindStyles} from './with-tailwind-styles';
