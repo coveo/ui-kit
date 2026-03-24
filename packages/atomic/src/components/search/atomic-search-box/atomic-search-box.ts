@@ -583,6 +583,7 @@ export class AtomicSearchBox
 
   private renderAbsolutePositionSpacer() {
     return html`<textarea
+      disabled
       aria-hidden="true"
       part="textarea-spacer"
       class="invisible w-full px-4 py-3.5 text-lg"

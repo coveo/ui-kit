@@ -349,10 +349,11 @@ describe('atomic-search-box', () => {
       );
     });
 
-    it('should be focusable', async () => {
-      const {element} = await renderSearchBox();
+    it('should be focusable & delegate focus to the text area', async () => {
+      const {element, textArea} = await renderSearchBox();
       element.focus();
-      expect(element).toHaveFocus();
+      expect(document.activeElement).toBe(element);
+      expect(element.shadowRoot!.activeElement).toBe(textArea);
     });
   });
 

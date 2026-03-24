@@ -443,7 +443,7 @@ export class AtomicCommerceSearchBox
     this.announceNewSuggestionsToScreenReader();
   }
 
-  private async _onFocus() {
+  private async onFocus() {
     if (this.isExpanded) {
       return;
     }
@@ -561,6 +561,7 @@ export class AtomicCommerceSearchBox
 
   private renderAbsolutePositionSpacer() {
     return html`<textarea
+      disabled
       aria-hidden="true"
       part="textarea-spacer"
       class="invisible w-full p-3.5 px-4 text-lg"
@@ -577,7 +578,7 @@ export class AtomicCommerceSearchBox
         value: this.searchBoxState.value,
         title: this.textAreaLabel,
         ariaLabel: this.textAreaLabel,
-        onFocus: () => this._onFocus(),
+        onFocus: () => this.onFocus(),
         onInput: (e: Event) =>
           this.onInput((e.target as HTMLTextAreaElement).value),
         onKeyDown: (e: KeyboardEvent) => this.onKeyDown(e),

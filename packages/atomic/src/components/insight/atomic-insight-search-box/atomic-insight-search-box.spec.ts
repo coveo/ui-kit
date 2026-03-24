@@ -214,10 +214,11 @@ describe('atomic-insight-search-box', () => {
     });
   });
 
-  it('should be focusable', async () => {
-    const {element} = await renderComponent();
+  it('should be focusable & delegate focus to the text area', async () => {
+    const {element, textArea} = await renderComponent();
     element.focus();
-    expect(element).toHaveFocus();
+    expect(document.activeElement).toBe(element);
+    expect(element.shadowRoot!.activeElement).toBe(textArea);
   });
 
   it('should have aria-label for the textarea', async () => {
