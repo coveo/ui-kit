@@ -64,12 +64,14 @@ test.describe('default', () => {
       const item = cart.items.first();
 
       initialItemQuantity = parseInt(
-        (await (await cart.getItemQuantity(item)).textContent()) || ''
+        (await (await cart.getItemQuantity(item)).textContent()) || '',
+        10
       );
       initialItemPrice = parseInt(
-        (await (await cart.getItemPrice(item)).textContent()) || ''
+        (await (await cart.getItemPrice(item)).textContent()) || '',
+        10
       );
-      initialCartTotal = parseInt((await cart.total.textContent()) || '');
+      initialCartTotal = parseInt((await cart.total.textContent()) || '', 10);
 
       await cart.addOneButton.first().click();
     });
@@ -80,7 +82,8 @@ test.describe('default', () => {
       await expect
         .poll(async () => {
           return parseInt(
-            (await (await cart.getItemQuantity(item)).textContent()) || ''
+            (await (await cart.getItemQuantity(item)).textContent()) || '',
+            10
           );
         })
         .toBe(initialItemQuantity + 1);
@@ -92,7 +95,8 @@ test.describe('default', () => {
       await expect
         .poll(async () => {
           return parseInt(
-            (await (await cart.getItemTotalPrice(item)).textContent()) || ''
+            (await (await cart.getItemTotalPrice(item)).textContent()) || '',
+            10
           );
         })
         .toBe(initialItemPrice * (initialItemQuantity + 1));
@@ -101,7 +105,7 @@ test.describe('default', () => {
     test('should increase the cart total', async ({cart}) => {
       await expect
         .poll(async () => {
-          const total = parseInt((await cart.total.textContent()) || '');
+          const total = parseInt((await cart.total.textContent()) || '', 10);
           return total;
         })
         .toBe(initialCartTotal + initialItemPrice);
@@ -116,12 +120,14 @@ test.describe('default', () => {
         const item = cart.items.nth(1);
 
         initialItemQuantity = parseInt(
-          (await (await cart.getItemQuantity(item)).textContent()) || ''
+          (await (await cart.getItemQuantity(item)).textContent()) || '',
+          10
         );
         initialItemPrice = parseInt(
-          (await (await cart.getItemPrice(item)).textContent()) || ''
+          (await (await cart.getItemPrice(item)).textContent()) || '',
+          10
         );
-        initialCartTotal = parseInt((await cart.total.textContent()) || '');
+        initialCartTotal = parseInt((await cart.total.textContent()) || '', 10);
 
         initialCartItemsCount = await cart.items.count();
 
@@ -134,7 +140,8 @@ test.describe('default', () => {
         await expect
           .poll(async () => {
             const quantity = parseInt(
-              (await (await cart.getItemQuantity(item)).textContent()) || ''
+              (await (await cart.getItemQuantity(item)).textContent()) || '',
+              10
             );
             return quantity;
           })
@@ -147,7 +154,8 @@ test.describe('default', () => {
         await expect
           .poll(async () => {
             const totalPrice = parseInt(
-              (await (await cart.getItemTotalPrice(item)).textContent()) || ''
+              (await (await cart.getItemTotalPrice(item)).textContent()) || '',
+              10
             );
             return totalPrice;
           })
@@ -157,7 +165,7 @@ test.describe('default', () => {
       test('should decrease the cart total', async ({cart}) => {
         await expect
           .poll(async () => {
-            const total = parseInt((await cart.total.textContent()) || '');
+            const total = parseInt((await cart.total.textContent()) || '', 10);
             return total;
           })
           .toBe(initialCartTotal - initialItemPrice);
@@ -177,12 +185,14 @@ test.describe('default', () => {
         const item = cart.items.first();
 
         initialItemQuantity = parseInt(
-          (await (await cart.getItemQuantity(item)).textContent()) || ''
+          (await (await cart.getItemQuantity(item)).textContent()) || '',
+          10
         );
         initialItemPrice = parseInt(
-          (await (await cart.getItemPrice(item)).textContent()) || ''
+          (await (await cart.getItemPrice(item)).textContent()) || '',
+          10
         );
-        initialCartTotal = parseInt((await cart.total.textContent()) || '');
+        initialCartTotal = parseInt((await cart.total.textContent()) || '', 10);
 
         initialCartItemsCount = await cart.items.count();
 
@@ -201,7 +211,7 @@ test.describe('default', () => {
       test('should decrease the cart total', async ({cart}) => {
         await expect
           .poll(async () => {
-            const total = parseInt((await cart.total.textContent()) || '');
+            const total = parseInt((await cart.total.textContent()) || '', 10);
             return total;
           })
           .toBe(initialCartTotal - initialItemPrice * 1);
@@ -242,7 +252,7 @@ test.describe('default', () => {
     test('should set the cart total to 0', async ({cart}) => {
       await expect
         .poll(async () => {
-          const total = parseInt((await cart.total.textContent()) || '');
+          const total = parseInt((await cart.total.textContent()) || '', 10);
           return total;
         })
         .toBe(0);

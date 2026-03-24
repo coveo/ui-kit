@@ -529,32 +529,32 @@ describe('atomic-insight-user-actions-timeline', () => {
         prop: 'ticketCreationDateTime',
         invalidValue: '',
       },
-    ])(
-      'should log validation warning when #$prop is set to empty string',
-      async ({prop, invalidValue}) => {
-        const {element} = await renderComponent({
-          props: {
-            userId: 'test@example.com',
-            ticketCreationDateTime: '2024-08-01T00:00:00Z',
-          },
-        });
+    ])('should log validation warning when #$prop is set to empty string', async ({
+      prop,
+      invalidValue,
+    }) => {
+      const {element} = await renderComponent({
+        props: {
+          userId: 'test@example.com',
+          ticketCreationDateTime: '2024-08-01T00:00:00Z',
+        },
+      });
 
-        // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
-        (element as any)[prop] = invalidValue;
-        await element.updateComplete;
+      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      (element as any)[prop] = invalidValue;
+      await element.updateComplete;
 
-        expect(mockedConsole.warn).toHaveBeenCalledWith(
-          expect.stringContaining(
-            'Prop validation failed for component atomic-insight-user-actions-timeline'
-          ),
-          element
-        );
-        expect(mockedConsole.warn).toHaveBeenCalledWith(
-          expect.stringContaining(prop),
-          element
-        );
-      }
-    );
+      expect(mockedConsole.warn).toHaveBeenCalledWith(
+        expect.stringContaining(
+          'Prop validation failed for component atomic-insight-user-actions-timeline'
+        ),
+        element
+      );
+      expect(mockedConsole.warn).toHaveBeenCalledWith(
+        expect.stringContaining(prop),
+        element
+      );
+    });
 
     it('should log validation warning when userId is not provided', async () => {
       await renderComponent({

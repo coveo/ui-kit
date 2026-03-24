@@ -36,14 +36,13 @@
     "build": "node ../../utils/ci/rm-rf.mjs dist cdn && tsc --outdir dist && tsc --outdir cdn --project tsconfig.cdn.json && node ./scripts/esbuild.js",
     "start": "node ./scripts/start.js",
     "e2e": "playwright test",
-    "release:phase3": "pnpm --filter @coveo/ci npm-publish",
     "release:phase1": "pnpm --filter @coveo/ci bump",
-    "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod"
+    "npm:publish": "pnpm --filter @coveo/ci npm-publish"
   },
   "dependencies": {
     "@coveo/bueno": "workspace:*",
     "@coveo/headless": "workspace:*",
-    "lit": "3.3.1"
+    "lit": "3.3.2"
   },
   "devDependencies": {
     "@playwright/test": "catalog:",

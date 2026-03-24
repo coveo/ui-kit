@@ -64,13 +64,13 @@ describe('commerce core summary', () => {
       },
       expected: true,
     },
-  ])(
-    'should return correct state when there is an error',
-    ({error, expected}) => {
-      options.errorSelector.mockReturnValue(error);
-      expect(summary.state.hasError).toEqual(expected);
-    }
-  );
+  ])('should return correct state when there is an error', ({
+    error,
+    expected,
+  }) => {
+    options.errorSelector.mockReturnValue(error);
+    expect(summary.state.hasError).toEqual(expected);
+  });
 
   it('should return correct state when no search has been executed', () => {
     options.responseIdSelector.mockReturnValue('');

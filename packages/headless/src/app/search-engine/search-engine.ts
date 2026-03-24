@@ -48,7 +48,7 @@ import {
   searchEngineConfigurationSchema,
 } from './search-engine-configuration.js';
 
-export type {SearchEngineConfiguration, SearchConfigurationOptions};
+export type {SearchConfigurationOptions, SearchEngineConfiguration};
 export {getSampleSearchEngineConfiguration};
 
 const searchEngineReducers = {debug, pipeline, searchHub, search};

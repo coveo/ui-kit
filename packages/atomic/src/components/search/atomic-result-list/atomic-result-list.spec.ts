@@ -91,21 +91,21 @@ describe('atomic-result-list', () => {
       prop: 'imageSize',
       invalidValue: 'invalid',
     },
-  ])(
-    'should set error when #$prop is invalid',
-    async ({prop, invalidValue}) => {
-      const element = await setupElement();
+  ])('should set error when #$prop is invalid', async ({
+    prop,
+    invalidValue,
+  }) => {
+    const element = await setupElement();
 
-      expect(element.error).toBeUndefined();
+    expect(element.error).toBeUndefined();
 
-      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
-      (element as any)[prop] = invalidValue;
-      await element.updateComplete;
+    // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+    (element as any)[prop] = invalidValue;
+    await element.updateComplete;
 
-      expect(element.error).toBeDefined();
-      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
-    }
-  );
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(new RegExp(prop, 'i'));
+  });
 
   // TODO V4: KIT-5197 - Remove this test
   it.each<{
@@ -128,33 +128,34 @@ describe('atomic-result-list', () => {
       validValue: 'small',
       invalidValue: 'invalid',
     },
-  ])(
-    'should log validation warning when #$prop is updated to invalid value',
-    async ({prop, validValue, invalidValue}) => {
-      const consoleWarnSpy = vi
-        .spyOn(console, 'warn')
-        .mockImplementation(() => {});
+  ])('should log validation warning when #$prop is updated to invalid value', async ({
+    prop,
+    validValue,
+    invalidValue,
+  }) => {
+    const consoleWarnSpy = vi
+      .spyOn(console, 'warn')
+      .mockImplementation(() => {});
 
-      const element = await setupElement({[prop]: validValue});
+    const element = await setupElement({[prop]: validValue});
 
-      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
-      (element as any)[prop] = invalidValue;
-      await element.updateComplete;
+    // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+    (element as any)[prop] = invalidValue;
+    await element.updateComplete;
 
-      expect(consoleWarnSpy).toHaveBeenCalledWith(
-        expect.stringContaining(
-          'Prop validation failed for component atomic-result-list'
-        ),
-        element
-      );
-      expect(consoleWarnSpy).toHaveBeenCalledWith(
-        expect.stringContaining(prop),
-        element
-      );
+    expect(consoleWarnSpy).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'Prop validation failed for component atomic-result-list'
+      ),
+      element
+    );
+    expect(consoleWarnSpy).toHaveBeenCalledWith(
+      expect.stringContaining(prop),
+      element
+    );
 
-      consoleWarnSpy.mockRestore();
-    }
-  );
+    consoleWarnSpy.mockRestore();
+  });
 
   // TODO V4: KIT-5197 - Remove skip
   it.skip.each<{
@@ -177,21 +178,22 @@ describe('atomic-result-list', () => {
       validValue: 'small',
       invalidValue: 'invalid',
     },
-  ])(
-    'should set error when valid #$prop is updated to an invalid value',
-    async ({prop, validValue, invalidValue}) => {
-      const element = await setupElement({[prop]: validValue});
+  ])('should set error when valid #$prop is updated to an invalid value', async ({
+    prop,
+    validValue,
+    invalidValue,
+  }) => {
+    const element = await setupElement({[prop]: validValue});
 
-      expect(element.error).toBeUndefined();
+    expect(element.error).toBeUndefined();
 
-      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
-      (element as any)[prop] = invalidValue;
-      await element.updateComplete;
+    // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+    (element as any)[prop] = invalidValue;
+    await element.updateComplete;
 
-      expect(element.error).toBeDefined();
-      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
-    }
-  );
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(new RegExp(prop, 'i'));
+  });
 
   describe('#willUpdate', () => {
     // biome-ignore lint/suspicious/noExplicitAny: <accessing private properties in tests>
@@ -453,14 +455,15 @@ describe('atomic-result-list', () => {
 
       describe.each<{
         density: ItemDisplayDensity;
-      }>([{density: 'comfortable'}, {density: 'compact'}, {density: 'normal'}])(
-        'when the #density prop is $density',
-        ({density}) => {
-          it('should render list wrapper & root with correct density class', async () => {
-            await renderListWrapperAndRootTestCase({density});
-          });
-        }
-      );
+      }>([
+        {density: 'comfortable'},
+        {density: 'compact'},
+        {density: 'normal'},
+      ])('when the #density prop is $density', ({density}) => {
+        it('should render list wrapper & root with correct density class', async () => {
+          await renderListWrapperAndRootTestCase({density});
+        });
+      });
 
       describe.each<{imageSize: ItemDisplayImageSize}>([
         {imageSize: 'icon'},
@@ -738,14 +741,15 @@ describe('atomic-result-list', () => {
 
       describe.each<{
         density: ItemDisplayDensity;
-      }>([{density: 'comfortable'}, {density: 'compact'}, {density: 'normal'}])(
-        'when #density is $density',
-        ({density}) => {
-          it('should render list wrapper & table with correct density class', async () => {
-            await renderListWrapperAndTableTestCase({density});
-          });
-        }
-      );
+      }>([
+        {density: 'comfortable'},
+        {density: 'compact'},
+        {density: 'normal'},
+      ])('when #density is $density', ({density}) => {
+        it('should render list wrapper & table with correct density class', async () => {
+          await renderListWrapperAndTableTestCase({density});
+        });
+      });
 
       describe.each<{imageSize: ItemDisplayImageSize}>([
         {imageSize: 'icon'},

@@ -5,7 +5,7 @@ import type {
   AtomicGeneratedAnswerThreadItem,
   AtomicGeneratedAnswerThreadItemProps,
 } from './atomic-generated-answer-thread-item';
-import '@/src/components/common/generated-answer/atomic-generated-answer-thread-item/atomic-generated-answer-thread-item';
+import '@/src/components/common/atomic-generated-answer-thread-item/atomic-generated-answer-thread-item';
 
 describe('atomic-generated-answer-thread-item', () => {
   const renderComponent = async (

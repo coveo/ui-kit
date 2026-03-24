@@ -1,5 +1,6 @@
 import type {CoreEngine} from '@coveo/headless';
 import type {AnyBindings} from '../components/common/interface/bindings';
+// biome-ignore lint/suspicious/noTsIgnore: Import from a generated file that might be missing before build.
 //@ts-ignore - Import from a generated file, _might_ be missing if the build hasn't been run yet, but this file is only used at runtime, so it should be fine.
 import {ATOMIC_CUSTOM_ELEMENT_TAGS} from './custom-element-tags.js';
 import {closest} from './dom-utils';
