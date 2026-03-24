@@ -113,13 +113,6 @@
       "matchPackageNames": ["marked"]
     },
     {
-      "groupName": "relay",
-      "groupSlug": "relay",
-      "rangeStrategy": "replace",
-      "description": "Isolate relay since it is causing issues with stencil projetcs",
-      "matchPackageNames": ["@coveo/relay"]
-    },
-    {
       "matchFileNames": ["packages/quantic/package.json"],
       "groupSlug": "sfdx-lwc-jest",
       "rangeStrategy": "replace",

@@ -834,8 +834,8 @@ importers:
         specifier: workspace:*
         version: link:../bueno
       '@coveo/relay':
-        specifier: 1.2.15
-        version: 1.2.15
+        specifier: 2.0.4
+        version: 2.0.4
       '@coveo/relay-event-types':
         specifier: 'catalog:'
         version: 15.4.0
@@ -1029,8 +1029,8 @@ importers:
         specifier: workspace:*
         version: link:../headless
       '@coveo/relay':
-        specifier: 1.2.15
-        version: 1.2.15
+        specifier: 2.0.4
+        version: 2.0.4
       uuid:
         specifier: ^11.0.0
         version: 11.1.0
@@ -2688,8 +2688,8 @@ packages:
   '@coveo/relay-event-types@15.4.0':
     resolution: {integrity: sha512-K3YN5gfPyu8tjROoL4CaaoVMb9yhGLQNElUr8c8S+5GpLt/QEaVKegK3ynUBJt6S1DaNbgY+n00Ad6iBWz0YMg==}
 
-  '@coveo/relay@1.2.15':
-    resolution: {integrity: sha512-pnJn8ZWjnJGz6B4/Lexx4EkYbwf3erT/4k/0oHjZE8FNvimmOfEgvGf+jqWVwTVZ1w65q5SbmfuJ0h9n4b3mKA==}
+  '@coveo/relay@2.0.4':
+    resolution: {integrity: sha512-FAyZKCKTqEpDhOBVL6cc9XnrxocHp+bdua3T7XLeePjHv4B1EfCHz6QN1vXBJJTpKrPoAs0rRaKYa2JG5AfvgA==}
 
   '@coveo/semantic-monorepo-tools@2.7.1':
     resolution: {integrity: sha512-yPUdpPgoZWxX/lyhQWaskwGXS4ZFLsOK4QVUyD+1BtOk/827vqw93Q7UD4aumuYMVKTDnGjjHOEmHl07nzUvYw==}
@@ -16650,7 +16650,7 @@ snapshots:
 
   '@coveo/relay-event-types@15.4.0': {}
 
-  '@coveo/relay@1.2.15':
+  '@coveo/relay@2.0.4':
     dependencies:
       '@coveo/explorer-messenger': 0.5.0
       uuid: 13.0.0
