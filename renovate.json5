@@ -141,13 +141,6 @@
       "description": "Isolate knip since updates can break CI",
       "matchPackageNames": ["knip"]
     },
-    {
-      "groupName": "publint",
-      "groupSlug": "publint",
-      "rangeStrategy": "replace",
-      "description": "Isolate publint since updates can break CI",
-      "matchPackageNames": ["publint"]
-    }
   ],
   "lockFileMaintenance": {
     "enabled": true
