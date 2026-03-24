@@ -21,12 +21,12 @@ import {
 } from '../../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet.js';
 
 export type {
-  NumericRangeOptions,
-  NumericRangeRequest,
+  NumericFacet,
   NumericFacetOptions,
   NumericFacetProps,
-  NumericFacet,
   NumericFacetState,
+  NumericRangeOptions,
+  NumericRangeRequest,
 };
 export {buildNumericRange};
 

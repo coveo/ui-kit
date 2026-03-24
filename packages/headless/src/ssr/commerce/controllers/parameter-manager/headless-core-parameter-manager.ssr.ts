@@ -27,12 +27,12 @@ import type {
 import {createControllerWithKind, Kind} from '../../types/kind.js';
 
 export type {
+  CommerceSearchParameters,
   ParameterManager,
   ParameterManagerProps,
   ParameterManagerState,
   Parameters,
   ProductListingParameters,
-  CommerceSearchParameters,
 };
 
 /**
