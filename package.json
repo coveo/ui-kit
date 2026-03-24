@@ -32,7 +32,7 @@
     "@biomejs/biome": "2.4.7",
     "@coveo/ci": "workspace:*",
     "@cspell/dict-fr-fr": "2.3.2",
-    "@tsconfig/node20": "20.1.8",
+    "@tsconfig/node22": "22.0.0",
     "@types/jest": "catalog:",
     "@types/node": "catalog:",
     "concurrently": "9.2.1",
