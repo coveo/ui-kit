@@ -298,11 +298,19 @@ export const streamAnswer = createAsyncThunk<
           JSON.parse(payload) as GeneratedAnswerEndOfStreamPayload
         ).answerGenerated;
         const cannotAnswer = queryExecuted.length !== 0 && !isAnswerGenerated;
-
+        const answerTextIsEmpty = isAnswerGenerated
+          ? !getState().generatedAnswer.answer?.length
+          : undefined;
         dispatch(setCannotAnswer(cannotAnswer));
         dispatch(setIsStreaming(false));
         dispatch(setIsAnswerGenerated(isAnswerGenerated));
-        dispatch(logGeneratedAnswerStreamEnd(isAnswerGenerated));
+        dispatch(
+          logGeneratedAnswerStreamEnd(
+            isAnswerGenerated,
+            undefined,
+            answerTextIsEmpty
+          )
+        );
         dispatch(logGeneratedAnswerResponseLinked());
         break;
       }

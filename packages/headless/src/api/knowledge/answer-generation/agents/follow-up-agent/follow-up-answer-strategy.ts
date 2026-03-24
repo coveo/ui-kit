@@ -26,10 +26,12 @@ export const createFollowUpStrategy = (
   dispatch: ThunkDispatch<unknown, unknown, UnknownAction>
 ): AgentSubscriber => {
   let runId = '';
+  let answerHasText = false;
 
   return {
     onRunStartedEvent: ({event}) => {
       runId = event.runId;
+      answerHasText = false;
       dispatch(setActiveFollowUpAnswerId(runId));
       dispatch(setFollowUpIsLoading({answerId: runId, isLoading: false}));
       dispatch(setFollowUpIsStreaming({answerId: runId, isStreaming: true}));
@@ -53,6 +55,9 @@ export const createFollowUpStrategy = (
       );
     },
     onTextMessageContentEvent: ({event}) => {
+      if (event.delta.length > 0) {
+        answerHasText = true;
+      }
       dispatch(
         followUpMessageChunkReceived({
           textDelta: event.delta,
@@ -98,15 +103,19 @@ export const createFollowUpStrategy = (
     },
     onRunFinishedEvent: ({event}) => {
       const answerGenerated = event.result?.completionReason === 'ANSWERED';
+      const answerTextIsEmpty = answerGenerated ? !answerHasText : undefined;
       dispatch(
         followUpCompleted({
           cannotAnswer: !answerGenerated,
           answerId: runId,
         })
       );
-      dispatch(logGeneratedAnswerStreamEnd(answerGenerated, runId));
+      dispatch(
+        logGeneratedAnswerStreamEnd(answerGenerated, runId, answerTextIsEmpty)
+      );
       dispatch(logGeneratedAnswerResponseLinked(runId));
       runId = '';
+      answerHasText = false;
     },
   };
 };

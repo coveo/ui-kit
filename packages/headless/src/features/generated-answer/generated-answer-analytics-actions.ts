@@ -250,24 +250,21 @@ export const logGeneratedAnswerFeedback = (
 //TODO: SFINT-5435
 export const logGeneratedAnswerStreamEnd = (
   answerGenerated: boolean,
-  answerId?: string
+  answerId?: string,
+  answerTextIsEmpty?: boolean
 ): CustomAction =>
   makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/streamEnd',
     __legacy__getBuilder: (client, state) => {
       const generativeQuestionAnsweringId =
         answerId ?? generativeQuestionAnsweringIdSelector(state);
-      const answerTextIsEmpty = answerGenerated
-        ? !state.generatedAnswer?.answer ||
-          !state.generatedAnswer?.answer.length
-        : undefined;
       if (!generativeQuestionAnsweringId) {
         return null;
       }
       return client.makeGeneratedAnswerStreamEnd({
         generativeQuestionAnsweringId,
         answerGenerated,
-        answerTextIsEmpty,
+        answerTextIsEmpty: answerGenerated ? answerTextIsEmpty : undefined,
       });
     },
     analyticsType: 'Rga.AnswerReceived',

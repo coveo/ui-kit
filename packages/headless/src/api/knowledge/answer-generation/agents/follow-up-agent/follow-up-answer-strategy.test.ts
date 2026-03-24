@@ -220,7 +220,7 @@ describe('createFollowUpStrategy', () => {
       1,
       followUpCompleted({answerId: runId, cannotAnswer: false})
     );
-    expect(streamEndSpy).toHaveBeenCalledWith(true, runId);
+    expect(streamEndSpy).toHaveBeenCalledWith(true, runId, true);
     expect(responseLinkedSpy).toHaveBeenCalledWith(runId);
     expect(dispatch).toHaveBeenNthCalledWith(2, streamEndAction);
     expect(dispatch).toHaveBeenNthCalledWith(3, responseLinkedAction);

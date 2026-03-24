@@ -370,11 +370,11 @@ describe('generated answer analytics actions', () => {
 
     [false, true].map((answerGenerated) => {
       it(`should log #logGeneratedAnswerStreamEnd with ${answerGenerated ? 'generated' : 'not generated'} and 'empty' answer`, async () => {
-        await logGeneratedAnswerStreamEnd(answerGenerated)()(
-          engine.dispatch,
-          () => engine.state,
-          {} as ThunkExtraArguments
-        );
+        await logGeneratedAnswerStreamEnd(
+          answerGenerated,
+          undefined,
+          answerGenerated ? true : undefined
+        )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
         const mockToUse = mockMakeGeneratedAnswerStreamEnd;
 
@@ -382,7 +382,7 @@ describe('generated answer analytics actions', () => {
         expect(mockToUse).toHaveBeenCalledWith({
           generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
           answerGenerated,
-          answerTextIsEmpty: answerGenerated || undefined,
+          answerTextIsEmpty: answerGenerated ? true : undefined,
         });
         expect(mockLogFunction).toHaveBeenCalledTimes(1);
       });
@@ -405,7 +405,7 @@ describe('generated answer analytics actions', () => {
           },
         })
       );
-      await logGeneratedAnswerStreamEnd(true)()(
+      await logGeneratedAnswerStreamEnd(true, undefined, false)()(
         newEngine.dispatch,
         () => newEngine.state,
         {} as ThunkExtraArguments
@@ -423,7 +423,7 @@ describe('generated answer analytics actions', () => {
     });
 
     it('should log #logGeneratedAnswerStreamEnd with a provided answerId', async () => {
-      await logGeneratedAnswerStreamEnd(true, exampleProvidedAnswerId)()(
+      await logGeneratedAnswerStreamEnd(true, exampleProvidedAnswerId, true)()(
         engine.dispatch,
         () => engine.state,
         {} as ThunkExtraArguments

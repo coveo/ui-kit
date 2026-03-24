@@ -30,8 +30,11 @@ import {mapRunErrorCode} from '../../../../../features/generated-answer/sse-gene
 export const createHeadAnswerStrategy = (
   dispatch: ThunkDispatch<unknown, unknown, UnknownAction>
 ): AgentSubscriber => {
+  let answerHasText = false;
+
   return {
     onRunStartedEvent: ({event}) => {
+      answerHasText = false;
       dispatch(setAnswerId(event.runId));
       dispatch(setIsLoading(false));
       dispatch(setIsStreaming(true));
@@ -54,6 +57,9 @@ export const createHeadAnswerStrategy = (
       );
     },
     onTextMessageContentEvent: ({event}) => {
+      if (event.delta.length > 0) {
+        answerHasText = true;
+      }
       dispatch(updateMessage({textDelta: event.delta}));
     },
     onCustomEvent: ({event}) => {
@@ -85,10 +91,17 @@ export const createHeadAnswerStrategy = (
     },
     onRunFinishedEvent: ({event}) => {
       const answerGenerated = event.result?.completionReason === 'ANSWERED';
+      const answerTextIsEmpty = answerGenerated ? !answerHasText : undefined;
       dispatch(setIsAnswerGenerated(answerGenerated));
       dispatch(setCannotAnswer(!answerGenerated));
       dispatch(setIsStreaming(false));
-      dispatch(logGeneratedAnswerStreamEnd(answerGenerated));
+      dispatch(
+        logGeneratedAnswerStreamEnd(
+          answerGenerated,
+          undefined,
+          answerTextIsEmpty
+        )
+      );
       dispatch(logGeneratedAnswerResponseLinked());
     },
   };
