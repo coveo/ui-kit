@@ -247,7 +247,9 @@ export const logGeneratedAnswerFeedback = (
     },
   });
 
-//TODO: SFINT-5435
+// TODO: SFINT-5435
+// TODO: In the next major version, make `answerId` required and remove the fallback
+// to `generativeQuestionAnsweringIdSelector(state)`.
 export const logGeneratedAnswerStreamEnd = (
   answerGenerated: boolean,
   answerId?: string,

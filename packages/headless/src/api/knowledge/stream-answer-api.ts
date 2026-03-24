@@ -130,6 +130,7 @@ export const updateCacheWithEvent = (
       break;
     case 'genqa.endOfStreamType': {
       handleEndOfStream(draft, parsedPayload);
+      const answerId = draft.answerId;
       const answerGenerated = parsedPayload.answerGenerated ?? false;
       const answerTextIsEmpty = answerGenerated
         ? !draft.answer?.length
@@ -137,7 +138,7 @@ export const updateCacheWithEvent = (
       dispatch(
         logGeneratedAnswerStreamEnd(
           answerGenerated,
-          undefined,
+          answerId,
           answerTextIsEmpty
         )
       );
