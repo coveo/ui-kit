@@ -70,7 +70,27 @@ describe('atomic-breadbox', () => {
             label: () => 'Test Numeric Facet',
             element: document.createElement('div'),
             isHidden: () => false,
-            format: vi.fn((value) => value.toString()),
+            format: vi.fn((value) => `${value.start} to ${value.end}`),
+          },
+        };
+        bindings.store.state.categoryFacets = {
+          'test-category-facet': {
+            facetId: 'test-category-facet',
+            label: () => 'Test Category',
+            element: document.createElement('div'),
+            isHidden: () => false,
+          },
+        };
+        bindings.store.state.dateFacets = {
+          'test-date-facet': {
+            facetId: 'test-date-facet',
+            label: () => 'Test Date',
+            element: document.createElement('div'),
+            isHidden: () => false,
+            format: vi.fn(
+              (value) =>
+                `${new Date(value.start).toISOString().split('T')[0]} to ${new Date(value.end).toISOString().split('T')[0]}`
+            ),
           },
         };
         return bindings;
@@ -650,6 +670,169 @@ describe('atomic-breadbox', () => {
       await expect
         .element(clearAll())
         .toHaveAttribute('aria-label', 'Clear All Filters');
+    });
+  });
+
+  describe('breadcrumb display', () => {
+    it('should display the facet label and value in the breadcrumb button', async () => {
+      await renderBreadbox({
+        breadcrumbState: {
+          facetBreadcrumbs: [
+            {
+              facetId: 'test-facet',
+              field: 'test-field',
+              values: [
+                {
+                  value: {
+                    value: 'People',
+                    state: 'selected',
+                    numberOfResults: 1,
+                  },
+                  deselect: vi.fn(),
+                },
+              ],
+            },
+          ],
+        },
+      });
+
+      const breadcrumbButton = page.getByTitle('Test Facet: People');
+      await expect.element(breadcrumbButton).toBeVisible();
+    });
+
+    it('should display category facet breadcrumbs with path values', async () => {
+      await renderBreadbox({
+        breadcrumbState: {
+          categoryFacetBreadcrumbs: [
+            {
+              facetId: 'test-category-facet',
+              field: 'test-category-field',
+              path: [
+                {value: 'Electronics', numberOfResults: 10},
+                {value: 'Laptops', numberOfResults: 5},
+              ],
+              deselect: vi.fn(),
+            },
+          ],
+        },
+      });
+
+      const breadcrumbButton = page.getByTitle(
+        'Test Category: Electronics / Laptops'
+      );
+      await expect.element(breadcrumbButton).toBeVisible();
+    });
+
+    it('should display date facet breadcrumbs with formatted values', async () => {
+      await renderBreadbox({
+        breadcrumbState: {
+          dateFacetBreadcrumbs: [
+            {
+              facetId: 'test-date-facet',
+              field: 'test-date-field',
+              values: [
+                {
+                  value: {
+                    start: '2023-01-01T00:00:00Z',
+                    end: '2023-12-31T23:59:59Z',
+                    endInclusive: true,
+                    state: 'selected',
+                    numberOfResults: 1,
+                  },
+                  deselect: vi.fn(),
+                },
+              ],
+            },
+          ],
+        },
+      });
+
+      const breadcrumbButton = page.getByTitle(
+        'Test Date: 2023-01-01 to 2023-12-31'
+      );
+      await expect.element(breadcrumbButton).toBeVisible();
+    });
+
+    it('should display numeric facet breadcrumbs with formatted values', async () => {
+      await renderBreadbox({
+        breadcrumbState: {
+          numericFacetBreadcrumbs: [
+            {
+              facetId: 'test-numeric-facet',
+              field: 'test-numeric-field',
+              values: [
+                {
+                  value: {
+                    start: 10,
+                    end: 50,
+                    endInclusive: true,
+                    state: 'selected',
+                    numberOfResults: 5,
+                  },
+                  deselect: vi.fn(),
+                },
+              ],
+            },
+          ],
+        },
+      });
+
+      const breadcrumbButton = page.getByTitle('Test Numeric Facet: 10 to 50');
+      await expect.element(breadcrumbButton).toBeVisible();
+    });
+
+    it('should call deselect when a category breadcrumb is clicked', async () => {
+      const mockedDeselect = vi.fn();
+      await renderBreadbox({
+        breadcrumbState: {
+          categoryFacetBreadcrumbs: [
+            {
+              facetId: 'test-category-facet',
+              field: 'test-category-field',
+              path: [{value: 'Electronics', numberOfResults: 10}],
+              deselect: mockedDeselect,
+            },
+          ],
+        },
+      });
+
+      const breadcrumbButton = page.getByTitle('Test Category: Electronics');
+      await userEvent.click(breadcrumbButton);
+
+      expect(mockedDeselect).toHaveBeenCalled();
+    });
+
+    it('should call deselect when a date breadcrumb is clicked', async () => {
+      const mockedDeselect = vi.fn();
+      await renderBreadbox({
+        breadcrumbState: {
+          dateFacetBreadcrumbs: [
+            {
+              facetId: 'test-date-facet',
+              field: 'test-date-field',
+              values: [
+                {
+                  value: {
+                    start: '2023-01-01T00:00:00Z',
+                    end: '2023-12-31T23:59:59Z',
+                    endInclusive: true,
+                    state: 'selected',
+                    numberOfResults: 1,
+                  },
+                  deselect: mockedDeselect,
+                },
+              ],
+            },
+          ],
+        },
+      });
+
+      const breadcrumbButton = page.getByTitle(
+        'Test Date: 2023-01-01 to 2023-12-31'
+      );
+      await userEvent.click(breadcrumbButton);
+
+      expect(mockedDeselect).toHaveBeenCalled();
     });
   });
 

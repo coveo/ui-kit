@@ -404,6 +404,145 @@ describe('atomic-commerce-breadbox', () => {
     await expect.element(dateRange()).toBeVisible();
   });
 
+  it('should display the facet label with the value on the breadcrumb button', async () => {
+    const {showMore, regular} = await renderBreadbox();
+    await userEvent.click(showMore()!);
+
+    const breadcrumbButton = regular().element();
+    expect(breadcrumbButton?.getAttribute('title')).toBe('Regular: Gucci');
+  });
+
+  it('should display the hierarchical facet label with path on the breadcrumb button', async () => {
+    const {showMore, hierarchical} = await renderBreadbox();
+    await userEvent.click(showMore()!);
+
+    const breadcrumbButton = hierarchical().element();
+    expect(breadcrumbButton?.getAttribute('title')).toBe(
+      'Hierarchical: path1 / path2 / path3 / path4'
+    );
+  });
+
+  it('should call deselect when a hierarchical breadcrumb is clicked', async () => {
+    const mockedDeselect = vi.fn();
+    const {showMore} = await renderBreadbox({
+      state: {
+        facetBreadcrumbs: [
+          {
+            facetId: 'hierarchical',
+            facetDisplayName: 'Hierarchical',
+            field: 'hierarchical',
+            type: 'hierarchical',
+            values: [
+              {
+                value: {
+                  value: 'Clothing',
+                  path: ['Clothing'],
+                  numberOfResults: 1,
+                  state: 'selected',
+                },
+                deselect: mockedDeselect,
+              },
+            ],
+          },
+        ],
+      },
+    });
+
+    const breadcrumbButton = page.getByTitle('Hierarchical: Clothing');
+
+    try {
+      await userEvent.click(showMore()!);
+    } catch {
+      // Show more may not be visible if viewport is wide enough
+    }
+
+    await userEvent.click(breadcrumbButton!);
+
+    expect(mockedDeselect).toHaveBeenCalled();
+  });
+
+  it('should call deselect when a date range breadcrumb is clicked', async () => {
+    const mockedDeselect = vi.fn();
+    const {showMore} = await renderBreadbox({
+      state: {
+        facetBreadcrumbs: [
+          {
+            facetId: 'dateRange',
+            facetDisplayName: 'Date Range',
+            field: 'dateRange',
+            type: 'dateRange',
+            values: [
+              {
+                value: {
+                  start: '2023-01-01T00:00:00Z',
+                  end: '2023-12-31T23:59:59Z',
+                  numberOfResults: 1,
+                  state: 'selected',
+                  endInclusive: true,
+                },
+                deselect: mockedDeselect,
+              },
+            ],
+          },
+        ],
+      },
+    });
+
+    const breadcrumbButton = page.getByTitle(
+      'Date Range: 2023-01-01 to 2023-12-31'
+    );
+
+    try {
+      await userEvent.click(showMore()!);
+    } catch {
+      // Show more may not be visible if viewport is wide enough
+    }
+
+    await userEvent.click(breadcrumbButton!);
+
+    expect(mockedDeselect).toHaveBeenCalled();
+  });
+
+  it('should call deselect when a numerical range breadcrumb is clicked', async () => {
+    const mockedDeselect = vi.fn();
+    const {showMore} = await renderBreadbox({
+      state: {
+        facetBreadcrumbs: [
+          {
+            facetId: 'numericalRange',
+            facetDisplayName: 'Numerical Range',
+            field: 'numericalRange',
+            type: 'numericalRange',
+            values: [
+              {
+                value: {
+                  start: '10',
+                  end: '50',
+                  numberOfResults: 1,
+                  state: 'selected',
+                  endInclusive: true,
+                },
+                deselect: mockedDeselect,
+              },
+            ],
+          },
+        ],
+      },
+    });
+
+    const breadcrumbButton = page.getByTitle('Numerical Range: 10 to 50');
+
+    try {
+      await userEvent.click(showMore()!);
+    } catch {
+      // Show more may not be visible if viewport is wide enough
+    }
+
+    await userEvent.click(breadcrumbButton!);
+
+    expect(mockedDeselect).toHaveBeenCalled();
+  });
+
   it('should render every part', async () => {
     const {element, parts} = await renderBreadbox();
 
