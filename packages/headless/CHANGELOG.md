@@ -1,3 +1,9 @@
+## <small>3.47.2 (2026-03-25)</small>
+
+* fix(deps): update all dependencies j:kit-282 (major) (#6195) ([a5df20c](https://github.com/coveo/ui-kit/commits/a5df20c)), closes [#6195](https://github.com/coveo/ui-kit/issues/6195)
+
+
+
 ## <small>3.47.1 (2026-03-25)</small>
 
 * fix(atomic): Ensure first tab is used when no active tab exists (#7252) ([c960e4b](https://github.com/coveo/ui-kit/commits/c960e4b)), closes [#7252](https://github.com/coveo/ui-kit/issues/7252)

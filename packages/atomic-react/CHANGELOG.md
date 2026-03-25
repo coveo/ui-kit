@@ -1,3 +1,9 @@
+## <small>3.11.7 (2026-03-25)</small>
+
+* fix(deps): update all dependencies j:kit-282 (major) (#6195) ([a5df20c](https://github.com/coveo/ui-kit/commits/a5df20c)), closes [#6195](https://github.com/coveo/ui-kit/issues/6195)
+
+
+
 ## <small>3.11.6 (2026-03-25)</small>
 
 * ci: migrate npm publishing to OIDC trusted publishers (#7198) ([c97eff5](https://github.com/coveo/ui-kit/commits/c97eff5)), closes [#7198](https://github.com/coveo/ui-kit/issues/7198)

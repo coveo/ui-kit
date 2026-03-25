@@ -1,3 +1,10 @@
+## <small>3.53.2 (2026-03-25)</small>
+
+* chore(deps): update tailwind to v4.1.18 j:kit-282 (#6214) ([17e0a51](https://github.com/coveo/ui-kit/commits/17e0a51)), closes [#6214](https://github.com/coveo/ui-kit/issues/6214)
+* fix(deps): update all dependencies j:kit-282 (major) (#6195) ([a5df20c](https://github.com/coveo/ui-kit/commits/a5df20c)), closes [#6195](https://github.com/coveo/ui-kit/issues/6195)
+
+
+
 ## <small>3.53.1 (2026-03-25)</small>
 
 * fix: use clickUri as citation url (#7265) ([a87ebb6](https://github.com/coveo/ui-kit/commits/a87ebb6)), closes [#7265](https://github.com/coveo/ui-kit/issues/7265)
