@@ -9,7 +9,7 @@
   "packageRules": [
     {
       // Completely disable auto merge for major versions of any dependency
-      "matchUpdateType": ["major"],
+      "matchUpdateTypes": ["major"],
       "automerge": false
     }
   ]
