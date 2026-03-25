@@ -423,8 +423,9 @@ describe('atomic-commerce-breadbox', () => {
   });
 
   it('should call deselect when a hierarchical breadcrumb is clicked', async () => {
+    await page.viewport(1200, 100);
     const mockedDeselect = vi.fn();
-    const {showMore} = await renderBreadbox({
+    await renderBreadbox({
       state: {
         facetBreadcrumbs: [
           {
@@ -449,21 +450,15 @@ describe('atomic-commerce-breadbox', () => {
     });
 
     const breadcrumbButton = page.getByTitle('Hierarchical: Clothing');
-
-    try {
-      await userEvent.click(showMore()!);
-    } catch {
-      // Show more may not be visible if viewport is wide enough
-    }
-
     await userEvent.click(breadcrumbButton!);
 
     expect(mockedDeselect).toHaveBeenCalled();
   });
 
   it('should call deselect when a date range breadcrumb is clicked', async () => {
+    await page.viewport(1200, 100);
     const mockedDeselect = vi.fn();
-    const {showMore} = await renderBreadbox({
+    await renderBreadbox({
       state: {
         facetBreadcrumbs: [
           {
@@ -491,21 +486,15 @@ describe('atomic-commerce-breadbox', () => {
     const breadcrumbButton = page.getByTitle(
       'Date Range: 2023-01-01 to 2023-12-31'
     );
-
-    try {
-      await userEvent.click(showMore()!);
-    } catch {
-      // Show more may not be visible if viewport is wide enough
-    }
-
     await userEvent.click(breadcrumbButton!);
 
     expect(mockedDeselect).toHaveBeenCalled();
   });
 
   it('should call deselect when a numerical range breadcrumb is clicked', async () => {
+    await page.viewport(1200, 100);
     const mockedDeselect = vi.fn();
-    const {showMore} = await renderBreadbox({
+    await renderBreadbox({
       state: {
         facetBreadcrumbs: [
           {
@@ -531,13 +520,6 @@ describe('atomic-commerce-breadbox', () => {
     });
 
     const breadcrumbButton = page.getByTitle('Numerical Range: 10 to 50');
-
-    try {
-      await userEvent.click(showMore()!);
-    } catch {
-      // Show more may not be visible if viewport is wide enough
-    }
-
     await userEvent.click(breadcrumbButton!);
 
     expect(mockedDeselect).toHaveBeenCalled();
