@@ -75,7 +75,6 @@ jobs:
   npm-prod:
     if: ${{ !cancelled() && needs.release.result == 'success' }}
     needs: release
-    environment: 'NPM Production'
     runs-on: 'ubuntu-latest'
     permissions:
       contents: read
