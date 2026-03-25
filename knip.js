@@ -13,25 +13,18 @@ export default {
     'samples/headless/rga-react/src/components/CitationsList.tsx',
   ],
 
-  // Enable back the plugin once https://github.com/webpro-nl/knip/issues/1154 is resolved.
-  biome: false,
   workspaces: {
     '.': {
       entry: ['.agents/skills/**/scripts/*.mjs', 'scripts/**/*.{js,mjs}'],
-      ignoreBinaries: ['ts-node', 'dev'],
+      ignoreBinaries: ['ts-node'],
       ignoreDependencies: ['@playwright/mcp', 'handlebars'],
     },
     'packages/headless': {
       entry: ['src/*index.ts', 'ponyfills/*.js'],
-      ignoreDependencies: ['navigator.sendbeacon', 'reselect', 'node-fetch'],
+      ignoreDependencies: ['reselect', 'node-fetch', 'jsdom'],
     },
     'packages/atomic-hosted-page': {
-      entry: [
-        'src/atomic-hosted-page.esm.ts',
-        'loader/index.js',
-        'dev/vite.config.ts',
-      ],
-      ignore: ['cdn/**'],
+      entry: ['src/atomic-hosted-page.esm.ts', 'dev/vite.config.ts'],
       ignoreDependencies: ['local-web-server'],
     },
     'packages/atomic-angular': {
@@ -40,7 +33,6 @@ export default {
         // Can be removed once we bump our package to use more recent Angular versions that support Vite 7+.
         'vite',
       ],
-      ignore: ['scripts/bump.mjs'],
     },
     'packages/atomic-angular/projects/atomic-angular': {
       entry: ['src/public-api.ts'],
@@ -50,7 +42,6 @@ export default {
     },
     'packages/atomic-react': {
       entry: ['src/*index.ts'],
-      ignore: ['src/components/stencil-generated/**/*.{ts,tsx}'],
       ignoreUnresolved: [/\.{1,2}\/([\w.]*?\/)?components\.js/],
       ignoreDependencies: [
         '@lit/react', // Only used in generated files.
@@ -63,7 +54,11 @@ export default {
       entry: ['src/auth.ts'],
     },
     'packages/documentation': {
-      entry: ['**/assets/**/*.js', '**/lib/*.ts'],
+      entry: [
+        '**/assets/**/*.js',
+        '**/lib/*.ts',
+        '**/*.css', //TODO: Find a better solution
+      ],
     },
     'samples/headless/commerce-react': {
       // Can be removed once the deprecated controller is removed from headless.
@@ -71,11 +66,14 @@ export default {
       ignoreDependencies: ['jsdom'],
     },
     'samples/headless-ssr/commerce-express': {
-      entry: ['src/server.ts', 'src/client.ts'],
+      entry: ['src/server.ts'],
     },
     'samples/headless/search-react': {
-      entry: ['server/server.tsx', 'src/index.tsx'],
+      entry: ['server/server.tsx'],
       ignoreDependencies: ['jsdom'],
+      ignore: [
+        'src/pages/AtomicReactPage.css', // TODO: Reassess if we can remove the file.
+      ],
     },
     'utils/ci': {
       ignoreDependencies: ['@types/conventional-changelog-writer'],
@@ -87,7 +85,7 @@ export default {
     // Projects to enable bunch by bunch.
     'packages/atomic': {
       ignore: [
-        'src/components/*/*/*.ts',
+        'src/**/*.css', // TODO: Find a better solution
         '**/*.e2e.ts',
         '**/e2e/*',
         'vitest-utils/**/*',
@@ -101,8 +99,19 @@ export default {
         'custom-elements-manifest.config.mjs',
         'fake-loader/**/*',
       ],
-      ignoreDependencies: ['tailwindcss', 'local-web-server'],
-      entry: ['src/index.ts', 'src/loader.ts', 'src/components/index.ts'],
+      ignoreUnresolved: [
+        /.*?\/index\.js/,
+        /.*?\/lazy-index\.js/,
+        /.*?\/custom-element-tags.js/,
+      ],
+      ignoreDependencies: ['local-web-server', 'natural-orderby', 'wait-on'],
+      entry: [
+        'src/components/*/*/*.ts',
+        'src/index.ts',
+        'src/loader.ts',
+        'src/components/index.ts',
+        'src/cdn.ts',
+      ],
     },
     'packages/atomic-legacy': {
       ignore: ['**/*'],
