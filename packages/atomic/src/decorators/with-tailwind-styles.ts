@@ -54,9 +54,7 @@ export const withTailwindStyles = <
       injectTailwindProperties(this);
     }
     static get styles(): CSSResultGroup {
-      const baseStyles: Array<CSSStyleSheet | CSSResult> = [
-        unsafeCSS(styles),
-      ];
+      const baseStyles: Array<CSSStyleSheet | CSSResult> = [unsafeCSS(styles)];
 
       const customStyles = Base.styles;
 
