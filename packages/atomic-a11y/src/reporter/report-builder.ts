@@ -19,6 +19,9 @@ export function buildA11yReport(
 ): A11yReport {
   const components = buildComponents(componentResults);
   const criteria = buildCriteria(componentResults);
+  const hasInteractiveData = [...componentResults.values()].some(
+    (c) => c.interactive !== undefined
+  );
 
   const axeCoreVersion =
     packageMetadata.devDependencies?.['axe-core'] ??
@@ -45,6 +48,7 @@ export function buildA11yReport(
       evaluationMethods: [
         `axe-core ${axeCoreVersion}`,
         'Storybook addon-a11y',
+        ...(hasInteractiveData ? ['Storybook interactive play() tests'] : []),
         'Manual audit',
       ],
       axeCoreVersion,
@@ -76,6 +80,14 @@ function buildComponents(
           ),
           incompleteDetails: component.automated.incompleteDetails,
         },
+        interactive: component.interactive
+          ? {
+              criteriaCovered: [...component.interactive.criteriaCovered].sort(
+                compareByNumericId
+              ),
+              testCount: component.interactive.testCount,
+            }
+          : undefined,
       };
     })
     .sort((first, second) => compareByName(first.name, second.name));
@@ -85,6 +97,7 @@ function buildCriteria(
   componentResults: Map<string, ComponentAccumulator>
 ): A11yCriterionReport[] {
   const criteriaToComponents = new Map<string, Set<string>>();
+  const interactiveCriteriaIds = new Set<string>();
 
   for (const component of componentResults.values()) {
     for (const criterion of component.automated.criteriaCovered) {
@@ -92,6 +105,16 @@ function buildCriteria(
         criteriaToComponents.get(criterion) ?? new Set<string>();
       components.add(component.name);
       criteriaToComponents.set(criterion, components);
+    }
+
+    if (component.interactive) {
+      for (const criterion of component.interactive.criteriaCovered) {
+        const components =
+          criteriaToComponents.get(criterion) ?? new Set<string>();
+        components.add(component.name);
+        criteriaToComponents.set(criterion, components);
+        interactiveCriteriaIds.add(criterion);
+      }
     }
   }
 
@@ -106,6 +129,7 @@ function buildCriteria(
         wcagVersion: metadata.wcagVersion,
         conformance: 'notEvaluated',
         automatedCoverage: true,
+        interactiveCoverage: interactiveCriteriaIds.has(criterionId),
         manualVerified: false,
         remarks: '',
         affectedComponents: [...coveredComponents].sort(compareByName),

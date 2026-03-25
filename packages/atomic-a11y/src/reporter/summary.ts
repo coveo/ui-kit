@@ -41,6 +41,10 @@ export function createSummary(
       criteria.length,
       totalCriteria
     ),
+    interactiveCoverage: getAutomationCoveragePercentage(
+      criteria.filter((c) => c.interactiveCoverage).length,
+      totalCriteria
+    ),
     manualCoverage: '0%',
   };
 }

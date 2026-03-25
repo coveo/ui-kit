@@ -24,8 +24,10 @@ import {
 import {buildA11yReport} from './report-builder.js';
 import {
   type ComponentAccumulator,
+  isInteractiveReport,
   type PackageMetadata,
   readPackageMetadata,
+  type StorybookInteractiveReport,
   type StorybookReport,
   type StorybookTaskMeta,
 } from './reporter-utils.js';
@@ -131,8 +133,12 @@ export class VitestA11yReporter implements Reporter {
         a11yReport && isAxeResults(a11yReport.result)
           ? a11yReport.result
           : null;
+      const interactiveReport =
+        reports.find((r): r is StorybookInteractiveReport =>
+          isInteractiveReport(r)
+        ) ?? null;
 
-      if (!axeResults) {
+      if (!axeResults && !interactiveReport) {
         return;
       }
 
@@ -169,19 +175,34 @@ export class VitestA11yReporter implements Reporter {
         'incomplete',
         'inapplicable',
       ] as const;
-      for (const bucket of buckets) {
-        component.automated[bucket] += axeResults[bucket].length;
-        this.collectCriteria(component, axeResults[bucket]);
+      if (axeResults) {
+        for (const bucket of buckets) {
+          component.automated[bucket] += axeResults[bucket].length;
+          this.collectCriteria(component, axeResults[bucket]);
+        }
+
+        for (const incompleteRule of axeResults.incomplete) {
+          component.automated.incompleteDetails.push({
+            ruleId: incompleteRule.id,
+            impact: incompleteRule.impact ?? 'unknown',
+            wcagCriteria: getCriteriaForRule(incompleteRule),
+            nodes: incompleteRule.nodes.length,
+            message: getIncompleteMessage(incompleteRule),
+          });
+        }
       }
 
-      for (const incompleteRule of axeResults.incomplete) {
-        component.automated.incompleteDetails.push({
-          ruleId: incompleteRule.id,
-          impact: incompleteRule.impact ?? 'unknown',
-          wcagCriteria: getCriteriaForRule(incompleteRule),
-          nodes: incompleteRule.nodes.length,
-          message: getIncompleteMessage(incompleteRule),
-        });
+      if (interactiveReport) {
+        if (!component.interactive) {
+          component.interactive = {
+            criteriaCovered: new Set<string>(),
+            testCount: 0,
+          };
+        }
+        for (const criterion of interactiveReport.result.criteriaCovered) {
+          component.interactive.criteriaCovered.add(criterion);
+        }
+        component.interactive.testCount++;
       }
     } catch (error) {
       this.warn('Unable to process Storybook a11y test result.', error);
