@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic",
   "type": "module",
-  "version": "3.53.0",
+  "version": "3.53.1",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -82,6 +82,8 @@
   },
   "dependencies": {
     "@coveo/atomic-legacy": "workspace:*",
+    "@coveo/bueno": "workspace:*",
+    "@coveo/headless": "workspace:*",
     "@coveo/relay-event-types": "catalog:",
     "@lit/context": "1.1.6",
     "@open-wc/lit-helpers": "0.7.0",
@@ -94,7 +96,7 @@
     "escape-html": "1.0.3",
     "i18next": "25.7.3",
     "i18next-http-backend": "3.0.2",
-    "lit": "3.3.1",
+    "lit": "3.3.2",
     "marked": "12.0.2"
   },
   "devDependencies": {
@@ -111,11 +113,10 @@
     "@tailwindcss/postcss": "4.2.1",
     "@tailwindcss/vite": "4.2.1",
     "@types/escape-html": "1.0.4",
-    "@types/jest": "catalog:",
     "@types/node": "catalog:",
     "@vitest/browser-playwright": "catalog:",
     "@wc-toolkit/storybook-helpers": "10.0.0",
-    "chromatic": "13.3.4",
+    "chromatic": "15.3.0",
     "handlebars": "4.7.8",
     "lit-html": "3.3.1",
     "local-web-server": "catalog:",
@@ -137,7 +138,7 @@
     "typescript": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:",
-    "wait-on": "8.0.5"
+    "wait-on": "9.0.4"
   },
   "peerDependencies": {
     "@coveo/bueno": "workspace:*",

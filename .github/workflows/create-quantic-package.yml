@@ -26,7 +26,7 @@ jobs:
           egress-policy: audit
 
       - name: Check Out Repository
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - name: Create cache file
         run: |
           mkdir check-SHA
@@ -39,7 +39,7 @@ jobs:
           key: check-SHA-${{ github.sha }}
       - name: Cancel current workflow run if no changes made
         if: steps.check_sha.outputs.cache-hit == 'true'
-        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         with:
           script: |
             github.rest.actions.cancelWorkflowRun({

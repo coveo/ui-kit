@@ -3,7 +3,7 @@
   "sideEffects": false,
   "license": "Apache-2.0",
   "type": "module",
-  "version": "3.11.5",
+  "version": "3.11.6",
   "description": "React specific wrapper for the Atomic component library",
   "repository": {
     "type": "git",
@@ -30,7 +30,7 @@
     "@lit/react": "1.0.8"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "28.0.9",
+    "@rollup/plugin-commonjs": "29.0.2",
     "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "16.0.3",
     "@rollup/plugin-typescript": "12.3.0",
