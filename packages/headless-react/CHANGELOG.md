@@ -1,3 +1,11 @@
+## <small>2.9.6 (2026-03-25)</small>
+
+* chore(deps): update dependency @biomejs/biome to v2.4.7 j:kit-282 (#6193) ([a72f939](https://github.com/coveo/ui-kit/commits/a72f939)), closes [#6193](https://github.com/coveo/ui-kit/issues/6193)
+* ci: migrate npm publishing to OIDC trusted publishers (#7198) ([c97eff5](https://github.com/coveo/ui-kit/commits/c97eff5)), closes [#7198](https://github.com/coveo/ui-kit/issues/7198)
+* Docs/doc 18865 add getting started headless react (#7253) ([c1dc59f](https://github.com/coveo/ui-kit/commits/c1dc59f)), closes [#7253](https://github.com/coveo/ui-kit/issues/7253)
+
+
+
 ## 2.9.0 (2026-01-21)
 
 * feat: add ProductEnrichment Controller in Commerce SSR (#6819) ([850047e](https://github.com/coveo/ui-kit/commits/850047e)), closes [#6819](https://github.com/coveo/ui-kit/issues/6819)
