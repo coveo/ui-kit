@@ -200,7 +200,6 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
         ),
       ],
       plugins: [
-        getBuenoReplacePlugin('@coveo/bueno'),
         umdWrapper({libraryName: globalName}),
         codeReplacerPlugin(
           'src/api/knowledge/answer-slice.ts',
