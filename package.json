@@ -43,7 +43,7 @@
     "esbuild-plugin-umd-wrapper": "3.0.0",
     "husky": "9.1.7",
     "knip": "5.62.0",
-    "lint-staged": "16.1.2",
+    "lint-staged": "16.4.0",
     "playwright": "catalog:",
     "publint": "0.3.18",
     "semver": "7.7.3",
