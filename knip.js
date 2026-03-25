@@ -40,6 +40,7 @@ export default {
         // Can be removed once we bump our package to use more recent Angular versions that support Vite 7+.
         'vite',
       ],
+      ignore: ['scripts/bump.mjs'],
     },
     'packages/atomic-angular/projects/atomic-angular': {
       entry: ['src/public-api.ts'],

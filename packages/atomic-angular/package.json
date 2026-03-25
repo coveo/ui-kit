@@ -7,7 +7,7 @@
     "gen:lit": "node ./scripts/build-lit.mjs",
     "build:bundles": "ng build",
     "build:assets": "node ../../utils/ci/copy-files.mjs ../atomic/dist/assets projects/atomic-angular/dist/assets ../atomic/dist/lang projects/atomic-angular/dist/lang",
-    "release:phase3": "node ./scripts/publish-npm.mjs",
+    "release:phase1": "node ./scripts/bump.mjs",
     "npm:publish": "node ./scripts/publish-npm.mjs"
   },
   "private": true,
