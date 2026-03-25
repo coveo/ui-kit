@@ -18,7 +18,7 @@
       "inputs": ["src/themes/**"]
     },
     "build:storybook": {
-      "dependsOn": ["^build", "build:cem"],
+      "dependsOn": ["^build", "build:cem", "build:locales"],
       "outputs": ["./dist-storybook/**"]
     },
     "chromatic": {
@@ -98,7 +98,7 @@
       "persistent": true
     },
     "dev:storybook": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "build:locales"],
       "cache": false,
       "persistent": true
     },

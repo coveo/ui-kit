@@ -145,7 +145,7 @@ const config: StorybookConfig = {
   staticDirs: [
     {from: './static/assets', to: '/assets'},
     {from: '../src/assets/lang', to: '/assets/lang'},
-    {from: '../src/assets/lang', to: './lang'},
+    {from: '../src/assets/lang', to: '/lang'},
     {from: './public', to: '/'},
   ],
   addons: [
