@@ -8,4 +8,3 @@ export * as InsightComponentMap from '../atomic/components/components/insight/la
 export * as IpxComponentMap from '../atomic/components/components/ipx/lazy-index.js';
 export * as RecommendationsComponentMap from '../atomic/components/components/recommendations/lazy-index.js';
 export * as SearchComponentMap from '../atomic/components/components/search/lazy-index.js';
-export * from './_index.js';

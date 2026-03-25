@@ -1,3 +1,29 @@
+## <small>3.11.6 (2026-03-25)</small>
+
+* ci: migrate npm publishing to OIDC trusted publishers (#7198) ([c97eff5](https://github.com/coveo/ui-kit/commits/c97eff5)), closes [#7198](https://github.com/coveo/ui-kit/issues/7198)
+* fix(deps): update all dependencies j:kit-282 (#6191) ([9ec6cc5](https://github.com/coveo/ui-kit/commits/9ec6cc5)), closes [#6191](https://github.com/coveo/ui-kit/issues/6191)
+
+
+
+## <small>3.11.5 (2026-03-18)</small>
+
+* chore(atomic-angular): turbod atomic-angular build (#7228) ([b803043](https://github.com/coveo/ui-kit/commits/b803043)), closes [#7228](https://github.com/coveo/ui-kit/issues/7228)
+* chore(atomic-react): turbod atomic-react build (#7227) ([700aaa5](https://github.com/coveo/ui-kit/commits/700aaa5)), closes [#7227](https://github.com/coveo/ui-kit/issues/7227)
+
+
+
+## <small>3.11.3 (2026-03-04)</small>
+
+* chore: eject react build from Stencil (#7160) ([76aae89](https://github.com/coveo/ui-kit/commits/76aae89)), closes [#7160](https://github.com/coveo/ui-kit/issues/7160)
+
+
+
+## <small>3.11.2 (2026-02-25)</small>
+
+* chore(atomic): migrate atomic-ipx-recs-list (#7069) ([64be4a6](https://github.com/coveo/ui-kit/commits/64be4a6)), closes [#7069](https://github.com/coveo/ui-kit/issues/7069)
+
+
+
 ## 3.11.0 (2026-02-18)
 
 * feat: optimize tree-shaking for Atomic React (#7063) ([108c8ec](https://github.com/coveo/ui-kit/commits/108c8ec)), closes [#7063](https://github.com/coveo/ui-kit/issues/7063)

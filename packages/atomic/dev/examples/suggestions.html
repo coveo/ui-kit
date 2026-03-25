@@ -28,9 +28,6 @@
 
       function registerCustomSuggestions() {
         class CustomSuggestions extends HTMLElement {
-          constructor() {
-            super();
-          }
 
           suggestions = [];
 
@@ -83,7 +80,7 @@
           organizationId: 'fashioncoveodemocomgzh7iep8',
         });
 
-        const engine = searchInterface.engine;
+        const _engine = searchInterface.engine;
         searchInterface.executeFirstSearch();
       }
 

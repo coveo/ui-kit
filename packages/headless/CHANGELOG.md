@@ -1,3 +1,56 @@
+## <small>3.47.1 (2026-03-25)</small>
+
+* fix(atomic): Ensure first tab is used when no active tab exists (#7252) ([c960e4b](https://github.com/coveo/ui-kit/commits/c960e4b)), closes [#7252](https://github.com/coveo/ui-kit/issues/7252)
+* fix(deps): update all dependencies j:kit-282 (#6191) ([9ec6cc5](https://github.com/coveo/ui-kit/commits/9ec6cc5)), closes [#6191](https://github.com/coveo/ui-kit/issues/6191)
+* fix(deps): update dependency @coveo/relay to v2 j:kit-282 (#7136) ([0e49e7c](https://github.com/coveo/ui-kit/commits/0e49e7c)), closes [#7136](https://github.com/coveo/ui-kit/issues/7136)
+* fix(headless): adapted strategies to latest backend changes (#7237) ([b2b4638](https://github.com/coveo/ui-kit/commits/b2b4638)), closes [#7237](https://github.com/coveo/ui-kit/issues/7237)
+* chore: remove isCDN variable (#7231) ([9d7a65a](https://github.com/coveo/ui-kit/commits/9d7a65a)), closes [#7231](https://github.com/coveo/ui-kit/issues/7231)
+* chore(deps): update dependency @biomejs/biome to v2.4.7 j:kit-282 (#6193) ([a72f939](https://github.com/coveo/ui-kit/commits/a72f939)), closes [#6193](https://github.com/coveo/ui-kit/issues/6193)
+* ci: migrate npm publishing to OIDC trusted publishers (#7198) ([c97eff5](https://github.com/coveo/ui-kit/commits/c97eff5)), closes [#7198](https://github.com/coveo/ui-kit/issues/7198)
+* feat(atomic, headless): added support for new error code turn limit reached from KGAS (#7262) ([ad46f6d](https://github.com/coveo/ui-kit/commits/ad46f6d)), closes [#7262](https://github.com/coveo/ui-kit/issues/7262)
+
+
+
+## 3.47.0 (2026-03-18)
+
+* fix(headless, atomic): log correct answer ID in analytics for citations in follow-up answers. (#7226 ([b112e7f](https://github.com/coveo/ui-kit/commits/b112e7f)), closes [#7226](https://github.com/coveo/ui-kit/issues/7226)
+* fix: compare totalNumberofChildResults to returned results, not 0 (offset by 1) (#7201) ([3332ec6](https://github.com/coveo/ui-kit/commits/3332ec6)), closes [#7201](https://github.com/coveo/ui-kit/issues/7201)
+* feat(headless): add `enableResults` option to SSR commerce controllers COMHUB2-1472 (#7204) ([fd29c19](https://github.com/coveo/ui-kit/commits/fd29c19)), closes [#7204](https://github.com/coveo/ui-kit/issues/7204)
+* feat(headless): start sending stream end and response linked when generating initial answer with age ([567e311](https://github.com/coveo/ui-kit/commits/567e311)), closes [#7214](https://github.com/coveo/ui-kit/issues/7214)
+* chore(headless): cleaned up rtk q implementation for agent api (#7195) ([5c8d8fd](https://github.com/coveo/ui-kit/commits/5c8d8fd)), closes [#7195](https://github.com/coveo/ui-kit/issues/7195)
+
+
+
+## <small>3.46.1 (2026-03-11)</small>
+
+* feat(atomic) creation of agent generation steps component (#7165) ([901ed24](https://github.com/coveo/ui-kit/commits/901ed24)), closes [#7165](https://github.com/coveo/ui-kit/issues/7165)
+* feat(headless) Extend internal Generated Answer With Follow Ups controller analytics methods to supp ([e6c79f2](https://github.com/coveo/ui-kit/commits/e6c79f2)), closes [#7182](https://github.com/coveo/ui-kit/issues/7182)
+* fix(headless): properly reset isEnabled property representing follow up capability (#7209) ([1701efe](https://github.com/coveo/ui-kit/commits/1701efe)), closes [#7209](https://github.com/coveo/ui-kit/issues/7209)
+
+
+
+## 3.46.0 (2026-03-04)
+
+* feat(headless): added logic to support agent steps in the state (#7155) ([fe4a57e](https://github.com/coveo/ui-kit/commits/fe4a57e)), closes [#7155](https://github.com/coveo/ui-kit/issues/7155)
+* feat(headless): integration of ag-ui client to generate head and follow up answers (#7153) ([c8b6d3c](https://github.com/coveo/ui-kit/commits/c8b6d3c)), closes [#7153](https://github.com/coveo/ui-kit/issues/7153)
+
+
+
+## <small>3.45.1 (2026-02-25)</small>
+
+* fix(headless): clear tab-restricted facet values synchronously on tab switch (#7092) ([8adad48](https://github.com/coveo/ui-kit/commits/8adad48)), closes [#7092](https://github.com/coveo/ui-kit/issues/7092)
+* fix(headless): eliminate commerce subpackage imports from search subpackage (#7166) ([19bbdd5](https://github.com/coveo/ui-kit/commits/19bbdd5)), closes [#7166](https://github.com/coveo/ui-kit/issues/7166)
+* fix(headless): renew access token middleware calls renewToken 2x in parallel & skips error handling  ([bbac7dd](https://github.com/coveo/ui-kit/commits/bbac7dd)), closes [#7109](https://github.com/coveo/ui-kit/issues/7109)
+
+
+
+## 3.45.0 (2026-02-18)
+
+* feat(headless): added askFollowUp method to generated answer with follow ups controller (kepler) (#7 ([441238f](https://github.com/coveo/ui-kit/commits/441238f)), closes [#7127](https://github.com/coveo/ui-kit/issues/7127)
+* feat(headless): introduced like, dislike and logCopyToClipboard methods to generated answer with fol ([f3fac36](https://github.com/coveo/ui-kit/commits/f3fac36)), closes [#7120](https://github.com/coveo/ui-kit/issues/7120)
+
+
+
 ## 3.44.0 (2026-02-18)
 
 * feat(headless): answer generation endpoints updated to target the kgas service (#7075) ([9682fef](https://github.com/coveo/ui-kit/commits/9682fef)), closes [#7075](https://github.com/coveo/ui-kit/issues/7075)

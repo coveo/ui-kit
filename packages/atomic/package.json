@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic",
   "type": "module",
-  "version": "3.49.0",
+  "version": "3.53.1",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -9,19 +9,19 @@
     "url": "git+https://github.com/coveo/ui-kit.git",
     "directory": "packages/atomic"
   },
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.js",
+  "main": "dist/cjs/index.cjs.js",
+  "module": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
   "exports": {
     "./loader": {
       "types": "./dist/atomic/loader/index.d.ts",
-      "import": "./dist/atomic/loader/index.js",
-      "require": "./dist/atomic/loader/index.cjs.js"
+      "import": "./dist/esm/loader.js",
+      "require": "./dist/cjs/loader.cjs.js"
     },
     ".": {
       "types": "./dist/types/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs.js"
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.cjs.js"
     },
     "./themes/*": {
       "import": "./dist/atomic/themes/*",
@@ -37,14 +37,15 @@
     },
     "./components": {
       "types": "./dist/atomic/components/index.d.ts",
-      "import": "./dist/atomic/components/index.js"
+      "import": "./dist/atomic/components/components/index.js"
     },
     "./custom-elements-manifest": "./custom-elements.json"
   },
   "sideEffects": [
     "./dist/atomic/components/components/*/*/*.js",
-    "./dist/index.js",
-    "./dist/atomic/loader/index.js"
+    "./dist/esm/index.js",
+    "./dist/esm/loader.js",
+    "./dist/cjs/loader.cjs.js"
   ],
   "files": [
     "custom-elements.json",
@@ -56,7 +57,7 @@
     "clean": "node ../../utils/ci/rm-rf.mjs dist/* dist-storybook/* www/* docs/* playwright-report/*",
     "build:storybook": "storybook build -o dist-storybook --stats-json",
     "build:cem": "cem analyze",
-    "build:stencil-lit": "pnpm exec node --max_old_space_size=6144 ./node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json && node ./scripts/stencil-proxy.mjs && node ./scripts/build.mjs --config=tsconfig.lit.json && esbuild src/autoloader/index.ts --format=esm --outfile=dist/atomic/autoloader/index.esm.js && esbuild src/autoloader/index.ts --format=cjs --outfile=dist/atomic/autoloader/index.cjs.js && node ../../utils/ci/rm-rf.mjs ./dist/atomic/loader/package.json && tsc --project tsconfig.validate-types.json",
+    "build:stencil-lit": "node ./scripts/stencil-proxy.mjs && node ./scripts/build.mjs --config=tsconfig.lit.json && esbuild src/autoloader/index.ts --format=esm --outfile=dist/atomic/autoloader/index.esm.js && esbuild src/autoloader/index.ts --format=cjs --outfile=dist/atomic/autoloader/index.cjs.js",
     "build:cdn": "rollup -c rollup.config.js",
     "build:angular": "npx turbo gen:lit --filter=@coveo/atomic-angular-builder",
     "build:react": "npx turbo gen:lit --filter=@coveo/atomic-react",
@@ -72,57 +73,42 @@
     "test:lit": "vitest run --project=atomic-default",
     "test:watch": "vitest --project=atomic-default",
     "test:storybook": "vitest run --project=storybook",
-    "e2e": "cypress run --browser chrome",
-    "e2e:firefox": "cypress run --browser firefox",
-    "e2e:watch": "cypress open --browser chrome --e2e",
-    "e2e:hsp": "cypress run --config-file cypress-hsp.config.mjs --browser chrome",
-    "e2e:hsp:firefox": "cypress run --config-file cypress-hsp.config.mjs --browser firefox",
-    "e2e:hsp:watch": "cypress open --config-file cypress-hsp.config.mjs",
-    "e2e:snapshots": "cypress run --config-file cypress-screenshots.config.mjs --browser chrome",
-    "e2e:snapshots:watch": "cypress open --config-file cypress-screenshots.config.mjs --browser chrome",
-    "e2e:insight": "cypress run --config-file cypress-insight-panel.config.mjs --browser chrome",
-    "e2e:insight:watch": "cypress open --config-file cypress-insight-panel.config.mjs --browser chrome",
     "generate-component": "node ./scripts/generate-component.mjs",
-    "release:phase3": "pnpm --filter @coveo/ci npm-publish",
     "release:phase1": "pnpm --filter @coveo/ci bump",
-    "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod",
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
     "chromatic": "chromatic -d=dist-storybook",
     "validate:light-dom-styles": "node ./scripts/check-light-dom-host-selectors.mjs",
-    "validate:no-new-light-dom": "node ./scripts/check-no-new-light-dom-components.mjs"
+    "validate:no-new-light-dom": "node ./scripts/check-no-new-light-dom-components.mjs",
+    "npm:publish": "pnpm --filter @coveo/ci npm-publish"
   },
   "dependencies": {
+    "@coveo/atomic-legacy": "workspace:*",
     "@coveo/bueno": "workspace:*",
     "@coveo/headless": "workspace:*",
     "@coveo/relay-event-types": "catalog:",
     "@lit/context": "1.1.6",
     "@open-wc/lit-helpers": "0.7.0",
     "@popperjs/core": "2.11.8",
-    "@salesforce-ux/design-system": "2.27.2",
+    "@salesforce-ux/design-system": "2.28.1",
     "@stencil/core": "catalog:",
-    "cssnano": "7.1.1",
+    "cssnano": "7.1.2",
     "dayjs": "catalog:",
-    "dompurify": "3.2.6",
+    "dompurify": "3.3.1",
     "encoding": "^0.1.13",
     "escape-html": "1.0.3",
-    "i18next": "25.3.2",
+    "i18next": "25.7.3",
     "i18next-http-backend": "3.0.2",
-    "lit": "3.3.1",
-    "marked": "12.0.2",
-    "stencil-inline-svg": "1.1.0",
-    "@coveo/atomic-legacy": "workspace:*"
+    "lit": "3.3.2",
+    "marked": "12.0.2"
   },
   "devDependencies": {
-    "@custom-elements-manifest/analyzer": "0.10.4",
-    "@mswjs/source": "0.5.0",
+    "@custom-elements-manifest/analyzer": "0.11.0",
+    "@msw/source": "0.6.0",
     "@playwright/test": "catalog:",
-    "@rollup/plugin-commonjs": "28.0.6",
+    "@rollup/plugin-commonjs": "29.0.2",
     "@rollup/plugin-json": "6.1.0",
-    "@rollup/plugin-node-resolve": "16.0.1",
+    "@rollup/plugin-node-resolve": "16.0.3",
     "@rollup/plugin-replace": "catalog:",
-    "@stencil-community/postcss": "2.2.0",
-    "@stencil/angular-output-target": "0.8.4",
-    "@stencil/react-output-target": "0.5.3",
     "@storybook/addon-a11y": "10.0.8",
     "@storybook/addon-docs": "10.0.8",
     "@storybook/addon-mcp": "0.1.3",
@@ -132,40 +118,33 @@
     "@tailwindcss/postcss": "4.1.18",
     "@tailwindcss/vite": "4.1.18",
     "@types/escape-html": "1.0.4",
-    "@types/jest": "catalog:",
-    "@types/minimatch": "5.1.2",
     "@types/node": "catalog:",
     "@vitest/browser-playwright": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "@wc-toolkit/storybook-helpers": "10.0.0",
-    "axe-core": "4.10.3",
-    "chromatic": "13.3.4",
-    "cypress": "catalog:",
-    "cypress-axe": "1.6.0",
-    "cypress-repeat": "catalog:",
-    "cypress-split": "1.5.0",
+    "axe-core": "4.11.0",
+    "chromatic": "15.3.0",
     "handlebars": "4.7.8",
     "html-loader-jest": "0.2.1",
     "jest": "catalog:",
     "jest-cli": "catalog:",
     "jest-localstorage-mock": "2.4.26",
-    "lit-html": "3.3.1",
+    "lit-html": "3.3.2",
     "local-web-server": "catalog:",
-    "msw": "2.11.4",
+    "msw": "2.12.7",
     "msw-storybook-addon": "2.0.5",
     "natural-orderby": "5.0.0",
     "openapi-types": "12.1.3",
     "playwright": "catalog:",
     "postcss": "8.5.6",
     "postcss-load-config": "6.0.1",
-    "postcss-nested": "7.0.2",
     "prettier": "catalog:",
     "puppeteer": "catalog:",
     "react": "catalog:",
     "remark-gfm": "4.0.1",
-    "rollup": "4.46.2",
+    "rollup": "4.54.0",
     "rollup-plugin-copy": "3.5.0",
-    "shadow-dom-testing-library": "1.12.0",
+    "shadow-dom-testing-library": "1.13.1",
     "storybook": "10.0.8",
     "tailwindcss": "4.1.18",
     "ts-dedent": "2.2.0",
@@ -173,7 +152,7 @@
     "typescript": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:",
-    "wait-on": "8.0.4"
+    "wait-on": "9.0.4"
   },
   "peerDependencies": {
     "@coveo/bueno": "workspace:*",
@@ -193,5 +172,6 @@
     "workerDirectory": [
       ".storybook/public"
     ]
-  }
+  },
+  "customElements": "custom-elements.json"
 }

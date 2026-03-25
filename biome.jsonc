@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.1.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.4.7/schema.json",
   "vcs": {"enabled": true, "clientKind": "git", "useIgnoreFile": true},
   "root": true,
   "plugins": [
@@ -26,6 +26,8 @@
       "!**/packages/atomic-legacy/**/*.tsx", // Exclude tsx files during Lit migration.
       "**/packages/atomic/**/*.stories.tsx", // Reinclude storybook stories.
       "!**/packages/atomic/**/*.d.ts",
+      "!**/packages/atomic/stencil-proxy/**/*",
+      "!**/packages/atomic/src/**/*.css", // Exclude Tailwind CSS 4 files (biome can't parse @theme/@utility syntax).
 
       // atomic-angular excluded files.
       "!**/packages/atomic-angular/**/stencil-generated/**/*",
@@ -40,7 +42,10 @@
       "!**/packages/headless/**/coveo.analytics/**/*",
 
       // atomic-stencil-samples excluded files.
-      "!samples/atomic/search-stencil/**/*.d.ts"
+      "!samples/atomic/search-stencil/**/*.d.ts",
+
+      // Angular template files (biome can't parse Angular template syntax).
+      "!**/samples/headless/rga-angular/**/*.html"
     ]
   },
   "formatter": {
@@ -56,11 +61,16 @@
       "suspicious": {
         // https://developer.mozilla.org/en-US/docs/Web/API/CookieStore Reevaluate in June '26 after 1y of availability.
         // https://coveord.atlassian.net/browse/KIT-4913
-        "noDocumentCookie": "off"
+        "noDocumentCookie": "off",
+        "useIterableCallbackReturn": "off",
+        "noNonNullAssertedOptionalChain": "off"
       },
       "style": {"noNonNullAssertion": "off"},
       "complexity": {"noBannedTypes": "off"},
-      "correctness": {"noUnknownFunction": "off"}
+      "correctness": {
+        "noUnknownFunction": "off",
+        "noUnknownTypeSelector": "off"
+      }
     },
     "includes": ["**"]
   },

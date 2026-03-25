@@ -112,15 +112,14 @@ describe('atomic-result-placeholder', () => {
       {display: 'list'},
       {display: 'grid'},
       {display: 'table'},
-    ])(
-      'should apply display-$display class when display is $display',
-      async ({display}) => {
-        const {resultRoot} = await renderComponent({display});
-        const expectedClass =
-          display === 'list' ? 'display-list' : `display-${display}`;
-        expect(resultRoot?.classList.contains(expectedClass)).toBe(true);
-      }
-    );
+    ])('should apply display-$display class when display is $display', async ({
+      display,
+    }) => {
+      const {resultRoot} = await renderComponent({display});
+      const expectedClass =
+        display === 'list' ? 'display-list' : `display-${display}`;
+      expect(resultRoot?.classList.contains(expectedClass)).toBe(true);
+    });
   });
 
   describe('#density property', () => {
@@ -128,13 +127,12 @@ describe('atomic-result-placeholder', () => {
       {density: 'comfortable'},
       {density: 'normal'},
       {density: 'compact'},
-    ])(
-      'should apply density-$density class when density is $density',
-      async ({density}) => {
-        const {resultRoot} = await renderComponent({density});
-        expect(resultRoot?.classList.contains(`density-${density}`)).toBe(true);
-      }
-    );
+    ])('should apply density-$density class when density is $density', async ({
+      density,
+    }) => {
+      const {resultRoot} = await renderComponent({density});
+      expect(resultRoot?.classList.contains(`density-${density}`)).toBe(true);
+    });
   });
 
   describe('#imageSize property', () => {
@@ -143,12 +141,11 @@ describe('atomic-result-placeholder', () => {
       {imageSize: 'small'},
       {imageSize: 'icon'},
       {imageSize: 'none'},
-    ])(
-      'should apply image-$imageSize class when imageSize is $imageSize',
-      async ({imageSize}) => {
-        const {resultRoot} = await renderComponent({imageSize});
-        expect(resultRoot?.classList.contains(`image-${imageSize}`)).toBe(true);
-      }
-    );
+    ])('should apply image-$imageSize class when imageSize is $imageSize', async ({
+      imageSize,
+    }) => {
+      const {resultRoot} = await renderComponent({imageSize});
+      expect(resultRoot?.classList.contains(`image-${imageSize}`)).toBe(true);
+    });
   });
 });
