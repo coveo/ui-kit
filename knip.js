@@ -86,6 +86,7 @@ export default {
     // Projects to enable bunch by bunch.
     'packages/atomic': {
       ignore: [
+        'src/components/*/*/*.ts',
         '**/*.e2e.ts',
         '**/e2e/*',
         'vitest-utils/**/*',

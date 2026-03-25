@@ -16,7 +16,7 @@ const rsbuild = await rsbuildApi.createRsbuild({
   rsbuildConfig: {
     source: {
       entry: {
-        'atomic.esm.js': './src/cdn.ts',
+        'atomic.esm': './src/cdn.ts',
       },
       tsconfigPath: './tsconfig.lit.json',
       decorators: {version: 'legacy'},
@@ -65,7 +65,7 @@ const rsbuild = await rsbuildApi.createRsbuild({
         config.experiments.outputModule = true;
 
         config.optimization ??= {};
-        config.optimization.sideEffects = false;
+        config.optimization.sideEffects = true;
 
         config.module ??= {};
         config.module.rules ??= [];
