@@ -122,6 +122,7 @@ export const CustomSort: Story = {
 };
 
 export const A11yInteraction: Story = {
+  tags: ['!dev'],
   args: {field: 'objecttype'},
   decorators: [facetDecorator],
   play: async (context) => {

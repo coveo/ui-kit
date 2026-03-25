@@ -106,6 +106,7 @@ export default meta;
 export const Default: Story = {};
 
 export const A11yInteraction: Story = {
+  tags: ['!dev'],
   play: async (context) => {
     await play(context);
     await testDialogA11y(context, {triggerLabel: 'Quick View'});

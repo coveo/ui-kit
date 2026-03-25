@@ -98,6 +98,7 @@ export const Default: Story = {
 };
 
 export const A11yInteraction: Story = {
+  tags: ['!dev'],
   decorators: [
     () => html`
      <atomic-refine-toggle></atomic-refine-toggle>

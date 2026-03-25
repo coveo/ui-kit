@@ -416,6 +416,7 @@ export const WithSelectedChildValueAndMoreAvailable: Story = {
 };
 
 export const A11yInteraction: Story = {
+  tags: ['!dev'],
   decorators: [facetDecorator],
   play: async (context) => {
     await play(context);

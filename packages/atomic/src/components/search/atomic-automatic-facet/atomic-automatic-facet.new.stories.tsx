@@ -58,6 +58,7 @@ export const Default: Story = {
 };
 
 export const A11yInteraction: Story = {
+  tags: ['!dev'],
   play: async (context) => {
     await play(context);
     await testListboxA11y(context, {});

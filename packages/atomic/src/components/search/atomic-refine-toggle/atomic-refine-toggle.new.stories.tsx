@@ -54,6 +54,7 @@ export const Default: Story = {
 };
 
 export const A11yInteraction: Story = {
+  tags: ['!dev'],
   decorators: [
     (story) => html`
       ${story()}
