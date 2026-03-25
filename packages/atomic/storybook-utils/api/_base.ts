@@ -59,6 +59,7 @@ export class EndpointHarness<TResponse extends {}> {
 
   clear() {
     this.nextResponses.length = 0;
+    this.nextResponseInit.length = 0;
   }
 
   getNextResponse(): HttpResponse<DefaultBodyType> {
