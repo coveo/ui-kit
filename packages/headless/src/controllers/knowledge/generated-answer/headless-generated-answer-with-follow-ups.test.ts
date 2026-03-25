@@ -604,12 +604,43 @@ describe('GeneratedAnswerWithFollowUps', () => {
     });
 
     it('does not run the agent when the conversationId is missing', () => {
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.askFollowUp(question);
 
       expect(mockCreateFollowUpAnswer).not.toHaveBeenCalled();
       expect(mockFollowUpAgent.runAgent).not.toHaveBeenCalled();
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        'Missing conversationId when generating a follow-up answer. ' +
+          'The generateFollowUpAnswer action requires an existing conversation.'
+      );
+      consoleWarnSpy.mockRestore();
+    });
+
+    it('does not run the agent when the conversationToken is missing', () => {
+      engine = buildEngineWithGeneratedAnswer({
+        followUpAnswers: {
+          ...getFollowUpAnswersInitialState(),
+          conversationId,
+        },
+      });
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.askFollowUp(question);
+
+      expect(mockCreateFollowUpAnswer).not.toHaveBeenCalled();
+      expect(mockFollowUpAgent.runAgent).not.toHaveBeenCalled();
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        'Missing conversationToken when generating a follow-up answer. ' +
+          'The generateFollowUpAnswer action requires an existing conversation.'
+      );
+      consoleWarnSpy.mockRestore();
     });
 
     it('dispatches activeFollowUpStartFailed and logs when the agent fails to start', async () => {

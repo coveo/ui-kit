@@ -2,6 +2,7 @@ import {createReducer} from '@reduxjs/toolkit';
 import {filterOutDuplicatedCitations} from '../generated-answer/utils/generated-answer-citation-utils.js';
 import {
   activeFollowUpStartFailed,
+  clearFollowUpAnswersConversationToken,
   createFollowUpAnswer,
   dislikeFollowUp,
   followUpCitationsReceived,
@@ -53,6 +54,9 @@ export const followUpAnswersReducer = createReducer(
       })
       .addCase(setFollowUpAnswersConversationToken, (state, {payload}) => {
         state.conversationToken = payload;
+      })
+      .addCase(clearFollowUpAnswersConversationToken, (state) => {
+        state.conversationToken = '';
       })
       .addCase(createFollowUpAnswer, (state, {payload}) => {
         const active = getActiveFollowUp(state);

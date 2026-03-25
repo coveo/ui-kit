@@ -1,6 +1,7 @@
 import {buildMockCitation} from '../../test/mock-citation.js';
 import {
   activeFollowUpStartFailed,
+  clearFollowUpAnswersConversationToken,
   createFollowUpAnswer,
   dislikeFollowUp,
   followUpCitationsReceived,
@@ -82,6 +83,19 @@ describe('follow-up answers slice', () => {
         setFollowUpAnswersConversationToken('new-token')
       );
       expect(finalState.conversationToken).toBe('new-token');
+    });
+  });
+
+  describe('#clearFollowUpAnswersConversationToken', () => {
+    it('clears the conversationToken', () => {
+      state.conversationToken = 'token-123';
+
+      const finalState = followUpAnswersReducer(
+        state,
+        clearFollowUpAnswersConversationToken()
+      );
+
+      expect(finalState.conversationToken).toBe('');
     });
   });
 
