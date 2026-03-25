@@ -445,8 +445,24 @@ function markComponentImportsAsSideEffectful(): Plugin {
           )
         ) {
           const resolution = await this.resolve(id, source, options);
+
+          if (isCDN) {
+            // Drop component imports for CDN builds by resolving to virtual empty module
+            return {
+              id: `\0virtual-empty:${resolution!.id}`,
+              moduleSideEffects: false,
+            };
+          }
+
           return {id: resolution!.id, moduleSideEffects: true};
         }
+      }
+      return null;
+    },
+    load(id) {
+      if (isCDN && id.startsWith('\0virtual-empty:')) {
+        // Return empty exports for stubbed components
+        return 'export default {};';
       }
       return null;
     },

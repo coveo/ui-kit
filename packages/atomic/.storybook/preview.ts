@@ -9,11 +9,12 @@ import {create} from 'storybook/theming';
 import customElements from '../custom-elements.json';
 import {COVEO_PRIMARY, FONT_BASE, FONT_CODE} from './theme';
 
-// Initialize autoloader for CDN builds to register custom elements dynamically
+// For CDN builds, we want to use the "true" lib hosted on our CDN instead of bundling it through
+// This allow us to have a more realistic test environment.
 if (import.meta.env.VITE_IS_CDN === 'true') {
-  // const url = new URL(import.meta.url);
-  // url.pathname = `${url.pathname.split('/storybook/')[0]}/atomic.esm.js`;
-  // import(url.href);
+  const url = new URL(import.meta.url);
+  url.pathname = `${url.pathname.split('/storybook/')[0]}/atomic.esm.js`;
+  import(url.href);
 }
 
 initialize(
