@@ -11,9 +11,9 @@ import {COVEO_PRIMARY, FONT_BASE, FONT_CODE} from './theme';
 
 // Initialize autoloader for CDN builds to register custom elements dynamically
 if (import.meta.env.VITE_IS_CDN === 'true') {
-  const url = new URL(import.meta.url);
-  url.pathname = `${url.pathname.split('/storybook/')[0]}/atomic.esm.js`;
-  import(url.href);
+  // const url = new URL(import.meta.url);
+  // url.pathname = `${url.pathname.split('/storybook/')[0]}/atomic.esm.js`;
+  // import(url.href);
 }
 
 initialize(

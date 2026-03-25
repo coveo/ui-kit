@@ -426,21 +426,23 @@ const prepareStorybookAssets = (): Plugin => {
 
 export default config;
 function markComponentImportsAsSideEffectful(): Plugin {
-  const absolutePathToSrc = resolve(__dirname, '../src');
+  const absolutePathToRoot = resolve(__dirname, '..');
   return {
     name: 'mark-components-as-side-effectful',
     enforce: 'pre',
     async resolveId(id, source, options) {
       if (
-        source?.startsWith(absolutePathToSrc) &&
-        (id.startsWith('.') || id.startsWith(absolutePathToSrc))
+        source?.startsWith(absolutePathToRoot) &&
+        (id.startsWith('.') || id.startsWith(absolutePathToRoot))
       ) {
-        const filePathRelativeToSrc = relative(
-          absolutePathToSrc,
+        const filePathRelativeToRoot = relative(
+          absolutePathToRoot,
           resolve(dirname(source), id)
         );
         if (
-          filePathRelativeToSrc.match(/^components\/\w*\/([\w-]*)\/\1(\.js)?$/)
+          filePathRelativeToRoot.match(
+            /^src\/components\/\w*\/([\w-]*)\/\1(\.js)?$/
+          )
         ) {
           const resolution = await this.resolve(id, source, options);
           return {id: resolution!.id, moduleSideEffects: true};

@@ -28,7 +28,6 @@ const meta: Meta = {
   },
   args,
   argTypes,
-
   play,
 };
 
