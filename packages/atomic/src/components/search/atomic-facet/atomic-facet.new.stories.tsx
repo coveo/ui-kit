@@ -2,6 +2,7 @@ import type {FacetSortCriterion} from '@coveo/headless';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {testListboxA11y} from '@/storybook-utils/a11y/';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -118,4 +119,13 @@ export const CustomSort: Story = {
       ></atomic-facet>`;
     },
   ],
+};
+
+export const A11yInteraction: Story = {
+  args: {field: 'objecttype'},
+  decorators: [facetDecorator],
+  play: async (context) => {
+    await play(context);
+    await testListboxA11y(context, {});
+  },
 };

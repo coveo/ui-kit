@@ -2,6 +2,7 @@
 
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {testNavigationA11y} from '@/storybook-utils/a11y/';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {baseFoldedResponse} from '@/storybook-utils/api/search/search-response';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
@@ -237,4 +238,11 @@ export const WithMoreResultsAvailableAndNoChildren: Story = {
     }));
   },
   play,
+};
+
+export const A11yInteraction: Story = {
+  play: async (context) => {
+    await play(context);
+    await testNavigationA11y(context, {});
+  },
 };

@@ -2,6 +2,7 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
 import {expect, waitFor} from 'storybook/test';
+import {testListboxA11y} from '@/storybook-utils/a11y/';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
@@ -70,5 +71,12 @@ export const Default: Story = {
         }
       );
     });
+  },
+};
+
+export const A11yInteraction: Story = {
+  play: async (context) => {
+    await play(context);
+    await testListboxA11y(context, {});
   },
 };

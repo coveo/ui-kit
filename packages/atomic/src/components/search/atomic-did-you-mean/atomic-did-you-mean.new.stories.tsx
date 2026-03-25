@@ -3,6 +3,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
+import {testLiveRegionA11y} from '@/storybook-utils/a11y/';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -76,5 +77,12 @@ export const WithoutAutomaticQueryCorrection: Story = {
         ],
       },
     }));
+  },
+};
+
+export const A11yInteraction: Story = {
+  play: async (context) => {
+    await play(context);
+    await testLiveRegionA11y(context, {triggerUpdate: async () => {}});
   },
 };

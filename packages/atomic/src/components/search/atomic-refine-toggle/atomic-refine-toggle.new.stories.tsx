@@ -1,6 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
+import {testDisclosureA11y} from '@/storybook-utils/a11y/';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
@@ -50,6 +51,22 @@ export const Default: Story = {
     `,
     decorator,
   ],
+};
+
+export const A11yInteraction: Story = {
+  decorators: [
+    (story) => html`
+      ${story()}
+      <div style="display:none;">
+        <atomic-facet field="author" label="Authors"></atomic-facet>
+      </div>
+    `,
+    decorator,
+  ],
+  play: async (context) => {
+    await play(context);
+    await testDisclosureA11y(context, {triggerLabel: 'Sort & Filter'});
+  },
 };
 
 export const WithAtomicExternals: Story = {

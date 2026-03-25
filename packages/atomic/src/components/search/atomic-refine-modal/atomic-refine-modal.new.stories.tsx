@@ -6,6 +6,7 @@ import type {
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
+import {testDialogA11y} from '@/storybook-utils/a11y/';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -94,4 +95,22 @@ export const Default: Story = {
     decorator,
     commerceFacetWidthDecorator,
   ],
+};
+
+export const A11yInteraction: Story = {
+  decorators: [
+    () => html`
+     <atomic-refine-toggle></atomic-refine-toggle>
+      <div style="display:none;">
+        <atomic-facet field="author" label="Authors"></atomic-facet>
+        <atomic-facet field="language" label="Language"></atomic-facet>
+      </div>
+    `,
+    decorator,
+    commerceFacetWidthDecorator,
+  ],
+  play: async (context) => {
+    await play(context);
+    await testDialogA11y(context, {triggerLabel: 'Sort & Filter'});
+  },
 };

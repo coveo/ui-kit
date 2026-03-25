@@ -1,5 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {testCollapsibleA11y} from '@/storybook-utils/a11y/';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
@@ -182,4 +183,11 @@ export default meta;
 
 export const Default: Story = {
   name: 'atomic-smart-snippet-suggestions',
+};
+
+export const A11yInteraction: Story = {
+  play: async (context) => {
+    await play(context);
+    await testCollapsibleA11y(context, {triggerLabel: 'Show more'});
+  },
 };

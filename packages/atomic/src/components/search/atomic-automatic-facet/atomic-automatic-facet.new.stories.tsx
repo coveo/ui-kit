@@ -4,6 +4,7 @@ import type {
   StoryObj as Story,
 } from '@storybook/web-components-vite';
 import {html} from 'lit';
+import {testListboxA11y} from '@/storybook-utils/a11y/';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -53,5 +54,12 @@ export const Default: Story = {
         ],
       },
     }));
+  },
+};
+
+export const A11yInteraction: Story = {
+  play: async (context) => {
+    await play(context);
+    await testListboxA11y(context, {});
   },
 };
