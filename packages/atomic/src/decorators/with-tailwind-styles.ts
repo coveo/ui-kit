@@ -1,5 +1,4 @@
 import {type CSSResult, type CSSResultGroup, unsafeCSS} from 'lit';
-import theme from '@/src/utils/coveo.tw.css';
 import styles from '@/src/utils/tailwind.global.tw.css';
 
 const tailwindPropertiesSheet: CSSStyleSheet | null =
@@ -56,7 +55,6 @@ export const withTailwindStyles = <
     }
     static get styles(): CSSResultGroup {
       const baseStyles: Array<CSSStyleSheet | CSSResult> = [
-        unsafeCSS(theme),
         unsafeCSS(styles),
       ];
 
