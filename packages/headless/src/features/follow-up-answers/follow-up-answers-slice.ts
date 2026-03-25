@@ -15,6 +15,7 @@ import {
   setActiveFollowUpAnswerId,
   setFollowUpAnswerContentFormat,
   setFollowUpAnswersConversationId,
+  setFollowUpAnswersConversationToken,
   setFollowUpIsLoading,
   setFollowUpIsStreaming,
   setIsEnabled,
@@ -49,6 +50,9 @@ export const followUpAnswersReducer = createReducer(
       })
       .addCase(setFollowUpAnswersConversationId, (state, {payload}) => {
         state.conversationId = payload;
+      })
+      .addCase(setFollowUpAnswersConversationToken, (state, {payload}) => {
+        state.conversationToken = payload;
       })
       .addCase(createFollowUpAnswer, (state, {payload}) => {
         const active = getActiveFollowUp(state);
@@ -207,6 +211,7 @@ export const followUpAnswersReducer = createReducer(
       .addCase(resetFollowUpAnswers, (state) => {
         state.followUpAnswers = [];
         state.conversationId = '';
+        state.conversationToken = '';
         state.isEnabled = false;
       })
 );

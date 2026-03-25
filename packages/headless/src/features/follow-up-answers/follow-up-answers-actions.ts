@@ -46,6 +46,11 @@ export const setFollowUpAnswersConversationId = createAction(
   (payload: string) => validatePayload(payload, requiredNonEmptyString)
 );
 
+export const setFollowUpAnswersConversationToken = createAction(
+  'followUpAnswers/setFollowUpAnswersConversationToken',
+  (payload: string) => validatePayload(payload, requiredNonEmptyString)
+);
+
 export const createFollowUpAnswer = createAction(
   'followUpAnswers/createFollowUpAnswer',
   (payload: {question: string}) =>

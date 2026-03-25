@@ -258,6 +258,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
         engine = buildEngineWithGeneratedAnswer({
           followUpAnswers: {
             conversationId: 'session-123',
+            conversationToken: 'token-123',
             isEnabled: true,
             followUpAnswers: [exampleFollowUpAnswers],
           },
@@ -267,6 +268,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
 
         expect(controller.state.followUpAnswers).toEqual({
           conversationId: 'session-123',
+          conversationToken: 'token-123',
           isEnabled: true,
           followUpAnswers: [exampleFollowUpAnswers],
         });
@@ -277,6 +279,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
 
         expect(controller.state.followUpAnswers).toEqual({
           conversationId: '',
+          conversationToken: '',
           isEnabled: false,
           followUpAnswers: [],
         });
@@ -562,12 +565,14 @@ describe('GeneratedAnswerWithFollowUps', () => {
   describe('askFollowUp method', () => {
     const question = 'Could you elaborate?';
     const conversationId = 'conversation-123';
+    const conversationToken = 'token-123';
 
     it('dispatches createFollowUpAnswer and runs the follow-up agent', () => {
       engine = buildEngineWithGeneratedAnswer({
         followUpAnswers: {
           ...getFollowUpAnswersInitialState(),
           conversationId,
+          conversationToken,
         },
       });
       const controller = createGeneratedAnswerWithFollowUps();
@@ -581,6 +586,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
           forwardedProps: {
             q: question,
             conversationId,
+            conversationToken,
             accessToken: 'foo',
           },
         },
@@ -611,6 +617,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
         followUpAnswers: {
           ...getFollowUpAnswersInitialState(),
           conversationId,
+          conversationToken,
         },
       });
       const controller = createGeneratedAnswerWithFollowUps();

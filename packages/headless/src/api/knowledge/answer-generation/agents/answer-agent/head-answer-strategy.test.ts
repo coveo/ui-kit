@@ -5,6 +5,7 @@ import type {Dispatch} from '@reduxjs/toolkit';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {
   setFollowUpAnswersConversationId,
+  setFollowUpAnswersConversationToken,
   setIsEnabled,
 } from '../../../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {
@@ -87,6 +88,7 @@ describe('createHeadAnswerStrategy', () => {
         value: {
           contentFormat: 'text/markdown',
           followUpEnabled: true,
+          conversationToken: 'token-123',
         },
       },
     } as any);
@@ -95,6 +97,9 @@ describe('createHeadAnswerStrategy', () => {
       setAnswerContentFormat('text/markdown')
     );
     expect(dispatch).toHaveBeenCalledWith(setIsEnabled(true));
+    expect(dispatch).toHaveBeenCalledWith(
+      setFollowUpAnswersConversationToken('token-123')
+    );
   });
 
   it('updates citations when the server sends citation data', () => {
