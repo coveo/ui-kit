@@ -77,7 +77,7 @@
     "jsdoc-tsimport-plugin": "1.0.5",
     "prettier-plugin-apex": "2.2.6",
     "ts-node": "10.9.2",
-    "wait-on": "8.0.5",
+    "wait-on": "9.0.4",
     "xml2js": "0.6.2"
   },
   "files": [
