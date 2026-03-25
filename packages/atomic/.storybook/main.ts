@@ -7,7 +7,7 @@ import {
   writeFileSync,
 } from 'node:fs';
 import {createRequire} from 'node:module';
-import path, {dirname, extname, join, resolve} from 'node:path';
+import path, {dirname, extname, join, relative, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import type {StorybookConfig} from '@storybook/web-components-vite';
 import remarkGfm from 'remark-gfm';
@@ -90,7 +90,7 @@ const virtualOpenApiModules = (): Plugin => {
   };
 };
 
-const externalizeDependencies: PluginImpl = () => {
+const externalizeDependencies = (): Plugin => {
   return {
     name: 'externalize-dependencies',
     enforce: 'pre',
@@ -194,6 +194,7 @@ const config: StorybookConfig = {
         virtualOpenApiModules(),
         tailwindcss(),
         resolvePathAliases(),
+        markComponentImportsAsSideEffectful(),
         processInlineCssImports(),
         forceInlineCssImports(),
         svgTransform(),
@@ -204,9 +205,10 @@ const config: StorybookConfig = {
   },
 };
 
-const resolvePathAliases: PluginImpl = () => {
+const resolvePathAliases = (): Plugin => {
   return {
     name: 'resolve-path-aliases',
+    enforce: 'pre',
     async resolveId(source: string, importer, options) {
       if (source.startsWith('@/')) {
         const aliasPath = source.slice(2); // Remove the "@/" prefix
@@ -218,7 +220,7 @@ const resolvePathAliases: PluginImpl = () => {
   };
 };
 
-const forceInlineCssImports: PluginImpl = () => {
+const forceInlineCssImports = (): Plugin => {
   return {
     name: 'force-inline-css-imports',
     enforce: 'pre',
@@ -238,10 +240,9 @@ const forceInlineCssImports: PluginImpl = () => {
   };
 };
 
-const svgTransform: PluginImpl = () => {
+const svgTransform = (): Plugin => {
   return {
     name: 'svg-transform',
-    enforce: 'pre',
     transform(code, id) {
       if (id.endsWith('.ts')) {
         return code.replace(
@@ -271,7 +272,7 @@ const svgTransform: PluginImpl = () => {
  * Vite plugin to do the same — constructable stylesheets don't support these
  * directives, so the CSS must be fully resolved before reaching the browser.
  */
-const processInlineCssImports: PluginImpl = () => {
+const processInlineCssImports = (): Plugin => {
   // biome-ignore lint/suspicious/noExplicitAny: PostCSS plugin types are complex
   let postcssPlugins: any[];
   let initialized = false;
@@ -329,7 +330,7 @@ const processInlineCssImports: PluginImpl = () => {
  * 2. Per-locale JSON files from src/locales.json → src/assets/lang/
  * 3. dayjs locale import map → src/generated/dayjs-locales-data.ts
  */
-const prepareStorybookAssets: PluginImpl = () => {
+const prepareStorybookAssets = (): Plugin => {
   const require = createRequire(import.meta.url);
 
   return {
@@ -424,3 +425,28 @@ const prepareStorybookAssets: PluginImpl = () => {
 };
 
 export default config;
+function markComponentImportsAsSideEffectful(): Plugin {
+  const absolutePathToSrc = resolve(__dirname, '../src');
+  return {
+    name: 'mark-components-as-side-effectful',
+    enforce: 'pre',
+    async resolveId(id, source, options) {
+      if (
+        source?.startsWith(absolutePathToSrc) &&
+        (id.startsWith('.') || id.startsWith(absolutePathToSrc))
+      ) {
+        const filePathRelativeToSrc = relative(
+          absolutePathToSrc,
+          resolve(dirname(source), id)
+        );
+        if (
+          filePathRelativeToSrc.match(/^components\/\w*\/([\w-]*)\/\1(\.js)?$/)
+        ) {
+          const resolution = await this.resolve(id, source, options);
+          return {id: resolution!.id, moduleSideEffects: true};
+        }
+      }
+      return null;
+    },
+  };
+}
