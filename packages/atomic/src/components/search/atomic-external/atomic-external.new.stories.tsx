@@ -2,7 +2,10 @@ import type {Meta, StoryObj} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import type {AtomicSearchInterface} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+
+const mockSearchApi = new MockSearchApi();
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-external',
@@ -72,6 +75,9 @@ const meta: Meta = {
   decorators: [externalComponentDecorator],
   parameters: {
     ...parameters,
+    msw: {
+      handlers: [...mockSearchApi.handlers],
+    },
     actions: {
       handles: events,
     },
