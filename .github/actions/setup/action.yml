@@ -39,13 +39,14 @@ runs:
         registry-url: 'https://registry.npmjs.org'
         cache: 'pnpm'
     - name: Start npm traffic measurement
+      if: runner.os == 'Linux'
       continue-on-error: true
       shell: bash
       run: bash "${{ github.action_path }}/measure-registry-traffic.sh" start
     - run: pnpm install --frozen-lockfile --prefer-offline
       shell: bash
     - name: Stop npm traffic measurement
-      if: ${{ !cancelled() }}
+      if: ${{ runner.os == 'Linux' &&  !cancelled() }}
       id: npm-traffic
       continue-on-error: true
       shell: bash
@@ -54,13 +55,13 @@ runs:
           echo "report_path=$REPORT_PATH" >> "$GITHUB_OUTPUT"
           echo "artifact_name=npm-traffic-${{ github.job }}-${{ github.run_id }}-${{ github.run_attempt }}-$(date +%s%N)" >> "$GITHUB_OUTPUT"
     - name: Upload npm traffic artifact
-      if: ${{ !cancelled() && steps.npm-traffic.outputs.report_path != '' }}
+      if: ${{ runner.os == 'Linux' && !cancelled() && steps.npm-traffic.outputs.report_path != '' }}
       continue-on-error: true
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
       with:
-          name: ${{ steps.npm-traffic.outputs.artifact_name }}
-          path: ${{ steps.npm-traffic.outputs.report_path }}
-          retention-days: 7
+        name: ${{ steps.npm-traffic.outputs.artifact_name }}
+        path: ${{ steps.npm-traffic.outputs.report_path }}
+        retention-days: 7
 #endregion
 #region Caches
     # Cypress cache
