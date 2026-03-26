@@ -1,9 +1,13 @@
 import {IconButton} from 'storybook/internal/components';
 import {STORY_MISSING, STORY_RENDERED} from 'storybook/internal/core-events';
-import {CogIcon} from '@storybook/icons';
-import {addons, types} from 'storybook/manager-api';
+import {CogIcon, GithubIcon} from '@storybook/icons';
+import {addons, types, useStorybookApi, useStorybookState} from 'storybook/manager-api';
 import {create} from 'storybook/theming';
 import {COVEO_PRIMARY, FONT_BASE, FONT_CODE} from './theme';
+import {
+  resolveGithubDocsUrl,
+  resolveGithubUrl,
+} from '../storybook-utils/documentation/resolve-github-path';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import React, {useEffect, useRef} from 'react';
 
@@ -239,6 +243,43 @@ const addNoIndexMetaTag = () => {
     document.head.appendChild(metaTag);
   }
 };
+
+function EditInGithubToolbarButton() {
+  const {viewMode, storyId} = useStorybookState();
+  const api = useStorybookApi();
+
+  const entry = storyId
+    ? (api.getData(storyId) as unknown as Record<string, unknown> | undefined)
+    : undefined;
+
+  const importPath = entry?.importPath as string | undefined;
+
+  const githubUrl =
+    viewMode === 'docs'
+      ? resolveGithubDocsUrl(importPath)
+      : resolveGithubUrl(importPath);
+
+  if (!githubUrl) return null;
+
+  return (
+    <IconButton
+      key="edit-in-github"
+      title="Edit in GitHub"
+      onClick={() => window.open(githubUrl, '_blank')}
+    >
+      <GithubIcon />
+    </IconButton>
+  );
+}
+
+addons.register('coveo-edit-in-github', () => {
+  addons.add('coveo-edit-in-github/toolbar', {
+    type: types.TOOL,
+    title: 'Edit in GitHub',
+    match: () => true,
+    render: () => <EditInGithubToolbarButton />,
+  });
+});
 
 addons.register('expand-all-folders-on-crawling', () => {
   addons.getChannel().on(STORY_RENDERED, (storyId) => {

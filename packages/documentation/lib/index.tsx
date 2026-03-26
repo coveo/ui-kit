@@ -23,6 +23,7 @@ import {hoistOtherCategoryInArray, hoistOtherCategoryInNav} from './hoist.js';
 import {insertAtomicSearchBox} from './insertAtomicSearchBox.js';
 import {insertBetaNote} from './insertBetaNote.js';
 import {insertCustomComments} from './insertCustomComments.js';
+import {insertEditInGithub} from './insertEditInGithub.js';
 import {insertMetaTags} from './insertMetaTags.js';
 import {insertSiteHeaderBar} from './insertSiteHeaderBar.js';
 import {removeNavSettings} from './removeNavSettings.js';
@@ -301,6 +302,7 @@ export const load = (app: Application) => {
   app.renderer.on(PageEvent.END, insertMetaTags);
   app.renderer.on(PageEvent.END, formatRightToc);
   app.renderer.on(PageEvent.END, removeNavSettings);
+  app.renderer.on(PageEvent.END, insertEditInGithub);
   app.renderer.on(Renderer.EVENT_END_PAGE, handleRendererEndPage);
 
   app.renderer.defineRouter('kebab', KebabRouter);

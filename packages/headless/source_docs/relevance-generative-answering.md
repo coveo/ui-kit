@@ -1,6 +1,7 @@
 ---
 title: Use Relevance Generative Answering (RGA)
 group: Usage
+slug: usage/relevance-generative-answering
 ---
 # Use Relevance Generative Answering (RGA)
 
