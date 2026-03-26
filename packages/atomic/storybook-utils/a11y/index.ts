@@ -19,15 +19,3 @@ export {
   COVERED_CRITERIA as LISTBOX_COVERED_CRITERIA,
   testListboxA11y,
 } from './listbox.js';
-export {
-  COVERED_CRITERIA as LIVE_REGION_COVERED_CRITERIA,
-  testLiveRegionA11y,
-} from './live-region.js';
-export {
-  COVERED_CRITERIA as NAVIGATION_COVERED_CRITERIA,
-  testNavigationA11y,
-} from './navigation.js';
-export {
-  COVERED_CRITERIA as TAB_COVERED_CRITERIA,
-  testTabA11y,
-} from './tab.js';

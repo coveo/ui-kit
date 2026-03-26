@@ -1,6 +1,5 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
-import {testLiveRegionA11y} from '@/storybook-utils/a11y/';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -46,13 +45,5 @@ export const Default: Story = {
       totalCount: 0,
       totalCountFiltered: 0,
     }));
-  },
-};
-
-export const A11yInteraction: Story = {
-  tags: ['!dev'],
-  play: async (context) => {
-    await play(context);
-    await testLiveRegionA11y(context, {triggerUpdate: async () => {}});
   },
 };

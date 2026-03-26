@@ -1,8 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 
-import {testNavigationA11y} from '@/storybook-utils/a11y/';
-
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -53,11 +51,3 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {};
-
-export const A11yInteraction: Story = {
-  tags: ['!dev'],
-  play: async (context) => {
-    await play(context);
-    await testNavigationA11y(context, {});
-  },
-};

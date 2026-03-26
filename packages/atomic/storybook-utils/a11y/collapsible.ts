@@ -1,5 +1,4 @@
 import type {StoryContext} from '@storybook/web-components-vite';
-import {within} from 'shadow-dom-testing-library';
 import {expect, userEvent, waitFor} from 'storybook/test';
 
 /**
@@ -10,7 +9,7 @@ import {expect, userEvent, waitFor} from 'storybook/test';
  * disclosure pattern (`aria-expanded` + `aria-controls`). These tests assert
  * the actual Atomic implementation.
  */
-export const COVERED_CRITERIA = ['2.1.1', '4.1.2'] as const;
+export const COVERED_CRITERIA = ['2.1.1'] as const;
 
 export interface CollapsibleA11yOptions {
   triggerLabel: string;
@@ -85,7 +84,6 @@ export async function testCollapsibleA11y(
   options: CollapsibleA11yOptions
 ): Promise<void> {
   const {canvasElement, step} = context;
-  const root = within(canvasElement);
 
   let trigger: HTMLElement | null = null;
 
@@ -116,15 +114,13 @@ export async function testCollapsibleA11y(
   );
 
   if (!trigger) {
-    await step(
-      'No collapse trigger found — component content fits without collapsing (pass)',
-      async () => {
-        const buttons = await root
-          .findAllByShadowRole('button', {}, {timeout: 2000})
-          .catch(() => []);
-        expect(buttons.length).toBeGreaterThanOrEqual(0);
-      }
-    );
+    context.reporting.addReport({
+      type: 'a11y-interactive',
+      version: 1,
+      status: 'warning',
+      result: {criteriaCovered: [...COVERED_CRITERIA]},
+    });
+    return;
   } else {
     await step('Trigger is keyboard accessible', async () => {
       (trigger as HTMLElement).focus();

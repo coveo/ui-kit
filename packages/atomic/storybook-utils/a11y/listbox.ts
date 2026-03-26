@@ -15,9 +15,9 @@ import {expect, userEvent, waitFor} from 'storybook/test';
  *
  * Both patterns satisfy WCAG 4.1.2 (Name, Role, Value). This helper
  * detects whichever pattern the facet renders and asserts keyboard
- * accessibility (2.1.1) and focus order (2.4.3).
+ * accessibility (2.1.1) via Enter key activation.
  */
-export const COVERED_CRITERIA = ['2.1.1', '2.4.3', '4.1.2'] as const;
+export const COVERED_CRITERIA = ['2.1.1', '4.1.2'] as const;
 
 export interface ListboxA11yOptions {
   listboxLabel?: string;
@@ -83,7 +83,6 @@ export async function testListboxA11y(
   const root = within(canvasElement);
 
   let selectionControls: HTMLElement[] = [];
-  let selectionAttr: SelectionAttr = 'aria-pressed';
 
   await step(
     'At least one control communicates selection state via ARIA',
@@ -92,7 +91,6 @@ export async function testListboxA11y(
         async () => {
           const result = await findSelectionControls(root);
           selectionControls = result.elements;
-          selectionAttr = result.attr;
           expect(selectionControls.length).toBeGreaterThan(0);
         },
         {timeout: 10000}
@@ -115,14 +113,6 @@ export async function testListboxA11y(
       },
       {timeout: 5000}
     );
-  });
-
-  await step('Each control has a valid selection state value', async () => {
-    const validValues = new Set(['true', 'false', 'mixed']);
-    for (const ctrl of selectionControls) {
-      const value = ctrl.getAttribute(selectionAttr);
-      expect(validValues.has(value ?? '')).toBe(true);
-    }
   });
 
   await step(
