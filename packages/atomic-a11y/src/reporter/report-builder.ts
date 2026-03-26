@@ -86,6 +86,11 @@ function buildComponents(
                 compareByNumericId
               ),
               testCount: component.interactive.testCount,
+              passedCount: component.interactive.passedCount,
+              failedCount: component.interactive.failedCount,
+              failedCriteria: [...component.interactive.failedCriteria].sort(
+                compareByNumericId
+              ),
             }
           : undefined,
       };
@@ -98,6 +103,7 @@ function buildCriteria(
 ): A11yCriterionReport[] {
   const criteriaToComponents = new Map<string, Set<string>>();
   const interactiveCriteriaIds = new Set<string>();
+  const interactiveStatusMap = new Map<string, 'passed' | 'failed' | 'mixed'>();
 
   for (const component of componentResults.values()) {
     for (const criterion of component.automated.criteriaCovered) {
@@ -114,6 +120,24 @@ function buildCriteria(
         components.add(component.name);
         criteriaToComponents.set(criterion, components);
         interactiveCriteriaIds.add(criterion);
+
+        const isFailed = component.interactive.failedCriteria.has(criterion);
+        const isPassed = component.interactive.passedCriteria.has(criterion);
+        if (!isFailed && !isPassed) {
+          continue;
+        }
+
+        const nextStatus: 'passed' | 'failed' = isFailed ? 'failed' : 'passed';
+        const currentStatus = interactiveStatusMap.get(criterion);
+
+        if (!currentStatus) {
+          interactiveStatusMap.set(criterion, nextStatus);
+          continue;
+        }
+
+        if (currentStatus !== nextStatus) {
+          interactiveStatusMap.set(criterion, 'mixed');
+        }
       }
     }
   }
@@ -130,6 +154,7 @@ function buildCriteria(
         conformance: 'notEvaluated',
         automatedCoverage: true,
         interactiveCoverage: interactiveCriteriaIds.has(criterionId),
+        interactiveStatus: interactiveStatusMap.get(criterionId),
         manualVerified: false,
         remarks: '',
         affectedComponents: [...coveredComponents].sort(compareByName),

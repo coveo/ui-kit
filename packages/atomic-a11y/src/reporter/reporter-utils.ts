@@ -61,6 +61,10 @@ export interface ComponentAccumulator {
   interactive?: {
     criteriaCovered: Set<string>;
     testCount: number;
+    passedCount: number;
+    failedCount: number;
+    passedCriteria: Set<string>;
+    failedCriteria: Set<string>;
   };
 }
 
