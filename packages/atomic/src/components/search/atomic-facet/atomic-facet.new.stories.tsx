@@ -3,9 +3,12 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {testListboxA11y} from '@/storybook-utils/a11y/';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+
+const mockSearchApi = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers('atomic-facet', {
@@ -123,8 +126,30 @@ export const CustomSort: Story = {
 
 export const A11yInteraction: Story = {
   tags: ['!dev'],
+  parameters: {msw: {handlers: [...mockSearchApi.handlers]}},
   args: {field: 'objecttype'},
   decorators: [facetDecorator],
+  beforeEach: () => {
+    mockSearchApi.searchEndpoint.mock((response) => ({
+      ...response,
+      facets: [
+        ...(response.facets || []),
+        {
+          facetId: 'objecttype',
+          field: 'objecttype',
+          moreValuesAvailable: true,
+          values: [
+            {value: 'People', state: 'idle', numberOfResults: 126786},
+            {value: 'Contact', state: 'idle', numberOfResults: 179426},
+            {value: 'Variant', state: 'idle', numberOfResults: 30827},
+            {value: 'Message', state: 'idle', numberOfResults: 26868},
+          ],
+          indexScore: 0.089,
+          label: 'Object type',
+        },
+      ],
+    }));
+  },
   play: async (context) => {
     await play(context);
     await testListboxA11y(context, {});

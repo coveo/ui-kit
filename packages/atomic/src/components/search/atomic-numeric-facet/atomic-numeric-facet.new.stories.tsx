@@ -251,6 +251,9 @@ export const WithSelectedValue: Story = {
 export const A11yInteraction: Story = {
   tags: ['!dev'],
   decorators: [facetDecorator],
+  args: {
+    field: 'ytviewcount',
+  },
   play: async (context) => {
     await play(context);
     await testListboxA11y(context, {});

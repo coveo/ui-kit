@@ -175,7 +175,18 @@ export const Default: Story = {
   },
   decorators: [facetDecorator, colorFacetStylesDecorator],
   beforeEach: () => {
-    mockDefaultFacetResponse();
+    searchApiHarness.searchEndpoint.mock((response) => {
+      if ('facets' in response) {
+        return {
+          ...response,
+          facets: [
+            ...(response.facets || []),
+            createFacetResponse(baseFacetValues),
+          ],
+        };
+      }
+      return response;
+    });
   },
 };
 
@@ -220,7 +231,14 @@ export const WithSelectedValue: Story = {
 
 export const A11yInteraction: Story = {
   tags: ['!dev'],
+  args: {
+    field: 'filetype',
+    label: 'File Type',
+  },
   decorators: [facetDecorator],
+  beforeEach: () => {
+    mockDefaultFacetResponse();
+  },
   play: async (context) => {
     await play(context);
     await testListboxA11y(context, {});

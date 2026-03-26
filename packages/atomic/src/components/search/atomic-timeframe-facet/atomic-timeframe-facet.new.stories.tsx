@@ -120,7 +120,7 @@ export const Default: Story = {
     `,
   },
   beforeEach: () => {
-    searchApiHarness.searchEndpoint.mockOnce((response) => ({
+    searchApiHarness.searchEndpoint.mock((response) => ({
       ...response,
       facets: [
         createDateFacetResponse(baseDateFacetValues),
@@ -276,6 +276,27 @@ export const Collapsed: Story = {
 export const A11yInteraction: Story = {
   tags: ['!dev'],
   decorators: [facetDecorator],
+  args: {
+    'default-slot': `
+      <atomic-timeframe unit="hour"></atomic-timeframe>
+      <atomic-timeframe unit="day"></atomic-timeframe>
+      <atomic-timeframe unit="week"></atomic-timeframe>
+      <atomic-timeframe unit="month"></atomic-timeframe>
+      <atomic-timeframe unit="quarter"></atomic-timeframe>
+      <atomic-timeframe unit="year"></atomic-timeframe>
+    `,
+  },
+  beforeEach: () => {
+    searchApiHarness.searchEndpoint.mockOnce((response) => ({
+      ...response,
+      facets: [
+        createDateFacetResponse(baseDateFacetValues),
+        createDateFacetResponse(baseDateFacetValues, {
+          facetId: 'date_input_range',
+        }),
+      ],
+    }));
+  },
   play: async (context) => {
     await play(context);
     await testListboxA11y(context, {});

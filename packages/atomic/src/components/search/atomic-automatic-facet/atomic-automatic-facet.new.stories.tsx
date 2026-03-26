@@ -37,7 +37,7 @@ export default meta;
 
 export const Default: Story = {
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mockOnce((response) => ({
+    mockSearchApi.searchEndpoint.mock((response) => ({
       ...response,
       generateAutomaticFacets: {
         facets: [
@@ -59,6 +59,25 @@ export const Default: Story = {
 
 export const A11yInteraction: Story = {
   tags: ['!dev'],
+  beforeEach: async () => {
+    mockSearchApi.searchEndpoint.mockOnce((response) => ({
+      ...response,
+      generateAutomaticFacets: {
+        facets: [
+          {
+            field: 'objecttype',
+            label: 'Type',
+            values: [
+              {value: 'Document', numberOfResults: 45, state: 'idle'},
+              {value: 'PDF', numberOfResults: 32, state: 'idle'},
+              {value: 'Video', numberOfResults: 18, state: 'idle'},
+              {value: 'Image', numberOfResults: 12, state: 'idle'},
+            ],
+          },
+        ],
+      },
+    }));
+  },
   play: async (context) => {
     await play(context);
     await testListboxA11y(context, {});

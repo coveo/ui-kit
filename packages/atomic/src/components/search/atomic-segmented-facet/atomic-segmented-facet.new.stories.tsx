@@ -69,6 +69,10 @@ export const Default: Story = {
 
 export const A11yInteraction: Story = {
   tags: ['!dev'],
+  args: {
+    field: 'objecttype',
+    label: 'Object Type',
+  },
   play: async (context) => {
     await play(context);
     await testListboxA11y(context, {});

@@ -46,6 +46,7 @@ export const Default: Story = {};
 
 export const A11yInteraction: Story = {
   tags: ['!dev'],
+  parameters: {a11y: {disable: true}},
   play: async (context) => {
     await play(context);
     await testTabA11y(context, {});

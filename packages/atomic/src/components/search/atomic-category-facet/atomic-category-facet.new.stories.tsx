@@ -369,7 +369,18 @@ export const Default: Story = {
   },
   decorators: [facetDecorator],
   beforeEach: () => {
-    mockDefaultCategoryFacetResponse();
+    searchApiHarness.searchEndpoint.mock((response) => {
+      if ('facets' in response) {
+        return {
+          ...response,
+          facets: [
+            ...(response.facets || []),
+            createCategoryFacetResponse(baseCategoryFacetValues),
+          ],
+        };
+      }
+      return response;
+    });
   },
 };
 
@@ -417,7 +428,14 @@ export const WithSelectedChildValueAndMoreAvailable: Story = {
 
 export const A11yInteraction: Story = {
   tags: ['!dev'],
+  args: {
+    field: 'geographicalhierarchy',
+    label: 'Geographical Hierarchy',
+  },
   decorators: [facetDecorator],
+  beforeEach: () => {
+    mockDefaultCategoryFacetResponse();
+  },
   play: async (context) => {
     await play(context);
     await testListboxA11y(context, {});
