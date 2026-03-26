@@ -1,5 +1,4 @@
 import type {StoryContext} from '@storybook/web-components-vite';
-import {within} from 'shadow-dom-testing-library';
 import {expect, userEvent, waitFor} from 'storybook/test';
 
 /**
@@ -10,7 +9,7 @@ import {expect, userEvent, waitFor} from 'storybook/test';
  * disclosure pattern (`aria-expanded` + `aria-controls`). These tests assert
  * the actual Atomic implementation.
  */
-export const COVERED_CRITERIA = ['2.1.1', '4.1.2'] as const;
+export const COVERED_CRITERIA = ['2.1.1'] as const;
 
 export interface CollapsibleA11yOptions {
   triggerLabel: string;
@@ -85,91 +84,82 @@ export async function testCollapsibleA11y(
   options: CollapsibleA11yOptions
 ): Promise<void> {
   const {canvasElement, step} = context;
-  const root = within(canvasElement);
 
   let trigger: HTMLElement | null = null;
 
-  let status: 'passed' | 'failed' = 'passed';
-  try {
-    await step(
-      `Look for collapsible trigger with text "${options.triggerLabel}"`,
-      async () => {
-        await waitFor(
-          () => {
-            trigger = findCollapseButton(canvasElement, options.triggerLabel);
-            if (!trigger) {
-              try {
-                const buttons = canvasElement.querySelectorAll('button');
-                trigger =
-                  Array.from(buttons).find((btn) =>
-                    btn.textContent
-                      ?.trim()
-                      .toLowerCase()
-                      .includes(options.triggerLabel.toLowerCase())
-                  ) ?? null;
-              } catch {
-                // ignore
-              }
+  await step(
+    `Look for collapsible trigger with text "${options.triggerLabel}"`,
+    async () => {
+      await waitFor(
+        () => {
+          trigger = findCollapseButton(canvasElement, options.triggerLabel);
+          if (!trigger) {
+            try {
+              const buttons = canvasElement.querySelectorAll('button');
+              trigger =
+                Array.from(buttons).find((btn) =>
+                  btn.textContent
+                    ?.trim()
+                    .toLowerCase()
+                    .includes(options.triggerLabel.toLowerCase())
+                ) ?? null;
+            } catch {
+              // ignore
             }
-          },
-          {timeout: 5000}
-        );
-      }
-    );
-
-    if (!trigger) {
-      await step(
-        'No collapse trigger found — component content fits without collapsing (pass)',
-        async () => {
-          const buttons = await root
-            .findAllByShadowRole('button', {}, {timeout: 2000})
-            .catch(() => []);
-          expect(buttons.length).toBeGreaterThanOrEqual(0);
-        }
+          }
+        },
+        {timeout: 5000}
       );
-    } else {
-      await step('Trigger is keyboard accessible', async () => {
-        (trigger as HTMLElement).focus();
-        await waitFor(
-          () => {
-            let active: Element | null =
-              canvasElement.ownerDocument.activeElement;
-            while (active?.shadowRoot?.activeElement) {
-              active = active.shadowRoot.activeElement;
-            }
-            expect(active).toBeTruthy();
-          },
-          {timeout: 3000}
-        );
-      });
-
-      await step('Clicking trigger toggles content visibility', async () => {
-        const initialText = (trigger as HTMLElement).textContent?.trim() ?? '';
-        await userEvent.click(trigger as HTMLElement);
-
-        await waitFor(
-          () => {
-            const currentText =
-              (trigger as HTMLElement).textContent?.trim() ?? '';
-            const textChanged = currentText !== initialText;
-            const contentVisible =
-              canvasElement.querySelector('[part*="answer"]') !== null ||
-              canvasElement.querySelector('[part*="body"]') !== null;
-            expect(textChanged || contentVisible).toBe(true);
-          },
-          {timeout: 5000}
-        );
-      });
     }
-  } catch (error) {
-    status = 'failed';
-    throw error;
-  } finally {
-    context.reporting?.addReport?.({
+  );
+
+  if (!trigger) {
+    context.reporting.addReport({
       type: 'a11y-interactive',
       version: 1,
-      status,
+      status: 'warning',
       result: {criteriaCovered: [...COVERED_CRITERIA]},
     });
+    return;
+  } else {
+    await step('Trigger is keyboard accessible', async () => {
+      (trigger as HTMLElement).focus();
+      await waitFor(
+        () => {
+          let active: Element | null =
+            canvasElement.ownerDocument.activeElement;
+          while (active?.shadowRoot?.activeElement) {
+            active = active.shadowRoot.activeElement;
+          }
+          expect(active).toBeTruthy();
+        },
+        {timeout: 3000}
+      );
+    });
+
+    await step('Clicking trigger toggles content visibility', async () => {
+      const initialText = (trigger as HTMLElement).textContent?.trim() ?? '';
+      await userEvent.click(trigger as HTMLElement);
+
+      await waitFor(
+        () => {
+          const currentText =
+            (trigger as HTMLElement).textContent?.trim() ?? '';
+          const textChanged = currentText !== initialText;
+          const contentVisible =
+            canvasElement.querySelector('[part*="answer"]') !== null ||
+            canvasElement.querySelector('[part*="body"]') !== null;
+          expect(textChanged || contentVisible).toBe(true);
+        },
+        {timeout: 5000}
+      );
+    });
   }
+
+  context.reporting.addReport({
+    type: 'a11y-interactive',
+    version: 1,
+    status: 'passed',
+    result: {criteriaCovered: [...COVERED_CRITERIA]},
+  });
 }
