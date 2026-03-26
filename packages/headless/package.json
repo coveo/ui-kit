@@ -110,7 +110,7 @@
   "dependencies": {
     "@ag-ui/client": "0.0.45",
     "@coveo/bueno": "workspace:*",
-    "@coveo/relay": "2.0.4",
+    "@coveo/relay": "catalog:",
     "@coveo/relay-event-types": "catalog:",
     "@reduxjs/toolkit": "2.11.2",
     "abortcontroller-polyfill": "1.7.8",
