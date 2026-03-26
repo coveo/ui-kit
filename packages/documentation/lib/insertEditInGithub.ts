@@ -121,8 +121,19 @@ function inferSourceDocPath(pageUrl: string): string | null {
   return null;
 }
 
+/** Escape string for use inside HTML attribute values */
+function escapeHtmlAttr(s: string): string {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
 function buildMetaTag(url: string): string {
-  return `<meta name="github-edit-url" content="${url}">`;
+  const safeContent = escapeHtmlAttr(String(url));
+  return `<meta name="github-edit-url" content="${safeContent}">`;
 }
 
 /**
@@ -150,6 +161,12 @@ export function insertEditInGithub(page: PageEvent<Reflection>) {
   let githubUrl: string | null = null;
   const pageUrl = page.url ?? '';
 
+  // Skip the root index page (TypeDoc's module listing)
+  if (pageUrl === 'index.html' || pageUrl === '') {
+    return;
+  }
+
+  // 1) Code reflections — derive from model.sources
   if (model?.sources?.length && model.sources[0]?.fullFileName) {
     const src = model.sources[0];
     const idx = src.fullFileName.indexOf('packages/');

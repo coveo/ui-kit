@@ -265,7 +265,10 @@ function EditInGithubToolbarButton() {
     <IconButton
       key="edit-in-github"
       title="Edit in GitHub"
-      onClick={() => window.open(githubUrl, '_blank')}
+      onClick={() => {
+        const w = window.open(githubUrl, '_blank', 'noopener,noreferrer');
+        if (w) w.opener = null;
+      }}
     >
       <GithubIcon />
     </IconButton>
