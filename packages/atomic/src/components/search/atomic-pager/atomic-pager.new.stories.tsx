@@ -1,5 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {testInteractiveA11y} from '@/storybook-utils/a11y/';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -56,5 +57,25 @@ export const WithACustomNumberOfPages: Story = {
   name: 'With a custom number of pages',
   args: {
     'number-of-pages': '10',
+  },
+};
+
+export const A11yInteraction: Story = {
+  tags: ['!dev'],
+  parameters: {
+    a11y: {
+      config: {
+        // Pre-existing: prev/next buttons lack aria-label because i18n
+        // doesn't load in the storybook test environment.
+        rules: [{id: 'button-name', enabled: false}],
+      },
+    },
+  },
+  play: async (context) => {
+    await play(context);
+    await testInteractiveA11y(context, {
+      selectionControl: false,
+      arrowNavigation: {groupRole: 'radiogroup'},
+    });
   },
 };
