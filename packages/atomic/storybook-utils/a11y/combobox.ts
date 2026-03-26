@@ -30,61 +30,72 @@ export async function testComboboxA11y(
   const {canvasElement, step} = context;
   const root = within(canvasElement);
 
-  await step(
-    'Assert textbox exists with aria-haspopup and aria-autocomplete',
-    async () => {
+  let status: 'passed' | 'failed' = 'passed';
+  try {
+    await step(
+      'Assert textbox exists with aria-haspopup and aria-autocomplete',
+      async () => {
+        const input = await root.findByShadowRole(
+          'textbox',
+          {},
+          {timeout: 5000}
+        );
+        await expect(input).toBeInTheDocument();
+        await expect(input).toHaveAttribute('aria-haspopup');
+        await expect(input).toHaveAttribute('aria-autocomplete');
+      }
+    );
+
+    await step('Assert textbox has aria-controls', async () => {
       const input = await root.findByShadowRole('textbox', {}, {timeout: 5000});
-      await expect(input).toBeInTheDocument();
-      await expect(input).toHaveAttribute('aria-haspopup');
-      await expect(input).toHaveAttribute('aria-autocomplete');
-    }
-  );
+      const hasControls =
+        input.hasAttribute('aria-controls') || input.hasAttribute('aria-owns');
+      expect(hasControls).toBe(true);
+    });
 
-  await step('Assert textbox has aria-controls', async () => {
-    const input = await root.findByShadowRole('textbox', {}, {timeout: 5000});
-    const hasControls =
-      input.hasAttribute('aria-controls') || input.hasAttribute('aria-owns');
-    expect(hasControls).toBe(true);
-  });
+    await step('Typing into the textbox is possible via keyboard', async () => {
+      const input = await root.findByShadowRole('textbox', {}, {timeout: 5000});
+      input.focus();
+      await userEvent.keyboard('test');
 
-  await step('Typing into the textbox is possible via keyboard', async () => {
-    const input = await root.findByShadowRole('textbox', {}, {timeout: 5000});
-    input.focus();
-    await userEvent.keyboard('test');
+      await waitFor(
+        () => {
+          const value =
+            (input as HTMLTextAreaElement).value ||
+            (input as HTMLInputElement).value;
+          expect(value.length).toBeGreaterThan(0);
+        },
+        {timeout: 3000}
+      );
+    });
 
-    await waitFor(
-      () => {
-        const value =
-          (input as HTMLTextAreaElement).value ||
-          (input as HTMLInputElement).value;
-        expect(value.length).toBeGreaterThan(0);
-      },
-      {timeout: 3000}
-    );
-  });
+    await step('Escape clears or closes and focus stays on input', async () => {
+      await userEvent.keyboard('{Escape}');
 
-  await step('Escape clears or closes and focus stays on input', async () => {
-    await userEvent.keyboard('{Escape}');
-
-    await waitFor(
-      () => {
-        const focused = canvasElement.ownerDocument.activeElement;
-        const isShadowHostOrInput =
-          focused === canvasElement ||
-          focused?.shadowRoot?.querySelector('[role="textbox"], textarea') !==
-            undefined;
-        expect(
-          isShadowHostOrInput || focused?.closest('[role="textbox"], textarea')
-        ).toBeTruthy();
-      },
-      {timeout: 3000}
-    );
-  });
-
-  context.reporting.addReport({
-    type: 'a11y-interactive',
-    version: 1,
-    status: 'passed',
-    result: {criteriaCovered: [...COVERED_CRITERIA]},
-  });
+      await waitFor(
+        () => {
+          const focused = canvasElement.ownerDocument.activeElement;
+          const isShadowHostOrInput =
+            focused === canvasElement ||
+            focused?.shadowRoot?.querySelector('[role="textbox"], textarea') !==
+              undefined;
+          expect(
+            isShadowHostOrInput ||
+              focused?.closest('[role="textbox"], textarea')
+          ).toBeTruthy();
+        },
+        {timeout: 3000}
+      );
+    });
+  } catch (error) {
+    status = 'failed';
+    throw error;
+  } finally {
+    context.reporting?.addReport?.({
+      type: 'a11y-interactive',
+      version: 1,
+      status,
+      result: {criteriaCovered: [...COVERED_CRITERIA]},
+    });
+  }
 }

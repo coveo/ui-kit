@@ -24,130 +24,137 @@ export async function testNavigationA11y(
   const {canvasElement, step} = context;
   const root = within(canvasElement);
 
-  await step(
-    'Assert navigation landmark or interactive elements exist',
-    async () => {
-      let hasNavigation = false;
+  let status: 'passed' | 'failed' = 'passed';
+  try {
+    await step(
+      'Assert navigation landmark or interactive elements exist',
+      async () => {
+        let hasNavigation = false;
 
-      try {
-        const nav = await root.findByShadowRole(
-          'navigation',
-          {},
-          {timeout: 2000}
-        );
-        hasNavigation = nav !== null;
-      } catch {
-        hasNavigation = false;
-      }
-
-      if (hasNavigation) {
-        const nav = await root.findByShadowRole(
-          'navigation',
-          {},
-          {timeout: 2000}
-        );
-        const hasLabel =
-          nav.hasAttribute('aria-label') || nav.hasAttribute('aria-labelledby');
-        expect(hasLabel).toBe(true);
-        return;
-      }
-
-      let hasInteractiveElements = false;
-      try {
-        const buttons = await root.findAllByShadowRole(
-          'button',
-          {},
-          {timeout: 3000}
-        );
-        hasInteractiveElements = buttons.length > 0;
-      } catch {
-        hasInteractiveElements = false;
-      }
-
-      if (!hasInteractiveElements) {
         try {
-          const radios = await root.findAllByShadowRole(
-            'radio',
+          const nav = await root.findByShadowRole(
+            'navigation',
             {},
             {timeout: 2000}
           );
-          hasInteractiveElements = radios.length > 0;
+          hasNavigation = nav !== null;
         } catch {
-          hasInteractiveElements = false;
+          hasNavigation = false;
         }
-      }
 
-      if (!hasInteractiveElements) {
-        try {
-          const comboboxes = await root.findAllByShadowRole(
-            'combobox',
+        if (hasNavigation) {
+          const nav = await root.findByShadowRole(
+            'navigation',
             {},
             {timeout: 2000}
           );
-          hasInteractiveElements = comboboxes.length > 0;
+          const hasLabel =
+            nav.hasAttribute('aria-label') ||
+            nav.hasAttribute('aria-labelledby');
+          expect(hasLabel).toBe(true);
+          return;
+        }
+
+        let hasInteractiveElements = false;
+        try {
+          const buttons = await root.findAllByShadowRole(
+            'button',
+            {},
+            {timeout: 3000}
+          );
+          hasInteractiveElements = buttons.length > 0;
         } catch {
           hasInteractiveElements = false;
         }
-      }
 
-      expect(hasInteractiveElements).toBe(true);
-    }
-  );
-
-  await step(
-    'Interactive elements are keyboard accessible (focusable)',
-    async () => {
-      await waitFor(
-        async () => {
-          let focusable: HTMLElement | null = null;
-
+        if (!hasInteractiveElements) {
           try {
-            const buttons = await root.findAllByShadowRole(
-              'button',
+            const radios = await root.findAllByShadowRole(
+              'radio',
               {},
               {timeout: 2000}
             );
-            if (buttons.length > 0) focusable = buttons[0] as HTMLElement;
-          } catch {}
+            hasInteractiveElements = radios.length > 0;
+          } catch {
+            hasInteractiveElements = false;
+          }
+        }
 
-          if (!focusable) {
+        if (!hasInteractiveElements) {
+          try {
+            const comboboxes = await root.findAllByShadowRole(
+              'combobox',
+              {},
+              {timeout: 2000}
+            );
+            hasInteractiveElements = comboboxes.length > 0;
+          } catch {
+            hasInteractiveElements = false;
+          }
+        }
+
+        expect(hasInteractiveElements).toBe(true);
+      }
+    );
+
+    await step(
+      'Interactive elements are keyboard accessible (focusable)',
+      async () => {
+        await waitFor(
+          async () => {
+            let focusable: HTMLElement | null = null;
+
             try {
-              const radios = await root.findAllByShadowRole(
-                'radio',
+              const buttons = await root.findAllByShadowRole(
+                'button',
                 {},
                 {timeout: 2000}
               );
-              if (radios.length > 0) focusable = radios[0] as HTMLElement;
+              if (buttons.length > 0) focusable = buttons[0] as HTMLElement;
             } catch {}
-          }
 
-          if (!focusable) {
-            try {
-              const links = await root.findAllByShadowRole(
-                'link',
-                {},
-                {timeout: 2000}
-              );
-              if (links.length > 0) focusable = links[0] as HTMLElement;
-            } catch {}
-          }
+            if (!focusable) {
+              try {
+                const radios = await root.findAllByShadowRole(
+                  'radio',
+                  {},
+                  {timeout: 2000}
+                );
+                if (radios.length > 0) focusable = radios[0] as HTMLElement;
+              } catch {}
+            }
 
-          expect(focusable).not.toBeNull();
-          if (focusable) {
-            focusable.focus();
-            const focused = canvasElement.ownerDocument.activeElement;
-            expect(focused).toBeTruthy();
-          }
-        },
-        {timeout: 5000}
-      );
-    }
-  );
+            if (!focusable) {
+              try {
+                const links = await root.findAllByShadowRole(
+                  'link',
+                  {},
+                  {timeout: 2000}
+                );
+                if (links.length > 0) focusable = links[0] as HTMLElement;
+              } catch {}
+            }
 
-  context.reporting.addReport({
-    type: 'a11y-interactive',
-    version: 1,
-    status: 'passed',
-    result: {criteriaCovered: [...COVERED_CRITERIA]},
-  });
+            expect(focusable).not.toBeNull();
+            if (focusable) {
+              focusable.focus();
+              const focused = canvasElement.ownerDocument.activeElement;
+              expect(focused).toBeTruthy();
+            }
+          },
+          {timeout: 5000}
+        );
+      }
+    );
+  } catch (error) {
+    status = 'failed';
+    throw error;
+  } finally {
+    context.reporting?.addReport?.({
+      type: 'a11y-interactive',
+      version: 1,
+      status,
+      result: {criteriaCovered: [...COVERED_CRITERIA]},
+    });
+  }
 }

@@ -20,6 +20,12 @@ export function createSummary(
     (accumulator, component) => accumulator + component.storyCount,
     0
   );
+  const interactiveCoveredCriteria = criteria.filter(
+    (criterion) => criterion.interactiveCoverage
+  ).length;
+  const interactivePassedCriteria = criteria.filter(
+    (criterion) => criterion.interactiveStatus === 'passed'
+  ).length;
 
   return {
     totalComponents: components.length,
@@ -42,8 +48,12 @@ export function createSummary(
       totalCriteria
     ),
     interactiveCoverage: getAutomationCoveragePercentage(
-      criteria.filter((c) => c.interactiveCoverage).length,
+      interactiveCoveredCriteria,
       totalCriteria
+    ),
+    interactivePassRate: getAutomationCoveragePercentage(
+      interactivePassedCriteria,
+      interactiveCoveredCriteria
     ),
     manualCoverage: '0%',
   };

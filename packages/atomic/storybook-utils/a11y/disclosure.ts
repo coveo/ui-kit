@@ -60,55 +60,61 @@ export async function testDisclosureA11y(
   const root = within(canvasElement);
   const doc = canvasElement.ownerDocument;
 
-  const trigger = await root.findByShadowRole(
-    'button',
-    {name: options.triggerLabel},
-    {timeout: 5000}
-  );
-
-  await step('Trigger button exists with accessible name', async () => {
-    await expect(trigger).toBeInTheDocument();
-    const hasName =
-      trigger.hasAttribute('aria-label') ||
-      (trigger.textContent?.trim().length ?? 0) > 0;
-    expect(hasName).toBe(true);
-  });
-
-  await step('Trigger is keyboard accessible via Enter', async () => {
-    trigger.focus();
-    await userEvent.keyboard('{Enter}');
-
-    await waitFor(
-      () => {
-        const dialog = findOpenDialog(doc);
-        const somethingOpened =
-          dialog !== null || trigger.getAttribute('aria-expanded') === 'true';
-        expect(somethingOpened).toBe(true);
-      },
+  let status: 'passed' | 'failed' = 'passed';
+  try {
+    const trigger = await root.findByShadowRole(
+      'button',
+      {name: options.triggerLabel},
       {timeout: 5000}
     );
-  });
 
-  await step('Can dismiss via Escape', async () => {
-    await userEvent.keyboard('{Escape}');
+    await step('Trigger button exists with accessible name', async () => {
+      await expect(trigger).toBeInTheDocument();
+      const hasName =
+        trigger.hasAttribute('aria-label') ||
+        (trigger.textContent?.trim().length ?? 0) > 0;
+      expect(hasName).toBe(true);
+    });
 
-    await waitFor(
-      () => {
-        const dialog = findOpenDialog(doc);
-        const dialogDismissed = dialog === null;
-        const expandedFalse =
-          trigger.getAttribute('aria-expanded') === 'false' ||
-          !trigger.hasAttribute('aria-expanded');
-        expect(dialogDismissed || expandedFalse).toBe(true);
-      },
-      {timeout: 5000}
-    );
-  });
+    await step('Trigger is keyboard accessible via Enter', async () => {
+      trigger.focus();
+      await userEvent.keyboard('{Enter}');
 
-  context.reporting.addReport({
-    type: 'a11y-interactive',
-    version: 1,
-    status: 'passed',
-    result: {criteriaCovered: [...COVERED_CRITERIA]},
-  });
+      await waitFor(
+        () => {
+          const dialog = findOpenDialog(doc);
+          const somethingOpened =
+            dialog !== null || trigger.getAttribute('aria-expanded') === 'true';
+          expect(somethingOpened).toBe(true);
+        },
+        {timeout: 5000}
+      );
+    });
+
+    await step('Can dismiss via Escape', async () => {
+      await userEvent.keyboard('{Escape}');
+
+      await waitFor(
+        () => {
+          const dialog = findOpenDialog(doc);
+          const dialogDismissed = dialog === null;
+          const expandedFalse =
+            trigger.getAttribute('aria-expanded') === 'false' ||
+            !trigger.hasAttribute('aria-expanded');
+          expect(dialogDismissed || expandedFalse).toBe(true);
+        },
+        {timeout: 5000}
+      );
+    });
+  } catch (error) {
+    status = 'failed';
+    throw error;
+  } finally {
+    context.reporting?.addReport?.({
+      type: 'a11y-interactive',
+      version: 1,
+      status,
+      result: {criteriaCovered: [...COVERED_CRITERIA]},
+    });
+  }
 }
