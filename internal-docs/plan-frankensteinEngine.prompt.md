@@ -1,5 +1,7 @@
 # Frankenstein Engine: Unified Search & Commerce Engine Spec & Implementation Plan
 
+> **Reference**: This spec productizes patterns from the [Dual-Engine Commerce & Knowledge Search Confluence cookbook](https://coveord.atlassian.net/wiki/spaces/JSUI/pages/6088392726/Dual-Engine+Commerce+Knowledge+Search+Frontend+Patterns) and [dual-engine sample repository](https://github.com/Coveo-Incubator/dual-engine-search-sample).
+
 ## Executive Summary
 
 **Goal**: Create a new "Frankenstein Engine" that combines Search and Commerce capabilities into a single unified engine, allowing developers to use both search and commerce controllers simultaneously while supporting intent-based routing.
@@ -56,9 +58,11 @@ const productSuggestions = buildProductSuggestions(engine);
 - **Does NOT expose**: `executeFirstSearch`, search-specific or commerce-specific methods
 
 **State Management**:
-- Combined Redux store with both search and commerce reducers
-- State accessed via `engine[stateKey]`
-- Contains union of search and commerce state slices
+- Each sub-engine maintains its own independent Redux store
+- Search engine has its own state (search reducers)
+- Commerce engine has its own state (commerce reducers)
+- NO state merging - controllers access their respective sub-engine's state
+- Frankenstein engine itself does not expose a combined state
 
 **Configuration**:
 ```typescript
@@ -107,25 +111,28 @@ interface FrankensteinEngineConfiguration {
 
 ### 4. Intent-Based Branching
 
-**Mechanism**: Controller methods accept optional intent parameter for dual-mode operations.
+**Mechanism**: Controller methods accept optional intent parameter for selective submission.
 
 **Example**:
 ```typescript
-// Search intent (default)
+// Submit both engines (default dual-engine behavior)
 searchBox.submit();
+searchBox.submit({intent: 'both'});
 
-// Commerce intent
+// Selective submit - search only (saves 1 QPM)
+searchBox.submit({intent: 'search'});
+
+// Selective submit - commerce only (saves 1 QPM)
 searchBox.submit({intent: 'commerce'});
-
-// Facet selection with intent
-facet.toggleSelect(value, {intent: 'commerce'});
 ```
 
 **Implementation**:
 - Frankenstein controllers expose methods with optional `intent` parameter
-- Intent values: `'search' | 'commerce'`
-- Default behavior when no intent specified (TBD per controller)
-- Routes action to appropriate sub-engine based on intent
+- Intent values: `'search' | 'commerce' | 'both'`
+- Default: `'both'` (queries both engines, 2 QPM, update each sub-engine state)
+- Intent detection is **out of scope** - consumers implement their own strategies
+
+**Note**: Intent detection patterns (suggestion counts, facet field lookups, result counts, unified signals) are documented in the Confluence cookbook but are **not** part of Frankenstein. Consumers implement these patterns externally and pass the detected intent to Frankenstein controllers.
 
 ### 5. Frankenstein-Only Controllers
 
@@ -160,7 +167,7 @@ export function buildSearchBox(
       }
     },
     get state() {
-      // Merge or select based on context
+      // Return appropriate sub-controller state based on context and the state of both sub-controllers
     },
   };
 }
@@ -168,7 +175,45 @@ export function buildSearchBox(
 
 **Location**: `packages/headless/src/controllers/frankenstein/`
 
-### 6. Entry Point Structure
+### 6. URL Manager Integration
+
+**Challenge**: Both search and commerce URL managers serialize state using the same parameter names (`q`, `f-{field}`, `page`, `sortCriteria`), causing collisions in a shared URL hash.
+
+**Solution**: Provide URL manager utilities that namespace parameters with prefixes.
+
+**Pattern**:
+```typescript
+import {buildUrlManager} from '@coveo/headless';
+import {buildFrankensteinUrlManagerWrapper} from '@coveo/headless/frankenstein';
+
+const searchUrlManager = buildUrlManager(searchEngine, {
+  initialState: {fragment: initialFragments.search},
+});
+const commerceUrlManager = commerceSearch.urlManager({
+  initialState: {fragment: initialFragments.commerce},
+});
+
+// Wrapper handles prefixing (s. and c.), merging, and popstate
+const wrapper = buildFrankensteinUrlManagerWrapper({
+  searchUrlManager,
+  commerceUrlManager,
+  searchPrefix: 's.',
+  commercePrefix: 'c.',
+});
+
+// Result: #s.q=shoes&s.f-source=Web&c.q=shoes&c.f-ec_brand=Nike&c.page=2
+```
+
+**Implementation**:
+- Parse initial hash before constructing engines (critical timing)
+- Subscribe to both URL managers, merge prefixed fragments, push to history
+- Handle popstate: split by prefix, call `synchronize()` on each manager
+- Use `synchronizing` flag to prevent re-entrant writes
+- `lastHash` check to avoid duplicate history entries
+
+**Location**: `packages/headless/src/controllers/frankenstein/url-manager/`
+
+### 7. Entry Point Structure
 
 **New Entry Point**: `@coveo/headless/frankenstein`
 
@@ -190,8 +235,14 @@ export function buildSearchBox(
 
 **Exports**:
 - Engine: `buildFrankensteinEngine`, `FrankensteinEngine`, `FrankensteinEngineConfiguration`
-- Frankenstein controllers from `controllers/frankenstein/`
-- Types and utilities
+- Frankenstein controllers:
+  * `buildSearchBox` - Unified searchbox with intent-based submission
+  * `buildInstantResults` - Wraps both instant products and instant results
+  * `buildFrankensteinUrlManagerWrapper` - URL parameter namespacing utility
+- Utilities:
+  * `mergeSuggestions` - Deduplicates and prioritizes suggestions
+  * Search/Commerce engine accessors (for advanced use cases)
+- Types: `FrankensteinSearchBox`, `Intent`, etc.
 
 ## Implementation Plan
 
@@ -231,10 +282,9 @@ export function buildSearchBox(
    - Create configuration types: `FrankensteinEngineConfiguration`
    - Create configuration schema validation
    - Implement `buildFrankensteinEngine` function:
-     * Build search engine with search config
-     * Build commerce engine with commerce config
-     * Create combined Redux store
-     * Store sub-engines via Symbols
+     * Build search engine with search config (creates its own Redux store)
+     * Build commerce engine with commerce config (creates its own Redux store)
+     * Store sub-engines via Symbols (each with independent state)
      * Set marker to `'frankenstein'`
      * Use `redactEngine` to hide internal state
      * Return `FrankensteinEngine` interface
@@ -253,8 +303,8 @@ export function buildSearchBox(
 8. **Verification**
    - Frankenstein engine builds successfully
    - Sub-engines are created and accessible internally
+   - Each sub-engine has its own independent Redux store
    - Configuration validation works
-   - Combined state includes both search and commerce slices
 
 ### Phase 3: Enable Existing Controllers
 
@@ -293,22 +343,23 @@ export function buildSearchBox(
 14. **Implement Frankenstein SearchBox** (*depends on step 13*)
     - Create unified searchbox that wraps both variants
     - Support intent parameter in `submit` method
-    - Merge state from both sub-controllers
+    - Expose frankenstein-ed controller state from both sub-controllers
     - Location: `src/controllers/frankenstein/search-box/headless-frankenstein-search-box.ts`
 
 15. **Implement other Frankenstein controllers** (*parallel, depends on step 13*)
     - Identify which controllers need Frankenstein variants:
-      * Facet Generator (can generate both search and commerce facets)
-      * Breadcrumb Manager (unified breadcrumb for both)
-      * Sort Controller (unified sort)
-      * Pagination Controller (unified pagination)
-      * Query Summary (unified summary)
+      * **InstantResults wrapper** - Wraps both `buildInstantProducts` and `buildInstantResults`, updates both on query change, merges results
+      * **URL Manager wrapper** - Critical for avoiding parameter collisions (see section 6)
+      * **Suggestion merger utility** - Deduplicates suggestions by `rawValue.toLowerCase().trim()`, prioritizes shared suggestions
+    - Optional wrappers (lower priority):
+      * Facet Generator (note: facets typically shown per-tab, not unified)
+      * Pagination (note: each engine maintains independent page state)
     - Implement each following the wrapper pattern
+    - **Not included**: GenAI wrapper (search-only feature), Analytics wrappers (incompatible APIs)
 
 16. **Verification**
     - Frankenstein controllers only accept FrankensteinEngine
     - Intent routing works correctly
-    - State merging logic is sound
     - Controllers coordinate both sub-engines properly
 
 ### Phase 5: Entry Point & Exports
@@ -383,8 +434,10 @@ export function buildSearchBox(
 - `src/app/frankenstein-engine/frankenstein-engine-configuration.ts` - Configuration types & validation
 - `src/app/frankenstein-engine/frankenstein-engine-utils.ts` - Sub-engine accessors
 - `src/frankenstein.index.ts` - Entry point exports
-- `src/controllers/frankenstein/search-box/headless-frankenstein-search-box.ts` - Unified searchbox
-- `src/controllers/frankenstein/facet-generator/headless-frankenstein-facet-generator.ts` - Unified facet generator
+- `src/controllers/frankenstein/search-box/headless-frankenstein-search-box.ts` - Unified searchbox with intent submission
+- `src/controllers/frankenstein/instant-results/headless-frankenstein-instant-results.ts` - Unified instant products + instant results
+- `src/controllers/frankenstein/url-manager/headless-frankenstein-url-manager-wrapper.ts` - URL parameter namespacing
+- `src/controllers/frankenstein/utils/suggestions.ts` - Suggestion merging utilities
 - (Additional Frankenstein controller files as needed)
 
 ### Modified Files
@@ -403,9 +456,27 @@ export function buildSearchBox(
 2. **Knowledge = Search**: No separate Knowledge engine; Knowledge is an alias for Search engine
 3. **Frankenstein API surface**: Core methods + configuration + common methods only; no engine-specific methods exposed
 4. **Sub-engine access**: Symbol-based internal access only; not exposed to consumers for encapsulation
-5. **Intent branching**: Optional parameter on controller methods (e.g., `submit({intent: 'commerce'})`) for explicit routing
+5. **Intent branching**: Optional parameter on controller methods with three values: `'search'`, `'commerce'`, `'both'` (default)
 6. **Frankenstein controllers**: Wrapper pattern that composes existing search and commerce controllers
 7. **Controller supportEngine**: Internal parameter in `buildController` function, with runtime validation and sub-engine routing
+8. **Query synchronization**: `updateText` always updates both engines (necessary for suggestions and instant results)
+9. **Default submission behavior**: `submit()` queries both engines by default (2 QPM); selective submission is opt-in via `intent` parameter
+10. **URL manager integration**: Namespaced parameters (s. and c. prefixes) to avoid collisions, provided as wrapper utility
+
+## Key Patterns from Confluence Cookbook
+
+These patterns from the dual-engine cookbook should guide implementation:
+
+1. **Lazy singleton engines**: Each engine is created once and reused, not recreated per component
+2. **Query synchronization**: `updateText` on both engines for every keystroke to ensure suggestions work
+3. **Suggestion merging**: Deduplicate by `rawValue.toLowerCase().trim()`, prioritize shared suggestions
+4. **Independent pagination**: Each engine maintains its own page state; no cross-engine pagination
+5. **Tab-specific facets**: Facets only shown on engine-specific tabs, not unified
+6. **URL manager namespacing**: Critical pattern to avoid parameter collisions using prefixes
+7. **Instant results coordination**: Both `updateQuery` and `handleSuggestionHover` update both controllers
+8. **Separate analytics**: Different APIs cannot be unified; each engine requires its own click handlers
+9. **GenAI display strategy**: Show RGA answer on all tabs even though it's search-only
+11. **Intent detection is external**: Frankenstein enables the selective submit pattern but doesn't implement detection algorithms
 
 ## Scope Clarifications
 
@@ -427,6 +498,8 @@ export function buildSearchBox(
 - ❌ Breaking changes to existing APIs
 - ❌ Migration tooling
 - ❌ Atomic component updates
+- ❌ GenAI wrapper (RGA is search-only, display on all tabs is presentation logic)
+- ❌ Analytics unification (APIs are fundamentally different: `buildInteractiveResult` vs `interactiveProduct`)
 
 ## Implementation Notes
 
@@ -434,14 +507,16 @@ export function buildSearchBox(
 - Changes to existing controllers are additive only (adding support, not modifying behavior)
 - Testing should verify both isolated engine usage and Frankenstein usage
 - Documentation should emphasize when to use Frankenstein vs separate engines
-- Consider performance implications of dual-engine state management
+- Each sub-engine maintains independent state - no state merging or combination
 - Intent parameter defaults should be carefully chosen per controller (document rationale)
 
 ## Risks & Considerations
 
-1. **State size**: Combined store may be large; consider lazy-loading reducers
-2. **Action collision**: Ensure search and commerce actions don't conflict in combined store
+1. **State isolation**: Each sub-engine has its own store; ensure proper isolation and no cross-contamination
+2. **Action independence**: Search and commerce actions are handled by separate Redux stores independently
 3. **Type complexity**: Union types for engine parameters may complicate type inference
 4. **Breaking changes**: Ensure changes to buildController don't break existing usage
-5. **Performance**: Dual state subscription may impact performance; monitor and optimize
-6. **Intent ambiguity**: Default intent choices may surprise users; document clearly
+5. **Performance**: Controllers subscribe to their respective sub-engine's store independently; monitor overall subscription overhead
+6. **URL parameter collisions**: Critical requirement for URL manager wrapper with namespacing
+7. **GenAI limitations**: Generated answers only work with search engine, not commerce
+8. **Analytics API divergence**: Search uses `buildInteractiveResult`, Commerce uses `interactiveProduct` - cannot be unified
