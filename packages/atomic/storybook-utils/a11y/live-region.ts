@@ -64,53 +64,59 @@ export async function testLiveRegionA11y(
 ): Promise<void> {
   const {canvasElement, step} = context;
 
-  await step(
-    'Assert live region element exists with aria-live or status/alert role',
-    async () => {
-      await waitFor(
-        () => {
-          const liveRegion = findLiveRegion(canvasElement);
-          expect(liveRegion).not.toBeNull();
+  let status: 'passed' | 'failed' = 'passed';
+  try {
+    await step(
+      'Assert live region element exists with aria-live or status/alert role',
+      async () => {
+        await waitFor(
+          () => {
+            const liveRegion = findLiveRegion(canvasElement);
+            expect(liveRegion).not.toBeNull();
 
-          if (liveRegion) {
-            const liveValue = liveRegion.getAttribute('aria-live');
-            const role = liveRegion.getAttribute('role');
-            const validLive =
-              liveValue === 'polite' || liveValue === 'assertive';
-            const validRole = role === 'status' || role === 'alert';
-            expect(validLive || validRole).toBe(true);
-          }
-        },
-        {timeout: 5000}
-      );
+            if (liveRegion) {
+              const liveValue = liveRegion.getAttribute('aria-live');
+              const role = liveRegion.getAttribute('role');
+              const validLive =
+                liveValue === 'polite' || liveValue === 'assertive';
+              const validRole = role === 'status' || role === 'alert';
+              expect(validLive || validRole).toBe(true);
+            }
+          },
+          {timeout: 5000}
+        );
+      }
+    );
+
+    if (options.triggerUpdate) {
+      await step('Live region content updates after state change', async () => {
+        const liveRegionBefore = findLiveRegion(canvasElement);
+        const contentBefore = liveRegionBefore?.textContent ?? '';
+
+        await options.triggerUpdate!();
+
+        await waitFor(
+          () => {
+            const liveRegionAfter = findLiveRegion(canvasElement);
+            expect(liveRegionAfter).not.toBeNull();
+            const contentAfter = liveRegionAfter?.textContent ?? '';
+            if (contentBefore.length > 0) {
+              expect(contentAfter.length).toBeGreaterThan(0);
+            }
+          },
+          {timeout: 5000}
+        );
+      });
     }
-  );
-
-  if (options.triggerUpdate) {
-    await step('Live region content updates after state change', async () => {
-      const liveRegionBefore = findLiveRegion(canvasElement);
-      const contentBefore = liveRegionBefore?.textContent ?? '';
-
-      await options.triggerUpdate!();
-
-      await waitFor(
-        () => {
-          const liveRegionAfter = findLiveRegion(canvasElement);
-          expect(liveRegionAfter).not.toBeNull();
-          const contentAfter = liveRegionAfter?.textContent ?? '';
-          if (contentBefore.length > 0) {
-            expect(contentAfter.length).toBeGreaterThan(0);
-          }
-        },
-        {timeout: 5000}
-      );
+  } catch (error) {
+    status = 'failed';
+    throw error;
+  } finally {
+    context.reporting?.addReport?.({
+      type: 'a11y-interactive',
+      version: 1,
+      status,
+      result: {criteriaCovered: [...COVERED_CRITERIA]},
     });
   }
-
-  context.reporting.addReport({
-    type: 'a11y-interactive',
-    version: 1,
-    status: 'passed',
-    result: {criteriaCovered: [...COVERED_CRITERIA]},
-  });
 }

@@ -85,74 +85,80 @@ export async function testListboxA11y(
   let selectionControls: HTMLElement[] = [];
   let selectionAttr: SelectionAttr = 'aria-pressed';
 
-  await step(
-    'At least one control communicates selection state via ARIA',
-    async () => {
-      await waitFor(
-        async () => {
-          const result = await findSelectionControls(root);
-          selectionControls = result.elements;
-          selectionAttr = result.attr;
-          expect(selectionControls.length).toBeGreaterThan(0);
-        },
-        {timeout: 10000}
-      );
-    }
-  );
-
-  await step('Controls are keyboard accessible (focusable)', async () => {
-    const targetControl = selectionControls[0];
-    targetControl.focus();
-
-    await waitFor(
-      () => {
-        const deepFocused = getDeepActiveElement(canvasElement.ownerDocument);
-        const isFocused =
-          deepFocused?.tagName === 'BUTTON' ||
-          deepFocused?.getAttribute('role') === 'button' ||
-          deepFocused?.getAttribute('role') === 'checkbox';
-        expect(isFocused).toBe(true);
-      },
-      {timeout: 5000}
-    );
-  });
-
-  await step('Each control has a valid selection state value', async () => {
-    const validValues = new Set(['true', 'false', 'mixed']);
-    for (const ctrl of selectionControls) {
-      const value = ctrl.getAttribute(selectionAttr);
-      expect(validValues.has(value ?? '')).toBe(true);
-    }
-  });
-
-  await step(
-    'Control is keyboard-activatable (Enter key triggers click)',
-    async () => {
-      const targetControl = selectionControls[0];
-      let clicked = false;
-      const handler = () => {
-        clicked = true;
-      };
-      targetControl.addEventListener('click', handler);
-      try {
-        targetControl.focus();
-        await userEvent.keyboard('{Enter}');
+  let status: 'passed' | 'failed' = 'passed';
+  try {
+    await step(
+      'At least one control communicates selection state via ARIA',
+      async () => {
         await waitFor(
-          () => {
-            expect(clicked).toBe(true);
+          async () => {
+            const result = await findSelectionControls(root);
+            selectionControls = result.elements;
+            selectionAttr = result.attr;
+            expect(selectionControls.length).toBeGreaterThan(0);
           },
-          {timeout: 5000}
+          {timeout: 10000}
         );
-      } finally {
-        targetControl.removeEventListener('click', handler);
       }
-    }
-  );
+    );
 
-  context.reporting.addReport({
-    type: 'a11y-interactive',
-    version: 1,
-    status: 'passed',
-    result: {criteriaCovered: [...COVERED_CRITERIA]},
-  });
+    await step('Controls are keyboard accessible (focusable)', async () => {
+      const targetControl = selectionControls[0];
+      targetControl.focus();
+
+      await waitFor(
+        () => {
+          const deepFocused = getDeepActiveElement(canvasElement.ownerDocument);
+          const isFocused =
+            deepFocused?.tagName === 'BUTTON' ||
+            deepFocused?.getAttribute('role') === 'button' ||
+            deepFocused?.getAttribute('role') === 'checkbox';
+          expect(isFocused).toBe(true);
+        },
+        {timeout: 5000}
+      );
+    });
+
+    await step('Each control has a valid selection state value', async () => {
+      const validValues = new Set(['true', 'false', 'mixed']);
+      for (const ctrl of selectionControls) {
+        const value = ctrl.getAttribute(selectionAttr);
+        expect(validValues.has(value ?? '')).toBe(true);
+      }
+    });
+
+    await step(
+      'Control is keyboard-activatable (Enter key triggers click)',
+      async () => {
+        const targetControl = selectionControls[0];
+        let clicked = false;
+        const handler = () => {
+          clicked = true;
+        };
+        targetControl.addEventListener('click', handler);
+        try {
+          targetControl.focus();
+          await userEvent.keyboard('{Enter}');
+          await waitFor(
+            () => {
+              expect(clicked).toBe(true);
+            },
+            {timeout: 5000}
+          );
+        } finally {
+          targetControl.removeEventListener('click', handler);
+        }
+      }
+    );
+  } catch (error) {
+    status = 'failed';
+    throw error;
+  } finally {
+    context.reporting?.addReport?.({
+      type: 'a11y-interactive',
+      version: 1,
+      status,
+      result: {criteriaCovered: [...COVERED_CRITERIA]},
+    });
+  }
 }
