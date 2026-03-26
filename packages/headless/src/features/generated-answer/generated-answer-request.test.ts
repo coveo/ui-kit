@@ -531,12 +531,7 @@ describe('constructGenerateHeadAnswerParams', () => {
 
     expect(params).toMatchObject({
       q: 'test query',
-      pipelineRuleParameters: {
-        mlGenerativeQuestionAnswering: {
-          responseFormat: {contentFormat: ['text/plain']},
-          citationsFieldToInclude: ['field1', 'field2'],
-        },
-      },
+      citationsFieldToInclude: ['field1', 'field2'],
       searchHub: 'test-hub',
       pipeline: 'test-pipeline',
       locale: 'en',
