@@ -108,6 +108,12 @@
       "ignore": ["**/*"],
       "ignoreDependencies": ["cypress-repeat"]
     },
+    "samples/headless-ssr/commerce-nextjs": {
+      "entry": ["proxy.ts"]
+    },
+    "samples/headless-ssr/commerce-nextjs-v4": {
+      "entry": ["proxy.ts"]
+    },
     "samples/headless-ssr/search-nextjs": {
       "ignore": ["**/*"],
       "ignoreDependencies": ["cypress-repeat"]
