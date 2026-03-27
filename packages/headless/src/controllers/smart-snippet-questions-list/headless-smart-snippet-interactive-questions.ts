@@ -1,4 +1,6 @@
 import type {Result} from '../../api/search/search/result.js';
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {logOpenSmartSnippetSuggestionSource} from '../../features/question-answering/question-answering-analytics-actions.js';
 import {
@@ -42,14 +44,15 @@ interface SmartSnippetInteractiveQuestions {
  * @internal
  */
 export function buildSmartSnippetInteractiveQuestions(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props?: SmartSnippetInteractiveQuestionsProps
 ): SmartSnippetInteractiveQuestions {
-  if (!loadSmartSnippetInteractiveQuestionsReducer(engine)) {
+  const searchEngine = ensureSearchEngine(engine);
+  if (!loadSmartSnippetInteractiveQuestionsReducer(searchEngine)) {
     throw loadReducerError;
   }
 
-  const getState = () => engine.state;
+  const getState = () => searchEngine.state;
 
   const getSource = (questionAnswerId: string) => {
     const state = getState();
@@ -85,18 +88,18 @@ export function buildSmartSnippetInteractiveQuestions(
     questionAnswerId: string
   ) =>
     buildInteractiveResultCore(
-      engine,
+      searchEngine,
       {options: {selectionDelay: props?.options?.selectionDelay}},
       () => {
         if (relatedQuestionWasClicked(questionAnswerId)) {
           return;
         }
-        engine.dispatch(
+        searchEngine.dispatch(
           logOpenSmartSnippetSuggestionSource({
             questionAnswerId,
           })
         );
-        engine.dispatch(pushRecentResult(source));
+        searchEngine.dispatch(pushRecentResult(source));
       }
     );
 

@@ -1,4 +1,6 @@
 import {configuration} from '../../app/common-reducers.js';
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {updateQuery} from '../../features/query/query-actions.js';
 import {queryReducer as query} from '../../features/query/query-slice.js';
@@ -102,15 +104,16 @@ export interface StandaloneSearchBoxState extends SearchBoxState {
  * @category StandaloneSearchBox
  */
 export function buildStandaloneSearchBox(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props: StandaloneSearchBoxProps
 ): StandaloneSearchBox {
-  if (!loadStandaloneSearchBoxReducers(engine)) {
+  const searchEngine = ensureSearchEngine(engine);
+  if (!loadStandaloneSearchBoxReducers(searchEngine)) {
     throw loadReducerError;
   }
 
-  const {dispatch} = engine;
-  const getState = () => engine.state;
+  const {dispatch} = searchEngine;
+  const getState = () => searchEngine.state;
 
   const id = props.options.id || randomID('standalone_search_box');
   const options: Required<StandaloneSearchBoxOptions> = {
@@ -122,13 +125,13 @@ export function buildStandaloneSearchBox(
   };
 
   validateOptions(
-    engine,
+    searchEngine,
     standaloneSearchBoxSchema,
     options,
     'buildStandaloneSearchBox'
   );
 
-  const searchBox = buildSearchBox(engine, {options});
+  const searchBox = buildSearchBox(searchEngine, {options});
   dispatch(
     registerStandaloneSearchBox({
       id,

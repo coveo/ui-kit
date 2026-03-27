@@ -1,5 +1,7 @@
 import type {HtmlApiClient} from '../../api/search/html/html-api-client.js';
 import type {CoreEngine} from '../../app/engine.js';
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import type {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {preparePreviewPagination} from '../../features/result-preview/result-preview-actions.js';
@@ -67,24 +69,25 @@ export interface Quickview extends CoreQuickview {
  * @category Quickview
  */
 export function buildQuickview(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props: QuickviewProps
 ): Quickview {
-  if (!loadSearchQuickviewReducers(engine)) {
+  const searchEngine = ensureSearchEngine(engine);
+  if (!loadSearchQuickviewReducers(searchEngine)) {
     throw loadReducerError;
   }
 
-  const {dispatch} = engine;
-  const getState = () => engine.state;
+  const {dispatch} = searchEngine;
+  const getState = () => searchEngine.state;
   const getResults = () => getState().search.results;
 
   const fetchResultContentCallback = () => {
-    engine.dispatch(logDocumentQuickview(props.options.result));
+    searchEngine.dispatch(logDocumentQuickview(props.options.result));
   };
   const path = '/html';
 
   const core = buildCoreQuickview(
-    engine,
+    searchEngine,
     props,
     buildResultPreviewRequest,
     path,

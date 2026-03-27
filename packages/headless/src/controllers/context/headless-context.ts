@@ -1,4 +1,6 @@
 import type {CoreEngine} from '../../app/engine.js';
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureCoreEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {
   ContextPayload,
   ContextValue,
@@ -32,8 +34,8 @@ export type {
  * @category Context
  */
 export function buildContext(
-  engine: CoreEngine,
+  engine: CoreEngine | FrankensteinEngine,
   props?: ContextProps
 ): Context {
-  return buildCoreContext(engine, props);
+  return buildCoreContext(ensureCoreEngine(engine), props);
 }

@@ -1,3 +1,5 @@
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   logOpenSmartSnippetInlineLink,
@@ -57,14 +59,15 @@ interface SmartSnippetInteractiveInlineLinks {
  * @internal
  */
 export function buildSmartSnippetInteractiveInlineLinks(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props?: SmartSnippetInteractiveInlineLinksProps
 ): SmartSnippetInteractiveInlineLinks {
-  if (!loadSmartSnippetInteractiveInlineLinksReducer(engine)) {
+  const searchEngine = ensureSearchEngine(engine);
+  if (!loadSmartSnippetInteractiveInlineLinksReducer(searchEngine)) {
     throw loadReducerError;
   }
 
-  const getState = () => engine.state;
+  const getState = () => searchEngine.state;
 
   const clickedRelatedQuestions = new Set<string>();
   const inlineLinkWasClicked = (linkId: string) => {
@@ -92,13 +95,13 @@ export function buildSmartSnippetInteractiveInlineLinks(
     questionAnswerId?: string
   ) =>
     buildInteractiveResultCore(
-      engine,
+      searchEngine,
       {options: {selectionDelay: props?.options?.selectionDelay}},
       () => {
         if (inlineLinkWasClicked(linkId)) {
           return;
         }
-        engine.dispatch(
+        searchEngine.dispatch(
           questionAnswerId
             ? logOpenSmartSnippetSuggestionInlineLink({questionAnswerId}, link)
             : logOpenSmartSnippetInlineLink(link)

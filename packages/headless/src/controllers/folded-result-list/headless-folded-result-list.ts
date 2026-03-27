@@ -1,3 +1,5 @@
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {loadCollection} from '../../features/folding/folding-actions.js';
 import {foldedResultAnalyticsClient} from '../../features/folding/folding-analytics-actions.js';
@@ -39,11 +41,11 @@ export interface FoldedResultListProps {
  * @category FoldedResultList
  */
 export function buildFoldedResultList(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props: FoldedResultListProps = {}
 ): FoldedResultList {
   const foldedResultList = buildCoreFoldedResultList(
-    engine,
+    ensureSearchEngine(engine),
     {
       ...props,
       loadCollectionActionCreator: loadCollection,

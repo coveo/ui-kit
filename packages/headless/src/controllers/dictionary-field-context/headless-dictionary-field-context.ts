@@ -1,4 +1,6 @@
 import type {CoreEngine} from '../../app/engine.js';
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureCoreEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import {
   addContext,
   removeContext,
@@ -74,15 +76,16 @@ export interface DictionaryFieldContextState {
  * @category DictionaryFieldContext
  */
 export function buildDictionaryFieldContext(
-  engine: CoreEngine
+  engine: CoreEngine | FrankensteinEngine
 ): DictionaryFieldContext {
-  if (!loadReducers(engine)) {
+  const coreEngine = ensureCoreEngine(engine);
+  if (!loadReducers(coreEngine)) {
     throw loadReducerError;
   }
 
-  const controller = buildController(engine);
-  const {dispatch} = engine;
-  const getState = () => engine.state;
+  const controller = buildController(coreEngine);
+  const {dispatch} = coreEngine;
+  const getState = () => coreEngine.state;
 
   return {
     ...controller,
