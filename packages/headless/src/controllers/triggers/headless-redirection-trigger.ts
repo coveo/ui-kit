@@ -1,3 +1,5 @@
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {logTriggerRedirect} from '../../features/triggers/trigger-analytics-actions.js';
 import {triggerReducer as triggers} from '../../features/triggers/triggers-slice.js';
@@ -16,16 +18,17 @@ import type {RedirectionTrigger} from '../core/triggers/headless-core-redirectio
  * @category RedirectionTrigger
  * */
 export function buildRedirectionTrigger(
-  engine: SearchEngine
+  engine: SearchEngine | FrankensteinEngine
 ): RedirectionTrigger {
-  if (!loadRedirectionReducers(engine)) {
+  const searchEngine = ensureSearchEngine(engine);
+  if (!loadRedirectionReducers(searchEngine)) {
     throw loadReducerError;
   }
 
-  const controller = buildController(engine);
-  const {dispatch} = engine;
+  const controller = buildController(searchEngine);
+  const {dispatch} = searchEngine;
 
-  const getState = () => engine.state;
+  const getState = () => searchEngine.state;
 
   let previousRedirectTo = getState().triggers.redirectTo;
 
@@ -43,7 +46,7 @@ export function buildRedirectionTrigger(
         }
       };
       strictListener();
-      return engine.subscribe(strictListener);
+      return searchEngine.subscribe(strictListener);
     },
 
     get state() {

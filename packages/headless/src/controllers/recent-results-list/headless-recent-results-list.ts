@@ -1,5 +1,7 @@
 import {ArrayValue, NumberValue, Schema} from '@coveo/bueno';
 import type {Result} from '../../api/search/search/result.js';
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   clearRecentResults,
@@ -127,23 +129,24 @@ function validateRecentResultsProps(
  * @category RecentResultsList
  * */
 export function buildRecentResultsList(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props?: RecentResultsListProps
 ): RecentResultsList {
-  if (!loadRecentResultsListReducer(engine)) {
+  const searchEngine = ensureSearchEngine(engine);
+  if (!loadRecentResultsListReducer(searchEngine)) {
     throw loadReducerError;
   }
 
-  const controller = buildController(engine);
-  const {dispatch} = engine;
-  const getState = () => engine.state;
+  const controller = buildController(searchEngine);
+  const {dispatch} = searchEngine;
+  const getState = () => searchEngine.state;
 
   const registrationProps: Required<RecentResultsListProps> = {
     ...defaultRecentResultsProps,
     ...props,
   };
 
-  validateRecentResultsProps(engine, registrationProps);
+  validateRecentResultsProps(searchEngine, registrationProps);
 
   const options = {
     results: registrationProps.initialState.results,

@@ -1,6 +1,8 @@
 import type {SerializedError} from '@reduxjs/toolkit';
 import type {Result} from '../../api/search/search/result.js';
 import type {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {hasExpired} from '../../features/instant-items/instant-items-state.js';
 import {
@@ -90,16 +92,17 @@ export interface InstantResultsState {
  * @category InstantResults
  */
 export function buildInstantResults(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props: InstantResultProps
 ): InstantResults {
-  if (!loadInstantResultsReducers(engine)) {
+  const searchEngine = ensureSearchEngine(engine);
+  if (!loadInstantResultsReducers(searchEngine)) {
     throw loadReducerError;
   }
 
-  const controller = buildController(engine);
-  const {dispatch} = engine;
-  const getState = () => engine.state;
+  const controller = buildController(searchEngine);
+  const {dispatch} = searchEngine;
+  const getState = () => searchEngine.state;
 
   const options: Required<InstantResultOptions> = {
     searchBoxId: props.options.searchBoxId || randomID('instant-results-'),
@@ -108,7 +111,7 @@ export function buildInstantResults(
   };
 
   validateOptions(
-    engine,
+    searchEngine,
     instantResultsOptionsSchema,
     options,
     'buildInstantResults'

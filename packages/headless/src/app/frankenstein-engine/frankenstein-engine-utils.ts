@@ -1,5 +1,8 @@
 import type {CommerceEngine} from '../commerce-engine/commerce-engine.js';
+import type {CoreEngine} from '../engine.js';
+import {engineMarkerKey} from '../engine-marker.js';
 import type {SearchEngine} from '../search-engine/search-engine.js';
+import type {FrankensteinEngine} from './frankenstein-engine.js';
 
 /**
  * Symbol key used to store the internal search sub-engine on a FrankensteinEngine instance.
@@ -40,4 +43,42 @@ export function getSearchEngine(engine: HasSearchEngine): SearchEngine {
  */
 export function getCommerceEngine(engine: HasCommerceEngine): CommerceEngine {
   return engine[commerceEngineKey];
+}
+
+function isFrankensteinEngine(engine: object): engine is FrankensteinEngine {
+  return (
+    engineMarkerKey in engine &&
+    (engine as Record<symbol, unknown>)[engineMarkerKey] === 'frankenstein'
+  );
+}
+
+/**
+ * Accepts a `SearchEngine` or `FrankensteinEngine` and returns a `SearchEngine`.
+ * If a `FrankensteinEngine` is provided, its internal search sub-engine is extracted.
+ *
+ * @internal
+ */
+export function ensureSearchEngine(
+  engine: SearchEngine | FrankensteinEngine
+): SearchEngine {
+  if (isFrankensteinEngine(engine)) {
+    return getSearchEngine(engine);
+  }
+  return engine;
+}
+
+/**
+ * Accepts a `CoreEngine` or `FrankensteinEngine` and returns a `CoreEngine`.
+ * If a `FrankensteinEngine` is provided, its internal search sub-engine is extracted
+ * (which extends `CoreEngine`).
+ *
+ * @internal
+ */
+export function ensureCoreEngine(
+  engine: CoreEngine | FrankensteinEngine
+): CoreEngine {
+  if (isFrankensteinEngine(engine)) {
+    return getSearchEngine(engine);
+  }
+  return engine;
 }

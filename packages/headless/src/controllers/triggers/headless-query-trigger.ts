@@ -1,3 +1,5 @@
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {updateQuery} from '../../features/query/query-actions.js';
 import {queryReducer as query} from '../../features/query/query-slice.js';
@@ -19,15 +21,18 @@ import type {QueryTrigger} from '../core/triggers/headless-core-query-trigger.js
  * @group Controllers
  * @category QueryTrigger
  * */
-export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
-  if (!loadQueryTriggerReducers(engine)) {
+export function buildQueryTrigger(
+  engine: SearchEngine | FrankensteinEngine
+): QueryTrigger {
+  const searchEngine = ensureSearchEngine(engine);
+  if (!loadQueryTriggerReducers(searchEngine)) {
     throw loadReducerError;
   }
 
-  const controller = buildController(engine);
-  const {dispatch} = engine;
+  const controller = buildController(searchEngine);
+  const {dispatch} = searchEngine;
 
-  const getState = () => engine.state;
+  const getState = () => searchEngine.state;
 
   const modification = () => getState().triggers.queryModification.newQuery;
   const originalQuery = () =>

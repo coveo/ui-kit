@@ -1,5 +1,7 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {configuration} from '../../app/common-reducers.js';
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import type {StateWithHistory} from '../../app/undoable.js';
 import {facetOrderReducer as facetOrder} from '../../features/facets/facet-order/facet-order-slice.js';
@@ -75,14 +77,17 @@ export type HistoryManagerState = StateWithHistory<HistoryState>;
  * @group Controllers
  * @category HistoryManager
  */
-export function buildHistoryManager(engine: SearchEngine): HistoryManager {
-  if (!loadHistoryManagerReducers(engine)) {
+export function buildHistoryManager(
+  engine: SearchEngine | FrankensteinEngine
+): HistoryManager {
+  const searchEngine = ensureSearchEngine(engine);
+  if (!loadHistoryManagerReducers(searchEngine)) {
     throw loadReducerError;
   }
 
-  const controller = buildController(engine);
-  const {dispatch} = engine;
-  const getState = () => engine.state;
+  const controller = buildController(searchEngine);
+  const {dispatch} = searchEngine;
+  const getState = () => searchEngine.state;
 
   const canGoBack = (state: HistoryManagerState) => {
     return state.past.length > 0 && !isNullOrUndefined(state.present);
@@ -103,7 +108,7 @@ export function buildHistoryManager(engine: SearchEngine): HistoryManager {
           listener();
         }
       };
-      return engine.subscribe(() => strictListener());
+      return searchEngine.subscribe(() => strictListener());
     },
     get state() {
       return getState().history;

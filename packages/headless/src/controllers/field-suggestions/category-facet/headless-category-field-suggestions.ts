@@ -1,6 +1,8 @@
 import type {CategoryFacetSearchResult} from '../../../api/search/facet-search/category-facet-search/category-facet-search-response.js';
 import {configuration} from '../../../app/common-reducers.js';
 import type {CoreEngine} from '../../../app/engine.js';
+import type {FrankensteinEngine} from '../../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import type {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments.js';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions.js';
@@ -168,16 +170,17 @@ export interface CategoryFieldSuggestionsProps {
  * @category CategoryFieldSuggestions
  */
 export function buildCategoryFieldSuggestions(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props: CategoryFieldSuggestionsProps
 ): CategoryFieldSuggestions {
-  if (!loadCategoryFieldSuggestionsReducers(engine)) {
+  const searchEngine = ensureSearchEngine(engine);
+  if (!loadCategoryFieldSuggestionsReducers(searchEngine)) {
     throw loadReducerError;
   }
   const {facetSearch: facetSearchOptions, ...facetOptions} =
     props.options.facet;
-  const facetId = determineFacetId(engine, facetOptions);
-  engine.dispatch(
+  const facetId = determineFacetId(searchEngine, facetOptions);
+  searchEngine.dispatch(
     registerCategoryFacet({
       ...defaultCategoryFacetOptions,
       ...facetOptions,
@@ -185,13 +188,13 @@ export function buildCategoryFieldSuggestions(
     })
   );
 
-  const facetSearch = buildCategoryFacetSearch(engine, {
+  const facetSearch = buildCategoryFacetSearch(searchEngine, {
     options: {...facetSearchOptions, facetId},
     executeFacetSearchActionCreator: executeFacetSearch,
     executeFieldSuggestActionCreator: executeFieldSuggest,
     select: (value: CategoryFacetSearchResult) => {
-      engine.dispatch(updateFacetOptions());
-      engine.dispatch(
+      searchEngine.dispatch(updateFacetOptions());
+      searchEngine.dispatch(
         executeSearch({
           legacy: logFacetSelect({facetId, facetValue: value.rawValue}),
           next: facetSelect(),
@@ -200,7 +203,7 @@ export function buildCategoryFieldSuggestions(
     },
     isForFieldSuggestions: true,
   });
-  const controller = buildController(engine);
+  const controller = buildController(searchEngine);
   return {
     ...controller,
     ...facetSearch,

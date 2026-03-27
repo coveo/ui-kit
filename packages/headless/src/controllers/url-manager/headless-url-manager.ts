@@ -1,5 +1,7 @@
 import {Schema, StringValue} from '@coveo/bueno';
 import {configuration} from '../../app/common-reducers.js';
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {buildSearchParameterSerializer} from '../../features/search-parameters/search-parameter-serializer.js';
 import type {SearchParametersState} from '../../state/search-app-state.js';
@@ -78,35 +80,36 @@ export interface UrlManagerState {
  * @category UrlManager
  */
 export function buildUrlManager(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props: UrlManagerProps
 ): UrlManager {
+  const searchEngine = ensureSearchEngine(engine);
   let lastRequestId: string;
 
   function updateLastRequestId() {
-    lastRequestId = engine.state.search.requestId;
+    lastRequestId = searchEngine.state.search.requestId;
   }
 
   function hasRequestIdChanged() {
-    return lastRequestId !== engine.state.search.requestId;
+    return lastRequestId !== searchEngine.state.search.requestId;
   }
 
-  if (!loadUrlManagerReducers(engine)) {
+  if (!loadUrlManagerReducers(searchEngine)) {
     throw loadReducerError;
   }
 
   validateInitialState(
-    engine,
+    searchEngine,
     initialStateSchema,
     props.initialState,
     'buildUrlManager'
   );
 
-  const controller = buildController(engine);
+  const controller = buildController(searchEngine);
   let previousFragment = props.initialState.fragment;
   updateLastRequestId();
 
-  const searchParameterManager = buildSearchParameterManager(engine, {
+  const searchParameterManager = buildSearchParameterManager(searchEngine, {
     initialState: {
       parameters: deserializeFragment(previousFragment),
     },
@@ -128,7 +131,7 @@ export function buildUrlManager(
         updateLastRequestId();
       };
       strictListener();
-      return engine.subscribe(strictListener);
+      return searchEngine.subscribe(strictListener);
     },
 
     get state() {

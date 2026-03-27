@@ -1,5 +1,7 @@
 import {configuration} from '../../../app/common-reducers.js';
 import type {CoreEngine} from '../../../app/engine.js';
+import type {FrankensteinEngine} from '../../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import type {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments.js';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions.js';
@@ -171,10 +173,11 @@ export interface FieldSuggestionsProps {
  * @category FieldSuggestions
  */
 export function buildFieldSuggestions(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props: FieldSuggestionsProps
 ): FieldSuggestions {
-  if (!loadFieldSuggestionsReducers(engine)) {
+  const searchEngine = ensureSearchEngine(engine);
+  if (!loadFieldSuggestionsReducers(searchEngine)) {
     throw loadReducerError;
   }
   const {
@@ -182,8 +185,8 @@ export function buildFieldSuggestions(
     allowedValues,
     ...facetOptions
   } = props.options.facet;
-  const facetId = determineFacetId(engine, facetOptions);
-  engine.dispatch(
+  const facetId = determineFacetId(searchEngine, facetOptions);
+  searchEngine.dispatch(
     registerFacet({
       ...defaultFacetOptions,
       ...facetOptions,
@@ -197,11 +200,11 @@ export function buildFieldSuggestions(
     })
   );
 
-  const facetSearch = buildFacetSearch(engine, {
+  const facetSearch = buildFacetSearch(searchEngine, {
     options: {...facetSearchOptions, facetId},
     select: (value) => {
-      engine.dispatch(updateFacetOptions());
-      engine.dispatch(
+      searchEngine.dispatch(updateFacetOptions());
+      searchEngine.dispatch(
         executeSearch({
           legacy: logFacetSelect({facetId, facetValue: value.rawValue}),
           next: facetSelect(),
@@ -209,8 +212,8 @@ export function buildFieldSuggestions(
       );
     },
     exclude: (value) => {
-      engine.dispatch(updateFacetOptions());
-      engine.dispatch(
+      searchEngine.dispatch(updateFacetOptions());
+      searchEngine.dispatch(
         executeSearch({
           legacy: logFacetExclude({facetId, facetValue: value.rawValue}),
           next: facetExclude(),
@@ -221,7 +224,7 @@ export function buildFieldSuggestions(
     executeFacetSearchActionCreator: executeFacetSearch,
     executeFieldSuggestActionCreator: executeFieldSuggest,
   });
-  const controller = buildController(engine);
+  const controller = buildController(searchEngine);
   return {
     ...controller,
     ...facetSearch,

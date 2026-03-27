@@ -1,3 +1,5 @@
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {logTriggerExecute} from '../../features/triggers/trigger-analytics-actions.js';
 import {triggerReducer as triggers} from '../../features/triggers/triggers-slice.js';
@@ -51,15 +53,18 @@ export interface ExecuteTriggerState {
  * @group Controllers
  * @category ExecuteTrigger
  * */
-export function buildExecuteTrigger(engine: SearchEngine): ExecuteTrigger {
-  if (!loadExecuteTriggerReducers(engine)) {
+export function buildExecuteTrigger(
+  engine: SearchEngine | FrankensteinEngine
+): ExecuteTrigger {
+  const searchEngine = ensureSearchEngine(engine);
+  if (!loadExecuteTriggerReducers(searchEngine)) {
     throw loadReducerError;
   }
 
-  const controller = buildController(engine);
-  const {dispatch} = engine;
+  const controller = buildController(searchEngine);
+  const {dispatch} = searchEngine;
 
-  const getState = () => engine.state;
+  const getState = () => searchEngine.state;
 
   let previousExecutions = getState().triggers.executions;
 
@@ -84,7 +89,7 @@ export function buildExecuteTrigger(engine: SearchEngine): ExecuteTrigger {
         }
       };
       strictListener();
-      return engine.subscribe(strictListener);
+      return searchEngine.subscribe(strictListener);
     },
 
     get state() {

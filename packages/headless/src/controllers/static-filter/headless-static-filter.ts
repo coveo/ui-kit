@@ -1,4 +1,6 @@
 import {Schema} from '@coveo/bueno';
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {executeSearch} from '../../features/search/search-actions.js';
 import {
@@ -160,18 +162,24 @@ export interface StaticFilterState {
  * @category StaticFilter
  */
 export function buildStaticFilter(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props: StaticFilterProps
 ): StaticFilter {
-  if (!loadReducers(engine)) {
+  const searchEngine = ensureSearchEngine(engine);
+  if (!loadReducers(searchEngine)) {
     throw loadReducerError;
   }
 
-  validateOptions(engine, optionsSchema, props.options, 'buildStaticFilter');
+  validateOptions(
+    searchEngine,
+    optionsSchema,
+    props.options,
+    'buildStaticFilter'
+  );
 
-  const controller = buildController(engine);
-  const {dispatch} = engine;
-  const getState = () => engine.state;
+  const controller = buildController(searchEngine);
+  const {dispatch} = searchEngine;
+  const getState = () => searchEngine.state;
   const {id} = props.options;
 
   dispatch(registerStaticFilter(props.options));

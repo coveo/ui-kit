@@ -9,6 +9,8 @@ import type {Result} from '../../api/search/search/result.js';
 import type {SearchResponseSuccessWithDebugInfo} from '../../api/search/search/search-response.js';
 import type {SecurityIdentity} from '../../api/search/search/security-identity.js';
 import {configuration} from '../../app/common-reducers.js';
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {disableDebug, enableDebug} from '../../features/debug/debug-actions.js';
 import {rankingInformationSelector} from '../../features/debug/debug-selectors.js';
@@ -193,19 +195,20 @@ export interface QueryExpressions {
  * @category RelevanceInspector
  */
 export function buildRelevanceInspector(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props: RelevanceInspectorProps = {}
 ): RelevanceInspector {
-  if (!loadRelevanceInspectorReducers(engine)) {
+  const searchEngine = ensureSearchEngine(engine);
+  if (!loadRelevanceInspectorReducers(searchEngine)) {
     throw loadReducerError;
   }
 
-  const controller = buildController(engine);
-  const {dispatch} = engine;
-  const getState = () => engine.state;
+  const controller = buildController(searchEngine);
+  const {dispatch} = searchEngine;
+  const getState = () => searchEngine.state;
 
   const initialState = validateInitialState(
-    engine,
+    searchEngine,
     initialStateSchema,
     props.initialState,
     'buildRelevanceInspector'
@@ -216,7 +219,7 @@ export function buildRelevanceInspector(
   }
 
   const warnProductionEnvironment = (flag: string) => {
-    engine.logger.warn(
+    searchEngine.logger.warn(
       `Flag [ ${flag} ] is now activated. This should *not* be used in any production environment as it negatively impact performance.`
     );
   };
@@ -282,7 +285,7 @@ export function buildRelevanceInspector(
       !this.state.isEnabled && dispatch(enableDebug());
       dispatch(fetchFieldsDescription());
       warnProductionEnvironment('fieldsDescription');
-      engine.logger.warn(
+      searchEngine.logger.warn(
         `For production environment, please specify the necessary fields either when instantiating a ResultList controller, or by dispatching a registerFieldsToInclude action.
         
         https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.ResultListOptions.html
