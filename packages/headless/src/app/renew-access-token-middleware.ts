@@ -105,10 +105,11 @@ export function createRenewAccessTokenMiddleware(
 
     try {
       await handleTokenRenewal(store, true);
-    } catch {
-      // Renewal may have been initiated by the proactive path with
-      // handleErrors=false; the shared promise rejects but we handle
-      // errors gracefully in the reactive path.
+    } catch (error) {
+      logger.debug(
+        error,
+        'Token renewal failed in reactive path (piggybacked on a proactive renewal). The action will be re-dispatched.'
+      );
     }
     store.dispatch(action as unknown as UnknownAction);
     return;
