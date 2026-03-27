@@ -5,6 +5,11 @@ import type {CaseAssistEngine} from '../app/case-assist-engine/case-assist-engin
 import type {CommerceEngine} from '../app/commerce-engine/commerce-engine.js';
 import type {CoreEngine, CoreEngineNext} from '../app/engine.js';
 import {type EngineMarker, engineMarkerKey} from '../app/engine-marker.js';
+import type {FrankensteinEngine} from '../app/frankenstein-engine/frankenstein-engine.js';
+import {
+  commerceEngineKey,
+  searchEngineKey,
+} from '../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {InsightEngine} from '../app/insight-engine/insight-engine.js';
 import {defaultNodeJSNavigatorContextProvider} from '../app/navigator-context-provider.js';
 import type {RecommendationEngine} from '../app/recommendation-engine/recommendation-engine.js';
@@ -201,5 +206,51 @@ export function buildMockSSRCommerceEngine(
   return {
     ...engine,
     waitForRequestCompletedAction: vi.fn(),
+  };
+}
+
+export function buildMockFrankensteinEngine(
+  searchEngine?: SearchEngine,
+  commerceEngine?: CommerceEngine
+): FrankensteinEngine {
+  const mockSearchEngine =
+    searchEngine ??
+    (buildMockCoreEngine(
+      {} as StateFromEngine<CoreEngine>
+    ) as unknown as SearchEngine);
+  const mockCommerceEngine =
+    commerceEngine ??
+    (buildMockCoreEngineNext(
+      {} as StateFromEngineNext<CoreEngineNext>
+    ) as unknown as CommerceEngine);
+
+  return {
+    [engineMarkerKey]: 'frankenstein' as const,
+    [searchEngineKey]: mockSearchEngine,
+    [commerceEngineKey]: mockCommerceEngine,
+    // @ts-expect-error testing purposes
+    dispatch: vi.fn(),
+    addReducers: vi.fn(),
+    disableAnalytics: vi.fn(),
+    enableAnalytics: vi.fn(),
+    logger: mockLogger(pino({level: 'silent'})),
+    relay: mockRelay(),
+    subscribe: vi.fn(),
+    navigatorContext: defaultNodeJSNavigatorContextProvider(),
+    configuration: {
+      accessToken: '',
+      organizationId: '',
+      analytics: {enabled: true, source: {}},
+      environment: 'prod',
+    },
+    [stateKey]: {
+      configuration: {
+        accessToken: '',
+        organizationId: '',
+        analytics: {enabled: true, source: {}},
+        environment: 'prod',
+      },
+      version: '',
+    },
   };
 }

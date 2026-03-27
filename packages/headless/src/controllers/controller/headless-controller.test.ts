@@ -2,6 +2,7 @@ import type {Mock} from 'vitest';
 import {buildMockCommerceState} from '../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
+  buildMockFrankensteinEngine,
   buildMockSearchEngine,
   type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
@@ -144,6 +145,60 @@ describe('Controller', () => {
           supportedEngines: ['commerce', 'frankenstein'],
         })
       ).not.toThrow();
+    });
+  });
+
+  describe('Frankenstein engine sub-engine routing', () => {
+    it('routes to search sub-engine when controller supports search and frankenstein engine is used', () => {
+      const searchEngine = buildMockSearchEngine(createMockState());
+      const frankensteinEngine = buildMockFrankensteinEngine(searchEngine);
+
+      const controller = buildController(
+        frankensteinEngine as Parameters<typeof buildController>[0],
+        {
+          supportedEngines: ['search', 'frankenstein'],
+        }
+      );
+
+      controller.subscribe(() => {});
+
+      expect(searchEngine.subscribe).toHaveBeenCalled();
+    });
+
+    it('routes to commerce sub-engine when controller supports commerce and frankenstein engine is used', () => {
+      const commerceEngine = buildMockCommerceEngine(buildMockCommerceState());
+      const frankensteinEngine = buildMockFrankensteinEngine(
+        undefined,
+        commerceEngine
+      );
+
+      const controller = buildController(
+        frankensteinEngine as Parameters<typeof buildController>[0],
+        {
+          supportedEngines: ['commerce', 'frankenstein'],
+        }
+      );
+
+      controller.subscribe(() => {});
+
+      expect(commerceEngine.subscribe).toHaveBeenCalled();
+    });
+
+    it('does not route to sub-engine when controller only supports frankenstein', () => {
+      const searchEngine = buildMockSearchEngine(createMockState());
+      const frankensteinEngine = buildMockFrankensteinEngine(searchEngine);
+
+      const controller = buildController(
+        frankensteinEngine as Parameters<typeof buildController>[0],
+        {
+          supportedEngines: ['frankenstein'],
+        }
+      );
+
+      controller.subscribe(() => {});
+
+      expect(frankensteinEngine.subscribe).toHaveBeenCalled();
+      expect(searchEngine.subscribe).not.toHaveBeenCalled();
     });
   });
 });

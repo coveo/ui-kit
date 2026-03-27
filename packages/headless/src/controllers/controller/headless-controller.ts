@@ -1,6 +1,10 @@
 import type {Unsubscribe} from '@reduxjs/toolkit';
 import type {CoreEngine, CoreEngineNext} from '../../app/engine.js';
 import {type EngineMarker, engineMarkerKey} from '../../app/engine-marker.js';
+import {
+  commerceEngineKey,
+  searchEngineKey,
+} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 
 export interface Subscribable {
   /**
@@ -50,13 +54,9 @@ function validateEngineSupport(
   }
 
   if (marker === 'frankenstein') {
-    // Frankenstein engine is compatible if the controller supports 'frankenstein'
-    // or if it supports the specific sub-engine type (routing will happen later in Phase 2).
     if (supportedEngines.includes('frankenstein')) {
       return;
     }
-    // For Phase 1, if a controller supports 'search' or 'commerce' and is used with a
-    // Frankenstein engine, we allow it (sub-engine routing will handle this in Phase 2).
     if (
       supportedEngines.includes('search') ||
       supportedEngines.includes('commerce')
@@ -77,11 +77,56 @@ function validateEngineSupport(
   }
 }
 
+/**
+ * Resolves the engine to use for controller subscription.
+ *
+ * When a Frankenstein engine is detected, routes to the appropriate sub-engine
+ * based on the `supportedEngines` declaration:
+ * - Controllers supporting 'search' are routed to the internal search sub-engine.
+ * - Controllers supporting 'commerce' are routed to the internal commerce sub-engine.
+ * - Controllers supporting only 'frankenstein' subscribe to the Frankenstein engine directly.
+ */
+function resolveEngine(
+  engine: CoreEngine | CoreEngineNext,
+  supportedEngines?: SupportedEngines
+): CoreEngine | CoreEngineNext {
+  const marker = (
+    engine as CoreEngine & {[engineMarkerKey]: EngineMarker | undefined}
+  )[engineMarkerKey];
+
+  if (marker !== 'frankenstein' || !supportedEngines) {
+    return engine;
+  }
+
+  const engineWithSubEngines = engine as unknown as Record<
+    symbol,
+    CoreEngine | CoreEngineNext
+  >;
+
+  if (supportedEngines.includes('search')) {
+    const subEngine = engineWithSubEngines[searchEngineKey];
+    if (subEngine) {
+      return subEngine;
+    }
+  }
+
+  if (supportedEngines.includes('commerce')) {
+    const subEngine = engineWithSubEngines[commerceEngineKey];
+    if (subEngine) {
+      return subEngine;
+    }
+  }
+
+  return engine;
+}
+
 export function buildController<T extends object>(
   engine: CoreEngine<T> | CoreEngineNext<T>,
   options?: BuildControllerOptions
 ): Controller {
   validateEngineSupport(engine, options?.supportedEngines);
+
+  const effectiveEngine = resolveEngine(engine, options?.supportedEngines);
 
   let prevState: string;
   const listeners: Map<Symbol, () => void> = new Map();
@@ -110,7 +155,7 @@ export function buildController<T extends object>(
 
       if (hasNoListeners()) {
         prevState = JSON.stringify(this.state);
-        unsubscribe = engine.subscribe(() => {
+        unsubscribe = effectiveEngine.subscribe(() => {
           if (hasStateChanged(this.state)) {
             listeners.forEach((listener) => listener());
           }
