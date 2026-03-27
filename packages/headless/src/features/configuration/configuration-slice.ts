@@ -22,7 +22,10 @@ import {
   type ConfigurationState,
   getConfigurationInitialState,
 } from './configuration-state.js';
-import getMagicCookie from './magic-cookie.js';
+import {
+  getMagicCookie,
+  getSearchAgentDebugMagicCookie,
+} from './magic-cookie.js';
 
 export const configurationReducer = createReducer(
   getConfigurationInitialState(),
@@ -61,7 +64,7 @@ export const configurationReducer = createReducer(
         }
       })
       .addCase(setAgentId, (state, {payload}) => {
-        state.knowledge.agentId = payload;
+        handleUpdateAgentId(state, payload);
       })
 );
 
@@ -149,5 +152,13 @@ function handleUpdateAnalyticsConfiguration(
   }
   if (!isNullOrUndefined(payload.documentLocation)) {
     state.analytics.documentLocation = payload.documentLocation;
+  }
+}
+
+function handleUpdateAgentId(state: ConfigurationState, payload: string) {
+  state.knowledge.agentId = payload;
+  const searchAgentDebugMagicCookie = getSearchAgentDebugMagicCookie();
+  if (searchAgentDebugMagicCookie) {
+    state.knowledge.debugAgentSession = true;
   }
 }

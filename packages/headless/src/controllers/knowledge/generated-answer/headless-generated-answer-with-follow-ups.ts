@@ -6,6 +6,7 @@ import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import {setAgentId} from '../../../features/configuration/configuration-actions.js';
 import {
   selectAccessToken,
+  selectDebugAgentSession,
   selectEnvironment,
   selectOrganizationId,
 } from '../../../features/configuration/configuration-selectors.js';
@@ -122,6 +123,7 @@ export function buildGeneratedAnswerWithFollowUps(
   const organizationId = selectOrganizationId(getState());
   const accessToken = selectAccessToken(getState());
   const environment = selectEnvironment(getState());
+  const recordDebugSession = selectDebugAgentSession(getState());
 
   const followUpAgent = createFollowUpAgent(
     props.agentId,
@@ -256,6 +258,7 @@ export function buildGeneratedAnswerWithFollowUps(
               conversationId,
               conversationToken,
               accessToken,
+              recordDebugSession,
             },
           },
           followUpStrategy
