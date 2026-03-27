@@ -97,10 +97,19 @@ export function createRenewAccessTokenMiddleware(
       return payload;
     }
 
-    accessTokenRenewalsAttempts++;
-    resetRenewalTriesAfterDelay();
+    const isInitiator = !pendingTokenRenewal;
+    if (isInitiator) {
+      accessTokenRenewalsAttempts++;
+      resetRenewalTriesAfterDelay();
+    }
 
-    await handleTokenRenewal(store, true);
+    try {
+      await handleTokenRenewal(store, true);
+    } catch {
+      // Renewal may have been initiated by the proactive path with
+      // handleErrors=false; the shared promise rejects but we handle
+      // errors gracefully in the reactive path.
+    }
     store.dispatch(action as unknown as UnknownAction);
     return;
   };
