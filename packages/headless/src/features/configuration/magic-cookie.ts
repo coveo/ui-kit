@@ -13,7 +13,6 @@ export function getSearchAgentDebugMagicCookie() {
   if (typeof window === 'undefined') {
     return false;
   } else {
-    const match = searchAgentDebugCookieValueMatcher.exec(document.cookie);
-    return match ? match.pop() : null;
+    return searchAgentDebugCookieValueMatcher.test(document.cookie);
   }
 }

@@ -99,7 +99,6 @@ describe('GeneratedAnswerWithFollowUps', () => {
       ...initialState,
       configuration: {
         ...getConfigurationInitialState(),
-        ...initialState.configuration,
         organizationId: 'org-123',
         environment: 'prod',
         accessToken: 'foo',
@@ -589,43 +588,6 @@ describe('GeneratedAnswerWithFollowUps', () => {
             conversationId,
             conversationToken,
             accessToken: 'foo',
-            recordDebugSession: undefined,
-          },
-        },
-        mockFollowUpStrategy
-      );
-    });
-
-    it('forwards recordDebugSession when enabled', () => {
-      engine = buildEngineWithGeneratedAnswer({
-        configuration: {
-          ...getConfigurationInitialState(),
-          organizationId: 'org-123',
-          environment: 'prod',
-          accessToken: 'foo',
-          knowledge: {
-            answerConfigurationId: '',
-            debugAgentSession: true,
-          },
-        },
-        followUpAnswers: {
-          ...getFollowUpAnswersInitialState(),
-          conversationId,
-          conversationToken,
-        },
-      });
-      const controller = createGeneratedAnswerWithFollowUps();
-
-      controller.askFollowUp(question);
-
-      expect(mockFollowUpAgent.runAgent).toHaveBeenCalledWith(
-        {
-          forwardedProps: {
-            q: question,
-            conversationId,
-            conversationToken,
-            accessToken: 'foo',
-            recordDebugSession: true,
           },
         },
         mockFollowUpStrategy
