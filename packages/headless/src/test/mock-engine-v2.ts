@@ -15,6 +15,7 @@ import {defaultNodeJSNavigatorContextProvider} from '../app/navigator-context-pr
 import type {RecommendationEngine} from '../app/recommendation-engine/recommendation-engine.js';
 import type {SearchEngine} from '../app/search-engine/search-engine.js';
 import {stateKey} from '../app/state-key.js';
+import {getConfigurationInitialState} from '../features/configuration/configuration-state.js';
 import type {SSRCommerceEngine} from '../ssr/commerce/factories/build-factory.js';
 import type {SSRSearchEngine} from '../ssr/search/engine/search-engine.ssr.js';
 
@@ -234,18 +235,10 @@ export function buildMockFrankensteinEngine(
     relay: mockRelay(),
     navigatorContext: defaultNodeJSNavigatorContextProvider(),
     configuration: {
+      ...getConfigurationInitialState(),
       accessToken: '',
       organizationId: '',
-      analytics: {enabled: true, source: {}},
       environment: 'prod',
-      search: {
-        locale: 'en-US',
-        timezone: 'UTC',
-        authenticationProviders: [],
-      },
-      knowledge: {
-        answerConfigurationId: '',
-      },
     },
   };
 }
