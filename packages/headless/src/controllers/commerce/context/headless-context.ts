@@ -1,5 +1,7 @@
 import type {CurrencyCodeISO4217} from '@coveo/relay-event-types';
 import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import type {FrankensteinEngine} from '../../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureCommerceEngine} from '../../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import {stateKey} from '../../../app/state-key.js';
 import {
   setContext,
@@ -125,19 +127,25 @@ export interface ContextState {
  * @category Context
  */
 export function buildContext(
-  engine: CommerceEngine,
+  engine: CommerceEngine | FrankensteinEngine,
   props: ContextProps = {}
 ): Context {
-  if (!loadBaseContextReducers(engine)) {
+  const commerceEngine = ensureCommerceEngine(engine);
+  if (!loadBaseContextReducers(commerceEngine)) {
     throw loadReducerError;
   }
 
-  const controller = buildController(engine);
-  const {dispatch} = engine;
-  const getState = () => engine[stateKey];
+  const controller = buildController(commerceEngine);
+  const {dispatch} = commerceEngine;
+  const getState = () => commerceEngine[stateKey];
 
   if (props.options) {
-    validateOptions(engine, contextSchema, props.options, 'buildContext');
+    validateOptions(
+      commerceEngine,
+      contextSchema,
+      props.options,
+      'buildContext'
+    );
     dispatch(setContext(props.options));
   }
 

@@ -3,6 +3,8 @@ import type {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../app/commerce-engine/commerce-engine.js';
+import type {FrankensteinEngine} from '../../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureCommerceEngine} from '../../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import {stateKey} from '../../../app/state-key.js';
 import {commerceCategoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/commerce/facets/facet-search-set/category/commerce-category-facet-search-set-slice.js';
 import {getFacetIdWithCommerceFieldSuggestionNamespace} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions.js';
@@ -94,19 +96,20 @@ export interface CategoryFieldSuggestions
  * @category CategoryFieldSuggestions
  */
 export function buildCategoryFieldSuggestions(
-  engine: CommerceEngine,
+  engine: CommerceEngine | FrankensteinEngine,
   options: CategoryFacetOptions
 ): CategoryFieldSuggestions {
-  if (!loadFieldSuggestionsReducers(engine)) {
+  const commerceEngine = ensureCommerceEngine(engine);
+  if (!loadFieldSuggestionsReducers(commerceEngine)) {
     throw loadReducerError;
   }
 
-  const {dispatch} = engine;
+  const {dispatch} = commerceEngine;
 
   const namespacedFacetId = getFacetIdWithCommerceFieldSuggestionNamespace(
     options.facetId
   );
-  const facetSearch = buildCategoryFacetSearch(engine, {
+  const facetSearch = buildCategoryFacetSearch(commerceEngine, {
     options: {
       facetId: namespacedFacetId,
       ...options.facetSearch,
@@ -118,7 +121,7 @@ export function buildCategoryFieldSuggestions(
     isForFieldSuggestions: false,
   });
 
-  const getState = () => engine[stateKey];
+  const getState = () => commerceEngine[stateKey];
 
   const getFacetForFieldSuggestions = (facetId: string) => {
     return getState().fieldSuggestionsOrder.find(
@@ -126,7 +129,7 @@ export function buildCategoryFieldSuggestions(
     )!;
   };
 
-  const controller = buildController(engine);
+  const controller = buildController(commerceEngine);
 
   const facetSearchStateSelector = createSelector(
     (state: CommerceEngineState) =>

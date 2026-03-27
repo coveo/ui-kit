@@ -2,6 +2,8 @@ import type {SerializedError} from '@reduxjs/toolkit';
 import type {CommerceAPIErrorResponse} from '../../../api/commerce/commerce-api-error-response.js';
 import type {BadgesProduct} from '../../../api/commerce/product-enrichment/product-enrichment-response.js';
 import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import type {FrankensteinEngine} from '../../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureCommerceEngine} from '../../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import {stateKey} from '../../../app/state-key.js';
 import {productEnrichmentOptionsSchema} from '../../../features/commerce/product-enrichment/product-enrichment.js';
 import {
@@ -96,23 +98,24 @@ function validateProductEnrichmentProps(
  *
  * */
 export function buildProductEnrichment(
-  engine: CommerceEngine,
+  engine: CommerceEngine | FrankensteinEngine,
   props?: ProductEnrichmentProps
 ): ProductEnrichment {
-  if (!loadProductEnrichmentReducer(engine)) {
+  const commerceEngine = ensureCommerceEngine(engine);
+  if (!loadProductEnrichmentReducer(commerceEngine)) {
     throw loadReducerError;
   }
 
-  const controller = buildController(engine);
-  const {dispatch} = engine;
-  const getState = () => engine[stateKey];
+  const controller = buildController(commerceEngine);
+  const {dispatch} = commerceEngine;
+  const getState = () => commerceEngine[stateKey];
 
   const registrationOptions: ProductEnrichmentOptions = {
     ...defaultProductEnrichmentOptions,
     ...props?.options,
   };
 
-  validateProductEnrichmentProps(engine, {
+  validateProductEnrichmentProps(commerceEngine, {
     options: props?.options,
   });
 

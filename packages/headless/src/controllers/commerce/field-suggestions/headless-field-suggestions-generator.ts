@@ -4,6 +4,8 @@ import type {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../app/commerce-engine/commerce-engine.js';
+import type {FrankensteinEngine} from '../../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureCommerceEngine} from '../../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import {stateKey} from '../../../app/state-key.js';
 import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice.js';
 import type {FieldSuggestionsFacet} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-state.js';
@@ -61,9 +63,10 @@ export interface FieldSuggestionsGenerator extends Controller {
  * @deprecated
  */
 export function buildFieldSuggestionsGenerator(
-  engine: CommerceEngine
+  engine: CommerceEngine | FrankensteinEngine
 ): FieldSuggestionsGenerator {
-  if (!loadFieldSuggestionsGeneratorReducers(engine)) {
+  const commerceEngine = ensureCommerceEngine(engine);
+  if (!loadFieldSuggestionsGeneratorReducers(commerceEngine)) {
     throw loadReducerError;
   }
 
@@ -74,7 +77,7 @@ export function buildFieldSuggestionsGenerator(
     facetSearch: {type: 'SEARCH' as FacetSearchType},
   };
 
-  const controller = buildController(engine);
+  const controller = buildController(commerceEngine);
 
   const createFieldSuggestionsControllers = createSelector(
     (state: CommerceEngineState) => state.fieldSuggestionsOrder,
@@ -83,7 +86,7 @@ export function buildFieldSuggestionsGenerator(
         if (type !== 'hierarchical') {
           return;
         }
-        return buildCategoryFieldSuggestions(engine, {
+        return buildCategoryFieldSuggestions(commerceEngine, {
           facetId,
           ...commonOptions,
         });
@@ -94,13 +97,13 @@ export function buildFieldSuggestionsGenerator(
     ...controller,
 
     get fieldSuggestions() {
-      return createFieldSuggestionsControllers(engine[stateKey]).filter(
+      return createFieldSuggestionsControllers(commerceEngine[stateKey]).filter(
         (v) => v !== undefined
       );
     },
 
     get state() {
-      return engine[stateKey].fieldSuggestionsOrder;
+      return commerceEngine[stateKey].fieldSuggestionsOrder;
     },
   };
 }

@@ -1,4 +1,6 @@
 import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import type {FrankensteinEngine} from '../../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureCommerceEngine} from '../../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import {stateKey} from '../../../app/state-key.js';
 import {updateQuery} from '../../../features/commerce/query/query-actions.js';
 import {queryReducer as query} from '../../../features/commerce/query/query-slice.js';
@@ -35,17 +37,18 @@ export interface QueryTriggerOptions {
  * @category QueryTrigger
  * */
 export function buildQueryTrigger(
-  engine: CommerceEngine,
+  engine: CommerceEngine | FrankensteinEngine,
   {enableResults = false}: QueryTriggerOptions = {enableResults: false}
 ): QueryTrigger {
-  if (!loadQueryTriggerReducers(engine)) {
+  const commerceEngine = ensureCommerceEngine(engine);
+  if (!loadQueryTriggerReducers(commerceEngine)) {
     throw loadReducerError;
   }
 
-  const controller = buildController(engine);
-  const {dispatch} = engine;
+  const controller = buildController(commerceEngine);
+  const {dispatch} = commerceEngine;
 
-  const getState = () => engine[stateKey];
+  const getState = () => commerceEngine[stateKey];
 
   const modification = () => getState().triggers.queryModification.newQuery;
   const originalQuery = () =>

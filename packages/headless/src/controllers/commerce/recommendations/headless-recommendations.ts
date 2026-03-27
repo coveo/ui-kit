@@ -7,6 +7,8 @@ import type {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../app/commerce-engine/commerce-engine.js';
+import type {FrankensteinEngine} from '../../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureCommerceEngine} from '../../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import {stateKey} from '../../../app/state-key.js';
 import {
   pageRecommendationSelector,
@@ -118,22 +120,23 @@ export interface RecommendationsProps {
  * @category Recommendations
  */
 export function buildRecommendations(
-  engine: CommerceEngine,
+  engine: CommerceEngine | FrankensteinEngine,
   props: RecommendationsProps
 ): Recommendations {
-  if (!loadBaseRecommendationsReducers(engine)) {
+  const commerceEngine = ensureCommerceEngine(engine);
+  if (!loadBaseRecommendationsReducers(commerceEngine)) {
     throw loadReducerError;
   }
 
   validateInitialState(
-    engine,
+    commerceEngine,
     recommendationsOptionsSchema,
     props.options,
     'buildRecommendations'
   );
 
-  const controller = buildController(engine);
-  const {dispatch} = engine;
+  const controller = buildController(commerceEngine);
+  const {dispatch} = commerceEngine;
 
   const {slotId, productId} = props.options;
   dispatch(registerRecommendationsSlot({slotId, productId}));
@@ -142,7 +145,7 @@ export function buildRecommendations(
     state.recommendations[slotId]!;
 
   const subControllers = buildBaseSubControllers<RecommendationsSummaryState>(
-    engine,
+    commerceEngine,
     {
       slotId,
       responseIdSelector: (state) => state.recommendations[slotId]!.responseId,
@@ -168,7 +171,7 @@ export function buildRecommendations(
     },
 
     get state() {
-      return recommendationStateSelector(engine[stateKey]);
+      return recommendationStateSelector(commerceEngine[stateKey]);
     },
 
     refresh: () => dispatch(fetchRecommendations({slotId, productId})),

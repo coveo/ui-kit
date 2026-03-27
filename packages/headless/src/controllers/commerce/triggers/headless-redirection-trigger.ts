@@ -1,4 +1,6 @@
 import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import type {FrankensteinEngine} from '../../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureCommerceEngine} from '../../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import {stateKey} from '../../../app/state-key.js';
 import {commerceTriggersReducer as triggers} from '../../../features/commerce/triggers/triggers-slice.js';
 import type {TriggerSection} from '../../../state/state-sections.js';
@@ -20,15 +22,16 @@ import type {RedirectionTrigger} from '../../core/triggers/headless-core-redirec
  * @category RedirectionTrigger
  * */
 export function buildRedirectionTrigger(
-  engine: CommerceEngine
+  engine: CommerceEngine | FrankensteinEngine
 ): RedirectionTrigger {
-  if (!loadRedirectionReducers(engine)) {
+  const commerceEngine = ensureCommerceEngine(engine);
+  if (!loadRedirectionReducers(commerceEngine)) {
     throw loadReducerError;
   }
 
-  const controller = buildController(engine);
+  const controller = buildController(commerceEngine);
 
-  const getState = () => engine[stateKey];
+  const getState = () => commerceEngine[stateKey];
 
   let previousRedirectTo = getState().triggers.redirectTo;
 
@@ -45,7 +48,7 @@ export function buildRedirectionTrigger(
         }
       };
       strictListener();
-      return engine.subscribe(strictListener);
+      return commerceEngine.subscribe(strictListener);
     },
 
     get state() {

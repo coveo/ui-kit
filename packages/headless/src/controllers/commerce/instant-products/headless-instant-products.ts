@@ -6,6 +6,8 @@ import type {
   Product,
 } from '../../../api/commerce/common/product.js';
 import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import type {FrankensteinEngine} from '../../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureCommerceEngine} from '../../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import {stateKey} from '../../../app/state-key.js';
 import {
   clearExpiredProducts,
@@ -144,16 +146,17 @@ export interface InstantProductsState {
  * @category InstantProducts
  */
 export function buildInstantProducts(
-  engine: CommerceEngine,
+  engine: CommerceEngine | FrankensteinEngine,
   props: InstantProductsProps
 ): InstantProducts {
-  if (!loadInstantProductsReducers(engine)) {
+  const commerceEngine = ensureCommerceEngine(engine);
+  if (!loadInstantProductsReducers(commerceEngine)) {
     throw loadReducerError;
   }
 
-  const controller = buildController(engine);
-  const {dispatch} = engine;
-  const getState = () => engine[stateKey];
+  const controller = buildController(commerceEngine);
+  const {dispatch} = commerceEngine;
+  const getState = () => commerceEngine[stateKey];
 
   const options: Required<InstantProductsOptions> = {
     searchBoxId: props.options.searchBoxId || randomID('instant-products-'),
@@ -161,7 +164,7 @@ export function buildInstantProducts(
   };
 
   validateOptions(
-    engine,
+    commerceEngine,
     instantProductsOptionsSchema,
     options,
     'buildInstantProducts'
@@ -227,7 +230,7 @@ export function buildInstantProducts(
     },
 
     interactiveProduct(props: InteractiveProductProps) {
-      return buildCoreInteractiveProduct(engine, {
+      return buildCoreInteractiveProduct(commerceEngine, {
         ...props,
         responseIdSelector: () =>
           getStateForSearchBox().cache[getQuery()].searchUid,

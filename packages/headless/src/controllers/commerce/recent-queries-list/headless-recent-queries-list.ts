@@ -6,6 +6,8 @@ import {
   StringValue,
 } from '@coveo/bueno';
 import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import type {FrankensteinEngine} from '../../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureCommerceEngine} from '../../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import {stateKey} from '../../../app/state-key.js';
 import type {UpdateQueryPayload} from '../../../features/commerce/query/query-actions.js';
 import {
@@ -138,16 +140,17 @@ function validateRecentQueriesProps(
  *
  * */
 export function buildRecentQueriesList(
-  engine: CommerceEngine,
+  engine: CommerceEngine | FrankensteinEngine,
   props?: RecentQueriesListProps
 ): RecentQueriesList {
-  if (!loadRecentQueriesListReducer(engine)) {
+  const commerceEngine = ensureCommerceEngine(engine);
+  if (!loadRecentQueriesListReducer(commerceEngine)) {
     throw loadReducerError;
   }
 
-  const controller = buildController(engine);
-  const {dispatch} = engine;
-  const getState = () => engine[stateKey];
+  const controller = buildController(commerceEngine);
+  const {dispatch} = commerceEngine;
+  const getState = () => commerceEngine[stateKey];
 
   const registrationOptions: Required<RecentQueriesListOptions> = {
     ...defaultRecentQueriesOptions,
@@ -158,7 +161,7 @@ export function buildRecentQueriesList(
     ...props?.initialState,
   };
 
-  validateRecentQueriesProps(engine, {
+  validateRecentQueriesProps(commerceEngine, {
     options: registrationOptions,
     initialState: registrationState,
   });

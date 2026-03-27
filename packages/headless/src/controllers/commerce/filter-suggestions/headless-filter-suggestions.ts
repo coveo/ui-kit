@@ -5,6 +5,8 @@ import type {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../app/commerce-engine/commerce-engine.js';
+import type {FrankensteinEngine} from '../../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureCommerceEngine} from '../../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import {stateKey} from '../../../app/state-key.js';
 import {clearAllCoreFacets} from '../../../features/commerce/facets/core-facet/core-facet-actions.js';
 import {getFacetIdWithCommerceFieldSuggestionNamespace} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions.js';
@@ -122,29 +124,30 @@ export interface FilterSuggestions
  * @category FilterSuggestions
  */
 export function buildFilterSuggestions(
-  engine: CommerceEngine,
+  engine: CommerceEngine | FrankensteinEngine,
   options: RegularFacetOptions
 ): FilterSuggestions {
-  if (!loadFilterSuggestionsReducers(engine)) {
+  const commerceEngine = ensureCommerceEngine(engine);
+  if (!loadFilterSuggestionsReducers(commerceEngine)) {
     throw loadReducerError;
   }
 
-  const {dispatch} = engine;
+  const {dispatch} = commerceEngine;
 
   const namespacedFacetId = getFacetIdWithCommerceFieldSuggestionNamespace(
     options.facetId
   );
 
-  const facetSearch = buildRegularFacetSearch(engine, {
+  const facetSearch = buildRegularFacetSearch(commerceEngine, {
     options: {facetId: namespacedFacetId, ...options.facetSearch},
     select: () => {},
     exclude: () => {},
     isForFieldSuggestions: true,
   });
 
-  const getState = () => engine[stateKey];
+  const getState = () => commerceEngine[stateKey];
 
-  const controller = buildController(engine);
+  const controller = buildController(commerceEngine);
 
   const facetForFieldSuggestionsSelector = createSelector(
     (state: CommerceEngineState) => state.fieldSuggestionsOrder,
@@ -185,7 +188,8 @@ export function buildFilterSuggestions(
       dispatch(
         updateQuery({
           query:
-            engine[stateKey].facetSearchSet[namespacedFacetId].options.query,
+            commerceEngine[stateKey].facetSearchSet[namespacedFacetId].options
+              .query,
         })
       );
       dispatch(options.fetchProductsActionCreator());

@@ -1,5 +1,7 @@
 import type {Product} from '@coveo/relay-event-types';
 import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import type {FrankensteinEngine} from '../../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureCommerceEngine} from '../../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import {productView} from '../../../features/commerce/product/product-actions.js';
 
 /**
@@ -25,10 +27,13 @@ export interface ProductView {
  * @group Buildable controllers
  * @category ProductView
  */
-export function buildProductView(engine: CommerceEngine): ProductView {
+export function buildProductView(
+  engine: CommerceEngine | FrankensteinEngine
+): ProductView {
+  const commerceEngine = ensureCommerceEngine(engine);
   return {
     view: (product) => {
-      engine.dispatch(productView(product));
+      commerceEngine.dispatch(productView(product));
     },
   };
 }

@@ -1,4 +1,6 @@
 import type {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
+import type {FrankensteinEngine} from '../../../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureCommerceEngine} from '../../../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import {stateKey} from '../../../../app/state-key.js';
 import {
   type CartActionPayload,
@@ -146,20 +148,24 @@ export interface CartState {
  * @group Buildable controllers
  * @category Cart
  */
-export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
-  if (!loadBaseCartReducers(engine)) {
+export function buildCart(
+  engine: CommerceEngine | FrankensteinEngine,
+  props: CartProps = {}
+): Cart {
+  const commerceEngine = ensureCommerceEngine(engine);
+  if (!loadBaseCartReducers(commerceEngine)) {
     throw loadReducerError;
   }
 
-  const {dispatch} = engine;
-  const controller = buildController(engine);
-  const getState = () => engine[stateKey].cart;
+  const {dispatch} = commerceEngine;
+  const controller = buildController(commerceEngine);
+  const getState = () => commerceEngine[stateKey].cart;
 
   const initialState = {
     ...props.initialState,
   };
 
-  validateInitialState(engine, cartSchema, initialState, 'buildCart');
+  validateInitialState(commerceEngine, cartSchema, initialState, 'buildCart');
 
   // TODO: expose some helpers to facilitate storing / restoring the cart state for MPAs
   if (initialState.items !== undefined) {

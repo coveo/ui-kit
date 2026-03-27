@@ -68,6 +68,21 @@ export function ensureSearchEngine(
 }
 
 /**
+ * Accepts a `CommerceEngine` or `FrankensteinEngine` and returns a `CommerceEngine`.
+ * If a `FrankensteinEngine` is provided, its internal commerce sub-engine is extracted.
+ *
+ * @internal
+ */
+export function ensureCommerceEngine(
+  engine: CommerceEngine | FrankensteinEngine
+): CommerceEngine {
+  if (isFrankensteinEngine(engine)) {
+    return getCommerceEngine(engine);
+  }
+  return engine;
+}
+
+/**
  * Accepts a `CoreEngine` or `FrankensteinEngine` and returns a `CoreEngine`.
  * If a `FrankensteinEngine` is provided, its internal search sub-engine is extracted
  * (which extends `CoreEngine`).

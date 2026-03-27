@@ -3,6 +3,8 @@ import type {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../../../app/commerce-engine/commerce-engine.js';
+import type {FrankensteinEngine} from '../../../../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureCommerceEngine} from '../../../../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import {stateKey} from '../../../../../app/state-key.js';
 import {clearAllCoreFacets} from '../../../../../features/commerce/facets/core-facet/core-facet-actions.js';
 import {commerceFacetOrderReducer as facetOrder} from '../../../../../features/commerce/facets/facet-order/commerce-facet-order-slice.js';
@@ -130,15 +132,16 @@ export interface FacetGeneratorOptions {
  * @returns A `FacetGenerator` sub-controller.
  */
 export function buildFacetGenerator(
-  engine: CommerceEngine,
+  engine: CommerceEngine | FrankensteinEngine,
   options: FacetGeneratorOptions
 ): FacetGenerator {
-  if (!loadCommerceFacetGeneratorReducers(engine)) {
+  const commerceEngine = ensureCommerceEngine(engine);
+  if (!loadCommerceFacetGeneratorReducers(commerceEngine)) {
     throw loadReducerError;
   }
 
-  const controller = buildController(engine);
-  const {dispatch} = engine;
+  const controller = buildController(commerceEngine);
+  const {dispatch} = commerceEngine;
 
   const createFacetControllers = createSelector(
     [
@@ -161,15 +164,15 @@ export function buildFacetGenerator(
     ({type, facetId}) => {
       switch (type) {
         case 'dateRange':
-          return options.buildDateFacet(engine, {facetId});
+          return options.buildDateFacet(commerceEngine, {facetId});
         case 'hierarchical':
-          return options.buildCategoryFacet(engine, {facetId});
+          return options.buildCategoryFacet(commerceEngine, {facetId});
         case 'numericalRange':
-          return options.buildNumericFacet(engine, {facetId});
+          return options.buildNumericFacet(commerceEngine, {facetId});
         case 'regular':
-          return options.buildRegularFacet(engine, {facetId});
+          return options.buildRegularFacet(commerceEngine, {facetId});
         case 'location':
-          return options.buildLocationFacet(engine, {facetId});
+          return options.buildLocationFacet(commerceEngine, {facetId});
       }
     }
   );
@@ -183,11 +186,11 @@ export function buildFacetGenerator(
     },
 
     get facets() {
-      return createFacetControllers(engine[stateKey]);
+      return createFacetControllers(commerceEngine[stateKey]);
     },
 
     get state() {
-      return engine[stateKey].facetOrder;
+      return commerceEngine[stateKey].facetOrder;
     },
   };
 }

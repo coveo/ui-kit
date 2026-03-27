@@ -4,6 +4,8 @@ import type {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../app/commerce-engine/commerce-engine.js';
+import type {FrankensteinEngine} from '../../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureCommerceEngine} from '../../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import {stateKey} from '../../../app/state-key.js';
 import {clearAllCoreFacets} from '../../../features/commerce/facets/core-facet/core-facet-actions.js';
 import {commerceCategoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/commerce/facets/facet-search-set/category/commerce-category-facet-search-set-slice.js';
@@ -124,19 +126,20 @@ export interface CategoryFilterSuggestions
  * @category CategoryFilterSuggestions
  */
 export function buildCategoryFilterSuggestions(
-  engine: CommerceEngine,
+  engine: CommerceEngine | FrankensteinEngine,
   options: CategoryFacetOptions
 ): CategoryFilterSuggestions {
-  if (!loadCategoryFilterSuggestionsReducers(engine)) {
+  const commerceEngine = ensureCommerceEngine(engine);
+  if (!loadCategoryFilterSuggestionsReducers(commerceEngine)) {
     throw loadReducerError;
   }
 
-  const {dispatch} = engine;
+  const {dispatch} = commerceEngine;
 
   const namespacedFacetId = getFacetIdWithCommerceFieldSuggestionNamespace(
     options.facetId
   );
-  const facetSearch = buildCategoryFacetSearch(engine, {
+  const facetSearch = buildCategoryFacetSearch(commerceEngine, {
     options: {
       facetId: namespacedFacetId,
       ...options.facetSearch,
@@ -145,9 +148,9 @@ export function buildCategoryFilterSuggestions(
     isForFieldSuggestions: true,
   });
 
-  const getState = () => engine[stateKey];
+  const getState = () => commerceEngine[stateKey];
 
-  const controller = buildController(engine);
+  const controller = buildController(commerceEngine);
 
   const facetForFieldSuggestionsSelector = createSelector(
     (state: CommerceEngineState) => state.fieldSuggestionsOrder,
@@ -191,8 +194,8 @@ export function buildCategoryFilterSuggestions(
       dispatch(
         updateQuery({
           query:
-            engine[stateKey].categoryFacetSearchSet[namespacedFacetId].options
-              .query,
+            commerceEngine[stateKey].categoryFacetSearchSet[namespacedFacetId]
+              .options.query,
         })
       );
       dispatch(options.fetchProductsActionCreator());

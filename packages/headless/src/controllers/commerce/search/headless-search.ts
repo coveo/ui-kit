@@ -6,6 +6,8 @@ import type {
 import type {Result} from '../../../api/commerce/common/result.js';
 import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {configuration} from '../../../app/common-reducers.js';
+import type {FrankensteinEngine} from '../../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureCommerceEngine} from '../../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import {stateKey} from '../../../app/state-key.js';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice.js';
 import {
@@ -119,17 +121,18 @@ export interface SearchOptions {
  * @category Search
  */
 export function buildSearch(
-  engine: CommerceEngine,
+  engine: CommerceEngine | FrankensteinEngine,
   {enableResults = false}: SearchOptions = {enableResults: false}
 ): Search {
-  if (!loadBaseSearchReducers(engine)) {
+  const commerceEngine = ensureCommerceEngine(engine);
+  if (!loadBaseSearchReducers(commerceEngine)) {
     throw loadReducerError;
   }
 
-  const controller = buildController(engine);
-  const {dispatch} = engine;
-  const getState = () => engine[stateKey];
-  const subControllers = buildSearchSubControllers(engine, {
+  const controller = buildController(commerceEngine);
+  const {dispatch} = commerceEngine;
+  const getState = () => commerceEngine[stateKey];
+  const subControllers = buildSearchSubControllers(commerceEngine, {
     responseIdSelector,
     fetchProductsActionCreator: () => executeSearch({enableResults}),
     fetchMoreProductsActionCreator: () => fetchMoreProducts({enableResults}),

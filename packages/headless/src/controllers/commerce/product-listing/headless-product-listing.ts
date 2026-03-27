@@ -6,6 +6,8 @@ import type {
 import type {Result} from '../../../api/commerce/common/result.js';
 import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {configuration} from '../../../app/common-reducers.js';
+import type {FrankensteinEngine} from '../../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureCommerceEngine} from '../../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import {stateKey} from '../../../app/state-key.js';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice.js';
 import {
@@ -121,20 +123,21 @@ export interface ProductListingOptions extends FetchProductListingPayload {}
  * @category ProductListing
  */
 export function buildProductListing(
-  engine: CommerceEngine,
+  engine: CommerceEngine | FrankensteinEngine,
   {enableResults = false}: ProductListingOptions = {
     enableResults: false,
   }
 ): ProductListing {
-  if (!loadBaseProductListingReducers(engine)) {
+  const commerceEngine = ensureCommerceEngine(engine);
+  if (!loadBaseProductListingReducers(commerceEngine)) {
     throw loadReducerError;
   }
 
-  const controller = buildController(engine);
-  const {dispatch} = engine;
-  const getState = () => engine[stateKey];
+  const controller = buildController(commerceEngine);
+  const {dispatch} = commerceEngine;
+  const getState = () => commerceEngine[stateKey];
 
-  const subControllers = buildProductListingSubControllers(engine, {
+  const subControllers = buildProductListingSubControllers(commerceEngine, {
     responseIdSelector,
     fetchProductsActionCreator: () => fetchProductListing({enableResults}),
     fetchMoreProductsActionCreator: () => fetchMoreProducts({enableResults}),

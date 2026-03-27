@@ -4,6 +4,8 @@ import type {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../app/commerce-engine/commerce-engine.js';
+import type {FrankensteinEngine} from '../../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureCommerceEngine} from '../../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import {stateKey} from '../../../app/state-key.js';
 import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice.js';
 import type {FieldSuggestionsFacet} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-state.js';
@@ -65,9 +67,10 @@ export interface FilterSuggestionsGenerator extends Controller {
  * @category FilterSuggestionsGenerator
  */
 export function buildFilterSuggestionsGenerator(
-  engine: CommerceEngine
+  engine: CommerceEngine | FrankensteinEngine
 ): FilterSuggestionsGenerator {
-  if (!loadFilterSuggestionsGeneratorReducers(engine)) {
+  const commerceEngine = ensureCommerceEngine(engine);
+  if (!loadFilterSuggestionsGeneratorReducers(commerceEngine)) {
     throw loadReducerError;
   }
 
@@ -78,7 +81,7 @@ export function buildFilterSuggestionsGenerator(
     facetSearch: {type: 'SEARCH' as FacetSearchType},
   };
 
-  const controller = buildController(engine);
+  const controller = buildController(commerceEngine);
 
   const createFacetedSearchControllers = createSelector(
     (state: CommerceEngineState) => state.fieldSuggestionsOrder,
@@ -86,12 +89,15 @@ export function buildFilterSuggestionsGenerator(
       facetOrder.map(({type, facetId}) => {
         switch (type) {
           case 'hierarchical':
-            return buildCategoryFilterSuggestions(engine, {
+            return buildCategoryFilterSuggestions(commerceEngine, {
               facetId,
               ...commonOptions,
             });
           default:
-            return buildFilterSuggestions(engine, {facetId, ...commonOptions});
+            return buildFilterSuggestions(commerceEngine, {
+              facetId,
+              ...commonOptions,
+            });
         }
       })
   );
@@ -100,11 +106,11 @@ export function buildFilterSuggestionsGenerator(
     ...controller,
 
     get filterSuggestions() {
-      return createFacetedSearchControllers(engine[stateKey]);
+      return createFacetedSearchControllers(commerceEngine[stateKey]);
     },
 
     get state() {
-      return engine[stateKey].fieldSuggestionsOrder;
+      return commerceEngine[stateKey].fieldSuggestionsOrder;
     },
   };
 }

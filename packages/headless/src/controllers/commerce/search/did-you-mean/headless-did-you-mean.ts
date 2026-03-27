@@ -3,6 +3,8 @@ import type {
   WordCorrection,
 } from '../../../../api/search/search/query-corrections.js';
 import type {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
+import type {FrankensteinEngine} from '../../../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureCommerceEngine} from '../../../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import {stateKey} from '../../../../app/state-key.js';
 import {didYouMeanReducer as didYouMean} from '../../../../features/commerce/did-you-mean/did-you-mean-slice.js';
 import {updateQuery} from '../../../../features/commerce/query/query-actions.js';
@@ -47,22 +49,25 @@ export interface DidYouMean extends Controller {
  * @group Sub-controllers
  * @category DidYouMean
  */
-export function buildDidYouMean(engine: CommerceEngine): DidYouMean {
-  if (!loadDidYouMeanReducers(engine)) {
+export function buildDidYouMean(
+  engine: CommerceEngine | FrankensteinEngine
+): DidYouMean {
+  const commerceEngine = ensureCommerceEngine(engine);
+  if (!loadDidYouMeanReducers(commerceEngine)) {
     throw loadReducerError;
   }
 
-  const controller = buildController(engine);
-  const getState = () => engine[stateKey].didYouMean;
+  const controller = buildController(commerceEngine);
+  const getState = () => commerceEngine[stateKey].didYouMean;
 
   return {
     ...controller,
 
     applyCorrection() {
-      engine.dispatch(
+      commerceEngine.dispatch(
         updateQuery({query: this.state.queryCorrection.correctedQuery})
       );
-      engine.dispatch(executeSearch());
+      commerceEngine.dispatch(executeSearch());
     },
 
     get state() {
