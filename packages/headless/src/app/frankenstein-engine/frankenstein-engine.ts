@@ -1,17 +1,19 @@
+import type {Relay} from '@coveo/relay';
 import type {Logger} from 'pino';
+import type {ConfigurationState} from '../../features/configuration/configuration-state.js';
 import {
   buildCommerceEngine,
   type CommerceEngine,
 } from '../commerce-engine/commerce-engine.js';
-import type {CoreEngineNext} from '../engine.js';
 import {engineMarkerKey} from '../engine-marker.js';
 import type {LoggerOptions} from '../logger.js';
 import {buildLogger} from '../logger.js';
+import type {NavigatorContext} from '../navigator-context-provider.js';
 import {
   buildSearchEngine,
   type SearchEngine,
 } from '../search-engine/search-engine.js';
-import {redactEngine, stateKey} from '../state-key.js';
+import {redactEngine} from '../state-key.js';
 import {
   type FrankensteinEngineConfiguration,
   frankensteinEngineConfigurationSchema,
@@ -26,13 +28,17 @@ export type {FrankensteinEngineConfiguration};
 /**
  * The engine that unifies Coveo search and commerce capabilities into a single instance.
  *
- * Controllers declared with `supportedEngines: ['search', 'frankenstein']` or
- * `supportedEngines: ['commerce', 'frankenstein']` are automatically routed to the
- * appropriate internal sub-engine.
+ * Each sub-engine maintains its own independent Redux store. Controllers are routed
+ * to the correct sub-engine via `buildController`'s `supportedEngines` option.
+ *
+ * Sub-engines are siloed: `dispatch`, `subscribe`, and `addReducers` are intentionally
+ * not exposed at the Frankenstein engine level to avoid unwarranted side effects.
+ * Use the `supportedEngines` option in `buildController` to route controllers to the
+ * appropriate sub-engine.
  *
  * @group Engine
  */
-export interface FrankensteinEngine extends CoreEngineNext<{}> {
+export interface FrankensteinEngine {
   readonly [engineMarkerKey]: 'frankenstein';
   /**
    * The internal search sub-engine.
@@ -44,6 +50,35 @@ export interface FrankensteinEngine extends CoreEngineNext<{}> {
    * @internal
    */
   readonly [commerceEngineKey]: CommerceEngine;
+
+  /**
+   * Enable analytics tracking on both sub-engines.
+   */
+  enableAnalytics(): void;
+  /**
+   * Disable analytics tracking on both sub-engines.
+   */
+  disableAnalytics(): void;
+
+  /**
+   * The logger instance used by the engine.
+   */
+  readonly logger: Logger;
+
+  /**
+   * The Relay instance used by the engine.
+   */
+  readonly relay: Relay;
+
+  /**
+   * The navigator context (referer, location, UserAgent).
+   */
+  readonly navigatorContext: NavigatorContext;
+
+  /**
+   * The readonly global headless engine configuration.
+   */
+  readonly configuration: ConfigurationState;
 }
 
 /**
@@ -114,33 +149,10 @@ export function buildFrankensteinEngine(
     loggerOptions: options.loggerOptions,
   });
 
-  // biome-ignore lint/suspicious/noExplicitAny: required for Frankenstein engine dispatch forwarding
-  const dispatch = (action: any): any => {
-    searchEngine.dispatch(action);
-    commerceEngine.dispatch(action);
-    return action;
-  };
-
   const engine: FrankensteinEngine = {
     [engineMarkerKey]: 'frankenstein' as const,
     [searchEngineKey]: searchEngine,
     [commerceEngineKey]: commerceEngine,
-
-    dispatch: dispatch as FrankensteinEngine['dispatch'],
-
-    subscribe(listener: () => void) {
-      const unsubscribeSearch = searchEngine.subscribe(listener);
-      const unsubscribeCommerce = commerceEngine.subscribe(listener);
-      return () => {
-        unsubscribeSearch();
-        unsubscribeCommerce();
-      };
-    },
-
-    addReducers(reducers) {
-      searchEngine.addReducers(reducers);
-      commerceEngine.addReducers(reducers);
-    },
 
     enableAnalytics() {
       searchEngine.enableAnalytics();
@@ -170,11 +182,6 @@ export function buildFrankensteinEngine(
 
     get configuration() {
       return searchEngine.state.configuration;
-    },
-
-    get [stateKey]() {
-      const {configuration, version} = searchEngine.state;
-      return {configuration, version};
     },
   };
 

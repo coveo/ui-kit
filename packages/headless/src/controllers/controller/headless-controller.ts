@@ -1,6 +1,7 @@
 import type {Unsubscribe} from '@reduxjs/toolkit';
 import type {CoreEngine, CoreEngineNext} from '../../app/engine.js';
 import {type EngineMarker, engineMarkerKey} from '../../app/engine-marker.js';
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
 import {
   commerceEngineKey,
   searchEngineKey,
@@ -37,17 +38,26 @@ interface BuildControllerOptions {
   supportedEngines?: SupportedEngines;
 }
 
+type AnyEngine<T extends object = object> =
+  | CoreEngine<T>
+  | CoreEngineNext<T>
+  | FrankensteinEngine;
+
+function getEngineMarker(engine: AnyEngine): EngineMarker | undefined {
+  return (engine as {[engineMarkerKey]: EngineMarker | undefined})[
+    engineMarkerKey
+  ];
+}
+
 function validateEngineSupport(
-  engine: CoreEngine | CoreEngineNext,
+  engine: AnyEngine,
   supportedEngines?: SupportedEngines
 ): void {
   if (!supportedEngines || supportedEngines.length === 0) {
     return;
   }
 
-  const marker = (
-    engine as CoreEngine & {[engineMarkerKey]: EngineMarker | undefined}
-  )[engineMarkerKey];
+  const marker = getEngineMarker(engine);
 
   if (!marker) {
     return;
@@ -84,18 +94,18 @@ function validateEngineSupport(
  * based on the `supportedEngines` declaration:
  * - Controllers supporting 'search' are routed to the internal search sub-engine.
  * - Controllers supporting 'commerce' are routed to the internal commerce sub-engine.
- * - Controllers supporting only 'frankenstein' subscribe to the Frankenstein engine directly.
+ *
+ * Controllers that only declare 'frankenstein' support are not yet implemented
+ * and will be introduced in a future phase.
  */
 function resolveEngine(
-  engine: CoreEngine | CoreEngineNext,
+  engine: AnyEngine,
   supportedEngines?: SupportedEngines
 ): CoreEngine | CoreEngineNext {
-  const marker = (
-    engine as CoreEngine & {[engineMarkerKey]: EngineMarker | undefined}
-  )[engineMarkerKey];
+  const marker = getEngineMarker(engine);
 
-  if (marker !== 'frankenstein' || !supportedEngines) {
-    return engine;
+  if (marker !== 'frankenstein') {
+    return engine as CoreEngine | CoreEngineNext;
   }
 
   const engineWithSubEngines = engine as unknown as Record<
@@ -103,25 +113,28 @@ function resolveEngine(
     CoreEngine | CoreEngineNext
   >;
 
-  if (supportedEngines.includes('search')) {
+  if (supportedEngines?.includes('search')) {
     const subEngine = engineWithSubEngines[searchEngineKey];
     if (subEngine) {
       return subEngine;
     }
   }
 
-  if (supportedEngines.includes('commerce')) {
+  if (supportedEngines?.includes('commerce')) {
     const subEngine = engineWithSubEngines[commerceEngineKey];
     if (subEngine) {
       return subEngine;
     }
   }
 
-  return engine;
+  throw new Error(
+    'Controllers that exclusively support the Frankenstein engine are not yet implemented. ' +
+      "Use supportedEngines: ['search', 'frankenstein'] or ['commerce', 'frankenstein'] to route to a sub-engine."
+  );
 }
 
 export function buildController<T extends object>(
-  engine: CoreEngine<T> | CoreEngineNext<T>,
+  engine: AnyEngine<T>,
   options?: BuildControllerOptions
 ): Controller {
   validateEngineSupport(engine, options?.supportedEngines);

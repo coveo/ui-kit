@@ -153,12 +153,9 @@ describe('Controller', () => {
       const searchEngine = buildMockSearchEngine(createMockState());
       const frankensteinEngine = buildMockFrankensteinEngine(searchEngine);
 
-      const controller = buildController(
-        frankensteinEngine as Parameters<typeof buildController>[0],
-        {
-          supportedEngines: ['search', 'frankenstein'],
-        }
-      );
+      const controller = buildController(frankensteinEngine, {
+        supportedEngines: ['search', 'frankenstein'],
+      });
 
       controller.subscribe(() => {});
 
@@ -172,33 +169,25 @@ describe('Controller', () => {
         commerceEngine
       );
 
-      const controller = buildController(
-        frankensteinEngine as Parameters<typeof buildController>[0],
-        {
-          supportedEngines: ['commerce', 'frankenstein'],
-        }
-      );
+      const controller = buildController(frankensteinEngine, {
+        supportedEngines: ['commerce', 'frankenstein'],
+      });
 
       controller.subscribe(() => {});
 
       expect(commerceEngine.subscribe).toHaveBeenCalled();
     });
 
-    it('does not route to sub-engine when controller only supports frankenstein', () => {
-      const searchEngine = buildMockSearchEngine(createMockState());
-      const frankensteinEngine = buildMockFrankensteinEngine(searchEngine);
+    it('throws when controller only supports frankenstein (not yet implemented)', () => {
+      const frankensteinEngine = buildMockFrankensteinEngine();
 
-      const controller = buildController(
-        frankensteinEngine as Parameters<typeof buildController>[0],
-        {
+      expect(() =>
+        buildController(frankensteinEngine, {
           supportedEngines: ['frankenstein'],
-        }
+        })
+      ).toThrow(
+        'Controllers that exclusively support the Frankenstein engine are not yet implemented.'
       );
-
-      controller.subscribe(() => {});
-
-      expect(frankensteinEngine.subscribe).toHaveBeenCalled();
-      expect(searchEngine.subscribe).not.toHaveBeenCalled();
     });
   });
 });

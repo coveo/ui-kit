@@ -228,29 +228,24 @@ export function buildMockFrankensteinEngine(
     [engineMarkerKey]: 'frankenstein' as const,
     [searchEngineKey]: mockSearchEngine,
     [commerceEngineKey]: mockCommerceEngine,
-    // @ts-expect-error testing purposes
-    dispatch: vi.fn(),
-    addReducers: vi.fn(),
     disableAnalytics: vi.fn(),
     enableAnalytics: vi.fn(),
     logger: mockLogger(pino({level: 'silent'})),
     relay: mockRelay(),
-    subscribe: vi.fn(),
     navigatorContext: defaultNodeJSNavigatorContextProvider(),
     configuration: {
       accessToken: '',
       organizationId: '',
       analytics: {enabled: true, source: {}},
       environment: 'prod',
-    },
-    [stateKey]: {
-      configuration: {
-        accessToken: '',
-        organizationId: '',
-        analytics: {enabled: true, source: {}},
-        environment: 'prod',
+      search: {
+        locale: 'en-US',
+        timezone: 'UTC',
+        authenticationProviders: [],
       },
-      version: '',
+      knowledge: {
+        answerConfigurationId: '',
+      },
     },
   };
 }

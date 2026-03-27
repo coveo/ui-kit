@@ -1,5 +1,4 @@
 import {engineMarkerKey} from '../engine-marker.js';
-import {stateKey} from '../state-key.js';
 import {
   buildFrankensteinEngine,
   type FrankensteinEngine,
@@ -125,35 +124,12 @@ describe('FrankensteinEngine', () => {
       expect(commerceEngine).toBeDefined();
       expect(commerceEngine[engineMarkerKey]).toBe('commerce');
     });
-  });
 
-  describe('state', () => {
-    it('has an empty [stateKey] representing no combined state', () => {
+    it('does not expose dispatch or subscribe at the Frankenstein engine level', () => {
       const engine = buildSampleFrankensteinEngine();
-      const state = engine[stateKey];
-      expect(state).toBeDefined();
-    });
-
-    it('[stateKey] is not enumerable on the engine', () => {
-      const engine = buildSampleFrankensteinEngine();
-      const ownKeys = Reflect.ownKeys(engine);
-      expect(ownKeys).not.toContain(stateKey);
-    });
-  });
-
-  describe('subscribe', () => {
-    it('returns an unsubscribe function', () => {
-      const engine = buildSampleFrankensteinEngine();
-      const listener = vi.fn();
-      const unsubscribe = engine.subscribe(listener);
-      expect(typeof unsubscribe).toBe('function');
-    });
-
-    it('unsubscribes from both sub-engines when unsubscribed', () => {
-      const engine = buildSampleFrankensteinEngine();
-      const listener = vi.fn();
-      const unsubscribe = engine.subscribe(listener);
-      expect(() => unsubscribe()).not.toThrow();
+      expect('dispatch' in engine).toBe(false);
+      expect('subscribe' in engine).toBe(false);
+      expect('addReducers' in engine).toBe(false);
     });
   });
 
