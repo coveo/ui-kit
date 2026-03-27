@@ -1,14 +1,19 @@
-import type {CoreEngineNext} from './engine.js';
+import type {CoreEngine, CoreEngineNext} from './engine.js';
+import {engineMarkerKey} from './engine-marker.js';
 
 const stateKeyDescription = 'coveo-headless-internal-state';
 export const stateKey = Symbol.for(stateKeyDescription);
 
-export const redactEngine = <TEngine extends CoreEngineNext>(
+const redactedKeys: symbol[] = [stateKey, engineMarkerKey];
+
+export const redactEngine = <TEngine extends CoreEngine | CoreEngineNext>(
   engine: TEngine
 ): TEngine =>
   new Proxy(engine, {
     ownKeys(target) {
-      return Reflect.ownKeys(target).filter((key) => key !== stateKey);
+      return Reflect.ownKeys(target).filter(
+        (key) => !redactedKeys.includes(key as symbol)
+      );
     },
     get(target, prop, receiver) {
       if (

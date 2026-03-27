@@ -37,6 +37,7 @@ import {
   type EngineOptions,
   type ExternalEngineOptions,
 } from '../engine.js';
+import {engineMarkerKey} from '../engine-marker.js';
 import {buildLogger} from '../logger.js';
 import {redactEngine, stateKey} from '../state-key.js';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments.js';
@@ -132,7 +133,8 @@ export function buildCommerceEngine(
   const internalEngine = buildCoreEngine(
     augmentedOptions,
     thunkArguments,
-    configurationReducer
+    configurationReducer,
+    'commerce'
   );
 
   const {state: _, ...engine} = internalEngine;
@@ -187,6 +189,8 @@ export function buildCommerceEngine(
         ...internalEngine.state.configuration,
       };
     },
+
+    [engineMarkerKey]: 'commerce' as const,
   });
 }
 

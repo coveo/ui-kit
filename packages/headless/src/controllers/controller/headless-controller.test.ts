@@ -1,5 +1,7 @@
 import type {Mock} from 'vitest';
+import {buildMockCommerceState} from '../../test/mock-commerce-state.js';
 import {
+  buildMockCommerceEngine,
   buildMockSearchEngine,
   type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
@@ -79,5 +81,69 @@ describe('Controller', () => {
 
     expect(firstListener).toHaveBeenCalledTimes(2);
     expect(secondListener).toHaveBeenCalledTimes(2);
+  });
+
+  describe('engine support validation', () => {
+    it('does not throw when no supportedEngines option is provided', () => {
+      const searchEngine = buildMockSearchEngine(createMockState());
+      expect(() => buildController(searchEngine)).not.toThrow();
+    });
+
+    it('does not throw when supportedEngines is an empty array', () => {
+      const searchEngine = buildMockSearchEngine(createMockState());
+      expect(() =>
+        buildController(searchEngine, {supportedEngines: []})
+      ).not.toThrow();
+    });
+
+    it('does not throw when search engine is used with a controller supporting search', () => {
+      const searchEngine = buildMockSearchEngine(createMockState());
+      expect(() =>
+        buildController(searchEngine, {supportedEngines: ['search']})
+      ).not.toThrow();
+    });
+
+    it('does not throw when commerce engine is used with a controller supporting commerce', () => {
+      const commerceEngine = buildMockCommerceEngine(buildMockCommerceState());
+      expect(() =>
+        buildController(commerceEngine, {supportedEngines: ['commerce']})
+      ).not.toThrow();
+    });
+
+    it('throws when search engine is used with a controller only supporting commerce', () => {
+      const searchEngine = buildMockSearchEngine(createMockState());
+      expect(() =>
+        buildController(searchEngine, {supportedEngines: ['commerce']})
+      ).toThrow(
+        'This controller does not support the "search" engine. Supported engine types: [commerce].'
+      );
+    });
+
+    it('throws when commerce engine is used with a controller only supporting search', () => {
+      const commerceEngine = buildMockCommerceEngine(buildMockCommerceState());
+      expect(() =>
+        buildController(commerceEngine, {supportedEngines: ['search']})
+      ).toThrow(
+        'This controller does not support the "commerce" engine. Supported engine types: [search].'
+      );
+    });
+
+    it('does not throw when search engine is used with a controller supporting search and frankenstein', () => {
+      const searchEngine = buildMockSearchEngine(createMockState());
+      expect(() =>
+        buildController(searchEngine, {
+          supportedEngines: ['search', 'frankenstein'],
+        })
+      ).not.toThrow();
+    });
+
+    it('does not throw when commerce engine is used with a controller supporting commerce and frankenstein', () => {
+      const commerceEngine = buildMockCommerceEngine(buildMockCommerceState());
+      expect(() =>
+        buildController(commerceEngine, {
+          supportedEngines: ['commerce', 'frankenstein'],
+        })
+      ).not.toThrow();
+    });
   });
 });

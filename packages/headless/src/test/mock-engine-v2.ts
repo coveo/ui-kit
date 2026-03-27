@@ -4,6 +4,7 @@ import {type Mock, vi} from 'vitest';
 import type {CaseAssistEngine} from '../app/case-assist-engine/case-assist-engine.js';
 import type {CommerceEngine} from '../app/commerce-engine/commerce-engine.js';
 import type {CoreEngine, CoreEngineNext} from '../app/engine.js';
+import {type EngineMarker, engineMarkerKey} from '../app/engine-marker.js';
 import type {InsightEngine} from '../app/insight-engine/insight-engine.js';
 import {defaultNodeJSNavigatorContextProvider} from '../app/navigator-context-provider.js';
 import type {RecommendationEngine} from '../app/recommendation-engine/recommendation-engine.js';
@@ -58,7 +59,8 @@ type MockedCoreEngine<
 } & SpyEverything<Omit<CoreEngine, 'logger' | 'state' | 'relay'>>;
 
 function buildMockCoreEngine<State extends StateFromEngine<CoreEngine>>(
-  initialState: State
+  initialState: State,
+  marker: EngineMarker = 'search'
 ): MockedCoreEngine<State> {
   const state: State = initialState;
   return {
@@ -80,6 +82,7 @@ function buildMockCoreEngine<State extends StateFromEngine<CoreEngine>>(
     },
     subscribe: vi.fn(),
     navigatorContext: defaultNodeJSNavigatorContextProvider(),
+    [engineMarkerKey]: marker,
   };
 }
 
@@ -94,7 +97,10 @@ type MockedCoreEngineNext<
 
 function buildMockCoreEngineNext<
   State extends StateFromEngineNext<CoreEngineNext>,
->(initialState: State): MockedCoreEngineNext<State> {
+>(
+  initialState: State,
+  marker: EngineMarker = 'commerce'
+): MockedCoreEngineNext<State> {
   const state: State = initialState;
   return {
     [stateKey]: state,
@@ -108,6 +114,7 @@ function buildMockCoreEngineNext<
     relay: mockRelay(),
     subscribe: vi.fn(),
     navigatorContext: defaultNodeJSNavigatorContextProvider(),
+    [engineMarkerKey]: marker,
   };
 }
 

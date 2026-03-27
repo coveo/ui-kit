@@ -37,8 +37,10 @@ import {
   type EngineOptions,
   type ExternalEngineOptions,
 } from '../engine.js';
+import {engineMarkerKey} from '../engine-marker.js';
 import {buildLogger} from '../logger.js';
 import type {SearchThunkExtraArguments} from '../search-thunk-extra-arguments.js';
+import {redactEngine} from '../state-key.js';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments.js';
 import {jwtReducer} from './jwt-reducer.js';
 import {
@@ -149,8 +151,10 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
     engine.dispatch(updateSearchConfiguration(search));
   }
 
-  return {
+  return redactEngine({
     ...engine,
+
+    [engineMarkerKey]: 'search' as const,
 
     get state() {
       return engine.state;
@@ -187,7 +191,7 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
       });
       engine.dispatch(action);
     },
-  };
+  });
 }
 
 function validateConfiguration(
