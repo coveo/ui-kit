@@ -258,8 +258,7 @@ const wrapper = buildFrankensteinUrlManagerWrapper({
 2. **Update existing engines to use markers**
    - Modify `buildSearchEngine` to pass `'search'` marker
    - Modify `buildCommerceEngine` to pass `'commerce'` marker
-   - Modify `buildRecommendationEngine` to pass `'search'` marker (it's search-based)
-   - Modify `buildInsightEngine` to pass `'search'` marker
+   - Note: `buildRecommendationEngine`, `buildInsightEngine`, and `buildCaseAssistEngine` are **not** supported by the Frankenstein engine and do not receive markers
 
 3. **Enhance buildController with support engine validation** (*parallel with step 2*)
    - Add `SupportedEngine` type

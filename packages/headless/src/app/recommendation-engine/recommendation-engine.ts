@@ -22,7 +22,6 @@ import {
   type EngineOptions,
   type ExternalEngineOptions,
 } from '../engine.js';
-import {engineMarkerKey} from '../engine-marker.js';
 import {buildLogger} from '../logger.js';
 import type {SearchThunkExtraArguments} from '../search-thunk-extra-arguments.js';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments.js';
@@ -113,8 +112,6 @@ export function buildRecommendationEngine(
 
   return {
     ...engine,
-
-    [engineMarkerKey]: 'search' as const,
 
     get state() {
       return engine.state;
