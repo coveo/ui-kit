@@ -17,6 +17,7 @@ import {
   type ExternalEngineOptions,
   warnIfUsingNextAnalyticsModeForServiceFeature,
 } from '../engine.js';
+import {engineMarkerKey} from '../engine-marker.js';
 import {buildLogger} from '../logger.js';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments.js';
 import {
@@ -114,6 +115,8 @@ export function buildCaseAssistEngine(
 
   return {
     ...engine,
+
+    [engineMarkerKey]: 'search' as const,
 
     get state() {
       return engine.state;

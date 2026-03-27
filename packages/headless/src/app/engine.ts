@@ -30,6 +30,7 @@ import {doNotTrack} from '../utils/utils.js';
 import {analyticsMiddleware} from './analytics-middleware.js';
 import {configuration} from './common-reducers.js';
 import type {EngineConfiguration} from './engine-configuration.js';
+import {type EngineMarker, engineMarkerKey} from './engine-marker.js';
 import {instantlyCallableThunkActionMiddleware} from './instantly-callable-middleware.js';
 import {createGenerateAnswerListener} from './listener-middleware/generate-answer-listener-middleware.js';
 import type {LoggerOptions} from './logger.js';
@@ -115,6 +116,12 @@ export interface CoreEngine<
    * The navigator context (referer, location, UserAgent)
    */
   navigatorContext: NavigatorContext;
+  /**
+   * The engine type marker.
+   *
+   * @internal
+   */
+  readonly [engineMarkerKey]: EngineMarker;
 }
 
 export type CoreEngineNext<
@@ -133,6 +140,13 @@ export type CoreEngineNext<
    * The readonly global headless engine configuration
    */
   readonly configuration: Configuration;
+
+  /**
+   * The engine type marker.
+   *
+   * @internal
+   */
+  readonly [engineMarkerKey]: EngineMarker;
 };
 
 export interface EngineOptions<Reducers extends ReducersMapObject>
@@ -222,7 +236,8 @@ export function buildEngine<
   ExtraArguments extends ThunkExtraArguments,
 >(
   options: EngineOptions<Reducers>,
-  thunkExtraArguments: ExtraArguments
+  thunkExtraArguments: ExtraArguments,
+  marker: EngineMarker = 'search'
 ): CoreEngine<
   StateFromReducersMapObject<Reducers>,
   CoreExtraArguments & ExtraArguments,
@@ -236,7 +251,8 @@ export function buildEngine<
   const engine = buildCoreEngine(
     {...options, reducers},
     thunkExtraArguments,
-    configuration
+    configuration,
+    marker
   );
   const {accessToken, environment, organizationId} = options.configuration;
 
@@ -266,7 +282,8 @@ export function buildCoreEngine<
 >(
   options: EngineOptions<Reducers>,
   thunkExtraArguments: ExtraArguments,
-  configurationReducer: Reducer<Configuration>
+  configurationReducer: Reducer<Configuration>,
+  marker: EngineMarker = 'search'
 ): CoreEngine<
   StateFromReducersMapObject<Reducers>,
   ExtraArguments,
@@ -333,6 +350,8 @@ export function buildCoreEngine<
     logger,
 
     store,
+
+    [engineMarkerKey]: marker,
   };
   return engine;
 }

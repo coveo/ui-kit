@@ -24,6 +24,7 @@ import {
   type ExternalEngineOptions,
   warnIfUsingNextAnalyticsModeForServiceFeature,
 } from '../engine.js';
+import {engineMarkerKey} from '../engine-marker.js';
 import type {InsightThunkExtraArguments} from '../insight-thunk-extra-arguments.js';
 import {buildLogger} from '../logger.js';
 import type {AdditionalCoreExtraArguments} from '../store.js';
@@ -135,6 +136,8 @@ export function buildInsightEngine(
 
   return {
     ...engine,
+
+    [engineMarkerKey]: 'search' as const,
 
     get state() {
       return engine.state;
