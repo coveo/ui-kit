@@ -1,5 +1,7 @@
 import type {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload.js';
 import {warnIfUsingNextAnalyticsModeForServiceFeature} from '../../app/engine.js';
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {generatedAnswerAnalyticsClient} from '../../features/generated-answer/generated-answer-analytics-actions.js';
 import type {
@@ -47,17 +49,18 @@ export type {
  * @category GeneratedAnswer
  */
 export function buildGeneratedAnswer(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props: GeneratedAnswerProps = {}
 ): GeneratedAnswer | GeneratedAnswerWithFollowUps {
+  const searchEngine = ensureSearchEngine(engine);
   warnIfUsingNextAnalyticsModeForServiceFeature(
-    engine.state.configuration.analytics.analyticsMode
+    searchEngine.state.configuration.analytics.analyticsMode
   );
 
   let controller: GeneratedAnswer | GeneratedAnswerWithFollowUps;
   if (props.agentId && props.agentId.trim() !== '') {
     controller = buildGeneratedAnswerWithFollowUps(
-      engine,
+      searchEngine,
       generatedAnswerAnalyticsClient,
       {...props, agentId: props.agentId}
     );
@@ -66,13 +69,13 @@ export function buildGeneratedAnswer(
     props.answerConfigurationId.trim() !== ''
   ) {
     controller = buildAnswerApiGeneratedAnswer(
-      engine,
+      searchEngine,
       generatedAnswerAnalyticsClient,
       props
     );
   } else {
     controller = buildSearchAPIGeneratedAnswer(
-      engine,
+      searchEngine,
       generatedAnswerAnalyticsClient,
       props
     );

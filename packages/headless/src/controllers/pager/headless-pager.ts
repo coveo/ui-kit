@@ -1,3 +1,5 @@
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   browseResults,
@@ -28,11 +30,12 @@ export type {Pager, PagerInitialState, PagerOptions, PagerProps, PagerState};
  * @category Pager
  * */
 export function buildPager(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props: PagerProps = {}
 ): Pager {
-  const {dispatch} = engine;
-  const pager = buildCorePager(engine, props);
+  const searchEngine = ensureSearchEngine(engine);
+  const {dispatch} = searchEngine;
+  const pager = buildCorePager(searchEngine, props);
 
   return {
     ...pager,

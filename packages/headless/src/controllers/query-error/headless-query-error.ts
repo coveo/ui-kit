@@ -1,3 +1,5 @@
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   buildCoreQueryError,
@@ -15,6 +17,8 @@ export type {QueryError, QueryErrorState};
  * @group Controllers
  * @category QueryError
  */
-export function buildQueryError(engine: SearchEngine): QueryError {
-  return buildCoreQueryError(engine);
+export function buildQueryError(
+  engine: SearchEngine | FrankensteinEngine
+): QueryError {
+  return buildCoreQueryError(ensureSearchEngine(engine));
 }

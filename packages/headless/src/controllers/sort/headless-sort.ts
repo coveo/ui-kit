@@ -1,3 +1,5 @@
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {executeSearch} from '../../features/search/search-actions.js';
 import type {SortCriterion} from '../../features/sort-criteria/criteria.js';
@@ -25,9 +27,13 @@ export type {Sort, SortInitialState, SortProps, SortState};
  * @group Controllers
  * @category Sort
  */
-export function buildSort(engine: SearchEngine, props: SortProps = {}): Sort {
-  const {dispatch} = engine;
-  const sort = buildCoreSort(engine, props);
+export function buildSort(
+  engine: SearchEngine | FrankensteinEngine,
+  props: SortProps = {}
+): Sort {
+  const searchEngine = ensureSearchEngine(engine);
+  const {dispatch} = searchEngine;
+  const sort = buildCoreSort(searchEngine, props);
   const search = () =>
     dispatch(
       executeSearch({

@@ -1,4 +1,6 @@
 import {configuration} from '../../app/common-reducers.js';
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   browseResults,
@@ -37,15 +39,16 @@ export type {
  * @category ResultsPerPage
  */
 export function buildResultsPerPage(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props: ResultsPerPageProps = {}
 ): ResultsPerPage {
-  if (!loadResultsPerPageReducers(engine)) {
+  const searchEngine = ensureSearchEngine(engine);
+  if (!loadResultsPerPageReducers(searchEngine)) {
     throw loadReducerError;
   }
 
-  const coreController = buildCoreResultsPerPage(engine, props);
-  const {dispatch} = engine;
+  const coreController = buildCoreResultsPerPage(searchEngine, props);
+  const {dispatch} = searchEngine;
 
   return {
     ...coreController,

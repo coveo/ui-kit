@@ -1,3 +1,5 @@
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   logSearchboxSubmit,
@@ -88,10 +90,10 @@ export interface SearchBox extends Controller {
  * @category SearchBox
  */
 export function buildSearchBox(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props: SearchBoxProps = {}
 ): SearchBox {
-  const searchBox = buildCoreSearchBox(engine, {
+  const searchBox = buildCoreSearchBox(ensureSearchEngine(engine), {
     ...props,
     executeSearchActionCreator: executeSearch,
     fetchQuerySuggestionsActionCreator: fetchQuerySuggestions,

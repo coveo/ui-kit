@@ -2,6 +2,8 @@ import type {
   QueryCorrection,
   WordCorrection,
 } from '../../api/search/search/query-corrections.js';
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   didYouMeanClick,
@@ -37,11 +39,12 @@ export type {
  * @category DidYouMean
  */
 export function buildDidYouMean(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props: DidYouMeanProps = {}
 ): DidYouMean {
-  const controller = buildCoreDidYouMean(engine, props);
-  const {dispatch} = engine;
+  const searchEngine = ensureSearchEngine(engine);
+  const controller = buildCoreDidYouMean(searchEngine, props);
+  const {dispatch} = searchEngine;
 
   return {
     ...controller,

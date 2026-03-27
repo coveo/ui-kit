@@ -1,3 +1,5 @@
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {generatedAnswerAnalyticsClient} from '../../features/generated-answer/generated-answer-analytics-actions.js';
 import {
@@ -24,11 +26,11 @@ export type {
  * @category InteractiveCitation
  */
 export function buildInteractiveCitation(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props: InteractiveCitationProps
 ): InteractiveCitation {
   return buildInteractiveCitationCore(
-    engine,
+    ensureSearchEngine(engine),
     generatedAnswerAnalyticsClient,
     props
   );

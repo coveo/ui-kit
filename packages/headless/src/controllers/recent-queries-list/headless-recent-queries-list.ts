@@ -1,3 +1,5 @@
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {SearchPageEvents} from '../../features/analytics/search-action-cause.js';
 import {
@@ -33,11 +35,12 @@ export type {
  * @category RecentQueriesList
  * */
 export function buildRecentQueriesList(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props?: RecentQueriesListProps
 ): RecentQueriesList {
-  const coreController = buildCoreRecentQueriesList(engine, props);
-  const {dispatch} = engine;
+  const searchEngine = ensureSearchEngine(engine);
+  const coreController = buildCoreRecentQueriesList(searchEngine, props);
+  const {dispatch} = searchEngine;
 
   return {
     ...coreController,

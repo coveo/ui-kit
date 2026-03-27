@@ -1,4 +1,6 @@
 import type {Result} from '../../api/search/search/result.js';
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {logRecentResultClick} from '../../features/recent-results/recent-results-analytics-actions.js';
 import {
@@ -43,11 +45,12 @@ export interface InteractiveRecentResult extends InteractiveResultCore {}
  * @category InteractiveRecentResult
  */
 export function buildInteractiveRecentResult(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props: InteractiveRecentResultProps
 ): InteractiveRecentResult {
+  const searchEngine = ensureSearchEngine(engine);
   const logAnalytics = () =>
-    engine.dispatch(logRecentResultClick(props.options.result));
+    searchEngine.dispatch(logRecentResultClick(props.options.result));
 
-  return buildInteractiveResultCore(engine, props, logAnalytics);
+  return buildInteractiveResultCore(searchEngine, props, logAnalytics);
 }

@@ -1,3 +1,5 @@
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   buildCoreTabManager,
@@ -17,8 +19,10 @@ export type {TabManager, TabManagerState};
  * @group Controllers
  * @category TabManager
  */
-export function buildTabManager(engine: SearchEngine): TabManager {
-  const tabManager = buildCoreTabManager(engine);
+export function buildTabManager(
+  engine: SearchEngine | FrankensteinEngine
+): TabManager {
+  const tabManager = buildCoreTabManager(ensureSearchEngine(engine));
 
   return {
     ...tabManager,

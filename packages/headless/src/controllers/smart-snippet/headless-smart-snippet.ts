@@ -1,4 +1,6 @@
 import {warnIfUsingNextAnalyticsModeForServiceFeature} from '../../app/engine.js';
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {smartSnippetAnalyticsClient} from '../../features/question-answering/question-answering-analytics-actions.js';
 import {
@@ -31,20 +33,21 @@ export type {
  * @category SmartSnippet
  * */
 export function buildSmartSnippet(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props?: SmartSnippetProps
 ): SmartSnippet {
+  const searchEngine = ensureSearchEngine(engine);
   warnIfUsingNextAnalyticsModeForServiceFeature(
-    engine.state.configuration.analytics.analyticsMode
+    searchEngine.state.configuration.analytics.analyticsMode
   );
   const smartSnippet = buildCoreSmartSnippet(
-    engine,
+    searchEngine,
     smartSnippetAnalyticsClient,
     props
   );
 
   const interactiveInlineLinks = buildSmartSnippetInteractiveInlineLinks(
-    engine,
+    searchEngine,
     {options: {selectionDelay: props?.options?.selectionDelay}}
   );
 

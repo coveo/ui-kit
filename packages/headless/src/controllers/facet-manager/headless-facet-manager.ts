@@ -1,3 +1,5 @@
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   buildCoreFacetManager,
@@ -16,6 +18,8 @@ export type {FacetManager, FacetManagerPayload, FacetManagerState};
  * @group Controllers
  * @category FacetManager
  */
-export function buildFacetManager(engine: SearchEngine): FacetManager {
-  return buildCoreFacetManager(engine);
+export function buildFacetManager(
+  engine: SearchEngine | FrankensteinEngine
+): FacetManager {
+  return buildCoreFacetManager(ensureSearchEngine(engine));
 }

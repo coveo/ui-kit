@@ -1,4 +1,6 @@
 import type {Result} from '../../api/search/search/result.js';
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {pushRecentResult} from '../../features/recent-results/recent-results-actions.js';
 import {logDocumentOpen} from '../../features/result/result-analytics-actions.js';
@@ -44,9 +46,10 @@ export interface InteractiveResult extends InteractiveResultCore {}
  * @category InteractiveResult
  */
 export function buildInteractiveResult(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props: InteractiveResultProps
 ): InteractiveResult {
+  const searchEngine = ensureSearchEngine(engine);
   let wasOpened = false;
 
   const logAnalyticsIfNeverOpened = () => {
@@ -54,13 +57,13 @@ export function buildInteractiveResult(
       return;
     }
     wasOpened = true;
-    engine.dispatch(logDocumentOpen(props.options.result));
+    searchEngine.dispatch(logDocumentOpen(props.options.result));
   };
 
   const action = () => {
     logAnalyticsIfNeverOpened();
-    engine.dispatch(pushRecentResult(props.options.result));
+    searchEngine.dispatch(pushRecentResult(props.options.result));
   };
 
-  return buildInteractiveResultCore(engine, props, action);
+  return buildInteractiveResultCore(searchEngine, props, action);
 }

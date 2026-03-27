@@ -1,4 +1,6 @@
 import {warnIfUsingNextAnalyticsModeForServiceFeature} from '../../app/engine.js';
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {smartSnippetAnalyticsClient} from '../../features/question-answering/question-answering-analytics-actions.js';
 import {
@@ -116,27 +118,31 @@ export interface SmartSnippetQuestionsList
  * @category SmartSnippetQuestionsList
  * */
 export function buildSmartSnippetQuestionsList(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props?: SmartSnippetQuestionsListProps
 ): SmartSnippetQuestionsList {
+  const searchEngine = ensureSearchEngine(engine);
   warnIfUsingNextAnalyticsModeForServiceFeature(
-    engine.state.configuration.analytics.analyticsMode
+    searchEngine.state.configuration.analytics.analyticsMode
   );
   const smartSnippetQuestionList = buildCoreSmartSnippetQuestionsList(
-    engine,
+    searchEngine,
     smartSnippetAnalyticsClient
   );
 
   const interactiveInlineLinks = buildSmartSnippetInteractiveInlineLinks(
-    engine,
+    searchEngine,
     {
       options: {selectionDelay: props?.options?.selectionDelay},
     }
   );
 
-  const interactiveQuestions = buildSmartSnippetInteractiveQuestions(engine, {
-    options: {selectionDelay: props?.options?.selectionDelay},
-  });
+  const interactiveQuestions = buildSmartSnippetInteractiveQuestions(
+    searchEngine,
+    {
+      options: {selectionDelay: props?.options?.selectionDelay},
+    }
+  );
 
   return {
     ...smartSnippetQuestionList,

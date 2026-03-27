@@ -1,3 +1,5 @@
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {getDebugInitialState} from '../../features/debug/debug-state.js';
 import {getPaginationInitialState} from '../../features/pagination/pagination-state.js';
@@ -40,19 +42,20 @@ export type {
  * @category SearchParameterManager
  */
 export function buildSearchParameterManager(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props: SearchParameterManagerProps
 ): SearchParameterManager {
-  const {dispatch} = engine;
-  const controller = buildCoreSearchParameterManager(engine, props);
+  const searchEngine = ensureSearchEngine(engine);
+  const {dispatch} = searchEngine;
+  const controller = buildCoreSearchParameterManager(searchEngine, props);
 
   return {
     ...controller,
 
     synchronize(parameters: SearchParameters) {
-      const activeParams = getActiveSearchParameters(engine);
-      const oldParams = enrichParameters(engine, activeParams);
-      const newParams = enrichParameters(engine, parameters);
+      const activeParams = getActiveSearchParameters(searchEngine);
+      const oldParams = enrichParameters(searchEngine, activeParams);
+      const newParams = enrichParameters(searchEngine, parameters);
 
       if (deepEqualAnyOrder(oldParams, newParams)) {
         return;
@@ -68,7 +71,7 @@ export function buildSearchParameterManager(
     },
 
     get state() {
-      const parameters = getActiveSearchParameters(engine);
+      const parameters = getActiveSearchParameters(searchEngine);
       return {parameters};
     },
   };

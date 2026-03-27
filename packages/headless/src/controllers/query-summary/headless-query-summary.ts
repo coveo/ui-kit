@@ -1,3 +1,5 @@
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   buildCoreQuerySummary,
@@ -17,6 +19,8 @@ export type {QuerySummary, QuerySummaryState};
  * @group Controllers
  * @category QuerySummary
  */
-export function buildQuerySummary(engine: SearchEngine): QuerySummary {
-  return buildCoreQuerySummary(engine);
+export function buildQuerySummary(
+  engine: SearchEngine | FrankensteinEngine
+): QuerySummary {
+  return buildCoreQuerySummary(ensureSearchEngine(engine));
 }

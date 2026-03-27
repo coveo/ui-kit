@@ -1,3 +1,5 @@
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {logInstantResultOpen} from '../../features/instant-results/instant-result-analytics-actions.js';
 import {pushRecentResult} from '../../features/recent-results/recent-results-actions.js';
@@ -40,9 +42,10 @@ export interface InteractiveInstantResult extends InteractiveResult {}
  * @category InteractiveInstantResult
  */
 export function buildInteractiveInstantResult(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props: InteractiveInstantResultProps
 ): InteractiveInstantResult {
+  const searchEngine = ensureSearchEngine(engine);
   let wasOpened = false;
 
   const logAnalyticsIfNeverOpened = () => {
@@ -50,13 +53,13 @@ export function buildInteractiveInstantResult(
       return;
     }
     wasOpened = true;
-    engine.dispatch(logInstantResultOpen(props.options.result));
+    searchEngine.dispatch(logInstantResultOpen(props.options.result));
   };
 
   const action = () => {
     logAnalyticsIfNeverOpened();
-    engine.dispatch(pushRecentResult(props.options.result));
+    searchEngine.dispatch(pushRecentResult(props.options.result));
   };
 
-  return buildInteractiveResultCore(engine, props, action);
+  return buildInteractiveResultCore(searchEngine, props, action);
 }

@@ -1,3 +1,5 @@
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {fetchMoreResults} from '../../features/search/search-actions.js';
 import {
@@ -21,10 +23,10 @@ export type {ResultList, ResultListOptions, ResultListProps, ResultListState};
  * @category ResultList
  */
 export function buildResultList(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props?: ResultListProps
 ): ResultList {
-  return buildCoreResultList(engine, {
+  return buildCoreResultList(ensureSearchEngine(engine), {
     ...props,
     fetchMoreResultsActionCreator: fetchMoreResults,
   });

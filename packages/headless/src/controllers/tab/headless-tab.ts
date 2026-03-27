@@ -1,3 +1,5 @@
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   interfaceChange,
@@ -25,9 +27,13 @@ export type {Tab, TabInitialState, TabOptions, TabProps, TabState};
  * @group Controllers
  * @category Tab
  */
-export function buildTab(engine: SearchEngine, props: TabProps): Tab {
-  const {dispatch} = engine;
-  const tab = buildCoreTab(engine, props);
+export function buildTab(
+  engine: SearchEngine | FrankensteinEngine,
+  props: TabProps
+): Tab {
+  const searchEngine = ensureSearchEngine(engine);
+  const {dispatch} = searchEngine;
+  const tab = buildCoreTab(searchEngine, props);
   const search = () =>
     dispatch(
       executeSearch({

@@ -1,4 +1,6 @@
 import {configuration} from '../../app/common-reducers.js';
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {SearchPageEvents} from '../../features/analytics/search-action-cause.js';
 import {toggleSelectAutomaticFacetValue} from '../../features/facets/automatic-facet-set/automatic-facet-set-actions.js';
@@ -143,19 +145,20 @@ export interface AutomaticFacetBreadcrumb extends Breadcrumb<FacetValue> {
  * @category BreadcrumbManager
  */
 export function buildBreadcrumbManager(
-  engine: SearchEngine
+  engine: SearchEngine | FrankensteinEngine
 ): BreadcrumbManager {
-  if (!loadBreadcrumbManagerReducers(engine)) {
+  const searchEngine = ensureSearchEngine(engine);
+  if (!loadBreadcrumbManagerReducers(searchEngine)) {
     throw loadReducerError;
   }
 
-  const controller = buildCoreBreadcrumbManager(engine);
-  const {dispatch} = engine;
-  const getState = () => engine.state;
+  const controller = buildCoreBreadcrumbManager(searchEngine);
+  const {dispatch} = searchEngine;
+  const getState = () => searchEngine.state;
 
   const getFacetBreadcrumbs = (): FacetBreadcrumb[] => {
     const config: GetBreadcrumbsConfiguration<Record<string, FacetSlice>> = {
-      engine,
+      engine: searchEngine,
       facetSet: getState().facetSet,
       executeToggleSelect: ({facetId, selection}) => {
         dispatch(toggleSelectFacetValue({facetId, selection}));
@@ -197,7 +200,7 @@ export function buildBreadcrumbManager(
     const config: GetBreadcrumbsConfiguration<
       Record<string, NumericFacetSlice>
     > = {
-      engine,
+      engine: searchEngine,
       facetSet: getState().numericFacetSet,
       executeToggleSelect: (payload) => {
         dispatch(toggleSelectNumericFacetValue(payload));
@@ -225,7 +228,7 @@ export function buildBreadcrumbManager(
   const getDateFacetBreadcrumbs = (): DateFacetBreadcrumb[] => {
     const config: GetBreadcrumbsConfiguration<Record<string, DateFacetSlice>> =
       {
-        engine,
+        engine: searchEngine,
         facetSet: getState().dateFacetSet,
         executeToggleSelect: (payload) => {
           dispatch(toggleSelectDateFacetValue(payload));

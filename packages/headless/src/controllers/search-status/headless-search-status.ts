@@ -1,3 +1,5 @@
+import type {FrankensteinEngine} from '../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   buildCoreStatus,
@@ -16,6 +18,8 @@ export type {SearchStatus, SearchStatusState};
  * @group Controllers
  * @category SearchStatus
  * */
-export function buildSearchStatus(engine: SearchEngine): SearchStatus {
-  return buildCoreStatus(engine);
+export function buildSearchStatus(
+  engine: SearchEngine | FrankensteinEngine
+): SearchStatus {
+  return buildCoreStatus(ensureSearchEngine(engine));
 }
