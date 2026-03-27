@@ -1,18 +1,17 @@
 ---
 title: Search Controller hooks
-group: Usage
+group: Guides
 ---
 
-# Hooks
+# Search Hooks
 
 This package provides React hooks for controllers defined in the Engine Definition. Hooks allow you to access controller state and methods easily within your React components.
 Without these hooks, you would need to manually pass down props through every component or implement your own provider solution, which can be cumbersome and error-prone.
 
 See [Headless SSR usage: Define the search engine and controllers](https://docs.coveo.com/en/headless/latest/reference/documents/usage/server-side-rendering/implement-server-side-rendering.html#create-an-engine-definition)
 
-## Usage
 
-### 1. Create an engine configuration
+## Create an engine configuration
 
 Define the controllers you need in your engine configuration. This example includes `SearchBox`, `ResultList` and `Facet` controllers:
 
@@ -37,7 +36,7 @@ const engineConfig = {
 };
 ```
 
-### 2. Define the engine
+## Define the engine
 
 Use `defineSearchEngine` to define the engine with your configuration:
 
@@ -45,7 +44,7 @@ Use `defineSearchEngine` to define the engine with your configuration:
 export const engineDefinition = defineSearchEngine(engineConfig);
 ```
 
-### 3. Export hooks
+## Export hooks
 
 Extract hooks for each controller from the engine definition.
 
@@ -57,7 +56,7 @@ export const {
 } = engineDefinition.controllers;
 ```
 
-### 4. Use Hooks in Components
+## Use hooks in components
 
 Access controller methods and state in your components through the hooks.
 The controller methods and state attributes exposed through controller hooks are the same as the ones exposed by the controllers.
