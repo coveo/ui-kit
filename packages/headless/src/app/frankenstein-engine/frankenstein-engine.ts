@@ -152,6 +152,10 @@ export function buildFrankensteinEngine(
       commerceEngine.disableAnalytics();
     },
 
+    // The search and commerce sub-engines share the same base configuration
+    // (organizationId, accessToken, environment, etc.), so relay, logger, and
+    // navigatorContext are equivalent across both. The search engine is used as
+    // the canonical source for these shared properties.
     get relay() {
       return searchEngine.relay;
     },
