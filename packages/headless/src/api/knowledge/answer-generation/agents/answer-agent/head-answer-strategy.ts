@@ -1,7 +1,9 @@
 import type {AgentSubscriber} from '@ag-ui/client';
 import type {ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
 import {
+  clearFollowUpAnswersConversationToken,
   setFollowUpAnswersConversationId,
+  setFollowUpAnswersConversationToken,
   setIsEnabled,
 } from '../../../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {
@@ -36,6 +38,7 @@ export const createHeadAnswerStrategy = (
       dispatch(setIsLoading(false));
       dispatch(setIsStreaming(true));
       dispatch(setFollowUpAnswersConversationId(event.threadId));
+      dispatch(clearFollowUpAnswersConversationToken());
     },
     onStepStartedEvent: ({event}) => {
       dispatch(
@@ -63,8 +66,13 @@ export const createHeadAnswerStrategy = (
           if (value?.contentFormat) {
             dispatch(setAnswerContentFormat(value.contentFormat));
           }
-          if (value?.followUpEnabled) {
+          if (typeof value?.followUpEnabled === 'boolean') {
             dispatch(setIsEnabled(value.followUpEnabled));
+          }
+          if (value?.conversationToken) {
+            dispatch(
+              setFollowUpAnswersConversationToken(value.conversationToken)
+            );
           }
           return;
         }

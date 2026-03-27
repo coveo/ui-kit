@@ -219,12 +219,12 @@ describe('atomic-ipx-recs-list', () => {
       const element = await setupElement({numberOfRecommendationsPerPage: 3});
 
       await element.nextPage();
-      expect(element['currentPage']).toBe(1);
+      expect(element.currentPage).toBe(1);
 
       element.numberOfRecommendationsPerPage = 2;
       await element.updateComplete;
 
-      expect(element['currentPage']).toBe(0);
+      expect(element.currentPage).toBe(0);
     });
 
     it.each([
@@ -292,13 +292,13 @@ describe('atomic-ipx-recs-list', () => {
     it('should move to next page', async () => {
       const element = await setupElement({numberOfRecommendationsPerPage: 3});
 
-      expect(element['currentPage']).toBe(0);
+      expect(element.currentPage).toBe(0);
 
       await element.nextPage();
-      expect(element['currentPage']).toBe(1);
+      expect(element.currentPage).toBe(1);
 
       await element.nextPage();
-      expect(element['currentPage']).toBe(2);
+      expect(element.currentPage).toBe(2);
     });
 
     it('should wrap to first page when next exceeds number of pages', async () => {
@@ -315,10 +315,10 @@ describe('atomic-ipx-recs-list', () => {
       const element = await setupElement({numberOfRecommendationsPerPage: 3});
 
       await element.nextPage();
-      expect(element['currentPage']).toBe(1);
+      expect(element.currentPage).toBe(1);
 
       await element.nextPage();
-      expect(element['currentPage']).toBe(0);
+      expect(element.currentPage).toBe(0);
     });
 
     it('should move to previous page', async () => {
@@ -326,19 +326,19 @@ describe('atomic-ipx-recs-list', () => {
 
       await element.nextPage();
       await element.nextPage();
-      expect(element['currentPage']).toBe(2);
+      expect(element.currentPage).toBe(2);
 
       await element.previousPage();
-      expect(element['currentPage']).toBe(1);
+      expect(element.currentPage).toBe(1);
     });
 
     it('should wrap to last page when previous on first page', async () => {
       const element = await setupElement({numberOfRecommendationsPerPage: 3});
 
-      expect(element['currentPage']).toBe(0);
+      expect(element.currentPage).toBe(0);
 
       await element.previousPage();
-      expect(element['currentPage']).toBe(2);
+      expect(element.currentPage).toBe(2);
     });
   });
 

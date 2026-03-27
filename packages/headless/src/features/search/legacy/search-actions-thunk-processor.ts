@@ -1,5 +1,5 @@
 import {isNullOrUndefined} from '@coveo/bueno';
-import type {AnyAction} from '@reduxjs/toolkit';
+import type {UnknownAction} from '@reduxjs/toolkit';
 import type {ThunkDispatch} from 'redux-thunk';
 import type {StateNeededBySearchAnalyticsProvider} from '../../../api/analytics/search-analytics.js';
 import type {SearchRequest} from '../../../api/search/search/search-request.js';
@@ -100,7 +100,7 @@ export interface AsyncThunkConfig {
     ClientThunkExtraArguments<SearchAPIClient> & {
       searchAPIClient?: SearchAPIClient | undefined;
     },
-    AnyAction
+    UnknownAction
   >;
 
   rejectWithValue: (err: SearchAPIErrorWithStatusCode) => unknown;

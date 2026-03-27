@@ -23,15 +23,15 @@ import {
 } from '../knowledge/generated-answer/headless-generated-answer-with-follow-ups.js';
 
 export type {
-  GeneratedAnswerCitation,
-  GeneratedResponseFormat,
-  GeneratedAnswerState,
   GeneratedAnswer,
-  GeneratedAnswerWithFollowUps,
-  GeneratedAnswerWithFollowUpsState,
   GeneratedAnswerBase,
+  GeneratedAnswerCitation,
   GeneratedAnswerProps,
   GeneratedAnswerPropsInitialState,
+  GeneratedAnswerState,
+  GeneratedAnswerWithFollowUps,
+  GeneratedAnswerWithFollowUpsState,
+  GeneratedResponseFormat,
   GenerationStep,
   GenerationStepName,
 };

@@ -25,7 +25,7 @@ describe('buildSamlState', () => {
   it('#setLoginPending sets the "samlLoginPending" to true', () => {
     samlState.setLoginPending();
 
-    expect(storage.setItem).toBeCalledWith('samlLoginPending', 'true');
+    expect(storage.setItem).toHaveBeenCalledWith('samlLoginPending', 'true');
   });
 
   describe('#isLoginPending', () => {
@@ -42,6 +42,6 @@ describe('buildSamlState', () => {
 
   it('#removeLoginPending', () => {
     samlState.removeLoginPending();
-    expect(storage.removeItem).toBeCalledWith('samlLoginPending');
+    expect(storage.removeItem).toHaveBeenCalledWith('samlLoginPending');
   });
 });

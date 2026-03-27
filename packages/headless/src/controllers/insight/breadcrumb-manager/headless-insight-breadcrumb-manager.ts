@@ -72,16 +72,16 @@ import {
 } from '../../core/breadcrumb-manager/headless-core-breadcrumb-manager.js';
 
 export type {
-  NumericFacetBreadcrumb,
-  FacetBreadcrumb,
-  DateFacetBreadcrumb,
-  CategoryFacetBreadcrumb,
-  StaticFilterBreadcrumb,
   Breadcrumb,
-  BreadcrumbValue,
-  BreadcrumbManagerState,
   BreadcrumbManager,
+  BreadcrumbManagerState,
+  BreadcrumbValue,
+  CategoryFacetBreadcrumb,
+  DateFacetBreadcrumb,
   DeselectableValue,
+  FacetBreadcrumb,
+  NumericFacetBreadcrumb,
+  StaticFilterBreadcrumb,
 };
 /**
  * Creates an insight `BreadcrumbManager` controller instance.

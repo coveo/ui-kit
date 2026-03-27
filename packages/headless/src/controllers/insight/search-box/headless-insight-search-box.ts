@@ -16,11 +16,11 @@ import {
 import type {SearchBoxOptions} from '../../core/search-box/headless-core-search-box-options.js';
 
 export type {
+  Delimiters,
   SearchBoxOptions,
   SearchBoxState,
-  SuggestionHighlightingOptions,
   Suggestion,
-  Delimiters,
+  SuggestionHighlightingOptions,
 };
 
 export interface SearchBoxProps {

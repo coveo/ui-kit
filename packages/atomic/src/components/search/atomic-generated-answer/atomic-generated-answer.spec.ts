@@ -178,7 +178,7 @@ describe('atomic-generated-answer', () => {
       },
       get generatedAnswersThread() {
         return element.shadowRoot?.querySelector(
-          'atomic-generated-answers-thread'
+          'atomic-generated-answer-thread'
         );
       },
       get followUpInputContainer() {

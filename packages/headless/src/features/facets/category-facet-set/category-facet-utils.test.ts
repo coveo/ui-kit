@@ -33,26 +33,24 @@ describe('#findActiveValueAncestry', () => {
       expect(findActiveValueAncestry([selectedValue])).toEqual([selectedValue]);
     });
 
-    it.each(hierarchicalTestCases)(
-      'should return an array containing the selected value whole ancestry',
-      (generateValues) => {
-        expect(findActiveValueAncestry(generateValues())).not.toContain(
-          notAncestorValue
-        );
-      }
-    );
+    it.each(
+      hierarchicalTestCases
+    )('should return an array containing the selected value whole ancestry', (generateValues) => {
+      expect(findActiveValueAncestry(generateValues())).not.toContain(
+        notAncestorValue
+      );
+    });
 
-    it.each(hierarchicalTestCases)(
-      'should return an array containing the ancestors in order, from the root to the selected value',
-      (generateValue) => {
-        const ancestry = findActiveValueAncestry(generateValue());
+    it.each(
+      hierarchicalTestCases
+    )('should return an array containing the ancestors in order, from the root to the selected value', (generateValue) => {
+      const ancestry = findActiveValueAncestry(generateValue());
 
-        expect(ancestry.pop()).toBe(selectedValue);
-        expect(ancestry[ancestry.length - 1].children).toContain(selectedValue);
-        for (let i = 0; i < ancestry.length - 2; i++) {
-          expect(ancestry[i].children).toContain(ancestry[i + 1]);
-        }
+      expect(ancestry.pop()).toBe(selectedValue);
+      expect(ancestry[ancestry.length - 1].children).toContain(selectedValue);
+      for (let i = 0; i < ancestry.length - 2; i++) {
+        expect(ancestry[i].children).toContain(ancestry[i + 1]);
       }
-    );
+    });
   });
 });

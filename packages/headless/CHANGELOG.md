@@ -1,3 +1,22 @@
+## <small>3.47.2 (2026-03-25)</small>
+
+* fix(deps): update all dependencies j:kit-282 (major) (#6195) ([a5df20c](https://github.com/coveo/ui-kit/commits/a5df20c)), closes [#6195](https://github.com/coveo/ui-kit/issues/6195)
+
+
+
+## <small>3.47.1 (2026-03-25)</small>
+
+* fix(atomic): Ensure first tab is used when no active tab exists (#7252) ([c960e4b](https://github.com/coveo/ui-kit/commits/c960e4b)), closes [#7252](https://github.com/coveo/ui-kit/issues/7252)
+* fix(deps): update all dependencies j:kit-282 (#6191) ([9ec6cc5](https://github.com/coveo/ui-kit/commits/9ec6cc5)), closes [#6191](https://github.com/coveo/ui-kit/issues/6191)
+* fix(deps): update dependency @coveo/relay to v2 j:kit-282 (#7136) ([0e49e7c](https://github.com/coveo/ui-kit/commits/0e49e7c)), closes [#7136](https://github.com/coveo/ui-kit/issues/7136)
+* fix(headless): adapted strategies to latest backend changes (#7237) ([b2b4638](https://github.com/coveo/ui-kit/commits/b2b4638)), closes [#7237](https://github.com/coveo/ui-kit/issues/7237)
+* chore: remove isCDN variable (#7231) ([9d7a65a](https://github.com/coveo/ui-kit/commits/9d7a65a)), closes [#7231](https://github.com/coveo/ui-kit/issues/7231)
+* chore(deps): update dependency @biomejs/biome to v2.4.7 j:kit-282 (#6193) ([a72f939](https://github.com/coveo/ui-kit/commits/a72f939)), closes [#6193](https://github.com/coveo/ui-kit/issues/6193)
+* ci: migrate npm publishing to OIDC trusted publishers (#7198) ([c97eff5](https://github.com/coveo/ui-kit/commits/c97eff5)), closes [#7198](https://github.com/coveo/ui-kit/issues/7198)
+* feat(atomic, headless): added support for new error code turn limit reached from KGAS (#7262) ([ad46f6d](https://github.com/coveo/ui-kit/commits/ad46f6d)), closes [#7262](https://github.com/coveo/ui-kit/issues/7262)
+
+
+
 ## 3.47.0 (2026-03-18)
 
 * fix(headless, atomic): log correct answer ID in analytics for citations in follow-up answers. (#7226 ([b112e7f](https://github.com/coveo/ui-kit/commits/b112e7f)), closes [#7226](https://github.com/coveo/ui-kit/issues/7226)
