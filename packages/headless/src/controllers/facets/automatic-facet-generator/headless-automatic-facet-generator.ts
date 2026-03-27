@@ -1,5 +1,7 @@
 import {configuration} from '../../../app/common-reducers.js';
 import type {CoreEngine} from '../../../app/engine.js';
+import type {FrankensteinEngine} from '../../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import {setOptions} from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions.js';
 import {automaticFacetSetReducer as automaticFacetSet} from '../../../features/facets/automatic-facet-set/automatic-facet-set-slice.js';
@@ -124,26 +126,27 @@ export interface AutomaticFacet extends Controller {
  * @category AutomaticFacetGenerator
  */
 export function buildAutomaticFacetGenerator(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props: AutomaticFacetGeneratorProps
 ): AutomaticFacetGenerator {
-  if (!loadAutomaticFacetGeneratorReducers(engine)) {
+  const searchEngine = ensureSearchEngine(engine);
+  if (!loadAutomaticFacetGeneratorReducers(searchEngine)) {
     throw loadReducerError;
   }
 
-  const {dispatch} = engine;
+  const {dispatch} = searchEngine;
   const options = buildOptions(props.options);
   dispatch(setOptions(options));
 
-  const controller = buildController(engine);
+  const controller = buildController(searchEngine);
 
   return {
     ...controller,
 
     get state() {
       const automaticFacets =
-        engine.state.search.response.generateAutomaticFacets?.facets.map(
-          (facet) => buildAutomaticFacet(engine, {field: facet.field})
+        searchEngine.state.search.response.generateAutomaticFacets?.facets.map(
+          (facet) => buildAutomaticFacet(searchEngine, {field: facet.field})
         ) ?? [];
       return {
         automaticFacets,

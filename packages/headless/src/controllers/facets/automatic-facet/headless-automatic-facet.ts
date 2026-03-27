@@ -1,3 +1,5 @@
+import type {FrankensteinEngine} from '../../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import {
   deselectAllAutomaticFacetValues,
@@ -38,11 +40,12 @@ interface AutomaticFacetProps {
  * @returns An `AutomaticFacet` controller instance.
  * */
 export function buildAutomaticFacet(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props: AutomaticFacetProps
 ): AutomaticFacet {
-  const {dispatch} = engine;
-  const controller = buildController(engine);
+  const searchEngine = ensureSearchEngine(engine);
+  const {dispatch} = searchEngine;
+  const controller = buildController(searchEngine);
 
   const {field} = props;
 
@@ -73,7 +76,8 @@ export function buildAutomaticFacet(
     },
 
     get state() {
-      const response = engine.state.automaticFacetSet?.set[field]?.response;
+      const response =
+        searchEngine.state.automaticFacetSet?.set[field]?.response;
 
       const defaultState = {field: '', values: [], label: ''};
 

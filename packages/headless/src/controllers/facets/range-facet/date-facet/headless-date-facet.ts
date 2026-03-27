@@ -1,3 +1,5 @@
+import type {FrankensteinEngine} from '../../../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../../../app/search-engine/search-engine.js';
 import {
   facetClearAll,
@@ -46,11 +48,12 @@ export {buildDateRange};
  * @category DateFacet
  */
 export function buildDateFacet(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props: DateFacetProps
 ): DateFacet {
-  const coreController = buildCoreDateFacet(engine, props);
-  const dispatch = engine.dispatch;
+  const searchEngine = ensureSearchEngine(engine);
+  const coreController = buildCoreDateFacet(searchEngine, props);
+  const dispatch = searchEngine.dispatch;
   const getFacetId = () => coreController.state.facetId;
 
   return {

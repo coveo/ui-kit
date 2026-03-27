@@ -1,5 +1,7 @@
 import {configuration} from '../../../app/common-reducers.js';
 import type {CoreEngine} from '../../../app/engine.js';
+import type {FrankensteinEngine} from '../../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import type {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments.js';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions.js';
@@ -89,14 +91,18 @@ export interface FacetProps {
  * @group Controllers
  * @category Facet
  * */
-export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
-  if (!loadFacetReducers(engine)) {
+export function buildFacet(
+  engine: SearchEngine | FrankensteinEngine,
+  props: FacetProps
+): Facet {
+  const searchEngine = ensureSearchEngine(engine);
+  if (!loadFacetReducers(searchEngine)) {
     throw loadReducerError;
   }
 
-  const {dispatch} = engine;
+  const {dispatch} = searchEngine;
   const coreController = buildCoreFacet(
-    engine,
+    searchEngine,
     {
       ...props,
       options: {
@@ -116,7 +122,7 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
   const createFacetSearch = () => {
     const {facetSearch} = props.options;
 
-    return buildFacetSearch(engine, {
+    return buildFacetSearch(searchEngine, {
       options: {facetId: getFacetId(), ...facetSearch},
       select: (value) => {
         dispatch(updateFacetOptions());

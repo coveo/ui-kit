@@ -1,4 +1,6 @@
 import {configuration} from '../../../../app/common-reducers.js';
+import type {FrankensteinEngine} from '../../../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../../../app/search-engine/search-engine.js';
 import {
   facetClearAll,
@@ -53,15 +55,16 @@ export {buildNumericRange};
  * @category NumericFacet
  */
 export function buildNumericFacet(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props: NumericFacetProps
 ): NumericFacet {
-  if (!loadNumericFacetReducers(engine)) {
+  const searchEngine = ensureSearchEngine(engine);
+  if (!loadNumericFacetReducers(searchEngine)) {
     throw loadReducerError;
   }
 
-  const coreController = buildCoreNumericFacet(engine, props);
-  const dispatch = engine.dispatch;
+  const coreController = buildCoreNumericFacet(searchEngine, props);
+  const dispatch = searchEngine.dispatch;
   const getFacetId = () => coreController.state.facetId;
 
   return {

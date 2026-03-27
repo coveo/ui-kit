@@ -1,4 +1,6 @@
 import {configuration} from '../../../../app/common-reducers.js';
+import type {FrankensteinEngine} from '../../../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../../../app/search-engine/search-engine.js';
 import {
   facetClearAll,
@@ -44,15 +46,16 @@ export type {
  * @category DateFilter
  */
 export function buildDateFilter(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props: DateFilterProps
 ): DateFilter {
-  if (!loadDateFilterReducer(engine)) {
+  const searchEngine = ensureSearchEngine(engine);
+  if (!loadDateFilterReducer(searchEngine)) {
     throw loadReducerError;
   }
 
-  const coreController = buildCoreDateFilter(engine, props);
-  const {dispatch} = engine;
+  const coreController = buildCoreDateFilter(searchEngine, props);
+  const {dispatch} = searchEngine;
   const getFacetId = () => coreController.state.facetId;
 
   return {

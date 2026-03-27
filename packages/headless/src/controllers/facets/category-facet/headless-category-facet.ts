@@ -1,4 +1,6 @@
 import {configuration} from '../../../app/common-reducers.js';
+import type {FrankensteinEngine} from '../../../app/frankenstein-engine/frankenstein-engine.js';
+import {ensureSearchEngine} from '../../../app/frankenstein-engine/frankenstein-engine-utils.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions.js';
 import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice.js';
@@ -74,17 +76,18 @@ export type {
  * @category CategoryFacet
  * */
 export function buildCategoryFacet(
-  engine: SearchEngine,
+  engine: SearchEngine | FrankensteinEngine,
   props: CategoryFacetProps
 ): CategoryFacet {
-  if (!loadCategoryFacetReducers(engine)) {
+  const searchEngine = ensureSearchEngine(engine);
+  if (!loadCategoryFacetReducers(searchEngine)) {
     throw loadReducerError;
   }
 
-  const coreController = buildCoreCategoryFacet(engine, props);
-  const {dispatch} = engine;
+  const coreController = buildCoreCategoryFacet(searchEngine, props);
+  const {dispatch} = searchEngine;
   const getFacetId = () => coreController.state.facetId;
-  const facetSearch = buildCategoryFacetSearch(engine, {
+  const facetSearch = buildCategoryFacetSearch(searchEngine, {
     options: {
       facetId: getFacetId(),
       ...props.options.facetSearch,
