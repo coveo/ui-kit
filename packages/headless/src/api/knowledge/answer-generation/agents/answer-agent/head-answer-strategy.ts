@@ -106,7 +106,12 @@ export const createHeadAnswerStrategy = (
       dispatch(setCannotAnswer(!answerGenerated));
       dispatch(setIsStreaming(false));
       dispatch(
-        logGeneratedAnswerStreamEnd(answerGenerated, runId, answerTextIsEmpty)
+        logGeneratedAnswerStreamEnd(
+          answerGenerated,
+          runId,
+          answerTextIsEmpty,
+          event.threadId
+        )
       );
       dispatch(logGeneratedAnswerResponseLinked());
     },
