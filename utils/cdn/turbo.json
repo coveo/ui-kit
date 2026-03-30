@@ -2,7 +2,12 @@
   "extends": ["//"],
   "tasks": {
     "deploy": {
-      "outputs": []
+      "dependsOn": [
+        "@coveo/headless#build",
+        "@coveo/atomic#build",
+        "@coveo/bueno#build"
+      ],
+      "outputs": ["./dist"]
     },
     "serve": {
       "dependsOn": ["deploy"],
