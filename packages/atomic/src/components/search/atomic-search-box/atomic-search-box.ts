@@ -104,7 +104,7 @@ export class AtomicSearchBox
   implements InitializableComponent<Bindings>
 {
   static styles: CSSResultGroup =
-    css`@import "../atomic-search-box/atomic-search-box.pcss";`;
+    css`@import "../atomic-search-box/atomic-search-box.css";`;
 
   @state() bindings!: Bindings;
   @state() error!: Error;

@@ -1,4 +1,4 @@
-@import '../../../global/global.pcss';
+@import '../../../global/global.css';
 
 .value-count {
   @apply text-neutral-dark ml-1.5;

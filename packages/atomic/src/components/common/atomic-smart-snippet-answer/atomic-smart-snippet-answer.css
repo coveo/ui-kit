@@ -1,4 +1,4 @@
-@import '../../../../global/global.pcss';
+@import '../../../../global/global.css';
 :host {
   @apply text-on-background text-lg;
   line-height: calc(var(--text-lg) * var(--atomic-line-height-ratio));
