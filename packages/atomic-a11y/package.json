@@ -15,10 +15,9 @@
     "a11y:merge-shards": "pnpm build && node scripts/merge-shards-cli.mjs"
   },
   "dependencies": {
-    "js-yaml": "^4.1.0"
+    "yaml": "2.8.0"
   },
   "devDependencies": {
-    "@types/js-yaml": "^4.0.9",
     "axe-core": "4.10.3",
     "typescript": "catalog:"
   }
