@@ -19,7 +19,7 @@ These utilities enable SSR with the [Headless](https://docs.coveo.com/en/lcdf049
 ## Prerequisites
 
 * You should know how to use [Headless](https://docs.coveo.com/en/lcdf0493/) engines and controllers.
-You can refer to the [Headless](https://docs.coveo.com/en/lcdf0493/) [usage documentation](https://docs.coveo.com/en/headless/latest/usage/) for more information.
+You can refer to the [Headless](https://docs.coveo.com/en/lcdf0493/) [usage documentation](../index.html) for more information.
 * You should also be familiar with React and Next.js.
 Although you can read this documentation without an understanding of either framework, details which are specific to them won’t be explained.
 
@@ -39,14 +39,14 @@ The utilities for SSR use three core concepts:
 1. **Static state**
 
    This is the initial state of the application, which is generated on the server and sent to the client.
-   This initial state typically contains the data that’s required for the initial render of the app without interactivity, such as the initial state of each [Headless controller](https://docs.coveo.com/en/headless/latest/usage#use-headless-controllers).
+   This initial state typically contains the data that’s required for the initial render of the app without interactivity, such as the initial state of each [Headless controller](../index.html#use-headless-controllers).
 
    The static state is used to pre-populate (hydrate) the components with data.
    This lets the app load with pre-rendered content on the first request, rather than waiting for the client-side rendering to fetch and display the data.
 2. **Hydrated state**
 
    This is the state after it’s sent from the server to the client and then hydrated on the client side.
-   It contains [Headless controllers](https://docs.coveo.com/en/headless/latest/usage#use-headless-controllers) which you can use to interact with the state of the [Headless](https://docs.coveo.com/en/lcdf0493/) engine.
+   It contains [Headless controllers](../index.html#use-headless-controllers) which you can use to interact with the state of the [Headless](https://docs.coveo.com/en/lcdf0493/) engine.
    It also includes the [Headless](https://docs.coveo.com/en/lcdf0493/) engine.
 
    Synchronizing the state ensures that the behavior of the client-side application is consistent with what was initially rendered on the server.
@@ -64,4 +64,4 @@ The following updated sequence diagram illustrates how SSR and hydration are imp
 
 ## What's next?
 
-To implement server-side rendering in your [Headless](https://docs.coveo.com/en/lcdf0493/) [search interface](https://docs.coveo.com/en/2741/), refer to the [SSR usage documentation](https://docs.coveo.com/en/headless/latest/usage/headless-server-side-rendering/headless-implement-ssr/).
+To implement server-side rendering in your [Headless](https://docs.coveo.com/en/lcdf0493/) [search interface](https://docs.coveo.com/en/2741/), refer to the [SSR usage documentation](./implement-server-side-rendering.html).
