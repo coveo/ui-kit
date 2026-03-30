@@ -73,6 +73,7 @@
     "test:lit": "vitest run --project=atomic-default",
     "test:watch": "vitest --project=atomic-default",
     "test:storybook": "vitest run --project=storybook",
+    "test:storybook-utils": "vitest run --project=storybookPure",
     "generate-component": "node ./scripts/generate-component.mjs",
     "release:phase1": "pnpm --filter @coveo/ci bump",
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",

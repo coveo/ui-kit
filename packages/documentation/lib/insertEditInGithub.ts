@@ -174,6 +174,7 @@ export function insertEditInGithub(page: PageEvent<Reflection>) {
     }
   }
 
+  // 2) Document pages with explicit document/ prefix
   if (!githubUrl && String(pageUrl).startsWith(DOCUMENT_PAGE_PREFIX)) {
     const inferredPath = inferSourceDocPath(String(pageUrl));
     if (inferredPath) {
@@ -181,7 +182,7 @@ export function insertEditInGithub(page: PageEvent<Reflection>) {
     }
   }
 
-  // The root index.html is TypeDoc's alias for documents/index.html — resolve it the same way.
+  // 3) Root index.html (TypeDoc's alias for documents/index.html)
   if (!githubUrl && (pageUrl === 'index.html' || pageUrl === '')) {
     const inferredPath = inferSourceDocPath(
       `${DOCUMENT_PAGE_PREFIX}index.html`
