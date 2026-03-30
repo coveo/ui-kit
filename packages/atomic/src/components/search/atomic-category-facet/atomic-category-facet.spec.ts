@@ -418,12 +418,12 @@ describe('atomic-category-facet', () => {
     );
   });
 
-  it('should not build facet conditions manager when no depends-on attribute is provided', async () => {
+  it('should build facet conditions manager even when no depends-on attribute is provided', async () => {
     vi.mocked(buildFacetConditionsManager).mockClear();
 
     await renderCategoryFacet();
 
-    expect(buildFacetConditionsManager).not.toHaveBeenCalled();
+    expect(buildFacetConditionsManager).toHaveBeenCalled();
   });
 
   it('should use default label when not provided', async () => {
