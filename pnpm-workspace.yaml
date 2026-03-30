@@ -1,33 +1,33 @@
 packages:
-  - 'packages/bueno'
-  - 'packages/auth'
-  - 'packages/headless'
-  - 'packages/quantic'
-  - 'packages/headless-react'
-  - 'packages/ssr'
-  - 'packages/atomic-hosted-page'
-  - 'packages/atomic-react'
-  - 'packages/atomic-angular'
-  - 'packages/documentation'
-  - 'packages/atomic-angular/projects/*'
-  - 'packages/atomic-a11y'
-  - 'packages/atomic'
-  - 'packages/atomic-legacy'
-  - 'packages/shopify'
-  - 'packages/create-atomic-template'
-  - 'packages/create-atomic'
-  - 'packages/create-atomic-component'
-  - 'packages/create-atomic-component/template/src/components/sample-component'
-  - 'packages/create-atomic-component-project'
-  - 'packages/create-atomic-component-project/template'
-  - 'packages/create-atomic-rollup-plugin'
-  - 'packages/create-atomic-result-component'
-  - 'packages/create-atomic-result-component/template/src/components/sample-result-component'
-  - 'samples/atomic/*'
-  - 'samples/headless/*'
-  - 'samples/headless-ssr/*'
-  - 'utils/cdn'
-  - 'utils/ci'
+  - packages/bueno
+  - packages/auth
+  - packages/headless
+  - packages/quantic
+  - packages/headless-react
+  - packages/ssr
+  - packages/atomic-hosted-page
+  - packages/atomic-react
+  - packages/atomic-angular
+  - packages/documentation
+  - packages/atomic-angular/projects/*
+  - packages/atomic
+  - packages/atomic-a11y
+  - packages/atomic-legacy
+  - packages/shopify
+  - packages/create-atomic-template
+  - packages/create-atomic
+  - packages/create-atomic-component
+  - packages/create-atomic-component/template/src/components/sample-component
+  - packages/create-atomic-component-project
+  - packages/create-atomic-component-project/template
+  - packages/create-atomic-rollup-plugin
+  - packages/create-atomic-result-component
+  - packages/create-atomic-result-component/template/src/components/sample-result-component
+  - samples/atomic/*
+  - samples/headless/*
+  - samples/headless-ssr/*
+  - utils/cdn
+  - utils/ci
 
 catalog:
   '@angular-devkit/build-angular': 20.3.13
@@ -61,6 +61,7 @@ catalog:
   '@types/react': 19.2.14
   '@types/react-dom': 19.2.3
   '@vitejs/plugin-react': 6.0.1
+  '@vitest/browser-playwright': 4.0.16
   coveo.analytics: 2.30.54
   cypress: 13.7.3
   cypress-repeat: 2.3.9
@@ -82,16 +83,12 @@ catalog:
   typescript: 5.9.3
   vite: 8.0.0
   vitest: 4.0.16
-  '@vitest/coverage-v8': 4.0.16
-  '@vitest/browser-playwright': 4.0.16
 
-publicHoistPattern:
-  - '*eslint*'
-  - '*prettier*'
 minimumReleaseAge: 10080
+
 minimumReleaseAgeExclude:
   - '@coveo/*'
-  - 'coveo.analytics'
+  - coveo.analytics
   - '@vitest/*'
   - vitest
   - '@wc-toolkit/storybook-helpers'
@@ -106,3 +103,7 @@ minimumReleaseAgeExclude:
   - react-dom
   - react-router
   - '@react-router/*'
+
+publicHoistPattern:
+  - '*eslint*'
+  - '*prettier*'
