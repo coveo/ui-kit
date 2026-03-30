@@ -1,8 +1,8 @@
-@import '../../../../global/global.pcss';
-@import './generated-text.pcss';
-@import '../generated-content/generated-markdown-content.pcss';
-@import './feedback-buttons.pcss';
-@import './copy-button.pcss';
+@import '../../../../global/global.css';
+@import './generated-text.css';
+@import '../generated-content/generated-markdown-content.css';
+@import './feedback-buttons.css';
+@import './copy-button.css';
 
 @utility mobile-footer-layout {
   & {

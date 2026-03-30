@@ -110,7 +110,7 @@ export class AtomicCommerceSearchBox
     delegatesFocus: true,
   };
   static styles: CSSResultGroup =
-    css`@import "../../search/atomic-search-box/atomic-search-box.pcss";`;
+    css`@import "../../search/atomic-search-box/atomic-search-box.css";`;
 
   @state() bindings!: CommerceBindings;
   @state() error!: Error;
