@@ -1,9 +1,9 @@
 ---
-title: Introduction
+title: Concepts
 group: Usage
 slug: usage/index
 ---
-# Usage
+# Concepts
 
 A project built on top of Headless will typically involve two main building-blocks: the _engine,_ which manages the state of the search interface and communicates with the Coveo Platform, and the _controllers,_ which dispatch actions to the engine based on user interactions.
 
@@ -31,7 +31,7 @@ Headless requires Node.js version 20.
 
 ## Configure a Headless Engine
 
-To start building an application on top of the [Headless library](https://docs.coveo.com/en/lcdf0493/), you must first initialize a [Headless engine](https://docs.coveo.com/en/headless/latest/reference/index.html) using one of the builder functions, each of which is dedicated to a specific use case.
+To start building an application on top of the [Headless library](https://docs.coveo.com/en/lcdf0493/), you must first initialize a [Headless engine](../../index.html) using one of the builder functions, each of which is dedicated to a specific use case.
 Each builder function is imported from a dedicated sub-package that has the relevant exports for its use case.
 These engine builder functions are:
 
@@ -99,7 +99,7 @@ For most use cases, we recommend that you use controllers to interact with the s
 
 **Example**
 
-To implement a search box UI component, you decide to use the [`SearchBox`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchBox.html) controller, available in the Headless [Search Engine](https://docs.coveo.com/en/headless/latest/reference/modules/Search.html).
+To implement a search box UI component, you decide to use the [`SearchBox`](../../interfaces/Search.SearchBox.html) controller, available in the Headless [Search Engine](../../modules/Search.html).
 
 This controller exposes various public methods such as `updateText` and `submit`.
 You write code to ensure that when the end user types in the search box, the `Searchbox` controller’s `updateText` method is called.
@@ -109,7 +109,7 @@ The Headless Search Engine’s reducers react to those actions by updating the s
 In this case, the `query` property of the state is updated.
 Then, the controller fetches new query suggestions from the Search API, and updates the `querySuggestState` property.
 
-For detailed information on the various Headless controllers, see the [reference documentation](https://docs.coveo.com/en/headless/latest/reference/index.html).
+For detailed information on the various Headless controllers, see the [reference documentation](../../index.html).
 
 ### Initialize a Controller Instance
 
@@ -155,7 +155,7 @@ const myAuthorFacet: Facet = buildFacet(engine, { options });
 ```
 1. Specifying a `field` value in the options object is required to initialize a `Facet` controller instance.
 
-The options that are available on each controller are detailed in the [reference documentation](https://docs.coveo.com/en/headless/latest/reference/index.html).
+The options that are available on each controller are detailed in the [reference documentation](../../index.html).
 
 ### Interact With a Controller
 
@@ -178,7 +178,7 @@ mySearchBox.selectSuggestion(mySearchBox.state.suggestions[0].value) ②
 1. Dispatches actions to update the query to `hello`, and fetch new query suggestions.
 2. Dispatches actions to set the query to the value of the first query suggestion (for example, `hello world`), and execute that query.
 
-The methods that are available on each controller are detailed in the [reference documentation](https://docs.coveo.com/en/headless/latest/reference/index.html).
+The methods that are available on each controller are detailed in the [reference documentation](../../index.html).
 
 ### Subscribe to State Changes
 
@@ -230,12 +230,12 @@ unsubscribe();
 
 ## Initialize Your Interface
 
-Once you’ve initialized your engine and controllers, you may want to set initial search parameters, if needed, before [synchronizing the search parameters with values retrieved from the URL](https://docs.coveo.com/en/headless/latest/usage/synchronize-search-parameters-with-the-url) and finally triggering the first request.
+Once you’ve initialized your engine and controllers, you may want to set initial search parameters, if needed, before [synchronizing the search parameters with values retrieved from the URL](./synchronize-search-parameters-with-the-url.html) and finally triggering the first request.
 If your application does not need to modify initial search parameters, then the next step would be to trigger the first request.
 
 In any case, be sure to modify initial search parameters, and then to synchronize with the URL, only after the engine and controllers have been initialized, lest you face timing problems.
 To avoid this kind of issue, modern frameworks expose purpose-built lifecycle methods.
-In React, there is [`componentDidMount`](https://reactjs.org/docs/react-component.html#componentdidmount), in Vue.js, there is [`mounted`](https://v3.vuejs.org/api/options-lifecycle-hooks.html#mounted), and in Angular there is [`ngAfterViewInit`](https://angular.io/guide/lifecycle-hooks#lifecycle-event-sequence).
+In React, there is [`componentDidMount`](https://react.dev/reference/react/Component#componentdidmount), in Vue.js, there is [`mounted`](https://v3.vuejs.org/api/options-lifecycle-hooks.html#mounted), and in Angular there is [`ngAfterViewInit`](https://angular.io/guide/lifecycle-hooks#lifecycle-event-sequence).
 
 ```typescript
 // app/SearchPage.tsx
@@ -267,13 +267,13 @@ export default class App extends React.Component {
 }
 ```
 
-1. Import the engine [you created above](https://docs.coveo.com/en/headless/latest/usage#configure-a-headless-engine).
-2. Import the search box and author facet [you created above](https://docs.coveo.com/en/headless/latest/usage#initialize-a-controller-instance).
+1. Import the engine [you created above](./index.html#configure-a-headless-engine).
+2. Import the search box and author facet [you created above](./index.html#initialize-a-controller-instance).
 Recall that you pass the engine to each of those components.
 3. Use your components to build your interface.
 4. The `componentDidMount` method allows you to wait until the `mySearchBox` and `myAuthorFacet` components have been initialized and have registered their state on the engine.
 You can therefore execute the first search.
-If you wanted to modify search parameters and to [synchronize them with values retrieved from the URL](https://docs.coveo.com/en/headless/latest/usage/synchronize-search-parameters-with-the-url), you would do it in this block, before executing the first search.
+If you wanted to modify search parameters and to [synchronize them with values retrieved from the URL](./synchronize-search-parameters-with-the-url.html), you would do it in this block, before executing the first search.
 
 ## Dispatch Actions
 
@@ -297,4 +297,4 @@ engine.dispatch(action); ③
 > Every action dispatch triggers the corresponding listener function.
 > Consequently, you should only perform costly operations, such as rendering a UI component, when the state they depend on has changed.
 
-For more information on the various actions you can dispatch, see the [reference documentation](https://docs.coveo.com/en/headless/latest/reference/index.html).
+For more information on the various actions you can dispatch, see the [reference documentation](../../index.html).
