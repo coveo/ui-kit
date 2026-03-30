@@ -17,9 +17,6 @@
       "!**/packages/create-atomic-component-project/template/**/*",
       "!**/packages/create-atomic-result-component/template/**/*",
 
-      // Root excluded files.
-      "!**/.deployment.config/**/*",
-
       // atomic excluded files.
       "!**/packages/atomic/**/cypress/**/*",
       "!**/packages/atomic/**/*.tsx", // Exclude tsx files during Lit migration.

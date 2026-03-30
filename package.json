@@ -46,7 +46,6 @@
     "@playwright/mcp": "catalog:",
     "playwright": "catalog:",
     "publint": "0.3.18",
-    "semver": "7.7.3",
     "turbo": "2.8.15",
     "typescript": "catalog:",
     "vitest": "catalog:"

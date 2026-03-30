@@ -12,9 +12,6 @@ module.exports = {
       if (file.includes('/packages/create-atomic-component-project/template/'))
         return false;
 
-      // Exclude root deployment config
-      if (file.includes('/.deployment.config/')) return false;
-
       if (file.endsWith('package-lock.json')) return false;
 
       // Exclude atomic package cypress, tsx (except stories), and d.ts files

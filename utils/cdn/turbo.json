@@ -2,7 +2,7 @@
   "extends": ["//"],
   "tasks": {
     "deploy": {
-      "outputs": []
+      "outputs": ["dist/**"]
     },
     "serve": {
       "dependsOn": ["deploy"],
