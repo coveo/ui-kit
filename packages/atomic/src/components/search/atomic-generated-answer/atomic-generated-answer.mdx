@@ -30,8 +30,9 @@ The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) m
 ## Key Features
 
 - **AI-Generated Answers**: Automatically generates answers to user queries using Coveo ML
+- **Conversational Experience**: Ask follow-up questions and maintain context across a multi-turn conversation
 - **Source Citations**: Displays citations to the sources used to generate the answer
-- **Feedback Collection**: Built-in like/dislike buttons to collect user feedback
+- **Feedback Collection**: Built-in like/dislike buttons to collect user feedback on a specific answer
 - **Copy to Clipboard**: Users can easily copy the generated answer
 - **Collapsible Mode**: Allows long answers to be collapsed for better UI management
 - **Tab Integration**: Show/hide the component based on active tabs
@@ -75,6 +76,28 @@ Specify a particular answer configuration to use:
   answer-configuration-id="my-config-id">
 </atomic-generated-answer>
 ```
+
+### Conversational Experience (Multi-Turn)
+
+Enable the conversational experience by providing an `agent-id`. This activates multi-turn interactions, allowing users to ask follow-up questions after the initial answer is generated.
+
+When an `agent-id` is set, the component:
+- Displays the initial answer along with a follow-up input field
+- Lets users ask follow-up questions that maintain the conversation context
+- Renders the full conversation as a threaded timeline, where each answer has its own citations, feedback buttons, and copy-to-clipboard action
+- Tracks analytics (citation clicks, hovers, likes/dislikes, copy) independently for each answer in the conversation
+
+```html
+<atomic-generated-answer
+  agent-id="my-agent-id">
+</atomic-generated-answer>
+```
+
+- **`agent-id`**: The unique identifier of the Coveo AI agent to use for answer generation. When set, the component uses the Agent API instead of the Answer API and enables multi-turn follow-up questions.
+
+> **Note:** The `agent-id` and `answer-configuration-id` properties are mutually exclusive. Use `agent-id` for the conversational experience, or `answer-configuration-id` for single-turn answer generation via the Answer API. If neither is provided, the component falls back to the Search API for generated answers.
+
+> **Note:** The `collapsible` property is not supported when the conversational experience is enabled. The threaded conversation layout manages its own content display.
 
 ### Citation Configuration
 

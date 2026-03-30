@@ -146,9 +146,9 @@ export class AtomicGeneratedAnswer
    */
   @property({type: String, attribute: 'answer-configuration-id'})
   answerConfigurationId?: string;
+
   /**
-   * @internal
-   * The unique identifier of the agent to use to generate answers.
+   * The unique identifier of the agent to use to generate answers. When set, it enables the follow-up answers feature.
    */
   @property({type: String, attribute: 'agent-id'})
   agentId?: string;
