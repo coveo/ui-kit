@@ -161,11 +161,6 @@ export function insertEditInGithub(page: PageEvent<Reflection>) {
   let githubUrl: string | null = null;
   const pageUrl = page.url ?? '';
 
-  // Skip the root index page (TypeDoc's module listing)
-  if (pageUrl === 'index.html' || pageUrl === '') {
-    return;
-  }
-
   // 1) Code reflections — derive from model.sources
   if (model?.sources?.length && model.sources[0]?.fullFileName) {
     const src = model.sources[0];
@@ -181,6 +176,16 @@ export function insertEditInGithub(page: PageEvent<Reflection>) {
 
   if (!githubUrl && String(pageUrl).startsWith(DOCUMENT_PAGE_PREFIX)) {
     const inferredPath = inferSourceDocPath(String(pageUrl));
+    if (inferredPath) {
+      githubUrl = `${GITHUB_BASE}${inferredPath}`;
+    }
+  }
+
+  // The root index.html is TypeDoc's alias for documents/index.html — resolve it the same way.
+  if (!githubUrl && (pageUrl === 'index.html' || pageUrl === '')) {
+    const inferredPath = inferSourceDocPath(
+      `${DOCUMENT_PAGE_PREFIX}index.html`
+    );
     if (inferredPath) {
       githubUrl = `${GITHUB_BASE}${inferredPath}`;
     }
