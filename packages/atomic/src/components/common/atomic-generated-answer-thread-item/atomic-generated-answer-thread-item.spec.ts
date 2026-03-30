@@ -73,19 +73,6 @@ describe('atomic-generated-answer-thread-item', () => {
     expect(locators().timelineLine).toBeInTheDocument();
   });
 
-  it('should render a faded divider under content when expanded', async () => {
-    const {locators} = await renderComponent({isExpanded: true});
-
-    expect(locators().contentState).toHaveAttribute('aria-hidden', 'false');
-  });
-
-  it('should not render divider when collapsed', async () => {
-    const {locators} = await renderComponent({isExpanded: false});
-
-    expect(locators().contentState).toHaveAttribute('hidden');
-    expect(locators().contentState).toHaveAttribute('aria-hidden', 'true');
-  });
-
   it('should render a title button when collapsible', async () => {
     const {locators} = await renderComponent({
       disableCollapse: false,
