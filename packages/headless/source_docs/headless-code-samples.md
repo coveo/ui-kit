@@ -13,10 +13,9 @@ The following interactive code sample uses Coveo Headless alongside the [Materia
      sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
    ></iframe>
 
-You can find controller-specific implementation examples in the controller [reference documentation](https://docs.coveo.com/en/headless/latest/reference/index.html).
+You can find controller-specific implementation examples in the controller [reference documentation](../index.html).
 
 Finally, you can find more code samples in the following:
 
 * [Headless React](https://github.com/coveo/ui-kit/tree/main/samples/headless/search-react)
 * [Headless Commerce React](https://github.com/coveo/ui-kit/tree/main/samples/headless/commerce-react)
-* [Headless SSR Next.js](https://github.com/coveo/ui-kit/tree/main/samples/headless-ssr/search-nextjs)

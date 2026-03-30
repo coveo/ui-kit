@@ -6,7 +6,7 @@ slug: versioned-documentation
 
 >[!TIP]
 >
->For detailed changes between versions, see the [Change Log](https://github.com/coveo/ui-kit/blob/master/packages/headless/CHANGELOG.md).
+>For detailed changes between versions, see the [Change Log](https://github.com/coveo/ui-kit/blob/main/packages/headless/CHANGELOG.md).
 
 > [!NOTE]
 > 
@@ -14,7 +14,7 @@ slug: versioned-documentation
 
 ## Latest version (v3.35.0)
 
-[Documentation](https://docs.coveo.com/en/headless/latest/)
+[Documentation](./index.html)
 
 ## 2.80.7
 

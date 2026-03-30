@@ -91,6 +91,8 @@ export class AtomicGeneratedAnswerThread extends LitElement {
   }
 
   private renderThread(generatedAnswers: readonly GeneratedAnswer[]) {
+    const showTimelineDot = this.generatedAnswers.length > 1;
+
     return html`
       ${repeat(
         generatedAnswers,
@@ -104,6 +106,7 @@ export class AtomicGeneratedAnswerThread extends LitElement {
               .hideLine=${isLastAnswer}
               .disableCollapse=${isLastAnswer}
               .isExpanded=${isLastAnswer}
+              .showTimelineDot=${showTimelineDot}
             >
               <atomic-generated-answer-content
                 .generatedAnswer=${answer}

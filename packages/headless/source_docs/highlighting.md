@@ -6,8 +6,8 @@ slug: usage/implement-highlighting
 # Implement highlighting
 Coveo Headless offers highlighting for the following search elements:
 
-* [query suggestions](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchBox.html#state)
-* [result list elements](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.Result.html):
+* [query suggestions](../../interfaces/Search.SearchBox.html#state)
+* [result list elements](../../interfaces/Search.Result.html):
   * title
   * excerpt
   * printable URI
@@ -18,7 +18,7 @@ This article explains how to implement highlighting in your Headless search inte
 
 ## Highlight Query Suggestions
 
-Let’s assume that you have a [`SearchBox`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchBox.html) component which offers clickable suggestions.
+Let’s assume that you have a [`SearchBox`](../../interfaces/Search.SearchBox.html) component which offers clickable suggestions.
 
 Each time you add or delete a character in the search field, Headless performs a [`querySuggest`](https://docs.coveo.com/en/13#operation/querySuggestPost) request to the Search API.
 
@@ -108,7 +108,7 @@ export const SearchBox: FunctionComponent<SearchBoxProps> = (props) => {
   );
 };
 ```
-1. Adds the highlighting delimiters during initialization of a `SearchBox` controller instance (see [`SuggestionHighlightingOptions`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SuggestionHighlightingOptions.html)).
+1. Adds the highlighting delimiters during initialization of a `SearchBox` controller instance (see [`SuggestionHighlightingOptions`](../../interfaces/Search.SuggestionHighlightingOptions.html)).
 If you use valid HTML tags as shown in this example, Headless interprets them as tags rather than as regular text.
 2. Adds a condition on showing a bulleted list of suggestions (if any).
 3. Applies highlighting to the suggestions.
