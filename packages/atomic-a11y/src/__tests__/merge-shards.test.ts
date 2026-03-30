@@ -37,6 +37,7 @@ function createCriterion(
     wcagVersion: '2.0',
     conformance: 'notEvaluated',
     automatedCoverage: true,
+    interactiveCoverage: false,
     manualVerified: false,
     remarks: '',
     affectedComponents: [],
@@ -81,6 +82,8 @@ function createReport(
       notApplicable: 0,
       notEvaluated: 50,
       automatedCoverage: '0%',
+      interactiveCoverage: '0%',
+      interactivePassRate: '0%',
       manualCoverage: '0%',
     },
   };

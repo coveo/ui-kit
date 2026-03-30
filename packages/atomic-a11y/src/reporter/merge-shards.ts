@@ -11,6 +11,7 @@ import type {
   A11yAutomatedResults,
   A11yComponentReport,
   A11yCriterionReport,
+  A11yInteractiveResults,
   A11yReport,
 } from '../shared/types.js';
 import {formatDate, getCriterionMetadata} from './reporter-utils.js';
@@ -29,9 +30,16 @@ interface MutableAutomatedResults
   criteriaCovered: Set<string>;
 }
 
+interface MutableInteractiveResults
+  extends Omit<A11yInteractiveResults, 'criteriaCovered' | 'failedCriteria'> {
+  criteriaCovered: Set<string>;
+  failedCriteria: Set<string>;
+}
+
 interface MutableComponentReport
-  extends Omit<A11yComponentReport, 'automated'> {
+  extends Omit<A11yComponentReport, 'automated' | 'interactive'> {
   automated: MutableAutomatedResults;
+  interactive?: MutableInteractiveResults;
 }
 
 interface MutableCriterionReport
@@ -49,6 +57,13 @@ function toMutableComponent(
       criteriaCovered: new Set(component.automated.criteriaCovered),
       incompleteDetails: [...component.automated.incompleteDetails],
     },
+    interactive: component.interactive
+      ? {
+          ...component.interactive,
+          criteriaCovered: new Set(component.interactive.criteriaCovered),
+          failedCriteria: new Set(component.interactive.failedCriteria),
+        }
+      : undefined,
   };
 }
 
@@ -114,6 +129,10 @@ export function mergeComponents(reports: A11yReport[]): A11yComponentReport[] {
       existing.automated.incompleteDetails.push(
         ...component.automated.incompleteDetails
       );
+
+      if (component.interactive) {
+        mergeInteractiveResults(existing, component.interactive);
+      }
     }
   }
 
@@ -127,9 +146,48 @@ export function mergeComponents(reports: A11yReport[]): A11yComponentReport[] {
             compareByNumericId
           ),
         },
+        interactive: component.interactive
+          ? {
+              ...component.interactive,
+              criteriaCovered: [...component.interactive.criteriaCovered].sort(
+                compareByNumericId
+              ),
+              failedCriteria: [...component.interactive.failedCriteria].sort(
+                compareByNumericId
+              ),
+            }
+          : undefined,
       };
     })
     .sort((first, second) => compareByName(first.name, second.name));
+}
+
+function mergeInteractiveResults(
+  target: MutableComponentReport,
+  source: A11yInteractiveResults
+): void {
+  if (!target.interactive) {
+    target.interactive = {
+      criteriaCovered: new Set(source.criteriaCovered),
+      testCount: source.testCount,
+      passedCount: source.passedCount,
+      failedCount: source.failedCount,
+      failedCriteria: new Set(source.failedCriteria),
+    };
+    return;
+  }
+
+  target.interactive.testCount += source.testCount;
+  target.interactive.passedCount += source.passedCount;
+  target.interactive.failedCount += source.failedCount;
+
+  for (const criterion of source.criteriaCovered) {
+    target.interactive.criteriaCovered.add(criterion);
+  }
+
+  for (const criterion of source.failedCriteria) {
+    target.interactive.failedCriteria.add(criterion);
+  }
 }
 
 export function mergeCriteria(
@@ -148,6 +206,17 @@ export function mergeCriteria(
 
       for (const componentName of criterion.affectedComponents) {
         existing.affectedComponents.add(componentName);
+      }
+
+      if (criterion.interactiveCoverage) {
+        existing.interactiveCoverage = true;
+      }
+
+      if (criterion.interactiveStatus) {
+        existing.interactiveStatus = mergeInteractiveStatus(
+          existing.interactiveStatus,
+          criterion.interactiveStatus
+        );
       }
     }
   }
@@ -171,10 +240,30 @@ export function mergeCriteria(
         wcagVersion: metadata.wcagVersion,
         conformance: 'notEvaluated',
         automatedCoverage: true,
+        interactiveCoverage: false,
         manualVerified: false,
         remarks: '',
         affectedComponents: new Set([component.name]),
       });
+    }
+
+    if (component.interactive) {
+      for (const criterionId of component.interactive.criteriaCovered) {
+        const existing = criteriaById.get(criterionId);
+        if (existing) {
+          existing.interactiveCoverage = true;
+          const isFailed =
+            component.interactive.failedCriteria.includes(criterionId);
+          const nextStatus: 'passed' | 'failed' = isFailed
+            ? 'failed'
+            : 'passed';
+          existing.interactiveStatus = mergeInteractiveStatus(
+            existing.interactiveStatus,
+            nextStatus
+          );
+          existing.affectedComponents.add(component.name);
+        }
+      }
     }
   }
 
@@ -194,6 +283,31 @@ export function mergeCriteria(
       };
     })
     .sort((first, second) => compareByNumericId(first.id, second.id));
+}
+
+function mergeInteractiveStatus(
+  current: 'passed' | 'failed' | 'mixed' | undefined,
+  incoming: 'passed' | 'failed' | 'mixed'
+): 'passed' | 'failed' | 'mixed' {
+  if (!current) {
+    return incoming;
+  }
+
+  if (current === incoming) {
+    return current;
+  }
+
+  return 'mixed';
+}
+
+function mergeEvaluationMethods(reports: A11yReport[]): string[] {
+  const methods = new Set<string>();
+  for (const report of reports) {
+    for (const method of report.report.evaluationMethods) {
+      methods.add(method);
+    }
+  }
+  return [...methods];
 }
 
 export async function mergeA11yShardReports(
@@ -249,10 +363,12 @@ export async function mergeA11yShardReports(
   const components = mergeComponents(shardReports);
   const criteria = mergeCriteria(shardReports, components);
   const baseReport = shardReports[0];
+  const evaluationMethods = mergeEvaluationMethods(shardReports);
   const mergedReport: A11yReport = {
     report: {
       ...baseReport.report,
       reportDate: formatDate(new Date()),
+      evaluationMethods,
     },
     components,
     criteria,
