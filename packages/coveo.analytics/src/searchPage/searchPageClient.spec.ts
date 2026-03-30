@@ -58,6 +58,7 @@ describe('SearchPageClient', () => {
     ];
 
     const fakeStreamId = 'some-stream-id-123';
+    const fakeConversationId = 'some-conversation-id-123';
 
     let client: CoveoSearchPageClient;
 
@@ -1451,6 +1452,12 @@ describe('SearchPageClient', () => {
         expectMatchCustomEventPayload(SearchPageEvents.likeGeneratedAnswer, meta);
     });
 
+    it('should send proper payload for #logLikeGeneratedAnswer with agent metadata', async () => {
+        const meta = {generativeQuestionAnsweringId: fakeStreamId, conversationId: fakeConversationId};
+        await client.logLikeGeneratedAnswer(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.likeGeneratedAnswer, meta);
+    });
+
     it('should send proper payload for #makeLikeGeneratedAnswer', async () => {
         const meta = {generativeQuestionAnsweringId: fakeStreamId};
         const built = await client.makeLikeGeneratedAnswer(meta);
@@ -1461,6 +1468,12 @@ describe('SearchPageClient', () => {
 
     it('should send proper payload for #logDislikeGeneratedAnswer', async () => {
         const meta = {generativeQuestionAnsweringId: fakeStreamId};
+        await client.logDislikeGeneratedAnswer(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.dislikeGeneratedAnswer, meta);
+    });
+
+    it('should send proper payload for #logDislikeGeneratedAnswer with agent metadata', async () => {
+        const meta = {generativeQuestionAnsweringId: fakeStreamId, conversationId: fakeConversationId};
         await client.logDislikeGeneratedAnswer(meta);
         expectMatchCustomEventPayload(SearchPageEvents.dislikeGeneratedAnswer, meta);
     });
@@ -1476,6 +1489,17 @@ describe('SearchPageClient', () => {
     it('should send proper payload for #logOpenGeneratedAnswerSource', async () => {
         const meta = {
             generativeQuestionAnsweringId: fakeStreamId,
+            citationId: 'some-document-id',
+            permanentId: 'perm-id',
+        };
+        await client.logOpenGeneratedAnswerSource(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.openGeneratedAnswerSource, meta);
+    });
+
+    it('should send proper payload for #logOpenGeneratedAnswerSource with agent metadata', async () => {
+        const meta = {
+            generativeQuestionAnsweringId: fakeStreamId,
+            conversationId: fakeConversationId,
             citationId: 'some-document-id',
             permanentId: 'perm-id',
         };
@@ -1510,6 +1534,22 @@ describe('SearchPageClient', () => {
         });
     });
 
+    it('should send proper payload for #logGeneratedAnswerCitationClick with agent metadata', async () => {
+        const meta = {
+            generativeQuestionAnsweringId: fakeStreamId,
+            conversationId: fakeConversationId,
+            citationId: 'some-document-id',
+            documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+        };
+
+        await client.logGeneratedAnswerCitationClick(fakeDocInfo, meta);
+        expectMatchDocumentPayload(SearchPageEvents.generatedAnswerCitationClick, fakeDocInfo, {
+            ...meta,
+            contentIDKey: meta.documentId.contentIdKey,
+            contentIDValue: meta.documentId.contentIdValue,
+        });
+    });
+
     it('should send proper payload for #makeGeneratedAnswerCitationClick', async () => {
         const meta = {
             generativeQuestionAnsweringId: fakeStreamId,
@@ -1530,6 +1570,17 @@ describe('SearchPageClient', () => {
         expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerStreamEnd, meta);
     });
 
+    it('should send proper payload for #logGeneratedAnswerStreamEnd with agent metadata', async () => {
+        const meta = {
+            generativeQuestionAnsweringId: fakeStreamId,
+            conversationId: fakeConversationId,
+            answerGenerated: true,
+            answerTextIsEmpty: false,
+        };
+        await client.logGeneratedAnswerStreamEnd(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerStreamEnd, meta);
+    });
+
     it('should send proper payload for #makeGeneratedAnswerStreamEnd', async () => {
         const meta = {generativeQuestionAnsweringId: fakeStreamId, answerGenerated: true, answerTextIsEmpty: false};
         const built = await client.makeGeneratedAnswerStreamEnd(meta);
@@ -1541,6 +1592,18 @@ describe('SearchPageClient', () => {
     it('should send proper payload for #logGeneratedAnswerSourceHover', async () => {
         const meta = {
             generativeQuestionAnsweringId: fakeStreamId,
+            citationId: 'some-document-id',
+            permanentId: 'perm-id',
+            citationHoverTimeMs: 100,
+        };
+        await client.logGeneratedAnswerSourceHover(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerSourceHover, meta);
+    });
+
+    it('should send proper payload for #logGeneratedAnswerSourceHover with agent metadata', async () => {
+        const meta = {
+            generativeQuestionAnsweringId: fakeStreamId,
+            conversationId: fakeConversationId,
             citationId: 'some-document-id',
             permanentId: 'perm-id',
             citationHoverTimeMs: 100,
@@ -1568,6 +1631,12 @@ describe('SearchPageClient', () => {
         expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerCopyToClipboard, meta);
     });
 
+    it('should send proper payload for #logGeneratedAnswerCopyToClipboard with agent metadata', async () => {
+        const meta = {generativeQuestionAnsweringId: fakeStreamId, conversationId: fakeConversationId};
+        await client.logGeneratedAnswerCopyToClipboard(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerCopyToClipboard, meta);
+    });
+
     it('should send proper payload for #makeGeneratedAnswerCopyToClipboard', async () => {
         const meta = {generativeQuestionAnsweringId: fakeStreamId};
         const built = await client.makeGeneratedAnswerCopyToClipboard(meta);
@@ -1578,6 +1647,12 @@ describe('SearchPageClient', () => {
 
     it('should send proper payload for #logGeneratedAnswerHideAnswers', async () => {
         const meta = {generativeQuestionAnsweringId: fakeStreamId};
+        await client.logGeneratedAnswerHideAnswers(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerHideAnswers, meta);
+    });
+
+    it('should send proper payload for #logGeneratedAnswerHideAnswers with agent metadata', async () => {
+        const meta = {generativeQuestionAnsweringId: fakeStreamId, conversationId: fakeConversationId};
         await client.logGeneratedAnswerHideAnswers(meta);
         expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerHideAnswers, meta);
     });
@@ -1596,6 +1671,12 @@ describe('SearchPageClient', () => {
         expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerShowAnswers, meta);
     });
 
+    it('should send proper payload for #logGeneratedAnswerShowAnswers with agent metadata', async () => {
+        const meta = {generativeQuestionAnsweringId: fakeStreamId, conversationId: fakeConversationId};
+        await client.logGeneratedAnswerShowAnswers(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerShowAnswers, meta);
+    });
+
     it('should send proper payload for #makeGeneratedAnswerShowAnswers', async () => {
         const meta = {generativeQuestionAnsweringId: fakeStreamId};
         const built = await client.makeGeneratedAnswerShowAnswers(meta);
@@ -1606,6 +1687,12 @@ describe('SearchPageClient', () => {
 
     it('should send proper payload for #logGeneratedAnswerExpand', async () => {
         const meta = {generativeQuestionAnsweringId: fakeStreamId};
+        await client.logGeneratedAnswerExpand(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerExpand, meta);
+    });
+
+    it('should send proper payload for #logGeneratedAnswerExpand with agent metadata', async () => {
+        const meta = {generativeQuestionAnsweringId: fakeStreamId, conversationId: fakeConversationId};
         await client.logGeneratedAnswerExpand(meta);
         expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerExpand, meta);
     });

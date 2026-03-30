@@ -551,14 +551,25 @@ export type PartialDocumentInformation = Omit<DocumentInformation, 'actionCause'
 interface AnswerGeneratedWithAnswerAPI {
     answerAPIStreamId: string;
     generativeQuestionAnsweringId?: never;
+    conversationId?: never;
 }
 
 interface AnswerGeneratedWithSearchAPI {
     answerAPIStreamId?: never;
     generativeQuestionAnsweringId: string;
+    conversationId?: never;
 }
 
-export type GeneratedAnswerBaseMeta = AnswerGeneratedWithAnswerAPI | AnswerGeneratedWithSearchAPI;
+interface AnswerGeneratedWithAgent {
+    answerAPIStreamId?: never;
+    generativeQuestionAnsweringId: string;
+    conversationId: string;
+}
+
+export type GeneratedAnswerBaseMeta =
+    | AnswerGeneratedWithAnswerAPI
+    | AnswerGeneratedWithSearchAPI
+    | AnswerGeneratedWithAgent;
 
 export type GeneratedAnswerStreamEndMeta = GeneratedAnswerBaseMeta & {
     answerGenerated: boolean;
