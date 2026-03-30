@@ -4,6 +4,7 @@ import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-s
 import type {GeneratedAnswerCitation} from '../../controllers/generated-answer/headless-generated-answer.js';
 import type {SearchAppState} from '../../state/search-app-state.js';
 import type {
+  FollowUpAnswersSection,
   GeneratedAnswerSection,
   SearchSection,
 } from '../../state/state-sections.js';
@@ -60,10 +61,23 @@ export const selectFieldsToIncludeInCitation = (
 ) => state.generatedAnswer?.fieldsToIncludeInCitations;
 
 export const citationSourceSelector = createSelector(
-  (state: Partial<GeneratedAnswerSection>) => state.generatedAnswer?.citations,
-  (_state: Partial<GeneratedAnswerSection>, citationId: string) => citationId,
-  (citations, citationId) =>
-    citations?.find(
-      (citation: GeneratedAnswerCitation) => citation.id === citationId
-    )
+  (state: Partial<GeneratedAnswerSection & FollowUpAnswersSection>) =>
+    state.generatedAnswer?.citations,
+  (state: Partial<GeneratedAnswerSection & FollowUpAnswersSection>) =>
+    state.followUpAnswers?.followUpAnswers,
+  (
+    _state: Partial<GeneratedAnswerSection & FollowUpAnswersSection>,
+    citationId: string
+  ) => citationId,
+  (headCitations, followUpAnswers, citationId) => {
+    const findCitation = (citations: GeneratedAnswerCitation[] | undefined) =>
+      citations?.find((citation) => citation.id === citationId);
+
+    return (
+      findCitation(headCitations) ??
+      followUpAnswers
+        ?.find((followUp) => findCitation(followUp.citations))
+        ?.citations.find((citation) => citation.id === citationId)
+    );
+  }
 );

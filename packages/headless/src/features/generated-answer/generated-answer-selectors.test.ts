@@ -1,6 +1,13 @@
 import type {SearchAppState} from '../../state/search-app-state.js';
+import type {
+  FollowUpAnswersSection,
+  GeneratedAnswerSection,
+} from '../../state/state-sections.js';
+import {buildMockCitation} from '../../test/mock-citation.js';
+import {createInitialFollowUpAnswer} from '../follow-up-answers/follow-up-answers-state.js';
 import {streamAnswerAPIStateMock} from './generated-answer-mocks.js';
 import {
+  citationSourceSelector,
   generativeQuestionAnsweringIdSelector,
   isGeneratedAnswerFeatureEnabledWithAgentAPI,
 } from './generated-answer-selectors.js';
@@ -191,6 +198,133 @@ describe('generated-answer-selectors', () => {
       } as unknown as Partial<SearchAppState>;
 
       expect(isGeneratedAnswerFeatureEnabledWithAgentAPI(state)).toBe(false);
+    });
+  });
+
+  describe('citationSourceSelector', () => {
+    const headCitation = buildMockCitation({
+      id: 'head-citation-1',
+      permanentid: 'head-perm-1',
+      title: 'Head Citation',
+      uri: 'https://example.com/head',
+      clickUri: 'https://example.com/head',
+    });
+
+    const followUpCitation = buildMockCitation({
+      id: 'followup-citation-1',
+      permanentid: 'followup-perm-1',
+      title: 'Follow-up Citation',
+      uri: 'https://example.com/followup',
+      clickUri: 'https://example.com/followup',
+    });
+
+    it('finds a citation in head answer citations', () => {
+      const state = {
+        generatedAnswer: {citations: [headCitation]},
+      } as unknown as Partial<GeneratedAnswerSection & FollowUpAnswersSection>;
+
+      const result = citationSourceSelector(state, 'head-citation-1');
+      expect(result).toEqual(headCitation);
+    });
+
+    it('finds a citation in follow-up answer citations', () => {
+      const state = {
+        generatedAnswer: {citations: [headCitation]},
+        followUpAnswers: {
+          followUpAnswers: [
+            {
+              ...createInitialFollowUpAnswer('follow up question'),
+              answerId: 'followup-answer-1',
+              citations: [followUpCitation],
+            },
+          ],
+        },
+      } as unknown as Partial<GeneratedAnswerSection & FollowUpAnswersSection>;
+
+      const result = citationSourceSelector(state, 'followup-citation-1');
+      expect(result).toEqual(followUpCitation);
+    });
+
+    it('prioritizes head answer citations over follow-up citations with the same id', () => {
+      const duplicateCitation = buildMockCitation({
+        id: 'shared-id',
+        title: 'Follow-up version',
+      });
+      const headVersion = buildMockCitation({
+        id: 'shared-id',
+        title: 'Head version',
+      });
+
+      const state = {
+        generatedAnswer: {citations: [headVersion]},
+        followUpAnswers: {
+          followUpAnswers: [
+            {
+              ...createInitialFollowUpAnswer('follow up'),
+              answerId: 'followup-1',
+              citations: [duplicateCitation],
+            },
+          ],
+        },
+      } as unknown as Partial<GeneratedAnswerSection & FollowUpAnswersSection>;
+
+      const result = citationSourceSelector(state, 'shared-id');
+      expect(result?.title).toBe('Head version');
+    });
+
+    it('returns undefined when citation is not found anywhere', () => {
+      const state = {
+        generatedAnswer: {citations: [headCitation]},
+        followUpAnswers: {
+          followUpAnswers: [
+            {
+              ...createInitialFollowUpAnswer('follow up'),
+              answerId: 'followup-1',
+              citations: [followUpCitation],
+            },
+          ],
+        },
+      } as unknown as Partial<GeneratedAnswerSection & FollowUpAnswersSection>;
+
+      const result = citationSourceSelector(state, 'nonexistent-id');
+      expect(result).toBeUndefined();
+    });
+
+    it('works when followUpAnswers is not present in state', () => {
+      const state = {
+        generatedAnswer: {citations: [headCitation]},
+      } as unknown as Partial<GeneratedAnswerSection & FollowUpAnswersSection>;
+
+      const result = citationSourceSelector(state, 'head-citation-1');
+      expect(result).toEqual(headCitation);
+    });
+
+    it('finds a citation across multiple follow-up answers', () => {
+      const secondFollowUpCitation = buildMockCitation({
+        id: 'followup-citation-2',
+        title: 'Second Follow-up Citation',
+      });
+
+      const state = {
+        generatedAnswer: {citations: []},
+        followUpAnswers: {
+          followUpAnswers: [
+            {
+              ...createInitialFollowUpAnswer('first follow up'),
+              answerId: 'followup-1',
+              citations: [followUpCitation],
+            },
+            {
+              ...createInitialFollowUpAnswer('second follow up'),
+              answerId: 'followup-2',
+              citations: [secondFollowUpCitation],
+            },
+          ],
+        },
+      } as unknown as Partial<GeneratedAnswerSection & FollowUpAnswersSection>;
+
+      const result = citationSourceSelector(state, 'followup-citation-2');
+      expect(result).toEqual(secondFollowUpCitation);
     });
   });
 });
