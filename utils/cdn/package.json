@@ -5,16 +5,24 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "serve": "node ./scripts/serve.mjs",
-    "deploy": "node ./scripts/deploy-local-cdn.mjs"
+    "start": "node ./scripts/serve.mjs",
+    "build": "node ./scripts/deploy-local-cdn.mjs",
+    "test": "vitest --project=cdn-check"
   },
   "engines": {
     "node": ">=22.14.0"
   },
-  "dependencies": {
-    "local-web-server": "catalog:"
-  },
   "devDependencies": {
-    "@coveo/bueno": "workspace:*"
+    "@coveo/atomic": "workspace:*",
+    "@coveo/atomic-hosted-page": "workspace:*",
+    "@coveo/atomic-react": "workspace:*",
+    "@coveo/bueno": "workspace:*",
+    "@coveo/headless": "workspace:*",
+    "@coveo/shopify": "workspace:*",
+    "@vitest/browser-playwright": "catalog:",
+    "local-web-server": "catalog:",
+    "playwright": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   }
 }

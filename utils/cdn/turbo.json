@@ -1,11 +1,8 @@
 {
   "extends": ["//"],
   "tasks": {
-    "deploy": {
-      "outputs": []
-    },
-    "serve": {
-      "dependsOn": ["deploy"],
+    "start": {
+      "dependsOn": ["build"],
       "outputs": [],
       "persistent": true,
       "cache": false
