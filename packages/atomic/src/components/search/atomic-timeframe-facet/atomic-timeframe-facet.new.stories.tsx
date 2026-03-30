@@ -8,6 +8,9 @@ import {
   withRegularFacet,
 } from '@/storybook-utils/common/facets-decorator';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-facet/atomic-facet.js';
+import '@/src/components/common/atomic-timeframe/atomic-timeframe.js';
+import '@/src/components/search/atomic-timeframe-facet/atomic-timeframe-facet.js';
 
 const searchApiHarness = new MockSearchApi();
 

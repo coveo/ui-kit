@@ -8,6 +8,8 @@ import {html} from 'lit';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-segmented-facet/atomic-segmented-facet.js';
+import '@/src/components/search/atomic-segmented-facet-scrollable/atomic-segmented-facet-scrollable.js';
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-segmented-facet-scrollable',

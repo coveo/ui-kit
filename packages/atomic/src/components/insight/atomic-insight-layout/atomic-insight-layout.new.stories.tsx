@@ -3,6 +3,8 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit-html';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
+import '@/src/components/insight/atomic-insight-layout/atomic-insight-layout.js';
+import '@/src/components/common/atomic-layout-section/atomic-layout-section.js';
 
 const {decorator, play} = wrapInInsightInterface();
 const {events, args, argTypes} = getStorybookHelpers('atomic-insight-layout', {

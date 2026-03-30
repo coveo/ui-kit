@@ -1,3 +1,5 @@
+import '@/src/components/recommendations/atomic-recs-list/atomic-recs-list.js';
+import '@/src/components/recommendations/atomic-recs-result-template/atomic-recs-result-template.js';
 import {Decorator} from '@storybook/web-components-vite';
 import {html, render, type TemplateResult} from 'lit';
 

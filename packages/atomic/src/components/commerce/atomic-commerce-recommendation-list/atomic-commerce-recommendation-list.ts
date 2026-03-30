@@ -42,6 +42,8 @@ import {randomID} from '@/src/utils/utils';
 import placeholderStyles from '../../common/item-list/styles/placeholders.tw.css';
 import type {CommerceBindings} from '../atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface';
 import type {SelectChildProductEventArgs} from '../atomic-product-children/select-child-product-event';
+import '@/src/components/commerce/atomic-product/atomic-product';
+import '@/src/components/commerce/atomic-product-template/atomic-product-template';
 
 /**
  * The `atomic-commerce-recommendation-list` component displays a list of product recommendations by applying one or more product templates.
@@ -71,7 +73,7 @@ export class AtomicCommerceRecommendationList
 {
   static styles: CSSResultGroup = [
     placeholderStyles,
-    css`@reference "../../common/item-list/styles/mixins.pcss";
+    css`@reference "../../common/item-list/styles/mixins.css";
   
   :host {
     @apply atomic-grid-clickable-elements;

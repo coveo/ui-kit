@@ -3,6 +3,8 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-tab/atomic-tab.js';
+import '@/src/components/search/atomic-tab-manager/atomic-tab-manager.js';
 
 const {decorator, play} = wrapInSearchInterface();
 

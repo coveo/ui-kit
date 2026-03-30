@@ -4,6 +4,7 @@ import {userEvent} from 'storybook/test';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceSearchBox} from '@/storybook-utils/commerce/commerce-search-box-wrapper';
 import {parameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
+import '@/src/components/commerce/atomic-commerce-search-box-recent-queries/atomic-commerce-search-box-recent-queries.js';
 
 const {decorator: commerceInterfaceDecorator, play: commerceInterfacePlay} =
   wrapInCommerceInterface({includeCodeRoot: false});
