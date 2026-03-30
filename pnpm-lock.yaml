@@ -1542,24 +1542,6 @@ importers:
 
   utils/cdn:
     devDependencies:
-      '@coveo/atomic':
-        specifier: workspace:*
-        version: link:../../packages/atomic
-      '@coveo/atomic-hosted-page':
-        specifier: workspace:*
-        version: link:../../packages/atomic-hosted-page
-      '@coveo/atomic-react':
-        specifier: workspace:*
-        version: link:../../packages/atomic-react
-      '@coveo/bueno':
-        specifier: workspace:*
-        version: link:../../packages/bueno
-      '@coveo/headless':
-        specifier: workspace:*
-        version: link:../../packages/headless
-      '@coveo/shopify':
-        specifier: workspace:*
-        version: link:../../packages/shopify
       '@vitest/browser-playwright':
         specifier: 'catalog:'
         version: 4.0.16(msw@2.12.7(@types/node@25.5.0)(typescript@5.9.3))(playwright@1.57.0)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.1)(yaml@2.8.3))(vitest@4.0.16)

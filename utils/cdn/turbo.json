@@ -1,6 +1,18 @@
 {
   "extends": ["//"],
   "tasks": {
+    "build": {
+      "dependsOn": [
+        "@coveo/atomic#build",
+        "@coveo/atomic-angular#build",
+        "@coveo/atomic-react#build",
+        "@coveo/atomic-hosted-page#build",
+        "@coveo/bueno#build",
+        "@coveo/headless#build",
+        "@coveo/shopify#build"
+      ],
+      "outputs": ["dist"]
+    },
     "start": {
       "dependsOn": ["build"],
       "outputs": [],

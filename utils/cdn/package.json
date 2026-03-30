@@ -13,12 +13,6 @@
     "node": ">=22.14.0"
   },
   "devDependencies": {
-    "@coveo/atomic": "workspace:*",
-    "@coveo/atomic-hosted-page": "workspace:*",
-    "@coveo/atomic-react": "workspace:*",
-    "@coveo/bueno": "workspace:*",
-    "@coveo/headless": "workspace:*",
-    "@coveo/shopify": "workspace:*",
     "@vitest/browser-playwright": "catalog:",
     "local-web-server": "catalog:",
     "playwright": "catalog:",
