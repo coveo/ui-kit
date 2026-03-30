@@ -6,22 +6,21 @@ slug: upgrade/v2-to-v3
 # Upgrade from v2 to v3
 [Headless](https://docs.coveo.com/en/lcdf0493/) v3 introduces changes and innovations that align with the latest evolution of the [Coveo Platform](https://docs.coveo.com/en/186/).
 
-<dl><dt><strong>❗ IMPORTANT: The following are breaking changes from Headless v2 to v3</strong></dt><dd>
-
-</dd></dl>
+> [!IMPORTANT]
+>
+> The following are breaking changes from Headless v2 to v3.
 
 ## Migration to Coveo Event Protocol
 
-Coveo [Event Protocol](https://docs.coveo.com/en/headless/latest/usage/headless-usage-analytics/headless-ep/) becomes the new default protocol.
+Coveo [Event Protocol](../usage/usage-analytics/event-protocol.html) becomes the new default protocol.
 In other words, the default value of `configuration.analytics.analyticsMode` in the Engine is now `next` instead of `legacy`.
 
 If you’re using the default value in v3 and aren’t yet ready to [migrate to the new protocol](https://docs.coveo.com/en/o88d0509/), set the value to `legacy` to continue using the Coveo UA protocol.
 
-<dl><dt><strong>❗ IMPORTANT</strong></dt><dd>
-
-Only [Coveo for Commerce](https://docs.coveo.com/en/1499/) supports EP at the moment.
-For all other implementations, set `analyticsMode` to `legacy` when upgrading to v3.
-</dd></dl>
+> [!IMPORTANT]
+>
+> Only [Coveo for Commerce](https://docs.coveo.com/en/1499/) supports EP at the moment.
+> For all other implementations, set `analyticsMode` to `legacy` when upgrading to v3.
 
 ```ts
 const engine = buildSearchEngine({
@@ -245,10 +244,10 @@ If you’re using them, import then directly from Redux.
 
 ### DidYouMean `queryCorrectionMode`
 
-The [`queryCorrectionMode`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.DidYouMeanOptions.html) default value is now `next` rather than `legacy`.
+The [`queryCorrectionMode`](../../interfaces/Search.DidYouMeanOptions.html) default value is now `next` rather than `legacy`.
 This means that the default behavior of the `didYouMean` controller will be to use a [query suggestions](https://docs.coveo.com/en/1015/) [model](https://docs.coveo.com/en/1012/) for query correction rather than the legacy [index](https://docs.coveo.com/en/204/) mechanism.
 
-### GeneratedAnswer [`sendFeedback`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.GeneratedAnswer.html#sendfeedback)
+### GeneratedAnswer [`sendFeedback`](../../interfaces/Search.GeneratedAnswer.html#sendfeedback)
 
 The `feedback` parameter of the `sendFeedback` method was changed.
 In v2, it could have either the `GeneratedAnswerFeedback` or `GeneratedAnswerFeedbackV2` type, which were defined as follows:
@@ -352,7 +351,7 @@ Many actions, properties, types and methods related to the Relevance Generative 
 * All [`rephrase`](https://docs.coveo.com/en/headless/2.80.7/reference/search/controllers/generated-answer#rephrase-method) methods were removed from all `*-generated-answer` controllers.
 * The undocumented `logRephraseGeneratedAnswer` analytics action was removed.
 * The undocumented `rephraseGeneratedAnswer` search action cause was removed.
-* The `GeneratedResponseFormat.answerStyle` was removed from the [GeneratedAnswer `state`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.GeneratedAnswer.html#state).
+* The `GeneratedResponseFormat.answerStyle` was removed from the [GeneratedAnswer `state`](../../interfaces/Search.GeneratedAnswer.html#state).
 * The `GeneratedAnswerStyle` type was removed.
 * The undocumented `updateResponseFormat` action now only accepts the `contentFormat` option, and not the answer style.
 
@@ -366,15 +365,15 @@ See [Headless for commerce](https://docs.coveo.com/en/o52e9091/).
 
 The following were removed in v3:
 
-* [`buildCaseAssistQuickview`](https://docs.coveo.com/en/headless/2.80.7/reference/case-assist/controllers/case-assist-quickview#buildcaseassistquickview), which was a duplicate export of [`buildQuickview`](https://docs.coveo.com/en/headless/latest/reference/functions/Search.buildQuickview.html) has been removed.
-* [`buildCaseAssistInteractiveResult`](https://docs.coveo.com/en/headless/2.80.7/reference/case-assist/controllers/case-assist-interactive-result#buildcaseassistinteractiveresult), which was a duplicate export of [`buildInteractiveResult`](https://docs.coveo.com/en/headless/latest/reference/functions/Search.buildInteractiveResult.html) has been removed.
+* [`buildCaseAssistQuickview`](https://docs.coveo.com/en/headless/2.80.7/reference/case-assist/controllers/case-assist-quickview#buildcaseassistquickview), which was a duplicate export of [`buildQuickview`](../../functions/Search.buildQuickview.html) has been removed.
+* [`buildCaseAssistInteractiveResult`](https://docs.coveo.com/en/headless/2.80.7/reference/case-assist/controllers/case-assist-interactive-result#buildcaseassistinteractiveresult), which was a duplicate export of [`buildInteractiveResult`](../../functions/Search.buildInteractiveResult.html) has been removed.
 * `browserPostLogHook`, which used to be exposed in the engine configuration options, has been removed.
 It wasn’t doing anything.
-* The quickview `onlyContentURL` initialization option has been removed from [`Quickview`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.QuickviewOptions.html) and [`CaseAssistQuickview`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Case_Assist.QuickviewOptions.html) controllers because it was always set to `true`.
+* The quickview `onlyContentURL` initialization option has been removed from [`Quickview`](../../interfaces/Search.QuickviewOptions.html) and [`CaseAssistQuickview`](../../interfaces/Case_Assist.QuickviewOptions.html) controllers because it was always set to `true`.
 
   Similarly, the `content` state attribute has been removed from those controllers, as it was always empty.
 * The undocumented `showMoreSmartSnippetSuggestion` and `showLessSmartSnippetSuggestion` search page events have been removed.
-* [CategoryFacet `state`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.CategoryFacet.html#state) properties `parents` and `values` have been removed.
+* [CategoryFacet `state`](../../interfaces/Search.CategoryFacet.html#state) properties `parents` and `values` have been removed.
 Use `valuesAsTrees` and `selectedValueAncestry` instead.
 
   While `values` was a flat list of all values, `valuesAsTrees` contains the root facet values, whose children, if any, are accessible via `valuesAsTrees[i].children[j]`.
@@ -479,7 +478,7 @@ Use `valuesAsTrees` and `selectedValueAncestry` instead.
 
 ### Actions
 
-#### [`logExpandToFullUI` parameters](https://docs.coveo.com/en/headless/latest/reference/interfaces/Insight.InsightSearchAnalyticsActionCreators.html#logexpandtofullui)
+#### [`logExpandToFullUI` parameters](../../interfaces/Insight.InsightSearchAnalyticsActionCreators.html#logexpandtofullui)
 
 The `LogExpandToFullUI` action no longer uses the `caseId` and `caseNumber` parameters.
 They are rather fetched automatically from the Headless engine state.
