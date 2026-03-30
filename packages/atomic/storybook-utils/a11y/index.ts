@@ -15,7 +15,9 @@ export {
   COVERED_CRITERIA as DISCLOSURE_COVERED_CRITERIA,
   testDisclosureA11y,
 } from './disclosure.js';
+export type {InteractiveA11yOptions} from './listbox.js';
 export {
   COVERED_CRITERIA as LISTBOX_COVERED_CRITERIA,
+  testInteractiveA11y,
   testListboxA11y,
 } from './listbox.js';
