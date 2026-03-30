@@ -7,6 +7,7 @@ import {
 import type {
   A11yOverrideEntry,
   CriterionAggregate,
+  InteractiveAggregate,
   ManualAuditAggregate,
   OpenAcrConformance,
 } from './types.js';
@@ -15,6 +16,7 @@ import {reportConformanceToOpenAcr} from './types.js';
 interface ConformanceContext {
   criterion: A11yCriterionReport | undefined;
   aggregate: CriterionAggregate | undefined;
+  interactiveAggregate: InteractiveAggregate | undefined;
   manualAggregates: ManualAuditAggregate[] | undefined;
   override: A11yOverrideEntry | undefined;
 }
@@ -24,6 +26,8 @@ interface RemarksContext extends ConformanceContext {
   conformance: OpenAcrConformance;
   coveredComponents: string[];
   violatingComponents: string[];
+  interactiveCoveredComponents: string[];
+  interactiveFailedComponents: string[];
 }
 
 function mapCriterionConformance(
@@ -34,6 +38,26 @@ function mapCriterionConformance(
   }
 
   return reportConformanceToOpenAcr[criterion.conformance] ?? null;
+}
+
+function resolveInteractiveConformance(
+  interactiveAggregate: InteractiveAggregate | undefined
+): OpenAcrConformance | null {
+  const coveredCount = interactiveAggregate?.coveredComponents.size ?? 0;
+  if (coveredCount === 0) {
+    return null;
+  }
+
+  const failedCount = interactiveAggregate?.failedComponents.size ?? 0;
+  if (failedCount === 0) {
+    return 'supports';
+  }
+
+  if (failedCount >= coveredCount) {
+    return 'does-not-support';
+  }
+
+  return 'partially-supports';
 }
 
 function resolveAutomatedConformance(
@@ -59,7 +83,13 @@ function resolveAutomatedConformance(
 export function resolveConformance(
   context: ConformanceContext
 ): OpenAcrConformance {
-  const {override, manualAggregates, criterion, aggregate} = context;
+  const {
+    override,
+    manualAggregates,
+    interactiveAggregate,
+    criterion,
+    aggregate,
+  } = context;
 
   if (override) {
     return override.conformance;
@@ -68,6 +98,12 @@ export function resolveConformance(
   const manualConformance = resolveManualConformance(manualAggregates);
   if (manualConformance) {
     return manualConformance;
+  }
+
+  const interactiveConformance =
+    resolveInteractiveConformance(interactiveAggregate);
+  if (interactiveConformance) {
+    return interactiveConformance;
   }
 
   const existingConformance = mapCriterionConformance(criterion);
@@ -79,12 +115,48 @@ export function resolveConformance(
   return resolveAutomatedConformance(aggregate);
 }
 
+function buildInteractiveSuffix(
+  interactiveCoveredComponents: string[],
+  interactiveFailedComponents: string[]
+): string {
+  const coveredCount = interactiveCoveredComponents.length;
+  if (coveredCount === 0) {
+    return '';
+  }
+
+  const failedCount = interactiveFailedComponents.length;
+  if (failedCount === 0) {
+    return ` Interactive keyboard/screen-reader testing passed across ${coveredCount} component(s).`;
+  }
+
+  return ` Interactive keyboard/screen-reader testing found failures in ${failedCount} of ${coveredCount} component(s).`;
+}
+
+function buildAutomatedSuffix(
+  coveredComponents: string[],
+  violatingComponents: string[]
+): string {
+  const coveredCount = coveredComponents.length;
+  if (coveredCount === 0) {
+    return '';
+  }
+
+  const violatingCount = violatingComponents.length;
+  if (violatingCount === 0) {
+    return ` Automated axe-core testing found no violations across ${coveredCount} component(s).`;
+  }
+
+  return ` Automated axe-core testing found violations in ${violatingCount} of ${coveredCount} component(s).`;
+}
+
 export function buildRemarks(context: RemarksContext): string {
   const {
     criterionId,
     conformance,
     coveredComponents,
     violatingComponents,
+    interactiveCoveredComponents,
+    interactiveFailedComponents,
     manualAggregates,
     override,
   } = context;
@@ -107,19 +179,46 @@ export function buildRemarks(context: RemarksContext): string {
     return `Manual audit: ${summary} across ${manualAggregates.length} component(s).`;
   }
 
-  const coveredCount = coveredComponents.length;
-  const violatingCount = violatingComponents.length;
+  const interactiveDrives =
+    resolveInteractiveConformance(context.interactiveAggregate) !== null;
+
+  if (interactiveDrives) {
+    const coveredCount = interactiveCoveredComponents.length;
+    const failedCount = interactiveFailedComponents.length;
+
+    let primary: string;
+    if (failedCount === 0) {
+      primary = `Interactive keyboard/screen-reader testing passed for WCAG ${criterionId} across ${coveredCount} component(s).`;
+    } else if (failedCount >= coveredCount) {
+      primary = `Interactive keyboard/screen-reader testing found failures for WCAG ${criterionId} in all ${coveredCount} component(s).`;
+    } else {
+      primary = `Interactive keyboard/screen-reader testing found failures for WCAG ${criterionId} in ${failedCount} of ${coveredCount} component(s).`;
+    }
+
+    const automatedSuffix = buildAutomatedSuffix(
+      coveredComponents,
+      violatingComponents
+    );
+    return `${primary}${automatedSuffix} ${DEFAULT_MANUAL_PLACEHOLDER_NOTE}`;
+  }
+
+  const automatedCoveredCount = coveredComponents.length;
+  const automatedViolatingCount = violatingComponents.length;
+  const interactiveSuffix = buildInteractiveSuffix(
+    interactiveCoveredComponents,
+    interactiveFailedComponents
+  );
 
   if (conformance === 'supports') {
-    return `Automated testing found no axe-core violations for WCAG ${criterionId} across ${coveredCount} mapped component(s). ${DEFAULT_MANUAL_PLACEHOLDER_NOTE}`;
+    return `Automated testing found no axe-core violations for WCAG ${criterionId} across ${automatedCoveredCount} mapped component(s).${interactiveSuffix} ${DEFAULT_MANUAL_PLACEHOLDER_NOTE}`;
   }
 
   if (conformance === 'partially-supports') {
-    return `Automated testing found violations for WCAG ${criterionId} in ${violatingCount} of ${coveredCount} mapped component(s). ${DEFAULT_MANUAL_PLACEHOLDER_NOTE}`;
+    return `Automated testing found violations for WCAG ${criterionId} in ${automatedViolatingCount} of ${automatedCoveredCount} mapped component(s).${interactiveSuffix} ${DEFAULT_MANUAL_PLACEHOLDER_NOTE}`;
   }
 
   if (conformance === 'does-not-support') {
-    return `Automated testing found violations for WCAG ${criterionId} in all ${coveredCount} mapped component(s). ${DEFAULT_MANUAL_PLACEHOLDER_NOTE}`;
+    return `Automated testing found violations for WCAG ${criterionId} in all ${automatedCoveredCount} mapped component(s).${interactiveSuffix} ${DEFAULT_MANUAL_PLACEHOLDER_NOTE}`;
   }
 
   if (conformance === 'not-applicable') {

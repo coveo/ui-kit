@@ -10,6 +10,7 @@ import type {
   A11yOverrideEntry,
   ChapterId,
   CriterionAggregate,
+  InteractiveAggregate,
   ManualAuditAggregate,
   OpenAcrConformance,
   OpenAcrCriterion,
@@ -57,6 +58,38 @@ function buildCriterionAggregates(
   return aggregates;
 }
 
+function buildInteractiveAggregates(
+  components: A11yComponentReport[]
+): Map<string, InteractiveAggregate> {
+  const aggregates = new Map<string, InteractiveAggregate>();
+
+  for (const component of components) {
+    if (!component.interactive) {
+      continue;
+    }
+
+    for (const criterionId of component.interactive.criteriaCovered) {
+      const aggregate = aggregates.get(criterionId) ?? {
+        coveredComponents: new Set<string>(),
+        passedComponents: new Set<string>(),
+        failedComponents: new Set<string>(),
+      };
+
+      aggregate.coveredComponents.add(component.name);
+
+      if (component.interactive.failedCriteria.includes(criterionId)) {
+        aggregate.failedComponents.add(component.name);
+      } else {
+        aggregate.passedComponents.add(component.name);
+      }
+
+      aggregates.set(criterionId, aggregate);
+    }
+  }
+
+  return aggregates;
+}
+
 function buildCriterionComponents(
   conformance: OpenAcrConformance,
   remarks: string
@@ -99,6 +132,9 @@ function buildOpenAcrCriteria(
     report?.components ?? [],
     report?.criteria ?? []
   );
+  const interactiveAggregates = buildInteractiveAggregates(
+    report?.components ?? []
+  );
   const manualByCriterion = buildManualAggregateIndex(manualAggregates);
 
   const criteriaByChapter: Record<ChapterId, OpenAcrCriterion[]> = {
@@ -117,10 +153,18 @@ function buildOpenAcrCriteria(
       ...(aggregate?.violatingComponents ?? []),
     ].sort(compareByNumericId);
     const manualForCriterion = manualByCriterion.get(definition.id);
+    const interactiveAggregate = interactiveAggregates.get(definition.id);
+    const interactiveCoveredComponents = [
+      ...(interactiveAggregate?.coveredComponents ?? []),
+    ].sort(compareByNumericId);
+    const interactiveFailedComponents = [
+      ...(interactiveAggregate?.failedComponents ?? []),
+    ].sort(compareByNumericId);
 
     const conformanceContext = {
       criterion: criterionFromReport,
       aggregate,
+      interactiveAggregate,
       manualAggregates: manualForCriterion,
       override,
     };
@@ -132,6 +176,8 @@ function buildOpenAcrCriteria(
       conformance,
       coveredComponents,
       violatingComponents,
+      interactiveCoveredComponents,
+      interactiveFailedComponents,
     });
 
     criteriaByChapter[definition.chapterId].push({
@@ -203,12 +249,12 @@ export function buildOpenAcrReport(
     chapters: {
       success_criteria_level_a: {
         notes:
-          'Conformance is based on automated Storybook + axe-core output and pending manual validation.',
+          'Conformance is based on automated Storybook + axe-core output, interactive keyboard/screen-reader testing, and pending manual validation.',
         criteria: criteriaByChapter.success_criteria_level_a,
       },
       success_criteria_level_aa: {
         notes:
-          'Conformance is based on automated Storybook + axe-core output and pending manual validation.',
+          'Conformance is based on automated Storybook + axe-core output, interactive keyboard/screen-reader testing, and pending manual validation.',
         criteria: criteriaByChapter.success_criteria_level_aa,
       },
       success_criteria_level_aaa: {
