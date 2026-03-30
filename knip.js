@@ -1,6 +1,5 @@
-module.exports = {
+export default {
   $schema: 'https://unpkg.com/knip@5/schema.json',
-
   // Always ignoring quantic since it throws errors. Adding those two lines is necessary for 100% of quantic to be ignored.
   ignoreWorkspaces: [
     'packages/quantic',
@@ -12,30 +11,18 @@ module.exports = {
     'samples/headless/rga-react/src/components/Citation.tsx',
     'samples/headless/rga-react/src/components/CitationsList.tsx',
   ],
-
-  // Enable back the plugin once https://github.com/webpro-nl/knip/issues/1154 is resolved.
-  biome: false,
   workspaces: {
     '.': {
-      entry: [
-        '.agents/skills/**/scripts/*.mjs',
-        'hooks/*.js',
-        'scripts/**/*.{js,mjs}',
-      ],
-      ignoreBinaries: ['ts-node', 'dev'],
+      entry: ['.agents/skills/**/scripts/*.mjs', 'scripts/**/*.{js,mjs}'],
+      ignoreBinaries: ['ts-node'],
       ignoreDependencies: ['@playwright/mcp', 'handlebars'],
     },
     'packages/headless': {
       entry: ['src/*index.ts', 'ponyfills/*.js'],
-      ignoreDependencies: ['navigator.sendbeacon', 'reselect', 'node-fetch'],
+      ignoreDependencies: ['reselect', 'node-fetch', 'jsdom'],
     },
     'packages/atomic-hosted-page': {
-      entry: [
-        'src/atomic-hosted-page.esm.ts',
-        'loader/index.js',
-        'dev/vite.config.ts',
-      ],
-      ignore: ['cdn/**'],
+      entry: ['src/atomic-hosted-page.esm.ts', 'dev/vite.config.ts'],
       ignoreDependencies: ['local-web-server'],
     },
     'packages/atomic-angular': {
@@ -53,7 +40,7 @@ module.exports = {
     },
     'packages/atomic-react': {
       entry: ['src/*index.ts'],
-      ignore: ['src/components/stencil-generated/**/*.{ts,tsx}'],
+      ignoreUnresolved: [/\.{1,2}\/([\w.]*?\/)?components\.js/],
       ignoreDependencies: [
         '@lit/react', // Only used in generated files.
       ],
@@ -65,7 +52,11 @@ module.exports = {
       entry: ['src/auth.ts'],
     },
     'packages/documentation': {
-      entry: ['**/assets/**/*.js', '**/lib/*.ts'],
+      entry: [
+        '**/assets/**/*.js',
+        '**/lib/*.ts',
+        '**/*.css', //TODO: Find a better solution
+      ],
     },
     'samples/headless/commerce-react': {
       // Can be removed once the deprecated controller is removed from headless.
@@ -73,12 +64,17 @@ module.exports = {
       ignoreDependencies: ['jsdom'],
     },
     'samples/headless-ssr/commerce-express': {
-      entry: ['src/server.ts', 'src/client.ts'],
+      entry: ['src/server.ts'],
     },
     'samples/headless/search-react': {
-      entry: ['server/server.tsx', 'src/index.tsx'],
+      entry: ['server/server.tsx'],
       ignoreDependencies: ['jsdom'],
+      ignore: [
+        'src/pages/AtomicReactPage.css', // TODO: Reassess if we can remove the file.
+      ],
     },
+    'samples/headless-ssr/commerce-nextjs': {},
+    'samples/headless-ssr/commerce-nextjs-v4': {},
     'utils/ci': {
       ignoreDependencies: ['@types/conventional-changelog-writer'],
     },
@@ -87,10 +83,8 @@ module.exports = {
     },
 
     // Projects to enable bunch by bunch.
-    // Projects using stencil don't really have a proper entry point because of stencil's magic so they have problems with knip.
     'packages/atomic': {
       ignore: ['**/*'],
-      ignoreDependencies: ['cypress-repeat'],
     },
     'packages/atomic-legacy': {
       ignore: ['**/*'],
@@ -106,17 +100,9 @@ module.exports = {
     },
     'samples/atomic/search-stencil': {
       ignore: ['**/*'],
-      ignoreDependencies: ['cypress-repeat'],
-    },
-    'samples/headless-ssr/commerce-nextjs': {
-      entry: ['proxy.ts'],
-    },
-    'samples/headless-ssr/commerce-nextjs-v4': {
-      entry: ['proxy.ts'],
     },
     'samples/headless-ssr/search-nextjs': {
       ignore: ['**/*'],
-      ignoreDependencies: ['cypress-repeat'],
     },
     'packages/create-atomic-component': {
       ignore: ['template/**/*'],
