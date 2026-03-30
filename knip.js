@@ -1,0 +1,128 @@
+module.exports = {
+  $schema: 'https://unpkg.com/knip@5/schema.json',
+
+  // Always ignoring quantic since it throws errors. Adding those two lines is necessary for 100% of quantic to be ignored.
+  ignoreWorkspaces: [
+    'packages/quantic',
+    'packages/create-atomic-component-project/template',
+  ],
+  ignore: [
+    'packages/quantic/**',
+    'samples/headless/rga-react/src/components/Quickstart.tsx',
+    'samples/headless/rga-react/src/components/Citation.tsx',
+    'samples/headless/rga-react/src/components/CitationsList.tsx',
+  ],
+
+  // Enable back the plugin once https://github.com/webpro-nl/knip/issues/1154 is resolved.
+  biome: false,
+  workspaces: {
+    '.': {
+      entry: [
+        '.agents/skills/**/scripts/*.mjs',
+        'hooks/*.js',
+        'scripts/**/*.{js,mjs}',
+      ],
+      ignoreBinaries: ['ts-node', 'dev'],
+      ignoreDependencies: ['@playwright/mcp', 'handlebars'],
+    },
+    'packages/headless': {
+      entry: ['src/*index.ts', 'ponyfills/*.js'],
+      ignoreDependencies: ['navigator.sendbeacon', 'reselect', 'node-fetch'],
+    },
+    'packages/atomic-hosted-page': {
+      entry: [
+        'src/atomic-hosted-page.esm.ts',
+        'loader/index.js',
+        'dev/vite.config.ts',
+      ],
+      ignore: ['cdn/**'],
+      ignoreDependencies: ['local-web-server'],
+    },
+    'packages/atomic-angular': {
+      ignoreDependencies: [
+        'rxjs',
+        // Can be removed once we bump our package to use more recent Angular versions that support Vite 7+.
+        'vite',
+      ],
+    },
+    'packages/atomic-angular/projects/atomic-angular': {
+      entry: ['src/public-api.ts'],
+      ignore: [
+        'src/utils.ts', // Only used by generated files, so it 'seems' to have unused exports, but it's actually used.
+      ],
+    },
+    'packages/atomic-react': {
+      entry: ['src/*index.ts'],
+      ignore: ['src/components/stencil-generated/**/*.{ts,tsx}'],
+      ignoreDependencies: [
+        '@lit/react', // Only used in generated files.
+      ],
+    },
+    'packages/headless-react': {
+      ignoreDependencies: ['@types/react-dom', '@types/react', 'jsdom'],
+    },
+    'packages/auth': {
+      entry: ['src/auth.ts'],
+    },
+    'packages/documentation': {
+      entry: ['**/assets/**/*.js', '**/lib/*.ts'],
+    },
+    'samples/headless/commerce-react': {
+      // Can be removed once the deprecated controller is removed from headless.
+      ignore: ['src/components/legacy-field-suggestions/**'],
+      ignoreDependencies: ['jsdom'],
+    },
+    'samples/headless-ssr/commerce-express': {
+      entry: ['src/server.ts', 'src/client.ts'],
+    },
+    'samples/headless/search-react': {
+      entry: ['server/server.tsx', 'src/index.tsx'],
+      ignoreDependencies: ['jsdom'],
+    },
+    'utils/ci': {
+      ignoreDependencies: ['@types/conventional-changelog-writer'],
+    },
+    'utils/cdn': {
+      ignoreDependencies: ['@coveo/bueno', 'local-web-server'],
+    },
+
+    // Projects to enable bunch by bunch.
+    // Projects using stencil don't really have a proper entry point because of stencil's magic so they have problems with knip.
+    'packages/atomic': {
+      ignore: ['**/*'],
+      ignoreDependencies: ['cypress-repeat'],
+    },
+    'packages/atomic-legacy': {
+      ignore: ['**/*'],
+    },
+    'packages/create-atomic': {
+      ignore: ['**/*'],
+    },
+    'packages/create-atomic-template': {
+      ignore: ['**/*'],
+    },
+    'packages/shopify': {
+      ignore: ['**/*'],
+    },
+    'samples/atomic/search-stencil': {
+      ignore: ['**/*'],
+      ignoreDependencies: ['cypress-repeat'],
+    },
+    'samples/headless-ssr/commerce-nextjs': {
+      entry: ['proxy.ts'],
+    },
+    'samples/headless-ssr/commerce-nextjs-v4': {
+      entry: ['proxy.ts'],
+    },
+    'samples/headless-ssr/search-nextjs': {
+      ignore: ['**/*'],
+      ignoreDependencies: ['cypress-repeat'],
+    },
+    'packages/create-atomic-component': {
+      ignore: ['template/**/*'],
+    },
+    'packages/create-atomic-result-component': {
+      ignore: ['template/**/*'],
+    },
+  },
+};
