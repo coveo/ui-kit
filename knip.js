@@ -75,6 +75,12 @@ export default {
         'src/pages/AtomicReactPage.css', // TODO: Reassess if we can remove the file.
       ],
     },
+    'samples/headless-ssr/commerce-nextjs': {
+      entry: ['proxy.ts'],
+    },
+    'samples/headless-ssr/commerce-nextjs-v4': {
+      entry: ['proxy.ts'],
+    },
     'utils/ci': {
       ignoreDependencies: ['@types/conventional-changelog-writer'],
     },

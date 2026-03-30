@@ -610,6 +610,18 @@ code.code-text-red mark {
   color: #f1f2ff !important;
 }
 
+.tsd-page-navigation {
+  background-color: #333357;
+}
+
+.tsd-page-navigation a {
+  color: #f1f2ff;
+}
+
+.tsd-page-navigation-section > .tsd-accordion-summary + h3 {
+  color: #f1f2ff;
+}
+
 .btn-outline-primary.toc-thumbs-up-btn,
 .btn-outline-primary.toc-thumbs-down-btn {
   border: none;
