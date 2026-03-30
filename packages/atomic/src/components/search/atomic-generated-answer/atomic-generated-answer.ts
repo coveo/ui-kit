@@ -146,9 +146,10 @@ export class AtomicGeneratedAnswer
    */
   @property({type: String, attribute: 'answer-configuration-id'})
   answerConfigurationId?: string;
+
   /**
-   * @internal
    * The unique identifier of the agent to use to generate answers.
+   * This is required to use an agent that can provide follow-up answers, but whether follow-ups are shown in the UI also depends on the feature being enabled in the application state.
    */
   @property({type: String, attribute: 'agent-id'})
   agentId?: string;
