@@ -14,7 +14,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import ArrowBottomIcon from '@/src/images/arrow-bottom-rounded.svg';
+import ArrowBottomIcon from '../../../images/arrow-bottom-rounded.svg';
 
 /**
  * The `atomic-tab-popover` is an internal component that provides a popover menu for tab overflow.
