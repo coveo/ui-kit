@@ -32,10 +32,6 @@
       "enabled": false
     }
   },
-  "permission": {
-    "bash": "ask",
-    "webfetch": "ask"
-  },
   "compaction": {
     "auto": true,
     "prune": true

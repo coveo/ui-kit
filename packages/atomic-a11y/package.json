@@ -10,7 +10,12 @@
   ],
   "scripts": {
     "generate:wcag": "node scripts/generate-wcag-criteria.mjs",
-    "build": "pnpm generate:wcag && tsc -p tsconfig.json"
+    "build": "pnpm generate:wcag && tsc -p tsconfig.json",
+    "a11y:vpat": "pnpm build && node scripts/json-to-openacr.mjs && npx --yes @openacr/openacr output -f reports/openacr.yaml -o reports/vpat-2.5-coveo-atomic.md -t scripts/vpat-from-openacr.handlebars",
+    "a11y:merge-shards": "pnpm build && node scripts/merge-shards-cli.mjs"
+  },
+  "dependencies": {
+    "yaml": "2.8.0"
   },
   "devDependencies": {
     "axe-core": "4.10.3",
