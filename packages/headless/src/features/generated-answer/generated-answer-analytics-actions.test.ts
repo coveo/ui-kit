@@ -458,6 +458,26 @@ describe('generated answer analytics actions', () => {
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
+    it('should log #logGeneratedAnswerStreamEnd with a provided conversationId', async () => {
+      await logGeneratedAnswerStreamEnd(
+        true,
+        exampleProvidedAnswerId,
+        true,
+        'conversation-123'
+      )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+
+      const mockToUse = mockMakeGeneratedAnswerStreamEnd;
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith({
+        generativeQuestionAnsweringId: exampleProvidedAnswerId,
+        answerGenerated: true,
+        answerTextIsEmpty: true,
+        conversationId: 'conversation-123',
+      });
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
+    });
+
     it('should log #logGeneratedAnswerShowAnswers with the right payload', async () => {
       await logGeneratedAnswerShowAnswers()()(
         engine.dispatch,

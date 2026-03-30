@@ -1,3 +1,16 @@
+## 3.48.0 (2026-03-30)
+
+* feat(headless): add conversationId to generatedStreamEnd events (#7304) ([f346d1e](https://github.com/coveo/ui-kit/commits/f346d1e)), closes [#7304](https://github.com/coveo/ui-kit/issues/7304)
+* feat(headless): add conversationToken to follow-ups (#7281) ([7f4be25](https://github.com/coveo/ui-kit/commits/7f4be25)), closes [#7281](https://github.com/coveo/ui-kit/issues/7281)
+* feat(headless): change the agent answer api params to respect new backend changes (#7284) ([2fc89e8](https://github.com/coveo/ui-kit/commits/2fc89e8)), closes [#7284](https://github.com/coveo/ui-kit/issues/7284)
+* feat(headless): start sending stream end and response linked when generating follow-up answers with  ([55cb8ac](https://github.com/coveo/ui-kit/commits/55cb8ac)), closes [#7268](https://github.com/coveo/ui-kit/issues/7268)
+* feat(SFINT-6700): added a magic cookie to debug search agents (#7293) ([d57a042](https://github.com/coveo/ui-kit/commits/d57a042)), closes [#7293](https://github.com/coveo/ui-kit/issues/7293)
+* Feat/doc 18810 headless getting started (#7249) ([3126d91](https://github.com/coveo/ui-kit/commits/3126d91)), closes [#7249](https://github.com/coveo/ui-kit/issues/7249)
+* fix(deps): update dependency @reduxjs/toolkit to v2.11.2 j:kit-282 (#6215) ([269df62](https://github.com/coveo/ui-kit/commits/269df62)), closes [#6215](https://github.com/coveo/ui-kit/issues/6215)
+* fix(headless): fix Accept header value for agents (#7298) ([75c481d](https://github.com/coveo/ui-kit/commits/75c481d)), closes [#7298](https://github.com/coveo/ui-kit/issues/7298)
+
+
+
 ## <small>3.47.2 (2026-03-25)</small>
 
 * fix(deps): update all dependencies j:kit-282 (major) (#6195) ([a5df20c](https://github.com/coveo/ui-kit/commits/a5df20c)), closes [#6195](https://github.com/coveo/ui-kit/issues/6195)

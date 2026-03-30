@@ -21,7 +21,7 @@ const myResultTemplate: ResultTemplate = { ①
 ```
 1. Defines a `ResultTemplate` element which will be rendered to the user interface.
 Specifying the content and conditions properties is mandatory, whereas priority and fields are optional.
-For more details on these properties, see the [reference documentation](https://docs.coveo.com/en/headless/latest/usage/result-templates#resulttemplate).
+For more details on these properties, see the [reference documentation](./use-result-templates.html#resulttemplate).
 2. Creates a function that takes as input the given `result` and returns the `title`, enclosed in a `div` tag.
 3. Specifies that the result must contain a `title` for this template to be used.
 
@@ -93,7 +93,7 @@ export default class ResultList {
 You can pass multiple templates as separate parameters, or call `registerTemplates` multiple times.
 3. Results will always satisfy this template’s conditions because there are none, making this the default template.
 4. Headless offers result template helpers to make it easier to define conditions.
-See the [reference documentation](https://docs.coveo.com/en/headless/latest/usage/result-templates#resulttemplateshelper) for more information.
+See the [reference documentation](./use-result-templates.html#resulttemplateshelper) for more information.
 5. Sets the priority of the result template.
 If multiple templates' conditions are satisfied by a given result, the template with the highest priority will be selected.
 If multiple templates have equal priority, the first template registered will win out.
@@ -101,7 +101,7 @@ If multiple templates have equal priority, the first template registered will wi
 
 ## Reference
 
-Take a look at the [Headless project repository](https://github.com/coveo/ui-kit/tree/master/packages/headless/src/features/result-templates) for more information about the data types and methods detailed here.
+Take a look at the [Headless project repository](https://github.com/coveo/ui-kit/tree/main/packages/headless/src/features/result-templates) for more information about the data types and methods detailed here.
 
 ### ResultTemplate
 
@@ -110,7 +110,7 @@ Element which will be rendered in the list of suggestions.
 | Property | Description | Type |
 | --- | --- | --- |
 | `content` (required) |  The template itself. It can be anything, but generally it will be a function that takes a result and returns something to display. | `Content` |
-| `conditions` (required) | The conditions that a result must satisfy for this template to be selected for that result. If an empty array of conditions is passed in, the template will be considered as a default that may be chosen for any result. Various [`ResultTemplatesHelpers`](https://docs.coveo.com/en/headless/latest/usage/result-templates#resulttemplateshelper) can easily be used to create conditions. | `ResultTemplateCondition[]` |
+| `conditions` (required) | The conditions a given result must satisfy for this template to be selected. If an empty array of conditions is passed in, the template will be considered as a default that may be chosen for any result. Various [`ResultTemplatesHelpers`](./use-result-templates.html#resulttemplateshelper) can easily be used to create conditions. | `ResultTemplateCondition[]` |
 | `priority` | Defaults to 0. When `selectTemplate(result)` is called, the result may satisfy the conditions of several registered templates. When this happens, the template with the highest priority is selected. If several templates are satisfied and have the same priority, then the first one that was registered is chosen. | `number` |
 | `fields` | The names of the Coveo fields used in the template’s content. This property tells the index to include those fields in the returned results. | `string[]` |
 
