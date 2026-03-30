@@ -43,6 +43,7 @@ catalog:
   '@angular/platform-server': 20.3.16
   '@angular/router': 20.3.16
   '@coveo/create-atomic-rollup-plugin': 1.2.3
+  '@coveo/relay': 2.1.1
   '@coveo/relay-event-types': 19.0.6
   '@playwright/mcp': 0.0.54
   '@playwright/test': 1.57.0
