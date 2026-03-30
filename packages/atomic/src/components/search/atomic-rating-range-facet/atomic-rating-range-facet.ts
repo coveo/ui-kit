@@ -306,7 +306,9 @@ export class AtomicRatingRangeFacet
 
   public disconnectedCallback() {
     super.disconnectedCallback();
-    this.dependenciesManager?.stopWatching();
+    if (!this.isConnected) {
+      this.dependenciesManager?.stopWatching();
+    }
   }
 
   private get focusTarget() {

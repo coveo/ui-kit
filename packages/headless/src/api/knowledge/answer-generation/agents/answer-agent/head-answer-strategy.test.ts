@@ -151,6 +151,10 @@ describe('createHeadAnswerStrategy', () => {
       'logGeneratedAnswerResponseLinked'
     ).mockReturnValue(responseLinkedAction);
     strategy = createHeadAnswerStrategy(dispatch);
+    strategy.onRunStartedEvent!({
+      event: {runId: 'run-001', threadId: 'thread-007'},
+    } as any);
+    vi.clearAllMocks();
 
     strategy.onRunFinishedEvent!({
       event: {
@@ -163,7 +167,7 @@ describe('createHeadAnswerStrategy', () => {
     expect(dispatch).toHaveBeenNthCalledWith(1, setIsAnswerGenerated(true));
     expect(dispatch).toHaveBeenNthCalledWith(2, setCannotAnswer(false));
     expect(dispatch).toHaveBeenNthCalledWith(3, setIsStreaming(false));
-    expect(streamEndSpy).toHaveBeenCalledWith(true);
+    expect(streamEndSpy).toHaveBeenCalledWith(true, 'run-001', true);
     expect(dispatch).toHaveBeenNthCalledWith(4, streamEndAction);
     expect(dispatch).toHaveBeenNthCalledWith(5, responseLinkedAction);
   });
@@ -179,6 +183,10 @@ describe('createHeadAnswerStrategy', () => {
       'logGeneratedAnswerResponseLinked'
     ).mockReturnValue(responseLinkedAction);
     strategy = createHeadAnswerStrategy(dispatch);
+    strategy.onRunStartedEvent!({
+      event: {runId: 'run-001', threadId: 'thread-007'},
+    } as any);
+    vi.clearAllMocks();
 
     strategy.onRunFinishedEvent!({
       event: {
@@ -191,7 +199,7 @@ describe('createHeadAnswerStrategy', () => {
     expect(dispatch).toHaveBeenNthCalledWith(1, setIsAnswerGenerated(false));
     expect(dispatch).toHaveBeenNthCalledWith(2, setCannotAnswer(true));
     expect(dispatch).toHaveBeenNthCalledWith(3, setIsStreaming(false));
-    expect(streamEndSpy).toHaveBeenCalledWith(false);
+    expect(streamEndSpy).toHaveBeenCalledWith(false, 'run-001', undefined);
     expect(dispatch).toHaveBeenNthCalledWith(4, streamEndAction);
     expect(dispatch).toHaveBeenNthCalledWith(5, responseLinkedAction);
   });
