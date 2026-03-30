@@ -1,7 +1,5 @@
 import {intersection} from '@/src/utils/set';
 
-export type TemplateContent = DocumentFragment;
-
 export interface TemplateHelpers<TCondition> {
   fieldMustMatch: (field: string, values: string[]) => TCondition;
   fieldMustNotMatch: (field: string, values: string[]) => TCondition;
