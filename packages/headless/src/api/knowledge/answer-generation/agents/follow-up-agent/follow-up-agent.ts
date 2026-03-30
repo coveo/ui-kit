@@ -16,7 +16,7 @@ export class FollowUpAgent extends HttpAgent {
         ...this.headers,
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
-        Accept: 'text/event-stream',
+        Accept: 'text/event-stream, application/json',
       },
       body: JSON.stringify({
         q,
