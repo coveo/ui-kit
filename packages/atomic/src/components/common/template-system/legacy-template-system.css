@@ -1,11 +1,11 @@
-@import "./with-sections.pcss";
-@import "./row-desktop.pcss";
-@import "./row-mobile.pcss";
-@import "./cell-desktop.pcss";
-@import "./cell-mobile.pcss";
+@import "./with-sections.css";
+@import "./row-desktop.css";
+@import "./row-mobile.css";
+@import "./cell-desktop.css";
+@import "./cell-mobile.css";
 @reference '../../../utils/tailwind-utilities/aspect-square.css';
 @reference '../../../utils/tailwind-utilities/set-font-size.css';
-@reference '../../../global/global.pcss';
+@reference '../../../global/global.css';
 
 @utility atomic-template-system {
   @layer components {

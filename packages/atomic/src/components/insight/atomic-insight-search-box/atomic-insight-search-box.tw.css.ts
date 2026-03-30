@@ -2,7 +2,7 @@ import {css} from 'lit';
 
 const styles = css`
   @reference '../../../utils/tailwind.global.tw.css';
-  @import '../../common/search-box/search-box.pcss';
+  @import '../../common/search-box/search-box.css';
 
 [part='wrapper'] {
   @apply z-10;
