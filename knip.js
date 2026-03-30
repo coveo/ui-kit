@@ -59,7 +59,7 @@ export default {
       ],
     },
     'samples/headless/commerce-react': {
-      // Can be removed once the deprecated controller is removed from headless.
+      // Can be removed once the deprecated controller is removed from headless. https://coveord.atlassian.net/browse/KIT-5551
       ignore: ['src/components/legacy-field-suggestions/**'],
       ignoreDependencies: ['jsdom'],
     },
