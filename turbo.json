@@ -62,16 +62,7 @@
       "dependsOn": [],
       "cache": false
     },
-    "promote:npm:latest": {
-      "dependsOn": [],
-      "env": [
-        "NODE_AUTH_TOKEN",
-        "NPM_CONFIG_USERCONFIG",
-        "ACTIONS_ID_TOKEN_REQUEST_URL",
-        "ACTIONS_ID_TOKEN_REQUEST_TOKEN"
-      ],
-      "cache": false
-    },
+
     "release:phase1": {
       "dependsOn": ["^release:phase1"],
       "cache": false
@@ -81,6 +72,15 @@
       "env": [
         "NODE_AUTH_TOKEN",
         "NPM_CONFIG_USERCONFIG",
+        "ACTIONS_ID_TOKEN_REQUEST_URL",
+        "ACTIONS_ID_TOKEN_REQUEST_TOKEN"
+      ],
+      "cache": false
+    },
+    "npm:publish": {
+      "dependsOn": [],
+      "env": [
+        "NPM_TAG",
         "ACTIONS_ID_TOKEN_REQUEST_URL",
         "ACTIONS_ID_TOKEN_REQUEST_TOKEN"
       ],

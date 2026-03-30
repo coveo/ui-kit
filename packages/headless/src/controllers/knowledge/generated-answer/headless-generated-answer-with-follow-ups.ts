@@ -17,6 +17,7 @@ import {
 } from '../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {followUpAnswersReducer as followUpAnswers} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import type {FollowUpAnswersState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
+import {withGeneratedAnswerSseErrorHelpers} from '../../../features/generated-answer/sse-generated-answer-errors.js';
 import type {GeneratedAnswerState} from '../../../index.js';
 import type {
   FollowUpAnswersSection,
@@ -134,10 +135,20 @@ export function buildGeneratedAnswerWithFollowUps(
     ...controller,
     get state() {
       const followUpAnswersState = getState().followUpAnswers;
+      const generatedAnswerState = getState().generatedAnswer;
 
       return {
-        ...getState().generatedAnswer,
-        followUpAnswers: followUpAnswersState,
+        ...generatedAnswerState,
+        error: withGeneratedAnswerSseErrorHelpers(generatedAnswerState.error),
+        followUpAnswers: {
+          ...followUpAnswersState,
+          followUpAnswers: followUpAnswersState.followUpAnswers.map(
+            (followUpAnswer) => ({
+              ...followUpAnswer,
+              error: withGeneratedAnswerSseErrorHelpers(followUpAnswer.error),
+            })
+          ),
+        },
       };
     },
 
@@ -219,9 +230,17 @@ export function buildGeneratedAnswerWithFollowUps(
         return;
       }
       const conversationId = this.state.followUpAnswers.conversationId;
+      const conversationToken = this.state.followUpAnswers.conversationToken;
       if (!conversationId) {
         console.warn(
           'Missing conversationId when generating a follow-up answer. ' +
+            'The generateFollowUpAnswer action requires an existing conversation.'
+        );
+        return;
+      }
+      if (!conversationToken) {
+        console.warn(
+          'Missing conversationToken when generating a follow-up answer. ' +
             'The generateFollowUpAnswer action requires an existing conversation.'
         );
         return;
@@ -235,6 +254,7 @@ export function buildGeneratedAnswerWithFollowUps(
             forwardedProps: {
               q: question,
               conversationId,
+              conversationToken,
               accessToken,
             },
           },

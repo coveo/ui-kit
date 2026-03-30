@@ -297,14 +297,15 @@ describe('atomic-insight-result-list', () => {
 
     describe.each<{
       density: ItemDisplayDensity;
-    }>([{density: 'comfortable'}, {density: 'compact'}, {density: 'normal'}])(
-      'when the #density prop is $density',
-      ({density}) => {
-        it('should render list wrapper & root with correct density class', async () => {
-          await renderListWrapperAndRootTestCase({density});
-        });
-      }
-    );
+    }>([
+      {density: 'comfortable'},
+      {density: 'compact'},
+      {density: 'normal'},
+    ])('when the #density prop is $density', ({density}) => {
+      it('should render list wrapper & root with correct density class', async () => {
+        await renderListWrapperAndRootTestCase({density});
+      });
+    });
 
     describe.each<{imageSize: ItemDisplayImageSize}>([
       {imageSize: 'icon'},

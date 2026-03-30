@@ -356,14 +356,15 @@ describe('atomic-commerce-recommendation-list', () => {
 
       describe.each<{
         density: ItemDisplayDensity;
-      }>([{density: 'comfortable'}, {density: 'compact'}, {density: 'normal'}])(
-        'when the #density prop is $density',
-        ({density}) => {
-          it('should render with correct density class', async () => {
-            await testWrapperRendering({density});
-          });
-        }
-      );
+      }>([
+        {density: 'comfortable'},
+        {density: 'compact'},
+        {density: 'normal'},
+      ])('when the #density prop is $density', ({density}) => {
+        it('should render with correct density class', async () => {
+          await testWrapperRendering({density});
+        });
+      });
 
       describe.each<{imageSize: ItemDisplayImageSize}>([
         {imageSize: 'icon'},

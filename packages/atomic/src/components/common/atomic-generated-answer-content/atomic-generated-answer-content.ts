@@ -8,10 +8,10 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import atomicGeneratedAnswerStyles from '@/src/components/search/atomic-generated-answer/atomic-generated-answer.tw.css.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {renderGeneratedContentContainer} from '../generated-content-container';
-import {renderAgentGenerationSteps} from '../render-agent-generation-steps';
-import {renderFeedbackAndCopyButtons} from '../render-feedback-and-copy-buttons';
-import {renderSourceCitations} from '../source-citations';
+import {renderGeneratedContentContainer} from '../generated-answer/generated-content-container';
+import {renderAgentGenerationSteps} from '../generated-answer/render-agent-generation-steps';
+import {renderFeedbackAndCopyButtons} from '../generated-answer/render-feedback-and-copy-buttons';
+import {renderSourceCitations} from '../generated-answer/source-citations';
 
 const COPY_RESET_DURATION_MS = 2000;
 
@@ -23,13 +23,13 @@ export interface GeneratedAnswer extends GeneratedAnswerBase {
 type CopyState = 'idle' | 'success' | 'error';
 
 /**
- * The `atomic-answer-content` component renders the content of a generated answer.
+ * The `atomic-generated-answer-content` component renders the content of a generated answer.
  *
  * @internal
  */
-@customElement('atomic-answer-content')
+@customElement('atomic-generated-answer-content')
 @withTailwindStyles
-export class AtomicAnswerContent extends LitElement {
+export class AtomicGeneratedAnswerContent extends LitElement {
   static styles = [atomicGeneratedAnswerStyles];
 
   /**
@@ -71,9 +71,6 @@ export class AtomicAnswerContent extends LitElement {
   @property({attribute: false})
   public onCopyToClipboard: (answerId: string) => void = () => {};
 
-  /**
-   * Internal copy feedback state.
-   */
   @state()
   private copyState: CopyState = 'idle';
 
@@ -205,10 +202,15 @@ export class AtomicAnswerContent extends LitElement {
   }
 
   private renderError(): TemplateResult {
+    const errorMessageKey =
+      this.generatedAnswer.error?.isSseTurnLimitReachedError?.()
+        ? 'generated-answer-error-turn-limit-reached'
+        : 'generated-answer-error-generic';
+
     return html`
       <div part="generated-answer-error">
         <p>
-          ${this.i18n.t('generated-answer-error-generic')}
+          ${this.i18n.t(errorMessageKey)}
         </p>
       </div>
     `;

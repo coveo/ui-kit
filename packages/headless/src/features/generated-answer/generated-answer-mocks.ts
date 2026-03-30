@@ -1052,7 +1052,7 @@ export const streamAnswerAPIStateMock: StreamAnswerAPIState = {
         },
     },
     mutations: {},
-    provided: {},
+    provided: {tags: {}, keys: {}},
     subscriptions: {},
     config: {
       online: true,

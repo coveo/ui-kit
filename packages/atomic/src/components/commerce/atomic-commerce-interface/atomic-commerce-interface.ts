@@ -545,7 +545,7 @@ export class AtomicCommerceInterface
   private updateHash() {
     const newFragment = this.urlManager.state.fragment;
 
-    if (!this.searchOrListing.state.isLoading) {
+    if (!this.summary.state.firstRequestExecuted) {
       history.replaceState(null, document.title, `#${newFragment}`);
       this.bindings.engine.logger.info(`History replaceState #${newFragment}`);
 

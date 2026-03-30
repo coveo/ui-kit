@@ -1,12 +1,12 @@
 /**
- * Middleware for Next.js applications to handle clientID tracking with Coveo.
+ * Proxy for Next.js applications to handle clientID tracking with Coveo.
  *
- * This middleware generates a unique client ID using the `crypto.randomUUID()` method
+ * This proxy generates a unique client ID using the `crypto.randomUUID()` method
  * and injects this ID into both the request and response headers under 'x-coveo-client-id'.
  * By doing so, it ensures that both server-side and client-side requests can be associated
  * with the same client ID, facilitating consistent tracking across requests.
  *
- * The middleware utilizes Next.js's built-in `NextRequest` and `NextResponse` objects
+ * The proxy utilizes Next.js's built-in `NextRequest` and `NextResponse` objects
  * from 'next/server' to intercept and modify the requests and responses respectively.
  *
  * @param {NextRequest} request - The incoming request object provided by Next.js.
@@ -14,7 +14,7 @@
  */
 import {type NextRequest, NextResponse} from 'next/server';
 
-export default function middleware(request: NextRequest) {
+export default function proxy(request: NextRequest) {
   // Generate the next response object.
   const response = NextResponse.next();
 
