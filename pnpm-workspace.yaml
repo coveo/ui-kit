@@ -60,7 +60,7 @@ catalog:
   '@types/react': 19.2.14
   '@types/react-dom': 19.2.3
   '@vitejs/plugin-react': 6.0.1
-  coveo.analytics: 2.30.52
+  coveo.analytics: 2.30.54
   cypress: 13.7.3
   cypress-repeat: 2.3.9
   dayjs: 1.11.19

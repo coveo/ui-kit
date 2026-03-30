@@ -1,6 +1,6 @@
 {
   "name": "@coveo/quantic",
-  "version": "3.36.10",
+  "version": "3.37.0",
   "description": "A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform",
   "author": "coveo.com",
   "homepage": "https://coveo.com",
@@ -48,7 +48,7 @@
   "dependencies": {
     "@coveo/bueno": "workspace:*",
     "@coveo/headless": "workspace:*",
-    "coveo.analytics": "2.30.51",
+    "coveo.analytics": "2.30.54",
     "dompurify": "3.3.1",
     "marked": "12.0.2"
   },
