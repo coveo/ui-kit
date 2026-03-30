@@ -10,7 +10,7 @@ import {
   joinBreadcrumbValues,
 } from './breadcrumb-utils';
 
-export interface BreadcrumbButtonProps {
+interface BreadcrumbButtonProps {
   onSelectBreadcrumb: () => void;
   refCallback: (el?: HTMLButtonElement) => void;
   pathLimit: number;

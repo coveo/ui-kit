@@ -15,7 +15,7 @@ const defaultValues: FacetValue[] = [
   },
 ];
 
-export const defaultState = {
+const defaultState = {
   canShowLessValues: true,
   canShowMoreValues: true,
   facetId: 'some-facet-id',
@@ -32,7 +32,7 @@ export const defaultState = {
   hasActiveValues: false,
 } satisfies FacetState;
 
-export const defaultImplementation = {
+const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
   facetSearch: {

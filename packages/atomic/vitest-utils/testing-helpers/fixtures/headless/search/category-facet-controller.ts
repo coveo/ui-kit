@@ -65,7 +65,7 @@ const defaultValues: CategoryFacetValue[] = [
   },
 ];
 
-export const defaultState = {
+const defaultState = {
   canShowLessValues: true,
   canShowMoreValues: true,
   facetId: 'some-category-facet-id',
@@ -86,7 +86,7 @@ export const defaultState = {
   activeValue: undefined,
 } satisfies CategoryFacetState;
 
-export const defaultImplementation = {
+const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
   deselectAll: vi.fn(),

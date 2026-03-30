@@ -1,7 +1,7 @@
 import type {QuerySummary, QuerySummaryState} from '@coveo/headless';
 import {genericSubscribe} from '../common';
 
-export const defaultState = {
+const defaultState = {
   firstResult: 1,
   lastResult: 10,
   total: 100,
@@ -16,7 +16,7 @@ export const defaultState = {
   hasQuery: false,
 } satisfies QuerySummaryState;
 
-export const defaultImplementation = {
+const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
 } satisfies QuerySummary;

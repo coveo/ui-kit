@@ -66,7 +66,7 @@ export class FixtureAtomicProduct extends LitElement {
   }
 }
 
-export const defaultBindings = {
+const defaultBindings = {
   ...commerceDefaultBindings,
 } as const;
 

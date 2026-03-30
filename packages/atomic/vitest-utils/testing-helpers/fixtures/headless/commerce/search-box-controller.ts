@@ -2,7 +2,7 @@ import type {SearchBox, SearchBoxState} from '@coveo/headless/commerce';
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 
-export const defaultState = {
+const defaultState = {
   value: '',
   suggestions: [],
   isLoading: false,
@@ -10,7 +10,7 @@ export const defaultState = {
   searchBoxId: 'search-box-id',
 } satisfies SearchBoxState;
 
-export const defaultImplementation = {
+const defaultImplementation = {
   subscribe: genericSubscribe as unknown as SearchBox['subscribe'],
   state: defaultState,
   updateText: vi.fn(),

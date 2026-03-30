@@ -1,7 +1,7 @@
 import {html} from 'lit';
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 
-export interface ModalBodyProps {
+interface ModalBodyProps {
   formId: string;
   onSubmit: (e: Event) => void;
 }

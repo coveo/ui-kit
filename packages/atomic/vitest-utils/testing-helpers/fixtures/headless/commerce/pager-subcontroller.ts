@@ -2,14 +2,14 @@ import type {Pagination, PaginationState} from '@coveo/headless/commerce';
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 
-export const defaultState = {
+const defaultState = {
   page: 0,
   totalPages: 10,
   pageSize: 10,
   totalEntries: 100,
 } satisfies PaginationState;
 
-export const defaultImplementation = {
+const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
   previousPage: vi.fn(),

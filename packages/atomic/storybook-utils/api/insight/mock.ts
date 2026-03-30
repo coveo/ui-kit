@@ -41,4 +41,4 @@ export class MockInsightApi implements MockApi {
   }
 }
 
-export {baseFoldedResponse, baseSearchResponse, nestedFoldedResponse};
+export {baseFoldedResponse, nestedFoldedResponse};

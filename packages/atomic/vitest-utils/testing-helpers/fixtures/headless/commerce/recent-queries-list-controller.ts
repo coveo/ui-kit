@@ -5,13 +5,13 @@ import type {
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 
-export const defaultState = {
+const defaultState = {
   queries: ['query1', 'query2', 'query3'],
   maxLength: 5,
   analyticsEnabled: true,
 } satisfies RecentQueriesState;
 
-export const defaultImplementation = {
+const defaultImplementation = {
   clear: vi.fn() as unknown as RecentQueriesList['clear'],
   executeRecentQuery:
     vi.fn() as unknown as RecentQueriesList['executeRecentQuery'],

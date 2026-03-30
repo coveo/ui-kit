@@ -74,7 +74,7 @@ export class FixtureAtomicCommerceRecommendationInterface
   }
 }
 
-export const defaultBindings = {
+const defaultBindings = {
   interfaceElement: {} as unknown as CommerceBindings['interfaceElement'],
   store: {
     state: {

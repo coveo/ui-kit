@@ -6,7 +6,7 @@ import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 import {buildFakeProduct} from './product';
 
-export const defaultState = {
+const defaultState = {
   headline: 'Recommended for you',
   responseId: 'some-id',
   productId: '123',
@@ -14,7 +14,7 @@ export const defaultState = {
   isLoading: false,
   error: null,
 } satisfies RecommendationsState;
-export const defaultImplementation = {
+const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
   refresh: vi.fn(),

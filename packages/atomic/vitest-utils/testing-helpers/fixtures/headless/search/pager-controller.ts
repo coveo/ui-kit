@@ -2,7 +2,7 @@ import type {Pager, PagerState} from '@coveo/headless';
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 
-export const defaultPagerState = {
+const defaultPagerState = {
   currentPage: 1,
   maxPage: 10,
   currentPages: [1, 2, 3, 4, 5],
@@ -10,7 +10,7 @@ export const defaultPagerState = {
   hasNextPage: true,
 } satisfies PagerState;
 
-export const defaultPagerImplementation = {
+const defaultPagerImplementation = {
   subscribe: genericSubscribe,
   state: defaultPagerState,
   previousPage: vi.fn(),

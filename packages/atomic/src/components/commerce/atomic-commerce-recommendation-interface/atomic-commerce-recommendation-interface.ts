@@ -1,7 +1,6 @@
 import {
   buildContext,
   type CommerceEngine,
-  type CommerceEngineConfiguration,
   type Context,
   VERSION as HEADLESS_VERSION,
   loadConfigurationActions,
@@ -31,7 +30,6 @@ import {
   createCommerceRecommendationStore,
 } from './store.js';
 
-export type CommerceInitializationOptions = CommerceEngineConfiguration;
 export type CommerceBindings = CommonBindings<
   CommerceEngine,
   CommerceRecommendationStore,

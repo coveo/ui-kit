@@ -5,9 +5,9 @@ import type {
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 
-export const defaultState = ['facet1', 'facet2'] satisfies FacetGeneratorState;
+const defaultState = ['facet1', 'facet2'] satisfies FacetGeneratorState;
 
-export const defaultImplementation = {
+const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
   deselectAll: vi.fn(),

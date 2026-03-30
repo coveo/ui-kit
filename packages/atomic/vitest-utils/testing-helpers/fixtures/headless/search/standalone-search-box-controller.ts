@@ -4,7 +4,7 @@ import type {
 } from '@coveo/headless';
 import {vi} from 'vitest';
 
-export const defaultState: StandaloneSearchBoxState = {
+const defaultState: StandaloneSearchBoxState = {
   value: '',
   suggestions: [],
   isLoading: false,
@@ -16,7 +16,7 @@ export const defaultState: StandaloneSearchBoxState = {
   },
 };
 
-export const defaultImplementation = {
+const defaultImplementation = {
   subscribe: vi.fn((subscribedFunction: () => void) => {
     subscribedFunction();
   }) as unknown as StandaloneSearchBox['subscribe'],

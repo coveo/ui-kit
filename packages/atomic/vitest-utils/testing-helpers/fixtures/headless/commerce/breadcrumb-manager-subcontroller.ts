@@ -5,7 +5,7 @@ import type {
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 
-export const defaultState = {
+const defaultState = {
   facetBreadcrumbs: [
     {
       facetId: 'brand',
@@ -86,7 +86,7 @@ export const defaultState = {
   hasBreadcrumbs: true,
 } satisfies BreadcrumbManagerState;
 
-export const defaultImplementation = {
+const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
   deselectAll: vi.fn(),

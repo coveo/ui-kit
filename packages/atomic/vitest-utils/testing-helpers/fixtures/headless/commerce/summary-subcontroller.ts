@@ -8,7 +8,7 @@ import {genericSubscribe} from '../common';
 type SummaryType = Summary<SearchSummaryState | ProductListingSummaryState>;
 type SummaryState = SearchSummaryState | ProductListingSummaryState;
 
-export const defaultState = {
+const defaultState = {
   query: '',
   firstProduct: 1,
   lastProduct: 10,
@@ -19,7 +19,7 @@ export const defaultState = {
   hasError: false,
 } satisfies SummaryState;
 
-export const defaultImplementation = {
+const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
 } satisfies SummaryType;

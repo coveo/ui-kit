@@ -27,11 +27,11 @@ export const buildFakeRelatedQuestion = (
   };
 };
 
-export const defaultState = {
+const defaultState = {
   questions: [],
 } satisfies SmartSnippetQuestionsListState;
 
-export const defaultImplementation = {
+const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
   expand: () => {},

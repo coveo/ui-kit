@@ -7,7 +7,7 @@ import CloseIcon from '../../../images/close.svg';
 import type {Breadcrumb} from './breadcrumb-types';
 import {getFirstBreadcrumbValue} from './breadcrumb-utils';
 
-export interface BreadcrumbContentProps {
+interface BreadcrumbContentProps {
   pathLimit: number;
   isCollapsed: boolean;
   i18n: i18n;

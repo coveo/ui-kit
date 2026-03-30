@@ -1,5 +1,3 @@
-import {isArray} from '@coveo/bueno';
-import {type ComponentInterface, getElement} from '@stencil/core';
 import type {ReactiveElement} from 'lit';
 import {camelToKebab, kebabToCamel} from './utils';
 
@@ -36,72 +34,6 @@ export function mapProperty<Element extends ReactiveElement>(
 
       (instance as Instance)[propertyKey] = props as Instance[K];
     });
-  };
-}
-
-/**
- * @deprecated Use the `mapProperty` decorator instead.
- */
-export function MapProp(opts?: MapPropOptions) {
-  return (component: ComponentInterface, variableName: string) => {
-    const {componentWillLoad} = component;
-    if (!componentWillLoad) {
-      console.error(
-        'The "componentWillLoad" lifecycle method has to be defined for the MapProp decorator to work.'
-      );
-      return;
-    }
-
-    component.componentWillLoad = function () {
-      const prefix = opts?.attributePrefix || variableName;
-      const variable = this[variableName];
-      const attributes = getElement(this).attributes;
-      mapAttributesToProp(
-        prefix,
-        variable,
-        Array.from(attributes),
-        opts?.splitValues ?? false
-      );
-      componentWillLoad.call(this);
-    };
-  };
-}
-
-/**
- * @deprecated In Lit, you can achieve the same behavior by using `@property({type: Array})`.
- */
-export function ArrayProp() {
-  return (component: ComponentInterface, variableName: string) => {
-    const {componentWillLoad} = component;
-
-    const attributeWithBrackets = camelToKebab(variableName);
-
-    component.componentWillLoad = function () {
-      const value = this[variableName];
-      if (!value || isArray(value)) {
-        componentWillLoad?.call(this);
-        return;
-      }
-
-      try {
-        const valueAsArray = JSON.parse(value);
-        if (isArray(valueAsArray)) {
-          this[variableName] = valueAsArray;
-        } else {
-          console.error(
-            `Property ${attributeWithBrackets} should be an array`,
-            getElement(this)
-          );
-        }
-      } catch (e) {
-        console.error(
-          `Error while parsing attribute ${attributeWithBrackets} as array`,
-          e
-        );
-      }
-
-      componentWillLoad?.call(this);
-    };
   };
 }
 

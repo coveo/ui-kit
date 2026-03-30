@@ -127,7 +127,7 @@ export class FixtureAtomicInsightResult extends LitElement {
   }
 }
 
-export const defaultBindings = {
+const defaultBindings = {
   ...insightDefaultBindings,
 } as const;
 

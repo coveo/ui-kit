@@ -7,7 +7,7 @@ export interface LayoutStylesHost extends ReactiveControllerHost {
   id?: string;
 }
 
-export type StylesBuilderFunction = (
+type StylesBuilderFunction = (
   host: HTMLElement,
   mobileBreakpoint: string
 ) => string;

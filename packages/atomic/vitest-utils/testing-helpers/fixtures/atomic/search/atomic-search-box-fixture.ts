@@ -75,7 +75,7 @@ export class FixtureAtomicSearchBox extends LitElement {
   }
 }
 
-export const defaultBindings = {
+const defaultBindings = {
   engine: {
     dispatch: vi.fn(),
     logger: {

@@ -6,7 +6,7 @@ import type {
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 
-export const defaultState = {
+const defaultState = {
   q: 'the query',
   results: [
     {

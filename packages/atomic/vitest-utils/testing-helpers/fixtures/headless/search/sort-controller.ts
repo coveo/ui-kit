@@ -2,11 +2,11 @@ import type {Sort, SortState} from '@coveo/headless';
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 
-export const defaultState = {
+const defaultState = {
   sortCriteria: 'relevancy',
 } satisfies SortState;
 
-export const defaultImplementation = {
+const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
   sortBy: vi.fn(),

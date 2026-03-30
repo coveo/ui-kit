@@ -2,7 +2,7 @@ import type {ResultList, ResultListState} from '@coveo/headless';
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common.js';
 
-export const defaultState = {
+const defaultState = {
   firstSearchExecuted: true,
   hasError: false,
   hasResults: true,
@@ -12,7 +12,7 @@ export const defaultState = {
   moreResultsAvailable: false,
 } satisfies ResultListState;
 
-export const defaultImplementation = {
+const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
   fetchMoreResults: vi.fn(),
