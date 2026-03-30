@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node ./scripts/serve.mjs",
     "build": "node ./scripts/deploy-local-cdn.mjs",
-    "test": "vitest --project=cdn-check"
+    "test": "vitest run --project=cdn-check"
   },
   "engines": {
     "node": ">=22.14.0"

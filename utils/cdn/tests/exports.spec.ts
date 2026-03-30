@@ -6,7 +6,6 @@ describe('CDN exports checks', () => {
     'index.esm',
     'atomic.esm',
   ])('did %s exports changed?', async (file) => {
-    console.log(file);
     const module = await import(`../dist/proda/StaticCDN/atomic/v3/${file}.js`);
     expect(module).toMatchSnapshot();
   });
