@@ -75,9 +75,7 @@ export const citationSourceSelector = createSelector(
 
     return (
       findCitation(headCitations) ??
-      followUpAnswers
-        ?.find((followUp) => findCitation(followUp.citations))
-        ?.citations.find((citation) => citation.id === citationId)
+      findCitation(followUpAnswers?.flatMap((followUp) => followUp.citations))
     );
   }
 );
