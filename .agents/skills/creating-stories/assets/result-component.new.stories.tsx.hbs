@@ -5,6 +5,8 @@ import {Mock{{apiClass}}} from '@/storybook-utils/api/{{apiPath}}/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
 import {{wrapperImport}} from '{{wrapperPath}}';
+import '@/src/components/{{componentCategory}}/{{componentName}}/{{componentName}}.js';
+import '@/src/components/search/atomic-result-list/atomic-result-list.js';
 
 const {{apiPath}}ApiHarness = new Mock{{apiClass}}();
 
