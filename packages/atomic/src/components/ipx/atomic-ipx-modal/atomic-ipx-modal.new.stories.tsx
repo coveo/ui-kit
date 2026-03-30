@@ -3,6 +3,7 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/ipx/atomic-ipx-modal/atomic-ipx-modal.js';
 
 const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(

@@ -9,6 +9,8 @@ import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-result-link/atomic-result-link.js';
+import '@/src/components/search/atomic-result-list/atomic-result-list.js';
 
 const searchApiHarness = new MockSearchApi();
 

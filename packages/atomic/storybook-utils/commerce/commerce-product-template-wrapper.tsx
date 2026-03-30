@@ -1,3 +1,4 @@
+import '@/src/components/commerce/atomic-product-template/atomic-product-template.js';
 import { Decorator } from '@storybook/web-components-vite';
 import { html, TemplateResult, render } from 'lit';
 

@@ -7,6 +7,7 @@ import {
   getProductSectionDecorators,
 } from '@/storybook-utils/commerce/product-section-story-utils';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import '@/src/components/commerce/atomic-product-section-actions/atomic-product-section-actions.js';
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-product-section-actions',

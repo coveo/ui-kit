@@ -1,3 +1,4 @@
+import '@/src/components/search/atomic-search-box/atomic-search-box.js';
 import { spreadProps } from '@open-wc/lit-helpers';
 import {Decorator} from '@storybook/web-components-vite';
 import {html, TemplateResult} from 'lit';

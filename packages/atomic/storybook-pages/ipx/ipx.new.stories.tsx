@@ -7,6 +7,41 @@ import {
   richResponse,
 } from '@/storybook-utils/api/search/search-response';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
+import '@/src/components/search/atomic-did-you-mean/atomic-did-you-mean.js';
+import '@/src/components/search/atomic-facet/atomic-facet.js';
+import '@/src/components/search/atomic-field-condition/atomic-field-condition.js';
+import '@/src/components/ipx/atomic-ipx-button/atomic-ipx-button.js';
+import '@/src/components/ipx/atomic-ipx-modal/atomic-ipx-modal.js';
+import '@/src/components/ipx/atomic-ipx-refine-toggle/atomic-ipx-refine-toggle.js';
+import '@/src/components/ipx/atomic-ipx-result-link/atomic-ipx-result-link.js';
+import '@/src/components/ipx/atomic-ipx-tab/atomic-ipx-tab.js';
+import '@/src/components/ipx/atomic-ipx-tabs/atomic-ipx-tabs.js';
+import '@/src/components/common/atomic-layout-section/atomic-layout-section.js';
+import '@/src/components/search/atomic-load-more-results/atomic-load-more-results.js';
+import '@/src/components/search/atomic-no-results/atomic-no-results.js';
+import '@/src/components/search/atomic-notifications/atomic-notifications.js';
+import '@/src/components/search/atomic-query-error/atomic-query-error.js';
+import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
+import '@/src/components/search/atomic-result-badge/atomic-result-badge.js';
+import '@/src/components/search/atomic-result-date/atomic-result-date.js';
+import '@/src/components/search/atomic-result-fields-list/atomic-result-fields-list.js';
+import '@/src/components/search/atomic-result-list/atomic-result-list.js';
+import '@/src/components/search/atomic-result-printable-uri/atomic-result-printable-uri.js';
+import '@/src/components/search/atomic-result-rating/atomic-result-rating.js';
+import '@/src/components/search/atomic-result-section-badges/atomic-result-section-badges.js';
+import '@/src/components/search/atomic-result-section-bottom-metadata/atomic-result-section-bottom-metadata.js';
+import '@/src/components/search/atomic-result-section-excerpt/atomic-result-section-excerpt.js';
+import '@/src/components/search/atomic-result-section-title/atomic-result-section-title.js';
+import '@/src/components/search/atomic-result-section-title-metadata/atomic-result-section-title-metadata.js';
+import '@/src/components/search/atomic-result-template/atomic-result-template.js';
+import '@/src/components/search/atomic-result-text/atomic-result-text.js';
+import '@/src/components/search/atomic-search-box/atomic-search-box.js';
+import '@/src/components/search/atomic-search-interface/atomic-search-interface.js';
+import '@/src/components/search/atomic-smart-snippet/atomic-smart-snippet.js';
+import '@/src/components/search/atomic-smart-snippet-suggestions/atomic-smart-snippet-suggestions.js';
+import '@/src/components/search/atomic-text/atomic-text.js';
+import '@/src/components/common/atomic-timeframe/atomic-timeframe.js';
+import '@/src/components/search/atomic-timeframe-facet/atomic-timeframe-facet.js';
 
 async function initializeIpxInterface(canvasElement: HTMLElement) {
   await customElements.whenDefined('atomic-search-interface');
