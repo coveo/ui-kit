@@ -4,6 +4,8 @@ import {html} from 'lit';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/common/atomic-timeframe/atomic-timeframe.js';
+import '@/src/components/search/atomic-timeframe-facet/atomic-timeframe-facet.js';
 
 const searchApiHarness = new MockSearchApi();
 const {decorator, play} = wrapInSearchInterface({

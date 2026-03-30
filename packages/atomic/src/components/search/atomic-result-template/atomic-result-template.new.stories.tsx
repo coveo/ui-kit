@@ -6,6 +6,29 @@ import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {parameters as searchBoxParameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-field-condition/atomic-field-condition.js';
+import '@/src/components/search/atomic-folded-result-list/atomic-folded-result-list.js';
+import '@/src/components/search/atomic-result-badge/atomic-result-badge.js';
+import '@/src/components/search/atomic-result-children/atomic-result-children.js';
+import '@/src/components/search/atomic-result-children-template/atomic-result-children-template.js';
+import '@/src/components/search/atomic-result-date/atomic-result-date.js';
+import '@/src/components/search/atomic-result-fields-list/atomic-result-fields-list.js';
+import '@/src/components/search/atomic-result-image/atomic-result-image.js';
+import '@/src/components/search/atomic-result-link/atomic-result-link.js';
+import '@/src/components/search/atomic-result-list/atomic-result-list.js';
+import '@/src/components/search/atomic-result-multi-value-text/atomic-result-multi-value-text.js';
+import '@/src/components/search/atomic-result-section-badges/atomic-result-section-badges.js';
+import '@/src/components/search/atomic-result-section-bottom-metadata/atomic-result-section-bottom-metadata.js';
+import '@/src/components/search/atomic-result-section-children/atomic-result-section-children.js';
+import '@/src/components/search/atomic-result-section-excerpt/atomic-result-section-excerpt.js';
+import '@/src/components/search/atomic-result-section-title/atomic-result-section-title.js';
+import '@/src/components/search/atomic-result-section-visual/atomic-result-section-visual.js';
+import '@/src/components/search/atomic-result-template/atomic-result-template.js';
+import '@/src/components/search/atomic-result-text/atomic-result-text.js';
+import '@/src/components/search/atomic-search-box/atomic-search-box.js';
+import '@/src/components/search/atomic-search-box-instant-results/atomic-search-box-instant-results.js';
+import '@/src/components/search/atomic-search-box-query-suggestions/atomic-search-box-query-suggestions.js';
+import '@/src/components/search/atomic-text/atomic-text.js';
 
 const TEMPLATE_EXAMPLE = `<template>
   <atomic-result-section-visual>
