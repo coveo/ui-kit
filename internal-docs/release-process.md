@@ -1,17 +1,8 @@
 # Release processes
 
-This repository contains two release processes, which are triggered on Git commits:
+This repository triggers releases on Git commits via a scheduled release process.
 
-## 1. The pre-release process
-
-The purpose of the pre-release process is to publish new changes from the main branch as frequently as possible. This has two main benefits:
-
-1. This tests whether we broke some parts of the release process so we don't get surprises when we need a scheduled release.
-2. This enables implementers to test a new feature or fix before we trigger a scheduled release.
-
-To achieve its purpose, the pre-release process is executed on every new commit on the main branch. Additionally, pre-releases do not commit anything to the main branch, which allows them to be deployed even if multiple features are merged on the main branch faster than the CI can release them.
-
-## 2. The scheduled release process
+## The scheduled release process
 
 The purpose of the scheduled release process is to deploy versions of our packages that we feel confident are safe for implementers to use.
 
@@ -28,8 +19,6 @@ Specifically, a commit will determine its version by looking for the last schedu
 When triggered, releases processes will execute a series of [Turborepo tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks). Some tasks are run at the root of the repository, and some will be run on each individual package.
 
 ## `release:phase0` (lock the main branch)
-
-This task is only run for the scheduled release.
 
 The purpose of this task is to lock the main branch, preventing users from merging pull requests while the release is in progress.
 
@@ -55,10 +44,6 @@ The purpose of this sub-phase is to update the `package.json` file of every pack
 3. Waterfall bumping.
    - Bumping dependencies directly in `package.json` means that packages can determine whether they need to be bumped by just looking at their own `package.json`.
 
-On pre-releases, the first ten digits of the commit hash will be appended to the version like so:
-
-- `1.2.3` -> `1.2.3-pre.abcdef1234`
-
 Additionally, this task will update the `CHANGELOG.md` file of the package to contain the changes that were taken into account when bumping its version.
 
 This task does not make any changes to the `package-lock.json` file at the root of the repository, since doing so would cause [an error with NPM Workspaces](https://github.com/npm/cli/issues/5506).
@@ -82,8 +67,6 @@ If a package is already published to npm, this task will exit without error. Aft
 Packages are published directly to the `@latest` tag using OIDC-based authentication (npm trusted publishing).
 
 ## `release:phase3` (commit version bumps)
-
-This task is only run for the scheduled release.
 
 This task will create a new "version bump" commit, which will contain:
 
