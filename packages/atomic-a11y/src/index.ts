@@ -9,6 +9,7 @@ export type {
   A11yComponentReport,
   A11yCriterionReport,
   A11yIncompleteDetail,
+  A11yInteractiveResults,
   A11yReport,
   A11ySummary,
   CriterionLevel,
