@@ -1,5 +1,4 @@
-//@ts-expect-error TODO: Simplify path to target some kind of index file?
-import elementMap from '../components/components/lazy-index.js';
+import elementMap from '@/src/components/lazy-index.js';
 
 export function registerAutoloader(
   roots?:
