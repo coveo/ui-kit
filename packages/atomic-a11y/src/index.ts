@@ -17,6 +17,5 @@ export type {
   A11ySummary,
   CriterionLevel,
   CriterionMetadata,
-  SupportedFramework,
   WCAGVersion,
 } from './shared/types.js';
