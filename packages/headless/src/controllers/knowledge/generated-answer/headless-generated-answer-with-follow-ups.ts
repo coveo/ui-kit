@@ -111,11 +111,7 @@ export function buildGeneratedAnswerWithFollowUps(
     throw loadReducerError;
   }
 
-  const {...controller} = buildCoreGeneratedAnswer(
-    engine,
-    analyticsClient,
-    props
-  );
+  const controller = buildCoreGeneratedAnswer(engine, analyticsClient, props);
   const getState = () => engine.state;
   engine.dispatch(setAgentId(props.agentId));
 
@@ -160,27 +156,31 @@ export function buildGeneratedAnswerWithFollowUps(
       );
     },
 
-    // TODO: SFINT-6665
     like(answerId?: string) {
       if (!answerId || this.state.answerId === answerId) {
         controller.like();
         return;
       }
 
-      if (!this.state.liked) {
+      const followUpAnswer = this.state.followUpAnswers.followUpAnswers.find(
+        (answer) => answer.answerId === answerId
+      );
+      if (!followUpAnswer?.liked) {
         engine.dispatch(likeFollowUp({answerId}));
         engine.dispatch(analyticsClient.logLikeGeneratedAnswer(answerId));
       }
     },
 
-    // TODO: SFINT-6665
     dislike(answerId?: string) {
       if (!answerId || this.state.answerId === answerId) {
         controller.dislike();
         return;
       }
 
-      if (!this.state.disliked) {
+      const followUpAnswer = this.state.followUpAnswers.followUpAnswers.find(
+        (answer) => answer.answerId === answerId
+      );
+      if (!followUpAnswer?.disliked) {
         engine.dispatch(dislikeFollowUp({answerId}));
         engine.dispatch(analyticsClient.logDislikeGeneratedAnswer(answerId));
       }
