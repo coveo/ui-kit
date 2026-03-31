@@ -1,3 +1,4 @@
+import {DEFAULT_WCAG_22_AA_CRITERIA_COUNT} from '../shared/constants.js';
 import type {
   A11yComponentReport,
   A11yCriterionReport,
@@ -7,9 +8,9 @@ import {getAutomationCoveragePercentage} from './reporter-utils.js';
 
 export function createSummary(
   components: A11yComponentReport[],
-  criteria: A11yCriterionReport[],
-  totalCriteria: number
+  criteria: A11yCriterionReport[]
 ): A11ySummary {
+  const totalCriteria = DEFAULT_WCAG_22_AA_CRITERIA_COUNT;
   const totalStories = components.reduce(
     (accumulator, component) => accumulator + component.storyCount,
     0

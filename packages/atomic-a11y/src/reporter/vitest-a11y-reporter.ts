@@ -1,6 +1,6 @@
 import {mkdir, writeFile} from 'node:fs/promises';
 import path from 'node:path';
-import type {Result as AxeRuleResult} from 'axe-core';
+import type {AxeResults, Result as AxeRuleResult} from 'axe-core';
 import type {
   Reporter,
   SerializedError,
@@ -11,7 +11,6 @@ import type {
 import {
   DEFAULT_A11Y_REPORT_FILENAME,
   DEFAULT_A11Y_REPORT_OUTPUT_DIR,
-  DEFAULT_WCAG_22_AA_CRITERIA_COUNT,
 } from '../shared/constants.js';
 import {
   getCriteriaForRule,
@@ -21,6 +20,7 @@ import {
 import {buildA11yReport} from './report-builder.js';
 import {
   type ComponentAccumulator,
+  isStorybookTaskMeta,
   type PackageMetadata,
   readPackageMetadata,
   type StorybookTaskMeta,
@@ -41,10 +41,6 @@ export interface A11yReporterOptions {
   /** Report filename.
    * @default 'a11y-report.json' */
   outputFilename?: string;
-
-  /** Total WCAG 2.2 AA criteria used to calculate coverage percentages.
-   * @default 55 */
-  totalCriteria?: number;
 
   /** Path to a `package.json` from which product/tool versions are read (e.g. atomic package). */
   packageJsonPath?: string;
@@ -86,7 +82,6 @@ export class VitestA11yReporter implements Reporter {
   private readonly componentResults = new Map<string, ComponentAccumulator>();
   private readonly outputDir: string;
   private readonly outputFilename: string;
-  private readonly totalCriteria: number;
   private readonly shardInfo: ShardInfo | null;
   private readonly packageMetadata: PackageMetadata;
 
@@ -94,8 +89,6 @@ export class VitestA11yReporter implements Reporter {
     this.outputDir = options.outputDir ?? DEFAULT_A11Y_REPORT_OUTPUT_DIR;
     this.outputFilename =
       options.outputFilename ?? DEFAULT_A11Y_REPORT_FILENAME;
-    this.totalCriteria =
-      options.totalCriteria ?? DEFAULT_WCAG_22_AA_CRITERIA_COUNT;
     this.shardInfo = resolveShardInfo();
     this.packageMetadata = readPackageMetadata(options.packageJsonPath);
   }
@@ -113,14 +106,12 @@ export class VitestA11yReporter implements Reporter {
         return;
       }
 
-      const meta = testCase.meta() as StorybookTaskMeta;
-      const reports = meta.reports ?? [];
-      const a11yReport = reports.find((report) => report.type === 'a11y');
-      const axeResults =
-        a11yReport && isAxeResults(a11yReport.result)
-          ? a11yReport.result
-          : null;
+      const meta = testCase.meta();
+      if (!isStorybookTaskMeta(meta)) {
+        return;
+      }
 
+      const axeResults = VitestA11yReporter.getAxeResults(meta);
       if (!axeResults) {
         return;
       }
@@ -183,7 +174,6 @@ export class VitestA11yReporter implements Reporter {
 
       const report = buildA11yReport(
         this.componentResults,
-        this.totalCriteria,
         this.packageMetadata
       );
       const serializedReport = `${JSON.stringify(report, null, 2)}\n`;
@@ -232,6 +222,15 @@ export class VitestA11yReporter implements Reporter {
         component.automated.criteriaCovered.add(criterion);
       }
     }
+  }
+
+  private static getAxeResults(meta: StorybookTaskMeta): AxeResults | null {
+    const reports = meta.reports ?? [];
+    const a11yReport = reports.find((report) => report.type === 'a11y');
+
+    return a11yReport && isAxeResults(a11yReport.result)
+      ? a11yReport.result
+      : null;
   }
 
   private getOutputPaths(): string[] {

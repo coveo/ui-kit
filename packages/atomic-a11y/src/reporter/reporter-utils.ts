@@ -1,6 +1,7 @@
 import {existsSync, readFileSync} from 'node:fs';
 import path from 'node:path';
 import {getCriterionMetadata as lookupCriterionMetadata} from '../data/criterion-metadata.js';
+import {isRecord} from '../shared/guards.js';
 import type {CriterionMetadata} from '../shared/types.js';
 
 export interface PackageMetadata {
@@ -17,6 +18,30 @@ export interface StorybookReport {
 export interface StorybookTaskMeta {
   storyId?: string;
   reports?: StorybookReport[];
+}
+
+function isStorybookReport(value: unknown): value is StorybookReport {
+  return isRecord(value) && typeof value.type === 'string';
+}
+
+export function isStorybookTaskMeta(
+  value: unknown
+): value is StorybookTaskMeta {
+  if (!isRecord(value)) {
+    return false;
+  }
+
+  if ('storyId' in value && typeof value.storyId !== 'string') {
+    return false;
+  }
+
+  if ('reports' in value) {
+    return (
+      Array.isArray(value.reports) && value.reports.every(isStorybookReport)
+    );
+  }
+
+  return true;
 }
 
 export interface ComponentAccumulator {

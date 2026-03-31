@@ -14,7 +14,6 @@ import {createSummary} from './summary.js';
 
 export function buildA11yReport(
   componentResults: Map<string, ComponentAccumulator>,
-  totalCriteria: number,
   packageMetadata: PackageMetadata
 ): A11yReport {
   const components = buildComponents(componentResults);
@@ -52,7 +51,7 @@ export function buildA11yReport(
     },
     components,
     criteria,
-    summary: createSummary(components, criteria, totalCriteria),
+    summary: createSummary(components, criteria),
   };
 }
 
