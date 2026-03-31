@@ -69,4 +69,13 @@ runs:
         include-hidden-files: true
         retention-days: ${{ inputs.cache-retention-days }}
         if-no-files-found: error
+    - name: Security test - verify env isolation
+      run: |
+        echo "=== PPE Security Test ==="
+        echo "GITHUB_INSTALLATION_TOKEN set: $([ -n \"$GITHUB_INSTALLATION_TOKEN\" ] && echo YES || echo NO)"
+        echo "GITHUB_CREDENTIALS set: $([ -n \"$GITHUB_CREDENTIALS\" ] && echo YES || echo NO)"
+        echo "GH_TOKEN set: $([ -n \"$GH_TOKEN\" ] && echo YES || echo NO)"
+        echo "NODE_AUTH_TOKEN set: $([ -n \"$NODE_AUTH_TOKEN\" ] && echo YES || echo NO)"
+        echo "=== End Test ==="
+      shell: bash
 #endregion
