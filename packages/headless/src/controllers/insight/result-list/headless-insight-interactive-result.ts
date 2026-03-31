@@ -10,9 +10,9 @@ import {
 } from '../../core/interactive-result/headless-core-interactive-result.js';
 
 export type {
+  InteractiveResultCore,
   InteractiveResultCoreOptions,
   InteractiveResultCoreProps,
-  InteractiveResultCore,
 };
 export interface InsightInteractiveResultOptions
   extends InteractiveResultCoreOptions {

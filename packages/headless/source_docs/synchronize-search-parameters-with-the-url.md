@@ -4,16 +4,16 @@ group: Usage
 slug: usage/synchronize-search-parameters-with-the-url
 ---
 # Synchronize search parameters with the URL
-Headless provides two controllers to help you keep the URL of your application in sync with your [Headless engine](https://docs.coveo.com/en/headless/latest/usage#configure-a-headless-engine) state.
+Headless provides two controllers to help you keep the URL of your application in sync with your [Headless engine](./index.html#configure-a-headless-engine) state.
 This article explains how to use those controllers, and why you would choose one over the other.
 
 > [!NOTE]
 > 
-> The context where you would make use of those controllers is during the initialization of your Headless application, so you may want to [review how to do so](https://docs.coveo.com/en/headless/latest/usage#initialize-your-interface) before reading this article.
+> The context where you would make use of those controllers is during the initialization of your Headless application, so you may want to [review how to do so](./index.html#initialize-your-interface) before reading this article.
 
 ## `buildUrlManager`
 
-The [`UrlManager`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.UrlManager.html) controller is the faster option, taking a few minutes to set up.
+The [`UrlManager`](../../interfaces/Search.UrlManager.html) controller is the faster option, taking a few minutes to set up.
 It monitors the search parameters affecting the result list, and serializes them into a URL-ready string that contains values such as the query, sort criteria and selected facet values.
 
 **Example**
@@ -57,7 +57,7 @@ Using `replaceState` instead replaces the current state of the browser history w
 
 ## `buildSearchParameterManager`
 
-The [`SearchParameterManager`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchParameterManager.html) controller provides the active search parameters as an object rather than a string, giving you full control over how to serialize them.
+The [`SearchParameterManager`](../../interfaces/Search.SearchParameterManager.html) controller provides the active search parameters as an object rather than a string, giving you full control over how to serialize them.
 Conversely, the controller can take in an object with search parameters with which to update the Headless engine state.
 The following sample is similar to the one above, but uses custom `serialize` and `deserialize` functions you would define yourself:
 

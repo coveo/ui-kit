@@ -31,6 +31,8 @@ export class AtomicInsightUserActionsSession
   implements InitializableComponent<InsightBindings>
 {
   static styles = css`
+    @reference '../../../utils/tailwind.global.tw.css';
+
     .session-start-icon__container {
       background-color: #fbb439;
     }

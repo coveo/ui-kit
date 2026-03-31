@@ -44,18 +44,18 @@ import {
 } from './headless-insight-facet-options.js';
 
 export type {
-  FacetOptions,
-  FacetSearchOptions,
-  FacetValueState,
-  Facet,
-  FacetState,
-  FacetSearch,
-  FacetSearchState,
-  SpecificFacetSearchResult,
-  FacetValue,
   CoreFacet,
-  CoreFacetState,
   CoreFacetOptions,
+  CoreFacetState,
+  Facet,
+  FacetOptions,
+  FacetSearch,
+  FacetSearchOptions,
+  FacetSearchState,
+  FacetState,
+  FacetValue,
+  FacetValueState,
+  SpecificFacetSearchResult,
 };
 
 export interface FacetProps {

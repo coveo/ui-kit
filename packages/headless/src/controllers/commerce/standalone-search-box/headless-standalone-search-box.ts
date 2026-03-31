@@ -3,6 +3,7 @@ import {configuration} from '../../../app/common-reducers.js';
 import {stateKey} from '../../../app/state-key.js';
 import {updateQuery} from '../../../features/commerce/query/query-actions.js';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice.js';
+import {commerceQuerySuggestReducer as querySuggest} from '../../../features/commerce/query-suggest/commerce-query-suggest-slice.js';
 import {selectQuerySuggestion} from '../../../features/commerce/query-suggest/query-suggest-actions.js';
 import {
   fetchRedirectUrl,
@@ -11,7 +12,6 @@ import {
   updateStandaloneSearchBoxRedirectionUrl,
 } from '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-actions.js';
 import {commerceStandaloneSearchBoxSetReducer as commerceStandaloneSearchBoxSet} from '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-slice.js';
-import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice.js';
 import type {
   CommerceQuerySection,
   CommerceStandaloneSearchBoxSection,

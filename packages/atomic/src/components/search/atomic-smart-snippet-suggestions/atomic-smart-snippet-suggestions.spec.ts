@@ -182,35 +182,35 @@ describe('atomic-smart-snippet-suggestions', () => {
     }>([
       {validValue: 2, invalidValue: -1},
       {validValue: 2, invalidValue: 6},
-    ])(
-      'should log validation warning when #headingLevel is updated to invalid value',
-      async ({validValue, invalidValue}) => {
-        const consoleWarnSpy = vi
-          .spyOn(console, 'warn')
-          .mockImplementation(() => {});
+    ])('should log validation warning when #headingLevel is updated to invalid value', async ({
+      validValue,
+      invalidValue,
+    }) => {
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
 
-        const {element} = await renderComponent({
-          props: {headingLevel: validValue},
-        });
+      const {element} = await renderComponent({
+        props: {headingLevel: validValue},
+      });
 
-        // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
-        (element as any).headingLevel = invalidValue;
-        await element.updateComplete;
+      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      (element as any).headingLevel = invalidValue;
+      await element.updateComplete;
 
-        expect(consoleWarnSpy).toHaveBeenCalledWith(
-          expect.stringContaining(
-            'Prop validation failed for component atomic-smart-snippet-suggestions'
-          ),
-          element
-        );
-        expect(consoleWarnSpy).toHaveBeenCalledWith(
-          expect.stringContaining('headingLevel'),
-          element
-        );
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining(
+          'Prop validation failed for component atomic-smart-snippet-suggestions'
+        ),
+        element
+      );
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('headingLevel'),
+        element
+      );
 
-        consoleWarnSpy.mockRestore();
-      }
-    );
+      consoleWarnSpy.mockRestore();
+    });
 
     // TODO V4: KIT-5197 - Remove skip
     it.skip('should set error when valid #headingLevel is updated to an invalid value', async () => {
