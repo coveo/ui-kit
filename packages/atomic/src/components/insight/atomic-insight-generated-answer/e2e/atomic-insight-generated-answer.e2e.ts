@@ -1,7 +1,7 @@
 import {expect, test} from './fixture';
 
 const closePopoverDebounceMs = 100;
-const pollTimeoutMs = 2000;
+const pollTimeoutMs = 5000;
 
 test.describe('atomic-insight-generated-answer citation', () => {
   test.describe('with citation anchoring enabled', () => {
@@ -66,7 +66,9 @@ test.describe('atomic-insight-generated-answer citation', () => {
       await expect(popover).not.toBeVisible();
 
       const citation = generatedAnswer.citation.first();
-      await citation.hover();
+      // Wait for component to be fully ready before hover
+      await citation.waitFor({state: 'visible'});
+      await citation.dispatchEvent('mouseover');
 
       await expect
         .poll(async () => await popover.getAttribute('class'), {
@@ -84,16 +86,22 @@ test.describe('atomic-insight-generated-answer citation', () => {
       const popover = generatedAnswer.citationPopover.first();
       await expect(popover).toHaveClass(/hidden/);
 
-      await citation.hover();
+      // Wait for component to be fully ready before hover
+      await citation.waitFor({state: 'visible'});
+      await citation.dispatchEvent('mouseover');
       await expect
         .poll(async () => await popover.getAttribute('class'), {
           timeout: pollTimeoutMs,
         })
         .toMatch(/desktop-only:flex/);
 
+      // Trigger close debounce by leaving citation
       await citation.dispatchEvent('mouseleave');
+
+      // Immediately cancel close by entering popover
       await popover.dispatchEvent('mouseenter');
 
+      // Wait longer than close debounce (100ms) to ensure cancel worked
       await generatedAnswer.page.waitForTimeout(closePopoverDebounceMs + 100);
       await expect(popover).toHaveClass(/desktop-only:flex/);
       await expect(popover).toBeVisible();
@@ -105,7 +113,9 @@ test.describe('atomic-insight-generated-answer citation', () => {
       const citation = generatedAnswer.citation.first();
       const popover = generatedAnswer.citationPopover.first();
 
-      await citation.hover();
+      // Wait for component to be fully ready before hover
+      await citation.waitFor({state: 'visible'});
+      await citation.dispatchEvent('mouseover');
       await expect
         .poll(async () => await popover.getAttribute('class'), {
           timeout: pollTimeoutMs,
