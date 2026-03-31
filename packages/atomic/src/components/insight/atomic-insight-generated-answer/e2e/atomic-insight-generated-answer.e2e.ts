@@ -66,7 +66,6 @@ test.describe('atomic-insight-generated-answer citation', () => {
       await expect(popover).not.toBeVisible();
 
       const citation = generatedAnswer.citation.first();
-      // Wait for component to be fully ready before hover
       await citation.waitFor({state: 'visible'});
       await citation.dispatchEvent('mouseover');
 
@@ -86,7 +85,6 @@ test.describe('atomic-insight-generated-answer citation', () => {
       const popover = generatedAnswer.citationPopover.first();
       await expect(popover).toHaveClass(/hidden/);
 
-      // Wait for component to be fully ready before hover
       await citation.waitFor({state: 'visible'});
       await citation.dispatchEvent('mouseover');
       await expect
@@ -95,13 +93,9 @@ test.describe('atomic-insight-generated-answer citation', () => {
         })
         .toMatch(/desktop-only:flex/);
 
-      // Trigger close debounce by leaving citation
       await citation.dispatchEvent('mouseleave');
-
-      // Immediately cancel close by entering popover
       await popover.dispatchEvent('mouseenter');
 
-      // Wait longer than close debounce (100ms) to ensure cancel worked
       await generatedAnswer.page.waitForTimeout(closePopoverDebounceMs + 100);
       await expect(popover).toHaveClass(/desktop-only:flex/);
       await expect(popover).toBeVisible();
@@ -113,7 +107,6 @@ test.describe('atomic-insight-generated-answer citation', () => {
       const citation = generatedAnswer.citation.first();
       const popover = generatedAnswer.citationPopover.first();
 
-      // Wait for component to be fully ready before hover
       await citation.waitFor({state: 'visible'});
       await citation.dispatchEvent('mouseover');
       await expect
