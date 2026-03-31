@@ -1,6 +1,7 @@
 {
   "name": "@samples/headless-rga-react",
   "version": "0.1.0",
+  "private": true,
   "description": "React example for Coveo Headless Relevance Generative Answering (RGA)",
   "type": "module",
   "scripts": {
