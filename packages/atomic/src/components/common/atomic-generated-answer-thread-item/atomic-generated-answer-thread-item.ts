@@ -21,6 +21,10 @@ export interface AtomicGeneratedAnswerThreadItemProps {
    * Whether the thread item is initially expanded.
    */
   isExpanded: boolean;
+  /**
+   * Whether the thread item should display its timeline dot.
+   */
+  showTimelineDot: boolean;
 }
 
 /**
@@ -59,6 +63,12 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
    */
   @property({type: Boolean, attribute: 'is-expanded'})
   public isExpanded = false;
+
+  /**
+   * Whether the thread item should display its timeline dot.
+   */
+  @property({type: Boolean, attribute: 'show-timeline-dot'})
+  public showTimelineDot = true;
 
   protected willUpdate() {
     if (!this.hasUpdated) {
@@ -129,7 +139,12 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
       <li class="grid min-w-0">
         <div class="flex min-w-0 items-center gap-3">
           <div class="flex w-[10px] shrink-0 items-center justify-center">
-            <span class=${timelineDotClasses}></span>
+            ${when(
+              this.showTimelineDot,
+              () => html`
+                  <span class=${timelineDotClasses}></span>
+              `
+            )}
           </div>
           <div class="flex min-w-0 flex-col">
             ${when(
@@ -175,14 +190,6 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
             </div>
           </div>
         </div>
-        ${when(
-          this.isExpanded,
-          () =>
-            html`<div
-              class="thread-content-divider h-px w-full bg-gradient-to-r from-transparent via-neutral to-transparent"
-              aria-hidden="true"
-            ></div>`
-        )}
       </li>
     `;
   }

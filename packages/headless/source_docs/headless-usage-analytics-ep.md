@@ -40,7 +40,7 @@ As a result, you generally won’t need to tinker with search or click events yo
 
 > [!WARNING]
 > 
-> We strongly recommend using the [`InteractiveResult`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.InteractiveResult.html) controller when implementing your result components.
+> We strongly recommend using the [`InteractiveResult`](../../../interfaces/Search.InteractiveResult.html) controller when implementing your result components.
 > The controller can automatically extract relevant data from result items and log click events for you, as in the following interactive example.
 
 <iframe src="https://stackblitz.com/github/coveo/headless-documentation-material-ui-react-codesandbox/tree/main?embed=1&file=src%2FComponents%2FResultLink.tsx"
@@ -48,9 +48,9 @@ As a result, you generally won’t need to tinker with search or click events yo
    ></iframe>
 
 > [!NOTE]
-> For the purpose of using [content recommendations](https://docs.coveo.com/en/1016/) models however, you must log [view events](https://docs.coveo.com/en/headless/latest/usage/headless-usage-analytics/headless-view-events-ep/).
+> For the purpose of using [content recommendations](https://docs.coveo.com/en/1016/) models however, you must log [view events](./log-view-events-with-ep.html).
 > Headless controllers won’t log view events for you.
-> Use the [Relay library](https://docs.coveo.com/en/headless/latest/usage/headless-usage-analytics/headless-view-events-ep/).
+> Use the [Relay library](./log-view-events-with-ep.html).
 
 ## Disable and enable analytics
 
@@ -62,9 +62,9 @@ Coveo front-end libraries use the `coveo_visitorId` cookie to track individual u
 > For compatibility with legacy implementations, however, the associated cookie and local storage value are [still labeled `visitorID`](https://docs.coveo.com/en/mc2e2218#why-do-i-still-see-the-name-visitor-id-in-the-local-storage).
 
 When implementing a cookie policy, you may need to disable UA tracking for end-users under specific circumstances (for example, when a user opts out of cookies).
-To do so, call the [`disableAnalytics`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchEngine.html#disableAnalytics) method on an engine instance.
+To do so, call the [`disableAnalytics`](../../../interfaces/Search.SearchEngine.html#disableAnalytics) method on an engine instance.
 
-To re-enable UA tracking, call the [`enableAnalytics`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchEngine.html#enableAnalytics) method.
+To re-enable UA tracking, call the [`enableAnalytics`](../../../interfaces/Search.SearchEngine.html#enableAnalytics) method.
 
 ```typescript
 // initialize an engine instance

@@ -1,3 +1,9 @@
+## 3.37.0 (2026-03-30)
+
+* feat(headless): add conversationId to generatedStreamEnd events (#7304) ([f346d1e](https://github.com/coveo/ui-kit/commits/f346d1e)), closes [#7304](https://github.com/coveo/ui-kit/issues/7304)
+
+
+
 ## <small>3.36.10 (2026-03-25)</small>
 
 * fix(deps): update all dependencies j:kit-282 (major) (#6195) ([a5df20c](https://github.com/coveo/ui-kit/commits/a5df20c)), closes [#6195](https://github.com/coveo/ui-kit/issues/6195)

@@ -1,3 +1,11 @@
+## <small>3.53.3 (2026-03-30)</small>
+
+* fix(atomic): Facet tabs included / excluded not working properly (#7248) ([871137d](https://github.com/coveo/ui-kit/commits/871137d)), closes [#7248](https://github.com/coveo/ui-kit/issues/7248)
+* fix(atomic): Keep atomic-search-box id stable for element lifetime (#7266) ([5dc0608](https://github.com/coveo/ui-kit/commits/5dc0608)), closes [#7266](https://github.com/coveo/ui-kit/issues/7266)
+* fix(Atomic): small styling polish on agent answers (#7301) ([e25eb0a](https://github.com/coveo/ui-kit/commits/e25eb0a)), closes [#7301](https://github.com/coveo/ui-kit/issues/7301)
+
+
+
 ## <small>3.53.2 (2026-03-25)</small>
 
 * chore(deps): update tailwind to v4.1.18 j:kit-282 (#6214) ([17e0a51](https://github.com/coveo/ui-kit/commits/17e0a51)), closes [#6214](https://github.com/coveo/ui-kit/issues/6214)
