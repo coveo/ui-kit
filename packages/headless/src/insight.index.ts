@@ -18,6 +18,16 @@ import * as HighlightUtils from './utils/highlight.js';
 export type {Relay} from '@coveo/relay';
 // 3rd Party Libraries
 export type {Middleware, Unsubscribe} from '@reduxjs/toolkit';
+export {
+  getAnalyticsNextApiBaseUrl,
+  getOrganizationEndpoint,
+} from './api/platform-client.js';
+export type {
+  RelativeDate,
+  RelativeDatePeriod,
+  RelativeDateUnit,
+} from './api/search/date/relative-date.js';
+export {deserializeRelativeDate} from './api/search/date/relative-date.js';
 // Types & Helpers
 export type {Raw} from './api/search/search/raw.js';
 export type {Result} from './api/search/search/result.js';
@@ -363,27 +373,13 @@ export type {
   ResultTemplatesManager,
 } from './features/result-templates/result-templates-manager.js';
 export {buildResultTemplatesManager} from './features/result-templates/result-templates-manager.js';
-export type {HighlightKeyword} from './utils/highlight.js';
-export {HighlightUtils};
-
-export {
-  getAnalyticsNextApiBaseUrl,
-  getOrganizationEndpoint,
-} from './api/platform-client.js';
-
-export type {
-  RelativeDate,
-  RelativeDatePeriod,
-  RelativeDateUnit,
-} from './api/search/date/relative-date.js';
-
-export {deserializeRelativeDate} from './api/search/date/relative-date.js';
 export {
   buildCriterionExpression,
   buildDateSortCriterion,
   buildRelevanceSortCriterion,
   SortOrder,
 } from './features/sort-criteria/criteria.js';
-
+export type {HighlightKeyword} from './utils/highlight.js';
 export type {PlatformEnvironment} from './utils/url-utils.js';
 export {VERSION} from './utils/version.js';
+export {HighlightUtils};

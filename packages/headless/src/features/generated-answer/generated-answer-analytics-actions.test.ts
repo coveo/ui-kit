@@ -93,6 +93,7 @@ const exampleFeedback: GeneratedAnswerFeedback = {
 };
 const exampleGenerativeQuestionAnsweringId =
   '94b77748-2479-4e4b-a4e8-010fa62b04a0';
+const exampleProvidedAnswerId = 'explicit-answer-id';
 const exampleSearchUid = '456';
 
 const exampleCitation: GeneratedAnswerCitation = {
@@ -220,6 +221,29 @@ describe('generated answer analytics actions', () => {
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
+    it('should log #logOpenGeneratedAnswerSource with a provided answerId', async () => {
+      await logOpenGeneratedAnswerSource(
+        exampleCitation.id,
+        exampleProvidedAnswerId
+      )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+
+      const mockToUse = mockMakeGeneratedAnswerCitationClick;
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+
+      expect(mockToUse.mock.calls[0][0]).toStrictEqual(
+        expectedCitationDocumentInfo
+      );
+
+      expect(mockToUse.mock.calls[0][1]).toStrictEqual({
+        generativeQuestionAnsweringId: exampleProvidedAnswerId,
+        citationId: exampleCitation.id,
+        documentId: exampleDocumentId,
+      });
+
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
+    });
+
     it('should log #logHoverCitation with the right payload', async () => {
       const hoverDuration = 1234;
 
@@ -234,6 +258,27 @@ describe('generated answer analytics actions', () => {
       expect(mockToUse).toHaveBeenCalledTimes(1);
       expect(mockToUse).toHaveBeenCalledWith({
         generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
+        citationId: exampleCitation.id,
+        permanentId: exampleCitation.permanentid,
+        citationHoverTimeMs: hoverDuration,
+      });
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
+    });
+
+    it('should log #logHoverCitation with a provided answerId', async () => {
+      const hoverDuration = 1234;
+
+      await logHoverCitation(
+        exampleCitation.id,
+        hoverDuration,
+        exampleProvidedAnswerId
+      )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+
+      const mockToUse = mockMakeGeneratedAnswerSourceHover;
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith({
+        generativeQuestionAnsweringId: exampleProvidedAnswerId,
         citationId: exampleCitation.id,
         permanentId: exampleCitation.permanentid,
         citationHoverTimeMs: hoverDuration,
@@ -257,6 +302,22 @@ describe('generated answer analytics actions', () => {
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
+    it('should log #logLikeGeneratedAnswer with a provided answerId', async () => {
+      await logLikeGeneratedAnswer(exampleProvidedAnswerId)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockMakeLikeGeneratedAnswer;
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith({
+        generativeQuestionAnsweringId: exampleProvidedAnswerId,
+      });
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
+    });
+
     it('should log #logDislikeGeneratedAnswer with the right payload', async () => {
       await logDislikeGeneratedAnswer()()(
         engine.dispatch,
@@ -269,6 +330,22 @@ describe('generated answer analytics actions', () => {
       expect(mockToUse).toHaveBeenCalledTimes(1);
       expect(mockToUse).toHaveBeenCalledWith({
         generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
+      });
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
+    });
+
+    it('should log #logDislikeGeneratedAnswer with a provided answerId', async () => {
+      await logDislikeGeneratedAnswer(exampleProvidedAnswerId)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockMakeDislikeGeneratedAnswer;
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith({
+        generativeQuestionAnsweringId: exampleProvidedAnswerId,
       });
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
@@ -305,10 +382,28 @@ describe('generated answer analytics actions', () => {
         expect(mockToUse).toHaveBeenCalledWith({
           generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
           answerGenerated,
-          answerTextIsEmpty: answerGenerated || undefined,
+          answerTextIsEmpty: answerGenerated ? true : undefined,
         });
         expect(mockLogFunction).toHaveBeenCalledTimes(1);
       });
+    });
+
+    it('should prefer a provided answerTextIsEmpty over the state fallback', async () => {
+      await logGeneratedAnswerStreamEnd(true, undefined, false)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockMakeGeneratedAnswerStreamEnd;
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith({
+        generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
+        answerGenerated: true,
+        answerTextIsEmpty: false,
+      });
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
     it("should log #logGeneratedAnswerStreamEnd with 'non empty' answer", async () => {
@@ -328,7 +423,7 @@ describe('generated answer analytics actions', () => {
           },
         })
       );
-      await logGeneratedAnswerStreamEnd(true)()(
+      await logGeneratedAnswerStreamEnd(true, undefined, false)()(
         newEngine.dispatch,
         () => newEngine.state,
         {} as ThunkExtraArguments
@@ -341,6 +436,44 @@ describe('generated answer analytics actions', () => {
         generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
         answerGenerated: true,
         answerTextIsEmpty: false,
+      });
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
+    });
+
+    it('should log #logGeneratedAnswerStreamEnd with a provided answerId', async () => {
+      await logGeneratedAnswerStreamEnd(true, exampleProvidedAnswerId, true)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockMakeGeneratedAnswerStreamEnd;
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith({
+        generativeQuestionAnsweringId: exampleProvidedAnswerId,
+        answerGenerated: true,
+        answerTextIsEmpty: true,
+      });
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
+    });
+
+    it('should log #logGeneratedAnswerStreamEnd with a provided conversationId', async () => {
+      await logGeneratedAnswerStreamEnd(
+        true,
+        exampleProvidedAnswerId,
+        true,
+        'conversation-123'
+      )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+
+      const mockToUse = mockMakeGeneratedAnswerStreamEnd;
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith({
+        generativeQuestionAnsweringId: exampleProvidedAnswerId,
+        answerGenerated: true,
+        answerTextIsEmpty: true,
+        conversationId: 'conversation-123',
       });
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
@@ -424,6 +557,22 @@ describe('generated answer analytics actions', () => {
       });
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
+
+    it('should log #logCopyGeneratedAnswer with a provided answerId', async () => {
+      await logCopyGeneratedAnswer(exampleProvidedAnswerId)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockMakeGeneratedAnswerCopyToClipboard;
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith({
+        generativeQuestionAnsweringId: exampleProvidedAnswerId,
+      });
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe('when analyticsMode is `next`', () => {
@@ -454,6 +603,28 @@ describe('generated answer analytics actions', () => {
       expect(emit.mock.calls[0]).toMatchSnapshot();
     });
 
+    it('should log #logOpenGeneratedAnswerSource with a provided answerId', async () => {
+      await logOpenGeneratedAnswerSource(
+        exampleCitation.id,
+        exampleProvidedAnswerId
+      )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toStrictEqual([
+        'Rga.CitationClick',
+        {
+          answerId: exampleProvidedAnswerId,
+          citationId: exampleCitation.id,
+          itemMetadata: {
+            uniqueFieldName: 'permanentid',
+            uniqueFieldValue: exampleCitation.permanentid,
+            title: exampleCitation.title,
+            url: exampleCitation.clickUri,
+          },
+        },
+      ]);
+    });
+
     it('should log #logHoverCitation with the right payload', async () => {
       const hoverDuration = 1234;
 
@@ -467,6 +638,32 @@ describe('generated answer analytics actions', () => {
       expect(emit.mock.calls[0]).toMatchSnapshot();
     });
 
+    it('should log #logHoverCitation with a provided answerId', async () => {
+      const hoverDuration = 1234;
+
+      await logHoverCitation(
+        exampleCitation.id,
+        hoverDuration,
+        exampleProvidedAnswerId
+      )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toStrictEqual([
+        'Rga.CitationHover',
+        {
+          answerId: exampleProvidedAnswerId,
+          citationId: exampleCitation.id,
+          itemMetadata: {
+            uniqueFieldName: 'permanentid',
+            uniqueFieldValue: exampleCitation.permanentid,
+            title: exampleCitation.title,
+            url: exampleCitation.clickUri,
+          },
+          citationHoverTimeInMs: hoverDuration,
+        },
+      ]);
+    });
+
     it('should log #logLikeGeneratedAnswer with the right payload', async () => {
       await logLikeGeneratedAnswer()()(
         engine.dispatch,
@@ -478,6 +675,23 @@ describe('generated answer analytics actions', () => {
       expect(emit.mock.calls[0]).toMatchSnapshot();
     });
 
+    it('should log #logLikeGeneratedAnswer with a provided answerId', async () => {
+      await logLikeGeneratedAnswer(exampleProvidedAnswerId)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toStrictEqual([
+        'Rga.AnswerAction',
+        {
+          action: 'like',
+          answerId: exampleProvidedAnswerId,
+        },
+      ]);
+    });
+
     it('should log #logDislikeGeneratedAnswer with the right payload', async () => {
       await logDislikeGeneratedAnswer()()(
         engine.dispatch,
@@ -487,6 +701,23 @@ describe('generated answer analytics actions', () => {
 
       expect(emit).toHaveBeenCalledTimes(1);
       expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
+
+    it('should log #logDislikeGeneratedAnswer with a provided answerId', async () => {
+      await logDislikeGeneratedAnswer(exampleProvidedAnswerId)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toStrictEqual([
+        'Rga.AnswerAction',
+        {
+          action: 'dislike',
+          answerId: exampleProvidedAnswerId,
+        },
+      ]);
     });
 
     it('should log #logGeneratedAnswerFeedback with the right payload', async () => {
@@ -555,6 +786,23 @@ describe('generated answer analytics actions', () => {
       expect(emit.mock.calls[0]).toMatchSnapshot();
     });
 
+    it('should log #logCopyGeneratedAnswer with a provided answerId', async () => {
+      await logCopyGeneratedAnswer(exampleProvidedAnswerId)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toStrictEqual([
+        'Rga.AnswerAction',
+        {
+          action: 'copyToClipboard',
+          answerId: exampleProvidedAnswerId,
+        },
+      ]);
+    });
+
     [false, true].map((answerGenerated) => {
       it(`should log #logGeneratedAnswerStreamEnd with ${answerGenerated ? 'generated' : 'not generated'} and 'empty' answer`, async () => {
         await logGeneratedAnswerStreamEnd(answerGenerated)()(
@@ -568,6 +816,23 @@ describe('generated answer analytics actions', () => {
       });
     });
 
+    it('should log #logGeneratedAnswerStreamEnd with a provided answerId', async () => {
+      await logGeneratedAnswerStreamEnd(true, exampleProvidedAnswerId)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toStrictEqual([
+        'Rga.AnswerReceived',
+        {
+          answerId: exampleProvidedAnswerId,
+          answerGenerated: true,
+        },
+      ]);
+    });
+
     it('should log #logGeneratedAnswerResponseLinked with the response id and answer id', async () => {
       await logGeneratedAnswerResponseLinked()()(
         engine.dispatch,
@@ -577,6 +842,23 @@ describe('generated answer analytics actions', () => {
 
       expect(emit).toHaveBeenCalledTimes(1);
       expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
+
+    it('should log #logGeneratedAnswerResponseLinked with a provided answer id', async () => {
+      await logGeneratedAnswerResponseLinked(exampleProvidedAnswerId)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toStrictEqual([
+        'Rga.ResponseLinked',
+        {
+          answerId: exampleProvidedAnswerId,
+          responseId: exampleSearchUid,
+        },
+      ]);
     });
   });
 });

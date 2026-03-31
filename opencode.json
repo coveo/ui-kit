@@ -1,6 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "autoupdate": true,
+  "autoupdate": false,
   "share": "manual",
   "instructions": [
     ".github/instructions/general.instructions.md",
@@ -33,7 +33,13 @@
     }
   },
   "permission": {
-    "bash": "ask",
+    "bash": {
+      "*": "ask",
+      "git diff *": "allow",
+      "git log *": "allow",
+      "git show *": "allow",
+      "git status *": "allow"
+    },
     "webfetch": "ask"
   },
   "compaction": {

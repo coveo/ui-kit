@@ -1,3 +1,23 @@
+## 3.37.0 (2026-03-30)
+
+* feat(headless): add conversationId to generatedStreamEnd events (#7304) ([f346d1e](https://github.com/coveo/ui-kit/commits/f346d1e)), closes [#7304](https://github.com/coveo/ui-kit/issues/7304)
+
+
+
+## <small>3.36.10 (2026-03-25)</small>
+
+* fix(deps): update all dependencies j:kit-282 (major) (#6195) ([a5df20c](https://github.com/coveo/ui-kit/commits/a5df20c)), closes [#6195](https://github.com/coveo/ui-kit/issues/6195)
+
+
+
+## <small>3.36.9 (2026-03-25)</small>
+
+* fix(deps): update all dependencies j:kit-282 (#6191) ([9ec6cc5](https://github.com/coveo/ui-kit/commits/9ec6cc5)), closes [#6191](https://github.com/coveo/ui-kit/issues/6191)
+* fix(deps): update dependency @coveo/relay to v2 j:kit-282 (#7136) ([0e49e7c](https://github.com/coveo/ui-kit/commits/0e49e7c)), closes [#7136](https://github.com/coveo/ui-kit/issues/7136)
+* ci: migrate npm publishing to OIDC trusted publishers (#7198) ([c97eff5](https://github.com/coveo/ui-kit/commits/c97eff5)), closes [#7198](https://github.com/coveo/ui-kit/issues/7198)
+
+
+
 ## <small>3.36.3 (2026-02-04)</small>
 
 * docs(quantic): vale language fixes (#6857) ([26448b5](https://github.com/coveo/ui-kit/commits/26448b5)), closes [#6857](https://github.com/coveo/ui-kit/issues/6857)

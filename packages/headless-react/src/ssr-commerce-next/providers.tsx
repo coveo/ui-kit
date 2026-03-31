@@ -52,7 +52,7 @@ export function buildProviderWithDefinition<
             controllers,
           });
         });
-    }, [staticState, definition]);
+    }, [staticState]);
 
     return (
       <definition.StateProvider

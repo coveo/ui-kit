@@ -128,13 +128,23 @@ export const updateCacheWithEvent = (
         dispatch(updateCitations({citations: parsedPayload.citations}));
       }
       break;
-    case 'genqa.endOfStreamType':
+    case 'genqa.endOfStreamType': {
       handleEndOfStream(draft, parsedPayload);
+      const answerId = draft.answerId;
+      const answerGenerated = parsedPayload.answerGenerated ?? false;
+      const answerTextIsEmpty = answerGenerated
+        ? !draft.answer?.length
+        : undefined;
       dispatch(
-        logGeneratedAnswerStreamEnd(parsedPayload.answerGenerated ?? false)
+        logGeneratedAnswerStreamEnd(
+          answerGenerated,
+          answerId,
+          answerTextIsEmpty
+        )
       );
       dispatch(logGeneratedAnswerResponseLinked());
       break;
+    }
   }
 };
 

@@ -1,3 +1,17 @@
+## <small>1.41.10 (2026-03-25)</small>
+
+* fix(deps): update all dependencies j:kit-282 (major) (#6195) ([a5df20c](https://github.com/coveo/ui-kit/commits/a5df20c)), closes [#6195](https://github.com/coveo/ui-kit/issues/6195)
+
+
+
+## <small>1.41.9 (2026-03-25)</small>
+
+* chore(deps): update dependency @biomejs/biome to v2.4.7 j:kit-282 (#6193) ([a72f939](https://github.com/coveo/ui-kit/commits/a72f939)), closes [#6193](https://github.com/coveo/ui-kit/issues/6193)
+* ci: migrate npm publishing to OIDC trusted publishers (#7198) ([c97eff5](https://github.com/coveo/ui-kit/commits/c97eff5)), closes [#7198](https://github.com/coveo/ui-kit/issues/7198)
+* fix(deps): update all dependencies j:kit-282 (#6191) ([9ec6cc5](https://github.com/coveo/ui-kit/commits/9ec6cc5)), closes [#6191](https://github.com/coveo/ui-kit/issues/6191)
+
+
+
 ## <small>1.41.8 (2026-02-11)</small>
 
 * fix(create-atomic): resolve workspace: and catalog: placeholders in template (#7079) ([ad7b703](https://github.com/coveo/ui-kit/commits/ad7b703)), closes [#7079](https://github.com/coveo/ui-kit/issues/7079)

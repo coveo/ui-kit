@@ -5,9 +5,9 @@ slug: upgrade/v1-to-v2
 ---
 # Upgrade from v1 to v2
 
-<dl><dt><strong>❗ IMPORTANT: The following are breaking changes from Headless v1 to v2</strong></dt><dd>
-
-</dd></dl>
+> [!IMPORTANT]
+>
+> The following are breaking changes from Headless v1 to v2.
 
 ## Renamed variables
 
@@ -27,23 +27,23 @@ The following elements were renamed without changes to their underlying function
   <button onClick={() => controller.fetchFieldsDescription()}></button>
   ```
 
-  Documentation: [RelevanceInspector](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.RelevanceInspector.html)
+  Documentation: [RelevanceInspector](../../interfaces/Search.RelevanceInspector.html)
 * `RelevanceInspectorState.fieldDescriptions` renamed to `RelevanceInspectorState.fieldDescription`
 
-  Documentation: [RelevanceInspector](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.RelevanceInspector.html)
+  Documentation: [RelevanceInspector](../../interfaces/Search.RelevanceInspector.html)
 * `ResultListState.searchUid` renamed to `ResultListState.searchResponseId`
 
-  Documentation: [ResultList](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.ResultList.html)
+  Documentation: [ResultList](../../interfaces/Search.ResultList.html)
 * `searchAPIClient` renamed to `apiClient`
 
-  Documentation: [SearchActions](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchActionCreators.html)
+  Documentation: [SearchActions](../../interfaces/Search.SearchActionCreators.html)
 
 ## Changes
 
 ### CDN
 
 <span>https://</span>static.cloud.coveo.com/headless/latest/* resources will no longer be updated (also, using this wasn’t recommended).
-If you want to use the CDN instead of [using npm to install Headless](https://docs.coveo.com/en/headless/latest/usage#install-headless), specify a major version to follow updates, such as in <span>https://</span>static.cloud.coveo.com/headless/v2/*.
+If you want to use the CDN instead of [using npm to install Headless](../usage/index.html#install-headless), specify a major version to follow updates, such as in <span>https://</span>static.cloud.coveo.com/headless/v2/*.
 
 **Headless Version 1**
 
@@ -63,10 +63,10 @@ or
 <script type="module" src="https://static.cloud.coveo.com/headless/v2/headless.esm.js"></script>
 ```
 
-### [`FieldSuggestionsOptions`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.FieldSuggestionsOptions.html)
+### [`FieldSuggestionsOptions`](../../interfaces/Search.FieldSuggestionsOptions.html)
 
 Except for the `delimitingCharacter` option, which had no effect and has been removed completely, the options exposed through `FieldSuggestionsOptions` have been removed.
-They must now be set by passing a [`FacetOptions`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.FacetOptions.html) object.
+They must now be set by passing a [`FacetOptions`](../../interfaces/Search.FacetOptions.html) object.
 
 **Headless Version 1 Example**
 
@@ -95,9 +95,9 @@ controller = buildFieldSuggestions(engine, {field: 'author', facetId: 'author-2'
 controller = buildFieldSuggestions(engine, {facet: {field: 'author', facetId: 'author-2', facetSearch: {query: "herman"}}});
 ```
 
-### [`CategoryFieldSuggestionsOptions`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.CategoryFieldSuggestionsOptions.html)
+### [`CategoryFieldSuggestionsOptions`](../../interfaces/Search.CategoryFieldSuggestionsOptions.html)
 
-Except for the `delimitingCharacter` option, which had no effect and has been removed completely, the options exposed through `CategoryFieldSuggestionsOptions` have been removed and must now be set by passing a [`CategoryFacetOptions`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.CategoryFacetOptions.html) object.
+Except for the `delimitingCharacter` option, which had no effect and has been removed completely, the options exposed through `CategoryFieldSuggestionsOptions` have been removed and must now be set by passing a [`CategoryFacetOptions`](../../interfaces/Search.CategoryFacetOptions.html) object.
 
 **Headless Version 1 Example**
 
@@ -152,7 +152,7 @@ controller = buildCategoryFieldSuggestions(engine, {
 });
 ```
 
-### [`UrlManager`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.UrlManager.html)
+### [`UrlManager`](../../interfaces/Search.UrlManager.html)
 
 The `UrlManager` now serializes facets with a dash instead of brackets.
 
@@ -173,7 +173,7 @@ In that case, adjust to the new serialization.
 <a href="https://mysite.com/search/#f-country=canada"></a>
 ```
 
-### [`BreadcrumbActionCreator`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.BreadcrumbActionCreators.html)
+### [`BreadcrumbActionCreator`](../../interfaces/Search.BreadcrumbActionCreators.html)
 
 `deselectAllFacets` has been removed.
 Instead, use `deselectAllBreadcrumbs`.
@@ -202,11 +202,11 @@ const action = breadcrumbActionCreators.deselectAllBreadcrumbs();
 headlessEngine.dispatch(action);
 ```
 
-### [`DateRangeOptions`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.DateRangeOptions.html)
+### [`DateRangeOptions`](../../interfaces/Search.DateRangeOptions.html)
 
 The `useLocalTime` option was removed.
 
-In v2, if you don’t want to use the local time, use [`SearchConfigurationOptions.timezone`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchConfigurationOptions.html) instead.
+In v2, if you don’t want to use the local time, use [`SearchConfigurationOptions.timezone`](../../interfaces/Search.SearchConfigurationOptions.html) instead.
 By default, the user local time is used.
 To change it, specify the target `timezone` value when initializing your search interface.
 
@@ -248,23 +248,23 @@ export const headlessEngine = buildSearchEngine({
 });
 ```
 
-### [`SmartSnippetRelatedQuestion`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SmartSnippetRelatedQuestion.html)
+### [`SmartSnippetRelatedQuestion`](../../interfaces/Search.SmartSnippetRelatedQuestion.html)
 
 The `documentId` property has been removed.
 Use `questionAnswerId` instead.
 
 In particular, you now need to use `questionAnswerId` rather than `documentId` when using the following methods:
 
-* [`collapse`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SmartSnippetQuestionsList.html#collapse)
-* [`expand`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SmartSnippetQuestionsList.html#expand)
+* [`collapse`](../../interfaces/Search.SmartSnippetQuestionsList.html#collapse)
+* [`expand`](../../interfaces/Search.SmartSnippetQuestionsList.html#expand)
 
 The same applies when using the following actions:
 
-* [`collapseSmartSnippetRelatedQuestion`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.QuestionAnsweringActionCreators.html#collapsesmartsnippetrelatedquestion)
-* [`expandSmartSnippetRelatedQuestion`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.QuestionAnsweringActionCreators.html#expandsmartsnippetrelatedquestion)
-* [`logOpenSmartSnippetSuggestionSource`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.ClickAnalyticsActionCreators.html#logopensmartsnippetsuggestionsource)
-* [`logExpandSmartSnippetSuggestion`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchAnalyticsActionCreators.html#logexpandsmartsnippetsuggestion)
-* [`logCollapseSmartSnippetSuggestion`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchAnalyticsActionCreators.html#logcollapsesmartsnippetsuggestion)
+* [`collapseSmartSnippetRelatedQuestion`](../../interfaces/Search.QuestionAnsweringActionCreators.html#collapsesmartsnippetrelatedquestion)
+* [`expandSmartSnippetRelatedQuestion`](../../interfaces/Search.QuestionAnsweringActionCreators.html#expandsmartsnippetrelatedquestion)
+* [`logOpenSmartSnippetSuggestionSource`](../../interfaces/Search.ClickAnalyticsActionCreators.html#logopensmartsnippetsuggestionsource)
+* [`logExpandSmartSnippetSuggestion`](../../interfaces/Search.SearchAnalyticsActionCreators.html#logexpandsmartsnippetsuggestion)
+* [`logCollapseSmartSnippetSuggestion`](../../interfaces/Search.SearchAnalyticsActionCreators.html#logcollapsesmartsnippetsuggestion)
 
 **Headless Version 1 Example**
 
@@ -362,7 +362,7 @@ export const SmartSnippetQuestionsList: FunctionComponent<
 };
 ```
 
-### [`logOpenSmartSnippetSource`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.ClickAnalyticsActionCreators.html#logopensmartsnippetsource)
+### [`logOpenSmartSnippetSource`](../../interfaces/Search.ClickAnalyticsActionCreators.html#logopensmartsnippetsource)
 
 This action no longer requires the `source` parameter to be specified.
 Headless infers it automatically.
@@ -381,7 +381,7 @@ engine.dispatch(logOpenSmartSnippetSource(result));
 engine.dispatch(logOpenSmartSnippetSource());
 ```
 
-### [`NotifyTrigger`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.NotifyTrigger.html)
+### [`NotifyTrigger`](../../interfaces/Search.NotifyTrigger.html)
 
 The controller state `notification` property has been replaced by the `notifications` property, which is an array that could contain multiple notifications.
 
@@ -405,7 +405,7 @@ const notify = () => {
 };
 ```
 
-### [`ExecuteTrigger`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.ExecuteTrigger.html)
+### [`ExecuteTrigger`](../../interfaces/Search.ExecuteTrigger.html)
 
 `engine.state.triggers.executed` has been replaced by `engine.state.triggers.executions`, which is an array that could contain multiple executions.
 Also, `functionName` and `params` have been removed from `engine.state.triggers` and moved to the executions in the `engine.state.triggers.executions` array.
@@ -470,10 +470,10 @@ export class ExecuteTrigger extends Component<{}, ExecuteTriggerState> {
 }
 ```
 
-### [`querySuggest`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.QuerySuggestActionCreators.html)
+### [`querySuggest`](../../interfaces/Search.QuerySuggestActionCreators.html)
 
 `engine.state.querySuggest.q` has been removed.
-Instead, use the more general `engine.state.querySet`, which is also a set of [queries](https://docs.coveo.com/en/231/) (strings) available using the `id` of the target search box (see [`QuerySetActions`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.QuerySetActionCreators.html)).
+Instead, use the more general `engine.state.querySet`, which is also a set of [queries](https://docs.coveo.com/en/231/) (strings) available using the `id` of the target search box (see [`QuerySetActions`](../../interfaces/Search.QuerySetActionCreators.html)).
 
 **Headless Version 1 Example**
 
@@ -497,7 +497,7 @@ lastQuery = engine.state.querySet['123']
 // ...
 ```
 
-### [`facetSet`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.FacetSetActionCreators.html) and [`NumericFacetSet`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.NumericFacetSetActionCreators.html)
+### [`facetSet`](../../interfaces/Search.FacetSetActionCreators.html) and [`NumericFacetSet`](../../interfaces/Search.NumericFacetSetActionCreators.html)
 
 The type of `engine.state.facetSet` has changed from `{ [facetId: string]: FacetRequest }` to `{ [facetId: string]: FacetSlice }`.
 
@@ -550,14 +550,14 @@ The following internal controllers have been removed:
 ### `Redirection`
 
 The `engine.state.redirection` reducer (not documented) and the related actions (not documented either) have been removed.
-If you were using them previously, see [`StandaloneSearchBox`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.StandaloneSearchBox.html) and [`StandaloneSearchBoxSetActions`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Commerce.StandaloneSearchBoxSetActionCreators.html) instead.
+If you were using them previously, see [`StandaloneSearchBox`](../../interfaces/Search.StandaloneSearchBox.html) and [`StandaloneSearchBoxSetActions`](../../interfaces/Commerce.StandaloneSearchBoxSetActionCreators.html) instead.
 
-### [`FacetOptions`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.FacetOptions.html)
+### [`FacetOptions`](../../interfaces/Search.FacetOptions.html)
 
 The `delimitingCharacter` option was removed.
 It wasn’t doing anything, since delimiting characters are only relevant in category [facets](https://docs.coveo.com/en/198/).
 
-### [Result template manager](https://docs.coveo.com/en/headless/latest/usage/result-templates/)
+### [Result template manager](../usage/use-result-templates.html)
 
 Registering an invalid template now throws an error rather than just logging it.
 Previously, the invalid template wouldn’t work, but it wouldn’t throw an error.
@@ -577,7 +577,7 @@ The following properties are invalid:
 
 ### `clientOrigin`
 
-The `clientOrigin` has been changed for some Search API requests (see [Modify requests and responses](https://docs.coveo.com/en/headless/latest/usage/headless-modify-requests-responses/)).
+The `clientOrigin` has been changed for some Search API requests (see [Modify requests and responses](../usage/modify-requests-and-responses.html)).
 This change should be transparent, unless you were modifying the `clientOrigin` yourself.
 
 | Request |
@@ -592,7 +592,7 @@ This change should be transparent, unless you were modifying the `clientOrigin` 
 
 ### Search analytics actions
 
-All of the [`log*` search action creators](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchAnalyticsActionCreators.html) now return dispatchable actions of type `PreparableAnalyticsAction` rather than `AsyncThunkAction<{ analyticsType: AnalyticsType.Search; }, void, AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>>`.
-[Search actions](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchActionCreators.html) now require this new type of dispatchable analytics actions to trigger.
+All of the [`log*` search action creators](../../interfaces/Search.SearchAnalyticsActionCreators.html) now return dispatchable actions of type `PreparableAnalyticsAction` rather than `AsyncThunkAction<{ analyticsType: AnalyticsType.Search; }, void, AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>>`.
+[Search actions](../../interfaces/Search.SearchActionCreators.html) now require this new type of dispatchable analytics actions to trigger.
 
 The change should be transparent, because only the types used are different, not the use of the functions involved themselves.

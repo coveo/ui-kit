@@ -3,8 +3,8 @@ import {
   executeCommerceFacetSearch,
   executeCommerceFieldSuggest,
 } from '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions.js';
+import {commerceSpecificFacetSearchSetReducer as facetSearchSet} from '../../../../../features/commerce/facets/facet-search-set/regular/commerce-specific-facet-search-set-slice.js';
 import {updateFacetSearch} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
-import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice.js';
 import type {SpecificFacetSearchState} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-set-state.js';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state.js';
 import {
