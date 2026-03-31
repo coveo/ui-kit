@@ -462,8 +462,8 @@ importers:
   packages/atomic-a11y:
     devDependencies:
       typescript:
-        specifier: 5.8.3
-        version: 5.8.3
+        specifier: 5.9.3
+        version: 5.9.3
 
   packages/atomic-angular:
     dependencies:
