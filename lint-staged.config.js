@@ -1,7 +1,7 @@
 module.exports = {
-  '**/*.{ts?(x),?(m)js,json,css,html}': (files) => {
+  '**/*.{ts?(x),?(m)js}': (files) => {
     const filteredFiles = files.filter((file) => {
-      // Exclude .vscode directory (biome ignores it via .gitignore)
+      // Exclude .vscode directory
       if (file.includes('/.vscode/')) return false;
 
       // Exclude quantic and create-atomic-template packages
@@ -14,8 +14,6 @@ module.exports = {
 
       // Exclude root deployment config
       if (file.includes('/.deployment.config/')) return false;
-
-      if (file.endsWith('package-lock.json')) return false;
 
       // Exclude atomic package cypress, tsx (except stories), and d.ts files
       if (
@@ -54,22 +52,29 @@ module.exports = {
       )
         return false;
 
-      // Exclude atomic-stencil-samples d.ts
-      if (file.includes('/packages/samples/stencil/') && file.endsWith('.d.ts'))
-        return false;
-
-      // Exclude .storybook HTML fragments (not full documents, Biome can't process them)
-      if (file.includes('/.storybook/') && file.endsWith('.html')) return false;
-
-      // Exclude tailwind css files
-      if (file.endsWith('.css')) return false;
-
       return true;
     });
     if (filteredFiles.length === 0) {
-      return 'echo "No files to process with Biome"';
+      return 'echo "No files to lint"';
     }
-    return `biome check --write --error-on-warnings ${filteredFiles.join(' ')}`;
+    return [
+      `oxlint --fix ${filteredFiles.join(' ')}`,
+      `oxfmt ${filteredFiles.join(' ')}`,
+    ];
+  },
+  '**/*.{json,css,html}': (files) => {
+    const filteredFiles = files.filter((file) => {
+      if (file.includes('/.vscode/')) return false;
+      if (file.includes('/packages/quantic/')) return false;
+      if (file.includes('/.deployment.config/')) return false;
+      if (file.endsWith('package-lock.json')) return false;
+      if (file.includes('/.storybook/') && file.endsWith('.html')) return false;
+      return true;
+    });
+    if (filteredFiles.length === 0) {
+      return 'echo "No files to format"';
+    }
+    return `oxfmt ${filteredFiles.join(' ')}`;
   },
   '**/*.md': (files) => {
     return `cspell --no-progress --show-suggestions --show-context --no-must-find-files ${files.join(

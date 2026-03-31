@@ -94,6 +94,10 @@ minimumReleaseAgeExclude:
   - 'coveo.analytics'
   - '@vitest/*'
   - vitest
+  - oxlint
+  - '@oxlint/*'
+  - oxfmt
+  - '@oxfmt/*'
   - '@wc-toolkit/storybook-helpers'
   - '@storybook/*'
   - storybook

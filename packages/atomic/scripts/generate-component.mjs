@@ -67,7 +67,8 @@ async function generateFiles(name, outputDir) {
     writeFileSync(outputPath, content, 'utf8');
     console.log(`Created: ${outputPath}`);
   }
-  execSync(`npx @biomejs/biome check --write ${outputPaths.join(' ')}`);
+  execSync(`npx oxlint --fix ${outputPaths.join(' ')}`);
+  execSync(`npx oxfmt ${outputPaths.join(' ')}`);
 }
 
 const [componentName, outputDir] = process.argv.slice(2);
