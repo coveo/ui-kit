@@ -80,7 +80,8 @@ export class AtomicIpxRecsList
     placeholderStyles,
     css`
       @reference '../../../utils/tailwind.global.tw.css';
-      @import '../../common/item-list/styles/mixins.css';
+      @import '../../common/item-list/styles/mixins.pcss';
+      @import '../../common/item-list/styles/placeholders.pcss';
 
      :host {
       @apply atomic-grid-clickable-elements;
