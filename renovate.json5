@@ -127,13 +127,7 @@
       "description": "sfdx-lwc-jest uses a not GA version of Salesforce API (60)",
       "matchPackageNames": ["/^@​salesforce/sfdx-lwc-jest$/"]
     },
-    {
-      "groupName": "biome",
-      "groupSlug": "biome",
-      "rangeStrategy": "replace",
-      "description": "Isolate biome since it has memory issues in 2.1.1",
-      "matchPackageNames": ["@biomejs/biome"]
-    },
+
     {
       "groupName": "knip",
       "groupSlug": "knip",
