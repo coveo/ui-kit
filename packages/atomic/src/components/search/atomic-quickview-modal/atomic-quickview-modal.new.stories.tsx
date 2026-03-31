@@ -106,4 +106,6 @@ export const Default: Story = {
   },
 };
 
-export const Closed: Story = {};
+export const Closed: Story = {
+  tags: ['!dev'],
+};

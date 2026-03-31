@@ -63,10 +63,6 @@ export class AtomicQuickviewModal
     @reference '../../../utils/tailwind.global.tw.css';
    @reference '../../../utils/tailwind-utilities/link-style.css';
 
-:host {
-  pointer-events: none;
-}
-
 .atomic-quickview-modal {
   &::part(backdrop) {
     grid-template-columns: 1fr max(80vw, 30rem) 1fr;
