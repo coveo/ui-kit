@@ -91,8 +91,6 @@ export default function Context() {
 }
 ```
 
-<dl><dt><strong>❗ IMPORTANT</strong>
-
-Don’t forget to add this component inside your `SearchPageProvider`.
-
-</dt><dd>
+> [!IMPORTANT]
+>
+> Don’t forget to add this component inside your `SearchPageProvider`.

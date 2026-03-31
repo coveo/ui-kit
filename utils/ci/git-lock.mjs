@@ -12,26 +12,18 @@ if (!process.env.INIT_CWD) {
 }
 process.chdir(process.env.INIT_CWD);
 
-const isPrerelease = process.env.IS_PRERELEASE === 'true';
+// Lock-out main
+await limitWriteAccessToBot();
 
-const ensureUpToDateBranch = async () => {
-  // Lock-out main
-  await limitWriteAccessToBot();
-
-  // Verify main has not changed
-  const local = await getSHA1fromRef(REPO_MAIN_BRANCH);
-  await gitPull();
-  const remote = await getSHA1fromRef(REPO_MAIN_BRANCH);
-  if (local !== remote) {
-    await removeWriteAccessRestrictions();
-    throw new Error(dedent`
-        Main branch changed before lockout.
-        pre-lock:${local}
-        post-lock:${remote}
-      `);
-  }
-};
-
-if (!isPrerelease) {
-  await ensureUpToDateBranch();
+// Verify main has not changed
+const local = await getSHA1fromRef(REPO_MAIN_BRANCH);
+await gitPull();
+const remote = await getSHA1fromRef(REPO_MAIN_BRANCH);
+if (local !== remote) {
+  await removeWriteAccessRestrictions();
+  throw new Error(dedent`
+      Main branch changed before lockout.
+      pre-lock:${local}
+      post-lock:${remote}
+    `);
 }

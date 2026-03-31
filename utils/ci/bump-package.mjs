@@ -9,7 +9,6 @@ import {
   getCurrentVersion,
   getLastTag,
   getNextVersion,
-  getSHA1fromRef,
   parseCommits,
   writeChangelog,
 } from '@coveo/semantic-monorepo-tools';
@@ -133,8 +132,6 @@ const modifyPackageJson = (packageDir, modifyPackageJsonCallback) => {
   );
 };
 
-const isPrerelease = process.env.IS_PRERELEASE === 'true';
-
 // Run on each package, it generate the changelog, install the latest dependencies that are part of the workspace, publish the package.
 const PATH = '.';
 const privatePackage = isPrivatePackage();
@@ -168,10 +165,7 @@ const nextGoldVersion = getNextVersion(
   isRedo ? currentNpmVersion : currentGitVersion,
   bumpInfo
 );
-const newVersion =
-  isPrerelease && !privatePackage
-    ? await getNextBetaVersion(nextGoldVersion)
-    : nextGoldVersion;
+const newVersion = nextGoldVersion;
 
 modifyPackageJson(PATH, (packageJson) => {
   packageJson.version = newVersion;
@@ -203,14 +197,4 @@ function isPrivatePackage() {
     readFileSync('package.json', {encoding: 'utf-8'})
   );
   return packageJson.private;
-}
-
-/**
- * @param {string} nextGoldVersion
- * @returns {Promise<string>}
- */
-async function getNextBetaVersion(nextGoldVersion) {
-  const charactersToKeep = 10;
-  const hash = (await getSHA1fromRef('HEAD')).slice(0, charactersToKeep);
-  return `${nextGoldVersion}-pre.${hash}`;
 }
