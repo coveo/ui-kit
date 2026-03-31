@@ -1,8 +1,8 @@
 {
   "servers": {
     "atlassian": {
-      "type": "http",
-      "url": "https://mcp.atlassian.com/v1/sse"
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://mcp.atlassian.com/v1/mcp"]
     },
     "github": {
       "type": "http",
