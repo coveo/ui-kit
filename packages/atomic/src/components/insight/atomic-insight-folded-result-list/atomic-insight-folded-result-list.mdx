@@ -1,6 +1,6 @@
-import {Meta} from '@storybook/addon-docs/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicInsightFoldedResultListStories from './atomic-insight-folded-result-list.new.stories';
-import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-template';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 <Meta of={AtomicInsightFoldedResultListStories} />
 
@@ -36,6 +36,7 @@ This component should be placed within an `atomic-insight-interface` component, 
 </atomic-insight-interface>
 ```
 
+
 ## Result Templates
 
 The component requires at least one `atomic-insight-result-template` child to define how results should be rendered. You can define multiple templates with conditions to display different layouts based on result properties.
@@ -51,7 +52,7 @@ The component requires at least one `atomic-insight-result-template` child to de
       </atomic-result-section-title>
     </template>
   </atomic-insight-result-template>
-
+  
   <!-- Default template -->
   <atomic-insight-result-template>
     <template>

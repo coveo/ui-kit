@@ -1,8 +1,8 @@
-import {Meta} from '@storybook/addon-docs/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicColorFacetStories from './atomic-color-facet.new.stories';
-import {AtomicDocTemplate} from '../../../../storybook-utils/documentation/atomic-doc-template';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicColorFacetStories} />
+<Meta of={ AtomicColorFacetStories } />
 
 <AtomicDocTemplate
   stories={ AtomicColorFacetStories }
@@ -24,10 +24,7 @@ Place this component within the "facets" section of your search layout. For Dyna
     ...
     <atomic-layout-section section="facets">
       ...
-      <atomic-color-facet
-        field="filetype"
-        label="File Type"
-      ></atomic-color-facet>
+      <atomic-color-facet field="filetype" label="File Type"></atomic-color-facet>
     </atomic-layout-section>
   </atomic-search-layout>
 </atomic-search-interface>
@@ -51,7 +48,7 @@ You can customize the colors for specific facet values using CSS shadow parts. T
     background-size: contain;
     background-repeat: no-repeat;
   }
-
+  
   atomic-color-facet::part(value-doc) {
     background-image: url('atomic/assets/document.svg');
     background-color: rgb(146, 151, 196);
@@ -80,18 +77,16 @@ You can customize the number of color boxes displayed per row using CSS custom p
 ## UX Best Practices
 
 ### Usage Notes
-
-- A color facet is best for placing emphasis on the visual aspect of a facet value.
-- The two available options to display the facet values are `box` and `checkbox`.
-  - The `box` display option will present the facet values in a grid with a larger tile format.
+- A color facet is best for placing emphasis on the visual aspect of a facet value. 
+- The two available options to display the facet values are `box` and `checkbox`. 
+  - The `box` display option will present the facet values in a grid with a larger tile format. 
   - The `checkbox` display option will present the values in a list with a smaller icon or color tile.
-- When the facet doesn't have too many values to display and the text labels are short, it's best practice to use the `box` display option.
+- When the facet doesn't have too many values to display and the text labels are short, it's best practice to use the `box` display option. 
 - When using an image instead of a color tile or icon, it's best practice to use the `box` display.
 
 ### Use Cases and Examples
 
 Use a color facet when color or an image-based swatch provides faster recognition than plain text. For example:
-
 - **Commerce product colors:** A person shopping for a t-shirt can select the colors they want (for example, `red`, `blue`, or `green`) to immediately see only products available in those colors.
 - **Product variants or finishes:** A person choosing furniture or appliances can filter by finishes such as `matte black`, `brushed steel`, or `oak` using image swatches or color tiles.
 - **Document or content types:** An internal knowledge base can use different colors or icons for `PDF`, `DOC`, `PPT`, and `Image` file types so people can visually scan for the type they need.

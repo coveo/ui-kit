@@ -1,8 +1,8 @@
-import {Meta} from '@storybook/addon-docs/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicCategoryFacetStories from './atomic-category-facet.new.stories';
-import {AtomicDocTemplate} from '../../../../storybook-utils/documentation/atomic-doc-template';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicCategoryFacetStories} />
+<Meta of={ AtomicCategoryFacetStories } />
 
 <AtomicDocTemplate
   stories={ AtomicCategoryFacetStories }
@@ -15,6 +15,7 @@ Use this component to display hierarchical facet values in a navigable tree stru
 
 Place this component within the "facets" section of your search layout. For Dynamic Navigation Experience (DNE) support, nest it inside an `atomic-facet-manager` component (see [DNE documentation](https://docs.coveo.com/en/2918)).
 
+
 ```html
 <atomic-search-interface>
   ...
@@ -22,10 +23,8 @@ Place this component within the "facets" section of your search layout. For Dyna
     ...
     <atomic-layout-section section="facets">
       ...
-      <atomic-category-facet
-        field="geographicalhierarchy"
-        label="Location"
-      ></atomic-category-facet>
+        <atomic-category-facet field="geographicalhierarchy" label="Location"></atomic-category-facet>
+
     </atomic-layout-section>
   </atomic-search-layout>
 </atomic-search-interface>
@@ -45,8 +44,8 @@ The category facet allows users to drill down through levels of a hierarchy:
 Enable facet search to allow users to find values across all levels of the hierarchy:
 
 ```html
-<atomic-category-facet
-  field="geographicalhierarchy"
+<atomic-category-facet 
+  field="geographicalhierarchy" 
   label="Location"
   with-search
 ></atomic-category-facet>
@@ -65,22 +64,22 @@ You can customize the "All Categories" button label using i18n. The component lo
 ```javascript
 // Customize by facet ID
 searchInterface.i18n.addResourceBundle('en', 'translation', {
-  'all-categories-my-location-facet': 'All Locations',
+  'all-categories-my-location-facet': 'All Locations'
 });
 
 // Or customize by field
 searchInterface.i18n.addResourceBundle('en', 'translation', {
-  'all-categories-geographicalhierarchy': 'All Regions',
+  'all-categories-geographicalhierarchy': 'All Regions'
 });
 ```
 
 ## UX Best Practices
 
-- A Category Facet requires a multi-value field whose values are formatted hierarchically. The facet will determine the filter to apply based on the current selected path of values. This can offer a powerful navigational experience, quickly leading a user to relevant results.
+- A Category Facet requires a multi-value field whose values are formatted hierarchically. The facet will determine the filter to apply based on the current selected path of values. This can offer a powerful navigational experience, quickly leading a user to relevant results. 
   - This component uses `;` to separate individual values, and the character that's defined with the `delimiting-character` attribute to separate hierarchical levels within each value. Set this attribute to `|` instead of using the default, which is `;`.
   - The following is an example of the recommended hierarchical formatting: `clothing; clothing|sale; clothing|sale|shoes; clothing|sale|shoes|kids; clothing|sale|shoes|kids|sneakers;`
-- It's only possible to select one value at a time in a category facet.
-  This is because they're meant to ease navigation through their hierarchically organized content, as opposed to applying multiple hierarchical filters.
+- It's only possible to select one value at a time in a category facet. 
+This is because they're meant to ease navigation through their hierarchically organized content, as opposed to applying multiple hierarchical filters.
 
 - It's best practice to have hierarchies at five levels or less in depth.
 

@@ -1,8 +1,8 @@
-import {Meta} from '@storybook/addon-docs/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicResultImageStories from './atomic-result-image.new.stories';
-import {AtomicDocTemplate} from '../../../../storybook-utils/documentation/atomic-doc-template';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicResultImageStories} />
+<Meta of={ AtomicResultImageStories } />
 
 <AtomicDocTemplate
   stories={ AtomicResultImageStories }
@@ -21,16 +21,17 @@ For accessibility, you can specify a result field to provide custom alt text for
     <atomic-result-section-visual>
       <!-- Basic usage -->
       <atomic-result-image field="thumbnail"></atomic-result-image>
-
+      
       <!-- With fallback image -->
-      <atomic-result-image
-        field="thumbnail"
-        fallback="https://example.com/placeholder.png"
-      >
+      <atomic-result-image 
+        field="thumbnail" 
+        fallback="https://example.com/placeholder.png">
       </atomic-result-image>
-
+      
       <!-- With custom alt text from a field -->
-      <atomic-result-image field="thumbnail" image-alt-field="alt_description">
+      <atomic-result-image 
+        field="thumbnail" 
+        image-alt-field="alt_description">
       </atomic-result-image>
     </atomic-result-section-visual>
   </template>

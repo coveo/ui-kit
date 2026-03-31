@@ -1,6 +1,7 @@
-import {Meta} from '@storybook/addon-docs/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicResultLocalizedTextStories from './atomic-result-localized-text.new.stories';
-import {AtomicDocTemplate} from '../../../../storybook-utils/documentation/atomic-doc-template';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
 
 <Meta of={AtomicResultLocalizedTextStories} />
 
@@ -21,10 +22,9 @@ This component is used within `atomic-result-template` components inside the res
   <atomic-result-list>
     <atomic-result-template>
       <template>
-        <atomic-result-localized-text
-          locale-key="book_by_author"
-          field-author="name"
-        >
+        <atomic-result-localized-text 
+          locale-key="book_by_author" 
+          field-author="name">
         </atomic-result-localized-text>
       </template>
     </atomic-result-template>

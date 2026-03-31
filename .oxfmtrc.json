@@ -29,6 +29,8 @@
     "**/packages/headless/**/coveo.analytics/**/*",
     "**/samples/atomic/search-stencil/**/*.d.ts",
     "**/samples/headless/rga-angular/**/*.html",
-    "**/*.hbs"
+    "**/*.hbs",
+    "**/*.tw.css",
+    "**/*.mdx"
   ]
 }

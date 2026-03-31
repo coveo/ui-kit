@@ -1,6 +1,7 @@
-import {Meta} from '@storybook/addon-docs/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicSortExpressionStories from './atomic-sort-expression.new.stories';
-import {AtomicDocTemplate} from '../../../../storybook-utils/documentation/atomic-doc-template';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
 
 <Meta of={AtomicSortExpressionStories} />
 
@@ -20,24 +21,12 @@ See the [atomic-sort-dropdown documentation](?path=/docs/atomic-sort-dropdown--d
 ```html
 <atomic-search-interface>
   <!-- other components -->
-
+  
   <atomic-sort-dropdown>
-    <atomic-sort-expression
-      label="Relevance"
-      expression="relevancy"
-    ></atomic-sort-expression>
-    <atomic-sort-expression
-      label="Newest"
-      expression="date descending"
-    ></atomic-sort-expression>
-    <atomic-sort-expression
-      label="Oldest"
-      expression="date ascending"
-    ></atomic-sort-expression>
-    <atomic-sort-expression
-      label="Size"
-      expression="size descending"
-    ></atomic-sort-expression>
+    <atomic-sort-expression label="Relevance" expression="relevancy"></atomic-sort-expression>
+    <atomic-sort-expression label="Newest" expression="date descending"></atomic-sort-expression>
+    <atomic-sort-expression label="Oldest" expression="date ascending"></atomic-sort-expression>
+    <atomic-sort-expression label="Size" expression="size descending"></atomic-sort-expression>
   </atomic-sort-dropdown>
 
   <!-- other components -->
@@ -58,17 +47,15 @@ The available sort criteria are:
 You can specify multiple sort criteria separated by commas. The API applies them sequentially:
 
 ```html
-<atomic-sort-expression
-  label="Size then Date"
-  expression="size ascending, date descending"
->
+<atomic-sort-expression 
+  label="Size then Date" 
+  expression="size ascending, date descending">
 </atomic-sort-expression>
 ```
 
 Valid combinations:
-
 - A relevancy criterion followed by field or date criteria
-- A qre criterion followed by field or date criteria
+- A qre criterion followed by field or date criteria  
 - Two or more field criteria
 - A date criterion and one or more field criteria
 
@@ -79,11 +66,10 @@ Valid combinations:
 Specify which tabs should display this sort expression:
 
 ```html
-<atomic-sort-expression
-  label="Relevance"
+<atomic-sort-expression 
+  label="Relevance" 
   expression="relevancy"
-  tabs-included='["all", "documents"]'
->
+  tabs-included='["all", "documents"]'>
 </atomic-sort-expression>
 ```
 
@@ -92,11 +78,10 @@ Specify which tabs should display this sort expression:
 Specify which tabs should NOT display this sort expression:
 
 ```html
-<atomic-sort-expression
-  label="Date"
+<atomic-sort-expression 
+  label="Date" 
   expression="date descending"
-  tabs-excluded='["images"]'
->
+  tabs-excluded='["images"]'>
 </atomic-sort-expression>
 ```
 

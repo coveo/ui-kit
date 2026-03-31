@@ -1,6 +1,7 @@
-import {Meta} from '@storybook/addon-docs/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicProductNumericFieldValueStories from './atomic-product-numeric-field-value.new.stories';
-import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-template';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
 
 <Meta of={AtomicProductNumericFieldValueStories} />
 
@@ -22,13 +23,11 @@ It is typically used within `atomic-product-template` components to show numeric
     <atomic-product-template>
       <template>
         ...
-        <atomic-product-numeric-field-value
-          field="ec_rating"
-        ></atomic-product-numeric-field-value>
+          <atomic-product-numeric-field-value field="ec_rating"></atomic-product-numeric-field-value>
+
       </template>
     </atomic-product-template>
   </atomic-commerce-product-list>
 </atomic-commerce-interface>
 ```
-
 </AtomicDocTemplate>

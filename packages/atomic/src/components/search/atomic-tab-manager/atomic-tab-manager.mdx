@@ -1,6 +1,7 @@
-import {Meta} from '@storybook/addon-docs/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicTabManagerStories from './atomic-tab-manager.new.stories';
-import {AtomicDocTemplate} from '../../../../storybook-utils/documentation/atomic-doc-template';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
 
 <Meta of={AtomicTabManagerStories} />
 
@@ -18,19 +19,11 @@ This component must contain `atomic-tab` children to function correctly.
 ```html
 <atomic-search-interface>
   <!-- other components -->
-
+  
   <atomic-tab-manager>
     <atomic-tab name="all" label="All"></atomic-tab>
-    <atomic-tab
-      name="images"
-      label="Images"
-      expression="@objecttype==Image"
-    ></atomic-tab>
-    <atomic-tab
-      name="articles"
-      label="Articles"
-      expression="@objecttype==Article"
-    ></atomic-tab>
+    <atomic-tab name="images" label="Images" expression="@objecttype==Image"></atomic-tab>
+    <atomic-tab name="articles" label="Articles" expression="@objecttype==Article"></atomic-tab>
   </atomic-tab-manager>
 
   <!-- other components -->

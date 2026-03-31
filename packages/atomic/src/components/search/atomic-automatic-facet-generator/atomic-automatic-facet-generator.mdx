@@ -1,6 +1,7 @@
-import {Meta} from '@storybook/addon-docs/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicAutomaticFacetGeneratorStories from './atomic-automatic-facet-generator.new.stories';
-import {AtomicDocTemplate} from '../../../../storybook-utils/documentation/atomic-doc-template';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
 
 <Meta of={AtomicAutomaticFacetGeneratorStories} />
 
@@ -18,17 +19,15 @@ This component renders one or more [atomic-automatic-facet](https://docs.coveo.c
 To learn more about the automatic facet generator feature, see: [About the Facet Generator](https://docs.coveo.com/en/n9sd0159/).
 
 This component is typically placed within the facets section of the search interface layout.
-
 ```html
 <atomic-search-interface>
   ...
   <atomic-search-layout>
     ...
     <atomic-layout-section section="facets">
-      <atomic-automatic-facet-generator
-        desired-count="5"
-        number-of-values="8"
-      ></atomic-automatic-facet-generator>
+
+      <atomic-automatic-facet-generator desired-count="5" number-of-values="8"></atomic-automatic-facet-generator>
+
     </atomic-layout-section>
   </atomic-search-layout>
 </atomic-search-interface>

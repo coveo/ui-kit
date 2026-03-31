@@ -18,7 +18,9 @@ The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) m
   ...
   <atomic-search-layout>
     <atomic-layout-section section="main">
+      
       <atomic-generated-answer></atomic-generated-answer>
+      
     </atomic-layout-section>
     ...
   </atomic-search-layout>
@@ -55,7 +57,9 @@ Display a toggle button that lets users hide or show the answer:
 Allow the answer to be collapsed when it's taller than a specified height:
 
 ```html
-<atomic-generated-answer collapsible max-collapsed-height="20">
+<atomic-generated-answer
+  collapsible
+  max-collapsed-height="20">
 </atomic-generated-answer>
 ```
 
@@ -67,7 +71,8 @@ Allow the answer to be collapsed when it's taller than a specified height:
 Specify a particular answer configuration to use:
 
 ```html
-<atomic-generated-answer answer-configuration-id="my-config-id">
+<atomic-generated-answer
+  answer-configuration-id="my-config-id">
 </atomic-generated-answer>
 ```
 
@@ -78,8 +83,7 @@ Include additional fields with citations and control citation anchoring:
 ```html
 <atomic-generated-answer
   fields-to-include-in-citations="author,date,category"
-  disable-citation-anchoring
->
+  disable-citation-anchoring>
 </atomic-generated-answer>
 ```
 
@@ -89,11 +93,13 @@ Control which tabs display the generated answer:
 
 ```html
 <!-- Show only on specific tabs -->
-<atomic-generated-answer tabs-included='["search", "knowledge"]'>
+<atomic-generated-answer
+  tabs-included='["search", "knowledge"]'>
 </atomic-generated-answer>
 
 <!-- Hide on specific tabs -->
-<atomic-generated-answer tabs-excluded='["images", "videos"]'>
+<atomic-generated-answer
+  tabs-excluded='["images", "videos"]'>
 </atomic-generated-answer>
 ```
 
@@ -104,8 +110,8 @@ Provide a custom message when no answer can be generated:
 ```html
 <atomic-generated-answer>
   <div slot="no-answer-message">
-    Sorry, we couldn't generate an answer for your query. Please try rephrasing
-    your question.
+    Sorry, we couldn't generate an answer for your query.
+    Please try rephrasing your question.
   </div>
 </atomic-generated-answer>
 ```
@@ -113,7 +119,6 @@ Provide a custom message when no answer can be generated:
 ## Accessibility
 
 The component is built with accessibility in mind:
-
 - ARIA live regions announce answer generation status
 - Keyboard-accessible feedback buttons and toggle
 - Proper focus management
@@ -122,7 +127,6 @@ The component is built with accessibility in mind:
 ## Styling
 
 The component supports various CSS parts for customization:
-
 - `container` - Main container
 - `header-label` - Answer header
 - `toggle` - Visibility toggle switch
@@ -134,7 +138,6 @@ The component supports various CSS parts for customization:
 - `citation-popover` - Citation preview popups
 
 Custom CSS properties:
-
 - `--atomic-crga-collapsed-height` - Height of collapsed answer container
 
 </AtomicDocTemplate>

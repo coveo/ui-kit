@@ -1,6 +1,7 @@
-import {Meta} from '@storybook/addon-docs/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicProductDescriptionStories from './atomic-product-description.new.stories';
-import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-template';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
 
 <Meta of={AtomicProductDescriptionStories} />
 
@@ -23,14 +24,12 @@ It is typically used within `atomic-product-template` components to display prod
       <template>
         ...
         <atomic-product-section-description>
-          <atomic-product-description
-            field="ec_description"
-          ></atomic-product-description>
+          <atomic-product-description field="ec_description"></atomic-product-description>
         </atomic-product-section-description>
+
       </template>
     </atomic-product-template>
   </atomic-commerce-product-list>
 </atomic-commerce-interface>
 ```
-
 </AtomicDocTemplate>

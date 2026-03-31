@@ -1,8 +1,8 @@
-import {Meta} from '@storybook/addon-docs/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicNumericFacetStories from './atomic-numeric-facet.new.stories';
-import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-template';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicNumericFacetStories} />
+<Meta of={ AtomicNumericFacetStories } />
 
 <AtomicDocTemplate
   stories={ AtomicNumericFacetStories }
@@ -18,11 +18,13 @@ This component is typically placed within the "facets" section of the layout. It
   ...
   <atomic-layout-section section="facets">
     <atomic-facet-manager>
+
       <atomic-numeric-facet
         field="ec_price"
         label="Price"
         with-input="integer"
       ></atomic-numeric-facet>
+
     </atomic-facet-manager>
   </atomic-layout-section>
 </atomic-search-interface>
@@ -35,7 +37,5 @@ This component is typically placed within the "facets" section of the layout. It
 - Best used in cases where the value has units, such as height, width, screen sizes, etc.
 
 ## Reference
-
 [Don't Lose Face with Facets](https://source.coveo.com/2018/04/18/facets/)
-
 </AtomicDocTemplate>

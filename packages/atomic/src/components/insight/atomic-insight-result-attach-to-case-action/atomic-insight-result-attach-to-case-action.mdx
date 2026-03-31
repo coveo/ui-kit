@@ -1,6 +1,6 @@
-import {Meta} from '@storybook/addon-docs/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicInsightResultAttachToCaseActionStories from './atomic-insight-result-attach-to-case-action.new.stories';
-import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-template';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 <Meta of={AtomicInsightResultAttachToCaseActionStories} />
 
@@ -33,13 +33,13 @@ Listen for the custom events to implement your attach/detach logic:
 
 ```javascript
 document.addEventListener('atomic/insight/attachToCase/attach', (event) => {
-  const {callback, result} = event.detail;
+  const { callback, result } = event.detail;
   // Perform your attach logic here
   callback(); // Call to update the component state
 });
 
 document.addEventListener('atomic/insight/attachToCase/detach', (event) => {
-  const {callback, result} = event.detail;
+  const { callback, result } = event.detail;
   // Perform your detach logic here
   callback(); // Call to update the component state
 });

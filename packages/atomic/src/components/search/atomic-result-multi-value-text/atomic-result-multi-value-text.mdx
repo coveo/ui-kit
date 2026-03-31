@@ -1,6 +1,7 @@
-import {Meta} from '@storybook/addon-docs/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicResultMultiValueTextStories from './atomic-result-multi-value-text.new.stories';
-import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-template';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
 
 <Meta of={AtomicResultMultiValueTextStories} />
 
@@ -21,13 +22,8 @@ This component is used within `atomic-result-template` components inside the res
   <atomic-result-list>
     <atomic-result-template>
       <template>
-        <atomic-result-multi-value-text
-          field="language"
-        ></atomic-result-multi-value-text>
-        <atomic-result-multi-value-text
-          field="tags"
-          max-values-to-display="5"
-        ></atomic-result-multi-value-text>
+        <atomic-result-multi-value-text field="language"></atomic-result-multi-value-text>
+        <atomic-result-multi-value-text field="tags" max-values-to-display="5"></atomic-result-multi-value-text>
       </template>
     </atomic-result-template>
   </atomic-result-list>

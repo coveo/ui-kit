@@ -1,6 +1,6 @@
-import {Meta} from '@storybook/addon-docs/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicInsightResultTemplateStories from './atomic-insight-result-template.new.stories';
-import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-template';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 <Meta of={AtomicInsightResultTemplateStories} />
 
@@ -25,12 +25,9 @@ Example using the `atomic-insight-result-list`:
     <atomic-insight-result-template>
       <template>
         <atomic-result-section-visual>
-          <atomic-result-image
-            field="ytthumbnailurl"
-            fallback="https://picsum.photos/seed/picsum/350"
-          ></atomic-result-image>
+          <atomic-result-image field="ytthumbnailurl" fallback="https://picsum.photos/seed/picsum/350"></atomic-result-image>
         </atomic-result-section-visual>
-
+        
         <atomic-result-section-badges>
           <atomic-field-condition must-match-sourcetype="YouTube">
             <atomic-result-badge
@@ -56,14 +53,14 @@ Example using the `atomic-insight-result-list`:
               </span>
               <atomic-result-text field="source"></atomic-result-text>
             </atomic-field-condition>
-
+            
             <atomic-field-condition class="field" if-defined="author">
               <span class="field-label">
                 <atomic-text value="author"></atomic-text>:
               </span>
               <atomic-result-text field="author"></atomic-result-text>
             </atomic-field-condition>
-
+            
             <atomic-field-condition class="field" if-defined="date">
               <span class="field-label">
                 <atomic-text value="date"></atomic-text>:

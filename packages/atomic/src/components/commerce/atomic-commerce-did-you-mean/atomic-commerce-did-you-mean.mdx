@@ -1,15 +1,7 @@
-import {
-  Canvas,
-  ArgTypes,
-  Meta,
-  Title,
-  Description,
-  Stories,
-  Subtitle,
-} from '@storybook/addon-docs/blocks';
+import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/addon-docs/blocks';
 import * as AtomicCommerceDidYouMeanStories from './atomic-commerce-did-you-mean.new.stories';
-import {CanvasWithGithub} from '../../../../storybook-utils/documentation/canvas-with-github';
-import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-template';
+import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 <Meta of={AtomicCommerceDidYouMeanStories} />
 
@@ -21,7 +13,6 @@ import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-temp
 >
 
 This component is typically placed within the "status" section of the layout.
-
 ```html
 <atomic-commerce-interface>
   ...
@@ -30,11 +21,13 @@ This component is typically placed within the "status" section of the layout.
     <atomic-layout-section section="main">
       ...
       <atomic-layout-section section="status">
+        
         <atomic-commerce-did-you-mean></atomic-commerce-did-you-mean>
+
       </atomic-layout-section>
     </atomic-layout-section>
   </atomic-commerce-layout>
 </atomic-commerce-interface>
 ```
-
 </AtomicDocTemplate>
+

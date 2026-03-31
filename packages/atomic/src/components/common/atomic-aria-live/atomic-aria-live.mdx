@@ -1,6 +1,7 @@
-import {Meta} from '@storybook/addon-docs/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicAriaLiveStories from './atomic-aria-live.new.stories';
-import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-template';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
 
 <Meta of={AtomicAriaLiveStories} />
 
@@ -20,7 +21,7 @@ To use this from a custom component, you can dispatch the event and then call me
 ```typescript
 // Find the aria-live component
 const event = new CustomEvent('atomic/accessibility/findAriaLive', {
-  detail: {},
+  detail: {}
 });
 document.dispatchEvent(event);
 const ariaLiveElement = event.detail.element;
@@ -29,5 +30,4 @@ const ariaLiveElement = event.detail.element;
 ariaLiveElement?.registerRegion('my-region', false); // false = polite, true = assertive
 ariaLiveElement?.updateMessage('my-region', 'This is an announcement', false);
 ```
-
 </AtomicDocTemplate>

@@ -1,8 +1,8 @@
-import {Meta} from '@storybook/addon-docs/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicResultPrintableUriStories from './atomic-result-printable-uri.new.stories';
-import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-template';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicResultPrintableUriStories} />
+<Meta of={ AtomicResultPrintableUriStories } />
 
 <AtomicDocTemplate
   stories={ AtomicResultPrintableUriStories }
@@ -23,9 +23,7 @@ You can customize link attributes using the `attributes` slot to add properties 
   <atomic-result-printable-uri></atomic-result-printable-uri>
 
   <!-- Limit to 3 path segments before showing ellipsis -->
-  <atomic-result-printable-uri
-    max-number-of-parts="3"
-  ></atomic-result-printable-uri>
+  <atomic-result-printable-uri max-number-of-parts="3"></atomic-result-printable-uri>
 
   <!-- Open links in new tab -->
   <atomic-result-printable-uri>

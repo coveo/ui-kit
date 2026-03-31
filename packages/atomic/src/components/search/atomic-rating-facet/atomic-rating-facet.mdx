@@ -1,6 +1,6 @@
-import {Meta} from '@storybook/addon-docs/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicRatingFacetStories from './atomic-rating-facet.new.stories';
-import {AtomicDocTemplate} from '../../../../storybook-utils/documentation/atomic-doc-template';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
 <Meta of={AtomicRatingFacetStories} />
 
@@ -15,7 +15,7 @@ The `atomic-rating-facet` component displays facet values as star ratings, makin
 
 This component is typically placed within the "facets" section of the search interface layout.
 
-You can also place rating facets inside an `atomic-facet-manager` component to ensure the effective functioning of DNE (Dynamic Navigation Experience).
+You can also place rating facets inside an `atomic-facet-manager` component to ensure the effective functioning of DNE (Dynamic Navigation Experience). 
 More info here: [atomic-facet-manager](https://docs.coveo.com/en/2918).
 
 ## Key Features
@@ -36,10 +36,8 @@ More info here: [atomic-facet-manager](https://docs.coveo.com/en/2918).
     ...
     <atomic-layout-section section="facets">
       ...
-      <atomic-rating-facet
-        field="snrating"
-        label="Rating"
-      ></atomic-rating-facet>
+        <atomic-rating-facet field="snrating" label="Rating"></atomic-rating-facet>
+
     </atomic-layout-section>
   </atomic-search-layout>
 </atomic-search-interface>
@@ -48,28 +46,24 @@ More info here: [atomic-facet-manager](https://docs.coveo.com/en/2918).
 ## Display Modes
 
 ### Checkbox Mode (Default)
-
 Allows multiple rating selections:
 
 ```html
-<atomic-rating-facet
-  field="rating"
+<atomic-rating-facet 
+  field="rating" 
   label="Customer Rating"
-  display-values-as="checkbox"
->
+  display-values-as="checkbox">
 </atomic-rating-facet>
 ```
 
 ### Link Mode
-
 Allows single rating selection:
 
 ```html
-<atomic-rating-facet
-  field="rating"
+<atomic-rating-facet 
+  field="rating" 
   label="Customer Rating"
-  display-values-as="link"
->
+  display-values-as="link">
 </atomic-rating-facet>
 ```
 
@@ -78,13 +72,12 @@ Allows single rating selection:
 Configure the number of stars and value ranges:
 
 ```html
-<atomic-rating-facet
-  field="rating"
+<atomic-rating-facet 
+  field="rating" 
   label="Rating"
   number-of-intervals="10"
   max-value-in-index="10"
-  min-value-in-index="1"
->
+  min-value-in-index="1">
 </atomic-rating-facet>
 ```
 
@@ -93,7 +86,10 @@ Configure the number of stars and value ranges:
 Use a custom SVG icon for the rating display:
 
 ```html
-<atomic-rating-facet field="rating" label="Rating" icon="<svg>...</svg>">
+<atomic-rating-facet 
+  field="rating" 
+  label="Rating"
+  icon="<svg>...</svg>">
 </atomic-rating-facet>
 ```
 

@@ -1,6 +1,6 @@
-import {Meta} from '@storybook/addon-docs/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicCommerceBreadboxStories from './atomic-commerce-breadbox.new.stories';
-import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-template';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 <Meta of={AtomicCommerceBreadboxStories} />
 
@@ -21,11 +21,12 @@ This component is typically placed within the "status" section of the layout.
     <atomic-layout-section section="main">
       ...
       <atomic-layout-section section="status">
+        
         <atomic-commerce-breadbox></atomic-commerce-breadbox>
+
       </atomic-layout-section>
     </atomic-layout-section>
   </atomic-commerce-layout>
 </atomic-commerce-interface>
 ```
-
 </AtomicDocTemplate>

@@ -1,6 +1,7 @@
-import {Meta} from '@storybook/addon-docs/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicResultTemplateStories from './atomic-result-template.new.stories';
-import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-template';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
 
 <Meta of={AtomicResultTemplateStories} />
 
@@ -12,24 +13,19 @@ import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-temp
   className="AtomicResultTemplate"
 >
 
-This component defines the UI display of your search results.
+This component defines the UI display of your search results. 
 A `template` element must be the child of an `atomic-result-template`. Furthermore, an `atomic-result-list`, `atomic-folded-result-list`, or `atomic-search-box-instant-results` must be the parent of each `atomic-result-template`.
-
-- **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
+ * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
 
 Example using the `atomic-result-list`:
-
 ```html
 <atomic-result-list>
   <atomic-result-template>
     <template>
       <atomic-result-section-visual>
-        <atomic-result-image
-          field="ytthumbnailurl"
-          fallback="https://picsum.photos/seed/picsum/350"
-        ></atomic-result-image>
+        <atomic-result-image field="ytthumbnailurl" fallback="https://picsum.photos/seed/picsum/350"></atomic-result-image>
       </atomic-result-section-visual>
-
+      
       <atomic-result-section-badges>
         <atomic-field-condition must-match-sourcetype="YouTube">
           <atomic-result-badge
@@ -37,7 +33,7 @@ Example using the `atomic-result-list`:
             class="youtube-badge"
           ></atomic-result-badge>
         </atomic-field-condition>
-
+        
         <atomic-result-badge
           icon="https://raw.githubusercontent.com/Rush/Font-Awesome-SVG-PNG/master/black/svg/language.svg"
         >
@@ -63,14 +59,14 @@ Example using the `atomic-result-list`:
             </span>
             <atomic-result-text field="source"></atomic-result-text>
           </atomic-field-condition>
-
+          
           <atomic-field-condition class="field" if-defined="author">
             <span class="field-label">
               <atomic-text value="author"></atomic-text>:
             </span>
             <atomic-result-text field="author"></atomic-result-text>
           </atomic-field-condition>
-
+          
           <atomic-field-condition class="field" if-defined="date">
             <span class="field-label">
               <atomic-text value="date"></atomic-text>:
@@ -85,6 +81,7 @@ Example using the `atomic-result-list`:
 ```
 
 ## Template Conditions
+
 
 You can use conditions to display different templates based on result properties. You can specify as many `must-match-*` and `must-not-match-*` attributes as you want on a template, each targeting a different field. Each attribute can accept multiple comma-separated values.
 

@@ -1,8 +1,8 @@
-import {Meta} from '@storybook/addon-docs/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicResultChildrenStories from './atomic-result-children.new.stories';
-import {AtomicDocTemplate} from '../../../../storybook-utils/documentation/atomic-doc-template';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicResultChildrenStories} />
+<Meta of={ AtomicResultChildrenStories } />
 
 <AtomicDocTemplate
   stories={ AtomicResultChildrenStories }
@@ -44,7 +44,8 @@ For nested children (grandchildren), you can use the `inherit-templates` propert
     <template>
       <!-- Child template content -->
       <atomic-result-section-children>
-        <atomic-result-children inherit-templates> </atomic-result-children>
+        <atomic-result-children inherit-templates>
+        </atomic-result-children>
       </atomic-result-section-children>
     </template>
   </atomic-result-children-template>

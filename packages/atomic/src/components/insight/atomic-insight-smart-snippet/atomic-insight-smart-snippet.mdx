@@ -1,6 +1,7 @@
-import {Meta} from '@storybook/addon-docs/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicInsightSmartSnippetStories from './atomic-insight-smart-snippet.new.stories';
-import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-template';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
 
 <Meta of={AtomicInsightSmartSnippetStories} />
 
@@ -71,9 +72,7 @@ Control when the "show more/less" buttons appear:
 You can style the snippet content using the `snippet-style` attribute:
 
 ```html
-<atomic-insight-smart-snippet
-  snippet-style="b { color: blue; }"
-></atomic-insight-smart-snippet>
+<atomic-insight-smart-snippet snippet-style="b { color: blue; }"></atomic-insight-smart-snippet>
 ```
 
 Or apply more complex styles:
@@ -105,7 +104,6 @@ Pass custom attributes to the source links using slots:
 ## User Feedback
 
 The component includes a feedback mechanism that allows users to:
-
 - Like the answer (helpful)
 - Dislike the answer (not helpful)
 - Provide detailed feedback when disliking (opens a modal)
