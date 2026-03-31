@@ -4,7 +4,7 @@ group: Usage
 slug: usage/saml-authentication
 ---
 # Configure SAML authentication
-The [Search API](https://docs.coveo.com/en/52/) supports SAML authentication, and the [`@coveo/auth`](https://github.com/coveo/ui-kit/tree/master/packages/auth) package lets you easily enable SAML authentication in a search page built with the [Coveo Headless library](https://docs.coveo.com/en/lcdf0493/).
+The [Search API](https://docs.coveo.com/en/52/) supports SAML authentication, and the [`@coveo/auth`](https://github.com/coveo/ui-kit/tree/main/packages/auth) package lets you easily enable SAML authentication in a search page built with the [Coveo Headless library](https://docs.coveo.com/en/lcdf0493/).
 
 ## Install `@coveo/auth`
 
@@ -22,7 +22,7 @@ You’ll need it when creating your Headless interface.
 
 ## Headless code sample
 
-The code example below is a sample [SAML page built with Headless](https://github.com/coveo/ui-kit/blob/master/samples/headless/search-react/src/pages/SamlPage.tsx) and [React](https://reactjs.org/).
+The code example below is a sample [SAML page built with Headless](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/pages/SamlPage.tsx) and [React](https://react.dev/).
 
 ```tsx
 import {buildSamlClient, SamlClient, SamlClientOptions} from '@coveo/auth';
@@ -77,15 +77,15 @@ export const SamlPage: FunctionComponent<PropsWithChildren> = ({children}) => {
 
 1. `SamlClientOptions` is a `@coveo/auth` interface that lets you define the parameters for the organization and the SAML provider.
 The organization is identified with the `organizationId` (for example, `myorg1n23b18d5a`), while the `provider` (for example, `mySAMLAuthenticationProvider`) parameter refers to the SAML identity provider that you configured with the Search API.
-2. `initialAccessToken` is defined as a [state](https://beta.reactjs.org/learn/state-a-components-memory) of the `SamlPage` component.
+2. `initialAccessToken` is defined as a [state](https://react.dev/learn/state-a-components-memory) of the `SamlPage` component.
 It’s initialized as an empty string using the `useState` hook.
 `setInitialAccessToken`, its corresponding state setter function, is also defined.
 3. `SamlClient` is a `@coveo/auth` interface that is responsible for initiating the SAML flow to resolve a Coveo access token.
-The [`useRef`](https://beta.reactjs.org/reference/react/useRef) hook is used here, because the value of `samlClient` isn’t needed for rendering.
-4. The [`useEffect`](https://beta.reactjs.org/reference/react/useEffect) hook is used to initialize `samlClient.current`.
+The [`useRef`](https://react.dev/reference/react/useRef) hook is used here, because the value of `samlClient` isn’t needed for rendering.
+4. The [`useEffect`](https://react.dev/reference/react/useEffect) hook is used to initialize `samlClient.current`.
 5. `SamlClient.authenticate` is not idempotent.
 Calling it twice after redirection from the provider, even on different clients, would cause a redirection loop.
 6. `buildSamlClient` is a function used to instantiate `SamlClient`.
-7. The [`useMemo`](https://beta.reactjs.org/reference/react/useMemo) hook is used to cache values between re-renders.
-In this case, `organizationId`, `accessToken`, and `renewAccessToken` are used to configure the [`buildSearchEngine`](https://docs.coveo.com/en/headless/latest/usage#configure-a-headless-engine) function.
-8. The [`Context.Provider`](https://reactjs.org/docs/context.html#contextprovider) React component is returned.
+7. The [`useMemo`](https://react.dev/reference/react/useMemo) hook is used to cache values between re-renders.
+In this case, `organizationId`, `accessToken`, and `renewAccessToken` are used to configure the [`buildSearchEngine`](../../functions/Search.buildSearchEngine.html) function.
+8. The [`Context.Provider`](https://react.dev/reference/react/createContext#provider) React component is returned.

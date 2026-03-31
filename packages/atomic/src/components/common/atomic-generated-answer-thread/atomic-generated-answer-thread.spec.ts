@@ -99,6 +99,7 @@ describe('generated-answer-thread', () => {
     const {locators} = await renderComponent({generatedAnswers});
 
     expect(locators().threadItems).toHaveLength(1);
+    expect(locators().threadItems[0]?.showTimelineDot).toBe(false);
     expect(locators().showPreviousAnswersButton).toBeNull();
   });
 
@@ -107,6 +108,9 @@ describe('generated-answer-thread', () => {
     const {locators} = await renderComponent({generatedAnswers});
 
     expect(locators().threadItems).toHaveLength(2);
+    locators().threadItems.forEach((item) => {
+      expect(item.showTimelineDot).toBe(true);
+    });
     expect(locators().answerContents[0]?.generatedAnswer.question).toBe(
       'Question 1'
     );
@@ -152,6 +156,7 @@ describe('generated-answer-thread', () => {
     const {locators} = await renderComponent({generatedAnswers});
 
     const [latestItem] = locators().threadItems;
+    expect(latestItem?.showTimelineDot).toBe(true);
     expect(latestItem?.hideLine).toBe(true);
     expect(latestItem?.disableCollapse).toBe(true);
     expect(latestItem?.isExpanded).toBe(true);
