@@ -12,8 +12,11 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   className="AtomicRefineModal"
 >
 
-This component should not be used directly. It is internally used by the `atomic-refine-toggle` component to display the refine modal.
-To use the refine modal, you should use the `atomic-refine-toggle` component instead. It usually is placed within the "status" section of the layout.
+The `atomic-refine-modal` is an internal component. It is publicly documented for the sake of exposing its CSS properties and shadow parts so that you can customize its styles.
+
+You should never insert this component directly in your markup or modify its attributes.
+
+The correct way to use the refine modal is through the `atomic-refine-toggle` component, usually placed within the "status" section of the layout.
 ```html
 <atomic-search-interface>
   ...

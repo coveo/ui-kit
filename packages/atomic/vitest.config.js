@@ -160,7 +160,10 @@ export default mergeConfig(atomicDefault, {
     reporters: [
       'default',
       new VitestA11yReporter({
-        outputDir: path.resolve(import.meta.dirname, '../atomic-a11y/reports'),
+        outputFile: path.resolve(
+          import.meta.dirname,
+          'reports/a11y-report.json'
+        ),
         packageJsonPath: path.resolve(import.meta.dirname, 'package.json'),
       }),
     ],

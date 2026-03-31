@@ -5,20 +5,19 @@
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
-    "@coveo/semantic-monorepo-tools": "2.7.0",
-    "conventional-changelog-conventionalcommits": "8.0.0",
-    "octokit": "4.1.4",
-    "semver": "7.7.2",
+    "@coveo/semantic-monorepo-tools": "2.7.1",
+    "conventional-changelog-conventionalcommits": "9.3.0",
+    "octokit": "5.0.5",
+    "semver": "7.7.3",
     "ts-dedent": "2.2.0"
   },
   "devDependencies": {
-    "@types/conventional-changelog-writer": "4.0.10",
+    "@types/conventional-changelog-writer": "4.0.11",
     "@types/semver": "7.7.1",
     "typescript": "catalog:"
   },
   "scripts": {
     "add-generated-files": "node ./add-generated-files.mjs",
-    "promote-npm-prod": "node ./promote-npm-tag-to-latest.mjs",
     "git-lock": "node ./git-lock.mjs",
     "bump": "node ./bump-package.mjs",
     "bump:root": "node ./bump-root.mjs",

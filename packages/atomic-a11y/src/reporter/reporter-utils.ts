@@ -2,22 +2,46 @@ import {existsSync, readFileSync} from 'node:fs';
 import path from 'node:path';
 import {getCriterionMetadata as lookupCriterionMetadata} from '../data/criterion-metadata.js';
 import {isRecord} from '../shared/guards.js';
-import type {CriterionMetadata, SupportedFramework} from '../shared/types.js';
+import type {CriterionMetadata} from '../shared/types.js';
 
 export interface PackageMetadata {
-  version?: string;
+  version: string;
   dependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
 }
 
-export interface StorybookTaskMeta {
-  storyId?: unknown;
-  reports?: unknown;
+export interface StorybookReport {
+  type: string;
+  result?: unknown;
 }
 
-export interface StorybookReport {
-  type?: unknown;
-  result?: unknown;
+export interface StorybookTaskMeta {
+  storyId?: string;
+  reports?: StorybookReport[];
+}
+
+function isStorybookReport(value: unknown): value is StorybookReport {
+  return isRecord(value) && typeof value.type === 'string';
+}
+
+export function isStorybookTaskMeta(
+  value: unknown
+): value is StorybookTaskMeta {
+  if (!isRecord(value)) {
+    return false;
+  }
+
+  if ('storyId' in value && typeof value.storyId !== 'string') {
+    return false;
+  }
+
+  if ('reports' in value) {
+    return (
+      Array.isArray(value.reports) && value.reports.every(isStorybookReport)
+    );
+  }
+
+  return true;
 }
 
 export interface StorybookInteractiveReport {
@@ -41,8 +65,6 @@ export function isInteractiveReport(
 
 export interface ComponentAccumulator {
   name: string;
-  category: string;
-  framework: SupportedFramework;
   storyIds: Set<string>;
   automated: {
     violations: number;
@@ -94,12 +116,6 @@ export function readPackageMetadata(packageJsonPath?: string): PackageMetadata {
     throw new Error(
       `[VitestA11yReporter] Invalid JSON in package metadata file "${resolvedPath}".`,
       {cause: error}
-    );
-  }
-
-  if (!isRecord(parsedMetadata)) {
-    throw new Error(
-      `[VitestA11yReporter] package.json must contain a JSON object at "${resolvedPath}".`
     );
   }
 

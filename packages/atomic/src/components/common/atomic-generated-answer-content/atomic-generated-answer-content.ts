@@ -1,0 +1,228 @@
+import type {
+  GeneratedAnswerBase,
+  GeneratedAnswerCitation,
+} from '@coveo/headless';
+import type {i18n} from 'i18next';
+import {html, LitElement, type TemplateResult} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {when} from 'lit/directives/when.js';
+import atomicGeneratedAnswerStyles from '@/src/components/search/atomic-generated-answer/atomic-generated-answer.tw.css.js';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {renderGeneratedContentContainer} from '../generated-answer/generated-content-container';
+import {renderAgentGenerationSteps} from '../generated-answer/render-agent-generation-steps';
+import {renderFeedbackAndCopyButtons} from '../generated-answer/render-feedback-and-copy-buttons';
+import {renderSourceCitations} from '../generated-answer/source-citations';
+
+const COPY_RESET_DURATION_MS = 2000;
+
+export interface GeneratedAnswer extends GeneratedAnswerBase {
+  question: string;
+  expanded?: boolean;
+}
+
+type CopyState = 'idle' | 'success' | 'error';
+
+/**
+ * The `atomic-generated-answer-content` component renders the content of a generated answer.
+ *
+ * @internal
+ */
+@customElement('atomic-generated-answer-content')
+@withTailwindStyles
+export class AtomicGeneratedAnswerContent extends LitElement {
+  static styles = [atomicGeneratedAnswerStyles];
+
+  /**
+   * The generated answer object to render.
+   */
+  @property({attribute: false})
+  public generatedAnswer!: GeneratedAnswer;
+
+  /**
+   * The i18next instance used to translate UI labels.
+   */
+  @property({attribute: false})
+  public i18n!: i18n;
+
+  /**
+   * A render function responsible for displaying the answer citations.
+   */
+  @property({attribute: false})
+  public renderCitations: (
+    citations: GeneratedAnswerCitation[],
+    answerId?: string
+  ) => TemplateResult = () => html``;
+
+  /**
+   * Callback invoked when the user clicks the "like" feedback button.
+   */
+  @property({attribute: false})
+  public onClickLike: (answerId: string) => void = () => {};
+
+  /**
+   * Callback invoked when the user clicks the "dislike" feedback button.
+   */
+  @property({attribute: false})
+  public onClickDislike: (answerId: string) => void = () => {};
+
+  /**
+   * Callback invoked after the answer text has been successfully copied.
+   */
+  @property({attribute: false})
+  public onCopyToClipboard: (answerId: string) => void = () => {};
+
+  @state()
+  private copyState: CopyState = 'idle';
+
+  private resetCopyTimeout?: number;
+
+  public override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    clearTimeout(this.resetCopyTimeout);
+  }
+
+  public render() {
+    const {
+      answer,
+      answerContentFormat,
+      isStreaming,
+      generationSteps,
+      citations = [],
+      answerId,
+      error,
+      cannotAnswer,
+    } = this.generatedAnswer || {};
+
+    if (error) {
+      return this.renderError();
+    }
+
+    if (cannotAnswer) {
+      return this.renderCannotAnswer();
+    }
+
+    if (!answerId) {
+      return html``;
+    }
+
+    const shouldRenderFeedbackAndCopyButtons = Boolean(answer) && !isStreaming;
+
+    return html`
+      <div>
+        ${renderAgentGenerationSteps({
+          props: {
+            i18n: this.i18n,
+            agentSteps: generationSteps ?? [],
+            isStreaming: Boolean(isStreaming),
+          },
+        })}
+        <div>
+          ${renderGeneratedContentContainer({
+            props: {
+              answer,
+              answerContentFormat,
+              isStreaming: Boolean(isStreaming),
+            },
+          })(html`
+            ${renderSourceCitations({
+              props: {
+                label: this.i18n.t('citations'),
+                isVisible: citations.length > 0,
+              },
+            })(html`${this.renderCitations(citations, answerId)}`)}
+          `)}
+        </div>
+        ${when(shouldRenderFeedbackAndCopyButtons, () =>
+          this.renderFeedbackAndCopyButtons(answerId)
+        )}
+      </div>
+    `;
+  }
+
+  private renderFeedbackAndCopyButtons(answerId: string) {
+    return html`
+      <div class="mt-4" part="feedback-and-copy-buttons">
+        ${renderFeedbackAndCopyButtons({
+          props: {
+            i18n: this.i18n,
+            generatedAnswerActionsState: {
+              liked: this.generatedAnswer.liked,
+              disliked: this.generatedAnswer.disliked,
+              isStreaming: this.generatedAnswer.isStreaming,
+              isLoading: this.generatedAnswer.isLoading,
+              answer: this.generatedAnswer.answer,
+            },
+            copied: this.copyState === 'success',
+            copyError: this.copyState === 'error',
+            getCopyToClipboardTooltip: () => this.getCopyToClipboardTooltip(),
+            onClickLike: () => this.onClickLike(answerId),
+            onClickDislike: () => this.onClickDislike(answerId),
+            onCopyToClipboard: () => this.copyToClipboard(),
+          },
+        })}
+      </div>
+    `;
+  }
+
+  private async copyToClipboard(): Promise<void> {
+    const {answer, answerId} = this.generatedAnswer;
+
+    if (!answer || !answerId) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(answer);
+      this.copyState = 'success';
+      this.onCopyToClipboard(answerId);
+    } catch (error) {
+      this.copyState = 'error';
+      console.error(`Failed to copy to clipboard: ${error}`);
+    }
+
+    this.scheduleCopyReset();
+  }
+
+  private scheduleCopyReset() {
+    clearTimeout(this.resetCopyTimeout);
+    this.resetCopyTimeout = window.setTimeout(() => {
+      this.copyState = 'idle';
+    }, COPY_RESET_DURATION_MS);
+  }
+
+  private getCopyToClipboardTooltip(): string {
+    switch (this.copyState) {
+      case 'error':
+        return this.i18n.t('failed-to-copy-generated-answer');
+      case 'success':
+        return this.i18n.t('generated-answer-copied');
+      default:
+        return this.i18n.t('copy-generated-answer');
+    }
+  }
+
+  private renderError(): TemplateResult {
+    const errorMessageKey =
+      this.generatedAnswer.error?.isSseTurnLimitReachedError?.()
+        ? 'generated-answer-error-turn-limit-reached'
+        : 'generated-answer-error-generic';
+
+    return html`
+      <div part="generated-answer-error">
+        <p>
+          ${this.i18n.t(errorMessageKey)}
+        </p>
+      </div>
+    `;
+  }
+
+  private renderCannotAnswer(): TemplateResult {
+    return html`
+      <div part="generated-answer-cannot-answer">
+        <p>
+          ${this.i18n.t('generated-answer-cannot-generate-answer')}
+        </p>
+      </div>
+    `;
+  }
+}

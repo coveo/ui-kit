@@ -10,7 +10,7 @@ import type {
 import {buildSearchAPIGeneratedAnswer} from '../../core/generated-answer/headless-searchapi-generated-answer.js';
 import {buildAnswerApiGeneratedAnswer} from '../../knowledge/generated-answer/headless-answerapi-generated-answer.js';
 
-export type {GeneratedAnswerState, GeneratedAnswer, GeneratedAnswerProps};
+export type {GeneratedAnswer, GeneratedAnswerProps, GeneratedAnswerState};
 
 /**
  * Creates an insight `GeneratedAnswer` controller instance.

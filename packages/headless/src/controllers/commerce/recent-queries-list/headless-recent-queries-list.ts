@@ -36,10 +36,11 @@ import type {
 } from '../../recent-queries-list/headless-recent-queries-list.js';
 
 export type {
-  RecentQueriesListProps,
   RecentQueriesListInitialState,
   RecentQueriesListOptions,
+  RecentQueriesListProps,
 };
+
 const defaultRecentQueriesState: Required<RecentQueriesListInitialState> = {
   queries: [],
 };

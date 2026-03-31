@@ -3,6 +3,9 @@ title: Home
 slug: index
 ---
 # Use the Headless library
+> [!TIP]
+> Unless you need full control over the appearance of your page, Headless is most likely not for you.
+> Rather, to quickly assemble a feature-rich search interface, consider using Coveo Atomic, our prebuilt, modern component library.
 
 _Coveo Headless_ is a library for developing Coveo-powered UI components.
 It works as a middle layer for applications, opening a line of communication between the UI elements and the [Coveo Platform](https://docs.coveo.com/en/186/).
@@ -48,16 +51,13 @@ The following interactive code sample uses Coveo Headless alongside the [Materia
      sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
    ></iframe>
 
-<dl><dt><strong>💡 TIP: Leading practice</strong></dt><dd>
-
-Unless you need full control over the appearance of your page, Headless is most likely not for you.
-Rather, to quickly assemble a feature-rich search interface, consider using Coveo Atomic, our prebuilt, modern component library.
-</dd></dl>
 
 Additionally, in rare cases you may need to develop directly against the Coveo APIs, such as when you want to integrate Coveo search features inside a non-web-based application.
 
 ## Where Do I Start?
 
-To learn the basics of the Headless library, see the [Usage](https://docs.coveo.com/en/headless/latest/usage) and [Reference](https://docs.coveo.com/en/headless/latest/reference) sections.
+If you're new to Headless, check out the [Getting Started](./getting-started/getting-started-search.html) guides to install the library and verify a minimal setup for your use case.
+
+Once you're up and running, see the [Usage](./usage/index.html) section to learn about engines, controllers, and state management.
 
 To create a starter Angular, React, or Vue.js project with a Coveo Headless-powered search page, check out the [Coveo CLI](https://github.com/coveo/cli#readme).

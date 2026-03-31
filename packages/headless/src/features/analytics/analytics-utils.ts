@@ -11,6 +11,7 @@ import {
   type AsyncThunk,
   type AsyncThunkPayloadCreator,
   createAsyncThunk,
+  type UnknownAction,
 } from '@reduxjs/toolkit';
 import type {
   AnalyticsClientSendEventHook,
@@ -70,10 +71,15 @@ type PreparableAnalyticsActionOptions<
   getState(): StateNeeded;
 };
 
+// The `& UnknownAction` intersection allows analytics actions (AsyncThunk action creators)
+// to be dispatched via ThunkDispatch's `<A extends UnknownAction>(action: A): A` overload.
+// In RTK 2.11.2, AsyncThunkActionCreator's signature changed from `() => ...` to
+// `(arg?: undefined, config?) => ...`, breaking compatibility with the ThunkAction overload.
 export type AnalyticsAsyncThunk<
   StateNeeded extends
     ConfigurationSection = StateNeededBySearchAnalyticsProvider,
-> = AsyncThunk<void, void, AsyncThunkAnalyticsOptions<StateNeeded>>;
+> = AsyncThunk<void, void, AsyncThunkAnalyticsOptions<StateNeeded>> &
+  UnknownAction;
 
 export function makeBasicNewSearchAnalyticsAction(
   actionCause: string,
@@ -160,14 +166,18 @@ function makePreparableAnalyticsAction<
       void,
       AsyncThunkAnalyticsOptions<StateNeeded>
     >
-  ) =>
-    makeInstantlyCallable(
-      createAsyncThunk<
-        EventType,
-        void,
-        AsyncThunkAnalyticsOptions<StateNeeded>
-      >(prefix, body) as unknown as AnalyticsAsyncThunk<StateNeeded>
+  ) => {
+    const thunk = createAsyncThunk<
+      EventType,
+      void,
+      AsyncThunkAnalyticsOptions<StateNeeded>
+    >(prefix, body);
+    return makeInstantlyCallable(
+      Object.assign(thunk, {
+        type: thunk.typePrefix,
+      }) as unknown as AnalyticsAsyncThunk<StateNeeded>
     );
+  };
 
   const rootAction = createAnalyticsAction(async (_, {getState, extra}) => {
     const {analyticsClientMiddleware, preprocessRequest, logger} = extra;

@@ -6,6 +6,7 @@ import {
   baseFoldedResponse,
   baseResponse as baseSearchResponse,
   type InsightResponse,
+  nestedFoldedResponse,
 } from './search-response.js';
 
 export class MockInsightApi implements MockApi {
@@ -40,4 +41,4 @@ export class MockInsightApi implements MockApi {
   }
 }
 
-export {baseSearchResponse, baseFoldedResponse};
+export {baseFoldedResponse, baseSearchResponse, nestedFoldedResponse};

@@ -18,19 +18,19 @@ jobs:
       NODE_OPTIONS: --max_old_space_size=4096
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
       - name: Generate a token
         if: ${{ always() && github.event_name == 'pull_request'}}
         id: generate-token
-        uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3
         with:
           app-id: ${{ secrets.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           owner: coveo
           repositories: "ui-kit"
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
       - run: git branch ${{ github.event.pull_request.base.ref }} origin/${{ github.event.pull_request.base.ref }}
@@ -51,11 +51,11 @@ jobs:
       contents: read
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           ref: ${{ github.head_ref }}
       - uses: ./.github/actions/setup
@@ -69,11 +69,11 @@ jobs:
     environment: PR Artifacts
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           ref: ${{ github.head_ref }}
       - uses: ./.github/actions/setup
@@ -90,7 +90,7 @@ jobs:
       - name: Generate a token
         if: ${{ steps.check-changes.outputs.has_changes == 'true' && github.event_name == 'pull_request' }}
         id: generate-token
-        uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3
         with:
           app-id: ${{ secrets.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
@@ -108,11 +108,11 @@ jobs:
     environment: PR Artifacts
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: ./.github/actions/setup
         with:
           save-cache: "true"
@@ -125,11 +125,11 @@ jobs:
       PR_NUMBER: ${{ github.event_name == 'pull_request' && github.event.pull_request.number || '' }}
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: ./.github/actions/setup
         with:
           cache-prefix: "cdn"
@@ -142,11 +142,11 @@ jobs:
       projects: ${{ steps.set.outputs.projects }}
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
           filter: blob:none
@@ -171,10 +171,10 @@ jobs:
     needs: build
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: ./.github/actions/setup
       - name: Run knip
         run: pnpm run knip
@@ -186,14 +186,14 @@ jobs:
       DEPLOYMENT_ENVIRONMENT: CDN
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      image: mcr.microsoft.com/playwright:v1.57.0-noble
       options: --user 1001
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: ./.github/actions/setup
         with:
           cache-prefix: "cdn"
@@ -205,11 +205,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: ./.github/actions/setup
       - run: pnpm run lint:check
   validate-light-dom-styles:
@@ -218,11 +218,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: ./.github/actions/setup
       - run: pnpm --filter @coveo/atomic run validate:light-dom-styles
   validate-no-new-light-dom:
@@ -235,7 +235,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: ./.github/actions/setup
       - run: pnpm --filter @coveo/atomic run validate:no-new-light-dom
   unit-test:
@@ -243,16 +243,16 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      image: mcr.microsoft.com/playwright:v1.57.0-noble
       options: --user 1001
     timeout-minutes: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'long-test') && 120 || 15 }}
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
           filter: blob:none
@@ -268,11 +268,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: ./.github/actions/setup
       - run: pnpm run package-compatibility
   typedoc:
@@ -282,11 +282,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: ./.github/actions/setup
       - name: "Build headless typedoc"
         run: pnpm run build:typedoc
@@ -294,20 +294,20 @@ jobs:
       - name: "Build headless-react typedoc"
         run: pnpm run build:typedoc
         working-directory: packages/headless-react
-  e2e-atomic-csp-test:
+  puppeteer-atomic-csp:
     name: "Run e2e tests on Atomic CSP"
     needs: affected
     if: contains(needs.affected.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-atomic-csp
+      - uses: ./.github/actions/puppeteer-atomic-csp
   prepare-playwright-atomic:
     name: "Determine Playwright E2E tests to run"
     needs: affected
@@ -321,11 +321,11 @@ jobs:
       shardTotal: ${{ steps.determine-tests.outputs.shardTotal }}
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
       - run: git branch ${{ github.event.pull_request.base.ref }} origin/${{ github.event.pull_request.base.ref }}
@@ -360,16 +360,16 @@ jobs:
       # CHROMATIC_SLUG: ${{ github.repository }}
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         if: ${{ github.event_name == 'pull_request' }}
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.ref }} # https://www.chromatic.com/docs/github-actions/#recommended-configuration-for-build-events
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         if: ${{ github.event_name != 'pull_request' }}
         with:
           fetch-depth: 0
@@ -387,7 +387,7 @@ jobs:
     if: ${{ needs.prepare-playwright-atomic.outputs.shardIndex != '[0]' && needs.prepare-playwright-atomic.outputs.shardTotal != '[0]' }}
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      image: mcr.microsoft.com/playwright:v1.57.0-noble
       options: --user 1001
     strategy:
       fail-fast: ${{ github.event_name == 'merge_group' }}
@@ -396,11 +396,11 @@ jobs:
         shardTotal: ${{ fromJson(needs.prepare-playwright-atomic.outputs.shardTotal) }}
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/playwright-atomic
         with:
@@ -416,11 +416,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: ./.github/actions/setup
       - name: Merge Playwright reports
         uses: ./.github/actions/merge-playwright-reports
@@ -432,7 +432,7 @@ jobs:
       - name: Generate a token
         if: ${{ always() && github.event_name == 'pull_request'}}
         id: generate-token
-        uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3
         with:
           app-id: ${{ secrets.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
@@ -449,15 +449,15 @@ jobs:
     if: contains(needs.affected.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      image: mcr.microsoft.com/playwright:v1.57.0-noble
       options: --user 1001
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/playwright-atomic-theming
   storybook-atomic:
@@ -466,7 +466,7 @@ jobs:
     if: contains(needs.affected.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      image: mcr.microsoft.com/playwright:v1.57.0-noble
       options: --user 1001
     strategy:
       fail-fast: ${{ github.event_name == 'merge_group' }}
@@ -475,11 +475,11 @@ jobs:
         shardTotal: [10]
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
           filter: blob:none
@@ -493,15 +493,15 @@ jobs:
     if: contains(needs.affected.outputs.projects, '@samples/atomic-search-commerce-react')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      image: mcr.microsoft.com/playwright:v1.57.0-noble
       options: --user 1001
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/playwright-atomic-search-commerce-react
   playwright-atomic-search-commerce-angular-test:
@@ -510,15 +510,15 @@ jobs:
     if: contains(needs.affected.outputs.projects, '@samples/atomic-search-commerce-angular')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      image: mcr.microsoft.com/playwright:v1.57.0-noble
       options: --user 1001
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/playwright-atomic-search-commerce-angular
   playwright-atomic-hosted-page-test:
@@ -527,15 +527,15 @@ jobs:
     if: contains(needs.affected.outputs.projects, '@coveo/atomic-hosted-page')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      image: mcr.microsoft.com/playwright:v1.57.0-noble
       options: --user 1001
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/playwright-atomic-hosted-pages
   playwright-headless-ssr-commerce-nextjs-test:
@@ -544,31 +544,18 @@ jobs:
     if: contains(needs.affected.outputs.projects, '@samples/headless-ssr-commerce-nextjs')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      image: mcr.microsoft.com/playwright:v1.57.0-noble
       options: --user 1001
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/playwright-headless-ssr-commerce-nextjs
-  cypress-atomic-insight-panel-test:
-    name: "Run e2e tests on Atomic insight panel"
-    needs: affected
-    if: contains(needs.affected.outputs.projects, '@coveo/atomic')
-    runs-on: ubuntu-latest
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
-        with:
-          egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-      - uses: ./.github/actions/setup
-      - uses: ./.github/actions/cypress-atomic-insight-panel
   cypress-headless-ssr-search-nextjs-test:
     name: "Run e2e tests on Headless SSR Search NextJS"
     needs: affected
@@ -576,11 +563,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/cypress-headless-ssr-search-nextjs
   e2e-quantic:
@@ -596,48 +583,6 @@ jobs:
     secrets:
       SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
       SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
-  # prerelease-npm-pr:
-  #   if: ${{ !cancelled() && github.event_name == 'pull_request' }}
-  #   needs: build
-  #   timeout-minutes: 40
-  #   name: Pre-release NPM at alpha (PR)
-  #   permissions:
-  #     contents: read
-  #     id-token: write
-  #   env:
-  #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-  #   runs-on: ubuntu-latest
-  #   environment: "Prerelease"
-  #   steps:
-  #     - name: Harden Runner
-  #       uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
-  #       with:
-  #         egress-policy: audit
-
-  #     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-  #       with:
-  #         fetch-depth: 0
-  #     - run: |
-  #         git branch ${{ github.event.pull_request.base.ref }} origin/${{ github.event.pull_request.base.ref }}
-  #         git branch main origin/main
-  #     - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-  #       with:
-  #         registry-url: "https://registry.npmjs.org"
-  #         node-version-file: ".nvmrc"
-  #     - name: Install npm
-  #       run: npm i -g npm@11.6.0
-  #       shell: bash
-  #     - run: npm ci
-  #       shell: bash
-  #     - name: Release
-  #       run: |
-  #         npm run nx:graph
-  #         npm run release:phase1
-  #         npm run release:phase3
-  #         npm run release:phase4
-  #       env:
-  #         IS_PRERELEASE: "true"
-  #         PR_NUMBER: ${{ github.event.number }}
   prerelease-cdn-pr:
     if: ${{ !cancelled() && github.event_name == 'pull_request' }}
     needs: build-cdn
@@ -646,10 +591,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
       - run: git branch ${{ github.event.pull_request.base.ref }} origin/${{ github.event.pull_request.base.ref }}
@@ -678,18 +623,16 @@ jobs:
       - "playwright-atomic-theming"
       - "playwright-atomic-hosted-page-test"
       - "playwright-headless-ssr-commerce-nextjs-test"
-      - "e2e-atomic-csp-test"
+      - "puppeteer-atomic-csp"
       - "e2e-quantic"
       - "playwright-atomic-search-commerce-react-test"
       - "playwright-atomic-search-commerce-angular-test"
-      - "cypress-atomic-insight-panel-test"
       - "cypress-headless-ssr-search-nextjs-test"
-      # - "prerelease-npm-pr"
       - "prerelease-cdn-pr"
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
@@ -719,12 +662,11 @@ jobs:
       - "e2e-quantic"
       - "playwright-atomic-search-commerce-react-test"
       - "playwright-atomic-search-commerce-angular-test"
-      - "cypress-atomic-insight-panel-test"
       - "cypress-headless-ssr-search-nextjs-test"
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
@@ -746,7 +688,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
@@ -759,47 +701,6 @@ jobs:
             echo "Build is invalid"
             exit 1
           fi
-  # prerelease-npm-merge:
-  #   if: ${{ !cancelled() && needs.is-valid.result == 'success' && github.event_name == 'merge_group' }}
-  #   needs: is-valid
-  #   timeout-minutes: 40
-  #   name: Pre-release NPM at alpha (Merge group)
-  #   env:
-  #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-  #   runs-on: ubuntu-latest
-  #   environment: "Prerelease"
-  #   permissions:
-  #     contents: read
-  #     id-token: write
-  #   steps:
-  #     - name: Harden Runner
-  #       uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
-  #       with:
-  #         egress-policy: audit
-
-  #     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-  #       with:
-  #         fetch-depth: 0
-  #     - run: |
-  #         git branch ${{ github.event.pull_request.base.ref }} origin/${{ github.event.pull_request.base.ref }}
-  #         git branch main origin/main
-  #     - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-  #       with:
-  #         registry-url: "https://registry.npmjs.org"
-  #         node-version-file: ".nvmrc"
-  #     - name: Install npm
-  #       run: npm i -g npm@11.6.0
-  #       shell: bash
-  #     - run: npm ci
-  #       shell: bash
-  #     - name: Release
-  #       run: |
-  #         npm run nx:graph
-  #         npm run release:phase1
-  #         npm run release:phase3
-  #         npm run release:phase4
-  #       env:
-  #         IS_PRERELEASE: "true"
   prerelease-cdn-merge:
     if: ${{ !cancelled() && needs.is-valid.result == 'success' && needs.build-cdn.result == 'success' && github.event_name == 'merge_group' }}
     needs: 
@@ -810,10 +711,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
       - run: git branch ${{ github.event.pull_request.base.ref }} origin/${{ github.event.pull_request.base.ref }}
@@ -838,11 +739,11 @@ jobs:
       CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
 

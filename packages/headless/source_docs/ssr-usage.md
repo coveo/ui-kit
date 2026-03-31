@@ -12,7 +12,7 @@ This article uses the App Router paradigm.
 
 **Notes**
 
-* You can also consult a [working demo](https://github.com/coveo/ui-kit/tree/master/samples/headless-ssr/search-nextjs) of a [Headless](https://docs.coveo.com/en/lcdf0493/) SSR search page.
+* You can also consult a [working demo](https://github.com/coveo/ui-kit/tree/main/samples/headless-ssr/search-nextjs) of a [Headless](https://docs.coveo.com/en/lcdf0493/) SSR search page.
 * For a Coveo Commerce implementation, see [Headless for Commerce: Server-side rendering](https://docs.coveo.com/en/obif0156/).
 
 ## Overview
@@ -245,6 +245,6 @@ See [Data Fetching](https://nextjs.org/docs/app/building-your-application/data-f
 
 For more advanced use cases, such as dispatching actions or interacting with the engine on the server side, refer to the following articles:
 
-* [Extend engine definitions](https://docs.coveo.com/en/headless/latest/usage/headless-server-side-rendering/extend-engine-definitions/)
-* [Implement search parameter support](https://docs.coveo.com/en/headless/latest/usage/headless-server-side-rendering/implement-search-parameter-support/)
-* [Send context](https://docs.coveo.com/en/headless/latest/usage/headless-server-side-rendering/ssr-send-context/)
+* [Extend engine definitions](./extend-engine-definitions.html)
+* [Implement search parameter support](./implement-search-parameter-support.html)
+* [Send context](./send-context.html)

@@ -49,7 +49,7 @@
 
         recsInterfaces.forEach((recInterface) => {
           const engine = recInterface.engine;
-          const contextAction = loadContextActions(engine).setContext(context);
+          const _contextAction = loadContextActions(engine).setContext(context);
           engine.dispatch(loadContextActions(engine).setContext(context));
 
           recInterface.getRecommendations();

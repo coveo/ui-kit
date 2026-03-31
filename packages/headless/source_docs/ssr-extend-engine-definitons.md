@@ -173,6 +173,14 @@ const hydratedState = await hydrateStaticState({
 ```
 
 > [!WARNING]
+> 
+> In this anti-pattern, the engine definition is exported directly and manipulated differently on the server and client.
+> The server dispatches `updateQuery` before calling `fetchStaticState.fromBuildResult`, but the client does not perform the same manipulation before calling `hydrateStaticState.fromBuildResult`.
+>
+> This causes a mismatch between the server-rendered state and the client-hydrated state, which can lead to hydration errors, incorrect UI, or unexpected search behavior.
+>
+> Always extract shared engine manipulations into a common function (as shown above) so that both the server and client start from the same state.
+>
 > Avoid doing something like the following code samples.
 > 
 > In `common/engine-definition.ts`:

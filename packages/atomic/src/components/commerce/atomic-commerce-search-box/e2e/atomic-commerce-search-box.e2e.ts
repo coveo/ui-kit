@@ -105,10 +105,8 @@ test.describe('atomic-commerce-search-box', () => {
     });
 
     test.describe('when recent queries are available', () => {
-      test.beforeEach(async ({searchBox, page}) => {
+      test.beforeEach(async ({searchBox}) => {
         await searchBox.load({story: 'with-suggestions-and-recent-queries'});
-        // We reload to ensure we load the recent queries from local storage
-        await page.reload();
         await searchBox.hydrated.waitFor();
         await searchBox.searchInput.waitFor({state: 'visible'});
         await searchBox.searchInput.click();
@@ -123,7 +121,7 @@ test.describe('atomic-commerce-search-box', () => {
         const count = Math.min(
           (await searchBox.recentQueries().count()) +
             (await searchBox.searchSuggestions().count()),
-          parseInt((await searchBox.numberOfQueries) ?? '')
+          parseInt((await searchBox.numberOfQueries) ?? '', 10)
         ).toString();
 
         const regexMessage = new RegExp(

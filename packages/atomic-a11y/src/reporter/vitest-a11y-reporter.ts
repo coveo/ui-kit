@@ -1,6 +1,6 @@
 import {mkdir, writeFile} from 'node:fs/promises';
 import path from 'node:path';
-import type {Result as AxeRuleResult} from 'axe-core';
+import type {AxeResults, Result as AxeRuleResult} from 'axe-core';
 import type {
   Reporter,
   SerializedError,
@@ -8,14 +8,7 @@ import type {
   TestModule,
   TestRunEndReason,
 } from 'vitest/node';
-import {
-  DEFAULT_A11Y_REPORT_FILENAME,
-  DEFAULT_A11Y_REPORT_OUTPUT_DIR,
-  DEFAULT_WCAG_22_AA_CRITERIA_COUNT,
-  UNKNOWN_CATEGORY,
-  UNKNOWN_FRAMEWORK,
-} from '../shared/constants.js';
-import type {SupportedFramework} from '../shared/types.js';
+
 import {
   getCriteriaForRule,
   getIncompleteMessage,
@@ -25,19 +18,14 @@ import {buildA11yReport} from './report-builder.js';
 import {
   type ComponentAccumulator,
   isInteractiveReport,
+  isStorybookTaskMeta,
   type PackageMetadata,
   readPackageMetadata,
   type StorybookInteractiveReport,
-  type StorybookReport,
   type StorybookTaskMeta,
 } from './reporter-utils.js';
 import {resolveShardInfo, type ShardInfo} from './shard-resolution.js';
-import {
-  extractCategory,
-  extractComponentName,
-  extractFramework,
-  normalizePath,
-} from './storybook-extraction.js';
+import {extractComponentName, normalizePath} from './storybook-extraction.js';
 
 const REPORTER_NAME = 'VitestA11yReporter';
 
@@ -45,17 +33,8 @@ const REPORTER_NAME = 'VitestA11yReporter';
  * Configuration options for {@link VitestA11yReporter}.
  */
 export interface A11yReporterOptions {
-  /** Directory where JSON reports are written.
-   * @default 'a11y/reports' */
-  outputDir?: string;
-
-  /** Report filename.
-   * @default 'a11y-report.json' */
-  outputFilename?: string;
-
-  /** Total WCAG 2.2 AA criteria used to calculate coverage percentages.
-   * @default 55 */
-  totalCriteria?: number;
+  /** Full path (directory + filename) where the JSON report is written. */
+  outputFile: string;
 
   /** Path to a `package.json` from which product/tool versions are read (e.g. atomic package). */
   packageJsonPath?: string;
@@ -88,25 +67,19 @@ export interface A11yReporterOptions {
  *
  * export default defineConfig({
  *   test: {
- *     reporters: [new VitestA11yReporter({ outputDir: 'reports' })],
+ *     reporters: [new VitestA11yReporter({ outputFile: 'reports/a11y-report.json' })],
  *   },
  * });
  * ```
  */
 export class VitestA11yReporter implements Reporter {
   private readonly componentResults = new Map<string, ComponentAccumulator>();
-  private readonly outputDir: string;
-  private readonly outputFilename: string;
-  private readonly totalCriteria: number;
+  private readonly outputFile: string;
   private readonly shardInfo: ShardInfo | null;
   private readonly packageMetadata: PackageMetadata;
 
-  public constructor(options: A11yReporterOptions = {}) {
-    this.outputDir = options.outputDir ?? DEFAULT_A11Y_REPORT_OUTPUT_DIR;
-    this.outputFilename =
-      options.outputFilename ?? DEFAULT_A11Y_REPORT_FILENAME;
-    this.totalCriteria =
-      options.totalCriteria ?? DEFAULT_WCAG_22_AA_CRITERIA_COUNT;
+  public constructor(options: A11yReporterOptions) {
+    this.outputFile = options.outputFile;
     this.shardInfo = resolveShardInfo();
     this.packageMetadata = readPackageMetadata(options.packageJsonPath);
   }
@@ -124,31 +97,21 @@ export class VitestA11yReporter implements Reporter {
         return;
       }
 
-      const meta = testCase.meta() as StorybookTaskMeta;
-      const reports = Array.isArray(meta.reports)
-        ? (meta.reports as StorybookReport[])
-        : [];
-      const a11yReport = reports.find((report) => report.type === 'a11y');
-      const axeResults =
-        a11yReport && isAxeResults(a11yReport.result)
-          ? a11yReport.result
-          : null;
-      const interactiveReport =
-        reports.find((r): r is StorybookInteractiveReport =>
-          isInteractiveReport(r)
-        ) ?? null;
+      const meta = testCase.meta();
+      if (!isStorybookTaskMeta(meta)) {
+        return;
+      }
+
+      const axeResults = VitestA11yReporter.getAxeResults(meta);
+      const interactiveReport = VitestA11yReporter.getInteractiveReport(meta);
 
       if (!axeResults && !interactiveReport) {
         return;
       }
 
-      const storyId =
-        typeof meta.storyId === 'string' ? meta.storyId : testCase.id;
-      const moduleWithRelativePath = testCase.module as TestModule & {
-        relativeModuleId?: string;
-      };
+      const storyId = meta.storyId ?? testCase.id;
       const modulePath = normalizePath(
-        moduleWithRelativePath.relativeModuleId ?? testCase.module.moduleId
+        testCase.module.relativeModuleId ?? testCase.module.moduleId
       );
       const componentName = extractComponentName(modulePath, storyId);
 
@@ -156,13 +119,7 @@ export class VitestA11yReporter implements Reporter {
         return;
       }
 
-      const category = extractCategory(modulePath, storyId);
-      const framework = extractFramework(modulePath);
-      const component = this.getOrCreateComponent(
-        componentName,
-        category,
-        framework
-      );
+      const component = this.getOrCreateComponent(componentName);
 
       if (component.storyIds.has(storyId)) {
         return;
@@ -248,13 +205,12 @@ export class VitestA11yReporter implements Reporter {
 
       const report = buildA11yReport(
         this.componentResults,
-        this.totalCriteria,
         this.packageMetadata
       );
       const serializedReport = `${JSON.stringify(report, null, 2)}\n`;
       const outputPaths = this.getOutputPaths();
 
-      await mkdir(this.outputDir, {recursive: true});
+      await mkdir(path.dirname(this.outputFile), {recursive: true});
       await Promise.all(
         outputPaths.map((outputPath) =>
           writeFile(outputPath, serializedReport, 'utf8')
@@ -265,34 +221,14 @@ export class VitestA11yReporter implements Reporter {
     }
   }
 
-  private getOrCreateComponent(
-    componentName: string,
-    category: string,
-    framework: SupportedFramework
-  ): ComponentAccumulator {
+  private getOrCreateComponent(componentName: string): ComponentAccumulator {
     const existing = this.componentResults.get(componentName);
     if (existing) {
-      if (
-        existing.category === UNKNOWN_CATEGORY &&
-        category !== UNKNOWN_CATEGORY
-      ) {
-        existing.category = category;
-      }
-
-      if (
-        existing.framework === UNKNOWN_FRAMEWORK &&
-        framework !== UNKNOWN_FRAMEWORK
-      ) {
-        existing.framework = framework;
-      }
-
       return existing;
     }
 
     const component: ComponentAccumulator = {
       name: componentName,
-      category,
-      framework,
       storyIds: new Set<string>(),
       automated: {
         violations: 0,
@@ -319,19 +255,40 @@ export class VitestA11yReporter implements Reporter {
     }
   }
 
-  private getOutputPaths(): string[] {
-    const baseOutputPath = path.resolve(this.outputDir, this.outputFilename);
+  private static getAxeResults(meta: StorybookTaskMeta): AxeResults | null {
+    const reports = meta.reports ?? [];
+    const a11yReport = reports.find((report) => report.type === 'a11y');
 
-    if (!this.shardInfo) {
-      return [baseOutputPath];
-    }
+    return a11yReport && isAxeResults(a11yReport.result)
+      ? a11yReport.result
+      : null;
+  }
 
-    const shardOutputPath = path.resolve(
-      this.outputDir,
-      `a11y-report.shard-${this.shardInfo.index}.json`
+  private static getInteractiveReport(
+    meta: StorybookTaskMeta
+  ): StorybookInteractiveReport | null {
+    const reports = meta.reports ?? [];
+    const interactiveReport = reports.find((report) =>
+      isInteractiveReport(report)
     );
 
-    return [baseOutputPath, shardOutputPath];
+    return interactiveReport ?? null;
+  }
+
+  private getOutputPaths(): string[] {
+    if (!this.shardInfo) {
+      return [this.outputFile];
+    }
+
+    const dir = path.dirname(this.outputFile);
+    const ext = path.extname(this.outputFile);
+    const base = path.basename(this.outputFile, ext);
+    const shardOutputPath = path.resolve(
+      dir,
+      `${base}.shard-${this.shardInfo.index}${ext}`
+    );
+
+    return [this.outputFile, shardOutputPath];
   }
 
   private warn(message: string, error?: unknown): void {
