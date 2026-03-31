@@ -10,7 +10,7 @@ import {Form, useFetcher, useLoaderData} from 'react-router';
 import externalContextService from '@/external-services/external-context-service';
 import {useContext, useEngine} from '@/lib/commerce-engine';
 
-export const loader = async (_args: LoaderFunctionArgs) => {
+const loader = async (_args: LoaderFunctionArgs) => {
   const contextInfo = await externalContextService.getContextInformation();
   return contextInfo;
 };

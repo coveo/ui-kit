@@ -41,7 +41,7 @@
     "esbuild-plugin-alias": "0.2.1",
     "esbuild-plugin-umd-wrapper": "3.0.0",
     "husky": "9.1.7",
-    "knip": "5.62.0",
+    "knip": "5.88.0",
     "lint-staged": "16.2.7",
     "@playwright/mcp": "catalog:",
     "playwright": "catalog:",
