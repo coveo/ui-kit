@@ -303,7 +303,7 @@ function getAutomaticFacets(state: Partial<SearchParametersState>) {
       const selectedValues = getSelectedResponseValues(response);
       return selectedValues.length ? {[facetId]: selectedValues} : {};
     })
-    // biome-ignore lint/performance/noAccumulatingSpread: <>
+    // oxlint-disable-next-line oxc/no-accumulating-spread -- <>
     .reduce((acc, obj) => ({...acc, ...obj}), {});
 
   return Object.keys(af).length ? {af} : {};

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// biome-ignore lint/correctness/noUnusedImports: <>
+// oxlint-disable-next-line @typescript-eslint/no-unused-vars -- <>
 import SearchPage from './components/SearchPage.vue';
 </script>
 

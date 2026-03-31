@@ -54,7 +54,7 @@ describe('commerce facet-order slice', () => {
         })
       );
 
-      // biome-ignore lint/suspicious/noExplicitAny: <>
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
       return action(response as any, '');
     }
 
@@ -74,7 +74,7 @@ describe('commerce facet-order slice', () => {
       actionName: '#restoreProductListingParameters',
       action: restoreProductListingParameters,
     },
-    // biome-ignore lint/suspicious/noExplicitAny: <>
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
   ])('$actionName', ({action}: {action: (payload: any) => Action}) => {
     it('sets the facet order to the facets in the parameters', () => {
       const payload: Parameters = {

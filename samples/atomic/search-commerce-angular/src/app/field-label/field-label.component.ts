@@ -1,4 +1,4 @@
-// biome-ignore lint/style/useImportType: <>
+// oxlint-disable-next-line @typescript-eslint/consistent-type-imports -- <>
 import {
   type AfterViewInit,
   Component,
@@ -6,7 +6,7 @@ import {
   NgZone,
   ViewChild,
 } from '@angular/core';
-// biome-ignore lint/style/useImportType: <>
+// oxlint-disable-next-line @typescript-eslint/consistent-type-imports -- <>
 import {AtomicText} from '@coveo/atomic-angular';
 
 @Component({
@@ -40,7 +40,7 @@ export class FieldLabelComponent implements AfterViewInit {
     if (!this.atomicText) {
       return '';
     }
-    // biome-ignore lint/complexity/useLiteralKeys: <>
+    // oxlint-disable-next-line dot-notation -- <>
     return this.atomicText['el'].getAttribute('value') as string;
   }
 
@@ -49,7 +49,7 @@ export class FieldLabelComponent implements AfterViewInit {
       return;
     }
     this.z.runOutsideAngular(() => {
-      // biome-ignore lint/complexity/useLiteralKeys: <>
+      // oxlint-disable-next-line dot-notation -- <>
       this.atomicText!['el'].setAttribute('value', v);
     });
   }

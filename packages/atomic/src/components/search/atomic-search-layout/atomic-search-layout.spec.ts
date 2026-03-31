@@ -10,14 +10,16 @@ import {AtomicSearchLayout} from './atomic-search-layout';
 describe('AtomicSearchLayout', () => {
   const renderSearchLayout = async (mobileBreakpoint?: string) => {
     const {element} = await renderInAtomicSearchInterface<AtomicSearchLayout>({
-      template: html`<atomic-search-layout mobile-breakpoint="${ifDefined(mobileBreakpoint)}">
-    <atomic-layout-section data-testid="facets" section="facets">
-            facets...
-          </atomic-layout-section>
-          <atomic-layout-section data-testid="main" section="main">
-            main...
-          </atomic-layout-section>
-    </atomic-search-layout>`,
+      template: html`<atomic-search-layout
+        mobile-breakpoint="${ifDefined(mobileBreakpoint)}"
+      >
+        <atomic-layout-section data-testid="facets" section="facets">
+          facets...
+        </atomic-layout-section>
+        <atomic-layout-section data-testid="main" section="main">
+          main...
+        </atomic-layout-section>
+      </atomic-search-layout>`,
       selector: 'atomic-search-layout',
     });
 
@@ -55,7 +57,7 @@ describe('AtomicSearchLayout', () => {
   describe('#layoutStylesController', () => {
     it('should initialize LayoutStylesController', async () => {
       const {element} = await renderSearchLayout();
-      // biome-ignore lint/complexity/useLiteralKeys: <accessing private property for testing>
+      // oxlint-disable-next-line dot-notation -- <accessing private property for testing>
       expect(element['layoutStylesController']).toBeDefined();
     });
   });
