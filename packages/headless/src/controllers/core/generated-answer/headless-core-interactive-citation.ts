@@ -14,6 +14,10 @@ export interface InteractiveCitationOptions
    * The generated answer citation.
    */
   citation: GeneratedAnswerCitation;
+  /**
+   * The unique identifier of the generated answer associated with the citation.
+   */
+  answerId?: string;
 }
 
 export interface InteractiveCitationProps extends InteractiveResultCoreProps {
@@ -32,7 +36,10 @@ export interface InteractiveCitationProps extends InteractiveResultCoreProps {
 export interface InteractiveCitation extends InteractiveResultCore {}
 
 interface InteractiveCitationAnalyticsClient {
-  logOpenGeneratedAnswerSource(citationId: string): CustomAction;
+  logOpenGeneratedAnswerSource(
+    citationId: string,
+    answerId?: string
+  ): CustomAction;
 }
 
 /**
@@ -55,7 +62,10 @@ export function buildInteractiveCitationCore(
     }
     wasOpened = true;
     engine.dispatch(
-      analyticsClient.logOpenGeneratedAnswerSource(props.options.citation.id)
+      analyticsClient.logOpenGeneratedAnswerSource(
+        props.options.citation.id,
+        props.options.answerId
+      )
     );
   };
 

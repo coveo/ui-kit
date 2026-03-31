@@ -6,7 +6,7 @@ import {
   type FacetManagerState,
 } from '../../core/facet-manager/headless-core-facet-manager.js';
 
-export type {FacetManagerState, FacetManagerPayload, FacetManager};
+export type {FacetManager, FacetManagerPayload, FacetManagerState};
 
 /**
  * Creates an insight `FacetManager` instance.

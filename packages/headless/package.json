@@ -68,7 +68,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "3.43.0",
+  "version": "3.48.0",
   "files": [
     "dist/"
   ],
@@ -83,7 +83,6 @@
     "test:watch": "vitest --exclude \"src/integration-tests/**\"",
     "integration-test": "vitest run --poolOptions.threads.singleThread src/integration-tests/**",
     "integration-test:watch": "vitest --poolOptions.threads.singleThread src/integration-tests/**",
-    "release:phase3": "pnpm --filter @coveo/ci npm-publish",
     "release:phase1": "pnpm --filter @coveo/ci bump",
     "build:typedoc": "pnpm run build:typedoc:docs && pnpm run build:typedoc:merge",
     "build:typedoc:docs": "concurrently \"pnpm run build:typedoc:search\" \"pnpm run build:typedoc:commerce\" \"pnpm run build:typedoc:case-assist\" \"pnpm run build:typedoc:insight\" \"pnpm run build:typedoc:recommendation\" \"pnpm run build:typedoc:ssr\" \"pnpm run build:typedoc:ssr-commerce\"",
@@ -96,7 +95,7 @@
     "build:typedoc:ssr": "typedoc --json ./temp/ssr.json --tsconfig tsconfig.typedoc.json --options typedoc-configs/ssr.typedoc.json",
     "build:typedoc:ssr-commerce": "typedoc --json ./temp/ssr-commerce.json --tsconfig tsconfig.typedoc.json --options typedoc-configs/ssr-commerce.typedoc.json",
     "serve:typedoc": "live-server ./docs",
-    "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod"
+    "npm:publish": "pnpm --filter @coveo/ci npm-publish"
   },
   "peerDependencies": {
     "encoding": "^0.1.13",
@@ -109,16 +108,17 @@
     }
   },
   "dependencies": {
+    "@ag-ui/client": "0.0.45",
     "@coveo/bueno": "workspace:*",
-    "@coveo/relay": "1.2.15",
+    "@coveo/relay": "catalog:",
     "@coveo/relay-event-types": "catalog:",
-    "@reduxjs/toolkit": "2.6.0",
+    "@reduxjs/toolkit": "2.11.2",
     "abortcontroller-polyfill": "1.7.8",
     "coveo.analytics": "catalog:",
     "dayjs": "catalog:",
     "exponential-backoff": "catalog:",
-    "fast-equals": "5.2.2",
-    "headers-polyfill": "4.0.3",
+    "fast-equals": "6.0.0",
+    "headers-polyfill": "5.0.1",
     "navigator.sendbeacon": "0.0.20",
     "pino": "10.1.0",
     "redux-thunk": "3.1.0",

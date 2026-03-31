@@ -9,8 +9,8 @@ import {
 
 export type {
   InteractiveCitation,
-  InteractiveCitationProps,
   InteractiveCitationOptions,
+  InteractiveCitationProps,
 };
 
 /**

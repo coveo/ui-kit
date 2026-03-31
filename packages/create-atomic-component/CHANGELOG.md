@@ -1,3 +1,10 @@
+## <small>1.5.14 (2026-03-25)</small>
+
+* ci: migrate npm publishing to OIDC trusted publishers (#7198) ([c97eff5](https://github.com/coveo/ui-kit/commits/c97eff5)), closes [#7198](https://github.com/coveo/ui-kit/issues/7198)
+* fix(deps): update all dependencies j:kit-282 (#6191) ([9ec6cc5](https://github.com/coveo/ui-kit/commits/9ec6cc5)), closes [#6191](https://github.com/coveo/ui-kit/issues/6191)
+
+
+
 ## <small>1.5.13 (2026-01-14)</small>
 
 * fix(deps): Replace catalog:* with workspace:* for @coveo/create-atomic-rollup-plugin (#6808) ([2872e4b](https://github.com/coveo/ui-kit/commits/2872e4b)), closes [#6808](https://github.com/coveo/ui-kit/issues/6808)

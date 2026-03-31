@@ -139,7 +139,6 @@ export default function RegularFacet(props: IRegularFacetProps) {
             <label className="FacetSearchResultLabel" htmlFor={value.rawValue}>
               <span
                 className="FacetSearchResultName"
-                // biome-ignore lint/security/noDangerouslySetInnerHtml: <>
                 dangerouslySetInnerHTML={{
                   __html: highlightFacetSearchResult(value.displayValue),
                 }}

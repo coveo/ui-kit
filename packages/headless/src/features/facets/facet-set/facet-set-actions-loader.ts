@@ -25,11 +25,11 @@ import {
 export type {
   RegisterFacetActionCreatorPayload,
   ToggleSelectFacetValueActionCreatorPayload,
+  UpdateFacetAutoSelectionActionCreatorPayload,
   UpdateFacetIsFieldExpandedActionCreatorPayload,
   UpdateFacetNumberOfValuesActionCreatorPayload,
   UpdateFacetSortCriterionActionCreatorPayload,
   UpdateFreezeCurrentValuesActionCreatorPayload,
-  UpdateFacetAutoSelectionActionCreatorPayload,
 };
 
 /**

@@ -6,7 +6,7 @@
     <title>Coveo Atomic Hosted UI</title>
 
     <script type="module">
-      const deploymentEnvironment = typeof process != 'undefined' ? process.env.DEPLOYMENT_ENVIRONMENT : 'CDN';
+      const deploymentEnvironment = typeof process !== 'undefined' ? process.env.DEPLOYMENT_ENVIRONMENT : 'CDN';
 
       (async () => {
         if (deploymentEnvironment === 'CDN') {

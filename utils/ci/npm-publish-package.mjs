@@ -28,8 +28,7 @@ async function isPublished(name, version, tag = version) {
   }
 }
 
-const isPrerelease = process.env.IS_PRERELEASE === 'true';
-const tagSuffix = process.env.PR_NUMBER || '';
+const tag = process.env.NPM_TAG || 'latest';
 /**@type {import('./types.mjs').PackageJson} */
 const {name, version} = JSON.parse(
   readFileSync('package.json', {encoding: 'utf-8'})
@@ -38,11 +37,8 @@ if (!name || !version) {
   throw 'Expected name and version to exist in package.json.';
 }
 if (!(await isPublished(name, version))) {
-  const tagToPublish = isPrerelease
-    ? ['alpha', ...(tagSuffix ? [tagSuffix] : [])].join('-')
-    : 'beta';
   await pnpmPublishPackage('.', {
-    tag: tagToPublish,
+    tag,
     provenance: true,
   });
 } else {

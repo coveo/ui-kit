@@ -173,6 +173,20 @@ describe('atomic-ipx-modal', () => {
 
       expect(element.id).toBe('custom-id');
     });
+
+    it('should apply atomic-ipx-modal-opened to the interface element on init when isOpen=true', async () => {
+      const {atomicInterface} =
+        await renderInAtomicSearchInterface<AtomicIpxModal>({
+          template: html`<atomic-ipx-modal .isOpen=${true}></atomic-ipx-modal>`,
+          selector: 'atomic-ipx-modal',
+          bindings: (bindings) => {
+            bindings.engine = mockedEngine;
+            return bindings;
+          },
+        });
+
+      expect(atomicInterface).toHaveClass('atomic-ipx-modal-opened');
+    });
   });
 
   describe('when handling touch events', () => {
@@ -289,7 +303,9 @@ describe('atomic-ipx-modal', () => {
 
   describe('when integrating with ipx-body functional component', () => {
     it('should render container with visible class when isOpen=true', async () => {
-      const {element, parts} = await renderIPXModal({props: {isOpen: true}});
+      const {element, parts} = await renderIPXModal({
+        props: {isOpen: true},
+      });
 
       await element.updateComplete;
 
@@ -297,7 +313,9 @@ describe('atomic-ipx-modal', () => {
     });
 
     it('should render container with invisible class when isOpen=false', async () => {
-      const {element, parts} = await renderIPXModal({props: {isOpen: false}});
+      const {element, parts} = await renderIPXModal({
+        props: {isOpen: false},
+      });
 
       await element.updateComplete;
 

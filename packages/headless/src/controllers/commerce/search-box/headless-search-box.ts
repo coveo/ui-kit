@@ -3,10 +3,12 @@ import {configuration} from '../../../app/common-reducers.js';
 import {stateKey} from '../../../app/state-key.js';
 import type {UpdateQueryPayload} from '../../../features/commerce/query/query-actions.js';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice.js';
+import {commerceQuerySetReducer as querySet} from '../../../features/commerce/query-set/commerce-query-set-slice.js';
 import {
   registerQuerySetQuery,
   updateQuerySetQuery,
 } from '../../../features/commerce/query-set/query-set-actions.js';
+import {commerceQuerySuggestReducer as querySuggest} from '../../../features/commerce/query-suggest/commerce-query-suggest-slice.js';
 import {
   clearQuerySuggest,
   fetchQuerySuggestions,
@@ -19,8 +21,6 @@ import {
   prepareForSearchWithQuery,
 } from '../../../features/commerce/search/search-actions.js';
 import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice.js';
-import {querySetReducer as querySet} from '../../../features/query-set/query-set-slice.js';
-import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice.js';
 import type {
   CommerceQuerySection,
   CommerceSearchSection,
@@ -44,7 +44,7 @@ import {
   searchBoxOptionsSchema,
 } from './headless-search-box-options.js';
 
-export type {SearchBoxOptions, SearchBoxState, Suggestion, CoreSearchBox};
+export type {CoreSearchBox, SearchBoxOptions, SearchBoxState, Suggestion};
 
 export interface SearchBoxProps {
   /**

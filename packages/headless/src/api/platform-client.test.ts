@@ -91,29 +91,28 @@ it.each([
     platform: string;
     search: string;
   };
-}>)(
-  'return the correct #getOrganizationEndpoints()',
-  ({orgId, env, organizationEndpoints}) => {
-    expect(getOrganizationEndpoint(orgId, env, 'admin')).toEqual(
-      organizationEndpoints.admin
-    );
-    expect(getOrganizationEndpoint(orgId, env, 'analytics')).toEqual(
-      organizationEndpoints.analytics
-    );
-    expect(getAnalyticsNextApiBaseUrl(orgId, env)).toEqual(
-      organizationEndpoints.analyticsNext
-    );
-    expect(getOrganizationEndpoint(orgId, env, 'platform')).toEqual(
-      organizationEndpoints.platform
-    );
-    expect(getOrganizationEndpoint(orgId, env)).toEqual(
-      organizationEndpoints.platform
-    );
-    expect(getSearchApiBaseUrl(orgId, env)).toEqual(
-      organizationEndpoints.search
-    );
-  }
-);
+}>)('return the correct #getOrganizationEndpoints()', ({
+  orgId,
+  env,
+  organizationEndpoints,
+}) => {
+  expect(getOrganizationEndpoint(orgId, env, 'admin')).toEqual(
+    organizationEndpoints.admin
+  );
+  expect(getOrganizationEndpoint(orgId, env, 'analytics')).toEqual(
+    organizationEndpoints.analytics
+  );
+  expect(getAnalyticsNextApiBaseUrl(orgId, env)).toEqual(
+    organizationEndpoints.analyticsNext
+  );
+  expect(getOrganizationEndpoint(orgId, env, 'platform')).toEqual(
+    organizationEndpoints.platform
+  );
+  expect(getOrganizationEndpoint(orgId, env)).toEqual(
+    organizationEndpoints.platform
+  );
+  expect(getSearchApiBaseUrl(orgId, env)).toEqual(organizationEndpoints.search);
+});
 
 describe('PlatformClient call', () => {
   let url: string;
@@ -296,17 +295,16 @@ describe('PlatformClient call', () => {
     );
   });
 
-  it.each([401, 419])(
-    'when status is %d should return a TokenExpiredError',
-    async (status) => {
-      mockFetch.mockReturnValueOnce(
-        Promise.resolve(new Response(JSON.stringify({}), {status}))
-      );
+  it.each([
+    401, 419,
+  ])('when status is %d should return a TokenExpiredError', async (status) => {
+    mockFetch.mockReturnValueOnce(
+      Promise.resolve(new Response(JSON.stringify({}), {status}))
+    );
 
-      const response = await platformCall();
-      expect(response).toBeInstanceOf(UnauthorizedTokenError);
-    }
-  );
+    const response = await platformCall();
+    expect(response).toBeInstanceOf(UnauthorizedTokenError);
+  });
 
   it('when status is 429 should try exponential backOff', async () => {
     mockFetch
