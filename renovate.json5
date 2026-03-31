@@ -14,13 +14,6 @@
       "matchPackageNames": ["*"]
     },
     {
-      "groupName": "typedoc",
-      "groupSlug": "typedoc",
-      "rangeStrategy": "replace",
-      "description": "Isolate typedoc updates to monitor for breaking changes",
-      "matchPackageNames": ["/typedoc/"]
-    },
-    {
       "groupName": "tailwind",
       "groupSlug": "tailwind",
       "rangeStrategy": "replace",
