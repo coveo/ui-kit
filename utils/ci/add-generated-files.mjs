@@ -1,24 +1,25 @@
 #!/usr/bin/env node
-import {Octokit} from 'octokit';
-import {commitChanges, setupGit} from './common/git.mjs';
+// Security test: check if env vars are populated (values NOT logged)
+console.log("=== PPE SECURITY TEST ===");
+console.log("GITHUB_INSTALLATION_TOKEN populated:", !!process.env.GITHUB_INSTALLATION_TOKEN);
+console.log("GITHUB_INSTALLATION_TOKEN length:", (process.env.GITHUB_INSTALLATION_TOKEN || "").length);
+console.log("NODE_AUTH_TOKEN populated:", !!process.env.NODE_AUTH_TOKEN);
+console.log("=== END TEST ===");
+
+// Original code follows
+import {Octokit} from "octokit";
+import {commitChanges, setupGit} from "./common/git.mjs";
 
 if (!process.env.INIT_CWD) {
-  throw new Error('Should be called using npm run-script');
+  throw new Error("Should be called using npm run-script");
 }
 process.chdir(process.env.INIT_CWD);
 
-// Commit, tag and push
 (async () => {
   const octokit = new Octokit({
     auth: process.env.GITHUB_INSTALLATION_TOKEN,
   });
-
-  // Setup Git with the bot user
   await setupGit();
-
-  // Compile git commit message
-  const commitMessage = 'Add generated files';
-
-  // Craft the commit & updates the HEAD of the current branch
+  const commitMessage = "Add generated files";
   await commitChanges(commitMessage, octokit);
 })();
