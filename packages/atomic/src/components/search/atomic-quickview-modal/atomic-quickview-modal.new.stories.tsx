@@ -85,6 +85,12 @@ const meta: Meta = {
   },
   args,
   argTypes,
+  play,
+};
+
+export default meta;
+
+export const Default: Story = {
   play: async (context) => {
     await play(context);
     const {canvasElement, step, userEvent} = context;
@@ -100,6 +106,6 @@ const meta: Meta = {
   },
 };
 
-export default meta;
-
-export const Default: Story = {};
+export const Closed: Story = {
+  tags: ['!dev'],
+};
