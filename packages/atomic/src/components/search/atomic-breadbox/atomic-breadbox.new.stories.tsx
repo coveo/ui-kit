@@ -1,9 +1,14 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
+import {within} from 'shadow-dom-testing-library';
 import {expect, waitFor} from 'storybook/test';
+import {testInteractiveA11y} from '@/storybook-utils/a11y/';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+
+const mockSearchApi = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -20,6 +25,9 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
+    msw: {
+      handlers: [...mockSearchApi.handlers],
+    },
     actions: {
       handles: events,
     },
@@ -69,6 +77,54 @@ export const Default: Story = {
           timeout: 30e3,
         }
       );
+    });
+  },
+};
+
+export const A11yInteraction: Story = {
+  tags: ['!dev'],
+  decorators: [
+    (story) => html`
+      ${story()}
+      <atomic-facet
+        field="objecttype"
+        label="Object type"
+      ></atomic-facet>
+    `,
+  ],
+  beforeEach: () => {
+    mockSearchApi.searchEndpoint.mock((response) => {
+      const facets = (response as Record<string, unknown>).facets as Array<
+        Record<string, unknown>
+      >;
+      const objecttypeFacet = facets.find((f) => f.facetId === 'objecttype') as
+        | Record<string, unknown>
+        | undefined;
+      if (objecttypeFacet) {
+        const values = objecttypeFacet.values as Array<Record<string, unknown>>;
+        if (values[0]) {
+          values[0].state = 'selected';
+        }
+      }
+      return response;
+    });
+    return () => mockSearchApi.searchEndpoint.reset();
+  },
+  play: async (context) => {
+    await play(context);
+    const canvas = within(context.canvasElement);
+
+    await waitFor(
+      () => {
+        const btn = canvas.queryByShadowTitle(/Object type: People/i);
+        expect(btn).toBeInTheDocument();
+      },
+      {timeout: 30e3}
+    );
+
+    await testInteractiveA11y(context, {
+      selectionControl: false,
+      activatableButtons: [{name: /People/i}],
     });
   },
 };

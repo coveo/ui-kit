@@ -4,6 +4,7 @@ import type {
   StoryObj as Story,
 } from '@storybook/web-components-vite';
 import {html} from 'lit';
+import {testInteractiveA11y} from '@/storybook-utils/a11y/';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -36,6 +37,29 @@ export default meta;
 
 export const Default: Story = {
   beforeEach: async () => {
+    mockSearchApi.searchEndpoint.mock((response) => ({
+      ...response,
+      generateAutomaticFacets: {
+        facets: [
+          {
+            field: 'objecttype',
+            label: 'Type',
+            values: [
+              {value: 'Document', numberOfResults: 45, state: 'idle'},
+              {value: 'PDF', numberOfResults: 32, state: 'idle'},
+              {value: 'Video', numberOfResults: 18, state: 'idle'},
+              {value: 'Image', numberOfResults: 12, state: 'idle'},
+            ],
+          },
+        ],
+      },
+    }));
+  },
+};
+
+export const A11yInteraction: Story = {
+  tags: ['!dev'],
+  beforeEach: async () => {
     mockSearchApi.searchEndpoint.mockOnce((response) => ({
       ...response,
       generateAutomaticFacets: {
@@ -53,5 +77,9 @@ export const Default: Story = {
         ],
       },
     }));
+  },
+  play: async (context) => {
+    await play(context);
+    await testInteractiveA11y(context, {});
   },
 };

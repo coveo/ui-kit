@@ -1,8 +1,12 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
+import {testDisclosureA11y} from '@/storybook-utils/a11y/';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+
+const mockSearchApi = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -17,6 +21,9 @@ const meta: Meta = {
   render: (args) => template(args),
   parameters: {
     ...parameters,
+    msw: {
+      handlers: [...mockSearchApi.handlers],
+    },
     actions: {
       handles: events,
     },
@@ -50,6 +57,23 @@ export const Default: Story = {
     `,
     decorator,
   ],
+};
+
+export const A11yInteraction: Story = {
+  tags: ['!dev'],
+  decorators: [
+    (story) => html`
+      ${story()}
+      <div style="display:none;">
+        <atomic-facet field="author" label="Authors"></atomic-facet>
+      </div>
+    `,
+    decorator,
+  ],
+  play: async (context) => {
+    await play(context);
+    await testDisclosureA11y(context, {triggerLabel: 'Sort & Filter'});
+  },
 };
 
 export const WithAtomicExternals: Story = {

@@ -5,6 +5,7 @@ import type {
 } from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
+import {testCollapsibleA11y} from '@/storybook-utils/a11y/';
 import {MockAnswerApi} from '@/storybook-utils/api/answer/mock';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
@@ -88,5 +89,13 @@ export const DisableCitationAnchoring: Story = {
   name: 'Citation anchoring disabled',
   args: {
     'disable-citation-anchoring': true,
+  },
+};
+
+export const A11yInteraction: Story = {
+  tags: ['!dev'],
+  play: async (context) => {
+    await play(context);
+    await testCollapsibleA11y(context, {triggerLabel: 'Show more'});
   },
 };

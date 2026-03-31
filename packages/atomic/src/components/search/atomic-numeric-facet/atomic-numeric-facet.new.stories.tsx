@@ -1,5 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {testInteractiveA11y} from '@/storybook-utils/a11y/';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {
@@ -244,5 +245,17 @@ export const WithSelectedValue: Story = {
         },
       ],
     }));
+  },
+};
+
+export const A11yInteraction: Story = {
+  tags: ['!dev'],
+  decorators: [facetDecorator],
+  args: {
+    field: 'ytviewcount',
+  },
+  play: async (context) => {
+    await play(context);
+    await testInteractiveA11y(context, {});
   },
 };

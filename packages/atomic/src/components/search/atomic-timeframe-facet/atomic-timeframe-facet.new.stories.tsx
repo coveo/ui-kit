@@ -1,5 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {testInteractiveA11y} from '@/storybook-utils/a11y/';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {
@@ -119,7 +120,7 @@ export const Default: Story = {
     `,
   },
   beforeEach: () => {
-    searchApiHarness.searchEndpoint.mockOnce((response) => ({
+    searchApiHarness.searchEndpoint.mock((response) => ({
       ...response,
       facets: [
         createDateFacetResponse(baseDateFacetValues),
@@ -269,5 +270,35 @@ export const Collapsed: Story = {
         }),
       ],
     }));
+  },
+};
+
+export const A11yInteraction: Story = {
+  tags: ['!dev'],
+  decorators: [facetDecorator],
+  args: {
+    'default-slot': `
+      <atomic-timeframe unit="hour"></atomic-timeframe>
+      <atomic-timeframe unit="day"></atomic-timeframe>
+      <atomic-timeframe unit="week"></atomic-timeframe>
+      <atomic-timeframe unit="month"></atomic-timeframe>
+      <atomic-timeframe unit="quarter"></atomic-timeframe>
+      <atomic-timeframe unit="year"></atomic-timeframe>
+    `,
+  },
+  beforeEach: () => {
+    searchApiHarness.searchEndpoint.mockOnce((response) => ({
+      ...response,
+      facets: [
+        createDateFacetResponse(baseDateFacetValues),
+        createDateFacetResponse(baseDateFacetValues, {
+          facetId: 'date_input_range',
+        }),
+      ],
+    }));
+  },
+  play: async (context) => {
+    await play(context);
+    await testInteractiveA11y(context, {});
   },
 };

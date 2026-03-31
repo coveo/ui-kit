@@ -5,6 +5,7 @@ import type {
 } from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {testComboboxA11y} from '@/storybook-utils/a11y/';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -67,5 +68,13 @@ export const StandaloneSearchBox: Story = {
   args: {
     'redirection-url':
       './iframe.html?id=atomic-search-interface--with-result-list',
+  },
+};
+
+export const A11yInteraction: Story = {
+  tags: ['!dev'],
+  play: async (context) => {
+    await play(context);
+    await testComboboxA11y(context, {inputSelector: 'input'});
   },
 };

@@ -1,5 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {testInteractiveA11y} from '@/storybook-utils/a11y/';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
@@ -368,7 +369,18 @@ export const Default: Story = {
   },
   decorators: [facetDecorator],
   beforeEach: () => {
-    mockDefaultCategoryFacetResponse();
+    searchApiHarness.searchEndpoint.mock((response) => {
+      if ('facets' in response) {
+        return {
+          ...response,
+          facets: [
+            ...(response.facets || []),
+            createCategoryFacetResponse(baseCategoryFacetValues),
+          ],
+        };
+      }
+      return response;
+    });
   },
 };
 
@@ -411,5 +423,21 @@ export const WithSelectedChildValueAndMoreAvailable: Story = {
   decorators: [facetDecorator],
   beforeEach: () => {
     mockSelectedChildValueWithMoreAvailable();
+  },
+};
+
+export const A11yInteraction: Story = {
+  tags: ['!dev'],
+  args: {
+    field: 'geographicalhierarchy',
+    label: 'Geographical Hierarchy',
+  },
+  decorators: [facetDecorator],
+  beforeEach: () => {
+    mockDefaultCategoryFacetResponse();
+  },
+  play: async (context) => {
+    await play(context);
+    await testInteractiveA11y(context, {});
   },
 };

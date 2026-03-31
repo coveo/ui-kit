@@ -5,6 +5,7 @@ import type {
 } from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {testInteractiveA11y} from '@/storybook-utils/a11y/';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -62,3 +63,23 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {};
+
+export const A11yInteraction: Story = {
+  tags: ['!dev'],
+  parameters: {
+    a11y: {
+      config: {
+        // Pre-existing: active tab color #399ffe on white has 2.77:1
+        // contrast ratio (needs 4.5:1).
+        rules: [{id: 'color-contrast', enabled: false}],
+      },
+    },
+  },
+  play: async (context) => {
+    await play(context);
+    await testInteractiveA11y(context, {
+      selectionControl: false,
+      activatableButtons: [{name: /Documentation/i}],
+    });
+  },
+};

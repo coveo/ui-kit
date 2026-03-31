@@ -1,9 +1,12 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {userEvent} from 'storybook/test';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
 import {wrapInSearchBox} from '@/storybook-utils/search/search-box-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+
+const mockSearchApi = new MockSearchApi();
 
 const {decorator: searchInterfaceDecorator, play: searchInterfacePlay} =
   wrapInSearchInterface({}, false, false);
@@ -21,6 +24,9 @@ const meta: Meta = {
   decorators: [searchBoxDecorator, searchInterfaceDecorator],
   parameters: {
     ...parameters,
+    msw: {
+      handlers: [...mockSearchApi.handlers],
+    },
     actions: {
       handles: events,
     },

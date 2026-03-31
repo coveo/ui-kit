@@ -1,10 +1,13 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {
   playExecuteFirstSearch,
   wrapInSearchInterface,
 } from '@/storybook-utils/search/search-interface-wrapper';
+
+const mockSearchApi = new MockSearchApi();
 
 const defaultTemplateContent = `<atomic-result-template>
   <template>
@@ -95,6 +98,9 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
+    msw: {
+      handlers: [...mockSearchApi.handlers],
+    },
     layout: 'fullscreen',
     actions: {
       handles: events,
