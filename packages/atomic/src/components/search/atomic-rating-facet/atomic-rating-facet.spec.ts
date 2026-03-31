@@ -432,7 +432,7 @@ describe('atomic-rating-facet', () => {
       );
 
       const {element} = await renderRatingFacet();
-      element.disconnectedCallback();
+      element.remove();
 
       expect(stopWatchingSpy).toHaveBeenCalled();
     });

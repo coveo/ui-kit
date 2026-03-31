@@ -104,13 +104,6 @@
       "matchPackageNames": ["@coveo/relay"]
     },
     {
-      "groupName": "biome",
-      "groupSlug": "biome",
-      "rangeStrategy": "replace",
-      "description": "Isolate biome since it has memory issues in 2.1.1",
-      "matchPackageNames": ["@biomejs/biome"]
-    },
-    {
       "groupName": "knip",
       "groupSlug": "knip",
       "rangeStrategy": "replace",
