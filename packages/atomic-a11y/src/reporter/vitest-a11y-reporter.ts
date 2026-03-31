@@ -12,10 +12,7 @@ import {
   DEFAULT_A11Y_REPORT_FILENAME,
   DEFAULT_A11Y_REPORT_OUTPUT_DIR,
   DEFAULT_WCAG_22_AA_CRITERIA_COUNT,
-  UNKNOWN_CATEGORY,
-  UNKNOWN_FRAMEWORK,
 } from '../shared/constants.js';
-import type {SupportedFramework} from '../shared/types.js';
 import {
   getCriteriaForRule,
   getIncompleteMessage,
@@ -26,16 +23,10 @@ import {
   type ComponentAccumulator,
   type PackageMetadata,
   readPackageMetadata,
-  type StorybookReport,
   type StorybookTaskMeta,
 } from './reporter-utils.js';
 import {resolveShardInfo, type ShardInfo} from './shard-resolution.js';
-import {
-  extractCategory,
-  extractComponentName,
-  extractFramework,
-  normalizePath,
-} from './storybook-extraction.js';
+import {extractComponentName, normalizePath} from './storybook-extraction.js';
 
 const REPORTER_NAME = 'VitestA11yReporter';
 
@@ -123,9 +114,7 @@ export class VitestA11yReporter implements Reporter {
       }
 
       const meta = testCase.meta() as StorybookTaskMeta;
-      const reports = Array.isArray(meta.reports)
-        ? (meta.reports as StorybookReport[])
-        : [];
+      const reports = meta.reports ?? [];
       const a11yReport = reports.find((report) => report.type === 'a11y');
       const axeResults =
         a11yReport && isAxeResults(a11yReport.result)
@@ -136,13 +125,9 @@ export class VitestA11yReporter implements Reporter {
         return;
       }
 
-      const storyId =
-        typeof meta.storyId === 'string' ? meta.storyId : testCase.id;
-      const moduleWithRelativePath = testCase.module as TestModule & {
-        relativeModuleId?: string;
-      };
+      const storyId = meta.storyId ?? testCase.id;
       const modulePath = normalizePath(
-        moduleWithRelativePath.relativeModuleId ?? testCase.module.moduleId
+        testCase.module.relativeModuleId ?? testCase.module.moduleId
       );
       const componentName = extractComponentName(modulePath, storyId);
 
@@ -150,13 +135,7 @@ export class VitestA11yReporter implements Reporter {
         return;
       }
 
-      const category = extractCategory(modulePath, storyId);
-      const framework = extractFramework(modulePath);
-      const component = this.getOrCreateComponent(
-        componentName,
-        category,
-        framework
-      );
+      const component = this.getOrCreateComponent(componentName);
 
       if (component.storyIds.has(storyId)) {
         return;
@@ -221,34 +200,14 @@ export class VitestA11yReporter implements Reporter {
     }
   }
 
-  private getOrCreateComponent(
-    componentName: string,
-    category: string,
-    framework: SupportedFramework
-  ): ComponentAccumulator {
+  private getOrCreateComponent(componentName: string): ComponentAccumulator {
     const existing = this.componentResults.get(componentName);
     if (existing) {
-      if (
-        existing.category === UNKNOWN_CATEGORY &&
-        category !== UNKNOWN_CATEGORY
-      ) {
-        existing.category = category;
-      }
-
-      if (
-        existing.framework === UNKNOWN_FRAMEWORK &&
-        framework !== UNKNOWN_FRAMEWORK
-      ) {
-        existing.framework = framework;
-      }
-
       return existing;
     }
 
     const component: ComponentAccumulator = {
       name: componentName,
-      category,
-      framework,
       storyIds: new Set<string>(),
       automated: {
         violations: 0,

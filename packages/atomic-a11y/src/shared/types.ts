@@ -14,11 +14,6 @@ export type CriterionLevel = 'A' | 'AA' | 'AAA' | 'unknown';
 export type WCAGVersion = '2.0' | '2.1' | '2.2' | 'unknown';
 
 /**
- * Supported framework types.
- */
-export type SupportedFramework = 'lit' | 'stencil' | 'unknown';
-
-/**
  * Metadata for a WCAG criterion.
  */
 export interface CriterionMetadata {
@@ -55,8 +50,6 @@ export interface A11yAutomatedResults {
  */
 export interface A11yComponentReport {
   name: string;
-  category: string;
-  framework: SupportedFramework;
   storyCount: number;
   automated: A11yAutomatedResults;
 }
@@ -77,7 +70,6 @@ export interface A11yCriterionReport {
     | 'notEvaluated';
   automatedCoverage: boolean;
   manualVerified: boolean;
-  remarks: string;
   affectedComponents: string[];
 }
 
@@ -95,9 +87,6 @@ interface StoryCoverage {
  */
 export interface A11ySummary {
   totalComponents: number;
-  litComponents: number;
-  stencilComponents: number;
-  stencilExcluded: boolean;
   storyCoverage: StoryCoverage;
   totalCriteria: number;
   supports: number;

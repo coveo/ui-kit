@@ -1,6 +1,3 @@
-import {UNKNOWN_CATEGORY, UNKNOWN_FRAMEWORK} from '../shared/constants.js';
-import type {SupportedFramework} from '../shared/types.js';
-
 export function normalizePath(filePath: string): string {
   return filePath.replaceAll('\\', '/');
 }
@@ -27,36 +24,4 @@ export function extractComponentName(
   }
 
   return null;
-}
-
-export function extractCategory(modulePath: string, storyId: string): string {
-  const categoryFromPath = modulePath.match(
-    /components\/(commerce|search|insight|ipx|common|recommendations)\//i
-  );
-
-  if (categoryFromPath?.[1]) {
-    return categoryFromPath[1].toLowerCase();
-  }
-
-  const categoryFromStoryId = storyId.match(
-    /^(commerce|search|insight|ipx|common|recommendations)-/i
-  );
-
-  if (categoryFromStoryId?.[1]) {
-    return categoryFromStoryId[1].toLowerCase();
-  }
-
-  return UNKNOWN_CATEGORY;
-}
-
-export function extractFramework(modulePath: string): SupportedFramework {
-  if (modulePath.endsWith('.new.stories.tsx')) {
-    return 'lit';
-  }
-
-  if (modulePath.endsWith('.stories.tsx')) {
-    return 'stencil';
-  }
-
-  return UNKNOWN_FRAMEWORK;
 }

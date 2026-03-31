@@ -1,5 +1,4 @@
 import type {AxeResults, Result as AxeRuleResult} from 'axe-core';
-import {extractCriteriaFromTags} from '../data/axe-rule-mappings.js';
 import {isRecord} from '../shared/guards.js';
 import {compareByNumericId} from '../shared/sorting.js';
 
@@ -14,7 +13,13 @@ export function isAxeResults(value: unknown): value is AxeResults {
 }
 
 export function getCriteriaForRule(rule: AxeRuleResult): string[] {
-  return extractCriteriaFromTags(rule.tags).sort(compareByNumericId);
+  const criterionTagPattern = /^wcag(\d)(\d)(\d{1,2})$/;
+
+  return (rule.tags as string[])
+    .map((tag) => tag.match(criterionTagPattern))
+    .filter((match): match is RegExpMatchArray => match !== null)
+    .map((match) => `${match[1]}.${match[2]}.${match[3]}`)
+    .sort(compareByNumericId);
 }
 
 export function getIncompleteMessage(rule: AxeRuleResult): string {

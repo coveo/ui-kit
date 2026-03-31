@@ -10,12 +10,6 @@ export function createSummary(
   criteria: A11yCriterionReport[],
   totalCriteria: number
 ): A11ySummary {
-  const litComponents = components.filter(
-    (component) => component.framework === 'lit'
-  ).length;
-  const stencilComponents = components.filter(
-    (component) => component.framework === 'stencil'
-  ).length;
   const totalStories = components.reduce(
     (accumulator, component) => accumulator + component.storyCount,
     0
@@ -23,9 +17,6 @@ export function createSummary(
 
   return {
     totalComponents: components.length,
-    litComponents,
-    stencilComponents,
-    stencilExcluded: true,
     storyCoverage: {
       total: totalStories,
       withA11y: totalStories,

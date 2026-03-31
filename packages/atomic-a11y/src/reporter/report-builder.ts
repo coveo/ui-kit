@@ -39,7 +39,7 @@ export function buildA11yReport(
   return {
     report: {
       product: 'Coveo Atomic',
-      version: packageMetadata.version ?? '3.x.x',
+      version: packageMetadata.version,
       standard: 'WCAG 2.2 AA',
       reportDate: formatDate(new Date()),
       evaluationMethods: [
@@ -63,8 +63,6 @@ function buildComponents(
     .map((component): A11yComponentReport => {
       return {
         name: component.name,
-        category: component.category,
-        framework: component.framework,
         storyCount: component.storyIds.size,
         automated: {
           violations: component.automated.violations,
@@ -104,10 +102,12 @@ function buildCriteria(
         name: metadata.name,
         level: metadata.level,
         wcagVersion: metadata.wcagVersion,
+        // Conformance is intentionally deferred — the automated report only captures
+        // coverage data, not the final judgment. The OpenACR pipeline (conformance.ts)
+        // resolves actual conformance using: overrides → manual audit → interactive tests → automated results.
         conformance: 'notEvaluated',
         automatedCoverage: true,
         manualVerified: false,
-        remarks: '',
         affectedComponents: [...coveredComponents].sort(compareByName),
       };
     })
