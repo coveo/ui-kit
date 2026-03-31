@@ -1,6 +1,6 @@
 # Manual Audit Guide
 
-This guide explains how to create manual audit baseline files for the Coveo Atomic accessibility pipeline. These files capture human-reviewed WCAG 2.2 conformance results that feed into the final VPAT (Voluntary Product Accessibility Template) report.
+This guide explains how to create manual audit baseline files for the Coveo Atomic accessibility pipeline. These files capture human-reviewed WCAG conformance results that feed into the final VPAT (Voluntary Product Accessibility Template) report.
 
 ## Why manual audits?
 
@@ -86,7 +86,7 @@ Keys in `wcag22Criteria` must follow this pattern:
 {numeric-id}-{slug}
 ```
 
-The system extracts the numeric ID using the regex `/^(\d+(?:\.\d+)+)-/`, so the slug after the hyphen can be anything descriptive. Convention is to use the WCAG criterion handle in lowercase kebab-case.
+The system extracts the numeric ID using the regex `/^(\d+(?:\.\d+)+)-/`, so what follows the first hyphen can be anything descriptive. Convention is to use the WCAG criterion handle in lowercase kebab-case.
 
 **Examples:**
 
@@ -123,7 +123,7 @@ For example, if `atomic-search-box` reports `pass` and `atomic-result-list` repo
 Manual audits are one of four conformance sources. The full priority chain (highest to lowest):
 
 1. **Overrides** (`a11y-overrides.json`) — explicit exceptions set by engineering
-2. **Manual audits** — your baseline files (this guide)
+2. **Manual audits** — your baseline files (as described in this guide)
 3. **Existing report conformance** — previously computed values in the JSON report
 4. **Automated results** — derived from axe-core pass/fail counts
 
