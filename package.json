@@ -33,7 +33,7 @@
     "@coveo/ci": "workspace:*",
     "@cspell/dict-fr-fr": "2.3.2",
     "@playwright/mcp": "catalog:",
-    "@tsconfig/node22": "22.0.0",
+    "@tsconfig/node24": "24.0.0",
     "@types/jest": "catalog:",
     "@types/node": "catalog:",
     "concurrently": "9.2.1",
