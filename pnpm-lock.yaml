@@ -18,16 +18,10 @@ catalogs:
     '@angular/cli':
       specifier: 20.3.13
       version: 20.3.13
-    '@angular/common':
-      specifier: 20.3.16
-      version: 20.3.16
     '@angular/compiler':
       specifier: 20.3.16
       version: 20.3.16
     '@angular/compiler-cli':
-      specifier: 20.3.16
-      version: 20.3.16
-    '@angular/core':
       specifier: 20.3.16
       version: 20.3.16
     '@angular/forms':
@@ -166,6 +160,8 @@ overrides:
   react-dom: 19.2.4
   typescript: 5.9.3
   html-minifier: npm:html-minifier-terser@^7.2.0
+  '@angular/core': 20.3.16
+  '@angular/common': 20.3.16
 
 patchedDependencies:
   '@stencil/core@4.20.0':
@@ -503,10 +499,10 @@ importers:
   packages/atomic-angular/projects/atomic-angular:
     dependencies:
       '@angular/common':
-        specifier: 14 - 20
+        specifier: 20.3.16
         version: 20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
       '@angular/core':
-        specifier: 14 - 20
+        specifier: 20.3.16
         version: 20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1)
       '@coveo/atomic':
         specifier: workspace:*
@@ -1045,13 +1041,13 @@ importers:
         specifier: 'catalog:'
         version: 20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))
       '@angular/common':
-        specifier: 'catalog:'
+        specifier: 20.3.16
         version: 20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
       '@angular/compiler':
         specifier: 'catalog:'
         version: 20.3.16
       '@angular/core':
-        specifier: 'catalog:'
+        specifier: 20.3.16
         version: 20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1)
       '@angular/platform-browser':
         specifier: 'catalog:'
@@ -1400,13 +1396,13 @@ importers:
   samples/headless/rga-angular:
     dependencies:
       '@angular/common':
-        specifier: 'catalog:'
+        specifier: 20.3.16
         version: 20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
       '@angular/compiler':
         specifier: 'catalog:'
         version: 20.3.16
       '@angular/core':
-        specifier: 'catalog:'
+        specifier: 20.3.16
         version: 20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1)
       '@angular/forms':
         specifier: 'catalog:'
@@ -1698,7 +1694,7 @@ packages:
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
     peerDependencies:
       '@angular/compiler-cli': ^20.0.0
-      '@angular/core': ^20.0.0
+      '@angular/core': 20.3.16
       '@angular/localize': ^20.0.0
       '@angular/platform-browser': ^20.0.0
       '@angular/platform-server': ^20.0.0
@@ -1775,7 +1771,7 @@ packages:
     peerDependencies:
       '@angular/compiler': ^20.0.0
       '@angular/compiler-cli': ^20.0.0
-      '@angular/core': ^20.0.0
+      '@angular/core': 20.3.16
       '@angular/localize': ^20.0.0
       '@angular/platform-browser': ^20.0.0
       '@angular/platform-server': ^20.0.0
