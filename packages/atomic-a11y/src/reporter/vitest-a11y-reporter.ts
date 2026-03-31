@@ -8,10 +8,7 @@ import type {
   TestModule,
   TestRunEndReason,
 } from 'vitest/node';
-import {
-  DEFAULT_A11Y_REPORT_FILENAME,
-  DEFAULT_A11Y_REPORT_OUTPUT_DIR,
-} from '../shared/constants.js';
+
 import {
   getCriteriaForRule,
   getIncompleteMessage,
@@ -34,13 +31,8 @@ const REPORTER_NAME = 'VitestA11yReporter';
  * Configuration options for {@link VitestA11yReporter}.
  */
 export interface A11yReporterOptions {
-  /** Directory where JSON reports are written.
-   * @default 'a11y/reports' */
-  outputDir?: string;
-
-  /** Report filename.
-   * @default 'a11y-report.json' */
-  outputFilename?: string;
+  /** Full path (directory + filename) where the JSON report is written. */
+  outputFile: string;
 
   /** Path to a `package.json` from which product/tool versions are read (e.g. atomic package). */
   packageJsonPath?: string;
@@ -73,22 +65,19 @@ export interface A11yReporterOptions {
  *
  * export default defineConfig({
  *   test: {
- *     reporters: [new VitestA11yReporter({ outputDir: 'reports' })],
+ *     reporters: [new VitestA11yReporter({ outputFile: 'reports/a11y-report.json' })],
  *   },
  * });
  * ```
  */
 export class VitestA11yReporter implements Reporter {
   private readonly componentResults = new Map<string, ComponentAccumulator>();
-  private readonly outputDir: string;
-  private readonly outputFilename: string;
+  private readonly outputFile: string;
   private readonly shardInfo: ShardInfo | null;
   private readonly packageMetadata: PackageMetadata;
 
-  public constructor(options: A11yReporterOptions = {}) {
-    this.outputDir = options.outputDir ?? DEFAULT_A11Y_REPORT_OUTPUT_DIR;
-    this.outputFilename =
-      options.outputFilename ?? DEFAULT_A11Y_REPORT_FILENAME;
+  public constructor(options: A11yReporterOptions) {
+    this.outputFile = options.outputFile;
     this.shardInfo = resolveShardInfo();
     this.packageMetadata = readPackageMetadata(options.packageJsonPath);
   }
@@ -179,7 +168,7 @@ export class VitestA11yReporter implements Reporter {
       const serializedReport = `${JSON.stringify(report, null, 2)}\n`;
       const outputPaths = this.getOutputPaths();
 
-      await mkdir(this.outputDir, {recursive: true});
+      await mkdir(path.dirname(this.outputFile), {recursive: true});
       await Promise.all(
         outputPaths.map((outputPath) =>
           writeFile(outputPath, serializedReport, 'utf8')
@@ -234,18 +223,19 @@ export class VitestA11yReporter implements Reporter {
   }
 
   private getOutputPaths(): string[] {
-    const baseOutputPath = path.resolve(this.outputDir, this.outputFilename);
-
     if (!this.shardInfo) {
-      return [baseOutputPath];
+      return [this.outputFile];
     }
 
+    const dir = path.dirname(this.outputFile);
+    const ext = path.extname(this.outputFile);
+    const base = path.basename(this.outputFile, ext);
     const shardOutputPath = path.resolve(
-      this.outputDir,
-      `a11y-report.shard-${this.shardInfo.index}.json`
+      dir,
+      `${base}.shard-${this.shardInfo.index}${ext}`
     );
 
-    return [baseOutputPath, shardOutputPath];
+    return [this.outputFile, shardOutputPath];
   }
 
   private warn(message: string, error?: unknown): void {

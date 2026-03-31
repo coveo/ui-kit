@@ -5,11 +5,7 @@ export {
   type A11yReporterOptions,
   VitestA11yReporter,
 } from './reporter/vitest-a11y-reporter.js';
-export {
-  BASELINE_FILE_PATTERN,
-  DEFAULT_A11Y_REPORT_FILENAME,
-  DEFAULT_A11Y_REPORT_OUTPUT_DIR,
-} from './shared/constants.js';
+export {BASELINE_FILE_PATTERN} from './shared/constants.js';
 export {isA11yReport, isRecord} from './shared/guards.js';
 export type {
   A11yAutomatedResults,
