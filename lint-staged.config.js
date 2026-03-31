@@ -1,6 +1,9 @@
 module.exports = {
   '**/*.{ts?(x),?(m)js,json,css,html}': (files) => {
     const filteredFiles = files.filter((file) => {
+      // Exclude .vscode directory (biome ignores it via .gitignore)
+      if (file.includes('/.vscode/')) return false;
+
       // Exclude quantic and create-atomic-template packages
       if (file.includes('/packages/quantic/')) return false;
       if (file.includes('/packages/create-atomic-template/')) return false;
@@ -54,6 +57,9 @@ module.exports = {
       // Exclude atomic-stencil-samples d.ts
       if (file.includes('/packages/samples/stencil/') && file.endsWith('.d.ts'))
         return false;
+
+      // Exclude .storybook HTML fragments (not full documents, Biome can't process them)
+      if (file.includes('/.storybook/') && file.endsWith('.html')) return false;
 
       // Exclude tailwind css files
       if (file.endsWith('.css')) return false;

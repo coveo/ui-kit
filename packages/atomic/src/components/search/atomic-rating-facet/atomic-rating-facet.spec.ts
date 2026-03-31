@@ -203,21 +203,21 @@ describe('atomic-rating-facet', () => {
         prop: 'injectionDepth',
         invalidValue: -1,
       },
-    ])(
-      'should set error when #$prop is invalid',
-      async ({prop, invalidValue}) => {
-        const element = await renderRatingFacet().then(({element}) => element);
+    ])('should set error when #$prop is invalid', async ({
+      prop,
+      invalidValue,
+    }) => {
+      const element = await renderRatingFacet().then(({element}) => element);
 
-        expect(element.error).toBeUndefined();
+      expect(element.error).toBeUndefined();
 
-        // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
-        (element as any)[prop] = invalidValue;
-        await element.updateComplete;
+      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      (element as any)[prop] = invalidValue;
+      await element.updateComplete;
 
-        expect(element.error).toBeDefined();
-        expect(element.error.message).toMatch(new RegExp(prop, 'i'));
-      }
-    );
+      expect(element.error).toBeDefined();
+      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
+    });
 
     it('should warn when both tabsIncluded and tabsExcluded are provided', async () => {
       const consoleWarnSpy = vi
@@ -432,7 +432,7 @@ describe('atomic-rating-facet', () => {
       );
 
       const {element} = await renderRatingFacet();
-      element.disconnectedCallback();
+      element.remove();
 
       expect(stopWatchingSpy).toHaveBeenCalled();
     });

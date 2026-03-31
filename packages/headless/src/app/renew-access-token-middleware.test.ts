@@ -187,7 +187,7 @@ describe('createRenewAccessTokenMiddleware', () => {
     });
   });
 
-  describe('when the action returns an expired token payload, a renew function is configured, and after the second call', () => {
+  describe('when the action returns an expired token payload, a renew function is configured, and after the retry budget is exhausted', () => {
     beforeEach(async () => {
       const payload = buildExpiredTokenPayload();
       const action = () => Promise.resolve(payload);
@@ -196,9 +196,9 @@ describe('createRenewAccessTokenMiddleware', () => {
 
       const middleware = createRenewAccessTokenMiddleware(logger, renewFn);
 
-      const array = buildArrayWithLengthEqualToNumberOfRetries();
-      const promises = array.map(() => callMiddleware(middleware, action));
-      await Promise.all(promises);
+      for (let i = 0; i < 5; i++) {
+        await callMiddleware(middleware, action);
+      }
 
       (store.dispatch as Mock).mockReset();
 
@@ -224,7 +224,82 @@ describe('createRenewAccessTokenMiddleware', () => {
     });
   });
 
-  it('should dispatch actions on the store on the third call when 500ms pass after the second call with no invocations', async () => {
+  it('should only call renewToken once in the reactive path when two 401s arrive concurrently', async () => {
+    const {shouldRenewJWT} = await import('../utils/jwt-utils.js');
+    (shouldRenewJWT as Mock).mockReturnValue(false);
+
+    const payload = buildExpiredTokenPayload();
+    const action = () => Promise.resolve(payload);
+
+    let resolveRenewal: (token: string) => void = () => {};
+    const renewalPromise = new Promise<string>((resolve) => {
+      resolveRenewal = resolve;
+    });
+
+    const renewFn = vi.fn().mockReturnValue(renewalPromise);
+    const middleware = createRenewAccessTokenMiddleware(logger, renewFn);
+
+    const firstCall = callMiddleware(middleware, action);
+    const secondCall = callMiddleware(middleware, action);
+
+    // Flush microtasks so the middleware reaches the renewFn call.
+    await vi.waitFor(() => expect(renewFn).toHaveBeenCalledTimes(1));
+
+    resolveRenewal('newToken');
+    await Promise.all([firstCall, secondCall]);
+
+    expect(renewFn).toHaveBeenCalledTimes(1);
+  });
+
+  it('should not throw when renewToken rejects in the reactive path', async () => {
+    const {shouldRenewJWT} = await import('../utils/jwt-utils.js');
+    (shouldRenewJWT as Mock).mockReturnValue(false);
+
+    const payload = buildExpiredTokenPayload();
+    const action = () => Promise.resolve(payload);
+    const renewFn = vi
+      .fn()
+      .mockRejectedValue(new Error('renewal service down'));
+    const middleware = createRenewAccessTokenMiddleware(logger, renewFn);
+
+    await expect(callMiddleware(middleware, action)).resolves.not.toThrow();
+  });
+
+  it('should not dispatch updateBasicConfiguration when renewToken fails in the reactive path', async () => {
+    const {shouldRenewJWT} = await import('../utils/jwt-utils.js');
+    (shouldRenewJWT as Mock).mockReturnValue(false);
+
+    const payload = buildExpiredTokenPayload();
+    const action = () => Promise.resolve(payload);
+    const renewFn = vi
+      .fn()
+      .mockRejectedValue(new Error('renewal service down'));
+    const middleware = createRenewAccessTokenMiddleware(logger, renewFn);
+
+    await callMiddleware(middleware, action);
+
+    expect(store.dispatch).not.toHaveBeenCalledWith(
+      updateBasicConfiguration(expect.anything())
+    );
+  });
+
+  it('should re-dispatch the original action when renewToken fails in the reactive path', async () => {
+    const {shouldRenewJWT} = await import('../utils/jwt-utils.js');
+    (shouldRenewJWT as Mock).mockReturnValue(false);
+
+    const payload = buildExpiredTokenPayload();
+    const action = () => Promise.resolve(payload);
+    const renewFn = vi
+      .fn()
+      .mockRejectedValue(new Error('renewal service down'));
+    const middleware = createRenewAccessTokenMiddleware(logger, renewFn);
+
+    await callMiddleware(middleware, action);
+
+    expect(store.dispatch).toHaveBeenCalledWith(action);
+  });
+
+  it('should reset the retry budget after 500ms of inactivity', async () => {
     const payload = buildExpiredTokenPayload();
     const action = () => Promise.resolve(payload);
     const renewFn = () => Promise.resolve('newToken');
@@ -232,9 +307,9 @@ describe('createRenewAccessTokenMiddleware', () => {
     const middleware = createRenewAccessTokenMiddleware(logger, renewFn);
 
     vi.useFakeTimers();
-    const array = buildArrayWithLengthEqualToNumberOfRetries();
-    const promises = array.map(() => callMiddleware(middleware, action));
-    await Promise.all(promises);
+    for (let i = 0; i < 5; i++) {
+      await callMiddleware(middleware, action);
+    }
 
     (store.dispatch as Mock).mockReset();
 
@@ -242,5 +317,64 @@ describe('createRenewAccessTokenMiddleware', () => {
     await callMiddleware(middleware, action);
 
     expect(store.dispatch).toHaveBeenCalled();
+  });
+
+  it('should not exhaust retry budget when multiple 401s arrive concurrently', async () => {
+    const {shouldRenewJWT} = await import('../utils/jwt-utils.js');
+    (shouldRenewJWT as Mock).mockReturnValue(false);
+
+    const payload = buildExpiredTokenPayload();
+    const action = () => Promise.resolve(payload);
+    const renewFn = vi.fn().mockResolvedValue('newToken');
+    logger.warn = vi.fn();
+
+    const middleware = createRenewAccessTokenMiddleware(logger, renewFn);
+
+    const promises = new Array(5)
+      .fill(0)
+      .map(() => callMiddleware(middleware, action));
+    await Promise.all(promises);
+
+    (store.dispatch as Mock).mockReset();
+    await callMiddleware(middleware, action);
+
+    expect(store.dispatch).toHaveBeenCalledWith(action);
+    expect(store.dispatch).not.toHaveBeenCalledWith(
+      setError(expect.anything())
+    );
+  });
+
+  it('should not throw in the reactive path when piggybacking on a proactive renewal that rejects', async () => {
+    const {shouldRenewJWT} = await import('../utils/jwt-utils.js');
+    let proactiveCallCount = 0;
+    (shouldRenewJWT as Mock).mockImplementation(() => {
+      proactiveCallCount++;
+      return proactiveCallCount === 1;
+    });
+
+    logger.warn = vi.fn();
+
+    let rejectRenewal!: (err: Error) => void;
+    const renewFn = vi.fn().mockImplementation(
+      () =>
+        new Promise<string>((_, reject) => {
+          rejectRenewal = reject;
+        })
+    );
+
+    const payload = buildExpiredTokenPayload();
+    const actionA = vi.fn().mockResolvedValue('ok');
+    const actionB = vi.fn().mockResolvedValue(payload);
+
+    const middleware = createRenewAccessTokenMiddleware(logger, renewFn);
+
+    const callA = callMiddleware(middleware, actionA);
+    const callB = callMiddleware(middleware, actionB);
+
+    await vi.waitFor(() => expect(renewFn).toHaveBeenCalledTimes(1));
+
+    rejectRenewal(new Error('renewal service down'));
+
+    await expect(Promise.all([callA, callB])).resolves.not.toThrow();
   });
 });

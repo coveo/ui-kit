@@ -89,7 +89,12 @@ export class AtomicIpxModal extends InitializeBindingsMixin(LitElement) {
   @state()
   error!: Error;
 
-  public initialize() {}
+  public initialize() {
+    if (this.isOpen) {
+      this.watchToggleOpen();
+      this.updateHostClasses();
+    }
+  }
 
   /**
    * The element that triggered opening the modal.
@@ -152,7 +157,6 @@ export class AtomicIpxModal extends InitializeBindingsMixin(LitElement) {
     const id = this.id || randomID('atomic-ipx-modal-');
     this.id = id;
     this.setAttribute('part', 'atomic-ipx-modal');
-    this.watchToggleOpen();
   }
 
   private onWindowTouchMove = (e: Event) => {

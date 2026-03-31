@@ -32,6 +32,7 @@ export const baseResponse: CommerceSearchResponse = {
       ec_brand: 'Sample Brand',
       ec_category: 'Electronics',
       children: [],
+      additionalFields: {},
     },
     {
       permanentid: 'product-2',
@@ -41,6 +42,7 @@ export const baseResponse: CommerceSearchResponse = {
       ec_brand: 'Sample Brand',
       ec_category: 'Electronics',
       children: [],
+      additionalFields: {},
     },
   ],
   facets: [],

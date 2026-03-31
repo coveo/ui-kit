@@ -2,7 +2,7 @@
 title: Log view events with Coveo UA
 group: Usage
 category: Usage Analytics
-slug: usage/usage-analytics/log-view-events with-coveo-ua
+slug: usage/usage-analytics/log-view-events-with-coveo-ua
 ---
 # Log view events with Coveo UA
 

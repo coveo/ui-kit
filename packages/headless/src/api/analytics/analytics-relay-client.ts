@@ -49,16 +49,11 @@ export const getRelayInstanceFromState = createSelector(
 );
 
 const noopRelayEnvironment: CustomEnvironment = {
-  generateUUID: () => '',
+  getClientId: () => '',
   getLocation: () => null,
   getReferrer: () => null,
   getUserAgent: () => null,
-  send: () => {},
-  storage: {
-    getItem: () => null,
-    setItem: () => {},
-    removeItem: () => {},
-  },
+  send: async () => {},
 };
 
 const getEnvironment = (
@@ -74,7 +69,7 @@ const getEnvironment = (
     : noopRelayEnvironment;
   return {
     ...baseEnvironment,
-    generateUUID: () => customContext.clientId,
+    getClientId: () => customContext.clientId,
     getLocation: () => customContext.location,
     getReferrer: () => customContext.referrer,
     getUserAgent: () => customContext.userAgent,

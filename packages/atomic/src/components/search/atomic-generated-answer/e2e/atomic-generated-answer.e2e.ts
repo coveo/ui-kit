@@ -324,4 +324,20 @@ test.describe('atomic-generated-answer', () => {
       });
     });
   });
+
+  test.describe('with legacy analytics', () => {
+    test('should log an analytics event with the legacy analytics mode', async ({
+      generatedAnswer,
+    }) => {
+      const analyticsRequestPromise =
+        generatedAnswer.waitForLegacyAnalyticsSearchboxSubmitRequest();
+
+      await generatedAnswer.load({story: 'with-legacy-analytics'});
+
+      const analyticsRequest = await analyticsRequestPromise;
+      const requestBody = analyticsRequest.postDataJSON();
+
+      expect(requestBody.actionCause).toBe('searchboxSubmit');
+    });
+  });
 });

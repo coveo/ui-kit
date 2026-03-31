@@ -21,10 +21,10 @@ import type {
 } from './hydrate-static-state.js';
 
 export type {
+  EngineStaticState,
+  FetchStaticState,
   HydrateStaticState,
   HydrateStaticStateOptions,
-  FetchStaticState,
-  EngineStaticState,
 };
 
 type ReservedControllerNames = 'context' | 'parameterManager' | 'cart';

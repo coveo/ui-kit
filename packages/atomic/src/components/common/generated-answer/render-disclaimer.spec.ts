@@ -19,7 +19,6 @@ describe('#renderDisclaimer', () => {
   ) => {
     const defaultProps: RenderDisclaimerProps = {
       i18n,
-      isStreaming: false,
       ...overrides,
     };
 
@@ -34,43 +33,28 @@ describe('#renderDisclaimer', () => {
     };
   };
 
-  describe('when not streaming', () => {
+  describe('when rendering', () => {
     it('should render the disclaimer container and slot', async () => {
-      const {container, slot} = await renderComponent({isStreaming: false});
+      const {container, slot} = await renderComponent();
 
       expect(container).toBeInTheDocument();
       expect(slot).toBeInTheDocument();
     });
 
     it('should render the slot with correct name attribute', async () => {
-      const {slot} = await renderComponent({isStreaming: false});
+      const {slot} = await renderComponent();
 
       expect(slot).toHaveAttribute('name', 'disclaimer');
     });
 
     it('should render the default disclaimer text', async () => {
-      const {element} = await renderComponent({isStreaming: false});
+      const {element} = await renderComponent();
 
       await expect
         .element(element)
         .toHaveTextContent(
           'Generated content may contain errors. Verify important information.'
         );
-    });
-  });
-
-  describe('when streaming', () => {
-    it('should not render anything', async () => {
-      const {element} = await renderComponent({isStreaming: true});
-
-      expect(element.children.length).toBe(0);
-    });
-
-    it('should not render the disclaimer container nor slot', async () => {
-      const {container, slot} = await renderComponent({isStreaming: true});
-
-      expect(container).not.toBeInTheDocument();
-      expect(slot).not.toBeInTheDocument();
     });
   });
 });

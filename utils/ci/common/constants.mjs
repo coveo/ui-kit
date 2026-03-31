@@ -13,5 +13,3 @@ export const REPO_FS_ROOT = resolve(
   '..',
   '..'
 );
-
-export const NPM_LATEST_TAG = 'latest';

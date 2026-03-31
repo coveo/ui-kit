@@ -14,8 +14,8 @@ import {
  * The date facet action creators.
  */
 export type {
-  ToggleSelectDateFacetValuePayload,
   ToggleExcludeDateFacetValuePayload,
+  ToggleSelectDateFacetValuePayload,
   UpdateDateFacetValuesPayload,
 };
 

@@ -275,11 +275,11 @@ function cast<K extends CommerceSearchParametersKey>(
   const [key, value] = pair;
 
   if (key === 'page') {
-    return [key, parseInt(value)];
+    return [key, parseInt(value, 10)];
   }
 
   if (key === 'perPage') {
-    return [key, parseInt(value)];
+    return [key, parseInt(value, 10)];
   }
 
   if (keyHasObjectValue(key)) {

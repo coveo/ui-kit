@@ -83,7 +83,7 @@ export default defineConfig({
       stderr: 'pipe',
     },
     isCDN && {
-      command: 'pnpm exec turbo serve --filter=@coveo/cdn',
+      command: 'pnpm exec turbo start --filter=@coveo/cdn',
       timeout: 10 * 60e3,
       port: 3000,
       reuseExistingServer: !process.env.CI,
