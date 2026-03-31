@@ -1,7 +1,6 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+import {Meta} from '@storybook/addon-docs/blocks';
 import * as AtomicProductTemplateStories from './atomic-product-template.new.stories';
-import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-template';
 
 <Meta of={AtomicProductTemplateStories} />
 
@@ -13,11 +12,13 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   className="AtomicProductTemplate"
 >
 
-This component defines the UI display of your products. 
+This component defines the UI display of your products.
 A `template` element must be the child of an `atomic-product-template`. Furthermore, an `atomic-commerce-product-list`, `atomic-commerce-recommendation-list`, or `atomic-commerce-search-box-instant-products` must be the parent of each `atomic-product-template`.
-* **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the products are being rendered.
+
+- **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the products are being rendered.
 
 Example using the `atomic-commerce-product-list`:
+
 ```html
 <atomic-commerce-product-list>
   <atomic-product-template>
@@ -98,14 +99,20 @@ If you set both `must-match-*` and `must-not-match-*` for the same field and the
       <atomic-product-section-name>
         <atomic-product-link class="font-bold text-gold"></atomic-product-link>
       </atomic-product-section-name>
-      
+
       <atomic-product-section-metadata>
-        <atomic-product-text field="ec_brand" class="block text-luxury-gold"></atomic-product-text>
+        <atomic-product-text
+          field="ec_brand"
+          class="block text-luxury-gold"
+        ></atomic-product-text>
         <span class="luxury-badge">✨ Luxury</span>
       </atomic-product-section-metadata>
 
       <atomic-product-section-emphasized>
-        <atomic-product-price currency="USD" class="text-gold"></atomic-product-price>
+        <atomic-product-price
+          currency="USD"
+          class="text-gold"
+        ></atomic-product-price>
       </atomic-product-section-emphasized>
     </template>
   </atomic-product-template>
@@ -116,16 +123,22 @@ If you set both `must-match-*` and `must-not-match-*` for the same field and the
       <atomic-product-section-name>
         <atomic-product-link class="font-bold opacity-60"></atomic-product-link>
       </atomic-product-section-name>
-      
+
       <atomic-product-section-metadata>
         <atomic-product-field-condition if-defined="ec_brand">
-          <atomic-product-text field="ec_brand" class="block text-neutral-dark"></atomic-product-text>
+          <atomic-product-text
+            field="ec_brand"
+            class="block text-neutral-dark"
+          ></atomic-product-text>
         </atomic-product-field-condition>
         <span class="out-of-stock-badge text-red-600">Out of Stock</span>
       </atomic-product-section-metadata>
 
       <atomic-product-section-emphasized>
-        <atomic-product-price currency="USD" class="opacity-60"></atomic-product-price>
+        <atomic-product-price
+          currency="USD"
+          class="opacity-60"
+        ></atomic-product-price>
       </atomic-product-section-emphasized>
     </template>
   </atomic-product-template>
@@ -139,7 +152,10 @@ If you set both `must-match-*` and `must-not-match-*` for the same field and the
 
       <atomic-product-section-metadata>
         <atomic-product-field-condition if-defined="ec_brand">
-          <atomic-product-text field="ec_brand" class="block text-neutral-dark"></atomic-product-text>
+          <atomic-product-text
+            field="ec_brand"
+            class="block text-neutral-dark"
+          ></atomic-product-text>
         </atomic-product-field-condition>
 
         <atomic-product-field-condition if-defined="ec_rating">
@@ -148,7 +164,10 @@ If you set both `must-match-*` and `must-not-match-*` for the same field and the
       </atomic-product-section-metadata>
 
       <atomic-product-section-description>
-        <atomic-product-text field="excerpt" class="block text-neutral-dark"></atomic-product-text>
+        <atomic-product-text
+          field="excerpt"
+          class="block text-neutral-dark"
+        ></atomic-product-text>
       </atomic-product-section-description>
 
       <atomic-product-section-emphasized>
@@ -160,4 +179,3 @@ If you set both `must-match-*` and `must-not-match-*` for the same field and the
 ```
 
 </AtomicDocTemplate>
-

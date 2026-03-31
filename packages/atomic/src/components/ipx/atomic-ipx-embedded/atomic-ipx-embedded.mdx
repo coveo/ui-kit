@@ -1,6 +1,6 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+import {Meta} from '@storybook/addon-docs/blocks';
 import * as AtomicIpxEmbeddedStories from './atomic-ipx-embedded.new.stories';
-import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-template';
 
 <Meta of={AtomicIpxEmbeddedStories} />
 
@@ -23,7 +23,10 @@ The component must be placed inside an `atomic-search-interface` and provides th
         <atomic-ipx-refine-toggle></atomic-ipx-refine-toggle>
         <atomic-ipx-tabs>
           <atomic-ipx-tab label="All" expression="" active></atomic-ipx-tab>
-          <atomic-ipx-tab label="Articles" expression="@source==Knowledge"></atomic-ipx-tab>
+          <atomic-ipx-tab
+            label="Articles"
+            expression="@source==Knowledge"
+          ></atomic-ipx-tab>
         </atomic-ipx-tabs>
       </atomic-layout-section>
     </div>
@@ -51,15 +54,15 @@ The component must be placed inside an `atomic-search-interface` and provides th
 ## Embedded vs Modal
 
 Use `atomic-ipx-embedded` when:
+
 - The search interface should be persistently visible on the page
 - You want to embed search within a specific section or container
 - The search experience is a primary feature of the page
 
 Use `atomic-ipx-modal` when:
+
 - Search should appear on demand via a button click
 - You want an overlay experience that doesn't take permanent page space
 - The search is a secondary feature accessed occasionally
-
-
 
 </AtomicDocTemplate>

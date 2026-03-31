@@ -1,7 +1,6 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+import {Meta} from '@storybook/addon-docs/blocks';
 import * as AtomicCommerceSearchBoxStories from './atomic-commerce-search-box.new.stories';
-import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-template';
 
 <Meta of={AtomicCommerceSearchBoxStories} />
 
@@ -22,6 +21,7 @@ This component is typically placed within the "search" section of the layout.
         <atomic-commerce-search-box></atomic-commerce-search-box>
 
     </atomic-layout-section>
+
   </atomic-commerce-layout>
 </atomic-commerce-interface>
 ```
@@ -31,16 +31,18 @@ You can include them inside the search box to customize their properties.
 
 To enable instant products, you must explicitly include the [atomic-commerce-search-box-instant-products](/docs/atomic-commerce-search-box-instant-products--docs) component inside the search box.
 
-
 ```html
 <atomic-commerce-search-box>
-  <atomic-commerce-search-box-recent-queries max-queries="8"></atomic-commerce-search-box-recent-queries>
-  <atomic-commerce-search-box-query-suggestions max-suggestions="6"></atomic-commerce-search-box-query-suggestions>
+  <atomic-commerce-search-box-recent-queries
+    max-queries="8"
+  ></atomic-commerce-search-box-recent-queries>
+  <atomic-commerce-search-box-query-suggestions
+    max-suggestions="6"
+  ></atomic-commerce-search-box-query-suggestions>
   <atomic-commerce-search-box-instant-products image-size="small">
-    <atomic-product-template>
-       ...
-    </atomic-product-template>
+    <atomic-product-template> ... </atomic-product-template>
   </atomic-commerce-search-box-instant-products>
 </atomic-commerce-search-box>
 ```
+
 </AtomicDocTemplate>

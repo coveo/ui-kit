@@ -1,7 +1,6 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+import {Meta} from '@storybook/addon-docs/blocks';
 import * as AtomicTabStories from './atomic-tab.new.stories';
-import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
-
+import {AtomicDocTemplate} from '../../../../storybook-utils/documentation/atomic-doc-template';
 
 <Meta of={AtomicTabStories} />
 
@@ -21,11 +20,19 @@ See the [atomic-tab-manager documentation](?path=/docs/atomic-tab-manager--docs)
 ```html
 <atomic-search-interface>
   <!-- other components -->
-  
+
   <atomic-tab-manager>
     <atomic-tab name="all" label="All"></atomic-tab>
-    <atomic-tab name="images" label="Images" expression="@objecttype==Image"></atomic-tab>
-    <atomic-tab name="articles" label="Articles" expression="@objecttype==Article"></atomic-tab>
+    <atomic-tab
+      name="images"
+      label="Images"
+      expression="@objecttype==Image"
+    ></atomic-tab>
+    <atomic-tab
+      name="articles"
+      label="Articles"
+      expression="@objecttype==Article"
+    ></atomic-tab>
   </atomic-tab-manager>
 
   <!-- other components -->

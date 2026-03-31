@@ -1,7 +1,6 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+import {Meta} from '@storybook/addon-docs/blocks';
 import * as AtomicResultTextStories from './atomic-result-text.new.stories';
-import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-template';
 
 <Meta of={AtomicResultTextStories} />
 
@@ -24,7 +23,10 @@ This component is used within `atomic-result-template` components inside the res
       <template>
         <atomic-result-text field="title"></atomic-result-text>
         <atomic-result-text field="excerpt"></atomic-result-text>
-        <atomic-result-text field="author" default="no-author"></atomic-result-text>
+        <atomic-result-text
+          field="author"
+          default="no-author"
+        ></atomic-result-text>
       </template>
     </atomic-result-template>
   </atomic-result-list>
@@ -45,20 +47,27 @@ To display a specific result field:
 When a field might not have a value, you can provide a fallback:
 
 ```html
-<atomic-result-text field="brand" default="no-brand-available"></atomic-result-text>
+<atomic-result-text
+  field="brand"
+  default="no-brand-available"
+></atomic-result-text>
 ```
 
 ### With Highlighting
 
-By default, the component will highlight search terms in supported fields (`title`, `excerpt`, `firstSentences`, `printableUri`  and `summary`  ). You can disable this behavior:
+By default, the component will highlight search terms in supported fields (`title`, `excerpt`, `firstSentences`, `printableUri` and `summary` ). You can disable this behavior:
 
 ```html
-<atomic-result-text field="excerpt" should-highlight="false"></atomic-result-text>
+<atomic-result-text
+  field="excerpt"
+  should-highlight="false"
+></atomic-result-text>
 ```
 
 ### Supported Fields
 
 The component looks for fields in this order:
+
 1. First in the Result object properties
 2. Then in the `result.raw` object
 

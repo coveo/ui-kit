@@ -50,7 +50,9 @@ describe('image-carousel', () => {
     };
     const mergedProps = {...defaultProps, ...props};
     return renderFunctionFixture(
-      html`${renderImageCarousel({props: mergedProps})(children ?? defaultChildren)}`
+      html`${renderImageCarousel({props: mergedProps})(
+        children ?? defaultChildren
+      )}`
     );
   };
 

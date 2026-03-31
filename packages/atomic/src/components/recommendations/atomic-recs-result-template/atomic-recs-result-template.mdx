@@ -1,7 +1,6 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+import {Meta} from '@storybook/addon-docs/blocks';
 import * as AtomicRecsResultTemplateStories from './atomic-recs-result-template.new.stories';
-import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-template';
 
 <Meta of={AtomicRecsResultTemplateStories} />
 
@@ -13,20 +12,24 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   className="AtomicRecsResultTemplate"
 >
 
-This component defines the UI display of your recommendation results. 
+This component defines the UI display of your recommendation results.
 A `template` element must be the child of an `atomic-recs-result-template`. Furthermore, an `atomic-recs-list` or `atomic-ipx-recs-list` must be the parent of each `atomic-recs-result-template`.
 
 **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
 
 Example using the `atomic-recs-list`:
+
 ```html
 <atomic-recs-list>
   <atomic-recs-result-template>
     <template>
       <atomic-result-section-visual>
-        <atomic-result-image field="ytthumbnailurl" fallback="https://picsum.photos/seed/picsum/350"></atomic-result-image>
+        <atomic-result-image
+          field="ytthumbnailurl"
+          fallback="https://picsum.photos/seed/picsum/350"
+        ></atomic-result-image>
       </atomic-result-section-visual>
-      
+
       <atomic-result-section-badges>
         <atomic-field-condition must-match-sourcetype="YouTube">
           <atomic-result-badge
@@ -52,7 +55,7 @@ Example using the `atomic-recs-list`:
             </span>
             <atomic-result-text field="source"></atomic-result-text>
           </atomic-field-condition>
-          
+
           <atomic-field-condition class="field" if-defined="author">
             <span class="field-label">
               <atomic-text value="author"></atomic-text>:
@@ -84,4 +87,5 @@ You can use the `link` slot to customize how the entire result item behaves as a
   </template>
 </atomic-recs-result-template>
 ```
+
 </AtomicDocTemplate>

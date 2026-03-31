@@ -1,7 +1,6 @@
 import type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering.js';
 
-export interface QuestionAnsweringRelatedQuestionState
-  extends QuestionAnswerDocumentIdentifier {
+export interface QuestionAnsweringRelatedQuestionState extends QuestionAnswerDocumentIdentifier {
   /**
    * Determines if the snippet is expanded.
    */

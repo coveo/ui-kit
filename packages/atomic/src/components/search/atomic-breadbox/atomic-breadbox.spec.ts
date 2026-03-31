@@ -176,28 +176,28 @@ describe('atomic-breadbox', () => {
         resizeObserverAvailable: false,
         shouldObserve: false,
       },
-    ])('should handle ResizeObserver creation when $description', async ({
-      resizeObserverAvailable,
-      shouldObserve,
-    }) => {
-      const originalResizeObserver = window.ResizeObserver;
-      const observeSpy = vi.spyOn(ResizeObserver.prototype, 'observe');
+    ])(
+      'should handle ResizeObserver creation when $description',
+      async ({resizeObserverAvailable, shouldObserve}) => {
+        const originalResizeObserver = window.ResizeObserver;
+        const observeSpy = vi.spyOn(ResizeObserver.prototype, 'observe');
 
-      if (!resizeObserverAvailable) {
-        // @ts-expect-error - Intentionally setting to undefined for testing
-        window.ResizeObserver = undefined;
+        if (!resizeObserverAvailable) {
+          // @ts-expect-error - Intentionally setting to undefined for testing
+          window.ResizeObserver = undefined;
+        }
+
+        const {element} = await renderBreadbox();
+
+        if (shouldObserve) {
+          expect(observeSpy).toHaveBeenCalledWith(element.parentElement);
+        } else {
+          expect(observeSpy).not.toHaveBeenCalled();
+        }
+
+        window.ResizeObserver = originalResizeObserver;
       }
-
-      const {element} = await renderBreadbox();
-
-      if (shouldObserve) {
-        expect(observeSpy).toHaveBeenCalledWith(element.parentElement);
-      } else {
-        expect(observeSpy).not.toHaveBeenCalled();
-      }
-
-      window.ResizeObserver = originalResizeObserver;
-    });
+    );
   });
 
   describe('render', () => {

@@ -1,7 +1,6 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+import {Meta} from '@storybook/addon-docs/blocks';
 import * as AtomicResultTimespanStories from './atomic-result-timespan.new.stories';
-import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
-
+import {AtomicDocTemplate} from '../../../../storybook-utils/documentation/atomic-doc-template';
 
 <Meta of={AtomicResultTimespanStories} />
 
@@ -22,8 +21,14 @@ This component is used within `atomic-result-template` components inside the res
   <atomic-result-list>
     <atomic-result-template>
       <template>
-        <atomic-result-timespan field="duration" unit="ms"></atomic-result-timespan>
-        <atomic-result-timespan field="videolength" unit="s"></atomic-result-timespan>
+        <atomic-result-timespan
+          field="duration"
+          unit="ms"
+        ></atomic-result-timespan>
+        <atomic-result-timespan
+          field="videolength"
+          unit="s"
+        ></atomic-result-timespan>
       </template>
     </atomic-result-template>
   </atomic-result-list>

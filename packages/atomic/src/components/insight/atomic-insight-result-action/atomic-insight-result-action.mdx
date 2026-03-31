@@ -1,6 +1,6 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+import {Meta} from '@storybook/addon-docs/blocks';
 import * as AtomicInsightResultActionStories from './atomic-insight-result-action.new.stories';
-import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-template';
 
 <Meta of={AtomicInsightResultActionStories} />
 
@@ -52,13 +52,13 @@ Place this component directly inside `atomic-result-section-actions` for always-
 
 The component supports the following built-in action types, each with a default icon:
 
-| Action | Description | Default Icon |
-|--------|-------------|--------------|
-| `copyToClipboard` | Copies the result's click URI to the clipboard | Copy icon |
-| `attachToCase` | Attaches the result to a case | Attach icon |
-| `quickview` | Opens a quickview of the result | Preview icon |
-| `postToFeed` | Posts the result to a feed | Share icon |
-| `sendAsEmail` | Sends the result as an email | Email icon |
+| Action            | Description                                    | Default Icon |
+| ----------------- | ---------------------------------------------- | ------------ |
+| `copyToClipboard` | Copies the result's click URI to the clipboard | Copy icon    |
+| `attachToCase`    | Attaches the result to a case                  | Attach icon  |
+| `quickview`       | Opens a quickview of the result                | Preview icon |
+| `postToFeed`      | Posts the result to a feed                     | Share icon   |
+| `sendAsEmail`     | Sends the result as an email                   | Email icon   |
 
 ## Handling events
 
@@ -66,8 +66,8 @@ Listen for the `atomicInsightResultActionClicked` event to implement custom logi
 
 ```javascript
 document.addEventListener('atomicInsightResultActionClicked', (event) => {
-  const { action, result } = event.detail;
-  
+  const {action, result} = event.detail;
+
   switch (action) {
     case 'copyToClipboard':
       // The component automatically copies to clipboard,

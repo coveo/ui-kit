@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+import {Meta} from '@storybook/addon-docs/blocks';
 
 <Meta title="Search/Introduction" />
 
@@ -6,20 +6,22 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 This section showcases interactive documentation for the [Coveo Atomic Search](https://docs.coveo.com/en/atomic/latest/) web components.
 
-You can explore the individual Search components in the sidebar. 
+You can explore the individual Search components in the sidebar.
 Each component includes:
 
-* Interactive examples with configurable properties
-* Code snippets showing implementation details
-* Documentation for available attributes and events
+- Interactive examples with configurable properties
+- Code snippets showing implementation details
+- Documentation for available attributes and events
 
 ## Getting Started
+
 These stories provide example usages of the Coveo Atomic web components for Search.
 Each of the components must be placed correctly within the component hierarchy in order to function.
 The top level of the tree must match the interface being initialized by the Headless engine.
 For example, Coveo Search pages must start have `atomic-search-interface` at the top of the component hierarchy.
 
 ### Initialization
+
 Here is an example of how to initialize an `atomic-search-interface`.
 This uses `getSampleSearchEngineConfiguration` from `@coveo/headless` as its initialization configuration.
 This will not work in a production environment.
@@ -30,23 +32,23 @@ For a detailed breakdown of how to configure a Search engine, please refer to th
 <html>
   <head>
     <title>Example Search Page</title>
-      <script
-          type="module"
-          src="https://static.cloud.coveo.com/atomic/v3/atomic.esm.js">
-      </script>
-      <link
-          rel="stylesheet"
-          href="https://static.cloud.coveo.com/atomic/v3/themes/coveo.css"/>
-      <script type="module">
-        const {
-          getSampleSearchEngineConfiguration
-        } = await import('https://static.cloud.coveo.com/headless/v3/headless.esm.js');
+    <script
+      type="module"
+      src="https://static.cloud.coveo.com/atomic/v3/atomic.esm.js"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://static.cloud.coveo.com/atomic/v3/themes/coveo.css"
+    />
+    <script type="module">
+      const {getSampleSearchEngineConfiguration} =
+        await import('https://static.cloud.coveo.com/headless/v3/headless.esm.js');
 
-        await customElements.whenDefined('atomic-search-interface');
-        const searchInterface = document.querySelector('atomic-search-interface');
-        await searchInterface.initialize(getSampleSearchEngineConfiguration());
-        searchInterface.executeFirstSearch();
-      </script>
+      await customElements.whenDefined('atomic-search-interface');
+      const searchInterface = document.querySelector('atomic-search-interface');
+      await searchInterface.initialize(getSampleSearchEngineConfiguration());
+      searchInterface.executeFirstSearch();
+    </script>
   </head>
   <body>
     <atomic-search-interface>
@@ -57,40 +59,41 @@ For a detailed breakdown of how to configure a Search engine, please refer to th
 ```
 
 ### Initialization with an engine
+
 Here is an example of how to initialize an `atomic-search-interface` with an engine from `@coveo/headless`.
 The primary difference in the use cases between a standard Initialization and using an engine is that an engine allows for a single instance to be shared across multiple interfaces.
+
 ```javascript
 // engine.mjs
-const {
-  buildSearchEngine, 
-  getSampleSearchEngineConfiguration
-} = await import('http://static.cloud.coveo.com/headless/v3/headless.esm.js');
-
+const {buildSearchEngine, getSampleSearchEngineConfiguration} =
+  await import('http://static.cloud.coveo.com/headless/v3/headless.esm.js');
 
 export const searchEngine = buildSearchEngine({
   configuration: getSampleSearchEngineConfiguration(),
 });
 ```
+
 ```html
 <!-- index.html -->
 <html>
   <head>
     <title>Example Search Page</title>
-      <script
-          type="module"
-          src="https://static.cloud.coveo.com/atomic/v3/atomic.esm.js">
-      </script>
-      <link
-          rel="stylesheet"
-          href="https://static.cloud.coveo.com/atomic/v3/themes/coveo.css"/>
-      <script type="module">
-        import {searchEngine} from './engine.mjs';
+    <script
+      type="module"
+      src="https://static.cloud.coveo.com/atomic/v3/atomic.esm.js"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://static.cloud.coveo.com/atomic/v3/themes/coveo.css"
+    />
+    <script type="module">
+      import {searchEngine} from './engine.mjs';
 
-        await customElements.whenDefined('atomic-search-interface');
-        const searchInterface = document.querySelector('atomic-search-interface');
-        await searchInterface.initializeWithSearchEngine(searchEngine);
-        searchInterface.executeFirstSearch();
-      </script>
+      await customElements.whenDefined('atomic-search-interface');
+      const searchInterface = document.querySelector('atomic-search-interface');
+      await searchInterface.initializeWithSearchEngine(searchEngine);
+      searchInterface.executeFirstSearch();
+    </script>
   </head>
   <body>
     <atomic-search-interface>
@@ -101,8 +104,8 @@ export const searchEngine = buildSearchEngine({
 ```
 
 ## Advanced Examples
+
 If you are looking to implement Coveo in a framework, you can find reference code in our GitHub repo:
 
-* [NextJS - Search](https://github.com/coveo/ui-kit/tree/main/samples/atomic/search-nextjs)
-* [Vue - Search](https://github.com/coveo/ui-kit/tree/main/samples/atomic/search-vuejs)
-
+- [NextJS - Search](https://github.com/coveo/ui-kit/tree/main/samples/atomic/search-nextjs)
+- [Vue - Search](https://github.com/coveo/ui-kit/tree/main/samples/atomic/search-vuejs)

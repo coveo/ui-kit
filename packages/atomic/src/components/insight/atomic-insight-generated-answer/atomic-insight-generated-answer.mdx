@@ -17,9 +17,7 @@ The `atomic-insight-generated-answer` component uses Coveo Machine Learning (Cov
 <atomic-insight-interface>
   ...
   <atomic-insight-layout>
-    
     <atomic-insight-generated-answer></atomic-insight-generated-answer>
-    
   </atomic-insight-layout>
 </atomic-insight-interface>
 ```
@@ -53,9 +51,7 @@ Display a toggle button that lets users hide or show the answer:
 Allow the answer to be collapsed when it's taller than a specified height:
 
 ```html
-<atomic-insight-generated-answer
-  collapsible
-  max-collapsed-height="20">
+<atomic-insight-generated-answer collapsible max-collapsed-height="20">
 </atomic-insight-generated-answer>
 ```
 
@@ -67,8 +63,7 @@ Allow the answer to be collapsed when it's taller than a specified height:
 Specify a particular answer configuration to use:
 
 ```html
-<atomic-insight-generated-answer
-  answer-configuration-id="my-config-id">
+<atomic-insight-generated-answer answer-configuration-id="my-config-id">
 </atomic-insight-generated-answer>
 ```
 
@@ -79,7 +74,8 @@ Include additional fields with citations and control citation anchoring:
 ```html
 <atomic-insight-generated-answer
   fields-to-include-in-citations="author,date,category"
-  disable-citation-anchoring>
+  disable-citation-anchoring
+>
 </atomic-insight-generated-answer>
 ```
 
@@ -90,8 +86,8 @@ Provide a custom message when no answer can be generated:
 ```html
 <atomic-insight-generated-answer>
   <div slot="no-answer-message">
-    Sorry, we couldn't generate an answer for your query.
-    Please try rephrasing your question.
+    Sorry, we couldn't generate an answer for your query. Please try rephrasing
+    your question.
   </div>
 </atomic-insight-generated-answer>
 ```
@@ -99,6 +95,7 @@ Provide a custom message when no answer can be generated:
 ## Accessibility
 
 The component is built with accessibility in mind:
+
 - ARIA live regions announce answer generation status
 - Keyboard-accessible feedback buttons and toggle
 - Proper focus management
@@ -107,6 +104,7 @@ The component is built with accessibility in mind:
 ## Styling
 
 The component supports various CSS parts for customization:
+
 - `container` - Main container
 - `header-label` - Answer header
 - `toggle` - Visibility toggle switch
@@ -118,6 +116,7 @@ The component supports various CSS parts for customization:
 - `citation-popover` - Citation preview popups
 
 Custom CSS properties:
+
 - `--atomic-crga-collapsed-height` - Height of collapsed answer container
 
 </AtomicDocTemplate>

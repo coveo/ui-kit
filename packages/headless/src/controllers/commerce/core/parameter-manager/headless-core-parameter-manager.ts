@@ -32,8 +32,9 @@ export interface ParameterManagerProps<T extends Parameters> {
   excludeDefaultParameters?: boolean;
 }
 
-export interface CoreParameterManagerProps<T extends Parameters>
-  extends ParameterManagerProps<T> {
+export interface CoreParameterManagerProps<
+  T extends Parameters,
+> extends ParameterManagerProps<T> {
   /**
    * The definition of the parameters.
    */

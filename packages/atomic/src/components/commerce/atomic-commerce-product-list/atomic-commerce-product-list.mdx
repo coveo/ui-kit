@@ -1,7 +1,6 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+import {Meta} from '@storybook/addon-docs/blocks';
 import * as AtomicCommerceProductListStories from './atomic-commerce-product-list.new.stories';
-import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-template';
 
 <Meta of={AtomicCommerceProductListStories} />
 
@@ -68,20 +67,21 @@ When [displaying products as a table](https://docs.coveo.com/en/atomic/latest/us
 ```
 
 ### Displaying a specific product listing
+
 If you want `atomic-commerce-product-list` to display a specific product listing, you will need to ensure that the `atomic-commerce-interface` at
 level component of the hierarchy for this interface has its type set to `product-listing`.
 
 You will also need to ensure that configuration being used to initialize the interface has the `view` url of the configuration
 [`context`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Commerce.ContextOptions.html) set to a configured listing page.
 
-
 For example,
+
 ```html
 <script type="module">
-  const {
-    getSampleSearchEngineConfiguration
-  } = await import('https://static.cloud.coveo.com/headless/v3/headless.esm.js');
-  const {context, ...restOfConfiguration} = getSampleCommerceEngineConfiguration();
+  const {getSampleSearchEngineConfiguration} =
+    await import('https://static.cloud.coveo.com/headless/v3/headless.esm.js');
+  const {context, ...restOfConfiguration} =
+    getSampleCommerceEngineConfiguration();
 
   const configuration = {
     context: {
@@ -98,7 +98,6 @@ For example,
   await commerceInterface.initialize(configuration);
   await commerceInterface.executeFirstRequest();
 </script>
-
 ```
 
 </AtomicDocTemplate>

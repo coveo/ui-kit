@@ -152,12 +152,12 @@ export class AtomicPager
 
     return html`${when(
       this.pagerState.maxPage > 1 && this.isAppLoaded,
-      () => html`
-      ${renderPagerNavigation({
-        props: {
-          i18n: this.bindings.i18n,
-        },
-      })(html`
+      () =>
+        html` ${renderPagerNavigation({
+          props: {
+            i18n: this.bindings.i18n,
+          },
+        })(html`
           ${renderPagerPreviousButton({
             props: {
               icon: this.previousButtonIcon,
@@ -174,8 +174,8 @@ export class AtomicPager
             props: {
               i18n: this.bindings.i18n,
             },
-          })(html`
-            ${pagesRange.map((pageNumber, index) =>
+          })(
+            html` ${pagesRange.map((pageNumber, index) =>
               keyed(
                 `page-${pageNumber}-${index}`,
                 renderPagerPageButton({
@@ -197,7 +197,8 @@ export class AtomicPager
                   },
                 })
               )
-            )}`)}
+            )}`
+          )}
           ${renderPagerNextButton({
             props: {
               icon: this.nextButtonIcon,

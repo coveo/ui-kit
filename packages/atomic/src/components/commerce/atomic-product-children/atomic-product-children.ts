@@ -188,17 +188,15 @@ export class AtomicProductChildren
       ${this.label.trim() !== '' ? this.renderLabel() : nothing}
       <div class="flex flex-wrap">
         ${visibleChildren.map((child) => this.renderChild(child))}
-        ${
-          this.count > 0
-            ? renderButton({
-                props: {
-                  style: 'text-primary',
-                  class: 'product-child',
-                  onClick: this.handleClick,
-                },
-              })(html`+${this.count}`)
-            : nothing
-        }
+        ${this.count > 0
+          ? renderButton({
+              props: {
+                style: 'text-primary',
+                class: 'product-child',
+                onClick: this.handleClick,
+              },
+            })(html`+${this.count}`)
+          : nothing}
       </div>
     `;
   }

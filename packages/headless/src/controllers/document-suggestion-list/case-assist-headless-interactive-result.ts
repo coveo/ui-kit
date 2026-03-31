@@ -13,16 +13,14 @@ export type {
   InteractiveResultCoreOptions,
   InteractiveResultCoreProps,
 };
-export interface CaseAssistInteractiveResultOptions
-  extends InteractiveResultCoreOptions {
+export interface CaseAssistInteractiveResultOptions extends InteractiveResultCoreOptions {
   /**
    * The query result.
    */
   result: Result;
 }
 
-export interface CaseAssistInteractiveResultProps
-  extends InteractiveResultCoreProps {
+export interface CaseAssistInteractiveResultProps extends InteractiveResultCoreProps {
   /**
    * The options for the `CaseAssistInteractiveResult` controller.
    * */

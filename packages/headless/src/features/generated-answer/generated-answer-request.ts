@@ -56,7 +56,8 @@ type StateNeededByGeneratedAnswerStream = ConfigurationSection &
   GeneratedAnswerSection;
 
 export interface AnswerApiQueryParams
-  extends Omit<
+  extends
+    Omit<
       SearchRequest,
       keyof (BaseParam & AuthenticationParam & AutomaticFacetsParams)
     >,

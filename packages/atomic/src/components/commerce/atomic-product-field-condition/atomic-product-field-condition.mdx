@@ -1,7 +1,6 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+import {Meta} from '@storybook/addon-docs/blocks';
 import * as AtomicProductFieldConditionStories from './atomic-product-field-condition.new.stories';
-import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-template';
 
 <Meta of={AtomicProductFieldConditionStories} />
 
@@ -19,15 +18,12 @@ It is typically used within `atomic-product-template`.
 
 ```html
 <atomic-product-template>
-  ... 
+  ...
 
-  <atomic-product-field-condition
-    if-defined="ec_name"
- 
-  >
-  <span>Render me if <strong>ec_name</strong> is defined.</span>
+  <atomic-product-field-condition if-defined="ec_name">
+    <span>Render me if <strong>ec_name</strong> is defined.</span>
   </atomic-product-field-condition>
-  
 </atomic-product-template>
 ```
+
 </AtomicDocTemplate>

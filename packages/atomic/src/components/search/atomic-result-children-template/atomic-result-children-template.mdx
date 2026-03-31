@@ -1,7 +1,6 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+import {Meta} from '@storybook/addon-docs/blocks';
 import * as AtomicResultChildrenTemplateStories from './atomic-result-children-template.new.stories';
-import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-template';
 
 <Meta of={AtomicResultChildrenTemplateStories} />
 
@@ -14,22 +13,26 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
 >
 
 A `template` element must be the child of an `atomic-result-children-template`, and an `atomic-result-children` must be the parent of each `atomic-result-children-template`.
-* Note: Any `<script>` tags defined inside of a `<template>` element will not be executed when results are being rendered.
 
+- Note: Any `<script>` tags defined inside of a `<template>` element will not be executed when results are being rendered.
 
 Example using `atomic-result-children` with `atomic-folded-result-list`:
+
 ```html
 <atomic-folded-result-list>
   <atomic-result-template>
     <template>
       <atomic-result-section-visual>
-        <atomic-result-image field="ytthumbnailurl" fallback="https://picsum.photos/seed/picsum/350"></atomic-result-image>
+        <atomic-result-image
+          field="ytthumbnailurl"
+          fallback="https://picsum.photos/seed/picsum/350"
+        ></atomic-result-image>
       </atomic-result-section-visual>
-      
+
       <atomic-result-section-title>
         <atomic-result-link></atomic-result-link>
       </atomic-result-section-title>
-      
+
       <atomic-result-section-excerpt>
         <atomic-result-text field="excerpt"></atomic-result-text>
       </atomic-result-section-excerpt>
@@ -39,13 +42,16 @@ Example using `atomic-result-children` with `atomic-folded-result-list`:
           <atomic-result-children-template>
             <template>
               <atomic-result-section-visual>
-                <atomic-result-image field="ytthumbnailurl" fallback="https://picsum.photos/seed/picsum/350"></atomic-result-image>
+                <atomic-result-image
+                  field="ytthumbnailurl"
+                  fallback="https://picsum.photos/seed/picsum/350"
+                ></atomic-result-image>
               </atomic-result-section-visual>
-              
+
               <atomic-result-section-title>
                 <atomic-result-link></atomic-result-link>
               </atomic-result-section-title>
-              
+
               <atomic-result-section-excerpt>
                 <atomic-result-text field="excerpt"></atomic-result-text>
               </atomic-result-section-excerpt>
@@ -138,7 +144,7 @@ For deeply nested hierarchical results, you can use `inherit-templates` on `atom
     <atomic-result-section-excerpt>
       <atomic-result-text field="excerpt"></atomic-result-text>
     </atomic-result-section-excerpt>
-    
+
     <!-- Nested children inherit the same template -->
     <atomic-result-section-children>
       <atomic-result-children inherit-templates></atomic-result-children>

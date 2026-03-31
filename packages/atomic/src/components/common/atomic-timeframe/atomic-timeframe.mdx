@@ -1,7 +1,6 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+import {Meta} from '@storybook/addon-docs/blocks';
 import * as AtomicTimeframeStories from './atomic-timeframe.new.stories';
-import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-template';
 
 <Meta of={AtomicTimeframeStories} />
 
@@ -24,7 +23,11 @@ This component must be placed as a child of `atomic-timeframe-facet` (for search
     <atomic-layout-section section="facets">
       ...
       <atomic-timeframe-facet field="date" label="Date">
-        <atomic-timeframe period="past" unit="week" amount="1"></atomic-timeframe>
+        <atomic-timeframe
+          period="past"
+          unit="week"
+          amount="1"
+        ></atomic-timeframe>
       </atomic-timeframe-facet>
     </atomic-layout-section>
   </atomic-search-layout>

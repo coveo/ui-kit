@@ -1,7 +1,6 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+import {Meta} from '@storybook/addon-docs/blocks';
 import * as AtomicLoadMoreResultsStories from './atomic-load-more-results.new.stories';
-import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-template';
 
 <Meta of={AtomicLoadMoreResultsStories} />
 
@@ -15,10 +14,9 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
 This component is typically placed within the "pagination" section of the layout.
 
 **Note:** Use either `atomic-load-more-results` OR `atomic-pager` for pagination, but not both. These components provide alternative pagination approaches:
+
 - `atomic-pager`: Provides traditional page-based navigation with numbered pages. It is often used along with the `atomic-results-per-page` component.
 - `atomic-load-more-results`: Allows users to incrementally load additional results with a "Load More" button.
-
-
 
 ```html
 <atomic-search-interface>
@@ -28,9 +26,7 @@ This component is typically placed within the "pagination" section of the layout
     <atomic-layout-section section="main">
       ...
       <atomic-layout-section section="pagination">
-        
         <atomic-load-more-results></atomic-load-more-results>
-
       </atomic-layout-section>
     </atomic-layout-section>
   </atomic-search-layout>
@@ -41,7 +37,7 @@ This component is typically placed within the "pagination" section of the layout
 
 ### Usage Notes
 
-- The Load More Results component is especially useful when you want your user to browse more results, rather than return to and refine facets or reconsider their query. 
+- The Load More Results component is especially useful when you want your user to browse more results, rather than return to and refine facets or reconsider their query.
 - Users browse longer than with Load More than with Pagination.
 - Load More is less effective when the items in a source are highly specific or when they require comparison.
 

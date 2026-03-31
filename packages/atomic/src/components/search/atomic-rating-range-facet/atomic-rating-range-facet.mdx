@@ -20,13 +20,12 @@ This component only supports numeric fields and is designed to work with rating 
   ...
   <atomic-search-layout>
     <atomic-layout-section section="facets">
-      
       <atomic-rating-range-facet
         field="rating"
         label="Customer Rating"
-        number-of-intervals="5">
+        number-of-intervals="5"
+      >
       </atomic-rating-range-facet>
-      
     </atomic-layout-section>
     ...
   </atomic-search-layout>
@@ -49,9 +48,7 @@ This component only supports numeric fields and is designed to work with rating 
 The `field` attribute specifies which numeric field in your index contains the rating data:
 
 ```html
-<atomic-rating-range-facet
-  field="snrating"
-  label="Star Rating">
+<atomic-rating-range-facet field="snrating" label="Star Rating">
 </atomic-rating-range-facet>
 ```
 
@@ -64,7 +61,8 @@ Control the number of rating levels and the maximum/minimum values:
   field="rating"
   number-of-intervals="5"
   max-value-in-index="5"
-  min-value-in-index="1">
+  min-value-in-index="1"
+>
 </atomic-rating-range-facet>
 ```
 
@@ -77,18 +75,18 @@ Control the number of rating levels and the maximum/minimum values:
 Replace the default star icon with a custom SVG:
 
 ```html
-<atomic-rating-range-facet
-  field="rating"
-  icon="assets://heart.svg">
+<atomic-rating-range-facet field="rating" icon="assets://heart.svg">
 </atomic-rating-range-facet>
 ```
 
 You can use:
+
 - URLs starting with `http://`, `https://`, `./`, or `../` to load external icons
 - `assets://` prefix to use icons from the Atomic package
 - Inline SVG strings
 
 Make sure your custom icon includes `fill="currentColor"` to allow color customization via CSS variables:
+
 - `--atomic-rating-icon-active-color`: Color for filled/active icons
 - `--atomic-rating-icon-inactive-color`: Color for unfilled/inactive icons
 
@@ -100,13 +98,12 @@ Control which tabs display the facet:
 <!-- Show only on specific tabs -->
 <atomic-rating-range-facet
   field="rating"
-  tabs-included='["reviews", "products"]'>
+  tabs-included='["reviews", "products"]'
+>
 </atomic-rating-range-facet>
 
 <!-- Hide on specific tabs -->
-<atomic-rating-range-facet
-  field="rating"
-  tabs-excluded='["documentation"]'>
+<atomic-rating-range-facet field="rating" tabs-excluded='["documentation"]'>
 </atomic-rating-range-facet>
 ```
 
@@ -118,15 +115,14 @@ Display the facet only when specific values are selected in other facets:
 <atomic-facet facet-id="producttype" field="producttype"></atomic-facet>
 
 <!-- Show rating facet only when "Electronics" is selected -->
-<atomic-rating-range-facet
-  field="rating"
-  depends-on-producttype="Electronics">
+<atomic-rating-range-facet field="rating" depends-on-producttype="Electronics">
 </atomic-rating-range-facet>
 ```
 
 ## Accessibility
 
 The component is built with accessibility in mind:
+
 - Proper ARIA labels for screen readers
 - Keyboard navigation support
 - Focus management for improved usability
@@ -137,9 +133,7 @@ The component is built with accessibility in mind:
 Use `injection-depth` to control how many results are scanned when generating facet values. Higher values provide more accurate facet counts but may impact performance:
 
 ```html
-<atomic-rating-range-facet
-  field="rating"
-  injection-depth="2000">
+<atomic-rating-range-facet field="rating" injection-depth="2000">
 </atomic-rating-range-facet>
 ```
 

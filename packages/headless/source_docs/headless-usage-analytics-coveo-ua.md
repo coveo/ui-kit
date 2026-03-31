@@ -4,17 +4,18 @@ group: Usage
 category: Usage Analytics
 slug: usage/usage-analytics/coveo-ua
 ---
+
 # Coveo UA
 
 When used correctly, Headless controllers take care of logging standard Coveo UA search and click [Coveo Analytics events](https://docs.coveo.com/en/260/) for you.
 This article covers various topics that you may find helpful if you require further customization when using the Coveo UA protocol with Headless.
 
 > [!NOTE]
-> 
-> * For brevity, this article mainly focuses on the [`Search Engine`](../../../modules/Search.html).
-> However, similar logic applies when configuring UA for other Headless engines (except the Commerce Engine, which only supports [Event Protocol](https://docs.coveo.com/en/o3r90189/)).
-> * Take a look at the [Log view events with Coveo UA](./log-view-events-with-coveo-ua.html) article to understand how to log view events.
-> View event tracking with the Coveo UA protocol requires the `coveoua.js` script rather than the [Atomic](https://docs.coveo.com/en/lcdf0264/) or Headless libraries.
+>
+> - For brevity, this article mainly focuses on the [`Search Engine`](../../../modules/Search.html).
+>   However, similar logic applies when configuring UA for other Headless engines (except the Commerce Engine, which only supports [Event Protocol](https://docs.coveo.com/en/o3r90189/)).
+> - Take a look at the [Log view events with Coveo UA](./log-view-events-with-coveo-ua.html) article to understand how to log view events.
+>   View event tracking with the Coveo UA protocol requires the `coveoua.js` script rather than the [Atomic](https://docs.coveo.com/en/lcdf0264/) or Headless libraries.
 
 ## Modify the metadata to send with UA events
 
@@ -52,17 +53,17 @@ export const headlessEngine = buildSearchEngine({
 1. The `analyticsClientMiddleware` is a function that needs to be defined if we want to add or modify event data (see [analytics.ts](https://github.com/coveo/coveo.analytics.js/blob/master/src/client/analytics.ts)).
 2. The function takes as input an `eventName` and the event `payload`.
 3. Within this function, you can access the `payload` data and modify it.
-In the example above, we check to see if `visitorId` is an empty string.
-We add a new field (`loggedIn`) and a new custom context field (`context_role`)  to `customData`.
-If `visitorId` is empty, `loggedIn` is set to `false` and `context_role` to `Anonymous`.
-On the other hand, if `visitorId` is not empty, `loggedIn` is set to `true` and `context_role` to `Visitor`.
+   In the example above, we check to see if `visitorId` is an empty string.
+   We add a new field (`loggedIn`) and a new custom context field (`context_role`) to `customData`.
+   If `visitorId` is empty, `loggedIn` is set to `false` and `context_role` to `Anonymous`.
+   On the other hand, if `visitorId` is not empty, `loggedIn` is set to `true` and `context_role` to `Visitor`.
 
 ## Send click events
 
 Click events are intended to record item view and preview actions, such as:
 
-* Opening a result link
-* Opening a result Quick view
+- Opening a result link
+- Opening a result Quick view
 
 > [!WARNING]
 > We strongly recommend using the [`InteractiveResult`](../../../interfaces/Search.InteractiveResult.html) controller when implementing your result components.
@@ -103,8 +104,8 @@ export const headlessEngine = buildSearchEngine({
 
 1. If a UA event is dispatched with the [`logDocumentOpen`](../../../interfaces/Search.ClickAnalyticsActionCreators.html#logDocumentOpen) cause, add the target metadata.
 2. You can access result item fields when logging metadata.
-Concretely, you can use the populated default item fields, plus the ones specified through the [`fieldsToInclude`](../../../interfaces/Search.ResultListOptions.html) parameter.
-You can inspect search request responses in your search interface to see the currently available fields:
+   Concretely, you can use the populated default item fields, plus the ones specified through the [`fieldsToInclude`](../../../interfaces/Search.ResultListOptions.html) parameter.
+   You can inspect search request responses in your search interface to see the currently available fields:
 
 ![Inspecting response fields](https://docs.coveo.com/en/assets/images/build-a-search-ui/inspect-fields.png)
 
@@ -112,8 +113,8 @@ You can inspect search request responses in your search interface to see the cur
 
 Search events are intended to record end-user interactions that trigger queries, such as:
 
-* Submitting a search request from the search box
-* Selecting a facet value
+- Submitting a search request from the search box
+- Selecting a facet value
 
 You generally shouldn’t have to worry about logging search events, because standard search controllers such as [`SearchBox`](../../../interfaces/Search.SearchBox.html) and [`facet`](../../../interfaces/Search.Facet.html) controllers take care of automatically logging such interactions.
 
@@ -155,24 +156,24 @@ export const CustomComponent = () => {
 
 1. Import a local initialized search engine from your `engine.ts` file.
 2. Import `loadSearchActions` from the Headless package.
-This lets you create an action to execute a search query.
+   This lets you create an action to execute a search query.
 3. Import `loadSearchAnalyticsActions` from the Headless package.
-This will lets you return a dictionary of possible search analytics action creators.
+   This will lets you return a dictionary of possible search analytics action creators.
 4. Get the `executeSearch` action creator to execute a search query.
 5. Get a specific action creator, `logInterfaceLoad` in this scenario.
-This is the analytics event you will log.
+   This is the analytics event you will log.
 6. Dispatch an action to execute a search query, with the search analytic action passed in as input to log it.
 
 > [!NOTE]
-> 
+>
 > Take a look at [Custom events](#send-custom-events) to see a code example of how to log a search event using `GenericAnalyticsActions`.
 
 ## Send custom events
 
 Custom events are intended to record end-user interactions that don’t trigger a query or open a query result, such as:
 
-* Updating end-user preferences
-* Changing the result list layout
+- Updating end-user preferences
+- Changing the result list layout
 
 `GenericAnalyticsActions` lets you send any type of custom event using the `logCustomEvent` action creator.
 The _cause_ of this event is unknown to Coveo, so it can’t be used by Coveo ML.
@@ -201,10 +202,10 @@ export const CustomComponent = () => {
 
 1. Import a local initialized search engine from your `engine.ts` file.
 2. Import `loadGenericAnalyticsActions` from the Headless package.
-This lets you return a dictionary of possible generic analytics action creators.
+   This lets you return a dictionary of possible generic analytics action creators.
 3. Get a specific action creator, `logCustomEvent` in this scenario.
 4. Create a `payload` object to be sent to Coveo when logging a custom event.
-This payload will describe the details of which event led to the action being triggered.
+   This payload will describe the details of which event led to the action being triggered.
 5. Dispatch the action to log the custom event.
 
 ## User tracking and anonymizing UA Data
@@ -216,23 +217,23 @@ You can do so when initializing an engine instance by setting the `anonymous` pr
 ```jsx
 export const headlessEngine = buildSearchEngine({
   configuration: {
-    organizationId: "<ORGANIZATION_ID>",
-    accessToken: "<ACCESS_TOKEN>",
+    organizationId: '<ORGANIZATION_ID>',
+    accessToken: '<ACCESS_TOKEN>',
     analytics: {
-      anonymous: true
+      anonymous: true,
     },
-  }
-})
+  },
+});
 ```
 
 While we recommend the use of a search token for request authentication, it’s still possible to send user information if users are logged in, and you’re utilizing an [API key](https://docs.coveo.com/en/105/) for authentication.
 
 When using an API key, user information can be sent to Coveo by [modifying the UA event](#modify-the-metadata-to-send-with-ua-events), as shown in the following code snippet:
 
->[!IMPORTANT]
+> [!IMPORTANT]
 >
->When you [create the API Key](https://docs.coveo.com/en/1718#create-an-api-key), use the **Anonymous search** [template](https://docs.coveo.com/en/1718#api-key-templates).
->It will provide the right [privileges](https://docs.coveo.com/en/228/) for this use case.
+> When you [create the API Key](https://docs.coveo.com/en/1718#create-an-api-key), use the **Anonymous search** [template](https://docs.coveo.com/en/1718#api-key-templates).
+> It will provide the right [privileges](https://docs.coveo.com/en/228/) for this use case.
 
 ```typescript
 export const headlessEngine = buildSearchEngine({
@@ -251,8 +252,9 @@ export const headlessEngine = buildSearchEngine({
   }
 });
 ```
+
 1. Use a custom `isLoggedIn` variable to determine whether the user is logged in.
-Extract the `username` and `userDisplayName` from your user object and add them to the payload.
+   Extract the `username` and `userDisplayName` from your user object and add them to the payload.
 
 ## Send events externally
 
@@ -285,7 +287,7 @@ const pushToGoogleDataLayer = (payload: Record<string, unknown>) => {
 Coveo front-end libraries use the `coveo_visitorId` cookie to track individual users and sessions.
 
 > [!NOTE]
-> 
+>
 > Coveo now uses the [client ID](https://docs.coveo.com/en/lbjf0131/) value to track individual users and sessions.
 > For compatibility with legacy implementations, however, the associated cookie and local storage value are [still labeled `visitorID`](https://docs.coveo.com/en/mc2e2218#why-do-i-still-see-the-name-visitor-id-in-the-local-storage).
 
@@ -300,7 +302,7 @@ const headlessEngine = buildSearchEngine({
   configuration: getSampleSearchEngineConfiguration(),
 });
 
-headlessEngine.disableAnalytics()
+headlessEngine.disableAnalytics();
 // Or, headlessEngine.enableAnalytics();
 ```
 
@@ -310,16 +312,16 @@ headlessEngine.disableAnalytics()
 It’s used to indicate whether the user is requesting sites and advertisers not to track them.
 
 > [!NOTE]
-> 
+>
 > This property is deprecated, but it’s still supported in many browsers.
 
 Headless v2 complies with the value of this property.
 It automatically disables analytics tracking whenever `DNT` is enabled.
 
 > [!IMPORTANT]
-> 
+>
 > Headless v3 will no longer support this property.
 
 > [!NOTE]
-> 
+>
 > To understand how Coveo Usage Analytics tracks users and sessions, see [What’s a user visit?](https://docs.coveo.com/en/1873/).

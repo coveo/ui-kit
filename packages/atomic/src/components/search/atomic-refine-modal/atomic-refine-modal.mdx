@@ -1,7 +1,6 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+import {Meta} from '@storybook/addon-docs/blocks';
 import * as AtomicRefineModalStories from './atomic-refine-modal.new.stories';
-import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-template';
 
 <Meta of={AtomicRefineModalStories} />
 
@@ -17,6 +16,7 @@ The `atomic-refine-modal` is an internal component. It is publicly documented fo
 You should never insert this component directly in your markup or modify its attributes.
 
 The correct way to use the refine modal is through the `atomic-refine-toggle` component, usually placed within the "status" section of the layout.
+
 ```html
 <atomic-search-interface>
   ...
@@ -25,9 +25,7 @@ The correct way to use the refine modal is through the `atomic-refine-toggle` co
     <atomic-layout-section section="main">
       ...
       <atomic-layout-section section="status">
-
-            <atomic-refine-toggle></atomic-refine-toggle>
-
+        <atomic-refine-toggle></atomic-refine-toggle>
       </atomic-layout-section>
     </atomic-layout-section>
   </atomic-search-layout>

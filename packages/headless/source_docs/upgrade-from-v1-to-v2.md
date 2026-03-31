@@ -3,6 +3,7 @@ title: v1 to v2
 group: Upgrade
 slug: upgrade/v1-to-v2
 ---
+
 # Upgrade from v1 to v2
 
 > [!IMPORTANT]
@@ -13,7 +14,7 @@ slug: upgrade/v1-to-v2
 
 The following elements were renamed without changes to their underlying functionality.
 
-* `RelevanceInspector.fetchFieldDescriptions` renamed to `RelevanceInspector.fetchFieldsDescription`
+- `RelevanceInspector.fetchFieldDescriptions` renamed to `RelevanceInspector.fetchFieldsDescription`
 
   **Headless Version 1**
 
@@ -28,13 +29,16 @@ The following elements were renamed without changes to their underlying function
   ```
 
   Documentation: [RelevanceInspector](../../interfaces/Search.RelevanceInspector.html)
-* `RelevanceInspectorState.fieldDescriptions` renamed to `RelevanceInspectorState.fieldDescription`
+
+- `RelevanceInspectorState.fieldDescriptions` renamed to `RelevanceInspectorState.fieldDescription`
 
   Documentation: [RelevanceInspector](../../interfaces/Search.RelevanceInspector.html)
-* `ResultListState.searchUid` renamed to `ResultListState.searchResponseId`
+
+- `ResultListState.searchUid` renamed to `ResultListState.searchResponseId`
 
   Documentation: [ResultList](../../interfaces/Search.ResultList.html)
-* `searchAPIClient` renamed to `apiClient`
+
+- `searchAPIClient` renamed to `apiClient`
 
   Documentation: [SearchActions](../../interfaces/Search.SearchActionCreators.html)
 
@@ -42,25 +46,34 @@ The following elements were renamed without changes to their underlying function
 
 ### CDN
 
-<span>https://</span>static.cloud.coveo.com/headless/latest/* resources will no longer be updated (also, using this wasn’t recommended).
-If you want to use the CDN instead of [using npm to install Headless](../usage/index.html#install-headless), specify a major version to follow updates, such as in <span>https://</span>static.cloud.coveo.com/headless/v2/*.
+<span>https://</span>static.cloud.coveo.com/headless/latest/_ resources will no longer be updated (also, using this wasn’t recommended).
+If you want to use the CDN instead of [using npm to install Headless](../usage/index.html#install-headless), specify a major version to follow updates, such as in <span>https://</span>static.cloud.coveo.com/headless/v2/_.
 
 **Headless Version 1**
 
 ```html
-<script type="module" src="https://static.cloud.coveo.com/headless/latest/headless.esm.js"></script>
+<script
+  type="module"
+  src="https://static.cloud.coveo.com/headless/latest/headless.esm.js"
+></script>
 ```
 
 or
 
 ```html
-<script type="module" src="https://static.cloud.coveo.com/headless/v1/headless.esm.js"></script>
+<script
+  type="module"
+  src="https://static.cloud.coveo.com/headless/v1/headless.esm.js"
+></script>
 ```
 
 **Headless Version 2**
 
 ```html
-<script type="module" src="https://static.cloud.coveo.com/headless/v2/headless.esm.js"></script>
+<script
+  type="module"
+  src="https://static.cloud.coveo.com/headless/v2/headless.esm.js"
+></script>
 ```
 
 ### [`FieldSuggestionsOptions`](../../interfaces/Search.FieldSuggestionsOptions.html)
@@ -71,13 +84,18 @@ They must now be set by passing a [`FacetOptions`](../../interfaces/Search.Facet
 **Headless Version 1 Example**
 
 ```ts
-controller = buildFieldSuggestions(engine, {field: 'author', facetId: 'author-2'});
+controller = buildFieldSuggestions(engine, {
+  field: 'author',
+  facetId: 'author-2',
+});
 ```
 
 **Headless Version 2 Example**
 
 ```ts
-controller = buildFieldSuggestions(engine, {facet: {field: 'author', facetId: 'author-2'}});
+controller = buildFieldSuggestions(engine, {
+  facet: {field: 'author', facetId: 'author-2'},
+});
 ```
 
 Similarly, the `FieldSuggestionsFacetSearchOptions` have been removed and you must use `FacetSearchOptions` instead.
@@ -86,13 +104,19 @@ Because they expose the same attributes, this change should be transparent.
 **Headless Version 1 Example**
 
 ```ts
-controller = buildFieldSuggestions(engine, {field: 'author', facetId: 'author-2', facetSearch: {query: "herman"}});
+controller = buildFieldSuggestions(engine, {
+  field: 'author',
+  facetId: 'author-2',
+  facetSearch: {query: 'herman'},
+});
 ```
 
 **Headless Version 2 Example**
 
 ```ts
-controller = buildFieldSuggestions(engine, {facet: {field: 'author', facetId: 'author-2', facetSearch: {query: "herman"}}});
+controller = buildFieldSuggestions(engine, {
+  facet: {field: 'author', facetId: 'author-2', facetSearch: {query: 'herman'}},
+});
 ```
 
 ### [`CategoryFieldSuggestionsOptions`](../../interfaces/Search.CategoryFieldSuggestionsOptions.html)
@@ -106,7 +130,7 @@ controller = buildCategoryFieldSuggestions(engine, {
   options: {
     field: 'geographicalhierarchy',
     facetId: 'geographicalhierarchy-3',
-  }
+  },
 });
 ```
 
@@ -118,8 +142,8 @@ controller = buildCategoryFieldSuggestions(engine, {
     facet: {
       field: 'geographicalhierarchy',
       facetId: 'geographicalhierarchy-3',
-    }
-  }
+    },
+  },
 });
 ```
 
@@ -133,8 +157,8 @@ controller = buildCategoryFieldSuggestions(engine, {
   options: {
     field: 'geographicalhierarchy',
     facetId: 'geographicalhierarchy-3',
-    facetSearch: {query: "brazil"}
-  }
+    facetSearch: {query: 'brazil'},
+  },
 });
 ```
 
@@ -146,9 +170,9 @@ controller = buildCategoryFieldSuggestions(engine, {
     facet: {
       field: 'geographicalhierarchy',
       facetId: 'geographicalhierarchy-3',
-      facetSearch: {query: "brazil"}
-    }
-  }
+      facetSearch: {query: 'brazil'},
+    },
+  },
 });
 ```
 
@@ -181,8 +205,8 @@ Instead, use `deselectAllBreadcrumbs`.
 **Headless Version 1 Example**
 
 ```ts
-import { engine } from './engine';
-import { loadBreadcrumbActions } from '@coveo/headless';
+import {engine} from './engine';
+import {loadBreadcrumbActions} from '@coveo/headless';
 
 const breadcrumbActionCreators = loadBreadcrumbActions(headlessEngine);
 const action = breadcrumbActionCreators.deselectAllFacets();
@@ -193,8 +217,8 @@ headlessEngine.dispatch(action);
 **Headless Version 2 Example**
 
 ```ts
-import { engine } from './engine';
-import { loadBreadcrumbActions } from '@coveo/headless';
+import {engine} from './engine';
+import {loadBreadcrumbActions} from '@coveo/headless';
 
 const breadcrumbActionCreators = loadBreadcrumbActions(headlessEngine);
 const action = breadcrumbActionCreators.deselectAllBreadcrumbs();
@@ -236,15 +260,15 @@ const controller = buildDateFacet(engine, {
 **Headless Version 2 Example**
 
 ```ts
-import { buildSearchEngine } from '@coveo/headless';
+import {buildSearchEngine} from '@coveo/headless';
 
 export const headlessEngine = buildSearchEngine({
   configuration: {
     // ...
     search: {
-        timezone: 'Etc/UTC'
-    }
-  }
+      timezone: 'Etc/UTC',
+    },
+  },
 });
 ```
 
@@ -255,16 +279,16 @@ Use `questionAnswerId` instead.
 
 In particular, you now need to use `questionAnswerId` rather than `documentId` when using the following methods:
 
-* [`collapse`](../../interfaces/Search.SmartSnippetQuestionsList.html#collapse)
-* [`expand`](../../interfaces/Search.SmartSnippetQuestionsList.html#expand)
+- [`collapse`](../../interfaces/Search.SmartSnippetQuestionsList.html#collapse)
+- [`expand`](../../interfaces/Search.SmartSnippetQuestionsList.html#expand)
 
 The same applies when using the following actions:
 
-* [`collapseSmartSnippetRelatedQuestion`](../../interfaces/Search.QuestionAnsweringActionCreators.html#collapsesmartsnippetrelatedquestion)
-* [`expandSmartSnippetRelatedQuestion`](../../interfaces/Search.QuestionAnsweringActionCreators.html#expandsmartsnippetrelatedquestion)
-* [`logOpenSmartSnippetSuggestionSource`](../../interfaces/Search.ClickAnalyticsActionCreators.html#logopensmartsnippetsuggestionsource)
-* [`logExpandSmartSnippetSuggestion`](../../interfaces/Search.SearchAnalyticsActionCreators.html#logexpandsmartsnippetsuggestion)
-* [`logCollapseSmartSnippetSuggestion`](../../interfaces/Search.SearchAnalyticsActionCreators.html#logcollapsesmartsnippetsuggestion)
+- [`collapseSmartSnippetRelatedQuestion`](../../interfaces/Search.QuestionAnsweringActionCreators.html#collapsesmartsnippetrelatedquestion)
+- [`expandSmartSnippetRelatedQuestion`](../../interfaces/Search.QuestionAnsweringActionCreators.html#expandsmartsnippetrelatedquestion)
+- [`logOpenSmartSnippetSuggestionSource`](../../interfaces/Search.ClickAnalyticsActionCreators.html#logopensmartsnippetsuggestionsource)
+- [`logExpandSmartSnippetSuggestion`](../../interfaces/Search.SearchAnalyticsActionCreators.html#logexpandsmartsnippetsuggestion)
+- [`logCollapseSmartSnippetSuggestion`](../../interfaces/Search.SearchAnalyticsActionCreators.html#logcollapsesmartsnippetsuggestion)
 
 **Headless Version 1 Example**
 
@@ -478,7 +502,7 @@ Instead, use the more general `engine.state.querySet`, which is also a set of [q
 **Headless Version 1 Example**
 
 ```ts
-lastQuery = engine.state.querySuggest.q
+lastQuery = engine.state.querySuggest.q;
 // ...
 ```
 
@@ -489,11 +513,11 @@ this.headlessSearchBox = buildSearchBox(headlessEngine, {
   options: {
     id: '123',
     // ...
-  }
+  },
   // ...
-})
+});
 // ...
-lastQuery = engine.state.querySet['123']
+lastQuery = engine.state.querySet['123'];
 // ...
 ```
 
@@ -508,14 +532,14 @@ The type of `engine.state.numericFacetSet` has changed from `{ [facetId: string]
 **Headless Version 1**
 
 ```ts
-lastRequest = engine.state.facetSet[this.headlessFacet.state.facetId]
+lastRequest = engine.state.facetSet[this.headlessFacet.state.facetId];
 // ...
 ```
 
 **Headless Version 2**
 
 ```ts
-lastRequest = engine.state.facetSet[this.headlessFacet.state.facetId].request
+lastRequest = engine.state.facetSet[this.headlessFacet.state.facetId].request;
 // ...
 ```
 
@@ -539,13 +563,13 @@ engine.state.facetSet[<FACET_ID>].hasBreadcrumbs
 
 The following internal controllers have been removed:
 
-* `InteractiveResultCore`
-* `CoreQuerySummary`
-* `CoreResultList`
-* `CoreFacetManager`
-* `CoreStatus`
-* `DocumentSuggestion` (from the Case Assist engine)
-* `QuickviewCore`
+- `InteractiveResultCore`
+- `CoreQuerySummary`
+- `CoreResultList`
+- `CoreFacetManager`
+- `CoreStatus`
+- `DocumentSuggestion` (from the Case Assist engine)
+- `QuickviewCore`
 
 ### `Redirection`
 
@@ -580,15 +604,15 @@ The following properties are invalid:
 The `clientOrigin` has been changed for some Search API requests (see [Modify requests and responses](../usage/modify-requests-and-responses.html)).
 This change should be transparent, unless you were modifying the `clientOrigin` yourself.
 
-| Request |
-| --- |
+| Request              |
+| -------------------- |
 | `clientOrigin` value |
-| Product listing |
-| `commerceApiFetch` |
-| Case assist |
+| Product listing      |
+| `commerceApiFetch`   |
+| Case assist          |
 | `caseAssistApiFetch` |
-| Insight |
-| `insightApiFetch` |
+| Insight              |
+| `insightApiFetch`    |
 
 ### Search analytics actions
 

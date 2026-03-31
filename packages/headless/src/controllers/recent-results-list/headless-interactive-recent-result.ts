@@ -8,16 +8,14 @@ import {
   type InteractiveResultCoreProps,
 } from '../core/interactive-result/headless-core-interactive-result.js';
 
-export interface InteractiveRecentResultOptions
-  extends InteractiveResultCoreOptions {
+export interface InteractiveRecentResultOptions extends InteractiveResultCoreOptions {
   /**
    * The query result.
    */
   result: Result;
 }
 
-export interface InteractiveRecentResultProps
-  extends InteractiveResultCoreProps {
+export interface InteractiveRecentResultProps extends InteractiveResultCoreProps {
   /**
    * The options for the `InteractiveResult` controller.
    */
