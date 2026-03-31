@@ -90,22 +90,6 @@
       ]
     },
     {
-      "matchFileNames": ["packages/quantic/package.json"],
-      "groupSlug": "quantic-chalk",
-      "rangeStrategy": "replace",
-      "allowedVersions": "4.x",
-      "description": "Cypress custom reporter are CJS, and Chalk 5.x is ESM only",
-      "matchPackageNames": ["/^chalk$/"]
-    },
-    {
-      "matchFileNames": ["packages/quantic/package.json"],
-      "groupSlug": "change-case",
-      "rangeStrategy": "replace",
-      "allowedVersions": "4.x",
-      "description": "Quantic uses JSDOC that does not support ESM modules for template",
-      "matchPackageNames": ["/^change-case$/"]
-    },
-    {
       "groupName": "marked",
       "groupSlug": "marked",
       "rangeStrategy": "replace",
@@ -120,15 +104,6 @@
       "matchPackageNames": ["@coveo/relay"]
     },
     {
-      "matchFileNames": ["packages/quantic/package.json"],
-      "groupSlug": "sfdx-lwc-jest",
-      "rangeStrategy": "replace",
-      "allowedVersions": "3.x",
-      "description": "sfdx-lwc-jest uses a not GA version of Salesforce API (60)",
-      "matchPackageNames": ["/^@​salesforce/sfdx-lwc-jest$/"]
-    },
-
-    {
       "groupName": "knip",
       "groupSlug": "knip",
       "rangeStrategy": "replace",
@@ -141,6 +116,31 @@
       "rangeStrategy": "replace",
       "description": "Isolate publint since updates can break CI",
       "matchPackageNames": ["publint"]
+    },
+    {
+      "groupName": "Quantic-only dependencies",
+      "groupSlug": "quantic-deps",
+      "rangeStrategy": "replace",
+      "description": "Group all dependencies only used by the Quantic package",
+      "matchPackageNames": [
+        "@babel/cli",
+        "@babel/plugin-transform-async-to-generator",
+        "@octokit/graphql",
+        "@octokit/graphql-schema",
+        "@salesforce/eslint-config-lwc",
+        "@salesforce/sfdx-lwc-jest",
+        "@types/wait-on",
+        "@typescript-eslint/parser",
+        "dotenv",
+        "eslint",
+        "eslint-config-prettier",
+        "jest-junit",
+        "jsdoc",
+        "jsdoc-tsimport-plugin",
+        "prettier-plugin-apex",
+        "ts-node",
+        "xml2js"
+      ]
     }
   ],
   "lockFileMaintenance": {
@@ -153,7 +153,6 @@
   },
   "postUpdateOptions": ["pnpmDedupe"],
   "ignoreDeps": [
-    "@salesforce/sfdx-lwc-jest",
     "fix-esm-import-path",
     // Ignore cypress since it is getting removed.
     "cypress",
@@ -180,6 +179,7 @@
     "@storybook/addon-vitest",
     "msw-storybook-addon",
     // Problems with angular. Just ignore it.
-    "zone.js"
+    "zone.js",
+
   ]
 }

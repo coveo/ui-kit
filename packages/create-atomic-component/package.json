@@ -1,6 +1,6 @@
 {
   "name": "@coveo/create-atomic-component",
-  "version": "1.5.13",
+  "version": "1.5.14",
   "description": "Initialize a Coveo Atomic Component",
   "type": "module",
   "main": "index.js",
@@ -15,10 +15,9 @@
     "template/.gitignore"
   ],
   "scripts": {
-    "release:phase3": "pnpm --filter @coveo/ci npm-publish",
     "publish:bump": "pnpm --filter @coveo/ci bump",
     "release:phase1": "pnpm run publish:bump",
-    "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod"
+    "npm:publish": "pnpm --filter @coveo/ci npm-publish"
   },
   "keywords": [
     "coveo",

@@ -13,7 +13,6 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "jsx": "react",
-    "jsxFactory": "h",
     "types": ["@testing-library/jest-dom"],
     "plugins": [
       {

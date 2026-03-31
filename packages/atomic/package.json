@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic",
   "type": "module",
-  "version": "3.53.0",
+  "version": "3.53.3",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -74,15 +74,15 @@
     "test:watch": "vitest --project=atomic-default",
     "test:storybook": "vitest run --project=storybook",
     "generate-component": "node ./scripts/generate-component.mjs",
-    "release:phase3": "pnpm --filter @coveo/ci npm-publish",
     "release:phase1": "pnpm --filter @coveo/ci bump",
-    "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod",
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
     "chromatic": "chromatic -d=dist-storybook",
     "validate:light-dom-styles": "node ./scripts/check-light-dom-host-selectors.mjs",
-    "validate:no-new-light-dom": "node ./scripts/check-no-new-light-dom-components.mjs"
+    "validate:no-new-light-dom": "node ./scripts/check-no-new-light-dom-components.mjs",
+    "npm:publish": "pnpm --filter @coveo/ci npm-publish"
   },
   "dependencies": {
+    "@coveo/atomic-legacy": "workspace:*",
     "@coveo/bueno": "workspace:*",
     "@coveo/headless": "workspace:*",
     "@coveo/relay-event-types": "catalog:",
@@ -99,14 +99,13 @@
     "i18next": "25.7.3",
     "i18next-http-backend": "3.0.2",
     "lit": "3.3.2",
-    "marked": "12.0.2",
-    "@coveo/atomic-legacy": "workspace:*"
+    "marked": "12.0.2"
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "0.11.0",
     "@msw/source": "0.6.0",
     "@playwright/test": "catalog:",
-    "@rollup/plugin-commonjs": "28.0.9",
+    "@rollup/plugin-commonjs": "29.0.2",
     "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "16.0.3",
     "@rollup/plugin-replace": "catalog:",
@@ -116,17 +115,15 @@
     "@storybook/addon-vitest": "10.0.8",
     "@storybook/icons": "2.0.1",
     "@storybook/web-components-vite": "10.0.8",
-    "@tailwindcss/postcss": "4.1.13",
-    "@tailwindcss/vite": "4.1.13",
+    "@tailwindcss/postcss": "4.1.18",
+    "@tailwindcss/vite": "4.1.18",
     "@types/escape-html": "1.0.4",
-    "@types/jest": "catalog:",
-    "@types/minimatch": "5.1.2",
     "@types/node": "catalog:",
     "@vitest/browser-playwright": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "@wc-toolkit/storybook-helpers": "10.0.0",
     "axe-core": "4.11.0",
-    "chromatic": "13.3.4",
+    "chromatic": "15.3.0",
     "handlebars": "4.7.8",
     "html-loader-jest": "0.2.1",
     "jest": "catalog:",
@@ -149,13 +146,13 @@
     "rollup-plugin-copy": "3.5.0",
     "shadow-dom-testing-library": "1.13.1",
     "storybook": "10.0.8",
-    "tailwindcss": "4.1.13",
+    "tailwindcss": "4.1.18",
     "ts-dedent": "2.2.0",
     "ts-lit-plugin": "2.0.2",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:",
-    "wait-on": "8.0.5"
+    "wait-on": "9.0.4"
   },
   "peerDependencies": {
     "@coveo/bueno": "workspace:*",

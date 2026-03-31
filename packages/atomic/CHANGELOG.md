@@ -1,3 +1,36 @@
+## <small>3.53.3 (2026-03-30)</small>
+
+* fix(atomic): Facet tabs included / excluded not working properly (#7248) ([871137d](https://github.com/coveo/ui-kit/commits/871137d)), closes [#7248](https://github.com/coveo/ui-kit/issues/7248)
+* fix(atomic): Keep atomic-search-box id stable for element lifetime (#7266) ([5dc0608](https://github.com/coveo/ui-kit/commits/5dc0608)), closes [#7266](https://github.com/coveo/ui-kit/issues/7266)
+* fix(Atomic): small styling polish on agent answers (#7301) ([e25eb0a](https://github.com/coveo/ui-kit/commits/e25eb0a)), closes [#7301](https://github.com/coveo/ui-kit/issues/7301)
+
+
+
+## <small>3.53.2 (2026-03-25)</small>
+
+* chore(deps): update tailwind to v4.1.18 j:kit-282 (#6214) ([17e0a51](https://github.com/coveo/ui-kit/commits/17e0a51)), closes [#6214](https://github.com/coveo/ui-kit/issues/6214)
+* fix(deps): update all dependencies j:kit-282 (major) (#6195) ([a5df20c](https://github.com/coveo/ui-kit/commits/a5df20c)), closes [#6195](https://github.com/coveo/ui-kit/issues/6195)
+
+
+
+## <small>3.53.1 (2026-03-25)</small>
+
+* fix: use clickUri as citation url (#7265) ([a87ebb6](https://github.com/coveo/ui-kit/commits/a87ebb6)), closes [#7265](https://github.com/coveo/ui-kit/issues/7265)
+* fix(atomic): generated answer components not exposed in the CDN (#7269) ([aaf4bf7](https://github.com/coveo/ui-kit/commits/aaf4bf7)), closes [#7269](https://github.com/coveo/ui-kit/issues/7269)
+* fix(atomic): the query in the thread item component not truncating long queries beyond 3 lines (#725 ([5bc8fea](https://github.com/coveo/ui-kit/commits/5bc8fea)), closes [#7259](https://github.com/coveo/ui-kit/issues/7259)
+* fix(commerce): prevent history loops in atomic commerce interface (#7254) ([11975dc](https://github.com/coveo/ui-kit/commits/11975dc)), closes [#7254](https://github.com/coveo/ui-kit/issues/7254)
+* fix(deps): update all dependencies j:kit-282 (#6191) ([9ec6cc5](https://github.com/coveo/ui-kit/commits/9ec6cc5)), closes [#6191](https://github.com/coveo/ui-kit/issues/6191)
+* fix(ipxModal): init with classes (#7264) ([73f494f](https://github.com/coveo/ui-kit/commits/73f494f)), closes [#7264](https://github.com/coveo/ui-kit/issues/7264)
+* chore(atomic): clean up imports and remove deprecated TODOs in atomic-search-interface (#7234) ([1a60481](https://github.com/coveo/ui-kit/commits/1a60481)), closes [#7234](https://github.com/coveo/ui-kit/issues/7234)
+* chore(deps): update dependency @biomejs/biome to v2.4.7 j:kit-282 (#6193) ([a72f939](https://github.com/coveo/ui-kit/commits/a72f939)), closes [#6193](https://github.com/coveo/ui-kit/issues/6193)
+* ci: migrate npm publishing to OIDC trusted publishers (#7198) ([c97eff5](https://github.com/coveo/ui-kit/commits/c97eff5)), closes [#7198](https://github.com/coveo/ui-kit/issues/7198)
+* feat(atomic, headless): added support for new error code turn limit reached from KGAS (#7262) ([ad46f6d](https://github.com/coveo/ui-kit/commits/ad46f6d)), closes [#7262](https://github.com/coveo/ui-kit/issues/7262)
+* fix(atomic) Answer content shifts upward when generation steps component disappears after answer gen ([09b1697](https://github.com/coveo/ui-kit/commits/09b1697)), closes [#7258](https://github.com/coveo/ui-kit/issues/7258)
+* fix(atomic) issue with the Atomic-generated-answer collapsible parameter is not working as expected  ([ea7fcbd](https://github.com/coveo/ui-kit/commits/ea7fcbd)), closes [#7240](https://github.com/coveo/ui-kit/issues/7240)
+* refactor(atomic): remove custom element tag generation script and update tag export method (#7235) ([b85c67d](https://github.com/coveo/ui-kit/commits/b85c67d)), closes [#7235](https://github.com/coveo/ui-kit/issues/7235)
+
+
+
 ## 3.53.0 (2026-03-18)
 
 * chore: cleaning atomic generated files (#7233) ([38add47](https://github.com/coveo/ui-kit/commits/38add47)), closes [#7233](https://github.com/coveo/ui-kit/issues/7233)

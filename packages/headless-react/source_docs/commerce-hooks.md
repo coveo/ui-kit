@@ -1,18 +1,17 @@
 ---
 title: Commerce Controller hooks
-group: Usage
+group: Guides
 ---
 
-# Hooks
+# Commerce Hooks
 
 This package provides React hooks for controllers defined in the Engine Definition. Hooks allow you to access controller state and methods easily within your React components.
 Without these hooks, you would need to manually pass down props through every component or implement your own provider solution, which can be cumbersome and error-prone.
 
 See [Headless commerce usage (SSR): Define the commerce engine and controllers](https://docs.coveo.com/en/obif0156/#define-the-commerce-engine-and-controllers)
 
-## Usage
 
-### 1. Create an engine configuration
+## Create an engine configuration
 
 Define the controllers you need in your engine configuration. This example includes `Summary`, `ProductList` and `Cart` controllers:
 
@@ -37,7 +36,7 @@ const config : CommerceEngineDefinitionOptions {
 }
 ```
 
-### 2. Define the engine
+## Define the engine
 
 Use `defineCommerceEngine` to define the engine with your configuration:
 
@@ -45,7 +44,7 @@ Use `defineCommerceEngine` to define the engine with your configuration:
 export const engineDefinition = defineCommerceEngine(engineConfig);
 ```
 
-### 3. Export hooks
+## Export hooks
 
 Extract hooks for each controller from the engine definition.
 
@@ -57,7 +56,7 @@ export const {
 } = engineDefinition.controllers;
 ```
 
-### 4. Use Hooks in Components
+## Use hooks in components
 
 Access controller methods and state in your components through the hooks.
 The controller methods and state attributes exposed through controller hooks are the same as the ones exposed by the controllers.
