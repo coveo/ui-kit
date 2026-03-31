@@ -81,6 +81,22 @@ vi.mock('../../core/generated-answer/headless-core-generated-answer.js', () => {
   };
 });
 
+const exampleFollowUpAnswer = {
+  question: 'What about X?',
+  answer: 'Answer about X',
+  citations: [],
+  generationSteps: [],
+  answerId: 'follow-up-1',
+  isLoading: false,
+  isStreaming: false,
+  liked: false,
+  disliked: false,
+  feedbackSubmitted: false,
+  isAnswerGenerated: true,
+  cannotAnswer: false,
+  isActive: false,
+};
+
 describe('GeneratedAnswerWithFollowUps', () => {
   let engine: MockedSearchEngine;
   const createGeneratedAnswerWithFollowUps = (
@@ -239,28 +255,12 @@ describe('GeneratedAnswerWithFollowUps', () => {
 
     describe('follow-up answers state', () => {
       it('should expose follow-up answers from Redux state', () => {
-        const exampleFollowUpAnswers = {
-          question: 'What about X?',
-          answer: 'Answer about X',
-          citations: [],
-          generationSteps: [],
-          answerId: 'follow-up-1',
-          isLoading: false,
-          isStreaming: false,
-          liked: true,
-          disliked: false,
-          feedbackSubmitted: false,
-          isAnswerGenerated: true,
-          cannotAnswer: false,
-          isActive: false,
-        };
-
         engine = buildEngineWithGeneratedAnswer({
           followUpAnswers: {
             conversationId: 'session-123',
             conversationToken: 'token-123',
             isEnabled: true,
-            followUpAnswers: [exampleFollowUpAnswers],
+            followUpAnswers: [exampleFollowUpAnswer],
           },
         });
 
@@ -270,7 +270,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
           conversationId: 'session-123',
           conversationToken: 'token-123',
           isEnabled: true,
-          followUpAnswers: [exampleFollowUpAnswers],
+          followUpAnswers: [exampleFollowUpAnswer],
         });
       });
 
@@ -310,6 +310,12 @@ describe('GeneratedAnswerWithFollowUps', () => {
           ...getGeneratedAnswerInitialState(),
           answerId: 'head-id',
         },
+        followUpAnswers: {
+          conversationId: 'session-123',
+          conversationToken: 'token-123',
+          isEnabled: true,
+          followUpAnswers: [exampleFollowUpAnswer],
+        },
       });
     });
 
@@ -338,29 +344,18 @@ describe('GeneratedAnswerWithFollowUps', () => {
     it('should dispatch likeFollowUp when answerId targets a follow-up answer', () => {
       const controller = createGeneratedAnswerWithFollowUps();
 
-      controller.like(followUpAnswerId);
+      controller.like(exampleFollowUpAnswer.answerId);
 
-      expect(likeFollowUp).toHaveBeenCalledWith({answerId: followUpAnswerId});
+      expect(likeFollowUp).toHaveBeenCalledWith({
+        answerId: exampleFollowUpAnswer.answerId,
+      });
       expect(mockCoreLike).not.toHaveBeenCalled();
-      expect(logLikeGeneratedAnswer).toHaveBeenCalledWith(followUpAnswerId);
+      expect(logLikeGeneratedAnswer).toHaveBeenCalledWith(
+        exampleFollowUpAnswer.answerId
+      );
     });
 
     it('should not dispatch follow-up like actions when already liked', () => {
-      const exampleFollowUpAnswers = {
-        question: 'What about X?',
-        answer: 'Answer about X',
-        citations: [],
-        generationSteps: [],
-        answerId: 'follow-up-1',
-        isLoading: false,
-        isStreaming: false,
-        liked: true,
-        disliked: false,
-        feedbackSubmitted: false,
-        isAnswerGenerated: true,
-        cannotAnswer: false,
-        isActive: false,
-      };
       engine = buildEngineWithGeneratedAnswer({
         generatedAnswer: {
           ...getGeneratedAnswerInitialState(),
@@ -370,12 +365,34 @@ describe('GeneratedAnswerWithFollowUps', () => {
           conversationId: 'session-123',
           conversationToken: 'token-123',
           isEnabled: true,
-          followUpAnswers: [exampleFollowUpAnswers],
+          followUpAnswers: [{...exampleFollowUpAnswer, liked: true}],
         },
       });
       const controller = createGeneratedAnswerWithFollowUps();
 
-      controller.like(exampleFollowUpAnswers.answerId);
+      controller.like(exampleFollowUpAnswer.answerId);
+
+      expect(likeFollowUp).not.toHaveBeenCalled();
+      expect(logLikeGeneratedAnswer).not.toHaveBeenCalled();
+      expect(mockCoreLike).not.toHaveBeenCalled();
+    });
+
+    it('should not dispatch follow-up like actions when follow up answer is not found', () => {
+      engine = buildEngineWithGeneratedAnswer({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          answerId: headAnswerId,
+        },
+        followUpAnswers: {
+          conversationId: 'session-123',
+          conversationToken: 'token-123',
+          isEnabled: true,
+          followUpAnswers: [exampleFollowUpAnswer],
+        },
+      });
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.like('non-existent-answer-id');
 
       expect(likeFollowUp).not.toHaveBeenCalled();
       expect(logLikeGeneratedAnswer).not.toHaveBeenCalled();
@@ -389,6 +406,12 @@ describe('GeneratedAnswerWithFollowUps', () => {
         generatedAnswer: {
           ...getGeneratedAnswerInitialState(),
           answerId: 'head-id',
+        },
+        followUpAnswers: {
+          conversationId: 'session-123',
+          conversationToken: 'token-123',
+          isEnabled: true,
+          followUpAnswers: [exampleFollowUpAnswer],
         },
       });
     });
@@ -418,31 +441,18 @@ describe('GeneratedAnswerWithFollowUps', () => {
     it('should dispatch dislikeFollowUp when answerId targets a follow-up answer', () => {
       const controller = createGeneratedAnswerWithFollowUps();
 
-      controller.dislike(followUpAnswerId);
+      controller.dislike(exampleFollowUpAnswer.answerId);
 
       expect(dislikeFollowUp).toHaveBeenCalledWith({
-        answerId: followUpAnswerId,
+        answerId: exampleFollowUpAnswer.answerId,
       });
       expect(mockCoreDislike).not.toHaveBeenCalled();
-      expect(logDislikeGeneratedAnswer).toHaveBeenCalledWith(followUpAnswerId);
+      expect(logDislikeGeneratedAnswer).toHaveBeenCalledWith(
+        exampleFollowUpAnswer.answerId
+      );
     });
 
     it('should not dispatch follow-up dislike actions when already disliked', () => {
-      const exampleFollowUpAnswers = {
-        question: 'What about X?',
-        answer: 'Answer about X',
-        citations: [],
-        generationSteps: [],
-        answerId: 'follow-up-1',
-        isLoading: false,
-        isStreaming: false,
-        liked: false,
-        disliked: true,
-        feedbackSubmitted: false,
-        isAnswerGenerated: true,
-        cannotAnswer: false,
-        isActive: false,
-      };
       engine = buildEngineWithGeneratedAnswer({
         generatedAnswer: {
           ...getGeneratedAnswerInitialState(),
@@ -452,12 +462,34 @@ describe('GeneratedAnswerWithFollowUps', () => {
           conversationId: 'session-123',
           conversationToken: 'token-123',
           isEnabled: true,
-          followUpAnswers: [exampleFollowUpAnswers],
+          followUpAnswers: [{...exampleFollowUpAnswer, disliked: true}],
         },
       });
       const controller = createGeneratedAnswerWithFollowUps();
 
-      controller.dislike(exampleFollowUpAnswers.answerId);
+      controller.dislike(exampleFollowUpAnswer.answerId);
+
+      expect(dislikeFollowUp).not.toHaveBeenCalled();
+      expect(logDislikeGeneratedAnswer).not.toHaveBeenCalled();
+      expect(mockCoreDislike).not.toHaveBeenCalled();
+    });
+
+    it('should not dispatch follow-up dislike actions when follow up answer is not found', () => {
+      engine = buildEngineWithGeneratedAnswer({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          answerId: headAnswerId,
+        },
+        followUpAnswers: {
+          conversationId: 'session-123',
+          conversationToken: 'token-123',
+          isEnabled: true,
+          followUpAnswers: [exampleFollowUpAnswer],
+        },
+      });
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.dislike('non-existent-answer-id');
 
       expect(dislikeFollowUp).not.toHaveBeenCalled();
       expect(logDislikeGeneratedAnswer).not.toHaveBeenCalled();

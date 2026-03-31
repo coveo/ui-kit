@@ -165,7 +165,10 @@ export function buildGeneratedAnswerWithFollowUps(
       const followUpAnswer = this.state.followUpAnswers.followUpAnswers.find(
         (answer) => answer.answerId === answerId
       );
-      if (!followUpAnswer?.liked) {
+      if (!followUpAnswer) {
+        return;
+      }
+      if (!followUpAnswer.liked) {
         engine.dispatch(likeFollowUp({answerId}));
         engine.dispatch(analyticsClient.logLikeGeneratedAnswer(answerId));
       }
@@ -180,7 +183,10 @@ export function buildGeneratedAnswerWithFollowUps(
       const followUpAnswer = this.state.followUpAnswers.followUpAnswers.find(
         (answer) => answer.answerId === answerId
       );
-      if (!followUpAnswer?.disliked) {
+      if (!followUpAnswer) {
+        return;
+      }
+      if (!followUpAnswer.disliked) {
         engine.dispatch(dislikeFollowUp({answerId}));
         engine.dispatch(analyticsClient.logDislikeGeneratedAnswer(answerId));
       }
