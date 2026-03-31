@@ -1,0 +1,46 @@
+// CDN Manifest — single source of truth for CDN package structure.
+//
+// Each entry describes a package deployed to the Coveo static CDN:
+//   - name:    Package identifier (used to match S3 deployment phases in ui-kit-cd)
+//   - source:  Build output directory to upload
+//   - cdnPath: CDN path pattern. $VERSION is replaced with the semver version at deploy time.
+//              Most packages follow "{name}/v$VERSION"; exceptions have extra nesting.
+[
+  {
+    "name": "bueno",
+    "source": "packages/bueno/cdn",
+    "cdnPath": "bueno/v$VERSION"
+  },
+  {
+    "name": "headless",
+    "source": "packages/headless/cdn",
+    "cdnPath": "headless/v$VERSION"
+  },
+  {
+    "name": "atomic",
+    "source": "packages/atomic/cdn",
+    "cdnPath": "atomic/v$VERSION"
+  },
+  {
+    // Storybook is nested inside the atomic CDN directory
+    "name": "atomic-storybook",
+    "source": "packages/atomic/dist-storybook",
+    "cdnPath": "atomic/v$VERSION/storybook"
+  },
+  {
+    "name": "atomic-react",
+    "source": "packages/atomic-react/dist",
+    "cdnPath": "atomic-react/v$VERSION"
+  },
+  {
+    // Hosted page has an extra subdirectory after the version
+    "name": "atomic-hosted-page",
+    "source": "packages/atomic-hosted-page/cdn",
+    "cdnPath": "atomic-hosted-page/v$VERSION/atomic-hosted-page"
+  },
+  {
+    "name": "shopify",
+    "source": "packages/shopify/cdn",
+    "cdnPath": "shopify/v$VERSION"
+  }
+]

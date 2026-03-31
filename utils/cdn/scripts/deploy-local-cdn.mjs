@@ -30,29 +30,26 @@ const copyFiles = async (source, destination) => {
   await fs.cp(source, destination, {recursive: true, force: true});
 };
 
+const getPackageDir = (source) => {
+  const parts = source.split('/');
+  return parts.slice(0, 2).join('/');
+};
+
 const main = async () => {
-  const manifestPath = path.resolve(repoRoot, 'cdn-manifest.json');
-  const manifest = JSON.parse(await fs.readFile(manifestPath, 'utf-8'));
+  const manifestPath = path.resolve(repoRoot, 'cdn-manifest.jsonc');
+  const manifestRaw = await fs.readFile(manifestPath, 'utf-8');
+  const manifest = JSON.parse(manifestRaw.replace(/\/\/.*$/gm, ''));
 
   await fs.rm(devCdnDir, {recursive: true, force: true});
 
   for (const entry of manifest) {
     const sourcePath = path.resolve(repoRoot, entry.source);
-
-    const packageName = entry.cdnDirPattern
-      ? entry.name.replace('-storybook', '')
-      : entry.name;
-    const version = await getVersion(packageName);
+    const packageDir = getPackageDir(entry.source);
+    const version = await getVersion(path.basename(packageDir));
     const levels = getVersionLevels(version);
 
     for (const level of Object.values(levels)) {
-      let cdnPath;
-      if (entry.cdnDirPattern) {
-        cdnPath = entry.cdnDirPattern.replace('$VERSION', level);
-      } else {
-        cdnPath = `${entry.cdnDir}/v${level}`;
-      }
-
+      const cdnPath = entry.cdnPath.replace('$VERSION', level);
       const targetPath = path.resolve(devCdnDir, 'proda/StaticCDN', cdnPath);
 
       await fs.mkdir(targetPath, {recursive: true});
