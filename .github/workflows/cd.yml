@@ -1,44 +1,37 @@
-name: Create release
+name: Release
+
+# RELEASE FLOW:
+#
+# On every push to main, the changesets/action either:
+#   A) Opens/updates a "Version Packages" PR if there are pending changesets
+#   B) Publishes packages if changesets were just consumed (release PR merged)
+#
+# When publishing (no pending changesets):
+#   1. Build packages and publish to npm (changeset publish)
+#   2. Deploy to CDN
+#   3. Promote Quantic SFDX package, build typedocs, notify docs
+
 on:
-  schedule:
-    # At 02:00 (UTC) Wednesday/ 21:00 (ETC) every Tuesday.
-    - cron: '0 2 * * 3'
-  workflow_dispatch:
-    inputs:
-      version:
-        description: '⚠ be sure of yourself ⚠'
-        required: false
-        default: ''
-        type: string
-      debug:
-        description: 'Add DEBUG=* to the env if true'
-        type: boolean
-        default: false
-        required: false
+  push:
+    branches: [main]
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
 
 permissions:
   contents: read
 
 jobs:
-  approve:
-    if: ${{ github.event_name == 'workflow_dispatch' }}
-    runs-on: ubuntu-latest
-    environment: 'Manual Release'
-    steps:
-      - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
-        with:
-          egress-policy: audit
-
-      - run: exit 0;
   release:
-    if: ${{ !cancelled() }}
-    needs: approve
-    environment: 'Release'
+    name: Release
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      packages: write
+      pull-requests: write
+      id-token: write
+    outputs:
+      published: ${{ steps.changesets.outputs.published }}
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
@@ -53,34 +46,26 @@ jobs:
           load-cache: false
           save-cache: true
           cache-retention-days: 7
-      - name: Generate a token
-        id: generate-token
-        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3
+
+      - name: Create release PR or publish
+        id: changesets
+        uses: changesets/action@6a0a831ff30acef54f2c6aa1cbbc1096b066edaf # v1
         with:
-          app-id: ${{ secrets.RELEASER_APP_ID }}
-          private-key: ${{ secrets.RELEASER_PRIVATE_KEY }}
-          owner: coveo
-          repositories: 'ui-kit'
-      - name: Release
-        run: pnpm run release
+          version: pnpm changeset version
+          publish: pnpm run release
+          title: 'ci(changesets): version packages'
+          commit: 'ci(changesets): version packages'
+          commitMode: github-api
         env:
-          VERSION: ${{ inputs.version }}
-          DEBUG: ${{ inputs.debug && '@coveo/semantic-monorepo-tools:*' || '' }}
-          GITHUB_INSTALLATION_TOKEN: ${{ steps.generate-token.outputs.token }}
-          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
-      - name: Call ui-kit-cd
-        run: node ./scripts/deploy/trigger-ui-kit-cd.mjs
-        env:
-          GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
-  npm-prod:
-    if: ${{ !cancelled() && needs.release.result == 'success' }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  cdn-prod:
+    name: CDN Production
     needs: release
-    environment: 'NPM Production'
-    runs-on: 'ubuntu-latest'
+    if: ${{ needs.release.outputs.published == 'true' }}
+    runs-on: ubuntu-latest
     permissions:
       contents: read
-      discussions: write
-      id-token: write 
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
@@ -88,16 +73,38 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: ./.github/actions/setup
+      - name: Deploy to CDN
+        run: node ./scripts/deploy/trigger-ui-kit-cd.mjs
+        env:
+          GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
+
+  npm-prod:
+    name: NPM Production
+    needs: [release, cdn-prod]
+    if: ${{ needs.release.outputs.published == 'true' }}
+    runs-on: ubuntu-latest
+    environment: 'NPM Production'
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
-          ref: 'release/v3'
+          egress-policy: audit
+
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: ./.github/actions/setup
       - name: Publish NPM packages to latest
         run: pnpm run publish:npm:latest
         env:
           NPM_TAG: latest
+
   quantic-prod:
-    if: ${{ !cancelled() && needs.release.result == 'success' }}
-    needs: release
+    name: Quantic Production
+    needs: [release, cdn-prod]
+    if: ${{ needs.release.outputs.published == 'true' }}
     runs-on: ubuntu-latest
     environment: 'Quantic Production'
     permissions:
@@ -111,8 +118,6 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-        with:
-          ref: 'release/v3'
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/setup-sfdx
       - name: Promote SFDX package to production
@@ -127,9 +132,11 @@ jobs:
           SFDX_AUTH_JWT_KEY_FILE: ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         working-directory: ./packages/quantic
+
   typedoc-headless:
-    if: ${{ !cancelled() && needs.release.result == 'success' }}
-    needs: release
+    name: Typedoc Headless
+    needs: [release, cdn-prod]
+    if: ${{ needs.release.outputs.published == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -137,13 +144,8 @@ jobs:
         with:
           egress-policy: audit
 
-      - name: Checkout code
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-        with:
-          ref: 'release/v3'
-
-      - name: Set up and build the project
-        uses: ./.github/actions/setup
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: ./.github/actions/setup
 
       - name: Build typedoc site
         run: pnpm run build:typedoc
@@ -168,9 +170,11 @@ jobs:
         with:
           name: headless-docs-${{ env.version }}
           path: typedoc-headless-site/
+
   typedoc-headless-react:
-    if: ${{ !cancelled() && needs.release.result == 'success' }}
-    needs: release
+    name: Typedoc Headless React
+    needs: [release, cdn-prod]
+    if: ${{ needs.release.outputs.published == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -178,13 +182,8 @@ jobs:
         with:
           egress-policy: audit
 
-      - name: Checkout code
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-        with:
-          ref: 'release/v3'
-
-      - name: Set up and build the project
-        uses: ./.github/actions/setup
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: ./.github/actions/setup
 
       - name: Build typedoc site
         run: pnpm run build:typedoc
@@ -209,9 +208,11 @@ jobs:
         with:
           name: headless-react-docs-${{ env.version }}
           path: typedoc-headless-react-site/
+
   docs-prod:
-    if: ${{ !cancelled() && needs.release.result == 'success' }}
-    needs: release
+    name: Docs Production
+    needs: [release, cdn-prod]
+    if: ${{ needs.release.outputs.published == 'true' }}
     runs-on: ubuntu-latest
     environment: 'Docs Production'
     steps:
@@ -221,8 +222,6 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-        with:
-          ref: 'release/v3'
       - uses: ./.github/actions/setup
       - name: Notify Docs
         run: pnpm run notify:docs
