@@ -4,11 +4,8 @@ import {isRecord} from '../shared/guards.js';
 import {compareByNumericId} from '../shared/sorting.js';
 
 export function isAxeResults(value: unknown): value is AxeResults {
-  if (!isRecord(value)) {
-    return false;
-  }
-
   return (
+    isRecord(value) &&
     Array.isArray(value.violations) &&
     Array.isArray(value.passes) &&
     Array.isArray(value.incomplete) &&
