@@ -583,6 +583,37 @@ jobs:
     secrets:
       SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
       SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+  publish-preview:
+    if: ${{ !cancelled() && github.event_name == 'pull_request' }}
+    needs: build
+    name: "Publish Preview Packages"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: ./.github/actions/setup
+        with:
+          load-cache: "false"
+      - name: Publish to pkg.pr.new
+        run: |
+          pnpm dlx pkg-pr-new publish --pnpm \
+            './packages/atomic' \
+            './packages/atomic-hosted-page' \
+            './packages/atomic-legacy' \
+            './packages/atomic-react' \
+            './packages/auth' \
+            './packages/bueno' \
+            './packages/create-atomic' \
+            './packages/create-atomic-component' \
+            './packages/create-atomic-component-project' \
+            './packages/create-atomic-result-component' \
+            './packages/create-atomic-rollup-plugin' \
+            './packages/headless' \
+            './packages/headless-react' \
+            './packages/shopify'
   is-valid-pr:
     name: "Confirm build is valid (PR)"
     if: ${{ always() && github.event_name == 'pull_request'}}
