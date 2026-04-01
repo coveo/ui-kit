@@ -19,7 +19,6 @@
     "**/packages/create-atomic-result-component/template/**/*",
     "**/.deployment.config/**/*",
     "**/packages/atomic/**/cypress/**/*",
-    "**/packages/atomic/**/*.tsx",
     "**/packages/atomic-legacy/**/*.tsx",
     "**/packages/atomic/**/*.d.ts",
     "**/packages/atomic/stencil-proxy/**/*",

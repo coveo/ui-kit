@@ -42,11 +42,14 @@ export interface ResultSectionStoryConfig {
   skipFirstSearch?: boolean;
 }
 
-
 export const getResultSectionDecorators = (
   config: ResultSectionStoryConfig = {}
 ): Decorator[] => {
-  const {includeCodeRoot = false, config: searchConfig, skipFirstSearch} = config;
+  const {
+    includeCodeRoot = false,
+    config: searchConfig,
+    skipFirstSearch,
+  } = config;
 
   const {decorator: resultTemplateDecorator} =
     wrapInResultTemplateForSections();
@@ -81,4 +84,4 @@ export const getResultSectionArgTypes = () => ({
 
 export const getResultSectionArgs = () => ({
   layout: 'list' as ItemDisplayLayout,
-});;
+});
