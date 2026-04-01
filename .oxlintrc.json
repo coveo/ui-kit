@@ -14,7 +14,6 @@
     "unicorn/no-new-array": "off",
     "no-wrapper-object-types": "off",
     "no-unsafe-declaration-merging": "off",
-    "unicorn/prefer-string-starts-ends-with": "off",
     "no-unnecessary-parameter-property-assignment": "off",
     "no-duplicate-enum-values": "off",
     "unicorn/no-empty-file": "off",
