@@ -15,7 +15,6 @@
     "no-wrapper-object-types": "off",
     "no-unsafe-declaration-merging": "off",
     "no-unnecessary-parameter-property-assignment": "off",
-    "no-duplicate-enum-values": "off",
     "unicorn/no-empty-file": "off",
     "preserve-caught-error": "off"
   },
