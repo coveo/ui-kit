@@ -16,9 +16,9 @@ import {
 import {recommendationsReducer as recommendations} from './recommendations-slice.js';
 
 export type {
-  RegisterRecommendationsSlotPayload,
-  FetchRecommendationsPayload,
   FetchMoreRecommendationsPayload,
+  FetchRecommendationsPayload,
+  RegisterRecommendationsSlotPayload,
 };
 
 /**

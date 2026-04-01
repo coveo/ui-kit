@@ -52,7 +52,7 @@ export default defineConfig({
   webServer: process.env.CI
     ? {
         command: isCDN
-          ? 'pnpm exec turbo serve --filter=@coveo/cdn'
+          ? 'pnpm exec turbo start --filter=@coveo/cdn'
           : `pnpm exec ws -d ./dist-storybook -p ${storybookPort}`,
 
         stdout: 'pipe',

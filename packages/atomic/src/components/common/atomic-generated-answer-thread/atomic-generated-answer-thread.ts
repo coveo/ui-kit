@@ -1,28 +1,22 @@
 import type {GeneratedAnswerCitation} from '@coveo/headless';
-import {
-  html,
-  LitElement,
-  type nothing,
-  type PropertyValues,
-  type TemplateResult,
-} from 'lit';
+import {html, LitElement, type PropertyValues, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import '@/src/components/common/generated-answer/atomic-generated-answer-thread-item/atomic-generated-answer-thread-item';
-import '@/src/components/common/generated-answer/atomic-answer-content/atomic-answer-content';
-import type {i18n} from 'i18next';
 import {repeat} from 'lit/directives/repeat.js';
-import type {GeneratedAnswer} from '@/src/components/common/generated-answer/atomic-answer-content/atomic-answer-content';
+import '@/src/components/common/atomic-generated-answer-content/atomic-generated-answer-content';
+import '@/src/components/common/atomic-generated-answer-thread-item/atomic-generated-answer-thread-item';
+import type {i18n} from 'i18next';
+import type {GeneratedAnswer} from '@/src/components/common/atomic-generated-answer-content/atomic-generated-answer-content';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 
 const MIN_ANSWERS_TO_COLLAPSE = 2;
 
 /**
- * The `atomic-generated-answers-thread` component is responsible for rendering a thread of generated answers.
+ * The `atomic-generated-answer-thread` component is responsible for rendering a thread of generated answers.
  * @internal
  */
-@customElement('atomic-generated-answers-thread')
+@customElement('atomic-generated-answer-thread')
 @withTailwindStyles
-export class AtomicGeneratedAnswersThread extends LitElement {
+export class AtomicGeneratedAnswerThread extends LitElement {
   /**
    * The list of generated answers to render in the thread.
    */
@@ -41,7 +35,7 @@ export class AtomicGeneratedAnswersThread extends LitElement {
   public renderCitations: (
     citations: GeneratedAnswerCitation[],
     answerId?: string
-  ) => TemplateResult | typeof nothing = () => html``;
+  ) => TemplateResult = () => html``;
 
   /**
    * Callback invoked when the user clicks the "like" feedback button of a specific answer.
@@ -97,6 +91,8 @@ export class AtomicGeneratedAnswersThread extends LitElement {
   }
 
   private renderThread(generatedAnswers: readonly GeneratedAnswer[]) {
+    const showTimelineDot = this.generatedAnswers.length > 1;
+
     return html`
       ${repeat(
         generatedAnswers,
@@ -110,15 +106,16 @@ export class AtomicGeneratedAnswersThread extends LitElement {
               .hideLine=${isLastAnswer}
               .disableCollapse=${isLastAnswer}
               .isExpanded=${isLastAnswer}
+              .showTimelineDot=${showTimelineDot}
             >
-              <atomic-answer-content
+              <atomic-generated-answer-content
                 .generatedAnswer=${answer}
                 .i18n=${this.i18n}
                 .renderCitations=${this.renderCitations}
                 .onClickLike=${this.onClickLike}
                 .onClickDislike=${this.onClickDislike}
                 .onCopyToClipboard=${this.onCopyToClipboard}
-              ></atomic-answer-content>
+              ></atomic-generated-answer-content>
             </atomic-generated-answer-thread-item>
           `;
         }

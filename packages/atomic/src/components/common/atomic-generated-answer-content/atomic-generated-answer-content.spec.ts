@@ -2,33 +2,33 @@ import {html, type TemplateResult} from 'lit';
 import {beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {renderGeneratedContentContainer} from '../generated-content-container';
-import {renderAgentGenerationSteps} from '../render-agent-generation-steps';
-import {renderFeedbackAndCopyButtons} from '../render-feedback-and-copy-buttons';
-import {renderSourceCitations} from '../source-citations';
+import {renderGeneratedContentContainer} from '../generated-answer/generated-content-container';
+import {renderAgentGenerationSteps} from '../generated-answer/render-agent-generation-steps';
+import {renderFeedbackAndCopyButtons} from '../generated-answer/render-feedback-and-copy-buttons';
+import {renderSourceCitations} from '../generated-answer/source-citations';
 import type {
-  AtomicAnswerContent,
+  AtomicGeneratedAnswerContent,
   GeneratedAnswer,
-} from './atomic-answer-content';
-import './atomic-answer-content';
+} from './atomic-generated-answer-content';
+import './atomic-generated-answer-content';
 import type {GeneratedAnswerCitation} from '@coveo/headless';
 
-vi.mock('../render-feedback-and-copy-buttons', () => ({
+vi.mock('../generated-answer/render-feedback-and-copy-buttons', () => ({
   renderFeedbackAndCopyButtons: vi.fn(() => html``),
 }));
-vi.mock('../generated-content-container', () => ({
+vi.mock('../generated-answer/generated-content-container', () => ({
   renderGeneratedContentContainer: vi.fn(
     () => (slot?: unknown) => html`${slot ?? ''}`
   ),
 }));
-vi.mock('../render-agent-generation-steps', () => ({
+vi.mock('../generated-answer/render-agent-generation-steps', () => ({
   renderAgentGenerationSteps: vi.fn(() => html``),
 }));
-vi.mock('../source-citations', () => ({
+vi.mock('../generated-answer/source-citations', () => ({
   renderSourceCitations: vi.fn(() => (slot?: unknown) => html`${slot ?? ''}`),
 }));
 
-describe('atomic-answer-content', () => {
+describe('atomic-generated-answer-content', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
   let writeTextMock: ReturnType<typeof vi.fn>;
 
@@ -70,17 +70,18 @@ describe('atomic-answer-content', () => {
     const onCopyToClipboard = options.onCopyToClipboard ?? vi.fn();
     const renderCitations = options.renderCitations ?? vi.fn(() => html``);
 
-    const {element} = await renderInAtomicSearchInterface<AtomicAnswerContent>({
-      template: html`<atomic-answer-content
+    const {element} =
+      await renderInAtomicSearchInterface<AtomicGeneratedAnswerContent>({
+        template: html`<atomic-generated-answer-content
           .generatedAnswer=${generatedAnswer}
           .i18n=${i18n}
           .onClickLike=${onClickLike}
           .onClickDislike=${onClickDislike}
           .onCopyToClipboard=${onCopyToClipboard}
           .renderCitations=${renderCitations}
-        ></atomic-answer-content>`,
-      selector: 'atomic-answer-content',
-    });
+        ></atomic-generated-answer-content>`,
+        selector: 'atomic-generated-answer-content',
+      });
 
     return {
       element,

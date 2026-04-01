@@ -340,11 +340,11 @@ export function cast<K extends SearchParameterKey>(
   }
 
   if (key === 'firstResult') {
-    return [key, parseInt(value)];
+    return [key, parseInt(value, 10)];
   }
 
   if (key === 'numberOfResults') {
-    return [key, parseInt(value)];
+    return [key, parseInt(value, 10)];
   }
 
   if (keyHasObjectValue(key)) {

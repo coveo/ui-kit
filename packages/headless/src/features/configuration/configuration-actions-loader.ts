@@ -16,10 +16,10 @@ import {
 } from './configuration-actions.js';
 
 export type {
+  AnalyticsRuntimeEnvironment,
   SetOriginLevel2ActionCreatorPayload,
   SetOriginLevel3ActionCreatorPayload,
   UpdateAnalyticsConfigurationActionCreatorPayload,
-  AnalyticsRuntimeEnvironment,
   UpdateBasicConfigurationActionCreatorPayload,
 };
 

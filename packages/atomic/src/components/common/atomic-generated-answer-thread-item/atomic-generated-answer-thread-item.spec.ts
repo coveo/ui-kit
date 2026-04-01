@@ -5,7 +5,7 @@ import type {
   AtomicGeneratedAnswerThreadItem,
   AtomicGeneratedAnswerThreadItemProps,
 } from './atomic-generated-answer-thread-item';
-import '@/src/components/common/generated-answer/atomic-generated-answer-thread-item/atomic-generated-answer-thread-item';
+import '@/src/components/common/atomic-generated-answer-thread-item/atomic-generated-answer-thread-item';
 
 describe('atomic-generated-answer-thread-item', () => {
   const renderComponent = async (
@@ -18,6 +18,7 @@ describe('atomic-generated-answer-thread-item', () => {
         .disableCollapse=${props.disableCollapse ?? false}
         .hideLine=${props.hideLine ?? false}
         .isExpanded=${props.isExpanded ?? true}
+        .showTimelineDot=${props.showTimelineDot ?? true}
       >
         ${children}
       </atomic-generated-answer-thread-item>
@@ -28,8 +29,6 @@ describe('atomic-generated-answer-thread-item', () => {
       locators: () => ({
         timelineDot: element.shadowRoot?.querySelector('span.h-2.w-2') ?? null,
         timelineLine: element.shadowRoot?.querySelector('span.w-px') ?? null,
-        contentDivider:
-          element.shadowRoot?.querySelector('.thread-content-divider') ?? null,
         threadItemTitle:
           element.shadowRoot?.querySelector('[part="thread-item-title"]') ??
           null,
@@ -53,6 +52,12 @@ describe('atomic-generated-answer-thread-item', () => {
     expect(locators().contentRegion).toBeInTheDocument();
   });
 
+  it('should hide the timeline dot when showTimelineDot is false', async () => {
+    const {locators} = await renderComponent({showTimelineDot: false});
+
+    expect(locators().timelineDot).toBeNull();
+  });
+
   it('should hide the timeline line when hideLine is true', async () => {
     const {locators} = await renderComponent({hideLine: true});
 
@@ -66,21 +71,6 @@ describe('atomic-generated-answer-thread-item', () => {
     });
 
     expect(locators().timelineLine).toBeInTheDocument();
-  });
-
-  it('should render a faded divider under content when expanded', async () => {
-    const {locators} = await renderComponent({isExpanded: true});
-
-    expect(locators().contentDivider).toBeInTheDocument();
-    expect(locators().contentState).toHaveAttribute('aria-hidden', 'false');
-  });
-
-  it('should not render divider when collapsed', async () => {
-    const {locators} = await renderComponent({isExpanded: false});
-
-    expect(locators().contentDivider).toBeNull();
-    expect(locators().contentState).toHaveAttribute('hidden');
-    expect(locators().contentState).toHaveAttribute('aria-hidden', 'true');
   });
 
   it('should render a title button when collapsible', async () => {

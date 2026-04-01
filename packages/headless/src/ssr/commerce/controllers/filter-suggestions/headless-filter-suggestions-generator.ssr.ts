@@ -13,14 +13,15 @@ import {
   type GeneratedFilterSuggestionsControllers,
 } from '../../../../controllers/commerce/filter-suggestions/headless-filter-suggestions-generator.js';
 import type {NonRecommendationControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
+
 export type {
-  FilterSuggestionsGenerator,
-  GeneratedFilterSuggestionsControllers,
-  FieldSuggestionsFacet,
   CategoryFilterSuggestions,
   CategoryFilterSuggestionsState,
+  FieldSuggestionsFacet,
   FilterSuggestions,
+  FilterSuggestionsGenerator,
   FilterSuggestionsState,
+  GeneratedFilterSuggestionsControllers,
 };
 
 export interface FilterSuggestionsGeneratorDefinition

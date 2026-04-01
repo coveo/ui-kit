@@ -1,6 +1,6 @@
 import {type NextRequest, NextResponse} from 'next/server';
 
-export default function middleware(request: NextRequest) {
+export default function proxy(request: NextRequest) {
   const response = NextResponse.next();
   const requestHeaders = new Headers(request.headers);
   const uuid = crypto.randomUUID();

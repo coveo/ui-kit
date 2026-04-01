@@ -231,9 +231,17 @@ export function buildGeneratedAnswerWithFollowUps(
         return;
       }
       const conversationId = this.state.followUpAnswers.conversationId;
+      const conversationToken = this.state.followUpAnswers.conversationToken;
       if (!conversationId) {
         console.warn(
           'Missing conversationId when generating a follow-up answer. ' +
+            'The generateFollowUpAnswer action requires an existing conversation.'
+        );
+        return;
+      }
+      if (!conversationToken) {
+        console.warn(
+          'Missing conversationToken when generating a follow-up answer. ' +
             'The generateFollowUpAnswer action requires an existing conversation.'
         );
         return;
@@ -254,6 +262,7 @@ export function buildGeneratedAnswerWithFollowUps(
             forwardedProps: {
               params,
               conversationId,
+              conversationToken,
               accessToken,
             },
           },
