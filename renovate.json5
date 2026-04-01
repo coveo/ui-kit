@@ -14,13 +14,6 @@
       "matchPackageNames": ["*"]
     },
     {
-      "groupName": "typedoc",
-      "groupSlug": "typedoc",
-      "rangeStrategy": "replace",
-      "description": "Isolate typedoc updates to monitor for breaking changes",
-      "matchPackageNames": ["/typedoc/"]
-    },
-    {
       "groupName": "tailwind",
       "groupSlug": "tailwind",
       "rangeStrategy": "replace",
@@ -102,13 +95,6 @@
       "rangeStrategy": "replace",
       "description": "Isolate relay since it is causing issues with stencil projetcs",
       "matchPackageNames": ["@coveo/relay"]
-    },
-    {
-      "groupName": "biome",
-      "groupSlug": "biome",
-      "rangeStrategy": "replace",
-      "description": "Isolate biome since it has memory issues in 2.1.1",
-      "matchPackageNames": ["@biomejs/biome"]
     },
     {
       "groupName": "knip",
