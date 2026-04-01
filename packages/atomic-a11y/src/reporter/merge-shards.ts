@@ -3,7 +3,6 @@ import path from 'node:path';
 import {
   DEFAULT_A11Y_REPORT_FILENAME,
   DEFAULT_A11Y_REPORT_OUTPUT_DIR,
-  DEFAULT_WCAG_22_AA_CRITERIA_COUNT,
 } from '../shared/constants.js';
 import {isA11yReport} from '../shared/guards.js';
 import {compareByName, compareByNumericId} from '../shared/sorting.js';
@@ -22,7 +21,6 @@ const SHARD_FILE_PATTERN = /^a11y-report\.shard-(\d+)\.json$/;
 interface MergeShardOptions {
   inputDir?: string;
   outputFile?: string;
-  totalCriteria?: number;
 }
 
 interface MutableAutomatedResults
@@ -319,9 +317,6 @@ export async function mergeA11yShardReports(
   const outputFile = path.resolve(
     options.outputFile ?? path.join(inputDir, DEFAULT_A11Y_REPORT_FILENAME)
   );
-  const totalCriteria =
-    options.totalCriteria ?? DEFAULT_WCAG_22_AA_CRITERIA_COUNT;
-
   console.log(`[merge-shards] Scanning for shard reports in ${inputDir}`);
 
   let directoryEntries: string[];
@@ -372,7 +367,7 @@ export async function mergeA11yShardReports(
     },
     components,
     criteria,
-    summary: createSummary(components, criteria, totalCriteria),
+    summary: createSummary(components, criteria),
   };
 
   await mkdir(path.dirname(outputFile), {recursive: true});
