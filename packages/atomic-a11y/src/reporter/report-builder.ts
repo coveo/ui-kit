@@ -18,6 +18,9 @@ export function buildA11yReport(
 ): A11yReport {
   const components = buildComponents(componentResults);
   const criteria = buildCriteria(componentResults);
+  const hasInteractiveData = [...componentResults.values()].some(
+    (c) => c.interactive !== undefined
+  );
 
   const axeCoreVersion =
     packageMetadata.devDependencies?.['axe-core'] ??
@@ -44,6 +47,7 @@ export function buildA11yReport(
       evaluationMethods: [
         `axe-core ${axeCoreVersion}`,
         'Storybook addon-a11y',
+        ...(hasInteractiveData ? ['Storybook interactive play() tests'] : []),
         'Manual audit',
       ],
       axeCoreVersion,
@@ -73,6 +77,19 @@ function buildComponents(
           ),
           incompleteDetails: component.automated.incompleteDetails,
         },
+        interactive: component.interactive
+          ? {
+              criteriaCovered: [...component.interactive.criteriaCovered].sort(
+                compareByNumericId
+              ),
+              testCount: component.interactive.testCount,
+              passedCount: component.interactive.passedCount,
+              failedCount: component.interactive.failedCount,
+              failedCriteria: [...component.interactive.failedCriteria].sort(
+                compareByNumericId
+              ),
+            }
+          : undefined,
       };
     })
     .sort((first, second) => compareByName(first.name, second.name));
@@ -82,6 +99,8 @@ function buildCriteria(
   componentResults: Map<string, ComponentAccumulator>
 ): A11yCriterionReport[] {
   const criteriaToComponents = new Map<string, Set<string>>();
+  const interactiveCriteriaIds = new Set<string>();
+  const interactiveStatusMap = new Map<string, 'passed' | 'failed' | 'mixed'>();
 
   for (const component of componentResults.values()) {
     for (const criterion of component.automated.criteriaCovered) {
@@ -89,6 +108,34 @@ function buildCriteria(
         criteriaToComponents.get(criterion) ?? new Set<string>();
       components.add(component.name);
       criteriaToComponents.set(criterion, components);
+    }
+
+    if (component.interactive) {
+      for (const criterion of component.interactive.criteriaCovered) {
+        const components =
+          criteriaToComponents.get(criterion) ?? new Set<string>();
+        components.add(component.name);
+        criteriaToComponents.set(criterion, components);
+        interactiveCriteriaIds.add(criterion);
+
+        const isFailed = component.interactive.failedCriteria.has(criterion);
+        const isPassed = component.interactive.passedCriteria.has(criterion);
+        if (!isFailed && !isPassed) {
+          continue;
+        }
+
+        const nextStatus: 'passed' | 'failed' = isFailed ? 'failed' : 'passed';
+        const currentStatus = interactiveStatusMap.get(criterion);
+
+        if (!currentStatus) {
+          interactiveStatusMap.set(criterion, nextStatus);
+          continue;
+        }
+
+        if (currentStatus !== nextStatus) {
+          interactiveStatusMap.set(criterion, 'mixed');
+        }
+      }
     }
   }
 
@@ -106,6 +153,8 @@ function buildCriteria(
         // resolves actual conformance using: overrides → manual audit → interactive tests → automated results.
         conformance: 'notEvaluated',
         automatedCoverage: true,
+        interactiveCoverage: interactiveCriteriaIds.has(criterionId),
+        interactiveStatus: interactiveStatusMap.get(criterionId),
         manualVerified: false,
         affectedComponents: [...coveredComponents].sort(compareByName),
       };

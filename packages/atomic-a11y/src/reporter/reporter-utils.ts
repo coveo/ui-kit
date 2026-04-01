@@ -44,6 +44,25 @@ export function isStorybookTaskMeta(
   return true;
 }
 
+export interface StorybookInteractiveReport {
+  type: 'a11y-interactive';
+  version: number;
+  status: 'passed' | 'failed' | 'warning';
+  result: {
+    criteriaCovered: string[];
+  };
+}
+
+export function isInteractiveReport(
+  report: StorybookReport
+): report is StorybookInteractiveReport {
+  return (
+    report.type === 'a11y-interactive' &&
+    isRecord(report.result) &&
+    Array.isArray((report.result as Record<string, unknown>).criteriaCovered)
+  );
+}
+
 export interface ComponentAccumulator {
   name: string;
   storyIds: Set<string>;
@@ -60,6 +79,14 @@ export interface ComponentAccumulator {
       nodes: number;
       message: string;
     }>;
+  };
+  interactive?: {
+    criteriaCovered: Set<string>;
+    testCount: number;
+    passedCount: number;
+    failedCount: number;
+    passedCriteria: Set<string>;
+    failedCriteria: Set<string>;
   };
 }
 

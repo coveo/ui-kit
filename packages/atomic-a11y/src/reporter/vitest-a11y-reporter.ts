@@ -17,9 +17,11 @@ import {
 import {buildA11yReport} from './report-builder.js';
 import {
   type ComponentAccumulator,
+  isInteractiveReport,
   isStorybookTaskMeta,
   type PackageMetadata,
   readPackageMetadata,
+  type StorybookInteractiveReport,
   type StorybookTaskMeta,
 } from './reporter-utils.js';
 import {resolveShardInfo, type ShardInfo} from './shard-resolution.js';
@@ -101,7 +103,9 @@ export class VitestA11yReporter implements Reporter {
       }
 
       const axeResults = VitestA11yReporter.getAxeResults(meta);
-      if (!axeResults) {
+      const interactiveReport = VitestA11yReporter.getInteractiveReport(meta);
+
+      if (!axeResults && !interactiveReport) {
         return;
       }
 
@@ -128,19 +132,57 @@ export class VitestA11yReporter implements Reporter {
         'incomplete',
         'inapplicable',
       ] as const;
-      for (const bucket of buckets) {
-        component.automated[bucket] += axeResults[bucket].length;
-        this.collectCriteria(component, axeResults[bucket]);
+      if (axeResults) {
+        for (const bucket of buckets) {
+          component.automated[bucket] += axeResults[bucket].length;
+          this.collectCriteria(component, axeResults[bucket]);
+        }
+
+        for (const incompleteRule of axeResults.incomplete) {
+          component.automated.incompleteDetails.push({
+            ruleId: incompleteRule.id,
+            impact: incompleteRule.impact ?? 'unknown',
+            wcagCriteria: getCriteriaForRule(incompleteRule),
+            nodes: incompleteRule.nodes.length,
+            message: getIncompleteMessage(incompleteRule),
+          });
+        }
       }
 
-      for (const incompleteRule of axeResults.incomplete) {
-        component.automated.incompleteDetails.push({
-          ruleId: incompleteRule.id,
-          impact: incompleteRule.impact ?? 'unknown',
-          wcagCriteria: getCriteriaForRule(incompleteRule),
-          nodes: incompleteRule.nodes.length,
-          message: getIncompleteMessage(incompleteRule),
-        });
+      if (interactiveReport) {
+        if (!component.interactive) {
+          component.interactive = {
+            criteriaCovered: new Set<string>(),
+            testCount: 0,
+            passedCount: 0,
+            failedCount: 0,
+            passedCriteria: new Set<string>(),
+            failedCriteria: new Set<string>(),
+          };
+        }
+
+        const testState = testCase.result()?.state;
+        const effectiveStatus: StorybookInteractiveReport['status'] =
+          testState === 'failed' ? 'failed' : interactiveReport.status;
+
+        for (const criterion of interactiveReport.result.criteriaCovered) {
+          component.interactive.criteriaCovered.add(criterion);
+          if (effectiveStatus === 'passed') {
+            component.interactive.passedCriteria.add(criterion);
+          }
+          if (effectiveStatus === 'failed') {
+            component.interactive.failedCriteria.add(criterion);
+          }
+        }
+
+        component.interactive.testCount++;
+        if (effectiveStatus === 'passed') {
+          component.interactive.passedCount++;
+        }
+
+        if (effectiveStatus === 'failed') {
+          component.interactive.failedCount++;
+        }
       }
     } catch (error) {
       this.warn('Unable to process Storybook a11y test result.', error);
@@ -220,6 +262,17 @@ export class VitestA11yReporter implements Reporter {
     return a11yReport && isAxeResults(a11yReport.result)
       ? a11yReport.result
       : null;
+  }
+
+  private static getInteractiveReport(
+    meta: StorybookTaskMeta
+  ): StorybookInteractiveReport | null {
+    const reports = meta.reports ?? [];
+    const interactiveReport = reports.find((report) =>
+      isInteractiveReport(report)
+    );
+
+    return interactiveReport ?? null;
   }
 
   private getOutputPaths(): string[] {

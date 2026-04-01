@@ -46,12 +46,24 @@ export interface A11yAutomatedResults {
 }
 
 /**
+ * Interactive accessibility test results from Storybook play() functions.
+ */
+export interface A11yInteractiveResults {
+  criteriaCovered: string[];
+  testCount: number;
+  passedCount: number;
+  failedCount: number;
+  failedCriteria: string[];
+}
+
+/**
  * Component accessibility report.
  */
 export interface A11yComponentReport {
   name: string;
   storyCount: number;
   automated: A11yAutomatedResults;
+  interactive?: A11yInteractiveResults;
 }
 
 /**
@@ -69,6 +81,8 @@ export interface A11yCriterionReport {
     | 'notApplicable'
     | 'notEvaluated';
   automatedCoverage: boolean;
+  interactiveCoverage: boolean;
+  interactiveStatus?: 'passed' | 'failed' | 'mixed';
   manualVerified: boolean;
   affectedComponents: string[];
 }
@@ -95,6 +109,8 @@ export interface A11ySummary {
   notApplicable: number;
   notEvaluated: number;
   automatedCoverage: string;
+  interactiveCoverage: string;
+  interactivePassRate: string;
   manualCoverage: string;
 }
 
