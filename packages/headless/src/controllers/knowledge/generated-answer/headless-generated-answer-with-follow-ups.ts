@@ -166,6 +166,9 @@ export function buildGeneratedAnswerWithFollowUps(
         (answer) => answer.answerId === answerId
       );
       if (!followUpAnswer) {
+        console.warn(
+          `No follow-up answer found with ID ${answerId}. Cannot like.`
+        );
         return;
       }
       if (!followUpAnswer.liked) {
@@ -184,6 +187,9 @@ export function buildGeneratedAnswerWithFollowUps(
         (answer) => answer.answerId === answerId
       );
       if (!followUpAnswer) {
+        console.warn(
+          `No follow-up answer found with ID ${answerId}. Cannot dislike.`
+        );
         return;
       }
       if (!followUpAnswer.disliked) {

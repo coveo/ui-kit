@@ -390,6 +390,9 @@ describe('GeneratedAnswerWithFollowUps', () => {
           followUpAnswers: [exampleFollowUpAnswer],
         },
       });
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.like('non-existent-answer-id');
@@ -397,6 +400,10 @@ describe('GeneratedAnswerWithFollowUps', () => {
       expect(likeFollowUp).not.toHaveBeenCalled();
       expect(logLikeGeneratedAnswer).not.toHaveBeenCalled();
       expect(mockCoreLike).not.toHaveBeenCalled();
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        'No follow-up answer found with ID non-existent-answer-id. Cannot like.'
+      );
+      consoleWarnSpy.mockRestore();
     });
   });
 
@@ -487,6 +494,9 @@ describe('GeneratedAnswerWithFollowUps', () => {
           followUpAnswers: [exampleFollowUpAnswer],
         },
       });
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.dislike('non-existent-answer-id');
@@ -494,6 +504,10 @@ describe('GeneratedAnswerWithFollowUps', () => {
       expect(dislikeFollowUp).not.toHaveBeenCalled();
       expect(logDislikeGeneratedAnswer).not.toHaveBeenCalled();
       expect(mockCoreDislike).not.toHaveBeenCalled();
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        'No follow-up answer found with ID non-existent-answer-id. Cannot dislike.'
+      );
+      consoleWarnSpy.mockRestore();
     });
   });
 

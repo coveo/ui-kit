@@ -660,11 +660,11 @@ export class AtomicGeneratedAnswer
         .i18n=${this.bindings.i18n}
         .renderCitations=${this.renderCitationsList.bind(this)}
         .onClickLike=${(answerId: string) =>
-          this.generatedAnswer.like(answerId)}
+          this.generatedAnswerWithFollowUps?.like(answerId)}
         .onClickDislike=${(answerId: string) =>
-          this.generatedAnswer.dislike(answerId)}
+          this.generatedAnswerWithFollowUps?.dislike(answerId)}
         .onCopyToClipboard=${(answerId: string) =>
-          this.generatedAnswer.logCopyToClipboard(answerId)}
+          this.generatedAnswerWithFollowUps?.logCopyToClipboard(answerId)}
       ></atomic-generated-answer-thread>`;
     }
 
