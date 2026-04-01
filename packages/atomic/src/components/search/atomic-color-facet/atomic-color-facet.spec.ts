@@ -746,11 +746,11 @@ describe('atomic-color-facet', () => {
     },
     {
       prop: 'allowedValues',
-      invalidValue: new Array(26).fill('value'),
+      invalidValue: Array.from({length: 26}, () => 'value'),
     },
     {
       prop: 'customSort',
-      invalidValue: new Array(26).fill('value'),
+      invalidValue: Array.from({length: 26}, () => 'value'),
     },
     {
       prop: 'tabsExcluded',
@@ -831,12 +831,12 @@ describe('atomic-color-facet', () => {
     {
       prop: 'allowedValues',
       validValue: ['pdf', 'doc'],
-      invalidValue: new Array(26).fill('value'),
+      invalidValue: Array.from({length: 26}, () => 'value'),
     },
     {
       prop: 'customSort',
       validValue: ['pdf', 'doc'],
-      invalidValue: new Array(26).fill('value'),
+      invalidValue: Array.from({length: 26}, () => 'value'),
     },
     {
       prop: 'tabsExcluded',

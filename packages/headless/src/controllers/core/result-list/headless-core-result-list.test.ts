@@ -28,7 +28,7 @@ describe('CoreResultList', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     const state = createMockState();
-    const results = new Array(10).fill(buildMockResult());
+    const results = Array.from({length: 10}, () => buildMockResult());
     state.search.results = results;
     state.search.response.totalCountFiltered = 1000;
     engine = buildMockSearchEngine(state);
