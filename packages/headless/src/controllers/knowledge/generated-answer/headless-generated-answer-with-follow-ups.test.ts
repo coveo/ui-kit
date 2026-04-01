@@ -584,11 +584,9 @@ describe('GeneratedAnswerWithFollowUps', () => {
       expect(mockFollowUpAgent.runAgent).toHaveBeenCalledWith(
         {
           forwardedProps: {
-            params: expect.objectContaining({
-              q: question,
-              analytics: expect.objectContaining({
-                actionCause: 'searchboxSubmit',
-              }),
+            q: question,
+            analytics: expect.objectContaining({
+              actionCause: 'searchboxSubmit',
             }),
             conversationId,
             conversationToken,
@@ -597,6 +595,15 @@ describe('GeneratedAnswerWithFollowUps', () => {
         },
         mockFollowUpStrategy
       );
+
+      const forwardedProps =
+        mockFollowUpAgent.runAgent.mock.calls[0][0].forwardedProps;
+      expect(forwardedProps).not.toHaveProperty('facets');
+      expect(forwardedProps).not.toHaveProperty('pipelineRuleParameters');
+      expect(forwardedProps).not.toHaveProperty('searchHub');
+      expect(forwardedProps).not.toHaveProperty('pipeline');
+      expect(forwardedProps).not.toHaveProperty('locale');
+      expect(forwardedProps).not.toHaveProperty('citationsFieldToInclude');
     });
 
     it('does not run the agent when the question is empty', () => {
