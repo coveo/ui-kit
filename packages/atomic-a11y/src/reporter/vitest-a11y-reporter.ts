@@ -56,9 +56,9 @@ export interface A11yReporterOptions {
  *
  * ## Output
  *
- * - `a11y-report.json` — always written.
- * - `a11y-report.shard-N.json` — additionally written when running with
- *   the `--shard` CLI flag.
+ * - `a11y-report.json` — written when running without the `--shard` CLI flag.
+ * - `a11y-report.shard-N.json` — written instead when running with
+ *   the `--shard` CLI flag (the base file is skipped to avoid incomplete data).
  *
  * @example
  * ```ts

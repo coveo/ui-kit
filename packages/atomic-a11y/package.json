@@ -9,7 +9,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json"
+    "build": "tsc -p tsconfig.json",
+    "a11y:merge-shards": "pnpm build && node scripts/merge-shards-cli.mjs"
   },
   "devDependencies": {
     "axe-core": "4.10.3",
