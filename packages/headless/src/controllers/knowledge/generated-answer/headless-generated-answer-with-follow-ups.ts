@@ -3,6 +3,7 @@ import {createFollowUpAgent} from '../../../api/knowledge/answer-generation/agen
 import {createFollowUpStrategy} from '../../../api/knowledge/answer-generation/agents/follow-up-agent/follow-up-answer-strategy.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
+import {fromAnalyticsStateToAnalyticsParams} from '../../../features/configuration/analytics-params.js';
 import {setAgentId} from '../../../features/configuration/configuration-actions.js';
 import {
   selectAccessToken,
@@ -17,8 +18,8 @@ import {
 } from '../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {followUpAnswersReducer as followUpAnswers} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import type {FollowUpAnswersState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
-import {constructGenerateHeadAnswerParams} from '../../../features/generated-answer/generated-answer-request.js';
 import {withGeneratedAnswerSseErrorHelpers} from '../../../features/generated-answer/sse-generated-answer-errors.js';
+import {selectSearchActionCause} from '../../../features/search/search-selectors.js';
 import type {GeneratedAnswerState} from '../../../index.js';
 import type {
   FollowUpAnswersSection,
@@ -249,18 +250,17 @@ export function buildGeneratedAnswerWithFollowUps(
 
       followUpAgent.abortRun();
       engine.dispatch(createFollowUpAnswer({question}));
-      const params = {
-        ...constructGenerateHeadAnswerParams(
-          getState(),
-          engine.navigatorContext
-        ),
-        q: question,
-      };
+      const analyticsParams = fromAnalyticsStateToAnalyticsParams(
+        getState().configuration.analytics,
+        engine.navigatorContext,
+        {actionCause: selectSearchActionCause(getState())}
+      );
       try {
         await followUpAgent.runAgent(
           {
             forwardedProps: {
-              params,
+              q: question,
+              ...analyticsParams,
               conversationId,
               conversationToken,
               accessToken,
