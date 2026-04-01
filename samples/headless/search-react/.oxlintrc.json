@@ -1,7 +1,0 @@
-{
-  "$schema": "../../node_modules/oxlint/configuration_schema.json",
-  "rules": {
-    "react-hooks/exhaustive-deps": "off",
-    "react-hooks/rules-of-hooks": "off"
-  }
-}
