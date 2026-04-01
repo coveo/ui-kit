@@ -97,10 +97,20 @@ export function createRenewAccessTokenMiddleware(
       return payload;
     }
 
-    accessTokenRenewalsAttempts++;
-    resetRenewalTriesAfterDelay();
+    const isInitiator = !pendingTokenRenewal;
+    if (isInitiator) {
+      accessTokenRenewalsAttempts++;
+      resetRenewalTriesAfterDelay();
+    }
 
-    await handleTokenRenewal(store, true);
+    try {
+      await handleTokenRenewal(store, true);
+    } catch (error) {
+      logger.debug(
+        error,
+        'Token renewal failed in reactive path (piggybacked on a proactive renewal). The action will be re-dispatched.'
+      );
+    }
     store.dispatch(action as unknown as UnknownAction);
     return;
   };

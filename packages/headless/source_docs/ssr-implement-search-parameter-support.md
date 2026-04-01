@@ -168,10 +168,9 @@ useEffect(() => { ②
 Whenever there’s a change, the state’s parameters are serialized (using the `serialize` utility provided by the `@coveo/headless/ssr` package) and applied to the URL.
 2. The `useEffect` hook then updates the browser’s history state.
 
-<dl><dt><strong>📌 Note</strong></dt><dd>
-
-You can consult a [working demo](https://github.com/coveo/ui-kit/tree/master/samples/headless-ssr/search-nextjs) of the component.
-</dd></dl>
+> [!NOTE]
+>
+> You can consult a [working demo](https://github.com/coveo/ui-kit/tree/main/samples/headless-ssr/search-nextjs) of the component.
 
 ## Add the component to the search page
 

@@ -16,10 +16,9 @@ Headless doesn’t log these events for you, so you should ensure that you’re 
 
 The [Relay library](https://docs.coveo.com/en/relay/latest/), which is included in Headless, lets you send EP view events to Coveo.
 
-<dl><dt><strong>💡 TIP: Leading practice</strong></dt><dd>
-
-Start sending view events as soon as you can to gather data that your CR models can learn from.
-</dd></dl>
+> [!TIP]
+>
+> Start sending view events as soon as you can to gather data that your CR models can learn from.
 
 ## Send view events with Relay
 
