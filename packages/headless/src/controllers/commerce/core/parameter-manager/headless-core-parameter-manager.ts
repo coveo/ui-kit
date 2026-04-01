@@ -69,7 +69,7 @@ const initialStateSchema = <T extends Parameters>(
   new Schema<Required<ParameterManagerInitialState<T>>>({
     parameters: new RecordValue({
       options: {required: true},
-      values: parametersDefinition as SchemaDefinition<Record<string, Object>>,
+      values: parametersDefinition as SchemaDefinition<Record<string, object>>,
     }),
   });
 

@@ -12,7 +12,6 @@
     "unicorn/no-useless-spread": "off",
     "unicorn/no-useless-fallback-in-spread": "off",
     "unicorn/no-new-array": "off",
-    "no-wrapper-object-types": "off",
     "no-unsafe-declaration-merging": "off",
     "no-unnecessary-parameter-property-assignment": "off",
     "preserve-caught-error": "off"
