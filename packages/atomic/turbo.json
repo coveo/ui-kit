@@ -34,7 +34,7 @@
     "build:cem": {
       "outputs": ["./custom-elements.json"],
       "inputs": [
-        "!./src/**/*.ts",
+        "./src/**/*.ts",
         "!./src/components/*/index.ts",
         "!./src/components/*/lazy-index.ts",
         "!./src/utils/custom-element-tags.ts",
