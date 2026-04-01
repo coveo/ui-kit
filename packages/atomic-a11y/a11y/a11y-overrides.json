@@ -1,9 +1,79 @@
 {
   "overrides": [
     {
+      "criterion": "1.2.1",
+      "conformance": "not-applicable",
+      "reason": "Atomic components do not include prerecorded audio-only or video-only content."
+    },
+    {
+      "criterion": "1.2.2",
+      "conformance": "not-applicable",
+      "reason": "Atomic components do not include synchronized media requiring captions."
+    },
+    {
+      "criterion": "1.2.3",
+      "conformance": "not-applicable",
+      "reason": "Atomic components do not include prerecorded video content requiring audio descriptions."
+    },
+    {
+      "criterion": "1.2.4",
+      "conformance": "not-applicable",
+      "reason": "Atomic components do not include live audio content."
+    },
+    {
+      "criterion": "1.2.5",
+      "conformance": "not-applicable",
+      "reason": "Atomic components do not include prerecorded video content."
+    },
+    {
       "criterion": "1.4.2",
       "conformance": "not-applicable",
       "reason": "Atomic components do not produce audio output."
+    },
+    {
+      "criterion": "2.4.1",
+      "conformance": "not-applicable",
+      "reason": "Bypass blocks is a page-level concern — skip links and landmark regions are the responsibility of the consuming application."
+    },
+    {
+      "criterion": "2.4.2",
+      "conformance": "not-applicable",
+      "reason": "Page titles are set at the document level by the consuming application, not by embedded components."
+    },
+    {
+      "criterion": "2.4.5",
+      "conformance": "not-applicable",
+      "reason": "Multiple ways to locate content is a site architecture concern — navigation mechanisms are the responsibility of the consuming application."
+    },
+    {
+      "criterion": "2.5.4",
+      "conformance": "not-applicable",
+      "reason": "Atomic components do not implement device motion-based interactions."
+    },
+    {
+      "criterion": "2.5.7",
+      "conformance": "not-applicable",
+      "reason": "Atomic components do not require dragging movements — all interactions have single-pointer alternatives."
+    },
+    {
+      "criterion": "3.2.6",
+      "conformance": "not-applicable",
+      "reason": "Consistent help mechanisms are an application-level concern — Atomic provides UI primitives, not help systems."
+    },
+    {
+      "criterion": "3.3.4",
+      "conformance": "not-applicable",
+      "reason": "Error prevention for legal, financial, or data transactions is a business logic concern handled by the consuming application."
+    },
+    {
+      "criterion": "3.3.7",
+      "conformance": "not-applicable",
+      "reason": "Redundant entry prevention for multi-step processes is an application-level concern — Atomic provides form primitives, not process flows."
+    },
+    {
+      "criterion": "3.3.8",
+      "conformance": "not-applicable",
+      "reason": "Atomic components do not implement authentication flows."
     }
   ]
 }
