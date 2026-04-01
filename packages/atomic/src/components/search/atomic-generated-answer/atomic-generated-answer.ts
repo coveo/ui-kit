@@ -131,6 +131,7 @@ export class AtomicGeneratedAnswer
 
   /**
    * Whether to allow the answer to be collapsed when the text is taller than the specified `--atomic-crga-collapsed-height` value (16rem by default).
+   * The `collapsible` property is disabled when follow-up questions are enabled. The threaded conversation layout manages its own content display.
    */
   @property({type: Boolean, converter: booleanConverter})
   collapsible = false;
@@ -146,9 +147,11 @@ export class AtomicGeneratedAnswer
    */
   @property({type: String, attribute: 'answer-configuration-id'})
   answerConfigurationId?: string;
+
   /**
-   * @internal
    * The unique identifier of the agent to use to generate answers.
+   * This is required to use an agent that can provide follow-up answers, but whether follow-ups are shown in the UI also depends on the feature being enabled in the application state.
+   * Setting both `agent-id` and `answer-configuration-id` is not supported. If both are provided, `agent-id` takes precedence and `answer-configuration-id` is ignored. Use `agent-id` for the conversational experience, or `answer-configuration-id` for single-turn answer generation via the Answer API. If neither is provided, the component falls back to the Search API for generated answers.
    */
   @property({type: String, attribute: 'agent-id'})
   agentId?: string;
@@ -660,11 +663,11 @@ export class AtomicGeneratedAnswer
         .i18n=${this.bindings.i18n}
         .renderCitations=${this.renderCitationsList.bind(this)}
         .onClickLike=${(answerId: string) =>
-          this.generatedAnswer.like(answerId)}
+          this.generatedAnswerWithFollowUps?.like(answerId)}
         .onClickDislike=${(answerId: string) =>
-          this.generatedAnswer.dislike(answerId)}
+          this.generatedAnswerWithFollowUps?.dislike(answerId)}
         .onCopyToClipboard=${(answerId: string) =>
-          this.generatedAnswer.logCopyToClipboard(answerId)}
+          this.generatedAnswerWithFollowUps?.logCopyToClipboard(answerId)}
       ></atomic-generated-answer-thread>`;
     }
 
