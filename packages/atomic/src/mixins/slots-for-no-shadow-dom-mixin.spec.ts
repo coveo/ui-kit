@@ -8,11 +8,8 @@ describe('SlotsForNoShadowDOMMixin', () => {
 
   class SlottedElement extends SlotsForNoShadowDOMMixin(LitElement) {
     render() {
-      return html`
-        <div class="content">
-          ${this.renderDefaultSlotContent(html`<span>Default content</span>`)}
-        </div>
-      `;
+      // prettier-ignore
+      return html`<div class="content">${this.renderDefaultSlotContent(html`<span>Default content</span>`)}</div>`;
     }
   }
 
