@@ -80,7 +80,8 @@
         "!./src/**/e2e/**",
         "./dist/assets/**",
         "./dist/lang/**",
-        "./dist/themes/**"
+        "./dist/themes/**",
+        "./rsbuild.cdn.mjs"
       ]
     },
     "test:lit": {

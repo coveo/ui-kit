@@ -17,6 +17,8 @@ const rsbuild = await rsbuildApi.createRsbuild({
     source: {
       entry: {
         'atomic.esm': './src/cdn.ts',
+        index: './src/loader.ts',
+        'index.esm': './src/index.ts',
       },
       tsconfigPath: './tsconfig.lit.json',
       decorators: {version: 'legacy'},
@@ -66,10 +68,10 @@ const rsbuild = await rsbuildApi.createRsbuild({
 
         config.optimization ??= {};
         config.optimization.sideEffects = true;
+        config.optimization.avoidEntryIife = true;
 
         config.module ??= {};
         config.module.rules ??= [];
-
         // SVG imports → raw string content (override rsbuild's default asset handling)
         function excludeSvgFromRules(rules) {
           for (const rule of rules) {
