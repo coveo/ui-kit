@@ -79,7 +79,7 @@ export default {
       ignoreDependencies: ['@types/conventional-changelog-writer'],
     },
     'utils/cdn': {
-      ignoreDependencies: ['@coveo/bueno', 'local-web-server'],
+      ignoreDependencies: ['local-web-server'],
     },
 
     // Projects to enable bunch by bunch.
