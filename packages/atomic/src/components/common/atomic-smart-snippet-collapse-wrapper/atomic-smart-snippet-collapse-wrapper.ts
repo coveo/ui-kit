@@ -8,8 +8,8 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {multiClassMap, tw} from '@/src/directives/multi-class-map';
-import ArrowDown from '@/src/images/arrow-down.svg';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
+import ArrowDown from '../../../images/arrow-down.svg';
 import '@/src/components/common/atomic-icon/atomic-icon';
 
 /**

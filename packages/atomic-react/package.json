@@ -3,7 +3,7 @@
   "sideEffects": false,
   "license": "Apache-2.0",
   "type": "module",
-  "version": "3.11.8",
+  "version": "3.11.9",
   "description": "React specific wrapper for the Atomic component library",
   "repository": {
     "type": "git",
