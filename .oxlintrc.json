@@ -14,7 +14,6 @@
     "unicorn/no-new-array": "off",
     "no-wrapper-object-types": "off",
     "no-unsafe-declaration-merging": "off",
-    "no-unassigned-vars": "off",
     "no-constant-binary-expression": "off",
     "unicorn/prefer-string-starts-ends-with": "off",
     "no-unnecessary-parameter-property-assignment": "off",
