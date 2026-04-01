@@ -1,3 +1,9 @@
+## <small>1.9.21 (2026-04-01)</small>
+
+* chore: update relay+move to catalog (#7287) ([e7a79a1](https://github.com/coveo/ui-kit/commits/e7a79a1)), closes [#7287](https://github.com/coveo/ui-kit/issues/7287)
+
+
+
 ## <small>1.9.19 (2026-03-25)</small>
 
 * fix(deps): update all dependencies j:kit-282 (major) (#6195) ([a5df20c](https://github.com/coveo/ui-kit/commits/a5df20c)), closes [#6195](https://github.com/coveo/ui-kit/issues/6195)
