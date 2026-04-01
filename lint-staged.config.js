@@ -15,27 +15,8 @@ module.exports = {
       // Exclude root deployment config
       if (file.includes('/.deployment.config/')) return false;
 
-      // Exclude atomic package cypress, tsx (except stories), and d.ts files
-      if (
-        file.includes('/packages/atomic/') &&
-        (file.includes('/cypress/') ||
-          (file.endsWith('.tsx') && !file.endsWith('.stories.tsx')) ||
-          file.endsWith('.d.ts'))
-      )
-        return false;
-
-      // Exclude atomic-angular stencil-generated
-      if (
-        file.includes('/packages/atomic-angular/') &&
-        file.includes('/stencil-generated/')
-      )
-        return false;
-
-      // Exclude atomic-react stencil-generated
-      if (
-        file.includes('/packages/atomic-react/') &&
-        file.includes('/stencil-generated/')
-      )
+      // Exclude atomic package d.ts files
+      if (file.includes('/packages/atomic/') && file.endsWith('.d.ts'))
         return false;
 
       // Exclude documentation assets
