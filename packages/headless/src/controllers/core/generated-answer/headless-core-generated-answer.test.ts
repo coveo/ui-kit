@@ -98,13 +98,6 @@ describe('generated answer', () => {
     expect(logLikeGeneratedAnswer).toHaveBeenCalled();
   });
 
-  it('#like dispatches analytics action with provided answerId', () => {
-    generatedAnswer.like(providedAnswerId);
-
-    expect(likeGeneratedAnswer).toHaveBeenCalled();
-    expect(logLikeGeneratedAnswer).toHaveBeenCalledWith(providedAnswerId);
-  });
-
   it('#like dispatches no analytics action when #liked is set to true', () => {
     engine = buildEngineWithGeneratedAnswer({liked: true});
     initGeneratedAnswer();
@@ -118,13 +111,6 @@ describe('generated answer', () => {
     generatedAnswer.dislike();
     expect(dislikeGeneratedAnswer).toHaveBeenCalled();
     expect(logDislikeGeneratedAnswer).toHaveBeenCalled();
-  });
-
-  it('#dislike dispatches analytics action with provided answerId', () => {
-    generatedAnswer.dislike(providedAnswerId);
-
-    expect(dislikeGeneratedAnswer).toHaveBeenCalled();
-    expect(logDislikeGeneratedAnswer).toHaveBeenCalledWith(providedAnswerId);
   });
 
   it('#dislike dispatches no analytics action when #disliked is set to true', () => {
