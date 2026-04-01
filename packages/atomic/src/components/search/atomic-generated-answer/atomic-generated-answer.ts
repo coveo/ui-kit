@@ -151,7 +151,7 @@ export class AtomicGeneratedAnswer
   /**
    * The unique identifier of the agent to use to generate answers.
    * This is required to use an agent that can provide follow-up answers, but whether follow-ups are shown in the UI also depends on the feature being enabled in the application state.
-   * Setting both `agent-id` and `answer-configuration-id` is not recommended. If both are provided, `agent-id` takes precedence and `answer-configuration-id` is ignored. Use `agent-id` for the conversational experience, or `answer-configuration-id` for single-turn answer generation via the Answer API. If neither is provided, the component falls back to the Search API for generated answers.
+   * Setting both `agent-id` and `answer-configuration-id` is not supported. If both are provided, `agent-id` takes precedence and `answer-configuration-id` is ignored. Use `agent-id` for the conversational experience, or `answer-configuration-id` for single-turn answer generation via the Answer API. If neither is provided, the component falls back to the Search API for generated answers.
    */
   @property({type: String, attribute: 'agent-id'})
   agentId?: string;

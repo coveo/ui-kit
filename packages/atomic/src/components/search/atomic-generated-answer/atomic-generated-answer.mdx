@@ -32,7 +32,7 @@ The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) m
 - **AI-Generated Answers**: Automatically generates answers to user queries using Coveo ML
 - **Conversational Experience**: Ask follow-up questions and maintain context across a multi-turn conversation
 - **Source Citations**: Displays citations to the sources used to generate the answer
-- **Feedback Collection**: Built-in like/dislike buttons to collect user feedback on a specific answer
+- **Feedback Collection**: Built-in like/dislike buttons to collect user feedback on specific answers
 - **Copy to Clipboard**: Users can easily copy the generated answer
 - **Collapsible Mode**: Allows long answers to be collapsed for better UI management
 - **Tab Integration**: Show/hide the component based on active tabs
@@ -89,15 +89,13 @@ When an `agent-id` is set and the agent has the follow-up capability enabled, th
 - Renders the full conversation as a threaded timeline, where each answer has its own citations, feedback buttons, and copy-to-clipboard action
 - Tracks analytics (citation clicks, hovers, likes/dislikes, copy) independently for each answer in the conversation
 
+For more information, see [Configure a search interface for the Search Agent](https://docs.coveo.com/en/q32d5507/leverage-machine-learning/configure-a-search-interface-for-the-search-agent).
+
 ```html
 <atomic-generated-answer
   agent-id="my-agent-id">
 </atomic-generated-answer>
 ```
-
-> **Note:** Setting both `agent-id` and `answer-configuration-id` is not recommended. If both are provided, `agent-id` takes precedence and `answer-configuration-id` is ignored. Use `agent-id` for the conversational experience, or `answer-configuration-id` for single-turn answer generation via the Answer API. If neither is provided, the component falls back to the Search API for generated answers.
-
-> **Note:** The `collapsible` property is disabled when follow-up questions are enabled. The threaded conversation layout manages its own content display.
 
 ### Citation Configuration
 
