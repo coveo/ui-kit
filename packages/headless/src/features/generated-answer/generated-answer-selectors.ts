@@ -77,20 +77,6 @@ const getCitationId = (
   citationId: string
 ) => citationId;
 
-/**
- * Looks up a citation by its ID across the head answer and all follow-up answers.
- *
- * A citation with the same ID can appear in multiple answers (e.g., the same
- * source cited in both answer 2 and answer 4). This selector returns the first
- * match it finds (head answer first, then follow-ups) and is only used to
- * retrieve the citation's document metadata (permanentid, title, clickUri, etc.)
- * for analytics payloads. Since identical citations share the same metadata
- * regardless of which answer they belong to, this is safe.
- *
- * The `answerId` — which determines *which answer* the interaction is
- * attributed to — is tracked separately by the caller and is never derived
- * from this selector.
- */
 export const citationSourceSelector = createSelector(
   getHeadCitations,
   getFlatFollowUpCitations,
