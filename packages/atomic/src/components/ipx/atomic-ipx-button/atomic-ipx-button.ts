@@ -7,14 +7,14 @@ import type {Bindings} from '@/src/components/search/atomic-search-interface/ato
 import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import CloseIcon from '@/src/images/close.svg';
-import SearchIcon from '@/src/images/search.svg';
+import CloseIcon from '../../../images/close.svg';
+import SearchIcon from '../../../images/search.svg';
 import '@/src/components/common/atomic-icon/atomic-icon';
 
 const numberOrPixelValuePattern = new RegExp(/^(?=.*(?:\d+|px)$).*$/);
 
 /**
- * The `atomic-ipx-button` component represents a button that toggles the IPX modal.
+ * The `atomic-ipx-button` component renders a button that toggles the IPX modal.
  *
  * @part ipx-button - The main button element.
  * @part button-icon - The icon container within the button.

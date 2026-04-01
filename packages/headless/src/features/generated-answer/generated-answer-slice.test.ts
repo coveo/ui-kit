@@ -6,6 +6,7 @@ import {
   collapseGeneratedAnswer,
   dislikeGeneratedAnswer,
   expandGeneratedAnswer,
+  finishStep,
   likeGeneratedAnswer,
   openGeneratedAnswerFeedbackModal,
   registerFieldsToIncludeInCitations,
@@ -21,6 +22,7 @@ import {
   setIsLoading,
   setIsStreaming,
   setIsVisible,
+  startStep,
   updateCitations,
   updateError,
   updateMessage,
@@ -278,35 +280,33 @@ describe('generated answer slice', () => {
     expect(finalState.answerConfigurationId).toBe('some-id');
   });
 
-  test.each(generatedContentFormat)(
-    '#setAnswerContentFormat should set the "%i" content format in the state',
-    (format: GeneratedContentFormat) => {
-      const finalState = generatedAnswerReducer(
-        baseState,
-        setAnswerContentFormat(format)
-      );
+  test.each(
+    generatedContentFormat
+  )('#setAnswerContentFormat should set the "%i" content format in the state', (format: GeneratedContentFormat) => {
+    const finalState = generatedAnswerReducer(
+      baseState,
+      setAnswerContentFormat(format)
+    );
 
-      expect(finalState).toEqual({
-        ...getGeneratedAnswerInitialState(),
-        answerContentFormat: format,
-      });
-    }
-  );
+    expect(finalState).toEqual({
+      ...getGeneratedAnswerInitialState(),
+      answerContentFormat: format,
+    });
+  });
 
-  test.each(generatedContentFormat)(
-    '#setAnswerContentFormat should set the "%i" content format in the state',
-    (format: GeneratedContentFormat) => {
-      const finalState = generatedAnswerReducer(
-        baseState,
-        setAnswerContentFormat(format)
-      );
+  test.each(
+    generatedContentFormat
+  )('#setAnswerContentFormat should set the "%i" content format in the state', (format: GeneratedContentFormat) => {
+    const finalState = generatedAnswerReducer(
+      baseState,
+      setAnswerContentFormat(format)
+    );
 
-      expect(finalState).toEqual({
-        ...getGeneratedAnswerInitialState(),
-        answerContentFormat: format,
-      });
-    }
-  );
+    expect(finalState).toEqual({
+      ...getGeneratedAnswerInitialState(),
+      answerContentFormat: format,
+    });
+  });
 
   it('#likeGeneratedAnswer should set the answer as liked in the state', () => {
     const finalState = generatedAnswerReducer(baseState, likeGeneratedAnswer());
@@ -577,6 +577,115 @@ describe('generated answer slice', () => {
       );
 
       expect(finalState.answerGenerationMode).toEqual('manual');
+    });
+  });
+
+  describe('#startStep', () => {
+    it('should append a new active step with the provided payload', () => {
+      const startedAt = 123;
+      const initialState = {
+        ...baseState,
+        generationSteps: [
+          {
+            name: 'searching' as const,
+            status: 'completed' as const,
+            startedAt: 1,
+            finishedAt: 2,
+          },
+        ],
+      };
+
+      const finalState = generatedAnswerReducer(
+        initialState,
+        startStep({name: 'Thinking', startedAt})
+      );
+
+      expect(finalState.generationSteps).toEqual([
+        {
+          name: 'searching',
+          status: 'completed',
+          startedAt: 1,
+          finishedAt: 2,
+        },
+        {
+          name: 'thinking',
+          status: 'active',
+          startedAt,
+        },
+      ]);
+    });
+  });
+
+  describe('#finishStep', () => {
+    it('should mark the most recent matching active step as completed', () => {
+      const finishedAt = 999;
+      const initialState = {
+        ...baseState,
+        generationSteps: [
+          {
+            name: 'searching' as const,
+            status: 'active' as const,
+            startedAt: 1,
+            finishedAt: 2,
+          },
+          {
+            name: 'thinking' as const,
+            status: 'completed' as const,
+            startedAt: 10,
+          },
+          {
+            name: 'searching' as const,
+            status: 'active' as const,
+            startedAt: 20,
+          },
+        ],
+      };
+
+      const finalState = generatedAnswerReducer(
+        initialState,
+        finishStep({name: 'SEARCHING', finishedAt})
+      );
+
+      expect(finalState.generationSteps).toEqual([
+        {
+          name: 'searching',
+          status: 'active',
+          startedAt: 1,
+          finishedAt: 2,
+        },
+        {
+          name: 'thinking',
+          status: 'completed',
+          startedAt: 10,
+        },
+        {
+          name: 'searching',
+          status: 'completed',
+          startedAt: 20,
+          finishedAt,
+        },
+      ]);
+    });
+
+    it('should leave steps unchanged when no matching active step is found', () => {
+      const initialState = {
+        ...baseState,
+        generationSteps: [
+          {
+            name: 'searching' as const,
+            status: 'completed' as const,
+            startedAt: 1,
+            finishedAt: 2,
+          },
+        ],
+      };
+
+      const finalState = generatedAnswerReducer(
+        initialState,
+        finishStep({name: 'thinking', finishedAt: 50})
+      );
+
+      expect(finalState.generationSteps).toEqual(initialState.generationSteps);
     });
   });
 });

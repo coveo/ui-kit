@@ -3,7 +3,7 @@ export {
   type A11yReporterOptions,
   VitestA11yReporter,
 } from './reporter/vitest-a11y-reporter.js';
-export {isA11yReport} from './shared/guards.js';
+export {isA11yReport, isRecord} from './shared/guards.js';
 export type {
   A11yAutomatedResults,
   A11yComponentReport,
@@ -14,6 +14,5 @@ export type {
   A11ySummary,
   CriterionLevel,
   CriterionMetadata,
-  SupportedFramework,
   WCAGVersion,
 } from './shared/types.js';

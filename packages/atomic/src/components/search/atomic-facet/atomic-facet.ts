@@ -55,7 +55,6 @@ import '../../common/atomic-facet-placeholder/atomic-facet-placeholder';
 import {arrayConverter} from '@/src/converters/array-converter';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindings} from '@/src/decorators/bindings';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import facetCommonStyles from '../../common/facets/facet-common.tw.css';
 import facetSearchStyles from '../../common/facets/facet-search/facet-search.tw.css';
 import facetValueBoxStyles from '../../common/facets/facet-value-box/facet-value-box.tw.css';
@@ -106,7 +105,7 @@ import {ValidatePropsController} from '../../common/validate-props-controller/va
 @bindings()
 @withTailwindStyles
 export class AtomicFacet
-  extends InitializeBindingsMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<Bindings>
 {
   static styles = [
@@ -443,7 +442,9 @@ export class AtomicFacet
 
   public disconnectedCallback() {
     super.disconnectedCallback();
-    this.facetConditionsManager?.stopWatching();
+    if (!this.isConnected) {
+      this.facetConditionsManager?.stopWatching();
+    }
   }
 
   public shouldUpdate(changedProperties: Map<string, unknown>) {

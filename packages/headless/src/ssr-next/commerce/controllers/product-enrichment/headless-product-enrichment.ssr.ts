@@ -7,7 +7,7 @@ import {
 import {MissingControllerProps} from '../../../common/errors.js';
 import type {StandaloneControllerWithProps} from '../../types/controller-definitions.js';
 
-export type {ProductEnrichmentState, ProductEnrichment, ProductEnrichmentProps};
+export type {ProductEnrichment, ProductEnrichmentProps, ProductEnrichmentState};
 
 export interface ProductEnrichmentDefinition
   extends StandaloneControllerWithProps<

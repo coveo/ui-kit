@@ -1,6 +1,6 @@
 {
   "name": "@coveo/headless-react",
-  "version": "2.9.0",
+  "version": "2.9.9",
   "description": "React utilities for SSR (Server Side Rendering) with headless",
   "homepage": "https://docs.coveo.com/en/headless/latest/",
   "repository": {
@@ -30,15 +30,14 @@
     "clean": "node ../../utils/ci/rm-rf.mjs dist",
     "test": "vitest run",
     "test:watch": "vitest",
-    "release:phase3": "pnpm --filter @coveo/ci npm-publish",
     "release:phase1": "pnpm --filter @coveo/ci bump",
-    "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod",
     "build:typedoc": "pnpm run build:typedoc:docs && pnpm run build:typedoc:merge",
     "build:typedoc:docs": "concurrently \"pnpm run build:typedoc:ssr\" \"pnpm run build:typedoc:ssr-commerce\"",
     "build:typedoc:ssr": "typedoc --json ./temp/ssr.json --tsconfig tsconfig.json --options typedoc-configs/ssr.typedoc.json",
     "build:typedoc:ssr-commerce": "typedoc --json ./temp/ssr-commerce.json --tsconfig tsconfig.json --options typedoc-configs/ssr-commerce.typedoc.json",
     "build:typedoc:merge": "typedoc --tsconfig tsconfig.typedoc.json",
-    "serve:typedoc": "live-server ./docs"
+    "serve:typedoc": "live-server ./docs",
+    "npm:publish": "pnpm --filter @coveo/ci npm-publish"
   },
   "dependencies": {
     "@coveo/headless": "workspace:*"

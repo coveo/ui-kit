@@ -97,75 +97,75 @@ describe('SSR FacetGenerator', () => {
       buildGeneratedCSRFacetControllersFunction: () =>
         buildSearch(engine).facetGenerator().facets,
     },
-  ])(
-    'when solutionType is $solutionType',
-    ({solutionType, buildGeneratedCSRFacetControllersFunction}) => {
-      let generatedCSRFacetControllers: GeneratedFacetControllers;
-      beforeEach(() => {
-        options = {props: {solutionType}};
-        facetsInEngineState = [
-          {
-            facetId: 'category-facet',
-            type: 'hierarchical',
-          },
-          {
-            facetId: 'date-facet',
-            type: 'dateRange',
-          },
-          {
-            facetId: 'numeric-facet',
-            type: 'numericalRange',
-          },
-          {
-            facetId: 'regular-facet',
-            type: 'regular',
-          },
-          {
-            facetId: 'location-facet',
-            type: 'location',
-          },
-        ];
-        state = buildMockCommerceState();
-        setFacetState(facetsInEngineState);
-        initEngine(state);
-        initCommerceFacetGenerator();
+  ])('when solutionType is $solutionType', ({
+    solutionType,
+    buildGeneratedCSRFacetControllersFunction,
+  }) => {
+    let generatedCSRFacetControllers: GeneratedFacetControllers;
+    beforeEach(() => {
+      options = {props: {solutionType}};
+      facetsInEngineState = [
+        {
+          facetId: 'category-facet',
+          type: 'hierarchical',
+        },
+        {
+          facetId: 'date-facet',
+          type: 'dateRange',
+        },
+        {
+          facetId: 'numeric-facet',
+          type: 'numericalRange',
+        },
+        {
+          facetId: 'regular-facet',
+          type: 'regular',
+        },
+        {
+          facetId: 'location-facet',
+          type: 'location',
+        },
+      ];
+      state = buildMockCommerceState();
+      setFacetState(facetsInEngineState);
+      initEngine(state);
+      initCommerceFacetGenerator();
 
-        generatedCSRFacetControllers =
-          buildGeneratedCSRFacetControllersFunction();
-      });
+      generatedCSRFacetControllers =
+        buildGeneratedCSRFacetControllersFunction();
+    });
 
-      it('initialized', () => {
-        expect(facetGenerator).toBeTruthy();
-      });
-      it('#state is an array containing the state of each facet', () => {
-        expect(facetGenerator.state.length).toBe(5);
-        expect(
-          facetGenerator.state.map((facet) => ({
-            facetId: facet.facetId,
-            type: facet.type,
-          }))
-        ).toEqual(facetsInEngineState);
-      });
+    it('initialized', () => {
+      expect(facetGenerator).toBeTruthy();
+    });
+    it('#state is an array containing the state of each facet', () => {
+      expect(facetGenerator.state.length).toBe(5);
+      expect(
+        facetGenerator.state.map((facet) => ({
+          facetId: facet.facetId,
+          type: facet.type,
+        }))
+      ).toEqual(facetsInEngineState);
+    });
 
-      it('#getFacetController returns facet controller for the given facet id and type', () => {
-        for (const facetInEngineState of facetsInEngineState) {
-          const {facetId, type} = facetInEngineState;
-          const generatedSSRFacetController = facetGenerator.getFacetController(
-            facetId,
-            type
-          );
-          const generatedCSRFacetController = generatedCSRFacetControllers.find(
-            (controller) => controller.state.facetId === facetId
-          );
-          expect(generatedSSRFacetController).toBeTruthy();
-          expect(generatedSSRFacetController?.type).toBe(
-            generatedCSRFacetController?.type
-          );
-          expect(generatedSSRFacetController?.state).toEqual(
-            generatedCSRFacetController?.state
-          );
-        }
-      });
-    }
-  );
+    it('#getFacetController returns facet controller for the given facet id and type', () => {
+      for (const facetInEngineState of facetsInEngineState) {
+        const {facetId, type} = facetInEngineState;
+        const generatedSSRFacetController = facetGenerator.getFacetController(
+          facetId,
+          type
+        );
+        const generatedCSRFacetController = generatedCSRFacetControllers.find(
+          (controller) => controller.state.facetId === facetId
+        );
+        expect(generatedSSRFacetController).toBeTruthy();
+        expect(generatedSSRFacetController?.type).toBe(
+          generatedCSRFacetController?.type
+        );
+        expect(generatedSSRFacetController?.state).toEqual(
+          generatedCSRFacetController?.state
+        );
+      }
+    });
+  });
 });

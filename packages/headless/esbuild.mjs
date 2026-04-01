@@ -19,7 +19,6 @@ const {useCaseEntries, quanticUseCaseEntries} = buildConfig;
 const require = createRequire(import.meta.url);
 const devMode = process.argv[2] === 'dev';
 
-const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 const isNightly = process.env.IS_NIGHTLY === 'true';
 const isPrRelease =
   process.env.IS_PRERELEASE === 'true' && process.env.PR_NUMBER;
@@ -29,9 +28,6 @@ const buenoVersion = isNightly
   : isPrRelease
     ? `v${buenoJson.version.split('-').shift()}.${process.env.PR_NUMBER}`
     : `v${buenoJson.version}`;
-const buenoPath = isCDN
-  ? `/bueno/${buenoVersion}/bueno.esm.js`
-  : '@coveo/bueno';
 
 function getUmdGlobalName(useCase) {
   const map = {
@@ -84,10 +80,14 @@ const browserEsm = Object.entries(useCaseEntries).map((entry) => {
   const outDir = getUseCaseDir('cdn', useCase);
   const outfile = `${outDir}/headless.esm.js`;
 
+  const buenoPath = `/bueno/${buenoVersion}/bueno.esm.js`;
+
   let config = {
     entryPoints: [entryPoint],
     outfile,
     format: 'esm',
+    external: [buenoPath],
+    plugins: [getBuenoReplacePlugin(buenoPath)],
   };
 
   if (devMode) {
@@ -106,7 +106,7 @@ const browserUmd = Object.entries(useCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
   const outDir = getUseCaseDir('cdn', useCase);
   const outfile = `${outDir}/headless.js`;
-
+  const buenoPath = `/bueno/${buenoVersion}/bueno.esm.js`;
   const globalName = getUmdGlobalName(useCase);
 
   return buildBrowserConfig(
@@ -117,7 +117,11 @@ const browserUmd = Object.entries(useCaseEntries).map((entry) => {
       banner: {
         js: `${base.banner.js}`,
       },
-      plugins: [umdWrapper({libraryName: globalName})],
+      external: ['crypto', buenoPath],
+      plugins: [
+        getBuenoReplacePlugin(buenoPath),
+        umdWrapper({libraryName: globalName}),
+      ],
     },
     outDir
   );
@@ -145,7 +149,6 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
   const outDir = getUseCaseDir('dist/quantic/', useCase);
   const outfile = `${outDir}/headless.js`;
-
   const globalName = getUmdGlobalName(useCase);
 
   const target = /}\)\(updatedArgs, api, extraOptions\);/g;
@@ -188,7 +191,6 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
       banner: {
         js: `${base.banner.js}`,
       },
-      external: ['crypto'],
       inject: [
         'ponyfills/headers-shim.js',
         'ponyfills/global-this-shim.js',
@@ -231,36 +233,35 @@ function resolveBrowser(moduleName) {
   );
 }
 
+function getBuenoReplacePlugin(buenoPath) {
+  return {
+    name: 'replace-bueno-import',
+    setup(build) {
+      build.onResolve({filter: /^@coveo\/bueno$/}, () => {
+        return {path: buenoPath, external: true};
+      });
+    },
+  };
+}
+
 /**
  * @param {import('esbuild').BuildOptions} options
  * @returns {Promise<import('esbuild').BuildResult>}
  */
 async function buildBrowserConfig(options, outDir) {
-  const replaceBuenoImport = [
-    {
-      name: 'replace-bueno-import',
-      setup(build) {
-        build.onResolve({filter: /^@coveo\/bueno$/}, () => {
-          return {path: buenoPath, external: true};
-        });
-      },
-    },
-  ];
   const out = await build({
     ...base,
     platform: 'browser',
     minify: true,
     sourcemap: true,
     metafile: true,
-    external: ['crypto', buenoPath],
     ...options,
-
+    external: ['crypto', ...(options.external || [])],
     plugins: [
       alias({
         'coveo.analytics': resolveEsm('coveo.analytics'),
         pino: resolveBrowser('pino'),
       }),
-      ...(isCDN ? replaceBuenoImport : []),
       ...(options.plugins || []),
     ],
   });

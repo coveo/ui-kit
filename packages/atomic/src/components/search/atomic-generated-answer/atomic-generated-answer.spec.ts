@@ -5,12 +5,16 @@ import {
   buildTabManager,
   type GeneratedAnswer,
   type GeneratedAnswerState,
+  type GeneratedAnswerWithFollowUps,
+  type GeneratedAnswerWithFollowUpsState,
   type InteractiveCitation,
   type SearchStatus,
   type TabManager,
 } from '@coveo/headless';
 import {html} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {renderAnswerContent} from '@/src/components/common/generated-answer/render-answer-content';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
 import {buildFakeGeneratedAnswer} from '@/vitest-utils/testing-helpers/fixtures/headless/search/generated-answer-controller';
@@ -21,30 +25,43 @@ import './atomic-generated-answer';
 import {userEvent} from 'vitest/browser';
 
 vi.mock('@coveo/headless', {spy: true});
+vi.mock('@/src/components/common/generated-answer/render-answer-content', {
+  spy: true,
+});
 
 describe('atomic-generated-answer', () => {
   const mockedEngine = buildFakeSearchEngine();
   let mockedGeneratedAnswer: GeneratedAnswer;
   let mockedSearchStatus: SearchStatus;
   let mockedTabManager: TabManager;
+  type FollowUpAnswersState =
+    GeneratedAnswerWithFollowUpsState['followUpAnswers'];
+  type FollowUpAnswerEntry = FollowUpAnswersState['followUpAnswers'][number];
+  type RenderGeneratedAnswerOptions = {
+    props?: Partial<AtomicGeneratedAnswer>;
+    generatedAnswerState?: Partial<GeneratedAnswerState>;
+    searchStatusState?: {hasError?: boolean};
+    tabManagerState?: {activeTab?: string};
+    generatedAnswerOverrides?: Partial<GeneratedAnswer> &
+      Record<string, unknown>;
+  };
 
   const renderGeneratedAnswer = async ({
     props = {},
     generatedAnswerState = {},
     searchStatusState = {},
     tabManagerState = {},
-  }: {
-    props?: Partial<AtomicGeneratedAnswer>;
-    generatedAnswerState?: Partial<GeneratedAnswerState>;
-    searchStatusState?: {hasError?: boolean};
-    tabManagerState?: {activeTab?: string};
-  } = {}) => {
-    mockedGeneratedAnswer = buildFakeGeneratedAnswer({
-      answer: 'Test answer',
-      citations: [],
-      isVisible: true,
-      ...generatedAnswerState,
-    });
+    generatedAnswerOverrides = {},
+  }: RenderGeneratedAnswerOptions = {}) => {
+    mockedGeneratedAnswer = Object.assign(
+      buildFakeGeneratedAnswer({
+        answer: 'Test answer',
+        citations: [],
+        isVisible: true,
+        ...generatedAnswerState,
+      }),
+      generatedAnswerOverrides
+    );
 
     mockedSearchStatus = buildFakeSearchStatus({
       hasError: false,
@@ -75,10 +92,13 @@ describe('atomic-generated-answer', () => {
           .collapsible=${props.collapsible ?? false}
           .disableCitationAnchoring=${props.disableCitationAnchoring ?? false}
           .answerConfigurationId=${props.answerConfigurationId}
-          fields-to-include-in-citations=${props.fieldsToIncludeInCitations}
+          fields-to-include-in-citations=${ifDefined(
+            props.fieldsToIncludeInCitations
+          )}
           .maxCollapsedHeight=${props.maxCollapsedHeight ?? 16}
           .tabsIncluded=${props.tabsIncluded ?? []}
           .tabsExcluded=${props.tabsExcluded ?? []}
+          .agentId=${props.agentId}
         ></atomic-generated-answer>`,
         selector: 'atomic-generated-answer',
         bindings: (bindings) => {
@@ -105,6 +125,11 @@ describe('atomic-generated-answer', () => {
       },
       get generatedContent() {
         return element.shadowRoot?.querySelector('[part="generated-content"]')!;
+      },
+      get scrollableContainer() {
+        return element.shadowRoot?.querySelector(
+          '[part="generated-content-container"] .agent-scrollable'
+        );
       },
       get feedbackButtons() {
         return element.shadowRoot?.querySelectorAll(
@@ -151,8 +176,63 @@ describe('atomic-generated-answer', () => {
           '[part="answer-show-button"]'
         ) as HTMLButtonElement;
       },
+      get generatedAnswersThread() {
+        return element.shadowRoot?.querySelector(
+          'atomic-generated-answer-thread'
+        );
+      },
+      get followUpInputContainer() {
+        return element.shadowRoot?.querySelector('[part="input-container"]');
+      },
+      get followUpInputField() {
+        return element.shadowRoot?.querySelector(
+          '[part="input-field"]'
+        ) as HTMLInputElement | null;
+      },
+      get followUpSubmitButton() {
+        return element.shadowRoot?.querySelector(
+          '[part="submit-button"]'
+        ) as HTMLButtonElement | null;
+      },
     };
   };
+
+  const buildFollowUpAnswerEntry = (
+    overrides: Partial<FollowUpAnswerEntry> = {}
+  ) =>
+    ({
+      answer: 'Follow up answer',
+      citations: [],
+      isVisible: true,
+      isStreaming: false,
+      isLoading: false,
+      liked: false,
+      disliked: false,
+      feedbackSubmitted: false,
+      error: undefined,
+      expanded: true,
+      cannotAnswer: false,
+      answerContentFormat: 'text/plain',
+      ...overrides,
+    }) as FollowUpAnswerEntry;
+
+  const createGeneratedAnswerWithFollowUpsState = ({
+    isEnabled = true,
+    followUpAnswers = [buildFollowUpAnswerEntry()],
+    stateOverrides = {},
+  }: {
+    isEnabled?: boolean;
+    followUpAnswers?: FollowUpAnswerEntry[];
+    stateOverrides?: Partial<GeneratedAnswerState>;
+  } = {}) => ({
+    isVisible: true,
+    answer: 'Test answer',
+    ...stateOverrides,
+    followUpAnswers: {
+      isEnabled,
+      followUpAnswers,
+    } as FollowUpAnswersState,
+  });
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -233,7 +313,10 @@ describe('atomic-generated-answer', () => {
             .collapsible=${props.collapsible ?? false}
             .disableCitationAnchoring=${props.disableCitationAnchoring ?? false}
             .answerConfigurationId=${props.answerConfigurationId}
-            fields-to-include-in-citations=${props.fieldsToIncludeInCitations}
+            .agentId=${props.agentId}
+            fields-to-include-in-citations=${ifDefined(
+              props.fieldsToIncludeInCitations
+            )}
             .maxCollapsedHeight=${props.maxCollapsedHeight ?? 16}
             .tabsIncluded=${props.tabsIncluded ?? []}
             .tabsExcluded=${props.tabsExcluded ?? []}
@@ -597,7 +680,7 @@ describe('atomic-generated-answer', () => {
   });
 
   it('should render show more button when collapsible and content is tall', async () => {
-    const {showMoreButton} = await renderGeneratedAnswer({
+    const renderedAnswer = await renderGeneratedAnswer({
       props: {collapsible: true},
       generatedAnswerState: {
         isVisible: true,
@@ -605,10 +688,14 @@ describe('atomic-generated-answer', () => {
       },
     });
 
-    expect(showMoreButton).toBeInTheDocument();
+    Reflect.set(renderedAnswer.element, 'fullAnswerHeight', 100);
+    await renderedAnswer.element.requestUpdate();
+    await renderedAnswer.element.updateComplete;
+
+    expect(renderedAnswer.showMoreButton).toBeInTheDocument();
   });
 
-  it('should show button even when content is short', async () => {
+  it('should not show button when content is short', async () => {
     const {showMoreButton} = await renderGeneratedAnswer({
       props: {collapsible: true},
       generatedAnswerState: {
@@ -617,7 +704,79 @@ describe('atomic-generated-answer', () => {
       },
     });
 
-    await expect.element(showMoreButton).toBeInTheDocument();
+    await expect.element(showMoreButton).not.toBeInTheDocument();
+  });
+
+  it('should pass collapsible as false to renderAnswerContent when collapsible is disabled', async () => {
+    await renderGeneratedAnswer({
+      props: {collapsible: false, maxCollapsedHeight: 16},
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Short text',
+      },
+    });
+
+    const lastCall = vi.mocked(renderAnswerContent).mock.calls.at(-1);
+    expect(lastCall).toBeDefined();
+    expect(lastCall?.[0].props.collapsible).toBe(false);
+  });
+
+  it('should pass collapsible as true to renderAnswerContent when collapsible is enabled and content is tall', async () => {
+    const renderedAnswer = await renderGeneratedAnswer({
+      props: {collapsible: true, maxCollapsedHeight: 16},
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Long text',
+      },
+    });
+
+    Reflect.set(renderedAnswer.element, 'fullAnswerHeight', 100);
+    await renderedAnswer.element.requestUpdate();
+    await renderedAnswer.element.updateComplete;
+
+    const lastCall = vi.mocked(renderAnswerContent).mock.calls.at(-1);
+    expect(lastCall).toBeDefined();
+    expect(lastCall?.[0].props.collapsible).toBe(true);
+  });
+
+  it('should request re-render when adaptAnswerHeight updates measured height', async () => {
+    const renderedAnswer = await renderGeneratedAnswer({
+      props: {collapsible: true, maxCollapsedHeight: 16},
+      generatedAnswerState: {
+        isVisible: true,
+        answer: 'Test answer',
+      },
+    });
+
+    const generatedText = renderedAnswer.element.shadowRoot?.querySelector(
+      '[part="generated-text"]'
+    ) as HTMLElement | null;
+    expect(generatedText).not.toBeNull();
+
+    vi.spyOn(
+      generatedText as HTMLElement,
+      'getBoundingClientRect'
+    ).mockReturnValue({
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 320,
+      top: 0,
+      right: 0,
+      bottom: 320,
+      left: 0,
+      toJSON: () => ({}),
+    } as DOMRect);
+
+    const requestUpdateSpy = vi.spyOn(renderedAnswer.element, 'requestUpdate');
+    const adaptAnswerHeight = Reflect.get(
+      renderedAnswer.element,
+      'adaptAnswerHeight'
+    ) as () => void;
+
+    adaptAnswerHeight.call(renderedAnswer.element);
+
+    expect(requestUpdateSpy).toHaveBeenCalled();
   });
 
   it('should toggle visibility when toggle is clicked when toggle is activated and deactivated', async () => {
@@ -765,6 +924,292 @@ describe('atomic-generated-answer', () => {
           answerConfigurationId: expect.anything(),
         })
       );
+    });
+  });
+
+  describe('agentId property', () => {
+    it('should pass agentId to buildGeneratedAnswer when provided', async () => {
+      const {element} = await renderGeneratedAnswer({
+        props: {agentId: 'test-agent-id'},
+        generatedAnswerState: {isVisible: true, answer: 'Test'},
+      });
+      await element.updateComplete;
+
+      expect(buildGeneratedAnswer).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.objectContaining({
+          agentId: 'test-agent-id',
+        })
+      );
+    });
+
+    it('should not pass agentId when not provided', async () => {
+      await renderGeneratedAnswer({
+        generatedAnswerState: {isVisible: true, answer: 'Test'},
+      });
+
+      expect(buildGeneratedAnswer).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.not.objectContaining({
+          agentId: expect.anything(),
+        })
+      );
+    });
+  });
+
+  describe('follow up capability', () => {
+    it('should render a scrollable content container when agentId is provided', async () => {
+      const {scrollableContainer} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-123'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          isEnabled: true,
+        }),
+        generatedAnswerOverrides: {
+          askFollowUp: vi.fn(),
+        },
+      });
+
+      expect(scrollableContainer).not.toBeNull();
+    });
+
+    it('should transition from non-scrollable to scrollable when follow-up answers become enabled', async () => {
+      const result = await renderGeneratedAnswer({
+        props: {agentId: 'agent-123'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          isEnabled: false,
+        }),
+        generatedAnswerOverrides: {
+          askFollowUp: vi.fn(),
+        },
+      });
+
+      const {element} = result;
+      expect(result.scrollableContainer).toBeNull();
+
+      const generatedAnswerWithFollowUps =
+        element.generatedAnswer as GeneratedAnswerWithFollowUps;
+      generatedAnswerWithFollowUps.state.followUpAnswers.isEnabled = true;
+      element.requestUpdate();
+      await element.updateComplete;
+
+      const updatedScrollableContainer = result.scrollableContainer;
+      expect(updatedScrollableContainer).not.toBeNull();
+    });
+
+    it('should apply a default 50vh height to the scrollable part when agentId is provided', async () => {
+      const {element, scrollableContainer} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-123'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          isEnabled: true,
+        }),
+        generatedAnswerOverrides: {
+          askFollowUp: vi.fn(),
+        },
+      });
+
+      await element.updateComplete;
+
+      const heightInPixels = parseFloat(
+        getComputedStyle(scrollableContainer as HTMLElement).height
+      );
+
+      expect(heightInPixels).toBeCloseTo(window.innerHeight * 0.5, 0);
+    });
+
+    it('should not render show more button when agentId is provided and collapsible is true', async () => {
+      const {showMoreButton} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-123', collapsible: true},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          isEnabled: true,
+          stateOverrides: {answer: 'A'.repeat(1000)},
+        }),
+        generatedAnswerOverrides: {
+          askFollowUp: vi.fn(),
+        },
+      });
+
+      expect(showMoreButton).not.toBeInTheDocument();
+    });
+
+    it('should not render a scrollable content container when agentId is not provided', async () => {
+      const {scrollableContainer} = await renderGeneratedAnswer({
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          isEnabled: true,
+        }),
+      });
+
+      expect(scrollableContainer).toBeNull();
+    });
+
+    it('should not render a scrollable content container when follow-up is disabled even if agentId is provided', async () => {
+      const {scrollableContainer} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-123'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          isEnabled: false,
+        }),
+        generatedAnswerOverrides: {
+          askFollowUp: vi.fn(),
+        },
+      });
+
+      expect(scrollableContainer).toBeNull();
+    });
+
+    it('should render generated answers thread when follow ups are enabled', async () => {
+      const askFollowUp = vi.fn().mockResolvedValue(undefined);
+      const {generatedAnswersThread} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState(),
+        generatedAnswerOverrides: {askFollowUp},
+      });
+
+      expect(generatedAnswersThread).toBeInTheDocument();
+      const threadComponent = generatedAnswersThread as HTMLElement & {
+        generatedAnswers?: unknown[];
+      };
+      expect(threadComponent.generatedAnswers).toBeDefined();
+      expect(threadComponent.generatedAnswers).toHaveLength(2);
+    });
+
+    it('should not render generated answers thread when follow ups are disabled', async () => {
+      const {generatedAnswersThread} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          isEnabled: false,
+        }),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(generatedAnswersThread).toBeNull();
+    });
+
+    it('should render the follow up input when follow ups are enabled', async () => {
+      const {followUpInputContainer} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState(),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(followUpInputContainer).toBeInTheDocument();
+    });
+
+    it('should not render the follow up input when follow ups are disabled', async () => {
+      const {followUpInputContainer} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          isEnabled: false,
+        }),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(followUpInputContainer).toBeNull();
+    });
+
+    it('should disable the follow up submit button when the initial answer is streaming', async () => {
+      const {followUpSubmitButton} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          isEnabled: true,
+          stateOverrides: {isStreaming: true},
+          followUpAnswers: [],
+        }),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(followUpSubmitButton).not.toBeNull();
+      expect((followUpSubmitButton as HTMLButtonElement).disabled).toBe(true);
+    });
+
+    it('should disable the follow up submit button when the initial answer is loading', async () => {
+      const {followUpSubmitButton} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          isEnabled: true,
+          stateOverrides: {isLoading: true},
+          followUpAnswers: [],
+        }),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(followUpSubmitButton).not.toBeNull();
+      expect((followUpSubmitButton as HTMLButtonElement).disabled).toBe(true);
+    });
+
+    it('should not disable the follow up submit button when the initial answer is completed', async () => {
+      const {followUpSubmitButton} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          isEnabled: true,
+          stateOverrides: {isLoading: false, isStreaming: false},
+          followUpAnswers: [],
+        }),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(followUpSubmitButton).not.toBeNull();
+      expect((followUpSubmitButton as HTMLButtonElement).disabled).toBe(false);
+    });
+
+    it('should disable the follow up submit button when a follow up is streaming', async () => {
+      const {followUpSubmitButton} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          followUpAnswers: [buildFollowUpAnswerEntry({isStreaming: true})],
+        }),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(followUpSubmitButton).not.toBeNull();
+      expect((followUpSubmitButton as HTMLButtonElement).disabled).toBe(true);
+    });
+
+    it('should disable the follow up submit button when a follow up is loading', async () => {
+      const {followUpSubmitButton} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          followUpAnswers: [buildFollowUpAnswerEntry({isLoading: true})],
+        }),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(followUpSubmitButton).not.toBeNull();
+      expect((followUpSubmitButton as HTMLButtonElement).disabled).toBe(true);
+    });
+
+    it('should not disable the follow up submit button when a follow up is completed', async () => {
+      const {followUpSubmitButton} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          followUpAnswers: [
+            buildFollowUpAnswerEntry({isLoading: false, isStreaming: false}),
+          ],
+        }),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(followUpSubmitButton).not.toBeNull();
+      expect((followUpSubmitButton as HTMLButtonElement).disabled).toBe(false);
+    });
+
+    it('should call askFollowUp when a follow up question is submitted', async () => {
+      const askFollowUp = vi.fn().mockResolvedValue(undefined);
+      const {element, followUpInputField, followUpSubmitButton} =
+        await renderGeneratedAnswer({
+          props: {agentId: 'agent-id'},
+          generatedAnswerState: createGeneratedAnswerWithFollowUpsState(),
+          generatedAnswerOverrides: {askFollowUp},
+        });
+
+      await element.updateComplete;
+      const input = followUpInputField as HTMLInputElement;
+      expect(input).not.toBeNull();
+      input.value = 'Follow up question';
+      expect(followUpSubmitButton).not.toBeNull();
+      followUpSubmitButton!.click();
+
+      await vi.waitFor(() => {
+        expect(askFollowUp).toHaveBeenCalledWith('Follow up question');
+      });
     });
   });
 
