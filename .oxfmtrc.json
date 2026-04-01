@@ -16,10 +16,10 @@
     "**/packages/atomic/stencil-proxy/**/*",
     "**/packages/documentation/**/assets/**/*",
     "**/packages/headless/**/coveo.analytics/**/*",
-    "**/samples/atomic/search-stencil/**/*.d.ts",
     "**/samples/headless/rga-angular/**/*.html",
     "**/*.hbs",
     "**/*.tw.css",
-    "**/*.mdx"
+    "**/*.mdx",
+    "**/CHANGELOG.md"
   ]
 }
