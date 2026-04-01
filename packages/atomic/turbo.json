@@ -103,7 +103,7 @@
       "persistent": true
     },
     "dev:storybook": {
-      "dependsOn": ["build:locales"],
+      "dependsOn": ["^build", "build:lit", "build:cem", "build:locales"],
       "cache": false,
       "persistent": true
     },

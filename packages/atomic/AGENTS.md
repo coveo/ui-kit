@@ -11,7 +11,7 @@
 
 **Notes**:
 
-- By default, the Atomic and Storybook dev servers run on ports 3333 and 4400 respectively
+- By default, Storybook dev server runs on `http://storybook.localhost:1355`
 - End-to-end testing commands must be executed from `packages/atomic/` while the Storybook server is running
 
 ## Atomic Package Structure
