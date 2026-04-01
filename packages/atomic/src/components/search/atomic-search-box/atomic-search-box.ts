@@ -103,6 +103,10 @@ export class AtomicSearchBox
   extends LitElement
   implements InitializableComponent<Bindings>
 {
+  static shadowRootOptions = {
+    ...LitElement.shadowRootOptions,
+    delegatesFocus: true,
+  };
   static styles: CSSResultGroup = css`
     @import '../atomic-search-box/atomic-search-box.pcss';
   `;
@@ -580,6 +584,7 @@ export class AtomicSearchBox
 
   private renderAbsolutePositionSpacer() {
     return html`<textarea
+      disabled
       aria-hidden="true"
       part="textarea-spacer"
       class="invisible w-full px-4 py-3.5 text-lg"

@@ -37,8 +37,14 @@ import {
   renderTableLayout,
   renderTableRow,
 } from '@/src/components/common/item-list/table-layout';
-
+import {
+  getItemListDisplayClasses,
+  type ItemDisplayDensity,
+  type ItemDisplayImageSize,
+  type ItemDisplayLayout,
+} from '@/src/components/common/layout/item-layout-utils';
 import {renderTabWrapper} from '@/src/components/common/tabs/tab-wrapper';
+import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {arrayConverter} from '@/src/converters/array-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
@@ -50,15 +56,8 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {randomID} from '@/src/utils/utils';
-import '../atomic-result/atomic-result';
-import {
-  getItemListDisplayClasses,
-  type ItemDisplayDensity,
-  type ItemDisplayImageSize,
-  type ItemDisplayLayout,
-} from '@/src/components/common/layout/item-layout-utils';
-import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import '@/src/components/search/atomic-result-template/atomic-result-template';
+import '@/src/components/search/atomic-result/atomic-result';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.

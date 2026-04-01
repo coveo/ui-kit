@@ -2,13 +2,13 @@ import type {UserAction as IUserAction} from '@coveo/headless/insight';
 import {html, nothing} from 'lit';
 import type {InsightBindings} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
 import {multiClassMap, tw} from '@/src/directives/multi-class-map';
-import BookmarkIcon from '@/src/images/bookmark.svg';
-import DocumentIcon from '@/src/images/document.svg';
-import PointIcon from '@/src/images/point.svg';
-import QuickviewIcon from '@/src/images/quickview.svg';
-import SearchIcon from '@/src/images/search.svg';
 import {parseTimestampToDateDetails} from '@/src/utils/date-utils';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
+import BookmarkIcon from '../../../images/bookmark.svg';
+import DocumentIcon from '../../../images/document.svg';
+import PointIcon from '../../../images/point.svg';
+import QuickviewIcon from '../../../images/quickview.svg';
+import SearchIcon from '../../../images/search.svg';
 
 const icons = {
   SEARCH: SearchIcon,

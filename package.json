@@ -1,6 +1,6 @@
 {
   "name": "ui-kit",
-  "version": "3.0.97",
+  "version": "3.0.98",
   "private": true,
   "scripts": {
     "postinstall": "husky install",

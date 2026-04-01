@@ -1,3 +1,9 @@
+## <small>3.11.9 (2026-04-01)</small>
+
+* chore: update knip & tweaks (#7306) ([51a165a](https://github.com/coveo/ui-kit/commits/51a165a)), closes [#7306](https://github.com/coveo/ui-kit/issues/7306)
+
+
+
 ## <small>3.11.7 (2026-03-25)</small>
 
 - fix(deps): update all dependencies j:kit-282 (major) (#6195) ([a5df20c](https://github.com/coveo/ui-kit/commits/a5df20c)), closes [#6195](https://github.com/coveo/ui-kit/issues/6195)

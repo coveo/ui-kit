@@ -105,6 +105,10 @@ export class AtomicCommerceSearchBox
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
+  static shadowRootOptions = {
+    ...LitElement.shadowRootOptions,
+    delegatesFocus: true,
+  };
   static styles: CSSResultGroup = css`
     @import '../../search/atomic-search-box/atomic-search-box.pcss';
   `;
@@ -558,6 +562,7 @@ export class AtomicCommerceSearchBox
 
   private renderAbsolutePositionSpacer() {
     return html`<textarea
+      disabled
       aria-hidden="true"
       part="textarea-spacer"
       class="invisible w-full p-3.5 px-4 text-lg"

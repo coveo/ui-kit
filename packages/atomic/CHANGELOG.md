@@ -1,3 +1,16 @@
+## 3.54.0 (2026-04-01)
+
+* fix: missing cdn outputs (#7309) ([040b1b1](https://github.com/coveo/ui-kit/commits/040b1b1)), closes [#7309](https://github.com/coveo/ui-kit/issues/7309)
+* fix(atomic): various import fixes (#7327) ([9b9b030](https://github.com/coveo/ui-kit/commits/9b9b030)), closes [#7327](https://github.com/coveo/ui-kit/issues/7327)
+* chore: removing jsxFactory from tsconfig (#7303) ([6467d8a](https://github.com/coveo/ui-kit/commits/6467d8a)), closes [#7303](https://github.com/coveo/ui-kit/issues/7303)
+* chore(atomic-quickview-modal): add style template to Storybook helpers (#7274) ([d0796a8](https://github.com/coveo/ui-kit/commits/d0796a8)), closes [#7274](https://github.com/coveo/ui-kit/issues/7274)
+* chore(atomic): unalias icon imports (#7326) ([4a203c6](https://github.com/coveo/ui-kit/commits/4a203c6)), closes [#7326](https://github.com/coveo/ui-kit/issues/7326)
+* feat: enable focus delegation for search boxes (#7273) ([22963dd](https://github.com/coveo/ui-kit/commits/22963dd)), closes [#7273](https://github.com/coveo/ui-kit/issues/7273)
+* test(atomic): prevent quickview modal from intercepting pointer events (#7321) ([b309e64](https://github.com/coveo/ui-kit/commits/b309e64)), closes [#7321](https://github.com/coveo/ui-kit/issues/7321)
+* test(atomic): stabilize insight generated answer citation hover tests (#7319) ([5e99987](https://github.com/coveo/ui-kit/commits/5e99987)), closes [#7319](https://github.com/coveo/ui-kit/issues/7319)
+
+
+
 ## <small>3.53.3 (2026-03-30)</small>
 
 - fix(atomic): Facet tabs included / excluded not working properly (#7248) ([871137d](https://github.com/coveo/ui-kit/commits/871137d)), closes [#7248](https://github.com/coveo/ui-kit/issues/7248)

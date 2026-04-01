@@ -1,3 +1,10 @@
+## <small>3.48.1 (2026-04-01)</small>
+
+* fix(headless): handle edge cases in renew-access-token middleware (#7299) ([0c8f855](https://github.com/coveo/ui-kit/commits/0c8f855)), closes [#7299](https://github.com/coveo/ui-kit/issues/7299)
+* chore: update relay+move to catalog (#7287) ([e7a79a1](https://github.com/coveo/ui-kit/commits/e7a79a1)), closes [#7287](https://github.com/coveo/ui-kit/issues/7287)
+
+
+
 ## 3.48.0 (2026-03-30)
 
 - feat(headless): add conversationId to generatedStreamEnd events (#7304) ([f346d1e](https://github.com/coveo/ui-kit/commits/f346d1e)), closes [#7304](https://github.com/coveo/ui-kit/issues/7304)

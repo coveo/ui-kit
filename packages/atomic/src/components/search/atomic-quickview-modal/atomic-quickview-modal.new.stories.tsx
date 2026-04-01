@@ -53,9 +53,12 @@ const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
 const {decorator: resultListDecorator} = wrapInResultList('list', false);
 const {decorator: resultTemplateDecorator} = wrapInResultTemplate();
 
-const {events, args, argTypes} = getStorybookHelpers('atomic-quickview-modal', {
-  excludeCategories: ['methods'],
-});
+const {events, args, argTypes, styleTemplate} = getStorybookHelpers(
+  'atomic-quickview-modal',
+  {
+    excludeCategories: ['methods'],
+  }
+);
 
 const meta: Meta = {
   component: 'atomic-quickview-modal',
@@ -66,6 +69,7 @@ const meta: Meta = {
     resultTemplateDecorator,
     resultListDecorator,
     searchInterfaceDecorator,
+    (story, {args}) => html` ${styleTemplate(args)} ${story()} `,
   ],
   parameters: {
     ...commonParameters,
