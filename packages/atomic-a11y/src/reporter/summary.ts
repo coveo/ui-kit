@@ -1,3 +1,4 @@
+import {DEFAULT_WCAG_22_AA_CRITERIA_COUNT} from '../shared/constants.js';
 import type {
   A11yComponentReport,
   A11yCriterionReport,
@@ -9,11 +10,11 @@ export function createSummary(
   components: A11yComponentReport[],
   criteria: A11yCriterionReport[]
 ): A11ySummary {
+  const totalCriteria = DEFAULT_WCAG_22_AA_CRITERIA_COUNT;
   const totalStories = components.reduce(
     (accumulator, component) => accumulator + component.storyCount,
     0
   );
-  const totalCriteria = 55; // Hardcoded for WCAG 2.2 AA, update if criteria set changes
   const interactiveCoveredCriteria = criteria.filter(
     (criterion) => criterion.interactiveCoverage
   ).length;
