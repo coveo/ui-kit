@@ -11,18 +11,18 @@ This article covers various topics that you may find helpful if you require furt
 
 > [!NOTE]
 > 
-> * For brevity, this article mainly focuses on the [`Search Engine`](https://docs.coveo.com/en/headless/latest/reference/modules/Search.html).
+> * For brevity, this article mainly focuses on the [`Search Engine`](../../../modules/Search.html).
 > However, similar logic applies when configuring UA for other Headless engines (except the Commerce Engine, which only supports [Event Protocol](https://docs.coveo.com/en/o3r90189/)).
-> * Take a look at the [Log view events with Coveo UA](https://docs.coveo.com/en/headless/latest/usage/headless-usage-analytics/headless-view-events/) article to understand how to log view events.
+> * Take a look at the [Log view events with Coveo UA](./log-view-events-with-coveo-ua.html) article to understand how to log view events.
 > View event tracking with the Coveo UA protocol requires the `coveoua.js` script rather than the [Atomic](https://docs.coveo.com/en/lcdf0264/) or Headless libraries.
 
 ## Modify the metadata to send with UA events
 
 It can be useful to add or modify metadata to send along with the standard UA events logged by Headless controllers.
-You can leverage the `analyticsClientMiddleware` property of an [`AnalyticsConfiguration`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.AnalyticsConfiguration.html) to hook into an analytics event payload before Headless sends it to Coveo.
+You can leverage the `analyticsClientMiddleware` property of an [`AnalyticsConfiguration`](../../../interfaces/Search.AnalyticsConfiguration.html) to hook into an analytics event payload before Headless sends it to Coveo.
 By default, Headless v3 uses [Event Protocol](https://docs.coveo.com/en/o9je0592/) to track events instead of the Coveo UA protocol.
 The Event Protocol doesn’t support the `analyticsClientMiddleware` property.
-To use this property in Headless v3, you need to [set the `analyticsMode` to `legacy`](https://docs.coveo.com/en/headless/latest/headless-upgrade-from-v2/#removal-of-analyticsclientmiddleware-function) during the initialization.
+To use this property in Headless v3, you need to [set the `analyticsMode` to `legacy`](../upgrade/v2-to-v3.html#removal-of-analyticsclientmiddleware-function) during the initialization.
 
 The following example shows how to customize metadata using `analyticsClientMiddleware`:
 
@@ -65,7 +65,7 @@ Click events are intended to record item view and preview actions, such as:
 * Opening a result Quick view
 
 > [!WARNING]
-> We strongly recommend using the [`InteractiveResult`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.InteractiveResult.html) controller when implementing your result components.
+> We strongly recommend using the [`InteractiveResult`](../../../interfaces/Search.InteractiveResult.html) controller when implementing your result components.
 > The controller can automatically extract relevant data from result items and log click events for you, as in the following interactive example.
 
 <iframe src="https://stackblitz.com/github/coveo/headless-documentation-material-ui-react-codesandbox/tree/main?embed=1&view=split&file=src%2FComponents%2FResultLink.tsx"
@@ -76,12 +76,12 @@ To learn more about using the `InteractiveResult` component in your result list 
 
 ### Send your own click events
 
-It’s also technically possible to send your own click events, without the `InteractiveResult` controller, by [dispatching](https://docs.coveo.com/en/headless/latest/usage#dispatch-actions) [`ClickAnalyticsActions`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.ClickAnalyticsActionCreators.html) or [`GenericAnalyticsActions`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.GenericAnalyticsActionCreators.html).
+It’s also technically possible to send your own click events, without the `InteractiveResult` controller, by [dispatching](../index.html#dispatch-actions) [`ClickAnalyticsActions`](../../../interfaces/Search.ClickAnalyticsActionCreators.html) or [`GenericAnalyticsActions`](../../../interfaces/Search.GenericAnalyticsActionCreators.html).
 
 However, we recommend against doing so because it’s very error prone.
 For UA reports and ML models to function properly, click events need to contain all the metadata that the `InteractiveResult` controller extracts from results.
 
-If you need to customize your click events, we rather recommend [using the `analyticsClientMiddleware` property](#modify-the-metadata-to-send-with-ua-events) and listening to the [target action](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.ClickAnalyticsActionCreators.html), as in the following example.
+If you need to customize your click events, we rather recommend [using the `analyticsClientMiddleware` property](#modify-the-metadata-to-send-with-ua-events) and listening to the [target action](../../../interfaces/Search.ClickAnalyticsActionCreators.html), as in the following example.
 
 ```jsx
 export const headlessEngine = buildSearchEngine({
@@ -101,9 +101,9 @@ export const headlessEngine = buildSearchEngine({
 })
 ```
 
-1. If a UA event is dispatched with the [`logDocumentOpen`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.ClickAnalyticsActionCreators.html#logDocumentOpen) cause, add the target metadata.
+1. If a UA event is dispatched with the [`logDocumentOpen`](../../../interfaces/Search.ClickAnalyticsActionCreators.html#logDocumentOpen) cause, add the target metadata.
 2. You can access result item fields when logging metadata.
-Concretely, you can use the populated default item fields, plus the ones specified through the [`fieldsToInclude`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.ResultListOptions.html) parameter.
+Concretely, you can use the populated default item fields, plus the ones specified through the [`fieldsToInclude`](../../../interfaces/Search.ResultListOptions.html) parameter.
 You can inspect search request responses in your search interface to see the currently available fields:
 
 ![Inspecting response fields](https://docs.coveo.com/en/assets/images/build-a-search-ui/inspect-fields.png)
@@ -115,16 +115,16 @@ Search events are intended to record end-user interactions that trigger queries,
 * Submitting a search request from the search box
 * Selecting a facet value
 
-You generally shouldn’t have to worry about logging search events, because standard search controllers such as [`SearchBox`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchBox.html) and [`facet`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.Facet.html) controllers take care of automatically logging such interactions.
+You generally shouldn’t have to worry about logging search events, because standard search controllers such as [`SearchBox`](../../../interfaces/Search.SearchBox.html) and [`facet`](../../../interfaces/Search.Facet.html) controllers take care of automatically logging such interactions.
 
 ### Send your own search events
 
-If you need to send additional search events, you can do so by [dispatching actions](https://docs.coveo.com/en/headless/latest/usage#dispatch-actions).
+If you need to send additional search events, you can do so by [dispatching actions](../index.html#dispatch-actions).
 We recommend using controllers over dispatching actions directly.
 However, the latter is still possible and can be helpful in specific use cases that controllers don’t cover, such as when you need to send your own UA events.
 
 Depending on your use case, there are two ways to send your own search events.
-A search event can either be sent via [`SearchAnalyticsActions`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchAnalyticsActionCreators.html) or [`GenericAnalyticsActions`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.GenericAnalyticsActionCreators.html).
+A search event can either be sent via [`SearchAnalyticsActions`](../../../interfaces/Search.SearchAnalyticsActionCreators.html) or [`GenericAnalyticsActions`](../../../interfaces/Search.GenericAnalyticsActionCreators.html).
 Both of these are action loaders.
 
 `SearchAnalyticsActions` are for specific search events for which the _cause_ is recognized by Coveo, such as `logFacetClearAll` or `logInterfaceLoad`.
@@ -256,7 +256,7 @@ Extract the `username` and `userDisplayName` from your user object and add them 
 
 ## Send events externally
 
-If you want to log UA events to an external service, such as [Google Analytics](https://analytics.google.com/), we recommend leveraging the `analyticsClientMiddleware` property in your [`AnalyticsConfiguration`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.AnalyticsConfiguration.html) to hook into an analytics event payload, as in the following example.
+If you want to log UA events to an external service, such as [Google Analytics](https://analytics.google.com/), we recommend leveraging the `analyticsClientMiddleware` property in your [`AnalyticsConfiguration`](../../../interfaces/Search.AnalyticsConfiguration.html) to hook into an analytics event payload, as in the following example.
 
 ```jsx
 const pushToGoogleDataLayer = (payload: Record<string, unknown>) => {
@@ -290,9 +290,9 @@ Coveo front-end libraries use the `coveo_visitorId` cookie to track individual u
 > For compatibility with legacy implementations, however, the associated cookie and local storage value are [still labeled `visitorID`](https://docs.coveo.com/en/mc2e2218#why-do-i-still-see-the-name-visitor-id-in-the-local-storage).
 
 When implementing a cookie policy, you may need to disable UA tracking for end-users under specific circumstances (for example, when a user opts out of cookies).
-To do so, call the [`disableAnalytics`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchEngine.html#disableAnalytics) method on an engine instance.
+To do so, call the [`disableAnalytics`](../../../interfaces/Search.SearchEngine.html#disableAnalytics) method on an engine instance.
 
-To re-enable UA tracking, call the [`enableAnalytics`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchEngine.html#enableAnalytics) method.
+To re-enable UA tracking, call the [`enableAnalytics`](../../../interfaces/Search.SearchEngine.html#enableAnalytics) method.
 
 ```typescript
 // initialize an engine instance

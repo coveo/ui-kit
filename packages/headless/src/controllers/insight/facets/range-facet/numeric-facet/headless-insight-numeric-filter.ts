@@ -19,12 +19,12 @@ import {
 } from '../../../../core/facets/range-facet/numeric-facet/headless-core-numeric-filter.js';
 
 export type {
-  NumericFilterOptions,
-  NumericFilterInitialState,
-  NumericFilterRange,
-  NumericFilterProps,
-  NumericFilterState,
   NumericFilter,
+  NumericFilterInitialState,
+  NumericFilterOptions,
+  NumericFilterProps,
+  NumericFilterRange,
+  NumericFilterState,
 };
 
 /**

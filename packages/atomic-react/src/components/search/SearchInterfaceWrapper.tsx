@@ -5,7 +5,7 @@ import {
 } from '@coveo/headless';
 // biome-ignore lint/style/useImportType: <React is needed>
 import React, {useEffect, useRef} from 'react';
-import {AtomicSearchInterface} from './components';
+import {AtomicSearchInterface} from './components.js';
 
 type AtomicSearchInterfaceProps = React.ComponentProps<
   typeof AtomicSearchInterface

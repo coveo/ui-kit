@@ -74,12 +74,9 @@ function buildControllerHook<
         isHydratedStateContext(ctx)
           ? ctx.controllers[key as ControllerKey].subscribe(listener)
           : () => {},
-      [ctx, key]
+      [ctx]
     );
-    const getStaticState = useCallback(
-      () => ctx.controllers[key].state,
-      [ctx, key]
-    );
+    const getStaticState = useCallback(() => ctx.controllers[key].state, [ctx]);
     const state = useSyncMemoizedStore(subscribe, getStaticState);
     const methods = useMemo(() => {
       if (!isHydratedStateContext(ctx)) {
@@ -93,7 +90,7 @@ function buildControllerHook<
         InferControllerFromDefinition<TControllers[TKey]>,
         'state' | 'subscribe'
       >;
-    }, [ctx, key]);
+    }, [ctx]);
     return {state, methods};
   };
 }

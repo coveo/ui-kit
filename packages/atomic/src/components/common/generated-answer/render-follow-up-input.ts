@@ -56,7 +56,7 @@ export const renderFollowUpInput: FunctionalComponent<
     <div class="relative" part="input-container">
       <input
         part="input-field"
-        class="w-full rounded-md border border-neutral px-4 py-2 pr-8 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary disabled:bg-neutral-light disabled:text-neutral-dark disabled:cursor-not-allowed"
+        class="w-full rounded-md border border-neutral px-4 py-2 pr-[3rem] focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary disabled:bg-neutral-light disabled:text-neutral-dark disabled:cursor-not-allowed"
         ${ref(inputRef)}
         type="text"
         @keydown=${handleKeyDown}

@@ -13,15 +13,16 @@ import type {
   InferControllerStaticStateFromController,
 } from './controller-definitions.js';
 
-export type {InferStaticState, InferHydratedState};
+export type {InferHydratedState, InferStaticState};
 
 type InferControllerPropsFromDefinition<
   TController extends ControllerDefinition<Controller>,
-> = TController extends ControllerDefinitionWithProps<Controller, infer Props>
-  ? Props
-  : TController extends ControllerDefinitionWithoutProps<Controller>
-    ? {}
-    : unknown;
+> =
+  TController extends ControllerDefinitionWithProps<Controller, infer Props>
+    ? Props
+    : TController extends ControllerDefinitionWithoutProps<Controller>
+      ? {}
+      : unknown;
 
 export type InferControllerPropsMapFromDefinitions<
   TControllers extends ControllerDefinitionsMap<Controller>,
@@ -35,9 +36,10 @@ export type InferControllerPropsMapFromDefinitions<
 
 export type InferControllerFromDefinition<
   TDefinition extends ControllerDefinition<Controller>,
-> = TDefinition extends ControllerDefinition<infer TController>
-  ? TController
-  : never;
+> =
+  TDefinition extends ControllerDefinition<infer TController>
+    ? TController
+    : never;
 
 export type InferControllersMapFromDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,

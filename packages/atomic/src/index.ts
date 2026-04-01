@@ -1,6 +1,8 @@
 export * from '@coveo/atomic-legacy/item-decorators';
 export type {i18n} from 'i18next';
-export {Components, JSX} from './components';
+
+import * as _Components from './components/index.js';
+
 export {CommerceBindings} from './components/commerce/atomic-commerce-interface/atomic-commerce-interface';
 export {SelectChildProductEventArgs} from './components/commerce/atomic-product-children/select-child-product-event';
 export {fetchProductContext} from './components/commerce/product-template-component-utils/context/fetch-product-context';
@@ -24,3 +26,4 @@ export {
   MissingInterfaceParentError,
 } from './utils/initialization-common-utils';
 export {bindLogDocumentOpenOnResult} from './utils/result-utils';
+export {_Components as Components, _Components as JSX};

@@ -181,6 +181,7 @@ export interface CoreAnalyticsState {
 interface KnowledgeState {
   answerConfigurationId: string;
   agentId?: string;
+  debugAgentSession?: boolean;
 }
 
 export const getConfigurationInitialState: () => ConfigurationState = () => ({

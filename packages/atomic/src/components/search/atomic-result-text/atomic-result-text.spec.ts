@@ -132,21 +132,21 @@ describe('atomic-result-text', () => {
       prop: 'disableHighlight',
       invalidValue: 'not-a-boolean',
     },
-  ])(
-    'should set error when #$prop is invalid',
-    async ({prop, invalidValue}) => {
-      const element = await renderComponent({field: 'author'});
+  ])('should set error when #$prop is invalid', async ({
+    prop,
+    invalidValue,
+  }) => {
+    const element = await renderComponent({field: 'author'});
 
-      expect(element.error).toBeUndefined();
+    expect(element.error).toBeUndefined();
 
-      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
-      (element as any)[prop] = invalidValue;
-      await element.updateComplete;
+    // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+    (element as any)[prop] = invalidValue;
+    await element.updateComplete;
 
-      expect(element.error).toBeDefined();
-      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
-    }
-  );
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(new RegExp(prop, 'i'));
+  });
 
   it.each<{
     prop: 'shouldHighlight' | 'disableHighlight';
@@ -163,24 +163,25 @@ describe('atomic-result-text', () => {
       validValue: false,
       invalidValue: 'not-a-boolean',
     },
-  ])(
-    'should set error when valid #$prop is updated to an invalid value',
-    async ({prop, validValue, invalidValue}) => {
-      const element = await renderComponent({
-        field: 'author',
-        [prop]: validValue,
-      });
+  ])('should set error when valid #$prop is updated to an invalid value', async ({
+    prop,
+    validValue,
+    invalidValue,
+  }) => {
+    const element = await renderComponent({
+      field: 'author',
+      [prop]: validValue,
+    });
 
-      expect(element.error).toBeUndefined();
+    expect(element.error).toBeUndefined();
 
-      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
-      (element as any)[prop] = invalidValue;
-      await element.updateComplete;
+    // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+    (element as any)[prop] = invalidValue;
+    await element.updateComplete;
 
-      expect(element.error).toBeDefined();
-      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
-    }
-  );
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(new RegExp(prop, 'i'));
+  });
 
   it('should render nothing when default props are used', async () => {
     const element = await renderComponent();
@@ -255,30 +256,31 @@ describe('atomic-result-text', () => {
         value: 'https://example.com/test',
         highlightKey: 'printableUriHighlights',
       },
-    ])(
-      'should render highlights for #$field field with highlight keywords',
-      async ({field, value, highlightKey}) => {
-        const resultWithHighlights = buildFakeResult({
-          [field === 'printableUri' ? 'printableUri' : field]: value,
-          [highlightKey]: [
-            {
-              offset: 5,
-              length: 6,
-            },
-          ],
-        });
+    ])('should render highlights for #$field field with highlight keywords', async ({
+      field,
+      value,
+      highlightKey,
+    }) => {
+      const resultWithHighlights = buildFakeResult({
+        [field === 'printableUri' ? 'printableUri' : field]: value,
+        [highlightKey]: [
+          {
+            offset: 5,
+            length: 6,
+          },
+        ],
+      });
 
-        const element = await renderComponent({
-          field,
-          shouldHighlight: true,
-          result: resultWithHighlights,
-        });
+      const element = await renderComponent({
+        field,
+        shouldHighlight: true,
+        result: resultWithHighlights,
+      });
 
-        const text = locators.getText(element);
-        expect(text).toBeNull();
-        expect(element.innerHTML).not.toContain('<atomic-text');
-      }
-    );
+      const text = locators.getText(element);
+      expect(text).toBeNull();
+      expect(element.innerHTML).not.toContain('<atomic-text');
+    });
 
     it('should render highlights for #summary field with highlight keywords', async () => {
       const resultWithHighlights = buildFakeResult({
@@ -357,28 +359,29 @@ describe('atomic-result-text', () => {
         value: 'This is an excerpt with highlights',
         highlightKey: 'excerptHighlights',
       },
-    ])(
-      'should render plain text for #$field field',
-      async ({field, value, highlightKey}) => {
-        const resultWithHighlights = buildFakeResult({
-          [field]: value,
-          [highlightKey]: [
-            {
-              offset: 5,
-              length: 6,
-            },
-          ],
-        });
+    ])('should render plain text for #$field field', async ({
+      field,
+      value,
+      highlightKey,
+    }) => {
+      const resultWithHighlights = buildFakeResult({
+        [field]: value,
+        [highlightKey]: [
+          {
+            offset: 5,
+            length: 6,
+          },
+        ],
+      });
 
-        const element = await renderComponent({
-          field,
-          shouldHighlight: false,
-          result: resultWithHighlights,
-        });
+      const element = await renderComponent({
+        field,
+        shouldHighlight: false,
+        result: resultWithHighlights,
+      });
 
-        const text = locators.getText(element);
-        assertTextContent(text, value);
-      }
-    );
+      const text = locators.getText(element);
+      assertTextContent(text, value);
+    });
   });
 });

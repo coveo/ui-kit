@@ -18,12 +18,14 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {when} from 'lit/directives/when.js';
 import {GeneratedAnswerController} from '@/src/components/common/generated-answer/generated-answer-controller';
+import '@/src/components/common/atomic-generated-answer-thread/atomic-generated-answer-thread.js';
 import {renderAnswerContent} from '@/src/components/common/generated-answer/render-answer-content';
 import {renderCardHeader} from '@/src/components/common/generated-answer/render-card-header';
 import {renderCitations} from '@/src/components/common/generated-answer/render-citations';
 import {renderCustomNoAnswerMessage} from '@/src/components/common/generated-answer/render-custom-no-answer-message';
 import {renderDisclaimer} from '@/src/components/common/generated-answer/render-disclaimer';
 import {renderFeedbackAndCopyButtons} from '@/src/components/common/generated-answer/render-feedback-and-copy-buttons';
+import {renderFollowUpInput} from '@/src/components/common/generated-answer/render-follow-up-input.js';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {arrayConverter} from '@/src/converters/array-converter';
@@ -40,8 +42,6 @@ import {debounce} from '@/src/utils/debounce-utils';
 import {getNamedSlotContent} from '@/src/utils/slot-utils';
 import {shouldDisplayOnCurrentTab} from '@/src/utils/tab-utils';
 import atomicGeneratedAnswerStyles from './atomic-generated-answer.tw.css.js';
-import '@/src/components/common/generated-answer/atomic-generated-answers-thread/atomic-generated-answers-thread.js';
-import {renderFollowUpInput} from '@/src/components/common/generated-answer/render-follow-up-input.js';
 
 /**
  * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
@@ -288,7 +288,7 @@ export class AtomicGeneratedAnswer
 
     this.controller.insertFeedbackModal();
 
-    if (window.ResizeObserver && this.isCollapsibleEnabled) {
+    if (window.ResizeObserver && this.collapsible) {
       const debouncedAdaptAnswerHeight = debounce(
         () => this.adaptAnswerHeight(),
         100
@@ -421,7 +421,6 @@ export class AtomicGeneratedAnswer
                     ${renderDisclaimer({
                       props: {
                         i18n: this.bindings.i18n,
-                        isStreaming: !!this.generatedAnswerState.isStreaming,
                       },
                     })}
                   </div>
@@ -536,7 +535,11 @@ export class AtomicGeneratedAnswer
         getComputedStyle(document.documentElement).fontSize
       );
 
-      this.fullAnswerHeight = answerHeight / rootFontSize;
+      const nextFullAnswerHeight = answerHeight / rootFontSize;
+      if (this.fullAnswerHeight !== nextFullAnswerHeight) {
+        this.fullAnswerHeight = nextFullAnswerHeight;
+        this.requestUpdate();
+      }
 
       this.updateAnswerHeight();
     }
@@ -594,19 +597,23 @@ export class AtomicGeneratedAnswer
     this.controller.clickLike();
   }
 
-  private renderCitationsList(citations: GeneratedAnswerCitation[]) {
+  private renderCitationsList(
+    citations: GeneratedAnswerCitation[],
+    answerId?: string
+  ) {
     return renderCitations({
       props: {
         citations,
         i18n: this.bindings.i18n,
         buildInteractiveCitation: (citation) =>
           buildInteractiveCitation(this.bindings.engine, {
-            options: {citation},
+            options: {citation, answerId},
           }),
         logCitationHover: (citationId, citationHoverTimeMs) => {
           this.generatedAnswer?.logCitationHover(
             citationId,
-            citationHoverTimeMs
+            citationHoverTimeMs,
+            answerId
           );
         },
         disableCitationAnchoring: this.disableCitationAnchoring,
@@ -636,19 +643,19 @@ export class AtomicGeneratedAnswer
   }
 
   private renderAnswerContent() {
-    const generatedAnswer = {
-      ...this.generatedAnswerState,
-      question: this.bindings.engine.state.query?.q ?? '',
-    };
-
     if (this.areFollowUpsEnabled) {
+      const generatedAnswerWithQuestion = {
+        ...this.generatedAnswerState,
+        question: this.bindings.engine.state.query?.q ?? '',
+      };
+
       const allGeneratedAnswers = [
-        generatedAnswer,
+        generatedAnswerWithQuestion,
         ...(this.generatedAnswerWithFollowUps?.state.followUpAnswers
           .followUpAnswers ?? []),
       ];
 
-      return html`<atomic-generated-answers-thread
+      return html`<atomic-generated-answer-thread
         .generatedAnswers=${allGeneratedAnswers}
         .i18n=${this.bindings.i18n}
         .renderCitations=${this.renderCitationsList.bind(this)}
@@ -658,18 +665,18 @@ export class AtomicGeneratedAnswer
           this.generatedAnswer.dislike(answerId)}
         .onCopyToClipboard=${(answerId: string) =>
           this.generatedAnswer.logCopyToClipboard(answerId)}
-      ></atomic-generated-answers-thread>`;
+      ></atomic-generated-answer-thread>`;
     }
 
     return renderAnswerContent({
       props: {
         i18n: this.bindings.i18n,
-        generatedAnswer: generatedAnswer,
+        generatedAnswer: this.generatedAnswerState,
         collapsible: this.isCollapsibleEnabled,
         renderFeedbackAndCopyButtonsSlot: () =>
           this.renderFeedbackAndCopyButtonsWrapper(),
         renderCitationsSlot: () =>
-          html`${this.renderCitationsList(generatedAnswer.citations)}`,
+          html`${this.renderCitationsList(this.generatedAnswerState.citations)}`,
         onRetry: () => this.generatedAnswer?.retry(),
         onClickShowButton: () => this.clickOnShowButton(),
       },
@@ -702,7 +709,11 @@ export class AtomicGeneratedAnswer
   }
 
   private get isCollapsibleEnabled() {
-    return this.collapsible && !this.areFollowUpsEnabled;
+    return (
+      this.collapsible &&
+      !this.areFollowUpsEnabled &&
+      (this.fullAnswerHeight ?? 0) > this.validateMaxCollapsedHeight()
+    );
   }
 
   private resetCollapsibleStyles() {

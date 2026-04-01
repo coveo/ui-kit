@@ -65,6 +65,64 @@ body {
   font-weight: 400;
 }
 
+.tsd-page-navigation {
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.tsd-page-navigation a {
+  font-size: 12px;
+}
+
+.tsd-accordion-summary::marker {
+  display: none;
+  content: "";
+}
+
+.tsd-accordion-summary::-webkit-details-marker {
+  display: none;
+}
+
+.tsd-page-navigation-section > .tsd-accordion-summary {
+  display: none;
+}
+.tsd-page-navigation-section > .tsd-accordion-summary + h3{
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.tsd-page-navigation-section > .tsd-accordion-summary > svg {
+  display: none;
+}
+
+.tsd-page-navigation .tsd-accordion-details {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.tsd-page-navigation .tsd-accordion-details ul {
+  list-style-type: none;
+  padding-left: 0.75rem;
+}
+
+.col-content a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.col-content a:hover {
+  color: inherit;
+}
+
+.col-content .tsd-signature a {
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+.col-content .tsd-signature a:hover {
+  color: var(--color-link);
+}
+
 @media (max-width: 769px) {
   .feedback {
     display: none;
@@ -88,5 +146,28 @@ body {
   }
   .tsd-widget.active {
     background-color: inherit;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 200;
+  line-height: 1.2;
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.25rem; }
+h6 { font-size: 1rem; }
+
+.col-content {
+  min-width: 36rem;
+}
+
+@media (max-width: 575.98px) {
+  .col-content {
+    min-width: 0;
+    width: 100%;
   }
 }

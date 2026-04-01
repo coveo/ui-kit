@@ -155,7 +155,7 @@ export function buildProviderWithDefinition<
           >,
         });
       });
-    }, [staticState, definition]);
+    }, [staticState]);
 
     return (
       <definition.StateProvider

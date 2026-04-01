@@ -280,35 +280,33 @@ describe('generated answer slice', () => {
     expect(finalState.answerConfigurationId).toBe('some-id');
   });
 
-  test.each(generatedContentFormat)(
-    '#setAnswerContentFormat should set the "%i" content format in the state',
-    (format: GeneratedContentFormat) => {
-      const finalState = generatedAnswerReducer(
-        baseState,
-        setAnswerContentFormat(format)
-      );
+  test.each(
+    generatedContentFormat
+  )('#setAnswerContentFormat should set the "%i" content format in the state', (format: GeneratedContentFormat) => {
+    const finalState = generatedAnswerReducer(
+      baseState,
+      setAnswerContentFormat(format)
+    );
 
-      expect(finalState).toEqual({
-        ...getGeneratedAnswerInitialState(),
-        answerContentFormat: format,
-      });
-    }
-  );
+    expect(finalState).toEqual({
+      ...getGeneratedAnswerInitialState(),
+      answerContentFormat: format,
+    });
+  });
 
-  test.each(generatedContentFormat)(
-    '#setAnswerContentFormat should set the "%i" content format in the state',
-    (format: GeneratedContentFormat) => {
-      const finalState = generatedAnswerReducer(
-        baseState,
-        setAnswerContentFormat(format)
-      );
+  test.each(
+    generatedContentFormat
+  )('#setAnswerContentFormat should set the "%i" content format in the state', (format: GeneratedContentFormat) => {
+    const finalState = generatedAnswerReducer(
+      baseState,
+      setAnswerContentFormat(format)
+    );
 
-      expect(finalState).toEqual({
-        ...getGeneratedAnswerInitialState(),
-        answerContentFormat: format,
-      });
-    }
-  );
+    expect(finalState).toEqual({
+      ...getGeneratedAnswerInitialState(),
+      answerContentFormat: format,
+    });
+  });
 
   it('#likeGeneratedAnswer should set the answer as liked in the state', () => {
     const finalState = generatedAnswerReducer(baseState, likeGeneratedAnswer());
@@ -599,7 +597,7 @@ describe('generated answer slice', () => {
 
       const finalState = generatedAnswerReducer(
         initialState,
-        startStep({name: 'thinking', startedAt})
+        startStep({name: 'Thinking', startedAt})
       );
 
       expect(finalState.generationSteps).toEqual([
@@ -645,7 +643,7 @@ describe('generated answer slice', () => {
 
       const finalState = generatedAnswerReducer(
         initialState,
-        finishStep({name: 'searching', finishedAt})
+        finishStep({name: 'SEARCHING', finishedAt})
       );
 
       expect(finalState.generationSteps).toEqual([

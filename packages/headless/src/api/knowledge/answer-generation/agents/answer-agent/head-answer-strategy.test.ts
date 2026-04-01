@@ -2,9 +2,10 @@
 
 import type {AgentSubscriber} from '@ag-ui/client';
 import type {Dispatch} from '@reduxjs/toolkit';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {
   setFollowUpAnswersConversationId,
+  setFollowUpAnswersConversationToken,
   setIsEnabled,
 } from '../../../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {
@@ -20,12 +21,17 @@ import {
   updateError,
   updateMessage,
 } from '../../../../../features/generated-answer/generated-answer-actions.js';
+import * as generatedAnswerAnalyticsActions from '../../../../../features/generated-answer/generated-answer-analytics-actions.js';
 import {GeneratedAnswerSseErrorCode} from '../../../../../features/generated-answer/sse-generated-answer-errors.js';
 import {createHeadAnswerStrategy} from './head-answer-strategy.js';
 
 describe('createHeadAnswerStrategy', () => {
   let dispatch: ReturnType<typeof vi.fn> & Dispatch;
   let strategy: AgentSubscriber;
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
 
   beforeEach(() => {
     dispatch = vi.fn() as unknown as ReturnType<typeof vi.fn> & Dispatch;
@@ -82,6 +88,7 @@ describe('createHeadAnswerStrategy', () => {
         value: {
           contentFormat: 'text/markdown',
           followUpEnabled: true,
+          conversationToken: 'token-123',
         },
       },
     } as any);
@@ -90,6 +97,9 @@ describe('createHeadAnswerStrategy', () => {
       setAnswerContentFormat('text/markdown')
     );
     expect(dispatch).toHaveBeenCalledWith(setIsEnabled(true));
+    expect(dispatch).toHaveBeenCalledWith(
+      setFollowUpAnswersConversationToken('token-123')
+    );
   });
 
   it('updates citations when the server sends citation data', () => {
@@ -131,24 +141,78 @@ describe('createHeadAnswerStrategy', () => {
   });
 
   it('finalizes the run with the answer generation result', () => {
+    const streamEndAction = vi.fn() as any;
+    const responseLinkedAction = vi.fn() as any;
+    const streamEndSpy = vi
+      .spyOn(generatedAnswerAnalyticsActions, 'logGeneratedAnswerStreamEnd')
+      .mockReturnValue(streamEndAction);
+    vi.spyOn(
+      generatedAnswerAnalyticsActions,
+      'logGeneratedAnswerResponseLinked'
+    ).mockReturnValue(responseLinkedAction);
+    strategy = createHeadAnswerStrategy(dispatch);
+    strategy.onRunStartedEvent!({
+      event: {runId: 'run-001', threadId: 'thread-007'},
+    } as any);
+    vi.clearAllMocks();
+
     strategy.onRunFinishedEvent!({
       event: {
         result: {
-          answerGenerated: true,
+          completionReason: 'ANSWERED',
         },
+        threadId: 'thread-007',
       },
     } as any);
 
     expect(dispatch).toHaveBeenNthCalledWith(1, setIsAnswerGenerated(true));
     expect(dispatch).toHaveBeenNthCalledWith(2, setCannotAnswer(false));
     expect(dispatch).toHaveBeenNthCalledWith(3, setIsStreaming(false));
+    expect(streamEndSpy).toHaveBeenCalledWith(
+      true,
+      'run-001',
+      true,
+      'thread-007'
+    );
+    expect(dispatch).toHaveBeenNthCalledWith(4, streamEndAction);
+    expect(dispatch).toHaveBeenNthCalledWith(5, responseLinkedAction);
   });
 
   it('disables answer flags when no answer was generated', () => {
-    strategy.onRunFinishedEvent!({event: {}} as any);
+    const streamEndAction = vi.fn() as any;
+    const responseLinkedAction = vi.fn() as any;
+    const streamEndSpy = vi
+      .spyOn(generatedAnswerAnalyticsActions, 'logGeneratedAnswerStreamEnd')
+      .mockReturnValue(streamEndAction);
+    vi.spyOn(
+      generatedAnswerAnalyticsActions,
+      'logGeneratedAnswerResponseLinked'
+    ).mockReturnValue(responseLinkedAction);
+    strategy = createHeadAnswerStrategy(dispatch);
+    strategy.onRunStartedEvent!({
+      event: {runId: 'run-001', threadId: 'thread-007'},
+    } as any);
+    vi.clearAllMocks();
+
+    strategy.onRunFinishedEvent!({
+      event: {
+        result: {
+          completionReason: 'NO_RESULTS',
+        },
+        threadId: 'thread-007',
+      },
+    } as any);
 
     expect(dispatch).toHaveBeenNthCalledWith(1, setIsAnswerGenerated(false));
     expect(dispatch).toHaveBeenNthCalledWith(2, setCannotAnswer(true));
     expect(dispatch).toHaveBeenNthCalledWith(3, setIsStreaming(false));
+    expect(streamEndSpy).toHaveBeenCalledWith(
+      false,
+      'run-001',
+      undefined,
+      'thread-007'
+    );
+    expect(dispatch).toHaveBeenNthCalledWith(4, streamEndAction);
+    expect(dispatch).toHaveBeenNthCalledWith(5, responseLinkedAction);
   });
 });

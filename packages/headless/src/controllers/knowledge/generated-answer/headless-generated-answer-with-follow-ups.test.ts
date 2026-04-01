@@ -1,7 +1,6 @@
+import * as answerAgentRunnerModule from '../../../api/knowledge/answer-generation/agents/answer-agent/answer-agent-runner.js';
 import * as followUpAgentModule from '../../../api/knowledge/answer-generation/agents/follow-up-agent/follow-up-agent.js';
 import * as followUpStrategyModule from '../../../api/knowledge/answer-generation/agents/follow-up-agent/follow-up-answer-strategy.js';
-import {answerGenerationApi} from '../../../api/knowledge/answer-generation/answer-generation-api.js';
-import type {AnswerGenerationApiState} from '../../../api/knowledge/answer-generation/answer-generation-api-state.js';
 import {setAgentId} from '../../../features/configuration/configuration-actions.js';
 import {getConfigurationInitialState} from '../../../features/configuration/configuration-state.js';
 import {
@@ -12,9 +11,16 @@ import {
 } from '../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {followUpAnswersReducer} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import {getFollowUpAnswersInitialState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
-import {generateHeadAnswer} from '../../../features/generated-answer/generated-answer-actions.js';
-import {generatedAnswerAnalyticsClient} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
+import {
+  generatedAnswerAnalyticsClient,
+  logCopyGeneratedAnswer,
+  logDislikeGeneratedAnswer,
+  logHoverCitation,
+  logLikeGeneratedAnswer,
+  logOpenGeneratedAnswerSource,
+} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
 import {getGeneratedAnswerInitialState} from '../../../features/generated-answer/generated-answer-state.js';
+import type {SearchAppState} from '../../../index.js';
 import {
   buildMockSearchEngine,
   type MockedSearchEngine,
@@ -35,11 +41,23 @@ vi.mock(
 const mockCoreLike = vi.fn();
 const mockCoreDislike = vi.fn();
 const mockCoreCopy = vi.fn();
+const mockAnswerRunner = {
+  run: vi.fn(),
+};
+const mockCoreCitationClick = vi.fn();
+const mockCoreCitationHover = vi.fn();
+const headAnswerId = 'head-id';
+const followUpAnswerId = 'follow-1';
+const citationId = 'citation-1';
 const mockFollowUpAgent = {
   runAgent: vi.fn(),
   abortRun: vi.fn(),
 };
 const mockFollowUpStrategy = {};
+const mockCreateAnswerRunner = vi.spyOn(
+  answerAgentRunnerModule,
+  'createAnswerRunner'
+);
 const mockCreateFollowUpAgent = vi.spyOn(
   followUpAgentModule,
   'createFollowUpAgent'
@@ -57,6 +75,8 @@ vi.mock('../../core/generated-answer/headless-core-generated-answer.js', () => {
       like: mockCoreLike,
       dislike: mockCoreDislike,
       logCopyToClipboard: mockCoreCopy,
+      logCitationClick: mockCoreCitationClick,
+      logCitationHover: mockCoreCitationHover,
     })),
   };
 });
@@ -73,7 +93,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
     );
 
   const buildEngineWithGeneratedAnswer = (
-    initialState: Partial<AnswerGenerationApiState> = {}
+    initialState: Partial<SearchAppState> = {}
   ) => {
     const state = createMockState({
       ...initialState,
@@ -103,6 +123,12 @@ describe('GeneratedAnswerWithFollowUps', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockCreateAnswerRunner.mockReturnValue(mockAnswerRunner as never);
+    mockCoreLike.mockClear();
+    mockCoreDislike.mockClear();
+    mockCoreCopy.mockClear();
+    mockCoreCitationClick.mockClear();
+    mockCoreCitationHover.mockClear();
     mockCreateFollowUpAgent.mockReturnValue(mockFollowUpAgent as never);
     mockCreateFollowUpStrategy.mockReturnValue(mockFollowUpStrategy as never);
     engine = buildEngineWithGeneratedAnswer();
@@ -131,10 +157,9 @@ describe('GeneratedAnswerWithFollowUps', () => {
     ).not.toThrow();
   });
 
-  it('adds the answerGenerationApi and followUpAnswers reducers to engine', () => {
+  it('adds the followUpAnswers reducers to engine', () => {
     createGeneratedAnswerWithFollowUps();
     expect(engine.addReducers).toHaveBeenCalledWith({
-      [answerGenerationApi.reducerPath]: answerGenerationApi.reducer,
       followUpAnswers: followUpAnswersReducer,
     });
   });
@@ -218,6 +243,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
           question: 'What about X?',
           answer: 'Answer about X',
           citations: [],
+          generationSteps: [],
           answerId: 'follow-up-1',
           isLoading: false,
           isStreaming: false,
@@ -232,6 +258,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
         engine = buildEngineWithGeneratedAnswer({
           followUpAnswers: {
             conversationId: 'session-123',
+            conversationToken: 'token-123',
             isEnabled: true,
             followUpAnswers: [exampleFollowUpAnswers],
           },
@@ -241,6 +268,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
 
         expect(controller.state.followUpAnswers).toEqual({
           conversationId: 'session-123',
+          conversationToken: 'token-123',
           isEnabled: true,
           followUpAnswers: [exampleFollowUpAnswers],
         });
@@ -251,6 +279,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
 
         expect(controller.state.followUpAnswers).toEqual({
           conversationId: '',
+          conversationToken: '',
           isEnabled: false,
           followUpAnswers: [],
         });
@@ -259,11 +288,18 @@ describe('GeneratedAnswerWithFollowUps', () => {
   });
 
   describe('retry method', () => {
-    it('should dispatch generateHeadAnswer', () => {
+    it('should rerun the head answer generation', () => {
       const controller = createGeneratedAnswerWithFollowUps();
       controller.retry();
 
-      expect(generateHeadAnswer).toHaveBeenCalledTimes(1);
+      expect(mockCreateAnswerRunner).toHaveBeenCalledTimes(1);
+      expect(mockAnswerRunner.run).toHaveBeenCalledWith(
+        engine.state,
+        engine.dispatch,
+        expect.any(Function)
+      );
+      const navigatorContextProvider = mockAnswerRunner.run.mock.calls[0][2];
+      expect(navigatorContextProvider()).toBe(engine.navigatorContext);
     });
   });
 
@@ -283,24 +319,46 @@ describe('GeneratedAnswerWithFollowUps', () => {
       controller.like();
 
       expect(mockCoreLike).toHaveBeenCalledTimes(1);
+      expect(mockCoreLike).toHaveBeenCalledWith();
       expect(likeFollowUp).not.toHaveBeenCalled();
+      expect(logLikeGeneratedAnswer).not.toHaveBeenCalled();
     });
 
     it('should delegate to core like when answerId matches head answer', () => {
       const controller = createGeneratedAnswerWithFollowUps();
 
-      controller.like('head-id');
+      controller.like(headAnswerId);
 
       expect(mockCoreLike).toHaveBeenCalledTimes(1);
+      expect(mockCoreLike).toHaveBeenCalledWith();
       expect(likeFollowUp).not.toHaveBeenCalled();
+      expect(logLikeGeneratedAnswer).not.toHaveBeenCalled();
     });
 
     it('should dispatch likeFollowUp when answerId targets a follow-up answer', () => {
       const controller = createGeneratedAnswerWithFollowUps();
 
-      controller.like('follow-1');
+      controller.like(followUpAnswerId);
 
-      expect(likeFollowUp).toHaveBeenCalledWith({answerId: 'follow-1'});
+      expect(likeFollowUp).toHaveBeenCalledWith({answerId: followUpAnswerId});
+      expect(mockCoreLike).not.toHaveBeenCalled();
+      expect(logLikeGeneratedAnswer).toHaveBeenCalledWith(followUpAnswerId);
+    });
+
+    it('should not dispatch follow-up like actions when already liked', () => {
+      engine = buildEngineWithGeneratedAnswer({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          answerId: headAnswerId,
+          liked: true,
+        },
+      });
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.like(followUpAnswerId);
+
+      expect(likeFollowUp).not.toHaveBeenCalled();
+      expect(logLikeGeneratedAnswer).not.toHaveBeenCalled();
       expect(mockCoreLike).not.toHaveBeenCalled();
     });
   });
@@ -321,24 +379,48 @@ describe('GeneratedAnswerWithFollowUps', () => {
       controller.dislike();
 
       expect(mockCoreDislike).toHaveBeenCalledTimes(1);
+      expect(mockCoreDislike).toHaveBeenCalledWith();
       expect(dislikeFollowUp).not.toHaveBeenCalled();
+      expect(logDislikeGeneratedAnswer).not.toHaveBeenCalled();
     });
 
     it('should delegate to core dislike when answerId matches head answer', () => {
       const controller = createGeneratedAnswerWithFollowUps();
 
-      controller.dislike('head-id');
+      controller.dislike(headAnswerId);
 
       expect(mockCoreDislike).toHaveBeenCalledTimes(1);
+      expect(mockCoreDislike).toHaveBeenCalledWith();
       expect(dislikeFollowUp).not.toHaveBeenCalled();
+      expect(logDislikeGeneratedAnswer).not.toHaveBeenCalled();
     });
 
     it('should dispatch dislikeFollowUp when answerId targets a follow-up answer', () => {
       const controller = createGeneratedAnswerWithFollowUps();
 
-      controller.dislike('follow-1');
+      controller.dislike(followUpAnswerId);
 
-      expect(dislikeFollowUp).toHaveBeenCalledWith({answerId: 'follow-1'});
+      expect(dislikeFollowUp).toHaveBeenCalledWith({
+        answerId: followUpAnswerId,
+      });
+      expect(mockCoreDislike).not.toHaveBeenCalled();
+      expect(logDislikeGeneratedAnswer).toHaveBeenCalledWith(followUpAnswerId);
+    });
+
+    it('should not dispatch follow-up dislike actions when already disliked', () => {
+      engine = buildEngineWithGeneratedAnswer({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          answerId: headAnswerId,
+          disliked: true,
+        },
+      });
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.dislike(followUpAnswerId);
+
+      expect(dislikeFollowUp).not.toHaveBeenCalled();
+      expect(logDislikeGeneratedAnswer).not.toHaveBeenCalled();
       expect(mockCoreDislike).not.toHaveBeenCalled();
     });
   });
@@ -359,26 +441,138 @@ describe('GeneratedAnswerWithFollowUps', () => {
       controller.logCopyToClipboard();
 
       expect(mockCoreCopy).toHaveBeenCalledTimes(1);
+      expect(mockCoreCopy).toHaveBeenCalledWith();
+      expect(logCopyGeneratedAnswer).not.toHaveBeenCalled();
     });
 
     it('should delegate to core logCopyToClipboard when answerId matches head answer', () => {
       const controller = createGeneratedAnswerWithFollowUps();
 
-      controller.logCopyToClipboard('head-id');
+      controller.logCopyToClipboard(headAnswerId);
 
       expect(mockCoreCopy).toHaveBeenCalledTimes(1);
+      expect(mockCoreCopy).toHaveBeenCalledWith();
+      expect(logCopyGeneratedAnswer).not.toHaveBeenCalled();
+    });
+
+    it('should dispatch copy analytics when answerId targets a follow-up answer', () => {
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.logCopyToClipboard(followUpAnswerId);
+
+      expect(logCopyGeneratedAnswer).toHaveBeenCalledWith(followUpAnswerId);
+      expect(mockCoreCopy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('logCitationClick', () => {
+    beforeEach(() => {
+      engine = buildEngineWithGeneratedAnswer({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          answerId: 'head-id',
+        },
+      });
+    });
+
+    it('should delegate to core logCitationClick when no answerId is provided', () => {
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.logCitationClick(citationId);
+
+      expect(mockCoreCitationClick).toHaveBeenCalledWith(citationId);
+      expect(logOpenGeneratedAnswerSource).not.toHaveBeenCalled();
+    });
+
+    it('should delegate to core logCitationClick when answerId matches head answer', () => {
+      engine = buildEngineWithGeneratedAnswer({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          answerId: headAnswerId,
+        },
+      });
+
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.logCitationClick(citationId, headAnswerId);
+
+      expect(mockCoreCitationClick).toHaveBeenCalledWith(citationId);
+      expect(logOpenGeneratedAnswerSource).not.toHaveBeenCalled();
+    });
+
+    it('should dispatch citation click analytics when answerId targets a follow-up answer', () => {
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.logCitationClick(citationId, followUpAnswerId);
+
+      expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(
+        citationId,
+        followUpAnswerId
+      );
+      expect(mockCoreCitationClick).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('logCitationHover', () => {
+    beforeEach(() => {
+      engine = buildEngineWithGeneratedAnswer({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          answerId: 'head-id',
+        },
+      });
+    });
+
+    it('should delegate to core logCitationHover when no answerId is provided', () => {
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.logCitationHover(citationId, 10);
+
+      expect(mockCoreCitationHover).toHaveBeenCalledWith(citationId, 10);
+      expect(logHoverCitation).not.toHaveBeenCalled();
+    });
+
+    it('should delegate to core logCitationHover when answerId matches head answer', () => {
+      engine = buildEngineWithGeneratedAnswer({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          answerId: headAnswerId,
+        },
+      });
+
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.logCitationHover(citationId, 10, headAnswerId);
+
+      expect(mockCoreCitationHover).toHaveBeenCalledWith(citationId, 10);
+      expect(logHoverCitation).not.toHaveBeenCalled();
+    });
+
+    it('should dispatch citation hover analytics when answerId targets a follow-up answer', () => {
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.logCitationHover(citationId, 10, followUpAnswerId);
+
+      expect(logHoverCitation).toHaveBeenCalledWith(
+        citationId,
+        10,
+        followUpAnswerId
+      );
+      expect(mockCoreCitationHover).not.toHaveBeenCalled();
     });
   });
 
   describe('askFollowUp method', () => {
     const question = 'Could you elaborate?';
     const conversationId = 'conversation-123';
+    const conversationToken = 'token-123';
 
     it('dispatches createFollowUpAnswer and runs the follow-up agent', () => {
       engine = buildEngineWithGeneratedAnswer({
         followUpAnswers: {
           ...getFollowUpAnswersInitialState(),
           conversationId,
+          conversationToken,
         },
       });
       const controller = createGeneratedAnswerWithFollowUps();
@@ -392,6 +586,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
           forwardedProps: {
             q: question,
             conversationId,
+            conversationToken,
             accessToken: 'foo',
           },
         },
@@ -409,12 +604,43 @@ describe('GeneratedAnswerWithFollowUps', () => {
     });
 
     it('does not run the agent when the conversationId is missing', () => {
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.askFollowUp(question);
 
       expect(mockCreateFollowUpAnswer).not.toHaveBeenCalled();
       expect(mockFollowUpAgent.runAgent).not.toHaveBeenCalled();
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        'Missing conversationId when generating a follow-up answer. ' +
+          'The generateFollowUpAnswer action requires an existing conversation.'
+      );
+      consoleWarnSpy.mockRestore();
+    });
+
+    it('does not run the agent when the conversationToken is missing', () => {
+      engine = buildEngineWithGeneratedAnswer({
+        followUpAnswers: {
+          ...getFollowUpAnswersInitialState(),
+          conversationId,
+        },
+      });
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.askFollowUp(question);
+
+      expect(mockCreateFollowUpAnswer).not.toHaveBeenCalled();
+      expect(mockFollowUpAgent.runAgent).not.toHaveBeenCalled();
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        'Missing conversationToken when generating a follow-up answer. ' +
+          'The generateFollowUpAnswer action requires an existing conversation.'
+      );
+      consoleWarnSpy.mockRestore();
     });
 
     it('dispatches activeFollowUpStartFailed and logs when the agent fails to start', async () => {
@@ -422,6 +648,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
         followUpAnswers: {
           ...getFollowUpAnswersInitialState(),
           conversationId,
+          conversationToken,
         },
       });
       const controller = createGeneratedAnswerWithFollowUps();

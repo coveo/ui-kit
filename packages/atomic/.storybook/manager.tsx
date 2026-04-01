@@ -115,7 +115,7 @@ const coveoTheme = create({
   brandTitle: 'Coveo Docs',
   brandUrl: 'https://docs.coveo.com/en/0',
   brandTarget: '_blank',
-  brandImage: '/coveo-logo.svg',
+  brandImage: './coveo-logo.svg',
 
   // Colors
   colorPrimary: COVEO_PRIMARY,

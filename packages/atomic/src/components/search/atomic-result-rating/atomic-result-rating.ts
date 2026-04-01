@@ -14,8 +14,8 @@ import {bindings} from '@/src/decorators/bindings.js';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import Star from '@/src/images/star.svg';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
+import Star from '../../../images/star.svg';
 
 /**
  * The `atomic-result-rating` element renders a star rating.

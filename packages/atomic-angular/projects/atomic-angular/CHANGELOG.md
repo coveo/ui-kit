@@ -1,3 +1,9 @@
+## <small>3.10.6 (2026-03-18)</small>
+
+* chore(atomic-angular): turbod atomic-angular build (#7228) ([b803043](https://github.com/coveo/ui-kit/commits/b803043)), closes [#7228](https://github.com/coveo/ui-kit/issues/7228)
+
+
+
 ## <small>3.10.4 (2026-03-04)</small>
 
 * chore: eject angular build from Stencil (#7149) ([2c4d509](https://github.com/coveo/ui-kit/commits/2c4d509)), closes [#7149](https://github.com/coveo/ui-kit/issues/7149)
