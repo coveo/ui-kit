@@ -23,7 +23,9 @@ describe('atomic-focus-trap', () => {
         .shouldHideSelf=${options.shouldHideSelf ?? true}
         .scope=${options.scope ?? document.body}
       >
-        ${options.children ? html`${options.children}` : html`<button>Test Button</button>`}
+        ${options.children
+          ? html`${options.children}`
+          : html`<button>Test Button</button>`}
       </atomic-focus-trap>`
     );
 

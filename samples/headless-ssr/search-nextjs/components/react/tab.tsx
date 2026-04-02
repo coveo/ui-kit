@@ -17,7 +17,7 @@ export default function Tab({
 }) {
   const tabManager = useTabManager();
 
-  // biome-ignore lint/suspicious/noImplicitAnyLet: <>
+  // oxlint-disable-next-line oxc/no-implicit-any-let -- <>
   let controller;
 
   if (tabName === 'all') {

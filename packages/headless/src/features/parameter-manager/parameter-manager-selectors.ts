@@ -42,7 +42,7 @@ export function getFacets<Value, Request, Parameters>(
       const selectedValues = valuesSelector(request);
       return selectedValues.length ? {[facetId]: selectedValues} : {};
     })
-    // biome-ignore lint/performance/noAccumulatingSpread: <>
+    // oxlint-disable-next-line oxc/no-accumulating-spread -- <>
     .reduce((acc, obj) => ({...acc, ...obj}), {});
 
   return Object.keys(facets).length ? {[out]: facets} : {};

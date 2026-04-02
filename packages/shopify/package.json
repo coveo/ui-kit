@@ -1,18 +1,18 @@
 {
   "name": "@coveo/shopify",
+  "version": "1.9.21",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/coveo/ui-kit.git",
     "directory": "packages/shopify"
   },
-  "main": "./dist/headless.esm.js",
-  "module": "./dist/headless.esm.js",
-  "license": "Apache-2.0",
-  "version": "1.9.19",
   "files": [
     "dist/"
   ],
   "type": "module",
+  "main": "./dist/headless.esm.js",
+  "module": "./dist/headless.esm.js",
   "exports": {
     ".": {
       "types": "./dist/headless/index.d.ts",
@@ -55,14 +55,14 @@
     "release:phase1": "pnpm --filter @coveo/ci bump",
     "npm:publish": "pnpm --filter @coveo/ci npm-publish"
   },
+  "dependencies": {
+    "@coveo/headless": "workspace:*",
+    "@coveo/relay": "catalog:",
+    "uuid": "^13.0.0"
+  },
   "devDependencies": {
     "@types/node": "catalog:",
     "vitest": "catalog:"
-  },
-  "dependencies": {
-    "@coveo/headless": "workspace:*",
-    "@coveo/relay": "2.0.4",
-    "uuid": "^13.0.0"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0 || ^24.11.0"

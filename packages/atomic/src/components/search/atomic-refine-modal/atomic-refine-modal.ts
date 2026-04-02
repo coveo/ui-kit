@@ -94,12 +94,12 @@ export class AtomicRefineModal
 {
   static styles: CSSResultGroup = [
     css`
-    @reference '../../../utils/tailwind.global.tw.css';
+      @reference '../../../utils/tailwind.global.tw.css';
 
-    select:hover + div,
-    select:focus-visible + div {
-      @apply text-primary-light;
-    }
+      select:hover + div,
+      select:focus-visible + div {
+        @apply text-primary-light;
+      }
     `,
   ];
 

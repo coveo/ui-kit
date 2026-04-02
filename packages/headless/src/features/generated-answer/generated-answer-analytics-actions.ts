@@ -253,7 +253,8 @@ export const logGeneratedAnswerFeedback = (
 export const logGeneratedAnswerStreamEnd = (
   answerGenerated: boolean,
   answerId?: string,
-  answerTextIsEmpty?: boolean
+  answerTextIsEmpty?: boolean,
+  conversationId?: string
 ): CustomAction =>
   makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/streamEnd',
@@ -272,6 +273,7 @@ export const logGeneratedAnswerStreamEnd = (
         generativeQuestionAnsweringId,
         answerGenerated,
         answerTextIsEmpty: resolvedAnswerTextIsEmpty,
+        ...(conversationId && {conversationId}),
       });
     },
     analyticsType: 'Rga.AnswerReceived',

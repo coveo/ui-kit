@@ -3,33 +3,34 @@ title: v2 to v3
 group: Upgrade
 slug: upgrade/v2-to-v3
 ---
+
 # Upgrade from v2 to v3
+
 [Headless](https://docs.coveo.com/en/lcdf0493/) v3 introduces changes and innovations that align with the latest evolution of the [Coveo Platform](https://docs.coveo.com/en/186/).
 
-<dl><dt><strong>❗ IMPORTANT: The following are breaking changes from Headless v2 to v3</strong></dt><dd>
-
-</dd></dl>
+> [!IMPORTANT]
+>
+> The following are breaking changes from Headless v2 to v3.
 
 ## Migration to Coveo Event Protocol
 
-Coveo [Event Protocol](https://docs.coveo.com/en/headless/latest/usage/headless-usage-analytics/headless-ep/) becomes the new default protocol.
+Coveo [Event Protocol](../usage/usage-analytics/event-protocol.html) becomes the new default protocol.
 In other words, the default value of `configuration.analytics.analyticsMode` in the Engine is now `next` instead of `legacy`.
 
 If you’re using the default value in v3 and aren’t yet ready to [migrate to the new protocol](https://docs.coveo.com/en/o88d0509/), set the value to `legacy` to continue using the Coveo UA protocol.
 
-<dl><dt><strong>❗ IMPORTANT</strong></dt><dd>
-
-Only [Coveo for Commerce](https://docs.coveo.com/en/1499/) supports EP at the moment.
-For all other implementations, set `analyticsMode` to `legacy` when upgrading to v3.
-</dd></dl>
+> [!IMPORTANT]
+>
+> Only [Coveo for Commerce](https://docs.coveo.com/en/1499/) supports EP at the moment.
+> For all other implementations, set `analyticsMode` to `legacy` when upgrading to v3.
 
 ```ts
 const engine = buildSearchEngine({
-    configuration: {
-        // ...rest of configuration
-        analytics: {analyticsMode: 'legacy'},
-    }
-})
+  configuration: {
+    // ...rest of configuration
+    analytics: {analyticsMode: 'legacy'},
+  },
+});
 ```
 
 ### Removal of `analyticsClientMiddleware` function
@@ -40,15 +41,18 @@ As part of the migration to support Coveo Event Protocol (EP), [Headless](https:
 
 ```ts
 const engine = buildSearchEngine({
-    configuration: {
-        // ...rest of configuration
-        analytics: {
-            analyticsClientMiddleware: (eventName: string, payload: Record<string, unknown>) => {
-                // ...
-            }
-        }
-    }
-})
+  configuration: {
+    // ...rest of configuration
+    analytics: {
+      analyticsClientMiddleware: (
+        eventName: string,
+        payload: Record<string, unknown>
+      ) => {
+        // ...
+      },
+    },
+  },
+});
 ```
 
 There’s no alternative when using EP, as EP is meant to be more streamlined, which results in cleaner data and more powerful [machine learning](https://docs.coveo.com/en/188/) [models](https://docs.coveo.com/en/1012/).
@@ -58,16 +62,16 @@ When using the legacy Coveo UA protocol, you can continue using `analyticsClient
 
 ```ts
 const engine = buildSearchEngine({
-    configuration: {
-        // ...rest of configuration
-        analytics: {
-            analyticsMode: 'legacy',
-            analyticsClientMiddleware: (eventName: string, payload: any) => {
-                // ...
-            }
-        }
-    }
-})
+  configuration: {
+    // ...rest of configuration
+    analytics: {
+      analyticsMode: 'legacy',
+      analyticsClientMiddleware: (eventName: string, payload: any) => {
+        // ...
+      },
+    },
+  },
+});
 ```
 
 ## Organization endpoints
@@ -82,12 +86,12 @@ Starting with Headless v3, the usage of organization endpoints will be enforced 
 import {buildSearchEngine} from '@coveo/headless';
 
 const engine = buildSearchEngine({
-    configuration: {
-        // ...
-        organizationId: '<ORGANIZATION_ID>',
-        organizationEndpoints: getOrganizationEndpoints('<ORGANIZATION_ID>')
-    }
-})
+  configuration: {
+    // ...
+    organizationId: '<ORGANIZATION_ID>',
+    organizationEndpoints: getOrganizationEndpoints('<ORGANIZATION_ID>'),
+  },
+});
 ```
 
 **Headless Version 3**
@@ -96,11 +100,11 @@ const engine = buildSearchEngine({
 import {buildSearchEngine} from '@coveo/headless';
 
 const engine = buildSearchEngine({
-    configuration: {
-        // ...
-        organizationId: '<ORGANIZATION_ID>',
-    }
-})
+  configuration: {
+    // ...
+    organizationId: '<ORGANIZATION_ID>',
+  },
+});
 ```
 
 For [HIPAA](https://docs.coveo.com/en/1853/) organizations, rather than specifying the `hipaa` argument in the `getOrganizationEndpoints` function, set the `environment` property to `hipaa` in your engine configuration.
@@ -111,12 +115,15 @@ For [HIPAA](https://docs.coveo.com/en/1853/) organizations, rather than specifyi
 import {buildSearchEngine} from '@coveo/headless';
 
 const engine = buildSearchEngine({
-    configuration: {
-        // ...
-        organizationId: '<ORGANIZATION_ID>',
-        organizationEndpoints: getOrganizationEndpoints('<ORGANIZATION_ID>', 'hipaa')
-    }
-})
+  configuration: {
+    // ...
+    organizationId: '<ORGANIZATION_ID>',
+    organizationEndpoints: getOrganizationEndpoints(
+      '<ORGANIZATION_ID>',
+      'hipaa'
+    ),
+  },
+});
 ```
 
 **Headless Version 3**
@@ -125,12 +132,12 @@ const engine = buildSearchEngine({
 import {buildSearchEngine} from '@coveo/headless';
 
 const engine = buildSearchEngine({
-    configuration: {
-        // ...
-        organizationId: '<ORGANIZATION_ID>',
-        environment: 'hipaa',
-    }
-})
+  configuration: {
+    // ...
+    organizationId: '<ORGANIZATION_ID>',
+    environment: 'hipaa',
+  },
+});
 ```
 
 For most implementations, this is the extent of the changes.
@@ -143,16 +150,15 @@ Headless v3 introduces the `search.proxyBaseUrl`, `analytics.proxyBaseUrl`, and 
 import {buildSearchEngine} from '@coveo/headless';
 
 const engine = buildSearchEngine({
-    configuration: {
-        // ...
-        organizationId: 'my-org-id',
-        organizationEndpoints:
-            {
-                ...getOrganizationEndpoints('my-org-id'),
-                search: 'https://myproxy.com/search',
-            }
-    }
-})
+  configuration: {
+    // ...
+    organizationId: 'my-org-id',
+    organizationEndpoints: {
+      ...getOrganizationEndpoints('my-org-id'),
+      search: 'https://myproxy.com/search',
+    },
+  },
+});
 ```
 
 **Headless Version 3**
@@ -161,14 +167,14 @@ const engine = buildSearchEngine({
 import {buildSearchEngine} from '@coveo/headless';
 
 const engine = buildSearchEngine({
-    configuration: {
-        // ...
-        organizationId: 'my-org-id',
-        search: {
-            proxyBaseUrl: 'https://myproxy.com/search',
-        },
-    }
-})
+  configuration: {
+    // ...
+    organizationId: 'my-org-id',
+    search: {
+      proxyBaseUrl: 'https://myproxy.com/search',
+    },
+  },
+});
 ```
 
 If you were using the `getOrganizationEndpoints` function for some other purpose, you can use the new `getOrganizationEndpoint`, `getAdministrationOrganizationEndpoint`, `getSearchApiBaseUrl` or `getAnalyticsNextApiBaseUrl` functions instead.
@@ -245,10 +251,10 @@ If you’re using them, import then directly from Redux.
 
 ### DidYouMean `queryCorrectionMode`
 
-The [`queryCorrectionMode`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.DidYouMeanOptions.html) default value is now `next` rather than `legacy`.
+The [`queryCorrectionMode`](../../interfaces/Search.DidYouMeanOptions.html) default value is now `next` rather than `legacy`.
 This means that the default behavior of the `didYouMean` controller will be to use a [query suggestions](https://docs.coveo.com/en/1015/) [model](https://docs.coveo.com/en/1012/) for query correction rather than the legacy [index](https://docs.coveo.com/en/204/) mechanism.
 
-### GeneratedAnswer [`sendFeedback`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.GeneratedAnswer.html#sendfeedback)
+### GeneratedAnswer [`sendFeedback`](../../interfaces/Search.GeneratedAnswer.html#sendfeedback)
 
 The `feedback` parameter of the `sendFeedback` method was changed.
 In v2, it could have either the `GeneratedAnswerFeedback` or `GeneratedAnswerFeedbackV2` type, which were defined as follows:
@@ -334,13 +340,13 @@ The undocumented `SearchBoxSuggestionsEvent` type now takes in a search box cont
 **Headless Version 2**
 
 ```ts
-const event: SearchBoxSuggestionsEvent,
+const event: SearchBoxSuggestionsEvent;
 ```
 
 **Headless Version 3**
 
 ```ts
-const event: SearchBoxSuggestionsEvent<SearchBoxController, AnyBindings>,
+const event: SearchBoxSuggestionsEvent<SearchBoxController, AnyBindings>;
 ```
 
 ## Removals
@@ -349,12 +355,12 @@ const event: SearchBoxSuggestionsEvent<SearchBoxController, AnyBindings>,
 
 Many actions, properties, types and methods related to the Relevance Generative Answering `rephrase` option were removed or modified in v3, since the option itself is no longer supported.
 
-* All [`rephrase`](https://docs.coveo.com/en/headless/2.80.7/reference/search/controllers/generated-answer#rephrase-method) methods were removed from all `*-generated-answer` controllers.
-* The undocumented `logRephraseGeneratedAnswer` analytics action was removed.
-* The undocumented `rephraseGeneratedAnswer` search action cause was removed.
-* The `GeneratedResponseFormat.answerStyle` was removed from the [GeneratedAnswer `state`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.GeneratedAnswer.html#state).
-* The `GeneratedAnswerStyle` type was removed.
-* The undocumented `updateResponseFormat` action now only accepts the `contentFormat` option, and not the answer style.
+- All [`rephrase`](https://docs.coveo.com/en/headless/2.80.7/reference/search/controllers/generated-answer#rephrase-method) methods were removed from all `*-generated-answer` controllers.
+- The undocumented `logRephraseGeneratedAnswer` analytics action was removed.
+- The undocumented `rephraseGeneratedAnswer` search action cause was removed.
+- The `GeneratedResponseFormat.answerStyle` was removed from the [GeneratedAnswer `state`](../../interfaces/Search.GeneratedAnswer.html#state).
+- The `GeneratedAnswerStyle` type was removed.
+- The undocumented `updateResponseFormat` action now only accepts the `contentFormat` option, and not the answer style.
 
 ### Sub-packages
 
@@ -366,16 +372,17 @@ See [Headless for commerce](https://docs.coveo.com/en/o52e9091/).
 
 The following were removed in v3:
 
-* [`buildCaseAssistQuickview`](https://docs.coveo.com/en/headless/2.80.7/reference/case-assist/controllers/case-assist-quickview#buildcaseassistquickview), which was a duplicate export of [`buildQuickview`](https://docs.coveo.com/en/headless/latest/reference/functions/Search.buildQuickview.html) has been removed.
-* [`buildCaseAssistInteractiveResult`](https://docs.coveo.com/en/headless/2.80.7/reference/case-assist/controllers/case-assist-interactive-result#buildcaseassistinteractiveresult), which was a duplicate export of [`buildInteractiveResult`](https://docs.coveo.com/en/headless/latest/reference/functions/Search.buildInteractiveResult.html) has been removed.
-* `browserPostLogHook`, which used to be exposed in the engine configuration options, has been removed.
-It wasn’t doing anything.
-* The quickview `onlyContentURL` initialization option has been removed from [`Quickview`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.QuickviewOptions.html) and [`CaseAssistQuickview`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Case_Assist.QuickviewOptions.html) controllers because it was always set to `true`.
+- [`buildCaseAssistQuickview`](https://docs.coveo.com/en/headless/2.80.7/reference/case-assist/controllers/case-assist-quickview#buildcaseassistquickview), which was a duplicate export of [`buildQuickview`](../../functions/Search.buildQuickview.html) has been removed.
+- [`buildCaseAssistInteractiveResult`](https://docs.coveo.com/en/headless/2.80.7/reference/case-assist/controllers/case-assist-interactive-result#buildcaseassistinteractiveresult), which was a duplicate export of [`buildInteractiveResult`](../../functions/Search.buildInteractiveResult.html) has been removed.
+- `browserPostLogHook`, which used to be exposed in the engine configuration options, has been removed.
+  It wasn’t doing anything.
+- The quickview `onlyContentURL` initialization option has been removed from [`Quickview`](../../interfaces/Search.QuickviewOptions.html) and [`CaseAssistQuickview`](../../interfaces/Case_Assist.QuickviewOptions.html) controllers because it was always set to `true`.
 
   Similarly, the `content` state attribute has been removed from those controllers, as it was always empty.
-* The undocumented `showMoreSmartSnippetSuggestion` and `showLessSmartSnippetSuggestion` search page events have been removed.
-* [CategoryFacet `state`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.CategoryFacet.html#state) properties `parents` and `values` have been removed.
-Use `valuesAsTrees` and `selectedValueAncestry` instead.
+
+- The undocumented `showMoreSmartSnippetSuggestion` and `showLessSmartSnippetSuggestion` search page events have been removed.
+- [CategoryFacet `state`](../../interfaces/Search.CategoryFacet.html#state) properties `parents` and `values` have been removed.
+  Use `valuesAsTrees` and `selectedValueAncestry` instead.
 
   While `values` was a flat list of all values, `valuesAsTrees` contains the root facet values, whose children, if any, are accessible via `valuesAsTrees[i].children[j]`.
 
@@ -479,7 +486,7 @@ Use `valuesAsTrees` and `selectedValueAncestry` instead.
 
 ### Actions
 
-#### [`logExpandToFullUI` parameters](https://docs.coveo.com/en/headless/latest/reference/interfaces/Insight.InsightSearchAnalyticsActionCreators.html#logexpandtofullui)
+#### [`logExpandToFullUI` parameters](../../interfaces/Insight.InsightSearchAnalyticsActionCreators.html#logexpandtofullui)
 
 The `LogExpandToFullUI` action no longer uses the `caseId` and `caseNumber` parameters.
 They are rather fetched automatically from the Headless engine state.
@@ -499,7 +506,7 @@ If you were using this type, switch to the undocumented `SearchBoxSuggestionsEve
 **Headless Version 2**
 
 ```ts
-const event: SearchBoxSuggestionsEvent,
+const event: SearchBoxSuggestionsEvent;
 ```
 
 **Headless Version 3**
@@ -507,3 +514,4 @@ const event: SearchBoxSuggestionsEvent,
 ```ts
 const event: SearchBoxSuggestionsEvent<SearchBoxController, AnyBindings>,
 --
+```

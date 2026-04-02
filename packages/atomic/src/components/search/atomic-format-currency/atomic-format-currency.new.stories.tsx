@@ -114,7 +114,7 @@ export const Result: Story = {
       ...response,
       results: (response as SearchResponse).results
         .slice(0, 1)
-        // biome-ignore lint/suspicious/noExplicitAny: raw fields are dynamically added
+        // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- raw fields are dynamically added
         .map((result: any) => ({
           ...result,
           raw: {

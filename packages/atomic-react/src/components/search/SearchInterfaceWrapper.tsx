@@ -3,9 +3,9 @@ import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
 } from '@coveo/headless';
-// biome-ignore lint/style/useImportType: <React is needed>
+// oxlint-disable-next-line @typescript-eslint/consistent-type-imports -- <React is needed>
 import React, {useEffect, useRef} from 'react';
-import {AtomicSearchInterface} from './components';
+import {AtomicSearchInterface} from './components.js';
 
 type AtomicSearchInterfaceProps = React.ComponentProps<
   typeof AtomicSearchInterface
@@ -15,11 +15,10 @@ type ExecuteSearch = AtomicSearchInterfaceProps['executeFirstSearch'];
 /**
  * The properties of the AtomicSearchInterface component
  */
-interface WrapperProps
-  extends Omit<
-    AtomicSearchInterfaceProps,
-    'i18n' | 'pipeline' | 'searchHub' | 'analytics'
-  > {
+interface WrapperProps extends Omit<
+  AtomicSearchInterfaceProps,
+  'i18n' | 'pipeline' | 'searchHub' | 'analytics'
+> {
   /**
    * An optional callback function that can be used to control the execution of the first query.
    *

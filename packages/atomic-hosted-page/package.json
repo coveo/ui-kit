@@ -1,20 +1,23 @@
 {
   "name": "@coveo/atomic-hosted-page",
+  "version": "1.2.33",
   "description": "Web Component used to inject a Coveo Hosted Search Page in the DOM.",
-  "version": "1.2.31",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/coveo/ui-kit.git",
     "directory": "packages/atomic-hosted-page"
   },
+  "files": [
+    "dist/",
+    "loader/",
+    "docs/"
+  ],
   "type": "module",
-  "license": "Apache-2.0",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
-  "es2015": "dist/esm/index.mjs",
-  "es2017": "dist/esm/index.mjs",
   "types": "dist/types/components.d.ts",
   "unpkg": "dist/atomic-page/atomic-hosted-page.esm.js",
+  "es2015": "dist/esm/index.mjs",
   "exports": {
     ".": {
       "types": "./dist/types/components.d.ts",
@@ -26,11 +29,6 @@
     },
     "./dist/*": "./dist/*"
   },
-  "files": [
-    "dist/",
-    "loader/",
-    "docs/"
-  ],
   "scripts": {
     "clean": "node ../../utils/ci/rm-rf.mjs dist/*",
     "build": "node ../../utils/ci/rm-rf.mjs dist cdn && tsc --outdir dist && tsc --outdir cdn --project tsconfig.cdn.json && node ./scripts/esbuild.js",
@@ -52,5 +50,6 @@
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
-  }
+  },
+  "es2017": "dist/esm/index.mjs"
 }

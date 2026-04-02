@@ -29,6 +29,7 @@ import styles from './atomic-result-link.tw.css';
  */
 @customElement('atomic-result-link')
 @bindings()
+// oxlint-disable-next-line typescript/no-unsafe-declaration-merging
 export class AtomicResultLink
   extends LightDomMixin(SlotsForNoShadowDOMMixin(LitElement))
   implements InitializableComponent<Bindings>

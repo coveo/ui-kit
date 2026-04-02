@@ -22,7 +22,7 @@ Number steps clearly. Each step should be independently actionable.
 
 4. **Validate** - Verify the migration
    Run: `pnpm build && pnpm test`
-</example>
+   </example>
 
 **When to use:** Linear processes where each step depends on the previous.
 
@@ -43,6 +43,7 @@ What exists?
     ├─ Missing stories → Add Storybook coverage
     └─ Has stories → Update with MSW mocks
 ```
+
 </example>
 
 **When to use:** Mutually exclusive paths based on conditions.
@@ -55,6 +56,7 @@ Add validation between major phases to catch errors early.
 ### After Step 3: Transform
 
 **Checkpoint** - Before proceeding, verify:
+
 - [ ] No Stencil imports remain
 - [ ] TypeScript compiles: `pnpm build`
 - [ ] Component renders: check Storybook
@@ -72,21 +74,23 @@ Pair symptoms with causes and fixes.
 ## Troubleshooting
 
 **Build fails after decorator transformation**
+
 - Cause: Lit decorators require initializers
 - Fix: Add default values (`items: Item[] = []`)
 
 **Tests fail with "Element not found"**
+
 - Cause: Different rendering timing in Lit
 - Fix: Add `await element.updateComplete` before assertions
-</example>
+  </example>
 
 **When to use:** Workflows with common failure modes.
 
 ## Choosing a Pattern
 
-| Workflow Type | Pattern | Example |
-|---------------|---------|---------|
-| Linear process | Sequential | Migration, setup |
-| Branching logic | Decision Tree | Component type selection |
-| Error-prone steps | Checkpoints | Multi-file refactoring |
-| Known failure modes | Troubleshooting | Build/test issues |
+| Workflow Type       | Pattern         | Example                  |
+| ------------------- | --------------- | ------------------------ |
+| Linear process      | Sequential      | Migration, setup         |
+| Branching logic     | Decision Tree   | Component type selection |
+| Error-prone steps   | Checkpoints     | Multi-file refactoring   |
+| Known failure modes | Troubleshooting | Build/test issues        |

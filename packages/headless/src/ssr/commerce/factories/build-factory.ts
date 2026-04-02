@@ -59,8 +59,8 @@ export type SSRCommerceEngineOptions = Omit<
 };
 
 export type CommerceEngineDefinitionOptions<
-  TControllers extends
-    ControllerDefinitionsMap<Controller> = ControllerDefinitionsMap<Controller>,
+  TControllers extends ControllerDefinitionsMap<Controller> =
+    ControllerDefinitionsMap<Controller>,
 > = EngineDefinitionOptions<SSRCommerceEngineOptions, TControllers> & {
   /**
    * Callback invoked when the access token changes.

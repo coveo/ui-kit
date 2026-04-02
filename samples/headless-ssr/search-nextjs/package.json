@@ -1,8 +1,8 @@
 {
   "name": "@samples/headless-ssr-search-nextjs",
-  "description": "Examples of framework agnostic @coveo/headless/ssr utils and @coveo/headless-react/ssr using Next.js app router",
   "version": "0.0.0",
   "private": true,
+  "description": "Examples of framework agnostic @coveo/headless/ssr utils and @coveo/headless-react/ssr using Next.js app router",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -12,8 +12,8 @@
     "e2e:watch": "cypress open --browser chrome --e2e"
   },
   "dependencies": {
-    "@coveo/headless-react": "workspace:*",
     "@coveo/headless": "workspace:*",
+    "@coveo/headless-react": "workspace:*",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:"
@@ -23,8 +23,8 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "cypress": "catalog:",
-    "cypress-web-vitals": "4.2.0",
     "cypress-repeat": "catalog:",
+    "cypress-web-vitals": "4.2.0",
     "typescript": "catalog:"
   }
 }

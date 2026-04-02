@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: unit test */
+/* oxlint-disable @typescript-eslint/no-explicit-any -- unit test */
 
 import type {AgentSubscriber} from '@ag-ui/client';
 import type {Dispatch} from '@reduxjs/toolkit';
@@ -213,6 +213,7 @@ describe('createFollowUpStrategy', () => {
     strategy.onRunFinishedEvent!({
       event: {
         result: {completionReason: 'ANSWERED'},
+        threadId: 'conversation-123',
       },
     } as any);
 
@@ -220,7 +221,12 @@ describe('createFollowUpStrategy', () => {
       1,
       followUpCompleted({answerId: runId, cannotAnswer: false})
     );
-    expect(streamEndSpy).toHaveBeenCalledWith(true, runId, true);
+    expect(streamEndSpy).toHaveBeenCalledWith(
+      true,
+      runId,
+      true,
+      'conversation-123'
+    );
     expect(responseLinkedSpy).toHaveBeenCalledWith(runId);
     expect(dispatch).toHaveBeenNthCalledWith(2, streamEndAction);
     expect(dispatch).toHaveBeenNthCalledWith(3, responseLinkedAction);

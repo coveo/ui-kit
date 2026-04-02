@@ -8,8 +8,10 @@ import type {ControllerDefinitionWithoutProps} from '../../types/controller-defi
 
 export * from '../../../../controllers/standalone-search-box/headless-standalone-search-box.js';
 
-export interface StandaloneSearchBoxDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, StandaloneSearchBox> {}
+export interface StandaloneSearchBoxDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  StandaloneSearchBox
+> {}
 
 /**
  * Defines a `StandaloneSearchBox` controller instance.

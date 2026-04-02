@@ -1,11 +1,20 @@
 {
   "extends": ["//"],
   "tasks": {
-    "deploy": {
-      "outputs": ["dist/**"]
+    "build": {
+      "dependsOn": [
+        "@coveo/atomic#build",
+        "@coveo/atomic-angular#build",
+        "@coveo/atomic-react#build",
+        "@coveo/atomic-hosted-page#build",
+        "@coveo/bueno#build",
+        "@coveo/headless#build",
+        "@coveo/shopify#build"
+      ],
+      "outputs": ["dist"]
     },
-    "serve": {
-      "dependsOn": ["deploy"],
+    "start": {
+      "dependsOn": ["build"],
       "outputs": [],
       "persistent": true,
       "cache": false

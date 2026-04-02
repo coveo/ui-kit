@@ -1,14 +1,20 @@
 {
   "name": "@coveo/headless",
+  "version": "3.48.1",
   "homepage": "https://docs.coveo.com/en/headless/latest/",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/coveo/ui-kit.git",
     "directory": "packages/headless"
   },
+  "files": [
+    "dist/"
+  ],
+  "type": "module",
   "main": "./dist/cjs/headless.cjs",
   "module": "./dist/esm/index.js",
-  "type": "module",
+  "types": "./dist/definitions/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/definitions/index.d.ts",
@@ -66,12 +72,6 @@
     },
     "./package.json": "./package.json"
   },
-  "types": "./dist/definitions/index.d.ts",
-  "license": "Apache-2.0",
-  "version": "3.47.2",
-  "files": [
-    "dist/"
-  ],
   "scripts": {
     "dev": "concurrently \"pnpm run build:definitions -w\" \"pnpm run build:bundles dev\"",
     "build": "pnpm run build:definitions && pnpm run build:bundles && pnpm run build:esm",
@@ -97,20 +97,10 @@
     "serve:typedoc": "live-server ./docs",
     "npm:publish": "pnpm --filter @coveo/ci npm-publish"
   },
-  "peerDependencies": {
-    "encoding": "^0.1.13",
-    "pino-pretty": "^6.0.0 || ^10.0.0 || ^11.0.0 || ^13.0.0",
-    "typescript": ">=5.0.0"
-  },
-  "peerDependenciesMeta": {
-    "typescript": {
-      "optional": true
-    }
-  },
   "dependencies": {
     "@ag-ui/client": "0.0.45",
     "@coveo/bueno": "workspace:*",
-    "@coveo/relay": "2.0.4",
+    "@coveo/relay": "catalog:",
     "@coveo/relay-event-types": "catalog:",
     "@reduxjs/toolkit": "2.11.2",
     "abortcontroller-polyfill": "1.7.8",
@@ -130,6 +120,16 @@
     "node-fetch": "3.3.2",
     "typedoc": "catalog:",
     "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "encoding": "^0.1.13",
+    "pino-pretty": "^6.0.0 || ^10.0.0 || ^11.0.0 || ^13.0.0",
+    "typescript": ">=5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0 || ^24.11.0"

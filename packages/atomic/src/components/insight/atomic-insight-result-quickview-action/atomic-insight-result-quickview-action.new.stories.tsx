@@ -12,10 +12,10 @@ import {wrapInInsightResultTemplate} from '@/storybook-utils/insight/insight-res
 const mockInsightApi = new MockInsightApi();
 const mockSearchApi = new MockSearchApi();
 
-// biome-ignore lint/suspicious/noExplicitAny: Mock API response types are loosely defined
+// oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Mock API response types are loosely defined
 mockInsightApi.searchEndpoint.mock((response: any) => ({
   ...response,
-  // biome-ignore lint/suspicious/noExplicitAny: Mock API result types are loosely defined
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Mock API result types are loosely defined
   results: response.results.slice(0, 3).map((result: any) => ({
     ...result,
     flags: 'HasHtmlVersion;HasThumbnail',

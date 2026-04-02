@@ -61,15 +61,14 @@ export class AtomicInsightResultChildren
   implements InitializableComponent<InsightBindings>
 {
   static styles = css`
-  @reference '../../../utils/tailwind.global.tw.css';
-@import '../../../components/common/result-children/result-children.pcss';
+    @reference '../../../utils/tailwind.global.tw.css';
+    @import '../../../components/common/result-children/result-children.pcss';
 
-[part='children-root'] {
-  @apply border-neutral border-l;
-  padding-left: 1rem;
-  margin-top: 1rem;
-}
-
+    [part='children-root'] {
+      @apply border-neutral border-l;
+      padding-left: 1rem;
+      margin-top: 1rem;
+    }
   `;
 
   /**

@@ -252,23 +252,23 @@ describe('analytics-utils', () => {
         });
       });
 
-      describe.each([
-        'analyticsPayloadBuilder',
-        'analyticsType',
-      ] as const)('when %s is not given', (_missingArg) => {
-        it('should not send any analytics when called', async () => {
-          const {[_missingArg]: _, ...makeAnalyticsParam} = {
-            ...baseMakeAnalyticParams,
-            ...additionalMakeAnalyticParamsForRelay,
-          };
-          const action = makeAnalyticsAction(makeAnalyticsParam);
+      describe.each(['analyticsPayloadBuilder', 'analyticsType'] as const)(
+        'when %s is not given',
+        (_missingArg) => {
+          it('should not send any analytics when called', async () => {
+            const {[_missingArg]: _, ...makeAnalyticsParam} = {
+              ...baseMakeAnalyticParams,
+              ...additionalMakeAnalyticParamsForRelay,
+            };
+            const action = makeAnalyticsAction(makeAnalyticsParam);
 
-          await engine.dispatch(action);
+            await engine.dispatch(action);
 
-          expect(fakeCAJSLog).not.toHaveBeenCalled();
-          expect(relayEmitSpy).not.toHaveBeenCalled();
-        });
-      });
+            expect(fakeCAJSLog).not.toHaveBeenCalled();
+            expect(relayEmitSpy).not.toHaveBeenCalled();
+          });
+        }
+      );
     });
 
     describe('when analyticsMode=legacy', () => {

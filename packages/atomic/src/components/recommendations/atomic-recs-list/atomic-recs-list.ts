@@ -40,7 +40,8 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {randomID} from '@/src/utils/utils';
-import '../atomic-recs-result/atomic-recs-result';
+import '@/src/components/recommendations/atomic-recs-result/atomic-recs-result';
+import '@/src/components/recommendations/atomic-recs-result-template/atomic-recs-result-template';
 
 /**
  * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
@@ -64,32 +65,35 @@ export class AtomicRecsList
   implements InitializableComponent<RecsBindings>
 {
   static styles: CSSResultGroup = css`
-  @reference '../../../utils/tailwind.global.tw.css';
-  
-  @import '../../common/item-list/styles/mixins.pcss';
-@import '../../common/item-list/styles/placeholders.pcss';
+    @reference '../../../utils/tailwind.global.tw.css';
 
-:host {
-  @apply atomic-grid-clickable-elements;
-  @apply atomic-grid-display-common;
-  display: block;
+    @import '../../common/item-list/styles/mixins.pcss';
+    @import '../../common/item-list/styles/placeholders.pcss';
 
-  /**
+    :host {
+      @apply atomic-grid-clickable-elements;
+      @apply atomic-grid-display-common;
+      display: block;
+
+      /**
  * @prop --atomic-recs-number-of-columns: Number of columns for the recommendation list.
  */
-  .list-root {
-    @apply atomic-grid-with-cards;
-    grid-template-columns: repeat(var(--atomic-recs-number-of-columns, 1), minmax(0, 1fr));
-  }
+      .list-root {
+        @apply atomic-grid-with-cards;
+        grid-template-columns: repeat(
+          var(--atomic-recs-number-of-columns, 1),
+          minmax(0, 1fr)
+        );
+      }
 
-  [part='label'] {
-    @apply font-sans text-2xl font-bold;
-  }
+      [part='label'] {
+        @apply font-sans text-2xl font-bold;
+      }
 
-  atomic-result:not(.hydrated) {
-    visibility: hidden;
-  }
-}
+      atomic-result:not(.hydrated) {
+        visibility: hidden;
+      }
+    }
   `;
 
   private static readonly propsSchema = new Schema({

@@ -1,6 +1,7 @@
 ---
 title: Contributing
 ---
+
 # Contributing to @coveo/headless-react
 
 ## Entry points

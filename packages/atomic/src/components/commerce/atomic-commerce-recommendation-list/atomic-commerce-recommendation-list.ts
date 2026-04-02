@@ -71,33 +71,34 @@ export class AtomicCommerceRecommendationList
 {
   static styles: CSSResultGroup = [
     placeholderStyles,
-    css`@reference "../../common/item-list/styles/mixins.pcss";
-  
-  :host {
-    @apply atomic-grid-clickable-elements;
-    @apply atomic-grid-display-common;
-  
-    /**
+    css`
+      @reference "../../common/item-list/styles/mixins.pcss";
+
+      :host {
+        @apply atomic-grid-clickable-elements;
+        @apply atomic-grid-display-common;
+
+        /**
      * @prop --atomic-recs-number-of-columns: Number of columns for the recommendation list.
      * @prop --atomic-recs-number-of-rows: Number of rows for the recommendation list.
      */
-    .list-root {
-      @apply atomic-grid-with-cards;
-      grid-template-columns: repeat(
-          var(--atomic-recs-number-of-columns, 1),
-          minmax(0, 1fr)
-        );
-      grid-template-rows: repeat(
-        var(--atomic-recs-number-of-rows, 1),
-        minmax(0, 1fr)
-      );
-    }
-  
-    [part="label"] {
-      @apply font-sans text-2xl font-bold;
-    }
-  }
-  `,
+        .list-root {
+          @apply atomic-grid-with-cards;
+          grid-template-columns: repeat(
+            var(--atomic-recs-number-of-columns, 1),
+            minmax(0, 1fr)
+          );
+          grid-template-rows: repeat(
+            var(--atomic-recs-number-of-rows, 1),
+            minmax(0, 1fr)
+          );
+        }
+
+        [part='label'] {
+          @apply font-sans text-2xl font-bold;
+        }
+      }
+    `,
   ];
 
   public recommendations!: Recommendations;
@@ -527,11 +528,9 @@ export class AtomicCommerceRecommendationList
             .density=${props.density}
             .display=${props.display}
             .imageSize=${props.imageSize}
-            .linkContent=${
-              props.display === 'grid'
-                ? this.productTemplateProvider.getLinkTemplateContent(product)
-                : this.productTemplateProvider.getEmptyLinkTemplateContent()
-            }
+            .linkContent=${props.display === 'grid'
+              ? this.productTemplateProvider.getLinkTemplateContent(product)
+              : this.productTemplateProvider.getEmptyLinkTemplateContent()}
             .loadingFlag=${props.loadingFlag}
             .interactiveProduct=${props.interactiveProduct}
             .product=${props.product}

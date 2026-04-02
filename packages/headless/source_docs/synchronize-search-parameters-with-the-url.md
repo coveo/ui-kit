@@ -3,17 +3,19 @@ title: Synchronize search parameters with the URL
 group: Usage
 slug: usage/synchronize-search-parameters-with-the-url
 ---
+
 # Synchronize search parameters with the URL
-Headless provides two controllers to help you keep the URL of your application in sync with your [Headless engine](https://docs.coveo.com/en/headless/latest/usage#configure-a-headless-engine) state.
+
+Headless provides two controllers to help you keep the URL of your application in sync with your [Headless engine](./index.html#configure-a-headless-engine) state.
 This article explains how to use those controllers, and why you would choose one over the other.
 
 > [!NOTE]
-> 
-> The context where you would make use of those controllers is during the initialization of your Headless application, so you may want to [review how to do so](https://docs.coveo.com/en/headless/latest/usage#initialize-your-interface) before reading this article.
+>
+> The context where you would make use of those controllers is during the initialization of your Headless application, so you may want to [review how to do so](./index.html#initialize-your-interface) before reading this article.
 
 ## `buildUrlManager`
 
-The [`UrlManager`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.UrlManager.html) controller is the faster option, taking a few minutes to set up.
+The [`UrlManager`](../../interfaces/Search.UrlManager.html) controller is the faster option, taking a few minutes to set up.
 It monitors the search parameters affecting the result list, and serializes them into a URL-ready string that contains values such as the query, sort criteria and selected facet values.
 
 **Example**
@@ -47,17 +49,18 @@ window.addEventListener('hashchange', () => { ④
     urlManager.synchronize(fragment);
 });
 ```
+
 1. Set the initial search parameters to the values in the URL when a page first loads.
 2. Update the hash when search parameters change.
 3. Using `replaceState()` instead of `pushState()` in this case ensures that the URL reflects the current state of the search page on the first interface load.
-If `pushState()` were used instead, users could possibly enter a history loop, having to click the back button multiple times without being able to return to a previous page.
-This situation happens with components such as the `Tab` component, which adds a new state to the browser history stack.
-Using `replaceState` instead replaces the current state of the browser history with a new state, effectively updating the URL without adding a new entry to the history stack.
+   If `pushState()` were used instead, users could possibly enter a history loop, having to click the back button multiple times without being able to return to a previous page.
+   This situation happens with components such as the `Tab` component, which adds a new state to the browser history stack.
+   Using `replaceState` instead replaces the current state of the browser history with a new state, effectively updating the URL without adding a new entry to the history stack.
 4. Update the search parameters when an end user manually changes the hash.
 
 ## `buildSearchParameterManager`
 
-The [`SearchParameterManager`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchParameterManager.html) controller provides the active search parameters as an object rather than a string, giving you full control over how to serialize them.
+The [`SearchParameterManager`](../../interfaces/Search.SearchParameterManager.html) controller provides the active search parameters as an object rather than a string, giving you full control over how to serialize them.
 Conversely, the controller can take in an object with search parameters with which to update the Headless engine state.
 The following sample is similar to the one above, but uses custom `serialize` and `deserialize` functions you would define yourself:
 
@@ -92,6 +95,7 @@ function deserialize(url) {
     // ...
 }
 ```
+
 1. Set the initial search parameters to the values in the URL when a page first loads.
 2. Update the URL when search parameters change.
 3. This condition handles cases that could cause bugs in some interfaces.

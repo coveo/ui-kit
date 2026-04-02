@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/suspicious/noTemplateCurlyInString: <> */
+/* oxlint-disable no-template-curly-in-string -- <> */
 import {type Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import type {CommerceBindings} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
