@@ -28,10 +28,8 @@ describe('atomic-insight-tabs', () => {
     const {element} = await renderInAtomicInsightInterface<AtomicInsightTabs>({
       template: html`
         <atomic-insight-tabs>
-          ${
-            slottedContent ??
-            html`<div class="test-tab">Default Tab Content</div>`
-          }
+          ${slottedContent ??
+          html`<div class="test-tab">Default Tab Content</div>`}
         </atomic-insight-tabs>
       `,
       selector: 'atomic-insight-tabs',

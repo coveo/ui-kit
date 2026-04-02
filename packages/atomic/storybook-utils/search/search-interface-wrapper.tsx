@@ -2,11 +2,11 @@ import {
   SearchEngineConfiguration,
   getSampleSearchEngineConfiguration,
 } from '@coveo/headless';
-import { Decorator, StoryContext } from '@storybook/web-components-vite';
-import { html } from 'lit';
+import {Decorator, StoryContext} from '@storybook/web-components-vite';
+import {html} from 'lit';
 import type * as _ from '../../src/components.js';
-import { spreadProps } from '@open-wc/lit-helpers';
-import { AtomicSearchInterface } from '@/src/components/search/atomic-search-interface/atomic-search-interface';
+import {spreadProps} from '@open-wc/lit-helpers';
+import {AtomicSearchInterface} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 
 export const wrapInSearchInterface = ({
   config = {},
@@ -21,16 +21,17 @@ export const wrapInSearchInterface = ({
   play: (context: StoryContext) => Promise<void>;
 } => ({
   decorator: (story) => html`
-    <atomic-search-interface ${spreadProps(includeCodeRoot ? { id: 'code-root' } : {})}>
+    <atomic-search-interface
+      ${spreadProps(includeCodeRoot ? {id: 'code-root'} : {})}
+    >
       ${story()}
     </atomic-search-interface>
   `,
-  play: async ({ canvasElement, step }) => {
+  play: async ({canvasElement, step}) => {
     await customElements.whenDefined('atomic-search-interface');
-    const searchInterface =
-      canvasElement.querySelector<AtomicSearchInterface>(
-        'atomic-search-interface'
-      );
+    const searchInterface = canvasElement.querySelector<AtomicSearchInterface>(
+      'atomic-search-interface'
+    );
     await step('Render the Search Interface', async () => {
       await searchInterface!.initialize({
         ...getSampleSearchEngineConfiguration(),
@@ -49,11 +50,10 @@ export const wrapInSearchInterface = ({
 
 export const playExecuteFirstSearch: (
   context: StoryContext
-) => Promise<void> = async ({ canvasElement, step }) => {
-  const searchInterface =
-    canvasElement.querySelector<AtomicSearchInterface>(
-      'atomic-search-interface'
-    );
+) => Promise<void> = async ({canvasElement, step}) => {
+  const searchInterface = canvasElement.querySelector<AtomicSearchInterface>(
+    'atomic-search-interface'
+  );
   await step('Execute the first search', async () => {
     await searchInterface!.executeFirstSearch();
   });

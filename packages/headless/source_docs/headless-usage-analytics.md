@@ -4,6 +4,7 @@ group: Usage
 category: Usage Analytics
 slug: usage/usage-analytics/index
 ---
+
 # Usage Analytics
 
 Administrators can leverage recorded [Coveo Analytics](https://docs.coveo.com/en/182/) [data](https://docs.coveo.com/en/259/) to evaluate how users interact with a [search interface](https://docs.coveo.com/en/2741/), identify content gaps, and improve relevancy by generating and examining [dashboards](https://docs.coveo.com/en/256/) and [reports](https://docs.coveo.com/en/266/) within the [Coveo Administration Console](https://docs.coveo.com/en/183/) (see [Coveo Analytics overview](https://docs.coveo.com/en/l3bf0598/)).
@@ -35,11 +36,11 @@ Since the Headless V3 release, [Event Protocol](https://docs.coveo.com/en/o9je05
 
 ```ts
 const engine = buildSearchEngine({
-    configuration: {
-        // ...rest of configuration
-        analytics: {analyticsMode: 'legacy'},
-    }
-})
+  configuration: {
+    // ...rest of configuration
+    analytics: {analyticsMode: 'legacy'},
+  },
+});
 ```
 
 To learn more about whether you should migrate to EP, see [Migrate to Event Protocol](https://docs.coveo.com/en/o88d0509/).

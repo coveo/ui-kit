@@ -8,8 +8,10 @@ import type {ControllerDefinitionWithoutProps} from '../../types/controller-defi
 
 export * from '../../../../controllers/result-list/headless-result-list.js';
 
-export interface ResultListDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, ResultList> {}
+export interface ResultListDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  ResultList
+> {}
 
 /**
  * Defines a `ResultList` controller instance.

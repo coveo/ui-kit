@@ -25,12 +25,13 @@ describe('atomic-field-condition', () => {
     const {element} = await renderInAtomicResult<AtomicFieldCondition>({
       template: html`
         <atomic-field-condition
-        if-defined="${ifDefined}"
-        if-not-defined="${ifNotDefined}"
-        .mustMatch="${mustMatch}"
-        .mustNotMatch="${mustNotMatch}">
+          if-defined="${ifDefined}"
+          if-not-defined="${ifNotDefined}"
+          .mustMatch="${mustMatch}"
+          .mustNotMatch="${mustNotMatch}"
+        >
           <span id="condition-met">Condition Met</span>
-      </atomic-field-condition>
+        </atomic-field-condition>
       `,
       selector: 'atomic-field-condition',
       result,

@@ -8,8 +8,10 @@ import type {ControllerDefinitionWithoutProps} from '../../../../../common/types
 
 export * from '../../../../../../controllers/facets/range-facet/date-facet/headless-date-filter.js';
 
-export interface DateFilterDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, DateFilter> {}
+export interface DateFilterDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  DateFilter
+> {}
 
 /**
  * Defines a `DateFilter` controller instance.

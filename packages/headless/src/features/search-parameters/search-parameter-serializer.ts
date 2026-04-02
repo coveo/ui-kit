@@ -204,11 +204,11 @@ function deserialize(fragment: string): SearchParameters {
 
     if (keyHasObjectValue(key)) {
       const mergedValues = {...acc[key], ...(val as object)};
-      // biome-ignore lint/performance/noAccumulatingSpread: <>
+      // oxlint-disable-next-line oxc/no-accumulating-spread -- <>
       return {...acc, [key]: mergedValues};
     }
 
-    // biome-ignore lint/performance/noAccumulatingSpread: <>
+    // oxlint-disable-next-line oxc/no-accumulating-spread -- <>
     return {...acc, [key]: val};
   }, {});
 }

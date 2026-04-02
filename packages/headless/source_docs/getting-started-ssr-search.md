@@ -3,6 +3,7 @@ title: Getting Started with SSR Search
 group: Getting Started
 slug: getting-started/getting-started-ssr-search
 ---
+
 # Getting Started with SSR Search
 
 > [!NOTE]
@@ -23,9 +24,9 @@ npm install @coveo/headless
 Once installed, you can import from the SSR sub-path in your project:
 
 ```typescript
-import { 
-    defineSearchEngine, 
-    getSampleSearchEngineConfiguration 
+import {
+  defineSearchEngine,
+  getSampleSearchEngineConfiguration,
 } from '@coveo/headless/ssr';
 ```
 
@@ -52,7 +53,8 @@ If you prefer not to use a package manager, you can load Headless SSR directly f
 <script src="https://static.cloud.coveo.com/headless/v3/ssr/headless.js"></script>
 <script>
   // All exports are available on the global CoveoHeadlessSSR object.
-  const { defineSearchEngine, getSampleSearchEngineConfiguration } = CoveoHeadlessSSR;
+  const {defineSearchEngine, getSampleSearchEngineConfiguration} =
+    CoveoHeadlessSSR;
 </script>
 ```
 

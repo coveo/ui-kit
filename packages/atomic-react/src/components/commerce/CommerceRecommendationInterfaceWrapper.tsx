@@ -1,5 +1,5 @@
 import type {i18n} from '@coveo/atomic';
-// biome-ignore lint/style/useImportType: <React is needed>
+// oxlint-disable-next-line @typescript-eslint/consistent-type-imports -- <React is needed>
 import React, {useEffect, useRef} from 'react';
 import {AtomicCommerceRecommendationInterface} from './components.js';
 
@@ -7,11 +7,10 @@ type AtomicCommerceRecommendationInterfaceProps = React.ComponentProps<
   typeof AtomicCommerceRecommendationInterface
 >;
 
-interface WrapperProps
-  extends Omit<
-    AtomicCommerceRecommendationInterfaceProps,
-    'i18n' | 'pipeline' | 'searchHub'
-  > {
+interface WrapperProps extends Omit<
+  AtomicCommerceRecommendationInterfaceProps,
+  'i18n' | 'pipeline' | 'searchHub'
+> {
   /**
    * An optional callback that lets you control the interface localization.
    *

@@ -4,8 +4,10 @@ import {
   renderCategoryFacetValueLink,
 } from './value-link';
 
-interface CategoryFacetParentValueLinkProps
-  extends Omit<CategoryFacetValueLinkProps, 'isParent' | 'isSelected'> {}
+interface CategoryFacetParentValueLinkProps extends Omit<
+  CategoryFacetValueLinkProps,
+  'isParent' | 'isSelected'
+> {}
 
 export const renderCategoryFacetParentValueLink: FunctionalComponentWithChildren<
   CategoryFacetParentValueLinkProps

@@ -8,8 +8,10 @@ import type {ControllerDefinitionWithoutProps} from '../../types/controller-defi
 
 export * from '../../../../controllers/instant-results/instant-results.js';
 
-export interface InstantResultsDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, InstantResults> {}
+export interface InstantResultsDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  InstantResults
+> {}
 
 /**
  * Defines an `InstantResults` controller instance.

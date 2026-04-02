@@ -9,7 +9,7 @@ vi.mock(
   () => ({
     InteractiveItemContextController: vi
       .fn()
-      // biome-ignore lint/complexity/useArrowFunction: https://vitest.dev/guide/migration.html#spyon-and-fn-support-constructors
+      // oxlint-disable-next-line prefer-arrow-callback -- https://vitest.dev/guide/migration.html#spyon-and-fn-support-constructors
       .mockImplementation(function () {}),
   })
 );
@@ -40,11 +40,11 @@ describe('result-template-controllers', () => {
     it('should return InteractiveItemContextController instance', () => {
       const mockController =
         {} as InteractiveItemContextController<InteractiveResult>;
-      vi.mocked(InteractiveItemContextController).mockImplementation(function (
-        this: unknown
-      ) {
-        return mockController;
-      });
+      vi.mocked(InteractiveItemContextController).mockImplementation(
+        function (this: unknown) {
+          return mockController;
+        }
+      );
       const hostWithError = mockHost as LitElement & {error: Error};
 
       const result = createInteractiveResultContextController(hostWithError);

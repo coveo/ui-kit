@@ -48,8 +48,14 @@ export const Default: Story = {
     (story) => html`
       ${story()}
       <div style="display:none;">
-        <atomic-insight-facet field="source" label="Source"></atomic-insight-facet>
-        <atomic-insight-facet field="filetype" label="File Type"></atomic-insight-facet>
+        <atomic-insight-facet
+          field="source"
+          label="Source"
+        ></atomic-insight-facet>
+        <atomic-insight-facet
+          field="filetype"
+          label="File Type"
+        ></atomic-insight-facet>
       </div>
     `,
     decorator,

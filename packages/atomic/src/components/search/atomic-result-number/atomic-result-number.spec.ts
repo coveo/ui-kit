@@ -64,7 +64,8 @@ describe('atomic-result-number', () => {
     const {element, atomicResult} =
       await renderInAtomicResult<AtomicResultNumber>({
         template: html`<atomic-result-number field=${ifDefined(props.field)}
-        >${ifDefined(slottedContent)}</atomic-result-number>`,
+          >${ifDefined(slottedContent)}</atomic-result-number
+        >`,
         selector: 'atomic-result-number',
         result: result as Result,
         bindings: (bindings) => {
@@ -274,8 +275,8 @@ describe('atomic-result-number', () => {
     const {atomicInterface} =
       await renderInAtomicSearchInterface<AtomicResultNumber>({
         template: html`<atomic-result-number
-            field="size"
-          ></atomic-result-number>`,
+          field="size"
+        ></atomic-result-number>`,
         selector: undefined,
         bindings: (bindings) => {
           bindings.engine = mockedEngine;

@@ -10,11 +10,9 @@ import type {
   InteractiveResultOptions,
 } from '../result-list/headless-interactive-result.js';
 
-export interface InteractiveInstantResultOptions
-  extends InteractiveResultOptions {}
+export interface InteractiveInstantResultOptions extends InteractiveResultOptions {}
 
-export interface InteractiveInstantResultProps
-  extends InteractiveResultCoreProps {
+export interface InteractiveInstantResultProps extends InteractiveResultCoreProps {
   /**
    * The options for the `InteractiveInstantResult` controller.
    * */

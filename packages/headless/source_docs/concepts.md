@@ -3,12 +3,13 @@ title: Concepts
 group: Usage
 slug: usage/index
 ---
+
 # Concepts
 
 A project built on top of Headless will typically involve two main building-blocks: the _engine,_ which manages the state of the search interface and communicates with the Coveo Platform, and the _controllers,_ which dispatch actions to the engine based on user interactions.
 
 > [!NOTE]
-> 
+>
 > To create a starter Angular, React, or Vue.js project with a Coveo Headless-powered search page, check out the [Coveo CLI](https://github.com/coveo/cli#readme).
 > The CLI can handle several steps for you.
 
@@ -25,7 +26,7 @@ npm install @coveo/headless
 Headless requires Node.js version 20.
 
 > [!NOTE]
-> 
+>
 > If you use TypeScript, note that Headless doesn’t support the `classic` or `node10`/`node` `moduleResolution` options.
 > See [TypeScript module resolution](https://www.typescriptlang.org/docs/handbook/modules/theory.html#module-resolution) and [Announcing TypeScript 5.0 `--moduleResolution bundler`](https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#--moduleresolution-bundler).
 
@@ -35,12 +36,12 @@ To start building an application on top of the [Headless library](https://docs.c
 Each builder function is imported from a dedicated sub-package that has the relevant exports for its use case.
 These engine builder functions are:
 
-* `buildSearchEngine` (imported from `@coveo/headless'`)
-* `buildCaseAssistEngine` (imported from `@coveo/headless/case-assist'`)
-* [`buildCommerceEngine`](https://docs.coveo.com/en/o52e9091/) (imported from `@coveo/headless/commerce'`)
-* `buildInsightEngine` (imported from `@coveo/headless/insight'`)
-* `buildRecommendationEngine` (imported from `@coveo/headless/recommendation'`)
-* `defineSearchEngine` (imported from `@coveo/headless/ssr'`)
+- `buildSearchEngine` (imported from `@coveo/headless'`)
+- `buildCaseAssistEngine` (imported from `@coveo/headless/case-assist'`)
+- [`buildCommerceEngine`](https://docs.coveo.com/en/o52e9091/) (imported from `@coveo/headless/commerce'`)
+- `buildInsightEngine` (imported from `@coveo/headless/insight'`)
+- `buildRecommendationEngine` (imported from `@coveo/headless/recommendation'`)
+- `defineSearchEngine` (imported from `@coveo/headless/ssr'`)
 
 You’ll specify your _search endpoint_ configuration through this instance (that is, where to send Coveo search requests and how to [authenticate](https://docs.coveo.com/en/2120/) them).
 
@@ -49,13 +50,16 @@ For testing purposes, you can pass the sample configuration for the engine build
 ```ts
 // app/Engine.ts
 
-import { buildSearchEngine, getSampleSearchEngineConfiguration } from '@coveo/headless';
+import {
+  buildSearchEngine,
+  getSampleSearchEngineConfiguration,
+} from '@coveo/headless';
 
 // If you're using a different engine builder function, this would be something like the following:
 // import {buildRecommendationEngine, getSampleRecommendationEngineConfiguration} from '@coveo/headless/recommendation';
 
 export const headlessEngine = buildSearchEngine({
-  configuration: getSampleSearchEngineConfiguration()
+  configuration: getSampleSearchEngineConfiguration(),
 });
 
 // If you're using a different engine builder function, this would be something like the following:
@@ -83,10 +87,10 @@ export const headlessEngine = buildSearchEngine({
 1. `<ORGANIZATION_ID>` (string) is the [unique identifier of your Coveo organization](https://docs.coveo.com/en/n1ce5273/) (for example, `mycoveoorganization`).
 2. `<ACCESS_TOKEN>` (string) is an [API key](https://docs.coveo.com/en/105/) that was created using the **Anonymous search** [template](https://docs.coveo.com/en/1718#api-key-templates) or a [search token](https://docs.coveo.com/en/56/) that grants the **Allowed** [access level](https://docs.coveo.com/en/2818/) on the [**Execute Queries**](https://docs.coveo.com/en/1707#execute-queries-domain) [domain](https://docs.coveo.com/en/2819/) and the **Push** [access level](https://docs.coveo.com/en/2818/) on the [**Analytics Data**](https://docs.coveo.com/en/1707#administrate-domain) [domain](https://docs.coveo.com/en/2819/) in the target [organization](https://docs.coveo.com/en/185/).
 3. `<CALLBACK>` (function) returns a new access token, usually by fetching it from a backend service that can generate [search tokens](https://docs.coveo.com/en/56/).
-The engine will automatically run this function when the current access token expires (that is, when the engine detects a `419 Authentication Timeout` HTTP code).
+   The engine will automatically run this function when the current access token expires (that is, when the engine detects a `419 Authentication Timeout` HTTP code).
 
 > [!NOTE]
-> 
+>
 > You don’t need to specify a `renewAccessToken` callback if your application is using [API key authentication](https://docs.coveo.com/en/105/).
 > This is typically not recommended, but can be legitimate in some scenarios.
 
@@ -119,10 +123,8 @@ A controller’s builder function always requires a Headless engine instance as 
 
 ```typescript
 // src/Components/MySearchBox.ts
- 
-import { SearchBox, buildSearchBox } from '@coveo/headless';
-import { engine } from '../Engine';
- 
+import {SearchBox, buildSearchBox} from '@coveo/headless';
+import {engine} from '../Engine';
 const mySearchBox: SearchBox = buildSearchBox(engine);
 ```
 
@@ -141,6 +143,7 @@ const options: SearchBoxOptions = { ①
  
 const myStandaloneSearchBox: SearchBox = buildSearchBox(engine, { options });
 ```
+
 1. None of the `SearchBox` controller options are required, but you can use them to tailor the controller instance to your needs.
 
 ```typescript
@@ -153,6 +156,7 @@ const options: FacetOptions = { field: "author" }; ①
  
 const myAuthorFacet: Facet = buildFacet(engine, { options });
 ```
+
 1. Specifying a `field` value in the options object is required to initialize a `Facet` controller instance.
 
 The options that are available on each controller are detailed in the [reference documentation](../../index.html).
@@ -175,6 +179,7 @@ mySearchBox.updateText('hello'); ①
  
 mySearchBox.selectSuggestion(mySearchBox.state.suggestions[0].value) ②
 ```
+
 1. Dispatches actions to update the query to `hello`, and fetch new query suggestions.
 2. Dispatches actions to set the query to the value of the first query suggestion (for example, `hello world`), and execute that query.
 
@@ -207,6 +212,7 @@ mySearchBox.updateText('hello'); ②
  
 unsubscribe(); ③
 ```
+
 1. Every time the portion of the state that’s relevant for the `SearchBox` controller changes, the `onSearchBoxUpdate` function will be called.
 2. This will trigger a `SearchBox` state change.
 3. The `subscribe` method returns an `unsubscribe` method which you can call to stop listening for state updates (for example, when the controller is deleted).
@@ -214,17 +220,13 @@ unsubscribe(); ③
 You can also call the `subscribe` method from your Headless engine instance to listen to all state changes.
 
 ```typescript
-import { engine } from '../Engine';
- 
+import {engine} from '../Engine';
 function onStateUpdate() {
   const state = engine.state;
   // ...Do something with the updated state...
 }
- 
 const unsubscribe = engine.subscribe(onStateUpdate);
- 
 // ...
- 
 unsubscribe();
 ```
 
@@ -269,11 +271,11 @@ export default class App extends React.Component {
 
 1. Import the engine [you created above](./index.html#configure-a-headless-engine).
 2. Import the search box and author facet [you created above](./index.html#initialize-a-controller-instance).
-Recall that you pass the engine to each of those components.
+   Recall that you pass the engine to each of those components.
 3. Use your components to build your interface.
 4. The `componentDidMount` method allows you to wait until the `mySearchBox` and `myAuthorFacet` components have been initialized and have registered their state on the engine.
-You can therefore execute the first search.
-If you wanted to modify search parameters and to [synchronize them with values retrieved from the URL](./synchronize-search-parameters-with-the-url.html), you would do it in this block, before executing the first search.
+   You can therefore execute the first search.
+   If you wanted to modify search parameters and to [synchronize them with values retrieved from the URL](./synchronize-search-parameters-with-the-url.html), you would do it in this block, before executing the first search.
 
 ## Dispatch Actions
 
@@ -288,12 +290,13 @@ const action = FieldActionCreators.registerFieldsToInclude(['field1', 'field2'])
  
 engine.dispatch(action); ③
 ```
+
 1. The action loader `loadFieldActions` allows you to use field actions. Calling this function will add the necessary reducers to the engine, if they haven’t been added already, and return an object holding the relevant action creator functions.
 2. To create a dispatchable action, use the action creators that were loaded in the previous line. In this case, the `registerFieldsToInclude` method takes field names as parameters and returns an action that, when dispatched, will cause those fields to be returned as part of each search result.
 3. Dispatch the action using the engine’s `dispatch` method.
 
 > [!NOTE]
-> 
+>
 > Every action dispatch triggers the corresponding listener function.
 > Consequently, you should only perform costly operations, such as rendering a UI component, when the state they depend on has changed.
 

@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: <> */
+/* oxlint-disable @typescript-eslint/no-explicit-any -- <> */
 import type {SearchEngine} from '@coveo/headless/ssr';
 import {cleanup, render, screen} from '@testing-library/react';
 import React, {type Context, createContext} from 'react';

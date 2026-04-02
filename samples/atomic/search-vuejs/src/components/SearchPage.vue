@@ -1,5 +1,5 @@
 <script setup lang="ts">
-/** biome-ignore-all lint/correctness/noUnusedImports: <> */
+/* oxlint-disable @typescript-eslint/no-unused-vars -- <> */
 import {onMounted} from 'vue';
 import ResultsList from './ResultsList.vue';
 import SearchPageFacets from './SearchPageFacets.vue';
@@ -25,7 +25,11 @@ onMounted(initInterface);
 </script>
 
 <template>
-  <atomic-search-interface search-hub="UI_KIT_E2E" pipeline="UI_KIT_E2E" fields-to-include='["ec_price","ec_rating","ec_images","ec_brand","cat_platform","cat_condition","cat_categories","cat_review_count","cat_color"]'>
+  <atomic-search-interface
+    search-hub="UI_KIT_E2E"
+    pipeline="UI_KIT_E2E"
+    fields-to-include='["ec_price","ec_rating","ec_images","ec_brand","cat_platform","cat_condition","cat_categories","cat_review_count","cat_color"]'
+  >
     <atomic-search-layout>
       <atomic-layout-section section="search">
         <atomic-search-box></atomic-search-box>

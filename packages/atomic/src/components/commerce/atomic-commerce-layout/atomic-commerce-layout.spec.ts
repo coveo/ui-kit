@@ -12,15 +12,15 @@ describe('atomic-commerce-layout', () => {
     const {element, atomicInterface} =
       await renderInAtomicCommerceInterface<AtomicCommerceLayout>({
         template: html`<atomic-commerce-layout
-        mobile-breakpoint="${ifDefined(mobileBreakpoint)}"
-      >
-        <atomic-layout-section data-testid="facets" section="facets">
-          facets...
-        </atomic-layout-section>
-        <atomic-layout-section data-testid="main" section="main">
-          main...
-        </atomic-layout-section>
-      </atomic-commerce-layout>`,
+          mobile-breakpoint="${ifDefined(mobileBreakpoint)}"
+        >
+          <atomic-layout-section data-testid="facets" section="facets">
+            facets...
+          </atomic-layout-section>
+          <atomic-layout-section data-testid="main" section="main">
+            main...
+          </atomic-layout-section>
+        </atomic-commerce-layout>`,
         selector: 'atomic-commerce-layout',
       });
 
@@ -59,7 +59,7 @@ describe('atomic-commerce-layout', () => {
   describe('#layoutStylesController', () => {
     it('should initialize LayoutStylesController', async () => {
       const {element} = await renderCommerceLayout();
-      // biome-ignore lint/complexity/useLiteralKeys: <accessing private property for testing>
+      // oxlint-disable-next-line dot-notation -- <accessing private property for testing>
       expect(element['layoutStylesController']).toBeDefined();
     });
   });

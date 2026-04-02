@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/style/noNonNullAssertion: For testing, locators should always exist */
+/* oxlint-disable @typescript-eslint/no-non-null-assertion -- For testing, locators should always exist */
 
 import {
   buildDateFacet,
@@ -319,28 +319,27 @@ describe('atomic-insight-timeframe-facet', () => {
         },
         {prop: 'headingLevel', validValue: 2, invalidValue: 7},
         {prop: 'injectionDepth', validValue: 1000, invalidValue: -1},
-      ])('should log validation warning when #$prop is updated to invalid value', async ({
-        prop,
-        validValue,
-        invalidValue,
-      }) => {
-        const {element} = await setupElement({[prop]: validValue});
+      ])(
+        'should log validation warning when #$prop is updated to invalid value',
+        async ({prop, validValue, invalidValue}) => {
+          const {element} = await setupElement({[prop]: validValue});
 
-        // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
-        (element as any)[prop] = invalidValue;
-        await element.updateComplete;
+          // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
+          (element as any)[prop] = invalidValue;
+          await element.updateComplete;
 
-        expect(consoleWarnSpy).toHaveBeenCalledWith(
-          expect.stringContaining(
-            'Prop validation failed for component atomic-insight-timeframe-facet'
-          ),
-          element
-        );
-        expect(consoleWarnSpy).toHaveBeenCalledWith(
-          expect.stringContaining(prop),
-          element
-        );
-      });
+          expect(consoleWarnSpy).toHaveBeenCalledWith(
+            expect.stringContaining(
+              'Prop validation failed for component atomic-insight-timeframe-facet'
+            ),
+            element
+          );
+          expect(consoleWarnSpy).toHaveBeenCalledWith(
+            expect.stringContaining(prop),
+            element
+          );
+        }
+      );
     });
   });
 

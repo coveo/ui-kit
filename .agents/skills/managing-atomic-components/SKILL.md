@@ -4,7 +4,7 @@ description: Provides conventions, patterns, and architecture for Atomic Lit web
 license: Apache-2.0
 metadata:
   author: coveo
-  version: "1.0"
+  version: '1.0'
 ---
 
 # Managing Atomic Components
@@ -12,6 +12,7 @@ metadata:
 ## Component Directory Structure
 
 `atomic-{component-name}/`
+
 - `atomic-{component-name}.ts`: Main component (Lit)
 - `atomic-{component-name}.tw.css.ts`: Styles (Tailwind; optional)
 - `atomic-{component-name}.spec.ts`: Unit tests (Vitest)
@@ -20,10 +21,11 @@ metadata:
 - `e2e/`: End-to-end tests (Playwright; optional)
   - `atomic-{component-name}.e2e.ts`: E2E test suite
   - `page-object.ts`: Page object for E2E test suite
-  - `fixture.ts`: Fixture for E2E test suite   
+  - `fixture.ts`: Fixture for E2E test suite
 - `*.ts`: Supporting files (optional)
 
 **Notes**:
+
 - The `.tw.css.ts` file is only included when complex styles are required; otherwise component styles are usually set directly in the Lit component's static `styles` property
 - Internal components may lack the `e2e/` directory
 - Complex components may have one or more `.ts` helper files
@@ -42,6 +44,7 @@ export class AtomicElement
 ```
 
 **Light DOM components** use mixins instead of extending `LitElement` directly:
+
 - `LightDomMixin(LitElement)` — most light DOM components with `@bindings()`
 - `LightDomMixin(InitializeBindingsMixin(LitElement))` — components needing binding initialization without use-case-specific bindings
 
@@ -72,6 +75,7 @@ Decorators > Mixins > Lit reactive controllers. Use controllers when they provid
 ## Documentation Requirements
 
 **Component class JSDoc:**
+
 - First sentence: "The `atomic-element-name` component [description]."
 - Shadow parts: `@part partName - Description.`
 - Events: `@event eventName - Description.`

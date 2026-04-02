@@ -746,11 +746,11 @@ describe('atomic-color-facet', () => {
     },
     {
       prop: 'allowedValues',
-      invalidValue: new Array(26).fill('value'),
+      invalidValue: Array.from({length: 26}, () => 'value'),
     },
     {
       prop: 'customSort',
-      invalidValue: new Array(26).fill('value'),
+      invalidValue: Array.from({length: 26}, () => 'value'),
     },
     {
       prop: 'tabsExcluded',
@@ -760,21 +760,21 @@ describe('atomic-color-facet', () => {
       prop: 'tabsIncluded',
       invalidValue: [''],
     },
-  ])('should set error when #$prop is invalid', async ({
-    prop,
-    invalidValue,
-  }) => {
-    const {element} = await setupElement();
+  ])(
+    'should set error when #$prop is invalid',
+    async ({prop, invalidValue}) => {
+      const {element} = await setupElement();
 
-    expect(element.error).toBeUndefined();
+      expect(element.error).toBeUndefined();
 
-    // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
-    (element as any)[prop] = invalidValue;
-    await element.updateComplete;
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
+      (element as any)[prop] = invalidValue;
+      await element.updateComplete;
 
-    expect(element.error).toBeDefined();
-    expect(element.error.message).toMatch(new RegExp(prop, 'i'));
-  });
+      expect(element.error).toBeDefined();
+      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
+    }
+  );
 
   // TODO V4: KIT-5197 - Remove this test
   it.each<{
@@ -831,12 +831,12 @@ describe('atomic-color-facet', () => {
     {
       prop: 'allowedValues',
       validValue: ['pdf', 'doc'],
-      invalidValue: new Array(26).fill('value'),
+      invalidValue: Array.from({length: 26}, () => 'value'),
     },
     {
       prop: 'customSort',
       validValue: ['pdf', 'doc'],
-      invalidValue: new Array(26).fill('value'),
+      invalidValue: Array.from({length: 26}, () => 'value'),
     },
     {
       prop: 'tabsExcluded',
@@ -848,32 +848,31 @@ describe('atomic-color-facet', () => {
       validValue: ['tab1', 'tab2'],
       invalidValue: [''],
     },
-  ])('should log validation warning when #$prop is updated to invalid value', async ({
-    prop,
-    validValue,
-    invalidValue,
-  }) => {
-    const consoleWarnSpy = vi
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
+  ])(
+    'should log validation warning when #$prop is updated to invalid value',
+    async ({prop, validValue, invalidValue}) => {
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
 
-    const {element} = await setupElement({[prop]: validValue});
+      const {element} = await setupElement({[prop]: validValue});
 
-    // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
-    (element as any)[prop] = invalidValue;
-    await element.updateComplete;
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
+      (element as any)[prop] = invalidValue;
+      await element.updateComplete;
 
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining(
-        'Prop validation failed for component atomic-color-facet'
-      ),
-      element
-    );
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining(prop),
-      element
-    );
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining(
+          'Prop validation failed for component atomic-color-facet'
+        ),
+        element
+      );
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining(prop),
+        element
+      );
 
-    consoleWarnSpy.mockRestore();
-  });
+      consoleWarnSpy.mockRestore();
+    }
+  );
 });

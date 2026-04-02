@@ -8,7 +8,7 @@ import {
 } from '@coveo/headless';
 import escapeHtml from 'escape-html';
 import express from 'express';
-// biome-ignore lint/correctness/noUnusedImports: <>
+// oxlint-disable-next-line @typescript-eslint/no-unused-vars -- <>
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import App from '../src/App';

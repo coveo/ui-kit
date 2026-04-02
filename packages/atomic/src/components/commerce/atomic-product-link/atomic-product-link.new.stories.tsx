@@ -82,7 +82,11 @@ export const WithAlternativeContent: Story = {
       return html`
         <atomic-product-link>
           <div>
-            <img src="https://picsum.photos/seed/picsum/350" alt="Thumbnail" class="thumbnail" />
+            <img
+              src="https://picsum.photos/seed/picsum/350"
+              alt="Thumbnail"
+              class="thumbnail"
+            />
           </div>
         </atomic-product-link>
       `;

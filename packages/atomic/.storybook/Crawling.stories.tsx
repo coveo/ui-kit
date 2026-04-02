@@ -18,7 +18,10 @@ export const Crawling: Story = {
   render: () => html`
     <div style="font-family: 'Nunito Sans', sans-serif; padding: 20px;">
       <h1>Coveo Atomic Component Index</h1>
-      <p>This page is used for search engine indexing. All component folders have been expanded in the sidebar for discovery.</p>
+      <p>
+        This page is used for search engine indexing. All component folders have
+        been expanded in the sidebar for discovery.
+      </p>
     </div>
   `,
 };

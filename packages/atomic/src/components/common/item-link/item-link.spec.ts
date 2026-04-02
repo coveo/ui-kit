@@ -36,9 +36,9 @@ describe('#renderLinkWithItemAnalytics', () => {
     const element = await renderComponent(
       {},
       html`
-          <span class="child-1">child 1</span>
-          <span class="child-2">child 2</span>
-        `
+        <span class="child-1">child 1</span>
+        <span class="child-2">child 2</span>
+      `
     );
 
     expect(element.querySelector('.child-1')).toHaveTextContent('child 1');

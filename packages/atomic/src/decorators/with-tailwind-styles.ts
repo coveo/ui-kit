@@ -22,7 +22,7 @@ const tailwindPropertiesSheet: CSSStyleSheet | null =
       })()
     : null;
 
-// biome-ignore lint/suspicious/noExplicitAny: <>
+// oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
 function injectTailwindProperties(element: any) {
   if (typeof window === 'undefined' || !tailwindPropertiesSheet) return;
 
@@ -42,7 +42,7 @@ function injectTailwindProperties(element: any) {
 export const withTailwindStyles = <
   T extends {
     styles?: CSSResultGroup | CSSStyleSheet | undefined;
-    // biome-ignore lint/suspicious/noExplicitAny: <>
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
     new (...args: any[]): any;
   },
 >(
