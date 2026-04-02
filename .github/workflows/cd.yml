@@ -51,27 +51,6 @@ jobs:
       - name: Update release/v3 bookmark
         if: ${{ steps.changesets.outputs.published == 'true' }}
         run: git push origin HEAD:refs/heads/release/v3 --force
-  npm-prod:
-    if: ${{ needs.release.outputs.published == 'true' }}
-    needs: release
-    environment: 'NPM Production'
-    runs-on: 'ubuntu-latest'
-    permissions:
-      contents: read
-      discussions: write
-      id-token: write
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
-        with:
-          egress-policy: audit
-
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - uses: ./.github/actions/setup
-      - name: Publish NPM packages to latest
-        run: pnpm run publish:npm:latest
-        env:
-          NPM_TAG: latest
   quantic-prod:
     if: ${{ needs.release.outputs.published == 'true' }}
     needs: release
