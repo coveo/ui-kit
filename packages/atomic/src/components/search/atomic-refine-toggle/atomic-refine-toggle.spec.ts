@@ -58,8 +58,8 @@ describe('atomic-refine-toggle', () => {
 
     const {element} = await renderInAtomicSearchInterface<AtomicRefineToggle>({
       template: html`<atomic-refine-toggle
-          .collapseFacetsAfter=${props.collapseFacetsAfter ?? 0}
-        ></atomic-refine-toggle>`,
+        .collapseFacetsAfter=${props.collapseFacetsAfter ?? 0}
+      ></atomic-refine-toggle>`,
       selector: 'atomic-refine-toggle',
       bindings: (bindings) => {
         bindings.engine = mockedEngine;

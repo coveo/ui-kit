@@ -1,0 +1,29 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oxc-project/oxc/main/npm/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "oxc", "import"],
+  "categories": {
+    "correctness": "error"
+  },
+  "rules": {
+    "typescript/no-non-null-asserted-optional-chain": "off",
+    "no-unused-expressions": "off",
+    "no-unused-vars": "off",
+    "no-unsafe-optional-chaining": "off",
+    "unicorn/no-useless-spread": "off",
+    "unicorn/no-useless-fallback-in-spread": "off"
+  },
+  "ignorePatterns": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/packages/quantic/**",
+    "**/packages/create-atomic-template/**",
+    "**/packages/create-atomic-component/template/**",
+    "**/packages/create-atomic-component-project/template/**",
+    "**/packages/create-atomic-result-component/template/**",
+    "**/.deployment.config/**",
+    "**/packages/atomic/**/*.d.ts",
+    "**/packages/atomic/stencil-proxy/**",
+    "**/packages/documentation/**/assets/**",
+    "**/packages/headless/**/coveo.analytics/**"
+  ]
+}

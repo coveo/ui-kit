@@ -25,11 +25,13 @@ This sample demonstrates server-side rendering (SSR) with Coveo Headless commerc
 ## Getting Started
 
 1. Install dependencies:
+
    ```bash
    npm install
    ```
 
 2. Start the development server:
+
    ```bash
    npm run dev
    ```
@@ -49,6 +51,7 @@ npm run prod      # Start production server (run after build)
 ### Server-Side Rendering
 
 This sample demonstrates:
+
 - Rendering product listings on the server for improved initial page load
 - Hydrating Headless controllers on the client for interactivity
 - Using `@coveo/headless-react/ssr-commerce` utilities for SSR support
@@ -57,6 +60,7 @@ This sample demonstrates:
 ### Next.js App Router
 
 The sample uses Next.js App Router features:
+
 - Server Components for initial rendering
 - Client Components for interactive features
 - React Server Components architecture
@@ -65,6 +69,7 @@ The sample uses Next.js App Router features:
 ### Performance Benefits
 
 SSR provides:
+
 - Faster initial page loads
 - Better SEO through pre-rendered content
 - Improved Core Web Vitals

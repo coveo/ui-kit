@@ -4,7 +4,7 @@ description: Creates, validates, and packages Agent Skills following the open st
 license: Apache-2.0
 metadata:
   author: coveo
-  version: "1.0"
+  version: '1.0'
 ---
 
 # Creating Skills
@@ -14,7 +14,7 @@ metadata:
 Skills following the [Agent Skills open standard](https://agentskills.io) can be stored in multiple locations:
 
 - **`.claude/skills/`** - Workspace-level (recommended for local development, maximum compatibility)
-- **`.skills/`** or `skills/`** - Alternative workspace conventions
+- **`.skills/`** or `skills/`\*\* - Alternative workspace conventions
 - **`~/.claude/skills/`** - User-level personal skills
 
 This skill recommends `.agents/skills/` for workspace development as it's compatible with multiple AI tools (GitHub Copilot, Claude Code, OpenCode, etc.).
@@ -89,44 +89,48 @@ Produces a `.skill` archive (tar.gz) for distribution.
 ## Modifying Existing Skills
 
 **Extending a skill:**
+
 1. Read existing `SKILL.md` and references to understand current scope
 2. Add new sections/steps without removing existing functionality
 3. Update description if scope expanded significantly
 4. Run validation, test with representative use cases
 
 **Renaming a skill:**
+
 1. Create new directory with new name
 2. Move all files, update `name` field in frontmatter
 3. Search for references in your workspace (e.g., `grep -r "old-skill-name"`)
 4. Update all references, delete old directory
 
 **Deprecating a skill:**
+
 1. Add to description: "(Deprecated: use `replacement-skill` instead)"
 2. Keep functional until dependents migrate
 3. Delete only after confirming no references remain
 
 ## Reference Documentation
 
-| Reference | When to Load |
-|-----------|--------------|
-| [SPECIFICATION.md](references/SPECIFICATION.md) | Format details, field constraints, validation rules |
-| [best-practices.md](references/best-practices.md) | Writing guidance, naming, descriptions, patterns |
-| [workflows.md](references/workflows.md) | Multi-step process patterns |
-| [output-patterns.md](references/output-patterns.md) | Templates for consistent output |
+| Reference                                           | When to Load                                        |
+| --------------------------------------------------- | --------------------------------------------------- |
+| [SPECIFICATION.md](references/SPECIFICATION.md)     | Format details, field constraints, validation rules |
+| [best-practices.md](references/best-practices.md)   | Writing guidance, naming, descriptions, patterns    |
+| [workflows.md](references/workflows.md)             | Multi-step process patterns                         |
+| [output-patterns.md](references/output-patterns.md) | Templates for consistent output                     |
 
 ## Scripts
 
-| Script | Purpose |
-|--------|---------|
-| `init_skill.mjs` | Initialize new skill with template |
-| `quick_validate.mjs` | Validate skill structure per spec |
-| `package_skill.mjs` | Package for distribution (.skill) |
+| Script               | Purpose                            |
+| -------------------- | ---------------------------------- |
+| `init_skill.mjs`     | Initialize new skill with template |
+| `quick_validate.mjs` | Validate skill structure per spec  |
+| `package_skill.mjs`  | Package for distribution (.skill)  |
 
 ## ui-kit Notes
 
 **Naming pattern:** `generating-*`, `migrating-*`, `validating-*`, `documenting-*`
 
 **Integration:**
+
 - Skills stored in `.claude/skills/` (workspace-level, compatible with all AI tools)
 - Skills reference workspace instructions for context
 - Agents compose skills for complex workflows

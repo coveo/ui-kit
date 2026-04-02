@@ -1,15 +1,15 @@
 {
   "name": "@samples/headless-rga-angular",
-  "description": "Angular example for Coveo Headless Relevance Generative Answering (RGA)",
   "version": "0.1.0",
+  "private": true,
+  "description": "Angular example for Coveo Headless Relevance Generative Answering (RGA)",
+  "type": "module",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development"
   },
-  "type": "module",
-  "private": true,
   "dependencies": {
     "@angular/common": "catalog:",
     "@angular/compiler": "catalog:",

@@ -31,11 +31,13 @@ This sample includes multiple page examples:
 ## Getting Started
 
 1. Install dependencies:
+
    ```bash
    pnpm install
    ```
 
 2. Start the development server:
+
    ```bash
    pnpm dev
    ```
@@ -68,6 +70,7 @@ The assets are copied before starting the dev server to ensure all resources are
 ### Component Usage
 
 The sample demonstrates:
+
 - Configuring Atomic search and commerce interfaces
 - Using various Atomic components (result lists, facets, search boxes, etc.)
 - Implementing different UI patterns (tables, cards, recommendations)

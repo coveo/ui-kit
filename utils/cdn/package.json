@@ -1,16 +1,12 @@
 {
   "name": "@coveo/cdn",
-  "private": true,
-  "authors": "Coveo",
   "version": "1.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "start": "node ./scripts/serve.mjs",
     "build": "node ./scripts/deploy-local-cdn.mjs",
     "test": "vitest run --project=cdn-check"
-  },
-  "engines": {
-    "node": ">=22.14.0"
   },
   "devDependencies": {
     "@vitest/browser-playwright": "catalog:",
@@ -18,5 +14,9 @@
     "playwright": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
-  }
+  },
+  "engines": {
+    "node": ">=22.14.0"
+  },
+  "authors": "Coveo"
 }

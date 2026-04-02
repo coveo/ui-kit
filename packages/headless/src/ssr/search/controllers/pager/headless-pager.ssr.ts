@@ -8,8 +8,10 @@ import type {ControllerDefinitionWithoutProps} from '../../../common/types/contr
 
 export * from '../../../../controllers/pager/headless-pager.js';
 
-export interface PagerDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, Pager> {}
+export interface PagerDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  Pager
+> {}
 
 /**
  * Defines a `Pager` controller instance.

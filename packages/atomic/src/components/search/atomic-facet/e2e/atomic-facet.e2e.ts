@@ -129,7 +129,7 @@ test.describe('Sort Criteria', () => {
             .toBe(30);
         });
 
-        // biome-ignore lint/suspicious/noTemplateCurlyInString: <>
+        // oxlint-disable-next-line no-template-curly-in-string -- <>
         test('should have facet values sorted by custom order first, and then by ${criteria}', async ({
           facet,
         }) => {

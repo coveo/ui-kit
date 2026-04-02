@@ -137,11 +137,10 @@ export interface SearchAndListingSubControllers<
   ): InteractiveSpotlightContent;
 }
 
-export interface SearchSubControllers
-  extends SearchAndListingSubControllers<
-    CommerceSearchParameters,
-    SearchSummaryState
-  > {
+export interface SearchSubControllers extends SearchAndListingSubControllers<
+  CommerceSearchParameters,
+  SearchSummaryState
+> {
   /**
    * Creates a `DidYouMean` sub-controller.
    * @returns A `DidYouMean` sub-controller.

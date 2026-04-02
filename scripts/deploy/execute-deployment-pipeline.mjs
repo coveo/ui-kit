@@ -3,19 +3,11 @@ import {writeFileSync} from 'node:fs';
 import {parse} from 'semver';
 import rootJson from '../../package.json' with {type: 'json'};
 import atomicJson from '../../packages/atomic/package.json' with {type: 'json'};
-import atomicHostedPageJson from '../../packages/atomic-hosted-page/package.json' with {
-  type: 'json',
-};
-import atomicReactJson from '../../packages/atomic-react/package.json' with {
-  type: 'json',
-};
+import atomicHostedPageJson from '../../packages/atomic-hosted-page/package.json' with {type: 'json'};
+import atomicReactJson from '../../packages/atomic-react/package.json' with {type: 'json'};
 import buenoJson from '../../packages/bueno/package.json' with {type: 'json'};
-import headlessJson from '../../packages/headless/package.json' with {
-  type: 'json',
-};
-import shopifyJson from '../../packages/shopify/package.json' with {
-  type: 'json',
-};
+import headlessJson from '../../packages/headless/package.json' with {type: 'json'};
+import shopifyJson from '../../packages/shopify/package.json' with {type: 'json'};
 
 const packagesAndVersions = [
   {packageName: 'BUENO', version: buenoJson.version, s3Dir: 'bueno'},

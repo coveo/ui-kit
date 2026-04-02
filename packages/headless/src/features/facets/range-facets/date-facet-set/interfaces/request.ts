@@ -40,6 +40,7 @@ export function isDateFacetRequest(
 }
 
 export interface DateFacetRequest
-  extends BaseRangeFacetRequest,
+  extends
+    BaseRangeFacetRequest,
     CurrentValues<DateRangeRequest>,
     Type<'dateRange'> {}

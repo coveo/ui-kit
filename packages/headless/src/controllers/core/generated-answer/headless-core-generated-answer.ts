@@ -49,24 +49,12 @@ export interface GeneratedAnswer extends Controller {
   retry(): void;
   /**
    * Indicates that the generated answer met the user expectations.
-   * @deprecated The no-argument `like` method is deprecated and will be removed in a future major version. The method will now take a required `answerId` parameter to specify which answer is being liked, and will log the like action with the provided `answerId` for analytics.
    */
   like(): void;
   /**
-   * Indicates that the generated answer met the user expectations.
-   * @param answerId - Answer Id of the liked answer.
-   */
-  like(answerId: string): void;
-  /**
    * Marks the generated answer as not relevant to the end user.
-   * @deprecated The no-argument `dislike` method is deprecated and will be removed in a future major version. The method will now take a required `answerId` parameter to specify which answer is being disliked, and will log the dislike action with the provided `answerId` for analytics.
    */
   dislike(): void;
-  /**
-   * Marks the generated answer as not relevant to the end user.
-   * @param answerId - Answer Id of the disliked answer.
-   */
-  dislike(answerId: string): void;
   /**
    * Opens the modal to provide feedback about why the generated answer was not relevant.
    */
@@ -271,19 +259,19 @@ export function buildCoreGeneratedAnswer(
       };
     },
 
-    // TODO: SFINT-6665
-    like(answerId?: string) {
+    like() {
       if (!this.state.liked) {
         dispatch(likeGeneratedAnswer());
-        dispatch(analyticsClient.logLikeGeneratedAnswer(answerId));
+        dispatch(analyticsClient.logLikeGeneratedAnswer(this.state.answerId));
       }
     },
 
-    // TODO: SFINT-6665
-    dislike(answerId?: string) {
+    dislike() {
       if (!this.state.disliked) {
         dispatch(dislikeGeneratedAnswer());
-        dispatch(analyticsClient.logDislikeGeneratedAnswer(answerId));
+        dispatch(
+          analyticsClient.logDislikeGeneratedAnswer(this.state.answerId)
+        );
       }
     },
 

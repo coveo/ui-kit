@@ -4,6 +4,7 @@ group: Usage
 category: Usage Analytics
 slug: usage/usage-analytics/log-view-events-with-ep
 ---
+
 # Log view events with EP
 
 You can use Headless controllers to handle Search API requests and leverage [Coveo Analytics](https://docs.coveo.com/en/182/).
@@ -48,9 +49,10 @@ searchEngine.relay.emit('itemView', { ①
     },
 });
 ```
+
 1. Pass in the name of the event as the first parameter of the `emit` function.
 2. Pass in the event payload required for the [`itemview`](https://docs.coveo.com/en/n9da0377#itemview) event.
-No need to send the `meta` object, as it’s automatically handled by Relay.
+   No need to send the `meta` object, as it’s automatically handled by Relay.
 
 You can also use the Relay library directly to log view events on pages you want to be able to recommend but on which you don’t use Headless.
 See the [Relay library documentation](https://docs.coveo.com/en/relay/latest/).

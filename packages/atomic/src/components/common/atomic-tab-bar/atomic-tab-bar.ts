@@ -32,13 +32,14 @@ export class AtomicTabBar extends LitElement implements LitElementWithError {
   static styles: CSSResultGroup = css`
     @reference '../../../utils/tailwind.global.tw.css';
 
-  :host {
-    white-space: nowrap;
-    width: 100%;
-    overflow-x: visible;
-    display: flex;
-    position: relative;
-  }`;
+    :host {
+      white-space: nowrap;
+      width: 100%;
+      overflow-x: visible;
+      display: flex;
+      position: relative;
+    }
+  `;
 
   @state()
   private popoverTabs: TemplateResult[] = [];

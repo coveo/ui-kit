@@ -135,8 +135,10 @@ export function defineFacetGenerator<
  * (CMH). The implementer is only responsible for leveraging the facet controllers created by this sub-controller to
  * properly render facets in their application.
  */
-export interface FacetGenerator
-  extends Omit<CSRFacetGenerator, 'state' | 'facets'> {
+export interface FacetGenerator extends Omit<
+  CSRFacetGenerator,
+  'state' | 'facets'
+> {
   /**
    * The state of each every facet returned by the Commerce API.
    *

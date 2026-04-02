@@ -38,8 +38,7 @@ export interface AtomicGeneratedAnswerThreadItemProps {
 @customElement('atomic-generated-answer-thread-item')
 @withTailwindStyles
 export class AtomicGeneratedAnswerThreadItem extends LitElement {
-  private readonly contentId =
-    `atomic-generated-answer-thread-item-content-${crypto.randomUUID()}`;
+  private readonly contentId = `atomic-generated-answer-thread-item-content-${crypto.randomUUID()}`;
   /**
    * The title displayed for the thread item.
    */
@@ -141,9 +140,7 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
           <div class="flex w-[10px] shrink-0 items-center justify-center">
             ${when(
               this.showTimelineDot,
-              () => html`
-                  <span class=${timelineDotClasses}></span>
-              `
+              () => html` <span class=${timelineDotClasses}></span> `
             )}
           </div>
           <div class="flex min-w-0 flex-col">
@@ -157,9 +154,7 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
                   class=${titleButtonClasses}
                   @click=${this.toggle}
                 >
-                  <span
-                    part="thread-item-title"
-                    style=${clampedTitleStyles}
+                  <span part="thread-item-title" style=${clampedTitleStyles}
                     >${this.title}</span
                   >
                 </button>`,
@@ -182,7 +177,8 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
             )}
           </div>
           <div id=${this.contentId} class="pl-2 py-1.5">
-            <div class="mb-2"
+            <div
+              class="mb-2"
               ?hidden=${!this.isExpanded}
               aria-hidden=${this.isExpanded ? 'false' : 'true'}
             >

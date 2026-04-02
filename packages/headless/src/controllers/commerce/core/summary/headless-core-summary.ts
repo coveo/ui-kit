@@ -43,8 +43,9 @@ export interface SummaryState {
 /**
  * The `Summary` sub-controller manages a summary of the current search results.
  */
-export interface Summary<State extends SummaryState = SummaryState>
-  extends Controller {
+export interface Summary<
+  State extends SummaryState = SummaryState,
+> extends Controller {
   /**
    * A scoped and simplified part of the headless state that is relevant to the `SearchSummary` sub-controller.
    */

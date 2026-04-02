@@ -173,14 +173,14 @@ export class AtomicResultMultiValueText
       <li
         aria-hidden="true"
         part="result-multi-value-text-separator"
-               class="${String.raw`inline-block before:inline before:content-[',\00a0']`}"
+        class="${String.raw`inline-block before:inline before:content-[',\00a0']`}"
       ></li>
     `;
   }
 
   private renderMoreLabel(value: number) {
     return html`
-      <li  part="result-multi-value-text-value-more">
+      <li part="result-multi-value-text-value-more">
         ${this.bindings.i18n.t('n-more', {value})}
       </li>
     `;

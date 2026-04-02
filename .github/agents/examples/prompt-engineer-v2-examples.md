@@ -29,6 +29,7 @@ To avoid confirmation bias, use **batched real execution** rather than simulatio
 **Focus:** Basic artifact type selection (ephemeral, prompt, skill)
 
 **Instructions:**
+
 1. Switch to PromptEngineerV2 agent mode
 2. Present only the **Input** text from Scenarios 1, 2, 3 (one at a time)
 3. Do NOT show Expected Behavior or Validation Checklist sections
@@ -37,6 +38,7 @@ To avoid confirmation bias, use **batched real execution** rather than simulatio
 6. Document deviations before proceeding to Batch 2
 
 **Expected artifacts created:**
+
 - None (Scenario 1 - ephemeral)
 - `.github/prompts/generate-release-notes.prompt.md` (Scenario 2)
 - `.github/skills/test-generator/` (Scenario 3)
@@ -46,12 +48,14 @@ To avoid confirmation bias, use **batched real execution** rather than simulatio
 **Focus:** Overlap detection and scope conflict handling
 
 **Instructions:**
+
 1. Present only Input text from Scenarios 6, 13, 16
 2. Agent should ASK questions rather than create artifacts (these test clarification behavior)
 3. Compare agent's questions/reasoning against Expected Behavior
 4. Document whether agent correctly identified conflicts
 
 **Expected behavior:**
+
 - Agent should request clarification, NOT create duplicate artifacts
 
 #### Batch 3: Architectural Decomposition (Scenarios 21, 22, 23)
@@ -59,12 +63,14 @@ To avoid confirmation bias, use **batched real execution** rather than simulatio
 **Focus:** "Persona IS vs USES Capability" framework application
 
 **Instructions:**
+
 1. Present only Input text from Scenarios 21, 22, 23
 2. Verify agent applies skill-first thinking where appropriate
 3. Compare decomposition decisions against Expected Behavior
 4. Document whether agent correctly distinguished identity vs auxiliary knowledge
 
 **Expected artifacts:**
+
 - Scenario 21: Skill proposed first, clarifying question asked
 - Scenario 22: Agent created with built-in knowledge (no skill extraction)
 - Scenario 23: Skill created first, then agent that uses it
@@ -72,6 +78,7 @@ To avoid confirmation bias, use **batched real execution** rather than simulatio
 ### Post-Test Analysis
 
 After completing all batches:
+
 1. Count validation checklist items passed vs failed
 2. Identify systematic deviations (patterns of incorrect decisions)
 3. Determine if agent instructions need refinement
@@ -90,6 +97,7 @@ After completing all batches:
 **Phase 1 (Understand):** Is this one-time? YES → Ephemeral Response
 
 Agent should:
+
 - Recognize no reuse expected
 - Answer directly without creating files
 - Provide working regex with examples
@@ -97,6 +105,7 @@ Agent should:
 ### Expected Output
 
 Direct response with regex pattern:
+
 ```
 Pattern: ^([a-z]{2}-)?[a-z0-9]{8,32}$
 ```
@@ -118,10 +127,12 @@ Pattern: ^([a-z]{2}-)?[a-z0-9]{8,32}$
 ### Expected Behavior
 
 **Phase 1 (Understand):**
+
 - One-time? NO (reusable)
 - User-invoked workflow? YES → Prompt
 
 Agent should:
+
 1. Run `node .github/skills/creating-prompts/scripts/init_prompt.mjs generate-release-notes`
 2. Edit the generated file to fill TODO placeholders
 3. Run validation script
@@ -149,10 +160,12 @@ File: `.github/prompts/generate-release-notes.prompt.md`
 ### Expected Behavior
 
 **Phase 1 (Understand):**
+
 - One-time? NO
 - Agent-discoverable capability? YES → Skill
 
 Agent should:
+
 1. Run `node .github/skills/creating-skills/scripts/init_skill.mjs test-generator --path .github/skills`
 2. Edit SKILL.md with test generation instructions
 3. Create scaffolding scripts
@@ -186,10 +199,12 @@ Agent should:
 ### Expected Behavior
 
 **Phase 1 (Understand):**
+
 - One-time? NO
 - Specialized persona with tool control? YES → Agent
 
 Agent should:
+
 1. Run `node .github/skills/creating-agents/scripts/init_agent.mjs performance-optimizer`
 2. Edit agent file with persona definition and optimization workflow
 3. Define tool restrictions and analysis capabilities
@@ -220,10 +235,12 @@ Agent should:
 ### Expected Behavior
 
 **Phase 1 (Understand):**
+
 - One-time? NO
 - Coding standards for file patterns? YES → Instruction
 
 Agent should:
+
 1. Run `node .github/skills/creating-instructions/scripts/init_instruction.mjs headless --apply-to "packages/headless/**"`
 2. Edit the generated file with headless-specific conventions
 3. Run validation script
@@ -252,12 +269,14 @@ File: `.github/instructions/headless.instructions.md`
 
 **Phase 2 (Decide):**
 Agent should check existing artifacts and find:
+
 - Potential overlap with test-related prompts in `.github/prompts/`
 - Existing test instruction patterns (different artifact type)
 
 **Decision:** Check if similar prompt exists
 
 Agent should:
+
 1. Show what test-related prompts already exist
 2. Ask if user wants to:
    - Extend an existing test prompt
@@ -286,10 +305,12 @@ Clarification request with inventory of existing prompts (not instructions, as t
 ### Expected Behavior
 
 **Phase 1 (Understand):**
+
 - Check for existing: test-related prompts, skills
 - User explicitly wants replacement → REPLACE action
 
 Agent should:
+
 1. List what will be superseded
 2. Confirm with user before deleting/modifying
 3. Create new skill
@@ -319,6 +340,7 @@ Agent should:
 ### Expected Behavior
 
 Agent should recognize ambiguity and ask for clarification:
+
 - What kind of testing? (unit, e2e, accessibility)
 - What package? (atomic, headless, quantic)
 - One-time help or reusable?
@@ -349,6 +371,7 @@ Clarification request explaining the artifact type decision depends on answers.
 ### Expected Behavior
 
 Agent should:
+
 1. Initialize skill with creating-skills
 2. Create SKILL.md with core instructions
 3. Add `references/` directory with detailed docs
@@ -390,6 +413,7 @@ Agent should find `.github/agents/accessibility-v1.agent.md` exists
 **Decision:** MODIFY (exact match, needs update)
 
 Agent should:
+
 1. Read existing agent file
 2. Identify where to add contrast validation
 3. Make surgical edits preserving existing functionality
@@ -425,6 +449,7 @@ Agent finds `general.typescript.instructions.md` exists
 **Decision:** Recognize this is problematic - TypeScript instructions shouldn't contain Python content
 
 Agent should:
+
 1. Identify the scope mismatch
 2. Suggest alternatives:
    - Create separate `python-typescript-interop.instructions.md`
@@ -456,6 +481,7 @@ Clarification request explaining the scope issue and suggesting alternatives
 User explicitly requests deletion → DELETE action
 
 Agent should:
+
 1. Verify files exist
 2. Check if they're referenced elsewhere (in skills, other artifacts)
 3. Confirm with user before deletion
@@ -492,6 +518,7 @@ Agent finds `accessibility-v1.agent.md` already exists
 **Decision:** OVERLAP - exact match
 
 Agent should:
+
 1. Show existing accessibility agent
 2. Ask if user wants to:
    - Use the existing agent
@@ -521,10 +548,12 @@ Clarification request with existing agent details
 
 **Phase 1 (Understand):**
 Agent recognizes artifact type mismatch:
+
 - User said "prompt" (manual invocation)
 - But "automatically fixes" suggests agent or skill (autonomous)
 
 Agent should:
+
 1. Identify the contradiction
 2. Clarify invocation model:
    - Manual prompt that user triggers per-file?
@@ -556,6 +585,7 @@ Clarification request explaining the artifact type implications
 ### Expected Behavior
 
 Agent should:
+
 1. Create initial agent file
 2. Run validate_agent.mjs
 3. See validation errors (e.g., missing description)
@@ -582,7 +612,7 @@ Agent should:
 
 ### Input
 
-> Create an instruction for Atomic component styling that applies to packages/atomic/src/components/**
+> Create an instruction for Atomic component styling that applies to packages/atomic/src/components/\*\*
 
 ### Expected Behavior
 
@@ -592,6 +622,7 @@ Agent finds `atomic.instructions.md` with `applyTo: 'packages/atomic/**'`
 **Decision:** SCOPE CONFLICT - new pattern is subset of existing
 
 Agent should:
+
 1. Identify the scope overlap
 2. Explain that `atomic.instructions.md` already covers this path
 3. Ask if user wants to:
@@ -626,6 +657,7 @@ Agent finds `stencil-to-lit-migration-v1.agent.md` and `stencil-to-lit-migration
 **Decision:** CREATE (new version)
 
 Agent should:
+
 1. Use creating-agents to initialize `stencil-to-lit-migration-v3.agent.md`
 2. Note this doesn't auto-remove v1/v2 (user may want gradual migration)
 3. Create new examples file
@@ -659,6 +691,7 @@ Agent finds `maintenance-v1.agent.md`
 **Decision:** EXTEND (add feature to existing)
 
 Agent should:
+
 1. Read existing maintenance agent
 2. Check if bundle analysis already exists (partial overlap)
 3. If not, add bundle size analysis to the agent's capabilities
@@ -689,10 +722,12 @@ Enhanced `maintenance-v1.agent.md` with bundle analysis capability
 
 **Phase 1 (Understand):**
 Agent recognizes artifact type error:
+
 - User said "instruction" (auto-applied)
 - But "run to generate" suggests prompt (manual) or skill (with script)
 
 Agent should:
+
 1. Identify the contradiction
 2. Explain that instructions are auto-applied, not "run"
 3. Suggest correct artifact type:
@@ -723,6 +758,7 @@ Clarification request explaining instructions are auto-applied, suggesting promp
 
 **Phase 1 (Understand):**
 Agent recognizes multiple valid interpretations:
+
 - Ephemeral: one-time review help
 - Prompt: manual review workflow per PR
 - Agent: specialized reviewer persona with read-only tools
@@ -730,6 +766,7 @@ Agent recognizes multiple valid interpretations:
 - Instruction: coding standards for reviews
 
 Agent should:
+
 1. List all possible interpretations
 2. Ask clarifying questions:
    - One-time or reusable?
@@ -761,10 +798,12 @@ Comprehensive clarification request with decision tree
 
 **Phase 2 (Decide) - Step B: Architectural Decomposition:**
 Agent should recognize "Persona USES Capability" pattern:
+
 - Capability: Component creation knowledge (auxiliary, separable)
 - Persona: Not clearly specified or justified
 
 Agent should:
+
 1. Identify that component knowledge is AUXILIARY (any agent might need it)
 2. Recognize multiple agents could benefit from this capability
 3. Propose creating skill first: `creating-atomic-components`
@@ -797,10 +836,12 @@ Agent should:
 
 **Phase 2 (Decide) - Step B: Architectural Decomposition:**
 Agent should recognize "Persona IS Capability" pattern:
+
 - Capability: Security knowledge
 - Persona: Security reviewer (the knowledge IS the agent's identity/purpose)
 
 Agent should:
+
 1. Identify that security expertise is the agent's PRIMARY PURPOSE
 2. Recognize this is NOT auxiliary knowledge other agents need
 3. Keep security knowledge built-in to the agent
@@ -829,10 +870,12 @@ Create `.github/agents/security-reviewer-v1.agent.md` with built-in security kno
 
 **Phase 2 (Decide) - Step B: Architectural Decomposition:**
 Agent should decompose into two parts:
+
 - Capability: Accessibility checking knowledge (reusable, auxiliary)
 - Persona: PR automation workflow (specialized behavior)
 
 Agent should:
+
 1. Identify a11y knowledge as AUXILIARY (other agents might need it)
 2. Propose creating `accessibility-checking` skill first
 3. Then create PR agent that discovers the skill
@@ -863,10 +906,12 @@ Agent should:
 
 **Phase 2 (Decide) - Step B: Architectural Decomposition:**
 Agent should decompose:
+
 - Capability: Migration procedures (reusable, could be used by multiple contexts)
 - Invocation: User-triggered (manual)
 
 Agent should:
+
 1. Identify migration procedures as reusable capability → Skill
 2. Identify user trigger requirement → Prompt
 3. NOT create an agent (no specialized persona needed)
@@ -898,11 +943,13 @@ Agent should:
 
 **Phase 2 (Decide) - Step B: Architectural Decomposition:**
 Agent should recognize this is an ANTI-PATTERN:
+
 - The decision-making workflow IS the PromptEngineer's identity
 - This is orchestration/judgment, not auxiliary knowledge
 - Other agents don't need prompt engineering decision-making
 
 Agent should:
+
 1. Identify this as "Persona IS Capability" (decision-making is identity)
 2. Recognize extraction would be over-engineering
 3. Decline to extract as skill

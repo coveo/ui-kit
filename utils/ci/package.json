@@ -1,21 +1,9 @@
 {
   "name": "@coveo/ci",
+  "version": "1.0.0",
   "private": true,
   "author": "Coveo",
-  "version": "1.0.0",
   "type": "module",
-  "dependencies": {
-    "@coveo/semantic-monorepo-tools": "2.7.1",
-    "conventional-changelog-conventionalcommits": "9.3.0",
-    "octokit": "5.0.5",
-    "semver": "7.7.3",
-    "ts-dedent": "2.2.0"
-  },
-  "devDependencies": {
-    "@types/conventional-changelog-writer": "4.0.11",
-    "@types/semver": "7.7.1",
-    "typescript": "catalog:"
-  },
   "scripts": {
     "add-generated-files": "node ./add-generated-files.mjs",
     "git-lock": "node ./git-lock.mjs",
@@ -27,5 +15,17 @@
     "if-cdn": "node ./if-cdn.mjs",
     "if-ci": "node ./if-ci.mjs",
     "test": "tsc"
+  },
+  "dependencies": {
+    "@coveo/semantic-monorepo-tools": "2.7.1",
+    "conventional-changelog-conventionalcommits": "9.3.0",
+    "octokit": "5.0.5",
+    "semver": "7.7.3",
+    "ts-dedent": "2.2.0"
+  },
+  "devDependencies": {
+    "@types/conventional-changelog-writer": "4.0.11",
+    "@types/semver": "7.7.1",
+    "typescript": "catalog:"
   }
 }
