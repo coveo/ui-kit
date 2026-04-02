@@ -55,6 +55,16 @@ const preview: Preview = {
         method: 'alphabetical',
         order: [
           'Coveo Atomic Storybook',
+          'Resources',
+          [
+            'Coveo atomic home',
+            'Code samples',
+            'Product lifecycle',
+            'Atomic usage analytics coveo ua',
+            'Atomic usage analytics ep',
+            'Versioned documentation',
+            ['*'],
+          ],
           'Usage',
           [
             'Introduction',
