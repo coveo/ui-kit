@@ -48,6 +48,9 @@ jobs:
         run: node ./scripts/deploy/trigger-ui-kit-cd.mjs
         env:
           GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
+      - name: Update release/v3 bookmark
+        if: ${{ steps.changesets.outputs.published == 'true' }}
+        run: git push origin HEAD:refs/heads/release/v3 --force
   npm-prod:
     if: ${{ needs.release.outputs.published == 'true' }}
     needs: release
