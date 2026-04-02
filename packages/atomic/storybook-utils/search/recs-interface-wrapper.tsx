@@ -5,8 +5,8 @@ import {
 import {Decorator, StoryContext} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import {spreadProps} from '@open-wc/lit-helpers';
-import type {AtomicRecsInterface} from '@/src/components/recommendations/atomic-recs-interface/atomic-recs-interface';
-import '@/src/components/recommendations/atomic-recs-interface/atomic-recs-interface';
+import type {AtomicRecsInterface} from '@/src/components/recommendations/atomic-recs-interface/atomic-recs-interface.js';
+import '@/src/components/recommendations/atomic-recs-interface/atomic-recs-interface.js';
 
 export const wrapInRecommendationInterface = ({
   config,

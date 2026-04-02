@@ -6,8 +6,8 @@ import {
 import {Decorator, StoryContext} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import {spreadProps} from '@open-wc/lit-helpers';
-import type {AtomicCommerceRecommendationInterface} from '@/src/components/commerce/atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface';
-import '@/src/components/commerce/atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface';
+import type {AtomicCommerceRecommendationInterface} from '@/src/components/commerce/atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface.js';
+import '@/src/components/commerce/atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface.js';
 
 export const wrapInCommerceRecommendationInterface = (
   engineConfig?: Partial<CommerceEngineConfiguration>,

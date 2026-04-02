@@ -5,8 +5,8 @@ import {
 import {Decorator, StoryContext} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import {spreadProps} from '@open-wc/lit-helpers';
-import type {AtomicSearchInterface} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
-import '@/src/components/search/atomic-search-interface/atomic-search-interface';
+import type {AtomicSearchInterface} from '@/src/components/search/atomic-search-interface/atomic-search-interface.js';
+import '@/src/components/search/atomic-search-interface/atomic-search-interface.js';
 
 export const wrapInSearchInterface = ({
   config = {},

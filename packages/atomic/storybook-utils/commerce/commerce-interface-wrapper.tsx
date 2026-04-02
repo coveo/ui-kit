@@ -5,8 +5,8 @@ import {
 import {Decorator, StoryContext} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import {spreadProps} from '@open-wc/lit-helpers';
-import type {AtomicCommerceInterface} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
-import '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
+import type {AtomicCommerceInterface} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface.js';
+import '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface.js';
 
 export const wrapInCommerceInterface = ({
   engineConfig,

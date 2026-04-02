@@ -107,7 +107,3 @@ minimumReleaseAgeExclude:
   - react-dom
   - react-router
   - '@react-router/*'
-
-publicHoistPattern:
-  - '*eslint*'
-  - '*prettier*'
