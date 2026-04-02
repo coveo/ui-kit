@@ -31,7 +31,7 @@ We recommend that the color contrast ratios in your interface conform to [WCAG L
 
 If you're using the theme that's included with [Atomic](https://docs.coveo.com/en/lcdf0264/) (`coveo.css`), you can ensure that [Atomic](https://docs.coveo.com/en/lcdf0264/) conforms to accessibility standards by replacing it with the accessibility theme (`accessible.css`).
 
-If you're using a custom theme, [customize the colors and font sizes](https://docs.coveo.com/en/atomic/latest/usage/themes-and-visual-customization/) in your interface to conform to accessibility standards.
+If you're using a custom theme, [customize the colors and font sizes](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-themes-and-visual-customization--docs) in your interface to conform to accessibility standards.
 
 ## Add headings
 
@@ -85,7 +85,7 @@ We recommend the following guidelines to help you provide an accessible experien
 
 > **Note**
 >
-> This is only relevant if you use [result sections](https://docs.coveo.com/en/atomic/latest/usage/displaying-results/result-sections/) in your result template.
+> This is only relevant if you use [result sections](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-display-results-use-result-sections--docs) in your result template.
 
 
 Screen readers read sections in the order they are defined in the template, regardless of their visual arrangement.
@@ -200,7 +200,7 @@ document.querySelector('atomic-search-box-instant-results').ariaLabelGenerator =
 
 1. The `ariaLabelGenerator` function takes in the `i18next` bindings and the target result.
 
-The `i18next` bindings are required when you want to support [localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
+The `i18next` bindings are required when you want to support [localization](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-localization--docs).
 
 
 2. Create an array of strings that your function will concatenate and return.
@@ -209,7 +209,7 @@ The first thing you include is the item name.
 You'll add other strings below.
 
 
-3. If the field you want to add is populated, add it to the `information` array, using `i18n` [dynamic values](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization#use-dynamic-values) for localization.
+3. If the field you want to add is populated, add it to the `information` array, using `i18n` [dynamic values](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-localization--docs#use-dynamic-values) for localization.
 
 Turn the field into a string as in the `locales.json` file below.
 

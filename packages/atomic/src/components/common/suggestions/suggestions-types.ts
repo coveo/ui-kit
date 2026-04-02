@@ -83,7 +83,7 @@ export type SearchBoxSuggestionsBindings<
    */
   id: string;
   /**
-   * Whether the search box is [standalone](https://docs.coveo.com/en/atomic/latest/usage/ssb/).
+   * Whether the search box is [standalone](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-standalone-search-box--docs).
    */
   isStandalone: boolean;
   /**

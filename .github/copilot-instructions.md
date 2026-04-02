@@ -8,6 +8,10 @@ Outside of what is specified in this file, GitHub Copilot should review PRs as i
 
 When reviewing code changes in `packages/headless` and `packages/headless-react`, have a look at the handwritten documentation articles under `packages/headless/source_docs`, in case they are impacted.
 
+## Atomic documentation tips
+
+When reviewing code changes in `packages/atomic`, have a look at the handwritten documentation articles under `packages/atomic/src/documentation`, in case they are impacted. This includes usage guides, resource articles, and Storybook content.
+
 ## Samples
 
 When reviewing code changes, have a look at the `samples` directory, in case it contains samples that need to be updated.

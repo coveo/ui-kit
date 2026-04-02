@@ -67,7 +67,7 @@ export class AtomicResultTimespan
    *
    * By default, the format is HH:mm:ss when the duration is under a day, and it is an approximation when longer (days, months or years).
    *
-   * The string displayed when there is an approximation can be modified with [localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
+   * The string displayed when there is an approximation can be modified with [localization](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-localization--docs).
    *
    * Available formats: https://day.js.org/docs/en/durations/format
    */

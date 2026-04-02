@@ -28,7 +28,7 @@ interface WrapperProps extends Omit<
   /**
    * An optional callback that lets you control the interface localization.
    *
-   * The function receives the search interface 18n instance, which you can then modify (see [Localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/)).
+   * The function receives the search interface 18n instance, which you can then modify (see [Localization](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-additional-topics-localization--docs)).
    *
    */
   localization?: (i18n: i18n) => void;

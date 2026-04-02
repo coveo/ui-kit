@@ -64,7 +64,7 @@ cp -r node_modules/@coveo/atomic-react/dist/lang public/lang
 
 ## Result templates
 
-The way to [define result templates](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) for an HTML project using the core Atomic library involves defining one or multiple [`atomic-result-template`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-template/) components, configured with HTML properties, adding conditions on the attributes and metadata of each result.
+The way to [define result templates](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-display-results-introduction--docs#defining-a-result-template) for an HTML project using the core Atomic library involves defining one or multiple [`atomic-result-template`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-template/) components, configured with HTML properties, adding conditions on the attributes and metadata of each result.
 
 Coupled with the [`<template>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template) HTML tag, this approach works very well in a plain HTML project.
 However, it can be limiting and awkward to use in a React project using JSX.
@@ -171,7 +171,7 @@ const MyPage = () => {
 
 > **Warning**
 >
-> When implementing [folding](https://docs.coveo.com/en/atomic/latest/usage/displaying-results/folding) in result templates, you must use [rendering functions](https://docs.coveo.com/en/atomic/latest/usage/displaying-results/folding#folding-in-rendering-functions).
+> When implementing [folding](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-display-results-implement-folding--docs) in result templates, you must use [rendering functions](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-display-results-implement-folding--docs#folding-in-rendering-functions).
 > Atomic React doesn't support `atomic-result-children`, `atomic-result-children-template`, or any other Atomic components in child results.
 
 
@@ -273,7 +273,7 @@ Example:
 
 ## Localization (i18n)
 
-The Atomic React [search interface](#atomic-search-interface) component exposes an optional `localization` option, which takes a callback function that lets you handle [localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
+The Atomic React [search interface](#atomic-search-interface) component exposes an optional `localization` option, which takes a callback function that lets you handle [localization](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-localization--docs).
 
 ```jsx
 <AtomicSearchInterface

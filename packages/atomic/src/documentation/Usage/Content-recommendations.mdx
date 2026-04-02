@@ -8,7 +8,7 @@ This article provides an overview of the core Atomic concepts needed to implemen
 > **Note**
 >
 > CR models depend on [view](https://docs.coveo.com/en/2949#view) [events](https://docs.coveo.com/en/260/) and the user's action history.
-> To display recommendations with Atomic, configure a [CR model](https://docs.coveo.com/en/3387/) and [logged the required usage analytics events](https://docs.coveo.com/en/atomic/latest/usage/atomic-usage-analytics/atomic-view-events/).
+> To display recommendations with Atomic, configure a [CR model](https://docs.coveo.com/en/3387/) and [logged the required usage analytics events](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-usage-analytics-introduction--docs).
 
 
 ## Implement recommendations
@@ -47,7 +47,7 @@ Here, we provide a `label` for the recommendations along with a `recommendation`
 3. The format of the query results is defined by a `template` component that needs to placed within `atomic-recs-result-template`.
 
 
-Similar to how a [search interface is initialized](https://docs.coveo.com/en/atomic/latest/usage#use-components-to-create-a-search-interface) with an overarching `atomic-search-interface` component, recommendations require you to initialize the [`atomic-recs-interface`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface) component using a script:
+Similar to how a [search interface is initialized](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-introduction--docs#use-components-to-create-a-search-interface) with an overarching `atomic-search-interface` component, recommendations require you to initialize the [`atomic-recs-interface`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface) component using a script:
 
 ```html
 <head>
@@ -145,7 +145,7 @@ The following is an example of how you could style the `label` associated with t
 </style>
 ```
 
-For a more detailed guide on how to customize your components, see [Themes and visual customization](https://docs.coveo.com/en/atomic/latest/usage/themes-and-visual-customization).
+For a more detailed guide on how to customize your components, see [Themes and visual customization](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-themes-and-visual-customization--docs).
 
 ## Display results
 
@@ -159,9 +159,9 @@ To display result-specific information, use [Result Template components](https:/
 
 ## In a framework
 
-Recommendation components can be used [out of the box](https://docs.coveo.com/en/atomic/latest/usage/frameworks/atomic-vue/) in a [Vue.js](https://vuejs.org/) project.
+Recommendation components can be used [out of the box](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-in-a-framework-usage-in-a-vue-project--docs) in a [Vue.js](https://vuejs.org/) project.
 
-To use recommendations in others frameworks such as [React](https://reactjs.org/) or [Angular](https://angular.io/), the [Atomic React wrapper](https://docs.coveo.com/en/atomic/latest/usage/frameworks/atomic-react-wrapper/) and [Atomic Angular wrapper](https://docs.coveo.com/en/atomic/latest/usage/frameworks/atomic-angular-wrapper/) expose the components described in this article.
+To use recommendations in others frameworks such as [React](https://reactjs.org/) or [Angular](https://angular.io/), the [Atomic React wrapper](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-in-a-framework-use-the-react-wrapper--docs) and [Atomic Angular wrapper](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-in-a-framework-use-the-angular-wrapper--docs) expose the components described in this article.
 The only thing that changes is the name of the component during implementation, as shown in the Atomic React example below:
 
 ```html
