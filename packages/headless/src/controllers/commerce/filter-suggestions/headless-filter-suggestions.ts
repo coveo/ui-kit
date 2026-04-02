@@ -53,8 +53,7 @@ export type FilterSuggestionsState = RegularFacetSearchState &
  * @category FilterSuggestions
  */
 export interface FilterSuggestions
-  extends Controller,
-    FacetControllerType<'regular'> {
+  extends Controller, FacetControllerType<'regular'> {
   /**
    * Resets the query in the controller state and clears the filter suggestions.
    */
@@ -192,9 +191,8 @@ export function buildFilterSuggestions(
     },
 
     get state() {
-      const {displayName, field, facetId} = facetForFieldSuggestionsSelector(
-        getState()
-      );
+      const {displayName, field, facetId} =
+        facetForFieldSuggestionsSelector(getState());
       return {
         displayName,
         field,

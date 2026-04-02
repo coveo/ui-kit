@@ -38,7 +38,7 @@ export class AtomicAngularRGAPageComponent implements AfterViewInit {
     if ('ec_rating' in result.raw) {
       information.push(
         i18n.t('stars', {
-          // biome-ignore lint/complexity/useLiteralKeys: <angular needs this>
+          // oxlint-disable-next-line dot-notation -- <angular needs this>
           count: result.raw['ec_rating'] as number,
           max: 5,
         })
@@ -49,7 +49,7 @@ export class AtomicAngularRGAPageComponent implements AfterViewInit {
 
     if ('ec_price' in result.raw) {
       information.push(
-        // biome-ignore lint/complexity/useLiteralKeys: <angular needs this>
+        // oxlint-disable-next-line dot-notation -- <angular needs this>
         (result.raw['ec_price'] as number).toLocaleString(
           i18n.languages as string[],
           {

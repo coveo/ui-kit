@@ -2,17 +2,17 @@
 
 exports[`CDN exports checks > did atomic.esm exports changed? 1`] = `
 {
-  "atomicVersion": "3.53.3",
-  "headlessVersion": "3.48.0",
+  "atomicVersion": "<version>",
+  "headlessVersion": "<version>",
 }
 `;
 
 exports[`CDN exports checks > did index exports changed? 1`] = `
 {
   "applyPolyfills": [Function],
-  "atomicVersion": "3.53.3",
+  "atomicVersion": "<version>",
   "defineCustomElements": [Function],
-  "headlessVersion": "3.48.0",
+  "headlessVersion": "<version>",
   "setNonce": [Function],
 }
 `;

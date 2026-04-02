@@ -83,51 +83,52 @@ export class AtomicCommerceProductList
     tableDisplayStyles,
     listDisplayStyles,
     gridDisplayStyles,
-    css`@reference '../../../utils/tailwind.global.tw.css';
-    :host {
-    .result-link {
-      @apply link-style;
-    }
-  
-    .result-grid {
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      justify-items: center;
-  
-      & a {
-        justify-content: center;
-      }
-    }
-  
-    .result-list {
-      display: flex;
-      flex-direction: column;
-  
-      & .result-item {
-        width: 100%;
-        max-width: 600px;
-        display: flex;
-        flex-wrap: wrap;
-  
-        & .result-details {
-          align-content: center;
+    css`
+      @reference '../../../utils/tailwind.global.tw.css';
+      :host {
+        .result-link {
+          @apply link-style;
+        }
+
+        .result-grid {
+          grid-template-columns: repeat(5, minmax(0, 1fr));
+          justify-items: center;
+
+          & a {
+            justify-content: center;
+          }
+        }
+
+        .result-list {
+          display: flex;
+          flex-direction: column;
+
+          & .result-item {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-wrap: wrap;
+
+            & .result-details {
+              align-content: center;
+            }
+          }
         }
       }
-    }
-  }
-  
-  @media (width >= theme(--breakpoint-desktop)) {
-    :host .result-grid {
-      display: grid;
-    }
-  }
-  
-  @media not all and (width >= theme(--breakpoint-desktop)) {
-    :host .result-grid {
-      display: flex;
-      flex-direction: column;
-    }
-  }
-  `,
+
+      @media (width >= theme(--breakpoint-desktop)) {
+        :host .result-grid {
+          display: grid;
+        }
+      }
+
+      @media not all and (width >= theme(--breakpoint-desktop)) {
+        :host .result-grid {
+          display: flex;
+          flex-direction: column;
+        }
+      }
+    `,
   ];
 
   public searchOrListing!: Search | ProductListing;
@@ -465,7 +466,9 @@ export class AtomicCommerceProductList
           .interactiveProduct=${this.searchOrListing.interactiveProduct({
             options: {product},
           })}
-          .linkContent=${this.productTemplateProvider.getLinkTemplateContent(product)}
+          .linkContent=${this.productTemplateProvider.getLinkTemplateContent(
+            product
+          )}
           .loadingFlag=${this.loadingFlag}
           .product=${product}
           .renderingFunction=${this.itemRenderingFunction}
@@ -526,7 +529,9 @@ export class AtomicCommerceProductList
                         .interactiveProduct=${this.searchOrListing.interactiveProduct(
                           {options: {product}}
                         )}
-                        .linkContent=${this.productTemplateProvider.getLinkTemplateContent(product)}
+                        .linkContent=${this.productTemplateProvider.getLinkTemplateContent(
+                          product
+                        )}
                         .loadingFlag=${this.loadingFlag}
                         .product=${product}
                         .store=${this.bindings.store as never}

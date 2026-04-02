@@ -7,8 +7,10 @@ import type {ControllerDefinitionWithoutProps} from '../../../common/types/contr
 
 export * from '../../../../controllers/query-summary/headless-query-summary.js';
 
-export interface QuerySummaryDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, QuerySummary> {}
+export interface QuerySummaryDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  QuerySummary
+> {}
 
 /**
  * Defines a `QuerySummary` controller instance.

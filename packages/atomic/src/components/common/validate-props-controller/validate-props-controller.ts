@@ -13,9 +13,9 @@ import {deepEqual} from '@/src/utils/compare-utils';
  * If validation fails, the controller either sets the `error` property on the host
  * or logs a warning, depending on the `throwOnError` configuration.
  */
-export class ValidatePropsController<TProps extends Record<string, unknown>>
-  implements ReactiveController
-{
+export class ValidatePropsController<
+  TProps extends Record<string, unknown>,
+> implements ReactiveController {
   private currentProps?: TProps;
   private previousProps?: TProps;
   private lastValidationError?: Error;

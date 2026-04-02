@@ -3,6 +3,7 @@ title: Getting Started with SSR Commerce
 group: Getting Started
 slug: getting-started/getting-started-ssr-commerce
 ---
+
 # Getting Started with SSR Commerce
 
 > [!NOTE]
@@ -53,7 +54,7 @@ If you prefer not to use a package manager, you can load the SSR Commerce bundle
 <script src="https://static.cloud.coveo.com/headless/v3/ssr-commerce/headless.js"></script>
 <script>
   // All exports are available on the global CoveoHeadlessCommerceSSR object.
-  const { defineCommerceEngine, getSampleCommerceEngineConfiguration } =
+  const {defineCommerceEngine, getSampleCommerceEngineConfiguration} =
     CoveoHeadlessCommerceSSR;
 </script>
 ```

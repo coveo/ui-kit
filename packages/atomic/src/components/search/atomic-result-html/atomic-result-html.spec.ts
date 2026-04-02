@@ -191,9 +191,7 @@ describe('atomic-result-html', () => {
   it('should set the error when not used in a result template', async () => {
     const {atomicInterface} =
       await renderInAtomicSearchInterface<AtomicResultHtml>({
-        template: html`<atomic-result-html
-          field="title"
-        ></atomic-result-html>`,
+        template: html`<atomic-result-html field="title"></atomic-result-html>`,
         selector: undefined,
         bindings: (bindings) => {
           bindings.engine = mockedEngine;

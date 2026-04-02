@@ -64,5 +64,4 @@ export type SearchBoxSuggestionsComponent<
 > = BaseInitializableComponent<SpecificBindings, SearchBoxSuggestions>;
 
 export interface LitElementWithError
-  extends Pick<InitializableComponent, 'error'>,
-    LitElement {}
+  extends Pick<InitializableComponent, 'error'>, LitElement {}

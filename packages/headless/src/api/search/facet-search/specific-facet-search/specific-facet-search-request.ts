@@ -4,7 +4,6 @@ import type {
 } from '../base/base-facet-search-request.js';
 
 export interface SpecificFacetSearchRequest
-  extends BaseFacetSearchRequest,
-    FacetSearchType<'specific'> {
+  extends BaseFacetSearchRequest, FacetSearchType<'specific'> {
   ignoreValues: string[];
 }

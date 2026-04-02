@@ -4,8 +4,8 @@ import {
 } from '@coveo/headless/insight';
 import {Decorator, StoryContext} from '@storybook/web-components-vite';
 import {html} from 'lit';
-import type * as _ from '../../src/components.js';  
-import { spreadProps } from '@open-wc/lit-helpers';
+import type * as _ from '../../src/components.js';
+import {spreadProps} from '@open-wc/lit-helpers';
 
 export const wrapInInsightInterface = (
   config?: Partial<InsightEngineConfiguration>,
@@ -26,7 +26,9 @@ export const wrapInInsightInterface = (
         box-shadow: 0px 3px 24px 0px #0000001a;
       }
     </style>
-    <atomic-insight-interface ${spreadProps(includeCodeRoot ? { id: "code-root" } : {})}>
+    <atomic-insight-interface
+      ${spreadProps(includeCodeRoot ? {id: 'code-root'} : {})}
+    >
       ${story()}
     </atomic-insight-interface>
   `,

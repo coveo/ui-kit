@@ -1,11 +1,11 @@
 name: cdn-checks
-description: "Runs CDN checks"
+description: 'Runs CDN checks'
 runs:
   using: composite
   steps:
     - uses: ./.github/actions/playwright-atomic
       with:
-        testsToRun: "atomic-commerce-query-error.e2e.ts atomic-icon.e2e.ts atomic-commerce-text.e2e.ts atomic-commerce-query-summary.e2e.ts"
+        testsToRun: 'atomic-commerce-query-error.e2e.ts atomic-icon.e2e.ts atomic-commerce-text.e2e.ts atomic-commerce-query-summary.e2e.ts'
         shardIndex: 1
         shardTotal: 1
         uploadArtifacts: false

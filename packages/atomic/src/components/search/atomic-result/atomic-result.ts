@@ -38,12 +38,12 @@ export class AtomicResult extends ChildrenUpdateCompleteMixin(LitElement) {
   private itemLayoutController!: ItemLayoutController;
 
   static styles: CSSResultGroup = css`
-@import "../../common/template-system/template-system.css";
+    @import '../../common/template-system/template-system.css';
 
-:host {
-  @apply atomic-template-system;
-}
-`;
+    :host {
+      @apply atomic-template-system;
+    }
+  `;
 
   private static readonly propsSchema = new Schema({
     display: new StringValue({constrainTo: ['grid', 'list', 'table']}),
@@ -312,7 +312,9 @@ export class AtomicResult extends ChildrenUpdateCompleteMixin(LitElement) {
     return html`
       <div class=${resultComponentClass}>
         <div
-          class="result-root ${this.itemLayoutController.getCombinedClasses().join(' ')}"
+          class="result-root ${this.itemLayoutController
+            .getCombinedClasses()
+            .join(' ')}"
         >
           ${unsafeHTML(this.getContentHTML())}
         </div>

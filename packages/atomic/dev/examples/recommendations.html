@@ -2,7 +2,10 @@
 <html dir="ltr" lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"
+    />
     <title>Coveo Atomic: Recommendations example</title>
 
     <script type="module">
@@ -26,7 +29,9 @@
 
       (async () => {
         await customElements.whenDefined('atomic-recs-interface');
-        const recsInterfaces = Array.from(document.querySelectorAll('atomic-recs-interface'));
+        const recsInterfaces = Array.from(
+          document.querySelectorAll('atomic-recs-interface')
+        );
         await Promise.all(
           recsInterfaces.map(async (recommendationInterface) =>
             recommendationInterface.initialize({
@@ -106,11 +111,16 @@
         language-assets-path="./lang"
         icon-assets-path="./assets"
       >
-        <atomic-recs-list label="Top clothing for you" display="grid" number-of-recommendations="10">
+        <atomic-recs-list
+          label="Top clothing for you"
+          display="grid"
+          number-of-recommendations="10"
+        >
           <atomic-recs-result-template>
             <template>
               <style>
-                div.result-root.with-sections.display-list.image-small atomic-result-section-visual {
+                div.result-root.with-sections.display-list.image-small
+                  atomic-result-section-visual {
                   height: 120px;
                 }
 
@@ -125,22 +135,34 @@
                 }
               </style>
               <atomic-result-section-visual>
-                <atomic-result-image field="ec_images" aria-hidden="true"></atomic-result-image>
+                <atomic-result-image
+                  field="ec_images"
+                  aria-hidden="true"
+                ></atomic-result-image>
               </atomic-result-section-visual>
               <atomic-result-section-title>
                 <atomic-result-link></atomic-result-link>
               </atomic-result-section-title>
               <atomic-result-section-title-metadata>
                 <div class="rating-wrapper">
-                  <atomic-result-rating field="ec_rating"></atomic-result-rating>
+                  <atomic-result-rating
+                    field="ec_rating"
+                  ></atomic-result-rating>
                   <atomic-field-condition class="field" if-defined="ec_rating">
-                    <span> <atomic-result-number field="cat_rating_count"></atomic-result-number> reviews </span>
+                    <span>
+                      <atomic-result-number
+                        field="cat_rating_count"
+                      ></atomic-result-number>
+                      reviews
+                    </span>
                   </atomic-field-condition>
                 </div>
               </atomic-result-section-title-metadata>
               <atomic-result-section-emphasized>
                 <atomic-result-number field="ec_price">
-                  <atomic-format-currency currency="USD"></atomic-format-currency>
+                  <atomic-format-currency
+                    currency="USD"
+                  ></atomic-format-currency>
                 </atomic-result-number>
               </atomic-result-section-emphasized>
               <atomic-result-section-excerpt
@@ -157,11 +179,16 @@
         language-assets-path="./lang"
         icon-assets-path="./assets"
       >
-        <atomic-recs-list label="Frequently viewed" recommendation="frequentViewed" number-of-recommendations="6">
+        <atomic-recs-list
+          label="Frequently viewed"
+          recommendation="frequentViewed"
+          number-of-recommendations="6"
+        >
           <atomic-recs-result-template>
             <template>
               <style>
-                div.result-root.with-sections.display-list.image-small atomic-result-section-visual {
+                div.result-root.with-sections.display-list.image-small
+                  atomic-result-section-visual {
                   height: 120px;
                 }
 
@@ -176,22 +203,34 @@
                 }
               </style>
               <atomic-result-section-visual>
-                <atomic-result-image field="ec_images" aria-hidden="true"></atomic-result-image>
+                <atomic-result-image
+                  field="ec_images"
+                  aria-hidden="true"
+                ></atomic-result-image>
               </atomic-result-section-visual>
               <atomic-result-section-title>
                 <atomic-result-link></atomic-result-link>
               </atomic-result-section-title>
               <atomic-result-section-title-metadata>
                 <div class="rating-wrapper">
-                  <atomic-result-rating field="ec_rating"></atomic-result-rating>
+                  <atomic-result-rating
+                    field="ec_rating"
+                  ></atomic-result-rating>
                   <atomic-field-condition class="field" if-defined="ec_rating">
-                    <span> <atomic-result-number field="cat_rating_count"></atomic-result-number> reviews </span>
+                    <span>
+                      <atomic-result-number
+                        field="cat_rating_count"
+                      ></atomic-result-number>
+                      reviews
+                    </span>
                   </atomic-field-condition>
                 </div>
               </atomic-result-section-title-metadata>
               <atomic-result-section-emphasized>
                 <atomic-result-number field="ec_price">
-                  <atomic-format-currency currency="USD"></atomic-format-currency>
+                  <atomic-format-currency
+                    currency="USD"
+                  ></atomic-format-currency>
                 </atomic-result-number>
               </atomic-result-section-emphasized>
               <atomic-result-section-excerpt
@@ -217,7 +256,8 @@
           <atomic-recs-result-template>
             <template>
               <style>
-                div.result-root.with-sections.display-list.image-small atomic-result-section-visual {
+                div.result-root.with-sections.display-list.image-small
+                  atomic-result-section-visual {
                   height: 120px;
                 }
 
@@ -232,22 +272,34 @@
                 }
               </style>
               <atomic-result-section-visual>
-                <atomic-result-image field="ec_images" aria-hidden="true"></atomic-result-image>
+                <atomic-result-image
+                  field="ec_images"
+                  aria-hidden="true"
+                ></atomic-result-image>
               </atomic-result-section-visual>
               <atomic-result-section-title>
                 <atomic-result-link></atomic-result-link>
               </atomic-result-section-title>
               <atomic-result-section-title-metadata>
                 <div class="rating-wrapper">
-                  <atomic-result-rating field="ec_rating"></atomic-result-rating>
+                  <atomic-result-rating
+                    field="ec_rating"
+                  ></atomic-result-rating>
                   <atomic-field-condition class="field" if-defined="ec_rating">
-                    <span> <atomic-result-number field="cat_rating_count"></atomic-result-number> reviews </span>
+                    <span>
+                      <atomic-result-number
+                        field="cat_rating_count"
+                      ></atomic-result-number>
+                      reviews
+                    </span>
                   </atomic-field-condition>
                 </div>
               </atomic-result-section-title-metadata>
               <atomic-result-section-emphasized>
                 <atomic-result-number field="ec_price">
-                  <atomic-format-currency currency="USD"></atomic-format-currency>
+                  <atomic-format-currency
+                    currency="USD"
+                  ></atomic-format-currency>
                 </atomic-result-number>
               </atomic-result-section-emphasized>
               <atomic-result-section-excerpt

@@ -34,18 +34,18 @@ export class AtomicInsightTab
   implements TabCommon, InitializableComponent<InsightBindings>
 {
   static styles = css`
-  @reference '../../../utils/tailwind.global.tw.css';
+    @reference '../../../utils/tailwind.global.tw.css';
     .active::after {
-    @apply bg-primary absolute bottom-0 block h-1 w-full rounded;
-    content: '';
-  }
+      @apply bg-primary absolute bottom-0 block h-1 w-full rounded;
+      content: '';
+    }
 
-  [part='tab'] {
-    @apply relative mt-1 mr-6 pb-3 font-semibold;
-    max-width: 150px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-  }
+    [part='tab'] {
+      @apply relative mt-1 mr-6 pb-3 font-semibold;
+      max-width: 150px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
   `;
 
   /**

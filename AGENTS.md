@@ -23,6 +23,7 @@
 ## Boundaries
 
 **You must ALWAYS**:
+
 - Discover available Agent Skills under `.agents/skills` when beginning a new session
 - Run `pnpm run lint:fix` before committing work
 - Use the Conventional Commits 1.0.0 specification when composing a commit message
@@ -30,11 +31,13 @@
 ---
 
 **You must ASK BEFORE**:
+
 - Adding a new dependency in the monorepo
 - Introducing a potentially breaking change
 
 ---
 
 **You must NEVER**:
+
 - Commit unencrypted API keys, secrets, or Personally Identifiable Information (PII)
 - Write inline comments that restate what the code is doing

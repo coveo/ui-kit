@@ -34,7 +34,9 @@ describe('atomic-result-fields-list', () => {
     const {element, atomicInterface} =
       await renderInAtomicResult<AtomicResultFieldsList>({
         template: html`<atomic-result-fields-list
-          >${unsafeHTML(options.slottedContent ?? '')}</atomic-result-fields-list
+          >${unsafeHTML(
+            options.slottedContent ?? ''
+          )}</atomic-result-fields-list
         >`,
         selector: 'atomic-result-fields-list',
         result: mockResult,

@@ -1,98 +1,70 @@
 ## <small>1.41.10 (2026-03-25)</small>
 
-* fix(deps): update all dependencies j:kit-282 (major) (#6195) ([a5df20c](https://github.com/coveo/ui-kit/commits/a5df20c)), closes [#6195](https://github.com/coveo/ui-kit/issues/6195)
-
-
+- fix(deps): update all dependencies j:kit-282 (major) (#6195) ([a5df20c](https://github.com/coveo/ui-kit/commits/a5df20c)), closes [#6195](https://github.com/coveo/ui-kit/issues/6195)
 
 ## <small>1.41.9 (2026-03-25)</small>
 
-* chore(deps): update dependency @biomejs/biome to v2.4.7 j:kit-282 (#6193) ([a72f939](https://github.com/coveo/ui-kit/commits/a72f939)), closes [#6193](https://github.com/coveo/ui-kit/issues/6193)
-* ci: migrate npm publishing to OIDC trusted publishers (#7198) ([c97eff5](https://github.com/coveo/ui-kit/commits/c97eff5)), closes [#7198](https://github.com/coveo/ui-kit/issues/7198)
-* fix(deps): update all dependencies j:kit-282 (#6191) ([9ec6cc5](https://github.com/coveo/ui-kit/commits/9ec6cc5)), closes [#6191](https://github.com/coveo/ui-kit/issues/6191)
-
-
+- chore(deps): update dependency @biomejs/biome to v2.4.7 j:kit-282 (#6193) ([a72f939](https://github.com/coveo/ui-kit/commits/a72f939)), closes [#6193](https://github.com/coveo/ui-kit/issues/6193)
+- ci: migrate npm publishing to OIDC trusted publishers (#7198) ([c97eff5](https://github.com/coveo/ui-kit/commits/c97eff5)), closes [#7198](https://github.com/coveo/ui-kit/issues/7198)
+- fix(deps): update all dependencies j:kit-282 (#6191) ([9ec6cc5](https://github.com/coveo/ui-kit/commits/9ec6cc5)), closes [#6191](https://github.com/coveo/ui-kit/issues/6191)
 
 ## <small>1.41.8 (2026-02-11)</small>
 
-* fix(create-atomic): resolve workspace: and catalog: placeholders in template (#7079) ([ad7b703](https://github.com/coveo/ui-kit/commits/ad7b703)), closes [#7079](https://github.com/coveo/ui-kit/issues/7079)
-
-
+- fix(create-atomic): resolve workspace: and catalog: placeholders in template (#7079) ([ad7b703](https://github.com/coveo/ui-kit/commits/ad7b703)), closes [#7079](https://github.com/coveo/ui-kit/issues/7079)
 
 ## <small>1.41.7 (2026-01-07)</small>
 
-* [Version Bump][skip ci]: ui-kit publish ([b2a83c4](https://github.com/coveo/ui-kit/commits/b2a83c4))
-* Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
-
-
+- [Version Bump][skip ci]: ui-kit publish ([b2a83c4](https://github.com/coveo/ui-kit/commits/b2a83c4))
+- Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
 
 ## <small>1.41.6 (2026-01-06)</small>
 
-* Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
-
-
+- Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
 
 ## <small>1.41.5 (2025-10-30)</small>
 
-* ci: fix pnpm pack including node_modules for create-atomic packages (#6333) ([c9debba](https://github.com/coveo/ui-kit/commits/c9debba)), closes [#6333](https://github.com/coveo/ui-kit/issues/6333)
-* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
-* [Version Bump][skip ci]: ui-kit publish ([b33d02f](https://github.com/coveo/ui-kit/commits/b33d02f))
-
-
+- ci: fix pnpm pack including node_modules for create-atomic packages (#6333) ([c9debba](https://github.com/coveo/ui-kit/commits/c9debba)), closes [#6333](https://github.com/coveo/ui-kit/issues/6333)
+- ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+- [Version Bump][skip ci]: ui-kit publish ([b33d02f](https://github.com/coveo/ui-kit/commits/b33d02f))
 
 ## <small>1.41.4 (2025-10-29)</small>
 
-* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
-
-
+- ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
 
 ## <small>1.41.3 (2025-10-08)</small>
 
-* chore: more cleanup of dependencies in multiples packages (#6119) ([ff6c837](https://github.com/coveo/ui-kit/commits/ff6c837)), closes [#6119](https://github.com/coveo/ui-kit/issues/6119)
-
-
+- chore: more cleanup of dependencies in multiples packages (#6119) ([ff6c837](https://github.com/coveo/ui-kit/commits/ff6c837)), closes [#6119](https://github.com/coveo/ui-kit/issues/6119)
 
 ## <small>1.41.2 (2025-09-17)</small>
 
-* chore: deduplicate dependencies in create-atomic-* (#6029) ([ba54e8e](https://github.com/coveo/ui-kit/commits/ba54e8e)), closes [#6029](https://github.com/coveo/ui-kit/issues/6029)
-
-
+- chore: deduplicate dependencies in create-atomic-\* (#6029) ([ba54e8e](https://github.com/coveo/ui-kit/commits/ba54e8e)), closes [#6029](https://github.com/coveo/ui-kit/issues/6029)
 
 ## <small>1.41.1 (2025-08-27)</small>
 
-* fix(cli): fix plop choice type to simple list (#5968) ([b0a1ace](https://github.com/coveo/ui-kit/commits/b0a1ace)), closes [#5968](https://github.com/coveo/ui-kit/issues/5968)
-
-
+- fix(cli): fix plop choice type to simple list (#5968) ([b0a1ace](https://github.com/coveo/ui-kit/commits/b0a1ace)), closes [#5968](https://github.com/coveo/ui-kit/issues/5968)
 
 ## 1.41.0 (2025-08-07)
 
-* feat: Migrate monorepo build system from NX to Turborepo (#5733) ([e7e1237](https://github.com/coveo/ui-kit/commits/e7e1237)), closes [#5733](https://github.com/coveo/ui-kit/issues/5733)
-* chore: update dependencies (major) (#5793) ([8cbf5bc](https://github.com/coveo/ui-kit/commits/8cbf5bc)), closes [#5793](https://github.com/coveo/ui-kit/issues/5793)
-* fix(deps): update all dependencies j:kit-282 (#5770) ([214bb00](https://github.com/coveo/ui-kit/commits/214bb00)), closes [#5770](https://github.com/coveo/ui-kit/issues/5770)
-
-
+- feat: Migrate monorepo build system from NX to Turborepo (#5733) ([e7e1237](https://github.com/coveo/ui-kit/commits/e7e1237)), closes [#5733](https://github.com/coveo/ui-kit/issues/5733)
+- chore: update dependencies (major) (#5793) ([8cbf5bc](https://github.com/coveo/ui-kit/commits/8cbf5bc)), closes [#5793](https://github.com/coveo/ui-kit/issues/5793)
+- fix(deps): update all dependencies j:kit-282 (#5770) ([214bb00](https://github.com/coveo/ui-kit/commits/214bb00)), closes [#5770](https://github.com/coveo/ui-kit/issues/5770)
 
 ## <small>1.40.13 (2025-07-30)</small>
 
-* chore: enable noUnusedVariables rule (#5670) ([6809d57](https://github.com/coveo/ui-kit/commits/6809d57)), closes [#5670](https://github.com/coveo/ui-kit/issues/5670)
-
-
+- chore: enable noUnusedVariables rule (#5670) ([6809d57](https://github.com/coveo/ui-kit/commits/6809d57)), closes [#5670](https://github.com/coveo/ui-kit/issues/5670)
 
 ## <small>1.40.11 (2025-07-23)</small>
 
-* fix(deps): update all dependencies j:kit-282 (#5723) ([6c032c9](https://github.com/coveo/ui-kit/commits/6c032c9)), closes [#5723](https://github.com/coveo/ui-kit/issues/5723)
-* chore: enable recommended biome rules for entire repo (#5662) ([015a764](https://github.com/coveo/ui-kit/commits/015a764)), closes [#5662](https://github.com/coveo/ui-kit/issues/5662)
-
-
+- fix(deps): update all dependencies j:kit-282 (#5723) ([6c032c9](https://github.com/coveo/ui-kit/commits/6c032c9)), closes [#5723](https://github.com/coveo/ui-kit/issues/5723)
+- chore: enable recommended biome rules for entire repo (#5662) ([015a764](https://github.com/coveo/ui-kit/commits/015a764)), closes [#5662](https://github.com/coveo/ui-kit/issues/5662)
 
 ## <small>1.40.10 (2025-07-16)</small>
 
-* chore(ci): change create-atomic release process from cli to ui-kit (#5648) ([2a906d4](https://github.com/coveo/ui-kit/commits/2a906d4)), closes [#5648](https://github.com/coveo/ui-kit/issues/5648)
-* chore(create-atomic): add missing repository metadata (#5674) ([17a99ce](https://github.com/coveo/ui-kit/commits/17a99ce)), closes [#5674](https://github.com/coveo/ui-kit/issues/5674)
-* fix(create-atomic): add missing build script to package.json (#5671) ([b17ab99](https://github.com/coveo/ui-kit/commits/b17ab99)), closes [#5671](https://github.com/coveo/ui-kit/issues/5671)
-* ci(create-atomic): fix create-atomic release (#5661) ([296d1f4](https://github.com/coveo/ui-kit/commits/296d1f4)), closes [#5661](https://github.com/coveo/ui-kit/issues/5661)
-* feat(cli): port over create-atomic from cli repo (#5623) ([94e8280](https://github.com/coveo/ui-kit/commits/94e8280)), closes [#5623](https://github.com/coveo/ui-kit/issues/5623)
-
-
+- chore(ci): change create-atomic release process from cli to ui-kit (#5648) ([2a906d4](https://github.com/coveo/ui-kit/commits/2a906d4)), closes [#5648](https://github.com/coveo/ui-kit/issues/5648)
+- chore(create-atomic): add missing repository metadata (#5674) ([17a99ce](https://github.com/coveo/ui-kit/commits/17a99ce)), closes [#5674](https://github.com/coveo/ui-kit/issues/5674)
+- fix(create-atomic): add missing build script to package.json (#5671) ([b17ab99](https://github.com/coveo/ui-kit/commits/b17ab99)), closes [#5671](https://github.com/coveo/ui-kit/issues/5671)
+- ci(create-atomic): fix create-atomic release (#5661) ([296d1f4](https://github.com/coveo/ui-kit/commits/296d1f4)), closes [#5661](https://github.com/coveo/ui-kit/issues/5661)
+- feat(cli): port over create-atomic from cli repo (#5623) ([94e8280](https://github.com/coveo/ui-kit/commits/94e8280)), closes [#5623](https://github.com/coveo/ui-kit/issues/5623)
 
 ## 1.40.9 (2025-03-25)
 

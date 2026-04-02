@@ -65,7 +65,6 @@ export class FocusTargetController implements ReactiveController {
     private host: ReactiveControllerHost,
     bindings: AnyBindings
   ) {
-    this.host = host;
     this.bindings = bindings;
     this.host.addController(this);
   }

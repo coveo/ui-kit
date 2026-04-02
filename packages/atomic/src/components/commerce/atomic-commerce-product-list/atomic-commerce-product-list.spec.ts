@@ -192,7 +192,7 @@ describe('atomic-commerce-product-list', () => {
   });
 
   describe('#updated', () => {
-    // biome-ignore lint/suspicious/noExplicitAny: <accessing private properties in tests>
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <accessing private properties in tests>
     let element: any;
 
     beforeEach(async () => {
@@ -498,15 +498,14 @@ describe('atomic-commerce-product-list', () => {
 
       describe.each<{
         density: ItemDisplayDensity;
-      }>([
-        {density: 'comfortable'},
-        {density: 'compact'},
-        {density: 'normal'},
-      ])('when the #density prop is $density', ({density}) => {
-        it('should render list wrapper & root with correct density class', async () => {
-          await renderListWrapperAndRootTestCase({density});
-        });
-      });
+      }>([{density: 'comfortable'}, {density: 'compact'}, {density: 'normal'}])(
+        'when the #density prop is $density',
+        ({density}) => {
+          it('should render list wrapper & root with correct density class', async () => {
+            await renderListWrapperAndRootTestCase({density});
+          });
+        }
+      );
 
       describe.each<{imageSize: ItemDisplayImageSize}>([
         {imageSize: 'icon'},
@@ -815,15 +814,14 @@ describe('atomic-commerce-product-list', () => {
 
       describe.each<{
         density: ItemDisplayDensity;
-      }>([
-        {density: 'comfortable'},
-        {density: 'compact'},
-        {density: 'normal'},
-      ])('when #density is $density', ({density}) => {
-        it('should render list wrapper & table with correct density class', async () => {
-          await renderListWrapperAndTableTestCase({density});
-        });
-      });
+      }>([{density: 'comfortable'}, {density: 'compact'}, {density: 'normal'}])(
+        'when #density is $density',
+        ({density}) => {
+          it('should render list wrapper & table with correct density class', async () => {
+            await renderListWrapperAndTableTestCase({density});
+          });
+        }
+      );
 
       describe.each<{imageSize: ItemDisplayImageSize}>([
         {imageSize: 'icon'},

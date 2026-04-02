@@ -150,7 +150,7 @@ function getStaticFilters(state: Partial<SearchParametersState>) {
       const selectedCaptions = getSelectedStaticFilterCaptions(filter.values);
       return selectedCaptions.length ? {[id]: selectedCaptions} : {};
     })
-    // biome-ignore lint/performance/noAccumulatingSpread: <>
+    // oxlint-disable-next-line oxc/no-accumulating-spread -- <>
     .reduce((acc, obj) => ({...acc, ...obj}), {});
 
   return Object.keys(sf).length ? {sf} : {};

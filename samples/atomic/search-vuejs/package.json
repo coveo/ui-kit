@@ -1,7 +1,7 @@
 {
   "name": "@samples/atomic-search-vuejs",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "build:assets": "node ../../../utils/ci/copy-files.mjs ../../../packages/atomic/dist/atomic/assets public/assets ../../../packages/atomic/dist/atomic/lang public/lang",

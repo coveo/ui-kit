@@ -68,24 +68,27 @@ export const renderExpandableText: FunctionalComponentWithChildren<
     const icon = isExpanded ? MinusIcon : PlusIcon;
 
     return html`<div class="flex flex-col items-start">
-        <div part="expandable-text"
+      <div
+        part="expandable-text"
         class="${multiClassMap(expandableTextClasses)}"
         ${ref(textRef)}
-        >
+      >
         ${children}
-        </div>
+      </div>
 
-        ${renderButton({
-          props: {
-            style: 'text-primary',
-            class: buttonClassString,
-            title: buttonLabel,
-            onClick: onToggleExpand,
-          },
-        })(
-          html`
-          <atomic-icon icon="${icon}" class="mx-1 w-2 align-baseline"></atomic-icon>
+      ${renderButton({
+        props: {
+          style: 'text-primary',
+          class: buttonClassString,
+          title: buttonLabel,
+          onClick: onToggleExpand,
+        },
+      })(
+        html` <atomic-icon
+            icon="${icon}"
+            class="mx-1 w-2 align-baseline"
+          ></atomic-icon>
           ${buttonLabel}`
-        )}
+      )}
     </div>`;
   };

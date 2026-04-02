@@ -43,10 +43,10 @@ const meta: Meta = {
   render: (args) => template(args),
   decorators: [
     (story) => html`
-    <atomic-product-section-visual id="code-root">
-      ${story()}
-    </atomic-product-section-visual>    
-  `,
+      <atomic-product-section-visual id="code-root">
+        ${story()}
+      </atomic-product-section-visual>
+    `,
     productTemplateDecorator,
     commerceProductListDecorator,
     commerceInterfaceDecorator,

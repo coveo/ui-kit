@@ -2,7 +2,10 @@
 <html dir="ltr" lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"
+    />
     <title>Coveo Atomic: Custom component example</title>
 
     <script type="module">
@@ -46,7 +49,8 @@
 
         get template() {
           const template = document.createElement('template');
-          template.innerHTML = '<input type="text" placeholder="Search as you type" />';
+          template.innerHTML =
+            '<input type="text" placeholder="Search as you type" />';
           return template;
         }
 
@@ -99,21 +103,31 @@
         }
       }
 
-      window.customElements.define('custom-template-component', CustomTemplateComponent);
+      window.customElements.define(
+        'custom-template-component',
+        CustomTemplateComponent
+      );
     </script>
   </head>
 
   <body>
-    <atomic-search-interface language-assets-path="./lang" icon-assets-path="./assets">
+    <atomic-search-interface
+      language-assets-path="./lang"
+      icon-assets-path="./assets"
+    >
       <custom-component></custom-component>
       <atomic-segmented-facet field="language"></atomic-segmented-facet>
       <atomic-query-summary></atomic-query-summary>
       <atomic-result-list>
         <atomic-result-template>
           <template>
-            <custom-template-component label="Hello"></custom-template-component>
+            <custom-template-component
+              label="Hello"
+            ></custom-template-component>
             <atomic-field-condition must-not-match-language="Swedish">
-              <custom-template-component label="Hallå"></custom-template-component>
+              <custom-template-component
+                label="Hallå"
+              ></custom-template-component>
             </atomic-field-condition>
           </template>
         </atomic-result-template>

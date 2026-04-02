@@ -30,6 +30,7 @@ import styles from './atomic-product-link.tw.css';
  */
 @customElement('atomic-product-link')
 @bindings()
+// oxlint-disable-next-line typescript/no-unsafe-declaration-merging
 export class AtomicProductLink
   extends LightDomMixin(SlotsForNoShadowDOMMixin(LitElement))
   implements InitializableComponent<CommerceBindings>

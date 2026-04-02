@@ -35,7 +35,7 @@ export default function DidYouMean(props: IDidYouMeanProps) {
     <div>
       <p>
         Search for
-        {/** biome-ignore lint/a11y/noStaticElementInteractions: <> */}
+        {/* oxlint-disable-next-line jsx-a11y/no-static-element-interactions -- <> */}
         <span
           onClick={() => controller?.applyCorrection()}
           onKeyDown={(e) => {

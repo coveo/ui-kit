@@ -69,7 +69,9 @@ const TEMPLATE_EXAMPLE = `<template>
 
 const layoutDecorator = (story: () => unknown) => html`
   <atomic-insight-layout>
-    <atomic-layout-section section="results"> ${story()} </atomic-layout-section>
+    <atomic-layout-section section="results">
+      ${story()}
+    </atomic-layout-section>
   </atomic-insight-layout>
 `;
 

@@ -1,4 +1,4 @@
-import {execSync} from 'node:child_process';
+import {execFileSync} from 'node:child_process';
 import {existsSync, mkdirSync, readFileSync, writeFileSync} from 'node:fs';
 import path from 'node:path';
 import handlebars from 'handlebars';
@@ -67,7 +67,8 @@ async function generateFiles(name, outputDir) {
     writeFileSync(outputPath, content, 'utf8');
     console.log(`Created: ${outputPath}`);
   }
-  execSync(`npx @biomejs/biome check --write ${outputPaths.join(' ')}`);
+  execFileSync('npx', ['oxlint', '--fix', ...outputPaths], {stdio: 'inherit'});
+  execFileSync('npx', ['oxfmt', ...outputPaths], {stdio: 'inherit'});
 }
 
 const [componentName, outputDir] = process.argv.slice(2);
