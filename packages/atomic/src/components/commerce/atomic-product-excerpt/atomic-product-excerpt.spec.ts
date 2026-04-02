@@ -36,10 +36,10 @@ describe('atomic-product-excerpt', () => {
 
     const {element} = await renderInAtomicProduct<AtomicProductExcerpt>({
       template: html`
-      <atomic-product-excerpt
-        truncate-after=${ifDefined(props.truncateAfter)}
-        ?is-collapsible=${props.isCollapsible ?? false}
-      ></atomic-product-excerpt>
+        <atomic-product-excerpt
+          truncate-after=${ifDefined(props.truncateAfter)}
+          ?is-collapsible=${props.isCollapsible ?? false}
+        ></atomic-product-excerpt>
       `,
       selector: 'atomic-product-excerpt',
       product: mockedProduct,
@@ -98,7 +98,7 @@ describe('atomic-product-excerpt', () => {
     const {element, locators} = await renderProductExcerpt({
       truncateAfter: '2',
     });
-    // biome-ignore lint/suspicious/noExplicitAny: <>
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
     (element as any).isTruncated = true;
     await userEvent.click(locators.button!);
 
@@ -109,7 +109,7 @@ describe('atomic-product-excerpt', () => {
     const {element, locators} = await renderProductExcerpt({
       truncateAfter: '2',
     });
-    // biome-ignore lint/suspicious/noExplicitAny: <>
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
     (element as any).isTruncated = true;
     expect(locators.expandableDiv).toHaveClass('min-lines-2');
     expect(locators.expandableDiv).toHaveStyle({
@@ -133,7 +133,7 @@ describe('atomic-product-excerpt', () => {
 
       expect(locators.expandableDiv).not.toHaveClass('line-clamp-2');
 
-      // biome-ignore lint/suspicious/noExplicitAny: <>
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
       (element as any).isTruncated = true;
       await userEvent.click(locators.button!);
 

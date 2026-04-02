@@ -2,7 +2,10 @@
 <html dir="ltr" lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"
+    />
     <title>Coveo Atomic: Headless example</title>
 
     <script type="module">
@@ -20,14 +23,17 @@
     </script>
 
     <script type="module">
-      const {loadAdvancedSearchQueryActions, loadContextActions} = await (import.meta.env
-        ? import('@coveo/headless')
-        : import('http://localhost:3000/headless/v0.0.0/headless.esm.js'));
+      const {loadAdvancedSearchQueryActions, loadContextActions} =
+        await (import.meta.env
+          ? import('@coveo/headless')
+          : import('http://localhost:3000/headless/v0.0.0/headless.esm.js'));
 
       // CDN example: 'http://localhost:3000/atomic/v0.0.0/headless/headless.esm.js'
 
       function setExpression(engine) {
-        const action = loadAdvancedSearchQueryActions(engine).updateAdvancedSearchQueries({
+        const action = loadAdvancedSearchQueryActions(
+          engine
+        ).updateAdvancedSearchQueries({
           aq: '@author=amoreau',
         });
         engine.dispatch(action);
@@ -43,7 +49,9 @@
 
       async function main() {
         await customElements.whenDefined('atomic-search-interface');
-        const searchInterface = document.querySelector('atomic-search-interface');
+        const searchInterface = document.querySelector(
+          'atomic-search-interface'
+        );
         await searchInterface.initialize({
           accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
           organizationId: 'searchuisamples',
@@ -60,7 +68,10 @@
   </head>
 
   <body>
-    <atomic-search-interface language-assets-path="./lang" icon-assets-path="./assets">
+    <atomic-search-interface
+      language-assets-path="./lang"
+      icon-assets-path="./assets"
+    >
       <atomic-search-box></atomic-search-box>
       <atomic-query-summary></atomic-query-summary>
       <atomic-result-list></atomic-result-list>

@@ -175,12 +175,10 @@ export class AtomicSmartSnippetExpandableAnswer
             this.fullHeight = e.detail.height;
           }}
           @selectInlineLink=${this.handleSelectInlineLink}
-          @beginDelayedSelectInlineLink=${
-            this.handleBeginDelayedSelectInlineLink
-          }
-          @cancelPendingSelectInlineLink=${
-            this.handleCancelPendingSelectInlineLink
-          }
+          @beginDelayedSelectInlineLink=${this
+            .handleBeginDelayedSelectInlineLink}
+          @cancelPendingSelectInlineLink=${this
+            .handleCancelPendingSelectInlineLink}
         ></atomic-smart-snippet-answer>
       </div>
     `;

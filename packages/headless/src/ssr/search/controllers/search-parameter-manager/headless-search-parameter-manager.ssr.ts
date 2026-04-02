@@ -29,12 +29,11 @@ export interface SearchParameterManagerBuildProps {
   initialState: SearchParameterManagerInitialState;
 }
 
-export interface SearchParameterManagerDefinition
-  extends ControllerDefinitionWithProps<
-    SearchEngine,
-    SearchParameterManager,
-    SearchParameterManagerBuildProps
-  > {}
+export interface SearchParameterManagerDefinition extends ControllerDefinitionWithProps<
+  SearchEngine,
+  SearchParameterManager,
+  SearchParameterManagerBuildProps
+> {}
 
 /**
  * Defines a `SearchParameterManager` controller instance.

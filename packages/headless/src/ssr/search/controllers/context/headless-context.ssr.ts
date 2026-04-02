@@ -9,8 +9,11 @@ import type {ControllerDefinitionWithProps} from '../../../common/types/controll
 
 export * from '../../../../controllers/context/headless-context.js';
 
-export interface ContextDefinition
-  extends ControllerDefinitionWithProps<SearchEngine, Context, ContextProps> {}
+export interface ContextDefinition extends ControllerDefinitionWithProps<
+  SearchEngine,
+  Context,
+  ContextProps
+> {}
 
 /**
  * Defines a `Context` controller instance.

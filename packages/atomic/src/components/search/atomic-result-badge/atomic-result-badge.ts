@@ -108,7 +108,9 @@ export class AtomicResultBadge
 
   private getTextContent() {
     if (this.field !== undefined) {
-      return html`<atomic-result-text .field=${this.field}></atomic-result-text>`;
+      return html`<atomic-result-text
+        .field=${this.field}
+      ></atomic-result-text>`;
     }
     if (this.label !== undefined) {
       return html`<atomic-text .value=${this.label}></atomic-text>`;
@@ -117,7 +119,9 @@ export class AtomicResultBadge
   }
 
   private renderText() {
-    return html`<span part="result-badge-label">${this.getTextContent()}</span>`;
+    return html`<span part="result-badge-label"
+      >${this.getTextContent()}</span
+    >`;
   }
 
   private renderBadge() {
@@ -126,8 +130,7 @@ export class AtomicResultBadge
         part="result-badge-element"
         class="bg-neutral-light text-neutral-dark inline-flex h-full place-items-center space-x-1.5 rounded-full px-3"
       >
-        ${when(this.icon, () => this.renderIcon())}
-        ${this.renderText()}
+        ${when(this.icon, () => this.renderIcon())} ${this.renderText()}
       </div>
     `;
   }

@@ -19,8 +19,9 @@ const meta: Meta = {
   title: 'Search/Did You Mean',
   id: 'atomic-did-you-mean',
   component: 'atomic-did-you-mean',
-  render: (args) => html`
-  <div style="display: flex; justify-content: flex-start;">
+  render: (args) => html` <div
+    style="display: flex; justify-content: flex-start;"
+  >
     ${template(args)}
   </div>`,
   decorators: [decorator],

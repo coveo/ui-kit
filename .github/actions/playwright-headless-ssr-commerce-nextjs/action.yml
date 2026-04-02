@@ -1,5 +1,5 @@
-name: "Playwright Headless SSR Commerce"
-description: "Run Playwright tests for Headless SSR Commerce"
+name: 'Playwright Headless SSR Commerce'
+description: 'Run Playwright tests for Headless SSR Commerce'
 runs:
   using: composite
   steps:

@@ -45,7 +45,7 @@ export type PlatformClientCallError =
   | DisconnectedError
   | Error;
 
-// biome-ignore lint/complexity/noStaticOnlyClass: Maybe change this into a function someday. Not worth the effort right now.
+// oxlint-disable-next-line unicorn/no-static-only-class -- Maybe change this into a function someday. Not worth the effort right now.
 export class PlatformClient {
   static async call(
     options: PlatformClientCallOptions

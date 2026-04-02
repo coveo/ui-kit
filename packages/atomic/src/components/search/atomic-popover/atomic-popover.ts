@@ -208,10 +208,7 @@ export class AtomicPopover
       >
         ${label}
       </span>
-      <span
-        part="value-count"
-        class=${multiClassMap(countClasses)}
-      >
+      <span part="value-count" class=${multiClassMap(countClasses)}>
         ${this.bindings.i18n.t('between-parentheses', {
           text: count,
         })}

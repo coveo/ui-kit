@@ -4,6 +4,7 @@ group: Usage
 category: Server-side rendering
 slug: usage/server-side-rendering/implement-search-parameter-support
 ---
+
 # Implement search parameter support
 
 We recommend that you use the [Coveo Headless](https://docs.coveo.com/en/lcdf0493/) SSR utilities with the latest [Next.js](https://nextjs.org/) [App Router](https://nextjs.org/docs/app).
@@ -15,7 +16,7 @@ This would cause both the client and server to execute search requests to the [C
 For more details on the root cause of this behavior, refer to [this GitHub issue](https://github.com/vercel/next.js/discussions/19611).
 
 > [!TIP]
-> 
+>
 > Although you could read this article without being familiar with Next.js, we recommend that you follow the Next.js [Getting Started](https://nextjs.org/docs) documentation first.
 
 ## Define the engine and controllers
@@ -49,7 +50,7 @@ export const { useSearchParameterManager } = engineDefinition.controllers; ②
 ```
 
 1. `searchParameterManager` must be added as the last controller, because it requires other controllers to be initialized first.
-Controllers are built in the order in which they’re specified in the engine definition.
+   Controllers are built in the order in which they’re specified in the engine definition.
 2. Make sure to export the `useSearchParameterManager` hook, which will synchronize the search parameters with the URL.
 
 ## Define the component
@@ -82,7 +83,7 @@ Add the code in `src/components/history-router.tsx`:
 ```ts
 'use client';
 
-import { useEffect, useMemo, useCallback } from 'react';
+import {useEffect, useMemo, useCallback} from 'react';
 
 function getUrl() {
   if (typeof window === 'undefined') {
@@ -114,7 +115,7 @@ export function useAppHistoryRouter() {
 The `SearchParameterManager` component uses the [`useEffect`](https://react.dev/reference/react/useEffect) hook to synchronize the [search interface](https://docs.coveo.com/en/2741/) with the current URL whenever its search parameter changes.
 
 > [!TIP]
-> 
+>
 > For more info about `useEffect`, see [Synchronizing with Effects](https://react.dev/learn/synchronizing-with-effects).
 
 Any search filter (such as [facet](https://docs.coveo.com/en/198/) value, [query](https://docs.coveo.com/en/231/), or sort criteria) in the URL will automatically be reflected in the interface when loading the search page with specific parameters in the URL.
@@ -165,7 +166,7 @@ useEffect(() => { ②
 ```
 
 1. The [`useMemo`](https://react.dev/reference/react/useMemo) hook listens for any parameter changes in the state.
-Whenever there’s a change, the state’s parameters are serialized (using the `serialize` utility provided by the `@coveo/headless/ssr` package) and applied to the URL.
+   Whenever there’s a change, the state’s parameters are serialized (using the `serialize` utility provided by the `@coveo/headless/ssr` package) and applied to the URL.
 2. The `useEffect` hook then updates the browser’s history state.
 
 > [!NOTE]

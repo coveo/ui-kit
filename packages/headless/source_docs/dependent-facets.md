@@ -3,6 +3,7 @@ title: Use dependent facets
 group: Usage
 slug: usage/use-dependent-facets
 ---
+
 # Use dependent facets
 
 In the context of a search application, a frequent use case is to define relationships between facets (or filters), so that a dependent facet will only appear when the user interacts with its specified parent facet.
@@ -21,13 +22,13 @@ The **Movie subgenre** facet only appears after a selection is made in the **Mov
 The facet conditions manager lets you define dependencies to use when enabling a facet.
 
 ```typescript
-import { buildFacetConditionsManager } from "@coveo/headless";
+import {buildFacetConditionsManager} from '@coveo/headless';
 import type {
   SearchEngine,
   Facet,
   AnyFacetValuesCondition,
   FacetValueRequest,
-} from "@coveo/headless";
+} from '@coveo/headless';
 
 function makeDependent(
   engine: SearchEngine,
@@ -42,7 +43,7 @@ function makeDependent(
           {
             parentFacetId: parentFacet.state.facetId,
             condition: (parentValues) =>
-              parentValues.some((v) => v.state === "selected"),
+              parentValues.some((v) => v.state === 'selected'),
           };
         return parentFacetHasAnySelectedValueCondition;
       }),

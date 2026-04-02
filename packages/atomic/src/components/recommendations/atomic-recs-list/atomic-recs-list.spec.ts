@@ -95,21 +95,21 @@ describe('atomic-recs-list', () => {
       prop: 'imageSize',
       invalidValue: 'invalid',
     },
-  ])('should set error when #$prop is invalid', async ({
-    prop,
-    invalidValue,
-  }) => {
-    const element = await setupElement();
+  ])(
+    'should set error when #$prop is invalid',
+    async ({prop, invalidValue}) => {
+      const element = await setupElement();
 
-    expect(element.error).toBeUndefined();
+      expect(element.error).toBeUndefined();
 
-    // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
-    (element as any)[prop] = invalidValue;
-    await element.updateComplete;
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
+      (element as any)[prop] = invalidValue;
+      await element.updateComplete;
 
-    expect(element.error).toBeDefined();
-    expect(element.error.message).toMatch(new RegExp(prop, 'i'));
-  });
+      expect(element.error).toBeDefined();
+      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
+    }
+  );
 
   // TODO V4: KIT-5197 - Remove this test
   it.each<{
@@ -135,37 +135,36 @@ describe('atomic-recs-list', () => {
       validValue: 'small',
       invalidValue: 'invalid',
     },
-  ])('should log validation warning when #$prop is updated to invalid value', async ({
-    prop,
-    validValue,
-    invalidValue,
-  }) => {
-    const consoleWarnSpy = vi
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
+  ])(
+    'should log validation warning when #$prop is updated to invalid value',
+    async ({prop, validValue, invalidValue}) => {
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
 
-    const element = await setupElement({[prop]: validValue});
+      const element = await setupElement({[prop]: validValue});
 
-    // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
-    (element as any)[prop] = invalidValue;
-    await element.updateComplete;
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
+      (element as any)[prop] = invalidValue;
+      await element.updateComplete;
 
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining(
-        'Prop validation failed for component atomic-recs-list'
-      ),
-      element
-    );
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining(prop),
-      element
-    );
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining(
+          'Prop validation failed for component atomic-recs-list'
+        ),
+        element
+      );
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining(prop),
+        element
+      );
 
-    consoleWarnSpy.mockRestore();
-  });
+      consoleWarnSpy.mockRestore();
+    }
+  );
 
   describe('#willUpdate', () => {
-    // biome-ignore lint/suspicious/noExplicitAny: accessing private properties in tests
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- accessing private properties in tests
     let element: any;
 
     beforeEach(async () => {
@@ -525,18 +524,18 @@ describe('atomic-recs-list', () => {
   } = {}) => {
     const {element} = await renderInAtomicRecsInterface<AtomicRecsList>({
       template: html`<atomic-recs-list
-          .display=${display}
-          .density=${density}
-          .imageSize=${imageSize}
-          .label=${label}
-          .numberOfRecommendationsPerPage=${numberOfRecommendationsPerPage}
-        >
-          <atomic-recs-result-template>
-            <template>
-              <div>Result Content</div>
-            </template>
-          </atomic-recs-result-template>
-        </atomic-recs-list>`,
+        .display=${display}
+        .density=${density}
+        .imageSize=${imageSize}
+        .label=${label}
+        .numberOfRecommendationsPerPage=${numberOfRecommendationsPerPage}
+      >
+        <atomic-recs-result-template>
+          <template>
+            <div>Result Content</div>
+          </template>
+        </atomic-recs-result-template>
+      </atomic-recs-list>`,
       selector: 'atomic-recs-list',
       bindings: (bindings) => {
         bindings.store.state.loadingFlags = isAppLoaded ? [] : ['loading-flag'];

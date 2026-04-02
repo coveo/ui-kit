@@ -10,58 +10,58 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 );
 
 const externalComponentDecorator = (story: () => unknown) => html`
- <style>
-        .wrapper {
-          display: flex;
-        }
+  <style>
+    .wrapper {
+      display: flex;
+    }
 
-        .wrapper > div {
-          padding: 3rem;
-        }
+    .wrapper > div {
+      padding: 3rem;
+    }
 
-        .wrapper > div * {
-          margin-bottom: 2rem;
-        }
+    .wrapper > div * {
+      margin-bottom: 2rem;
+    }
 
-        h1 {
-          font-size: 1rem;
-        }
-      </style>
-      <div id="code-root">
-        <div class="wrapper">
-          <div>
-            <h1>External components of interface #2</h1>
-            ${story()}
-          </div>
-          <div>
-            <h1>Interface #1, not linked to URL</h1>
-            <atomic-search-interface
-              data-interface-id="interface-1"
-              pipeline="UI_KIT_E2E"
-              search-hub="UI_KIT_E2E"
-              reflect-state-in-url="false"
-            >
-              <atomic-query-summary></atomic-query-summary>
-              <atomic-numeric-facet
-                field="ec_price"
-                label="Cost"
-                with-input="integer"
-              >
-                <atomic-format-currency currency="USD"></atomic-format-currency>
-              </atomic-numeric-facet>
-              <atomic-search-box></atomic-search-box>
-              <atomic-result-list></atomic-result-list>
-            </atomic-search-interface>
-          </div>
-          <div>
-            <h1>Interface #2, linked to URL</h1>
-            <atomic-search-interface data-interface-id="interface-2">
-              <atomic-query-summary></atomic-query-summary>
-              <atomic-result-list></atomic-result-list>
-            </atomic-search-interface>
-          </div>
-        </div>
+    h1 {
+      font-size: 1rem;
+    }
+  </style>
+  <div id="code-root">
+    <div class="wrapper">
+      <div>
+        <h1>External components of interface #2</h1>
+        ${story()}
       </div>
+      <div>
+        <h1>Interface #1, not linked to URL</h1>
+        <atomic-search-interface
+          data-interface-id="interface-1"
+          pipeline="UI_KIT_E2E"
+          search-hub="UI_KIT_E2E"
+          reflect-state-in-url="false"
+        >
+          <atomic-query-summary></atomic-query-summary>
+          <atomic-numeric-facet
+            field="ec_price"
+            label="Cost"
+            with-input="integer"
+          >
+            <atomic-format-currency currency="USD"></atomic-format-currency>
+          </atomic-numeric-facet>
+          <atomic-search-box></atomic-search-box>
+          <atomic-result-list></atomic-result-list>
+        </atomic-search-interface>
+      </div>
+      <div>
+        <h1>Interface #2, linked to URL</h1>
+        <atomic-search-interface data-interface-id="interface-2">
+          <atomic-query-summary></atomic-query-summary>
+          <atomic-result-list></atomic-result-list>
+        </atomic-search-interface>
+      </div>
+    </div>
+  </div>
 `;
 
 const meta: Meta = {

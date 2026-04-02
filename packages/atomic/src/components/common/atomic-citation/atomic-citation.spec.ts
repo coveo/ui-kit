@@ -225,7 +225,7 @@ describe('atomic-citation', () => {
     element.remove();
 
     expect(element.isConnected).toBe(false);
-    // biome-ignore lint/suspicious/noExplicitAny: Testing private property
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Testing private property
     expect((element as any).popperInstance).toBeUndefined();
   });
 });

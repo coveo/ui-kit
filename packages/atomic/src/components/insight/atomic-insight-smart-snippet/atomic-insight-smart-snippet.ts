@@ -153,9 +153,8 @@ export class AtomicInsightSmartSnippet
         'source-anchor-attributes'
       )}
       .onBeginDelayedSelectSource=${this.smartSnippet.beginDelayedSelectSource}
-      .onCancelPendingSelectSource=${
-        this.smartSnippet.cancelPendingSelectSource
-      }
+      .onCancelPendingSelectSource=${this.smartSnippet
+        .cancelPendingSelectSource}
       .onSelectSource=${this.smartSnippet.selectSource}
       .source=${source}
     ></atomic-smart-snippet-source>`;
@@ -196,8 +195,7 @@ export class AtomicInsightSmartSnippet
     const shouldDisplay = this.smartSnippetState?.answerFound ?? false;
     this.classList.toggle('atomic-hidden', !shouldDisplay);
 
-    return html`
-    ${when(shouldDisplay, () =>
+    return html` ${when(shouldDisplay, () =>
       renderSnippetWrapper({
         props: {
           headingLevel: this.headingLevel,

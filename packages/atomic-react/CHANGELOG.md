@@ -6,356 +6,284 @@
 
 ## <small>3.11.7 (2026-03-25)</small>
 
-* fix(deps): update all dependencies j:kit-282 (major) (#6195) ([a5df20c](https://github.com/coveo/ui-kit/commits/a5df20c)), closes [#6195](https://github.com/coveo/ui-kit/issues/6195)
-
-
+- fix(deps): update all dependencies j:kit-282 (major) (#6195) ([a5df20c](https://github.com/coveo/ui-kit/commits/a5df20c)), closes [#6195](https://github.com/coveo/ui-kit/issues/6195)
 
 ## <small>3.11.6 (2026-03-25)</small>
 
-* ci: migrate npm publishing to OIDC trusted publishers (#7198) ([c97eff5](https://github.com/coveo/ui-kit/commits/c97eff5)), closes [#7198](https://github.com/coveo/ui-kit/issues/7198)
-* fix(deps): update all dependencies j:kit-282 (#6191) ([9ec6cc5](https://github.com/coveo/ui-kit/commits/9ec6cc5)), closes [#6191](https://github.com/coveo/ui-kit/issues/6191)
-
-
+- ci: migrate npm publishing to OIDC trusted publishers (#7198) ([c97eff5](https://github.com/coveo/ui-kit/commits/c97eff5)), closes [#7198](https://github.com/coveo/ui-kit/issues/7198)
+- fix(deps): update all dependencies j:kit-282 (#6191) ([9ec6cc5](https://github.com/coveo/ui-kit/commits/9ec6cc5)), closes [#6191](https://github.com/coveo/ui-kit/issues/6191)
 
 ## <small>3.11.5 (2026-03-18)</small>
 
-* chore(atomic-angular): turbod atomic-angular build (#7228) ([b803043](https://github.com/coveo/ui-kit/commits/b803043)), closes [#7228](https://github.com/coveo/ui-kit/issues/7228)
-* chore(atomic-react): turbod atomic-react build (#7227) ([700aaa5](https://github.com/coveo/ui-kit/commits/700aaa5)), closes [#7227](https://github.com/coveo/ui-kit/issues/7227)
-
-
+- chore(atomic-angular): turbod atomic-angular build (#7228) ([b803043](https://github.com/coveo/ui-kit/commits/b803043)), closes [#7228](https://github.com/coveo/ui-kit/issues/7228)
+- chore(atomic-react): turbod atomic-react build (#7227) ([700aaa5](https://github.com/coveo/ui-kit/commits/700aaa5)), closes [#7227](https://github.com/coveo/ui-kit/issues/7227)
 
 ## <small>3.11.3 (2026-03-04)</small>
 
-* chore: eject react build from Stencil (#7160) ([76aae89](https://github.com/coveo/ui-kit/commits/76aae89)), closes [#7160](https://github.com/coveo/ui-kit/issues/7160)
-
-
+- chore: eject react build from Stencil (#7160) ([76aae89](https://github.com/coveo/ui-kit/commits/76aae89)), closes [#7160](https://github.com/coveo/ui-kit/issues/7160)
 
 ## <small>3.11.2 (2026-02-25)</small>
 
-* chore(atomic): migrate atomic-ipx-recs-list (#7069) ([64be4a6](https://github.com/coveo/ui-kit/commits/64be4a6)), closes [#7069](https://github.com/coveo/ui-kit/issues/7069)
-
-
+- chore(atomic): migrate atomic-ipx-recs-list (#7069) ([64be4a6](https://github.com/coveo/ui-kit/commits/64be4a6)), closes [#7069](https://github.com/coveo/ui-kit/issues/7069)
 
 ## 3.11.0 (2026-02-18)
 
-* feat: optimize tree-shaking for Atomic React (#7063) ([108c8ec](https://github.com/coveo/ui-kit/commits/108c8ec)), closes [#7063](https://github.com/coveo/ui-kit/issues/7063)
-* chore(atomic): migrate atomic-recs-list (#7068) ([c335c2d](https://github.com/coveo/ui-kit/commits/c335c2d)), closes [#7068](https://github.com/coveo/ui-kit/issues/7068)
-
-
+- feat: optimize tree-shaking for Atomic React (#7063) ([108c8ec](https://github.com/coveo/ui-kit/commits/108c8ec)), closes [#7063](https://github.com/coveo/ui-kit/issues/7063)
+- chore(atomic): migrate atomic-recs-list (#7068) ([c335c2d](https://github.com/coveo/ui-kit/commits/c335c2d)), closes [#7068](https://github.com/coveo/ui-kit/issues/7068)
 
 ## <small>3.10.4 (2026-02-11)</small>
 
-* chore(atomic): migrate atomic-generated-answer-feedback-modal to Lit (#6989) ([9e559f9](https://github.com/coveo/ui-kit/commits/9e559f9)), closes [#6989](https://github.com/coveo/ui-kit/issues/6989)
-
-
+- chore(atomic): migrate atomic-generated-answer-feedback-modal to Lit (#6989) ([9e559f9](https://github.com/coveo/ui-kit/commits/9e559f9)), closes [#6989](https://github.com/coveo/ui-kit/issues/6989)
 
 ## <small>3.10.3 (2026-01-28)</small>
 
-* chore(atomic): migrate atomic-quickview-modal to Lit (#6949) ([222ce5f](https://github.com/coveo/ui-kit/commits/222ce5f)), closes [#6949](https://github.com/coveo/ui-kit/issues/6949)
-
-
+- chore(atomic): migrate atomic-quickview-modal to Lit (#6949) ([222ce5f](https://github.com/coveo/ui-kit/commits/222ce5f)), closes [#6949](https://github.com/coveo/ui-kit/issues/6949)
 
 ## <small>3.10.1 (2026-01-21)</small>
 
-* chore(atomic): migrate atomic-ipx-button to Lit (#6894) ([fe95e69](https://github.com/coveo/ui-kit/commits/fe95e69)), closes [#6894](https://github.com/coveo/ui-kit/issues/6894)
-* chore(atomic): migrate atomic-recs-result to Lit (#6929) ([f8d774e](https://github.com/coveo/ui-kit/commits/f8d774e)), closes [#6929](https://github.com/coveo/ui-kit/issues/6929)
-* refactor(atomic): migrate atomic-timeframe-facet from Stencil to Lit (#6757) ([122ccc2](https://github.com/coveo/ui-kit/commits/122ccc2)), closes [#6757](https://github.com/coveo/ui-kit/issues/6757)
-
-
+- chore(atomic): migrate atomic-ipx-button to Lit (#6894) ([fe95e69](https://github.com/coveo/ui-kit/commits/fe95e69)), closes [#6894](https://github.com/coveo/ui-kit/issues/6894)
+- chore(atomic): migrate atomic-recs-result to Lit (#6929) ([f8d774e](https://github.com/coveo/ui-kit/commits/f8d774e)), closes [#6929](https://github.com/coveo/ui-kit/issues/6929)
+- refactor(atomic): migrate atomic-timeframe-facet from Stencil to Lit (#6757) ([122ccc2](https://github.com/coveo/ui-kit/commits/122ccc2)), closes [#6757](https://github.com/coveo/ui-kit/issues/6757)
 
 ## 3.10.0 (2026-01-14)
 
-* fix(atomic-react): exclude insight components from search and commerce builds (#6851) ([c916ab9](https://github.com/coveo/ui-kit/commits/c916ab9)), closes [#6851](https://github.com/coveo/ui-kit/issues/6851)
-* feat(atomic): migrate atomic-smart-snippet to Lit with Tailwind styles (#6858) ([a66a4d1](https://github.com/coveo/ui-kit/commits/a66a4d1)), closes [#6858](https://github.com/coveo/ui-kit/issues/6858)
-* feat(atomic): migrate atomic-smart-snippet-feedback-modal to Lit (#6820) ([3bdac6f](https://github.com/coveo/ui-kit/commits/3bdac6f)), closes [#6820](https://github.com/coveo/ui-kit/issues/6820)
-* refactor(atomic): migrate atomic-insight-no-results to Lit (#6864) ([5e7f2a9](https://github.com/coveo/ui-kit/commits/5e7f2a9)), closes [#6864](https://github.com/coveo/ui-kit/issues/6864)
-* refactor(atomic): migrate atomic-insight-pager to Lit (#6863) ([bbdb87b](https://github.com/coveo/ui-kit/commits/bbdb87b)), closes [#6863](https://github.com/coveo/ui-kit/issues/6863)
-* refactor(atomic): migrate atomic-insight-query-error to Lit (#6867) ([8598f21](https://github.com/coveo/ui-kit/commits/8598f21)), closes [#6867](https://github.com/coveo/ui-kit/issues/6867)
-* refactor(atomic): migrate atomic-insight-query-summary to Lit (#6868) ([2f273ec](https://github.com/coveo/ui-kit/commits/2f273ec)), closes [#6868](https://github.com/coveo/ui-kit/issues/6868)
-* refactor(atomic): migrate atomic-insight-result-template to Lit (#6871) ([3f2db89](https://github.com/coveo/ui-kit/commits/3f2db89)), closes [#6871](https://github.com/coveo/ui-kit/issues/6871)
-* refactor(atomic): migrate atomic-recs-error to Lit (#6887) ([8de3fa1](https://github.com/coveo/ui-kit/commits/8de3fa1)), closes [#6887](https://github.com/coveo/ui-kit/issues/6887)
-* chore(atomic): migrate atomic-insight-edit-toggle to Lit (#6848) ([827d868](https://github.com/coveo/ui-kit/commits/827d868)), closes [#6848](https://github.com/coveo/ui-kit/issues/6848)
-* chore(atomic): migrate atomic-insight-full-search-button to Lit (#6841) ([61fe98f](https://github.com/coveo/ui-kit/commits/61fe98f)), closes [#6841](https://github.com/coveo/ui-kit/issues/6841)
-* chore(atomic): migrate atomic-insight-layout to Lit (#6831) ([a3fe211](https://github.com/coveo/ui-kit/commits/a3fe211)), closes [#6831](https://github.com/coveo/ui-kit/issues/6831)
-
-
+- fix(atomic-react): exclude insight components from search and commerce builds (#6851) ([c916ab9](https://github.com/coveo/ui-kit/commits/c916ab9)), closes [#6851](https://github.com/coveo/ui-kit/issues/6851)
+- feat(atomic): migrate atomic-smart-snippet to Lit with Tailwind styles (#6858) ([a66a4d1](https://github.com/coveo/ui-kit/commits/a66a4d1)), closes [#6858](https://github.com/coveo/ui-kit/issues/6858)
+- feat(atomic): migrate atomic-smart-snippet-feedback-modal to Lit (#6820) ([3bdac6f](https://github.com/coveo/ui-kit/commits/3bdac6f)), closes [#6820](https://github.com/coveo/ui-kit/issues/6820)
+- refactor(atomic): migrate atomic-insight-no-results to Lit (#6864) ([5e7f2a9](https://github.com/coveo/ui-kit/commits/5e7f2a9)), closes [#6864](https://github.com/coveo/ui-kit/issues/6864)
+- refactor(atomic): migrate atomic-insight-pager to Lit (#6863) ([bbdb87b](https://github.com/coveo/ui-kit/commits/bbdb87b)), closes [#6863](https://github.com/coveo/ui-kit/issues/6863)
+- refactor(atomic): migrate atomic-insight-query-error to Lit (#6867) ([8598f21](https://github.com/coveo/ui-kit/commits/8598f21)), closes [#6867](https://github.com/coveo/ui-kit/issues/6867)
+- refactor(atomic): migrate atomic-insight-query-summary to Lit (#6868) ([2f273ec](https://github.com/coveo/ui-kit/commits/2f273ec)), closes [#6868](https://github.com/coveo/ui-kit/issues/6868)
+- refactor(atomic): migrate atomic-insight-result-template to Lit (#6871) ([3f2db89](https://github.com/coveo/ui-kit/commits/3f2db89)), closes [#6871](https://github.com/coveo/ui-kit/issues/6871)
+- refactor(atomic): migrate atomic-recs-error to Lit (#6887) ([8de3fa1](https://github.com/coveo/ui-kit/commits/8de3fa1)), closes [#6887](https://github.com/coveo/ui-kit/issues/6887)
+- chore(atomic): migrate atomic-insight-edit-toggle to Lit (#6848) ([827d868](https://github.com/coveo/ui-kit/commits/827d868)), closes [#6848](https://github.com/coveo/ui-kit/issues/6848)
+- chore(atomic): migrate atomic-insight-full-search-button to Lit (#6841) ([61fe98f](https://github.com/coveo/ui-kit/commits/61fe98f)), closes [#6841](https://github.com/coveo/ui-kit/issues/6841)
+- chore(atomic): migrate atomic-insight-layout to Lit (#6831) ([a3fe211](https://github.com/coveo/ui-kit/commits/a3fe211)), closes [#6831](https://github.com/coveo/ui-kit/issues/6831)
 
 ## 3.9.0 (2026-01-07)
 
-* [Version Bump][skip ci]: ui-kit publish ([b2a83c4](https://github.com/coveo/ui-kit/commits/b2a83c4))
-* Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
-* chore (atomic): migrate atomic segmented facet to lit (#6736) ([0417ad2](https://github.com/coveo/ui-kit/commits/0417ad2)), closes [#6736](https://github.com/coveo/ui-kit/issues/6736)
-* chore (atomic): migrated atomic-numeric-facet to lit (#6842) ([e8d5361](https://github.com/coveo/ui-kit/commits/e8d5361)), closes [#6842](https://github.com/coveo/ui-kit/issues/6842)
-* refactor(atomic): migrate atomic-automatic-facet-generator to Lit (#6717) ([c60f22f](https://github.com/coveo/ui-kit/commits/c60f22f)), closes [#6717](https://github.com/coveo/ui-kit/issues/6717)
-* refactor(atomic): migrate atomic-facet-manager to Lit (#6769) ([644ef71](https://github.com/coveo/ui-kit/commits/644ef71)), closes [#6769](https://github.com/coveo/ui-kit/issues/6769)
-* refactor(atomic): migrate atomic-quickview to Lit (#6770) ([bacb2d0](https://github.com/coveo/ui-kit/commits/bacb2d0)), closes [#6770](https://github.com/coveo/ui-kit/issues/6770)
-* refactor(atomic): migrate atomic-refine-modal to Lit (#6815) ([d7bc5ae](https://github.com/coveo/ui-kit/commits/d7bc5ae)), closes [#6815](https://github.com/coveo/ui-kit/issues/6815)
-* refactor(atomic): migrate atomic-refine-toggle to Lit (#6777) ([1756269](https://github.com/coveo/ui-kit/commits/1756269)), closes [#6777](https://github.com/coveo/ui-kit/issues/6777)
-* refactor(atomic): migrate atomic-search-box (#6601) ([18356b4](https://github.com/coveo/ui-kit/commits/18356b4)), closes [#6601](https://github.com/coveo/ui-kit/issues/6601)
-* feat(atomic): migrate atomic-generated-answer to Lit (#6715) ([1357389](https://github.com/coveo/ui-kit/commits/1357389)), closes [#6715](https://github.com/coveo/ui-kit/issues/6715)
-* feat(atomic): migrate atomic-smart-snippet-suggestions to Lit (#6835) ([0a68bab](https://github.com/coveo/ui-kit/commits/0a68bab)), closes [#6835](https://github.com/coveo/ui-kit/issues/6835)
-* feat(atomic): migrate atomic-timeframe to Lit (#6793) ([6e3cefb](https://github.com/coveo/ui-kit/commits/6e3cefb)), closes [#6793](https://github.com/coveo/ui-kit/issues/6793)
-
-
+- [Version Bump][skip ci]: ui-kit publish ([b2a83c4](https://github.com/coveo/ui-kit/commits/b2a83c4))
+- Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
+- chore (atomic): migrate atomic segmented facet to lit (#6736) ([0417ad2](https://github.com/coveo/ui-kit/commits/0417ad2)), closes [#6736](https://github.com/coveo/ui-kit/issues/6736)
+- chore (atomic): migrated atomic-numeric-facet to lit (#6842) ([e8d5361](https://github.com/coveo/ui-kit/commits/e8d5361)), closes [#6842](https://github.com/coveo/ui-kit/issues/6842)
+- refactor(atomic): migrate atomic-automatic-facet-generator to Lit (#6717) ([c60f22f](https://github.com/coveo/ui-kit/commits/c60f22f)), closes [#6717](https://github.com/coveo/ui-kit/issues/6717)
+- refactor(atomic): migrate atomic-facet-manager to Lit (#6769) ([644ef71](https://github.com/coveo/ui-kit/commits/644ef71)), closes [#6769](https://github.com/coveo/ui-kit/issues/6769)
+- refactor(atomic): migrate atomic-quickview to Lit (#6770) ([bacb2d0](https://github.com/coveo/ui-kit/commits/bacb2d0)), closes [#6770](https://github.com/coveo/ui-kit/issues/6770)
+- refactor(atomic): migrate atomic-refine-modal to Lit (#6815) ([d7bc5ae](https://github.com/coveo/ui-kit/commits/d7bc5ae)), closes [#6815](https://github.com/coveo/ui-kit/issues/6815)
+- refactor(atomic): migrate atomic-refine-toggle to Lit (#6777) ([1756269](https://github.com/coveo/ui-kit/commits/1756269)), closes [#6777](https://github.com/coveo/ui-kit/issues/6777)
+- refactor(atomic): migrate atomic-search-box (#6601) ([18356b4](https://github.com/coveo/ui-kit/commits/18356b4)), closes [#6601](https://github.com/coveo/ui-kit/issues/6601)
+- feat(atomic): migrate atomic-generated-answer to Lit (#6715) ([1357389](https://github.com/coveo/ui-kit/commits/1357389)), closes [#6715](https://github.com/coveo/ui-kit/issues/6715)
+- feat(atomic): migrate atomic-smart-snippet-suggestions to Lit (#6835) ([0a68bab](https://github.com/coveo/ui-kit/commits/0a68bab)), closes [#6835](https://github.com/coveo/ui-kit/issues/6835)
+- feat(atomic): migrate atomic-timeframe to Lit (#6793) ([6e3cefb](https://github.com/coveo/ui-kit/commits/6e3cefb)), closes [#6793](https://github.com/coveo/ui-kit/issues/6793)
 
 ## 3.8.0 (2026-01-06)
 
-* refactor(atomic): migrate atomic-automatic-facet-generator to Lit (#6717) ([c60f22f](https://github.com/coveo/ui-kit/commits/c60f22f)), closes [#6717](https://github.com/coveo/ui-kit/issues/6717)
-* refactor(atomic): migrate atomic-facet-manager to Lit (#6769) ([644ef71](https://github.com/coveo/ui-kit/commits/644ef71)), closes [#6769](https://github.com/coveo/ui-kit/issues/6769)
-* refactor(atomic): migrate atomic-quickview to Lit (#6770) ([bacb2d0](https://github.com/coveo/ui-kit/commits/bacb2d0)), closes [#6770](https://github.com/coveo/ui-kit/issues/6770)
-* refactor(atomic): migrate atomic-refine-modal to Lit (#6815) ([d7bc5ae](https://github.com/coveo/ui-kit/commits/d7bc5ae)), closes [#6815](https://github.com/coveo/ui-kit/issues/6815)
-* refactor(atomic): migrate atomic-refine-toggle to Lit (#6777) ([1756269](https://github.com/coveo/ui-kit/commits/1756269)), closes [#6777](https://github.com/coveo/ui-kit/issues/6777)
-* refactor(atomic): migrate atomic-search-box (#6601) ([18356b4](https://github.com/coveo/ui-kit/commits/18356b4)), closes [#6601](https://github.com/coveo/ui-kit/issues/6601)
-* feat(atomic): migrate atomic-generated-answer to Lit (#6715) ([1357389](https://github.com/coveo/ui-kit/commits/1357389)), closes [#6715](https://github.com/coveo/ui-kit/issues/6715)
-* feat(atomic): migrate atomic-smart-snippet-suggestions to Lit (#6835) ([0a68bab](https://github.com/coveo/ui-kit/commits/0a68bab)), closes [#6835](https://github.com/coveo/ui-kit/issues/6835)
-* feat(atomic): migrate atomic-timeframe to Lit (#6793) ([6e3cefb](https://github.com/coveo/ui-kit/commits/6e3cefb)), closes [#6793](https://github.com/coveo/ui-kit/issues/6793)
-* Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
-* chore (atomic): migrate atomic segmented facet to lit (#6736) ([0417ad2](https://github.com/coveo/ui-kit/commits/0417ad2)), closes [#6736](https://github.com/coveo/ui-kit/issues/6736)
-* chore (atomic): migrated atomic-numeric-facet to lit (#6842) ([e8d5361](https://github.com/coveo/ui-kit/commits/e8d5361)), closes [#6842](https://github.com/coveo/ui-kit/issues/6842)
-
-
+- refactor(atomic): migrate atomic-automatic-facet-generator to Lit (#6717) ([c60f22f](https://github.com/coveo/ui-kit/commits/c60f22f)), closes [#6717](https://github.com/coveo/ui-kit/issues/6717)
+- refactor(atomic): migrate atomic-facet-manager to Lit (#6769) ([644ef71](https://github.com/coveo/ui-kit/commits/644ef71)), closes [#6769](https://github.com/coveo/ui-kit/issues/6769)
+- refactor(atomic): migrate atomic-quickview to Lit (#6770) ([bacb2d0](https://github.com/coveo/ui-kit/commits/bacb2d0)), closes [#6770](https://github.com/coveo/ui-kit/issues/6770)
+- refactor(atomic): migrate atomic-refine-modal to Lit (#6815) ([d7bc5ae](https://github.com/coveo/ui-kit/commits/d7bc5ae)), closes [#6815](https://github.com/coveo/ui-kit/issues/6815)
+- refactor(atomic): migrate atomic-refine-toggle to Lit (#6777) ([1756269](https://github.com/coveo/ui-kit/commits/1756269)), closes [#6777](https://github.com/coveo/ui-kit/issues/6777)
+- refactor(atomic): migrate atomic-search-box (#6601) ([18356b4](https://github.com/coveo/ui-kit/commits/18356b4)), closes [#6601](https://github.com/coveo/ui-kit/issues/6601)
+- feat(atomic): migrate atomic-generated-answer to Lit (#6715) ([1357389](https://github.com/coveo/ui-kit/commits/1357389)), closes [#6715](https://github.com/coveo/ui-kit/issues/6715)
+- feat(atomic): migrate atomic-smart-snippet-suggestions to Lit (#6835) ([0a68bab](https://github.com/coveo/ui-kit/commits/0a68bab)), closes [#6835](https://github.com/coveo/ui-kit/issues/6835)
+- feat(atomic): migrate atomic-timeframe to Lit (#6793) ([6e3cefb](https://github.com/coveo/ui-kit/commits/6e3cefb)), closes [#6793](https://github.com/coveo/ui-kit/issues/6793)
+- Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
+- chore (atomic): migrate atomic segmented facet to lit (#6736) ([0417ad2](https://github.com/coveo/ui-kit/commits/0417ad2)), closes [#6736](https://github.com/coveo/ui-kit/issues/6736)
+- chore (atomic): migrated atomic-numeric-facet to lit (#6842) ([e8d5361](https://github.com/coveo/ui-kit/commits/e8d5361)), closes [#6842](https://github.com/coveo/ui-kit/issues/6842)
 
 ## <small>3.7.1 (2025-12-12)</small>
 
-* refactor(atomic): migrate atomic-category-facet from Stencil to Lit (#6690) ([acb6d28](https://github.com/coveo/ui-kit/commits/acb6d28)), closes [#6690](https://github.com/coveo/ui-kit/issues/6690)
-* refactor(atomic): migrate atomic-did-you-mean to Lit (#6749) ([ea3d558](https://github.com/coveo/ui-kit/commits/ea3d558)), closes [#6749](https://github.com/coveo/ui-kit/issues/6749)
-* refactor(atomic): migrate atomic-folded-result-list to Lit (#6718) ([3eb45da](https://github.com/coveo/ui-kit/commits/3eb45da)), closes [#6718](https://github.com/coveo/ui-kit/issues/6718)
-* refactor(atomic): migrate atomic-notifications to Lit (#6747) ([68ef911](https://github.com/coveo/ui-kit/commits/68ef911)), closes [#6747](https://github.com/coveo/ui-kit/issues/6747)
-* refactor(atomic): migrate atomic-result-fields-list to Lit (#6667) ([75ed908](https://github.com/coveo/ui-kit/commits/75ed908)), closes [#6667](https://github.com/coveo/ui-kit/issues/6667)
-* refactor(atomic): migrate atomic-table-element (#6750) ([22b56e8](https://github.com/coveo/ui-kit/commits/22b56e8)), closes [#6750](https://github.com/coveo/ui-kit/issues/6750)
-
-
+- refactor(atomic): migrate atomic-category-facet from Stencil to Lit (#6690) ([acb6d28](https://github.com/coveo/ui-kit/commits/acb6d28)), closes [#6690](https://github.com/coveo/ui-kit/issues/6690)
+- refactor(atomic): migrate atomic-did-you-mean to Lit (#6749) ([ea3d558](https://github.com/coveo/ui-kit/commits/ea3d558)), closes [#6749](https://github.com/coveo/ui-kit/issues/6749)
+- refactor(atomic): migrate atomic-folded-result-list to Lit (#6718) ([3eb45da](https://github.com/coveo/ui-kit/commits/3eb45da)), closes [#6718](https://github.com/coveo/ui-kit/issues/6718)
+- refactor(atomic): migrate atomic-notifications to Lit (#6747) ([68ef911](https://github.com/coveo/ui-kit/commits/68ef911)), closes [#6747](https://github.com/coveo/ui-kit/issues/6747)
+- refactor(atomic): migrate atomic-result-fields-list to Lit (#6667) ([75ed908](https://github.com/coveo/ui-kit/commits/75ed908)), closes [#6667](https://github.com/coveo/ui-kit/issues/6667)
+- refactor(atomic): migrate atomic-table-element (#6750) ([22b56e8](https://github.com/coveo/ui-kit/commits/22b56e8)), closes [#6750](https://github.com/coveo/ui-kit/issues/6750)
 
 ## 3.7.0 (2025-12-10)
 
-* feat(atomic): migrate atomic-popover from Stencil to Lit (#6638) ([1b1186d](https://github.com/coveo/ui-kit/commits/1b1186d)), closes [#6638](https://github.com/coveo/ui-kit/issues/6638)
-* feat(atomic): migrate atomic-rating-facet from Stencil to Lit (#6640) ([5b23931](https://github.com/coveo/ui-kit/commits/5b23931)), closes [#6640](https://github.com/coveo/ui-kit/issues/6640)
-* refactor(atomic): migrate atomic-color-facet to Lit (#6498) ([5f64b78](https://github.com/coveo/ui-kit/commits/5f64b78)), closes [#6498](https://github.com/coveo/ui-kit/issues/6498)
-* refactor(atomic): migrate atomic-format-* components (#6705) ([7a95a98](https://github.com/coveo/ui-kit/commits/7a95a98)), closes [#6705](https://github.com/coveo/ui-kit/issues/6705)
-* refactor(atomic): migrate atomic-rating-range-facet from Stencil to Lit (#6641) ([9b34a63](https://github.com/coveo/ui-kit/commits/9b34a63)), closes [#6641](https://github.com/coveo/ui-kit/issues/6641)
-* refactor(atomic): migrate atomic-result-children to Lit (#6700) ([2e78a7b](https://github.com/coveo/ui-kit/commits/2e78a7b)), closes [#6700](https://github.com/coveo/ui-kit/issues/6700)
-* refactor(atomic): migrate atomic-result-icon to Lit (#6672) ([190ed0b](https://github.com/coveo/ui-kit/commits/190ed0b)), closes [#6672](https://github.com/coveo/ui-kit/issues/6672)
-* refactor(atomic): migrate atomic-result-printable-uri (#6673) ([b0f394d](https://github.com/coveo/ui-kit/commits/b0f394d)), closes [#6673](https://github.com/coveo/ui-kit/issues/6673)
-* refactor(atomic): migrate atomic-result-rating to Lit (#6455) ([7c62356](https://github.com/coveo/ui-kit/commits/7c62356)), closes [#6455](https://github.com/coveo/ui-kit/issues/6455)
-* chore(atomic): Migrate atomic-result-link from Stencil to Lit (#6456) ([3768a66](https://github.com/coveo/ui-kit/commits/3768a66)), closes [#6456](https://github.com/coveo/ui-kit/issues/6456)
-
-
+- feat(atomic): migrate atomic-popover from Stencil to Lit (#6638) ([1b1186d](https://github.com/coveo/ui-kit/commits/1b1186d)), closes [#6638](https://github.com/coveo/ui-kit/issues/6638)
+- feat(atomic): migrate atomic-rating-facet from Stencil to Lit (#6640) ([5b23931](https://github.com/coveo/ui-kit/commits/5b23931)), closes [#6640](https://github.com/coveo/ui-kit/issues/6640)
+- refactor(atomic): migrate atomic-color-facet to Lit (#6498) ([5f64b78](https://github.com/coveo/ui-kit/commits/5f64b78)), closes [#6498](https://github.com/coveo/ui-kit/issues/6498)
+- refactor(atomic): migrate atomic-format-\* components (#6705) ([7a95a98](https://github.com/coveo/ui-kit/commits/7a95a98)), closes [#6705](https://github.com/coveo/ui-kit/issues/6705)
+- refactor(atomic): migrate atomic-rating-range-facet from Stencil to Lit (#6641) ([9b34a63](https://github.com/coveo/ui-kit/commits/9b34a63)), closes [#6641](https://github.com/coveo/ui-kit/issues/6641)
+- refactor(atomic): migrate atomic-result-children to Lit (#6700) ([2e78a7b](https://github.com/coveo/ui-kit/commits/2e78a7b)), closes [#6700](https://github.com/coveo/ui-kit/issues/6700)
+- refactor(atomic): migrate atomic-result-icon to Lit (#6672) ([190ed0b](https://github.com/coveo/ui-kit/commits/190ed0b)), closes [#6672](https://github.com/coveo/ui-kit/issues/6672)
+- refactor(atomic): migrate atomic-result-printable-uri (#6673) ([b0f394d](https://github.com/coveo/ui-kit/commits/b0f394d)), closes [#6673](https://github.com/coveo/ui-kit/issues/6673)
+- refactor(atomic): migrate atomic-result-rating to Lit (#6455) ([7c62356](https://github.com/coveo/ui-kit/commits/7c62356)), closes [#6455](https://github.com/coveo/ui-kit/issues/6455)
+- chore(atomic): Migrate atomic-result-link from Stencil to Lit (#6456) ([3768a66](https://github.com/coveo/ui-kit/commits/3768a66)), closes [#6456](https://github.com/coveo/ui-kit/issues/6456)
 
 ## 3.6.0 (2025-12-03)
 
-* [Version Bump][skip ci]: ui-kit publish ([cfc527e](https://github.com/coveo/ui-kit/commits/cfc527e))
-* Migrate atomic-breadbox from Stencil to Lit (#6492) ([f219d75](https://github.com/coveo/ui-kit/commits/f219d75)), closes [#6492](https://github.com/coveo/ui-kit/issues/6492)
-* refactor: migrate atomic-no-results from Stencil to Lit (#6322) ([1ec8894](https://github.com/coveo/ui-kit/commits/1ec8894)), closes [#6322](https://github.com/coveo/ui-kit/issues/6322)
-* refactor(atomic): migrate atomic-result-date (#6670) ([3e90ee8](https://github.com/coveo/ui-kit/commits/3e90ee8)), closes [#6670](https://github.com/coveo/ui-kit/issues/6670)
-* refactor(atomic): Migrate atomic-result-image component to Lit (#6671) ([b853176](https://github.com/coveo/ui-kit/commits/b853176)), closes [#6671](https://github.com/coveo/ui-kit/issues/6671)
-* refactor(atomic): migrate atomic-result-localized-text to Lit (#6628) ([0580b82](https://github.com/coveo/ui-kit/commits/0580b82)), closes [#6628](https://github.com/coveo/ui-kit/issues/6628)
-* refactor(atomic): migrate atomic-result-multi-value-text to Lit (#6629) ([c5a0b96](https://github.com/coveo/ui-kit/commits/c5a0b96)), closes [#6629](https://github.com/coveo/ui-kit/issues/6629)
-* refactor(atomic): migrate atomic-result-timespan to Lit (#6649) ([dcfea43](https://github.com/coveo/ui-kit/commits/dcfea43)), closes [#6649](https://github.com/coveo/ui-kit/issues/6649)
-* refactor(atomic): migrate atomic-tab to Lit (#6603) ([291e15e](https://github.com/coveo/ui-kit/commits/291e15e)), closes [#6603](https://github.com/coveo/ui-kit/issues/6603)
-* refactor(atomic): migrate atomic-tab-manager (#6674) ([bc93cfe](https://github.com/coveo/ui-kit/commits/bc93cfe)), closes [#6674](https://github.com/coveo/ui-kit/issues/6674)
-* feat(atomic): migrate atomic-segmented-facet-scrollable to Lit (#6513) ([09ca553](https://github.com/coveo/ui-kit/commits/09ca553)), closes [#6513](https://github.com/coveo/ui-kit/issues/6513)
-* feat(atomic): migrate atomic-sort-dropdown to Lit (#6658) ([f9a0b1e](https://github.com/coveo/ui-kit/commits/f9a0b1e)), closes [#6658](https://github.com/coveo/ui-kit/issues/6658)
-* feat(atomic): migrate atomic-sort-expression from Stencil to Lit (#6653) ([871ded9](https://github.com/coveo/ui-kit/commits/871ded9)), closes [#6653](https://github.com/coveo/ui-kit/issues/6653)
-* chore(atomic): migrate atomic-automatic-facet to Lit (#6576) ([7918ede](https://github.com/coveo/ui-kit/commits/7918ede)), closes [#6576](https://github.com/coveo/ui-kit/issues/6576)
-
-
+- [Version Bump][skip ci]: ui-kit publish ([cfc527e](https://github.com/coveo/ui-kit/commits/cfc527e))
+- Migrate atomic-breadbox from Stencil to Lit (#6492) ([f219d75](https://github.com/coveo/ui-kit/commits/f219d75)), closes [#6492](https://github.com/coveo/ui-kit/issues/6492)
+- refactor: migrate atomic-no-results from Stencil to Lit (#6322) ([1ec8894](https://github.com/coveo/ui-kit/commits/1ec8894)), closes [#6322](https://github.com/coveo/ui-kit/issues/6322)
+- refactor(atomic): migrate atomic-result-date (#6670) ([3e90ee8](https://github.com/coveo/ui-kit/commits/3e90ee8)), closes [#6670](https://github.com/coveo/ui-kit/issues/6670)
+- refactor(atomic): Migrate atomic-result-image component to Lit (#6671) ([b853176](https://github.com/coveo/ui-kit/commits/b853176)), closes [#6671](https://github.com/coveo/ui-kit/issues/6671)
+- refactor(atomic): migrate atomic-result-localized-text to Lit (#6628) ([0580b82](https://github.com/coveo/ui-kit/commits/0580b82)), closes [#6628](https://github.com/coveo/ui-kit/issues/6628)
+- refactor(atomic): migrate atomic-result-multi-value-text to Lit (#6629) ([c5a0b96](https://github.com/coveo/ui-kit/commits/c5a0b96)), closes [#6629](https://github.com/coveo/ui-kit/issues/6629)
+- refactor(atomic): migrate atomic-result-timespan to Lit (#6649) ([dcfea43](https://github.com/coveo/ui-kit/commits/dcfea43)), closes [#6649](https://github.com/coveo/ui-kit/issues/6649)
+- refactor(atomic): migrate atomic-tab to Lit (#6603) ([291e15e](https://github.com/coveo/ui-kit/commits/291e15e)), closes [#6603](https://github.com/coveo/ui-kit/issues/6603)
+- refactor(atomic): migrate atomic-tab-manager (#6674) ([bc93cfe](https://github.com/coveo/ui-kit/commits/bc93cfe)), closes [#6674](https://github.com/coveo/ui-kit/issues/6674)
+- feat(atomic): migrate atomic-segmented-facet-scrollable to Lit (#6513) ([09ca553](https://github.com/coveo/ui-kit/commits/09ca553)), closes [#6513](https://github.com/coveo/ui-kit/issues/6513)
+- feat(atomic): migrate atomic-sort-dropdown to Lit (#6658) ([f9a0b1e](https://github.com/coveo/ui-kit/commits/f9a0b1e)), closes [#6658](https://github.com/coveo/ui-kit/issues/6658)
+- feat(atomic): migrate atomic-sort-expression from Stencil to Lit (#6653) ([871ded9](https://github.com/coveo/ui-kit/commits/871ded9)), closes [#6653](https://github.com/coveo/ui-kit/issues/6653)
+- chore(atomic): migrate atomic-automatic-facet to Lit (#6576) ([7918ede](https://github.com/coveo/ui-kit/commits/7918ede)), closes [#6576](https://github.com/coveo/ui-kit/issues/6576)
 
 ## 3.5.0 (2025-12-03)
 
-* refactor: migrate atomic-no-results from Stencil to Lit (#6322) ([1ec8894](https://github.com/coveo/ui-kit/commits/1ec8894)), closes [#6322](https://github.com/coveo/ui-kit/issues/6322)
-* refactor(atomic): migrate atomic-result-date (#6670) ([3e90ee8](https://github.com/coveo/ui-kit/commits/3e90ee8)), closes [#6670](https://github.com/coveo/ui-kit/issues/6670)
-* refactor(atomic): Migrate atomic-result-image component to Lit (#6671) ([b853176](https://github.com/coveo/ui-kit/commits/b853176)), closes [#6671](https://github.com/coveo/ui-kit/issues/6671)
-* refactor(atomic): migrate atomic-result-localized-text to Lit (#6628) ([0580b82](https://github.com/coveo/ui-kit/commits/0580b82)), closes [#6628](https://github.com/coveo/ui-kit/issues/6628)
-* refactor(atomic): migrate atomic-result-multi-value-text to Lit (#6629) ([c5a0b96](https://github.com/coveo/ui-kit/commits/c5a0b96)), closes [#6629](https://github.com/coveo/ui-kit/issues/6629)
-* refactor(atomic): migrate atomic-result-timespan to Lit (#6649) ([dcfea43](https://github.com/coveo/ui-kit/commits/dcfea43)), closes [#6649](https://github.com/coveo/ui-kit/issues/6649)
-* refactor(atomic): migrate atomic-tab to Lit (#6603) ([291e15e](https://github.com/coveo/ui-kit/commits/291e15e)), closes [#6603](https://github.com/coveo/ui-kit/issues/6603)
-* refactor(atomic): migrate atomic-tab-manager (#6674) ([bc93cfe](https://github.com/coveo/ui-kit/commits/bc93cfe)), closes [#6674](https://github.com/coveo/ui-kit/issues/6674)
-* feat(atomic): migrate atomic-segmented-facet-scrollable to Lit (#6513) ([09ca553](https://github.com/coveo/ui-kit/commits/09ca553)), closes [#6513](https://github.com/coveo/ui-kit/issues/6513)
-* feat(atomic): migrate atomic-sort-dropdown to Lit (#6658) ([f9a0b1e](https://github.com/coveo/ui-kit/commits/f9a0b1e)), closes [#6658](https://github.com/coveo/ui-kit/issues/6658)
-* feat(atomic): migrate atomic-sort-expression from Stencil to Lit (#6653) ([871ded9](https://github.com/coveo/ui-kit/commits/871ded9)), closes [#6653](https://github.com/coveo/ui-kit/issues/6653)
-* Migrate atomic-breadbox from Stencil to Lit (#6492) ([f219d75](https://github.com/coveo/ui-kit/commits/f219d75)), closes [#6492](https://github.com/coveo/ui-kit/issues/6492)
-* chore(atomic): migrate atomic-automatic-facet to Lit (#6576) ([7918ede](https://github.com/coveo/ui-kit/commits/7918ede)), closes [#6576](https://github.com/coveo/ui-kit/issues/6576)
-
-
+- refactor: migrate atomic-no-results from Stencil to Lit (#6322) ([1ec8894](https://github.com/coveo/ui-kit/commits/1ec8894)), closes [#6322](https://github.com/coveo/ui-kit/issues/6322)
+- refactor(atomic): migrate atomic-result-date (#6670) ([3e90ee8](https://github.com/coveo/ui-kit/commits/3e90ee8)), closes [#6670](https://github.com/coveo/ui-kit/issues/6670)
+- refactor(atomic): Migrate atomic-result-image component to Lit (#6671) ([b853176](https://github.com/coveo/ui-kit/commits/b853176)), closes [#6671](https://github.com/coveo/ui-kit/issues/6671)
+- refactor(atomic): migrate atomic-result-localized-text to Lit (#6628) ([0580b82](https://github.com/coveo/ui-kit/commits/0580b82)), closes [#6628](https://github.com/coveo/ui-kit/issues/6628)
+- refactor(atomic): migrate atomic-result-multi-value-text to Lit (#6629) ([c5a0b96](https://github.com/coveo/ui-kit/commits/c5a0b96)), closes [#6629](https://github.com/coveo/ui-kit/issues/6629)
+- refactor(atomic): migrate atomic-result-timespan to Lit (#6649) ([dcfea43](https://github.com/coveo/ui-kit/commits/dcfea43)), closes [#6649](https://github.com/coveo/ui-kit/issues/6649)
+- refactor(atomic): migrate atomic-tab to Lit (#6603) ([291e15e](https://github.com/coveo/ui-kit/commits/291e15e)), closes [#6603](https://github.com/coveo/ui-kit/issues/6603)
+- refactor(atomic): migrate atomic-tab-manager (#6674) ([bc93cfe](https://github.com/coveo/ui-kit/commits/bc93cfe)), closes [#6674](https://github.com/coveo/ui-kit/issues/6674)
+- feat(atomic): migrate atomic-segmented-facet-scrollable to Lit (#6513) ([09ca553](https://github.com/coveo/ui-kit/commits/09ca553)), closes [#6513](https://github.com/coveo/ui-kit/issues/6513)
+- feat(atomic): migrate atomic-sort-dropdown to Lit (#6658) ([f9a0b1e](https://github.com/coveo/ui-kit/commits/f9a0b1e)), closes [#6658](https://github.com/coveo/ui-kit/issues/6658)
+- feat(atomic): migrate atomic-sort-expression from Stencil to Lit (#6653) ([871ded9](https://github.com/coveo/ui-kit/commits/871ded9)), closes [#6653](https://github.com/coveo/ui-kit/issues/6653)
+- Migrate atomic-breadbox from Stencil to Lit (#6492) ([f219d75](https://github.com/coveo/ui-kit/commits/f219d75)), closes [#6492](https://github.com/coveo/ui-kit/issues/6492)
+- chore(atomic): migrate atomic-automatic-facet to Lit (#6576) ([7918ede](https://github.com/coveo/ui-kit/commits/7918ede)), closes [#6576](https://github.com/coveo/ui-kit/issues/6576)
 
 ## <small>3.4.2 (2025-11-20)</small>
 
-* chore(atomic): migrate atomic-result-badge to Lit (#6552) ([0b1d2f9](https://github.com/coveo/ui-kit/commits/0b1d2f9)), closes [#6552](https://github.com/coveo/ui-kit/issues/6552)
-
-
+- chore(atomic): migrate atomic-result-badge to Lit (#6552) ([0b1d2f9](https://github.com/coveo/ui-kit/commits/0b1d2f9)), closes [#6552](https://github.com/coveo/ui-kit/issues/6552)
 
 ## <small>3.4.1 (2025-11-19)</small>
 
-* chore (atomic): migrated atomic-result-html to lit (#6538) ([b76337c](https://github.com/coveo/ui-kit/commits/b76337c)), closes [#6538](https://github.com/coveo/ui-kit/issues/6538)
-* chore(atomic): migrate atomic-focus-trap from Stencil to Lit (#6450) ([1a56993](https://github.com/coveo/ui-kit/commits/1a56993)), closes [#6450](https://github.com/coveo/ui-kit/issues/6450)
-
-
+- chore (atomic): migrated atomic-result-html to lit (#6538) ([b76337c](https://github.com/coveo/ui-kit/commits/b76337c)), closes [#6538](https://github.com/coveo/ui-kit/issues/6538)
+- chore(atomic): migrate atomic-focus-trap from Stencil to Lit (#6450) ([1a56993](https://github.com/coveo/ui-kit/commits/1a56993)), closes [#6450](https://github.com/coveo/ui-kit/issues/6450)
 
 ## 3.4.0 (2025-11-12)
 
-* chore: remove stencil-generated build artifacts from git tracking (#6500) ([e9f418f](https://github.com/coveo/ui-kit/commits/e9f418f)), closes [#6500](https://github.com/coveo/ui-kit/issues/6500)
-* chore(atomic): migrate atomic-result-number (#6188) ([4baa234](https://github.com/coveo/ui-kit/commits/4baa234)), closes [#6188](https://github.com/coveo/ui-kit/issues/6188)
-* chore (atomic): migrated atomic query error to lit (#6334) ([b57d672](https://github.com/coveo/ui-kit/commits/b57d672)), closes [#6334](https://github.com/coveo/ui-kit/issues/6334)
-* Migrate atomic-numeric-range from Stencil to Lit (#6430) ([df456c9](https://github.com/coveo/ui-kit/commits/df456c9)), closes [#6430](https://github.com/coveo/ui-kit/issues/6430)
-* feat(atomic): create placeholder Generate Answer button for builder preview (#6201) ([70f384f](https://github.com/coveo/ui-kit/commits/70f384f)), closes [#6201](https://github.com/coveo/ui-kit/issues/6201)
-
-
+- chore: remove stencil-generated build artifacts from git tracking (#6500) ([e9f418f](https://github.com/coveo/ui-kit/commits/e9f418f)), closes [#6500](https://github.com/coveo/ui-kit/issues/6500)
+- chore(atomic): migrate atomic-result-number (#6188) ([4baa234](https://github.com/coveo/ui-kit/commits/4baa234)), closes [#6188](https://github.com/coveo/ui-kit/issues/6188)
+- chore (atomic): migrated atomic query error to lit (#6334) ([b57d672](https://github.com/coveo/ui-kit/commits/b57d672)), closes [#6334](https://github.com/coveo/ui-kit/issues/6334)
+- Migrate atomic-numeric-range from Stencil to Lit (#6430) ([df456c9](https://github.com/coveo/ui-kit/commits/df456c9)), closes [#6430](https://github.com/coveo/ui-kit/issues/6430)
+- feat(atomic): create placeholder Generate Answer button for builder preview (#6201) ([70f384f](https://github.com/coveo/ui-kit/commits/70f384f)), closes [#6201](https://github.com/coveo/ui-kit/issues/6201)
 
 ## <small>3.3.22 (2025-11-05)</small>
 
-* chore(atomic): migrate atomic-load-more-results (#6217) ([ffc26c1](https://github.com/coveo/ui-kit/commits/ffc26c1)), closes [#6217](https://github.com/coveo/ui-kit/issues/6217)
-* chore(atomic): migrate atomic-recs-interface (#6337) ([fc956f2](https://github.com/coveo/ui-kit/commits/fc956f2)), closes [#6337](https://github.com/coveo/ui-kit/issues/6337)
-* chore(atomic): migrate atomic-result-text (#6206) ([3521050](https://github.com/coveo/ui-kit/commits/3521050)), closes [#6206](https://github.com/coveo/ui-kit/issues/6206)
-* chore(atomic): migrate atomic-text (#6205) ([bf2294c](https://github.com/coveo/ui-kit/commits/bf2294c)), closes [#6205](https://github.com/coveo/ui-kit/issues/6205)
-
-
+- chore(atomic): migrate atomic-load-more-results (#6217) ([ffc26c1](https://github.com/coveo/ui-kit/commits/ffc26c1)), closes [#6217](https://github.com/coveo/ui-kit/issues/6217)
+- chore(atomic): migrate atomic-recs-interface (#6337) ([fc956f2](https://github.com/coveo/ui-kit/commits/fc956f2)), closes [#6337](https://github.com/coveo/ui-kit/issues/6337)
+- chore(atomic): migrate atomic-result-text (#6206) ([3521050](https://github.com/coveo/ui-kit/commits/3521050)), closes [#6206](https://github.com/coveo/ui-kit/issues/6206)
+- chore(atomic): migrate atomic-text (#6205) ([bf2294c](https://github.com/coveo/ui-kit/commits/bf2294c)), closes [#6205](https://github.com/coveo/ui-kit/issues/6205)
 
 ## <small>3.3.21 (2025-10-30)</small>
 
-* chore(atomic): migrate `atomic-html` (#6202) ([d204f17](https://github.com/coveo/ui-kit/commits/d204f17)), closes [#6202](https://github.com/coveo/ui-kit/issues/6202)
-* chore(atomic): migrate atomic-result-list (#6189) ([eace955](https://github.com/coveo/ui-kit/commits/eace955)), closes [#6189](https://github.com/coveo/ui-kit/issues/6189)
-* [Version Bump][skip ci]: ui-kit publish ([b33d02f](https://github.com/coveo/ui-kit/commits/b33d02f))
-* chore (atomic): migrated atomic-result-children-template to lit (#6199) ([c0f6684](https://github.com/coveo/ui-kit/commits/c0f6684)), closes [#6199](https://github.com/coveo/ui-kit/issues/6199)
-* fix(deps): update react j:kit-282 (#6192) ([183b449](https://github.com/coveo/ui-kit/commits/183b449)), closes [#6192](https://github.com/coveo/ui-kit/issues/6192)
-* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
-
-
+- chore(atomic): migrate `atomic-html` (#6202) ([d204f17](https://github.com/coveo/ui-kit/commits/d204f17)), closes [#6202](https://github.com/coveo/ui-kit/issues/6202)
+- chore(atomic): migrate atomic-result-list (#6189) ([eace955](https://github.com/coveo/ui-kit/commits/eace955)), closes [#6189](https://github.com/coveo/ui-kit/issues/6189)
+- [Version Bump][skip ci]: ui-kit publish ([b33d02f](https://github.com/coveo/ui-kit/commits/b33d02f))
+- chore (atomic): migrated atomic-result-children-template to lit (#6199) ([c0f6684](https://github.com/coveo/ui-kit/commits/c0f6684)), closes [#6199](https://github.com/coveo/ui-kit/issues/6199)
+- fix(deps): update react j:kit-282 (#6192) ([183b449](https://github.com/coveo/ui-kit/commits/183b449)), closes [#6192](https://github.com/coveo/ui-kit/issues/6192)
+- ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
 
 ## <small>3.3.21 (2025-10-29)</small>
 
-* fix(deps): update react j:kit-282 (#6192) ([183b449](https://github.com/coveo/ui-kit/commits/183b449)), closes [#6192](https://github.com/coveo/ui-kit/issues/6192)
-* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
-* chore(atomic): migrate `atomic-html` (#6202) ([d204f17](https://github.com/coveo/ui-kit/commits/d204f17)), closes [#6202](https://github.com/coveo/ui-kit/issues/6202)
-
-
+- fix(deps): update react j:kit-282 (#6192) ([183b449](https://github.com/coveo/ui-kit/commits/183b449)), closes [#6192](https://github.com/coveo/ui-kit/issues/6192)
+- ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+- chore(atomic): migrate `atomic-html` (#6202) ([d204f17](https://github.com/coveo/ui-kit/commits/d204f17)), closes [#6202](https://github.com/coveo/ui-kit/issues/6202)
 
 ## <small>3.3.20 (2025-10-28)</small>
 
-* chore(atomic): migrate atomic-external to lit (#6184) ([9235b73](https://github.com/coveo/ui-kit/commits/9235b73)), closes [#6184](https://github.com/coveo/ui-kit/issues/6184)
-* chore(atomic): migrate atomic-facet (#5995) ([bbd2ea2](https://github.com/coveo/ui-kit/commits/bbd2ea2)), closes [#5995](https://github.com/coveo/ui-kit/issues/5995)
-* chore(atomic): migrate atomic-result (#6134) ([006e0a8](https://github.com/coveo/ui-kit/commits/006e0a8)), closes [#6134](https://github.com/coveo/ui-kit/issues/6134)
-
-
+- chore(atomic): migrate atomic-external to lit (#6184) ([9235b73](https://github.com/coveo/ui-kit/commits/9235b73)), closes [#6184](https://github.com/coveo/ui-kit/issues/6184)
+- chore(atomic): migrate atomic-facet (#5995) ([bbd2ea2](https://github.com/coveo/ui-kit/commits/bbd2ea2)), closes [#5995](https://github.com/coveo/ui-kit/issues/5995)
+- chore(atomic): migrate atomic-result (#6134) ([006e0a8](https://github.com/coveo/ui-kit/commits/006e0a8)), closes [#6134](https://github.com/coveo/ui-kit/issues/6134)
 
 ## <small>3.3.19 (2025-10-22)</small>
 
-* chore(atomic): migrate atomic-result-section-* (#6113) ([d9eb32d](https://github.com/coveo/ui-kit/commits/d9eb32d)), closes [#6113](https://github.com/coveo/ui-kit/issues/6113)
-
-
+- chore(atomic): migrate atomic-result-section-\* (#6113) ([d9eb32d](https://github.com/coveo/ui-kit/commits/d9eb32d)), closes [#6113](https://github.com/coveo/ui-kit/issues/6113)
 
 ## <small>3.3.16 (2025-10-15)</small>
 
-* fix(atomic-react): fix table layout (#6146) ([2cdc290](https://github.com/coveo/ui-kit/commits/2cdc290)), closes [#6146](https://github.com/coveo/ui-kit/issues/6146)
-* chore(atomic insight): migrate atomic-insight-interface (#5889) ([5aaf044](https://github.com/coveo/ui-kit/commits/5aaf044)), closes [#5889](https://github.com/coveo/ui-kit/issues/5889)
-* chore(atomic): migrate atomic-search-box-instant-results (#6104) ([34aebcb](https://github.com/coveo/ui-kit/commits/34aebcb)), closes [#6104](https://github.com/coveo/ui-kit/issues/6104)
-* chore(atomic): migrate atomic-search-box-query-suggestions (#6071) ([8ec8876](https://github.com/coveo/ui-kit/commits/8ec8876)), closes [#6071](https://github.com/coveo/ui-kit/issues/6071)
-
-
+- fix(atomic-react): fix table layout (#6146) ([2cdc290](https://github.com/coveo/ui-kit/commits/2cdc290)), closes [#6146](https://github.com/coveo/ui-kit/issues/6146)
+- chore(atomic insight): migrate atomic-insight-interface (#5889) ([5aaf044](https://github.com/coveo/ui-kit/commits/5aaf044)), closes [#5889](https://github.com/coveo/ui-kit/issues/5889)
+- chore(atomic): migrate atomic-search-box-instant-results (#6104) ([34aebcb](https://github.com/coveo/ui-kit/commits/34aebcb)), closes [#6104](https://github.com/coveo/ui-kit/issues/6104)
+- chore(atomic): migrate atomic-search-box-query-suggestions (#6071) ([8ec8876](https://github.com/coveo/ui-kit/commits/8ec8876)), closes [#6071](https://github.com/coveo/ui-kit/issues/6071)
 
 ## <small>3.3.13 (2025-10-08)</small>
 
-* chore: more cleanup of dependencies in multiples packages (#6119) ([ff6c837](https://github.com/coveo/ui-kit/commits/ff6c837)), closes [#6119](https://github.com/coveo/ui-kit/issues/6119)
-* chore(atomic): migrate atomic-relevance-inspector (#6089) ([af85860](https://github.com/coveo/ui-kit/commits/af85860)), closes [#6089](https://github.com/coveo/ui-kit/issues/6089)
-* chore(atomic): migrate atomic-search-box-recent-queries (#6080) ([a9fe081](https://github.com/coveo/ui-kit/commits/a9fe081)), closes [#6080](https://github.com/coveo/ui-kit/issues/6080)
-* chore(atomic): migrate atomic-search-interface (#5990) ([feafe1d](https://github.com/coveo/ui-kit/commits/feafe1d)), closes [#5990](https://github.com/coveo/ui-kit/issues/5990)
-* chore (atomic): migrated atomic-pager to lit (#6084) ([c894ef6](https://github.com/coveo/ui-kit/commits/c894ef6)), closes [#6084](https://github.com/coveo/ui-kit/issues/6084)
-
-
+- chore: more cleanup of dependencies in multiples packages (#6119) ([ff6c837](https://github.com/coveo/ui-kit/commits/ff6c837)), closes [#6119](https://github.com/coveo/ui-kit/issues/6119)
+- chore(atomic): migrate atomic-relevance-inspector (#6089) ([af85860](https://github.com/coveo/ui-kit/commits/af85860)), closes [#6089](https://github.com/coveo/ui-kit/issues/6089)
+- chore(atomic): migrate atomic-search-box-recent-queries (#6080) ([a9fe081](https://github.com/coveo/ui-kit/commits/a9fe081)), closes [#6080](https://github.com/coveo/ui-kit/issues/6080)
+- chore(atomic): migrate atomic-search-interface (#5990) ([feafe1d](https://github.com/coveo/ui-kit/commits/feafe1d)), closes [#5990](https://github.com/coveo/ui-kit/issues/5990)
+- chore (atomic): migrated atomic-pager to lit (#6084) ([c894ef6](https://github.com/coveo/ui-kit/commits/c894ef6)), closes [#6084](https://github.com/coveo/ui-kit/issues/6084)
 
 ## <small>3.3.11 (2025-09-24)</small>
 
-* chore(query summary): migrate atomic-query-summary (#6025) ([25218e2](https://github.com/coveo/ui-kit/commits/25218e2)), closes [#6025](https://github.com/coveo/ui-kit/issues/6025)
-
-
+- chore(query summary): migrate atomic-query-summary (#6025) ([25218e2](https://github.com/coveo/ui-kit/commits/25218e2)), closes [#6025](https://github.com/coveo/ui-kit/issues/6025)
 
 ## <small>3.3.10 (2025-09-18)</small>
 
-* [Version Bump][skip ci]: ui-kit publish ([a3fb13e](https://github.com/coveo/ui-kit/commits/a3fb13e))
-
-
+- [Version Bump][skip ci]: ui-kit publish ([a3fb13e](https://github.com/coveo/ui-kit/commits/a3fb13e))
 
 ## <small>3.3.6 (2025-08-28)</small>
 
-* chore: migrate to storybook9 (#5916) ([b26bff1](https://github.com/coveo/ui-kit/commits/b26bff1)), closes [#5916](https://github.com/coveo/ui-kit/issues/5916)
-* chore(atomic): migrate atomic-search-layout (#5877) ([b2172dd](https://github.com/coveo/ui-kit/commits/b2172dd)), closes [#5877](https://github.com/coveo/ui-kit/issues/5877)
-* fix: expose rga internals for angular availability (#5958) ([d452d4f](https://github.com/coveo/ui-kit/commits/d452d4f)), closes [#5958](https://github.com/coveo/ui-kit/issues/5958)
-
-
+- chore: migrate to storybook9 (#5916) ([b26bff1](https://github.com/coveo/ui-kit/commits/b26bff1)), closes [#5916](https://github.com/coveo/ui-kit/issues/5916)
+- chore(atomic): migrate atomic-search-layout (#5877) ([b2172dd](https://github.com/coveo/ui-kit/commits/b2172dd)), closes [#5877](https://github.com/coveo/ui-kit/issues/5877)
+- fix: expose rga internals for angular availability (#5958) ([d452d4f](https://github.com/coveo/ui-kit/commits/d452d4f)), closes [#5958](https://github.com/coveo/ui-kit/issues/5958)
 
 ## <small>3.3.3 (2025-08-13)</small>
 
-* chore(atomic): migrate atomic-results-per-page (#5807) ([8f46a79](https://github.com/coveo/ui-kit/commits/8f46a79)), closes [#5807](https://github.com/coveo/ui-kit/issues/5807)
-* docs(atomic): standardize storybook (#5854) ([54b9400](https://github.com/coveo/ui-kit/commits/54b9400)), closes [#5854](https://github.com/coveo/ui-kit/issues/5854)
-
-
+- chore(atomic): migrate atomic-results-per-page (#5807) ([8f46a79](https://github.com/coveo/ui-kit/commits/8f46a79)), closes [#5807](https://github.com/coveo/ui-kit/issues/5807)
+- docs(atomic): standardize storybook (#5854) ([54b9400](https://github.com/coveo/ui-kit/commits/54b9400)), closes [#5854](https://github.com/coveo/ui-kit/issues/5854)
 
 ## 3.3.0 (2025-08-07)
 
-* chore: migrate atomic-product-section-* from Stencil to Lit (#5707) ([b7fe622](https://github.com/coveo/ui-kit/commits/b7fe622)), closes [#5707](https://github.com/coveo/ui-kit/issues/5707) [#5697](https://github.com/coveo/ui-kit/issues/5697)
-* chore(atomic): migrate all commerce facets (#5750) ([93f09ad](https://github.com/coveo/ui-kit/commits/93f09ad)), closes [#5750](https://github.com/coveo/ui-kit/issues/5750)
-* chore(atomic): migrate atomic-aria-live (#5753) ([1707e4b](https://github.com/coveo/ui-kit/commits/1707e4b)), closes [#5753](https://github.com/coveo/ui-kit/issues/5753)
-* chore(atomic): migrate atomic-product-description (#5747) ([8974972](https://github.com/coveo/ui-kit/commits/8974972)), closes [#5747](https://github.com/coveo/ui-kit/issues/5747)
-* chore(atomic): migrate atomic-product-field-condition (#5722) ([5a0e0a9](https://github.com/coveo/ui-kit/commits/5a0e0a9)), closes [#5722](https://github.com/coveo/ui-kit/issues/5722)
-* chore(atomic): migrate atomic-product-image (#5731) ([be03980](https://github.com/coveo/ui-kit/commits/be03980)), closes [#5731](https://github.com/coveo/ui-kit/issues/5731)
-* chore(atomic): migrate atomic-product-rating from Stencil to Lit (#5716) ([9d27353](https://github.com/coveo/ui-kit/commits/9d27353)), closes [#5716](https://github.com/coveo/ui-kit/issues/5716) [#5696](https://github.com/coveo/ui-kit/issues/5696)
-* chore(deps): lock file maintenance j:kit-282 (#5810) ([c408fd2](https://github.com/coveo/ui-kit/commits/c408fd2)), closes [#5810](https://github.com/coveo/ui-kit/issues/5810)
-* feat: Migrate monorepo build system from NX to Turborepo (#5733) ([e7e1237](https://github.com/coveo/ui-kit/commits/e7e1237)), closes [#5733](https://github.com/coveo/ui-kit/issues/5733)
-* fix(deps): update all dependencies j:kit-282 (#5770) ([214bb00](https://github.com/coveo/ui-kit/commits/214bb00)), closes [#5770](https://github.com/coveo/ui-kit/issues/5770)
-
-
+- chore: migrate atomic-product-section-\* from Stencil to Lit (#5707) ([b7fe622](https://github.com/coveo/ui-kit/commits/b7fe622)), closes [#5707](https://github.com/coveo/ui-kit/issues/5707) [#5697](https://github.com/coveo/ui-kit/issues/5697)
+- chore(atomic): migrate all commerce facets (#5750) ([93f09ad](https://github.com/coveo/ui-kit/commits/93f09ad)), closes [#5750](https://github.com/coveo/ui-kit/issues/5750)
+- chore(atomic): migrate atomic-aria-live (#5753) ([1707e4b](https://github.com/coveo/ui-kit/commits/1707e4b)), closes [#5753](https://github.com/coveo/ui-kit/issues/5753)
+- chore(atomic): migrate atomic-product-description (#5747) ([8974972](https://github.com/coveo/ui-kit/commits/8974972)), closes [#5747](https://github.com/coveo/ui-kit/issues/5747)
+- chore(atomic): migrate atomic-product-field-condition (#5722) ([5a0e0a9](https://github.com/coveo/ui-kit/commits/5a0e0a9)), closes [#5722](https://github.com/coveo/ui-kit/issues/5722)
+- chore(atomic): migrate atomic-product-image (#5731) ([be03980](https://github.com/coveo/ui-kit/commits/be03980)), closes [#5731](https://github.com/coveo/ui-kit/issues/5731)
+- chore(atomic): migrate atomic-product-rating from Stencil to Lit (#5716) ([9d27353](https://github.com/coveo/ui-kit/commits/9d27353)), closes [#5716](https://github.com/coveo/ui-kit/issues/5716) [#5696](https://github.com/coveo/ui-kit/issues/5696)
+- chore(deps): lock file maintenance j:kit-282 (#5810) ([c408fd2](https://github.com/coveo/ui-kit/commits/c408fd2)), closes [#5810](https://github.com/coveo/ui-kit/issues/5810)
+- feat: Migrate monorepo build system from NX to Turborepo (#5733) ([e7e1237](https://github.com/coveo/ui-kit/commits/e7e1237)), closes [#5733](https://github.com/coveo/ui-kit/issues/5733)
+- fix(deps): update all dependencies j:kit-282 (#5770) ([214bb00](https://github.com/coveo/ui-kit/commits/214bb00)), closes [#5770](https://github.com/coveo/ui-kit/issues/5770)
 
 ## <small>3.2.54 (2025-07-30)</small>
 
-* chore: enable noUnusedVariables rule (#5670) ([6809d57](https://github.com/coveo/ui-kit/commits/6809d57)), closes [#5670](https://github.com/coveo/ui-kit/issues/5670)
-* chore(atomic): migrate atomic-product-excerpt (#5735) ([7d5a246](https://github.com/coveo/ui-kit/commits/7d5a246)), closes [#5735](https://github.com/coveo/ui-kit/issues/5735)
-* chore(atomic): migrate atomic-product-link (#5618) ([20e0245](https://github.com/coveo/ui-kit/commits/20e0245)), closes [#5618](https://github.com/coveo/ui-kit/issues/5618)
-* chore(atomic): migrate atomic-product-multi-value-text (#5739) ([99f9284](https://github.com/coveo/ui-kit/commits/99f9284)), closes [#5739](https://github.com/coveo/ui-kit/issues/5739)
-* chore(atomic): migrate atomic-product-numeric-field-value (#5745) ([487f65a](https://github.com/coveo/ui-kit/commits/487f65a)), closes [#5745](https://github.com/coveo/ui-kit/issues/5745)
-* chore(atomic): migrate atomic-product-price (#5744) ([a09bdf6](https://github.com/coveo/ui-kit/commits/a09bdf6)), closes [#5744](https://github.com/coveo/ui-kit/issues/5744)
-* chore(atomic-angular, atomic-react, auth, bueno, headless-react): remove unused exports, code and de ([6f8efc1](https://github.com/coveo/ui-kit/commits/6f8efc1)), closes [#5690](https://github.com/coveo/ui-kit/issues/5690)
-
-
+- chore: enable noUnusedVariables rule (#5670) ([6809d57](https://github.com/coveo/ui-kit/commits/6809d57)), closes [#5670](https://github.com/coveo/ui-kit/issues/5670)
+- chore(atomic): migrate atomic-product-excerpt (#5735) ([7d5a246](https://github.com/coveo/ui-kit/commits/7d5a246)), closes [#5735](https://github.com/coveo/ui-kit/issues/5735)
+- chore(atomic): migrate atomic-product-link (#5618) ([20e0245](https://github.com/coveo/ui-kit/commits/20e0245)), closes [#5618](https://github.com/coveo/ui-kit/issues/5618)
+- chore(atomic): migrate atomic-product-multi-value-text (#5739) ([99f9284](https://github.com/coveo/ui-kit/commits/99f9284)), closes [#5739](https://github.com/coveo/ui-kit/issues/5739)
+- chore(atomic): migrate atomic-product-numeric-field-value (#5745) ([487f65a](https://github.com/coveo/ui-kit/commits/487f65a)), closes [#5745](https://github.com/coveo/ui-kit/issues/5745)
+- chore(atomic): migrate atomic-product-price (#5744) ([a09bdf6](https://github.com/coveo/ui-kit/commits/a09bdf6)), closes [#5744](https://github.com/coveo/ui-kit/issues/5744)
+- chore(atomic-angular, atomic-react, auth, bueno, headless-react): remove unused exports, code and de ([6f8efc1](https://github.com/coveo/ui-kit/commits/6f8efc1)), closes [#5690](https://github.com/coveo/ui-kit/issues/5690)
 
 ## <small>3.2.52 (2025-07-23)</small>
 
-* fix(deps): update all dependencies j:kit-282 (#5723) ([6c032c9](https://github.com/coveo/ui-kit/commits/6c032c9)), closes [#5723](https://github.com/coveo/ui-kit/issues/5723)
-* chore: enable recommended biome rules for entire repo (#5662) ([015a764](https://github.com/coveo/ui-kit/commits/015a764)), closes [#5662](https://github.com/coveo/ui-kit/issues/5662)
-* chore(atomic): migrate atomic-commerce-refine-modal (#5543) ([1b0a4b3](https://github.com/coveo/ui-kit/commits/1b0a4b3)), closes [#5543](https://github.com/coveo/ui-kit/issues/5543)
-* chore(atomic): migrate atomic-commere-query-error (#5570) ([85d3010](https://github.com/coveo/ui-kit/commits/85d3010)), closes [#5570](https://github.com/coveo/ui-kit/issues/5570)
-* chore(atomic): migrate atomic-product-children (#5624) ([0be84d8](https://github.com/coveo/ui-kit/commits/0be84d8)), closes [#5624](https://github.com/coveo/ui-kit/issues/5624)
-
-
+- fix(deps): update all dependencies j:kit-282 (#5723) ([6c032c9](https://github.com/coveo/ui-kit/commits/6c032c9)), closes [#5723](https://github.com/coveo/ui-kit/issues/5723)
+- chore: enable recommended biome rules for entire repo (#5662) ([015a764](https://github.com/coveo/ui-kit/commits/015a764)), closes [#5662](https://github.com/coveo/ui-kit/issues/5662)
+- chore(atomic): migrate atomic-commerce-refine-modal (#5543) ([1b0a4b3](https://github.com/coveo/ui-kit/commits/1b0a4b3)), closes [#5543](https://github.com/coveo/ui-kit/issues/5543)
+- chore(atomic): migrate atomic-commere-query-error (#5570) ([85d3010](https://github.com/coveo/ui-kit/commits/85d3010)), closes [#5570](https://github.com/coveo/ui-kit/issues/5570)
+- chore(atomic): migrate atomic-product-children (#5624) ([0be84d8](https://github.com/coveo/ui-kit/commits/0be84d8)), closes [#5624](https://github.com/coveo/ui-kit/issues/5624)
 
 ## <small>3.2.51 (2025-07-16)</small>
 
-* chore(atomic-react): enable recommended rule for atomic-react (#5629) ([eb8cb02](https://github.com/coveo/ui-kit/commits/eb8cb02)), closes [#5629](https://github.com/coveo/ui-kit/issues/5629)
-* chore(deps): update dependency @rollup/plugin-typescript to v12.1.4 j:kit-282 (#5590) ([86ce689](https://github.com/coveo/ui-kit/commits/86ce689)), closes [#5590](https://github.com/coveo/ui-kit/issues/5590)
-* fix(deps): update all dependencies j:kit-282 (#5605) ([8132ed8](https://github.com/coveo/ui-kit/commits/8132ed8)), closes [#5605](https://github.com/coveo/ui-kit/issues/5605)
-
-
+- chore(atomic-react): enable recommended rule for atomic-react (#5629) ([eb8cb02](https://github.com/coveo/ui-kit/commits/eb8cb02)), closes [#5629](https://github.com/coveo/ui-kit/issues/5629)
+- chore(deps): update dependency @rollup/plugin-typescript to v12.1.4 j:kit-282 (#5590) ([86ce689](https://github.com/coveo/ui-kit/commits/86ce689)), closes [#5590](https://github.com/coveo/ui-kit/issues/5590)
+- fix(deps): update all dependencies j:kit-282 (#5605) ([8132ed8](https://github.com/coveo/ui-kit/commits/8132ed8)), closes [#5605](https://github.com/coveo/ui-kit/issues/5605)
 
 ## <small>3.2.49 (2025-07-09)</small>
 
-* chore(atomic commerce): migrate atomic-commerce-load-more-products to Lit (#5551) ([9a77990](https://github.com/coveo/ui-kit/commits/9a77990)), closes [#5551](https://github.com/coveo/ui-kit/issues/5551)
-* chore(atomic commerce): migrate atomic-commerce-recommendation-interface (#5483) ([f8c6add](https://github.com/coveo/ui-kit/commits/f8c6add)), closes [#5483](https://github.com/coveo/ui-kit/issues/5483)
-* chore(atomic): migrate atomic-commerce-no-products (#5550) ([a29a641](https://github.com/coveo/ui-kit/commits/a29a641)), closes [#5550](https://github.com/coveo/ui-kit/issues/5550)
-* chore(atomic): migrate atomic-commerce-products-per-page (#5525) ([1ef71f1](https://github.com/coveo/ui-kit/commits/1ef71f1)), closes [#5525](https://github.com/coveo/ui-kit/issues/5525)
-* chore(atomic): migrate atomic-commerce-refine-toggle (#5557) ([c758e56](https://github.com/coveo/ui-kit/commits/c758e56)), closes [#5557](https://github.com/coveo/ui-kit/issues/5557)
-* chore(atomic): migrate atomic-commerce-text (#5464) ([4f3f990](https://github.com/coveo/ui-kit/commits/4f3f990)), closes [#5464](https://github.com/coveo/ui-kit/issues/5464)
-* chore(atomic): migrate atomic-layout-section (#5564) ([9ad6b72](https://github.com/coveo/ui-kit/commits/9ad6b72)), closes [#5564](https://github.com/coveo/ui-kit/issues/5564)
-* chore(atomic): migrate atomic-product-text (#5465) ([91c0773](https://github.com/coveo/ui-kit/commits/91c0773)), closes [#5465](https://github.com/coveo/ui-kit/issues/5465)
-* chore(deps): update dependency @rollup/plugin-typescript to v12.1.3 j:kit-282 (#5560) ([73dc0e9](https://github.com/coveo/ui-kit/commits/73dc0e9)), closes [#5560](https://github.com/coveo/ui-kit/issues/5560)
-
-
+- chore(atomic commerce): migrate atomic-commerce-load-more-products to Lit (#5551) ([9a77990](https://github.com/coveo/ui-kit/commits/9a77990)), closes [#5551](https://github.com/coveo/ui-kit/issues/5551)
+- chore(atomic commerce): migrate atomic-commerce-recommendation-interface (#5483) ([f8c6add](https://github.com/coveo/ui-kit/commits/f8c6add)), closes [#5483](https://github.com/coveo/ui-kit/issues/5483)
+- chore(atomic): migrate atomic-commerce-no-products (#5550) ([a29a641](https://github.com/coveo/ui-kit/commits/a29a641)), closes [#5550](https://github.com/coveo/ui-kit/issues/5550)
+- chore(atomic): migrate atomic-commerce-products-per-page (#5525) ([1ef71f1](https://github.com/coveo/ui-kit/commits/1ef71f1)), closes [#5525](https://github.com/coveo/ui-kit/issues/5525)
+- chore(atomic): migrate atomic-commerce-refine-toggle (#5557) ([c758e56](https://github.com/coveo/ui-kit/commits/c758e56)), closes [#5557](https://github.com/coveo/ui-kit/issues/5557)
+- chore(atomic): migrate atomic-commerce-text (#5464) ([4f3f990](https://github.com/coveo/ui-kit/commits/4f3f990)), closes [#5464](https://github.com/coveo/ui-kit/issues/5464)
+- chore(atomic): migrate atomic-layout-section (#5564) ([9ad6b72](https://github.com/coveo/ui-kit/commits/9ad6b72)), closes [#5564](https://github.com/coveo/ui-kit/issues/5564)
+- chore(atomic): migrate atomic-product-text (#5465) ([91c0773](https://github.com/coveo/ui-kit/commits/91c0773)), closes [#5465](https://github.com/coveo/ui-kit/issues/5465)
+- chore(deps): update dependency @rollup/plugin-typescript to v12.1.3 j:kit-282 (#5560) ([73dc0e9](https://github.com/coveo/ui-kit/commits/73dc0e9)), closes [#5560](https://github.com/coveo/ui-kit/issues/5560)
 
 ## <small>3.2.48 (2025-07-02)</small>
 
-* chore(atomic): migrate atomic-commerce-breadbox (#5459) ([817e7b5](https://github.com/coveo/ui-kit/commits/817e7b5)), closes [#5459](https://github.com/coveo/ui-kit/issues/5459)
-* chore(atomic): migrate atomic-commerce-did-you-mean (#5523) ([5357de3](https://github.com/coveo/ui-kit/commits/5357de3)), closes [#5523](https://github.com/coveo/ui-kit/issues/5523)
-* chore(atomic): migrate atomic-product (#5398) ([6cd9e95](https://github.com/coveo/ui-kit/commits/6cd9e95)), closes [#5398](https://github.com/coveo/ui-kit/issues/5398)
-* chore(lint): integrate biome (#5507) ([53bcada](https://github.com/coveo/ui-kit/commits/53bcada)), closes [#5507](https://github.com/coveo/ui-kit/issues/5507)
-
-
+- chore(atomic): migrate atomic-commerce-breadbox (#5459) ([817e7b5](https://github.com/coveo/ui-kit/commits/817e7b5)), closes [#5459](https://github.com/coveo/ui-kit/issues/5459)
+- chore(atomic): migrate atomic-commerce-did-you-mean (#5523) ([5357de3](https://github.com/coveo/ui-kit/commits/5357de3)), closes [#5523](https://github.com/coveo/ui-kit/issues/5523)
+- chore(atomic): migrate atomic-product (#5398) ([6cd9e95](https://github.com/coveo/ui-kit/commits/6cd9e95)), closes [#5398](https://github.com/coveo/ui-kit/issues/5398)
+- chore(lint): integrate biome (#5507) ([53bcada](https://github.com/coveo/ui-kit/commits/53bcada)), closes [#5507](https://github.com/coveo/ui-kit/issues/5507)
 
 ## <small>3.2.47 (2025-06-25)</small>
 

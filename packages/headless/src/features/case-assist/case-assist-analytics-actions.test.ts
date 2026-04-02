@@ -49,20 +49,20 @@ vi.mocked(createRelay).mockReturnValue({
 });
 
 vi.mock('coveo.analytics', () => {
-  const mockCaseAssistClient = vi.fn().mockImplementation(function (
-    this: CaseAssistClient
-  ) {
-    this.logEnterInterface = mockLogEnterInterface;
-    this.logMoveToNextCaseStep = mockLogMoveToNextCaseStep;
-    this.logCaseCreated = mockLogCaseCreated;
-    this.logCaseSolved = mockLogCaseSolved;
-    this.logCaseCancelled = mockLogCaseCancelled;
-    this.logUpdateCaseField = mockLogUpdateCaseField;
-    this.logSelectFieldSuggestion = mockLogSelectFieldSuggestion;
-    this.logSelectDocumentSuggestion = mockLogSelectDocumentSuggestion;
-    this.logRateDocumentSuggestion = mockLogRateDocumentSuggestion;
-    this.logQuickviewDocumentSuggestion = mockLogQuickviewDocumentSuggestion;
-  });
+  const mockCaseAssistClient = vi
+    .fn()
+    .mockImplementation(function (this: CaseAssistClient) {
+      this.logEnterInterface = mockLogEnterInterface;
+      this.logMoveToNextCaseStep = mockLogMoveToNextCaseStep;
+      this.logCaseCreated = mockLogCaseCreated;
+      this.logCaseSolved = mockLogCaseSolved;
+      this.logCaseCancelled = mockLogCaseCancelled;
+      this.logUpdateCaseField = mockLogUpdateCaseField;
+      this.logSelectFieldSuggestion = mockLogSelectFieldSuggestion;
+      this.logSelectDocumentSuggestion = mockLogSelectDocumentSuggestion;
+      this.logRateDocumentSuggestion = mockLogRateDocumentSuggestion;
+      this.logQuickviewDocumentSuggestion = mockLogQuickviewDocumentSuggestion;
+    });
   return {
     CaseAssistClient: mockCaseAssistClient,
     history: {HistoryStore: vi.fn()},

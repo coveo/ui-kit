@@ -1,6 +1,6 @@
 {
   "recommendations": [
-    "biomejs.biome",
+    "oxc.oxc-vscode",
     "streetsidesoftware.code-spell-checker",
     "github.copilot-chat",
     "runem.lit-plugin",

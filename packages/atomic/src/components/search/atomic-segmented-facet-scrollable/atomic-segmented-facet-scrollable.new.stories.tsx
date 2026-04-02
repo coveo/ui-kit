@@ -17,7 +17,9 @@ const searchApiHarness = new MockSearchApi();
 const {decorator, play} = wrapInSearchInterface();
 
 const withNarrowContainer: Decorator = (story) => {
-  return html` <div style="width: 400px; border: 1px solid lightgray; padding: 8px;">
+  return html` <div
+    style="width: 400px; border: 1px solid lightgray; padding: 8px;"
+  >
     ${story()}
   </div>`;
 };

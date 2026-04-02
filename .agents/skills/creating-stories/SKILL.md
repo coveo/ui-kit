@@ -4,7 +4,7 @@ description: Creates and modifies Storybook stories for Atomic components and sa
 license: Apache-2.0
 metadata:
   author: coveo
-  version: "1.0"
+  version: '1.0'
   package: atomic
 ---
 
@@ -22,6 +22,7 @@ Answer these questions:
 4. What API mocking is needed?
 
 **Locations:**
+
 - Components: `packages/atomic/src/components/<category>/<name>/<name>.new.stories.tsx`
 - Pages: `packages/atomic/storybook-pages/<use-case>/<name>.new.stories.tsx`
 
@@ -44,10 +45,12 @@ node .agents/skills/creating-stories/scripts/generate-story-template.mjs \
 ```
 
 Allowed values:
+
 - `--type`: `component` (default), `page`
 - `--category`: `search` (default), `commerce`, `insight`, `ipx`, `recommendations`
 
 Notes:
+
 - `--result` is only valid for `--type component` (using it with `--type page` is an error).
 
 ### Step 3: Complete the Story
@@ -107,11 +110,13 @@ export const Default: Story = {};
 ### API Mocking Patterns
 
 **Default response:**
+
 ```typescript
 // Uses base response automatically
 ```
 
 **Modify for all stories:**
+
 ```typescript
 searchApiHarness.searchEndpoint.mock((response) => ({
   ...response,
@@ -120,6 +125,7 @@ searchApiHarness.searchEndpoint.mock((response) => ({
 ```
 
 **Story-specific response:**
+
 ```typescript
 export const NoResults: Story = {
   beforeEach: () => {
@@ -172,6 +178,7 @@ export const NoResults: Story = {
 ## Templates
 
 Templates in `assets/` directory:
+
 - `component.new.stories.tsx.hbs` - Standard component story
 - `result-component.new.stories.tsx.hbs` - Result template component
 - `page.new.stories.tsx.hbs` - Sample page story
@@ -179,6 +186,7 @@ Templates in `assets/` directory:
 ## Validation Checklist
 
 Before completing:
+
 - [ ] Story file named `<component-name>.new.stories.tsx`
 - [ ] MSW handlers included in parameters
 - [ ] `beforeEach` clears mocked responses
@@ -192,18 +200,21 @@ Before completing:
 ### Forgetting to clear endpoints
 
 Always clear in meta-level `beforeEach`, not `afterEach`:
+
 ```typescript
 beforeEach: () => {
   harness.searchEndpoint.clear();
-}
+};
 ```
 
 ### Stories show wrong data in docs mode
 
 Every story needs story-level `beforeEach` queuing `mockOnce()`. Create helper:
+
 ```typescript
-const mockDefault = () => harness.endpoint.mockOnce(r => r);
+const mockDefault = () => harness.endpoint.mockOnce((r) => r);
 ```
+
 Call in ALL stories' `beforeEach`, even for default responses.
 
 ### State persists between stories
@@ -214,11 +225,12 @@ Call in ALL stories' `beforeEach`, even for default responses.
 ### Not spreading base response
 
 Always spread to maintain all required fields:
+
 ```typescript
 mockOnce((response) => ({
   ...response,
   results: [], // Modify only what you need
-}))
+}));
 ```
 
 ### Wrong import paths
@@ -228,6 +240,7 @@ Use `@/storybook-utils/...` path aliases, not relative paths
 ### Missing MSW handlers
 
 Include all harness handlers in parameters:
+
 ```typescript
 parameters: {
   msw: {handlers: [...harness.handlers]},
@@ -241,8 +254,9 @@ Result templates require specific decorator order—check similar components for
 ### API calls return default responses
 
 **Check:**
+
 - Endpoint path in harness matches actual API call
-- HTTP method (GET/POST) is correct  
+- HTTP method (GET/POST) is correct
 - Handlers included: `msw: {handlers: [...harness.handlers]}`
 
 ### Using mock() instead of mockOnce()

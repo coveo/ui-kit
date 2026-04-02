@@ -12,16 +12,14 @@ import {
   type InteractiveResultCoreProps as InteractiveResultHeadlessCoreProps,
 } from '../../../core/interactive-result/headless-core-interactive-result.js';
 
-export interface InteractiveProductOptions
-  extends InteractiveProductCoreOptions {
+export interface InteractiveProductOptions extends InteractiveProductCoreOptions {
   /**
    * The product to log analytics for.
    */
   product: Product;
 }
 
-export interface InteractiveProductCoreProps
-  extends InteractiveResultHeadlessCoreProps {
+export interface InteractiveProductCoreProps extends InteractiveResultHeadlessCoreProps {
   /**
    * The options for the `InteractiveProduct` sub-controller.
    */

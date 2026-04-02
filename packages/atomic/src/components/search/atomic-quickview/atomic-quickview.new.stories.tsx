@@ -8,10 +8,10 @@ import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-w
 
 const searchApiHarness = new MockSearchApi();
 
-// biome-ignore lint/suspicious/noExplicitAny: Mock API response types are loosely defined
+// oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Mock API response types are loosely defined
 searchApiHarness.searchEndpoint.mock((response: any) => ({
   ...response,
-  // biome-ignore lint/suspicious/noExplicitAny: Mock API result types are loosely defined
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Mock API result types are loosely defined
   results: response.results.slice(0, 1).map((result: any) => ({
     ...result,
     title:
