@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicQuickviewStories from './atomic-quickview.new.stories';
+import meta, { Default, CustomSandbox } from './atomic-quickview.new.stories';
 import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicQuickviewStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicQuickviewStories}
+  stories={{ Default, CustomSandbox }}
   githubPath="search/atomic-quickview/atomic-quickview.ts"
   tagName="atomic-quickview"
   className="AtomicQuickview"

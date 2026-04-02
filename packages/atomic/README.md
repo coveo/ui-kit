@@ -72,6 +72,24 @@ To run the unit tests for the components, run:
 pnpm turbo run test --filter=@coveo/atomic
 ```
 
+### Building and serving Storybook locally
+
+To build the Storybook site for production and serve it locally:
+
+```sh
+# Build the Atomic library and Storybook
+pnpm turbo build --filter=@coveo/atomic
+
+# Serve the production Storybook build
+pnpm turbo run prod --filter=@coveo/atomic
+```
+
+The production Storybook site will be available at `http://localhost:4400`.
+
+> [!NOTE]
+> The `build` command includes the `build:storybook` step, which outputs the static site to `dist-storybook/`.
+> This is the same output that gets deployed to the CDN. Use this to verify that components render correctly in a production build.
+
 ### Storybook MCP (Model Context Protocol)
 
 This Storybook instance is configured with the MCP addon, which enables AI agents to programmatically interact with component stories. When Storybook is running, the MCP server is accessible at `http://localhost:4400/mcp`.
