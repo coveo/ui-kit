@@ -20,7 +20,8 @@ const meta: Meta = {
   title: 'Commerce/Refine Modal',
   id: 'atomic-commerce-refine-modal',
   render: (args) =>
-    html`${styleTemplate(args)}<atomic-commerce-refine-toggle></atomic-commerce-refine-toggle>`,
+    html`${styleTemplate(args)}<atomic-commerce-refine-toggle
+      ></atomic-commerce-refine-toggle>`,
   decorators: [decorator],
   parameters: {
     ...commonParameters,

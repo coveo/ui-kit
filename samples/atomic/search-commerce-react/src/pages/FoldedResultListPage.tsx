@@ -92,7 +92,7 @@ function MyTemplate(result: FoldedResult) {
       </AtomicResultSectionChildren>
       <AtomicResultSectionBottomMetadata>
         <AtomicResultFieldsList>
-          {/** biome-ignore lint/complexity/noUselessFragments: <> */}
+          {/* oxlint-disable-next-line react/jsx-no-useless-fragment -- <> */}
           <>
             {result.result.raw.author && (
               <div className="field">

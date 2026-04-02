@@ -5,6 +5,7 @@ This directory contains utilities for mocking REST API responses in Storybook st
 ## Overview
 
 The API harness system provides a wrapper around MSW that simplifies mocking REST APIs with features like:
+
 - Response queuing for multi-step interactions
 - Base response modification for test variations
 - Network error simulation
@@ -38,17 +39,20 @@ storybook-utils/api/
 ## Naming Conventions
 
 ### Directory Names
+
 - Use lowercase, single-word names matching the API domain (e.g., `search`, `commerce`, `answer`)
 - For multi-word API domains, use camelCase (e.g., `machinelearning`)
 
 ### File Names
 
 #### Mock Class Files
+
 - **Pattern:** `mock.ts`
 - **Purpose:** Contains the `Mock[Domain]Api` class
 - **Example:** `search/mock.ts` exports `MockSearchApi`
 
 #### Response Data Files
+
 - **Pattern:** `[endpoint-name]-response.ts`
 - **Purpose:** Contains base response data for a specific endpoint
 - **Examples:**
@@ -59,6 +63,7 @@ storybook-utils/api/
 ### Class Names
 
 #### Mock API Classes
+
 - **Pattern:** `Mock[Domain]Api`
 - **Must implement:** `MockApi` interface
 - **Examples:**
@@ -68,6 +73,7 @@ storybook-utils/api/
   - `MockMachineLearningApi`
 
 #### Endpoint Property Names
+
 - **Pattern:** `[endpointName]Endpoint`
 - **Type:** `EndpointHarness<TResponse>`
 - **Examples:**
@@ -79,6 +85,7 @@ storybook-utils/api/
 ### Export Names
 
 #### Response Data Exports
+
 - **Pattern:** `baseResponse` or specific name for variations
 - **Examples:**
   ```typescript
@@ -115,15 +122,15 @@ For streaming responses (like RGA), export a function that returns an `HttpRespo
 
 ```typescript
 // streaming-response.ts
-import { HttpResponse } from 'msw';
+import {HttpResponse} from 'msw';
 
 export const baseResponse = () => {
   const stream = new ReadableStream({
     // ... streaming logic
   });
-  
+
   return new HttpResponse(stream, {
-    headers: { 'Content-Type': 'text/event-stream' },
+    headers: {'Content-Type': 'text/event-stream'},
   });
 };
 ```
@@ -134,16 +141,16 @@ Create `mock.ts` with your `Mock[Domain]Api` class:
 
 ```typescript
 // mock.ts
-import type { HttpHandler } from 'msw';
-import { EndpointHarness, type MockApi } from '../_base.js';
-import { baseResponse } from './example-response.js';
+import type {HttpHandler} from 'msw';
+import {EndpointHarness, type MockApi} from '../_base.js';
+import {baseResponse} from './example-response.js';
 
 export class MockExampleApi implements MockApi {
   readonly exampleEndpoint;
 
   constructor(basePath: string = 'https://:orgId.org.coveo.com') {
     this.exampleEndpoint = new EndpointHarness<typeof baseResponse>(
-      'POST',  // or 'GET'
+      'POST', // or 'GET'
       `${basePath}/rest/path/to/endpoint`,
       baseResponse
     );
@@ -168,7 +175,7 @@ export class MockStreamingApi implements MockApi {
       'POST',
       `${basePath}/rest/path/to/generate`,
       baseResponse,
-      (response) => response()  // Custom factory for streaming
+      (response) => response() // Custom factory for streaming
     );
   }
 
@@ -193,7 +200,7 @@ export class MockMultiEndpointApi implements MockApi {
       `${basePath}/rest/api/search`,
       baseSearchResponse
     );
-    
+
     this.suggestEndpoint = new EndpointHarness(
       'POST',
       `${basePath}/rest/api/suggest`,
@@ -219,10 +226,9 @@ Use MSW path patterns with parameters for dynamic routes:
 - `:insightId` - Insight ID placeholder
 
 **Examples:**
+
 ```typescript
-`${basePath}/rest/organizations/:orgId/commerce/v2/search`
-`${basePath}/rest/organizations/:orgId/answer/v1/configs/:configId/generate`
-`${basePath}/rest/organizations/:orgId/insight/v1/configs/:insightId/answer/:configId/generate`
+`${basePath}/rest/organizations/:orgId/commerce/v2/search``${basePath}/rest/organizations/:orgId/answer/v1/configs/:configId/generate``${basePath}/rest/organizations/:orgId/insight/v1/configs/:insightId/answer/:configId/generate`;
 ```
 
 ## Type Safety
@@ -244,15 +250,11 @@ this.searchEndpoint = new EndpointHarness<typeof baseSearchResponse>(
 Include error types in the generic for endpoints that can return errors:
 
 ```typescript
-import type { APIErrorWithStatusCode } from '../_common/error.js';
+import type {APIErrorWithStatusCode} from '../_common/error.js';
 
 this.searchEndpoint = new EndpointHarness<
   typeof baseSearchResponse | APIErrorWithStatusCode
->(
-  'POST',
-  path,
-  baseSearchResponse
-);
+>('POST', path, baseSearchResponse);
 ```
 
 ## Best Practices

@@ -5,9 +5,9 @@ file_patterns:
   - .nvmrc
 
   # Manifests everywhere
-  - "**/pnpm-workspace.yaml"
-  - "**/pnpm-lock.yaml"
-  - "**/package.json"
+  - '**/pnpm-workspace.yaml'
+  - '**/pnpm-lock.yaml'
+  - '**/package.json'
 
 reviewers:
   dxui:

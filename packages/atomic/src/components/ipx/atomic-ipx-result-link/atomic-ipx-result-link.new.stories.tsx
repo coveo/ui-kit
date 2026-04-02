@@ -24,9 +24,7 @@ const {decorator: recsInterfaceDecorator, play} =
 const {decorator: recsResultTemplateDecorator} = wrapInRecsResultTemplate();
 
 const resultSectionDecorator: Decorator = (story) => html`
-  <atomic-result-section-title>
-    ${story()}
-  </atomic-result-section-title>
+  <atomic-result-section-title> ${story()} </atomic-result-section-title>
   <atomic-result-section-excerpt>
     <atomic-result-text field="excerpt"></atomic-result-text>
   </atomic-result-section-excerpt>

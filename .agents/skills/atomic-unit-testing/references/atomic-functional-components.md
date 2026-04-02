@@ -1,6 +1,6 @@
 # Atomic Functional Components
 
-Testing patterns for functional components (functions named `render*` that return Lit `TemplateResult`)  in `packages/atomic`.
+Testing patterns for functional components (functions named `render*` that return Lit `TemplateResult`) in `packages/atomic`.
 
 ## Rendering
 
@@ -81,8 +81,12 @@ const renderComponent = async (overrides: Partial<TextAreaProps> = {}) => {
   );
   return {
     element,
-    get textarea() { return element.querySelector('textarea')!; },
-    get clear() { return element.querySelector<HTMLButtonElement>('[part="clear"]'); },
+    get textarea() {
+      return element.querySelector('textarea')!;
+    },
+    get clear() {
+      return element.querySelector<HTMLButtonElement>('[part="clear"]');
+    },
   };
 };
 ```
@@ -94,7 +98,9 @@ const renderComponent = async (overrides: Partial<TextAreaProps> = {}) => {
 ```typescript
 const locators = {
   get showMoreButton() {
-    return page.getByRole('button', {name: 'Show more values for the test facet'});
+    return page.getByRole('button', {
+      name: 'Show more values for the test facet',
+    });
   },
   get showMoreIcon() {
     return locators.showMoreButton.element().querySelector('atomic-icon');
@@ -109,7 +115,9 @@ const locators = {
 ```typescript
 it('should render the radio button with correct attributes', async () => {
   const element = await renderComponent({text: 'Option', checked: true});
-  const input = element.querySelector('input[type="radio"]') as HTMLInputElement;
+  const input = element.querySelector(
+    'input[type="radio"]'
+  ) as HTMLInputElement;
 
   expect(input).toBeInTheDocument();
   expect(input.checked).toBe(true);
@@ -137,10 +145,14 @@ it('should handle keyboard navigation', async () => {
     html`${renderRadioButton({props: {...props, text: 'radio-1'}})}
     ${renderRadioButton({props: {...props, text: 'radio-2'}})}`
   );
-  const inputs = element.querySelectorAll('input[type="radio"]') as NodeListOf<HTMLInputElement>;
+  const inputs = element.querySelectorAll(
+    'input[type="radio"]'
+  ) as NodeListOf<HTMLInputElement>;
 
   inputs[0].focus();
-  inputs[0].dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true}));
+  inputs[0].dispatchEvent(
+    new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true})
+  );
   expect(document.activeElement).toBe(inputs[1]);
 });
 ```
@@ -197,7 +209,9 @@ Icons are rendered as `<atomic-icon>` custom elements. Test via attributes:
 it('should render with the correct icon', async () => {
   await renderComponent({canShowMoreValues: true});
   const icon = locators.showMoreButton.element().querySelector('atomic-icon');
-  await expect.element(icon).toHaveAttribute('icon', expect.stringMatching(/<svg/));
+  await expect
+    .element(icon)
+    .toHaveAttribute('icon', expect.stringMatching(/<svg/));
 });
 ```
 
@@ -216,10 +230,9 @@ it('should call ref with the element', async () => {
 ```typescript
 it('should render localized button label', async () => {
   await renderComponent({canShowMoreValues: true});
-  await expect.element(locators.showMoreButton).toHaveAttribute(
-    'aria-label',
-    'Show more values for the test facet'
-  );
+  await expect
+    .element(locators.showMoreButton)
+    .toHaveAttribute('aria-label', 'Show more values for the test facet');
 });
 ```
 
@@ -238,7 +251,9 @@ it('should create a ripple on mousedown', async () => {
   const input = element.querySelector('input')!;
 
   input.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));
-  expect(mockedRipple).toHaveBeenCalledWith(expect.anything(), {color: 'primary'});
+  expect(mockedRipple).toHaveBeenCalledWith(expect.anything(), {
+    color: 'primary',
+  });
 });
 ```
 

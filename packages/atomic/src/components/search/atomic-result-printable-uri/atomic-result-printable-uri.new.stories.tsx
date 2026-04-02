@@ -80,7 +80,7 @@ export const WithEllipsis: Story = {
             if ('results' in response) {
               return {
                 ...response,
-                // biome-ignore lint/suspicious/noExplicitAny: Mock response type needs flexibility
+                // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Mock response type needs flexibility
                 results: response.results.slice(0, 1).map((r: any) => ({
                   ...r,
                   printableUri:

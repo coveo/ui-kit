@@ -45,19 +45,17 @@ type CaseAssistEngineState =
  *
  * @group Engine
  */
-export interface CaseAssistEngine<State extends object = {}>
-  extends CoreEngine<
-    State & CaseAssistEngineState,
-    CaseAssistThunkExtraArguments
-  > {}
+export interface CaseAssistEngine<State extends object = {}> extends CoreEngine<
+  State & CaseAssistEngineState,
+  CaseAssistThunkExtraArguments
+> {}
 
 /**
  * The case assist engine options.
  *
  * @group Engine
  */
-export interface CaseAssistEngineOptions
-  extends ExternalEngineOptions<CaseAssistEngineState> {
+export interface CaseAssistEngineOptions extends ExternalEngineOptions<CaseAssistEngineState> {
   /**
    * The case assist engine configuration options.
    */

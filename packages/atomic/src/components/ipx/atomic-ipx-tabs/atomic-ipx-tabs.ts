@@ -25,7 +25,9 @@ export class AtomicIpxTabs
   public initialize() {}
 
   render() {
-    return html`<atomic-tab-bar>${this.renderDefaultSlotContent()}</atomic-tab-bar>`;
+    return html`<atomic-tab-bar
+      >${this.renderDefaultSlotContent()}</atomic-tab-bar
+    >`;
   }
 }
 

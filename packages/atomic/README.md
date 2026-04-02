@@ -24,30 +24,29 @@ The `@coveo/atomic` package exposes the following entry points:
 Once you have cloned the repo, follow the instructions in the top-level [README.md](../../README.md) to install dependencies and link packages.
 
 ### Running package scripts
+
 While there are package specific scripts for this package, its best to rely on running command with `turbo` from the root of the monorepo.
 
-For example, to run the package in the development you would run 
+For example, to run the package in the development you would run
 
 ```sh
 # ✅ Preferred method
 pnpm turbo run dev --filter=@coveo/atomic
 ```
 
-from the root of the monorepo, as opposed to 
+from the root of the monorepo, as opposed to
 
 ```sh
 # ❌ Deprecated method
 cd package/atomic
-pnpm run dev 
+pnpm run dev
 ```
 
 While running scripts from the package folder does work, using the `turbo` scripts is generally a smoother experience.
 
 All the subsequent examples assume you are operating from the monorepo root.
 
-
 ### Available scripts
-
 
 Atomic uses Storybook for component development, documentation, and testing. To start Storybook in development mode:
 
@@ -72,8 +71,6 @@ To run the unit tests for the components, run:
 ```sh
 pnpm turbo run test --filter=@coveo/atomic
 ```
-
-
 
 ### Storybook MCP (Model Context Protocol)
 

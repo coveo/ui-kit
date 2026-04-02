@@ -27,7 +27,9 @@ export const wrapInInsightResultTemplate = (
       templateTag.id = 'code-root';
     }
     return html`
-      <atomic-insight-result-template>${templateTag}</atomic-insight-result-template>
+      <atomic-insight-result-template
+        >${templateTag}</atomic-insight-result-template
+      >
     `;
   };
 

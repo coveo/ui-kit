@@ -4,8 +4,8 @@ import type {FunctionalComponentWithChildrenNoProps} from '@/src/utils/functiona
 export const renderNoItemsContainer: FunctionalComponentWithChildrenNoProps =
   () => (children) =>
     html`
-    <div class="text-on-background flex h-full w-full flex-col items-center">
-      ${children}
-    </div>
-    <slot></slot>
-  `;
+      <div class="text-on-background flex h-full w-full flex-col items-center">
+        ${children}
+      </div>
+      <slot></slot>
+    `;

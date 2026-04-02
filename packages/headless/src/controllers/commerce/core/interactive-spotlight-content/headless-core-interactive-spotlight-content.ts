@@ -12,16 +12,14 @@ import type {
 } from '../../../core/interactive-result/headless-core-interactive-result.js';
 import {buildInteractiveResultCore} from '../../../core/interactive-result/headless-core-interactive-result.js';
 
-export interface InteractiveSpotlightContentOptions
-  extends InteractiveSpotlightContentCoreOptions {
+export interface InteractiveSpotlightContentOptions extends InteractiveSpotlightContentCoreOptions {
   /**
    * The spotlight content to log analytics for.
    */
   spotlightContent: SpotlightContent;
 }
 
-export interface InteractiveSpotlightContentCoreProps
-  extends InteractiveResultHeadlessCoreProps {
+export interface InteractiveSpotlightContentCoreProps extends InteractiveResultHeadlessCoreProps {
   /**
    * The options for the `InteractiveSpotlightContent` sub-controller.
    */

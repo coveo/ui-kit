@@ -25,11 +25,13 @@ This sample demonstrates how to build a custom search interface using `@coveo/he
 ## Getting Started
 
 1. Install dependencies:
+
    ```bash
    npm install
    ```
 
 2. Start the development server:
+
    ```bash
    npm run dev
    ```
@@ -52,6 +54,7 @@ npm test             # Run tests in interactive watch mode
 ### Headless Controllers
 
 This sample demonstrates how to:
+
 - Initialize a Headless search engine
 - Create and manage controllers for different search features (search box, facets, results, etc.)
 - Subscribe to state changes and update the UI
@@ -62,6 +65,7 @@ This sample demonstrates how to:
 To run the application with server-side rendering:
 
 1. Build the app and server:
+
    ```bash
    npm run build
    ```
@@ -76,6 +80,7 @@ This approach pre-renders the search interface on the server for improved initia
 ### Custom UI
 
 Unlike Atomic components, this sample gives you complete control over:
+
 - Component structure and styling
 - User interactions and behavior
 - Integration with your design system

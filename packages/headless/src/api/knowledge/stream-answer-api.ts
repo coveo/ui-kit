@@ -20,8 +20,10 @@ import {answerSlice} from './answer-slice.js';
 import type {GeneratedAnswerStream} from './generated-answer-stream.js';
 import type {StreamAnswerAPIState} from './stream-answer-api-state.js';
 
-interface StreamPayload
-  extends Pick<GeneratedAnswerStream, 'contentFormat' | 'citations'> {
+interface StreamPayload extends Pick<
+  GeneratedAnswerStream,
+  'contentFormat' | 'citations'
+> {
   textDelta?: string;
   padding?: string;
   answerGenerated?: boolean;

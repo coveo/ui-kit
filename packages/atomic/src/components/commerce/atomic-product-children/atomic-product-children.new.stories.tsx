@@ -34,10 +34,10 @@ const meta: Meta = {
   render: (args) => template(args),
   decorators: [
     (story) => html`
-    <atomic-product-section-children id="code-root">
-      ${story()}
-    </atomic-product-section-children>    
-  `,
+      <atomic-product-section-children id="code-root">
+        ${story()}
+      </atomic-product-section-children>
+    `,
     productTemplateDecorator,
     commerceProductListDecorator,
     commerceInterfaceDecorator,

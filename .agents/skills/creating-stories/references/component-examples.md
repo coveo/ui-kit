@@ -15,7 +15,8 @@ import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-w
 
 const searchApiHarness = new MockSearchApi();
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers('atomic-search-box');
+const {events, args, argTypes, template} =
+  getStorybookHelpers('atomic-search-box');
 
 const meta: Meta = {
   component: 'atomic-search-box',
@@ -72,10 +73,13 @@ export const Default: Story = {
       if ('facets' in response) {
         return {
           ...response,
-          facets: [...(response.facets || []), createFacetResponse([
-            {value: 'Value1', state: 'idle', numberOfResults: 100},
-            {value: 'Value2', state: 'idle', numberOfResults: 50},
-          ])],
+          facets: [
+            ...(response.facets || []),
+            createFacetResponse([
+              {value: 'Value1', state: 'idle', numberOfResults: 100},
+              {value: 'Value2', state: 'idle', numberOfResults: 50},
+            ]),
+          ],
         };
       }
       return response;
@@ -101,9 +105,7 @@ searchApiHarness.searchEndpoint.mock((response) => ({
 }));
 
 const customResultListDecorator = (story) => html`
-  <atomic-result-list display="list">
-    ${story()}
-  </atomic-result-list>
+  <atomic-result-list display="list"> ${story()} </atomic-result-list>
 `;
 
 const {decorator: resultTemplateDecorator} = wrapInResultTemplate(false);
@@ -161,7 +163,7 @@ const stylesDecorator = (story) => html`
 `;
 
 const meta: Meta = {
-  decorators: [stylesDecorator, /* ...other decorators */],
+  decorators: [stylesDecorator /* ...other decorators */],
 };
 ```
 
@@ -198,9 +200,12 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  args: {
-    field: 'color',
-    label: 'Color',
-  },
+args: {
+field: 'color',
+label: 'Color',
+},
 };
+
+```
+
 ```

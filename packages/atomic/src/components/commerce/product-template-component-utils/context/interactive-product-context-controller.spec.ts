@@ -13,11 +13,11 @@ describe('product-template-controllers', () => {
   let mockHost: LitElement & {error: Error | null};
 
   beforeEach(() => {
-    vi.mocked(InteractiveItemContextController).mockImplementation(function (
-      this: unknown
-    ) {
-      return this;
-    });
+    vi.mocked(InteractiveItemContextController).mockImplementation(
+      function (this: unknown) {
+        return this;
+      }
+    );
     mockHost = {
       addController: vi.fn(),
       requestUpdate: vi.fn(),
@@ -40,11 +40,11 @@ describe('product-template-controllers', () => {
     it('should return InteractiveItemContextController instance', () => {
       const mockController =
         {} as InteractiveItemContextController<InteractiveProduct>;
-      vi.mocked(InteractiveItemContextController).mockImplementation(function (
-        this: unknown
-      ) {
-        return mockController;
-      });
+      vi.mocked(InteractiveItemContextController).mockImplementation(
+        function (this: unknown) {
+          return mockController;
+        }
+      );
       const hostWithError = mockHost as LitElement & {error: Error};
 
       const result = createInteractiveProductContextController(hostWithError);

@@ -14,11 +14,10 @@ export type RecommendationsDefinitionMeta = {
   [recommendationInternalOptionKey]: {} & RecommendationsProps['options'];
 };
 
-export interface RecommendationsDefinition
-  extends RecommendationOnlyControllerDefinitionWithProps<
-    Recommendations,
-    Partial<RecommendationsOptions>
-  > {}
+export interface RecommendationsDefinition extends RecommendationOnlyControllerDefinitionWithProps<
+  Recommendations,
+  Partial<RecommendationsOptions>
+> {}
 
 /**
  * Defines a `Recommendations` controller instance.
