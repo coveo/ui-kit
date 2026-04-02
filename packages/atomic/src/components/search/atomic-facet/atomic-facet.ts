@@ -478,15 +478,12 @@ export class AtomicFacet
   render() {
     return html`${when(this.shouldRenderFacet(), () =>
       this.searchStatusState.firstSearchExecuted
-        ? renderFacetContainer()(
-            html`
-            ${this.renderFacetHeader()}
-            ${this.renderBody()}
-          `
-          )
+        ? renderFacetContainer()(html`
+            ${this.renderFacetHeader()} ${this.renderBody()}
+          `)
         : html`<atomic-facet-placeholder
-          value-count="${this.numberOfValues}"
-        ></atomic-facet-placeholder>`
+            value-count="${this.numberOfValues}"
+          ></atomic-facet-placeholder>`
     )}`;
   }
 
@@ -542,11 +539,9 @@ export class AtomicFacet
             },
           })
       )}
-      ${
-        shouldDisplaySearchResults(this.facetState.facetSearch)
-          ? html`${this.renderSearchResults()}${this.renderMatches()}`
-          : html`${this.renderValues()}${this.renderShowMoreLess()}`
-      }
+      ${shouldDisplaySearchResults(this.facetState.facetSearch)
+        ? html`${this.renderSearchResults()}${this.renderMatches()}`
+        : html`${this.renderValues()}${this.renderShowMoreLess()}`}
     `;
   }
 

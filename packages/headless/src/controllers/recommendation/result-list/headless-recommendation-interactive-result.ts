@@ -14,16 +14,14 @@ export type {
   InteractiveResultCoreProps,
 };
 
-export interface RecommendationInteractiveResultOptions
-  extends InteractiveResultCoreOptions {
+export interface RecommendationInteractiveResultOptions extends InteractiveResultCoreOptions {
   /**
    * The query result.
    */
   result: Result;
 }
 
-export interface RecommendationInteractiveResultProps
-  extends InteractiveResultCoreProps {
+export interface RecommendationInteractiveResultProps extends InteractiveResultCoreProps {
   /**
    * The options for the `InteractiveResult` controller.
    */

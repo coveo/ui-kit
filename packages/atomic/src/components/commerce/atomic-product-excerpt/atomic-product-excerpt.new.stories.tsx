@@ -33,9 +33,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 );
 const wrapperDecorator: Decorator = (story) => {
   return html`
-    <div style="width: 200px; height: 60px;" id="code-root">
-      ${story()}
-    </div>
+    <div style="width: 200px; height: 60px;" id="code-root">${story()}</div>
   `;
 };
 

@@ -17,40 +17,40 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 @withTailwindStyles
 export class AtomicResultTablePlaceholder extends LitElement {
   static styles = css`
-  @reference '../../common/item-list/styles/mixins.css';
+    @reference '../../common/item-list/styles/mixins.css';
     :host {
-    display: grid;
-  }
+      display: grid;
+    }
 
-  .list-root.display-table {
-    @apply atomic-result-table border-neutral rounded-xl border;
+    .list-root.display-table {
+      @apply atomic-result-table border-neutral rounded-xl border;
 
-    thead tr,
-    tbody tr:not(:last-child) {
-      position: relative;
+      thead tr,
+      tbody tr:not(:last-child) {
+        position: relative;
 
-      &::after {
-        content: ' ';
-        display: block;
-        position: absolute;
-        height: 1px;
-        bottom: 0;
-        left: var(--padding);
-        right: var(--padding);
-        @apply bg-neutral;
+        &::after {
+          content: ' ';
+          display: block;
+          position: absolute;
+          height: 1px;
+          bottom: 0;
+          left: var(--padding);
+          right: var(--padding);
+          @apply bg-neutral;
+        }
+      }
+
+      th,
+      td {
+        border-color: transparent;
+        border-radius: initial;
+      }
+
+      th {
+        background-color: transparent;
       }
     }
-
-    th,
-    td {
-      border-color: transparent;
-      border-radius: initial;
-    }
-
-    th {
-      background-color: transparent;
-    }
-  }
   `;
   /**
    * The display density for the table.
@@ -74,9 +74,7 @@ export class AtomicResultTablePlaceholder extends LitElement {
 
   render(): TemplateResult {
     return html`
-      <table
-        class="list-root animate-pulse ${this.getClasses().join(' ')}"
-      >
+      <table class="list-root animate-pulse ${this.getClasses().join(' ')}">
         <thead aria-hidden="true">
           <tr>
             <th>

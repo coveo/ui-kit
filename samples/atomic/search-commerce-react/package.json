@@ -1,7 +1,7 @@
 {
   "name": "@samples/atomic-search-commerce-react",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "build:assets": "node ../../../utils/ci/copy-files.mjs ../../../packages/atomic-react/dist/assets public/assets ../../../packages/atomic-react/dist/lang public/lang ../../../packages/atomic/dist/themes public/themes",

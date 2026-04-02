@@ -25,7 +25,9 @@ export const wrapInRecsResultTemplate = (): {
 
     return html`
       <atomic-recs-list display="list" density="normal" image-size="none">
-        <atomic-recs-result-template>${templateTag}</atomic-recs-result-template>
+        <atomic-recs-result-template
+          >${templateTag}</atomic-recs-result-template
+        >
       </atomic-recs-list>
     `;
   };

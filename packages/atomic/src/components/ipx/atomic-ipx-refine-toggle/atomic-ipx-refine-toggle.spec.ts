@@ -51,8 +51,8 @@ describe('atomic-ipx-refine-toggle', () => {
     const {element} =
       await renderInAtomicSearchInterface<AtomicIpxRefineToggle>({
         template: html`<atomic-ipx-refine-toggle
-        collapse-facets-after=${ifDefined(collapseFacetsAfter)}
-      ></atomic-ipx-refine-toggle>`,
+          collapse-facets-after=${ifDefined(collapseFacetsAfter)}
+        ></atomic-ipx-refine-toggle>`,
         selector: 'atomic-ipx-refine-toggle',
         bindings: (bindings) => {
           bindings.engine = mockedEngine;

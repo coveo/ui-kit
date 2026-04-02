@@ -209,9 +209,7 @@ export class AtomicGeneratedAnswerContent extends LitElement {
 
     return html`
       <div part="generated-answer-error">
-        <p>
-          ${this.i18n.t(errorMessageKey)}
-        </p>
+        <p>${this.i18n.t(errorMessageKey)}</p>
       </div>
     `;
   }
@@ -219,9 +217,7 @@ export class AtomicGeneratedAnswerContent extends LitElement {
   private renderCannotAnswer(): TemplateResult {
     return html`
       <div part="generated-answer-cannot-answer">
-        <p>
-          ${this.i18n.t('generated-answer-cannot-generate-answer')}
-        </p>
+        <p>${this.i18n.t('generated-answer-cannot-generate-answer')}</p>
       </div>
     `;
   }

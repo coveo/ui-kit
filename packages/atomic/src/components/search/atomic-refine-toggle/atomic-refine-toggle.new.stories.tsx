@@ -81,7 +81,7 @@ export const WithAtomicExternals: Story = {
         </atomic-layout-section>
         <atomic-facet field="author" label="facet8"></atomic-facet>
       </atomic-external>
- 
+
       <atomic-external selector="#foo">
         <h1>External 3</h1>
         <atomic-layout-section section="horizontal-facets">

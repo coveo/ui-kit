@@ -3,6 +3,7 @@ title: Getting Started with Recommendation
 group: Getting Started
 slug: getting-started/getting-started-recommendation
 ---
+
 # Getting Started with Recommendation
 
 The Recommendation engine powers content recommendation interfaces that suggest relevant items to users based on their behavior and context.
@@ -18,9 +19,9 @@ npm install @coveo/headless
 Once installed, you can import from the recommendation sub-package:
 
 ```typescript
-import { 
-    buildRecommendationEngine, 
-    getSampleRecommendationEngineConfiguration 
+import {
+  buildRecommendationEngine,
+  getSampleRecommendationEngineConfiguration,
 } from '@coveo/headless/recommendation';
 ```
 
@@ -47,7 +48,10 @@ If you prefer not to use a package manager, you can load Headless Recommendation
 <script src="https://static.cloud.coveo.com/headless/v3/recommendation/headless.js"></script>
 <script>
   // All exports are available on the global CoveoHeadlessRecommendation object.
-  const { buildRecommendationEngine, getSampleRecommendationEngineConfiguration } = CoveoHeadlessRecommendation;
+  const {
+    buildRecommendationEngine,
+    getSampleRecommendationEngineConfiguration,
+  } = CoveoHeadlessRecommendation;
 </script>
 ```
 
@@ -76,7 +80,7 @@ const engine = buildRecommendationEngine({
 const recommendationList = buildRecommendationList(engine);
 
 recommendationList.subscribe(() => {
-  const { recommendations } = recommendationList.state;
+  const {recommendations} = recommendationList.state;
   if (recommendations.length) {
     console.log(`Received ${recommendations.length} recommendations.`);
     console.log('First recommendation:', recommendations[0].title);
@@ -114,7 +118,7 @@ recommendationList.refresh();
       const list = document.getElementById('recommendations');
 
       recommendationList.subscribe(() => {
-        const { recommendations } = recommendationList.state;
+        const {recommendations} = recommendationList.state;
         list.innerHTML = '';
         recommendations.forEach((r) => {
           const item = document.createElement('li');

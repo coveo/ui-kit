@@ -85,10 +85,16 @@ export default meta;
 export const Default: Story = {
   decorators: [
     () => html`
-     <atomic-insight-refine-toggle></atomic-insight-refine-toggle>
+      <atomic-insight-refine-toggle></atomic-insight-refine-toggle>
       <div style="display:none;">
-        <atomic-insight-facet field="source" label="Source"></atomic-insight-facet>
-        <atomic-insight-facet field="filetype" label="File Type"></atomic-insight-facet>
+        <atomic-insight-facet
+          field="source"
+          label="Source"
+        ></atomic-insight-facet>
+        <atomic-insight-facet
+          field="filetype"
+          label="File Type"
+        ></atomic-insight-facet>
       </div>
     `,
     decorator,

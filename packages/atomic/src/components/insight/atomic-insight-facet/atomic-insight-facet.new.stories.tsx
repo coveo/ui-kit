@@ -122,10 +122,10 @@ export const WithSelectedValue: Story = {
   },
   decorators: [facetDecorator],
   beforeEach: () => {
-    // biome-ignore lint/suspicious/noExplicitAny: MSW mock response structure is dynamic and known at runtime
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- MSW mock response structure is dynamic and known at runtime
     mockInsightApi.searchEndpoint.mockOnce((response: any) => {
       const selectedFacets = response.facets?.map(
-        (facet: Object & {field: string; values: Object[]}) => {
+        (facet: object & {field: string; values: object[]}) => {
           if (facet.field === 'objecttype') {
             return {
               ...facet,

@@ -127,9 +127,9 @@ describe('atomic-refine-modal', () => {
 
     const {element} = await renderInAtomicSearchInterface<AtomicRefineModal>({
       template: html`<atomic-refine-modal
-          ?is-open=${isOpen}
-          collapse-facets-after=${ifDefined(collapseFacetsAfter)}
-        ></atomic-refine-modal>`,
+        ?is-open=${isOpen}
+        collapse-facets-after=${ifDefined(collapseFacetsAfter)}
+      ></atomic-refine-modal>`,
       selector: 'atomic-refine-modal',
       bindings: (bindings) => {
         bindings.engine = mockedEngine;

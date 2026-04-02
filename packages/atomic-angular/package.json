@@ -1,6 +1,7 @@
 {
   "name": "@coveo/atomic-angular-builder",
   "version": "0.0.0",
+  "private": true,
   "scripts": {
     "ng": "ng",
     "dev": "ng serve",
@@ -10,24 +11,23 @@
     "release:phase1": "node ./scripts/bump.mjs",
     "npm:publish": "node ./scripts/publish-npm.mjs"
   },
-  "private": true,
   "dependencies": {
     "@coveo/atomic": "workspace:*",
     "rxjs": "7.8.2"
-  },
-  "peerDependencies": {
-    "@coveo/headless": "workspace:*"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "catalog:",
     "@angular/cli": "catalog:",
     "@angular/compiler-cli": "catalog:",
-    "@types/node": "catalog:",
     "@coveo/headless": "workspace:*",
+    "@types/node": "catalog:",
     "ng-packagr": "20.3.2",
-    "typescript": "catalog:",
     "tslib": "2.8.1",
+    "typescript": "catalog:",
     "vite": "^8.0.0"
+  },
+  "peerDependencies": {
+    "@coveo/headless": "workspace:*"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0 || ^24.11.0"

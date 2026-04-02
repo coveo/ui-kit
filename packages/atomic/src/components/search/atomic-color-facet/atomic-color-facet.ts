@@ -161,9 +161,9 @@ export class AtomicColorFacet
         padding-left: 0.5rem;
         padding-right: 0.5rem;
         grid-template-columns: repeat(
-            var(--atomic-facet-color-boxes-per-row, 3),
-            minmax(0, 1fr)
-          );
+          var(--atomic-facet-color-boxes-per-row, 3),
+          minmax(0, 1fr)
+        );
         gap: var(--atomic-facet-color-boxes-gap, 0.5rem);
       }
 
@@ -479,12 +479,9 @@ export class AtomicColorFacet
   render() {
     return html`${when(this.shouldRenderFacet(), () =>
       this.searchStatusState.firstSearchExecuted
-        ? renderFacetContainer()(
-            html`
-            ${this.renderFacetHeader()}
-            ${this.renderBody()}
-          `
-          )
+        ? renderFacetContainer()(html`
+            ${this.renderFacetHeader()} ${this.renderBody()}
+          `)
         : renderFacetPlaceholder({
             props: {
               numberOfValues: this.numberOfValues,
@@ -546,11 +543,9 @@ export class AtomicColorFacet
             },
           })
       )}
-      ${
-        shouldDisplaySearchResults(this.facetState.facetSearch)
-          ? html`${this.renderSearchResults()}${this.renderMatches()}`
-          : html`${this.renderValues()}${this.renderShowMoreLess()}`
-      }
+      ${shouldDisplaySearchResults(this.facetState.facetSearch)
+        ? html`${this.renderSearchResults()}${this.renderMatches()}`
+        : html`${this.renderValues()}${this.renderShowMoreLess()}`}
     `;
   }
 
@@ -611,22 +606,20 @@ export class AtomicColorFacet
             searchQuery: this.facetState.facetSearch.query,
             buttonRef,
           },
-        })(
-          html`
-            <div
-              part="value-${partValueWithDisplayValue} value-${partValueWithAPIValue} default-color-value"
-              class="value-box-color"
-            ></div>
-            ${renderFacetValueLabelHighlight({
-              props: {
-                displayValue,
-                isSelected,
-                isExcluded,
-                searchQuery: this.facetState.facetSearch.query,
-              },
-            })}
-          `
-        );
+        })(html`
+          <div
+            part="value-${partValueWithDisplayValue} value-${partValueWithAPIValue} default-color-value"
+            class="value-box-color"
+          ></div>
+          ${renderFacetValueLabelHighlight({
+            props: {
+              displayValue,
+              isSelected,
+              isExcluded,
+              searchQuery: this.facetState.facetSearch.query,
+            },
+          })}
+        `);
     }
   }
 

@@ -37,7 +37,8 @@ export interface FacetValueRequest extends BaseFacetValueRequest {
 }
 
 export interface FacetRequest
-  extends BaseFacetRequest,
+  extends
+    BaseFacetRequest,
     CurrentValues<FacetValueRequest>,
     Expandable,
     Freezable,

@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: Just tests */
+/* oxlint-disable @typescript-eslint/no-explicit-any -- Just tests */
 import {
   closeGeneratedAnswerFeedbackModal,
   dislikeGeneratedAnswer,

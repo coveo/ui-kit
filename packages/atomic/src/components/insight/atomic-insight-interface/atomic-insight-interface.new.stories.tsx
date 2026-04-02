@@ -362,8 +362,8 @@ export const Default: Story = {
                           }
 
                           .result-root:has(
-                              atomic-result-section-children:hover
-                            ) {
+                            atomic-result-section-children:hover
+                          ) {
                             atomic-insight-result-action-bar {
                               visibility: hidden;
                             }
@@ -721,8 +721,8 @@ export const Default: Story = {
                           }
 
                           .result-root:has(
-                              atomic-result-section-children:hover
-                            ) {
+                            atomic-result-section-children:hover
+                          ) {
                             atomic-insight-result-action-bar {
                               visibility: hidden;
                             }

@@ -62,9 +62,7 @@ export default meta;
 export const Default: Story = {
   decorators: [
     (story) => html`
-      <div id="code-root">
-        ${story()}
-      </div>
+      <div id="code-root">${story()}</div>
       <div style="margin:20px 0">
         Select facet value(s) to see the Breadbox component.
       </div>

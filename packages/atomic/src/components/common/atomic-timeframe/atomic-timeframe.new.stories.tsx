@@ -73,7 +73,7 @@ export const Default: Story = {
       if (!('results' in response)) return response;
       return {
         ...response,
-        // biome-ignore lint/suspicious/noExplicitAny: Mock response type needs flexibility
+        // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Mock response type needs flexibility
         results: response.results.slice(0, 10).map((r: any, i: number) => ({
           ...r,
           raw: {
@@ -118,7 +118,7 @@ export const WithPastPeriod: Story = {
       if (!('results' in response)) return response;
       return {
         ...response,
-        // biome-ignore lint/suspicious/noExplicitAny: Mock response type needs flexibility
+        // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Mock response type needs flexibility
         results: response.results.slice(0, 10).map((r: any, i: number) => ({
           ...r,
           raw: {
@@ -163,7 +163,7 @@ export const WithNextPeriod: Story = {
       if (!('results' in response)) return response;
       return {
         ...response,
-        // biome-ignore lint/suspicious/noExplicitAny: Mock response type needs flexibility
+        // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Mock response type needs flexibility
         results: response.results.slice(0, 10).map((r: any, i: number) => ({
           ...r,
           raw: {
@@ -209,7 +209,7 @@ export const WithCustomLabel: Story = {
       if (!('results' in response)) return response;
       return {
         ...response,
-        // biome-ignore lint/suspicious/noExplicitAny: Mock response type needs flexibility
+        // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Mock response type needs flexibility
         results: response.results.slice(0, 10).map((r: any, i: number) => ({
           ...r,
           raw: {

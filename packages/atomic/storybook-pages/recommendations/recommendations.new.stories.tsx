@@ -119,7 +119,8 @@ const meta: Meta = {
           <atomic-recs-result-template>
             <template>
               <style>
-                div.result-root.with-sections.display-list.image-small atomic-result-section-visual {
+                div.result-root.with-sections.display-list.image-small
+                  atomic-result-section-visual {
                   height: 180px;
                 }
                 .content-metadata {
@@ -134,7 +135,7 @@ const meta: Meta = {
                   display: inline-block;
                   padding: 4px 12px;
                   background-color: #e3f2fd;
-                  color: #145EA9;
+                  color: #145ea9;
                   border-radius: 12px;
                   font-size: 0.75rem;
                   font-weight: 500;
@@ -142,7 +143,10 @@ const meta: Meta = {
                 }
               </style>
               <atomic-result-section-visual>
-                <atomic-result-image field="image" aria-hidden="true"></atomic-result-image>
+                <atomic-result-image
+                  field="image"
+                  aria-hidden="true"
+                ></atomic-result-image>
               </atomic-result-section-visual>
               <atomic-result-section-badges>
                 <atomic-field-condition if-defined="category">

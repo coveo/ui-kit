@@ -8,8 +8,10 @@ import type {ControllerDefinitionWithoutProps} from '../../../common/types/contr
 
 export * from '../../../../controllers/sort/headless-sort.js';
 
-export interface SortDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, Sort> {}
+export interface SortDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  Sort
+> {}
 
 /**
  * Defines a `Sort` controller instance.

@@ -84,8 +84,7 @@ export class AtomicCommerceNoProducts
       },
       () =>
         renderNoItemsContainer()(html`
-          ${renderMagnifyingGlass()} 
-          ${this.renderNoItems()}
+          ${renderMagnifyingGlass()} ${this.renderNoItems()}
           ${this.renderSearchTips()}
         `)
     )}`;

@@ -41,7 +41,7 @@ export const caseAssistCustomCaseInputValuesSelector = (
     if (isCustomFieldName(fieldName)) {
       const value = state?.caseInput?.[fieldName]?.value;
       if (value) {
-        // biome-ignore lint/performance/noAccumulatingSpread: <>
+        // oxlint-disable-next-line oxc/no-accumulating-spread -- <>
         return {...customFields, [fieldName]: value};
       }
     }
@@ -62,7 +62,7 @@ export const caseAssistCustomCaseFieldValuesSelector = (
       if (isCustomFieldName(fieldName)) {
         const value = state?.caseField?.fields?.[fieldName]?.value;
         if (value) {
-          // biome-ignore lint/performance/noAccumulatingSpread: <>
+          // oxlint-disable-next-line oxc/no-accumulating-spread -- <>
           return {...customFields, [fieldName]: value};
         }
       }

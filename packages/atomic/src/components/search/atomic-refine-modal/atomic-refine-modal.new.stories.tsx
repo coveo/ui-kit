@@ -79,9 +79,14 @@ export default meta;
 export const Default: Story = {
   decorators: [
     () => html`
-     <atomic-refine-toggle></atomic-refine-toggle>
+      <atomic-refine-toggle></atomic-refine-toggle>
       <div style="display:none;">
-        <atomic-sort-dropdown><atomic-sort-expression label="relevance" expression="relevancy"></atomic-sort-expression></atomic-sort-dropdown>
+        <atomic-sort-dropdown
+          ><atomic-sort-expression
+            label="relevance"
+            expression="relevancy"
+          ></atomic-sort-expression
+        ></atomic-sort-dropdown>
         <atomic-facet field="author" label="Authors"></atomic-facet>
         <atomic-facet field="language" label="Language"></atomic-facet>
         <atomic-facet

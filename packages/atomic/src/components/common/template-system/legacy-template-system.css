@@ -1,8 +1,8 @@
-@import "./with-sections.css";
-@import "./row-desktop.css";
-@import "./row-mobile.css";
-@import "./cell-desktop.css";
-@import "./cell-mobile.css";
+@import './with-sections.css';
+@import './row-desktop.css';
+@import './row-mobile.css';
+@import './cell-desktop.css';
+@import './cell-mobile.css';
 @reference '../../../utils/tailwind-utilities/aspect-square.css';
 @reference '../../../utils/tailwind-utilities/set-font-size.css';
 @reference '../../../global/global.css';

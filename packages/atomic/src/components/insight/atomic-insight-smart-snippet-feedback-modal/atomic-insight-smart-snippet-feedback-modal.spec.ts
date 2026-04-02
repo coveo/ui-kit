@@ -205,7 +205,7 @@ describe('atomic-insight-smart-snippet-feedback-modal', () => {
     it('should call smartSnippet.sendFeedback for standard feedback option', async () => {
       const {element} = await renderFeedbackModal({isOpen: true});
 
-      // biome-ignore lint/suspicious/noExplicitAny: accessing private property for testing
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- accessing private property for testing
       (element as any).currentAnswer = 'does_not_answer';
       await element.updateComplete;
 
@@ -222,11 +222,11 @@ describe('atomic-insight-smart-snippet-feedback-modal', () => {
     it('should call smartSnippet.sendDetailedFeedback for "other" option', async () => {
       const {element} = await renderFeedbackModal({isOpen: true});
 
-      // biome-ignore lint/suspicious/noExplicitAny: accessing private property for testing
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- accessing private property for testing
       (element as any).currentAnswer = 'other';
       await element.updateComplete;
 
-      // biome-ignore lint/suspicious/noExplicitAny: accessing private property for testing
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- accessing private property for testing
       const detailsInputRef = (element as any).detailsInputRef;
       if (detailsInputRef.value) {
         detailsInputRef.value.value = 'Custom feedback';
@@ -250,7 +250,7 @@ describe('atomic-insight-smart-snippet-feedback-modal', () => {
         eventFired = true;
       });
 
-      // biome-ignore lint/suspicious/noExplicitAny: accessing private property for testing
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- accessing private property for testing
       (element as any).currentAnswer = 'does_not_answer';
       await element.updateComplete;
 
@@ -265,7 +265,7 @@ describe('atomic-insight-smart-snippet-feedback-modal', () => {
     it('should set isOpen to false after submission', async () => {
       const {element} = await renderFeedbackModal({isOpen: true});
 
-      // biome-ignore lint/suspicious/noExplicitAny: accessing private property for testing
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- accessing private property for testing
       (element as any).currentAnswer = 'does_not_answer';
       await element.updateComplete;
 

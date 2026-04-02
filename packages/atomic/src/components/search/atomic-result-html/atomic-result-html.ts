@@ -104,7 +104,10 @@ export class AtomicResultHtml
     }
 
     return html`
-      <atomic-html value=${resultValue} ?sanitize=${this.sanitize}></atomic-html>
+      <atomic-html
+        value=${resultValue}
+        ?sanitize=${this.sanitize}
+      ></atomic-html>
     `;
   }
 }

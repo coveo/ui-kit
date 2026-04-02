@@ -24,8 +24,9 @@ const {decorator, play} = wrapInSearchInterface({
 
 const searchApiHarness = new MockSearchApi();
 
-const normalWidthDecorator: Decorator = (story) =>
-  html` <div style="min-width: 600px;" id="code-root">${story()}</div> `;
+const normalWidthDecorator: Decorator = (story) => html`
+  <div style="min-width: 600px;" id="code-root">${story()}</div>
+`;
 
 const meta: Meta = {
   component: 'atomic-search-box',

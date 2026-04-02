@@ -7,8 +7,10 @@ import type {ControllerDefinitionWithoutProps} from '../../types/controller-defi
 
 export * from '../../../../controllers/facet-manager/headless-facet-manager.js';
 
-export interface FacetManagerDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, FacetManager> {}
+export interface FacetManagerDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  FacetManager
+> {}
 
 /**
  * Defines a `FacetManager` controller instance.

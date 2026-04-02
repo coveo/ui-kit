@@ -9,7 +9,7 @@ vi.mock('@coveo/headless', {spy: true});
 vi.mock('@/src/mixins/bindings-mixin', () => ({
   InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
     return class extends superClass {
-      // biome-ignore lint/complexity/noUselessConstructor: <mocking the mixin for testing>
+      // oxlint-disable-next-line no-useless-constructor -- <mocking the mixin for testing>
       constructor(...args: unknown[]) {
         super(...args);
       }
@@ -50,21 +50,15 @@ describe('atomic-ipx-modal', () => {
           .source=${props.source}
           .container=${props.container}
         >
-          ${
-            slottedContent.header
-              ? html`<div slot="header">${slottedContent.header}</div>`
-              : ''
-          }
-          ${
-            slottedContent.body
-              ? html`<div slot="body">${slottedContent.body}</div>`
-              : ''
-          }
-          ${
-            slottedContent.footer
-              ? html`<div slot="footer">${slottedContent.footer}</div>`
-              : ''
-          }
+          ${slottedContent.header
+            ? html`<div slot="header">${slottedContent.header}</div>`
+            : ''}
+          ${slottedContent.body
+            ? html`<div slot="body">${slottedContent.body}</div>`
+            : ''}
+          ${slottedContent.footer
+            ? html`<div slot="footer">${slottedContent.footer}</div>`
+            : ''}
         </atomic-ipx-modal>
       `,
       selector: 'atomic-ipx-modal',

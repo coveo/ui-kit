@@ -8,8 +8,10 @@ import type {ControllerDefinitionWithoutProps} from '../../types/controller-defi
 
 export * from '../../../../controllers/recent-queries-list/headless-recent-queries-list.js';
 
-export interface RecentQueriesListDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, RecentQueriesList> {}
+export interface RecentQueriesListDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  RecentQueriesList
+> {}
 
 /**
  * Defines a `RecentQueriesList` controller instance.

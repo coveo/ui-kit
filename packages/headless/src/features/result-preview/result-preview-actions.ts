@@ -35,8 +35,10 @@ export interface PreparePreviewPaginationActionPayload {
   results: Pick<Result, 'hasHtmlVersion' | 'uniqueId'>[];
 }
 
-export interface AsyncThunkGlobalOptions<T>
-  extends AsyncThunkOptions<T, ClientThunkExtraArguments<HtmlApiClient>> {
+export interface AsyncThunkGlobalOptions<T> extends AsyncThunkOptions<
+  T,
+  ClientThunkExtraArguments<HtmlApiClient>
+> {
   rejectValue: SearchAPIErrorWithStatusCode;
 }
 

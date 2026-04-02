@@ -2,10 +2,10 @@ import {
   CommerceEngineConfiguration,
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless/commerce';
-import { Decorator, StoryContext } from '@storybook/web-components-vite';
-import { html } from 'lit';
-import { spreadProps } from '@open-wc/lit-helpers';
-import type { AtomicCommerceInterface } from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
+import {Decorator, StoryContext} from '@storybook/web-components-vite';
+import {html} from 'lit';
+import {spreadProps} from '@open-wc/lit-helpers';
+import type {AtomicCommerceInterface} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
 import '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
 
 export const wrapInCommerceInterface = ({
@@ -23,13 +23,19 @@ export const wrapInCommerceInterface = ({
   play: (context: StoryContext) => Promise<void>;
 } => ({
   decorator: (story) => html`
-    <atomic-commerce-interface ${spreadProps(includeCodeRoot?{id:"code-root"}:{})} type="${type}">
+    <atomic-commerce-interface
+      ${spreadProps(includeCodeRoot ? {id: 'code-root'} : {})}
+      type="${type}"
+    >
       ${story()}
     </atomic-commerce-interface>
   `,
-  play: async ({ canvasElement }) => {
+  play: async ({canvasElement}) => {
     await customElements.whenDefined('atomic-commerce-interface');
-    const commerceInterface = canvasElement.querySelector<AtomicCommerceInterface>('atomic-commerce-interface')!;
+    const commerceInterface =
+      canvasElement.querySelector<AtomicCommerceInterface>(
+        'atomic-commerce-interface'
+      )!;
     await commerceInterface!.initialize({
       ...getSampleCommerceEngineConfiguration(),
       ...engineConfig,
@@ -43,8 +49,11 @@ export const wrapInCommerceInterface = ({
 
 export const executeFirstRequestHook: (
   context: StoryContext
-) => Promise<void> = async ({ canvasElement }) => {
-  const commerceInterface = canvasElement.querySelector<AtomicCommerceInterface>('atomic-commerce-interface')!;
+) => Promise<void> = async ({canvasElement}) => {
+  const commerceInterface =
+    canvasElement.querySelector<AtomicCommerceInterface>(
+      'atomic-commerce-interface'
+    )!;
   await commerceInterface!.executeFirstRequest();
 };
 
@@ -59,7 +68,9 @@ export const hideFacetTypesHook = async (
     'atomic-commerce-category-facet',
   ];
 
-  const facetTypesToHide = allFacetTypes.filter(type => type !== facetTypeToKeep);
+  const facetTypesToHide = allFacetTypes.filter(
+    (type) => type !== facetTypeToKeep
+  );
 
   const waitForFacets = () => {
     return new Promise<void>((resolve) => {

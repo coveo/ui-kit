@@ -53,8 +53,7 @@ export const Default: Story = {
     (story) =>
       html` <atomic-commerce-layout>
         <atomic-layout-section section="search">
-          <atomic-commerce-search-box
-          ></atomic-commerce-search-box>
+          <atomic-commerce-search-box></atomic-commerce-search-box>
         </atomic-layout-section>
 
         <atomic-layout-section section="main">

@@ -1,8 +1,10 @@
 import '@/src/components/commerce/atomic-product-template/atomic-product-template.js';
-import { Decorator } from '@storybook/web-components-vite';
-import { html, TemplateResult, render } from 'lit';
+import {Decorator} from '@storybook/web-components-vite';
+import {html, TemplateResult, render} from 'lit';
 
-export const wrapInProductTemplate = (includeCodeRoot: boolean = true): {
+export const wrapInProductTemplate = (
+  includeCodeRoot: boolean = true
+): {
   decorator: Decorator;
 } => {
   const decorator: Decorator = (story) => {
@@ -22,7 +24,9 @@ export const wrapInProductTemplate = (includeCodeRoot: boolean = true): {
       templateTag.innerHTML = String(storyResult);
     }
 
-    if (includeCodeRoot) { templateTag.id = 'code-root'; }
+    if (includeCodeRoot) {
+      templateTag.id = 'code-root';
+    }
     return html`
       <atomic-product-template>${templateTag}</atomic-product-template>
     `;

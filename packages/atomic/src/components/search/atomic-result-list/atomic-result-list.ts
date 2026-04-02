@@ -439,23 +439,23 @@ export class AtomicResultList
       return html`${keyed(
         this.getResultId(result),
         html`<atomic-result
-        part="outline"
-         ${ref(
-           (element) =>
-             element instanceof HTMLElement &&
-             this.resultListCommon.setNewResultRef(element, index)
-         )}
-            .content=${this.getContent(result)}
-            .density=${this.density}
-            .display=${this.display}
-            .imageSize=${this.imageSize}
-            .interactiveResult=${this.getInteractiveResult(result)}
-            .linkContent=${this.getLinkContent(result)}
-            .loadingFlag=${this.loadingFlag}
-            .result=${result}
-            .renderingFunction=${this.itemRenderingFunction}
-            .store=${this.bindings.store as never}
-          ></atomic-result>`
+          part="outline"
+          ${ref(
+            (element) =>
+              element instanceof HTMLElement &&
+              this.resultListCommon.setNewResultRef(element, index)
+          )}
+          .content=${this.getContent(result)}
+          .density=${this.density}
+          .display=${this.display}
+          .imageSize=${this.imageSize}
+          .interactiveResult=${this.getInteractiveResult(result)}
+          .linkContent=${this.getLinkContent(result)}
+          .loadingFlag=${this.loadingFlag}
+          .result=${result}
+          .renderingFunction=${this.itemRenderingFunction}
+          .store=${this.bindings.store as never}
+        ></atomic-result>`
       )}`;
     })}`;
   }
@@ -503,7 +503,7 @@ export class AtomicResultList
                       .display=${this.display}
                       .imageSize=${this.imageSize}
                       .interactiveResult=${this.getInteractiveResult(result)}
-                       .linkContent=${this.getLinkContent(result)}
+                      .linkContent=${this.getLinkContent(result)}
                       .loadingFlag=${this.loadingFlag}
                       .result=${result}
                       .renderingFunction=${this.itemRenderingFunction}

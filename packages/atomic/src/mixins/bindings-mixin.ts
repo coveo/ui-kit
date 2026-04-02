@@ -99,7 +99,7 @@ export const InitializeBindingsMixin = <T extends Constructor<LitElement>>(
   superClass: T
 ) => {
   class BindingControllerMixinClass extends superClass {
-    // biome-ignore lint/suspicious/noExplicitAny: <>
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
     constructor(...args: any[]) {
       super(...args);
       this.initBindings();

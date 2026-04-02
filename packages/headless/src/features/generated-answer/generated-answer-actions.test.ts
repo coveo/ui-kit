@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: unit tests */
+/* oxlint-disable @typescript-eslint/no-explicit-any -- unit tests */
 import {buildMockCitation} from '../../test/mock-citation.js';
 import {
   generateAnswer,
@@ -106,15 +106,16 @@ describe('generated answer', () => {
   });
 
   describe('#updateResponseFormat', () => {
-    test.each(
-      generatedContentFormat
-    )('should accept a valid payload with format: "%i"', (format: GeneratedContentFormat) => {
-      expect(() =>
-        updateResponseFormat({
-          contentFormat: [format],
-        })
-      ).not.toThrow();
-    });
+    test.each(generatedContentFormat)(
+      'should accept a valid payload with format: "%i"',
+      (format: GeneratedContentFormat) => {
+        expect(() =>
+          updateResponseFormat({
+            contentFormat: [format],
+          })
+        ).not.toThrow();
+      }
+    );
   });
 
   describe('#registerFieldsToIncludeInCitations', () => {
@@ -140,11 +141,12 @@ describe('generated answer', () => {
   });
 
   describe('#setAnswerContentFormat', () => {
-    test.each(
-      generatedContentFormat
-    )('should accept a valid payload with format: "%i"', (format: GeneratedContentFormat) => {
-      expect(() => setAnswerContentFormat(format)).not.toThrow();
-    });
+    test.each(generatedContentFormat)(
+      'should accept a valid payload with format: "%i"',
+      (format: GeneratedContentFormat) => {
+        expect(() => setAnswerContentFormat(format)).not.toThrow();
+      }
+    );
   });
 
   describe('#generateAnswer', () => {

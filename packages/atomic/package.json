@@ -1,14 +1,26 @@
 {
   "name": "@coveo/atomic",
-  "type": "module",
   "version": "3.54.0",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/coveo/ui-kit.git",
     "directory": "packages/atomic"
   },
+  "files": [
+    "custom-elements.json",
+    "dist/",
+    "docs/",
+    "licenses/"
+  ],
+  "sideEffects": [
+    "./dist/esm/components/*/*/*.js",
+    "./dist/esm/index.js",
+    "./dist/esm/loader.js",
+    "./dist/cjs/loader.cjs"
+  ],
   "main": "dist/cjs/index.cjs",
   "module": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
@@ -41,18 +53,6 @@
     },
     "./custom-elements-manifest": "./custom-elements.json"
   },
-  "sideEffects": [
-    "./dist/esm/components/*/*/*.js",
-    "./dist/esm/index.js",
-    "./dist/esm/loader.js",
-    "./dist/cjs/loader.cjs"
-  ],
-  "files": [
-    "custom-elements.json",
-    "dist/",
-    "docs/",
-    "licenses/"
-  ],
   "scripts": {
     "clean": "node ../../utils/ci/rm-rf.mjs dist/* dist-storybook/* www/* docs/* playwright-report/*",
     "build:storybook": "storybook build -o dist-storybook --stats-json",
@@ -150,14 +150,13 @@
       "optional": true
     }
   },
-  "license": "Apache-2.0",
   "engines": {
     "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
   },
+  "customElements": "custom-elements.json",
   "msw": {
     "workerDirectory": [
       ".storybook/public"
     ]
-  },
-  "customElements": "custom-elements.json"
+  }
 }

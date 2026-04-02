@@ -7,28 +7,28 @@
 
 @utility atomic-template-system-cell-result {
   grid-template-areas:
-    "badges"
-    "visual"
-    "title"
-    "title-metadata"
-    "emphasized"
-    "excerpt"
-    "children"
-    "bottom-metadata"
-    "actions";
+    'badges'
+    'visual'
+    'title'
+    'title-metadata'
+    'emphasized'
+    'excerpt'
+    'children'
+    'bottom-metadata'
+    'actions';
   grid-template-columns: 100%;
   grid-template-rows: repeat(9, auto);
 }
 
 @utility atomic-template-system-row-result-desktop-template {
   grid-template-areas:
-    "badges badges          .               actions"
-    "visual title           title           title"
-    "visual title-metadata  title-metadata  title-metadata"
-    "visual emphasized      emphasized      emphasized"
-    "visual excerpt         excerpt         excerpt"
-    "visual bottom-metadata bottom-metadata bottom-metadata"
-    "visual children        children        children";
+    'badges badges          .               actions'
+    'visual title           title           title'
+    'visual title-metadata  title-metadata  title-metadata'
+    'visual emphasized      emphasized      emphasized'
+    'visual excerpt         excerpt         excerpt'
+    'visual bottom-metadata bottom-metadata bottom-metadata'
+    'visual children        children        children';
   grid-template-columns: minmax(0, min-content) auto 1fr auto;
 }
 
@@ -47,13 +47,13 @@
 
   &.image-none {
     grid-template-areas:
-      "badges          .               actions"
-      "title           title           title"
-      "title-metadata  title-metadata  title-metadata"
-      "emphasized      emphasized      emphasized"
-      "excerpt         excerpt         excerpt"
-      "bottom-metadata bottom-metadata bottom-metadata"
-      "children        children        children";
+      'badges          .               actions'
+      'title           title           title'
+      'title-metadata  title-metadata  title-metadata'
+      'emphasized      emphasized      emphasized'
+      'excerpt         excerpt         excerpt'
+      'bottom-metadata bottom-metadata bottom-metadata'
+      'children        children        children';
     grid-template-columns: auto 1fr auto;
     grid-template-rows: repeat(6, auto);
   }
@@ -62,58 +62,58 @@
   /* == Image styles == */
   &.image-large {
     grid-template-areas:
-      "visual"
-      "badges"
-      "title"
-      "title-metadata"
-      "emphasized"
-      "excerpt"
-      "bottom-metadata"
-      "actions"
-      "children";
+      'visual'
+      'badges'
+      'title'
+      'title-metadata'
+      'emphasized'
+      'excerpt'
+      'bottom-metadata'
+      'actions'
+      'children';
     grid-template-columns: 100%;
     grid-template-rows: repeat(8, auto);
   }
 
   &.image-small {
     grid-template-areas:
-      "badges          badges"
-      "visual          title"
-      "visual          title-metadata"
-      "visual          emphasized"
-      "visual          ."
-      "excerpt         excerpt"
-      "bottom-metadata bottom-metadata"
-      "actions         actions"
-      "children        children";
+      'badges          badges'
+      'visual          title'
+      'visual          title-metadata'
+      'visual          emphasized'
+      'visual          .'
+      'excerpt         excerpt'
+      'bottom-metadata bottom-metadata'
+      'actions         actions'
+      'children        children';
     grid-template-columns: auto minmax(0, 1fr);
     grid-template-rows: repeat(4, auto) minmax(0, 1fr) repeat(3, auto);
   }
 
   &.image-icon {
     grid-template-areas:
-      "badges          badges"
-      "visual          title"
-      "visual          title-metadata"
-      "visual          emphasized"
-      "visual          excerpt"
-      "visual          bottom-metadata"
-      "visual          actions"
-      "visual          children";
+      'badges          badges'
+      'visual          title'
+      'visual          title-metadata'
+      'visual          emphasized'
+      'visual          excerpt'
+      'visual          bottom-metadata'
+      'visual          actions'
+      'visual          children';
     grid-template-columns: auto minmax(0, 1fr);
     grid-template-rows: repeat(7, auto) 1fr;
   }
 
   &.image-none {
     grid-template-areas:
-      "badges"
-      "title"
-      "title-metadata"
-      "emphasized"
-      "excerpt"
-      "bottom-metadata"
-      "actions"
-      "children";
+      'badges'
+      'title'
+      'title-metadata'
+      'emphasized'
+      'excerpt'
+      'bottom-metadata'
+      'actions'
+      'children';
     grid-template-columns: 100%;
     grid-template-rows: repeat(7, auto);
   }

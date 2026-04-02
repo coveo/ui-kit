@@ -23,14 +23,17 @@ export const wrapInRecommendationInterface = ({
   play: (context: StoryContext) => Promise<void>;
 } => ({
   decorator: (story) => html`
-    <atomic-recs-interface ${spreadProps(includeCodeRoot ? { id: "code-root" } : {})}>
+    <atomic-recs-interface
+      ${spreadProps(includeCodeRoot ? {id: 'code-root'} : {})}
+    >
       ${story()}
     </atomic-recs-interface>
   `,
   play: async ({canvasElement, step}) => {
     await customElements.whenDefined('atomic-recs-interface');
-    const recsInterface =
-      canvasElement.querySelector<AtomicRecsInterface>('atomic-recs-interface')!;
+    const recsInterface = canvasElement.querySelector<AtomicRecsInterface>(
+      'atomic-recs-interface'
+    )!;
 
     if (!skipInitialization) {
       await step('Render the Recs Interface', async () => {
