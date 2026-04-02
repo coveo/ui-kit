@@ -3,9 +3,12 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {parameters as searchBoxParameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+
+const searchApiHarness = new MockSearchApi();
 
 const TEMPLATE_EXAMPLE = `<template>
   <atomic-result-section-visual>
@@ -171,6 +174,12 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
+    msw: {
+      handlers: [...searchApiHarness.handlers],
+    },
+  },
+  beforeEach: () => {
+    searchApiHarness.clearAll();
   },
   args: {
     ...args,
@@ -283,7 +292,7 @@ export const InASearchBoxInstantResults: Story = {
   name: 'In a search box instant results',
   decorators: [
     (story) => html`
-      <atomic-search-box style="width: 600px;">
+      <atomic-search-box suggestion-timeout="30000" style="width: 600px;">
         <atomic-search-box-query-suggestions>
           <atomic-search-box-instant-results>
             ${story()}
