@@ -93,6 +93,11 @@ const customRenderer = {
     return `<p part="answer-paragraph">${text}</p>`;
   },
 
+  link(href: string, _title: string | null | undefined, text: string) {
+    const safeHref = href?.startsWith('http') ? href : '#';
+    return `<a part="answer-link" href="${safeHref}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+  },
+
   strong(text: string) {
     return `<strong part="answer-strong">${text}</strong>`;
   },

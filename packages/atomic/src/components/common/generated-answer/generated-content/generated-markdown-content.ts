@@ -14,7 +14,7 @@ export const renderGeneratedMarkdownContent: FunctionalComponent<
 > = ({props}) => {
   const answerAsHtml = DOMPurify.sanitize(
     transformMarkdownToHtml(props.answer ?? ''),
-    {ADD_ATTR: ['part']}
+    {ADD_ATTR: ['part', 'target', 'rel']}
   );
 
   return html`

@@ -43,6 +43,14 @@ const styles = css`
     @apply font-bold;
   }
 
+  [part='generated-text'] [part='answer-link'] {
+    @apply text-primary underline cursor-pointer;
+  }
+
+  [part='generated-text'] [part='answer-link']:hover {
+    @apply text-primary-light;
+  }
+
   [part='generated-text'] [part='answer-ordered-list'] {
     @apply mb-2 list-decimal ps-8;
   }
