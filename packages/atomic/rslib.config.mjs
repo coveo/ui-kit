@@ -9,8 +9,6 @@ const {version} = JSON.parse(
   readFileSync(join(__dirname, 'package.json'), 'utf8')
 );
 
-const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
-
 const shared = {
   bundle: false,
   syntax: 'es2021',
@@ -61,7 +59,6 @@ export default defineConfig({
       // CDN builds go through rsbuild (not rslib), so safe to stub it out here.
       // This also prevents CJS output from containing invalid import.meta syntax.
       'import.meta.url': JSON.stringify('https://localhost'),
-      ...(isCDN ? {'import.meta.env.RESOURCE_URL': 'import.meta.url'} : {}),
     },
     decorators: {
       version: 'legacy',
