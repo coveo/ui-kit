@@ -50,7 +50,6 @@ export interface A11yAutomatedResults {
  */
 export interface A11yComponentReport {
   name: string;
-  category: string;
   storyCount: number;
   automated: A11yAutomatedResults;
 }
@@ -71,7 +70,6 @@ export interface A11yCriterionReport {
     | 'notEvaluated';
   automatedCoverage: boolean;
   manualVerified: boolean;
-  remarks: string;
   affectedComponents: string[];
 }
 
@@ -89,7 +87,6 @@ interface StoryCoverage {
  */
 export interface A11ySummary {
   totalComponents: number;
-  litComponents: number;
   storyCoverage: StoryCoverage;
   totalCriteria: number;
   supports: number;
