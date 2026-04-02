@@ -1,16 +1,4 @@
-name: Release
-
-# RELEASE FLOW:
-#
-# On every push to main, the changesets/action either:
-#   A) Opens/updates a "Version Packages" PR if there are pending changesets
-#   B) Publishes packages if changesets were just consumed (release PR merged)
-#
-# When publishing (no pending changesets):
-#   1. Build packages and publish to npm (changeset publish)
-#   2. Deploy to CDN
-#   3. Promote Quantic SFDX package, build typedocs, notify docs
-
+name: Create release
 on:
   push:
     branches: [main]
@@ -24,12 +12,10 @@ permissions:
 
 jobs:
   release:
-    name: Release
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
-      id-token: write
     outputs:
       published: ${{ steps.changesets.outputs.published }}
     steps:
@@ -46,7 +32,6 @@ jobs:
           load-cache: false
           save-cache: true
           cache-retention-days: 7
-
       - name: Create release PR or publish
         id: changesets
         uses: changesets/action@6a0a831ff30acef54f2c6aa1cbbc1096b066edaf # v1
@@ -58,35 +43,19 @@ jobs:
           commitMode: github-api
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  cdn-prod:
-    name: CDN Production
-    needs: release
-    if: ${{ needs.release.outputs.published == 'true' }}
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
-        with:
-          egress-policy: audit
-
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - uses: ./.github/actions/setup
-      - name: Deploy to CDN
+      - name: Call ui-kit-cd
+        if: ${{ steps.changesets.outputs.published == 'true' }}
         run: node ./scripts/deploy/trigger-ui-kit-cd.mjs
         env:
           GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
-
   npm-prod:
-    name: NPM Production
-    needs: [release, cdn-prod]
     if: ${{ needs.release.outputs.published == 'true' }}
-    runs-on: ubuntu-latest
+    needs: release
     environment: 'NPM Production'
+    runs-on: 'ubuntu-latest'
     permissions:
       contents: read
+      discussions: write
       id-token: write
     steps:
       - name: Harden Runner
@@ -100,11 +69,9 @@ jobs:
         run: pnpm run publish:npm:latest
         env:
           NPM_TAG: latest
-
   quantic-prod:
-    name: Quantic Production
-    needs: [release, cdn-prod]
     if: ${{ needs.release.outputs.published == 'true' }}
+    needs: release
     runs-on: ubuntu-latest
     environment: 'Quantic Production'
     permissions:
@@ -132,11 +99,9 @@ jobs:
           SFDX_AUTH_JWT_KEY_FILE: ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         working-directory: ./packages/quantic
-
   typedoc-headless:
-    name: Typedoc Headless
-    needs: [release, cdn-prod]
     if: ${{ needs.release.outputs.published == 'true' }}
+    needs: release
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -144,8 +109,11 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - uses: ./.github/actions/setup
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Set up and build the project
+        uses: ./.github/actions/setup
 
       - name: Build typedoc site
         run: pnpm run build:typedoc
@@ -170,11 +138,9 @@ jobs:
         with:
           name: headless-docs-${{ env.version }}
           path: typedoc-headless-site/
-
   typedoc-headless-react:
-    name: Typedoc Headless React
-    needs: [release, cdn-prod]
     if: ${{ needs.release.outputs.published == 'true' }}
+    needs: release
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -182,8 +148,11 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - uses: ./.github/actions/setup
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Set up and build the project
+        uses: ./.github/actions/setup
 
       - name: Build typedoc site
         run: pnpm run build:typedoc
@@ -208,11 +177,9 @@ jobs:
         with:
           name: headless-react-docs-${{ env.version }}
           path: typedoc-headless-react-site/
-
   docs-prod:
-    name: Docs Production
-    needs: [release, cdn-prod]
     if: ${{ needs.release.outputs.published == 'true' }}
+    needs: release
     runs-on: ubuntu-latest
     environment: 'Docs Production'
     steps:
