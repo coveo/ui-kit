@@ -19,7 +19,6 @@ import {
 import {followUpAnswersReducer as followUpAnswers} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import type {FollowUpAnswersState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
 import {withGeneratedAnswerSseErrorHelpers} from '../../../features/generated-answer/sse-generated-answer-errors.js';
-import {selectSearchActionCause} from '../../../features/search/search-selectors.js';
 import type {GeneratedAnswerState} from '../../../index.js';
 import type {
   FollowUpAnswersSection,
@@ -252,8 +251,7 @@ export function buildGeneratedAnswerWithFollowUps(
       engine.dispatch(createFollowUpAnswer({question}));
       const analyticsParams = fromAnalyticsStateToAnalyticsParams(
         getState().configuration.analytics,
-        engine.navigatorContext,
-        {actionCause: selectSearchActionCause(getState())}
+        engine.navigatorContext
       );
       try {
         await followUpAgent.runAgent(

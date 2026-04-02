@@ -586,7 +586,11 @@ describe('GeneratedAnswerWithFollowUps', () => {
           forwardedProps: {
             q: question,
             analytics: expect.objectContaining({
-              actionCause: 'searchboxSubmit',
+              clientId: '',
+              capture: false,
+              originContext: 'Search',
+              clientTimestamp: expect.any(String),
+              source: expect.any(Array),
             }),
             conversationId,
             conversationToken,
