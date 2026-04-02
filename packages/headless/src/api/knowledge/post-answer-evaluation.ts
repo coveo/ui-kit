@@ -9,10 +9,10 @@ export interface AnswerEvaluationPOSTParams {
     format: string;
   };
   details: {
-    readable: Boolean | null;
-    documented: Boolean | null;
-    correctTopic: Boolean | null;
-    hallucinationFree: Boolean | null;
+    readable: boolean | null;
+    documented: boolean | null;
+    correctTopic: boolean | null;
+    hallucinationFree: boolean | null;
   };
   correctAnswerUrl: string | null;
   additionalNotes: string | null;

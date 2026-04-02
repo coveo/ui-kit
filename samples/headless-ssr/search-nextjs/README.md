@@ -61,6 +61,7 @@ The `@coveo/headless/ssr` utilities are framework-agnostic and can be used with 
 ### Server-Side Rendering Benefits
 
 SSR provides:
+
 - Improved initial page load performance
 - Better SEO with pre-rendered search content
 - Enhanced Core Web Vitals

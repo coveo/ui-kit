@@ -1,3 +1,4 @@
+// oxlint-disable unicorn/no-empty-file
 /**
  * @typedef PackageJson
  * @property {string} name - The package name

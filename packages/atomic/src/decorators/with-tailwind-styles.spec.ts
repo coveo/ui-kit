@@ -74,6 +74,7 @@ describe('withTailwindStyles decorator', () => {
   ];
 
   describe('when styles is an array', () => {
+    // oxlint-disable-next-line no-unassigned-vars
     let styles: CSSResultGroup | CSSStyleSheet | undefined;
 
     beforeEach(async () => {
@@ -94,6 +95,7 @@ describe('withTailwindStyles decorator', () => {
   });
 
   describe('when styles is not an array', () => {
+    // oxlint-disable-next-line no-unassigned-vars
     let styles: CSSResultGroup | CSSStyleSheet | undefined;
 
     beforeEach(async () => {
@@ -114,6 +116,7 @@ describe('withTailwindStyles decorator', () => {
   });
 
   describe('when styles is undefined', () => {
+    // oxlint-disable-next-line no-unassigned-vars
     let styles: CSSResultGroup | CSSStyleSheet | undefined;
 
     beforeEach(async () => {

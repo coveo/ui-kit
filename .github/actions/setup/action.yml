@@ -26,7 +26,7 @@ inputs:
 runs:
   using: composite
   steps:
-#region PNPM
+    #region PNPM
     # Note: pnpm dependencies are cached automatically by setup-node (cache: 'pnpm')
     # The load-cache/save-cache inputs only control turbo cache artifacts
     - name: Install pnpm
@@ -40,8 +40,8 @@ runs:
         cache: 'pnpm'
     - run: pnpm install --frozen-lockfile --prefer-offline
       shell: bash
-#endregion
-#region Caches
+    #endregion
+    #region Caches
     # Cypress cache
     - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
       with:
@@ -55,8 +55,8 @@ runs:
       with:
         name: ${{ runner.os }}-${{ inputs.cache-prefix }}-turbo
         path: .turbo
-#endregion
-#region Build
+    #endregion
+    #region Build
     - run: pnpm run build
       if: inputs.skip-build != 'true'
       shell: bash

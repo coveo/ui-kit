@@ -47,40 +47,40 @@ export class AtomicIpxModal extends InitializeBindingsMixin(LitElement) {
   static styles: CSSResultGroup = [
     ipxBodyStyles,
     css`
-  @reference '../../../utils/tailwind.global.tw.css';
+      @reference '../../../utils/tailwind.global.tw.css';
 
-  atomic-focus-trap {
-  @apply contents;
-  height: inherit;
-}
+      atomic-focus-trap {
+        @apply contents;
+        height: inherit;
+      }
 
-:host {
-  width: var(--atomic-ipx-width, 31.25rem);
-  height: var(--atomic-ipx-height, 43.75rem);
-  max-width: calc(100vw - 3rem);
-  max-height: calc(100vh - 4.25rem);
-  box-shadow: rgb(0 0 0 / 50%) 0 0 0.5rem;
-  inset: auto 3rem 4.25rem auto;
-  position: fixed;
-  z-index: 1000;
-  display: none;
+      :host {
+        width: var(--atomic-ipx-width, 31.25rem);
+        height: var(--atomic-ipx-height, 43.75rem);
+        max-width: calc(100vw - 3rem);
+        max-height: calc(100vh - 4.25rem);
+        box-shadow: rgb(0 0 0 / 50%) 0 0 0.5rem;
+        inset: auto 3rem 4.25rem auto;
+        position: fixed;
+        z-index: 1000;
+        display: none;
 
-  [part='backdrop'] {
-    @apply pointer-events-none;
-    height: inherit;
-  }
-}
+        [part='backdrop'] {
+          @apply pointer-events-none;
+          height: inherit;
+        }
+      }
 
-:host(.open) {
-  display: block;
+      :host(.open) {
+        display: block;
 
-  [part='backdrop'] {
-    @apply pointer-events-auto;
-    height: inherit;
-    max-height: calc(100vh - 4.25rem);
-  }
-}
-  `,
+        [part='backdrop'] {
+          @apply pointer-events-auto;
+          height: inherit;
+          max-height: calc(100vh - 4.25rem);
+        }
+      }
+    `,
   ];
 
   @state()

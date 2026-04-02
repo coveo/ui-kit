@@ -1,8 +1,9 @@
 {
   "name": "@samples/headless-ssr-commerce-express",
-  "description": "Headless Commerce SSR Generic Sample using the new simplified ssr-next API",
   "version": "0.0.0",
   "private": true,
+  "description": "Headless Commerce SSR Generic Sample using the new simplified ssr-next API",
+  "type": "module",
   "scripts": {
     "dev": "pnpm build:client --watch=forever & pnpm build:server --watch & pnpm start -- --watch",
     "build": "pnpm build:server && pnpm build:client",
@@ -23,6 +24,5 @@
     "@types/node": "catalog:",
     "esbuild": "catalog:",
     "typescript": "catalog:"
-  },
-  "type": "module"
+  }
 }

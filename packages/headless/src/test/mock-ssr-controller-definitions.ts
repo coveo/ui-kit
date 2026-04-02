@@ -20,15 +20,16 @@ interface MockController {
   initialState?: Record<string, unknown>;
 }
 
-interface MockControllerDefinitionWithoutProps
-  extends ControllerDefinitionWithoutProps<SearchEngine, Controller> {}
+interface MockControllerDefinitionWithoutProps extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  Controller
+> {}
 
-interface MockControllerDefinitionWithProps
-  extends ControllerDefinitionWithProps<
-    SearchEngine,
-    Controller,
-    MockController
-  > {}
+interface MockControllerDefinitionWithProps extends ControllerDefinitionWithProps<
+  SearchEngine,
+  Controller,
+  MockController
+> {}
 
 type SolutionTypeAvailabilities = {
   listing?: boolean;
@@ -103,15 +104,16 @@ interface MockSearchController {
   initialState?: Record<string, unknown>;
 }
 
-interface MockSearchControllerDefinitionWithoutProps
-  extends SearchControllerDefinitionWithoutProps<SSRSearchEngine, Controller> {}
+interface MockSearchControllerDefinitionWithoutProps extends SearchControllerDefinitionWithoutProps<
+  SSRSearchEngine,
+  Controller
+> {}
 
-interface MockSearchControllerDefinitionWithProps
-  extends SearchControllerDefinitionWithProps<
-    SSRSearchEngine,
-    Controller,
-    MockSearchController
-  > {}
+interface MockSearchControllerDefinitionWithProps extends SearchControllerDefinitionWithProps<
+  SSRSearchEngine,
+  Controller,
+  MockSearchController
+> {}
 
 export function defineMockSearchController(): MockSearchControllerDefinitionWithoutProps {
   return {

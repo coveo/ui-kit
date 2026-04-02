@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: unit test */
+/* oxlint-disable @typescript-eslint/no-explicit-any -- unit test */
 
 import type {RunAgentInput} from '@ag-ui/client';
 import {describe, expect, it} from 'vitest';

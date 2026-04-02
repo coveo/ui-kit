@@ -40,19 +40,19 @@ export const renderCitations: FunctionalComponent<RenderCitationsProps> = ({
       return keyed(
         citation.id,
         html`
-        <li class="max-w-full">
-          <atomic-citation
-            .citation=${getCitationWithTitle(citation, i18n)}
-            .index=${index}
-            .sendHoverEndEvent=${(citationHoverTimeMs: number) => {
-              logCitationHover(citation.id, citationHoverTimeMs);
-            }}
-            .interactiveCitation=${interactiveCitation}
-            .disableCitationAnchoring=${disableCitationAnchoring ?? false}
-            exportparts="citation,citation-popover"
-          ></atomic-citation>
-        </li>
-      `
+          <li class="max-w-full">
+            <atomic-citation
+              .citation=${getCitationWithTitle(citation, i18n)}
+              .index=${index}
+              .sendHoverEndEvent=${(citationHoverTimeMs: number) => {
+                logCitationHover(citation.id, citationHoverTimeMs);
+              }}
+              .interactiveCitation=${interactiveCitation}
+              .disableCitationAnchoring=${disableCitationAnchoring ?? false}
+              exportparts="citation,citation-popover"
+            ></atomic-citation>
+          </li>
+        `
       );
     })
   )}`;

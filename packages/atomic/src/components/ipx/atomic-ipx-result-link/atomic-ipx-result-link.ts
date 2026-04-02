@@ -37,6 +37,7 @@ import styles from './atomic-ipx-result-link.tw.css';
  */
 @customElement('atomic-ipx-result-link')
 @bindings()
+// oxlint-disable-next-line typescript/no-unsafe-declaration-merging
 export class AtomicIpxResultLink
   extends LightDomMixin(SlotsForNoShadowDOMMixin(LitElement))
   implements InitializableComponent<RecsBindings>

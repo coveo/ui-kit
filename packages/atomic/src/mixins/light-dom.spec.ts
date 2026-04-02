@@ -138,8 +138,16 @@ describe('#LightDomMixin', () => {
       document.adoptedStyleSheets = [];
 
       const dynamicStyles = [
-        css`p { font-size: 16px; }`,
-        css`span { color: green; }`,
+        css`
+          p {
+            font-size: 16px;
+          }
+        `,
+        css`
+          span {
+            color: green;
+          }
+        `,
       ];
 
       await element.injectStyles(dynamicStyles);

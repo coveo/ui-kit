@@ -93,7 +93,8 @@
     "pnpm-workspace.yaml",
     ".npmrc",
     "tsconfig.json",
-    "biome.jsonc",
+    ".oxlintrc.json",
+    ".oxfmtrc.json",
     ".cspell.json"
   ],
   "globalEnv": [

@@ -18,25 +18,22 @@ export interface GeneratedContentContainerProps {
 export const renderGeneratedContentContainer: FunctionalComponentWithChildren<
   GeneratedContentContainerProps
 > = ({props}) => {
-  return (children) =>
-    html`
-      <div part="generated-container">
-        ${
-          props.answerContentFormat === 'text/markdown'
-            ? renderGeneratedMarkdownContent({
-                props: {
-                  answer: props.answer,
-                  isStreaming: props.isStreaming,
-                } satisfies GeneratedMarkdownContentProps,
-              })
-            : renderGeneratedTextContent({
-                props: {
-                  answer: props.answer,
-                  isStreaming: props.isStreaming,
-                } satisfies GeneratedTextContentProps,
-              })
-        }
-        <div class="footer mt-6">${children}</div>
-      </div>
-    `;
+  return (children) => html`
+    <div part="generated-container">
+      ${props.answerContentFormat === 'text/markdown'
+        ? renderGeneratedMarkdownContent({
+            props: {
+              answer: props.answer,
+              isStreaming: props.isStreaming,
+            } satisfies GeneratedMarkdownContentProps,
+          })
+        : renderGeneratedTextContent({
+            props: {
+              answer: props.answer,
+              isStreaming: props.isStreaming,
+            } satisfies GeneratedTextContentProps,
+          })}
+      <div class="footer mt-6">${children}</div>
+    </div>
+  `;
 };

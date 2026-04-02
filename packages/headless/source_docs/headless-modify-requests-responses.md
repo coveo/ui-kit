@@ -3,7 +3,9 @@ title: Modify requests and responses
 group: Usage
 slug: usage/modify-requests-and-responses
 ---
+
 # Modify requests and responses
+
 You may also want to modify responses before [Headless](https://docs.coveo.com/en/lcdf0493/) controllers use them.
 This article explains how to do so.
 
@@ -42,12 +44,11 @@ const engine = buildSearchEngine({
 ```
 
 1. Initialize the function with its parameters:
-   * `request`: The HTTP request sent to Coveo. See [`preprocess-request.ts`](https://github.com/coveo/ui-kit/blob/main/packages/headless/src/api/preprocess-request.ts).
-   * `clientOrigin`: The origin of the request. See [`preprocess-request.ts`](https://github.com/coveo/ui-kit/blob/main/packages/headless/src/api/preprocess-request.ts).
-   * `metadata`: Optional metadata consisting of two properties:
-
-     * `method`: The method called on the client.
-     * `origin`: The origin of the client that helps to distinguish between features while using the same method.
+   - `request`: The HTTP request sent to Coveo. See [`preprocess-request.ts`](https://github.com/coveo/ui-kit/blob/main/packages/headless/src/api/preprocess-request.ts).
+   - `clientOrigin`: The origin of the request. See [`preprocess-request.ts`](https://github.com/coveo/ui-kit/blob/main/packages/headless/src/api/preprocess-request.ts).
+   - `metadata`: Optional metadata consisting of two properties:
+     - `method`: The method called on the client.
+     - `origin`: The origin of the client that helps to distinguish between features while using the same method.
 
      See [`search-metadata.ts`](https://github.com/coveo/ui-kit/blob/main/packages/headless/src/api/search/search-metadata.ts).
 

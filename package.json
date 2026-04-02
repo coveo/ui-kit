@@ -1,7 +1,7 @@
 {
   "name": "ui-kit",
-  "private": true,
   "version": "3.0.98",
+  "private": true,
   "scripts": {
     "postinstall": "husky install",
     "reset:install": "git checkout origin/main pnpm-lock.yaml && pnpm install",
@@ -10,8 +10,8 @@
     "build": "turbo build",
     "test": "turbo test",
     "e2e": "turbo e2e",
-    "lint:check": "npx @biomejs/biome check --error-on-warnings . && turbo lint:check --filter=@coveo/quantic && cspell **/*.md --no-progress --show-suggestions --show-context",
-    "lint:fix": "npx @biomejs/biome check --write --error-on-warnings . && turbo lint:fix --filter=@coveo/quantic && cspell **/*.md --no-progress --show-suggestions --show-context",
+    "lint:check": "oxlint --deny-warnings . && oxfmt --check . && turbo lint:check --filter=@coveo/quantic && cspell **/*.md --no-progress --show-suggestions --show-context",
+    "lint:fix": "oxlint --deny-warnings --fix . && oxfmt . && turbo lint:fix --filter=@coveo/quantic && cspell **/*.md --no-progress --show-suggestions --show-context",
     "package-compatibility": "node ./scripts/ci/package-compatibility.mjs",
     "pr:report": "echo 'TODO KIT-5109: pr:report must be reactivated after pnpm has been merged in main'",
     "report:bundle-size:time-series": "node ./scripts/reports/bundle-size/time-series.mjs",
@@ -26,7 +26,6 @@
   "devDependencies": {
     "@actions/core": "3.0.0",
     "@actions/github": "9.0.0",
-    "@biomejs/biome": "2.4.8",
     "@changesets/changelog-github": "0.6.0",
     "@changesets/cli": "2.30.0",
     "@coveo/ci": "workspace:*",
@@ -41,8 +40,10 @@
     "esbuild-plugin-alias": "0.2.1",
     "esbuild-plugin-umd-wrapper": "3.0.0",
     "husky": "9.1.7",
-    "knip": "5.88.0",
+    "knip": "5.88.1",
     "lint-staged": "16.2.7",
+    "oxfmt": "0.43.0",
+    "oxlint": "1.58.0",
     "playwright": "catalog:",
     "publint": "0.3.18",
     "semver": "7.7.3",
@@ -57,6 +58,11 @@
       }
     }
   },
+  "engines": {
+    "node": "^22.14.0 || ^24.11.0",
+    "pnpm": ">=10.0.0"
+  },
+  "packageManager": "pnpm@10.26.2",
   "pnpm": {
     "patchedDependencies": {
       "@stencil/core@4.20.0": "patches/@stencil+core+4.20.0.patch",
@@ -72,10 +78,5 @@
       "@angular/core": "catalog:",
       "@angular/common": "catalog:"
     }
-  },
-  "engines": {
-    "node": "^22.14.0 || ^24.11.0",
-    "pnpm": ">=10.0.0"
-  },
-  "packageManager": "pnpm@10.26.2"
+  }
 }

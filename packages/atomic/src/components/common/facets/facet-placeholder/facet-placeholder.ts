@@ -26,6 +26,9 @@ export const renderFacetPlaceholder: FunctionalComponent<
     aria-hidden="true"
   >
     <div class="bg-neutral h-8 rounded" style="width: 75%"></div>
-    ${when(!props.isCollapsed, () => html`<div class="mt-7">${facetValues}</div>`)}
+    ${when(
+      !props.isCollapsed,
+      () => html`<div class="mt-7">${facetValues}</div>`
+    )}
   </div>`;
 };

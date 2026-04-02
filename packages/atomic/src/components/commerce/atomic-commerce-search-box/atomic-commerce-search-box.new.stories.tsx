@@ -21,8 +21,9 @@ const {decorator, play} = wrapInCommerceInterface({
   includeCodeRoot: false,
 });
 
-const normalWidthDecorator: Decorator = (story) =>
-  html` <div style="min-width: 600px;" id="code-root">${story()}</div> `;
+const normalWidthDecorator: Decorator = (story) => html`
+  <div style="min-width: 600px;" id="code-root">${story()}</div>
+`;
 
 const meta: Meta = {
   component: 'atomic-commerce-search-box',

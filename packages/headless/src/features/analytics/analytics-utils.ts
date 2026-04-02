@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/suspicious/noConfusingVoidType: <> */
+/* oxlint-disable @typescript-eslint/no-invalid-void-type -- <> */
 import {
   isNullOrUndefined,
   RecordValue,
@@ -76,8 +76,8 @@ type PreparableAnalyticsActionOptions<
 // In RTK 2.11.2, AsyncThunkActionCreator's signature changed from `() => ...` to
 // `(arg?: undefined, config?) => ...`, breaking compatibility with the ThunkAction overload.
 export type AnalyticsAsyncThunk<
-  StateNeeded extends
-    ConfigurationSection = StateNeededBySearchAnalyticsProvider,
+  StateNeeded extends ConfigurationSection =
+    StateNeededBySearchAnalyticsProvider,
 > = AsyncThunk<void, void, AsyncThunkAnalyticsOptions<StateNeeded>> &
   UnknownAction;
 
@@ -93,23 +93,23 @@ export function makeBasicNewSearchAnalyticsAction(
 }
 
 type PreparedAnalyticsAction<
-  StateNeeded extends
-    ConfigurationSection = StateNeededBySearchAnalyticsProvider,
+  StateNeeded extends ConfigurationSection =
+    StateNeededBySearchAnalyticsProvider,
 > = {
   description?: EventDescription;
   action: AnalyticsAsyncThunk<StateNeeded>;
 };
 
 type PrepareAnalyticsFunction<
-  StateNeeded extends
-    ConfigurationSection = StateNeededBySearchAnalyticsProvider,
+  StateNeeded extends ConfigurationSection =
+    StateNeededBySearchAnalyticsProvider,
 > = (
   options: PreparableAnalyticsActionOptions<StateNeeded>
 ) => Promise<PreparedAnalyticsAction<StateNeeded>>;
 
 type PreparableAnalyticsAction<
-  StateNeeded extends
-    ConfigurationSection = StateNeededBySearchAnalyticsProvider,
+  StateNeeded extends ConfigurationSection =
+    StateNeededBySearchAnalyticsProvider,
 > = AnalyticsAsyncThunk<StateNeeded> & {
   prepare: PrepareAnalyticsFunction<StateNeeded>;
 };
@@ -290,8 +290,8 @@ const makeAnalyticsActionFactory = <
   providerClass: ProviderClass<LegacyStateNeededByProvider, LegacyProvider>
 ) => {
   function makeAnalyticsAction<
-    LegacyStateNeeded extends
-      LegacyStateNeededByProvider = LegacyStateNeededByProvider,
+    LegacyStateNeeded extends LegacyStateNeededByProvider =
+      LegacyStateNeededByProvider,
     ComputedLegacyAnalyticsOptions extends LegacyAnalyticsOptions<
       LegacyStateNeeded,
       Client,
@@ -303,8 +303,8 @@ const makeAnalyticsActionFactory = <
     __legacy__provider?: ComputedLegacyAnalyticsOptions['__legacy__provider']
   ): PreparableAnalyticsAction<LegacyStateNeeded>;
   function makeAnalyticsAction<
-    LegacyStateNeeded extends
-      LegacyStateNeededByProvider = LegacyStateNeededByProvider,
+    LegacyStateNeeded extends LegacyStateNeededByProvider =
+      LegacyStateNeededByProvider,
     StateNeeded extends StateNeededByProvider = StateNeededByProvider,
     PayloadType = {},
   >({
@@ -322,8 +322,8 @@ const makeAnalyticsActionFactory = <
     PayloadType
   >): PreparableAnalyticsAction<StateNeeded>;
   function makeAnalyticsAction<
-    LegacyStateNeeded extends
-      LegacyStateNeededByProvider = LegacyStateNeededByProvider,
+    LegacyStateNeeded extends LegacyStateNeededByProvider =
+      LegacyStateNeededByProvider,
     ComputedLegacyAnalyticsOptions extends LegacyAnalyticsOptions<
       LegacyStateNeeded,
       Client,

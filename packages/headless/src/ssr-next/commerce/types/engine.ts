@@ -39,8 +39,8 @@ type ValidateControllerNames<T extends ControllerDefinitionsMap<Controller>> = {
  * The options to create a Commerce engine definition in SSR.
  */
 export type CommerceEngineDefinitionOptions<
-  TControllers extends
-    ControllerDefinitionsMap<Controller> = ControllerDefinitionsMap<Controller>,
+  TControllers extends ControllerDefinitionsMap<Controller> =
+    ControllerDefinitionsMap<Controller>,
 > = SSRCommerceEngineOptions & {
   /**
    * The controllers to initialize with the commerce engine.

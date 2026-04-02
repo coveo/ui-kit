@@ -74,8 +74,8 @@ describe('BaseTemplateController', () => {
     it('it should set an error on the host when the host is not a valid parent', async () => {
       const element = await setupElement(
         html`<test-element>
-            <template><h1>hello</h1></template>
-          </test-element>`,
+          <template><h1>hello</h1></template>
+        </test-element>`,
         document.createElement('invalid-parent')
       );
 
@@ -93,8 +93,8 @@ describe('BaseTemplateController', () => {
     it('should set an error when allowEmpty is false', async () => {
       const element = await setupElement(
         html`<test-element>
-            <template> </template>
-          </test-element>`
+          <template> </template>
+        </test-element>`
       );
 
       expect(element.error).toBeInstanceOf(Error);
@@ -104,8 +104,8 @@ describe('BaseTemplateController', () => {
     it('should not set an error when allowEmpty is true', async () => {
       await setupElement(
         html`<empty-test-element>
-            <template> </template>
-          </empty-test-element>`
+          <template> </template>
+        </empty-test-element>`
       );
 
       const element = document.querySelector(
@@ -119,8 +119,8 @@ describe('BaseTemplateController', () => {
       const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       const element = await setupElement(
         html`<test-element>
-            <template><script></script></template>
-          </test-element>`
+          <template><script></script></template>
+        </test-element>`
       );
 
       expect(warnSpy).toHaveBeenCalledWith(
@@ -140,8 +140,12 @@ describe('BaseTemplateController', () => {
         await setupElement(
           html`<test-element>
             <template>
-              <atomic-result-section-visual>section1</atomic-result-section-visual>
-              <atomic-result-section-title>section2</atomic-result-section-title>
+              <atomic-result-section-visual
+                >section1</atomic-result-section-visual
+              >
+              <atomic-result-section-title
+                >section2</atomic-result-section-title
+              >
             </template>
           </test-element>`
         );
@@ -175,9 +179,12 @@ describe('BaseTemplateController', () => {
         await setupElement(
           html`<test-element>
             <template>
-              <style>body { color: red; }</style>
+              <style>
+                body {
+                  color: red;
+                }
+              </style>
               <!-- This is a comment -->
-               
             </template>
           </test-element>`
         );
@@ -193,8 +200,12 @@ describe('BaseTemplateController', () => {
         await setupElement(
           html`<test-element>
             <template>
-              <atomic-table-element slot="table-column">Column 1</atomic-table-element>
-              <atomic-table-element slot="table-column">Column 2</atomic-table-element>
+              <atomic-table-element slot="table-column"
+                >Column 1</atomic-table-element
+              >
+              <atomic-table-element slot="table-column"
+                >Column 2</atomic-table-element
+              >
             </template>
           </test-element>`
         );
@@ -211,7 +222,9 @@ describe('BaseTemplateController', () => {
           setupElement(
             html`<test-element>
               <template>
-                <atomic-result-section-visual>section</atomic-result-section-visual>
+                <atomic-result-section-visual
+                  >section</atomic-result-section-visual
+                >
                 <span>other</span>
               </template>
             </test-element>`
