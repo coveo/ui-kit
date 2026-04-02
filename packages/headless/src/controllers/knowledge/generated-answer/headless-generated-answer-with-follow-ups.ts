@@ -269,7 +269,7 @@ export function buildGeneratedAnswerWithFollowUps(
           {
             forwardedProps: {
               q: question,
-              ...analyticsParams,
+              analytics: analyticsParams.analytics,
               conversationId,
               conversationToken,
               accessToken,
