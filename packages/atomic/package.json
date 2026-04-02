@@ -15,6 +15,7 @@
     "docs/",
     "licenses/"
   ],
+  "type": "module",
   "sideEffects": [
     "./dist/esm/components/*/*/*.js",
     "./dist/esm/index.js",
