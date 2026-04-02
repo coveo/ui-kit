@@ -7,19 +7,19 @@ export const defineCustomElements = async (...args: unknown[]) => {
   );
 };
 /**
- * @deprecated The applyPolyfills function has been removed. It always been a no-op, and should not be used.
+ * @deprecated The applyPolyfills function has been removed. It has always been a no-op, and should not be used.
  */
 export const applyPolyfills = () => {
   throw new Error(
-    'The applyPolyfills function has been removed. It always been a no-op, and should not be used.'
+    'The applyPolyfills function has been removed. It has always been a no-op, and should not be used.'
   );
 };
 /**
- * @deprecated Since v3.52.0, `@coveo/atomic` does not longer add script or style tags. The setNonce function is now a no-op and can be safely removed from your codebase.
+ * @deprecated Since v3.52.0, `@coveo/atomic` no longer adds script or style tags. The setNonce function is now a no-op and can be safely removed from your codebase.
  */
 export const setNonce = () => {
   console.warn(
-    'Since v3.52.0, `@coveo/atomic` does not longer add script or style tags. The setNonce function is now a no-op and can be safely removed from your codebase.'
+    'Since v3.52.0, `@coveo/atomic` no longer adds script or style tags. The setNonce function is now a no-op and can be safely removed from your codebase.'
   );
 };
 
