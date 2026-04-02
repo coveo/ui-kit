@@ -14,7 +14,10 @@
       "outputs": ["./dist/types/**"]
     },
     "build:assets": {
-      "dependsOn": ["@coveo/atomic#build:assets", "@coveo/atomic#build:locales"],
+      "dependsOn": [
+        "@coveo/atomic#build:assets",
+        "@coveo/atomic#build:locales"
+      ],
       "outputs": ["./dist/assets/**", "./dist/lang/**"]
     },
     "gen:lit": {
