@@ -1,20 +1,4 @@
 name: Create release
-
-# Previously, this workflow ran on a weekly cron schedule with a manual dispatch option,
-# and required an "approve" gate + GitHub App token to release.
-#
-# With Changesets, releases are driven by merging PRs:
-#   1. Developers add changeset files (pnpm changeset) alongside their PRs.
-#   2. On every push to main, the changesets/action checks for pending changesets:
-#      - If changesets exist: opens/updates a "Version Packages" PR that bumps versions.
-#      - If no changesets exist: runs `changeset publish`, which publishes any packages
-#        whose package.json version is ahead of npm (i.e. the version PR was just merged).
-#   3. Downstream jobs (CDN, quantic, typedoc, docs) only run when publish actually happened.
-#
-# The old npm-prod job was removed because `changeset publish` already publishes to npm
-# with the `latest` tag. OIDC trusted publishers still work because the workflow filename
-# (cd.yml) hasn't changed and id-token: write is set on the release job.
-
 on:
   push:
     branches: [main]
@@ -54,10 +38,6 @@ jobs:
         uses: changesets/action@6a0a831ff30acef54f2c6aa1cbbc1096b066edaf # v1
         with:
           version: pnpm changeset version
-          # publish: runs when there are NO pending changesets (version PR was just merged).
-          # Calls `pnpm run release` which builds all packages and runs `changeset publish`.
-          # `changeset publish` compares each package.json version against npm and publishes
-          # any that are ahead. Sets outputs.published to 'true' if anything was published.
           publish: pnpm run release
           title: 'ci(changesets): version packages'
           commit: 'ci(changesets): version packages'
