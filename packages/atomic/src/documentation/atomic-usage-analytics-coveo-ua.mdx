@@ -7,12 +7,12 @@ This article covers various topics that you may find helpful if you require furt
 
 > **Notes**
 >
-> * As the Atomic library uses [Coveo Headless](https://docs.coveo.com/en/lcdf0493/) to interface with Coveo, you can access [Headless through Atomic](https://docs.coveo.com/en/atomic/latest/usage/headless-through-atomic) to leverage advanced UA customizations that aren't possible in Atomic components.
+> * As the Atomic library uses [Coveo Headless](https://docs.coveo.com/en/lcdf0493/) to interface with Coveo, you can access [Headless through Atomic](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-access-headless-through-atomic--docs) to leverage advanced UA customizations that aren't possible in Atomic components.
 >  
 > To better understand this article, familiarize yourself with the [core concepts](https://docs.coveo.com/en/headless/latest/usage/) of the Headless library.
 >
 > * The Atomic and Headless libraries don't send view events automatically.
-> Take a look at the [Log view events with Coveo UA](https://docs.coveo.com/en/atomic/latest/usage/atomic-usage-analytics/atomic-view-events/) article to understand how to send view events.
+> Take a look at the [Log view events with Coveo UA](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-usage-analytics-coveo-ua-log-view-events-with-coveo-ua--docs) article to understand how to send view events.
 
 
 ## Modify the metadata to send with Coveo Analytics events
@@ -21,7 +21,7 @@ It can be useful to add or modify the metadata to send along with the standard U
 You can leverage the `analyticsClientMiddleware` property of an [`AnalyticsConfiguration`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.AnalyticsConfiguration.html) to hook into an analytics event payload before it's sent to Coveo.
 By default, Atomic v3 uses [Event Protocol](https://docs.coveo.com/en/o9je0592/) to track events instead of [Coveo Analytics](https://docs.coveo.com/en/182/).
 The Event Protocol [doesn't support the `analyticsClientMiddleware` property](https://docs.coveo.com/en/headless/latest/headless-upgrade-from-v2#removal-of-analyticsclientmiddleware-function).
-To use this property in Atomic v3, you need to [set the `analyticsMode` to `legacy`](https://docs.coveo.com/en/atomic/latest/atomic-upgrade-from-v2#migration-to-coveo-event-protocol) during the initialization.
+To use this property in Atomic v3, you need to [set the `analyticsMode` to `legacy`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/upgrade-v2-to-v3--docs#migration-to-coveo-event-protocol) during the initialization.
 
 The following example shows how to customize metadata using `analyticsClientMiddleware`:
 
@@ -115,7 +115,7 @@ You can inspect search request responses in your search interface to see the cur
 
 ### Use the `InteractiveResult` controller
 
-To send additional click events, use the Headless [`InteractiveResult`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.InteractiveResult.html) controller, which can take care of extracting result item metadata and logging events correctly for you, as in the following [custom Atomic component](https://docs.coveo.com/en/atomic/latest/usage/custom-web-components/) example.
+To send additional click events, use the Headless [`InteractiveResult`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.InteractiveResult.html) controller, which can take care of extracting result item metadata and logging events correctly for you, as in the following [custom Atomic component](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-custom-web-components--docs) example.
 
 ```html
 <script type="module">

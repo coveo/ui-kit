@@ -16,7 +16,7 @@ import type {LitElementWithError} from '@/src/decorators/types';
 import '../atomic-recs-result/atomic-recs-result';
 
 /**
- * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
+ * A [result template](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-display-results-introduction--docs#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
  *
  * A `template` element must be the child of an `atomic-recs-result-template`, and an `atomic-recs-list` must be the parent of each `atomic-recs-result-template`.
  *

@@ -49,7 +49,7 @@ export class AtomicResultDate
   /**
    * Whether the date should display in the [relative time format](https://day.js.org/docs/en/plugin/calendar).
    *
-   * To modify the relative time string, use the [localization feature](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
+   * To modify the relative time string, use the [localization feature](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-localization--docs).
    */
   @property({type: Boolean, reflect: true, attribute: 'relative-time'})
   public relativeTime = false;

@@ -12,8 +12,8 @@ This article explains how to use the Coveo Atomic library in a [Vue.js](https://
 
 ## Installation
 
-Installing Atomic in your Vue project is very similar to [installing Atomic](https://docs.coveo.com/en/atomic/latest/usage#install-atomic) outside of Vue.
-However, there are some extra steps if you choose to [install Atomic via npm](https://docs.coveo.com/en/atomic/latest/usage/frameworks/atomic-vue#npm).
+Installing Atomic in your Vue project is very similar to [installing Atomic](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-introduction--docs#install-atomic) outside of Vue.
+However, there are some extra steps if you choose to [install Atomic via npm](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-in-a-framework-usage-in-a-vue-project--docs#npm).
 
 ### CDN
 
@@ -110,7 +110,7 @@ const assetDirectory = dirname(import.meta.resolve('@coveo/atomic/assets/all.svg
 
 #### Update Your Entry File
 
-The Atomic package allows you to customize your components by defining CSS variables in your own stylesheet (see [Themes and visual customization](https://docs.coveo.com/en/atomic/latest/usage/themes-and-visual-customization/)).
+The Atomic package allows you to customize your components by defining CSS variables in your own stylesheet (see [Themes and visual customization](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-themes-and-visual-customization--docs)).
 
 It also exposes a default theme that you can use as is or build upon.
 When using npm, you can import the default theme from `@coveo/atomic/dist/atomic/themes/coveo.css` in your entry `.js` file as exemplified below.
@@ -213,7 +213,7 @@ async function initInterface() {
 onMounted(initInterface); (3)
 ```
 
-1. Initialization (see [Use components to create a search interface](https://docs.coveo.com/en/atomic/latest/usage#use-components-to-create-a-search-interface)).
+1. Initialization (see [Use components to create a search interface](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-introduction--docs#use-components-to-create-a-search-interface)).
 2. Triggers the first search.
 3. Initializes the interface after the search interface has rendered.
 
@@ -221,7 +221,7 @@ onMounted(initInterface); (3)
 ## Use the `<atomic-result-template>` Component
 
 Vue treats the `<template>` tag as a container for Vue components and therefore doesn't render it (see [Template Refs](https://vuejs.org/guide/essentials/template-refs.html#template-refs)).
-This poses an obstacle when working with the `<atomic-result-template>` component, which expects a native `<template>` that it will then use to create each result element (see [Defining a result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template)).
+This poses an obstacle when working with the `<atomic-result-template>` component, which expects a native `<template>` that it will then use to create each result element (see [Defining a result template](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-display-results-introduction--docs#defining-a-result-template)).
 To get around this, create your result templates in HTML files (as in the following example, with the `src/templates/result-template.html` file) and then import them as follows.
 
 ```html

@@ -121,7 +121,7 @@ To include the default Coveo theme, use the `angular.json` configuration file.
 },
 ```
 
-This is however optional, and (all theme variables)[https://docs.coveo.com/en/atomic/latest/usage/themes-and-visual-customization/#theme-variables] can be configured in the global application stylesheet (`src/style.css`, for example).
+This is however optional, and [all theme variables](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-additional-topics-themes-and-visual-customization--docs#theme-variables) can be configured in the global application stylesheet (`src/style.css`, for example).
 
 ## Wrapping Atomic Angular Components
 
