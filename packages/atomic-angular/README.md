@@ -114,7 +114,7 @@ To include the default Coveo theme, use the `angular.json` configuration file.
    // [...] omitted for brevity
   "options": {
     "styles": [
-      "./node_modules/@coveo/atomic/atomic/themes/coveo.css",
+      "./node_modules/@coveo/atomic/dist/themes/coveo.css",
       "src/styles.css"
     ],
   },
