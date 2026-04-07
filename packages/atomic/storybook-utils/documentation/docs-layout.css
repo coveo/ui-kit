@@ -1,9 +1,3 @@
-/* Inline code baseline adjustment */
-code {
-  vertical-align: -0.36em;
-}
-
-/* Constrain Storybook docs column to 750px without affecting story canvases */
 .sbdocs .sbdocs-wrapper,
 .sbdocs .sbdocs-preview,
 .sbdocs .sbdocs-content,
@@ -16,4 +10,8 @@ code {
   margin-right: auto;
   padding-left: 1rem;
   padding-right: 1rem;
+}
+
+.sbdocs code {
+  vertical-align: -0.36em;
 }

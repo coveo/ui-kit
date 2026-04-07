@@ -107,7 +107,7 @@ const preview: Preview = {
             ],
             'Access Headless through Atomic',
             'Change component properties',
-            'Use external properties',
+            'Use external components',
             'Modify requests and responses',
             'Localization',
             'Custom web components',
