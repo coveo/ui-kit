@@ -86,6 +86,6 @@ export const WithAMaxValueInIndex: Story = {
 export const WithADifferentIcon: Story = {
   name: 'With a custom icon',
   args: {
-    icon: 'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/brightness_1/baseline.svg',
+    icon: 'https://raw.githubusercontent.com/Rush/Font-Awesome-SVG-PNG/master/black/svg/circle.svg',
   },
 };

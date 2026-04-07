@@ -42,9 +42,9 @@ export const CustomIcon: Story = {
   name: 'With custom icons',
   args: {
     'previous-button-icon':
-      'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/arrow_back/baseline.svg',
+      'https://raw.githubusercontent.com/coveo/ui-kit/main/packages/atomic/src/images/arrow-top-rounded.svg',
     'next-button-icon':
-      'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/arrow_upward/baseline.svg',
+      'https://raw.githubusercontent.com/coveo/ui-kit/main/packages/atomic/src/images/arrow-top-rounded.svg',
   },
 };
 
