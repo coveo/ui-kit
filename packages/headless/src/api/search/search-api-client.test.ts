@@ -376,7 +376,7 @@ describe('search api client', () => {
 
     it(`when calling SearchAPIClient.plan with enableQuerySyntax
     should include enableQuerySyntax in the request params`, async () => {
-      (state as any).enableQuerySyntax = true;
+      state.query.enableQuerySyntax = true;
       const req = await buildPlanRequest(
         state,
         buildMockNavigatorContextProvider()()
