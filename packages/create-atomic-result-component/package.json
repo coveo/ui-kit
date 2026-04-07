@@ -35,7 +35,7 @@
     "npm:publish": "pnpm --filter @coveo/ci npm-publish"
   },
   "dependencies": {
-    "@coveo/create-atomic-component-project": "1.5.11"
+    "@coveo/create-atomic-component-project": "1.5.15"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0 || ^24.11.0"

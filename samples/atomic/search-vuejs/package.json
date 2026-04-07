@@ -13,10 +13,10 @@
   },
   "dependencies": {
     "@coveo/atomic": "workspace:*",
-    "vue": "3.5.26"
+    "vue": "3.5.31"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "6.0.3",
+    "@vitejs/plugin-vue": "6.0.5",
     "cypress": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:"
