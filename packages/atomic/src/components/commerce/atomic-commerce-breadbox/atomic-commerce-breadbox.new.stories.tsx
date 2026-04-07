@@ -1,32 +1,13 @@
-import {
-  type CommerceEngineConfiguration,
-  getSampleCommerceEngineConfiguration,
-} from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 
-const {context, ...restOfConfiguration} =
-  getSampleCommerceEngineConfiguration();
-
-const productListingEngineConfiguration: Partial<CommerceEngineConfiguration> =
-  {
-    context: {
-      ...context,
-      country: 'US',
-      currency: 'USD',
-      language: 'en',
-      view: {
-        url: `${context.view.url}/browse/promotions/ui-kit-testing`,
-      },
-    },
-    ...restOfConfiguration,
-  };
+const mockCommerceApi = new MockCommerceApi();
 
 const {decorator, play} = wrapInCommerceInterface({
-  engineConfig: productListingEngineConfiguration,
   type: 'product-listing',
   includeCodeRoot: false,
 });
@@ -48,10 +29,13 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
+    msw: {handlers: [...mockCommerceApi.handlers]},
   },
   args,
   argTypes,
-
+  beforeEach: () => {
+    mockCommerceApi.productListingEndpoint.clear();
+  },
   play,
 };
 
