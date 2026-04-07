@@ -79,7 +79,7 @@
   "hoistOther.nestedOrder": {
     "contributing": ["Contributing", "*"],
     "guides server-side rendering": ["Concepts", "*"],
-    "upgrade": ["Concepts", "*"],
+    "guides upgrade": ["Concepts", "*"],
     "guides usage analytics": ["Concepts", "*"],
     "getting started": [
       "Getting Started with Search",

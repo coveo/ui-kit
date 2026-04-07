@@ -77,10 +77,6 @@ The values you pass to `setCustom` depend on the context mapping type and your a
 Call [`setCustom`](../../interfaces/Commerce.Context.html#setcustom) on the [`Context`](../../interfaces/Commerce.Context.html) controller before dispatching a search action.
 The controller automatically includes the custom context in all subsequent Commerce API requests.
 
-> [!NOTE]
-> `setCustom` replaces the entire `custom` object each time it is called.
-> If you need to update a single key while preserving others, spread the existing `context.state.custom` values into your new object.
-
 ### JavaScript example
 
 The following is a complete vanilla JavaScript example that demonstrates `setCustom` with the three context mappings above.
@@ -94,6 +90,10 @@ The following is a complete vanilla JavaScript example that demonstrates `setCus
 > - [`buildContext`](../../functions/Commerce.buildContext.html)
 > - [`buildSearch`](../../functions/Commerce.buildSearch.html)
 > - [`loadSearchActions`](../../functions/Commerce.loadSearchActions.html)
+
+> [!NOTE]
+> `setCustom` replaces the entire `custom` object each time it is called.
+> If you need to update a single key while preserving others, spread the existing `contextController.state.custom` values into your new object.
 
 { @includeCode ../../../samples/headless/commerce-custom-context-native/index.js }
 

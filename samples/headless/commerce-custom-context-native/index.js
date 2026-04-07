@@ -30,7 +30,7 @@ const coveoHeadlessCustomContext = () => {
 
   contextController.subscribe(() => {
     const {custom, ...rest} = contextController.state;
-    contextStateEl.textContent = JSON.stringify({...rest, custom}, null, 2); // callout[This is just for demonstration purposes, in a real-world example diplaying the values of the context being passed would not add value.]
+    contextStateEl.textContent = JSON.stringify({...rest, custom}, null, 2); // callout[This is just for demonstration purposes, in a real-world example displaying the values of the context being passed would not add value.]
   });
 
   applyButton.addEventListener('click', () => {
