@@ -374,6 +374,19 @@ describe('search api client', () => {
       expect(request.url).toBe(expectedUrl);
     });
 
+    it(`when calling SearchAPIClient.plan with enableQuerySyntax
+    should include enableQuerySyntax in the request params`, async () => {
+      (state as any).enableQuerySyntax = true;
+      const req = await buildPlanRequest(
+        state,
+        buildMockNavigatorContextProvider()()
+      );
+      searchAPIClient.plan(req);
+      const request = (PlatformClient.call as Mock).mock.calls[0][0];
+
+      expect(request.requestParams.enableQuerySyntax).toBe(true);
+    });
+
     it(`when calling SearchAPIClient.querySuggest
     should call PlatformClient.call with the right options`, async () => {
       const id = 'someid123';

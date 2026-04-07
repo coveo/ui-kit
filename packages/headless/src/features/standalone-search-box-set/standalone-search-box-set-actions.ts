@@ -26,6 +26,7 @@ import {
 import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params.js';
 import {fromAnalyticsStateToAnalyticsParams as legacyFromAnalyticsStateToAnalyticsParams} from '../configuration/legacy-analytics-params.js';
 import type {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions.js';
+import type {QueryState} from '../query/query-state.js';
 
 export interface RegisterStandaloneSearchBoxActionCreatorPayload {
   /**
@@ -122,7 +123,7 @@ export const updateAnalyticsToOmniboxFromLink =
 
 export type StateNeededForRedirect = ConfigurationSection &
   QuerySection &
-  Partial<ContextSection & SearchHubSection & PipelineSection>;
+  Partial<ContextSection & SearchHubSection & PipelineSection & QueryState>;
 
 export interface FetchRedirectUrlActionCreatorPayload {
   /**
@@ -187,6 +188,9 @@ export const buildPlanRequest = async (
     ...(state.context && {context: state.context.contextValues}),
     ...(state.pipeline && {pipeline: state.pipeline}),
     ...(state.searchHub && {searchHub: state.searchHub}),
+    ...(state.enableQuerySyntax && {
+      enableQuerySyntax: state.enableQuerySyntax,
+    }),
     ...(state.configuration.analytics.enabled &&
     state.configuration.analytics.analyticsMode === 'legacy'
       ? await legacyFromAnalyticsStateToAnalyticsParams(
