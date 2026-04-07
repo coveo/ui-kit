@@ -1,3 +1,8 @@
+---
+title: Adding a new controller
+group: Contributing
+---
+
 # Contribution guide: Adding a new controller.
 
 Controllers are the building blocks of Headless, that make it easy to build visual components on top of, by exposing relevant methods and state. Headless provides controllers to power search boxes, result lists, facets, pagers and many more UI components.

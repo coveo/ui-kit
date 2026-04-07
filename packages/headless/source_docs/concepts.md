@@ -1,6 +1,6 @@
 ---
 title: Concepts
-group: Usage
+group: Guides
 slug: usage/index
 ---
 

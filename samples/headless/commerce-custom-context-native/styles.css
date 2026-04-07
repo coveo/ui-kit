@@ -1,0 +1,130 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  color: #333;
+}
+
+h1 {
+  margin-bottom: 0.25rem;
+}
+
+h1 + p {
+  margin-top: 0;
+  color: #555;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  padding: 1.25rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 250px;
+}
+
+.control-group label {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.control-group select,
+.control-group textarea {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.control-group textarea {
+  resize: none;
+  background: #f5f5f5;
+}
+
+.hint {
+  font-size: 0.75rem;
+  color: #888;
+  margin-top: 0.25rem;
+}
+
+button {
+  padding: 0.6rem 1.5rem;
+  background: #1372ec;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  align-self: flex-end;
+}
+
+button:hover {
+  background: #0f5ecb;
+}
+
+.output {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.output > div {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+#context-state pre {
+  background: #f5f5f5;
+  padding: 0.75rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+#search-results ul {
+  list-style: none;
+  padding: 0;
+}
+
+#search-results li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+#search-results li:last-child {
+  border-bottom: none;
+}
+
+.product-name {
+  font-weight: 600;
+}
+
+.product-price {
+  color: #1372ec;
+  margin-left: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .output {
+    grid-template-columns: 1fr;
+  }
+}
