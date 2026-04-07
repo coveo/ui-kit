@@ -8,11 +8,11 @@ It showcases [context mappings](https://docs.coveo.com/en/q3bc0472/coveo-for-com
 
 This sample assumes the target tracking ID has the following context mappings configured (matching the [List context mappings](https://docs.coveo.com/en/q3bc0472/coveo-for-commerce/use-context-mappings#list-context-mappings) example in the docs):
 
-| Key | Type | Destinations | Purpose |
-|-----|------|-------------|---------|
-| `fitmentProducts` | `PRODUCT_LIST` | `QUERY_PIPELINE_CONTEXT` | Filter results to compatible parts |
-| `shoppingIntent` | `STRING` | `ML_CONTEXT`, `QUERY_PIPELINE_CONTEXT` | Influence ML relevance + pipeline rules |
-| `storeId` | `STRING` | `FIELD_ALIASES` (`price_dict`) | Resolve store-specific pricing |
+| Key               | Type           | Destinations                           | Purpose                                 |
+| ----------------- | -------------- | -------------------------------------- | --------------------------------------- |
+| `fitmentProducts` | `PRODUCT_LIST` | `QUERY_PIPELINE_CONTEXT`               | Filter results to compatible parts      |
+| `shoppingIntent`  | `STRING`       | `ML_CONTEXT`, `QUERY_PIPELINE_CONTEXT` | Influence ML relevance + pipeline rules |
+| `storeId`         | `STRING`       | `FIELD_ALIASES` (`price_dict`)         | Resolve store-specific pricing          |
 
 ## Technology Stack
 
@@ -47,6 +47,7 @@ This sample assumes the target tracking ID has the following context mappings co
 3. Click **Apply Context & Search** to call `setCustom()` and execute a search.
 
 The page shows:
+
 - **Context State** — the full context object including custom values, updated live.
 - **Search Results** — products returned by the Commerce API with the applied context.
 

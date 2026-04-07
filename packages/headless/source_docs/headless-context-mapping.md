@@ -30,16 +30,14 @@ The following examples assume the target tracking ID has been configured with th
   {
     "key": "fitmentProducts",
     "type": "PRODUCT_LIST",
-    "destinations": [
-      { "attribute": "QUERY_PIPELINE_CONTEXT" }
-    ]
+    "destinations": [{"attribute": "QUERY_PIPELINE_CONTEXT"}]
   },
   {
     "key": "shoppingIntent",
     "type": "STRING",
     "destinations": [
-      { "attribute": "ML_CONTEXT" },
-      { "attribute": "QUERY_PIPELINE_CONTEXT" }
+      {"attribute": "ML_CONTEXT"},
+      {"attribute": "QUERY_PIPELINE_CONTEXT"}
     ]
   },
   {
@@ -56,11 +54,11 @@ The following examples assume the target tracking ID has been configured with th
 ]
 ```
 
-| Key | Type | Destinations | Typical use case |
-| --- | --- | --- | --- |
-| `fitmentProducts` | `PRODUCT_LIST` | `QUERY_PIPELINE_CONTEXT` | Filter results to compatible parts via a pipeline filter rule. |
-| `shoppingIntent` | `STRING` | `ML_CONTEXT`, `QUERY_PIPELINE_CONTEXT` | Influence ML relevance and enable intent-based ranking expressions. |
-| `storeId` | `STRING` | `FIELD_ALIASES` | Resolve store-specific pricing from a dictionary field. |
+| Key               | Type           | Destinations                           | Typical use case                                                    |
+| ----------------- | -------------- | -------------------------------------- | ------------------------------------------------------------------- |
+| `fitmentProducts` | `PRODUCT_LIST` | `QUERY_PIPELINE_CONTEXT`               | Filter results to compatible parts via a pipeline filter rule.      |
+| `shoppingIntent`  | `STRING`       | `ML_CONTEXT`, `QUERY_PIPELINE_CONTEXT` | Influence ML relevance and enable intent-based ranking expressions. |
+| `storeId`         | `STRING`       | `FIELD_ALIASES`                        | Resolve store-specific pricing from a dictionary field.             |
 
 ## Determining suitable values
 
@@ -96,7 +94,6 @@ The following is a complete vanilla JavaScript example that demonstrates `setCus
 > If you need to update a single key while preserving others, spread the existing `contextController.state.custom` values into your new object.
 
 { @includeCode ../../../samples/headless/commerce-custom-context-native/index.js }
-
 
 ## Setting custom context at engine initialization
 

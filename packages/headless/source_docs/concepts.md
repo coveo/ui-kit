@@ -51,13 +51,12 @@ For testing purposes, you can pass the sample configuration for the engine build
 // app/Engine.ts
 
 import {
-    buildSearchEngine,
-    getSampleSearchEngineConfiguration,
+  buildSearchEngine,
+  getSampleSearchEngineConfiguration,
 } from '@coveo/headless';
 
-
 export const headlessEngine = buildSearchEngine({
-    configuration: getSampleSearchEngineConfiguration(),
+  configuration: getSampleSearchEngineConfiguration(),
 });
 ```
 
@@ -65,12 +64,12 @@ If you're using a different engine builder function, this would be something lik
 
 ```ts
 import {
-    buildRecommendationEngine, 
-    getSampleRecommendationEngineConfiguration
+  buildRecommendationEngine,
+  getSampleRecommendationEngineConfiguration,
 } from '@coveo/headless/recommendation';
 
 export const recommendationEngine = buildRecommendationEngine({
-    configuration: getSampleRecommendationEngineConfiguration()
+  configuration: getSampleRecommendationEngineConfiguration(),
 });
 ```
 
@@ -89,7 +88,6 @@ export const headlessEngine = buildSearchEngine({
     }
 });
 ```
-
 
 > [!NOTE]
 >
