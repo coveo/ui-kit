@@ -5,6 +5,8 @@ import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-inter
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
 import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product-template-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import '@/src/components/commerce/atomic-product-children/atomic-product-children.js';
+import '@/src/components/commerce/atomic-product-section-children/atomic-product-section-children.js';
 
 const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
   engineConfig: {
@@ -34,10 +36,10 @@ const meta: Meta = {
   render: (args) => template(args),
   decorators: [
     (story) => html`
-    <atomic-product-section-children id="code-root">
-      ${story()}
-    </atomic-product-section-children>    
-  `,
+      <atomic-product-section-children id="code-root">
+        ${story()}
+      </atomic-product-section-children>
+    `,
     productTemplateDecorator,
     commerceProductListDecorator,
     commerceInterfaceDecorator,

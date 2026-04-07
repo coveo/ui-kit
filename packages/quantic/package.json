@@ -1,6 +1,6 @@
 {
   "name": "@coveo/quantic",
-  "version": "3.37.0",
+  "version": "3.37.1",
   "description": "A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform",
   "author": "coveo.com",
   "homepage": "https://coveo.com",
@@ -75,6 +75,7 @@
     "jest-junit": "16.0.0",
     "jsdoc": "4.0.5",
     "jsdoc-tsimport-plugin": "1.0.5",
+    "prettier": "catalog:",
     "prettier-plugin-apex": "2.2.6",
     "ts-node": "10.9.2",
     "wait-on": "9.0.4",

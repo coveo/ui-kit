@@ -57,9 +57,9 @@ export function doNotTrack() {
   if (typeof navigator === 'undefined' || typeof window === 'undefined') {
     return false;
   }
-  // biome-ignore lint/suspicious/noExplicitAny: <>
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
   const nav = <any>navigator;
-  // biome-ignore lint/suspicious/noExplicitAny: <>
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
   const win = <any>window;
   return [
     nav.globalPrivacyControl,
@@ -80,7 +80,7 @@ export function fromEntries<K extends PropertyKey, V>(
 }
 
 export function resetTimeout(
-  // biome-ignore lint/suspicious/noExplicitAny: <>
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
   callback: (...args: any[]) => void,
   timeoutId?: ReturnType<typeof setTimeout>,
   ms?: number | undefined

@@ -2,15 +2,23 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "dependsOn": [
-        "build:storybook",
-        "@coveo/atomic-angular-builder#gen:lit",
-        "@coveo/atomic-react#gen:lit"
-      ],
+      "dependsOn": ["build:storybook", "build:lit", "build:cdn"],
       "outputs": []
     },
+    "build:locales": {
+      "outputs": ["dist/lang/**", "src/assets/lang/**", "src/generated/**"],
+      "inputs": ["src/locales.json"]
+    },
+    "build:assets": {
+      "outputs": ["dist/assets/**"],
+      "inputs": ["scripts/build-assets.mjs"]
+    },
+    "build:themes": {
+      "outputs": ["dist/themes/**"],
+      "inputs": ["src/themes/**"]
+    },
     "build:storybook": {
-      "dependsOn": ["build:cem"],
+      "dependsOn": ["^build", "build:cem", "build:locales"],
       "outputs": ["./dist-storybook/**"]
     },
     "chromatic": {
@@ -24,52 +32,76 @@
       ]
     },
     "build:cem": {
-      "dependsOn": ["build:cdn"],
-      "outputs": ["./custom-elements.json"]
+      "outputs": ["./custom-elements.json"],
+      "inputs": [
+        "./src/**/*.ts",
+        "!./src/components/*/index.ts",
+        "!./src/components/*/lazy-index.ts",
+        "!./src/utils/custom-element-tags.ts",
+        "!./src/**/*.spec.ts",
+        "!./src/**/*.d.ts",
+        "!./src/**/e2e/**"
+      ]
     },
-    "build:stencil-lit": {
+    "build:lit": {
       "dependsOn": ["^build", "build:locales"],
       "outputs": [
         "src/components/*/index.ts",
         "src/components/*/lazy-index.ts",
         "src/utils/custom-element-tags.ts",
-        "dist/**",
-        "!dist/atomic/assets/**",
-        "!dist/atomic/themes/**",
-        "!dist/atomic/lang/**",
-        "docs/**",
-        "!docs/assets.json"
+        "dist/esm/**",
+        "dist/cjs/**",
+        "dist/types/**",
+        "docs/**"
+      ],
+      "inputs": [
+        "./src/**/*.ts",
+        "!./src/components/*/index.ts",
+        "!./src/components/*/lazy-index.ts",
+        "!./src/utils/custom-element-tags.ts",
+        "!./src/**/*.spec.ts",
+        "!./src/**/*.d.ts",
+        "!./src/**/e2e/**"
       ]
     },
-    "build:copy-assets": {
-      "dependsOn": ["build:stencil-lit", "build:locales"],
-      "outputs": ["dist/atomic/themes/**", "dist/atomic/lang/**"]
-    },
-    "build:list-assets": {
-      "dependsOn": ["build:copy-assets"],
-      "outputs": ["dist/atomic/assets/**", "docs/assets.json"]
-    },
     "build:cdn": {
-      "dependsOn": ["build:list-assets"],
-      "outputs": ["cdn/**"]
-    },
-
-    "build:locales": {
-      "dependsOn": ["^build"],
-      "outputs": ["src/generated/**", "src/assets/lang/**"]
-    },
-
-    "test:stencil": {
-      "dependsOn": ["build:locales"],
-      "outputs": ["coverage/**"]
+      "dependsOn": [
+        "^build",
+        "build:lit",
+        "build:locales",
+        "build:assets",
+        "build:themes"
+      ],
+      "outputs": ["cdn/**"],
+      "inputs": [
+        "./src/**/*.ts",
+        "!./src/**/*.spec.ts",
+        "!./src/**/*.d.ts",
+        "!./src/**/e2e/**",
+        "./dist/assets/**",
+        "./dist/lang/**",
+        "./dist/themes/**",
+        "./rsbuild.cdn.mjs"
+      ]
     },
     "test:lit": {
-      "dependsOn": ["^build", "build"],
+      "dependsOn": ["^build"],
       "outputs": ["coverage/**"]
     },
     "test:storybook": {
       "dependsOn": ["^build", "build"],
       "outputs": []
+    },
+    "dev": {
+      "extends": false,
+      "with": ["dev:storybook"],
+      "cache": false,
+      "persistent": true
+    },
+    "dev:storybook": {
+      "dependsOn": ["^build", "build:locales"],
+      "cache": false,
+      "persistent": true
     },
     "web:dev": {
       "dependsOn": ["build"],

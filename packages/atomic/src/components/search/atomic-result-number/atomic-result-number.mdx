@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicResultNumberStories from './atomic-result-number.new.stories';
+import meta, { Default, WithCurrencyFormatting, WithNumberFormatting, WithUnitFormatting } from './atomic-result-number.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicResultNumberStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicResultNumberStories}
+  stories={{ Default, WithCurrencyFormatting, WithNumberFormatting, WithUnitFormatting }}
   githubPath="search/atomic-result-number/atomic-result-number.ts"
   tagName="atomic-result-number"
   className="AtomicResultNumber"

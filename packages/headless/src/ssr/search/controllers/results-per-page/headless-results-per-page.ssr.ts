@@ -8,8 +8,10 @@ import type {ControllerDefinitionWithoutProps} from '../../../common/types/contr
 
 export * from '../../../../controllers/results-per-page/headless-results-per-page.js';
 
-export interface ResultsPerPageDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, ResultsPerPage> {}
+export interface ResultsPerPageDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  ResultsPerPage
+> {}
 
 /**
  * Defines a `ResultsPerPage` controller instance.

@@ -201,9 +201,10 @@ addons.register("custom/onetrust-button", () => {
 
 const observeAndExpandButtons = () => {
   const expandButtons = () => {
-    const buttonsToExpand: NodeListOf<HTMLButtonElement> = document.querySelectorAll(
-      'button[data-action="expand-all"][data-expanded="false"]',
-    );
+    const buttonsToExpand: NodeListOf<HTMLButtonElement> =
+      document.querySelectorAll(
+        'button[data-action="expand-all"][data-expanded="false"]'
+      );
     if (!buttonsToExpand.length) return false;
     buttonsToExpand.forEach((button) => {
       button.click();

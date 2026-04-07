@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicNotificationsStories from './atomic-notifications.new.stories';
+import meta, { Default, CustomIcon } from './atomic-notifications.new.stories';
 import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicNotificationsStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicNotificationsStories}
+  stories={{ Default, CustomIcon }}
   githubPath="search/atomic-notifications/atomic-notifications.ts"
   tagName="atomic-notifications"
   className="AtomicNotifications"

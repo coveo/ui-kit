@@ -103,8 +103,13 @@ export class AtomicSearchBox
   extends LitElement
   implements InitializableComponent<Bindings>
 {
-  static styles: CSSResultGroup =
-    css`@import "../atomic-search-box/atomic-search-box.pcss";`;
+  static shadowRootOptions = {
+    ...LitElement.shadowRootOptions,
+    delegatesFocus: true,
+  };
+  static styles: CSSResultGroup = css`
+    @import '../atomic-search-box/atomic-search-box.css';
+  `;
 
   @state() bindings!: Bindings;
   @state() error!: Error;
@@ -579,6 +584,7 @@ export class AtomicSearchBox
 
   private renderAbsolutePositionSpacer() {
     return html`<textarea
+      disabled
       aria-hidden="true"
       part="textarea-spacer"
       class="invisible w-full px-4 py-3.5 text-lg"
@@ -762,17 +768,17 @@ export class AtomicSearchBox
         },
       })(
         html`${this.renderTextBox()}
-      ${renderSubmitButton({
-        props: {
-          i18n: this.bindings.i18n,
-          disabled: this.isSearchDisabledForEndUser,
-          onClick: () => {
-            this.searchBox.submit();
-            this.suggestionManager.clearSuggestions();
+        ${renderSubmitButton({
+          props: {
+            i18n: this.bindings.i18n,
+            disabled: this.isSearchDisabledForEndUser,
+            onClick: () => {
+              this.searchBox.submit();
+              this.suggestionManager.clearSuggestions();
+            },
           },
-        },
-      })}
-      ${this.renderSuggestions()}`
+        })}
+        ${this.renderSuggestions()}`
       )}
       ${this.renderSlotContent()}
     `;

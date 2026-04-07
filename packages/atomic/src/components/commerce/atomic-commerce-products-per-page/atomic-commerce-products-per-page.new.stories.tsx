@@ -2,6 +2,7 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import '@/src/components/commerce/atomic-commerce-products-per-page/atomic-commerce-products-per-page.js';
 
 const {decorator, play} = wrapInCommerceInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(

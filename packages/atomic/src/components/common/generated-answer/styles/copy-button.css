@@ -1,0 +1,23 @@
+[part='copy-button'] {
+  .icon-container {
+    atomic-icon {
+      &:hover {
+        @apply text-primary;
+      }
+    }
+  }
+  &.copied {
+    .icon-container {
+      atomic-icon {
+        @apply text-success;
+      }
+    }
+  }
+  &.error {
+    .icon-container {
+      atomic-icon {
+        @apply text-error;
+      }
+    }
+  }
+}

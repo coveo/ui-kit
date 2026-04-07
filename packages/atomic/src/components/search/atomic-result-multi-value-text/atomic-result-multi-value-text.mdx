@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicResultMultiValueTextStories from './atomic-result-multi-value-text.new.stories';
+import meta, { Default, WithMaxValues } from './atomic-result-multi-value-text.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicResultMultiValueTextStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicResultMultiValueTextStories}
+  stories={{ Default, WithMaxValues }}
   githubPath="search/atomic-result-multi-value-text/atomic-result-multi-value-text.ts"
   tagName="atomic-result-multi-value-text"
   className="AtomicResultMultiValueText"

@@ -97,10 +97,20 @@ export function createRenewAccessTokenMiddleware(
       return payload;
     }
 
-    accessTokenRenewalsAttempts++;
-    resetRenewalTriesAfterDelay();
+    const isInitiator = !pendingTokenRenewal;
+    if (isInitiator) {
+      accessTokenRenewalsAttempts++;
+      resetRenewalTriesAfterDelay();
+    }
 
-    await handleTokenRenewal(store, true);
+    try {
+      await handleTokenRenewal(store, true);
+    } catch (error) {
+      logger.debug(
+        error,
+        'Token renewal failed in reactive path (piggybacked on a proactive renewal). The action will be re-dispatched.'
+      );
+    }
     store.dispatch(action as unknown as UnknownAction);
     return;
   };
@@ -154,13 +164,13 @@ function isExpiredTokenError(
     typeof action === 'object' &&
     action !== null &&
     'error' in action &&
-    // biome-ignore lint/suspicious/noExplicitAny: any action is possible here.
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- any action is possible here.
     (action as any).error?.name === new UnauthorizedTokenError().name
   );
 }
 
 function dispatchError(
-  // biome-ignore lint/suspicious/noExplicitAny: any action is possible here.
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- any action is possible here.
   store: MiddlewareAPI<Dispatch<UnknownAction>, any>,
   error: UnauthorizedTokenError
 ) {

@@ -3,6 +3,9 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import '@/src/components/ipx/atomic-ipx-button/atomic-ipx-button.js';
+import '@/src/components/ipx/atomic-ipx-modal/atomic-ipx-modal.js';
+import '@/src/components/search/atomic-search-interface/atomic-search-interface.js';
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-ipx-button',

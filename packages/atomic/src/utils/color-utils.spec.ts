@@ -162,7 +162,7 @@ describe('color-utils', () => {
     it('should handle all six sectors of the color wheel', () => {
       // Test each sector (i % 6) in the switch statement
       const sectors = [
-        {h: 0 / 6, expected: 'red-like'}, // sector 0
+        {h: 0, expected: 'red-like'}, // sector 0
         {h: 1 / 6, expected: 'yellow-like'}, // sector 1
         {h: 2 / 6, expected: 'green-like'}, // sector 2
         {h: 3 / 6, expected: 'cyan-like'}, // sector 3

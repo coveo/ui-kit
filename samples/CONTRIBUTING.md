@@ -17,7 +17,7 @@ samples/
 ```
 
 - **`atomic/`** - Samples using Atomic components in every form
-- **`headless/`** - Samples using headless controllers for custom UI implementations  
+- **`headless/`** - Samples using headless controllers for custom UI implementations
 - **`headless-ssr/`** - Samples demonstrating server-side rendering with headless controllers
 
 ## Naming Convention
@@ -38,23 +38,25 @@ All samples follow this standardized folder and package naming pattern:
 
 ### Examples:
 
-* Folder: `atomic/commerce-angular` 
+- Folder: `atomic/commerce-angular`
 
   Package: `@samples/atomic/commerce-angular`
-* Folder: `headless-ssr/search-nextjs`
+
+- Folder: `headless-ssr/search-nextjs`
 
   Package: `@samples/headless-ssr-search-nextjs`
-* Folder: `atomic/search-react-vite`
+
+- Folder: `atomic/search-react-vite`
 
   Package: `@samples/atomic/search-react-vite`
 
 ### Guidelines:
 
-* Use **kebab-case** for all folder and package names
-* **Subpackage names**: `commerce`, `search`, `insight`, etc.
-* **Framework names**: `react`, `angular`, `vuejs`, `nextjs`, `stencil`, etc.
-* **Optional details**: `vite`, `app-router`, etc.
-* Package name must exactly match the folder structure under `samples/`
+- Use **kebab-case** for all folder and package names
+- **Subpackage names**: `commerce`, `search`, `insight`, etc.
+- **Framework names**: `react`, `angular`, `vuejs`, `nextjs`, `stencil`, etc.
+- **Optional details**: `vite`, `app-router`, etc.
+- Package name must exactly match the folder structure under `samples/`
 
 ## Creating a New Sample
 
@@ -69,6 +71,7 @@ Determine which entry point best fits your sample:
 ### 2. Create a README.md
 
 Every sample must include a README.md with:
+
 - **Purpose**: Brief description of what the sample demonstrates
 - **Prerequisites**: Required tools, versions, or accounts
 - **Key Features**: Highlighted functionality or components used
@@ -77,6 +80,7 @@ Every sample must include a README.md with:
 ### 3. Add Smoke Tests
 
 Include basic tests to verify the sample works correctly:
+
 - Use Playwright
 - Have at least one test that verifies the sample loads and renders
 

@@ -1,6 +1,7 @@
 description: Linting configuration files
 file_patterns:
-  - biome.jsonc
+  - .oxlintrc.json
+  - .oxfmtrc.json
   - lint-staged.config.js
 
 reviewers:

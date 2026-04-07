@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicResultTextStories from './atomic-result-text.new.stories';
+import meta, { Default, WithTitle, WithFirstSentences, WithPrintableUri, WithSummary, WithoutHighlights } from './atomic-result-text.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicResultTextStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicResultTextStories}
+  stories={{ Default, WithTitle, WithFirstSentences, WithPrintableUri, WithSummary, WithoutHighlights }}
   githubPath="search/atomic-result-text/atomic-result-text.ts"
   tagName="atomic-result-text"
   className="AtomicResultText"

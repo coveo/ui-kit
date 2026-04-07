@@ -88,113 +88,116 @@ describe('pagination slice', () => {
         slotId,
       },
     },
-  ])('$name pagination', ({
-    getSlice,
-    setSlice,
-    slotParams,
-  }: {
-    setSlice: (slice: PaginationSlice) => void;
-    getSlice: (state: CommercePaginationState) => PaginationSlice | undefined;
-    slotParams: {} | {slotId: string};
-  }) => {
-    beforeEach(() => {
-      setSlice(getCommercePaginationInitialSlice());
-    });
+  ])(
+    '$name pagination',
+    ({
+      getSlice,
+      setSlice,
+      slotParams,
+    }: {
+      setSlice: (slice: PaginationSlice) => void;
+      getSlice: (state: CommercePaginationState) => PaginationSlice | undefined;
+      slotParams: {} | {slotId: string};
+    }) => {
+      beforeEach(() => {
+        setSlice(getCommercePaginationInitialSlice());
+      });
 
-    it('#selectPage does not update the current page if specified page is invalid', () => {
-      getSlice(state)!.totalPages = 1;
+      it('#selectPage does not update the current page if specified page is invalid', () => {
+        getSlice(state)!.totalPages = 1;
 
-      const intermediaryState = paginationReducer(
-        state,
-        selectPage({
-          ...slotParams,
-          page: 1,
-        })
-      );
+        const intermediaryState = paginationReducer(
+          state,
+          selectPage({
+            ...slotParams,
+            page: 1,
+          })
+        );
 
-      expect(getSlice(intermediaryState)!.page).toBe(0);
+        expect(getSlice(intermediaryState)!.page).toBe(0);
 
-      const finalState = paginationReducer(
-        state,
-        selectPage({
-          ...slotParams,
-          page: -1,
-        })
-      );
+        const finalState = paginationReducer(
+          state,
+          selectPage({
+            ...slotParams,
+            page: -1,
+          })
+        );
 
-      expect(getSlice(finalState)!.page).toBe(0);
-    });
+        expect(getSlice(finalState)!.page).toBe(0);
+      });
 
-    it('#selectPage updates the current page if valid', () => {
-      getSlice(state)!.totalPages = 2;
-      const finalState = paginationReducer(
-        state,
-        selectPage({
-          ...slotParams,
-          page: 1,
-        })
-      );
+      it('#selectPage updates the current page if valid', () => {
+        getSlice(state)!.totalPages = 2;
+        const finalState = paginationReducer(
+          state,
+          selectPage({
+            ...slotParams,
+            page: 1,
+          })
+        );
 
-      expect(getSlice(finalState)!.page).toBe(1);
-    });
+        expect(getSlice(finalState)!.page).toBe(1);
+      });
 
-    it('#nextPage does not update the current page if already on the last page', () => {
-      getSlice(state)!.totalPages = 2;
-      getSlice(state)!.page = 1;
-      const finalState = paginationReducer(state, nextPage(slotParams));
+      it('#nextPage does not update the current page if already on the last page', () => {
+        getSlice(state)!.totalPages = 2;
+        getSlice(state)!.page = 1;
+        const finalState = paginationReducer(state, nextPage(slotParams));
 
-      expect(getSlice(finalState)!.page).toBe(1);
-    });
+        expect(getSlice(finalState)!.page).toBe(1);
+      });
 
-    it('#nextPage increments the current page if not already on last page', () => {
-      getSlice(state)!.totalPages = 2;
-      const finalState = paginationReducer(state, nextPage(slotParams));
+      it('#nextPage increments the current page if not already on last page', () => {
+        getSlice(state)!.totalPages = 2;
+        const finalState = paginationReducer(state, nextPage(slotParams));
 
-      expect(getSlice(finalState)!.page).toBe(1);
-    });
+        expect(getSlice(finalState)!.page).toBe(1);
+      });
 
-    it('#previousPage does not update the current page if already on the first page', () => {
-      getSlice(state)!.totalPages = 2;
-      const finalState = paginationReducer(state, previousPage(slotParams));
+      it('#previousPage does not update the current page if already on the first page', () => {
+        getSlice(state)!.totalPages = 2;
+        const finalState = paginationReducer(state, previousPage(slotParams));
 
-      expect(getSlice(finalState)!.page).toBe(0);
-    });
+        expect(getSlice(finalState)!.page).toBe(0);
+      });
 
-    it('#previousPage decrements the current page if not already on first page', () => {
-      getSlice(state)!.totalPages = 2;
-      getSlice(state)!.page = 1;
-      const finalState = paginationReducer(state, previousPage(slotParams));
+      it('#previousPage decrements the current page if not already on first page', () => {
+        getSlice(state)!.totalPages = 2;
+        getSlice(state)!.page = 1;
+        const finalState = paginationReducer(state, previousPage(slotParams));
 
-      expect(getSlice(finalState)!.page).toBe(0);
-    });
+        expect(getSlice(finalState)!.page).toBe(0);
+      });
 
-    it('#setPageSize sets the page size', () => {
-      const pageSize = 17;
-      const finalState = paginationReducer(
-        state,
-        setPageSize({
-          ...slotParams,
-          pageSize,
-        })
-      );
+      it('#setPageSize sets the page size', () => {
+        const pageSize = 17;
+        const finalState = paginationReducer(
+          state,
+          setPageSize({
+            ...slotParams,
+            pageSize,
+          })
+        );
 
-      expect(getSlice(finalState)!.perPage).toBe(pageSize);
-    });
+        expect(getSlice(finalState)!.perPage).toBe(pageSize);
+      });
 
-    it('#setPageSize resets page to 0', () => {
-      const pageSize = 17;
-      const finalState = paginationReducer(
-        state,
-        setPageSize({
-          ...slotParams,
-          pageSize,
-        })
-      );
+      it('#setPageSize resets page to 0', () => {
+        const pageSize = 17;
+        const finalState = paginationReducer(
+          state,
+          setPageSize({
+            ...slotParams,
+            pageSize,
+          })
+        );
 
-      expect(getSlice(finalState)!.perPage).toBe(pageSize);
-      expect(getSlice(finalState)!.page).toBe(0);
-    });
-  });
+        expect(getSlice(finalState)!.perPage).toBe(pageSize);
+        expect(getSlice(finalState)!.page).toBe(0);
+      });
+    }
+  );
 
   it('sets the principal pagination on #fetchProductListing.fulfilled', () => {
     const response = buildFetchProductListingResponse({

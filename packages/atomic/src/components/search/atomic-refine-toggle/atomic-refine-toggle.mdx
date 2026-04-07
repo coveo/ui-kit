@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicRefineToggleStories from './atomic-refine-toggle.new.stories';
+import meta, { Default, WithAtomicExternals } from './atomic-refine-toggle.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicRefineToggleStories} name="Docs"/>
+<Meta of={meta} name="Docs"/>
 
 <AtomicDocTemplate
-  stories={AtomicRefineToggleStories}
+  stories={{ Default, WithAtomicExternals }}
   githubPath="search/atomic-refine-toggle/atomic-refine-toggle.ts"
   tagName="atomic-refine-toggle"
   className="AtomicRefineToggle"

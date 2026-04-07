@@ -3,6 +3,7 @@ title: Use Relevance Generative Answering (RGA)
 group: Usage
 slug: usage/relevance-generative-answering
 ---
+
 # Use Relevance Generative Answering (RGA)
 
 A [Coveo Machine Learning (Coveo ML)](https://docs.coveo.com/en/188/) [Relevance Generative Answering (RGA)](https://docs.coveo.com/en/nbtb6010/) [model](https://docs.coveo.com/en/1012/) generates answers to complex natural language user queries in a Coveo-powered [search interface](https://docs.coveo.com/en/2741/).
@@ -15,38 +16,36 @@ It focuses on a [React](#getting-started-with-react) implementation, but the bas
 
 If you’re looking to jump into code, a great place to start is with the following React quickstart.
 
-
 <details>
 <summary>Example React quickstart</summary>
 { @includeCode ../../../samples/headless/rga-react/src/components/Quickstart.tsx }
 </details>
 
-> [!TIP] **Core RGA type definitions** 
+> [!TIP] **Core RGA type definitions**
 >
-> * [`GeneratedAnswer`](../interfaces/Search.GeneratedAnswer.html)
-> * [`GeneratedAnswerProps`](../interfaces/Search.GeneratedAnswerProps.html)
-> * [`GeneratedAnswerState`](../interfaces/Search.GeneratedAnswerState.html)
-
+> - [`GeneratedAnswer`](../interfaces/Search.GeneratedAnswer.html)
+> - [`GeneratedAnswerProps`](../interfaces/Search.GeneratedAnswerProps.html)
+> - [`GeneratedAnswerState`](../interfaces/Search.GeneratedAnswerState.html)
 
 > [!TIP] **Additional type references**
-> 
-> * [`buildGeneratedAnswer`](../functions/Search.buildGeneratedAnswer.html)
-> * [`buildInteractiveCitation`](../functions/Search.buildInteractiveCitation.html)
-> * [`buildSearchEngine`](../functions/Search.buildSearchEngine.html)
-> * [`GeneratedAnswerCitation`](../interfaces/Search.GeneratedAnswerCitation.html)
-> * [`InteractiveCitation`](../interfaces/Search.InteractiveCitation.html)
-> * [`QueryActionCreators`](../interfaces/Search.QueryActionCreators.html)
-> * [`SearchActionCreators`](../interfaces/Search.SearchActionCreators.html)
-> * [`SearchAnalyticsActionCreators`](../interfaces/Search.SearchAnalyticsActionCreators.html)
-> * [`SearchEngine`](../interfaces/Search.SearchEngine.html)
-> * [`SearchEngineOptions`](../interfaces/Search.SearchEngineOptions.html)
+>
+> - [`buildGeneratedAnswer`](../functions/Search.buildGeneratedAnswer.html)
+> - [`buildInteractiveCitation`](../functions/Search.buildInteractiveCitation.html)
+> - [`buildSearchEngine`](../functions/Search.buildSearchEngine.html)
+> - [`GeneratedAnswerCitation`](../interfaces/Search.GeneratedAnswerCitation.html)
+> - [`InteractiveCitation`](../interfaces/Search.InteractiveCitation.html)
+> - [`QueryActionCreators`](../interfaces/Search.QueryActionCreators.html)
+> - [`SearchActionCreators`](../interfaces/Search.SearchActionCreators.html)
+> - [`SearchAnalyticsActionCreators`](../interfaces/Search.SearchAnalyticsActionCreators.html)
+> - [`SearchEngine`](../interfaces/Search.SearchEngine.html)
+> - [`SearchEngineOptions`](../interfaces/Search.SearchEngineOptions.html)
 
 ## Getting started with React
 
 ### Instantiating the engine and the controller
 
 > [!WARNING]
-> 
+>
 > Currently, only [`SearchEngine`](../interfaces/Search.SearchEngine.html) and [`InsightEngine`](../interfaces/Insight.InsightEngine.html) support RGA.
 
 This document will concentrate on implementing RGA with a `SearchEngine`, but the interactions with [`GeneratedAnswer`](../interfaces/Search.GeneratedAnswer.html) would be the same if you were to use the `InsightEngine`.
@@ -58,8 +57,8 @@ First, use [`buildSearchEngine`](../functions/Search.buildSearchEngine.html) to 
 
 > [!TIP] **Type definitions**
 >
-> * [`SearchEngine`](../interfaces/Search.SearchEngine.html)
-> * [`SearchEngineOptions`](../interfaces/Search.SearchEngineOptions.html)
+> - [`SearchEngine`](../interfaces/Search.SearchEngine.html)
+> - [`SearchEngineOptions`](../interfaces/Search.SearchEngineOptions.html)
 
 The RGA controller generates responses based on the context of the query submitted to the engine.
 Create the RGA controller by passing a reference to an engine into [`buildGeneratedAnswer`](../functions/Search.buildGeneratedAnswer.html).
@@ -73,9 +72,9 @@ This means that any code that uses RGA to generate a response needs a reference 
 
 > [!TIP] **Type definitions**
 >
-> * [`SearchEngine`](../interfaces/Search.SearchEngine.html)
-> * [`GeneratedAnswer`](../interfaces/Search.GeneratedAnswer.html)
-> * [`GeneratedAnswerProps`](../interfaces/Search.GeneratedAnswerProps.html)
+> - [`SearchEngine`](../interfaces/Search.SearchEngine.html)
+> - [`GeneratedAnswer`](../interfaces/Search.GeneratedAnswer.html)
+> - [`GeneratedAnswerProps`](../interfaces/Search.GeneratedAnswerProps.html)
 
 ### Interacting with RGA
 
@@ -95,42 +94,41 @@ You’ll need the corresponding `answerGenerator` and to `subscribe` its state c
 { @includeCode ../../../samples/headless/rga-react/src/components/AnswerGenerator.tsx }
 
 > [!TIP] **Type definitions**
-> 
-> * [`GeneratedAnswer`](../interfaces/Search.GeneratedAnswer.html)
-> * [`GeneratedAnswerState`](../interfaces/Search.GeneratedAnswerState.html)
-> * [`QueryActionCreators`](../interfaces/Search.QueryActionCreators.html)
-> * [`SearchActionCreators`](../interfaces/Search.SearchActionCreators.html)
+>
+> - [`GeneratedAnswer`](../interfaces/Search.GeneratedAnswer.html)
+> - [`GeneratedAnswerState`](../interfaces/Search.GeneratedAnswerState.html)
+> - [`QueryActionCreators`](../interfaces/Search.QueryActionCreators.html)
+> - [`SearchActionCreators`](../interfaces/Search.SearchActionCreators.html)
 
 #### Generated Answer event tracking
 
 The [`GeneratedAnswer`](../interfaces/Search.GeneratedAnswer.html) controller provides methods to update its state and track user interactions.
 Following is a summary of the available methods, describing their effects on [`GeneratedAnswerState`](../interfaces/Search.GeneratedAnswerState.html) and whether they trigger analytics:
 
-| Method | Effect on state | Analytics |
-| --- | --- | --: |
-| [`openFeedbackModal()`](../interfaces/Search.GeneratedAnswer.html#openfeedbackmodal) | Sets `feedbackModalOpen` to true. | ❌|
-| [`closeFeedbackModal()`](../interfaces/Search.GeneratedAnswer.html#closefeedbackmodal) | Sets `feedbackModalOpen` to false. | ❌ |
-| [`like()`](../interfaces/Search.GeneratedAnswer.html#like) | Marks the generated answer as liked. | ✅  Logs like event |
-| [`dislike()`](../interfaces/Search.GeneratedAnswer.html#dislike) | Marks the generated answer as disliked. | ✅  Logs dislike event |
-| [`sendFeedback(feedback: GeneratedAnswerFeedback)`](../interfaces/Search.GeneratedAnswer.html#sendfeedback) | Submits user feedback and sets `feedbackSubmitted` to true. | ✅ Logs feedback event |
-| [`show()`](../interfaces/Search.GeneratedAnswer.html#show) | Marks the answer as visible. | ✅ Logs show event |
-| [`hide()`](../interfaces/Search.GeneratedAnswer.html#hide) | Marks the answer as hidden. | ✅ Logs hide event |
-| [`expand()`](../interfaces/Search.GeneratedAnswer.html#expand) | Marks the answer as expanded to show full response. | ✅ Logs expand event |
-| [`collapse()`](../interfaces/Search.GeneratedAnswer.html#collapse) | Marks the answer as collapsed to show partial response. | ✅ Logs collapse event |
-| [`enable()`](../interfaces/Search.GeneratedAnswer.html#enable) | Enables the generated answer feature. | ❌ |
-| [`disable()`](../interfaces/Search.GeneratedAnswer.html#disable) | Disables the generated answer feature. | ❌ |
-| [`logCitationClick(citationId: string)`](../interfaces/Search.GeneratedAnswer.html#logcitationclick) | ❌ | ✅ Logs citation click event |
-| [`logCitationHover(citationId: string, timeMs: number)`](../interfaces/Search.GeneratedAnswer.html#logcitationhover) | ❌ | ✅Logs citation hover event |
-| [`logCopyToClipboard()`](../interfaces/Search.GeneratedAnswer.html#logcopytoclipboard) | ❌ | ✅ Logs copy-to-clipboard event |
-| [`retry()`](../interfaces/Search.GeneratedAnswer.html#retry) | Tries to generate an answer again. | ❌ |
+| Method                                                                                                               | Effect on state                                             |                       Analytics |
+| -------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- | ------------------------------: |
+| [`openFeedbackModal()`](../interfaces/Search.GeneratedAnswer.html#openfeedbackmodal)                                 | Sets `feedbackModalOpen` to true.                           |                              ❌ |
+| [`closeFeedbackModal()`](../interfaces/Search.GeneratedAnswer.html#closefeedbackmodal)                               | Sets `feedbackModalOpen` to false.                          |                              ❌ |
+| [`like()`](../interfaces/Search.GeneratedAnswer.html#like)                                                           | Marks the generated answer as liked.                        |              ✅ Logs like event |
+| [`dislike()`](../interfaces/Search.GeneratedAnswer.html#dislike)                                                     | Marks the generated answer as disliked.                     |           ✅ Logs dislike event |
+| [`sendFeedback(feedback: GeneratedAnswerFeedback)`](../interfaces/Search.GeneratedAnswer.html#sendfeedback)          | Submits user feedback and sets `feedbackSubmitted` to true. |          ✅ Logs feedback event |
+| [`show()`](../interfaces/Search.GeneratedAnswer.html#show)                                                           | Marks the answer as visible.                                |              ✅ Logs show event |
+| [`hide()`](../interfaces/Search.GeneratedAnswer.html#hide)                                                           | Marks the answer as hidden.                                 |              ✅ Logs hide event |
+| [`expand()`](../interfaces/Search.GeneratedAnswer.html#expand)                                                       | Marks the answer as expanded to show full response.         |            ✅ Logs expand event |
+| [`collapse()`](../interfaces/Search.GeneratedAnswer.html#collapse)                                                   | Marks the answer as collapsed to show partial response.     |          ✅ Logs collapse event |
+| [`enable()`](../interfaces/Search.GeneratedAnswer.html#enable)                                                       | Enables the generated answer feature.                       |                              ❌ |
+| [`disable()`](../interfaces/Search.GeneratedAnswer.html#disable)                                                     | Disables the generated answer feature.                      |                              ❌ |
+| [`logCitationClick(citationId: string)`](../interfaces/Search.GeneratedAnswer.html#logcitationclick)                 | ❌                                                          |    ✅ Logs citation click event |
+| [`logCitationHover(citationId: string, timeMs: number)`](../interfaces/Search.GeneratedAnswer.html#logcitationhover) | ❌                                                          |     ✅Logs citation hover event |
+| [`logCopyToClipboard()`](../interfaces/Search.GeneratedAnswer.html#logcopytoclipboard)                               | ❌                                                          | ✅ Logs copy-to-clipboard event |
+| [`retry()`](../interfaces/Search.GeneratedAnswer.html#retry)                                                         | Tries to generate an answer again.                          |                              ❌ |
 
 You’ll need to integrate these events into your code to be able to generate reports for RGA in your Coveo Dashboard.
 You can also find details on what actions are automatically tracked by reviewing [Relevance Generative Answering (RGA) reports and UA events](https://docs.coveo.com/en/nb6a0210/).
 
-
 > [!TIP] **Type definitions**
-> 
-> * [`GeneratedAnswerFeedback`](../types/Search.GeneratedAnswerFeedback.html)
+>
+> - [`GeneratedAnswerFeedback`](../types/Search.GeneratedAnswerFeedback.html)
 
 ### Citations List
 
@@ -146,10 +144,10 @@ The following example shows how to render a list of citations after the answer h
 
 Citations also support analytic events, refer to [Citation Event Tracking](#citation-event-tracking) for details.
 
-
 > [!TIP] **Type definitions**
-> * [`GeneratedAnswerCitation`](../interfaces/Search.GeneratedAnswerCitation.html)
-> * [`GeneratedAnswerState`](../interfaces/Search.GeneratedAnswerState.html)
+>
+> - [`GeneratedAnswerCitation`](../interfaces/Search.GeneratedAnswerCitation.html)
+> - [`GeneratedAnswerState`](../interfaces/Search.GeneratedAnswerState.html)
 
 #### Citation event tracking
 
@@ -158,11 +156,11 @@ This allows for the gathering of analytics on which sources of information your 
 
 Below is a quick reference to the analytic tracking events provided by `buildInteractiveCitation`.
 
-| Method | Analytics |
-| --- | --- |
-| [`beginDelayedSelect()`](../functions/Search.buildInteractiveCitation.html#begindelayedselect) | ✅ Prepares to log selection event |
+| Method                                                                                           | Analytics                                                |
+| ------------------------------------------------------------------------------------------------ | -------------------------------------------------------- |
+| [`beginDelayedSelect()`](../functions/Search.buildInteractiveCitation.html#begindelayedselect)   | ✅ Prepares to log selection event                       |
 | [`cancelPendingSelect()`](../functions/Search.buildInteractiveCitation.html#cancelpendingselect) | ✅ Cancels the pending selection of `beginDelayedSelect` |
-| [`select()`](../functions/Search.buildInteractiveCitation.html#select) | ✅ Logs the selection event |
+| [`select()`](../functions/Search.buildInteractiveCitation.html#select)                           | ✅ Logs the selection event                              |
 
 In order to track user interactions with results, you need to instantiate the [`InteractiveCitation`](../interfaces/Search.InteractiveCitation.html) with the specific [`GeneratedAnswerCitation`](../interfaces/Search.GeneratedAnswerCitation.html) being interacted with.
 Once these events have been integrated with your code, they can be accessed in your [Coveo RGA reports](https://docs.coveo.com/en/nb6a0210/).
@@ -172,11 +170,11 @@ Following is an example of rendering a [`GeneratedAnswerCitation`](../interfaces
 { @includeCode ../../../samples/headless/rga-react/src/components/Citation.tsx }
 
 > [!TIP] **Type definitions**
-> 
-> * [`buildInteractiveCitation`](../functions/Search.buildInteractiveCitation.html)
-> * [`GeneratedAnswerCitation`](../interfaces/Search.GeneratedAnswerCitation.html)
-> * [`InteractiveCitation`](../interfaces/Search.InteractiveCitation.html)
-> * [`SearchEngine`](../interfaces/Search.SearchEngine.html)
+>
+> - [`buildInteractiveCitation`](../functions/Search.buildInteractiveCitation.html)
+> - [`GeneratedAnswerCitation`](../interfaces/Search.GeneratedAnswerCitation.html)
+> - [`InteractiveCitation`](../interfaces/Search.InteractiveCitation.html)
+> - [`SearchEngine`](../interfaces/Search.SearchEngine.html)
 
 ## Angular
 
@@ -190,6 +188,7 @@ The following is a basic implementation of the `@coveo/headless` RGA controller 
 { @includeCode ../../../samples/headless/rga-angular/src/app/coveo-headless-rga.component.ts }
 
 { @includeCode ../../../samples/headless/rga-angular/src/app/coveo-headless-rga.component.html }
+
 </details>
 
 ## JavaScript
@@ -198,6 +197,5 @@ The following is a basic implementation of the `@coveo/headless` RGA Controller 
 
 <details>
 <summary>Example JavaScript quickstart</summary>
-
 
 { @includeCode ../../../samples/headless/rga-native/index.js }

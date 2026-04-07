@@ -21,7 +21,7 @@ describe('atomic-insight-user-actions-timeline', () => {
     mockedConsole = mockConsole();
   });
 
-  // biome-ignore lint/suspicious/noExplicitAny: Test fixture with partial data
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Test fixture with partial data
   const defaultUserActions: any = {
     timeline: {
       session: {
@@ -111,12 +111,12 @@ describe('atomic-insight-user-actions-timeline', () => {
     const {element} =
       await renderInAtomicInsightInterface<AtomicInsightUserActionsTimeline>({
         template: html`
-        <atomic-insight-user-actions-timeline
-          user-id=${ifDefined(props.userId)}
-          ticket-creation-date-time=${ifDefined(props.ticketCreationDateTime)}
-          .excludedCustomActions=${props.excludedCustomActions || []}
-        ></atomic-insight-user-actions-timeline>
-      `,
+          <atomic-insight-user-actions-timeline
+            user-id=${ifDefined(props.userId)}
+            ticket-creation-date-time=${ifDefined(props.ticketCreationDateTime)}
+            .excludedCustomActions=${props.excludedCustomActions || []}
+          ></atomic-insight-user-actions-timeline>
+        `,
         selector: 'atomic-insight-user-actions-timeline',
       });
 
@@ -529,32 +529,32 @@ describe('atomic-insight-user-actions-timeline', () => {
         prop: 'ticketCreationDateTime',
         invalidValue: '',
       },
-    ])('should log validation warning when #$prop is set to empty string', async ({
-      prop,
-      invalidValue,
-    }) => {
-      const {element} = await renderComponent({
-        props: {
-          userId: 'test@example.com',
-          ticketCreationDateTime: '2024-08-01T00:00:00Z',
-        },
-      });
+    ])(
+      'should log validation warning when #$prop is set to empty string',
+      async ({prop, invalidValue}) => {
+        const {element} = await renderComponent({
+          props: {
+            userId: 'test@example.com',
+            ticketCreationDateTime: '2024-08-01T00:00:00Z',
+          },
+        });
 
-      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
-      (element as any)[prop] = invalidValue;
-      await element.updateComplete;
+        // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
+        (element as any)[prop] = invalidValue;
+        await element.updateComplete;
 
-      expect(mockedConsole.warn).toHaveBeenCalledWith(
-        expect.stringContaining(
-          'Prop validation failed for component atomic-insight-user-actions-timeline'
-        ),
-        element
-      );
-      expect(mockedConsole.warn).toHaveBeenCalledWith(
-        expect.stringContaining(prop),
-        element
-      );
-    });
+        expect(mockedConsole.warn).toHaveBeenCalledWith(
+          expect.stringContaining(
+            'Prop validation failed for component atomic-insight-user-actions-timeline'
+          ),
+          element
+        );
+        expect(mockedConsole.warn).toHaveBeenCalledWith(
+          expect.stringContaining(prop),
+          element
+        );
+      }
+    );
 
     it('should log validation warning when userId is not provided', async () => {
       await renderComponent({

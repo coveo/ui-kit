@@ -42,9 +42,9 @@ function extractFolded<T = Record<string, unknown>>(
  * A reactive controller that manages item context data from parent components.
  * Handles fetching item data via custom events and manages error states.
  */
-export class ItemContextController<T = Record<string, unknown>>
-  implements ReactiveController
-{
+export class ItemContextController<
+  T = Record<string, unknown>,
+> implements ReactiveController {
   private host: ReactiveControllerHost & LitElementWithError;
   private parentName: string;
   private folded: boolean;

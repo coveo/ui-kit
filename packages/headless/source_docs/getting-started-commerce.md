@@ -3,6 +3,7 @@ title: Getting Started with Commerce
 group: Getting Started
 slug: getting-started/getting-started-commerce
 ---
+
 # Getting Started with Commerce
 
 The Commerce engine powers commerce-specific search, product listing, and recommendation experiences.
@@ -19,9 +20,9 @@ npm install @coveo/headless
 Once installed, you can import from the Commerce sub-package:
 
 ```typescript
-import { 
-    buildCommerceEngine, 
-    getSampleCommerceEngineConfiguration 
+import {
+  buildCommerceEngine,
+  getSampleCommerceEngineConfiguration,
 } from '@coveo/headless/commerce';
 ```
 
@@ -48,7 +49,8 @@ If you prefer not to use a package manager, you can load the Commerce bundle dir
 <script src="https://static.cloud.coveo.com/headless/v3/commerce/headless.js"></script>
 <script>
   // All exports are available on the global CoveoHeadlessCommerce object.
-  const { buildCommerceEngine, getSampleCommerceEngineConfiguration } = CoveoHeadlessCommerce;
+  const {buildCommerceEngine, getSampleCommerceEngineConfiguration} =
+    CoveoHeadlessCommerce;
 </script>
 ```
 
@@ -77,7 +79,7 @@ const engine = buildCommerceEngine({
 const search = buildSearch(engine);
 
 search.subscribe(() => {
-  const { products } = search.state;
+  const {products} = search.state;
   if (products.length) {
     console.log(`Received ${products.length} products.`);
     console.log('First product:', products[0].ec_name);
@@ -115,7 +117,7 @@ search.executeFirstSearch();
       const list = document.getElementById('results');
 
       search.subscribe(() => {
-        const { products } = search.state;
+        const {products} = search.state;
         list.textContent = '';
         products.forEach((p) => {
           const item = document.createElement('li');

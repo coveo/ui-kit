@@ -11,7 +11,7 @@ env:
 jobs:
   pr-report:
     if: github.event_name == 'pull_request'
-    name: "PR Report"
+    name: 'PR Report'
     runs-on: ubuntu-latest
     environment: PR Artifacts
     env:
@@ -29,7 +29,7 @@ jobs:
           app-id: ${{ secrets.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           owner: coveo
-          repositories: "ui-kit"
+          repositories: 'ui-kit'
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
@@ -39,13 +39,13 @@ jobs:
         if: ${{ github.event_name != 'pull_request' }}
       - uses: ./.github/actions/setup
         with:
-          skip-build: "true"
-          load-cache: "false"
+          skip-build: 'true'
+          load-cache: 'false'
       - run: pnpm run pr:report
         env:
           GITHUB_CREDENTIALS: ${{ steps.generate-token.outputs.token }}
   build-windows:
-    name: "Build Windows"
+    name: 'Build Windows'
     runs-on: windows-latest
     permissions:
       contents: read
@@ -60,9 +60,9 @@ jobs:
           ref: ${{ github.head_ref }}
       - uses: ./.github/actions/setup
         with:
-          load-cache: "false"
+          load-cache: 'false'
   build-missing:
-    name: "Build & commit missing generated files"
+    name: 'Build & commit missing generated files'
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -78,7 +78,7 @@ jobs:
           ref: ${{ github.head_ref }}
       - uses: ./.github/actions/setup
         with:
-          load-cache: "false"
+          load-cache: 'false'
       - name: Check for uncommitted changes
         id: check-changes
         run: |
@@ -95,15 +95,15 @@ jobs:
           app-id: ${{ secrets.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           owner: coveo
-          repositories: "ui-kit"
+          repositories: 'ui-kit'
       - name: Commit files
         if: ${{ steps.check-changes.outputs.has_changes == 'true' && github.event_name == 'pull_request' }}
         run: pnpm --filter @coveo/ci add-generated-files
         env:
           GITHUB_INSTALLATION_TOKEN: ${{ steps.generate-token.outputs.token }}
-          DEBUG: "*"
+          DEBUG: '*'
   build:
-    name: "Build"
+    name: 'Build'
     runs-on: ubuntu-latest
     environment: PR Artifacts
     steps:
@@ -115,13 +115,13 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: ./.github/actions/setup
         with:
-          save-cache: "true"
+          save-cache: 'true'
   build-cdn:
-    name: "Build CDN"
+    name: 'Build CDN'
     runs-on: ubuntu-latest
     env:
       DEPLOYMENT_ENVIRONMENT: CDN
-      IS_PRERELEASE: "true"
+      IS_PRERELEASE: 'true'
       PR_NUMBER: ${{ github.event_name == 'pull_request' && github.event.pull_request.number || '' }}
     steps:
       - name: Harden Runner
@@ -132,10 +132,10 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: ./.github/actions/setup
         with:
-          cache-prefix: "cdn"
-          save-cache: "true"
+          cache-prefix: 'cdn'
+          save-cache: 'true'
   affected:
-    name: "Determine affected projects"
+    name: 'Determine affected projects'
     runs-on: ubuntu-latest
     needs: build
     outputs:
@@ -166,7 +166,7 @@ jobs:
         run: |
           echo "Affected projects: ${{ steps.set.outputs.projects }}"
   knip:
-    name: "Look for unused code or dependencies"
+    name: 'Look for unused code or dependencies'
     runs-on: ubuntu-latest
     needs: build
     steps:
@@ -179,7 +179,7 @@ jobs:
       - name: Run knip
         run: pnpm run knip
   cdn-checks:
-    name: "CDN Checks"
+    name: 'CDN Checks'
     needs: [affected]
     if: contains(needs.affected.outputs.projects, '@coveo/atomic') || contains(needs.affected.outputs.projects, '@samples/headless-commerce-react') || contains(needs.affected.outputs.projects, '@coveo/atomic-hosted-page')
     env:
@@ -196,11 +196,11 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: ./.github/actions/setup
         with:
-          cache-prefix: "cdn"
-      - name: "Run CDN checks"
+          cache-prefix: 'cdn'
+      - name: 'Run CDN checks'
         uses: ./.github/actions/cdn-checks
   lint-check:
-    name: "Check with linter"
+    name: 'Check with linter'
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -213,7 +213,7 @@ jobs:
       - uses: ./.github/actions/setup
       - run: pnpm run lint:check
   validate-light-dom-styles:
-    name: "Validate Light DOM styles"
+    name: 'Validate Light DOM styles'
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -226,7 +226,7 @@ jobs:
       - uses: ./.github/actions/setup
       - run: pnpm --filter @coveo/atomic run validate:light-dom-styles
   validate-no-new-light-dom:
-    name: "Validate no new Light DOM components"
+    name: 'Validate no new Light DOM components'
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -239,7 +239,7 @@ jobs:
       - uses: ./.github/actions/setup
       - run: pnpm --filter @coveo/atomic run validate:no-new-light-dom
   unit-test:
-    name: "Run unit tests"
+    name: 'Run unit tests'
     needs: build
     runs-on: ubuntu-latest
     container:
@@ -263,7 +263,7 @@ jobs:
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo test --affected
   package-compatibility:
-    name: "Verify compatibility of packages"
+    name: 'Verify compatibility of packages'
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -276,7 +276,7 @@ jobs:
       - uses: ./.github/actions/setup
       - run: pnpm run package-compatibility
   typedoc:
-    name: "Build typedoc"
+    name: 'Build typedoc'
     needs: affected
     if: contains(needs.affected.outputs.projects, '@coveo/headless') || contains(needs.affected.outputs.projects, '@coveo/headless-react')
     runs-on: ubuntu-latest
@@ -288,14 +288,14 @@ jobs:
 
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: ./.github/actions/setup
-      - name: "Build headless typedoc"
+      - name: 'Build headless typedoc'
         run: pnpm run build:typedoc
         working-directory: packages/headless
-      - name: "Build headless-react typedoc"
+      - name: 'Build headless-react typedoc'
         run: pnpm run build:typedoc
         working-directory: packages/headless-react
   puppeteer-atomic-csp:
-    name: "Run e2e tests on Atomic CSP"
+    name: 'Run e2e tests on Atomic CSP'
     needs: affected
     if: contains(needs.affected.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
@@ -309,7 +309,7 @@ jobs:
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/puppeteer-atomic-csp
   prepare-playwright-atomic:
-    name: "Determine Playwright E2E tests to run"
+    name: 'Determine Playwright E2E tests to run'
     needs: affected
     if: contains(needs.affected.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
@@ -348,7 +348,7 @@ jobs:
           echo "Shard Total: ${{ steps.determine-tests.outputs.shardTotal }}"
         shell: bash
   chromatic:
-    name: "Run Chromatic visual tests on Atomic"
+    name: 'Run Chromatic visual tests on Atomic'
     needs: affected
     runs-on: ubuntu-latest
     env:
@@ -382,7 +382,7 @@ jobs:
         working-directory: packages/atomic
         if: steps.chromatic-run.outcome == 'skipped'
   playwright-atomic:
-    name: "Run Playwright tests for Atomic"
+    name: 'Run Playwright tests for Atomic'
     needs: prepare-playwright-atomic
     if: ${{ needs.prepare-playwright-atomic.outputs.shardIndex != '[0]' && needs.prepare-playwright-atomic.outputs.shardTotal != '[0]' }}
     runs-on: ubuntu-latest
@@ -408,11 +408,11 @@ jobs:
           shardTotal: ${{ matrix.shardTotal }}
           testsToRun: ${{ needs.prepare-playwright-atomic.outputs.testsToRun }}
   merge-atomic-playwright-reports:
-    name: "Merge Playwright reports"
+    name: 'Merge Playwright reports'
     environment: PR Artifacts
     if: ${{ !cancelled() && !contains(needs.*.result, 'skipped') }}
     needs:
-      - "playwright-atomic"
+      - 'playwright-atomic'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -437,14 +437,14 @@ jobs:
           app-id: ${{ secrets.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           owner: coveo
-          repositories: "ui-kit-prs"
+          repositories: 'ui-kit-prs'
       - uses: ./.github/actions/publish-pr-review-site
         if: ${{ always() && github.event_name == 'pull_request'}}
         with:
           token: ${{ steps.generate-token.outputs.token }}
           copy: true
   playwright-atomic-theming:
-    name: "Run theming smoke tests for Atomic"
+    name: 'Run theming smoke tests for Atomic'
     needs: affected
     if: contains(needs.affected.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
@@ -461,7 +461,7 @@ jobs:
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/playwright-atomic-theming
   storybook-atomic:
-    name: "Run Storybook tests"
+    name: 'Run Storybook tests'
     needs: affected
     if: contains(needs.affected.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
@@ -488,7 +488,7 @@ jobs:
       - run: npm run test:storybook -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
         working-directory: packages/atomic
   playwright-atomic-search-commerce-react-test:
-    name: "Run e2e tests on Atomic Search Commerce React"
+    name: 'Run e2e tests on Atomic Search Commerce React'
     needs: affected
     if: contains(needs.affected.outputs.projects, '@samples/atomic-search-commerce-react')
     runs-on: ubuntu-latest
@@ -505,7 +505,7 @@ jobs:
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/playwright-atomic-search-commerce-react
   playwright-atomic-search-commerce-angular-test:
-    name: "Run e2e tests on Atomic Search Commerce Angular"
+    name: 'Run e2e tests on Atomic Search Commerce Angular'
     needs: affected
     if: contains(needs.affected.outputs.projects, '@samples/atomic-search-commerce-angular')
     runs-on: ubuntu-latest
@@ -522,7 +522,7 @@ jobs:
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/playwright-atomic-search-commerce-angular
   playwright-atomic-hosted-page-test:
-    name: "Run e2e tests for Atomic Hosted Page"
+    name: 'Run e2e tests for Atomic Hosted Page'
     needs: affected
     if: contains(needs.affected.outputs.projects, '@coveo/atomic-hosted-page')
     runs-on: ubuntu-latest
@@ -539,7 +539,7 @@ jobs:
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/playwright-atomic-hosted-pages
   playwright-headless-ssr-commerce-nextjs-test:
-    name: "Run e2e tests on Headless SSR Commerce NextJS"
+    name: 'Run e2e tests on Headless SSR Commerce NextJS'
     needs: affected
     if: contains(needs.affected.outputs.projects, '@samples/headless-ssr-commerce-nextjs')
     runs-on: ubuntu-latest
@@ -557,7 +557,7 @@ jobs:
       - uses: ./.github/actions/playwright-headless-ssr-commerce-nextjs
 
   cypress-headless-ssr-search-nextjs-test:
-    name: "Run e2e tests on Headless SSR Search NextJS"
+    name: 'Run e2e tests on Headless SSR Search NextJS'
     needs: affected
     if: contains(needs.affected.outputs.projects, '@samples/headless-ssr-search-nextjs')
     runs-on: ubuntu-latest
@@ -571,7 +571,7 @@ jobs:
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/cypress-headless-ssr-search-nextjs
   e2e-quantic:
-    name: "Run Quantic E2E tests"
+    name: 'Run Quantic E2E tests'
     needs: affected
     if: contains(needs.affected.outputs.projects, '@coveo/quantic') && !(github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'skip-quantic'))
     permissions:
@@ -583,11 +583,10 @@ jobs:
     secrets:
       SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
       SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
-  prerelease-cdn-pr:
+  publish-preview:
     if: ${{ !cancelled() && github.event_name == 'pull_request' }}
-    needs: build-cdn
-    name: Pre-release CDN in dev (PR)
-    environment: "Prerelease (CDN)"
+    needs: build
+    name: 'Publish Preview Packages'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -595,40 +594,46 @@ jobs:
         with:
           egress-policy: audit
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-        with:
-          fetch-depth: 0
-      - run: git branch ${{ github.event.pull_request.base.ref }} origin/${{ github.event.pull_request.base.ref }}
-        if: ${{ github.event_name == 'pull_request' }}
-      - run: git branch main origin/main
-        if: ${{ github.event_name != 'pull_request' }}
       - uses: ./.github/actions/setup
         with:
-          skip-build: "true"
-          load-cache: "false"
-      - name: Call ui-kit-cd for dev
-        run: node ./scripts/deploy/trigger-ui-kit-cd-pr.mjs
-        env:
-          GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
+          load-cache: 'false'
+      - name: Publish to pkg.pr.new
+        run: |
+          pnpm dlx pkg-pr-new publish --pnpm \
+            './packages/atomic' \
+            './packages/atomic-hosted-page' \
+            './packages/atomic-legacy' \
+            './packages/atomic-react' \
+            './packages/auth' \
+            './packages/bueno' \
+            './packages/create-atomic' \
+            './packages/create-atomic-component' \
+            './packages/create-atomic-component-project' \
+            './packages/create-atomic-result-component' \
+            './packages/create-atomic-rollup-plugin' \
+            './packages/headless' \
+            './packages/headless-react' \
+            './packages/shopify'
   is-valid-pr:
-    name: "Confirm build is valid (PR)"
+    name: 'Confirm build is valid (PR)'
     if: ${{ always() && github.event_name == 'pull_request'}}
     needs:
-      - "build"
-      - "lint-check"
-      - "knip"
-      - "unit-test"
-      - "chromatic"
-      - "storybook-atomic"
-      - "playwright-atomic"
-      - "playwright-atomic-theming"
-      - "playwright-atomic-hosted-page-test"
-      - "playwright-headless-ssr-commerce-nextjs-test"
-      - "puppeteer-atomic-csp"
-      - "e2e-quantic"
-      - "playwright-atomic-search-commerce-react-test"
-      - "playwright-atomic-search-commerce-angular-test"
-      - "cypress-headless-ssr-search-nextjs-test"
-      - "prerelease-cdn-pr"
+      - 'build'
+      - 'lint-check'
+      - 'knip'
+      - 'unit-test'
+      - 'chromatic'
+      - 'storybook-atomic'
+      - 'playwright-atomic'
+      - 'playwright-atomic-theming'
+      - 'playwright-atomic-hosted-page-test'
+      - 'playwright-headless-ssr-commerce-nextjs-test'
+      - 'puppeteer-atomic-csp'
+      - 'e2e-quantic'
+      - 'playwright-atomic-search-commerce-react-test'
+      - 'playwright-atomic-search-commerce-angular-test'
+      - 'cypress-headless-ssr-search-nextjs-test'
+      - 'publish-preview'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -646,23 +651,23 @@ jobs:
             exit 1
           fi
   is-valid-merge-queue:
-    name: "Confirm build is valid (merge group)"
+    name: 'Confirm build is valid (merge group)'
     if: ${{ always() && github.event_name == 'merge_group'}}
     needs:
-      - "build"
-      - "lint-check"
-      - "knip"
-      - "unit-test"
-      - "chromatic"
-      - "storybook-atomic"
-      - "playwright-atomic"
-      - "playwright-atomic-theming"
-      - "playwright-atomic-hosted-page-test"
-      - "playwright-headless-ssr-commerce-nextjs-test"
-      - "e2e-quantic"
-      - "playwright-atomic-search-commerce-react-test"
-      - "playwright-atomic-search-commerce-angular-test"
-      - "cypress-headless-ssr-search-nextjs-test"
+      - 'build'
+      - 'lint-check'
+      - 'knip'
+      - 'unit-test'
+      - 'chromatic'
+      - 'storybook-atomic'
+      - 'playwright-atomic'
+      - 'playwright-atomic-theming'
+      - 'playwright-atomic-hosted-page-test'
+      - 'playwright-headless-ssr-commerce-nextjs-test'
+      - 'e2e-quantic'
+      - 'playwright-atomic-search-commerce-react-test'
+      - 'playwright-atomic-search-commerce-angular-test'
+      - 'cypress-headless-ssr-search-nextjs-test'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -680,11 +685,11 @@ jobs:
             exit 1
           fi
   is-valid:
-    name: "Confirm build is valid"
+    name: 'Confirm build is valid'
     if: ${{ always() }}
     needs:
-      - "is-valid-pr"
-      - "is-valid-merge-queue"
+      - 'is-valid-pr'
+      - 'is-valid-merge-queue'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -703,11 +708,11 @@ jobs:
           fi
   prerelease-cdn-merge:
     if: ${{ !cancelled() && needs.is-valid.result == 'success' && needs.build-cdn.result == 'success' && github.event_name == 'merge_group' }}
-    needs: 
+    needs:
       - is-valid
       - build-cdn
     name: Pre-release CDN in dev (Merge group)
-    environment: "Prerelease (CDN)"
+    environment: 'Prerelease (CDN)'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -723,14 +728,14 @@ jobs:
         if: ${{ github.event_name != 'pull_request' }}
       - uses: ./.github/actions/setup
         with:
-          skip-build: "true"
-          load-cache: "false"
+          skip-build: 'true'
+          load-cache: 'false'
       - name: Call ui-kit-cd for dev
         run: node ./scripts/deploy/trigger-ui-kit-cd-dev.mjs
         env:
           GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
   chromatic-update-main:
-    name: "Update Chromatic baseline on main"
+    name: 'Update Chromatic baseline on main'
     if: ${{ !cancelled() && needs.is-valid.result == 'success' && github.event_name == 'merge_group' }}
     needs:
       - is-valid

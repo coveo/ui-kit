@@ -3,6 +3,7 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import type {AtomicCommerceInterface} from '../atomic-commerce-interface/atomic-commerce-interface';
+import '@/src/components/commerce/atomic-commerce-text/atomic-commerce-text.js';
 
 const {decorator, play} = wrapInCommerceInterface({
   skipFirstRequest: true,

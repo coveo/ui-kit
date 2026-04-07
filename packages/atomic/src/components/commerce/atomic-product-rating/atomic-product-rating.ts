@@ -142,7 +142,6 @@ export class AtomicProductRating
                 iconSize: 0.875,
               },
             })}
-
             ${when(
               this.ratingDetails !== null,
               () => html`

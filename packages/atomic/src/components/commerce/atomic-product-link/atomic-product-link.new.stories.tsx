@@ -5,6 +5,7 @@ import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-inter
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
 import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product-template-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import '@/src/components/commerce/atomic-product-link/atomic-product-link.js';
 
 const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
   type: 'product-listing',
@@ -82,7 +83,11 @@ export const WithAlternativeContent: Story = {
       return html`
         <atomic-product-link>
           <div>
-            <img src="https://picsum.photos/seed/picsum/350" alt="Thumbnail" class="thumbnail" />
+            <img
+              src="https://picsum.photos/seed/picsum/350"
+              alt="Thumbnail"
+              class="thumbnail"
+            />
           </div>
         </atomic-product-link>
       `;

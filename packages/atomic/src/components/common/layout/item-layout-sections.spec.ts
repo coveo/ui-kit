@@ -40,19 +40,20 @@ const invalidTags = [
 describe('item-layout-sections', () => {
   describe('#isResultSectionNode', () => {
     describe('with section elements', () => {
-      it.each(
-        validSectionTags
-      )('should return true for %s element', (tagName) => {
-        const element = document.createElement(tagName);
-        expect(isResultSectionNode(element)).toBe(true);
+      it.each(validSectionTags)(
+        'should return true for %s element',
+        (tagName) => {
+          const element = document.createElement(tagName);
+          expect(isResultSectionNode(element)).toBe(true);
 
-        const upperElement = document.createElement(tagName);
-        Object.defineProperty(upperElement, 'tagName', {
-          value: tagName.toUpperCase(),
-          writable: false,
-        });
-        expect(isResultSectionNode(upperElement)).toBe(true);
-      });
+          const upperElement = document.createElement(tagName);
+          Object.defineProperty(upperElement, 'tagName', {
+            value: tagName.toUpperCase(),
+            writable: false,
+          });
+          expect(isResultSectionNode(upperElement)).toBe(true);
+        }
+      );
     });
 
     describe('with non-section elements', () => {
@@ -118,27 +119,29 @@ describe('item-layout-sections', () => {
         container = document.createElement('div');
       });
 
-      describe.each(
-        validSectionTags
-      )('when NodeList contains %s', (tagName) => {
-        it('should return true', () => {
-          const sectionElement = document.createElement(tagName);
-          container.appendChild(sectionElement);
+      describe.each(validSectionTags)(
+        'when NodeList contains %s',
+        (tagName) => {
+          it('should return true', () => {
+            const sectionElement = document.createElement(tagName);
+            container.appendChild(sectionElement);
 
-          expect(containsSections(container.childNodes)).toBe(true);
-        });
-      });
+            expect(containsSections(container.childNodes)).toBe(true);
+          });
+        }
+      );
 
-      describe.each(
-        invalidTags
-      )('when NodeList contains only %s elements', (tagName) => {
-        it('should return false', () => {
-          const element = document.createElement(tagName);
-          container.appendChild(element);
+      describe.each(invalidTags)(
+        'when NodeList contains only %s elements',
+        (tagName) => {
+          it('should return false', () => {
+            const element = document.createElement(tagName);
+            container.appendChild(element);
 
-          expect(containsSections(container.childNodes)).toBe(false);
-        });
-      });
+            expect(containsSections(container.childNodes)).toBe(false);
+          });
+        }
+      );
 
       it('should return true when section is mixed with other nodes', () => {
         const textNode = document.createTextNode('Some text');
@@ -166,37 +169,39 @@ describe('item-layout-sections', () => {
         container = document.createElement('div');
       });
 
-      describe.each(
-        validSectionTags
-      )('when HTMLCollection contains %s', (tagName) => {
-        it('should return true', () => {
-          const sectionElement = document.createElement(tagName);
-          container.appendChild(sectionElement);
+      describe.each(validSectionTags)(
+        'when HTMLCollection contains %s',
+        (tagName) => {
+          it('should return true', () => {
+            const sectionElement = document.createElement(tagName);
+            container.appendChild(sectionElement);
 
-          expect(containsSections(container.children)).toBe(true);
-        });
+            expect(containsSections(container.children)).toBe(true);
+          });
 
-        it('should return true when nested in wrapper', () => {
-          const wrapper = document.createElement('div');
-          const nestedSection = document.createElement(tagName);
-          wrapper.appendChild(nestedSection);
-          container.appendChild(wrapper);
+          it('should return true when nested in wrapper', () => {
+            const wrapper = document.createElement('div');
+            const nestedSection = document.createElement(tagName);
+            wrapper.appendChild(nestedSection);
+            container.appendChild(wrapper);
 
-          expect(containsSections(container.children)).toBe(false);
-          expect(containsSections(wrapper.children)).toBe(true);
-        });
-      });
+            expect(containsSections(container.children)).toBe(false);
+            expect(containsSections(wrapper.children)).toBe(true);
+          });
+        }
+      );
 
-      describe.each(
-        invalidTags
-      )('when HTMLCollection contains only %s elements', (tagName) => {
-        it('should return false', () => {
-          const element = document.createElement(tagName);
-          container.appendChild(element);
+      describe.each(invalidTags)(
+        'when HTMLCollection contains only %s elements',
+        (tagName) => {
+          it('should return false', () => {
+            const element = document.createElement(tagName);
+            container.appendChild(element);
 
-          expect(containsSections(container.children)).toBe(false);
-        });
-      });
+            expect(containsSections(container.children)).toBe(false);
+          });
+        }
+      );
 
       it('should return true when section is mixed with other elements', () => {
         const regularElement = document.createElement('div');

@@ -283,7 +283,9 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
     return html`
       <div class=${resultComponentClass}>
         <div
-          class="result-root ${this.itemLayoutController.getCombinedClasses().join(' ')}"
+          class="result-root ${this.itemLayoutController
+            .getCombinedClasses()
+            .join(' ')}"
           .innerHTML=${this.getContentHTML()}
         ></div>
         <div class="link-container" .innerHTML=${this.getLinkHTML()}></div>

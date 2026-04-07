@@ -7,6 +7,7 @@ import {
 } from '@/storybook-utils/api/insight/search-response';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
+import '@/src/components/insight/atomic-insight-smart-snippet-suggestions/atomic-insight-smart-snippet-suggestions.js';
 
 const mockInsightApi = new MockInsightApi();
 

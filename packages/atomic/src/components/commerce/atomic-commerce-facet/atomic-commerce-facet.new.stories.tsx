@@ -7,6 +7,8 @@ import {
   wrapInCommerceInterface,
 } from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import '@/src/components/commerce/atomic-commerce-facet/atomic-commerce-facet.js';
+import '@/src/components/commerce/atomic-commerce-facets/atomic-commerce-facets.js';
 
 const {play, decorator} = wrapInCommerceInterface({
   includeCodeRoot: false,

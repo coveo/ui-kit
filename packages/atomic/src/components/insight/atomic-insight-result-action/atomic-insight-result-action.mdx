@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicInsightResultActionStories from './atomic-insight-result-action.new.stories';
+import meta, { Default, InActionBar } from './atomic-insight-result-action.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicInsightResultActionStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicInsightResultActionStories}
+  stories={{ Default, InActionBar }}
   defaultStory="Default"
   githubPath="insight/atomic-insight-result-action/atomic-insight-result-action.ts"
   tagName="atomic-insight-result-action"

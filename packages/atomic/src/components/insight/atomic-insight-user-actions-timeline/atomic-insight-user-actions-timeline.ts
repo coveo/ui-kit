@@ -20,6 +20,8 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import ArrowDownIcon from '../../../images/big-arrow-down.svg';
 import ArrowUpIcon from '../../../images/big-arrow-up.svg';
+import '@/src/components/common/atomic-icon/atomic-icon.js';
+import '@/src/components/insight/atomic-insight-user-actions-session/atomic-insight-user-actions-session.js';
 
 /**
  * The `atomic-insight-user-actions-timeline` component displays all the actions performed by a user around the time they created a case.
@@ -47,7 +49,9 @@ export class AtomicInsightUserActionsTimeline
 
     .separator {
       height: 1px;
-      background-color: var(--atomic-insight-user-actions-timeline-separator-background);
+      background-color: var(
+        --atomic-insight-user-actions-timeline-separator-background
+      );
     }
   `;
 
