@@ -1,3 +1,4 @@
+import '@/src/components/commerce/atomic-commerce-recommendation-list/atomic-commerce-recommendation-list.js';
 import {spreadProps} from '@open-wc/lit-helpers';
 import {Decorator} from '@storybook/web-components-vite';
 import {html} from 'lit';

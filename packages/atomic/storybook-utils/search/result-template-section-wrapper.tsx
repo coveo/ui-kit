@@ -1,3 +1,13 @@
+import '@/src/components/search/atomic-result-template/atomic-result-template.js';
+import '@/src/components/search/atomic-result-section-actions/atomic-result-section-actions.js';
+import '@/src/components/search/atomic-result-section-badges/atomic-result-section-badges.js';
+import '@/src/components/search/atomic-result-section-bottom-metadata/atomic-result-section-bottom-metadata.js';
+import '@/src/components/search/atomic-result-section-children/atomic-result-section-children.js';
+import '@/src/components/search/atomic-result-section-emphasized/atomic-result-section-emphasized.js';
+import '@/src/components/search/atomic-result-section-excerpt/atomic-result-section-excerpt.js';
+import '@/src/components/search/atomic-result-section-title/atomic-result-section-title.js';
+import '@/src/components/search/atomic-result-section-title-metadata/atomic-result-section-title-metadata.js';
+import '@/src/components/search/atomic-result-section-visual/atomic-result-section-visual.js';
 import {Decorator} from '@storybook/web-components-vite';
 import {html, TemplateResult, render} from 'lit';
 

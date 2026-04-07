@@ -38,7 +38,7 @@
     "gen:lit": "node ./scripts/build-lit.mjs",
     "build:bundles": "rollup --config rollup.config.js",
     "build:types": "tsc --project tsconfig.types.json",
-    "build:assets": "node ../../utils/ci/copy-files.mjs ../atomic/dist/atomic/assets dist/assets ../atomic/dist/atomic/lang dist/lang",
+    "build:assets": "node ../../utils/ci/copy-files.mjs ../atomic/dist/assets dist/assets ../atomic/dist/lang dist/lang",
     "release:phase1": "pnpm --filter @coveo/ci bump",
     "npm:publish": "pnpm --filter @coveo/ci npm-publish"
   },

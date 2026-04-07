@@ -5,6 +5,7 @@ import {MockInsightApi} from '@/storybook-utils/api/insight/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
+import '@/src/components/insight/atomic-insight-facet/atomic-insight-facet.js';
 
 const {decorator, play} = wrapInInsightInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(

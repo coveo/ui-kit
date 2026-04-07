@@ -81,6 +81,9 @@ cd packages/atomic && pnpm storybook
 ### Component Story Anatomy
 
 ```typescript
+// 0. Import component source (side-effect import to register the custom element)
+import '@/src/components/search/atomic-name/atomic-name.js';
+
 // 1. Create API harness at top level
 const searchApiHarness = new MockSearchApi();
 
@@ -191,6 +194,7 @@ Before completing:
 - [ ] MSW handlers included in parameters
 - [ ] `beforeEach` clears mocked responses
 - [ ] At least `Default` story exported
+- [ ] Component source imports present (e.g., `import '@/src/components/<category>/<name>/<name>.js'`)
 - [ ] Component imports use path aliases (`@/storybook-utils/...`)
 - [ ] For pages: initialization function and `play` handler included
 - [ ] Story follows patterns from similar components

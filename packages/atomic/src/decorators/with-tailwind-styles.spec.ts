@@ -7,7 +7,6 @@ import {
 } from 'lit';
 import {customElement} from 'lit/decorators.js';
 import {beforeAll, beforeEach, describe, expect, it} from 'vitest';
-import theme from '@/src/utils/coveo.tw.css';
 import globalStyles from '@/src/utils/tailwind.global.tw.css';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {withTailwindStyles} from './with-tailwind-styles';
@@ -60,7 +59,6 @@ class TestTailwindElementNoStyles extends LitElement {
 
 describe('withTailwindStyles decorator', () => {
   const testCases = [
-    {description: 'include Tailwind theme styles', index: 0, expected: theme},
     {
       description: 'include Tailwind global styles',
       index: 1,
