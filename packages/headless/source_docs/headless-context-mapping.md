@@ -70,7 +70,7 @@ The values you pass to `setCustom` depend on the context mapping type and your a
 - **`BOOLEAN`** values (e.g., `contractCustomer`) are typically resolved from authentication state or user profile data.
 - **`NUMBER`** values (e.g., `loyaltyTier`) may come from a CRM or loyalty system.
 
-## Setting custom context at query time
+## Set custom context at query time
 
 Call [`setCustom`](../../interfaces/Commerce.Context.html#setcustom) on the [`Context`](../../interfaces/Commerce.Context.html) controller before dispatching a search action.
 The controller automatically includes the custom context in all subsequent Commerce API requests.
@@ -95,7 +95,7 @@ The following is a complete vanilla JavaScript example that demonstrates `setCus
 
 { @includeCode ../../../samples/headless/commerce-custom-context-native/index.js }
 
-## Setting custom context at engine initialization
+## Set custom context at engine initialization
 
 You can also provide initial custom context values when building the commerce engine, through the `context.custom` property of the engine configuration.
 
