@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicInsightLayoutStories from './atomic-insight-layout.new.stories';
+import meta, { Default } from './atomic-insight-layout.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicInsightLayoutStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicInsightLayoutStories}
+  stories={{ Default }}
   githubPath="insight/atomic-insight-layout/atomic-insight-layout.ts"
   tagName="atomic-insight-layout"
   className="AtomicInsightLayout"

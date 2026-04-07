@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicIpxRecsListStories from './atomic-ipx-recs-list.new.stories';
+import meta, { Default, RecsWithFullTemplate, RecsOpeningInNewTab, RecsAsCarousel, NotEnoughRecsForCarousel } from './atomic-ipx-recs-list.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicIpxRecsListStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicIpxRecsListStories}
+  stories={{ Default, RecsWithFullTemplate, RecsOpeningInNewTab, RecsAsCarousel, NotEnoughRecsForCarousel }}
   githubPath="ipx/atomic-ipx-recs-list/atomic-ipx-recs-list.ts"
   tagName="atomic-ipx-recs-list"
   className="AtomicIpxRecsList"

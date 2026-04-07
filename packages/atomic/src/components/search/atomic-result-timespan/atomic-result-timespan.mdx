@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicResultTimespanStories from './atomic-result-timespan.new.stories';
+import meta, { Default } from './atomic-result-timespan.new.stories';
 import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicResultTimespanStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicResultTimespanStories}
+  stories={{ Default }}
   githubPath="search/atomic-result-timespan/atomic-result-timespan.ts"
   tagName="atomic-result-timespan"
   className="AtomicResultTimespan"

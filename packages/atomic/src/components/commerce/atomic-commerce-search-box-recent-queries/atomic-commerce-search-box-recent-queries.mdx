@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicCommerceSearchBoxRecentQueriesStories from './atomic-commerce-search-box-recent-queries.new.stories';
+import meta, { Default } from './atomic-commerce-search-box-recent-queries.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicCommerceSearchBoxRecentQueriesStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicCommerceSearchBoxRecentQueriesStories}
+  stories={{ Default }}
   githubPath="commerce/atomic-commerce-search-box-recent-queries/atomic-commerce-search-box-recent-queries.ts"
   tagName="atomic-commerce-search-box-recent-queries"
   className="AtomicCommerceSearchBoxRecentQueries"

@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicIpxRefineToggleStories from './atomic-ipx-refine-toggle.new.stories';
+import meta, { Default, WithCollapsedFacets } from './atomic-ipx-refine-toggle.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicIpxRefineToggleStories} name="Docs" />
+<Meta of={meta} name="Docs" />
 
 <AtomicDocTemplate
-  stories={AtomicIpxRefineToggleStories}
+  stories={{ Default, WithCollapsedFacets }}
   githubPath="ipx/atomic-ipx-refine-toggle/atomic-ipx-refine-toggle.ts"
   tagName="atomic-ipx-refine-toggle"
   className="AtomicIpxRefineToggle"

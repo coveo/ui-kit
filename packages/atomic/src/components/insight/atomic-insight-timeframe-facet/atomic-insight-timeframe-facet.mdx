@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicInsightTimeframeFacetStories from './atomic-insight-timeframe-facet.new.stories';
+import meta, { Default, WithSelectedValue, WithDatePicker } from './atomic-insight-timeframe-facet.new.stories';
 import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={ AtomicInsightTimeframeFacetStories } />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={ AtomicInsightTimeframeFacetStories }
+  stories={{ Default, WithSelectedValue, WithDatePicker }}
   githubPath="insight/atomic-insight-timeframe-facet/atomic-insight-timeframe-facet.ts"
   tagName="atomic-insight-timeframe-facet"
   className="AtomicInsightTimeframeFacet"

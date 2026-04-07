@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicResultPrintableUriStories from './atomic-result-printable-uri.new.stories';
+import meta, { Default, WithEllipsis } from './atomic-result-printable-uri.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={ AtomicResultPrintableUriStories } />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={ AtomicResultPrintableUriStories }
+  stories={{ Default, WithEllipsis }}
   githubPath="search/atomic-result-printable-uri/atomic-result-printable-uri.ts"
   tagName="atomic-result-printable-uri"
   className="AtomicResultPrintableUri"
