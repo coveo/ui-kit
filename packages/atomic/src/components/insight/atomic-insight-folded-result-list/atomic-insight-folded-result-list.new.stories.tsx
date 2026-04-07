@@ -46,7 +46,7 @@ const TEMPLATE_EXAMPLE = `<template>
       ></atomic-result-badge>
     </atomic-field-condition>
     <atomic-result-badge
-      icon="https://raw.githubusercontent.com/Rush/Font-Awesome-SVG-PNG/master/black/svg/language.svg"
+      icon="https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/translate/baseline.svg"
     >
       <atomic-result-multi-value-text
         field="language"
