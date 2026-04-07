@@ -1,5 +1,5 @@
-import * as fs from 'node:fs';
-import * as path from 'node:path';
+import {existsSync, readdirSync, readFileSync} from 'node:fs';
+import {basename, extname, join, resolve} from 'node:path';
 import type {PageEvent, Reflection} from 'typedoc';
 
 const GITHUB_BASE = 'https://github.com/coveo/ui-kit/blob/main/';
@@ -8,13 +8,23 @@ const DOCUMENT_PAGE_PREFIX = 'documents/';
 
 let mdSourceMap: Map<string, string> | null = null;
 
-function normalizeKey(s?: string | null): string {
-  if (!s) return '';
-  return s
-    .trim()
-    .toLowerCase()
-    .replace(/^\/+|\/+$/g, '')
-    .replace(/\.html$/, '');
+/**
+ * Normalizes a URL or slug for consistent map lookups.
+ *
+ * Examples:
+ * - `"  Usage/Proxy.html  "` → `"usage/proxy"`
+ * - `"/api/search/"` → `"api/search"`
+ */
+function normalizeKey(urlOrSlug?: string | null): string {
+  if (!urlOrSlug) return '';
+
+  const normalized = urlOrSlug.trim().toLowerCase();
+
+  const leadingSlashesRemoved = normalized.replace(/^\/+/, '');
+  const trailingSlashesRemoved = leadingSlashesRemoved.replace(/\/+$/, '');
+  const htmlExtensionRemoved = trailingSlashesRemoved.replace(/\.html$/, '');
+
+  return htmlExtensionRemoved;
 }
 
 /**
@@ -30,23 +40,26 @@ function buildMarkdownSourceMap(): Map<string, string> {
   if (mdSourceMap) return mdSourceMap;
   mdSourceMap = new Map();
 
-  const sourceDocsDir = path.resolve(
-    process.cwd(),
-    path.basename(SOURCE_DOCS_REPO_PATH)
-  );
+  // Resolve the repository root relative to this file, then locate
+  // `packages/headless/source_docs` from that root. This avoids
+  // depending on the process current working directory which may vary
+  // when TypeDoc is invoked from different locations.
+  const __dirname = import.meta.dirname;
+  const repoRoot = resolve(__dirname, '../../..');
+  const sourceDocsDir = resolve(repoRoot, SOURCE_DOCS_REPO_PATH);
 
-  if (!fs.existsSync(sourceDocsDir)) {
+  if (!existsSync(sourceDocsDir)) {
     return mdSourceMap;
   }
 
   try {
-    const files = fs
-      .readdirSync(sourceDocsDir)
-      .filter((f) => f.endsWith('.md') || f.endsWith('.mdx'));
+    const files = readdirSync(sourceDocsDir).filter(
+      (f) => f.endsWith('.md') || f.endsWith('.mdx')
+    );
 
     for (const file of files) {
-      const filePath = path.join(sourceDocsDir, file);
-      const content = fs.readFileSync(filePath, 'utf8');
+      const filePath = join(sourceDocsDir, file);
+      const content = readFileSync(filePath, 'utf8');
       const repoRelativePath = `${SOURCE_DOCS_REPO_PATH}/${file}`;
 
       const fmMatch = content.match(/^---\s*([\s\S]*?)\s*---/);
@@ -66,7 +79,7 @@ function buildMarkdownSourceMap(): Map<string, string> {
         }
       }
 
-      const baseName = normalizeKey(path.basename(file, path.extname(file)));
+      const baseName = normalizeKey(basename(file, extname(file)));
       mdSourceMap.set(baseName, repoRelativePath);
     }
   } catch {
@@ -151,7 +164,7 @@ export function insertEditInGithub(page: PageEvent<Reflection>) {
   // CSS applied, so set a flag to skip only the button injection.
   let skipButton = false;
   try {
-    skipButton = process.cwd().includes('packages/headless-react');
+    skipButton = import.meta.dirname.includes('packages/headless-react');
   } catch {}
 
   const model = page.model as Reflection & {

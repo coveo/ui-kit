@@ -267,6 +267,7 @@ export const load = (app: Application) => {
       'css/dark-theme.css',
       'favicon.ico',
       'icons/coveo-docs-logo.svg',
+      'icons/github.svg',
       'icons/more.svg',
       'icons/external-action-4.svg',
       'icons/external-action-6.svg',
