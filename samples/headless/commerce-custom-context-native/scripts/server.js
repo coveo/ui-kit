@@ -1,7 +1,9 @@
+import {generateKeyPairSync} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
-import {createServer} from 'node:http';
+import {createServer} from 'node:https';
 import {dirname, join, extname} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {execSync} from 'node:child_process';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PORT = 3000;
@@ -17,9 +19,25 @@ const ROUTES = {
   '/index.html': 'index.html',
   '/index.js': 'index.js',
   '/styles.css': 'styles.css',
+  '/renderSearchResults.js': 'renderSearchResults.js',
 };
 
-const server = createServer(async (req, res) => {
+function generateSelfSignedCert() {
+  const {privateKey} = generateKeyPairSync('rsa', {
+    modulusLength: 2048,
+    publicKeyEncoding: {type: 'spki', format: 'pem'},
+    privateKeyEncoding: {type: 'pkcs8', format: 'pem'},
+  });
+
+  const cert = execSync(
+    'openssl req -new -x509 -key /dev/stdin -out /dev/stdout -days 1 -subj "/CN=localhost" -addext "subjectAltName=DNS:localhost"',
+    {input: privateKey, encoding: 'utf-8'}
+  );
+
+  return {key: privateKey, cert};
+}
+
+const server = createServer(generateSelfSignedCert(), async (req, res) => {
   const fileName = ROUTES[req.url];
 
   if (!fileName) {
@@ -42,5 +60,5 @@ const server = createServer(async (req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}/`);
+  console.log(`Server running at https://localhost:${PORT}/`);
 });
