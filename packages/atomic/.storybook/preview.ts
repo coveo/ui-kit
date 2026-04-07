@@ -88,7 +88,6 @@ const preview: Preview = {
         textColor: '#282829',
       }),
     },
-    chromatic: {disableSnapshot: true},
   },
   decorators: [
     (Story) => {

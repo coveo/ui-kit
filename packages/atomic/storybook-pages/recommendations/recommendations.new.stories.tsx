@@ -38,7 +38,6 @@ const meta: Meta = {
     msw: {
       handlers: [...mockRecommendationApi.handlers],
     },
-    chromatic: {disableSnapshot: false},
   },
   render: () => html`
     <style>

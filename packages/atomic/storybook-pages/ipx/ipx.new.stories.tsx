@@ -63,7 +63,6 @@ const meta: Meta = {
     msw: {
       handlers: [...mockSearchApi.handlers],
     },
-    chromatic: {disableSnapshot: false},
   },
   beforeEach: async () => {
     mockSearchApi.searchEndpoint.mock(
