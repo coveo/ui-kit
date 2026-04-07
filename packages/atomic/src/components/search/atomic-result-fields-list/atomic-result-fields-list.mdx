@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicResultFieldsListStories from './atomic-result-fields-list.new.stories';
+import meta, { Default } from './atomic-result-fields-list.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicResultFieldsListStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicResultFieldsListStories}
+  stories={{ Default }}
   githubPath="search/atomic-result-fields-list/atomic-result-fields-list.ts"
   tagName="atomic-result-fields-list"
   className="AtomicResultFieldsList"

@@ -1,11 +1,11 @@
 import {Meta} from '@storybook/addon-docs/blocks';
-import * as AtomicSegmentedFacetScrollableStories from './atomic-segmented-facet-scrollable.new.stories';
+import meta, { Default } from './atomic-segmented-facet-scrollable.new.stories';
 import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicSegmentedFacetScrollableStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicSegmentedFacetScrollableStories}
+  stories={{ Default }}
   githubPath="search/facets/atomic-segmented-facet-scrollable/atomic-segmented-facet-scrollable.ts"
   tagName="atomic-segmented-facet-scrollable"
   className="AtomicSegmentedFacetScrollable"
