@@ -84,13 +84,12 @@ import { buildSearchEngine } from '@coveo/headless';
 export const headlessEngine = buildSearchEngine({
   configuration: {
     organizationId: '<ORGANIZATION_ID>', // callout[This is the <a href="https://docs.coveo.com/en/n1ce5273/">unique identifier of your Coveo organization</a> (for example, `mycoveoorganization`).]
-    accessToken: '<ACCESS_TOKEN>', //callout[This is an <a href="https://docs.coveo.com/en/105/">API key</a> that was created using the **Anonymous search** <a href="https://docs.coveo.com/en/1718#api-key-templates">template</a> or a <a href="https://docs.coveo.com/en/56/">search token</a> that grants the **Allowed** <a href="https://docs.coveo.com/en/2818/">access level</a> on the <a href="https://docs.coveo.com/en/1707#execute-queries-domain">**Execute Queries**</a> <a href="https://docs.coveo.com/en/2819/">domain</a> and the **Push** <a href="https://docs.coveo.com/en/2818/">access level</a> on the <a href="https://docs.coveo.com/en/1707#administrate-domain"> **Analytics Data**</a> <a href="https://docs.coveo.com/en/2819/">domain</a> in the target <a href="https://docs.coveo.com/en/185/">organization</a>.]
+    accessToken: '<ACCESS_TOKEN>', //callout[This is an <a href="https://docs.coveo.com/en/105/">API key</a> that was created using the Anonymous search <a href="https://docs.coveo.com/en/1718#api-key-templates">template</a> or a <a href="https://docs.coveo.com/en/56/">search token</a> that grants the Allowed <a href="https://docs.coveo.com/en/2818/">access level</a> on the <a href="https://docs.coveo.com/en/1707#execute-queries-domain">Execute Queries</a> <a href="https://docs.coveo.com/en/2819/">domain</a> and the Push <a href="https://docs.coveo.com/en/2818/">access level</a> on the <a href="https://docs.coveo.com/en/1707#administrate-domain">Analytics Data</a> <a href="https://docs.coveo.com/en/2819/">domain</a> in the target <a href="https://docs.coveo.com/en/185/">organization</a>.]
     renewAccessToken: <CALLBACK>, //callout[This is a function that returns a new access token, usually by fetching it from a backend service that can generate <a href="https://docs.coveo.com/en/56/">search tokens</a>.  The engine will automatically run this function when the current access token expires (that is, when the engine detects a `419 Authentication Timeout` HTTP code).]
   }
 });
 ```
 
-3. `<CALLBACK>` (function) 
 
 > [!NOTE]
 >
