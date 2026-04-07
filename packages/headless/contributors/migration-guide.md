@@ -1,3 +1,8 @@
+---
+title: Migration guide
+group: Contributing
+---
+
 If you are migrating across a major version, be aware of the following breaking changes:
 
 ## Migrating from v0 to v1

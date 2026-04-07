@@ -1,6 +1,7 @@
 ---
 title: v1 to v2
-group: Upgrade
+group: Guides
+category: Upgrade
 slug: upgrade/v1-to-v2
 ---
 

@@ -43,7 +43,11 @@
     "source_docs/upgrade-from-v1-to-v2.md",
     "source_docs/upgrade-from-v2-to-v3.md",
     "source_docs/versions.md",
-    "README.md"
+    "README.md",
+    "contributors/adding-a-controller.md",
+    "contributors/adding-a-sub-package.md",
+    "contributors/migration-guide.md",
+    "contributors/troubleshooting-bundles-content.md"
   ],
   "entryPointStrategy": "merge",
   "navigation": {
@@ -66,17 +70,16 @@
   "hoistOther.topLevelOrder": [
     "Home",
     "Getting Started",
-    "Usage",
+    "Guides",
     "Reference",
-    "Code samples",
-    "Product lifecycle",
-    "Upgrade",
-    "Versioned documentation"
+    "Information",
+    "Contributing"
   ],
   "hoistOther.nestedOrder": {
-    "usage server-side rendering": ["Concepts", "*"],
-    "upgrade": ["Concepts", "*"],
-    "usage usage analytics": ["Concepts", "*"],
+    "contributing": ["Contributing", "*"],
+    "guides server-side rendering": ["Concepts", "*"],
+    "guides upgrade": ["Concepts", "*"],
+    "guides usage analytics": ["Concepts", "*"],
     "getting started": [
       "Getting Started with Search",
       "Getting Started with Case Assist",
@@ -86,7 +89,7 @@
       "Getting Started with SSR Search",
       "Getting Started with SSR Commerce"
     ],
-    "usage": ["Concepts", "*"],
+    "guides": ["Concepts", "*"],
     "reference search": [
       "Engine",
       "Controllers",

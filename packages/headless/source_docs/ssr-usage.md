@@ -1,6 +1,6 @@
 ---
 title: Implement server-side rendering
-group: Usage
+group: Guides
 category: Server-side rendering
 slug: usage/server-side-rendering/implement-server-side-rendering
 ---
