@@ -19,7 +19,7 @@ Each mapping defines a key, a data type, and one or more destinations that contr
 ## Prerequisites
 
 Before using `setCustom`, you must [create context mappings](https://docs.coveo.com/en/q3bc0472/coveo-for-commerce/use-context-mappings#create-a-context-mapping) on your tracking ID using the Context Mappings API.
-The Commerce API validates each value you send against its configured type and silently drops any key that does not match.
+The Commerce API validates each value you send against its configured type and silently drops any key that doesn't match.
 
 ## Example context mappings
 
@@ -60,7 +60,7 @@ The following examples assume the target tracking ID has been configured with th
 | `shoppingIntent`  | `STRING`       | `ML_CONTEXT`, `QUERY_PIPELINE_CONTEXT` | Influence ML relevance and enable intent-based ranking expressions. |
 | `storeId`         | `STRING`       | `FIELD_ALIASES`                        | Resolve store-specific pricing from a dictionary field.             |
 
-## Determining suitable values
+## Determine suitable values
 
 The values you pass to `setCustom` depend on the context mapping type and your application's runtime state.
 

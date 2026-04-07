@@ -17,7 +17,7 @@ const coveoHeadlessCustomContext = () => {
   const searchResultsEl = document.getElementById('search-results');
 
   const engine = buildCommerceEngine({
-    configuration: getSampleCommerceEngineConfiguration(), // callout[This configuration does not have context mapping defined, meaning changing values for the context mapping elements will not affect the returned results.]
+    configuration: getSampleCommerceEngineConfiguration(), // callout[This configuration doesn't have context mapping defined, meaning changing values for the context mapping elements will not affect the returned results.]
   });
 
   const contextController = buildContext(engine);
