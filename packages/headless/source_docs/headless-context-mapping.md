@@ -19,7 +19,7 @@ Each mapping defines a key, a data type, and one or more destinations that contr
 ## Prerequisites
 
 Before using `setCustom`, you must [create context mappings](https://docs.coveo.com/en/q3bc0472/coveo-for-commerce/use-context-mappings#create-a-context-mapping) on your tracking ID using the Context Mappings API.
-The Commerce API validates each value you send against its configured type and silently drops any key that doesn't match.
+The Commerce API validates each value you send against its configured type and silently drops any key that does not match.
 
 ## Example context mappings
 
