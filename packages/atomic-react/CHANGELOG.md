@@ -1,3 +1,10 @@
+## <small>3.11.10 (2026-04-08)</small>
+
+* chore: replace biome with oxlint / oxfmt (#7328) ([3b8d688](https://github.com/coveo/ui-kit/commits/3b8d688)), closes [#7328](https://github.com/coveo/ui-kit/issues/7328)
+* chore(atomic): streamline build process (#7229) ([219d2a8](https://github.com/coveo/ui-kit/commits/219d2a8)), closes [#7229](https://github.com/coveo/ui-kit/issues/7229)
+
+
+
 ## <small>3.11.9 (2026-04-01)</small>
 
 * chore: update knip & tweaks (#7306) ([51a165a](https://github.com/coveo/ui-kit/commits/51a165a)), closes [#7306](https://github.com/coveo/ui-kit/issues/7306)

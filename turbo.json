@@ -97,13 +97,7 @@
     ".oxfmtrc.json",
     ".cspell.json"
   ],
-  "globalEnv": [
-    "DEPLOYMENT_ENVIRONMENT",
-    "IS_PRERELEASE",
-    "PR_NUMBER",
-    "NODE_ENV",
-    "CI"
-  ],
+  "globalEnv": ["DEPLOYMENT_ENVIRONMENT", "IS_PRERELEASE", "NODE_ENV", "CI"],
   "globalPassThroughEnv": [
     "GITHUB_*",
     "RUNNER_*",
