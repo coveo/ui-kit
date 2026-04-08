@@ -1,5 +1,5 @@
 ---
-"@coveo/headless": minor
+"@coveo/headless": patch
 ---
 
 added params for analytics for the follow up call in search agent
