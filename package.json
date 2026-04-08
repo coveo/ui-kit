@@ -1,6 +1,6 @@
 {
   "name": "ui-kit",
-  "version": "3.0.98",
+  "version": "3.0.100",
   "private": true,
   "scripts": {
     "postinstall": "husky install",
@@ -16,9 +16,11 @@
     "pr:report": "echo 'TODO KIT-5109: pr:report must be reactivated after pnpm has been merged in main'",
     "report:bundle-size:time-series": "node ./scripts/reports/bundle-size/time-series.mjs",
     "pre-commit": "lint-staged",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
     "publish:npm:latest": "turbo npm:publish --concurrency=1",
     "notify:docs": "node ./scripts/notify-docs/published-ui-kit.mjs",
-    "release": "pnpm run nx:graph && pnpm run release:phase0 && pnpm run release:phase1 && pnpm run release:phase2 && pnpm run release:phase3",
+    "release": "pnpm run build && changeset publish",
     "nx:graph": "turbo release:phase1 --dry-run=json > topology-raw.json && node scripts/transform-topology.mjs topology-raw.json topology.json",
     "release:phase0": "pnpm --filter @coveo/ci git-lock",
     "release:phase1": "turbo release:phase1 --concurrency=1 && pnpm run build",
@@ -29,6 +31,8 @@
   "devDependencies": {
     "@actions/core": "3.0.0",
     "@actions/github": "9.0.0",
+    "@changesets/changelog-github": "0.6.0",
+    "@changesets/cli": "2.30.0",
     "@coveo/ci": "workspace:*",
     "@cspell/dict-fr-fr": "2.3.2",
     "@playwright/mcp": "catalog:",
@@ -41,7 +45,7 @@
     "esbuild-plugin-alias": "0.2.1",
     "esbuild-plugin-umd-wrapper": "3.0.0",
     "husky": "9.1.7",
-    "knip": "5.88.0",
+    "knip": "5.88.1",
     "lint-staged": "16.2.7",
     "oxfmt": "0.43.0",
     "oxlint": "1.58.0",

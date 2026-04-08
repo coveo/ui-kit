@@ -1,3 +1,9 @@
+## <small>1.2.34 (2026-04-08)</small>
+
+* chore: replace biome with oxlint / oxfmt (#7328) ([3b8d688](https://github.com/coveo/ui-kit/commits/3b8d688)), closes [#7328](https://github.com/coveo/ui-kit/issues/7328)
+
+
+
 ## <small>1.2.33 (2026-04-01)</small>
 
 * fix: missing cdn outputs (#7309) ([040b1b1](https://github.com/coveo/ui-kit/commits/040b1b1)), closes [#7309](https://github.com/coveo/ui-kit/issues/7309)

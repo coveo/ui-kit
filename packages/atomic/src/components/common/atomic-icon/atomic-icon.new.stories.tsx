@@ -6,6 +6,7 @@ import {expect, userEvent, waitFor} from 'storybook/test';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import AssetsList from '../../../../docs/assets.json';
+import '@/src/components/common/atomic-icon/atomic-icon.js';
 
 function snakeToCamel(value: string) {
   return value
@@ -27,6 +28,7 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
+    chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
     },

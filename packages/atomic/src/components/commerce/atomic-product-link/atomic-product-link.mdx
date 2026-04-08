@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicProductLinkStories from './atomic-product-link.new.stories';
+import meta, { Default, WithSlotsAttributes, WithAlternativeContent, WithHrefTemplate } from './atomic-product-link.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicProductLinkStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicProductLinkStories}
+  stories={{ Default, WithSlotsAttributes, WithAlternativeContent, WithHrefTemplate }}
   githubPath="commerce/atomic-product-link/atomic-product-link.ts"
   tagName="atomic-product-link"
   className="AtomicProductLink"

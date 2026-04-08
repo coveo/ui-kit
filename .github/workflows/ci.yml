@@ -122,7 +122,6 @@ jobs:
     env:
       DEPLOYMENT_ENVIRONMENT: CDN
       IS_PRERELEASE: 'true'
-      PR_NUMBER: ${{ github.event_name == 'pull_request' && github.event.pull_request.number || '' }}
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
@@ -583,11 +582,10 @@ jobs:
     secrets:
       SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
       SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
-  prerelease-cdn-pr:
+  publish-preview:
     if: ${{ !cancelled() && github.event_name == 'pull_request' }}
-    needs: build-cdn
-    name: Pre-release CDN in dev (PR)
-    environment: 'Prerelease (CDN)'
+    needs: build
+    name: 'Publish Preview Packages'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -595,20 +593,26 @@ jobs:
         with:
           egress-policy: audit
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-        with:
-          fetch-depth: 0
-      - run: git branch ${{ github.event.pull_request.base.ref }} origin/${{ github.event.pull_request.base.ref }}
-        if: ${{ github.event_name == 'pull_request' }}
-      - run: git branch main origin/main
-        if: ${{ github.event_name != 'pull_request' }}
       - uses: ./.github/actions/setup
         with:
-          skip-build: 'true'
           load-cache: 'false'
-      - name: Call ui-kit-cd for dev
-        run: node ./scripts/deploy/trigger-ui-kit-cd-pr.mjs
-        env:
-          GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
+      - name: Publish to pkg.pr.new
+        run: |
+          pnpm dlx pkg-pr-new publish --pnpm \
+            './packages/atomic' \
+            './packages/atomic-hosted-page' \
+            './packages/atomic-legacy' \
+            './packages/atomic-react' \
+            './packages/auth' \
+            './packages/bueno' \
+            './packages/create-atomic' \
+            './packages/create-atomic-component' \
+            './packages/create-atomic-component-project' \
+            './packages/create-atomic-result-component' \
+            './packages/create-atomic-rollup-plugin' \
+            './packages/headless' \
+            './packages/headless-react' \
+            './packages/shopify'
   is-valid-pr:
     name: 'Confirm build is valid (PR)'
     if: ${{ always() && github.event_name == 'pull_request'}}
@@ -628,7 +632,7 @@ jobs:
       - 'playwright-atomic-search-commerce-react-test'
       - 'playwright-atomic-search-commerce-angular-test'
       - 'cypress-headless-ssr-search-nextjs-test'
-      - 'prerelease-cdn-pr'
+      - 'publish-preview'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner

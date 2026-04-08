@@ -1,3 +1,4 @@
+import '@/src/components/insight/atomic-insight-result-template/atomic-insight-result-template.js';
 import {Decorator} from '@storybook/web-components-vite';
 import {html, TemplateResult, render} from 'lit';
 

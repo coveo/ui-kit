@@ -4,6 +4,10 @@ import {html} from 'lit';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-facet/atomic-facet.js';
+import '@/src/components/ipx/atomic-ipx-modal/atomic-ipx-modal.js';
+import '@/src/components/ipx/atomic-ipx-refine-toggle/atomic-ipx-refine-toggle.js';
+import '@/src/components/common/atomic-layout-section/atomic-layout-section.js';
 
 const mockSearchApi = new MockSearchApi();
 

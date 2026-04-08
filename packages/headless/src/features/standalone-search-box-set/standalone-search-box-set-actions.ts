@@ -187,6 +187,9 @@ export const buildPlanRequest = async (
     ...(state.context && {context: state.context.contextValues}),
     ...(state.pipeline && {pipeline: state.pipeline}),
     ...(state.searchHub && {searchHub: state.searchHub}),
+    ...(state.query.enableQuerySyntax && {
+      enableQuerySyntax: state.query.enableQuerySyntax,
+    }),
     ...(state.configuration.analytics.enabled &&
     state.configuration.analytics.analyticsMode === 'legacy'
       ? await legacyFromAnalyticsStateToAnalyticsParams(

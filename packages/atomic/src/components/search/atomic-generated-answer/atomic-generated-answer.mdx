@@ -1,11 +1,11 @@
 import {Meta} from '@storybook/addon-docs/blocks';
-import * as AtomicGeneratedAnswerStories from './atomic-generated-answer.new.stories';
+import meta, { Default, DisableCitationAnchoring, WithLegacyAnalytics } from './atomic-generated-answer.new.stories';
 import {AtomicDocTemplate} from '../../../../storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicGeneratedAnswerStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicGeneratedAnswerStories}
+  stories={{ Default, DisableCitationAnchoring, WithLegacyAnalytics }}
   githubPath="search/atomic-generated-answer/atomic-generated-answer.ts"
   tagName="atomic-generated-answer"
   className="AtomicGeneratedAnswer"

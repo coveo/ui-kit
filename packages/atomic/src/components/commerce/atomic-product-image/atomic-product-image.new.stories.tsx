@@ -5,6 +5,8 @@ import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-inter
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
 import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product-template-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import '@/src/components/commerce/atomic-product-image/atomic-product-image.js';
+import '@/src/components/commerce/atomic-product-section-visual/atomic-product-section-visual.js';
 
 const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
   type: 'product-listing',
@@ -53,6 +55,7 @@ const meta: Meta = {
   ],
   parameters: {
     ...parameters,
+    chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
     },

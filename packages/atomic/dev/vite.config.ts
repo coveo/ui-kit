@@ -40,7 +40,7 @@ function configureAssetPaths(): Plugin {
 }
 
 export default defineConfig({
-  publicDir: resolve(import.meta.dirname, '../dist/atomic'),
+  publicDir: resolve(import.meta.dirname, '../dist'),
   appType: 'mpa',
   server: {
     port: 3333,

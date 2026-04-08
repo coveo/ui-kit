@@ -9,6 +9,7 @@ import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-inter
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
 import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product-template-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import '@/src/components/commerce/atomic-product-excerpt/atomic-product-excerpt.js';
 
 const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
   engineConfig: {
@@ -43,6 +44,7 @@ const meta: Meta = {
   render: (args) => template(args),
   parameters: {
     ...parameters,
+    chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
     },

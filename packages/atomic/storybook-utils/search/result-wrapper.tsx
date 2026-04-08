@@ -1,3 +1,5 @@
+import '@/src/components/search/atomic-result-list/atomic-result-list.js';
+import '@/src/components/search/atomic-result-template/atomic-result-template.js';
 import {SearchEngineConfiguration} from '@coveo/headless';
 import {Decorator} from '@storybook/web-components-vite';
 import {html, render} from 'lit';

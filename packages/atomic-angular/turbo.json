@@ -9,15 +9,22 @@
       "dependsOn": ["@coveo/atomic#build:cem"],
       "outputs": ["projects/atomic-angular/src/lib/generated/**/*"]
     },
+    "release:phase1": {
+      "dependsOn": ["^release:phase1", "@coveo/headless#release:phase1"],
+      "outputs": []
+    },
     "build:assets": {
-      "dependsOn": ["@coveo/atomic#build:list-assets"],
+      "dependsOn": [
+        "@coveo/atomic#build:locales",
+        "@coveo/atomic#build:assets"
+      ],
       "outputs": [
         "projects/atomic-angular/dist/assets/**",
         "projects/atomic-angular/dist/lang/**"
       ]
     },
     "build:bundles": {
-      "dependsOn": ["gen:lit"],
+      "dependsOn": ["gen:lit", "@coveo/atomic#build:lit"],
       "outputs": [
         "projects/atomic-angular/dist/**/*",
         "!projects/atomic-angular/dist/assets/**",
