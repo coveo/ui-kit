@@ -6,21 +6,6 @@ import {renderButton} from '@/src/components/common/button';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import styles from './atomic-ask-follow-up-input.tw.css';
 
-export interface RenderFollowUpInputProps {
-  /**
-   * The i18n instance for translations.
-   */
-  i18n: i18n;
-  /**
-   * Whether the submit button is disabled.
-   */
-  submitButtonDisabled?: boolean;
-  /**
-   * Function to call when a follow-up question is submitted.
-   */
-  askFollowUp: (query: string) => Promise<void>;
-}
-
 /**
  * The `atomic-ask-follow-up-input` component is responsible for rendering the input for follow-up questions.
  * @internal
@@ -110,7 +95,10 @@ export class AtomicAskFollowUpInput extends LitElement {
 
   public render() {
     return html`
-      <div part="input-container" class="relative flex rounded-md border border-neutral">
+      <div
+        part="input-container"
+        class="relative flex rounded-md border border-neutral"
+      >
         <div part="textarea-expander" class="grid grow overflow-hidden">
           <textarea
             part="input-field"
