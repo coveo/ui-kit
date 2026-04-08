@@ -9,9 +9,5 @@
     "if-not-cdn": "node ./if-not-cdn.mjs",
     "if-cdn": "node ./if-cdn.mjs",
     "if-ci": "node ./if-ci.mjs"
-  },
-  "dependencies": {
-    "@coveo/semantic-monorepo-tools": "2.7.1",
-    "octokit": "5.0.5"
   }
 }

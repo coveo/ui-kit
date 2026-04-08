@@ -1,101 +1,43 @@
-#!/usr/bin/env node
-import {spawnSync} from 'node:child_process';
-import {randomUUID} from 'node:crypto';
-import {
-  getCurrentBranchName,
-  getSHA1fromRef,
-  gitAdd,
-  gitCommitTree,
-  gitCreateBranch,
-  gitDeleteRemoteBranch,
-  gitPublishBranch,
-  gitPull,
-  gitSetupUser,
-  gitSwitchBranch,
-  gitUpdateRef,
-  gitWriteTree,
-} from '@coveo/semantic-monorepo-tools';
-import {Octokit} from 'octokit';
-import {REPO_NAME, REPO_OWNER} from './constants.mjs';
+import {execFileSync} from 'node:child_process';
 
-export const setupGit = async () => {
-  const GIT_USERNAME = 'developer-experience-bot[bot]';
-  const GIT_EMAIL =
-    '91079284+developer-experience-bot[bot]@users.noreply.github.com';
-  await gitSetupUser(GIT_USERNAME, GIT_EMAIL);
+function git(...args) {
+  return execFileSync('git', args, {encoding: 'utf-8'}).trim();
+}
+
+export const getCurrentBranchName = () =>
+  git('rev-parse', '--abbrev-ref', 'HEAD');
+
+export const getSHA1fromRef = (ref) => git('rev-parse', ref);
+
+export const gitAdd = (path) => git('add', path);
+
+export const gitCommitTree = (tree, parent, message) => {
+  const args = ['commit-tree', tree];
+  if (parent) args.push('-p', parent);
+  if (message) args.push('-m', message);
+  return git(...args);
 };
 
-/**
- * "Craft" a signed commit.
- * @param {string} commitMessage
- * @param {Octokit} octokit
- * @returns {Promise<string>}
- */
-export async function commitChanges(commitMessage, octokit) {
-  // Get latest commit and name of the main branch.
-  const currentBranchName = await getCurrentBranchName();
-  const currentSHA = await getSHA1fromRef(currentBranchName);
+export const gitCreateBranch = (name) => git('branch', name);
 
-  // Create a temporary branch and check it out.
-  const tempBranchName = `ui-kit-temp/${randomUUID()}`;
-  await gitCreateBranch(tempBranchName);
-  await gitSwitchBranch(tempBranchName);
-  // Stage all the changes...
-  await gitAdd('.');
-  // Lint staged files
-  runPrecommit();
-  //... and create a Git tree object with the changes. The Tree SHA will be used with GitHub APIs.
-  const treeSHA = await gitWriteTree();
-  // Create a new commit that references the Git tree object.
-  const commitTree = await gitCommitTree(treeSHA, tempBranchName, 'tempcommit');
+export const gitDeleteRemoteBranch = (remote, ...refs) =>
+  git('push', remote, '--delete', ...refs);
 
-  // Update the HEAD of the temp branch to point to the new commit, then publish the temp branch.
-  await gitUpdateRef('HEAD', commitTree);
-  await gitPublishBranch('origin', tempBranchName);
+export const gitPublishBranch = (remote, branch) =>
+  git('push', '-u', remote, branch);
 
-  /**
-   * Once we pushed the temp branch, the tree object is then known to the remote repository.
-   * We can now create a new commit that references the tree object using the GitHub API.
-   * The fact that we use the API makes the commit 'verified'.
-   * The commit is directly created on the GitHub repository, not on the local repository.
-   */
-  const commit = await octokit.rest.git.createCommit({
-    message: commitMessage,
-    owner: REPO_OWNER,
-    repo: REPO_NAME,
-    tree: treeSHA,
-    parents: [currentSHA],
-  });
+export const gitPull = () => git('pull');
 
-  /**
-   * We then update the mainBranch to this new verified commit.
-   */
-  await octokit.rest.git.updateRef({
-    owner: REPO_OWNER,
-    repo: REPO_NAME,
-    ref: `heads/${currentBranchName}`,
-    sha: commit.data.sha,
-    force: false,
-  });
-  await gitSwitchBranch(currentBranchName);
-  await gitPull();
+export const gitSetupUser = (name, email) => {
+  if (name) git('config', '--global', 'user.name', name);
+  if (email) git('config', '--global', 'user.email', email);
+};
 
-  // Delete the temp branch
-  await gitDeleteRemoteBranch('origin', tempBranchName);
-  return commit.data.sha;
-}
+export const gitSwitchBranch = (branch) => git('checkout', branch);
 
-/**
- * Run `pnpm run pre-commit`
- */
-function runPrecommit() {
-  spawnSync(appendCmdIfWindows('pnpm'), ['run', 'pre-commit']);
-}
+export const gitUpdateRef = (ref, value) => git('update-ref', ref, value);
 
-/**
- * Append `.cmd` to the input if the runtime OS is Windows.
- * @param {string|TemplateStringsArray} cmd
- * @returns
- */
-const appendCmdIfWindows = (cmd) =>
-  `${cmd}${process.platform === 'win32' ? '.cmd' : ''}`;
+export const gitWriteTree = () => git('write-tree');
+
+export const REPO_OWNER = 'coveo';
+export const REPO_NAME = 'ui-kit';
