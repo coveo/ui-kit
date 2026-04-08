@@ -1,3 +1,10 @@
+## <small>3.55.1 (2026-04-08)</small>
+
+* chore: tweak rsbuild to ensure import.meta.url is preserved (#7358) ([e795e68](https://github.com/coveo/ui-kit/commits/e795e68)), closes [#7358](https://github.com/coveo/ui-kit/issues/7358)
+* chore: update handlebars (#7354) ([cc542d0](https://github.com/coveo/ui-kit/commits/cc542d0)), closes [#7354](https://github.com/coveo/ui-kit/issues/7354)
+
+
+
 ## 3.55.0 (2026-04-08)
 
 * chore: explictly disable chromatic snapshot for stories w/o msw (#7348) ([ff67d83](https://github.com/coveo/ui-kit/commits/ff67d83)), closes [#7348](https://github.com/coveo/ui-kit/issues/7348)

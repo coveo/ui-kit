@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic-react",
-  "version": "3.11.10",
+  "version": "3.11.11",
   "description": "React specific wrapper for the Atomic component library",
   "license": "Apache-2.0",
   "repository": {
