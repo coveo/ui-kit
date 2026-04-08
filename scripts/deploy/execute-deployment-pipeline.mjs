@@ -47,19 +47,13 @@ function getFullyQualifiedVersion(versionComponentsOrdered) {
 }
 
 function getVersionSubpaths(version) {
-  const prNumber = process.env.PR_NUMBER;
   const versionComponentsOrdered = getVersionComponents(version);
 
-  // Use PR number as build if available
-  return prNumber
-    ? {
-        patch: versionComponentsOrdered.slice(0, 3).concat(prNumber).join('.'),
-      }
-    : {
-        major: versionComponentsOrdered.slice(0, 1),
-        minor: versionComponentsOrdered.slice(0, 2).join('.'),
-        patch: getFullyQualifiedVersion(versionComponentsOrdered),
-      };
+  return {
+    major: versionComponentsOrdered.slice(0, 1),
+    minor: versionComponentsOrdered.slice(0, 2).join('.'),
+    patch: getFullyQualifiedVersion(versionComponentsOrdered),
+  };
 }
 
 function getResolveVariableString(version, packageName) {

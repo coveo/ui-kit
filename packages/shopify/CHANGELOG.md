@@ -1,3 +1,9 @@
+## <small>1.9.22 (2026-04-08)</small>
+
+* chore: replace biome with oxlint / oxfmt (#7328) ([3b8d688](https://github.com/coveo/ui-kit/commits/3b8d688)), closes [#7328](https://github.com/coveo/ui-kit/issues/7328)
+
+
+
 ## <small>1.9.21 (2026-04-01)</small>
 
 * chore: update relay+move to catalog (#7287) ([e7a79a1](https://github.com/coveo/ui-kit/commits/e7a79a1)), closes [#7287](https://github.com/coveo/ui-kit/issues/7287)
