@@ -4,6 +4,18 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import '@/src/components/commerce/atomic-commerce-breadbox/atomic-commerce-breadbox.js';
+import '@/src/components/commerce/atomic-commerce-facets/atomic-commerce-facets.js';
+import '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface.js';
+import '@/src/components/commerce/atomic-commerce-layout/atomic-commerce-layout.js';
+import '@/src/components/commerce/atomic-commerce-pager/atomic-commerce-pager.js';
+import '@/src/components/commerce/atomic-commerce-product-list/atomic-commerce-product-list.js';
+import '@/src/components/commerce/atomic-commerce-products-per-page/atomic-commerce-products-per-page.js';
+import '@/src/components/commerce/atomic-commerce-query-error/atomic-commerce-query-error.js';
+import '@/src/components/commerce/atomic-commerce-query-summary/atomic-commerce-query-summary.js';
+import '@/src/components/commerce/atomic-commerce-search-box/atomic-commerce-search-box.js';
+import '@/src/components/commerce/atomic-commerce-sort-dropdown/atomic-commerce-sort-dropdown.js';
+import '@/src/components/common/atomic-layout-section/atomic-layout-section.js';
 
 const commerceApiHarness = new MockCommerceApi();
 

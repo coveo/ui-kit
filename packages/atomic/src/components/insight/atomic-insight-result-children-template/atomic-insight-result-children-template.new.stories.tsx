@@ -10,6 +10,15 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import {wrapInInsightFoldedResultList} from '@/storybook-utils/insight/insight-result-list-wrapper';
 import {wrapInInsightResultTemplate} from '@/storybook-utils/insight/insight-result-template-wrapper';
+import '@/src/components/insight/atomic-insight-result-children/atomic-insight-result-children.js';
+import '@/src/components/insight/atomic-insight-result-children-template/atomic-insight-result-children-template.js';
+import '@/src/components/search/atomic-result-badge/atomic-result-badge.js';
+import '@/src/components/search/atomic-result-link/atomic-result-link.js';
+import '@/src/components/search/atomic-result-section-badges/atomic-result-section-badges.js';
+import '@/src/components/search/atomic-result-section-children/atomic-result-section-children.js';
+import '@/src/components/search/atomic-result-section-excerpt/atomic-result-section-excerpt.js';
+import '@/src/components/search/atomic-result-section-title/atomic-result-section-title.js';
+import '@/src/components/search/atomic-result-text/atomic-result-text.js';
 
 const insightApiHarness = new MockInsightApi();
 insightApiHarness.searchEndpoint.mock(() => baseFoldedResponse);

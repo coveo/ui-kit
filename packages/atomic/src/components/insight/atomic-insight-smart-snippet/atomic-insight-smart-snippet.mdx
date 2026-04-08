@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicInsightSmartSnippetStories from './atomic-insight-smart-snippet.new.stories';
+import meta, { Default } from './atomic-insight-smart-snippet.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicInsightSmartSnippetStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicInsightSmartSnippetStories}
+  stories={{ Default }}
   githubPath="insight/atomic-insight-smart-snippet/atomic-insight-smart-snippet.ts"
   tagName="atomic-insight-smart-snippet"
   className="AtomicInsightSmartSnippet"

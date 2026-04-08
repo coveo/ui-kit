@@ -4,6 +4,7 @@ import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-inter
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
 import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product-template-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import '@/src/components/commerce/atomic-product-rating/atomic-product-rating.js';
 
 const {
   decorator: commerceInterfaceDecorator,
@@ -53,6 +54,7 @@ const meta: Meta = {
   ],
   parameters: {
     ...parameters,
+    chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
     },

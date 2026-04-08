@@ -1,3 +1,5 @@
+import '@/src/components/search/atomic-facet/atomic-facet.js';
+import '@/src/components/search/atomic-breadbox/atomic-breadbox.js';
 import {Decorator} from '@storybook/web-components-vite';
 import {html, nothing} from 'lit';
 

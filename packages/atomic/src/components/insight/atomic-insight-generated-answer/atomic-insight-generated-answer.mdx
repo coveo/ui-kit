@@ -1,11 +1,11 @@
 import {Meta} from '@storybook/addon-docs/blocks';
-import * as AtomicInsightGeneratedAnswerStories from './atomic-insight-generated-answer.new.stories';
+import meta, { Default, DisableCitationAnchoring } from './atomic-insight-generated-answer.new.stories';
 import {AtomicDocTemplate} from '../../../../storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicInsightGeneratedAnswerStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicInsightGeneratedAnswerStories}
+  stories={{ Default, DisableCitationAnchoring }}
   githubPath="insight/atomic-insight-generated-answer/atomic-insight-generated-answer.ts"
   tagName="atomic-insight-generated-answer"
   className="AtomicInsightGeneratedAnswer"

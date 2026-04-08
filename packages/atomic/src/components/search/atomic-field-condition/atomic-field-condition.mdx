@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicFieldConditionStories from './atomic-field-condition.new.stories';
+import meta, { Default } from './atomic-field-condition.new.stories';
 import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={ AtomicFieldConditionStories } />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={ AtomicFieldConditionStories }
+  stories={{ Default }}
   githubPath="search/result-template-components/atomic-field-condition/atomic-field-condition.ts"
   tagName="atomic-field-condition"
   className="AtomicFieldCondition"

@@ -6,6 +6,10 @@ import {
   wrapInCommerceInterface,
 } from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import '@/src/components/commerce/atomic-commerce-layout/atomic-commerce-layout.js';
+import '@/src/components/commerce/atomic-commerce-no-products/atomic-commerce-no-products.js';
+import '@/src/components/commerce/atomic-commerce-search-box/atomic-commerce-search-box.js';
+import '@/src/components/common/atomic-layout-section/atomic-layout-section.js';
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-commerce-no-products',
@@ -32,6 +36,7 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
+    chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
     },

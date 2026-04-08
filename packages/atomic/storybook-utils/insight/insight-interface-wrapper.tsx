@@ -4,8 +4,9 @@ import {
 } from '@coveo/headless/insight';
 import {Decorator, StoryContext} from '@storybook/web-components-vite';
 import {html} from 'lit';
-import type * as _ from '../../src/components.js';
 import {spreadProps} from '@open-wc/lit-helpers';
+import type {AtomicInsightInterface} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface.js';
+import '@/src/components/insight/atomic-insight-interface/atomic-insight-interface.js';
 
 export const wrapInInsightInterface = (
   config?: Partial<InsightEngineConfiguration>,
@@ -35,7 +36,7 @@ export const wrapInInsightInterface = (
   play: async ({canvasElement, step}) => {
     await customElements.whenDefined('atomic-insight-interface');
     const insightInterface =
-      canvasElement.querySelector<HTMLAtomicInsightInterfaceElement>(
+      canvasElement.querySelector<AtomicInsightInterface>(
         'atomic-insight-interface'
       );
     await step('Render the Insight Interface', async () => {

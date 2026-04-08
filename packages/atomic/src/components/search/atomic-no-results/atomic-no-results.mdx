@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicNoResultsStories from './atomic-no-results.new.stories';
+import meta, { Default } from './atomic-no-results.new.stories';
 import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicNoResultsStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicNoResultsStories}
+  stories={{ Default }}
   githubPath="search/atomic-no-results/atomic-no-results.ts"
   tagName="atomic-no-results"
   className="AtomicNoResults"

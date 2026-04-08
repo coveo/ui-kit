@@ -7,6 +7,8 @@ import {parameters as commonParameters} from '@/storybook-utils/common/common-me
 import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
 import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-quickview/atomic-quickview.js';
+import '@/src/components/search/atomic-quickview-modal/atomic-quickview-modal.js';
 
 const searchApiHarness = new MockSearchApi();
 

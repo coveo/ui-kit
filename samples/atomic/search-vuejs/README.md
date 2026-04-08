@@ -91,7 +91,7 @@ To leverage everything that Atomic has to offer, you will need to copy some asse
 scripts: {
   ...,
   "dev": "npm run build:assets && npm run serve",
-  "build:assets": "ncp node_modules/@coveo/atomic/dist/atomic/assets public/assets && ncp node_modules/@coveo/atomic/dist/atomic/lang public/lang"
+  "build:assets": "ncp node_modules/@coveo/atomic/dist/assets public/assets && ncp node_modules/@coveo/atomic/dist/lang public/lang"
 }
 ```
 

@@ -17,7 +17,7 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 @withTailwindStyles
 export class AtomicResultTablePlaceholder extends LitElement {
   static styles = css`
-    @reference '../../common/item-list/styles/mixins.pcss';
+    @reference '../../common/item-list/styles/mixins.css';
     :host {
       display: grid;
     }

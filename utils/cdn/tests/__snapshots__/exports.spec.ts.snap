@@ -2,6 +2,7 @@
 
 exports[`CDN exports checks > did atomic.esm exports changed? 1`] = `
 {
+  "__webpack_require__": [Function],
   "atomicVersion": "<version>",
   "headlessVersion": "<version>",
 }
@@ -9,6 +10,7 @@ exports[`CDN exports checks > did atomic.esm exports changed? 1`] = `
 
 exports[`CDN exports checks > did index exports changed? 1`] = `
 {
+  "__webpack_require__": [Function],
   "applyPolyfills": [Function],
   "atomicVersion": "<version>",
   "defineCustomElements": [Function],
@@ -430,6 +432,7 @@ exports[`CDN exports checks > did index.esm exports changed? 1`] = `
     "AtomicTimeframeFacet": [Function],
   },
   "MissingInterfaceParentError": [Function],
+  "__webpack_require__": [Function],
   "bindLogDocumentOpenOnResult": [Function],
   "dispatchSearchBoxSuggestionsEvent": [Function],
   "elementHasNoQuery": [Function],

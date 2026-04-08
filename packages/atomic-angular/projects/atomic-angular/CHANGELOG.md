@@ -1,3 +1,9 @@
+## <small>3.10.11 (2026-04-08)</small>
+
+* chore: replace biome with oxlint / oxfmt (#7328) ([3b8d688](https://github.com/coveo/ui-kit/commits/3b8d688)), closes [#7328](https://github.com/coveo/ui-kit/issues/7328)
+
+
+
 ## <small>3.10.6 (2026-03-18)</small>
 
 - chore(atomic-angular): turbod atomic-angular build (#7228) ([b803043](https://github.com/coveo/ui-kit/commits/b803043)), closes [#7228](https://github.com/coveo/ui-kit/issues/7228)

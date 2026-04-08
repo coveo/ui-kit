@@ -1,5 +1,5 @@
-@import '../../../global/global.pcss';
-@import '../../common/search-box/search-box.pcss';
+@import '../../../global/global.css';
+@import '../../common/search-box/search-box.css';
 
 [part~='instant-results-item'] {
   @apply p-3;

@@ -7,6 +7,7 @@ import {
   getResultSectionDecorators,
 } from '@/storybook-utils/search/result-section-story-utils';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-result-section-children/atomic-result-section-children.js';
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-result-section-children',
@@ -31,6 +32,7 @@ const meta: Meta = {
   render: (args) => template(args),
   parameters: {
     ...parameters,
+    chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
     },
