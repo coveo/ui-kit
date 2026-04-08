@@ -8,6 +8,10 @@ import {html} from 'lit';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-search-box/atomic-search-box.js';
+import '@/src/components/search/atomic-search-box-instant-results/atomic-search-box-instant-results.js';
+import '@/src/components/search/atomic-search-box-query-suggestions/atomic-search-box-query-suggestions.js';
+import '@/src/components/search/atomic-search-box-recent-queries/atomic-search-box-recent-queries.js';
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-search-box',

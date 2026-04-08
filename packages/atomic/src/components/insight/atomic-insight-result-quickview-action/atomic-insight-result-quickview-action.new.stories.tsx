@@ -8,6 +8,14 @@ import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interfac
 import {wrapInInsightLayout} from '@/storybook-utils/insight/insight-layout-wrapper';
 import {wrapInInsightResultList} from '@/storybook-utils/insight/insight-result-list-wrapper';
 import {wrapInInsightResultTemplate} from '@/storybook-utils/insight/insight-result-template-wrapper';
+import '@/src/components/insight/atomic-insight-result-quickview-action/atomic-insight-result-quickview-action.js';
+import '@/src/components/search/atomic-result-image/atomic-result-image.js';
+import '@/src/components/search/atomic-result-link/atomic-result-link.js';
+import '@/src/components/search/atomic-result-section-actions/atomic-result-section-actions.js';
+import '@/src/components/search/atomic-result-section-excerpt/atomic-result-section-excerpt.js';
+import '@/src/components/search/atomic-result-section-title/atomic-result-section-title.js';
+import '@/src/components/search/atomic-result-section-visual/atomic-result-section-visual.js';
+import '@/src/components/search/atomic-result-text/atomic-result-text.js';
 
 const mockInsightApi = new MockInsightApi();
 const mockSearchApi = new MockSearchApi();

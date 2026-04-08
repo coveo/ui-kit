@@ -1,4 +1,4 @@
-@import '../../../../global/global.pcss';
+@import '../../../../global/global.css';
 
 .feedback-buttons {
   [part='feedback-button'] {

@@ -1,3 +1,13 @@
+import '@/src/components/commerce/atomic-product-template/atomic-product-template.js';
+import '@/src/components/commerce/atomic-product-section-actions/atomic-product-section-actions.js';
+import '@/src/components/commerce/atomic-product-section-badges/atomic-product-section-badges.js';
+import '@/src/components/commerce/atomic-product-section-bottom-metadata/atomic-product-section-bottom-metadata.js';
+import '@/src/components/commerce/atomic-product-section-children/atomic-product-section-children.js';
+import '@/src/components/commerce/atomic-product-section-description/atomic-product-section-description.js';
+import '@/src/components/commerce/atomic-product-section-emphasized/atomic-product-section-emphasized.js';
+import '@/src/components/commerce/atomic-product-section-metadata/atomic-product-section-metadata.js';
+import '@/src/components/commerce/atomic-product-section-name/atomic-product-section-name.js';
+import '@/src/components/commerce/atomic-product-section-visual/atomic-product-section-visual.js';
 import {Decorator} from '@storybook/web-components-vite';
 import {html, TemplateResult, render} from 'lit';
 

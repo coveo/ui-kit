@@ -1,6 +1,6 @@
 {
   "name": "ui-kit",
-  "version": "3.0.98",
+  "version": "3.0.99",
   "private": true,
   "scripts": {
     "postinstall": "husky install",
@@ -45,7 +45,7 @@
     "esbuild-plugin-alias": "0.2.1",
     "esbuild-plugin-umd-wrapper": "3.0.0",
     "husky": "9.1.7",
-    "knip": "5.88.0",
+    "knip": "5.88.1",
     "lint-staged": "16.2.7",
     "oxfmt": "0.43.0",
     "oxlint": "1.58.0",

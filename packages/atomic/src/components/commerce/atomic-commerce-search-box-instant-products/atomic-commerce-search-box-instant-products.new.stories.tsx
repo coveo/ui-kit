@@ -6,6 +6,8 @@ import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceSearchBox} from '@/storybook-utils/commerce/commerce-search-box-wrapper';
 import {parameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
+import '@/src/components/commerce/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products.js';
+import '@/src/components/commerce/atomic-commerce-search-box-query-suggestions/atomic-commerce-search-box-query-suggestions.js';
 
 const mockCommerceApi = new MockCommerceApi();
 

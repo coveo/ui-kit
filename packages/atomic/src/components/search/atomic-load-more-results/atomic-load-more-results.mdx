@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicLoadMoreResultsStories from './atomic-load-more-results.new.stories';
+import meta, { Default } from './atomic-load-more-results.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicLoadMoreResultsStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicLoadMoreResultsStories}
+  stories={{ Default }}
   githubPath="search/atomic-load-more-results/atomic-load-more-results.ts"
   tagName="atomic-load-more-results"
   className="AtomicLoadMoreResults"

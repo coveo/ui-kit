@@ -1,3 +1,12 @@
+## 3.49.0 (2026-04-08)
+
+* feat(headless): add support for enableQuerySyntax for SSB (#7346) ([44492ef](https://github.com/coveo/ui-kit/commits/44492ef)), closes [#7346](https://github.com/coveo/ui-kit/issues/7346)
+* fix(headless): citations UA events not sent on followups (#7305) ([89d79ac](https://github.com/coveo/ui-kit/commits/89d79ac)), closes [#7305](https://github.com/coveo/ui-kit/issues/7305)
+* fix(headless): like and dislike logic refactored to fix state problems (#7318) ([fc3cc73](https://github.com/coveo/ui-kit/commits/fc3cc73)), closes [#7318](https://github.com/coveo/ui-kit/issues/7318)
+* chore: replace biome with oxlint / oxfmt (#7328) ([3b8d688](https://github.com/coveo/ui-kit/commits/3b8d688)), closes [#7328](https://github.com/coveo/ui-kit/issues/7328)
+
+
+
 ## <small>3.48.1 (2026-04-01)</small>
 
 * fix(headless): handle edge cases in renew-access-token middleware (#7299) ([0c8f855](https://github.com/coveo/ui-kit/commits/0c8f855)), closes [#7299](https://github.com/coveo/ui-kit/issues/7299)

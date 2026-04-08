@@ -7,6 +7,8 @@ import {
   wrapInCommerceInterface,
 } from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import '@/src/components/commerce/atomic-commerce-facets/atomic-commerce-facets.js';
+import '@/src/components/commerce/atomic-commerce-timeframe-facet/atomic-commerce-timeframe-facet.js';
 
 const {play, decorator} = wrapInCommerceInterface({
   engineConfig: {
@@ -35,6 +37,7 @@ const meta: Meta = {
   decorators: [commerceFacetWidthDecorator, decorator],
   parameters: {
     ...parameters,
+    chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
     },
