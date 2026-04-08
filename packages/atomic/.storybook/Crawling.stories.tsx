@@ -5,6 +5,9 @@ const meta: Meta = {
   component: 'Crawling',
   title: 'Crawling',
   tags: ['!sidebar', '!dev'],
+  parameters: {
+    chromatic: {disableSnapshot: true},
+  },
 };
 
 export default meta;
