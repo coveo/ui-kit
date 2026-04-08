@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: <> */
+/* oxlint-disable @typescript-eslint/no-explicit-any -- <> */
 import {
   getSampleSearchEngineConfiguration,
   type SearchEngineConfiguration,

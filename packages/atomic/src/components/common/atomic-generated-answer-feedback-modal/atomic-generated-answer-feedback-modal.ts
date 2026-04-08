@@ -259,7 +259,9 @@ export class AtomicGeneratedAnswerFeedbackModal
       <div
         slot="header"
         part="modal-header"
-        class=${multiClassMap({'flex w-full items-center justify-between': true})}
+        class=${multiClassMap({
+          'flex w-full items-center justify-between': true,
+        })}
       >
         <h1>
           <span>${this.bindings.i18n.t('feedback-modal-title')}</span>
@@ -315,11 +317,16 @@ export class AtomicGeneratedAnswerFeedbackModal
         <div class=${multiClassMap({flex: true})}>
           <label class=${multiClassMap({'text-base': true})}>
             ${this.bindings.i18n.t(label)}
-            <span class=${multiClassMap({'text-error-red ml-0.5': true})}>*</span>
+            <span class=${multiClassMap({'text-error-red ml-0.5': true})}
+              >*</span
+            >
           </label>
         </div>
         <span
-          class=${multiClassMap({'text-error-red text-sm': true, hidden: !isRequired})}
+          class=${multiClassMap({
+            'text-error-red text-sm': true,
+            hidden: !isRequired,
+          })}
         >
           ${this.bindings.i18n.t('required-fields-error')}
         </span>
@@ -349,7 +356,9 @@ export class AtomicGeneratedAnswerFeedbackModal
                   ${this.renderAnswerEvaluation(localeKey, correspondingAnswer)}
                 </div>
                 <div
-                  class=${multiClassMap({'options flex flex-shrink-0 text-base': true})}
+                  class=${multiClassMap({
+                    'options flex flex-shrink-0 text-base': true,
+                  })}
                   aria-label=${this.bindings.i18n.t(localeKey)}
                 >
                   ${this.renderFeedbackOption('yes', correspondingAnswer)}
@@ -427,8 +436,14 @@ export class AtomicGeneratedAnswerFeedbackModal
 
   private renderSuccessMessage() {
     return html`
-      <div slot="body" class=${multiClassMap({'my-4 flex flex-col items-center gap-4': true})}>
-        <atomic-icon icon=${Success} class=${multiClassMap({'w-48': true})}></atomic-icon>
+      <div
+        slot="body"
+        class=${multiClassMap({'my-4 flex flex-col items-center gap-4': true})}
+      >
+        <atomic-icon
+          icon=${Success}
+          class=${multiClassMap({'w-48': true})}
+        ></atomic-icon>
         <p class=${multiClassMap({'text-base': true})}>
           ${this.bindings.i18n.t('generated-answer-feedback-success')}
         </p>
@@ -449,7 +464,9 @@ export class AtomicGeneratedAnswerFeedbackModal
 
     return html`
       <div slot="footer" part="modal-footer">
-        <div class=${multiClassMap({'flex items-center justify-between': true})}>
+        <div
+          class=${multiClassMap({'flex items-center justify-between': true})}
+        >
           <div class=${multiClassMap({'required-label text-base': true})}>
             <span class=${multiClassMap({'text-error mr-0.5': true})}>*</span>
             ${this.bindings.i18n.t('required-fields')}

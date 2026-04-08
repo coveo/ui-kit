@@ -25,7 +25,7 @@ describe('atomic-commerce-query-error', () => {
     error = mockError,
   }: {
     interfaceElementType?: 'product-listing' | 'search';
-    // biome-ignore lint/suspicious/noExplicitAny: <>
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
     error?: any;
   } = {}) => {
     vi.mocked(buildProductListing).mockReturnValue(

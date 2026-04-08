@@ -1,37 +1,37 @@
 {
   "name": "@coveo/create-atomic-rollup-plugin",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "Rollup plugin for resolving Coveo Atomic dependencies from CDN or npm",
-  "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "/dist"
-  ],
-  "scripts": {
-    "clean": "node ../../utils/ci/rm-rf.mjs dist",
-    "build": "pnpm run clean && pnpm run build:ts",
-    "build:ts": "tsc -p tsconfig.json",
-    "lint": "npx @biomejs/biome check .",
-    "release:phase1": "pnpm --filter @coveo/ci bump",
-    "npm:publish": "pnpm --filter @coveo/ci npm-publish"
-  },
   "keywords": [
-    "coveo",
     "atomic",
-    "rollup",
+    "bundler",
+    "coveo",
     "plugin",
-    "bundler"
+    "rollup"
   ],
-  "author": "Coveo",
   "license": "Apache-2.0",
-  "publishConfig": {
-    "access": "public"
-  },
+  "author": "Coveo",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/coveo/ui-kit.git",
     "directory": "packages/create-atomic-rollup-plugin"
+  },
+  "files": [
+    "/dist"
+  ],
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "clean": "node ../../utils/ci/rm-rf.mjs dist",
+    "build": "pnpm run clean && pnpm run build:ts",
+    "build:ts": "tsc -p tsconfig.json",
+    "lint": "oxlint . && oxfmt --check .",
+    "release:phase1": "pnpm --filter @coveo/ci bump",
+    "npm:publish": "pnpm --filter @coveo/ci npm-publish"
   },
   "devDependencies": {
     "@types/node": "catalog:",

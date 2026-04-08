@@ -15,10 +15,11 @@ import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 export class AtomicResultSectionExcerpt extends ItemSectionMixin(
   LitElement,
   css`
-@reference '../../common/template-system/sections/sections.css';
-atomic-result-section-excerpt {
-  @apply section-excerpt;
-}`
+    @reference '../../common/template-system/sections/sections.css';
+    atomic-result-section-excerpt {
+      @apply section-excerpt;
+    }
+  `
 ) {}
 
 declare global {

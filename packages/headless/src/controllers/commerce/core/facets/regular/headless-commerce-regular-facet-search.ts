@@ -23,11 +23,10 @@ export type RegularFacetSearch = Omit<
   'updateCaptions' | 'state'
 >;
 
-export interface RegularFacetSearchProps
-  extends Omit<
-    FacetSearchProps,
-    'executeFacetSearchActionCreator' | 'executeFieldSuggestActionCreator'
-  > {
+export interface RegularFacetSearchProps extends Omit<
+  FacetSearchProps,
+  'executeFacetSearchActionCreator' | 'executeFieldSuggestActionCreator'
+> {
   options: FacetSearchOptions & {type: FacetSearchType};
 }
 

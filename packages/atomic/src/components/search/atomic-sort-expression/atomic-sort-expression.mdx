@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicSortExpressionStories from './atomic-sort-expression.new.stories';
+import meta, { Default, DateDescending, WithTabsIncluded, WithTabsExcluded, ComplexExpression } from './atomic-sort-expression.new.stories';
 import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicSortExpressionStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicSortExpressionStories}
+  stories={{ Default, DateDescending, WithTabsIncluded, WithTabsExcluded, ComplexExpression }}
   githubPath="search/atomic-sort-expression/atomic-sort-expression.ts"
   tagName="atomic-sort-expression"
   className="AtomicSortExpression"

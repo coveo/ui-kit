@@ -39,8 +39,10 @@ import {
   type GeneratedAnswerProps,
 } from '../../core/generated-answer/headless-core-generated-answer.js';
 
-interface AnswerApiGeneratedAnswer
-  extends Omit<GeneratedAnswer, 'sendFeedback'> {
+interface AnswerApiGeneratedAnswer extends Omit<
+  GeneratedAnswer,
+  'sendFeedback'
+> {
   /**
    * Resets the last answer.
    */
@@ -54,8 +56,7 @@ interface AnswerApiGeneratedAnswer
 
 interface AnswerApiGeneratedAnswerProps extends GeneratedAnswerProps {}
 
-interface SearchAPIGeneratedAnswerAnalyticsClient
-  extends GeneratedAnswerAnalyticsClient {}
+interface SearchAPIGeneratedAnswerAnalyticsClient extends GeneratedAnswerAnalyticsClient {}
 
 interface ParseEvaluationArgumentsParams {
   feedback: GeneratedAnswerFeedback;

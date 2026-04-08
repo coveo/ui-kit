@@ -93,7 +93,7 @@ export class AtomicResultTimespan
       this.error = new Error(`No value found for field ${this.field}`);
       return;
     }
-    // biome-ignore lint/suspicious/noGlobalIsNan: isNan is needed here because switching to Number.isNaN would be a breaking change.
+    // oxlint-disable-next-line use-isnan -- isNan is needed here because switching to Number.isNaN would be a breaking change.
     if (isNaN(this.value)) {
       this.error = new Error(
         `Value ${this.value} for field ${this.field} is not a number`

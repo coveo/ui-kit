@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicResultTemplateStories from './atomic-result-template.new.stories';
+import meta, { Default, InAFoldedResultList, InASearchBoxInstantResults } from './atomic-result-template.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicResultTemplateStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicResultTemplateStories}
+  stories={{ Default, InAFoldedResultList, InASearchBoxInstantResults }}
   defaultStory="Default"
   githubPath="search/atomic-result-template/atomic-result-template.ts"
   tagName="atomic-result-template"

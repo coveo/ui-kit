@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicInsightResultQuickviewActionStories from './atomic-insight-result-quickview-action.new.stories';
+import meta, { Default, CustomSandbox } from './atomic-insight-result-quickview-action.new.stories';
 import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicInsightResultQuickviewActionStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicInsightResultQuickviewActionStories}
+  stories={{ Default, CustomSandbox }}
   githubPath="insight/atomic-insight-result-quickview-action/atomic-insight-result-quickview-action.ts"
   tagName="atomic-insight-result-quickview-action"
   className="AtomicInsightResultQuickviewAction"

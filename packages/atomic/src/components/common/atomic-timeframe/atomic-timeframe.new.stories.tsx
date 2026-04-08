@@ -4,6 +4,8 @@ import {html} from 'lit';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/common/atomic-timeframe/atomic-timeframe.js';
+import '@/src/components/search/atomic-timeframe-facet/atomic-timeframe-facet.js';
 
 const searchApiHarness = new MockSearchApi();
 const {decorator, play} = wrapInSearchInterface({
@@ -71,7 +73,7 @@ export const Default: Story = {
       if (!('results' in response)) return response;
       return {
         ...response,
-        // biome-ignore lint/suspicious/noExplicitAny: Mock response type needs flexibility
+        // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Mock response type needs flexibility
         results: response.results.slice(0, 10).map((r: any, i: number) => ({
           ...r,
           raw: {
@@ -116,7 +118,7 @@ export const WithPastPeriod: Story = {
       if (!('results' in response)) return response;
       return {
         ...response,
-        // biome-ignore lint/suspicious/noExplicitAny: Mock response type needs flexibility
+        // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Mock response type needs flexibility
         results: response.results.slice(0, 10).map((r: any, i: number) => ({
           ...r,
           raw: {
@@ -161,7 +163,7 @@ export const WithNextPeriod: Story = {
       if (!('results' in response)) return response;
       return {
         ...response,
-        // biome-ignore lint/suspicious/noExplicitAny: Mock response type needs flexibility
+        // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Mock response type needs flexibility
         results: response.results.slice(0, 10).map((r: any, i: number) => ({
           ...r,
           raw: {
@@ -207,7 +209,7 @@ export const WithCustomLabel: Story = {
       if (!('results' in response)) return response;
       return {
         ...response,
-        // biome-ignore lint/suspicious/noExplicitAny: Mock response type needs flexibility
+        // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Mock response type needs flexibility
         results: response.results.slice(0, 10).map((r: any, i: number) => ({
           ...r,
           raw: {

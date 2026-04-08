@@ -53,9 +53,9 @@ describe('atomic-product-children', () => {
     const {element} = await renderInAtomicProduct({
       template: html`
         <atomic-product-children
-        field=${ifDefined(props.field)}
-        label=${ifDefined(props.label)}
-        fallback=${ifDefined(props.fallback)}
+          field=${ifDefined(props.field)}
+          label=${ifDefined(props.label)}
+          fallback=${ifDefined(props.fallback)}
         ></atomic-product-children>
       `,
       selector: 'atomic-product-children',

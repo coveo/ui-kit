@@ -1,165 +1,121 @@
+## <small>2.9.10 (2026-04-08)</small>
+
+* chore: replace biome with oxlint / oxfmt (#7328) ([3b8d688](https://github.com/coveo/ui-kit/commits/3b8d688)), closes [#7328](https://github.com/coveo/ui-kit/issues/7328)
+
+
+
 ## <small>2.9.8 (2026-03-30)</small>
 
-* docs(headless-react): adjusting styleing of typedoc site; aligning TOC (#7261) ([cbbb2fb](https://github.com/coveo/ui-kit/commits/cbbb2fb)), closes [#7261](https://github.com/coveo/ui-kit/issues/7261)
-
-
+- docs(headless-react): adjusting styleing of typedoc site; aligning TOC (#7261) ([cbbb2fb](https://github.com/coveo/ui-kit/commits/cbbb2fb)), closes [#7261](https://github.com/coveo/ui-kit/issues/7261)
 
 ## <small>2.9.6 (2026-03-25)</small>
 
-* chore(deps): update dependency @biomejs/biome to v2.4.7 j:kit-282 (#6193) ([a72f939](https://github.com/coveo/ui-kit/commits/a72f939)), closes [#6193](https://github.com/coveo/ui-kit/issues/6193)
-* ci: migrate npm publishing to OIDC trusted publishers (#7198) ([c97eff5](https://github.com/coveo/ui-kit/commits/c97eff5)), closes [#7198](https://github.com/coveo/ui-kit/issues/7198)
-* Docs/doc 18865 add getting started headless react (#7253) ([c1dc59f](https://github.com/coveo/ui-kit/commits/c1dc59f)), closes [#7253](https://github.com/coveo/ui-kit/issues/7253)
-
-
+- chore(deps): update dependency @biomejs/biome to v2.4.7 j:kit-282 (#6193) ([a72f939](https://github.com/coveo/ui-kit/commits/a72f939)), closes [#6193](https://github.com/coveo/ui-kit/issues/6193)
+- ci: migrate npm publishing to OIDC trusted publishers (#7198) ([c97eff5](https://github.com/coveo/ui-kit/commits/c97eff5)), closes [#7198](https://github.com/coveo/ui-kit/issues/7198)
+- Docs/doc 18865 add getting started headless react (#7253) ([c1dc59f](https://github.com/coveo/ui-kit/commits/c1dc59f)), closes [#7253](https://github.com/coveo/ui-kit/issues/7253)
 
 ## 2.9.0 (2026-01-21)
 
-* feat: add ProductEnrichment Controller in Commerce SSR (#6819) ([850047e](https://github.com/coveo/ui-kit/commits/850047e)), closes [#6819](https://github.com/coveo/ui-kit/issues/6819)
-
-
+- feat: add ProductEnrichment Controller in Commerce SSR (#6819) ([850047e](https://github.com/coveo/ui-kit/commits/850047e)), closes [#6819](https://github.com/coveo/ui-kit/issues/6819)
 
 ## <small>2.8.3 (2026-01-14)</small>
 
-* docs(headless-react): typedoc site name (#6925) ([3aebbd9](https://github.com/coveo/ui-kit/commits/3aebbd9)), closes [#6925](https://github.com/coveo/ui-kit/issues/6925)
-
-
+- docs(headless-react): typedoc site name (#6925) ([3aebbd9](https://github.com/coveo/ui-kit/commits/3aebbd9)), closes [#6925](https://github.com/coveo/ui-kit/issues/6925)
 
 ## <small>2.8.2 (2026-01-07)</small>
 
-* [Version Bump][skip ci]: ui-kit publish ([b2a83c4](https://github.com/coveo/ui-kit/commits/b2a83c4))
-* Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
-
-
+- [Version Bump][skip ci]: ui-kit publish ([b2a83c4](https://github.com/coveo/ui-kit/commits/b2a83c4))
+- Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
 
 ## <small>2.8.1 (2026-01-06)</small>
 
-* Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
-
-
+- Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
 
 ## 2.8.0 (2025-12-12)
 
-* feat: migrating content from docs.coveo.com to typedoc (#6624) ([8a85527](https://github.com/coveo/ui-kit/commits/8a85527)), closes [#6624](https://github.com/coveo/ui-kit/issues/6624)
-
-
+- feat: migrating content from docs.coveo.com to typedoc (#6624) ([8a85527](https://github.com/coveo/ui-kit/commits/8a85527)), closes [#6624](https://github.com/coveo/ui-kit/issues/6624)
 
 ## 2.7.0 (2025-12-10)
 
-* feat(headless): support spotlight content for commerce COMHUB2-1228 (#6646) ([ba8c990](https://github.com/coveo/ui-kit/commits/ba8c990)), closes [#6646](https://github.com/coveo/ui-kit/issues/6646)
-
-
+- feat(headless): support spotlight content for commerce COMHUB2-1228 (#6646) ([ba8c990](https://github.com/coveo/ui-kit/commits/ba8c990)), closes [#6646](https://github.com/coveo/ui-kit/issues/6646)
 
 ## <small>2.6.10 (2025-10-30)</small>
 
-* [Version Bump][skip ci]: ui-kit publish ([b33d02f](https://github.com/coveo/ui-kit/commits/b33d02f))
-* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
-
-
+- [Version Bump][skip ci]: ui-kit publish ([b33d02f](https://github.com/coveo/ui-kit/commits/b33d02f))
+- ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
 
 ## <small>2.6.9 (2025-10-29)</small>
 
-* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
-
-
+- ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
 
 ## <small>2.6.7 (2025-10-22)</small>
 
-* docs(headless-react): update sample links in README files to use the correct path (#6086) ([17e5c58](https://github.com/coveo/ui-kit/commits/17e5c58)), closes [#6086](https://github.com/coveo/ui-kit/issues/6086)
-
-
+- docs(headless-react): update sample links in README files to use the correct path (#6086) ([17e5c58](https://github.com/coveo/ui-kit/commits/17e5c58)), closes [#6086](https://github.com/coveo/ui-kit/issues/6086)
 
 ## <small>2.6.2 (2025-10-08)</small>
 
-* chore(deps) update typedoc  (#6124) ([657371a](https://github.com/coveo/ui-kit/commits/657371a)), closes [#6124](https://github.com/coveo/ui-kit/issues/6124)
-* chore: more cleanup of dependencies in multiples packages (#6119) ([ff6c837](https://github.com/coveo/ui-kit/commits/ff6c837)), closes [#6119](https://github.com/coveo/ui-kit/issues/6119)
-
-
+- chore(deps) update typedoc (#6124) ([657371a](https://github.com/coveo/ui-kit/commits/657371a)), closes [#6124](https://github.com/coveo/ui-kit/issues/6124)
+- chore: more cleanup of dependencies in multiples packages (#6119) ([ff6c837](https://github.com/coveo/ui-kit/commits/ff6c837)), closes [#6119](https://github.com/coveo/ui-kit/issues/6119)
 
 ## <small>2.6.1 (2025-10-01)</small>
 
-* chore(deps): update dependency typedoc to v0.28.8 j:kit-282 (#5819) ([fb042f4](https://github.com/coveo/ui-kit/commits/fb042f4)), closes [#5819](https://github.com/coveo/ui-kit/issues/5819)
-
-
+- chore(deps): update dependency typedoc to v0.28.8 j:kit-282 (#5819) ([fb042f4](https://github.com/coveo/ui-kit/commits/fb042f4)), closes [#5819](https://github.com/coveo/ui-kit/issues/5819)
 
 ## 2.6.0 (2025-09-24)
 
-* feat(headless-ssr): add per-call navigator context support (#5878) ([76f135a](https://github.com/coveo/ui-kit/commits/76f135a)), closes [#5878](https://github.com/coveo/ui-kit/issues/5878)
-
-
+- feat(headless-ssr): add per-call navigator context support (#5878) ([76f135a](https://github.com/coveo/ui-kit/commits/76f135a)), closes [#5878](https://github.com/coveo/ui-kit/issues/5878)
 
 ## <small>2.5.10 (2025-09-18)</small>
 
-* chore(headless-react-ssr): create a folder for commerce next API (#5994) ([aaf190e](https://github.com/coveo/ui-kit/commits/aaf190e)), closes [#5994](https://github.com/coveo/ui-kit/issues/5994)
-* [Version Bump][skip ci]: ui-kit publish ([a3fb13e](https://github.com/coveo/ui-kit/commits/a3fb13e))
-
-
+- chore(headless-react-ssr): create a folder for commerce next API (#5994) ([aaf190e](https://github.com/coveo/ui-kit/commits/aaf190e)), closes [#5994](https://github.com/coveo/ui-kit/issues/5994)
+- [Version Bump][skip ci]: ui-kit publish ([a3fb13e](https://github.com/coveo/ui-kit/commits/a3fb13e))
 
 ## <small>2.5.8 (2025-09-17)</small>
 
-* chore: fix vitest config (#6019) ([bd83d59](https://github.com/coveo/ui-kit/commits/bd83d59)), closes [#6019](https://github.com/coveo/ui-kit/issues/6019)
-
-
+- chore: fix vitest config (#6019) ([bd83d59](https://github.com/coveo/ui-kit/commits/bd83d59)), closes [#6019](https://github.com/coveo/ui-kit/issues/6019)
 
 ## <small>2.5.7 (2025-09-03)</small>
 
-* test(headless-ssr): fix flaky SSR commerce tests (#5967) ([45c114a](https://github.com/coveo/ui-kit/commits/45c114a)), closes [#5967](https://github.com/coveo/ui-kit/issues/5967)
-* test(headless-ssr): fix flaky SSR search tests (#5996) ([53cab85](https://github.com/coveo/ui-kit/commits/53cab85)), closes [#5996](https://github.com/coveo/ui-kit/issues/5996) [#5967](https://github.com/coveo/ui-kit/issues/5967)
-
-
+- test(headless-ssr): fix flaky SSR commerce tests (#5967) ([45c114a](https://github.com/coveo/ui-kit/commits/45c114a)), closes [#5967](https://github.com/coveo/ui-kit/issues/5967)
+- test(headless-ssr): fix flaky SSR search tests (#5996) ([53cab85](https://github.com/coveo/ui-kit/commits/53cab85)), closes [#5996](https://github.com/coveo/ui-kit/issues/5996) [#5967](https://github.com/coveo/ui-kit/issues/5967)
 
 ## <small>2.5.5 (2025-08-27)</small>
 
-* chore(headless-ssr): auto-include Essential OOTB Controllers in Commerce Engine Definition (#5865) ([846210d](https://github.com/coveo/ui-kit/commits/846210d)), closes [#5865](https://github.com/coveo/ui-kit/issues/5865)
-
-
+- chore(headless-ssr): auto-include Essential OOTB Controllers in Commerce Engine Definition (#5865) ([846210d](https://github.com/coveo/ui-kit/commits/846210d)), closes [#5865](https://github.com/coveo/ui-kit/issues/5865)
 
 ## <small>2.5.1 (2025-08-11)</small>
 
-* test(headless-ssr): fix window is not defined flakiness (#5849) ([894a8a1](https://github.com/coveo/ui-kit/commits/894a8a1)), closes [#5849](https://github.com/coveo/ui-kit/issues/5849)
-
-
+- test(headless-ssr): fix window is not defined flakiness (#5849) ([894a8a1](https://github.com/coveo/ui-kit/commits/894a8a1)), closes [#5849](https://github.com/coveo/ui-kit/issues/5849)
 
 ## 2.5.0 (2025-08-07)
 
-* chore: migrate from master to main (#5822) ([5372fa4](https://github.com/coveo/ui-kit/commits/5372fa4)), closes [#5822](https://github.com/coveo/ui-kit/issues/5822)
-* chore(headless-ssr): create ssr-next endpoints (#5779) ([4dd12f4](https://github.com/coveo/ui-kit/commits/4dd12f4)), closes [#5779](https://github.com/coveo/ui-kit/issues/5779)
-* feat: Migrate monorepo build system from NX to Turborepo (#5733) ([e7e1237](https://github.com/coveo/ui-kit/commits/e7e1237)), closes [#5733](https://github.com/coveo/ui-kit/issues/5733)
-
-
+- chore: migrate from master to main (#5822) ([5372fa4](https://github.com/coveo/ui-kit/commits/5372fa4)), closes [#5822](https://github.com/coveo/ui-kit/issues/5822)
+- chore(headless-ssr): create ssr-next endpoints (#5779) ([4dd12f4](https://github.com/coveo/ui-kit/commits/4dd12f4)), closes [#5779](https://github.com/coveo/ui-kit/issues/5779)
+- feat: Migrate monorepo build system from NX to Turborepo (#5733) ([e7e1237](https://github.com/coveo/ui-kit/commits/e7e1237)), closes [#5733](https://github.com/coveo/ui-kit/issues/5733)
 
 ## <small>2.4.39 (2025-07-30)</small>
 
-* chore(atomic-angular, atomic-react, auth, bueno, headless-react): remove unused exports, code and de ([6f8efc1](https://github.com/coveo/ui-kit/commits/6f8efc1)), closes [#5690](https://github.com/coveo/ui-kit/issues/5690)
-* chore: enable noUnusedVariables rule (#5670) ([6809d57](https://github.com/coveo/ui-kit/commits/6809d57)), closes [#5670](https://github.com/coveo/ui-kit/issues/5670)
-
-
+- chore(atomic-angular, atomic-react, auth, bueno, headless-react): remove unused exports, code and de ([6f8efc1](https://github.com/coveo/ui-kit/commits/6f8efc1)), closes [#5690](https://github.com/coveo/ui-kit/issues/5690)
+- chore: enable noUnusedVariables rule (#5670) ([6809d57](https://github.com/coveo/ui-kit/commits/6809d57)), closes [#5670](https://github.com/coveo/ui-kit/issues/5670)
 
 ## <small>2.4.37 (2025-07-23)</small>
 
-* fix(deps): update all dependencies j:kit-282 (#5723) ([6c032c9](https://github.com/coveo/ui-kit/commits/6c032c9)), closes [#5723](https://github.com/coveo/ui-kit/issues/5723)
-* chore: enable recommended biome rules for entire repo (#5662) ([015a764](https://github.com/coveo/ui-kit/commits/015a764)), closes [#5662](https://github.com/coveo/ui-kit/issues/5662)
-
-
+- fix(deps): update all dependencies j:kit-282 (#5723) ([6c032c9](https://github.com/coveo/ui-kit/commits/6c032c9)), closes [#5723](https://github.com/coveo/ui-kit/issues/5723)
+- chore: enable recommended biome rules for entire repo (#5662) ([015a764](https://github.com/coveo/ui-kit/commits/015a764)), closes [#5662](https://github.com/coveo/ui-kit/issues/5662)
 
 ## <small>2.4.36 (2025-07-16)</small>
 
-* chore(deps): update vite to v3.2.4 j:kit-282 (#5604) ([8e8dd6a](https://github.com/coveo/ui-kit/commits/8e8dd6a)), closes [#5604](https://github.com/coveo/ui-kit/issues/5604)
-* chore(headless-react): enable recommended biome rules (#5634) ([7df6bd6](https://github.com/coveo/ui-kit/commits/7df6bd6)), closes [#5634](https://github.com/coveo/ui-kit/issues/5634)
-
-
+- chore(deps): update vite to v3.2.4 j:kit-282 (#5604) ([8e8dd6a](https://github.com/coveo/ui-kit/commits/8e8dd6a)), closes [#5604](https://github.com/coveo/ui-kit/issues/5604)
+- chore(headless-react): enable recommended biome rules (#5634) ([7df6bd6](https://github.com/coveo/ui-kit/commits/7df6bd6)), closes [#5634](https://github.com/coveo/ui-kit/issues/5634)
 
 ## <small>2.4.34 (2025-07-09)</small>
 
-* chore(deps): update dependency typedoc to v0.28.7 j:kit-282 (#5591) ([f769419](https://github.com/coveo/ui-kit/commits/f769419)), closes [#5591](https://github.com/coveo/ui-kit/issues/5591)
-* ci: fix flakiness in headless-react (#5585) ([5abcea5](https://github.com/coveo/ui-kit/commits/5abcea5)), closes [#5585](https://github.com/coveo/ui-kit/issues/5585)
-
-
+- chore(deps): update dependency typedoc to v0.28.7 j:kit-282 (#5591) ([f769419](https://github.com/coveo/ui-kit/commits/f769419)), closes [#5591](https://github.com/coveo/ui-kit/issues/5591)
+- ci: fix flakiness in headless-react (#5585) ([5abcea5](https://github.com/coveo/ui-kit/commits/5abcea5)), closes [#5585](https://github.com/coveo/ui-kit/issues/5585)
 
 ## <small>2.4.33 (2025-07-02)</small>
 
-* chore(lint): integrate biome (#5507) ([53bcada](https://github.com/coveo/ui-kit/commits/53bcada)), closes [#5507](https://github.com/coveo/ui-kit/issues/5507)
-
-
+- chore(lint): integrate biome (#5507) ([53bcada](https://github.com/coveo/ui-kit/commits/53bcada)), closes [#5507](https://github.com/coveo/ui-kit/issues/5507)
 
 ## <small>2.4.31 (2025-06-18)</small>
 

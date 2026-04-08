@@ -1,20 +1,23 @@
 {
   "name": "@coveo/headless-react",
-  "version": "2.9.9",
+  "version": "2.9.10",
   "description": "React utilities for SSR (Server Side Rendering) with headless",
+  "keywords": [
+    "headless",
+    "nextjs",
+    "react",
+    "ssr"
+  ],
   "homepage": "https://docs.coveo.com/en/headless/latest/",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/coveo/ui-kit.git",
     "directory": "packages/headless-react"
   },
-  "keywords": [
-    "headless",
-    "react",
-    "nextjs",
-    "ssr"
+  "files": [
+    "dist"
   ],
-  "license": "Apache-2.0",
   "type": "module",
   "exports": {
     "./ssr": "./dist/ssr/index.js",
@@ -22,9 +25,6 @@
     "./ssr-next": "./dist/ssr-next/index.js",
     "./ssr-commerce-next": "./dist/ssr-commerce-next/index.js"
   },
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "build": "tsc --project ./tsconfig.build.json",
     "clean": "node ../../utils/ci/rm-rf.mjs dist",
@@ -43,18 +43,18 @@
     "@coveo/headless": "workspace:*"
   },
   "devDependencies": {
+    "@coveo/documentation": "workspace:*",
     "@testing-library/react": "catalog:",
     "live-server": "1.2.2",
-    "typescript": "catalog:",
     "typedoc": "catalog:",
-    "vitest": "catalog:",
-    "@coveo/documentation": "workspace:*"
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   },
   "peerDependencies": {
-    "react": "^18 || ^19",
-    "react-dom": "^18 || ^19",
     "@types/react": "^18 || ^19",
-    "@types/react-dom": "^18 || ^19"
+    "@types/react-dom": "^18 || ^19",
+    "react": "^18 || ^19",
+    "react-dom": "^18 || ^19"
   },
   "peerDependenciesMeta": {
     "@types/react": {

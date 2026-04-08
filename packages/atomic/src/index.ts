@@ -3,11 +3,11 @@ export type {i18n} from 'i18next';
 
 import * as _Components from './components/index.js';
 
-export {CommerceBindings} from './components/commerce/atomic-commerce-interface/atomic-commerce-interface';
-export {SelectChildProductEventArgs} from './components/commerce/atomic-product-children/select-child-product-event';
+export type {CommerceBindings} from './components/commerce/atomic-commerce-interface/atomic-commerce-interface';
+export type {SelectChildProductEventArgs} from './components/commerce/atomic-product-children/select-child-product-event';
 export {fetchProductContext} from './components/commerce/product-template-component-utils/context/fetch-product-context';
-export {PopoverChildFacet} from './components/common/facets/popover/popover-type';
-export {RedirectionPayload} from './components/common/search-box/redirection-payload';
+export type {PopoverChildFacet} from './components/common/facets/popover/popover-type';
+export type {RedirectionPayload} from './components/common/search-box/redirection-payload';
 export {dispatchSearchBoxSuggestionsEvent} from './components/common/suggestions/suggestions-events';
 export type {
   SearchBoxSuggestionElement,
@@ -19,8 +19,8 @@ export {
   elementHasNoQuery,
   elementHasQuery,
 } from './components/common/suggestions/suggestions-utils';
-export {RecsBindings} from './components/recommendations/atomic-recs-interface/atomic-recs-interface';
-export {Bindings} from './components/search/atomic-search-interface/atomic-search-interface';
+export type {RecsBindings} from './components/recommendations/atomic-recs-interface/atomic-recs-interface';
+export type {Bindings} from './components/search/atomic-search-interface/atomic-search-interface';
 export {
   fetchBindings as initializeBindings,
   MissingInterfaceParentError,

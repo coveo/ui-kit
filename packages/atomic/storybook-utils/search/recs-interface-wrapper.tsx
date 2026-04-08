@@ -4,8 +4,9 @@ import {
 } from '@coveo/headless/recommendation';
 import {Decorator, StoryContext} from '@storybook/web-components-vite';
 import {html} from 'lit';
-import type * as _ from '../../src/components.js';
 import {spreadProps} from '@open-wc/lit-helpers';
+import type {AtomicRecsInterface} from '@/src/components/recommendations/atomic-recs-interface/atomic-recs-interface.js';
+import '@/src/components/recommendations/atomic-recs-interface/atomic-recs-interface.js';
 
 export const wrapInRecommendationInterface = ({
   config,
@@ -22,14 +23,17 @@ export const wrapInRecommendationInterface = ({
   play: (context: StoryContext) => Promise<void>;
 } => ({
   decorator: (story) => html`
-    <atomic-recs-interface ${spreadProps(includeCodeRoot ? { id: "code-root" } : {})}>
+    <atomic-recs-interface
+      ${spreadProps(includeCodeRoot ? {id: 'code-root'} : {})}
+    >
       ${story()}
     </atomic-recs-interface>
   `,
   play: async ({canvasElement, step}) => {
     await customElements.whenDefined('atomic-recs-interface');
-    const recsInterface =
-      canvasElement.querySelector('atomic-recs-interface')!;
+    const recsInterface = canvasElement.querySelector<AtomicRecsInterface>(
+      'atomic-recs-interface'
+    )!;
 
     if (!skipInitialization) {
       await step('Render the Recs Interface', async () => {

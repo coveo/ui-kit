@@ -132,8 +132,7 @@ describe('atomic-commerce-search-box', () => {
           number-of-queries=${ifDefined(numberOfQueries)}
           clear-filters=${ifDefined(clearFilters)}
         >
-          ${suggestions}
-          ${additionalChildren}
+          ${suggestions} ${additionalChildren}
         </atomic-commerce-search-box>`,
         selector: 'atomic-commerce-search-box',
         bindings: (bindings) => {

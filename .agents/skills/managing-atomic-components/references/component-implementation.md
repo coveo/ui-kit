@@ -197,7 +197,7 @@ condition ? html`<div>Content</div>` : nothing;
 Use `classMap` for conditional classes:
 
 ```typescript
-html`<div class=${classMap({'active': this.isActive, 'disabled': this.isDisabled})}>
+html`<div class=${classMap({active: this.isActive, disabled: this.isDisabled})}>
   Content
 </div>`;
 ```
@@ -212,7 +212,9 @@ const classNames = tw({
   'border-neutral-dark bg-white': !props.isHighlighted,
 });
 
-return html`<div class="rounded-lg border p-4 ${multiClassMap(classNames)}">Content</div>`;
+return html`<div class="rounded-lg border p-4 ${multiClassMap(classNames)}">
+  Content
+</div>`;
 ```
 
 ### Refs
@@ -277,6 +279,7 @@ private get result(): Result {
 Commerce product templates use a similar pattern with product context.
 
 These components typically:
+
 - Extend `LightDomMixin(LitElement)` (light DOM)
 - Self-remove when the field value is null/undefined
 - Use `ResultTemplatesHelpers.getResultProperty()` to extract field values

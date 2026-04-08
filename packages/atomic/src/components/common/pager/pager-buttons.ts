@@ -8,8 +8,10 @@ import type {
 import {type ButtonProps, renderButton} from '../button';
 import {type RadioButtonProps, renderRadioButton} from '../radio-button';
 
-interface PagerNavigationButtonProps
-  extends Omit<ButtonProps, 'style' | 'part' | 'class'> {
+interface PagerNavigationButtonProps extends Omit<
+  ButtonProps,
+  'style' | 'part' | 'class'
+> {
   icon: string;
   i18n: i18n;
 }
@@ -54,11 +56,10 @@ export const renderPagerNextButton: FunctionalComponent<
   );
 };
 
-interface PagerPageButtonProps
-  extends Omit<
-    RadioButtonProps,
-    'part' | 'style' | 'checked' | 'ariaCurrent' | 'key' | 'class'
-  > {
+interface PagerPageButtonProps extends Omit<
+  RadioButtonProps,
+  'part' | 'style' | 'checked' | 'ariaCurrent' | 'key' | 'class'
+> {
   page: number;
   isSelected: boolean;
   text: string;

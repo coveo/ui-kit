@@ -1,7 +1,22 @@
 {
   "name": "@coveo/create-atomic",
+  "version": "1.41.11",
   "description": "Coveo Atomic Generator",
-  "version": "1.41.10",
+  "keywords": [
+    "atomic",
+    "coveo",
+    "generator",
+    "headless",
+    "template"
+  ],
+  "license": "Apache-2.0",
+  "author": "Coveo",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
+    "directory": "packages/create-atomic"
+  },
+  "bin": "./index.mjs",
   "files": [
     "/dist",
     "template/.env.example",
@@ -22,13 +37,10 @@
     "template/tsconfig.donotcopy.json",
     "template/tsconfig.json"
   ],
-  "bin": "./index.mjs",
   "type": "module",
   "main": "index.mjs",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/coveo/ui-kit.git",
-    "directory": "packages/create-atomic"
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "start": "node ./index.mjs",
@@ -37,18 +49,6 @@
     "lint": "prettier --check . && eslint .",
     "release:phase1": "pnpm --filter @coveo/ci bump",
     "npm:publish": "pnpm --filter @coveo/ci npm-publish"
-  },
-  "keywords": [
-    "coveo",
-    "headless",
-    "atomic",
-    "template",
-    "generator"
-  ],
-  "author": "Coveo",
-  "license": "Apache-2.0",
-  "publishConfig": {
-    "access": "public"
   },
   "dependencies": {
     "@coveo/platform-client": "62.0.0",

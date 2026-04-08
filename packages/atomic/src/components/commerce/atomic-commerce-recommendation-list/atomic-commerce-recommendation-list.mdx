@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicCommerceRecommendationListStories from './atomic-commerce-recommendation-list.new.stories';
+import meta, { Default, WithFullTemplate, AsCarousel, NoRecommendations } from './atomic-commerce-recommendation-list.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicCommerceRecommendationListStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicCommerceRecommendationListStories}
+  stories={{ Default, WithFullTemplate, AsCarousel, NoRecommendations }}
   githubPath="commerce/atomic-commerce-recommendation-list/atomic-commerce-recommendation-list.ts"
   tagName="atomic-commerce-recommendation-list"
   className="AtomicCommerceRecommendationList"

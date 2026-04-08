@@ -7,8 +7,10 @@ import type {ControllerDefinitionWithoutProps} from '../../../common/types/contr
 
 export * from '../../../../controllers/breadcrumb-manager/headless-breadcrumb-manager.js';
 
-export interface BreadcrumbManagerDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, BreadcrumbManager> {}
+export interface BreadcrumbManagerDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  BreadcrumbManager
+> {}
 
 /**
  * Defines a `BreadcrumbManager` controller instance.

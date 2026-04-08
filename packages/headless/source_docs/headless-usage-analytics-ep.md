@@ -4,27 +4,28 @@ group: Usage
 category: Usage Analytics
 slug: usage/usage-analytics/event-protocol
 ---
+
 # Event Protocol with Headless
 
 > [!IMPORTANT]
-> 
+>
 > [Event Protocol](https://docs.coveo.com/en/o9je0592/) is currently in open beta.
 > If you’re interested in using Event Protocol, reach out to your Customer Success Manager (CSM).
 
 Since the Headless V3 release, [Event Protocol](https://docs.coveo.com/en/o9je0592/) is the default tracking protocol.
 
 > [!IMPORTANT]
-> 
+>
 > Only [Coveo for Commerce](https://docs.coveo.com/en/1499/) supports EP at the moment.
 > For every other kind of implementation, set `analyticsMode` to `legacy` for the time being.
 
 ```ts
 const engine = buildSearchEngine({
-    configuration: {
-        // ...rest of configuration
-        analytics: {analyticsMode: 'legacy'},
-    }
-})
+  configuration: {
+    // ...rest of configuration
+    analytics: {analyticsMode: 'legacy'},
+  },
+});
 ```
 
 To learn more about whether you should migrate to EP, see [Migrate to Event Protocol](https://docs.coveo.com/en/o88d0509/).
@@ -39,7 +40,7 @@ Headless controllers, when used correctly, also log click events for you.
 As a result, you generally won’t need to tinker with search or click events yourself.
 
 > [!WARNING]
-> 
+>
 > We strongly recommend using the [`InteractiveResult`](../../../interfaces/Search.InteractiveResult.html) controller when implementing your result components.
 > The controller can automatically extract relevant data from result items and log click events for you, as in the following interactive example.
 
@@ -57,7 +58,7 @@ As a result, you generally won’t need to tinker with search or click events yo
 Coveo front-end libraries use the `coveo_visitorId` cookie to track individual users and sessions.
 
 > [!NOTE]
-> 
+>
 > Coveo now uses the [client ID](https://docs.coveo.com/en/lbjf0131/) value to track individual users and sessions.
 > For compatibility with legacy implementations, however, the associated cookie and local storage value are [still labeled `visitorID`](https://docs.coveo.com/en/mc2e2218#why-do-i-still-see-the-name-visitor-id-in-the-local-storage).
 
@@ -72,7 +73,7 @@ const headlessEngine = buildSearchEngine({
   configuration: getSampleSearchEngineConfiguration(),
 });
 
-headlessEngine.disableAnalytics()
+headlessEngine.disableAnalytics();
 // Or, headlessEngine.enableAnalytics();
 ```
 
@@ -82,16 +83,16 @@ headlessEngine.disableAnalytics()
 It’s used to indicate whether the user is requesting sites and advertisers not to track them.
 
 > [!NOTE]
-> 
+>
 > This property is deprecated, but it’s still supported in many browsers.
 
 Headless v2 complies with the value of this property.
 It automatically disables analytics tracking whenever `DNT` is enabled.
 
 > [!IMPORTANT]
-> 
+>
 > Headless v3 will no longer support this property.
 
 > [!NOTE]
-> 
+>
 > To understand how Coveo Usage Analytics tracks users and sessions, see [What’s a user visit?](https://docs.coveo.com/en/1873/).

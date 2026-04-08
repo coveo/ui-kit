@@ -8,6 +8,8 @@ import {html} from 'lit';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-segmented-facet/atomic-segmented-facet.js';
+import '@/src/components/search/atomic-segmented-facet-scrollable/atomic-segmented-facet-scrollable.js';
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-segmented-facet-scrollable',
@@ -17,7 +19,9 @@ const searchApiHarness = new MockSearchApi();
 const {decorator, play} = wrapInSearchInterface();
 
 const withNarrowContainer: Decorator = (story) => {
-  return html` <div style="width: 400px; border: 1px solid lightgray; padding: 8px;">
+  return html` <div
+    style="width: 400px; border: 1px solid lightgray; padding: 8px;"
+  >
     ${story()}
   </div>`;
 };

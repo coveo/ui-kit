@@ -17,16 +17,19 @@ This sample demonstrates a minimal set of interactions with Headless RGA in a Re
 ## Getting Started
 
 1. Install dependencies:
+
    ```bash
    pnpm install
    ```
 
 2. Build the project:
+
    ```bash
    pnpm run build
    ```
 
 3. Start the development server:
+
    ```bash
    pnpm run dev
    ```

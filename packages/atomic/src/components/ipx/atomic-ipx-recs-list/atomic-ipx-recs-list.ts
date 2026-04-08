@@ -80,30 +80,32 @@ export class AtomicIpxRecsList
     placeholderStyles,
     css`
       @reference '../../../utils/tailwind.global.tw.css';
-      @import '../../common/item-list/styles/mixins.pcss';
-      @import '../../common/item-list/styles/placeholders.pcss';
+      @import '../../common/item-list/styles/mixins.css';
 
-     :host {
-      @apply atomic-grid-clickable-elements;
-  @apply atomic-grid-display-common;
-  display: block;
+      :host {
+        @apply atomic-grid-clickable-elements;
+        @apply atomic-grid-display-common;
+        display: block;
 
-  /**
+        /**
  * @prop --atomic-recs-number-of-columns: Number of columns for the recommendation list.
  */
-  .list-root {
-    @apply atomic-grid-with-cards;
-    grid-template-columns: repeat(var(--atomic-recs-number-of-columns, 1), minmax(0, 1fr));
-  }
+        .list-root {
+          @apply atomic-grid-with-cards;
+          grid-template-columns: repeat(
+            var(--atomic-recs-number-of-columns, 1),
+            minmax(0, 1fr)
+          );
+        }
 
-  [part='label'] {
-    @apply font-sans text-2xl font-bold;
-  }
+        [part='label'] {
+          @apply font-sans text-2xl font-bold;
+        }
 
-  atomic-result:not(.hydrated) {
-    visibility: hidden;
-  }
-}
+        atomic-result:not(.hydrated) {
+          visibility: hidden;
+        }
+      }
     `,
   ];
 

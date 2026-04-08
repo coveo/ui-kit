@@ -6,6 +6,7 @@ import {html} from 'lit/static-html.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-did-you-mean/atomic-did-you-mean.js';
 
 const mockSearchApi = new MockSearchApi();
 
@@ -19,8 +20,9 @@ const meta: Meta = {
   title: 'Search/Did You Mean',
   id: 'atomic-did-you-mean',
   component: 'atomic-did-you-mean',
-  render: (args) => html`
-  <div style="display: flex; justify-content: flex-start;">
+  render: (args) => html` <div
+    style="display: flex; justify-content: flex-start;"
+  >
     ${template(args)}
   </div>`,
   decorators: [decorator],
