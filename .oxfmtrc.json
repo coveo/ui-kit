@@ -20,6 +20,7 @@
     "**/*.hbs",
     "**/*.tw.css",
     "**/*.mdx",
-    "**/CHANGELOG.md"
+    "**/CHANGELOG.md",
+    ".changeset/*"
   ]
 }
