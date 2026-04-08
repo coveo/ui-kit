@@ -28,8 +28,7 @@ export class AtomicAskFollowUpInput extends LitElement {
    * Callback invoked when the user submits a follow-up question.
    */
   @property({attribute: false})
-  public askFollowUp: (query: string) => Promise<void> = () =>
-    Promise.resolve();
+  public askFollowUp!: (query: string) => Promise<void>;
 
   @state()
   private isSubmitting: boolean = false;
