@@ -20,7 +20,7 @@
     "version-packages": "changeset version",
     "publish:npm:latest": "turbo npm:publish --concurrency=1",
     "notify:docs": "node ./scripts/notify-docs/published-ui-kit.mjs",
-    "release": "pnpm run nx:graph && pnpm run release:phase0 && pnpm run release:phase1 && pnpm run release:phase2 && pnpm run release:phase3",
+    "release": "pnpm run build && changeset publish",
     "nx:graph": "turbo release:phase1 --dry-run=json > topology-raw.json && node scripts/transform-topology.mjs topology-raw.json topology.json",
     "release:phase0": "pnpm --filter @coveo/ci git-lock",
     "release:phase1": "turbo release:phase1 --concurrency=1 && pnpm run build",
