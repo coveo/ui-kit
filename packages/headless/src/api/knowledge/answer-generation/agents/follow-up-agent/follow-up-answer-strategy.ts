@@ -1,6 +1,7 @@
 import type {AgentSubscriber} from '@ag-ui/client';
 import type {ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
 import {
+  activeFollowUpStartFailed,
   followUpCitationsReceived,
   followUpCompleted,
   followUpFailed,
@@ -92,13 +93,24 @@ export const createFollowUpStrategy = (
     },
     onRunErrorEvent: ({event}) => {
       const mappedCode = mapRunErrorCode(event.code);
-      dispatch(
-        followUpFailed({
-          message: event.message,
-          code: mappedCode,
-          answerId: runId,
-        })
-      );
+      const targetAnswerId = runId || (event as {runId?: string}).runId;
+      if (targetAnswerId) {
+        dispatch(
+          followUpFailed({
+            message: event.message,
+            code: mappedCode,
+            answerId: targetAnswerId,
+          })
+        );
+      } else {
+        // If runId is not set, it means the error occurred before the run started or the runId was not provided. In this case, we dispatch a generic failure action without an answerId.
+        dispatch(
+          activeFollowUpStartFailed({
+            message: event.message,
+            code: mappedCode,
+          })
+        );
+      }
       runId = '';
     },
     onRunFinishedEvent: ({event}) => {

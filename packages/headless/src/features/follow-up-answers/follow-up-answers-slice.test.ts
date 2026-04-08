@@ -737,6 +737,26 @@ describe('follow-up answers slice', () => {
 
       expect(finalState).toEqual(state);
     });
+
+    it('stores the error code when provided', () => {
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          isLoading: true,
+          isStreaming: true,
+        },
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        activeFollowUpStartFailed({message: 'failure', code: 1005})
+      );
+
+      expect(finalState.followUpAnswers[0].error).toEqual({
+        message: 'failure',
+        code: 1005,
+      });
+    });
   });
 
   describe('#likeFollowUp', () => {
