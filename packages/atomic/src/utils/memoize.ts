@@ -3,7 +3,7 @@
  * Only successful results are cached - rejected promises are not remembered.
  *
  * @param fn - The async function to memoize
- * @param getCacheKey - Function that generates a cache key from the function arguments
+ * @param getCacheKey - A function that generates a unique cache key from the received `fn` function arguments
  * @returns Object with the memoized function and cache clearing capability
  */
 export function memoize<TArgs extends unknown[], TReturn>(
@@ -27,7 +27,6 @@ export function memoize<TArgs extends unknown[], TReturn>(
         const result = await promise;
         return result;
       } catch (error) {
-        // Remove failed promises from cache so they can be retried
         cache.delete(key);
         throw error;
       }
