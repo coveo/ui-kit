@@ -5,6 +5,7 @@ import {page} from 'vitest/browser';
 import * as assetPathUtils from '@/src/utils/asset-path-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {AtomicIcon} from './atomic-icon';
+import {clearIconCache} from './fetch-icon';
 import './atomic-icon';
 
 vi.mock('@/src/utils/asset-path-utils', {spy: true});
@@ -45,6 +46,7 @@ describe('atomic-icon', () => {
     vi.stubGlobal('fetch', fetchMock);
     parseAssetURLMock = vi.mocked(assetPathUtils.parseAssetURL);
     sanitizeMock = vi.spyOn(DOMPurify, 'sanitize');
+    clearIconCache();
   });
 
   const setupElement = async (icon: string) => {
@@ -134,5 +136,76 @@ describe('atomic-icon', () => {
         USE_PROFILES: {svg: true, svgFilters: true},
       }
     );
+  });
+
+  describe('caching', () => {
+    it('should cache fetch requests for the same URL', async () => {
+      parseAssetURLMock.mockReturnValue('/assets/star.svg');
+      fetchMock.mockResolvedValue(successfullResponse);
+
+      await setupElement('assets://star.svg');
+      await setupElement('assets://star.svg');
+      await setupElement('assets://star.svg');
+
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock).toHaveBeenCalledWith('/assets/star.svg');
+    });
+
+    it('should make separate fetch requests for different URLs', async () => {
+      const response1 = {
+        ok: true,
+        status: 200,
+        text: async () => '<svg data-testid="icon1"></svg>',
+      } as Response;
+
+      const response2 = {
+        ok: true,
+        status: 200,
+        text: async () => '<svg data-testid="icon2"></svg>',
+      } as Response;
+
+      parseAssetURLMock.mockReturnValueOnce('/assets/icon1.svg');
+      parseAssetURLMock.mockReturnValueOnce('/assets/icon2.svg');
+      fetchMock.mockResolvedValueOnce(response1);
+      fetchMock.mockResolvedValueOnce(response2);
+
+      await setupElement('assets://icon1.svg');
+      await setupElement('assets://icon2.svg');
+
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+      expect(fetchMock).toHaveBeenCalledWith('/assets/icon1.svg');
+      expect(fetchMock).toHaveBeenCalledWith('/assets/icon2.svg');
+    });
+
+    it('should not cache failed fetch requests and allow retry', async () => {
+      vi.spyOn(console, 'error').mockImplementation(() => {});
+      parseAssetURLMock.mockReturnValue('http://example.com/icon.svg');
+      fetchMock
+        .mockRejectedValueOnce(new Error('Network error'))
+        .mockResolvedValueOnce(successfullResponse);
+
+      await setupElement('http://example.com/icon.svg');
+      await expect
+        .element(page.getByText('atomic-icon component error'))
+        .toBeInTheDocument();
+
+      await setupElement('http://example.com/icon.svg');
+
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+      await expect.element(locators.svg).toBeInTheDocument();
+    });
+
+    it('should allow cache clearing and re-fetching', async () => {
+      parseAssetURLMock.mockReturnValue('/assets/icon.svg');
+      fetchMock.mockResolvedValue(successfullResponse);
+
+      await setupElement('assets://icon.svg');
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+
+      clearIconCache();
+
+      await setupElement('assets://icon.svg');
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+    });
   });
 });

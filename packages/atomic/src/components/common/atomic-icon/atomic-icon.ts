@@ -11,6 +11,7 @@ import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 import {parseAssetURL} from '@/src/utils/asset-path-utils';
 import type {AnyBindings} from '../interface/bindings';
+import {fetchIcon} from './fetch-icon';
 
 class IconFetchError extends Error {
   static fromStatusCode(url: string, statusCode: number, statusText: string) {
@@ -77,7 +78,7 @@ export class AtomicIcon
 
   private async fetchIcon(url: string) {
     try {
-      const response = await fetch(url).catch((e) => {
+      const response = await fetchIcon(url).catch((e) => {
         throw IconFetchError.fromError(url, e);
       });
       if (response.status !== 200 && response.status !== 304) {
