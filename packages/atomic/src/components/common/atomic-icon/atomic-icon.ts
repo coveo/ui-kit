@@ -13,24 +13,6 @@ import {parseAssetURL} from '@/src/utils/asset-path-utils';
 import type {AnyBindings} from '../interface/bindings';
 import {fetchIcon} from './fetch-icon';
 
-class IconFetchError extends Error {
-  static fromStatusCode(url: string, statusCode: number, statusText: string) {
-    return new IconFetchError(url, `status code ${statusCode} (${statusText})`);
-  }
-
-  static fromError(url: string, error: unknown) {
-    return new IconFetchError(url, 'an error', error);
-  }
-
-  private constructor(
-    public readonly url: string,
-    errorMessage: string,
-    public readonly errorObject?: unknown
-  ) {
-    super(`Could not fetch icon from ${url}, got ${errorMessage}.`);
-  }
-}
-
 /**
  * The `atomic-icon` component displays an SVG icon with a 1:1 aspect ratio.
  *
@@ -78,17 +60,7 @@ export class AtomicIcon
 
   private async fetchIcon(url: string) {
     try {
-      const response = await fetchIcon(url).catch((e) => {
-        throw IconFetchError.fromError(url, e);
-      });
-      if (response.status !== 200 && response.status !== 304) {
-        throw IconFetchError.fromStatusCode(
-          url,
-          response.status,
-          response.statusText
-        );
-      }
-      return await response.text();
+      return await fetchIcon(url);
     } catch (e) {
       this.error = e as Error;
       this.requestUpdate();
