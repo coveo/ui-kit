@@ -1,6 +1,6 @@
 {
   "name": "@coveo/create-atomic",
-  "version": "1.41.10",
+  "version": "1.41.11",
   "description": "Coveo Atomic Generator",
   "keywords": [
     "atomic",

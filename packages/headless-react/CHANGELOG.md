@@ -1,3 +1,9 @@
+## <small>2.9.10 (2026-04-08)</small>
+
+* chore: replace biome with oxlint / oxfmt (#7328) ([3b8d688](https://github.com/coveo/ui-kit/commits/3b8d688)), closes [#7328](https://github.com/coveo/ui-kit/issues/7328)
+
+
+
 ## <small>2.9.8 (2026-03-30)</small>
 
 - docs(headless-react): adjusting styleing of typedoc site; aligning TOC (#7261) ([cbbb2fb](https://github.com/coveo/ui-kit/commits/cbbb2fb)), closes [#7261](https://github.com/coveo/ui-kit/issues/7261)
