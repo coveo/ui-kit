@@ -103,7 +103,6 @@ export const createFollowUpStrategy = (
           })
         );
       } else {
-        // If runId is not set, it means the error occurred before the run started or the runId was not provided. In this case, we dispatch a generic failure action without an answerId.
         dispatch(
           activeFollowUpStartFailed({
             message: event.message,
