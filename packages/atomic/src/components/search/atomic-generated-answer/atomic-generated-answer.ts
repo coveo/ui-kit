@@ -19,13 +19,13 @@ import {classMap} from 'lit/directives/class-map.js';
 import {when} from 'lit/directives/when.js';
 import {GeneratedAnswerController} from '@/src/components/common/generated-answer/generated-answer-controller';
 import '@/src/components/common/atomic-generated-answer-thread/atomic-generated-answer-thread.js';
+import '@/src/components/common/atomic-ask-follow-up-input/atomic-ask-follow-up-input.js';
 import {renderAnswerContent} from '@/src/components/common/generated-answer/render-answer-content';
 import {renderCardHeader} from '@/src/components/common/generated-answer/render-card-header';
 import {renderCitations} from '@/src/components/common/generated-answer/render-citations';
 import {renderCustomNoAnswerMessage} from '@/src/components/common/generated-answer/render-custom-no-answer-message';
 import {renderDisclaimer} from '@/src/components/common/generated-answer/render-disclaimer';
 import {renderFeedbackAndCopyButtons} from '@/src/components/common/generated-answer/render-feedback-and-copy-buttons';
-import {renderFollowUpInput} from '@/src/components/common/generated-answer/render-follow-up-input.js';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {arrayConverter} from '@/src/converters/array-converter';
@@ -770,13 +770,11 @@ export class AtomicGeneratedAnswer
       return nothing;
     }
     return html` <div class="mb-2">
-      ${renderFollowUpInput({
-        props: {
-          i18n: this.bindings.i18n,
-          submitButtonDisabled: this.isAnswerGenerationOngoing,
-          askFollowUp: this.handleAskFollowUp.bind(this),
-        },
-      })}
+      <atomic-ask-follow-up-input
+        .i18n=${this.bindings.i18n}
+        .askFollowUp=${this.handleAskFollowUp.bind(this)}
+        .submitButtonDisabled=${this.isAnswerGenerationOngoing}>
+      </atomic-ask-follow-up-input>
     </div>`;
   }
 }
