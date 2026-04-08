@@ -34,7 +34,9 @@ const fetchIconUnmemoized = async (url: string) =>
       return response.text();
     });
 
-const memoizedFetchIcon = memoize(fetchIconUnmemoized, (url: string) => url);
+const memoizedFetchIcon = memoize(fetchIconUnmemoized, (url: string) => url, {
+  maxEntries: 20,
+});
 
 export const fetchIcon = memoizedFetchIcon.fn;
 

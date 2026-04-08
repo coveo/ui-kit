@@ -40,7 +40,7 @@ describe('atomic-icon', () => {
       return page.getByTestId('mocked-icon');
     },
   };
-  const successfullResponse = {
+  const successfulResponse = {
     ok: true,
     status: 200,
     text: async () =>
@@ -50,6 +50,8 @@ describe('atomic-icon', () => {
   beforeEach(() => {
     parseAssetURLMock = vi.mocked(assetPathUtils.parseAssetURL);
     sanitizeMock = vi.spyOn(DOMPurify, 'sanitize');
+    fetchMock.mockClear();
+    fetchMock.mockRejectedValue(new Error('fetch not mocked'));
     clearIconCache();
   });
 
@@ -71,7 +73,7 @@ describe('atomic-icon', () => {
 
   it('renders with default values', async () => {
     parseAssetURLMock.mockReturnValue('/assets/user.svg');
-    fetchMock.mockResolvedValue(successfullResponse);
+    fetchMock.mockResolvedValue(successfulResponse);
     await setupElement('assets://user.svg');
 
     expect(fetchMock).toHaveBeenCalledWith('/assets/user.svg');
@@ -95,7 +97,7 @@ describe('atomic-icon', () => {
 
   it('fetches and renders the SVG icon from a URL', async () => {
     parseAssetURLMock.mockReturnValue('http://example.com/icon.svg');
-    fetchMock.mockResolvedValue(successfullResponse);
+    fetchMock.mockResolvedValue(successfulResponse);
 
     await setupElement('http://example.com/icon.svg');
 
@@ -145,7 +147,7 @@ describe('atomic-icon', () => {
   describe('caching', () => {
     it('should cache fetch requests for the same URL', async () => {
       parseAssetURLMock.mockReturnValue('/assets/star.svg');
-      fetchMock.mockResolvedValue(successfullResponse);
+      fetchMock.mockResolvedValue(successfulResponse);
 
       await setupElement('assets://star.svg');
       await setupElement('assets://star.svg');
@@ -186,7 +188,7 @@ describe('atomic-icon', () => {
       parseAssetURLMock.mockReturnValue('http://example.com/icon.svg');
       fetchMock
         .mockRejectedValueOnce(new Error('Network error'))
-        .mockResolvedValueOnce(successfullResponse);
+        .mockResolvedValueOnce(successfulResponse);
 
       await setupElement('http://example.com/icon.svg');
       await expect
@@ -201,7 +203,7 @@ describe('atomic-icon', () => {
 
     it('should allow cache clearing and re-fetching', async () => {
       parseAssetURLMock.mockReturnValue('/assets/icon.svg');
-      fetchMock.mockResolvedValue(successfullResponse);
+      fetchMock.mockResolvedValue(successfulResponse);
 
       await setupElement('assets://icon.svg');
       expect(fetchMock).toHaveBeenCalledTimes(1);

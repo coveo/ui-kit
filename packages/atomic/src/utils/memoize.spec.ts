@@ -93,26 +93,60 @@ describe('memoize', () => {
     expect(mockFn).toHaveBeenCalledTimes(3);
   });
 
-  it('should clear specific cache entries', async () => {
-    mockFn.mockResolvedValue('result');
-    const memoized = memoize(mockFn, (arg: string) => arg);
+  describe('LRU eviction', () => {
+    it('should evict the least recently used entry when maxEntries is exceeded', async () => {
+      mockFn.mockImplementation((arg: string) =>
+        Promise.resolve(`result-${arg}`)
+      );
+      const memoized = memoize(mockFn, (arg: string) => arg, {maxEntries: 2});
 
-    await memoized.fn('test1');
-    await memoized.fn('test2');
-    expect(mockFn).toHaveBeenCalledTimes(2);
+      await memoized.fn('a');
+      await memoized.fn('b');
+      expect(mockFn).toHaveBeenCalledTimes(2);
 
-    await memoized.fn('test1');
-    await memoized.fn('test2');
-    expect(mockFn).toHaveBeenCalledTimes(2);
+      // Adding 'c' evicts 'a' (least recently used), cache: {b, c}
+      await memoized.fn('c');
+      expect(mockFn).toHaveBeenCalledTimes(3);
 
-    memoized.clearCacheEntry('test1');
+      mockFn.mockImplementation((arg: string) =>
+        Promise.resolve(`fresh-${arg}`)
+      );
 
-    mockFn.mockResolvedValue('new-result');
-    const result1 = await memoized.fn('test1');
-    const result2 = await memoized.fn('test2');
+      // 'b' and 'c' are still cached - no additional calls
+      const resultB = await memoized.fn('b');
+      expect(resultB).toBe('result-b');
+      const resultC = await memoized.fn('c');
+      expect(resultC).toBe('result-c');
+      expect(mockFn).toHaveBeenCalledTimes(3);
 
-    expect(result1).toBe('new-result');
-    expect(result2).toBe('result');
-    expect(mockFn).toHaveBeenCalledTimes(3);
+      // 'a' was evicted when 'c' was added (LRU), so it should re-fetch
+      const resultA = await memoized.fn('a');
+      expect(resultA).toBe('fresh-a');
+      expect(mockFn).toHaveBeenCalledTimes(4);
+    });
+
+    it('should promote a cache hit to most recently used', async () => {
+      mockFn.mockImplementation((arg: string) =>
+        Promise.resolve(`result-${arg}`)
+      );
+      const memoized = memoize(mockFn, (arg: string) => arg, {maxEntries: 2});
+
+      await memoized.fn('a');
+      await memoized.fn('b');
+
+      await memoized.fn('a');
+
+      mockFn.mockImplementation((arg: string) =>
+        Promise.resolve(`fresh-${arg}`)
+      );
+
+      await memoized.fn('c');
+
+      const resultA = await memoized.fn('a');
+      expect(resultA).toBe('result-a');
+
+      const resultB = await memoized.fn('b');
+      expect(resultB).toBe('fresh-b');
+    });
   });
 });
