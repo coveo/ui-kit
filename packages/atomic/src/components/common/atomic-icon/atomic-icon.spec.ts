@@ -8,6 +8,12 @@ import {AtomicIcon} from './atomic-icon';
 import {clearIconCache} from './fetch-icon';
 import './atomic-icon';
 
+// Hoist fetch mock to ensure it's in place before the following import chains:
+//  [atomic-icon.spec.ts]─►[atomic-icon.ts]─┐
+//  [atomic-icon.spec.ts]─►[atomic-icon.ts]─┴─►[fetch-icon.ts]
+// Because [fetch-icon.ts] uses fetch during its initialization to create the exported memoized function.
+const fetchMock = vi.hoisted(() => vi.spyOn(window, 'fetch'));
+
 vi.mock('@/src/utils/asset-path-utils', {spy: true});
 vi.mock('@/src/mixins/bindings-mixin', () => ({
   InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
@@ -27,7 +33,6 @@ vi.mock('@/src/mixins/bindings-mixin', () => ({
 }));
 
 describe('atomic-icon', () => {
-  const fetchMock = vi.fn();
   let parseAssetURLMock: MockInstance;
   let sanitizeMock: MockInstance;
   const locators = {
@@ -43,7 +48,6 @@ describe('atomic-icon', () => {
   } as Response;
 
   beforeEach(() => {
-    vi.stubGlobal('fetch', fetchMock);
     parseAssetURLMock = vi.mocked(assetPathUtils.parseAssetURL);
     sanitizeMock = vi.spyOn(DOMPurify, 'sanitize');
     clearIconCache();
