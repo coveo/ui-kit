@@ -1,8 +1,6 @@
+import type {i18n} from 'i18next';
 import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import '@/src/components/common/atomic-generated-answer-content/atomic-generated-answer-content';
-import '@/src/components/common/atomic-generated-answer-thread-item/atomic-generated-answer-thread-item';
-import type {i18n} from 'i18next';
 import {createRef, ref} from 'lit/directives/ref.js';
 import {renderButton} from '@/src/components/common/button';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
