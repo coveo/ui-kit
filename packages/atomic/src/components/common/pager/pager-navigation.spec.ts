@@ -1,7 +1,7 @@
 import i18next, {type i18n as I18n} from 'i18next';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it} from 'vitest';
-import enTranslations from '@/dist/atomic/lang/en.json';
+import enTranslations from '@/dist/lang/en.json';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {renderPagerNavigation} from './pager-navigation';
 

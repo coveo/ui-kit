@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicTimeframeStories from './atomic-timeframe.new.stories';
+import meta, { Default, WithPastPeriod, WithNextPeriod, WithCustomLabel } from './atomic-timeframe.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicTimeframeStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicTimeframeStories}
+  stories={{ Default, WithPastPeriod, WithNextPeriod, WithCustomLabel }}
   githubPath="common/atomic-timeframe/atomic-timeframe.ts"
   tagName="atomic-timeframe"
   className="AtomicTimeframe"

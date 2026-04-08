@@ -1,3 +1,23 @@
+## <small>3.55.1 (2026-04-08)</small>
+
+* chore: tweak rsbuild to ensure import.meta.url is preserved (#7358) ([e795e68](https://github.com/coveo/ui-kit/commits/e795e68)), closes [#7358](https://github.com/coveo/ui-kit/issues/7358)
+* chore: update handlebars (#7354) ([cc542d0](https://github.com/coveo/ui-kit/commits/cc542d0)), closes [#7354](https://github.com/coveo/ui-kit/issues/7354)
+
+
+
+## 3.55.0 (2026-04-08)
+
+* chore: explictly disable chromatic snapshot for stories w/o msw (#7348) ([ff67d83](https://github.com/coveo/ui-kit/commits/ff67d83)), closes [#7348](https://github.com/coveo/ui-kit/issues/7348)
+* chore: replace biome with oxlint / oxfmt (#7328) ([3b8d688](https://github.com/coveo/ui-kit/commits/3b8d688)), closes [#7328](https://github.com/coveo/ui-kit/issues/7328)
+* chore(atomic): streamline build process (#7229) ([219d2a8](https://github.com/coveo/ui-kit/commits/219d2a8)), closes [#7229](https://github.com/coveo/ui-kit/issues/7229)
+* test(atomic): fix flaky `atomic-result-template` e2e test for instant results (#7320) ([9675e5f](https://github.com/coveo/ui-kit/commits/9675e5f)), closes [#7320](https://github.com/coveo/ui-kit/issues/7320)
+* test(atomic): stabilize flaky commerce search box query suggestions e2e test (#7339) ([5845bc8](https://github.com/coveo/ui-kit/commits/5845bc8)), closes [#7339](https://github.com/coveo/ui-kit/issues/7339)
+* fix(docs): ensuring documentation pages in storybook load correctly (#7335) ([fb16850](https://github.com/coveo/ui-kit/commits/fb16850)), closes [#7335](https://github.com/coveo/ui-kit/issues/7335)
+* fix(headless): like and dislike logic refactored to fix state problems (#7318) ([fc3cc73](https://github.com/coveo/ui-kit/commits/fc3cc73)), closes [#7318](https://github.com/coveo/ui-kit/issues/7318)
+* feat(atomic): improved doc for atomic-generated-answer (#7308) ([9cf847a](https://github.com/coveo/ui-kit/commits/9cf847a)), closes [#7308](https://github.com/coveo/ui-kit/issues/7308)
+
+
+
 ## 3.54.0 (2026-04-01)
 
 * fix: missing cdn outputs (#7309) ([040b1b1](https://github.com/coveo/ui-kit/commits/040b1b1)), closes [#7309](https://github.com/coveo/ui-kit/issues/7309)

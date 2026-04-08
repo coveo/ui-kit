@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicSortDropdownStories from './atomic-sort-dropdown.new.stories';
+import meta, { Default } from './atomic-sort-dropdown.new.stories';
 import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicSortDropdownStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicSortDropdownStories}
+  stories={{ Default }}
   githubPath="search/atomic-sort-dropdown/atomic-sort-dropdown.ts"
   tagName="atomic-sort-dropdown"
   className="AtomicSortDropdown"

@@ -1,12 +1,12 @@
 import {Meta} from '@storybook/addon-docs/blocks';
-import * as AtomicSearchBoxQuerySuggestionsStories from './atomic-search-box-query-suggestions.new.stories';
+import meta, { Default } from './atomic-search-box-query-suggestions.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicSearchBoxQuerySuggestionsStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicSearchBoxQuerySuggestionsStories}
+  stories={{ Default }}
   githubPath="search/atomic-search-box-query-suggestions/atomic-search-box-query-suggestions.ts"
   tagName="atomic-search-box-query-suggestions"
   className="AtomicSearchBoxQuerySuggestions"

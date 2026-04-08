@@ -1,7 +1,7 @@
 import {css} from 'lit';
 
 const styles = css`
-  @reference './mixins.pcss';
+  @reference './mixins.css';
   :host {
     @apply atomic-grid-clickable-elements;
     @apply atomic-grid-display-common;

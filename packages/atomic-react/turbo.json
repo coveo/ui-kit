@@ -14,11 +14,14 @@
       "outputs": ["./dist/types/**"]
     },
     "build:assets": {
-      "dependsOn": ["@coveo/atomic#build:list-assets"],
+      "dependsOn": [
+        "@coveo/atomic#build:assets",
+        "@coveo/atomic#build:locales"
+      ],
       "outputs": ["./dist/assets/**", "./dist/lang/**"]
     },
     "gen:lit": {
-      "dependsOn": ["@coveo/atomic#build:cem"],
+      "dependsOn": ["@coveo/atomic#build:cem", "@coveo/atomic#build:lit"],
       "outputs": [
         "src/components/search/components.ts",
         "src/components/commerce/components.ts"

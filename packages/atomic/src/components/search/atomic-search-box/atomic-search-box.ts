@@ -108,7 +108,7 @@ export class AtomicSearchBox
     delegatesFocus: true,
   };
   static styles: CSSResultGroup = css`
-    @import '../atomic-search-box/atomic-search-box.pcss';
+    @import '../atomic-search-box/atomic-search-box.css';
   `;
 
   @state() bindings!: Bindings;

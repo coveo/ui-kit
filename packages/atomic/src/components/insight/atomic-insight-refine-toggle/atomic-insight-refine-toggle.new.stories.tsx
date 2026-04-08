@@ -8,6 +8,8 @@ import {
 } from '@/storybook-utils/api/insight/search-response';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
+import '@/src/components/insight/atomic-insight-facet/atomic-insight-facet.js';
+import '@/src/components/insight/atomic-insight-refine-toggle/atomic-insight-refine-toggle.js';
 
 const mockInsightApi = new MockInsightApi();
 

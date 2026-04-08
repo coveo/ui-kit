@@ -10,6 +10,34 @@ import {
 } from '@/storybook-utils/api/commerce/listing-response';
 import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
+import '@/src/components/commerce/atomic-commerce-breadbox/atomic-commerce-breadbox.js';
+import '@/src/components/commerce/atomic-commerce-facets/atomic-commerce-facets.js';
+import '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface.js';
+import '@/src/components/commerce/atomic-commerce-layout/atomic-commerce-layout.js';
+import '@/src/components/commerce/atomic-commerce-load-more-products/atomic-commerce-load-more-products.js';
+import '@/src/components/commerce/atomic-commerce-no-products/atomic-commerce-no-products.js';
+import '@/src/components/commerce/atomic-commerce-product-list/atomic-commerce-product-list.js';
+import '@/src/components/commerce/atomic-commerce-query-error/atomic-commerce-query-error.js';
+import '@/src/components/commerce/atomic-commerce-query-summary/atomic-commerce-query-summary.js';
+import '@/src/components/commerce/atomic-commerce-refine-toggle/atomic-commerce-refine-toggle.js';
+import '@/src/components/commerce/atomic-commerce-sort-dropdown/atomic-commerce-sort-dropdown.js';
+import '@/src/components/common/atomic-layout-section/atomic-layout-section.js';
+import '@/src/components/commerce/atomic-product-children/atomic-product-children.js';
+import '@/src/components/commerce/atomic-product-excerpt/atomic-product-excerpt.js';
+import '@/src/components/commerce/atomic-product-field-condition/atomic-product-field-condition.js';
+import '@/src/components/commerce/atomic-product-image/atomic-product-image.js';
+import '@/src/components/commerce/atomic-product-link/atomic-product-link.js';
+import '@/src/components/commerce/atomic-product-multi-value-text/atomic-product-multi-value-text.js';
+import '@/src/components/commerce/atomic-product-price/atomic-product-price.js';
+import '@/src/components/commerce/atomic-product-rating/atomic-product-rating.js';
+import '@/src/components/commerce/atomic-product-section-children/atomic-product-section-children.js';
+import '@/src/components/commerce/atomic-product-section-description/atomic-product-section-description.js';
+import '@/src/components/commerce/atomic-product-section-emphasized/atomic-product-section-emphasized.js';
+import '@/src/components/commerce/atomic-product-section-metadata/atomic-product-section-metadata.js';
+import '@/src/components/commerce/atomic-product-section-name/atomic-product-section-name.js';
+import '@/src/components/commerce/atomic-product-section-visual/atomic-product-section-visual.js';
+import '@/src/components/commerce/atomic-product-template/atomic-product-template.js';
+import '@/src/components/commerce/atomic-product-text/atomic-product-text.js';
 
 const mockCommerceApi = new MockCommerceApi();
 

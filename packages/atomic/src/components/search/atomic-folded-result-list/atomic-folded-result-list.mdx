@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicFoldedResultListStories from './atomic-folded-result-list.new.stories';
+import meta, { Default, WithNoResultChildren, WithFewResultChildren, WithMoreResultsAvailableAndNoChildren } from './atomic-folded-result-list.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicFoldedResultListStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicFoldedResultListStories}
+  stories={{ Default, WithNoResultChildren, WithFewResultChildren, WithMoreResultsAvailableAndNoChildren }}
   githubPath="search/atomic-folded-result-list/atomic-folded-result-list.ts"
   tagName="atomic-folded-result-list"
   className="AtomicFoldedResultList"

@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicCommerceProductsPerPageStories from './atomic-commerce-products-per-page.new.stories';
+import meta, { Default, WithCustomChoicesDisplayed } from './atomic-commerce-products-per-page.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicCommerceProductsPerPageStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicCommerceProductsPerPageStories}
+  stories={{ Default, WithCustomChoicesDisplayed }}
   githubPath="commerce/atomic-commerce-products-per-page/atomic-commerce-products-per-page.ts"
   tagName="atomic-commerce-products-per-page"
   className="AtomicCommerceProductsPerPage"

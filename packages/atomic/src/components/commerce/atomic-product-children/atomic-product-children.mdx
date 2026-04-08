@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicProductChildrenStories from './atomic-product-children.new.stories';
+import meta, { Default } from './atomic-product-children.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicProductChildrenStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicProductChildrenStories}
+  stories={{ Default }}
   githubPath="commerce/atomic-product-children/atomic-product-children.ts"
   tagName="atomic-product-children"
   className="AtomicProductChildren"

@@ -1,4 +1,3 @@
-import type {Page} from 'playwright/test';
 import {expect, test} from './fixture';
 
 test.describe('atomic-commerce-search-box-query-suggestions', () => {
@@ -47,14 +46,8 @@ test.describe('atomic-commerce-search-box-query-suggestions', () => {
   });
 
   test.describe('when using the keyboard', () => {
-    const keyDown = async (page: Page) => {
-      await page.waitForTimeout(300);
-      await page.keyboard.press('ArrowDown');
-    };
-
     test('should change the activeDescendant of the search box', async ({
       commerceSearchBoxQuerySuggestions,
-      page,
     }) => {
       await expect(commerceSearchBoxQuerySuggestions.searchBox).toHaveAttribute(
         'aria-activedescendant',
@@ -64,7 +57,7 @@ test.describe('atomic-commerce-search-box-query-suggestions', () => {
       await expect(
         commerceSearchBoxQuerySuggestions.suggestion.first()
       ).toBeVisible();
-      await keyDown(page);
+      await commerceSearchBoxQuerySuggestions.searchBox.press('ArrowDown');
 
       await expect(commerceSearchBoxQuerySuggestions.searchBox).toHaveAttribute(
         'aria-activedescendant',
@@ -74,13 +67,12 @@ test.describe('atomic-commerce-search-box-query-suggestions', () => {
 
     test('should change the query in the search box', async ({
       commerceSearchBoxQuerySuggestions,
-      page,
     }) => {
       await expect(
         commerceSearchBoxQuerySuggestions.suggestion.first()
       ).toBeVisible();
 
-      await keyDown(page);
+      await commerceSearchBoxQuerySuggestions.searchBox.press('ArrowDown');
 
       await expect(commerceSearchBoxQuerySuggestions.searchBox).not.toHaveValue(
         ''
@@ -89,14 +81,13 @@ test.describe('atomic-commerce-search-box-query-suggestions', () => {
 
     test('when pressing enter, it should hide the suggestions', async ({
       commerceSearchBoxQuerySuggestions,
-      page,
     }) => {
       await expect(
         commerceSearchBoxQuerySuggestions.suggestion.first()
       ).toBeVisible();
-      await keyDown(page);
+      await commerceSearchBoxQuerySuggestions.searchBox.press('ArrowDown');
 
-      await page.keyboard.press('Enter');
+      await commerceSearchBoxQuerySuggestions.searchBox.press('Enter');
 
       await expect(
         commerceSearchBoxQuerySuggestions.suggestion.first()

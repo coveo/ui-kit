@@ -4,6 +4,8 @@ import {html} from 'lit/static-html.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-sort-dropdown/atomic-sort-dropdown.js';
+import '@/src/components/search/atomic-sort-expression/atomic-sort-expression.js';
 
 const searchApiHarness = new MockSearchApi();
 const {decorator, play} = wrapInSearchInterface();
