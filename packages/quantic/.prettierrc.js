@@ -6,17 +6,18 @@ module.exports = {
   singleQuote: true,
   tabWidth: 2,
   trailingComma: 'es5',
-  plugins: ['prettier-plugin-apex'],
-  ...{
-    overrides: [
-      {
-        files: '**/lwc/**/*.html',
-        options: {parser: 'lwc'},
-      },
-      {
-        files: '*.{cmp,page,component}',
-        options: {parser: 'html'},
-      },
-    ],
-  },
+  overrides: [
+    {
+      files: '**/lwc/**/*.html',
+      options: {parser: 'lwc'},
+    },
+    {
+      files: '*.{cmp,page,component}',
+      options: {parser: 'html'},
+    },
+    {
+      files: '*.{cls,trigger}',
+      options: {plugins: ['prettier-plugin-apex']},
+    },
+  ],
 };
