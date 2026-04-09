@@ -16,7 +16,7 @@ module.exports = {
       options: {parser: 'html'},
     },
     {
-      files: '*.{cls,trigger}',
+      files: '**/*.{cls,trigger}',
       options: {plugins: ['prettier-plugin-apex']},
     },
   ],
