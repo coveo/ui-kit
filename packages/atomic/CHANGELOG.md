@@ -1,3 +1,19 @@
+## 3.55.2
+
+### Patch Changes
+
+- [#7352](https://github.com/coveo/ui-kit/pull/7352) [`9e73544`](https://github.com/coveo/ui-kit/commit/9e735448af0b2b6ab663089896db2451d161ac58) Thanks [@SimonMilord](https://github.com/SimonMilord)! - fixed issue where code snippets in generated answer thread items overflow beyond the viewport
+
+- [#7383](https://github.com/coveo/ui-kit/pull/7383) [`2f13df6`](https://github.com/coveo/ui-kit/commit/2f13df69138233334a858c405f0d11b88f30881c) Thanks [@louis-bompart](https://github.com/louis-bompart)! - Restore CSS customization that was accidentally removed in `atomic-generated-answer`
+
+- [#7369](https://github.com/coveo/ui-kit/pull/7369) [`dc20822`](https://github.com/coveo/ui-kit/commit/dc208221da799c3608b9df6a6f84eb75bfefac78) Thanks [@louis-bompart](https://github.com/louis-bompart)! - Fix a CDN-only issue introduced in v3.55.0 that caused TailwindCSS utility classes containing a period to not apply (e.g. `.p-2.5`)
+
+- [#7368](https://github.com/coveo/ui-kit/pull/7368) [`d059be1`](https://github.com/coveo/ui-kit/commit/d059be165116a1cdc99b85f87f210fb8646bd7e4) Thanks [@louis-bompart](https://github.com/louis-bompart)! - Fix a CDN-only issue introduced in v3.55.0 where transitive component imports were wrongfully treeshaked from the CDN output.
+
+- Updated dependencies [[`5148ad6`](https://github.com/coveo/ui-kit/commit/5148ad665cdaf50a8118a45a03a48d4dbd8b456a)]:
+  - @coveo/headless@3.49.1
+  - @coveo/atomic-legacy@0.0.10
+
 ## 3.55.1
 
 - chore: tweak rsbuild to ensure import.meta.url is preserved (#7358) ([e795e68](https://github.com/coveo/ui-kit/commits/e795e68)), closes [#7358](https://github.com/coveo/ui-kit/issues/7358)

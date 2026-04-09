@@ -1,3 +1,10 @@
+## 1.9.23
+
+### Patch Changes
+
+- Updated dependencies [[`5148ad6`](https://github.com/coveo/ui-kit/commit/5148ad665cdaf50a8118a45a03a48d4dbd8b456a)]:
+  - @coveo/headless@3.49.1
+
 ## 1.9.22
 
 - chore: replace biome with oxlint / oxfmt (#7328) ([3b8d688](https://github.com/coveo/ui-kit/commits/3b8d688)), closes [#7328](https://github.com/coveo/ui-kit/issues/7328)
