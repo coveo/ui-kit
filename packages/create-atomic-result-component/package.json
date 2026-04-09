@@ -29,11 +29,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "scripts": {
-    "release:phase1": "pnpm run publish:bump",
-    "publish:bump": "pnpm --filter @coveo/ci bump",
-    "npm:publish": "pnpm --filter @coveo/ci npm-publish"
-  },
+  "scripts": {},
   "dependencies": {
     "@coveo/create-atomic-component-project": "workspace:*"
   },
