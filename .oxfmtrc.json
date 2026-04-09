@@ -22,7 +22,6 @@
     "**/*.mdx",
     "**/CHANGELOG.md",
     "./changeset/*.md",
-    "!./changeset/README.md",
-    ".changeset/*"
+    "!./changeset/README.md"
   ]
 }
