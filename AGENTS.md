@@ -10,7 +10,7 @@
 
 ## Structure
 
-Public packages:
+These are the public packages in the monorepo:
 
 - `packages/atomic/`: Web-component library for building modern UIs interfacing with the Coveo platform; built on top of headless
 - `packages/atomic-react/`: React wrapper for the Atomic component library
