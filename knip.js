@@ -27,7 +27,6 @@ export default {
     },
     'packages/atomic-angular': {
       ignoreDependencies: [
-        'rxjs',
         // Can be removed once we bump our package to use more recent Angular versions that support Vite 7+.
         'vite',
       ],
@@ -75,9 +74,7 @@ export default {
     },
     'samples/headless-ssr/commerce-nextjs': {},
     'samples/headless-ssr/commerce-nextjs-v4': {},
-    'utils/ci': {
-      ignoreDependencies: ['@types/conventional-changelog-writer'],
-    },
+    'utils/ci': {},
     'utils/cdn': {
       ignoreDependencies: ['local-web-server'],
     },
