@@ -29,9 +29,7 @@
     "build:definitions": "tsc -p tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "node ../../utils/ci/rm-rf.mjs dist/*",
     "test": "vitest run",
-    "test:watch": "vitest",
-    "release:phase1": "pnpm --filter @coveo/ci bump",
-    "npm:publish": "pnpm --filter @coveo/ci npm-publish"
+    "test:watch": "vitest"
   },
   "devDependencies": {
     "vitest": "catalog:"
