@@ -623,8 +623,8 @@ importers:
   packages/create-atomic-component:
     dependencies:
       '@coveo/create-atomic-component-project':
-        specifier: 1.5.11
-        version: 1.5.11
+        specifier: workspace:*
+        version: link:../create-atomic-component-project
 
   packages/create-atomic-component-project: {}
 
@@ -699,8 +699,8 @@ importers:
   packages/create-atomic-result-component:
     dependencies:
       '@coveo/create-atomic-component-project':
-        specifier: 1.5.11
-        version: 1.5.11
+        specifier: workspace:*
+        version: link:../create-atomic-component-project
 
   packages/create-atomic-result-component/template/src/components/sample-result-component:
     dependencies:
@@ -2727,10 +2727,6 @@ packages:
 
   '@coveo/atomic-component-health-check@2.2.19':
     resolution: {integrity: sha512-n/llxt8mLYW5P9G8R0ozbrMrqtnDT03oMix7tQ796+F2AFwL6F3FcXyRPVMqsWuTnKH6jOwZ04HcAoP+868Ejw==}
-    hasBin: true
-
-  '@coveo/create-atomic-component-project@1.5.11':
-    resolution: {integrity: sha512-Nvnqno32Y8u8DTpwxs/oP3sfWHxNwhRgC2xv95b7TOu8kdryle6wd/7w4v5MdF7ni9jktEqo/zwY6ageAgHYzw==}
     hasBin: true
 
   '@coveo/explorer-messenger@0.5.0':
@@ -17448,8 +17444,6 @@ snapshots:
     dependencies:
       chalk: 4.1.2
       zod: 3.22.4
-
-  '@coveo/create-atomic-component-project@1.5.11': {}
 
   '@coveo/explorer-messenger@0.5.0': {}
 
