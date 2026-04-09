@@ -14,11 +14,9 @@ When reviewing code changes, have a look at the `samples` directory, in case it 
 
 ## Changesets
 
-This repository uses [Changesets](https://github.com/changesets/changesets) for versioning. When reviewing a PR that modifies source code in any public package (i.e., non-private packages under `packages/`), check whether the PR includes a changeset file in `.changeset/`. If it does not, leave a top-level comment asking the author to add one.
+PRs that modify source code in any public package (non-private packages under `packages/`) must include a changeset file in `.changeset/`. If one is missing, leave a top-level comment asking the author to add one.
 
-A changeset file is a Markdown file in `.changeset/` with YAML frontmatter listing affected packages and their semver bump types (`patch`, `minor`, or `major`), followed by a changelog description. See `.changeset/README.md` for details.
-
-Changesets are **not required** for changes that only touch documentation, CI/CD configuration, tests, internal tooling, or private packages (`@coveo/atomic-a11y`, `@coveo/documentation`, `@coveo/create-atomic-template`, `@coveo/atomic-angular-builder`).
+Changesets are **not required** for changes that only touch documentation, CI/CD configuration, tests, internal tooling, or private packages.
 
 ## Commenting on files not included in the PR
 
