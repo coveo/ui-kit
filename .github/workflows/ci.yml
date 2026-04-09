@@ -238,9 +238,13 @@ jobs:
       - uses: ./.github/actions/setup
       - run: pnpm --filter @coveo/atomic run validate:no-new-light-dom
   unit-test:
-    name: 'Run unit tests'
+    name: 'Run unit tests (shard ${{ matrix.shard }})'
     needs: build
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1/3, 2/3, 3/3]
     container:
       image: mcr.microsoft.com/playwright:v1.57.0-noble
       options: --user 1001
@@ -260,7 +264,7 @@ jobs:
       - run: git branch main origin/main
         if: ${{ github.event_name != 'pull_request' }}
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo test --affected
+      - run: pnpm exec turbo test --affected -- --shard=${{ matrix.shard }}
   package-compatibility:
     name: 'Verify compatibility of packages'
     needs: build
