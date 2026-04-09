@@ -162,7 +162,12 @@ describe('createFollowUpStrategy', () => {
       },
     } as any);
 
-    expect(dispatch).toHaveBeenCalledWith(
+    expect(dispatch).toHaveBeenNthCalledWith(
+      1,
+      setActiveFollowUpAnswerId('run-456')
+    );
+    expect(dispatch).toHaveBeenNthCalledWith(
+      2,
       followUpFailed({
         answerId: 'run-456',
         message: 'Failure',

@@ -93,7 +93,15 @@ export const createFollowUpStrategy = (
     },
     onRunErrorEvent: ({event}) => {
       const mappedCode = mapRunErrorCode(event.code);
-      const targetAnswerId = runId || (event as {runId?: string}).runId;
+      const eventRunId =
+        typeof event?.runId === 'string' ? event.runId : undefined;
+
+      // If we receive an error event with a runId but we haven't set it as active yet, set it as active so that the error state is associated with the correct answer
+      if (!runId && eventRunId) {
+        dispatch(setActiveFollowUpAnswerId(eventRunId));
+      }
+
+      const targetAnswerId = runId || eventRunId;
       if (targetAnswerId) {
         dispatch(
           followUpFailed({
