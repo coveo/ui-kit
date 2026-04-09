@@ -40,7 +40,7 @@ Create a new Markdown file in `.changeset/` with a random, descriptive kebab-cas
 
 ```markdown
 ---
-"@coveo/package-name": patch
+'@coveo/package-name': patch
 ---
 
 A brief description of the change for the changelog.
@@ -62,8 +62,8 @@ If a change spans multiple packages, list all affected packages in the same chan
 
 ```markdown
 ---
-"@coveo/headless": minor
-"@coveo/atomic": patch
+'@coveo/headless': minor
+'@coveo/atomic': patch
 ---
 
 Added a new `sortBy` option to the result list controller. Updated Atomic to support the new option.
@@ -104,8 +104,8 @@ A commit that fixes a bug in `@coveo/headless` and updates `@coveo/atomic` to ma
 
 ```markdown
 ---
-"@coveo/headless": patch
-"@coveo/atomic": patch
+'@coveo/headless': patch
+'@coveo/atomic': patch
 ---
 
 Fixed search query encoding for special characters in the query suggest controller.
