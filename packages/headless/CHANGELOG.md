@@ -1,3 +1,9 @@
+## 3.49.1
+
+### Patch Changes
+
+- [#7270](https://github.com/coveo/ui-kit/pull/7270) [`5148ad6`](https://github.com/coveo/ui-kit/commit/5148ad665cdaf50a8118a45a03a48d4dbd8b456a) Thanks [@SimonMilord](https://github.com/SimonMilord)! - added params for analytics for the follow up call in search agent
+
 ## 3.49.0
 
 - feat(headless): add support for enableQuerySyntax for SSB (#7346) ([44492ef](https://github.com/coveo/ui-kit/commits/44492ef)), closes [#7346](https://github.com/coveo/ui-kit/issues/7346)
