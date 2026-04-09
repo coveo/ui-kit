@@ -1,3 +1,9 @@
+## 1.5.16
+
+### Patch Changes
+
+- [#7362](https://github.com/coveo/ui-kit/pull/7362) [`2b49b8d`](https://github.com/coveo/ui-kit/commit/2b49b8d6fbf8d201b694bc501536216d16f78843) Thanks [@alexprudhomme](https://github.com/alexprudhomme)! - Replaced hardcoded version of `@coveo/create-atomic-component-project` dependency with `workspace:*` to keep versions in sync.
+
 ## 1.5.15
 
 - chore: replace biome with oxlint / oxfmt (#7328) ([3b8d688](https://github.com/coveo/ui-kit/commits/3b8d688)), closes [#7328](https://github.com/coveo/ui-kit/issues/7328)
