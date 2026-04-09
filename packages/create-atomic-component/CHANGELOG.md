@@ -1,82 +1,80 @@
-## <small>1.5.15 (2026-04-08)</small>
+## 1.5.15
 
-* chore: replace biome with oxlint / oxfmt (#7328) ([3b8d688](https://github.com/coveo/ui-kit/commits/3b8d688)), closes [#7328](https://github.com/coveo/ui-kit/issues/7328)
+- chore: replace biome with oxlint / oxfmt (#7328) ([3b8d688](https://github.com/coveo/ui-kit/commits/3b8d688)), closes [#7328](https://github.com/coveo/ui-kit/issues/7328)
 
-
-
-## <small>1.5.14 (2026-03-25)</small>
+## 1.5.14
 
 - ci: migrate npm publishing to OIDC trusted publishers (#7198) ([c97eff5](https://github.com/coveo/ui-kit/commits/c97eff5)), closes [#7198](https://github.com/coveo/ui-kit/issues/7198)
 - fix(deps): update all dependencies j:kit-282 (#6191) ([9ec6cc5](https://github.com/coveo/ui-kit/commits/9ec6cc5)), closes [#6191](https://github.com/coveo/ui-kit/issues/6191)
 
-## <small>1.5.13 (2026-01-14)</small>
+## 1.5.13
 
 - fix(deps): Replace catalog:_ with workspace:_ for @coveo/create-atomic-rollup-plugin (#6808) ([2872e4b](https://github.com/coveo/ui-kit/commits/2872e4b)), closes [#6808](https://github.com/coveo/ui-kit/issues/6808)
 
-## <small>1.5.12 (2026-01-07)</small>
+## 1.5.12
 
 - [Version Bump][skip ci]: ui-kit publish ([b2a83c4](https://github.com/coveo/ui-kit/commits/b2a83c4))
 - Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
 
-## <small>1.5.11 (2026-01-06)</small>
+## 1.5.11
 
 - Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
 
-## <small>1.5.10 (2025-10-30)</small>
+## 1.5.10
 
 - ci: fix pnpm pack including node_modules for create-atomic packages (#6333) ([c9debba](https://github.com/coveo/ui-kit/commits/c9debba)), closes [#6333](https://github.com/coveo/ui-kit/issues/6333)
 - ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
 - [Version Bump][skip ci]: ui-kit publish ([b33d02f](https://github.com/coveo/ui-kit/commits/b33d02f))
 
-## <small>1.5.9 (2025-10-29)</small>
+## 1.5.9
 
 - ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
 
-## <small>1.5.6 (2025-10-08)</small>
+## 1.5.6
 
 - chore: more cleanup of dependencies in multiples packages (#6119) ([ff6c837](https://github.com/coveo/ui-kit/commits/ff6c837)), closes [#6119](https://github.com/coveo/ui-kit/issues/6119)
 
-## <small>1.5.3 (2025-09-17)</small>
+## 1.5.3
 
 - chore: deduplicate dependencies in create-atomic-\* (#6029) ([ba54e8e](https://github.com/coveo/ui-kit/commits/ba54e8e)), closes [#6029](https://github.com/coveo/ui-kit/issues/6029)
 
-## 1.5.0 (2025-08-27)
+## 1.5.0
 
 - feat(cli): port over atomic-result-component from cli (#5919) ([2899a2c](https://github.com/coveo/ui-kit/commits/2899a2c)), closes [#5919](https://github.com/coveo/ui-kit/issues/5919)
 - chore: add missing workspace link (#5897) ([60ff41f](https://github.com/coveo/ui-kit/commits/60ff41f)), closes [#5897](https://github.com/coveo/ui-kit/issues/5897)
 
-## 1.4.0 (2025-08-07)
+## 1.4.0
 
 - feat: Migrate monorepo build system from NX to Turborepo (#5733) ([e7e1237](https://github.com/coveo/ui-kit/commits/e7e1237)), closes [#5733](https://github.com/coveo/ui-kit/issues/5733)
 - chore: update dependencies (major) (#5793) ([8cbf5bc](https://github.com/coveo/ui-kit/commits/8cbf5bc)), closes [#5793](https://github.com/coveo/ui-kit/issues/5793)
 - fix(deps): update all dependencies j:kit-282 (#5770) ([214bb00](https://github.com/coveo/ui-kit/commits/214bb00)), closes [#5770](https://github.com/coveo/ui-kit/issues/5770)
 
-## 1.3.0 (2025-07-30)
+## 1.3.0
 
 - ci(create-atomic): fix release phase 1 for new create-atomic packages (#5751) ([ca79c40](https://github.com/coveo/ui-kit/commits/ca79c40)), closes [#5751](https://github.com/coveo/ui-kit/issues/5751)
 - feat(cli): port over create-atomic-component from cli (#5656) ([da1e125](https://github.com/coveo/ui-kit/commits/da1e125)), closes [#5656](https://github.com/coveo/ui-kit/issues/5656)
 
-## 1.2.21 (2024-05-13)
+## 1.2.21
 
-## 1.2.18 (2024-02-21)
+## 1.2.18
 
-## 1.2.17 (2024-02-20)
+## 1.2.17
 
-## 1.2.15 (2023-10-27)
+## 1.2.15
 
 ### Features
 
 - support imports from `/headless` ([#1326](https://github.com/coveo/cli/issues/1326)) ([d24bec4](https://github.com/coveo/cli/commits/d24bec48e5050ffdbba406fe130a7f7a83ca9b95))
 
-## 1.1.2 (2023-08-24)
+## 1.1.2
 
 ### Bug Fixes
 
 - **cli:** remove deploy.example ([#1321](https://github.com/coveo/cli/issues/1321)) ([a79e335](https://github.com/coveo/cli/commits/a79e335a4b476c011945b56f417e13cbd295cf0d))
 
-## 1.1.1 (2023-07-26)
+## 1.1.1
 
-# 1.1.0 (2023-06-13)
+## 1.1.0
 
 ### Bug Fixes
 
@@ -88,13 +86,13 @@
 - **accd:** handle errors from initializers in the CLI ([#1316](https://github.com/coveo/cli/issues/1316)) ([aee4429](https://github.com/coveo/cli/commits/aee4429bb83362a426ddb3f1f1f7b81c6b3be367))
 - **organizationendpoints:** add support for organization endpoints for UI commands and projects ([#1289](https://github.com/coveo/cli/issues/1289)) ([3b7653d](https://github.com/coveo/cli/commits/3b7653dbf1b59015afb4575bd265ec0a91b2bcef))
 
-## 1.0.1 (2023-04-21)
+## 1.0.1
 
 ### Bug Fixes
 
 - **atomic:** don't need peerDeps ([#1294](https://github.com/coveo/cli/issues/1294)) ([8a7e7a9](https://github.com/coveo/cli/commits/8a7e7a9ae60b3837d2e3820d1af824756e4db549))
 
-# 1.0.0 (2023-04-21)
+## 1.0.0
 
 ### Bug Fixes
 
@@ -110,7 +108,7 @@
 
 - **atomic:** ACCD is now stable.
 
-## 0.2.4 (2023-04-05)
+## 0.2.4
 
 ### Bug Fixes
 
@@ -120,7 +118,7 @@
 
 - validate component element name ([#1203](https://github.com/coveo/cli/issues/1203)) ([ca54009](https://github.com/coveo/cli/commits/ca54009607fcf44fdb4087be1f8bb72e81230c40)), closes [#1205](https://github.com/coveo/cli/issues/1205) [#1207](https://github.com/coveo/cli/issues/1207)
 
-## 0.2.1 (2023-03-27)
+## 0.2.1
 
 ### Bug Fixes
 
@@ -132,9 +130,9 @@
 - add health-check as prepublish script ([#1169](https://github.com/coveo/cli/issues/1169)) ([bfcaf69](https://github.com/coveo/cli/commits/bfcaf69497a42c10a43c2dd0435a82313d04bcbc)), closes [#1190](https://github.com/coveo/cli/issues/1190)
 - improve custom component search page ([#1112](https://github.com/coveo/cli/issues/1112)) ([db1d2cb](https://github.com/coveo/cli/commits/db1d2cbf6bad6ecd3413e73d33d6ee400e5b8ade))
 
-## 0.1.1 (2023-03-02)
+## 0.1.1
 
-# 0.1.0 (2023-03-01)
+## 0.1.0
 
 ### Features
 
