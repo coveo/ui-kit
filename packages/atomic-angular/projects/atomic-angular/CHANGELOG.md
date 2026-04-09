@@ -1,3 +1,11 @@
+## 3.10.13
+
+### Patch Changes
+
+- Updated dependencies [[`9e73544`](https://github.com/coveo/ui-kit/commit/9e735448af0b2b6ab663089896db2451d161ac58), [`2f13df6`](https://github.com/coveo/ui-kit/commit/2f13df69138233334a858c405f0d11b88f30881c), [`5148ad6`](https://github.com/coveo/ui-kit/commit/5148ad665cdaf50a8118a45a03a48d4dbd8b456a), [`dc20822`](https://github.com/coveo/ui-kit/commit/dc208221da799c3608b9df6a6f84eb75bfefac78), [`d059be1`](https://github.com/coveo/ui-kit/commit/d059be165116a1cdc99b85f87f210fb8646bd7e4)]:
+  - @coveo/atomic@3.55.2
+  - @coveo/headless@3.49.1
+
 ## 3.10.11
 
 - chore: replace biome with oxlint / oxfmt (#7328) ([3b8d688](https://github.com/coveo/ui-kit/commits/3b8d688)), closes [#7328](https://github.com/coveo/ui-kit/issues/7328)
