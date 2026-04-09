@@ -137,6 +137,22 @@ describe('atomic-citation', () => {
       expect(locators.citationLink?.href).toContain('#:~:text=');
     });
 
+    it('should generate text fragment URL when using agent API (filetype at top level of citation object)', async () => {
+      const citationWithTopLevelFiletype: GeneratedAnswerCitation & {
+        filetype?: string;
+      } = {
+        ...mockCitation,
+        fields: undefined,
+        filetype: 'html',
+      };
+
+      const {locators} = await renderComponent({
+        citation: citationWithTopLevelFiletype,
+      });
+
+      expect(locators.citationLink?.href).toContain('#:~:text=');
+    });
+
     it('should not modify URL when citation anchoring is disabled', async () => {
       const {locators} = await renderComponent({
         disableCitationAnchoring: true,
