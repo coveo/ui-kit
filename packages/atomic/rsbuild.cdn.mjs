@@ -1,5 +1,6 @@
 import {readFileSync} from 'node:fs';
-import {dirname, join, resolve, relative} from 'node:path';
+import {dirname, join, resolve} from 'node:path';
+import {relative} from 'node:path/posix';
 import {fileURLToPath} from 'node:url';
 import {rsbuild as rsbuildApi} from '@rslib/core';
 import colors from '../../utils/ci/colors.mjs';
@@ -119,11 +120,15 @@ const rsbuild = await rsbuildApi.createRsbuild({
           ],
         });
         config.module.rules.unshift({
-          test: (value) =>
-            // If the import path matches src/components/*/component/component.ts or .js, mark them as side-effectful to prevent their tree-shaking when imported by other.
-            relative(resolve(import.meta.dirname), value).match(
-              /^src\/components\/\w*\/([\w-]*)\/\1(\.[jt]s)?$/
-            ),
+          test: (value) => {
+            // If the import path matches src/components/<group>/<component>/<component>.ts or .js, mark it as side-effectful to prevent tree-shaking when imported by other modules.
+            const relativePath = relative(resolve(__dirname), value);
+            return Boolean(
+              relativePath.match(
+                /^src\/components\/\w*\/([\w-]*)\/\1(\.[jt]s)?$/
+              )
+            );
+          },
           enforce: 'pre',
           sideEffects: true,
         });
