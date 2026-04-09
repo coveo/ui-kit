@@ -54,7 +54,7 @@ Atomic uses Storybook for component development, documentation, and testing. To 
 pnpm turbo run dev --filter=@coveo/atomic
 ```
 
-Storybook will be available at `http://localhost:4400`.
+Storybook will be available at `http://storybook.localhost:1355/`.
 
 > [!NOTE]
 > It is important you build `@coveo/atomic` at least once before running the Storybook server.
@@ -92,7 +92,7 @@ The production Storybook site will be available at `http://localhost:4400`.
 
 ### Storybook MCP (Model Context Protocol)
 
-This Storybook instance is configured with the MCP addon, which enables AI agents to programmatically interact with component stories. When Storybook is running, the MCP server is accessible at `http://localhost:4400/mcp`.
+This Storybook instance is configured with the MCP addon, which enables AI agents to programmatically interact with component stories. When Storybook is running, the MCP server is accessible at `http://storybook.localhost:1355/mcp`.
 
 ## Utilities
 

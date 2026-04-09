@@ -10,8 +10,7 @@
 - **Run a specific end-to-end test suite**: `npx playwright test -g <test-suite.e2e.ts>`
 
 **Notes**:
-
-- By default, the Atomic and Storybook dev servers run on ports 3333 and 4400 respectively
+- By default, Storybook dev server run on http://storybook.localhost:1355
 - End-to-end testing commands must be executed from `packages/atomic/` while the Storybook server is running
 
 ## Atomic Package Structure
