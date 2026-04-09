@@ -46,14 +46,16 @@ It’s the easiest and least error-prone approach to developing and maintaining 
 
 The following interactive code sample uses Coveo Headless alongside the [Material-UI React framework](https://material-ui.com/) to create a simple search page.
 
-<iframe src="https://stackblitz.com/github/coveo/headless-documentation-material-ui-react-codesandbox/tree/version-3.35.0/?embed=1&view=split&file=src%2FApp.tsx"
-     style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
-     title="coveo-headless-demo-v3.35.0"
-     allow=""
-     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
-   ></iframe>
+<details>
+        <summary>Click to show interactive demo</summary> 
+        <iframe src="https://stackblitz.com/github/coveo/headless-documentation-material-ui-react-codesandbox/tree/version-3.35.0/?embed=1&view=split&file=src%2FApp.tsx"
+            style="width:100%; height:1024px; border:0; border-radius: 4px; overflow:hidden;"
+            title="coveo-headless-demo-v3.35.0"
+            allow=""
+            sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+        ></iframe>
+</details>
 
-Additionally, in rare cases you may need to develop directly against the Coveo APIs, such as when you want to integrate Coveo search features inside a non-web-based application.
 
 ## Where Do I Start?
 
