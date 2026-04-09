@@ -773,7 +773,8 @@ export class AtomicGeneratedAnswer
       <atomic-ask-follow-up-input
         .i18n=${this.bindings.i18n}
         .askFollowUp=${this.handleAskFollowUp.bind(this)}
-        .submitButtonDisabled=${this.isAnswerGenerationOngoing}>
+        .submitButtonDisabled=${this.isAnswerGenerationOngoing}
+      >
       </atomic-ask-follow-up-input>
     </div>`;
   }

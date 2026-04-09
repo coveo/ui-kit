@@ -33,7 +33,8 @@ describe('atomic-ask-follow-up-input', () => {
       <atomic-ask-follow-up-input
         .i18n=${i18n}
         .submitButtonDisabled=${props.submitButtonDisabled ?? false}
-        .askFollowUp=${props.askFollowUp ?? vi.fn().mockResolvedValue(undefined)}
+        .askFollowUp=${props.askFollowUp ??
+        vi.fn().mockResolvedValue(undefined)}
       ></atomic-ask-follow-up-input>
     `);
 
