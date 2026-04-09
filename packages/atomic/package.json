@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "3.55.0",
+  "version": "3.55.1",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "license": "Apache-2.0",
@@ -118,7 +118,7 @@
     "@vitest/browser-playwright": "catalog:",
     "@wc-toolkit/storybook-helpers": "10.0.0",
     "chromatic": "15.3.0",
-    "handlebars": "4.7.8",
+    "handlebars": "4.7.9",
     "lit-html": "3.3.2",
     "local-web-server": "catalog:",
     "msw": "2.12.7",

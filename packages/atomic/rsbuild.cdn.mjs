@@ -71,6 +71,10 @@ const rsbuild = await rsbuildApi.createRsbuild({
         config.optimization.avoidEntryIife = true;
 
         config.module ??= {};
+        config.module.parser ??= {};
+        config.module.parser.javascript ??= {};
+        config.module.parser.javascript.importMeta = false;
+
         config.module.rules ??= [];
         // SVG imports → raw string content (override rsbuild's default asset handling)
         function excludeSvgFromRules(rules) {
