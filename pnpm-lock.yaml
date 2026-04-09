@@ -1329,8 +1329,6 @@ importers:
         specifier: 5.9.3
         version: 5.9.3
 
-  samples/headless/commerce-custom-context-native: {}
-
   samples/headless/commerce-react:
     dependencies:
       '@coveo/headless':

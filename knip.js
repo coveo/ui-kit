@@ -10,8 +10,6 @@ export default {
     'samples/headless/rga-react/src/components/Quickstart.tsx',
     'samples/headless/rga-react/src/components/Citation.tsx',
     'samples/headless/rga-react/src/components/CitationsList.tsx',
-    'samples/headless/commerce-custom-context-native/engineWithPopulatedContext.js',
-    'samples/headless/commerce-custom-context-native/styles.css',
   ],
   workspaces: {
     '.': {
