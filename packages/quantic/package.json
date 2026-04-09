@@ -39,11 +39,9 @@
     "publish:sfdx": "ts-node scripts/build/create-package.ts --remove-translations",
     "promote:sfdx": "pnpm run publish:sfdx -- --promote",
     "promote:sfdx:ci": "pnpm run publish:sfdx -- --promote --ci",
-    "release:phase1": "pnpm --filter @coveo/ci bump",
     "preinstall": "node scripts/npm/check-sfdx-project.js",
     "postinstall": "node scripts/npm/setup-quantic.js",
-    "babel:headless": "babel ./node_modules/@coveo/headless/dist/quantic --delete-dir-on-start --out-dir .tmp/quantic-compiled --extensions .js --minified",
-    "npm:publish": "pnpm --filter @coveo/ci npm-publish"
+    "babel:headless": "babel ./node_modules/@coveo/headless/dist/quantic --delete-dir-on-start --out-dir .tmp/quantic-compiled --extensions .js --minified"
   },
   "dependencies": {
     "@coveo/bueno": "workspace:*",
@@ -58,7 +56,6 @@
   "devDependencies": {
     "@babel/cli": "7.28.3",
     "@babel/plugin-transform-async-to-generator": "7.27.1",
-    "@coveo/ci": "workspace:*",
     "@coveo/relay-event-types": "catalog:",
     "@octokit/graphql": "9.0.3",
     "@octokit/graphql-schema": "15.26.1",

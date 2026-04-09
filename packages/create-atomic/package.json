@@ -46,9 +46,7 @@
     "start": "node ./index.mjs",
     "build": "node ../../utils/ci/rm-rf.mjs template && pnpm run build:ts && node ./scripts/preparePackageJsonTemplate.mjs",
     "build:ts": "tsc -p tsconfig.json",
-    "lint": "prettier --check . && eslint .",
-    "release:phase1": "pnpm --filter @coveo/ci bump",
-    "npm:publish": "pnpm --filter @coveo/ci npm-publish"
+    "lint": "prettier --check . && eslint ."
   },
   "dependencies": {
     "@coveo/platform-client": "62.0.0",
