@@ -1,113 +1,83 @@
-# Release processes
+# Release process
 
-This repository triggers releases on Git commits via a scheduled release process.
+This repository uses [Changesets](https://github.com/changesets/changesets) to manage versioning, changelogs, and npm publishing. Every push to `main` triggers the CD workflow (`.github/workflows/cd.yml`), which either opens a version PR or publishes packages.
 
-## The scheduled release process
+## How a release works
 
-The purpose of the scheduled release process is to deploy versions of our packages that we feel confident are safe for implementers to use.
-
-To achieve that purpose, every Wednesday, a scheduled release is triggered, which will request approval to deploy. Additionally, whenever we feel like the version currently on the main branch is safe, we may trigger a scheduled release by triggering the "Create release" workflow.
-
-Whenever a scheduled release is successful, a commit is pushed to the main branch which bumps the version of every publishable package in the repo.
-
-# Versioning & publishing to NPM
-
-Versions for any given commit are determined based on the [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) specification.
-
-Specifically, a commit will determine its version by looking for the last scheduled release version and bumping it based on how breaking the changes are between then and the current commit. This ensures that implementers can safely update their dependencies on our packages without unexpectedly causing errors.
-
-When triggered, releases processes will execute a series of [Turborepo tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks). Some tasks are run at the root of the repository, and some will be run on each individual package.
-
-## `release:phase0` (lock the main branch)
-
-The purpose of this task is to lock the main branch, preventing users from merging pull requests while the release is in progress.
-
-Specifically, this prevents new fixes or features from getting merged between the current release and the version bump commit we're about to push. If fixes or features were merged before the upcoming version bump, they would not be taken into account when calculating versions for the next releases.
-
-This task accomplishes its purpose by:
-
-1. Committing a `.git-lock` file to the main branch.
-2. Updating the repository's settings to enable "Require branches to be up to date before merging" for the main branch.
-
-## `release:phase1`
-
-### Sub-phase 1: Bump package versions
-
-This task is run individually on every package, in topological order (dependencies first, then dependants).
-
-The purpose of this sub-phase is to update the `package.json` file of every package to contain their new version and their new dependencies. This serves multiple purposes:
-
-1. NPM publishing.
-   - When publishing packages to NPM, NPM determines the version of the package by looking at its `package.json` file.
-2. NPM Workspaces linking.
-   - NPM Workspaces creates a [symbolic link](https://en.wikipedia.org/wiki/Symbolic_link) between a package and its dependencies when they are part of the same repository. NPM Workspaces won't link packages if the `version` field of the dependency doesn't match the version specified in the `dependencies` field of the dependant package.
-3. Waterfall bumping.
-   - Bumping dependencies directly in `package.json` means that packages can determine whether they need to be bumped by just looking at their own `package.json`.
-
-Additionally, this task will update the `CHANGELOG.md` file of the package to contain the changes that were taken into account when bumping its version.
-
-This task does not make any changes to the `package-lock.json` file at the root of the repository, since doing so would cause [an error with NPM Workspaces](https://github.com/npm/cli/issues/5506).
-
-### Sub-phase 2: build
-
-The purpose of this sub-phase is to re-build a project right after it was bumped and before it gets published. This is needed because many packages contain information about their own version in their compiled code.
-
-## `release:phase2` (bump the root version)
-
-This phase bumps the root package.json version. This is used by the deployment-package `--version` attribute.
-
-## `npm:publish` (publish to npm)
-
-This task is run individually on every package, in topological order (dependencies first, then dependants).
-
-The purpose of this task is to publish packages to npm. This task is executed **after** the CDN production deployment is complete.
-
-If a package is already published to npm, this task will exit without error. After a package is published, this task will repeatedly query npm until it confirms that the package exists in the registry.
-
-Packages are published directly to the `@latest` tag using OIDC-based authentication (npm trusted publishing).
-
-## `release:phase3` (commit version bumps)
-
-This task will create a new "version bump" commit, which will contain:
-
-- The new `package.json` files.
-- The new `CHANGELOG.md` files.
-- Git tags for each bumped package version.
-
-This task will also revert the changes from `release:phase0` to allow merging new features and fixes.
-
-# Deploying
-
-> [!NOTE]
-> Probably out-of-date
-
-After the release is completed on Git, GitHub and NPM, the release workflow will start a job on a Coveo-Hosted-runners to trigger the deployment pipeline.
-From there on, the process then follows this diagram (starting with 'Continue GitHub workflow on Coveo Hosted Runner):
-
-```mermaid
-sequenceDiagram
-   box blue Public network
-   participant SFDC
-   participant NPM
-   participant GitHub-public
-   end
-   box purple VPC network
-   participant GitHub-coveo
-   participant DepPipeline
-   participant AWS
-   participant TeamJenkins
-   end
-   GitHub-public->>+GitHub-coveo: Continue GitHub workflow on Coveo Hosted Runner
-   GitHub-coveo-)DepPipeline: Trigger Deployment Pipeline
-   GitHub-coveo->>+GitHub-public: Continue GitHub workflow on GitHub Hosted runner
-   activate GitHub-public
-   DepPipeline->>DepPipeline: Do the usual checks
-   DepPipeline->>+AWS: Deploy files to S3
-   DepPipeline->>+TeamJenkins: Dispatch Jenkins Job
-   DepPipeline->>+AWS: Invalidate CloudFront Cache
-   Note right of GitHub-public: Wait for ✅
-   deactivate GitHub-public
-   TeamJenkins->>+GitHub-public: Approve Production GitHub Environment usage
-   GitHub-public->>+NPM: Publish package to latest
-   GitHub-public->>+SFDC: Promote package to latest
 ```
+Developer creates PR with a changeset file
+  → PR merges to main
+  → changesets/action detects pending changesets → opens a "Version Packages" PR
+  → Team merges the "Version Packages" PR
+  → changesets/action detects no pending changesets → runs `pnpm run release`
+  → Packages are published to npm, git tags are created
+  → Post-publish jobs run (Quantic promotion, typedoc, docs notification, CDN deploy)
+```
+
+## Adding a changeset
+
+When you make changes that should appear in a release, add a changeset to your PR:
+
+```bash
+pnpm changeset
+```
+
+This will prompt you to select affected packages, choose a semver bump type (major/minor/patch), and write a summary. A markdown file is created in `.changeset/` describing the change.
+
+**When to add a changeset:**
+
+- Bug fixes, new features, breaking changes, dependency updates affecting public packages.
+
+**When _not_ to add a changeset:**
+
+- Documentation-only changes, CI/CD changes, test-only changes, internal tooling.
+
+See [`.changeset/README.md`](../.changeset/README.md) for more details.
+
+## Versioning
+
+When the "Version Packages" PR is created (or updated), `changesets/action` runs `pnpm changeset version`, which:
+
+1. Reads all pending changeset files in `.changeset/`.
+2. Determines the appropriate semver bump for each affected package.
+3. Updates `package.json` versions and inter-package dependency ranges.
+4. Generates or appends to each package's `CHANGELOG.md`.
+5. Deletes the consumed changeset files.
+
+All these changes are committed into the "Version Packages" PR for the team to review before merging.
+
+## Publishing to npm
+
+When the "Version Packages" PR is merged, the CD workflow runs `pnpm run release`, which:
+
+1. **Builds** every package (`pnpm run build`).
+2. **Publishes** every package to npm (`changeset publish`).
+
+`changeset publish` will skip packages whose current version is already on the registry. After publishing, it creates a git tag for each newly published version (e.g., `@coveo/atomic@3.55.0`).
+
+Publishing uses **OIDC trusted publishing** (npm provenance via the `id-token: write` permission) — no long-lived npm tokens are needed.
+
+## The `release/v3` bookmark
+
+After a successful publish, the CD workflow force-pushes the current `main` HEAD to the `release/v3` branch:
+
+```yaml
+git push origin HEAD:refs/heads/release/v3 --force
+```
+
+This branch acts as a bookmark pointing to the latest released commit. Downstream jobs (Quantic production promotion, typedoc generation, docs notification) check out `release/v3` so they operate on the exact code that was just published.
+
+## Post-publish jobs
+
+All post-publish jobs are gated on `published == 'true'` from the changesets step and check out `release/v3`:
+
+| Job                      | Purpose                                                                                                  |
+| ------------------------ | -------------------------------------------------------------------------------------------------------- |
+| `quantic-prod`           | Promotes the Quantic SFDX package to production (requires the "Quantic Production" environment approval) |
+| `typedoc-headless`       | Builds and uploads Headless API reference docs                                                           |
+| `typedoc-headless-react` | Builds and uploads Headless React API reference docs                                                     |
+| `docs-prod`              | Notifies the docs system of a new release (requires the "Docs Production" environment approval)          |
+
+## CDN deployment
+
+After publishing, the CD workflow dispatches a `deploy` event to the `coveo-platform/ui-kit-cd` repository, which handles CDN deployment (S3 upload, CloudFront invalidation).
