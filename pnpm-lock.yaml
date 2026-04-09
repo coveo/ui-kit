@@ -480,6 +480,7 @@ importers:
       '@coveo/headless':
         specifier: workspace:*
         version: link:../../../headless
+    publishDirectory: dist
 
   packages/atomic-hosted-page:
     dependencies:
@@ -1030,7 +1031,7 @@ importers:
         version: 20.3.16(@angular/common@20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@20.3.16(@angular/animations@20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
       '@coveo/atomic-angular':
         specifier: workspace:*
-        version: link:../../../packages/atomic-angular/projects/atomic-angular
+        version: link:../../../packages/atomic-angular/projects/atomic-angular/dist
       rxjs:
         specifier: 7.8.2
         version: 7.8.2

@@ -5,6 +5,9 @@
   "repository": {
     "url": "https://github.com/coveo/ui-kit"
   },
+  "publishConfig": {
+    "directory": "dist"
+  },
   "dependencies": {
     "@coveo/atomic": "workspace:*"
   },
