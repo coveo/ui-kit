@@ -56,7 +56,6 @@ The following interactive code sample uses Coveo Headless alongside the [Materia
         ></iframe>
 </details>
 
-
 ## Where Do I Start?
 
 If you're new to Headless, check out the [Getting Started](./getting-started/getting-started-search.html) guides to install the library and verify a minimal setup for your use case.
