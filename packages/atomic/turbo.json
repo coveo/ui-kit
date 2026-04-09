@@ -74,7 +74,9 @@
       ],
       "outputs": ["cdn/**"],
       "inputs": [
+        "./vite.config.ts",
         "./src/**/*.ts",
+        "./src/**/*.css",
         "!./src/**/*.spec.ts",
         "!./src/**/*.d.ts",
         "!./src/**/e2e/**",
