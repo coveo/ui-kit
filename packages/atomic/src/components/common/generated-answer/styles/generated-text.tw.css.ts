@@ -2,8 +2,8 @@ import {css} from 'lit';
 
 const styles = css`
   [part='generated-text'] {
-    font-size: 1.125rem;
-    line-height: 1.75rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
   }
 
   [part='generated-text'].cursor::after {
