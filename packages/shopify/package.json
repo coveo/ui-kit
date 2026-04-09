@@ -1,6 +1,6 @@
 {
   "name": "@coveo/shopify",
-  "version": "1.9.21",
+  "version": "1.9.22",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
@@ -51,9 +51,7 @@
     "build:bundles": "node esbuild.mjs",
     "build:definitions": "tsc -p src/tsconfig.build.json && node ./scripts/copy-types.mjs",
     "test": "vitest run",
-    "clean": "node ../../utils/ci/rm-rf.mjs dist/* cdn/",
-    "release:phase1": "pnpm --filter @coveo/ci bump",
-    "npm:publish": "pnpm --filter @coveo/ci npm-publish"
+    "clean": "node ../../utils/ci/rm-rf.mjs dist/* cdn/"
   },
   "dependencies": {
     "@coveo/headless": "workspace:*",
