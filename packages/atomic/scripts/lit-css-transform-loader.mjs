@@ -14,11 +14,11 @@ function escapeBackslashes(css) {
   return css.replace(/\\/g, '\\\\');
 }
 
-async function processCss(rawCss, from) {
+async function processCss(rawCss, from, {escape = true} = {}) {
   const {plugins, options} = await getPostcssConfig();
   const result = await postcss(plugins).process(rawCss, {...options, from});
   const minified = await postcss([cssnano()]).process(result.css, {from});
-  return escapeBackslashes(minified.css);
+  return escape ? escapeBackslashes(minified.css) : minified.css;
 }
 
 /**
@@ -34,7 +34,7 @@ export default async function litCssTransformLoader(source) {
 
   try {
     if (resourcePath.endsWith('.tw.css')) {
-      const processed = await processCss(source, resourcePath);
+      const processed = await processCss(source, resourcePath, {escape: false});
       return callback(null, `export default ${JSON.stringify(processed)};`);
     }
 

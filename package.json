@@ -18,14 +18,8 @@
     "pre-commit": "lint-staged",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "publish:npm:latest": "turbo npm:publish --concurrency=1",
     "notify:docs": "node ./scripts/notify-docs/published-ui-kit.mjs",
     "release": "pnpm run build && changeset publish",
-    "nx:graph": "turbo release:phase1 --dry-run=json > topology-raw.json && node scripts/transform-topology.mjs topology-raw.json topology.json",
-    "release:phase0": "pnpm --filter @coveo/ci git-lock",
-    "release:phase1": "turbo release:phase1 --concurrency=1 && pnpm run build",
-    "release:phase2": "pnpm --filter @coveo/ci bump:root",
-    "release:phase3": "pnpm --filter @coveo/ci git-publish-all",
     "knip": "knip"
   },
   "devDependencies": {
@@ -33,7 +27,6 @@
     "@actions/github": "9.0.0",
     "@changesets/changelog-github": "0.6.0",
     "@changesets/cli": "2.30.0",
-    "@coveo/ci": "workspace:*",
     "@cspell/dict-fr-fr": "2.3.2",
     "@playwright/mcp": "catalog:",
     "@tsconfig/node22": "22.0.0",
@@ -55,13 +48,6 @@
     "turbo": "2.8.15",
     "typescript": "catalog:",
     "vitest": "catalog:"
-  },
-  "overrides": {
-    "@coveo/ci": {
-      "@types/async-retry": {
-        "@types/retry": "0.12.5"
-      }
-    }
   },
   "engines": {
     "node": "^22.14.0 || ^24.11.0",
