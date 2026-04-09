@@ -687,7 +687,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 **Note:** Version bump only for package headless-react
 
-# 0.43.0 (2021-11-09)
+## 0.43.0
 
 ### Bug Fixes
 
@@ -1065,349 +1065,349 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 - **headless:** add sample for smart snippet controller ([#920](https://github.com/coveo/ui-kit/issues/920)) ([a23b638](https://github.com/coveo/ui-kit/commit/a23b6387068ee9166d99b02655abaa15d11443b0))
 
-# 0.32.0 (2021-06-22)
+## 0.32.0
 
 ### Features
 
 - **headless:** v1 breaking changes ([#876](https://github.com/coveo/ui-kit/issues/876)) ([25a83d0](https://github.com/coveo/ui-kit/commit/25a83d0d08b758478b8941c0636d1948bb11cb59))
 
-## 0.31.1 (2021-06-22)
+## 0.31.1
 
-# 0.31.0 (2021-06-21)
+## 0.31.0
 
-# 0.30.0 (2021-06-21)
+## 0.30.0
 
 ### Features
 
 - **headless:** TriggerRedirection ([#875](https://github.com/coveo/ui-kit/issues/875)) ([1439c9c](https://github.com/coveo/ui-kit/commit/1439c9c5eda19355898a203024f3d85c1f191045))
 
-## 0.29.1 (2021-06-21)
+## 0.29.1
 
-# 0.29.0 (2021-06-21)
+## 0.29.0
 
-## 0.28.1 (2021-06-18)
+## 0.28.1
 
-# 0.28.0 (2021-06-18)
+## 0.28.0
 
-# 0.27.0 (2021-06-17)
+## 0.27.0
 
 ### Features
 
 - **headless:** expose logRecommendationOpen action ([#902](https://github.com/coveo/ui-kit/issues/902)) ([68fca5b](https://github.com/coveo/ui-kit/commit/68fca5b58621d17afe8baeda4e12310b8167f483))
 
-# 0.26.0 (2021-06-17)
+## 0.26.0
 
-# 0.25.0 (2021-06-17)
+## 0.25.0
 
-# 0.24.0 (2021-06-17)
+## 0.24.0
 
-## 0.23.3 (2021-06-11)
+## 0.23.3
 
-## 0.23.1 (2021-06-10)
+## 0.23.1
 
-# 0.23.0 (2021-06-10)
+## 0.23.0
 
-## 0.22.1 (2021-06-10)
+## 0.22.1
 
-# 0.22.0 (2021-06-09)
+## 0.22.0
 
 ### Features
 
 - **headless:** expose and migrate to new engines ([#872](https://github.com/coveo/ui-kit/issues/872)) ([23e61b3](https://github.com/coveo/ui-kit/commit/23e61b3f344b9e3f20995a21a6958711f64481d5))
 
-# 0.21.0 (2021-06-09)
+## 0.21.0
 
-# 0.20.0 (2021-06-08)
+## 0.20.0
 
-# 0.19.0 (2021-06-08)
+## 0.19.0
 
 ### Features
 
 - **headless:** added folding show more ([#862](https://github.com/coveo/ui-kit/issues/862)) ([e0cc1dc](https://github.com/coveo/ui-kit/commit/e0cc1dcfe959f531070d85382da9b7742f2da594))
 
-# 0.18.0 (2021-06-08)
+## 0.18.0
 
-# 0.17.0 (2021-06-07)
+## 0.17.0
 
-## 0.16.2 (2021-06-02)
+## 0.16.2
 
-## 0.16.1 (2021-06-02)
+## 0.16.1
 
-# 0.16.0 (2021-06-02)
+## 0.16.0
 
-## 0.15.6 (2021-06-01)
+## 0.15.6
 
-## 0.15.5 (2021-06-01)
+## 0.15.5
 
-## 0.15.3 (2021-06-01)
+## 0.15.3
 
-## 0.15.2 (2021-05-31)
+## 0.15.2
 
-## 0.15.1 (2021-05-31)
+## 0.15.1
 
-## 0.14.1 (2021-05-19)
+## 0.14.1
 
-# 0.14.0 (2021-05-19)
+## 0.14.0
 
-# 0.14.0-alpha.8 (2021-05-18)
+## 0.14.0-alpha.8
 
-# 0.14.0-alpha.7 (2021-05-18)
+## 0.14.0-alpha.7
 
-# 0.14.0-alpha.6 (2021-05-17)
+## 0.14.0-alpha.6
 
-# 0.14.0-alpha.4 (2021-05-13)
+## 0.14.0-alpha.4
 
-# 0.14.0-alpha.3 (2021-05-13)
+## 0.14.0-alpha.3
 
-# 0.14.0-alpha.2 (2021-05-12)
+## 0.14.0-alpha.2
 
-# 0.14.0-alpha.0 (2021-05-11)
+## 0.14.0-alpha.0
 
 ### Features
 
 - **headless:** added folding ([#740](https://github.com/coveo/ui-kit/issues/740)) ([06f52e8](https://github.com/coveo/ui-kit/commit/06f52e8f564ddf1bcdccf2f143b1119ffce40656))
 
-## 0.13.2-alpha.1 (2021-05-11)
+## 0.13.2-alpha.1
 
-# 0.13.0 (2021-05-07)
+## 0.13.0
 
-# 0.13.0-alpha.7 (2021-05-06)
+## 0.13.0-alpha.7
 
-# 0.13.0-alpha.6 (2021-05-05)
+## 0.13.0-alpha.6
 
-# 0.13.0-alpha.5 (2021-05-05)
+## 0.13.0-alpha.5
 
-# 0.13.0-alpha.2 (2021-05-04)
+## 0.13.0-alpha.2
 
-# 0.13.0-alpha.1 (2021-05-04)
+## 0.13.0-alpha.1
 
-# 0.13.0-alpha.0 (2021-04-30)
+## 0.13.0-alpha.0
 
-# 0.12.0 (2021-04-29)
+## 0.12.0
 
-# 0.12.0-alpha.0 (2021-04-29)
+## 0.12.0-alpha.0
 
-# 0.11.0 (2021-04-29)
+## 0.11.0
 
-# 0.11.0-alpha.12 (2021-04-29)
+## 0.11.0-alpha.12
 
-# 0.11.0-alpha.10 (2021-04-27)
+## 0.11.0-alpha.10
 
-# 0.11.0-alpha.8 (2021-04-21)
+## 0.11.0-alpha.8
 
-# 1.1.0-alpha.3 (2021-04-20)
+## 1.1.0-alpha.3
 
-# 1.1.0-alpha.1 (2021-04-20)
+## 1.1.0-alpha.1
 
-# 1.1.0-alpha.0 (2021-04-20)
+## 1.1.0-alpha.0
 
-# 0.11.0-alpha.5 (2021-04-19)
+## 0.11.0-alpha.5
 
-# 0.11.0-alpha.3 (2021-04-16)
+## 0.11.0-alpha.3
 
-# 0.11.0-alpha.2 (2021-04-15)
+## 0.11.0-alpha.2
 
-# 0.10.0 (2021-04-14)
+## 0.10.0
 
-# 0.10.0-alpha.17 (2021-04-13)
+## 0.10.0-alpha.17
 
-# 0.10.0-alpha.16 (2021-04-13)
+## 0.10.0-alpha.16
 
-# 0.10.0-alpha.15 (2021-04-12)
+## 0.10.0-alpha.15
 
-# 0.10.0-alpha.14 (2021-04-12)
+## 0.10.0-alpha.14
 
-# 0.10.0-alpha.13 (2021-04-12)
+## 0.10.0-alpha.13
 
-# 0.10.0-alpha.12 (2021-04-09)
+## 0.10.0-alpha.12
 
-# 0.10.0-alpha.11 (2021-04-09)
+## 0.10.0-alpha.11
 
-# 0.10.0-alpha.10 (2021-04-08)
+## 0.10.0-alpha.10
 
-# 0.10.0-alpha.7 (2021-04-06)
+## 0.10.0-alpha.7
 
-# 0.10.0-alpha.6 (2021-04-06)
+## 0.10.0-alpha.6
 
-# 0.10.0-alpha.4 (2021-03-31)
+## 0.10.0-alpha.4
 
-# 0.10.0-alpha.3 (2021-03-31)
+## 0.10.0-alpha.3
 
-# 0.10.0-alpha.0 (2021-03-30)
+## 0.10.0-alpha.0
 
-# 0.9.0 (2021-03-26)
+## 0.9.0
 
-# 0.9.0-alpha.9 (2021-03-26)
+## 0.9.0-alpha.9
 
-# 0.9.0-alpha.7 (2021-03-25)
+## 0.9.0-alpha.7
 
-# 0.9.0-alpha.0 (2021-03-18)
+## 0.9.0-alpha.0
 
-## 0.8.1-alpha.0 (2021-03-17)
+## 0.8.1-alpha.0
 
-# 0.8.0 (2021-03-17)
+## 0.8.0
 
-# 0.8.0-alpha.21 (2021-03-15)
+## 0.8.0-alpha.21
 
-# 0.8.0-alpha.20 (2021-03-15)
+## 0.8.0-alpha.20
 
-# 0.8.0-alpha.19 (2021-03-15)
+## 0.8.0-alpha.19
 
-# 0.8.0-alpha.17 (2021-03-15)
+## 0.8.0-alpha.17
 
-# 0.8.0-alpha.16 (2021-03-12)
+## 0.8.0-alpha.16
 
-# 0.8.0-alpha.15 (2021-03-12)
+## 0.8.0-alpha.15
 
-# 0.8.0-alpha.14 (2021-03-12)
+## 0.8.0-alpha.14
 
-# 0.8.0-alpha.12 (2021-03-11)
+## 0.8.0-alpha.12
 
-# 0.8.0-alpha.10 (2021-03-11)
+## 0.8.0-alpha.10
 
 ### Features
 
 - **quantic:** add salesforce server tokens generation. ([#573](https://github.com/coveo/ui-kit/issues/573)) ([c3506ab](https://github.com/coveo/ui-kit/commit/c3506abe18a5f7a1a3c6153521bb18b11b2afd7a))
 
-# 0.8.0-alpha.9 (2021-03-11)
+## 0.8.0-alpha.9
 
-# 0.8.0-alpha.8 (2021-03-09)
+## 0.8.0-alpha.8
 
-# 0.8.0-alpha.7 (2021-03-09)
+## 0.8.0-alpha.7
 
-# 0.8.0-alpha.6 (2021-03-09)
+## 0.8.0-alpha.6
 
-# 0.8.0-alpha.5 (2021-03-09)
+## 0.8.0-alpha.5
 
-# 0.8.0-alpha.3 (2021-03-09)
+## 0.8.0-alpha.3
 
-# 0.8.0-alpha.2 (2021-03-09)
+## 0.8.0-alpha.2
 
-# 0.8.0-alpha.1 (2021-03-08)
+## 0.8.0-alpha.1
 
-# 0.7.0 (2021-03-08)
+## 0.7.0
 
-# 0.7.0-alpha.39 (2021-03-08)
+## 0.7.0-alpha.39
 
-# 0.7.0-alpha.38 (2021-03-08)
+## 0.7.0-alpha.38
 
-# 0.7.0-alpha.36 (2021-03-08)
+## 0.7.0-alpha.36
 
-# 0.7.0-alpha.35 (2021-03-08)
+## 0.7.0-alpha.35
 
-# 0.7.0-alpha.34 (2021-03-05)
+## 0.7.0-alpha.34
 
-# 0.7.0-alpha.33 (2021-03-04)
+## 0.7.0-alpha.33
 
-# 0.7.0-alpha.31 (2021-03-04)
+## 0.7.0-alpha.31
 
-# 0.7.0-alpha.30 (2021-03-04)
+## 0.7.0-alpha.30
 
-# 0.7.0-alpha.29 (2021-03-03)
+## 0.7.0-alpha.29
 
-# 0.7.0-alpha.26 (2021-03-02)
+## 0.7.0-alpha.26
 
-# 0.7.0-alpha.25 (2021-03-01)
+## 0.7.0-alpha.25
 
-# 0.7.0-alpha.24 (2021-02-26)
+## 0.7.0-alpha.24
 
-# 0.7.0-alpha.23 (2021-02-26)
+## 0.7.0-alpha.23
 
-# 0.7.0-alpha.22 (2021-02-26)
+## 0.7.0-alpha.22
 
-# 0.7.0-alpha.21 (2021-02-25)
+## 0.7.0-alpha.21
 
-# 0.7.0-alpha.20 (2021-02-24)
+## 0.7.0-alpha.20
 
-# 0.7.0-alpha.19 (2021-02-24)
+## 0.7.0-alpha.19
 
-# 0.7.0-alpha.18 (2021-02-23)
+## 0.7.0-alpha.18
 
-# 0.7.0-alpha.17 (2021-02-23)
+## 0.7.0-alpha.17
 
-# 0.7.0-alpha.16 (2021-02-23)
+## 0.7.0-alpha.16
 
-# 0.7.0-alpha.15 (2021-02-22)
+## 0.7.0-alpha.15
 
-# 0.7.0-alpha.14 (2021-02-22)
+## 0.7.0-alpha.14
 
-# 0.7.0-alpha.13 (2021-02-22)
+## 0.7.0-alpha.13
 
-# 0.7.0-alpha.12 (2021-02-22)
+## 0.7.0-alpha.12
 
-# 0.7.0-alpha.11 (2021-02-21)
+## 0.7.0-alpha.11
 
-# 0.7.0-alpha.10 (2021-02-19)
+## 0.7.0-alpha.10
 
-# 0.7.0-alpha.9 (2021-02-19)
+## 0.7.0-alpha.9
 
-# 0.7.0-alpha.7 (2021-02-18)
+## 0.7.0-alpha.7
 
-# 0.7.0-alpha.4 (2021-02-17)
+## 0.7.0-alpha.4
 
-# 0.7.0-alpha.3 (2021-02-17)
+## 0.7.0-alpha.3
 
-# 0.7.0-alpha.2 (2021-02-17)
+## 0.7.0-alpha.2
 
 ### Features
 
 - **headless:** added `ResultLinkAnalytics` ([#492](https://github.com/coveo/ui-kit/issues/492)) ([de45056](https://github.com/coveo/ui-kit/commit/de45056386fd0b487c835090bb68f37aab8652aa))
 
-# 0.7.0-alpha.1 (2021-02-17)
+## 0.7.0-alpha.1
 
-# 0.7.0-alpha.0 (2021-02-17)
+## 0.7.0-alpha.0
 
-## 0.6.1-alpha.0 (2021-02-16)
+## 0.6.1-alpha.0
 
-# 0.6.0 (2021-02-16)
+## 0.6.0
 
-# 0.6.0-alpha.8 (2021-02-16)
+## 0.6.0-alpha.8
 
-# 0.6.0-alpha.7 (2021-02-15)
+## 0.6.0-alpha.7
 
-# 0.6.0-alpha.6 (2021-02-11)
+## 0.6.0-alpha.6
 
-# 0.6.0-alpha.4 (2021-02-11)
+## 0.6.0-alpha.4
 
-# 0.6.0-alpha.2 (2021-02-10)
+## 0.6.0-alpha.2
 
 ### Features
 
 - **headless:** add preprocessRequest for both Analytics/SearchAPI ([#488](https://github.com/coveo/ui-kit/issues/488)) ([c026310](https://github.com/coveo/ui-kit/commit/c0263106cf6328556893874b37d7521e42f73d5a))
 
-# 0.6.0-alpha.1 (2021-02-10)
+## 0.6.0-alpha.1
 
-# 0.6.0-alpha.0 (2021-02-08)
+## 0.6.0-alpha.0
 
-## 0.5.1-alpha.0 (2021-02-05)
+## 0.5.1-alpha.0
 
 ### Bug Fixes
 
 - **headless-react:** made lerna bootstrap headless-react ([#481](https://github.com/coveo/ui-kit/issues/481)) ([6deb31c](https://github.com/coveo/ui-kit/commit/6deb31cdd722d1a854ade8ff70901b76d86897fe))
 
-# 0.5.0 (2021-02-04)
+## 0.5.0
 
-# 0.5.0-alpha.7 (2021-02-04)
+## 0.5.0-alpha.7
 
-# 0.5.0-alpha.6 (2021-02-03)
+## 0.5.0-alpha.6
 
-# 0.5.0-alpha.5 (2021-02-02)
+## 0.5.0-alpha.5
 
-# 0.5.0-alpha.4 (2021-02-02)
+## 0.5.0-alpha.4
 
-# 0.5.0-alpha.3 (2021-02-02)
+## 0.5.0-alpha.3
 
-# 0.5.0-alpha.2 (2021-02-02)
+## 0.5.0-alpha.2
 
-# 0.5.0-alpha.1 (2021-02-01)
+## 0.5.0-alpha.1
 
-# 0.5.0-alpha.0 (2021-02-01)
+## 0.5.0-alpha.0
 
-# 0.4.0 (2021-01-29)
+## 0.4.0
 
-# 0.4.0-alpha.10 (2021-01-28)
+## 0.4.0-alpha.10
 
-# 0.4.0-alpha.6 (2021-01-27)
+## 0.4.0-alpha.6
 
 ## [0.31.1](https://github.com/coveo/ui-kit/compare/v0.31.0...v0.31.1) (2021-06-22)
 
