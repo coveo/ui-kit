@@ -46,7 +46,6 @@
     "README.md",
     "contributors/adding-a-controller.md",
     "contributors/adding-a-sub-package.md",
-    "contributors/migration-guide.md",
     "contributors/troubleshooting-bundles-content.md"
   ],
   "entryPointStrategy": "merge",
