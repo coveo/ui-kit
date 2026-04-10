@@ -24,6 +24,7 @@ packages:
   - packages/create-atomic-result-component
   - packages/create-atomic-result-component/template/src/components/sample-result-component
   - samples/atomic/*
+  - samples/commerce-agent-chat
   - samples/headless/*
   - samples/headless-ssr/*
   - utils/cdn
