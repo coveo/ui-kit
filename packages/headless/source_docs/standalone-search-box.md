@@ -1,6 +1,6 @@
 ---
 title: Use a standalone search box
-group: Usage
+group: Guides
 slug: usage/use-a-standalone-search-box
 ---
 

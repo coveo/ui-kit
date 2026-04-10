@@ -1,6 +1,6 @@
 ---
 title: Concepts
-group: Usage
+group: Guides
 slug: usage/index
 ---
 
@@ -36,12 +36,12 @@ To start building an application on top of the [Headless library](https://docs.c
 Each builder function is imported from a dedicated sub-package that has the relevant exports for its use case.
 These engine builder functions are:
 
-- `buildSearchEngine` (imported from `@coveo/headless'`)
-- `buildCaseAssistEngine` (imported from `@coveo/headless/case-assist'`)
-- [`buildCommerceEngine`](https://docs.coveo.com/en/o52e9091/) (imported from `@coveo/headless/commerce'`)
-- `buildInsightEngine` (imported from `@coveo/headless/insight'`)
-- `buildRecommendationEngine` (imported from `@coveo/headless/recommendation'`)
-- `defineSearchEngine` (imported from `@coveo/headless/ssr'`)
+- `buildSearchEngine` (imported from `@coveo/headless`)
+- `buildCaseAssistEngine` (imported from `@coveo/headless/case-assist`)
+- [`buildCommerceEngine`](https://docs.coveo.com/en/o52e9091/) (imported from `@coveo/headless/commerce`)
+- `buildInsightEngine` (imported from `@coveo/headless/insight`)
+- `buildRecommendationEngine` (imported from `@coveo/headless/recommendation`)
+- `defineSearchEngine` (imported from `@coveo/headless/ssr`)
 
 You’ll specify your _search endpoint_ configuration through this instance (that is, where to send Coveo search requests and how to [authenticate](https://docs.coveo.com/en/2120/) them).
 
@@ -55,17 +55,22 @@ import {
   getSampleSearchEngineConfiguration,
 } from '@coveo/headless';
 
-// If you're using a different engine builder function, this would be something like the following:
-// import {buildRecommendationEngine, getSampleRecommendationEngineConfiguration} from '@coveo/headless/recommendation';
-
 export const headlessEngine = buildSearchEngine({
   configuration: getSampleSearchEngineConfiguration(),
 });
+```
 
-// If you're using a different engine builder function, this would be something like the following:
-// export const recommendationEngine = buildRecommendationEngine({
-//   configuration: getSampleRecommendationEngineConfiguration()
-// });
+If you're using a different engine builder function, this would be something like the following:
+
+```ts
+import {
+  buildRecommendationEngine,
+  getSampleRecommendationEngineConfiguration,
+} from '@coveo/headless/recommendation';
+
+export const recommendationEngine = buildRecommendationEngine({
+  configuration: getSampleRecommendationEngineConfiguration(),
+});
 ```
 
 However, most of the time, your initialization and export will look like this:
@@ -76,18 +81,13 @@ However, most of the time, your initialization and export will look like this:
 import { buildSearchEngine } from '@coveo/headless';
 
 export const headlessEngine = buildSearchEngine({
-  configuration: {
-    organizationId: '<ORGANIZATION_ID>', ①
-    accessToken: '<ACCESS_TOKEN>', ②
-    renewAccessToken: <CALLBACK>, ③
-  }
+    configuration: {
+        organizationId: '<ORGANIZATION_ID>', // callout[This is the <a href="https://docs.coveo.com/en/n1ce5273/">unique identifier of your Coveo organization</a> (for example, `mycoveoorganization`).]
+        accessToken: '<ACCESS_TOKEN>', //callout[This is an <a href="https://docs.coveo.com/en/105/">API key</a> that was created using the Anonymous search <a href="https://docs.coveo.com/en/1718#api-key-templates">template</a> or a <a href="https://docs.coveo.com/en/56/">search token</a> that grants the Allowed <a href="https://docs.coveo.com/en/2818/">access level</a> on the <a href="https://docs.coveo.com/en/1707#execute-queries-domain">Execute Queries</a> <a href="https://docs.coveo.com/en/2819/">domain</a> and the Push <a href="https://docs.coveo.com/en/2818/">access level</a> on the <a href="https://docs.coveo.com/en/1707#administrate-domain">Analytics Data</a> <a href="https://docs.coveo.com/en/2819/">domain</a> in the target <a href="https://docs.coveo.com/en/185/">organization</a>.]
+        renewAccessToken: <CALLBACK>, //callout[This is a function that returns a new access token, usually by fetching it from a backend service that can generate <a href="https://docs.coveo.com/en/56/">search tokens</a>.  The engine will automatically run this function when the current access token expires (that is, when the engine detects a `419 Authentication Timeout` HTTP code).]
+    }
 });
 ```
-
-1. `<ORGANIZATION_ID>` (string) is the [unique identifier of your Coveo organization](https://docs.coveo.com/en/n1ce5273/) (for example, `mycoveoorganization`).
-2. `<ACCESS_TOKEN>` (string) is an [API key](https://docs.coveo.com/en/105/) that was created using the **Anonymous search** [template](https://docs.coveo.com/en/1718#api-key-templates) or a [search token](https://docs.coveo.com/en/56/) that grants the **Allowed** [access level](https://docs.coveo.com/en/2818/) on the [**Execute Queries**](https://docs.coveo.com/en/1707#execute-queries-domain) [domain](https://docs.coveo.com/en/2819/) and the **Push** [access level](https://docs.coveo.com/en/2818/) on the [**Analytics Data**](https://docs.coveo.com/en/1707#administrate-domain) [domain](https://docs.coveo.com/en/2819/) in the target [organization](https://docs.coveo.com/en/185/).
-3. `<CALLBACK>` (function) returns a new access token, usually by fetching it from a backend service that can generate [search tokens](https://docs.coveo.com/en/56/).
-   The engine will automatically run this function when the current access token expires (that is, when the engine detects a `419 Authentication Timeout` HTTP code).
 
 > [!NOTE]
 >
