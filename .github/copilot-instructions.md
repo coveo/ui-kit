@@ -12,6 +12,12 @@ When reviewing code changes in `packages/headless` and `packages/headless-react`
 
 When reviewing code changes, have a look at the `samples` directory, in case it contains samples that need to be updated.
 
+## Changesets
+
+PRs that modify source code in any public package (non-private packages under `packages/`) must include a changeset file in `.changeset/`. If one is missing, leave a top-level comment asking the author to add one.
+
+Changesets are **not required** for changes that only touch documentation, CI/CD configuration, tests, internal tooling, or private packages.
+
 ## Commenting on files not included in the PR
 
 If you spot changes that need to be made in files not included in the PR (e.g., if code changes in `packages/headless` affect documentation articles in `packages/headless/source_docs`, but the latter aren't touched in the PR), write a top-level comment to that effect in the PR (e.g., don't try to comment on the affected articles, because unless such files are included in the PR, the comment won't appear).
