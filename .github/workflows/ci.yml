@@ -733,6 +733,28 @@ jobs:
         run: node ./scripts/deploy/trigger-ui-kit-cd-dev.mjs
         env:
           GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
+  commit-artifact-upload:
+    if: ${{ !cancelled() && needs.is-valid.result == 'success' && needs.build-cdn.result == 'success' && github.event_name == 'merge_group' }}
+    needs:
+      - is-valid
+      - build-cdn
+    name: Upload commit artifacts to S3 (Merge group)
+    environment: 'Prerelease (CDN)'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: ./.github/actions/setup
+        with:
+          skip-build: 'true'
+          load-cache: 'false'
+      - name: Trigger commit artifact upload on ui-kit-cd
+        run: node ./scripts/deploy/trigger-commit-upload.mjs
+        env:
+          GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
   chromatic-update-main:
     name: 'Update Chromatic baseline on main'
     if: ${{ !cancelled() && needs.is-valid.result == 'success' && github.event_name == 'merge_group' }}
