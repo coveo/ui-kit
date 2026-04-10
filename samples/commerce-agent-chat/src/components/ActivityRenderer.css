@@ -1,0 +1,25 @@
+.activity-renderer {
+  border: 2px solid rgba(0, 212, 255, 0.2);
+  border-radius: 12px;
+  background: rgba(22, 45, 66, 0.4);
+  padding: 0.85rem;
+  align-self: flex-start;
+  max-width: min(100%, 680px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.05);
+}
+
+.activity-type {
+  margin: 0 0 0.35rem;
+  color: var(--ink-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.activity-content {
+  margin: 0;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+}

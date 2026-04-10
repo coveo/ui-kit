@@ -1,0 +1,75 @@
+.message-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 1rem 1.25rem;
+  overflow: auto;
+}
+
+.message {
+  max-width: min(80ch, 88%);
+  padding: 0.9rem 1.1rem;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  backdrop-filter: blur(8px);
+}
+
+.message-user {
+  align-self: flex-end;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 168, 204, 0.2) 0%,
+    rgba(0, 212, 255, 0.15) 100%
+  );
+  border-color: rgba(0, 212, 255, 0.5);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+}
+
+.message-assistant {
+  align-self: flex-start;
+  background: linear-gradient(
+    135deg,
+    rgba(22, 45, 66, 0.6) 0%,
+    rgba(26, 58, 82, 0.4) 100%
+  );
+  border-color: rgba(0, 212, 255, 0.3);
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.1);
+}
+
+.message-role {
+  margin: 0 0 0.25rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.message-content {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.message-content--plain {
+  white-space: pre-wrap;
+}
+
+.agent-progress__thinking {
+  margin: 0.5rem 0 0;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: var(--accent);
+  font-weight: 500;
+  text-shadow: 0 0 8px rgba(0, 212, 255, 0.4);
+}
+
+.empty-state {
+  margin: auto;
+  text-align: center;
+  color: var(--ink-muted);
+}
+
+@media (max-width: 720px) {
+  .message {
+    max-width: 94%;
+  }
+}

@@ -1,0 +1,38 @@
+.state-screen {
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+
+.state-card {
+  width: min(940px, 100%);
+  border: 2px solid rgba(0, 212, 255, 0.4);
+  border-radius: 20px;
+  background: rgba(15, 36, 56, 0.75);
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 0 60px rgba(0, 212, 255, 0.15),
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(0, 212, 255, 0.2);
+  padding: 1rem 1.2rem;
+}
+
+.state-card pre {
+  white-space: pre-wrap;
+  margin: 0.5rem 0 0;
+}
+
+@media (max-width: 720px) {
+  .state-screen {
+    padding: 0;
+  }
+
+  .state-card {
+    width: 100%;
+    min-height: 100dvh;
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+  }
+}

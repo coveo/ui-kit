@@ -1,0 +1,147 @@
+:root {
+  --bg-0: #0a1428;
+  --bg-1: #0d1b2a;
+  --surface: #0f2438;
+  --surface-strong: #162d42;
+  --surface-accent: #1a3a52;
+  --ink: #ffffff;
+  --ink-muted: #a0d4ff;
+  --accent: #00d4ff;
+  --accent-strong: #00a8cc;
+  --accent-warm: #ffb700;
+  --accent-hot: #ff6b35;
+  --danger-bg: #2d0e0a;
+  --danger-ink: #ff6b6b;
+  --border: #1a4d6d;
+  --focus: #00d4ff;
+  --text-secondary: #7fa8d4;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: 'IBM Plex Sans', 'Segoe UI', sans-serif;
+  background:
+    radial-gradient(
+      circle at 20% 50%,
+      rgba(0, 212, 255, 0.25),
+      transparent 40%
+    ),
+    radial-gradient(circle at 80% 20%, rgba(255, 183, 0, 0.2), transparent 35%),
+    radial-gradient(
+      circle at 85% 85%,
+      rgba(255, 107, 53, 0.15),
+      transparent 45%
+    ),
+    linear-gradient(
+      135deg,
+      #0a1428 0%,
+      #0d1b2a 25%,
+      #1a2847 50%,
+      #1f3a5a 75%,
+      #1a2847 100%
+    );
+  background-attachment: fixed;
+}
+
+@keyframes wave {
+  0%,
+  100% {
+    left: -100%;
+  }
+  50% {
+    left: 100%;
+  }
+}
+
+/* Skeleton shimmer */
+@keyframes shimmer {
+  0% {
+    background-position: -600px 0;
+  }
+  100% {
+    background-position: 600px 0;
+  }
+}
+
+@keyframes glowPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(0, 212, 255, 0.6);
+  }
+}
+
+button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.2);
+}
+
+.text-muted {
+  color: var(--ink-muted);
+  font-size: 0.82rem;
+}
+
+.commerce-loading {
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    rgba(26, 77, 109, 0.4) 25%,
+    rgba(0, 212, 255, 0.15) 50%,
+    rgba(26, 77, 109, 0.4) 75%
+  );
+  background-size: 600px 100%;
+  animation: shimmer 1.4s infinite linear;
+}
+
+.commerce-loading--line {
+  height: 12px;
+  width: 45%;
+}
+
+.commerce-loading--line-wide {
+  width: 70%;
+}
+
+.commerce-loading--image {
+  width: 100%;
+  height: 90px;
+}
+
+.commerce-heading {
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.commerce-catalog {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.visually-hidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  white-space: nowrap;
+}
