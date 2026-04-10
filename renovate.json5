@@ -33,18 +33,6 @@
       ],
     },
     {
-      groupName: 'React',
-      groupSlug: 'react',
-      rangeStrategy: 'replace',
-      matchPackageNames: [
-        '/react/',
-        '/react-router-dom/',
-        '/react-dom/',
-        '/@types/react/',
-        'next',
-      ],
-    },
-    {
       groupName: 'Redux',
       groupSlug: 'Redux',
       rangeStrategy: 'replace',
