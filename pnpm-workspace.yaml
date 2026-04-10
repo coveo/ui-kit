@@ -47,11 +47,11 @@ catalog:
   '@coveo/relay-event-types': 19.0.6
   '@playwright/mcp': 0.0.54
   '@playwright/test': 1.57.0
-  '@react-router/dev': 7.13.2
-  '@react-router/fs-routes': 7.13.2
-  '@react-router/node': 7.13.2
-  '@react-router/serve': 7.13.2
-  'react-router': 7.13.2
+  '@react-router/dev': 7.14.0
+  '@react-router/fs-routes': 7.14.0
+  '@react-router/node': 7.14.0
+  '@react-router/serve': 7.14.0
+  'react-router': 7.14.0
   '@rollup/plugin-replace': 6.0.3
   '@rollup/plugin-url': 8.0.2
   '@stencil/core': 4.20.0
@@ -71,7 +71,7 @@ catalog:
   jest: 30.3.0
   jest-cli: 30.3.0
   local-web-server: 5.4.0
-  next: 16.2.1
+  next: 16.2.2
   prettier: 3.7.4
   puppeteer: 24.34.0
   playwright: 1.57.0
