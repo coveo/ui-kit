@@ -55,7 +55,7 @@ When the "Version Packages" PR is merged, the CD workflow runs `pnpm run release
 
 `changeset publish` will skip packages whose current version is already on the registry. After publishing, it creates a git tag for each newly published version (e.g., `@coveo/atomic@3.55.0`).
 
-Publishing uses **OIDC trusted publishing** (npm provenance via the `id-token: write` permission) — no long-lived npm tokens are needed.
+Publishing uses [**OIDC trusted publishing**](https://docs.npmjs.com/trusted-publishers) (npm provenance via the `id-token: write` permission) — no long-lived npm tokens are needed.
 
 ## The `release/v3` bookmark
 
