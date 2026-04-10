@@ -1,10 +1,10 @@
 {
   "name": "@samples/atomic-search-vuejs",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
-    "build:assets": "node ../../../utils/ci/copy-files.mjs ../../../packages/atomic/dist/atomic/assets public/assets ../../../packages/atomic/dist/atomic/lang public/lang",
+    "build:assets": "node ../../../utils/ci/copy-files.mjs ../../../packages/atomic/dist/assets public/assets ../../../packages/atomic/dist/lang public/lang",
     "build": "pnpm run build:assets && pnpm run build:vue",
     "dev": "pnpm run build:assets && pnpm run dev:vue",
     "dev:vue": "vite",
@@ -13,10 +13,10 @@
   },
   "dependencies": {
     "@coveo/atomic": "workspace:*",
-    "vue": "3.5.18"
+    "vue": "3.5.26"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "6.0.1",
+    "@vitejs/plugin-vue": "6.0.3",
     "cypress": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:"

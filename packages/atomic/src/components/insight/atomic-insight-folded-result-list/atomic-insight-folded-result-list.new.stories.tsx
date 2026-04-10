@@ -6,6 +6,22 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import '@/src/components/insight/atomic-insight-layout/atomic-insight-layout';
 import '@/src/components/common/atomic-layout-section/atomic-layout-section';
+import '@/src/components/search/atomic-field-condition/atomic-field-condition.js';
+import '@/src/components/insight/atomic-insight-folded-result-list/atomic-insight-folded-result-list.js';
+import '@/src/components/insight/atomic-insight-result-template/atomic-insight-result-template.js';
+import '@/src/components/search/atomic-result-badge/atomic-result-badge.js';
+import '@/src/components/search/atomic-result-date/atomic-result-date.js';
+import '@/src/components/search/atomic-result-fields-list/atomic-result-fields-list.js';
+import '@/src/components/search/atomic-result-image/atomic-result-image.js';
+import '@/src/components/search/atomic-result-link/atomic-result-link.js';
+import '@/src/components/search/atomic-result-multi-value-text/atomic-result-multi-value-text.js';
+import '@/src/components/search/atomic-result-section-badges/atomic-result-section-badges.js';
+import '@/src/components/search/atomic-result-section-bottom-metadata/atomic-result-section-bottom-metadata.js';
+import '@/src/components/search/atomic-result-section-excerpt/atomic-result-section-excerpt.js';
+import '@/src/components/search/atomic-result-section-title/atomic-result-section-title.js';
+import '@/src/components/search/atomic-result-section-visual/atomic-result-section-visual.js';
+import '@/src/components/search/atomic-result-text/atomic-result-text.js';
+import '@/src/components/search/atomic-text/atomic-text.js';
 
 const {decorator: insightInterfaceDecorator, play: initializeInsightInterface} =
   wrapInInsightInterface();
@@ -69,7 +85,9 @@ const TEMPLATE_EXAMPLE = `<template>
 
 const layoutDecorator = (story: () => unknown) => html`
   <atomic-insight-layout>
-    <atomic-layout-section section="results"> ${story()} </atomic-layout-section>
+    <atomic-layout-section section="results">
+      ${story()}
+    </atomic-layout-section>
   </atomic-insight-layout>
 `;
 

@@ -40,7 +40,7 @@ const preprocessConfig = async (configContent) => {
 
   let match;
   versionPlaceholderRegex.lastIndex = 0;
-  // biome-ignore lint/suspicious/noAssignInExpressions: <>
+  // oxlint-disable-next-line no-cond-assign -- <>
   while ((match = versionPlaceholderRegex.exec(configContent)) !== null) {
     const placeholderKey = match[0].substring(2, match[0].length - 1);
 

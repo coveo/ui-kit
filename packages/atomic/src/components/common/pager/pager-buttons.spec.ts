@@ -20,16 +20,14 @@ describe('#pagerButtons', () => {
   });
 
   const renderPreviousButton = async () => {
-    const element = await renderFunctionFixture(
-      html`
-        ${renderPagerPreviousButton({
-          props: {
-            i18n,
-            icon: ArrowLeftIcon,
-          },
-        })}
-      `
-    );
+    const element = await renderFunctionFixture(html`
+      ${renderPagerPreviousButton({
+        props: {
+          i18n,
+          icon: ArrowLeftIcon,
+        },
+      })}
+    `);
     return {
       element,
       button: element.querySelector('button'),
@@ -38,16 +36,14 @@ describe('#pagerButtons', () => {
   };
 
   const renderNextButton = async () => {
-    const element = await renderFunctionFixture(
-      html`
-        ${renderPagerNextButton({
-          props: {
-            i18n,
-            icon: ArrowRightIcon,
-          },
-        })}
-      `
-    );
+    const element = await renderFunctionFixture(html`
+      ${renderPagerNextButton({
+        props: {
+          i18n,
+          icon: ArrowRightIcon,
+        },
+      })}
+    `);
     return {
       element,
       button: element.querySelector('button'),
@@ -75,9 +71,9 @@ describe('#pagerButtons', () => {
       text: '1',
       ...overrides,
     };
-    const element = await renderFunctionFixture(
-      html` ${renderPagerPageButton({props})} `
-    );
+    const element = await renderFunctionFixture(html`
+      ${renderPagerPageButton({props})}
+    `);
     return {
       element,
       input: element.querySelector('input'),
@@ -85,9 +81,9 @@ describe('#pagerButtons', () => {
   };
 
   const renderPageButtonsGroup = async (children: ReturnType<typeof html>) => {
-    const element = await renderFunctionFixture(
-      html` ${renderPageButtons({props: {i18n}})(children)} `
-    );
+    const element = await renderFunctionFixture(html`
+      ${renderPageButtons({props: {i18n}})(children)}
+    `);
     return {
       element,
       div: element.querySelector('div'),

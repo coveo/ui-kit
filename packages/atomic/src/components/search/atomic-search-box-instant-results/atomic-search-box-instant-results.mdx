@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicSearchBoxInstantResultsStories from './atomic-search-box-instant-results.new.stories';
+import meta, { Default } from './atomic-search-box-instant-results.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicSearchBoxInstantResultsStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicSearchBoxInstantResultsStories}
+  stories={{ Default }}
   githubPath="search/atomic-search-box-instant-results/atomic-search-box-instant-results.ts"
   tagName="atomic-search-box-instant-results"
   className="AtomicSearchBoxInstantResults"

@@ -32,7 +32,7 @@ export const renderTriStateCheckbox: FunctionalComponent<
   });
 
   const parts = [partName];
-  if (isExcluded || isExcluded) {
+  if (isExcluded) {
     parts.push(`${partName}-checked`);
   }
 

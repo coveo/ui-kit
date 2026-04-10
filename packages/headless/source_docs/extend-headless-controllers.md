@@ -3,15 +3,17 @@ title: Extend controllers
 group: Usage
 slug: usage/extend-controllers
 ---
-# Extend controllers
-When you call a method, Headless dispatches one or more low-level actions.
-For example, calling the [`submit`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchBox.html#submit) method on the `SearchBox` controller dispatches actions to:
 
-* update the [query](https://docs.coveo.com/en/231/)
-* clear active [facet](https://docs.coveo.com/en/198/) values
-* reset the result page to the first page
-* perform a query
-* log the appropriate [Coveo Analytics event](https://docs.coveo.com/en/260/)
+# Extend controllers
+
+When you call a method, Headless dispatches one or more low-level actions.
+For example, calling the [`submit`](../../interfaces/Search.SearchBox.html#submit) method on the `SearchBox` controller dispatches actions to:
+
+- update the [query](https://docs.coveo.com/en/231/)
+- clear active [facet](https://docs.coveo.com/en/198/) values
+- reset the result page to the first page
+- perform a query
+- log the appropriate [Coveo Analytics event](https://docs.coveo.com/en/260/)
 
 Controllers embed user experience decisions that we believe are best-practices for creating great search experiences.
 For example, submitting a query from a search box resets selected facet values to reduce the odds of seeing no results.

@@ -306,7 +306,9 @@ export class AtomicRatingRangeFacet
 
   public disconnectedCallback() {
     super.disconnectedCallback();
-    this.dependenciesManager?.stopWatching();
+    if (!this.isConnected) {
+      this.dependenciesManager?.stopWatching();
+    }
   }
 
   private get focusTarget() {
@@ -449,9 +451,10 @@ export class AtomicRatingRangeFacet
   private renderLabelText(facetValue: NumericFacetValue) {
     return html`<span
       part="value-label"
-      class="group-focus:text-primary group-hover:text-primary ml-1 flex items-center truncate ${
-        facetValue.state === 'selected' ? 'font-bold' : ''
-      }"
+      class="group-focus:text-primary group-hover:text-primary ml-1 flex items-center truncate ${facetValue.state ===
+      'selected'
+        ? 'font-bold'
+        : ''}"
     >
       ${when(
         facetValue.start === (this.maxValueInIndex ?? this.numberOfIntervals),
@@ -520,7 +523,7 @@ export class AtomicRatingRangeFacet
         }
 
         return renderFacetContainer()(html`${this.renderHeader()}
-          ${when(!this.isCollapsed, () => this.renderValues())}`);
+        ${when(!this.isCollapsed, () => this.renderValues())}`);
       }
     )}`;
   }

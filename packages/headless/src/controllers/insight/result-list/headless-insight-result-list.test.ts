@@ -14,7 +14,7 @@ describe('InsightResultList', () => {
 
   beforeEach(() => {
     engine = buildMockInsightEngine(buildMockInsightState());
-    const results = new Array(10).fill(buildMockResult());
+    const results = Array.from({length: 10}, () => buildMockResult());
     engine.state.search.results = results;
     engine.state.search.response.totalCountFiltered = 1000;
     vi.useFakeTimers();

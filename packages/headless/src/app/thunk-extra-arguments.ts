@@ -10,8 +10,10 @@ import {validatePayloadAndThrow} from '../utils/validate-payload.js';
 import type {EngineConfiguration} from './engine-configuration.js';
 import type {NavigatorContext} from './navigator-context-provider.js';
 
-export interface ClientThunkExtraArguments<T, K = GeneratedAnswerAPIClient>
-  extends ThunkExtraArguments {
+export interface ClientThunkExtraArguments<
+  T,
+  K = GeneratedAnswerAPIClient,
+> extends ThunkExtraArguments {
   apiClient: T;
   streamingClient?: K;
   relay: Relay;
@@ -45,7 +47,7 @@ function getAnalyticsClientMiddleware(
   configuration: EngineConfiguration
 ): AnalyticsClientSendEventHook {
   const {analytics} = configuration;
-  // biome-ignore lint/suspicious/noExplicitAny: required for compatibility
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- required for compatibility
   const NoopAnalyticsMiddleware = (_: string, p: any) => p;
   return analytics?.analyticsClientMiddleware || NoopAnalyticsMiddleware;
 }

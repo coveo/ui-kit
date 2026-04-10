@@ -1,6 +1,7 @@
 import {buildMockCitation} from '../../test/mock-citation.js';
 import {
   activeFollowUpStartFailed,
+  clearFollowUpAnswersConversationToken,
   createFollowUpAnswer,
   dislikeFollowUp,
   followUpCitationsReceived,
@@ -14,6 +15,7 @@ import {
   setActiveFollowUpAnswerId,
   setFollowUpAnswerContentFormat,
   setFollowUpAnswersConversationId,
+  setFollowUpAnswersConversationToken,
   setFollowUpIsLoading,
   setFollowUpIsStreaming,
   setIsEnabled,
@@ -62,6 +64,38 @@ describe('follow-up answers slice', () => {
         setFollowUpAnswersConversationId('new-conv')
       );
       expect(finalState.conversationId).toBe('new-conv');
+    });
+  });
+
+  describe('#setFollowUpAnswersConversationToken', () => {
+    it('sets the conversationToken', () => {
+      const finalState = followUpAnswersReducer(
+        state,
+        setFollowUpAnswersConversationToken('token-123')
+      );
+      expect(finalState.conversationToken).toBe('token-123');
+    });
+
+    it('updates existing conversationToken', () => {
+      state.conversationToken = 'old-token';
+      const finalState = followUpAnswersReducer(
+        state,
+        setFollowUpAnswersConversationToken('new-token')
+      );
+      expect(finalState.conversationToken).toBe('new-token');
+    });
+  });
+
+  describe('#clearFollowUpAnswersConversationToken', () => {
+    it('clears the conversationToken', () => {
+      state.conversationToken = 'token-123';
+
+      const finalState = followUpAnswersReducer(
+        state,
+        clearFollowUpAnswersConversationToken()
+      );
+
+      expect(finalState.conversationToken).toBe('');
     });
   });
 
@@ -868,20 +902,22 @@ describe('follow-up answers slice', () => {
 
     it('clears conversationId', () => {
       state.conversationId = 'conv-123';
+      state.conversationToken = 'token-123';
       state.followUpAnswers = [createInitialFollowUpAnswer('Question?')];
 
       const finalState = followUpAnswersReducer(state, resetFollowUpAnswers());
 
       expect(finalState.conversationId).toBe('');
+      expect(finalState.conversationToken).toBe('');
     });
 
-    it('preserves isEnabled', () => {
+    it('clears isEnabled', () => {
       state.isEnabled = true;
       state.followUpAnswers = [createInitialFollowUpAnswer('Question?')];
 
       const finalState = followUpAnswersReducer(state, resetFollowUpAnswers());
 
-      expect(finalState.isEnabled).toBe(true);
+      expect(finalState.isEnabled).toBe(false);
       expect(finalState.followUpAnswers).toEqual([]);
     });
 
@@ -890,6 +926,8 @@ describe('follow-up answers slice', () => {
 
       expect(finalState.followUpAnswers).toEqual([]);
       expect(finalState.conversationId).toBe('');
+      expect(finalState.conversationToken).toBe('');
+      expect(finalState.isEnabled).toBe(false);
     });
   });
 
@@ -915,7 +953,7 @@ describe('follow-up answers slice', () => {
         state,
         followUpStepStarted({
           answerId: 'answer-123',
-          name: 'thinking',
+          name: 'Thinking',
           startedAt,
         })
       );
@@ -968,7 +1006,7 @@ describe('follow-up answers slice', () => {
         state,
         followUpStepFinished({
           answerId: 'answer-123',
-          name: 'searching',
+          name: 'SEARCHING',
           finishedAt,
         })
       );

@@ -153,7 +153,7 @@ describe('atomic-insight-result', () => {
 
       expect(element.error).toBeUndefined();
 
-      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
       (element as any).density = 'invalid';
       await element.updateComplete;
 
@@ -168,7 +168,7 @@ describe('atomic-insight-result', () => {
 
       expect(element.error).toBeUndefined();
 
-      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
       (element as any).imageSize = 'invalid';
       await element.updateComplete;
 
@@ -663,7 +663,7 @@ describe('atomic-insight-result', () => {
       const element = await renderResult();
       const mockCallback = vi.fn();
 
-      // biome-ignore lint/suspicious/noExplicitAny: testing undefined value
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing undefined value
       element.interactiveResult = undefined as any;
 
       const event = new CustomEvent('atomic/resolveInteractiveResult', {

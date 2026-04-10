@@ -18,7 +18,7 @@ describe('atomic-smart-snippet-expandable-answer', () => {
     element: AtomicSmartSnippetExpandableAnswer,
     height: number
   ) {
-    // biome-ignore lint/suspicious/noExplicitAny: Testing internal state
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Testing internal state
     (element as any).fullHeight = height;
     await element.updateComplete;
   }
@@ -54,7 +54,7 @@ describe('atomic-smart-snippet-expandable-answer', () => {
     // Setup bindings
     element.bindings = {
       i18n,
-      // biome-ignore lint/suspicious/noExplicitAny: Mock bindings
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Mock bindings
     } as any;
 
     await element.initialize();
@@ -102,7 +102,7 @@ describe('atomic-smart-snippet-expandable-answer', () => {
 
       element.bindings = {
         i18n,
-        // biome-ignore lint/suspicious/noExplicitAny: Mock bindings
+        // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Mock bindings
       } as any;
 
       expect(() => element.initialize()).toThrow(
@@ -122,7 +122,7 @@ describe('atomic-smart-snippet-expandable-answer', () => {
 
       element.bindings = {
         i18n,
-        // biome-ignore lint/suspicious/noExplicitAny: Mock bindings
+        // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Mock bindings
       } as any;
 
       expect(() => element.initialize()).not.toThrow();

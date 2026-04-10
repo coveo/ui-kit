@@ -9,7 +9,7 @@ test.describe('smoke test', () => {
   test.describe('search', () => {
     test('should load', async ({page}) => {
       // Visit the specified URL
-      await page.goto('http://localhost:4200/atomic-angular');
+      await page.goto('http://localhost:4200/atomic-search-angular');
 
       // Check if the search box exists and interact with it
       const searchBox = page.locator('atomic-search-box');
@@ -36,6 +36,7 @@ test.describe('smoke test', () => {
       await expect(result).toBeVisible();
     });
   });
+
   test.describe('commerce', () => {
     test('should load', async ({page}) => {
       // Visit the specified URL

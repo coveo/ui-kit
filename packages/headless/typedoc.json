@@ -12,7 +12,14 @@
     "source_docs/coveo-headless-home.md",
     "source_docs/relevance-generative-answering.md",
     "source_docs/headless-code-samples.md",
-    "source_docs/coveo-headless-usage.md",
+    "source_docs/getting-started.md",
+    "source_docs/getting-started-case-assist.md",
+    "source_docs/getting-started-commerce.md",
+    "source_docs/getting-started-insight.md",
+    "source_docs/getting-started-recommendation.md",
+    "source_docs/getting-started-ssr-search.md",
+    "source_docs/getting-started-ssr-commerce.md",
+    "source_docs/concepts.md",
     "source_docs/dependent-facets.md",
     "source_docs/extend-headless-controllers.md",
     "source_docs/headless-modify-requests-responses.md",
@@ -58,6 +65,7 @@
   "plugin": ["@coveo/documentation"],
   "hoistOther.topLevelOrder": [
     "Home",
+    "Getting Started",
     "Usage",
     "Reference",
     "Code samples",
@@ -66,10 +74,19 @@
     "Versioned documentation"
   ],
   "hoistOther.nestedOrder": {
-    "usage server-side rendering": ["Introduction", "*"],
-    "upgrade": ["Introduction", "*"],
-    "usage usage analytics": ["Introduction", "*"],
-    "usage": ["Introduction", "*"],
+    "usage server-side rendering": ["Concepts", "*"],
+    "upgrade": ["Concepts", "*"],
+    "usage usage analytics": ["Concepts", "*"],
+    "getting started": [
+      "Getting Started with Search",
+      "Getting Started with Case Assist",
+      "Getting Started with Commerce",
+      "Getting Started with Insight",
+      "Getting Started with Recommendation",
+      "Getting Started with SSR Search",
+      "Getting Started with SSR Commerce"
+    ],
+    "usage": ["Concepts", "*"],
     "reference search": [
       "Engine",
       "Controllers",

@@ -17,10 +17,10 @@ import {
 } from '../core/quickview/headless-core-quickview.js';
 
 export type {
+  CoreQuickview,
+  CoreQuickviewState,
   QuickviewOptions,
   QuickviewProps,
-  CoreQuickviewState,
-  CoreQuickview,
 };
 
 /**

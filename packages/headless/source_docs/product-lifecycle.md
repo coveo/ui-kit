@@ -2,7 +2,9 @@
 title: Product lifecycle
 slug: product-lifecycle
 ---
+
 # Product lifecycle
+
 This high velocity of innovation, combined with ever-changing dependencies (such as Node.js updates), means that certain legacy frameworks, methods, or features must be deprecated.
 
 This article describes the official product lifecycle for each version of the Headless library and its components.
@@ -15,11 +17,11 @@ For more details, visit Coveo’s [version support lifecycle policy](https://doc
 The latest version of the Headless library can be downloaded from [npm](https://www.npmjs.com/package/@coveo/headless).
 Links to older versions are also available, but support is limited as stated in the following table and as provided under the Coveo Support and Service-Level Policies.
 
-| Version number | Release date | Development end date | Bug fix end date | Support end date |
-| --- | --- | --- | ---  | --- | 
-| v3 | September 2024 | - | - | - |
-| v2 | December 2022 | September 2024 | - | - |
-| v1 | June 2021 | December 2022 | December 2022 | June 2024 |
+| Version number | Release date   | Development end date | Bug fix end date | Support end date |
+| -------------- | -------------- | -------------------- | ---------------- | ---------------- |
+| v3             | September 2024 | -                    | -                | -                |
+| v2             | December 2022  | September 2024       | -                | -                |
+| v1             | June 2021      | December 2022        | December 2022    | June 2024        |
 
 ## Definitions
 
@@ -41,8 +43,8 @@ After the support end date, [Coveo Support](https://connect.coveo.com/s/case/Cas
 
 As of `@coveo/headless` v3.11.0, the following technologies versions are supported:
 
-* TypeScript v4.9+
-* Node.js v20 and v22
+- TypeScript v4.9+
+- Node.js v20 and v22
 
 Support for newer versions of these technologies may be added in either major or minor updates.
 Support for older versions may be removed in major updates.

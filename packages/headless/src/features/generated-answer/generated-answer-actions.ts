@@ -16,18 +16,11 @@ import type {
   GeneratedAnswerStreamEventData,
 } from '../../api/generated-answer/generated-answer-event-payload.js';
 import type {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
-import {
-  type AnswerEndpointArgs,
-  initiateAnswerEndpoint,
-} from '../../api/knowledge/answer-generation/endpoints/answer/answer-endpoint.js';
 import {fetchAnswer} from '../../api/knowledge/stream-answer-api.js';
 import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
 import type {AsyncThunkOptions} from '../../app/async-thunk-options.js';
 import type {SearchThunkExtraArguments} from '../../app/search-thunk-extra-arguments.js';
-import type {
-  AnswerApiQueryParams,
-  StateNeededForHeadAnswerParams,
-} from '../../features/generated-answer/generated-answer-request.js';
+import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
 import type {
   ConfigurationSection,
   DebugSection,
@@ -39,7 +32,6 @@ import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../utils/validate-payload.js';
-import {selectAgentId} from '../configuration/configuration-selectors.js';
 import {
   logGeneratedAnswerResponseLinked,
   logGeneratedAnswerStreamEnd,
@@ -47,11 +39,11 @@ import {
 import {
   buildStreamingRequest,
   constructAnswerAPIQueryParams,
-  constructGenerateHeadAnswerParams,
 } from './generated-answer-request.js';
 import {
   GENERATION_STEP_NAMES,
   type GenerationStepName,
+  normalizeGenerationStepName,
 } from './generated-answer-state.js';
 import {
   type GeneratedContentFormat,
@@ -80,6 +72,18 @@ export const answerContentFormatSchema =
     required: true,
     constrainTo: generatedContentFormat,
   });
+
+const generationStepNameValue = new StringValue<GenerationStepName>({
+  required: true,
+  constrainTo: GENERATION_STEP_NAMES,
+});
+
+const normalizeGenerationStepPayload = <T extends {name: string}>(
+  payload: T
+): Omit<T, 'name'> & {name: GenerationStepName} => ({
+  ...payload,
+  name: normalizeGenerationStepName(payload.name),
+});
 
 export interface GeneratedAnswerErrorPayload {
   message?: string;
@@ -231,24 +235,18 @@ export const setAnswerApiQueryParams = createAction(
 
 export const startStep = createAction(
   'generatedAnswer/startStep',
-  (payload: {name: GenerationStepName; startedAt: number}) =>
-    validatePayload(payload, {
-      name: new StringValue<GenerationStepName>({
-        required: true,
-        constrainTo: GENERATION_STEP_NAMES,
-      }),
+  (payload: {name: string; startedAt: number}) =>
+    validatePayload(normalizeGenerationStepPayload(payload), {
+      name: generationStepNameValue,
       startedAt: new NumberValue({min: 0, required: true}),
     })
 );
 
 export const finishStep = createAction(
   'generatedAnswer/finishStep',
-  (payload: {name: GenerationStepName; finishedAt: number}) =>
-    validatePayload(payload, {
-      name: new StringValue<GenerationStepName>({
-        required: true,
-        constrainTo: GENERATION_STEP_NAMES,
-      }),
+  (payload: {name: string; finishedAt: number}) =>
+    validatePayload(normalizeGenerationStepPayload(payload), {
+      name: generationStepNameValue,
       finishedAt: new NumberValue({min: 0, required: true}),
     })
 );
@@ -299,12 +297,21 @@ export const streamAnswer = createAsyncThunk<
         const isAnswerGenerated = (
           JSON.parse(payload) as GeneratedAnswerEndOfStreamPayload
         ).answerGenerated;
+        const answerId = getState().generatedAnswer.answerId;
         const cannotAnswer = queryExecuted.length !== 0 && !isAnswerGenerated;
-
+        const answerTextIsEmpty = isAnswerGenerated
+          ? !getState().generatedAnswer.answer?.length
+          : undefined;
         dispatch(setCannotAnswer(cannotAnswer));
         dispatch(setIsStreaming(false));
         dispatch(setIsAnswerGenerated(isAnswerGenerated));
-        dispatch(logGeneratedAnswerStreamEnd(isAnswerGenerated));
+        dispatch(
+          logGeneratedAnswerStreamEnd(
+            isAnswerGenerated,
+            answerId,
+            answerTextIsEmpty
+          )
+        );
         dispatch(logGeneratedAnswerResponseLinked());
         break;
       }
@@ -397,45 +404,5 @@ export const generateAnswer = createAsyncThunk<
           'The generateAnswer action requires an answer configuration ID to use CRGA with the Answer API.'
       );
     }
-  }
-);
-
-/**
- * Thunk to generate the head answer as part of the generated answer with follow-ups feature.
- *
- * This action initiates the generation of the main answer when using the Answer Generation API
- * with an agent configuration. It requires an **agent ID** to be present in the engine configuration.
- *
- * @internal
- */
-export const generateHeadAnswer = createAsyncThunk<
-  void,
-  void,
-  AsyncThunkOptions<StateNeededForHeadAnswerParams, SearchThunkExtraArguments>
->(
-  'generatedAnswerWithFollowUps/generateHeadAnswer',
-  async (_, {getState, dispatch, extra: {navigatorContext, logger}}) => {
-    const state = getState();
-    const agentId = selectAgentId(state);
-
-    if (!agentId) {
-      logger.warn(
-        'Missing agentId in engine configuration. ' +
-          'The generateHeadAnswer action requires an agent ID.'
-      );
-      return;
-    }
-
-    dispatch(resetAnswer());
-    const generateHeadAnswerParams = constructGenerateHeadAnswerParams(
-      state,
-      navigatorContext
-    );
-    const headAnswerEndpointArgs: AnswerEndpointArgs = {
-      ...generateHeadAnswerParams,
-      strategyKey: 'head-answer',
-    };
-    dispatch(setAnswerApiQueryParams(generateHeadAnswerParams));
-    await dispatch(initiateAnswerEndpoint(headAnswerEndpointArgs));
   }
 );

@@ -16,9 +16,9 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import InfoIcon from '@/src/images/info.svg';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
+import InfoIcon from '../../../images/info.svg';
 import type {Bindings} from '../atomic-search-interface/interfaces';
 
 /**

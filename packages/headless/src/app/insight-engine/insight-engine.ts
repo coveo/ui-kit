@@ -58,8 +58,10 @@ type InsightEngineState = StateFromReducersMapObject<InsightEngineReducers> &
  *
  * @group Engine
  */
-export interface InsightEngine<State extends object = {}>
-  extends CoreEngine<State & InsightEngineState, InsightThunkExtraArguments> {
+export interface InsightEngine<State extends object = {}> extends CoreEngine<
+  State & InsightEngineState,
+  InsightThunkExtraArguments
+> {
   /**
    * Executes the first search.
    *
@@ -73,8 +75,7 @@ export interface InsightEngine<State extends object = {}>
  *
  * @group Engine
  */
-export interface InsightEngineOptions
-  extends ExternalEngineOptions<InsightEngineState> {
+export interface InsightEngineOptions extends ExternalEngineOptions<InsightEngineState> {
   /**
    * The insight engine configuration options.
    */

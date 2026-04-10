@@ -3,22 +3,24 @@ title: Implement highlighting
 group: Usage
 slug: usage/implement-highlighting
 ---
+
 # Implement highlighting
+
 Coveo Headless offers highlighting for the following search elements:
 
-* [query suggestions](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchBox.html#state)
-* [result list elements](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.Result.html):
-  * title
-  * excerpt
-  * printable URI
-  * first sentences
-  * summary
+- [query suggestions](../../interfaces/Search.SearchBox.html#state)
+- [result list elements](../../interfaces/Search.Result.html):
+  - title
+  - excerpt
+  - printable URI
+  - first sentences
+  - summary
 
 This article explains how to implement highlighting in your Headless search interface.
 
 ## Highlight Query Suggestions
 
-Let’s assume that you have a [`SearchBox`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchBox.html) component which offers clickable suggestions.
+Let’s assume that you have a [`SearchBox`](../../interfaces/Search.SearchBox.html) component which offers clickable suggestions.
 
 Each time you add or delete a character in the search field, Headless performs a [`querySuggest`](https://docs.coveo.com/en/13#operation/querySuggestPost) request to the Search API.
 
@@ -26,23 +28,23 @@ The response includes highlights and may look like this:
 
 ```json
 {
-  "completions" :
-  [
+  "completions": [
     {
-      "expression" : "pdf",
-      "score" : 1019.0259590148926,
-      "highlighted" : "{pdf}",
-      "executableConfidence" : 1.0,
-      "objectId" : "20c05008-3afc-5f4e-9695-3ec326a5f745"
-    }, {
-      "expression" : "filetype pdf",
-      "score" : 19.025959014892578,
-      "highlighted" : "[filetype] {pdf}",
-      "executableConfidence" : 1.0,
-      "objectId" : "39089349-6e45-5c18-991c-7158143ec468"
+      "expression": "pdf",
+      "score": 1019.0259590148926,
+      "highlighted": "{pdf}",
+      "executableConfidence": 1.0,
+      "objectId": "20c05008-3afc-5f4e-9695-3ec326a5f745"
+    },
+    {
+      "expression": "filetype pdf",
+      "score": 19.025959014892578,
+      "highlighted": "[filetype] {pdf}",
+      "executableConfidence": 1.0,
+      "objectId": "39089349-6e45-5c18-991c-7158143ec468"
     }
   ],
-  "responseId" : "9373a3c0-2c5c-4c9d-8adf-8bffd253ae3d"
+  "responseId": "9373a3c0-2c5c-4c9d-8adf-8bffd253ae3d"
 }
 ```
 
@@ -108,11 +110,12 @@ export const SearchBox: FunctionComponent<SearchBoxProps> = (props) => {
   );
 };
 ```
-1. Adds the highlighting delimiters during initialization of a `SearchBox` controller instance (see [`SuggestionHighlightingOptions`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SuggestionHighlightingOptions.html)).
-If you use valid HTML tags as shown in this example, Headless interprets them as tags rather than as regular text.
+
+1. Adds the highlighting delimiters during initialization of a `SearchBox` controller instance (see [`SuggestionHighlightingOptions`](../../interfaces/Search.SuggestionHighlightingOptions.html)).
+   If you use valid HTML tags as shown in this example, Headless interprets them as tags rather than as regular text.
 2. Adds a condition on showing a bulleted list of suggestions (if any).
 3. Applies highlighting to the suggestions.
-The highlighting depends on responses from the Search API.
+   The highlighting depends on responses from the Search API.
 
 ## Highlight Result Elements
 
@@ -177,10 +180,11 @@ export const ResultList: FunctionComponent<ResultListProps> = (props) => {
   );
 };
 ```
+
 1. Imports the `HighlightUtils` module so you can use the `highlightString` method in your component.
 2. Creates a custom function that returns the value of the `highlightString` method, which requires the following arguments:
-   * `content`, the element to highlight
-   * `highlights`, an object with highlights
-   * `openingDelimiter`, a string representing the opening delimiter
-   * `closingDelimiter`, a string representing the closing delimiter
+   - `content`, the element to highlight
+   - `highlights`, an object with highlights
+   - `openingDelimiter`, a string representing the opening delimiter
+   - `closingDelimiter`, a string representing the closing delimiter
 3. Inserts an excerpt with highlighted strings right after the title.

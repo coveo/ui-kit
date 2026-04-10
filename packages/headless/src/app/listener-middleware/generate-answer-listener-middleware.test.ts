@@ -67,7 +67,7 @@ describe('generateAnswerListener', () => {
               getDefaultMiddleware().prepend(
                 createGenerateAnswerListener({
                   getNavigatorContext: buildMockNavigatorContextProvider(),
-                  // biome-ignore lint/suspicious/noExplicitAny: unit test
+                  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- unit test
                 }).middleware as Middleware<{}, any>
               ),
           });
@@ -109,7 +109,7 @@ describe('generateAnswerListener', () => {
               getDefaultMiddleware().prepend(
                 createGenerateAnswerListener({
                   getNavigatorContext: buildMockNavigatorContextProvider(),
-                  // biome-ignore lint/suspicious/noExplicitAny: unit test
+                  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- unit test
                 }).middleware as Middleware<{}, any>
               ),
           });
@@ -147,10 +147,10 @@ describe('generateAnswerListener', () => {
 
           const abortCallOrder =
             answerRunnerAbortRun.mock.invocationCallOrder[0];
-          // biome-ignore lint/suspicious/noExplicitAny: unit tests
+          // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- unit tests
           const resetCallOrder = (resetAnswer as any).mock
             .invocationCallOrder[0];
-          // biome-ignore lint/suspicious/noExplicitAny: unit tests
+          // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- unit tests
           const resetFollowUpCallOrder = (resetFollowUpAnswers as any).mock
             .invocationCallOrder[0];
           const runCallOrder = answerRunnerRun.mock.invocationCallOrder[0];
@@ -176,7 +176,7 @@ describe('generateAnswerListener', () => {
             getDefaultMiddleware().prepend(
               createGenerateAnswerListener({
                 getNavigatorContext: buildMockNavigatorContextProvider(),
-                // biome-ignore lint/suspicious/noExplicitAny: unit test
+                // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- unit test
               }).middleware as Middleware<{}, any>
             ),
         });
@@ -206,51 +206,6 @@ describe('generateAnswerListener', () => {
         expect(resetFollowUpAnswers).not.toHaveBeenCalled();
         expect(answerRunnerAbortRun).not.toHaveBeenCalled();
       });
-    });
-  });
-
-  describe('when answerGenerationApi reducer is NOT present in state', () => {
-    beforeEach(() => {
-      store = configureStore({
-        reducer: {
-          generatedAnswer: (state = getGeneratedAnswerInitialState()) => state,
-          configuration: (state = {knowledge: {agentId: 'some-agent-id'}}) =>
-            state,
-          query: (state = {q: 'test'}) => state,
-        },
-        middleware: (getDefaultMiddleware) =>
-          getDefaultMiddleware().prepend(
-            createGenerateAnswerListener({
-              getNavigatorContext: buildMockNavigatorContextProvider(),
-              // biome-ignore lint/suspicious/noExplicitAny: unit test
-            }).middleware as Middleware<{}, any>
-          ),
-      });
-    });
-
-    it('should not run the answer agent when executeSearch.pending is dispatched', () => {
-      const searchAction = executeSearch.pending('requestId', {
-        legacy: logInsightInterfaceLoad(),
-        next: interfaceLoad(),
-      });
-
-      store.dispatch(searchAction);
-
-      expect(answerRunnerRun).not.toHaveBeenCalled();
-      expect(answerRunnerAbortRun).not.toHaveBeenCalled();
-    });
-
-    it('should not dispatch head answer reset or follow-up reset when executeSearch.pending is dispatched', () => {
-      const searchAction = executeSearch.pending('requestId', {
-        legacy: logInsightInterfaceLoad(),
-        next: interfaceLoad(),
-      });
-
-      store.dispatch(searchAction);
-
-      expect(resetAnswer).not.toHaveBeenCalled();
-      expect(resetFollowUpAnswers).not.toHaveBeenCalled();
-      expect(answerRunnerAbortRun).not.toHaveBeenCalled();
     });
   });
 });

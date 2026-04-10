@@ -25,7 +25,7 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {randomID} from '@/src/utils/utils';
 import type {Bindings} from '../atomic-search-interface/interfaces';
-
+import styles from './atomic-smart-snippet-feedback-modal.tw.css';
 /**
  * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
  *
@@ -58,6 +58,8 @@ export class AtomicSmartSnippetFeedbackModal
   extends LitElement
   implements InitializableComponent<Bindings>
 {
+  static styles = styles;
+
   @state()
   bindings!: Bindings;
 

@@ -50,5 +50,5 @@ body:
     attributes:
       value: |
         ---
-        
+
         **Note:** If you leave the Jira Ticket field empty, a ticket will be automatically created in the KIT project when this issue is created.

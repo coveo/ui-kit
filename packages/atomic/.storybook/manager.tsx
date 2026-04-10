@@ -115,7 +115,7 @@ const coveoTheme = create({
   brandTitle: 'Coveo Docs',
   brandUrl: 'https://docs.coveo.com/en/0',
   brandTarget: '_blank',
-  brandImage: '/coveo-logo.svg',
+  brandImage: './coveo-logo.svg',
 
   // Colors
   colorPrimary: COVEO_PRIMARY,
@@ -203,12 +203,13 @@ addons.register('custom/onetrust-button', () => {
 
 const observeAndExpandButtons = () => {
   const expandButtons = () => {
-    const buttonsToExpand: NodeListOf<HTMLButtonElement> = document.querySelectorAll(
-      'button[data-action="expand-all"][data-expanded="false"]'
-    );
+    const buttonsToExpand: NodeListOf<HTMLButtonElement> =
+      document.querySelectorAll(
+        'button[data-action="expand-all"][data-expanded="false"]'
+      );
     if (!buttonsToExpand.length) return false;
     buttonsToExpand.forEach((button) => {
-      button.click()
+      button.click();
     });
     return true;
   };

@@ -10,6 +10,7 @@
 - **Run a specific end-to-end test suite**: `npx playwright test -g <test-suite.e2e.ts>`
 
 **Notes**:
+
 - By default, the Atomic and Storybook dev servers run on ports 3333 and 4400 respectively
 - End-to-end testing commands must be executed from `packages/atomic/` while the Storybook server is running
 
@@ -39,6 +40,7 @@ In addition to the technology listed in the root `AGENTS.md` file, the following
 In addition to the boundaries listed in the root `AGENTS.md` file, the following boundaries apply when working in the Atomic package:
 
 **You must ALWAYS**:
+
 - Add unit tests in the corresponding test suite (`.spec.ts`) when:
   - Adding a new feature or behavior
   - Fixing a bug in an existing feature or behavior

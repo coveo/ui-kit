@@ -15,7 +15,7 @@ import {
 } from '../../../controller/headless-controller.js';
 import type {DidYouMeanState} from '../../../did-you-mean/headless-did-you-mean.js';
 
-export type {QueryCorrection, WordCorrection, DidYouMeanState};
+export type {DidYouMeanState, QueryCorrection, WordCorrection};
 
 /**
  * The `DidYouMean` controller is responsible for handling query corrections.

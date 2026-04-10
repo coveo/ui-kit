@@ -33,9 +33,9 @@ import type {Kind} from './kind.js';
 export type {
   EngineDefinitionBuildResult,
   HydratedState,
-  OptionsTuple,
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
+  OptionsTuple,
 };
 
 export type RecommendationControllerSettings = {

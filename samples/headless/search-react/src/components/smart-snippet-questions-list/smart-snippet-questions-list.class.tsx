@@ -54,7 +54,6 @@ export class SmartSnippetQuestionsList extends Component<
                 <dd>
                   <div
                     style={{display: question.expanded ? 'block' : 'none'}}
-                    // biome-ignore lint/security/noDangerouslySetInnerHtml: <>
                     dangerouslySetInnerHTML={{__html: question.answer}}
                   ></div>
                   <button

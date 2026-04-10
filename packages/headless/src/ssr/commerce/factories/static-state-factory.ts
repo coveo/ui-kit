@@ -16,7 +16,50 @@ import type {
 import {
   buildFactory,
   type CommerceEngineDefinitionOptions,
+  type SSRCommerceEngine,
 } from './build-factory.js';
+
+function findAndExecuteMethod(
+  controllers: Record<string, unknown>,
+  methodName: string
+): boolean {
+  for (const controller of Object.values(controllers)) {
+    if (
+      typeof Object.getOwnPropertyDescriptor(controller, methodName)?.value ===
+      'function'
+    ) {
+      (controller as Record<string, () => void>)[methodName]();
+      return true;
+    }
+  }
+  return false;
+}
+
+function executeFirstRequestForListing(
+  controllers: Record<string, unknown>,
+  engine: SSRCommerceEngine
+) {
+  const controllerExecuted = findAndExecuteMethod(
+    controllers,
+    'executeFirstRequest'
+  );
+  if (!controllerExecuted) {
+    buildProductListing(engine).executeFirstRequest();
+  }
+}
+
+function executeFirstSearchForSearch(
+  controllers: Record<string, unknown>,
+  engine: SSRCommerceEngine
+) {
+  const controllerExecuted = findAndExecuteMethod(
+    controllers,
+    'executeFirstSearch'
+  );
+  if (!controllerExecuted) {
+    buildSearch(engine).executeFirstSearch();
+  }
+}
 
 export const fetchStaticStateFactory: <
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
@@ -66,10 +109,10 @@ export const fetchStaticStateFactory: <
 
           switch (solutionType) {
             case SolutionType.listing:
-              buildProductListing(engine).executeFirstRequest();
+              executeFirstRequestForListing(controllers, engine);
               break;
             case SolutionType.search:
-              buildSearch(engine).executeFirstSearch();
+              executeFirstSearchForSearch(controllers, engine);
               break;
           }
 

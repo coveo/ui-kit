@@ -229,6 +229,7 @@ export type {
   GeneratedAnswerWithFollowUpsState,
   GeneratedResponseFormat,
   GenerationStep,
+  GenerationStepName,
 } from './controllers/generated-answer/headless-generated-answer.js';
 export {buildGeneratedAnswer} from './controllers/generated-answer/headless-generated-answer.js';
 export type {
@@ -457,6 +458,22 @@ export {
   getSearchApiBaseUrl,
 } from './api/platform-client.js';
 export {API_DATE_FORMAT} from './api/search/date/date-format.js';
+export type {
+  RelativeDate,
+  RelativeDatePeriod,
+  RelativeDateUnit,
+} from './api/search/date/relative-date.js';
+export {
+  deserializeRelativeDate,
+  validateRelativeDate,
+} from './api/search/date/relative-date.js';
+export type {FieldDescription} from './api/search/fields/fields-response.js';
+export type {Raw} from './api/search/search/raw.js';
+export type {Result} from './api/search/search/result.js';
+export type {
+  PhrasesToHighlight,
+  TermsToHighlight,
+} from './api/search/search/stemming.js';
 export * from './features/actions-history/ipx-actions-history-actions-loader.js';
 export * from './features/advanced-search-queries/advanced-search-queries-actions-loader.js';
 export * from './features/analytics/click-analytics-actions-loader.js';
@@ -475,6 +492,15 @@ export * from './features/excerpt-length/excerpt-length-actions-loader.js';
 export * from './features/facet-options/facet-options-actions-loader.js';
 export * from './features/facets/automatic-facet-set/automatic-facet-set-actions-loader.js';
 export * from './features/facets/category-facet-set/category-facet-set-actions-loader.js';
+export type {
+  CategoryFacetSortCriterion,
+  CategoryFacetValueRequest,
+} from './features/facets/category-facet-set/interfaces/request.js';
+export type {
+  CategoryFacetValue,
+  CategoryFacetValueCommon,
+} from './features/facets/category-facet-set/interfaces/response.js';
+export type {FacetResultsMustMatch} from './features/facets/facet-api/request.js';
 export * from './features/facets/facet-set/facet-set-actions-loader.js';
 // Selectors
 export {
@@ -483,11 +509,34 @@ export {
   facetResponseSelectedValuesSelector,
   facetResponseSelector,
 } from './features/facets/facet-set/facet-set-selectors.js';
+export type {
+  FacetSortCriterion,
+  FacetValueRequest,
+} from './features/facets/facet-set/interfaces/request.js';
+export type {AnyFacetValueRequest} from './features/facets/generic/interfaces/generic-facet-request.js';
 export * from './features/facets/range-facets/date-facet-set/date-facet-actions-loader.js';
+export type {DateRangeRequest} from './features/facets/range-facets/date-facet-set/interfaces/request.js';
+export type {DateFacetValue} from './features/facets/range-facets/date-facet-set/interfaces/response.js';
+export type {
+  RangeFacetRangeAlgorithm,
+  RangeFacetSortCriterion,
+} from './features/facets/range-facets/generic/interfaces/request.js';
+export type {NumericRangeRequest} from './features/facets/range-facets/numeric-facet-set/interfaces/request.js';
+export type {NumericFacetValue} from './features/facets/range-facets/numeric-facet-set/interfaces/response.js';
 export * from './features/facets/range-facets/numeric-facet-set/numeric-facet-actions-loader.js';
 export * from './features/fields/fields-actions-loader.js';
+export {
+  DefaultFieldsToInclude,
+  EcommerceDefaultFieldsToInclude,
+  MinimumFieldsToInclude,
+} from './features/fields/fields-state.js';
 export * from './features/folding/folding-actions-loader.js';
 export * from './features/generated-answer/generated-answer-actions-loader.js';
+export type {
+  GeneratedAnswerFeedback,
+  GeneratedAnswerFeedbackOption,
+} from './features/generated-answer/generated-answer-analytics-actions.js';
+export type {GeneratedContentFormat} from './features/generated-answer/generated-response-format.js';
 export * from './features/history/history-actions-loader.js';
 export * from './features/instant-results/instant-results-actions-loader.js';
 export * from './features/pagination/pagination-actions-loader.js';
@@ -506,68 +555,15 @@ export * from './features/recent-results/recent-results-actions-loader.js';
 export * from './features/result-preview/result-preview-actions-loader.js';
 //#region Grouped actions
 export {ResultTemplatesHelpers} from './features/result-templates/result-templates-helpers.js';
-export {buildResultTemplatesManager} from './features/result-templates/result-templates-manager.js';
-export * from './features/search/search-actions-loader.js';
-export * from './features/search-hub/search-hub-actions-loader.js';
-export * from './features/search-parameters/search-parameter-actions-loader.js';
-export * from './features/sort-criteria/sort-criteria-actions-loader.js';
-export * from './features/standalone-search-box-set/standalone-search-box-set-actions-loader.js';
-export * from './features/static-filter-set/static-filter-set-actions-loader.js';
-export * from './features/tab-set/tab-set-actions-loader.js';
-export {HighlightUtils};
-export type {
-  RelativeDate,
-  RelativeDatePeriod,
-  RelativeDateUnit,
-} from './api/search/date/relative-date.js';
-export {
-  deserializeRelativeDate,
-  validateRelativeDate,
-} from './api/search/date/relative-date.js';
-export type {FieldDescription} from './api/search/fields/fields-response.js';
-export type {Raw} from './api/search/search/raw.js';
-export type {Result} from './api/search/search/result.js';
-export type {
-  PhrasesToHighlight,
-  TermsToHighlight,
-} from './api/search/search/stemming.js';
-export type {
-  CategoryFacetSortCriterion,
-  CategoryFacetValueRequest,
-} from './features/facets/category-facet-set/interfaces/request.js';
-export type {
-  CategoryFacetValue,
-  CategoryFacetValueCommon,
-} from './features/facets/category-facet-set/interfaces/response.js';
-export type {FacetResultsMustMatch} from './features/facets/facet-api/request.js';
-export type {
-  FacetSortCriterion,
-  FacetValueRequest,
-} from './features/facets/facet-set/interfaces/request.js';
-export type {AnyFacetValueRequest} from './features/facets/generic/interfaces/generic-facet-request.js';
-export type {DateRangeRequest} from './features/facets/range-facets/date-facet-set/interfaces/request.js';
-export type {DateFacetValue} from './features/facets/range-facets/date-facet-set/interfaces/response.js';
-export type {
-  RangeFacetRangeAlgorithm,
-  RangeFacetSortCriterion,
-} from './features/facets/range-facets/generic/interfaces/request.js';
-export type {NumericRangeRequest} from './features/facets/range-facets/numeric-facet-set/interfaces/request.js';
-export type {NumericFacetValue} from './features/facets/range-facets/numeric-facet-set/interfaces/response.js';
-export {
-  DefaultFieldsToInclude,
-  EcommerceDefaultFieldsToInclude,
-  MinimumFieldsToInclude,
-} from './features/fields/fields-state.js';
-export type {
-  GeneratedAnswerFeedback,
-  GeneratedAnswerFeedbackOption,
-} from './features/generated-answer/generated-answer-analytics-actions.js';
-export type {GeneratedContentFormat} from './features/generated-answer/generated-response-format.js';
 export type {
   ResultTemplate,
   ResultTemplateCondition,
   ResultTemplatesManager,
 } from './features/result-templates/result-templates-manager.js';
+export {buildResultTemplatesManager} from './features/result-templates/result-templates-manager.js';
+export * from './features/search/search-actions-loader.js';
+export * from './features/search-hub/search-hub-actions-loader.js';
+export * from './features/search-parameters/search-parameter-actions-loader.js';
 export {buildSearchParameterSerializer} from './features/search-parameters/search-parameter-serializer.js';
 export type {
   SortByDate,
@@ -588,6 +584,10 @@ export {
   SortOrder,
 } from './features/sort-criteria/criteria.js';
 export {parseCriterionExpression} from './features/sort-criteria/criteria-parser.js';
+export * from './features/sort-criteria/sort-criteria-actions-loader.js';
+export * from './features/standalone-search-box-set/standalone-search-box-set-actions-loader.js';
+export * from './features/static-filter-set/static-filter-set-actions-loader.js';
+export * from './features/tab-set/tab-set-actions-loader.js';
 export type {
   Template,
   TemplatesManager,
@@ -597,3 +597,4 @@ export type {HighlightKeyword} from './utils/highlight.js';
 export * from './utils/query-expression/query-expression.js';
 export type {PlatformEnvironment} from './utils/url-utils.js';
 export {VERSION} from './utils/version.js';
+export {HighlightUtils};

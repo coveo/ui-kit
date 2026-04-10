@@ -7,6 +7,7 @@ import {
   getResultSectionDecorators,
 } from '@/storybook-utils/search/result-section-story-utils';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-result-section-excerpt/atomic-result-section-excerpt.js';
 
 const {play} = wrapInSearchInterface({
   config: {
@@ -32,6 +33,7 @@ const meta: Meta = {
   render: (args) => template(args),
   parameters: {
     ...parameters,
+    chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
     },

@@ -6,6 +6,7 @@ import type {
   GeneratedAnswerBase,
   GeneratedAnswerState,
   GenerationStep,
+  GenerationStepName,
 } from '../../features/generated-answer/generated-answer-state.js';
 import type {GeneratedResponseFormat} from '../../features/generated-answer/generated-response-format.js';
 import type {
@@ -22,16 +23,17 @@ import {
 } from '../knowledge/generated-answer/headless-generated-answer-with-follow-ups.js';
 
 export type {
-  GeneratedAnswerCitation,
-  GeneratedResponseFormat,
-  GeneratedAnswerState,
   GeneratedAnswer,
-  GeneratedAnswerWithFollowUps,
-  GeneratedAnswerWithFollowUpsState,
   GeneratedAnswerBase,
+  GeneratedAnswerCitation,
   GeneratedAnswerProps,
   GeneratedAnswerPropsInitialState,
+  GeneratedAnswerState,
+  GeneratedAnswerWithFollowUps,
+  GeneratedAnswerWithFollowUpsState,
+  GeneratedResponseFormat,
   GenerationStep,
+  GenerationStepName,
 };
 
 /**

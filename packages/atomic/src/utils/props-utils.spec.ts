@@ -88,7 +88,7 @@ describe('mapProperty', () => {
 
     // Verify the property was created reactively
     const ctor = TestElement as typeof LitElement;
-    // biome-ignore lint/suspicious/noExplicitAny: Testing internal Lit property
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Testing internal Lit property
     const properties = (ctor as any).elementProperties;
 
     expect(properties).toBeDefined();
@@ -106,7 +106,7 @@ describe('mapProperty', () => {
     const container = document.createElement('div');
     container.innerHTML =
       '<test-map-property-2 data-name="John" data-age="30"></test-map-property-2>';
-    // biome-ignore lint/suspicious/noExplicitAny: Testing dynamic property access
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Testing dynamic property access
     const element = container.firstElementChild as any;
 
     document.body.appendChild(element);
@@ -130,7 +130,7 @@ describe('mapProperty', () => {
 
     customElement('test-map-property-3')(TestElement3);
 
-    // biome-ignore lint/suspicious/noExplicitAny: Testing dynamic property access
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Testing dynamic property access
     const element = document.createElement('test-map-property-3') as any;
     document.body.appendChild(element);
 

@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicTabStories from './atomic-tab.new.stories';
+import meta, { Default } from './atomic-tab.new.stories';
 import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicTabStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicTabStories}
+  stories={{ Default }}
   githubPath="search/atomic-tab/atomic-tab.ts"
   tagName="atomic-tab"
   className="AtomicTab"

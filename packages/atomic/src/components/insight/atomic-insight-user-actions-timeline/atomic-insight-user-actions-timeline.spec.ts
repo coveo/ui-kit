@@ -21,7 +21,7 @@ describe('atomic-insight-user-actions-timeline', () => {
     mockedConsole = mockConsole();
   });
 
-  // biome-ignore lint/suspicious/noExplicitAny: Test fixture with partial data
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Test fixture with partial data
   const defaultUserActions: any = {
     timeline: {
       session: {
@@ -111,12 +111,12 @@ describe('atomic-insight-user-actions-timeline', () => {
     const {element} =
       await renderInAtomicInsightInterface<AtomicInsightUserActionsTimeline>({
         template: html`
-        <atomic-insight-user-actions-timeline
-          user-id=${ifDefined(props.userId)}
-          ticket-creation-date-time=${ifDefined(props.ticketCreationDateTime)}
-          .excludedCustomActions=${props.excludedCustomActions || []}
-        ></atomic-insight-user-actions-timeline>
-      `,
+          <atomic-insight-user-actions-timeline
+            user-id=${ifDefined(props.userId)}
+            ticket-creation-date-time=${ifDefined(props.ticketCreationDateTime)}
+            .excludedCustomActions=${props.excludedCustomActions || []}
+          ></atomic-insight-user-actions-timeline>
+        `,
         selector: 'atomic-insight-user-actions-timeline',
       });
 
@@ -539,7 +539,7 @@ describe('atomic-insight-user-actions-timeline', () => {
           },
         });
 
-        // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+        // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
         (element as any)[prop] = invalidValue;
         await element.updateComplete;
 

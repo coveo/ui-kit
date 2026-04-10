@@ -182,7 +182,7 @@ describe('atomic-notifications', () => {
 
     expect(element.error).toBeUndefined();
 
-    // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
     (element as any).headingLevel = -1;
     await element.updateComplete;
 
@@ -196,7 +196,7 @@ describe('atomic-notifications', () => {
 
     expect(element.error).toBeUndefined();
 
-    // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
     (element as any).headingLevel = 7;
     await element.updateComplete;
 
@@ -212,7 +212,7 @@ describe('atomic-notifications', () => {
 
     const {element} = await renderNotifications({props: {headingLevel: 2}});
 
-    // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
     (element as any).headingLevel = -1;
     await element.updateComplete;
 
@@ -238,7 +238,7 @@ describe('atomic-notifications', () => {
 
     const {element} = await renderNotifications({props: {headingLevel: 2}});
 
-    // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
     (element as any).headingLevel = 7;
     await element.updateComplete;
 
@@ -262,7 +262,7 @@ describe('atomic-notifications', () => {
 
     expect(element.error).toBeUndefined();
 
-    // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
     (element as any).headingLevel = 10;
     await element.updateComplete;
 

@@ -3,7 +3,9 @@ title: Use a standalone search box
 group: Usage
 slug: usage/use-a-standalone-search-box
 ---
+
 # Use a standalone search box
+
 As an example, take the search box at the top of this page.
 It allows you to start your search while on this page before redirecting you to the full search page.
 Because such a search experience involves two pages, some data needs to be shared between them so that the query response is correct, and so that you log the proper [Coveo Analytics events](https://docs.coveo.com/en/260/).
@@ -12,9 +14,9 @@ This article walks you through the implementation of such a search experience.
 
 ## Create the page with the standalone search box
 
-If you’ve already worked with [Coveo Headless controllers](https://docs.coveo.com/en/headless/latest/usage#use-headless-controllers), this step should already be familiar to you.
+If you’ve already worked with [Coveo Headless controllers](./index.html#use-headless-controllers), this step should already be familiar to you.
 You need to create a search engine, instantiate a standalone search box controller and connect it to the search box DOM element.
-A React example implementation is available [here](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/standalone-search-box/standalone-search-box.fn.tsx).
+A React example implementation is available [here](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/standalone-search-box/standalone-search-box.fn.tsx).
 
 ## Communicate between the two pages
 
@@ -24,16 +26,17 @@ For example, in the page with the standalone search box, you would include the f
 
 ```typescript
 searchBox.subscribe(() => {
-    const {redirectTo, value, analytics} = searchBox.state;
-​
-    if (redirectTo) {
-        const data = {value, analytics};
-        localStorage.setItem('coveo_standalone_search_box_data', JSON.stringify(data));
-​
-        // perform redirect
-        window.location.href = redirectTo;
-    }
-})
+  const {redirectTo, value, analytics} = searchBox.state;
+  if (redirectTo) {
+    const data = {value, analytics};
+    localStorage.setItem(
+      'coveo_standalone_search_box_data',
+      JSON.stringify(data)
+    );
+    // perform redirect
+    window.location.href = redirectTo;
+  }
+});
 ```
 
 ## Create the full search page
@@ -44,8 +47,7 @@ You also need to set the correct query.
 You can configure `originLevel3` using the `document.referrer` value when initializing the engine, as shown below:
 
 ```typescript
-import { buildSearchEngine } from '@coveo/headless';
-​
+import {buildSearchEngine} from '@coveo/headless';
 const engine = buildSearchEngine({
   configuration: {
     // ...
@@ -56,15 +58,13 @@ const engine = buildSearchEngine({
 });
 ```
 
-In your full search page, you can set the query using the [`updateQuery`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.QueryActionCreators.html#updateQuery) action, as shown below:
+In your full search page, you can set the query using the [`updateQuery`](../../interfaces/Search.QueryActionCreators.html#updateQuery) action, as shown below:
 
 ```typescript
 import {loadQueryActions} from '@coveo/headless';
-​
 const {updateQuery} = loadQueryActions(engine);
 const data = localStorage.getItem('coveo_standalone_search_box_data');
 const {value} = JSON.parse(data);
-​
 engine.dispatch(updateQuery({q: value}));
 ```
 
@@ -73,8 +73,11 @@ The final steps are to delete the data in local storage and to handle the case w
 If you do all of this, here’s what the code for your full search page will look like:
 
 ```typescript
-import {buildSearchEngine, loadQueryActions, loadSearchAnalyticsActions} from '@coveo/headless';
-​
+import {
+  buildSearchEngine,
+  loadQueryActions,
+  loadSearchAnalyticsActions,
+} from '@coveo/headless';
 const engine = buildSearchEngine({
   configuration: {
     // ...
@@ -83,14 +86,12 @@ const engine = buildSearchEngine({
     },
   },
 });
-​
 const {updateQuery} = loadQueryActions(engine);
 const data = localStorage.getItem('coveo_standalone_search_box_data');
-​
 if (data) {
   localStorage.removeItem('coveo_standalone_search_box_data');
   const {value, analytics} = JSON.parse(data);
-​  engine.dispatch(updateQuery({q: value}));
+  engine.dispatch(updateQuery({q: value}));
   engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
 } else {
   engine.executeFirstSearch();

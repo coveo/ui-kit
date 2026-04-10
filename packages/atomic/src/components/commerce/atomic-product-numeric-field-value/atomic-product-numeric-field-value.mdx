@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicProductNumericFieldValueStories from './atomic-product-numeric-field-value.new.stories';
+import meta, { Default } from './atomic-product-numeric-field-value.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicProductNumericFieldValueStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicProductNumericFieldValueStories}
+  stories={{ Default }}
   githubPath="commerce/atomic-product-numeric-field-value/atomic-product-numeric-field-value.ts"
   tagName="atomic-product-numeric-field-value"
   className="AtomicProductNumericFieldValue"

@@ -132,7 +132,7 @@ export function mapAttributesToProp(
 function stringMapToStringArrayMap(map: Record<string, string>) {
   return Object.entries(map).reduce(
     (acc, [key, value]) => ({
-      // biome-ignore lint/performance/noAccumulatingSpread: <>
+      // oxlint-disable-next-line oxc/no-accumulating-spread -- <>
       ...acc,
       [key]: splitAttributeValueOnCommas(value).map((subValue) =>
         subValue.trim()

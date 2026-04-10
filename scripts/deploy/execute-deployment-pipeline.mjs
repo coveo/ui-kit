@@ -3,19 +3,11 @@ import {writeFileSync} from 'node:fs';
 import {parse} from 'semver';
 import rootJson from '../../package.json' with {type: 'json'};
 import atomicJson from '../../packages/atomic/package.json' with {type: 'json'};
-import atomicHostedPageJson from '../../packages/atomic-hosted-page/package.json' with {
-  type: 'json',
-};
-import atomicReactJson from '../../packages/atomic-react/package.json' with {
-  type: 'json',
-};
+import atomicHostedPageJson from '../../packages/atomic-hosted-page/package.json' with {type: 'json'};
+import atomicReactJson from '../../packages/atomic-react/package.json' with {type: 'json'};
 import buenoJson from '../../packages/bueno/package.json' with {type: 'json'};
-import headlessJson from '../../packages/headless/package.json' with {
-  type: 'json',
-};
-import shopifyJson from '../../packages/shopify/package.json' with {
-  type: 'json',
-};
+import headlessJson from '../../packages/headless/package.json' with {type: 'json'};
+import shopifyJson from '../../packages/shopify/package.json' with {type: 'json'};
 
 const packagesAndVersions = [
   {packageName: 'BUENO', version: buenoJson.version, s3Dir: 'bueno'},
@@ -55,19 +47,13 @@ function getFullyQualifiedVersion(versionComponentsOrdered) {
 }
 
 function getVersionSubpaths(version) {
-  const prNumber = process.env.PR_NUMBER;
   const versionComponentsOrdered = getVersionComponents(version);
 
-  // Use PR number as build if available
-  return prNumber
-    ? {
-        patch: versionComponentsOrdered.slice(0, 3).concat(prNumber).join('.'),
-      }
-    : {
-        major: versionComponentsOrdered.slice(0, 1),
-        minor: versionComponentsOrdered.slice(0, 2).join('.'),
-        patch: getFullyQualifiedVersion(versionComponentsOrdered),
-      };
+  return {
+    major: versionComponentsOrdered.slice(0, 1),
+    minor: versionComponentsOrdered.slice(0, 2).join('.'),
+    patch: getFullyQualifiedVersion(versionComponentsOrdered),
+  };
 }
 
 function getResolveVariableString(version, packageName) {

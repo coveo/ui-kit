@@ -15,11 +15,11 @@ import {
 import {paginationReducer as commercePagination} from './pagination-slice.js';
 
 export type {
-  RegisterRecommendationsSlotPaginationPayload,
-  SetPageSizePayload,
-  SelectPagePayload,
   NextPagePayload,
   PreviousPagePayload,
+  RegisterRecommendationsSlotPaginationPayload,
+  SelectPagePayload,
+  SetPageSizePayload,
 };
 
 /**

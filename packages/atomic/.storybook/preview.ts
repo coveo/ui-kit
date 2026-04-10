@@ -1,4 +1,4 @@
-import '@coveo/atomic/themes/coveo.css';
+import '@/src/themes/coveo.css';
 import type {Preview} from '@storybook/web-components-vite';
 import {setCustomElementsManifest} from '@storybook/web-components-vite';
 import {setStorybookHelpersConfig} from '@wc-toolkit/storybook-helpers';
@@ -7,8 +7,15 @@ import {initialize, mswLoader} from 'msw-storybook-addon';
 import {within} from 'shadow-dom-testing-library';
 import {create} from 'storybook/theming';
 import customElements from '../custom-elements.json';
-import {defineCustomElements} from '../dist/atomic/loader/index.js';
 import {COVEO_PRIMARY, FONT_BASE, FONT_CODE} from './theme';
+
+// For CDN builds, we want to use the "true" lib hosted on our CDN instead of bundling it through
+// This allow us to have a more realistic test environment.
+if (import.meta.env.VITE_IS_CDN === 'true') {
+  const url = new URL(import.meta.url);
+  url.pathname = `${url.pathname.split('/storybook/')[0]}/atomic.esm.js`;
+  import(url.href);
+}
 
 initialize(
   import.meta.env.DEV || import.meta.env.VITE_IS_CDN === 'true'
@@ -18,7 +25,6 @@ initialize(
 
 setCustomElementsManifest(customElements);
 
-defineCustomElements();
 setStorybookHelpersConfig({
   categoryOrder: [
     'attributes',

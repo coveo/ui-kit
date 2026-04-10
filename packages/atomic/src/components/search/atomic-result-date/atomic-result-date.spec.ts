@@ -75,7 +75,7 @@ describe('atomic-result-date', () => {
           bindings.interfaceElement = {
             ...bindings.interfaceElement,
             language: 'en',
-            // biome-ignore lint/suspicious/noExplicitAny: mock interface element
+            // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- mock interface element
           } as any;
           return bindings;
         },

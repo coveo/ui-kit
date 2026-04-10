@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicCommerceRefineToggleStories from './atomic-commerce-refine-toggle.new.stories';
+import meta, { Default } from './atomic-commerce-refine-toggle.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicCommerceRefineToggleStories} name="Docs toggle"/>
+<Meta of={meta} name="Docs toggle"/>
 
 <AtomicDocTemplate
-  stories={AtomicCommerceRefineToggleStories}
+  stories={{ Default }}
   githubPath="commerce/atomic-commerce-refine-toggle/atomic-commerce-refine-toggle.ts"
   tagName="atomic-commerce-refine-toggle"
   className="AtomicCommerceRefineToggle"

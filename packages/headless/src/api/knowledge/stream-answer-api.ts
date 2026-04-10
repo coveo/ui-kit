@@ -20,8 +20,10 @@ import {answerSlice} from './answer-slice.js';
 import type {GeneratedAnswerStream} from './generated-answer-stream.js';
 import type {StreamAnswerAPIState} from './stream-answer-api-state.js';
 
-interface StreamPayload
-  extends Pick<GeneratedAnswerStream, 'contentFormat' | 'citations'> {
+interface StreamPayload extends Pick<
+  GeneratedAnswerStream,
+  'contentFormat' | 'citations'
+> {
   textDelta?: string;
   padding?: string;
   answerGenerated?: boolean;
@@ -128,13 +130,23 @@ export const updateCacheWithEvent = (
         dispatch(updateCitations({citations: parsedPayload.citations}));
       }
       break;
-    case 'genqa.endOfStreamType':
+    case 'genqa.endOfStreamType': {
       handleEndOfStream(draft, parsedPayload);
+      const answerId = draft.answerId;
+      const answerGenerated = parsedPayload.answerGenerated ?? false;
+      const answerTextIsEmpty = answerGenerated
+        ? !draft.answer?.length
+        : undefined;
       dispatch(
-        logGeneratedAnswerStreamEnd(parsedPayload.answerGenerated ?? false)
+        logGeneratedAnswerStreamEnd(
+          answerGenerated,
+          answerId,
+          answerTextIsEmpty
+        )
       );
       dispatch(logGeneratedAnswerResponseLinked());
       break;
+    }
   }
 };
 

@@ -1,12 +1,12 @@
 import type {HistoryElement} from '../../api/analytics/coveo.analytics/history-store.js';
 import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import type {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
-import type {AnswerParams} from '../../api/knowledge/answer-generation/endpoints/answer/answer-endpoint.js';
 import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
 import {getOrganizationEndpoint} from '../../api/platform-client.js';
 import type {BaseParam} from '../../api/platform-service-params.js';
 import type {SearchRequest} from '../../api/search/search/search-request.js';
 import type {
+  AnalyticsParam,
   AuthenticationParam,
   AutomaticFacetsParams,
 } from '../../api/search/search-api-params.js';
@@ -56,7 +56,8 @@ type StateNeededByGeneratedAnswerStream = ConfigurationSection &
   GeneratedAnswerSection;
 
 export interface AnswerApiQueryParams
-  extends Omit<
+  extends
+    Omit<
       SearchRequest,
       keyof (BaseParam & AuthenticationParam & AutomaticFacetsParams)
     >,
@@ -169,10 +170,22 @@ export type StateNeededForHeadAnswerParams = ConfigurationSection &
   GeneratedAnswerSection &
   Partial<TabSection>;
 
+/**
+ * Parameters for answer generation requests.
+ */
+type HeadAnswerParams = {
+  q: string;
+  facets?: AnyFacetRequest[];
+  searchHub?: string;
+  pipeline?: string;
+  citationsFieldToInclude?: string[];
+  locale: string;
+} & AnalyticsParam;
+
 export const constructGenerateHeadAnswerParams = (
   state: StateNeededForHeadAnswerParams,
   navigatorContext: NavigatorContext
-): AnswerParams => {
+): HeadAnswerParams => {
   const q = selectQuery(state)?.q;
   const facetParams = getGeneratedFacetParams(state);
   const analyticsParams = fromAnalyticsStateToAnalyticsParams(
@@ -189,12 +202,7 @@ export const constructGenerateHeadAnswerParams = (
   return {
     q: q || '',
     ...(facetParams.length && {facets: facetParams}),
-    pipelineRuleParameters: {
-      mlGenerativeQuestionAnswering: {
-        responseFormat: state.generatedAnswer.responseFormat,
-        citationsFieldToInclude,
-      },
-    },
+    citationsFieldToInclude,
     ...(searchHub?.length && {searchHub}),
     ...(pipeline?.length && {pipeline}),
     ...analyticsParams,

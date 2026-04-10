@@ -4,6 +4,7 @@ group: Usage
 category: Server-side rendering
 slug: usage/server-side-rendering/send-context
 ---
+
 # Send context
 
 For both of the following examples, assume that there’s a shared configuration file (`engine.ts`) which defines the search engine and context controller:
@@ -11,14 +12,14 @@ For both of the following examples, assume that there’s a shared configuration
 ```ts
 // engine.ts
 
-import { defineSearchEngine, defineContext } from '@coveo/headless-react/ssr';
+import {defineSearchEngine, defineContext} from '@coveo/headless-react/ssr';
 
 const engineDefinition = defineSearchEngine({
   // ...
-  controllers: { context: defineContext() },
+  controllers: {context: defineContext()},
 });
 
-export const { fetchStaticState } = engineDefinition;
+export const {fetchStaticState} = engineDefinition;
 ```
 
 ## Send context from the server before the page first loads
@@ -30,7 +31,7 @@ The following is an example implementation:
 ```tsx
 // server.ts
 
-import { fetchStaticState } from './engine.ts';
+import {fetchStaticState} from './engine.ts';
 
 export default async function Search() {
   const contextValues = {
@@ -41,7 +42,7 @@ export default async function Search() {
   const staticState = await fetchStaticState({
     controllers: {
       context: {
-        initialState: { values: contextValues },
+        initialState: {values: contextValues},
       },
     },
   });
@@ -67,7 +68,7 @@ First, modify the `engine.ts` file to export the `useContext` hook:
 // engine.ts
 
 // ...
-export const { useContext } = engineDefinition.controllers;
+export const {useContext} = engineDefinition.controllers;
 ```
 
 Then, in your component, you can use the `useContext` and `set` methods to set the context values:
@@ -77,22 +78,20 @@ Then, in your component, you can use the `useContext` and `set` methods to set t
 
 'use client';
 
-import { useContext } from '../path/to/engine.ts';
+import {useContext} from '../path/to/engine.ts';
 
 export default function Context() {
-  const { methods } = useContext();
+  const {methods} = useContext();
 
   methods?.set({
     region: 'Canada',
-    role: getRole()
-  })
+    role: getRole(),
+  });
 
-  return <></>
+  return <></>;
 }
 ```
 
-<dl><dt><strong>❗ IMPORTANT</strong>
-
-Don’t forget to add this component inside your `SearchPageProvider`.
-
-</dt><dd>
+> [!IMPORTANT]
+>
+> Don’t forget to add this component inside your `SearchPageProvider`.

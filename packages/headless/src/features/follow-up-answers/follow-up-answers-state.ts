@@ -19,6 +19,8 @@ export interface FollowUpAnswer extends GeneratedAnswerBase {
 export interface FollowUpAnswersState {
   /** The unique identifier of the follow-up answers conversation. */
   conversationId: string;
+  /** The token proving the client originated the follow-up conversation. */
+  conversationToken: string;
   /**
    * Determines if the follow-up answer feature is enabled.
    */
@@ -32,6 +34,7 @@ export interface FollowUpAnswersState {
 export function getFollowUpAnswersInitialState(): FollowUpAnswersState {
   return {
     conversationId: '',
+    conversationToken: '',
     isEnabled: false,
     followUpAnswers: [],
   };

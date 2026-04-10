@@ -253,7 +253,7 @@ export class AtomicSegmentedFacet
   })
   customSort: string[] = [];
 
-  private dependenciesManager!: FacetConditionsManager;
+  private dependenciesManager?: FacetConditionsManager;
 
   static styles: CSSResultGroup = [
     facetCommonStyles,
@@ -315,14 +315,20 @@ export class AtomicSegmentedFacet
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.dependenciesManager.stopWatching();
+    if (!this.isConnected) {
+      this.dependenciesManager?.stopWatching();
+    }
   }
 
   private renderValuesContainer(children: unknown) {
     const classes = 'box-container flex h-10';
     return renderFacetValuesGroup({
       props: {i18n: this.bindings.i18n, label: this.label},
-    })(html` <ul class=${classes} part="values">${children}</ul> `);
+    })(html`
+      <ul class=${classes} part="values">
+        ${children}
+      </ul>
+    `);
   }
 
   private renderValue(facetValue: FacetValue, onClick: () => void) {
@@ -356,9 +362,7 @@ export class AtomicSegmentedFacet
   private renderLabel() {
     return when(
       this.label,
-      () => html`
-        <b class="mr-2" part="label"> ${this.label}: </b>
-      `
+      () => html` <b class="mr-2" part="label"> ${this.label}: </b> `
     );
   }
 
