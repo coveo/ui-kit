@@ -752,4 +752,4 @@ jobs:
           fetch-depth: 0
 
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo chromatic --filter=@coveo/atomic --  --exit-once-uploaded --exit-zero-on-changes --auto-accept-changes --branchName=main
+      - run: pnpm exec turbo chromatic --filter=@coveo/atomic -- --exit-once-uploaded --exit-zero-on-changes --auto-accept-changes --branchName=main
