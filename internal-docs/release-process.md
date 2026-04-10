@@ -41,7 +41,7 @@ When the "Version Packages" PR is created (or updated), `changesets/action` runs
 1. Reads all pending changeset files in `.changeset/`.
 2. Determines the appropriate semver bump for each affected package.
 3. Updates `package.json` versions and inter-package dependency ranges.
-4. Generates or appends to each package's `CHANGELOG.md`.
+4. Generates or prepends to each package's `CHANGELOG.md`.
 5. Deletes the consumed changeset files.
 
 All these changes are committed into the "Version Packages" PR for the team to review before merging.
