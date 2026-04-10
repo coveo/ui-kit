@@ -11,19 +11,13 @@ const headlessJson = JSON.parse(
   readFileSync(resolve(__dirname, '../../headless/package.json'), 'utf8')
 );
 const isNightly = process.env.IS_NIGHTLY === 'true';
-const isPrRelease =
-  process.env.IS_PRERELEASE === 'true' && process.env.PR_NUMBER;
 
 const headlessVersion = isNightly
   ? `v${headlessJson.version.split('.').shift()}-nightly`
-  : isPrRelease
-    ? `v${headlessJson.version.split('-').shift()}.${process.env.PR_NUMBER}`
-    : `v${headlessJson.version}`;
+  : `v${headlessJson.version}`;
 const buenoVersion = isNightly
   ? `v${buenoJson.version.split('.').shift()}-nightly`
-  : isPrRelease
-    ? `v${buenoJson.version.split('-').shift()}.${process.env.PR_NUMBER}`
-    : `v${buenoJson.version}`;
+  : `v${buenoJson.version}`;
 const packageMappings = {
   '@coveo/headless': `/headless/${headlessVersion}/headless.esm.js`,
   '@coveo/bueno': `/bueno/${buenoVersion}/bueno.esm.js`,
