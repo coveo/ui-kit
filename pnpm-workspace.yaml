@@ -71,7 +71,7 @@ catalog:
   jest: 30.3.0
   jest-cli: 30.3.0
   local-web-server: 5.4.0
-  next: 16.2.2
+  next: 16.2.3
   prettier: 3.7.4
   puppeteer: 24.34.0
   playwright: 1.57.0
