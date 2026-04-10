@@ -38,11 +38,11 @@ describe('atomic-product-description', () => {
 
     const {element} = await renderInAtomicProduct<AtomicProductDescription>({
       template: html`
-      <atomic-product-description
-        truncate-after=${ifDefined(props.truncateAfter)}
-        ?is-collapsible=${props.isCollapsible}
-        field=${ifDefined(props.field)}
-      ></atomic-product-description>
+        <atomic-product-description
+          truncate-after=${ifDefined(props.truncateAfter)}
+          ?is-collapsible=${props.isCollapsible}
+          field=${ifDefined(props.field)}
+        ></atomic-product-description>
       `,
       selector: 'atomic-product-description',
       product: mockedProduct,
@@ -101,7 +101,7 @@ describe('atomic-product-description', () => {
     const {element, locators} = await renderProductDescription({
       truncateAfter: '2',
     });
-    // biome-ignore lint/suspicious/noExplicitAny: <>
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
     (element as any).isTruncated = true;
     await userEvent.click(locators.button!);
 
@@ -112,7 +112,7 @@ describe('atomic-product-description', () => {
     const {element, locators} = await renderProductDescription({
       truncateAfter: '2',
     });
-    // biome-ignore lint/suspicious/noExplicitAny: <>
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
     (element as any).isTruncated = true;
     expect(locators.expandableDiv).toHaveClass('min-lines-2');
     expect(locators.expandableDiv).toHaveStyle({
@@ -131,7 +131,7 @@ describe('atomic-product-description', () => {
         isCollapsible: true,
         truncateAfter: '2',
       }));
-      // biome-ignore lint/suspicious/noExplicitAny: <>
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
       (element as any).isTruncated = true;
     });
 

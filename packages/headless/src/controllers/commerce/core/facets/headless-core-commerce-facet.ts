@@ -40,18 +40,18 @@ import type {
 } from '../common.js';
 
 export type {
+  BaseFacetValue,
+  CategoryFacetValue,
+  CategoryFacetValueRequest,
+  DateFacetValue,
+  DateRangeRequest,
   FacetType,
   FacetValueRequest,
-  RegularFacetValue,
-  LocationFacetValueRequest,
   LocationFacetValue,
-  NumericRangeRequest,
+  LocationFacetValueRequest,
   NumericFacetValue,
-  DateRangeRequest,
-  DateFacetValue,
-  CategoryFacetValueRequest,
-  CategoryFacetValue,
-  BaseFacetValue,
+  NumericRangeRequest,
+  RegularFacetValue,
 };
 
 export interface FacetControllerType<T extends FacetType> {

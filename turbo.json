@@ -57,34 +57,6 @@
     },
     "clean": {
       "cache": false
-    },
-    "publish:bump": {
-      "dependsOn": [],
-      "cache": false
-    },
-    "promote:npm:latest": {
-      "dependsOn": [],
-      "env": [
-        "NODE_AUTH_TOKEN",
-        "NPM_CONFIG_USERCONFIG",
-        "ACTIONS_ID_TOKEN_REQUEST_URL",
-        "ACTIONS_ID_TOKEN_REQUEST_TOKEN"
-      ],
-      "cache": false
-    },
-    "release:phase1": {
-      "dependsOn": ["^release:phase1"],
-      "cache": false
-    },
-    "release:phase3": {
-      "dependsOn": ["^release:phase3"],
-      "env": [
-        "NODE_AUTH_TOKEN",
-        "NPM_CONFIG_USERCONFIG",
-        "ACTIONS_ID_TOKEN_REQUEST_URL",
-        "ACTIONS_ID_TOKEN_REQUEST_TOKEN"
-      ],
-      "cache": false
     }
   },
   "globalDependencies": [
@@ -93,16 +65,11 @@
     "pnpm-workspace.yaml",
     ".npmrc",
     "tsconfig.json",
-    "biome.jsonc",
+    ".oxlintrc.json",
+    ".oxfmtrc.json",
     ".cspell.json"
   ],
-  "globalEnv": [
-    "DEPLOYMENT_ENVIRONMENT",
-    "IS_PRERELEASE",
-    "PR_NUMBER",
-    "NODE_ENV",
-    "CI"
-  ],
+  "globalEnv": ["DEPLOYMENT_ENVIRONMENT", "IS_PRERELEASE", "NODE_ENV", "CI"],
   "globalPassThroughEnv": [
     "GITHUB_*",
     "RUNNER_*",

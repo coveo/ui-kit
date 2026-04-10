@@ -30,8 +30,8 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
-import {waitForAtomicChildrenToBeDefined} from '@/src/utils/custom-element-tags';
 import {markParentAsReady} from '@/src/utils/init-queue';
+import {waitForAtomicChildrenToBeDefined} from '@/src/utils/initialization-common-utils';
 import {getAnalyticsConfig} from './analytics-config';
 import {createRecsStore, type RecsStore} from './store';
 

@@ -79,20 +79,20 @@ describe('atomic-insight-numeric-facet', () => {
     const {element} =
       await renderInAtomicInsightInterface<AtomicInsightNumericFacet>({
         template: html`<atomic-insight-numeric-facet
-        field=${props.field ?? 'price'}
-        label=${props.label ?? 'Price'}
-        facet-id=${ifDefined(props.facetId)}
-        number-of-values=${ifDefined(props.numberOfValues)}
-        sort-criteria=${ifDefined(props.sortCriteria)}
-        range-algorithm=${ifDefined(props.rangeAlgorithm)}
-        display-values-as=${ifDefined(props.displayValuesAs)}
-        ?is-collapsed=${props.isCollapsed}
-        heading-level=${ifDefined(props.headingLevel)}
-        ?filter-facet-count=${props.filterFacetCount}
-        injection-depth=${ifDefined(props.injectionDepth)}
-        with-input=${ifDefined(inputType)}
-        .dependsOn=${props.dependsOn || {}}
-      ></atomic-insight-numeric-facet>`,
+          field=${props.field ?? 'price'}
+          label=${props.label ?? 'Price'}
+          facet-id=${ifDefined(props.facetId)}
+          number-of-values=${ifDefined(props.numberOfValues)}
+          sort-criteria=${ifDefined(props.sortCriteria)}
+          range-algorithm=${ifDefined(props.rangeAlgorithm)}
+          display-values-as=${ifDefined(props.displayValuesAs)}
+          ?is-collapsed=${props.isCollapsed}
+          heading-level=${ifDefined(props.headingLevel)}
+          ?filter-facet-count=${props.filterFacetCount}
+          injection-depth=${ifDefined(props.injectionDepth)}
+          with-input=${ifDefined(inputType)}
+          .dependsOn=${props.dependsOn || {}}
+        ></atomic-insight-numeric-facet>`,
         selector: 'atomic-insight-numeric-facet',
         bindings: (bindings) => ({
           ...bindings,
@@ -240,6 +240,12 @@ describe('atomic-insight-numeric-facet', () => {
     it('should register facet in store', async () => {
       await setupElement();
       expect(mockedRegisterFacet).toHaveBeenCalled();
+    });
+
+    it('should build facet conditions manager even when no depends-on attribute is provided', async () => {
+      vi.mocked(buildFacetConditionsManager).mockClear();
+      await setupElement();
+      expect(buildFacetConditionsManager).toHaveBeenCalled();
     });
   });
 

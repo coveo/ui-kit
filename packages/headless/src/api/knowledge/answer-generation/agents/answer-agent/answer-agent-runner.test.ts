@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: unit test */
+/* oxlint-disable @typescript-eslint/no-explicit-any -- unit test */
 
 import type {Dispatch} from '@reduxjs/toolkit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
@@ -6,6 +6,7 @@ import type {NavigatorContext} from '../../../../../app/navigator-context-provid
 import {
   selectAccessToken,
   selectAgentId,
+  selectDebugAgentSession,
   selectEnvironment,
   selectOrganizationId,
 } from '../../../../../features/configuration/configuration-selectors.js';
@@ -29,6 +30,7 @@ vi.mock(
     selectOrganizationId: vi.fn(),
     selectEnvironment: vi.fn(),
     selectAccessToken: vi.fn(),
+    selectDebugAgentSession: vi.fn(),
   })
 );
 
@@ -70,6 +72,7 @@ describe('createAnswerRunner', () => {
     vi.mocked(selectOrganizationId).mockReturnValue('org-123');
     vi.mocked(selectEnvironment).mockReturnValue('prod');
     vi.mocked(selectAccessToken).mockReturnValue('abc');
+    vi.mocked(selectDebugAgentSession).mockReturnValue(undefined);
     vi.mocked(constructGenerateHeadAnswerParams).mockReturnValue({
       query: 'hello',
     } as any);
@@ -118,6 +121,25 @@ describe('createAnswerRunner', () => {
         forwardedProps: {
           params: {query: 'hello'},
           accessToken: 'abc',
+          recordDebugSession: undefined,
+        },
+      },
+      exampleStrategy
+    );
+  });
+
+  it('forwards recordDebugSession when enabled', async () => {
+    vi.mocked(selectDebugAgentSession).mockReturnValue(true);
+    const runner = buildRunner();
+
+    await runner.run(state, dispatch, navigatorProvider);
+
+    expect(mockAgent.runAgent).toHaveBeenCalledWith(
+      {
+        forwardedProps: {
+          params: {query: 'hello'},
+          accessToken: 'abc',
+          recordDebugSession: true,
         },
       },
       exampleStrategy

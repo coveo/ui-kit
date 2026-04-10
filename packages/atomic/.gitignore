@@ -33,6 +33,7 @@ src/generated
 
 src/components/*/lazy-index.ts
 src/components/*/index.ts
+src/utils/custom-element-tags.ts
 
 /test-results/
 /playwright-report/
@@ -41,6 +42,9 @@ src/components/*/index.ts
 
 dist-storybook/
 dist-chromatic/
+
+.storybook/static/
+storybook-static/
 
 /dev/bueno/
 /dev/headless/

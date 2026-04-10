@@ -46,7 +46,7 @@ interface AtomicRecsListProps {
 
 interface HTMLAtomicRecsListElement extends AtomicRecsList, HTMLElement {}
 
-// biome-ignore lint/correctness/noUnusedVariables: <>
+// oxlint-disable-next-line @typescript-eslint/no-unused-vars -- <>
 var HTMLAtomicRecsListElement: {
   prototype: HTMLAtomicRecsListElement;
   new (): HTMLAtomicRecsListElement;
@@ -90,7 +90,7 @@ export const RecsListWrapper: React.FC<WrapperProps> = (props) => {
           contentRoot.render(templateResult);
           otherProps.display === 'grid'
             ? linkRoot.render(<AtomicResultLink></AtomicResultLink>)
-            : // biome-ignore lint/complexity/noUselessFragments: <>
+            : // oxlint-disable-next-line react/jsx-no-useless-fragment -- <>
               linkRoot.render(<></>);
         });
         return root.innerHTML;

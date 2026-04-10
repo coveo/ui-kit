@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicRecsListStories from './atomic-recs-list.new.stories';
+import meta, { Default, RecsBeforeQuery, RecsWithFullTemplate, RecsOpeningInNewTab, RecsAsCarousel, NotEnoughRecsForCarousel, NoRecommendations } from './atomic-recs-list.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicRecsListStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicRecsListStories}
+  stories={{ Default, RecsBeforeQuery, RecsWithFullTemplate, RecsOpeningInNewTab, RecsAsCarousel, NotEnoughRecsForCarousel, NoRecommendations }}
   githubPath="recommendations/atomic-recs-list/atomic-recs-list.ts"
   tagName="atomic-recs-list"
   className="AtomicRecsList"

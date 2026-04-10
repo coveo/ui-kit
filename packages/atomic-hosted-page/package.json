@@ -1,20 +1,23 @@
 {
   "name": "@coveo/atomic-hosted-page",
+  "version": "1.2.35",
   "description": "Web Component used to inject a Coveo Hosted Search Page in the DOM.",
-  "version": "1.2.29",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/coveo/ui-kit.git",
     "directory": "packages/atomic-hosted-page"
   },
+  "files": [
+    "dist/",
+    "loader/",
+    "docs/"
+  ],
   "type": "module",
-  "license": "Apache-2.0",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
-  "es2015": "dist/esm/index.mjs",
-  "es2017": "dist/esm/index.mjs",
   "types": "dist/types/components.d.ts",
   "unpkg": "dist/atomic-page/atomic-hosted-page.esm.js",
+  "es2015": "dist/esm/index.mjs",
   "exports": {
     ".": {
       "types": "./dist/types/components.d.ts",
@@ -26,24 +29,16 @@
     },
     "./dist/*": "./dist/*"
   },
-  "files": [
-    "dist/",
-    "loader/",
-    "docs/"
-  ],
   "scripts": {
     "clean": "node ../../utils/ci/rm-rf.mjs dist/*",
     "build": "node ../../utils/ci/rm-rf.mjs dist cdn && tsc --outdir dist && tsc --outdir cdn --project tsconfig.cdn.json && node ./scripts/esbuild.js",
     "start": "node ./scripts/start.js",
-    "e2e": "playwright test",
-    "release:phase3": "pnpm --filter @coveo/ci npm-publish",
-    "release:phase1": "pnpm --filter @coveo/ci bump",
-    "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod"
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@coveo/bueno": "workspace:*",
     "@coveo/headless": "workspace:*",
-    "lit": "3.3.1"
+    "lit": "3.3.2"
   },
   "devDependencies": {
     "@playwright/test": "catalog:",
@@ -53,5 +48,6 @@
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
-  }
+  },
+  "es2017": "dist/esm/index.mjs"
 }

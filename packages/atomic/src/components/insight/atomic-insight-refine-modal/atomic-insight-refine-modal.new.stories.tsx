@@ -13,6 +13,9 @@ import {
 } from '@/storybook-utils/api/insight/search-response';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
+import '@/src/components/insight/atomic-insight-facet/atomic-insight-facet.js';
+import '@/src/components/insight/atomic-insight-refine-modal/atomic-insight-refine-modal.js';
+import '@/src/components/insight/atomic-insight-refine-toggle/atomic-insight-refine-toggle.js';
 
 const insightApiHarness = new MockInsightApi();
 const {decorator, play} = wrapInInsightInterface();
@@ -82,10 +85,16 @@ export default meta;
 export const Default: Story = {
   decorators: [
     () => html`
-     <atomic-insight-refine-toggle></atomic-insight-refine-toggle>
+      <atomic-insight-refine-toggle></atomic-insight-refine-toggle>
       <div style="display:none;">
-        <atomic-insight-facet field="source" label="Source"></atomic-insight-facet>
-        <atomic-insight-facet field="filetype" label="File Type"></atomic-insight-facet>
+        <atomic-insight-facet
+          field="source"
+          label="Source"
+        ></atomic-insight-facet>
+        <atomic-insight-facet
+          field="filetype"
+          label="File Type"
+        ></atomic-insight-facet>
       </div>
     `,
     decorator,

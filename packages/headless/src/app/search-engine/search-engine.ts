@@ -48,7 +48,7 @@ import {
   searchEngineConfigurationSchema,
 } from './search-engine-configuration.js';
 
-export type {SearchEngineConfiguration, SearchConfigurationOptions};
+export type {SearchConfigurationOptions, SearchEngineConfiguration};
 export {getSampleSearchEngineConfiguration};
 
 const searchEngineReducers = {debug, pipeline, searchHub, search};
@@ -77,12 +77,11 @@ function getUpdateSearchConfigurationPayload(
  *
  * @group Engine
  */
-export interface SearchEngine<State extends object = {}>
-  extends CoreEngine<
-    State & SearchEngineState,
-    SearchThunkExtraArguments,
-    ConfigurationState
-  > {
+export interface SearchEngine<State extends object = {}> extends CoreEngine<
+  State & SearchEngineState,
+  SearchThunkExtraArguments,
+  ConfigurationState
+> {
   /**
    * Executes the first search.
    *
@@ -105,8 +104,7 @@ export interface SearchEngine<State extends object = {}>
  *
  * @group Engine
  */
-export interface SearchEngineOptions
-  extends ExternalEngineOptions<SearchEngineState> {
+export interface SearchEngineOptions extends ExternalEngineOptions<SearchEngineState> {
   /**
    * The search engine configuration options.
    */

@@ -9,6 +9,10 @@ import type {SearchResponse} from '@/storybook-utils/api/search/search-response'
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInRecommendationInterface} from '@/storybook-utils/search/recs-interface-wrapper';
 import {wrapInRecsResultTemplate} from '@/storybook-utils/search/recs-result-template-wrapper';
+import '@/src/components/ipx/atomic-ipx-result-link/atomic-ipx-result-link.js';
+import '@/src/components/search/atomic-result-section-excerpt/atomic-result-section-excerpt.js';
+import '@/src/components/search/atomic-result-section-title/atomic-result-section-title.js';
+import '@/src/components/search/atomic-result-text/atomic-result-text.js';
 
 const mockedSearchApi = new MockSearchApi();
 
@@ -24,9 +28,7 @@ const {decorator: recsInterfaceDecorator, play} =
 const {decorator: recsResultTemplateDecorator} = wrapInRecsResultTemplate();
 
 const resultSectionDecorator: Decorator = (story) => html`
-  <atomic-result-section-title>
-    ${story()}
-  </atomic-result-section-title>
+  <atomic-result-section-title> ${story()} </atomic-result-section-title>
   <atomic-result-section-excerpt>
     <atomic-result-text field="excerpt"></atomic-result-text>
   </atomic-result-section-excerpt>

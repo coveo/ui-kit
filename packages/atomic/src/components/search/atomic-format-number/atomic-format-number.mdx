@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicFormatNumberStories from './atomic-format-number.new.stories';
+import meta, { Facet, Result } from './atomic-format-number.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicFormatNumberStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicFormatNumberStories}
+  stories={{ Facet, Result }}
   githubPath="search/atomic-format-number/atomic-format-number.ts"
   tagName="atomic-format-number"
   className="AtomicFormatNumber"

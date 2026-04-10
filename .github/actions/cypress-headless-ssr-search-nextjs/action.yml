@@ -1,17 +1,17 @@
-name: "Headless SSR E2E tests"
-description: "Runs Cypress tests for Headless SSR"
+name: 'Headless SSR E2E tests'
+description: 'Runs Cypress tests for Headless SSR'
 inputs:
   github-token:
     description: The GitHub token for accurately detecting a build vs a re-run build
     required: false
-    default: ""
+    default: ''
 runs:
   using: composite
   steps:
     - run: pnpm exec cypress install
       shell: bash
       working-directory: samples/headless-ssr/search-nextjs
-    - uses: cypress-io/github-action@248bde77443c376edc45906ede03a1aba9da0462 # v5.8.4
+    - uses: cypress-io/github-action@82482149c343a5dee155d22104111b9319f9dd45 # v7.1.6
       name: Run Cypress
       with:
         command: >-
@@ -19,13 +19,13 @@ runs:
           cypress-repeat run -n 3 --until-passes --rerun-failed-only -- cypress
           run --browser chrome --project . --env NEXTJS_ROUTER=app
         start: pnpm exec turbo prod --filter=@samples/headless-ssr-search-nextjs
-        wait-on: "http://localhost:3000"
+        wait-on: 'http://localhost:3000'
         wait-on-timeout: 600000
         install: false
         record: false
         working-directory: samples/headless-ssr/search-nextjs
 
-    - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+    - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
       if: failure()
       with:
         name: ssr-app-screenshots

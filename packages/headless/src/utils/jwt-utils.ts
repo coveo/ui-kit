@@ -22,7 +22,7 @@ export function parseJWT(token?: string): JWTPayload | null {
       base64decoded
         .split('')
         .map((character) => {
-          return `%${(`00${character.charCodeAt(0).toString(16)}`).slice(-2)}`;
+          return `%${`00${character.charCodeAt(0).toString(16)}`.slice(-2)}`;
         })
         .join('')
     );

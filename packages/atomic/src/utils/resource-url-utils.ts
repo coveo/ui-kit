@@ -10,7 +10,7 @@ function isCoveoCDN() {
 }
 
 function getCoveoCdnResourceUrl() {
-  return import.meta.resolve('./');
+  return new URL(/* webpackIgnore: true */ './', import.meta.url).href;
 }
 
 export const getResourceUrl = () =>

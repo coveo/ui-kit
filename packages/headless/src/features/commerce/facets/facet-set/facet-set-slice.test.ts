@@ -92,7 +92,7 @@ import type {
 } from './interfaces/request.js';
 import type {AnyFacetResponse} from './interfaces/response.js';
 
-// biome-ignore lint/suspicious/noExplicitAny: <>
+// oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
 type ActionCreator = (payload: any) => Action;
 
 describe('commerceFacetSetReducer', () => {
@@ -137,7 +137,7 @@ describe('commerceFacetSetReducer', () => {
         const response = responseBuilder();
         response.response.facets = facets;
 
-        // biome-ignore lint/suspicious/noExplicitAny: <>
+        // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
         return action(response as any, '');
       }
 

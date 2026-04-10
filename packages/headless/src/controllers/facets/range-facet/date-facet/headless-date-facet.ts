@@ -25,13 +25,13 @@ import {
 import type {DateFacetOptions} from '../../../core/facets/range-facet/date-facet/headless-date-facet-options.js';
 
 export type {
+  DateFacet,
   DateFacetOptions,
+  DateFacetProps,
+  DateFacetState,
   DateRangeInput,
   DateRangeOptions,
   DateRangeRequest,
-  DateFacetProps,
-  DateFacet,
-  DateFacetState,
 };
 export {buildDateRange};
 

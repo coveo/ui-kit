@@ -8,13 +8,12 @@ import {MissingControllerProps} from '../../../common/errors.js';
 import type {StandaloneControllerWithProps} from '../../types/controller-definitions.js';
 import {createControllerWithKind, Kind} from '../../types/kind.js';
 
-export type {ProductEnrichmentState, ProductEnrichment, ProductEnrichmentProps};
+export type {ProductEnrichment, ProductEnrichmentProps, ProductEnrichmentState};
 
-export interface ProductEnrichmentDefinition
-  extends StandaloneControllerWithProps<
-    ProductEnrichment,
-    ProductEnrichmentProps
-  > {}
+export interface ProductEnrichmentDefinition extends StandaloneControllerWithProps<
+  ProductEnrichment,
+  ProductEnrichmentProps
+> {}
 
 /**
  * Defines the `ProductEnrichment` controller for the purpose of server-side rendering.

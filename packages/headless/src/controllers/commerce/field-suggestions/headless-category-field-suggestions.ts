@@ -53,8 +53,7 @@ export type CategoryFieldSuggestionsState = CoreCategoryFieldSuggestionsState &
  * @deprecated
  */
 export interface CategoryFieldSuggestions
-  extends Controller,
-    FacetControllerType<'hierarchical'> {
+  extends Controller, FacetControllerType<'hierarchical'> {
   /**
    * Requests field suggestions based on a query.
    *

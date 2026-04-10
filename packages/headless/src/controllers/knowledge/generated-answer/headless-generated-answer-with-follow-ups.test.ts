@@ -81,6 +81,22 @@ vi.mock('../../core/generated-answer/headless-core-generated-answer.js', () => {
   };
 });
 
+const exampleFollowUpAnswer = {
+  question: 'What about X?',
+  answer: 'Answer about X',
+  citations: [],
+  generationSteps: [],
+  answerId: 'follow-up-1',
+  isLoading: false,
+  isStreaming: false,
+  liked: false,
+  disliked: false,
+  feedbackSubmitted: false,
+  isAnswerGenerated: true,
+  cannotAnswer: false,
+  isActive: false,
+};
+
 describe('GeneratedAnswerWithFollowUps', () => {
   let engine: MockedSearchEngine;
   const createGeneratedAnswerWithFollowUps = (
@@ -239,27 +255,12 @@ describe('GeneratedAnswerWithFollowUps', () => {
 
     describe('follow-up answers state', () => {
       it('should expose follow-up answers from Redux state', () => {
-        const exampleFollowUpAnswers = {
-          question: 'What about X?',
-          answer: 'Answer about X',
-          citations: [],
-          generationSteps: [],
-          answerId: 'follow-up-1',
-          isLoading: false,
-          isStreaming: false,
-          liked: true,
-          disliked: false,
-          feedbackSubmitted: false,
-          isAnswerGenerated: true,
-          cannotAnswer: false,
-          isActive: false,
-        };
-
         engine = buildEngineWithGeneratedAnswer({
           followUpAnswers: {
             conversationId: 'session-123',
+            conversationToken: 'token-123',
             isEnabled: true,
-            followUpAnswers: [exampleFollowUpAnswers],
+            followUpAnswers: [exampleFollowUpAnswer],
           },
         });
 
@@ -267,8 +268,9 @@ describe('GeneratedAnswerWithFollowUps', () => {
 
         expect(controller.state.followUpAnswers).toEqual({
           conversationId: 'session-123',
+          conversationToken: 'token-123',
           isEnabled: true,
-          followUpAnswers: [exampleFollowUpAnswers],
+          followUpAnswers: [exampleFollowUpAnswer],
         });
       });
 
@@ -277,6 +279,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
 
         expect(controller.state.followUpAnswers).toEqual({
           conversationId: '',
+          conversationToken: '',
           isEnabled: false,
           followUpAnswers: [],
         });
@@ -307,6 +310,12 @@ describe('GeneratedAnswerWithFollowUps', () => {
           ...getGeneratedAnswerInitialState(),
           answerId: 'head-id',
         },
+        followUpAnswers: {
+          conversationId: 'session-123',
+          conversationToken: 'token-123',
+          isEnabled: true,
+          followUpAnswers: [exampleFollowUpAnswer],
+        },
       });
     });
 
@@ -335,11 +344,15 @@ describe('GeneratedAnswerWithFollowUps', () => {
     it('should dispatch likeFollowUp when answerId targets a follow-up answer', () => {
       const controller = createGeneratedAnswerWithFollowUps();
 
-      controller.like(followUpAnswerId);
+      controller.like(exampleFollowUpAnswer.answerId);
 
-      expect(likeFollowUp).toHaveBeenCalledWith({answerId: followUpAnswerId});
+      expect(likeFollowUp).toHaveBeenCalledWith({
+        answerId: exampleFollowUpAnswer.answerId,
+      });
       expect(mockCoreLike).not.toHaveBeenCalled();
-      expect(logLikeGeneratedAnswer).toHaveBeenCalledWith(followUpAnswerId);
+      expect(logLikeGeneratedAnswer).toHaveBeenCalledWith(
+        exampleFollowUpAnswer.answerId
+      );
     });
 
     it('should not dispatch follow-up like actions when already liked', () => {
@@ -347,16 +360,50 @@ describe('GeneratedAnswerWithFollowUps', () => {
         generatedAnswer: {
           ...getGeneratedAnswerInitialState(),
           answerId: headAnswerId,
-          liked: true,
+        },
+        followUpAnswers: {
+          conversationId: 'session-123',
+          conversationToken: 'token-123',
+          isEnabled: true,
+          followUpAnswers: [{...exampleFollowUpAnswer, liked: true}],
         },
       });
       const controller = createGeneratedAnswerWithFollowUps();
 
-      controller.like(followUpAnswerId);
+      controller.like(exampleFollowUpAnswer.answerId);
 
       expect(likeFollowUp).not.toHaveBeenCalled();
       expect(logLikeGeneratedAnswer).not.toHaveBeenCalled();
       expect(mockCoreLike).not.toHaveBeenCalled();
+    });
+
+    it('should not dispatch follow-up like actions when follow up answer is not found', () => {
+      engine = buildEngineWithGeneratedAnswer({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          answerId: headAnswerId,
+        },
+        followUpAnswers: {
+          conversationId: 'session-123',
+          conversationToken: 'token-123',
+          isEnabled: true,
+          followUpAnswers: [exampleFollowUpAnswer],
+        },
+      });
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.like('non-existent-answer-id');
+
+      expect(likeFollowUp).not.toHaveBeenCalled();
+      expect(logLikeGeneratedAnswer).not.toHaveBeenCalled();
+      expect(mockCoreLike).not.toHaveBeenCalled();
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        'No follow-up answer found with ID non-existent-answer-id. Cannot like.'
+      );
+      consoleWarnSpy.mockRestore();
     });
   });
 
@@ -366,6 +413,12 @@ describe('GeneratedAnswerWithFollowUps', () => {
         generatedAnswer: {
           ...getGeneratedAnswerInitialState(),
           answerId: 'head-id',
+        },
+        followUpAnswers: {
+          conversationId: 'session-123',
+          conversationToken: 'token-123',
+          isEnabled: true,
+          followUpAnswers: [exampleFollowUpAnswer],
         },
       });
     });
@@ -395,13 +448,15 @@ describe('GeneratedAnswerWithFollowUps', () => {
     it('should dispatch dislikeFollowUp when answerId targets a follow-up answer', () => {
       const controller = createGeneratedAnswerWithFollowUps();
 
-      controller.dislike(followUpAnswerId);
+      controller.dislike(exampleFollowUpAnswer.answerId);
 
       expect(dislikeFollowUp).toHaveBeenCalledWith({
-        answerId: followUpAnswerId,
+        answerId: exampleFollowUpAnswer.answerId,
       });
       expect(mockCoreDislike).not.toHaveBeenCalled();
-      expect(logDislikeGeneratedAnswer).toHaveBeenCalledWith(followUpAnswerId);
+      expect(logDislikeGeneratedAnswer).toHaveBeenCalledWith(
+        exampleFollowUpAnswer.answerId
+      );
     });
 
     it('should not dispatch follow-up dislike actions when already disliked', () => {
@@ -409,16 +464,50 @@ describe('GeneratedAnswerWithFollowUps', () => {
         generatedAnswer: {
           ...getGeneratedAnswerInitialState(),
           answerId: headAnswerId,
-          disliked: true,
+        },
+        followUpAnswers: {
+          conversationId: 'session-123',
+          conversationToken: 'token-123',
+          isEnabled: true,
+          followUpAnswers: [{...exampleFollowUpAnswer, disliked: true}],
         },
       });
       const controller = createGeneratedAnswerWithFollowUps();
 
-      controller.dislike(followUpAnswerId);
+      controller.dislike(exampleFollowUpAnswer.answerId);
 
       expect(dislikeFollowUp).not.toHaveBeenCalled();
       expect(logDislikeGeneratedAnswer).not.toHaveBeenCalled();
       expect(mockCoreDislike).not.toHaveBeenCalled();
+    });
+
+    it('should not dispatch follow-up dislike actions when follow up answer is not found', () => {
+      engine = buildEngineWithGeneratedAnswer({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          answerId: headAnswerId,
+        },
+        followUpAnswers: {
+          conversationId: 'session-123',
+          conversationToken: 'token-123',
+          isEnabled: true,
+          followUpAnswers: [exampleFollowUpAnswer],
+        },
+      });
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.dislike('non-existent-answer-id');
+
+      expect(dislikeFollowUp).not.toHaveBeenCalled();
+      expect(logDislikeGeneratedAnswer).not.toHaveBeenCalled();
+      expect(mockCoreDislike).not.toHaveBeenCalled();
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        'No follow-up answer found with ID non-existent-answer-id. Cannot dislike.'
+      );
+      consoleWarnSpy.mockRestore();
     });
   });
 
@@ -562,12 +651,14 @@ describe('GeneratedAnswerWithFollowUps', () => {
   describe('askFollowUp method', () => {
     const question = 'Could you elaborate?';
     const conversationId = 'conversation-123';
+    const conversationToken = 'token-123';
 
     it('dispatches createFollowUpAnswer and runs the follow-up agent', () => {
       engine = buildEngineWithGeneratedAnswer({
         followUpAnswers: {
           ...getFollowUpAnswersInitialState(),
           conversationId,
+          conversationToken,
         },
       });
       const controller = createGeneratedAnswerWithFollowUps();
@@ -580,7 +671,15 @@ describe('GeneratedAnswerWithFollowUps', () => {
         {
           forwardedProps: {
             q: question,
+            analytics: expect.objectContaining({
+              clientId: '',
+              capture: false,
+              originContext: 'Search',
+              clientTimestamp: expect.any(String),
+              source: expect.any(Array),
+            }),
             conversationId,
+            conversationToken,
             accessToken: 'foo',
           },
         },
@@ -598,12 +697,43 @@ describe('GeneratedAnswerWithFollowUps', () => {
     });
 
     it('does not run the agent when the conversationId is missing', () => {
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.askFollowUp(question);
 
       expect(mockCreateFollowUpAnswer).not.toHaveBeenCalled();
       expect(mockFollowUpAgent.runAgent).not.toHaveBeenCalled();
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        'Missing conversationId when generating a follow-up answer. ' +
+          'The generateFollowUpAnswer action requires an existing conversation.'
+      );
+      consoleWarnSpy.mockRestore();
+    });
+
+    it('does not run the agent when the conversationToken is missing', () => {
+      engine = buildEngineWithGeneratedAnswer({
+        followUpAnswers: {
+          ...getFollowUpAnswersInitialState(),
+          conversationId,
+        },
+      });
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.askFollowUp(question);
+
+      expect(mockCreateFollowUpAnswer).not.toHaveBeenCalled();
+      expect(mockFollowUpAgent.runAgent).not.toHaveBeenCalled();
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        'Missing conversationToken when generating a follow-up answer. ' +
+          'The generateFollowUpAnswer action requires an existing conversation.'
+      );
+      consoleWarnSpy.mockRestore();
     });
 
     it('dispatches activeFollowUpStartFailed and logs when the agent fails to start', async () => {
@@ -611,6 +741,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
         followUpAnswers: {
           ...getFollowUpAnswersInitialState(),
           conversationId,
+          conversationToken,
         },
       });
       const controller = createGeneratedAnswerWithFollowUps();

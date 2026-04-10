@@ -68,23 +68,23 @@ import type {SearchAndListingControllerDefinitionWithoutProps} from '../../types
 export type {
   BaseFacetSearchResult,
   CategoryFacet,
+  CategoryFacetSearchResult,
   CategoryFacetState,
   CategoryFacetValue,
-  CategoryFacetSearchResult,
   CoreCommerceFacet,
   DateFacet,
-  DateFacetValue,
   DateFacetState,
-  NumericFacet,
-  NumericFacetValue,
-  NumericFacetState,
-  RegularFacet,
-  RegularFacetState,
-  RegularFacetValue,
+  DateFacetValue,
   LocationFacet,
   LocationFacetState,
   LocationFacetValue,
   MappedGeneratedFacetController,
+  NumericFacet,
+  NumericFacetState,
+  NumericFacetValue,
+  RegularFacet,
+  RegularFacetState,
+  RegularFacetValue,
 };
 
 export type FacetGeneratorState = MappedFacetStates;
@@ -130,8 +130,10 @@ export function defineFacetGenerator(): FacetGeneratorDefinition {
  * (CMH). The implementer is only responsible for leveraging the facet controllers created by this sub-controller to
  * properly render facets in their application.
  */
-export interface FacetGenerator
-  extends Omit<CSRFacetGenerator, 'state' | 'facets'> {
+export interface FacetGenerator extends Omit<
+  CSRFacetGenerator,
+  'state' | 'facets'
+> {
   /**
    * The state of each every facet returned by the Commerce API.
    *

@@ -104,7 +104,18 @@ describe('atomic-citation', () => {
 
       expect(popover).toHaveClass('hidden');
       expect(popover?.textContent).toContain('Test Citation Title');
-      expect(popover?.textContent).toContain('https://example.com/test');
+      expect(popover?.textContent).toContain('https://example.com/test-click');
+    });
+
+    it('should render uri in the popover when clickUri is missing', async () => {
+      const citationWithoutClickUri = {...mockCitation, clickUri: undefined};
+      const {locators} = await renderComponent({
+        citation: citationWithoutClickUri,
+      });
+
+      expect(locators.citationPopover?.textContent).toContain(
+        'https://example.com/test'
+      );
     });
 
     it('should truncate citation text longer than 200 characters', async () => {
@@ -214,7 +225,7 @@ describe('atomic-citation', () => {
     element.remove();
 
     expect(element.isConnected).toBe(false);
-    // biome-ignore lint/suspicious/noExplicitAny: Testing private property
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Testing private property
     expect((element as any).popperInstance).toBeUndefined();
   });
 });

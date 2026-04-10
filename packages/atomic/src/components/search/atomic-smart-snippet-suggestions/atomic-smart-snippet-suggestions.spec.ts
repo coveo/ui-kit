@@ -193,7 +193,7 @@ describe('atomic-smart-snippet-suggestions', () => {
           props: {headingLevel: validValue},
         });
 
-        // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+        // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
         (element as any).headingLevel = invalidValue;
         await element.updateComplete;
 
@@ -220,7 +220,7 @@ describe('atomic-smart-snippet-suggestions', () => {
 
       expect(element.error).toBeUndefined();
 
-      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
       (element as any).headingLevel = 6;
       await element.updateComplete;
 

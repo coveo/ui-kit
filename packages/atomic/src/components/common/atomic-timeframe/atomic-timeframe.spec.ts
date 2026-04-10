@@ -127,7 +127,7 @@ describe('atomic-timeframe', () => {
 
       const {timeframe} = await renderTimeframe({[prop]: validValue});
 
-      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
       (timeframe as any)[prop] = invalidValue;
       await timeframe.updateComplete;
 
@@ -179,7 +179,7 @@ describe('atomic-timeframe', () => {
 
       expect(timeframe.error).toBeUndefined();
 
-      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
       (timeframe as any)[prop] = invalidValue;
       await timeframe.updateComplete;
 

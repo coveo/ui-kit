@@ -20,14 +20,10 @@ const require = createRequire(import.meta.url);
 const devMode = process.argv[2] === 'dev';
 
 const isNightly = process.env.IS_NIGHTLY === 'true';
-const isPrRelease =
-  process.env.IS_PRERELEASE === 'true' && process.env.PR_NUMBER;
 
 const buenoVersion = isNightly
   ? `v${buenoJson.version.split('.').shift()}-nightly`
-  : isPrRelease
-    ? `v${buenoJson.version.split('-').shift()}.${process.env.PR_NUMBER}`
-    : `v${buenoJson.version}`;
+  : `v${buenoJson.version}`;
 
 function getUmdGlobalName(useCase) {
   const map = {
@@ -195,9 +191,7 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
         'ponyfills/headers-shim.js',
         'ponyfills/global-this-shim.js',
         'ponyfills/abortable-fetch-shim.js',
-        require.resolve(
-          'navigator.sendbeacon/dist/navigator.sendbeacon.cjs.js'
-        ),
+        require.resolve('navigator.sendbeacon/dist/navigator.sendbeacon.cjs.js'),
       ],
       plugins: [
         umdWrapper({libraryName: globalName}),

@@ -1,4 +1,6 @@
-import {ItemDisplayLayout} from '@/src/components/common/layout/display-options';
+import '@/src/components/insight/atomic-insight-result-list/atomic-insight-result-list.js';
+import '@/src/components/insight/atomic-insight-folded-result-list/atomic-insight-folded-result-list.js';
+import type {ItemDisplayLayout} from '@/src/components/common/layout/item-layout-utils';
 import {spreadProps} from '@open-wc/lit-helpers';
 import {Decorator} from '@storybook/web-components-vite';
 import {html} from 'lit';

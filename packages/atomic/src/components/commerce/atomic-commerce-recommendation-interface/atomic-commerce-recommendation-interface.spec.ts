@@ -76,7 +76,8 @@ describe('atomic-commerce-recommendation-interface', () => {
         icon-assets-path=${ifDefined(props.iconAssetsPath)}
         language=${ifDefined(props.language)}
         language-assets-path=${ifDefined(props.languageAssetsPath)}
-        scroll-container=${props.scrollContainer || 'atomic-commerce-recommendation-interface'}
+        scroll-container=${props.scrollContainer ||
+        'atomic-commerce-recommendation-interface'}
       >
       </atomic-commerce-recommendation-interface>`
     )) as AtomicCommerceRecommendationInterface;

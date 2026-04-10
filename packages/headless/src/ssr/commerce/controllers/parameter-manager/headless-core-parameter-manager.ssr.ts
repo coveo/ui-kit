@@ -27,12 +27,12 @@ import type {
 import {createControllerWithKind, Kind} from '../../types/kind.js';
 
 export type {
+  CommerceSearchParameters,
   ParameterManager,
   ParameterManagerProps,
   ParameterManagerState,
   Parameters,
   ProductListingParameters,
-  CommerceSearchParameters,
 };
 
 /**
@@ -81,8 +81,10 @@ export function defineParameterManager<
   >;
 }
 
-export interface SSRParameterManagerProps<T extends Parameters>
-  extends Omit<ParameterManagerProps<T>, 'excludeDefaultParameters'> {}
+export interface SSRParameterManagerProps<T extends Parameters> extends Omit<
+  ParameterManagerProps<T>,
+  'excludeDefaultParameters'
+> {}
 
 type MappedParameterTypes<
   TOptions extends ControllerDefinitionOption | undefined,

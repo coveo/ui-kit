@@ -40,7 +40,8 @@ export const renderHighlightKeywordsCheckbox: FunctionalComponent<
         <label
           class="cursor-pointer font-bold whitespace-nowrap"
           for=${highlightKeywordsCheckboxId}
-        >${label}</label>
+          >${label}</label
+        >
       `
     )}
   `;

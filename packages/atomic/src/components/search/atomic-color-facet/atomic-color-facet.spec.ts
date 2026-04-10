@@ -746,11 +746,11 @@ describe('atomic-color-facet', () => {
     },
     {
       prop: 'allowedValues',
-      invalidValue: new Array(26).fill('value'),
+      invalidValue: Array.from({length: 26}, () => 'value'),
     },
     {
       prop: 'customSort',
-      invalidValue: new Array(26).fill('value'),
+      invalidValue: Array.from({length: 26}, () => 'value'),
     },
     {
       prop: 'tabsExcluded',
@@ -767,7 +767,7 @@ describe('atomic-color-facet', () => {
 
       expect(element.error).toBeUndefined();
 
-      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
       (element as any)[prop] = invalidValue;
       await element.updateComplete;
 
@@ -831,12 +831,12 @@ describe('atomic-color-facet', () => {
     {
       prop: 'allowedValues',
       validValue: ['pdf', 'doc'],
-      invalidValue: new Array(26).fill('value'),
+      invalidValue: Array.from({length: 26}, () => 'value'),
     },
     {
       prop: 'customSort',
       validValue: ['pdf', 'doc'],
-      invalidValue: new Array(26).fill('value'),
+      invalidValue: Array.from({length: 26}, () => 'value'),
     },
     {
       prop: 'tabsExcluded',
@@ -857,7 +857,7 @@ describe('atomic-color-facet', () => {
 
       const {element} = await setupElement({[prop]: validValue});
 
-      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
       (element as any)[prop] = invalidValue;
       await element.updateComplete;
 

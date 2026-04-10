@@ -210,7 +210,7 @@ describe('atomic-rating-facet', () => {
 
         expect(element.error).toBeUndefined();
 
-        // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+        // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
         (element as any)[prop] = invalidValue;
         await element.updateComplete;
 
@@ -432,7 +432,7 @@ describe('atomic-rating-facet', () => {
       );
 
       const {element} = await renderRatingFacet();
-      element.disconnectedCallback();
+      element.remove();
 
       expect(stopWatchingSpy).toHaveBeenCalled();
     });

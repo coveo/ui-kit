@@ -5,6 +5,7 @@ import {
   wrapInCommerceInterface,
 } from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import '@/src/components/commerce/atomic-commerce-facets/atomic-commerce-facets.js';
 
 const {decorator, play} = wrapInCommerceInterface({
   skipFirstRequest: true,
@@ -22,6 +23,7 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
+    chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
     },

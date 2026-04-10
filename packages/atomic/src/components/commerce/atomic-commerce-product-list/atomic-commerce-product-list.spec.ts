@@ -192,7 +192,7 @@ describe('atomic-commerce-product-list', () => {
   });
 
   describe('#updated', () => {
-    // biome-ignore lint/suspicious/noExplicitAny: <accessing private properties in tests>
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <accessing private properties in tests>
     let element: any;
 
     beforeEach(async () => {

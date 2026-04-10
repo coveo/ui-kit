@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicPopoverStories from './atomic-popover.new.stories';
+import meta, { Default } from './atomic-popover.new.stories';
 import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicPopoverStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicPopoverStories}
+  stories={{ Default }}
   githubPath="search/atomic-popover/atomic-popover.ts"
   tagName="atomic-popover"
   className="AtomicPopover"

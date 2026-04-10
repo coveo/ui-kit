@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: <mock> */
+/* oxlint-disable @typescript-eslint/no-explicit-any -- <mock> */
 /* eslint-disable @cspell/spellchecker */
 import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
 
@@ -1052,7 +1052,7 @@ export const streamAnswerAPIStateMock: StreamAnswerAPIState = {
         },
     },
     mutations: {},
-    provided: {},
+    provided: {tags: {}, keys: {}},
     subscriptions: {},
     config: {
       online: true,

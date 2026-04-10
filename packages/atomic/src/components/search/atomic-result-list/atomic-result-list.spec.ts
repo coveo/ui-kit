@@ -98,7 +98,7 @@ describe('atomic-result-list', () => {
 
       expect(element.error).toBeUndefined();
 
-      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
       (element as any)[prop] = invalidValue;
       await element.updateComplete;
 
@@ -137,7 +137,7 @@ describe('atomic-result-list', () => {
 
       const element = await setupElement({[prop]: validValue});
 
-      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
       (element as any)[prop] = invalidValue;
       await element.updateComplete;
 
@@ -184,7 +184,7 @@ describe('atomic-result-list', () => {
 
       expect(element.error).toBeUndefined();
 
-      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
       (element as any)[prop] = invalidValue;
       await element.updateComplete;
 
@@ -194,7 +194,7 @@ describe('atomic-result-list', () => {
   );
 
   describe('#willUpdate', () => {
-    // biome-ignore lint/suspicious/noExplicitAny: <accessing private properties in tests>
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <accessing private properties in tests>
     let element: any;
 
     beforeEach(async () => {
@@ -1147,20 +1147,22 @@ describe('atomic-result-list', () => {
   } = {}) => {
     const {element} = await renderInAtomicSearchInterface<AtomicResultList>({
       template: html`<atomic-result-list
-          .display=${display}
-          .density=${density}
-          .imageSize=${imageSize}
-        >  <atomic-result-template
-            .conditions=${[]}
-            .mustMatch=${{}}
-            .mustNotMatch=${{}}
-          >
-            <slot>
-              <template>
-                <div>Result Content</div>
-              </template>
-            </slot>
-          </atomic-result-template></atomic-result-list>`,
+        .display=${display}
+        .density=${density}
+        .imageSize=${imageSize}
+      >
+        <atomic-result-template
+          .conditions=${[]}
+          .mustMatch=${{}}
+          .mustNotMatch=${{}}
+        >
+          <slot>
+            <template>
+              <div>Result Content</div>
+            </template>
+          </slot>
+        </atomic-result-template></atomic-result-list
+      >`,
       selector: 'atomic-result-list',
       bindings: (bindings) => {
         bindings.store.state.loadingFlags = isAppLoaded ? [] : ['loading-flag'];

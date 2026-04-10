@@ -241,7 +241,7 @@ describe('atomic-sort-expression', () => {
 
       expect(element.error).toBeUndefined();
 
-      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
       (element as any)[prop] = invalidValue;
       await element.updateComplete;
 

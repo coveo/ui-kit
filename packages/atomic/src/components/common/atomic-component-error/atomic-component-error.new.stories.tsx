@@ -3,6 +3,7 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/common/atomic-component-error/atomic-component-error.js';
 
 const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes} = getStorybookHelpers('atomic-component-error', {
@@ -23,6 +24,7 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
+    chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
     },

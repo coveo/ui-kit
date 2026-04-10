@@ -15,7 +15,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import FilterIcon from '@/src/images/filter.svg';
+import FilterIcon from '../../../images/filter.svg';
 import {refineToggleGuard} from '../../common/refine-modal/guard';
 import type {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 import type {AtomicInsightRefineModal} from '../atomic-insight-refine-modal/atomic-insight-refine-modal';

@@ -9,7 +9,6 @@ import type {
   AnalyticsParam,
   AuthenticationParam,
   AutomaticFacetsParams,
-  PipelineRuleParameters,
 } from '../../api/search/search-api-params.js';
 import type {CaseContextParam} from '../../api/service/insight/query/query-request.js';
 import type {NavigatorContext} from '../../app/navigator-context-provider.js';
@@ -57,7 +56,8 @@ type StateNeededByGeneratedAnswerStream = ConfigurationSection &
   GeneratedAnswerSection;
 
 export interface AnswerApiQueryParams
-  extends Omit<
+  extends
+    Omit<
       SearchRequest,
       keyof (BaseParam & AuthenticationParam & AutomaticFacetsParams)
     >,
@@ -173,19 +173,19 @@ export type StateNeededForHeadAnswerParams = ConfigurationSection &
 /**
  * Parameters for answer generation requests.
  */
-type AnswerParams = {
+type HeadAnswerParams = {
   q: string;
   facets?: AnyFacetRequest[];
   searchHub?: string;
   pipeline?: string;
-  pipelineRuleParameters: PipelineRuleParameters;
+  citationsFieldToInclude?: string[];
   locale: string;
 } & AnalyticsParam;
 
 export const constructGenerateHeadAnswerParams = (
   state: StateNeededForHeadAnswerParams,
   navigatorContext: NavigatorContext
-): AnswerParams => {
+): HeadAnswerParams => {
   const q = selectQuery(state)?.q;
   const facetParams = getGeneratedFacetParams(state);
   const analyticsParams = fromAnalyticsStateToAnalyticsParams(
@@ -202,12 +202,7 @@ export const constructGenerateHeadAnswerParams = (
   return {
     q: q || '',
     ...(facetParams.length && {facets: facetParams}),
-    pipelineRuleParameters: {
-      mlGenerativeQuestionAnswering: {
-        responseFormat: state.generatedAnswer.responseFormat,
-        citationsFieldToInclude,
-      },
-    },
+    citationsFieldToInclude,
     ...(searchHub?.length && {searchHub}),
     ...(pipeline?.length && {pipeline}),
     ...analyticsParams,
