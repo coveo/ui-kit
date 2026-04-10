@@ -9,14 +9,25 @@ Private local sample to chat with the commerce agent over AG-UI streaming.
 2. Create local env file:
    `cp samples/commerce-agent-chat/.env.example samples/commerce-agent-chat/.env.local`
 3. Fill required values in `.env.local`.
-4. Ensure the commerce agent is running on `http://localhost:8080`.
-5. Keep `VITE_AGENT_URL=/api` for local dev to route requests through Vite and avoid CORS.
+
+## Agent modes
+
+Set `VITE_AGENT_MODE` in `.env.local` to one of:
+
+| Mode        | Description                                             | `VITE_AGENT_URL` |
+| ----------- | ------------------------------------------------------- | ---------------- |
+| `local`     | Proxies to a local agent at `http://localhost:8080`     | `/api`           |
+| `coveo-dev` | Proxies to the Coveo dev platform (`VITE_PLATFORM_URL`) | `/api/coveo-dev` |
+
+Keep `VITE_AGENT_URL` set to the proxy prefix shown above — this routes requests through Vite and avoids CORS issues.
+
+For `local` mode, ensure the commerce agent is running on `http://localhost:8080` before starting the dev server.
 
 ## Commands
 
 Run from `samples/commerce-agent-chat`:
 
-- `pnpm dev`
+- `pnpm dev` — starts the dev server on port 3001
 - `pnpm test`
 - `pnpm lint:check`
 - `pnpm lint:fix`
@@ -31,4 +42,3 @@ Run from repository root:
 
 - This sample is intentionally private and local-only.
 - The invocation payload includes `forwardedProps.coveo` and omits `forwardedProps.policy`.
-- In dev mode, Vite proxies `/api/*` to `http://localhost:8080/*`.
