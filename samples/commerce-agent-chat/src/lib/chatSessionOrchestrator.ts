@@ -173,7 +173,10 @@ export class ChatSessionOrchestrator {
   }
 
   private appendProgressStep(existing: string[], step: string): string[] {
-    if (step === 'Reasoning...' && existing.includes(step)) {
+    const isCollapsibleStep =
+      step === 'Reasoning...' || step.startsWith('Tool: ');
+
+    if (isCollapsibleStep && existing.includes(step)) {
       return existing;
     }
 

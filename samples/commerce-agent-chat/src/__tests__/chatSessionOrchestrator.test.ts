@@ -113,6 +113,24 @@ describe('ChatSessionOrchestrator', () => {
     orchestrator.dispose();
   });
 
+  it('collapses repeated identical tool progress into a single step', () => {
+    const stream = new Subject<BaseEvent>();
+    const invoke = vi.fn((_: Message[], __: string) => ({
+      runId: 'run-1',
+      events: stream.asObservable(),
+    }));
+
+    const orchestrator = new ChatSessionOrchestrator(mockConfig, {invoke});
+
+    orchestrator.sendMessage('Hello');
+    stream.next({type: 'TOOL_CALL_START', toolCallName: 'search'} as never);
+    stream.next({type: 'TOOL_CALL_START', toolCallName: 'search'} as never);
+
+    expect(orchestrator.getState().progressSteps).toEqual(['Tool: search']);
+
+    orchestrator.dispose();
+  });
+
   it('clears progress steps when stream completes', () => {
     const stream = new Subject<BaseEvent>();
     const invoke = vi.fn((_: Message[], __: string) => ({
