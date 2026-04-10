@@ -17,7 +17,7 @@ jobs:
     env:
       PLAYWRIGHT_VERSION: v1.57.0-noble
     steps:
-      - name: Log in to the Container registry
+      - name: Log in to the GitHub Container registry
         env:
           registry: ghcr.io
           username: ${{ github.actor }}
