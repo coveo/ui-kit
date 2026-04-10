@@ -1,6 +1,6 @@
 ---
 title: Implement search parameter support
-group: Usage
+group: Guides
 category: Server-side rendering
 slug: usage/server-side-rendering/implement-search-parameter-support
 ---
