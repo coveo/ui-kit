@@ -54,7 +54,7 @@ The purpose of this sub-phase is to re-build a project right after it was bumped
 
 ## `release:phase2` (bump the root version)
 
-This phase bumps the root package.json version. This is used by the deployment-package `--version` attribute.
+This phase bumps the root package.json version. This is used by the deployment pipeline.
 
 ## `npm:publish` (publish to npm)
 
