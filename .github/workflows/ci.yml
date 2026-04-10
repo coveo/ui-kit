@@ -374,10 +374,10 @@ jobs:
           fetch-depth: 0
 
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo chromatic --filter=@coveo/atomic
+      - run: pnpm exec turbo chromatic --filter=@coveo/atomic -- --exit-once-uploaded --exit-zero-on-changes
         id: chromatic-run
         if: contains(needs.affected.outputs.projects, '@coveo/atomic') && github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'chromatic')
-      - run: pnpm exec turbo chromatic --filter=@coveo/atomic -- --skip
+      - run: pnpm exec turbo chromatic --filter=@coveo/atomic -- --exit-once-uploaded --exit-zero-on-changes --skip
         working-directory: packages/atomic
         if: steps.chromatic-run.outcome == 'skipped'
   playwright-atomic:
@@ -752,4 +752,4 @@ jobs:
           fetch-depth: 0
 
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo chromatic --filter=@coveo/atomic -- --exit-zero-on-changes --auto-accept-changes --branchName=main
+      - run: pnpm exec turbo chromatic --filter=@coveo/atomic --  --exit-once-uploaded --exit-zero-on-changes --auto-accept-changes --branchName=main
