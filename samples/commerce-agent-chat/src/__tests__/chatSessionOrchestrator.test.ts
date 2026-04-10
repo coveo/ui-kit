@@ -65,7 +65,7 @@ describe('ChatSessionOrchestrator', () => {
     orchestrator.dispose();
   });
 
-  it('marks string progress updates as immediate', () => {
+  it('appends progress steps immediately when streamed events arrive', () => {
     const stream = new Subject<BaseEvent>();
     const invoke = vi.fn((_: Message[], __: string) => ({
       runId: 'run-1',
@@ -83,10 +83,51 @@ describe('ChatSessionOrchestrator', () => {
 
     orchestrator.sendMessage('Hello');
     stream.next({type: 'REASONING_START'} as never);
+    stream.next({type: 'TOOL_CALL_START', toolCallName: 'search'} as never);
 
+    const state = orchestrator.getState();
+    expect(state.progressSteps).toContain('Reasoning...');
+    expect(state.progressSteps).toContain('Tool: search');
     expect(immediates).toContain(true);
 
     unsubscribe();
+    orchestrator.dispose();
+  });
+
+  it('collapses repeated reasoning progress into a single step', () => {
+    const stream = new Subject<BaseEvent>();
+    const invoke = vi.fn((_: Message[], __: string) => ({
+      runId: 'run-1',
+      events: stream.asObservable(),
+    }));
+
+    const orchestrator = new ChatSessionOrchestrator(mockConfig, {invoke});
+
+    orchestrator.sendMessage('Hello');
+    stream.next({type: 'REASONING_START'} as never);
+    stream.next({type: 'REASONING_START'} as never);
+    stream.next({type: 'REASONING_START'} as never);
+
+    expect(orchestrator.getState().progressSteps).toEqual(['Reasoning...']);
+
+    orchestrator.dispose();
+  });
+
+  it('clears progress steps when stream completes', () => {
+    const stream = new Subject<BaseEvent>();
+    const invoke = vi.fn((_: Message[], __: string) => ({
+      runId: 'run-1',
+      events: stream.asObservable(),
+    }));
+
+    const orchestrator = new ChatSessionOrchestrator(mockConfig, {invoke});
+
+    orchestrator.sendMessage('Hello');
+    stream.next({type: 'REASONING_START'} as never);
+    stream.complete();
+
+    expect(orchestrator.getState().progressSteps).toEqual([]);
+
     orchestrator.dispose();
   });
 

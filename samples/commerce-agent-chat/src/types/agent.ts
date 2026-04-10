@@ -32,7 +32,7 @@ export interface Message {
 export interface ChatState {
   messages: Message[];
   isLoading: boolean;
-  progressLabel: string | null;
+  progressSteps: string[];
   error: string | null;
   threadId: string;
 }

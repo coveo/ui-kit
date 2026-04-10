@@ -112,13 +112,19 @@ describe('extractStreamingProgress', () => {
     ).toBe('Tool: search_products');
   });
 
-  it('clears progress for REASONING_END and TOOL_CALL_END', () => {
+  it('returns Writing response for TEXT_MESSAGE_START', () => {
+    expect(
+      extractStreamingProgress({type: 'TEXT_MESSAGE_START'} as never)
+    ).toBe('Writing response...');
+  });
+
+  it('returns undefined for REASONING_END and TOOL_CALL_END', () => {
     expect(
       extractStreamingProgress({type: 'REASONING_END'} as never)
-    ).toBeNull();
+    ).toBeUndefined();
     expect(
       extractStreamingProgress({type: 'TOOL_CALL_END'} as never)
-    ).toBeNull();
+    ).toBeUndefined();
   });
 
   it('ignores unrelated events', () => {

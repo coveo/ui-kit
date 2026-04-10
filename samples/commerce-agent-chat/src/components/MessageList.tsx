@@ -7,14 +7,14 @@ import './MessageList.css';
 interface MessageListProps {
   messages: Message[];
   isLoading: boolean;
-  progressLabel: string | null;
+  progressSteps: string[];
   onActionSelected: (prompt: string) => void;
 }
 
 export function MessageList({
   messages,
   isLoading,
-  progressLabel,
+  progressSteps,
   onActionSelected,
 }: MessageListProps): React.JSX.Element {
   const lastAssistantId =
@@ -59,8 +59,21 @@ export function MessageList({
                   }}
                 />
               ) : null}
-              {isActiveAssistantActivity && progressLabel ? (
-                <p className="agent-progress__thinking">{progressLabel}</p>
+              {isActiveAssistantActivity && progressSteps.length > 0 ? (
+                <ul className="agent-progress__steps">
+                  {progressSteps.map((step, i) => (
+                    <li
+                      key={i}
+                      className={`agent-progress__step${
+                        i === progressSteps.length - 1
+                          ? ' agent-progress__step--active'
+                          : ''
+                      }`}
+                    >
+                      {step}
+                    </li>
+                  ))}
+                </ul>
               ) : null}
             </article>
             {activities.map((activity) => (

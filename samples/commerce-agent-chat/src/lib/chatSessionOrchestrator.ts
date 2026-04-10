@@ -33,7 +33,7 @@ export class ChatSessionOrchestrator {
     this.state = {
       messages: [],
       isLoading: false,
-      progressLabel: null,
+      progressSteps: [],
       error: null,
       threadId: generateId('thread'),
     };
@@ -88,7 +88,7 @@ export class ChatSessionOrchestrator {
         ...this.state,
         messages: nextMessages,
         isLoading: true,
-        progressLabel: null,
+        progressSteps: [],
         error: null,
       },
       false
@@ -96,14 +96,17 @@ export class ChatSessionOrchestrator {
 
     this.activeSubscription = events.subscribe({
       next: (event: BaseEvent) => {
-        const progressUpdate = extractStreamingProgress(event);
-        if (progressUpdate !== undefined) {
+        const progressStep = extractStreamingProgress(event);
+        if (progressStep !== undefined) {
           this.updateState(
             {
               ...this.state,
-              progressLabel: progressUpdate,
+              progressSteps: this.appendProgressStep(
+                this.state.progressSteps,
+                progressStep
+              ),
             },
-            typeof progressUpdate === 'string'
+            true
           );
         }
 
@@ -121,14 +124,14 @@ export class ChatSessionOrchestrator {
           ...this.state,
           error: message,
           isLoading: false,
-          progressLabel: null,
+          progressSteps: [],
         });
       },
       complete: () => {
         this.updateState({
           ...this.state,
           isLoading: false,
-          progressLabel: null,
+          progressSteps: [],
         });
       },
     });
@@ -144,7 +147,7 @@ export class ChatSessionOrchestrator {
       messages: [],
       error: null,
       isLoading: false,
-      progressLabel: null,
+      progressSteps: [],
       threadId: generateId('thread'),
     });
   }
@@ -167,5 +170,13 @@ export class ChatSessionOrchestrator {
     for (const listener of this.listeners) {
       listener({state, immediate});
     }
+  }
+
+  private appendProgressStep(existing: string[], step: string): string[] {
+    if (step === 'Reasoning...' && existing.includes(step)) {
+      return existing;
+    }
+
+    return [...existing, step];
   }
 }

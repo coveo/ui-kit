@@ -53,11 +53,23 @@
   white-space: pre-wrap;
 }
 
-.agent-progress__thinking {
+.agent-progress__steps {
   margin: 0.5rem 0 0;
-  border-radius: 8px;
-  font-size: 0.85rem;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.agent-progress__step {
+  font-size: 0.8rem;
   color: var(--accent);
+  opacity: 0.5;
+}
+
+.agent-progress__step--active {
+  opacity: 1;
   font-weight: 500;
   text-shadow: 0 0 8px rgba(0, 212, 255, 0.4);
 }

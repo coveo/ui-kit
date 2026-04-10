@@ -1,9 +1,7 @@
 import type {BaseEvent} from '@ag-ui/core';
 import type {ParsedEvent} from '../types/agent.js';
 
-export function extractStreamingProgress(
-  event: BaseEvent
-): string | null | undefined {
+export function extractStreamingProgress(event: BaseEvent): string | undefined {
   if (!event || typeof event !== 'object') {
     return undefined;
   }
@@ -19,8 +17,8 @@ export function extractStreamingProgress(
     return 'Reasoning...';
   }
 
-  if (eventType === 'REASONING_END' || eventType === 'TOOL_CALL_END') {
-    return null;
+  if (eventType === 'TEXT_MESSAGE_START') {
+    return 'Writing response...';
   }
 
   if (eventType === 'TOOL_CALL_START') {

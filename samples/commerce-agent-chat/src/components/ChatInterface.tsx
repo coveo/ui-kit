@@ -28,7 +28,7 @@ export function ChatInterface({config}: ChatInterfaceProps): React.JSX.Element {
         <MessageList
           messages={state.messages}
           isLoading={state.isLoading}
-          progressLabel={state.progressLabel}
+          progressSteps={state.progressSteps}
           onActionSelected={sendMessage}
         />
 
