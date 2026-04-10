@@ -1,0 +1,28 @@
+name: Mirror Playwright Docker Image from Microsoft Container Registry
+on:
+  push:
+    branches: [main]
+  path:
+    - '.github/playwright-caching.yml'
+  jobs:
+    mirror-playwright-image:
+      runs-on: ubuntu-latest
+      permissions:
+        contents: read
+        packages: write
+        attestations: write
+        id-token: write
+      env:
+        PLAYWRIGHT_VERSION: v1.57.0-noble
+      steps:
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Mirror Playwright Docker Image
+        run: |
+          docker pull mcr.microsoft.com/playwright:${{ env.PLAYWRIGHT_VERSION }}
+          docker tag mcr.microsoft.com/playwright:${{ env.PLAYWRIGHT_VERSION }} coveo/ui-kit-playwright:${{ env.PLAYWRIGHT_VERSION }}
+          docker push coveo/ui-kit-playwright:${{ env.PLAYWRIGHT_VERSION }}
