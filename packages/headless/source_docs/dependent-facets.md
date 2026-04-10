@@ -1,6 +1,6 @@
 ---
 title: Use dependent facets
-group: Usage
+group: Guides
 slug: usage/use-dependent-facets
 ---
 

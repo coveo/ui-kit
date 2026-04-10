@@ -1,5 +1,6 @@
 ---
 title: Versioned documentation
+group: Information
 slug: versioned-documentation
 ---
 
