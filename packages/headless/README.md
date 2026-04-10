@@ -1,5 +1,6 @@
 ---
 title: Contributing
+group: Contributing
 ---
 
 [![npm version](https://badge.fury.io/js/@coveo%2Fheadless.svg)](https://badge.fury.io/js/@coveo%2Fheadless)

@@ -1,6 +1,6 @@
 ---
 title: Send context
-group: Usage
+group: Guides
 category: Server-side rendering
 slug: usage/server-side-rendering/send-context
 ---
