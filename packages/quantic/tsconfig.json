@@ -5,12 +5,15 @@
     "noEmit": true,
     "checkJs": true,
     "allowJs": true,
+    "strict": false,
     "baseUrl": "force-app/main/default/lwc",
     "ignoreDeprecations": "6.0",
     "target": "es2016",
     "module": "ESNext",
     "lib": ["es2019", "dom", "ES2018.Intl", "dom.Iterable", "ES2021.String"],
+    "types": ["jest"],
     "paths": {
+      "coveo": ["../../../../coveo"],
       "c/exampleSearch": ["exampleSearch/exampleSearch"],
       "c/quanticDateFacet": ["quanticDateFacet/quanticDateFacet.js"],
       "c/quanticHeadlessLoader": [
