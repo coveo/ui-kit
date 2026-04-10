@@ -29,9 +29,7 @@
     "clean": "node ../../utils/ci/rm-rf.mjs dist",
     "build": "pnpm run clean && pnpm run build:ts",
     "build:ts": "tsc -p tsconfig.json",
-    "lint": "oxlint . && oxfmt --check .",
-    "release:phase1": "pnpm --filter @coveo/ci bump",
-    "npm:publish": "pnpm --filter @coveo/ci npm-publish"
+    "lint": "oxlint . && oxfmt --check ."
   },
   "devDependencies": {
     "@types/node": "catalog:",

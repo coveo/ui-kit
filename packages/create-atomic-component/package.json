@@ -1,6 +1,6 @@
 {
   "name": "@coveo/create-atomic-component",
-  "version": "1.5.15",
+  "version": "1.5.16",
   "description": "Initialize a Coveo Atomic Component",
   "keywords": [
     "atomic",
@@ -29,13 +29,9 @@
   "publishConfig": {
     "access": "public"
   },
-  "scripts": {
-    "publish:bump": "pnpm --filter @coveo/ci bump",
-    "release:phase1": "pnpm run publish:bump",
-    "npm:publish": "pnpm --filter @coveo/ci npm-publish"
-  },
+  "scripts": {},
   "dependencies": {
-    "@coveo/create-atomic-component-project": "1.5.11"
+    "@coveo/create-atomic-component-project": "workspace:*"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
