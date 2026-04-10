@@ -13,6 +13,8 @@ enum EventType {
 
 const THREAD_ID = 'thread-1';
 const RUN_ID = 'run-1';
+const CONVERSATION_TOKEN = 'conv-token-1';
+let responseSequence = 0;
 
 interface AgentEvent {
   type: EventType;
@@ -21,6 +23,9 @@ interface AgentEvent {
   timestamp?: number;
   name?: string;
   value?: unknown;
+  result?: {
+    completionReason: string;
+  };
   stepName?: string;
   messageId?: string;
   delta?: string;
@@ -35,6 +40,7 @@ const buildMessage = (
     stepName,
     messageId,
     delta,
+    result,
   }: Omit<AgentEvent, 'threadId' | 'runId' | 'timestamp' | 'delayMs'>,
   delayMs?: number
 ): AgentEvent => {
@@ -45,6 +51,7 @@ const buildMessage = (
     timestamp: Date.now(),
     ...(name !== undefined && {name}),
     ...(value !== undefined && {value}),
+    ...(result !== undefined && {result}),
     ...(stepName !== undefined && {stepName}),
     ...(messageId !== undefined && {messageId}),
     ...(delta !== undefined && {delta}),
@@ -120,35 +127,39 @@ const agentMessages: AgentEvent[] = [
       conversationId: THREAD_ID,
       contentFormat: 'text/markdown',
       followUpEnabled: true,
+      conversationToken: CONVERSATION_TOKEN,
     },
   }),
   // First Step starts: searching
   buildMessage({
     type: EventType.STEP_STARTED,
-    stepName: 'searching',
+    stepName: 'Searching',
   }),
   // 1.5 second delay before finishing search
   buildMessage(
     {
       type: EventType.STEP_FINISHED,
-      stepName: 'searching',
+      stepName: 'Searching',
     },
     1500
   ),
   // Second Step starts: thinking
   buildMessage({
     type: EventType.STEP_STARTED,
-    stepName: 'thinking',
+    stepName: 'Thinking',
   }),
   // 1.5 second delay before finishing thinking
   buildMessage(
     {
       type: EventType.STEP_FINISHED,
-      stepName: 'thinking',
+      stepName: 'Thinking',
     },
     1500
   ),
-  // Text message chunks - loop through ANSWER array
+  buildMessage({
+    type: EventType.STEP_STARTED,
+    stepName: 'Answering',
+  }),
   ...ANSWER.map((textDelta) =>
     buildMessage({
       type: EventType.TEXT_MESSAGE_CHUNK,
@@ -163,11 +174,28 @@ const agentMessages: AgentEvent[] = [
       citations: [...CITATIONS],
     },
   }),
-  // TODO: Citations will be handled separately
+  buildMessage({
+    type: EventType.STEP_FINISHED,
+    stepName: 'Answering',
+  }),
   buildMessage({
     type: EventType.RUN_FINISHED,
+    result: {
+      completionReason: 'ANSWERED',
+    },
   }),
 ];
+
+const cloneMessagesForResponse = (messages: AgentEvent[]) => {
+  responseSequence += 1;
+
+  const runId = `${RUN_ID}-${responseSequence}`;
+
+  return messages.map((message) => ({
+    ...message,
+    ...(message.runId && {runId}),
+  }));
+};
 
 const buildAnsweringStreamingResponse = (
   {
@@ -184,10 +212,11 @@ const buildAnsweringStreamingResponse = (
       : delayBetweenMessages === 'infinite'
         ? Number.POSITIVE_INFINITY
         : delayBetweenMessages;
+  const responseMessages = cloneMessagesForResponse(messages);
 
   const stream = new ReadableStream({
     start(controller) {
-      for (const message of messages) {
+      for (const message of responseMessages) {
         // Remove delayMs before sending to avoid including it in the SSE payload
         const {delayMs: _delayMs, ...messageToSend} = message;
         controller.enqueue(
@@ -205,7 +234,7 @@ const buildAnsweringStreamingResponse = (
   const latencyStream = new TransformStream({
     start() {},
     async transform(chunk, controller) {
-      const message = messages[messageIndex];
+      const message = responseMessages[messageIndex];
       const delayMs = message?.delayMs ?? defaultDelay;
       await delay(delayMs);
       messageIndex++;
