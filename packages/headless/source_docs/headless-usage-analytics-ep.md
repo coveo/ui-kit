@@ -1,6 +1,6 @@
 ---
 title: Event Protocol
-group: Usage
+group: Guides
 category: Usage Analytics
 slug: usage/usage-analytics/event-protocol
 ---
