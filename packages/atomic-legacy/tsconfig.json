@@ -1,20 +1,23 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "declaration": false,
+    "esModuleInterop": true,
     "experimentalDecorators": true,
     "lib": ["dom", "dom.iterable", "ES2023", "ESNext.Promise"],
-    "moduleResolution": "Bundler",
     "module": "ES2022",
-    "target": "ES2021",
-    "resolveJsonModule": true,
-    "useDefineForClassFields": false,
+    "moduleResolution": "Bundler",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES2021",
+    "useDefineForClassFields": false,
     "jsx": "react",
     "jsxFactory": "h"
   },
   "include": ["src"],
   "exclude": ["node_modules"]
 }
+
