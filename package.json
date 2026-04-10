@@ -29,23 +29,23 @@
     "@changesets/cli": "2.30.0",
     "@cspell/dict-fr-fr": "2.3.2",
     "@playwright/mcp": "catalog:",
-    "@tsconfig/node22": "22.0.0",
+    "@tsconfig/node22": "22.0.5",
     "@types/jest": "catalog:",
     "@types/node": "catalog:",
     "concurrently": "9.2.1",
-    "cspell": "9.4.0",
+    "cspell": "9.7.0",
     "esbuild": "catalog:",
     "esbuild-plugin-alias": "0.2.1",
     "esbuild-plugin-umd-wrapper": "3.0.0",
     "husky": "9.1.7",
     "knip": "5.88.1",
-    "lint-staged": "16.2.7",
+    "lint-staged": "16.4.0",
     "oxfmt": "0.43.0",
     "oxlint": "1.58.0",
     "playwright": "catalog:",
     "publint": "0.3.18",
-    "semver": "7.7.3",
-    "turbo": "2.8.15",
+    "semver": "7.7.4",
+    "turbo": "2.9.3",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },
@@ -53,11 +53,11 @@
     "node": "^22.14.0 || ^24.11.0",
     "pnpm": ">=10.0.0"
   },
-  "packageManager": "pnpm@10.26.2",
+  "packageManager": "pnpm@10.33.0",
   "pnpm": {
     "patchedDependencies": {
       "@stencil/core@4.20.0": "patches/@stencil+core+4.20.0.patch",
-      "@wc-toolkit/storybook-helpers@10.0.0": "patches/@wc-toolkit+storybook-helpers+10.0.0.patch",
+      "@wc-toolkit/storybook-helpers@10.2.1": "patches/@wc-toolkit+storybook-helpers+10.2.1.patch",
       "jest-environment-jsdom@29.7.0": "patches/jest-environment-jsdom+29.7.0.patch"
     },
     "overrides": {

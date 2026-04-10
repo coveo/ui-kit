@@ -54,7 +54,7 @@
     "@types/react-dom": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "rollup": "4.54.0",
+    "rollup": "4.60.1",
     "rollup-plugin-polyfill-node": "^0.13.0"
   },
   "peerDependencies": {

@@ -96,7 +96,7 @@
     "serve:typedoc": "live-server ./docs"
   },
   "dependencies": {
-    "@ag-ui/client": "0.0.45",
+    "@ag-ui/client": "0.0.50",
     "@coveo/bueno": "workspace:*",
     "@coveo/relay": "catalog:",
     "@coveo/relay-event-types": "catalog:",
@@ -108,7 +108,7 @@
     "fast-equals": "6.0.0",
     "headers-polyfill": "5.0.1",
     "navigator.sendbeacon": "0.0.20",
-    "pino": "10.1.0",
+    "pino": "10.3.1",
     "redux-thunk": "3.1.0",
     "reselect": "5.1.1"
   },
