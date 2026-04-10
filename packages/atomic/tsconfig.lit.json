@@ -8,6 +8,7 @@
     "declaration": true,
     "resolveJsonModule": true,
     "declarationDir": "dist/types",
+    "rootDir": "src",
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
     "outDir": "dist/esm",

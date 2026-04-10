@@ -85,9 +85,9 @@ export const load = (app: Application) => {
   });
 
   const originalMethodName = 'getNavigation';
-  let originalMethod: (
-    project: ProjectReflection
-  ) => NavigationElement[] | null = null;
+  let originalMethod:
+    | ((project: ProjectReflection) => NavigationElement[])
+    | null = null;
   app.renderer.on('beginRender', () => {
     const theme = app.renderer.theme as DefaultTheme | undefined;
     if (!theme) return;
@@ -125,39 +125,55 @@ export const load = (app: Application) => {
 
     const typedNestedOrder = nestedOrder as Record<string, string[]>;
 
+    const saved = originalMethod;
     theme.getNavigation = function wrappedNavigation(
       this: unknown,
-      ...args: unknown[]
+      project: ProjectReflection
     ) {
-      const nav = originalMethod!.apply(this, args);
+      const nav = saved.call(this, project);
 
       // The nav shape can be an array of nodes or a single root with children
       if (Array.isArray(nav)) {
         if (renameModulesTo?.trim()) {
-          applyTopLevelRenameArray(nav, 'Modules', renameModulesTo.trim());
-        }
-
-        hoistOtherCategoryInArray(nav as TNavNode[], fallback, topLevelGroup);
-
-        if (topLevelOrder?.length) {
-          applyTopLevelOrderingArray(nav as TNavNode[], topLevelOrder);
-        }
-
-        applyNestedOrderingArray(nav as TNavNode[], typedNestedOrder);
-      } else if (nav && typeof nav === 'object') {
-        if (renameModulesTo?.trim() && Array.isArray(nav.children)) {
           applyTopLevelRenameArray(
-            nav.children,
+            nav as unknown as TNavNode[],
             'Modules',
             renameModulesTo.trim()
           );
         }
 
-        hoistOtherCategoryInNav(nav as TNavNode, fallback);
-        if ((nav as TNavNode).children && topLevelOrder?.length) {
-          applyTopLevelOrderingNode(nav as TNavNode, topLevelOrder);
+        hoistOtherCategoryInArray(
+          nav as unknown as TNavNode[],
+          fallback,
+          topLevelGroup
+        );
+
+        if (topLevelOrder?.length) {
+          applyTopLevelOrderingArray(
+            nav as unknown as TNavNode[],
+            topLevelOrder
+          );
         }
-        applyNestedOrderingNode(nav as TNavNode, typedNestedOrder);
+
+        applyNestedOrderingArray(
+          nav as unknown as TNavNode[],
+          typedNestedOrder
+        );
+      } else if (nav && typeof nav === 'object') {
+        const navNode = nav as unknown as TNavNode;
+        if (renameModulesTo?.trim() && Array.isArray(navNode.children)) {
+          applyTopLevelRenameArray(
+            navNode.children,
+            'Modules',
+            renameModulesTo.trim()
+          );
+        }
+
+        hoistOtherCategoryInNav(navNode, fallback);
+        if (navNode.children && topLevelOrder?.length) {
+          applyTopLevelOrderingNode(navNode, topLevelOrder);
+        }
+        applyNestedOrderingNode(navNode, typedNestedOrder);
       }
       return nav;
     };
@@ -290,7 +306,7 @@ export const load = (app: Application) => {
     };
     // Restore original to avoid side effects
     const theme = app.renderer.theme as DefaultTheme | undefined;
-    if (theme && originalMethodName && originalMethod) {
+    if (theme && originalMethod) {
       theme[originalMethodName] = originalMethod;
     }
     originalMethod = null;
