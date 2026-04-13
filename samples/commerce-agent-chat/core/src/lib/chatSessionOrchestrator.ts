@@ -94,8 +94,18 @@ export class ChatSessionOrchestrator {
       false
     );
 
+    let hasTextMessageStarted = false;
+
     this.activeSubscription = events.subscribe({
       next: (event: BaseEvent) => {
+        const eventType = String(
+          (event as Record<string, unknown>).type ?? ''
+        ).toUpperCase();
+
+        if (eventType === 'TEXT_MESSAGE_START') {
+          hasTextMessageStarted = true;
+        }
+
         const progressStep = extractStreamingProgress(event);
         if (progressStep !== undefined) {
           this.updateState(
@@ -111,6 +121,10 @@ export class ChatSessionOrchestrator {
         }
 
         const parsed = parseAgentEvent(event);
+        if (parsed.type === 'message' && !hasTextMessageStarted) {
+          return;
+        }
+
         if (parsed.type !== 'lifecycle') {
           this.updateState(
             applyParsedEventToChatState(this.state, assistantMessageId, parsed)
@@ -124,14 +138,20 @@ export class ChatSessionOrchestrator {
           ...this.state,
           error: message,
           isLoading: false,
-          progressSteps: [],
+          progressSteps: this.appendProgressStep(
+            this.state.progressSteps,
+            'Response failed'
+          ),
         });
       },
       complete: () => {
         this.updateState({
           ...this.state,
           isLoading: false,
-          progressSteps: [],
+          progressSteps: this.appendProgressStep(
+            this.state.progressSteps,
+            'Response complete'
+          ),
         });
       },
     });

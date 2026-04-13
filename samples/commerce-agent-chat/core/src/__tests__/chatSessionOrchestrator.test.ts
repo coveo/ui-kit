@@ -49,6 +49,7 @@ describe('ChatSessionOrchestrator', () => {
     const sentMessages = call[0];
     expect(sentMessages[sentMessages.length - 1].content).toBe('Hello');
 
+    stream.next({type: 'TEXT_MESSAGE_START'} as never);
     stream.next({type: 'TEXT_MESSAGE_CONTENT', delta: 'Hi'} as never);
     stream.next({type: 'TEXT_MESSAGE_CONTENT', delta: ' there'} as never);
     stream.complete();
@@ -62,6 +63,34 @@ describe('ChatSessionOrchestrator', () => {
     expect(finalState.isLoading).toBe(false);
 
     unsubscribe();
+    orchestrator.dispose();
+  });
+
+  it('ignores message text chunks that arrive before TEXT_MESSAGE_START', () => {
+    const stream = new Subject<BaseEvent>();
+    const invoke = vi.fn((_: Message[], __: string) => ({
+      runId: 'run-1',
+      events: stream.asObservable(),
+    }));
+
+    const orchestrator = new ChatSessionOrchestrator(mockConfig, {invoke});
+
+    orchestrator.sendMessage('Hello');
+    stream.next({
+      type: 'TEXT_MESSAGE_CONTENT',
+      delta: 'Reasoning text',
+    } as never);
+    stream.next({type: 'TEXT_MESSAGE_START'} as never);
+    stream.next({type: 'TEXT_MESSAGE_CONTENT', delta: 'Final answer'} as never);
+    stream.complete();
+
+    const finalAssistant =
+      [...orchestrator.getState().messages]
+        .reverse()
+        .find((m) => m.role === 'assistant')?.content ?? '';
+
+    expect(finalAssistant).toBe('Final answer');
+
     orchestrator.dispose();
   });
 
@@ -131,7 +160,7 @@ describe('ChatSessionOrchestrator', () => {
     orchestrator.dispose();
   });
 
-  it('clears progress steps when stream completes', () => {
+  it('preserves progress steps and appends completion status when stream completes', () => {
     const stream = new Subject<BaseEvent>();
     const invoke = vi.fn((_: Message[], __: string) => ({
       runId: 'run-1',
@@ -144,7 +173,10 @@ describe('ChatSessionOrchestrator', () => {
     stream.next({type: 'REASONING_START'} as never);
     stream.complete();
 
-    expect(orchestrator.getState().progressSteps).toEqual([]);
+    expect(orchestrator.getState().progressSteps).toEqual([
+      'Reasoning...',
+      'Response complete',
+    ]);
 
     orchestrator.dispose();
   });
