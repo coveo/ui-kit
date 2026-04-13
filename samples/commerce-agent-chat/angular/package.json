@@ -1,0 +1,33 @@
+{
+  "name": "@coveo/commerce-agent-chat-angular",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "generate:config": "node ./scripts/generate-config.mjs",
+    "prebuild": "pnpm run generate:config",
+    "predev": "pnpm run generate:config",
+    "ng": "ng",
+    "build": "ng build",
+    "dev": "ng serve --host=0.0.0.0 --port 3003",
+    "lint:check": "oxlint --deny-warnings .",
+    "lint:fix": "oxlint --deny-warnings --fix ."
+  },
+  "dependencies": {
+    "@angular/common": "catalog:",
+    "@angular/compiler": "catalog:",
+    "@angular/core": "catalog:",
+    "@angular/forms": "catalog:",
+    "@angular/platform-browser": "catalog:",
+    "@angular/platform-browser-dynamic": "catalog:",
+    "@coveo/commerce-agent-chat-core": "workspace:*",
+    "rxjs": "7.8.2",
+    "tslib": "2.8.1",
+    "zone.js": "0.15.1"
+  },
+  "devDependencies": {
+    "@angular/build": "catalog:",
+    "@angular/cli": "catalog:",
+    "@angular/compiler-cli": "catalog:",
+    "typescript": "catalog:"
+  }
+}

@@ -1,0 +1,29 @@
+<main class="chat-shell">
+  <section class="chat-container" aria-label="Commerce Agent Chat">
+    <header class="chat-header">
+      <h1>Commerce Agent Chat (Angular)</h1>
+      <button type="button" class="clear-button" (click)="clearMessages()">
+        Clear
+      </button>
+    </header>
+
+    <app-message-list
+      [messages]="state().messages"
+      [isLoading]="state().isLoading"
+      [progressSteps]="state().progressSteps"
+      (actionSelected)="sendMessage($event)"
+    />
+
+    @if (state().error) {
+      <section class="error-banner" role="alert">
+        <p>{{ state().error }}</p>
+        <button type="button" (click)="dismissError()">Dismiss</button>
+      </section>
+    }
+
+    <app-message-input
+      [disabled]="state().isLoading"
+      (send)="sendMessage($event)"
+    />
+  </section>
+</main>
