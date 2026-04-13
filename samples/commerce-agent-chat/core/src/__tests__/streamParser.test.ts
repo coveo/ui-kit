@@ -6,10 +6,11 @@ import {
 } from '../lib/streamParser.js';
 
 describe('parseAgentEvent', () => {
-  it('parses text stream events', () => {
+  it('parses standard TEXT_MESSAGE_CONTENT events', () => {
     const parsed = parseAgentEvent({
-      type: 'stream',
-      data: 'Hello world',
+      type: 'TEXT_MESSAGE_CONTENT',
+      messageId: 'msg-0',
+      delta: 'Hello world',
     } as never);
 
     expect(parsed.type).toBe('message');
@@ -27,10 +28,10 @@ describe('parseAgentEvent', () => {
     expect(parsed.content).toBe('Hi');
   });
 
-  it('parses AG-UI text chunk events with payload', () => {
+  it('parses TEXT_MESSAGE_CHUNK events with delta', () => {
     const parsed = parseAgentEvent({
       type: 'TEXT_MESSAGE_CHUNK',
-      payload: {delta: ' there'},
+      delta: ' there',
     } as never);
 
     expect(parsed.type).toBe('message');
@@ -39,7 +40,7 @@ describe('parseAgentEvent', () => {
 
   it('parses legacy activity events as activity_snapshot', () => {
     const parsed = parseAgentEvent({
-      type: 'activity',
+      type: 'ACTIVITY',
       payload: {operations: [{type: 'surface', payload: {}}]},
     } as never);
 

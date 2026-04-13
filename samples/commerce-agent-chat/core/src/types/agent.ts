@@ -1,19 +1,9 @@
-import type {BaseEvent} from '@ag-ui/core';
+import type {BaseEvent} from '@ag-ui/client';
 import type {Observable} from 'rxjs';
 
 export interface AgentInvocation {
   runId: string;
   events: Observable<BaseEvent>;
-}
-
-export interface RunAgentInput {
-  messages: Message[];
-  threadId: string;
-  runId: string;
-  state: Record<string, unknown>;
-  tools: unknown[];
-  context: unknown[];
-  forwardedProps: ForwardedProps | {};
 }
 
 export interface ActivityMessage {

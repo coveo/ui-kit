@@ -1,4 +1,9 @@
-import type {BaseEvent} from '@ag-ui/core';
+import type {
+  BaseEvent,
+  TextMessageContentEvent,
+  TextMessageChunkEvent,
+  ToolCallStartEvent,
+} from '@ag-ui/client';
 import type {ParsedEvent} from '../types/agent.js';
 
 export function extractStreamingProgress(event: BaseEvent): string | undefined {
@@ -6,12 +11,9 @@ export function extractStreamingProgress(event: BaseEvent): string | undefined {
     return undefined;
   }
 
-  const typedEvent = event as Record<string, unknown>;
-  const eventType = String(typedEvent.type ?? '').toUpperCase();
-  const payload =
-    typeof typedEvent.payload === 'object' && typedEvent.payload !== null
-      ? (typedEvent.payload as Record<string, unknown>)
-      : undefined;
+  const eventType = String(
+    (event as Record<string, unknown>).type ?? ''
+  ).toUpperCase();
 
   if (eventType === 'REASONING_START') {
     return 'Reasoning...';
@@ -22,18 +24,7 @@ export function extractStreamingProgress(event: BaseEvent): string | undefined {
   }
 
   if (eventType === 'TOOL_CALL_START') {
-    const toolCall =
-      typeof typedEvent.toolCall === 'object' && typedEvent.toolCall !== null
-        ? (typedEvent.toolCall as Record<string, unknown>)
-        : undefined;
-
-    const toolName =
-      extractString(typedEvent.toolCallName) ??
-      extractString(payload?.toolCallName) ??
-      extractString(toolCall?.name) ??
-      extractString(typedEvent.name) ??
-      'tool';
-
+    const toolName = (event as ToolCallStartEvent).toolCallName ?? 'tool';
     return `Tool: ${toolName}`;
   }
 
@@ -46,45 +37,23 @@ export function parseAgentEvent(event: BaseEvent): ParsedEvent {
   }
 
   const typedEvent = event as Record<string, unknown>;
-  const eventType = String(typedEvent.type ?? '');
-  const normalizedEventType = eventType.toUpperCase();
+  const eventType = String(typedEvent.type ?? '').toUpperCase();
 
-  const payload =
-    typeof typedEvent.payload === 'object' && typedEvent.payload !== null
-      ? (typedEvent.payload as Record<string, unknown>)
-      : undefined;
-
-  const textDelta =
-    extractString(typedEvent.delta) ??
-    extractString(payload?.delta) ??
-    extractString(typedEvent.text) ??
-    extractString(payload?.text) ??
-    extractString(typedEvent.content) ??
-    extractString(payload?.content) ??
-    extractString(typedEvent.data) ??
-    extractString(payload?.data);
-
-  if (
-    normalizedEventType === 'TEXT_MESSAGE_CONTENT' ||
-    normalizedEventType === 'TEXT_MESSAGE_CHUNK' ||
-    eventType === 'stream'
-  ) {
-    if (textDelta) {
-      return {type: 'message', content: textDelta};
-    }
+  if (eventType === 'TEXT_MESSAGE_CONTENT') {
+    const delta = (event as TextMessageContentEvent).delta;
+    if (delta) return {type: 'message', content: delta};
   }
 
-  if (normalizedEventType === 'ACTIVITY_SNAPSHOT') {
+  if (eventType === 'TEXT_MESSAGE_CHUNK') {
+    const delta = (event as TextMessageChunkEvent).delta;
+    if (delta) return {type: 'message', content: delta};
+  }
+
+  if (eventType === 'ACTIVITY_SNAPSHOT') {
     const messageId =
-      extractString(typedEvent.messageId) ??
-      extractString(payload?.messageId) ??
-      `activity-${Date.now()}`;
-    const activityType =
-      extractString(typedEvent.activityType) ??
-      extractString(payload?.activityType) ??
-      'unknown';
-    const rawContent =
-      typedEvent.content ?? payload?.content ?? typedEvent.data ?? {};
+      extractString(typedEvent.messageId) ?? `activity-${Date.now()}`;
+    const activityType = extractString(typedEvent.activityType) ?? 'unknown';
+    const rawContent = typedEvent.content ?? typedEvent.data ?? {};
     const content =
       typeof rawContent === 'object' && rawContent !== null
         ? (rawContent as Record<string, unknown>)
@@ -95,27 +64,17 @@ export function parseAgentEvent(event: BaseEvent): ParsedEvent {
     };
   }
 
-  if (normalizedEventType === 'ACTIVITY_DELTA') {
-    const messageId =
-      extractString(typedEvent.messageId) ??
-      extractString(payload?.messageId) ??
-      '';
-    const activityType =
-      extractString(typedEvent.activityType) ??
-      extractString(payload?.activityType) ??
-      'unknown';
-    const patch = Array.isArray(typedEvent.patch)
-      ? typedEvent.patch
-      : Array.isArray(payload?.patch)
-        ? (payload.patch as unknown[])
-        : [];
+  if (eventType === 'ACTIVITY_DELTA') {
+    const messageId = extractString(typedEvent.messageId) ?? '';
+    const activityType = extractString(typedEvent.activityType) ?? 'unknown';
+    const patch = Array.isArray(typedEvent.patch) ? typedEvent.patch : [];
     return {
       type: 'activity_delta',
       activityDelta: {messageId, activityType, patch},
     };
   }
 
-  if (eventType === 'activity' || eventType === 'a2ui_activity') {
+  if (eventType === 'ACTIVITY' || eventType === 'A2UI_ACTIVITY') {
     const rawContent =
       typeof typedEvent.payload === 'object' && typedEvent.payload !== null
         ? (typedEvent.payload as Record<string, unknown>)
@@ -131,15 +90,15 @@ export function parseAgentEvent(event: BaseEvent): ParsedEvent {
   }
 
   if (
-    normalizedEventType === 'RUN_STARTED' ||
-    normalizedEventType === 'RUN_FINISHED' ||
-    normalizedEventType === 'RUN_ERROR' ||
-    normalizedEventType === 'RUN_FAILED'
+    eventType === 'RUN_STARTED' ||
+    eventType === 'RUN_FINISHED' ||
+    eventType === 'RUN_ERROR' ||
+    eventType === 'RUN_FAILED'
   ) {
     return {type: 'lifecycle'};
   }
 
-  if (eventType === 'error' || typedEvent.error) {
+  if (eventType === 'ERROR' || typedEvent.error) {
     const errorMsg =
       typeof typedEvent.error === 'string'
         ? typedEvent.error

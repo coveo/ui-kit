@@ -1,4 +1,4 @@
-import type {BaseEvent} from '@ag-ui/core';
+import type {BaseEvent} from '@ag-ui/client';
 import type {Observable, Subscription} from 'rxjs';
 
 import type {CommerceConfig} from '../config/env.js';

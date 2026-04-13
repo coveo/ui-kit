@@ -1,4 +1,4 @@
-import type {BaseEvent} from '@ag-ui/core';
+import type {BaseEvent} from '@ag-ui/client';
 import {Subject} from 'rxjs';
 import {describe, expect, it, vi} from 'vitest';
 

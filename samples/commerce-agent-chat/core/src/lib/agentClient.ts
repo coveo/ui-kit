@@ -1,5 +1,11 @@
-import type {BaseEvent} from '@ag-ui/core';
-import {Observable} from 'rxjs';
+import {HttpAgent} from '@ag-ui/client';
+import type {
+  BaseEvent,
+  RunAgentInput as AgUiRunAgentInput,
+  StateDeltaEvent,
+  StateSnapshotEvent,
+} from '@ag-ui/client';
+import {Observable, tap} from 'rxjs';
 
 import type {CommerceConfig} from '../config/env.js';
 import {applyJsonPatch} from '../lib/jsonPatch.js';
@@ -7,14 +13,15 @@ import type {
   AgentInvocation,
   CoveoDevPayload,
   Message,
-  RunAgentInput,
 } from '../types/agent.js';
+import {generateId} from './chatIds.js';
 
 export class CommerceAgentClient {
   private readonly headers: Record<string, string>;
   private readonly url: string;
   private readonly config: CommerceConfig;
   private readonly threadState = new Map<string, Record<string, unknown>>();
+  private readonly httpAgent: HttpAgent;
 
   constructor(config: CommerceConfig) {
     this.config = config;
@@ -35,10 +42,11 @@ export class CommerceAgentClient {
     // In local mode the dev proxy rewrites /api → :8080, so we append /invocations.
     // In coveo-dev mode, allow either full converse path or a proxy prefix.
     this.url = resolveAgentUrl(config);
+    this.httpAgent = new HttpAgent({url: this.url, headers: this.headers});
   }
 
   invoke(messages: Message[], threadId: string): AgentInvocation {
-    const runId = this.generateRunId();
+    const runId = generateId('run');
 
     if (this.config.agentMode === 'coveo-dev') {
       const payload: CoveoDevPayload = {
@@ -65,12 +73,12 @@ export class CommerceAgentClient {
 
       return {
         runId,
-        events: this.runCoveoDevStream(payload),
+        events: parseCoveoSseStream(this.url, this.headers, payload),
       };
     }
 
-    const payload: RunAgentInput = {
-      messages,
+    const input: AgUiRunAgentInput = {
+      messages: messages as AgUiRunAgentInput['messages'],
       threadId,
       runId,
       state: this.threadState.get(threadId) ?? {},
@@ -97,10 +105,7 @@ export class CommerceAgentClient {
 
     return {
       runId,
-      events: this.captureThreadState(
-        this.runSseStream(payload, this.url, this.headers),
-        threadId
-      ),
+      events: this.captureThreadState(this.httpAgent.run(input), threadId),
     };
   }
 
@@ -112,148 +117,30 @@ export class CommerceAgentClient {
     events: Observable<BaseEvent>,
     threadId: string
   ): Observable<BaseEvent> {
-    return new Observable<BaseEvent>((subscriber) => {
-      const subscription = events.subscribe({
-        next: (event) => {
-          const typedEvent = event as Record<string, unknown>;
-          const eventType = String(typedEvent.type ?? '').toUpperCase();
+    return events.pipe(
+      tap((event) => {
+        const eventType = String(
+          (event as Record<string, unknown>).type ?? ''
+        ).toUpperCase();
 
-          if (eventType === 'STATE_SNAPSHOT') {
-            const snapshot = typedEvent.snapshot;
-            if (snapshot && typeof snapshot === 'object') {
-              this.threadState.set(
-                threadId,
-                snapshot as Record<string, unknown>
-              );
-            }
+        if (eventType === 'STATE_SNAPSHOT') {
+          const {snapshot} = event as StateSnapshotEvent;
+          if (snapshot && typeof snapshot === 'object') {
+            this.threadState.set(threadId, snapshot as Record<string, unknown>);
           }
-
-          if (eventType === 'STATE_DELTA' && Array.isArray(typedEvent.delta)) {
-            const previousState = this.threadState.get(threadId) ?? {};
-            const nextState = applyJsonPatch(
-              previousState,
-              typedEvent.delta as unknown[]
-            );
-            this.threadState.set(threadId, nextState);
-          }
-
-          subscriber.next(event);
-        },
-        error: (error) => {
-          subscriber.error(error);
-        },
-        complete: () => {
-          subscriber.complete();
-        },
-      });
-
-      return () => {
-        subscription.unsubscribe();
-      };
-    });
-  }
-
-  private runCoveoDevStream(payload: CoveoDevPayload): Observable<BaseEvent> {
-    return this.runSseStream(payload, this.url, this.headers);
-  }
-
-  private runSseStream(
-    payload: unknown,
-    url: string,
-    headers: Record<string, string>
-  ): Observable<BaseEvent> {
-    return new Observable<BaseEvent>((subscriber) => {
-      const abortController = new AbortController();
-
-      const processFrame = (frame: string) => {
-        const dataLines = frame
-          .split(/\r?\n/)
-          .filter((line) => line.startsWith('data:'))
-          .map((line) => line.slice(5).trimStart());
-
-        if (dataLines.length === 0) {
-          return;
         }
 
-        const data = dataLines.join('\n').trim();
-        if (!data || data === '[DONE]') {
-          return;
-        }
-
-        let parsed: unknown;
-        try {
-          parsed = JSON.parse(data);
-        } catch {
-          return;
-        }
-
-        const normalized = normalizeEvent(parsed);
-        if (normalized) {
-          subscriber.next(normalized);
-        }
-      };
-
-      void (async () => {
-        try {
-          const response = await fetch(url, {
-            method: 'POST',
-            headers,
-            body: JSON.stringify(payload),
-            signal: abortController.signal,
-          });
-
-          if (!response.ok) {
-            const text = await response.text();
-            throw new Error(
-              `HTTP ${response.status}: ${text || response.statusText}`
+        if (eventType === 'STATE_DELTA') {
+          const {delta} = event as StateDeltaEvent;
+          if (Array.isArray(delta)) {
+            this.threadState.set(
+              threadId,
+              applyJsonPatch(this.threadState.get(threadId) ?? {}, delta)
             );
           }
-
-          if (!response.body) {
-            throw new Error('Missing response body for coveo-dev stream');
-          }
-
-          const reader = response.body.getReader();
-          const decoder = new TextDecoder();
-          let buffer = '';
-
-          while (true) {
-            const {done, value} = await reader.read();
-            if (done) {
-              break;
-            }
-
-            buffer += decoder.decode(value, {stream: true});
-            const frames = buffer.split(/\r?\n\r?\n/);
-            buffer = frames.pop() ?? '';
-
-            for (const frame of frames) {
-              processFrame(frame);
-            }
-          }
-
-          if (buffer.trim()) {
-            processFrame(buffer);
-          }
-
-          subscriber.complete();
-        } catch (error) {
-          subscriber.error(
-            error instanceof Error
-              ? error
-              : new Error('coveo-dev stream failed')
-          );
         }
-      })();
-
-      return () => {
-        abortController.abort();
-      };
-    });
-  }
-
-  private generateRunId(): string {
-    return `run-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      })
+    );
   }
 }
 
@@ -278,94 +165,118 @@ function resolveAgentUrl(config: CommerceConfig): string {
   return `${baseProxy.replace(/\/$/, '')}/rest/organizations/${config.orgId}/commerce/unstable/agentic/converse`;
 }
 
-const KNOWN_EVENT_TYPES = new Set([
-  'TEXT_MESSAGE_START',
-  'TEXT_MESSAGE_CONTENT',
-  'TEXT_MESSAGE_END',
-  'TEXT_MESSAGE_CHUNK',
-  'THINKING_START',
-  'THINKING_END',
-  'THINKING_TEXT_MESSAGE_START',
-  'THINKING_TEXT_MESSAGE_CONTENT',
-  'THINKING_TEXT_MESSAGE_END',
-  'TOOL_CALL_START',
-  'TOOL_CALL_ARGS',
-  'TOOL_CALL_END',
-  'TOOL_CALL_CHUNK',
-  'TOOL_CALL_RESULT',
-  'STATE_SNAPSHOT',
-  'STATE_DELTA',
-  'MESSAGES_SNAPSHOT',
-  'ACTIVITY_SNAPSHOT',
-  'ACTIVITY_DELTA',
-  'RAW',
-  'CUSTOM',
-  'RUN_STARTED',
-  'RUN_FINISHED',
-  'RUN_ERROR',
-  'STEP_STARTED',
-  'STEP_FINISHED',
-  'REASONING_START',
-  'REASONING_MESSAGE_START',
-  'REASONING_MESSAGE_CONTENT',
-  'REASONING_MESSAGE_END',
-  'REASONING_MESSAGE_CHUNK',
-  'REASONING_END',
-  'REASONING_ENCRYPTED_VALUE',
-]);
-
-function normalizeEvent(event: unknown): BaseEvent | undefined {
-  if (!event || typeof event !== 'object') {
-    return undefined;
-  }
-
-  const typedEvent = event as Record<string, unknown>;
-  const rawType = typedEvent.type;
-  if (typeof rawType !== 'string' || rawType.length === 0) {
-    if (
-      typeof typedEvent.error === 'string' ||
-      typeof typedEvent.message === 'string'
-    ) {
-      // Some backends emit terminal SSE errors without an explicit type.
-      // Keep these events so upstream parsing can surface the error to UI state.
-      return {
-        ...typedEvent,
-        type: 'CUSTOM',
-      } as BaseEvent;
-    }
-    return undefined;
-  }
-
-  const canonicalType = toKnownEventType(rawType, typedEvent);
-  return {
-    ...typedEvent,
-    type: canonicalType,
-  } as BaseEvent;
+function parseCoveoSseStream(
+  url: string,
+  headers: Record<string, string>,
+  payload: unknown
+): Observable<BaseEvent> {
+  return new Observable<BaseEvent>((sub) => {
+    const controller = new AbortController();
+    void (async () => {
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(payload),
+          signal: controller.signal,
+        });
+        if (!response.ok) {
+          throw new Error(
+            `HTTP ${response.status}: ${(await response.text()) || response.statusText}`
+          );
+        }
+        const reader = response.body!.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+        for (;;) {
+          const {done, value} = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, {stream: true});
+          const frames = buffer.split(/\r?\n\r?\n/);
+          buffer = frames.pop() ?? '';
+          for (const frame of frames) {
+            const event = parseSseFrame(frame);
+            if (event) sub.next(event);
+          }
+        }
+        if (buffer.trim()) {
+          const event = parseSseFrame(buffer);
+          if (event) sub.next(event);
+        }
+        sub.complete();
+      } catch (e) {
+        sub.error(e instanceof Error ? e : new Error(String(e)));
+      }
+    })();
+    return () => controller.abort();
+  });
 }
 
-function toKnownEventType(
-  eventType: string,
-  payload: Record<string, unknown>
-): string {
-  const normalized = eventType.toUpperCase();
-  if (KNOWN_EVENT_TYPES.has(normalized)) {
-    return normalized;
+function parseSseFrame(frame: string): BaseEvent | undefined {
+  const data = frame
+    .split(/\r?\n/)
+    .filter((l) => l.startsWith('data:'))
+    .map((l) => l.slice(5).trimStart())
+    .join('\n')
+    .trim();
+  if (!data || data === '[DONE]') return undefined;
+  try {
+    return normalizeCoveoEvent(JSON.parse(data));
+  } catch {
+    return undefined;
+  }
+}
+
+function normalizeCoveoEvent(event: unknown): BaseEvent | undefined {
+  if (!event || typeof event !== 'object') return undefined;
+  const e = event as Record<string, unknown>;
+  const rawType = e.type;
+  if (typeof rawType !== 'string' || !rawType) {
+    if (typeof e.error === 'string' || typeof e.message === 'string') {
+      return {...e, type: 'CUSTOM'} as BaseEvent;
+    }
+    return undefined;
+  }
+  const upper = rawType.toUpperCase();
+
+  // Normalize non-standard text types and field aliases → TEXT_MESSAGE_CONTENT with delta.
+  if (
+    upper === 'TEXT_MESSAGE_' ||
+    upper === 'TEXT_MESSAGE_CONTENT' ||
+    rawType === 'stream'
+  ) {
+    const delta =
+      typeof e.delta === 'string'
+        ? e.delta
+        : typeof e.content === 'string'
+          ? e.content
+          : typeof e.text === 'string'
+            ? e.text
+            : typeof e.data === 'string'
+              ? e.data
+              : undefined;
+    if (delta !== undefined) {
+      return {...e, type: 'TEXT_MESSAGE_CONTENT', delta} as BaseEvent;
+    }
+    if (upper === 'TEXT_MESSAGE_' && typeof e.messageId === 'string') {
+      return {...e, type: 'TEXT_MESSAGE_CHUNK'} as BaseEvent;
+    }
   }
 
-  if (normalized === 'TEXT_MESSAGE_') {
-    if (
-      typeof payload.delta === 'string' ||
-      typeof payload.content === 'string' ||
-      typeof payload.text === 'string' ||
-      typeof payload.data === 'string'
-    ) {
-      return 'TEXT_MESSAGE_CONTENT';
-    }
-
-    if (typeof payload.messageId === 'string') {
-      return 'TEXT_MESSAGE_CHUNK';
+  // Lift payload.delta for chunk events that nest it.
+  if (upper === 'TEXT_MESSAGE_CHUNK' && typeof e.delta !== 'string') {
+    const payloadDelta =
+      typeof e.payload === 'object' && e.payload !== null
+        ? (e.payload as Record<string, unknown>).delta
+        : undefined;
+    if (typeof payloadDelta === 'string') {
+      return {
+        ...e,
+        type: 'TEXT_MESSAGE_CHUNK',
+        delta: payloadDelta,
+      } as BaseEvent;
     }
   }
 
-  return eventType;
+  return {...e, type: upper} as BaseEvent;
 }

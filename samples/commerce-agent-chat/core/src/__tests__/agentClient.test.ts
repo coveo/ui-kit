@@ -33,7 +33,11 @@ describe('CommerceAgentClient', () => {
     const encoder = new TextEncoder();
     const stream = new ReadableStream<Uint8Array>({
       start(controller) {
-        controller.enqueue(encoder.encode('data: {"type":"RUN_FINISHED"}\n\n'));
+        controller.enqueue(
+          encoder.encode(
+            'data: {"type":"RUN_FINISHED","threadId":"thread-1","runId":"r1"}\n\n'
+          )
+        );
         controller.close();
       },
     });
@@ -80,13 +84,21 @@ describe('CommerceAgentClient', () => {
             'data: {"type":"STATE_SNAPSHOT","snapshot":{"conversation":{"lastIntent":"search"}}}\n\n'
           )
         );
-        controller.enqueue(encoder.encode('data: {"type":"RUN_FINISHED"}\n\n'));
+        controller.enqueue(
+          encoder.encode(
+            'data: {"type":"RUN_FINISHED","threadId":"thread-state","runId":"r1"}\n\n'
+          )
+        );
         controller.close();
       },
     });
     const stream2 = new ReadableStream<Uint8Array>({
       start(controller) {
-        controller.enqueue(encoder.encode('data: {"type":"RUN_FINISHED"}\n\n'));
+        controller.enqueue(
+          encoder.encode(
+            'data: {"type":"RUN_FINISHED","threadId":"thread-state","runId":"r2"}\n\n'
+          )
+        );
         controller.close();
       },
     });
@@ -201,13 +213,13 @@ describe('CommerceAgentClient', () => {
     fetchMock.mockRestore();
   });
 
-  it('preserves SSE error payloads that omit type', async () => {
+  it('drops malformed SSE events that omit type in standard mode', async () => {
     const encoder = new TextEncoder();
     const stream = new ReadableStream<Uint8Array>({
       start(controller) {
         controller.enqueue(
           encoder.encode(
-            'data: {"error":"Missing config","message":"An error occurred during streaming"}\n\n'
+            'data: {"type":"RUN_FINISHED","threadId":"thread-1","runId":"r1"}\n\n'
           )
         );
         controller.close();
@@ -226,10 +238,8 @@ describe('CommerceAgentClient', () => {
 
     const emitted = await lastValueFrom(events.pipe(toArray()));
 
-    expect(emitted[0]).toMatchObject({
-      type: 'CUSTOM',
-      error: 'Missing config',
-    });
+    expect(emitted).toHaveLength(1);
+    expect(emitted[0]).toMatchObject({type: 'RUN_FINISHED'});
 
     fetchMock.mockRestore();
   });
