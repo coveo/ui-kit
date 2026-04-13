@@ -745,18 +745,19 @@ export class AtomicCommerceSearchBox
           },
         },
       })(
-        html`${this.renderTextBox()}
-        ${renderSubmitButton({
-          props: {
-            i18n: this.bindings.i18n,
-            disabled: this.isSearchDisabledForEndUser,
-            onClick: () => {
-              this.searchBox.submit();
-              this.suggestionManager.clearSuggestions();
+        html`<h1>OHHI!</h1>
+          ${this.renderTextBox()}
+          ${renderSubmitButton({
+            props: {
+              i18n: this.bindings.i18n,
+              disabled: this.isSearchDisabledForEndUser,
+              onClick: () => {
+                this.searchBox.submit();
+                this.suggestionManager.clearSuggestions();
+              },
             },
-          },
-        })}
-        ${this.renderSuggestions()}`
+          })}
+          ${this.renderSuggestions()}`
       )}
       ${this.renderSlotContent()}
     `;
