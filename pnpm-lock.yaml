@@ -238,9 +238,6 @@ importers:
       publint:
         specifier: 0.3.18
         version: 0.3.18
-      semver:
-        specifier: 7.7.3
-        version: 7.7.3
       turbo:
         specifier: 2.8.15
         version: 2.8.15
