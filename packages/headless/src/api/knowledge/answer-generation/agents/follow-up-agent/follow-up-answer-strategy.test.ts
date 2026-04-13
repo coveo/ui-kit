@@ -4,6 +4,7 @@ import type {AgentSubscriber} from '@ag-ui/client';
 import type {Dispatch} from '@reduxjs/toolkit';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {
+  activeFollowUpStartFailed,
   followUpCitationsReceived,
   followUpCompleted,
   followUpFailed,
@@ -146,6 +147,49 @@ describe('createFollowUpStrategy', () => {
         answerId: runId,
         message: 'Failure',
         code: GeneratedAnswerSseErrorCode.SseModelsNotAvailable,
+      })
+    );
+  });
+
+  it('records failures using the error event run id when no run was started', () => {
+    strategy = createFollowUpStrategy(dispatch);
+
+    strategy.onRunErrorEvent!({
+      event: {
+        runId: 'run-456',
+        message: 'Failure',
+        code: 'KNOWLEDGE:SSE_TURN_LIMIT_REACHED',
+      },
+    } as any);
+
+    expect(dispatch).toHaveBeenNthCalledWith(
+      1,
+      setActiveFollowUpAnswerId('run-456')
+    );
+    expect(dispatch).toHaveBeenNthCalledWith(
+      2,
+      followUpFailed({
+        answerId: 'run-456',
+        message: 'Failure',
+        code: GeneratedAnswerSseErrorCode.SseTurnLimitReached,
+      })
+    );
+  });
+
+  it('records active follow-up start failures when no run id is available', () => {
+    strategy = createFollowUpStrategy(dispatch);
+
+    strategy.onRunErrorEvent!({
+      event: {
+        message: 'Failure',
+        code: 'KNOWLEDGE:SSE_TURN_LIMIT_REACHED',
+      },
+    } as any);
+
+    expect(dispatch).toHaveBeenCalledWith(
+      activeFollowUpStartFailed({
+        message: 'Failure',
+        code: GeneratedAnswerSseErrorCode.SseTurnLimitReached,
       })
     );
   });

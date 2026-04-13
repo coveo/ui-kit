@@ -139,9 +139,10 @@ export const followUpFailed = createAction(
 
 export const activeFollowUpStartFailed = createAction(
   'followUpAnswers/activeFollowUpStartFailed',
-  (payload: {message?: string}) =>
+  (payload: {message?: string; code?: number}) =>
     validatePayload(payload, {
       message: new StringValue(),
+      code: new NumberValue({min: 0}),
     })
 );
 

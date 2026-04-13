@@ -153,6 +153,7 @@ export const followUpAnswersReducer = createReducer(
         activeFollowUp.isStreaming = false;
         activeFollowUp.error = {
           message: payload.message,
+          ...(payload.code !== undefined && {code: payload.code}),
         };
         activeFollowUp.citations = [];
         delete activeFollowUp.answer;
