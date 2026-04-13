@@ -2,6 +2,24 @@
 
 Private local sample to chat with the commerce agent over AG-UI streaming.
 
+## Structure
+
+- `core/` shared runtime logic, config types, and tests.
+- `react/` React implementation.
+- `vue/` Vue implementation.
+- `angular/` Angular implementation.
+
+## Current parity
+
+React remains the reference implementation. Vue and Angular now match core commerce rendering behavior for:
+
+- Product carousel rendering (including image fallback and promo/original pricing display)
+- Comparison summary/table rendering (including image row and dynamic attribute rows)
+- Bundle display rendering (tabbed tiers, slot-level product mapping, and promo pricing)
+- Next-actions rendering and loading fallbacks
+
+Framework-specific template and styling details may still differ slightly, but shared extraction, loading, and rendering decisions are now aligned through `core/`.
+
 ## Setup
 
 1. Install dependencies from repo root:
@@ -23,20 +41,68 @@ Keep `VITE_AGENT_URL` set to the proxy prefix shown above — this routes reques
 
 For `local` mode, ensure the commerce agent is running on `http://localhost:8080` before starting the dev server.
 
+For Angular, `VITE_*` variables are loaded into a generated runtime file instead of being written into source. The Angular package runs `pnpm run generate:config` automatically before `dev` and `build`, generating `angular/public/config.json` from `samples/commerce-agent-chat/.env.local` (fallback: `samples/commerce-agent-chat/.env`). The app fetches `/config.json` before bootstrap, and `angular/public/config.json` is git-ignored.
+Angular dev requests are proxied through `angular/proxy.conf.js`:
+
+- `/api` -> `http://localhost:8080`
+- `/api/coveo-dev` -> `VITE_PLATFORM_URL` (or `https://platform.cloud.coveo.com` if unset)
+
+For Angular local mode, these config fields must be non-empty or the backend will reject the invocation payload:
+
+- `config.accessToken` (`VITE_ACCESS_TOKEN`)
+- `config.orgId` (`VITE_ORG_ID`)
+- `config.platformUrl` (`VITE_PLATFORM_URL`)
+
+Mapping used by Angular `generate:config` from `samples/commerce-agent-chat/.env.local` (or `.env`) to `angular/public/config.json`:
+
+- `agentMode <- VITE_AGENT_MODE`
+- `agentUrl <- VITE_AGENT_URL`
+- `orgId <- VITE_ORG_ID`
+- `accessToken <- VITE_ACCESS_TOKEN`
+- `platformUrl <- VITE_PLATFORM_URL`
+- `trackingId <- VITE_TRACKING_ID`
+- `language <- VITE_LANGUAGE`
+- `country <- VITE_COUNTRY`
+- `currency <- VITE_CURRENCY`
+- `timezone <- VITE_TIMEZONE`
+- `clientId <- VITE_CLIENT_ID`
+- `contextUrl <- VITE_CONTEXT_URL`
+
 ## Commands
 
-Run from `samples/commerce-agent-chat`:
+Run from `samples/commerce-agent-chat/core`:
+
+- `pnpm test`
+- `pnpm lint:check`
+- `pnpm lint:fix`
+
+Run from `samples/commerce-agent-chat/react`:
 
 - `pnpm dev` — starts the dev server on port 3001
-- `pnpm test`
+- `pnpm lint:check`
+- `pnpm lint:fix`
+- `pnpm build`
+
+Run from `samples/commerce-agent-chat/vue`:
+
+- `pnpm dev` — starts the dev server on port 3002
+- `pnpm lint:check`
+- `pnpm lint:fix`
+- `pnpm build`
+
+Run from `samples/commerce-agent-chat/angular`:
+
+- `pnpm dev` — starts Angular on port 3003
 - `pnpm lint:check`
 - `pnpm lint:fix`
 - `pnpm build`
 
 Run from repository root:
 
-- `pnpm turbo test --filter=@coveo/commerce-agent-chat`
-- `pnpm turbo build --filter=@coveo/commerce-agent-chat`
+- `pnpm turbo test --filter=@coveo/commerce-agent-chat-core`
+- `pnpm turbo build --filter=@coveo/commerce-agent-chat-react`
+- `pnpm turbo build --filter=@coveo/commerce-agent-chat-vue`
+- `pnpm turbo build --filter=@coveo/commerce-agent-chat-angular`
 
 ## Notes
 
