@@ -12,6 +12,7 @@
     "lint:fix": "oxlint --deny-warnings --fix ."
   },
   "dependencies": {
+    "@coveo/commerce-agent-chat-components": "workspace:*",
     "@coveo/commerce-agent-chat-core": "workspace:*",
     "vue": "3.5.26"
   },

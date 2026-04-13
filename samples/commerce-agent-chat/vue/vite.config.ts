@@ -8,7 +8,15 @@ export default defineConfig(({mode}) => {
 
   return {
     envDir,
-    plugins: [vue()],
+    plugins: [
+      vue({
+        template: {
+          compilerOptions: {
+            isCustomElement: (tag) => tag.startsWith('cac-'),
+          },
+        },
+      }),
+    ],
     resolve: {
       alias: {
         '@core': path.resolve(__dirname, '../core/src'),
