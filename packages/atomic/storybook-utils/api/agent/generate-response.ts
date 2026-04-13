@@ -105,11 +105,9 @@ const ANSWER = [
 ];
 
 const agentMessages: AgentEvent[] = [
-  // Run starts
   buildMessage({
     type: EventType.RUN_STARTED,
   }),
-  // Header event
   buildMessage({
     type: EventType.CUSTOM,
     name: 'header',
@@ -120,12 +118,10 @@ const agentMessages: AgentEvent[] = [
       conversationToken: CONVERSATION_TOKEN,
     },
   }),
-  // First Step starts: searching
   buildMessage({
     type: EventType.STEP_STARTED,
     stepName: 'Searching',
   }),
-  // 1.5 second delay before finishing search
   buildMessage(
     {
       type: EventType.STEP_FINISHED,
@@ -133,12 +129,10 @@ const agentMessages: AgentEvent[] = [
     },
     1500
   ),
-  // Second Step starts: thinking
   buildMessage({
     type: EventType.STEP_STARTED,
     stepName: 'Thinking',
   }),
-  // 1.5 second delay before finishing thinking
   buildMessage(
     {
       type: EventType.STEP_FINISHED,
