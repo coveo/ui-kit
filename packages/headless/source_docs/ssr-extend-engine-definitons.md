@@ -1,6 +1,6 @@
 ---
 title: Extend engine definitions
-group: Usage
+group: Guides
 category: Server-side rendering
 slug: usage/server-side-rendering/extend-engine-definitions
 ---

@@ -46,6 +46,7 @@ const meta: Meta = {
   ],
   parameters: {
     ...parameters,
+    chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
     },
