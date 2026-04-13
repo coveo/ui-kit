@@ -1,0 +1,27 @@
+{
+  "name": "@coveo/commerce-agent-chat-vue",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "clean": "rm -rf dist",
+    "lint:check": "oxlint --deny-warnings .",
+    "lint:fix": "oxlint --deny-warnings --fix ."
+  },
+  "dependencies": {
+    "@coveo/commerce-agent-chat-core": "workspace:*",
+    "vue": "3.5.26"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@vitejs/plugin-vue": "6.0.3",
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  },
+  "engines": {
+    "node": "^22.14.0 || ^24.11.0"
+  }
+}
