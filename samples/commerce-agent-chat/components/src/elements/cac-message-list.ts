@@ -3,8 +3,13 @@ import {customElement, property} from 'lit/decorators.js';
 import {map} from 'lit/directives/map.js';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {when} from 'lit/directives/when.js';
+import {extractProductsBySurface} from '@coveo/commerce-agent-chat-core/lib/commerceExtractor';
 import {renderMarkdown} from '@coveo/commerce-agent-chat-core/lib/markdown';
 import type {Message} from '@coveo/commerce-agent-chat-core/types/agent';
+import type {
+  A2UISurfaceContent,
+  Product,
+} from '@coveo/commerce-agent-chat-core/types/commerce';
 import './cac-activity-renderer.js';
 
 /**
@@ -226,6 +231,7 @@ export class CacMessageList extends LitElement {
     isActiveAssistantActivity: boolean
   ) {
     const activities = message.activities ?? [];
+    const bundleProducts = this.buildBundleProducts(activities);
 
     return map(
       activities,
@@ -233,9 +239,21 @@ export class CacMessageList extends LitElement {
         <cac-activity-renderer
           .activity=${activity}
           .isLoading=${isActiveAssistantActivity}
+          .bundleProducts=${bundleProducts}
         ></cac-activity-renderer>
       `
     );
+  }
+
+  private buildBundleProducts(
+    activities: Message['activities']
+  ): Map<string, Product[]> {
+    const operations = (activities ?? [])
+      .filter((a) => a.activityType === 'a2ui-surface')
+      .flatMap(
+        (a) => (a.content as unknown as A2UISurfaceContent).operations ?? []
+      );
+    return extractProductsBySurface(operations);
   }
 
   private isActiveAssistantActivity(

@@ -2,7 +2,10 @@ import {css, html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import type {ActivityMessage} from '@coveo/commerce-agent-chat-core/types/agent';
-import type {A2UISurfaceContent} from '@coveo/commerce-agent-chat-core/types/commerce';
+import type {
+  A2UISurfaceContent,
+  Product,
+} from '@coveo/commerce-agent-chat-core/types/commerce';
 import './cac-commerce-catalog-view.js';
 
 /**
@@ -50,6 +53,10 @@ export class CacActivityRenderer extends LitElement {
   @property({type: Boolean, attribute: 'is-loading'})
   public isLoading = false;
 
+  /** Accumulated products from all activities in the same message, used to resolve bundle surface references. */
+  @property({attribute: false})
+  public bundleProducts: Map<string, Product[]> = new Map();
+
   override render() {
     return html`
       <article class="activity-renderer" aria-label="Agent activity">
@@ -71,6 +78,7 @@ export class CacActivityRenderer extends LitElement {
       <cac-commerce-catalog-view
         .content=${this.activity.content as unknown as A2UISurfaceContent}
         .isLoading=${this.isLoading}
+        .bundleProducts=${this.bundleProducts}
       ></cac-commerce-catalog-view>
     `;
   }

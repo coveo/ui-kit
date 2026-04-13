@@ -13,10 +13,6 @@ import {
   isType,
   uniqueProducts,
 } from '@coveo/commerce-agent-chat-core/lib/commerceHelpers';
-import {
-  getBundleProductsFromCache,
-  updateBundleProductCache,
-} from '@coveo/commerce-agent-chat-core/lib/bundleProductCache';
 import type {
   A2UISurfaceContent,
   BundleTierConfig,
@@ -82,6 +78,10 @@ export class CacCommerceCatalogView extends LitElement {
   @property({type: Boolean, attribute: 'is-loading'})
   public isLoading = false;
 
+  /** Accumulated products from all activities in the same message, used to resolve bundle surface references. */
+  @property({attribute: false})
+  public bundleProducts: Map<string, Product[]> = new Map();
+
   override render() {
     const context = this.buildRenderContext();
     if (context.supportedComponents.length === 0) {
@@ -114,7 +114,6 @@ export class CacCommerceCatalogView extends LitElement {
   private buildRenderContext(): CatalogRenderContext {
     const operations = this.content?.operations ?? [];
     const productsBySurface = extractProductsBySurface(operations);
-    updateBundleProductCache(productsBySurface);
 
     const catalogComponents = extractCatalogComponents(operations);
     const supportedComponents =
@@ -129,7 +128,8 @@ export class CacCommerceCatalogView extends LitElement {
       ),
       getProducts: (surfaceId: string) =>
         productsBySurface.get(surfaceId) ??
-        getBundleProductsFromCache(surfaceId),
+        this.bundleProducts.get(surfaceId) ??
+        [],
     };
   }
 
