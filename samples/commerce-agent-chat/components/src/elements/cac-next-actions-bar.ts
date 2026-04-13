@@ -72,6 +72,36 @@ export class CacNextActionsBar extends LitElement {
       border-style: solid;
     }
 
+    .commerce-loading {
+      border-radius: 6px;
+      background: linear-gradient(
+        90deg,
+        rgba(26, 77, 109, 0.4) 25%,
+        rgba(0, 212, 255, 0.15) 50%,
+        rgba(26, 77, 109, 0.4) 75%
+      );
+      background-size: 600px 100%;
+      animation: shimmer 1.4s infinite linear;
+    }
+
+    .commerce-loading--line {
+      height: 12px;
+      width: 45%;
+    }
+
+    .commerce-loading--line-wide {
+      width: 70%;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -600px 0;
+      }
+      100% {
+        background-position: 600px 0;
+      }
+    }
+
     .next-action-btn--skeleton .commerce-loading {
       width: 100%;
     }

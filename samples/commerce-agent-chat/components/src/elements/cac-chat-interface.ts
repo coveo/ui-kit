@@ -15,7 +15,7 @@ import {customElement, property} from 'lit/decorators.js';
 export class CacChatInterface extends LitElement {
   static override styles = css`
     :host {
-      min-height: 100%;
+      height: 100%;
       display: grid;
       place-items: center;
       padding: 1rem;
@@ -33,7 +33,8 @@ export class CacChatInterface extends LitElement {
         inset 0 1px 0 rgba(0, 212, 255, 0.2);
       display: grid;
       grid-template-rows: auto 1fr auto auto;
-      min-height: min(820px, 100dvh - 2rem);
+      height: min(820px, 100dvh - 2rem);
+      max-height: min(820px, 100dvh - 2rem);
       overflow: hidden;
     }
 
@@ -174,7 +175,8 @@ export class CacChatInterface extends LitElement {
 
       .chat-container {
         width: 100%;
-        min-height: 100dvh;
+        height: 100dvh;
+        max-height: 100dvh;
         border-radius: 0;
         border-left: 0;
         border-right: 0;

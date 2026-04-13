@@ -93,6 +93,41 @@ export class CacProductCarousel extends LitElement {
       );
     }
 
+    .commerce-loading {
+      border-radius: 6px;
+      background: linear-gradient(
+        90deg,
+        rgba(26, 77, 109, 0.4) 25%,
+        rgba(0, 212, 255, 0.15) 50%,
+        rgba(26, 77, 109, 0.4) 75%
+      );
+      background-size: 600px 100%;
+      animation: shimmer 1.4s infinite linear;
+    }
+
+    .commerce-loading--line {
+      height: 12px;
+      width: 45%;
+    }
+
+    .commerce-loading--line-wide {
+      width: 70%;
+    }
+
+    .commerce-loading--image {
+      width: 100%;
+      height: 90px;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -600px 0;
+      }
+      100% {
+        background-position: 600px 0;
+      }
+    }
+
     .product-card--skeleton .product-card__body {
       gap: 0.45rem;
     }
