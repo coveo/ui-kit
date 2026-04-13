@@ -55,16 +55,6 @@ const preview: Preview = {
         method: 'alphabetical',
         order: [
           'Coveo Atomic Storybook',
-          'Resources',
-          [
-            'Coveo atomic home',
-            'Code samples',
-            'Product lifecycle',
-            'Atomic usage analytics coveo ua',
-            'Atomic usage analytics ep',
-            'Versioned documentation',
-            ['*'],
-          ],
           'Usage',
           [
             'Introduction',
@@ -116,6 +106,16 @@ const preview: Preview = {
           ],
           'Upgrade',
           ['v2 to v3', 'v1 to v2'],
+          'Resources',
+          [
+            'Coveo atomic home',
+            'Code samples',
+            'Product lifecycle',
+            'Atomic usage analytics coveo ua',
+            'Atomic usage analytics ep',
+            'Versioned documentation',
+            ['*'],
+          ],
           'Reference',
           [
             'Search',
