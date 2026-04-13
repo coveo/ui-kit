@@ -22,7 +22,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-automatic-facet-generator',
-  title: 'Search/Automatic Facet Generator',
+  title: 'Reference/Search/Automatic Facet Generator',
   id: 'atomic-automatic-facet-generator',
   render: (args) => template(args),
   decorators: [facetWidthDecorator, decorator],

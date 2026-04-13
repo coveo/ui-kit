@@ -1,0 +1,182 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Usage/Standalone search box" />
+
+A standalone search box is a search box that's independent of the display of results.
+This is controlled with the `redirection-url` property of the [`atomic-search-box`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-box/) component.
+You can use this pattern to set up your search on one page before you redirect your users to a page to display the full search results.
+
+> **Important**
+>
+> [Query pipeline redirects](https://docs.coveo.com/en/1458/) will overwrite the `redirection-url` if it's set on the pipeline being queried.
+>
+> In the following examples, it's assumed that there's no pipeline redirect set.
+
+
+## Static search box behaviour
+
+With the `redirection-url` parameter set, the search box automatically redirects to the target URL when a search is executed.
+
+In the following example, there's a standalone search box defined in the `<header />` of a page:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- // callout[Ensure that the Atomic library and styling is loaded.] -->
+    <script type="module" src="https://static.cloud.coveo.com/atomic/v3/atomic.esm.js"></script>
+    <link rel="stylesheet" href="https://static.cloud.coveo.com/atomic/v3/themes/coveo.css"/>
+    <script type="module">
+      import { 
+        getSampleSearchEngineConfiguration 
+      } from "https://static.cloud.coveo.com/headless/v3/headless.esm.js";
+
+      (async () => {
+        await customElements.whenDefined("atomic-search-interface");
+        const searchInterface = document.querySelector("atomic-search-interface");
+        <!-- // callout[`configuration` needs to be replaced with a valid search engine configuration. Refer to [`SearchEngineConfiguration`]({site-baseurl}/headless/latest/reference/interfaces/Search.SearchEngineConfiguration.html) for details.] -->
+        const configuration = {
+          ...getSampleSearchEngineConfiguration(), 
+        };
+        await searchInterface.initialize(configuration);
+        window.coveoEngine = searchInterface.engine;
+      })();
+    </script>
+  </head>
+
+  <header>
+    <atomic-search-interface>
+      <!-- // callout[Every time a user submits a search, the search box redirects them to `search-results.html`.] -->
+      <atomic-search-box redirection-url="search-results.html"></atomic-search-box>
+    </atomic-search-interface>
+  </header>
+  <body>
+    <h1>This is a page without any search results content.</h1>
+  </body>
+</html>
+
+```
+## Dynamic search box behaviour
+
+It's often simpler to have a single search box used on multiple pages on your site.
+
+You can change the behaviour of a single search box by programmatically modifying the `redirection-url` parameter of the `atomic-search-box` component.
+
+### Embedded in a normal page
+
+Here's a page which provides a search box.
+As in the previous example, there's no interface to display search results.
+This examples lacks a `redirection-url` for `atomic-search-box`:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- // callout[Ensure that the Atomic Library and styling is loaded.] -->
+    <script type="module" src="https://static.cloud.coveo.com/atomic/v3/atomic.esm.js"></script>
+    <link rel="stylesheet" href="https://static.cloud.coveo.com/atomic/v3/themes/coveo.css"/>
+    <!-- // callout[Shared script to initialize the search box.]-->
+    <script type="module" src="./atomic-bootstrap.js"></script>
+  </head>
+
+  <header>
+    <atomic-search-interface id="search-interface">
+      <atomic-search-box id="search-box"></atomic-search-box>
+    </atomic-search-interface>
+  </header>
+  <body>
+    <h1>This is a page without any search results content.</h1>
+  </body>
+</html>
+```
+The `atomic-bootstrap.js` script included by this page controls `redirection-url` programmatically:
+
+```js
+// atomic-bootstrap.js
+import {getSampleSearchEngineConfiguration} from 'https://static.cloud.coveo.com/headless/v3/headless.esm.js';
+
+(async () => {
+  await customElements.whenDefined('atomic-search-interface'); // callout[Ensure that an `atomic-search-interface` component has been loaded before proceeding.]
+  const searchBox = document.querySelector(
+    'atomic-search-box#search-box' // callout[Be as specific as you can with the search box you are targeting.]
+  );
+  if (!searchBox) return; // callout[Don't proceed if no `atomic-search-box` can be found on the page.]
+
+  const searchResults = document.querySelector(
+    'atomic-search-interface#results' // callout[Check to see if there is an `atomic-search-interface` to display search results on the page.]
+  );
+  searchBox.setAttribute(
+    'redirection-url', // callout[Manage the redirection URL for the search box.]
+    searchResults ? undefined : 'search-results.html' // callout[If the `atomic-search-interface` used to results display is found, don't redirect the user.]
+  );
+  const searchInterface = document.querySelector(
+    'atomic-search-interface#search-interface' // callout[Note the targeting by id here. The page contains multiple instances of `atomic-search-interface` and it's important to target the correct one.]
+  );
+  const configuration = {
+    ...getSampleSearchEngineConfiguration(), // callout[`configuration` needs to be replaced with a valid search engine configuration. Refer to [`SearchEngineConfiguration`]({site-baseurl}/headless/latest/reference/interfaces/Search.SearchEngineConfiguration.html) for details.]
+  };
+  await searchInterface.initialize(configuration); // callout[Initialize the search interface.]
+  window.coveoEngine = searchInterface.engine; // callout[Expose the master engine so other interfaces can attach to it.]
+})();
+```
+### Embedded in a search results page
+
+In `search-results.html`, the same `atomic-search-box` is used, though in this case the page displays search results:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <script type="module" src="https://static.cloud.coveo.com/atomic/v3/atomic.esm.js"></script>
+    <link rel="stylesheet" href="https://static.cloud.coveo.com/atomic/v3/themes/coveo.css"/>
+    <!-- // callout[Use the same script from the other page to initialize the search box.]-->
+    <script type="module" src="./atomic-bootstrap.js"></script>
+    <!-- // callout[Attach the search results to the master engine.] -->
+    <script type="module" src="./search-results.js"></script>
+
+  </head>
+
+  <header>
+    <atomic-search-interface id="search-interface">
+      <atomic-search-box id="search-box"></atomic-search-box>
+    </atomic-search-interface>
+  </header>
+
+  <body>
+    <h1>This is a page with search results content.</h1>
+    <!-- // callout[This is a minimal example of showing search results. Refer to [`atomic-result-list`]({storybookurl}/docs/atomic-result-list\--docs) for detailed instructions on how to customize your search results.]-->
+    <atomic-search-interface id="results">
+      <atomic-result-list>
+        <atomic-result-template>
+          <template>
+            <atomic-result-link></atomic-result-link>
+          </template>
+        </atomic-result-template>
+      </atomic-result-list>
+    </atomic-search-interface>
+  </body>
+</html>
+```
+In `search-results.js`, the instance of the initialized search engine is connected to this search results interface:
+
+```js
+// search-results.js
+(async () => {
+  await customElements.whenDefined('atomic-search-interface'); // callout[Wait until the search results interface has loaded.]
+
+  const searchResults = document.querySelector(
+    'atomic-search-interface#results' // callout[Query for the search results container.]
+  );
+
+  if (!searchResults) return;
+
+  while (!window.coveoEngine) {
+    await new Promise((r) => setTimeout(r, 50)); // callout[Wait until the master engine exists, then reuse it.]
+  }
+
+  await searchResults.initializeWithSearchEngine(window.coveoEngine); // callout[Initialize the search results with the Engine initialized in `atomic-bootstrap.js`.]
+
+  searchResults.executeFirstSearch(); // callout[The results page should execute the first search.]
+})();
+```
+This pattern allows the search box to dynamically change its behaviour--from a standalone search box to a regular search box--based on the content of the page.

@@ -1,0 +1,224 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Usage/Custom query suggestions" />
+
+There are several ways to add [query suggestions](https://docs.coveo.com/en/1015/) to your search box.
+The simplest is to use pre-built [Coveo Atomic](https://docs.coveo.com/en/lcdf0264/) components such as [`atomic-search-box-recent-queries`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-box-recent-queries/) and [`atomic-search-box-query-suggestions`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-box-query-suggestions/).
+Another way is to use your own custom suggestions.
+This article shows you how to do so.
+This could be useful, for example, to retrieve suggestions from an API external to the [Coveo Platform](https://docs.coveo.com/en/186/).
+
+For custom suggestions to integrate well with existing [Atomic](https://docs.coveo.com/en/lcdf0264/) components, the [Atomic library](https://docs.coveo.com/en/lcdf0264/) offers a function called `dispatchSearchBoxSuggestionsEvent`.
+You can take a look at the usage of this function, along with the relevant reference documentation, in the following sections.
+
+## Complete code example
+
+The following code sample shows you how to leverage `dispatchSearchBoxSuggestionsEvents` to provide custom [query suggestions](https://docs.coveo.com/en/1015/) returned from a third-party API.
+You can copy-paste it, as is, to start playing with the concepts discussed in this article.
+
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Custom query suggestions</title>
+        <script type="module" src="https://static.cloud.coveo.com/atomic/v3/atomic.esm.js"></script>
+        <link rel="stylesheet" href="https://static.cloud.coveo.com/atomic/v3/themes/coveo.css"/>
+        <script type="module">
+            import {dispatchSearchBoxSuggestionsEvent} from 'https://static.cloud.coveo.com/atomic/v3/index.esm.js';
+
+            function registerCustomSuggestions() {
+              class CustomSuggestions extends HTMLElement {
+                constructor() {
+                  super();
+                }
+​
+                suggestions = [];
+​
+                renderSuggestions(bindings) { (4)
+                  return this.suggestions.slice(0, 2).map((suggestion) => {
+                    const content = document.createElement('div');
+                    content.innerText = suggestion;
+                    return {
+                      key: suggestion,
+                      query: suggestion,
+                      onSelect: () => {
+                        bindings.searchBoxController.updateText(suggestion);
+                        bindings.searchBoxController.submit();
+                      },
+                      content,
+                    };
+                  });
+                }
+​
+                onInput(bindings) { (3)
+                  const query = bindings.searchBoxController.state.value;
+​
+                  return fetch('https://pokeapi.co/api/v2/pokemon')
+                    .then((res) => res.json())
+                    .then((res) => {
+                      const resultsWithQuery = query ? results.filter((r) => r.name.includes(query[0])) : results;
+                      this.suggestions = resultsWithQuery.slice(0, 10).map((r) => r.name);
+                    });
+                }
+​
+                async connectedCallback() {
+                  dispatchSearchBoxSuggestionsEvent((bindings) => { (1)
+                    return { (2)
+                      position: 2,
+                      onInput: () => this.onInput(bindings),
+                      renderItems: () => this.renderSuggestions(bindings),
+                    };
+                  }, this);
+                }
+              }
+​
+              window.customElements.define('custom-suggestions', CustomSuggestions); (5)
+            }
+​
+            async function main() {
+              await customElements.whenDefined('atomic-search-interface');
+              const searchInterface = document.querySelector('atomic-search-interface');
+              await searchInterface.initialize({
+                accessToken: '<ACCESS_TOKEN>',
+                organizationId: '<ORGANIZATION_ID>',
+              });
+​
+              const engine = searchInterface.engine;
+              searchInterface.executeFirstSearch();
+            }
+​
+            main();
+            registerCustomSuggestions();
+        </script>
+    </head>
+    <body>
+        <atomic-search-interface id="search">
+        <atomic-search-layout>
+            <atomic-layout-section section="search">
+                <atomic-search-box>
+                  <custom-suggestions></custom-suggestions> (6)
+                </atomic-search-box>
+            </atomic-layout-section>
+            <atomic-layout-section section="main">
+                <atomic-layout-section section="results">
+                    <atomic-result-list></atomic-result-list>
+                </atomic-layout-section>
+            </atomic-layout-section>
+        </atomic-search-layout>
+        </atomic-search-interface>
+    </body>
+</html>
+```
+
+
+1. Pass `bindings` as input for the [`SearchBoxSuggestionsEvent`](#searchboxsuggestionsevent) callback.
+
+
+
+2. The callback function needs to return a [`SearchBoxSuggestions`](#searchboxsuggestions) object with certain required properties, as detailed in the reference section.
+
+
+
+3. `onInput` accesses the current [query](https://docs.coveo.com/en/231/) by using the state of the `searchBoxController`.
+
+It then makes a call to an API outside of the [Coveo Platform](https://docs.coveo.com/en/186/) and returns a list of matching results if they included the current [query](https://docs.coveo.com/en/231/).
+These results are saved to be provided as suggestions.
+
+
+4. The results saved from the previous step are processed and converted into a [`SearchBoxSuggestionElement`](#searchboxsuggestionelement) object with a unique `key`, the `query` to be suggested, and the HTML `content` to be displayed for the suggestions.
+
+In addition to these, an `onSelect` callback is defined so that whenever the suggestion is selected by the user, the search box display text is updated and a search [query](https://docs.coveo.com/en/231/) is triggered.
+
+
+5. A new custom HTML element is defined based on the `CustomSuggestions` class.
+
+
+
+6. The newly defined custom element can be placed as a child of the `<atomic-search-box>` component to provide custom [query suggestions](https://docs.coveo.com/en/1015/).
+
+
+## Reference
+
+Take a look at the [Atomic project repository](https://github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/common/suggestions) for more information about the data types and methods detailed here.
+
+### dispatchSearchBoxSuggestionsEvent
+
+Dispatches an [event](https://docs.coveo.com/en/260/) which retrieves the [`SearchBoxSuggestionsBindings`](#searchboxsuggestionsbindings) on a configured parent search box.
+
+**Parameters**
+
+* **event**: [`SearchBoxSuggestionsEvent`](#searchboxsuggestionsevent) (required)
+
+The [event](https://docs.coveo.com/en/260/) sent from the registered [query suggestions](https://docs.coveo.com/en/1015/) to the parent search box.
+
+* **element**: `HTMLElement` (required)
+
+Element on which to dispatch the [event](https://docs.coveo.com/en/260/), which must be the child of a configured search box.
+
+**Returns** `void`
+
+### SearchBoxSuggestionsEvent
+
+The [event](https://docs.coveo.com/en/260/) sent from the registered [query suggestions](https://docs.coveo.com/en/1015/) to the parent search box.
+
+**Parameters**
+
+* **bindings**: [`SearchBoxSuggestionsBindings`](#searchboxsuggestionsbindings)
+
+The bindings passed from the search box to the suggestions.
+
+**Returns** [`SearchBoxSuggestions`](#searchboxsuggestions)
+
+### SearchBoxSuggestionElement
+
+Element which will be rendered in the list of suggestions.
+
+[%header,cols="3"]
+
+| Property | Description | Type |
+| --- | --- | --- |
+| `key` (required) | Stable identity which enables [Stencil](https://stenciljs.com/) to reuse DOM elements for better performance. | `string` |
+| `content` (required) | Rendered content of the element. | `Element \| VNode` |
+| `onSelect` | Hook called when the selection is selected. | `(e: Event) => void` |
+| `query` | The [query](https://docs.coveo.com/en/231/) associated with the suggestion which will replace the [query](https://docs.coveo.com/en/231/) in the search box if the suggestion is selected. | `string` |
+| `ariaLabel` | For improved accessibility, provide this property with additional information. | `string` |
+| `part` | Adds a specific shadow part attribute that can be selected with the [CSS ::part pseudo-element](https://developer.mozilla.org/en-US/docs/Web/CSS/::part). | `string` |
+| `hideIfLast` | Hide the suggestion if it's the last in the list. | `boolean` |
+
+
+### SearchBoxSuggestions
+
+List of suggestions that will be displayed along with other lists (e.g recent [queries](https://docs.coveo.com/en/231/)) when the search box's input is selected.
+This will contain a list of [`SearchBoxSuggestionElement`](#searchboxsuggestionelement) objects.
+
+[%header,cols="3"]
+
+| Property | Description | Type |
+| --- | --- | --- |
+| `position` (required) | The search box will sort the position of suggestions using this value. | `number` |
+| `panel` | Whether the suggestions should be listed in the right or left panel. | `string` |
+| `renderItems` (required) | Method that returns the list of elements which will be rendered in the list of suggestions. | `() => SearchBoxSuggestionElement[];` |
+| `onInput` | Hook called when the user changes the search box's input value. | `() => Promise<unknown> \| void` |
+| `onSuggestedQueryChange` | Hook called when the suggested [query](https://docs.coveo.com/en/231/) changes as a user traverses through the list of suggestions. | `(q: string) => Promise<unknown> \| void` |
+
+
+### SearchBoxSuggestionsBindings
+
+The bindings passed from the search box to the suggestions.
+This object gives you access to the state of the suggestion system as a whole and has important information and functions that you can invoke.
+
+[%header,cols="3"]
+
+| Property | Description | Type |
+| --- | --- | --- |
+| `id` | The unique ID of the search box. | `string` |
+| `isStandalone` | Whether the search box is [standalone](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-standalone-search-box--docs). | `boolean` |
+| `searchBoxController` | The [search box headless controller](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchBox.html). | `searchBoxController` |
+| `numberOfQueries` | The amount of [queries](https://docs.coveo.com/en/231/) displayed when the user interacts with the search box. | `number` |
+| `clearFilters` | Whether to clear all active [query](https://docs.coveo.com/en/231/) filters when the user submits a new [query](https://docs.coveo.com/en/231/) from the search box. | `boolean` |
+| `suggestedQuery` | Retrieves the suggested [query](https://docs.coveo.com/en/231/), meaning the [query](https://docs.coveo.com/en/231/) that would be sent if the search were executed. | `() => string` |
+| `clearSuggestions` | Removes the current suggestions. | `() => void` |
+| `triggerSuggestions` | Triggers update and retrieval of all suggestions. | `() => void` |
+| `getSuggestions` | Retrieves the current suggestions. | `() => SearchBoxSuggestions[]` |
+| `getSuggestionElements` | Retrieves the currently suggested elements. | `() => SearchBoxSuggestionElement[]` |
+

@@ -1,0 +1,17 @@
+.sbdocs .sbdocs-wrapper,
+.sbdocs .sbdocs-preview,
+.sbdocs .sbdocs-content,
+.sbdocs .markdown,
+.docs-root .sbdocs-wrapper,
+.docs-root .sbdocs-content {
+  box-sizing: border-box;
+  max-width: 750px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.sbdocs code {
+  vertical-align: -0.36em;
+}

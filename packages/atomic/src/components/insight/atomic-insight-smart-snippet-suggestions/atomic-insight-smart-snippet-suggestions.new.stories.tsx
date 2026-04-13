@@ -20,7 +20,7 @@ const {decorator, play} = wrapInInsightInterface();
 
 const meta: Meta = {
   component: 'atomic-insight-smart-snippet-suggestions',
-  title: 'Insight/Smart Snippet Suggestions',
+  title: 'Reference/Insight/Smart Snippet Suggestions',
   id: 'atomic-insight-smart-snippet-suggestions',
   render: (args) => template(args),
   decorators: [decorator],

@@ -1,0 +1,61 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Usage/Manage your project/Create a project" />
+
+You can generate a basic [Atomic](https://docs.coveo.com/en/lcdf0264/) search page in the [Coveo Administration Console](https://docs.coveo.com/en/183/) or with the [Coveo CLI](https://docs.coveo.com/en/cli/).
+
+## Use the Administration Console
+
+The **Simple Builder & Legacy Interface Editor** tab on the [**Search Pages**](https://platform.cloud.coveo.com/admin/#/orgid/search/search-pages/) ([platform-ca](https://platform-ca.cloud.coveo.com/admin/#/orgid/search/search-pages/) | [platform-eu](https://platform-eu.cloud.coveo.com/admin/#/orgid/search/search-pages/) | [platform-au](https://platform-au.cloud.coveo.com/admin/#/orgid/search/search-pages/)) page of the [Administration Console](https://docs.coveo.com/en/183/) offers two WYSIWYG tools that let you create and edit search pages.
+
+Select the **Simple builder** to create and customize a basic [Atomic](https://docs.coveo.com/en/lcdf0264/) search page.
+If you want more flexibility, you can [download your page](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-manage-your-project-download-your-project-using-the-cli--docs) so that you can customize it locally.
+
+> **Important**
+>
+> Pages created with the **Legacy Interface Editor** are built upon the [Coveo JavaScript Search Framework](https://docs.coveo.com/en/187/).
+
+
+## Use the Coveo CLI
+
+Before you can use the Coveo CLI to create a basic [Atomic](https://docs.coveo.com/en/lcdf0264/) search page, you'll need to have a [Coveo organization](https://docs.coveo.com/en/185/) with an active [source](https://docs.coveo.com/en/246/).
+
+1. [Install the Coveo CLI](https://docs.coveo.com/en/cli#installation).
+
+2. Navigate to the folder in which you want to create your search page.
+
+3. Run `coveo auth:login` to connect to your [organization](https://docs.coveo.com/en/185/).
+
+> **Tip**
+>
+> By default, this command connects to whichever [organization](https://docs.coveo.com/en/185/) you're currently logged in with.
+> If you belong to multiple [organizations](https://docs.coveo.com/en/185/), you can append the `-o=<ORG_ID>` flag to connect to a specific one.
+
+
+4. Run `coveo ui:create:atomic <YOUR_PROJECT_NAME>`.
+
+You may be asked to install [Coveo Atomic](https://docs.coveo.com/en/lcdf0264/).
+If so, select Y, and then select Enter.
+
+5. In the next interactive prompt, select **Start from scratch**.
+
+The Coveo CLI will create a [Stencil](https://stenciljs.com/docs/introduction) project for you.
+Stencil is the same toolchain that was used to create the [Coveo Atomic](https://docs.coveo.com/en/lcdf0264/) project itself.
+
+> **Tip**
+>
+> If you have any existing search pages on the [**Search Pages**](https://platform.cloud.coveo.com/admin/#/orgid/search/search-pages/) ([platform-ca](https://platform-ca.cloud.coveo.com/admin/#/orgid/search/search-pages/) | [platform-eu](https://platform-eu.cloud.coveo.com/admin/#/orgid/search/search-pages/) | [platform-au](https://platform-au.cloud.coveo.com/admin/#/orgid/search/search-pages/)) page of the [Administration Console](https://docs.coveo.com/en/183/), they will be listed under **Start from scratch**.
+
+
+6. Navigate to the folder for your new [Atomic](https://docs.coveo.com/en/lcdf0264/) project.
+
+7. Run `npm start`.
+
+Once the build finishes, your browser should open to your new [Atomic](https://docs.coveo.com/en/lcdf0264/) search page.
+
+## What's next?
+
+* If you've used the **Simple builder** to create and customize your [Atomic](https://docs.coveo.com/en/lcdf0264/) search page, you can [leverage the `atomic-simple-builder`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-manage-your-project-use-a-hosted-page-in-your-infrastructure--docs) component to consume it from anywhere on the web.
+Alternately, you can [download your page](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-manage-your-project-download-your-project-using-the-cli--docs) and customize it locally.
+
+* If you've created and customized your [Atomic](https://docs.coveo.com/en/lcdf0264/) search page locally, you can use the Coveo CLI to [deploy it to the Coveo Platform infrastructure](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-manage-your-project-deploy-your-project--docs).

@@ -1,0 +1,257 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Usage/Introduction" />
+
+The [Coveo Atomic library](https://docs.coveo.com/en/lcdf0264/) provides you with a customizable set of UI components that are already configured to communicate with the [Coveo Platform](https://docs.coveo.com/en/186/).
+These [web components](https://developer.mozilla.org/en-US/docs/Web/Web_Components), which are built on top of the [Coveo Headless library](https://docs.coveo.com/en/headless/latest/), can be used with or without existing frameworks.
+
+> **Notes**
+>
+> * To create a starter [Atomic](https://docs.coveo.com/en/lcdf0264/) project, check out the [Coveo CLI](https://docs.coveo.com/en/cli/).
+>
+> * To use the [Atomic library](https://docs.coveo.com/en/lcdf0264/) in a [React](https://reactjs.org/), [Angular](https://angular.io/), or [Vue.js](https://vuejs.org/) project, check out the [Atomic React wrapper](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-in-a-framework-use-the-react-wrapper--docs), [Atomic Angular wrapper](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-in-a-framework-use-the-angular-wrapper--docs), or [Atomic Vue](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-in-a-framework-usage-in-a-vue-project--docs) documentation, respectively.
+
+
+This article provides an overview of the core [Atomic](https://docs.coveo.com/en/lcdf0264/) concepts.
+
+## Install Atomic
+
+## CDN
+The simplest way to get the Atomic component library is through a content delivery network (CDN).
+
+Include the following scripts in the target HTML page:
+
+```html
+<script
+    type="module"
+    src="https://static.cloud.coveo.com/atomic/v3/atomic.esm.js">
+</script> (1)
+<link
+    rel="stylesheet"
+    href="https://static.cloud.coveo.com/atomic/v3/themes/coveo.css"/> (2)
+```
+
+
+1. The main Atomic script.
+
+
+
+2. The [default Atomic stylesheet](https://static.cloud.coveo.com/atomic/v3/themes/coveo.css).
+
+While this import is optional, if you don't import it you'll need to [define its variables](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-themes-and-visual-customization--docs#theme-variables) yourself.
+
+Or, with [SRI](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity):
+```html
+<script
+  type="module"
+  src="https://static.cloud.coveo.com/atomic/v3.52.0/atomic.esm.js"
+  integrity="sha512-nfqsdKBVUU8tW25RYvOuxfb3YVHGvFGZiYbULo1lWJYuVyEtqIdTfNyON9ZmfY0xn2uFSo9aW0+gI0uTyEztaQ=="
+  crossorigin="anonymous">
+</script>
+<link
+  rel="stylesheet"
+  href="https://static.cloud.coveo.com/atomic/v3.52.0/themes/coveo.css"
+  integrity="sha512-+lY0zz8phT812JA4H/JdnhgZY3dTkxgLzO+DpbQ5yK8KewhK0cHofKYGP8b/0qGswkQB4BnRnSfwAu4h/NKB2A=="
+  crossorigin="anonymous"/>
+```
+
+CDN links are available for the following versions of Atomic releases:
+
+**Major:** `https://static.cloud.coveo.com/atomic/v3/atomic.esm.js`
+
+Recommended for development and QA environment purposes.
+It's a rather safe way to always have recent features from minor version updates, while not having major breaking changes.
+
+**Minor:** `https://static.cloud.coveo.com/atomic/v3.44/atomic.esm.js`
+
+Recommended for production and any customer-facing app.
+Minor version updates are mostly bug fixes; pointing to a minor version is safe and retrieves patches instantly.
+
+## NPM
+
+The library is also available as an [npm](https://www.npmjs.com/package/@coveo/atomic) package.
+
+```bash
+npm install @coveo/atomic
+```
+
+Use a bundler (Browserify, Webpack, Rollup, etc.) to `require('@coveo/atomic')` or `import '@coveo/atomic'`.
+The resources are exposed through the following entry points:
+
+* `@coveo/atomic` (various types and utilities used by Coveo Atomic, such as `initializeBindings`)
+
+**Example**
+
+   To [create a custom component](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-custom-web-components--docs), import `initializeBindings`.
+   
+   ```js
+   import {initializeBindings} from '@coveo/atomic'
+   // ...
+   ```
+
+* `@coveo/atomic/loader` (Coveo Atomic components types, as well as the `defineCustomElements` and `setNonce` utilities)
+
+**Example**
+
+   You use the Atomic Vue wrapper and need to [Bind the custom elements to the window object](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-in-a-framework-usage-in-a-vue-project--docs#update-your-entry-file).
+   You import `defineCustomElements`.
+   
+   ```js
+   import {defineCustomElements} from '@coveo/atomic/loader'
+   // ...
+   ```
+
+* `@coveo/atomic/themes` (sample Coveo Atomic themes)
+
+* `@coveo/atomic/assets` (SVG icons used by Coveo Atomic)
+
+* `@coveo/atomic/lang` (localization files used by Coveo Atomic)
+
+**Example**
+
+   You want to copy the Atomic themes, assets and localization files to your project.
+   
+   ```js
+   import {dirname} from 'node:path'
+   const themeDirectory = dirname(import.meta.resolve('@coveo/atomic/themes/coveo.css'))
+   const langDirectory = dirname(import.meta.resolve('@coveo/atomic/lang/en.json'))
+   const assetDirectory = dirname(import.meta.resolve('@coveo/atomic/assets/all.svg'))
+   // ...
+   ```
+
+> **Note**
+>
+> If you use TypeScript, note that Atomic doesn't support the `classic` or `node10`/`node` `moduleResolution` options.
+> See [TypeScript module resolution](https://www.typescriptlang.org/docs/handbook/modules/theory.html#module-resolution) and [Announcing TypeScript 5.0 `--moduleResolution bundler`](https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#--moduleresolution-bundler).
+
+
+:leveloffset!:
+
+## Use components to create a search interface
+
+[Atomic](https://docs.coveo.com/en/lcdf0264/) builds search pages by attaching components to target HTML elements.
+
+This means that you can build your search page by assembling the target HTML elements:
+
+```html
+<body>
+  <atomic-search-interface id="search">
+    <atomic-search-box></atomic-search-box>
+    <atomic-facet-manager>
+      <atomic-facet field="author" label="Authors"></atomic-facet>
+      <!-- ... -->
+    </atomic-facet-manager>
+    <!-- ... -->
+  </atomic-search-interface>
+</body>
+```
+
+To turn these HTML elements into real [Atomic](https://docs.coveo.com/en/lcdf0264/) components, you use a script to initialize the overarching [`atomic-search-interface`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/) component:
+
+
+[source,html,subs="attributes+"]
+```
+<head>
+  <!-- ... -->
+  <script>
+    (async () => {
+      await customElements.whenDefined('atomic-search-interface');
+      const searchInterface = document.querySelector('#search');
+
+      await searchInterface.initialize({
+        accessToken: '<ACCESS_TOKEN>', (1)
+        organizationId: '<ORGANIZATION_ID>', (2)
+        renewAccessToken: pass:[<CALLBACK>], (3)
+      });
+​
+      searchInterface.executeFirstSearch();
+    })();
+  </script>
+  <!-- ... -->
+</head>
+```
+
+
+1. `<ACCESS_TOKEN>` (string) is an [API key](https://docs.coveo.com/en/105/) that was created using the **Anonymous search** [template](https://docs.coveo.com/en/1718#api-key-templates) or a [search token](https://docs.coveo.com/en/56/) that grants the **Allowed** [access level](https://docs.coveo.com/en/2818/) on the [**Execute Queries**](https://docs.coveo.com/en/1707#execute-queries-domain) [domain](https://docs.coveo.com/en/2819/) and the **Push** [access level](https://docs.coveo.com/en/2818/) on the [**Analytics Data**](https://docs.coveo.com/en/1707#administrate-domain) [domain](https://docs.coveo.com/en/2819/) in the target [organization](https://docs.coveo.com/en/185/).
+
+
+> **Important**
+>
+> We strongly recommend that the access token enforces a `searchHub` value.
+> See [Defining the search hub in the authentication](https://docs.coveo.com/en/n89e0266#defining-the-search-hub-in-the-authentication) for more details.
+
+
+
+2. `<ORGANIZATION_ID>` (string) is the [unique identifier of your Coveo organization](https://docs.coveo.com/en/n1ce5273/) (for example, `mycoveoorganizationa1b23c`).
+
+
+
+3. `<CALLBACK>` (function) returns a new access token, usually by fetching it from a backend service that can generate [search tokens](https://docs.coveo.com/en/56/).
+
+The engine will automatically run this function when the current access token expires (that is, when the engine detects a `419 Authentication Timeout` HTTP code).
+
+> **Note**
+>
+> You don't need to specify a `renewAccessToken` callback if your application is using [API key authentication](https://docs.coveo.com/en/105/).
+> This is typically not recommended, but can be legitimate in some scenarios.
+
+
+Some components expose options.
+For example, the following [`atomic-search-box`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-box/) component will offer a maximum of two [queries](https://docs.coveo.com/en/231/) when the user interacts with it:
+
+```html
+<atomic-search-box number-of-queries="2"></atomic-search-box>
+```
+
+Some components also expose methods.
+The following code sample includes two methods [exposed by](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface#methods) the `atomic-search-interface` component:
+
+```javascript
+const searchInterface = document.querySelector("atomic-search-interface");
+
+await searchInterface.initialize({
+  accessToken: "xx564559b1-0045-48e1-953c-3addd1ee4457",
+  organizationId: "searchuisamples",
+}); (1)
+
+searchInterface.executeFirstSearch(); (2)
+```
+
+
+1. The `initialize` method is used to initialize the [search interface](https://docs.coveo.com/en/2741/).
+
+In this case, the `await` operator is used to wait for the interface to finish its initialization before moving on.
+
+
+2. The `executeFirstSearch` method is used to trigger a search after the [search interface](https://docs.coveo.com/en/2741/) has been initialized.
+
+
+### Style your components
+
+Atomic uses [shadow DOM](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM) to instantiate components.
+This encapsulates a specific section of the DOM to allow for componentization, meaning that the component style is independent from the surrounding DOM styling.
+So, style those components using their shadow DOM parts.
+For example:
+
+```css
+<style>
+  atomic-facet::part(label-button) {
+    justify-content: center;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--atomic-neutral)
+  }
+</style>
+```
+
+For more detailed guide on how to customize your components, please refer [to this article](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-themes-and-visual-customization--docs).
+
+## What's next?
+
+Result templates determine the format of the individual query results in a search interface.
+When a query is successful, each result is rendered according to the first template whose condition is satisfied by that result.
+
+Atomic currently provides one default template for all result types.
+More will be added in the future.
+
+You can also create your own result templates with custom styles (see [Defining a result template](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-display-results-introduction--docs#defining-a-result-template)).
+To learn more, see [Defining a Result Template](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-display-results-introduction--docs#defining-a-result-template).

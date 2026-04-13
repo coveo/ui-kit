@@ -1,0 +1,114 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Usage/Display results/Display Instant Results" />
+
+This article explains how to leverage the [`atomic-search-box-instant-results`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-box-instant-results/) component to display results whenever the user hovers over a [query suggestion](https://docs.coveo.com/en/1015/) in an `atomic-search-box`.
+
+To correctly render results related to a [query suggestion](https://docs.coveo.com/en/1015/), `atomic-search-box-instant-results` must be placed inside the `atomic-search-box` component and a [query suggestion](https://docs.coveo.com/en/1015/) component.
+Components which can be used to provide [query suggestions](https://docs.coveo.com/en/1015/) include [`atomic-search-box-recent-queries`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-box-recent-queries/) and [`atomic-search-box-query-suggestions`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-box-query-suggestions/).
+Additionally, you can provide [custom query suggestions](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-custom-query-suggestions--docs) if you wish to retrieve suggestions from an API external to the [Coveo Platform](https://docs.coveo.com/en/186/).
+
+Similar to how search results are displayed on the page, define a result template which will be used by `atomic-search-box-instant-results` to render results.
+
+This component can also be paired with the `atomic-did-you-mean` component for handling query corrections.
+
+## Code example
+
+The following code sample shows you how to leverage `atomic-search-box-instant-results` to display instant results.
+You can copy-paste it, as is, to start playing with the concepts discussed in this article.
+
+**HTML**
+
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Atomic Search Interface</title>
+        <!--  import atomic library via a CDN -->
+        <script type="module" src="https://static.cloud.coveo.com/atomic/v3/atomic.esm.js"></script>
+        <!-- import the default stylesheet for the framework -->
+        <link rel="stylesheet" href="https://static.cloud.coveo.com/atomic/v3/themes/coveo.css"/>
+        <!-- import custom stylesheet -->
+        <link rel="stylesheet" href="style.css"/>
+        <script type="module">
+
+            (async () => {
+                // whenDefined returns a promise that is fulfilled when the search interface is defined
+                await customElements.whenDefined("atomic-search-interface");
+                const searchInterface = document.querySelector("#search");
+                // initialize configures a search endpoint and initializes every atomic component within the tag "atomic-search-interface"
+                await searchInterface.initialize({
+                    accessToken: "xx564559b1-0045-48e1-953c-3addd1ee4457",
+                    organizationId: "searchuisamples",
+                });
+                // optional method to execute a query and display results right away
+                searchInterface.executeFirstSearch();
+        })();
+        </script>
+    </head>
+    <body>
+        <atomic-search-interface id="search">
+        <atomic-search-layout>
+            <atomic-layout-section section="search">
+                <atomic-search-box> (1)
+                    <atomic-search-box-recent-queries></atomic-search-box-recent-queries>
+                    <atomic-search-box-instant-results>
+                        <atomic-result-template> (2)
+                            <template>
+                                <atomic-result-section-title>
+                                    <atomic-result-link label="result-link"></atomic-result-link>
+                                </atomic-result-section-title>
+                                <atomic-result-section-title-metadata>
+                                    <div class="rating-wrapper">
+                                        <p>
+                                            Source : <atomic-result-text field="source"></atomic-result-text>
+                                        </p>
+                                </atomic-result-section-title-metadata>
+                            </template>
+                        </atomic-result-template>
+                    </atomic-search-box-instant-results>
+                </atomic-search-box>
+            </atomic-layout-section>
+            <atomic-layout-section section="main">
+                <atomic-layout-section section="results">
+                    <atomic-result-list></atomic-result-list>
+                </atomic-layout-section>
+            </atomic-layout-section>
+        </atomic-search-layout>
+        </atomic-search-interface>
+    </body>
+</html>
+```
+
+
+1. Ensure that a [query suggestion](https://docs.coveo.com/en/1015/) component, such as `<atomic-search-box-recent-queries>`, and the `<atomic-search-box-instant-results>` component are placed inside the `<atomic-search-box>` component.
+
+
+
+2. Define a result template inside `atomic-search-box-instant-results`.
+
+In this example, we provide a link to the suggestion being displayed along with information about the [source](https://docs.coveo.com/en/246/) from which the [item](https://docs.coveo.com/en/210/) originated.
+
+If you're using the [Atomic](https://docs.coveo.com/en/lcdf0264/) React Wrapper, [define the result template](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-in-a-framework-use-the-react-wrapper--docs#result-templates) via the `template` property, as in the following code snippet.
+
+**React**
+
+```jsx
+<AtomicSearchBoxInstantResult
+ template={() => {
+   return (
+     <>
+       <AtomicResultSectionTitle>
+         <AtomicResultLink />
+       </AtomicResultSectionTitle>
+       <AtomicResultSectionTitleMetadata>
+        <p>
+          {"Source: "}
+          <AtomicResultText field="source"></AtomicResultText>
+        </p>
+       </AtomicResultSectionTitleMetadata>
+     </>
+   );
+ }}
+/>
+```

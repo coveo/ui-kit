@@ -16,7 +16,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-sort-expression',
-  title: 'Search/SortExpression',
+  title: 'Reference/Search/SortExpression',
   id: 'atomic-sort-expression',
 
   render: (args) => template(args),

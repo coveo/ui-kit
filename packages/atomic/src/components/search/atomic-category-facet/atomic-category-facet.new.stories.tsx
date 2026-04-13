@@ -317,7 +317,7 @@ const {template} = getStorybookHelpers('atomic-category-facet', {
 
 const meta: Meta = {
   component: 'atomic-category-facet',
-  title: 'Search/Facet (Category)',
+  title: 'Reference/Search/Facet (Category)',
   id: 'atomic-category-facet',
   render: (args) => template(args),
   decorators: [decorator],

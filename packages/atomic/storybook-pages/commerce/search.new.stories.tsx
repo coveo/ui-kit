@@ -53,7 +53,7 @@ async function initializeCommerceInterface(canvasElement: HTMLElement) {
 
 const meta: Meta = {
   component: 'search-page',
-  title: 'Commerce/Example Pages',
+  title: 'Reference/Commerce/Example Pages',
   id: 'search-page',
   parameters: {
     ...parameters,

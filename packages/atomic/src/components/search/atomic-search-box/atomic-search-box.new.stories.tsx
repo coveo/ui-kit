@@ -30,7 +30,7 @@ const normalWidthDecorator: Decorator = (story) => html`
 
 const meta: Meta = {
   component: 'atomic-search-box',
-  title: 'Search/Search Box',
+  title: 'Reference/Search/Search Box',
   id: 'atomic-search-box',
   render: (args) => template(args),
   decorators: [normalWidthDecorator, decorator],

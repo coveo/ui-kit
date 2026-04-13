@@ -66,7 +66,7 @@ const meta: Meta = {
     'image-size': 'small',
   },
   component: 'atomic-commerce-product-list',
-  title: 'Commerce/Product List',
+  title: 'Reference/Commerce/Product List',
   id: 'atomic-commerce-product-list',
   render: (args) => template(args),
   decorators: [decorator],

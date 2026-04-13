@@ -30,7 +30,7 @@ const mockRecommendationApi = new MockRecommendationApi();
 
 const meta: Meta = {
   component: 'content-recs-page',
-  title: 'Recommendations/Example Pages',
+  title: 'Reference/Recommendations/Example Pages',
   id: 'content-recs-page',
   parameters: {
     ...parameters,

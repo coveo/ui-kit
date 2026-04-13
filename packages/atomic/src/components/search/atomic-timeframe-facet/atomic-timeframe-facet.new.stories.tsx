@@ -89,7 +89,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-timeframe-facet',
-  title: 'Search/Facet (Timeframe)',
+  title: 'Reference/Search/Facet (Timeframe)',
   id: 'atomic-timeframe-facet',
   render: (args) => template(args),
   decorators: [facetDecorator, decorator],

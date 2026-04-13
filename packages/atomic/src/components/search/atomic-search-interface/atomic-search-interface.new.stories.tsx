@@ -29,7 +29,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-search-interface',
-  title: 'Search/Interface',
+  title: 'Reference/Search/Interface',
   id: 'atomic-search-interface',
   render: (args) => template(args),
   decorators: [(story) => html`<div id="code-root">${story()}</div>`],

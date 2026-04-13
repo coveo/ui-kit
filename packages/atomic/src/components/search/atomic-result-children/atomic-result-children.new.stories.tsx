@@ -24,7 +24,7 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-result-children',
-  title: 'Search/Result Children',
+  title: 'Reference/Search/Result Children',
   id: 'atomic-result-children',
   decorators: [decorator],
   parameters: {

@@ -17,7 +17,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-ipx-embedded',
-  title: 'IPX/Embedded',
+  title: 'Reference/IPX/Embedded',
   id: 'atomic-ipx-embedded',
 
   render: (args) => template(args),

@@ -1,0 +1,528 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Upgrade/v2 to v3" />
+
+The [Coveo Platform](https://docs.coveo.com/en/186/) platform is constantly evolving.
+[Atomic](https://docs.coveo.com/en/lcdf0264/) v3 introduces changes and innovations that align with the latest evolution of the [Coveo Platform](https://docs.coveo.com/en/186/).
+
+> **The following are breaking changes from Atomic v2 to v3**
+
+
+## Migration to Coveo Event Protocol
+
+Coveo [Event Protocol](https://docs.coveo.com/en/atomic/latest/usage/atomic-usage-analytics/atomic-ep/) becomes the new default protocol.
+In other words, the Engine interface `analytics.analyticsMode` default value is now `next` rather than `legacy`.
+
+If you're using the default value in V3 and aren't ready to [migrate to the new protocol](https://docs.coveo.com/en/o88d0509/), set the value to `legacy` to keep using the Coveo UA protocol.
+
+> **Important**
+>
+> Only [Coveo for Commerce](https://docs.coveo.com/en/1499/) supports EP at the moment.
+> For all other implementations, set `analyticsMode` to `legacy` when upgrading to v3.
+
+
+```javascript
+const searchInterface = document.querySelector('atomic-search-interface');
+
+await searchInterface.initialize({
+    // ...
+    analytics: {analyticsMode: 'legacy'},
+});
+// ...
+```
+
+### Removal of `analyticsClientMiddleware` function
+
+As part of the migration to support Coveo Event Protocol (EP), [Atomic](https://docs.coveo.com/en/lcdf0264/) won't support the `analyticsClientMiddleware` property when EP is enabled.
+
+**Atomic Version 2**
+
+```javascript
+const searchInterface = document.querySelector('atomic-search-interface');
+
+await searchInterface.initialize({
+    // ...
+    analytics: {
+      analyticsClientMiddleware: (eventName: string, payload: any) => {
+          // ...
+      }},
+});
+// ...
+```
+
+There's no alternative when using EP, as EP is meant to be more streamlined, which results in cleaner data and more powerful [machine learning](https://docs.coveo.com/en/188/) [models](https://docs.coveo.com/en/1012/).
+When using the legacy Coveo UA protocol, you can continue using `analyticsClientMiddleware`.
+
+**Atomic Version 3**
+
+```javascript
+const searchInterface = document.querySelector('atomic-search-interface');
+
+await searchInterface.initialize({
+    // ...
+    analytics: {
+      analyticsMode: 'legacy',
+      analyticsClientMiddleware: (eventName: string, payload: any) => {
+          // ...
+      }},
+});
+// ...
+```
+
+## Organization endpoints
+
+[Organization endpoints](https://docs.coveo.com/en/mcc80216/) is a feature that improves separation of concerns and resiliency, making multi-region and data residency deployments smoother.
+Starting with Atomic v3, the usage of organization endpoints will be enforced automatically, as opposed to being optional in v2.
+
+**Atomic Version 2**
+
+```ts
+(async () => {
+  await customElements.whenDefined('atomic-search-interface');
+  const searchInterface = document.querySelector('#search');
+
+    await searchInterface.initialize({
+      accessToken:'<ACCESS_TOKEN>',
+      organizationId: '<ORGANIZATION_ID>',
+      organizationEndpoints: await searchInterface.getOrganizationEndpoints('<ORGANIZATION_ID>'),
+    });
+
+  searchInterface.executeFirstSearch();
+})();
+```
+
+**Atomic Version 3**
+
+```js
+(async () => {
+  await customElements.whenDefined('atomic-search-interface');
+  const searchInterface = document.querySelector('#search');
+
+    await searchInterface.initialize({
+      accessToken:'<ACCESS_TOKEN>',
+      organizationId: '<ORGANIZATION_ID>',
+    });
+
+  searchInterface.executeFirstSearch();
+})();
+```
+
+For [HIPAA](https://docs.coveo.com/en/1853/) organizations, rather than specifying the `hipaa` argument in the `getOrganizationEndpoints` function, set the `environment` property to `hipaa`.
+
+**Atomic Version 2**
+
+```ts
+(async () => {
+  await customElements.whenDefined('atomic-search-interface');
+  const searchInterface = document.querySelector('#search');
+
+    await searchInterface.initialize({
+      accessToken:'<ACCESS_TOKEN>',
+      organizationId: '<ORGANIZATION_ID>',
+      organizationEndpoints: await searchInterface.getOrganizationEndpoints('<ORGANIZATION_ID>', 'hipaa'),
+    });
+
+  searchInterface.executeFirstSearch();
+})();
+```
+
+**Atomic Version 3**
+
+```js
+(async () => {
+  await customElements.whenDefined('atomic-search-interface');
+  const searchInterface = document.querySelector('#search');
+
+    await searchInterface.initialize({
+      accessToken:'<ACCESS_TOKEN>',
+      organizationId: '<ORGANIZATION_ID>',
+      environment: 'hipaa',
+    });
+
+  searchInterface.executeFirstSearch();
+})();
+```
+
+For most implementations, this is the extent of the changes.
+However, if you used the `organizationEndpoints` property to send requests to your proxy, which then relayed them to the Coveo APIs, you'll need to make additional changes.
+Atomic v3 introduces the `search.proxyBaseUrl`, `analytics.proxyBaseUrl`, and `commerce.proxyBaseUrl` engine configuration options for such cases.
+
+**Atomic Version 2**
+
+```ts
+(async () => {
+  await customElements.whenDefined('atomic-search-interface');
+  const searchInterface = document.querySelector('#search');
+
+  await searchInterface.initialize({
+    // ...
+    organizationId: 'my-org-id',
+    organizationEndpoints: {
+       ...(await getOrganizationEndpoints('my-org-id')),
+      search: 'https://myproxy.com/search',
+    }
+  });
+
+  searchInterface.executeFirstSearch();
+})();
+```
+
+**Atomic Version 3**
+
+```ts
+(async () => {
+  await customElements.whenDefined('atomic-search-interface');
+  const searchInterface = document.querySelector('#search');
+
+  await searchInterface.initialize({
+    // ...
+    organizationId: 'my-org-id',
+    search: {
+      proxyBaseUrl: 'https://myproxy.com/search',
+    },
+  });
+
+  searchInterface.executeFirstSearch();
+})();
+```
+
+### `platformUrl` property
+
+The already deprecated `platformUrl` property was removed from the `initialize` method options of every search interface component.
+It was used prior to the introduction of `organizationEndpoints` and has been deprecated since.
+
+## Localization
+
+### i18next `compatibilityJSON`
+
+In [Atomic](https://docs.coveo.com/en/lcdf0264/) v2, the `compatibilityJSON` [property](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface#properties) in the `atomic-search-interface`, `atomic-insight-interface`, and `atomic-recs-interface` components was set to `v3` by default.
+In Atomic v3, the `compatibilityJSON` is automatically set to `v4`.
+The main change is the way that plural forms are handled.
+
+**Atomic Version 2**
+
+```json
+"past-year": {
+  "en": "Past year",
+  "fr": "Année passée"
+},
+"past-year_plural": {
+  "en": "Past {{count}} years",
+  "fr": "{{count}} années passées"
+},
+// ...
+```
+
+**Atomic Version 3**
+
+```json
+"past-year_one": {
+  "en": "Past year",
+  "fr": "Année passée"
+},
+"past-year_other": {
+  "en": "Past {{count}} years",
+  "fr": "{{count}} années passées"
+},
+// ...
+```
+
+See [JSON Format](https://www.i18next.com/misc/json-format).
+
+### `remove-filter-on` renamed to `remove-inclusion-filter-on`
+
+The `remove-filter-on` locale key was renamed to `remove-inclusion-filter-on` in Atomic v3.
+If you have custom locales using `remove-filter-on`, you should update the key to `remove-inclusion-filter-on`.
+
+**Atomic Version 2**
+
+```
+"remove-filter-on": {
+  "en": "Remove inclusion filter for {{value}}",
+  // ...
+},
+// ...
+```
+
+**Atomic Version 3**
+
+```
+"remove-inclusion-filter-on": {
+  "en": "Remove inclusion filter for {{value}}",
+  // ...
+},
+// ...
+```
+
+## Exports
+
+Atomic exports multiple entry points, each meant to support different use cases and environments.
+To improve the inter-operability of Atomic with different industry standard tools, and to guide those tools to properly use the appropriate entry points depending on the use case, Atomic will start enforcing and specifying [export fields in package.json](https://nodejs.org/api/packages.html#modules-packages).
+This means that implementations relying on non-public modules of the package will stop functioning.
+
+**Atomic Version 3**
+
+```js
+// This will be blocked entirely
+import {nonPubliclyDocumentedFunction} from '@coveo/atomic/dist/nonPublicFile.js';
+
+// Will throw an error, or won't compile
+nonPubliclyDocumentedFunction();
+```
+
+### `moduleResolution` in `tsconfig.json` when installing via [npm](https://www.npmjs.com/)
+
+If you use Typescript, note that the `node10`/`node` module resolution is no longer supported.
+The `classic` module resolution, which was never supported, remains unsupported.
+
+We recommend setting `moduleResolution` to `bundler` instead.
+See [TypeScript module resolution](https://www.typescriptlang.org/docs/handbook/modules/theory.html#module-resolution) and [Announcing TypeScript 5.0 `--moduleResolution bundler`](https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#--moduleresolution-bundler).
+
+### Atomic React
+
+The `@coveo/atomic-react` package will no longer export functionality from the Headless package. It will only contain Atomic React components. Instead, you should import them directly from the `@coveo/headless` package.
+
+**Atomic Version 2**
+
+```js
+import {
+  AtomicFacet,
+  AtomicText,
+  // This function is coming from @coveo/headless
+  buildSearchEngine,
+  // This interface is coming from @coveo/headless
+  Result,
+} from '@coveo/atomic-react';
+```
+
+**Atomic Version 3**
+
+```js
+import {AtomicFacet, AtomicText} from '@coveo/atomic-react';
+import {buildSearchEngine, Result} from '@coveo/headless';
+```
+
+Also,  you must set `moduleResolution": "bundler"` in your `tsconfig.json` file to access secondary entry points such as `@coveo/atomic-react/commerce` or `@coveo/atomic-react/recommendation`.
+See [TypeScript module resolution](https://www.typescriptlang.org/docs/handbook/modules/theory.html#module-resolution) for more information.
+
+## Modified behaviors
+
+### `textarea` search box is now the default
+
+To better support [Relevance Generative Answering (RGA)](https://docs.coveo.com/en/nbtb6010/) use cases, some work was done to expand the search box input when the queries are verbose.
+This required modifying the HTML for the search box input to be a [`<textarea>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea/) element, as opposed to an `<input type="text">` element.
+
+In [Atomic](https://docs.coveo.com/en/lcdf0264/) v2, an option was added on the [atomic-search-box](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-box) component to allow implementers to choose between a `textarea` and an `input`.
+In [Atomic](https://docs.coveo.com/en/lcdf0264/) v3, that option has been removed, and only one type of input, `textarea`, is supported.
+
+**Atomic Version 2**
+
+```html
+<!-- Control the input type with the textarea option -->
+<atomic-search-box textarea="true"></atomic-search-box>
+```
+
+
+**Atomic Version 3**
+
+```html
+<!-- Option is no longer necessary, and the component will output a textarea element -->
+<atomic-search-box></atomic-search-box>
+```
+
+### `queryCorrectionMode`
+
+The [atomic-did-you-mean `queryCorrectionMode` property](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-did-you-mean#properties) default value is now `next` rather than `legacy`.
+This means that the default behavior of the `atomic-did-you-mean` component will be to use a [query suggestions](https://docs.coveo.com/en/1015/) [model](https://docs.coveo.com/en/1012/) for query correction rather than the [index](https://docs.coveo.com/en/204/) mechanism.
+
+### Relevance Generative Answering (RGA) citation clicks now tracked as regular click events
+
+As of the Atomic `v3.3.0` release, Coveo [Relevance Generative Answering (RGA)](https://docs.coveo.com/en/nbtb6010/) citation clicks are now tracked as regular click events instead of custom click events in [Coveo Analytics](https://docs.coveo.com/en/182/) reports.
+As a result, citation click events now have a [click rank](https://docs.coveo.com/en/2948#click-rank) value of `1`.
+Additionally, the click **Event Cause** value is set to [`generatedAnswerCitationClick`](https://docs.coveo.com/en/2948#generatedanswercitationclick).
+
+This change applies regardless of the tracking protocol (Coveo UA or Coveo [Event Protocol](https://docs.coveo.com/en/o9je0592/)) used.
+
+## Removals
+
+### [`atomic-recs-list`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-list#properties) and [`atomic-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-list#properties) `gridCellLinkTarget` property
+
+The `gridCellLinkTarget` property was removed from the `atomic-recs-list` and `atomic-result-list` components.
+Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
+
+**Atomic Version 2**
+
+```html
+<atomic-result-list grid-cell-link-target="_blank">
+    <atomic-result-template>
+        <template>
+            My template
+        </template>
+    </atomic-result-template>
+</atomic-result-list>
+```
+
+**Atomic Version 3**
+
+```html
+<atomic-result-list>
+    <atomic-result-template>
+        <template slot="link">
+            <atomic-result-link>
+                <!-- Moreover, you can add other attributes on the anchor element as well -->
+                <a slot="attributes" target="_blank"></a>
+            </atomic-result-link>
+        </template>
+        <template>
+            My template
+        </template>
+    </atomic-result-template>
+</atomic-result-list>
+```
+
+### `atomic-hosted-page` and `atomic-simple-builder`
+
+[Use `atomic-hosted-ui`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-manage-your-project-use-a-hosted-page-in-your-infrastructure--docs#use-atomic-hosted-ui) instead.
+
+### `atomic-load-more-children-results`
+
+The component has been removed and its functionality has been integrated into [`atomic-result-children`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-children).
+
+**Atomic Version 2**
+
+```html
+<atomic-result-section-children>
+  <atomic-load-more-children-results></atomic-load-more-children-results>
+  <atomic-result-children image-size="icon">
+  <!-- ... -->
+  </atomic-result-children>
+</atomic-result-section-children>
+```
+
+
+**Atomic Version 3**
+
+```html
+<atomic-result-section-children>
+  <atomic-result-children image-size="icon">
+  <!-- ... -->
+  </atomic-result-children>
+</atomic-result-section-children>
+```
+
+### [`atomic-generated-answer` `withRephraseButtons` and `answerStyle` properties](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-generated-answer#properties)
+
+The `withRephraseButtons` and `answerStyle` properties were removed from the `atomic-generated-answer` component due to low usage not justifying their maintenance.
+
+### Atomic React
+
+The following are no longer supported in Atomic React.
+
+#### [IIFE](https://developer.mozilla.org/en-US/docs/Glossary/IIFE)
+
+Atomic React is no longer exported via CDN.
+While this method was useful for quick prototyping, it wasn't recommended for production.
+Instead, you should install Atomic React [NPM](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-in-a-framework-use-the-react-wrapper--docs#npm).
+
+#### Analytics configuration
+
+Atomic React no longer exposes the `analytics` prop on the `AtomicSearchInterface` component, as it didn't function correctly.
+Instead, you should use the `engine.analytics.enabled` configuration option.
+
+**Atomic Version 2 (Not working correctly)**
+
+```html
+<AtomicSearchInterface analytics={false} />
+```
+
+**Atomic Version 3**
+
+```js
+const engine = buildSearchEngine({
+  configuration: {
+    // ...
+    analytics: {enabled: false},
+  },
+});
+```
+
+### `CommerceSearchBoxSuggestionsEvent`
+
+When implementing [custom query suggestions](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-custom-query-suggestions--docs), you must dispatch an event of type `SearchBoxSuggestionsEvent` from the registered query suggestions to the parent search box.
+
+In v2, an event of type `CommerceSearchBoxSuggestionsEvent` was instead required in Commerce implementations.
+
+In v3, the `CommerceSearchBoxSuggestionsEvent` type no longer exists.
+You should use `SearchBoxSuggestionsEvent` type instead.
+
+### Atomic React wrapper props
+
+Two undocumented props were removed from the Atomic React wrapper component:
+
+* `WrapperProps.pipeline`
+
+* `WrapperProps.searchHub`
+
+They were both marked as deprecated in v2, due to being ineffective.
+Rather, to set those properties client-side, use the `engine` `search` configuration.
+
+```js
+const MyPage = () => {
+  const engine = buildSearchEngine({
+    configuration: {
+      search: {
+        pipeline: 'my-pipeline',
+        searchHub: 'my-search-hub',
+      },
+    },
+    }
+  });
+  return (
+    <AtomicSearchInterface engine={engine}>
+      // ...
+    </AtomicSearchInterface>
+  );
+};
+```
+
+Or better yet, enforce those properties through authentication (see [Search token authentication](https://docs.coveo.com/en/56/) and [API key authentication](https://docs.coveo.com/en/105/)).
+
+### Headless no longer exported through Atomic
+
+In [Atomic](https://docs.coveo.com/en/lcdf0264/) v2, the [Headless](https://docs.coveo.com/en/lcdf0493/) library was exported through the [Atomic](https://docs.coveo.com/en/lcdf0264/) library.
+This is no longer the case in [Atomic](https://docs.coveo.com/en/lcdf0264/) v3.
+Instead, you should import [Headless](https://docs.coveo.com/en/lcdf0493/) directly in your project.
+
+**Atomic Version 2**
+
+```html
+<head>
+    <script type="module" src="https://static.cloud.coveo.com/atomic/v2/atomic.esm.js"></script>
+    <link rel="stylesheet" href="https://static.cloud.coveo.com/atomic/v2/themes/coveo.css" />
+    <script type="module">
+      import {
+        buildRedirectionTrigger,
+        loadAdvancedSearchQueryActions
+      } from 'https://static.cloud.coveo.com/atomic/v2/headless/headless.esm.js';
+
+        // ...
+    </script>
+</head>
+```
+
+**Atomic Version 3**
+
+```html
+<head>
+    <script type="module" src="https://static.cloud.coveo.com/atomic/v3/atomic.esm.js"></script>
+    <link rel="stylesheet" href="https://static.cloud.coveo.com/atomic/v3/themes/coveo.css" />
+    <script type="module">
+      import {
+        buildRedirectionTrigger,
+        loadAdvancedSearchQueryActions
+      } from 'https://static.cloud.coveo.com/headless/v3/headless.esm.js';
+
+        // ...
+    </script>
+</head>
+```

@@ -19,7 +19,7 @@ const {events, args, argTypes, styleTemplate} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-commerce-refine-modal',
-  title: 'Commerce/Refine Modal',
+  title: 'Reference/Commerce/Refine Modal',
   id: 'atomic-commerce-refine-modal',
   render: (args) =>
     html`${styleTemplate(args)}<atomic-commerce-refine-toggle

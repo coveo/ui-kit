@@ -13,7 +13,7 @@ const {events, args, argTypes} = getStorybookHelpers('atomic-insight-layout', {
 
 const meta: Meta = {
   component: 'atomic-insight-layout',
-  title: 'Insight/Layout',
+  title: 'Reference/Insight/Layout',
   id: 'atomic-insight-layout',
   render: () => html`<atomic-insight-layout>
     <atomic-layout-section section="search">

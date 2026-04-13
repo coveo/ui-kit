@@ -44,7 +44,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-result-link',
-  title: 'Search/Result Link',
+  title: 'Reference/Search/Result Link',
   id: 'atomic-result-link',
   render: (args) => template(args),
   decorators: [

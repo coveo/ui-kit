@@ -1,0 +1,484 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Upgrade/v1 to v2" />
+
+Atomic v2 introduces changes that improve the library's performance, make it easier to use, and let you scale projects by supporting additional use cases.
+
+> **The following are breaking changes from Atomic v1 to v2**
+
+
+## Renamed Variables
+
+This section lists variables that were renamed without changes to the underlying functionality.
+
+### [`atomic-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-list#properties)
+
+The `image` attribute has been renamed to `image-size`.
+
+**Atomic Version 1**
+
+```html
+<atomic-result-list image="small"></atomic-result-list>
+```
+
+**Atomic Version 2**
+
+```html
+<atomic-result-list image-size="small"></atomic-result-list>
+```
+
+### [`atomic-result`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result#properties)
+
+The `image` attribute has been renamed to `image-size`.
+
+**Atomic Version 1**
+
+```html
+<atomic-result image="small"></atomic-result>
+```
+
+**Atomic Version 2**
+
+```html
+<atomic-result image-size="small"></atomic-result>
+```
+
+### [`atomic-rating-facet`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-rating-facet#css-custom-content):
+
+* The `atomic-rating-facet-icon-active-color` CSS variable has been renamed to `atomic-rating-icon-active-color`.
+
+* The `atomic-rating-facet-icon-inactive-color` CSS variable has been renamed to `atomic-rating-icon-inactive-color`.
+
+**Atomic Version 1**
+
+```css
+:root {
+    --atomic-rating-facet-icon-active-color: blue;
+    --atomic-rating-facet-icon-inactive-color: black;
+}
+```
+
+**Atomic Version 2**
+
+```css
+:root {
+    --atomic-rating-icon-active-color: blue;
+    --atomic-rating-icon-inactive-color: black;
+}
+```
+
+### [`atomic-refine-modal`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-refine-modal#shadow-parts):
+
+* The `select-icon` CSS part has been renamed to `select-icon-wrapper`.
+
+* The `select-icon-size` CSS part has been renamed to `select-icon`.
+
+**Atomic Version 1**
+
+```html
+<style>
+    atomic-refine-modal::part(select-icon) {
+        position: absolute;
+    }
+    atomic-refine-modal::part(select-icon-size) {
+        width: 1.5rem;
+    }
+</style>
+```
+
+**Atomic Version 2**
+
+```html
+ <style>
+    atomic-refine-modal::part(select-icon-wrapper) {
+        position: absolute;
+    }
+    atomic-refine-modal::part(select-icon) {
+        width: 1.5rem;
+    }
+</style>
+```
+
+## Changes
+
+### CDN
+
+https://static.cloud.coveo.com/atomic/latest/* resources will no longer be updated (also, using this wasn't recommended).
+To follow updates, rather specify a version, such as in https://static.cloud.coveo.com/atomic/v2/*.
+
+**Atomic Version 1**
+
+```html
+<script
+    type="module"
+    src="https://static.cloud.coveo.com/atomic/latest/atomic.esm.js"
+></script>
+<link
+    rel="stylesheet"
+    href="https://static.cloud.coveo.com/atomic/latest/themes/coveo.css"
+/>
+```
+
+Or
+
+```html
+<script
+    type="module"
+    src="https://static.cloud.coveo.com/atomic/v1/atomic.esm.js"
+></script>
+<link
+    rel="stylesheet"
+    href="https://static.cloud.coveo.com/atomic/v1/themes/coveo.css"
+/>
+```
+
+**Atomic Version 2**
+
+```html
+<script
+    type="module"
+    src="https://static.cloud.coveo.com/atomic/v2/atomic.esm.js"
+></script>
+<link
+    rel="stylesheet"
+    href="https://static.cloud.coveo.com/atomic/v2/themes/coveo.css"
+/>
+```
+
+### NPM
+
+Headless is no longer included in the [Atomic npm](https://www.npmjs.com/package/@coveo/atomic) package.
+If you refer to Headless, you must install it yourself or an error will warn you of missing dependencies.
+
+**Atomic Version 1 Example**
+
+```
+// package.json
+"dependencies": {
+    "@coveo/atomic": "^1.123.0",
+},
+// ...
+```
+
+```typescript
+// app.tsx
+import {
+  getSampleSearchEngineConfiguration,
+  SearchEngine,
+} from '@coveo/atomic/headless';
+// ...
+```
+
+**Atomic Version 2 Example**
+
+```
+// package.json
+"dependencies": {
+    "@coveo/atomic": "^2.0.1",
+    "@coveo/headless": "^2.0.1",
+},
+// ...
+```
+
+```typescript
+// app.tsx
+import {
+  getSampleSearchEngineConfiguration,
+  SearchEngine,
+} from '@coveo/headless';
+// ...
+```
+
+Headless is still packaged as part of the Atomic CDN link, so there is no difference in that case.
+
+### [`atomic-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-list#properties) and [`atomic-folded-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-folded-result-list#properties)
+
+The `fields-to-include` were removed from `atomic-result-list` and `atomic-folded-result-list`.
+Use the `fields-to-include` in [`atomic-search-interface`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface#properties) instead.
+
+Also, the values must now be specified as JSON/JSX/Angular Template, as you can see in the next section.
+
+**Atomic Version 1 Example**
+
+```html
+<atomic-search-interface>
+    <!-- ... -->
+    <atomic-result-list fields-to-include="in progress,completed"></atomic-result-list>
+    <!-- ... -->
+</atomic-search-interface>
+```
+
+**Atomic Version 2 Examples**
+
+Atomic:
+
+```html
+<atomic-search-interface fields-to-include='["in progress", "completed"]'>
+    <!-- ... -->
+    <atomic-result-list></atomic-result-list>
+    <!-- ... -->
+</atomic-search-interface>
+```
+
+Atomic React wrapper:
+
+```jsx
+<AtomicSearchInterface fieldsToInclude={["in progress", "completed"]}>
+    {/* ... */}
+    <AtomicResultList></AtomicResultList>
+    {/* ... */}
+</AtomicSearchInterface>
+```
+
+Atomic Angular wrapper:
+
+```html
+<atomic-search-interface fields-to-include="['in progress', 'completed']">
+    <!-- ... -->
+    <atomic-result-list></atomic-result-list>
+    <!-- ... -->
+</atomic-search-interface>
+```
+
+### Attributes: String to JSON/JSX/Angular Template
+
+The following attributes were modified to support only JSON, [JSX](https://reactjs.org/docs/introducing-jsx.html), or [Angular templates](https://angular.io/guide/template-syntax) as parameters rather than comma-separated strings.
+
+* [`atomic-facet`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-facet#properties) `allowed-values`
+
+* [`atomic-category-facet`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-category-facet#properties) `base-path`
+
+* [`atomic-search-interface`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface#properties) `fields-to-include`
+
+* `atomic-insight-interface` `fields-to-include` (undocumented)
+
+* [`atomic-recs-interface`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface#properties) `fields-to-include`
+
+**Atomic Version 1 Example**
+
+```html
+<atomic-facet allowed-values="in progress,completed"></atomic-facet>
+```
+
+**Atomic Version 2 Examples**
+
+Atomic:
+
+```html
+<atomic-facet allowed-values='["in progress", "completed"]'></atomic-facet>
+```
+
+Atomic React wrapper:
+
+```jsx
+<AtomicFacet allowedValues={["in progress", "completed"]}></AtomicFacet>
+```
+
+Atomic Angular wrapper:
+
+```html
+<atomic-facet allowed-values="['in progress', 'completed']"></atomic-facet>
+```
+
+### [`atomic-query-summary`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-query-summary/)
+
+The [`atomic-query-summary`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-query-summary/) `enable-duration` attribute has been removed.
+Use the `duration` CSS part instead.
+
+**Atomic Version 1**
+
+```html
+<atomic-query-summary enable-duration="true"></atomic-query-summary>
+```
+
+**Atomic Version 2**
+
+```html
+<!-- html -->
+<atomic-query-summary></atomic-query-summary>
+```
+
+```css
+<!-- CSS -->
+atomic-query-summary::part(duration) {
+  display: inline;
+}
+```
+
+### [`atomic-result`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result/)
+
+The `engine` property, which was unused, has been removed.
+
+The `interactiveResult` property is now required.
+It was and still is undocumented and for internal use only, but if you were using it you should know that it now takes an [`InteractiveResult`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.InteractiveResult.html) controller as a value, which you can build using [`buildInteractiveResult`](https://docs.coveo.com/en/headless/latest/reference/functions/Search.buildInteractiveResult.html).
+
+### [`atomic-category-facet`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-category-facet#properties) Styling
+
+To improve accessibility, the skeleton of category facets was completely revamped to be hierarchical.
+In Atomic v1, the list of parents was separate from the list of children.
+
+```
+ul[part="parents"]
+    li > button[part="parent-button"]{All categories}
+    li > button[part="parent-button"]{Computers & Tablets}
+    li > button[part="parent-button"]{Computer Accessories & Peripherals}
+    li > button[part="parent-button"]{Laptop Accessories}
+    li > button[part="active-parent"]{Laptop Bags & Cases}
+ul[part="values"]
+    li > button[part="value-link"]{Laptop Backpacks}
+    li > button[part="value-link"]{Laptop Sleeves}
+    li > button[part="value-link"]{Laptop Briefcases}
+    li > button[part="value-link"]{Laptop Hard-Shell Cases}
+    li > button[part="value-link"]{Laptop Messenger Bags}
+```
+
+In Atomic v2, the values are organized hierarchically.
+
+```
+[part="parents"]
+    button[part="all-categories-button"]{All categories}
+    [part="sub-parents"]
+        button[part="parent-button"]{Computers & Tablets}
+        [part="sub-parents"]
+            button[part="parent-button"]{Computer Accessories & Peripherals}
+            [part="sub-parents"]
+                button[part="parent-button"]{Laptop Accessories}
+                [part="sub-parents"]
+                    button[part="active-parent"]{Laptop Bags & Cases}
+                    [part="values"]
+                        button[part="value-link"]{Laptop Backpacks}
+                        button[part="value-link"]{Laptop Sleeves}
+                        button[part="value-link"]{Laptop Briefcases}
+                        button[part="value-link"]{Laptop Hard-Shell Cases}
+                        button[part="value-link"]{Laptop Messenger Bags}
+```
+
+Use the new hierarchy when styling your category facets.
+
+**Atomic Version 1**
+
+```css
+li:first-child::part(parent-button) {
+    font-size: 1.5rem;
+}
+```
+
+**Atomic Version 2**
+
+```css
+atomic-category-facet::part(all-categories-button) {
+    font-size: 1.5rem;
+}
+```
+
+### [`atomic-result-link`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-link#properties) and [`atomic-result-printable-uri`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-printable-uri#properties)
+
+The `target` attribute has been removed from `atomic-result-link` and `atomic-result-printable-uri`.
+Instead, use the `attributes` slot.
+
+**Atomic Version 1**
+
+```html
+<atomic-result-link target="_blank">
+</atomic-result-link>
+```
+
+**Atomic Version 2**
+
+```html
+<atomic-result-link>
+  <a slot="attributes" target="_blank"></a>
+</atomic-result-link>
+```
+
+### [Result sections](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-display-results-use-result-sections--docs)
+
+We strongly recommend against combining result section and non-result section elements at the root of a template.
+If you declare the template using pure HTML (that is, no JavaScript, JSX nor Angular templating) and mix result sections with non-result sections, Atomic logs a console warning.
+
+```
+'Result templates should only contain section elements or non-section elements. Future updates could unpredictably affect this result template.'
+```
+
+### `atomic-insight-result`
+
+This component was and is undocumented and meant for internal purposes, but if you were using it, the following are the changes.
+
+The `atomic-insight-result` `engine: InsightEngine` attribute has been removed.
+
+The `atomic-insight-result` `interactive-result: InsightInteractiveResult` attribute is now required.
+
+### [`atomic-search-box`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-box/)
+
+The search box now exposes a `--atomic-layout-max-search-box-input-width` CSS variable, which limits search box width by default.
+
+The search suggestions can now expand horizontally beyond the search box.
+You can adjust the width using the following CSS variables:
+
+* `--atomic-layout-max-search-box-double-suggestions-width`
+* `--atomic-layout-search-box-left-suggestions-width`
+
+**Atomic Version 2 Example**
+
+```css
+:root {
+    --atomic-layout-max-search-box-double-suggestions-width: 700px;
+    --atomic-layout-search-box-left-suggestions-width: 300px;
+}
+```
+
+> **Note**
+>
+> A case where you can see two suggestion panels is when implementing [instant results](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-display-results-display-instant-results--docs).
+
+
+### URL Serializing
+
+The hash in the URL representing the state of the search page now serializes facets with a dash instead of brackets.
+
+For instance, `f[my-facet]=valueA,valueB` in v1 is serialized as `f-my-facet=valueA,valueB` in v2.
+
+Atomic generally handles URL serialization by itself, so the changes should be transparent, unless you were leveraging the URL directly somehow, for example by linking to your search page with preselected facets.
+
+**Atomic Version 1 Example**
+
+```html
+<a href="https://mysite.com/search/#f[country]=canada"></a>
+```
+
+**Atomic Version 2 Example**
+
+```html
+<a href="https://mysite.com/search/#f-country=canada"></a>
+```
+
+### [Atomic React Wrapper](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-in-a-framework-use-the-react-wrapper--docs)
+
+The `theme` attribute of the `AtomicSearchInterface` component has been removed.
+
+The `theme` attribute of the `AtomicRecsInterface` component has been removed.
+
+**Atomic Version 1**
+
+```html
+<!-- index.html -->
+<!-- ... -->
+<AtomicSearchInterface engine={this.engine} theme="coveo">
+<!-- ... -->
+```
+
+**Atomic Version 2**
+
+Instead, import the target prebuilt theme directly.
+
+```html
+<!-- index.html -->
+<!-- ... -->
+<link
+    rel="stylesheet"
+    href="https://static.cloud.coveo.com/atomic/v2/themes/coveo.css"
+/>
+<!-- ... -->
+<AtomicSearchInterface engine={this.engine}>
+<!-- ... -->
+```

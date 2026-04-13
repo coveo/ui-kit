@@ -1,0 +1,468 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Resources/Atomic usage analytics coveo ua" />
+
+When used correctly, Atomic components take care of logging search and click [Coveo Analytics events](https://docs.coveo.com/en/260/) for you.
+This article covers various topics that you may find helpful if you require further customization when using the Coveo UA protocol with Atomic.
+
+> **Notes**
+>
+> * As the Atomic library uses [Coveo Headless](https://docs.coveo.com/en/lcdf0493/) to interface with Coveo, you can access [Headless through Atomic](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-access-headless-through-atomic--docs) to leverage advanced UA customizations that aren't possible in Atomic components.
+>  
+> To better understand this article, familiarize yourself with the [core concepts](https://docs.coveo.com/en/headless/latest/usage/) of the Headless library.
+>
+> * The Atomic and Headless libraries don't send view events automatically.
+> Take a look at the [Log view events with Coveo UA](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-usage-analytics-coveo-ua-log-view-events-with-coveo-ua--docs) article to understand how to send view events.
+
+
+## Modify the metadata to send with Coveo Analytics events
+
+It can be useful to add or modify the metadata to send along with the standard UA events that are logged automatically.
+You can leverage the `analyticsClientMiddleware` property of an [`AnalyticsConfiguration`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.AnalyticsConfiguration.html) to hook into an analytics event payload before it's sent to Coveo.
+By default, Atomic v3 uses [Event Protocol](https://docs.coveo.com/en/o9je0592/) to track events instead of [Coveo Analytics](https://docs.coveo.com/en/182/).
+The Event Protocol [doesn't support the `analyticsClientMiddleware` property](https://docs.coveo.com/en/headless/latest/headless-upgrade-from-v2#removal-of-analyticsclientmiddleware-function).
+To use this property in Atomic v3, you need to [set the `analyticsMode` to `legacy`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/upgrade-v2-to-v3--docs#migration-to-coveo-event-protocol) during the initialization.
+
+The following example shows how to customize metadata using `analyticsClientMiddleware`:
+
+```jsx
+const analyticsClientMiddleware = (eventName, payload) => { (2)
+    if (payload.visitorId == "") { (3)
+        payload.customData['loggedIn'] = false          // new metadata field added
+        payload.customData['context_role'] = "Anonymous"
+    } else {
+        payload.customData['loggedIn'] = true
+        payload.customData['context_role'] = "Visitor"
+    }
+    return payload;
+};
+
+(async () => {
+        await customElements.whenDefined('atomic-search-interface');
+        const searchInterface = document.querySelector('atomic-search-interface');
+        await searchInterface.initialize({
+            accessToken: '<ACCESS_TOKEN>',
+            organizationId: '<ORGANIZATION_ID>',
+            analytics: {
+                analyticsClientMiddleware (1)
+            },
+        })
+})();
+```
+
+
+1. The `analyticsClientMiddleware` is a function that needs to be defined if we want to add or modify event data (see [analytics.ts](https://github.com/coveo/coveo.analytics.js/blob/master/src/client/analytics.ts)).
+
+
+
+2. The function takes as input an `eventName` and the event `payload`.
+
+
+
+3. Within this function, you can access the `payload` data and modify it.
+
+In the example above, we check to see if `visitorId` is an empty string.
+We add a new field (`loggedIn`) and a new custom context field (`context_role`)  to `customData`.
+If `visitorId` is empty, `loggedIn` is set to `false` and `context_role` to `Anonymous`.
+On the other hand, if `visitorId` is not empty, `loggedIn` is set to `true` and `context_role` to `Visitor`.
+
+## Send your own click events
+
+Click events are intended to record item view and preview actions, such as:
+
+* Opening a result link
+
+* Opening a result Quick view
+
+By and large, the standard Coveo Atomic result template components handle click events for you.
+However, you can modify them or send your own, if needed.
+
+### Use the `analyticsClientMiddleware` property
+
+To customize your click events, [use the `analyticsClientMiddleware` property](#modify-the-metadata-to-send-with-coveo-analytics-events) and listen to the [target action](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.ClickAnalyticsActionCreators.html), as in the following example.
+
+```jsx
+(async () => {
+        await customElements.whenDefined('atomic-search-interface');
+        const searchInterface = document.querySelector('atomic-search-interface');
+        await searchInterface.initialize({
+            accessToken: '<ACCESS_TOKEN>',
+            organizationId: '<ORGANIZATION_ID>',
+            analytics: {
+                analyticsClientMiddleware: (eventName: string, payload: any) => {
+                    if (payload.actionCause === 'documentOpen') { (1)
+                    const matchingResult = searchInterface.engine.state.search.results[payload.documentPosition - 1];
+                    payload.customData['intent'] = matchingResult.raw['docsintent']; (2)
+                    }
+                    return payload;
+                };
+            },
+        })
+})();
+```
+
+
+1. If a UA event is dispatched with the [`logDocumentOpen`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.ClickAnalyticsActionCreators.html#logDocumentOpen) cause, add the target metadata.
+
+
+
+2. You can access result item fields when logging metadata.
+
+Concretely, you can use the populated default item fields, plus the ones specified using the [`fieldsToInclude`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/) parameter in your `atomic-search-interface` component.
+You can inspect search request responses in your search interface to see the currently available fields:
+
+![Inspecting response fields](https://docs.coveo.com/en/assets/images/build-a-search-ui/inspect-fields.png)
+
+### Use the `InteractiveResult` controller
+
+To send additional click events, use the Headless [`InteractiveResult`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.InteractiveResult.html) controller, which can take care of extracting result item metadata and logging events correctly for you, as in the following [custom Atomic component](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-custom-web-components--docs) example.
+
+```html
+<script type="module">
+import { initializeBindings, resultContext } from "https://static.cloud.coveo.com/atomic/v3/index.esm.js";
+import { buildInteractiveResult} from 'https://static.cloud.coveo.com/headless/v3/headless.esm.js';
+
+class DocumentAuthor extends HTMLElement {
+  shadow;
+  result;
+  initialized = false;
+
+  async connectedCallback() {
+    if (this.initialized) {
+      return;
+    }
+
+    this.initialized = true;
+    this.shadow = this.attachShadow({ mode: "closed" });
+
+    try {
+      this.result = await resultContext(this); (1)
+      this.bindings = await initializeBindings(this);
+      this.interactiveResult = buildInteractiveResult(this.bindings.engine, { (2)
+        options: { result: this.result }
+      });
+      this.render();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  render() {
+    const author = this.result.raw["author"] || "anonymous";
+    this.shadow.innerHTML = `<button>Written by: <b>${author}</b></button>`;
+    this.shadow.querySelector('button').onclick = () => this.interactiveResult.select(); (3)
+  }
+}
+
+window.customElements.define("document-author", DocumentAuthor);
+</script>
+<!-- ... -->
+<atomic-result-template>
+  <template>
+    <!-- ... -->
+    <atomic-result-fields-list>
+      <atomic-field-condition class="field" if-defined="author">
+        <document-author></document-author> (4)
+      </atomic-field-condition>
+    </atomic-result-fields-list>
+  </template>
+</atomic-result-template>
+<!-- ... -->
+```
+
+
+1. Retrieve the active result item.
+
+
+
+2. Use the [`buildInteractiveResult`](https://docs.coveo.com/en/headless/latest/reference/functions/Search.buildInteractiveResult.html) function to initialize an `InteractiveResult` controller.
+
+
+
+3. Let the `InteractiveResult` controller handle click events for you.
+
+
+
+4. Use your custom component in the target result template.
+
+
+While it's also technically possible to send your own click events by dispatching [`ClickAnalyticsActions`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.ClickAnalyticsActionCreators.html) or [`GenericAnalyticsActions`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.GenericAnalyticsActionCreators.html), we generally recommend against doing so because it's very error prone.
+For UA reports and ML models to function properly, click events need to contain very specific metadata whose handling is best left to the Atomic and Headless libraries.
+
+## Send your own search events
+
+Search events are intended to record user interactions that trigger queries, such as:
+
+* Submitting a search request from the search box
+
+* Selecting a facet value
+
+In addition to the standard search events that Atomic components log automatically, you may want to send your own UA events to track specific user interactions in your search interface.
+You can do so by accessing Headless through Atomic and [dispatching actions](https://docs.coveo.com/en/headless/latest/usage#dispatch-actions).
+Generally, use Headless controllers over dispatching actions directly.
+However, the latter is still possible and can be helpful in specific use cases that controllers don't cover, such as sending your own UA events.
+
+Depending on your use case, there are two ways to send your own search events: [`SearchAnalyticsActions`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchAnalyticsActionCreators.html) or [`GenericAnalyticsActions`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.GenericAnalyticsActionCreators.html).
+Both of these are action loaders.
+
+`SearchAnalyticsActions` are for specific search events for which the _cause_ is recognized by Coveo, such as `logFacetClearAll` or `logInterfaceLoad`.
+These events are used by Coveo ML.
+
+`GenericAnalyticsActions` let you send any type of custom search event using the `logSearchEvent` action creator.
+The _cause_ of this event is unknown to Coveo, so it can't be used by Coveo ML.
+
+To use `SearchAnalyticsActions`, implement logic as in the following example.
+Here a button is configured so that every time it's clicked, a search request is triggered and a search event is logged.
+
+```jsx
+import {
+    loadSearchActions,loadSearchAnalyticsActions
+} from 'https://static.cloud.coveo.com/headless/v3/headless.esm.js'; (1)
+(async () => {
+    await customElements.whenDefined("atomic-search-interface");
+    const searchInterface = document.querySelector("#search");
+
+    await searchInterface.initialize({
+        accessToken: '<ACCESS_TOKEN>',
+        organizationId: '<ORGANIZATION_ID>',
+    });
+    // optional method to execute a query and display results right away
+    searchInterface.executeFirstSearch();
+
+    function triggerSearch() {
+        const headlessEngine = searchInterface.engine; (2)
+        const {executeSearch} = loadSearchActions(headlessEngine); (3)
+        const {logInterfaceLoad} = loadSearchAnalyticsActions(headlessEngine); (4)
+        headlessEngine.dispatch(executeSearch(logInterfaceLoad())); (5)
+    }
+
+    const button = document.getElementById("custom-button");
+    button.addEventListener("click", triggerSearch);
+})();
+```
+
+
+1. Import `loadSearchActions` and `loadSearchAnalyticsActions` from the Headless package.
+
+This will let you create an action to execute a search query and create an action to log a search event.
+
+
+2. After initializing the search interface, access and store the engine in a variable.
+
+
+
+3. Get the `executeSearch` action creator that will let you execute a search query.
+
+
+
+4. Get a specific action creator, `logInterfaceLoad` in this scenario.
+
+This is the specific analytics event that you will log.
+
+
+5. Dispatch an action to execute a search query with the search analytics action passed in as input to log it.
+
+
+> **Note**
+>
+> Take a look at [Custom events](#send-custom-events) to see a code example of how to log a search event using `GenericAnalyticsActions`.
+
+
+## Send custom events
+
+Custom events are intended to record user interactions that don't trigger a query or open a query result, such as:
+
+* Updating user preferences
+
+* Changing the result list layout
+
+`GenericAnalyticsActions` let you send any type of custom event using the `logCustomEvent` action creator.
+The _cause_ of this event is unknown to Coveo, so it can't be used by Coveo ML.
+
+If you want to use `GenericAnalyticsActions`, implement logic as in the following example.
+
+```jsx
+import {
+    loadGenericAnalyticsActions
+} from 'https://static.cloud.coveo.com/headless/v3/headless.esm.js'; (1)
+(async () => {
+    await customElements.whenDefined("atomic-search-interface");
+    const searchInterface = document.querySelector("#search");
+
+    await searchInterface.initialize({
+        accessToken: '<ACCESS_TOKEN>',
+        organizationId: '<ORGANIZATION_ID>',
+    });
+    // optional method to execute a query and display results right away
+    searchInterface.executeFirstSearch();
+
+    function customEvent() {
+        const headlessEngine = searchInterface.engine; (2)
+        const {logCustomEvent} = loadGenericAnalyticsActions(headlessEngine); (3)
+
+        const payload = { (4)
+            evt: "<EVT>",
+            type:"<TYPE>"
+        }
+        headlessEngine.dispatch(logCustomEvent(payload)); (5)
+    }
+    const button = document.getElementById("custom-button");
+    button.addEventListener("click", customEvent);
+})();
+```
+
+
+1. Import `loadGenericAnalyticsActions` from the Headless package.
+
+This will let you return a dictionary of possible generic analytics action creators.
+
+
+2. After initializing the search interface, access and store the engine in a variable.
+
+
+
+3. Get a specific action creator, `logCustomEvent` in this scenario.
+
+
+
+4. Create a payload object to be sent to Coveo when logging a custom event.
+
+This payload will describe the details of which event led to the action being triggered.
+
+
+5. Dispatch the action to log the custom event.
+
+
+## Send events externally
+
+### Use `analyticsClientMiddleware`
+
+If you want to log UA events to an external service such as [Google Analytics](https://analytics.google.com/), leverage the `analyticsClientMiddleware` property in your [`AnalyticsConfiguration`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.AnalyticsConfiguration.html) to hook into an analytics event payload, as in the following example.
+
+```jsx
+const pushToGoogleDataLayer = (payload: Record<string, unknown>) => {
+  /* For implementation details, see the Google documentation
+  (https://developers.google.com/tag-platform/tag-manager/web/datalayer#datalayer) */
+};
+// ...
+(async () => {
+        await customElements.whenDefined('atomic-search-interface');
+        const searchInterface = document.querySelector('atomic-search-interface');
+        await searchInterface.initialize({
+            accessToken: '<ACCESS_TOKEN>',
+            organizationId: '<ORGANIZATION_ID>',
+            analytics: {
+                analyticsClientMiddleware: (eventType, payload) => { (1)
+                    pushToGoogleDataLayer(payload);
+                    return payload;
+                },
+            }
+        }),
+})();
+```
+
+
+1. The `analyticsClientMiddleware` function runs both on the search request and on the analytics request to ensure consistency between the two.
+
+
+In some cases, that might cause issues.
+
+For example, you may want to debounce the external service function  (for example, `pushToGoogleDataLayer`) to avoid logging the same event twice.
+
+## User tracking and anonymizing Coveo Analytics data
+
+By default, the UA Write API will extract the `name` and `userDisplayName`, if present, from the [search token](https://docs.coveo.com/en/56/).
+If the users of your search interface are authenticated, you may want to hash their identities to ensure that they can't be clearly identified in UA data.
+You can do so when initializing an engine instance by setting the `anonymous` property of the `AnalyticsConfiguration`, as in the following example.
+
+```jsx
+(async () => {
+        await customElements.whenDefined('atomic-search-interface');
+        const searchInterface = document.querySelector('atomic-search-interface');
+        await searchInterface.initialize({
+            accessToken: '<ACCESS_TOKEN>',
+            organizationId: '<ORGANIZATION_ID>',
+            analytics: {
+                anonymous: true
+            }
+        }),
+})();
+```
+
+While we recommend the use of a search token for request authentication, it's still possible to send user information if users are logged in, and you're using an [API key](https://docs.coveo.com/en/105/) for authentication.
+
+When using an API key, user information can be sent to Coveo by [modifying the UA event](#modify-the-metadata-to-send-with-coveo-analytics-events), as in the following code snippet:
+
+> **Important**
+>
+> When you [create the API Key](https://docs.coveo.com/en/1718#create-an-api-key), use the **Anonymous search** [template](https://docs.coveo.com/en/1718#api-key-templates).
+> It will provide the right [privileges](https://docs.coveo.com/en/228/) for this use case.
+
+
+```typescript
+(async () => {
+    await customElements.whenDefined('atomic-search-interface');
+    const searchInterface = document.querySelector('atomic-search-interface');
+    await searchInterface.initialize({
+        accessToken: '<ACCESS_TOKEN>',
+        organizationId: '<ORGANIZATION_ID>',
+        analytics: {
+          analyticsClientMiddleware: (eventName: string, payload: any) => {
+            if isLoggedIn { (1)
+              payload.username = <USERNAME>;
+              payload.userDisplayName = <USER>;
+            }
+            return payload;
+          };
+        }
+    }),
+})();
+```
+
+1. Use a custom `isLoggedIn` variable to determine whether the user is logged in.
+
+Extract the `username` and `userDisplayName` from your user object and add them to the payload.
+
+## Disable and Enable Analytics
+
+Coveo UA uses the `coveo_visitorId` cookie to track individual users and sessions.
+When implementing a cookie policy, you may need to disable UA tracking for users under specific circumstances (for example, when a user opts out of functionality cookies).
+
+To do so, you can use the `analytics` property of the `atomic-search-interface`.
+
+To re-enable UA tracking, you can set this property to `true.`
+
+```html
+<atomic-search-interface analytics="false">
+```
+
+or
+
+```javascript
+const searchInterface = document.querySelector('atomic-search-interface');
+// ... init and later on
+searchInterface.analytics = false;
+```
+
+## doNotTrack property
+
+[`doNotTrack`](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/doNotTrack) is a browser property which reflects the value of the [`DNT`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/DNT) HTTP header.
+It's used to indicate whether the user is requesting sites and advertisers not to track them.
+
+> **Note**
+>
+> This property is deprecated, but it's still supported in many browsers.
+
+
+Atomic v2 complies with the value of this property.
+It automatically disables analytics tracking whenever `DNT` is enabled.
+
+> **Important**
+>
+> Atomic v3 will no longer support this property.
+
+
+> **Note**
+>
+> To understand how Coveo Analytics tracks users and sessions, see [What's a user visit?](https://docs.coveo.com/en/1873/).
+

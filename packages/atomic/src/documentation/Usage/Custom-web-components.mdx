@@ -1,0 +1,253 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Usage/Custom web components" />
+
+[Coveo Atomic](https://docs.coveo.com/en/lcdf0264/) components fulfill most use cases, follow best UX practices, and are visually [customizable](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-themes-and-visual-customization--docs).
+However, you may sometimes need more features, further visual customization, or a different behavior altogether.
+In such cases, build your own custom components.
+
+This article explains how to do so by providing two commented examples.
+
+## Custom component example
+
+The following code sample implements a custom dropdown [facet](https://docs.coveo.com/en/198/) component.
+
+```html
+<!-- ... -->
+<script type='module'>
+  import {initializeBindings} from 'https://static.cloud.coveo.com/atomic/v3/index.esm.js'; (1)
+  import {buildFacet} from 'https://static.cloud.coveo.com/headless/v3/headless.esm.js'; (2)
+
+  class DropdownFacet extends HTMLElement {
+    shadow;
+    field;
+    bindings;
+    facetController;
+
+    facetUnsubscribe = () => {}; (3)
+    i18nUnsubscribe = () => {};
+
+    async connectedCallback() { (4)
+      try {
+        this.shadow = this.attachShadow({mode: 'closed'});
+        this.field = this.getAttribute('field');
+        if (!this.field) {
+          throw new Error('Missing "field" attribute');
+        }
+
+        this.bindings = await initializeBindings(this); (5)
+
+        this.facetController = buildFacet(this.bindings.engine, { (6)
+          options: {field: this.field},
+        });
+
+        this.facetUnsubscribe = this.facetController.subscribe(() => (7)
+          this.render()
+        );
+
+        const updateLanguage = () => this.render(); (8)
+        this.bindings.i18n.on('languageChanged', updateLanguage);
+        this.i18nUnsubscribe = () =>
+          this.bindings.i18n.off('languageChanged', updateLanguage);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    disconnectedCallback() { (9)
+      this.facetUnsubscribe();
+      this.i18nUnsubscribe();
+    }
+
+    get selectElement() {
+      return this.shadow.querySelector('select');
+    }
+
+    renderOption(facetValue) {
+      const facetValueCaption = this.bindings.i18n.t(facetValue.value, { (10)
+        ns: `caption-${this.field}`,
+      });
+      const selectedAttribute = facetValue.state === 'selected' ? 'selected' : '';
+      const count = `(${facetValue.numberOfResults.toLocaleString(
+        this.bindings.i18n.language
+      )})`;
+
+      return `<option value="${facetValue.value}" ${selectedAttribute}>${facetValueCaption} ${count}</option>`;
+    }
+
+    renderSelect() {
+      const {state} = this.facetController;
+
+      if (!state.values.length) {
+        return '';
+      }
+
+      const options = state.values.map((facetValue) =>
+        this.renderOption(facetValue)
+      );
+      options.unshift('<option value=""></option>');
+
+      return `<label for="author-facet">${this.bindings.i18n.t( (11)
+        this.field
+      )}: </label><select id="author-facet">${options}</select>`;
+    }
+
+    onChange() { (12)
+      const value = this.selectElement.value;
+      if (!value) {
+        this.facetController.deselectAll();
+        return;
+      }
+
+      const facetValue = this.facetController.state.values.find(
+        (facetValue) => value === facetValue.value
+      );
+
+      if (facetValue) {
+        this.facetController.toggleSingleSelect(facetValue);
+      }
+    }
+
+    render() {
+      this.shadow.innerHTML = this.renderSelect(); (13)
+      if (this.selectElement) {
+        this.selectElement.addEventListener('change', () => this.onChange());
+      }
+    }
+  }
+
+  window.customElements.define('dropdown-facet', DropdownFacet);
+</script>
+<!-- ... -->
+<body>
+  <atomic-search-interface>
+    <!-- ... -->
+    <dropdown-facet field="author"></dropdown-facet>
+  </atomic-search-interface>
+</body>
+```
+
+
+1. The [`initializeBindings`](https://github.com/coveo/ui-kit/tree/main/packages/atomic#initializebindings--bindstatetocontroller-decorators) method retrieves the [Atomic](https://docs.coveo.com/en/lcdf0264/) bindings from the parent `atomic-search-interface`.
+
+This lets you access the [Headless](https://docs.coveo.com/en/lcdf0493/) engine to create controllers, dispatch actions, access the controller state, and so on, as you'll do in the next section.
+
+
+2. Import the [`buildFacet`](https://docs.coveo.com/en/headless/latest/reference/functions/Search.buildFacet.html) method to create your facet controller.
+
+
+
+3. When disconnecting components from the page, we also recommend that you remove state change listeners by calling the unsubscribe methods.
+
+
+
+4. Initialize the bindings and [Headless](https://docs.coveo.com/en/lcdf0493/) controllers using the [`connectedCallback`](https://stenciljs.com/docs/component-lifecycle#connectedcallback) lifecycle method with `async`/`await`.
+
+
+
+5. Wait for the [Atomic](https://docs.coveo.com/en/lcdf0264/) bindings to be initialized on your component.
+
+
+
+6. Initialize the controller using the [Atomic](https://docs.coveo.com/en/lcdf0264/) bindings to access the [Headless](https://docs.coveo.com/en/lcdf0493/) engine of your interface.
+
+
+
+7. Subscribe to controller state changes.
+
+
+
+8. (Optional) This line and the following are only relevant if your component needs to re-render when the [Atomic](https://docs.coveo.com/en/lcdf0264/) [i18n](https://www.i18next.com/) language changes (see [Localization](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-localization--docs)).
+
+If your component doesn't use any strings or doesn't support multiple languages, ignore everything related to i18n.
+
+
+9. Use the [`disconnectedCallback`](https://stenciljs.com/docs/component-lifecycle#disconnectedcallback) lifecycle method to unsubscribe controllers and possibly the i18n language change listener.
+
+
+
+10. Leverage i18n to localize [facet](https://docs.coveo.com/en/198/) value captions.
+
+
+
+11. Leverage i18n to localize the [facet](https://docs.coveo.com/en/198/) label.
+
+
+
+12. Leverage the [Headless](https://docs.coveo.com/en/lcdf0493/) controller to dispatch the right actions to modify the controller state.
+
+
+
+13. Render by inserting the content directly inside the HTML.
+
+
+## Custom result template component example
+
+In custom result template components, you can leverage the `initializeBindings` method, as in other components.
+In addition, you can also leverage an exported `resultContext` method which retrieves the `result` from the parent component's rendered `atomic-result`.
+This lets you leverage result [item](https://docs.coveo.com/en/210/) [field](https://docs.coveo.com/en/200/) information.
+
+The following custom component example conditionally renders the author of a result, with a fallback to "Anonymous" if no author value is available.
+
+> **Note**
+>
+> This example is only intended for educational purposes.
+> In a real life scenario, use [result-field-condition](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-field-condition/) and [atomic-result-text](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-text/).
+
+
+```html
+<script type='module'>
+  import {resultContext} from 'https://static.cloud.coveo.com/atomic/v3/index.esm.js';
+
+  class DocumentAuthor extends HTMLElement {
+    shadow;
+    result;
+    initialized = false;
+
+    async connectedCallback() {
+      if (this.initialized) { (1)
+        return;
+      }
+
+      this.initialized = true;
+      this.shadow = this.attachShadow({mode: 'closed'});
+
+      try {
+        this.result = await resultContext(this); (2)
+        this.render();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    render() {
+      this.shadow.innerHTML = `<p>Author: ${
+        this.result.raw.author ?? 'Anonymous'
+      }</p>`;
+    }
+  }
+
+  window.customElements.define('document-author', DocumentAuthor);
+</script>
+<!-- ... -->
+<body>
+  <atomic-search-interface>
+    <!-- ... -->
+    <atomic-result-list>
+      <atomic-result-template>
+        <template>
+            <atomic-field-condition>
+              <document-author></document-author>
+            </atomic-field-condition>
+        </template>
+      </atomic-result-template>
+    </atomic-result-list>
+  </atomic-search-interface>
+</body>
+```
+
+
+1. Set an initialization flag when implementing custom result list components, to avoid multiple initializations.
+
+
+(2) Retrieve the `result` object of the target result [item](https://docs.coveo.com/en/210/).

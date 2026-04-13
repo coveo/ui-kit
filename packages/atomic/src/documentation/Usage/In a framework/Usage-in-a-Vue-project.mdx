@@ -1,0 +1,318 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Usage/In a framework/Usage in a Vue project" />
+
+This article explains how to use the Coveo Atomic library in a [Vue.js](https://vuejs.org/) project.
+
+
+> **Tip**
+>
+> For a complete example you may want to start from or refer to throughout this article, see this [Vue.js Search Page](https://github.com/coveo/ui-kit/tree/main/samples/atomic/search-vuejs).
+
+
+## Installation
+
+Installing Atomic in your Vue project is very similar to [installing Atomic](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-introduction--docs#install-atomic) outside of Vue.
+However, there are some extra steps if you choose to [install Atomic via npm](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-in-a-framework-usage-in-a-vue-project--docs#npm).
+
+### CDN
+
+Include the following scripts in the target HTML page:
+
+```html
+<script
+    type="module"
+    src="https://static.cloud.coveo.com/atomic/v3/atomic.esm.js">
+</script> (1)
+<link
+    rel="stylesheet"
+    href="https://static.cloud.coveo.com/atomic/v3/themes/coveo.css"/> (2)
+```
+
+1. The main framework script.
+2. The [default stylesheet](https://static.cloud.coveo.com/atomic/v3/themes/coveo.css) for the framework.
+
+While this import is optional, if you don't import it you'll need to define its variables yourself.
+
+CDN links are available for the following versions of Atomic releases:
+
+**Major:** `https://static.cloud.coveo.com/atomic/v3/atomic.esm.js`
+
+Recommended for development and QA environment purposes.
+It's a rather safe way to always have recent features from minor version updates, while not having major breaking changes.
+
+**Minor:** `https://static.cloud.coveo.com/atomic/v3.44/atomic.esm.js`
+
+Recommended for production and any customer-facing app.
+Minor version updates are mostly bug fixes; pointing to a minor version is safe and retrieves patches instantly.
+
+### NPM
+
+The library is also available as an [npm](https://www.npmjs.com/package/@coveo/atomic) package.
+
+```bash
+npm install @coveo/atomic
+```
+
+Use a bundler (Browserify, Webpack, Rollup, etc.) to `require('@coveo/atomic')` or `import '@coveo/atomic'`.
+The resources are exposed through the following entry points:
+
+* `@coveo/atomic` (various types and utilities used by Coveo Atomic, such as `initializeBindings`)
+
+**Example**
+
+   To [create a custom component](https://docs.coveo.com/en/atomic/latest/usage/custom-web-components/), import `initializeBindings`.
+   
+   ```js
+   import {initializeBindings} from '@coveo/atomic'
+   // ...
+   ```
+
+* `@coveo/atomic/loader` (Coveo Atomic components types, as well as the `defineCustomElements` and `setNonce` utilities)
+
+* `@coveo/atomic/themes` (sample Coveo Atomic themes)
+
+* `@coveo/atomic/assets` (SVG icons used by Coveo Atomic)
+
+* `@coveo/atomic/lang` (localization files used by Coveo Atomic)
+
+> **Note**
+>
+> If you use TypeScript, note that Atomic Vue doesn't support the `classic` or `node10`/`node` `moduleResolution` options.
+> See [TypeScript module resolution](https://www.typescriptlang.org/docs/handbook/modules/theory.html#module-resolution) and [Announcing TypeScript 5.0 `--moduleResolution bundler`](https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#--moduleresolution-bundler).
+
+
+#### Load Static Assets
+
+For performance reasons, when using the npm installation, the generated Atomic JavaScript bundle doesn't automatically include static assets that are loaded on demand.
+This impacts language support, as well as the use of included SVG icons.
+
+External assets distributed with Atomic must be made available by including them in the public directory of your app.
+Without this, you'll face various issues.
+For example, labels in the app will appear as temporary placeholders.
+
+The location of the public directory depends on how you build, configure and distribute your app.
+
+```js
+import {dirname} from 'node:path'
+const themeDirectory = dirname(import.meta.resolve('@coveo/atomic/themes/coveo.css'))
+const langDirectory = dirname(import.meta.resolve('@coveo/atomic/lang/en.json'))
+const assetDirectory = dirname(import.meta.resolve('@coveo/atomic/assets/all.svg'))
+
+// Copy the directories to your public folder
+// ...
+```
+
+> **Note**
+>
+> Be sure to respect the folder hierarchy, with SVG icons under the `assets` subdirectory and labels and languages under the `lang` subdirectory of the public folder.
+
+
+#### Update Your Entry File
+
+The Atomic package allows you to customize your components by defining CSS variables in your own stylesheet (see [Themes and visual customization](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-themes-and-visual-customization--docs)).
+
+It also exposes a default theme that you can use as is or build upon.
+When using npm, you can import the default theme from `@coveo/atomic/dist/atomic/themes/coveo.css` in your entry `.js` file as exemplified below.
+
+```typescript
+import '@coveo/atomic/dist/atomic/themes/coveo.css'; (1)
+import {applyPolyfills, defineCustomElements} from '@coveo/atomic/loader';
+import {createApp} from 'vue';
+import App from './App.vue';
+
+applyPolyfills().then(() => { (2)
+  defineCustomElements(window);
+});
+
+createApp(App).mount('#app');
+```
+
+1. Optional default themes.
+
+While this import is optional, if you don't import it you'll need to define its variables yourself.
+
+2. Bind the custom elements to the window object (see [Stencil - Vue](https://stenciljs.com/docs/vue)).
+
+
+#### Stencil and Vite Issue
+
+In a Vue project where you have installed Atomic via npm, you may see the following warning.
+
+```bash
+The above dynamic import cannot be analyzed by Vite.
+See link:https://github.com/rollup/plugins/tree/master/packages/dynamic-import-vars#limitations[Rollup limitations^] for supported dynamic import formats. If this is intended to be left as-is, use the /* @vite-ignore */ comment inside the import() call to suppress this warning.
+```
+
+This warning is due to [a small issue](https://github.com/stenciljs/core/issues/3195) with [Stencil](https://stenciljs.com/) and [Vite](https://vitejs.dev/).
+It shouldn't affect your application however, and you can suppress the warning if you prefer.
+
+## Configuration
+
+Add the following Vue configuration to handle Atomic components.
+
+```javascript
+// vue.config.js
+{
+  ...,
+  chainWebpack: (config) => { (1)
+    config.module
+      .rule('html')
+      .test(/\.html$/)
+      .use('html-loader') (2)
+      .loader('html-loader');
+ 
+    config.module (3)
+      .rule('vue')
+      .use('vue-loader')
+      .tap((options) => ({
+        ...options,
+        compilerOptions: {
+          isCustomElement: (tag) => tag.startsWith('atomic-'),
+        },
+      }));
+  }
+}
+```
+
+1. Allows for parsing HTML templates, which will be necessary for atomic components that require the native `<template>` tag.
+2. For this configuration to work, you'll need to add the `html-loader` dev dependency to your project.
+
+
+```bash
+npm install --save-dev html-loader
+```
+
+
+3. Tells Vue to treat any components starting with `atomic-` as native ones.
+
+This means Vue won't try to create Vue components out of them.
+
+## Initialize Your Search Interface
+
+After you render your search interface, initialize it as exemplified below.
+You can do so in any component, but ideally in the app wrapper.
+
+```javascript
+import {onMounted} from 'vue';
+ 
+async function initInterface() {
+  await customElements.whenDefined('atomic-search-interface');
+  const searchInterface = document.querySelector(
+    'atomic-search-interface'
+  ) as HTMLAtomicSearchInterfaceElement;
+ 
+  await searchInterface.initialize({ (1)
+    accessToken: '<YOUR-TOKEN>',
+    organizationId: '<YOUR-ORGANIZATION-ID>',
+  });
+ 
+  searchInterface.executeFirstSearch(); (2)
+}
+ 
+onMounted(initInterface); (3)
+```
+
+1. Initialization (see [Use components to create a search interface](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-introduction--docs#use-components-to-create-a-search-interface)).
+2. Triggers the first search.
+3. Initializes the interface after the search interface has rendered.
+
+
+## Use the `<atomic-result-template>` Component
+
+Vue treats the `<template>` tag as a container for Vue components and therefore doesn't render it (see [Template Refs](https://vuejs.org/guide/essentials/template-refs.html#template-refs)).
+This poses an obstacle when working with the `<atomic-result-template>` component, which expects a native `<template>` that it will then use to create each result element (see [Defining a result template](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-display-results-introduction--docs#defining-a-result-template)).
+To get around this, create your result templates in HTML files (as in the following example, with the `src/templates/result-template.html` file) and then import them as follows.
+
+```html
+<!-- .vue component -->
+<script setup lang="ts">
+  import resultTemplate from '../templates/result-template.html';
+</script>
+ 
+<template>
+  <atomic-result-list>
+    <atomic-result-template v-html="resultTemplate"></atomic-result-template>
+  </atomic-result-list>
+</template>
+```
+
+## Using Custom Components
+
+Writing your own components to leverage Vue components should be as straightforward as using Atomic components on any other page.
+However, it becomes a bit trickier when you want to use a custom Vue component inside your result templates which, as shown above, need to be passed down as raw HTML.
+
+For example, [the example project](https://github.com/coveo/ui-kit/tree/master/packages/samples/vuejs/src/components/ResultTextField.vue) defines a `ResultTextField` component, which takes a `label` and a `field` as `props` and renders two Atomic components.
+
+```html
+<!-- ResultTextField.vue -->
+<script setup lang="ts">
+const props = defineProps({
+  label: String,
+  field: String,
+});
+</script>
+ 
+<template>
+  <atomic-text :value="props.label"></atomic-text>:
+  <atomic-result-text :field="props.field"></atomic-result-text>
+</template>
+```
+
+> **Warning**
+>
+> If you tried to use this component in an HTML template as in the following snippet, and then tried to use it in the component further below it, Vue wouldn't attempt to render it.
+> The reason is that Vue expects only native HTML to be passed via the `v-html` directive.
+>
+>
+> ```html
+> \{/* templates/result-template.html */\}
+> <template>
+>   <atomic-result-fields-list>
+>   <atomic-field-condition class="field" if-defined="cat_platform">
+>     <result-text-field label="Platform" field="cat_platform"></result-text-field>
+>   </atomic-field-condition>
+>   <atomic-field-condition class="field" if-defined="cat_condition">
+>     <result-text-field label="Condition" field="cat_condition"></result-text-field>
+>   </atomic-field-condition>
+>   <atomic-field-condition class="field" if-defined="cat_categories">
+>     <result-text-field label="Tags" field="cat_categories"></result-text-field>
+>   </atomic-field-condition>
+> </atomic-result-fields-list>
+> </template>
+> ```
+>
+>
+> ```html
+>  \{/* .vue component */\}
+> <script setup lang="ts">
+>   import resultTemplate from '../templates/result-template.html';
+> </script>
+>  
+> <template>
+>   <atomic-result-list>
+>     <atomic-result-template v-html="resultTemplate"></atomic-result-template>
+>   </atomic-result-list>
+> </template>
+> ```
+
+
+> **Tip**
+>
+> The solution is to import your component and define it as a custom element in the browser.
+> In your entry `main.ts` file, make sure to define your element with the Vue helper function and then define it in the browser with the native [`customElements.define`](https://developer.mozilla.org/en-US/docs/Web/API/CustomElementRegistry/define) function.
+> By doing this, the snippets above will work and you can use your Vue components in HTML templates.
+>
+>
+> ```javascript
+> // src/main.ts
+> import \{defineCustomElement\} from 'vue'; (1)
+> import ResultTextField from './components/ResultTextField.vue'; (2)
+>  
+> const resultTextField = defineCustomElement(ResultTextField);
+>  
+> customElements.define('result-text-field', resultTextField); (3)
+> ```
+> 1. Handy helper function that transforms a Vue component into something the browser can use (see [defineCustomElement](https://vuejs.org/guide/extras/web-components.html#building-custom-elements-with-vue)).
+> 2. The custom component you want to use inside your HTML template.
+> 3. Define the custom component in your browser using the browser native `customElements.define` function.

@@ -43,7 +43,7 @@ const {decorator, play} = wrapInInsightInterface();
 
 const meta: Meta = {
   component: 'atomic-insight-generated-answer',
-  title: 'Insight/Generated Answer',
+  title: 'Reference/Insight/Generated Answer',
   id: 'atomic-insight-generated-answer',
   render: (args) => template(args),
   decorators: [layoutDecorator, decorator],

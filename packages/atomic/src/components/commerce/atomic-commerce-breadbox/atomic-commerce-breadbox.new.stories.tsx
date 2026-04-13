@@ -40,7 +40,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-commerce-breadbox',
-  title: 'Commerce/Breadbox',
+  title: 'Reference/Commerce/Breadbox',
   id: 'atomic-commerce-breadbox',
   render: (args) => template(args),
   decorators: [decorator],

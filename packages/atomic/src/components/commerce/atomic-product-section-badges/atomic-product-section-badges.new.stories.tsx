@@ -28,7 +28,7 @@ const {play} = wrapInCommerceInterface({
 
 const meta: Meta = {
   component: 'atomic-product-section-badges',
-  title: 'Commerce/Product Sections',
+  title: 'Reference/Commerce/Product Sections',
   id: 'atomic-product-section-badges',
   render: (args) => template(args),
   parameters: {

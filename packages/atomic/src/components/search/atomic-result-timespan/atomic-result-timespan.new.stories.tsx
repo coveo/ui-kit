@@ -42,7 +42,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-result-timespan',
-  title: 'Search/Result Timespan',
+  title: 'Reference/Search/Result Timespan',
   id: 'atomic-result-timespan',
 
   render: (args) => template(args),

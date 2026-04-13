@@ -1,0 +1,265 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Usage/In a framework/Use the Angular wrapper" />
+
+The integration of [Atomic](https://docs.coveo.com/en/lcdf0264/) [web components](https://developer.mozilla.org/en-US/docs/Web/Web_Components) in [Angular](https://angular.io/) projects can be tricky.
+[Atomic](https://docs.coveo.com/en/lcdf0264/) Angular is a wrapper around the core [Atomic](https://docs.coveo.com/en/atomic/latest/) library meant to address this issue.
+
+Since [Atomic](https://docs.coveo.com/en/lcdf0264/) Angular is built on top of the core [Atomic library](https://docs.coveo.com/en/lcdf0264/), most concepts that apply to the core [Atomic library](https://docs.coveo.com/en/lcdf0264/) apply directly to [Atomic](https://docs.coveo.com/en/lcdf0264/) Angular.
+The goal of this article is to go over the few areas where the use of [Atomic](https://docs.coveo.com/en/lcdf0264/) Angular differs from the use of the core [Atomic library](https://docs.coveo.com/en/lcdf0264/).
+
+> **Tip**
+>
+> For a complete example you may want to start from or refer to throughout this article, see this [Atomic Angular project](https://github.com/coveo/ui-kit/tree/main/samples/atomic/search-commerce-angular/src/app/atomic-commerce-angular-page).
+
+
+## Install Atomic Angular
+
+Install [Atomic](https://docs.coveo.com/en/lcdf0264/) Angular using the [npm](https://www.npmjs.com/get-npm) package.
+
+```bash
+npm i @coveo/atomic-angular
+```
+
+## Import `AtomicAngularModule`
+
+In the module where you wish to use [Atomic](https://docs.coveo.com/en/lcdf0264/) Angular components, declare and import the `AtomicAngular` module, as in the following example:
+
+```typescript
+import {NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {AtomicAngularModule} from '@coveo/atomic-angular';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule, AtomicAngularModule],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+```
+
+Once this is done, you'll be able to reference all atomic components inside that module.
+
+## Initialize your search interface
+
+You can initialize your [search interface](https://docs.coveo.com/en/2741/) at any time during the life cycle of your application.
+A suitable lifecycle hook is [`AfterViewInit`](https://angular.io/api/core/AfterViewInit).
+
+The following example uses this `AfterViewInit` hook and relies on the `AppModule` in the preceding section as a starting point, which bootstraps `AppComponent`.
+
+```typescript
+// app.component.ts
+import {AfterViewInit, Component} from '@angular/core';
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
+})
+export class AppComponent implements AfterViewInit {
+  ngAfterViewInit(): void {
+    const searchInterface = document.querySelector('atomic-search-interface');
+    searchInterface
+      ?.initialize({
+        accessToken: '<REPLACE_WITH_TOKEN>',
+        organizationId: '<REPLACE_WITH_COVEO_ORGANIZATION_ID>',
+      })
+      .then(() => {
+        searchInterface.executeFirstSearch();
+      });
+  }
+}
+```
+
+```html
+<!-- app.component.html  -->
+<atomic-search-interface>
+  <!-- content of the interface -->
+</atomic-search-interface>
+```
+
+## Load static assets
+
+For performance reasons, the generated [Atomic](https://docs.coveo.com/en/lcdf0264/) Angular JavaScript bundle doesn't automatically include static assets that are loaded on demand.
+This impacts language support, as well as the use of included SVG icons.
+
+External assets distributed with [Atomic](https://docs.coveo.com/en/lcdf0264/) Angular must be made available by including them in the public directory of your app.
+Without this, you'll face various issues.
+For example, labels in the app will appear as temporary placeholders.
+
+The location of the public directory depends on how you build, configure, and distribute your app.
+For example, for any project created with the [Angular CLI](https://angular.io/cli/), this would mean copying language and icon assets to the root of the source directory.
+
+```bash
+cp -r node_modules/@coveo/atomic-angular/assets src/assets
+cp -r node_modules/@coveo/atomic-angular/lang src/lang
+```
+
+> **Note**
+>
+> Be sure to respect the folder hierarchy, with SVG icons under the `assets` subdirectory and labels and languages under the `lang` subdirectory.
+
+
+Once this is done, these folders must be configured as asset folders in the application.
+
+You can do so using the `angular.json` configuration file.
+
+```json
+"build": {
+  // ...
+  "options": {
+    "assets": ["src/favicon.ico", "src/assets", "src/lang"],
+  },
+},
+```
+
+## Include the default Coveo theme
+
+You can include the default Coveo theme via the `angular.json` configuration file.
+
+```json
+"build": {
+  // ...
+  "options": {
+    "styles": [
+      "./node_modules/@coveo/atomic/dist/atomic/themes/coveo.css",
+      "src/styles.css"
+    ],
+  },
+},
+```
+
+> **Note**
+>
+> This is however optional, and [all theme variables](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-themes-and-visual-customization--docs#theme-variables) can be configured in the global application stylesheet (for example, `src/style.css`).
+
+
+## Wrap Atomic Angular components
+
+Create application-specific components that wrap out-of-the-box [Atomic](https://docs.coveo.com/en/lcdf0264/) Angular components.
+In other words, combine multiple [Atomic](https://docs.coveo.com/en/lcdf0264/) Angular component into a higher level parent component, which you can then reuse throughout your application.
+
+When doing so, you can't use the standard [`@Input()`](https://angular.io/api/core/Input) angular decorator directly to pass down properties to [Atomic](https://docs.coveo.com/en/lcdf0264/) web components in a component template.
+You must create getter and setter functions that assign properties to the DOM, without the standard Angular rendering engine.
+
+The following example wraps an [`atomic-text`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-text/) component inside a parent `app-field-label` component, which would pass down props.
+
+```html
+<!-- field-label.component.html -->
+​
+<atomic-text #atomictext></atomic-text>
+```
+
+```html
+<!-- Example usage in app.component.html -->
+​
+<app-field-label label="My label"> </app-field-label>
+```
+
+```typescript
+// field-label.component.ts
+​
+@Component({
+  selector: 'app-field-label',
+  templateUrl: './field-label.component.html',
+})
+export class FieldLabelComponent implements AfterViewInit {
+  @ViewChild('atomictext') atomicText?: AtomicText; (1)
+​
+  constructor(private z: NgZone) {}
+​
+  private val = '';
+  @Input() (2)
+  get label(): string {
+    if (this.atomicText) {
+      this.val = this.atomicTextValueAttribute;
+    }
+    return this.val;
+  }
+  set label(v: string) {
+    this.val = v;
+    this.atomicTextValueAttribute = this.val;
+  }
+​
+  ngAfterViewInit(): void {
+    this.atomicTextValueAttribute = this.val;
+  }
+​
+  private get atomicTextValueAttribute() {
+    if (!this.atomicText) { (3)
+      return '';
+    }
+    return this.atomicText['el'].getAttribute('value') as string;
+  }
+​
+  private set atomicTextValueAttribute(v: string) {
+    if (!this.atomicText) { (3)
+      return;
+    }
+    this.z.runOutsideAngular(() => { (4)
+      this.atomicText!['el'].setAttribute('value', v); (5)
+    });
+  }
+}
+```
+
+
+1. Use the `ViewChild('atomictext')` decorator to fetch the `atomic-text` component defined in `field-label.component.html`.
+
+
+
+2. Annotate `get label()` and `set label()` with the `@Input()` decorator.
+
+
+
+3. Since the `atomicText` reference will only be populated once `ngAfterViewInit` has executed, we code defensively against undefined references.
+
+
+
+4. Execute the property change inside a special `runOutsideAngular()` function to make sure that Angular doesn't needlessly recompute property changes and trigger the rendering lifecycle, as this isn't needed.
+
+
+
+5. Finally, pass the label down and propagate it to `<atomic-text>`.
+
+This ensures that this web component will receive the property without any modification by the Angular rendering engine.
+
+> **Note**
+>
+> The previous example is irrelevant if you're trying to pass down native DOM properties, such as `id`, `class`, etc.
+> For these properties, you can use the standard Angular approach.
+
+
+## Styling result templates
+The `template` element is added inside the `atomic-result-template` component to define what HTML content should be displayed for each result returned by the user's [query](https://docs.coveo.com/en/231/).
+
+To style a template in Angular, specify the styling using inline `style` HTML attributes.
+You can't style a template using an embedded `<style>` tag.
+The first example will apply the color red to the field-label `<span>`, but the second one won't.
+
+**Correct**
+
+   ```html
+   <!-- Example usage in app.component.html -->
+
+   <atomic-result-template>
+     <span class="field-label" style="color: red;">This will be red</span>
+   </atomic-result-template>
+   ```
+
+**Wrong**
+
+   ```html
+   <!-- Example usage in app.component.html -->
+
+   <atomic-result-template>
+     <template>
+       <style>
+         .field-label {
+           color: red;
+         }
+       </style>
+     </template>
+     <span class="field-label">This won't be red</span>
+   </atomic-result-template>
+   ```

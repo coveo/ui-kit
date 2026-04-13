@@ -44,7 +44,7 @@ async function initializeCommerceRecommendationInterface(
 
 const meta: Meta = {
   component: 'recommendations',
-  title: 'Commerce/Example Pages',
+  title: 'Reference/Commerce/Example Pages',
   id: 'recommendations',
   parameters: {
     ...parameters,
