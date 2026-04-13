@@ -81,13 +81,7 @@
       description: 'Isolate relay since it is causing issues with stencil projetcs',
       matchPackageNames: ['@coveo/relay'],
     },
-    {
-      groupName: 'knip',
-      groupSlug: 'knip',
-      rangeStrategy: 'replace',
-      description: 'Isolate knip since updates can break CI',
-      matchPackageNames: ['knip'],
-    },
+
     {
       groupName: 'publint',
       groupSlug: 'publint',
