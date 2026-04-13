@@ -181,18 +181,31 @@ describe('atomic-generated-answer', () => {
           'atomic-generated-answer-thread'
         );
       },
+      get followUpInputComponent() {
+        return element.shadowRoot?.querySelector(
+          'atomic-ask-follow-up-input'
+        ) as (HTMLElement & {shadowRoot: ShadowRoot | null}) | null;
+      },
       get followUpInputContainer() {
-        return element.shadowRoot?.querySelector('[part="input-container"]');
+        return (
+          this.followUpInputComponent?.shadowRoot?.querySelector(
+            '[part="input-container"]'
+          ) ?? null
+        );
       },
       get followUpInputField() {
-        return element.shadowRoot?.querySelector(
-          '[part="input-field"]'
-        ) as HTMLInputElement | null;
+        return (
+          (this.followUpInputComponent?.shadowRoot?.querySelector(
+            '[part="input-field"]'
+          ) as HTMLTextAreaElement | null) ?? null
+        );
       },
       get followUpSubmitButton() {
-        return element.shadowRoot?.querySelector(
-          '[part="submit-button"]'
-        ) as HTMLButtonElement | null;
+        return (
+          (this.followUpInputComponent?.shadowRoot?.querySelector(
+            '[part="submit-button"]'
+          ) as HTMLButtonElement | null) ?? null
+        );
       },
     };
   };
@@ -1201,7 +1214,7 @@ describe('atomic-generated-answer', () => {
         });
 
       await element.updateComplete;
-      const input = followUpInputField as HTMLInputElement;
+      const input = followUpInputField as HTMLTextAreaElement;
       expect(input).not.toBeNull();
       input.value = 'Follow up question';
       expect(followUpSubmitButton).not.toBeNull();
