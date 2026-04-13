@@ -3,7 +3,7 @@ import {resolveGithubDocsUrl, resolveGithubUrl} from './resolve-github-path';
 
 describe('resolveGithubUrl', () => {
   const EXPECTED_BASE =
-    'https://github.com/coveo/ui-kit/blob/main/packages/atomic/';
+    'https://github.com/coveo/ui-kit/tree/main/packages/atomic/';
 
   it('should convert .new.stories.tsx to .ts', () => {
     const result = resolveGithubUrl(
