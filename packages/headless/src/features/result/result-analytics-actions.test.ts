@@ -17,6 +17,10 @@ describe('result analytics actions', () => {
   describe('#logDocumentOpen', () => {
     const testResult = buildMockNonEmptyResult({
       searchUid: 'example searchUid',
+      raw: {
+        ...buildMockNonEmptyResult().raw,
+        objecttype: 'Message',
+      },
     });
     let engine: SearchEngine;
     const makeDocumentOpen = vi.fn();

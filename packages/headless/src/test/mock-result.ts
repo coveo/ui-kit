@@ -53,6 +53,7 @@ const resultParams = {
     source: 'example sourceName',
     collection: 'example collectionName',
     permanentid: 'example contentIDValue',
+    objecttype: 'example objectType',
   }),
 };
 

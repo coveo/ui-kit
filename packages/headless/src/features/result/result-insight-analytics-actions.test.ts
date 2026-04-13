@@ -51,6 +51,7 @@ const expectedDocumentInfo = {
   documentUri: 'example documentUri',
   documentUriHash: 'example documentUriHash',
   collectionName: 'example collectionName',
+  documentCategory: 'Message',
   sourceName: 'example sourceName',
   documentPosition: 1,
   documentTitle: 'example documentTitle',
@@ -77,6 +78,7 @@ const resultParams = {
   searchUid: 'example searchUid',
   raw: buildMockRaw({
     author: 'example author',
+    objecttype: 'Message',
     urihash: 'example documentUriHash',
     source: 'example sourceName',
     collection: 'example collectionName',

@@ -67,6 +67,15 @@ describe('analytics-utils', () => {
       ).toBe('unknown');
     });
 
+    it('should extract documentCategory information from objecttype', () => {
+      const result = buildMockResult();
+      result.raw.objecttype = 'Message';
+
+      expect(
+        partialDocumentInformation(result, createMockState()).documentCategory
+      ).toBe('Message');
+    });
+
     it('when the result is not found in state, the documentPosition is 1', () => {
       const result = buildMockResult({uniqueId: '1'});
       const state = createMockState();

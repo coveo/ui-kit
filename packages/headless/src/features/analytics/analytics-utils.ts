@@ -675,6 +675,7 @@ function buildPartialDocumentInformation(
   return {
     collectionName,
     documentAuthor: getDocumentAuthor(result),
+    documentCategory: getDocumentCategory(result),
     documentPosition: resultIndex + 1,
     documentTitle: result.title,
     documentUri: result.uri,
@@ -738,6 +739,14 @@ function getDocumentAuthor(result: Result) {
   }
 
   return Array.isArray(author) ? author.join(';') : `${author}`;
+}
+
+function getDocumentCategory(result: Result) {
+  const documentCategory = result.raw.objecttype;
+  if (isNullOrUndefined(documentCategory)) {
+    return 'unknown';
+  }
+  return documentCategory;
 }
 
 function getSourceName(result: Result) {

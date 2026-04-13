@@ -57,6 +57,7 @@ const expectedDocumentInfo = {
   documentUrl: 'example documentUrl',
   rankingModifier: 'example rankingModifier',
   documentAuthor: 'example author',
+  documentCategory: 'example objectType',
 };
 
 const expectedDocumentIdentifier = {
@@ -77,6 +78,7 @@ const resultParams = {
   searchUid: 'example searchUid',
   raw: buildMockRaw({
     author: 'example author',
+    objecttype: 'example objectType',
     urihash: 'example documentUriHash',
     source: 'example sourceName',
     collection: 'example collectionName',
