@@ -5,7 +5,7 @@ const styles = css`
   @reference '../../../../utils/tailwind-utilities/set-font-size.css';
 
   [part='generated-text'] {
-    @apply set-font-size-lg;
+    @apply set-font-size-base;
   }
 
   [part='generated-text'].cursor::after {

@@ -1,3 +1,16 @@
+## 3.37.4
+
+### Patch Changes
+
+- [#7340](https://github.com/coveo/ui-kit/pull/7340) [`6f552a4`](https://github.com/coveo/ui-kit/commit/6f552a46175dcd559b07a3b01913e8c4bc706cd2) Thanks [@SimonMilord](https://github.com/SimonMilord)! - fixed issue where locker proxies were making highlights to slow down the quickview
+
+## 3.37.3
+
+### Patch Changes
+
+- Updated dependencies [[`5148ad6`](https://github.com/coveo/ui-kit/commit/5148ad665cdaf50a8118a45a03a48d4dbd8b456a)]:
+  - @coveo/headless@3.49.1
+
 ## 3.37.2
 
 - chore: replace biome with oxlint / oxfmt (#7328) ([3b8d688](https://github.com/coveo/ui-kit/commits/3b8d688)), closes [#7328](https://github.com/coveo/ui-kit/issues/7328)

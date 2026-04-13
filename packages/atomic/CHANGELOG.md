@@ -1,3 +1,9 @@
+## 3.55.3
+
+### Patch Changes
+
+- [#7386](https://github.com/coveo/ui-kit/pull/7386) [`eb3a528`](https://github.com/coveo/ui-kit/commit/eb3a528d35f1615f66b73a33c76c9b6cd2079141) Thanks [@SimonMilord](https://github.com/SimonMilord)! - Ensure CSS default size is "standard"
+
 ## 3.55.2
 
 ### Patch Changes

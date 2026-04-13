@@ -1,6 +1,6 @@
 ---
 title: Implement highlighting
-group: Usage
+group: Guides
 slug: usage/implement-highlighting
 ---
 

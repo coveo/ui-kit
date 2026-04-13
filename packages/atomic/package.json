@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "3.55.2",
+  "version": "3.55.3",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "license": "Apache-2.0",
@@ -75,7 +75,7 @@
     "test:storybook": "vitest run --project=storybook",
     "generate-component": "node ./scripts/generate-component.mjs",
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
-    "chromatic": "chromatic -d=dist-storybook",
+    "chromatic": "chromatic -d=dist-storybook --only-changed",
     "validate:light-dom-styles": "node ./scripts/check-light-dom-host-selectors.mjs",
     "validate:no-new-light-dom": "node ./scripts/check-no-new-light-dom-components.mjs"
   },

@@ -1,6 +1,6 @@
 ---
 title: Extend controllers
-group: Usage
+group: Guides
 slug: usage/extend-controllers
 ---
 

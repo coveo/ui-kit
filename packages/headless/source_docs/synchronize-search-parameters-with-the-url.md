@@ -1,6 +1,6 @@
 ---
 title: Synchronize search parameters with the URL
-group: Usage
+group: Guides
 slug: usage/synchronize-search-parameters-with-the-url
 ---
 
