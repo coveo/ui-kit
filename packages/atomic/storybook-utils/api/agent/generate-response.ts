@@ -1,15 +1,5 @@
+import {EventType} from '@ag-ui/client';
 import {delay, HttpResponse} from 'msw';
-
-// Local EventType enum to match @ag-ui/core structure
-// TODO: Replace with import from '@ag-ui/core' once added as dependency
-enum EventType {
-  RUN_STARTED = 'RUN_STARTED',
-  RUN_FINISHED = 'RUN_FINISHED',
-  STEP_STARTED = 'STEP_STARTED',
-  STEP_FINISHED = 'STEP_FINISHED',
-  TEXT_MESSAGE_CHUNK = 'TEXT_MESSAGE_CHUNK',
-  CUSTOM = 'CUSTOM',
-}
 
 const THREAD_ID = 'thread-1';
 const RUN_ID = 'run-1';
