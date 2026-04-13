@@ -57,6 +57,10 @@ export class CacActivityRenderer extends LitElement {
   @property({attribute: false})
   public bundleProducts: Map<string, Product[]> = new Map();
 
+  /** Whether inferred Next Actions loading fallback can render for this activity. */
+  @property({type: Boolean, attribute: 'allow-next-actions-fallback'})
+  public allowNextActionsFallback = true;
+
   override render() {
     return html`
       <article class="activity-renderer" aria-label="Agent activity">
@@ -79,6 +83,7 @@ export class CacActivityRenderer extends LitElement {
         .content=${this.activity.content as unknown as A2UISurfaceContent}
         .isLoading=${this.isLoading}
         .bundleProducts=${this.bundleProducts}
+        .allowNextActionsFallback=${this.allowNextActionsFallback}
       ></cac-commerce-catalog-view>
     `;
   }

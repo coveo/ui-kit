@@ -82,9 +82,18 @@ export class CacCommerceCatalogView extends LitElement {
   @property({attribute: false})
   public bundleProducts: Map<string, Product[]> = new Map();
 
+  /** Whether this activity is allowed to render the inferred Next Actions loading placeholder. */
+  @property({type: Boolean, attribute: 'allow-next-actions-fallback'})
+  public allowNextActionsFallback = true;
+
   override render() {
     const context = this.buildRenderContext();
-    if (context.supportedComponents.length === 0) {
+    const shouldRenderFallback =
+      this.allowNextActionsFallback &&
+      this.isLoading &&
+      !context.hasNextActionsComponent;
+
+    if (context.supportedComponents.length === 0 && !shouldRenderFallback) {
       return nothing;
     }
 
@@ -100,7 +109,7 @@ export class CacCommerceCatalogView extends LitElement {
           })
         )}
         ${when(
-          this.isLoading && !context.hasNextActionsComponent,
+          shouldRenderFallback,
           () =>
             html`<cac-next-actions-bar
               .actions=${[]}
@@ -141,7 +150,10 @@ export class CacCommerceCatalogView extends LitElement {
         continue;
       }
 
-      const key = `${normalizeType(component.type)}::${component.surfaceId}`;
+      const normalizedType = normalizeType(component.type);
+      const key = isType(component.type, 'NextActionsBar')
+        ? normalizedType
+        : `${normalizedType}::${component.surfaceId}`;
       latestByTypeAndSurface.delete(key);
       latestByTypeAndSurface.set(key, component);
     }
