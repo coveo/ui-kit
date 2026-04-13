@@ -1,0 +1,27 @@
+{
+  "name": "@coveo/commerce-agent-chat-vanilla",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Local development sample: vanilla TypeScript chat interface for the commerce agent via AG-UI.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "clean": "rm -rf dist",
+    "lint:check": "oxlint --deny-warnings .",
+    "lint:fix": "oxlint --deny-warnings --fix ."
+  },
+  "dependencies": {
+    "@coveo/commerce-agent-chat-components": "workspace:*",
+    "@coveo/commerce-agent-chat-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  },
+  "engines": {
+    "node": "^22.14.0 || ^24.11.0"
+  }
+}
