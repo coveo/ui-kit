@@ -5,9 +5,11 @@ Private local sample to chat with the commerce agent over AG-UI streaming.
 ## Structure
 
 - `core/` shared runtime logic, config types, and tests.
+- `components/` shared Lit web components used across frameworks.
 - `react/` React implementation.
 - `vue/` Vue implementation.
 - `angular/` Angular implementation.
+- `vanilla/` framework-free TypeScript implementation.
 
 ## Current parity
 
@@ -76,6 +78,12 @@ Run from `samples/commerce-agent-chat/core`:
 - `pnpm lint:check`
 - `pnpm lint:fix`
 
+Run from `samples/commerce-agent-chat/components`:
+
+- `pnpm test`
+- `pnpm lint:check`
+- `pnpm lint:fix`
+
 Run from `samples/commerce-agent-chat/react`:
 
 - `pnpm dev` — starts the dev server on port 3001
@@ -97,12 +105,20 @@ Run from `samples/commerce-agent-chat/angular`:
 - `pnpm lint:fix`
 - `pnpm build`
 
+Run from `samples/commerce-agent-chat/vanilla`:
+
+- `pnpm dev` — starts Vite on port 3004
+- `pnpm lint:check`
+- `pnpm lint:fix`
+- `pnpm build`
+
 Run from repository root:
 
 - `pnpm turbo test --filter=@coveo/commerce-agent-chat-core`
 - `pnpm turbo build --filter=@coveo/commerce-agent-chat-react`
 - `pnpm turbo build --filter=@coveo/commerce-agent-chat-vue`
 - `pnpm turbo build --filter=@coveo/commerce-agent-chat-angular`
+- `pnpm turbo build --filter=@coveo/commerce-agent-chat-vanilla`
 
 ## Notes
 
