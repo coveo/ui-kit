@@ -1,5 +1,6 @@
 ---
 title: Product lifecycle
+group: Information
 slug: product-lifecycle
 ---
 

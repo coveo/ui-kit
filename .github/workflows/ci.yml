@@ -121,8 +121,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DEPLOYMENT_ENVIRONMENT: CDN
-      IS_PRERELEASE: 'true'
-      PR_NUMBER: ${{ github.event_name == 'pull_request' && github.event.pull_request.number || '' }}
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
@@ -180,7 +178,7 @@ jobs:
         run: pnpm run knip
   cdn-checks:
     name: 'CDN Checks'
-    needs: [affected]
+    needs: [affected, build-cdn]
     if: contains(needs.affected.outputs.projects, '@coveo/atomic') || contains(needs.affected.outputs.projects, '@samples/headless-commerce-react') || contains(needs.affected.outputs.projects, '@coveo/atomic-hosted-page')
     env:
       DEPLOYMENT_ENVIRONMENT: CDN
@@ -377,7 +375,7 @@ jobs:
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo chromatic --filter=@coveo/atomic
         id: chromatic-run
-        if: contains(needs.affected.outputs.projects, '@coveo/atomic') && github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'chromatic')
+        if: contains(needs.affected.outputs.projects, '@coveo/atomic') && github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'chromatic')
       - run: pnpm exec turbo chromatic --filter=@coveo/atomic -- --skip
         working-directory: packages/atomic
         if: steps.chromatic-run.outcome == 'skipped'

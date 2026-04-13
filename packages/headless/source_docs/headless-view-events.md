@@ -1,6 +1,6 @@
 ---
 title: Log view events with Coveo UA
-group: Usage
+group: Guides
 category: Usage Analytics
 slug: usage/usage-analytics/log-view-events-with-coveo-ua
 ---
