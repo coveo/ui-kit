@@ -186,6 +186,14 @@ const agentMessages: AgentEvent[] = [
   }),
 ];
 
+const headAnswerMessages = agentMessages.filter(
+  (message) =>
+    !(
+      message.stepName &&
+      (message.stepName === 'Searching' || message.stepName === 'Thinking')
+    )
+);
+
 const cloneMessagesForResponse = (messages: AgentEvent[]) => {
   responseSequence += 1;
 
@@ -249,17 +257,17 @@ const buildAnsweringStreamingResponse = (
   });
 };
 
-const immediateBaseResponse = () =>
-  buildAnsweringStreamingResponse({delayBetweenMessages: 0});
-const baseResponse = () =>
+const followUpAnswerResponse = () =>
   buildAnsweringStreamingResponse({delayBetweenMessages: 'real'});
-const slowDelayedBaseResponse = () =>
-  buildAnsweringStreamingResponse({delayBetweenMessages: 1000});
+const headAnswerResponse = () =>
+  buildAnsweringStreamingResponse({
+    messages: headAnswerMessages,
+    delayBetweenMessages: 'real',
+  });
 
 export {
   agentMessages,
-  immediateBaseResponse,
-  baseResponse,
-  slowDelayedBaseResponse,
+  headAnswerResponse,
+  followUpAnswerResponse,
   buildAnsweringStreamingResponse,
 };

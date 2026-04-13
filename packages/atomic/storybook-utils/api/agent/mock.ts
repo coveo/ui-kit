@@ -1,6 +1,9 @@
 import type {DefaultBodyType, HttpHandler, HttpResponse} from 'msw';
 import {EndpointHarness, type MockApi} from '../_base.js';
-import {baseResponse as baseGeneratedAnswer} from './generate-response.js';
+import {
+  headAnswerResponse,
+  followUpAnswerResponse,
+} from './generate-response.js';
 
 export class MockAgentApi implements MockApi {
   readonly answerEndpoint;
@@ -12,7 +15,7 @@ export class MockAgentApi implements MockApi {
     >(
       'POST',
       `${basePath}/api/preview/organizations/:orgId/agents/:agentId/answer`,
-      baseGeneratedAnswer,
+      headAnswerResponse,
       (response) => response()
     );
 
@@ -21,7 +24,7 @@ export class MockAgentApi implements MockApi {
     >(
       'POST',
       `${basePath}/api/preview/organizations/:orgId/agents/:agentId/follow-up`,
-      baseGeneratedAnswer,
+      followUpAnswerResponse,
       (response) => response()
     );
   }

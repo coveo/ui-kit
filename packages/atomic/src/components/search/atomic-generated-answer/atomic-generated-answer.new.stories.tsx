@@ -70,6 +70,37 @@ const {play: playWithLegacyAnalytics} = wrapInSearchInterface({
   config: configWithLegacyAnalytics,
 });
 
+const generatedAnswerQuery = 'how to resolve netflix connection with tivo';
+
+async function submitGeneratedAnswerQuery(storyContext: {
+  canvas: {
+    findAllByShadowPlaceholderText(text: string): Promise<HTMLElement[]>;
+  };
+}) {
+  const searchBox =
+    await storyContext.canvas.findAllByShadowPlaceholderText('Search');
+  const input = searchBox[0] as HTMLTextAreaElement;
+  input.scrollIntoView({block: 'center'});
+  input.focus();
+  input.value = generatedAnswerQuery;
+  input.dispatchEvent(
+    new InputEvent('input', {
+      bubbles: true,
+      composed: true,
+      data: generatedAnswerQuery,
+      inputType: 'insertText',
+    })
+  );
+  input.dispatchEvent(
+    new KeyboardEvent('keydown', {
+      bubbles: true,
+      composed: true,
+      key: 'Enter',
+      code: 'Enter',
+    })
+  );
+}
+
 const meta: Meta = {
   component: 'atomic-generated-answer',
   title: 'Search/Generated Answer',
@@ -96,12 +127,7 @@ const meta: Meta = {
 
   play: async (storyContext) => {
     await play(storyContext);
-    const searchBox =
-      await storyContext.canvas.findAllByShadowPlaceholderText('Search');
-    await storyContext.userEvent.type(
-      searchBox[0],
-      'how to resolve netflix connection with tivo{enter}'
-    );
+    await submitGeneratedAnswerQuery(storyContext);
   },
 };
 
@@ -128,12 +154,7 @@ export const WithLegacyAnalytics: Story = {
   },
   play: async (storyContext) => {
     await playWithLegacyAnalytics(storyContext);
-    const searchBox =
-      await storyContext.canvas.findAllByShadowPlaceholderText('Search');
-    await storyContext.userEvent.type(
-      searchBox[0],
-      'how to resolve netflix connection with tivo{enter}'
-    );
+    await submitGeneratedAnswerQuery(storyContext);
   },
 };
 
@@ -145,11 +166,6 @@ export const WithAgentId: Story = {
   },
   play: async (storyContext) => {
     await playWithLegacyAnalytics(storyContext);
-    const searchBox =
-      await storyContext.canvas.findAllByShadowPlaceholderText('Search');
-    await storyContext.userEvent.type(
-      searchBox[0],
-      'how to resolve netflix connection with tivo{enter}'
-    );
+    await submitGeneratedAnswerQuery(storyContext);
   },
 };
