@@ -1,5 +1,6 @@
 ---
 title: Code samples
+group: Guides
 slug: code-samples
 ---
 

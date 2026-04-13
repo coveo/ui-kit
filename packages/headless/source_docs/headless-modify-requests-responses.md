@@ -1,6 +1,6 @@
 ---
 title: Modify requests and responses
-group: Usage
+group: Guides
 slug: usage/modify-requests-and-responses
 ---
 

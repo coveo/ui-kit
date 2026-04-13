@@ -1,6 +1,6 @@
 ---
 title: SAML authentication
-group: Usage
+group: Guides
 slug: usage/saml-authentication
 ---
 
