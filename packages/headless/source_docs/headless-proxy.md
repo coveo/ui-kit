@@ -1,6 +1,6 @@
 ---
 title: Proxy
-group: Usage
+group: Guides
 slug: usage/proxy
 ---
 
