@@ -1,4 +1,5 @@
 import {bootstrapApplication} from '@angular/platform-browser';
+import '@coveo/commerce-agent-chat-components/register';
 
 import {AppComponent} from './app/app.component';
 
