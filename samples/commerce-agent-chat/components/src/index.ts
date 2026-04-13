@@ -1,3 +1,4 @@
+export * from './elements/cac-chat-interface.js';
 export * from './elements/cac-price-display.js';
 export * from './elements/cac-comparison-summary.js';
 export * from './elements/cac-next-actions-bar.js';

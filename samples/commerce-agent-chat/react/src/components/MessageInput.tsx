@@ -5,6 +5,7 @@ interface MessageSendEvent extends CustomEvent<{content: string}> {}
 interface MessageInputProps {
   onSend: (message: string) => void;
   disabled: boolean;
+  slot?: string;
 }
 
 interface MessageInputElement extends HTMLElement {
@@ -14,6 +15,7 @@ interface MessageInputElement extends HTMLElement {
 export function MessageInput({
   onSend,
   disabled,
+  slot,
 }: MessageInputProps): React.JSX.Element {
   const elementRef = useRef<MessageInputElement | null>(null);
 
@@ -38,5 +40,5 @@ export function MessageInput({
     return () => element.removeEventListener('message-send', handleSend);
   }, [onSend]);
 
-  return <cac-message-input ref={elementRef} />;
+  return <cac-message-input ref={elementRef} slot={slot} />;
 }

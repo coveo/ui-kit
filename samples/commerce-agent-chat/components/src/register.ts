@@ -1,3 +1,4 @@
+import './elements/cac-chat-interface.js';
 import './elements/cac-price-display.js';
 import './elements/cac-comparison-summary.js';
 import './elements/cac-next-actions-bar.js';

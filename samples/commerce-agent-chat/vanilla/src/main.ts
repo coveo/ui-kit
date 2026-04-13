@@ -12,6 +12,10 @@ import type {
 interface MessageSendEvent extends CustomEvent<{content: string}> {}
 interface CommerceActionClickEvent extends CustomEvent<{prompt: string}> {}
 
+interface CacChatInterfaceElement extends HTMLElement {
+  error: string;
+}
+
 interface CacMessageListElement extends HTMLElement {
   messages: Message[];
   isLoading: boolean;
@@ -74,54 +78,31 @@ function mountChat(config: ReturnType<typeof loadConfig>) {
   const orchestrator = new ChatSessionOrchestrator(config);
 
   app.innerHTML = `
-    <main class="chat-shell">
-      <section class="chat-container" aria-label="Commerce Agent Chat (Vanilla)">
-        <header class="chat-header">
-          <h1>Commerce Agent Chat (Vanilla)</h1>
-          <button class="clear-button" type="button">Clear</button>
-        </header>
-        <cac-message-list></cac-message-list>
-        <section class="error-banner" role="alert" hidden>
-          <p></p>
-          <button type="button">Dismiss</button>
-        </section>
-        <cac-message-input></cac-message-input>
-      </section>
-    </main>
+    <cac-chat-interface heading="Commerce Agent Chat (Vanilla)">
+      <cac-message-list slot="messages"></cac-message-list>
+      <cac-message-input slot="input"></cac-message-input>
+    </cac-chat-interface>
   `;
 
+  const chatInterface =
+    app.querySelector<CacChatInterfaceElement>('cac-chat-interface');
   const messageList =
     app.querySelector<CacMessageListElement>('cac-message-list');
   const messageInput =
     app.querySelector<CacMessageInputElement>('cac-message-input');
-  const clearButton = app.querySelector<HTMLButtonElement>('.clear-button');
-  const errorBanner = app.querySelector<HTMLElement>('.error-banner');
-  const errorText = errorBanner?.querySelector<HTMLParagraphElement>('p');
-  const dismissButton = errorBanner?.querySelector<HTMLButtonElement>('button');
 
-  if (
-    !messageList ||
-    !messageInput ||
-    !clearButton ||
-    !errorBanner ||
-    !errorText ||
-    !dismissButton
-  ) {
+  if (!chatInterface || !messageList || !messageInput) {
     throw new Error(
       'Vanilla chat shell failed to initialize required elements.'
     );
   }
 
   const render = (state: ChatState) => {
-    const hasError = Boolean(state.error?.trim());
-
     messageList.messages = state.messages;
     messageList.isLoading = state.isLoading;
     messageList.progressSteps = state.progressSteps;
     messageInput.disabled = state.isLoading;
-
-    errorText.textContent = hasError ? state.error! : '';
-    errorBanner.hidden = !hasError;
+    chatInterface.error = state.error ?? '';
   };
 
   const unsubscribe = orchestrator.subscribe(({state}: {state: ChatState}) => {
@@ -140,8 +121,10 @@ function mountChat(config: ReturnType<typeof loadConfig>) {
 
   messageInput.addEventListener('message-send', handleMessageSend);
   messageList.addEventListener('commerce-action-click', handleActionClick);
-  clearButton.addEventListener('click', () => orchestrator.clearMessages());
-  dismissButton.addEventListener('click', () => orchestrator.dismissError());
+  chatInterface.addEventListener('clear', () => orchestrator.clearMessages());
+  chatInterface.addEventListener('dismiss-error', () =>
+    orchestrator.dismissError()
+  );
 
   window.addEventListener(
     'beforeunload',

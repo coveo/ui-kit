@@ -1,51 +1,56 @@
+import {useEffect, useRef} from 'react';
 import type {CommerceConfig} from '@core/config/env.js';
 import {useChat} from '../hooks/useChat.js';
 import {MessageInput} from './MessageInput.js';
 import {MessageList} from './MessageList.js';
-import './ChatInterface.css';
 
 interface ChatInterfaceProps {
   config: CommerceConfig;
 }
 
+interface CacChatInterfaceElement extends HTMLElement {
+  error: string;
+}
+
 export function ChatInterface({config}: ChatInterfaceProps): React.JSX.Element {
   const {state, sendMessage, clearMessages, dismissError} = useChat(config);
+  const elementRef = useRef<CacChatInterfaceElement | null>(null);
+
+  useEffect(() => {
+    if (elementRef.current) {
+      elementRef.current.error = state.error ?? '';
+    }
+  }, [state.error]);
+
+  useEffect(() => {
+    const element = elementRef.current;
+    if (!element) {
+      return;
+    }
+    const handleClear = () => clearMessages();
+    const handleDismiss = () => dismissError();
+    element.addEventListener('clear', handleClear);
+    element.addEventListener('dismiss-error', handleDismiss);
+    return () => {
+      element.removeEventListener('clear', handleClear);
+      element.removeEventListener('dismiss-error', handleDismiss);
+    };
+  }, [clearMessages, dismissError]);
 
   return (
-    <main className="chat-shell">
-      <section
-        className="chat-container"
-        aria-label="Commerce Agent Chat (React)"
-      >
-        <header className="chat-header">
-          <h1>Commerce Agent Chat (React)</h1>
-          <button
-            onClick={clearMessages}
-            className="clear-button"
-            type="button"
-          >
-            Clear
-          </button>
-        </header>
-
-        <MessageList
-          messages={state.messages}
-          isLoading={state.isLoading}
-          progressSteps={state.progressSteps}
-          onActionSelected={sendMessage}
-        />
-
-        {state.error ? (
-          <section className="error-banner" role="alert">
-            <p>{state.error}</p>
-            <button onClick={dismissError} type="button">
-              Dismiss
-            </button>
-          </section>
-        ) : null}
-
-        <MessageInput onSend={sendMessage} disabled={state.isLoading} />
-      </section>
-    </main>
+    <cac-chat-interface ref={elementRef} heading="Commerce Agent Chat (React)">
+      <MessageList
+        slot="messages"
+        messages={state.messages}
+        isLoading={state.isLoading}
+        progressSteps={state.progressSteps}
+        onActionSelected={sendMessage}
+      />
+      <MessageInput
+        slot="input"
+        onSend={sendMessage}
+        disabled={state.isLoading}
+      />
+    </cac-chat-interface>
   );
 }

@@ -1,5 +1,5 @@
 import {CommonModule} from '@angular/common';
-import {Component, inject} from '@angular/core';
+import {Component, CUSTOM_ELEMENTS_SCHEMA, inject} from '@angular/core';
 
 import {ChatService} from './chat.service';
 import {MessageInputComponent} from './components/message-input.component';
@@ -10,6 +10,7 @@ import {MessageListComponent} from './components/message-list.component';
   standalone: true,
   imports: [CommonModule, MessageInputComponent, MessageListComponent],
   templateUrl: './app.component.html',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppComponent {
   private readonly chatService = inject(ChatService);

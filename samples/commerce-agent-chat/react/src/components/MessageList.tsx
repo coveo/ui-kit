@@ -8,6 +8,7 @@ interface MessageListProps {
   isLoading: boolean;
   progressSteps: string[];
   onActionSelected: (prompt: string) => void;
+  slot?: string;
 }
 
 interface MessageListElement extends HTMLElement {
@@ -21,6 +22,7 @@ export function MessageList({
   isLoading,
   progressSteps,
   onActionSelected,
+  slot,
 }: MessageListProps): React.JSX.Element {
   const elementRef = useRef<MessageListElement | null>(null);
 
@@ -47,5 +49,5 @@ export function MessageList({
       element.removeEventListener('commerce-action-click', handleActionClick);
   }, [onActionSelected]);
 
-  return <cac-message-list ref={elementRef} />;
+  return <cac-message-list ref={elementRef} slot={slot} />;
 }
