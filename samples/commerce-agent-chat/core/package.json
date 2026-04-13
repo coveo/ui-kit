@@ -1,0 +1,33 @@
+{
+  "name": "@coveo/commerce-agent-chat-core",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Shared core logic for commerce agent chat samples.",
+  "type": "module",
+  "exports": {
+    "./config/*": "./src/config/*.ts",
+    "./lib/*": "./src/lib/*.ts",
+    "./styles/*": "./src/styles/*",
+    "./types/*": "./src/types/*.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint:check": "oxlint --deny-warnings .",
+    "lint:fix": "oxlint --deny-warnings --fix ."
+  },
+  "dependencies": {
+    "@ag-ui/client": "0.0.48",
+    "@ag-ui/core": "0.0.48",
+    "marked": "12.0.2",
+    "rxjs": "7.8.1"
+  },
+  "devDependencies": {
+    "@types/marked": "6.0.0",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "engines": {
+    "node": "^22.14.0 || ^24.11.0"
+  }
+}

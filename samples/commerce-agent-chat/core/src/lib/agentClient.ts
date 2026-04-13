@@ -1,4 +1,3 @@
-import {HttpAgent} from '@ag-ui/client';
 import type {BaseEvent} from '@ag-ui/core';
 import {Observable} from 'rxjs';
 
@@ -12,7 +11,6 @@ import type {
 } from '../types/agent.js';
 
 export class CommerceAgentClient {
-  private readonly agent?: HttpAgent;
   private readonly headers: Record<string, string>;
   private readonly url: string;
   private readonly config: CommerceConfig;
@@ -30,18 +28,13 @@ export class CommerceAgentClient {
             }),
             'Content-Type': 'application/json',
           }
-        : {};
+        : {
+            'Content-Type': 'application/json',
+          };
 
-    // In coveo-dev mode the full URL is already in config.agentUrl.
-    // In local mode the Vite proxy rewrites /api → :8080, so we append /invocations.
-    this.url =
-      config.agentMode === 'coveo-dev'
-        ? config.agentUrl
-        : `${config.agentUrl}/invocations`;
-
-    if (config.agentMode !== 'coveo-dev') {
-      this.agent = new HttpAgent({url: this.url, headers: this.headers});
-    }
+    // In local mode the dev proxy rewrites /api → :8080, so we append /invocations.
+    // In coveo-dev mode, allow either full converse path or a proxy prefix.
+    this.url = resolveAgentUrl(config);
   }
 
   invoke(messages: Message[], threadId: string): AgentInvocation {
@@ -105,7 +98,7 @@ export class CommerceAgentClient {
     return {
       runId,
       events: this.captureThreadState(
-        this.agent!.run(payload as never) as Observable<BaseEvent>,
+        this.runSseStream(payload, this.url, this.headers),
         threadId
       ),
     };
@@ -161,6 +154,14 @@ export class CommerceAgentClient {
   }
 
   private runCoveoDevStream(payload: CoveoDevPayload): Observable<BaseEvent> {
+    return this.runSseStream(payload, this.url, this.headers);
+  }
+
+  private runSseStream(
+    payload: unknown,
+    url: string,
+    headers: Record<string, string>
+  ): Observable<BaseEvent> {
     return new Observable<BaseEvent>((subscriber) => {
       const abortController = new AbortController();
 
@@ -194,9 +195,9 @@ export class CommerceAgentClient {
 
       void (async () => {
         try {
-          const response = await fetch(this.url, {
+          const response = await fetch(url, {
             method: 'POST',
-            headers: this.headers,
+            headers,
             body: JSON.stringify(payload),
             signal: abortController.signal,
           });
@@ -256,6 +257,27 @@ export class CommerceAgentClient {
   }
 }
 
+function resolveAgentUrl(config: CommerceConfig): string {
+  if (config.agentMode !== 'coveo-dev') {
+    return `${config.agentUrl}/invocations`;
+  }
+
+  const configured = config.agentUrl.trim();
+  if (configured.includes('/rest/organizations/')) {
+    return configured;
+  }
+
+  if (!config.orgId) {
+    return configured;
+  }
+
+  const baseProxy = configured.startsWith('/api/coveo-dev')
+    ? configured
+    : '/api/coveo-dev';
+
+  return `${baseProxy.replace(/\/$/, '')}/rest/organizations/${config.orgId}/commerce/unstable/agentic/converse`;
+}
+
 const KNOWN_EVENT_TYPES = new Set([
   'TEXT_MESSAGE_START',
   'TEXT_MESSAGE_CONTENT',
@@ -300,6 +322,17 @@ function normalizeEvent(event: unknown): BaseEvent | undefined {
   const typedEvent = event as Record<string, unknown>;
   const rawType = typedEvent.type;
   if (typeof rawType !== 'string' || rawType.length === 0) {
+    if (
+      typeof typedEvent.error === 'string' ||
+      typeof typedEvent.message === 'string'
+    ) {
+      // Some backends emit terminal SSE errors without an explicit type.
+      // Keep these events so upstream parsing can surface the error to UI state.
+      return {
+        ...typedEvent,
+        type: 'CUSTOM',
+      } as BaseEvent;
+    }
     return undefined;
   }
 

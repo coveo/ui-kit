@@ -10,7 +10,7 @@ function makeState(): ChatState {
       {id: 'a1', role: 'assistant', content: ''},
     ],
     isLoading: true,
-    progressLabel: null,
+    progressSteps: [],
     error: null,
     threadId: 'thread-1',
   };
