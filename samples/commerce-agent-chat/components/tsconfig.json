@@ -1,0 +1,19 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "noEmit": true,
+    "types": ["vitest/globals"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
