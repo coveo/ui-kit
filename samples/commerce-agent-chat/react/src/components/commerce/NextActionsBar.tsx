@@ -1,5 +1,5 @@
+import {useEffect, useRef} from 'react';
 import type {NextAction} from '@core/types/commerce.js';
-import './NextActionsBar.css';
 
 interface NextActionsBarProps {
   actions: NextAction[];
@@ -7,39 +7,44 @@ interface NextActionsBarProps {
   onActionClick?: (prompt: string) => void;
 }
 
+interface NextActionsBarElement extends HTMLElement {
+  actions: NextAction[];
+  isLoading: boolean;
+}
+
+interface CommerceActionClickEventDetail {
+  prompt: string;
+}
+
 export function NextActionsBar({
   actions,
   isLoading = false,
   onActionClick,
 }: NextActionsBarProps) {
-  if (actions.length === 0 && !isLoading) return null;
+  const elementRef = useRef<NextActionsBarElement | null>(null);
 
-  return (
-    <div className="next-actions" aria-busy={isLoading ? true : undefined}>
-      <p className="next-actions__label">Next actions</p>
-      <div className="next-actions__list">
-        {isLoading && actions.length === 0
-          ? Array.from({length: 3}, (_, i) => (
-              <div
-                key={`next-actions-skeleton-${i}`}
-                className="next-action-btn next-action-btn--skeleton"
-                aria-hidden="true"
-              >
-                <div className="commerce-loading commerce-loading--line commerce-loading--line-wide" />
-              </div>
-            ))
-          : actions.map((action, i) => (
-              <button
-                key={`${action.type}-${action.text}-${i}`}
-                className="next-action-btn"
-                type="button"
-                onClick={() => onActionClick?.(action.text)}
-              >
-                {action.text}
-                <span className="next-action-btn__badge">{action.type}</span>
-              </button>
-            ))}
-      </div>
-    </div>
-  );
+  useEffect(() => {
+    if (elementRef.current) {
+      elementRef.current.actions = actions;
+      elementRef.current.isLoading = isLoading;
+    }
+  }, [actions, isLoading]);
+
+  useEffect(() => {
+    if (!elementRef.current) {
+      return;
+    }
+
+    const handler = (event: Event) => {
+      const customEvent = event as CustomEvent<CommerceActionClickEventDetail>;
+      onActionClick?.(customEvent.detail.prompt);
+    };
+
+    elementRef.current.addEventListener('commerce-action-click', handler);
+    return () => {
+      elementRef.current?.removeEventListener('commerce-action-click', handler);
+    };
+  }, [onActionClick]);
+
+  return <cac-next-actions-bar ref={elementRef} />;
 }

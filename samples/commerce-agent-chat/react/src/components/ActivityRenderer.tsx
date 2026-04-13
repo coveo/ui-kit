@@ -1,7 +1,7 @@
 import type {ActivityMessage} from '@core/types/agent.js';
-import type {A2UISurfaceContent} from '@core/types/commerce.js';
-import {CommerceCatalogView} from './commerce/CommerceCatalogView.js';
-import './ActivityRenderer.css';
+import {useEffect, useRef} from 'react';
+
+interface CommerceActionClickEvent extends CustomEvent<{prompt: string}> {}
 
 interface ActivityRendererProps {
   activity: ActivityMessage;
@@ -9,29 +9,39 @@ interface ActivityRendererProps {
   onActionSelected?: (prompt: string) => void;
 }
 
+interface ActivityRendererElement extends HTMLElement {
+  activity: ActivityMessage;
+  isLoading: boolean;
+}
+
 export function ActivityRenderer({
   activity,
   isLoading = false,
   onActionSelected,
 }: ActivityRendererProps): React.JSX.Element {
-  if (activity.activityType === 'a2ui-surface') {
-    return (
-      <article className="activity-renderer" aria-label="Agent activity">
-        <CommerceCatalogView
-          content={activity.content as unknown as A2UISurfaceContent}
-          isLoading={isLoading}
-          onActionSelected={onActionSelected}
-        />
-      </article>
-    );
-  }
+  const elementRef = useRef<ActivityRendererElement | null>(null);
 
-  return (
-    <article className="activity-renderer" aria-label="Agent activity">
-      <p className="activity-type">{activity.activityType}</p>
-      <pre className="activity-content">
-        {JSON.stringify(activity.content, null, 2)}
-      </pre>
-    </article>
-  );
+  useEffect(() => {
+    if (elementRef.current) {
+      elementRef.current.activity = activity;
+      elementRef.current.isLoading = isLoading;
+    }
+  }, [activity, isLoading]);
+
+  useEffect(() => {
+    const element = elementRef.current;
+    if (!element || !onActionSelected) {
+      return;
+    }
+
+    const handleActionClick = (event: Event) => {
+      onActionSelected((event as CommerceActionClickEvent).detail.prompt);
+    };
+
+    element.addEventListener('commerce-action-click', handleActionClick);
+    return () =>
+      element.removeEventListener('commerce-action-click', handleActionClick);
+  }, [onActionSelected]);
+
+  return <cac-activity-renderer ref={elementRef} />;
 }

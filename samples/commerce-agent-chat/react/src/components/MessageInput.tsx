@@ -1,8 +1,13 @@
-import {useState} from 'react';
-import './MessageInput.css';
+import {useEffect, useRef} from 'react';
+
+interface MessageSendEvent extends CustomEvent<{content: string}> {}
 
 interface MessageInputProps {
   onSend: (message: string) => void;
+  disabled: boolean;
+}
+
+interface MessageInputElement extends HTMLElement {
   disabled: boolean;
 }
 
@@ -10,66 +15,28 @@ export function MessageInput({
   onSend,
   disabled,
 }: MessageInputProps): React.JSX.Element {
-  const [input, setInput] = useState('');
+  const elementRef = useRef<MessageInputElement | null>(null);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  useEffect(() => {
+    if (elementRef.current) {
+      elementRef.current.disabled = disabled;
+    }
+  }, [disabled]);
 
-    const next = input.trim();
-    if (!next) {
+  useEffect(() => {
+    const element = elementRef.current;
+    if (!element) {
       return;
     }
 
-    onSend(next);
-    setInput('');
-  };
+    const handleSend = (event: Event) => {
+      const customEvent = event as MessageSendEvent;
+      onSend(customEvent.detail.content);
+    };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key !== 'Enter' || event.shiftKey) {
-      return;
-    }
+    element.addEventListener('message-send', handleSend);
+    return () => element.removeEventListener('message-send', handleSend);
+  }, [onSend]);
 
-    event.preventDefault();
-
-    const next = input.trim();
-    if (!next || disabled) {
-      return;
-    }
-
-    onSend(next);
-    setInput('');
-  };
-
-  return (
-    <form
-      onSubmit={handleSubmit}
-      className="message-input-form"
-      aria-label="Send message"
-    >
-      <label className="visually-hidden" htmlFor="chat-input">
-        Type your message
-      </label>
-      <p id="chat-input-hint" className="visually-hidden">
-        Press Enter to send. Press Shift plus Enter to insert a new line.
-      </p>
-      <textarea
-        id="chat-input"
-        value={input}
-        onChange={(event) => setInput(event.target.value)}
-        onKeyDown={handleKeyDown}
-        placeholder="Ask Zane..."
-        disabled={disabled}
-        className="message-input"
-        rows={2}
-        aria-describedby="chat-input-hint"
-      />
-      <button
-        type="submit"
-        disabled={disabled || input.trim().length === 0}
-        className="send-button"
-      >
-        Send
-      </button>
-    </form>
-  );
+  return <cac-message-input ref={elementRef} />;
 }

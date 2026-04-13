@@ -13,6 +13,7 @@
     "lint:fix": "oxlint --deny-warnings --fix ."
   },
   "dependencies": {
+    "@coveo/commerce-agent-chat-components": "workspace:*",
     "@coveo/commerce-agent-chat-core": "workspace:*",
     "react": "catalog:",
     "react-dom": "catalog:"

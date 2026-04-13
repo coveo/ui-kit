@@ -1,29 +1,18 @@
-import {
-  formatPrice,
-  hasDiscount,
-  promoPrice,
-} from '@core/lib/commerceHelpers.js';
+import {useEffect, useRef} from 'react';
 import type {Product} from '@core/types/commerce.js';
-import './PriceDisplay.css';
 
-export {formatPrice};
+interface PriceDisplayElement extends HTMLElement {
+  product: Product;
+}
 
 export function PriceDisplay({product}: {product: Product}) {
-  const promo = promoPrice(product);
-  const hasPromoDiscount = hasDiscount(product);
+  const elementRef = useRef<PriceDisplayElement | null>(null);
 
-  if (hasPromoDiscount) {
-    return (
-      <span className="price-display">
-        <span className="price-original">{formatPrice(product.ec_price)}</span>
-        <span className="price-promo">{formatPrice(promo)}</span>
-      </span>
-    );
-  }
+  useEffect(() => {
+    if (elementRef.current) {
+      elementRef.current.product = product;
+    }
+  }, [product]);
 
-  return (
-    <span className="price-display">
-      <span className="price-regular">{formatPrice(product.ec_price)}</span>
-    </span>
-  );
+  return <cac-price-display ref={elementRef} />;
 }
