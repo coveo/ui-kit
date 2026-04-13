@@ -3,6 +3,7 @@
   flex-direction: column;
   gap: 0.65rem;
   padding: 1rem 1.25rem;
+  min-height: 0;
   overflow: auto;
 }
 
@@ -75,7 +76,10 @@
 }
 
 .empty-state {
-  margin: auto;
+  flex: 1;
+  display: grid;
+  place-items: center;
+  margin: 0;
   text-align: center;
   color: var(--ink-muted);
 }

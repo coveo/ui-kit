@@ -1,4 +1,4 @@
-import type {Product} from '../../types/commerce.js';
+import type {Product} from '@core/types/commerce.js';
 import {PriceDisplay} from './PriceDisplay.js';
 import './ProductCarousel.css';
 

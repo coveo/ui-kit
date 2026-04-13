@@ -1,6 +1,6 @@
 import {Fragment} from 'react';
 import {marked} from 'marked';
-import type {Message} from '../types/agent.js';
+import type {Message} from '@core/types/agent.js';
 import {ActivityRenderer} from './ActivityRenderer.js';
 import './MessageList.css';
 

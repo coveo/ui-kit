@@ -1,8 +1,8 @@
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {flushSync} from 'react-dom';
 
-import type {CommerceConfig} from '../config/env.js';
-import {ChatSessionOrchestrator} from '../lib/chatSessionOrchestrator.js';
+import type {CommerceConfig} from '@core/config/env.js';
+import {ChatSessionOrchestrator} from '@core/lib/chatSessionOrchestrator.js';
 
 export function useChat(config: CommerceConfig) {
   const orchestrator = useMemo(

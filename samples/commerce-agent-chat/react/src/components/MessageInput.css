@@ -1,6 +1,7 @@
 .message-input-form {
   display: grid;
   grid-template-columns: 1fr auto;
+  align-items: end;
   gap: 0.75rem;
   padding: 1rem 1.5rem;
   border-top: 2px solid rgba(0, 212, 255, 0.2);
@@ -21,6 +22,9 @@
   font-size: 0.95rem;
   transition: all 0.3s ease;
   backdrop-filter: blur(5px);
+  min-height: 3.25rem;
+  max-height: 9rem;
+  resize: vertical;
 }
 
 .message-input::placeholder {

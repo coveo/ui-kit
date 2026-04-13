@@ -1,4 +1,5 @@
-import type {Product} from '../../types/commerce.js';
+import {formatAttribute} from '@core/lib/commerceHelpers.js';
+import type {Product} from '@core/types/commerce.js';
 import {PriceDisplay} from './PriceDisplay.js';
 import './ComparisonTable.css';
 
@@ -7,15 +8,6 @@ interface ComparisonTableProps {
   products: Product[];
   attributes?: string[];
   isLoading?: boolean;
-}
-
-function formatAttributeLabel(attribute: string): string {
-  return attribute
-    .replace(/^ec_/, '')
-    .split('_')
-    .filter(Boolean)
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(' ');
 }
 
 export function ComparisonTable({
@@ -92,7 +84,7 @@ export function ComparisonTable({
             {attributes.map((attr) => (
               <tr key={attr}>
                 <td className="comparison-table__label">
-                  {formatAttributeLabel(attr)}
+                  {formatAttribute(attr)}
                 </td>
                 {products.map((p) => (
                   <td key={p.ec_product_id}>

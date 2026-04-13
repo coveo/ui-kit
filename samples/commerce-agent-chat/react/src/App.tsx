@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 
 import {ChatInterface} from './components/ChatInterface.js';
-import {loadConfig, type CommerceConfig} from './config/env.js';
+import {loadConfig, type CommerceConfig} from '@core/config/env.js';
 import './App.css';
 
 export function App(): React.JSX.Element {

@@ -1,44 +1,28 @@
-import type {Product} from '../../types/commerce.js';
-import type {A2UISurfaceContent} from '../../types/commerce.js';
+import type {Product} from '@core/types/commerce.js';
+import type {A2UISurfaceContent} from '@core/types/commerce.js';
 import {
   extractActionsBySurface,
   extractCatalogComponents,
   extractProductsBySurface,
-} from '../../lib/commerceExtractor.js';
+} from '@core/lib/commerceExtractor.js';
+import {
+  isSupportedType,
+  isType,
+  uniqueProducts,
+} from '@core/lib/commerceHelpers.js';
+import {
+  getBundleProductsFromCache,
+  resetBundleProductCache,
+  updateBundleProductCache,
+} from '@core/lib/bundleProductCache.js';
 import {BundleDisplay} from './BundleDisplay.js';
 import {ComparisonSummary} from './ComparisonSummary.js';
 import {ComparisonTable} from './ComparisonTable.js';
 import {NextActionsBar} from './NextActionsBar.js';
 import {ProductCarousel, type ProductSection} from './ProductCarousel.js';
 
-function normalizeType(type: string): string {
-  return type.replace(/[^a-z0-9]/gi, '').toLowerCase();
-}
-
-function isType(type: string, expected: string): boolean {
-  const normalized = normalizeType(type);
-  if (normalized === normalizeType(expected)) {
-    return true;
-  }
-  return normalized.includes(normalizeType(expected));
-}
-
-function isSupportedType(type: string): boolean {
-  return (
-    isType(type, 'ProductCarousel') ||
-    isType(type, 'ComparisonTable') ||
-    isType(type, 'ComparisonSummary') ||
-    isType(type, 'BundleDisplay') ||
-    isType(type, 'NextActionsBar')
-  );
-}
-
-// Module-level cache so bundle slot products persist across delta patches,
-// matching the same pattern used in the dashboard renderer.
-const bundleProductCache = new Map<string, Product[]>();
-
 export function resetCommerceCatalogCache(): void {
-  bundleProductCache.clear();
+  resetBundleProductCache();
 }
 
 function hasBundleSlotProduct(
@@ -61,14 +45,10 @@ export function CommerceCatalogView({
   const {operations} = content;
   const productsBySurface = extractProductsBySurface(operations);
 
-  for (const [surfaceId, products] of productsBySurface.entries()) {
-    if (surfaceId.startsWith('bundle-surface-') && products.length > 0) {
-      bundleProductCache.set(surfaceId, products);
-    }
-  }
+  updateBundleProductCache(productsBySurface);
 
   const getProducts = (surfaceId: string): Product[] =>
-    productsBySurface.get(surfaceId) ?? bundleProductCache.get(surfaceId) ?? [];
+    productsBySurface.get(surfaceId) ?? getBundleProductsFromCache(surfaceId);
 
   const catalogComponents = extractCatalogComponents(operations);
   const actionsBySurface = extractActionsBySurface(operations);
@@ -77,21 +57,7 @@ export function CommerceCatalogView({
     isType(component.type, 'NextActionsBar')
   );
 
-  const allProducts = Array.from(productsBySurface.values())
-    .flat()
-    .filter((product, index, arr) => {
-      const key =
-        product.ec_product_id ||
-        `${product.ec_name ?? ''}-${product.ec_price ?? ''}`;
-      return (
-        arr.findIndex((candidate) => {
-          const candidateKey =
-            candidate.ec_product_id ||
-            `${candidate.ec_name ?? ''}-${candidate.ec_price ?? ''}`;
-          return candidateKey === key;
-        }) === index
-      );
-    });
+  const allProducts = uniqueProducts(productsBySurface);
 
   if (supported.length === 0) return null;
 

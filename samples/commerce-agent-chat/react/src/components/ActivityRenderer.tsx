@@ -1,5 +1,5 @@
-import type {ActivityMessage} from '../types/agent.js';
-import type {A2UISurfaceContent} from '../types/commerce.js';
+import type {ActivityMessage} from '@core/types/agent.js';
+import type {A2UISurfaceContent} from '@core/types/commerce.js';
 import {CommerceCatalogView} from './commerce/CommerceCatalogView.js';
 import './ActivityRenderer.css';
 

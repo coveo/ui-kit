@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import type {BundleTierConfig, Product} from '../../types/commerce.js';
+import type {BundleTierConfig, Product} from '@core/types/commerce.js';
 import {PriceDisplay} from './PriceDisplay.js';
 import './BundleDisplay.css';
 

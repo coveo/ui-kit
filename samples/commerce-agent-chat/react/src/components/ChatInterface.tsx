@@ -1,4 +1,4 @@
-import type {CommerceConfig} from '../config/env.js';
+import type {CommerceConfig} from '@core/config/env.js';
 import {useChat} from '../hooks/useChat.js';
 import {MessageInput} from './MessageInput.js';
 import {MessageList} from './MessageList.js';
@@ -13,9 +13,12 @@ export function ChatInterface({config}: ChatInterfaceProps): React.JSX.Element {
 
   return (
     <main className="chat-shell">
-      <section className="chat-container" aria-label="Commerce Agent Chat">
+      <section
+        className="chat-container"
+        aria-label="Commerce Agent Chat (React)"
+      >
         <header className="chat-header">
-          <h1>Commerce Agent Chat</h1>
+          <h1>Commerce Agent Chat (React)</h1>
           <button
             onClick={clearMessages}
             className="clear-button"
