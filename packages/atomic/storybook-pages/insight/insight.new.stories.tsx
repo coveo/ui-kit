@@ -74,7 +74,6 @@ const meta: Meta = {
     msw: {
       handlers: [...mockInsightApi.handlers],
     },
-    chromatic: {disableSnapshot: false},
   },
   beforeEach: async () => {
     mockInsightApi.searchEndpoint.mock(

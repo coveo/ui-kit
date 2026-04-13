@@ -30,6 +30,25 @@ class IconFetchError extends Error {
   }
 }
 
+const iconCache = new Map<string, Promise<string>>();
+
+async function fetchIcon(url: string) {
+  return fetch(url)
+    .catch((e) => {
+      throw IconFetchError.fromError(url, e);
+    })
+    .then((response) => {
+      if (response.status !== 200 && response.status !== 304) {
+        throw IconFetchError.fromStatusCode(
+          url,
+          response.status,
+          response.statusText
+        );
+      }
+      return response.text();
+    });
+}
+
 /**
  * The `atomic-icon` component displays an SVG icon with a 1:1 aspect ratio.
  *
@@ -75,19 +94,15 @@ export class AtomicIcon
   @state()
   private svg: string | null = null;
 
-  private async fetchIcon(url: string) {
+  private async fetchIcon(url: string): Promise<string | null> {
     try {
-      const response = await fetch(url).catch((e) => {
-        throw IconFetchError.fromError(url, e);
-      });
-      if (response.status !== 200 && response.status !== 304) {
-        throw IconFetchError.fromStatusCode(
-          url,
-          response.status,
-          response.statusText
-        );
+      if (iconCache.has(url)) {
+        return iconCache.get(url)!;
+      } else {
+        const iconRequest = fetchIcon(url);
+        iconCache.set(url, iconRequest);
+        return iconRequest;
       }
-      return await response.text();
     } catch (e) {
       this.error = e as Error;
       this.requestUpdate();
