@@ -216,39 +216,28 @@ export class CacProgressTrace extends LitElement {
   }
 
   override render() {
-    const hasDoneStep = this.progressSteps.includes('Done');
-    const hasStreamingProgress =
-      this.progressTrace.length > 0 || this.progressSteps.length > 0;
-    const turnComplete = hasDoneStep || !this.isStreaming;
-    const shouldAnimateCurrentStep = this.isStreaming && !hasDoneStep;
-    const showTrace =
-      (this.isStreaming && hasStreamingProgress && !hasDoneStep) ||
-      this.isExpanded;
-    const traceContainerClass = `agent-progress__trace ${
-      this.isExpanded
-        ? 'agent-progress__trace--expanded'
-        : 'agent-progress__trace--collapsed'
-    }`;
-    const traceId = `progress-trace-${this.messageId}`;
+    const hasDoneStep = this.hasDoneStep();
+    const hasStreamingProgress = this.hasStreamingProgress();
+    const turnComplete = this.isTurnComplete(hasDoneStep);
+    const shouldAnimateCurrentStep = this.shouldAnimateCurrentStep(hasDoneStep);
+    const showTrace = this.shouldShowTrace(hasDoneStep, hasStreamingProgress);
+    const traceContainerClass = this.getTraceContainerClass();
+    const traceId = this.getTraceId();
 
     return html`
       <section class="agent-progress" aria-label="Agent status">
         <button
           class="agent-progress__toggle"
           type="button"
-          ?disabled=${this.isStreaming && !hasDoneStep}
+          ?disabled=${this.isToggleDisabled(hasDoneStep)}
           aria-expanded=${showTrace ? 'true' : 'false'}
           aria-controls=${traceId}
           @click=${() => this.onToggleTrace()}
         >
           <span
-            class=${`agent-progress__toggle-label${
-              this.isStreaming && !hasStreamingProgress && !hasDoneStep
-                ? ' agent-progress__toggle-label--working'
-                : ''
-            }`}
+            class=${this.getToggleLabelClass(hasDoneStep, hasStreamingProgress)}
           >
-            ${turnComplete ? 'Show full status trace' : 'Working...'}</span
+            ${this.getToggleLabel(turnComplete)}</span
           >
         </button>
         ${when(
@@ -268,6 +257,60 @@ export class CacProgressTrace extends LitElement {
         )}
       </section>
     `;
+  }
+
+  private hasDoneStep() {
+    return this.progressSteps.includes('Done');
+  }
+
+  private hasStreamingProgress() {
+    return this.progressTrace.length > 0 || this.progressSteps.length > 0;
+  }
+
+  private isTurnComplete(hasDoneStep: boolean) {
+    return hasDoneStep || !this.isStreaming;
+  }
+
+  private shouldAnimateCurrentStep(hasDoneStep: boolean) {
+    return this.isStreaming && !hasDoneStep;
+  }
+
+  private shouldShowTrace(hasDoneStep: boolean, hasStreamingProgress: boolean) {
+    return (
+      (this.isStreaming && hasStreamingProgress && !hasDoneStep) ||
+      this.isExpanded
+    );
+  }
+
+  private getTraceContainerClass() {
+    return `agent-progress__trace ${
+      this.isExpanded
+        ? 'agent-progress__trace--expanded'
+        : 'agent-progress__trace--collapsed'
+    }`;
+  }
+
+  private getTraceId() {
+    return `progress-trace-${this.messageId}`;
+  }
+
+  private isToggleDisabled(hasDoneStep: boolean) {
+    return this.isStreaming && !hasDoneStep;
+  }
+
+  private getToggleLabelClass(
+    hasDoneStep: boolean,
+    hasStreamingProgress: boolean
+  ) {
+    return `agent-progress__toggle-label${
+      this.isStreaming && !hasStreamingProgress && !hasDoneStep
+        ? ' agent-progress__toggle-label--working'
+        : ''
+    }`;
+  }
+
+  private getToggleLabel(turnComplete: boolean) {
+    return turnComplete ? 'Show full status trace' : 'Working...';
   }
 
   private renderProgressTraceItems(shouldAnimateCurrentStep: boolean) {
