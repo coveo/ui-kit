@@ -4,6 +4,7 @@ import './styles.css';
 
 import {loadConfig} from '@coveo/commerce-agent-chat-core/config/env';
 import {ChatSessionOrchestrator} from '@coveo/commerce-agent-chat-core/lib/chatSessionOrchestrator';
+import {toChatState} from '@coveo/commerce-agent-chat-core/lib/chatStore';
 import type {
   ChatState,
   Message,
@@ -77,6 +78,7 @@ function renderStateCard(title: string, body: string, isError: boolean) {
 
 function mountChat(config: ReturnType<typeof loadConfig>) {
   const orchestrator = new ChatSessionOrchestrator(config);
+  const store = orchestrator.getStore();
 
   app.innerHTML = `
     <cac-chat-interface heading="Commerce Agent Chat (Vanilla)">
@@ -107,9 +109,11 @@ function mountChat(config: ReturnType<typeof loadConfig>) {
     chatInterface.error = state.error ?? '';
   };
 
-  const unsubscribe = orchestrator.subscribe(({state}: {state: ChatState}) => {
-    render(state);
+  const unsubscribe = store.subscribe((sessionState) => {
+    render(toChatState(sessionState));
   });
+
+  render(toChatState(store.getState()));
 
   const handleMessageSend = (event: Event) => {
     const message = (event as MessageSendEvent).detail.content;

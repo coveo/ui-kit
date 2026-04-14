@@ -2,13 +2,15 @@ import {onUnmounted, ref} from 'vue';
 
 import type {CommerceConfig} from '@core/config/env.js';
 import {ChatSessionOrchestrator} from '@core/lib/chatSessionOrchestrator.js';
+import {toChatState} from '@core/lib/chatStore.js';
 
 export function useChat(config: CommerceConfig) {
   const orchestrator = new ChatSessionOrchestrator(config);
-  const state = ref(orchestrator.getState());
+  const store = orchestrator.getStore();
+  const state = ref(toChatState(store.getState()));
 
-  const unsubscribe = orchestrator.subscribe((update) => {
-    state.value = update.state;
+  const unsubscribe = store.subscribe((sessionState) => {
+    state.value = toChatState(sessionState);
   });
 
   onUnmounted(() => {

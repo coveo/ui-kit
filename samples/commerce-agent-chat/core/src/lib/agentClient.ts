@@ -2,13 +2,10 @@ import {HttpAgent} from '@ag-ui/client';
 import type {
   BaseEvent,
   RunAgentInput as AgUiRunAgentInput,
-  StateDeltaEvent,
-  StateSnapshotEvent,
 } from '@ag-ui/client';
-import {Observable, tap} from 'rxjs';
+import {Observable} from 'rxjs';
 
 import type {CommerceConfig} from '../config/env.js';
-import {applyJsonPatch} from '../lib/jsonPatch.js';
 import type {
   AgentInvocation,
   CoveoDevPayload,
@@ -20,7 +17,6 @@ export class CommerceAgentClient {
   private readonly headers: Record<string, string>;
   private readonly url: string;
   private readonly config: CommerceConfig;
-  private readonly threadState = new Map<string, Record<string, unknown>>();
   private readonly httpAgent: HttpAgent;
 
   constructor(config: CommerceConfig) {
@@ -45,7 +41,11 @@ export class CommerceAgentClient {
     this.httpAgent = new HttpAgent({url: this.url, headers: this.headers});
   }
 
-  invoke(messages: Message[], threadId: string): AgentInvocation {
+  invoke(
+    messages: Message[],
+    threadId: string,
+    threadState: Record<string, unknown> = {}
+  ): AgentInvocation {
     const runId = generateId('run');
 
     if (this.config.agentMode === 'coveo-dev') {
@@ -81,7 +81,7 @@ export class CommerceAgentClient {
       messages: messages as AgUiRunAgentInput['messages'],
       threadId,
       runId,
-      state: this.threadState.get(threadId) ?? {},
+      state: threadState,
       tools: [],
       context: [],
       forwardedProps: {
@@ -105,42 +105,8 @@ export class CommerceAgentClient {
 
     return {
       runId,
-      events: this.captureThreadState(this.httpAgent.run(input), threadId),
+      events: this.httpAgent.run(input),
     };
-  }
-
-  clearThreadState(threadId: string): void {
-    this.threadState.delete(threadId);
-  }
-
-  private captureThreadState(
-    events: Observable<BaseEvent>,
-    threadId: string
-  ): Observable<BaseEvent> {
-    return events.pipe(
-      tap((event) => {
-        const eventType = String(
-          (event as Record<string, unknown>).type ?? ''
-        ).toUpperCase();
-
-        if (eventType === 'STATE_SNAPSHOT') {
-          const {snapshot} = event as StateSnapshotEvent;
-          if (snapshot && typeof snapshot === 'object') {
-            this.threadState.set(threadId, snapshot as Record<string, unknown>);
-          }
-        }
-
-        if (eventType === 'STATE_DELTA') {
-          const {delta} = event as StateDeltaEvent;
-          if (Array.isArray(delta)) {
-            this.threadState.set(
-              threadId,
-              applyJsonPatch(this.threadState.get(threadId) ?? {}, delta)
-            );
-          }
-        }
-      })
-    );
   }
 }
 

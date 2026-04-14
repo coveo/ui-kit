@@ -1232,15 +1232,15 @@ importers:
       '@ag-ui/client':
         specifier: 0.0.48
         version: 0.0.48
-      '@ag-ui/core':
-        specifier: 0.0.48
-        version: 0.0.48
       marked:
         specifier: 12.0.2
         version: 12.0.2
       rxjs:
         specifier: 7.8.1
         version: 7.8.1
+      zustand:
+        specifier: 5.0.8
+        version: 5.0.8(@types/react@19.2.14)(immer@11.1.4)(react@19.2.4)
     devDependencies:
       '@types/marked':
         specifier: 6.0.0
@@ -15750,6 +15750,24 @@ packages:
 
   zone.js@0.15.1:
     resolution: {integrity: sha512-XE96n56IQpJM7NAoXswY3XRLcWFW83xe0BiAOeMD7K5k5xecOeul3Qcpx6GqEeeHNkW5DWL5zOyTbEfB4eti8w==}
+
+  zustand@5.0.8:
+    resolution: {integrity: sha512-gyPKpIaxY9XcO2vSMrLbiER7QMAMGOQZVRdJ6Zi782jkbzZygq5GI9nG8g+sMgitRtndwaBSl7uiqC49o1SSiw==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@types/react': '>=18.0.0'
+      immer: '>=9.0.6'
+      react: 19.2.4
+      use-sync-external-store: '>=1.2.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      immer:
+        optional: true
+      react:
+        optional: true
+      use-sync-external-store:
+        optional: true
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -32799,5 +32817,11 @@ snapshots:
   zod@4.1.13: {}
 
   zone.js@0.15.1: {}
+
+  zustand@5.0.8(@types/react@19.2.14)(immer@11.1.4)(react@19.2.4):
+    optionalDependencies:
+      '@types/react': 19.2.14
+      immer: 11.1.4
+      react: 19.2.4
 
   zwitch@2.0.4: {}

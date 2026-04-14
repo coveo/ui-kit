@@ -11,13 +11,33 @@ import type {
 
 import {CommerceAgentClient} from './agentClient.js';
 import {buildInvocationMessages} from './chatContextBuilder.js';
-import {generateId} from './chatIds.js';
-import {applyParsedEventToChatState} from './chatEngine.js';
+import {
+  type ActivityOwner,
+  applyParsedEventToStore,
+  applyThreadStateDelta,
+  beginChatTurn,
+  clearChatSession,
+  createChatSessionStore,
+  createPendingChatTurn,
+  dismissChatError,
+  getActivityOwnership,
+  selectChatState,
+  setChatError,
+  setChatLoading,
+  setActivityOwner,
+  setThreadStateSnapshot,
+  updateProgressSteps,
+  updateProgressTrace,
+  type ChatSessionStore,
+} from './chatStore.js';
 import {extractStreamingProgress, parseAgentEvent} from './streamParser.js';
 
 interface ChatAgentClient {
-  invoke(messages: Message[], threadId: string): AgentInvocation;
-  clearThreadState?(threadId: string): void;
+  invoke(
+    messages: Message[],
+    threadId: string,
+    threadState?: Record<string, unknown>
+  ): AgentInvocation;
 }
 
 interface ChatSessionUpdate {
@@ -29,29 +49,34 @@ type ChatSessionListener = (update: ChatSessionUpdate) => void;
 
 export class ChatSessionOrchestrator {
   private readonly client: ChatAgentClient;
-  private state: ChatState;
+  private readonly store: ChatSessionStore;
   private activeSubscription: Subscription | null = null;
   private listeners = new Set<ChatSessionListener>();
 
   constructor(config: CommerceConfig, client?: ChatAgentClient) {
     this.client = client ?? new CommerceAgentClient(config);
-    this.state = {
-      messages: [],
-      isLoading: false,
-      progressSteps: [],
-      progressTrace: [],
-      error: null,
-      threadId: generateId('thread'),
-    };
+    this.store = createChatSessionStore();
   }
 
   getState(): ChatState {
-    return this.state;
+    return selectChatState(this.store);
+  }
+
+  getStore(): ChatSessionStore {
+    return this.store;
+  }
+
+  setActivityOwner(activityId: string, owner: ActivityOwner): void {
+    setActivityOwner(this.store, activityId, owner);
+  }
+
+  getActivityOwner(activityId: string): ActivityOwner | undefined {
+    return getActivityOwnership(this.store, activityId)?.owner;
   }
 
   subscribe(listener: ChatSessionListener): () => void {
     this.listeners.add(listener);
-    listener({state: this.state});
+    listener({state: this.getState()});
     return () => {
       this.listeners.delete(listener);
     };
@@ -59,49 +84,25 @@ export class ChatSessionOrchestrator {
 
   sendMessage(content: string): void {
     const trimmed = content.trim();
-    if (!trimmed || this.state.isLoading) {
+    if (!trimmed || this.getState().isLoading) {
       return;
     }
 
     this.activeSubscription?.unsubscribe();
-
-    const userMessage: Message = {
-      id: generateId('msg-user'),
-      role: 'user',
-      content: trimmed,
-    };
-
-    const assistantMessageId = generateId('msg-assistant');
-    const assistantMessage: Message = {
-      id: assistantMessageId,
-      role: 'assistant',
-      content: '',
-    };
-
-    const nextMessages = [
-      ...this.state.messages,
-      userMessage,
-      assistantMessage,
-    ];
-    const historyForAgent = buildInvocationMessages(this.state.messages);
+    const sessionState = this.store.getState();
+    const historyForAgent = buildInvocationMessages(sessionState.messages);
+    const turn = createPendingChatTurn(trimmed);
     const {events} = this.client.invoke(
-      [...historyForAgent, userMessage],
-      this.state.threadId
+      [...historyForAgent, turn.userMessage],
+      sessionState.threadId,
+      sessionState.threadState
     );
 
-    this.updateState(
-      {
-        ...this.state,
-        messages: nextMessages,
-        isLoading: true,
-        progressSteps: [],
-        progressTrace: [],
-        error: null,
-      },
-      false
-    );
+    beginChatTurn(this.store, turn);
+    this.emitState(false);
 
     let hasTextMessageStarted = false;
+    const assistantMessageId = turn.assistantMessage.id;
 
     this.activeSubscription = events.subscribe({
       next: (event: BaseEvent) => {
@@ -113,48 +114,49 @@ export class ChatSessionOrchestrator {
           hasTextMessageStarted = true;
         }
 
+        if (eventType === 'STATE_SNAPSHOT') {
+          const snapshot = (event as Record<string, unknown>).snapshot;
+          if (snapshot && typeof snapshot === 'object') {
+            setThreadStateSnapshot(
+              this.store,
+              snapshot as Record<string, unknown>
+            );
+          }
+        }
+
+        if (eventType === 'STATE_DELTA') {
+          const delta = (event as Record<string, unknown>).delta;
+          if (Array.isArray(delta)) {
+            applyThreadStateDelta(this.store, delta);
+          }
+        }
+
         if (eventType === 'RUN_FINISHED') {
-          this.updateState(
-            {
-              ...this.state,
-              progressSteps: this.appendProgressStep(
-                this.state.progressSteps,
-                'Done'
-              ),
-              progressTrace: this.markAllProgressTraceCompleted(
-                this.state.progressTrace
-              ),
-            },
-            true
+          updateProgressSteps(this.store, (steps) =>
+            this.appendProgressStep(steps, 'Done')
           );
+          updateProgressTrace(this.store, (trace) =>
+            this.markAllProgressTraceCompleted(trace)
+          );
+          this.emitState(true);
         }
 
         const progressStep = extractStreamingProgress(event);
         if (progressStep !== undefined) {
-          this.updateState(
-            {
-              ...this.state,
-              progressSteps: this.appendProgressStep(
-                this.state.progressSteps,
-                progressStep
-              ),
-            },
-            true
+          updateProgressSteps(this.store, (steps) =>
+            this.appendProgressStep(steps, progressStep)
           );
+          this.emitState(true);
         }
 
+        const previousTrace = this.getState().progressTrace;
         const progressTrace = this.applyProgressTraceEvent(
-          this.state.progressTrace,
+          previousTrace,
           event
         );
-        if (progressTrace !== this.state.progressTrace) {
-          this.updateState(
-            {
-              ...this.state,
-              progressTrace,
-            },
-            true
-          );
+        if (progressTrace !== previousTrace) {
+          updateProgressTrace(this.store, () => progressTrace);
+          this.emitState(true);
         }
 
         const parsed = parseAgentEvent(event);
@@ -163,43 +165,48 @@ export class ChatSessionOrchestrator {
         }
 
         if (parsed.type !== 'lifecycle') {
-          this.updateState(
-            applyParsedEventToChatState(this.state, assistantMessageId, parsed)
-          );
+          applyParsedEventToStore(this.store, assistantMessageId, parsed);
+          if (parsed.type === 'message') {
+            this.emitState();
+            return;
+          }
+
+          if (
+            parsed.type === 'activity_snapshot' ||
+            parsed.type === 'activity_delta' ||
+            parsed.type === 'error'
+          ) {
+            this.emitState();
+          }
         }
       },
       error: (error: unknown) => {
         const message =
           error instanceof Error ? error.message : 'Stream error occurred';
-        this.updateState({
-          ...this.state,
-          error: message,
-          isLoading: false,
-          progressSteps: this.appendProgressStep(
-            this.state.progressSteps,
-            'Response failed'
-          ),
-          progressTrace: this.markAllProgressTraceCompleted(
-            this.state.progressTrace
-          ),
-        });
+        setChatError(this.store, message);
+        setChatLoading(this.store, false);
+        updateProgressSteps(this.store, (steps) =>
+          this.appendProgressStep(steps, 'Response failed')
+        );
+        updateProgressTrace(this.store, (trace) =>
+          this.markAllProgressTraceCompleted(trace)
+        );
+        this.emitState();
       },
       complete: () => {
-        const hasDoneStep = this.state.progressSteps.includes('Done');
+        const currentState = this.getState();
+        const hasDoneStep = currentState.progressSteps.includes('Done');
 
-        this.updateState({
-          ...this.state,
-          isLoading: false,
-          progressSteps: hasDoneStep
-            ? this.state.progressSteps
-            : this.appendProgressStep(
-                this.state.progressSteps,
-                'Response complete'
-              ),
-          progressTrace: this.markAllProgressTraceCompleted(
-            this.state.progressTrace
-          ),
-        });
+        setChatLoading(this.store, false);
+        if (!hasDoneStep) {
+          updateProgressSteps(this.store, (steps) =>
+            this.appendProgressStep(steps, 'Response complete')
+          );
+        }
+        updateProgressTrace(this.store, (trace) =>
+          this.markAllProgressTraceCompleted(trace)
+        );
+        this.emitState();
       },
     });
   }
@@ -207,24 +214,13 @@ export class ChatSessionOrchestrator {
   clearMessages(): void {
     this.activeSubscription?.unsubscribe();
     this.activeSubscription = null;
-    const previousThreadId = this.state.threadId;
-    this.client.clearThreadState?.(previousThreadId);
-    this.updateState({
-      ...this.state,
-      messages: [],
-      error: null,
-      isLoading: false,
-      progressSteps: [],
-      progressTrace: [],
-      threadId: generateId('thread'),
-    });
+    clearChatSession(this.store);
+    this.emitState();
   }
 
   dismissError(): void {
-    this.updateState({
-      ...this.state,
-      error: null,
-    });
+    dismissChatError(this.store);
+    this.emitState();
   }
 
   dispose(): void {
@@ -233,8 +229,8 @@ export class ChatSessionOrchestrator {
     this.listeners.clear();
   }
 
-  private updateState(state: ChatState, immediate = false): void {
-    this.state = state;
+  private emitState(immediate = false): void {
+    const state = this.getState();
     for (const listener of this.listeners) {
       listener({state, immediate});
     }

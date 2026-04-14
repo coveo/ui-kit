@@ -259,24 +259,132 @@ describe('ChatSessionOrchestrator', () => {
     orchestrator.dispose();
   });
 
-  it('clearMessages asks client to clear previous thread state', () => {
+  it('stores streamed thread state and forwards it on the next turn', () => {
     const stream = new Subject<BaseEvent>();
-    const invoke = vi.fn((_: Message[], __: string) => ({
-      runId: 'run-1',
-      events: stream.asObservable(),
-    }));
-    const clearThreadState = vi.fn();
+    const invoke = vi.fn(
+      (_: Message[], __: string, ___?: Record<string, unknown>) => ({
+        runId: 'run-1',
+        events: stream.asObservable(),
+      })
+    );
 
-    const orchestrator = new ChatSessionOrchestrator(mockConfig, {
-      invoke,
-      clearThreadState,
+    const orchestrator = new ChatSessionOrchestrator(mockConfig, {invoke});
+
+    orchestrator.sendMessage('Find shoes');
+    stream.next({
+      type: 'STATE_SNAPSHOT',
+      snapshot: {conversation: {lastIntent: 'search'}},
+    } as never);
+    stream.complete();
+
+    const nextStream = new Subject<BaseEvent>();
+    invoke.mockReturnValueOnce({
+      runId: 'run-2',
+      events: nextStream.asObservable(),
     });
-    const originalThreadId = orchestrator.getState().threadId;
+
+    orchestrator.sendMessage('Only red ones');
+
+    expect(invoke).toHaveBeenNthCalledWith(
+      2,
+      expect.any(Array),
+      orchestrator.getState().threadId,
+      {conversation: {lastIntent: 'search'}}
+    );
+
+    nextStream.complete();
+
+    orchestrator.dispose();
+  });
+
+  it('clearMessages resets stored thread state before the next turn', () => {
+    const firstStream = new Subject<BaseEvent>();
+    const invoke = vi.fn(
+      (_: Message[], __: string, ___?: Record<string, unknown>) => ({
+        runId: 'run-1',
+        events: firstStream.asObservable(),
+      })
+    );
+
+    const orchestrator = new ChatSessionOrchestrator(mockConfig, {invoke});
+
+    orchestrator.sendMessage('Find shoes');
+    firstStream.next({
+      type: 'STATE_SNAPSHOT',
+      snapshot: {conversation: {lastIntent: 'search'}},
+    } as never);
+    firstStream.complete();
 
     orchestrator.clearMessages();
 
-    expect(clearThreadState).toHaveBeenCalledWith(originalThreadId);
+    const secondStream = new Subject<BaseEvent>();
+    invoke.mockReturnValueOnce({
+      runId: 'run-2',
+      events: secondStream.asObservable(),
+    });
 
+    orchestrator.sendMessage('Start over');
+
+    expect(invoke).toHaveBeenNthCalledWith(
+      2,
+      expect.any(Array),
+      orchestrator.getState().threadId,
+      {}
+    );
+
+    secondStream.complete();
+
+    orchestrator.dispose();
+  });
+
+  it('marks streamed activities as backend owned', () => {
+    const stream = new Subject<BaseEvent>();
+    const invoke = vi.fn(
+      (_: Message[], __: string, ___?: Record<string, unknown>) => ({
+        runId: 'run-1',
+        events: stream.asObservable(),
+      })
+    );
+
+    const orchestrator = new ChatSessionOrchestrator(mockConfig, {invoke});
+
+    orchestrator.sendMessage('Find surfboards');
+    stream.next({
+      type: 'ACTIVITY_SNAPSHOT',
+      messageId: 'act-1',
+      activityType: 'a2ui-surface',
+      content: {operations: []},
+    } as never);
+    stream.complete();
+
+    expect(orchestrator.getActivityOwner('act-1')).toBe('backend');
+
+    orchestrator.dispose();
+  });
+
+  it('allows explicit ownership handoff to client', () => {
+    const stream = new Subject<BaseEvent>();
+    const invoke = vi.fn(
+      (_: Message[], __: string, ___?: Record<string, unknown>) => ({
+        runId: 'run-1',
+        events: stream.asObservable(),
+      })
+    );
+
+    const orchestrator = new ChatSessionOrchestrator(mockConfig, {invoke});
+
+    orchestrator.sendMessage('Find surfboards');
+    stream.next({
+      type: 'ACTIVITY_SNAPSHOT',
+      messageId: 'act-2',
+      activityType: 'a2ui-surface',
+      content: {operations: []},
+    } as never);
+    orchestrator.setActivityOwner('act-2', 'client');
+
+    expect(orchestrator.getActivityOwner('act-2')).toBe('client');
+
+    stream.complete();
     orchestrator.dispose();
   });
 });

@@ -75,15 +75,10 @@ describe('CommerceAgentClient', () => {
     fetchMock.mockRestore();
   });
 
-  it('reuses local thread state between invocations', async () => {
+  it('accepts thread state from the caller', async () => {
     const encoder = new TextEncoder();
-    const stream1 = new ReadableStream<Uint8Array>({
+    const stream = new ReadableStream<Uint8Array>({
       start(controller) {
-        controller.enqueue(
-          encoder.encode(
-            'data: {"type":"STATE_SNAPSHOT","snapshot":{"conversation":{"lastIntent":"search"}}}\n\n'
-          )
-        );
         controller.enqueue(
           encoder.encode(
             'data: {"type":"RUN_FINISHED","threadId":"thread-state","runId":"r1"}\n\n'
@@ -92,39 +87,25 @@ describe('CommerceAgentClient', () => {
         controller.close();
       },
     });
-    const stream2 = new ReadableStream<Uint8Array>({
-      start(controller) {
-        controller.enqueue(
-          encoder.encode(
-            'data: {"type":"RUN_FINISHED","threadId":"thread-state","runId":"r2"}\n\n'
-          )
-        );
-        controller.close();
-      },
-    });
 
     const fetchMock = vi
       .spyOn(globalThis, 'fetch')
-      .mockResolvedValueOnce(new Response(stream1, {status: 200}))
-      .mockResolvedValueOnce(new Response(stream2, {status: 200}));
+      .mockResolvedValue(new Response(stream, {status: 200}));
 
     const client = new CommerceAgentClient(mockConfig);
 
-    const first = client.invoke(
-      [{id: 'msg-1', role: 'user', content: 'Find shoes'}],
-      'thread-state'
-    );
-    await lastValueFrom(first.events.pipe(toArray()));
-
-    const second = client.invoke(
+    const invocation = client.invoke(
       [{id: 'msg-2', role: 'user', content: 'Only red ones'}],
-      'thread-state'
+      'thread-state',
+      {
+        conversation: {lastIntent: 'search'},
+      }
     );
-    await lastValueFrom(second.events.pipe(toArray()));
+    await lastValueFrom(invocation.events.pipe(toArray()));
 
-    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
     const secondCallArg = JSON.parse(
-      String(fetchMock.mock.calls[1][1]?.body)
+      String(fetchMock.mock.calls[0][1]?.body)
     ) as Record<string, unknown>;
     expect(secondCallArg.state).toEqual({
       conversation: {lastIntent: 'search'},
