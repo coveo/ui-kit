@@ -11,6 +11,22 @@
       matchPackageNames: ['*'],
     },
     {
+      groupName: 'wc-toolkit storybook-helpers',
+      groupSlug: 'wc-toolkit-storybook-helpers',
+      rangeStrategy: 'replace',
+      description:
+        'Isolate @wc-toolkit/storybook-helpers since it has a pnpm patch that needs updating on every bump',
+      matchPackageNames: ['@wc-toolkit/storybook-helpers'],
+    },
+    {
+      groupName: 'tsconfig node22',
+      groupSlug: 'tsconfig-node22',
+      rangeStrategy: 'replace',
+      description:
+        'Isolate @tsconfig/node22 since it controls TypeScript lib settings that can break Stencil builds',
+      matchPackageNames: ['@tsconfig/node22'],
+    },
+    {
       groupName: 'tailwind',
       groupSlug: 'tailwind',
       rangeStrategy: 'replace',

@@ -29,7 +29,7 @@
     "@changesets/cli": "2.30.0",
     "@cspell/dict-fr-fr": "2.3.2",
     "@playwright/mcp": "catalog:",
-    "@tsconfig/node22": "22.0.5",
+    "@tsconfig/node22": "22.0.0",
     "@types/jest": "catalog:",
     "@types/node": "catalog:",
     "concurrently": "9.2.1",
