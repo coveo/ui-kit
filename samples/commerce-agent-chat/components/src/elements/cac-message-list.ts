@@ -28,18 +28,19 @@ interface ProgressSegmentStart {
   traceStart: number;
 }
 
+type MessageChangeFlags = {
+  hasMessagesChange: boolean;
+  hasProgressChange: boolean;
+  hasProgressTraceChange: boolean;
+  hasLoadingChange: boolean;
+};
+
 /**
  * The `cac-message-list` component renders conversation messages and activities.
  */
 @customElement('cac-message-list')
 export class CacMessageList extends LitElement {
   private static readonly bottomThresholdPx = 12;
-  private static readonly skeletonSelectors = [
-    '.product-card--skeleton',
-    '.next-action-btn--skeleton',
-    '.comparison-table-loading',
-    '.bundle-display[aria-busy="true"]',
-  ];
 
   static override styles = css`
     :host {
@@ -185,10 +186,6 @@ export class CacMessageList extends LitElement {
     super.disconnectedCallback();
   }
 
-  override connectedCallback() {
-    super.connectedCallback();
-  }
-
   override firstUpdated() {
     const messageList = this.getMessageList();
 
@@ -203,26 +200,16 @@ export class CacMessageList extends LitElement {
   }
 
   override willUpdate(changedProperties: PropertyValues<this>) {
-    if (
-      !changedProperties.has('messages') &&
-      !changedProperties.has('progressSteps') &&
-      !changedProperties.has('progressTrace') &&
-      !changedProperties.has('isLoading')
-    ) {
+    if (!this.hasRelevantMessageListChanges(changedProperties)) {
       return;
     }
 
-    const messageList = this.getMessageList();
-    this.wasAtBottomBeforeUpdate = messageList
-      ? this.isScrolledToBottom(messageList)
-      : true;
+    this.captureScrollPositionBeforeUpdate();
 
-    const previousIsLoading =
-      (changedProperties.get('isLoading') as boolean | undefined) ??
-      this.isLoading;
+    const previousIsLoading = this.getPreviousIsLoading(changedProperties);
 
     if (this.isLoading && !previousIsLoading) {
-      this.currentTraceSegmentStarts = [{stepStart: 0, traceStart: 0}];
+      this.resetCurrentTraceSegmentStarts();
       return;
     }
 
@@ -243,6 +230,8 @@ export class CacMessageList extends LitElement {
     if (skeletonLikelyActivityCount === 0) {
       return;
     }
+
+    this.hasRenderedSkeletonInCurrentTurn = true;
 
     for (let i = 0; i < skeletonLikelyActivityCount; i++) {
       this.pushCurrentTraceSegmentStart();
@@ -271,10 +260,12 @@ export class CacMessageList extends LitElement {
   }
 
   override updated(changedProperties: PropertyValues<this>) {
-    const hasMessagesChange = changedProperties.has('messages');
-    const hasProgressChange = changedProperties.has('progressSteps');
-    const hasProgressTraceChange = changedProperties.has('progressTrace');
-    const hasLoadingChange = changedProperties.has('isLoading');
+    const {
+      hasMessagesChange,
+      hasProgressChange,
+      hasProgressTraceChange,
+      hasLoadingChange,
+    } = this.getMessageChangeFlags(changedProperties);
 
     if (
       !hasMessagesChange &&
@@ -288,53 +279,85 @@ export class CacMessageList extends LitElement {
     const previousMessages = hasMessagesChange
       ? ((changedProperties.get('messages') as Message[] | undefined) ?? [])
       : undefined;
-    const hasPromptSubmission = hasMessagesChange
-      ? this.hasNewPromptSubmission(previousMessages)
-      : false;
 
-    if (hasPromptSubmission) {
-      this.deferScrollToLatestMessage();
+    if (this.handlePromptSubmission(hasMessagesChange, previousMessages)) {
       return;
     }
 
-    const wasLoading =
-      (changedProperties.get('isLoading') as boolean | undefined) ??
-      this.isLoading;
+    const wasLoading = this.getPreviousIsLoading(changedProperties);
 
-    if (this.isLoading && !wasLoading) {
-      this.hasRenderedSkeletonInCurrentTurn = false;
-      this.currentTraceSegmentStarts = [{stepStart: 0, traceStart: 0}];
-      this.collapseAllProgressTraces();
-    }
+    this.handleLoadingStart(wasLoading);
 
-    if (!this.isLoading) {
-      this.persistLatestAssistantProgressHistory();
-      this.pruneProgressHistory();
-      this.hasRenderedSkeletonInCurrentTurn = false;
-      this.currentTraceSegmentStarts = [{stepStart: 0, traceStart: 0}];
-      if (wasLoading) {
-        this.collapseAllProgressTraces();
-      }
+    if (this.handleLoadingCompletion()) {
       return;
     }
 
-    if (this.hasRenderedSkeletonLoader()) {
-      this.hasRenderedSkeletonInCurrentTurn = true;
-    }
+    this.pruneProgressHistoryOnMessageChange(hasMessagesChange);
 
-    if (hasMessagesChange) {
-      this.pruneProgressHistory();
-    }
-
-    if (!this.shouldAutoScroll || !this.wasAtBottomBeforeUpdate) {
-      return;
-    }
-
-    if (this.hasRenderedSkeletonInCurrentTurn) {
+    if (!this.shouldAutoScrollAfterUpdate()) {
       return;
     }
 
     this.deferScrollToLatestMessage();
+  }
+
+  private handlePromptSubmission(
+    hasMessagesChange: boolean,
+    previousMessages?: Message[]
+  ) {
+    const hasPromptSubmission = hasMessagesChange
+      ? this.hasNewPromptSubmission(previousMessages)
+      : false;
+
+    if (!hasPromptSubmission) {
+      return false;
+    }
+
+    this.deferScrollToLatestMessage();
+
+    return true;
+  }
+
+  private handleLoadingStart(wasLoading: boolean) {
+    if (!this.isLoading || wasLoading) {
+      return;
+    }
+
+    this.hasRenderedSkeletonInCurrentTurn = false;
+    this.resetCurrentTraceSegmentStarts();
+  }
+
+  private handleLoadingCompletion() {
+    if (this.isLoading) {
+      return false;
+    }
+
+    this.persistLatestAssistantProgressHistory();
+    this.pruneProgressHistory();
+    this.hasRenderedSkeletonInCurrentTurn = false;
+    this.resetCurrentTraceSegmentStarts();
+
+    return true;
+  }
+
+  private pruneProgressHistoryOnMessageChange(hasMessagesChange: boolean) {
+    if (!hasMessagesChange) {
+      return;
+    }
+
+    this.pruneProgressHistory();
+  }
+
+  private shouldAutoScrollAfterUpdate() {
+    if (!this.shouldAutoScroll || !this.wasAtBottomBeforeUpdate) {
+      return false;
+    }
+
+    if (this.hasRenderedSkeletonInCurrentTurn) {
+      return false;
+    }
+
+    return true;
   }
 
   private hasNewPromptSubmission(previousMessages?: Message[]) {
@@ -369,6 +392,53 @@ export class CacMessageList extends LitElement {
     return this.renderRoot.querySelector<HTMLElement>('.message-list');
   }
 
+  private getMessageChangeFlags(
+    changedProperties: PropertyValues<this>
+  ): MessageChangeFlags {
+    return {
+      hasMessagesChange: changedProperties.has('messages'),
+      hasProgressChange: changedProperties.has('progressSteps'),
+      hasProgressTraceChange: changedProperties.has('progressTrace'),
+      hasLoadingChange: changedProperties.has('isLoading'),
+    };
+  }
+
+  private hasRelevantMessageListChanges(
+    changedProperties: PropertyValues<this>
+  ) {
+    const {
+      hasMessagesChange,
+      hasProgressChange,
+      hasProgressTraceChange,
+      hasLoadingChange,
+    } = this.getMessageChangeFlags(changedProperties);
+
+    return (
+      hasMessagesChange ||
+      hasProgressChange ||
+      hasProgressTraceChange ||
+      hasLoadingChange
+    );
+  }
+
+  private getPreviousIsLoading(changedProperties: PropertyValues<this>) {
+    return (
+      (changedProperties.get('isLoading') as boolean | undefined) ??
+      this.isLoading
+    );
+  }
+
+  private captureScrollPositionBeforeUpdate() {
+    const messageList = this.getMessageList();
+    this.wasAtBottomBeforeUpdate = messageList
+      ? this.isScrolledToBottom(messageList)
+      : true;
+  }
+
+  private resetCurrentTraceSegmentStarts() {
+    this.currentTraceSegmentStarts = [{stepStart: 0, traceStart: 0}];
+  }
+
   private isScrolledToBottom(messageList: HTMLElement) {
     const distanceFromBottom =
       messageList.scrollHeight -
@@ -401,10 +471,6 @@ export class CacMessageList extends LitElement {
     });
   }
 
-  private hasRenderedSkeletonLoader() {
-    return this.hasMatchingElementInShadowTree(this.renderRoot);
-  }
-
   private pushCurrentTraceSegmentStart() {
     const lastStart =
       this.currentTraceSegmentStarts[this.currentTraceSegmentStarts.length - 1];
@@ -428,9 +494,15 @@ export class CacMessageList extends LitElement {
   }
 
   private getLastAssistantMessage(messages: Message[]) {
-    return [...messages]
-      .reverse()
-      .find((message) => message.role === 'assistant');
+    for (let i = messages.length - 1; i >= 0; i--) {
+      const message = messages[i];
+
+      if (message.role === 'assistant') {
+        return message;
+      }
+    }
+
+    return undefined;
   }
 
   private getNewAssistantActivities(
@@ -459,13 +531,18 @@ export class CacMessageList extends LitElement {
     return nextActivities.slice(previousActivities.length);
   }
 
-  private activityLikelyRendersSkeleton(activity: ActivityMessage) {
+  private getSurfaceOperations(activity: ActivityMessage) {
     if (!activity || activity.activityType !== 'a2ui-surface') {
-      return false;
+      return [] as NonNullable<A2UISurfaceContent['operations']>;
     }
 
-    const operations =
-      (activity.content as unknown as A2UISurfaceContent)?.operations ?? [];
+    return (
+      (activity.content as unknown as A2UISurfaceContent)?.operations ?? []
+    );
+  }
+
+  private activityLikelyRendersSkeleton(activity: ActivityMessage) {
+    const operations = this.getSurfaceOperations(activity);
 
     return operations.some((operation) =>
       (operation.surfaceUpdate?.components ?? []).some((component) => {
@@ -481,26 +558,6 @@ export class CacMessageList extends LitElement {
     );
   }
 
-  private hasMatchingElementInShadowTree(root: ParentNode): boolean {
-    for (const selector of CacMessageList.skeletonSelectors) {
-      if (root.querySelector(selector)) {
-        return true;
-      }
-    }
-
-    const elements = root.querySelectorAll('*');
-
-    for (let i = 0; i < elements.length; i++) {
-      const shadowRoot = (elements[i] as HTMLElement).shadowRoot;
-
-      if (shadowRoot && this.hasMatchingElementInShadowTree(shadowRoot)) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
   private renderMessage(message: Message, lastAssistantId?: string) {
     const isLatestAssistantMessage =
       message.role === 'assistant' && message.id === lastAssistantId;
@@ -514,40 +571,94 @@ export class CacMessageList extends LitElement {
       message.id,
       isLatestAssistantMessage
     );
-    const leadingProgressSegment = progressSegments.slice(0, 1);
-    const trailingProgressSegments = progressSegments.slice(1);
+    const {leadingProgressSegments, trailingProgressSegments} =
+      this.splitProgressSegments(progressSegments);
 
     if (message.role === 'user') {
-      const messageTemplate = html`
-        <article class=${`message message-${message.role}`}>
-          ${this.renderMessageBody(message, isActiveAssistantActivity)}
-        </article>
-      `;
-
-      return html`
-        ${messageTemplate}
-        ${this.renderProgressSegments(leadingProgressSegment, message.id)}
-        ${this.renderActivities(
-          allActivities,
-          allActivities,
-          isActiveAssistantActivity,
-          activeActivityId
-        )}
-        ${this.renderProgressSegments(trailingProgressSegments, message.id)}
-      `;
+      return this.renderUserMessage({
+        message,
+        allActivities,
+        isActiveAssistantActivity,
+        activeActivityId,
+        leadingProgressSegments,
+        trailingProgressSegments,
+      });
     }
 
-    // Assistant messages: render content without box or title
+    return this.renderAssistantMessage({
+      message,
+      allActivities,
+      isActiveAssistantActivity,
+      activeActivityId,
+      leadingProgressSegments,
+      trailingProgressSegments,
+    });
+  }
+
+  private splitProgressSegments(
+    progressSegments: Array<ProgressSnapshot & {isStreaming: boolean}>
+  ) {
+    return {
+      leadingProgressSegments: progressSegments.slice(0, 1),
+      trailingProgressSegments: progressSegments.slice(1),
+    };
+  }
+
+  private renderUserMessage({
+    message,
+    allActivities,
+    isActiveAssistantActivity,
+    activeActivityId,
+    leadingProgressSegments,
+    trailingProgressSegments,
+  }: {
+    message: Message;
+    allActivities: NonNullable<Message['activities']>;
+    isActiveAssistantActivity: boolean;
+    activeActivityId?: string;
+    leadingProgressSegments: Array<ProgressSnapshot & {isStreaming: boolean}>;
+    trailingProgressSegments: Array<ProgressSnapshot & {isStreaming: boolean}>;
+  }) {
+    const messageTemplate = html`
+      <article class=${`message message-${message.role}`}>
+        ${this.renderMessageBody(message, isActiveAssistantActivity)}
+      </article>
+    `;
+
+    return html`
+      ${messageTemplate}
+      ${this.renderProgressSegments(leadingProgressSegments, message.id)}
+      ${this.renderActivities(
+        allActivities,
+        allActivities,
+        isActiveAssistantActivity,
+        activeActivityId
+      )}
+      ${this.renderProgressSegments(trailingProgressSegments, message.id)}
+    `;
+  }
+
+  private renderAssistantMessage({
+    message,
+    allActivities,
+    isActiveAssistantActivity,
+    activeActivityId,
+    leadingProgressSegments,
+    trailingProgressSegments,
+  }: {
+    message: Message;
+    allActivities: NonNullable<Message['activities']>;
+    isActiveAssistantActivity: boolean;
+    activeActivityId?: string;
+    leadingProgressSegments: Array<ProgressSnapshot & {isStreaming: boolean}>;
+    trailingProgressSegments: Array<ProgressSnapshot & {isStreaming: boolean}>;
+  }) {
     if (allActivities.length > 0) {
-      const leadingActivities = allActivities.filter(
-        (activity) => !this.activityContainsNextActions(activity)
-      );
-      const trailingActivities = allActivities.filter((activity) =>
-        this.activityContainsNextActions(activity)
-      );
+      const {leadingActivities, trailingActivities} =
+        this.partitionAssistantActivities(allActivities);
 
       return html`
-        ${this.renderProgressSegments(leadingProgressSegment, message.id)}
+        ${this.renderProgressSegments(leadingProgressSegments, message.id)}
         ${this.renderActivities(
           leadingActivities,
           allActivities,
@@ -567,7 +678,7 @@ export class CacMessageList extends LitElement {
 
     return html`
       ${this.renderMessageBody(message, isActiveAssistantActivity)}
-      ${this.renderProgressSegments(leadingProgressSegment, message.id)}
+      ${this.renderProgressSegments(leadingProgressSegments, message.id)}
       ${this.renderActivities(
         allActivities,
         allActivities,
@@ -576,6 +687,19 @@ export class CacMessageList extends LitElement {
       )}
       ${this.renderProgressSegments(trailingProgressSegments, message.id)}
     `;
+  }
+
+  private partitionAssistantActivities(
+    activities: NonNullable<Message['activities']>
+  ) {
+    const leadingActivities = activities.filter(
+      (activity) => !this.activityContainsNextActions(activity)
+    );
+    const trailingActivities = activities.filter((activity) =>
+      this.activityContainsNextActions(activity)
+    );
+
+    return {leadingActivities, trailingActivities};
   }
 
   private renderMessageBody(
@@ -708,10 +832,6 @@ export class CacMessageList extends LitElement {
     this.progressHistoryByMessageId = nextHistoryEntries;
   }
 
-  private collapseAllProgressTraces() {
-    // No-op: traces are now managed internally by the component
-  }
-
   private renderProgressSegments(
     segments: Array<ProgressSnapshot & {isStreaming: boolean}>,
     messageId?: string
@@ -765,12 +885,7 @@ export class CacMessageList extends LitElement {
   }
 
   private activityContainsNextActions(activity: ActivityMessage) {
-    if (!activity || activity.activityType !== 'a2ui-surface') {
-      return false;
-    }
-
-    const operations =
-      (activity.content as unknown as A2UISurfaceContent)?.operations ?? [];
+    const operations = this.getSurfaceOperations(activity);
 
     return operations.some((operation) =>
       (operation.surfaceUpdate?.components ?? []).some((component) => {
@@ -785,9 +900,7 @@ export class CacMessageList extends LitElement {
   ): Map<string, Product[]> {
     const operations = (activities ?? [])
       .filter((a) => a.activityType === 'a2ui-surface')
-      .flatMap(
-        (a) => (a.content as unknown as A2UISurfaceContent).operations ?? []
-      );
+      .flatMap((a) => this.getSurfaceOperations(a));
     return extractProductsBySurface(operations);
   }
 
@@ -803,9 +916,15 @@ export class CacMessageList extends LitElement {
   }
 
   private getLastAssistantId() {
-    return [...this.messages]
-      .reverse()
-      .find((message) => message.role === 'assistant')?.id;
+    for (let i = this.messages.length - 1; i >= 0; i--) {
+      const message = this.messages[i];
+
+      if (message.role === 'assistant') {
+        return message.id;
+      }
+    }
+
+    return undefined;
   }
 }
 
