@@ -1,8 +1,8 @@
 diff --git a/dist/index.d.ts b/dist/index.d.ts
-index 867be0c..d822e79 100644
+index 1a969c8c5db3730eb974936e54c1eb49df5d1a0f..fa6638252acdcc8321139742f4ce49ac4994e7db 100644
 --- a/dist/index.d.ts
 +++ b/dist/index.d.ts
-@@ -19,6 +19,8 @@ type StoryOptions = {
+@@ -21,6 +21,8 @@ type StoryOptions = {
      excludeCategories?: Array<Categories>;
      /** Adds a <script> tag where a `component` variable will reference the story's component */
      setComponentVariable?: boolean;
@@ -10,12 +10,12 @@ index 867be0c..d822e79 100644
 +    containerSelector?: string;
  };
  type StoryHelpers<T> = {
-     args: Partial<T> & {
+     /** Default args for the component stories */
 diff --git a/dist/index.js b/dist/index.js
-index 1c0f4ce..1051420 100644
+index 88dcd49d80acb70039477e8794d0e8fa7d0a3e89..030897b2ca28257072896e336276d274e86930ea 100644
 --- a/dist/index.js
 +++ b/dist/index.js
-@@ -568,7 +568,7 @@ var options2 = {};
+@@ -569,7 +569,7 @@ var options2 = {};
  setTimeout(() => {
    options2 = globalThis?.__WC_STORYBOOK_HELPERS_CONFIG__ || {};
  });
@@ -24,7 +24,7 @@ index 1c0f4ce..1051420 100644
    if (!args) {
      return html`<${unsafeStatic(component.tagName)}></${unsafeStatic(component.tagName)}>`;
    }
-@@ -579,11 +579,23 @@ function getTemplate(component, args, slot, argTypes, excludeCategories, setComp
+@@ -580,11 +580,23 @@ function getTemplate(component, args, slot, argTypes, excludeCategories, setComp
    const { attrOperators, propOperators, additionalAttrs } = getTemplateOperators(component, args, argTypes);
    const operators = { ...attrOperators, ...propOperators, ...additionalAttrs };
    const slotsTemplate = getSlotsTemplate(component, args, excludeCategories);
@@ -45,12 +45,12 @@ index 1c0f4ce..1051420 100644
 +      if (containerElement.shadowRoot) {
 +        containerElement = containerElement.shadowRoot;
 +      } 
-+      window.component = containerElement.querySelector('" + component.tagName + "');
++      window.component = containerElement.querySelector('` + component.tagName + `');
 +    }\n</script>`
    ) : ""}
  `;
  }
-@@ -705,18 +717,32 @@ function getSlotsTemplate(component, args, excludeCategories) {
+@@ -723,20 +735,34 @@ function getSlotsTemplate(component, args, excludeCategories) {
  ${slotTemplates}
  `) : "";
  }
@@ -73,11 +73,13 @@ index 1c0f4ce..1051420 100644
 +    if(!selectedComponent) {
 +      return;
 +    }
-     argObserver?.observe(selectedComponent, {
--      attributes: true
-+      attributes: true,
-+      attributeOldValue: true,
-     });
+     if (selectedComponent && argsObserver) {
+       argObserver.observe(selectedComponent, {
+-        attributes: true
++        attributes: true,
++        attributeOldValue: true,
+       });
+     }
    });
  }
  function setArgObserver(component) {
@@ -87,14 +89,14 @@ index 1c0f4ce..1051420 100644
    const { attrArgs: attributes } = getAttributesAndProperties(component);
    if (argObserver) {
      return;
-@@ -726,13 +752,24 @@ function setArgObserver(component) {
+@@ -746,13 +772,24 @@ function setArgObserver(component) {
        if (mutation.attributeName === "class" && isUpdating) {
          return;
        }
 -      isUpdating = true;
        const attribute = attributes[`${mutation.attributeName}`];
 +      if (!attribute) { return; }
-+      if(mutation.oldValue=== mutation.target.getAttribute(mutation.attributeName || "")) {
++      if(mutation.oldValue === mutation.target.getAttribute(mutation.attributeName || "")) {
 +        return;
 +      }
        if (attribute?.control === "boolean" || attribute?.control?.type === "boolean") {
@@ -113,7 +115,7 @@ index 1c0f4ce..1051420 100644
          updateArgs({
            [`${mutation.attributeName}`]: mutation.target.getAttribute(mutation.attributeName || "")
          });
-@@ -781,7 +818,8 @@ function getStorybookHelpers(tagName, options3) {
+@@ -802,7 +839,8 @@ function getStorybookHelpers(tagName, options3) {
        slot,
        argTypes,
        options3?.excludeCategories || [],

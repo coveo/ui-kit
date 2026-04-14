@@ -56,8 +56,8 @@
   "pnpm": {
     "patchedDependencies": {
       "@stencil/core@4.20.0": "patches/@stencil+core+4.20.0.patch",
-      "@wc-toolkit/storybook-helpers@10.0.0": "patches/@wc-toolkit+storybook-helpers+10.0.0.patch",
-      "jest-environment-jsdom@29.7.0": "patches/jest-environment-jsdom+29.7.0.patch"
+      "jest-environment-jsdom@29.7.0": "patches/jest-environment-jsdom+29.7.0.patch",
+      "@wc-toolkit/storybook-helpers@10.2.1": "patches/@wc-toolkit__storybook-helpers@10.2.1.patch"
     },
     "overrides": {
       "braces": "3.0.3",
