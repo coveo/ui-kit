@@ -65,7 +65,13 @@ export function isTextNode(node: Node): node is Text {
 
 export function isVisualNode(node: Node) {
   if (isElementNode(node)) {
-    return !(node instanceof HTMLStyleElement);
+    if (node instanceof HTMLStyleElement) {
+      return false;
+    }
+    if ((node as HTMLElement).style?.display === 'none') {
+      return false;
+    }
+    return true;
   }
   if (isTextNode(node)) {
     return !!node.textContent?.trim();

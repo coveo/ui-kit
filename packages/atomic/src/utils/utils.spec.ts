@@ -2,7 +2,9 @@ import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {
   aggregate,
   camelToKebab,
+  containsVisualElement,
   isInDocument,
+  isVisualNode,
   kebabToCamel,
   once,
   randomID,
@@ -160,4 +162,85 @@ describe('utils', () => {
   });
 
   // TODO - KIT-4326:  add tests for all other functions exported from utils.ts.
+
+  describe('#isVisualNode', () => {
+    it('returns false for a style element', () => {
+      const el = document.createElement('style');
+      expect(isVisualNode(el)).toBe(false);
+    });
+
+    it('returns true for a regular element', () => {
+      const el = document.createElement('div');
+      expect(isVisualNode(el)).toBe(true);
+    });
+
+    it('returns false for an element with inline display:none', () => {
+      const el = document.createElement('div');
+      el.style.display = 'none';
+      expect(isVisualNode(el)).toBe(false);
+    });
+
+    it('returns true for an element with other inline display values', () => {
+      const el = document.createElement('div');
+      el.style.display = 'flex';
+      expect(isVisualNode(el)).toBe(true);
+    });
+
+    it('returns true for a non-empty text node', () => {
+      const text = document.createTextNode('hello');
+      expect(isVisualNode(text)).toBe(true);
+    });
+
+    it('returns false for a whitespace-only text node', () => {
+      const text = document.createTextNode('   ');
+      expect(isVisualNode(text)).toBe(false);
+    });
+
+    it('returns false for a comment node', () => {
+      const comment = document.createComment('comment');
+      expect(isVisualNode(comment)).toBe(false);
+    });
+  });
+
+  describe('#containsVisualElement', () => {
+    it('returns false for an element with no children', () => {
+      const el = document.createElement('div');
+      expect(containsVisualElement(el)).toBe(false);
+    });
+
+    it('returns true when a child element is present', () => {
+      const el = document.createElement('div');
+      el.appendChild(document.createElement('span'));
+      expect(containsVisualElement(el)).toBe(true);
+    });
+
+    it('returns false when the only child has display:none', () => {
+      const el = document.createElement('div');
+      const child = document.createElement('span');
+      child.style.display = 'none';
+      el.appendChild(child);
+      expect(containsVisualElement(el)).toBe(false);
+    });
+
+    it('returns true when at least one child is visible alongside hidden siblings', () => {
+      const el = document.createElement('div');
+      const hidden = document.createElement('span');
+      hidden.style.display = 'none';
+      el.appendChild(hidden);
+      el.appendChild(document.createElement('span'));
+      expect(containsVisualElement(el)).toBe(true);
+    });
+
+    it('returns true for non-empty text content', () => {
+      const el = document.createElement('div');
+      el.appendChild(document.createTextNode('some text'));
+      expect(containsVisualElement(el)).toBe(true);
+    });
+
+    it('returns false for whitespace-only text content', () => {
+      const el = document.createElement('div');
+      el.appendChild(document.createTextNode('  \n  '));
+      expect(containsVisualElement(el)).toBe(false);
+    });
+  });
 });
