@@ -13,6 +13,7 @@ import {CommerceAgentClient} from './agentClient.js';
 import {buildInvocationMessages} from './chatContextBuilder.js';
 import {
   type ActivityOwner,
+  applyClientActivityDeltaById,
   applyParsedEventToStore,
   applyThreadStateDelta,
   beginChatTurn,
@@ -21,6 +22,7 @@ import {
   createPendingChatTurn,
   dismissChatError,
   getActivityOwnership,
+  handoffActivityToClient,
   selectChatState,
   setChatError,
   setChatLoading,
@@ -72,6 +74,28 @@ export class ChatSessionOrchestrator {
 
   getActivityOwner(activityId: string): ActivityOwner | undefined {
     return getActivityOwnership(this.store, activityId)?.owner;
+  }
+
+  handoffActivityToClient(activityId: string): boolean {
+    const didHandoff = handoffActivityToClient(this.store, activityId);
+    if (didHandoff) {
+      this.emitState();
+    }
+
+    return didHandoff;
+  }
+
+  applyClientActivityPatch(activityId: string, patch: unknown[]): boolean {
+    const didApply = applyClientActivityDeltaById(
+      this.store,
+      activityId,
+      patch
+    );
+    if (didApply) {
+      this.emitState();
+    }
+
+    return didApply;
   }
 
   subscribe(listener: ChatSessionListener): () => void {

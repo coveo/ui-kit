@@ -1,6 +1,7 @@
 import {describe, expect, it} from 'vitest';
 
 import {
+  applyClientActivityDeltaById,
   applyParsedEventToStore,
   applyThreadStateDelta,
   beginChatTurn,
@@ -8,6 +9,7 @@ import {
   createChatSessionStore,
   createPendingChatTurn,
   getActivityOwnership,
+  handoffActivityToClient,
   markBackendOwnedActivityFromParsedEvent,
   replaceChatState,
   selectChatState,
@@ -125,5 +127,46 @@ describe('chatStore', () => {
     });
 
     expect(getActivityOwnership(store, 'act-3')?.owner).toBe('client');
+  });
+
+  it('returns false when handing off an unknown activity', () => {
+    const store = createChatSessionStore('thread-1');
+
+    expect(handoffActivityToClient(store, 'missing')).toBe(false);
+  });
+
+  it('applies client patches only after handoff', () => {
+    const store = createChatSessionStore('thread-1');
+
+    const turn = createPendingChatTurn('Hello');
+    beginChatTurn(store, turn);
+    applyParsedEventToStore(store, turn.assistantMessage.id, {
+      type: 'activity_snapshot',
+      activitySnapshot: {
+        messageId: 'act-4',
+        activityType: 'a2ui-surface',
+        content: {title: 'Original'},
+      },
+    });
+
+    expect(
+      applyClientActivityDeltaById(store, 'act-4', [
+        {op: 'replace', path: '/title', value: 'Client title'},
+      ])
+    ).toBe(false);
+
+    expect(handoffActivityToClient(store, 'act-4')).toBe(true);
+    expect(
+      applyClientActivityDeltaById(store, 'act-4', [
+        {op: 'replace', path: '/title', value: 'Client title'},
+      ])
+    ).toBe(true);
+
+    const activity = store
+      .getState()
+      .messages.flatMap((message) => message.activities ?? [])
+      .find((candidate) => candidate.id === 'act-4');
+
+    expect(activity?.content).toEqual({title: 'Client title'});
   });
 });

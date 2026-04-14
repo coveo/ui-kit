@@ -387,4 +387,53 @@ describe('ChatSessionOrchestrator', () => {
     stream.complete();
     orchestrator.dispose();
   });
+
+  it('supports runtime handoff and client-side activity patching', () => {
+    const stream = new Subject<BaseEvent>();
+    const invoke = vi.fn(
+      (_: Message[], __: string, ___?: Record<string, unknown>) => ({
+        runId: 'run-1',
+        events: stream.asObservable(),
+      })
+    );
+
+    const orchestrator = new ChatSessionOrchestrator(mockConfig, {invoke});
+
+    orchestrator.sendMessage('Find surfboards');
+    stream.next({type: 'TEXT_MESSAGE_START'} as never);
+    stream.next({
+      type: 'ACTIVITY_SNAPSHOT',
+      messageId: 'act-handoff',
+      activityType: 'a2ui-surface',
+      content: {title: 'Backend title'},
+    } as never);
+
+    expect(orchestrator.handoffActivityToClient('act-handoff')).toBe(true);
+    expect(orchestrator.getActivityOwner('act-handoff')).toBe('client');
+
+    expect(
+      orchestrator.applyClientActivityPatch('act-handoff', [
+        {op: 'replace', path: '/title', value: 'Client title'},
+      ])
+    ).toBe(true);
+
+    // Backend delta arrives after handoff and should be ignored.
+    stream.next({
+      type: 'ACTIVITY_DELTA',
+      messageId: 'act-handoff',
+      activityType: 'a2ui-surface',
+      patch: [{op: 'replace', path: '/title', value: 'Backend overwrite'}],
+    } as never);
+    stream.complete();
+
+    const activity = orchestrator
+      .getState()
+      .messages.flatMap((message) => message.activities ?? [])
+      .find((candidate) => candidate.id === 'act-handoff');
+
+    expect(activity?.content).toEqual({title: 'Client title'});
+    expect(orchestrator.getActivityOwner('act-handoff')).toBe('client');
+
+    orchestrator.dispose();
+  });
 });

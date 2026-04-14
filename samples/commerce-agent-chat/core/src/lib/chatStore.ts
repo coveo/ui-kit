@@ -24,6 +24,11 @@ export interface StartedChatTurn {
   assistantMessage: Message;
 }
 
+interface ActivityRef {
+  assistantMessageId: string;
+  activityType: string;
+}
+
 export type ChatSessionStore = StoreApi<ChatSessionState>;
 
 export function createChatSessionStore(
@@ -183,10 +188,16 @@ export function applyAssistantActivityDelta(
     messageId: string;
     activityType: string;
     patch: unknown[];
-  }
+  },
+  sourceOwner: ActivityOwner = 'backend'
 ): boolean {
   const ownership = getActivityOwnership(store, delta.messageId);
-  if (ownership?.owner === 'client') {
+
+  if (sourceOwner === 'backend' && ownership?.owner === 'client') {
+    return false;
+  }
+
+  if (sourceOwner === 'client' && ownership?.owner !== 'client') {
     return false;
   }
 
@@ -212,6 +223,41 @@ export function applyAssistantActivityDelta(
   }));
 
   return true;
+}
+
+export function handoffActivityToClient(
+  store: ChatSessionStore,
+  activityId: string
+): boolean {
+  const ref = findActivityRef(store, activityId);
+  if (!ref) {
+    return false;
+  }
+
+  setActivityOwner(store, activityId, 'client', ref.activityType);
+  return true;
+}
+
+export function applyClientActivityDeltaById(
+  store: ChatSessionStore,
+  activityId: string,
+  patch: unknown[]
+): boolean {
+  const ref = findActivityRef(store, activityId);
+  if (!ref) {
+    return false;
+  }
+
+  return applyAssistantActivityDelta(
+    store,
+    ref.assistantMessageId,
+    {
+      messageId: activityId,
+      activityType: ref.activityType,
+      patch,
+    },
+    'client'
+  );
 }
 
 export function applyParsedEventToStore(
@@ -371,4 +417,30 @@ function createInitialChatSessionState(threadId = generateId('thread')) {
     threadState: {},
     activityOwnershipById: {},
   } satisfies ChatSessionState;
+}
+
+function findActivityRef(
+  store: ChatSessionStore,
+  activityId: string
+): ActivityRef | undefined {
+  const id = activityId.trim();
+  if (!id) {
+    return undefined;
+  }
+
+  for (const message of store.getState().messages) {
+    if (message.role !== 'assistant') {
+      continue;
+    }
+
+    const activity = (message.activities ?? []).find((a) => a.id === id);
+    if (activity) {
+      return {
+        assistantMessageId: message.id,
+        activityType: activity.activityType,
+      };
+    }
+  }
+
+  return undefined;
 }
