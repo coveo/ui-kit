@@ -4,7 +4,7 @@ const FALLBACK_URL = 'http://storybook.localhost:1355';
 
 export function getStorybookUrl() {
   try {
-    return execSync('npx portless get storybook', {
+    return execSync('pnpm portless get storybook', {
       encoding: 'utf8',
       timeout: 5000,
     }).trim();
