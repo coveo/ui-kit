@@ -5,6 +5,7 @@ export default {
     'packages/quantic',
     'packages/create-atomic-component-project/template',
   ],
+  ignoreDependenciess: ['semver'],
   ignore: [
     'packages/quantic/**',
     'samples/headless/rga-react/src/components/Quickstart.tsx',
