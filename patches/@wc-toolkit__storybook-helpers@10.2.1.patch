@@ -1,18 +1,27 @@
 diff --git a/dist/index.d.ts b/dist/index.d.ts
-index 1a969c8c5db3730eb974936e54c1eb49df5d1a0f..fa6638252acdcc8321139742f4ce49ac4994e7db 100644
+index 1a969c8c5db3730eb974936e54c1eb49df5d1a0f..7dfc58dbdf9d44639a1494eef378ed426babada2 100644
 --- a/dist/index.d.ts
 +++ b/dist/index.d.ts
-@@ -21,6 +21,8 @@ type StoryOptions = {
-     excludeCategories?: Array<Categories>;
-     /** Adds a <script> tag where a `component` variable will reference the story's component */
-     setComponentVariable?: boolean;
+@@ -7,6 +7,8 @@ type StorybookHelpersOptions = {
+     hideArgRef?: boolean;
+     /** sets the custom type reference in the Custom Elements Manifest */
+     typeRef?: string;
 +    /** Selector for the element containing the rendered story */
 +    containerSelector?: string;
+     /** Adds a <script> tag where a `component` variable will reference the story's component */
+     setComponentVariable?: boolean;
+     /** renders default values for attributes and CSS properties */
+@@ -19,6 +21,8 @@ type Options = StorybookHelpersOptions;
+ type StoryOptions = {
+     /** Categories to exclude from these stories */
+     excludeCategories?: Array<Categories>;
++    /** Selector for the element containing the rendered story */
++    containerSelector?: string;
+     /** Adds a <script> tag where a `component` variable will reference the story's component */
+     setComponentVariable?: boolean;
  };
- type StoryHelpers<T> = {
-     /** Default args for the component stories */
 diff --git a/dist/index.js b/dist/index.js
-index 88dcd49d80acb70039477e8794d0e8fa7d0a3e89..030897b2ca28257072896e336276d274e86930ea 100644
+index 88dcd49d80acb70039477e8794d0e8fa7d0a3e89..88e53c794c1d96cafaa44ed8fec66dc9e3f4dfed 100644
 --- a/dist/index.js
 +++ b/dist/index.js
 @@ -569,7 +569,7 @@ var options2 = {};
@@ -24,7 +33,7 @@ index 88dcd49d80acb70039477e8794d0e8fa7d0a3e89..030897b2ca28257072896e336276d274
    if (!args) {
      return html`<${unsafeStatic(component.tagName)}></${unsafeStatic(component.tagName)}>`;
    }
-@@ -580,11 +580,23 @@ function getTemplate(component, args, slot, argTypes, excludeCategories, setComp
+@@ -580,13 +580,25 @@ function getTemplate(component, args, slot, argTypes, excludeCategories, setComp
    const { attrOperators, propOperators, additionalAttrs } = getTemplateOperators(component, args, argTypes);
    const operators = { ...attrOperators, ...propOperators, ...additionalAttrs };
    const slotsTemplate = getSlotsTemplate(component, args, excludeCategories);
@@ -44,13 +53,16 @@ index 88dcd49d80acb70039477e8794d0e8fa7d0a3e89..030897b2ca28257072896e336276d274
 +      }
 +      if (containerElement.shadowRoot) {
 +        containerElement = containerElement.shadowRoot;
-+      } 
++      }
 +      window.component = containerElement.querySelector('` + component.tagName + `');
 +    }\n</script>`
    ) : ""}
- `;
+-`;
++\`;
  }
-@@ -723,20 +735,34 @@ function getSlotsTemplate(component, args, excludeCategories) {
+ function getStyleTemplate(component, args, excludeCategories) {
+   const cssPropertiesTemplate = excludeCategory("cssProps", excludeCategories) ? "" : getCssPropTemplate(component, args) || "";
+@@ -723,20 +735,32 @@ function getSlotsTemplate(component, args, excludeCategories) {
  ${slotTemplates}
  `) : "";
  }
@@ -59,6 +71,10 @@ index 88dcd49d80acb70039477e8794d0e8fa7d0a3e89..030897b2ca28257072896e336276d274
    setArgObserver(component);
    setTimeout(() => {
 -    const selectedComponent = document.querySelector(component.tagName);
+-    if (selectedComponent && argsObserver) {
+-      argObserver.observe(selectedComponent, {
+-        attributes: true
+-      });
 +    let containerElement = containerSelector ? document.querySelector(containerSelector) : document;
 +    if (!containerElement) {
 +      containerElement = document;
@@ -68,18 +84,15 @@ index 88dcd49d80acb70039477e8794d0e8fa7d0a3e89..030897b2ca28257072896e336276d274
 +    }
 +    if (containerElement.shadowRoot) {
 +      containerElement = containerElement.shadowRoot;
-+    } 
-+    const selectedComponent = containerElement.querySelector(component.tagName);
-+    if(!selectedComponent) {
-+      return;
 +    }
-     if (selectedComponent && argsObserver) {
-       argObserver.observe(selectedComponent, {
--        attributes: true
-+        attributes: true,
-+        attributeOldValue: true,
-       });
++    const selectedComponent = containerElement.querySelector(component.tagName);
++    if (!selectedComponent) {
++      return;
      }
++    argObserver?.observe(selectedComponent, {
++      attributes: true,
++      attributeOldValue: true,
++    });
    });
  }
  function setArgObserver(component) {
@@ -89,14 +102,14 @@ index 88dcd49d80acb70039477e8794d0e8fa7d0a3e89..030897b2ca28257072896e336276d274
    const { attrArgs: attributes } = getAttributesAndProperties(component);
    if (argObserver) {
      return;
-@@ -746,13 +772,24 @@ function setArgObserver(component) {
+@@ -746,13 +770,24 @@ function setArgObserver(component) {
        if (mutation.attributeName === "class" && isUpdating) {
          return;
        }
 -      isUpdating = true;
        const attribute = attributes[`${mutation.attributeName}`];
 +      if (!attribute) { return; }
-+      if(mutation.oldValue === mutation.target.getAttribute(mutation.attributeName || "")) {
++      if (mutation.oldValue === mutation.target.getAttribute(mutation.attributeName || "")) {
 +        return;
 +      }
        if (attribute?.control === "boolean" || attribute?.control?.type === "boolean") {
@@ -115,7 +128,7 @@ index 88dcd49d80acb70039477e8794d0e8fa7d0a3e89..030897b2ca28257072896e336276d274
          updateArgs({
            [`${mutation.attributeName}`]: mutation.target.getAttribute(mutation.attributeName || "")
          });
-@@ -802,7 +839,8 @@ function getStorybookHelpers(tagName, options3) {
+@@ -802,7 +837,8 @@ function getStorybookHelpers(tagName, options3) {
        slot,
        argTypes,
        options3?.excludeCategories || [],
