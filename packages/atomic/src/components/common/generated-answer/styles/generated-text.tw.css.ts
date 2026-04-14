@@ -1,9 +1,11 @@
 import {css} from 'lit';
 
 const styles = css`
+  @reference '../../../../utils/tailwind.global.tw.css';
+  @reference '../../../../utils/tailwind-utilities/set-font-size.css';
+
   [part='generated-text'] {
-    font-size: 1.125rem;
-    line-height: 1.75rem;
+    @apply set-font-size-base;
   }
 
   [part='generated-text'].cursor::after {
@@ -11,7 +13,7 @@ const styles = css`
     width: 8px;
     height: 1em;
     margin-left: 0.1em;
-    background-color: var(--atomic-neutral-dark);
+    @apply bg-neutral-dark;
     display: inline-block;
     animation: cursor-blink 1.5s steps(2) infinite;
     vertical-align: text-bottom;

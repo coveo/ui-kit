@@ -120,9 +120,6 @@ const preview: Preview = {
   beforeEach({canvasElement, canvas}) {
     Object.assign(canvas, {...within(canvasElement)});
   },
-  globals: {
-    a11y: {manual: true},
-  },
 };
 
 export default preview;

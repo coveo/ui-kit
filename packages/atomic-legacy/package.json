@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic-legacy",
-  "version": "0.0.8",
+  "version": "0.0.10",
   "description": "Package used internally by @coveo/atomic for components using legacy technologies (e.g., Stencil). This package is not intended for public use.",
   "repository": {
     "type": "git",
@@ -19,9 +19,7 @@
     }
   },
   "scripts": {
-    "build": "pnpm exec node --max_old_space_size=6144 ./node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.json && tsc -b tsconfig.decorators.json",
-    "release:phase1": "pnpm --filter @coveo/ci bump",
-    "npm:publish": "pnpm --filter @coveo/ci npm-publish"
+    "build": "pnpm exec node --max_old_space_size=6144 ./node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.json && tsc -b tsconfig.decorators.json"
   },
   "dependencies": {
     "@coveo/headless": "workspace:*",

@@ -26,10 +26,6 @@
         "src/components/search/components.ts",
         "src/components/commerce/components.ts"
       ]
-    },
-    "release:phase1": {
-      "dependsOn": ["^release:phase1", "@coveo/headless#release:phase1"],
-      "outputs": []
     }
   }
 }

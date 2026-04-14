@@ -1,6 +1,6 @@
 ---
 title: Use result templates
-group: Usage
+group: Guides
 slug: usage/use-result-templates
 ---
 
