@@ -1,3 +1,9 @@
+## 3.49.3
+
+### Patch Changes
+
+- [#7365](https://github.com/coveo/ui-kit/pull/7365) [`f1924b8`](https://github.com/coveo/ui-kit/commit/f1924b800f40b0ed2f857ed18323ae85585854d3) Thanks [@SimonMilord](https://github.com/SimonMilord)! - fixed issue where the turn limit on a conversation would not show the error message properly in atomic component
+
 ## 3.49.2
 
 ### Patch Changes
