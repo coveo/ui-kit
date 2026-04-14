@@ -1,4 +1,11 @@
-# Why are multiple Headless bundles delivered?
+---
+title: Troubleshooting bundle contents
+group: Contributing
+---
+
+# Troubleshooting bundle contents
+
+## Why are multiple Headless bundles delivered?
 
 Coveo Headless is divided into several bundles, each catering to different use cases that can be powered by the Coveo platform. These bundles contain client-side features and code required to enhance the end-user experiences.
 

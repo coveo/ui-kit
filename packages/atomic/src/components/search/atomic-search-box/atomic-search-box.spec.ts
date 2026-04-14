@@ -395,6 +395,26 @@ describe('atomic-search-box', () => {
     });
   });
 
+  describe('when keys are pressed in the search box', () => {
+    it('should submit when Enter is pressed', async () => {
+      const {textArea} = await renderSearchBox();
+
+      submitMock.mockClear();
+      await userEvent.type(textArea, '{enter}');
+
+      expect(submitMock).toHaveBeenCalled();
+    });
+
+    it('should not submit when Shift+Enter is pressed', async () => {
+      const {textArea} = await renderSearchBox();
+
+      submitMock.mockClear();
+      await userEvent.type(textArea, '{shift>}{enter}{/shift}');
+
+      expect(submitMock).not.toHaveBeenCalled();
+    });
+  });
+
   describe('when the search box is a standalone search box', () => {
     it('should not throw when redirectionUrl changes before the search box initializes', async () => {
       updateRedirectUrlMock.mockClear();

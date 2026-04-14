@@ -1,13 +1,15 @@
 import {readFileSync} from 'node:fs';
+import {resolve} from 'node:path';
 
-const buenoJsonPath = new URL('../../bueno/package.json', import.meta.url);
-const buenoJson = JSON.parse(readFileSync(buenoJsonPath, 'utf-8'));
-
-const headlessJsonPath = new URL(
-  '../../headless/package.json',
-  import.meta.url
+const buenoBaseDir = resolve(import.meta.dirname, '../../bueno');
+const buenoJson = JSON.parse(
+  readFileSync(resolve(buenoBaseDir, 'package.json'), 'utf-8')
 );
-const headlessJson = JSON.parse(readFileSync(headlessJsonPath, 'utf-8'));
+
+const headlessBaseDir = resolve(import.meta.dirname, '../../headless');
+const headlessJson = JSON.parse(
+  readFileSync(resolve(headlessBaseDir, 'package.json'), 'utf-8')
+);
 
 const isNightly = process.env.IS_NIGHTLY === 'true';
 
@@ -23,21 +25,27 @@ export function generateExternalPackageMappings() {
   return {
     '@coveo/headless/commerce': {
       cdn: `/headless/${headlessVersion}/commerce/headless.esm.js`,
+      local: resolve(headlessBaseDir, './src/commerce.index.ts'),
     },
     '@coveo/headless/insight': {
       cdn: `/headless/${headlessVersion}/insight/headless.esm.js`,
+      local: resolve(headlessBaseDir, './src/insight.index.ts'),
     },
     '@coveo/headless/recommendation': {
       cdn: `/headless/${headlessVersion}/recommendation/headless.esm.js`,
+      local: resolve(headlessBaseDir, './src/recommendation.index.ts'),
     },
     '@coveo/headless/case-assist': {
       cdn: `/headless/${headlessVersion}/case-assist/headless.esm.js`,
+      local: resolve(headlessBaseDir, './src/case-assist.index.ts'),
     },
     '@coveo/headless': {
       cdn: `/headless/${headlessVersion}/headless.esm.js`,
+      local: resolve(headlessBaseDir, './src/index.ts'),
     },
     '@coveo/bueno': {
       cdn: `/bueno/${buenoVersion}/bueno.esm.js`,
+      local: resolve(buenoBaseDir, './src/index.ts'),
     },
   };
 }
