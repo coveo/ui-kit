@@ -1,3 +1,11 @@
+## 3.56.1
+
+### Patch Changes
+
+- Updated dependencies [[`f1924b8`](https://github.com/coveo/ui-kit/commit/f1924b800f40b0ed2f857ed18323ae85585854d3)]:
+  - @coveo/headless@3.49.3
+  - @coveo/atomic-legacy@0.0.12
+
 ## 3.56.0
 
 ### Minor Changes
