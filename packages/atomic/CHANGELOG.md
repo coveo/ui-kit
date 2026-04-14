@@ -1,3 +1,27 @@
+## 3.56.0
+
+### Minor Changes
+
+- [#7353](https://github.com/coveo/ui-kit/pull/7353) [`736cc2e`](https://github.com/coveo/ui-kit/commit/736cc2ec8e6fe91fc2fc0262167bb3db23017e85) Thanks [@louis-bompart](https://github.com/louis-bompart)! - Add caching for svg loaded by the atomic-icon component, hence reducing the # of duplicate requests, and speeding up the overall rendering.
+
+### Patch Changes
+
+- [#7390](https://github.com/coveo/ui-kit/pull/7390) [`7b7de89`](https://github.com/coveo/ui-kit/commit/7b7de897f4c06e35e9c87189c2bc56cc078e6291) Thanks [@SimonMilord](https://github.com/SimonMilord)! - fixed issue where using the agent api was breaking the citation anchoring
+
+- [#7416](https://github.com/coveo/ui-kit/pull/7416) [`71326a1`](https://github.com/coveo/ui-kit/commit/71326a1db95aadc112f82f6157c9e71341923d39) Thanks [@louis-bompart](https://github.com/louis-bompart)! - In the CDN, do not bundle components in index.esm.js
+
+- [#7426](https://github.com/coveo/ui-kit/pull/7426) [`2b0e4f1`](https://github.com/coveo/ui-kit/commit/2b0e4f110c98bacf5857a1e404270620d21c3405) Thanks [@alexprudhomme](https://github.com/alexprudhomme)! - Fix Shift+Enter in search box triggering a query. Pressing Shift+Enter now inserts a newline in the textarea without submitting the search.
+
+- Updated dependencies [[`7b7de89`](https://github.com/coveo/ui-kit/commit/7b7de897f4c06e35e9c87189c2bc56cc078e6291)]:
+  - @coveo/headless@3.49.2
+  - @coveo/atomic-legacy@0.0.11
+
+## 3.55.3
+
+### Patch Changes
+
+- [#7386](https://github.com/coveo/ui-kit/pull/7386) [`eb3a528`](https://github.com/coveo/ui-kit/commit/eb3a528d35f1615f66b73a33c76c9b6cd2079141) Thanks [@SimonMilord](https://github.com/SimonMilord)! - Ensure CSS default size is "standard"
+
 ## 3.55.2
 
 ### Patch Changes

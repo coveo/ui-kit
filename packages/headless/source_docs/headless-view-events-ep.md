@@ -1,6 +1,6 @@
 ---
 title: Log view events with EP
-group: Usage
+group: Guides
 category: Usage Analytics
 slug: usage/usage-analytics/log-view-events-with-ep
 ---

@@ -1,3 +1,23 @@
+## 3.37.5
+
+### Patch Changes
+
+- Updated dependencies [[`7b7de89`](https://github.com/coveo/ui-kit/commit/7b7de897f4c06e35e9c87189c2bc56cc078e6291)]:
+  - @coveo/headless@3.49.2
+
+## 3.37.4
+
+### Patch Changes
+
+- [#7340](https://github.com/coveo/ui-kit/pull/7340) [`6f552a4`](https://github.com/coveo/ui-kit/commit/6f552a46175dcd559b07a3b01913e8c4bc706cd2) Thanks [@SimonMilord](https://github.com/SimonMilord)! - fixed issue where locker proxies were making highlights to slow down the quickview
+
+## 3.37.3
+
+### Patch Changes
+
+- Updated dependencies [[`5148ad6`](https://github.com/coveo/ui-kit/commit/5148ad665cdaf50a8118a45a03a48d4dbd8b456a)]:
+  - @coveo/headless@3.49.1
+
 ## 3.37.2
 
 - chore: replace biome with oxlint / oxfmt (#7328) ([3b8d688](https://github.com/coveo/ui-kit/commits/3b8d688)), closes [#7328](https://github.com/coveo/ui-kit/issues/7328)
@@ -62,7 +82,7 @@
 ## 3.33.4
 
 - docs: correct JSDoc grammar and terminology across packages (#6531) ([356975a](https://github.com/coveo/ui-kit/commits/356975a)), closes [#6531](https://github.com/coveo/ui-kit/issues/6531)
-- fix(quantic): making the citation tooltip hoverable  (#6436) ([021a156](https://github.com/coveo/ui-kit/commits/021a156)), closes [#6436](https://github.com/coveo/ui-kit/issues/6436)
+- fix(quantic): making the citation tooltip hoverable (#6436) ([021a156](https://github.com/coveo/ui-kit/commits/021a156)), closes [#6436](https://github.com/coveo/ui-kit/issues/6436)
 
 ## 3.33.3
 
@@ -154,7 +174,7 @@
 
 ## 3.28.1
 
-- fix(quantic): fixed the console error test that was skipped  (#5759) ([21695c0](https://github.com/coveo/ui-kit/commits/21695c0)), closes [#5759](https://github.com/coveo/ui-kit/issues/5759)
+- fix(quantic): fixed the console error test that was skipped (#5759) ([21695c0](https://github.com/coveo/ui-kit/commits/21695c0)), closes [#5759](https://github.com/coveo/ui-kit/issues/5759)
 - fix(quantic): remove/replace unsupported styling hooks for slds2 (#5743) ([ca99131](https://github.com/coveo/ui-kit/commits/ca99131)), closes [#5743](https://github.com/coveo/ui-kit/issues/5743)
 - fix(quantic): wrong event name used in resultSendAsEmail (#5767) ([3768ab6](https://github.com/coveo/ui-kit/commits/3768ab6)), closes [#5767](https://github.com/coveo/ui-kit/issues/5767)
 - chore(quantic): fix issues with class overrides for slds2 migration (#5749) ([6a5d453](https://github.com/coveo/ui-kit/commits/6a5d453)), closes [#5749](https://github.com/coveo/ui-kit/issues/5749)
@@ -186,8 +206,8 @@
 ## 3.25.0
 
 - chore(lint): integrate biome (#5507) ([53bcada](https://github.com/coveo/ui-kit/commits/53bcada)), closes [#5507](https://github.com/coveo/ui-kit/issues/5507)
-- chore(quantic): added useful commands for deploying code  (#5547) ([e4bf3d3](https://github.com/coveo/ui-kit/commits/e4bf3d3)), closes [#5547](https://github.com/coveo/ui-kit/issues/5547)
-- feat(quantic): added the logic to support sending the case context in the payload of insight search  ([86a8c3c](https://github.com/coveo/ui-kit/commits/86a8c3c)), closes [#5463](https://github.com/coveo/ui-kit/issues/5463)
+- chore(quantic): added useful commands for deploying code (#5547) ([e4bf3d3](https://github.com/coveo/ui-kit/commits/e4bf3d3)), closes [#5547](https://github.com/coveo/ui-kit/issues/5547)
+- feat(quantic): added the logic to support sending the case context in the payload of insight search ([86a8c3c](https://github.com/coveo/ui-kit/commits/86a8c3c)), closes [#5463](https://github.com/coveo/ui-kit/issues/5463)
 - test(quantic): Playwright migration for the example insight panel component (#5485) ([77b153c](https://github.com/coveo/ui-kit/commits/77b153c)), closes [#5485](https://github.com/coveo/ui-kit/issues/5485)
 - test(quantic): Playwright migration for the example search page component (#5513) ([503ad14](https://github.com/coveo/ui-kit/commits/503ad14)), closes [#5513](https://github.com/coveo/ui-kit/issues/5513)
 - test(quantic): quanticFoldedResultList migration to Playwright and unit tests (#5520) ([6ee6229](https://github.com/coveo/ui-kit/commits/6ee6229)), closes [#5520](https://github.com/coveo/ui-kit/issues/5520)
