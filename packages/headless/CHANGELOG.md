@@ -1,3 +1,9 @@
+## 3.49.2
+
+### Patch Changes
+
+- [#7390](https://github.com/coveo/ui-kit/pull/7390) [`7b7de89`](https://github.com/coveo/ui-kit/commit/7b7de897f4c06e35e9c87189c2bc56cc078e6291) Thanks [@SimonMilord](https://github.com/SimonMilord)! - fixed issue where using the agent api was breaking the citation anchoring
+
 ## 3.49.1
 
 ### Patch Changes
