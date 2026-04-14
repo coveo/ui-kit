@@ -348,6 +348,7 @@ jobs:
   chromatic:
     name: 'Run Chromatic visual tests on Atomic'
     needs: affected
+    if: ${{ github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/') }}
     runs-on: ubuntu-latest
     env:
       CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
@@ -375,7 +376,7 @@ jobs:
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo chromatic --filter=@coveo/atomic
         id: chromatic-run
-        if: contains(needs.affected.outputs.projects, '@coveo/atomic') && github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'chromatic') && github.head_ref != 'changeset-release/main'
+        if: contains(needs.affected.outputs.projects, '@coveo/atomic') && github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'chromatic')
       - run: pnpm exec turbo chromatic --filter=@coveo/atomic -- --skip
         working-directory: packages/atomic
         if: steps.chromatic-run.outcome == 'skipped'
