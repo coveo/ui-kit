@@ -1,6 +1,8 @@
 import {defineConfig, devices} from '@playwright/test';
+import {getStorybookUrl} from './scripts/get-storybook-url.mjs';
 
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
+const storybookUrl = getStorybookUrl();
 
 const DEFAULT_DESKTOP_VIEWPORT = {
   width: 1920,
@@ -22,7 +24,7 @@ export default defineConfig({
     trace: 'retain-on-failure',
     baseURL: isCDN
       ? 'http://localhost:3000/atomic/v3/storybook/'
-      : 'http://storybook.localhost:1355/',
+      : `${storybookUrl}/`,
   },
   projects: [
     {
@@ -53,7 +55,7 @@ export default defineConfig({
         stdout: 'pipe',
         url: isCDN
           ? 'http://localhost:3000/atomic/v3/storybook/'
-          : `http://storybook.localhost:1355/`,
+          : `${storybookUrl}/`,
         timeout: 120 * 1000,
         reuseExistingServer: !process.env.CI,
         gracefulShutdown: {signal: 'SIGTERM', timeout: 500},

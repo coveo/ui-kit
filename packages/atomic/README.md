@@ -84,7 +84,7 @@ pnpm turbo build --filter=@coveo/atomic
 pnpm turbo run prod --filter=@coveo/atomic
 ```
 
-The production Storybook site will be available at `http://localhost:4400`.
+The production Storybook site will be available at `http://storybook.localhost:1355`.
 
 > [!NOTE]
 > The `build` command includes the `build:storybook` step, which outputs the static site to `dist-storybook/`.
