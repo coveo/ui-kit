@@ -119,7 +119,7 @@
     "handlebars": "4.7.9",
     "lit-html": "3.3.2",
     "local-web-server": "catalog:",
-    "msw": "2.13.0",
+    "msw": "2.12.7",
     "msw-storybook-addon": "2.0.5",
     "natural-orderby": "5.0.0",
     "playwright": "catalog:",

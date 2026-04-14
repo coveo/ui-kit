@@ -164,6 +164,8 @@
     '@storybook/addon-mcp',
     '@storybook/addon-vitest',
     'msw-storybook-addon',
+    // Ignore msw since it must be updated together with msw-storybook-addon.
+    'msw',
     // Problems with angular. Just ignore it.
     'zone.js',
   ],
