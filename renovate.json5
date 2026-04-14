@@ -104,6 +104,13 @@
       matchPackageNames: ['publint'],
     },
     {
+      groupName: 'vitest',
+      groupSlug: 'vitest',
+      rangeStrategy: 'replace',
+      description: 'Isolate vitest since 4.1.x breaks vi.mock() for CJS modules in browser mode',
+      matchPackageNames: ['vitest', '/^@vitest/*/'],
+    },
+    {
       groupName: 'Quantic-only dependencies',
       groupSlug: 'quantic-deps',
       rangeStrategy: 'replace',
@@ -156,20 +163,7 @@
     '@stencil-community/postcss',
     // Ignore gts since it is getting removed.
     'gts',
-    // Ignore storybook since it breaks because of stencil. We will update after migration.
-    '@storybook/addon-a11y',
-    '@storybook/web-components-vite',
-    'storybook',
-    '@storybook/addon-docs',
-    '@storybook/addon-mcp',
-    '@storybook/addon-vitest',
-    'msw-storybook-addon',
-    // Ignore msw since it must be updated together with msw-storybook-addon.
-    'msw',
     // Problems with angular. Just ignore it.
     'zone.js',
-    // vitest 4.1.x breaks vi.mock() for CJS modules in browser mode.
-    'vitest',
-    '@vitest/browser-playwright',
   ],
 }
