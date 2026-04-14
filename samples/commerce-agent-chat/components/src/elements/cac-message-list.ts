@@ -739,20 +739,27 @@ export class CacMessageList extends LitElement {
         this.progressSteps.length > 0
       ) {
         const segments = this.buildCurrentProgressSegments();
+        const displaySegments = this.isLoading
+          ? segments
+          : [this.mergeProgressSegments(segments)];
 
-        return segments.map((segment, index) => ({
+        return displaySegments.map((segment, index) => ({
           ...segment,
-          isStreaming: this.isLoading && index === segments.length - 1,
+          isStreaming: this.isLoading && index === displaySegments.length - 1,
         }));
       }
     }
 
-    return (this.progressHistoryByMessageId[messageId] ?? []).map(
-      (segment) => ({
-        ...segment,
-        isStreaming: false,
-      })
-    );
+    const historySegments = this.progressHistoryByMessageId[messageId] ?? [];
+    const displayHistorySegments =
+      historySegments.length > 1
+        ? [this.mergeProgressSegments(historySegments)]
+        : historySegments;
+
+    return displayHistorySegments.map((segment) => ({
+      ...segment,
+      isStreaming: false,
+    }));
   }
 
   private buildCurrentProgressSegments(): ProgressSnapshot[] {
@@ -809,7 +816,25 @@ export class CacMessageList extends LitElement {
 
     this.progressHistoryByMessageId = {
       ...this.progressHistoryByMessageId,
-      [lastAssistantId]: segments,
+      [lastAssistantId]: [this.mergeProgressSegments(segments)],
+    };
+  }
+
+  private mergeProgressSegments(
+    segments: ProgressSnapshot[]
+  ): ProgressSnapshot {
+    if (segments.length <= 1) {
+      return (
+        segments[0] ?? {
+          progressSteps: this.progressSteps,
+          progressTrace: this.progressTrace,
+        }
+      );
+    }
+
+    return {
+      progressSteps: segments.flatMap((segment) => segment.progressSteps),
+      progressTrace: segments.flatMap((segment) => segment.progressTrace),
     };
   }
 

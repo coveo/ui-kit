@@ -32,7 +32,6 @@ export class CacProgressTrace extends LitElement {
       width: 100%;
       display: flex;
       align-items: center;
-      justify-content: space-between;
       gap: 0.5rem;
       border: 0;
       background: transparent;
@@ -46,6 +45,24 @@ export class CacProgressTrace extends LitElement {
 
     .agent-progress__toggle:disabled {
       cursor: default;
+    }
+
+    .agent-progress__toggle-content {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .agent-progress__toggle-caret {
+      display: inline-block;
+      font-size: 0.66rem;
+      line-height: 1;
+      transform: rotate(0deg);
+      transition: transform 120ms ease;
+    }
+
+    .agent-progress__toggle-caret--expanded {
+      transform: rotate(90deg);
     }
 
     .agent-progress__toggle-label {
@@ -234,11 +251,25 @@ export class CacProgressTrace extends LitElement {
           aria-controls=${traceId}
           @click=${() => this.onToggleTrace()}
         >
-          <span
-            class=${this.getToggleLabelClass(hasDoneStep, hasStreamingProgress)}
-          >
-            ${this.getToggleLabel(turnComplete)}</span
-          >
+          <span class="agent-progress__toggle-content">
+            ${when(
+              turnComplete,
+              () =>
+                html`<span
+                  class=${this.getToggleCaretClass()}
+                  aria-hidden="true"
+                  >&#9656;</span
+                >`
+            )}
+            <span
+              class=${this.getToggleLabelClass(
+                hasDoneStep,
+                hasStreamingProgress
+              )}
+            >
+              ${this.getToggleLabel(turnComplete)}</span
+            >
+          </span>
         </button>
         ${when(
           showTrace,
@@ -309,8 +340,14 @@ export class CacProgressTrace extends LitElement {
     }`;
   }
 
+  private getToggleCaretClass() {
+    return `agent-progress__toggle-caret${
+      this.isExpanded ? ' agent-progress__toggle-caret--expanded' : ''
+    }`;
+  }
+
   private getToggleLabel(turnComplete: boolean) {
-    return turnComplete ? 'Show full status trace' : 'Working...';
+    return turnComplete ? 'Status trace' : 'Working...';
   }
 
   private renderProgressTraceItems(shouldAnimateCurrentStep: boolean) {
@@ -353,6 +390,16 @@ export class CacProgressTrace extends LitElement {
     const currentIndex = displayTraceItems.length - 1;
 
     return map(displayTraceItems, (entry, index) => {
+      const normalizedText = this.normalizeProgressTraceText(entry.text);
+      const shouldRenderEntry =
+        entry.kind === 'tool' ||
+        entry.label === 'Done' ||
+        Boolean(normalizedText);
+
+      if (!shouldRenderEntry) {
+        return html``;
+      }
+
       return html`
         <li class="agent-progress__item">
           <p
@@ -365,11 +412,9 @@ export class CacProgressTrace extends LitElement {
             ${this.formatProgressEntryTitle(entry)}
           </p>
           ${when(
-            Boolean(entry.text),
+            Boolean(normalizedText),
             () =>
-              html`<p class="agent-progress__item-text">
-                ${this.normalizeProgressTraceText(entry.text)}
-              </p>`
+              html`<p class="agent-progress__item-text">${normalizedText}</p>`
           )}
         </li>
       `;
