@@ -218,6 +218,7 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
     get state() {
       return {
         ...coreController.state,
+        label: 'POTATO',
         facetSearch: facetSearch.state,
       };
     },
