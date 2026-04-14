@@ -7,13 +7,12 @@ import type {StandaloneSearchBoxProps} from '../../../../controllers/standalone-
 import type {ListingAndStandaloneControllerWithoutProps} from '../../types/controller-definitions.js';
 
 export type {
-  StandaloneSearchBoxState,
   StandaloneSearchBox,
   StandaloneSearchBoxProps,
+  StandaloneSearchBoxState,
 };
 
-export interface StandaloneSearchBoxDefinition
-  extends ListingAndStandaloneControllerWithoutProps<StandaloneSearchBox> {}
+export interface StandaloneSearchBoxDefinition extends ListingAndStandaloneControllerWithoutProps<StandaloneSearchBox> {}
 
 /**
  * Defines the `StandaloneSearchBox` controller for the purpose of server-side rendering.

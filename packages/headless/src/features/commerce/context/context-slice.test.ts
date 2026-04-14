@@ -73,7 +73,7 @@ describe('context-slice', () => {
   });
 
   it('should return an error when setCustom is called with null', () => {
-    // biome-ignore lint/suspicious/noExplicitAny: Testing invalid input
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Testing invalid input
     const action = setCustom(null as any);
     expect('error' in action && action.error).toBeDefined();
   });

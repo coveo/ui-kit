@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicInsightQueryErrorStories from './atomic-insight-query-error.new.stories';
+import meta, { Default, WithInvalidToken, WithDisconnected, WithOrganizationPaused } from './atomic-insight-query-error.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicInsightQueryErrorStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicInsightQueryErrorStories}
+  stories={{ Default, WithInvalidToken, WithDisconnected, WithOrganizationPaused }}
   githubPath="insight/atomic-insight-query-error/atomic-insight-query-error.ts"
   tagName="atomic-insight-query-error"
   className="AtomicInsightQueryError"

@@ -57,7 +57,11 @@ export const renderImageCarousel: FunctionalComponentWithChildren<
         class: `${commonPaginationClasses} right-0 mr-1`,
       },
     })(html`
-      <atomic-icon part="next-icon" icon=${ArrowRight} class=${commonArrowClasses}></atomic-icon>
+      <atomic-icon
+        part="next-icon"
+        icon=${ArrowRight}
+        class=${commonArrowClasses}
+      ></atomic-icon>
     `);
   };
 
@@ -75,11 +79,11 @@ export const renderImageCarousel: FunctionalComponentWithChildren<
     if (!children || children === nothing) {
       return nothing;
     }
-    return html` <div class="relative flex w-full min-w-full items-center justify-center">
-        ${renderPreviousButton()}
-        ${children}
-        ${renderNextButton()}
-        ${renderIndicators()}
-      </div>`;
+    return html` <div
+      class="relative flex w-full min-w-full items-center justify-center"
+    >
+      ${renderPreviousButton()} ${children} ${renderNextButton()}
+      ${renderIndicators()}
+    </div>`;
   };
 };

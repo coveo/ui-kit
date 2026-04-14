@@ -3,6 +3,7 @@ import type {NavigatorContext} from '../../../../../app/navigator-context-provid
 import {
   selectAccessToken,
   selectAgentId,
+  selectDebugAgentSession,
   selectEnvironment,
   selectOrganizationId,
 } from '../../../../../features/configuration/configuration-selectors.js';
@@ -43,6 +44,7 @@ export const createAnswerRunner = () => {
     const organizationId = selectOrganizationId(state);
     const environment = selectEnvironment(state);
     const accessToken = selectAccessToken(state);
+    const recordDebugSession = selectDebugAgentSession(state);
 
     const agent = createAnswerAgent(agentId!, organizationId, environment);
 
@@ -60,6 +62,7 @@ export const createAnswerRunner = () => {
           forwardedProps: {
             params,
             accessToken,
+            recordDebugSession,
           },
         },
         strategy

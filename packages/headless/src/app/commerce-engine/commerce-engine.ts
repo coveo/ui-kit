@@ -76,20 +76,20 @@ export type CommerceEngineState =
  *
  * @group Engine
  */
-export interface CommerceEngine<State extends object = {}>
-  extends CoreEngineNext<
-    State & CoreState<ConfigurationState> & CommerceEngineState,
-    CommerceThunkExtraArguments,
-    ConfigurationState
-  > {}
+export interface CommerceEngine<
+  State extends object = {},
+> extends CoreEngineNext<
+  State & CoreState<ConfigurationState> & CommerceEngineState,
+  CommerceThunkExtraArguments,
+  ConfigurationState
+> {}
 
 /**
  * The commerce engine options.
  *
  * @group Engine
  */
-export interface CommerceEngineOptions
-  extends ExternalEngineOptions<CommerceEngineState> {
+export interface CommerceEngineOptions extends ExternalEngineOptions<CommerceEngineState> {
   /**
    * The commerce engine configuration options.
    */

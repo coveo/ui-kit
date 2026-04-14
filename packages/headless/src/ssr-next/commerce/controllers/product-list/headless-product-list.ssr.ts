@@ -10,7 +10,7 @@ import {
 import {SolutionType} from '../../types/controller-constants.js';
 import type {SearchAndListingControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
 
-export type {Search, ProductListing, ProductListingState as ProductListState};
+export type {ProductListing, ProductListingState as ProductListState, Search};
 
 export type ProductList = Pick<
   ProductListing | Search,

@@ -8264,5 +8264,32 @@
     "zh": "正在思考...",
     "zh-CN": "正在思考...",
     "zh-TW": "正在思考..."
+  },
+  "generated-answer-error-turn-limit-reached": {
+    "en": "Conversation turn limit reached. Please start a new conversation.",
+    "fr": "Limite de tours de conversation atteinte. Veuillez commencer une nouvelle conversation.",
+    "cs": "Dosaženo limitu kol konverzace. Začněte prosím novou konverzaci.",
+    "da": "Grænse for samtalevending nået. Start venligst en ny samtale.",
+    "de": "Limit für Gesprächswechsel erreicht. Bitte starten Sie eine neue Konversation.",
+    "el": "Έχετε φτάσει το όριο στροφής της συνομιλίας. Παρακαλώ ξεκινήστε μια νέα συνομιλία.",
+    "es": "Límite de turnos de conversación alcanzado. Por favor, inicia una nueva conversación.",
+    "fi": "Keskustelukierroksen raja saavutettu. Aloita uusi keskustelu.",
+    "hu": "Elérte a beszélgetési forduló korlátját. Kérjük, indítson új beszélgetést.",
+    "id": "Batas giliran percakapan tercapai. Silakan mulai percakapan baru.",
+    "it": "Limite di turni di conversazione raggiunto. Per favore, inizia una nuova conversazione.",
+    "ja": "会話のターン制限に達しました。新しい会話を開始してください。",
+    "ko": "대화 턴 제한에 도달했습니다. 새 대화를 시작하세요.",
+    "nl": "Gespreksturnlimiet bereikt. Start een nieuw gesprek.",
+    "no": "Samtaleturngrense nådd. Vennligst start en ny samtale.",
+    "pl": "Osiągnięto limit tur rozmowy. Proszę rozpocząć nową rozmowę.",
+    "pt": "Limite de turnos de conversa atingido. Por favor, inicie uma nova conversa.",
+    "pt-BR": "Limite de turnos de conversa atingido. Por favor, inicie uma nova conversa.",
+    "ru": "Достигнут лимит ходов в разговоре. Пожалуйста, начните новый разговор.",
+    "sv": "Gräns för samtalsturnering nådd. Vänligen starta en ny konversation.",
+    "th": "ถึงขีดจำกัดการสนทนาแล้ว โปรดเริ่มการสนทนาใหม่",
+    "tr": "Konuşma turu sınırına ulaşıldı. Lütfen yeni bir konuşma başlatın.",
+    "zh": "会话轮次限制已达。请开始新的会话。",
+    "zh-CN": "会话轮次限制已达。请开始新的会话。",
+    "zh-TW": "會話輪次限制已達。請開始新的會話。"
   }
 }

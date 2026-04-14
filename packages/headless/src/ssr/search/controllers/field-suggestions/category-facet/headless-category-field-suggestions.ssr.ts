@@ -8,11 +8,10 @@ import type {ControllerDefinitionWithoutProps} from '../../../../common/types/co
 
 export * from '../../../../../controllers/field-suggestions/category-facet/headless-category-field-suggestions.js';
 
-export interface CategoryFieldSuggestionsDefinition
-  extends ControllerDefinitionWithoutProps<
-    SearchEngine,
-    CategoryFieldSuggestions
-  > {}
+export interface CategoryFieldSuggestionsDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  CategoryFieldSuggestions
+> {}
 
 /**
  * Defines a `CategoryFieldSuggestions` controller instance.

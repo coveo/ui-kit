@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicInsightSearchBoxStories from './atomic-insight-search-box.new.stories';
+import meta, { Default, WithDisabledSearch } from './atomic-insight-search-box.new.stories';
 import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicInsightSearchBoxStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicInsightSearchBoxStories}
+  stories={{ Default, WithDisabledSearch }}
   githubPath="insight/atomic-insight-search-box/atomic-insight-search-box.ts"
   tagName="atomic-insight-search-box"
   className="AtomicInsightSearchBox"

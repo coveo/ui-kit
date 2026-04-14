@@ -56,8 +56,7 @@ describe('atomic-product-link', () => {
         template: html`<atomic-product-link
           .hrefTemplate=${options.hrefTemplate}
         >
-          ${ifDefined(options.slotContent)}
-          ${attributesSlot}
+          ${ifDefined(options.slotContent)} ${attributesSlot}
         </atomic-product-link>`,
         selector: 'atomic-product-link',
         product: productToUse,

@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicFacetStories from './atomic-facet.new.stories';
+import meta, { Default, LowFacetValues, monthFacet, CustomSort } from './atomic-facet.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={ AtomicFacetStories } />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={ AtomicFacetStories }
+  stories={{ Default, LowFacetValues, monthFacet, CustomSort }}
   githubPath="search/facets/atomic-facet/atomic-facet.ts"
   tagName="atomic-facet"
   className="AtomicFacet"

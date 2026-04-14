@@ -58,6 +58,10 @@ export class AtomicInsightSearchBox
   extends LitElement
   implements InitializableComponent<InsightBindings>
 {
+  static shadowRootOptions = {
+    ...LitElement.shadowRootOptions,
+    delegatesFocus: true,
+  };
   static styles = styles;
 
   @state()

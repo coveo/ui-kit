@@ -39,7 +39,6 @@ Includes: `<img>` elements, `<svg>` elements, font icons, emojis
   - `role="img"`: provide `aria-label` or `aria-labelledby`
   - Keep concise but meaningful
   - Avoid `title` attribute for alt text
-  
 - **Decorative**: No important information, or information found elsewhere
   - `<img>`: use empty `alt=""` attribute
   - `role="img"`: use `aria-hidden="true"`
@@ -161,12 +160,14 @@ When using `role="grid"`, ensure proper structure:
 ### Simple vs Complex Tables
 
 **Prefer simple tables:**
+
 - One set of column/row headers
 - No nested rows or spanning cells
 - Better assistive technology support
 - Easier for users with cognitive disabilities
 
 **Complex tables:**
+
 - Multiple levels of headers or spanning cells
 - More difficult to understand and use
 - Should be avoided when possible

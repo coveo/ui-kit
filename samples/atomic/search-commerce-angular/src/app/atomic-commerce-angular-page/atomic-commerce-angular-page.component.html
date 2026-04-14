@@ -1,4 +1,9 @@
-<atomic-commerce-interface type="search" #commerceInterface searchHub="UI_KIT_E2E" pipeline="UI_KIT_E2E">
+<atomic-commerce-interface
+  type="search"
+  #commerceInterface
+  searchHub="UI_KIT_E2E"
+  pipeline="UI_KIT_E2E"
+>
   <atomic-commerce-layout>
     <atomic-layout-section section="search">
       <atomic-commerce-search-box>
@@ -33,7 +38,9 @@
                 <atomic-product-price></atomic-product-price>
               </atomic-product-section-emphasized>
               <atomic-product-section-description>
-                <atomic-product-description field="ec_description"></atomic-product-description>
+                <atomic-product-description
+                  field="ec_description"
+                ></atomic-product-description>
               </atomic-product-section-description>
             </template>
           </atomic-product-template>
@@ -41,7 +48,8 @@
       </atomic-layout-section>
 
       <atomic-layout-section section="pagination">
-        <atomic-commerce-load-more-products> </atomic-commerce-load-more-products>
+        <atomic-commerce-load-more-products>
+        </atomic-commerce-load-more-products>
       </atomic-layout-section>
     </atomic-layout-section>
   </atomic-commerce-layout>

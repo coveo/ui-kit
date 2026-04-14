@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicCommerceFacetsStories from './atomic-commerce-facets.new.stories';
+import meta, { Default, LoadingState } from './atomic-commerce-facets.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicCommerceFacetsStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicCommerceFacetsStories}
+  stories={{ Default, LoadingState }}
   githubPath="commerce/atomic-commerce-facets/atomic-commerce-facets.ts"
   tagName="atomic-commerce-facets"
   className="AtomicCommerceFacets"

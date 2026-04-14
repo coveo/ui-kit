@@ -9,22 +9,26 @@ Define the expected structure. Use `[placeholder]` for variable content.
 <example name="strict-template">
 ALWAYS use this structure for test files:
 
-  import {describe, it, expect} from 'vitest';
+import {describe, it, expect} from 'vitest';
 
-  describe('[component-name]', () => {
-    it('should [behavior] when [condition]', async () => {
-      // Test implementation
-    });
-  });
+describe('[component-name]', () => {
+it('should [behavior] when [condition]', async () => {
+// Test implementation
+});
+});
 </example>
 
 <example name="flexible-template">
 Use this structure, adapting sections as needed:
 
-  # [Title]
-  ## Summary - [brief overview]
-  ## Details - [expand based on findings]
-  ## Recommendations - [actionable next steps]
+# [Title]
+
+## Summary - [brief overview]
+
+## Details - [expand based on findings]
+
+## Recommendations - [actionable next steps]
+
 </example>
 
 **When to use:** Code generation, reports, structured documents.
@@ -55,27 +59,27 @@ Define a schema for machine-readable output.
 <example name="json-schema">
 Output JSON with this structure:
 
-  {
-    "component": "string - component name",
-    "status": "completed | in-progress | blocked",
-    "files": {
-      "created": ["list of new files"],
-      "modified": ["list of changed files"],
-      "deleted": ["list of removed files"]
-    },
-    "issues": [
-      {"severity": "error | warning", "message": "description", "file": "path"}
-    ]
-  }
+{
+"component": "string - component name",
+"status": "completed | in-progress | blocked",
+"files": {
+"created": ["list of new files"],
+"modified": ["list of changed files"],
+"deleted": ["list of removed files"]
+},
+"issues": [
+{"severity": "error | warning", "message": "description", "file": "path"}
+]
+}
 </example>
 
 **When to use:** Reports consumed by scripts, CI integration, cross-tool communication.
 
 ## Choosing a Pattern
 
-| Output Type | Pattern | Example Use |
-|-------------|---------|-------------|
-| Code files | Template | Component scaffolding |
-| Text conventions | Input/Output | Naming, commit messages |
-| Machine-readable | Structured Data | Migration reports, audits |
-| Mixed/flexible | Template + examples | Documentation generation |
+| Output Type      | Pattern             | Example Use               |
+| ---------------- | ------------------- | ------------------------- |
+| Code files       | Template            | Component scaffolding     |
+| Text conventions | Input/Output        | Naming, commit messages   |
+| Machine-readable | Structured Data     | Migration reports, audits |
+| Mixed/flexible   | Template + examples | Documentation generation  |

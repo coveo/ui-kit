@@ -1,9 +1,19 @@
 {
   "name": "@coveo/create-atomic-component-project",
-  "version": "1.5.14",
+  "version": "1.5.16",
   "description": "Initialize a Coveo Atomic Library Project",
-  "type": "module",
-  "main": "index.js",
+  "keywords": [
+    "atomic",
+    "cli",
+    "coveo"
+  ],
+  "license": "Apache-2.0",
+  "author": "Coveo",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
+    "directory": "packages/create-atomic-component-project"
+  },
   "bin": "index.js",
   "files": [
     "index.js",
@@ -15,27 +25,12 @@
     "template/tsconfig.json",
     "template/src/**/*"
   ],
-  "scripts": {
-    "release:phase3": "pnpm --filter @coveo/ci npm-publish",
-    "publish:bump": "pnpm --filter @coveo/ci bump",
-    "release:phase1": "pnpm run publish:bump",
-    "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod"
-  },
-  "keywords": [
-    "coveo",
-    "cli",
-    "atomic"
-  ],
-  "author": "Coveo",
-  "license": "Apache-2.0",
+  "type": "module",
+  "main": "index.js",
   "publishConfig": {
     "access": "public"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/coveo/ui-kit.git",
-    "directory": "packages/create-atomic-component-project"
-  },
+  "scripts": {},
   "engines": {
     "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
   }

@@ -93,12 +93,21 @@ export default class QuanticResultHighlightedTextField extends LightningElement 
       this.field
     );
     /** @type {HighlightKeyword[]} */
-    const highlights = this.headless.ResultTemplatesHelpers.getResultProperty(
-      this.result,
-      `${this.field}Highlights`
-    );
+    const proxiedHighlights =
+      this.headless.ResultTemplatesHelpers.getResultProperty(
+        this.result,
+        `${this.field}Highlights`
+      );
 
-    if (highlights && this.headless?.HighlightUtils?.highlightString) {
+    if (proxiedHighlights && this.headless?.HighlightUtils?.highlightString) {
+      // Shallow-copy each highlight keyword into a plain object to avoid the Salesforce Locker Service proxy handling.
+      // Without this, every .offset / .length access inside highlightString triggers the proxy which is expensive at scale.
+      const highlights = Array.isArray(proxiedHighlights)
+        ? proxiedHighlights.map((h) => ({
+            offset: h.offset,
+            length: h.length,
+          }))
+        : proxiedHighlights;
       const openingDelimiter = '<b class="highlighted-field__highlight">';
       const closingDelimiter = '</b>';
       const highlightedValue = this.headless.HighlightUtils.highlightString({

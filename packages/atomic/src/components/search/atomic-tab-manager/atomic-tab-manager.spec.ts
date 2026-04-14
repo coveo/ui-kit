@@ -40,15 +40,15 @@ describe('atomic-tab-manager', () => {
 
     const {element} = await renderInAtomicSearchInterface<AtomicTabManager>({
       template: html`
-        <atomic-tab-manager ?clear-filters-on-tab-change=${clearFiltersOnTabChange}>
-          ${
-            slottedContent ??
-            html`
+        <atomic-tab-manager
+          ?clear-filters-on-tab-change=${clearFiltersOnTabChange}
+        >
+          ${slottedContent ??
+          html`
             <atomic-tab label="All" name="all"></atomic-tab>
             <atomic-tab label="Documentation" name="documentation"></atomic-tab>
             <atomic-tab label="Articles" name="articles"></atomic-tab>
-          `
-          }
+          `}
         </atomic-tab-manager>
       `,
       selector: 'atomic-tab-manager',
@@ -117,9 +117,7 @@ describe('atomic-tab-manager', () => {
         .mockImplementation(() => {});
 
       const {element} = await renderTabManager({
-        slottedContent: html`
-          <atomic-tab label="Test"></atomic-tab>
-        `,
+        slottedContent: html` <atomic-tab label="Test"></atomic-tab> `,
       });
 
       expect(element.error).toBeDefined();

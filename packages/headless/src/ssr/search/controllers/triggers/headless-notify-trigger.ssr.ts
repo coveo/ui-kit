@@ -8,8 +8,10 @@ export type {
   NotifyTriggerState,
 } from '../../../../controllers/core/triggers/headless-core-notify-trigger.js';
 
-export interface NotifyTriggerDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, NotifyTrigger> {}
+export interface NotifyTriggerDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  NotifyTrigger
+> {}
 
 /**
  * Defines a `NotifyTrigger` controller instance.

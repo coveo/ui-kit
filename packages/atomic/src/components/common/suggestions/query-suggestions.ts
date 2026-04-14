@@ -45,23 +45,26 @@ export const renderQuerySuggestion = ({
 }: RenderQuerySuggestionOptions): HTMLElement => {
   const shouldShowIcon = alwaysShowIcon || hasMultipleKindOfSuggestions;
   const template = html`
-    <div part="query-suggestion-content" class="pointer-events-none flex items-center">${
-      shouldShowIcon
+    <div
+      part="query-suggestion-content"
+      class="pointer-events-none flex items-center"
+    >
+      ${shouldShowIcon
         ? html`<atomic-icon
-          part="query-suggestion-icon"
-          icon=${icon}
-          class="mr-2 h-4 w-4 shrink-0"
-        ></atomic-icon>`
-        : nothing
-    }${
-      hasQuery
+            part="query-suggestion-icon"
+            icon=${icon}
+            class="mr-2 h-4 w-4 shrink-0"
+          ></atomic-icon>`
+        : nothing}${hasQuery
         ? html`<span
-          part="query-suggestion-text"
-          class="line-clamp-2 break-all"
-          .innerHTML=${suggestion.highlightedValue}
-        ></span>`
-        : html`<span part="query-suggestion-text" class="line-clamp-2 break-all">${suggestion.rawValue}</span>`
-    }</div>
+            part="query-suggestion-text"
+            class="line-clamp-2 break-all"
+            .innerHTML=${suggestion.highlightedValue}
+          ></span>`
+        : html`<span part="query-suggestion-text" class="line-clamp-2 break-all"
+            >${suggestion.rawValue}</span
+          >`}
+    </div>
   `;
 
   const container = document.createElement('div');

@@ -132,8 +132,7 @@ describe('atomic-commerce-search-box', () => {
           number-of-queries=${ifDefined(numberOfQueries)}
           clear-filters=${ifDefined(clearFilters)}
         >
-          ${suggestions}
-          ${additionalChildren}
+          ${suggestions} ${additionalChildren}
         </atomic-commerce-search-box>`,
         selector: 'atomic-commerce-search-box',
         bindings: (bindings) => {
@@ -363,6 +362,13 @@ describe('atomic-commerce-search-box', () => {
       expect(setMessageSpy).toHaveBeenCalledWith(
         'There are no search suggestions.'
       );
+    });
+
+    it('should be focusable & delegate focus to the text area', async () => {
+      const {element, textArea} = await renderSearchBox();
+      element.focus();
+      expect(document.activeElement).toBe(element);
+      expect(element.shadowRoot!.activeElement).toBe(textArea);
     });
   });
 

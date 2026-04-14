@@ -7,7 +7,8 @@ import {buildBaseAnswerGenerationUrl} from '../endpoint-url-builder.js';
  */
 export class FollowUpAgent extends HttpAgent {
   protected requestInit(input: RunAgentInput): RequestInit {
-    const {q, conversationId, accessToken} = input.forwardedProps || {};
+    const {q, analytics, conversationId, conversationToken, accessToken} =
+      input.forwardedProps || {};
 
     return {
       method: 'POST',
@@ -15,11 +16,13 @@ export class FollowUpAgent extends HttpAgent {
         ...this.headers,
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
-        Accept: 'text/event-stream',
+        Accept: 'text/event-stream, application/json',
       },
       body: JSON.stringify({
         q,
+        analytics,
         conversationId,
+        conversationToken,
       }),
       signal: this.abortController.signal,
     };

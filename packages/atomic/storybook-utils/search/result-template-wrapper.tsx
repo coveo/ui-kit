@@ -1,7 +1,10 @@
-import { Decorator } from '@storybook/web-components-vite';
-import { html, TemplateResult, render } from 'lit';
+import '@/src/components/search/atomic-result-template/atomic-result-template.js';
+import {Decorator} from '@storybook/web-components-vite';
+import {html, TemplateResult, render} from 'lit';
 
-export const wrapInResultTemplate = (includeCodeRoot: boolean = true): {
+export const wrapInResultTemplate = (
+  includeCodeRoot: boolean = true
+): {
   decorator: Decorator;
 } => {
   const decorator: Decorator = (story) => {
@@ -21,7 +24,9 @@ export const wrapInResultTemplate = (includeCodeRoot: boolean = true): {
       templateTag.innerHTML = String(storyResult);
     }
 
-    if (includeCodeRoot) { templateTag.id = 'code-root'; }
+    if (includeCodeRoot) {
+      templateTag.id = 'code-root';
+    }
     return html`
       <atomic-result-template>${templateTag}</atomic-result-template>
     `;

@@ -599,7 +599,7 @@ describe('generated answer slice', () => {
 
       const finalState = generatedAnswerReducer(
         initialState,
-        startStep({name: 'thinking', startedAt})
+        startStep({name: 'Thinking', startedAt})
       );
 
       expect(finalState.generationSteps).toEqual([
@@ -645,7 +645,7 @@ describe('generated answer slice', () => {
 
       const finalState = generatedAnswerReducer(
         initialState,
-        finishStep({name: 'searching', finishedAt})
+        finishStep({name: 'SEARCHING', finishedAt})
       );
 
       expect(finalState.generationSteps).toEqual([

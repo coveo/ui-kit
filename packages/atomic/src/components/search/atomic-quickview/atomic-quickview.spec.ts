@@ -67,7 +67,8 @@ describe('atomic-quickview', () => {
     const {element, atomicResult, atomicInterface} =
       await renderInAtomicResult<AtomicQuickview>({
         template: html`<atomic-quickview
-          sandbox=${props.sandbox || 'allow-popups allow-top-navigation allow-same-origin'}
+          sandbox=${props.sandbox ||
+          'allow-popups allow-top-navigation allow-same-origin'}
         ></atomic-quickview>`,
         selector: 'atomic-quickview',
         result,

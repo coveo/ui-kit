@@ -7,9 +7,19 @@
     ".github/instructions/general.typescript.instructions.md"
   ],
   "formatter": {
-    "biome": {
-      "command": ["pnpm", "exec", "biome", "check", "--write", "$FILE"],
-      "extensions": [".js", ".ts", ".jsx", ".tsx", ".json", ".jsonc"]
+    "oxfmt": {
+      "command": ["pnpm", "exec", "oxfmt", "$FILE"],
+      "extensions": [
+        ".js",
+        ".ts",
+        ".jsx",
+        ".tsx",
+        ".json",
+        ".jsonc",
+        ".css",
+        ".html",
+        ".md"
+      ]
     }
   },
   "mcp": {

@@ -400,12 +400,10 @@ export class TimeframeFacetCommon {
 
     return renderFacetContainer()(
       html`${this.renderHeader(isCollapsed, headerFocus, onToggleCollapse)}
-        ${
-          !isCollapsed
-            ? html`${this.shouldRenderValues ? this.renderValues() : nothing}
-              ${this.shouldRenderInput ? this.renderDateInput() : nothing}`
-            : nothing
-        }`
+      ${!isCollapsed
+        ? html`${this.shouldRenderValues ? this.renderValues() : nothing}
+          ${this.shouldRenderInput ? this.renderDateInput() : nothing}`
+        : nothing}`
     );
   }
 }

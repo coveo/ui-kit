@@ -9,6 +9,10 @@ import {MockAnswerApi} from '@/storybook-utils/api/answer/mock';
 import {MockInsightApi} from '@/storybook-utils/api/insight/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
+import '@/src/components/insight/atomic-insight-generated-answer/atomic-insight-generated-answer.js';
+import '@/src/components/insight/atomic-insight-layout/atomic-insight-layout.js';
+import '@/src/components/insight/atomic-insight-search-box/atomic-insight-search-box.js';
+import '@/src/components/common/atomic-layout-section/atomic-layout-section.js';
 
 const mockedAnswerApi = new MockAnswerApi();
 const mockedInsightApi = new MockInsightApi();

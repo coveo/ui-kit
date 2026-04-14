@@ -13,6 +13,10 @@ export const GENERATION_STEP_NAMES = [
   'answering',
 ] as const;
 
+export function normalizeGenerationStepName(name: string): GenerationStepName {
+  return name.toLowerCase() as GenerationStepName;
+}
+
 export interface GenerationStep {
   name: GenerationStepName;
   status: GenerationStepStatus;
@@ -56,6 +60,12 @@ export interface GeneratedAnswerBase {
     message?: string;
     code?: number;
     isRetryable?: boolean;
+    isMaxDurationExceededError?(): boolean;
+    isFollowupNotSupportedError?(): boolean;
+    isConversationNotFoundError?(): boolean;
+    isSseModelNotAvailableError?(): boolean;
+    isSseInternalError?(): boolean;
+    isSseTurnLimitReachedError?(): boolean;
   };
   /**
    * Whether an answer cannot be generated after a query is executed.

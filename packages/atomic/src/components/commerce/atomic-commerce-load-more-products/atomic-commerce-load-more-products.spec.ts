@@ -140,11 +140,11 @@ describe('atomic-commerce-load-more-products', () => {
       const {element} = await renderLoadMoreProducts({
         isAppLoaded: false,
       });
-      // biome-ignore lint/complexity/useLiteralKeys: <accessing private property for testing>
+      // oxlint-disable-next-line dot-notation -- <accessing private property for testing>
       expect(element['isAppLoaded']).toBe(false);
 
       appLoadedCallback(true);
-      // biome-ignore lint/complexity/useLiteralKeys: <accessing private property for testing>
+      // oxlint-disable-next-line dot-notation -- <accessing private property for testing>
       expect(element['isAppLoaded']).toBe(true);
     });
   });

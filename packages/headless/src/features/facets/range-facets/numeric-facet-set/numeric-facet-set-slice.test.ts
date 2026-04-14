@@ -193,7 +193,7 @@ describe('numeric-facet-set slice', () => {
     it('should deselect values for a facet with tabsIncluded when switching to a non-included tab', () => {
       vi.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll').mockReset();
 
-      state['facet1'] = buildMockNumericFacetSlice({
+      state.facet1 = buildMockNumericFacetSlice({
         tabs: {included: ['tab1', 'tab2']},
       });
 
@@ -207,7 +207,7 @@ describe('numeric-facet-set slice', () => {
     it('should not deselect values for a facet with tabsIncluded when switching to an included tab', () => {
       vi.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll').mockReset();
 
-      state['facet1'] = buildMockNumericFacetSlice({
+      state.facet1 = buildMockNumericFacetSlice({
         tabs: {included: ['tab1', 'tab2']},
       });
 
@@ -221,7 +221,7 @@ describe('numeric-facet-set slice', () => {
     it('should deselect values for a facet with tabsExcluded when switching to an excluded tab', () => {
       vi.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll').mockReset();
 
-      state['facet1'] = buildMockNumericFacetSlice({
+      state.facet1 = buildMockNumericFacetSlice({
         tabs: {excluded: ['tab3']},
       });
 
@@ -235,7 +235,7 @@ describe('numeric-facet-set slice', () => {
     it('should not deselect values for a facet without tabs configuration', () => {
       vi.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll').mockReset();
 
-      state['facet1'] = buildMockNumericFacetSlice();
+      state.facet1 = buildMockNumericFacetSlice();
 
       numericFacetSetReducer(state, updateActiveTab('anyTab'));
 

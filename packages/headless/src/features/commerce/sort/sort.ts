@@ -9,7 +9,7 @@ import {
 } from '../../sort/sort.js';
 
 export type {SortByRelevance};
-export {SortBy, SortDirection, buildRelevanceSortCriterion};
+export {buildRelevanceSortCriterion, SortBy, SortDirection};
 
 export type SortByFields = Pick<CoreSortByFields, 'by'> & {
   fields: SortByFieldsFields[];

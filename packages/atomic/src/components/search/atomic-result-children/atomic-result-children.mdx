@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicResultChildrenStories from './atomic-result-children.new.stories';
+import meta, { Default, WithInheritTemplates } from './atomic-result-children.new.stories';
 import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={ AtomicResultChildrenStories } />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={ AtomicResultChildrenStories }
+  stories={{ Default, WithInheritTemplates }}
   githubPath="search/atomic-result-children/atomic-result-children.ts"
   tagName="atomic-result-children"
   className="AtomicResultChildren"

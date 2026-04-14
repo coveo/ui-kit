@@ -1,14 +1,14 @@
 {
-  "private": true,
-  "version": "1.0.0",
   "name": "@coveo/documentation",
-  "type": "module",
-  "main": "dist/index.js",
+  "version": "1.0.0",
+  "private": true,
   "files": [
     "dist",
     "configs",
     "tsconfig.json"
   ],
+  "type": "module",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc -p tsconfig.json"
   },

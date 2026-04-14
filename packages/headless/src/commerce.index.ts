@@ -22,6 +22,7 @@ import * as HighlightUtils from './utils/highlight.js';
 export type {Relay} from '@coveo/relay';
 export type {Middleware, Unsubscribe} from '@reduxjs/toolkit';
 export {getCommerceApiBaseUrl} from './api/commerce/commerce-api-client.js';
+export type {CartItemParam} from './api/commerce/commerce-api-params.js';
 export type {
   BaseProduct,
   ChildProduct,
@@ -33,10 +34,22 @@ export type {
   SpotlightContent,
 } from './api/commerce/common/result.js';
 export {ResultType} from './api/commerce/common/result.js';
+export type {
+  Badge,
+  BadgePlacement,
+  BadgesProduct,
+} from './api/commerce/product-enrichment/product-enrichment-response.js';
 export {
   getAnalyticsNextApiBaseUrl,
   getOrganizationEndpoint,
 } from './api/platform-client.js';
+// Types & Helpers
+export {
+  deserializeRelativeDate,
+  validateRelativeDate,
+} from './api/search/date/relative-date.js';
+export type {CategoryFacetSearchResult} from './api/search/facet-search/category-facet-search/category-facet-search-response.js';
+export type {SpecificFacetSearchResult as RegularFacetSearchResult} from './api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
 export type {
   CommerceEngine,
   CommerceEngineConfiguration,
@@ -56,53 +69,6 @@ export type {
 } from './app/engine-configuration.js';
 export type {LoggerOptions, LogLevel} from './app/logger.js';
 export type {NavigatorContext} from './app/navigator-context-provider.js';
-export * from './features/commerce/configuration/configuration-actions-loader.js';
-export * from './features/commerce/context/cart/cart-actions-loader.js';
-
-// Actions
-export * from './features/commerce/context/context-actions-loader.js';
-export * from './features/commerce/facets/category-facet/category-facet-actions-loader.js';
-export * from './features/commerce/facets/core-facet/core-facet-actions-loader.js';
-export * from './features/commerce/facets/date-facet/date-facet-actions-loader.js';
-export * from './features/commerce/facets/location-facet/location-facet-actions-loader.js';
-export * from './features/commerce/facets/numeric-facet/numeric-facet-actions-loader.js';
-export * from './features/commerce/facets/regular-facet/regular-facet-actions-loader.js';
-export * from './features/commerce/instant-products/instant-products-actions-loader.js';
-export * from './features/commerce/pagination/pagination-actions-loader.js';
-export * from './features/commerce/product/product-actions-loaders.js';
-export * from './features/commerce/product-enrichment/product-enrichment-actions-loader.js';
-export * from './features/commerce/product-listing/product-listing-actions-loader.js';
-export * from './features/commerce/product-listing-parameters/product-listing-parameters-actions-loader.js';
-export * from './features/commerce/query/query-actions-loader.js';
-export * from './features/commerce/query-set/query-set-actions-loader.js';
-export * from './features/commerce/query-suggest/query-suggest-actions-loader.js';
-export * from './features/commerce/recent-queries/recent-queries-actions-loader.js';
-export * from './features/commerce/recommendations/recommendations-actions-loader.js';
-export * from './features/commerce/search/search-actions-loader.js';
-export * from './features/commerce/search-parameters/search-parameters-actions-loader.js';
-export * from './features/commerce/sort/sort-actions-loader.js';
-export * from './features/commerce/spotlight-content/spotlight-content-actions-loaders.js';
-export * from './features/commerce/standalone-search-box-set/standalone-search-box-set-actions-loader.js';
-export * from './features/commerce/triggers/triggers-actions-loader.js';
-export type {HighlightKeyword} from './utils/highlight.js';
-export type {PlatformEnvironment} from './utils/url-utils.js';
-
-// Selectors
-export {Selectors};
-
-export type {CartItemParam} from './api/commerce/commerce-api-params.js';
-export type {
-  Badge,
-  BadgePlacement,
-  BadgesProduct,
-} from './api/commerce/product-enrichment/product-enrichment-response.js';
-// Types & Helpers
-export {
-  deserializeRelativeDate,
-  validateRelativeDate,
-} from './api/search/date/relative-date.js';
-export type {CategoryFacetSearchResult} from './api/search/facet-search/category-facet-search/category-facet-search-response.js';
-export type {SpecificFacetSearchResult as RegularFacetSearchResult} from './api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
 export type {
   Cart,
   CartInitialState,
@@ -345,10 +311,30 @@ export type {
   StandaloneSearchBoxOptions,
   StandaloneSearchBoxProps,
 } from './controllers/standalone-search-box/headless-standalone-search-box.ts';
+export * from './features/commerce/configuration/configuration-actions-loader.js';
+export * from './features/commerce/context/cart/cart-actions-loader.js';
 export type {Transaction} from './features/commerce/context/cart/cart-selector.js';
 export type {CartItemWithMetadata} from './features/commerce/context/cart/cart-state.js';
+// Actions
+export * from './features/commerce/context/context-actions-loader.js';
+export * from './features/commerce/facets/category-facet/category-facet-actions-loader.js';
+export * from './features/commerce/facets/core-facet/core-facet-actions-loader.js';
+export * from './features/commerce/facets/date-facet/date-facet-actions-loader.js';
 export type {FieldSuggestionsFacet} from './features/commerce/facets/field-suggestions-order/field-suggestions-order-state.ts';
+export * from './features/commerce/facets/location-facet/location-facet-actions-loader.js';
+export * from './features/commerce/facets/numeric-facet/numeric-facet-actions-loader.js';
+export * from './features/commerce/facets/regular-facet/regular-facet-actions-loader.js';
+export * from './features/commerce/instant-products/instant-products-actions-loader.js';
+export * from './features/commerce/pagination/pagination-actions-loader.js';
 export type {Parameters} from './features/commerce/parameters/parameters-actions.js';
+export {
+  productListingSerializer,
+  searchSerializer,
+} from './features/commerce/parameters/parameters-serializer.js';
+export * from './features/commerce/product/product-actions-loaders.js';
+export * from './features/commerce/product-enrichment/product-enrichment-actions-loader.js';
+export * from './features/commerce/product-listing/product-listing-actions-loader.js';
+export * from './features/commerce/product-listing-parameters/product-listing-parameters-actions-loader.js';
 export {ProductTemplatesHelpers} from './features/commerce/product-templates/product-templates-helpers.js';
 export type {
   ProductTemplate,
@@ -356,13 +342,22 @@ export type {
   ProductTemplatesManager,
 } from './features/commerce/product-templates/product-templates-manager.js';
 export {buildProductTemplatesManager} from './features/commerce/product-templates/product-templates-manager.js';
+export * from './features/commerce/query/query-actions-loader.js';
+export * from './features/commerce/query-set/query-set-actions-loader.js';
+export * from './features/commerce/query-suggest/query-suggest-actions-loader.js';
+export * from './features/commerce/recent-queries/recent-queries-actions-loader.js';
+export * from './features/commerce/recommendations/recommendations-actions-loader.js';
+export * from './features/commerce/search/search-actions-loader.js';
 export type {CommerceSearchParameters} from './features/commerce/search-parameters/search-parameters-actions.js';
+export * from './features/commerce/search-parameters/search-parameters-actions-loader.js';
+export * from './features/commerce/sort/sort-actions-loader.js';
+export * from './features/commerce/spotlight-content/spotlight-content-actions-loaders.js';
+export * from './features/commerce/standalone-search-box-set/standalone-search-box-set-actions-loader.js';
+export * from './features/commerce/triggers/triggers-actions-loader.js';
 export type {SearchParameters} from './features/search-parameters/search-parameter-actions.js';
 export type {Template} from './features/templates/templates-manager.ts';
-export {HighlightUtils};
-
-export {
-  productListingSerializer,
-  searchSerializer,
-} from './features/commerce/parameters/parameters-serializer.js';
+export type {HighlightKeyword} from './utils/highlight.js';
+export type {PlatformEnvironment} from './utils/url-utils.js';
 export {VERSION} from './utils/version.js';
+// Selectors
+export {HighlightUtils, Selectors};

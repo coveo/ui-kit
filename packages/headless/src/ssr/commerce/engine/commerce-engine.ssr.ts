@@ -27,10 +27,10 @@ export interface CommerceEngineDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 > extends EngineDefinition<
-    TControllers,
-    CommerceEngineOptions,
-    TSolutionType
-  > {}
+  TControllers,
+  CommerceEngineOptions,
+  TSolutionType
+> {}
 
 /**
  * Initializes a Commerce engine definition in SSR with given controllers definitions and commerce engine config.
