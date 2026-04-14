@@ -21,7 +21,7 @@ index 1a969c8c5db3730eb974936e54c1eb49df5d1a0f..7dfc58dbdf9d44639a1494eef378ed42
      setComponentVariable?: boolean;
  };
 diff --git a/dist/index.js b/dist/index.js
-index 88dcd49d80acb70039477e8794d0e8fa7d0a3e89..88e53c794c1d96cafaa44ed8fec66dc9e3f4dfed 100644
+index 88dcd49d80acb70039477e8794d0e8fa7d0a3e89..46d54d4eb246200a7573b00a7e38bd3512d0e2a2 100644
 --- a/dist/index.js
 +++ b/dist/index.js
 @@ -569,7 +569,7 @@ var options2 = {};
@@ -33,7 +33,7 @@ index 88dcd49d80acb70039477e8794d0e8fa7d0a3e89..88e53c794c1d96cafaa44ed8fec66dc9
    if (!args) {
      return html`<${unsafeStatic(component.tagName)}></${unsafeStatic(component.tagName)}>`;
    }
-@@ -580,13 +580,25 @@ function getTemplate(component, args, slot, argTypes, excludeCategories, setComp
+@@ -580,11 +580,23 @@ function getTemplate(component, args, slot, argTypes, excludeCategories, setComp
    const { attrOperators, propOperators, additionalAttrs } = getTemplateOperators(component, args, argTypes);
    const operators = { ...attrOperators, ...propOperators, ...additionalAttrs };
    const slotsTemplate = getSlotsTemplate(component, args, excludeCategories);
@@ -57,11 +57,8 @@ index 88dcd49d80acb70039477e8794d0e8fa7d0a3e89..88e53c794c1d96cafaa44ed8fec66dc9
 +      window.component = containerElement.querySelector('` + component.tagName + `');
 +    }\n</script>`
    ) : ""}
--`;
-+\`;
+ `;
  }
- function getStyleTemplate(component, args, excludeCategories) {
-   const cssPropertiesTemplate = excludeCategory("cssProps", excludeCategories) ? "" : getCssPropTemplate(component, args) || "";
 @@ -723,20 +735,32 @@ function getSlotsTemplate(component, args, excludeCategories) {
  ${slotTemplates}
  `) : "";
