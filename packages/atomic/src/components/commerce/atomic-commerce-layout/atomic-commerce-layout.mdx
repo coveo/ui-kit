@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicCommerceLayoutStories from './atomic-commerce-layout.new.stories';
+import meta, { Default } from './atomic-commerce-layout.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicCommerceLayoutStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicCommerceLayoutStories}
+  stories={{ Default }}
   githubPath="commerce/atomic-commerce-layout/atomic-commerce-layout.ts"
   tagName="atomic-commerce-layout"
   className="AtomicCommerceLayout"

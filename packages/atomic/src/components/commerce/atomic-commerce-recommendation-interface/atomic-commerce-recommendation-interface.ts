@@ -75,7 +75,7 @@ export class AtomicCommerceRecommendationInterface
           height: inherit;
         }
       }
-      `,
+    `,
   ];
 
   /**

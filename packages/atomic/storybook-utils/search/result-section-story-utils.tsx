@@ -1,6 +1,6 @@
 import type {Decorator, StoryContext} from '@storybook/web-components-vite';
 import {html} from 'lit';
-import type {ItemDisplayLayout} from '@/src/components/common/layout/display-options';
+import type {ItemDisplayLayout} from '@/src/components/common/layout/item-layout-utils';
 import type {SearchEngineConfiguration} from '@coveo/headless';
 import {wrapInResultList} from './result-list-wrapper';
 import {wrapInSearchInterface} from './search-interface-wrapper';
@@ -42,11 +42,14 @@ export interface ResultSectionStoryConfig {
   skipFirstSearch?: boolean;
 }
 
-
 export const getResultSectionDecorators = (
   config: ResultSectionStoryConfig = {}
 ): Decorator[] => {
-  const {includeCodeRoot = false, config: searchConfig, skipFirstSearch} = config;
+  const {
+    includeCodeRoot = false,
+    config: searchConfig,
+    skipFirstSearch,
+  } = config;
 
   const {decorator: resultTemplateDecorator} =
     wrapInResultTemplateForSections();
@@ -81,4 +84,4 @@ export const getResultSectionArgTypes = () => ({
 
 export const getResultSectionArgs = () => ({
   layout: 'list' as ItemDisplayLayout,
-});;
+});

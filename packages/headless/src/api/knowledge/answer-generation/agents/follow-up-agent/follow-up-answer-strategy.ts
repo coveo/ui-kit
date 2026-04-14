@@ -1,5 +1,5 @@
 import type {AgentSubscriber} from '@ag-ui/client';
-import type {Dispatch} from '@reduxjs/toolkit';
+import type {ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
 import {
   followUpCitationsReceived,
   followUpCompleted,
@@ -12,18 +12,26 @@ import {
   setFollowUpIsLoading,
   setFollowUpIsStreaming,
 } from '../../../../../features/follow-up-answers/follow-up-answers-actions.js';
+import {
+  logGeneratedAnswerResponseLinked,
+  logGeneratedAnswerStreamEnd,
+} from '../../../../../features/generated-answer/generated-answer-analytics-actions.js';
 import type {GenerationStepName} from '../../../../../features/generated-answer/generated-answer-state.js';
 import {mapRunErrorCode} from '../../../../../features/generated-answer/sse-generated-answer-errors.js';
 
 /**
  * Creates an AgentSubscriber that handles follow-up answer streaming events
  */
-export const createFollowUpStrategy = (dispatch: Dispatch): AgentSubscriber => {
+export const createFollowUpStrategy = (
+  dispatch: ThunkDispatch<unknown, unknown, UnknownAction>
+): AgentSubscriber => {
   let runId = '';
+  let answerHasText = false;
 
   return {
     onRunStartedEvent: ({event}) => {
       runId = event.runId;
+      answerHasText = false;
       dispatch(setActiveFollowUpAnswerId(runId));
       dispatch(setFollowUpIsLoading({answerId: runId, isLoading: false}));
       dispatch(setFollowUpIsStreaming({answerId: runId, isStreaming: true}));
@@ -47,6 +55,9 @@ export const createFollowUpStrategy = (dispatch: Dispatch): AgentSubscriber => {
       );
     },
     onTextMessageContentEvent: ({event}) => {
+      if (event.delta.length > 0) {
+        answerHasText = true;
+      }
       dispatch(
         followUpMessageChunkReceived({
           textDelta: event.delta,
@@ -92,13 +103,24 @@ export const createFollowUpStrategy = (dispatch: Dispatch): AgentSubscriber => {
     },
     onRunFinishedEvent: ({event}) => {
       const answerGenerated = event.result?.completionReason === 'ANSWERED';
+      const answerTextIsEmpty = answerGenerated ? !answerHasText : undefined;
       dispatch(
         followUpCompleted({
           cannotAnswer: !answerGenerated,
           answerId: runId,
         })
       );
+      dispatch(
+        logGeneratedAnswerStreamEnd(
+          answerGenerated,
+          runId,
+          answerTextIsEmpty,
+          event.threadId
+        )
+      );
+      dispatch(logGeneratedAnswerResponseLinked(runId));
       runId = '';
+      answerHasText = false;
     },
   };
 };

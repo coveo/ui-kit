@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicAriaLiveStories from './atomic-aria-live.new.stories';
+import meta, { Default } from './atomic-aria-live.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicAriaLiveStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicAriaLiveStories}
+  stories={{ Default }}
   githubPath="common/atomic-aria-live/atomic-aria-live.ts"
   tagName="atomic-aria-live"
   className="AtomicAriaLive"

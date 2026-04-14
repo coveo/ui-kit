@@ -54,6 +54,7 @@ export enum SearchPageEvents {
   /**
    * Identifies the custom event that gets logged when a user action triggers a new query set in the effective query pipeline on the search page.
    */
+  // oxlint-disable-next-line typescript/no-duplicate-enum-values
   triggerQuery = 'query',
   /**
    * Identifies the search cause that gets logged for pagination and other user navigation that do not express a new search intent.
@@ -102,7 +103,6 @@ export enum SearchPageEvents {
   /**
    * Identifies the custom event that gets logged when a user query encounters an error during execution.
    */
-  //eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
   queryError = 'query',
   /**
    * Identifies the search event that gets logged when a user action (that is not a query) reloads the Recommendations panel with new recommendations.

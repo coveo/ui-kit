@@ -8,8 +8,10 @@ import type {ControllerDefinitionWithoutProps} from '../../types/controller-defi
 
 export * from '../../../../controllers/tab/headless-tab.js';
 
-export interface TabDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, Tab> {}
+export interface TabDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  Tab
+> {}
 
 /**
  * Defines a `Tab` controller instance.

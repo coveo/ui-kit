@@ -81,13 +81,13 @@ export interface CoreFoldedResultListProps {
    */
   loadCollectionActionCreator: (
     collectionId: CollectionId
-    // biome-ignore lint/suspicious/noExplicitAny: third-party API requires 'any'
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- third-party API requires 'any'
   ) => AsyncThunkAction<any, CollectionId, any>;
   /**
    * The action creator to build the `fetchMoreResults` action.
    */
 
-  // biome-ignore lint/suspicious/noExplicitAny: third-party API requires 'any'
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- third-party API requires 'any'
   fetchMoreResultsActionCreator: () => AsyncThunkAction<unknown, void, any>;
 }
 

@@ -82,7 +82,7 @@ const sanitizeCalloutHtml = (input: string): string => {
     const isSafe =
       /^https?:\/\//i.test(href) ||
       /^mailto:/i.test(href) ||
-      /^#/i.test(href) ||
+      href.startsWith('#') ||
       /^\.{0,2}\//.test(href);
 
     if (!href || !isSafe) return '';

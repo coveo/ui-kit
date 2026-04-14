@@ -7,6 +7,15 @@ import {
 } from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-folded-result-list/atomic-folded-result-list.js';
+import '@/src/components/search/atomic-result-children/atomic-result-children.js';
+import '@/src/components/search/atomic-result-children-template/atomic-result-children-template.js';
+import '@/src/components/search/atomic-result-link/atomic-result-link.js';
+import '@/src/components/search/atomic-result-section-children/atomic-result-section-children.js';
+import '@/src/components/search/atomic-result-section-excerpt/atomic-result-section-excerpt.js';
+import '@/src/components/search/atomic-result-section-title/atomic-result-section-title.js';
+import '@/src/components/search/atomic-result-template/atomic-result-template.js';
+import '@/src/components/search/atomic-result-text/atomic-result-text.js';
 
 const searchApiHarness = new MockSearchApi();
 searchApiHarness.searchEndpoint.mock(() => baseFoldedResponse);

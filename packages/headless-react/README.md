@@ -1,8 +1,8 @@
 ---
 title: Home
 ---
-# Headless React Utils for SSR
 
+# Use the Headless React library for Server Side Rendering
 
 `@coveo/headless-react` provides React utilities for server-side rendering with headless controllers. This package includes several sub-packages:
 
@@ -10,8 +10,6 @@ title: Home
 - `@coveo/headless-react/ssr-commerce`: (Open Beta) For implementing a commerce storefront with server-side rendering.
 - `@coveo/headless-react/ssr-next`: For future breaking changes and the latest features related to SSR with React (experimental, subject to change).
 - `@coveo/headless-react/ssr-commerce-next`: For future breaking changes and the latest features for SSR commerce storefronts (experimental, subject to change).
-
-
 
 ## Learn more
 

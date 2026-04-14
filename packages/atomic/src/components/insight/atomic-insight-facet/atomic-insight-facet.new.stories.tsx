@@ -5,6 +5,7 @@ import {MockInsightApi} from '@/storybook-utils/api/insight/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
+import '@/src/components/insight/atomic-insight-facet/atomic-insight-facet.js';
 
 const {decorator, play} = wrapInInsightInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -121,10 +122,10 @@ export const WithSelectedValue: Story = {
   },
   decorators: [facetDecorator],
   beforeEach: () => {
-    // biome-ignore lint/suspicious/noExplicitAny: MSW mock response structure is dynamic and known at runtime
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- MSW mock response structure is dynamic and known at runtime
     mockInsightApi.searchEndpoint.mockOnce((response: any) => {
       const selectedFacets = response.facets?.map(
-        (facet: Object & {field: string; values: Object[]}) => {
+        (facet: object & {field: string; values: object[]}) => {
           if (facet.field === 'objecttype') {
             return {
               ...facet,

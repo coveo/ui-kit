@@ -1,0 +1,27 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oxc-project/oxc/main/npm/oxfmt/configuration_schema.json",
+  "printWidth": 80,
+  "singleQuote": true,
+  "trailingComma": "es5",
+  "bracketSpacing": false,
+  "ignorePatterns": [
+    "**/packages/quantic/**/*",
+    "**/packages/create-atomic-template/**/*",
+    "**/packages/create-atomic-component/template/**/*",
+    "**/packages/create-atomic-component-project/template/**/*",
+    "**/packages/create-atomic-result-component/template/**/*",
+    "**/.deployment.config/**/*",
+    "**/packages/atomic-legacy/**/*.tsx",
+    "**/packages/atomic/**/*.d.ts",
+    "**/packages/atomic/stencil-proxy/**/*",
+    "**/packages/documentation/**/assets/**/*",
+    "**/packages/headless/**/coveo.analytics/**/*",
+    "**/samples/headless/rga-angular/**/*.html",
+    "**/*.hbs",
+    "**/*.tw.css",
+    "**/*.mdx",
+    "**/CHANGELOG.md",
+    ".changeset/*.md",
+    "!.changeset/README.md"
+  ]
+}

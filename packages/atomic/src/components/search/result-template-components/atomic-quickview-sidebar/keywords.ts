@@ -68,12 +68,8 @@ export const renderKeywords: FunctionalComponent<KeywordsProps> = ({props}) => {
                     class="mr-2 h-5 w-5 flex-none"
                     style=${styleMap({backgroundColor: keyword.color})}
                   ></div>
-                  <div class="mr-2 grow whitespace-nowrap">
-                    ${keyword.text}
-                  </div>
-                  <div class="flex-none">
-                    (${formattedOccurrences})
-                  </div>
+                  <div class="mr-2 grow whitespace-nowrap">${keyword.text}</div>
+                  <div class="flex-none">(${formattedOccurrences})</div>
                 </div>
                 ${renderFieldsetGroup({props: {label: navigationLabel}})(html`
                   <div class="flex px-2">

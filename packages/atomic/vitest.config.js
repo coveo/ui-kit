@@ -37,7 +37,6 @@ function replace() {
   return replacePlugin({
     values: {
       'process.env.VERSION': `"0.0.0"`,
-      'import.meta.env.RESOURCE_URL': `"${resourceUrl}"`,
       __ATOMIC_VERSION__: `"${packageJson.version}"`,
       __HEADLESS_VERSION__: `"${packageJsonHeadless.version}"`,
     },

@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicProductTemplateStories from './atomic-product-template.new.stories';
+import meta, { InAProductList, InARecommendationList, InASearchBoxInstantProducts } from './atomic-product-template.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicProductTemplateStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicProductTemplateStories}
+  stories={{ InAProductList, InARecommendationList, InASearchBoxInstantProducts }}
   defaultStory="InAProductList"
   githubPath="commerce/atomic-product-template/atomic-product-template.ts"
   tagName="atomic-product-template"

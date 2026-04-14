@@ -7,6 +7,41 @@ import {
   richResponse,
 } from '@/storybook-utils/api/search/search-response';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
+import '@/src/components/search/atomic-did-you-mean/atomic-did-you-mean.js';
+import '@/src/components/search/atomic-facet/atomic-facet.js';
+import '@/src/components/search/atomic-field-condition/atomic-field-condition.js';
+import '@/src/components/ipx/atomic-ipx-button/atomic-ipx-button.js';
+import '@/src/components/ipx/atomic-ipx-modal/atomic-ipx-modal.js';
+import '@/src/components/ipx/atomic-ipx-refine-toggle/atomic-ipx-refine-toggle.js';
+import '@/src/components/ipx/atomic-ipx-result-link/atomic-ipx-result-link.js';
+import '@/src/components/ipx/atomic-ipx-tab/atomic-ipx-tab.js';
+import '@/src/components/ipx/atomic-ipx-tabs/atomic-ipx-tabs.js';
+import '@/src/components/common/atomic-layout-section/atomic-layout-section.js';
+import '@/src/components/search/atomic-load-more-results/atomic-load-more-results.js';
+import '@/src/components/search/atomic-no-results/atomic-no-results.js';
+import '@/src/components/search/atomic-notifications/atomic-notifications.js';
+import '@/src/components/search/atomic-query-error/atomic-query-error.js';
+import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
+import '@/src/components/search/atomic-result-badge/atomic-result-badge.js';
+import '@/src/components/search/atomic-result-date/atomic-result-date.js';
+import '@/src/components/search/atomic-result-fields-list/atomic-result-fields-list.js';
+import '@/src/components/search/atomic-result-list/atomic-result-list.js';
+import '@/src/components/search/atomic-result-printable-uri/atomic-result-printable-uri.js';
+import '@/src/components/search/atomic-result-rating/atomic-result-rating.js';
+import '@/src/components/search/atomic-result-section-badges/atomic-result-section-badges.js';
+import '@/src/components/search/atomic-result-section-bottom-metadata/atomic-result-section-bottom-metadata.js';
+import '@/src/components/search/atomic-result-section-excerpt/atomic-result-section-excerpt.js';
+import '@/src/components/search/atomic-result-section-title/atomic-result-section-title.js';
+import '@/src/components/search/atomic-result-section-title-metadata/atomic-result-section-title-metadata.js';
+import '@/src/components/search/atomic-result-template/atomic-result-template.js';
+import '@/src/components/search/atomic-result-text/atomic-result-text.js';
+import '@/src/components/search/atomic-search-box/atomic-search-box.js';
+import '@/src/components/search/atomic-search-interface/atomic-search-interface.js';
+import '@/src/components/search/atomic-smart-snippet/atomic-smart-snippet.js';
+import '@/src/components/search/atomic-smart-snippet-suggestions/atomic-smart-snippet-suggestions.js';
+import '@/src/components/search/atomic-text/atomic-text.js';
+import '@/src/components/common/atomic-timeframe/atomic-timeframe.js';
+import '@/src/components/search/atomic-timeframe-facet/atomic-timeframe-facet.js';
 
 async function initializeIpxInterface(canvasElement: HTMLElement) {
   await customElements.whenDefined('atomic-search-interface');
@@ -86,15 +121,33 @@ const meta: Meta = {
             <atomic-ipx-refine-toggle></atomic-ipx-refine-toggle>
             <atomic-ipx-tabs>
               <atomic-ipx-tab label="All" expression="" active></atomic-ipx-tab>
-              <atomic-ipx-tab label="HTML" expression="@filetype==html"></atomic-ipx-tab>
-              <atomic-ipx-tab label="PDF" expression="@filetype==pdf"></atomic-ipx-tab>
+              <atomic-ipx-tab
+                label="HTML"
+                expression="@filetype==html"
+              ></atomic-ipx-tab>
+              <atomic-ipx-tab
+                label="PDF"
+                expression="@filetype==pdf"
+              ></atomic-ipx-tab>
             </atomic-ipx-tabs>
           </atomic-layout-section>
         </div>
         <atomic-layout-section section="facets">
-          <atomic-facet field="source" label="Source" display-values-as="checkbox"></atomic-facet>
-          <atomic-facet field="filetype" label="Filetype" display-values-as="checkbox"></atomic-facet>
-          <atomic-timeframe-facet label="Listed within" with-date-picker heading-level="2">
+          <atomic-facet
+            field="source"
+            label="Source"
+            display-values-as="checkbox"
+          ></atomic-facet>
+          <atomic-facet
+            field="filetype"
+            label="Filetype"
+            display-values-as="checkbox"
+          ></atomic-facet>
+          <atomic-timeframe-facet
+            label="Listed within"
+            with-date-picker
+            heading-level="2"
+          >
             <atomic-timeframe unit="hour"></atomic-timeframe>
             <atomic-timeframe unit="day"></atomic-timeframe>
             <atomic-timeframe unit="week"></atomic-timeframe>
@@ -125,13 +178,19 @@ const meta: Meta = {
                   </style>
                   <atomic-result-section-badges>
                     <atomic-field-condition must-match-sourcetype="Salesforce">
-                      <atomic-result-badge label="Salesforce"></atomic-result-badge>
+                      <atomic-result-badge
+                        label="Salesforce"
+                      ></atomic-result-badge>
                     </atomic-field-condition>
                     <atomic-field-condition must-match-is-recommendation="true">
-                      <atomic-result-badge label="Recommended"></atomic-result-badge>
+                      <atomic-result-badge
+                        label="Recommended"
+                      ></atomic-result-badge>
                     </atomic-field-condition>
                     <atomic-field-condition must-match-is-top-result="true">
-                      <atomic-result-badge label="Top Result"></atomic-result-badge>
+                      <atomic-result-badge
+                        label="Top Result"
+                      ></atomic-result-badge>
                     </atomic-field-condition>
                   </atomic-result-section-badges>
                   <atomic-result-section-title>
@@ -139,10 +198,17 @@ const meta: Meta = {
                   </atomic-result-section-title>
                   <atomic-result-section-title-metadata>
                     <atomic-field-condition class="field" if-defined="snrating">
-                      <atomic-result-rating field="snrating"></atomic-result-rating>
+                      <atomic-result-rating
+                        field="snrating"
+                      ></atomic-result-rating>
                     </atomic-field-condition>
-                    <atomic-field-condition class="field" if-not-defined="snrating">
-                      <atomic-result-printable-uri max-number-of-parts="3"></atomic-result-printable-uri>
+                    <atomic-field-condition
+                      class="field"
+                      if-not-defined="snrating"
+                    >
+                      <atomic-result-printable-uri
+                        max-number-of-parts="3"
+                      ></atomic-result-printable-uri>
                     </atomic-field-condition>
                   </atomic-result-section-title-metadata>
                   <atomic-result-section-excerpt>
@@ -151,20 +217,33 @@ const meta: Meta = {
                   <atomic-result-section-bottom-metadata>
                     <atomic-result-fields-list>
                       <atomic-field-condition class="field" if-defined="author">
-                        <span class="field-label"><atomic-text value="author"></atomic-text>:</span>
+                        <span class="field-label"
+                          ><atomic-text value="author"></atomic-text>:</span
+                        >
                         <atomic-result-text field="author"></atomic-result-text>
                       </atomic-field-condition>
                       <atomic-field-condition class="field" if-defined="source">
-                        <span class="field-label"><atomic-text value="source"></atomic-text>:</span>
+                        <span class="field-label"
+                          ><atomic-text value="source"></atomic-text>:</span
+                        >
                         <atomic-result-text field="source"></atomic-result-text>
                       </atomic-field-condition>
-                      <atomic-field-condition class="field" if-defined="filetype">
-                        <span class="field-label"><atomic-text value="fileType"></atomic-text>:</span>
-                        <atomic-result-text field="filetype"></atomic-result-text>
+                      <atomic-field-condition
+                        class="field"
+                        if-defined="filetype"
+                      >
+                        <span class="field-label"
+                          ><atomic-text value="fileType"></atomic-text>:</span
+                        >
+                        <atomic-result-text
+                          field="filetype"
+                        ></atomic-result-text>
                       </atomic-field-condition>
                       <span class="field">
                         <span class="field-label">Date:</span>
-                        <atomic-result-date format="ddd MMM D YYYY"></atomic-result-date>
+                        <atomic-result-date
+                          format="ddd MMM D YYYY"
+                        ></atomic-result-date>
                       </span>
                     </atomic-result-fields-list>
                   </atomic-result-section-bottom-metadata>
@@ -179,7 +258,9 @@ const meta: Meta = {
           </atomic-layout-section>
         </div>
         <div class="footer-slot" slot="footer">
-          <a class="footer-link" href="https://coveo.com" target="_blank">Powered by Coveo</a>
+          <a class="footer-link" href="https://coveo.com" target="_blank"
+            >Powered by Coveo</a
+          >
         </div>
       </atomic-ipx-modal>
       <atomic-ipx-button label="Help"></atomic-ipx-button>

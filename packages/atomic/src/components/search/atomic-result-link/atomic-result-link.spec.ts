@@ -59,7 +59,10 @@ describe('atomic-result-link', () => {
       await renderInAtomicResult<AtomicResultLink>({
         template: html`<atomic-result-link
           href-template=${ifDefined(props.hrefTemplate)}
-        >${slottedContent ? unsafeHTML(slottedContent) : ''}</atomic-result-link>`,
+          >${slottedContent
+            ? unsafeHTML(slottedContent)
+            : ''}</atomic-result-link
+        >`,
         selector: 'atomic-result-link',
         result,
         interactiveResult,

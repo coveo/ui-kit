@@ -13,9 +13,9 @@ interface StringValueConfig<T extends string> extends ValueConfig<T> {
 const ISODateStringRegex =
   /^\d{4}(-\d\d(-\d\d(T\d\d:\d\d(:\d\d)?(\.\d+)?(([+-]\d\d:\d\d)|Z)?)?)?)?$/i;
 
-export class StringValue<T extends string = string>
-  implements SchemaValue<string>
-{
+export class StringValue<
+  T extends string = string,
+> implements SchemaValue<string> {
   private value: Value<T>;
   private config: StringValueConfig<T>;
   constructor(config: StringValueConfig<T> = {}) {

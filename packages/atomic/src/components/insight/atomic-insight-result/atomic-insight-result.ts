@@ -49,10 +49,10 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(
       @apply relative;
 
       .with-sections:not(.child-result) {
-      padding-top: var(--atomic-layout-spacing-y);
-      padding-bottom: var(--atomic-layout-spacing-y);
-      padding-right: var(--atomic-layout-spacing-x);
-      padding-left: var(--atomic-layout-spacing-x);
+        padding-top: var(--atomic-layout-spacing-y);
+        padding-bottom: var(--atomic-layout-spacing-y);
+        padding-right: var(--atomic-layout-spacing-x);
+        padding-left: var(--atomic-layout-spacing-x);
       }
     }
 
@@ -280,12 +280,7 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(
 
   public render() {
     if (this.renderingFunction !== undefined) {
-      return html`
-          <div
-            class="result-root"
-            ${ref(this.resultRootRef)}
-          ></div>
-      `;
+      return html` <div class="result-root" ${ref(this.resultRootRef)}></div> `;
     }
     // Handle case where content is undefined and layout was not created
     if (!this.itemLayoutController.getLayout()) {
@@ -293,13 +288,13 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(
     }
 
     return html`
-        <div
-          class="result-root ${this.itemLayoutController
-            .getCombinedClasses()
-            .join(' ')}"
-        >
-          ${unsafeHTML(this.getContentHTML())}
-        </div>
+      <div
+        class="result-root ${this.itemLayoutController
+          .getCombinedClasses()
+          .join(' ')}"
+      >
+        ${unsafeHTML(this.getContentHTML())}
+      </div>
     `;
   }
 

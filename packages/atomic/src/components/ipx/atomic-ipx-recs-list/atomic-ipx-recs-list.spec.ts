@@ -258,7 +258,7 @@ describe('atomic-ipx-recs-list', () => {
       },
     ])('$description', async ({oldState, newState, expectedResult}) => {
       const element = await setupElement();
-      // biome-ignore lint/suspicious/noExplicitAny: accessing private property in test
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- accessing private property in test
       (element as any).isEveryResultReady = true;
 
       element.recommendationListState = {
@@ -271,7 +271,7 @@ describe('atomic-ipx-recs-list', () => {
         new Map([['recommendationListState', {isLoading: oldState}]])
       );
 
-      // biome-ignore lint/suspicious/noExplicitAny: accessing private property in test
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- accessing private property in test
       expect((element as any).isEveryResultReady).toBe(expectedResult);
     });
   });

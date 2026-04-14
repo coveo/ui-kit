@@ -45,8 +45,8 @@ describe('atomic-insight-refine-modal', () => {
     const {element} =
       await renderInAtomicInsightInterface<AtomicInsightRefineModal>({
         template: html`<atomic-insight-refine-modal
-        ?is-open=${isOpen}
-      ></atomic-insight-refine-modal>`,
+          ?is-open=${isOpen}
+        ></atomic-insight-refine-modal>`,
         selector: 'atomic-insight-refine-modal',
         bindings: (bindings) => {
           bindings.engine = mockedEngine;

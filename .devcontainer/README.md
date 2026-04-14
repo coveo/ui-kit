@@ -59,6 +59,7 @@ This separation ensures expensive operations are cached in the prebuild, while c
 ## What's Included
 
 ### Pre-installed Tools
+
 - Node.js 22.x
 - pnpm 10.24.0
 - turbo 2.5.5
@@ -66,8 +67,10 @@ This separation ensures expensive operations are cached in the prebuild, while c
 - GitHub CLI
 
 ### VS Code Extensions
+
 The following extensions are automatically installed:
-- Biome (formatter and linter)
+
+- Oxc (Oxlint linter & Oxfmt formatter)
 - Code Spell Checker
 - GitHub Copilot & Copilot Chat
 - Lit Plugin
@@ -77,7 +80,8 @@ The following extensions are automatically installed:
 - Vitest Explorer
 
 ### VS Code Settings
-- Default formatter: Biome
+
+- Default formatter: Oxfmt (via Oxc extension)
 - Format on save: Enabled
 - Auto-organize imports: Enabled
 - LF line endings enforced
@@ -95,6 +99,7 @@ Prebuilds must be configured in the repository settings:
 4. Click **Create**
 
 ### Benefits of Prebuilds
+
 - Reduces codespace creation from ~5 minutes to ~30 seconds
 - Pre-installs all dependencies
 - Pre-builds all packages in the monorepo
@@ -121,21 +126,25 @@ pnpm run build
 ## Troubleshooting
 
 ### Codespace takes a long time to start
+
 - Check if prebuilds are enabled in repository settings
 - Verify the prebuild workflow ran successfully
 - Consider manually triggering a new prebuild
 
 ### pnpm install fails
+
 - Ensure `pnpm-lock.yaml` is up to date
 - Try deleting the pnpm store volume: `docker volume rm ui-kit-pnpm-store`
 - Rebuild the container: "Dev Containers: Rebuild Container"
 
 ### Permission errors
+
 - The container runs as the `node` user (UID 1000, GID 1000)
 - If you see permission errors, ensure your host files are accessible
 - On Linux, you may need to adjust file ownership
 
 ### Extensions not installing
+
 - Check VS Code output panel for extension installation logs
 - Verify extension IDs in `devcontainer.json` are correct
 - Some extensions may require additional configuration

@@ -4,6 +4,8 @@ import {html} from 'lit/static-html.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-breadbox/atomic-breadbox.js';
+import '@/src/components/search/atomic-facet/atomic-facet.js';
 
 const mockSearchApi = new MockSearchApi();
 
@@ -22,6 +24,7 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
+    chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
     },

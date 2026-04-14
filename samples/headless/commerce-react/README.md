@@ -25,16 +25,19 @@ This sample demonstrates how to build a custom commerce interface using `@coveo/
 ## Getting Started
 
 1. Install dependencies:
+
    ```bash
    npm install
    ```
 
 2. Build the project:
+
    ```bash
    npm run build
    ```
 
 3. Start the development server:
+
    ```bash
    npm run dev
    ```
@@ -53,6 +56,7 @@ npm run build     # Build for production
 ### Headless Commerce Controllers
 
 This sample demonstrates how to:
+
 - Initialize a Headless commerce engine
 - Use commerce-specific controllers (product listing, search, recommendations)
 - Implement product facets and filters
@@ -62,6 +66,7 @@ This sample demonstrates how to:
 ### Custom Commerce UI
 
 This sample provides complete control over your commerce interface:
+
 - Custom product card layouts
 - Branded search experience
 - Tailored filtering and sorting options
@@ -70,6 +75,7 @@ This sample provides complete control over your commerce interface:
 ### State Management
 
 The sample uses Headless controllers to manage:
+
 - Product search state
 - Facet selections
 - Pagination

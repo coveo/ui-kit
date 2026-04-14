@@ -71,9 +71,9 @@ describe('atomic-product-multi-value-text', () => {
     const {element} = await renderInAtomicProduct<AtomicProductMultiValueText>({
       template: html`
         <atomic-product-multi-value-text
-        field="${field}"
-        delimiter="${ifDefined(delimiter)}"
-        max-values-to-display="${ifDefined(maxValuesToDisplay)}"
+          field="${field}"
+          delimiter="${ifDefined(delimiter)}"
+          max-values-to-display="${ifDefined(maxValuesToDisplay)}"
         ></atomic-product-multi-value-text>
       `,
       selector: 'atomic-product-multi-value-text',

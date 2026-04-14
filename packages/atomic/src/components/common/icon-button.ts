@@ -35,15 +35,14 @@ export const renderIconButton: FunctionalComponent<IconButtonProps> = ({
       `)}
       ${when(
         props.badge,
-        () =>
-          html`
-            <span
-              part="${props.partPrefix}-badge"
-              class="bg-primary text-on-primary absolute -top-2 -right-2 block h-4 w-4 rounded-full text-center text-xs leading-4"
-            >
-              ${props.badge}
-            </span>
-          `
+        () => html`
+          <span
+            part="${props.partPrefix}-badge"
+            class="bg-primary text-on-primary absolute -top-2 -right-2 block h-4 w-4 rounded-full text-center text-xs leading-4"
+          >
+            ${props.badge}
+          </span>
+        `
       )}
     </div>
   `;

@@ -8,17 +8,14 @@ describe('SlotsForNoShadowDOMMixin', () => {
 
   class SlottedElement extends SlotsForNoShadowDOMMixin(LitElement) {
     render() {
-      return html`
-        <div class="content">${this.renderDefaultSlotContent(html`<span>Default content</span>`)}</div>
-      `;
+      // prettier-ignore
+      return html`<div class="content">${this.renderDefaultSlotContent(html`<span>Default content</span>`)}</div>`;
     }
   }
 
   class SimpleSlottedElement extends SlotsForNoShadowDOMMixin(LitElement) {
     render() {
-      return html`
-        <div class="main">${this.renderDefaultSlotContent()}</div>
-      `;
+      return html` <div class="main">${this.renderDefaultSlotContent()}</div> `;
     }
   }
   class LightDomParentElement extends HTMLElement {
@@ -91,7 +88,9 @@ describe('SlotsForNoShadowDOMMixin', () => {
 
     beforeEach(async () => {
       element = (await fixture(html`
-        <simple-slotted-element><p>Unslotted content</p></simple-slotted-element>
+        <simple-slotted-element
+          ><p>Unslotted content</p></simple-slotted-element
+        >
       `)) as TestableSlottedElement;
     });
 
@@ -114,8 +113,8 @@ describe('SlotsForNoShadowDOMMixin', () => {
 
       beforeEach(async () => {
         element = (await fixture(html`
-        <slotted-element><span>Custom Content</span></slotted-element>
-      `)) as TestableSlottedElement;
+          <slotted-element><span>Custom Content</span></slotted-element>
+        `)) as TestableSlottedElement;
       });
 
       it('should return placeholder', () => {
@@ -150,7 +149,7 @@ describe('SlotsForNoShadowDOMMixin', () => {
 
     it('should return fallback content when default slot contains only comments', async () => {
       const commentElement = (await fixture(html`
-      <slotted-element><!-- a comment --></slotted-element>
+        <slotted-element><!-- a comment --></slotted-element>
       `)) as TestableSlottedElement;
       const fallbackContent = html`<span>Fallback</span>`;
       const contentComment =
@@ -162,7 +161,7 @@ describe('SlotsForNoShadowDOMMixin', () => {
 
     it('should return fallback content when default slot contains only empty text nodes', async () => {
       const emptyTextElement = (await fixture(html`
-      <slotted-element>   \n   </slotted-element>
+        <slotted-element> </slotted-element>
       `)) as TestableSlottedElement;
       const fallbackContent = html`<span>Fallback</span>`;
       const contentEmptyText =

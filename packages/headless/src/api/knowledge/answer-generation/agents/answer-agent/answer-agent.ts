@@ -7,16 +7,21 @@ import {buildBaseAnswerGenerationUrl} from '../endpoint-url-builder.js';
  */
 export class AnswerAgent extends HttpAgent {
   protected requestInit(input: RunAgentInput): RequestInit {
-    const {params, accessToken} = input.forwardedProps || {};
+    const {params, accessToken, recordDebugSession} =
+      input.forwardedProps || {};
+    const body = {
+      ...params,
+      ...(recordDebugSession && {recordDebugSession: true}),
+    };
     return {
       method: 'POST',
       headers: {
         ...this.headers,
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
-        Accept: 'text/event-stream',
+        Accept: 'text/event-stream, application/json',
       },
-      body: JSON.stringify(params),
+      body: JSON.stringify(body),
       signal: this.abortController.signal,
     };
   }

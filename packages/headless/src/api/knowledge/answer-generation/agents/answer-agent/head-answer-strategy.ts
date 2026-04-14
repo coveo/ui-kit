@@ -1,7 +1,9 @@
 import type {AgentSubscriber} from '@ag-ui/client';
 import type {ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
 import {
+  clearFollowUpAnswersConversationToken,
   setFollowUpAnswersConversationId,
+  setFollowUpAnswersConversationToken,
   setIsEnabled,
 } from '../../../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {
@@ -30,12 +32,18 @@ import {mapRunErrorCode} from '../../../../../features/generated-answer/sse-gene
 export const createHeadAnswerStrategy = (
   dispatch: ThunkDispatch<unknown, unknown, UnknownAction>
 ): AgentSubscriber => {
+  let runId = '';
+  let answerHasText = false;
+
   return {
     onRunStartedEvent: ({event}) => {
+      runId = event.runId;
+      answerHasText = false;
       dispatch(setAnswerId(event.runId));
       dispatch(setIsLoading(false));
       dispatch(setIsStreaming(true));
       dispatch(setFollowUpAnswersConversationId(event.threadId));
+      dispatch(clearFollowUpAnswersConversationToken());
     },
     onStepStartedEvent: ({event}) => {
       dispatch(
@@ -54,6 +62,9 @@ export const createHeadAnswerStrategy = (
       );
     },
     onTextMessageContentEvent: ({event}) => {
+      if (event.delta.length > 0) {
+        answerHasText = true;
+      }
       dispatch(updateMessage({textDelta: event.delta}));
     },
     onCustomEvent: ({event}) => {
@@ -63,8 +74,13 @@ export const createHeadAnswerStrategy = (
           if (value?.contentFormat) {
             dispatch(setAnswerContentFormat(value.contentFormat));
           }
-          if (value?.followUpEnabled) {
+          if (typeof value?.followUpEnabled === 'boolean') {
             dispatch(setIsEnabled(value.followUpEnabled));
+          }
+          if (value?.conversationToken) {
+            dispatch(
+              setFollowUpAnswersConversationToken(value.conversationToken)
+            );
           }
           return;
         }
@@ -85,10 +101,18 @@ export const createHeadAnswerStrategy = (
     },
     onRunFinishedEvent: ({event}) => {
       const answerGenerated = event.result?.completionReason === 'ANSWERED';
+      const answerTextIsEmpty = answerGenerated ? !answerHasText : undefined;
       dispatch(setIsAnswerGenerated(answerGenerated));
       dispatch(setCannotAnswer(!answerGenerated));
       dispatch(setIsStreaming(false));
-      dispatch(logGeneratedAnswerStreamEnd(answerGenerated));
+      dispatch(
+        logGeneratedAnswerStreamEnd(
+          answerGenerated,
+          runId,
+          answerTextIsEmpty,
+          event.threadId
+        )
+      );
       dispatch(logGeneratedAnswerResponseLinked());
     },
   };

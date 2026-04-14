@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicExternalStories from './atomic-external.new.stories';
+import meta, { Default } from './atomic-external.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={ AtomicExternalStories } />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={ AtomicExternalStories }
+  stories={{ Default }}
   githubPath="search/atomic-external/atomic-external.ts"
   tagName="atomic-external"
   className="AtomicExternal"

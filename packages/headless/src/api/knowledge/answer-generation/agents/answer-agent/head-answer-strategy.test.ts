@@ -1,10 +1,11 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: unit test */
+/* oxlint-disable @typescript-eslint/no-explicit-any -- unit test */
 
 import type {AgentSubscriber} from '@ag-ui/client';
 import type {Dispatch} from '@reduxjs/toolkit';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {
   setFollowUpAnswersConversationId,
+  setFollowUpAnswersConversationToken,
   setIsEnabled,
 } from '../../../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {
@@ -87,6 +88,7 @@ describe('createHeadAnswerStrategy', () => {
         value: {
           contentFormat: 'text/markdown',
           followUpEnabled: true,
+          conversationToken: 'token-123',
         },
       },
     } as any);
@@ -95,6 +97,9 @@ describe('createHeadAnswerStrategy', () => {
       setAnswerContentFormat('text/markdown')
     );
     expect(dispatch).toHaveBeenCalledWith(setIsEnabled(true));
+    expect(dispatch).toHaveBeenCalledWith(
+      setFollowUpAnswersConversationToken('token-123')
+    );
   });
 
   it('updates citations when the server sends citation data', () => {
@@ -146,19 +151,29 @@ describe('createHeadAnswerStrategy', () => {
       'logGeneratedAnswerResponseLinked'
     ).mockReturnValue(responseLinkedAction);
     strategy = createHeadAnswerStrategy(dispatch);
+    strategy.onRunStartedEvent!({
+      event: {runId: 'run-001', threadId: 'thread-007'},
+    } as any);
+    vi.clearAllMocks();
 
     strategy.onRunFinishedEvent!({
       event: {
         result: {
           completionReason: 'ANSWERED',
         },
+        threadId: 'thread-007',
       },
     } as any);
 
     expect(dispatch).toHaveBeenNthCalledWith(1, setIsAnswerGenerated(true));
     expect(dispatch).toHaveBeenNthCalledWith(2, setCannotAnswer(false));
     expect(dispatch).toHaveBeenNthCalledWith(3, setIsStreaming(false));
-    expect(streamEndSpy).toHaveBeenCalledWith(true);
+    expect(streamEndSpy).toHaveBeenCalledWith(
+      true,
+      'run-001',
+      true,
+      'thread-007'
+    );
     expect(dispatch).toHaveBeenNthCalledWith(4, streamEndAction);
     expect(dispatch).toHaveBeenNthCalledWith(5, responseLinkedAction);
   });
@@ -174,19 +189,29 @@ describe('createHeadAnswerStrategy', () => {
       'logGeneratedAnswerResponseLinked'
     ).mockReturnValue(responseLinkedAction);
     strategy = createHeadAnswerStrategy(dispatch);
+    strategy.onRunStartedEvent!({
+      event: {runId: 'run-001', threadId: 'thread-007'},
+    } as any);
+    vi.clearAllMocks();
 
     strategy.onRunFinishedEvent!({
       event: {
         result: {
           completionReason: 'NO_RESULTS',
         },
+        threadId: 'thread-007',
       },
     } as any);
 
     expect(dispatch).toHaveBeenNthCalledWith(1, setIsAnswerGenerated(false));
     expect(dispatch).toHaveBeenNthCalledWith(2, setCannotAnswer(true));
     expect(dispatch).toHaveBeenNthCalledWith(3, setIsStreaming(false));
-    expect(streamEndSpy).toHaveBeenCalledWith(false);
+    expect(streamEndSpy).toHaveBeenCalledWith(
+      false,
+      'run-001',
+      undefined,
+      'thread-007'
+    );
     expect(dispatch).toHaveBeenNthCalledWith(4, streamEndAction);
     expect(dispatch).toHaveBeenNthCalledWith(5, responseLinkedAction);
   });

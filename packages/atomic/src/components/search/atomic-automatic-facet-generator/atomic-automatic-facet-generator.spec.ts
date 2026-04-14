@@ -52,11 +52,11 @@ describe('atomic-automatic-facet-generator', () => {
     const {element} =
       await renderInAtomicSearchInterface<AtomicAutomaticFacetGenerator>({
         template: html`<div>
-        <atomic-automatic-facet-generator
-          desired-count=${desiredCount}
-          number-of-values=${numberOfValues}
-        ></atomic-automatic-facet-generator>
-      </div>`,
+          <atomic-automatic-facet-generator
+            desired-count=${desiredCount}
+            number-of-values=${numberOfValues}
+          ></atomic-automatic-facet-generator>
+        </div>`,
         selector: 'atomic-automatic-facet-generator',
         bindings: (bindings) => {
           bindings.engine = mockedEngine;

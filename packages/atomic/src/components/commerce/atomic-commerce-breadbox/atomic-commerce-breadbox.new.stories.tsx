@@ -4,6 +4,8 @@ import {html} from 'lit';
 import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import '@/src/components/commerce/atomic-commerce-breadbox/atomic-commerce-breadbox.js';
+import '@/src/components/commerce/atomic-commerce-facets/atomic-commerce-facets.js';
 
 const mockCommerceApi = new MockCommerceApi();
 
@@ -25,6 +27,7 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
+    chromatic: {disableSnapshot: true},
     layout: 'fullscreen',
     actions: {
       handles: events,
@@ -44,9 +47,7 @@ export default meta;
 export const Default: Story = {
   decorators: [
     (story) => html`
-      <div id="code-root">
-        ${story()}
-      </div>
+      <div id="code-root">${story()}</div>
       <div style="margin:20px 0">
         Select facet value(s) to see the Breadbox component.
       </div>

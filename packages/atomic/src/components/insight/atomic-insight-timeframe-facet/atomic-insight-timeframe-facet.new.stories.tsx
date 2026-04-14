@@ -7,6 +7,8 @@ import {
   withBreadboxDecorator,
 } from '@/storybook-utils/common/facets-decorator';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
+import '@/src/components/insight/atomic-insight-timeframe-facet/atomic-insight-timeframe-facet.js';
+import '@/src/components/common/atomic-timeframe/atomic-timeframe.js';
 
 const mockInsightApi = new MockInsightApi();
 

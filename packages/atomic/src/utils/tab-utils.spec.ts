@@ -64,11 +64,14 @@ describe('tab-utils', () => {
           ['tab1', 'tab2', 'tab3'],
           ['tab1', 'tab2', 'tab3'],
         ],
-      ])('returns true when no tab is active and tabs are %s', (_, includeTabs, excludeTabs) => {
-        expect(
-          shouldDisplayOnCurrentTab(includeTabs, excludeTabs, activeTab)
-        ).toBe(true);
-      });
+      ])(
+        'returns true when no tab is active and tabs are %s',
+        (_, includeTabs, excludeTabs) => {
+          expect(
+            shouldDisplayOnCurrentTab(includeTabs, excludeTabs, activeTab)
+          ).toBe(true);
+        }
+      );
     });
   });
 });
