@@ -83,7 +83,10 @@ async function submitGeneratedAnswerQuery(storyContext: {
   const input = searchBox[0] as HTMLTextAreaElement;
   input.scrollIntoView({block: 'center'});
   await userEvent.click(input);
-  await userEvent.type(input, generatedAnswerQuery);
+  await userEvent.type(input, generatedAnswerQuery, {
+    initialSelectionStart: 0,
+    initialSelectionEnd: input.value.length,
+  });
   await userEvent.keyboard('{Enter}');
 }
 
