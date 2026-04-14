@@ -135,8 +135,9 @@ export type CoreEngineNext<
   readonly configuration: Configuration;
 };
 
-export interface EngineOptions<Reducers extends ReducersMapObject>
-  extends ExternalEngineOptions<StateFromReducersMapObject<Reducers>> {
+export interface EngineOptions<
+  Reducers extends ReducersMapObject,
+> extends ExternalEngineOptions<StateFromReducersMapObject<Reducers>> {
   /**
    * Map object of reducers.
    * A reducer is a pure function that takes the previous state and an action, and returns the next state.

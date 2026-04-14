@@ -18,10 +18,10 @@ import type {
 } from '../parameter-manager/headless-core-parameter-manager.js';
 
 export type {
+  BaseUrlManagerProps,
   UrlManager,
   UrlManagerInitialState,
   UrlManagerState,
-  BaseUrlManagerProps,
 };
 
 export interface UrlManagerProps extends BaseUrlManagerProps {

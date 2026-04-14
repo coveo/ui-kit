@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicProductPriceStories from './atomic-product-price.new.stories';
+import meta, { Default, WithEURCurrency } from './atomic-product-price.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicProductPriceStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicProductPriceStories}
+  stories={{ Default, WithEURCurrency }}
   githubPath="commerce/atomic-product-price/atomic-product-price.ts"
   tagName="atomic-product-price"
   className="AtomicProductPrice"

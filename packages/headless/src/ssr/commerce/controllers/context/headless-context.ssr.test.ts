@@ -58,7 +58,7 @@ describe('define commerce context', () => {
 
     contextDefinition.buildWithProps(engine, options);
 
-    expect(buildContextMock).toBeCalledWith(engine, {options});
+    expect(buildContextMock).toHaveBeenCalledWith(engine, {options});
   });
 
   it('should throw when props is undefined', () => {

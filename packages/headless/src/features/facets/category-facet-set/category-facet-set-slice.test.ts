@@ -987,7 +987,7 @@ describe('category facet slice', () => {
         'handleCategoryFacetDeselectAll'
       ).mockReset();
 
-      state['facet1'] = buildMockCategoryFacetSlice({
+      state.facet1 = buildMockCategoryFacetSlice({
         tabs: {included: ['tab1', 'tab2']},
       });
 
@@ -1004,7 +1004,7 @@ describe('category facet slice', () => {
         'handleCategoryFacetDeselectAll'
       ).mockReset();
 
-      state['facet1'] = buildMockCategoryFacetSlice({
+      state.facet1 = buildMockCategoryFacetSlice({
         tabs: {included: ['tab1', 'tab2']},
       });
 
@@ -1021,7 +1021,7 @@ describe('category facet slice', () => {
         'handleCategoryFacetDeselectAll'
       ).mockReset();
 
-      state['facet1'] = buildMockCategoryFacetSlice({
+      state.facet1 = buildMockCategoryFacetSlice({
         tabs: {excluded: ['tab3']},
       });
 
@@ -1038,7 +1038,7 @@ describe('category facet slice', () => {
         'handleCategoryFacetDeselectAll'
       ).mockReset();
 
-      state['facet1'] = buildMockCategoryFacetSlice();
+      state.facet1 = buildMockCategoryFacetSlice();
 
       categoryFacetSetReducer(state, updateActiveTab('anyTab'));
 

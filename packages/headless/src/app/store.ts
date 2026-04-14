@@ -11,8 +11,7 @@ import type {NavigatorContext} from './navigator-context-provider.js';
 import type {ThunkExtraArguments} from './thunk-extra-arguments.js';
 
 export interface CoreExtraArguments
-  extends ThunkExtraArguments,
-    AdditionalCoreExtraArguments {}
+  extends ThunkExtraArguments, AdditionalCoreExtraArguments {}
 
 export interface AdditionalCoreExtraArguments {
   relay: Relay;

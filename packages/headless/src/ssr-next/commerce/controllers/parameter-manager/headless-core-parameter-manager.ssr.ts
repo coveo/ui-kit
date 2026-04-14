@@ -22,12 +22,12 @@ import {SolutionType} from '../../types/controller-constants.js';
 import type {SearchAndListingControllerDefinitionWithProps} from '../../types/controller-definitions.js';
 
 export type {
+  CommerceSearchParameters,
   ParameterManager,
   ParameterManagerProps,
   ParameterManagerState,
   Parameters,
   ProductListingParameters,
-  CommerceSearchParameters,
 };
 
 export type ParameterManagerDefinition =
@@ -73,8 +73,10 @@ export function defineParameterManager(): ParameterManagerDefinition {
   };
 }
 
-export interface SSRParameterManagerProps<T extends Parameters>
-  extends Omit<ParameterManagerProps<T>, 'excludeDefaultParameters'> {}
+export interface SSRParameterManagerProps<T extends Parameters> extends Omit<
+  ParameterManagerProps<T>,
+  'excludeDefaultParameters'
+> {}
 
 function loadCommerceCommonParameterReducers(
   engine: CoreEngineNext

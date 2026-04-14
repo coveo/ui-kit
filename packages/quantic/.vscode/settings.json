@@ -1,7 +1,7 @@
 {
   "eslint.enable": true,
   "prettier.enable": true,
-  "biome.enabled": false,
+  "oxc.enable": false,
   
   // Use ESLint for LWC JavaScript files in Quantic
   "[javascript]": {

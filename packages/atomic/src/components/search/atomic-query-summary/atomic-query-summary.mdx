@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicQuerySummaryStories from './atomic-query-summary.new.stories';
+import meta, { Default } from './atomic-query-summary.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={ AtomicQuerySummaryStories } />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={ AtomicQuerySummaryStories }
+  stories={{ Default }}
   githubPath="search/atomic-query-summary/atomic-query-summary.ts"
   tagName="atomic-query-summary"
   className="AtomicQuerySummary"

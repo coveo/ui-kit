@@ -50,19 +50,19 @@ type RecommendationEngineState =
  *
  * @group Engine
  */
-export interface RecommendationEngine<State extends object = {}>
-  extends CoreEngine<
-    State & RecommendationEngineState,
-    SearchThunkExtraArguments
-  > {}
+export interface RecommendationEngine<
+  State extends object = {},
+> extends CoreEngine<
+  State & RecommendationEngineState,
+  SearchThunkExtraArguments
+> {}
 
 /**
  * The recommendation engine options.
  *
  * @group Engine
  */
-export interface RecommendationEngineOptions
-  extends ExternalEngineOptions<RecommendationEngineState> {
+export interface RecommendationEngineOptions extends ExternalEngineOptions<RecommendationEngineState> {
   /**
    * The recommendation engine configuration options.
    */

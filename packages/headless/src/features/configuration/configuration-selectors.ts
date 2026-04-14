@@ -22,3 +22,7 @@ export const selectEnvironment = (state: {configuration: ConfigurationState}) =>
  */
 export const selectAgentId = (state: {configuration: ConfigurationState}) =>
   state.configuration?.knowledge?.agentId;
+
+export const selectDebugAgentSession = (state: {
+  configuration: ConfigurationState;
+}) => state.configuration.knowledge.debugAgentSession;

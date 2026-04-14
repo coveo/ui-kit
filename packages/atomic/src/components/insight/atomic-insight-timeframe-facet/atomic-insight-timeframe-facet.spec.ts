@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/style/noNonNullAssertion: For testing, locators should always exist */
+/* oxlint-disable @typescript-eslint/no-non-null-assertion -- For testing, locators should always exist */
 
 import {
   buildDateFacet,
@@ -324,7 +324,7 @@ describe('atomic-insight-timeframe-facet', () => {
         async ({prop, validValue, invalidValue}) => {
           const {element} = await setupElement({[prop]: validValue});
 
-          // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+          // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
           (element as any)[prop] = invalidValue;
           await element.updateComplete;
 

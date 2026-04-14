@@ -7,6 +7,7 @@ Get started in seconds with a fully configured development environment:
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/coveo/ui-kit)
 
 GitHub Codespaces provides a complete, cloud-based development environment with:
+
 - ✅ All dependencies pre-installed (1.6GB of node_modules)
 - ✅ Full project built and ready (~5 minutes of build time saved)
 - ✅ VS Code extensions automatically installed
@@ -118,19 +119,20 @@ To ensure a consistent development experience, add the following to your `.vscod
 
 ```jsonc
 {
-  "editor.defaultFormatter": "biomejs.biome",
+  "editor.defaultFormatter": "oxc.oxc-vscode",
   "editor.codeActionsOnSave": {
-    "source.organizeImports.biome": "explicit",
-    "source.fixAll.biome": "explicit"
+    "source.organizeImports.oxc": "explicit",
+    "source.fixAll.oxc": "explicit",
   },
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
 }
 ```
 
 These settings will:
-- Use [Biome](https://marketplace.visualstudio.com/items?itemName=biomejs.biome) as the default code formatter.
-- Automatically organize imports and fix issues with Biome on save.
+
+- Use [Oxc](https://marketplace.visualstudio.com/items?itemName=oxc.oxc-vscode) as the default code formatter (via Oxfmt) and linter (via Oxlint).
+- Automatically organize imports and apply lint fixes on save.
 
 > **Note:**  
-> Actual formatting is controlled by the project's `biome.jsonc` configuration.  
+> Formatting is controlled by `.oxfmtrc.json` and linting by `.oxlintrc.json`.  
 > The above settings ensure your editor behavior matches project standards.

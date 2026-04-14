@@ -1,3 +1,5 @@
+import '@/src/components/recommendations/atomic-recs-list/atomic-recs-list.js';
+import '@/src/components/recommendations/atomic-recs-result-template/atomic-recs-result-template.js';
 import {Decorator} from '@storybook/web-components-vite';
 import {html, render, type TemplateResult} from 'lit';
 
@@ -23,7 +25,9 @@ export const wrapInRecsResultTemplate = (): {
 
     return html`
       <atomic-recs-list display="list" density="normal" image-size="none">
-        <atomic-recs-result-template>${templateTag}</atomic-recs-result-template>
+        <atomic-recs-result-template
+          >${templateTag}</atomic-recs-result-template
+        >
       </atomic-recs-list>
     `;
   };

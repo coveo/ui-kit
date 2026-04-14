@@ -808,12 +808,12 @@ const setupElement = async ({
     await renderInAtomicCommerceRecommendationInterface<AtomicCommerceRecommendationList>(
       {
         template: html`<atomic-commerce-recommendation-list
-            .display=${display}
-            .density=${density}
-            .imageSize=${imageSize}
-            .productsPerPage=${productsPerPage}
-            .slotId=${slotId}
-          ></atomic-commerce-recommendation-list>`,
+          .display=${display}
+          .density=${density}
+          .imageSize=${imageSize}
+          .productsPerPage=${productsPerPage}
+          .slotId=${slotId}
+        ></atomic-commerce-recommendation-list>`,
         selector: 'atomic-commerce-recommendation-list',
         bindings: (bindings) => {
           bindings.store.state.loadingFlags = isAppLoaded

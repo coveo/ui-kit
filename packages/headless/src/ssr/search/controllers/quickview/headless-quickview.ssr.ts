@@ -8,8 +8,10 @@ import type {ControllerDefinitionWithoutProps} from '../../../common/types/contr
 
 export * from '../../../../controllers/quickview/headless-quickview.js';
 
-export interface QuickviewDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, Quickview> {}
+export interface QuickviewDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  Quickview
+> {}
 
 /**
  * Defines a `Quickview` controller instance.

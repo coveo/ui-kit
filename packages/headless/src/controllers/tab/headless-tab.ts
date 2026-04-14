@@ -13,7 +13,7 @@ import {
   type TabState,
 } from '../core/tab/headless-core-tab.js';
 
-export type {Tab, TabProps, TabState, TabInitialState, TabOptions};
+export type {Tab, TabInitialState, TabOptions, TabProps, TabState};
 
 /**
  * Creates a `Tab` controller instance.

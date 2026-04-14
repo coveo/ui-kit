@@ -3,6 +3,7 @@ import {createFollowUpAgent} from '../../../api/knowledge/answer-generation/agen
 import {createFollowUpStrategy} from '../../../api/knowledge/answer-generation/agents/follow-up-agent/follow-up-answer-strategy.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
+import {fromAnalyticsStateToAnalyticsParams} from '../../../features/configuration/analytics-params.js';
 import {setAgentId} from '../../../features/configuration/configuration-actions.js';
 import {
   selectAccessToken,
@@ -17,6 +18,7 @@ import {
 } from '../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {followUpAnswersReducer as followUpAnswers} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import type {FollowUpAnswersState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
+import {withGeneratedAnswerSseErrorHelpers} from '../../../features/generated-answer/sse-generated-answer-errors.js';
 import type {GeneratedAnswerState} from '../../../index.js';
 import type {
   FollowUpAnswersSection,
@@ -30,8 +32,7 @@ import {
   type GeneratedAnswerProps,
 } from '../../core/generated-answer/headless-core-generated-answer.js';
 
-export interface GeneratedAnswerWithFollowUpsState
-  extends GeneratedAnswerState {
+export interface GeneratedAnswerWithFollowUpsState extends GeneratedAnswerState {
   followUpAnswers: FollowUpAnswersState;
 }
 
@@ -110,11 +111,7 @@ export function buildGeneratedAnswerWithFollowUps(
     throw loadReducerError;
   }
 
-  const {...controller} = buildCoreGeneratedAnswer(
-    engine,
-    analyticsClient,
-    props
-  );
+  const controller = buildCoreGeneratedAnswer(engine, analyticsClient, props);
   const getState = () => engine.state;
   engine.dispatch(setAgentId(props.agentId));
 
@@ -134,10 +131,20 @@ export function buildGeneratedAnswerWithFollowUps(
     ...controller,
     get state() {
       const followUpAnswersState = getState().followUpAnswers;
+      const generatedAnswerState = getState().generatedAnswer;
 
       return {
-        ...getState().generatedAnswer,
-        followUpAnswers: followUpAnswersState,
+        ...generatedAnswerState,
+        error: withGeneratedAnswerSseErrorHelpers(generatedAnswerState.error),
+        followUpAnswers: {
+          ...followUpAnswersState,
+          followUpAnswers: followUpAnswersState.followUpAnswers.map(
+            (followUpAnswer) => ({
+              ...followUpAnswer,
+              error: withGeneratedAnswerSseErrorHelpers(followUpAnswer.error),
+            })
+          ),
+        },
       };
     },
 
@@ -149,27 +156,43 @@ export function buildGeneratedAnswerWithFollowUps(
       );
     },
 
-    // TODO: SFINT-6665
     like(answerId?: string) {
       if (!answerId || this.state.answerId === answerId) {
         controller.like();
         return;
       }
 
-      if (!this.state.liked) {
+      const followUpAnswer = this.state.followUpAnswers.followUpAnswers.find(
+        (answer) => answer.answerId === answerId
+      );
+      if (!followUpAnswer) {
+        console.warn(
+          `No follow-up answer found with ID ${answerId}. Cannot like.`
+        );
+        return;
+      }
+      if (!followUpAnswer.liked) {
         engine.dispatch(likeFollowUp({answerId}));
         engine.dispatch(analyticsClient.logLikeGeneratedAnswer(answerId));
       }
     },
 
-    // TODO: SFINT-6665
     dislike(answerId?: string) {
       if (!answerId || this.state.answerId === answerId) {
         controller.dislike();
         return;
       }
 
-      if (!this.state.disliked) {
+      const followUpAnswer = this.state.followUpAnswers.followUpAnswers.find(
+        (answer) => answer.answerId === answerId
+      );
+      if (!followUpAnswer) {
+        console.warn(
+          `No follow-up answer found with ID ${answerId}. Cannot dislike.`
+        );
+        return;
+      }
+      if (!followUpAnswer.disliked) {
         engine.dispatch(dislikeFollowUp({answerId}));
         engine.dispatch(analyticsClient.logDislikeGeneratedAnswer(answerId));
       }
@@ -219,6 +242,7 @@ export function buildGeneratedAnswerWithFollowUps(
         return;
       }
       const conversationId = this.state.followUpAnswers.conversationId;
+      const conversationToken = this.state.followUpAnswers.conversationToken;
       if (!conversationId) {
         console.warn(
           'Missing conversationId when generating a follow-up answer. ' +
@@ -226,15 +250,28 @@ export function buildGeneratedAnswerWithFollowUps(
         );
         return;
       }
+      if (!conversationToken) {
+        console.warn(
+          'Missing conversationToken when generating a follow-up answer. ' +
+            'The generateFollowUpAnswer action requires an existing conversation.'
+        );
+        return;
+      }
 
       followUpAgent.abortRun();
       engine.dispatch(createFollowUpAnswer({question}));
+      const analyticsParams = fromAnalyticsStateToAnalyticsParams(
+        getState().configuration.analytics,
+        engine.navigatorContext
+      );
       try {
         await followUpAgent.runAgent(
           {
             forwardedProps: {
               q: question,
+              analytics: analyticsParams.analytics,
               conversationId,
+              conversationToken,
               accessToken,
             },
           },

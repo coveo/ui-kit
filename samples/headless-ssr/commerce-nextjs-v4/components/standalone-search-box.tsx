@@ -88,7 +88,6 @@ export default function StandaloneSearchBox() {
                     onClick={() =>
                       methods?.selectSuggestion(suggestion.rawValue)
                     }
-                    // biome-ignore lint/security/noDangerouslySetInnerHtml: <>
                     dangerouslySetInnerHTML={{
                       __html: suggestion.highlightedValue,
                     }}

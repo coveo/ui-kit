@@ -12,7 +12,7 @@ async function waitForHydration(page: Page) {
 }
 
 async function getResultTitles(page: Page) {
-  const items = page.locator('.result-list li');
+  const items = page.locator(resultListSelector);
   return items.allInnerTexts();
 }
 

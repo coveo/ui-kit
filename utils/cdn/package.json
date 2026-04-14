@@ -1,20 +1,22 @@
 {
   "name": "@coveo/cdn",
-  "private": true,
-  "authors": "Coveo",
   "version": "1.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
-    "serve": "node ./scripts/serve.mjs",
-    "deploy": "node ./scripts/deploy-local-cdn.mjs"
+    "start": "node ./scripts/serve.mjs",
+    "build": "node ./scripts/deploy-local-cdn.mjs",
+    "test": "vitest run --project=cdn-check"
+  },
+  "devDependencies": {
+    "@vitest/browser-playwright": "catalog:",
+    "local-web-server": "catalog:",
+    "playwright": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   },
   "engines": {
     "node": ">=22.14.0"
   },
-  "dependencies": {
-    "local-web-server": "catalog:"
-  },
-  "devDependencies": {
-    "@coveo/bueno": "workspace:*"
-  }
+  "authors": "Coveo"
 }

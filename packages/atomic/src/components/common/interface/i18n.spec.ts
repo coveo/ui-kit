@@ -2,7 +2,7 @@ import Backend from 'i18next-http-backend';
 import {describe, expect, it, vi} from 'vitest';
 import type {AnyEngineType} from './bindings';
 import {i18nBackendOptions, init18n} from './i18n';
-import type {BaseAtomicInterface} from './interface-common';
+import type {BaseAtomicInterface} from './interface-controller';
 
 describe('i18n', () => {
   describe('#i18nBackendOptions', () => {

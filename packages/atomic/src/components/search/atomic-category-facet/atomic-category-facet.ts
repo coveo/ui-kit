@@ -425,7 +425,9 @@ export class AtomicCategoryFacet
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.dependenciesManager?.stopWatching();
+    if (!this.isConnected) {
+      this.dependenciesManager?.stopWatching();
+    }
   }
 
   private get focusTargets() {
@@ -483,17 +485,13 @@ export class AtomicCategoryFacet
   }
 
   private initializeDependenciesManager() {
-    if (!this.dependsOn || Object.keys(this.dependsOn).length === 0) {
-      return;
-    }
-
     this.dependenciesManager = buildFacetConditionsManager(
       this.bindings.engine,
       {
         facetId: this.facetId!,
         conditions: parseDependsOn<
           FacetValueRequest | CategoryFacetValueRequest
-        >(this.dependsOn),
+        >(this.dependsOn || {}),
       }
     );
   }

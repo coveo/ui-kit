@@ -100,7 +100,7 @@ if (/parameters:\s*\{/.test(content)) {
   info('Parameters configured');
 }
 
-console.log('\n' + '='.repeat(50));
+console.log(`\n${'='.repeat(50)}`);
 if (hasErrors) {
   console.log('❌ Validation failed');
   process.exit(1);

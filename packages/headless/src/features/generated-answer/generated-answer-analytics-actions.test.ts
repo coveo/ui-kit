@@ -382,10 +382,28 @@ describe('generated answer analytics actions', () => {
         expect(mockToUse).toHaveBeenCalledWith({
           generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
           answerGenerated,
-          answerTextIsEmpty: answerGenerated || undefined,
+          answerTextIsEmpty: answerGenerated ? true : undefined,
         });
         expect(mockLogFunction).toHaveBeenCalledTimes(1);
       });
+    });
+
+    it('should prefer a provided answerTextIsEmpty over the state fallback', async () => {
+      await logGeneratedAnswerStreamEnd(true, undefined, false)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockMakeGeneratedAnswerStreamEnd;
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith({
+        generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
+        answerGenerated: true,
+        answerTextIsEmpty: false,
+      });
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
     it("should log #logGeneratedAnswerStreamEnd with 'non empty' answer", async () => {
@@ -405,7 +423,7 @@ describe('generated answer analytics actions', () => {
           },
         })
       );
-      await logGeneratedAnswerStreamEnd(true)()(
+      await logGeneratedAnswerStreamEnd(true, undefined, false)()(
         newEngine.dispatch,
         () => newEngine.state,
         {} as ThunkExtraArguments
@@ -418,6 +436,44 @@ describe('generated answer analytics actions', () => {
         generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
         answerGenerated: true,
         answerTextIsEmpty: false,
+      });
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
+    });
+
+    it('should log #logGeneratedAnswerStreamEnd with a provided answerId', async () => {
+      await logGeneratedAnswerStreamEnd(true, exampleProvidedAnswerId, true)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      const mockToUse = mockMakeGeneratedAnswerStreamEnd;
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith({
+        generativeQuestionAnsweringId: exampleProvidedAnswerId,
+        answerGenerated: true,
+        answerTextIsEmpty: true,
+      });
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
+    });
+
+    it('should log #logGeneratedAnswerStreamEnd with a provided conversationId', async () => {
+      await logGeneratedAnswerStreamEnd(
+        true,
+        exampleProvidedAnswerId,
+        true,
+        'conversation-123'
+      )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+
+      const mockToUse = mockMakeGeneratedAnswerStreamEnd;
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith({
+        generativeQuestionAnsweringId: exampleProvidedAnswerId,
+        answerGenerated: true,
+        answerTextIsEmpty: true,
+        conversationId: 'conversation-123',
       });
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
@@ -760,6 +816,23 @@ describe('generated answer analytics actions', () => {
       });
     });
 
+    it('should log #logGeneratedAnswerStreamEnd with a provided answerId', async () => {
+      await logGeneratedAnswerStreamEnd(true, exampleProvidedAnswerId)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toStrictEqual([
+        'Rga.AnswerReceived',
+        {
+          answerId: exampleProvidedAnswerId,
+          answerGenerated: true,
+        },
+      ]);
+    });
+
     it('should log #logGeneratedAnswerResponseLinked with the response id and answer id', async () => {
       await logGeneratedAnswerResponseLinked()()(
         engine.dispatch,
@@ -769,6 +842,23 @@ describe('generated answer analytics actions', () => {
 
       expect(emit).toHaveBeenCalledTimes(1);
       expect(emit.mock.calls[0]).toMatchSnapshot();
+    });
+
+    it('should log #logGeneratedAnswerResponseLinked with a provided answer id', async () => {
+      await logGeneratedAnswerResponseLinked(exampleProvidedAnswerId)()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toStrictEqual([
+        'Rga.ResponseLinked',
+        {
+          answerId: exampleProvidedAnswerId,
+          responseId: exampleSearchUid,
+        },
+      ]);
     });
   });
 });

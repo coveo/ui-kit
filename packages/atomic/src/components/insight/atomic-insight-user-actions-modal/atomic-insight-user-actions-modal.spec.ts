@@ -22,12 +22,13 @@ describe('atomic-insight-user-actions-modal', () => {
     const {element} =
       await renderInAtomicInsightInterface<AtomicInsightUserActionsModal>({
         template: html`<atomic-insight-user-actions-modal
-        .openButton=${props.openButton}
-        ?is-open=${props.isOpen ?? false}
-        user-id=${props.userId ?? defaultUserId}
-        ticket-creation-date-time=${props.ticketCreationDateTime ?? defaultTicketCreationDateTime}
-        .excludedCustomActions=${props.excludedCustomActions ?? []}
-      ></atomic-insight-user-actions-modal>`,
+          .openButton=${props.openButton}
+          ?is-open=${props.isOpen ?? false}
+          user-id=${props.userId ?? defaultUserId}
+          ticket-creation-date-time=${props.ticketCreationDateTime ??
+          defaultTicketCreationDateTime}
+          .excludedCustomActions=${props.excludedCustomActions ?? []}
+        ></atomic-insight-user-actions-modal>`,
         selector: 'atomic-insight-user-actions-modal',
       });
 

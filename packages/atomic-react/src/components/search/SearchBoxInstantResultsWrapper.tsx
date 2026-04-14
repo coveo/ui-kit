@@ -56,7 +56,7 @@ export const SearchBoxInstantResultsWrapper: React.FC<WrapperProps> = ({
 
   return (
     <AtomicSearchBoxInstantResults
-      // biome-ignore lint/suspicious/noExplicitAny: Ref typing for web component
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Ref typing for web component
       ref={ref as any}
       maxResultsPerQuery={maxResultsPerQuery}
       imageSize={imageSize}

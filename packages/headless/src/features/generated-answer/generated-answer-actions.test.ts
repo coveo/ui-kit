@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: unit tests */
+/* oxlint-disable @typescript-eslint/no-explicit-any -- unit tests */
 import {buildMockCitation} from '../../test/mock-citation.js';
 import {
   generateAnswer,

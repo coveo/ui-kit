@@ -24,8 +24,7 @@ export type {
  * @group Controllers
  * @category SmartSnippetQuestionsList
  */
-export interface SmartSnippetQuestionsListState
-  extends CoreSmartSnippetQuestionsListState {}
+export interface SmartSnippetQuestionsListState extends CoreSmartSnippetQuestionsListState {}
 
 /**
  * The insight `SmartSnippetQuestionsList` controller allows to manage additional queries for which a SmartSnippet model can provide relevant excerpts.
@@ -33,8 +32,7 @@ export interface SmartSnippetQuestionsListState
  * @group Controllers
  * @category SmartSnippetQuestionsList
  */
-export interface SmartSnippetQuestionsList
-  extends CoreSmartSnippetQuestionsList {
+export interface SmartSnippetQuestionsList extends CoreSmartSnippetQuestionsList {
   /**
    * The state of the SmartSnippetQuestionsList controller.
    * */

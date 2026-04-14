@@ -1,6 +1,7 @@
 import {
   selectAccessToken,
   selectAgentId,
+  selectDebugAgentSession,
   selectEnvironment,
   selectLocale,
   selectOrganizationId,
@@ -117,6 +118,31 @@ describe('configuration selectors', () => {
       };
 
       expect(selectAgentId(state)).toBeUndefined();
+    });
+  });
+
+  describe('selectDebugAgentSession', () => {
+    it('returns true when debugAgentSession is enabled', () => {
+      const state = {
+        configuration: {
+          ...getConfigurationInitialState(),
+          knowledge: {
+            answerConfigurationId: '',
+            agentId: 'test-agent-123',
+            debugAgentSession: true,
+          },
+        },
+      };
+
+      expect(selectDebugAgentSession(state)).toBe(true);
+    });
+
+    it('returns undefined when debugAgentSession is not set', () => {
+      const state = {
+        configuration: getConfigurationInitialState(),
+      };
+
+      expect(selectDebugAgentSession(state)).toBeUndefined();
     });
   });
 });

@@ -8,8 +8,10 @@ import type {ControllerDefinitionWithoutProps} from '../../../common/types/contr
 
 export * from '../../../../controllers/static-filter/headless-static-filter.js';
 
-export interface StaticFilterDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, StaticFilter> {}
+export interface StaticFilterDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  StaticFilter
+> {}
 
 /**
  * Defines a `StaticFilter` controller instance.

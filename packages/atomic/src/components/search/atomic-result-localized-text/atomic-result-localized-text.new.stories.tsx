@@ -6,6 +6,7 @@ import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
 import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import type {AtomicSearchInterface} from '../atomic-search-interface/atomic-search-interface';
+import '@/src/components/search/atomic-result-localized-text/atomic-result-localized-text.js';
 
 const searchApiHarness = new MockSearchApi();
 

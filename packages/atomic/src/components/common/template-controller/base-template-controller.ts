@@ -15,9 +15,9 @@ interface Template<TCondition> {
   priority: number;
 }
 
-export abstract class BaseTemplateController<TCondition>
-  implements ReactiveController
-{
+export abstract class BaseTemplateController<
+  TCondition,
+> implements ReactiveController {
   private static readonly ERRORS = {
     invalidParent: (tagName: string, validParents: string[]) =>
       `The "${tagName}" component has to be the child of one of the following: ${validParents

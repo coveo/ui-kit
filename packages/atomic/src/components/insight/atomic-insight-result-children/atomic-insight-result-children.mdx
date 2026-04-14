@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicInsightResultChildrenStories from './atomic-insight-result-children.new.stories';
+import meta, { Default, WithBeforeChildrenSlot, WithAfterChildrenSlot, WithBothSlots } from './atomic-insight-result-children.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicInsightResultChildrenStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicInsightResultChildrenStories}
+  stories={{ Default, WithBeforeChildrenSlot, WithAfterChildrenSlot, WithBothSlots }}
   defaultStory="Default"
   githubPath="insight/atomic-insight-result-children/atomic-insight-result-children.ts"
   tagName="atomic-insight-result-children"

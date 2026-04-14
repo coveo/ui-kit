@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicRefineModalStories from './atomic-refine-modal.new.stories';
+import meta, { Default } from './atomic-refine-modal.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicRefineModalStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicRefineModalStories}
+  stories={{ Default }}
   githubPath="search/atomic-refine-modal/atomic-refine-modal.ts"
   tagName="atomic-refine-modal"
   className="AtomicRefineModal"

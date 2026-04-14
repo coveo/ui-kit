@@ -59,7 +59,7 @@ export default function NumericFacet(props: INumericFacetProps) {
 
   const onChangeManualRangeStart = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentManualRange({
-      start: Number.parseInt(e.target.value),
+      start: Number.parseInt(e.target.value, 10),
       end: currentManualRange.end,
     });
   };
@@ -67,7 +67,7 @@ export default function NumericFacet(props: INumericFacetProps) {
   const onChangeManualRangeEnd = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentManualRange({
       start: currentManualRange.start,
-      end: Number.parseInt(e.target.value),
+      end: Number.parseInt(e.target.value, 10),
     });
   };
 

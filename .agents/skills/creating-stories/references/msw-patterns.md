@@ -16,10 +16,7 @@ const answerApiHarness = new MockAnswerApi();
 const meta: Meta = {
   parameters: {
     msw: {
-      handlers: [
-        ...searchApiHarness.handlers,
-        ...answerApiHarness.handlers,
-      ],
+      handlers: [...searchApiHarness.handlers, ...answerApiHarness.handlers],
     },
   },
 };
@@ -34,10 +31,7 @@ searchApiHarness.searchEndpoint.mock((response) => {
   if ('facets' in response) {
     return {
       ...response,
-      facets: [
-        ...(response.facets || []),
-        customFacetResponse,
-      ],
+      facets: [...(response.facets || []), customFacetResponse],
     };
   }
   return response;
@@ -53,7 +47,7 @@ const meta: Meta = {
   beforeEach: () => {
     searchApiHarness.searchEndpoint.clear();
     searchApiHarness.facetSearchEndpoint.clear();
-    
+
     // Mock facet search results
     searchApiHarness.facetSearchEndpoint.mock(() => ({
       values: [
@@ -76,7 +70,7 @@ const searchApiHarness = new MockSearchApi();
 const meta: Meta = {
   beforeEach: () => {
     searchApiHarness.querySuggestEndpoint.clear();
-    
+
     searchApiHarness.querySuggestEndpoint.mock(() => ({
       completions: [
         {expression: 'laptop', score: 100, highlighted: '[laptop]'},
@@ -112,8 +106,8 @@ const meta: Meta = {
 ```typescript
 commerceApiHarness.productListingEndpoint.mock((response) => ({
   ...response,
-  products: response.products.filter(p => p.ec_price < 100),
-  totalCount: response.products.filter(p => p.ec_price < 100).length,
+  products: response.products.filter((p) => p.ec_price < 100),
+  totalCount: response.products.filter((p) => p.ec_price < 100).length,
 }));
 ```
 
@@ -185,14 +179,14 @@ Test multi-step interactions:
 const meta: Meta = {
   beforeEach: () => {
     searchApiHarness.searchEndpoint.clear();
-    
+
     // First search
     searchApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
       results: response.results.slice(0, 10),
       totalCount: 100,
     }));
-    
+
     // After refinement
     searchApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
@@ -223,6 +217,7 @@ const meta: Meta = {
 ```
 
 Available rich responses:
+
 - `search/search-response.ts` - `richResponse`
 - `commerce/search-response.ts` - `richResponse`
 - `insight/search-response.ts` - `richResponse`
@@ -333,8 +328,18 @@ const timeframeFacetResponse = {
   facetId: 'date',
   field: 'date',
   values: [
-    {start: '2024-01-01', end: '2024-12-31', state: 'idle', numberOfResults: 80},
-    {start: '2023-01-01', end: '2023-12-31', state: 'idle', numberOfResults: 120},
+    {
+      start: '2024-01-01',
+      end: '2024-12-31',
+      state: 'idle',
+      numberOfResults: 80,
+    },
+    {
+      start: '2023-01-01',
+      end: '2023-12-31',
+      state: 'idle',
+      numberOfResults: 120,
+    },
   ],
 };
 ```
@@ -348,7 +353,7 @@ export const LongContent: Story = {
   beforeEach: () => {
     searchApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
-      results: response.results.map(result => ({
+      results: response.results.map((result) => ({
         ...result,
         title: 'A'.repeat(200),
         excerpt: 'B'.repeat(1000),
@@ -365,7 +370,7 @@ export const SpecialCharacters: Story = {
   beforeEach: () => {
     searchApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
-      results: response.results.map(result => ({
+      results: response.results.map((result) => ({
         ...result,
         title: 'Test <script>alert("xss")</script>',
         raw: {

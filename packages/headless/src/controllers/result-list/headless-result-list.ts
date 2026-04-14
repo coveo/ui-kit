@@ -8,7 +8,7 @@ import {
   type ResultListState,
 } from '../core/result-list/headless-core-result-list.js';
 
-export type {ResultListOptions, ResultListProps, ResultListState, ResultList};
+export type {ResultList, ResultListOptions, ResultListProps, ResultListState};
 
 /**
  * Creates a `ResultList` controller instance.
