@@ -6,9 +6,20 @@
   dependencyDashboard: true,
   packageRules: [
     {
-      groupName: 'all dependencies',
-      groupSlug: 'all',
+      groupName: 'all production dependencies',
+      groupSlug: 'prod',
       matchPackageNames: ['*'],
+      matchDepTypes: ['dependencies'],
+    },
+    {
+      groupName: 'all dev dependencies',
+      groupSlug: 'dev',
+      matchPackageNames: ['*'],
+      matchDepTypes: [
+        'devDependencies',
+        'peerDependencies',
+        'optionalDependencies',
+      ],
     },
     {
       groupName: 'wc-toolkit storybook-helpers',
