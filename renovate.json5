@@ -168,5 +168,8 @@
     'msw',
     // Problems with angular. Just ignore it.
     'zone.js',
+    // vitest 4.1.x breaks vi.mock() for CJS modules in browser mode.
+    'vitest',
+    '@vitest/browser-playwright',
   ],
 }
