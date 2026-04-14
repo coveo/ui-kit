@@ -259,7 +259,7 @@ jobs:
       - run: git branch main origin/main
         if: ${{ github.event_name != 'pull_request' }}
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo test --affected --filter=!@coveo/headless
+      - run: pnpm exec turbo test --filter=!@coveo/headless
   unit-test-headless:
     name: 'Run headless unit tests (shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }})'
     needs: build
@@ -284,7 +284,7 @@ jobs:
       - run: git branch main origin/main
         if: ${{ github.event_name != 'pull_request' }}
       - uses: ./.github/actions/setup
-      - run: pnpm exec turbo test --affected --filter=@coveo/headless
+      - run: pnpm exec turbo test --filter=@coveo/headless
         env:
           VITEST_SHARD: '${{ matrix.shardIndex }}/${{ matrix.shardTotal }}'
   package-compatibility:
