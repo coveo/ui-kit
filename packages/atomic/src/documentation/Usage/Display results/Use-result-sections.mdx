@@ -13,7 +13,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 The result sections help you build desktop- and mobile-friendly result templates faster.
 
-Most sections have a font size and a line height that vary based on the configuration of the [`atomic-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-list/) and [`atomic-folded-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-folded-result-list/).
+Most sections have a font size and a line height that vary based on the configuration of the [`atomic-result-list`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-list--default) and [`atomic-folded-result-list`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-folded-result-list--default).
 
 The result sections are rearranged and resized based on:
 
@@ -32,7 +32,7 @@ Atomic supports nine result sections, each of which has a different purpose and 
 * emphasized
 * excerpt
 * bottom metadata
-* children (only for [`atomic-folded-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-folded-result-list/), see [Implement folding](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-display-results-implement-folding--docs))
+* children (only for [`atomic-folded-result-list`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-folded-result-list--default), see [Implement folding](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-display-results-implement-folding--docs))
 
 ![Atomic Grid or List Template Layout](https://docs.coveo.com/en/assets/images/atomic/defining-list-or-grid.png)
 
@@ -64,7 +64,7 @@ A result list with sections on a mobile device.
 
 ### Visual Section
 
-**Element:** [`atomic-result-section-visual`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-section-visual/)
+**Element:** [`atomic-result-section-visual`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-section-visual--default)
 
 **Attributes:**
 
@@ -83,9 +83,9 @@ An icon can quickly show the item type, or an avatar can quickly show the target
 
 **Recommended child elements**
 
-* [`atomic-result-image`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-image/)
-* [`atomic-result-icon`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-icon/)
-* [`atomic-icon`](https://docs.coveo.com/en/atomic/latest/reference/common-components/atomic-icon/)
+* [`atomic-result-image`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-image--default)
+* [`atomic-result-icon`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-icon--default)
+* [`atomic-icon`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-icon--default)
   * Some of the icons included with Atomic can't be recolored, use your own icons or add a background color.
   * Adding the following CSS is recommended: `width: 100%; height: auto;`
 * `img`
@@ -95,7 +95,7 @@ An icon can quickly show the item type, or an avatar can quickly show the target
 
 ### Badges Section
 
-**Element:** [`atomic-result-section-badges`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-section-badges/)
+**Element:** [`atomic-result-section-badges`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-section-badges--default)
 
 **Purpose:** This section provides badges that highlight special features of the item.
 
@@ -108,13 +108,13 @@ An icon can quickly show the item type, or an avatar can quickly show the target
 
 **Recommended child elements**
 
-* [`atomic-result-badge`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-badge/)
+* [`atomic-result-badge`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-badge--default)
 * `div`
   * Adding the following CSS is recommended: `height: var(--row-height)`
 
 ### Actions Section
 
-**Element:** [`atomic-result-section-actions`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-section-actions/)
+**Element:** [`atomic-result-section-actions`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-section-actions--default)
 
 **Purpose:** This section allows the information seeker to perform an action on an item without having to view its details.
 For example, in Commerce you can add an item to the cart directly or add it to a wish list to view at a later time.
@@ -128,12 +128,12 @@ For example, in Commerce you can add an item to the cart directly or add it to a
 
 **Recommended child elements**
 
-* `button` (using a [custom result component](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-custom-web-components--docs#custom-result-template-component-example))
+* `button` (using a [custom result component](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-custom-web-components--docs))
   * Adding the following CSS is recommended: `height: var(--row-height)`
 
 ### Title Section
 
-**Element:** [`atomic-result-section-title`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-section-title/)
+**Element:** [`atomic-result-section-title`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-section-title--default)
 
 **Purpose:** This section identifies the item by its name, and its main use is to make the result list scannable.
 This is usually the page title.
@@ -146,11 +146,11 @@ This is usually the page title.
 
 **Recommended child elements**
 
-* [`atomic-result-link`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-link/)
+* [`atomic-result-link`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-link--default)
 
 ### Title Metadata Section
 
-**Element:** [`atomic-result-section-title-metadata`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-section-title-metadata/)
+**Element:** [`atomic-result-section-title-metadata`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-section-title-metadata--default)
 
 **Purpose:** This section surfaces some fields that are directly related to the title of the item.
 For example, in Commerce, this could be the item's rating, which is tied to the nature of the product itself, rather than to the product's description.
@@ -162,12 +162,12 @@ For example, in Commerce, this could be the item's rating, which is tied to the 
 
 **Recommended child elements**
 
-* [`atomic-result-rating`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-rating/)
+* [`atomic-result-rating`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-rating--default)
 * Anything
 
 ### Emphasized Section
 
-**Element:** [`atomic-result-section-emphasized`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-section-emphasized/)
+**Element:** [`atomic-result-section-emphasized`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-section-emphasized--default)
 
 **Purpose:** This section displays the field that's important for its search criteria.
 For example, in Commerce, a product's cost is often more important than the title itself.
@@ -179,12 +179,12 @@ For example, in Commerce, a product's cost is often more important than the titl
 
 **Recommended child elements**
 
-* [`atomic-result-number`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-number/) (for example, the price of a product)
+* [`atomic-result-number`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-number--default) (for example, the price of a product)
 * Anything
 
 ### Excerpt Section
 
-**Element:** [`atomic-result-section-excerpt`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-section-excerpt/)
+**Element:** [`atomic-result-section-excerpt`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-section-excerpt--default)
 
 **Purpose:** This section contains an informative summary of the item's content.
 
@@ -197,11 +197,11 @@ For example, in Commerce, a product's cost is often more important than the titl
 
 **Recommended child elements**
 
-* [`atomic-result-text`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-text/)
+* [`atomic-result-text`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-text--default)
 
 ### Bottom Metadata Section
 
-**Element:** [`atomic-result-section-bottom-metadata`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-section-bottom-metadata/)
+**Element:** [`atomic-result-section-bottom-metadata`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-section-bottom-metadata--default)
 
 **Purpose:** This section displays additional descriptive information about the item.
 
@@ -215,29 +215,29 @@ For example, in Commerce, a product's cost is often more important than the titl
 
 **Recommended child elements**
 
-* [`atomic-result-fields-list`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-fields-list/)
+* [`atomic-result-fields-list`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-fields-list--default)
   * This component will automatically add dividers between all its children and hide overflowing elements or wrap them to the next line. It's recommended to wrap elements that should not be separated like a field label and a field value in a `span` element.
-* [`atomic-result-text`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-text/)
+* [`atomic-result-text`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-text--default)
 * Anything
 
 ### Children Section
 
 > **Important**
 >
-> This section should only be used inside [`atomic-folded-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-folded-result-list/) (see [Implement folding](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-display-results-implement-folding--docs)), not [`atomic-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-list/).
+> This section should only be used inside [`atomic-folded-result-list`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-folded-result-list--default) (see [Implement folding](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-display-results-implement-folding--docs)), not [`atomic-result-list`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-list--default).
 
 
-**Element:** [`atomic-result-section-children`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-section-children/)
+**Element:** [`atomic-result-section-children`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-section-children--default)
 
-**Purpose:** This section displays the folded results, available when using the [`atomic-result-children`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-children/) component.
+**Purpose:** This section displays the folded results, available when using the [`atomic-result-children`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-children--default) component.
 
 **Behavior:**
 
-* Will give a margin, padding, border and border radius to its child [`atomic-result-children`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-children/).
+* Will give a margin, padding, border and border radius to its child [`atomic-result-children`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-children--default).
 
 **Recommended child element**
 
-* [`atomic-result-children`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-children/)
+* [`atomic-result-children`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-children--default)
 
 ## Choosing an Image Size
 

@@ -133,7 +133,7 @@ You can include the default Coveo theme via the `angular.json` configuration fil
 
 > **Note**
 >
-> This is however optional, and [all theme variables](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-themes-and-visual-customization--docs#theme-variables) can be configured in the global application stylesheet (for example, `src/style.css`).
+> This is however optional, and [all theme variables](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-themes-and-visual-customization--docs) can be configured in the global application stylesheet (for example, `src/style.css`).
 
 
 ## Wrap Atomic Angular components
@@ -144,7 +144,7 @@ In other words, combine multiple [Atomic](https://docs.coveo.com/en/lcdf0264/) A
 When doing so, you can't use the standard [`@Input()`](https://angular.io/api/core/Input) angular decorator directly to pass down properties to [Atomic](https://docs.coveo.com/en/lcdf0264/) web components in a component template.
 You must create getter and setter functions that assign properties to the DOM, without the standard Angular rendering engine.
 
-The following example wraps an [`atomic-text`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-text/) component inside a parent `app-field-label` component, which would pass down props.
+The following example wraps an [`atomic-text`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-text--default) component inside a parent `app-field-label` component, which would pass down props.
 
 ```html
 <!-- field-label.component.html -->

@@ -49,7 +49,7 @@ Here, we provide a `label` for the recommendations along with a `recommendation`
 3. The format of the query results is defined by a `template` component that needs to placed within `atomic-recs-result-template`.
 
 
-Similar to how a [search interface is initialized](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-introduction--docs#use-components-to-create-a-search-interface) with an overarching `atomic-search-interface` component, recommendations require you to initialize the [`atomic-recs-interface`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface) component using a script:
+Similar to how a [search interface is initialized](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-introduction--docs) with an overarching `atomic-search-interface` component, recommendations require you to initialize the [`atomic-recs-interface`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-recs-interface--default) component using a script:
 
 ```html
 <head>
@@ -70,12 +70,12 @@ Similar to how a [search interface is initialized](https://static.cloud.coveo.co
 ```
 
 
-1. The [`initialize`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface#initialize) method initializes the interface.
+1. The [`initialize`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-recs-interface--default) method initializes the interface.
 
 In this case, use the `await` operator to wait for the interface initialization to complete before moving on.
 
 
-2. The [`getRecommendations`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface#getrecommendations) method retrieves recommendations after the interface is initialized.
+2. The [`getRecommendations`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-recs-interface--default) method retrieves recommendations after the interface is initialized.
 
 
 > **Warning**
@@ -157,7 +157,7 @@ This means that a `template` element must be the child of an `atomic-recs-result
 
 Unlike regular search components, there's no recommendation component that supports folding (that is, displaying results hierarchically).
 
-To display result-specific information, use [Result Template components](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/).
+To display result-specific information, use [Result Template components](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-template--default).
 
 ## In a framework
 

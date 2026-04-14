@@ -66,7 +66,7 @@ cp -r node_modules/@coveo/atomic-react/dist/lang public/lang
 
 ## Result templates
 
-The way to [define result templates](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-display-results-introduction--docs#defining-a-result-template) for an HTML project using the core Atomic library involves defining one or multiple [`atomic-result-template`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-template/) components, configured with HTML properties, adding conditions on the attributes and metadata of each result.
+The way to [define result templates](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-display-results-introduction--docs) for an HTML project using the core Atomic library involves defining one or multiple [`atomic-result-template`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-template--default) components, configured with HTML properties, adding conditions on the attributes and metadata of each result.
 
 Coupled with the [`<template>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template) HTML tag, this approach works very well in a plain HTML project.
 However, it can be limiting and awkward to use in a React project using JSX.
@@ -173,7 +173,7 @@ const MyPage = () => {
 
 > **Warning**
 >
-> When implementing [folding](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-display-results-implement-folding--docs) in result templates, you must use [rendering functions](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-display-results-implement-folding--docs#folding-in-rendering-functions).
+> When implementing [folding](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-display-results-implement-folding--docs) in result templates, you must use [rendering functions](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-display-results-implement-folding--docs).
 > Atomic React doesn't support `atomic-result-children`, `atomic-result-children-template`, or any other Atomic components in child results.
 
 
@@ -259,13 +259,13 @@ const MyPage = () => {
 
 Rather than accepting JSON as in the core Atomic library, the following Atomic React component properties support JSX:
 
-* [`atomic-facet`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-facet#properties) `allowed-values`
+* [`atomic-facet`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-facet--default) `allowed-values`
 
-* [`atomic-category-facet`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-category-facet#properties) `base-path`
+* [`atomic-category-facet`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-category-facet--default) `base-path`
 
-* [`atomic-search-interface`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface#properties) `fields-to-include`
+* [`atomic-search-interface`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-search-interface--default) `fields-to-include`
 
-* [`atomic-recs-interface`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface#properties) `fields-to-include`
+* [`atomic-recs-interface`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-recs-interface--default) `fields-to-include`
 
 Example:
 
@@ -323,7 +323,7 @@ Additionally, the following Atomic React components expose options not available
 
 ### atomic-search-interface
 
-In addition to the properties and methods available in the core [`atomic-search-interface`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/) component, the Atomic React `atomic-search-interface` component exposes the following properties:
+In addition to the properties and methods available in the core [`atomic-search-interface`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-search-interface--default) component, the Atomic React `atomic-search-interface` component exposes the following properties:
 
   |===
   | Property | Attribute | Description | Type | Default
@@ -342,13 +342,13 @@ In addition to the properties and methods available in the core [`atomic-search-
   | If not provided, a default function will be used, which executes the first query immediately after initialization.
   
   |===
-Also, the following two properties exposed through the core [`atomic-search-interface`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/) component are deprecated in the Atomic React `atomic-search-interface` component.
+Also, the following two properties exposed through the core [`atomic-search-interface`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-search-interface--default) component are deprecated in the Atomic React `atomic-search-interface` component.
 Using them would have no effect.
 
 * `pipeline`
 * `searchHub`
 
-Rather, set the pipeline and search hub [in the target `engine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface#initializewithsearchengine) [`search`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchEngineConfiguration.html) configuration.
+Rather, set the pipeline and search hub [in the target `engine`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-search-interface--default) [`search`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchEngineConfiguration.html) configuration.
 For example:
 
 ```jsx
@@ -371,7 +371,7 @@ const MyPage = () => {
 
 ### atomic-folded-result-list
 
-In addition to the properties and methods available in the core [`atomic-folded-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-folded-result-list/) component, the Atomic React `atomic-folded-result-list` component exposes the following property:
+In addition to the properties and methods available in the core [`atomic-folded-result-list`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-folded-result-list--default) component, the Atomic React `atomic-folded-result-list` component exposes the following property:
 
   |===
   | Property | Attribute | Description | Type | Default
@@ -386,7 +386,7 @@ In addition to the properties and methods available in the core [`atomic-folded-
   |===
 ### atomic-result-list
 
-In addition to the properties and methods available in the core [`atomic-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-list/) component, the Atomic React `atomic-search-interface` component exposes the following property:
+In addition to the properties and methods available in the core [`atomic-result-list`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-list--default) component, the Atomic React `atomic-search-interface` component exposes the following property:
 
   |===
   | Property | Attribute | Description | Type | Default
@@ -401,7 +401,7 @@ In addition to the properties and methods available in the core [`atomic-result-
   |===
 ### atomic-search-box-instant-results
 
-In addition to the properties and methods available in the core [`atomic-search-box-instant-results`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-box-instant-results/) component, the Atomic React `atomic-search-box-instant-results` component exposes the following property:
+In addition to the properties and methods available in the core [`atomic-search-box-instant-results`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-search-box-instant-results--default) component, the Atomic React `atomic-search-box-instant-results` component exposes the following property:
 
   |===
   | Property | Attribute | Description | Type | Default

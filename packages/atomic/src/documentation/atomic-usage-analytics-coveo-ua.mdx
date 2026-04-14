@@ -23,7 +23,7 @@ It can be useful to add or modify the metadata to send along with the standard U
 You can leverage the `analyticsClientMiddleware` property of an [`AnalyticsConfiguration`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.AnalyticsConfiguration.html) to hook into an analytics event payload before it's sent to Coveo.
 By default, Atomic v3 uses [Event Protocol](https://docs.coveo.com/en/o9je0592/) to track events instead of [Coveo Analytics](https://docs.coveo.com/en/182/).
 The Event Protocol [doesn't support the `analyticsClientMiddleware` property](https://docs.coveo.com/en/headless/latest/headless-upgrade-from-v2#removal-of-analyticsclientmiddleware-function).
-To use this property in Atomic v3, you need to [set the `analyticsMode` to `legacy`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/upgrade-v2-to-v3--docs#migration-to-coveo-event-protocol) during the initialization.
+To use this property in Atomic v3, you need to [set the `analyticsMode` to `legacy`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/upgrade-v2-to-v3--docs) during the initialization.
 
 The following example shows how to customize metadata using `analyticsClientMiddleware`:
 
@@ -110,7 +110,7 @@ To customize your click events, [use the `analyticsClientMiddleware` property](#
 
 2. You can access result item fields when logging metadata.
 
-Concretely, you can use the populated default item fields, plus the ones specified using the [`fieldsToInclude`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/) parameter in your `atomic-search-interface` component.
+Concretely, you can use the populated default item fields, plus the ones specified using the [`fieldsToInclude`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-search-interface--default) parameter in your `atomic-search-interface` component.
 You can inspect search request responses in your search interface to see the currently available fields:
 
 ![Inspecting response fields](https://docs.coveo.com/en/assets/images/build-a-search-ui/inspect-fields.png)

@@ -197,7 +197,7 @@ It was used prior to the introduction of `organizationEndpoints` and has been de
 
 ### i18next `compatibilityJSON`
 
-In [Atomic](https://docs.coveo.com/en/lcdf0264/) v2, the `compatibilityJSON` [property](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface#properties) in the `atomic-search-interface`, `atomic-insight-interface`, and `atomic-recs-interface` components was set to `v3` by default.
+In [Atomic](https://docs.coveo.com/en/lcdf0264/) v2, the `compatibilityJSON` [property](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-search-interface--default) in the `atomic-search-interface`, `atomic-insight-interface`, and `atomic-recs-interface` components was set to `v3` by default.
 In Atomic v3, the `compatibilityJSON` is automatically set to `v4`.
 The main change is the way that plural forms are handled.
 
@@ -314,7 +314,7 @@ See [TypeScript module resolution](https://www.typescriptlang.org/docs/handbook/
 To better support [Relevance Generative Answering (RGA)](https://docs.coveo.com/en/nbtb6010/) use cases, some work was done to expand the search box input when the queries are verbose.
 This required modifying the HTML for the search box input to be a [`<textarea>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea/) element, as opposed to an `<input type="text">` element.
 
-In [Atomic](https://docs.coveo.com/en/lcdf0264/) v2, an option was added on the [atomic-search-box](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-box) component to allow implementers to choose between a `textarea` and an `input`.
+In [Atomic](https://docs.coveo.com/en/lcdf0264/) v2, an option was added on the [atomic-search-box](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-search-box--default) component to allow implementers to choose between a `textarea` and an `input`.
 In [Atomic](https://docs.coveo.com/en/lcdf0264/) v3, that option has been removed, and only one type of input, `textarea`, is supported.
 
 **Atomic Version 2**
@@ -334,7 +334,7 @@ In [Atomic](https://docs.coveo.com/en/lcdf0264/) v3, that option has been remove
 
 ### `queryCorrectionMode`
 
-The [atomic-did-you-mean `queryCorrectionMode` property](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-did-you-mean#properties) default value is now `next` rather than `legacy`.
+The [atomic-did-you-mean `queryCorrectionMode` property](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-did-you-mean--default) default value is now `next` rather than `legacy`.
 This means that the default behavior of the `atomic-did-you-mean` component will be to use a [query suggestions](https://docs.coveo.com/en/1015/) [model](https://docs.coveo.com/en/1012/) for query correction rather than the [index](https://docs.coveo.com/en/204/) mechanism.
 
 ### Relevance Generative Answering (RGA) citation clicks now tracked as regular click events
@@ -347,7 +347,7 @@ This change applies regardless of the tracking protocol (Coveo UA or Coveo [Even
 
 ## Removals
 
-### [`atomic-recs-list`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-list#properties) and [`atomic-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-list#properties) `gridCellLinkTarget` property
+### [`atomic-recs-list`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-recs-list--default) and [`atomic-result-list`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-list--default) `gridCellLinkTarget` property
 
 The `gridCellLinkTarget` property was removed from the `atomic-recs-list` and `atomic-result-list` components.
 Instead of using this property, provide an `atomic-result-link` in the `link` slot of the `atomic-result-template` component.
@@ -384,11 +384,11 @@ Instead of using this property, provide an `atomic-result-link` in the `link` sl
 
 ### `atomic-hosted-page` and `atomic-simple-builder`
 
-[Use `atomic-hosted-ui`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-manage-your-project-use-a-hosted-page-in-your-infrastructure--docs#use-atomic-hosted-ui) instead.
+[Use `atomic-hosted-ui`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-manage-your-project-use-a-hosted-page-in-your-infrastructure--docs) instead.
 
 ### `atomic-load-more-children-results`
 
-The component has been removed and its functionality has been integrated into [`atomic-result-children`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-children).
+The component has been removed and its functionality has been integrated into [`atomic-result-children`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-children--default).
 
 **Atomic Version 2**
 
@@ -412,7 +412,7 @@ The component has been removed and its functionality has been integrated into [`
 </atomic-result-section-children>
 ```
 
-### [`atomic-generated-answer` `withRephraseButtons` and `answerStyle` properties](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-generated-answer#properties)
+### [`atomic-generated-answer` `withRephraseButtons` and `answerStyle` properties](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-generated-answer--default)
 
 The `withRephraseButtons` and `answerStyle` properties were removed from the `atomic-generated-answer` component due to low usage not justifying their maintenance.
 
@@ -424,7 +424,7 @@ The following are no longer supported in Atomic React.
 
 Atomic React is no longer exported via CDN.
 While this method was useful for quick prototyping, it wasn't recommended for production.
-Instead, you should install Atomic React [NPM](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-in-a-framework-use-the-react-wrapper--docs#npm).
+Instead, you should install Atomic React [NPM](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-in-a-framework-use-the-react-wrapper--docs).
 
 #### Analytics configuration
 

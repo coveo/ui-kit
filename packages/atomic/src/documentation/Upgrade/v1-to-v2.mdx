@@ -13,7 +13,7 @@ Atomic v2 introduces changes that improve the library's performance, make it eas
 
 This section lists variables that were renamed without changes to the underlying functionality.
 
-### [`atomic-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-list#properties)
+### [`atomic-result-list`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-list--default)
 
 The `image` attribute has been renamed to `image-size`.
 
@@ -29,7 +29,7 @@ The `image` attribute has been renamed to `image-size`.
 <atomic-result-list image-size="small"></atomic-result-list>
 ```
 
-### [`atomic-result`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result#properties)
+### [`atomic-result`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-list--default)
 
 The `image` attribute has been renamed to `image-size`.
 
@@ -45,7 +45,7 @@ The `image` attribute has been renamed to `image-size`.
 <atomic-result image-size="small"></atomic-result>
 ```
 
-### [`atomic-rating-facet`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-rating-facet#css-custom-content):
+### [`atomic-rating-facet`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-rating-facet--default):
 
 * The `atomic-rating-facet-icon-active-color` CSS variable has been renamed to `atomic-rating-icon-active-color`.
 
@@ -69,7 +69,7 @@ The `image` attribute has been renamed to `image-size`.
 }
 ```
 
-### [`atomic-refine-modal`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-refine-modal#shadow-parts):
+### [`atomic-refine-modal`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-refine-modal--default):
 
 * The `select-icon` CSS part has been renamed to `select-icon-wrapper`.
 
@@ -193,10 +193,10 @@ import {
 
 Headless is still packaged as part of the Atomic CDN link, so there is no difference in that case.
 
-### [`atomic-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-list#properties) and [`atomic-folded-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-folded-result-list#properties)
+### [`atomic-result-list`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-list--default) and [`atomic-folded-result-list`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-folded-result-list--default)
 
 The `fields-to-include` were removed from `atomic-result-list` and `atomic-folded-result-list`.
-Use the `fields-to-include` in [`atomic-search-interface`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface#properties) instead.
+Use the `fields-to-include` in [`atomic-search-interface`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-search-interface--default) instead.
 
 Also, the values must now be specified as JSON/JSX/Angular Template, as you can see in the next section.
 
@@ -246,15 +246,15 @@ Atomic Angular wrapper:
 
 The following attributes were modified to support only JSON, [JSX](https://reactjs.org/docs/introducing-jsx.html), or [Angular templates](https://angular.io/guide/template-syntax) as parameters rather than comma-separated strings.
 
-* [`atomic-facet`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-facet#properties) `allowed-values`
+* [`atomic-facet`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-facet--default) `allowed-values`
 
-* [`atomic-category-facet`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-category-facet#properties) `base-path`
+* [`atomic-category-facet`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-category-facet--default) `base-path`
 
-* [`atomic-search-interface`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface#properties) `fields-to-include`
+* [`atomic-search-interface`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-search-interface--default) `fields-to-include`
 
 * `atomic-insight-interface` `fields-to-include` (undocumented)
 
-* [`atomic-recs-interface`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface#properties) `fields-to-include`
+* [`atomic-recs-interface`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-recs-interface--default) `fields-to-include`
 
 **Atomic Version 1 Example**
 
@@ -282,9 +282,9 @@ Atomic Angular wrapper:
 <atomic-facet allowed-values="['in progress', 'completed']"></atomic-facet>
 ```
 
-### [`atomic-query-summary`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-query-summary/)
+### [`atomic-query-summary`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-query-summary--default)
 
-The [`atomic-query-summary`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-query-summary/) `enable-duration` attribute has been removed.
+The [`atomic-query-summary`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-query-summary--default) `enable-duration` attribute has been removed.
 Use the `duration` CSS part instead.
 
 **Atomic Version 1**
@@ -307,14 +307,14 @@ atomic-query-summary::part(duration) {
 }
 ```
 
-### [`atomic-result`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result/)
+### [`atomic-result`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-list--default)
 
 The `engine` property, which was unused, has been removed.
 
 The `interactiveResult` property is now required.
 It was and still is undocumented and for internal use only, but if you were using it you should know that it now takes an [`InteractiveResult`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.InteractiveResult.html) controller as a value, which you can build using [`buildInteractiveResult`](https://docs.coveo.com/en/headless/latest/reference/functions/Search.buildInteractiveResult.html).
 
-### [`atomic-category-facet`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-category-facet#properties) Styling
+### [`atomic-category-facet`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-category-facet--default) Styling
 
 To improve accessibility, the skeleton of category facets was completely revamped to be hierarchical.
 In Atomic v1, the list of parents was separate from the list of children.
@@ -373,7 +373,7 @@ atomic-category-facet::part(all-categories-button) {
 }
 ```
 
-### [`atomic-result-link`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-link#properties) and [`atomic-result-printable-uri`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-result-printable-uri#properties)
+### [`atomic-result-link`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-link--default) and [`atomic-result-printable-uri`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-printable-uri--default)
 
 The `target` attribute has been removed from `atomic-result-link` and `atomic-result-printable-uri`.
 Instead, use the `attributes` slot.
@@ -410,7 +410,7 @@ The `atomic-insight-result` `engine: InsightEngine` attribute has been removed.
 
 The `atomic-insight-result` `interactive-result: InsightInteractiveResult` attribute is now required.
 
-### [`atomic-search-box`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-box/)
+### [`atomic-search-box`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-search-box--default)
 
 The search box now exposes a `--atomic-layout-max-search-box-input-width` CSS variable, which limits search box width by default.
 

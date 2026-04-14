@@ -40,7 +40,7 @@ Include the following scripts in the target HTML page:
 
 2. The [default Atomic stylesheet](https://static.cloud.coveo.com/atomic/v3/themes/coveo.css).
 
-While this import is optional, if you don't import it you'll need to [define its variables](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-themes-and-visual-customization--docs#theme-variables) yourself.
+While this import is optional, if you don't import it you'll need to [define its variables](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-themes-and-visual-customization--docs) yourself.
 
 Or, with [SRI](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity):
 ```html
@@ -95,7 +95,7 @@ The resources are exposed through the following entry points:
 
 **Example**
 
-   You use the Atomic Vue wrapper and need to [Bind the custom elements to the window object](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-in-a-framework-usage-in-a-vue-project--docs#update-your-entry-file).
+   You use the Atomic Vue wrapper and need to [Bind the custom elements to the window object](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-in-a-framework-usage-in-a-vue-project--docs).
    You import `defineCustomElements`.
    
    ```js
@@ -148,7 +148,7 @@ This means that you can build your search page by assembling the target HTML ele
 </body>
 ```
 
-To turn these HTML elements into real [Atomic](https://docs.coveo.com/en/lcdf0264/) components, you use a script to initialize the overarching [`atomic-search-interface`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/) component:
+To turn these HTML elements into real [Atomic](https://docs.coveo.com/en/lcdf0264/) components, you use a script to initialize the overarching [`atomic-search-interface`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-search-interface--default) component:
 
 
 [source,html,subs="attributes+"]
@@ -199,14 +199,14 @@ The engine will automatically run this function when the current access token ex
 
 
 Some components expose options.
-For example, the following [`atomic-search-box`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-box/) component will offer a maximum of two [queries](https://docs.coveo.com/en/231/) when the user interacts with it:
+For example, the following [`atomic-search-box`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-search-box--default) component will offer a maximum of two [queries](https://docs.coveo.com/en/231/) when the user interacts with it:
 
 ```html
 <atomic-search-box number-of-queries="2"></atomic-search-box>
 ```
 
 Some components also expose methods.
-The following code sample includes two methods [exposed by](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface#methods) the `atomic-search-interface` component:
+The following code sample includes two methods [exposed by](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-search-interface--default) the `atomic-search-interface` component:
 
 ```javascript
 const searchInterface = document.querySelector("atomic-search-interface");
@@ -255,5 +255,5 @@ When a query is successful, each result is rendered according to the first templ
 Atomic currently provides one default template for all result types.
 More will be added in the future.
 
-You can also create your own result templates with custom styles (see [Defining a result template](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-display-results-introduction--docs#defining-a-result-template)).
-To learn more, see [Defining a Result Template](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-display-results-introduction--docs#defining-a-result-template).
+You can also create your own result templates with custom styles (see [Defining a result template](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-display-results-introduction--docs)).
+To learn more, see [Defining a Result Template](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/usage-display-results-introduction--docs).

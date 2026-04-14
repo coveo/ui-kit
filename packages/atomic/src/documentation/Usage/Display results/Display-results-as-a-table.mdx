@@ -4,13 +4,13 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # Display Results as a Table
 
-Using the [`atomic-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-list/) component, results can be displayed as a table.
+Using the [`atomic-result-list`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-list--default) component, results can be displayed as a table.
 
 ![An `atomic-result-list` component with `display="table"`](../../assets/images/result-table.png)
 
 ## The basics
 
-To make the [`atomic-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-list/) component display a table, the `display` attribute needs to be set to `table`.
+To make the [`atomic-result-list`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-list--default) component display a table, the `display` attribute needs to be set to `table`.
 
 ```html
 <atomic-result-list
@@ -20,14 +20,14 @@ To make the [`atomic-result-list`](https://docs.coveo.com/en/atomic/latest/refer
 </atomic-result-list>
 ```
 
-Then, a result template with columns needs to be defined using multiple [`atomic-table-element`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-table-element/) components.
+Then, a result template with columns needs to be defined using multiple [`atomic-table-element`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-list--table-display) components.
 Each column takes a `label` as a parameter, which will be a column's heading.
 The contents of each `atomic-table-element` will be interpreted as the template to render in each cell of the column they represent.
 
 > **Important**
 >
 > If more than one `atomic-result-template` is present, then the template which matches the first result will be used.
-> To customize rows on a per-result basis, use the [`atomic-field-condition`](https://docs.coveo.com/en/atomic/latest/reference/result-template-components/atomic-field-condition/) component instead.
+> To customize rows on a per-result basis, use the [`atomic-field-condition`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-field-condition--default) component instead.
 
 
 > **Notes**
@@ -87,4 +87,4 @@ It's possible to display alternating row colors by using the `result-table-row-o
 ### Customizing the header, cells, and other elements
 
 The result table exposes many shadow parts for customization.
-For more information, see [`atomic-result-list`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-result-list#shadow-parts).
+For more information, see [`atomic-result-list`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-list--default).
