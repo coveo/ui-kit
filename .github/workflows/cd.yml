@@ -49,8 +49,8 @@ jobs:
         with:
           version: pnpm changeset version
           publish: pnpm run release
-          title: 'ci(changesets): version packages'
-          commit: 'ci(changesets): version packages'
+          title: 'ci(changesets): version packages j:KIT-5605'
+          commit: 'ci(changesets): version packages j:KIT-5605'
           commitMode: github-api
         env:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
