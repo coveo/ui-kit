@@ -1,3 +1,9 @@
+## 3.56.2
+
+### Patch Changes
+
+- [#7174](https://github.com/coveo/ui-kit/pull/7174) [`f488b2c`](https://github.com/coveo/ui-kit/commit/f488b2c71e3b0766852923b954606b335af1b71c) Thanks [@erocheleau](https://github.com/erocheleau)! - Use Storybook `userEvent` APIs in the generated answer story interaction instead of manual DOM event dispatching.
+
 ## 3.56.1
 
 ### Patch Changes
