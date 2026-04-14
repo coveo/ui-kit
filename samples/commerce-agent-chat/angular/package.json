@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "clear:cache": "ng cache clean",
     "generate:config": "node ./scripts/generate-config.mjs",
-    "prebuild": "pnpm run generate:config",
+    "prebuild": "pnpm run clear:cache && pnpm run generate:config",
     "predev": "pnpm run generate:config",
     "ng": "ng",
     "build": "ng build",
