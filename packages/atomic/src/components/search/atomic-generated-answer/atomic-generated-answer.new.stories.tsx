@@ -5,6 +5,7 @@ import type {
 } from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
+import {userEvent} from 'storybook/test';
 import {MockAgentApi} from '@/storybook-utils/api/agent/mock';
 import {MockAnswerApi} from '@/storybook-utils/api/answer/mock';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
@@ -81,24 +82,9 @@ async function submitGeneratedAnswerQuery(storyContext: {
     await storyContext.canvas.findAllByShadowPlaceholderText('Search');
   const input = searchBox[0] as HTMLTextAreaElement;
   input.scrollIntoView({block: 'center'});
-  input.focus();
-  input.value = generatedAnswerQuery;
-  input.dispatchEvent(
-    new InputEvent('input', {
-      bubbles: true,
-      composed: true,
-      data: generatedAnswerQuery,
-      inputType: 'insertText',
-    })
-  );
-  input.dispatchEvent(
-    new KeyboardEvent('keydown', {
-      bubbles: true,
-      composed: true,
-      key: 'Enter',
-      code: 'Enter',
-    })
-  );
+  await userEvent.click(input);
+  await userEvent.type(input, generatedAnswerQuery);
+  await userEvent.keyboard('{Enter}');
 }
 
 const meta: Meta = {
