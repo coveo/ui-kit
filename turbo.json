@@ -32,7 +32,8 @@
     },
     "test": {
       "dependsOn": ["build"],
-      "outputs": []
+      "outputs": [],
+      "env": ["VITEST_SHARD"]
     },
     "test:watch": {
       "cache": false,
