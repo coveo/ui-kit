@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicIpxResultLinkStories from './atomic-ipx-result-link.new.stories';
+import meta, { Default, WithCustomText, WithHrefTemplate, WithTargetBlank } from './atomic-ipx-result-link.new.stories';
 import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicIpxResultLinkStories} name="Docs" />
+<Meta of={meta} name="Docs" />
 
 <AtomicDocTemplate
-  stories={AtomicIpxResultLinkStories}
+  stories={{ Default, WithCustomText, WithHrefTemplate, WithTargetBlank }}
   githubPath="ipx/atomic-ipx-result-link/atomic-ipx-result-link.ts"
   tagName="atomic-ipx-result-link"
   className="AtomicIpxResultLink"

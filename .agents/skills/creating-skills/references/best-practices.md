@@ -10,14 +10,15 @@ Skills are primarily consumed by AI agents. Focus on clarity and actionability r
 
 ### Match instruction detail to task complexity
 
-| Situation | Guidance Level |
-|-----------|----------------|
-| Minefield with hidden hazards | High detail, explicit steps, exact sequence |
-| Open field with no hazards | General direction, trust agent to find best route |
+| Situation                     | Guidance Level                                    |
+| ----------------------------- | ------------------------------------------------- |
+| Minefield with hidden hazards | High detail, explicit steps, exact sequence       |
+| Open field with no hazards    | General direction, trust agent to find best route |
 
 ### Test with multiple models
 
 Skills effectiveness depends on the underlying model:
+
 - **Smaller/faster models**: Need more guidance
 - **Balanced models**: Moderate detail works well
 - **Larger/reasoning models**: Avoid over-explaining
@@ -27,6 +28,7 @@ Skills effectiveness depends on the underlying model:
 Use **gerund form** (verb + -ing) for skill names - this clearly describes the activity or capability.
 
 **Good examples:**
+
 - `processing-pdfs`
 - `analyzing-spreadsheets`
 - `managing-databases`
@@ -34,10 +36,12 @@ Use **gerund form** (verb + -ing) for skill names - this clearly describes the a
 - `writing-documentation`
 
 **Acceptable alternatives:**
+
 - Noun phrases: `pdf-processing`, `spreadsheet-analysis`
 - Action-oriented: `process-pdfs`, `analyze-spreadsheets`
 
 **Avoid:**
+
 - Vague names: `helper`, `utils`, `tools`
 - Overly generic: `documents`, `data`, `files`
 - Inconsistent patterns within your skill collection
@@ -60,6 +64,7 @@ description: You can use this to process Excel files
 ### Include what AND when
 
 Every description must explain:
+
 1. **What** the skill does
 2. **When** to use it (triggers, contexts, keywords)
 
@@ -79,9 +84,11 @@ description: Helps with documents
 # PDF Processing
 
 ## Quick start
+
 [Basic usage here]
 
 ## Advanced features
+
 **Form filling**: See [FORMS.md](FORMS.md) for complete guide
 **API reference**: See [REFERENCE.md](REFERENCE.md) for all methods
 ```
@@ -115,11 +122,13 @@ For simple edits, modify the XML directly.
 Agents may partially read files referenced from other referenced files.
 
 **Bad (too deep):**
+
 ```
 SKILL.md → advanced.md → details.md → actual-info.md
 ```
 
 **Good (one level):**
+
 ```
 SKILL.md → advanced.md
 SKILL.md → reference.md
@@ -134,6 +143,7 @@ For files over 100 lines, include a table of contents at the top:
 # API Reference
 
 ## Contents
+
 - Authentication and setup
 - Core methods (create, read, update, delete)
 - Advanced features
@@ -141,6 +151,7 @@ For files over 100 lines, include a table of contents at the top:
 - Code examples
 
 ## Authentication and setup
+
 ...
 ```
 
@@ -152,9 +163,11 @@ Write utility scripts rather than asking the agent to generate code:
 
 ```markdown
 # Good
+
 Run `scripts/analyze_form.mjs` to extract fields
 
 # Avoid
+
 Write a script to extract form fields...
 ```
 
@@ -164,9 +177,11 @@ Distinguish between executing and reading:
 
 ```markdown
 # Execute (most common)
+
 Run `scripts/analyze_form.mjs` to extract fields
 
 # Read as reference
+
 See `scripts/analyze_form.mjs` for the extraction algorithm
 ```
 
@@ -198,15 +213,18 @@ This catches errors before changes are applied.
 
 ```markdown
 # Bad
+
 Error: Invalid field
 
 # Good
+
 Error: Field 'signature_date' not found. Available fields: customer_name, order_total, signature_date_signed
 ```
 
 ## Quality Checklist
 
 ### Core quality
+
 - [ ] Description is specific with key terms
 - [ ] Description includes what AND when
 - [ ] SKILL.md body under 500 lines
@@ -217,6 +235,7 @@ Error: Field 'signature_date' not found. Available fields: customer_name, order_
 - [ ] Workflows have clear steps
 
 ### Code and scripts
+
 - [ ] Scripts solve problems (not punt to agent)
 - [ ] Error handling is explicit and helpful
 - [ ] Required packages listed and verified
@@ -224,6 +243,7 @@ Error: Field 'signature_date' not found. Available fields: customer_name, order_
 - [ ] Validation steps for critical operations
 
 ### Testing
+
 - [ ] Tested with real usage scenarios
 - [ ] Works across different models if needed
 
@@ -232,12 +252,14 @@ Error: Field 'signature_date' not found. Available fields: customer_name, order_
 Skills follow the [Agent Skills open standard](https://agentskills.io) for agent capabilities, making them **portable across multiple AI tools**:
 
 **Example platforms that support Agent Skills:**
+
 - GitHub Copilot (in VS Code and other editors)
 - Claude Desktop and Claude Code
 - OpenCode CLI
 - Other tools implementing the Agent Skills standard
 
 **What portability means:**
+
 - Same skill works across different AI coding assistants
 - Agents discover skills based on `description` field and trigger keywords
 - Skills load automatically when relevant to the agent's current task
@@ -245,18 +267,21 @@ Skills follow the [Agent Skills open standard](https://agentskills.io) for agent
 - Skills are just directories with standard structure (SKILL.md + optional resources)
 
 **Standard skill locations:**
+
 - `.claude/skills/` - Workspace-level (recommended for local development)
 - `.skills/` or `skills/` - Alternative workspace conventions
 - `~/.claude/skills/` or `~/.skills/` - User-level (personal skills)
 - Remote registries - For shared/public skills
 
 **Discovery precedence** (implementation may vary by tool):
+
 1. Workspace-level skills (project-specific)
 2. Repository skills folders
 3. User-level skills (personal)
 4. Remote/registry skills (if supported)
 
 **Key benefits:**
+
 - Write once, use across multiple AI tools
 - Share skills across teams and projects
 - Not locked into a single AI platform or vendor
@@ -264,10 +289,10 @@ Skills follow the [Agent Skills open standard](https://agentskills.io) for agent
 
 **Platform-specific examples:**
 
-*GitHub Copilot (VS Code)*: Typically uses `.github/skills/` for workspace-level discovery. See [VS Code Agent Skills docs](https://code.visualstudio.com/docs/copilot/customization/agent-skills).
+_GitHub Copilot (VS Code)_: Typically uses `.github/skills/` for workspace-level discovery. See [VS Code Agent Skills docs](https://code.visualstudio.com/docs/copilot/customization/agent-skills).
 
-*Claude Desktop*: Uses `.claude/skills/` convention. Skills portable with other Claude tools.
+_Claude Desktop_: Uses `.claude/skills/` convention. Skills portable with other Claude tools.
 
-*OpenCode*: Supports `.claude/skills/` for maximum cross-tool compatibility.
+_OpenCode_: Supports `.claude/skills/` for maximum cross-tool compatibility.
 
 This portability is what differentiates skills from tool-specific artifacts like IDE-specific instructions, prompts, or editor extensions.

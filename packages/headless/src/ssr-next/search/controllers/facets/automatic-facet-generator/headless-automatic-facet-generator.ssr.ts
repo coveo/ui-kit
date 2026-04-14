@@ -8,11 +8,10 @@ import type {ControllerDefinitionWithoutProps} from '../../../types/controller-d
 
 export * from '../../../../../controllers/facets/automatic-facet-generator/headless-automatic-facet-generator.js';
 
-export interface AutomaticFacetGeneratorDefinition
-  extends ControllerDefinitionWithoutProps<
-    SearchEngine,
-    AutomaticFacetGenerator
-  > {}
+export interface AutomaticFacetGeneratorDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  AutomaticFacetGenerator
+> {}
 
 /**
  * Defines an `AutomaticFacetGenerator` controller instance.

@@ -27,7 +27,7 @@ describe('#renderCitations', () => {
       permanentid: id,
       clickUri: `https://example.com/${id}`,
       text: `Citation text ${id}`,
-      // biome-ignore lint/suspicious/noExplicitAny: Test fixture with partial mock
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Test fixture with partial mock
     }) as any;
 
   const renderComponent = async (

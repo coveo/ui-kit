@@ -5,6 +5,7 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
 import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-result-printable-uri/atomic-result-printable-uri.js';
 
 const searchApiHarness = new MockSearchApi();
 
@@ -80,7 +81,7 @@ export const WithEllipsis: Story = {
             if ('results' in response) {
               return {
                 ...response,
-                // biome-ignore lint/suspicious/noExplicitAny: Mock response type needs flexibility
+                // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Mock response type needs flexibility
                 results: response.results.slice(0, 1).map((r: any) => ({
                   ...r,
                   printableUri:

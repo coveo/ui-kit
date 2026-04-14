@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicInsightResultAttachToCaseActionStories from './atomic-insight-result-attach-to-case-action.new.stories';
+import meta, { Default, WithOtherActions } from './atomic-insight-result-attach-to-case-action.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicInsightResultAttachToCaseActionStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicInsightResultAttachToCaseActionStories}
+  stories={{ Default, WithOtherActions }}
   defaultStory="Default"
   githubPath="insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action.ts"
   tagName="atomic-insight-result-attach-to-case-action"

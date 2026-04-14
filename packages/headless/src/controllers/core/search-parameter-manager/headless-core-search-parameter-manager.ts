@@ -1,4 +1,4 @@
-import {RecordValue, Schema} from '@coveo/bueno';
+import {isNullOrUndefined, RecordValue, Schema} from '@coveo/bueno';
 import type {CoreEngine} from '../../../app/engine.js';
 import {isFacetVisibleOnTab} from '../../../features/facet-options/facet-options-utils.js';
 import type {AutomaticFacetResponse} from '../../../features/facets/automatic-facet-set/interfaces/response.js';
@@ -149,20 +149,32 @@ function ensureTabIsValid(
   tabSet: TabSetState | undefined,
   parameters: SearchParameters
 ): SearchParameters {
-  if (parameters.tab && tabSet) {
-    const tabExists = Object.values(tabSet).some(
-      (tab) => tab.id === parameters.tab
-    );
-    const currentActiveTab = Object.values(tabSet).find((tab) => tab.isActive);
+  if (isNullOrUndefined(parameters.tab) || !tabSet) {
+    return parameters;
+  }
 
-    if (!tabExists && currentActiveTab) {
-      return {...parameters, tab: currentActiveTab.id};
-    } else if (!tabExists) {
-      return {...parameters, tab: ''};
-    }
+  if (parameters.tab === '') {
+    return {...parameters, tab: getFallbackTabId(tabSet)};
+  }
+
+  const tabExists = Object.values(tabSet).some(
+    (tab) => tab.id === parameters.tab
+  );
+
+  if (!tabExists) {
+    const currentActiveTab = Object.values(tabSet).find((tab) => tab.isActive);
+    return {
+      ...parameters,
+      tab: currentActiveTab?.id ?? getFallbackTabId(tabSet),
+    };
   }
 
   return parameters;
+}
+
+function getFallbackTabId(tabSet: TabSetState): string {
+  const firstTabId = Object.keys(tabSet)[0];
+  return firstTabId ?? '';
 }
 
 export function getCoreActiveSearchParameters(
@@ -291,7 +303,7 @@ function getAutomaticFacets(state: Partial<SearchParametersState>) {
       const selectedValues = getSelectedResponseValues(response);
       return selectedValues.length ? {[facetId]: selectedValues} : {};
     })
-    // biome-ignore lint/performance/noAccumulatingSpread: <>
+    // oxlint-disable-next-line oxc/no-accumulating-spread -- <>
     .reduce((acc, obj) => ({...acc, ...obj}), {});
 
   return Object.keys(af).length ? {af} : {};

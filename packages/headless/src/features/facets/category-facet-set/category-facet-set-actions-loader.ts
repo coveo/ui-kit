@@ -22,9 +22,9 @@ import {
 export type {
   RegisterCategoryFacetActionCreatorPayload,
   ToggleSelectCategoryFacetValueActionCreatorPayload,
+  UpdateCategoryFacetBasePathActionCreatorPayload,
   UpdateCategoryFacetNumberOfValuesActionCreatorPayload,
   UpdateCategoryFacetSortCriterionActionCreatorPayload,
-  UpdateCategoryFacetBasePathActionCreatorPayload,
   UpdateFacetAutoSelectionActionCreatorPayload,
 };
 

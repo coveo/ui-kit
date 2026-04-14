@@ -39,7 +39,7 @@ describe('#renderSnippetTruncatedAnswer', () => {
     const answer = await renderComponent({answer: '<p>Test answer</p>'});
     const answerElement = answer.querySelector(
       'atomic-smart-snippet-answer'
-      // biome-ignore lint/suspicious/noExplicitAny: testing property access on custom element
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing property access on custom element
     ) as any;
     expect(answerElement.htmlContent).toBe('<p>Test answer</p>');
   });
@@ -48,7 +48,7 @@ describe('#renderSnippetTruncatedAnswer', () => {
     const answer = await renderComponent({style: 'color: red;'});
     const answerElement = answer.querySelector(
       'atomic-smart-snippet-answer'
-      // biome-ignore lint/suspicious/noExplicitAny: testing property access on custom element
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing property access on custom element
     ) as any;
     expect(answerElement.innerStyle).toBe('color: red;');
   });

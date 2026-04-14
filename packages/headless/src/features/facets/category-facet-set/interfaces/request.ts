@@ -15,15 +15,15 @@ export const categoryFacetSortCriteria: CategoryFacetSortCriterion[] = [
 export type CategoryFacetSortCriterion = 'alphanumeric' | 'occurrences';
 
 export interface CategoryFacetValueRequest
-  extends BaseFacetValueRequest,
-    CategoryFacetValueCommon {
+  extends BaseFacetValueRequest, CategoryFacetValueCommon {
   children: CategoryFacetValueRequest[];
   retrieveChildren: boolean;
   retrieveCount: number;
 }
 
 export interface CategoryFacetRequest
-  extends BaseFacetRequest,
+  extends
+    BaseFacetRequest,
     CurrentValues<CategoryFacetValueRequest>,
     Delimitable,
     Type<'hierarchical'>,

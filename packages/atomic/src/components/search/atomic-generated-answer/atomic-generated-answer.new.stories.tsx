@@ -9,6 +9,11 @@ import {MockAnswerApi} from '@/storybook-utils/api/answer/mock';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-generated-answer/atomic-generated-answer.js';
+import '@/src/components/common/atomic-layout-section/atomic-layout-section.js';
+import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
+import '@/src/components/search/atomic-search-box/atomic-search-box.js';
+import '@/src/components/search/atomic-search-layout/atomic-search-layout.js';
 
 const mockedAnswerApi = new MockAnswerApi();
 const mockedSearchApi = new MockSearchApi();

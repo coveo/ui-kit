@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/complexity/noExcessiveNestedTestSuites: <> */
+/* oxlint-disable vitest/no-nested-tests -- <> */
 import {
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,

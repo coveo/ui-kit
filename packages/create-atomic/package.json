@@ -1,7 +1,22 @@
 {
   "name": "@coveo/create-atomic",
+  "version": "1.41.11",
   "description": "Coveo Atomic Generator",
-  "version": "1.41.8",
+  "keywords": [
+    "atomic",
+    "coveo",
+    "generator",
+    "headless",
+    "template"
+  ],
+  "license": "Apache-2.0",
+  "author": "Coveo",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
+    "directory": "packages/create-atomic"
+  },
+  "bin": "./index.mjs",
   "files": [
     "/dist",
     "template/.env.example",
@@ -22,43 +37,25 @@
     "template/tsconfig.donotcopy.json",
     "template/tsconfig.json"
   ],
-  "bin": "./index.mjs",
   "type": "module",
   "main": "index.mjs",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/coveo/ui-kit.git",
-    "directory": "packages/create-atomic"
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "start": "node ./index.mjs",
     "build": "node ../../utils/ci/rm-rf.mjs template && pnpm run build:ts && node ./scripts/preparePackageJsonTemplate.mjs",
     "build:ts": "tsc -p tsconfig.json",
-    "lint": "prettier --check . && eslint .",
-    "release:phase3": "pnpm --filter @coveo/ci npm-publish",
-    "release:phase1": "pnpm --filter @coveo/ci bump",
-    "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod"
-  },
-  "keywords": [
-    "coveo",
-    "headless",
-    "atomic",
-    "template",
-    "generator"
-  ],
-  "author": "Coveo",
-  "license": "Apache-2.0",
-  "publishConfig": {
-    "access": "public"
+    "lint": "prettier --check . && eslint ."
   },
   "dependencies": {
-    "@coveo/platform-client": "60.4.0",
+    "@coveo/platform-client": "62.0.0",
     "abortcontroller-polyfill": "1.7.8",
-    "https-proxy-agent": "7.0.6",
+    "https-proxy-agent": "8.0.0",
     "isomorphic-fetch": "3.0.0",
     "minimist": "1.2.8",
     "node-plop": "^0.32.0",
-    "plop": "4.0.1"
+    "plop": "4.0.4"
   },
   "devDependencies": {
     "@types/node": "catalog:",

@@ -209,7 +209,7 @@ describe('knowledge-generated-answer', () => {
     });
 
     describe('when RTK Query is rejected with error', () => {
-      it('should expose error message and statusCode', () => {
+      it('should expose error message and code', () => {
         mockSelectAnswer.mockReturnValue({
           data: {
             error: {message: 'server error', code: 500},
@@ -220,7 +220,7 @@ describe('knowledge-generated-answer', () => {
 
         expect(generatedAnswer.state.error).toEqual({
           message: 'server error',
-          statusCode: 500,
+          code: 500,
         });
       });
     });

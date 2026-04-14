@@ -58,7 +58,8 @@
     align-items: center;
   }
 
-  #coveo-docs-search-container atomic-search-box::part(textarea-expander)::after,
+  #coveo-docs-search-container
+    atomic-search-box::part(textarea-expander)::after,
   #coveo-docs-search-container atomic-search-box::part(textarea) {
     color: rgba(255, 255, 255, 0.9);
   }
@@ -94,12 +95,13 @@
     z-index: 9999;
   }
 
-  #coveo-docs-search-container atomic-search-box::part(suggestions-single-list) {
+  #coveo-docs-search-container
+    atomic-search-box::part(suggestions-single-list) {
     white-space: normal;
   }
 </style>
 <script type="module">
-  import {disableBlockedKeys, updateCookieSettings } from './cookieManager.js';
+  import {disableBlockedKeys, updateCookieSettings} from './cookieManager.js';
 
   updateCookieSettings();
   disableBlockedKeys();

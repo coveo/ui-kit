@@ -173,7 +173,7 @@ function getManualNumericFacet(
       return {[facetId]: [manualFacetRange.manualRange]};
     })
     .filter((manualRange) => manualRange !== undefined)
-    // biome-ignore lint/performance/noAccumulatingSpread: <>
+    // oxlint-disable-next-line oxc/no-accumulating-spread -- <>
     .reduce((acc, obj) => ({...acc, ...obj}), {});
 
   return state === 'selected'

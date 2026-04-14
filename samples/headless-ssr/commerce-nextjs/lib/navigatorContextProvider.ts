@@ -34,7 +34,7 @@ export class NextJsNavigatorContext implements NavigatorContext {
   /**
    * Retrieves the current page URL from the 'x-href' header, which can represent
    * the application's active location or requested resource URL.
-   * This header may be set by middleware or server logic to reflect the active location.
+   * This header may be set by proxy or server logic to reflect the active location.
    * @returns The current location URL if available, otherwise undefined.
    */
   get location() {
@@ -42,7 +42,7 @@ export class NextJsNavigatorContext implements NavigatorContext {
   }
 
   /**
-   * Fetches the unique client ID that was generated earlier by the middleware.
+   * Fetches the unique client ID that was generated earlier by the proxy.
    * @returns The client ID.
    */
   get clientId() {

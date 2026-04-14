@@ -251,6 +251,12 @@ describe('atomic-numeric-facet', () => {
       await setupElement();
       expect(mockedRegisterFacet).toHaveBeenCalled();
     });
+
+    it('should build facet conditions manager even when no depends-on attribute is provided', async () => {
+      vi.mocked(buildFacetConditionsManager).mockClear();
+      await setupElement({withInput: true});
+      expect(buildFacetConditionsManager).toHaveBeenCalled();
+    });
   });
 
   describe('when rendering', () => {

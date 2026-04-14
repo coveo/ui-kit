@@ -15,7 +15,7 @@ vi.mock('@coveo/headless/insight', {spy: true});
 vi.mock('@/src/mixins/bindings-mixin', () => ({
   InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
     return class extends superClass {
-      // biome-ignore lint/complexity/noUselessConstructor: <mocking the mixin for testing>
+      // oxlint-disable-next-line no-useless-constructor -- <mocking the mixin for testing>
       constructor(...args: unknown[]) {
         super(...args);
       }
@@ -269,7 +269,7 @@ describe('atomic-insight-query-summary', () => {
   it('should create an AriaLiveRegionController', async () => {
     const {element} = await renderQuerySummary();
 
-    expect(element['ariaMessage']).toBeInstanceOf(AriaLiveRegionController);
+    expect(element.ariaMessage).toBeInstanceOf(AriaLiveRegionController);
   });
 
   it('should update aria message when state changes', async () => {

@@ -363,7 +363,7 @@ describe('atomic-rating-range-facet', () => {
         'stopWatching'
       );
       const {element} = await renderRatingRangeFacet();
-      element.disconnectedCallback();
+      element.remove();
       expect(stopWatchingSpy).toHaveBeenCalled();
     });
   });

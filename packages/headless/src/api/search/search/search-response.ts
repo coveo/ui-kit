@@ -31,8 +31,7 @@ export interface SearchResponseSuccess {
   extendedResults: ExtendedResults;
 }
 
-export interface SearchResponseSuccessWithDebugInfo
-  extends SearchResponseSuccess {
+export interface SearchResponseSuccessWithDebugInfo extends SearchResponseSuccess {
   executionReport: ExecutionReport;
   basicExpression: string;
   advancedExpression: string;

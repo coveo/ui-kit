@@ -204,11 +204,11 @@ function deserialize(fragment: string): SearchParameters {
 
     if (keyHasObjectValue(key)) {
       const mergedValues = {...acc[key], ...(val as object)};
-      // biome-ignore lint/performance/noAccumulatingSpread: <>
+      // oxlint-disable-next-line oxc/no-accumulating-spread -- <>
       return {...acc, [key]: mergedValues};
     }
 
-    // biome-ignore lint/performance/noAccumulatingSpread: <>
+    // oxlint-disable-next-line oxc/no-accumulating-spread -- <>
     return {...acc, [key]: val};
   }, {});
 }
@@ -340,11 +340,11 @@ export function cast<K extends SearchParameterKey>(
   }
 
   if (key === 'firstResult') {
-    return [key, parseInt(value)];
+    return [key, parseInt(value, 10)];
   }
 
   if (key === 'numberOfResults') {
-    return [key, parseInt(value)];
+    return [key, parseInt(value, 10)];
   }
 
   if (keyHasObjectValue(key)) {

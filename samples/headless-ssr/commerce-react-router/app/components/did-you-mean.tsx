@@ -24,7 +24,7 @@ export default function DidYouMean() {
     <div>
       <p>
         Search for
-        {/** biome-ignore lint/a11y/noStaticElementInteractions: <> */}
+        {/* oxlint-disable-next-line jsx-a11y/no-static-element-interactions -- <> */}
         <span
           onClick={() => methods?.applyCorrection()}
           onKeyUp={(e) => {

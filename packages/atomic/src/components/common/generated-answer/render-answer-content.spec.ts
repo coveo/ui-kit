@@ -259,7 +259,7 @@ describe('#renderAnswerContent', () => {
         expect(
           Boolean(
             documentPosition &&
-              documentPosition & Node.DOCUMENT_POSITION_FOLLOWING
+            documentPosition & Node.DOCUMENT_POSITION_FOLLOWING
           )
         ).toBe(true);
       });

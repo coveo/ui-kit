@@ -78,7 +78,7 @@ describe('atomic-insight-result-list', () => {
 
       expect(element.error).toBeUndefined();
 
-      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
       (element as any).density = 'invalid';
       await element.updateComplete;
 
@@ -93,7 +93,7 @@ describe('atomic-insight-result-list', () => {
 
       expect(element.error).toBeUndefined();
 
-      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
       (element as any).imageSize = 'invalid';
       await element.updateComplete;
 
@@ -103,7 +103,7 @@ describe('atomic-insight-result-list', () => {
   });
 
   describe('#willUpdate', () => {
-    // biome-ignore lint/suspicious/noExplicitAny: <accessing private properties in tests>
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <accessing private properties in tests>
     let element: any;
 
     beforeEach(async () => {

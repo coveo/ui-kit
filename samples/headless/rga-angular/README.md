@@ -20,6 +20,7 @@ This sample demonstrates a minimal set of interactions with Headless RGA in the 
    pnpm install
    ```
 2. Start the development server:
+
    ```bash
    pnpm run start
    ```
@@ -32,7 +33,6 @@ This sample demonstrates a minimal set of interactions with Headless RGA in the 
 pnpm run dev       # Start development server
 pnpm run build     # Build for production
 ```
-
 
 ## Usage
 

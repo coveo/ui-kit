@@ -14,8 +14,8 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import ArrowLeftIcon from '@/src/images/arrow-left-rounded.svg';
-import ArrowRightIcon from '@/src/images/arrow-right-rounded.svg';
+import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
+import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
 import '@/src/components/common/atomic-icon/atomic-icon';
 
 type ArrowDirection = 'right' | 'left';
@@ -194,11 +194,10 @@ export class AtomicSegmentedFacetScrollable
         `)}
         <div
           part="${direction}-fade"
-          class="from-background/60 pointer-events-none absolute top-0 z-0 h-10 w-20 ${
-            direction === 'left'
-              ? 'left-0 bg-linear-to-r'
-              : 'right-0 bg-linear-to-l'
-          }"
+          class="from-background/60 pointer-events-none absolute top-0 z-0 h-10 w-20 ${direction ===
+          'left'
+            ? 'left-0 bg-linear-to-r'
+            : 'right-0 bg-linear-to-l'}"
         ></div>
       </div>
     `;

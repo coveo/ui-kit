@@ -86,10 +86,10 @@ function buildSSRSearchEngine(options: SearchEngineOptions): SSRSearchEngine {
 export interface SearchEngineDefinition<
   TControllers extends ControllerDefinitionsMap<SSRSearchEngine, Controller>,
 > extends EngineDefinition<
-    SSRSearchEngine,
-    TControllers,
-    SearchEngineOptions
-  > {}
+  SSRSearchEngine,
+  TControllers,
+  SearchEngineOptions
+> {}
 
 /**
  * Initializes a Search engine definition in SSR with given controllers definitions and search engine config.

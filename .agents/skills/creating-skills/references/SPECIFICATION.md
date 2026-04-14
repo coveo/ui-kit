@@ -38,24 +38,25 @@ compatibility: Requires git, docker, and network access
 allowed-tools: Bash(git:*) Bash(jq:*) Read
 metadata:
   author: example-org
-  version: "1.0"
+  version: '1.0'
 ---
 ```
 
 ### Field Reference
 
-| Field | Required | Constraints |
-|-------|----------|-------------|
-| `name` | Yes | Max 64 chars. Lowercase letters, numbers, hyphens only. Must not start/end with hyphen. No consecutive hyphens. Must match folder name. |
-| `description` | Yes | Max 1024 chars. Non-empty. Describes what AND when to use. |
-| `license` | No | License name or reference to bundled LICENSE file. |
-| `compatibility` | No | Max 500 chars. Environment requirements (product, packages, network). |
-| `allowed-tools` | No | Space-delimited list of pre-approved tools. (Experimental) |
-| `metadata` | No | Arbitrary key-value mapping for additional context. |
+| Field           | Required | Constraints                                                                                                                             |
+| --------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`          | Yes      | Max 64 chars. Lowercase letters, numbers, hyphens only. Must not start/end with hyphen. No consecutive hyphens. Must match folder name. |
+| `description`   | Yes      | Max 1024 chars. Non-empty. Describes what AND when to use.                                                                              |
+| `license`       | No       | License name or reference to bundled LICENSE file.                                                                                      |
+| `compatibility` | No       | Max 500 chars. Environment requirements (product, packages, network).                                                                   |
+| `allowed-tools` | No       | Space-delimited list of pre-approved tools. (Experimental)                                                                              |
+| `metadata`      | No       | Arbitrary key-value mapping for additional context.                                                                                     |
 
 ### Name Field Rules
 
 Valid examples:
+
 ```yaml
 name: pdf-processing
 name: data-analysis
@@ -63,6 +64,7 @@ name: code-review
 ```
 
 Invalid examples:
+
 ```yaml
 name: PDF-Processing    # uppercase not allowed
 name: -pdf              # cannot start with hyphen
@@ -75,17 +77,20 @@ name: pdf_processing    # underscores not allowed
 The description is critical for skill discovery. Agents use it to choose the right skill from potentially 100+ available skills.
 
 **Must include:**
+
 1. What the skill does
 2. When to use it (triggers/contexts)
 
 **Write in third person** - descriptions are injected into system prompts.
 
 Good example:
+
 ```yaml
 description: Extracts text and tables from PDF files, fills forms, and merges documents. Use when working with PDF files or when the user mentions PDFs, forms, or document extraction.
 ```
 
 Poor examples:
+
 ```yaml
 description: Helps with PDFs.                    # Too vague
 description: I can help you process Excel files  # Wrong POV
@@ -97,6 +102,7 @@ description: You can use this to process files   # Wrong POV
 The Markdown body after frontmatter contains skill instructions. No format restrictions - write whatever helps agents perform the task effectively.
 
 Recommended sections:
+
 - Step-by-step instructions
 - Examples of inputs and outputs
 - Common edge cases
@@ -106,6 +112,7 @@ Recommended sections:
 ### scripts/
 
 Contains executable code that agents can run. Scripts should:
+
 - Be self-contained or clearly document dependencies
 - Include helpful error messages
 - Handle edge cases gracefully
@@ -113,6 +120,7 @@ Contains executable code that agents can run. Scripts should:
 ### references/
 
 Contains additional documentation loaded on demand:
+
 - `REFERENCE.md` - Detailed technical reference
 - Domain-specific files (`finance.md`, `legal.md`, etc.)
 
@@ -121,6 +129,7 @@ Keep files focused. Agents load these on demand, so smaller files mean less cont
 ### assets/
 
 Contains static resources:
+
 - Templates (document templates, configuration templates)
 - Images (diagrams, examples)
 - Data files (lookup tables, schemas)
@@ -164,4 +173,4 @@ node <skills-dir>/creating-skills/scripts/quick_validate.mjs <skills-dir>/my-ski
 
 ---
 
-*For the full specification and updates, see [agentskills.io](https://agentskills.io/llms.txt)*
+_For the full specification and updates, see [agentskills.io](https://agentskills.io/llms.txt)_

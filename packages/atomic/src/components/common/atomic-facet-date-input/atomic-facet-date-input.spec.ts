@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/style/noNonNullAssertion: For testing, locators should always exist */
+/* oxlint-disable @typescript-eslint/no-non-null-assertion -- For testing, locators should always exist */
 
 import type {DateFilterRange} from '@coveo/headless';
 import {html} from 'lit';

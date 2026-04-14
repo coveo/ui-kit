@@ -28,7 +28,9 @@ describe('filterProtocol', () => {
 
   it('allows good protocols', () => {
     expect(filterProtocol('https://github.com/')).toBe('https://github.com/');
-    expect(filterProtocol('mailto:user@example.com')).toBe('mailto:user@example.com');
+    expect(filterProtocol('mailto:user@example.com')).toBe(
+      'mailto:user@example.com'
+    );
   });
 });
 ```
@@ -42,16 +44,24 @@ import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {promiseTimeout} from './promise-utils';
 
 describe('promise-utils', () => {
-  beforeEach(() => { vi.useFakeTimers(); });
-  afterEach(() => { vi.useRealTimers(); });
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+  });
 
   describe('#promiseTimeout', () => {
     it('should resolve when promise completes before timeout', async () => {
-      await expect(promiseTimeout(Promise.resolve('ok'), 1000)).resolves.toBe('ok');
+      await expect(promiseTimeout(Promise.resolve('ok'), 1000)).resolves.toBe(
+        'ok'
+      );
     });
 
     it('should reject when promise exceeds timeout', async () => {
-      const slow = new Promise((resolve) => setTimeout(() => resolve('late'), 2000));
+      const slow = new Promise((resolve) =>
+        setTimeout(() => resolve('late'), 2000)
+      );
       const result = promiseTimeout(slow, 1000);
       vi.advanceTimersByTime(1000);
       await expect(result).rejects.toThrow('Promise timed out.');
@@ -69,7 +79,9 @@ import {afterEach, describe, expect, it, vi} from 'vitest';
 import {isIOS} from './device-utils';
 
 describe('#isIOS', () => {
-  afterEach(() => { vi.restoreAllMocks(); });
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
 
   it('should return true for iPad user agent', () => {
     vi.stubGlobal('navigator', {
@@ -127,14 +139,19 @@ beforeEach(() => {
   Object.defineProperties(mockButton, {
     clientWidth: {value: 100, writable: true, configurable: true},
     getBoundingClientRect: {
-      value: vi.fn().mockReturnValue({top: 50, left: 100, width: 100, height: 80}),
-      writable: true, configurable: true,
+      value: vi
+        .fn()
+        .mockReturnValue({top: 50, left: 100, width: 100, height: 80}),
+      writable: true,
+      configurable: true,
     },
   });
   document.body.appendChild(mockButton);
 });
 
-afterEach(() => { document.body.innerHTML = ''; });
+afterEach(() => {
+  document.body.innerHTML = '';
+});
 ```
 
 ## Spy Mocking Sibling Modules
@@ -164,12 +181,9 @@ describe('Given no tab is active', () => {
     ['not included or excluded', [], []],
     ['included', ['tab1', 'tab2'], []],
     ['excluded', [], ['tab1', 'tab2']],
-  ])(
-    'returns true when tabs are %s',
-    (_, includeTabs, excludeTabs) => {
-      expect(shouldDisplayOnCurrentTab(includeTabs, excludeTabs, '')).toBe(true);
-    }
-  );
+  ])('returns true when tabs are %s', (_, includeTabs, excludeTabs) => {
+    expect(shouldDisplayOnCurrentTab(includeTabs, excludeTabs, '')).toBe(true);
+  });
 });
 ```
 
@@ -188,7 +202,9 @@ customElements.define('mock-light-dom-element', MockLightDOMElement);
 
 describe('#getNamedSlotContent', () => {
   let host: MockLightDOMElement;
-  beforeEach(() => { host = new MockLightDOMElement(); });
+  beforeEach(() => {
+    host = new MockLightDOMElement();
+  });
 
   it('should return Elements from slotContent', () => {
     host.slotContent = {'test-slot': [document.createElement('div')]};
@@ -196,4 +212,3 @@ describe('#getNamedSlotContent', () => {
   });
 });
 ```
-

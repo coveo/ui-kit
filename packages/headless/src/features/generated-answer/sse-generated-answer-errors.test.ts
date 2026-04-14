@@ -1,6 +1,7 @@
 import {
   GeneratedAnswerSseErrorCode,
   mapRunErrorCode,
+  withGeneratedAnswerSseErrorHelpers,
 } from './sse-generated-answer-errors.js';
 
 describe('sse-generated-answer-errors', () => {
@@ -29,6 +30,10 @@ describe('sse-generated-answer-errors', () => {
         'KNOWLEDGE:SSE_INTERNAL_ERROR',
         GeneratedAnswerSseErrorCode.SseInternalError,
       ],
+      [
+        'KNOWLEDGE:TURN_LIMIT_REACHED',
+        GeneratedAnswerSseErrorCode.SseTurnLimitReached,
+      ],
     ])(
       'maps %s to the expected frontend error code',
       (backendCode, expected) => {
@@ -40,6 +45,31 @@ describe('sse-generated-answer-errors', () => {
       expect(mapRunErrorCode('UNKNOWN_CODE')).toBe(
         GeneratedAnswerSseErrorCode.SseInternalError
       );
+    });
+  });
+
+  describe('withGeneratedAnswerSseErrorHelpers', () => {
+    it('returns undefined when no error is provided', () => {
+      expect(withGeneratedAnswerSseErrorHelpers()).toBeUndefined();
+    });
+
+    it('adds SSE helper predicates to the decorated error', () => {
+      const decorated = withGeneratedAnswerSseErrorHelpers({
+        message: 'turn limit reached',
+        code: GeneratedAnswerSseErrorCode.SseTurnLimitReached,
+      });
+
+      expect(decorated?.isSseTurnLimitReachedError()).toBe(true);
+      expect(decorated?.isSseInternalError()).toBe(false);
+      expect(decorated?.isConversationNotFoundError()).toBe(false);
+    });
+
+    it('keeps helper methods non-enumerable', () => {
+      const decorated = withGeneratedAnswerSseErrorHelpers({
+        code: GeneratedAnswerSseErrorCode.SseInternalError,
+      });
+
+      expect(Object.keys(decorated ?? {})).not.toContain('isSseInternalError');
     });
   });
 });

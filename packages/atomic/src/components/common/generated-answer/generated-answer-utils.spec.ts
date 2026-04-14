@@ -61,7 +61,7 @@ describe('generated-answer-utils', () => {
     it('should return citation with fallback title when title is null', () => {
       const citation: GeneratedAnswerCitation = {
         id: 'test-2',
-        // @ts-ignore - intentionally using null to verify fallback behavior
+        // @ts-expect-error - intentionally using null to verify fallback behavior
         title: null,
         uri: 'https://example.com',
       };

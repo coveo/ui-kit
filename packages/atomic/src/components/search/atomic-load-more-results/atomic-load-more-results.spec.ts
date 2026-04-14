@@ -124,11 +124,11 @@ describe('atomic-load-more-results', () => {
       const {element} = await renderLoadMoreResults({
         props: {isAppLoaded: false},
       });
-      // biome-ignore lint/complexity/useLiteralKeys: <accessing private property for testing>
+      // oxlint-disable-next-line dot-notation -- <accessing private property for testing>
       expect(element['isAppLoaded']).toBe(false);
 
       appLoadedCallback(true);
-      // biome-ignore lint/complexity/useLiteralKeys: <accessing private property for testing>
+      // oxlint-disable-next-line dot-notation -- <accessing private property for testing>
       expect(element['isAppLoaded']).toBe(true);
     });
   });
