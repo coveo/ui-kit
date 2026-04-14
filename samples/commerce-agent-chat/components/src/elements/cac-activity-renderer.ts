@@ -14,13 +14,19 @@ import './cac-commerce-catalog-view.js';
 @customElement('cac-activity-renderer')
 export class CacActivityRenderer extends LitElement {
   static override styles = css`
+    :host {
+      display: block;
+      width: 100%;
+    }
+
     .activity-renderer {
       border: 2px solid rgba(0, 212, 255, 0.2);
       border-radius: 12px;
       background: rgba(22, 45, 66, 0.4);
       padding: 0.85rem;
-      align-self: flex-start;
-      max-width: min(100%, 680px);
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
       backdrop-filter: blur(8px);
       box-shadow: 0 0 15px rgba(0, 212, 255, 0.05);
     }

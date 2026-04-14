@@ -20,6 +20,7 @@ interface CacMessageListElement extends HTMLElement {
   messages: Message[];
   isLoading: boolean;
   progressSteps: string[];
+  progressTrace: ChatState['progressTrace'];
 }
 
 interface CacMessageInputElement extends HTMLElement {
@@ -101,6 +102,7 @@ function mountChat(config: ReturnType<typeof loadConfig>) {
     messageList.messages = state.messages;
     messageList.isLoading = state.isLoading;
     messageList.progressSteps = state.progressSteps;
+    messageList.progressTrace = state.progressTrace;
     messageInput.disabled = state.isLoading;
     chatInterface.error = state.error ?? '';
   };

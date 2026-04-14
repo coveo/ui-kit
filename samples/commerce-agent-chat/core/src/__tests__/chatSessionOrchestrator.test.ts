@@ -142,6 +142,41 @@ describe('ChatSessionOrchestrator', () => {
     orchestrator.dispose();
   });
 
+  it('aggregates adjacent reasoning trace entries into one item', () => {
+    const stream = new Subject<BaseEvent>();
+    const invoke = vi.fn((_: Message[], __: string) => ({
+      runId: 'run-1',
+      events: stream.asObservable(),
+    }));
+
+    const orchestrator = new ChatSessionOrchestrator(mockConfig, {invoke});
+
+    orchestrator.sendMessage('Hello');
+    stream.next({type: 'REASONING_MESSAGE_START', messageId: 'r1'} as never);
+    stream.next({
+      type: 'REASONING_MESSAGE_CONTENT',
+      messageId: 'r1',
+      delta: 'A',
+    } as never);
+    stream.next({type: 'REASONING_MESSAGE_END', messageId: 'r1'} as never);
+    stream.next({type: 'REASONING_MESSAGE_START', messageId: 'r2'} as never);
+    stream.next({
+      type: 'REASONING_MESSAGE_CONTENT',
+      messageId: 'r2',
+      delta: 'B',
+    } as never);
+
+    const trace = orchestrator.getState().progressTrace;
+    expect(trace).toHaveLength(1);
+    expect(trace[0]).toMatchObject({
+      kind: 'reasoning',
+      text: 'AB',
+      status: 'streaming',
+    });
+
+    orchestrator.dispose();
+  });
+
   it('collapses repeated identical tool progress into a single step', () => {
     const stream = new Subject<BaseEvent>();
     const invoke = vi.fn((_: Message[], __: string) => ({
@@ -176,6 +211,28 @@ describe('ChatSessionOrchestrator', () => {
     expect(orchestrator.getState().progressSteps).toEqual([
       'Reasoning...',
       'Response complete',
+    ]);
+
+    orchestrator.dispose();
+  });
+
+  it('appends Done on RUN_FINISHED and does not append Response complete afterwards', () => {
+    const stream = new Subject<BaseEvent>();
+    const invoke = vi.fn((_: Message[], __: string) => ({
+      runId: 'run-1',
+      events: stream.asObservable(),
+    }));
+
+    const orchestrator = new ChatSessionOrchestrator(mockConfig, {invoke});
+
+    orchestrator.sendMessage('Hello');
+    stream.next({type: 'REASONING_START'} as never);
+    stream.next({type: 'RUN_FINISHED'} as never);
+    stream.complete();
+
+    expect(orchestrator.getState().progressSteps).toEqual([
+      'Reasoning...',
+      'Done',
     ]);
 
     orchestrator.dispose();

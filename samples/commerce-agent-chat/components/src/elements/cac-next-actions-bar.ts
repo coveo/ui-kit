@@ -15,12 +15,13 @@ export interface CacActionClickDetail {
 @customElement('cac-next-actions-bar')
 export class CacNextActionsBar extends LitElement {
   static override styles = css`
+    :host {
+      display: block;
+      width: 100%;
+    }
+
     .next-actions {
-      border: 2px solid rgba(0, 212, 255, 0.3);
-      border-radius: 14px;
-      background: rgba(22, 45, 66, 0.4);
-      padding: 0.85rem 1rem;
-      backdrop-filter: blur(10px);
+      width: 100%;
     }
 
     .next-actions__label {
@@ -37,6 +38,12 @@ export class CacNextActionsBar extends LitElement {
       display: flex;
       flex-wrap: wrap;
       gap: 0.65rem;
+    }
+
+    .next-actions__list--loading {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+      width: 100%;
     }
 
     .next-action-btn {
@@ -66,10 +73,12 @@ export class CacNextActionsBar extends LitElement {
     }
 
     .next-action-btn--skeleton {
-      min-width: 9.5rem;
+      min-width: 0;
       min-height: 2.1rem;
+      width: 100%;
       cursor: default;
       border-style: solid;
+      box-sizing: border-box;
     }
 
     .commerce-loading {
@@ -153,12 +162,18 @@ export class CacNextActionsBar extends LitElement {
       return nothing;
     }
 
+    const isLoadingOnly = this.shouldRenderLoading();
+
     return html`
       <div class="next-actions" aria-busy=${this.isLoading ? 'true' : 'false'}>
         <p class="next-actions__label">Next actions</p>
-        <div class="next-actions__list">
+        <div
+          class=${`next-actions__list${
+            isLoadingOnly ? ' next-actions__list--loading' : ''
+          }`}
+        >
           ${when(
-            this.shouldRenderLoading(),
+            isLoadingOnly,
             () => this.renderLoadingActions(),
             () => this.renderActionButtons()
           )}
@@ -177,7 +192,7 @@ export class CacNextActionsBar extends LitElement {
 
   private renderLoadingActions() {
     return Array.from(
-      {length: 3},
+      {length: 4},
       () => html`
         <div
           class="next-action-btn next-action-btn--skeleton"

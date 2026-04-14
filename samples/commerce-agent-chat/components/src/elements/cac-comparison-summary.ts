@@ -7,6 +7,11 @@ import {css, html, LitElement, nothing} from 'lit';
 @customElement('cac-comparison-summary')
 export class CacComparisonSummary extends LitElement {
   static override styles = css`
+    :host {
+      display: block;
+      width: 100%;
+    }
+
     .comparison-summary {
       border: 2px solid rgba(0, 212, 255, 0.2);
       border-radius: 12px;
@@ -17,6 +22,8 @@ export class CacComparisonSummary extends LitElement {
       );
       padding: 0.9rem 1rem;
       backdrop-filter: blur(8px);
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .comparison-summary__text {

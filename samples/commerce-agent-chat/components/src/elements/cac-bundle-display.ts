@@ -27,10 +27,16 @@ export interface BundleTierWithProducts extends Omit<
 @customElement('cac-bundle-display')
 export class CacBundleDisplay extends LitElement {
   static override styles = css`
+    :host {
+      display: block;
+      width: 100%;
+    }
+
     .bundle-display {
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
+      width: 100%;
     }
 
     .bundle-tabs {

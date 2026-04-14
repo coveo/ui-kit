@@ -1,5 +1,5 @@
-import {css, html, LitElement} from 'lit';
-import {customElement, property} from 'lit/decorators.js';
+import {css, html, LitElement, type PropertyValues} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
 import {map} from 'lit/directives/map.js';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {when} from 'lit/directives/when.js';
@@ -9,18 +9,29 @@ import {renderMarkdown} from '@coveo/commerce-agent-chat-core/lib/markdown';
 import type {
   ActivityMessage,
   Message,
+  ProgressTraceEntry,
 } from '@coveo/commerce-agent-chat-core/types/agent';
 import type {
   A2UISurfaceContent,
   Product,
 } from '@coveo/commerce-agent-chat-core/types/commerce';
 import './cac-activity-renderer.js';
+import './cac-progress-trace.js';
 
 /**
  * The `cac-message-list` component renders conversation messages and activities.
  */
 @customElement('cac-message-list')
 export class CacMessageList extends LitElement {
+  private static readonly bottomThresholdPx = 12;
+  private static readonly traceBottomThresholdPx = 8;
+  private static readonly skeletonSelectors = [
+    '.product-card--skeleton',
+    '.next-action-btn--skeleton',
+    '.comparison-table-loading',
+    '.bundle-display[aria-busy="true"]',
+  ];
+
   static override styles = css`
     :host {
       display: flex;
@@ -41,6 +52,11 @@ export class CacMessageList extends LitElement {
       overflow-x: hidden;
       scrollbar-width: thin;
       scrollbar-color: rgba(0, 212, 255, 0.55) rgba(13, 27, 42, 0.7);
+    }
+
+    .message-list > cac-activity-renderer {
+      display: block;
+      width: 100%;
     }
 
     .message-list::-webkit-scrollbar {
@@ -94,26 +110,6 @@ export class CacMessageList extends LitElement {
       box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
     }
 
-    .message-assistant {
-      align-self: flex-start;
-      background: linear-gradient(
-        135deg,
-        rgba(22, 45, 66, 0.6) 0%,
-        rgba(26, 58, 82, 0.4) 100%
-      );
-      border-color: rgba(0, 212, 255, 0.3);
-      box-shadow: 0 0 15px rgba(0, 212, 255, 0.1);
-    }
-
-    .message-role {
-      margin: 0 0 0.25rem;
-      font-size: 0.75rem;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: var(--ink-muted);
-      text-align: left;
-    }
-
     .message-content {
       margin: 0;
       line-height: 1.5;
@@ -124,113 +120,8 @@ export class CacMessageList extends LitElement {
       white-space: pre-line;
     }
 
-    .message-loading {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: var(--ink-muted);
-      font-size: 0.9rem;
-    }
-
-    .message-loading__dots {
-      display: inline-flex;
-      gap: 0.25rem;
-    }
-
-    .message-loading__dot {
-      width: 0.4rem;
-      height: 0.4rem;
-      border-radius: 50%;
-      background: var(--accent);
-      opacity: 0.25;
-      animation: loadingPulse 1.1s ease-in-out infinite;
-    }
-
-    .message-loading__dot:nth-child(2) {
-      animation-delay: 0.15s;
-    }
-
-    .message-loading__dot:nth-child(3) {
-      animation-delay: 0.3s;
-    }
-
-    @keyframes loadingPulse {
-      0%,
-      100% {
-        transform: translateY(0);
-        opacity: 0.25;
-      }
-      50% {
-        transform: translateY(-2px);
-        opacity: 1;
-      }
-    }
-
-    .agent-progress {
-      margin: 0.5rem 0 0;
-      border: 1px solid rgba(0, 212, 255, 0.2);
-      border-radius: 10px;
-      padding: 0.55rem 0.65rem;
-      background: rgba(15, 36, 56, 0.35);
-    }
-
-    .agent-progress__current {
-      margin: 0;
-      font-size: 0.82rem;
-      color: var(--accent);
-      font-weight: 600;
-      text-shadow: 0 0 8px rgba(0, 212, 255, 0.35);
-    }
-
-    .agent-progress__details {
-      margin-top: 0.45rem;
-    }
-
-    .agent-progress__summary {
-      cursor: pointer;
-      color: var(--ink-muted);
-      font-size: 0.78rem;
-    }
-
-    .agent-progress__steps {
-      margin: 0.45rem 0 0;
-      padding: 0 0 0 1rem;
-      list-style: decimal;
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
-
-    .agent-progress__details[open] .agent-progress__summary {
-      color: var(--accent);
-    }
-
-    .agent-progress__step--current {
-      opacity: 1;
-      font-weight: 600;
-    }
-
-    .agent-progress__step {
-      font-size: 0.8rem;
-      color: var(--accent);
-      opacity: 0.65;
-    }
-
-    .agent-progress__step--active {
-      opacity: 1;
-      font-weight: 500;
-      text-shadow: 0 0 8px rgba(0, 212, 255, 0.4);
-    }
-
-    .agent-progress__step--complete {
-      color: #7ce7ff;
-      opacity: 0.95;
-    }
-
-    .agent-progress__step--failed {
-      color: var(--danger-ink);
-      padding: 0;
-      opacity: 1;
+    cac-progress-trace {
+      width: 100%;
     }
 
     .empty-state {
@@ -261,6 +152,61 @@ export class CacMessageList extends LitElement {
   @property({attribute: false})
   public progressSteps: string[] = [];
 
+  /** The structured in-progress trace for reasoning and tool calls. */
+  @property({attribute: false})
+  public progressTrace: ProgressTraceEntry[] = [];
+
+  private wasAtBottomBeforeUpdate = true;
+  private shouldAutoScroll = true;
+  private hasRenderedSkeletonInCurrentTurn = false;
+
+  @state()
+  private progressHistoryByMessageId: Record<
+    string,
+    {progressSteps: string[]; progressTrace: ProgressTraceEntry[]}
+  > = {};
+
+  override disconnectedCallback() {
+    this.getMessageList()?.removeEventListener(
+      'scroll',
+      this.handleMessageListScroll
+    );
+    super.disconnectedCallback();
+  }
+
+  override connectedCallback() {
+    super.connectedCallback();
+  }
+
+  override firstUpdated() {
+    const messageList = this.getMessageList();
+
+    if (!messageList) {
+      return;
+    }
+
+    this.shouldAutoScroll = this.isScrolledToBottom(messageList);
+    messageList.addEventListener('scroll', this.handleMessageListScroll, {
+      passive: true,
+    });
+  }
+
+  override willUpdate(changedProperties: PropertyValues<this>) {
+    if (
+      !changedProperties.has('messages') &&
+      !changedProperties.has('progressSteps') &&
+      !changedProperties.has('progressTrace') &&
+      !changedProperties.has('isLoading')
+    ) {
+      return;
+    }
+
+    const messageList = this.getMessageList();
+    this.wasAtBottomBeforeUpdate = messageList
+      ? this.isScrolledToBottom(messageList)
+      : true;
+  }
+
   override render() {
     const lastAssistantId = this.getLastAssistantId();
 
@@ -274,7 +220,7 @@ export class CacMessageList extends LitElement {
           this.messages.length === 0,
           () =>
             html`<p class="empty-state">
-              🏄 Start a conversation with Zane 🤙
+              Start a conversation with the commerce agent
             </p>`
         )}
         ${this.renderMessages(lastAssistantId)}
@@ -282,10 +228,157 @@ export class CacMessageList extends LitElement {
     `;
   }
 
+  override updated(changedProperties: PropertyValues<this>) {
+    const hasMessagesChange = changedProperties.has('messages');
+    const hasProgressChange = changedProperties.has('progressSteps');
+    const hasProgressTraceChange = changedProperties.has('progressTrace');
+    const hasLoadingChange = changedProperties.has('isLoading');
+
+    if (
+      !hasMessagesChange &&
+      !hasProgressChange &&
+      !hasProgressTraceChange &&
+      !hasLoadingChange
+    ) {
+      return;
+    }
+
+    const previousMessages = hasMessagesChange
+      ? ((changedProperties.get('messages') as Message[] | undefined) ?? [])
+      : undefined;
+    const hasPromptSubmission = hasMessagesChange
+      ? this.hasNewPromptSubmission(previousMessages)
+      : false;
+
+    if (hasPromptSubmission) {
+      this.deferScrollToLatestMessage();
+      return;
+    }
+
+    const wasLoading =
+      (changedProperties.get('isLoading') as boolean | undefined) ??
+      this.isLoading;
+
+    if (this.isLoading && !wasLoading) {
+      this.hasRenderedSkeletonInCurrentTurn = false;
+      this.collapseAllProgressTraces();
+    }
+
+    if (!this.isLoading) {
+      this.persistLatestAssistantProgressHistory();
+      this.pruneProgressHistory();
+      this.hasRenderedSkeletonInCurrentTurn = false;
+      if (wasLoading) {
+        this.collapseAllProgressTraces();
+      }
+      return;
+    }
+
+    if (this.hasRenderedSkeletonLoader()) {
+      this.hasRenderedSkeletonInCurrentTurn = true;
+    }
+
+    if (hasMessagesChange) {
+      this.pruneProgressHistory();
+    }
+
+    if (!this.shouldAutoScroll || !this.wasAtBottomBeforeUpdate) {
+      return;
+    }
+
+    if (this.hasRenderedSkeletonInCurrentTurn) {
+      return;
+    }
+
+    this.deferScrollToLatestMessage();
+  }
+
+  private hasNewPromptSubmission(previousMessages?: Message[]) {
+    const previousCount = previousMessages?.length ?? 0;
+
+    if (this.messages.length <= previousCount) {
+      return false;
+    }
+
+    return this.messages
+      .slice(previousCount)
+      .some((message) => message.role === 'user');
+  }
+
   private renderMessages(lastAssistantId?: string) {
     return map(this.messages, (message) =>
       this.renderMessage(message, lastAssistantId)
     );
+  }
+
+  private handleMessageListScroll = () => {
+    const messageList = this.getMessageList();
+
+    if (!messageList) {
+      return;
+    }
+
+    this.shouldAutoScroll = this.isScrolledToBottom(messageList);
+  };
+
+  private getMessageList() {
+    return this.renderRoot.querySelector<HTMLElement>('.message-list');
+  }
+
+  private isScrolledToBottom(messageList: HTMLElement) {
+    const distanceFromBottom =
+      messageList.scrollHeight -
+      messageList.scrollTop -
+      messageList.clientHeight;
+
+    return distanceFromBottom <= CacMessageList.bottomThresholdPx;
+  }
+
+  private scrollToLatestMessage() {
+    const messageList = this.getMessageList();
+
+    if (!messageList) {
+      return;
+    }
+
+    messageList.scrollTo({top: messageList.scrollHeight, behavior: 'auto'});
+  }
+
+  private deferScrollToLatestMessage() {
+    requestAnimationFrame(() => {
+      this.scrollToLatestMessage();
+
+      const messageList = this.getMessageList();
+      if (!messageList) {
+        return;
+      }
+
+      this.shouldAutoScroll = this.isScrolledToBottom(messageList);
+    });
+  }
+
+  private hasRenderedSkeletonLoader() {
+    return this.hasMatchingElementInShadowTree(this.renderRoot);
+  }
+
+  private hasMatchingElementInShadowTree(root: ParentNode): boolean {
+    for (const selector of CacMessageList.skeletonSelectors) {
+      if (root.querySelector(selector)) {
+        return true;
+      }
+    }
+
+    const elements = root.querySelectorAll('*');
+
+    for (let i = 0; i < elements.length; i++) {
+      const shadowRoot = (elements[i] as HTMLElement).shadowRoot;
+
+      if (shadowRoot && this.hasMatchingElementInShadowTree(shadowRoot)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   private renderMessage(message: Message, lastAssistantId?: string) {
@@ -298,17 +391,26 @@ export class CacMessageList extends LitElement {
       ? allActivities[allActivities.length - 1]?.id
       : undefined;
 
-    const messageTemplate = html`
-      <article class=${`message message-${message.role}`}>
-        <p class="message-role">
-          ${message.role === 'user' ? 'You' : 'Zane (Agent)'}
-        </p>
-        ${this.renderMessageBody(message, isActiveAssistantActivity)}
-        ${this.renderProgressSteps(isLatestAssistantMessage)}
-      </article>
-    `;
+    if (message.role === 'user') {
+      const messageTemplate = html`
+        <article class=${`message message-${message.role}`}>
+          ${this.renderMessageBody(message, isActiveAssistantActivity)}
+        </article>
+      `;
 
-    if (message.role === 'assistant' && allActivities.length > 0) {
+      return html`
+        ${messageTemplate}
+        ${this.renderActivities(
+          allActivities,
+          allActivities,
+          isActiveAssistantActivity,
+          activeActivityId
+        )}
+      `;
+    }
+
+    // Assistant messages: render content without box or title
+    if (allActivities.length > 0) {
       const leadingActivities = allActivities.filter(
         (activity) => !this.activityContainsNextActions(activity)
       );
@@ -323,7 +425,8 @@ export class CacMessageList extends LitElement {
           isActiveAssistantActivity,
           activeActivityId
         )}
-        ${messageTemplate}
+        ${this.renderMessageBody(message, isActiveAssistantActivity)}
+        ${this.renderProgressSteps(message.id, isLatestAssistantMessage)}
         ${this.renderActivities(
           trailingActivities,
           allActivities,
@@ -334,7 +437,8 @@ export class CacMessageList extends LitElement {
     }
 
     return html`
-      ${messageTemplate}
+      ${this.renderMessageBody(message, isActiveAssistantActivity)}
+      ${this.renderProgressSteps(message.id, isLatestAssistantMessage)}
       ${this.renderActivities(
         allActivities,
         allActivities,
@@ -356,15 +460,7 @@ export class CacMessageList extends LitElement {
         html`<p class="message-content message-content--plain">${content}</p>`,
       () => {
         if (!content && isActiveAssistantActivity) {
-          return html`
-            <p class="message-loading" aria-live="polite">
-              <span class="message-loading__dots" aria-hidden="true">
-                <span class="message-loading__dot"></span>
-                <span class="message-loading__dot"></span>
-                <span class="message-loading__dot"></span>
-              </span>
-            </p>
-          `;
+          return html``;
         }
 
         return when(
@@ -378,39 +474,101 @@ export class CacMessageList extends LitElement {
     );
   }
 
-  private renderProgressSteps(isLatestAssistantMessage: boolean) {
-    const hasProgressSteps =
-      isLatestAssistantMessage && this.progressSteps.length > 0;
-
-    const currentStep = this.progressSteps[this.progressSteps.length - 1] ?? '';
+  private renderProgressSteps(
+    messageId: string,
+    isLatestAssistantMessage: boolean
+  ) {
+    const snapshot = this.getProgressSnapshotForMessage(
+      messageId,
+      isLatestAssistantMessage
+    );
+    const isStreamingCurrentTurn = isLatestAssistantMessage && this.isLoading;
+    const hasStatus =
+      isStreamingCurrentTurn ||
+      snapshot.progressTrace.length > 0 ||
+      snapshot.progressSteps.length > 0;
 
     return when(
-      hasProgressSteps,
+      hasStatus,
       () => html`
-        <section class="agent-progress" aria-label="Agent status">
-          <p class="agent-progress__current">${currentStep}</p>
-          ${when(
-            this.progressSteps.length > 1,
-            () => html`
-              <details class="agent-progress__details">
-                <summary class="agent-progress__summary">
-                  Show full status trace
-                </summary>
-                <ol class="agent-progress__steps">
-                  ${map(
-                    this.progressSteps,
-                    (step, index) =>
-                      html`<li class=${this.getProgressStepClass(step, index)}>
-                        ${step}
-                      </li>`
-                  )}
-                </ol>
-              </details>
-            `
-          )}
-        </section>
+        <cac-progress-trace
+          .progressTrace=${snapshot.progressTrace}
+          .progressSteps=${snapshot.progressSteps}
+          .isStreaming=${isStreamingCurrentTurn}
+          .messageId=${messageId}
+        ></cac-progress-trace>
       `
     );
+  }
+
+  private getProgressSnapshotForMessage(
+    messageId: string,
+    isLatestAssistantMessage: boolean
+  ) {
+    if (isLatestAssistantMessage) {
+      if (
+        this.isLoading ||
+        this.progressTrace.length > 0 ||
+        this.progressSteps.length > 0
+      ) {
+        return {
+          progressTrace: this.progressTrace,
+          progressSteps: this.progressSteps,
+        };
+      }
+    }
+
+    return (
+      this.progressHistoryByMessageId[messageId] ?? {
+        progressTrace: [],
+        progressSteps: [],
+      }
+    );
+  }
+
+  private persistLatestAssistantProgressHistory() {
+    const lastAssistantId = this.getLastAssistantId();
+
+    if (!lastAssistantId) {
+      return;
+    }
+
+    if (this.progressTrace.length === 0 && this.progressSteps.length === 0) {
+      return;
+    }
+
+    this.progressHistoryByMessageId = {
+      ...this.progressHistoryByMessageId,
+      [lastAssistantId]: {
+        progressTrace: [...this.progressTrace],
+        progressSteps: [...this.progressSteps],
+      },
+    };
+  }
+
+  private pruneProgressHistory() {
+    const assistantIds = new Set(
+      this.messages
+        .filter((message) => message.role === 'assistant')
+        .map((message) => message.id)
+    );
+    const nextHistoryEntries = Object.entries(this.progressHistoryByMessageId)
+      .filter(([messageId]) => assistantIds.has(messageId))
+      .reduce<
+        Record<
+          string,
+          {progressSteps: string[]; progressTrace: ProgressTraceEntry[]}
+        >
+      >((acc, [messageId, progressSnapshot]) => {
+        acc[messageId] = progressSnapshot;
+        return acc;
+      }, {});
+
+    this.progressHistoryByMessageId = nextHistoryEntries;
+  }
+
+  private collapseAllProgressTraces() {
+    // No-op: traces are now managed internally by the component
   }
 
   private renderActivities(
@@ -468,23 +626,11 @@ export class CacMessageList extends LitElement {
     message: Message,
     isActiveAssistantActivity: boolean
   ) {
+    if (message.role === 'assistant') {
+      return message.content ?? '';
+    }
+
     return message.content || (isActiveAssistantActivity ? '' : '...');
-  }
-
-  private getProgressStepClass(step: string, index: number) {
-    const isCurrent = index === this.progressSteps.length - 1;
-    const isComplete = step === 'Response complete';
-    const isFailed = step === 'Response failed';
-
-    return [
-      'agent-progress__step',
-      isCurrent ? 'agent-progress__step--current' : '',
-      isCurrent ? 'agent-progress__step--active' : '',
-      isComplete ? 'agent-progress__step--complete' : '',
-      isFailed ? 'agent-progress__step--failed' : '',
-    ]
-      .filter(Boolean)
-      .join(' ');
   }
 
   private getLastAssistantId() {

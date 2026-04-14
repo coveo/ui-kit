@@ -108,7 +108,7 @@ export class CacMessageInput extends LitElement {
 
   /** The placeholder shown inside the textarea. */
   @property({type: String})
-  public placeholder = 'Ask Zane...';
+  public placeholder = 'Ask agent...';
 
   @state()
   private value = '';

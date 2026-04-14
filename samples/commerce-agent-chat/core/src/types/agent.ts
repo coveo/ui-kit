@@ -23,8 +23,20 @@ export interface ChatState {
   messages: Message[];
   isLoading: boolean;
   progressSteps: string[];
+  progressTrace: ProgressTraceEntry[];
   error: string | null;
   threadId: string;
+}
+
+export type ProgressTraceEntryKind = 'reasoning' | 'tool';
+export type ProgressTraceEntryStatus = 'streaming' | 'completed';
+
+export interface ProgressTraceEntry {
+  id: string;
+  kind: ProgressTraceEntryKind;
+  label: string;
+  text: string;
+  status: ProgressTraceEntryStatus;
 }
 
 export interface ParsedEvent {

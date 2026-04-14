@@ -63,10 +63,25 @@ interface ComponentRenderArgs {
 @customElement('cac-commerce-catalog-view')
 export class CacCommerceCatalogView extends LitElement {
   static override styles = css`
+    :host {
+      display: block;
+      width: 100%;
+    }
+
     .commerce-catalog {
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
+      width: 100%;
+    }
+
+    cac-product-carousel,
+    cac-next-actions-bar,
+    cac-bundle-display,
+    cac-comparison-table,
+    cac-comparison-summary {
+      display: block;
+      width: 100%;
     }
   `;
 

@@ -2,7 +2,12 @@ import type {BaseEvent} from '@ag-ui/client';
 import type {Observable, Subscription} from 'rxjs';
 
 import type {CommerceConfig} from '../config/env.js';
-import type {AgentInvocation, ChatState, Message} from '../types/agent.js';
+import type {
+  AgentInvocation,
+  ChatState,
+  Message,
+  ProgressTraceEntry,
+} from '../types/agent.js';
 
 import {CommerceAgentClient} from './agentClient.js';
 import {buildInvocationMessages} from './chatContextBuilder.js';
@@ -34,6 +39,7 @@ export class ChatSessionOrchestrator {
       messages: [],
       isLoading: false,
       progressSteps: [],
+      progressTrace: [],
       error: null,
       threadId: generateId('thread'),
     };
@@ -89,6 +95,7 @@ export class ChatSessionOrchestrator {
         messages: nextMessages,
         isLoading: true,
         progressSteps: [],
+        progressTrace: [],
         error: null,
       },
       false
@@ -106,6 +113,22 @@ export class ChatSessionOrchestrator {
           hasTextMessageStarted = true;
         }
 
+        if (eventType === 'RUN_FINISHED') {
+          this.updateState(
+            {
+              ...this.state,
+              progressSteps: this.appendProgressStep(
+                this.state.progressSteps,
+                'Done'
+              ),
+              progressTrace: this.markAllProgressTraceCompleted(
+                this.state.progressTrace
+              ),
+            },
+            true
+          );
+        }
+
         const progressStep = extractStreamingProgress(event);
         if (progressStep !== undefined) {
           this.updateState(
@@ -115,6 +138,20 @@ export class ChatSessionOrchestrator {
                 this.state.progressSteps,
                 progressStep
               ),
+            },
+            true
+          );
+        }
+
+        const progressTrace = this.applyProgressTraceEvent(
+          this.state.progressTrace,
+          event
+        );
+        if (progressTrace !== this.state.progressTrace) {
+          this.updateState(
+            {
+              ...this.state,
+              progressTrace,
             },
             true
           );
@@ -142,15 +179,25 @@ export class ChatSessionOrchestrator {
             this.state.progressSteps,
             'Response failed'
           ),
+          progressTrace: this.markAllProgressTraceCompleted(
+            this.state.progressTrace
+          ),
         });
       },
       complete: () => {
+        const hasDoneStep = this.state.progressSteps.includes('Done');
+
         this.updateState({
           ...this.state,
           isLoading: false,
-          progressSteps: this.appendProgressStep(
-            this.state.progressSteps,
-            'Response complete'
+          progressSteps: hasDoneStep
+            ? this.state.progressSteps
+            : this.appendProgressStep(
+                this.state.progressSteps,
+                'Response complete'
+              ),
+          progressTrace: this.markAllProgressTraceCompleted(
+            this.state.progressTrace
           ),
         });
       },
@@ -168,6 +215,7 @@ export class ChatSessionOrchestrator {
       error: null,
       isLoading: false,
       progressSteps: [],
+      progressTrace: [],
       threadId: generateId('thread'),
     });
   }
@@ -193,6 +241,10 @@ export class ChatSessionOrchestrator {
   }
 
   private appendProgressStep(existing: string[], step: string): string[] {
+    if (existing[existing.length - 1] === step) {
+      return existing;
+    }
+
     const isCollapsibleStep =
       step === 'Reasoning...' || step.startsWith('Tool: ');
 
@@ -201,5 +253,154 @@ export class ChatSessionOrchestrator {
     }
 
     return [...existing, step];
+  }
+
+  private applyProgressTraceEvent(
+    existing: ProgressTraceEntry[],
+    event: BaseEvent
+  ): ProgressTraceEntry[] {
+    const typedEvent = event as Record<string, unknown>;
+    const eventType = String(typedEvent.type ?? '').toUpperCase();
+
+    if (eventType === 'REASONING_MESSAGE_START') {
+      const messageId = String(
+        typedEvent.messageId ?? `reasoning-${Date.now()}`
+      );
+      return this.appendReasoningEntry(existing, messageId);
+    }
+
+    if (eventType === 'REASONING_START') {
+      const messageId = String(
+        typedEvent.messageId ?? `reasoning-${Date.now()}`
+      );
+      return this.appendReasoningEntry(existing, messageId);
+    }
+
+    if (
+      eventType === 'REASONING_MESSAGE_CONTENT' ||
+      eventType === 'REASONING_MESSAGE_CHUNK'
+    ) {
+      const messageId = String(typedEvent.messageId ?? 'reasoning');
+      const delta = String(typedEvent.delta ?? '');
+      if (!delta) {
+        return existing;
+      }
+
+      return existing.map((entry) =>
+        entry.id === messageId && entry.kind === 'reasoning'
+          ? {
+              ...entry,
+              text: `${entry.text}${delta}`,
+              status: 'streaming' as const,
+            }
+          : entry
+      );
+    }
+
+    if (
+      eventType === 'REASONING_MESSAGE_END' ||
+      eventType === 'REASONING_END'
+    ) {
+      const messageId = String(typedEvent.messageId ?? 'reasoning');
+
+      return existing.map((entry) =>
+        entry.id === messageId && entry.kind === 'reasoning'
+          ? {
+              ...entry,
+              status: 'completed' as const,
+            }
+          : entry
+      );
+    }
+
+    if (eventType === 'TOOL_CALL_START') {
+      const toolCallId = String(typedEvent.toolCallId ?? `tool-${Date.now()}`);
+      const toolCallName = String(typedEvent.toolCallName ?? 'tool');
+
+      const hasEntry = existing.some(
+        (entry) => entry.id === toolCallId && entry.kind === 'tool'
+      );
+
+      if (hasEntry) {
+        return existing;
+      }
+
+      return [
+        ...existing,
+        {
+          id: toolCallId,
+          kind: 'tool' as const,
+          label: toolCallName,
+          text: '',
+          status: 'streaming' as const,
+        },
+      ];
+    }
+
+    if (eventType === 'TOOL_CALL_END') {
+      const toolCallId = String(typedEvent.toolCallId ?? 'tool');
+
+      return existing.map((entry) =>
+        entry.id === toolCallId && entry.kind === 'tool'
+          ? {
+              ...entry,
+              status: 'completed' as const,
+            }
+          : entry
+      );
+    }
+
+    return existing;
+  }
+
+  private appendReasoningEntry(
+    existing: ProgressTraceEntry[],
+    id: string
+  ): ProgressTraceEntry[] {
+    const lastEntry = existing[existing.length - 1];
+
+    if (lastEntry?.kind === 'reasoning') {
+      return [
+        ...existing.slice(0, -1),
+        {
+          ...lastEntry,
+          // Keep existing text and label, but move tracking to latest reasoning id.
+          id,
+          status: 'streaming' as const,
+        },
+      ];
+    }
+
+    const hasEntry = existing.some(
+      (entry) => entry.id === id && entry.kind === 'reasoning'
+    );
+
+    if (hasEntry) {
+      return existing;
+    }
+
+    return [
+      ...existing,
+      {
+        id,
+        kind: 'reasoning' as const,
+        label: 'Reasoning',
+        text: '',
+        status: 'streaming' as const,
+      },
+    ];
+  }
+
+  private markAllProgressTraceCompleted(
+    existing: ProgressTraceEntry[]
+  ): ProgressTraceEntry[] {
+    if (!existing.some((entry) => entry.status === 'streaming')) {
+      return existing;
+    }
+
+    return existing.map((entry) => ({
+      ...entry,
+      status: 'completed' as const,
+    }));
   }
 }

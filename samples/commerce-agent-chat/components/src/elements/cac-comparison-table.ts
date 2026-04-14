@@ -12,10 +12,16 @@ import './cac-price-display.js';
 @customElement('cac-comparison-table')
 export class CacComparisonTable extends LitElement {
   static override styles = css`
+    :host {
+      display: block;
+      width: 100%;
+    }
+
     .comparison-table-wrap {
       display: flex;
       flex-direction: column;
       gap: 0.4rem;
+      width: 100%;
     }
 
     .comparison-table-loading {

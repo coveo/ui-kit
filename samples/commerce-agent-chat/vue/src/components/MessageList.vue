@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {onMounted, onUnmounted, ref, watchEffect} from 'vue';
-import type {Message} from '@core/types/agent.js';
+import type {Message, ProgressTraceEntry} from '@core/types/agent.js';
 
 interface CommerceActionClickEvent extends CustomEvent<{prompt: string}> {}
 
@@ -8,12 +8,14 @@ interface MessageListElement extends HTMLElement {
   messages: Message[];
   isLoading: boolean;
   progressSteps: string[];
+  progressTrace: ProgressTraceEntry[];
 }
 
 const props = defineProps<{
   messages: Message[];
   isLoading: boolean;
   progressSteps: string[];
+  progressTrace: ProgressTraceEntry[];
 }>();
 
 const emit = defineEmits<{
@@ -27,6 +29,7 @@ watchEffect(() => {
     elementRef.value.messages = props.messages;
     elementRef.value.isLoading = props.isLoading;
     elementRef.value.progressSteps = props.progressSteps;
+    elementRef.value.progressTrace = props.progressTrace;
   }
 });
 

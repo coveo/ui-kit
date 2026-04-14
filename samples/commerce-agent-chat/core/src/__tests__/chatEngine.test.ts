@@ -11,6 +11,7 @@ function makeState(): ChatState {
     ],
     isLoading: true,
     progressSteps: [],
+    progressTrace: [],
     error: null,
     threadId: 'thread-1',
   };

@@ -16,10 +16,16 @@ export interface ProductSection {
 @customElement('cac-product-carousel')
 export class CacProductCarousel extends LitElement {
   static override styles = css`
+    :host {
+      display: block;
+      width: 100%;
+    }
+
     .product-carousel {
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
+      width: 100%;
     }
 
     .carousel-section {
@@ -119,6 +125,13 @@ export class CacProductCarousel extends LitElement {
       height: 90px;
     }
 
+    .commerce-loading--heading {
+      display: block;
+      height: 1em;
+      width: min(16rem, 55%);
+      border-radius: 8px;
+    }
+
     @keyframes shimmer {
       0% {
         background-position: -600px 0;
@@ -190,7 +203,9 @@ export class CacProductCarousel extends LitElement {
   private renderLoadingSection(section: ProductSection, key: string) {
     return html`
       <div class="carousel-section" aria-busy="true" data-key=${key}>
-        <h3 class="commerce-heading">${section.heading}</h3>
+        <h3 class="commerce-heading" aria-hidden="true">
+          <span class="commerce-loading commerce-loading--heading"></span>
+        </h3>
         <div class="carousel-track" role="list" aria-label="Loading products">
           ${this.renderLoadingCards()}
         </div>
@@ -199,7 +214,7 @@ export class CacProductCarousel extends LitElement {
   }
 
   private renderLoadingCards() {
-    return Array.from({length: 3}, () => this.renderLoadingCard());
+    return Array.from({length: 4}, () => this.renderLoadingCard());
   }
 
   private renderLoadingCard() {

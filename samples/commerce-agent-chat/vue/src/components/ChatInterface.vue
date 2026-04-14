@@ -21,6 +21,7 @@ const {state, sendMessage, clearMessages, dismissError} = useChat(props.config);
       :messages="state.messages"
       :is-loading="state.isLoading"
       :progress-steps="state.progressSteps"
+      :progress-trace="state.progressTrace"
       @action-selected="sendMessage"
     />
     <MessageInput
