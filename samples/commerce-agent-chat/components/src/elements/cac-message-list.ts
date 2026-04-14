@@ -18,13 +18,22 @@ import type {
 import './cac-activity-renderer.js';
 import './cac-progress-trace.js';
 
+interface ProgressSnapshot {
+  progressSteps: string[];
+  progressTrace: ProgressTraceEntry[];
+}
+
+interface ProgressSegmentStart {
+  stepStart: number;
+  traceStart: number;
+}
+
 /**
  * The `cac-message-list` component renders conversation messages and activities.
  */
 @customElement('cac-message-list')
 export class CacMessageList extends LitElement {
   private static readonly bottomThresholdPx = 12;
-  private static readonly traceBottomThresholdPx = 8;
   private static readonly skeletonSelectors = [
     '.product-card--skeleton',
     '.next-action-btn--skeleton',
@@ -161,10 +170,12 @@ export class CacMessageList extends LitElement {
   private hasRenderedSkeletonInCurrentTurn = false;
 
   @state()
-  private progressHistoryByMessageId: Record<
-    string,
-    {progressSteps: string[]; progressTrace: ProgressTraceEntry[]}
-  > = {};
+  private currentTraceSegmentStarts: ProgressSegmentStart[] = [
+    {stepStart: 0, traceStart: 0},
+  ];
+
+  @state()
+  private progressHistoryByMessageId: Record<string, ProgressSnapshot[]> = {};
 
   override disconnectedCallback() {
     this.getMessageList()?.removeEventListener(
@@ -205,6 +216,37 @@ export class CacMessageList extends LitElement {
     this.wasAtBottomBeforeUpdate = messageList
       ? this.isScrolledToBottom(messageList)
       : true;
+
+    const previousIsLoading =
+      (changedProperties.get('isLoading') as boolean | undefined) ??
+      this.isLoading;
+
+    if (this.isLoading && !previousIsLoading) {
+      this.currentTraceSegmentStarts = [{stepStart: 0, traceStart: 0}];
+      return;
+    }
+
+    if (!this.isLoading || !changedProperties.has('messages')) {
+      return;
+    }
+
+    const previousMessages =
+      (changedProperties.get('messages') as Message[] | undefined) ?? [];
+    const newAssistantActivities = this.getNewAssistantActivities(
+      previousMessages,
+      this.messages
+    );
+    const skeletonLikelyActivityCount = newAssistantActivities.filter(
+      (activity) => this.activityLikelyRendersSkeleton(activity)
+    ).length;
+
+    if (skeletonLikelyActivityCount === 0) {
+      return;
+    }
+
+    for (let i = 0; i < skeletonLikelyActivityCount; i++) {
+      this.pushCurrentTraceSegmentStart();
+    }
   }
 
   override render() {
@@ -261,6 +303,7 @@ export class CacMessageList extends LitElement {
 
     if (this.isLoading && !wasLoading) {
       this.hasRenderedSkeletonInCurrentTurn = false;
+      this.currentTraceSegmentStarts = [{stepStart: 0, traceStart: 0}];
       this.collapseAllProgressTraces();
     }
 
@@ -268,6 +311,7 @@ export class CacMessageList extends LitElement {
       this.persistLatestAssistantProgressHistory();
       this.pruneProgressHistory();
       this.hasRenderedSkeletonInCurrentTurn = false;
+      this.currentTraceSegmentStarts = [{stepStart: 0, traceStart: 0}];
       if (wasLoading) {
         this.collapseAllProgressTraces();
       }
@@ -361,6 +405,82 @@ export class CacMessageList extends LitElement {
     return this.hasMatchingElementInShadowTree(this.renderRoot);
   }
 
+  private pushCurrentTraceSegmentStart() {
+    const lastStart =
+      this.currentTraceSegmentStarts[this.currentTraceSegmentStarts.length - 1];
+    const nextStart = {
+      stepStart: this.progressSteps.length,
+      traceStart: this.progressTrace.length,
+    };
+
+    if (
+      lastStart &&
+      lastStart.stepStart === nextStart.stepStart &&
+      lastStart.traceStart === nextStart.traceStart
+    ) {
+      return;
+    }
+
+    this.currentTraceSegmentStarts = [
+      ...this.currentTraceSegmentStarts,
+      nextStart,
+    ];
+  }
+
+  private getLastAssistantMessage(messages: Message[]) {
+    return [...messages]
+      .reverse()
+      .find((message) => message.role === 'assistant');
+  }
+
+  private getNewAssistantActivities(
+    previousMessages: Message[],
+    nextMessages: Message[]
+  ) {
+    const previousAssistant = this.getLastAssistantMessage(previousMessages);
+    const nextAssistant = this.getLastAssistantMessage(nextMessages);
+
+    if (!nextAssistant) {
+      return [] as ActivityMessage[];
+    }
+
+    const nextActivities = nextAssistant.activities ?? [];
+
+    if (!previousAssistant || previousAssistant.id !== nextAssistant.id) {
+      return nextActivities;
+    }
+
+    const previousActivities = previousAssistant.activities ?? [];
+
+    if (nextActivities.length <= previousActivities.length) {
+      return [] as ActivityMessage[];
+    }
+
+    return nextActivities.slice(previousActivities.length);
+  }
+
+  private activityLikelyRendersSkeleton(activity: ActivityMessage) {
+    if (!activity || activity.activityType !== 'a2ui-surface') {
+      return false;
+    }
+
+    const operations =
+      (activity.content as unknown as A2UISurfaceContent)?.operations ?? [];
+
+    return operations.some((operation) =>
+      (operation.surfaceUpdate?.components ?? []).some((component) => {
+        const componentType = Object.keys(component.component ?? {})[0] ?? '';
+
+        return (
+          isType(componentType, 'ProductCarousel') ||
+          isType(componentType, 'NextActionsBar') ||
+          isType(componentType, 'ComparisonTable') ||
+          isType(componentType, 'BundleDisplay')
+        );
+      })
+    );
+  }
+
   private hasMatchingElementInShadowTree(root: ParentNode): boolean {
     for (const selector of CacMessageList.skeletonSelectors) {
       if (root.querySelector(selector)) {
@@ -390,6 +510,12 @@ export class CacMessageList extends LitElement {
     const activeActivityId = isActiveAssistantActivity
       ? allActivities[allActivities.length - 1]?.id
       : undefined;
+    const progressSegments = this.getProgressSegmentsForMessage(
+      message.id,
+      isLatestAssistantMessage
+    );
+    const leadingProgressSegment = progressSegments.slice(0, 1);
+    const trailingProgressSegments = progressSegments.slice(1);
 
     if (message.role === 'user') {
       const messageTemplate = html`
@@ -400,12 +526,14 @@ export class CacMessageList extends LitElement {
 
       return html`
         ${messageTemplate}
+        ${this.renderProgressSegments(leadingProgressSegment, message.id)}
         ${this.renderActivities(
           allActivities,
           allActivities,
           isActiveAssistantActivity,
           activeActivityId
         )}
+        ${this.renderProgressSegments(trailingProgressSegments, message.id)}
       `;
     }
 
@@ -419,6 +547,7 @@ export class CacMessageList extends LitElement {
       );
 
       return html`
+        ${this.renderProgressSegments(leadingProgressSegment, message.id)}
         ${this.renderActivities(
           leadingActivities,
           allActivities,
@@ -426,25 +555,26 @@ export class CacMessageList extends LitElement {
           activeActivityId
         )}
         ${this.renderMessageBody(message, isActiveAssistantActivity)}
-        ${this.renderProgressSteps(message.id, isLatestAssistantMessage)}
         ${this.renderActivities(
           trailingActivities,
           allActivities,
           isActiveAssistantActivity,
           activeActivityId
         )}
+        ${this.renderProgressSegments(trailingProgressSegments, message.id)}
       `;
     }
 
     return html`
       ${this.renderMessageBody(message, isActiveAssistantActivity)}
-      ${this.renderProgressSteps(message.id, isLatestAssistantMessage)}
+      ${this.renderProgressSegments(leadingProgressSegment, message.id)}
       ${this.renderActivities(
         allActivities,
         allActivities,
         isActiveAssistantActivity,
         activeActivityId
       )}
+      ${this.renderProgressSegments(trailingProgressSegments, message.id)}
     `;
   }
 
@@ -474,34 +604,7 @@ export class CacMessageList extends LitElement {
     );
   }
 
-  private renderProgressSteps(
-    messageId: string,
-    isLatestAssistantMessage: boolean
-  ) {
-    const snapshot = this.getProgressSnapshotForMessage(
-      messageId,
-      isLatestAssistantMessage
-    );
-    const isStreamingCurrentTurn = isLatestAssistantMessage && this.isLoading;
-    const hasStatus =
-      isStreamingCurrentTurn ||
-      snapshot.progressTrace.length > 0 ||
-      snapshot.progressSteps.length > 0;
-
-    return when(
-      hasStatus,
-      () => html`
-        <cac-progress-trace
-          .progressTrace=${snapshot.progressTrace}
-          .progressSteps=${snapshot.progressSteps}
-          .isStreaming=${isStreamingCurrentTurn}
-          .messageId=${messageId}
-        ></cac-progress-trace>
-      `
-    );
-  }
-
-  private getProgressSnapshotForMessage(
+  private getProgressSegmentsForMessage(
     messageId: string,
     isLatestAssistantMessage: boolean
   ) {
@@ -511,19 +614,57 @@ export class CacMessageList extends LitElement {
         this.progressTrace.length > 0 ||
         this.progressSteps.length > 0
       ) {
-        return {
-          progressTrace: this.progressTrace,
-          progressSteps: this.progressSteps,
-        };
+        const segments = this.buildCurrentProgressSegments();
+
+        return segments.map((segment, index) => ({
+          ...segment,
+          isStreaming: this.isLoading && index === segments.length - 1,
+        }));
       }
     }
 
-    return (
-      this.progressHistoryByMessageId[messageId] ?? {
-        progressTrace: [],
-        progressSteps: [],
-      }
+    return (this.progressHistoryByMessageId[messageId] ?? []).map(
+      (segment) => ({
+        ...segment,
+        isStreaming: false,
+      })
     );
+  }
+
+  private buildCurrentProgressSegments(): ProgressSnapshot[] {
+    const segments: ProgressSnapshot[] = [];
+
+    for (let i = 0; i < this.currentTraceSegmentStarts.length; i++) {
+      const currentStart = this.currentTraceSegmentStarts[i];
+      const nextStart = this.currentTraceSegmentStarts[i + 1];
+      const progressSteps = this.progressSteps.slice(
+        currentStart.stepStart,
+        nextStart?.stepStart
+      );
+      const progressTrace = this.progressTrace.slice(
+        currentStart.traceStart,
+        nextStart?.traceStart
+      );
+      const isLastSegment = i === this.currentTraceSegmentStarts.length - 1;
+
+      if (
+        progressSteps.length === 0 &&
+        progressTrace.length === 0 &&
+        !isLastSegment
+      ) {
+        continue;
+      }
+
+      segments.push({progressSteps, progressTrace});
+    }
+
+    if (segments.length === 0) {
+      return [
+        {progressSteps: this.progressSteps, progressTrace: this.progressTrace},
+      ];
+    }
+
+    return segments;
   }
 
   private persistLatestAssistantProgressHistory() {
@@ -533,16 +674,18 @@ export class CacMessageList extends LitElement {
       return;
     }
 
-    if (this.progressTrace.length === 0 && this.progressSteps.length === 0) {
+    const segments = this.buildCurrentProgressSegments().filter(
+      (segment) =>
+        segment.progressSteps.length > 0 || segment.progressTrace.length > 0
+    );
+
+    if (segments.length === 0) {
       return;
     }
 
     this.progressHistoryByMessageId = {
       ...this.progressHistoryByMessageId,
-      [lastAssistantId]: {
-        progressTrace: [...this.progressTrace],
-        progressSteps: [...this.progressSteps],
-      },
+      [lastAssistantId]: segments,
     };
   }
 
@@ -554,21 +697,47 @@ export class CacMessageList extends LitElement {
     );
     const nextHistoryEntries = Object.entries(this.progressHistoryByMessageId)
       .filter(([messageId]) => assistantIds.has(messageId))
-      .reduce<
-        Record<
-          string,
-          {progressSteps: string[]; progressTrace: ProgressTraceEntry[]}
-        >
-      >((acc, [messageId, progressSnapshot]) => {
-        acc[messageId] = progressSnapshot;
-        return acc;
-      }, {});
+      .reduce<Record<string, ProgressSnapshot[]>>(
+        (acc, [messageId, progressSnapshot]) => {
+          acc[messageId] = progressSnapshot;
+          return acc;
+        },
+        {}
+      );
 
     this.progressHistoryByMessageId = nextHistoryEntries;
   }
 
   private collapseAllProgressTraces() {
     // No-op: traces are now managed internally by the component
+  }
+
+  private renderProgressSegments(
+    segments: Array<ProgressSnapshot & {isStreaming: boolean}>,
+    messageId?: string
+  ) {
+    if (segments.length === 0) {
+      return html``;
+    }
+
+    return map(segments, (segment, index) => {
+      const hasStatus =
+        segment.isStreaming ||
+        segment.progressTrace.length > 0 ||
+        segment.progressSteps.length > 0;
+
+      return when(
+        hasStatus,
+        () => html`
+          <cac-progress-trace
+            .progressTrace=${segment.progressTrace}
+            .progressSteps=${segment.progressSteps}
+            .isStreaming=${segment.isStreaming}
+            .messageId=${`${messageId ?? 'message'}-segment-${index}`}
+          ></cac-progress-trace>
+        `
+      );
+    });
   }
 
   private renderActivities(
