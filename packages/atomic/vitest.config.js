@@ -52,8 +52,9 @@ const storybook = defineConfig({
     // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
     storybookTest({
       configDir: path.join(import.meta.dirname, '.storybook'),
-      storybookUrl: 'http://localhost:4400',
-      storybookScript: 'npx storybook dev -p 4400 --no-open',
+      storybookUrl: 'http://storybook.localhost:1355',
+      storybookScript:
+        'portless run --name storybook node ./scripts/start-storybook.mjs',
     }),
   ],
   test: {
