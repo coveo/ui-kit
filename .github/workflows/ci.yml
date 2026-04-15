@@ -10,7 +10,7 @@ env:
   CYPRESS_VERIFY_TIMEOUT: 60000
 jobs:
   pr-report:
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' && !startsWith(github.head_ref, 'changeset-release/')
     name: 'PR Report'
     runs-on: ubuntu-latest
     environment: PR Artifacts
@@ -46,6 +46,7 @@ jobs:
           GITHUB_CREDENTIALS: ${{ steps.generate-token.outputs.token }}
   build-windows:
     name: 'Build Windows'
+    if: ${{ github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/') }}
     runs-on: windows-latest
     permissions:
       contents: read
@@ -63,6 +64,7 @@ jobs:
           load-cache: 'false'
   build-missing:
     name: 'Build & commit missing generated files'
+    if: ${{ github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/') }}
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -104,6 +106,7 @@ jobs:
           DEBUG: '*'
   build:
     name: 'Build'
+    if: ${{ github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/') }}
     runs-on: ubuntu-latest
     environment: PR Artifacts
     steps:
@@ -118,6 +121,7 @@ jobs:
           save-cache: 'true'
   build-cdn:
     name: 'Build CDN'
+    if: ${{ github.event_name != 'pull_request' || !startsWith(github.head_ref, 'changeset-release/') }}
     runs-on: ubuntu-latest
     env:
       DEPLOYMENT_ENVIRONMENT: CDN
