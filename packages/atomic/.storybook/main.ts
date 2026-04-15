@@ -17,6 +17,8 @@ import {generateExternalPackageMappings} from '../scripts/externalPackageMapping
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
+const isVitest = process.env.VITEST !== undefined;
 
 // Ensure directories referenced in staticDirs exist before Storybook validates them.
 // The prepareStorybookAssets plugin populates these during buildStart, which runs later.
@@ -90,13 +92,41 @@ const virtualOpenApiModules = (): Plugin => {
   };
 };
 
-const externalizeDependencies = (): Plugin => {
+const externalizeDependencies = (
+  configType: 'DEVELOPMENT' | 'PRODUCTION' | undefined
+): Plugin => {
+  const packageMappings = generateExternalPackageMappings();
   return {
     name: 'externalize-dependencies',
     enforce: 'pre',
     resolveId(source, _importer, _options) {
-      if (/^\/(headless|bueno)/.test(source)) {
-        return false;
+      const match =
+        /^\/(?<packageName>headless|bueno)\/v\d+\.\d+\.\d+\/(?<importPath>.*)$/.exec(
+          source
+        );
+
+      if (match && !isVitest) {
+        console.log('hi!!');
+        if (isCDN) {
+          return false;
+        } else {
+          console.log(
+            `Resolving ${source} to local file for development build`,
+            match.groups
+          );
+          const packageMapping =
+            packageMappings[
+              `@coveo/${match.groups!.packageName as 'headless' | 'bueno'}`
+            ];
+          return {
+            id: resolve(
+              packageMapping.localBaseDir,
+              'cdn',
+              match.groups!.importPath
+            ),
+            external: 'absolute',
+          };
+        }
       }
 
       if (
@@ -106,18 +136,22 @@ const externalizeDependencies = (): Plugin => {
       ) {
         return false;
       }
-
-      const packageMappings = generateExternalPackageMappings();
       const packageMapping = packageMappings[source];
 
-      if (packageMapping) {
-        if (!isCDN) {
-          return false;
-        }
+      if (!packageMapping || isVitest) {
+        return null;
+      }
 
+      if (isCDN) {
         return {
           id: packageMapping.cdn,
           external: 'absolute',
+        };
+      }
+
+      if (configType === 'DEVELOPMENT') {
+        return {
+          id: packageMapping.local,
         };
       }
 
@@ -125,7 +159,6 @@ const externalizeDependencies = (): Plugin => {
     },
   };
 };
-const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 
 function getPackageVersion(): string {
   return JSON.parse(
@@ -199,7 +232,7 @@ const config: StorybookConfig = {
         forceInlineCssImports(),
         svgTransform(),
         prepareStorybookAssets(),
-        configType === 'PRODUCTION' && isCDN && externalizeDependencies(),
+        externalizeDependencies(configType),
       ],
     });
   },
