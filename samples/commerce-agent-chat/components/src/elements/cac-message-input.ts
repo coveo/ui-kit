@@ -36,7 +36,7 @@ export class CacMessageInput extends LitElement {
       transition: border-color 0.2s ease;
       min-height: 3.25rem;
       max-height: 9rem;
-      resize: vertical;
+      resize: none;
       width: 100%;
       box-sizing: border-box;
     }
@@ -124,6 +124,11 @@ export class CacMessageInput extends LitElement {
   @property({type: String})
   public value = '';
 
+  /** Focus the textarea inside the component. */
+  public focusInput() {
+    this.getInputElement()?.focus();
+  }
+
   override render() {
     return html`
       <form
@@ -170,6 +175,10 @@ export class CacMessageInput extends LitElement {
 
   private onInput(event: Event) {
     this.value = (event.target as HTMLTextAreaElement).value;
+  }
+
+  private getInputElement() {
+    return this.renderRoot.querySelector<HTMLTextAreaElement>('#chat-input');
   }
 
   private onKeyDown(event: KeyboardEvent) {

@@ -10,6 +10,8 @@ interface MessageInputProps {
   placeholder?: string;
   aiEnabled: boolean;
   onToggleAi: (enabled: boolean) => void;
+  shouldFocusInput?: boolean;
+  onFocusHandled?: () => void;
   slot?: string;
 }
 
@@ -17,6 +19,7 @@ interface MessageInputElement extends HTMLElement {
   disabled: boolean;
   placeholder: string;
   value: string;
+  focusInput?: () => void;
 }
 
 export function MessageInput({
@@ -27,6 +30,8 @@ export function MessageInput({
   placeholder = 'Ask agent...',
   aiEnabled,
   onToggleAi,
+  shouldFocusInput = false,
+  onFocusHandled,
   slot,
 }: MessageInputProps): React.JSX.Element {
   const elementRef = useRef<MessageInputElement | null>(null);
@@ -38,6 +43,19 @@ export function MessageInput({
       elementRef.current.value = value;
     }
   }, [disabled, placeholder, value]);
+
+  useEffect(() => {
+    if (!shouldFocusInput) {
+      return;
+    }
+
+    const frameId = requestAnimationFrame(() => {
+      elementRef.current?.focusInput?.();
+      onFocusHandled?.();
+    });
+
+    return () => cancelAnimationFrame(frameId);
+  }, [shouldFocusInput, onFocusHandled]);
 
   useEffect(() => {
     const element = elementRef.current;

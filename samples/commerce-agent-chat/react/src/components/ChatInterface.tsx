@@ -17,10 +17,16 @@ export function ChatInterface({config}: ChatInterfaceProps): React.JSX.Element {
   const elementRef = useRef<CacChatInterfaceElement | null>(null);
   const [aiEnabled, setAiEnabled] = useState(true);
   const [draftValue, setDraftValue] = useState('');
+  const [shouldFocusInput, setShouldFocusInput] = useState(false);
 
   const handleSend = (content: string) => {
     sendMessage(content);
     setDraftValue('');
+  };
+
+  const handleToggleAi = (enabled: boolean) => {
+    setAiEnabled(enabled);
+    setShouldFocusInput(true);
   };
 
   useEffect(() => {
@@ -55,7 +61,9 @@ export function ChatInterface({config}: ChatInterfaceProps): React.JSX.Element {
             disabled={false}
             placeholder="Search..."
             aiEnabled={aiEnabled}
-            onToggleAi={setAiEnabled}
+            onToggleAi={handleToggleAi}
+            shouldFocusInput={shouldFocusInput}
+            onFocusHandled={() => setShouldFocusInput(false)}
           />
         </div>
       </section>
@@ -80,7 +88,9 @@ export function ChatInterface({config}: ChatInterfaceProps): React.JSX.Element {
         disabled={state.isLoading}
         placeholder="Ask agent..."
         aiEnabled={aiEnabled}
-        onToggleAi={setAiEnabled}
+        onToggleAi={handleToggleAi}
+        shouldFocusInput={shouldFocusInput}
+        onFocusHandled={() => setShouldFocusInput(false)}
       />
     </cac-chat-interface>
   );
