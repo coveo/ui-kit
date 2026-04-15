@@ -666,6 +666,7 @@ jobs:
       - 'playwright-atomic-search-commerce-react-test'
       - 'playwright-atomic-search-commerce-angular-test'
       - 'cypress-headless-ssr-search-nextjs-test'
+      - 'changeset-merge-guard'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
