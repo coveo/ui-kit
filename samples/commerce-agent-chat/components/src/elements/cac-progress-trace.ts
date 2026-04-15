@@ -1,7 +1,9 @@
 import {css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {map} from 'lit/directives/map.js';
+import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {when} from 'lit/directives/when.js';
+import {renderMarkdown} from '@coveo/commerce-agent-chat-core/lib/markdown';
 import type {ProgressTraceEntry} from '@coveo/commerce-agent-chat-core/types/agent';
 
 /**
@@ -117,12 +119,31 @@ export class CacProgressTrace extends LitElement {
       color: var(--ink);
     }
 
-    .agent-progress__item-text {
-      margin: 0;
+    .agent-progress__item-markdown {
       font-size: 0.8rem;
+      line-height: 1.45;
       color: var(--ink);
-      white-space: pre-line;
       overflow-wrap: anywhere;
+    }
+
+    .agent-progress__item-markdown > :first-child {
+      margin-top: 0;
+    }
+
+    .agent-progress__item-markdown > :last-child {
+      margin-bottom: 0;
+    }
+
+    .agent-progress__item-markdown :where(p, ul, ol, pre, blockquote) {
+      margin: 0.35rem 0;
+    }
+
+    .agent-progress__item-markdown :where(ul, ol) {
+      padding-left: 1.25rem;
+    }
+
+    .agent-progress__item-markdown :where(pre) {
+      white-space: pre-wrap;
     }
 
     @keyframes agentProgressPulse {
@@ -411,7 +432,9 @@ export class CacProgressTrace extends LitElement {
           ${when(
             Boolean(normalizedText),
             () =>
-              html`<p class="agent-progress__item-text">${normalizedText}</p>`
+              html`<div class="agent-progress__item-markdown">
+                ${unsafeHTML(renderMarkdown(normalizedText))}
+              </div>`
           )}
         </li>
       `;
@@ -421,9 +444,8 @@ export class CacProgressTrace extends LitElement {
   private normalizeProgressTraceText(text: string) {
     return text
       .replace(/\r\n?/g, '\n')
-      .replace(/^[\s\uFEFF\xA0]+/, '')
       .replace(/[ \t]+\n/g, '\n')
-      .replace(/\n{2,}/g, '\n')
+      .replace(/\n{3,}/g, '\n\n')
       .trim();
   }
 
