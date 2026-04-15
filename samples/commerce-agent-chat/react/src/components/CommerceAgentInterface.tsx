@@ -22,14 +22,17 @@ export function CommerceAgentInterface({
   const handleSend = (content: string) => {
     if (aiEnabled) {
       sendMessage(content);
+      setDraftValue('');
     } else {
       void search(content);
     }
-    setDraftValue('');
   };
 
   const handleToggleAi = (enabled: boolean) => {
     setAiEnabled(enabled);
+    if (enabled) {
+      setDraftValue('');
+    }
     setShouldFocusInput(true);
   };
 
