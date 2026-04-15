@@ -22,7 +22,6 @@ export class CacProgressTrace extends LitElement {
       border: 0;
       border-radius: 8px;
       padding: 0.55rem 0.65rem;
-      background: var(--surface-accent);
       width: 100%;
       box-sizing: border-box;
     }
@@ -78,7 +77,6 @@ export class CacProgressTrace extends LitElement {
       margin-top: 0.55rem;
       border: 1px solid var(--border);
       border-radius: 8px;
-      background: #fff;
       padding: 0.55rem 0.65rem;
       width: 100%;
       box-sizing: border-box;
