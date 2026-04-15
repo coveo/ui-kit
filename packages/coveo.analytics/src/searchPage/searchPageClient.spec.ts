@@ -106,7 +106,7 @@ describe('SearchPageClient', () => {
                         Promise.resolve({...payload, customData: {...payload.customData, ...customDataFromMiddleware}}),
                 ],
             },
-            provider,
+            provider
         );
     };
 
@@ -153,7 +153,7 @@ describe('SearchPageClient', () => {
     const expectSearchEventToMatchDescription = (
         description: EventDescription,
         actionCause: SearchPageEvents,
-        meta = {},
+        meta = {}
     ) => {
         expectMatchDescription(description, actionCause, {...meta, genQaMetadata: 'bar'});
     };
@@ -179,7 +179,7 @@ describe('SearchPageClient', () => {
     const expectMatchCustomEventPayload = (
         actionCause: SearchPageEvents,
         meta = {},
-        eventType = CustomEventsTypes[actionCause],
+        eventType = CustomEventsTypes[actionCause]
     ) => {
         const body: string = lastCallBody(fetchMock);
         const customData = {foo: 'bar', ...customDataFromMiddleware, ...meta};
@@ -1517,6 +1517,29 @@ describe('SearchPageClient', () => {
         await built.log({searchUID: provider.getSearchUID()});
         expectMatchCustomEventPayload(SearchPageEvents.openGeneratedAnswerSource, meta);
         expectMatchDescription(built.description, SearchPageEvents.openGeneratedAnswerSource, meta);
+    });
+
+    it('should send proper payload for #logGeneratedAnswerOpenInlineLink', async () => {
+        const meta = {
+            generativeQuestionAnsweringId: fakeStreamId,
+            conversationId: fakeConversationId,
+            linkText: 'Read more',
+            linkURL: 'https://example.com',
+        };
+        await client.logGeneratedAnswerOpenInlineLink(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerOpenInlineLink, meta);
+    });
+
+    it('should send proper payload for #makeGeneratedAnswerOpenInlineLink', async () => {
+        const meta = {
+            generativeQuestionAnsweringId: fakeStreamId,
+            linkText: 'Read more',
+            linkURL: 'https://example.com',
+        };
+        const built = await client.makeGeneratedAnswerOpenInlineLink(meta);
+        await built.log({searchUID: provider.getSearchUID()});
+        expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerOpenInlineLink, meta);
+        expectMatchDescription(built.description, SearchPageEvents.generatedAnswerOpenInlineLink, meta);
     });
 
     it('should send proper payload for #logGeneratedAnswerCitationClick', async () => {
