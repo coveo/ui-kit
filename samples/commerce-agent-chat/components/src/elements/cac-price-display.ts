@@ -23,8 +23,7 @@ export class CacPriceDisplay extends LitElement {
     .price-regular {
       font-weight: 700;
       font-size: 0.9rem;
-      color: var(--accent);
-      text-shadow: 0 0 8px rgba(0, 212, 255, 0.3);
+      color: var(--ink);
     }
 
     .price-original {
@@ -36,15 +35,11 @@ export class CacPriceDisplay extends LitElement {
     .price-promo {
       font-size: 0.85rem;
       font-weight: 700;
-      color: #fff;
-      background: linear-gradient(
-        135deg,
-        var(--accent-warm) 0%,
-        var(--accent-hot) 100%
-      );
-      border-radius: 6px;
+      color: #92400e;
+      background: #fef3c7;
+      border: 1px solid #f6d38a;
+      border-radius: 4px;
       padding: 0.15em 0.5em;
-      box-shadow: 0 0 10px rgba(255, 183, 0, 0.3);
     }
   `;
 

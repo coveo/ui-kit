@@ -61,7 +61,7 @@ export class CacMessageList extends LitElement {
       overflow-y: auto;
       overflow-x: hidden;
       scrollbar-width: thin;
-      scrollbar-color: rgba(0, 212, 255, 0.55) rgba(13, 27, 42, 0.7);
+      scrollbar-color: #b8c2d1 #eef2f7;
     }
 
     .message-list > cac-activity-renderer {
@@ -74,50 +74,36 @@ export class CacMessageList extends LitElement {
     }
 
     .message-list::-webkit-scrollbar-track {
-      background: rgba(13, 27, 42, 0.7);
+      background: #eef2f7;
       border-radius: 999px;
-      border: 1px solid rgba(0, 212, 255, 0.12);
+      border: 1px solid #d6dce6;
     }
 
     .message-list::-webkit-scrollbar-thumb {
-      background: linear-gradient(
-        180deg,
-        rgba(0, 212, 255, 0.55) 0%,
-        rgba(0, 168, 204, 0.8) 100%
-      );
+      background: #b8c2d1;
       border-radius: 999px;
-      border: 1px solid rgba(0, 212, 255, 0.35);
-      box-shadow: 0 0 10px rgba(0, 212, 255, 0.25);
+      border: 1px solid #a9b5c7;
     }
 
     .message-list::-webkit-scrollbar-thumb:hover {
-      background: linear-gradient(
-        180deg,
-        rgba(0, 255, 212, 0.8) 0%,
-        rgba(0, 212, 255, 0.9) 100%
-      );
+      background: #98a7bd;
     }
 
     .message {
       width: fit-content;
       max-width: min(80ch, 88%);
       padding: 0.9rem 1.1rem;
-      border-radius: 14px;
-      border: 1px solid transparent;
-      backdrop-filter: blur(8px);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #fff;
       overflow-wrap: anywhere;
       text-align: left;
     }
 
     .message-user {
       align-self: flex-end;
-      background: linear-gradient(
-        135deg,
-        rgba(0, 168, 204, 0.2) 0%,
-        rgba(0, 212, 255, 0.15) 100%
-      );
-      border-color: rgba(0, 212, 255, 0.5);
-      box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+      background: #edf4ff;
+      border-color: #c8dcff;
     }
 
     .message-content {

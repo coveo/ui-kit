@@ -2,19 +2,15 @@
   min-height: 100%;
   display: grid;
   place-items: center;
-  padding: 1rem;
+  padding: 0.75rem;
 }
 
 .state-card {
   width: min(940px, 100%);
-  border: 2px solid rgba(0, 212, 255, 0.4);
-  border-radius: 20px;
-  background: rgba(15, 36, 56, 0.75);
-  backdrop-filter: blur(10px);
-  box-shadow:
-    0 0 60px rgba(0, 212, 255, 0.15),
-    0 20px 60px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(0, 212, 255, 0.2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
   padding: 1rem 1.2rem;
 }
 
@@ -34,15 +30,11 @@
   min-width: 0;
 }
 
-.state-card .input-with-switch {
-  border-top: 2px solid rgba(0, 212, 255, 0.2);
-}
-
 .ai-switch {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  color: #d8f6ff;
+  color: var(--ink-muted);
   font-size: 0.8rem;
   user-select: none;
 }
@@ -57,8 +49,8 @@
   width: 2.2rem;
   height: 1.3rem;
   border-radius: 999px;
-  border: 1px solid rgba(0, 212, 255, 0.45);
-  background: rgba(29, 57, 79, 0.8);
+  border: 1px solid #b9c3d3;
+  background: #d7dee9;
   position: relative;
   cursor: pointer;
   transition: background-color 0.2s ease;
@@ -72,13 +64,13 @@
   width: 0.95rem;
   height: 0.95rem;
   border-radius: 50%;
-  background: #e6fbff;
-  box-shadow: 0 0 8px rgba(0, 212, 255, 0.35);
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.25);
   transition: transform 0.2s ease;
 }
 
 .ai-switch input[type='checkbox']:checked {
-  background: rgba(0, 173, 212, 0.95);
+  background: var(--accent);
 }
 
 .ai-switch input[type='checkbox']:checked::after {
@@ -86,7 +78,7 @@
 }
 
 .ai-switch input[type='checkbox']:focus-visible {
-  outline: 2px solid rgba(0, 212, 255, 0.95);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 
@@ -100,7 +92,7 @@
 
 .search-mode-input-wrap {
   width: min(940px, 100%);
-  animation: slide-to-top 220ms ease-out;
+  animation: slide-to-top 200ms ease-out;
 }
 
 cac-chat-interface {

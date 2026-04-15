@@ -27,11 +27,10 @@ export class CacNextActionsBar extends LitElement {
     .next-actions__label {
       margin: 0 0 0.55rem;
       font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--accent);
+      font-weight: 600;
+      color: var(--ink-muted);
       text-transform: uppercase;
       letter-spacing: 0.06em;
-      text-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
     }
 
     .next-actions__list {
@@ -48,14 +47,10 @@ export class CacNextActionsBar extends LitElement {
 
     .next-action-btn {
       padding: 0.55rem 1rem;
-      border: 2px solid var(--accent);
-      border-radius: 10px;
-      background: linear-gradient(
-        135deg,
-        rgba(0, 168, 204, 0.2) 0%,
-        rgba(0, 212, 255, 0.1) 100%
-      );
-      color: var(--accent);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
       font: inherit;
       font-size: 0.84rem;
       font-weight: 600;
@@ -63,12 +58,11 @@ export class CacNextActionsBar extends LitElement {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+      transition: background-color 0.2s ease;
     }
 
     .next-action-btn:focus-visible {
-      outline: 2px solid var(--accent);
+      outline: 2px solid var(--focus);
       outline-offset: 2px;
     }
 
@@ -85,9 +79,9 @@ export class CacNextActionsBar extends LitElement {
       border-radius: 6px;
       background: linear-gradient(
         90deg,
-        rgba(26, 77, 109, 0.4) 25%,
-        rgba(0, 212, 255, 0.15) 50%,
-        rgba(26, 77, 109, 0.4) 75%
+        rgba(208, 215, 226, 0.65) 25%,
+        rgba(228, 233, 241, 0.9) 50%,
+        rgba(208, 215, 226, 0.65) 75%
       );
       background-size: 600px 100%;
       animation: shimmer 1.4s infinite linear;
@@ -116,26 +110,19 @@ export class CacNextActionsBar extends LitElement {
     }
 
     .next-action-btn:hover {
-      background: linear-gradient(
-        135deg,
-        rgba(0, 212, 255, 0.3) 0%,
-        rgba(0, 212, 255, 0.2) 100%
-      );
-      box-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
-      transform: translateY(-2px);
+      background: #f8fafc;
     }
 
     .next-action-btn:active {
-      transform: translateY(0);
-      box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+      background: #eef2f7;
     }
 
     .next-action-btn__badge {
       font-size: 0.72rem;
       padding: 0.1em 0.5em;
       border-radius: 6px;
-      background: rgba(0, 212, 255, 0.2);
-      color: var(--accent);
+      background: #e7eefb;
+      color: var(--accent-strong);
     }
   `;
 

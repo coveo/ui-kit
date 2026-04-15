@@ -20,15 +20,14 @@ export class CacActivityRenderer extends LitElement {
     }
 
     .activity-renderer {
-      border: 2px solid rgba(0, 212, 255, 0.2);
-      border-radius: 12px;
-      background: rgba(22, 45, 66, 0.4);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface-accent);
       padding: 0.85rem;
       width: 100%;
       max-width: 100%;
       box-sizing: border-box;
-      backdrop-filter: blur(8px);
-      box-shadow: 0 0 15px rgba(0, 212, 255, 0.05);
+      box-shadow: none;
     }
 
     .activity-type {

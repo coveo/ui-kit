@@ -48,11 +48,11 @@ export class CacProductCarousel extends LitElement {
     }
 
     .carousel-track::-webkit-scrollbar-track {
-      background: var(--bg-1);
+      background: #eef2f7;
     }
 
     .carousel-track::-webkit-scrollbar-thumb {
-      background: var(--border);
+      background: #b8c2d1;
       border-radius: 2px;
     }
 
@@ -63,24 +63,17 @@ export class CacProductCarousel extends LitElement {
 
     .product-card {
       flex: 0 0 180px;
-      border: 2px solid rgba(0, 212, 255, 0.3);
-      border-radius: 12px;
-      background: linear-gradient(
-        135deg,
-        rgba(22, 45, 66, 0.6) 0%,
-        rgba(26, 58, 82, 0.4) 100%
-      );
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
       overflow: hidden;
       scroll-snap-align: start;
       transition: all 0.3s ease;
-      box-shadow: 0 0 15px rgba(0, 212, 255, 0.1);
-      backdrop-filter: blur(5px);
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
     }
 
     .product-card:hover {
-      border-color: rgba(0, 212, 255, 0.6);
-      box-shadow: 0 0 30px rgba(0, 212, 255, 0.25);
-      transform: translateY(-4px);
+      border-color: #b8c7dd;
     }
 
     .product-card__image {
@@ -88,24 +81,20 @@ export class CacProductCarousel extends LitElement {
       height: 110px;
       object-fit: cover;
       display: block;
-      border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+      border-bottom: 1px solid #e2e8f0;
     }
 
     .product-card__image--placeholder {
-      background: linear-gradient(
-        45deg,
-        rgba(0, 212, 255, 0.1),
-        rgba(0, 212, 255, 0.05)
-      );
+      background: #edf1f7;
     }
 
     .commerce-loading {
       border-radius: 6px;
       background: linear-gradient(
         90deg,
-        rgba(26, 77, 109, 0.4) 25%,
-        rgba(0, 212, 255, 0.15) 50%,
-        rgba(26, 77, 109, 0.4) 75%
+        rgba(208, 215, 226, 0.65) 25%,
+        rgba(228, 233, 241, 0.9) 50%,
+        rgba(208, 215, 226, 0.65) 75%
       );
       background-size: 600px 100%;
       animation: shimmer 1.4s infinite linear;

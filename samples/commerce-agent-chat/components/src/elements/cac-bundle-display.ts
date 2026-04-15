@@ -47,9 +47,9 @@ export class CacBundleDisplay extends LitElement {
 
     .bundle-tab {
       padding: 0.4rem 0.9rem;
-      border: 2px solid rgba(0, 212, 255, 0.3);
-      border-radius: 10px;
-      background: rgba(22, 45, 66, 0.5);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
       color: var(--ink);
       font: inherit;
       font-size: 0.84rem;
@@ -59,8 +59,7 @@ export class CacBundleDisplay extends LitElement {
     }
 
     .bundle-tab:hover {
-      border-color: var(--accent);
-      box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+      background: #f8fafc;
     }
 
     .bundle-tab:focus-visible {
@@ -69,14 +68,9 @@ export class CacBundleDisplay extends LitElement {
     }
 
     .bundle-tab--active {
-      background: linear-gradient(
-        135deg,
-        var(--accent-warm) 0%,
-        var(--accent) 100%
-      );
-      color: #000;
+      background: #edf4ff;
+      color: var(--accent-strong);
       border-color: var(--accent);
-      box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
     }
 
     .bundle-description {
@@ -94,26 +88,19 @@ export class CacBundleDisplay extends LitElement {
 
     .bundle-slot {
       flex: 0 0 160px;
-      border: 2px solid rgba(0, 212, 255, 0.3);
-      border-radius: 12px;
-      background: linear-gradient(
-        135deg,
-        rgba(22, 45, 66, 0.5) 0%,
-        rgba(26, 58, 82, 0.3) 100%
-      );
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
       padding: 0.7rem;
       display: flex;
       flex-direction: column;
       gap: 0.35rem;
       transition: all 0.3s ease;
-      box-shadow: 0 0 12px rgba(0, 212, 255, 0.1);
-      backdrop-filter: blur(5px);
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
     }
 
     .bundle-slot:hover {
-      border-color: rgba(0, 212, 255, 0.6);
-      box-shadow: 0 0 25px rgba(0, 212, 255, 0.2);
-      transform: translateY(-2px);
+      border-color: #b8c7dd;
     }
 
     .bundle-slot__label {
@@ -122,7 +109,7 @@ export class CacBundleDisplay extends LitElement {
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      color: var(--accent);
+      color: var(--ink-muted);
     }
 
     .bundle-slot__image {
@@ -130,25 +117,21 @@ export class CacBundleDisplay extends LitElement {
       height: 90px;
       object-fit: cover;
       border-radius: 8px;
-      border: 1px solid rgba(0, 212, 255, 0.2);
+      border: 1px solid #d6dce6;
       display: block;
     }
 
     .bundle-slot__image--placeholder {
-      background: linear-gradient(
-        45deg,
-        rgba(0, 212, 255, 0.1),
-        rgba(0, 212, 255, 0.05)
-      );
+      background: #edf1f7;
     }
 
     .commerce-loading {
       border-radius: 6px;
       background: linear-gradient(
         90deg,
-        rgba(26, 77, 109, 0.4) 25%,
-        rgba(0, 212, 255, 0.15) 50%,
-        rgba(26, 77, 109, 0.4) 75%
+        rgba(208, 215, 226, 0.65) 25%,
+        rgba(228, 233, 241, 0.9) 50%,
+        rgba(208, 215, 226, 0.65) 75%
       );
       background-size: 600px 100%;
       animation: shimmer 1.4s infinite linear;

@@ -19,10 +19,10 @@ export class CacProgressTrace extends LitElement {
 
     .agent-progress {
       margin: 0.5rem 0 0;
-      border: 1px solid rgba(0, 212, 255, 0.2);
-      border-radius: 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
       padding: 0.55rem 0.65rem;
-      background: rgba(15, 36, 56, 0.35);
+      background: var(--surface-accent);
       width: 100%;
       box-sizing: border-box;
     }
@@ -35,7 +35,7 @@ export class CacProgressTrace extends LitElement {
       gap: 0.5rem;
       border: 0;
       background: transparent;
-      color: var(--accent);
+      color: var(--ink-muted);
       font: inherit;
       font-size: 0.82rem;
       cursor: pointer;
@@ -68,7 +68,6 @@ export class CacProgressTrace extends LitElement {
     .agent-progress__toggle-label {
       margin: 0;
       font-weight: 600;
-      text-shadow: 0 0 8px rgba(0, 212, 255, 0.35);
     }
 
     .agent-progress__toggle-label--working {
@@ -77,9 +76,9 @@ export class CacProgressTrace extends LitElement {
 
     .agent-progress__trace {
       margin-top: 0.55rem;
-      border: 1px solid rgba(0, 212, 255, 0.22);
+      border: 1px solid var(--border);
       border-radius: 8px;
-      background: rgba(13, 27, 42, 0.45);
+      background: #fff;
       padding: 0.55rem 0.65rem;
       width: 100%;
       box-sizing: border-box;
@@ -117,7 +116,7 @@ export class CacProgressTrace extends LitElement {
     .agent-progress__item-title {
       margin: 0;
       font-weight: 600;
-      color: var(--accent);
+      color: var(--ink);
     }
 
     .agent-progress__item-text {

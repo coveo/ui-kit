@@ -26,15 +26,14 @@ export class CacMessageInput extends LitElement {
     }
 
     .message-input {
-      border: 2px solid rgba(0, 212, 255, 0.3);
-      border-radius: 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
       padding: 0.85rem 6.25rem 0.85rem 1rem;
       font: inherit;
-      background: rgba(26, 45, 65, 0.5);
+      background: #fff;
       color: var(--ink);
       font-size: 0.95rem;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(5px);
+      transition: border-color 0.2s ease;
       min-height: 3.25rem;
       max-height: 9rem;
       resize: vertical;
@@ -43,39 +42,34 @@ export class CacMessageInput extends LitElement {
     }
 
     .message-input::placeholder {
-      color: rgba(160, 212, 255, 0.5);
+      color: var(--text-secondary);
     }
 
     .message-input:focus-visible {
       outline: none;
       border-color: var(--accent);
-      background: rgba(26, 45, 65, 0.7);
-      box-shadow:
-        0 0 0 3px rgba(0, 212, 255, 0.15),
-        0 0 20px rgba(0, 212, 255, 0.3);
+      box-shadow: 0 0 0 2px rgba(19, 114, 236, 0.2);
     }
 
     .send-button {
       position: absolute;
       right: 0.55rem;
       top: 50%;
-      border: 1px solid transparent;
-      border-radius: 10px;
+      border: 1px solid var(--accent);
+      border-radius: 8px;
       padding: 0.5rem 0.9rem;
       font: inherit;
       line-height: 1.1;
       font-weight: 700;
       cursor: pointer;
-      background: linear-gradient(135deg, #00d4ff 0%, #00a8cc 100%);
-      color: #000;
-      box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
-      transition: all 0.3s ease;
+      background: var(--accent);
+      color: #fff;
+      transition: background-color 0.2s ease;
       transform: translateY(-50%);
     }
 
     .send-button:hover {
-      background: linear-gradient(135deg, #00ffd4 0%, #00d4ff 100%);
-      box-shadow: 0 0 35px rgba(0, 212, 255, 0.6);
+      background: var(--accent-strong);
       transform: translateY(calc(-50% - 2px));
     }
 
@@ -86,7 +80,6 @@ export class CacMessageInput extends LitElement {
     .send-button:disabled {
       opacity: 0.5;
       cursor: not-allowed;
-      box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
     }
 
     .actions-column {
@@ -113,10 +106,6 @@ export class CacMessageInput extends LitElement {
     }
 
     @media (max-width: 720px) {
-      .actions-column {
-        justify-content: flex-end;
-      }
-
       .message-input {
         padding-right: 6rem;
       }

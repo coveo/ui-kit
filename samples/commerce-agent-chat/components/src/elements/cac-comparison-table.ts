@@ -25,17 +25,12 @@ export class CacComparisonTable extends LitElement {
     }
 
     .comparison-table-loading {
-      border: 2px solid rgba(0, 212, 255, 0.2);
+      border: 1px solid var(--border);
       border-radius: 10px;
-      background: linear-gradient(
-        135deg,
-        rgba(22, 45, 66, 0.4) 0%,
-        rgba(26, 58, 82, 0.3) 100%
-      );
+      background: var(--surface-accent);
       padding: 0.85rem;
       display: grid;
       gap: 0.45rem;
-      backdrop-filter: blur(5px);
     }
 
     .comparison-table-loading__line,
@@ -43,9 +38,9 @@ export class CacComparisonTable extends LitElement {
       border-radius: 6px;
       background: linear-gradient(
         90deg,
-        rgba(26, 77, 109, 0.3) 25%,
-        rgba(0, 212, 255, 0.15) 50%,
-        rgba(26, 77, 109, 0.3) 75%
+        rgba(208, 215, 226, 0.65) 25%,
+        rgba(228, 233, 241, 0.9) 50%,
+        rgba(208, 215, 226, 0.65) 75%
       );
       background-size: 600px 100%;
       animation: shimmer 1.4s infinite linear;
@@ -64,29 +59,29 @@ export class CacComparisonTable extends LitElement {
     .comparison-table th,
     .comparison-table td {
       padding: 0.55rem 0.8rem;
-      border: 1px solid rgba(0, 212, 255, 0.2);
+      border: 1px solid var(--border);
       text-align: left;
       vertical-align: middle;
       color: var(--ink);
     }
 
     .comparison-table thead th {
-      background: rgba(26, 58, 82, 0.6);
+      background: #f8fafc;
       font-weight: 700;
-      color: var(--accent);
-      border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+      color: var(--ink);
+      border-bottom: 1px solid var(--border);
     }
 
     .comparison-table__attr-col {
       min-width: 100px;
-      background: rgba(26, 58, 82, 0.4);
+      background: #f8fafc;
       font-weight: 600;
     }
 
     .comparison-table__label {
       font-weight: 600;
       white-space: nowrap;
-      background: rgba(26, 58, 82, 0.4);
+      background: #f8fafc;
     }
 
     .comparison-table__thumb {
@@ -94,7 +89,7 @@ export class CacComparisonTable extends LitElement {
       height: 48px;
       object-fit: cover;
       border-radius: 6px;
-      border: 1px solid rgba(0, 212, 255, 0.2);
+      border: 1px solid #d6dce6;
       display: block;
     }
 
