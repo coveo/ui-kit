@@ -1,4 +1,5 @@
-import {createStore, type StoreApi} from 'zustand/vanilla';
+import {createStore, type StateCreator, type StoreApi} from 'zustand/vanilla';
+import {devtools} from 'zustand/middleware';
 
 import type {CommerceConfig} from '../config/env.js';
 import type {ChatState, Message, ParsedEvent} from '../types/agent.js';
@@ -54,8 +55,10 @@ export function createUnifiedSearchStore(
   threadId = generateId('thread'),
   env: CommerceConfig | null = null
 ): ChatSessionStore {
-  return createStore<ChatSessionState>(() =>
-    createInitialChatSessionState(threadId, env)
+  return createStore<ChatSessionState>()(
+    devtools(() => createInitialChatSessionState(threadId, env), {
+      name: `ChatSession-${threadId}`,
+    })
   );
 }
 

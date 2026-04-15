@@ -23,6 +23,7 @@
     "zustand": "5.0.8"
   },
   "devDependencies": {
+    "@redux-devtools/extension": "4.0.0",
     "@types/marked": "6.0.0",
     "typescript": "catalog:",
     "vitest": "catalog:"
