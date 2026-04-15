@@ -62,6 +62,7 @@ const expectedDocumentInfo = {
   documentUri: 'example documentUri',
   documentUriHash: 'example documentUriHash',
   collectionName: 'example collectionName',
+  documentCategory: 'example objectType',
   sourceName: 'example sourceName',
   documentPosition: 1,
   documentTitle: 'example documentTitle',
@@ -109,6 +110,7 @@ const resultParams = {
     collection: 'example collectionName',
     permanentid: 'example contentIDValue',
     author: 'example author',
+    objecttype: 'example objectType',
   }),
 };
 

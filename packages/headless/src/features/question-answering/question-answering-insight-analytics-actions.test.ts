@@ -140,6 +140,7 @@ const expectedDocumentInfo = {
   documentUri: 'example documentUri',
   documentUriHash: 'example documentUriHash',
   collectionName: 'example collectionName',
+  documentCategory: 'example objectType',
   sourceName: 'example sourceName',
   documentPosition: 1,
   documentTitle: 'example documentTitle',
@@ -159,6 +160,7 @@ const resultParams = {
     source: 'example sourceName',
     collection: 'example collectionName',
     permanentid: examplePermanentId,
+    objecttype: 'example objectType',
   }),
 };
 const exampleResult = buildMockResult(resultParams);
