@@ -10,7 +10,7 @@ env:
   CYPRESS_VERIFY_TIMEOUT: 60000
 jobs:
   pr-report:
-    if: github.event_name == 'pull_request' && !startsWith(github.head_ref, 'changeset-release/')
+    if: ${{ github.event_name == 'pull_request' && !startsWith(github.head_ref, 'changeset-release/') }}
     name: 'PR Report'
     runs-on: ubuntu-latest
     environment: PR Artifacts
