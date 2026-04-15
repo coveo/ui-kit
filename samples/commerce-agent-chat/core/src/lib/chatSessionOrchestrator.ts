@@ -13,6 +13,7 @@ import {CommerceAgentClient} from './agentClient.js';
 import {buildInvocationMessages} from './chatContextBuilder.js';
 import {
   type ActivityOwner,
+  addSearchResults,
   applyClientActivityDeltaById,
   applyParsedEventToStore,
   applyThreadStateDelta,
@@ -23,15 +24,22 @@ import {
   dismissChatError,
   getActivityOwnership,
   handoffActivityToClient,
+  resetSearch,
   selectChatState,
   setChatError,
   setChatLoading,
+  setSearchError,
+  setSearchLoading,
+  setSearchQuery,
+  setSearchResults,
   setActivityOwner,
   setThreadStateSnapshot,
   updateProgressSteps,
   updateProgressTrace,
   type ChatSessionStore,
+  type SearchResultsState,
 } from './chatStore.js';
+import {CoveoSearchClient} from './coveoSearchClient.js';
 import {extractStreamingProgress, parseAgentEvent} from './streamParser.js';
 
 interface ChatAgentClient {
@@ -53,13 +61,16 @@ export class ChatSessionOrchestrator {
   private readonly client: ChatAgentClient;
   private readonly store: ChatSessionStore;
   private readonly config: CommerceConfig;
+  private readonly searchClient: CoveoSearchClient;
   private activeSubscription: Subscription | null = null;
+  private searchDebounceTimer: ReturnType<typeof setTimeout> | null = null;
   private listeners = new Set<ChatSessionListener>();
 
   constructor(config: CommerceConfig, client?: ChatAgentClient) {
     this.config = config;
     this.client = client ?? new CommerceAgentClient(config);
     this.store = createChatSessionStore(undefined, config);
+    this.searchClient = new CoveoSearchClient(config);
   }
 
   getState(): ChatState {
@@ -86,8 +97,73 @@ export class ChatSessionOrchestrator {
     return this.store.getState().env;
   }
 
-  getSearchResults() {
+  getSearchResults(): SearchResultsState {
     return this.store.getState().searchResults;
+  }
+
+  async search(query: string): Promise<void> {
+    this.clearSearchDebounceTimer();
+
+    const trimmedQuery = query.trim();
+
+    if (!trimmedQuery) {
+      resetSearch(this.store);
+      this.emitState();
+      return;
+    }
+
+    setSearchQuery(this.store, trimmedQuery);
+    setSearchLoading(this.store, true);
+    this.emitState();
+
+    try {
+      const response = await this.searchClient.search(trimmedQuery, 0);
+      setSearchResults(this.store, response.results, response.hasMore);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Search failed';
+      setSearchError(this.store, message);
+    }
+
+    this.emitState();
+  }
+
+  searchDebounced(query: string, delayMs = 300): void {
+    this.clearSearchDebounceTimer();
+    this.searchDebounceTimer = setTimeout(() => {
+      void this.search(query);
+    }, delayMs);
+  }
+
+  async loadMore(): Promise<void> {
+    const currentState = this.getSearchResults();
+
+    if (!currentState.query || currentState.loading || !currentState.hasMore) {
+      return;
+    }
+
+    setSearchLoading(this.store, true);
+    this.emitState();
+
+    try {
+      const nextPage = currentState.page + 1;
+      const response = await this.searchClient.search(
+        currentState.query,
+        nextPage
+      );
+      addSearchResults(this.store, response.results, response.hasMore);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : 'Failed to load more';
+      setSearchError(this.store, message);
+    }
+
+    this.emitState();
+  }
+
+  clearSearch(): void {
+    this.clearSearchDebounceTimer();
+    resetSearch(this.store);
+    this.emitState();
   }
 
   handoffActivityToClient(activityId: string): boolean {
@@ -264,6 +340,7 @@ export class ChatSessionOrchestrator {
   dispose(): void {
     this.activeSubscription?.unsubscribe();
     this.activeSubscription = null;
+    this.clearSearchDebounceTimer();
     this.listeners.clear();
   }
 
@@ -271,6 +348,13 @@ export class ChatSessionOrchestrator {
     const state = this.getState();
     for (const listener of this.listeners) {
       listener({state, immediate});
+    }
+  }
+
+  private clearSearchDebounceTimer(): void {
+    if (this.searchDebounceTimer) {
+      clearTimeout(this.searchDebounceTimer);
+      this.searchDebounceTimer = null;
     }
   }
 
