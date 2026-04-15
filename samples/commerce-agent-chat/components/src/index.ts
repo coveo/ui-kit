@@ -9,6 +9,9 @@ export * from './elements/cac-message-input.js';
 export * from './elements/cac-commerce-catalog-view.js';
 export * from './elements/cac-activity-renderer.js';
 export * from './elements/cac-message-list.js';
+export * from './elements/atomock-search-product-card.js';
+export * from './elements/atomock-search-pagination.js';
+export * from './elements/atomock-search-results.js';
 
 export type {CacActionClickDetail} from './elements/cac-next-actions-bar.js';
 export type {CacMessageSendDetail} from './elements/cac-message-input.js';

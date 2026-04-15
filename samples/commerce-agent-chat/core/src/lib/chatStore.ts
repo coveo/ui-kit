@@ -1,13 +1,32 @@
 import {createStore, type StoreApi} from 'zustand/vanilla';
 
+import type {CommerceConfig} from '../config/env.js';
 import type {ChatState, Message, ParsedEvent} from '../types/agent.js';
 
 import {generateId} from './chatIds.js';
 import {applyJsonPatch} from './jsonPatch.js';
 
+export interface SearchResult {
+  id: string;
+  image: string;
+  title: string;
+  price: string;
+}
+
+export interface SearchResultsState {
+  data: SearchResult[];
+  loading: boolean;
+  error: string | null;
+  query: string;
+  page: number;
+  hasMore: boolean;
+}
+
 export interface ChatSessionState extends ChatState {
   threadState: Record<string, unknown>;
   activityOwnershipById: Record<string, ActivityOwnership>;
+  env: CommerceConfig | null;
+  searchResults: SearchResultsState;
 }
 
 export type ActivityOwner = 'backend' | 'client';
@@ -31,13 +50,17 @@ interface ActivityRef {
 
 export type ChatSessionStore = StoreApi<ChatSessionState>;
 
-export function createChatSessionStore(
-  threadId = generateId('thread')
+export function createUnifiedSearchStore(
+  threadId = generateId('thread'),
+  env: CommerceConfig | null = null
 ): ChatSessionStore {
   return createStore<ChatSessionState>(() =>
-    createInitialChatSessionState(threadId)
+    createInitialChatSessionState(threadId, env)
   );
 }
+
+// Backward compat alias
+export const createChatSessionStore = createUnifiedSearchStore;
 
 export function createPendingChatTurn(content: string): StartedChatTurn {
   return {
@@ -260,6 +283,97 @@ export function applyClientActivityDeltaById(
   );
 }
 
+export function setSearchResults(
+  store: ChatSessionStore,
+  results: SearchResult[],
+  hasMore: boolean
+): void {
+  store.setState((state) => ({
+    ...state,
+    searchResults: {
+      ...state.searchResults,
+      data: results,
+      hasMore,
+      loading: false,
+      error: null,
+    },
+  }));
+}
+
+export function addSearchResults(
+  store: ChatSessionStore,
+  results: SearchResult[],
+  hasMore: boolean
+): void {
+  store.setState((state) => ({
+    ...state,
+    searchResults: {
+      ...state.searchResults,
+      data: [...state.searchResults.data, ...results],
+      hasMore,
+      loading: false,
+      error: null,
+      page: state.searchResults.page + 1,
+    },
+  }));
+}
+
+export function setSearchLoading(
+  store: ChatSessionStore,
+  loading: boolean
+): void {
+  store.setState((state) => ({
+    ...state,
+    searchResults: {
+      ...state.searchResults,
+      loading,
+    },
+  }));
+}
+
+export function setSearchError(
+  store: ChatSessionStore,
+  error: string | null
+): void {
+  store.setState((state) => ({
+    ...state,
+    searchResults: {
+      ...state.searchResults,
+      error,
+      loading: false,
+    },
+  }));
+}
+
+export function setSearchQuery(store: ChatSessionStore, query: string): void {
+  store.setState((state) => ({
+    ...state,
+    searchResults: {
+      ...state.searchResults,
+      query,
+      page: 0,
+      data: [],
+      loading: false,
+      error: null,
+      hasMore: true,
+    },
+  }));
+}
+
+export function resetSearch(store: ChatSessionStore): void {
+  store.setState((state) => ({
+    ...state,
+    searchResults: {
+      data: [],
+      loading: false,
+      error: null,
+      query: '',
+      page: 0,
+      hasMore: true,
+    },
+  }));
+}
+
 export function applyParsedEventToStore(
   store: ChatSessionStore,
   assistantMessageId: string,
@@ -406,7 +520,10 @@ export function toChatState(state: ChatSessionState): ChatState {
   };
 }
 
-function createInitialChatSessionState(threadId = generateId('thread')) {
+function createInitialChatSessionState(
+  threadId = generateId('thread'),
+  env: CommerceConfig | null = null
+) {
   return {
     messages: [],
     isLoading: false,
@@ -416,6 +533,15 @@ function createInitialChatSessionState(threadId = generateId('thread')) {
     threadId,
     threadState: {},
     activityOwnershipById: {},
+    env,
+    searchResults: {
+      data: [],
+      loading: false,
+      error: null,
+      query: '',
+      page: 0,
+      hasMore: true,
+    },
   } satisfies ChatSessionState;
 }
 

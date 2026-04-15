@@ -85,14 +85,20 @@
 .search-mode-shell {
   min-height: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
+  gap: 0.9rem;
   padding-top: 11vh;
 }
 
 .search-mode-input-wrap {
   width: min(940px, 100%);
   animation: slide-to-top 200ms ease-out;
+}
+
+.search-mode-shell > atomock-search-results {
+  width: min(940px, 100%);
 }
 
 cac-chat-interface {

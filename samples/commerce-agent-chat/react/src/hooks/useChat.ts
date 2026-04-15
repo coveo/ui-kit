@@ -49,5 +49,5 @@ export function useChat(config: CommerceConfig) {
     orchestrator.dismissError();
   }, [orchestrator]);
 
-  return {state, sendMessage, clearMessages, dismissError};
+  return {state, sendMessage, clearMessages, dismissError, orchestrator};
 }

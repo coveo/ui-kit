@@ -9,6 +9,9 @@ import './elements/cac-message-input.js';
 import './elements/cac-commerce-catalog-view.js';
 import './elements/cac-activity-renderer.js';
 import './elements/cac-message-list.js';
+import './elements/atomock-search-product-card.js';
+import './elements/atomock-search-pagination.js';
+import './elements/atomock-search-results.js';
 
 export function registerCommerceAgentChatComponents() {
   // Side-effect imports are enough; this function gives explicit bootstrap intent.

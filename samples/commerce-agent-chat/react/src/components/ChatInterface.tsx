@@ -1,6 +1,7 @@
 import {useEffect, useRef, useState} from 'react';
 import type {CommerceConfig} from '@core/config/env.js';
 import {useChat} from '../hooks/useChat.js';
+import {useSearch} from '../hooks/useSearch.js';
 import {MessageInput} from './MessageInput.js';
 import {MessageList} from './MessageList.js';
 
@@ -13,14 +14,21 @@ interface CacChatInterfaceElement extends HTMLElement {
 }
 
 export function ChatInterface({config}: ChatInterfaceProps): React.JSX.Element {
-  const {state, sendMessage, clearMessages, dismissError} = useChat(config);
+  const {state, sendMessage, clearMessages, dismissError, orchestrator} =
+    useChat(config);
+  const {searchState, search, loadMore} = useSearch(orchestrator);
   const elementRef = useRef<CacChatInterfaceElement | null>(null);
+  const searchResultsRef = useRef<HTMLElement | null>(null);
   const [aiEnabled, setAiEnabled] = useState(true);
   const [draftValue, setDraftValue] = useState('');
   const [shouldFocusInput, setShouldFocusInput] = useState(false);
 
   const handleSend = (content: string) => {
-    sendMessage(content);
+    if (aiEnabled) {
+      sendMessage(content);
+    } else {
+      void search(content);
+    }
     setDraftValue('');
   };
 
@@ -29,11 +37,22 @@ export function ChatInterface({config}: ChatInterfaceProps): React.JSX.Element {
     setShouldFocusInput(true);
   };
 
+  const handleLoadMore = () => {
+    void loadMore();
+  };
+
   useEffect(() => {
     if (elementRef.current) {
       elementRef.current.error = state.error ?? '';
     }
   }, [state.error]);
+
+  useEffect(() => {
+    if (searchResultsRef.current) {
+      (searchResultsRef.current as Record<string, unknown>).searchState =
+        searchState;
+    }
+  }, [searchState]);
 
   useEffect(() => {
     const element = elementRef.current;
@@ -50,6 +69,22 @@ export function ChatInterface({config}: ChatInterfaceProps): React.JSX.Element {
     };
   }, [clearMessages, dismissError]);
 
+  useEffect(() => {
+    const element = searchResultsRef.current;
+    if (!element) {
+      return;
+    }
+
+    const handleLoadMoreEvent = () => {
+      handleLoadMore();
+    };
+
+    element.addEventListener('search-load-more', handleLoadMoreEvent);
+    return () => {
+      element.removeEventListener('search-load-more', handleLoadMoreEvent);
+    };
+  }, [handleLoadMore]);
+
   if (!aiEnabled) {
     return (
       <section className="search-mode-shell" aria-label="Search mode">
@@ -58,7 +93,7 @@ export function ChatInterface({config}: ChatInterfaceProps): React.JSX.Element {
             onSend={handleSend}
             value={draftValue}
             onValueChange={setDraftValue}
-            disabled={false}
+            disabled={searchState.loading}
             placeholder="Search..."
             aiEnabled={aiEnabled}
             onToggleAi={handleToggleAi}
@@ -66,6 +101,7 @@ export function ChatInterface({config}: ChatInterfaceProps): React.JSX.Element {
             onFocusHandled={() => setShouldFocusInput(false)}
           />
         </div>
+        <atomock-search-results ref={searchResultsRef} />
       </section>
     );
   }

@@ -52,12 +52,14 @@ type ChatSessionListener = (update: ChatSessionUpdate) => void;
 export class ChatSessionOrchestrator {
   private readonly client: ChatAgentClient;
   private readonly store: ChatSessionStore;
+  private readonly config: CommerceConfig;
   private activeSubscription: Subscription | null = null;
   private listeners = new Set<ChatSessionListener>();
 
   constructor(config: CommerceConfig, client?: ChatAgentClient) {
+    this.config = config;
     this.client = client ?? new CommerceAgentClient(config);
-    this.store = createChatSessionStore();
+    this.store = createChatSessionStore(undefined, config);
   }
 
   getState(): ChatState {
@@ -74,6 +76,18 @@ export class ChatSessionOrchestrator {
 
   getActivityOwner(activityId: string): ActivityOwner | undefined {
     return getActivityOwnership(this.store, activityId)?.owner;
+  }
+
+  getConfig(): CommerceConfig {
+    return this.config;
+  }
+
+  getEnvFromStore(): CommerceConfig | null {
+    return this.store.getState().env;
+  }
+
+  getSearchResults() {
+    return this.store.getState().searchResults;
   }
 
   handoffActivityToClient(activityId: string): boolean {
