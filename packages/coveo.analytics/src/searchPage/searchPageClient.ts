@@ -81,7 +81,10 @@ export interface EventBuilder<T extends AnyEventResponse = AnyEventResponse> {
 export class CoveoSearchPageClient {
     public coveoAnalyticsClient: AnalyticsClient;
 
-    constructor(private opts: Partial<SearchPageClientOptions>, private provider: SearchPageClientProvider) {
+    constructor(
+        private opts: Partial<SearchPageClientOptions>,
+        private provider: SearchPageClientProvider,
+    ) {
         const shouldDisableAnalytics = opts.enableAnalytics === false || doNotTrack();
         this.coveoAnalyticsClient = shouldDisableAnalytics ? new NoopAnalytics() : new CoveoAnalyticsClient(opts);
     }
@@ -290,7 +293,7 @@ export class CoveoSearchPageClient {
         return this.makeCustomEvent(
             SearchPageEvents.triggerQuery,
             {query: this.provider.getSearchEventRequestPayload().queryText},
-            'queryPipelineTriggers'
+            'queryPipelineTriggers',
         );
     }
 
@@ -551,7 +554,7 @@ export class CoveoSearchPageClient {
     public makeExpandSmartSnippetSuggestion(snippet: SmartSnippetSuggestionMeta | SmartSnippetDocumentIdentifier) {
         return this.makeCustomEvent(
             SearchPageEvents.expandSmartSnippetSuggestion,
-            'documentId' in snippet ? snippet : {documentId: snippet}
+            'documentId' in snippet ? snippet : {documentId: snippet},
         );
     }
 
@@ -562,12 +565,12 @@ export class CoveoSearchPageClient {
     public makeCollapseSmartSnippetSuggestion(snippet: SmartSnippetSuggestionMeta | SmartSnippetDocumentIdentifier) {
         return this.makeCustomEvent(
             SearchPageEvents.collapseSmartSnippetSuggestion,
-            'documentId' in snippet ? snippet : {documentId: snippet}
+            'documentId' in snippet ? snippet : {documentId: snippet},
         );
     }
 
     public async logCollapseSmartSnippetSuggestion(
-        snippet: SmartSnippetSuggestionMeta | SmartSnippetDocumentIdentifier
+        snippet: SmartSnippetSuggestionMeta | SmartSnippetDocumentIdentifier,
     ) {
         return (await this.makeCollapseSmartSnippetSuggestion(snippet)).log({searchUID: this.provider.getSearchUID()});
     }
@@ -613,7 +616,7 @@ export class CoveoSearchPageClient {
             SearchPageEvents.openSmartSnippetSuggestionSource,
             info,
             {contentIDKey: snippet.documentId.contentIdKey, contentIDValue: snippet.documentId.contentIdValue},
-            snippet
+            snippet,
         );
     }
 
@@ -627,7 +630,7 @@ export class CoveoSearchPageClient {
 
     public async logOpenSmartSnippetSuggestionSource(
         info: PartialDocumentInformation,
-        snippet: SmartSnippetSuggestionMeta
+        snippet: SmartSnippetSuggestionMeta,
     ) {
         return (await this.makeOpenSmartSnippetSuggestionSource(info, snippet)).log({
             searchUID: this.provider.getSearchUID(),
@@ -636,19 +639,19 @@ export class CoveoSearchPageClient {
 
     public makeOpenSmartSnippetInlineLink(
         info: PartialDocumentInformation,
-        identifierAndLink: DocumentIdentifier & SmartSnippetLinkMeta
+        identifierAndLink: DocumentIdentifier & SmartSnippetLinkMeta,
     ) {
         return this.makeClickEvent(
             SearchPageEvents.openSmartSnippetInlineLink,
             info,
             {contentIDKey: identifierAndLink.contentIDKey, contentIDValue: identifierAndLink.contentIDValue},
-            identifierAndLink
+            identifierAndLink,
         );
     }
 
     public async logOpenSmartSnippetInlineLink(
         info: PartialDocumentInformation,
-        identifierAndLink: DocumentIdentifier & SmartSnippetLinkMeta
+        identifierAndLink: DocumentIdentifier & SmartSnippetLinkMeta,
     ) {
         return (await this.makeOpenSmartSnippetInlineLink(info, identifierAndLink)).log({
             searchUID: this.provider.getSearchUID(),
@@ -657,7 +660,7 @@ export class CoveoSearchPageClient {
 
     public makeOpenSmartSnippetSuggestionInlineLink(
         info: PartialDocumentInformation,
-        snippetAndLink: SmartSnippetSuggestionMeta & SmartSnippetLinkMeta
+        snippetAndLink: SmartSnippetSuggestionMeta & SmartSnippetLinkMeta,
     ) {
         return this.makeClickEvent(
             SearchPageEvents.openSmartSnippetSuggestionInlineLink,
@@ -666,13 +669,13 @@ export class CoveoSearchPageClient {
                 contentIDKey: snippetAndLink.documentId.contentIdKey,
                 contentIDValue: snippetAndLink.documentId.contentIdValue,
             },
-            snippetAndLink
+            snippetAndLink,
         );
     }
 
     public async logOpenSmartSnippetSuggestionInlineLink(
         info: PartialDocumentInformation,
-        snippetAndLink: SmartSnippetSuggestionMeta & SmartSnippetLinkMeta
+        snippetAndLink: SmartSnippetSuggestionMeta & SmartSnippetLinkMeta,
     ) {
         return (await this.makeOpenSmartSnippetSuggestionInlineLink(info, snippetAndLink)).log({
             searchUID: this.provider.getSearchUID(),
@@ -737,7 +740,7 @@ export class CoveoSearchPageClient {
 
     private makeEventDescription(
         preparedEvent: PreparedEvent<unknown, unknown, AnyEventResponse>,
-        actionCause: SearchPageEvents
+        actionCause: SearchPageEvents,
     ): EventDescription {
         return {actionCause, customData: preparedEvent.payload?.customData};
     }
@@ -745,7 +748,7 @@ export class CoveoSearchPageClient {
     public async makeCustomEvent(
         event: SearchPageEvents,
         metadata?: Record<string, any>,
-        eventType: string = CustomEventsTypes[event]!
+        eventType: string = CustomEventsTypes[event]!,
     ): Promise<EventBuilder<CustomEventResponse>> {
         this.coveoAnalyticsClient.getParameters;
         const customData = {...this.provider.getBaseMetadata(), ...metadata};
@@ -764,7 +767,7 @@ export class CoveoSearchPageClient {
     public async logCustomEvent(
         event: SearchPageEvents,
         metadata?: Record<string, any>,
-        eventType: string = CustomEventsTypes[event]!
+        eventType: string = CustomEventsTypes[event]!,
     ) {
         return (await this.makeCustomEvent(event, metadata, eventType)).log({searchUID: this.provider.getSearchUID()});
     }
@@ -772,7 +775,7 @@ export class CoveoSearchPageClient {
     public async makeCustomEventWithType(
         eventValue: string,
         eventType: string,
-        metadata?: Record<string, any>
+        metadata?: Record<string, any>,
     ): Promise<EventBuilder<CustomEventResponse>> {
         const customData = {...this.provider.getBaseMetadata(), ...metadata};
         const payload: CustomEventRequest = {
@@ -799,7 +802,7 @@ export class CoveoSearchPageClient {
 
     public async makeSearchEvent(
         event: SearchPageEvents,
-        metadata?: Record<string, any>
+        metadata?: Record<string, any>,
     ): Promise<EventBuilder<SearchEventResponse>> {
         const request = await this.getBaseSearchEventRequest(event, metadata);
         const preparedEvent = await this.coveoAnalyticsClient.makeSearchEvent(request);
@@ -813,7 +816,7 @@ export class CoveoSearchPageClient {
         event: SearchPageEvents,
         info: PartialDocumentInformation,
         identifier: DocumentIdentifier,
-        metadata?: Record<string, any>
+        metadata?: Record<string, any>,
     ): Promise<EventBuilder<ClickEventResponse>> {
         const request: PreparedClickEventRequest = {
             ...info,
@@ -832,7 +835,7 @@ export class CoveoSearchPageClient {
         event: SearchPageEvents,
         info: PartialDocumentInformation,
         identifier: DocumentIdentifier,
-        metadata?: Record<string, any>
+        metadata?: Record<string, any>,
     ) {
         return (await this.makeClickEvent(event, info, identifier, metadata)).log({
             searchUID: this.provider.getSearchUID(),
@@ -841,7 +844,7 @@ export class CoveoSearchPageClient {
 
     private async getBaseSearchEventRequest(
         event: SearchPageEvents,
-        metadata?: Record<string, any>
+        metadata?: Record<string, any>,
     ): Promise<PreparedSearchEventRequest> {
         return {
             ...(await this.getBaseEventRequest({...metadata, ...this.provider.getGeneratedAnswerMetadata?.()})),
@@ -926,19 +929,19 @@ export class CoveoSearchPageClient {
 
     public makeGeneratedAnswerCitationClick(
         info: PartialDocumentInformation,
-        citation: GeneratedAnswerCitationClickMeta
+        citation: GeneratedAnswerCitationClickMeta,
     ) {
         return this.makeClickEvent(
             SearchPageEvents.generatedAnswerCitationClick,
             {...info, documentPosition: 1},
             {contentIDKey: citation.documentId.contentIdKey, contentIDValue: citation.documentId.contentIdValue},
-            citation
+            citation,
         );
     }
 
     public async logGeneratedAnswerCitationClick(
         info: PartialDocumentInformation,
-        citation: GeneratedAnswerCitationClickMeta
+        citation: GeneratedAnswerCitationClickMeta,
     ) {
         return (await this.makeGeneratedAnswerCitationClick(info, citation)).log({
             searchUID: this.provider.getSearchUID(),
