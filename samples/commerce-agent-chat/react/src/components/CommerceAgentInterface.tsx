@@ -2,7 +2,7 @@ import {useState} from 'react';
 import type {CommerceConfig} from '@core/config/env.js';
 import {useChat} from '../hooks/useChat.js';
 import {useSearch} from '../hooks/useSearch.js';
-import {ChatModeView} from './ChatModeView.js';
+import {ChatInterface} from './ChatInterface.js';
 import {SearchInterface} from './SearchInterface.js';
 
 interface CommerceAgentInterfaceProps {
@@ -54,7 +54,7 @@ export function CommerceAgentInterface({
   }
 
   return (
-    <ChatModeView
+    <ChatInterface
       state={state}
       onSend={handleSend}
       onClearMessages={clearMessages}

@@ -5,7 +5,7 @@ import type {ChatState} from '@core/types/agent.js';
 import {MessageInput} from './MessageInput.js';
 import {MessageList} from './MessageList.js';
 
-interface ChatModeViewProps {
+interface ChatInterfaceProps {
   state: ChatState;
   onSend: (content: string) => void;
   onClearMessages: () => void;
@@ -22,7 +22,7 @@ interface CacChatInterfaceElement extends HTMLElement {
   error: string;
 }
 
-export function ChatModeView({
+export function ChatInterface({
   state,
   onSend,
   onClearMessages,
@@ -33,7 +33,7 @@ export function ChatModeView({
   onToggleAi,
   shouldFocusInput,
   onFocusHandled,
-}: ChatModeViewProps): React.JSX.Element {
+}: ChatInterfaceProps): React.JSX.Element {
   const elementRef = useRef<CacChatInterfaceElement | null>(null);
 
   useEffect(() => {
