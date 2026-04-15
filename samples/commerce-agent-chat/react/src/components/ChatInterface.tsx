@@ -1,4 +1,4 @@
-import {useEffect, useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import type {CommerceConfig} from '@core/config/env.js';
 import {useChat} from '../hooks/useChat.js';
 import {MessageInput} from './MessageInput.js';
@@ -15,6 +15,13 @@ interface CacChatInterfaceElement extends HTMLElement {
 export function ChatInterface({config}: ChatInterfaceProps): React.JSX.Element {
   const {state, sendMessage, clearMessages, dismissError} = useChat(config);
   const elementRef = useRef<CacChatInterfaceElement | null>(null);
+  const [aiEnabled, setAiEnabled] = useState(true);
+  const [draftValue, setDraftValue] = useState('');
+
+  const handleSend = (content: string) => {
+    sendMessage(content);
+    setDraftValue('');
+  };
 
   useEffect(() => {
     if (elementRef.current) {
@@ -37,6 +44,24 @@ export function ChatInterface({config}: ChatInterfaceProps): React.JSX.Element {
     };
   }, [clearMessages, dismissError]);
 
+  if (!aiEnabled) {
+    return (
+      <section className="search-mode-shell" aria-label="Search mode">
+        <div className="search-mode-input-wrap">
+          <MessageInput
+            onSend={handleSend}
+            value={draftValue}
+            onValueChange={setDraftValue}
+            disabled={false}
+            placeholder="Search..."
+            aiEnabled={aiEnabled}
+            onToggleAi={setAiEnabled}
+          />
+        </div>
+      </section>
+    );
+  }
+
   return (
     <cac-chat-interface ref={elementRef} heading="Commerce Agent Chat (React)">
       <MessageList
@@ -49,8 +74,13 @@ export function ChatInterface({config}: ChatInterfaceProps): React.JSX.Element {
       />
       <MessageInput
         slot="input"
-        onSend={sendMessage}
+        onSend={handleSend}
+        value={draftValue}
+        onValueChange={setDraftValue}
         disabled={state.isLoading}
+        placeholder="Ask agent..."
+        aiEnabled={aiEnabled}
+        onToggleAi={setAiEnabled}
       />
     </cac-chat-interface>
   );

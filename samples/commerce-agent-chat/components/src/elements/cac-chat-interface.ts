@@ -15,14 +15,14 @@ import {customElement, property} from 'lit/decorators.js';
 export class CacChatInterface extends LitElement {
   static override styles = css`
     :host {
-      height: 100%;
-      display: grid;
-      place-items: center;
-      padding: 1rem;
+      height: 100dvh;
+      display: block;
+      padding: 0;
     }
 
     .chat-container {
       width: min(940px, 100%);
+      margin: 0 auto;
       border: 2px solid rgba(0, 212, 255, 0.4);
       border-radius: 20px;
       background: rgba(15, 36, 56, 0.75);
@@ -33,8 +33,8 @@ export class CacChatInterface extends LitElement {
         inset 0 1px 0 rgba(0, 212, 255, 0.2);
       display: grid;
       grid-template-rows: auto 1fr auto auto;
-      height: min(820px, 100dvh - 2rem);
-      max-height: min(820px, 100dvh - 2rem);
+      height: 100%;
+      max-height: 100%;
       overflow: hidden;
     }
 
@@ -89,8 +89,9 @@ export class CacChatInterface extends LitElement {
     .clear-button {
       border: 1px solid transparent;
       border-radius: 10px;
-      padding: 0.62rem 0.95rem;
+      padding: 0.5rem 0.9rem;
       font: inherit;
+      line-height: 1.1;
       font-weight: 700;
       cursor: pointer;
       background: linear-gradient(135deg, #00d4ff 0%, #00a8cc 100%);

@@ -1,5 +1,5 @@
 import {css, html, LitElement} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
+import {customElement, property} from 'lit/decorators.js';
 
 export interface CacMessageSendDetail {
   content: string;
@@ -13,23 +13,22 @@ export interface CacMessageSendDetail {
 export class CacMessageInput extends LitElement {
   static override styles = css`
     .message-input-form {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: center;
-      gap: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
       padding: 1rem 1.5rem;
-      border-top: 2px solid rgba(0, 212, 255, 0.2);
-      background: linear-gradient(
-        180deg,
-        rgba(15, 36, 56, 0.3) 0%,
-        rgba(13, 27, 42, 0.5) 100%
-      );
+      background: transparent;
+    }
+
+    .message-input-shell {
+      position: relative;
+      width: 100%;
     }
 
     .message-input {
       border: 2px solid rgba(0, 212, 255, 0.3);
       border-radius: 12px;
-      padding: 0.85rem 1rem;
+      padding: 0.85rem 6.25rem 0.85rem 1rem;
       font: inherit;
       background: rgba(26, 45, 65, 0.5);
       color: var(--ink);
@@ -39,6 +38,8 @@ export class CacMessageInput extends LitElement {
       min-height: 3.25rem;
       max-height: 9rem;
       resize: vertical;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .message-input::placeholder {
@@ -55,32 +56,48 @@ export class CacMessageInput extends LitElement {
     }
 
     .send-button {
+      position: absolute;
+      right: 0.55rem;
+      top: 50%;
       border: 1px solid transparent;
       border-radius: 10px;
-      padding: 0.62rem 0.95rem;
+      padding: 0.5rem 0.9rem;
       font: inherit;
+      line-height: 1.1;
       font-weight: 700;
       cursor: pointer;
       background: linear-gradient(135deg, #00d4ff 0%, #00a8cc 100%);
       color: #000;
       box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
       transition: all 0.3s ease;
+      transform: translateY(-50%);
     }
 
     .send-button:hover {
       background: linear-gradient(135deg, #00ffd4 0%, #00d4ff 100%);
       box-shadow: 0 0 35px rgba(0, 212, 255, 0.6);
-      transform: translateY(-2px);
+      transform: translateY(calc(-50% - 2px));
     }
 
     .send-button:active {
-      transform: translateY(0);
+      transform: translateY(-50%);
     }
 
     .send-button:disabled {
       opacity: 0.5;
       cursor: not-allowed;
       box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
+    }
+
+    .actions-column {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      min-height: 1.3rem;
+    }
+
+    ::slotted([slot='after-send']) {
+      justify-self: end;
     }
 
     .visually-hidden {
@@ -96,8 +113,12 @@ export class CacMessageInput extends LitElement {
     }
 
     @media (max-width: 720px) {
-      .message-input-form {
-        grid-template-columns: 1fr;
+      .actions-column {
+        justify-content: flex-end;
+      }
+
+      .message-input {
+        padding-right: 6rem;
       }
     }
   `;
@@ -110,8 +131,9 @@ export class CacMessageInput extends LitElement {
   @property({type: String})
   public placeholder = 'Ask agent...';
 
-  @state()
-  private value = '';
+  /** The current textarea value. */
+  @property({type: String})
+  public value = '';
 
   override render() {
     return html`
@@ -126,24 +148,29 @@ export class CacMessageInput extends LitElement {
         <p id="chat-input-hint" class="visually-hidden">
           Press Enter to send. Press Shift plus Enter to insert a new line.
         </p>
-        <textarea
-          id="chat-input"
-          class="message-input"
-          .value=${this.value}
-          ?disabled=${this.disabled}
-          placeholder=${this.placeholder}
-          rows="2"
-          aria-describedby="chat-input-hint"
-          @input=${this.onInput}
-          @keydown=${this.onKeyDown}
-        ></textarea>
-        <button
-          class="send-button"
-          type="submit"
-          ?disabled=${this.isSubmitDisabled()}
-        >
-          Send
-        </button>
+        <div class="message-input-shell">
+          <textarea
+            id="chat-input"
+            class="message-input"
+            .value=${this.value}
+            ?disabled=${this.disabled}
+            placeholder=${this.placeholder}
+            rows="2"
+            aria-describedby="chat-input-hint"
+            @input=${this.onInput}
+            @keydown=${this.onKeyDown}
+          ></textarea>
+          <button
+            class="send-button"
+            type="submit"
+            ?disabled=${this.isSubmitDisabled()}
+          >
+            Send
+          </button>
+        </div>
+        <div class="actions-column">
+          <slot name="after-send"></slot>
+        </div>
       </form>
     `;
   }
