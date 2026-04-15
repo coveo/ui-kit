@@ -16,7 +16,7 @@ export class CacMessageInput extends LitElement {
       display: flex;
       flex-direction: column;
       gap: 0.45rem;
-      padding: 1rem 1.5rem;
+      padding: 1rem 0;
       background: transparent;
     }
 
