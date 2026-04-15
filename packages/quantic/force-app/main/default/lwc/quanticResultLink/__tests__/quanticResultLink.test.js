@@ -115,6 +115,20 @@ describe('c-quantic-result-link', () => {
       );
     });
 
+    it('should open the Salesforce result link in a new browser tab when shouldOpenInNewTab is true', async () => {
+      const element = createTestComponent({
+        result: exampleSalesforceResult,
+        shouldOpenInNewTab: true,
+      });
+      await flushPromises();
+
+      const linkSalesforce = element.shadowRoot.querySelector('a');
+      linkSalesforce.click();
+
+      expect(linkSalesforce.getAttribute('target')).toEqual('_blank');
+      expect(getNavigateCalledWith().pageReference).toBeUndefined();
+    });
+
     describe('when the result is a knowledge article', () => {
       const exampleKnowledgeArticleResult = {
         ...exampleResult,
@@ -174,6 +188,19 @@ describe('c-quantic-result-link', () => {
 
       expect(link.getAttribute('href')).toEqual(exampleResult.clickUri);
       expect(link.getAttribute('target')).toEqual('_self');
+    });
+
+    it('should open the result link in a new tab when shouldOpenInNewTab is true', async () => {
+      const element = createTestComponent({
+        result: exampleResult,
+        shouldOpenInNewTab: true,
+      });
+      await flushPromises();
+
+      const link = element.shadowRoot.querySelector('a');
+
+      expect(link.getAttribute('href')).toEqual(exampleResult.clickUri);
+      expect(link.getAttribute('target')).toEqual('_blank');
     });
 
     describe('with a custom value for the target property', () => {
