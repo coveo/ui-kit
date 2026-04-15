@@ -26,26 +26,32 @@ export function generateExternalPackageMappings() {
     '@coveo/headless/commerce': {
       cdn: `/headless/${headlessVersion}/commerce/headless.esm.js`,
       local: resolve(headlessBaseDir, './src/commerce.index.ts'),
+      localBaseDir: resolve(headlessBaseDir),
     },
     '@coveo/headless/insight': {
       cdn: `/headless/${headlessVersion}/insight/headless.esm.js`,
       local: resolve(headlessBaseDir, './src/insight.index.ts'),
+      localBaseDir: resolve(headlessBaseDir),
     },
     '@coveo/headless/recommendation': {
       cdn: `/headless/${headlessVersion}/recommendation/headless.esm.js`,
       local: resolve(headlessBaseDir, './src/recommendation.index.ts'),
+      localBaseDir: resolve(headlessBaseDir),
     },
     '@coveo/headless/case-assist': {
       cdn: `/headless/${headlessVersion}/case-assist/headless.esm.js`,
       local: resolve(headlessBaseDir, './src/case-assist.index.ts'),
+      localBaseDir: resolve(headlessBaseDir),
     },
     '@coveo/headless': {
       cdn: `/headless/${headlessVersion}/headless.esm.js`,
       local: resolve(headlessBaseDir, './src/index.ts'),
+      localBaseDir: resolve(headlessBaseDir),
     },
     '@coveo/bueno': {
       cdn: `/bueno/${buenoVersion}/bueno.esm.js`,
       local: resolve(buenoBaseDir, './src/index.ts'),
+      localBaseDir: resolve(buenoBaseDir),
     },
   };
 }

@@ -14,6 +14,7 @@ import remarkGfm from 'remark-gfm';
 import type {Plugin} from 'vite';
 import {mergeConfig} from 'vite';
 import {generateExternalPackageMappings} from '../scripts/externalPackageMappings.mjs';
+import isChromatic from 'chromatic/isChromatic';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -100,8 +101,33 @@ const externalizeDependencies = (
     name: 'externalize-dependencies',
     enforce: 'pre',
     resolveId(source, _importer, _options) {
-      if (/^\/(headless|bueno)/.test(source)) {
-        return false;
+      const match =
+        /^\/(?<packageName>headless|bueno)\/v\d+\.\d+\.\d+\/(?<importPath>.*)$/.exec(
+          source
+        );
+
+      if (match && !isVitest) {
+        console.log('hi!!');
+        if (isCDN) {
+          return false;
+        } else {
+          console.log(
+            `Resolving ${source} to local file for development build`,
+            match.groups
+          );
+          const packageMapping =
+            packageMappings[
+              `@coveo/${match.groups!.packageName as 'headless' | 'bueno'}`
+            ];
+          return {
+            id: resolve(
+              packageMapping.localBaseDir,
+              'cdn',
+              match.groups!.importPath
+            ),
+            external: 'absolute',
+          };
+        }
       }
 
       if (
@@ -111,7 +137,6 @@ const externalizeDependencies = (
       ) {
         return false;
       }
-
       const packageMapping = packageMappings[source];
 
       if (!packageMapping || isVitest) {
@@ -150,6 +175,9 @@ const config: StorybookConfig = {
     '../src/**/*.mdx',
     '../storybook-pages/**/*.new.stories.tsx',
     '../storybook-pages/**/*.mdx',
+    ...(isChromatic()
+      ? []
+      : ['!../storybook-pages/search/search-lazy.new.stories.tsx']),
   ],
   staticDirs: [
     {from: './static/assets', to: '/assets'},
