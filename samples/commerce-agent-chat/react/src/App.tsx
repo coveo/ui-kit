@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 
-import {ChatInterface} from './components/ChatInterface.js';
+import {CommerceAgentInterface} from './components/CommerceAgentInterface.js';
 import {loadConfig, type CommerceConfig} from '@core/config/env.js';
 import './App.css';
 
@@ -35,5 +35,5 @@ export function App(): React.JSX.Element {
     );
   }
 
-  return <ChatInterface config={config} />;
+  return <CommerceAgentInterface config={config} />;
 }
