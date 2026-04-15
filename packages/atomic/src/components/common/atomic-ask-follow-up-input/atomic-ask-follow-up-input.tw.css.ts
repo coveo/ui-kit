@@ -15,6 +15,10 @@ const styles = css`
     visibility: hidden;
   }
 
+  [part='textarea-expander'] {
+    @apply mr-10;
+  }
+
   [part='textarea-expander'] > [part='input-field'],
   [part='textarea-expander']::after {
     @apply resize-none overflow-hidden whitespace-nowrap bg-transparent px-4 py-2 outline-none placeholder-neutral-dark hide-scrollbar;
@@ -25,7 +29,7 @@ const styles = css`
 
   /* Expanded: absolute overlay anchored at the bottom so growth goes upward.*/
   [part='textarea-expander'].expanded {
-    @apply bg-background rounded-md border border-primary ring-1 ring-primary overflow-visible;
+    @apply bg-background rounded-md border border-primary ring-1 ring-primary overflow-visible mr-0;
     position: absolute;
     bottom: -1px;
     left: -1px;
