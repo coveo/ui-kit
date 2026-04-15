@@ -1,48 +1,13 @@
 import {customElement, property} from 'lit/decorators.js';
-import {css, html, LitElement, nothing} from 'lit';
-import {when} from 'lit/directives/when.js';
-import {
-  formatPrice,
-  hasDiscount,
-  promoPrice,
-} from '@coveo/commerce-agent-chat-core/lib/commerceHelpers';
+import {html, LitElement, nothing} from 'lit';
 import type {Product} from '@coveo/commerce-agent-chat-core/types/commerce';
+import './atomock-product-price.js';
 
 /**
  * The `cac-price-display` component renders regular and promo price labels.
  */
 @customElement('cac-price-display')
 export class CacPriceDisplay extends LitElement {
-  static override styles = css`
-    .price-display {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    .price-regular {
-      font-weight: 700;
-      font-size: 0.9rem;
-      color: var(--ink);
-    }
-
-    .price-original {
-      font-size: 0.8rem;
-      color: var(--text-secondary);
-      text-decoration: line-through;
-    }
-
-    .price-promo {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: #92400e;
-      background: #fef3c7;
-      border: 1px solid #f6d38a;
-      border-radius: 4px;
-      padding: 0.15em 0.5em;
-    }
-  `;
-
   /** The product model used to render price information. */
   @property({attribute: false})
   public product!: Product;
@@ -52,26 +17,9 @@ export class CacPriceDisplay extends LitElement {
       return nothing;
     }
 
-    const promo = promoPrice(this.product);
-    const hasPromoDiscount = hasDiscount(this.product);
-
-    return html`
-      <span class="price-display">
-        ${when(
-          hasPromoDiscount,
-          () => html`
-            <span class="price-original"
-              >${formatPrice(this.product.ec_price)}</span
-            >
-            <span class="price-promo">${formatPrice(promo)}</span>
-          `,
-          () =>
-            html`<span class="price-regular"
-              >${formatPrice(this.product.ec_price)}</span
-            >`
-        )}
-      </span>
-    `;
+    return html`<atomock-product-price
+      .product=${this.product}
+    ></atomock-product-price>`;
   }
 }
 

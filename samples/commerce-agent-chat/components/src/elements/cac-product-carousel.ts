@@ -1,9 +1,11 @@
 import {customElement, property} from 'lit/decorators.js';
 import {css, html, LitElement, nothing} from 'lit';
 import {map} from 'lit/directives/map.js';
-import {when} from 'lit/directives/when.js';
 import type {Product} from '@coveo/commerce-agent-chat-core/types/commerce';
-import './cac-price-display.js';
+import './atomock-product-image.js';
+import './atomock-product-link.js';
+import './atomock-product-price.js';
+import './atomock-product-text.js';
 
 export interface ProductSection {
   heading: string;
@@ -76,16 +78,12 @@ export class CacProductCarousel extends LitElement {
       border-color: #b8c7dd;
     }
 
-    .product-card__image {
+    .product-image {
       width: 100%;
       height: 110px;
-      object-fit: cover;
       display: block;
       border-bottom: 1px solid #e2e8f0;
-    }
-
-    .product-card__image--placeholder {
-      background: #edf1f7;
+      --atomock-product-image-placeholder-bg: #edf1f7;
     }
 
     .commerce-loading {
@@ -141,21 +139,22 @@ export class CacProductCarousel extends LitElement {
       gap: 0.2rem;
     }
 
-    .product-card__name {
-      margin: 0;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--ink);
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
+    .product-name {
+      --atomock-product-link-font-size: 0.8rem;
+      --atomock-product-link-font-weight: 600;
+      --atomock-product-link-color: var(--ink);
+      --atomock-product-link-lines: 2;
     }
 
-    .product-card__brand {
-      margin: 0;
-      font-size: 0.72rem;
-      color: var(--ink-muted);
+    .product-brand {
+      --atomock-product-text-font-size: 0.72rem;
+      --atomock-product-text-color: var(--ink-muted);
+      --atomock-product-text-lines: 2;
+    }
+
+    .product-price {
+      --atomock-product-price-font-size: 0.9rem;
+      --atomock-product-price-color: var(--ink);
     }
   `;
 
@@ -243,34 +242,35 @@ export class CacProductCarousel extends LitElement {
     return html`
       <div role="listitem" class="carousel-track__item">
         <article class="product-card">
-          ${this.renderProductImage(product)}
+          <atomock-product-image
+            class="product-image"
+            .src=${product.ec_image}
+            .alt=${product.ec_name}
+          ></atomock-product-image>
           <div class="product-card__body">
-            <p class="product-card__name">${product.ec_name}</p>
-            <p class="product-card__brand">${product.ec_brand}</p>
-            <cac-price-display .product=${product}></cac-price-display>
+            <atomock-product-link
+              class="product-name"
+              .text=${product.ec_name}
+              .href=${this.getProductHref(product)}
+            ></atomock-product-link>
+            <atomock-product-text
+              class="product-brand"
+              .text=${product.ec_brand}
+            ></atomock-product-text>
+            <atomock-product-price
+              class="product-price"
+              .product=${product}
+            ></atomock-product-price>
           </div>
         </article>
       </div>
     `;
   }
 
-  private renderProductImage(product: Product) {
-    return when(
-      Boolean(product.ec_image),
-      () => html`
-        <img
-          src=${product.ec_image}
-          alt=${product.ec_name}
-          class="product-card__image"
-        />
-      `,
-      () => html`
-        <div
-          class="product-card__image product-card__image--placeholder"
-          aria-hidden="true"
-        ></div>
-      `
-    );
+  private getProductHref(product: Product) {
+    const candidate =
+      product['clickUri'] ?? product['ec_product_url'] ?? product['url'];
+    return typeof candidate === 'string' ? candidate : '';
   }
 }
 

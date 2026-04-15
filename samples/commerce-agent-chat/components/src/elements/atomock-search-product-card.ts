@@ -1,5 +1,8 @@
 import {css, html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
+import './atomock-product-image.js';
+import './atomock-product-link.js';
+import './atomock-product-price.js';
 
 /**
  * The `atomock-search-product-card` component displays a minimal product card
@@ -19,60 +22,49 @@ export class AtomockSearchProductCard extends LitElement {
 
     .product-card {
       border: 1px solid var(--border);
-      border-radius: 6px;
-      background: var(--surface);
+      border-radius: 10px;
+      background: #fff;
       overflow: hidden;
-      transition: all 200ms ease;
+      transition: all 0.3s ease;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
     }
 
     .product-card:hover {
-      border-color: var(--accent);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      border-color: #b8c7dd;
     }
 
     .image-container {
       width: 100%;
-      aspect-ratio: 1;
-      background: var(--bg-1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      height: 110px;
       overflow: hidden;
+      border-bottom: 1px solid #e2e8f0;
     }
 
     .product-image {
       width: 100%;
       height: 100%;
-      object-fit: cover;
-      object-position: center;
-    }
-
-    .product-image.empty {
-      background: var(--bg-1);
+      --atomock-product-image-placeholder-bg: #edf1f7;
     }
 
     .product-info {
-      padding: 0.85rem;
+      padding: 0.5rem 0.65rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
     }
 
     .product-title {
-      margin: 0 0 0.5rem;
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--ink);
-      line-height: 1.3;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      word-break: break-word;
+      --atomock-product-link-font-size: 0.8rem;
+      --atomock-product-link-font-weight: 600;
+      --atomock-product-link-color: var(--ink);
+      --atomock-product-link-line-height: 1.25;
+      --atomock-product-link-lines: 2;
     }
 
     .product-price {
-      margin: 0;
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--accent);
+      --atomock-product-price-font-size: 0.9rem;
+      --atomock-product-price-font-weight: 700;
+      --atomock-product-price-color: var(--ink);
     }
   `;
 
@@ -82,7 +74,7 @@ export class AtomockSearchProductCard extends LitElement {
 
   /** The product title. */
   @property({type: String})
-  public title = '';
+  public override title = '';
 
   /** The product price (formatted string, e.g., "$99.99"). */
   @property({type: String})
@@ -92,19 +84,24 @@ export class AtomockSearchProductCard extends LitElement {
     return html`
       <article class="product-card">
         <div class="image-container" part="image">
-          ${this.image
-            ? html`<img
-                class="product-image"
-                src="${this.image}"
-                alt="${this.title}"
-                loading="lazy"
-              />`
-            : html`<div class="product-image empty"></div>`}
+          <atomock-product-image
+            class="product-image"
+            .src=${this.image}
+            .alt=${this.title}
+          ></atomock-product-image>
         </div>
         <div class="product-info">
-          <h3 class="product-title" part="title">${this.title}</h3>
+          <atomock-product-link
+            class="product-title"
+            part="title"
+            .text=${this.title}
+          ></atomock-product-link>
           ${this.price
-            ? html`<p class="product-price" part="price">${this.price}</p>`
+            ? html`<atomock-product-price
+                class="product-price"
+                part="price"
+                .value=${this.price}
+              ></atomock-product-price>`
             : ''}
         </div>
       </article>
