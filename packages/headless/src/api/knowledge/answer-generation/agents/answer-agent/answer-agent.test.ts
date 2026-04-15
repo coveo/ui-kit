@@ -34,4 +34,19 @@ describe('AnswerAgent', () => {
       query: 'hello',
     });
   });
+
+  it('preserves context in the answer request body', () => {
+    const request = buildRequest({
+      params: {
+        query: 'hello',
+        context: {userRole: 'admin', locale: ['en', 'fr']},
+      },
+      accessToken: 'token',
+    });
+
+    expect(JSON.parse(request.body as string)).toEqual({
+      query: 'hello',
+      context: {userRole: 'admin', locale: ['en', 'fr']},
+    });
+  });
 });

@@ -178,6 +178,7 @@ type HeadAnswerParams = {
   facets?: AnyFacetRequest[];
   searchHub?: string;
   pipeline?: string;
+  context?: Record<string, string | string[]>;
   citationsFieldToInclude?: string[];
   locale: string;
 } & AnalyticsParam;
@@ -197,6 +198,7 @@ export const constructGenerateHeadAnswerParams = (
 
   const searchHub = selectSearchHub(state);
   const pipeline = selectPipeline(state);
+  const context = selectContext(state);
   const citationsFieldToInclude = selectFieldsToIncludeInCitation(state) ?? [];
 
   return {
@@ -205,6 +207,7 @@ export const constructGenerateHeadAnswerParams = (
     citationsFieldToInclude,
     ...(searchHub?.length && {searchHub}),
     ...(pipeline?.length && {pipeline}),
+    ...(context?.contextValues && {context: context.contextValues}),
     ...analyticsParams,
     locale,
   };
