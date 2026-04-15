@@ -1,70 +1,68 @@
-## <small>1.41.11 (2026-04-08)</small>
+## 1.41.11
 
-* chore: replace biome with oxlint / oxfmt (#7328) ([3b8d688](https://github.com/coveo/ui-kit/commits/3b8d688)), closes [#7328](https://github.com/coveo/ui-kit/issues/7328)
+- chore: replace biome with oxlint / oxfmt (#7328) ([3b8d688](https://github.com/coveo/ui-kit/commits/3b8d688)), closes [#7328](https://github.com/coveo/ui-kit/issues/7328)
 
-
-
-## <small>1.41.10 (2026-03-25)</small>
+## 1.41.10
 
 - fix(deps): update all dependencies j:kit-282 (major) (#6195) ([a5df20c](https://github.com/coveo/ui-kit/commits/a5df20c)), closes [#6195](https://github.com/coveo/ui-kit/issues/6195)
 
-## <small>1.41.9 (2026-03-25)</small>
+## 1.41.9
 
 - chore(deps): update dependency @biomejs/biome to v2.4.7 j:kit-282 (#6193) ([a72f939](https://github.com/coveo/ui-kit/commits/a72f939)), closes [#6193](https://github.com/coveo/ui-kit/issues/6193)
 - ci: migrate npm publishing to OIDC trusted publishers (#7198) ([c97eff5](https://github.com/coveo/ui-kit/commits/c97eff5)), closes [#7198](https://github.com/coveo/ui-kit/issues/7198)
 - fix(deps): update all dependencies j:kit-282 (#6191) ([9ec6cc5](https://github.com/coveo/ui-kit/commits/9ec6cc5)), closes [#6191](https://github.com/coveo/ui-kit/issues/6191)
 
-## <small>1.41.8 (2026-02-11)</small>
+## 1.41.8
 
 - fix(create-atomic): resolve workspace: and catalog: placeholders in template (#7079) ([ad7b703](https://github.com/coveo/ui-kit/commits/ad7b703)), closes [#7079](https://github.com/coveo/ui-kit/issues/7079)
 
-## <small>1.41.7 (2026-01-07)</small>
+## 1.41.7
 
 - [Version Bump][skip ci]: ui-kit publish ([b2a83c4](https://github.com/coveo/ui-kit/commits/b2a83c4))
 - Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
 
-## <small>1.41.6 (2026-01-06)</small>
+## 1.41.6
 
 - Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
 
-## <small>1.41.5 (2025-10-30)</small>
+## 1.41.5
 
 - ci: fix pnpm pack including node_modules for create-atomic packages (#6333) ([c9debba](https://github.com/coveo/ui-kit/commits/c9debba)), closes [#6333](https://github.com/coveo/ui-kit/issues/6333)
 - ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
 - [Version Bump][skip ci]: ui-kit publish ([b33d02f](https://github.com/coveo/ui-kit/commits/b33d02f))
 
-## <small>1.41.4 (2025-10-29)</small>
+## 1.41.4
 
 - ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
 
-## <small>1.41.3 (2025-10-08)</small>
+## 1.41.3
 
 - chore: more cleanup of dependencies in multiples packages (#6119) ([ff6c837](https://github.com/coveo/ui-kit/commits/ff6c837)), closes [#6119](https://github.com/coveo/ui-kit/issues/6119)
 
-## <small>1.41.2 (2025-09-17)</small>
+## 1.41.2
 
 - chore: deduplicate dependencies in create-atomic-\* (#6029) ([ba54e8e](https://github.com/coveo/ui-kit/commits/ba54e8e)), closes [#6029](https://github.com/coveo/ui-kit/issues/6029)
 
-## <small>1.41.1 (2025-08-27)</small>
+## 1.41.1
 
 - fix(cli): fix plop choice type to simple list (#5968) ([b0a1ace](https://github.com/coveo/ui-kit/commits/b0a1ace)), closes [#5968](https://github.com/coveo/ui-kit/issues/5968)
 
-## 1.41.0 (2025-08-07)
+## 1.41.0
 
 - feat: Migrate monorepo build system from NX to Turborepo (#5733) ([e7e1237](https://github.com/coveo/ui-kit/commits/e7e1237)), closes [#5733](https://github.com/coveo/ui-kit/issues/5733)
 - chore: update dependencies (major) (#5793) ([8cbf5bc](https://github.com/coveo/ui-kit/commits/8cbf5bc)), closes [#5793](https://github.com/coveo/ui-kit/issues/5793)
 - fix(deps): update all dependencies j:kit-282 (#5770) ([214bb00](https://github.com/coveo/ui-kit/commits/214bb00)), closes [#5770](https://github.com/coveo/ui-kit/issues/5770)
 
-## <small>1.40.13 (2025-07-30)</small>
+## 1.40.13
 
 - chore: enable noUnusedVariables rule (#5670) ([6809d57](https://github.com/coveo/ui-kit/commits/6809d57)), closes [#5670](https://github.com/coveo/ui-kit/issues/5670)
 
-## <small>1.40.11 (2025-07-23)</small>
+## 1.40.11
 
 - fix(deps): update all dependencies j:kit-282 (#5723) ([6c032c9](https://github.com/coveo/ui-kit/commits/6c032c9)), closes [#5723](https://github.com/coveo/ui-kit/issues/5723)
 - chore: enable recommended biome rules for entire repo (#5662) ([015a764](https://github.com/coveo/ui-kit/commits/015a764)), closes [#5662](https://github.com/coveo/ui-kit/issues/5662)
 
-## <small>1.40.10 (2025-07-16)</small>
+## 1.40.10
 
 - chore(ci): change create-atomic release process from cli to ui-kit (#5648) ([2a906d4](https://github.com/coveo/ui-kit/commits/2a906d4)), closes [#5648](https://github.com/coveo/ui-kit/issues/5648)
 - chore(create-atomic): add missing repository metadata (#5674) ([17a99ce](https://github.com/coveo/ui-kit/commits/17a99ce)), closes [#5674](https://github.com/coveo/ui-kit/issues/5674)
@@ -72,38 +70,38 @@
 - ci(create-atomic): fix create-atomic release (#5661) ([296d1f4](https://github.com/coveo/ui-kit/commits/296d1f4)), closes [#5661](https://github.com/coveo/ui-kit/issues/5661)
 - feat(cli): port over create-atomic from cli repo (#5623) ([94e8280](https://github.com/coveo/ui-kit/commits/94e8280)), closes [#5623](https://github.com/coveo/ui-kit/issues/5623)
 
-## 1.40.9 (2025-03-25)
+## 1.40.9
 
-## 1.40.8 (2025-03-25)
+## 1.40.8
 
-## 1.40.7 (2025-03-24)
+## 1.40.7
 
-## 1.40.6 (2025-03-24)
+## 1.40.6
 
-## 1.40.3 (2024-07-02)
+## 1.40.3
 
-## 1.40.2 (2024-05-13)
+## 1.40.2
 
-# 1.40.0 (2024-02-20)
+## 1.40.0
 
 ### Features
 
 - **atomic:** add support for ngsp ([#1409](https://github.com/coveo/cli/issues/1409)) ([0602475](https://github.com/coveo/cli/commits/0602475c075348d7cc51ef55e1969012d1a1b485))
 - **cli:** add support to associate a search hub when creating a search page ([#1417](https://github.com/coveo/cli/issues/1417)) ([278de45](https://github.com/coveo/cli/commits/278de45dfaa796bc4578ce931e45916d50036ba6))
 
-# 1.38.0 (2023-06-13)
+## 1.38.0
 
 ### Features
 
 - **organizationendpoints:** add support for organization endpoints for UI commands and projects ([#1289](https://github.com/coveo/cli/issues/1289)) ([3b7653d](https://github.com/coveo/cli/commits/3b7653dbf1b59015afb4575bd265ec0a91b2bcef))
 
-## 1.37.3 (2023-04-21)
+## 1.37.3
 
 ### Bug Fixes
 
 - **atomic:** don't need peerDeps ([#1294](https://github.com/coveo/cli/issues/1294)) ([8a7e7a9](https://github.com/coveo/cli/commits/8a7e7a9ae60b3837d2e3820d1af824756e4db549))
 
-## 1.37.1 (2023-03-27)
+## 1.37.1
 
 ### Bug Fixes
 
@@ -115,21 +113,21 @@
 
 - **create-atomic:** adapt project to use ui:deploy instead of netlify ([#1131](https://github.com/coveo/cli/issues/1131)) ([97498ed](https://github.com/coveo/cli/commits/97498ed1ec2dcd4abfdbe992134cf5fcf18fd26b))
 
-## 1.36.4 (2023-03-01)
+## 1.36.4
 
 ### Bug Fixes
 
 - **atomic:** do not track lambda symlink ([#1098](https://github.com/coveo/cli/issues/1098)) ([11f8c08](https://github.com/coveo/cli/commits/11f8c089025647663c8688d53a7cf970d076b9ac))
 - **deps:** update all dependencies j:cdx-227 (major) ([#1054](https://github.com/coveo/cli/issues/1054)) ([03d4b34](https://github.com/coveo/cli/commits/03d4b3411164933fc0a25ca7aa3b3f644e8cdc08))
 
-## 1.36.1 (2022-12-14)
+## 1.36.1
 
 ### Bug Fixes
 
 - **deps:** update all dependencies j:cdx-227 ([#1053](https://github.com/coveo/cli/issues/1053)) ([f218b3f](https://github.com/coveo/cli/commits/f218b3f2d8070890da1501622f34b757cd2ad3d9))
 - **deps:** update all dependencies j:cdx-227 ([#1066](https://github.com/coveo/cli/issues/1066)) ([12533ea](https://github.com/coveo/cli/commits/12533ea7c8182d183a7158945de742202eac0b69))
 
-# 1.36.0 (2022-11-29)
+## 1.36.0
 
 ### Bug Fixes
 
@@ -140,7 +138,7 @@
 
 - **atomic:** reduce disk footprint of projects ([#1044](https://github.com/coveo/cli/issues/1044)) ([985ba50](https://github.com/coveo/cli/commits/985ba50692cde3523d370051b699624639ebd928))
 
-## 1.35.15 (2022-11-15)
+## 1.35.15
 
 ### Bug Fixes
 
@@ -148,85 +146,85 @@
 - **deps:** update all dependencies j:cdx-227 ([#1022](https://github.com/coveo/cli/issues/1022)) ([e181d70](https://github.com/coveo/cli/commits/e181d700e19445bf912b3ecd370f7eabdb777d71))
 - **deps:** update all dependencies j:cdx-227 ([#1026](https://github.com/coveo/cli/issues/1026)) ([c6ca8dd](https://github.com/coveo/cli/commits/c6ca8ddf8dde39eb69cd99da3e9d897db873e4c6))
 
-## 1.35.14 (2022-10-13)
+## 1.35.14
 
-## 1.35.13 (2022-09-21)
+## 1.35.13
 
-## 1.35.10 (2022-09-07)
+## 1.35.10
 
-## 1.35.8 (2022-08-29)
+## 1.35.8
 
-# 1.34.0 (2022-08-10)
+## 1.34.0
 
 ### Features
 
 - **create-atomic:** replace variables for continious deployment ([#879](https://github.com/coveo/cli/issues/879)) ([df7c7bf](https://github.com/coveo/cli/commits/df7c7bfb8d9953d3479afeb62d4d8073057a5cab))
 
-# 1.33.0 (2022-07-26)
+## 1.33.0
 
-# 1.32.0 (2022-07-13)
+## 1.32.0
 
 ### Bug Fixes
 
 - **deps:** update all dependencies j:cdx-227 ([#854](https://github.com/coveo/cli/issues/854)) ([cd042cc](https://github.com/coveo/cli/commits/cd042cc9d08898a9cad39c644a99fa0dd64ba77a))
 
-# 1.31.0 (2022-06-29)
+## 1.31.0
 
 ### Features
 
 - **snapshot:** add `deletionScope` on `/apply` ([#849](https://github.com/coveo/cli/issues/849)) ([7b7fcb2](https://github.com/coveo/cli/commits/7b7fcb2ed1d0fc73d0ee7500c91aed85fbfd0dc6))
 
-# 1.30.0 (2022-06-09)
+## 1.30.0
 
 ### Features
 
 - **atomic:** create impersonate key inside create-atomic instead ([#827](https://github.com/coveo/cli/issues/827)) ([9178ab1](https://github.com/coveo/cli/commits/9178ab136ed7886bdf711312e8415bef30a2fa2d))
 - **create-atomic:** display npm install error details to user ([#821](https://github.com/coveo/cli/issues/821)) ([0870918](https://github.com/coveo/cli/commits/0870918aa32c080bb66f19b84a20c74660b3406e))
 
-## 1.29.2 (2022-06-03)
+## 1.29.2
 
-## 1.29.1 (2022-06-03)
+## 1.29.1
 
 ### Bug Fixes
 
 - **cli:** replace qa by stg ([#811](https://github.com/coveo/cli/issues/811)) ([7a47f9b](https://github.com/coveo/cli/commits/7a47f9b035b4902b5e8fc4234b8eb223bc6cecd4))
 - **create-atomic:** download prompt selected hosted page ([#810](https://github.com/coveo/cli/issues/810)) ([f525ffb](https://github.com/coveo/cli/commits/f525ffb3d502a7a1080481f64b403d60ae4c1933))
 
-# 1.29.0 (2022-05-31)
+## 1.29.0
 
 ### Features
 
 - **create-atomic:** allow Coveo atomic to start from an existing Platform Search page ([#728](https://github.com/coveo/cli/issues/728)) ([340fe4a](https://github.com/coveo/cli/commits/340fe4af779ff87730f3a9964272f7a50561ee39))
 
-# 1.28.0 (2022-05-24)
+## 1.28.0
 
-## 1.27.1 (2022-04-20)
+## 1.27.1
 
 ### Bug Fixes
 
 - **deps:** update all dependencies j:cdx-227 ([#758](https://github.com/coveo/cli/issues/758)) ([e381804](https://github.com/coveo/cli/commits/e381804d509cef83a3ec6ef7a39995a4d5c38bd4))
 
-# 1.27.0 (2022-04-14)
+## 1.27.0
 
 ### Bug Fixes
 
 - **create-atomic:** prevent Atomic/Headless version mismatch & use installed Atomic version ([#753](https://github.com/coveo/cli/issues/753)) ([916240a](https://github.com/coveo/cli/commits/916240afc50d0265987e0f3f38cf887dcb2a4c70))
 
-# 1.26.0 (2022-03-31)
+## 1.26.0
 
 ### Bug Fixes
 
 - **deps:** update all dependencies j:cdx-227 ([#723](https://github.com/coveo/cli/issues/723)) ([88a18fd](https://github.com/coveo/cli/commits/88a18fdc3f035959a3ad13bb1aa30289a53bff72))
 
-## 1.25.2 (2022-02-18)
+## 1.25.2
 
-## 1.25.1 (2022-02-17)
+## 1.25.1
 
 ### Bug Fixes
 
 - **oclif:** patch oclif to work with npm workspaces ([#677](https://github.com/coveo/cli/issues/677)) ([cd8bdc2](https://github.com/coveo/cli/commits/cd8bdc25ee3a3a02f9a7a502e477f188da968ba8))
 
-# 1.25.0 (2022-02-16)
+## 1.25.0
 
 ### Bug Fixes
 

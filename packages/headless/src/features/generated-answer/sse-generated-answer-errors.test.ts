@@ -31,7 +31,7 @@ describe('sse-generated-answer-errors', () => {
         GeneratedAnswerSseErrorCode.SseInternalError,
       ],
       [
-        'KNOWLEDGE:TURN_LIMIT_REACHED',
+        'KNOWLEDGE:SSE_TURN_LIMIT_REACHED',
         GeneratedAnswerSseErrorCode.SseTurnLimitReached,
       ],
     ])(

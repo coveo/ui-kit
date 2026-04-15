@@ -18,6 +18,8 @@ jest.mock('c/quanticUtils', () => ({
   I18nUtils: {
     format: jest.fn(),
   },
+  getFirstFocusableElement: jest.fn(),
+  getLastFocusableElement: jest.fn(),
 }));
 
 /** @type {Object} */

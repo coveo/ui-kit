@@ -1,10 +1,11 @@
 export default {
-  $schema: 'https://unpkg.com/knip@5/schema.json',
+  $schema: 'https://unpkg.com/knip@6/schema.json',
   // Always ignoring quantic since it throws errors. Adding those two lines is necessary for 100% of quantic to be ignored.
   ignoreWorkspaces: [
     'packages/quantic',
     'packages/create-atomic-component-project/template',
   ],
+  ignoreDependencies: ['semver'],
   ignore: [
     'packages/quantic/**',
     'samples/headless/rga-react/src/components/Quickstart.tsx',

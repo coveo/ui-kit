@@ -21,7 +21,7 @@
     "**/*.tw.css",
     "**/*.mdx",
     "**/CHANGELOG.md",
-    "./changeset/*.md",
-    "!./changeset/README.md"
+    ".changeset/*.md",
+    "!.changeset/README.md"
   ]
 }

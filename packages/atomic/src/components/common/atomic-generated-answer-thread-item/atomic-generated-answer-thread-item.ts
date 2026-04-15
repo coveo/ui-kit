@@ -176,7 +176,7 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
               () => html`<span class=${timelineConnectorClasses}> </span>`
             )}
           </div>
-          <div id=${this.contentId} class="pl-2 py-1.5">
+          <div id=${this.contentId} class="min-w-0 pl-2 py-1.5">
             <div
               class="mb-2"
               ?hidden=${!this.isExpanded}
