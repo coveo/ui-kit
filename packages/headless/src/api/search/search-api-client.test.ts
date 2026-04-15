@@ -374,8 +374,8 @@ describe('search api client', () => {
       expect(request.url).toBe(expectedUrl);
     });
 
-    it(`when calling SearchAPIClient.plan with enableQuerySyntax
-    should include enableQuerySyntax in the request params`, async () => {
+    it(`when calling SearchAPIClient.plan with enableQuerySyntax=true
+    should include enableQuerySyntax=true in the request params`, async () => {
       state.query.enableQuerySyntax = true;
       const req = await buildPlanRequest(
         state,
@@ -385,6 +385,19 @@ describe('search api client', () => {
       const request = (PlatformClient.call as Mock).mock.calls[0][0];
 
       expect(request.requestParams.enableQuerySyntax).toBe(true);
+    });
+
+    it(`when calling SearchAPIClient.plan with enableQuerySyntax=false
+    should include enableQuerySyntax=false in the request params`, async () => {
+      state.query.enableQuerySyntax = false;
+      const req = await buildPlanRequest(
+        state,
+        buildMockNavigatorContextProvider()()
+      );
+      searchAPIClient.plan(req);
+      const request = (PlatformClient.call as Mock).mock.calls[0][0];
+
+      expect(request.requestParams.enableQuerySyntax).toBe(false);
     });
 
     it(`when calling SearchAPIClient.querySuggest
