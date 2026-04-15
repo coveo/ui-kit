@@ -19,7 +19,7 @@ export class CacProgressTrace extends LitElement {
 
     .agent-progress {
       margin: 0.5rem 0 0;
-      border: 1px solid var(--border);
+      border: 0;
       border-radius: 8px;
       padding: 0.55rem 0.65rem;
       background: var(--surface-accent);
@@ -55,14 +55,14 @@ export class CacProgressTrace extends LitElement {
 
     .agent-progress__toggle-caret {
       display: inline-block;
-      font-size: 0.66rem;
+      font-size: 2rem;
       line-height: 1;
-      transform: rotate(0deg);
+      transform: translateY(-0.08em) rotate(0deg);
       transition: transform 120ms ease;
     }
 
     .agent-progress__toggle-caret--expanded {
-      transform: rotate(90deg);
+      transform: translateY(-0.08em) rotate(90deg);
     }
 
     .agent-progress__toggle-label {
@@ -257,7 +257,7 @@ export class CacProgressTrace extends LitElement {
                 html`<span
                   class=${this.getToggleCaretClass()}
                   aria-hidden="true"
-                  >&#9656;</span
+                  >&#8250;</span
                 >`
             )}
             <span
