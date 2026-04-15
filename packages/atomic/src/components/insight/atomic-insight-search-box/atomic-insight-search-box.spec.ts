@@ -176,6 +176,13 @@ describe('atomic-insight-search-box', () => {
       expect(submitMock).toHaveBeenCalled();
     });
 
+    it('should not submit when Shift+Enter is pressed', async () => {
+      const {textArea} = await renderComponent();
+      submitMock.mockClear();
+      await userEvent.type(textArea, '{shift>}{enter}{/shift}');
+      expect(submitMock).not.toHaveBeenCalled();
+    });
+
     it('should not submit when disableSearch is true', async () => {
       const {element, textArea} = await renderComponent();
       element.disableSearch = true;

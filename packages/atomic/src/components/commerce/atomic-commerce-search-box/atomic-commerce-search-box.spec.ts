@@ -399,6 +399,15 @@ describe('atomic-commerce-search-box', () => {
       expect(submitMock).toHaveBeenCalled();
     });
 
+    it('should not trigger the submit event when Shift+Enter is pressed', async () => {
+      const {textArea} = await renderSearchBox();
+
+      submitMock.mockClear();
+      await userEvent.type(textArea, '{shift>}{enter}{/shift}');
+
+      expect(submitMock).not.toHaveBeenCalled();
+    });
+
     it('should clear suggestions when the Escape key is pressed', async () => {
       const {element, suggestions} = await renderSearchBox();
 
