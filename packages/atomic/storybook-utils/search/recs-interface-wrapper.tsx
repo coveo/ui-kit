@@ -13,13 +13,11 @@ export const wrapInRecommendationInterface = ({
   skipFirstQuery = false,
   skipInitialization = false,
   includeCodeRoot = true,
-  disableStateReflectionInUrl = false,
 }: {
   config?: Partial<RecommendationEngineConfiguration>;
   skipFirstQuery?: boolean;
   skipInitialization?: boolean;
   includeCodeRoot?: boolean;
-  disableStateReflectionInUrl?: boolean;
 } = {}): {
   decorator: Decorator;
   play: (context: StoryContext) => Promise<void>;
@@ -27,7 +25,6 @@ export const wrapInRecommendationInterface = ({
   decorator: (story) => html`
     <atomic-recs-interface
       ${spreadProps(includeCodeRoot ? {id: 'code-root'} : {})}
-      ?disable-state-reflection-in-url=${disableStateReflectionInUrl}
     >
       ${story()}
     </atomic-recs-interface>

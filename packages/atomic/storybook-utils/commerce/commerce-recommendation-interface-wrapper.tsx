@@ -11,8 +11,7 @@ import '@/src/components/commerce/atomic-commerce-recommendation-interface/atomi
 
 export const wrapInCommerceRecommendationInterface = (
   engineConfig?: Partial<CommerceEngineConfiguration>,
-  includeCodeRoot: boolean = true,
-  disableStateReflectionInUrl: boolean = false
+  includeCodeRoot: boolean = true
 ): {
   decorator: Decorator;
   play: (context: StoryContext) => Promise<void>;
@@ -20,7 +19,6 @@ export const wrapInCommerceRecommendationInterface = (
   decorator: (story) => html`
     <atomic-commerce-recommendation-interface
       ${spreadProps(includeCodeRoot ? {id: 'code-root'} : {})}
-      ?disable-state-reflection-in-url=${disableStateReflectionInUrl}
     >
       ${story()}
     </atomic-commerce-recommendation-interface>
