@@ -13,11 +13,13 @@ export const wrapInCommerceInterface = ({
   skipFirstRequest,
   type = 'search',
   includeCodeRoot = true,
+  disableStateReflectionInUrl = false,
 }: {
   engineConfig?: Partial<CommerceEngineConfiguration>;
   skipFirstRequest?: boolean;
   type?: 'search' | 'product-listing';
   includeCodeRoot?: boolean;
+  disableStateReflectionInUrl?: boolean;
 } = {}): {
   decorator: Decorator;
   play: (context: StoryContext) => Promise<void>;
@@ -26,6 +28,7 @@ export const wrapInCommerceInterface = ({
     <atomic-commerce-interface
       ${spreadProps(includeCodeRoot ? {id: 'code-root'} : {})}
       type="${type}"
+      ?disable-state-reflection-in-url=${disableStateReflectionInUrl}
     >
       ${story()}
     </atomic-commerce-interface>
