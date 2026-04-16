@@ -28,11 +28,6 @@ export const wrapInResult = (
   engineConfig: Partial<SearchEngineConfiguration>;
 } => ({
   decorator: (story) => {
-    const tempResultTemplate = document.createElement('div');
-    render(html`${story()}`, tempResultTemplate);
-    tempResultTemplate.replaceChildren(
-      ...Array.from(tempResultTemplate.children)
-    );
     return html`
       <div style="position: relative; margin-top: 20px;">
         <atomic-result-list
@@ -42,7 +37,7 @@ export const wrapInResult = (
           style="border: 2px dashed black; padding:20px; position: relative;"
         >
           <atomic-result-template results>
-            <template>${html(tempResultTemplate.innerHTML)}</template>
+            <template>${story()}</template>
           </atomic-result-template>
         </atomic-result-list>
         <div style="position: absolute; top: -20px; right: 0;">Template</div>
@@ -55,7 +50,7 @@ export const wrapInResult = (
           margin: auto;
         }
       </style>
-      <div style="hidden">${html(tempResultTemplate.innerHTML)}</div>
+      <div style="hidden">${story()}</div>
     `;
   },
   engineConfig: {
