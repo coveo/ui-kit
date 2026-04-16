@@ -33,6 +33,9 @@ export const insertSiteHeaderBar = (assetsPath: string) => {
               <div class="btn-toolbar navbar-buttons flex-nowrap justify-content-center justify-content-md-end" role="toolbar"
                 aria-label="Navbar buttons">
                 <div class="btn-group py-81 py-md-0" role="group" aria-label="Navigation links">
+                  <a id="tsd-edit-github-link" href="#" target="_blank" rel="noopener noreferrer" title="Edit in GitHub" aria-label="Edit in GitHub" class="btn site-navbar-btn navbar-link fs-75 fw-400 align-items-center justify-content-center" style="display:none">
+                    <img src="${assetsPath}/icons/github.svg" width="16" height="16" aria-hidden="true" style="flex-shrink:0;display:block" alt="">
+                  </a>
                   <button type="button" class="btn site-navbar-btn">
                     <a href="https://docs.google.com/forms/d/e/1FAIpQLSeyNL18g4JWIDR5xEyIMY48JIjyjwXRmlCveecjXBNSLh4Ygg/viewform?usp=sf_link"
                       class="navbar-link fs-75 fw-400" target="_blank">Feedback</a>
@@ -80,6 +83,17 @@ export const insertSiteHeaderBar = (assetsPath: string) => {
 
       if (header.parentNode) {
         header.parentNode.replaceChild(newHeader, header);
+      }
+
+      const githubMeta = document.querySelector('meta[name="github-edit-url"]');
+      const editLink = document.getElementById('tsd-edit-github-link');
+
+      // Resolve content safely, prefer empty string if missing.
+      const url = githubMeta?.getAttribute('content') ?? '';
+
+      if (editLink && url.trim() && url !== '#') {
+        (editLink as HTMLAnchorElement).href = url;
+        (editLink as HTMLElement).style.display = 'inline-flex';
       }
 
       header.setAttribute('data-bs-theme', 'light');

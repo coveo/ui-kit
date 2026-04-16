@@ -153,6 +153,16 @@ const atomicDefault = defineConfig({
   },
 });
 
+// Pure function tests for Storybook utilities (Node.js, no browser needed)
+const storybookPure = defineConfig({
+  name: 'storybookPure',
+  test: {
+    name: 'storybookPure',
+    include: ['storybook-utils/**/*.spec.ts'],
+    environment: 'node',
+  },
+});
+
 export default mergeConfig(atomicDefault, {
-  test: {projects: [atomicDefault, storybook]},
+  test: {projects: [atomicDefault, storybookPure, storybook]},
 });
