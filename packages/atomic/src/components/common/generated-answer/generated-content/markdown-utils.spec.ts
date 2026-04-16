@@ -89,6 +89,22 @@ describe('markdownUtils', () => {
       );
     });
 
+    it('should transform links with the answer-link part', () => {
+      const text = '[example](https://example.com)';
+
+      const html = transformMarkdownToHtml(text);
+
+      expect(removeLineBreaks(html)).toBe(
+        removeLineBreaks(
+          unindentHtml(`
+            <p part="answer-paragraph">
+              <a part="answer-link" href="https://example.com" target="_blank" rel="noopener noreferrer">example</a>
+            </p>
+          `)
+        )
+      );
+    });
+
     it('should escape HTML in inline code', () => {
       const text = '`<html>`';
 

@@ -31,6 +31,15 @@ const styles = css`
     @apply mb-3;
   }
 
+  [part='generated-text'] [part='answer-link'] {
+    @apply text-primary underline;
+  }
+
+  [part='generated-text'] [part='answer-link']::after {
+    content: '↗';
+    @apply ms-1 inline-block text-sm no-underline;
+  }
+
   [part='generated-text'] [part='answer-list-item'],
   [part='generated-text'] [part='answer-paragraph'],
   [part='generated-text'] [part='answer-quote-block'],

@@ -76,6 +76,13 @@ const customRenderer = {
     return `${tag}${body}</${type}>`;
   },
 
+  link(href: string, title: string | null | undefined, text: string) {
+    const titleAttribute = title ? ` title="${escapeHtml(title)}"` : '';
+    const safeHref = href ? escapeHtml(href) : '';
+
+    return `<a part="answer-link" href="${safeHref}" target="_blank" rel="noopener noreferrer"${titleAttribute}>${text}</a>`;
+  },
+
   /**
    * Custom Marked renderer to remove wrapping `<p>` element around list item content.
    * @param text The element text content.
