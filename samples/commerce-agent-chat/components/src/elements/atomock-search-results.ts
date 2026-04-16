@@ -193,12 +193,16 @@ export class AtomockSearchResults extends LitElement {
             )}
           `
         )}
-
-        <atomock-search-pagination
-          ?has-more="${this.searchState.hasMore && !this.searchState.error}"
-          ?loading="${this.searchState.loading}"
-          @load-more="${this.handleLoadMore}"
-        ></atomock-search-pagination>
+        ${when(
+          this.searchState.data.length > 0,
+          () => html`
+            <atomock-search-pagination
+              ?has-more="${this.searchState.hasMore && !this.searchState.error}"
+              ?loading="${this.searchState.loading}"
+              @load-more="${this.handleLoadMore}"
+            ></atomock-search-pagination>
+          `
+        )}
       </div>
     `;
   }
