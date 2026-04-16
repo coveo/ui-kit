@@ -57,16 +57,6 @@ export function SearchInterface({
 
   return (
     <section className="search-mode-shell" aria-label="Search mode">
-      {onBack && (
-        <button
-          type="button"
-          className="back-to-chat-btn"
-          onClick={onBack}
-          aria-label="Back to chat"
-        >
-          ← Back to chat
-        </button>
-      )}
       <div className="search-mode-input-wrap">
         <MessageInput
           onSend={onSend}
@@ -80,6 +70,17 @@ export function SearchInterface({
         />
       </div>
       <atomock-search-results ref={searchResultsRef} />
+      {onBack && (
+        <button
+          type="button"
+          className="ai-chat-btn"
+          onClick={onBack}
+          aria-label="Back to AI chat"
+          title="Back to AI chat"
+        >
+          <span aria-hidden="true">✨</span>
+        </button>
+      )}
     </section>
   );
 }

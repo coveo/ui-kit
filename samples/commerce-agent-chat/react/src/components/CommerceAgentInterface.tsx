@@ -1,4 +1,4 @@
-import {useCallback, useState} from 'react';
+import {useState} from 'react';
 import type {CommerceConfig} from '@core/config/env.js';
 import {classifyQuery, ClassificationError} from '@core/lib/heuristicClient.js';
 import {generateId} from '@core/lib/chatIds.js';
@@ -6,8 +6,6 @@ import {useChat} from '../hooks/useChat.js';
 import {useSearch} from '../hooks/useSearch.js';
 import {ChatInterface} from './ChatInterface.js';
 import {SearchInterface} from './SearchInterface.js';
-
-const SEE_RESULTS_PREFIX = '__see_results__:';
 
 interface CommerceAgentInterfaceProps {
   config: CommerceConfig;
@@ -43,26 +41,12 @@ export function CommerceAgentInterface({
             {
               id: generateId('msg-assistant'),
               role: 'assistant' as const,
-              content: `See results for **"${content}"**`,
-              activities: [
-                {
-                  id: generateId('activity'),
-                  activityType: 'next-actions',
-                  content: {
-                    actions: [
-                      {
-                        text: 'See results',
-                        type: 'search',
-                        prompt: `${SEE_RESULTS_PREFIX}${content}`,
-                      },
-                    ],
-                  },
-                },
-              ],
+              content: `[See results for "**${content}**"](#see-results:${encodeURIComponent(content)})`,
             },
           ],
         }));
         setDraftValue('');
+        setShowSearchView(true);
         void search(content);
       } else {
         sendMessage(content);
@@ -79,20 +63,13 @@ export function CommerceAgentInterface({
     }
   };
 
-  const handleActionSelected = useCallback(
-    (prompt: string) => {
-      if (prompt.startsWith(SEE_RESULTS_PREFIX)) {
-        const query = prompt.slice(SEE_RESULTS_PREFIX.length);
-        if (searchState.query !== query) {
-          void search(query);
-        }
-        setShowSearchView(true);
-        return;
-      }
-      void handleSend(prompt);
-    },
-    [searchState.query, search]
-  );
+  const handleSeeResults = (query: string) => {
+    if (searchState.query !== query) {
+      void search(query);
+    }
+    setShowSearchView(true);
+    setShouldFocusInput(true);
+  };
 
   const handleLoadMore = () => {
     void loadMore();
@@ -100,6 +77,12 @@ export function CommerceAgentInterface({
 
   const handleBackToChat = () => {
     setShowSearchView(false);
+    setShouldFocusInput(true);
+  };
+
+  const handleBackToSearch = () => {
+    setShowSearchView(true);
+    setShouldFocusInput(true);
   };
 
   if (showSearchView) {
@@ -129,7 +112,8 @@ export function CommerceAgentInterface({
       shouldFocusInput={shouldFocusInput}
       onFocusHandled={() => setShouldFocusInput(false)}
       isClassifying={isClassifying}
-      onActionSelected={handleActionSelected}
+      onSeeResults={handleSeeResults}
+      onBackToSearch={handleBackToSearch}
     />
   );
 }

@@ -12,6 +12,7 @@ interface MessageInputProps {
   shouldFocusInput?: boolean;
   onFocusHandled?: () => void;
   slot?: string;
+  onGoToSearch?: () => void;
 }
 
 interface MessageInputElement extends HTMLElement {
@@ -31,6 +32,7 @@ export function MessageInput({
   shouldFocusInput = false,
   onFocusHandled,
   slot,
+  onGoToSearch,
 }: MessageInputProps): React.JSX.Element {
   const elementRef = useRef<MessageInputElement | null>(null);
 
@@ -83,6 +85,17 @@ export function MessageInput({
   return (
     <div className="input-with-switch" slot={slot}>
       <cac-message-input ref={elementRef} />
+      {onGoToSearch && (
+        <button
+          type="button"
+          className="go-search-btn"
+          onClick={onGoToSearch}
+          aria-label="Go to search"
+          title="Go to search"
+        >
+          <span aria-hidden="true">🔍</span>
+        </button>
+      )}
     </div>
   );
 }

@@ -16,6 +16,8 @@ interface ChatInterfaceProps {
   onFocusHandled: () => void;
   isClassifying?: boolean;
   onActionSelected?: (prompt: string) => void;
+  onSeeResults?: (query: string) => void;
+  onBackToSearch?: () => void;
 }
 
 interface CacChatInterfaceElement extends HTMLElement {
@@ -33,6 +35,8 @@ export function ChatInterface({
   onFocusHandled,
   isClassifying = false,
   onActionSelected,
+  onSeeResults,
+  onBackToSearch,
 }: ChatInterfaceProps): React.JSX.Element {
   const elementRef = useRef<CacChatInterfaceElement | null>(null);
 
@@ -58,6 +62,31 @@ export function ChatInterface({
     };
   }, [onClearMessages, onDismissError]);
 
+  useEffect(() => {
+    const element = elementRef.current;
+    if (!element || !onSeeResults) {
+      return;
+    }
+
+    const handleClick = (event: MouseEvent) => {
+      const anchor = event
+        .composedPath()
+        .find((el): el is HTMLAnchorElement => el instanceof HTMLAnchorElement);
+      if (!anchor) {
+        return;
+      }
+      const href = anchor.getAttribute('href') ?? '';
+      const match = href.match(/^#see-results:(.+)$/);
+      if (match) {
+        event.preventDefault();
+        onSeeResults(decodeURIComponent(match[1]));
+      }
+    };
+
+    element.addEventListener('click', handleClick);
+    return () => element.removeEventListener('click', handleClick);
+  }, [onSeeResults]);
+
   return (
     <cac-chat-interface ref={elementRef} heading="Commerce Agent Chat (React)">
       <MessageList
@@ -78,6 +107,7 @@ export function ChatInterface({
         isClassifying={isClassifying}
         shouldFocusInput={shouldFocusInput}
         onFocusHandled={onFocusHandled}
+        onGoToSearch={onBackToSearch}
       />
     </cac-chat-interface>
   );

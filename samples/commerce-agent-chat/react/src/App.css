@@ -21,13 +21,59 @@
 
 .input-with-switch {
   display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.4rem;
   padding: 0 1rem 0.85rem;
 }
 
 .input-with-switch > cac-message-input {
   min-width: 0;
+  flex: 1;
+  align-self: center;
+}
+
+.ai-chat-btn,
+.go-search-btn {
+  position: fixed;
+  right: calc(1rem + env(safe-area-inset-right));
+  bottom: calc(1rem + env(safe-area-inset-bottom));
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 66px;
+  height: 66px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.2);
+  color: var(--ink-muted);
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.ai-chat-btn span,
+.go-search-btn span {
+  display: block;
+  font-size: 40px;
+  line-height: 1;
+}
+
+.ai-chat-btn:hover,
+.go-search-btn:hover {
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.ai-chat-btn:focus-visible,
+.go-search-btn:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 6px;
 }
 
 .ai-switch {
@@ -94,7 +140,7 @@
 
 .search-mode-input-wrap {
   width: min(940px, 100%);
-  animation: slide-to-top 200ms ease-out;
+  animation: reveal-chat-interface 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .search-mode-shell > atomock-search-results {
@@ -106,18 +152,6 @@ cac-chat-interface {
   animation: reveal-chat-interface 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-@keyframes slide-to-top {
-  from {
-    transform: translateY(22vh);
-    opacity: 0.75;
-  }
-
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
 @keyframes reveal-chat-interface {
   from {
     opacity: 0;
@@ -126,7 +160,7 @@ cac-chat-interface {
 
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: none;
   }
 }
 
