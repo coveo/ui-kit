@@ -8,6 +8,7 @@ import {
 } from '../analytics/analytics-utils.js';
 import {SearchPageEvents} from '../analytics/search-action-cause.js';
 import type {SearchAction} from '../search/search-actions.js';
+import type {InlineLink} from '../../utils/inline-link.js';
 import {
   citationSourceSelector,
   generativeQuestionAnsweringIdSelector,
@@ -141,6 +142,21 @@ export function logHoverCitation(
         },
         citationHoverTimeInMs,
       };
+    },
+  });
+}
+
+export function logGeneratedAnswerOpenInlineLink(
+  inlineLink: InlineLink,
+  answerId: string
+): CustomAction {
+  return makeAnalyticsAction({
+    prefix: 'analytics/generatedAnswer/openInlineLink',
+    __legacy__getBuilder: (client) => {
+      return client.makeGeneratedAnswerOpenInlineLink({
+        generativeQuestionAnsweringId: answerId,
+        ...inlineLink,
+      });
     },
   });
 }
@@ -446,6 +462,7 @@ export const generatedAnswerAnalyticsClient = {
   logGeneratedAnswerFeedback,
   logDislikeGeneratedAnswer,
   logLikeGeneratedAnswer,
+  logGeneratedAnswerOpenInlineLink,
   logHoverCitation,
   logOpenGeneratedAnswerSource,
   logRetryGeneratedAnswer,

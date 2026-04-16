@@ -18,6 +18,7 @@ import {
   logGeneratedAnswerExpand,
   logGeneratedAnswerFeedback,
   logGeneratedAnswerHideAnswers,
+  logGeneratedAnswerOpenInlineLink,
   logGeneratedAnswerResponseLinked,
   logGeneratedAnswerShowAnswers,
   logGeneratedAnswerStreamEnd,
@@ -39,6 +40,9 @@ const mockMakeGeneratedAnswerCitationClick = vi.fn((..._args) => ({
   log: mockLogFunction,
 }));
 const mockMakeGeneratedAnswerSourceHover = vi.fn(() => ({
+  log: mockLogFunction,
+}));
+const mockMakeGeneratedAnswerOpenInlineLink = vi.fn(() => ({
   log: mockLogFunction,
 }));
 const mockMakeLikeGeneratedAnswer = vi.fn(() => ({
@@ -95,6 +99,10 @@ const exampleGenerativeQuestionAnsweringId =
   '94b77748-2479-4e4b-a4e8-010fa62b04a0';
 const exampleProvidedAnswerId = 'explicit-answer-id';
 const exampleSearchUid = '456';
+const exampleInlineLink = {
+  linkText: 'Open inline link',
+  linkURL: 'https://example.com/inline-link',
+};
 
 const exampleCitation: GeneratedAnswerCitation = {
   id: 'some-citation-id',
@@ -150,6 +158,8 @@ describe('generated answer analytics actions', () => {
           mockMakeGeneratedAnswerCitationClick as unknown as typeof this.makeGeneratedAnswerCitationClick;
         this.makeGeneratedAnswerSourceHover =
           mockMakeGeneratedAnswerSourceHover as unknown as typeof this.makeGeneratedAnswerSourceHover;
+        this.makeGeneratedAnswerOpenInlineLink =
+          mockMakeGeneratedAnswerOpenInlineLink as unknown as typeof this.makeGeneratedAnswerOpenInlineLink;
         this.makeLikeGeneratedAnswer =
           mockMakeLikeGeneratedAnswer as unknown as typeof this.makeLikeGeneratedAnswer;
         this.makeDislikeGeneratedAnswer =
@@ -282,6 +292,22 @@ describe('generated answer analytics actions', () => {
         citationId: exampleCitation.id,
         permanentId: exampleCitation.permanentid,
         citationHoverTimeMs: hoverDuration,
+      });
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
+    });
+
+    it('should log #logGeneratedAnswerOpenInlineLink with the provided answerId', async () => {
+      await logGeneratedAnswerOpenInlineLink(
+        exampleInlineLink,
+        exampleProvidedAnswerId
+      )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+
+      const mockToUse = mockMakeGeneratedAnswerOpenInlineLink;
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith({
+        generativeQuestionAnsweringId: exampleProvidedAnswerId,
+        ...exampleInlineLink,
       });
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
