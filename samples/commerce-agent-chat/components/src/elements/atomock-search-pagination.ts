@@ -14,6 +14,7 @@ export class AtomockSearchPagination extends LitElement {
       display: block;
       width: 100%;
       margin-top: 1.5rem;
+      padding-bottom: 1rem;
     }
 
     .pagination-container {
