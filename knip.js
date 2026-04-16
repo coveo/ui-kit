@@ -10,9 +10,6 @@ export default {
   ignoreIssues: {
     'packages/atomic/**': [
       'duplicates',
-      'dependencies',
-      'devDependencies',
-      'optionalPeerDependencies',
       'unlisted',
       'unresolved',
       'binaries',
