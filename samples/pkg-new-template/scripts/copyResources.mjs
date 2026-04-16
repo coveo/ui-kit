@@ -1,7 +1,7 @@
 import {cpSync, existsSync, mkdirSync} from 'node:fs';
 import {resolve} from 'node:path';
 
-const atomicDist = resolve('./node_modules/@coveo/atomic/dist/atomic');
+const atomicDist = resolve('./node_modules/@coveo/atomic/dist');
 
 const resources = [
   {src: resolve(atomicDist, 'lang'), dest: resolve('./public/lang')},
