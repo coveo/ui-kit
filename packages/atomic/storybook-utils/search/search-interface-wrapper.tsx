@@ -12,10 +12,12 @@ export const wrapInSearchInterface = ({
   config = {},
   skipFirstSearch = false,
   includeCodeRoot = true,
+  disableStateReflectionInUrl = false,
 }: {
   config?: Partial<SearchEngineConfiguration>;
   skipFirstSearch?: boolean;
   includeCodeRoot?: boolean;
+  disableStateReflectionInUrl?: boolean;
 } = {}): {
   decorator: Decorator;
   play: (context: StoryContext) => Promise<void>;
@@ -23,6 +25,7 @@ export const wrapInSearchInterface = ({
   decorator: (story) => html`
     <atomic-search-interface
       ${spreadProps(includeCodeRoot ? {id: 'code-root'} : {})}
+      ?disable-state-reflection-in-url=${disableStateReflectionInUrl}
     >
       ${story()}
     </atomic-search-interface>

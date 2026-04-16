@@ -2,6 +2,7 @@ import type {
   Decorator,
   Meta,
   StoryObj as Story,
+  StoryContext,
 } from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
@@ -64,30 +65,20 @@ const configWithLegacyAnalytics = {
 // Use base config for decorator (shared by all stories)
 const {decorator, play} = wrapInSearchInterface({
   config: baseConfig,
+  disableStateReflectionInUrl: true,
 });
 
 // Legacy config play function for specific stories
 const {play: playWithLegacyAnalytics} = wrapInSearchInterface({
   config: configWithLegacyAnalytics,
+  disableStateReflectionInUrl: true,
 });
 
 const generatedAnswerQuery = 'how to resolve netflix connection with tivo';
-
-async function submitGeneratedAnswerQuery(storyContext: {
-  canvas: {
-    findAllByShadowPlaceholderText(text: string): Promise<HTMLElement[]>;
-  };
-}) {
+async function submitGeneratedAnswerQuery(storyContext: StoryContext) {
   const searchBox =
-    await storyContext.canvas.findAllByShadowPlaceholderText('Search');
-  const input = searchBox[0] as HTMLTextAreaElement;
-  input.scrollIntoView({block: 'center'});
-  await userEvent.click(input);
-  await userEvent.type(input, generatedAnswerQuery, {
-    initialSelectionStart: 0,
-    initialSelectionEnd: input.value.length,
-  });
-  await userEvent.keyboard('{Enter}');
+    await storyContext.canvas.findByShadowPlaceholderText('Search');
+  await userEvent.type(searchBox, `${generatedAnswerQuery}{enter}`);
 }
 
 const meta: Meta = {
