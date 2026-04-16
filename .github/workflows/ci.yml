@@ -666,6 +666,7 @@ jobs:
       - 'playwright-atomic-search-commerce-react-test'
       - 'playwright-atomic-search-commerce-angular-test'
       - 'cypress-headless-ssr-search-nextjs-test'
+      - 'changeset-merge-guard'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -773,3 +774,17 @@ jobs:
 
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo chromatic --filter=@coveo/atomic -- --exit-zero-on-changes --auto-accept-changes --branchName=main
+
+  changeset-merge-guard:
+    if: github.event_name == 'merge_group'
+    name: 'Changeset merge guard'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          fetch-depth: 0
+
+      - uses: ./.github/actions/changeset-merge-guard
+        with:
+          base-sha: ${{ github.event.merge_group.base_sha }}
+          head-sha: ${{ github.sha }}
