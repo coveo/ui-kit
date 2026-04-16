@@ -9,6 +9,18 @@ import {create} from 'storybook/theming';
 import customElements from '../custom-elements.json';
 import {COVEO_PRIMARY, FONT_BASE, FONT_CODE} from './theme';
 
+// @ts-ignore
+window.litHtmlPolyfillSupportDevMode = window.litHtmlPolyfillSupport = (
+  Template
+) => {
+  // @ts-ignore
+  Template.createElement = (html) => {
+    const template = document.createElement('template');
+    template.setHTMLUnsafe(html);
+    return template;
+  };
+};
+
 // For CDN builds, we want to use the "true" lib hosted on our CDN instead of bundling it through
 // This allow us to have a more realistic test environment.
 if (import.meta.env.VITE_IS_CDN === 'true') {

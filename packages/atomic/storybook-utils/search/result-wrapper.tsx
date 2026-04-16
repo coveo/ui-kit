@@ -3,7 +3,6 @@ import '@/src/components/search/atomic-result-template/atomic-result-template.js
 import {SearchEngineConfiguration} from '@coveo/headless';
 import {Decorator} from '@storybook/web-components-vite';
 import {html, render} from 'lit';
-import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import type * as _ from '../../src/components.js';
 
 interface Request extends RequestInit {
@@ -43,9 +42,7 @@ export const wrapInResult = (
           style="border: 2px dashed black; padding:20px; position: relative;"
         >
           <atomic-result-template results>
-            ${unsafeHTML(
-              `<template>${tempResultTemplate.innerHTML}</template>`
-            )}
+            <template>${html(tempResultTemplate.innerHTML)}</template>
           </atomic-result-template>
         </atomic-result-list>
         <div style="position: absolute; top: -20px; right: 0;">Template</div>
@@ -58,7 +55,7 @@ export const wrapInResult = (
           margin: auto;
         }
       </style>
-      <div style="hidden">${unsafeHTML(tempResultTemplate.innerHTML)}</div>
+      <div style="hidden">${html(tempResultTemplate.innerHTML)}</div>
     `;
   },
   engineConfig: {
