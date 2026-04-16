@@ -6,19 +6,6 @@ export default {
     'packages/create-atomic-component-project/template',
   ],
   ignoreDependencies: ['semver'],
-  // All issue types disabled for atomic for now. We'll enable them one by one.
-  ignoreIssues: {
-    'packages/atomic/**': [
-      'duplicates',
-      'unlisted',
-      'binaries',
-      'enumMembers',
-      'namespaceMembers',
-      'nsExports',
-      'nsTypes',
-      'catalog',
-    ],
-  },
   ignore: [
     'packages/quantic/**',
     'samples/headless/rga-react/src/components/Quickstart.tsx',
