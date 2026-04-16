@@ -1,0 +1,16 @@
+{
+  "name": "coveo-atomic-pkg-new-template",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite"
+  },
+  "dependencies": {
+    "@coveo/atomic": "3.55.3",
+    "@coveo/headless": "3.49.1"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0"
+  }
+}

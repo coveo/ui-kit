@@ -598,6 +598,7 @@ jobs:
       - name: Publish to pkg.pr.new
         run: |
           pnpm dlx pkg-pr-new publish --pnpm \
+            --template './samples/pkg-new-template' \
             './packages/atomic' \
             './packages/atomic-hosted-page' \
             './packages/atomic-legacy' \
