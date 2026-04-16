@@ -1,3 +1,15 @@
+## 3.49.3
+
+### Patch Changes
+
+- [#7365](https://github.com/coveo/ui-kit/pull/7365) [`f1924b8`](https://github.com/coveo/ui-kit/commit/f1924b800f40b0ed2f857ed18323ae85585854d3) Thanks [@SimonMilord](https://github.com/SimonMilord)! - fixed issue where the turn limit on a conversation would not show the error message properly in atomic component
+
+## 3.49.2
+
+### Patch Changes
+
+- [#7390](https://github.com/coveo/ui-kit/pull/7390) [`7b7de89`](https://github.com/coveo/ui-kit/commit/7b7de897f4c06e35e9c87189c2bc56cc078e6291) Thanks [@SimonMilord](https://github.com/SimonMilord)! - fixed issue where using the agent api was breaking the citation anchoring
+
 ## 3.49.1
 
 ### Patch Changes

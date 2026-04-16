@@ -45,6 +45,7 @@
     "playwright": "catalog:",
     "publint": "0.3.18",
     "turbo": "2.9.4",
+    "semver": "7.7.4",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },

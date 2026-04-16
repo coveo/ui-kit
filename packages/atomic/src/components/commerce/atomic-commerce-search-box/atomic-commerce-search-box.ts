@@ -473,7 +473,9 @@ export class AtomicCommerceSearchBox
 
     switch (e.key) {
       case 'Enter':
-        this.onSubmit();
+        if (!e.shiftKey) {
+          this.onSubmit();
+        }
         break;
       case 'Escape':
         this.suggestionManager.clearSuggestions();

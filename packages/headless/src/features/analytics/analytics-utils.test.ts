@@ -67,6 +67,24 @@ describe('analytics-utils', () => {
       ).toBe('unknown');
     });
 
+    it('should extract documentCategory information from objecttype', () => {
+      const result = buildMockResult();
+      result.raw.objecttype = 'Message';
+
+      expect(
+        partialDocumentInformation(result, createMockState()).documentCategory
+      ).toBe('Message');
+    });
+
+    it('should not include documentCategory when objecttype is missing', () => {
+      const result = buildMockResult();
+      delete result.raw.objecttype;
+
+      expect(
+        partialDocumentInformation(result, createMockState())
+      ).not.toHaveProperty('documentCategory');
+    });
+
     it('when the result is not found in state, the documentPosition is 1', () => {
       const result = buildMockResult({uniqueId: '1'});
       const state = createMockState();

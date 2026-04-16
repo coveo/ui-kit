@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "3.55.3",
+  "version": "3.56.2",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "license": "Apache-2.0",
@@ -100,6 +100,7 @@
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "0.11.0",
+    "@ag-ui/client": "0.0.45",
     "@playwright/test": "catalog:",
     "@rollup/plugin-replace": "catalog:",
     "@rslib/core": "0.20.3",
