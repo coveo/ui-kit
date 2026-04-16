@@ -2,12 +2,15 @@ import {NumberValue, Schema} from '@coveo/bueno';
 import {
   buildGeneratedAnswer,
   buildInteractiveCitation,
+  buildInteractiveGeneratedAnswerInlineLink,
   buildSearchStatus,
   buildTabManager,
   type GeneratedAnswer,
   type GeneratedAnswerCitation,
   type GeneratedAnswerState,
   type GeneratedAnswerWithFollowUps,
+  type InlineLink,
+  type InteractiveGeneratedAnswerInlineLink,
   type SearchStatus,
   type SearchStatusState,
   type TabManager,
@@ -73,6 +76,7 @@ import atomicGeneratedAnswerStyles from './atomic-generated-answer.tw.css.js';
  * @part answer-heading-5 - The generated answer level 5 heading elements.
  * @part answer-heading-6 - The generated answer level 6 heading elements.
  * @part answer-list-item - The generated answer list item elements for both ordered and unordered lists.
+ * @part answer-link - The generated answer inline link elements.
  * @part answer-ordered-list - The generated answer ordered list elements.
  * @part answer-paragraph - The generated answer paragraph elements.
  * @part answer-quote-block - The generated answer quote block elements.
@@ -118,6 +122,10 @@ export class AtomicGeneratedAnswer
   private resizeObserver?: ResizeObserver;
   private fullAnswerHeight?: number;
   private controller!: GeneratedAnswerController;
+  private interactiveInlineLinks = new Map<
+    string,
+    InteractiveGeneratedAnswerInlineLink
+  >();
 
   /**
    * Whether to render a toggle button that lets the user hide or show the answer.
@@ -304,6 +312,7 @@ export class AtomicGeneratedAnswer
   disconnectedCallback() {
     super.disconnectedCallback();
     this.resizeObserver?.disconnect();
+    this.interactiveInlineLinks.clear();
   }
 
   protected willUpdate(changedProperties: PropertyValueMap<this>) {
@@ -668,6 +677,16 @@ export class AtomicGeneratedAnswer
           this.generatedAnswerWithFollowUps?.dislike(answerId)}
         .onCopyToClipboard=${(answerId: string) =>
           this.generatedAnswerWithFollowUps?.logCopyToClipboard(answerId)}
+        .onSelectInlineLink=${(answerId: string, link: InlineLink) =>
+          this.selectInlineLink(answerId, link)}
+        .onBeginDelayedSelectInlineLink=${(
+          answerId: string,
+          link: InlineLink
+        ) => this.beginDelayedSelectInlineLink(answerId, link)}
+        .onCancelPendingSelectInlineLink=${(
+          answerId: string,
+          link: InlineLink
+        ) => this.cancelPendingSelectInlineLink(answerId, link)}
       ></atomic-generated-answer-thread>`;
     }
 
@@ -682,8 +701,52 @@ export class AtomicGeneratedAnswer
           html`${this.renderCitationsList(this.generatedAnswerState.citations)}`,
         onRetry: () => this.generatedAnswer?.retry(),
         onClickShowButton: () => this.clickOnShowButton(),
+        onSelectInlineLink: (link: InlineLink) =>
+          this.generatedAnswerState.answerId &&
+          this.selectInlineLink(this.generatedAnswerState.answerId, link),
+        onBeginDelayedSelectInlineLink: (link: InlineLink) =>
+          this.generatedAnswerState.answerId &&
+          this.beginDelayedSelectInlineLink(
+            this.generatedAnswerState.answerId,
+            link
+          ),
+        onCancelPendingSelectInlineLink: (link: InlineLink) =>
+          this.generatedAnswerState.answerId &&
+          this.cancelPendingSelectInlineLink(
+            this.generatedAnswerState.answerId,
+            link
+          ),
       },
     });
+  }
+
+  private getInteractiveInlineLink(answerId: string, link: InlineLink) {
+    const key = `${answerId}:${link.linkText}:${link.linkURL}`;
+    let interactiveInlineLink = this.interactiveInlineLinks.get(key);
+
+    if (!interactiveInlineLink) {
+      interactiveInlineLink = buildInteractiveGeneratedAnswerInlineLink(
+        this.bindings.engine,
+        {
+          options: {answerId, link},
+        }
+      );
+      this.interactiveInlineLinks.set(key, interactiveInlineLink);
+    }
+
+    return interactiveInlineLink;
+  }
+
+  private selectInlineLink(answerId: string, link: InlineLink) {
+    this.getInteractiveInlineLink(answerId, link).select();
+  }
+
+  private beginDelayedSelectInlineLink(answerId: string, link: InlineLink) {
+    this.getInteractiveInlineLink(answerId, link).beginDelayedSelect();
+  }
+
+  private cancelPendingSelectInlineLink(answerId: string, link: InlineLink) {
+    this.getInteractiveInlineLink(answerId, link).cancelPendingSelect();
   }
 
   private get hasAgentId() {

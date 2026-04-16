@@ -1,4 +1,4 @@
-import type {GeneratedAnswerCitation} from '@coveo/headless';
+import type {GeneratedAnswerCitation, InlineLink} from '@coveo/headless';
 import {html, LitElement, type PropertyValues, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {repeat} from 'lit/directives/repeat.js';
@@ -54,6 +54,31 @@ export class AtomicGeneratedAnswerThread extends LitElement {
    */
   @property({attribute: false})
   public onCopyToClipboard: (answerId: string) => void = () => {};
+
+  /**
+   * Callback invoked when the user selects an inline link in a specific answer.
+   */
+  @property({attribute: false})
+  public onSelectInlineLink: (answerId: string, link: InlineLink) => void =
+    () => {};
+
+  /**
+   * Callback invoked when the user starts a delayed selection for an inline link in a specific answer.
+   */
+  @property({attribute: false})
+  public onBeginDelayedSelectInlineLink: (
+    answerId: string,
+    link: InlineLink
+  ) => void = () => {};
+
+  /**
+   * Callback invoked when the user cancels a pending delayed selection for an inline link in a specific answer.
+   */
+  @property({attribute: false})
+  public onCancelPendingSelectInlineLink: (
+    answerId: string,
+    link: InlineLink
+  ) => void = () => {};
 
   @state()
   private allGeneratedAnswersDisplayed: boolean = false;
@@ -115,6 +140,11 @@ export class AtomicGeneratedAnswerThread extends LitElement {
                 .onClickLike=${this.onClickLike}
                 .onClickDislike=${this.onClickDislike}
                 .onCopyToClipboard=${this.onCopyToClipboard}
+                .onSelectInlineLink=${this.onSelectInlineLink}
+                .onBeginDelayedSelectInlineLink=${this
+                  .onBeginDelayedSelectInlineLink}
+                .onCancelPendingSelectInlineLink=${this
+                  .onCancelPendingSelectInlineLink}
               ></atomic-generated-answer-content>
             </atomic-generated-answer-thread-item>
           `;

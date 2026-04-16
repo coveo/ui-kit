@@ -1,6 +1,7 @@
 import type {
   GeneratedAnswerBase,
   GeneratedAnswerCitation,
+  InlineLink,
 } from '@coveo/headless';
 import type {i18n} from 'i18next';
 import {html, LitElement, type TemplateResult} from 'lit';
@@ -71,6 +72,31 @@ export class AtomicGeneratedAnswerContent extends LitElement {
   @property({attribute: false})
   public onCopyToClipboard: (answerId: string) => void = () => {};
 
+  /**
+   * Callback invoked when the user selects an inline link in the answer content.
+   */
+  @property({attribute: false})
+  public onSelectInlineLink: (answerId: string, link: InlineLink) => void =
+    () => {};
+
+  /**
+   * Callback invoked when the user starts a delayed inline link selection.
+   */
+  @property({attribute: false})
+  public onBeginDelayedSelectInlineLink: (
+    answerId: string,
+    link: InlineLink
+  ) => void = () => {};
+
+  /**
+   * Callback invoked when the user cancels a pending delayed inline link selection.
+   */
+  @property({attribute: false})
+  public onCancelPendingSelectInlineLink: (
+    answerId: string,
+    link: InlineLink
+  ) => void = () => {};
+
   @state()
   private copyState: CopyState = 'idle';
 
@@ -122,6 +148,12 @@ export class AtomicGeneratedAnswerContent extends LitElement {
               answer,
               answerContentFormat,
               isStreaming: Boolean(isStreaming),
+              onSelectInlineLink: (link) =>
+                this.onSelectInlineLink(answerId, link),
+              onBeginDelayedSelectInlineLink: (link) =>
+                this.onBeginDelayedSelectInlineLink(answerId, link),
+              onCancelPendingSelectInlineLink: (link) =>
+                this.onCancelPendingSelectInlineLink(answerId, link),
             },
           })(html`
             ${renderSourceCitations({

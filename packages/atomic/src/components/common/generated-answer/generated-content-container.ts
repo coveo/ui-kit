@@ -1,4 +1,5 @@
 import {html} from 'lit';
+import type {InlineLink} from '@coveo/headless';
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {
   type GeneratedMarkdownContentProps,
@@ -13,6 +14,9 @@ export interface GeneratedContentContainerProps {
   answer?: string;
   answerContentFormat?: string;
   isStreaming: boolean;
+  onSelectInlineLink?: (link: InlineLink) => void;
+  onBeginDelayedSelectInlineLink?: (link: InlineLink) => void;
+  onCancelPendingSelectInlineLink?: (link: InlineLink) => void;
 }
 
 export const renderGeneratedContentContainer: FunctionalComponentWithChildren<
@@ -25,6 +29,11 @@ export const renderGeneratedContentContainer: FunctionalComponentWithChildren<
             props: {
               answer: props.answer,
               isStreaming: props.isStreaming,
+              onSelectInlineLink: props.onSelectInlineLink,
+              onBeginDelayedSelectInlineLink:
+                props.onBeginDelayedSelectInlineLink,
+              onCancelPendingSelectInlineLink:
+                props.onCancelPendingSelectInlineLink,
             } satisfies GeneratedMarkdownContentProps,
           })
         : renderGeneratedTextContent({

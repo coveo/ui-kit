@@ -1,3 +1,4 @@
+import type {InlineLink} from '@coveo/headless';
 import {html, type TemplateResult} from 'lit';
 import {beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
@@ -54,6 +55,15 @@ describe('atomic-generated-answer-content', () => {
       onClickLike?: (answerId?: string) => void;
       onClickDislike?: (answerId?: string) => void;
       onCopyToClipboard?: (answerId?: string) => void;
+      onSelectInlineLink?: (answerId: string, link: InlineLink) => void;
+      onBeginDelayedSelectInlineLink?: (
+        answerId: string,
+        link: InlineLink
+      ) => void;
+      onCancelPendingSelectInlineLink?: (
+        answerId: string,
+        link: InlineLink
+      ) => void;
       renderCitations?: (
         citations: GeneratedAnswerCitation[],
         answerId?: string
@@ -68,6 +78,11 @@ describe('atomic-generated-answer-content', () => {
     const onClickLike = options.onClickLike ?? vi.fn();
     const onClickDislike = options.onClickDislike ?? vi.fn();
     const onCopyToClipboard = options.onCopyToClipboard ?? vi.fn();
+    const onSelectInlineLink = options.onSelectInlineLink ?? vi.fn();
+    const onBeginDelayedSelectInlineLink =
+      options.onBeginDelayedSelectInlineLink ?? vi.fn();
+    const onCancelPendingSelectInlineLink =
+      options.onCancelPendingSelectInlineLink ?? vi.fn();
     const renderCitations = options.renderCitations ?? vi.fn(() => html``);
 
     const {element} =
@@ -78,6 +93,9 @@ describe('atomic-generated-answer-content', () => {
           .onClickLike=${onClickLike}
           .onClickDislike=${onClickDislike}
           .onCopyToClipboard=${onCopyToClipboard}
+          .onSelectInlineLink=${onSelectInlineLink}
+          .onBeginDelayedSelectInlineLink=${onBeginDelayedSelectInlineLink}
+          .onCancelPendingSelectInlineLink=${onCancelPendingSelectInlineLink}
           .renderCitations=${renderCitations}
         ></atomic-generated-answer-content>`,
         selector: 'atomic-generated-answer-content',
@@ -89,6 +107,9 @@ describe('atomic-generated-answer-content', () => {
       onClickLike,
       onClickDislike,
       onCopyToClipboard,
+      onSelectInlineLink,
+      onBeginDelayedSelectInlineLink,
+      onCancelPendingSelectInlineLink,
       renderCitations,
       getFeedbackProps: () =>
         vi.mocked(renderFeedbackAndCopyButtons).mock.calls.at(-1)?.[0].props,
@@ -203,6 +224,38 @@ describe('atomic-generated-answer-content', () => {
       }),
     });
     expect(renderFeedbackAndCopyButtons).not.toHaveBeenCalled();
+  });
+
+  it('should pass inline link callbacks to renderGeneratedContentContainer', async () => {
+    const onSelectInlineLink = vi.fn();
+    const onBeginDelayedSelectInlineLink = vi.fn();
+    const onCancelPendingSelectInlineLink = vi.fn();
+
+    const {getGeneratedContentProps} = await renderComponent({
+      onSelectInlineLink,
+      onBeginDelayedSelectInlineLink,
+      onCancelPendingSelectInlineLink,
+    });
+
+    const generatedContentProps = getGeneratedContentProps();
+    const link = {linkText: 'Example', linkURL: 'https://example.com/'};
+
+    generatedContentProps?.onSelectInlineLink?.(link);
+    generatedContentProps?.onBeginDelayedSelectInlineLink?.(link);
+    generatedContentProps?.onCancelPendingSelectInlineLink?.(link);
+
+    expect(onSelectInlineLink).toHaveBeenCalledWith(
+      defaultGeneratedAnswer.answerId,
+      link
+    );
+    expect(onBeginDelayedSelectInlineLink).toHaveBeenCalledWith(
+      defaultGeneratedAnswer.answerId,
+      link
+    );
+    expect(onCancelPendingSelectInlineLink).toHaveBeenCalledWith(
+      defaultGeneratedAnswer.answerId,
+      link
+    );
   });
 
   it('should render the error template when the generated answer has an error', async () => {
