@@ -21,6 +21,7 @@ export class CacChatInterface extends LitElement {
     }
 
     .chat-container {
+      box-sizing: border-box;
       width: min(940px, 100%);
       margin: 0 auto;
       border: 1px solid var(--border);
