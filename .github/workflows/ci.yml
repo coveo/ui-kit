@@ -784,37 +784,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Check for stale version PR in merge group
-        run: |
-          BASE_SHA="${{ github.event.merge_group.base_sha }}"
-          HEAD_SHA="${{ github.sha }}"
-
-          echo "Checking commits in range ${BASE_SHA}..${HEAD_SHA}"
-
-          COMMITS=$(git log --format='%s' "${BASE_SHA}..${HEAD_SHA}")
-          if [ $? -ne 0 ]; then
-            echo "::error::Failed to resolve commit range. Ensure fetch-depth is sufficient."
-            exit 1
-          fi
-
-          VERSION_PR_FOUND=$(echo "$COMMITS" | grep -cE '^ci\(changesets\): version packages' || true)
-
-          if [ "$VERSION_PR_FOUND" -eq 0 ]; then
-            echo "No version PR in this merge group. Skipping check."
-            exit 0
-          fi
-
-          echo "Version PR detected in merge group. Checking for unprocessed changesets..."
-
-          CHANGESET_FILES=$(find .changeset -name '*.md' ! -name 'README.md' 2>/dev/null)
-
-          if [ -n "$CHANGESET_FILES" ]; then
-            echo "::error::Stale version PR detected! The following changeset files are unprocessed:"
-            echo "$CHANGESET_FILES"
-            echo ""
-            echo "This means another PR in the merge queue added changesets that the version PR doesn't include."
-            echo "The version PR needs to be updated before merging."
-            exit 1
-          fi
-
-          echo "All changesets are accounted for. Good to merge."
+      - uses: ./.github/actions/changeset-merge-guard
+        with:
+          base-sha: ${{ github.event.merge_group.base_sha }}
+          head-sha: ${{ github.sha }}
