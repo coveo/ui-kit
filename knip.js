@@ -11,6 +11,7 @@ export default {
     'samples/headless/rga-react/src/components/Quickstart.tsx',
     'samples/headless/rga-react/src/components/Citation.tsx',
     'samples/headless/rga-react/src/components/CitationsList.tsx',
+    'samples/pkg-new-template/**',
   ],
   workspaces: {
     '.': {
