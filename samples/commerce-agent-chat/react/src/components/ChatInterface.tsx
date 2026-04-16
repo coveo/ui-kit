@@ -15,6 +15,7 @@ interface ChatInterfaceProps {
   shouldFocusInput: boolean;
   onFocusHandled: () => void;
   isClassifying?: boolean;
+  onActionSelected?: (prompt: string) => void;
 }
 
 interface CacChatInterfaceElement extends HTMLElement {
@@ -31,6 +32,7 @@ export function ChatInterface({
   shouldFocusInput,
   onFocusHandled,
   isClassifying = false,
+  onActionSelected,
 }: ChatInterfaceProps): React.JSX.Element {
   const elementRef = useRef<CacChatInterfaceElement | null>(null);
 
@@ -64,7 +66,7 @@ export function ChatInterface({
         isLoading={state.isLoading}
         progressSteps={state.progressSteps}
         progressTrace={state.progressTrace}
-        onActionSelected={onSend}
+        onActionSelected={onActionSelected ?? onSend}
       />
       <MessageInput
         slot="input"

@@ -13,6 +13,7 @@ interface SearchInterfaceProps {
   onFocusHandled: () => void;
   onLoadMore: () => void;
   isClassifying?: boolean;
+  onBack?: () => void;
 }
 
 interface SearchResultsElement extends HTMLElement {
@@ -28,6 +29,7 @@ export function SearchInterface({
   onFocusHandled,
   onLoadMore,
   isClassifying = false,
+  onBack,
 }: SearchInterfaceProps): React.JSX.Element {
   const searchResultsRef = useRef<SearchResultsElement | null>(null);
 
@@ -55,6 +57,16 @@ export function SearchInterface({
 
   return (
     <section className="search-mode-shell" aria-label="Search mode">
+      {onBack && (
+        <button
+          type="button"
+          className="back-to-chat-btn"
+          onClick={onBack}
+          aria-label="Back to chat"
+        >
+          ← Back to chat
+        </button>
+      )}
       <div className="search-mode-input-wrap">
         <MessageInput
           onSend={onSend}

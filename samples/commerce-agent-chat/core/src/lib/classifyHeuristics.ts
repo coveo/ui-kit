@@ -40,6 +40,7 @@ export function classifyQueryLocally(query: string): QueryRouteDecision {
     'i want',
     "i'm looking",
     'looking for',
+    'please',
   ];
   const lower = trimmed.toLowerCase();
   if (agentPrefixes.some((prefix) => lower.startsWith(prefix))) {

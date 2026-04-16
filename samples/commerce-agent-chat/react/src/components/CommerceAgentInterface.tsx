@@ -1,11 +1,13 @@
-import {useState} from 'react';
+import {useCallback, useState} from 'react';
 import type {CommerceConfig} from '@core/config/env.js';
 import {classifyQuery, ClassificationError} from '@core/lib/heuristicClient.js';
-import type {QueryRouteDecision} from '@core/types/heuristics.js';
+import {generateId} from '@core/lib/chatIds.js';
 import {useChat} from '../hooks/useChat.js';
 import {useSearch} from '../hooks/useSearch.js';
 import {ChatInterface} from './ChatInterface.js';
 import {SearchInterface} from './SearchInterface.js';
+
+const SEE_RESULTS_PREFIX = '__see_results__:';
 
 interface CommerceAgentInterfaceProps {
   config: CommerceConfig;
@@ -20,15 +22,46 @@ export function CommerceAgentInterface({
   const [draftValue, setDraftValue] = useState('');
   const [shouldFocusInput, setShouldFocusInput] = useState(false);
   const [isClassifying, setIsClassifying] = useState(false);
-  const [lastRouteDecision, setLastRouteDecision] =
-    useState<QueryRouteDecision>('agent');
+  const [showSearchView, setShowSearchView] = useState(false);
 
   const handleSend = async (content: string) => {
+    setShowSearchView(false);
     setIsClassifying(true);
     try {
       const decision = await classifyQuery(content);
-      setLastRouteDecision(decision);
       if (decision === 'search') {
+        const store = orchestrator.getStore();
+        store.setState((s) => ({
+          ...s,
+          messages: [
+            ...s.messages,
+            {
+              id: generateId('msg-user'),
+              role: 'user' as const,
+              content,
+            },
+            {
+              id: generateId('msg-assistant'),
+              role: 'assistant' as const,
+              content: `See results for **"${content}"**`,
+              activities: [
+                {
+                  id: generateId('activity'),
+                  activityType: 'next-actions',
+                  content: {
+                    actions: [
+                      {
+                        text: 'See results',
+                        type: 'search',
+                        prompt: `${SEE_RESULTS_PREFIX}${content}`,
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          ],
+        }));
         setDraftValue('');
         void search(content);
       } else {
@@ -46,11 +79,30 @@ export function CommerceAgentInterface({
     }
   };
 
+  const handleActionSelected = useCallback(
+    (prompt: string) => {
+      if (prompt.startsWith(SEE_RESULTS_PREFIX)) {
+        const query = prompt.slice(SEE_RESULTS_PREFIX.length);
+        if (searchState.query !== query) {
+          void search(query);
+        }
+        setShowSearchView(true);
+        return;
+      }
+      void handleSend(prompt);
+    },
+    [searchState.query, search]
+  );
+
   const handleLoadMore = () => {
     void loadMore();
   };
 
-  if (lastRouteDecision === 'search') {
+  const handleBackToChat = () => {
+    setShowSearchView(false);
+  };
+
+  if (showSearchView) {
     return (
       <SearchInterface
         searchState={searchState}
@@ -61,6 +113,7 @@ export function CommerceAgentInterface({
         onFocusHandled={() => setShouldFocusInput(false)}
         onLoadMore={handleLoadMore}
         isClassifying={isClassifying}
+        onBack={handleBackToChat}
       />
     );
   }
@@ -76,6 +129,7 @@ export function CommerceAgentInterface({
       shouldFocusInput={shouldFocusInput}
       onFocusHandled={() => setShouldFocusInput(false)}
       isClassifying={isClassifying}
+      onActionSelected={handleActionSelected}
     />
   );
 }
