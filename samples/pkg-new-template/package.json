@@ -11,6 +11,6 @@
     "@coveo/headless": "workspace:*"
   },
   "devDependencies": {
-    "vite": "^6.0.0"
+    "vite": "catalog:"
   }
 }
