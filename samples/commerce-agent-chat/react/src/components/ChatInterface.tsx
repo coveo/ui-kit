@@ -15,7 +15,6 @@ interface ChatInterfaceProps {
   shouldFocusInput: boolean;
   onFocusHandled: () => void;
   isClassifying?: boolean;
-  onActionSelected?: (prompt: string) => void;
   onSeeResults?: (query: string) => void;
   onBackToSearch?: () => void;
 }
@@ -34,7 +33,6 @@ export function ChatInterface({
   shouldFocusInput,
   onFocusHandled,
   isClassifying = false,
-  onActionSelected,
   onSeeResults,
   onBackToSearch,
 }: ChatInterfaceProps): React.JSX.Element {
@@ -95,7 +93,7 @@ export function ChatInterface({
         isLoading={state.isLoading}
         progressSteps={state.progressSteps}
         progressTrace={state.progressTrace}
-        onActionSelected={onActionSelected ?? onSend}
+        onActionSelected={onSend}
       />
       <MessageInput
         slot="input"

@@ -41,7 +41,7 @@ export function CommerceAgentInterface({
             {
               id: generateId('msg-assistant'),
               role: 'assistant' as const,
-              content: `[See results for "**${content}**"](#see-results:${encodeURIComponent(content)})`,
+              content: `[See search results for "**${content}**"](#see-results:${encodeURIComponent(content)})`,
             },
           ],
         }));
