@@ -554,7 +554,7 @@ export class CacMessageList extends LitElement {
       ? allActivities[allActivities.length - 1]?.id
       : undefined;
     const progressSegments = this.getProgressSegmentsForMessage(
-      message.id,
+      message,
       isLatestAssistantMessage
     );
     const {leadingProgressSegments, trailingProgressSegments} =
@@ -715,7 +715,7 @@ export class CacMessageList extends LitElement {
   }
 
   private getProgressSegmentsForMessage(
-    messageId: string,
+    message: Message,
     isLatestAssistantMessage: boolean
   ) {
     if (isLatestAssistantMessage) {
@@ -736,7 +736,22 @@ export class CacMessageList extends LitElement {
       }
     }
 
-    const historySegments = this.progressHistoryByMessageId[messageId] ?? [];
+    if (message.progress) {
+      const hasStoredProgress =
+        message.progress.progressSteps.length > 0 ||
+        message.progress.progressTrace.length > 0;
+
+      if (hasStoredProgress) {
+        return [
+          {
+            ...message.progress,
+            isStreaming: false,
+          },
+        ];
+      }
+    }
+
+    const historySegments = this.progressHistoryByMessageId[message.id] ?? [];
     const displayHistorySegments =
       historySegments.length > 1
         ? [this.mergeProgressSegments(historySegments)]

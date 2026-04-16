@@ -11,6 +11,7 @@ import {
   getActivityOwnership,
   handoffActivityToClient,
   markBackendOwnedActivityFromParsedEvent,
+  persistAssistantProgress,
   replaceChatState,
   selectChatState,
   setActivityOwner,
@@ -168,5 +169,44 @@ describe('chatStore', () => {
       .find((candidate) => candidate.id === 'act-4');
 
     expect(activity?.content).toEqual({title: 'Client title'});
+  });
+
+  it('persists completed progress on the assistant message', () => {
+    const store = createChatSessionStore('thread-1');
+
+    const turn = createPendingChatTurn('Hello');
+    beginChatTurn(store, turn);
+
+    persistAssistantProgress(
+      store,
+      turn.assistantMessage.id,
+      ['Searching', 'Done'],
+      [
+        {
+          id: 'trace-1',
+          kind: 'reasoning',
+          label: 'Searching',
+          text: 'Looking for products',
+          status: 'completed',
+        },
+      ]
+    );
+
+    const assistantMessage = store
+      .getState()
+      .messages.find((message) => message.id === turn.assistantMessage.id);
+
+    expect(assistantMessage?.progress).toEqual({
+      progressSteps: ['Searching', 'Done'],
+      progressTrace: [
+        {
+          id: 'trace-1',
+          kind: 'reasoning',
+          label: 'Searching',
+          text: 'Looking for products',
+          status: 'completed',
+        },
+      ],
+    });
   });
 });

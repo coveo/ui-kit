@@ -24,6 +24,7 @@ import {
   dismissChatError,
   getActivityOwnership,
   handoffActivityToClient,
+  persistAssistantProgress,
   resetSearch,
   selectChatState,
   setChatError,
@@ -305,6 +306,13 @@ export class ChatSessionOrchestrator {
         updateProgressTrace(this.store, (trace) =>
           this.markAllProgressTraceCompleted(trace)
         );
+        const nextState = this.getState();
+        persistAssistantProgress(
+          this.store,
+          assistantMessageId,
+          nextState.progressSteps,
+          nextState.progressTrace
+        );
         this.emitState();
       },
       complete: () => {
@@ -319,6 +327,13 @@ export class ChatSessionOrchestrator {
         }
         updateProgressTrace(this.store, (trace) =>
           this.markAllProgressTraceCompleted(trace)
+        );
+        const nextState = this.getState();
+        persistAssistantProgress(
+          this.store,
+          assistantMessageId,
+          nextState.progressSteps,
+          nextState.progressTrace
         );
         this.emitState();
       },

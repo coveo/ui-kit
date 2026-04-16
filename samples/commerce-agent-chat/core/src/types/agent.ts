@@ -12,11 +12,17 @@ export interface ActivityMessage {
   content: Record<string, unknown>;
 }
 
+export interface MessageProgress {
+  progressSteps: string[];
+  progressTrace: ProgressTraceEntry[];
+}
+
 export interface Message {
   id: string;
   role: 'user' | 'assistant';
   content: string;
   activities?: ActivityMessage[];
+  progress?: MessageProgress;
 }
 
 export interface ChatState {

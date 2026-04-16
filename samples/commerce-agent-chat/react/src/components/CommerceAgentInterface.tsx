@@ -31,6 +31,9 @@ export function CommerceAgentInterface({
         const store = orchestrator.getStore();
         store.setState((s) => ({
           ...s,
+          isLoading: false,
+          progressSteps: [],
+          progressTrace: [],
           messages: [
             ...s.messages,
             {

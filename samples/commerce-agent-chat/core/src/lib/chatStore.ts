@@ -2,7 +2,12 @@ import {createStore, type StateCreator, type StoreApi} from 'zustand/vanilla';
 import {devtools} from 'zustand/middleware';
 
 import type {CommerceConfig} from '../config/env.js';
-import type {ChatState, Message, ParsedEvent} from '../types/agent.js';
+import type {
+  ChatState,
+  Message,
+  ParsedEvent,
+  ProgressTraceEntry,
+} from '../types/agent.js';
 
 import {generateId} from './chatIds.js';
 import {applyJsonPatch} from './jsonPatch.js';
@@ -142,6 +147,32 @@ export function updateProgressTrace(
   store.setState((state) => ({
     ...state,
     progressTrace: updater(state.progressTrace),
+  }));
+}
+
+export function persistAssistantProgress(
+  store: ChatSessionStore,
+  assistantMessageId: string,
+  progressSteps: string[],
+  progressTrace: ProgressTraceEntry[]
+): void {
+  if (progressSteps.length === 0 && progressTrace.length === 0) {
+    return;
+  }
+
+  store.setState((state) => ({
+    ...state,
+    messages: state.messages.map((message) =>
+      message.id === assistantMessageId
+        ? {
+            ...message,
+            progress: {
+              progressSteps: [...progressSteps],
+              progressTrace: [...progressTrace],
+            },
+          }
+        : message
+    ),
   }));
 }
 
