@@ -9,7 +9,6 @@ export default {
   // All issue types disabled for atomic for now. We'll enable them one by one.
   ignoreIssues: {
     'packages/atomic/**': [
-      'files',
       'exports',
       'types',
       'duplicates',
