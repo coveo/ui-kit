@@ -11,7 +11,6 @@ export default {
     'packages/atomic/**': [
       'duplicates',
       'unlisted',
-      'unresolved',
       'binaries',
       'enumMembers',
       'namespaceMembers',
