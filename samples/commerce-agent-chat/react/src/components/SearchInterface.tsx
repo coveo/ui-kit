@@ -9,11 +9,10 @@ interface SearchInterfaceProps {
   onSend: (content: string) => void;
   value: string;
   onValueChange: (value: string) => void;
-  aiEnabled: boolean;
-  onToggleAi: (enabled: boolean) => void;
   shouldFocusInput: boolean;
   onFocusHandled: () => void;
   onLoadMore: () => void;
+  isClassifying?: boolean;
 }
 
 interface SearchResultsElement extends HTMLElement {
@@ -25,11 +24,10 @@ export function SearchInterface({
   onSend,
   value,
   onValueChange,
-  aiEnabled,
-  onToggleAi,
   shouldFocusInput,
   onFocusHandled,
   onLoadMore,
+  isClassifying = false,
 }: SearchInterfaceProps): React.JSX.Element {
   const searchResultsRef = useRef<SearchResultsElement | null>(null);
 
@@ -64,8 +62,7 @@ export function SearchInterface({
           onValueChange={onValueChange}
           disabled={searchState.loading}
           placeholder="Search..."
-          aiEnabled={aiEnabled}
-          onToggleAi={onToggleAi}
+          isClassifying={isClassifying}
           shouldFocusInput={shouldFocusInput}
           onFocusHandled={onFocusHandled}
         />

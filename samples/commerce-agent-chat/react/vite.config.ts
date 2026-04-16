@@ -8,7 +8,24 @@ export default defineConfig(({mode}) => {
 
   return {
     envDir,
-    plugins: [react()],
+    plugins: [
+      react(),
+      {
+        name: 'heuristic-classify',
+        configureServer(server) {
+          server.middlewares.use(
+            '/api/heuristics/classify',
+            (req, res, next) => {
+              import('./server/classifyMiddleware.js').then(
+                ({classifyQueryMiddleware}) =>
+                  classifyQueryMiddleware(req, res),
+                () => next()
+              );
+            }
+          );
+        },
+      },
+    ],
     resolve: {
       alias: {
         '@core': path.resolve(__dirname, '../core/src'),

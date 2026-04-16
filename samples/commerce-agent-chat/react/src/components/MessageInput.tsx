@@ -8,8 +8,7 @@ interface MessageInputProps {
   onValueChange: (value: string) => void;
   disabled: boolean;
   placeholder?: string;
-  aiEnabled: boolean;
-  onToggleAi: (enabled: boolean) => void;
+  isClassifying?: boolean;
   shouldFocusInput?: boolean;
   onFocusHandled?: () => void;
   slot?: string;
@@ -27,9 +26,8 @@ export function MessageInput({
   value,
   onValueChange,
   disabled,
-  placeholder = 'Ask agent...',
-  aiEnabled,
-  onToggleAi,
+  placeholder = 'Ask something...',
+  isClassifying = false,
   shouldFocusInput = false,
   onFocusHandled,
   slot,
@@ -38,11 +36,13 @@ export function MessageInput({
 
   useEffect(() => {
     if (elementRef.current) {
-      elementRef.current.disabled = disabled;
-      elementRef.current.placeholder = placeholder;
+      elementRef.current.disabled = disabled || isClassifying;
+      elementRef.current.placeholder = isClassifying
+        ? 'Classifying...'
+        : placeholder;
       elementRef.current.value = value;
     }
-  }, [disabled, placeholder, value]);
+  }, [disabled, isClassifying, placeholder, value]);
 
   useEffect(() => {
     if (!shouldFocusInput) {
@@ -82,21 +82,7 @@ export function MessageInput({
 
   return (
     <div className="input-with-switch" slot={slot}>
-      <cac-message-input ref={elementRef}>
-        <label
-          slot="after-send"
-          className="ai-switch"
-          aria-label="Toggle AI mode"
-        >
-          <span className="ai-switch-label">AI</span>
-          <input
-            type="checkbox"
-            role="switch"
-            checked={aiEnabled}
-            onChange={(event) => onToggleAi(event.currentTarget.checked)}
-          />
-        </label>
-      </cac-message-input>
+      <cac-message-input ref={elementRef} />
     </div>
   );
 }

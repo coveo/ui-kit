@@ -1,5 +1,7 @@
 import {useState} from 'react';
 import type {CommerceConfig} from '@core/config/env.js';
+import {classifyQuery, ClassificationError} from '@core/lib/heuristicClient.js';
+import type {QueryRouteDecision} from '@core/types/heuristics.js';
 import {useChat} from '../hooks/useChat.js';
 import {useSearch} from '../hooks/useSearch.js';
 import {ChatInterface} from './ChatInterface.js';
@@ -15,43 +17,50 @@ export function CommerceAgentInterface({
   const {state, sendMessage, clearMessages, dismissError, orchestrator} =
     useChat(config);
   const {searchState, search, loadMore} = useSearch(orchestrator);
-  const [aiEnabled, setAiEnabled] = useState(true);
   const [draftValue, setDraftValue] = useState('');
   const [shouldFocusInput, setShouldFocusInput] = useState(false);
+  const [isClassifying, setIsClassifying] = useState(false);
+  const [lastRouteDecision, setLastRouteDecision] =
+    useState<QueryRouteDecision>('agent');
 
-  const handleSend = (content: string) => {
-    if (aiEnabled) {
-      sendMessage(content);
-      setDraftValue('');
-    } else {
-      void search(content);
+  const handleSend = async (content: string) => {
+    setIsClassifying(true);
+    try {
+      const decision = await classifyQuery(content);
+      setLastRouteDecision(decision);
+      if (decision === 'search') {
+        setDraftValue('');
+        void search(content);
+      } else {
+        sendMessage(content);
+        setDraftValue('');
+      }
+    } catch (error) {
+      const message =
+        error instanceof ClassificationError
+          ? error.message
+          : 'An unexpected error occurred while classifying the query.';
+      orchestrator.getStore().setState((s) => ({...s, error: message}));
+    } finally {
+      setIsClassifying(false);
     }
-  };
-
-  const handleToggleAi = (enabled: boolean) => {
-    setAiEnabled(enabled);
-    if (enabled) {
-      setDraftValue('');
-    }
-    setShouldFocusInput(true);
   };
 
   const handleLoadMore = () => {
     void loadMore();
   };
 
-  if (!aiEnabled) {
+  if (lastRouteDecision === 'search') {
     return (
       <SearchInterface
         searchState={searchState}
         onSend={handleSend}
         value={draftValue}
         onValueChange={setDraftValue}
-        aiEnabled={aiEnabled}
-        onToggleAi={handleToggleAi}
         shouldFocusInput={shouldFocusInput}
         onFocusHandled={() => setShouldFocusInput(false)}
         onLoadMore={handleLoadMore}
+        isClassifying={isClassifying}
       />
     );
   }
@@ -64,10 +73,9 @@ export function CommerceAgentInterface({
       onDismissError={dismissError}
       value={draftValue}
       onValueChange={setDraftValue}
-      aiEnabled={aiEnabled}
-      onToggleAi={handleToggleAi}
       shouldFocusInput={shouldFocusInput}
       onFocusHandled={() => setShouldFocusInput(false)}
+      isClassifying={isClassifying}
     />
   );
 }

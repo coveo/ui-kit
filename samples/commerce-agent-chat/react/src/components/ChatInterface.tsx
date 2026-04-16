@@ -12,10 +12,9 @@ interface ChatInterfaceProps {
   onDismissError: () => void;
   value: string;
   onValueChange: (value: string) => void;
-  aiEnabled: boolean;
-  onToggleAi: (enabled: boolean) => void;
   shouldFocusInput: boolean;
   onFocusHandled: () => void;
+  isClassifying?: boolean;
 }
 
 interface CacChatInterfaceElement extends HTMLElement {
@@ -29,10 +28,9 @@ export function ChatInterface({
   onDismissError,
   value,
   onValueChange,
-  aiEnabled,
-  onToggleAi,
   shouldFocusInput,
   onFocusHandled,
+  isClassifying = false,
 }: ChatInterfaceProps): React.JSX.Element {
   const elementRef = useRef<CacChatInterfaceElement | null>(null);
 
@@ -74,9 +72,8 @@ export function ChatInterface({
         value={value}
         onValueChange={onValueChange}
         disabled={state.isLoading}
-        placeholder="Ask agent..."
-        aiEnabled={aiEnabled}
-        onToggleAi={onToggleAi}
+        placeholder="Ask something..."
+        isClassifying={isClassifying}
         shouldFocusInput={shouldFocusInput}
         onFocusHandled={onFocusHandled}
       />
