@@ -22,8 +22,12 @@ Headless requires Node.js version 20.9.0 or later when used in a Node.js environ
 Install `@coveo/headless` using npm (or any other package manager such as pnpm or yarn):
 
 ```bash
-npm install @coveo/headless
+npm install @coveo/headless@{{packageVersion}}
 ```
+
+> [!TIP]
+>
+> We recommend pinning your `@coveo/headless` dependency to a specific version to avoid unexpected changes.
 
 Once installed, you can import from the package in your project:
 
@@ -45,7 +49,7 @@ If you prefer not to use a package manager, you can load Headless directly from 
   import {
     buildSearchEngine,
     getSampleSearchEngineConfiguration,
-  } from 'https://static.cloud.coveo.com/headless/v3/headless.esm.js';
+  } from 'https://static.cloud.coveo.com/headless/v{{packageVersion}}/headless.esm.js';
 
   // You can now use the imported functions.
 </script>
@@ -54,7 +58,7 @@ If you prefer not to use a package manager, you can load Headless directly from 
 ### UMD (Classic Script Tag)
 
 ```html
-<script src="https://static.cloud.coveo.com/headless/v3/headless.js"></script>
+<script src="https://static.cloud.coveo.com/headless/v{{packageVersion}}/headless.js"></script>
 <script>
   // All exports are available on the global CoveoHeadless object.
   const {buildSearchEngine, getSampleSearchEngineConfiguration} = CoveoHeadless;
@@ -63,7 +67,7 @@ If you prefer not to use a package manager, you can load Headless directly from 
 
 > [!TIP]
 >
-> Replace `v3` in the URL with a specific version (for example, `v3.46.0`) to pin your application to a known release.
+> Replace `v{{packageVersion}}` in the URL with `v3` to always use the latest major version.
 
 ## Verify Your Installation
 
@@ -114,7 +118,7 @@ engine.executeFirstSearch();
         buildSearchEngine,
         buildResultList,
         getSampleSearchEngineConfiguration,
-      } from 'https://static.cloud.coveo.com/headless/v3/headless.esm.js';
+      } from 'https://static.cloud.coveo.com/headless/v{{packageVersion}}/headless.esm.js';
 
       const engine = buildSearchEngine({
         configuration: getSampleSearchEngineConfiguration(),

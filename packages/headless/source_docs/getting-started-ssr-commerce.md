@@ -18,8 +18,12 @@ The SSR Commerce engine enables server-side rendering of commerce interfaces —
 Install `@coveo/headless` using npm (or any other package manager such as pnpm or yarn):
 
 ```bash
-npm install @coveo/headless
+npm install @coveo/headless@{{packageVersion}}
 ```
+
+> [!TIP]
+>
+> We recommend pinning your `@coveo/headless` dependency to a specific version to avoid unexpected changes.
 
 Once installed, you can import from the SSR Commerce sub-package:
 
@@ -42,7 +46,7 @@ If you prefer not to use a package manager, you can load the SSR Commerce bundle
   import {
     defineCommerceEngine,
     getSampleCommerceEngineConfiguration,
-  } from 'https://static.cloud.coveo.com/headless/v3/ssr-commerce/headless.esm.js';
+  } from 'https://static.cloud.coveo.com/headless/v{{packageVersion}}/ssr-commerce/headless.esm.js';
 
   // You can now use the imported functions.
 </script>
@@ -51,7 +55,7 @@ If you prefer not to use a package manager, you can load the SSR Commerce bundle
 ### UMD (Classic Script Tag)
 
 ```html
-<script src="https://static.cloud.coveo.com/headless/v3/ssr-commerce/headless.js"></script>
+<script src="https://static.cloud.coveo.com/headless/v{{packageVersion}}/ssr-commerce/headless.js"></script>
 <script>
   // All exports are available on the global CoveoHeadlessCommerceSSR object.
   const {defineCommerceEngine, getSampleCommerceEngineConfiguration} =
@@ -61,7 +65,7 @@ If you prefer not to use a package manager, you can load the SSR Commerce bundle
 
 > [!TIP]
 >
-> Replace `v3` in the URL with a specific version (for example, `v3.46.0`) to pin your application to a known release.
+> Replace `v{{packageVersion}}` in the URL with `v3` to always use the latest major version.
 
 ## Verify Your Installation
 
