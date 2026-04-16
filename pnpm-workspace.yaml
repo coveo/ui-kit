@@ -26,6 +26,7 @@ packages:
   - samples/atomic/*
   - samples/headless/*
   - samples/headless-ssr/*
+  - samples/pkg-new-template
   - utils/cdn
   - utils/ci
 
