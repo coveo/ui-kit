@@ -1,0 +1,90 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Guides/Display results/Display as table" />
+
+# Display results as a table
+
+Using the [`atomic-result-list`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-list--default) component, results can be displayed as a table.
+
+![An `atomic-result-list` component with `display="table"`](../../assets/images/result-table.png)
+
+## The basics
+
+To make the [`atomic-result-list`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-list--default) component display a table, the `display` attribute needs to be set to `table`.
+
+```html
+<atomic-result-list
+  display="table"
+>
+  ...
+</atomic-result-list>
+```
+
+Then, a result template with columns needs to be defined using multiple [`atomic-table-element`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-list--table-display) components.
+Each column takes a `label` as a parameter, which will be a column's heading.
+The contents of each `atomic-table-element` will be interpreted as the template to render in each cell of the column they represent.
+
+> **Important**
+>
+> If more than one `atomic-result-template` is present, then the template which matches the first result will be used.
+> To customize rows on a per-result basis, use the [`atomic-field-condition`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-field-condition--default) component instead.
+
+
+> **Notes**
+>
+> * Table cells can use [result sections](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/docs/guides-display-results-use-result-sections--docs) by adding section elements as direct children of their `atomic-table-element` elements.
+>
+> * You can customize the contents of each cell by adding a `<style>` tag as a direct child of its `atomic-table-element`.
+
+
+```html
+<atomic-result-list display="table">
+  <atomic-result-template>
+    <template>
+      <atomic-table-element label="Product name">
+        <atomic-result-link></atomic-result-link>
+      </atomic-table-element>
+      <atomic-table-element label="Cost">
+        <atomic-result-number field="price">
+          <atomic-format-currency currency="USD"></atomic-format-currency>
+        </atomic-result-number>
+      </atomic-table-element>
+      <atomic-table-element label="Specifications">
+        <atomic-field-condition must-match-category="Movies & TV Shows">
+          <atomic-result-fields-list>
+            <span>Genre: <atomic-result-text field="genre"></atomic-result-text></span>
+            <span>Duration: <atomic-result-text field="duration"></atomic-result-text></span>
+          </atomic-result-fields-list>
+        </atomic-field-condition>
+        <atomic-field-condition must-match-category="Gaming Laptops">
+          <atomic-result-fields-list>
+            <span>Condition: <atomic-result-text field="condition"></atomic-result-text></span>
+            <span>Brand: <atomic-result-text field="brand"></atomic-result-text></span>
+          </atomic-result-fields-list>
+        </atomic-field-condition>
+      </atomic-table-element>
+    </template>
+  </atomic-result-template>
+</atomic-result-list>
+```
+
+## Advanced customization
+
+### Alternating rows
+
+It's possible to display alternating row colors by using the `result-table-row-odd` or `result-table-row-even` shadow parts, as in the following:
+
+```html
+<style>
+  atomic-result-list::part(result-table-row-even) {
+    background-color: var(--atomic-neutral-light);
+  }
+</style>
+```
+
+![A result table with alternating row](../../assets/images/result-table-alternating-rows.png)
+
+### Customizing the header, cells, and other elements
+
+The result table exposes many shadow parts for customization.
+For more information, see [`atomic-result-list`](https://static.cloud.coveo.com/atomic/v3/storybook/index.html?path=/story/atomic-result-list--default).

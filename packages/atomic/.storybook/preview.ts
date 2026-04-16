@@ -51,91 +51,80 @@ const preview: Preview = {
   loaders: [mswLoader],
   parameters: {
     options: {
-      storySort: {
-        method: 'alphabetical',
-        order: [
+      storySort: (a, b) => {
+        // Get the story hierarchy parts
+        const aPath = a.title.split('/');
+        const bPath = b.title.split('/');
+
+        // Custom order for top-level sections
+        const sectionOrder = [
           'Coveo Atomic Storybook',
-          'Usage',
-          [
-            'Introduction',
-            'Guides',
-            [
-              'Display results',
-              [
-                'Introduction',
-                'Display as list or grid',
-                'Display as table',
-                'Display instant results',
-                'Implement folding',
-                'Use result sections',
-              ],
-              'Use generative answering',
-              'Use layouts',
-              'Content recommendations',
-              'Standalone search box',
-              'Frameworks',
-              [
-                'Introduction',
-                'Use the React wrapper',
-                'Use the Angular wrapper',
-                'Usage in a Vue project',
-              ],
-            ],
-            'Information',
-            [
-              'Manage your project',
-              [
-                'Introduction',
-                'Create a project',
-                'Download using CLI',
-                'Deploy your project',
-                'Use hosted page',
-              ],
-              'Usage Analytics',
-              [
-                'Overview',
-                'Coveo UA',
-                'Log view events with Coveo UA',
-                'Event Protocol',
-                'Log view events with Event Protocol',
-              ],
-              'Themes and visual customization',
-              'Localization',
-              'Accessibility',
-              'Custom web components',
-              'Custom query suggestions',
-              'Access Headless through Atomic',
-              'Modify requests and responses',
-              'Use external components',
-              'Change component properties',
-            ],
-          ],
-          'Upgrade',
-          ['v2 to v3', 'v1 to v2'],
-          'Resources',
-          [
-            'Code samples',
-            'Product lifecycle',
-            'Versioned documentation',
-            ['*'],
-          ],
+          'Getting started',
+          'Guides',
           'Reference',
-          [
+          'Information',
+        ];
+
+        // Subfolders where Introduction should come first
+        const introFirstSubfolders = [
+          'Display results',
+          'Frameworks',
+          'Manage your project',
+          'Usage Analytics',
+        ];
+
+        const aSection = aPath[0];
+        const bSection = bPath[0];
+
+        // Compare top-level sections
+        if (aSection !== bSection) {
+          const aIndex = sectionOrder.indexOf(aSection);
+          const bIndex = sectionOrder.indexOf(bSection);
+
+          if (aIndex !== -1 && bIndex !== -1) {
+            return aIndex - bIndex;
+          }
+          if (aIndex !== -1) return -1;
+          if (bIndex !== -1) return 1;
+          return aSection.localeCompare(bSection);
+        }
+
+        // Special handling for Guides subfolders with Introduction first
+        if (aSection === 'Guides' && aPath.length > 2 && bPath.length > 2) {
+          const aSubfolder = aPath[1];
+          const bSubfolder = bPath[1];
+
+          if (
+            aSubfolder === bSubfolder &&
+            introFirstSubfolders.includes(aSubfolder)
+          ) {
+            // Within these subfolders, Introduction goes first
+            if (aPath[2] === 'Introduction') return -1;
+            if (bPath[2] === 'Introduction') return 1;
+          }
+        }
+
+        // Special handling for Reference subsections
+        if (aSection === 'Reference' && aPath.length > 2 && bPath.length > 2) {
+          const refSections = [
             'Search',
-            ['Introduction', 'Example Pages', '*'],
             'Commerce',
-            ['Introduction', 'Example Pages', '*'],
             'Recommendations',
-            ['Introduction', 'Example Pages', '*'],
             'IPX',
-            ['Introduction', 'Example Pages', '*'],
             'Insight',
-            ['Introduction', 'Example Pages', '*'],
             'Common',
-            ['Introduction', 'Example Pages', '*'],
-          ],
-          '*',
-        ],
+          ];
+          if (aPath[1] === bPath[1] && refSections.includes(aPath[1])) {
+            // Within each Reference section, Introduction and Example Pages go first
+            if (aPath[2] === 'Introduction') return -1;
+            if (bPath[2] === 'Introduction') return 1;
+            if (aPath[2] === 'Example Pages') return -1;
+            if (bPath[2] === 'Example Pages') return 1;
+          }
+        }
+
+        // Default alphabetical comparison
+        return a.title.localeCompare(b.title);
       },
     },
     controls: {

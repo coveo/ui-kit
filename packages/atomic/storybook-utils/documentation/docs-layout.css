@@ -12,6 +12,7 @@
   padding-right: 1rem;
 }
 
-.sbdocs code {
-  vertical-align: -0.36em;
+.sbdocs img,
+.docs-root img {
+  border: 1px solid #e5e8e8;
 }
