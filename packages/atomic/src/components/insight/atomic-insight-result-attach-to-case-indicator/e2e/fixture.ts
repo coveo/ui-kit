@@ -11,5 +11,3 @@ export const test =
       await use(new AtomicInsightResultAttachToCaseIndicatorPageObject(page));
     },
   });
-
-export {expect} from '@playwright/test';
