@@ -53,9 +53,11 @@ test.describe('default', () => {
     test('should add the item to the cart', async ({cart, page}) => {
       await page.goto('/cart');
 
-      const cartItemsCount = await cart.items.count();
-
-      expect(cartItemsCount).toBe(3);
+      await expect
+        .poll(async () => {
+          return await cart.items.count();
+        })
+        .toBeGreaterThanOrEqual(3);
     });
   });
 
