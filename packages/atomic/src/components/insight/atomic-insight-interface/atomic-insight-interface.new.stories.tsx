@@ -56,6 +56,8 @@ mockedInsightApi.searchEndpoint.mock((response) => ({
   ...response,
   results: response.results.map((result: Record<string, unknown>) => ({
     ...result,
+    isTopResult: false,
+    isRecommendation: false,
     raw: {
       ...(result.raw as Record<string, unknown>),
       sourcetype: 'YouTube',
