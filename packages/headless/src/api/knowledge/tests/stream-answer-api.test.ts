@@ -112,6 +112,27 @@ describe('#streamAnswerApi', () => {
       });
     });
 
+    it('should ignore blank-only prefixes in the cached answer draft', () => {
+      const dispatch = vi.fn();
+      const event = buildSuccessEvent({
+        payloadType: 'genqa.messageType',
+        payload: {
+          textDelta: '   ',
+        },
+      });
+      const draft = buildDefaultDraft({answer: undefined});
+
+      updateCacheWithEvent(event, draft, dispatch);
+
+      expect(draft.answer).toBeUndefined();
+      expect(dispatch).toHaveBeenCalledWith({
+        type: 'generatedAnswer/updateMessage',
+        payload: {
+          textDelta: '   ',
+        },
+      });
+    });
+
     it('should handle message type and append answer', () => {
       const dispatch = vi.fn();
       const event = buildSuccessEvent({

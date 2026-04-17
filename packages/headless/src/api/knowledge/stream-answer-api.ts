@@ -13,6 +13,10 @@ import {
   logGeneratedAnswerStreamEnd,
 } from '../../features/generated-answer/generated-answer-analytics-actions.js';
 import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
+import {
+  appendGeneratedAnswerText,
+  hasDisplayableGeneratedAnswerText,
+} from '../../features/generated-answer/utils/streamed-answer-text-utils.js';
 import {fetchEventSource} from '../../utils/fetch-event-source/fetch.js';
 import type {EventSourceMessage} from '../../utils/fetch-event-source/parse.js';
 import {getOrganizationEndpoint} from '../platform-client.js';
@@ -49,11 +53,11 @@ const handleMessage = (
   draft: GeneratedAnswerStream,
   payload: Pick<StreamPayload, 'textDelta'>
 ) => {
-  if (draft.answer === undefined) {
-    draft.answer = payload.textDelta;
-  } else if (typeof payload.textDelta === 'string') {
-    draft.answer = draft.answer.concat(payload.textDelta);
+  if (typeof payload.textDelta !== 'string') {
+    return;
   }
+
+  draft.answer = appendGeneratedAnswerText(draft.answer, payload.textDelta);
 };
 
 const handleCitations = (
@@ -135,7 +139,7 @@ export const updateCacheWithEvent = (
       const answerId = draft.answerId;
       const answerGenerated = parsedPayload.answerGenerated ?? false;
       const answerTextIsEmpty = answerGenerated
-        ? !draft.answer?.length
+        ? !hasDisplayableGeneratedAnswerText(draft.answer)
         : undefined;
       dispatch(
         logGeneratedAnswerStreamEnd(
