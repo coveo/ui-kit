@@ -595,6 +595,8 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           load-cache: 'false'
+      - name: Resolve catalog references in pkg.pr.new templates
+        run: node samples/pkg-new-template/scripts/flatten-catalog.mjs
       - name: Publish to pkg.pr.new
         run: |
           pnpm dlx pkg-pr-new publish --pnpm \
