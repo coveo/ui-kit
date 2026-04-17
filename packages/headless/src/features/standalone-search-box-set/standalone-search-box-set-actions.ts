@@ -187,7 +187,7 @@ export const buildPlanRequest = async (
     ...(state.context && {context: state.context.contextValues}),
     ...(state.pipeline && {pipeline: state.pipeline}),
     ...(state.searchHub && {searchHub: state.searchHub}),
-    ...(Object.hasOwn(state.query, 'enableQuerySyntax') && {
+    ...(state.query.enableQuerySyntax !== undefined && {
       enableQuerySyntax: state.query.enableQuerySyntax,
     }),
     ...(state.configuration.analytics.enabled &&
