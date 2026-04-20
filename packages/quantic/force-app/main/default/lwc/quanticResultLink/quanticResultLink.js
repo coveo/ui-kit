@@ -52,13 +52,6 @@ export default class QuanticResultLink extends NavigationMixin(
    */
   @api target = '_self';
   /**
-   * Whether clicking the result link should always open it in a new browser tab.
-   * @api
-   * @type {boolean}
-   * @defaultValue `false`
-   */
-  @api shouldOpenInNewTab = false;
-  /**
    * A function used to set focus to the link.
    * @api
    * @type {VoidFunction}
@@ -128,7 +121,7 @@ export default class QuanticResultLink extends NavigationMixin(
   };
 
   handleClick(event) {
-    if (this.isSalesforceLink && !this.shouldOpenInNewTab) {
+    if (this.shouldNavigateToSalesforceRecord) {
       event.preventDefault();
       this.navigateToSalesforceRecord(event);
     }
@@ -182,21 +175,15 @@ export default class QuanticResultLink extends NavigationMixin(
       : 'clickUri';
   }
 
-  /**
-   * Returns the target for the link.
-   */
-  get targetTab() {
-    if (this.shouldOpenInNewTab) {
-      return '_blank';
-    }
-    return this.target;
+  get shouldNavigateToSalesforceRecord() {
+    return this.isSalesforceLink && this.target === '_self';
   }
 
   /**
    * Returns the aria label value for the link.
    */
   get ariaLabelValue() {
-    if (this.isSalesforceLink && !this.shouldOpenInNewTab) {
+    if (this.shouldNavigateToSalesforceRecord) {
       return this.labels.navigateToRecord;
     }
     return this.labels.opensInBrowserTab;

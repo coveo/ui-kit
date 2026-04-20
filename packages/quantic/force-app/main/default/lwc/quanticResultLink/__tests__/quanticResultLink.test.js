@@ -101,7 +101,7 @@ describe('c-quantic-result-link', () => {
       );
     });
 
-    it('should open the result link in a Salesforce console subtab', async () => {
+    it('should open the result link in a Salesforce console subtab when no target is specified', async () => {
       const element = createTestComponent({result: exampleSalesforceResult});
       await flushPromises();
 
@@ -115,10 +115,10 @@ describe('c-quantic-result-link', () => {
       );
     });
 
-    it('should open the Salesforce result link in a new browser tab when shouldOpenInNewTab is true', async () => {
+    it('should open the Salesforce result link in a new browser tab when target is _blank', async () => {
       const element = createTestComponent({
         result: exampleSalesforceResult,
-        shouldOpenInNewTab: true,
+        target: '_blank',
       });
       await flushPromises();
 
@@ -126,6 +126,20 @@ describe('c-quantic-result-link', () => {
       linkSalesforce.click();
 
       expect(linkSalesforce.getAttribute('target')).toEqual('_blank');
+      expect(getNavigateCalledWith().pageReference).toBeUndefined();
+    });
+
+    it('should let Salesforce result links use other target values without console navigation', async () => {
+      const element = createTestComponent({
+        result: exampleSalesforceResult,
+        target: '_parent',
+      });
+      await flushPromises();
+
+      const linkSalesforce = element.shadowRoot.querySelector('a');
+      linkSalesforce.click();
+
+      expect(linkSalesforce.getAttribute('target')).toEqual('_parent');
       expect(getNavigateCalledWith().pageReference).toBeUndefined();
     });
 
@@ -190,10 +204,10 @@ describe('c-quantic-result-link', () => {
       expect(link.getAttribute('target')).toEqual('_self');
     });
 
-    it('should open the result link in a new tab when shouldOpenInNewTab is true', async () => {
+    it('should open the result link in a new tab when target is _blank', async () => {
       const element = createTestComponent({
         result: exampleResult,
-        shouldOpenInNewTab: true,
+        target: '_blank',
       });
       await flushPromises();
 
