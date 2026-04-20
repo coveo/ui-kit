@@ -308,9 +308,9 @@ export class AtomicGeneratedAnswer
 
   protected willUpdate(changedProperties: PropertyValueMap<this>) {
     if (changedProperties.has('tabManagerState' as keyof this)) {
-      const oldValue = changedProperties.get(
-        'tabManagerState' as keyof this
-      ) as TabManagerState | undefined;
+      const oldValue = changedProperties.get('tabManagerState' as keyof this) as
+        | TabManagerState
+        | undefined;
       if (oldValue && this.tabManagerState?.activeTab !== oldValue?.activeTab) {
         if (
           !shouldDisplayOnCurrentTab(
