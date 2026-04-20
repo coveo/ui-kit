@@ -8,8 +8,8 @@ describe('Cookie', () => {
 
   const mockWindow = {
     location: {
-      hostname: 'example.com',
-      protocol: 'http:',
+      hostname: '',
+      protocol: '',
     },
   };
 
@@ -17,6 +17,10 @@ describe('Cookie', () => {
     // Mock global objects
     vi.stubGlobal('document', mockDocument);
     vi.stubGlobal('window', mockWindow);
+
+    // Reset window properties before each test
+    mockWindow.location.hostname = 'example.com';
+    mockWindow.location.protocol = 'http:';
 
     // Reset document.cookie before each test
     mockDocument.cookie = '';
