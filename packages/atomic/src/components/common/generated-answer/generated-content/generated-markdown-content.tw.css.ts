@@ -37,7 +37,15 @@ const styles = css`
 
   [part='generated-text'] [part='answer-link']::after {
     content: '↗';
-    @apply ms-1 inline-block text-sm no-underline;
+    @apply ms-1 inline-block no-underline;
+  }
+
+  [part='generated-text'] [part^='answer-heading-'] [part='answer-link'] {
+    @apply text-inherit font-bold no-underline;
+  }
+
+  [part='generated-text'] [part^='answer-heading-'] [part='answer-link']:hover {
+    @apply underline;
   }
 
   [part='generated-text'] [part='answer-list-item'],
