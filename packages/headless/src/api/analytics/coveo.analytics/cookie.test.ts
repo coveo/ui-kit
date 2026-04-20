@@ -9,6 +9,7 @@ describe('Cookie', () => {
   const mockWindow = {
     location: {
       hostname: 'example.com',
+      protocol: 'http:',
     },
   };
 
@@ -76,6 +77,17 @@ describe('Cookie', () => {
 
       expect(mockDocument.cookie).toBe(
         'testCookie=testValue;domain=co.uk;path=/;SameSite=Lax'
+      );
+    });
+
+    it('should set cookie with Secure attribute when protocol is https', () => {
+      mockWindow.location.protocol = 'https:';
+      mockWindow.location.hostname = 'localhost';
+
+      Cookie.set('testCookie', 'testValue');
+
+      expect(mockDocument.cookie).toBe(
+        'testCookie=testValue;path=/;SameSite=Lax;Secure'
       );
     });
   });
