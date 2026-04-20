@@ -194,8 +194,19 @@ jobs:
         run: pnpm run notify:docs
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+  build-cdn:
+    name: Build CDN
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@fe104658747b27e96e4f7e80cd0a94068e53901d # v2.16.1
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: ./.github/actions/build-cdn
   prerelease-cdn:
     name: Pre-release CDN in dev
+    needs: build-cdn
     environment: 'Prerelease (CDN)'
     runs-on: ubuntu-latest
     steps:
@@ -204,8 +215,6 @@ jobs:
         with:
           egress-policy: audit
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-        with:
-          fetch-depth: 0
       - uses: ./.github/actions/setup
         with:
           skip-build: 'true'
@@ -216,6 +225,7 @@ jobs:
           GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
   commit-artifact-upload:
     name: Upload commit artifacts to S3
+    needs: build-cdn
     environment: 'Prerelease (CDN)'
     runs-on: ubuntu-latest
     steps:

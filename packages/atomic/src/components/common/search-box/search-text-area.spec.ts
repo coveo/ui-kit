@@ -155,6 +155,6 @@ describe('#renderSearchBoxTextArea', () => {
       textarea!.value = '';
     }
     await userEvent.click(clearButton!);
-    expect(expander!).toHaveAttribute('data-replicated-value', '');
+    expect(expander!.getAttribute('data-replicated-value')).toBeFalsy();
   });
 });

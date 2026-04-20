@@ -1,0 +1,13 @@
+name: Build CDN
+description: Build with CDN deployment environment and save turbo cache artifact
+
+runs:
+  using: composite
+  steps:
+    - uses: ./.github/actions/setup
+      with:
+        cache-prefix: 'cdn'
+        save-cache: 'true'
+        load-cache: 'false'
+      env:
+        DEPLOYMENT_ENVIRONMENT: CDN
