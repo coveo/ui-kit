@@ -58,7 +58,5 @@ function writeCookie(
     `${name}=${value}` +
     (expirationDate ? `;expires=${expirationDate.toUTCString()}` : '') +
     (domain ? `;domain=${domain}` : '') +
-    ';path=/' +
-    ';SameSite=Lax' +
-    (location.protocol === 'https:' ? ';Secure' : '');
+    ';path=/;SameSite=Lax';
 }
