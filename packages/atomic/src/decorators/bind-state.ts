@@ -40,12 +40,16 @@ export function bindStateToController<Element extends ReactiveElement>(
     const ctor = proto.constructor as typeof ReactiveElement;
 
     ctor.addInitializer((instance) => {
-      const component = instance as Instance;
-      const {disconnectedCallback, initialize} = component;
+      const weakRef = new WeakRef<Instance>(instance as Instance);
+      const {disconnectedCallback, initialize} = instance as Instance;
 
-      component.initialize = function () {
+      (instance as Instance).initialize = function () {
         initialize?.call(this);
-
+        const component = weakRef.deref();
+        if (!component) {
+          // Component has been gcd, no need to set up the subscription
+          return;
+        }
         if (!initialize) {
           return console.error(
             `ControllerState: The "initialize" method has to be defined and instantiate a controller for the property ${controllerProperty.toString()}`,
@@ -80,7 +84,7 @@ export function bindStateToController<Element extends ReactiveElement>(
           typeof updateCallback === 'function' && updateCallback();
         });
 
-        component.disconnectedCallback = () => {
+        (component as Instance).disconnectedCallback = () => {
           !component.isConnected && unsubscribeController?.();
           disconnectedCallback?.call(component);
         };
