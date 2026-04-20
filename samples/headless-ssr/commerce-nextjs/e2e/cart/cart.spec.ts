@@ -44,9 +44,12 @@ test.describe('default', () => {
   });
 
   test.describe('when adding a new item to the cart', () => {
-    test.beforeEach(async ({page, cart}) => {
-      await page.goto('/toys');
+    let initialCartItemCount: number;
 
+    test.beforeEach(async ({page, cart}) => {
+      initialCartItemCount = await cart.items.count();
+
+      await page.goto('/toys');
       await cart.addToCartButton.first().click();
     });
 
@@ -57,7 +60,7 @@ test.describe('default', () => {
         .poll(async () => {
           return await cart.items.count();
         })
-        .toBeGreaterThanOrEqual(3);
+        .toBe(initialCartItemCount + 1);
     });
   });
 
