@@ -18,7 +18,7 @@ export const renderTextAreaClearButton: FunctionalComponent<Props> = ({
   return html`<div
     part="clear-button-wrapper"
     class="ml-2 flex items-center justify-center py-2"
-    @mousedown=${(e: MouseEvent) => e.preventDefault()}
+    @pointerdown=${(e: PointerEvent) => e.preventDefault()}
   >
     ${renderButton({
       props: {

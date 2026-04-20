@@ -82,9 +82,9 @@ describe('#renderTextAreaClearButton', () => {
     expect(icon!.getAttribute('icon')).toContain('<svg');
   });
 
-  it('should prevent default on mousedown to keep focus in the textarea', async () => {
+  it('should prevent default on pointerdown to keep focus in the textarea', async () => {
     const {wrapper} = await renderComponent();
-    const event = new MouseEvent('mousedown', {
+    const event = new PointerEvent('pointerdown', {
       bubbles: true,
       cancelable: true,
     });
