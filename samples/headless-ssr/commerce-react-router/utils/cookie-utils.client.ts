@@ -13,7 +13,12 @@ export function setCookie(
   path = '/',
   maxAge = 60 * 60 * 24 * 365
 ) {
-  document.cookie = `${name}=${value}; path=${path}; Max-Age=${maxAge}; SameSite=Lax`;
+  document.cookie =
+    `${name}=${value}` +
+    `;path=${path}` +
+    `;Max-Age=${maxAge}` +
+    ';SameSite=Lax' +
+    `${location.protocol === 'https:' ? ';Secure' : ''}`;
 }
 
 /**
