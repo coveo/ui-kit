@@ -15,12 +15,6 @@ export const facetDecorator: Decorator = (story, context) => html`
 
 type Position = 'before' | 'after';
 
-export const withFacetContainer: Decorator = (story) =>
-  html`<div style="min-width: 470px;">
-    <h1>Test</h1>
-    ${story()}
-  </div> `;
-
 export const withRegularFacet: (position: Position) => Decorator =
   (position) => (story) =>
     html` ${html`${position === 'after' ? story() : nothing}`}

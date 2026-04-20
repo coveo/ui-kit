@@ -249,9 +249,4 @@ const headAnswerResponse = () =>
     delayBetweenMessages: 'real',
   });
 
-export {
-  agentMessages,
-  headAnswerResponse,
-  followUpAnswerResponse,
-  buildAnsweringStreamingResponse,
-};
+export {headAnswerResponse, followUpAnswerResponse};

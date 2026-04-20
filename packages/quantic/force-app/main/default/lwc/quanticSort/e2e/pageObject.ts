@@ -10,10 +10,6 @@ export class SortObject {
     return this.page.getByRole('combobox', {name: 'Sort by'});
   }
 
-  get sortPreviewButton(): Locator {
-    return this.page.getByRole('button', {name: 'Preview'});
-  }
-
   sortButton(buttonName: string): Locator {
     return this.page.getByRole('option', {name: buttonName});
   }
@@ -23,8 +19,7 @@ export class SortObject {
   }
 
   async focusSortDropDown(): Promise<void> {
-    await this.sortPreviewButton.click();
-    await this.page.keyboard.press('Tab');
+    await this.sortDropDown.focus();
   }
 
   async clickSortButton(buttonName: string): Promise<void> {
@@ -33,12 +28,11 @@ export class SortObject {
 
   async openSortDropdownUsingKeyboardEnter(useEnter = true): Promise<void> {
     if (useEnter) {
-      await this.page.keyboard.press('Enter');
+      await this.sortDropDown.press('Enter');
     } else {
-      await this.page.keyboard.press('Space');
+      await this.sortDropDown.press('Space');
     }
-    await this.sortButton('Oldest').isVisible();
-    await this.page.waitForTimeout(500);
+    await this.sortButton('Oldest').waitFor({state: 'visible'});
   }
 
   async waitForSortUaAnalytics(eventValue: any): Promise<Request> {
