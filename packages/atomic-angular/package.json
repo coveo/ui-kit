@@ -22,7 +22,7 @@
     "ng-packagr": "20.3.2",
     "tslib": "2.8.1",
     "typescript": "catalog:",
-    "vite": "^8.0.0"
+    "vite": "catalog:"
   },
   "peerDependencies": {
     "@coveo/headless": "workspace:*"
