@@ -138,8 +138,7 @@
     "ts-lit-plugin": "2.0.2",
     "typescript": "catalog:",
     "vite": "catalog:",
-    "vitest": "catalog:",
-    "wait-on": "9.0.4"
+    "vitest": "catalog:"
   },
   "peerDependencies": {
     "@coveo/bueno": "workspace:*",

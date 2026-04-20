@@ -5,7 +5,7 @@ import {type RefOrCallback, ref} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 
-export interface ModalDetailsProps {
+interface ModalDetailsProps {
   currentAnswer: SmartSnippetFeedback | 'other';
   i18n: i18n;
   detailsInputRef: RefOrCallback;
