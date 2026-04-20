@@ -3,15 +3,14 @@ on:
   push:
     branches: [main]
 
-concurrency:
-  group: release-${{ github.ref }}
-  cancel-in-progress: false
-
 permissions:
   contents: read
 
 jobs:
   release:
+    concurrency:
+      group: release-${{ github.ref }}
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     environment: Release
     permissions:
