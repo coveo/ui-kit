@@ -7,7 +7,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "node -e \"const v=require(\\\"typescript\\\").version;if(parseInt(v)>=6){console.log(\\\"Skipping: Angular 20.x requires TypeScript <6 (found \\\"+v+\\\")\\\");process.exit(0)}else{process.exit(1)}\" || ng build",
     "watch": "ng build --watch --configuration development"
   },
   "dependencies": {

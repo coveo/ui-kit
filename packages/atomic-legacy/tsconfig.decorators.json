@@ -2,7 +2,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "declaration": true,
-    "outDir": "./dist/item-decorators"
+    "outDir": "./dist/item-decorators",
+    "rootDir": "./src/item-decorators"
   },
   "include": ["./src/item-decorators"]
 }
