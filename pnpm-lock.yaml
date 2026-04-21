@@ -1494,12 +1494,12 @@ importers:
         specifier: 6.0.2
         version: 6.0.2
     devDependencies:
+      '@playwright/test':
+        specifier: 'catalog:'
+        version: 1.59.1
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 6.0.1(vite@8.0.6(@types/node@24.12.2)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(terser@5.46.1)(yaml@2.8.3))
-      cypress:
-        specifier: 'catalog:'
-        version: 13.7.3
       vite:
         specifier: 'catalog:'
         version: 8.0.6(@types/node@24.12.2)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(terser@5.46.1)(yaml@2.8.3)
