@@ -46,5 +46,26 @@ describe('getSortCriteria', () => {
         getSortCriteria({appliedSort}, (s) => s.appliedSort, initialSort)
       ).toEqual({sortCriteria: appliedSort});
     });
+
+    it('returns {sortCriteria} when fields are the same but in different order', () => {
+      const appliedSort = {
+        by: 'fields',
+        fields: [
+          {name: 'price', direction: 'asc'},
+          {name: 'date', direction: 'desc'},
+        ],
+      };
+      const initialSort = {
+        by: 'fields',
+        fields: [
+          {name: 'date', direction: 'desc'},
+          {name: 'price', direction: 'asc'},
+        ],
+      };
+
+      expect(
+        getSortCriteria({appliedSort}, (s) => s.appliedSort, initialSort)
+      ).toEqual({sortCriteria: appliedSort});
+    });
   });
 });
