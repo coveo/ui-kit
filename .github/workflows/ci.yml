@@ -517,6 +517,23 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/playwright-atomic-search-commerce-angular
+  playwright-atomic-search-vuejs-test:
+    name: 'Run e2e tests on Atomic Search Vue'
+    needs: affected
+    if: contains(needs.affected.outputs.projects, '@samples/atomic-search-vuejs') || contains(needs.affected.outputs.projects, '@coveo/atomic')
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.59.1-noble
+      options: --user 1001
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@f808768d1510423e83855289c910610ca9b43176 # v2.17.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/playwright-atomic-search-vuejs
   playwright-atomic-hosted-page-test:
     name: 'Run e2e tests for Atomic Hosted Page'
     needs: affected
@@ -631,6 +648,7 @@ jobs:
       - 'e2e-quantic'
       - 'playwright-atomic-search-commerce-react-test'
       - 'playwright-atomic-search-commerce-angular-test'
+      - 'playwright-atomic-search-vuejs-test'
       - 'cypress-headless-ssr-search-nextjs-test'
       - 'publish-preview'
     runs-on: ubuntu-latest
@@ -666,6 +684,7 @@ jobs:
       - 'e2e-quantic'
       - 'playwright-atomic-search-commerce-react-test'
       - 'playwright-atomic-search-commerce-angular-test'
+      - 'playwright-atomic-search-vuejs-test'
       - 'cypress-headless-ssr-search-nextjs-test'
       - 'changeset-merge-guard'
     runs-on: ubuntu-latest
