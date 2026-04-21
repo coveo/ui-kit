@@ -1,32 +1,7 @@
 <template>
   <atomic-facet-manager>
-    <atomic-category-facet
-      field="ec_category"
-      label="Category"
-      with-search="true"
-    ></atomic-category-facet>
-    <atomic-facet field="ec_brand" label="Brand"></atomic-facet>
-    <atomic-numeric-facet
-      field="cat_review_count"
-      label="Amount of reviews"
-      display-values-as="link"
-    >
-      <atomic-numeric-range
-        start="0"
-        end="150"
-        label="Few"
-      ></atomic-numeric-range>
-      <atomic-numeric-range
-        start="150"
-        end="650"
-        label="A moderate amount"
-      ></atomic-numeric-range>
-      <atomic-numeric-range
-        start="650"
-        end="9999999999999"
-        label="A lot"
-      ></atomic-numeric-range>
-    </atomic-numeric-facet>
+    <atomic-facet field="source" label="Source"></atomic-facet>
+    <atomic-facet field="objecttype" label="Type"></atomic-facet>
     <atomic-color-facet
       field="cat_color"
       label="Color"
@@ -57,11 +32,10 @@
     ></atomic-rating-facet>
     <atomic-rating-range-facet
       field="ec_rating"
-      label="Rating range"
+      label="Rating Range"
       number-of-intervals="5"
       facet-id="ec_rating_range"
     >
     </atomic-rating-range-facet>
-    <atomic-facet field="source"></atomic-facet>
   </atomic-facet-manager>
 </template>
