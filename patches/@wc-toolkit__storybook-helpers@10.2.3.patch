@@ -21,7 +21,7 @@ index 1a969c8c5db3730eb974936e54c1eb49df5d1a0f..7dfc58dbdf9d44639a1494eef378ed42
      setComponentVariable?: boolean;
  };
 diff --git a/dist/index.js b/dist/index.js
-index 88dcd49d80acb70039477e8794d0e8fa7d0a3e89..46d54d4eb246200a7573b00a7e38bd3512d0e2a2 100644
+index 744e2cdce7310b7c1cf20a5f2b3228e6979380aa..49c4484de945380ffc8c5198fb1f735e46724706 100644
 --- a/dist/index.js
 +++ b/dist/index.js
 @@ -569,7 +569,7 @@ var options2 = {};
@@ -59,7 +59,7 @@ index 88dcd49d80acb70039477e8794d0e8fa7d0a3e89..46d54d4eb246200a7573b00a7e38bd35
    ) : ""}
  `;
  }
-@@ -723,20 +735,32 @@ function getSlotsTemplate(component, args, excludeCategories) {
+@@ -725,20 +737,32 @@ function getSlotsTemplate(component, args, excludeCategories) {
  ${slotTemplates}
  `) : "";
  }
@@ -68,7 +68,7 @@ index 88dcd49d80acb70039477e8794d0e8fa7d0a3e89..46d54d4eb246200a7573b00a7e38bd35
    setArgObserver(component);
    setTimeout(() => {
 -    const selectedComponent = document.querySelector(component.tagName);
--    if (selectedComponent && argsObserver) {
+-    if (selectedComponent && argObserver) {
 -      argObserver.observe(selectedComponent, {
 -        attributes: true
 -      });
@@ -99,7 +99,7 @@ index 88dcd49d80acb70039477e8794d0e8fa7d0a3e89..46d54d4eb246200a7573b00a7e38bd35
    const { attrArgs: attributes } = getAttributesAndProperties(component);
    if (argObserver) {
      return;
-@@ -746,13 +770,24 @@ function setArgObserver(component) {
+@@ -748,13 +772,24 @@ function setArgObserver(component) {
        if (mutation.attributeName === "class" && isUpdating) {
          return;
        }
@@ -125,7 +125,7 @@ index 88dcd49d80acb70039477e8794d0e8fa7d0a3e89..46d54d4eb246200a7573b00a7e38bd35
          updateArgs({
            [`${mutation.attributeName}`]: mutation.target.getAttribute(mutation.attributeName || "")
          });
-@@ -802,7 +837,8 @@ function getStorybookHelpers(tagName, options3) {
+@@ -804,7 +839,8 @@ function getStorybookHelpers(tagName, options3) {
        slot,
        argTypes,
        options3?.excludeCategories || [],
