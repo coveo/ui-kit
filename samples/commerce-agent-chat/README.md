@@ -5,11 +5,7 @@ Private local sample to chat with the commerce agent over AG-UI streaming.
 ## Structure
 
 - `core/` shared runtime logic, config types, and tests.
-- `components/` shared Lit web components used across frameworks.
-- `react/` React implementation.
-- `vue/` Vue implementation.
-- `angular/` Angular implementation.
-- `vanilla/` framework-free TypeScript implementation.
+- `react-headless/` React headless implementation.
 
 ## Current parity
 
@@ -58,12 +54,6 @@ Mapping used by Angular `generate:config` from `samples/commerce-agent-chat/.env
 ## Commands
 
 Run from `samples/commerce-agent-chat/core`:
-
-- `pnpm test`
-- `pnpm lint:check`
-- `pnpm lint:fix`
-
-Run from `samples/commerce-agent-chat/components`:
 
 - `pnpm test`
 - `pnpm lint:check`
