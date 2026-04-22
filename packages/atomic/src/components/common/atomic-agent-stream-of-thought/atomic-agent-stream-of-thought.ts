@@ -27,7 +27,7 @@ const stepLabelKeys: Record<
     completed: 'agent-step-analyzing-completed',
   },
   searching: {
-    active: 'agent-step-searching-active',
+    active: 'agent-generation-step-search',
     completed: 'agent-step-searching-completed',
   },
   'think-after-search': {
@@ -35,7 +35,7 @@ const stepLabelKeys: Record<
     completed: 'agent-step-processing-completed',
   },
   answering: {
-    active: 'agent-step-answering-active',
+    active: 'generating-answer',
     completed: 'agent-step-answering-completed',
   },
 };
