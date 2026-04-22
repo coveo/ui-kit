@@ -1,0 +1,136 @@
+.rh-agent-progress {
+  margin: 0.5rem 0 0;
+  border: 0;
+  border-radius: 8px;
+  padding: 0.55rem 0.65rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.rh-agent-progress__toggle {
+  margin: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 0;
+  background: transparent;
+  color: var(--ink-muted);
+  font: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+  text-align: left;
+  padding: 0;
+}
+
+.rh-agent-progress__toggle:disabled {
+  cursor: default;
+}
+
+.rh-agent-progress__toggle-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.rh-agent-progress__toggle-caret {
+  display: inline-block;
+  font-size: 2rem;
+  line-height: 1;
+  transform: translateY(-0.08em) rotate(0deg);
+  transition: transform 120ms ease;
+}
+
+.rh-agent-progress__toggle-caret--expanded {
+  transform: translateY(-0.08em) rotate(90deg);
+}
+
+.rh-agent-progress__toggle-label {
+  margin: 0;
+  font-weight: 600;
+}
+
+.rh-agent-progress__toggle-label--working {
+  animation: rh-agent-progress-pulse 1.1s ease-in-out infinite;
+}
+
+.rh-agent-progress__trace {
+  margin-top: 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.55rem 0.65rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.rh-agent-progress__trace--collapsed {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.rh-agent-progress__trace--expanded {
+  max-height: none;
+  overflow: visible;
+}
+
+.rh-agent-progress__steps {
+  margin: 0;
+  padding: 0 0 0 1rem;
+  list-style: disc;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.rh-agent-progress__item {
+  color: var(--ink);
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.rh-agent-progress__item-title {
+  margin: 0;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.rh-agent-progress__item-title--current {
+  animation: rh-agent-progress-pulse 1.1s ease-in-out infinite;
+}
+
+.rh-agent-progress__item-markdown {
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.rh-agent-progress__item-markdown > :first-child {
+  margin-top: 0;
+}
+
+.rh-agent-progress__item-markdown > :last-child {
+  margin-bottom: 0;
+}
+
+.rh-agent-progress__item-markdown :where(p, ul, ol, pre, blockquote) {
+  margin: 0.35rem 0;
+}
+
+.rh-agent-progress__item-markdown :where(ul, ol) {
+  padding-left: 1.25rem;
+}
+
+.rh-agent-progress__item-markdown :where(pre) {
+  white-space: pre-wrap;
+}
+
+@keyframes rh-agent-progress-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
+}

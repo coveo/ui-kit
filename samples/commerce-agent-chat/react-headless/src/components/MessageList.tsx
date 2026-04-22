@@ -4,6 +4,7 @@ import type {
   AgentChatProgress,
 } from '@coveo/headless/commerce';
 import {ActivityRenderer} from './ActivityRenderer.js';
+import {ProgressTrace, type ProgressTraceEntry} from './ProgressTrace.js';
 import {renderMarkdown} from '../../../core/src/lib/markdown.js';
 
 import './MessageList.css';
@@ -21,28 +22,6 @@ interface ActivityMessage {
   id: string;
   activityType: string;
   content: unknown;
-}
-
-interface ProgressTraceElement extends HTMLElement {
-  progressTrace: unknown[];
-  progressSteps: string[];
-  isStreaming: boolean;
-  messageId: string;
-}
-
-interface ProgressTraceBridgeProps {
-  progressTrace: unknown[];
-  progressSteps: string[];
-  isStreaming: boolean;
-  messageId: string;
-}
-
-interface ProgressTraceEntry {
-  id: string;
-  kind: 'reasoning' | 'tool';
-  label: string;
-  text: string;
-  status: 'streaming' | 'completed';
 }
 
 interface SurfaceComponent {
@@ -222,34 +201,6 @@ function groupSuccessiveToolTraceEntries(trace: ProgressTraceEntry[]) {
   return grouped;
 }
 
-function ProgressTraceBridge({
-  progressTrace,
-  progressSteps,
-  isStreaming,
-  messageId,
-}: ProgressTraceBridgeProps): React.JSX.Element {
-  const elementRef = useRef<ProgressTraceElement | null>(null);
-
-  useEffect(() => {
-    if (!elementRef.current) {
-      return;
-    }
-
-    elementRef.current.progressTrace = progressTrace;
-    elementRef.current.progressSteps = progressSteps;
-    elementRef.current.isStreaming = isStreaming;
-    elementRef.current.messageId = messageId;
-  }, [progressTrace, progressSteps, isStreaming, messageId]);
-
-  const hasStatus =
-    isStreaming || progressTrace.length > 0 || progressSteps.length > 0;
-  if (!hasStatus) {
-    return <></>;
-  }
-
-  return <cac-progress-trace ref={elementRef} />;
-}
-
 export function MessageList({
   messages,
   isStreaming,
@@ -353,8 +304,8 @@ export function MessageList({
             )}
 
             {message.role === 'assistant' && (
-              <ProgressTraceBridge
-                progressTrace={groupedProgressTrace as unknown[]}
+              <ProgressTrace
+                progressTrace={groupedProgressTrace}
                 progressSteps={progressSteps}
                 isStreaming={Boolean(
                   shouldShowStreamingProgress && isStreaming
