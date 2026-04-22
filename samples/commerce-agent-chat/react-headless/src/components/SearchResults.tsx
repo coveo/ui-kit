@@ -1,5 +1,5 @@
 import type {Product} from '@coveo/headless/commerce';
-import {formatPrice} from '../../../core/src/lib/commerceHelpers.js';
+import {formatPrice} from '../lib/commerceHelpers.js';
 
 import './SearchResults.css';
 

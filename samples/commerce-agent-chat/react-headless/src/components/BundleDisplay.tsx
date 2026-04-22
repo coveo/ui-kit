@@ -1,9 +1,5 @@
 import {useEffect, useId, useState} from 'react';
-import {
-  formatPrice,
-  hasDiscount,
-  promoPrice,
-} from '../../../core/src/lib/commerceHelpers.js';
+import {formatPrice, hasDiscount, promoPrice} from '../lib/commerceHelpers.js';
 import type {BundleTierConfig, Product} from '../types/commerce.js';
 
 import './BundleDisplay.css';

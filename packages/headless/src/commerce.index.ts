@@ -368,5 +368,22 @@ export type {Template} from './features/templates/templates-manager.ts';
 export type {HighlightKeyword} from './utils/highlight.js';
 export type {PlatformEnvironment} from './utils/url-utils.js';
 export {VERSION} from './utils/version.js';
+// Commerce Agent Chat Data Extraction Utilities
+// These utilities parse A2UI surface updates from agent responses into structured data.
+// Sample implementations provide their own formatting/rendering logic.
+export type {
+  A2UISurfaceContent,
+  BundleTierConfig,
+  CatalogComponent,
+  NextAction,
+  Product as AgentChatProduct,
+  ServerToClientMessage,
+  ValueMapEntry,
+} from './utils/commerce-types.js';
+export {
+  extractActionsBySurface,
+  extractCatalogComponents,
+  extractProductsBySurface,
+} from './utils/commerce-extractors.js';
 // Selectors
 export {HighlightUtils, Selectors};

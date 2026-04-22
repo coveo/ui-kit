@@ -1,5 +1,14 @@
+/**
+ * Sample-specific commerce helpers for react-headless.
+ * Includes formatting utilities (locale/currency specific) and component type checking.
+ */
+
 import type {Product} from '../types/commerce.js';
 
+/**
+ * Format a price value using USD locale and currency.
+ * Returns empty string for non-numeric values.
+ */
 export function formatPrice(value: unknown): string {
   if (typeof value !== 'number') {
     return '';
@@ -10,6 +19,10 @@ export function formatPrice(value: unknown): string {
   }).format(value);
 }
 
+/**
+ * Format a product attribute name by removing ec_ prefix and humanizing.
+ * Example: 'ec_brand' → 'Brand'
+ */
 export function formatAttribute(attribute: string): string {
   return attribute
     .replace(/^ec_/, '')
@@ -19,20 +32,32 @@ export function formatAttribute(attribute: string): string {
     .join(' ');
 }
 
+/**
+ * Extract the promotional price from a product, or null if not available.
+ */
 export function promoPrice(product: Product): number | null {
   const value = product.ec_promo_price;
   return typeof value === 'number' ? value : null;
 }
 
+/**
+ * Check if a product has an active discount (promo price less than regular price).
+ */
 export function hasDiscount(product: Product): boolean {
   const discount = promoPrice(product);
   return discount != null && discount < product.ec_price;
 }
 
+/**
+ * Normalize a component type string by removing non-alphanumeric characters and lowercasing.
+ */
 export function normalizeType(type: string): string {
   return type.replace(/[^a-z0-9]/gi, '').toLowerCase();
 }
 
+/**
+ * Check if a component type matches an expected type (case-insensitive, partial match allowed).
+ */
 export function isType(type: string, expected: string): boolean {
   const normalized = normalizeType(type);
   const normalizedExpected = normalizeType(expected);
@@ -41,6 +66,10 @@ export function isType(type: string, expected: string): boolean {
   );
 }
 
+/**
+ * Check if a component type is supported by this sample implementation.
+ * Other samples may support different component types.
+ */
 export function isSupportedType(type: string): boolean {
   return (
     isType(type, 'ProductCarousel') ||
@@ -51,6 +80,10 @@ export function isSupportedType(type: string): boolean {
   );
 }
 
+/**
+ * Deduplicate products across multiple surfaces by product ID.
+ * Preserves order of first occurrence.
+ */
 export function uniqueProducts(
   productsBySurface: Map<string, Product[]>
 ): Product[] {

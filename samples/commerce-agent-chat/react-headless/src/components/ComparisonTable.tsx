@@ -3,7 +3,7 @@ import {
   formatPrice,
   hasDiscount,
   promoPrice,
-} from '../../../core/src/lib/commerceHelpers.js';
+} from '../lib/commerceHelpers.js';
 import type {Product} from '../types/commerce.js';
 
 import './ComparisonTable.css';

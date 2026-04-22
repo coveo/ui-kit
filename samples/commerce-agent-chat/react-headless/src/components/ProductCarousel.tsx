@@ -1,8 +1,4 @@
-import {
-  formatPrice,
-  hasDiscount,
-  promoPrice,
-} from '../../../core/src/lib/commerceHelpers.js';
+import {formatPrice, hasDiscount, promoPrice} from '../lib/commerceHelpers.js';
 import type {Product} from '../types/commerce.js';
 
 import './ProductCarousel.css';

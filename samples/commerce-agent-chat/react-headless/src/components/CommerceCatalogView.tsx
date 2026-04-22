@@ -3,13 +3,13 @@ import {
   extractActionsBySurface,
   extractCatalogComponents,
   extractProductsBySurface,
-} from '../../../core/src/lib/commerceExtractor.js';
+} from '@coveo/headless/commerce';
 import {
   isSupportedType,
   normalizeType,
   isType,
   uniqueProducts,
-} from '../../../core/src/lib/commerceHelpers.js';
+} from '../lib/commerceHelpers.js';
 import type {
   A2UISurfaceContent,
   BundleTierConfig,

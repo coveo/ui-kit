@@ -1,3 +1,9 @@
+/**
+ * Utilities for extracting commerce data from agent chat A2UI surface updates.
+ * These functions parse ServerToClientMessage operations and extract structured data
+ * (products, actions, catalog components) for rendering.
+ */
+
 import type {
   BundleTierConfig,
   CatalogComponent,
@@ -5,8 +11,12 @@ import type {
   Product,
   ServerToClientMessage,
   ValueMapEntry,
-} from '../types/commerce.js';
+} from './commerce-types.js';
 
+/**
+ * Extract products organized by surface ID from a list of operations.
+ * Iterates through dataModelUpdate operations and extracts ec_* fields as products.
+ */
 export function extractProductsBySurface(
   operations: ServerToClientMessage[]
 ): Map<string, Product[]> {
@@ -49,6 +59,10 @@ export function extractProductsBySurface(
   );
 }
 
+/**
+ * Extract next actions organized by surface ID from a list of operations.
+ * Looks for 'actions' collections in dataModelUpdate.
+ */
 export function extractActionsBySurface(
   operations: ServerToClientMessage[]
 ): Map<string, NextAction[]> {
@@ -82,6 +96,10 @@ export function extractActionsBySurface(
   return bySurface;
 }
 
+/**
+ * Extract catalog components from a list of operations.
+ * Parses surfaceUpdate components and returns structured CatalogComponent objects.
+ */
 export function extractCatalogComponents(
   operations: ServerToClientMessage[]
 ): CatalogComponent[] {
@@ -133,6 +151,10 @@ export function extractCatalogComponents(
   }
   return components;
 }
+
+// ─────────────────────────────────────────────────────────
+// Private Helpers
+// ─────────────────────────────────────────────────────────
 
 function normalizeSurfaceId(id: string): string {
   return id.trim();
