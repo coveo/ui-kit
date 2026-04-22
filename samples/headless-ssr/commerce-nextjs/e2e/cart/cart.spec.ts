@@ -44,18 +44,23 @@ test.describe('default', () => {
   });
 
   test.describe('when adding a new item to the cart', () => {
-    test.beforeEach(async ({page, cart}) => {
-      await page.goto('/toys');
+    let initialCartItemCount: number;
 
+    test.beforeEach(async ({page, cart}) => {
+      initialCartItemCount = await cart.items.count();
+
+      await page.goto('/toys');
       await cart.addToCartButton.first().click();
     });
 
     test('should add the item to the cart', async ({cart, page}) => {
       await page.goto('/cart');
 
-      const cartItemsCount = await cart.items.count();
-
-      expect(cartItemsCount).toBe(3);
+      await expect
+        .poll(async () => {
+          return await cart.items.count();
+        })
+        .toBe(initialCartItemCount + 1);
     });
   });
 

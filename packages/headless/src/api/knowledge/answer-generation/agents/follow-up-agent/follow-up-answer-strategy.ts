@@ -90,8 +90,14 @@ export const createFollowUpStrategy = (
         }
       }
     },
-    onRunErrorEvent: ({event}) => {
+    onRunErrorEvent: ({input, event}) => {
+      if (!runId) {
+        runId = input.runId;
+        dispatch(setActiveFollowUpAnswerId(input.runId));
+      }
+
       const mappedCode = mapRunErrorCode(event.code);
+
       dispatch(
         followUpFailed({
           message: event.message,

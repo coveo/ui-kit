@@ -675,6 +675,9 @@ function buildPartialDocumentInformation(
   return {
     collectionName,
     documentAuthor: getDocumentAuthor(result),
+    ...(getDocumentCategory(result)
+      ? {documentCategory: getDocumentCategory(result)}
+      : {}),
     documentPosition: resultIndex + 1,
     documentTitle: result.title,
     documentUri: result.uri,
@@ -684,6 +687,10 @@ function buildPartialDocumentInformation(
     sourceName: getSourceName(result),
     queryPipeline: state.pipeline || getPipelineInitialState(),
   };
+}
+
+function getDocumentCategory(result: Result) {
+  return result.raw?.objecttype || undefined;
 }
 
 export const documentIdentifier = (result: Result): DocumentIdentifier => {

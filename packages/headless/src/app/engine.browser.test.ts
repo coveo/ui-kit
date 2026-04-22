@@ -1,5 +1,5 @@
 /**
- * @jest-environment jsdom
+ * @vitest-environment jsdom
  */
 
 import {buildMockNavigatorContextProvider} from '../test/mock-navigator-context-provider.js';

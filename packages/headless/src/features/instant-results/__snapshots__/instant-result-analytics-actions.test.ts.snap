@@ -5,6 +5,7 @@ exports[`instant result analytics actions > #logRecommendationOpen > when analyt
   {
     "collectionName": "example collectionName",
     "documentAuthor": "unknown",
+    "documentCategory": "example objectType",
     "documentPosition": 1,
     "documentTitle": "example documentTitle",
     "documentUri": "example documentUri",

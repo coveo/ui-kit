@@ -36,7 +36,7 @@ const createSectionLayoutDecorator = (): Decorator => {
   };
 };
 
-export interface ResultSectionStoryConfig {
+interface ResultSectionStoryConfig {
   includeCodeRoot?: boolean;
   config?: Partial<SearchEngineConfiguration>;
   skipFirstSearch?: boolean;

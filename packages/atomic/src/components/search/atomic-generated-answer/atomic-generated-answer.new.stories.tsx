@@ -2,9 +2,12 @@ import type {
   Decorator,
   Meta,
   StoryObj as Story,
+  StoryContext,
 } from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
+import {userEvent} from 'storybook/test';
+import {MockAgentApi} from '@/storybook-utils/api/agent/mock';
 import {MockAnswerApi} from '@/storybook-utils/api/answer/mock';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
@@ -15,6 +18,7 @@ import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 import '@/src/components/search/atomic-search-box/atomic-search-box.js';
 import '@/src/components/search/atomic-search-layout/atomic-search-layout.js';
 
+const mockedAgentApi = new MockAgentApi();
 const mockedAnswerApi = new MockAnswerApi();
 const mockedSearchApi = new MockSearchApi();
 mockedSearchApi.searchEndpoint.mock((response) => ({
@@ -61,12 +65,21 @@ const configWithLegacyAnalytics = {
 // Use base config for decorator (shared by all stories)
 const {decorator, play} = wrapInSearchInterface({
   config: baseConfig,
+  disableStateReflectionInUrl: true,
 });
 
 // Legacy config play function for specific stories
 const {play: playWithLegacyAnalytics} = wrapInSearchInterface({
   config: configWithLegacyAnalytics,
+  disableStateReflectionInUrl: true,
 });
+
+const generatedAnswerQuery = 'how to resolve netflix connection with tivo';
+async function submitGeneratedAnswerQuery(storyContext: StoryContext) {
+  const searchBox =
+    await storyContext.canvas.findByShadowPlaceholderText('Search');
+  await userEvent.type(searchBox, `${generatedAnswerQuery}{enter}`);
+}
 
 const meta: Meta = {
   component: 'atomic-generated-answer',
@@ -80,46 +93,59 @@ const meta: Meta = {
       handles: events,
     },
     msw: {
-      handlers: [...mockedSearchApi.handlers, ...mockedAnswerApi.handlers],
+      handlers: [
+        ...mockedSearchApi.handlers,
+        ...mockedAnswerApi.handlers,
+        ...mockedAgentApi.handlers,
+      ],
     },
   },
   args: {
     ...args,
-    'answer-configuration-id': 'fc581be0-6e61-4039-ab26-a3f2f52f308f',
   },
   argTypes,
 
   play: async (storyContext) => {
     await play(storyContext);
-    const searchBox =
-      await storyContext.canvas.findAllByShadowPlaceholderText('Search');
-    await storyContext.userEvent.type(
-      searchBox[0],
-      'how to resolve netflix connection with tivo{enter}'
-    );
+    await submitGeneratedAnswerQuery(storyContext);
   },
 };
 
 export default meta;
 
-export const Default: Story = {};
+export const Default: Story = {
+  args: {
+    'answer-configuration-id': 'fc581be0-6e61-4039-ab26-a3f2f52f308f',
+  },
+};
 
 export const DisableCitationAnchoring: Story = {
   name: 'Citation anchoring disabled',
   args: {
     'disable-citation-anchoring': true,
+    'answer-configuration-id': 'fc581be0-6e61-4039-ab26-a3f2f52f308f',
   },
 };
 
 export const WithLegacyAnalytics: Story = {
   name: 'With Legacy Analytics',
+  args: {
+    'answer-configuration-id': 'fc581be0-6e61-4039-ab26-a3f2f52f308f',
+  },
   play: async (storyContext) => {
     await playWithLegacyAnalytics(storyContext);
-    const searchBox =
-      await storyContext.canvas.findAllByShadowPlaceholderText('Search');
-    await storyContext.userEvent.type(
-      searchBox[0],
-      'how to resolve netflix connection with tivo{enter}'
-    );
+    await submitGeneratedAnswerQuery(storyContext);
+  },
+};
+
+export const WithAgentId: Story = {
+  name: 'With Agent ID',
+  args: {
+    'agent-id': 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+    'answer-configuration-id': undefined,
+  },
+  play: async (storyContext) => {
+    await playWithLegacyAnalytics(storyContext);
+    await submitGeneratedAnswerQuery(storyContext);
   },
 };
