@@ -11,7 +11,6 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@coveo/commerce-agent-chat-components": "workspace:*",
     "@coveo/headless": "workspace:*",
     "react": "catalog:",
     "react-dom": "catalog:"
