@@ -1,6 +1,7 @@
 ---
 "@coveo/bueno": patch
 "@coveo/atomic": patch
+"@coveo/atomic-legacy": patch
 "@coveo/atomic-react": patch
 "@coveo/quantic": patch
 "@coveo/create-atomic": patch
