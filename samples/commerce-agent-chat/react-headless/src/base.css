@@ -51,11 +51,6 @@ button:focus {
   box-shadow: 0 0 0 2px rgba(19, 114, 236, 0.25);
 }
 
-.text-muted {
-  color: var(--ink-muted);
-  font-size: 0.82rem;
-}
-
 .commerce-loading {
   border-radius: 6px;
   background: linear-gradient(
@@ -77,22 +72,11 @@ button:focus {
   width: 70%;
 }
 
-.commerce-loading--image {
-  width: 100%;
-  height: 90px;
-}
-
 .commerce-heading {
   margin: 0 0 0.5rem;
   font-size: 0.95rem;
   font-weight: 600;
   color: var(--ink);
-}
-
-.commerce-catalog {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
 }
 
 .visually-hidden {

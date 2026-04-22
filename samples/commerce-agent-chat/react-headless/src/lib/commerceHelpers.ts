@@ -3,8 +3,6 @@
  * Includes formatting utilities (locale/currency specific) and component type checking.
  */
 
-import type {Product} from '../types/commerce.js';
-
 /**
  * Format a price value using USD locale and currency.
  * Returns empty string for non-numeric values.
@@ -78,28 +76,4 @@ export function isSupportedType(type: string): boolean {
     isType(type, 'BundleDisplay') ||
     isType(type, 'NextActionsBar')
   );
-}
-
-/**
- * Deduplicate products across multiple surfaces by product ID.
- * Preserves order of first occurrence.
- */
-export function uniqueProducts(
-  productsBySurface: Map<string, Product[]>
-): Product[] {
-  return Array.from(productsBySurface.values())
-    .flat()
-    .filter((product, index, arr) => {
-      const key =
-        product.ec_product_id ||
-        `${product.ec_name ?? ''}-${product.ec_price ?? ''}`;
-      return (
-        arr.findIndex((candidate) => {
-          const candidateKey =
-            candidate.ec_product_id ||
-            `${candidate.ec_name ?? ''}-${candidate.ec_price ?? ''}`;
-          return candidateKey === key;
-        }) === index
-      );
-    });
 }
