@@ -4,19 +4,18 @@ Private local sample to chat with the commerce agent over AG-UI streaming.
 
 ## Structure
 
-- `core/` shared runtime logic, config types, and tests.
 - `react-headless/` React headless implementation.
 
 ## Current parity
 
-React remains the reference implementation. Vue and Angular now match core commerce rendering behavior for:
+React remains the reference implementation. Vue and Angular now match the same commerce rendering behavior for:
 
 - Product carousel rendering (including image fallback and promo/original pricing display)
 - Comparison summary/table rendering (including image row and dynamic attribute rows)
 - Bundle display rendering (tabbed tiers, slot-level product mapping, and promo pricing)
 - Next-actions rendering and loading fallbacks
 
-Framework-specific template and styling details may still differ slightly, but shared extraction, loading, and rendering decisions are now aligned through `core/`.
+Framework-specific template and styling details may still differ slightly.
 
 ## Setup
 
@@ -53,12 +52,6 @@ Mapping used by Angular `generate:config` from `samples/commerce-agent-chat/.env
 
 ## Commands
 
-Run from `samples/commerce-agent-chat/core`:
-
-- `pnpm test`
-- `pnpm lint:check`
-- `pnpm lint:fix`
-
 Run from `samples/commerce-agent-chat/react`:
 
 - `pnpm dev` — starts the dev server on port 3001
@@ -89,7 +82,6 @@ Run from `samples/commerce-agent-chat/vanilla`:
 
 Run from repository root:
 
-- `pnpm turbo test --filter=@coveo/commerce-agent-chat-core`
 - `pnpm turbo build --filter=@coveo/commerce-agent-chat-react`
 - `pnpm turbo build --filter=@coveo/commerce-agent-chat-vue`
 - `pnpm turbo build --filter=@coveo/commerce-agent-chat-angular`
