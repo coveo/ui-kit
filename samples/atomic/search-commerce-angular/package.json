@@ -5,7 +5,7 @@
   "scripts": {
     "ng": "ng",
     "build": "pnpm --filter @coveo/ci if-not-cdn -- \"pnpm run build:assets\" && pnpm --filter @coveo/ci if-not-cdn -- \"pnpm run build:angular\"",
-    "build:angular": "node -e \"const v=require(\\\"typescript\\\").version;if(parseInt(v)>=6){console.log(\\\"Skipping: Angular 20.x requires TypeScript <6 (found \\\"+v+\\\")\\\");process.exit(0)}else{process.exit(1)}\" || ng build",
+    "build:angular": "node ../../../utils/ci/skip-if-ts6.mjs || ng build",
     "dev": "pnpm run build:assets && pnpm run dev:angular",
     "dev:angular": "ng serve --host=0.0.0.0 --prebundle=false",
     "build:assets": "node ../../../utils/ci/copy-files.mjs ../../../packages/atomic-angular/projects/atomic-angular/dist/assets src/assets ../../../packages/atomic-angular/projects/atomic-angular/dist/lang src/lang"

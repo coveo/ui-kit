@@ -59,7 +59,7 @@ async function getPackageVersion(log: StepLogger): Promise<string> {
     return version;
   } catch (error) {
     log('Failed to determine next package version.');
-    throw new Error(error.message);
+    throw new Error((error as Error).message);
   }
 }
 
@@ -178,7 +178,7 @@ async function createGithubDiscussionPost(
     );
     log(`Github discussion ID: ${discussion.id} created.`);
   } catch (error) {
-    log(`Discussion creation FAILED: ${error.message}`);
+    log(`Discussion creation FAILED: ${(error as Error).message}`);
   }
 }
 

@@ -6,7 +6,7 @@
     "ng": "ng",
     "dev": "ng serve",
     "gen:lit": "node ./scripts/build-lit.mjs",
-    "build:bundles": "node -e \"const v=require('typescript').version;if(parseInt(v)>=6){console.log('Skipping: Angular requires TypeScript <6 (found '+v+')');process.exit(0)}else{process.exit(1)}\" || ng build",
+    "build:bundles": "node ../../utils/ci/skip-if-ts6.mjs || ng build",
     "build:assets": "node ../../utils/ci/copy-files.mjs ../atomic/dist/assets projects/atomic-angular/dist/assets ../atomic/dist/lang projects/atomic-angular/dist/lang"
   },
   "dependencies": {

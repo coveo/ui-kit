@@ -34,7 +34,7 @@ interface Options {
  * @param {string} filePath - The path to the .env file
  * @param {object} newVariables - An object containing the key-value pairs of variables to update or add
  */
-function updateEnvFile(filePath, newVariables) {
+function updateEnvFile(filePath: string, newVariables: Record<string, string>) {
   try {
     if (!fs.existsSync(filePath)) {
       fs.mkdirSync(path.dirname(filePath), {recursive: true});
@@ -44,7 +44,7 @@ function updateEnvFile(filePath, newVariables) {
     const envData = fs.readFileSync(filePath, 'utf8');
 
     const lines = envData.split('\n');
-    const envVariables = {};
+    const envVariables: Record<string, string> = {};
 
     lines.forEach((line) => {
       const [key, value] = line.split('=');
@@ -64,7 +64,7 @@ function updateEnvFile(filePath, newVariables) {
     fs.writeFileSync(filePath, updatedEnvContent, 'utf8');
     console.log('.env file updated successfully!');
   } catch (error) {
-    console.error(`Error updating .env file: ${error.message}`);
+    console.error(`Error updating .env file: ${(error as Error).message}`);
   }
 }
 
@@ -142,7 +142,7 @@ async function writeDefinitionFile(
   });
 }
 
-async function buildOptions(scratchOrgDefPath): Promise<Options> {
+async function buildOptions(scratchOrgDefPath: string): Promise<Options> {
   const ci = isCi();
   const orgName = getOrgNameFromScratchDefFile(scratchOrgDefPath);
 
@@ -212,7 +212,7 @@ async function ensureCommunityExists(
     });
     log('Community created successfully.');
   } catch (error) {
-    if (error.message === 'Enter a different name. That one already exists.') {
+    if ((error as Error).message === 'Enter a different name. That one already exists.') {
       log('Community found.');
     } else {
       throw error;
@@ -289,7 +289,7 @@ async function publishCommunity(
   return response.result.url;
 }
 
-async function setCommunityBaseUrlAsEnvVariable(log, communityUrl, orgName) {
+async function setCommunityBaseUrlAsEnvVariable(log: StepLogger, communityUrl: string, orgName: string) {
   const pathSegments = [__dirname, '..', '..', '.env', `${orgName}.env`];
   const envFilePath = path.join(...pathSegments);
   const newEnvVariables = {

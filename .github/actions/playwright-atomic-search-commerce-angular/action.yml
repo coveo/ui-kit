@@ -9,7 +9,12 @@ runs:
   using: composite
   steps:
     - name: Run Playwright tests
-      run: pnpm exec playwright test
+      run: |
+        if node ../../../utils/ci/skip-if-ts6.mjs; then
+          echo "Skipping Angular e2e tests (Angular requires TypeScript <6)"
+        else
+          pnpm exec playwright test
+        fi
       working-directory: samples/atomic/search-commerce-angular
       shell: bash
     - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
