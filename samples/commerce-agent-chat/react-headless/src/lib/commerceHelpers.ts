@@ -3,6 +3,8 @@
  * Includes formatting utilities (locale/currency specific) and component type checking.
  */
 
+import type {Product} from '../types/commerce.js';
+
 /**
  * Format a price value using USD locale and currency.
  * Returns empty string for non-numeric values.
