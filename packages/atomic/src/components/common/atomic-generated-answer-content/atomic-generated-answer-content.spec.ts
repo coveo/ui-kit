@@ -3,8 +3,9 @@ import {beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {renderGeneratedContentContainer} from '../generated-answer/generated-content-container';
-import {renderAgentGenerationSteps} from '../generated-answer/render-agent-generation-steps';
 import {renderFeedbackAndCopyButtons} from '../generated-answer/render-feedback-and-copy-buttons';
+import type {AtomicAgentStreamOfThought} from '../atomic-agent-stream-of-thought/atomic-agent-stream-of-thought';
+import '../atomic-agent-stream-of-thought/atomic-agent-stream-of-thought';
 import {renderSourceCitations} from '../generated-answer/source-citations';
 import type {
   AtomicGeneratedAnswerContent,
@@ -21,9 +22,7 @@ vi.mock('../generated-answer/generated-content-container', () => ({
     () => (slot?: unknown) => html`${slot ?? ''}`
   ),
 }));
-vi.mock('../generated-answer/render-agent-generation-steps', () => ({
-  renderAgentGenerationSteps: vi.fn(() => html``),
-}));
+
 vi.mock('../generated-answer/source-citations', () => ({
   renderSourceCitations: vi.fn(() => (slot?: unknown) => html`${slot ?? ''}`),
 }));
@@ -96,6 +95,10 @@ describe('atomic-generated-answer-content', () => {
         vi.mocked(renderGeneratedContentContainer).mock.calls.at(-1)?.[0].props,
       getSourceCitationsProps: () =>
         vi.mocked(renderSourceCitations).mock.calls.at(-1)?.[0].props,
+      getStreamOfThought: () =>
+        element.shadowRoot?.querySelector<AtomicAgentStreamOfThought>(
+          'atomic-agent-stream-of-thought'
+        ),
     };
   };
 
@@ -113,35 +116,32 @@ describe('atomic-generated-answer-content', () => {
   });
 
   it('should render nothing when the answer id is missing', async () => {
-    await renderComponent({
+    const {getStreamOfThought} = await renderComponent({
       generatedAnswer: {
         answer: undefined,
         answerId: undefined,
       },
     });
 
-    expect(renderAgentGenerationSteps).not.toHaveBeenCalled();
+    expect(getStreamOfThought()).toBeNull();
     expect(renderGeneratedContentContainer).not.toHaveBeenCalled();
     expect(renderFeedbackAndCopyButtons).not.toHaveBeenCalled();
   });
 
-  it('should call renderAgentGenerationSteps with an empty list when generation steps are missing', async () => {
-    await renderComponent({
+  it('should pass empty agentSteps when generation steps are missing', async () => {
+    const {getStreamOfThought} = await renderComponent({
       generatedAnswer: {
         generationSteps: undefined,
       },
     });
 
-    expect(renderAgentGenerationSteps).toHaveBeenCalledWith({
-      props: expect.objectContaining({
-        i18n,
-        agentSteps: [],
-        isStreaming: false,
-      }),
-    });
+    const streamOfThoughtElement = getStreamOfThought();
+    expect(streamOfThoughtElement).not.toBeNull();
+    expect(streamOfThoughtElement?.agentSteps).toEqual([]);
+    expect(streamOfThoughtElement?.isStreaming).toBe(false);
   });
 
-  it('should call renderAgentGenerationSteps with isStreaming false when not streaming', async () => {
+  it('should pass isStreaming false to stream-of-thought when not streaming', async () => {
     const generationSteps = [
       {
         name: 'searching' as const,
@@ -150,24 +150,20 @@ describe('atomic-generated-answer-content', () => {
       },
     ];
 
-    await renderComponent({
+    const {getStreamOfThought} = await renderComponent({
       generatedAnswer: {
         isStreaming: false,
         generationSteps,
       },
     });
 
-    expect(renderAgentGenerationSteps).toHaveBeenCalledWith({
-      props: expect.objectContaining({
-        i18n,
-        agentSteps: generationSteps,
-        isStreaming: false,
-      }),
-    });
+    const streamOfThoughtElement = getStreamOfThought();
+    expect(streamOfThoughtElement?.agentSteps).toEqual(generationSteps);
+    expect(streamOfThoughtElement?.isStreaming).toBe(false);
   });
 
-  it('should render generation-step state when streaming without answer content', async () => {
-    await renderComponent({
+  it('should render stream-of-thought when streaming without answer content', async () => {
+    const {getStreamOfThought} = await renderComponent({
       generatedAnswer: {
         answer: undefined,
         answerId: 'answer-id',
@@ -182,19 +178,15 @@ describe('atomic-generated-answer-content', () => {
       },
     });
 
-    expect(renderAgentGenerationSteps).toHaveBeenCalledWith({
-      props: expect.objectContaining({
-        i18n,
-        isStreaming: true,
-        agentSteps: [
-          {
-            name: 'thinking',
-            status: 'active',
-            startedAt: 1,
-          },
-        ],
-      }),
-    });
+    const streamOfThoughtElement = getStreamOfThought();
+    expect(streamOfThoughtElement?.isStreaming).toBe(true);
+    expect(streamOfThoughtElement?.agentSteps).toEqual([
+      {
+        name: 'thinking',
+        status: 'active',
+        startedAt: 1,
+      },
+    ]);
     expect(renderGeneratedContentContainer).toHaveBeenCalledWith({
       props: expect.objectContaining({
         answer: undefined,

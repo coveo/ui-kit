@@ -8,8 +8,8 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import atomicGeneratedAnswerStyles from '@/src/components/search/atomic-generated-answer/atomic-generated-answer.tw.css.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import '../atomic-agent-stream-of-thought/atomic-agent-stream-of-thought';
 import {renderGeneratedContentContainer} from '../generated-answer/generated-content-container';
-import {renderAgentGenerationSteps} from '../generated-answer/render-agent-generation-steps';
 import {renderFeedbackAndCopyButtons} from '../generated-answer/render-feedback-and-copy-buttons';
 import {renderSourceCitations} from '../generated-answer/source-citations';
 
@@ -109,13 +109,11 @@ export class AtomicGeneratedAnswerContent extends LitElement {
 
     return html`
       <div>
-        ${renderAgentGenerationSteps({
-          props: {
-            i18n: this.i18n,
-            agentSteps: generationSteps ?? [],
-            isStreaming: Boolean(isStreaming),
-          },
-        })}
+        <atomic-agent-stream-of-thought
+          .i18n=${this.i18n}
+          .agentSteps=${generationSteps ?? []}
+          .isStreaming=${Boolean(isStreaming)}
+        ></atomic-agent-stream-of-thought>
         <div>
           ${renderGeneratedContentContainer({
             props: {
