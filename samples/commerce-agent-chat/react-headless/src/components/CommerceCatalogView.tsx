@@ -17,6 +17,7 @@ import type {
   NextAction,
   Product,
 } from '../../../core/src/types/commerce.js';
+import {ComparisonSummary} from './ComparisonSummary.js';
 import {NextActionsBar} from './NextActionsBar.js';
 
 import './CommerceCatalogView.css';
@@ -53,10 +54,6 @@ interface ComparisonTableElement extends HTMLElement {
   products: Product[];
   comparisonAttributes: string[];
   isLoading: boolean;
-}
-
-interface ComparisonSummaryElement extends HTMLElement {
-  text: string;
 }
 
 interface BundleDisplayElement extends HTMLElement {
@@ -111,20 +108,6 @@ function ComparisonTableBridge({
   }, [heading, products, comparisonAttributes, isLoading]);
 
   return <cac-comparison-table ref={ref} />;
-}
-
-function ComparisonSummaryBridge({text}: {text: string}): React.JSX.Element {
-  const ref = useRef<ComparisonSummaryElement | null>(null);
-
-  useEffect(() => {
-    if (!ref.current) {
-      return;
-    }
-
-    ref.current.text = text;
-  }, [text]);
-
-  return <cac-comparison-summary ref={ref} />;
 }
 
 function BundleDisplayBridge({
@@ -271,7 +254,7 @@ export function CommerceCatalogView({
 
         if (isType(component.type, 'ComparisonSummary')) {
           return (
-            <ComparisonSummaryBridge
+            <ComparisonSummary
               key={`comparison-summary-${index}`}
               text={component.text ?? ''}
             />

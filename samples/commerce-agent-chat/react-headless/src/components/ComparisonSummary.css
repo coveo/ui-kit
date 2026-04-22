@@ -1,0 +1,15 @@
+.rh-comparison-summary {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-accent);
+  padding: 0.9rem 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.rh-comparison-summary__text {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--ink);
+}

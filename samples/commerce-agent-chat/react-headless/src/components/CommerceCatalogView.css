@@ -11,7 +11,7 @@
     .rh-next-actions,
     cac-bundle-display,
     cac-comparison-table,
-    cac-comparison-summary
+    .rh-comparison-summary
   ) {
   display: block;
   width: 100%;

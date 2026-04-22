@@ -15,10 +15,6 @@ declare module 'react/jsx-runtime' {
         React.HTMLAttributes<HTMLElement>,
         HTMLElement
       >;
-      'cac-comparison-summary': React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLElement>,
-        HTMLElement
-      >;
       'atomock-search-results': React.DetailedHTMLProps<
         React.HTMLAttributes<HTMLElement>,
         HTMLElement
