@@ -1,0 +1,14 @@
+name: 'Playwright Headless Search React'
+description: 'Run Playwright tests for Headless Search React'
+runs:
+  using: composite
+  steps:
+    - name: Run Playwright tests
+      run: pnpm exec playwright test
+      working-directory: samples/headless/search-react
+      shell: bash
+    - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+      if: failure()
+      with:
+        name: headless-search-react-screenshots
+        path: samples/headless/search-react/playwright-report/
