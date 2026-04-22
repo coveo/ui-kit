@@ -279,6 +279,15 @@ export type {
 } from './controllers/commerce/search-box/headless-search-box.js';
 export {buildSearchBox} from './controllers/commerce/search-box/headless-search-box.js';
 export type {
+  AgentChat,
+  AgentChatControllerState,
+  AgentChatActivity,
+  AgentChatError,
+  AgentChatMessage,
+  AgentChatProgress,
+} from './controllers/commerce/agent-chat/headless-agent-chat.js';
+export {buildAgentChat} from './controllers/commerce/agent-chat/headless-agent-chat.js';
+export type {
   StandaloneSearchBox,
   StandaloneSearchBoxState,
 } from './controllers/commerce/standalone-search-box/headless-standalone-search-box.js';
