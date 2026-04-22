@@ -116,7 +116,7 @@
     "@types/escape-html": "1.0.4",
     "@types/node": "catalog:",
     "@vitest/browser-playwright": "catalog:",
-    "@wc-toolkit/storybook-helpers": "10.2.1",
+    "@wc-toolkit/storybook-helpers": "10.2.3",
     "chromatic": "15.3.1",
     "handlebars": "4.7.9",
     "lit-html": "3.3.2",
