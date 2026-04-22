@@ -3,7 +3,7 @@ import type {
   AgentChatMessage,
   AgentChatProgress,
 } from '@coveo/headless/commerce';
-import type {Product} from '../../../core/src/types/commerce.js';
+import type {Product} from '../types/commerce.js';
 import {ActivityRenderer} from './ActivityRenderer.js';
 import {ProgressTrace, type ProgressTraceEntry} from './ProgressTrace.js';
 import {renderMarkdown} from '../lib/markdown.js';

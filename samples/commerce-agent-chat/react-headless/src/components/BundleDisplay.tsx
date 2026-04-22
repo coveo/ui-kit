@@ -4,10 +4,7 @@ import {
   hasDiscount,
   promoPrice,
 } from '../../../core/src/lib/commerceHelpers.js';
-import type {
-  BundleTierConfig,
-  Product,
-} from '../../../core/src/types/commerce.js';
+import type {BundleTierConfig, Product} from '../types/commerce.js';
 
 import './BundleDisplay.css';
 

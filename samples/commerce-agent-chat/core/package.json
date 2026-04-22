@@ -6,9 +6,7 @@
   "type": "module",
   "exports": {
     "./config/*": "./src/config/*.ts",
-    "./lib/*": "./src/lib/*.ts",
-    "./styles/*": "./src/styles/*",
-    "./types/*": "./src/types/*.ts"
+    "./lib/*": "./src/lib/*.ts"
   },
   "scripts": {
     "test": "vitest run",

@@ -4,7 +4,7 @@ import {
   hasDiscount,
   promoPrice,
 } from '../../../core/src/lib/commerceHelpers.js';
-import type {Product} from '../../../core/src/types/commerce.js';
+import type {Product} from '../types/commerce.js';
 
 import './ComparisonTable.css';
 

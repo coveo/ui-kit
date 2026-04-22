@@ -16,7 +16,7 @@ import type {
   CatalogComponent,
   NextAction,
   Product,
-} from '../../../core/src/types/commerce.js';
+} from '../types/commerce.js';
 import {ComparisonTable} from './ComparisonTable.js';
 import {ComparisonSummary} from './ComparisonSummary.js';
 import {BundleDisplay} from './BundleDisplay.js';

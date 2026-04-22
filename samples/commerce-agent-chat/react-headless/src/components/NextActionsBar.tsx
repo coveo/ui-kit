@@ -1,4 +1,4 @@
-import type {NextAction} from '../../../core/src/types/commerce.js';
+import type {NextAction} from '../types/commerce.js';
 
 import './NextActionsBar.css';
 

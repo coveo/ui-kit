@@ -1,7 +1,4 @@
-import type {
-  A2UISurfaceContent,
-  Product,
-} from '../../../core/src/types/commerce.js';
+import type {A2UISurfaceContent, Product} from '../types/commerce.js';
 import {CommerceCatalogView} from './CommerceCatalogView.js';
 
 import './ActivityRenderer.css';
