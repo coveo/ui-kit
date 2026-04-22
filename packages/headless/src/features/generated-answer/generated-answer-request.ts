@@ -3,7 +3,10 @@ import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import type {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
 import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
 import {getOrganizationEndpoint} from '../../api/platform-client.js';
-import type {BaseParam} from '../../api/platform-service-params.js';
+import type {
+  BaseParam,
+  ContextParam,
+} from '../../api/platform-service-params.js';
 import type {SearchRequest} from '../../api/search/search/search-request.js';
 import type {
   AnalyticsParam,
@@ -178,10 +181,10 @@ type HeadAnswerParams = {
   facets?: AnyFacetRequest[];
   searchHub?: string;
   pipeline?: string;
-  context?: Record<string, string | string[]>;
   citationsFieldToInclude?: string[];
   locale: string;
-} & AnalyticsParam;
+} & ContextParam &
+  AnalyticsParam;
 
 export const constructGenerateHeadAnswerParams = (
   state: StateNeededForHeadAnswerParams,
