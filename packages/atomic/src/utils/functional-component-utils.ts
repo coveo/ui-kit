@@ -29,7 +29,7 @@ export type FunctionalComponentWithOptionalChildren<T> = ({
   children?: FunctionalComponentChildren
 ) => TemplateResult | typeof nothing;
 
-export type FunctionalComponentGuard<T> = ({
+type FunctionalComponentGuard<T> = ({
   props,
 }: {
   props: T;

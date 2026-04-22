@@ -33,7 +33,7 @@ const generatedAnswerSseErrorMap: Record<string, GeneratedAnswerSseErrorCode> =
       GeneratedAnswerSseErrorCode.SseModelsNotAvailable,
     'KNOWLEDGE:SSE_INTERNAL_ERROR':
       GeneratedAnswerSseErrorCode.SseInternalError,
-    'KNOWLEDGE:TURN_LIMIT_REACHED':
+    'KNOWLEDGE:SSE_TURN_LIMIT_REACHED':
       GeneratedAnswerSseErrorCode.SseTurnLimitReached,
   };
 

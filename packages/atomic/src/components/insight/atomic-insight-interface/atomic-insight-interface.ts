@@ -29,7 +29,7 @@ import {getAnalyticsConfig} from './analytics-config.js';
 import {createInsightStore, type InsightStore} from './store.js';
 
 const FirstInsightRequestExecutedFlag = 'firstInsightRequestExecuted';
-export type InsightInitializationOptions = InsightEngineConfiguration;
+type InsightInitializationOptions = InsightEngineConfiguration;
 export type InsightBindings = CommonBindings<
   InsightEngine,
   InsightStore,

@@ -7,7 +7,7 @@ import {vi} from 'vitest';
 import type {CommerceStore} from '@/src/components/commerce/atomic-commerce-interface/store';
 import type {CommerceBindings} from '@/src/components/commerce/atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface.js';
 import {bindingsContext} from '@/src/components/common/context/bindings-context.js';
-import type {BaseAtomicInterface} from '@/src/components/common/interface/interface-common.js';
+import type {BaseAtomicInterface} from '@/src/components/common/interface/interface-controller.js';
 import {
   type InitializeEvent,
   markParentAsReady,

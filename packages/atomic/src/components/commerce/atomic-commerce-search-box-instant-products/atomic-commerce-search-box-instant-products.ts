@@ -31,7 +31,7 @@ import {encodeForDomAttribute} from '@/src/utils/string-utils';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductTemplateProvider} from '../product-list/product-template-provider';
 
-export type AriaLabelGenerator = (
+type AriaLabelGenerator = (
   bindings: CommerceBindings,
   product: Product
 ) => string | undefined;

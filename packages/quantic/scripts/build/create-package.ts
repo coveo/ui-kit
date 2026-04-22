@@ -59,7 +59,7 @@ async function getPackageVersion(log: StepLogger): Promise<string> {
     return version;
   } catch (error) {
     log('Failed to determine next package version.');
-    throw new Error(error.message);
+    throw new Error((error as Error).message);
   }
 }
 
@@ -77,9 +77,9 @@ async function buildOptions(): Promise<Options> {
     promote: promote,
     removeTranslations: removeTranslations,
     jwt: {
-      clientId: process.env.SFDX_AUTH_CLIENT_ID,
-      keyFile: process.env.SFDX_AUTH_JWT_KEY_FILE,
-      username: process.env.SFDX_AUTH_JWT_USERNAME,
+      clientId: process.env.SFDX_AUTH_CLIENT_ID!,
+      keyFile: process.env.SFDX_AUTH_JWT_KEY_FILE!,
+      username: process.env.SFDX_AUTH_JWT_USERNAME!,
     },
   };
 }
@@ -178,7 +178,7 @@ async function createGithubDiscussionPost(
     );
     log(`Github discussion ID: ${discussion.id} created.`);
   } catch (error) {
-    log(`Discussion creation FAILED: ${error.message}`);
+    log(`Discussion creation FAILED: ${(error as Error).message}`);
   }
 }
 

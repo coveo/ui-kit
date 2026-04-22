@@ -2,14 +2,12 @@ import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {page, userEvent} from 'vitest/browser';
-import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {
-  type RenderFollowUpInputProps,
-  renderFollowUpInput,
-} from './render-follow-up-input';
+import type {AtomicAskFollowUpInput} from './atomic-ask-follow-up-input';
+import './atomic-ask-follow-up-input';
 
-describe('#renderFollowUpInput', () => {
+describe('atomic-ask-follow-up-input', () => {
   let i18n: i18n;
 
   beforeAll(async () => {
@@ -25,44 +23,50 @@ describe('#renderFollowUpInput', () => {
     },
   };
 
-  const parts = (element: Element) => ({
-    get inputContainer() {
-      return element.querySelector('[part="input-container"]');
-    },
-    get inputField() {
-      return element.querySelector('[part="input-field"]');
-    },
-    get submitButton() {
-      return element.querySelector('[part="submit-button"]');
-    },
-    get submitIcon() {
-      return element.querySelector('[part="submit-icon"]');
-    },
-  });
-
   const renderComponent = async (
-    props: Partial<RenderFollowUpInputProps> = {}
+    props: {
+      submitButtonDisabled?: boolean;
+      askFollowUp?: (query: string) => Promise<void>;
+    } = {}
   ) => {
-    const defaultProps: RenderFollowUpInputProps = {
-      i18n,
-      submitButtonDisabled: false,
-      askFollowUp: vi.fn().mockResolvedValue(undefined),
-      ...props,
-    };
+    const element = await fixture<AtomicAskFollowUpInput>(html`
+      <atomic-ask-follow-up-input
+        .i18n=${i18n}
+        .submitButtonDisabled=${props.submitButtonDisabled ?? false}
+        .askFollowUp=${props.askFollowUp ??
+        vi.fn().mockResolvedValue(undefined)}
+      ></atomic-ask-follow-up-input>
+    `);
 
-    const element = await renderFunctionFixture(
-      html`${renderFollowUpInput({props: defaultProps})}`
-    );
+    const shadowParts = () => ({
+      get inputContainer() {
+        return element.shadowRoot?.querySelector('[part="input-container"]');
+      },
+      get textareaExpander() {
+        return element.shadowRoot?.querySelector(
+          '[part="textarea-expander"]'
+        ) as HTMLElement | null;
+      },
+      get inputField() {
+        return element.shadowRoot?.querySelector('[part="input-field"]');
+      },
+      get submitButton() {
+        return element.shadowRoot?.querySelector('[part="submit-button"]');
+      },
+      get submitIcon() {
+        return element.shadowRoot?.querySelector('[part="submit-icon"]');
+      },
+    });
 
     return {
       element,
       ...locators,
-      parts: () => parts(element),
+      parts: shadowParts,
     };
   };
 
   describe('rendering', () => {
-    it('should render with valid props', async () => {
+    it('should render the component', async () => {
       const {element} = await renderComponent();
       await expect.element(element).toBeInTheDocument();
     });
@@ -87,23 +91,24 @@ describe('#renderFollowUpInput', () => {
       expect(parts().submitIcon).toBeInTheDocument();
     });
 
-    it('should render input with correct type', async () => {
+    it('should render a textarea with one row for the input field', async () => {
       const {input} = await renderComponent();
-      const inputElement = input.element() as HTMLInputElement;
-      expect(inputElement.type).toBe('text');
+      const inputElement = input.element() as HTMLTextAreaElement;
+      expect(inputElement.tagName).toBe('TEXTAREA');
+      expect(inputElement.rows).toBe(1);
     });
 
-    it('should render input with placeholder text', async () => {
+    it('should render input with a placeholder', async () => {
       const {input} = await renderComponent();
       await expect.element(input).toHaveAttribute('placeholder');
     });
 
-    it('should render input with aria-label', async () => {
+    it('should render input with an aria-label', async () => {
       const {input} = await renderComponent();
       await expect.element(input).toHaveAttribute('aria-label');
     });
 
-    it('should render submit button with aria-label', async () => {
+    it('should render submit button with an aria-label', async () => {
       const {submitButton} = await renderComponent();
       await expect.element(submitButton).toHaveAttribute('aria-label');
     });
@@ -182,27 +187,31 @@ describe('#renderFollowUpInput', () => {
       await input.fill('test question');
       await submitButton.click();
 
-      await vi.waitFor(async () => {
-        const inputElement = input.element() as HTMLInputElement;
+      await vi.waitFor(() => {
+        const inputElement = input.element() as HTMLTextAreaElement;
         expect(inputElement.value).toBe('');
       });
     });
 
-    it('should keep button disabled when submitButtonDisabled is true', async () => {
+    it('should clear the replica text after successful submission', async () => {
       const askFollowUp = vi.fn().mockResolvedValue(undefined);
-      const {input, submitButton} = await renderComponent({
-        askFollowUp,
-        submitButtonDisabled: true,
-      });
+      const {input, submitButton, parts} = await renderComponent({askFollowUp});
 
       await input.fill('test question');
-      await userEvent.keyboard('{Enter}');
+      expect(parts().textareaExpander?.dataset.replicatedValue).toBe(
+        'test question'
+      );
 
-      await expect.element(submitButton).toBeDisabled();
-      expect(askFollowUp).not.toHaveBeenCalled();
+      await submitButton.click();
+
+      await vi.waitFor(() => {
+        expect(
+          parts().textareaExpander?.dataset.replicatedValue
+        ).toBeUndefined();
+      });
     });
 
-    it('should not call askFollowUp when button is already disabled', async () => {
+    it('should not call askFollowUp when submitButtonDisabled is true', async () => {
       const askFollowUp = vi.fn().mockResolvedValue(undefined);
       const {input} = await renderComponent({
         askFollowUp,
@@ -237,7 +246,7 @@ describe('#renderFollowUpInput', () => {
       await userEvent.keyboard('{Enter}');
 
       await vi.waitFor(() => {
-        const inputElement = input.element() as HTMLInputElement;
+        const inputElement = input.element() as HTMLTextAreaElement;
         expect(inputElement.value).toBe('');
       });
     });
@@ -249,6 +258,103 @@ describe('#renderFollowUpInput', () => {
       await userEvent.keyboard('{Enter}');
 
       expect(askFollowUp).not.toHaveBeenCalled();
+    });
+
+    it('should not submit on Shift+Enter', async () => {
+      const askFollowUp = vi.fn().mockResolvedValue(undefined);
+      const {input} = await renderComponent({askFollowUp});
+      const inputElement = input.element() as HTMLTextAreaElement;
+
+      await input.fill('first line\nsecond line');
+      inputElement.dispatchEvent(
+        new KeyboardEvent('keydown', {
+          bubbles: true,
+          cancelable: true,
+          key: 'Enter',
+          shiftKey: true,
+        })
+      );
+
+      expect(inputElement.value).toBe('first line\nsecond line');
+      expect(askFollowUp).not.toHaveBeenCalled();
+    });
+
+    it('should submit multiline questions when the submit button is clicked', async () => {
+      const askFollowUp = vi.fn().mockResolvedValue(undefined);
+      const {input, submitButton} = await renderComponent({askFollowUp});
+
+      await input.fill('first line\nsecond line');
+      await submitButton.click();
+
+      await vi.waitFor(() => {
+        expect(askFollowUp).toHaveBeenCalledWith('first line\nsecond line');
+      });
+    });
+
+    it('should sync the replica text as the user types', async () => {
+      const {input, parts} = await renderComponent();
+
+      await input.fill('first line\nsecond line');
+
+      expect(parts().textareaExpander?.dataset.replicatedValue).toBe(
+        'first line\nsecond line'
+      );
+    });
+  });
+
+  describe('expand/collapse behavior', () => {
+    it('should add expanded class to textarea-expander on focus', async () => {
+      const {input, parts} = await renderComponent();
+
+      const inputElement = input.element() as HTMLTextAreaElement;
+      inputElement.focus();
+
+      expect(parts().textareaExpander?.classList.contains('expanded')).toBe(
+        true
+      );
+    });
+
+    it('should remove expanded class from textarea-expander on blur', async () => {
+      const {input, parts} = await renderComponent();
+
+      const inputElement = input.element() as HTMLTextAreaElement;
+      inputElement.focus();
+      inputElement.blur();
+
+      expect(parts().textareaExpander?.classList.contains('expanded')).toBe(
+        false
+      );
+    });
+
+    it('should collapse textarea after successful submission', async () => {
+      const askFollowUp = vi.fn().mockResolvedValue(undefined);
+      const {input, submitButton, parts} = await renderComponent({askFollowUp});
+
+      const inputElement = input.element() as HTMLTextAreaElement;
+      inputElement.focus();
+
+      await input.fill('test question');
+      await submitButton.click();
+
+      await vi.waitFor(() => {
+        expect(parts().textareaExpander?.classList.contains('expanded')).toBe(
+          false
+        );
+      });
+    });
+
+    it('should expand textarea when user types even if expanded class is missing', async () => {
+      const {input, parts} = await renderComponent();
+
+      const expander = parts().textareaExpander!;
+      expander.classList.remove('expanded');
+
+      const inputElement = input.element() as HTMLTextAreaElement;
+      inputElement.dispatchEvent(new InputEvent('input', {bubbles: true}));
+
+      expect(parts().textareaExpander?.classList.contains('expanded')).toBe(
+        true
+      );
     });
   });
 });

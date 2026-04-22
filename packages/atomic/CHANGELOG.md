@@ -1,3 +1,35 @@
+## 3.56.2
+
+### Patch Changes
+
+- [#7174](https://github.com/coveo/ui-kit/pull/7174) [`f488b2c`](https://github.com/coveo/ui-kit/commit/f488b2c71e3b0766852923b954606b335af1b71c) Thanks [@erocheleau](https://github.com/erocheleau)! - Use Storybook `userEvent` APIs in the generated answer story interaction instead of manual DOM event dispatching.
+
+## 3.56.1
+
+### Patch Changes
+
+- Updated dependencies [[`f1924b8`](https://github.com/coveo/ui-kit/commit/f1924b800f40b0ed2f857ed18323ae85585854d3)]:
+  - @coveo/headless@3.49.3
+  - @coveo/atomic-legacy@0.0.12
+
+## 3.56.0
+
+### Minor Changes
+
+- [#7353](https://github.com/coveo/ui-kit/pull/7353) [`736cc2e`](https://github.com/coveo/ui-kit/commit/736cc2ec8e6fe91fc2fc0262167bb3db23017e85) Thanks [@louis-bompart](https://github.com/louis-bompart)! - Add caching for svg loaded by the atomic-icon component, hence reducing the # of duplicate requests, and speeding up the overall rendering.
+
+### Patch Changes
+
+- [#7390](https://github.com/coveo/ui-kit/pull/7390) [`7b7de89`](https://github.com/coveo/ui-kit/commit/7b7de897f4c06e35e9c87189c2bc56cc078e6291) Thanks [@SimonMilord](https://github.com/SimonMilord)! - fixed issue where using the agent api was breaking the citation anchoring
+
+- [#7416](https://github.com/coveo/ui-kit/pull/7416) [`71326a1`](https://github.com/coveo/ui-kit/commit/71326a1db95aadc112f82f6157c9e71341923d39) Thanks [@louis-bompart](https://github.com/louis-bompart)! - In the CDN, do not bundle components in index.esm.js
+
+- [#7426](https://github.com/coveo/ui-kit/pull/7426) [`2b0e4f1`](https://github.com/coveo/ui-kit/commit/2b0e4f110c98bacf5857a1e404270620d21c3405) Thanks [@alexprudhomme](https://github.com/alexprudhomme)! - Fix Shift+Enter in search box triggering a query. Pressing Shift+Enter now inserts a newline in the textarea without submitting the search.
+
+- Updated dependencies [[`7b7de89`](https://github.com/coveo/ui-kit/commit/7b7de897f4c06e35e9c87189c2bc56cc078e6291)]:
+  - @coveo/headless@3.49.2
+  - @coveo/atomic-legacy@0.0.11
+
 ## 3.55.3
 
 ### Patch Changes
