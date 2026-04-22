@@ -3,7 +3,7 @@ import type React from 'react';
 declare module 'react/jsx-runtime' {
   namespace JSX {
     interface IntrinsicElements {
-      'cac-activity-renderer': React.DetailedHTMLProps<
+      'cac-commerce-catalog-view': React.DetailedHTMLProps<
         React.HTMLAttributes<HTMLElement>,
         HTMLElement
       >;

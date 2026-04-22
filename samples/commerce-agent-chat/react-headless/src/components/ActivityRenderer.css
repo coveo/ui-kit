@@ -1,0 +1,25 @@
+.rh-activity-renderer {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-accent);
+  padding: 0.85rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  box-shadow: none;
+}
+
+.rh-activity-type {
+  margin: 0 0 0.35rem;
+  color: var(--ink-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.rh-activity-content {
+  margin: 0;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+}

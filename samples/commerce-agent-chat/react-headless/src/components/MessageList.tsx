@@ -3,6 +3,8 @@ import type {
   AgentChatMessage,
   AgentChatProgress,
 } from '@coveo/headless/commerce';
+import {ActivityRenderer} from './ActivityRenderer.js';
+import {renderMarkdown} from '../../../core/src/lib/markdown.js';
 
 import './MessageList.css';
 
@@ -21,20 +23,6 @@ interface ActivityMessage {
   content: unknown;
 }
 
-interface ActivityRendererElement extends HTMLElement {
-  activity: ActivityMessage;
-  isLoading: boolean;
-  bundleProducts: Map<string, ProductRecord[]>;
-  allowNextActionsFallback: boolean;
-}
-
-interface ActivityRendererBridgeProps {
-  activity: ActivityMessage;
-  isLoading: boolean;
-  allowNextActionsFallback: boolean;
-  bundleProducts: Map<string, ProductRecord[]>;
-}
-
 interface ProgressTraceElement extends HTMLElement {
   progressTrace: unknown[];
   progressSteps: string[];
@@ -47,6 +35,14 @@ interface ProgressTraceBridgeProps {
   progressSteps: string[];
   isStreaming: boolean;
   messageId: string;
+}
+
+interface ProgressTraceEntry {
+  id: string;
+  kind: 'reasoning' | 'tool';
+  label: string;
+  text: string;
+  status: 'streaming' | 'completed';
 }
 
 interface SurfaceComponent {
@@ -171,49 +167,6 @@ function extractProductsBySurface(
   );
 }
 
-function escapeHtml(content: string) {
-  return content
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#39;');
-}
-
-function renderInlineMarkdown(content: string) {
-  return content
-    .replace(/`([^`]+)`/g, '<code>$1</code>')
-    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*([^*]+)\*/g, '<em>$1</em>')
-    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2">$1</a>');
-}
-
-function renderMarkdown(content: string): string {
-  const escaped = escapeHtml(content);
-  const blocks = escaped.split(/\n\s*\n/);
-
-  return blocks
-    .map((block) => {
-      const lines = block.split('\n').filter((line) => line.trim().length > 0);
-      if (lines.length === 0) {
-        return '';
-      }
-
-      const isListBlock = lines.every((line) => /^\s*[-*]\s+/.test(line));
-      if (isListBlock) {
-        const items = lines
-          .map((line) => line.replace(/^\s*[-*]\s+/, '').trim())
-          .map((line) => `<li>${renderInlineMarkdown(line)}</li>`)
-          .join('');
-        return `<ul>${items}</ul>`;
-      }
-
-      const paragraph = lines.join('<br />');
-      return `<p>${renderInlineMarkdown(paragraph)}</p>`;
-    })
-    .join('');
-}
-
 function partitionAssistantActivities(activities: ActivityMessage[]) {
   return {
     leadingActivities: activities.filter(
@@ -232,28 +185,41 @@ function buildBundleProducts(activities: ActivityMessage[]) {
   return extractProductsBySurface(operations) as Map<string, ProductRecord[]>;
 }
 
-function ActivityRendererBridge({
-  activity,
-  isLoading,
-  allowNextActionsFallback,
-  bundleProducts,
-}: ActivityRendererBridgeProps): React.JSX.Element {
-  const elementRef = useRef<ActivityRendererElement | null>(null);
+function normalizeToolLabel(label: string) {
+  return label
+    .trim()
+    .replace(/^Tool\s+call:\s*/i, '')
+    .toLowerCase();
+}
 
-  useEffect(() => {
-    if (!elementRef.current) {
-      return;
+function groupSuccessiveToolTraceEntries(trace: ProgressTraceEntry[]) {
+  const grouped: ProgressTraceEntry[] = [];
+
+  for (const entry of trace) {
+    const previous = grouped[grouped.length - 1];
+    const canGroupWithPrevious =
+      previous &&
+      previous.kind === 'tool' &&
+      entry.kind === 'tool' &&
+      normalizeToolLabel(previous.label) === normalizeToolLabel(entry.label);
+
+    if (!canGroupWithPrevious) {
+      grouped.push({...entry});
+      continue;
     }
 
-    elementRef.current.activity = activity;
-    elementRef.current.isLoading = isLoading;
-    elementRef.current.bundleProducts = bundleProducts;
-    elementRef.current.allowNextActionsFallback = allowNextActionsFallback;
-  }, [activity, isLoading, allowNextActionsFallback, bundleProducts]);
+    const mergedText = [previous.text, entry.text].filter(Boolean).join('\n\n');
 
-  return (
-    <cac-activity-renderer className="rh-activity-renderer" ref={elementRef} />
-  );
+    grouped[grouped.length - 1] = {
+      ...previous,
+      id: entry.id,
+      label: previous.label,
+      text: mergedText,
+      status: entry.status,
+    };
+  }
+
+  return grouped;
 }
 
 function ProgressTraceBridge({
@@ -372,6 +338,9 @@ export function MessageList({
         const progressSteps = shouldShowStreamingProgress
           ? progress.steps
           : messageProgressSteps;
+        const groupedProgressTrace = groupSuccessiveToolTraceEntries(
+          progressTrace as ProgressTraceEntry[]
+        );
 
         return (
           <Fragment key={message.id}>
@@ -385,7 +354,7 @@ export function MessageList({
 
             {message.role === 'assistant' && (
               <ProgressTraceBridge
-                progressTrace={progressTrace as unknown[]}
+                progressTrace={groupedProgressTrace as unknown[]}
                 progressSteps={progressSteps}
                 isStreaming={Boolean(
                   shouldShowStreamingProgress && isStreaming
@@ -395,7 +364,7 @@ export function MessageList({
             )}
 
             {leadingActivities.map((activity) => (
-              <ActivityRendererBridge
+              <ActivityRenderer
                 key={activity.id}
                 activity={activity}
                 isLoading={Boolean(
@@ -418,7 +387,7 @@ export function MessageList({
             )}
 
             {trailingActivities.map((activity) => (
-              <ActivityRendererBridge
+              <ActivityRenderer
                 key={activity.id}
                 activity={activity}
                 isLoading={Boolean(
