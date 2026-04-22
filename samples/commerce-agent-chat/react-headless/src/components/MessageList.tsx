@@ -6,7 +6,7 @@ import type {
 import type {Product} from '../../../core/src/types/commerce.js';
 import {ActivityRenderer} from './ActivityRenderer.js';
 import {ProgressTrace, type ProgressTraceEntry} from './ProgressTrace.js';
-import {renderMarkdown} from '../../../core/src/lib/markdown.js';
+import {renderMarkdown} from '../lib/markdown.js';
 
 import './MessageList.css';
 

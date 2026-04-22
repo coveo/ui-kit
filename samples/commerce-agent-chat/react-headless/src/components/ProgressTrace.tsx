@@ -1,5 +1,5 @@
 import {useEffect, useMemo, useRef, useState} from 'react';
-import {renderMarkdown} from '../../../core/src/lib/markdown.js';
+import {renderMarkdown} from '../lib/markdown.js';
 
 import './ProgressTrace.css';
 
