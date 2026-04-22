@@ -310,7 +310,10 @@ describe('atomic-agent-stream-of-thought', () => {
 
     it('should show a chevron beside the last step when collapsed', async () => {
       const {collapsedRow} = await renderComponent({
-        agentSteps: [buildStep({name: 'answering', status: 'completed'})],
+        agentSteps: [
+          buildStep({name: 'thinking', status: 'completed'}),
+          buildStep({name: 'answering', status: 'completed'}),
+        ],
         isStreaming: false,
       });
 
@@ -336,7 +339,10 @@ describe('atomic-agent-stream-of-thought', () => {
 
     it('should show a checkmark icon on the collapsed step', async () => {
       const {collapsedRow} = await renderComponent({
-        agentSteps: [buildStep({name: 'answering', status: 'completed'})],
+        agentSteps: [
+          buildStep({name: 'thinking', status: 'completed'}),
+          buildStep({name: 'answering', status: 'completed'}),
+        ],
         isStreaming: false,
       });
 
@@ -345,7 +351,10 @@ describe('atomic-agent-stream-of-thought', () => {
 
     it('should have aria-expanded set to false when collapsed', async () => {
       const {collapsedRow} = await renderComponent({
-        agentSteps: [buildStep({name: 'answering', status: 'completed'})],
+        agentSteps: [
+          buildStep({name: 'thinking', status: 'completed'}),
+          buildStep({name: 'answering', status: 'completed'}),
+        ],
         isStreaming: false,
       });
 
@@ -416,7 +425,10 @@ describe('atomic-agent-stream-of-thought', () => {
 
     it('should show chevron pointing up when expanded', async () => {
       const {element, collapsedRow} = await renderComponent({
-        agentSteps: [buildStep({name: 'answering', status: 'completed'})],
+        agentSteps: [
+          buildStep({name: 'thinking', status: 'completed'}),
+          buildStep({name: 'answering', status: 'completed'}),
+        ],
         isStreaming: false,
       });
 
@@ -429,7 +441,10 @@ describe('atomic-agent-stream-of-thought', () => {
 
     it('should show chevron pointing down when collapsed', async () => {
       const {chevron} = await renderComponent({
-        agentSteps: [buildStep({name: 'answering', status: 'completed'})],
+        agentSteps: [
+          buildStep({name: 'thinking', status: 'completed'}),
+          buildStep({name: 'answering', status: 'completed'}),
+        ],
         isStreaming: false,
       });
 
@@ -438,7 +453,10 @@ describe('atomic-agent-stream-of-thought', () => {
 
     it('should set aria-expanded to true when expanded', async () => {
       const {element, collapsedRow} = await renderComponent({
-        agentSteps: [buildStep({name: 'answering', status: 'completed'})],
+        agentSteps: [
+          buildStep({name: 'thinking', status: 'completed'}),
+          buildStep({name: 'answering', status: 'completed'}),
+        ],
         isStreaming: false,
       });
 
@@ -478,6 +496,43 @@ describe('atomic-agent-stream-of-thought', () => {
       expect(
         element.shadowRoot?.querySelector('.collapsed-row')
       ).not.toBeNull();
+    });
+  });
+
+  describe('single answering step', () => {
+    it('should show the step without a toggle button when only answering exists', async () => {
+      const {steps, toggleButton, collapsedRow} = await renderComponent({
+        agentSteps: [buildStep({name: 'answering', status: 'completed'})],
+        isStreaming: false,
+      });
+
+      expect(steps.length).toBe(1);
+      expect(toggleButton).toBeNull();
+      expect(collapsedRow).toBeNull();
+    });
+
+    it('should show the answering step with a spinner while streaming', async () => {
+      const {steps, spinners, toggleButton} = await renderComponent({
+        agentSteps: [buildStep({name: 'answering', status: 'active'})],
+        isStreaming: true,
+      });
+
+      expect(steps.length).toBe(1);
+      expect(spinners.length).toBe(1);
+      expect(toggleButton).toBeNull();
+    });
+
+    it('should show the answering step with a checkmark after completion', async () => {
+      const {steps, checkmarks} = await renderComponent({
+        agentSteps: [buildStep({name: 'answering', status: 'completed'})],
+        isStreaming: false,
+      });
+
+      expect(steps.length).toBe(1);
+      expect(checkmarks.length).toBe(1);
+      expect(steps[0].textContent).toContain(
+        i18n.t('agent-step-answering-completed')
+      );
     });
   });
 });

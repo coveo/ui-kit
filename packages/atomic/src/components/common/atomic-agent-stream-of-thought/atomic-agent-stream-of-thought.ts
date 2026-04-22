@@ -86,8 +86,9 @@ export class AtomicAgentStreamOfThought extends LitElement {
     }
 
     const isComplete = !this.isStreaming;
+    const isCollapsible = resolvedSteps.length > 1;
 
-    if (isComplete && !this.expanded) {
+    if (isComplete && !this.expanded && isCollapsible) {
       const lastStep = resolvedSteps[resolvedSteps.length - 1];
       return html`
         <div part="agent-stream-of-thought" class="timeline">
@@ -99,7 +100,7 @@ export class AtomicAgentStreamOfThought extends LitElement {
     return html`
       <div part="agent-stream-of-thought" class="timeline">
         ${map(resolvedSteps, (step) => this.renderStep(step))}
-        ${isComplete ? this.renderToggleButton() : nothing}
+        ${isComplete && isCollapsible ? this.renderToggleButton() : nothing}
       </div>
     `;
   }
