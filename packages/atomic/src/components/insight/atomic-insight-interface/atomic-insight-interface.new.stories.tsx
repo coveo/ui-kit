@@ -3,6 +3,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {MockInsightApi} from '@/storybook-utils/api/insight/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import '@/src/components/search/atomic-field-condition/atomic-field-condition.js';
@@ -50,6 +51,23 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
+const mockedInsightApi = new MockInsightApi();
+mockedInsightApi.searchEndpoint.mock((response) => ({
+  ...response,
+  results: response.results.map((result: Record<string, unknown>) => ({
+    ...result,
+    isTopResult: false,
+    isRecommendation: false,
+    raw: {
+      ...(result.raw as Record<string, unknown>),
+      sourcetype: 'YouTube',
+      syssourcetype: 'YouTube',
+      ytchanneltitle: 'Coveo Support Channel',
+      ytviewcount: 1234,
+    },
+  })),
+}));
+
 const meta: Meta = {
   component: 'atomic-insight-interface',
   title: 'Insight/Interface',
@@ -63,6 +81,13 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
+    msw: {
+      handlers: [...mockedInsightApi.handlers],
+    },
+  },
+  beforeEach: () => {
+    mockedInsightApi.searchEndpoint.clear();
+    mockedInsightApi.querySuggestEndpoint.clear();
   },
   args,
   argTypes,

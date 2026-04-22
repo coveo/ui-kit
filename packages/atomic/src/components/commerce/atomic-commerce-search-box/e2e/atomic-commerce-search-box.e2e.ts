@@ -286,7 +286,7 @@ test.describe('atomic-commerce-search-box', () => {
     test.beforeEach(async ({page, searchBox}) => {
       querySuggestionRequestPerformed = false;
       page.on('request', (request) => {
-        if (request.url().includes('/querySuggest')) {
+        if (request.url().includes('/v2/search/querySuggest')) {
           querySuggestionRequestPerformed = true;
         }
       });
@@ -337,7 +337,7 @@ test.describe('atomic-commerce-search-box', () => {
     test.beforeEach(async ({page, searchBox}) => {
       querySuggestionRequestPerformed = false;
       page.on('request', (request) => {
-        if (request.url().includes('/querySuggest')) {
+        if (request.url().includes('/v2/search/querySuggest')) {
           querySuggestionRequestPerformed = true;
         }
       });

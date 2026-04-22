@@ -25,7 +25,7 @@ app.use(express.static('dist'));
 
 app.get('/', async (req, res) => {
   try {
-    const queryFromRequest = req.query.q?.toString?.() ?? '';
+    const queryFromRequest = typeof req.query.q === 'string' ? req.query.q : '';
 
     const staticState = await searchEngineDefinition.fetchStaticState({
       searchParams: {q: queryFromRequest},

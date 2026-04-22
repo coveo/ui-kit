@@ -35,7 +35,7 @@ import {waitForAtomicChildrenToBeDefined} from '@/src/utils/initialization-commo
 import {getAnalyticsConfig} from './analytics-config';
 import {createRecsStore, type RecsStore} from './store';
 
-export type RecsInitializationOptions = RecommendationEngineConfiguration;
+type RecsInitializationOptions = RecommendationEngineConfiguration;
 export type RecsBindings = CommonBindings<
   RecommendationEngine,
   RecsStore,

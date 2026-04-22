@@ -10,5 +10,3 @@ export const test = base.extend<Fixtures>({
     await use(new AtomicHtmlPageObject(page));
   },
 });
-
-export {expect} from '@playwright/test';

@@ -31,7 +31,7 @@ import {
   createCommerceRecommendationStore,
 } from './store.js';
 
-export type CommerceInitializationOptions = CommerceEngineConfiguration;
+type CommerceInitializationOptions = CommerceEngineConfiguration;
 export type CommerceBindings = CommonBindings<
   CommerceEngine,
   CommerceRecommendationStore,
