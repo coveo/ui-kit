@@ -86,7 +86,7 @@ function isCi() {
 }
 
 function getBranchName() {
-  return process.env.COMMIT_SHA.substring(0, 6);
+  return process.env.COMMIT_SHA!.substring(0, 6);
 }
 
 function getCiOrgName() {
@@ -164,9 +164,9 @@ async function buildOptions(scratchOrgDefPath: string): Promise<Options> {
       duration: ci ? 1 : 7,
     },
     jwt: {
-      clientId: process.env.SFDX_AUTH_CLIENT_ID,
-      keyFile: process.env.SFDX_AUTH_JWT_KEY_FILE,
-      username: process.env.SFDX_AUTH_JWT_USERNAME,
+      clientId: process.env.SFDX_AUTH_CLIENT_ID!,
+      keyFile: process.env.SFDX_AUTH_JWT_KEY_FILE!,
+      username: process.env.SFDX_AUTH_JWT_USERNAME!,
     },
     deleteOldOrgs: ci,
     deleteOrgOnError: ci,
