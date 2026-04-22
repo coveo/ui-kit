@@ -1,0 +1,127 @@
+.rh-comparison-table-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  width: 100%;
+}
+
+.rh-comparison-table-loading {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-accent);
+  padding: 0.85rem;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.rh-comparison-table-loading__line,
+.rh-comparison-table-loading__cell {
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    rgba(208, 215, 226, 0.65) 25%,
+    rgba(228, 233, 241, 0.9) 50%,
+    rgba(208, 215, 226, 0.65) 75%
+  );
+  background-size: 600px 100%;
+  animation: shimmer 1.4s infinite linear;
+}
+
+.rh-comparison-table-loading__line {
+  height: 12px;
+  width: 45%;
+}
+
+.rh-comparison-table-loading__line--wide {
+  width: 70%;
+}
+
+.rh-comparison-table-loading__grid {
+  display: grid;
+  gap: 0.45rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.rh-comparison-table-loading__cell {
+  height: 44px;
+}
+
+.rh-comparison-table-scroll {
+  overflow-x: auto;
+}
+
+.rh-comparison-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.82rem;
+}
+
+.rh-comparison-table th,
+.rh-comparison-table td {
+  padding: 0.55rem 0.8rem;
+  border: 1px solid var(--border);
+  text-align: left;
+  vertical-align: middle;
+  color: var(--ink);
+}
+
+.rh-comparison-table thead th {
+  background: #f8fafc;
+  font-weight: 700;
+  color: var(--ink);
+  border-bottom: 1px solid var(--border);
+}
+
+.rh-comparison-table__attr-col {
+  min-width: 100px;
+  background: #f8fafc;
+  font-weight: 600;
+}
+
+.rh-comparison-table__label {
+  font-weight: 600;
+  white-space: nowrap;
+  background: #f8fafc;
+}
+
+.rh-comparison-table__thumb {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #d6dce6;
+  display: block;
+}
+
+.rh-text-muted {
+  color: var(--ink-muted);
+}
+
+.rh-price-display {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.rh-price-regular {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--ink);
+}
+
+.rh-price-original {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-decoration: line-through;
+}
+
+.rh-price-promo {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #92400e;
+  background: #fef3c7;
+  border: 1px solid #f6d38a;
+  border-radius: 4px;
+  padding: 0.15em 0.5em;
+}

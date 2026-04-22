@@ -17,6 +17,7 @@ import type {
   NextAction,
   Product,
 } from '../../../core/src/types/commerce.js';
+import {ComparisonTable} from './ComparisonTable.js';
 import {ComparisonSummary} from './ComparisonSummary.js';
 import {NextActionsBar} from './NextActionsBar.js';
 
@@ -49,13 +50,6 @@ interface ProductCarouselElement extends HTMLElement {
   isLoading: boolean;
 }
 
-interface ComparisonTableElement extends HTMLElement {
-  heading: string;
-  products: Product[];
-  comparisonAttributes: string[];
-  isLoading: boolean;
-}
-
 interface BundleDisplayElement extends HTMLElement {
   heading: string;
   bundles: BundleTierWithProducts[];
@@ -81,33 +75,6 @@ function ProductCarouselBridge({
   }, [sections, isLoading]);
 
   return <cac-product-carousel ref={ref} />;
-}
-
-function ComparisonTableBridge({
-  heading,
-  products,
-  comparisonAttributes,
-  isLoading,
-}: {
-  heading: string;
-  products: Product[];
-  comparisonAttributes: string[];
-  isLoading: boolean;
-}): React.JSX.Element {
-  const ref = useRef<ComparisonTableElement | null>(null);
-
-  useEffect(() => {
-    if (!ref.current) {
-      return;
-    }
-
-    ref.current.heading = heading;
-    ref.current.products = products;
-    ref.current.comparisonAttributes = comparisonAttributes;
-    ref.current.isLoading = isLoading;
-  }, [heading, products, comparisonAttributes, isLoading]);
-
-  return <cac-comparison-table ref={ref} />;
 }
 
 function BundleDisplayBridge({
@@ -242,7 +209,7 @@ export function CommerceCatalogView({
           const inferredLoading = isLoading && comparisonProducts.length === 0;
 
           return (
-            <ComparisonTableBridge
+            <ComparisonTable
               key={`comparison-table-${index}`}
               heading={component.heading}
               products={comparisonProducts}

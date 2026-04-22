@@ -10,7 +10,7 @@
     cac-product-carousel,
     .rh-next-actions,
     cac-bundle-display,
-    cac-comparison-table,
+    .rh-comparison-table-wrap,
     .rh-comparison-summary
   ) {
   display: block;
