@@ -5,6 +5,7 @@ Private local sample to chat with the commerce agent over AG-UI streaming.
 ## Structure
 
 - `react-headless/` React headless implementation.
+- `services/` local classify service used by the sample.
 
 ## Current parity
 
@@ -50,40 +51,21 @@ Mapping used by Angular `generate:config` from `samples/commerce-agent-chat/.env
 
 ## Commands
 
-Run from `samples/commerce-agent-chat/react`:
+Run from `samples/commerce-agent-chat`:
 
-- `pnpm dev` — starts the dev server on port 3001
-- `pnpm lint:check`
-- `pnpm lint:fix`
+- `pnpm dev` — starts both `services` and `react-headless` in parallel
+- `pnpm dev:services` — starts only the classify service
+- `pnpm dev:react` — starts only the React dev server
+
+Run from `samples/commerce-agent-chat/react-headless`:
+
+- `pnpm dev` — starts the React dev server
 - `pnpm build`
 
-Run from `samples/commerce-agent-chat/vue`:
+Run from `samples/commerce-agent-chat/services`:
 
-- `pnpm dev` — starts the dev server on port 3002
-- `pnpm lint:check`
-- `pnpm lint:fix`
-- `pnpm build`
-
-Run from `samples/commerce-agent-chat/angular`:
-
-- `pnpm dev` — starts Angular on port 3003
-- `pnpm lint:check`
-- `pnpm lint:fix`
-- `pnpm build`
-
-Run from `samples/commerce-agent-chat/vanilla`:
-
-- `pnpm dev` — starts Vite on port 3004
-- `pnpm lint:check`
-- `pnpm lint:fix`
-- `pnpm build`
-
-Run from repository root:
-
-- `pnpm turbo build --filter=@coveo/commerce-agent-chat-react`
-- `pnpm turbo build --filter=@coveo/commerce-agent-chat-vue`
-- `pnpm turbo build --filter=@coveo/commerce-agent-chat-angular`
-- `pnpm turbo build --filter=@coveo/commerce-agent-chat-vanilla`
+- `pnpm dev` — starts the classify service with file watching
+- `pnpm start` — starts the classify service without file watching
 
 ## Notes
 

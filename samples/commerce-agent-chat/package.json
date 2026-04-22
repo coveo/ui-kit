@@ -1,0 +1,9 @@
+{
+  "name": "@coveo/commerce-agent-chat-sample",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm -r --parallel --stream --filter @coveo/commerce-agent-chat-services --filter @coveo/commerce-agent-chat-react-headless dev",
+    "dev:services": "pnpm --dir services dev",
+    "dev:react": "pnpm --dir react-headless dev"
+  }
+}
