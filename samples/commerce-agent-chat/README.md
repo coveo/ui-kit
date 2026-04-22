@@ -46,8 +46,6 @@ Mapping used by Angular `generate:config` from `samples/commerce-agent-chat/.env
 - `language <- VITE_LANGUAGE`
 - `country <- VITE_COUNTRY`
 - `currency <- VITE_CURRENCY`
-- `timezone <- VITE_TIMEZONE`
-- `clientId <- VITE_CLIENT_ID`
 - `contextUrl <- VITE_CONTEXT_URL`
 
 ## Commands
