@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useRef} from 'react';
+import {useMemo} from 'react';
 import {
   extractActionsBySurface,
   extractCatalogComponents,
@@ -19,6 +19,8 @@ import type {
 } from '../../../core/src/types/commerce.js';
 import {ComparisonTable} from './ComparisonTable.js';
 import {ComparisonSummary} from './ComparisonSummary.js';
+import {BundleDisplay} from './BundleDisplay.js';
+import type {BundleTierWithProducts} from './BundleDisplay.js';
 import {NextActionsBar} from './NextActionsBar.js';
 import {ProductCarousel} from './ProductCarousel.js';
 
@@ -29,51 +31,11 @@ interface ProductSection {
   products: Product[];
 }
 
-interface BundleSlotWithProduct {
-  categoryLabel: string;
-  surfaceRef: string;
-  product: Product | null;
-}
-
-interface BundleTierWithProducts extends Omit<BundleTierConfig, 'slots'> {
-  slots: BundleSlotWithProduct[];
-}
-
 interface CommerceCatalogViewProps {
   content: A2UISurfaceContent;
   isLoading: boolean;
   bundleProducts: Map<string, Product[]>;
   allowNextActionsFallback: boolean;
-}
-
-interface BundleDisplayElement extends HTMLElement {
-  heading: string;
-  bundles: BundleTierWithProducts[];
-  isLoading: boolean;
-}
-
-function BundleDisplayBridge({
-  heading,
-  bundles,
-  isLoading,
-}: {
-  heading: string;
-  bundles: BundleTierWithProducts[];
-  isLoading: boolean;
-}): React.JSX.Element {
-  const ref = useRef<BundleDisplayElement | null>(null);
-
-  useEffect(() => {
-    if (!ref.current) {
-      return;
-    }
-
-    ref.current.heading = heading;
-    ref.current.bundles = bundles;
-    ref.current.isLoading = isLoading;
-  }, [heading, bundles, isLoading]);
-
-  return <cac-bundle-display ref={ref} />;
 }
 
 function getLatestSupportedComponents(components: CatalogComponent[]) {
@@ -208,7 +170,7 @@ export function CommerceCatalogView({
           const inferredLoading = isLoading && !hasBundleSlotProduct(bundles);
 
           return (
-            <BundleDisplayBridge
+            <BundleDisplay
               key={`bundle-display-${index}`}
               heading={component.title ?? component.heading}
               bundles={bundles}

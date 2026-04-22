@@ -9,7 +9,7 @@
   > :where(
     .rh-product-carousel,
     .rh-next-actions,
-    cac-bundle-display,
+    .rh-bundle-display,
     .rh-comparison-table-wrap,
     .rh-comparison-summary
   ) {
