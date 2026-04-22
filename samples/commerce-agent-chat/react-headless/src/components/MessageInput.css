@@ -1,0 +1,132 @@
+.input-with-switch {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0 1rem 0.85rem;
+}
+
+.input-with-switch > .rh-message-input-form {
+  min-width: 0;
+  flex: 1;
+  align-self: center;
+}
+
+.rh-message-input-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  width: 100%;
+  padding: 1rem 0;
+}
+
+.rh-message-input-shell {
+  position: relative;
+  width: 100%;
+}
+
+.rh-message-input {
+  width: 100%;
+  min-height: 3.25rem;
+  max-height: 9rem;
+  resize: none;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.85rem 6.25rem 0.85rem 1rem;
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--ink);
+  background: #fff;
+  transition: border-color 0.2s ease;
+}
+
+.rh-message-input::placeholder {
+  color: var(--text-secondary);
+}
+
+.rh-message-input:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(19, 114, 236, 0.2);
+}
+
+.rh-send-button {
+  position: absolute;
+  right: 0.55rem;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  padding: 0.5rem 0.9rem;
+  font: inherit;
+  line-height: 1.1;
+  font-weight: 700;
+  cursor: pointer;
+  background: var(--accent);
+  color: #fff;
+  transition: background-color 0.2s ease;
+}
+
+.rh-send-button:hover {
+  background: var(--accent-strong);
+  transform: translateY(calc(-50% - 2px));
+}
+
+.rh-send-button:active {
+  transform: translateY(-50%);
+}
+
+.rh-send-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.go-search-btn {
+  position: fixed;
+  right: calc(1rem + env(safe-area-inset-right));
+  bottom: calc(1rem + env(safe-area-inset-bottom));
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 66px;
+  height: 66px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.2);
+  color: var(--ink-muted);
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.go-search-btn span {
+  display: block;
+  font-size: 40px;
+  line-height: 1;
+}
+
+.go-search-btn:hover {
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.go-search-btn:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+@media (max-width: 720px) {
+  .input-with-switch {
+    padding: 0 0.75rem 0.85rem;
+  }
+
+  .rh-message-input {
+    padding-right: 6rem;
+  }
+}

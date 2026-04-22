@@ -18,10 +18,6 @@ interface ChatInterfaceProps {
   onBackToSearch?: () => void;
 }
 
-interface CacChatInterfaceElement extends HTMLElement {
-  error: string;
-}
-
 export function ChatInterface({
   state,
   onSend,
@@ -35,33 +31,15 @@ export function ChatInterface({
   onSeeResults,
   onBackToSearch,
 }: ChatInterfaceProps): React.JSX.Element {
-  const elementRef = useRef<CacChatInterfaceElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (elementRef.current) {
-      elementRef.current.error = state.error?.message ?? '';
-    }
-  }, [state.error]);
-
-  useEffect(() => {
-    const element = elementRef.current;
+    const element = containerRef.current;
     if (!element) {
       return;
     }
 
-    const handleClear = () => onClearMessages();
-    const handleDismiss = () => onDismissError();
-    element.addEventListener('clear', handleClear);
-    element.addEventListener('dismiss-error', handleDismiss);
-    return () => {
-      element.removeEventListener('clear', handleClear);
-      element.removeEventListener('dismiss-error', handleDismiss);
-    };
-  }, [onClearMessages, onDismissError]);
-
-  useEffect(() => {
-    const element = elementRef.current;
-    if (!element || !onSeeResults) {
+    if (!onSeeResults) {
       return;
     }
 
@@ -81,33 +59,58 @@ export function ChatInterface({
     };
 
     element.addEventListener('click', handleClick);
-    return () => element.removeEventListener('click', handleClick);
+    return () => {
+      element.removeEventListener('click', handleClick);
+    };
   }, [onSeeResults]);
 
+  const errorMessage = state.error?.message?.trim() ?? '';
+
   return (
-    <cac-chat-interface
-      ref={elementRef}
-      heading="Commerce Agent Chat (Headless)"
+    <section
+      className="rh-chat-interface"
+      aria-label="Commerce Agent Chat (Headless)"
     >
-      <MessageList
-        slot="messages"
-        messages={state.messages}
-        isStreaming={state.isStreaming}
-        progress={state.progress}
-        onActionSelected={onSend}
-      />
-      <MessageInput
-        slot="input"
-        onSend={onSend}
-        value={value}
-        onValueChange={onValueChange}
-        disabled={state.isStreaming}
-        placeholder="Ask something..."
-        isClassifying={isClassifying}
-        shouldFocusInput={shouldFocusInput}
-        onFocusHandled={onFocusHandled}
-        onGoToSearch={onBackToSearch}
-      />
-    </cac-chat-interface>
+      <div className="rh-chat-container" ref={containerRef}>
+        <header className="rh-chat-header">
+          <h1>Commerce Agent Chat (Headless)</h1>
+          <button
+            className="rh-clear-button"
+            type="button"
+            onClick={onClearMessages}
+          >
+            Clear
+          </button>
+        </header>
+
+        <MessageList
+          messages={state.messages}
+          isStreaming={state.isStreaming}
+          progress={state.progress}
+          onActionSelected={onSend}
+        />
+
+        {Boolean(errorMessage) && (
+          <section className="rh-error-banner" role="alert">
+            <p>{errorMessage}</p>
+            <button type="button" onClick={onDismissError}>
+              Dismiss
+            </button>
+          </section>
+        )}
+
+        <MessageInput
+          onSend={onSend}
+          value={value}
+          onValueChange={onValueChange}
+          disabled={state.isStreaming}
+          placeholder="Ask something..."
+          isClassifying={isClassifying}
+          shouldFocusInput={shouldFocusInput}
+          onFocusHandled={onFocusHandled}
+          onGoToSearch={onBackToSearch}
+        />
+      </div>
+    </section>
   );
 }

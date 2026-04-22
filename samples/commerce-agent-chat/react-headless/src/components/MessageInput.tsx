@@ -1,6 +1,5 @@
-import {useEffect, useRef} from 'react';
-
-interface MessageSendEvent extends CustomEvent<{content: string}> {}
+import {useEffect, useId, useRef} from 'react';
+import './MessageInput.css';
 
 interface MessageInputProps {
   onSend: (message: string) => void;
@@ -15,13 +14,6 @@ interface MessageInputProps {
   onGoToSearch?: () => void;
 }
 
-interface MessageInputElement extends HTMLElement {
-  disabled: boolean;
-  placeholder: string;
-  value: string;
-  focusInput?: () => void;
-}
-
 export function MessageInput({
   onSend,
   value,
@@ -34,17 +26,9 @@ export function MessageInput({
   slot,
   onGoToSearch,
 }: MessageInputProps): React.JSX.Element {
-  const elementRef = useRef<MessageInputElement | null>(null);
-
-  useEffect(() => {
-    if (elementRef.current) {
-      elementRef.current.disabled = disabled || isClassifying;
-      elementRef.current.placeholder = isClassifying
-        ? 'Classifying...'
-        : placeholder;
-      elementRef.current.value = value;
-    }
-  }, [disabled, isClassifying, placeholder, value]);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const inputId = useId();
+  const inputHintId = `${inputId}-hint`;
 
   useEffect(() => {
     if (!shouldFocusInput) {
@@ -52,39 +36,73 @@ export function MessageInput({
     }
 
     const frameId = requestAnimationFrame(() => {
-      elementRef.current?.focusInput?.();
+      textareaRef.current?.focus();
       onFocusHandled?.();
     });
 
     return () => cancelAnimationFrame(frameId);
   }, [shouldFocusInput, onFocusHandled]);
 
-  useEffect(() => {
-    const element = elementRef.current;
-    if (!element) {
+  const isDisabled = disabled || isClassifying;
+  const resolvedPlaceholder = isClassifying ? 'Classifying...' : placeholder;
+  const isSubmitDisabled = isDisabled || value.trim().length === 0;
+
+  const submitValue = () => {
+    const content = value.trim();
+    if (!content || isDisabled) {
       return;
     }
+    onSend(content);
+  };
 
-    const handleSend = (event: Event) => {
-      const customEvent = event as MessageSendEvent;
-      onSend(customEvent.detail.content);
-    };
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    submitValue();
+  };
 
-    const handleInput = () => {
-      onValueChange(element.value);
-    };
-
-    element.addEventListener('message-send', handleSend);
-    element.addEventListener('input', handleInput);
-    return () => {
-      element.removeEventListener('message-send', handleSend);
-      element.removeEventListener('input', handleInput);
-    };
-  }, [onSend, onValueChange]);
+  const onKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key !== 'Enter' || event.shiftKey) {
+      return;
+    }
+    event.preventDefault();
+    submitValue();
+  };
 
   return (
     <div className="input-with-switch" slot={slot}>
-      <cac-message-input ref={elementRef} />
+      <form
+        className="rh-message-input-form"
+        aria-label="Send message"
+        onSubmit={onSubmit}
+      >
+        <label className="visually-hidden" htmlFor={inputId}>
+          Type your message
+        </label>
+        <p id={inputHintId} className="visually-hidden">
+          Press Enter to send. Press Shift plus Enter to insert a new line.
+        </p>
+        <div className="rh-message-input-shell">
+          <textarea
+            ref={textareaRef}
+            id={inputId}
+            className="rh-message-input"
+            value={value}
+            disabled={isDisabled}
+            placeholder={resolvedPlaceholder}
+            rows={2}
+            aria-describedby={inputHintId}
+            onChange={(event) => onValueChange(event.currentTarget.value)}
+            onKeyDown={onKeyDown}
+          />
+          <button
+            className="rh-send-button"
+            type="submit"
+            disabled={isSubmitDisabled}
+          >
+            Send
+          </button>
+        </div>
+      </form>
       {onGoToSearch && (
         <button
           type="button"
