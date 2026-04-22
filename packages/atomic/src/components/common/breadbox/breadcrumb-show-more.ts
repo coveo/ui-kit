@@ -4,7 +4,7 @@ import {keyed} from 'lit/directives/keyed.js';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {renderButton} from '../button';
 
-export interface BreadcrumbShowMoreProps {
+interface BreadcrumbShowMoreProps {
   refCallback: (el: HTMLButtonElement) => void;
   onShowMore: () => void;
   numberOfCollapsedBreadcrumbs: number;

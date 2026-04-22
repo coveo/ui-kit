@@ -23,9 +23,9 @@ import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete
 import {parentNodeToString} from '@/src/utils/dom-utils';
 import type {InsightStore} from '../atomic-insight-interface/store';
 
-export type InsightResultContextEvent<T = InsightResult | InsightFoldedResult> =
+type InsightResultContextEvent<T = InsightResult | InsightFoldedResult> =
   CustomEvent<(result: T) => void>;
-export type InsightInteractiveResultContextEvent<
+type InsightInteractiveResultContextEvent<
   T extends InsightInteractiveResult = InsightInteractiveResult,
 > = CustomEvent<(result: T) => void>;
 

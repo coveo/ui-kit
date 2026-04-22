@@ -81,4 +81,14 @@ describe('#renderTextAreaClearButton', () => {
     const {icon} = await renderComponent();
     expect(icon!.getAttribute('icon')).toContain('<svg');
   });
+
+  it('should prevent default on pointerdown to keep focus in the textarea', async () => {
+    const {wrapper} = await renderComponent();
+    const event = new PointerEvent('pointerdown', {
+      bubbles: true,
+      cancelable: true,
+    });
+    wrapper!.dispatchEvent(event);
+    expect(event.defaultPrevented).toBe(true);
+  });
 });

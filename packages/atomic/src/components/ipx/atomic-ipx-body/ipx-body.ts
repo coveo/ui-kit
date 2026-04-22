@@ -2,7 +2,7 @@ import type {i18n} from 'i18next';
 import {html, nothing, type TemplateResult} from 'lit';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 
-export interface IpxBodyProps {
+interface IpxBodyProps {
   i18n: i18n;
   visibility: 'open' | 'closed' | 'embedded';
   displayFooterSlot?: boolean;
