@@ -8,9 +8,9 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import styles from './atomic-agent-stream-of-thought.tw.css.js';
 
 export type ResolvedStepType =
-  | 'think-before-search'
+  | 'thinking-before-search'
   | 'searching'
-  | 'think-after-search'
+  | 'thinking-after-search'
   | 'answering';
 
 export interface ResolvedStep {
@@ -22,7 +22,7 @@ const stepLabelKeys: Record<
   ResolvedStepType,
   {active: string; completed: string}
 > = {
-  'think-before-search': {
+  'thinking-before-search': {
     active: 'agent-step-analyzing-active',
     completed: 'agent-step-analyzing-completed',
   },
@@ -30,7 +30,7 @@ const stepLabelKeys: Record<
     active: 'agent-generation-step-search',
     completed: 'agent-step-searching-completed',
   },
-  'think-after-search': {
+  'thinking-after-search': {
     active: 'agent-step-processing-active',
     completed: 'agent-step-processing-completed',
   },
@@ -216,7 +216,9 @@ export function resolveSteps(steps: GenerationStep[]): ResolvedStep[] {
     } else if (step.name === 'answering') {
       type = 'answering';
     } else {
-      type = hasSeenSearching ? 'think-after-search' : 'think-before-search';
+      type = hasSeenSearching
+        ? 'thinking-after-search'
+        : 'thinking-before-search';
     }
     return {type, status: step.status};
   });

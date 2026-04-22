@@ -92,10 +92,10 @@ describe('atomic-agent-stream-of-thought', () => {
       expect(resolveSteps([])).toEqual([]);
     });
 
-    it('should resolve thinking before searching as think-before-search', () => {
+    it('should resolve thinking before searching as thinking-before-search', () => {
       const steps = [buildStep({name: 'thinking', status: 'active'})];
       expect(resolveSteps(steps)).toEqual([
-        {type: 'think-before-search', status: 'active'},
+        {type: 'thinking-before-search', status: 'active'},
       ]);
     });
 
@@ -106,14 +106,14 @@ describe('atomic-agent-stream-of-thought', () => {
       ]);
     });
 
-    it('should resolve thinking after searching as think-after-search', () => {
+    it('should resolve thinking after searching as thinking-after-search', () => {
       const steps = [
         buildStep({name: 'searching', status: 'completed'}),
         buildStep({name: 'thinking', status: 'active'}),
       ];
       expect(resolveSteps(steps)).toEqual([
         {type: 'searching', status: 'completed'},
-        {type: 'think-after-search', status: 'active'},
+        {type: 'thinking-after-search', status: 'active'},
       ]);
     });
 
@@ -133,9 +133,9 @@ describe('atomic-agent-stream-of-thought', () => {
       ];
       const result = resolveSteps(steps);
       expect(result).toEqual([
-        {type: 'think-before-search', status: 'completed'},
+        {type: 'thinking-before-search', status: 'completed'},
         {type: 'searching', status: 'completed'},
-        {type: 'think-after-search', status: 'completed'},
+        {type: 'thinking-after-search', status: 'completed'},
         {type: 'answering', status: 'active'},
       ]);
     });
@@ -150,11 +150,11 @@ describe('atomic-agent-stream-of-thought', () => {
       ];
       const result = resolveSteps(steps);
       expect(result).toEqual([
-        {type: 'think-before-search', status: 'completed'},
+        {type: 'thinking-before-search', status: 'completed'},
         {type: 'searching', status: 'completed'},
-        {type: 'think-after-search', status: 'completed'},
+        {type: 'thinking-after-search', status: 'completed'},
         {type: 'searching', status: 'completed'},
-        {type: 'think-after-search', status: 'active'},
+        {type: 'thinking-after-search', status: 'active'},
       ]);
     });
   });
@@ -242,7 +242,7 @@ describe('atomic-agent-stream-of-thought', () => {
       });
 
       expect(steps[1].textContent).toContain(
-        i18n.t('agent-step-searching-active')
+        i18n.t('agent-generation-step-search')
       );
     });
 
@@ -272,9 +272,7 @@ describe('atomic-agent-stream-of-thought', () => {
         isStreaming: true,
       });
 
-      expect(steps[3].textContent).toContain(
-        i18n.t('agent-step-answering-active')
-      );
+      expect(steps[3].textContent).toContain(i18n.t('generating-answer'));
     });
 
     it('should display completed label for completed steps', async () => {
