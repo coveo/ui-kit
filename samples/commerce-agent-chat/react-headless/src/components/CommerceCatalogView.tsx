@@ -20,6 +20,7 @@ import type {
 import {ComparisonTable} from './ComparisonTable.js';
 import {ComparisonSummary} from './ComparisonSummary.js';
 import {NextActionsBar} from './NextActionsBar.js';
+import {ProductCarousel} from './ProductCarousel.js';
 
 import './CommerceCatalogView.css';
 
@@ -45,36 +46,10 @@ interface CommerceCatalogViewProps {
   allowNextActionsFallback: boolean;
 }
 
-interface ProductCarouselElement extends HTMLElement {
-  sections: ProductSection[];
-  isLoading: boolean;
-}
-
 interface BundleDisplayElement extends HTMLElement {
   heading: string;
   bundles: BundleTierWithProducts[];
   isLoading: boolean;
-}
-
-function ProductCarouselBridge({
-  sections,
-  isLoading,
-}: {
-  sections: ProductSection[];
-  isLoading: boolean;
-}): React.JSX.Element {
-  const ref = useRef<ProductCarouselElement | null>(null);
-
-  useEffect(() => {
-    if (!ref.current) {
-      return;
-    }
-
-    ref.current.sections = sections;
-    ref.current.isLoading = isLoading;
-  }, [sections, isLoading]);
-
-  return <cac-product-carousel ref={ref} />;
 }
 
 function BundleDisplayBridge({
@@ -194,7 +169,7 @@ export function CommerceCatalogView({
           const inferredLoading = isLoading && products.length === 0;
 
           return (
-            <ProductCarouselBridge
+            <ProductCarousel
               key={`product-carousel-${index}`}
               sections={sections}
               isLoading={Boolean(component.isLoading) || inferredLoading}
