@@ -7,10 +7,6 @@ declare module 'react/jsx-runtime' {
         React.HTMLAttributes<HTMLElement>,
         HTMLElement
       >;
-      'cac-next-actions-bar': React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLElement>,
-        HTMLElement
-      >;
       'cac-bundle-display': React.DetailedHTMLProps<
         React.HTMLAttributes<HTMLElement>,
         HTMLElement

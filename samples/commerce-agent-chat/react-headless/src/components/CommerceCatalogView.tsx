@@ -17,6 +17,7 @@ import type {
   NextAction,
   Product,
 } from '../../../core/src/types/commerce.js';
+import {NextActionsBar} from './NextActionsBar.js';
 
 import './CommerceCatalogView.css';
 
@@ -61,11 +62,6 @@ interface ComparisonSummaryElement extends HTMLElement {
 interface BundleDisplayElement extends HTMLElement {
   heading: string;
   bundles: BundleTierWithProducts[];
-  isLoading: boolean;
-}
-
-interface NextActionsBarElement extends HTMLElement {
-  actions: NextAction[];
   isLoading: boolean;
 }
 
@@ -153,27 +149,6 @@ function BundleDisplayBridge({
   }, [heading, bundles, isLoading]);
 
   return <cac-bundle-display ref={ref} />;
-}
-
-function NextActionsBarBridge({
-  actions,
-  isLoading,
-}: {
-  actions: NextAction[];
-  isLoading: boolean;
-}): React.JSX.Element {
-  const ref = useRef<NextActionsBarElement | null>(null);
-
-  useEffect(() => {
-    if (!ref.current) {
-      return;
-    }
-
-    ref.current.actions = actions;
-    ref.current.isLoading = isLoading;
-  }, [actions, isLoading]);
-
-  return <cac-next-actions-bar ref={ref} />;
 }
 
 function getLatestSupportedComponents(components: CatalogComponent[]) {
@@ -322,7 +297,7 @@ export function CommerceCatalogView({
           const inferredLoading = isLoading && actions.length === 0;
 
           return (
-            <NextActionsBarBridge
+            <NextActionsBar
               key={`next-actions-${index}`}
               actions={actions}
               isLoading={Boolean(component.isLoading) || inferredLoading}
@@ -332,9 +307,7 @@ export function CommerceCatalogView({
 
         return null;
       })}
-      {shouldRenderFallback && (
-        <NextActionsBarBridge actions={[]} isLoading={true} />
-      )}
+      {shouldRenderFallback && <NextActionsBar actions={[]} isLoading={true} />}
     </div>
   );
 }

@@ -8,7 +8,7 @@
 .rh-commerce-catalog
   > :where(
     cac-product-carousel,
-    cac-next-actions-bar,
+    .rh-next-actions,
     cac-bundle-display,
     cac-comparison-table,
     cac-comparison-summary
