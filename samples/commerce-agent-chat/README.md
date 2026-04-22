@@ -30,26 +30,14 @@ Framework-specific template and styling details may still differ slightly, but s
    `cp samples/commerce-agent-chat/.env.example samples/commerce-agent-chat/.env.local`
 3. Fill required values in `.env.local`.
 
-## Agent modes
-
-Set `VITE_AGENT_MODE` in `.env.local` to one of:
-
-| Mode        | Description                                             | `VITE_AGENT_URL` |
-| ----------- | ------------------------------------------------------- | ---------------- |
-| `local`     | Proxies to a local agent at `http://localhost:8080`     | `/api`           |
-| `coveo-dev` | Proxies to the Coveo dev platform (`VITE_PLATFORM_URL`) | `/api/coveo-dev` |
-
-Keep `VITE_AGENT_URL` set to the proxy prefix shown above — this routes requests through Vite and avoids CORS issues.
-
-For `local` mode, ensure the commerce agent is running on `http://localhost:8080` before starting the dev server.
+The sample always uses the Coveo agent API. The agent endpoint is derived automatically from the organization ID and environment.
 
 For Angular, `VITE_*` variables are loaded into a generated runtime file instead of being written into source. The Angular package runs `pnpm run generate:config` automatically before `dev` and `build`, generating `angular/public/config.json` from `samples/commerce-agent-chat/.env.local` (fallback: `samples/commerce-agent-chat/.env`). The app fetches `/config.json` before bootstrap, and `angular/public/config.json` is git-ignored.
 Angular dev requests are proxied through `angular/proxy.conf.js`:
 
-- `/api` -> `http://localhost:8080`
-- `/api/coveo-dev` -> `VITE_PLATFORM_URL` (or `https://platform.cloud.coveo.com` if unset)
+- `/api/heuristics` -> classify service (classification model, run separately)
 
-For Angular local mode, these config fields must be non-empty or the backend will reject the invocation payload:
+For Angular, these config fields must be non-empty:
 
 - `config.accessToken` (`VITE_ACCESS_TOKEN`)
 - `config.orgId` (`VITE_ORG_ID`)
@@ -57,11 +45,8 @@ For Angular local mode, these config fields must be non-empty or the backend wil
 
 Mapping used by Angular `generate:config` from `samples/commerce-agent-chat/.env.local` (or `.env`) to `angular/public/config.json`:
 
-- `agentMode <- VITE_AGENT_MODE`
-- `agentUrl <- VITE_AGENT_URL`
 - `orgId <- VITE_ORG_ID`
 - `accessToken <- VITE_ACCESS_TOKEN`
-- `platformUrl <- VITE_PLATFORM_URL`
 - `trackingId <- VITE_TRACKING_ID`
 - `language <- VITE_LANGUAGE`
 - `country <- VITE_COUNTRY`
