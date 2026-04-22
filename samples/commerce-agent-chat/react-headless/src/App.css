@@ -160,7 +160,7 @@
   animation: reveal-chat-interface 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.search-mode-shell > atomock-search-results {
+.search-mode-shell > .rh-search-results {
   width: min(940px, 100%);
 }
 

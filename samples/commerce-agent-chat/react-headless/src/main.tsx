@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import '@coveo/commerce-agent-chat-components/register';
 
 import './base.css';
 import './App.css';

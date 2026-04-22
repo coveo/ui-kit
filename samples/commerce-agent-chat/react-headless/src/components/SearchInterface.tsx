@@ -1,7 +1,7 @@
-import {useEffect, useRef} from 'react';
 import type {Product} from '@coveo/headless/commerce';
 
 import {MessageInput} from './MessageInput.js';
+import {SearchResults} from './SearchResults.js';
 
 interface SearchInterfaceProps {
   products: Product[];
@@ -16,18 +16,6 @@ interface SearchInterfaceProps {
   onBack?: () => void;
 }
 
-interface SearchResultsElement extends HTMLElement {
-  searchState: {
-    data: Array<{id: string; image: string; title: string; price: string}>;
-    loading: boolean;
-    error: string | null;
-    query: string;
-    page: number;
-    hasMore: boolean;
-  };
-  onLoadMore?: () => void;
-}
-
 export function SearchInterface({
   products,
   isLoading,
@@ -40,27 +28,6 @@ export function SearchInterface({
   isClassifying = false,
   onBack,
 }: SearchInterfaceProps): React.JSX.Element {
-  const searchResultsRef = useRef<SearchResultsElement | null>(null);
-
-  useEffect(() => {
-    if (searchResultsRef.current) {
-      // Map headless products to the shape the web component expects
-      searchResultsRef.current.searchState = {
-        data: products.map((p) => ({
-          id: p.ec_product_id ?? p.permanentid,
-          image: p.ec_images?.[0] ?? p.ec_thumbnails?.[0] ?? '',
-          title: p.ec_name ?? '',
-          price: String(p.ec_promo_price ?? p.ec_price ?? ''),
-        })),
-        loading: isLoading,
-        error: null,
-        query,
-        page: 0,
-        hasMore: false,
-      };
-    }
-  }, [products, isLoading, query]);
-
   return (
     <section className="search-mode-shell" aria-label="Search mode">
       <div className="search-mode-input-wrap">
@@ -75,7 +42,7 @@ export function SearchInterface({
           onFocusHandled={onFocusHandled}
         />
       </div>
-      <atomock-search-results ref={searchResultsRef} />
+      <SearchResults products={products} isLoading={isLoading} query={query} />
       {onBack && (
         <button
           type="button"
