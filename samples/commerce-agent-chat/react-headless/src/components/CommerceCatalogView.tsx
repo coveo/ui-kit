@@ -1,22 +1,14 @@
 import {useMemo} from 'react';
-import {
-  extractActionsBySurface,
-  extractCatalogComponents,
-  extractProductsBySurface,
+import type {
+  AgentChatCatalogActivityState,
+  AgentChatProduct,
 } from '@coveo/headless/commerce';
 import {
   isSupportedType,
   normalizeType,
   isType,
-  uniqueProducts,
 } from '../lib/commerceHelpers.js';
-import type {
-  A2UISurfaceContent,
-  BundleTierConfig,
-  CatalogComponent,
-  NextAction,
-  Product,
-} from '../types/commerce.js';
+import type {CatalogComponent, Product} from '../types/commerce.js';
 import {ComparisonTable} from './ComparisonTable.js';
 import {ComparisonSummary} from './ComparisonSummary.js';
 import {BundleDisplay} from './BundleDisplay.js';
@@ -32,9 +24,9 @@ interface ProductSection {
 }
 
 interface CommerceCatalogViewProps {
-  content: A2UISurfaceContent;
+  catalog: AgentChatCatalogActivityState | null;
   isLoading: boolean;
-  bundleProducts: Map<string, Product[]>;
+  bundleProducts: Record<string, AgentChatProduct[]>;
   allowNextActionsFallback: boolean;
 }
 
@@ -82,13 +74,11 @@ function hasBundleSlotProduct(bundles: BundleTierWithProducts[]) {
 }
 
 export function CommerceCatalogView({
-  content,
+  catalog,
   isLoading,
   bundleProducts,
   allowNextActionsFallback,
 }: CommerceCatalogViewProps): React.JSX.Element | null {
-  const operations = content?.operations ?? [];
-
   const {
     supportedComponents,
     actionsBySurface,
@@ -96,22 +86,20 @@ export function CommerceCatalogView({
     hasNextActionsComponent,
     getProducts,
   } = useMemo(() => {
-    const productsBySurface = extractProductsBySurface(operations);
-    const catalogComponents = extractCatalogComponents(operations);
+    const productsBySurface = catalog?.productsBySurface ?? {};
+    const catalogComponents = catalog?.catalogComponents ?? [];
     const nextSupportedComponents =
       getLatestSupportedComponents(catalogComponents);
 
     return {
       supportedComponents: nextSupportedComponents,
-      actionsBySurface: extractActionsBySurface(operations),
-      allProducts: uniqueProducts(productsBySurface),
-      hasNextActionsComponent: nextSupportedComponents.some((component) =>
-        isType(component.type, 'NextActionsBar')
-      ),
+      actionsBySurface: catalog?.actionsBySurface ?? {},
+      allProducts: catalog?.allProducts ?? [],
+      hasNextActionsComponent: Boolean(catalog?.hasNextActionsComponent),
       getProducts: (surfaceId: string) =>
-        productsBySurface.get(surfaceId) ?? bundleProducts.get(surfaceId) ?? [],
+        productsBySurface[surfaceId] ?? bundleProducts[surfaceId] ?? [],
     };
-  }, [operations, bundleProducts]);
+  }, [catalog, bundleProducts]);
 
   const shouldRenderFallback =
     allowNextActionsFallback && isLoading && !hasNextActionsComponent;
@@ -180,7 +168,7 @@ export function CommerceCatalogView({
         }
 
         if (isType(component.type, 'NextActionsBar')) {
-          const actions = actionsBySurface.get(component.surfaceId) ?? [];
+          const actions = actionsBySurface[component.surfaceId] ?? [];
           const inferredLoading = isLoading && actions.length === 0;
 
           return (

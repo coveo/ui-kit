@@ -1,4 +1,7 @@
-import type {A2UISurfaceContent, Product} from '../types/commerce.js';
+import type {
+  AgentChatCatalogActivityState,
+  AgentChatProduct,
+} from '@coveo/headless/commerce';
 import {CommerceCatalogView} from './CommerceCatalogView.js';
 
 import './ActivityRenderer.css';
@@ -11,13 +14,15 @@ interface ActivityMessage {
 
 interface ActivityRendererProps {
   activity: ActivityMessage;
+  catalog: AgentChatCatalogActivityState | null;
   isLoading: boolean;
-  bundleProducts: Map<string, Product[]>;
+  bundleProducts: Record<string, AgentChatProduct[]>;
   allowNextActionsFallback: boolean;
 }
 
 export function ActivityRenderer({
   activity,
+  catalog,
   isLoading,
   bundleProducts,
   allowNextActionsFallback,
@@ -28,7 +33,7 @@ export function ActivityRenderer({
     <article className="rh-activity-renderer" aria-label="Agent activity">
       {isA2UIActivity ? (
         <CommerceCatalogView
-          content={activity.content as A2UISurfaceContent}
+          catalog={catalog}
           isLoading={isLoading}
           bundleProducts={bundleProducts}
           allowNextActionsFallback={allowNextActionsFallback}

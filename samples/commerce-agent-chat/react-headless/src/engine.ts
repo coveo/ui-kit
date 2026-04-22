@@ -3,12 +3,14 @@ import {
   buildSearch,
   buildSearchBox,
   buildAgentChat,
+  buildAgentChatCatalog,
   type CommerceEngine,
   type CommerceEngineConfiguration,
   type ContextOptions,
   type Search,
   type SearchBox,
   type AgentChat,
+  type AgentChatCatalog,
 } from '@coveo/headless/commerce';
 
 export interface EngineConfig {
@@ -27,6 +29,7 @@ export interface EngineControllers {
   search: Search;
   searchBox: SearchBox;
   agentChat: AgentChat;
+  agentChatCatalog: AgentChatCatalog;
 }
 
 export function createEngineControllers(
@@ -54,8 +57,9 @@ export function createEngineControllers(
   const search = buildSearch(engine, {enableResults: true});
   const searchBox = buildSearchBox(engine);
   const agentChat = buildAgentChat(engine);
+  const agentChatCatalog = buildAgentChatCatalog(engine);
 
-  return {engine, search, searchBox, agentChat};
+  return {engine, search, searchBox, agentChat, agentChatCatalog};
 }
 
 export function loadEngineConfig(): EngineConfig {

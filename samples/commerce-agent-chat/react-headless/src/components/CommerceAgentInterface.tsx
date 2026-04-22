@@ -1,6 +1,7 @@
 import {useState, useCallback} from 'react';
 import type {EngineControllers} from '../engine.js';
 import {useAgentChat} from '../hooks/useAgentChat.js';
+import {useAgentChatCatalog} from '../hooks/useAgentChatCatalog.js';
 import {useCommerceSearch} from '../hooks/useCommerceSearch.js';
 import {ChatInterface} from './ChatInterface.js';
 import {SearchInterface} from './SearchInterface.js';
@@ -37,6 +38,9 @@ export function CommerceAgentInterface({
     clearConversation,
     dismissError,
   } = useAgentChat(controllers.agentChat);
+  const {state: catalogState} = useAgentChatCatalog(
+    controllers.agentChatCatalog
+  );
   const {state: searchState, submitSearch} = useCommerceSearch(
     controllers.search,
     controllers.searchBox
@@ -115,6 +119,7 @@ export function CommerceAgentInterface({
   return (
     <ChatInterface
       state={chatState}
+      catalogState={catalogState}
       onSend={handleSend}
       onClearMessages={clearConversation}
       onDismissError={dismissError}

@@ -1,11 +1,15 @@
 import {useEffect, useRef} from 'react';
-import type {AgentChatControllerState} from '@coveo/headless/commerce';
+import type {
+  AgentChatCatalogControllerState,
+  AgentChatControllerState,
+} from '@coveo/headless/commerce';
 
 import {MessageInput} from './MessageInput.js';
 import {MessageList} from './MessageList.js';
 
 interface ChatInterfaceProps {
   state: AgentChatControllerState;
+  catalogState: AgentChatCatalogControllerState;
   onSend: (content: string) => void;
   onClearMessages: () => void;
   onDismissError: () => void;
@@ -20,6 +24,7 @@ interface ChatInterfaceProps {
 
 export function ChatInterface({
   state,
+  catalogState,
   onSend,
   onClearMessages,
   onDismissError,
@@ -85,6 +90,7 @@ export function ChatInterface({
 
         <MessageList
           messages={state.messages}
+          catalogState={catalogState}
           isStreaming={state.isStreaming}
           progress={state.progress}
           onActionSelected={onSend}

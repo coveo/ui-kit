@@ -1,9 +1,9 @@
 import {Fragment, useEffect, useMemo, useRef} from 'react';
 import type {
+  AgentChatCatalogControllerState,
   AgentChatMessage,
   AgentChatProgress,
 } from '@coveo/headless/commerce';
-import type {Product} from '../types/commerce.js';
 import {ActivityRenderer} from './ActivityRenderer.js';
 import {ProgressTrace, type ProgressTraceEntry} from './ProgressTrace.js';
 import {renderMarkdown} from '../lib/markdown.js';
@@ -14,6 +14,7 @@ interface CommerceActionClickEvent extends CustomEvent<{prompt: string}> {}
 
 interface MessageListProps {
   messages: AgentChatMessage[];
+  catalogState: AgentChatCatalogControllerState;
   isStreaming: boolean;
   progress: AgentChatProgress;
   onActionSelected: (prompt: string) => void;
@@ -24,143 +25,19 @@ interface ActivityMessage {
   activityType: string;
   content: unknown;
 }
-
-interface SurfaceComponent {
-  component?: Record<string, unknown>;
-}
-
-interface SurfaceOperation {
-  dataModelUpdate?: {
-    surfaceId?: string;
-    contents?: Array<{
-      valueMap?: Array<{
-        valueMap?: Array<{
-          key: string;
-          valueString?: string;
-          valueNumber?: number;
-        }>;
-      }>;
-    }>;
-  };
-  surfaceUpdate?: {
-    surfaceId?: string;
-    components?: SurfaceComponent[];
-  };
-}
-
-interface SurfaceContent {
-  operations?: SurfaceOperation[];
-}
-
-function getSurfaceOperations(activity: ActivityMessage): SurfaceOperation[] {
-  if (activity.activityType !== 'a2ui-surface') {
-    return [];
-  }
-
-  return (activity.content as SurfaceContent | undefined)?.operations ?? [];
-}
-
-function activityContainsNextActions(activity: ActivityMessage) {
-  const operations = getSurfaceOperations(activity);
-
-  return operations.some((operation) =>
-    (operation.surfaceUpdate?.components ?? []).some((component) =>
-      Object.keys(component.component ?? {}).some((componentType) =>
-        isType(componentType, 'NextActionsBar')
-      )
-    )
-  );
-}
-
-function normalizeType(value: string) {
-  return value.toLowerCase().replace(/[^a-z0-9]/g, '');
-}
-
-function isType(value: string, expected: string) {
-  return normalizeType(value) === normalizeType(expected);
-}
-
-function valueMapToRecord(
-  entries: Array<{key: string; valueString?: string; valueNumber?: number}>
-): Record<string, string | number | undefined> {
-  const record: Record<string, string | number | undefined> = {};
-  for (const entry of entries) {
-    if (entry.valueString != null) {
-      record[entry.key] = entry.valueString;
-    } else if (entry.valueNumber != null) {
-      record[entry.key] = entry.valueNumber;
-    }
-  }
-  return record;
-}
-
-function extractProductsBySurface(
-  operations: SurfaceOperation[]
-): Map<string, Product[]> {
-  const bySurface = new Map<string, Map<string, Product>>();
-
-  const getSurfaceProductsById = (surfaceId: string) => {
-    const existing = bySurface.get(surfaceId);
-    if (existing) {
-      return existing;
-    }
-    const created = new Map<string, Product>();
-    bySurface.set(surfaceId, created);
-    return created;
-  };
-
-  for (const operation of operations) {
-    const update = operation.dataModelUpdate;
-    if (!update) {
-      continue;
-    }
-
-    const surfaceId = (update.surfaceId ?? '').trim();
-    if (!surfaceId) {
-      continue;
-    }
-
-    for (const collection of update.contents ?? []) {
-      for (const item of collection.valueMap ?? []) {
-        if (!item.valueMap) {
-          continue;
-        }
-        const record = valueMapToRecord(item.valueMap);
-        if (typeof record.ec_product_id !== 'string') {
-          continue;
-        }
-
-        const surfaceProductsById = getSurfaceProductsById(surfaceId);
-        surfaceProductsById.delete(record.ec_product_id);
-        surfaceProductsById.set(record.ec_product_id, record as Product);
-      }
-    }
-  }
-
-  return new Map(
-    Array.from(bySurface.entries(), ([surfaceId, productsById]) => [
-      surfaceId,
-      Array.from(productsById.values()),
-    ])
-  );
-}
-
-function partitionAssistantActivities(activities: ActivityMessage[]) {
+function partitionAssistantActivities(
+  activities: ActivityMessage[],
+  catalogState: AgentChatCatalogControllerState
+) {
   return {
     leadingActivities: activities.filter(
-      (activity) => !activityContainsNextActions(activity)
+      (activity) =>
+        !catalogState.activities[activity.id]?.hasNextActionsComponent
     ),
     trailingActivities: activities.filter((activity) =>
-      activityContainsNextActions(activity)
+      Boolean(catalogState.activities[activity.id]?.hasNextActionsComponent)
     ),
   };
-}
-
-function buildBundleProducts(activities: ActivityMessage[]) {
-  const operations = activities.flatMap((activity) =>
-    getSurfaceOperations(activity)
-  );
-  return extractProductsBySurface(operations);
 }
 
 function normalizeToolLabel(label: string) {
@@ -202,6 +79,7 @@ function groupSuccessiveToolTraceEntries(trace: ProgressTraceEntry[]) {
 
 export function MessageList({
   messages,
+  catalogState,
   isStreaming,
   progress,
   onActionSelected,
@@ -276,8 +154,9 @@ export function MessageList({
         const activeActivityId =
           messageActivities[messageActivities.length - 1]?.id;
         const {leadingActivities, trailingActivities} =
-          partitionAssistantActivities(messageActivities);
-        const bundleProducts = buildBundleProducts(messageActivities);
+          partitionAssistantActivities(messageActivities, catalogState);
+        const bundleProducts =
+          catalogState.messages[message.id]?.productsBySurface ?? {};
         const shouldShowStreamingProgress =
           message.role === 'assistant' && message.id === lastAssistantId;
         const messageProgressTrace = message.progress?.trace ?? [];
@@ -317,10 +196,13 @@ export function MessageList({
               <ActivityRenderer
                 key={activity.id}
                 activity={activity}
+                catalog={catalogState.activities[activity.id] ?? null}
                 isLoading={Boolean(
                   isLatestAssistantMessage && activity.id === activeActivityId
                 )}
-                allowNextActionsFallback={activityContainsNextActions(activity)}
+                allowNextActionsFallback={Boolean(
+                  catalogState.activities[activity.id]?.hasNextActionsComponent
+                )}
                 bundleProducts={bundleProducts}
               />
             ))}
@@ -340,10 +222,13 @@ export function MessageList({
               <ActivityRenderer
                 key={activity.id}
                 activity={activity}
+                catalog={catalogState.activities[activity.id] ?? null}
                 isLoading={Boolean(
                   isLatestAssistantMessage && activity.id === activeActivityId
                 )}
-                allowNextActionsFallback={activityContainsNextActions(activity)}
+                allowNextActionsFallback={Boolean(
+                  catalogState.activities[activity.id]?.hasNextActionsComponent
+                )}
                 bundleProducts={bundleProducts}
               />
             ))}
