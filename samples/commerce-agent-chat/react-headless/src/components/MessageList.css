@@ -1,0 +1,112 @@
+.rh-message-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 1rem 1.25rem;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #b8c2d1 #eef2f7;
+}
+
+.rh-message-list > .rh-activity-renderer {
+  display: block;
+  width: 100%;
+}
+
+.rh-message-list::-webkit-scrollbar {
+  width: 10px;
+}
+
+.rh-message-list::-webkit-scrollbar-track {
+  background: #eef2f7;
+  border-radius: 999px;
+  border: 1px solid #d6dce6;
+}
+
+.rh-message-list::-webkit-scrollbar-thumb {
+  background: #b8c2d1;
+  border-radius: 999px;
+  border: 1px solid #a9b5c7;
+}
+
+.rh-message-list::-webkit-scrollbar-thumb:hover {
+  background: #98a7bd;
+}
+
+.rh-message {
+  width: fit-content;
+  max-width: min(80ch, 88%);
+  padding: 0.9rem 1.1rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #fff;
+  overflow-wrap: anywhere;
+  text-align: left;
+}
+
+.rh-message-user {
+  align-self: flex-end;
+  background: #edf4ff;
+  border-color: #c8dcff;
+}
+
+.rh-message-assistant {
+  align-self: flex-start;
+  width: 100%;
+  max-width: 100%;
+}
+
+.rh-message-content {
+  margin: 0;
+  line-height: 1.5;
+  text-align: left;
+  color: var(--ink);
+}
+
+.rh-message-content--plain {
+  white-space: pre-line;
+}
+
+.rh-message-content--markdown {
+  font-size: 1rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.rh-message-content--markdown > :first-child {
+  margin-top: 0;
+}
+
+.rh-message-content--markdown > :last-child {
+  margin-bottom: 0;
+}
+
+.rh-message-content--markdown :where(p, ul, ol, pre, blockquote) {
+  margin: 0.35rem 0;
+}
+
+.rh-message-content--markdown :where(ul, ol) {
+  padding-left: 1.25rem;
+}
+
+.rh-message-content--markdown :where(pre) {
+  white-space: pre-wrap;
+}
+
+.rh-empty-state {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  text-align: center;
+  color: var(--ink-muted);
+}
+
+@media (max-width: 720px) {
+  .rh-message {
+    max-width: 94%;
+  }
+}
