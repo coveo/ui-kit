@@ -1,0 +1,13 @@
+{
+  "name": "@coveo/commerce-agent-chat-services",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node --import tsx src/server.ts",
+    "dev": "node --watch --import tsx src/server.ts"
+  },
+  "dependencies": {
+    "tsx": "^4.19.0"
+  }
+}
