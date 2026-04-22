@@ -311,6 +311,10 @@ export enum SearchPageEvents {
      */
     openGeneratedAnswerSource = 'openGeneratedAnswerSource',
     /**
+     * Identifies the custom event that gets logged when a user clicks an inline link in a generated answer.
+     */
+    generatedAnswerOpenInlineLink = 'generatedAnswerOpenInlineLink',
+    /**
      * Identified the custom event that gets logged when a generated answer stream is completed.
      */
     generatedAnswerStreamEnd = 'generatedAnswerStreamEnd',
@@ -398,6 +402,7 @@ export const CustomEventsTypes: Partial<Record<SearchPageEvents | InsightEvents,
     [SearchPageEvents.likeGeneratedAnswer]: 'generatedAnswer',
     [SearchPageEvents.dislikeGeneratedAnswer]: 'generatedAnswer',
     [SearchPageEvents.openGeneratedAnswerSource]: 'generatedAnswer',
+    [SearchPageEvents.generatedAnswerOpenInlineLink]: 'generatedAnswer',
     [SearchPageEvents.generatedAnswerStreamEnd]: 'generatedAnswer',
     [SearchPageEvents.generatedAnswerSourceHover]: 'generatedAnswer',
     [SearchPageEvents.generatedAnswerCopyToClipboard]: 'generatedAnswer',
@@ -536,10 +541,12 @@ export interface SmartSnippetSuggestionMeta {
     documentId: SmartSnippetDocumentIdentifier;
 }
 
-export interface SmartSnippetLinkMeta {
+export interface LinkMeta {
     linkText: string;
     linkURL: string;
 }
+
+export interface SmartSnippetLinkMeta extends LinkMeta {}
 
 export interface SmartSnippetDocumentIdentifier {
     contentIdKey: string;
@@ -580,6 +587,8 @@ export type GeneratedAnswerCitationMeta = GeneratedAnswerBaseMeta & {
     permanentId: string;
     citationId: string;
 };
+
+export type GeneratedAnswerInlineLinkMeta = GeneratedAnswerBaseMeta & LinkMeta;
 
 export type GeneratedAnswerCitationClickMeta = GeneratedAnswerBaseMeta & {
     citationId: string;
