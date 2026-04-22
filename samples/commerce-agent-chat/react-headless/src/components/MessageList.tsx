@@ -3,6 +3,7 @@ import type {
   AgentChatMessage,
   AgentChatProgress,
 } from '@coveo/headless/commerce';
+import type {Product} from '../../../core/src/types/commerce.js';
 import {ActivityRenderer} from './ActivityRenderer.js';
 import {ProgressTrace, type ProgressTraceEntry} from './ProgressTrace.js';
 import {renderMarkdown} from '../../../core/src/lib/markdown.js';
@@ -51,8 +52,6 @@ interface SurfaceContent {
   operations?: SurfaceOperation[];
 }
 
-type ProductRecord = Record<string, unknown>;
-
 function getSurfaceOperations(activity: ActivityMessage): SurfaceOperation[] {
   if (activity.activityType !== 'a2ui-surface') {
     return [];
@@ -97,15 +96,15 @@ function valueMapToRecord(
 
 function extractProductsBySurface(
   operations: SurfaceOperation[]
-): Map<string, ProductRecord[]> {
-  const bySurface = new Map<string, Map<string, ProductRecord>>();
+): Map<string, Product[]> {
+  const bySurface = new Map<string, Map<string, Product>>();
 
   const getSurfaceProductsById = (surfaceId: string) => {
     const existing = bySurface.get(surfaceId);
     if (existing) {
       return existing;
     }
-    const created = new Map<string, ProductRecord>();
+    const created = new Map<string, Product>();
     bySurface.set(surfaceId, created);
     return created;
   };
@@ -133,7 +132,7 @@ function extractProductsBySurface(
 
         const surfaceProductsById = getSurfaceProductsById(surfaceId);
         surfaceProductsById.delete(record.ec_product_id);
-        surfaceProductsById.set(record.ec_product_id, record);
+        surfaceProductsById.set(record.ec_product_id, record as Product);
       }
     }
   }
@@ -161,7 +160,7 @@ function buildBundleProducts(activities: ActivityMessage[]) {
   const operations = activities.flatMap((activity) =>
     getSurfaceOperations(activity)
   );
-  return extractProductsBySurface(operations) as Map<string, ProductRecord[]>;
+  return extractProductsBySurface(operations);
 }
 
 function normalizeToolLabel(label: string) {
