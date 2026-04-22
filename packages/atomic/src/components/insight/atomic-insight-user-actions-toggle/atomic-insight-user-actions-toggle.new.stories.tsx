@@ -1,10 +1,12 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {MockInsightApi} from '@/storybook-utils/api/insight/mock';
 import {MockMachineLearningApi} from '@/storybook-utils/api/machinelearning/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import '@/src/components/insight/atomic-insight-user-actions-toggle/atomic-insight-user-actions-toggle.js';
 
+const mockedInsightApi = new MockInsightApi();
 const mockMachineLearningApi = new MockMachineLearningApi();
 
 const {decorator, play} = wrapInInsightInterface();
@@ -25,7 +27,16 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
-    msw: {handlers: [...mockMachineLearningApi.handlers]},
+    msw: {
+      handlers: [
+        ...mockedInsightApi.handlers,
+        ...mockMachineLearningApi.handlers,
+      ],
+    },
+  },
+  beforeEach: () => {
+    mockedInsightApi.searchEndpoint.clear();
+    mockedInsightApi.querySuggestEndpoint.clear();
   },
   args: {
     ...args,

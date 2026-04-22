@@ -1,7 +1,7 @@
 import {html, nothing} from 'lit';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 
-export interface QueryErrorDetailsProps {
+interface QueryErrorDetailsProps {
   error: unknown;
   show: boolean;
 }
