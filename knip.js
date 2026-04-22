@@ -46,7 +46,6 @@ export default {
     },
     'packages/atomic-react': {
       entry: ['src/*index.ts'],
-      ignoreUnresolved: [/\.{1,2}\/([\w.]*?\/)?components\.js/],
       ignoreDependencies: [
         '@lit/react', // Only used in generated files.
       ],
@@ -122,9 +121,7 @@ export default {
         'local-web-server',
       ],
     },
-    'packages/atomic-legacy': {
-      ignore: ['**/*'],
-    },
+    'packages/atomic-legacy': {},
     'packages/create-atomic': {
       ignore: ['**/*'],
     },
