@@ -1,3 +1,21 @@
+## 3.49.4
+
+### Patch Changes
+
+- [#7423](https://github.com/coveo/ui-kit/pull/7423) [`f76c16f`](https://github.com/coveo/ui-kit/commit/f76c16f6f3dcde4e83563cebaf80c067901e5b34) Thanks [@renovate-coveo](https://github.com/apps/renovate-coveo)! - Bump production dependencies
+
+- [#7473](https://github.com/coveo/ui-kit/pull/7473) [`bd26438`](https://github.com/coveo/ui-kit/commit/bd264389ad421e622ab3a4ac3d324bd8e1fce60a) Thanks [@vdunlop-coveo](https://github.com/vdunlop-coveo)! - Fix default commerce sort being appended to the URL on page load.
+
+  The `getSortCriteria` selector was using reference equality (`!==`) to compare the current sort against the initial state. Because commerce sort criteria are objects, two equal-valued instances were never `===`, causing `sortCriteria=relevance` to always be serialized into the URL fragment even when the user had not changed the sort. The fix uses deep equality so the default sort is correctly omitted from the URL.
+
+- [#7462](https://github.com/coveo/ui-kit/pull/7462) [`2dd45bc`](https://github.com/coveo/ui-kit/commit/2dd45bcdabd1ec7683cc1f341a9ba4747671e222) Thanks [@jfcere-coveo](https://github.com/jfcere-coveo)! - Add `Secure` attribute on cookie when using HTTPS session
+
+- [#7411](https://github.com/coveo/ui-kit/pull/7411) [`6db3fdb`](https://github.com/coveo/ui-kit/commit/6db3fdbc9e669dd4f3d4a0f900401700d86f7505) Thanks [@mmitiche](https://github.com/mmitiche)! - Map result `raw.objecttype` to the `documentCategory` analytics dimension on Headless click events sent through UA.
+
+- [#7458](https://github.com/coveo/ui-kit/pull/7458) [`39c2c10`](https://github.com/coveo/ui-kit/commit/39c2c102e585df4861a65d6b6350c5ff35774e35) Thanks [@fbeaudoincoveo](https://github.com/fbeaudoincoveo)! - Fix search and insight engine initialization so `updateSearchConfiguration` only receives serializable supported fields.
+
+  This prevents Redux Toolkit dev warnings caused by function-valued configuration properties being forwarded in action payloads.
+
 ## 3.49.3
 
 ### Patch Changes
