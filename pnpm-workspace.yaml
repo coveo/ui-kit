@@ -82,6 +82,7 @@ catalog:
   rollup-plugin-node-polyfills: 0.2.1
   typedoc: 0.28.18
   typescript: 6.0.2
+  '@typescript/native-preview': 7.0.0-dev.20260421.2
   vite: 8.0.6
   vitest: 4.0.16
 
@@ -93,6 +94,8 @@ minimumReleaseAgeExclude:
   - '@vitest/*'
   - vitest
   - oxlint
+  - '@typescript/native-preview'
+  - '@typescript/native-preview-*'
   - '@oxlint/*'
   - oxfmt
   - '@oxfmt/*'

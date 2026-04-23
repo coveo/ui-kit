@@ -77,7 +77,7 @@
     "build": "pnpm run build:definitions && pnpm run build:bundles && pnpm run build:esm",
     "build:bundles": "node esbuild.mjs",
     "build:esm": "node ./scripts/build.mjs --config=tsconfig.build-esm.json",
-    "build:definitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
+    "build:definitions": "tsgo -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "node ../../utils/ci/rm-rf.mjs dist/*",
     "test": "vitest run --exclude \"src/integration-tests/**\"",
     "test:watch": "vitest --exclude \"src/integration-tests/**\"",

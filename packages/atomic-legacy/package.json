@@ -19,7 +19,7 @@
     }
   },
   "scripts": {
-    "build": "pnpm exec node --max_old_space_size=6144 ./node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.json && tsc -b tsconfig.decorators.json"
+    "build": "pnpm exec node --max_old_space_size=6144 ./node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.json && tsgo -b tsconfig.decorators.json"
   },
   "dependencies": {
     "@coveo/headless": "workspace:*",

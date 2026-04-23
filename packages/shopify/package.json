@@ -49,7 +49,7 @@
     "dev": "pnpm run build:bundles -- dev",
     "build": "pnpm run build:bundles && pnpm run build:definitions",
     "build:bundles": "node esbuild.mjs",
-    "build:definitions": "tsc -p src/tsconfig.build.json && node ./scripts/copy-types.mjs",
+    "build:definitions": "tsgo -p src/tsconfig.build.json && node ./scripts/copy-types.mjs",
     "test": "vitest run",
     "clean": "node ../../utils/ci/rm-rf.mjs dist/* cdn/"
   },

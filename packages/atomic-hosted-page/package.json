@@ -31,7 +31,7 @@
   },
   "scripts": {
     "clean": "node ../../utils/ci/rm-rf.mjs dist/*",
-    "build": "node ../../utils/ci/rm-rf.mjs dist cdn && tsc --outdir dist && tsc --outdir cdn --project tsconfig.cdn.json && node ./scripts/esbuild.js",
+    "build": "node ../../utils/ci/rm-rf.mjs dist cdn && tsgo --outdir dist && tsgo --outdir cdn --project tsconfig.cdn.json && node ./scripts/esbuild.js",
     "start": "node ./scripts/start.js",
     "e2e": "playwright test"
   },

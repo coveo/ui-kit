@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "module": "Node16",
+    "module": "NodeNext",
     "target": "ESNext",
-    "moduleResolution": "Node16",
+    "moduleResolution": "NodeNext",
     "esModuleInterop": true
   },
   "exclude": ["node_modules"]

@@ -10,7 +10,7 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc -p tsconfig.json"
+    "build": "tsgo -p tsconfig.json"
   },
   "devDependencies": {
     "typedoc": "catalog:",

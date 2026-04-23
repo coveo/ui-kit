@@ -2,7 +2,6 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "ignoreDeprecations": "6.0",
     "lib": ["DOM", "ES2023"],
     "module": "ES2022",
     "moduleResolution": "Bundler",
@@ -10,11 +9,10 @@
     "target": "ES2022",
     "paths": {
       "atomic-angular": [
-        "dist/atomic-angular/atomic-angular",
-        "dist/atomic-angular"
+        "./dist/atomic-angular/atomic-angular",
+        "./dist/atomic-angular"
       ]
     },
-    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,

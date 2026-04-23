@@ -3,7 +3,7 @@
   "compilerOptions": {
     "declaration": false,
     "lib": ["DOM", "ES2023"],
-    "module": "Node16",
+    "module": "NodeNext",
     "target": "ES2022",
     "esModuleInterop": true,
     "noUnusedLocals": true,

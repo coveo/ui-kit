@@ -32,6 +32,7 @@
     "@tsconfig/node22": "22.0.5",
     "@types/jest": "catalog:",
     "@types/node": "catalog:",
+    "@typescript/native-preview": "catalog:",
     "concurrently": "9.2.1",
     "cspell": "9.8.0",
     "esbuild": "catalog:",
