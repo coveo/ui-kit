@@ -65,7 +65,6 @@ catalog:
   '@vitest/browser-playwright': 4.0.16
   coveo.analytics: 2.30.54
   cypress: 13.7.3
-  cypress-repeat: 2.3.9
   dayjs: 1.11.20
   esbuild: 0.28.0
   exponential-backoff: 3.1.3
