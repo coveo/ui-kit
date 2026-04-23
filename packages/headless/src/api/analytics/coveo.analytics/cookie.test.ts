@@ -28,6 +28,7 @@ describe('Cookie', () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.unstubAllGlobals();
   });
 
   describe('set', () => {
