@@ -591,6 +591,9 @@ jobs:
     needs: affected
     if: contains(needs.affected.outputs.projects, '@samples/headless-ssr-search-nextjs')
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.59.1-noble
+      options: --user 1001
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@f808768d1510423e83855289c910610ca9b43176 # v2.17.0
