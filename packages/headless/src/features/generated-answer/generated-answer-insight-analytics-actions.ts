@@ -15,7 +15,7 @@ import {
   citationSourceSelector,
   generativeQuestionAnsweringIdSelector,
 } from './generated-answer-selectors.js';
-import {hasDisplayableGeneratedAnswerText} from './utils/streamed-answer-text-utils.js';
+import {resolveGeneratedAnswerTextIsEmpty} from './utils/streamed-answer-text-utils.js';
 
 //TODO: SFINT-5435
 export const logRetryGeneratedAnswer = (): InsightAction =>
@@ -227,9 +227,10 @@ export const logGeneratedAnswerStreamEnd = (
     __legacy__getBuilder: (client, state) => {
       const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
-      const answerTextIsEmpty = answerGenerated
-        ? !hasDisplayableGeneratedAnswerText(state.generatedAnswer?.answer)
-        : undefined;
+      const answerTextIsEmpty = resolveGeneratedAnswerTextIsEmpty(
+        answerGenerated,
+        state.generatedAnswer?.answer
+      );
       if (!generativeQuestionAnsweringId) {
         return null;
       }

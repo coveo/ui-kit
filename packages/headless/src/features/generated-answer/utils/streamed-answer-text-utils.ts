@@ -4,6 +4,16 @@ export function hasDisplayableGeneratedAnswerText(
   return typeof answer === 'string' && answer.trim() !== '';
 }
 
+export function resolveGeneratedAnswerTextIsEmpty(
+  answerGenerated: boolean,
+  answer?: string,
+  answerTextIsEmpty?: boolean
+): boolean | undefined {
+  return answerGenerated
+    ? (answerTextIsEmpty ?? !hasDisplayableGeneratedAnswerText(answer))
+    : undefined;
+}
+
 export function appendGeneratedAnswerText(
   answer: string | undefined,
   textDelta: string

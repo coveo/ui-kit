@@ -12,7 +12,7 @@ import {
   citationSourceSelector,
   generativeQuestionAnsweringIdSelector,
 } from './generated-answer-selectors.js';
-import {hasDisplayableGeneratedAnswerText} from './utils/streamed-answer-text-utils.js';
+import {resolveGeneratedAnswerTextIsEmpty} from './utils/streamed-answer-text-utils.js';
 
 export type GeneratedAnswerFeedbackOption = 'yes' | 'unknown' | 'no';
 
@@ -262,10 +262,11 @@ export const logGeneratedAnswerStreamEnd = (
     __legacy__getBuilder: (client, state) => {
       const generativeQuestionAnsweringId =
         answerId ?? generativeQuestionAnsweringIdSelector(state);
-      const resolvedAnswerTextIsEmpty = answerGenerated
-        ? (answerTextIsEmpty ??
-          !hasDisplayableGeneratedAnswerText(state.generatedAnswer?.answer))
-        : undefined;
+      const resolvedAnswerTextIsEmpty = resolveGeneratedAnswerTextIsEmpty(
+        answerGenerated,
+        state.generatedAnswer?.answer,
+        answerTextIsEmpty
+      );
       if (!generativeQuestionAnsweringId) {
         return null;
       }

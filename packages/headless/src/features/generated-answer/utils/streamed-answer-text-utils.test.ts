@@ -1,6 +1,7 @@
 import {
   appendGeneratedAnswerText,
   hasDisplayableGeneratedAnswerText,
+  resolveGeneratedAnswerTextIsEmpty,
 } from './streamed-answer-text-utils.js';
 
 describe('#hasDisplayableGeneratedAnswerText', () => {
@@ -50,5 +51,26 @@ describe('#appendGeneratedAnswerText', () => {
 
   it('should append blank-only chunks after displayable text already exists', () => {
     expect(appendGeneratedAnswerText('Hello', '   ')).toBe('Hello   ');
+  });
+});
+
+describe('#resolveGeneratedAnswerTextIsEmpty', () => {
+  it('should return undefined when no answer was generated', () => {
+    expect(resolveGeneratedAnswerTextIsEmpty(false, undefined)).toBeUndefined();
+    expect(
+      resolveGeneratedAnswerTextIsEmpty(false, 'answer', true)
+    ).toBeUndefined();
+  });
+
+  it('should derive the value from answer text when no explicit value is provided', () => {
+    expect(resolveGeneratedAnswerTextIsEmpty(true, undefined)).toBe(true);
+    expect(resolveGeneratedAnswerTextIsEmpty(true, 'answer')).toBe(false);
+  });
+
+  it('should prefer an explicit answerTextIsEmpty value over the derived one', () => {
+    expect(resolveGeneratedAnswerTextIsEmpty(true, 'answer', true)).toBe(true);
+    expect(resolveGeneratedAnswerTextIsEmpty(true, undefined, false)).toBe(
+      false
+    );
   });
 });

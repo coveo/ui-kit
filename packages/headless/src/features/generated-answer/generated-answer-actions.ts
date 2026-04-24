@@ -36,7 +36,7 @@ import {
   logGeneratedAnswerResponseLinked,
   logGeneratedAnswerStreamEnd,
 } from './generated-answer-analytics-actions.js';
-import {hasDisplayableGeneratedAnswerText} from './utils/streamed-answer-text-utils.js';
+import {resolveGeneratedAnswerTextIsEmpty} from './utils/streamed-answer-text-utils.js';
 import {
   buildStreamingRequest,
   constructAnswerAPIQueryParams,
@@ -300,11 +300,10 @@ export const streamAnswer = createAsyncThunk<
         ).answerGenerated;
         const answerId = getState().generatedAnswer.answerId;
         const cannotAnswer = queryExecuted.length !== 0 && !isAnswerGenerated;
-        const answerTextIsEmpty = isAnswerGenerated
-          ? !hasDisplayableGeneratedAnswerText(
-              getState().generatedAnswer.answer
-            )
-          : undefined;
+        const answerTextIsEmpty = resolveGeneratedAnswerTextIsEmpty(
+          isAnswerGenerated,
+          getState().generatedAnswer.answer
+        );
         dispatch(setCannotAnswer(cannotAnswer));
         dispatch(setIsStreaming(false));
         dispatch(setIsAnswerGenerated(isAnswerGenerated));

@@ -15,7 +15,7 @@ import {
 import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
 import {
   appendGeneratedAnswerText,
-  hasDisplayableGeneratedAnswerText,
+  resolveGeneratedAnswerTextIsEmpty,
 } from '../../features/generated-answer/utils/streamed-answer-text-utils.js';
 import {fetchEventSource} from '../../utils/fetch-event-source/fetch.js';
 import type {EventSourceMessage} from '../../utils/fetch-event-source/parse.js';
@@ -138,9 +138,10 @@ export const updateCacheWithEvent = (
       handleEndOfStream(draft, parsedPayload);
       const answerId = draft.answerId;
       const answerGenerated = parsedPayload.answerGenerated ?? false;
-      const answerTextIsEmpty = answerGenerated
-        ? !hasDisplayableGeneratedAnswerText(draft.answer)
-        : undefined;
+      const answerTextIsEmpty = resolveGeneratedAnswerTextIsEmpty(
+        answerGenerated,
+        draft.answer
+      );
       dispatch(
         logGeneratedAnswerStreamEnd(
           answerGenerated,
