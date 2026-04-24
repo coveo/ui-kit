@@ -635,15 +635,26 @@ describe('GeneratedAnswerWithFollowUps', () => {
     });
 
     it('should dispatch citation hover analytics when answerId targets a follow-up answer', () => {
+      engine = buildEngineWithGeneratedAnswer({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          answerId: headAnswerId,
+        },
+        followUpAnswers: {
+          ...getFollowUpAnswersInitialState(),
+          conversationId: 'conversation-123',
+          conversationToken: 'token-123',
+          followUpAnswers: [exampleFollowUpAnswer],
+        },
+      });
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.logCitationHover(citationId, 10, followUpAnswerId);
 
-      expect(logHoverCitation).toHaveBeenCalledWith(
-        citationId,
-        10,
-        followUpAnswerId
-      );
+      expect(logHoverCitation).toHaveBeenCalledWith(citationId, 10, {
+        answerId: followUpAnswerId,
+        conversationId: 'conversation-123',
+      });
       expect(mockCoreCitationHover).not.toHaveBeenCalled();
     });
   });

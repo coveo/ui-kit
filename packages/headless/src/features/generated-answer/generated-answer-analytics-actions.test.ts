@@ -268,11 +268,9 @@ describe('generated answer analytics actions', () => {
     it('should log #logHoverCitation with a provided answerId', async () => {
       const hoverDuration = 1234;
 
-      await logHoverCitation(
-        exampleCitation.id,
-        hoverDuration,
-        exampleProvidedAnswerId
-      )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+      await logHoverCitation(exampleCitation.id, hoverDuration, {
+        answerId: exampleProvidedAnswerId,
+      })()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
       const mockToUse = mockMakeGeneratedAnswerSourceHover;
 
@@ -282,6 +280,26 @@ describe('generated answer analytics actions', () => {
         citationId: exampleCitation.id,
         permanentId: exampleCitation.permanentid,
         citationHoverTimeMs: hoverDuration,
+      });
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
+    });
+
+    it('should log #logHoverCitation with a provided conversationId', async () => {
+      const hoverDuration = 1234;
+      const conversationId = 'conversation-123';
+
+      await logHoverCitation(exampleCitation.id, hoverDuration, {
+        answerId: exampleProvidedAnswerId,
+        conversationId,
+      })()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+
+      expect(mockMakeGeneratedAnswerSourceHover).toHaveBeenCalledTimes(1);
+      expect(mockMakeGeneratedAnswerSourceHover).toHaveBeenCalledWith({
+        generativeQuestionAnsweringId: exampleProvidedAnswerId,
+        citationId: exampleCitation.id,
+        permanentId: exampleCitation.permanentid,
+        citationHoverTimeMs: hoverDuration,
+        conversationId,
       });
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
@@ -641,11 +659,9 @@ describe('generated answer analytics actions', () => {
     it('should log #logHoverCitation with a provided answerId', async () => {
       const hoverDuration = 1234;
 
-      await logHoverCitation(
-        exampleCitation.id,
-        hoverDuration,
-        exampleProvidedAnswerId
-      )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+      await logHoverCitation(exampleCitation.id, hoverDuration, {
+        answerId: exampleProvidedAnswerId,
+      })()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
       expect(emit).toHaveBeenCalledTimes(1);
       expect(emit.mock.calls[0]).toStrictEqual([

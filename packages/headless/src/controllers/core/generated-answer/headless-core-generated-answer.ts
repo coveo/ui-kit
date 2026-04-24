@@ -150,15 +150,13 @@ export interface GeneratedAnswerAnalyticsClient {
     citationId: string,
     answerId?: string
   ): CustomAction;
-  /** @deprecated */
-  logHoverCitation(
-    citationId: string,
-    citationHoverTimeMs: number
-  ): CustomAction;
   logHoverCitation(
     citationId: string,
     citationHoverTimeMs: number,
-    answerId?: string
+    options?: {
+      answerId?: string;
+      conversationId?: string;
+    }
   ): CustomAction;
   logGeneratedAnswerShowAnswers: () => CustomAction;
   logGeneratedAnswerHideAnswers: () => CustomAction;
@@ -302,11 +300,9 @@ export function buildCoreGeneratedAnswer(
       answerId?: string
     ) {
       dispatch(
-        analyticsClient.logHoverCitation(
-          citationId,
-          citationHoverTimeMs,
-          answerId
-        )
+        analyticsClient.logHoverCitation(citationId, citationHoverTimeMs, {
+          answerId: answerId ?? this.state.answerId,
+        })
       );
     },
 

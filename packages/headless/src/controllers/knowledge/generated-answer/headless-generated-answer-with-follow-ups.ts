@@ -19,6 +19,7 @@ import {
 import {followUpAnswersReducer as followUpAnswers} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import type {FollowUpAnswersState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
 import {withGeneratedAnswerSseErrorHelpers} from '../../../features/generated-answer/sse-generated-answer-errors.js';
+import {selectFollowUpAnswersConversationId} from '../../../features/generated-answer/generated-answer-selectors.js';
 import type {GeneratedAnswerState} from '../../../index.js';
 import type {
   FollowUpAnswersSection,
@@ -229,11 +230,10 @@ export function buildGeneratedAnswerWithFollowUps(
         return;
       }
       engine.dispatch(
-        analyticsClient.logHoverCitation(
-          citationId,
-          citationHoverTimeMs,
-          answerId
-        )
+        analyticsClient.logHoverCitation(citationId, citationHoverTimeMs, {
+          answerId,
+          conversationId: selectFollowUpAnswersConversationId(getState()),
+        })
       );
     },
 

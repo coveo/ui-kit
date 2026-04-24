@@ -171,7 +171,7 @@ describe('generated answer', () => {
     expect(logHoverCitation).toHaveBeenCalledWith(
       testCitation.id,
       exampleDuration,
-      undefined
+      {answerId: state.generatedAnswer.answerId}
     );
   });
 
@@ -188,7 +188,7 @@ describe('generated answer', () => {
     expect(logHoverCitation).toHaveBeenCalledWith(
       testCitation.id,
       exampleDuration,
-      providedAnswerId
+      {answerId: providedAnswerId}
     );
   });
 

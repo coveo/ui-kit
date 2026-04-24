@@ -92,22 +92,22 @@ export function logOpenGeneratedAnswerSource(
   });
 }
 
+type LogHoverCitationOptions = {
+  answerId?: string;
+  conversationId?: string;
+};
+
 // TODO: SFINT-6665
-// Overloading the function here for backward compatibility because #logHoverCitation will eventually take an answerId.
-export function logHoverCitation(
-  citationId: string,
-  citationHoverTimeInMs: number
-): CustomAction;
+// In the next major version, make `options.answerId` required and remove the
+// fallback to `generativeQuestionAnsweringIdSelector(state)`.
 export function logHoverCitation(
   citationId: string,
   citationHoverTimeInMs: number,
-  answerId: string
-): CustomAction;
-export function logHoverCitation(
-  citationId: string,
-  citationHoverTimeInMs: number,
-  answerId?: string
+  options?: LogHoverCitationOptions
 ): CustomAction {
+  const answerId = options?.answerId;
+  const conversationId = options?.conversationId;
+
   return makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/hoverCitation',
     __legacy__getBuilder: (client, state) => {
@@ -123,6 +123,7 @@ export function logHoverCitation(
         permanentId: citation.permanentid,
         citationId: citation.id,
         citationHoverTimeMs: citationHoverTimeInMs,
+        ...(conversationId && {conversationId}),
       });
     },
     analyticsType: 'Rga.CitationHover',
