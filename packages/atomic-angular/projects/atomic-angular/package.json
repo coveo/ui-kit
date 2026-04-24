@@ -12,8 +12,8 @@
     "@coveo/atomic": "workspace:*"
   },
   "peerDependencies": {
-    "@angular/common": "14 - 20",
-    "@angular/core": "14 - 20",
+    "@angular/common": "14 - 21",
+    "@angular/core": "14 - 21",
     "@coveo/headless": "workspace:*"
   },
   "engines": {

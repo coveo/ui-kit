@@ -68,7 +68,7 @@ const iframeConnectedEvent = async (
   });
 };
 
-export interface QuickviewIframeProps {
+interface QuickviewIframeProps {
   title: string;
   content?: string;
   onSetIframeRef: (ref: HTMLIFrameElement) => void;

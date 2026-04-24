@@ -4,7 +4,7 @@ import {keyed} from 'lit/directives/keyed.js';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {renderButton} from '../button';
 
-export interface BreadcrumbClearAllProps {
+interface BreadcrumbClearAllProps {
   refCallback: (el: HTMLButtonElement) => void;
   onClick: ((event?: MouseEvent | undefined) => void) | undefined;
   isCollapsed: boolean;

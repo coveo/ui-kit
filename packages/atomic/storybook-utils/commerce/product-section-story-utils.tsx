@@ -36,7 +36,7 @@ const createSectionLayoutDecorator = (): Decorator => {
   };
 };
 
-export interface ProductSectionStoryConfig {
+interface ProductSectionStoryConfig {
   includeCodeRoot?: boolean;
   engineConfig?: Partial<CommerceEngineConfiguration>;
 }
