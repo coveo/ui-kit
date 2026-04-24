@@ -123,7 +123,7 @@ export const updateCacheWithEvent = (
       }
       break;
     case 'genqa.messageType':
-      if (parsedPayload.textDelta) {
+      if (typeof parsedPayload.textDelta === 'string') {
         handleMessage(draft, parsedPayload);
         dispatch(updateMessage({textDelta: parsedPayload.textDelta}));
       }

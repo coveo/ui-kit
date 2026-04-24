@@ -13,7 +13,7 @@ import {
 import type {AtomicGeneratedAnswerFeedbackModal} from '../atomic-generated-answer-feedback-modal/atomic-generated-answer-feedback-modal';
 import '@/src/components/common/atomic-generated-answer-feedback-modal/atomic-generated-answer-feedback-modal';
 
-function hasAnswerText(answer: string | undefined): boolean {
+function hasAnswerText(answer: string | undefined): answer is string {
   return typeof answer === 'string' && answer.trim() !== '';
 }
 

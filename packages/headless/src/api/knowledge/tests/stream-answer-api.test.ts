@@ -154,6 +154,21 @@ describe('#streamAnswerApi', () => {
       });
     });
 
+    it('should ignore non-string message payloads', () => {
+      const dispatch = vi.fn();
+      const event = buildSuccessEvent({
+        payloadType: 'genqa.messageType',
+        payload: {
+          textDelta: {text: 'some answer'},
+        },
+      });
+      const draft = buildDefaultDraft({answer: 'existing answer'});
+
+      expect(() => updateCacheWithEvent(event, draft, dispatch)).not.toThrow();
+      expect(draft).toHaveProperty('answer', 'existing answer');
+      expect(dispatch).not.toHaveBeenCalled();
+    });
+
     it('should handle citations message', () => {
       const dispatch = vi.fn();
       const citation = {
