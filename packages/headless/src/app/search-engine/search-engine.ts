@@ -1,7 +1,6 @@
 import type {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import type {Logger} from 'pino';
 import {GeneratedAnswerAPIClient} from '../../api/generated-answer/generated-answer-client.js';
-import {getSearchApiBaseUrl} from '../../api/platform-client.js';
 import {NoopPreprocessRequest} from '../../api/preprocess-request.js';
 import {SearchAPIClient} from '../../api/search/search-api-client.js';
 import {
@@ -59,17 +58,24 @@ type SearchEngineState = StateFromReducersMapObject<SearchEngineReducers> &
 function getUpdateSearchConfigurationPayload(
   configuration: SearchEngineConfiguration
 ): UpdateSearchConfigurationActionCreatorPayload {
-  const {search, organizationId, environment} = configuration;
-  const apiBaseUrl = search?.proxyBaseUrl
-    ? search.proxyBaseUrl
-    : getSearchApiBaseUrl(organizationId, environment);
+  const {search} = configuration;
+  const {
+    proxyBaseUrl,
+    pipeline,
+    searchHub,
+    timezone,
+    locale,
+    authenticationProviders,
+  } = search ?? {};
 
-  const payloadWithURL = {
-    ...search,
-    apiBaseUrl,
+  return {
+    proxyBaseUrl,
+    pipeline,
+    searchHub,
+    timezone,
+    locale,
+    authenticationProviders,
   };
-
-  return payloadWithURL;
 }
 
 /**

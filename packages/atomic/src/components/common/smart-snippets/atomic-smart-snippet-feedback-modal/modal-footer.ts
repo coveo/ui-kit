@@ -3,7 +3,7 @@ import {html} from 'lit';
 import {renderButton} from '@/src/components/common/button';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 
-export interface ModalFooterProps {
+interface ModalFooterProps {
   formId: string;
   i18n: i18n;
   onClick: (e: MouseEvent) => void;

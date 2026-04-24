@@ -21,7 +21,7 @@ function findHighlightedElements(iframe?: HTMLIFrameElement): HTMLElement[] {
 /**
  * @internal
  */
-export class IframeParser {
+class IframeParser {
   private textParser = new TextParser(this.stemmingInfoFromIndex);
   private wordsHighlights: Record<string, QuickviewWordHighlight> = {};
 

@@ -55,7 +55,7 @@ export interface NonceBindings {
  * If used to inject style on a component with no shadow DOM, use the `LightDomMixin` mixin on Lit component.
  * If used to inject a styled layout, consider using `CommerceLayoutMixin` instead.
  */
-export interface AdoptedStylesBindings {
+interface AdoptedStylesBindings {
   /**
    * @deprecated
    * An array of adopted stylesheets to be used in the shadow DOM.
