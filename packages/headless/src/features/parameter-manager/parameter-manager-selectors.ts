@@ -1,3 +1,5 @@
+import {deepEqual} from '../../utils/compare-utils.js';
+
 export function getQ<Section, Value>(
   section: Section | undefined,
   querySelector: (state: Section) => Value,
@@ -22,7 +24,7 @@ export function getSortCriteria<Section, Value>(
   }
 
   const sortCriteria = sortCriteriaSelector(section);
-  const shouldInclude = sortCriteria !== initialState;
+  const shouldInclude = !deepEqual(sortCriteria, initialState);
   return shouldInclude ? {sortCriteria} : {};
 }
 
