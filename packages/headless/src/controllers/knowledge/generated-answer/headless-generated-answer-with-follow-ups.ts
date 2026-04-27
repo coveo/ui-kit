@@ -174,7 +174,12 @@ export function buildGeneratedAnswerWithFollowUps(
       }
       if (!followUpAnswer.liked) {
         engine.dispatch(likeFollowUp({answerId}));
-        engine.dispatch(analyticsClient.logLikeGeneratedAnswer(answerId));
+        engine.dispatch(
+          analyticsClient.logLikeGeneratedAnswer({
+            answerId,
+            conversationId: selectFollowUpAnswersConversationId(getState()),
+          })
+        );
       }
     },
 
@@ -195,7 +200,12 @@ export function buildGeneratedAnswerWithFollowUps(
       }
       if (!followUpAnswer.disliked) {
         engine.dispatch(dislikeFollowUp({answerId}));
-        engine.dispatch(analyticsClient.logDislikeGeneratedAnswer(answerId));
+        engine.dispatch(
+          analyticsClient.logDislikeGeneratedAnswer({
+            answerId,
+            conversationId: selectFollowUpAnswersConversationId(getState()),
+          })
+        );
       }
     },
 
@@ -205,7 +215,12 @@ export function buildGeneratedAnswerWithFollowUps(
         controller.logCopyToClipboard();
         return;
       }
-      engine.dispatch(analyticsClient.logCopyGeneratedAnswer(answerId));
+      engine.dispatch(
+        analyticsClient.logCopyGeneratedAnswer({
+          answerId,
+          conversationId: selectFollowUpAnswersConversationId(getState()),
+        })
+      );
     },
 
     // TODO: SFINT-6665
@@ -215,7 +230,10 @@ export function buildGeneratedAnswerWithFollowUps(
         return;
       }
       engine.dispatch(
-        analyticsClient.logOpenGeneratedAnswerSource(citationId, answerId)
+        analyticsClient.logOpenGeneratedAnswerSource(citationId, {
+          answerId,
+          conversationId: selectFollowUpAnswersConversationId(getState()),
+        })
       );
     },
 

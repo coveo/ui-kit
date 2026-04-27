@@ -135,20 +135,23 @@ export interface GeneratedAnswer extends Controller {
 }
 
 export interface GeneratedAnswerAnalyticsClient {
-  /** @deprecated */
-  logLikeGeneratedAnswer(): CustomAction;
-  logLikeGeneratedAnswer(answerId?: string): CustomAction;
-  /** @deprecated */
-  logDislikeGeneratedAnswer(): CustomAction;
-  logDislikeGeneratedAnswer(answerId?: string): CustomAction;
+  logLikeGeneratedAnswer(options?: {
+    answerId?: string;
+    conversationId?: string;
+  }): CustomAction;
+  logDislikeGeneratedAnswer(options?: {
+    answerId?: string;
+    conversationId?: string;
+  }): CustomAction;
   logGeneratedAnswerFeedback: (
     feedback: GeneratedAnswerFeedback
   ) => CustomAction;
-  /** @deprecated */
-  logOpenGeneratedAnswerSource(citationId: string): CustomAction;
   logOpenGeneratedAnswerSource(
     citationId: string,
-    answerId?: string
+    options?: {
+      answerId?: string;
+      conversationId?: string;
+    }
   ): CustomAction;
   logHoverCitation(
     citationId: string,
@@ -160,9 +163,10 @@ export interface GeneratedAnswerAnalyticsClient {
   ): CustomAction;
   logGeneratedAnswerShowAnswers: () => CustomAction;
   logGeneratedAnswerHideAnswers: () => CustomAction;
-  /** @deprecated */
-  logCopyGeneratedAnswer(): CustomAction;
-  logCopyGeneratedAnswer(answerId?: string): CustomAction;
+  logCopyGeneratedAnswer(options?: {
+    answerId?: string;
+    conversationId?: string;
+  }): CustomAction;
   logRetryGeneratedAnswer: () => LegacySearchAction;
   logGeneratedAnswerExpand: () => CustomAction;
   logGeneratedAnswerCollapse: () => CustomAction;
@@ -260,7 +264,11 @@ export function buildCoreGeneratedAnswer(
     like() {
       if (!this.state.liked) {
         dispatch(likeGeneratedAnswer());
-        dispatch(analyticsClient.logLikeGeneratedAnswer(this.state.answerId));
+        dispatch(
+          analyticsClient.logLikeGeneratedAnswer({
+            answerId: this.state.answerId,
+          })
+        );
       }
     },
 
@@ -268,7 +276,9 @@ export function buildCoreGeneratedAnswer(
       if (!this.state.disliked) {
         dispatch(dislikeGeneratedAnswer());
         dispatch(
-          analyticsClient.logDislikeGeneratedAnswer(this.state.answerId)
+          analyticsClient.logDislikeGeneratedAnswer({
+            answerId: this.state.answerId,
+          })
         );
       }
     },
@@ -289,7 +299,9 @@ export function buildCoreGeneratedAnswer(
     // TODO: SFINT-6665
     logCitationClick(citationId: string, answerId?: string) {
       dispatch(
-        analyticsClient.logOpenGeneratedAnswerSource(citationId, answerId)
+        analyticsClient.logOpenGeneratedAnswerSource(citationId, {
+          answerId: answerId ?? this.state.answerId,
+        })
       );
     },
 
@@ -348,7 +360,11 @@ export function buildCoreGeneratedAnswer(
 
     // TODO: SFINT-6665
     logCopyToClipboard(answerId?: string) {
-      dispatch(analyticsClient.logCopyGeneratedAnswer(answerId));
+      dispatch(
+        analyticsClient.logCopyGeneratedAnswer({
+          answerId: answerId ?? this.state.answerId,
+        })
+      );
     },
 
     retry() {},

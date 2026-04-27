@@ -222,10 +222,9 @@ describe('generated answer analytics actions', () => {
     });
 
     it('should log #logOpenGeneratedAnswerSource with a provided answerId', async () => {
-      await logOpenGeneratedAnswerSource(
-        exampleCitation.id,
-        exampleProvidedAnswerId
-      )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+      await logOpenGeneratedAnswerSource(exampleCitation.id, {
+        answerId: exampleProvidedAnswerId,
+      })()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
       const mockToUse = mockMakeGeneratedAnswerCitationClick;
 
@@ -241,6 +240,26 @@ describe('generated answer analytics actions', () => {
         documentId: exampleDocumentId,
       });
 
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
+    });
+
+    it('should log #logOpenGeneratedAnswerSource with a provided conversationId', async () => {
+      const conversationId = 'conversation-123';
+
+      await logOpenGeneratedAnswerSource(exampleCitation.id, {
+        answerId: exampleProvidedAnswerId,
+        conversationId,
+      })()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+
+      expect(mockMakeGeneratedAnswerCitationClick).toHaveBeenCalledTimes(1);
+      expect(
+        mockMakeGeneratedAnswerCitationClick.mock.calls[0][1]
+      ).toStrictEqual({
+        generativeQuestionAnsweringId: exampleProvidedAnswerId,
+        citationId: exampleCitation.id,
+        documentId: exampleDocumentId,
+        conversationId,
+      });
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
@@ -321,7 +340,7 @@ describe('generated answer analytics actions', () => {
     });
 
     it('should log #logLikeGeneratedAnswer with a provided answerId', async () => {
-      await logLikeGeneratedAnswer(exampleProvidedAnswerId)()(
+      await logLikeGeneratedAnswer({answerId: exampleProvidedAnswerId})()(
         engine.dispatch,
         () => engine.state,
         {} as ThunkExtraArguments
@@ -332,6 +351,22 @@ describe('generated answer analytics actions', () => {
       expect(mockToUse).toHaveBeenCalledTimes(1);
       expect(mockToUse).toHaveBeenCalledWith({
         generativeQuestionAnsweringId: exampleProvidedAnswerId,
+      });
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
+    });
+
+    it('should log #logLikeGeneratedAnswer with a provided conversationId', async () => {
+      const conversationId = 'conversation-123';
+
+      await logLikeGeneratedAnswer({
+        answerId: exampleProvidedAnswerId,
+        conversationId,
+      })()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+
+      expect(mockMakeLikeGeneratedAnswer).toHaveBeenCalledTimes(1);
+      expect(mockMakeLikeGeneratedAnswer).toHaveBeenCalledWith({
+        generativeQuestionAnsweringId: exampleProvidedAnswerId,
+        conversationId,
       });
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
@@ -353,7 +388,7 @@ describe('generated answer analytics actions', () => {
     });
 
     it('should log #logDislikeGeneratedAnswer with a provided answerId', async () => {
-      await logDislikeGeneratedAnswer(exampleProvidedAnswerId)()(
+      await logDislikeGeneratedAnswer({answerId: exampleProvidedAnswerId})()(
         engine.dispatch,
         () => engine.state,
         {} as ThunkExtraArguments
@@ -364,6 +399,22 @@ describe('generated answer analytics actions', () => {
       expect(mockToUse).toHaveBeenCalledTimes(1);
       expect(mockToUse).toHaveBeenCalledWith({
         generativeQuestionAnsweringId: exampleProvidedAnswerId,
+      });
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
+    });
+
+    it('should log #logDislikeGeneratedAnswer with a provided conversationId', async () => {
+      const conversationId = 'conversation-123';
+
+      await logDislikeGeneratedAnswer({
+        answerId: exampleProvidedAnswerId,
+        conversationId,
+      })()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+
+      expect(mockMakeDislikeGeneratedAnswer).toHaveBeenCalledTimes(1);
+      expect(mockMakeDislikeGeneratedAnswer).toHaveBeenCalledWith({
+        generativeQuestionAnsweringId: exampleProvidedAnswerId,
+        conversationId,
       });
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
@@ -577,7 +628,7 @@ describe('generated answer analytics actions', () => {
     });
 
     it('should log #logCopyGeneratedAnswer with a provided answerId', async () => {
-      await logCopyGeneratedAnswer(exampleProvidedAnswerId)()(
+      await logCopyGeneratedAnswer({answerId: exampleProvidedAnswerId})()(
         engine.dispatch,
         () => engine.state,
         {} as ThunkExtraArguments
@@ -588,6 +639,22 @@ describe('generated answer analytics actions', () => {
       expect(mockToUse).toHaveBeenCalledTimes(1);
       expect(mockToUse).toHaveBeenCalledWith({
         generativeQuestionAnsweringId: exampleProvidedAnswerId,
+      });
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
+    });
+
+    it('should log #logCopyGeneratedAnswer with a provided conversationId', async () => {
+      const conversationId = 'conversation-123';
+
+      await logCopyGeneratedAnswer({
+        answerId: exampleProvidedAnswerId,
+        conversationId,
+      })()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+
+      expect(mockMakeGeneratedAnswerCopyToClipboard).toHaveBeenCalledTimes(1);
+      expect(mockMakeGeneratedAnswerCopyToClipboard).toHaveBeenCalledWith({
+        generativeQuestionAnsweringId: exampleProvidedAnswerId,
+        conversationId,
       });
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
@@ -622,10 +689,9 @@ describe('generated answer analytics actions', () => {
     });
 
     it('should log #logOpenGeneratedAnswerSource with a provided answerId', async () => {
-      await logOpenGeneratedAnswerSource(
-        exampleCitation.id,
-        exampleProvidedAnswerId
-      )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+      await logOpenGeneratedAnswerSource(exampleCitation.id, {
+        answerId: exampleProvidedAnswerId,
+      })()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
       expect(emit).toHaveBeenCalledTimes(1);
       expect(emit.mock.calls[0]).toStrictEqual([
@@ -692,7 +758,7 @@ describe('generated answer analytics actions', () => {
     });
 
     it('should log #logLikeGeneratedAnswer with a provided answerId', async () => {
-      await logLikeGeneratedAnswer(exampleProvidedAnswerId)()(
+      await logLikeGeneratedAnswer({answerId: exampleProvidedAnswerId})()(
         engine.dispatch,
         () => engine.state,
         {} as ThunkExtraArguments
@@ -720,7 +786,7 @@ describe('generated answer analytics actions', () => {
     });
 
     it('should log #logDislikeGeneratedAnswer with a provided answerId', async () => {
-      await logDislikeGeneratedAnswer(exampleProvidedAnswerId)()(
+      await logDislikeGeneratedAnswer({answerId: exampleProvidedAnswerId})()(
         engine.dispatch,
         () => engine.state,
         {} as ThunkExtraArguments
@@ -803,7 +869,7 @@ describe('generated answer analytics actions', () => {
     });
 
     it('should log #logCopyGeneratedAnswer with a provided answerId', async () => {
-      await logCopyGeneratedAnswer(exampleProvidedAnswerId)()(
+      await logCopyGeneratedAnswer({answerId: exampleProvidedAnswerId})()(
         engine.dispatch,
         () => engine.state,
         {} as ThunkExtraArguments

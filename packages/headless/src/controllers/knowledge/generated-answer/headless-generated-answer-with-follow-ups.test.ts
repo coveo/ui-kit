@@ -350,9 +350,10 @@ describe('GeneratedAnswerWithFollowUps', () => {
         answerId: exampleFollowUpAnswer.answerId,
       });
       expect(mockCoreLike).not.toHaveBeenCalled();
-      expect(logLikeGeneratedAnswer).toHaveBeenCalledWith(
-        exampleFollowUpAnswer.answerId
-      );
+      expect(logLikeGeneratedAnswer).toHaveBeenCalledWith({
+        answerId: exampleFollowUpAnswer.answerId,
+        conversationId: 'session-123',
+      });
     });
 
     it('should not dispatch follow-up like actions when already liked', () => {
@@ -454,9 +455,10 @@ describe('GeneratedAnswerWithFollowUps', () => {
         answerId: exampleFollowUpAnswer.answerId,
       });
       expect(mockCoreDislike).not.toHaveBeenCalled();
-      expect(logDislikeGeneratedAnswer).toHaveBeenCalledWith(
-        exampleFollowUpAnswer.answerId
-      );
+      expect(logDislikeGeneratedAnswer).toHaveBeenCalledWith({
+        answerId: exampleFollowUpAnswer.answerId,
+        conversationId: 'session-123',
+      });
     });
 
     it('should not dispatch follow-up dislike actions when already disliked', () => {
@@ -542,11 +544,26 @@ describe('GeneratedAnswerWithFollowUps', () => {
     });
 
     it('should dispatch copy analytics when answerId targets a follow-up answer', () => {
+      engine = buildEngineWithGeneratedAnswer({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          answerId: headAnswerId,
+        },
+        followUpAnswers: {
+          ...getFollowUpAnswersInitialState(),
+          conversationId: 'conversation-123',
+          conversationToken: 'token-123',
+          followUpAnswers: [exampleFollowUpAnswer],
+        },
+      });
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.logCopyToClipboard(followUpAnswerId);
 
-      expect(logCopyGeneratedAnswer).toHaveBeenCalledWith(followUpAnswerId);
+      expect(logCopyGeneratedAnswer).toHaveBeenCalledWith({
+        answerId: followUpAnswerId,
+        conversationId: 'conversation-123',
+      });
       expect(mockCoreCopy).not.toHaveBeenCalled();
     });
   });
@@ -587,14 +604,26 @@ describe('GeneratedAnswerWithFollowUps', () => {
     });
 
     it('should dispatch citation click analytics when answerId targets a follow-up answer', () => {
+      engine = buildEngineWithGeneratedAnswer({
+        generatedAnswer: {
+          ...getGeneratedAnswerInitialState(),
+          answerId: headAnswerId,
+        },
+        followUpAnswers: {
+          ...getFollowUpAnswersInitialState(),
+          conversationId: 'conversation-123',
+          conversationToken: 'token-123',
+          followUpAnswers: [exampleFollowUpAnswer],
+        },
+      });
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.logCitationClick(citationId, followUpAnswerId);
 
-      expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(
-        citationId,
-        followUpAnswerId
-      );
+      expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(citationId, {
+        answerId: followUpAnswerId,
+        conversationId: 'conversation-123',
+      });
       expect(mockCoreCitationClick).not.toHaveBeenCalled();
     });
   });

@@ -37,7 +37,10 @@ export interface InteractiveCitation extends InteractiveResultCore {}
 interface InteractiveCitationAnalyticsClient {
   logOpenGeneratedAnswerSource(
     citationId: string,
-    answerId?: string
+    options?: {
+      answerId?: string;
+      conversationId?: string;
+    }
   ): CustomAction;
 }
 
@@ -61,10 +64,9 @@ export function buildInteractiveCitationCore(
     }
     wasOpened = true;
     engine.dispatch(
-      analyticsClient.logOpenGeneratedAnswerSource(
-        props.options.citation.id,
-        props.options.answerId
-      )
+      analyticsClient.logOpenGeneratedAnswerSource(props.options.citation.id, {
+        answerId: props.options.answerId,
+      })
     );
   };
 

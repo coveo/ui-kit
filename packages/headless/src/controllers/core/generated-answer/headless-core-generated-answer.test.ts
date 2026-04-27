@@ -147,20 +147,18 @@ describe('generated answer', () => {
   it('#logCitationClick dispatches analytics action', () => {
     const testCitation = buildMockCitation();
     generatedAnswer.logCitationClick(testCitation.id);
-    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(
-      testCitation.id,
-      undefined
-    );
+    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(testCitation.id, {
+      answerId: state.generatedAnswer.answerId,
+    });
   });
 
   it('#logCitationClick dispatches analytics action with provided answerId', () => {
     const testCitation = buildMockCitation();
     generatedAnswer.logCitationClick(testCitation.id, providedAnswerId);
 
-    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(
-      testCitation.id,
-      providedAnswerId
-    );
+    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(testCitation.id, {
+      answerId: providedAnswerId,
+    });
   });
 
   it('#logCitationHover dispatches analytics action', () => {
@@ -194,13 +192,17 @@ describe('generated answer', () => {
 
   it('#logCopyToClipboard dispatches analytics action', () => {
     generatedAnswer.logCopyToClipboard();
-    expect(logCopyGeneratedAnswer).toHaveBeenCalled();
+    expect(logCopyGeneratedAnswer).toHaveBeenCalledWith({
+      answerId: state.generatedAnswer.answerId,
+    });
   });
 
   it('#logCopyToClipboard dispatches analytics action with provided answerId', () => {
     generatedAnswer.logCopyToClipboard(providedAnswerId);
 
-    expect(logCopyGeneratedAnswer).toHaveBeenCalledWith(providedAnswerId);
+    expect(logCopyGeneratedAnswer).toHaveBeenCalledWith({
+      answerId: providedAnswerId,
+    });
   });
 
   describe('#show', () => {

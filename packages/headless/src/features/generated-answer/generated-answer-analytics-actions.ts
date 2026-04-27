@@ -37,6 +37,11 @@ export const parseEvaluationDetails = (
   return undefined;
 };
 
+type GeneratedAnswerAnalyticsOptions = {
+  answerId?: string;
+  conversationId?: string;
+};
+
 //TODO: KIT-2859
 export const logRetryGeneratedAnswer = (): LegacySearchAction =>
   makeAnalyticsAction('analytics/generatedAnswer/retry', (client) =>
@@ -44,16 +49,14 @@ export const logRetryGeneratedAnswer = (): LegacySearchAction =>
   );
 
 // TODO: SFINT-6665
-// Overloading the function here for backward compatibility because #logOpenGeneratedAnswerSource will eventually take an answerId.
-export function logOpenGeneratedAnswerSource(citationId: string): CustomAction;
+// In the next major version, make `options.answerId` required and remove the
+// fallback to `generativeQuestionAnsweringIdSelector(state)`.
 export function logOpenGeneratedAnswerSource(
   citationId: string,
-  answerId: string
-): CustomAction;
-export function logOpenGeneratedAnswerSource(
-  citationId: string,
-  answerId?: string
+  options?: GeneratedAnswerAnalyticsOptions
 ): CustomAction {
+  const answerId = options?.answerId;
+  const conversationId = options?.conversationId;
   return makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/openAnswerSource',
     __legacy__getBuilder: (client, state) => {
@@ -70,6 +73,7 @@ export function logOpenGeneratedAnswerSource(
           generativeQuestionAnsweringId: resolvedAnswerId,
           citationId: citation.id,
           documentId: citationDocumentIdentifier(citation),
+          ...(conversationId && {conversationId}),
         }
       );
     },
@@ -92,18 +96,13 @@ export function logOpenGeneratedAnswerSource(
   });
 }
 
-type LogHoverCitationOptions = {
-  answerId?: string;
-  conversationId?: string;
-};
-
 // TODO: SFINT-6665
 // In the next major version, make `options.answerId` required and remove the
 // fallback to `generativeQuestionAnsweringIdSelector(state)`.
 export function logHoverCitation(
   citationId: string,
   citationHoverTimeInMs: number,
-  options?: LogHoverCitationOptions
+  options?: GeneratedAnswerAnalyticsOptions
 ): CustomAction {
   const answerId = options?.answerId;
   const conversationId = options?.conversationId;
@@ -147,10 +146,13 @@ export function logHoverCitation(
 }
 
 // TODO: SFINT-6665
-// Overloading the function here for backward compatibility because #logLikeGeneratedAnswer will eventually take an answerId.
-export function logLikeGeneratedAnswer(): CustomAction;
-export function logLikeGeneratedAnswer(answerId: string): CustomAction;
-export function logLikeGeneratedAnswer(answerId?: string): CustomAction {
+// In the next major version, make `options.answerId` required and remove the
+// fallback to `generativeQuestionAnsweringIdSelector(state)`.
+export function logLikeGeneratedAnswer(
+  options?: GeneratedAnswerAnalyticsOptions
+): CustomAction {
+  const answerId = options?.answerId;
+  const conversationId = options?.conversationId;
   return makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/like',
     __legacy__getBuilder: (client, state) => {
@@ -161,6 +163,7 @@ export function logLikeGeneratedAnswer(answerId?: string): CustomAction {
       }
       return client.makeLikeGeneratedAnswer({
         generativeQuestionAnsweringId: resolvedAnswerId,
+        ...(conversationId && {conversationId}),
       });
     },
     analyticsType: 'Rga.AnswerAction',
@@ -176,10 +179,13 @@ export function logLikeGeneratedAnswer(answerId?: string): CustomAction {
 }
 
 // TODO: SFINT-6665
-// Overloading the function here for backward compatibility because #logDislikeGeneratedAnswer will eventually take an answerId.
-export function logDislikeGeneratedAnswer(): CustomAction;
-export function logDislikeGeneratedAnswer(answerId: string): CustomAction;
-export function logDislikeGeneratedAnswer(answerId?: string): CustomAction {
+// In the next major version, make `options.answerId` required and remove the
+// fallback to `generativeQuestionAnsweringIdSelector(state)`.
+export function logDislikeGeneratedAnswer(
+  options?: GeneratedAnswerAnalyticsOptions
+): CustomAction {
+  const answerId = options?.answerId;
+  const conversationId = options?.conversationId;
   return makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/dislike',
     __legacy__getBuilder: (client, state) => {
@@ -190,6 +196,7 @@ export function logDislikeGeneratedAnswer(answerId?: string): CustomAction {
       }
       return client.makeDislikeGeneratedAnswer({
         generativeQuestionAnsweringId: resolvedAnswerId,
+        ...(conversationId && {conversationId}),
       });
     },
     analyticsType: 'Rga.AnswerAction',
@@ -407,10 +414,13 @@ export const logGeneratedAnswerCollapse = (): CustomAction =>
   });
 
 // TODO: SFINT-6665
-// Overloading the function here for backward compatibility because #logCopyGeneratedAnswer will eventually take an answerId.
-export function logCopyGeneratedAnswer(): CustomAction;
-export function logCopyGeneratedAnswer(answerId: string): CustomAction;
-export function logCopyGeneratedAnswer(answerId?: string): CustomAction {
+// In the next major version, make `options.answerId` required and remove the
+// fallback to `generativeQuestionAnsweringIdSelector(state)`.
+export function logCopyGeneratedAnswer(
+  options?: GeneratedAnswerAnalyticsOptions
+): CustomAction {
+  const answerId = options?.answerId;
+  const conversationId = options?.conversationId;
   return makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/copy',
     __legacy__getBuilder: (client, state) => {
@@ -421,6 +431,7 @@ export function logCopyGeneratedAnswer(answerId?: string): CustomAction {
       }
       return client.makeGeneratedAnswerCopyToClipboard({
         generativeQuestionAnsweringId: resolvedAnswerId,
+        ...(conversationId && {conversationId}),
       });
     },
     analyticsType: 'Rga.AnswerAction',
