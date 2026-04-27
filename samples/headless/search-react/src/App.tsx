@@ -2,10 +2,6 @@ import type React from 'react';
 import {BrowserRouter, NavLink, Route, Routes} from 'react-router';
 import {AboutPage} from './pages/AboutPage';
 import {AnalyticsHook} from './pages/AnalyticsHook';
-import {CommerceApp} from './pages/commerce/CommerceApp';
-import {ProductListingPage} from './pages/commerce/ProductListingPage';
-import {RecommendationsPage} from './pages/commerce/RecommendationsPage';
-import {SearchPage as CommerceSearchPage} from './pages/commerce/SearchPage';
 import {DependentFacetPage} from './pages/DependentFacetPage';
 import {RecommendationPage} from './pages/RecommendationPage';
 import {SamlPage} from './pages/SamlPage';
@@ -76,14 +72,6 @@ function App(props: SearchPageProps) {
               Analytics hook (Google Tag Manager)
             </NavLink>
           </button>
-          <button>
-            <NavLink
-              to="/commerce"
-              style={({isActive}) => (isActive ? activeNavLink : {})}
-            >
-              Commerce
-            </NavLink>
-          </button>
         </nav>
         <Routes>
           <Route path="/recommendation" element={<RecommendationPage />} />
@@ -95,11 +83,6 @@ function App(props: SearchPageProps) {
           <Route path="/saml" element={<SamlPage />} />
           <Route path="/dependent-facet" element={<DependentFacetPage />} />
           <Route path="/analyticshooks" element={<AnalyticsHook />} />
-          <Route path="/commerce" element={<CommerceApp />}>
-            <Route path="search" element={<CommerceSearchPage />} />
-            <Route path="product-listing" element={<ProductListingPage />} />
-            <Route path="recommendations" element={<RecommendationsPage />} />
-          </Route>
           <Route path="/search-page" element={<SearchPage {...props} />} />
           <Route path="/" element={<SearchPage {...props} />} />
         </Routes>
