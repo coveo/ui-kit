@@ -296,8 +296,8 @@ importers:
         specifier: 25.10.10
         version: 25.10.10(typescript@6.0.2)
       i18next-http-backend:
-        specifier: 3.0.4
-        version: 3.0.4(encoding@0.1.13)
+        specifier: 3.0.5
+        version: 3.0.5(encoding@0.1.13)
       lit:
         specifier: 3.3.2
         version: 3.3.2
@@ -10235,8 +10235,8 @@ packages:
     resolution: {integrity: sha512-Y93lCzHYgGWdrJ66yIktxiaGULYc6oGiABxhcO5AufBeOyoIdZF7bIfLaOrbM0iGIOXQQgxxRrFEnb+Y6w1n4A==}
     engines: {node: '>=10.18'}
 
-  i18next-http-backend@3.0.4:
-    resolution: {integrity: sha512-udwrBIE6cNpqn1gRAqRULq3+7MzIIuaiKRWrz++dVz5SqWW2VwXmPJtAgkI0JtMLFaADC9qNmnZAxWAhsxXx2g==}
+  i18next-http-backend@3.0.5:
+    resolution: {integrity: sha512-QaWHnsxieEDcqKe+vo/RFqpiIFRi/KBqlOSPcUlvinBaISCeiTRCbtrazHAjtHtsLC66oDsROAH8frWkQzfMMQ==}
 
   i18next@25.10.10:
     resolution: {integrity: sha512-cqUW2Z3EkRx7NqSyywjkgCLK7KLCL6IFVFcONG7nVYIJ3ekZ1/N5jUsihHV6Bq37NfhgtczxJcxduELtjTwkuQ==}
@@ -25262,7 +25262,7 @@ snapshots:
 
   hyperdyperid@1.2.0: {}
 
-  i18next-http-backend@3.0.4(encoding@0.1.13):
+  i18next-http-backend@3.0.5(encoding@0.1.13):
     dependencies:
       cross-fetch: 4.1.0(encoding@0.1.13)
     transitivePeerDependencies:
