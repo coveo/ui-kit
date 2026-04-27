@@ -1,15 +1,17 @@
 name: Renovate Production Changeset
 
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, reopened, synchronize]
+    paths:
+      - '**/package.json'
 
 permissions:
   contents: write
 
 jobs:
   add-renovate-prod-changeset:
-    if: ${{ startsWith(github.event.pull_request.head.ref, 'renovate/prod') }}
+    if: ${{ startsWith(github.head_ref, 'renovate/prod') }}
     name: Add production dependency changeset
     runs-on: ubuntu-latest
     steps:
@@ -20,20 +22,11 @@ jobs:
 
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
 
       - uses: ./.github/actions/setup
         with:
           load-cache: 'false'
-
-      # temporary for debugging, to be removed in the future
-      - name: Debug refs
-        run: |
-          echo "event: ${{ github.event_name }}"
-          echo "head_ref: ${{ github.head_ref }}"
-          echo "pr.head.ref: ${{ github.event.pull_request.head.ref }}"
-          echo "base.ref: ${{ github.event.pull_request.base.ref }}"
 
       - name: Generate or merge production changeset
         run: pnpm --filter @coveo/ci write-prod-dep-changeset
