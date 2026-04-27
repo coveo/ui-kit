@@ -59,8 +59,8 @@
   },
   "peerDependencies": {
     "@coveo/headless": "workspace:*",
-    "react": ">=18.0.0",
-    "react-dom": ">=18.0.0"
+    "react": ">=19.0.0",
+    "react-dom": ">=19.0.0"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
