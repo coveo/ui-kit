@@ -1,17 +1,60 @@
 name: Renovate Production Changeset
 
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, reopened, synchronize]
+    paths:
+      - '**/package.json'
+
+permissions:
+  contents: write
 
 jobs:
-  debug:
-    name: Debug trigger
+  add-renovate-prod-changeset:
+    if: ${{ startsWith(github.head_ref, 'renovate/prod') }}
+    name: Add production dependency changeset
     runs-on: ubuntu-latest
     steps:
-      - name: Print context
+      - name: Harden Runner
+        uses: step-security/harden-runner@f808768d1510423e83855289c910610ca9b43176 # v2.17.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          fetch-depth: 0
+
+      - uses: ./.github/actions/setup
+        with:
+          load-cache: 'false'
+
+      - name: Generate or merge production changeset
+        run: pnpm --filter @coveo/ci write-prod-dep-changeset
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+
+      - name: Check for changeset changes
+        id: check-changes
         run: |
-          echo "event: ${{ github.event_name }}"
-          echo "head_ref: ${{ github.head_ref }}"
-          echo "pr.head.ref: ${{ github.event.pull_request.head.ref }}"
-          echo "base.ref: ${{ github.event.pull_request.base.ref }}"
+          if [[ -n "$(git status --porcelain -- .changeset/bump-prod-deps.md)" ]]; then
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Generate a token
+        if: ${{ steps.check-changes.outputs.has_changes == 'true' }}
+        id: generate-token
+        uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: coveo
+          repositories: 'ui-kit'
+
+      - name: Commit changeset via DXbot
+        if: ${{ steps.check-changes.outputs.has_changes == 'true' }}
+        run: pnpm --filter @coveo/ci add-generated-files
+        env:
+          GITHUB_INSTALLATION_TOKEN: ${{ steps.generate-token.outputs.token }}
