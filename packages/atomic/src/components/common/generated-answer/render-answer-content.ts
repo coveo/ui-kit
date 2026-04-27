@@ -1,4 +1,4 @@
-import type {GeneratedAnswerBase, InlineLink} from '@coveo/headless';
+import type {GeneratedAnswerBase} from '@coveo/headless';
 import type {i18n} from 'i18next';
 import type {TemplateResult} from 'lit';
 import {html, nothing} from 'lit';
@@ -23,9 +23,6 @@ export interface RenderAnswerContentProps {
   renderCitationsSlot: () => TemplateResult | typeof nothing;
   onRetry: () => void;
   onClickShowButton: () => void;
-  onSelectInlineLink?: (link: InlineLink) => void;
-  onBeginDelayedSelectInlineLink?: (link: InlineLink) => void;
-  onCancelPendingSelectInlineLink?: (link: InlineLink) => void;
 }
 
 /**
@@ -42,13 +39,17 @@ export const renderAnswerContent: FunctionalComponent<
     renderCitationsSlot,
     onRetry,
     onClickShowButton,
-    onSelectInlineLink,
-    onBeginDelayedSelectInlineLink,
-    onCancelPendingSelectInlineLink,
   } = props;
 
-  const {answer, isStreaming, citations, answerContentFormat, expanded, error} =
-    generatedAnswer;
+  const {
+    answer,
+    isStreaming,
+    citations,
+    answerContentFormat,
+    expanded,
+    error,
+    answerId,
+  } = generatedAnswer;
   const hasRetryableError = error?.isRetryable === true;
 
   return html`
@@ -66,11 +67,9 @@ export const renderAnswerContent: FunctionalComponent<
         ? renderGeneratedContentContainer({
             props: {
               answer,
+              answerId,
               answerContentFormat,
               isStreaming: !!isStreaming,
-              onSelectInlineLink,
-              onBeginDelayedSelectInlineLink,
-              onCancelPendingSelectInlineLink,
             },
           })(html`
             ${renderSourceCitations({

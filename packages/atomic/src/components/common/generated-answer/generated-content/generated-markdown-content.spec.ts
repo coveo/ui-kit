@@ -17,7 +17,7 @@ describe('#renderGeneratedMarkdownContent', () => {
       return element.querySelector('div[part="generated-text"]');
     },
     get inlineLink() {
-      return element.querySelector('a');
+      return element.querySelector('atomic-generated-answer-inline-link');
     },
   });
 
@@ -66,22 +66,26 @@ describe('#renderGeneratedMarkdownContent', () => {
     expect(generatedText).not.toHaveClass('cursor');
   });
 
-  it('should call transformMarkdownToHtml with the answer', async () => {
+  it('should call transformMarkdownToHtml with the answer and answerId', async () => {
     const mockedTransformMarkdownToHtml = vi.mocked(transformMarkdownToHtml);
     const answer = '**bold** markdown';
-    await renderComponent({answer});
+    const answerId = 'test-id';
+    await renderComponent({answer, answerId});
 
-    expect(mockedTransformMarkdownToHtml).toHaveBeenCalledWith(answer);
+    expect(mockedTransformMarkdownToHtml).toHaveBeenCalledWith(
+      answer,
+      answerId
+    );
   });
 
   it('should call transformMarkdownToHtml with empty string when answer is undefined', async () => {
     const mockedTransformMarkdownToHtml = vi.mocked(transformMarkdownToHtml);
     await renderComponent({answer: undefined});
 
-    expect(mockedTransformMarkdownToHtml).toHaveBeenCalledWith('');
+    expect(mockedTransformMarkdownToHtml).toHaveBeenCalledWith('', undefined);
   });
 
-  it('should call DOMPurify.sanitize with the transformed HTML and with ADD_ATTR config to preserve allowed attributes', async () => {
+  it('should call DOMPurify.sanitize with CUSTOM_ELEMENT_HANDLING to allow inline link component', async () => {
     const mockedTransformMarkdownToHtml = vi.mocked(transformMarkdownToHtml);
     const answer = '# Heading';
     const transformedHtml = '<h1 part="answer-heading-1">Heading</h1>';
@@ -92,9 +96,16 @@ describe('#renderGeneratedMarkdownContent', () => {
 
     await renderComponent({answer});
 
-    expect(mockedTransformMarkdownToHtml).toHaveBeenCalledWith(answer);
+    expect(mockedTransformMarkdownToHtml).toHaveBeenCalledWith(
+      answer,
+      undefined
+    );
     expect(DOMPurify.sanitize).toHaveBeenCalledWith(transformedHtml, {
       ADD_ATTR: ['part', 'target', 'rel'],
+      CUSTOM_ELEMENT_HANDLING: {
+        tagNameCheck: /^atomic-generated-answer-inline-link$/,
+        attributeNameCheck: /^(href|answer-id|title|text)$/,
+      },
     });
   });
 
@@ -109,105 +120,12 @@ describe('#renderGeneratedMarkdownContent', () => {
     expect(generatedText?.innerHTML).toContain('Sanitized content');
   });
 
-  it('should call onSelectInlineLink when clicking an inline link', async () => {
-    const onSelectInlineLink = vi.fn();
+  it('should not have event listeners for inline link interactions on the generated-text div', async () => {
     const element = await renderComponent({
       answer: '[Example](https://example.com)',
-      onSelectInlineLink,
     });
+    const generatedText = locators(element).generatedText;
 
-    locators(element).inlineLink?.dispatchEvent(
-      new MouseEvent('click', {bubbles: true})
-    );
-
-    expect(onSelectInlineLink).toHaveBeenCalledWith({
-      linkText: 'Example',
-      linkURL: 'https://example.com/',
-    });
-  });
-
-  it('should call onSelectInlineLink on contextmenu for an inline link', async () => {
-    const onSelectInlineLink = vi.fn();
-    const element = await renderComponent({
-      answer: '[Example](https://example.com)',
-      onSelectInlineLink,
-    });
-
-    locators(element).inlineLink?.dispatchEvent(
-      new MouseEvent('contextmenu', {bubbles: true})
-    );
-
-    expect(onSelectInlineLink).toHaveBeenCalledWith({
-      linkText: 'Example',
-      linkURL: 'https://example.com/',
-    });
-  });
-
-  it('should call onSelectInlineLink on mousedown for an inline link', async () => {
-    const onSelectInlineLink = vi.fn();
-    const element = await renderComponent({
-      answer: '[Example](https://example.com)',
-      onSelectInlineLink,
-    });
-
-    locators(element).inlineLink?.dispatchEvent(
-      new MouseEvent('mousedown', {bubbles: true})
-    );
-
-    expect(onSelectInlineLink).toHaveBeenCalledWith({
-      linkText: 'Example',
-      linkURL: 'https://example.com/',
-    });
-  });
-
-  it('should call onSelectInlineLink on mouseup for an inline link', async () => {
-    const onSelectInlineLink = vi.fn();
-    const element = await renderComponent({
-      answer: '[Example](https://example.com)',
-      onSelectInlineLink,
-    });
-
-    locators(element).inlineLink?.dispatchEvent(
-      new MouseEvent('mouseup', {bubbles: true})
-    );
-
-    expect(onSelectInlineLink).toHaveBeenCalledWith({
-      linkText: 'Example',
-      linkURL: 'https://example.com/',
-    });
-  });
-
-  it('should call onBeginDelayedSelectInlineLink on touchstart for an inline link', async () => {
-    const onBeginDelayedSelectInlineLink = vi.fn();
-    const element = await renderComponent({
-      answer: '[Example](https://example.com)',
-      onBeginDelayedSelectInlineLink,
-    });
-
-    locators(element).inlineLink?.dispatchEvent(
-      new Event('touchstart', {bubbles: true})
-    );
-
-    expect(onBeginDelayedSelectInlineLink).toHaveBeenCalledWith({
-      linkText: 'Example',
-      linkURL: 'https://example.com/',
-    });
-  });
-
-  it('should call onCancelPendingSelectInlineLink on touchend for an inline link', async () => {
-    const onCancelPendingSelectInlineLink = vi.fn();
-    const element = await renderComponent({
-      answer: '[Example](https://example.com)',
-      onCancelPendingSelectInlineLink,
-    });
-
-    locators(element).inlineLink?.dispatchEvent(
-      new Event('touchend', {bubbles: true})
-    );
-
-    expect(onCancelPendingSelectInlineLink).toHaveBeenCalledWith({
-      linkText: 'Example',
-      linkURL: 'https://example.com/',
-    });
+    expect(generatedText).toBeInTheDocument();
   });
 });

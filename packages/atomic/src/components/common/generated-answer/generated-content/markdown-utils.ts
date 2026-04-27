@@ -37,7 +37,7 @@ const escapeHtml = (text: string) => {
     .replace(/'/g, '&#39;');
 };
 
-const customRenderer = {
+const createRenderer = (answerId?: string) => ({
   blockquote(quote: string) {
     return `<blockquote part="answer-quote-block">${quote}</blockquote>`;
   },
@@ -78,9 +78,11 @@ const customRenderer = {
 
   link(href: string, title: string | null | undefined, text: string) {
     const titleAttribute = title ? ` title="${escapeHtml(title)}"` : '';
+    const textAttribute = text ? ` text="${escapeHtml(text)}"` : '';
     const safeHref = href ? escapeHtml(href) : '';
+    const answerIdAttr = answerId ? ` answer-id="${escapeHtml(answerId)}"` : '';
 
-    return `<a part="answer-link" href="${safeHref}" target="_blank" rel="noopener noreferrer"${titleAttribute}>${text}</a>`;
+    return `<atomic-generated-answer-inline-link part="answer-link" href="${safeHref}"${answerIdAttr}${titleAttribute}${textAttribute}></atomic-generated-answer-inline-link>`;
   },
 
   /**
@@ -135,8 +137,11 @@ const customRenderer = {
   text(text: string) {
     return completeUnclosedElement(text);
   },
-};
+});
 
-export const transformMarkdownToHtml = (text: string): string => {
-  return marked.use({renderer: customRenderer}).parse(text) as string;
+export const transformMarkdownToHtml = (
+  text: string,
+  answerId?: string
+): string => {
+  return marked.use({renderer: createRenderer(answerId)}).parse(text) as string;
 };

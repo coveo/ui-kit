@@ -98,7 +98,23 @@ describe('markdownUtils', () => {
         removeLineBreaks(
           unindentHtml(`
             <p part="answer-paragraph">
-              <a part="answer-link" href="https://example.com" target="_blank" rel="noopener noreferrer">example</a>
+              <atomic-generated-answer-inline-link part="answer-link" href="https://example.com" text="example"></atomic-generated-answer-inline-link>
+            </p>
+          `)
+        )
+      );
+    });
+
+    it('should include answer-id attribute on links when answerId is provided', () => {
+      const text = '[example](https://example.com)';
+
+      const html = transformMarkdownToHtml(text, 'test-answer-id');
+
+      expect(removeLineBreaks(html)).toBe(
+        removeLineBreaks(
+          unindentHtml(`
+            <p part="answer-paragraph">
+              <atomic-generated-answer-inline-link part="answer-link" href="https://example.com" answer-id="test-answer-id" text="example"></atomic-generated-answer-inline-link>
             </p>
           `)
         )

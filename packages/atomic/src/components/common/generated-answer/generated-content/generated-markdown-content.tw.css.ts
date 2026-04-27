@@ -31,20 +31,15 @@ const styles = css`
     @apply mb-3;
   }
 
-  [part='generated-text'] [part='answer-link'] {
-    @apply text-primary underline;
-  }
-
-  [part='generated-text'] [part='answer-link']::after {
-    content: '↗';
-    @apply ms-1 inline-block no-underline;
-  }
-
-  [part='generated-text'] [part^='answer-heading-'] [part='answer-link'] {
+  [part='generated-text']
+    [part^='answer-heading-']
+    atomic-generated-answer-inline-link::part(answer-link) {
     @apply text-inherit font-bold no-underline;
   }
 
-  [part='generated-text'] [part^='answer-heading-'] [part='answer-link']:hover {
+  [part='generated-text']
+    [part^='answer-heading-']
+    atomic-generated-answer-inline-link::part(answer-link):hover {
     @apply underline;
   }
 

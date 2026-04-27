@@ -1,7 +1,6 @@
 import {
   buildGeneratedAnswer,
   buildInteractiveCitation,
-  buildInteractiveGeneratedAnswerInlineLink,
   buildSearchStatus,
   buildTabManager,
   type GeneratedAnswer,
@@ -9,7 +8,6 @@ import {
   type GeneratedAnswerWithFollowUps,
   type GeneratedAnswerWithFollowUpsState,
   type InteractiveCitation,
-  type InteractiveGeneratedAnswerInlineLink,
   type SearchStatus,
   type TabManager,
 } from '@coveo/headless';
@@ -86,11 +84,6 @@ describe('atomic-generated-answer', () => {
       beginDelayedSelect: vi.fn(),
       cancelPendingSelect: vi.fn(),
     } as ReturnType<typeof buildInteractiveCitation>);
-    vi.mocked(buildInteractiveGeneratedAnswerInlineLink).mockReturnValue({
-      select: vi.fn(),
-      beginDelayedSelect: vi.fn(),
-      cancelPendingSelect: vi.fn(),
-    } as InteractiveGeneratedAnswerInlineLink);
 
     const {element} =
       await renderInAtomicSearchInterface<AtomicGeneratedAnswer>({
@@ -132,11 +125,6 @@ describe('atomic-generated-answer', () => {
       },
       get generatedContent() {
         return element.shadowRoot?.querySelector('[part="generated-content"]')!;
-      },
-      get generatedAnswerInlineLink() {
-        return element.shadowRoot?.querySelector(
-          '[part="answer-link"]'
-        ) as HTMLAnchorElement | null;
       },
       get scrollableContainer() {
         return element.shadowRoot?.querySelector(
@@ -1783,73 +1771,5 @@ describe('atomic-generated-answer', () => {
 
       expect(consoleWarnSpy).not.toHaveBeenCalled();
     });
-  });
-
-  it('should log generated answer inline link analytics when an inline link is clicked', async () => {
-    const interactiveInlineLink = {
-      select: vi.fn(),
-      beginDelayedSelect: vi.fn(),
-      cancelPendingSelect: vi.fn(),
-    } as InteractiveGeneratedAnswerInlineLink;
-    vi.mocked(buildInteractiveGeneratedAnswerInlineLink).mockReturnValue(
-      interactiveInlineLink
-    );
-
-    const {generatedAnswerInlineLink} = await renderGeneratedAnswer({
-      generatedAnswerState: {
-        isVisible: true,
-        answer: '[Example](https://example.com)',
-        answerId: 'test-answer-id',
-        answerContentFormat: 'text/markdown',
-      },
-    });
-
-    generatedAnswerInlineLink?.dispatchEvent(
-      new MouseEvent('click', {bubbles: true})
-    );
-
-    expect(buildInteractiveGeneratedAnswerInlineLink).toHaveBeenCalledWith(
-      mockedEngine,
-      {
-        options: {
-          answerId: 'test-answer-id',
-          link: {
-            linkText: 'Example',
-            linkURL: 'https://example.com/',
-          },
-        },
-      }
-    );
-    expect(interactiveInlineLink.select).toHaveBeenCalledTimes(1);
-  });
-
-  it('should reuse the same generated answer inline link controller when the same inline link is clicked twice', async () => {
-    const interactiveInlineLink = {
-      select: vi.fn(),
-      beginDelayedSelect: vi.fn(),
-      cancelPendingSelect: vi.fn(),
-    } as InteractiveGeneratedAnswerInlineLink;
-    vi.mocked(buildInteractiveGeneratedAnswerInlineLink).mockReturnValue(
-      interactiveInlineLink
-    );
-
-    const {generatedAnswerInlineLink} = await renderGeneratedAnswer({
-      generatedAnswerState: {
-        isVisible: true,
-        answer: '[Example](https://example.com)',
-        answerId: 'test-answer-id',
-        answerContentFormat: 'text/markdown',
-      },
-    });
-
-    generatedAnswerInlineLink?.dispatchEvent(
-      new MouseEvent('click', {bubbles: true})
-    );
-    generatedAnswerInlineLink?.dispatchEvent(
-      new MouseEvent('click', {bubbles: true})
-    );
-
-    expect(buildInteractiveGeneratedAnswerInlineLink).toHaveBeenCalledTimes(1);
-    expect(interactiveInlineLink.select).toHaveBeenCalledTimes(2);
   });
 });
