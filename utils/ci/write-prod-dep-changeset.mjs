@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 import {execFileSync} from 'node:child_process';
-import {existsSync, readFileSync, writeFileSync} from 'node:fs';
+import {existsSync, mkdirSync, readFileSync, writeFileSync} from 'node:fs';
+import {dirname, join} from 'node:path';
 
-const CHANGESET_PATH = '.changeset/bump-prod-deps.md';
+const CHANGESET_RELATIVE_PATH = '.changeset/bump-prod-deps.md';
 const PROD_DEP_FIELDS = [
   'dependencies',
   'optionalDependencies',
@@ -15,6 +16,9 @@ const headSha = process.env.HEAD_SHA;
 if (!baseSha || !headSha) {
   throw new Error('BASE_SHA and HEAD_SHA must be provided');
 }
+
+const repositoryRoot = git(['rev-parse', '--show-toplevel']);
+const changesetPath = join(repositoryRoot, CHANGESET_RELATIVE_PATH);
 
 const changedFiles = git(['diff', '--name-only', baseSha, headSha])
   .split('\n')
@@ -52,22 +56,23 @@ if (updatedPublicPackages.size === 0) {
 }
 
 const mergedPackages = new Set([
-  ...readExistingChangesetPackages(CHANGESET_PATH),
+  ...readExistingChangesetPackages(changesetPath),
   ...updatedPublicPackages,
 ]);
 
 const nextContent = buildChangesetContent(
   [...mergedPackages].sort((a, b) => a.localeCompare(b))
 );
-const previousContent = existsSync(CHANGESET_PATH)
-  ? readFileSync(CHANGESET_PATH, 'utf8')
+const previousContent = existsSync(changesetPath)
+  ? readFileSync(changesetPath, 'utf8')
   : null;
 
 if (previousContent === nextContent) {
   process.exit(0);
 }
 
-writeFileSync(CHANGESET_PATH, nextContent);
+mkdirSync(dirname(changesetPath), {recursive: true});
+writeFileSync(changesetPath, nextContent);
 
 function git(args) {
   return execFileSync('git', args, {encoding: 'utf8'}).trim();
