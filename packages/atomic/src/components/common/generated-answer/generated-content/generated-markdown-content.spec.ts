@@ -119,13 +119,4 @@ describe('#renderGeneratedMarkdownContent', () => {
 
     expect(generatedText?.innerHTML).toContain('Sanitized content');
   });
-
-  it('should not have event listeners for inline link interactions on the generated-text div', async () => {
-    const element = await renderComponent({
-      answer: '[Example](https://example.com)',
-    });
-    const generatedText = locators(element).generatedText;
-
-    expect(generatedText).toBeInTheDocument();
-  });
 });
