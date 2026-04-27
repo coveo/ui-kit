@@ -14,6 +14,7 @@ jobs:
     if: ${{ startsWith(github.head_ref, 'renovate/prod') }}
     name: Add production dependency changeset
     runs-on: ubuntu-latest
+    environment: PR Artifacts
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@f808768d1510423e83855289c910610ca9b43176 # v2.17.0
