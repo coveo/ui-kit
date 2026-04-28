@@ -55,13 +55,19 @@ if (updatedPublicPackages.size === 0) {
   process.exit(0);
 }
 
-const mergedPackages = new Set([
-  ...readExistingChangesetPackages(changesetPath),
-  ...updatedPublicPackages,
-]);
+const mergedEntries = new Map(readExistingChangesetEntries(changesetPath));
+for (const packageName of updatedPublicPackages) {
+  const existingBumpType = mergedEntries.get(packageName);
+  mergedEntries.set(
+    packageName,
+    keepHighestBumpType(existingBumpType, 'patch')
+  );
+}
 
 const nextContent = buildChangesetContent(
-  [...mergedPackages].sort((a, b) => a.localeCompare(b))
+  [...mergedEntries.entries()].sort(([left], [right]) =>
+    left.localeCompare(right)
+  )
 );
 const previousContent = existsSync(changesetPath)
   ? readFileSync(changesetPath, 'utf8')
@@ -116,7 +122,7 @@ function isPublicPackageManifestPath(filePath) {
   return /^packages\/[^/]+\/package\.json$/.test(filePath);
 }
 
-function readExistingChangesetPackages(filePath) {
+function readExistingChangesetEntries(filePath) {
   if (!existsSync(filePath)) {
     return [];
   }
@@ -128,14 +134,44 @@ function readExistingChangesetPackages(filePath) {
   }
 
   return Array.from(
-    frontmatterMatch[1].matchAll(/['"]([^'"]+)['"]\s*:\s*patch\s*$/gm),
-    (match) => match[1]
+    frontmatterMatch[1].matchAll(
+      /['"]([^'"]+)['"]\s*:\s*([A-Za-z][A-Za-z-]*)\s*$/gm
+    ),
+    (match) => [match[1], match[2]]
   );
 }
 
-function buildChangesetContent(packageNames) {
-  const packageLines = packageNames
-    .map((packageName) => `'${packageName}': patch`)
+function keepHighestBumpType(existingBumpType, nextBumpType) {
+  if (!existingBumpType) {
+    return nextBumpType;
+  }
+
+  const existingPriority = getBumpPriority(existingBumpType);
+  const nextPriority = getBumpPriority(nextBumpType);
+
+  if (existingPriority === 0 || nextPriority === 0) {
+    return existingBumpType;
+  }
+
+  return existingPriority >= nextPriority ? existingBumpType : nextBumpType;
+}
+
+function getBumpPriority(bumpType) {
+  switch (bumpType) {
+    case 'patch':
+      return 1;
+    case 'minor':
+      return 2;
+    case 'major':
+      return 3;
+    default:
+      return 0;
+  }
+}
+
+function buildChangesetContent(changesetEntries) {
+  const packageLines = changesetEntries
+    .map(([packageName, bumpType]) => `'${packageName}': ${bumpType}`)
     .join('\n');
   return `---\n${packageLines}\n---\n\nUpdate production dependencies\n`;
 }
