@@ -40,11 +40,7 @@
     },
     "e2e": {
       "dependsOn": ["build"],
-      "outputs": [
-        "playwright-report/**",
-        "cypress/screenshots/**",
-        "cypress/videos/**"
-      ]
+      "outputs": ["playwright-report/**"]
     },
     "lint": {
       "outputs": []
