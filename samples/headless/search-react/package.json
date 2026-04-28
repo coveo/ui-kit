@@ -8,6 +8,8 @@
     "dev": "vite",
     "build": "vite build && vite build --ssr server/server.tsx --outDir dist/server",
     "serve": "vite preview",
+    "e2e": "playwright test",
+    "e2e:watch": "playwright test --ui",
     "test": "vitest run",
     "prod:ssr": "node ./dist/server/index.js"
   },
@@ -30,8 +32,8 @@
     "typescript": "catalog:"
   },
   "devDependencies": {
+    "@playwright/test": "catalog:",
     "@vitejs/plugin-react": "catalog:",
-    "cypress": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:"
   },
