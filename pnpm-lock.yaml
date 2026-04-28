@@ -472,7 +472,7 @@ importers:
         specifier: workspace:*
         version: link:../../../atomic
       '@coveo/headless':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../../headless
     publishDirectory: dist
 
@@ -520,7 +520,7 @@ importers:
         specifier: workspace:*
         version: link:../atomic
       '@coveo/headless':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../headless
       '@lit/react':
         specifier: 1.0.8
