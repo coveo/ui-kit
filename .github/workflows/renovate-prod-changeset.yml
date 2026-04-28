@@ -7,7 +7,7 @@ on:
       - '**/package.json'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   add-renovate-prod-changeset:
@@ -45,24 +45,8 @@ jobs:
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Generate a token
-        if: ${{ steps.check-changes.outputs.has_changes == 'true' }}
-        id: generate-token
-        uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-          owner: coveo
-          repositories: 'ui-kit'
-
-      - name: Configure git remote with DXbot token
-        if: ${{ steps.check-changes.outputs.has_changes == 'true' }}
-        run: git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-        env:
-          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
-
       - name: Commit changeset via DXbot
         if: ${{ steps.check-changes.outputs.has_changes == 'true' }}
         run: pnpm --filter @coveo/ci add-generated-files
         env:
-          GITHUB_INSTALLATION_TOKEN: ${{ steps.generate-token.outputs.token }}
+          GITHUB_INSTALLATION_TOKEN: ${{ github.token }}
