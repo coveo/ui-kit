@@ -55,6 +55,12 @@ jobs:
           owner: coveo
           repositories: 'ui-kit'
 
+      - name: Configure git remote with DXbot token
+        if: ${{ steps.check-changes.outputs.has_changes == 'true' }}
+        run: git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+
       - name: Commit changeset via DXbot
         if: ${{ steps.check-changes.outputs.has_changes == 'true' }}
         run: pnpm --filter @coveo/ci add-generated-files
