@@ -6,11 +6,11 @@
   "type": "module",
   "scripts": {
     "add-generated-files": "node ./add-generated-files.mjs",
-    "write-prod-dep-changeset": "node ./write-prod-dep-changeset.mjs",
-    "test:prod-dep-changeset": "node --test ./tests/write-prod-dep-changeset.test.mjs",
     "if-not-cdn": "node ./if-not-cdn.mjs",
     "if-cdn": "node ./if-cdn.mjs",
-    "if-ci": "node ./if-ci.mjs"
+    "if-ci": "node ./if-ci.mjs",
+    "test": "node --test ./tests/**/*.test.mjs",
+    "write-prod-dep-changeset": "node ./write-prod-dep-changeset.mjs"
   },
   "dependencies": {
     "@coveo/semantic-monorepo-tools": "2.7.1",
