@@ -66,13 +66,6 @@
   postUpdateOptions: ['pnpmDedupe'],
   ignoreDeps: [
     'fix-esm-import-path',
-    // Ignore cypress since it is getting removed.
-    'cypress',
-    'cypress-split',
-    'cypress-repeat',
-    'cypress-real-events',
-    'cypress-web-vitals',
-    'cypress-axe',
     // Ignore marked to not have a floating PR.
     'marked',
     // Ignore stencil since it is getting removed.
