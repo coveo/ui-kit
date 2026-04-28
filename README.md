@@ -90,7 +90,7 @@ pnpm turbo run @coveo/atomic#dev
 pnpm turbo run @coveo/atomic#e2e
 ```
 
-To run e2e tests for specific files/components using the Cypress GUI
+To run e2e tests for specific files/components using the Playwright UI
 
 ```sh
 pnpm turbo e2e:watch --filter=@coveo/atomic
