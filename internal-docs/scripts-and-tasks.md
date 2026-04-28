@@ -19,9 +19,8 @@ Some scripts may be nested under other scripts using the colon (`:`) symbol. Thi
   - E.g.:
     ```json
     {
-      "e2e": "cypress run --browser chrome",
-      "e2e:firefox": "cypress run --browser firefox",
-      "e2e:watch": "cypress open --browser chrome --e2e"
+      "e2e": "playwright test",
+      "e2e:watch": "playwright test --ui"
     }
     ```
 
