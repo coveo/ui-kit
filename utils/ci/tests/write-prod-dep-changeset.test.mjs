@@ -146,6 +146,49 @@ test('ignores production dependency updates in private packages', () => {
   );
 });
 
+test('preserves existing bump types when merging new packages', () => {
+  const repoDir = createTempGitRepo();
+
+  writeJson(repoDir, 'packages/headless/package.json', {
+    name: '@coveo/headless',
+    version: '1.0.0',
+    dependencies: {dep: '1.0.0'},
+  });
+
+  writeJson(repoDir, 'packages/atomic/package.json', {
+    name: '@coveo/atomic',
+    version: '1.0.0',
+    dependencies: {dep: '1.0.0'},
+  });
+
+  writeFileSync(
+    join(repoDir, '.changeset/bump-prod-deps.md'),
+    "---\n'@coveo/headless': major\n---\n\nUpdate production dependencies\n"
+  );
+
+  commit(repoDir, 'initial state with existing major changeset');
+
+  const baseSha = revParse(repoDir, 'HEAD');
+
+  writeJson(repoDir, 'packages/atomic/package.json', {
+    name: '@coveo/atomic',
+    version: '1.0.0',
+    dependencies: {dep: '1.1.0'},
+  });
+
+  commit(repoDir, 'update atomic prod dependency');
+  const headSha = revParse(repoDir, 'HEAD');
+
+  runGenerator(repoDir, baseSha, headSha);
+
+  const changeset = readFileSync(
+    join(repoDir, '.changeset/bump-prod-deps.md'),
+    'utf8'
+  );
+  assert.match(changeset, /'@coveo\/headless': major/);
+  assert.match(changeset, /'@coveo\/atomic': patch/);
+});
+
 function createTempGitRepo() {
   const repoDir = mkdtempSync(join(tmpdir(), 'ui-kit-renovate-prod-test-'));
   tempDirs.push(repoDir);

@@ -75,6 +75,7 @@
     "test:storybook": "vitest run --project=storybook",
     "test:storybook-utils": "vitest run --project=storybookPure",
     "generate-component": "node ./scripts/generate-component.mjs",
+    "tsc:check": "tsc --noEmit -p tsconfig.check.json",
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
     "chromatic": "chromatic -d=dist-storybook --only-changed --untraced \"/virtual:*\"",
     "validate:light-dom-styles": "node ./scripts/check-light-dom-host-selectors.mjs",
