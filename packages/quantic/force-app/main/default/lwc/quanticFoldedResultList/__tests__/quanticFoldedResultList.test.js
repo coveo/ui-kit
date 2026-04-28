@@ -319,5 +319,36 @@ describe('c-quantic-folded-result-list', () => {
       });
       expect(results[0].getAttribute('result')).toBeDefined();
     });
+
+    it('should use a stable fallback key prefix when the search response id is missing', async () => {
+      foldedResultsListState = {
+        ...foldedResultsListState,
+        searchResponseId: undefined,
+      };
+
+      const element = createTestComponent();
+      await flushPromises();
+
+      const collectionKeys = Array.from(
+        element.shadowRoot.querySelectorAll(selectors.result)
+      ).map((resultElement) => resultElement.collection.keyResultList);
+      const fallbackPrefix = collectionKeys[0].replace(
+        `_${fakeCollections[0].result.uniqueId}`,
+        ''
+      );
+      const stableCollectionKeys = Array.from(
+        element.shadowRoot.querySelectorAll(selectors.result)
+      ).map((resultElement) => resultElement.collection.keyResultList);
+
+      expect(collectionKeys.length).toBe(fakeCollections.length);
+      expect(fallbackPrefix).toMatch(/^quantic-folded-result-list-\d+$/);
+      expect(new Set(collectionKeys).size).toBe(fakeCollections.length);
+      collectionKeys.forEach((key, index) => {
+        expect(key).toBe(
+          `${fallbackPrefix}_${fakeCollections[index].result.uniqueId}`
+        );
+      });
+      expect(stableCollectionKeys).toEqual(collectionKeys);
+    });
   });
 });

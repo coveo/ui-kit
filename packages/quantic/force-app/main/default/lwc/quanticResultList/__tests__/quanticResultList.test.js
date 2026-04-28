@@ -338,5 +338,53 @@ describe('c-quantic-result-list', () => {
         );
       });
     });
+
+    it('should use a stable fallback key prefix when the search response id is missing', async () => {
+      const fakeResults = [
+        {
+          uniqueId: 'foo',
+          title: 'Foo',
+          excerpt: 'Foo',
+          raw: {
+            foo: 'foo',
+          },
+        },
+        {
+          uniqueId: 'Bar',
+          title: 'Bar',
+          excerpt: 'Bar',
+          raw: {
+            foo: 'bar',
+          },
+        },
+      ];
+      resultListState = {
+        ...initialResultListState,
+        searchResponseId: undefined,
+        results: fakeResults,
+      };
+
+      const element = createTestComponent();
+      await flushPromises();
+
+      const resultKeys = Array.from(
+        element.shadowRoot.querySelectorAll(selectors.quanticResult)
+      ).map((resultElement) => resultElement.result.keyResultList);
+      const fallbackPrefix = resultKeys[0].replace(
+        `_${fakeResults[0].uniqueId}`,
+        ''
+      );
+      const stableResultKeys = Array.from(
+        element.shadowRoot.querySelectorAll(selectors.quanticResult)
+      ).map((resultElement) => resultElement.result.keyResultList);
+
+      expect(resultKeys.length).toBe(fakeResults.length);
+      expect(fallbackPrefix).toMatch(/^quantic-result-list-\d+$/);
+      expect(new Set(resultKeys).size).toBe(fakeResults.length);
+      resultKeys.forEach((key, index) => {
+        expect(key).toBe(`${fallbackPrefix}_${fakeResults[index].uniqueId}`);
+      });
+      expect(stableResultKeys).toEqual(resultKeys);
+    });
   });
 });

@@ -13,6 +13,8 @@ import {LightningElement, api} from 'lwc';
 /** @typedef {import("coveo").ResultTemplatesManager} ResultTemplatesManager */
 /** @typedef {import("coveo").ResultsPerPage} ResultsPerPage */
 
+let foldedResultListFallbackId = 0;
+
 /**
  * The `QuanticFoldedResultList` component is responsible for displaying query results by applying one or more result templates.
  * This component can display query results that have a parent-child relationship with any level of nesting.
@@ -87,6 +89,8 @@ export default class QuanticFoldedResultList extends LightningElement {
   hasInitializationError = false;
   /** @type {import('c/quanticUtils').AriaLiveUtils} */
   loadingAriaLiveMessage;
+  /** @type {string} */
+  fallbackSearchResponseId = `quantic-folded-result-list-${++foldedResultListFallbackId}`;
 
   labels = {
     loadingResults,
@@ -172,7 +176,8 @@ export default class QuanticFoldedResultList extends LightningElement {
   get collections() {
     // We need to add a unique key to each result to make sure to re-render the LWC when the results change.
     // If the unique key is only the result uniqueId, the LWC will not re-render when the results change AND the same result is still in the results.
-    const searchResponseId = this?.state?.searchResponseId || Math.random();
+    const searchResponseId =
+      this.state?.searchResponseId || this.fallbackSearchResponseId;
     return (
       this?.state?.results?.map((collection) => ({
         ...collection,

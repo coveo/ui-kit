@@ -14,6 +14,8 @@ import {LightningElement, api, track} from 'lwc';
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 
+let resultListFallbackId = 0;
+
 /**
  * The `QuanticResultList` component is responsible for displaying query results by applying one or more result templates.
  * @fires CustomEvent#quantic__registerresulttemplates
@@ -63,6 +65,8 @@ export default class QuanticResultList extends LightningElement {
   openPreviewId;
   /** @type {boolean} */
   hasInitializationError = false;
+  /** @type {string} */
+  fallbackSearchResponseId = `quantic-result-list-${++resultListFallbackId}`;
 
   labels = {
     loadingResults,
@@ -157,7 +161,8 @@ export default class QuanticResultList extends LightningElement {
   get results() {
     // We need to add a unique key to each result to make sure to re-render the LWC when the results change.
     // If the unique key is only the result uniqueId, the LWC will not re-render when the results change AND the same result is still in the results.
-    const searchResponseId = this?.state?.searchResponseId || Math.random();
+    const searchResponseId =
+      this.state?.searchResponseId || this.fallbackSearchResponseId;
     return (
       this.state?.results?.map((result) => ({
         ...result,
