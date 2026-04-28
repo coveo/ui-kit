@@ -13,10 +13,6 @@ import {
 import type {AtomicGeneratedAnswerFeedbackModal} from '../atomic-generated-answer-feedback-modal/atomic-generated-answer-feedback-modal';
 import '@/src/components/common/atomic-generated-answer-feedback-modal/atomic-generated-answer-feedback-modal';
 
-function hasAnswerText(answer: string | undefined): answer is string {
-  return typeof answer === 'string' && answer.trim() !== '';
-}
-
 export interface GeneratedAnswerControllerOptions {
   withToggle?: boolean;
   getGeneratedAnswer: () => GeneratedAnswer | undefined;
@@ -106,7 +102,7 @@ export class GeneratedAnswerController implements ReactiveController {
 
     const isHidden = !state.isVisible;
     const isGenerating = !!state.isStreaming;
-    const hasAnswer = hasAnswerText(state.answer);
+    const hasAnswer = !!state.answer?.trim();
     const hasError = !!state.error;
 
     if (isHidden) {
@@ -144,9 +140,7 @@ export class GeneratedAnswerController implements ReactiveController {
    */
   public get hasNoAnswerGenerated(): boolean {
     const {answer, citations} = this.options.getGeneratedAnswerState() ?? {};
-    return (
-      !hasAnswerText(answer) && !citations?.length && !this.hasRetryableError
-    );
+    return !answer?.trim() && !citations?.length && !this.hasRetryableError;
   }
 
   /**

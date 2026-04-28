@@ -370,11 +370,11 @@ describe('generated answer analytics actions', () => {
 
     [false, true].map((answerGenerated) => {
       it(`should log #logGeneratedAnswerStreamEnd with ${answerGenerated ? 'generated' : 'not generated'} and 'empty' answer`, async () => {
-        await logGeneratedAnswerStreamEnd(answerGenerated)()(
-          engine.dispatch,
-          () => engine.state,
-          {} as ThunkExtraArguments
-        );
+        await logGeneratedAnswerStreamEnd(
+          answerGenerated,
+          undefined,
+          answerGenerated ? true : undefined
+        )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
         const mockToUse = mockMakeGeneratedAnswerStreamEnd;
 
@@ -388,7 +388,7 @@ describe('generated answer analytics actions', () => {
       });
     });
 
-    it('should prefer a provided answerTextIsEmpty over the state fallback', async () => {
+    it('should use a provided answerTextIsEmpty value', async () => {
       await logGeneratedAnswerStreamEnd(true, undefined, false)()(
         engine.dispatch,
         () => engine.state,
@@ -805,11 +805,11 @@ describe('generated answer analytics actions', () => {
 
     [false, true].map((answerGenerated) => {
       it(`should log #logGeneratedAnswerStreamEnd with ${answerGenerated ? 'generated' : 'not generated'} and 'empty' answer`, async () => {
-        await logGeneratedAnswerStreamEnd(answerGenerated)()(
-          engine.dispatch,
-          () => engine.state,
-          {} as ThunkExtraArguments
-        );
+        await logGeneratedAnswerStreamEnd(
+          answerGenerated,
+          undefined,
+          answerGenerated ? true : undefined
+        )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
         expect(emit).toHaveBeenCalledTimes(1);
         expect(emit.mock.calls[0]).toMatchSnapshot();
@@ -817,7 +817,7 @@ describe('generated answer analytics actions', () => {
     });
 
     it('should log #logGeneratedAnswerStreamEnd with a provided answerId', async () => {
-      await logGeneratedAnswerStreamEnd(true, exampleProvidedAnswerId)()(
+      await logGeneratedAnswerStreamEnd(true, exampleProvidedAnswerId, true)()(
         engine.dispatch,
         () => engine.state,
         {} as ThunkExtraArguments

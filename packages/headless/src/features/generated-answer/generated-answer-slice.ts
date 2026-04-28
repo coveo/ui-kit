@@ -31,7 +31,6 @@ import {
   updateResponseFormat,
 } from './generated-answer-actions.js';
 import {getGeneratedAnswerInitialState} from './generated-answer-state.js';
-import {appendGeneratedAnswerText} from './utils/streamed-answer-text-utils.js';
 import {filterOutDuplicatedCitations} from './utils/generated-answer-citation-utils.js';
 
 export const generatedAnswerReducer = createReducer(
@@ -50,10 +49,11 @@ export const generatedAnswerReducer = createReducer(
       .addCase(updateMessage, (state, {payload}) => {
         state.isLoading = false;
         state.isStreaming = true;
-        state.answer = appendGeneratedAnswerText(
-          state.answer,
-          payload.textDelta
-        );
+        state.answer = !state.answer?.trim()
+          ? payload.textDelta.trim() === ''
+            ? undefined
+            : payload.textDelta
+          : state.answer.concat(payload.textDelta);
         delete state.error;
       })
       .addCase(updateCitations, (state, {payload}) => {
