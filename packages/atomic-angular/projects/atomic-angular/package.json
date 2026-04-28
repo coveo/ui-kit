@@ -14,7 +14,7 @@
   "peerDependencies": {
     "@angular/common": "14 - 21",
     "@angular/core": "14 - 21",
-    "@coveo/headless": "workspace:*"
+    "@coveo/headless": "workspace:^"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0 || ^24.11.0"

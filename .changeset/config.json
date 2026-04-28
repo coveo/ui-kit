@@ -16,5 +16,9 @@
   "privatePackages": {
     "version": false,
     "tag": false
+  },
+  "//": "onlyUpdatePeerDependentsWhenOutOfRange prevents major bumps on peer dependents when the new version still satisfies the declared range. This requires internal peerDependencies to use workspace:^ (caret range) instead of workspace:* (exact version). See KIT-5656.",
+  "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
+    "onlyUpdatePeerDependentsWhenOutOfRange": true
   }
 }

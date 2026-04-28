@@ -58,7 +58,7 @@
     "rollup-plugin-polyfill-node": "^0.13.0"
   },
   "peerDependencies": {
-    "@coveo/headless": "workspace:*",
+    "@coveo/headless": "workspace:^",
     "react": ">=19.0.0",
     "react-dom": ">=19.0.0"
   },

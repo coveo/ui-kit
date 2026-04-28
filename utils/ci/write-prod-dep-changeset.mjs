@@ -128,7 +128,7 @@ function readExistingChangesetEntries(filePath) {
   }
 
   const content = readFileSync(filePath, 'utf8');
-  const frontmatterMatch = content.match(/---\s*\n([\s\S]*?)\n---/);
+  const frontmatterMatch = content.match(/---\s*\r?\n([\s\S]*?)\r?\n---/);
   if (!frontmatterMatch) {
     return [];
   }
@@ -149,8 +149,12 @@ function keepHighestBumpType(existingBumpType, nextBumpType) {
   const existingPriority = getBumpPriority(existingBumpType);
   const nextPriority = getBumpPriority(nextBumpType);
 
-  if (existingPriority === 0 || nextPriority === 0) {
-    return existingBumpType;
+  if (nextPriority === 0) {
+    throw new Error(`Unknown bump type: ${nextBumpType}`);
+  }
+
+  if (existingPriority === 0) {
+    return nextBumpType;
   }
 
   return existingPriority >= nextPriority ? existingBumpType : nextBumpType;

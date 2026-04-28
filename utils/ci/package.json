@@ -9,7 +9,7 @@
     "if-not-cdn": "node ./if-not-cdn.mjs",
     "if-cdn": "node ./if-cdn.mjs",
     "if-ci": "node ./if-ci.mjs",
-    "test": "node --test ./tests/**/*.test.mjs",
+    "test": "node --test \"./tests/**/*.test.mjs\"",
     "write-prod-dep-changeset": "node ./write-prod-dep-changeset.mjs"
   },
   "dependencies": {
