@@ -470,6 +470,9 @@ importers:
       typescript:
         specifier: 5.9.3
         version: 5.9.3
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.16(@types/node@25.5.0)(@vitest/browser-playwright@4.0.16)(jiti@2.6.1)(jsdom@20.0.3)(less@4.5.1)(lightningcss@1.32.0)(msw@2.12.7(@types/node@25.5.0)(typescript@5.9.3))(sass@1.97.3)(terser@5.46.1)(yaml@2.8.3)
 
   packages/atomic-angular:
     dependencies:
