@@ -1,5 +1,4 @@
 export {
-  assertExpandCollapse,
   COVERED_CRITERIA as COLLAPSIBLE_COVERED_CRITERIA,
   testCollapsibleA11y,
 } from './collapsible.js';
@@ -19,5 +18,4 @@ export type {InteractiveA11yOptions} from './listbox.js';
 export {
   COVERED_CRITERIA as LISTBOX_COVERED_CRITERIA,
   testInteractiveA11y,
-  testListboxA11y,
 } from './listbox.js';

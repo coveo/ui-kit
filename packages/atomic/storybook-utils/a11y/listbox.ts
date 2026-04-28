@@ -30,15 +30,6 @@ export interface InteractiveA11yOptions {
   selectionControl?: boolean;
 }
 
-/**
- * @deprecated Use {@link InteractiveA11yOptions} instead.
- */
-export interface ListboxA11yOptions {
-  collapseExpand?: boolean;
-  showMore?: boolean;
-  facetSearch?: boolean;
-}
-
 async function findFirstSelectionControl(
   root: ReturnType<typeof within>,
   timeout = 10000
@@ -230,30 +221,4 @@ export async function testInteractiveA11y(
     status: 'passed',
     result: {criteriaCovered: [...COVERED_CRITERIA]},
   });
-}
-
-/**
- * @deprecated Use {@link testInteractiveA11y} with {@link InteractiveA11yOptions} instead.
- * Maps legacy facet-specific options to the generic API.
- */
-export async function testListboxA11y(
-  context: StoryContext,
-  options: ListboxA11yOptions = {}
-): Promise<void> {
-  const mapped: InteractiveA11yOptions = {};
-
-  if (options.collapseExpand) {
-    mapped.expandCollapse = {role: 'button', expanded: true};
-  }
-  if (options.showMore) {
-    mapped.activatableButtons = [
-      ...(mapped.activatableButtons ?? []),
-      {name: /show more/i},
-    ];
-  }
-  if (options.facetSearch) {
-    mapped.textInput = {role: 'textbox'};
-  }
-
-  return testInteractiveA11y(context, mapped);
 }

@@ -15,23 +15,6 @@ export interface CollapsibleA11yOptions {
   triggerLabel: string;
 }
 
-export async function assertExpandCollapse(
-  trigger: HTMLElement,
-  _canvasElement: HTMLElement
-): Promise<void> {
-  const initialText = trigger.textContent?.trim() ?? '';
-  trigger.focus();
-  await userEvent.keyboard('{Enter}');
-
-  await waitFor(
-    () => {
-      const currentText = trigger.textContent?.trim() ?? '';
-      expect(currentText !== initialText || currentText.length > 0).toBe(true);
-    },
-    {timeout: 5000}
-  );
-}
-
 function findCollapseButton(
   root: HTMLElement,
   label: string
