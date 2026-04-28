@@ -22,6 +22,12 @@
       ],
     },
     {
+      groupName: 'Changesets',
+      groupSlug: 'changesets',
+      description: 'Isolate @changesets/* since we rely on experimental options that may change in a patch update',
+      matchPackageNames: ['@changesets/*'],
+    },
+    {
       groupName: 'wc-toolkit storybook-helpers',
       groupSlug: 'wc-toolkit-storybook-helpers',
       rangeStrategy: 'replace',
