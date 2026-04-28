@@ -29,7 +29,7 @@ export interface RelayConfig {
   mode?: "emit" | "disabled";
 
   /**
-   * Optionally allows a Relay integration to specify the name(s) of software package(s) relay is
+   * Optionally allows a Relay integration to specify the names of software packages relay is
    * being called from. These names will be transmitted with each event, along with Relay's own
    * version. The recommendation is to specify them using a 'softwarename@softwareversion' string.
    */

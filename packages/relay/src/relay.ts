@@ -54,7 +54,7 @@ interface Relay {
   on: (type: string, callback: EventCallback) => Off;
 
   /**
-   * Detach callback(s) from events.
+   * Detaches callbacks from events.
    * If only the "type" parameter is set, all callbacks for the specified type will be removed.
    * @param {string} type - event's type.
    * @param {EventCallback} callback - callback that should be removed.

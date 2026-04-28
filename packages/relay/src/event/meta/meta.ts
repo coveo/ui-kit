@@ -44,17 +44,17 @@ export interface Meta {
   clientId: string;
 
   /**
-   * Browser Navigator's [user agent](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/userAgent) property if set.
+   * Browser Navigator's [`userAgent`](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/userAgent) property if set.
    */
   userAgent: string | null;
 
   /**
-   * Browser Document's [referrer](https://developer.mozilla.org/en-US/docs/Web/API/Document/referrer) property if set.
+   * Browser Document's [`referrer`](https://developer.mozilla.org/en-US/docs/Web/API/Document/referrer) property if set.
    */
   referrer: string | null;
 
   /**
-   * Browser Location's [href](https://developer.mozilla.org/en-US/docs/Web/API/Location/href) property if set.
+   * Browser Location's [`href`](https://developer.mozilla.org/en-US/docs/Web/API/Location/href) property if set.
    */
   location: string | null;
 }

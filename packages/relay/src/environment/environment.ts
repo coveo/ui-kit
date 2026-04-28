@@ -8,7 +8,7 @@ export interface Environment {
   /**
    * Current runtime context for Relay. It has three possible values.
    * `"browser"` indicates a standard web environment.
-   * `"null"` disables all side effects (e.g., for unit testing).
+   * `"null"` disables all side effects (for example, for unit testing).
    * `"custom"` represents a user-supplied environment.
    * @type {"browser" | "null" | "custom"}
    */
