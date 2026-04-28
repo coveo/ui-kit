@@ -189,6 +189,86 @@ test('preserves existing bump types when merging new packages', () => {
   assert.match(changeset, /'@coveo\/atomic': patch/);
 });
 
+test('replaces invalid existing bump type with next bump type', () => {
+  const repoDir = createTempGitRepo();
+
+  writeJson(repoDir, 'packages/atomic/package.json', {
+    name: '@coveo/atomic',
+    version: '1.0.0',
+    dependencies: {dep: '1.0.0'},
+  });
+
+  writeFileSync(
+    join(repoDir, '.changeset/bump-prod-deps.md'),
+    "---\n'@coveo/atomic': banana\n---\n\nUpdate production dependencies\n"
+  );
+
+  commit(repoDir, 'initial state with invalid bump type');
+
+  const baseSha = revParse(repoDir, 'HEAD');
+
+  writeJson(repoDir, 'packages/atomic/package.json', {
+    name: '@coveo/atomic',
+    version: '1.0.0',
+    dependencies: {dep: '1.1.0'},
+  });
+
+  commit(repoDir, 'update atomic prod dependency');
+  const headSha = revParse(repoDir, 'HEAD');
+
+  runGenerator(repoDir, baseSha, headSha);
+
+  const changeset = readFileSync(
+    join(repoDir, '.changeset/bump-prod-deps.md'),
+    'utf8'
+  );
+  assert.match(changeset, /'@coveo\/atomic': patch/);
+  assert.doesNotMatch(changeset, /'@coveo\/atomic': banana/);
+});
+
+test('parses existing changeset entries with CRLF frontmatter line endings', () => {
+  const repoDir = createTempGitRepo();
+
+  writeJson(repoDir, 'packages/headless/package.json', {
+    name: '@coveo/headless',
+    version: '1.0.0',
+    dependencies: {dep: '1.0.0'},
+  });
+
+  writeJson(repoDir, 'packages/atomic/package.json', {
+    name: '@coveo/atomic',
+    version: '1.0.0',
+    dependencies: {dep: '1.0.0'},
+  });
+
+  writeFileSync(
+    join(repoDir, '.changeset/bump-prod-deps.md'),
+    "---\r\n'@coveo/headless': major\r\n---\r\n\r\nUpdate production dependencies\r\n"
+  );
+
+  commit(repoDir, 'initial state with CRLF changeset');
+
+  const baseSha = revParse(repoDir, 'HEAD');
+
+  writeJson(repoDir, 'packages/atomic/package.json', {
+    name: '@coveo/atomic',
+    version: '1.0.0',
+    dependencies: {dep: '1.1.0'},
+  });
+
+  commit(repoDir, 'update atomic prod dependency');
+  const headSha = revParse(repoDir, 'HEAD');
+
+  runGenerator(repoDir, baseSha, headSha);
+
+  const changeset = readFileSync(
+    join(repoDir, '.changeset/bump-prod-deps.md'),
+    'utf8'
+  );
+  assert.match(changeset, /'@coveo\/headless': major/);
+  assert.match(changeset, /'@coveo\/atomic': patch/);
+});
+
 function createTempGitRepo() {
   const repoDir = mkdtempSync(join(tmpdir(), 'ui-kit-renovate-prod-test-'));
   tempDirs.push(repoDir);
