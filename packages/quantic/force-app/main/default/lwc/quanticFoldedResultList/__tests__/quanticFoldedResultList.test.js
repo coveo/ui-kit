@@ -341,7 +341,7 @@ describe('c-quantic-folded-result-list', () => {
       ).map((resultElement) => resultElement.collection.keyResultList);
 
       expect(collectionKeys.length).toBe(fakeCollections.length);
-      expect(fallbackPrefix).toMatch(/^quantic-folded-result-list-\d+$/);
+      expect(fallbackPrefix).toMatch(/^quantic-folded-result-list-\d+-\d+$/);
       expect(new Set(collectionKeys).size).toBe(fakeCollections.length);
       collectionKeys.forEach((key, index) => {
         expect(key).toBe(
@@ -349,6 +349,38 @@ describe('c-quantic-folded-result-list', () => {
         );
       });
       expect(stableCollectionKeys).toEqual(collectionKeys);
+
+      const updatedCollections = fakeCollections.map((collection) => ({
+        ...collection,
+        result: {
+          ...collection.result,
+          title: `${collection.result.title} updated`,
+        },
+      }));
+      functionsMocks.buildFoldedResultList.mock.results[0].value.state = {
+        ...foldedResultsListState,
+        results: updatedCollections,
+      };
+      functionsMocks.subscribeFoldedResultList.mock.calls[0][0]();
+      await flushPromises();
+
+      const updatedCollectionKeys = Array.from(
+        element.shadowRoot.querySelectorAll(selectors.result)
+      ).map((resultElement) => resultElement.collection.keyResultList);
+      const updatedFallbackPrefix = updatedCollectionKeys[0].replace(
+        `_${updatedCollections[0].result.uniqueId}`,
+        ''
+      );
+
+      expect(updatedFallbackPrefix).toMatch(
+        /^quantic-folded-result-list-\d+-\d+$/
+      );
+      expect(updatedFallbackPrefix).not.toBe(fallbackPrefix);
+      updatedCollectionKeys.forEach((key, index) => {
+        expect(key).toBe(
+          `${updatedFallbackPrefix}_${updatedCollections[index].result.uniqueId}`
+        );
+      });
     });
   });
 });

@@ -90,7 +90,11 @@ export default class QuanticFoldedResultList extends LightningElement {
   /** @type {import('c/quanticUtils').AriaLiveUtils} */
   loadingAriaLiveMessage;
   /** @type {string} */
-  fallbackSearchResponseId = `quantic-folded-result-list-${++foldedResultListFallbackId}`;
+  fallbackSearchResponseIdPrefix = `quantic-folded-result-list-${++foldedResultListFallbackId}`;
+  /** @type {number} */
+  fallbackSearchResponseIdVersion = 0;
+  /** @type {FoldedResultListState} */
+  fallbackSearchResponseState;
 
   labels = {
     loadingResults,
@@ -151,7 +155,9 @@ export default class QuanticFoldedResultList extends LightningElement {
   }
 
   updateState() {
-    this.state = this.foldedResultList.state;
+    const nextState = this.foldedResultList.state;
+    this.updateFallbackSearchResponseId(nextState);
+    this.state = nextState;
     this.showPlaceholder =
       this?.state?.isLoading &&
       !this?.state?.hasError &&
@@ -160,6 +166,20 @@ export default class QuanticFoldedResultList extends LightningElement {
     if (this.showPlaceholder) {
       this.loadingAriaLiveMessage.dispatchMessage(this.labels.loadingResults);
     }
+  }
+
+  /** @param {FoldedResultListState} state */
+  updateFallbackSearchResponseId(state) {
+    if (
+      !state ||
+      state.searchResponseId ||
+      state === this.fallbackSearchResponseState
+    ) {
+      return;
+    }
+
+    this.fallbackSearchResponseState = state;
+    this.fallbackSearchResponseIdVersion++;
   }
 
   updateResultPerPage() {
@@ -184,6 +204,10 @@ export default class QuanticFoldedResultList extends LightningElement {
         keyResultList: `${searchResponseId}_${collection.result.uniqueId}`,
       })) || []
     );
+  }
+
+  get fallbackSearchResponseId() {
+    return `${this.fallbackSearchResponseIdPrefix}-${this.fallbackSearchResponseIdVersion}`;
   }
 
   /**

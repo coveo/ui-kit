@@ -379,12 +379,39 @@ describe('c-quantic-result-list', () => {
       ).map((resultElement) => resultElement.result.keyResultList);
 
       expect(resultKeys.length).toBe(fakeResults.length);
-      expect(fallbackPrefix).toMatch(/^quantic-result-list-\d+$/);
+      expect(fallbackPrefix).toMatch(/^quantic-result-list-\d+-\d+$/);
       expect(new Set(resultKeys).size).toBe(fakeResults.length);
       resultKeys.forEach((key, index) => {
         expect(key).toBe(`${fallbackPrefix}_${fakeResults[index].uniqueId}`);
       });
       expect(stableResultKeys).toEqual(resultKeys);
+
+      const updatedResults = fakeResults.map((result) => ({
+        ...result,
+        title: `${result.title} updated`,
+      }));
+      functionsMocks.buildResultList.mock.results[0].value.state = {
+        ...resultListState,
+        results: updatedResults,
+      };
+      functionsMocks.resultsListSubscriber.mock.calls[0][0]();
+      await flushPromises();
+
+      const updatedResultKeys = Array.from(
+        element.shadowRoot.querySelectorAll(selectors.quanticResult)
+      ).map((resultElement) => resultElement.result.keyResultList);
+      const updatedFallbackPrefix = updatedResultKeys[0].replace(
+        `_${updatedResults[0].uniqueId}`,
+        ''
+      );
+
+      expect(updatedFallbackPrefix).toMatch(/^quantic-result-list-\d+-\d+$/);
+      expect(updatedFallbackPrefix).not.toBe(fallbackPrefix);
+      updatedResultKeys.forEach((key, index) => {
+        expect(key).toBe(
+          `${updatedFallbackPrefix}_${updatedResults[index].uniqueId}`
+        );
+      });
     });
   });
 });
