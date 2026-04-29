@@ -1764,3 +1764,22 @@ summary:hover {
   user-select: none;
   -webkit-user-select: none;
 }
+
+/* Header nav bar – light theme */
+.header-nav-dropdown .dropdown-menu {
+  background: #fff;
+  border: 1px solid #e5e8e8;
+  box-shadow: rgba(229, 232, 232, 0.75) 0px 2px 16px 0px;
+}
+
+.header-nav-dropdown-item {
+  color: #282829;
+}
+.header-nav-dropdown-item:hover {
+  background-color: #f8f9fa;
+  color: #1372ec;
+}
+.header-nav-dropdown-item.active {
+  background-color: transparent;
+  color: #1372ec;
+}
