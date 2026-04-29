@@ -26,6 +26,7 @@ const meta: Meta = {
   id: 'internal-foobar',
   parameters: {
     chromatic: {disableSnapshot: false},
+    a11y: {test: 'todo'},
   },
   tags: ['!dev', '!autodocs', '!test'],
 };
