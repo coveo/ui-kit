@@ -16,7 +16,7 @@ export const renderGeneratedMarkdownContent: FunctionalComponent<
   const answerAsHtml = DOMPurify.sanitize(
     transformMarkdownToHtml(props.answer ?? ''),
     {
-      ADD_ATTR: ['part', 'target', 'rel'],
+      ADD_ATTR: ['part'],
       CUSTOM_ELEMENT_HANDLING: {
         tagNameCheck: /^atomic-generated-answer-inline-link$/,
         attributeNameCheck: /^(href|title)$/,
