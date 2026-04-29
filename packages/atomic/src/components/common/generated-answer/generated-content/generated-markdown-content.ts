@@ -7,7 +7,6 @@ import {transformMarkdownToHtml} from './markdown-utils';
 
 export interface GeneratedMarkdownContentProps {
   answer?: string;
-  answerId?: string;
   isStreaming: boolean;
 }
 
@@ -15,12 +14,12 @@ export const renderGeneratedMarkdownContent: FunctionalComponent<
   GeneratedMarkdownContentProps
 > = ({props}) => {
   const answerAsHtml = DOMPurify.sanitize(
-    transformMarkdownToHtml(props.answer ?? '', props.answerId),
+    transformMarkdownToHtml(props.answer ?? ''),
     {
       ADD_ATTR: ['part', 'target', 'rel'],
       CUSTOM_ELEMENT_HANDLING: {
         tagNameCheck: /^atomic-generated-answer-inline-link$/,
-        attributeNameCheck: /^(href|answer-id|title|text)$/,
+        attributeNameCheck: /^(href|title)$/,
       },
     }
   );

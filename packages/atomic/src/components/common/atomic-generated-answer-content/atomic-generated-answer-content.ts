@@ -4,6 +4,7 @@ import type {
 } from '@coveo/headless';
 import type {i18n} from 'i18next';
 import {html, LitElement, type TemplateResult} from 'lit';
+import {provide} from '@lit/context';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import atomicGeneratedAnswerStyles from '@/src/components/search/atomic-generated-answer/atomic-generated-answer.tw.css.js';
@@ -12,6 +13,7 @@ import {renderGeneratedContentContainer} from '../generated-answer/generated-con
 import {renderAgentGenerationSteps} from '../generated-answer/render-agent-generation-steps';
 import {renderFeedbackAndCopyButtons} from '../generated-answer/render-feedback-and-copy-buttons';
 import {renderSourceCitations} from '../generated-answer/source-citations';
+import {answerContext} from './answer-context';
 
 const COPY_RESET_DURATION_MS = 2000;
 
@@ -31,6 +33,9 @@ type CopyState = 'idle' | 'success' | 'error';
 @withTailwindStyles
 export class AtomicGeneratedAnswerContent extends LitElement {
   static styles = [atomicGeneratedAnswerStyles];
+
+  @provide({context: answerContext})
+  answerId = '';
 
   /**
    * The generated answer object to render.
@@ -93,6 +98,8 @@ export class AtomicGeneratedAnswerContent extends LitElement {
       cannotAnswer,
     } = this.generatedAnswer || {};
 
+    this.answerId = answerId || '';
+
     if (error) {
       return this.renderError();
     }
@@ -120,7 +127,6 @@ export class AtomicGeneratedAnswerContent extends LitElement {
           ${renderGeneratedContentContainer({
             props: {
               answer,
-              answerId,
               answerContentFormat,
               isStreaming: Boolean(isStreaming),
             },

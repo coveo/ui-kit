@@ -2,13 +2,26 @@ import {
   buildInteractiveGeneratedAnswerInlineLink,
   type InteractiveGeneratedAnswerInlineLink,
 } from '@coveo/headless';
-import {html} from 'lit';
+import {html, LitElement} from 'lit';
 import {describe, expect, it, vi, beforeEach} from 'vitest';
+import {customElement} from 'lit/decorators.js';
+import {provide} from '@lit/context';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import type {AtomicGeneratedAnswerInlineLink} from './atomic-generated-answer-inline-link';
+import {answerContext} from '../atomic-generated-answer-content/answer-context';
 import './atomic-generated-answer-inline-link';
 
 vi.mock('@coveo/headless', {spy: true});
+
+@customElement('test-answer-context-provider')
+class TestAnswerContextProvider extends LitElement {
+  @provide({context: answerContext})
+  answerId = '';
+
+  override render() {
+    return html`<slot></slot>`;
+  }
+}
 
 describe('atomic-generated-answer-inline-link', () => {
   let mockedInteractiveLink: InteractiveGeneratedAnswerInlineLink;
@@ -29,22 +42,33 @@ describe('atomic-generated-answer-inline-link', () => {
     props?: Partial<{
       href: string;
       answerId: string;
-      text: string;
+      slotText: string;
       title: string;
     }>
   ) => {
-    const {element} =
-      await renderInAtomicSearchInterface<AtomicGeneratedAnswerInlineLink>({
-        template: html`<atomic-generated-answer-inline-link
-          href=${props?.href ?? 'https://example.com'}
-          answer-id=${props?.answerId ?? 'test-answer-id'}
-          text=${props?.text ?? 'Example Link'}
-          title=${props?.title ?? 'Example Title'}
-        ></atomic-generated-answer-inline-link>`,
-        selector: 'atomic-generated-answer-inline-link',
+    const answerId = props?.answerId ?? 'test-answer-id';
+
+    const {element: contextProvider} =
+      await renderInAtomicSearchInterface<TestAnswerContextProvider>({
+        template: html`<test-answer-context-provider .answerId=${answerId}>
+          <atomic-generated-answer-inline-link
+            href=${props?.href ?? 'https://example.com'}
+            title=${props?.title ?? 'Example Title'}
+            >${props?.slotText ??
+            'Example Link'}</atomic-generated-answer-inline-link
+          >
+        </test-answer-context-provider>`,
+        selector: 'test-answer-context-provider',
       });
 
-    const anchor = element.shadowRoot?.querySelector('a');
+    await contextProvider.updateComplete;
+
+    const element = contextProvider.querySelector(
+      'atomic-generated-answer-inline-link'
+    ) as AtomicGeneratedAnswerInlineLink;
+    await element?.updateComplete;
+
+    const anchor = element?.shadowRoot?.querySelector('a');
 
     return {element, anchor};
   };
@@ -85,6 +109,17 @@ describe('atomic-generated-answer-inline-link', () => {
     const {anchor} = await setupElement();
 
     expect(anchor?.getAttribute('part')).toBe('answer-link');
+  });
+
+  it('should render an external-link svg icon', async () => {
+    const {element} = await setupElement();
+    const icon = element.shadowRoot?.querySelector(
+      'svg[part="answer-link-icon"]'
+    );
+
+    expect(icon).not.toBeNull();
+    expect(icon?.getAttribute('aria-hidden')).toBe('true');
+    expect(icon?.getAttribute('focusable')).toBe('false');
   });
 
   it('should call select on click', async () => {

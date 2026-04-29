@@ -11,7 +11,6 @@ import {
 
 export interface GeneratedContentContainerProps {
   answer?: string;
-  answerId?: string;
   answerContentFormat?: string;
   isStreaming: boolean;
 }
@@ -25,7 +24,6 @@ export const renderGeneratedContentContainer: FunctionalComponentWithChildren<
         ? renderGeneratedMarkdownContent({
             props: {
               answer: props.answer,
-              answerId: props.answerId,
               isStreaming: props.isStreaming,
             } satisfies GeneratedMarkdownContentProps,
           })

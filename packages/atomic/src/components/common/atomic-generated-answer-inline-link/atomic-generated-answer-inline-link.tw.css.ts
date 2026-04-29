@@ -8,12 +8,18 @@ const styles = css`
   }
 
   a {
-    @apply text-primary underline;
+    @apply text-primary no-underline;
   }
 
-  a::after {
-    content: '↗';
-    @apply ms-1 inline-block no-underline;
+  a [part='answer-link-text'] {
+    @apply underline;
+  }
+
+  .icon-wrapper {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: text-bottom;
   }
 `;
 

@@ -67,7 +67,6 @@ export const renderAnswerContent: FunctionalComponent<
         ? renderGeneratedContentContainer({
             props: {
               answer,
-              answerId,
               answerContentFormat,
               isStreaming: !!isStreaming,
             },

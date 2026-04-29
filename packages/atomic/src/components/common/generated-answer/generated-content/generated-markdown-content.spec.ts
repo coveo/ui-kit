@@ -66,23 +66,19 @@ describe('#renderGeneratedMarkdownContent', () => {
     expect(generatedText).not.toHaveClass('cursor');
   });
 
-  it('should call transformMarkdownToHtml with the answer and answerId', async () => {
+  it('should call transformMarkdownToHtml with the answer', async () => {
     const mockedTransformMarkdownToHtml = vi.mocked(transformMarkdownToHtml);
     const answer = '**bold** markdown';
-    const answerId = 'test-id';
-    await renderComponent({answer, answerId});
+    await renderComponent({answer});
 
-    expect(mockedTransformMarkdownToHtml).toHaveBeenCalledWith(
-      answer,
-      answerId
-    );
+    expect(mockedTransformMarkdownToHtml).toHaveBeenCalledWith(answer);
   });
 
   it('should call transformMarkdownToHtml with empty string when answer is undefined', async () => {
     const mockedTransformMarkdownToHtml = vi.mocked(transformMarkdownToHtml);
     await renderComponent({answer: undefined});
 
-    expect(mockedTransformMarkdownToHtml).toHaveBeenCalledWith('', undefined);
+    expect(mockedTransformMarkdownToHtml).toHaveBeenCalledWith('');
   });
 
   it('should call DOMPurify.sanitize with CUSTOM_ELEMENT_HANDLING to allow inline link component', async () => {
@@ -96,15 +92,12 @@ describe('#renderGeneratedMarkdownContent', () => {
 
     await renderComponent({answer});
 
-    expect(mockedTransformMarkdownToHtml).toHaveBeenCalledWith(
-      answer,
-      undefined
-    );
+    expect(mockedTransformMarkdownToHtml).toHaveBeenCalledWith(answer);
     expect(DOMPurify.sanitize).toHaveBeenCalledWith(transformedHtml, {
       ADD_ATTR: ['part', 'target', 'rel'],
       CUSTOM_ELEMENT_HANDLING: {
         tagNameCheck: /^atomic-generated-answer-inline-link$/,
-        attributeNameCheck: /^(href|answer-id|title|text)$/,
+        attributeNameCheck: /^(href|title)$/,
       },
     });
   });

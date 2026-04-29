@@ -98,23 +98,23 @@ describe('markdownUtils', () => {
         removeLineBreaks(
           unindentHtml(`
             <p part="answer-paragraph">
-              <atomic-generated-answer-inline-link part="answer-link" href="https://example.com" text="example"></atomic-generated-answer-inline-link>
+              <atomic-generated-answer-inline-link href="https://example.com">example</atomic-generated-answer-inline-link>
             </p>
           `)
         )
       );
     });
 
-    it('should include answer-id attribute on links when answerId is provided', () => {
-      const text = '[example](https://example.com)';
+    it('should transform bold text inside a link', () => {
+      const text = '[**bold**](https://example.com)';
 
-      const html = transformMarkdownToHtml(text, 'test-answer-id');
+      const html = transformMarkdownToHtml(text);
 
       expect(removeLineBreaks(html)).toBe(
         removeLineBreaks(
           unindentHtml(`
             <p part="answer-paragraph">
-              <atomic-generated-answer-inline-link part="answer-link" href="https://example.com" answer-id="test-answer-id" text="example"></atomic-generated-answer-inline-link>
+              <atomic-generated-answer-inline-link href="https://example.com"><strong part="answer-strong">bold</strong></atomic-generated-answer-inline-link>
             </p>
           `)
         )
