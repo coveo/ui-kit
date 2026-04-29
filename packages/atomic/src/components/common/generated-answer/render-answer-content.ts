@@ -41,15 +41,8 @@ export const renderAnswerContent: FunctionalComponent<
     onClickShowButton,
   } = props;
 
-  const {
-    answer,
-    isStreaming,
-    citations,
-    answerContentFormat,
-    expanded,
-    error,
-    answerId,
-  } = generatedAnswer;
+  const {answer, isStreaming, citations, answerContentFormat, expanded, error} =
+    generatedAnswer;
   const hasRetryableError = error?.isRetryable === true;
 
   return html`
