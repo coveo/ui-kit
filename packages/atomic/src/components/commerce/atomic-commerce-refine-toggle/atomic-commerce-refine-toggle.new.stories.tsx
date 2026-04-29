@@ -1,5 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {html} from 'lit';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/commerce/atomic-commerce-refine-toggle/atomic-commerce-refine-toggle.js';
@@ -18,7 +19,7 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
-    chromatic: {disableSnapshot: true},
+    chromatic: {disableSnapshot: false},
     actions: {
       handles: events,
     },
@@ -32,3 +33,7 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {};
+
+export const IntentionalA11yViolationForChromaticCsv: Story = {
+  render: () => html`<button></button>`,
+};
