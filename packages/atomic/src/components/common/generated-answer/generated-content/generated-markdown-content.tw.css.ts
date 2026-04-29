@@ -34,7 +34,13 @@ const styles = css`
   [part='generated-text']
     [part^='answer-heading-']
     atomic-generated-answer-inline-link::part(answer-link) {
-    @apply text-inherit no-underline;
+    @apply text-inherit;
+  }
+
+  [part='generated-text']
+    [part^='answer-heading-']
+    atomic-generated-answer-inline-link::part(answer-link-text) {
+    @apply no-underline;
   }
 
   [part='generated-text'] [part='answer-list-item'],
