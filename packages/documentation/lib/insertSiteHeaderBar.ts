@@ -176,11 +176,11 @@ export const insertSiteHeaderBar = (
           <a class="btn header-nav-label fs-100 fw-400" href="https://docs.coveo.com/en/1495/">Solutions &amp; integrations</a>
           <a class="btn header-nav-label fs-100 fw-400" href="https://docs.coveo.com/en/q4ke0131/">Resources</a>
           <div class="flex-grow-1"></div>
-          ${renderDropdown('api-reference', 'API reference', apiRefEntries, false, '')}
-          ${renderDropdown('developer-tools', 'Developer tools', devToolsEntries, true, activeEntry)}
           <a id="tsd-edit-github-link" href="#" target="_blank" rel="noopener noreferrer" title="Edit in GitHub" aria-label="Edit in GitHub" class="btn header-nav-label d-flex align-items-center" style="display:none">
             <img src="${assetsPath}/icons/github.svg" width="20" height="20" aria-hidden="true" style="flex-shrink:0;display:block;filter:brightness(0) invert(1)" alt="">
           </a>
+          ${renderDropdown('api-reference', 'API reference', apiRefEntries, false, '')}
+          ${renderDropdown('developer-tools', 'Developer tools', devToolsEntries, true, activeEntry)}
         </div>`;
 
       if (header.parentNode) {
