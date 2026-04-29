@@ -4,4 +4,3 @@
 scripts
 packages/samples
 .storybook
-cypress

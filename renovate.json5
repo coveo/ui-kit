@@ -22,6 +22,12 @@
       ],
     },
     {
+      groupName: 'Changesets',
+      groupSlug: 'changesets',
+      description: 'Isolate @changesets/* since we rely on experimental options that may change in a patch update',
+      matchPackageNames: ['@changesets/*'],
+    },
+    {
       groupName: 'wc-toolkit storybook-helpers',
       groupSlug: 'wc-toolkit-storybook-helpers',
       rangeStrategy: 'replace',
@@ -66,13 +72,6 @@
   postUpdateOptions: ['pnpmDedupe'],
   ignoreDeps: [
     'fix-esm-import-path',
-    // Ignore cypress since it is getting removed.
-    'cypress',
-    'cypress-split',
-    'cypress-repeat',
-    'cypress-real-events',
-    'cypress-web-vitals',
-    'cypress-axe',
     // Ignore marked to not have a floating PR.
     'marked',
     // Ignore stencil since it is getting removed.
