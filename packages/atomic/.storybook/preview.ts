@@ -76,12 +76,6 @@ const preview: Preview = {
       // 'error' - fail CI on a11y violations
       // 'off' - skip a11y checks entirely
       test: 'error',
-      options: {
-        runOnly: {
-          type: 'tag',
-          values: ['wcag2a', 'wcag21a', 'wcag2aa', 'wcag21aa', 'wcag22aa'],
-        },
-      },
     },
     docs: {
       theme: create({
