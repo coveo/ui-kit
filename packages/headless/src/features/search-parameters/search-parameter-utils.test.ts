@@ -140,17 +140,17 @@ describe('search-parameter-utils', () => {
   });
 
   describe('extendSearchParameters', () => {
-    it.each([
-      null,
-      undefined,
-    ])('should not modify searchParams if value is %s', (value: unknown) => {
-      const searchParams: Record<string, unknown> = {foo: 'bar'};
-      const key = 'q';
+    it.each([null, undefined])(
+      'should not modify searchParams if value is %s',
+      (value: unknown) => {
+        const searchParams: Record<string, unknown> = {foo: 'bar'};
+        const key = 'q';
 
-      extendSearchParameters(searchParams, key, value as SearchParamValue);
+        extendSearchParameters(searchParams, key, value as SearchParamValue);
 
-      expect(searchParams).toEqual({foo: 'bar'});
-    });
+        expect(searchParams).toEqual({foo: 'bar'});
+      }
+    );
 
     it('should add the value to searchParams if key is a valid basic key', () => {
       const searchParams: Record<string, unknown> = {foo: 'bar'};

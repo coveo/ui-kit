@@ -4,7 +4,7 @@ description: Applies WCAG 2.2 Level AA accessibility standards to UI components.
 license: Apache-2.0
 metadata:
   author: coveo
-  version: "1.0"
+  version: '1.0'
 ---
 
 # Applying WCAG Guidelines
@@ -14,6 +14,7 @@ metadata:
 ### Step 1: Plan for Accessibility
 
 Before generating code:
+
 - Reflect on WCAG 2.2 Level AA requirements
 - Identify which persona-based guidelines apply (keyboard, screen reader, low vision, cognitive, voice)
 - Plan semantic HTML structure and ARIA attributes
@@ -23,6 +24,7 @@ Before generating code:
 Apply appropriate patterns from this skill and [detailed patterns reference](references/wcag-patterns.md):
 
 **Core requirements:**
+
 - Use semantic HTML elements (`<button>`, `<nav>`, `<main>`, etc.)
 - Ensure all interactive elements are keyboard navigable
 - Provide text alternatives for non-text content
@@ -30,6 +32,7 @@ Apply appropriate patterns from this skill and [detailed patterns reference](ref
 - Never use color alone to convey information
 
 **Common patterns:**
+
 - Forms: labels, required indicators, error messages with `aria-invalid` and `aria-describedby`
 - Images: `alt` text for informative images, `alt=""` for decorative
 - Navigation: roving tabindex, `aria-expanded` for expandable menus
@@ -38,6 +41,7 @@ Apply appropriate patterns from this skill and [detailed patterns reference](ref
 ### Step 3: Review and Test
 
 After generating code:
+
 - Review against WCAG 2.2 checklist below
 - Test keyboard navigation (Tab, Arrow, Enter, Escape)
 - Verify focus indicators are visible
@@ -59,6 +63,7 @@ Inform users that code was built with accessibility in mind but should be review
 ### Keyboard
 
 **Core requirements:**
+
 - All interactive elements keyboard navigable in predictable order
 - Visible focus indicators
 - Static elements should NOT have `tabindex` (exception: `tabindex="-1"` for programmatic focus)
@@ -89,6 +94,7 @@ Inform users that code was built with accessibility in mind but should be review
 ```
 
 **Keyboard commands:**
+
 - `Tab` - Next interactive element
 - `Arrow` - Navigate within components
 - `Enter` - Activate control
@@ -99,10 +105,12 @@ Inform users that code was built with accessibility in mind but should be review
 Use **roving tabindex** or **aria-activedescendant** to manage focus.
 
 Roving tabindex algorithm:
+
 1. Initial: Set `tabindex="0"` on initial element, `tabindex="-1"` on others
 2. On arrow key: Update tabindex values and call `element.focus()`
 
 Aria-activedescendant pattern:
+
 - Container has `tabindex="0"` and `aria-activedescendant="IDREF"`
 - CSS draws focus on referenced element
 - Update `aria-activedescendant` on navigation
@@ -129,6 +137,7 @@ Aria-activedescendant pattern:
 ## Pattern-Specific Guidelines
 
 For detailed implementation patterns, see [wcag-patterns.md](references/wcag-patterns.md):
+
 - Forms (labels, validation, error messages)
 - Graphics and images (alt text, decorative vs informative)
 - Input labels (visual labels, aria-label for context)
@@ -146,12 +155,14 @@ For detailed implementation patterns, see [wcag-patterns.md](references/wcag-pat
 ## Automated Validation
 
 **Storybook automatically runs Axe-core accessibility checks** on all stories in the Atomic package:
+
 - Configured in `packages/atomic/.storybook/preview.ts` with `a11y: {test: 'error'}`
 - CI fails if any WCAG violations detected
 - Axe-core checks 50+ rules including color contrast, ARIA attributes, keyboard accessibility, form labels, semantic HTML, and focus management
 - Creates comprehensive coverage when components have stories for all states
 
 **Best practice:** When creating or modifying components, ensure Storybook stories cover:
+
 - All interactive states (enabled, disabled, focused, error)
 - All visual variants (themes, sizes, layouts)
 - Keyboard navigation scenarios
@@ -160,6 +171,7 @@ For detailed implementation patterns, see [wcag-patterns.md](references/wcag-pat
 ## Validation Checklist
 
 Before completing:
+
 - [ ] Keyboard navigation works (no mouse required)
 - [ ] Focus visible on all interactive elements
 - [ ] Color contrast meets minimums

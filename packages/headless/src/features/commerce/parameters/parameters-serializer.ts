@@ -190,17 +190,17 @@ function deserialize<T extends Parameters>(fragment: string): T {
 
     if (keyHasObjectValue(key)) {
       const mergedValues = {...acc[key], ...(val as object)};
-      // biome-ignore lint/performance/noAccumulatingSpread: <>
+      // oxlint-disable-next-line oxc/no-accumulating-spread -- <>
       return {...acc, [key]: mergedValues};
     }
 
     if (key === 'sortCriteria') {
       const sortCriteria = deserializeSortCriteria(val as string);
-      // biome-ignore lint/performance/noAccumulatingSpread: <>
+      // oxlint-disable-next-line oxc/no-accumulating-spread -- <>
       return {...acc, [key]: sortCriteria};
     }
 
-    // biome-ignore lint/performance/noAccumulatingSpread: <>
+    // oxlint-disable-next-line oxc/no-accumulating-spread -- <>
     return {...acc, [key]: val};
   }, {}) as T;
 }

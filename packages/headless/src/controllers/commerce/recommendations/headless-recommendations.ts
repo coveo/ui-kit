@@ -47,8 +47,7 @@ import type {RecommendationsSummaryState} from './summary/headless-recommendatio
  * @category Recommendations
  */
 export interface Recommendations
-  extends Controller,
-    BaseSolutionTypeSubControllers<SummaryState> {
+  extends Controller, BaseSolutionTypeSubControllers<SummaryState> {
   /**
    * Fetches the recommendations.
    */

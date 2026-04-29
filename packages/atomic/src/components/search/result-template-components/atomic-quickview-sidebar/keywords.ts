@@ -13,7 +13,7 @@ import ArrowDown from '../../../../images/arrow-bottom-rounded.svg';
 import ArrowUp from '../../../../images/arrow-top-rounded.svg';
 import Remove from '../../../../images/remove.svg';
 
-export interface KeywordsProps {
+interface KeywordsProps {
   i18n: i18n;
   onHighlightKeywords: (highlight: HighlightKeywords) => void;
   highlightKeywords: HighlightKeywords;
@@ -68,12 +68,8 @@ export const renderKeywords: FunctionalComponent<KeywordsProps> = ({props}) => {
                     class="mr-2 h-5 w-5 flex-none"
                     style=${styleMap({backgroundColor: keyword.color})}
                   ></div>
-                  <div class="mr-2 grow whitespace-nowrap">
-                    ${keyword.text}
-                  </div>
-                  <div class="flex-none">
-                    (${formattedOccurrences})
-                  </div>
+                  <div class="mr-2 grow whitespace-nowrap">${keyword.text}</div>
+                  <div class="flex-none">(${formattedOccurrences})</div>
                 </div>
                 ${renderFieldsetGroup({props: {label: navigationLabel}})(html`
                   <div class="flex px-2">

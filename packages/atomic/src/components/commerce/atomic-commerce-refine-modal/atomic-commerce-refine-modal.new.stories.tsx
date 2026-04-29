@@ -6,6 +6,8 @@ import {expect} from 'storybook/test';
 import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
+import '@/src/components/commerce/atomic-commerce-refine-modal/atomic-commerce-refine-modal.js';
+import '@/src/components/commerce/atomic-commerce-refine-toggle/atomic-commerce-refine-toggle.js';
 
 const mockCommerceApi = new MockCommerceApi();
 
@@ -20,7 +22,8 @@ const meta: Meta = {
   title: 'Commerce/Refine Modal',
   id: 'atomic-commerce-refine-modal',
   render: (args) =>
-    html`${styleTemplate(args)}<atomic-commerce-refine-toggle></atomic-commerce-refine-toggle>`,
+    html`${styleTemplate(args)}<atomic-commerce-refine-toggle
+      ></atomic-commerce-refine-toggle>`,
   decorators: [decorator],
   parameters: {
     ...commonParameters,

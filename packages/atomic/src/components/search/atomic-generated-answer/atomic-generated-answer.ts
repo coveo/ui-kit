@@ -19,13 +19,13 @@ import {classMap} from 'lit/directives/class-map.js';
 import {when} from 'lit/directives/when.js';
 import {GeneratedAnswerController} from '@/src/components/common/generated-answer/generated-answer-controller';
 import '@/src/components/common/atomic-generated-answer-thread/atomic-generated-answer-thread.js';
+import '@/src/components/common/atomic-ask-follow-up-input/atomic-ask-follow-up-input.js';
 import {renderAnswerContent} from '@/src/components/common/generated-answer/render-answer-content';
 import {renderCardHeader} from '@/src/components/common/generated-answer/render-card-header';
 import {renderCitations} from '@/src/components/common/generated-answer/render-citations';
 import {renderCustomNoAnswerMessage} from '@/src/components/common/generated-answer/render-custom-no-answer-message';
 import {renderDisclaimer} from '@/src/components/common/generated-answer/render-disclaimer';
 import {renderFeedbackAndCopyButtons} from '@/src/components/common/generated-answer/render-feedback-and-copy-buttons';
-import {renderFollowUpInput} from '@/src/components/common/generated-answer/render-follow-up-input.js';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {arrayConverter} from '@/src/converters/array-converter';
@@ -131,6 +131,7 @@ export class AtomicGeneratedAnswer
 
   /**
    * Whether to allow the answer to be collapsed when the text is taller than the specified `--atomic-crga-collapsed-height` value (16rem by default).
+   * The `collapsible` property is disabled when follow-up questions are enabled. The threaded conversation layout manages its own content display.
    */
   @property({type: Boolean, converter: booleanConverter})
   collapsible = false;
@@ -146,9 +147,11 @@ export class AtomicGeneratedAnswer
    */
   @property({type: String, attribute: 'answer-configuration-id'})
   answerConfigurationId?: string;
+
   /**
-   * @internal
    * The unique identifier of the agent to use to generate answers.
+   * This is required to use an agent that can provide follow-up answers, but whether follow-ups are shown in the UI also depends on the feature being enabled in the application state.
+   * Setting both `agent-id` and `answer-configuration-id` is not supported. If both are provided, `agent-id` takes precedence and `answer-configuration-id` is ignored. Use `agent-id` for the conversational experience, or `answer-configuration-id` for single-turn answer generation via the Answer API. If neither is provided, the component falls back to the Search API for generated answers.
    */
   @property({type: String, attribute: 'agent-id'})
   agentId?: string;
@@ -305,9 +308,9 @@ export class AtomicGeneratedAnswer
 
   protected willUpdate(changedProperties: PropertyValueMap<this>) {
     if (changedProperties.has('tabManagerState' as keyof this)) {
-      const oldValue = changedProperties.get('tabManagerState' as keyof this) as
-        | TabManagerState
-        | undefined;
+      const oldValue = changedProperties.get(
+        'tabManagerState' as keyof this
+      ) as TabManagerState | undefined;
       if (oldValue && this.tabManagerState?.activeTab !== oldValue?.activeTab) {
         if (
           !shouldDisplayOnCurrentTab(
@@ -660,11 +663,11 @@ export class AtomicGeneratedAnswer
         .i18n=${this.bindings.i18n}
         .renderCitations=${this.renderCitationsList.bind(this)}
         .onClickLike=${(answerId: string) =>
-          this.generatedAnswer.like(answerId)}
+          this.generatedAnswerWithFollowUps?.like(answerId)}
         .onClickDislike=${(answerId: string) =>
-          this.generatedAnswer.dislike(answerId)}
+          this.generatedAnswerWithFollowUps?.dislike(answerId)}
         .onCopyToClipboard=${(answerId: string) =>
-          this.generatedAnswer.logCopyToClipboard(answerId)}
+          this.generatedAnswerWithFollowUps?.logCopyToClipboard(answerId)}
       ></atomic-generated-answer-thread>`;
     }
 
@@ -767,13 +770,12 @@ export class AtomicGeneratedAnswer
       return nothing;
     }
     return html` <div class="mb-2">
-      ${renderFollowUpInput({
-        props: {
-          i18n: this.bindings.i18n,
-          submitButtonDisabled: this.isAnswerGenerationOngoing,
-          askFollowUp: this.handleAskFollowUp.bind(this),
-        },
-      })}
+      <atomic-ask-follow-up-input
+        .i18n=${this.bindings.i18n}
+        .askFollowUp=${this.handleAskFollowUp.bind(this)}
+        .submitButtonDisabled=${this.isAnswerGenerationOngoing}
+      >
+      </atomic-ask-follow-up-input>
     </div>`;
   }
 }

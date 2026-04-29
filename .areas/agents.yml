@@ -5,10 +5,6 @@ file_patterns:
   - .github/prompts/**
   - .agents/**
   - AGENTS.md
-  - opencode.json
 
 reviewers:
   dxui: ~
-
-review_bypass:
-  integration/139346: exempt # Developer eXperience Bot. Important for releases

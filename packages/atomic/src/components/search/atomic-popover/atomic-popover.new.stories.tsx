@@ -3,6 +3,8 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-facet/atomic-facet.js';
+import '@/src/components/search/atomic-popover/atomic-popover.js';
 
 const searchApiHarness = new MockSearchApi();
 

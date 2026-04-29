@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicResultImageStories from './atomic-result-image.new.stories';
+import meta, { Default, WithAltTextField, WithFallback } from './atomic-result-image.new.stories';
 import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={ AtomicResultImageStories } />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={ AtomicResultImageStories }
+  stories={{ Default, WithAltTextField, WithFallback }}
   githubPath="search/atomic-result-image/atomic-result-image.ts"
   tagName="atomic-result-image"
   className="AtomicResultImage"

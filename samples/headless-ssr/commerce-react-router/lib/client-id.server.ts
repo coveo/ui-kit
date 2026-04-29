@@ -2,8 +2,9 @@ import {randomUUID} from 'node:crypto';
 import type {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {coveo_capture, coveo_visitorId} from '../app/cookies.server.js';
 
-interface CoveoAnalyticsContext
-  extends Required<Pick<NavigatorContext, 'clientId' | 'capture'>> {}
+interface CoveoAnalyticsContext extends Required<
+  Pick<NavigatorContext, 'clientId' | 'capture'>
+> {}
 
 type SetCookieHeader = {'Set-Cookie': string} | Record<string, never>;
 

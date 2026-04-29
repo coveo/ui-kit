@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicIpxModalStories from './atomic-ipx-modal.new.stories';
+import meta, { Default, WithoutFooter, Closed } from './atomic-ipx-modal.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicIpxModalStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicIpxModalStories}
+  stories={{ Default, WithoutFooter, Closed }}
   githubPath="ipx/atomic-ipx-modal/atomic-ipx-modal.ts"
   tagName="atomic-ipx-modal"
   className="AtomicIpxModal"

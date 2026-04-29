@@ -121,7 +121,7 @@ export default class QuanticResultLink extends NavigationMixin(
   };
 
   handleClick(event) {
-    if (this.isSalesforceLink) {
+    if (this.shouldNavigateToSalesforceRecord) {
       event.preventDefault();
       this.navigateToSalesforceRecord(event);
     }
@@ -175,21 +175,15 @@ export default class QuanticResultLink extends NavigationMixin(
       : 'clickUri';
   }
 
-  /**
-   * Returns the target for the link.
-   */
-  get targetTab() {
-    if (this.isSalesforceLink) {
-      return '_blank';
-    }
-    return this.target;
+  get shouldNavigateToSalesforceRecord() {
+    return this.isSalesforceLink && this.target === '_self';
   }
 
   /**
    * Returns the aria label value for the link.
    */
   get ariaLabelValue() {
-    if (this.isSalesforceLink) {
+    if (this.shouldNavigateToSalesforceRecord) {
       return this.labels.navigateToRecord;
     }
     return this.labels.opensInBrowserTab;

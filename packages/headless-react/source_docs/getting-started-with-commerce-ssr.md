@@ -3,6 +3,7 @@ title: Getting Started with Commerce SSR
 group: Getting Started
 slug: getting-started/commerce-ssr
 ---
+
 # Getting started with Commerce SSR
 
 This guide walks through setting up a server-side rendered commerce storefront using `@coveo/headless-react/ssr-commerce`.
@@ -15,10 +16,10 @@ This guide walks through setting up a server-side rendered commerce storefront u
 
 Before getting started, make sure that:
 
-* You have a working knowledge of [React](https://react.dev/) and a React-based framework such as [Next.js](https://nextjs.org/).
-* You're familiar with Coveo Headless engines and controllers.
+- You have a working knowledge of [React](https://react.dev/) and a React-based framework such as [Next.js](https://nextjs.org/).
+- You're familiar with Coveo Headless engines and controllers.
   You can refer to the [Headless usage documentation](https://docs.coveo.com/en/headless/latest/reference/documents/usage/index.html) for an introduction.
-* You have Node.js version 20 or later installed.
+- You have Node.js version 20 or later installed.
 
 ## Install
 
@@ -73,19 +74,16 @@ export const engineDefinition = defineCommerceEngine({
   },
 });
 
-export const {
-  useSummary,
-  useProductList,
-  useCart,
-} = engineDefinition.controllers;
+export const {useSummary, useProductList, useCart} =
+  engineDefinition.controllers;
 ```
 
 The commerce engine definition provides four solution-type definitions that you can use depending on the page type:
 
-* `engineDefinition.listingEngineDefinition` — For product listing pages.
-* `engineDefinition.searchEngineDefinition` — For search result pages.
-* `engineDefinition.standaloneEngineDefinition` — For standalone components (for example, a standalone search box).
-* `engineDefinition.recommendationEngineDefinition` — For recommendation widgets.
+- `engineDefinition.listingEngineDefinition` — For product listing pages.
+- `engineDefinition.searchEngineDefinition` — For search result pages.
+- `engineDefinition.standaloneEngineDefinition` — For standalone components (for example, a standalone search box).
+- `engineDefinition.recommendationEngineDefinition` — For recommendation widgets.
 
 ## Build components with hooks
 
@@ -99,23 +97,27 @@ The hook is named after the controller key, capitalized and prefixed with `use` 
 ```tsx
 'use client';
 
-import { useProductList, useCart } from '../lib/commerce-engine';
+import {useProductList, useCart} from '../lib/commerce-engine';
 
 export function ProductList() {
-  const { state, methods } = useProductList();
-  const { methods: cartMethods } = useCart();
+  const {state, methods} = useProductList();
+  const {methods: cartMethods} = useCart();
 
   return (
     <ul>
       {state.products.map((product) => (
         <li key={product.ec_product_id}>
           <span>{product.ec_name}</span>
-          <button onClick={() => cartMethods?.updateItemQuantity({
-            productId: product.ec_product_id!,
-            name: product.ec_name!,
-            price: product.ec_price!,
-            quantity: 1,
-          })}>
+          <button
+            onClick={() =>
+              cartMethods?.updateItemQuantity({
+                productId: product.ec_product_id!,
+                name: product.ec_name!,
+                price: product.ec_price!,
+                quantity: 1,
+              })
+            }
+          >
             Add to cart
           </button>
         </li>
@@ -135,8 +137,8 @@ export function ProductList() {
 The commerce engine definition provides `buildProviderWithDefinition`, a utility that creates a provider component handling the static-to-hydrated state transition for you:
 
 ```tsx
-import { buildProviderWithDefinition } from '@coveo/headless-react/ssr-commerce';
-import { engineDefinition } from '../lib/commerce-engine';
+import {buildProviderWithDefinition} from '@coveo/headless-react/ssr-commerce';
+import {engineDefinition} from '../lib/commerce-engine';
 
 export const ListingProvider = buildProviderWithDefinition(
   engineDefinition.listingEngineDefinition
@@ -146,11 +148,11 @@ export const ListingProvider = buildProviderWithDefinition(
 You can then use this provider in your server-rendered page to wrap your components:
 
 ```tsx
-import { engineDefinition } from '../lib/commerce-engine';
-import { ListingProvider } from '../components/ListingProvider';
-import { ProductList } from '../components/ProductList';
+import {engineDefinition} from '../lib/commerce-engine';
+import {ListingProvider} from '../components/ListingProvider';
+import {ProductList} from '../components/ProductList';
 
-const { listingEngineDefinition } = engineDefinition;
+const {listingEngineDefinition} = engineDefinition;
 
 export default async function ListingPage() {
   const staticState = await listingEngineDefinition.fetchStaticState();
@@ -165,10 +167,10 @@ export default async function ListingPage() {
 
 ## Samples
 
-* [Commerce SSR with Next.js](https://github.com/coveo/ui-kit/tree/main/samples/headless-ssr/commerce-nextjs) — Demonstrates `@coveo/headless-react/ssr-commerce` with Next.js.
-* [Commerce SSR with React Router](https://github.com/coveo/ui-kit/tree/main/samples/headless-ssr/commerce-react-router) — Demonstrates `@coveo/headless-react` with React Router 7.
+- [Commerce SSR with Next.js](https://github.com/coveo/ui-kit/tree/main/samples/headless-ssr/commerce-nextjs) — Demonstrates `@coveo/headless-react/ssr-commerce` with Next.js.
+- [Commerce SSR with React Router](https://github.com/coveo/ui-kit/tree/main/samples/headless-ssr/commerce-react-router) — Demonstrates `@coveo/headless-react` with React Router 7.
 
 ## What's next?
 
-* [Commerce SSR documentation](https://docs.coveo.com/en/obif0156/) — Advanced commerce SSR topics such as product listing pages, recommendations, and facets.
-* [Commerce controller hooks](../Commerce_Controller_hooks.html) — Detailed reference for all available commerce controller hooks.
+- [Commerce SSR documentation](https://docs.coveo.com/en/obif0156/) — Advanced commerce SSR topics such as product listing pages, recommendations, and facets.
+- [Commerce controller hooks](../Commerce_Controller_hooks.html) — Detailed reference for all available commerce controller hooks.

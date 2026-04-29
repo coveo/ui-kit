@@ -13,7 +13,7 @@ vi.mock('@coveo/headless', {spy: true});
 vi.mock('@/src/mixins/bindings-mixin', () => ({
   InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
     return class extends superClass {
-      // biome-ignore lint/complexity/noUselessConstructor: <mocking the mixin for testing>
+      // oxlint-disable-next-line no-useless-constructor -- <mocking the mixin for testing>
       constructor(...args: unknown[]) {
         super(...args);
       }
@@ -44,9 +44,10 @@ describe('atomic-results-per-page', () => {
 
     const {element} = await renderInAtomicSearchInterface<AtomicResultsPerPage>(
       {
-        template: html`<atomic-results-per-page choices-displayed=${ifDefined(props.choicesDisplayed)}
+        template: html`<atomic-results-per-page
+          choices-displayed=${ifDefined(props.choicesDisplayed)}
           initial-choice=${ifDefined(props.initialChoice)}
-      ></atomic-results-per-page>`,
+        ></atomic-results-per-page>`,
         selector: 'atomic-results-per-page',
         bindings: (bindings) => {
           bindings.engine = mockedEngine;
@@ -174,7 +175,7 @@ describe('atomic-results-per-page', () => {
       const {element} = await renderResultsPerPage();
 
       // Update the bound state to simulate error condition
-      // biome-ignore lint/suspicious/noExplicitAny: test mock assignment
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- test mock assignment
       (element as any).searchStatusState = {
         hasError: true,
         hasResults: false,
@@ -196,7 +197,7 @@ describe('atomic-results-per-page', () => {
       const {element} = await renderResultsPerPage();
 
       // Update the bound state to simulate no results condition
-      // biome-ignore lint/suspicious/noExplicitAny: test mock assignment
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- test mock assignment
       (element as any).searchStatusState = {
         hasError: false,
         hasResults: false,

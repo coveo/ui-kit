@@ -1,19 +1,51 @@
-## <small>0.0.5 (2026-03-25)</small>
+## 0.0.14
 
-* ci: migrate npm publishing to OIDC trusted publishers (#7198) ([c97eff5](https://github.com/coveo/ui-kit/commits/c97eff5)), closes [#7198](https://github.com/coveo/ui-kit/issues/7198)
+### Patch Changes
 
+- Updated dependencies [[`2453994`](https://github.com/coveo/ui-kit/commit/245399483d93d17cfc0d01f2f7b9eebcf2859089), [`861d8ca`](https://github.com/coveo/ui-kit/commit/861d8cae4cb73fee10c9fd753e5874baebf539bf)]:
+  - @coveo/headless@3.50.0
 
+## 0.0.13
 
-## <small>0.0.2 (2026-03-04)</small>
+### Patch Changes
 
-* chore: remove more stencil files (#7183) ([c5f0e5c](https://github.com/coveo/ui-kit/commits/c5f0e5c)), closes [#7183](https://github.com/coveo/ui-kit/issues/7183)
-* chore(agents): add managing-atomic-components Agent Skill (#7190) ([30362a6](https://github.com/coveo/ui-kit/commits/30362a6)), closes [#7190](https://github.com/coveo/ui-kit/issues/7190)
+- Updated dependencies [[`f76c16f`](https://github.com/coveo/ui-kit/commit/f76c16f6f3dcde4e83563cebaf80c067901e5b34), [`bd26438`](https://github.com/coveo/ui-kit/commit/bd264389ad421e622ab3a4ac3d324bd8e1fce60a), [`2dd45bc`](https://github.com/coveo/ui-kit/commit/2dd45bcdabd1ec7683cc1f341a9ba4747671e222), [`6db3fdb`](https://github.com/coveo/ui-kit/commit/6db3fdbc9e669dd4f3d4a0f900401700d86f7505), [`39c2c10`](https://github.com/coveo/ui-kit/commit/39c2c102e585df4861a65d6b6350c5ff35774e35)]:
+  - @coveo/headless@3.49.4
 
+## 0.0.12
 
+### Patch Changes
 
-## <small>0.0.1 (2026-02-18)</small>
+- Updated dependencies [[`f1924b8`](https://github.com/coveo/ui-kit/commit/f1924b800f40b0ed2f857ed18323ae85585854d3)]:
+  - @coveo/headless@3.49.3
 
-* chore: add release scripts to atomic-legacy (#7148) ([521f125](https://github.com/coveo/ui-kit/commits/521f125)), closes [#7148](https://github.com/coveo/ui-kit/issues/7148)
+## 0.0.11
 
+### Patch Changes
 
+- Updated dependencies [[`7b7de89`](https://github.com/coveo/ui-kit/commit/7b7de897f4c06e35e9c87189c2bc56cc078e6291)]:
+  - @coveo/headless@3.49.2
 
+## 0.0.10
+
+### Patch Changes
+
+- Updated dependencies [[`5148ad6`](https://github.com/coveo/ui-kit/commit/5148ad665cdaf50a8118a45a03a48d4dbd8b456a)]:
+  - @coveo/headless@3.49.1
+
+## 0.0.9
+
+- chore: replace biome with oxlint / oxfmt (#7328) ([3b8d688](https://github.com/coveo/ui-kit/commits/3b8d688)), closes [#7328](https://github.com/coveo/ui-kit/issues/7328)
+
+## 0.0.5
+
+- ci: migrate npm publishing to OIDC trusted publishers (#7198) ([c97eff5](https://github.com/coveo/ui-kit/commits/c97eff5)), closes [#7198](https://github.com/coveo/ui-kit/issues/7198)
+
+## 0.0.2
+
+- chore: remove more stencil files (#7183) ([c5f0e5c](https://github.com/coveo/ui-kit/commits/c5f0e5c)), closes [#7183](https://github.com/coveo/ui-kit/issues/7183)
+- chore(agents): add managing-atomic-components Agent Skill (#7190) ([30362a6](https://github.com/coveo/ui-kit/commits/30362a6)), closes [#7190](https://github.com/coveo/ui-kit/issues/7190)
+
+## 0.0.1
+
+- chore: add release scripts to atomic-legacy (#7148) ([521f125](https://github.com/coveo/ui-kit/commits/521f125)), closes [#7148](https://github.com/coveo/ui-kit/issues/7148)

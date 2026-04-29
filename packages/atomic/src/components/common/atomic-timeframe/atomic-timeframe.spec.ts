@@ -118,34 +118,33 @@ describe('atomic-timeframe', () => {
       validValue: 1,
       invalidValue: 0,
     },
-  ])('should log validation warning when #$prop is updated to invalid value', async ({
-    prop,
-    validValue,
-    invalidValue,
-  }) => {
-    const consoleWarnSpy = vi
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
+  ])(
+    'should log validation warning when #$prop is updated to invalid value',
+    async ({prop, validValue, invalidValue}) => {
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
 
-    const {timeframe} = await renderTimeframe({[prop]: validValue});
+      const {timeframe} = await renderTimeframe({[prop]: validValue});
 
-    // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
-    (timeframe as any)[prop] = invalidValue;
-    await timeframe.updateComplete;
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
+      (timeframe as any)[prop] = invalidValue;
+      await timeframe.updateComplete;
 
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining(
-        'Prop validation failed for component atomic-timeframe'
-      ),
-      timeframe
-    );
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining(prop),
-      timeframe
-    );
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining(
+          'Prop validation failed for component atomic-timeframe'
+        ),
+        timeframe
+      );
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining(prop),
+        timeframe
+      );
 
-    consoleWarnSpy.mockRestore();
-  });
+      consoleWarnSpy.mockRestore();
+    }
+  );
 
   // TODO V4: KIT-5197 - Remove skip
   it.skip.each<{
@@ -173,20 +172,19 @@ describe('atomic-timeframe', () => {
       validValue: 1,
       invalidValue: -1,
     },
-  ])('should set error when valid #$prop is updated to an invalid value', async ({
-    prop,
-    validValue,
-    invalidValue,
-  }) => {
-    const {timeframe} = await renderTimeframe({[prop]: validValue});
+  ])(
+    'should set error when valid #$prop is updated to an invalid value',
+    async ({prop, validValue, invalidValue}) => {
+      const {timeframe} = await renderTimeframe({[prop]: validValue});
 
-    expect(timeframe.error).toBeUndefined();
+      expect(timeframe.error).toBeUndefined();
 
-    // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
-    (timeframe as any)[prop] = invalidValue;
-    await timeframe.updateComplete;
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
+      (timeframe as any)[prop] = invalidValue;
+      await timeframe.updateComplete;
 
-    expect(timeframe.error).toBeDefined();
-    expect(timeframe.error.message).toMatch(new RegExp(prop, 'i'));
-  });
+      expect(timeframe.error).toBeDefined();
+      expect(timeframe.error.message).toMatch(new RegExp(prop, 'i'));
+    }
+  );
 });

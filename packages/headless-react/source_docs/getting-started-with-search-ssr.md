@@ -3,6 +3,7 @@ title: Getting Started with Search SSR
 group: Getting Started
 slug: getting-started/search-ssr
 ---
+
 # Getting started with Search SSR
 
 This guide walks through setting up a server-side rendered search interface using `@coveo/headless-react/ssr`.
@@ -11,10 +12,10 @@ This guide walks through setting up a server-side rendered search interface usin
 
 Before getting started, make sure that:
 
-* You have a working knowledge of [React](https://react.dev/) and a React-based framework such as [Next.js](https://nextjs.org/).
-* You're familiar with Coveo Headless engines and controllers.
+- You have a working knowledge of [React](https://react.dev/) and a React-based framework such as [Next.js](https://nextjs.org/).
+- You're familiar with Coveo Headless engines and controllers.
   You can refer to the [Headless usage documentation](https://docs.coveo.com/en/headless/latest/reference/documents/usage/index.html) for an introduction.
-* You have Node.js version 20 or later installed.
+- You have Node.js version 20 or later installed.
 
 ## Install
 
@@ -61,20 +62,17 @@ import {
 export const engineDefinition = defineSearchEngine({
   configuration: {
     ...getSampleSearchEngineConfiguration(),
-    analytics: { enabled: false },
+    analytics: {enabled: false},
   },
   controllers: {
     searchBox: defineSearchBox(),
     resultList: defineResultList(),
-    authorFacet: defineFacet({ options: { field: 'author' } }),
+    authorFacet: defineFacet({options: {field: 'author'}}),
   },
 });
 
-export const {
-  useSearchBox,
-  useResultList,
-  useAuthorFacet,
-} = engineDefinition.controllers;
+export const {useSearchBox, useResultList, useAuthorFacet} =
+  engineDefinition.controllers;
 ```
 
 For production use, replace the sample configuration with your own Coveo organization ID and access token:
@@ -103,10 +101,10 @@ The hook is named after the controller key, capitalized and prefixed with `use` 
 ```tsx
 'use client';
 
-import { useSearchBox, useResultList } from '../lib/engine';
+import {useSearchBox, useResultList} from '../lib/engine';
 
 export function SearchBox() {
-  const { state, methods } = useSearchBox();
+  const {state, methods} = useSearchBox();
 
   return (
     <input
@@ -118,7 +116,7 @@ export function SearchBox() {
 }
 
 export function ResultList() {
-  const { state } = useResultList();
+  const {state} = useResultList();
 
   return (
     <ul>
@@ -145,14 +143,11 @@ The engine definition provides `StaticStateProvider` and `HydratedStateProvider`
 ```tsx
 'use client';
 
-import { useEffect, useState, PropsWithChildren } from 'react';
-import { engineDefinition } from '../lib/engine';
-import {
-  InferStaticState,
-  InferHydratedState,
-} from '@coveo/headless-react/ssr';
+import {useEffect, useState, PropsWithChildren} from 'react';
+import {engineDefinition} from '../lib/engine';
+import {InferStaticState, InferHydratedState} from '@coveo/headless-react/ssr';
 
-const { hydrateStaticState, StaticStateProvider, HydratedStateProvider } =
+const {hydrateStaticState, StaticStateProvider, HydratedStateProvider} =
   engineDefinition;
 
 type StaticState = InferStaticState<typeof engineDefinition>;
@@ -161,7 +156,7 @@ type HydratedState = InferHydratedState<typeof engineDefinition>;
 export function SearchProvider({
   staticState,
   children,
-}: PropsWithChildren<{ staticState: StaticState }>) {
+}: PropsWithChildren<{staticState: StaticState}>) {
   const [hydratedState, setHydratedState] = useState<HydratedState | null>(
     null
   );
@@ -195,11 +190,11 @@ export function SearchProvider({
 Then, in your server-rendered page, fetch the static state and pass it to the provider:
 
 ```tsx
-import { engineDefinition } from '../lib/engine';
-import { SearchProvider } from '../components/SearchProvider';
-import { SearchBox, ResultList } from '../components/SearchComponents';
+import {engineDefinition} from '../lib/engine';
+import {SearchProvider} from '../components/SearchProvider';
+import {SearchBox, ResultList} from '../components/SearchComponents';
 
-const { fetchStaticState } = engineDefinition;
+const {fetchStaticState} = engineDefinition;
 
 export default async function SearchPage() {
   const staticState = await fetchStaticState();
@@ -215,10 +210,10 @@ export default async function SearchPage() {
 
 ## Samples
 
-* [Search SSR with Next.js](https://github.com/coveo/ui-kit/tree/main/samples/headless-ssr/search-nextjs) — Demonstrates `@coveo/headless-react/ssr` with the Next.js App Router.
+- [Search SSR with Next.js](https://github.com/coveo/ui-kit/tree/main/samples/headless-ssr/search-nextjs) — Demonstrates `@coveo/headless-react/ssr` with the Next.js App Router.
 
 ## What's next?
 
-* [Search controller hooks](../Search_Controller_hooks.html) — Detailed reference for all available search controller hooks.
-* [Extend engine definitions](https://docs.coveo.com/en/headless/latest/reference/documents/usage/server-side-rendering/extend-engine-definitions.html) — Dispatch actions or interact with the engine on the server side.
-* [Implement search parameter support](https://docs.coveo.com/en/headless/latest/reference/documents/usage/server-side-rendering/implement-search-parameter-support.html) — Synchronize search parameters with the URL.
+- [Search controller hooks](../Search_Controller_hooks.html) — Detailed reference for all available search controller hooks.
+- [Extend engine definitions](https://docs.coveo.com/en/headless/latest/reference/documents/usage/server-side-rendering/extend-engine-definitions.html) — Dispatch actions or interact with the engine on the server side.
+- [Implement search parameter support](https://docs.coveo.com/en/headless/latest/reference/documents/usage/server-side-rendering/implement-search-parameter-support.html) — Synchronize search parameters with the URL.

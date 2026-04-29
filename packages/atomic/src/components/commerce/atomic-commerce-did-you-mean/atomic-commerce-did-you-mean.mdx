@@ -1,12 +1,12 @@
 import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/addon-docs/blocks';
-import * as AtomicCommerceDidYouMeanStories from './atomic-commerce-did-you-mean.new.stories';
+import meta, { Default } from './atomic-commerce-did-you-mean.new.stories';
 import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicCommerceDidYouMeanStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicCommerceDidYouMeanStories}
+  stories={{ Default }}
   githubPath="commerce/atomic-commerce-did-you-mean/atomic-commerce-did-you-mean.ts"
   tagName="atomic-commerce-did-you-mean"
   className="AtomicCommerceDidYouMean"

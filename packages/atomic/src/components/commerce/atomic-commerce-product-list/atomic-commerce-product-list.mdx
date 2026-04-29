@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicCommerceProductListStories from './atomic-commerce-product-list.new.stories';
+import meta, { Default, GridDisplayWithTemplate, GridDisplayBeforeQuery, ListDisplay, ListDisplayWithTemplate, ListDisplayBeforeQuery, TableDisplay, TableDisplayBeforeQuery, NoProducts } from './atomic-commerce-product-list.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicCommerceProductListStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicCommerceProductListStories}
+  stories={{ Default, GridDisplayWithTemplate, GridDisplayBeforeQuery, ListDisplay, ListDisplayWithTemplate, ListDisplayBeforeQuery, TableDisplay, TableDisplayBeforeQuery, NoProducts }}
   githubPath="commerce/atomic-commerce-product-list/atomic-commerce-product-list.ts"
   tagName="atomic-commerce-product-list"
   className="AtomicCommerceProductList"

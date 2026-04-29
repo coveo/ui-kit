@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 import {join} from 'node:path';
-import buildConfig from '../../packages/headless/build.config.json' with {
-  type: 'json',
-};
+import buildConfig from '../../packages/headless/build.config.json' with {type: 'json'};
 import {listExportsFromIndex} from './list-imports.mjs';
 
 function getHeadlessPackageName(useCase) {

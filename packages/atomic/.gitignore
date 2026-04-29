@@ -43,6 +43,9 @@ src/utils/custom-element-tags.ts
 dist-storybook/
 dist-chromatic/
 
+.storybook/static/
+storybook-static/
+
 /dev/bueno/
 /dev/headless/
 

@@ -3,20 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "description": "React example for Coveo Headless Relevance Generative Answering (RGA)",
+  "keywords": [
+    "coveo",
+    "generative-answering",
+    "headless",
+    "react",
+    "rga",
+    "typescript"
+  ],
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
-  "keywords": [
-    "coveo",
-    "headless",
-    "rga",
-    "generative-answering",
-    "react",
-    "typescript"
-  ],
   "dependencies": {
     "@coveo/headless": "workspace:*",
     "react": "catalog:",

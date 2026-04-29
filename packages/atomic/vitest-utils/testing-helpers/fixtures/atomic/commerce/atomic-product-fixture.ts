@@ -113,7 +113,10 @@ export async function renderInAtomicProduct<T extends LitElement>({
   atomicInterface: FixtureAtomicCommerceInterface;
 }> {
   const atomicProduct = await fixture<FixtureAtomicProduct>(
-    html`<atomic-product .product=${product} .interactiveProduct=${interactiveProduct}></atomic-product>`
+    html`<atomic-product
+      .product=${product}
+      .interactiveProduct=${interactiveProduct}
+    ></atomic-product>`
   );
 
   atomicProduct.setRenderTemplate(template);

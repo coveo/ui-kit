@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicInsightUserActionsToggleStories from './atomic-insight-user-actions-toggle.new.stories';
+import meta, { Default } from './atomic-insight-user-actions-toggle.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={ AtomicInsightUserActionsToggleStories } />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={ AtomicInsightUserActionsToggleStories }
+  stories={{ Default }}
   githubPath="insight/atomic-insight-user-actions-toggle/atomic-insight-user-actions-toggle.ts"
   tagName="atomic-insight-user-actions-toggle"
   className="AtomicInsightUserActionsToggle"

@@ -128,9 +128,9 @@ describe('atomic-popover', () => {
       const element = (
         await renderInAtomicSearchInterface<AtomicPopover>({
           template: html`<atomic-popover>
-              <div>Child 1</div>
-              <div>Child 2</div>
-            </atomic-popover>`,
+            <div>Child 1</div>
+            <div>Child 2</div>
+          </atomic-popover>`,
           selector: 'atomic-popover',
           bindings: (bindings) => {
             bindings.engine = mockEngine;
@@ -307,8 +307,8 @@ describe('atomic-popover', () => {
       const element = (
         await renderInAtomicSearchInterface<AtomicPopover>({
           template: html`<atomic-popover>
-          <div>Test Facet</div>
-        </atomic-popover>`,
+            <div>Test Facet</div>
+          </atomic-popover>`,
           selector: 'atomic-popover',
           bindings: (bindings) => {
             bindings.engine = mockEngine;

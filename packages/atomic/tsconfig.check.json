@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": ["src"],
+  "exclude": [
+    "node_modules",
+    "src/external-builds",
+    "src/**/*.spec.ts",
+    "src/**/*.stories.ts",
+    "src/**/*.stories.tsx",
+    "src/**/e2e/**",
+    "src/index.ts",
+    "src/cdn.ts",
+    "src/loader.ts",
+    "src/autoloader/**",
+    "src/components/**/index.ts",
+    "src/components/**/lazy-index.ts",
+    "src/utils/custom-element-tags.ts"
+  ]
+}

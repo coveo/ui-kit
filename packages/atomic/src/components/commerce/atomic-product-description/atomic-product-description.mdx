@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicProductDescriptionStories from './atomic-product-description.new.stories';
+import meta, { Default, Collapsible, UsingECDescription } from './atomic-product-description.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicProductDescriptionStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicProductDescriptionStories}
+  stories={{ Default, Collapsible, UsingECDescription }}
   githubPath="commerce/atomic-product-description/atomic-product-description.ts"
   tagName="atomic-product-description"
   className="AtomicProductDescription"

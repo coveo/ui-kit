@@ -52,7 +52,9 @@ export const renderUserAction: FunctionalComponent<UserActionProps> = ({
   const renderActionTitle = () => {
     switch (props.action.actionType) {
       case 'TICKET_CREATION':
-        return html`<div class="ticket-creation-action__text text-xs font-semibold">
+        return html`<div
+          class="ticket-creation-action__text text-xs font-semibold"
+        >
           ${props.bindings.i18n.t('ticket-created')}
         </div>`;
       case 'CUSTOM':

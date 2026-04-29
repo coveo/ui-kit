@@ -75,16 +75,17 @@ export function isRecord(value: unknown): value is ComplexRecord {
   return value !== undefined && typeof value === 'object';
 }
 
-interface ArrayValueConfig<T extends PrimitivesValues = PrimitivesValues>
-  extends ValueConfig<T[]> {
+interface ArrayValueConfig<
+  T extends PrimitivesValues = PrimitivesValues,
+> extends ValueConfig<T[]> {
   min?: number;
   max?: number;
   each?: BooleanValue | NumberValue | StringValue | RecordValue;
 }
 
-export class ArrayValue<T extends PrimitivesValues = PrimitivesValues>
-  implements SchemaValue<T[]>
-{
+export class ArrayValue<
+  T extends PrimitivesValues = PrimitivesValues,
+> implements SchemaValue<T[]> {
   private value: Value<T[]>;
   constructor(private config: ArrayValueConfig<T> = {}) {
     this.value = new Value(this.config);

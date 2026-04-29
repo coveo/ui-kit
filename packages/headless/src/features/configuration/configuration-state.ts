@@ -36,8 +36,7 @@ export interface CoreConfigurationState<
   organizationId: string;
 }
 
-export interface ConfigurationState
-  extends CoreConfigurationState<AnalyticsState> {
+export interface ConfigurationState extends CoreConfigurationState<AnalyticsState> {
   /**
    * The global headless engine Search API configuration.
    */

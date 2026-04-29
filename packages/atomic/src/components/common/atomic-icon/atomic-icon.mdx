@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicIconStories from './atomic-icon.new.stories';
+import meta, { Default, AllIcons } from './atomic-icon.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicIconStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicIconStories}
+  stories={{ Default, AllIcons }}
   githubPath="common/atomic-icon/atomic-icon.ts"
   tagName="atomic-icon"
   className="AtomicIcon"

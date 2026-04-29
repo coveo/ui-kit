@@ -242,7 +242,7 @@ export default function CategoryFacet({
                 checked={false}
                 onChange={() => toggleSelectFacetValue(root)}
               ></input>
-              {/** biome-ignore lint/a11y/noLabelWithoutControl: <> */}
+              {/* oxlint-disable-next-line jsx-a11y/label-has-associated-control -- <> */}
               <label className="FacetValueName">{root.value}</label>
               <span className="FacetValueNumberOfResults">
                 {' '}

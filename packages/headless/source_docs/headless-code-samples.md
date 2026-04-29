@@ -1,7 +1,9 @@
 ---
 title: Code samples
+group: Guides
 slug: code-samples
 ---
+
 # Code samples
 
 The following interactive code sample uses Coveo Headless alongside the [Material-UI React framework](https://material-ui.com/) to create a simple search page.
@@ -17,5 +19,5 @@ You can find controller-specific implementation examples in the controller [refe
 
 Finally, you can find more code samples in the following:
 
-* [Headless React](https://github.com/coveo/ui-kit/tree/main/samples/headless/search-react)
-* [Headless Commerce React](https://github.com/coveo/ui-kit/tree/main/samples/headless/commerce-react)
+- [Headless React](https://github.com/coveo/ui-kit/tree/main/samples/headless/search-react)
+- [Headless Commerce React](https://github.com/coveo/ui-kit/tree/main/samples/headless/commerce-react)

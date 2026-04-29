@@ -75,7 +75,7 @@ describe('atomic-result-date', () => {
           bindings.interfaceElement = {
             ...bindings.interfaceElement,
             language: 'en',
-            // biome-ignore lint/suspicious/noExplicitAny: mock interface element
+            // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- mock interface element
           } as any;
           return bindings;
         },
@@ -168,16 +168,17 @@ describe('atomic-result-date', () => {
   it.each([
     {result: null, description: '#result is null'},
     {result: undefined, description: '#result is undefined'},
-  ])('should render error component when result is not available and $description', async ({
-    result,
-  }) => {
-    const element = await renderComponent({
-      result: result as unknown as Result,
-    });
+  ])(
+    'should render error component when result is not available and $description',
+    async ({result}) => {
+      const element = await renderComponent({
+        result: result as unknown as Result,
+      });
 
-    // Since there's no result context, the error component should be rendered
-    expect(element).toBeDefined();
-  });
+      // Since there's no result context, the error component should be rendered
+      expect(element).toBeDefined();
+    }
+  );
 
   describe('when #relativeTime is true', () => {
     it('should render relative time for yesterday date', async () => {

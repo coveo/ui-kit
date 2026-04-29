@@ -18,8 +18,7 @@ export type {
   Suggestion,
 };
 
-export interface SearchBoxDefinition
-  extends SearchOnlyControllerDefinitionWithoutProps<SearchBox> {}
+export interface SearchBoxDefinition extends SearchOnlyControllerDefinitionWithoutProps<SearchBox> {}
 
 /**
  * Defines a `SearchBox` controller instance.

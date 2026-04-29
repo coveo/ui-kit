@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: unit test */
+/* oxlint-disable @typescript-eslint/no-explicit-any -- unit test */
 
 import type {AgentSubscriber} from '@ag-ui/client';
 import type {Dispatch} from '@reduxjs/toolkit';
@@ -146,6 +146,31 @@ describe('createFollowUpStrategy', () => {
         answerId: runId,
         message: 'Failure',
         code: GeneratedAnswerSseErrorCode.SseModelsNotAvailable,
+      })
+    );
+  });
+
+  it('records turn limit failures using the input run id when no run was started', () => {
+    strategy = createFollowUpStrategy(dispatch);
+
+    strategy.onRunErrorEvent!({
+      input: {runId: 'run-456'},
+      event: {
+        message: 'Failure',
+        code: 'KNOWLEDGE:SSE_TURN_LIMIT_REACHED',
+      },
+    } as any);
+
+    expect(dispatch).toHaveBeenNthCalledWith(
+      1,
+      setActiveFollowUpAnswerId('run-456')
+    );
+    expect(dispatch).toHaveBeenNthCalledWith(
+      2,
+      followUpFailed({
+        answerId: 'run-456',
+        message: 'Failure',
+        code: GeneratedAnswerSseErrorCode.SseTurnLimitReached,
       })
     );
   });

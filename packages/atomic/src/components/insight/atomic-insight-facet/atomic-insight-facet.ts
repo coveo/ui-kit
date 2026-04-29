@@ -258,15 +258,13 @@ export class AtomicInsightFacet
   render() {
     return html`${when(this.shouldRenderFacet(), () =>
       this.searchStatusState.firstSearchExecuted
-        ? renderFacetContainer()(
-            html`
-                ${this.renderFacetHeader()} ${this.renderBody()}
-              `
-          )
+        ? renderFacetContainer()(html`
+            ${this.renderFacetHeader()} ${this.renderBody()}
+          `)
         : html`<atomic-facet-placeholder
-              value-count="${this.numberOfValues}"
-              ?is-collapsed="${this.isCollapsed}"
-            ></atomic-facet-placeholder>`
+            value-count="${this.numberOfValues}"
+            ?is-collapsed="${this.isCollapsed}"
+          ></atomic-facet-placeholder>`
     )}`;
   }
 
