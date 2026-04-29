@@ -241,11 +241,6 @@ h6 { font-size: 1rem; }
 .header-nav-dropdown .header-nav-dropdown-item {
   white-space: nowrap;
   text-decoration: none;
-  --bs-dropdown-link-color: #282829;
-  --bs-dropdown-link-hover-color: #1372ec;
-  --bs-dropdown-link-hover-bg: transparent;
-  --bs-dropdown-link-active-color: #1372ec;
-  --bs-dropdown-link-active-bg: transparent;
 }
 
 .header-nav-dropdown .header-nav-dropdown-item:hover {

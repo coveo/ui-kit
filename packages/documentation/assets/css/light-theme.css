@@ -1770,6 +1770,9 @@ summary:hover {
   background: #fff;
   border: 1px solid #e5e8e8;
   box-shadow: rgba(229, 232, 232, 0.75) 0px 2px 16px 0px;
+}
+
+.header-nav-dropdown .header-nav-dropdown-item {
   --bs-dropdown-link-color: #282829;
   --bs-dropdown-link-hover-color: #1372ec;
   --bs-dropdown-link-hover-bg: transparent;
