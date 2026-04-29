@@ -140,7 +140,12 @@ export class GeneratedAnswerController implements ReactiveController {
    */
   public get hasNoAnswerGenerated(): boolean {
     const {answer, citations} = this.options.getGeneratedAnswerState() ?? {};
-    return !answer?.trim() && !citations?.length && !this.hasRetryableError;
+
+    const isAnswerEmpty = !answer?.trim();
+    const hasNoCitations = !citations?.length;
+    const hasNoRetryableError = !this.hasRetryableError;
+
+    return isAnswerEmpty && hasNoCitations && hasNoRetryableError;
   }
 
   /**

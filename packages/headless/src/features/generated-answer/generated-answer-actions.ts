@@ -299,8 +299,9 @@ export const streamAnswer = createAsyncThunk<
         ).answerGenerated;
         const answerId = getState().generatedAnswer.answerId;
         const cannotAnswer = queryExecuted.length !== 0 && !isAnswerGenerated;
+        const trimmedAnswer = getState().generatedAnswer.answer?.trim();
         const answerTextIsEmpty = isAnswerGenerated
-          ? !getState().generatedAnswer.answer?.trim()
+          ? trimmedAnswer === undefined || trimmedAnswer.length === 0
           : undefined;
         dispatch(setCannotAnswer(cannotAnswer));
         dispatch(setIsStreaming(false));

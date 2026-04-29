@@ -112,7 +112,7 @@ describe('#streamAnswerApi', () => {
       });
     });
 
-    it('should ignore blank-only prefixes in the cached answer draft', () => {
+    it('should not initialize the cached answer with blank-only first chunk', () => {
       const dispatch = vi.fn();
       const event = buildSuccessEvent({
         payloadType: 'genqa.messageType',
@@ -154,12 +154,12 @@ describe('#streamAnswerApi', () => {
       });
     });
 
-    it('should ignore non-string message payloads', () => {
+    it('should ignore message payloads when textDelta is not a string', () => {
       const dispatch = vi.fn();
       const event = buildSuccessEvent({
         payloadType: 'genqa.messageType',
         payload: {
-          textDelta: {text: 'some answer'},
+          textDelta: {not: 'a simple string'},
         },
       });
       const draft = buildDefaultDraft({answer: 'existing answer'});
