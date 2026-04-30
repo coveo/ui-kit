@@ -225,8 +225,7 @@ jobs:
           GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
   commit-artifact-upload:
     name: Upload commit artifacts to S3
-    needs: build-cdn
-    environment: 'Prerelease (CDN)'
+    needs: [build-cdn, release]
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -242,7 +241,7 @@ jobs:
         run: node ./scripts/deploy/trigger-commit-upload.mjs
         env:
           GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
-          CHANNELS: canary
+          CHANNELS: ${{ needs.release.outputs.published == 'true' && 'canary,rc' || 'canary' }}
   chromatic-update-main:
     name: 'Update Chromatic baseline on main'
     runs-on: ubuntu-latest
