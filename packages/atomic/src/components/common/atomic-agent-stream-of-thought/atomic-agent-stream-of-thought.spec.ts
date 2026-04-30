@@ -228,7 +228,7 @@ describe('atomic-agent-stream-of-thought', () => {
       });
 
       expect(steps[0].textContent).toContain(
-        i18n.t('agent-step-analyzing-active')
+        i18n.t('agent-step-analyzing-question-active')
       );
     });
 
@@ -246,7 +246,7 @@ describe('atomic-agent-stream-of-thought', () => {
       );
     });
 
-    it('should display the correct label for thinking after search', async () => {
+    it('should display "Analyzing results…" for thinking after search', async () => {
       const {steps} = await renderComponent({
         agentSteps: [
           buildStep({name: 'thinking', status: 'completed'}),
@@ -257,7 +257,27 @@ describe('atomic-agent-stream-of-thought', () => {
       });
 
       expect(steps[2].textContent).toContain(
-        i18n.t('agent-step-processing-active')
+        i18n.t('agent-step-analyzing-results-active')
+      );
+    });
+
+    it('should display "Analyzing results…" for thinking after each search in iterative cycles', async () => {
+      const {steps} = await renderComponent({
+        agentSteps: [
+          buildStep({name: 'thinking', status: 'completed'}),
+          buildStep({name: 'searching', status: 'completed'}),
+          buildStep({name: 'thinking', status: 'completed'}),
+          buildStep({name: 'searching', status: 'completed'}),
+          buildStep({name: 'thinking', status: 'active'}),
+        ],
+        isStreaming: true,
+      });
+
+      expect(steps[2].textContent).toContain(
+        i18n.t('agent-step-analyzing-results-completed')
+      );
+      expect(steps[4].textContent).toContain(
+        i18n.t('agent-step-analyzing-results-active')
       );
     });
 
@@ -285,7 +305,7 @@ describe('atomic-agent-stream-of-thought', () => {
       });
 
       expect(steps[0].textContent).toContain(
-        i18n.t('agent-step-analyzing-completed')
+        i18n.t('agent-step-analyzing-question-completed')
       );
     });
   });
