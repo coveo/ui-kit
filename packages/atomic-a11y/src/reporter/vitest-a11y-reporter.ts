@@ -116,22 +116,20 @@ export class VitestA11yReporter implements Reporter {
       }
 
       const component = this.getOrCreateComponent(componentName);
-
       if (component.storyIds.has(storyId)) {
         return;
       }
       component.storyIds.add(storyId);
 
-      const buckets = [
-        'violations',
-        'passes',
-        'incomplete',
-        'inapplicable',
-      ] as const;
-      for (const bucket of buckets) {
-        component.automated[bucket] += axeResults[bucket].length;
-        this.collectCriteria(component, axeResults[bucket]);
-      }
+      component.automated.violations += axeResults.violations.length;
+      component.automated.passes += axeResults.passes.length;
+      component.automated.incomplete += axeResults.incomplete.length;
+      component.automated.inapplicable += axeResults.inapplicable.length;
+
+      this.collectCriteria(component, axeResults.violations);
+      this.collectCriteria(component, axeResults.passes);
+      this.collectCriteria(component, axeResults.incomplete);
+      this.collectCriteria(component, axeResults.inapplicable);
 
       for (const incompleteRule of axeResults.incomplete) {
         component.automated.incompleteDetails.push({
@@ -215,11 +213,13 @@ export class VitestA11yReporter implements Reporter {
 
   private static getAxeResults(meta: StorybookTaskMeta): AxeResults | null {
     const reports = meta.reports ?? [];
-    const a11yReport = reports.find((report) => report.type === 'a11y');
+    for (const report of reports) {
+      if (report.type === 'a11y' && isAxeResults(report.result)) {
+        return report.result;
+      }
+    }
 
-    return a11yReport && isAxeResults(a11yReport.result)
-      ? a11yReport.result
-      : null;
+    return null;
   }
 
   private getOutputPaths(): string[] {
