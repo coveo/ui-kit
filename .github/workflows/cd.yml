@@ -242,6 +242,7 @@ jobs:
         run: node ./scripts/deploy/trigger-commit-upload.mjs
         env:
           GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
+          CHANNELS: canary
   chromatic-update-main:
     name: 'Update Chromatic baseline on main'
     runs-on: ubuntu-latest
