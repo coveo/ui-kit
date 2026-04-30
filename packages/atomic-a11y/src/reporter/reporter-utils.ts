@@ -1,4 +1,5 @@
 import {existsSync, readFileSync} from 'node:fs';
+import {findPackageJSON} from 'node:module';
 import path from 'node:path';
 import {getCriterionMetadata as lookupCriterionMetadata} from '../data/criterion-metadata.js';
 import {isRecord} from '../shared/guards.js';
@@ -64,16 +65,17 @@ export interface ComponentAccumulator {
 }
 
 function resolvePackageJsonPath(packageJsonPath?: string): string {
+  const searchRoot = process.cwd();
   const resolvedPath = packageJsonPath
     ? path.resolve(packageJsonPath)
-    : path.resolve(process.cwd(), 'package.json');
+    : findPackageJSON('.', `${searchRoot}${path.sep}`);
 
-  if (existsSync(resolvedPath)) {
+  if (resolvedPath && existsSync(resolvedPath)) {
     return resolvedPath;
   }
 
   throw new Error(
-    `[VitestA11yReporter] package.json not found at "${resolvedPath}". ` +
+    `[VitestA11yReporter] package.json not found from "${packageJsonPath ?? searchRoot}". ` +
       'Provide A11yReporterOptions.packageJsonPath explicitly.'
   );
 }
