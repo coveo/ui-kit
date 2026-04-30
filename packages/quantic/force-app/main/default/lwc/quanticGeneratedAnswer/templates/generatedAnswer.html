@@ -93,6 +93,12 @@
               ></lightning-button>
             </template>
           </div>
+          <template lwc:if={areFollowUpsEnabled}>
+            <c-quantic-ask-follow-up-input
+              data-testid="generated-answer__ask-follow-up-input"
+              submit-button-disabled={isAnswerGenerationOngoing}
+            ></c-quantic-ask-follow-up-input>
+          </template>
           <template lwc:if={shouldShowDisclaimer}>
             <div
               class="slds-grid slds-grid_align-end slds-var-m-top_x-small slds-text-body_small slds-text-color_weak"

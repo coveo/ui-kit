@@ -193,6 +193,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       'quantic__generatedanswercopy',
       this.handleGeneratedAnswerCopyToClipboard
     );
+    this.template.addEventListener(
+      'quantic__askfollowup',
+      this.handleAskFollowUp
+    );
     if (this.withToggle) {
       this.template.addEventListener(
         'quantic__generatedanswertoggle',
@@ -255,6 +259,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     this.template.removeEventListener(
       'quantic__generatedanswercopy',
       this.handleGeneratedAnswerCopyToClipboard
+    );
+    this.template.removeEventListener(
+      'quantic__askfollowup',
+      this.handleAskFollowUp
     );
     if (this.withToggle) {
       this.template.removeEventListener(
@@ -392,6 +400,14 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   handleGeneratedAnswerCopyToClipboard = (event) => {
     event.stopPropagation();
     this.generatedAnswer.logCopyToClipboard();
+  };
+
+  handleAskFollowUp = async (event) => {
+    event.stopPropagation();
+    const {question} = event.detail;
+    if (this.areFollowUpsEnabled && question) {
+      await this.generatedAnswer.askFollowUp?.(question);
+    }
   };
 
   handleGeneratedAnswerToggle = (event) => {
@@ -607,6 +623,24 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   get isExpanded() {
     return this.state?.expanded;
+  }
+
+  get areFollowUpsEnabled() {
+    return (
+      !!this.agentId &&
+      typeof this.generatedAnswer?.askFollowUp === 'function' &&
+      this.state?.followUpAnswers?.isEnabled === true
+    );
+  }
+
+  get isAnswerGenerationOngoing() {
+    const initialAnswerPending = this.isStreaming || !!this.state?.isLoading;
+    return (
+      initialAnswerPending ||
+      !!this.state?.followUpAnswers?.followUpAnswers?.some(
+        (answer) => answer.isStreaming || answer.isLoading
+      )
+    );
   }
 
   /**

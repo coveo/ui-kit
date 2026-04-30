@@ -1,0 +1,31 @@
+<template>
+  <div class="slds-form-element">
+    <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right">
+      <input
+        data-testid="ask-follow-up-input__field"
+        type="text"
+        class="slds-input slds-input_large"
+        placeholder={labels.askFollowUp}
+        aria-label={labels.askFollowUp}
+        value={inputValue}
+        oninput={handleInputChange}
+        onkeydown={handleKeyDown}
+      />
+      <button
+        data-testid="ask-follow-up-input__submit"
+        class="slds-button slds-button_icon slds-input__icon slds-input__icon_right ask-follow-up__submit-button"
+        type="button"
+        onclick={handleSubmit}
+        disabled={isSubmitDisabled}
+        aria-label={labels.submitFollowUp}
+        title={labels.submitFollowUp}
+      >
+        <lightning-icon
+          icon-name="utility:send"
+          size="xx-small"
+          class="slds-current-color"
+        ></lightning-icon>
+      </button>
+    </div>
+  </div>
+</template>

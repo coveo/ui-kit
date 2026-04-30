@@ -1,0 +1,8 @@
+.ask-follow-up__submit-button {
+  color: var(--lwc-brandPrimary, #1b96ff);
+}
+
+.ask-follow-up__submit-button:disabled {
+  color: var(--lwc-colorTextButtonDisabled, #dddbda);
+  cursor: not-allowed;
+}
