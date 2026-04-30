@@ -45,7 +45,7 @@ catalog:
   '@angular/platform-server': 21.2.9
   '@angular/router': 21.2.9
   '@coveo/relay': 2.1.1
-  '@coveo/relay-event-types': 19.1.2
+  '@coveo/relay-event-types': 19.5.0
   '@playwright/mcp': 0.0.70
   '@playwright/test': 1.59.1
   '@react-router/dev': 7.14.1
@@ -71,16 +71,16 @@ catalog:
   jest-cli: 30.3.0
   local-web-server: 5.4.0
   next: 16.2.4
-  prettier: 3.8.1
+  prettier: 3.8.3
   puppeteer: 24.42.0
   playwright: 1.59.1
   react: 19.2.5
   react-dom: 19.2.5
   rollup-plugin-string: 3.0.0
   rollup-plugin-node-polyfills: 0.2.1
-  typedoc: 0.28.18
-  typescript: 6.0.2
-  vite: 8.0.6
+  typedoc: 0.28.19
+  typescript: 6.0.3
+  vite: 8.0.10
   vitest: 4.0.16
 
 minimumReleaseAge: 10080
