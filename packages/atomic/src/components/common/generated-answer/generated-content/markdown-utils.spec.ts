@@ -105,6 +105,22 @@ describe('markdownUtils', () => {
       );
     });
 
+    it('should render link text in a span when href is empty', () => {
+      const text = 'text before [example]() text after';
+
+      const html = transformMarkdownToHtml(text);
+
+      expect(removeLineBreaks(html)).toBe(
+        removeLineBreaks(
+          unindentHtml(`
+            <p part="answer-paragraph">
+              text before <span>example</span> text after
+            </p>
+          `)
+        )
+      );
+    });
+
     it('should transform bold text inside a link', () => {
       const text = '[**bold**](https://example.com)';
 

@@ -1,3 +1,3 @@
 import {createContext} from '@lit/context';
 
-export const answerContext = createContext<string>('answer-id');
+export const answerContext = createContext<string>(Symbol('answer-id'));

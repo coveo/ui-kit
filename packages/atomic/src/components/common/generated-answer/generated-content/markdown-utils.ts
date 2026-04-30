@@ -80,6 +80,10 @@ const customRenderer = {
     const titleAttribute = title ? ` title="${escapeHtml(title)}"` : '';
     const safeHref = href ? escapeHtml(href) : '';
 
+    if (!safeHref) {
+      return `<span>${text}</span>`;
+    }
+
     return `<atomic-generated-answer-inline-link href="${safeHref}"${titleAttribute}>${text}</atomic-generated-answer-inline-link>`;
   },
 
