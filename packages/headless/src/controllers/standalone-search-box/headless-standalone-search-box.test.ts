@@ -202,7 +202,7 @@ describe('headless standalone searchBox', () => {
       });
     });
 
-    it('dispatches updateQuery with enableQuerySyntax when option is true', () => {
+    it('dispatches updateQuery with enableQuerySyntax=true when option is true', () => {
       options.enableQuerySyntax = true;
       initController();
       const expectedQuery = state.querySet[id];
@@ -211,6 +211,18 @@ describe('headless standalone searchBox', () => {
       expect(updateQuery).toHaveBeenCalledWith({
         q: expectedQuery,
         enableQuerySyntax: true,
+      });
+    });
+
+    it('dispatches updateQuery with enableQuerySyntax=false when option is false', () => {
+      options.enableQuerySyntax = false;
+      initController();
+      const expectedQuery = state.querySet[id];
+      searchBox.submit();
+
+      expect(updateQuery).toHaveBeenCalledWith({
+        q: expectedQuery,
+        enableQuerySyntax: false,
       });
     });
 

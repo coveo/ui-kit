@@ -10,8 +10,10 @@ test.describe('atomic-commerce-sort-dropdown', () => {
       await commerceSortDropdown.select.selectOption('relevance');
     });
 
-    test('should reflect relevance sortCriteria in the URL', async ({page}) => {
-      expect(page.url()).toContain('sortCriteria=relevance');
+    test('should not reflect sortCriteria in the URL when the default (relevance) sort is active', async ({
+      page,
+    }) => {
+      expect(page.url()).not.toContain('sortCriteria=');
     });
   });
 

@@ -22,104 +22,17 @@
       ],
     },
     {
+      groupName: 'Changesets',
+      groupSlug: 'changesets',
+      description: 'Isolate @changesets/* since we rely on experimental options that may change in a patch update',
+      matchPackageNames: ['@changesets/*'],
+    },
+    {
       groupName: 'wc-toolkit storybook-helpers',
       groupSlug: 'wc-toolkit-storybook-helpers',
       rangeStrategy: 'replace',
       description: 'Isolate @wc-toolkit/storybook-helpers since it has a pnpm patch that needs updating on every bump',
       matchPackageNames: ['@wc-toolkit/storybook-helpers'],
-    },
-    {
-      groupName: 'tsconfig node22',
-      groupSlug: 'tsconfig-node22',
-      rangeStrategy: 'replace',
-      description: 'Isolate @tsconfig/node22 since it controls TypeScript lib settings that can break Stencil builds',
-      matchPackageNames: ['@tsconfig/node22'],
-    },
-    {
-      groupName: 'tailwind',
-      groupSlug: 'tailwind',
-      rangeStrategy: 'replace',
-      description: 'Isolate tailwind for breaking changes',
-      matchPackageNames: [
-        'tailwindcss',
-        '@tailwindcss/postcss',
-        '@tailwindcss/vite',
-      ],
-    },
-    {
-      groupName: 'Angular',
-      groupSlug: 'angular',
-      rangeStrategy: 'replace',
-      allowedVersions: '18.x',
-      matchPackageNames: [
-        '/^@angular/*/',
-        '/^@angular-devkit/*/',
-        '/ng-packagr/',
-      ],
-    },
-    {
-      groupName: 'Redux',
-      groupSlug: 'Redux',
-      rangeStrategy: 'replace',
-      matchPackageNames: ['/^redux-*/', '/^@redux/*/'],
-    },
-    {
-      groupName: 'Stencil',
-      groupSlug: 'stencil',
-      rangeStrategy: 'replace',
-      matchPackageNames: ['/^@stencil/*/'],
-    },
-    {
-      groupName: 'LWC Compiler',
-      groupSlug: 'lwc-compiler',
-      rangeStrategy: 'replace',
-      matchPackageNames: ['/^@lwc/compiler$/'],
-    },
-    {
-      matchFileNames: [
-        'packages/atomic/package.json',
-        'packages/create-atomic-component/template/src/components/sample-component/package.json',
-        'packages/create-atomic-component-project/template/package.json',
-      ],
-      groupSlug: 'atomic-jest',
-      rangeStrategy: 'replace',
-      allowedVersions: '27.x',
-      description: 'Stencil do not support Jest >27 https://stenciljs.com/docs/support-policy#testing-libraries',
-      matchPackageNames: [
-        '/^jest$/',
-        '/^jest-cli$/',
-        '/@types/jest/',
-        '/jest-environment-node/',
-      ],
-    },
-    {
-      groupName: 'marked',
-      groupSlug: 'marked',
-      rangeStrategy: 'replace',
-      description: 'Isolate marked',
-      matchPackageNames: ['marked'],
-    },
-    {
-      groupName: 'relay',
-      groupSlug: 'relay',
-      rangeStrategy: 'replace',
-      description: 'Isolate relay since it is causing issues with stencil projetcs',
-      matchPackageNames: ['@coveo/relay'],
-    },
-
-    {
-      groupName: 'publint',
-      groupSlug: 'publint',
-      rangeStrategy: 'replace',
-      description: 'Isolate publint since updates can break CI',
-      matchPackageNames: ['publint'],
-    },
-    {
-      groupName: 'vitest',
-      groupSlug: 'vitest',
-      rangeStrategy: 'replace',
-      description: 'Isolate vitest since 4.1.x breaks vi.mock() for CJS modules in browser mode',
-      matchPackageNames: ['vitest', '/^@vitest/*/'],
     },
     {
       groupName: 'Quantic-only dependencies',
@@ -144,6 +57,7 @@
         'prettier-plugin-apex',
         'ts-node',
         'xml2js',
+        '/^@lwc/compiler$/',
       ],
     },
   ],
@@ -158,13 +72,6 @@
   postUpdateOptions: ['pnpmDedupe'],
   ignoreDeps: [
     'fix-esm-import-path',
-    // Ignore cypress since it is getting removed.
-    'cypress',
-    'cypress-split',
-    'cypress-repeat',
-    'cypress-real-events',
-    'cypress-web-vitals',
-    'cypress-axe',
     // Ignore marked to not have a floating PR.
     'marked',
     // Ignore stencil since it is getting removed.
@@ -174,6 +81,12 @@
     '@stencil-community/postcss',
     // Ignore gts since it is getting removed.
     'gts',
+    // Ignore jest since Atomic moved to Vitest and templates use catalog.
+    'jest',
+    'jest-cli',
+    '@types/jest',
+    'jest-environment-node',
+    'jest-environment-jsdom',
     // Problems with angular. Just ignore it.
     'zone.js',
   ],
