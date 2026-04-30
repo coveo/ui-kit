@@ -31,11 +31,11 @@ export function isStorybookTaskMeta(
     return false;
   }
 
-  if ('storyId' in value && typeof value.storyId !== 'string') {
+  if (Object.hasOwn(value, 'storyId') && typeof value.storyId !== 'string') {
     return false;
   }
 
-  if ('reports' in value) {
+  if (Object.hasOwn(value, 'reports')) {
     return (
       Array.isArray(value.reports) && value.reports.every(isStorybookReport)
     );

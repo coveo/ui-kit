@@ -81,34 +81,39 @@ function buildComponents(
 function buildCriteria(
   componentResults: Map<string, ComponentAccumulator>
 ): A11yCriterionReport[] {
-  const criteriaToComponents = new Map<string, Set<string>>();
+  const criteriaById = new Map<string, A11yCriterionReport>();
 
   for (const component of componentResults.values()) {
-    for (const criterion of component.automated.criteriaCovered) {
-      const components =
-        criteriaToComponents.get(criterion) ?? new Set<string>();
-      components.add(component.name);
-      criteriaToComponents.set(criterion, components);
+    for (const criterionId of component.automated.criteriaCovered) {
+      let criterion = criteriaById.get(criterionId);
+      if (!criterion) {
+        const metadata = getCriterionMetadata(criterionId);
+        criterion = {
+          id: criterionId,
+          name: metadata.name,
+          level: metadata.level,
+          wcagVersion: metadata.wcagVersion,
+          // Conformance is intentionally deferred — the automated report only captures
+          // coverage data, not the final judgment. The OpenACR pipeline (conformance.ts)
+          // resolves actual conformance using: overrides → manual audit → interactive tests → automated results.
+          conformance: 'notEvaluated',
+          automatedCoverage: true,
+          manualVerified: false,
+          affectedComponents: [],
+        };
+        criteriaById.set(criterionId, criterion);
+      }
+
+      criterion.affectedComponents.push(component.name);
     }
   }
 
-  return [...criteriaToComponents.entries()]
-    .map(([criterionId, coveredComponents]): A11yCriterionReport => {
-      const metadata = getCriterionMetadata(criterionId);
+  const criteria = [...criteriaById.values()];
+  for (const criterion of criteria) {
+    criterion.affectedComponents.sort(compareByName);
+  }
 
-      return {
-        id: criterionId,
-        name: metadata.name,
-        level: metadata.level,
-        wcagVersion: metadata.wcagVersion,
-        // Conformance is intentionally deferred — the automated report only captures
-        // coverage data, not the final judgment. The OpenACR pipeline (conformance.ts)
-        // resolves actual conformance using: overrides → manual audit → interactive tests → automated results.
-        conformance: 'notEvaluated',
-        automatedCoverage: true,
-        manualVerified: false,
-        affectedComponents: [...coveredComponents].sort(compareByName),
-      };
-    })
-    .sort((first, second) => compareByNumericId(first.id, second.id));
+  return criteria.sort((first, second) =>
+    compareByNumericId(first.id, second.id)
+  );
 }
