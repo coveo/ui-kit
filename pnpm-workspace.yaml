@@ -2,6 +2,7 @@ packages:
   - packages/bueno
   - packages/auth
   - packages/headless
+  - packages/headless-future
   - packages/quantic
   - packages/headless-react
   - packages/ssr
@@ -46,6 +47,7 @@ catalog:
   '@angular/router': 21.2.9
   '@coveo/relay': 2.1.1
   '@coveo/relay-event-types': 19.1.2
+  '@reduxjs/toolkit': 2.11.2
   '@playwright/mcp': 0.0.70
   '@playwright/test': 1.59.1
   '@react-router/dev': 7.14.1
