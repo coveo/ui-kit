@@ -1,10 +1,17 @@
+[data-testid='generated-answer__card'].slds-box,
+[data-testid='generated-answer__no-answer-card'].slds-box {
+  padding: 0;
+}
+
 .generated-answer__card-header {
-  justify-content: space-between;
   align-items: center;
+  padding: var(--lwc-spacingSmall, 0.5rem) var(--lwc-spacingMedium, 1rem);
 }
 
 .generated-answer__badge {
-  background-color: var(--lwc-colorBackgroundButtonDefaultHover, #eef4ff);
   color: var(--lwc-brandPrimary, #1b96ff);
-  border-radius: var(--lwc-border-radius-medium, 0.25rem);
+}
+
+.generated-answer__header-icon {
+  color: var(--lwc-brandPrimary, #1b96ff);
 }

@@ -1,8 +1,7 @@
 @import '../quanticGeneratedAnswer.css';
 
-.generated-answer__header-actions {
-  align-items: center;
-  flex-wrap: wrap-reverse;
+.generated-answer__content {
+  padding: 0 var(--lwc-spacingMedium, 1rem) var(--lwc-spacingMedium, 1rem);
 }
 
 .generated-answer__answer {
