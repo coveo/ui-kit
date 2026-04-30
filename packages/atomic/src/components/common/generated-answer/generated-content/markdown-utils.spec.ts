@@ -111,13 +111,7 @@ describe('markdownUtils', () => {
       const html = transformMarkdownToHtml(text);
 
       expect(removeLineBreaks(html)).toBe(
-        removeLineBreaks(
-          unindentHtml(`
-            <p part="answer-paragraph">
-              text before <span>example</span> text after
-            </p>
-          `)
-        )
+        `<p part="answer-paragraph">text before <span>example</span> text after</p>`
       );
     });
 
