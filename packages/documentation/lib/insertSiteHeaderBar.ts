@@ -55,7 +55,7 @@ export const insertSiteHeaderBar = (
     {title: 'Source API', href: 'https://docs.coveo.com/en/15'},
     {
       title: 'Usage Analytics Write API',
-      href: 'https://docs.coveo.com/en/18',
+      href: 'https://docs.coveo.com/en/18#tag/Analytics-API-Version-15',
     },
     {divider: true},
     {title: 'View all', href: 'https://docs.coveo.com/en/4/'},
