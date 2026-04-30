@@ -23,16 +23,16 @@ const stepLabelKeys: Record<
   {active: string; completed: string}
 > = {
   'thinking-before-search': {
-    active: 'agent-step-analyzing-active',
-    completed: 'agent-step-analyzing-completed',
+    active: 'agent-step-analyzing-question-active',
+    completed: 'agent-step-analyzing-question-completed',
   },
   searching: {
     active: 'agent-generation-step-search',
     completed: 'agent-step-searching-completed',
   },
   'thinking-after-search': {
-    active: 'agent-step-processing-active',
-    completed: 'agent-step-processing-completed',
+    active: 'agent-step-analyzing-results-active',
+    completed: 'agent-step-analyzing-results-completed',
   },
   answering: {
     active: 'generating-answer',
@@ -208,16 +208,16 @@ export class AtomicAgentStreamOfThought extends LitElement {
 }
 
 export function resolveSteps(steps: GenerationStep[]): ResolvedStep[] {
-  let hasSeenSearching = false;
+  let searchWasPerformed = false;
   return steps.map((step) => {
     let type: ResolvedStepType;
     if (step.name === 'searching') {
-      hasSeenSearching = true;
+      searchWasPerformed = true;
       type = 'searching';
     } else if (step.name === 'answering') {
       type = 'answering';
     } else {
-      type = hasSeenSearching
+      type = searchWasPerformed
         ? 'thinking-after-search'
         : 'thinking-before-search';
     }
