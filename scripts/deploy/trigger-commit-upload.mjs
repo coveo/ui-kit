@@ -6,7 +6,7 @@ const channels = process.env.CHANNELS;
 await octokit.rest.repos.createDispatchEvent({
   event_type: 'deploy-commit',
   client_payload: {
-    run_id: context.runId,
+    run_Id: context.runId,
     sha: context.sha,
     channels,
   },
