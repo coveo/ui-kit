@@ -1,0 +1,101 @@
+name: Weekly A11y Scan
+
+on:
+  schedule:
+    # Every Monday at 9:00 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  weekly-a11y-scan:
+    name: 'Run Storybook a11y tests (${{ matrix.shardIndex }}/${{ matrix.shardTotal }})'
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      options: --user 1001
+    strategy:
+      fail-fast: false
+      matrix:
+        shardIndex: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        shardTotal: [10]
+    env:
+      NODE_OPTIONS: --max_old_space_size=4096
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          ref: main
+
+      - uses: ./.github/actions/setup
+
+      - name: 'Run Storybook a11y tests'
+        run: npm run test:storybook -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+        working-directory: packages/atomic
+
+      - name: 'Upload a11y shard report'
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: a11y-report-shard-${{ matrix.shardIndex }}
+          path: packages/atomic/reports/a11y-report.shard-${{ matrix.shardIndex }}.json
+          retention-days: 7
+          if-no-files-found: warn
+
+  merge-a11y-reports:
+    name: 'Merge a11y shard reports'
+    runs-on: ubuntu-latest
+    needs: weekly-a11y-scan
+    if: always()
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          ref: main
+
+      - uses: ./.github/actions/setup
+        with:
+          skip-build: 'true'
+
+      - name: 'Download a11y shard reports'
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          pattern: a11y-report-shard-*
+          path: packages/atomic/reports
+          merge-multiple: true
+
+      - name: 'Merge a11y shard reports'
+        run: pnpm run a11y:merge-shards -- ../atomic/reports/a11y-report.json
+        working-directory: packages/atomic-a11y
+
+      - name: 'Upload merged a11y report'
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: a11y-weekly-report
+          path: packages/atomic/reports/a11y-report.json
+          retention-days: 30
+          if-no-files-found: warn
+
+      - name: 'Summarize a11y report'
+        if: always()
+        run: |
+          echo "A11y scan completed on $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+          if [ -f packages/atomic/reports/a11y-report.json ]; then
+            echo "Report artifact available: packages/atomic/reports/a11y-report.json"
+            echo ""
+            echo "Summary of results:"
+            node -e "const report = require('./packages/atomic/reports/a11y-report.json'); console.log(JSON.stringify(report.summary, null, 2));"
+          else
+            echo "Warning: a11y report not generated"
+          fi
