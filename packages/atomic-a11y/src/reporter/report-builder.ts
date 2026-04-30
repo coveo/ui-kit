@@ -176,7 +176,7 @@ function addAffectedComponent(
   criterion: A11yCriterionReport,
   componentName: string
 ): void {
-  if (criterion.affectedComponents.at(-1) !== componentName) {
+  if (!criterion.affectedComponents.includes(componentName)) {
     criterion.affectedComponents.push(componentName);
   }
 }

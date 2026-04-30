@@ -55,12 +55,33 @@ export interface StorybookInteractiveReport {
 }
 
 export function isInteractiveReport(
-  report: StorybookReport
+  report: unknown
 ): report is StorybookInteractiveReport {
+  if (!isRecord(report)) {
+    return false;
+  }
+
+  if (report.type !== 'a11y-interactive') {
+    return false;
+  }
+
+  if (typeof report.version !== 'number') {
+    return false;
+  }
+
+  const status = report.status;
+  if (status !== 'passed' && status !== 'failed' && status !== 'warning') {
+    return false;
+  }
+
+  if (!isRecord(report.result)) {
+    return false;
+  }
+
+  const {criteriaCovered} = report.result;
   return (
-    report.type === 'a11y-interactive' &&
-    isRecord(report.result) &&
-    Array.isArray((report.result as Record<string, unknown>).criteriaCovered)
+    Array.isArray(criteriaCovered) &&
+    criteriaCovered.every((criterion) => typeof criterion === 'string')
   );
 }
 

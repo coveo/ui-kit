@@ -69,42 +69,40 @@ export async function testCollapsibleA11y(
   const {canvasElement, step} = context;
 
   let trigger: HTMLElement | null = null;
+  let status: 'passed' | 'warning' | 'failed' = 'passed';
 
-  await step(
-    `Look for collapsible trigger with text "${options.triggerLabel}"`,
-    async () => {
-      await waitFor(
-        () => {
-          trigger = findCollapseButton(canvasElement, options.triggerLabel);
-          if (!trigger) {
-            try {
-              const buttons = canvasElement.querySelectorAll('button');
-              trigger =
-                Array.from(buttons).find((btn) =>
-                  btn.textContent
-                    ?.trim()
-                    .toLowerCase()
-                    .includes(options.triggerLabel.toLowerCase())
-                ) ?? null;
-            } catch {
-              // ignore
+  try {
+    await step(
+      `Look for collapsible trigger with text "${options.triggerLabel}"`,
+      async () => {
+        await waitFor(
+          () => {
+            trigger = findCollapseButton(canvasElement, options.triggerLabel);
+            if (!trigger) {
+              try {
+                const buttons = canvasElement.querySelectorAll('button');
+                trigger =
+                  Array.from(buttons).find((btn) =>
+                    btn.textContent
+                      ?.trim()
+                      .toLowerCase()
+                      .includes(options.triggerLabel.toLowerCase())
+                  ) ?? null;
+              } catch {
+                // ignore
+              }
             }
-          }
-        },
-        {timeout: 5000}
-      );
-    }
-  );
+          },
+          {timeout: 5000}
+        );
+      }
+    );
 
-  if (!trigger) {
-    context.reporting.addReport({
-      type: 'a11y-interactive',
-      version: 1,
-      status: 'warning',
-      result: {criteriaCovered: [...COVERED_CRITERIA]},
-    });
-    return;
-  } else {
+    if (!trigger) {
+      status = 'warning';
+      return;
+    }
+
     await step('Trigger is keyboard accessible', async () => {
       (trigger as HTMLElement).focus();
       await waitFor(
@@ -137,12 +135,15 @@ export async function testCollapsibleA11y(
         {timeout: 5000}
       );
     });
+  } catch (error) {
+    status = 'failed';
+    throw error;
+  } finally {
+    context.reporting?.addReport?.({
+      type: 'a11y-interactive',
+      version: 1,
+      status,
+      result: {criteriaCovered: [...COVERED_CRITERIA]},
+    });
   }
-
-  context.reporting.addReport({
-    type: 'a11y-interactive',
-    version: 1,
-    status: 'passed',
-    result: {criteriaCovered: [...COVERED_CRITERIA]},
-  });
 }
