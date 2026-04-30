@@ -297,12 +297,10 @@ export const streamAnswer = createAsyncThunk<
         const isAnswerGenerated = (
           JSON.parse(payload) as GeneratedAnswerEndOfStreamPayload
         ).answerGenerated;
-        const answerId = getState().generatedAnswer.answerId;
-        const cannotAnswer = queryExecuted.length !== 0 && !isAnswerGenerated;
-        const trimmedAnswer = getState().generatedAnswer.answer?.trim();
-        const answerTextIsEmpty = isAnswerGenerated
-          ? trimmedAnswer === undefined || trimmedAnswer.length === 0
-          : undefined;
+        const {answerId, answer} = getState().generatedAnswer;
+        const hasExecutedQuery = queryExecuted.length !== 0;
+        const cannotAnswer = hasExecutedQuery && !isAnswerGenerated;
+        const isAnswerTextEmpty = !answer?.trim();
         dispatch(setCannotAnswer(cannotAnswer));
         dispatch(setIsStreaming(false));
         dispatch(setIsAnswerGenerated(isAnswerGenerated));
@@ -310,7 +308,7 @@ export const streamAnswer = createAsyncThunk<
           logGeneratedAnswerStreamEnd(
             isAnswerGenerated,
             answerId,
-            answerTextIsEmpty
+            isAnswerGenerated ? isAnswerTextEmpty : undefined
           )
         );
         dispatch(logGeneratedAnswerResponseLinked());

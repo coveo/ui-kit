@@ -102,7 +102,7 @@ export class GeneratedAnswerController implements ReactiveController {
 
     const isHidden = !state.isVisible;
     const isGenerating = !!state.isStreaming;
-    const hasAnswer = !!state.answer?.trim();
+    const hasNonEmptyAnswer = !!state.answer?.trim();
     const hasError = !!state.error;
 
     if (isHidden) {
@@ -117,7 +117,7 @@ export class GeneratedAnswerController implements ReactiveController {
       return bindings.i18n.t('answer-could-not-be-generated');
     }
 
-    if (hasAnswer) {
+    if (hasNonEmptyAnswer) {
       return bindings.i18n.t('answer-generated', {
         answer: state.answer,
       });
