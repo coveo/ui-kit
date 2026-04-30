@@ -1,2 +1,12 @@
 export {buildSearchBoxController} from './search-box/controller.js';
 export {buildResultListController} from './result-list/controller.js';
+export {buildConversationController} from './conversation/controller.js';
+export type {ConversationController} from './conversation/controller.js';
+export {buildStreamingController} from './streaming/controller.js';
+export type {StreamingController} from './streaming/controller.js';
+export {buildOrchestrationController} from './orchestration/controller.js';
+export type {OrchestrationController} from './orchestration/controller.js';
+export {buildSurfaceController} from './surface/controller.js';
+export type {SurfaceController} from './surface/controller.js';
+export {buildContextBridgeController} from './context-bridge/controller.js';
+export type {ContextBridgeController} from './context-bridge/controller.js';
