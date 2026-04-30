@@ -1,3 +1,13 @@
+## 3.50.0
+
+### Minor Changes
+
+- [#7443](https://github.com/coveo/ui-kit/pull/7443) [`2453994`](https://github.com/coveo/ui-kit/commit/245399483d93d17cfc0d01f2f7b9eebcf2859089) Thanks [@SimonMilord](https://github.com/SimonMilord)! - added search context to the head answer call
+
+### Patch Changes
+
+- [#7446](https://github.com/coveo/ui-kit/pull/7446) [`861d8ca`](https://github.com/coveo/ui-kit/commit/861d8cae4cb73fee10c9fd753e5874baebf539bf) Thanks [@louis-bompart](https://github.com/louis-bompart)! - Ensure enableQuerySyntax is **always** sent with /plan request (including when enableQuerySyntax=false)
+
 ## 3.49.4
 
 ### Patch Changes
