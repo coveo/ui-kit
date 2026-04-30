@@ -38,7 +38,7 @@ const buildFakeDateFilter = (overrides?: Partial<DateFilter>): DateFilter => {
       isLoading: false,
       range: undefined,
       ...(overrides?.state || {}),
-      // biome-ignore lint/suspicious/noExplicitAny: Test fixture builder requires flexible state override
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Test fixture builder requires flexible state override
     } as any,
     subscribe: genericSubscribe,
     setRange: vi.fn(),
@@ -138,7 +138,7 @@ describe('TimeframeFacetCommon', () => {
   });
 
   it('should generate random facetId if field already exists in store', () => {
-    // biome-ignore lint/suspicious/noExplicitAny: Test fixture requires any type
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Test fixture requires any type
     mockBindings.store!.state.dateFacets.date = {} as any;
 
     createInstance();
@@ -300,7 +300,7 @@ describe('TimeframeFacetCommon', () => {
   it('should provide format function that uses formatFacetValue', () => {
     createInstance();
 
-    // biome-ignore lint/suspicious/noExplicitAny: Test spy access
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Test spy access
     const registerCall = (mockBindings.store!.registerFacet as any).mock
       .calls[0];
     expect(registerCall[1]).toHaveProperty('format');
@@ -325,7 +325,7 @@ describe('TimeframeFacetCommon', () => {
 
       createInstance({deserializeRelativeDate: deserializeRelativeDateSpy});
 
-      // biome-ignore lint/suspicious/noExplicitAny: Test spy access
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Test spy access
       const formatFn = (mockBindings.store!.registerFacet as any).mock
         .calls[0][1].format;
 
@@ -356,7 +356,7 @@ describe('TimeframeFacetCommon', () => {
 
       createInstance({deserializeRelativeDate: deserializeRelativeDateSpy});
 
-      // biome-ignore lint/suspicious/noExplicitAny: Test spy access
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Test spy access
       const formatFn = (mockBindings.store!.registerFacet as any).mock
         .calls[0][1].format;
 
@@ -390,7 +390,7 @@ describe('TimeframeFacetCommon', () => {
 
       createInstance({deserializeRelativeDate: deserializeRelativeDateSpy});
 
-      // biome-ignore lint/suspicious/noExplicitAny: Test spy access
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Test spy access
       const formatFn = (mockBindings.store!.registerFacet as any).mock
         .calls[0][1].format;
 
@@ -424,7 +424,7 @@ describe('TimeframeFacetCommon', () => {
 
       createInstance({deserializeRelativeDate: deserializeRelativeDateSpy});
 
-      // biome-ignore lint/suspicious/noExplicitAny: Test spy access
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Test spy access
       const formatFn = (mockBindings.store!.registerFacet as any).mock
         .calls[0][1].format;
 
@@ -447,7 +447,7 @@ describe('TimeframeFacetCommon', () => {
 
       createInstance({deserializeRelativeDate: deserializeRelativeDateSpy});
 
-      // biome-ignore lint/suspicious/noExplicitAny: Test spy access
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Test spy access
       const formatFn = (mockBindings.store!.registerFacet as any).mock
         .calls[0][1].format;
 

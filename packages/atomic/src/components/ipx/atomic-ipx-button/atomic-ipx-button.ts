@@ -128,7 +128,10 @@ export class AtomicIpxButton
           .icon=${this.getIcon(this.openIcon)}
         ></atomic-icon>
       </span>
-      ${when(this.label, () => html`<span part="button-text">${this.label}</span>`)}
+      ${when(
+        this.label,
+        () => html`<span part="button-text">${this.label}</span>`
+      )}
     `);
   }
 
@@ -142,19 +145,19 @@ export class AtomicIpxButton
 
     return html`
       <style>
-        [part=${displayedIcon}] {
+        [part='${displayedIcon}'] {
           transform: translateY(0rem);
         }
-        [part=${hiddenIcon}] {
+        [part='${hiddenIcon}'] {
           transform: translateY(3rem);
         }
 
         .btn-open {
-          [part=${displayedIcon}] {
+          [part='${displayedIcon}'] {
             transform: translateY(3rem);
           }
 
-          [part=${hiddenIcon}] {
+          [part='${hiddenIcon}'] {
             transform: translateY(0rem);
           }
         }

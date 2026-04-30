@@ -1,16 +1,23 @@
 export default {
-  $schema: 'https://unpkg.com/knip@5/schema.json',
+  $schema: 'https://unpkg.com/knip@6/schema.json',
   // Always ignoring quantic since it throws errors. Adding those two lines is necessary for 100% of quantic to be ignored.
   ignoreWorkspaces: [
     'packages/quantic',
     'packages/create-atomic-component-project/template',
   ],
+  ignoreDependencies: ['semver'],
   ignore: [
     'packages/quantic/**',
     'samples/headless/rga-react/src/components/Quickstart.tsx',
     'samples/headless/rga-react/src/components/Citation.tsx',
     'samples/headless/rga-react/src/components/CitationsList.tsx',
+    'samples/pkg-new-template/**',
   ],
+  compilers: {
+    // Enable the built-in MDX compiler so Knip can trace imports inside .mdx
+    // Storybook docs pages (e.g. storybook-utils helpers).
+    mdx: true,
+  },
   workspaces: {
     '.': {
       entry: ['.agents/skills/**/scripts/*.mjs', 'scripts/**/*.{js,mjs}'],
@@ -27,7 +34,6 @@ export default {
     },
     'packages/atomic-angular': {
       ignoreDependencies: [
-        'rxjs',
         // Can be removed once we bump our package to use more recent Angular versions that support Vite 7+.
         'vite',
       ],
@@ -40,7 +46,6 @@ export default {
     },
     'packages/atomic-react': {
       entry: ['src/*index.ts'],
-      ignoreUnresolved: [/\.{1,2}\/([\w.]*?\/)?components\.js/],
       ignoreDependencies: [
         '@lit/react', // Only used in generated files.
       ],
@@ -75,20 +80,48 @@ export default {
     },
     'samples/headless-ssr/commerce-nextjs': {},
     'samples/headless-ssr/commerce-nextjs-v4': {},
-    'utils/ci': {
-      ignoreDependencies: ['@types/conventional-changelog-writer'],
-    },
+    'utils/ci': {},
     'utils/cdn': {
       ignoreDependencies: ['local-web-server'],
     },
 
-    // Projects to enable bunch by bunch.
+    // Projects to enable rule by rule.
     'packages/atomic': {
-      ignore: ['**/*'],
+      entry: [
+        'src/loader.ts',
+        'src/cdn.ts',
+        'src/**/*.e2e.ts',
+        'dev/**/*.{ts,js,mjs}',
+        'scripts/**/*.{mjs,js}',
+        'csp/**/*.{mjs,js}',
+        'custom-elements-manifest.config.mjs',
+        // Build-generated barrel indexes (created by `pnpm build:lit`).
+        // In CI the build step runs before knip, so these always exist.
+        // Adding them as entry points lets knip trace the export chain
+        // into section components and other web components naturally.
+        'src/components/*/index.ts',
+        // Test fixture utilities consumed by spec files via @/ path alias.
+        // Knip cannot resolve the @/ → ./ tsconfig path mapping, so it
+        // cannot trace spec → fixture imports. Declaring them as entry
+        // points preserves their exports from false-positive removal.
+        'vitest-utils/**/*.ts',
+      ],
+      ignore: [
+        // Ambient type declaration file, not an ES module
+        '.storybook/vite-env.d.ts',
+        // Static file loaded via HTML <script> tag in manager-head.html
+        '.storybook/public/cookieManager.js',
+        // CSS files referenced via @import/@reference inside CSS tagged template literals.
+        // Knip cannot trace CSS imports inside template literal strings.
+        'src/**/*.css',
+      ],
+      ignoreDependencies: [
+        // local-web-server provides the `ws` binary invoked as `pnpm exec ws`
+        // in playwright.config.ts webServer. Knip cannot trace CLI binary usage.
+        'local-web-server',
+      ],
     },
-    'packages/atomic-legacy': {
-      ignore: ['**/*'],
-    },
+    'packages/atomic-legacy': {},
     'packages/create-atomic': {
       ignore: ['**/*'],
     },

@@ -31,12 +31,15 @@ describe('sse-generated-answer-errors', () => {
         GeneratedAnswerSseErrorCode.SseInternalError,
       ],
       [
-        'KNOWLEDGE:TURN_LIMIT_REACHED',
+        'KNOWLEDGE:SSE_TURN_LIMIT_REACHED',
         GeneratedAnswerSseErrorCode.SseTurnLimitReached,
       ],
-    ])('maps %s to the expected frontend error code', (backendCode, expected) => {
-      expect(mapRunErrorCode(backendCode)).toBe(expected);
-    });
+    ])(
+      'maps %s to the expected frontend error code',
+      (backendCode, expected) => {
+        expect(mapRunErrorCode(backendCode)).toBe(expected);
+      }
+    );
 
     it('returns SseInternalError when the backend code is not mapped', () => {
       expect(mapRunErrorCode('UNKNOWN_CODE')).toBe(

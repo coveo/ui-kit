@@ -43,7 +43,7 @@ async function getMatchingPackageVersion(versionNumber: string) {
 
 async function getIsPublished(): Promise<boolean> {
   const matchingVersion = await getMatchingPackageVersion(pack.version);
-  return matchingVersion?.IsReleased;
+  return matchingVersion?.IsReleased ?? false;
 }
 
 async function getPackageVersion(log: StepLogger): Promise<string> {
@@ -59,7 +59,7 @@ async function getPackageVersion(log: StepLogger): Promise<string> {
     return version;
   } catch (error) {
     log('Failed to determine next package version.');
-    throw new Error(error.message);
+    throw new Error((error as Error).message);
   }
 }
 
@@ -77,9 +77,9 @@ async function buildOptions(): Promise<Options> {
     promote: promote,
     removeTranslations: removeTranslations,
     jwt: {
-      clientId: process.env.SFDX_AUTH_CLIENT_ID,
-      keyFile: process.env.SFDX_AUTH_JWT_KEY_FILE,
-      username: process.env.SFDX_AUTH_JWT_USERNAME,
+      clientId: process.env.SFDX_AUTH_CLIENT_ID!,
+      keyFile: process.env.SFDX_AUTH_JWT_KEY_FILE!,
+      username: process.env.SFDX_AUTH_JWT_USERNAME!,
     },
   };
 }
@@ -128,7 +128,7 @@ async function createPackage(
 
   const response = await sfdx.createPackageVersion({
     packageId: options.packageId,
-    packageVersion: options.packageVersion,
+    packageVersion: options.packageVersion!,
     timeout: 30,
   });
 
@@ -154,6 +154,10 @@ async function createGithubDiscussionPost(
   const packageDetails = (await sfdx.getPackageVersionList(0)).result.find(
     (pack) => pack.SubscriberPackageVersionId === packageVersionId
   );
+  if (!packageDetails) {
+    log(`Could not find package details for ${packageVersionId}. Skipping discussion.`);
+    return;
+  }
   const discussionTitle = `${packageDetails.Package2Name} v${options.packageVersion}`;
   const discussionBody = `Package ID: ${packageDetails.SubscriberPackageVersionId}\nInstallation URL: ${packageDetails.InstallUrl}`;
 
@@ -163,9 +167,15 @@ async function createGithubDiscussionPost(
       {owner: 'coveo', name: 'ui-kit'},
       token
     );
-    const announcementCategoryId = repository.discussionCategories.edges.find(
-      (edge) => edge.node.name === 'Announcements'
-    ).node.id;
+    const announcementCategoryId =
+      repository.discussionCategories?.edges?.find(
+        (edge) => edge?.node?.name === 'Announcements'
+      )?.node?.id;
+
+    if (!announcementCategoryId) {
+      log('Could not find Announcements category. Skipping discussion.');
+      return;
+    }
 
     const discussion = await createDiscussion(
       {
@@ -176,9 +186,13 @@ async function createGithubDiscussionPost(
       },
       token
     );
-    log(`Github discussion ID: ${discussion.id} created.`);
+    if (discussion) {
+      log(`Github discussion ID: ${discussion.id} created.`);
+    } else {
+      log('Discussion creation returned no result.');
+    }
   } catch (error) {
-    log(`Discussion creation FAILED: ${error.message}`);
+    log(`Discussion creation FAILED: ${(error as Error).message}`);
   }
 }
 
@@ -201,14 +215,15 @@ async function createGithubDiscussionPost(
     runner.add(async (log) => {
       packageVersionId = (await createPackage(log, options)).result
         .SubscriberPackageVersionId;
-      !options.promote &&
+      if (!options.promote) {
         log(
           JSON.stringify(
-            await getMatchingPackageVersion(options.packageVersion),
+            await getMatchingPackageVersion(options.packageVersion!),
             null,
             2
           )
         );
+      }
     });
     options.promote &&
       runner

@@ -164,13 +164,13 @@ function isExpiredTokenError(
     typeof action === 'object' &&
     action !== null &&
     'error' in action &&
-    // biome-ignore lint/suspicious/noExplicitAny: any action is possible here.
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- any action is possible here.
     (action as any).error?.name === new UnauthorizedTokenError().name
   );
 }
 
 function dispatchError(
-  // biome-ignore lint/suspicious/noExplicitAny: any action is possible here.
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- any action is possible here.
   store: MiddlewareAPI<Dispatch<UnknownAction>, any>,
   error: UnauthorizedTokenError
 ) {

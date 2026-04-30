@@ -54,7 +54,8 @@ import type {ProductListingSummaryState} from './summary/headless-product-listin
  * @category ProductListing
  */
 export interface ProductListing
-  extends Controller,
+  extends
+    Controller,
     SearchAndListingSubControllers<Parameters, ProductListingSummaryState> {
   /**
    * Fetches the product listing.

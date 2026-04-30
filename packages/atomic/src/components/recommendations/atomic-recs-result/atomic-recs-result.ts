@@ -37,12 +37,12 @@ export class AtomicRecsResult extends ChildrenUpdateCompleteMixin(LitElement) {
   private itemLayoutController!: ItemLayoutController;
 
   static styles: CSSResultGroup = css`
-@import "../../common/template-system/legacy-template-system.css";
+    @import '../../common/template-system/legacy-template-system.css';
 
-:host {
-  @apply atomic-template-system;
-}
-`;
+    :host {
+      @apply atomic-template-system;
+    }
+  `;
 
   @state()
   error!: Error;
@@ -309,7 +309,9 @@ export class AtomicRecsResult extends ChildrenUpdateCompleteMixin(LitElement) {
     return html`
       <div class=${resultComponentClass}>
         <div
-          class="result-root ${this.itemLayoutController.getCombinedClasses().join(' ')}"
+          class="result-root ${this.itemLayoutController
+            .getCombinedClasses()
+            .join(' ')}"
           .innerHTML=${this.getContentHTML()}
         ></div>
         <div class="link-container" .innerHTML=${this.getLinkHTML()}></div>

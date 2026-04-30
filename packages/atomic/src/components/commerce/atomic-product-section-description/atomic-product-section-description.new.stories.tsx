@@ -7,6 +7,7 @@ import {
   getProductSectionDecorators,
 } from '@/storybook-utils/commerce/product-section-story-utils';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import '@/src/components/commerce/atomic-product-section-description/atomic-product-section-description.js';
 
 const {play} = wrapInCommerceInterface({
   engineConfig: {
@@ -32,6 +33,7 @@ const meta: Meta = {
   render: (args) => template(args),
   parameters: {
     ...parameters,
+    chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
     },

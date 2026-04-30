@@ -4,7 +4,7 @@ description: Provides conventions, patterns, and fixtures for Vitest unit tests 
 license: Apache-2.0
 metadata:
   author: coveo
-  version: "1.0"
+  version: '1.0'
 ---
 
 # Atomic Unit Testing
@@ -77,7 +77,7 @@ describe('when loading', () => {
 
 - **Test behavior, not implementation**: Assert on outputs and observable effects, not internal method calls.
 - **One behavior per test**: Multiple assertions for the same behavior are fine; multiple unrelated behaviors are not. Don't test the same behavior multiple ways — if a test already covers a code path, another one adds noise.
-- **Use specific assertions**: Prefer `toHaveBeenCalledWith(expected)`, `toHaveTextContent('text')` over loose matchers like `toBeTruthy()` or `toBeDefined()`. Assert on the *what*, not just that something exists.
+- **Use specific assertions**: Prefer `toHaveBeenCalledWith(expected)`, `toHaveTextContent('text')` over loose matchers like `toBeTruthy()` or `toBeDefined()`. Assert on the _what_, not just that something exists.
 - **Prefer creation over mutation**: Set up the desired state before the action under test rather than mutating afterward.
 - **Test edge cases**: null, undefined, empty strings, empty arrays, boundary values.
 - **Test error paths**: Invalid inputs, missing dependencies, network failures.
@@ -86,6 +86,6 @@ describe('when loading', () => {
 
 Identify the entity being tested and load the appropriate additional reference:
 
-  - **Atomic Lit web component**: `references/atomic-lit-components.md`
-  - **Atomic Functional component**: `references/atomic-functional-components.md`
-  - **Atomic Utility function, helper, class-based utility**: `references/atomic-utils.md`
+- **Atomic Lit web component**: `references/atomic-lit-components.md`
+- **Atomic Functional component**: `references/atomic-functional-components.md`
+- **Atomic Utility function, helper, class-based utility**: `references/atomic-utils.md`

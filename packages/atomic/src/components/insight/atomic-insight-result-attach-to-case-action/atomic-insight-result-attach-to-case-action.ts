@@ -46,9 +46,9 @@ export class AtomicInsightResultAttachToCaseAction
 
   @bindStateToController('attachedResults')
   @state()
-  // biome-ignore lint/suspicious/noTsIgnore: Type error only appears without a build.
+  // oxlint-disable-next-line @typescript-eslint/ban-ts-comment -- Type error only appears without a build.
   // @ts-ignore - Binds headless state to trigger Lit re-renders.
-  // biome-ignore lint/correctness/noUnusedPrivateClassMembers: Binds headless state to trigger Lit re-renders.
+  // oxlint-disable-next-line no-unused-private-class-members -- Binds headless state to trigger Lit re-renders.
   private attachedResultsState!: Record<string, never>;
 
   private itemContextController!: ItemContextController<Result>;

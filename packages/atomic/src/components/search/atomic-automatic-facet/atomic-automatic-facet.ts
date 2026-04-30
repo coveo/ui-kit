@@ -149,7 +149,11 @@ export class AtomicAutomaticFacet
         label: this.facet.state.label,
         query,
       },
-    })(html`<ul class="mt-3" part="values">${children}</ul>`);
+    })(
+      html`<ul class="mt-3" part="values">
+        ${children}
+      </ul>`
+    );
   }
 
   private renderValues() {
@@ -188,7 +192,8 @@ export class AtomicAutomaticFacet
     }
 
     return renderFacetContainer()(html`
-      ${this.renderHeader()} ${when(!this.isCollapsed, () => this.renderValues())}
+      ${this.renderHeader()}
+      ${when(!this.isCollapsed, () => this.renderValues())}
     `);
   }
 }

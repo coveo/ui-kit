@@ -28,6 +28,14 @@ export const insertAtomicSearchBox = () => {
     if (typedocSearchBox) {
       typedocSearchBox.innerHTML = '';
       const searchInterface = document.createElement('atomic-search-interface');
+      searchInterface.style.setProperty(
+        '--atomic-font-family',
+        'canada-type-gibson, sans-serif'
+      );
+      searchInterface.style.setProperty('--atomic-font-normal', '300');
+      searchInterface.style.setProperty('--atomic-font-bold', '500');
+      searchInterface.style.setProperty('--atomic-text-base', '1rem');
+      searchInterface.style.setProperty('--atomic-text-lg', '1.125rem');
       const initializeAnalytics = areFunctionalCookiesEnabled();
       searchInterface.setAttribute('analytics', `${initializeAnalytics}`);
       const searchBox = document.createElement('atomic-search-box');

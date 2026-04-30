@@ -2,7 +2,7 @@ import type {i18n} from 'i18next';
 import {html, nothing, type TemplateResult} from 'lit';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 
-export interface IpxBodyProps {
+interface IpxBodyProps {
   i18n: i18n;
   visibility: 'open' | 'closed' | 'embedded';
   displayFooterSlot?: boolean;
@@ -42,11 +42,11 @@ export const renderIpxBody: FunctionalComponent<IpxBodyProps> = ({props}) => {
         role="region"
         aria-label=${props.i18n.t('ipx-body-content')}
       >
-        <div part="body" class="w-full">
-          ${props.body ?? nothing}
-        </div>
+        <div part="body" class="w-full">${props.body ?? nothing}</div>
       </div>
-      ${props.displayFooterSlot !== false ? renderFooter(props.footer ?? nothing) : nothing}
+      ${props.displayFooterSlot !== false
+        ? renderFooter(props.footer ?? nothing)
+        : nothing}
     </article>
   `;
 };
@@ -57,9 +57,7 @@ function renderFooter(footerContent: TemplateResult | typeof nothing) {
       part="footer-wrapper"
       class="border-neutral bg-neutral-light z-10 flex w-full flex-col items-stretch border-t px-7 py-4"
     >
-      <div part="footer">
-        ${footerContent}
-      </div>
+      <div part="footer">${footerContent}</div>
     </footer>
   `;
 }

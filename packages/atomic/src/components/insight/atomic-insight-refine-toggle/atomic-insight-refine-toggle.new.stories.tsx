@@ -8,6 +8,8 @@ import {
 } from '@/storybook-utils/api/insight/search-response';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
+import '@/src/components/insight/atomic-insight-facet/atomic-insight-facet.js';
+import '@/src/components/insight/atomic-insight-refine-toggle/atomic-insight-refine-toggle.js';
 
 const mockInsightApi = new MockInsightApi();
 
@@ -48,8 +50,14 @@ export const Default: Story = {
     (story) => html`
       ${story()}
       <div style="display:none;">
-        <atomic-insight-facet field="source" label="Source"></atomic-insight-facet>
-        <atomic-insight-facet field="filetype" label="File Type"></atomic-insight-facet>
+        <atomic-insight-facet
+          field="source"
+          label="Source"
+        ></atomic-insight-facet>
+        <atomic-insight-facet
+          field="filetype"
+          label="File Type"
+        ></atomic-insight-facet>
       </div>
     `,
     decorator,

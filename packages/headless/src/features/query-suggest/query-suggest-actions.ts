@@ -104,7 +104,8 @@ export interface FetchQuerySuggestionsActionCreatorPayload {
 }
 
 export interface FetchQuerySuggestionsThunkReturn
-  extends FetchQuerySuggestionsActionCreatorPayload,
+  extends
+    FetchQuerySuggestionsActionCreatorPayload,
     QuerySuggestSuccessResponse {
   /**
    * The query for which query suggestions were retrieved.

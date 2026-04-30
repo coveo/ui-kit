@@ -15,10 +15,11 @@ import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 export class AtomicResultSectionTitle extends ItemSectionMixin(
   LitElement,
   css`
-@reference '../../common/template-system/sections/sections.css';
-atomic-result-section-title {
-  @apply section-title;
-}`
+    @reference '../../common/template-system/sections/sections.css';
+    atomic-result-section-title {
+      @apply section-title;
+    }
+  `
 ) {}
 
 declare global {

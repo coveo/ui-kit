@@ -24,8 +24,7 @@ export type {
   GeneratedFilterSuggestionsControllers,
 };
 
-export interface FilterSuggestionsGeneratorDefinition
-  extends NonRecommendationControllerDefinitionWithoutProps<FilterSuggestionsGenerator> {}
+export interface FilterSuggestionsGeneratorDefinition extends NonRecommendationControllerDefinitionWithoutProps<FilterSuggestionsGenerator> {}
 
 /**
  * Defines the `FilterSuggestionsGenerator` controller for the purpose of server-side rendering.

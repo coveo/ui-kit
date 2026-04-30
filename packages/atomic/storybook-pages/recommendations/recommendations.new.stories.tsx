@@ -3,6 +3,20 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import {MockRecommendationApi} from '@/storybook-utils/api/recommendation/mock.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
+import '@/src/components/search/atomic-field-condition/atomic-field-condition.js';
+import '@/src/components/recommendations/atomic-recs-error/atomic-recs-error.js';
+import '@/src/components/recommendations/atomic-recs-interface/atomic-recs-interface.js';
+import '@/src/components/recommendations/atomic-recs-list/atomic-recs-list.js';
+import '@/src/components/recommendations/atomic-recs-result-template/atomic-recs-result-template.js';
+import '@/src/components/search/atomic-result-date/atomic-result-date.js';
+import '@/src/components/search/atomic-result-image/atomic-result-image.js';
+import '@/src/components/search/atomic-result-link/atomic-result-link.js';
+import '@/src/components/search/atomic-result-section-badges/atomic-result-section-badges.js';
+import '@/src/components/search/atomic-result-section-excerpt/atomic-result-section-excerpt.js';
+import '@/src/components/search/atomic-result-section-title/atomic-result-section-title.js';
+import '@/src/components/search/atomic-result-section-title-metadata/atomic-result-section-title-metadata.js';
+import '@/src/components/search/atomic-result-section-visual/atomic-result-section-visual.js';
+import '@/src/components/search/atomic-result-text/atomic-result-text.js';
 
 async function initializeRecsInterface(canvasElement: HTMLElement) {
   await customElements.whenDefined('atomic-recs-interface');
@@ -105,7 +119,8 @@ const meta: Meta = {
           <atomic-recs-result-template>
             <template>
               <style>
-                div.result-root.with-sections.display-list.image-small atomic-result-section-visual {
+                div.result-root.with-sections.display-list.image-small
+                  atomic-result-section-visual {
                   height: 180px;
                 }
                 .content-metadata {
@@ -120,7 +135,7 @@ const meta: Meta = {
                   display: inline-block;
                   padding: 4px 12px;
                   background-color: #e3f2fd;
-                  color: #145EA9;
+                  color: #145ea9;
                   border-radius: 12px;
                   font-size: 0.75rem;
                   font-weight: 500;
@@ -128,7 +143,10 @@ const meta: Meta = {
                 }
               </style>
               <atomic-result-section-visual>
-                <atomic-result-image field="image" aria-hidden="true"></atomic-result-image>
+                <atomic-result-image
+                  field="image"
+                  aria-hidden="true"
+                ></atomic-result-image>
               </atomic-result-section-visual>
               <atomic-result-section-badges>
                 <atomic-field-condition if-defined="category">

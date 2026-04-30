@@ -14,8 +14,7 @@ test.describe('atomic-product-image', () => {
   });
 
   test.describe('as a carousel', async () => {
-    const URL =
-      '/iframe.html?id=atomic-product-image--default&viewMode=story#sortCriteria=relevance';
+    const URL = '/iframe.html?id=atomic-product-image--default&viewMode=story';
     const FIRST_IMAGE =
       'https://images.barca.group/Sports/mj/Trampolines%20%26%20Floats/Huge%20inflatable%20mats/3_Blue/df1a99488425_bottom_right.webp';
     const SECOND_IMAGE =

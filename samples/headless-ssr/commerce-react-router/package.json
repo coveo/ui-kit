@@ -1,8 +1,8 @@
 {
   "name": "@samples/headless-ssr-commerce-react-router",
   "private": true,
-  "sideEffects": false,
   "type": "module",
+  "sideEffects": false,
   "scripts": {
     "build": "react-router build",
     "dev": "react-router dev",

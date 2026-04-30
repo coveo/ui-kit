@@ -10,7 +10,6 @@ Without these hooks, you would need to manually pass down props through every co
 
 See [Headless SSR usage: Define the search engine and controllers](https://docs.coveo.com/en/headless/latest/reference/documents/usage/server-side-rendering/implement-server-side-rendering.html#create-an-engine-definition)
 
-
 ## Create an engine configuration
 
 Define the controllers you need in your engine configuration. This example includes `SearchBox`, `ResultList` and `Facet` controllers:

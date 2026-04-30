@@ -194,11 +194,10 @@ export class AtomicSegmentedFacetScrollable
         `)}
         <div
           part="${direction}-fade"
-          class="from-background/60 pointer-events-none absolute top-0 z-0 h-10 w-20 ${
-            direction === 'left'
-              ? 'left-0 bg-linear-to-r'
-              : 'right-0 bg-linear-to-l'
-          }"
+          class="from-background/60 pointer-events-none absolute top-0 z-0 h-10 w-20 ${direction ===
+          'left'
+            ? 'left-0 bg-linear-to-r'
+            : 'right-0 bg-linear-to-l'}"
         ></div>
       </div>
     `;

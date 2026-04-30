@@ -112,7 +112,8 @@ const baseStyle = css`
   [part='agent-generation-status'] .generation-steps-value {
     @apply inline-block whitespace-nowrap;
     transform-origin: 50% 100%;
-    animation: generation-steps-rolodex 1000ms cubic-bezier(0.22, 0.9, 0.26, 1) both;
+    animation: generation-steps-rolodex 1000ms cubic-bezier(0.22, 0.9, 0.26, 1)
+      both;
     will-change: transform;
     backface-visibility: hidden;
   }

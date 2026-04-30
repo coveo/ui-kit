@@ -15,11 +15,17 @@ export function createSummary(
     (accumulator, component) => accumulator + component.storyCount,
     0
   );
+  const automatedCoveredCriteria = criteria.filter(
+    (criterion) => criterion.automatedCoverage
+  ).length;
   const interactiveCoveredCriteria = criteria.filter(
     (criterion) => criterion.interactiveCoverage
   ).length;
   const interactivePassedCriteria = criteria.filter(
     (criterion) => criterion.interactiveStatus === 'passed'
+  ).length;
+  const interactiveStatusCriteria = criteria.filter(
+    (criterion) => criterion.interactiveStatus !== undefined
   ).length;
 
   return {
@@ -36,7 +42,7 @@ export function createSummary(
     notApplicable: 0,
     notEvaluated: totalCriteria,
     automatedCoverage: getAutomationCoveragePercentage(
-      criteria.length,
+      automatedCoveredCriteria,
       totalCriteria
     ),
     interactiveCoverage: getAutomationCoveragePercentage(
@@ -45,7 +51,7 @@ export function createSummary(
     ),
     interactivePassRate: getAutomationCoveragePercentage(
       interactivePassedCriteria,
-      interactiveCoveredCriteria
+      interactiveStatusCriteria
     ),
     manualCoverage: '0%',
   };

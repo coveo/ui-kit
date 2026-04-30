@@ -22,14 +22,15 @@ export class AtomicProductSectionVisual extends ItemSectionMixin(
 
       .with-sections {
         &.image-icon {
-      atomic-product-image::part(previous-button),
-      atomic-product-image::part(next-button),
-      atomic-product-image::part(indicator) {
-        display: none;
+          atomic-product-image::part(previous-button),
+          atomic-product-image::part(next-button),
+          atomic-product-image::part(indicator) {
+            display: none;
+          }
+        }
       }
-    }}
     }
-    `
+  `
 ) {
   /**
    * How large or small the visual section of product using this template should be.

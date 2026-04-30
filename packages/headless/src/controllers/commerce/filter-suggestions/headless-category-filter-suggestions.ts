@@ -55,8 +55,7 @@ export type CategoryFilterSuggestionsState = CoreCategoryFieldSuggestionsState &
  * @category CategoryFilterSuggestions
  */
 export interface CategoryFilterSuggestions
-  extends Controller,
-    FacetControllerType<'hierarchical'> {
+  extends Controller, FacetControllerType<'hierarchical'> {
   /**
    * Resets the query in the controller state and clears the category filter suggestions.
    */
@@ -199,9 +198,8 @@ export function buildCategoryFilterSuggestions(
     },
 
     get state() {
-      const {displayName, field, facetId} = facetForFieldSuggestionsSelector(
-        getState()
-      );
+      const {displayName, field, facetId} =
+        facetForFieldSuggestionsSelector(getState());
       return {
         displayName,
         field,

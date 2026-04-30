@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicCommercePagerStories from './atomic-commerce-pager.new.stories';
+import meta, { Default, CustomIcon, WithACustomNumberOfPages } from './atomic-commerce-pager.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicCommercePagerStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicCommercePagerStories}
+  stories={{ Default, CustomIcon, WithACustomNumberOfPages }}
   githubPath="commerce/atomic-commerce-pager/atomic-commerce-pager.ts"
   tagName="atomic-commerce-pager"
   className="AtomicCommercePager"

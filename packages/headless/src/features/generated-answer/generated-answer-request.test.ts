@@ -563,6 +563,34 @@ describe('constructGenerateHeadAnswerParams', () => {
     expect(params.pipeline).toBeUndefined();
   });
 
+  it('includes search context when present', () => {
+    const params = constructGenerateHeadAnswerParams(
+      buildState({
+        context: {
+          contextValues: {
+            userRole: 'admin',
+            locale: ['en', 'fr'],
+          },
+        },
+      }),
+      buildMockNavigatorContextProvider()()
+    );
+
+    expect(params.context).toEqual({
+      userRole: 'admin',
+      locale: ['en', 'fr'],
+    });
+  });
+
+  it('does not include search context when absent', () => {
+    const params = constructGenerateHeadAnswerParams(
+      buildState({context: undefined}),
+      buildMockNavigatorContextProvider()()
+    );
+
+    expect(params.context).toBeUndefined();
+  });
+
   it('includes facets when present and sorts them alphabetically', () => {
     const params = constructGenerateHeadAnswerParams(
       buildState({

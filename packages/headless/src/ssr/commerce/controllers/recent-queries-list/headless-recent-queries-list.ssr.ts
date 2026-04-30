@@ -16,8 +16,7 @@ export type {
   RecentQueriesState,
 };
 
-export interface RecentQueriesListDefinition
-  extends NonRecommendationControllerDefinitionWithoutProps<RecentQueriesList> {}
+export interface RecentQueriesListDefinition extends NonRecommendationControllerDefinitionWithoutProps<RecentQueriesList> {}
 
 /**
  * Defines the `RecentQueriesList` controller for the purpose of server-side rendering.

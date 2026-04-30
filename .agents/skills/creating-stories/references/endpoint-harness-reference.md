@@ -16,16 +16,16 @@ Atomic uses **MSW (Mock Service Worker)** to mock API responses in Storybook sto
 Each domain has a Mock API class following the naming convention `Mock[Domain]Api`:
 
 ```typescript
-import { MockSearchApi } from '@/storybook-utils/api/search/mock';
-import { MockCommerceApi } from '@/storybook-utils/api/commerce/mock';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
 ```
 
 Each mock class exposes endpoint properties following the pattern `[endpoint]Endpoint`:
 
 ```typescript
 const searchApiHarness = new MockSearchApi();
-searchApiHarness.searchEndpoint        // EndpointHarness<SearchResponse>
-searchApiHarness.querySuggestEndpoint  // EndpointHarness<QuerySuggestResponse>
+searchApiHarness.searchEndpoint; // EndpointHarness<SearchResponse>
+searchApiHarness.querySuggestEndpoint; // EndpointHarness<QuerySuggestResponse>
 ```
 
 ## Methods
@@ -97,7 +97,7 @@ export const NetworkError: Story = {
 All methods that modify responses use a **modifier function** pattern:
 
 ```typescript
-(baseResponse: TResponse) => TResponse
+(baseResponse: TResponse) => TResponse;
 ```
 
 The modifier receives the typed base response and must return the same type. **Always spread the base response** to maintain required fields:

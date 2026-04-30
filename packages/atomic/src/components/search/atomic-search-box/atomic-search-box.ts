@@ -107,8 +107,9 @@ export class AtomicSearchBox
     ...LitElement.shadowRootOptions,
     delegatesFocus: true,
   };
-  static styles: CSSResultGroup =
-    css`@import "../atomic-search-box/atomic-search-box.pcss";`;
+  static styles: CSSResultGroup = css`
+    @import '../atomic-search-box/atomic-search-box.css';
+  `;
 
   @state() bindings!: Bindings;
   @state() error!: Error;
@@ -499,7 +500,9 @@ export class AtomicSearchBox
 
     switch (e.key) {
       case 'Enter':
-        this.onSubmit();
+        if (!e.shiftKey) {
+          this.onSubmit();
+        }
         break;
       case 'Escape':
         this.suggestionManager.clearSuggestions();
@@ -767,17 +770,17 @@ export class AtomicSearchBox
         },
       })(
         html`${this.renderTextBox()}
-      ${renderSubmitButton({
-        props: {
-          i18n: this.bindings.i18n,
-          disabled: this.isSearchDisabledForEndUser,
-          onClick: () => {
-            this.searchBox.submit();
-            this.suggestionManager.clearSuggestions();
+        ${renderSubmitButton({
+          props: {
+            i18n: this.bindings.i18n,
+            disabled: this.isSearchDisabledForEndUser,
+            onClick: () => {
+              this.searchBox.submit();
+              this.suggestionManager.clearSuggestions();
+            },
           },
-        },
-      })}
-      ${this.renderSuggestions()}`
+        })}
+        ${this.renderSuggestions()}`
       )}
       ${this.renderSlotContent()}
     `;

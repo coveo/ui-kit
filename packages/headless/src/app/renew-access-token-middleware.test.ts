@@ -34,7 +34,7 @@ describe('createRenewAccessTokenMiddleware', () => {
   }
 
   function buildArrayWithLengthEqualToNumberOfRetries() {
-    return new Array(5).fill(0);
+    return Array.from({length: 5}, () => 0);
   }
 
   beforeEach(() => {
@@ -330,9 +330,9 @@ describe('createRenewAccessTokenMiddleware', () => {
 
     const middleware = createRenewAccessTokenMiddleware(logger, renewFn);
 
-    const promises = new Array(5)
-      .fill(0)
-      .map(() => callMiddleware(middleware, action));
+    const promises = Array.from({length: 5}, () => 0).map(() =>
+      callMiddleware(middleware, action)
+    );
     await Promise.all(promises);
 
     (store.dispatch as Mock).mockReset();

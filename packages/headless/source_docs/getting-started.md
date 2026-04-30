@@ -3,6 +3,7 @@ title: Getting Started with Search
 group: Getting Started
 slug: getting-started/getting-started-search
 ---
+
 # Getting Started with Search
 
 This guide walks you through installing the Coveo Headless library and running a minimal example to confirm that everything is working.
@@ -27,9 +28,9 @@ npm install @coveo/headless
 Once installed, you can import from the package in your project:
 
 ```typescript
-import { 
-    buildSearchEngine, 
-    getSampleSearchEngineConfiguration
+import {
+  buildSearchEngine,
+  getSampleSearchEngineConfiguration,
 } from '@coveo/headless';
 ```
 
@@ -56,7 +57,7 @@ If you prefer not to use a package manager, you can load Headless directly from 
 <script src="https://static.cloud.coveo.com/headless/v3/headless.js"></script>
 <script>
   // All exports are available on the global CoveoHeadless object.
-  const { buildSearchEngine, getSampleSearchEngineConfiguration } = CoveoHeadless;
+  const {buildSearchEngine, getSampleSearchEngineConfiguration} = CoveoHeadless;
 </script>
 ```
 
@@ -85,7 +86,7 @@ const engine = buildSearchEngine({
 const resultList = buildResultList(engine);
 
 resultList.subscribe(() => {
-  const { results } = resultList.state;
+  const {results} = resultList.state;
   if (results.length) {
     console.log(`Received ${results.length} results.`);
     console.log('First result:', results[0].title);
@@ -123,7 +124,7 @@ engine.executeFirstSearch();
       const list = document.getElementById('results');
 
       resultList.subscribe(() => {
-        const { results } = resultList.state;
+        const {results} = resultList.state;
         list.innerHTML = '';
         results.forEach((r) => {
           const item = document.createElement('li');

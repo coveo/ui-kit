@@ -5,6 +5,10 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
 import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-result-fields-list/atomic-result-fields-list.js';
+import '@/src/components/search/atomic-result-multi-value-text/atomic-result-multi-value-text.js';
+import '@/src/components/search/atomic-result-text/atomic-result-text.js';
+import '@/src/components/search/atomic-text/atomic-text.js';
 
 const searchApiHarness = new MockSearchApi();
 

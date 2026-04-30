@@ -68,7 +68,7 @@ describe('atomic-insight-layout', () => {
   describe('#layoutStylesController', () => {
     it('should initialize LayoutStylesController', async () => {
       const {element} = await renderInsightLayout();
-      // biome-ignore lint/complexity/useLiteralKeys: <accessing private property for testing>
+      // oxlint-disable-next-line dot-notation -- <accessing private property for testing>
       expect(element['layoutStylesController']).toBeDefined();
     });
   });
