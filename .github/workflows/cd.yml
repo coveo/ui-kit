@@ -225,9 +225,9 @@ jobs:
           GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
   commit-artifact-upload:
     name: Upload commit artifacts to S3
-    needs: build-cdn
-    environment: 'Prerelease (CDN)'
+    needs: [build-cdn, release]
     runs-on: ubuntu-latest
+    environment: 'Prerelease (CDN)'
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
@@ -242,6 +242,10 @@ jobs:
         run: node ./scripts/deploy/trigger-commit-upload.mjs
         env:
           GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
+          # Comma-separated list of CDN channels to update (e.g. "canary" or "canary,rc").
+          # On release commits, update both canary and RC pointers.
+          # On regular merges, only update canary pointers.
+          CHANNELS: ${{ needs.release.outputs.published == 'true' && 'canary,rc' || 'canary' }}
   chromatic-update-main:
     name: 'Update Chromatic baseline on main'
     runs-on: ubuntu-latest
