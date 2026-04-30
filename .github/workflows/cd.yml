@@ -241,6 +241,7 @@ jobs:
         run: node ./scripts/deploy/trigger-commit-upload.mjs
         env:
           GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
+          # Comma-separated list of CDN channels to update (e.g. "canary" or "canary,rc").
           # On release commits, update both canary and RC pointers.
           # On regular merges, only update canary pointers.
           CHANNELS: ${{ needs.release.outputs.published == 'true' && 'canary,rc' || 'canary' }}
