@@ -19,7 +19,13 @@ function parseShardDescriptor(
   const index = Number.parseInt(rawIndex, 10);
   const total = Number.parseInt(rawTotal, 10);
 
-  if (Number.isNaN(index) || Number.isNaN(total) || total <= 0) {
+  if (
+    Number.isNaN(index) ||
+    Number.isNaN(total) ||
+    total < 1 ||
+    index < 1 ||
+    index > total
+  ) {
     return null;
   }
 
