@@ -1,4 +1,7 @@
-export {mergeA11yShardReports} from './reporter/merge-shards.js';
+export {
+  mergeA11yShardReports,
+  type MergeShardOptions,
+} from './reporter/merge-shards.js';
 export {
   type A11yReporterOptions,
   VitestA11yReporter,
