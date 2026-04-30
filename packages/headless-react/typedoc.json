@@ -24,6 +24,7 @@
   "entryPoints": ["./temp/ssr-commerce.json", "./temp/ssr.json"],
   "gitRevision": "main",
   "plugin": ["@coveo/documentation"],
+  "headerNav.activeEntry": "Headless React",
   "hoistOther.renameModulesTo": "Reference",
   "router": "kebab",
   "hoistOther.nestedOrder": {
