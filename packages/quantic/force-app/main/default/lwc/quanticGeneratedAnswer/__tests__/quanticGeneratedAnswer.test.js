@@ -52,6 +52,7 @@ jest.mock(
 const defaultOptions = {
   fieldsToIncludeInCitations: 'sfid,sfkbid,sfkavid,filetype',
   answerConfigurationId: undefined,
+  agentId: undefined,
   withToggle: false,
   collapsible: false,
   maxCollapsedHeight: 250,
@@ -329,6 +330,40 @@ describe('c-quantic-generated-answer', () => {
           exampleEngine,
           expect.not.objectContaining({
             answerConfigurationId: expect.any(String),
+          })
+        );
+      });
+    });
+
+    describe('when the agent id property is passed to the component', () => {
+      it('should initialize the controller with the correct agent id value', async () => {
+        const exampleAgentIdValue = 'exampleAgentId';
+        createTestComponent({
+          ...defaultOptions,
+          agentId: exampleAgentIdValue,
+        });
+        await flushPromises();
+
+        expect(functionsMocks.buildGeneratedAnswer).toHaveBeenCalledTimes(1);
+        expect(functionsMocks.buildGeneratedAnswer).toHaveBeenCalledWith(
+          exampleEngine,
+          expect.objectContaining({
+            agentId: exampleAgentIdValue,
+          })
+        );
+      });
+    });
+
+    describe('when the agent id property is not passed to the component', () => {
+      it('should initialize the controller without the agent id value', async () => {
+        createTestComponent();
+        await flushPromises();
+
+        expect(functionsMocks.buildGeneratedAnswer).toHaveBeenCalledTimes(1);
+        expect(functionsMocks.buildGeneratedAnswer).toHaveBeenCalledWith(
+          exampleEngine,
+          expect.not.objectContaining({
+            agentId: expect.any(String),
           })
         );
       });

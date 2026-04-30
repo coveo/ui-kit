@@ -101,6 +101,13 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    */
   @api answerConfigurationId;
   /**
+   * The unique identifier of the agent to use to generate the answer.
+   * @api
+   * @type {string}
+   * @default {undefined}
+   */
+  @api agentId;
+  /**
    * The maximum height (in px units) of the generated answer when it is collapsed.
    * @api
    * @type {number}
@@ -235,6 +242,9 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       },
       ...(this.answerConfigurationId && {
         answerConfigurationId: this.answerConfigurationId,
+      }),
+      ...(this.agentId && {
+        agentId: this.agentId,
       }),
       fieldsToIncludeInCitations: this.citationFields,
     });
