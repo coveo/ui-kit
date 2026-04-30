@@ -85,6 +85,12 @@ export const load = (app: Application) => {
     type: ParameterType.String,
   });
 
+  app.options.addDeclaration({
+    name: 'headerNav.activeEntry',
+    help: "Title of the Developer tools dropdown entry to highlight as active (e.g. 'Headless').",
+    type: ParameterType.String,
+  });
+
   const originalMethodName = 'getNavigation';
   let originalMethod: (
     project: ProjectReflection
@@ -204,7 +210,7 @@ export const load = (app: Application) => {
       </script>
       <script>
         <JSX.Raw
-          html={`(${insertSiteHeaderBar.toString()})('${event.relativeURL('assets')}');`}
+          html={`(${insertSiteHeaderBar.toString()})('${event.relativeURL('assets')}', '${(app.options.getValue('headerNav.activeEntry') as string) || ''}');`}
         />
       </script>
       <script>

@@ -23,6 +23,7 @@
     "test:unit:watch": "lwc-jest --watch",
     "test:unit:coverage": "lwc-jest --coverage",
     "validate:types": "tsc",
+    "validate:types:build-scripts": "tsc --noEmit --project scripts/build/tsconfig.json",
     "e2e:playwright": "npx playwright test",
     "e2e:playwright:lws-enabled": "npx playwright test --project=LWS-enabled",
     "e2e:playwright:lws-disabled": "npx playwright test --project=LWS-disabled",
