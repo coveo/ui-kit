@@ -1,6 +1,6 @@
 # Glossary
 
-Quick reference for terms used throughout the Thermidor codebase and documentation. Many of these terms are either novel to this architecture or have specific meanings that differ from general usage.
+Quick reference for terms used throughout the Headless Future codebase and documentation. Many of these terms are either novel to this architecture or have specific meanings that differ from general usage.
 
 ---
 
@@ -48,7 +48,7 @@ engine.adoptSlice(searchBoxSlice); // Subsequent calls: no-op
 
 ### StateMutation
 
-A library-agnostic `{ type, payload }` object representing a state change. It's the Thermidor equivalent of a Redux action — but its type is a plain TypeScript interface with no Redux imports.
+A library-agnostic `{ type, payload }` object representing a state change. It's the Headless Future equivalent of a Redux action — but its type is a plain TypeScript interface with no Redux imports.
 
 ```typescript
 interface StateMutation {

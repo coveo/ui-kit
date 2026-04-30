@@ -1,13 +1,13 @@
 # Usage Examples
 
-Concrete TypeScript examples showing how you'd consume the Thermidor headless library. These demonstrate the **consumer's perspective** — what a developer building a UI would write.
+Concrete TypeScript examples showing how you'd consume the Headless Future library. These demonstrate the **consumer's perspective** — what a developer building a UI would write.
 
 ## Setup
 
 All examples start with creating and configuring an `Engine`:
 
 ```typescript
-import {Engine} from '@thermidor/headless';
+import {Engine} from '@coveo/headless-future';
 
 // Create an engine (store starts empty)
 const engine = new Engine();
@@ -26,7 +26,7 @@ import {
   Engine,
   buildSearchBoxController,
   buildResultListController,
-} from '@thermidor/headless';
+} from '@coveo/headless-future';
 
 // 1. Create the engine
 const engine = new Engine();
@@ -71,7 +71,7 @@ For power users who need fine-grained control without controller orchestration.
 ### Using `loadSearchBoxActions`
 
 ```typescript
-import {Engine, loadSearchBoxActions} from '@thermidor/headless';
+import {Engine, loadSearchBoxActions} from '@coveo/headless-future';
 
 const engine = new Engine();
 
@@ -89,7 +89,7 @@ console.log(query); // 'advanced search'
 ### Using individual action functions
 
 ```typescript
-import {Engine, setQuery} from '@thermidor/headless';
+import {Engine, setQuery} from '@coveo/headless-future';
 
 const engine = new Engine();
 
@@ -122,7 +122,7 @@ actions.setQuery('custom workflow');
 Subscribe to specific parts of state. Callbacks only fire when the selected value actually changes.
 
 ```typescript
-import {Engine, buildSearchBoxController} from '@thermidor/headless';
+import {Engine, buildSearchBoxController} from '@coveo/headless-future';
 
 const engine = new Engine();
 const searchBox = buildSearchBoxController(engine);
@@ -160,8 +160,8 @@ import {
   Engine,
   searchBoxSelectors,
   searchBoxMutations,
-} from '@thermidor/headless';
-import {searchBoxSlice} from '@thermidor/headless/core/internal/searchBox/slice';
+} from '@coveo/headless-future';
+import {searchBoxSlice} from '@coveo/headless-future/core/internal/searchBox/slice';
 
 const engine = new Engine();
 await engine.adoptSlice(searchBoxSlice);
@@ -209,7 +209,7 @@ import {
   Engine,
   buildSearchBoxController,
   buildResultListController,
-} from '@thermidor/headless';
+} from '@coveo/headless-future';
 
 const engine = new Engine();
 
@@ -235,10 +235,10 @@ How tests work in this codebase (useful if you're extending the PoC).
 
 ```typescript
 import {describe, it, expect} from 'vitest';
-import {createTestEngine} from '@thermidor/headless/core/test-utils';
-import {searchBoxSlice} from '@thermidor/headless/core/internal/searchBox/slice';
-import * as searchBoxMutations from '@thermidor/headless/core/interface/search-box/mutate';
-import * as searchBoxSelectors from '@thermidor/headless/core/interface/search-box/selectors';
+import {createTestEngine} from '@coveo/headless-future/core/test-utils';
+import {searchBoxSlice} from '@coveo/headless-future/core/internal/searchBox/slice';
+import * as searchBoxMutations from '@coveo/headless-future/core/interface/search-box/mutate';
+import * as searchBoxSelectors from '@coveo/headless-future/core/interface/search-box/selectors';
 
 describe('searchBox', () => {
   it('should update the query', async () => {
@@ -303,10 +303,10 @@ const good = engine.read((state) => state.searchBox?.query ?? '');
 
 ```typescript
 // BAD: Bypassing the interface layer
-import {searchBoxSlice} from '@thermidor/headless/core/internal/searchBox/slice';
+import {searchBoxSlice} from '@coveo/headless-future/core/internal/searchBox/slice';
 
 // GOOD: Use controllers or actions that handle adoption for you
-import {buildSearchBoxController} from '@thermidor/headless';
+import {buildSearchBoxController} from '@coveo/headless-future';
 ```
 
 _(The internal imports in examples 4 and 6 above are for library developers/testers, not consumers.)_

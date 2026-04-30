@@ -243,11 +243,11 @@ export async function executeSearchAPI(engine: Engine): Promise<void> {
 **File**: [`src/public/controllers/search-box/controller.ts`](../src/public/controllers/search-box/controller.ts)
 
 ```typescript
-import {executeSearchAPI} from '../../../api';
-import {Engine} from '../../../core/interface/engine/engine';
-import {searchBoxSlice} from '../../../core/internal/searchBox/slice';
-import * as searchBoxSelectors from '../../../core/interface/search-box/selectors';
-import * as searchBoxMutators from '../../../core/interface/search-box/mutate';
+import {executeSearchAPI} from '@/src/api/index.js';
+import {Engine} from '@/src/core/interface/engine/engine.js';
+import {searchBoxSlice} from '@/src/core/internal/searchBox/slice.js';
+import * as searchBoxSelectors from '@/src/core/interface/search-box/selectors.js';
+import * as searchBoxMutators from '@/src/core/interface/search-box/mutate.js';
 import {createSelector} from '@reduxjs/toolkit';
 
 const stateSelect = createSelector([searchBoxSelectors.query], (query) => ({
@@ -305,15 +305,17 @@ export const buildSearchBoxController = (engine: Engine) => {
 **File**: [`src/public/actions/search-box.ts`](../src/public/actions/search-box.ts)
 
 ```typescript
-import {Engine} from '../../core';
-import {searchBoxSlice} from '../../core/internal/searchBox/slice';
-import * as searchBoxMutators from '../../core/interface/search-box/mutate';
+import {searchBoxSlice} from '@/src/core/internal/searchBox/slice.js';
+import * as searchBoxMutators from '@/src/core/interface/search-box/mutate.js';
+import {Engine} from '@/src/core/interface/engine/engine.js';
 
 type MutatorToAction<T> = T extends (...args: infer A) => any
   ? (...args: A) => void
   : never;
-type MutatorsToActions<T> = {[K in keyof T]: MutatorToAction<T[K]>};
 
+type MutatorsToActions<T> = {
+  [K in keyof T]: MutatorToAction<T[K]>;
+};
 const loadedEngine = new WeakSet<Engine>();
 
 export const loadSearchBoxActions = (
@@ -333,6 +335,7 @@ export const setQuery = (engine: Engine) => {
     engine.adoptSlice(searchBoxSlice);
     loadedEngine.add(engine);
   }
+
   return (query: string) => {
     engine.mutate(searchBoxMutators.setQuery(query));
   };
