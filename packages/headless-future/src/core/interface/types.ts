@@ -22,6 +22,24 @@ export type {ResultsState} from './results/types.js';
 export type {FacetState, FacetValue} from './facets/types.js';
 export type {PaginationState} from './pagination/types.js';
 export type {ConfigurationState} from './configuration/types.js';
+export type {
+  ConversationState,
+  ConversationMessage,
+  ConversationTurn,
+  ConversationSession,
+  ConversationMessageRole,
+  TurnStatus,
+  CitationRef,
+  ToolState,
+} from './conversation/types.js';
+export type {StreamingState, StreamError} from './streaming/types.js';
+export type {
+  OrchestrationState,
+  OrchestrationSnapshot,
+  OrchestrationMode,
+} from './orchestration/types.js';
+export type {SurfacesState, StructuredSurface} from './surfaces/types.js';
+export type {SharedContextState, CitationLink} from './shared-context/types.js';
 
 // Import for use in State interface below
 import type {SearchBoxState} from './search-box/types.js';
@@ -30,6 +48,11 @@ import type {ResultsState} from './results/types.js';
 import type {FacetState} from './facets/types.js';
 import type {PaginationState} from './pagination/types.js';
 import type {ConfigurationState} from './configuration/types.js';
+import type {ConversationState} from './conversation/types.js';
+import type {StreamingState} from './streaming/types.js';
+import type {OrchestrationState} from './orchestration/types.js';
+import type {SurfacesState} from './surfaces/types.js';
+import type {SharedContextState} from './shared-context/types.js';
 
 // ============================================================================
 // Root State Interface
@@ -54,6 +77,16 @@ export interface State {
   pagination?: PaginationState;
   /** Configuration state (available after adoption) */
   configuration?: ConfigurationState;
+  /** Conversation domain: messages, turns, session continuity */
+  conversation?: ConversationState;
+  /** Streaming domain: SSE connection status and telemetry */
+  streaming?: StreamingState;
+  /** Orchestration domain: backend-driven mode/phase transitions */
+  orchestration?: OrchestrationState;
+  /** Surfaces domain: normalized structured UI surfaces */
+  surfaces?: SurfacesState;
+  /** SharedContext domain: cross-domain context bridge state */
+  sharedContext?: SharedContextState;
 }
 
 // ============================================================================
