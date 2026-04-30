@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicCommerceSearchBoxStories from './atomic-commerce-search-box.new.stories';
+import meta, { Default, RichSearchBox, StandaloneSearchBox, WithSuggestions, WithSuggestionsAndRecentQueries, WithNoSuggestions } from './atomic-commerce-search-box.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicCommerceSearchBoxStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicCommerceSearchBoxStories}
+  stories={{ Default, RichSearchBox, StandaloneSearchBox, WithSuggestions, WithSuggestionsAndRecentQueries, WithNoSuggestions }}
   githubPath="commerce/atomic-commerce-search-box/atomic-commerce-search-box.ts"
   tagName="atomic-commerce-search-box"
   className="AtomicCommerceSearchBox"

@@ -2,7 +2,10 @@
 <html dir="ltr" lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"
+    />
     <title>Homepage</title>
 
     <script type="module">
@@ -23,8 +26,12 @@
       import {commerceEngine} from './engine.mjs';
 
       (async () => {
-        await customElements.whenDefined('atomic-commerce-recommendation-interface');
-        const recommendationInterfaces = document.querySelectorAll('atomic-commerce-recommendation-interface');
+        await customElements.whenDefined(
+          'atomic-commerce-recommendation-interface'
+        );
+        const recommendationInterfaces = document.querySelectorAll(
+          'atomic-commerce-recommendation-interface'
+        );
 
         for (const recommendationInterface of recommendationInterfaces) {
           await recommendationInterface.initializeWithEngine(commerceEngine);
@@ -57,7 +64,10 @@
     <h1>HOMEPAGE</h1>
     <main>
       <section>
-        <atomic-commerce-recommendation-interface language-assets-path="./lang" icon-assets-path="./assets">
+        <atomic-commerce-recommendation-interface
+          language-assets-path="./lang"
+          icon-assets-path="./assets"
+        >
           <atomic-commerce-layout>
             <atomic-layout-section section="main">
               <atomic-commerce-recommendation-list
@@ -68,22 +78,35 @@
                 <atomic-product-template>
                   <template>
                     <atomic-product-section-name>
-                      <atomic-product-link class="font-bold"></atomic-product-link>
+                      <atomic-product-link
+                        class="font-bold"
+                      ></atomic-product-link>
                     </atomic-product-section-name>
                     <atomic-product-section-visual>
-                      <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+                      <atomic-product-image
+                        field="ec_thumbnails"
+                      ></atomic-product-image>
                     </atomic-product-section-visual>
                     <atomic-product-section-metadata>
                       <atomic-product-field-condition if-defined="ec_brand">
-                        <atomic-product-text field="ec_brand" class="text-neutral-dark block"></atomic-product-text>
+                        <atomic-product-text
+                          field="ec_brand"
+                          class="text-neutral-dark block"
+                        ></atomic-product-text>
                       </atomic-product-field-condition>
                       <atomic-product-field-condition if-defined="ec_brand">
-                        <atomic-product-rating field="ec_rating"></atomic-product-rating>
-                        <atomic-product-multi-value-text field="cat_available_sizes"></atomic-product-multi-value-text>
+                        <atomic-product-rating
+                          field="ec_rating"
+                        ></atomic-product-rating>
+                        <atomic-product-multi-value-text
+                          field="cat_available_sizes"
+                        ></atomic-product-multi-value-text>
                       </atomic-product-field-condition>
                     </atomic-product-section-metadata>
                     <atomic-product-section-emphasized>
-                      <atomic-product-price currency="USD"></atomic-product-price>
+                      <atomic-product-price
+                        currency="USD"
+                      ></atomic-product-price>
                     </atomic-product-section-emphasized>
                     <atomic-product-section-children>
                       <atomic-product-children></atomic-product-children>
@@ -94,7 +117,10 @@
             </atomic-layout-section>
           </atomic-commerce-layout>
         </atomic-commerce-recommendation-interface>
-        <atomic-commerce-recommendation-interface language-assets-path="./lang" icon-assets-path="./assets">
+        <atomic-commerce-recommendation-interface
+          language-assets-path="./lang"
+          icon-assets-path="./assets"
+        >
           <atomic-commerce-layout>
             <atomic-layout-section section="main">
               <atomic-commerce-recommendation-list

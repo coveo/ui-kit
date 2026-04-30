@@ -1,15 +1,17 @@
 ---
 title: Versioned documentation
+group: Information
 slug: versioned-documentation
 ---
+
 # Versioned documentation
 
->[!TIP]
+> [!TIP]
 >
->For detailed changes between versions, see the [Change Log](https://github.com/coveo/ui-kit/blob/main/packages/headless/CHANGELOG.md).
+> For detailed changes between versions, see the [Change Log](https://github.com/coveo/ui-kit/blob/main/packages/headless/CHANGELOG.md).
 
 > [!NOTE]
-> 
+>
 > As of v1.28.2 the default analytics endpoint has moved to `https://analytics.cloud.coveo.com/rest/ua`
 
 ## Latest version (v3.35.0)

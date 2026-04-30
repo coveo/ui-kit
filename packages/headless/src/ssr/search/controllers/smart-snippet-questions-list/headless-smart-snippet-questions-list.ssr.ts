@@ -8,11 +8,10 @@ import type {ControllerDefinitionWithoutProps} from '../../../common/types/contr
 
 export * from '../../../../controllers/smart-snippet-questions-list/headless-smart-snippet-questions-list.js';
 
-export interface SmartSnippetQuestionsListDefinition
-  extends ControllerDefinitionWithoutProps<
-    SearchEngine,
-    SmartSnippetQuestionsList
-  > {}
+export interface SmartSnippetQuestionsListDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  SmartSnippetQuestionsList
+> {}
 
 /**
  * Defines a `SmartSnippetQuestionsList` controller instance.

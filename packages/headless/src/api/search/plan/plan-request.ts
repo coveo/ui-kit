@@ -6,6 +6,7 @@ import type {
 import type {
   AnalyticsParam,
   AuthenticationParam,
+  EnableQuerySyntaxParam,
   PipelineParam,
   QueryParam,
   SearchHubParam,
@@ -20,4 +21,5 @@ export type PlanRequest = BaseParam &
   LocaleParam &
   TimezoneParam &
   AnalyticsParam &
-  AuthenticationParam;
+  AuthenticationParam &
+  EnableQuerySyntaxParam;

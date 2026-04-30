@@ -1,6 +1,10 @@
 import type {SearchAppState} from '../../state/search-app-state.js';
+import {buildMockCitation} from '../../test/mock-citation.js';
+import {createMockState} from '../../test/mock-state.js';
+import {createInitialFollowUpAnswer} from '../follow-up-answers/follow-up-answers-state.js';
 import {streamAnswerAPIStateMock} from './generated-answer-mocks.js';
 import {
+  citationSourceSelector,
   generativeQuestionAnsweringIdSelector,
   isGeneratedAnswerFeatureEnabledWithAgentAPI,
 } from './generated-answer-selectors.js';
@@ -191,6 +195,152 @@ describe('generated-answer-selectors', () => {
       } as unknown as Partial<SearchAppState>;
 
       expect(isGeneratedAnswerFeatureEnabledWithAgentAPI(state)).toBe(false);
+    });
+  });
+
+  describe('citationSourceSelector', () => {
+    const headCitation = buildMockCitation({
+      id: 'head-citation-1',
+      permanentid: 'head-perm-1',
+      title: 'Head Citation',
+      uri: 'https://example.com/head',
+      clickUri: 'https://example.com/head',
+    });
+
+    const followUpCitation = buildMockCitation({
+      id: 'followup-citation-1',
+      permanentid: 'followup-perm-1',
+      title: 'Follow-up Citation',
+      uri: 'https://example.com/followup',
+      clickUri: 'https://example.com/followup',
+    });
+
+    it('finds a citation in head answer citations', () => {
+      const state = createMockState({
+        generatedAnswer: {
+          ...createMockState().generatedAnswer,
+          citations: [headCitation],
+        },
+      });
+
+      const result = citationSourceSelector(state, 'head-citation-1');
+      expect(result).toEqual(headCitation);
+    });
+
+    it('finds a citation in follow-up answer citations', () => {
+      const state = createMockState({
+        generatedAnswer: {
+          ...createMockState().generatedAnswer,
+          citations: [headCitation],
+        },
+        followUpAnswers: {
+          ...createMockState().followUpAnswers,
+          followUpAnswers: [
+            {
+              ...createInitialFollowUpAnswer('follow up question'),
+              answerId: 'followup-answer-1',
+              citations: [followUpCitation],
+            },
+          ],
+        },
+      });
+
+      const result = citationSourceSelector(state, 'followup-citation-1');
+      expect(result).toEqual(followUpCitation);
+    });
+
+    it('prioritizes head answer citations over follow-up citations with the same id', () => {
+      const duplicateCitation = buildMockCitation({
+        id: 'shared-id',
+        title: 'Follow-up version',
+      });
+      const headVersion = buildMockCitation({
+        id: 'shared-id',
+        title: 'Head version',
+      });
+
+      const state = createMockState({
+        generatedAnswer: {
+          ...createMockState().generatedAnswer,
+          citations: [headVersion],
+        },
+        followUpAnswers: {
+          ...createMockState().followUpAnswers,
+          followUpAnswers: [
+            {
+              ...createInitialFollowUpAnswer('follow up'),
+              answerId: 'followup-1',
+              citations: [duplicateCitation],
+            },
+          ],
+        },
+      });
+
+      const result = citationSourceSelector(state, 'shared-id');
+      expect(result?.title).toBe('Head version');
+    });
+
+    it('returns undefined when citation is not found anywhere', () => {
+      const state = createMockState({
+        generatedAnswer: {
+          ...createMockState().generatedAnswer,
+          citations: [headCitation],
+        },
+        followUpAnswers: {
+          ...createMockState().followUpAnswers,
+          followUpAnswers: [
+            {
+              ...createInitialFollowUpAnswer('follow up'),
+              answerId: 'followup-1',
+              citations: [followUpCitation],
+            },
+          ],
+        },
+      });
+
+      const result = citationSourceSelector(state, 'nonexistent-id');
+      expect(result).toBeUndefined();
+    });
+
+    it('works when followUpAnswers is not present in state', () => {
+      const state = createMockState({
+        generatedAnswer: {
+          ...createMockState().generatedAnswer,
+          citations: [headCitation],
+        },
+      });
+
+      const result = citationSourceSelector(state, 'head-citation-1');
+      expect(result).toEqual(headCitation);
+    });
+
+    it('finds a citation across multiple follow-up answers', () => {
+      const secondFollowUpCitation = buildMockCitation({
+        id: 'followup-citation-2',
+        title: 'Second Follow-up Citation',
+      });
+
+      const state = createMockState({
+        generatedAnswer: {...createMockState().generatedAnswer, citations: []},
+        followUpAnswers: {
+          ...createMockState().followUpAnswers,
+          followUpAnswers: [
+            {
+              ...createInitialFollowUpAnswer('first follow up'),
+              answerId: 'followup-1',
+              citations: [followUpCitation],
+            },
+            {
+              ...createInitialFollowUpAnswer('second follow up'),
+              answerId: 'followup-2',
+              citations: [secondFollowUpCitation],
+            },
+          ],
+        },
+      });
+
+      const result = citationSourceSelector(state, 'followup-citation-2');
+      expect(result).toEqual(secondFollowUpCitation);
     });
   });
 });

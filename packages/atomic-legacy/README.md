@@ -17,6 +17,7 @@ This package is part of Coveo's ongoing modernization effort to migrate from Ste
 An internal component used to render individual search box suggestions. It handles rendering of suggestion content that can be either Stencil VNodes or native DOM Elements, providing compatibility between legacy Stencil components and modern Lit implementations.
 
 **Key features:**
+
 - Renders suggestion content for search box autocomplete
 - Supports both Stencil VNode and native Element content
 - Handles accessibility attributes (ARIA labels, keyboard navigation)
@@ -34,15 +35,17 @@ The package exposes a single entry point:
 This package is consumed automatically by `@coveo/atomic` and should not be installed or imported directly in application code.
 
 **Do not use:**
+
 ```typescript
 // ❌ Don't import from atomic-legacy in your projects
-import { AtomicSuggestionRenderer } from '@coveo/atomic-legacy';
+import {AtomicSuggestionRenderer} from '@coveo/atomic-legacy';
 ```
 
 **Instead, use:**
+
 ```typescript
 // ✅ Use the main @coveo/atomic package
-import { defineCustomElements } from '@coveo/atomic/loader';
+import {defineCustomElements} from '@coveo/atomic/loader';
 ```
 
 ## Development

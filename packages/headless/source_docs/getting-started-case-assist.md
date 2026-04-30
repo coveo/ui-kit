@@ -3,6 +3,7 @@ title: Getting Started with Case Assist
 group: Getting Started
 slug: getting-started/getting-started-case-assist
 ---
+
 # Getting Started with Case Assist
 
 Case Assist helps you build interfaces that assist agents and users in classifying and resolving cases by suggesting relevant fields and documentation.
@@ -18,10 +19,10 @@ npm install @coveo/headless
 Once installed, you can import from the Case Assist sub-package:
 
 ```typescript
-import { 
-    buildCaseAssistEngine, 
-    buildCaseInput, 
-    buildDocumentSuggestionList 
+import {
+  buildCaseAssistEngine,
+  buildCaseInput,
+  buildDocumentSuggestionList,
 } from '@coveo/headless/case-assist';
 ```
 
@@ -49,7 +50,8 @@ If you prefer not to use a package manager, you can load the Case Assist bundle 
 <script src="https://static.cloud.coveo.com/headless/v3/case-assist/headless.js"></script>
 <script>
   // All exports are available on the global CoveoHeadlessCaseAssist object.
-  const { buildCaseAssistEngine, buildCaseInput, buildDocumentSuggestionList } = CoveoHeadlessCaseAssist;
+  const {buildCaseAssistEngine, buildCaseInput, buildDocumentSuggestionList} =
+    CoveoHeadlessCaseAssist;
 </script>
 ```
 
@@ -79,7 +81,7 @@ const engine = buildCaseAssistEngine({
   },
 });
 
-const caseInput = buildCaseInput(engine, { options: { field: 'subject' } });
+const caseInput = buildCaseInput(engine, {options: {field: 'subject'}});
 
 caseInput.subscribe(() => {
   console.log('Case input state:', caseInput.state);

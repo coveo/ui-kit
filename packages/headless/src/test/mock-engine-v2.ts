@@ -84,8 +84,8 @@ function buildMockCoreEngine<State extends StateFromEngine<CoreEngine>>(
 }
 
 type MockedCoreEngineNext<
-  State extends
-    StateFromEngineNext<CoreEngineNext> = StateFromEngineNext<CoreEngineNext>,
+  State extends StateFromEngineNext<CoreEngineNext> =
+    StateFromEngineNext<CoreEngineNext>,
 > = CoreEngineNext & {
   [stateKey]: State;
   logger: MockedLogger;

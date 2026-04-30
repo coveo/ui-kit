@@ -16,9 +16,9 @@ export class MissingParentError extends Error {
  * A reactive controller that manages folded item list context data from parent components.
  * Handles fetching folded item list data via custom events and manages error states.
  */
-export class FoldedItemListContextController<T = unknown>
-  implements ReactiveController
-{
+export class FoldedItemListContextController<
+  T = unknown,
+> implements ReactiveController {
   private host: ReactiveControllerHost & LitElementWithError;
   private _foldedItemList: T | null = null;
   private _error: MissingParentError | null = null;

@@ -99,21 +99,21 @@ describe('atomic-recs-result', () => {
       prop: 'imageSize',
       invalidValue: 'invalid',
     },
-  ])('should set error when #$prop is invalid', async ({
-    prop,
-    invalidValue,
-  }) => {
-    const element = await renderResult();
+  ])(
+    'should set error when #$prop is invalid',
+    async ({prop, invalidValue}) => {
+      const element = await renderResult();
 
-    expect(element.error).toBeUndefined();
+      expect(element.error).toBeUndefined();
 
-    // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
-    (element as any)[prop] = invalidValue;
-    await element.updateComplete;
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
+      (element as any)[prop] = invalidValue;
+      await element.updateComplete;
 
-    expect(element.error).toBeDefined();
-    expect(element.error.message).toMatch(new RegExp(prop, 'i'));
-  });
+      expect(element.error).toBeDefined();
+      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
+    }
+  );
 
   it.each<{
     prop: 'density' | 'display' | 'imageSize';
@@ -135,22 +135,21 @@ describe('atomic-recs-result', () => {
       validValue: 'icon',
       invalidValue: 'invalid',
     },
-  ])('should set error when valid #$prop is updated to an invalid value', async ({
-    prop,
-    validValue,
-    invalidValue,
-  }) => {
-    const element = await renderResult({[prop]: validValue});
+  ])(
+    'should set error when valid #$prop is updated to an invalid value',
+    async ({prop, validValue, invalidValue}) => {
+      const element = await renderResult({[prop]: validValue});
 
-    expect(element.error).toBeUndefined();
+      expect(element.error).toBeUndefined();
 
-    // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
-    (element as any)[prop] = invalidValue;
-    await element.updateComplete;
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
+      (element as any)[prop] = invalidValue;
+      await element.updateComplete;
 
-    expect(element.error).toBeDefined();
-    expect(element.error.message).toMatch(new RegExp(prop, 'i'));
-  });
+      expect(element.error).toBeDefined();
+      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
+    }
+  );
 
   it('should handle click and stop propagation', async () => {
     const element = await renderResult();
@@ -290,7 +289,7 @@ describe('atomic-recs-result', () => {
     const element = await renderResult();
     element.store = {
       unsetLoadingFlag: unsetLoadingFlagSpy,
-      // biome-ignore lint/suspicious/noExplicitAny: testing with mock store
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing with mock store
     } as any;
     element.loadingFlag = 'test-flag';
 

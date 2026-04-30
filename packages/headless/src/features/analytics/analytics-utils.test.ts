@@ -67,6 +67,24 @@ describe('analytics-utils', () => {
       ).toBe('unknown');
     });
 
+    it('should extract documentCategory information from objecttype', () => {
+      const result = buildMockResult();
+      result.raw.objecttype = 'Message';
+
+      expect(
+        partialDocumentInformation(result, createMockState()).documentCategory
+      ).toBe('Message');
+    });
+
+    it('should not include documentCategory when objecttype is missing', () => {
+      const result = buildMockResult();
+      delete result.raw.objecttype;
+
+      expect(
+        partialDocumentInformation(result, createMockState())
+      ).not.toHaveProperty('documentCategory');
+    });
+
     it('when the result is not found in state, the documentPosition is 1', () => {
       const result = buildMockResult({uniqueId: '1'});
       const state = createMockState();
@@ -252,23 +270,23 @@ describe('analytics-utils', () => {
         });
       });
 
-      describe.each([
-        'analyticsPayloadBuilder',
-        'analyticsType',
-      ] as const)('when %s is not given', (_missingArg) => {
-        it('should not send any analytics when called', async () => {
-          const {[_missingArg]: _, ...makeAnalyticsParam} = {
-            ...baseMakeAnalyticParams,
-            ...additionalMakeAnalyticParamsForRelay,
-          };
-          const action = makeAnalyticsAction(makeAnalyticsParam);
+      describe.each(['analyticsPayloadBuilder', 'analyticsType'] as const)(
+        'when %s is not given',
+        (_missingArg) => {
+          it('should not send any analytics when called', async () => {
+            const {[_missingArg]: _, ...makeAnalyticsParam} = {
+              ...baseMakeAnalyticParams,
+              ...additionalMakeAnalyticParamsForRelay,
+            };
+            const action = makeAnalyticsAction(makeAnalyticsParam);
 
-          await engine.dispatch(action);
+            await engine.dispatch(action);
 
-          expect(fakeCAJSLog).not.toHaveBeenCalled();
-          expect(relayEmitSpy).not.toHaveBeenCalled();
-        });
-      });
+            expect(fakeCAJSLog).not.toHaveBeenCalled();
+            expect(relayEmitSpy).not.toHaveBeenCalled();
+          });
+        }
+      );
     });
 
     describe('when analyticsMode=legacy', () => {

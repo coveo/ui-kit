@@ -3,7 +3,7 @@ import {
   buildRecommendationEngine,
   getSampleRecommendationEngineConfiguration,
 } from '@coveo/headless/recommendation';
-// biome-ignore lint/style/useImportType: <React is needed>
+// oxlint-disable-next-line @typescript-eslint/consistent-type-imports -- <React is needed>
 import React, {useEffect, useRef} from 'react';
 import {AtomicRecsInterface} from '../search/components.js';
 
@@ -15,8 +15,10 @@ type GetRecommendations = AtomicRecsInterfaceProps['getRecommendations'];
 /**
  * The properties of the AtomicRecsInterface component
  */
-interface WrapperProps
-  extends Omit<AtomicRecsInterfaceProps, 'i18n' | 'pipeline' | 'searchHub'> {
+interface WrapperProps extends Omit<
+  AtomicRecsInterfaceProps,
+  'i18n' | 'pipeline' | 'searchHub'
+> {
   /**
    * An optional callback function that can be used to control the execution of the first query.
    *

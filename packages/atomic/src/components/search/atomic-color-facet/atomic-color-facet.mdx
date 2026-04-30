@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicColorFacetStories from './atomic-color-facet.new.stories';
+import meta, { Default, CheckboxDisplay, WithSelectedValue } from './atomic-color-facet.new.stories';
 import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={ AtomicColorFacetStories } />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={ AtomicColorFacetStories }
+  stories={{ Default, CheckboxDisplay, WithSelectedValue }}
   githubPath="search/atomic-color-facet/atomic-color-facet.ts"
   tagName="atomic-color-facet"
   className="AtomicColorFacet"

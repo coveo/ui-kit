@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicRecsResultTemplateStories from './atomic-recs-result-template.new.stories';
+import meta, { Default, WithMinimalTemplate, WithLinkSlot } from './atomic-recs-result-template.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicRecsResultTemplateStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicRecsResultTemplateStories}
+  stories={{ Default, WithMinimalTemplate, WithLinkSlot }}
   defaultStory="Default"
   githubPath="recommendations/atomic-recs-result-template/atomic-recs-result-template.ts"
   tagName="atomic-recs-result-template"

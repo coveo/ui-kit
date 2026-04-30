@@ -8,8 +8,10 @@ export type {
   RedirectionTriggerState,
 } from '../../../../controllers/core/triggers/headless-core-redirection-trigger.js';
 
-export interface RedirectionTriggerDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, RedirectionTrigger> {}
+export interface RedirectionTriggerDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  RedirectionTrigger
+> {}
 
 /**
  * Defines a `RedirectionTrigger` controller instance.

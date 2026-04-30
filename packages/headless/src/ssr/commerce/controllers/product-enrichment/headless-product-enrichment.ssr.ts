@@ -10,11 +10,10 @@ import {createControllerWithKind, Kind} from '../../types/kind.js';
 
 export type {ProductEnrichment, ProductEnrichmentProps, ProductEnrichmentState};
 
-export interface ProductEnrichmentDefinition
-  extends StandaloneControllerWithProps<
-    ProductEnrichment,
-    ProductEnrichmentProps
-  > {}
+export interface ProductEnrichmentDefinition extends StandaloneControllerWithProps<
+  ProductEnrichment,
+  ProductEnrichmentProps
+> {}
 
 /**
  * Defines the `ProductEnrichment` controller for the purpose of server-side rendering.

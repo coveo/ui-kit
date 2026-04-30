@@ -213,6 +213,7 @@ function getTemplateData(componentName, cat) {
 
   return {
     componentName,
+    componentCategory: cat,
     pageName: componentName,
     category: capitalize(cat),
     titleName,

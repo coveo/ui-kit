@@ -15,6 +15,9 @@ export function createSummary(
     (accumulator, component) => accumulator + component.storyCount,
     0
   );
+  const automatedCoveredCriteria = criteria.filter(
+    (criterion) => criterion.automatedCoverage
+  ).length;
   const interactiveCoveredCriteria = criteria.filter(
     (criterion) => criterion.interactiveCoverage
   ).length;
@@ -36,7 +39,7 @@ export function createSummary(
     notApplicable: 0,
     notEvaluated: totalCriteria,
     automatedCoverage: getAutomationCoveragePercentage(
-      criteria.length,
+      automatedCoveredCriteria,
       totalCriteria
     ),
     interactiveCoverage: getAutomationCoveragePercentage(

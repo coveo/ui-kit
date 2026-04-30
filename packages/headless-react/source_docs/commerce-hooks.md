@@ -10,7 +10,6 @@ Without these hooks, you would need to manually pass down props through every co
 
 See [Headless commerce usage (SSR): Define the commerce engine and controllers](https://docs.coveo.com/en/obif0156/#define-the-commerce-engine-and-controllers)
 
-
 ## Create an engine configuration
 
 Define the controllers you need in your engine configuration. This example includes `Summary`, `ProductList` and `Cart` controllers:

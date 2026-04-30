@@ -3,6 +3,7 @@ title: Getting Started with Insight
 group: Getting Started
 slug: getting-started/getting-started-insight
 ---
+
 # Getting Started with Insight
 
 The Insight engine powers search interfaces embedded within service agent consoles, helping agents find relevant information to resolve customer cases.
@@ -18,9 +19,9 @@ npm install @coveo/headless
 Once installed, you can import from the Insight sub-package:
 
 ```typescript
-import { 
-    buildInsightEngine, 
-    getSampleInsightEngineConfiguration 
+import {
+  buildInsightEngine,
+  getSampleInsightEngineConfiguration,
 } from '@coveo/headless/insight';
 ```
 
@@ -47,7 +48,8 @@ If you prefer not to use a package manager, you can load Headless Insight direct
 <script src="https://static.cloud.coveo.com/headless/v3/insight/headless.js"></script>
 <script>
   // All exports are available on the global CoveoHeadlessInsight object.
-  const { buildInsightEngine, getSampleInsightEngineConfiguration } = CoveoHeadlessInsight;
+  const {buildInsightEngine, getSampleInsightEngineConfiguration} =
+    CoveoHeadlessInsight;
 </script>
 ```
 
@@ -75,7 +77,7 @@ const engine = buildInsightEngine({
 const resultList = buildResultList(engine);
 
 resultList.subscribe(() => {
-  const { results } = resultList.state;
+  const {results} = resultList.state;
   if (results.length) {
     console.log(`Received ${results.length} results.`);
     console.log('First result:', results[0].title);
@@ -113,7 +115,7 @@ engine.executeFirstSearch();
       const list = document.getElementById('results');
 
       resultList.subscribe(() => {
-        const { results } = resultList.state;
+        const {results} = resultList.state;
         list.innerHTML = '';
         results.forEach((r) => {
           const li = document.createElement('li');

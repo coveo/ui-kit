@@ -11,12 +11,17 @@ import {getSampleSearchEngineConfiguration} from '@coveo/headless';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
-import {richResponse, type baseResponse} from '@/storybook-utils/api/search/search-response';
+import {
+  richResponse,
+  type baseResponse,
+} from '@/storybook-utils/api/search/search-response';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
 
 async function initializeSearchInterface(canvasElement: HTMLElement) {
   await customElements.whenDefined('atomic-search-interface');
-  const searchInterface = canvasElement.querySelector('atomic-search-interface');
+  const searchInterface = canvasElement.querySelector(
+    'atomic-search-interface'
+  );
   await searchInterface!.initialize(getSampleSearchEngineConfiguration());
 }
 
@@ -27,15 +32,20 @@ const meta: Meta = {
   title: 'Search/Example Pages',
   parameters: {
     ...parameters,
-    layout: 'fullscreen',  // Required for sample pages
+    layout: 'fullscreen', // Required for sample pages
     msw: {handlers: [...mockSearchApi.handlers]},
     chromatic: {disableSnapshot: false},
   },
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mock(() => richResponse as unknown as typeof baseResponse);
+    mockSearchApi.searchEndpoint.mock(
+      () => richResponse as unknown as typeof baseResponse
+    );
   },
   render: () => html`
-    <atomic-search-interface language-assets-path="./lang" icon-assets-path="./assets">
+    <atomic-search-interface
+      language-assets-path="./lang"
+      icon-assets-path="./assets"
+    >
       <atomic-search-layout>
         <atomic-layout-section section="search">
           <atomic-search-box></atomic-search-box>
@@ -74,7 +84,9 @@ const meta: Meta = {
   `,
   play: async (context) => {
     await initializeSearchInterface(context.canvasElement);
-    const searchInterface = context.canvasElement.querySelector('atomic-search-interface');
+    const searchInterface = context.canvasElement.querySelector(
+      'atomic-search-interface'
+    );
     await searchInterface!.executeFirstSearch();
   },
 };
@@ -93,7 +105,10 @@ export const Default: Story = {
 ```typescript
 import {getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
 import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock.js';
-import {richResponse, type baseResponse} from '@/storybook-utils/api/commerce/search-response';
+import {
+  richResponse,
+  type baseResponse,
+} from '@/storybook-utils/api/commerce/search-response';
 
 const mockCommerceApi = new MockCommerceApi();
 
@@ -114,7 +129,9 @@ const meta: Meta = {
               <atomic-product-template>
                 <template>
                   <atomic-product-link></atomic-product-link>
-                  <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+                  <atomic-product-image
+                    field="ec_thumbnails"
+                  ></atomic-product-image>
                   <atomic-product-price></atomic-product-price>
                 </template>
               </atomic-product-template>
@@ -125,8 +142,10 @@ const meta: Meta = {
     </atomic-commerce-interface>
   `,
   play: async (context) => {
-    const commerceInterface = context.canvasElement.querySelector('atomic-commerce-interface');
-    await commerceInterface!.executeFirstRequest();  // Note: executeFirstRequest, not executeFirstSearch
+    const commerceInterface = context.canvasElement.querySelector(
+      'atomic-commerce-interface'
+    );
+    await commerceInterface!.executeFirstRequest(); // Note: executeFirstRequest, not executeFirstSearch
   },
 };
 ```
@@ -181,7 +200,9 @@ const meta: Meta = {
     </atomic-recs-interface>
   `,
   play: async (context) => {
-    const recsInterface = context.canvasElement.querySelector('atomic-recs-interface');
+    const recsInterface = context.canvasElement.querySelector(
+      'atomic-recs-interface'
+    );
     await recsInterface!.getRecommendations();
   },
 };

@@ -121,10 +121,8 @@ export class AtomicNoResults
       },
       () =>
         renderNoItemsContainer()(html`
-          ${renderMagnifyingGlass()}
-          ${this.renderNoItems()}
-          ${this.renderSearchTips()}
-          ${this.renderCancelButton()}
+          ${renderMagnifyingGlass()} ${this.renderNoItems()}
+          ${this.renderSearchTips()} ${this.renderCancelButton()}
         `)
     )}`;
   }

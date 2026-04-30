@@ -8,6 +8,7 @@ import {html} from 'lit';
 import {MockInsightApi} from '@/storybook-utils/api/insight/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
+import '@/src/components/insight/atomic-insight-search-box/atomic-insight-search-box.js';
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-insight-search-box',

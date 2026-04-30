@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/suspicious/noDocumentCookie: <> */
+/* oxlint-disable no-document-cookie -- <> */
 /**
  * Sets a document cookie with the provided name, value, path, and maxAge.
  *
@@ -13,7 +13,12 @@ export function setCookie(
   path = '/',
   maxAge = 60 * 60 * 24 * 365
 ) {
-  document.cookie = `${name}=${value}; path=${path}; Max-Age=${maxAge}; SameSite=Lax`;
+  document.cookie =
+    `${name}=${value}` +
+    `;path=${path}` +
+    `;Max-Age=${maxAge}` +
+    ';SameSite=Lax' +
+    `${window.location.protocol === 'https:' ? ';Secure' : ''}`;
 }
 
 /**

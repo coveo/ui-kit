@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicFormatCurrencyStories from './atomic-format-currency.new.stories';
+import meta, { Facet, Result } from './atomic-format-currency.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicFormatCurrencyStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicFormatCurrencyStories}
+  stories={{ Facet, Result }}
   githubPath="search/atomic-format-currency/atomic-format-currency.ts"
   tagName="atomic-format-currency"
   className="AtomicFormatCurrency"

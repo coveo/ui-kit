@@ -22,8 +22,7 @@ describe('atomic-insight-result-children-template', () => {
     'conditions' | 'mustMatch' | 'mustNotMatch'
   >;
 
-  interface SetupOptions
-    extends Partial<AtomicInsightResultChildrenTemplateProps> {
+  interface SetupOptions extends Partial<AtomicInsightResultChildrenTemplateProps> {
     ifDefined?: string;
     ifNotDefined?: string;
   }

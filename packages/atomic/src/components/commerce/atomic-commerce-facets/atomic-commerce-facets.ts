@@ -113,8 +113,8 @@ export class AtomicCommerceFacets
       Array.from({length: this.collapseFacetsAfter}),
       () =>
         html`<atomic-facet-placeholder
-            value-count="8"
-          ></atomic-facet-placeholder>`
+          value-count="8"
+        ></atomic-facet-placeholder>`
     );
   }
 

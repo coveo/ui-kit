@@ -63,8 +63,7 @@ export interface ResultPosition {
 }
 
 export interface SpotlightContent
-  extends ResultPosition,
-    BaseSpotlightContent {}
+  extends ResultPosition, BaseSpotlightContent {}
 
 export type BaseResult = BaseProduct | BaseSpotlightContent;
 export type Result = Product | SpotlightContent;

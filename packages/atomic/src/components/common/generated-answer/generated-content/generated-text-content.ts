@@ -12,9 +12,9 @@ export const renderGeneratedTextContent: FunctionalComponent<
   return html`
     <p
       part="generated-text"
-      class="text-on-background mb-0 whitespace-pre-wrap ${
-        props.isStreaming ? 'cursor' : ''
-      }"
+      class="text-on-background mb-0 whitespace-pre-wrap ${props.isStreaming
+        ? 'cursor'
+        : ''}"
     >
       ${props.answer}
     </p>

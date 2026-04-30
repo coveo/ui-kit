@@ -8,8 +8,10 @@ import type {ControllerDefinitionWithoutProps} from '../../types/controller-defi
 
 export * from '../../../../controllers/folded-result-list/headless-folded-result-list.js';
 
-export interface FoldedResultListDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, FoldedResultList> {}
+export interface FoldedResultListDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  FoldedResultList
+> {}
 
 /**
  * Defines a `FoldedResultList` controller instance.

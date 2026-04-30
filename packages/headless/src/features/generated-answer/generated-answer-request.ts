@@ -3,7 +3,10 @@ import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import type {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
 import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
 import {getOrganizationEndpoint} from '../../api/platform-client.js';
-import type {BaseParam} from '../../api/platform-service-params.js';
+import type {
+  BaseParam,
+  ContextParam,
+} from '../../api/platform-service-params.js';
 import type {SearchRequest} from '../../api/search/search/search-request.js';
 import type {
   AnalyticsParam,
@@ -56,7 +59,8 @@ type StateNeededByGeneratedAnswerStream = ConfigurationSection &
   GeneratedAnswerSection;
 
 export interface AnswerApiQueryParams
-  extends Omit<
+  extends
+    Omit<
       SearchRequest,
       keyof (BaseParam & AuthenticationParam & AutomaticFacetsParams)
     >,
@@ -179,7 +183,8 @@ type HeadAnswerParams = {
   pipeline?: string;
   citationsFieldToInclude?: string[];
   locale: string;
-} & AnalyticsParam;
+} & ContextParam &
+  AnalyticsParam;
 
 export const constructGenerateHeadAnswerParams = (
   state: StateNeededForHeadAnswerParams,
@@ -196,6 +201,7 @@ export const constructGenerateHeadAnswerParams = (
 
   const searchHub = selectSearchHub(state);
   const pipeline = selectPipeline(state);
+  const context = selectContext(state);
   const citationsFieldToInclude = selectFieldsToIncludeInCitation(state) ?? [];
 
   return {
@@ -204,6 +210,7 @@ export const constructGenerateHeadAnswerParams = (
     citationsFieldToInclude,
     ...(searchHub?.length && {searchHub}),
     ...(pipeline?.length && {pipeline}),
+    ...(context?.contextValues && {context: context.contextValues}),
     ...analyticsParams,
     locale,
   };

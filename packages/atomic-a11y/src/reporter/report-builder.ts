@@ -98,66 +98,85 @@ function buildComponents(
 function buildCriteria(
   componentResults: Map<string, ComponentAccumulator>
 ): A11yCriterionReport[] {
-  const criteriaToComponents = new Map<string, Set<string>>();
-  const interactiveCriteriaIds = new Set<string>();
-  const interactiveStatusMap = new Map<string, 'passed' | 'failed' | 'mixed'>();
+  const criteriaById = new Map<string, A11yCriterionReport>();
 
   for (const component of componentResults.values()) {
-    for (const criterion of component.automated.criteriaCovered) {
-      const components =
-        criteriaToComponents.get(criterion) ?? new Set<string>();
-      components.add(component.name);
-      criteriaToComponents.set(criterion, components);
+    for (const criterionId of component.automated.criteriaCovered) {
+      const criterion = getOrCreateCriterion(criteriaById, criterionId);
+      criterion.automatedCoverage = true;
+      addAffectedComponent(criterion, component.name);
     }
 
     if (component.interactive) {
-      for (const criterion of component.interactive.criteriaCovered) {
-        const components =
-          criteriaToComponents.get(criterion) ?? new Set<string>();
-        components.add(component.name);
-        criteriaToComponents.set(criterion, components);
-        interactiveCriteriaIds.add(criterion);
+      for (const criterionId of component.interactive.criteriaCovered) {
+        const criterion = getOrCreateCriterion(criteriaById, criterionId);
+        criterion.interactiveCoverage = true;
+        addAffectedComponent(criterion, component.name);
 
-        const isFailed = component.interactive.failedCriteria.has(criterion);
-        const isPassed = component.interactive.passedCriteria.has(criterion);
+        const isFailed = component.interactive.failedCriteria.has(criterionId);
+        const isPassed = component.interactive.passedCriteria.has(criterionId);
         if (!isFailed && !isPassed) {
           continue;
         }
 
         const nextStatus: 'passed' | 'failed' = isFailed ? 'failed' : 'passed';
-        const currentStatus = interactiveStatusMap.get(criterion);
+        const currentStatus = criterion.interactiveStatus;
 
         if (!currentStatus) {
-          interactiveStatusMap.set(criterion, nextStatus);
+          criterion.interactiveStatus = nextStatus;
           continue;
         }
 
         if (currentStatus !== nextStatus) {
-          interactiveStatusMap.set(criterion, 'mixed');
+          criterion.interactiveStatus = 'mixed';
         }
       }
     }
   }
 
-  return [...criteriaToComponents.entries()]
-    .map(([criterionId, coveredComponents]): A11yCriterionReport => {
-      const metadata = getCriterionMetadata(criterionId);
+  const criteria = [...criteriaById.values()];
+  for (const criterion of criteria) {
+    criterion.affectedComponents.sort(compareByName);
+  }
 
-      return {
-        id: criterionId,
-        name: metadata.name,
-        level: metadata.level,
-        wcagVersion: metadata.wcagVersion,
-        // Conformance is intentionally deferred — the automated report only captures
-        // coverage data, not the final judgment. The OpenACR pipeline (conformance.ts)
-        // resolves actual conformance using: overrides → manual audit → interactive tests → automated results.
-        conformance: 'notEvaluated',
-        automatedCoverage: true,
-        interactiveCoverage: interactiveCriteriaIds.has(criterionId),
-        interactiveStatus: interactiveStatusMap.get(criterionId),
-        manualVerified: false,
-        affectedComponents: [...coveredComponents].sort(compareByName),
-      };
-    })
-    .sort((first, second) => compareByNumericId(first.id, second.id));
+  return criteria.sort((first, second) =>
+    compareByNumericId(first.id, second.id)
+  );
+}
+
+function getOrCreateCriterion(
+  criteriaById: Map<string, A11yCriterionReport>,
+  criterionId: string
+): A11yCriterionReport {
+  const existing = criteriaById.get(criterionId);
+  if (existing) {
+    return existing;
+  }
+
+  const metadata = getCriterionMetadata(criterionId);
+  const criterion: A11yCriterionReport = {
+    id: criterionId,
+    name: metadata.name,
+    level: metadata.level,
+    wcagVersion: metadata.wcagVersion,
+    // Conformance is intentionally deferred — the automated report only captures
+    // coverage data, not the final judgment. The OpenACR pipeline (conformance.ts)
+    // resolves actual conformance using: overrides → manual audit → interactive tests → automated results.
+    conformance: 'notEvaluated',
+    automatedCoverage: false,
+    interactiveCoverage: false,
+    manualVerified: false,
+    affectedComponents: [],
+  };
+  criteriaById.set(criterionId, criterion);
+  return criterion;
+}
+
+function addAffectedComponent(
+  criterion: A11yCriterionReport,
+  componentName: string
+): void {
+  if (criterion.affectedComponents.at(-1) !== componentName) {
+    criterion.affectedComponents.push(componentName);
+  }
 }

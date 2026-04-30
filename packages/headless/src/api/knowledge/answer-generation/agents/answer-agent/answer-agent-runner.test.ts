@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: unit test */
+/* oxlint-disable @typescript-eslint/no-explicit-any -- unit test */
 
 import type {Dispatch} from '@reduxjs/toolkit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';

@@ -73,8 +73,10 @@ export function defineParameterManager(): ParameterManagerDefinition {
   };
 }
 
-export interface SSRParameterManagerProps<T extends Parameters>
-  extends Omit<ParameterManagerProps<T>, 'excludeDefaultParameters'> {}
+export interface SSRParameterManagerProps<T extends Parameters> extends Omit<
+  ParameterManagerProps<T>,
+  'excludeDefaultParameters'
+> {}
 
 function loadCommerceCommonParameterReducers(
   engine: CoreEngineNext

@@ -140,7 +140,10 @@ export async function renderInAtomicResult<T extends LitElement>({
   atomicInterface: FixtureAtomicSearchInterface;
 }> {
   const atomicResult = await fixture<FixtureAtomicResult>(
-    html`<atomic-result .result=${result} .interactiveResult=${interactiveResult}></atomic-result>`
+    html`<atomic-result
+      .result=${result}
+      .interactiveResult=${interactiveResult}
+    ></atomic-result>`
   );
 
   atomicResult.setRenderTemplate(template);

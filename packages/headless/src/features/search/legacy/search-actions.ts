@@ -155,7 +155,7 @@ const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
 
 export async function legacyFetchInstantResults(
   payload: FetchInstantResultsActionCreatorPayload,
-  // biome-ignore lint/suspicious/noExplicitAny: <>
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
   config: any
 ) {
   validatePayload(payload, {
@@ -203,7 +203,7 @@ export async function legacyFetchInstantResults(
 
 export async function legacyFetchPage(
   state: StateNeededByExecuteSearch,
-  // biome-ignore lint/suspicious/noExplicitAny: <>
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
   config: any,
   searchAction: LegacySearchAction
 ) {
@@ -231,7 +231,7 @@ export async function legacyFetchPage(
 }
 
 export async function legacyFetchMoreResults(
-  // biome-ignore lint/suspicious/noExplicitAny: <>
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
   config: any,
   state: StateNeededByExecuteSearch
 ) {
@@ -257,7 +257,7 @@ export async function legacyFetchMoreResults(
 }
 
 async function legacyFetchFacetValues(
-  // biome-ignore lint/suspicious/noExplicitAny: <>
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
   config: any,
   searchAction: LegacySearchAction,
   state: StateNeededByExecuteSearch
@@ -284,7 +284,7 @@ async function legacyFetchFacetValues(
 
 export async function legacyExecuteSearch(
   state: StateNeededByExecuteSearch,
-  // biome-ignore lint/suspicious/noExplicitAny: <>
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
   config: any,
   searchAction: LegacySearchAction
 ) {

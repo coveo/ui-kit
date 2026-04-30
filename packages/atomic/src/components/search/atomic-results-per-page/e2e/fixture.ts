@@ -10,5 +10,3 @@ export const test = base.extend<Fixtures>({
     await use(new AtomicResultsPerPagePageObject(page));
   },
 });
-
-export {expect} from '@playwright/test';
