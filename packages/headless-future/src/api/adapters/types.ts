@@ -81,7 +81,7 @@ export interface AuthAdapter {
  */
 export interface PersistenceAdapter {
   save(key: string, payload: unknown): Promise<void>;
-  load(key: string): Promise<unknown>;
+  load(key: string): Promise<unknown | null>;
   delete(key: string): Promise<void>;
   list(prefix?: string): Promise<string[]>;
 }

@@ -31,6 +31,12 @@ export type {BrowserTransportOptions} from './api/adapters/browser-transport.js'
 export {DefaultAuthAdapter} from './api/adapters/default-auth.js';
 export type {DefaultAuthOptions} from './api/adapters/default-auth.js';
 export {LocalHeuristicOrchestrationAdapter} from './api/adapters/local-heuristic-orchestration.js';
+export {IndexedDbPersistenceAdapter} from './api/adapters/indexeddb-persistence.js';
+export {
+  CONVERSATION_PERSISTENCE_KEY,
+  SURFACES_PERSISTENCE_KEY,
+  SHARED_CONTEXT_PERSISTENCE_KEY,
+} from './api/adapters/persistence-keys.js';
 
 // Protocol types (normalized stream events)
 export type {NormalizedStreamEvent} from './api/protocol/types.js';
