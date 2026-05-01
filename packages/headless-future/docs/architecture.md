@@ -360,7 +360,7 @@ sequenceDiagram
 
 For engineers familiar with the current `@coveo/headless`:
 
-| Concept                    | Current Headless                                             | Headless-future                                                               |
+| Concept                    | Current Headless                                             | Headless-future                                                         |
 | -------------------------- | ------------------------------------------------------------ | ----------------------------------------------------------------------- |
 | **State library**          | Redux exposed to consumers (actions, reducers, middleware)   | Redux hidden behind `Engine` abstraction                                |
 | **Creating the engine**    | `buildSearchEngine({ configuration })` with Redux middleware | `new Engine()` — empty store, configure via mutations                   |
