@@ -1,15 +1,14 @@
 {
-  "private": true,
-  "version": "1.0.0",
   "name": "@coveo/atomic-a11y",
+  "version": "1.0.0",
+  "private": true,
   "description": "Accessibility utilities and tools for Coveo Atomic components",
-  "type": "module",
-  "main": "dist/index.js",
   "files": [
     "dist"
   ],
+  "type": "module",
+  "main": "dist/index.js",
   "scripts": {
-    "generate:wcag": "node scripts/generate-wcag-criteria.mjs",
     "build": "tsc -p tsconfig.json",
     "a11y:merge-shards": "pnpm build && node scripts/merge-shards-cli.mjs",
     "test": "vitest run",
