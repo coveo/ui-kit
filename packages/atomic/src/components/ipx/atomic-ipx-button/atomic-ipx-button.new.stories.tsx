@@ -3,6 +3,9 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import '@/src/components/ipx/atomic-ipx-button/atomic-ipx-button.js';
+import '@/src/components/ipx/atomic-ipx-modal/atomic-ipx-modal.js';
+import '@/src/components/search/atomic-search-interface/atomic-search-interface.js';
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-ipx-button',
@@ -19,7 +22,7 @@ async function initializeInterface(canvasElement: HTMLElement) {
 
 const meta: Meta = {
   component: 'atomic-ipx-button',
-  title: 'IPX/IpxButton',
+  title: 'IPX/Button',
   id: 'atomic-ipx-button',
   render: (args) => html`
     <style>
@@ -28,25 +31,29 @@ const meta: Meta = {
         right: auto;
         bottom: auto;
       }
+      atomic-ipx-modal {
+        position: relative;
+        inset: auto;
+      }
     </style>
     <atomic-search-interface>
       <atomic-ipx-modal>
-        <div slot="body">
-          <p>IPX Modal Content</p>
-        </div>
+        <div slot="header"><p>Header Content</p></div>
+        <div slot="body"><p>Body Content</p></div>
+        <div slot="footer"><p>Footer Content</p></div>
       </atomic-ipx-modal>
       ${template(args)}
     </atomic-search-interface>
   `,
   parameters: {
     ...parameters,
+    chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
     },
   },
   args: {
     ...args,
-    label: 'Help',
   },
   argTypes,
   play: async (context) => {
@@ -63,13 +70,6 @@ export const Default: Story = {
 export const WithLabel: Story = {
   name: 'With label',
   args: {
-    label: 'Need Help?',
-  },
-};
-
-export const WithoutLabel: Story = {
-  name: 'Without label',
-  args: {
-    label: undefined,
+    label: 'Help',
   },
 };

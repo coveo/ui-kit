@@ -16,10 +16,11 @@ import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 export class AtomicResultSectionActions extends ItemSectionMixin(
   LitElement,
   css`
-@reference '../../common/template-system/sections/sections.css';
-atomic-result-section-actions {
-  @apply section-actions;
-}`
+    @reference '../../common/template-system/sections/sections.css';
+    atomic-result-section-actions {
+      @apply section-actions;
+    }
+  `
 ) {}
 
 declare global {

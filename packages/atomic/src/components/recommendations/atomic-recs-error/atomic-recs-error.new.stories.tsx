@@ -3,6 +3,7 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInRecommendationInterface} from '@/storybook-utils/search/recs-interface-wrapper';
+import '@/src/components/recommendations/atomic-recs-error/atomic-recs-error.js';
 
 const mockSearchApi = new MockSearchApi();
 

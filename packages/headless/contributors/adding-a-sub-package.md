@@ -1,3 +1,8 @@
+---
+title: Adding a sub-package
+group: Contributing
+---
+
 # Adding a sub-package
 
 Headless provides exports through multiple sub-packages.

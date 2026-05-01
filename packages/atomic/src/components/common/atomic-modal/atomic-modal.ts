@@ -41,35 +41,46 @@ export class AtomicModal
   implements InitializableComponent<AnyBindings>
 {
   static styles = css`
-  @reference '../../../utils/tailwind.global.tw.css';
-  
-  @keyframes scaleUp {
-    from { transform: scale(0.7) translateY(150vh); opacity: 0; }
-    to { transform: scale(1) translateY(0); opacity: 1; }
-  }
-  
-  @keyframes slideDown {
-    from { transform: translateY(0); opacity: 1; }
-    to { transform: translateY(150vh); opacity: 0; }
-  }
+    @reference '../../../utils/tailwind.global.tw.css';
 
-  article.animate-open {
-    @apply animate-scale-up-modal;
-  }
-  
-  article.animate-close {
-    @apply animate-slide-down-modal;
-  }
-  
-  .grid-template-modal {
-        grid-template-areas:
-      '. .     .'
-      '. modal .'
-      '. .     .';
-    grid-template-columns: 1fr min(30rem, 100%) 1fr;
-    grid-template-rows: 1fr auto 3fr;
+    @keyframes scaleUp {
+      from {
+        transform: scale(0.7) translateY(150vh);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+      }
+    }
 
-  }
+    @keyframes slideDown {
+      from {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateY(150vh);
+        opacity: 0;
+      }
+    }
+
+    article.animate-open {
+      @apply animate-scale-up-modal;
+    }
+
+    article.animate-close {
+      @apply animate-slide-down-modal;
+    }
+
+    .grid-template-modal {
+      grid-template-areas:
+        '. .     .'
+        '. modal .'
+        '. .     .';
+      grid-template-columns: 1fr min(30rem, 100%) 1fr;
+      grid-template-rows: 1fr auto 3fr;
+    }
   `;
 
   @state()
@@ -152,7 +163,8 @@ export class AtomicModal
                 'pointer-events-none': !this.isOpen,
               })
             )}
-            @click="${(e: MouseEvent) => e.target === e.currentTarget && this.close()}"
+            @click="${(e: MouseEvent) =>
+              e.target === e.currentTarget && this.close()}"
             data-nosnippet
           >
             <atomic-focus-trap
@@ -287,8 +299,8 @@ export class AtomicModal
         )}
         ${ref(this.animatableContainer)}
       >
-        <header 
-          part="header-wrapper" 
+        <header
+          part="header-wrapper"
           class=${multiClassMap(
             tw({
               'flex flex-col items-center px-6 py-6': true,
@@ -309,7 +321,7 @@ export class AtomicModal
             <slot name="header"></slot>
           </div>
         </header>
-        <hr part="header-ruler" class="border-t border-neutral"/>
+        <hr part="header-ruler" class="border-t border-neutral" />
         <div
           part="body-wrapper"
           class=${multiClassMap(

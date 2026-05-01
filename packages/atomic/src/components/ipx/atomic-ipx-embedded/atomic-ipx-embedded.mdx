@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicIpxEmbeddedStories from './atomic-ipx-embedded.new.stories';
+import meta, { Default } from './atomic-ipx-embedded.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicIpxEmbeddedStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicIpxEmbeddedStories}
+  stories={{ Default }}
   githubPath="ipx/atomic-ipx-embedded/atomic-ipx-embedded.ts"
   tagName="atomic-ipx-embedded"
   className="AtomicIpxEmbedded"

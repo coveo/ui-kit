@@ -1,9 +1,9 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
 import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
-import type {GeneratedAnswerCitation} from '../../controllers/generated-answer/headless-generated-answer.js';
 import type {SearchAppState} from '../../state/search-app-state.js';
 import type {
+  FollowUpAnswersSection,
   GeneratedAnswerSection,
   SearchSection,
 } from '../../state/state-sections.js';
@@ -16,7 +16,7 @@ export const generativeQuestionAnsweringIdSelector = (
   // If using the AnswerApi or the AgentApi, we return the answerId first.
   if (
     isGeneratedAnswerFeatureEnabledWithAnswerAPI(state) ||
-    isGeneratedAnswerFeatureEnabledWithAnswerGenerationAPI(state)
+    isGeneratedAnswerFeatureEnabledWithAgentAPI(state)
   ) {
     return state.generatedAnswer?.answerId;
   }
@@ -37,12 +37,11 @@ const isGeneratedAnswerFeatureEnabledWithAnswerAPI = (
   'generatedAnswer' in state &&
   !isNullOrUndefined(state.generatedAnswer?.answerConfigurationId);
 
-export const isGeneratedAnswerFeatureEnabledWithAnswerGenerationAPI = (
+export const isGeneratedAnswerFeatureEnabledWithAgentAPI = (
   state: Partial<SearchAppState>
 ): state is StreamAnswerAPIState => {
   const agentId = selectAgentId(state as {configuration: ConfigurationState});
   return (
-    'answerGenerationApi' in state &&
     'generatedAnswer' in state &&
     typeof agentId === 'string' &&
     agentId.trim().length > 0
@@ -60,11 +59,29 @@ export const selectFieldsToIncludeInCitation = (
   state: Partial<GeneratedAnswerSection>
 ) => state.generatedAnswer?.fieldsToIncludeInCitations;
 
+const getHeadCitations = (
+  state: Partial<GeneratedAnswerSection & FollowUpAnswersSection>
+) => state.generatedAnswer?.citations;
+
+const getFollowUpAnswers = (
+  state: Partial<GeneratedAnswerSection & FollowUpAnswersSection>
+) => state.followUpAnswers?.followUpAnswers;
+
+const getFlatFollowUpCitations = createSelector(
+  getFollowUpAnswers,
+  (followUpAnswers) => followUpAnswers?.flatMap((f) => f.citations)
+);
+
+const getCitationId = (
+  _state: Partial<GeneratedAnswerSection & FollowUpAnswersSection>,
+  citationId: string
+) => citationId;
+
 export const citationSourceSelector = createSelector(
-  (state: Partial<GeneratedAnswerSection>) => state.generatedAnswer?.citations,
-  (_state: Partial<GeneratedAnswerSection>, citationId: string) => citationId,
-  (citations, citationId) =>
-    citations?.find(
-      (citation: GeneratedAnswerCitation) => citation.id === citationId
-    )
+  getHeadCitations,
+  getFlatFollowUpCitations,
+  getCitationId,
+  (headCitations, flatFollowUpCitations, citationId) =>
+    headCitations?.find((citation) => citation.id === citationId) ??
+    flatFollowUpCitations?.find((citation) => citation.id === citationId)
 );

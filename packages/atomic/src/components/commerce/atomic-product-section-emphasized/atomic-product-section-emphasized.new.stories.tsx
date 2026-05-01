@@ -7,6 +7,7 @@ import {
   getProductSectionDecorators,
 } from '@/storybook-utils/commerce/product-section-story-utils';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import '@/src/components/commerce/atomic-product-section-emphasized/atomic-product-section-emphasized.js';
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-product-section-emphasized',
@@ -31,6 +32,7 @@ const meta: Meta = {
   render: (args) => template(args),
   parameters: {
     ...parameters,
+    chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
     },

@@ -139,7 +139,7 @@ function MyTemplate(result: Result) {
       <AtomicResultSectionBottomMetadata>
         <AtomicResultFieldsList>
           <AtomicResultDate format="ddd MMM D YYYY" />
-          {/** biome-ignore lint/complexity/noUselessFragments: <> */}
+          {/* oxlint-disable-next-line react/jsx-no-useless-fragment -- <> */}
           <>
             {result.raw.cat_platform && (
               <>

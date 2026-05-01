@@ -15,5 +15,3 @@ export const test = base.extend<Fixtures>({
     await use(new SearchBoxPageObject(page));
   },
 });
-
-export {expect} from '@playwright/test';

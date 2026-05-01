@@ -3,6 +3,7 @@ import type {FacetRequest} from './interfaces/request.js';
 export type FacetSlice = {
   request: FacetRequest;
   hasBreadcrumbs: boolean;
+  tabs?: {included?: string[]; excluded?: string[]};
 };
 
 /**
@@ -11,9 +12,10 @@ export type FacetSlice = {
 export type FacetSetState = Record<string, FacetSlice>;
 
 export function getFacetSetSliceInitialState(
-  request: FacetRequest
+  request: FacetRequest,
+  tabs?: {included?: string[]; excluded?: string[]}
 ): FacetSlice {
-  return {request, hasBreadcrumbs: true};
+  return {request, hasBreadcrumbs: true, tabs};
 }
 
 export function getFacetSetInitialState(): FacetSetState {

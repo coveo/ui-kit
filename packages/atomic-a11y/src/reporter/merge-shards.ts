@@ -1,10 +1,5 @@
 import {mkdir, readdir, readFile, writeFile} from 'node:fs/promises';
 import path from 'node:path';
-import {
-  DEFAULT_A11Y_REPORT_FILENAME,
-  DEFAULT_A11Y_REPORT_OUTPUT_DIR,
-  DEFAULT_WCAG_22_AA_CRITERIA_COUNT,
-} from '../shared/constants.js';
 import {isA11yReport} from '../shared/guards.js';
 import {compareByName, compareByNumericId} from '../shared/sorting.js';
 import type {
@@ -19,31 +14,38 @@ import {createSummary} from './summary.js';
 
 const SHARD_FILE_PATTERN = /^a11y-report\.shard-(\d+)\.json$/;
 
-interface MergeShardOptions {
-  inputDir?: string;
-  outputFile?: string;
-  totalCriteria?: number;
+export interface MergeShardOptions {
+  /** Full path (directory + filename) where the merged report is written. Shard files are read from the same directory. */
+  outputFile: string;
 }
 
-interface MutableAutomatedResults
-  extends Omit<A11yAutomatedResults, 'criteriaCovered'> {
+interface MutableAutomatedResults extends Omit<
+  A11yAutomatedResults,
+  'criteriaCovered'
+> {
   criteriaCovered: Set<string>;
 }
 
-interface MutableInteractiveResults
-  extends Omit<A11yInteractiveResults, 'criteriaCovered' | 'failedCriteria'> {
+interface MutableInteractiveResults extends Omit<
+  A11yInteractiveResults,
+  'criteriaCovered' | 'failedCriteria'
+> {
   criteriaCovered: Set<string>;
   failedCriteria: Set<string>;
 }
 
-interface MutableComponentReport
-  extends Omit<A11yComponentReport, 'automated' | 'interactive'> {
+interface MutableComponentReport extends Omit<
+  A11yComponentReport,
+  'automated' | 'interactive'
+> {
   automated: MutableAutomatedResults;
   interactive?: MutableInteractiveResults;
 }
 
-interface MutableCriterionReport
-  extends Omit<A11yCriterionReport, 'affectedComponents'> {
+interface MutableCriterionReport extends Omit<
+  A11yCriterionReport,
+  'affectedComponents'
+> {
   affectedComponents: Set<string>;
 }
 
@@ -77,27 +79,24 @@ function toMutableCriterion(
 }
 
 async function readShardReports(shardFiles: string[]): Promise<A11yReport[]> {
-  const results = await Promise.allSettled(
-    shardFiles.map(async (shardFile) => {
+  const reports: A11yReport[] = [];
+
+  for (const shardFile of shardFiles) {
+    try {
       const content = await readFile(shardFile, 'utf8');
       const parsed = JSON.parse(content) as unknown;
 
       if (!isA11yReport(parsed)) {
-        throw new Error('Invalid report structure');
+        console.warn(
+          `[merge-shards] Skipping shard file: ${path.basename(shardFile)} — Invalid report structure`
+        );
+        continue;
       }
 
-      return parsed;
-    })
-  );
-
-  const reports: A11yReport[] = [];
-  for (let i = 0; i < results.length; i++) {
-    const result = results[i];
-    if (result.status === 'fulfilled') {
-      reports.push(result.value);
-    } else {
+      reports.push(parsed);
+    } catch (error) {
       console.warn(
-        `[merge-shards] Skipping shard file: ${path.basename(shardFiles[i])} — ${result.reason instanceof Error ? result.reason.message : 'unknown error'}`
+        `[merge-shards] Skipping shard file: ${path.basename(shardFile)} — ${error instanceof Error ? error.message : 'unknown error'}`
       );
     }
   }
@@ -242,7 +241,6 @@ export function mergeCriteria(
         automatedCoverage: true,
         interactiveCoverage: false,
         manualVerified: false,
-        remarks: '',
         affectedComponents: new Set([component.name]),
       });
     }
@@ -311,17 +309,10 @@ function mergeEvaluationMethods(reports: A11yReport[]): string[] {
 }
 
 export async function mergeA11yShardReports(
-  options: MergeShardOptions = {}
+  options: MergeShardOptions
 ): Promise<A11yReport | null> {
-  const inputDir = path.resolve(
-    options.inputDir ?? DEFAULT_A11Y_REPORT_OUTPUT_DIR
-  );
-  const outputFile = path.resolve(
-    options.outputFile ?? path.join(inputDir, DEFAULT_A11Y_REPORT_FILENAME)
-  );
-  const totalCriteria =
-    options.totalCriteria ?? DEFAULT_WCAG_22_AA_CRITERIA_COUNT;
-
+  const outputFile = path.resolve(options.outputFile);
+  const inputDir = path.dirname(outputFile);
   console.log(`[merge-shards] Scanning for shard reports in ${inputDir}`);
 
   let directoryEntries: string[];
@@ -372,7 +363,7 @@ export async function mergeA11yShardReports(
     },
     components,
     criteria,
-    summary: createSummary(components, criteria, totalCriteria),
+    summary: createSummary(components, criteria),
   };
 
   await mkdir(path.dirname(outputFile), {recursive: true});

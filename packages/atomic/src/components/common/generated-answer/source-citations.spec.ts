@@ -65,7 +65,8 @@ describe('#renderSourceCitations', () => {
     it('should render children inside the list', async () => {
       const element = await renderComponent(
         {isVisible: true},
-        html`<li>Citation 1</li><li>Citation 2</li>`
+        html`<li>Citation 1</li>
+          <li>Citation 2</li>`
       );
       const list = locators(element).list;
       expect(list?.querySelectorAll('li').length).toBe(2);

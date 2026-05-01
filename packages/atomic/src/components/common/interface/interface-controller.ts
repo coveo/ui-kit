@@ -25,9 +25,9 @@ export interface BaseAtomicInterface<EngineType extends AnyEngineType> {
   registerFieldsToInclude?: () => void;
 }
 
-export class InterfaceController<EngineType extends AnyEngineType>
-  implements ReactiveController
-{
+export class InterfaceController<
+  EngineType extends AnyEngineType,
+> implements ReactiveController {
   private host: LitElement & BaseAtomicInterface<EngineType>;
   private i18nPromise!: Promise<TFunction>;
   private hangingComponentsInitialization: InitializeEvent[] = [];

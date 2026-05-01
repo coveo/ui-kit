@@ -12,9 +12,9 @@ import type {SearchOnlyControllerDefinitionWithoutProps} from '../../types/contr
 export type {
   CoreSearchBox,
   SearchBox,
+  SearchBoxOptions,
   SearchBoxProps,
   SearchBoxState,
-  SearchBoxOptions,
   Suggestion,
 };
 

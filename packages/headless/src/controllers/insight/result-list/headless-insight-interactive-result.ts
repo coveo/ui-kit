@@ -10,20 +10,18 @@ import {
 } from '../../core/interactive-result/headless-core-interactive-result.js';
 
 export type {
+  InteractiveResultCore,
   InteractiveResultCoreOptions,
   InteractiveResultCoreProps,
-  InteractiveResultCore,
 };
-export interface InsightInteractiveResultOptions
-  extends InteractiveResultCoreOptions {
+export interface InsightInteractiveResultOptions extends InteractiveResultCoreOptions {
   /**
    * The query result.
    */
   result: Result;
 }
 
-export interface InsightInteractiveResultProps
-  extends InteractiveResultCoreProps {
+export interface InsightInteractiveResultProps extends InteractiveResultCoreProps {
   /**
    * The options for the `InteractiveResult` controller.
    */

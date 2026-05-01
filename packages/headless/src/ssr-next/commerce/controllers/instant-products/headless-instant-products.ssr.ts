@@ -8,10 +8,10 @@ import {
 import type {NonRecommendationControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
 
 export type {
-  InstantProductsOptions,
-  InstantProductsState,
   InstantProducts,
+  InstantProductsOptions,
   InstantProductsProps,
+  InstantProductsState,
 };
 
 export type InstantProductsDefinition =

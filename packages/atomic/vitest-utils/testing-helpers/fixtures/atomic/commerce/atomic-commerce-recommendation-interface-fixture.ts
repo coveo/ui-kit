@@ -7,12 +7,12 @@ import {vi} from 'vitest';
 import type {CommerceStore} from '@/src/components/commerce/atomic-commerce-interface/store';
 import type {CommerceBindings} from '@/src/components/commerce/atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface.js';
 import {bindingsContext} from '@/src/components/common/context/bindings-context.js';
-import type {BaseAtomicInterface} from '@/src/components/common/interface/interface-common.js';
+import type {BaseAtomicInterface} from '@/src/components/common/interface/interface-controller.js';
 import {
   type InitializeEvent,
   markParentAsReady,
 } from '@/src/utils/init-queue.js';
-import {initializeEventName} from '@/src/utils/initialization-lit-stencil-common-utils.js';
+import {initializeEventName} from '@/src/utils/initialization-common-utils.js';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture.js';
 import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common.js';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils.js';

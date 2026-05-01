@@ -14,7 +14,7 @@ import {
 import type {StateNeededByExecuteSearch} from './search-actions-thunk-processor.js';
 import {commerceSearchReducer as commerceSearch} from './search-slice.js';
 
-export type {PrepareForSearchWithQueryPayload, FetchSearchPayload};
+export type {FetchSearchPayload, PrepareForSearchWithQueryPayload};
 
 /**
  * The search action creators.

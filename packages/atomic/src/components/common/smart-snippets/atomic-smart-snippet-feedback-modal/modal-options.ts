@@ -2,7 +2,7 @@ import type {i18n} from 'i18next';
 import {html} from 'lit';
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 
-export interface ModalOptionsProps {
+interface ModalOptionsProps {
   i18n: i18n;
 }
 

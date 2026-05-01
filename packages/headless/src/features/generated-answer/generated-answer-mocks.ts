@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: <mock> */
+/* oxlint-disable @typescript-eslint/no-explicit-any -- <mock> */
 /* eslint-disable @cspell/spellchecker */
 import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
 
@@ -1052,7 +1052,7 @@ export const streamAnswerAPIStateMock: StreamAnswerAPIState = {
         },
     },
     mutations: {},
-    provided: {},
+    provided: {tags: {}, keys: {}},
     subscriptions: {},
     config: {
       online: true,
@@ -1086,6 +1086,7 @@ export const streamAnswerAPIStateMock: StreamAnswerAPIState = {
     answerConfigurationId: 'c36fd994-3eb7-4aaf-bfce-2dad4b15a622',
     cannotAnswer: false,
     answerGenerationMode: 'automatic',
+    generationSteps: [],
   },
 };
 

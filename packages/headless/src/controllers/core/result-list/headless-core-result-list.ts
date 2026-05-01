@@ -50,7 +50,7 @@ export interface ResultListProps {
    * The action creator to build the `fetchMoreResults` action.
    */
 
-  // biome-ignore lint/suspicious/noExplicitAny: third-party type uses 'any'
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- third-party type uses 'any'
   fetchMoreResultsActionCreator?: () => AsyncThunkAction<unknown, void, any>;
 }
 

@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicCommerceInterfaceStories from './atomic-commerce-interface.new.stories';
+import meta, { Default, WithProductList, WithSearch } from './atomic-commerce-interface.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicCommerceInterfaceStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicCommerceInterfaceStories}
+  stories={{ Default, WithProductList, WithSearch }}
   githubPath="commerce/atomic-commerce-interface/atomic-commerce-interface.ts"
   tagName="atomic-commerce-interface"
   className="AtomicCommerceInterface"

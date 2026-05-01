@@ -23,13 +23,13 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
-import {waitForAtomicChildrenToBeDefined} from '@/src/utils/custom-element-tags';
 import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue';
+import {waitForAtomicChildrenToBeDefined} from '@/src/utils/initialization-common-utils';
 import {getAnalyticsConfig} from './analytics-config.js';
 import {createInsightStore, type InsightStore} from './store.js';
 
 const FirstInsightRequestExecutedFlag = 'firstInsightRequestExecuted';
-export type InsightInitializationOptions = InsightEngineConfiguration;
+type InsightInitializationOptions = InsightEngineConfiguration;
 export type InsightBindings = CommonBindings<
   InsightEngine,
   InsightStore,

@@ -266,7 +266,7 @@ describe('atomic-insight-folded-result-list', () => {
 
       await element.setRenderFunction(mockRenderFunction);
 
-      // biome-ignore lint/suspicious/noExplicitAny: accessing private property for test
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- accessing private property for test
       expect((element as any).itemRenderingFunction).toBe(mockRenderFunction);
     });
   });

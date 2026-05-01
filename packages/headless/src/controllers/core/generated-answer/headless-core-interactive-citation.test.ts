@@ -24,7 +24,7 @@ describe('InteractiveCitation', () => {
   let mockCitation: GeneratedAnswerCitation;
   let interactiveCitation: InteractiveCitation;
 
-  function initializeInteractiveCitation(delay?: number) {
+  function initializeInteractiveCitation(delay?: number, answerId?: string) {
     mockCitation = buildMockCitation({
       id: 'some-test-id',
     });
@@ -32,12 +32,13 @@ describe('InteractiveCitation', () => {
       engine,
       generatedAnswerAnalyticsClient,
       {
-        options: {citation: mockCitation, selectionDelay: delay},
+        options: {citation: mockCitation, selectionDelay: delay, answerId},
       }
     );
   }
 
   beforeEach(() => {
+    vi.clearAllMocks();
     engine = buildMockSearchEngine(createMockState());
     initializeInteractiveCitation();
   });
@@ -48,6 +49,27 @@ describe('InteractiveCitation', () => {
 
   it('when calling select(), logs openGeneratedAnswerSource', () => {
     interactiveCitation.select();
-    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(mockCitation.id);
+    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(
+      mockCitation.id,
+      undefined
+    );
+  });
+
+  it('when an answerId is provided, passes it to logOpenGeneratedAnswerSource', () => {
+    initializeInteractiveCitation(undefined, 'answer-id');
+
+    interactiveCitation.select();
+
+    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(
+      mockCitation.id,
+      'answer-id'
+    );
+  });
+
+  it('when calling select() more than once, logs openGeneratedAnswerSource only once', () => {
+    interactiveCitation.select();
+    interactiveCitation.select();
+
+    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledTimes(1);
   });
 });

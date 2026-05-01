@@ -31,6 +31,8 @@ export class AtomicInsightUserActionsSession
   implements InitializableComponent<InsightBindings>
 {
   static styles = css`
+    @reference '../../../utils/tailwind.global.tw.css';
+
     .session-start-icon__container {
       background-color: #fbb439;
     }
@@ -124,7 +126,10 @@ export class AtomicInsightUserActionsSession
     const formatedStartDate = date.format('ddd. MMMM D, YYYY');
 
     return html`
-      <div data-testid="session-start-date-container" class="flex items-center px-2 pb-3">
+      <div
+        data-testid="session-start-date-container"
+        class="flex items-center px-2 pb-3"
+      >
         ${when(
           this.isCaseCreationSession,
           () => html`

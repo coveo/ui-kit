@@ -82,4 +82,18 @@ describe('#renderFeedbackButton', () => {
 
     expect(onClick).toHaveBeenCalledOnce();
   });
+
+  it('should not keep neutral text class when like button is active', async () => {
+    const button = await renderComponent({variant: 'like', active: true});
+
+    expect(button).toHaveClass('text-success');
+    expect(button).not.toHaveClass('text-neutral-dark');
+  });
+
+  it('should not keep neutral text class when dislike button is active', async () => {
+    const button = await renderComponent({variant: 'dislike', active: true});
+
+    expect(button).toHaveClass('text-error');
+    expect(button).not.toHaveClass('text-neutral-dark');
+  });
 });

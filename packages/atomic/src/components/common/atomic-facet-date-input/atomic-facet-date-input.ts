@@ -68,6 +68,7 @@ export class AtomicFacetDateInput
   private validateParentComponent(): void {
     const validParents = [
       'atomic-commerce-timeframe-facet',
+      'atomic-insight-timeframe-facet',
       'atomic-timeframe-facet',
     ];
     const parentElement = this.parentElement;

@@ -15,9 +15,25 @@ import {
   answerContentFormatSchema,
   citationSchema,
 } from '../generated-answer/generated-answer-actions.js';
+import {
+  GENERATION_STEP_NAMES,
+  type GenerationStepName,
+  normalizeGenerationStepName,
+} from '../generated-answer/generated-answer-state.js';
 import type {GeneratedContentFormat} from '../generated-answer/generated-response-format.js';
 
 const stringValue = new StringValue({required: true});
+const generationStepNameValue = new StringValue<GenerationStepName>({
+  required: true,
+  constrainTo: GENERATION_STEP_NAMES,
+});
+
+const normalizeGenerationStepPayload = <T extends {name: string}>(
+  payload: T
+): Omit<T, 'name'> & {name: GenerationStepName} => ({
+  ...payload,
+  name: normalizeGenerationStepName(payload.name),
+});
 
 export const setIsEnabled = createAction(
   'followUpAnswers/setIsEnabled',
@@ -28,6 +44,15 @@ export const setIsEnabled = createAction(
 export const setFollowUpAnswersConversationId = createAction(
   'followUpAnswers/setFollowUpAnswersConversationId',
   (payload: string) => validatePayload(payload, requiredNonEmptyString)
+);
+
+export const setFollowUpAnswersConversationToken = createAction(
+  'followUpAnswers/setFollowUpAnswersConversationToken',
+  (payload: string) => validatePayload(payload, requiredNonEmptyString)
+);
+
+export const clearFollowUpAnswersConversationToken = createAction(
+  'followUpAnswers/clearFollowUpAnswersConversationToken'
 );
 
 export const createFollowUpAnswer = createAction(
@@ -57,6 +82,15 @@ export const setFollowUpIsLoading = createAction(
   (payload: {answerId: string; isLoading: boolean}) =>
     validatePayload(payload, {
       isLoading: new BooleanValue({required: true}),
+      answerId: requiredNonEmptyString,
+    })
+);
+
+export const setFollowUpIsStreaming = createAction(
+  'followUpAnswers/setFollowUpIsStreaming',
+  (payload: {answerId: string; isStreaming: boolean}) =>
+    validatePayload(payload, {
+      isStreaming: new BooleanValue({required: true}),
       answerId: requiredNonEmptyString,
     })
 );
@@ -103,6 +137,14 @@ export const followUpFailed = createAction(
     })
 );
 
+export const activeFollowUpStartFailed = createAction(
+  'followUpAnswers/activeFollowUpStartFailed',
+  (payload: {message?: string}) =>
+    validatePayload(payload, {
+      message: new StringValue(),
+    })
+);
+
 export const likeFollowUp = createAction(
   'followUpAnswers/likeFollowUp',
   (payload: {answerId: string}) =>
@@ -129,4 +171,24 @@ export const submitFollowUpFeedback = createAction(
 
 export const resetFollowUpAnswers = createAction(
   'followUpAnswers/resetFollowUpAnswers'
+);
+
+export const followUpStepStarted = createAction(
+  'followUpAnswers/stepStarted',
+  (payload: {answerId: string; name: string; startedAt: number}) =>
+    validatePayload(normalizeGenerationStepPayload(payload), {
+      answerId: requiredNonEmptyString,
+      name: generationStepNameValue,
+      startedAt: new NumberValue({min: 0, required: true}),
+    })
+);
+
+export const followUpStepFinished = createAction(
+  'followUpAnswers/stepFinished',
+  (payload: {answerId: string; name: string; finishedAt: number}) =>
+    validatePayload(normalizeGenerationStepPayload(payload), {
+      answerId: requiredNonEmptyString,
+      name: generationStepNameValue,
+      finishedAt: new NumberValue({min: 0, required: true}),
+    })
 );

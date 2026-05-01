@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicQuickviewModalStories from './atomic-quickview-modal.new.stories';
+import meta, { Default, Closed } from './atomic-quickview-modal.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicQuickviewModalStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicQuickviewModalStories}
+  stories={{ Default, Closed }}
   githubPath="search/atomic-quickview-modal/atomic-quickview-modal.ts"
   tagName="atomic-quickview-modal"
   className="AtomicQuickviewModal"

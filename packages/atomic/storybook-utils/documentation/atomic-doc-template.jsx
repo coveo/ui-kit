@@ -6,7 +6,7 @@ import {
   Subtitle,
   Title,
 } from '@storybook/addon-docs/blocks';
-// biome-ignore lint/correctness/noUnusedImports: Storybook needs this import
+// oxlint-disable-next-line @typescript-eslint/no-unused-vars -- Storybook needs this import
 import React from 'react';
 import {CanvasWithGithub} from './canvas-with-github';
 

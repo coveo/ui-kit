@@ -11,6 +11,10 @@ import {
 } from '../../../controllers/commerce/search/headless-search.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {buildMockCommerceContext} from '../../../test/mock-context.js';
+import {
+  buildMockProductListingController,
+  buildMockSearchController,
+} from '../../../test/mock-controller.js';
 import {buildMockSSRCommerceEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
 import {defineMockCommerceController} from '../../../test/mock-ssr-controller-definitions.js';
@@ -176,6 +180,73 @@ describe('fetchStaticStateFactory', () => {
     it('should not perform any request ', async () => {
       expect(mockedExecuteFirstSearch).toHaveBeenCalledTimes(0);
       expect(mockExecuteFirstRequest).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  describe('when controllers include a ProductList controller with executeFirstRequest/executeFirstSearch', () => {
+    let mockProductListController: ReturnType<
+      typeof buildMockProductListingController
+    >;
+    let mockSearchProductListController: ReturnType<
+      typeof buildMockSearchController
+    >;
+
+    beforeEach(() => {
+      mockProductListController = buildMockProductListingController();
+      mockSearchProductListController = buildMockSearchController();
+      engineSpy = vi.spyOn(buildFactory, 'buildFactory').mockReturnValue(
+        <T extends SolutionType>(solutionType: T) =>
+          async () =>
+            Promise.resolve({
+              engine: mockEngine,
+              controllers: {
+                productList:
+                  solutionType === SolutionType.listing
+                    ? mockProductListController
+                    : mockSearchProductListController,
+              } as unknown as InferControllersMapFromDefinition<
+                CommerceControllerDefinitionsMap,
+                T
+              > &
+                BakedInControllers,
+            })
+      );
+    });
+
+    it('should request using the existing controller and not build a fallback, for the Listing solution type', async () => {
+      // @ts-expect-error: do not care about baked-in controller initial state
+      const factory = fetchStaticStateFactory(definition, mockEngineOptions);
+      await factory(SolutionType.listing)({
+        navigatorContext: mockNavigatorContext,
+        context: mockContext,
+      });
+
+      expect(
+        mockProductListController.executeFirstRequest
+      ).toHaveBeenCalledTimes(1);
+      expect(buildProductListing).not.toHaveBeenCalled();
+    });
+
+    it('should request using the existing controller and not build a fallback, for the Search solution type', async () => {
+      // @ts-expect-error: do not care about baked-in controller initial state
+      const factory = fetchStaticStateFactory(definition, mockEngineOptions);
+      await factory(SolutionType.search)({
+        navigatorContext: mockNavigatorContext,
+        context: {
+          country: 'CA',
+          currency: 'USD',
+          language: 'en',
+          view: {url: 'https://example.com'},
+        },
+        searchParams: {
+          q: 'test',
+        },
+      });
+
+      expect(
+        mockSearchProductListController.executeFirstSearch
+      ).toHaveBeenCalledTimes(1);
+      expect(buildSearch).not.toHaveBeenCalled();
     });
   });
 });

@@ -38,7 +38,6 @@ function replace() {
   return replacePlugin({
     values: {
       'process.env.VERSION': `"0.0.0"`,
-      'import.meta.env.RESOURCE_URL': `"${resourceUrl}"`,
       __ATOMIC_VERSION__: `"${packageJson.version}"`,
       __HEADLESS_VERSION__: `"${packageJsonHeadless.version}"`,
     },
@@ -155,15 +154,28 @@ const atomicDefault = defineConfig({
   },
 });
 
+// Pure function tests for Storybook utilities (Node.js, no browser needed)
+const storybookPure = defineConfig({
+  name: 'storybookPure',
+  test: {
+    name: 'storybookPure',
+    include: ['storybook-utils/**/*.spec.ts'],
+    environment: 'node',
+  },
+});
+
 export default mergeConfig(atomicDefault, {
   test: {
     reporters: [
       'default',
       new VitestA11yReporter({
-        outputDir: path.resolve(import.meta.dirname, '../atomic-a11y/reports'),
+        outputFile: path.resolve(
+          import.meta.dirname,
+          'reports/a11y-report.json'
+        ),
         packageJsonPath: path.resolve(import.meta.dirname, 'package.json'),
       }),
     ],
-    projects: [atomicDefault, storybook],
+    projects: [atomicDefault, storybookPure, storybook],
   },
 });

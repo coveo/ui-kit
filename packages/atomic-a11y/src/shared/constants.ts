@@ -5,5 +5,3 @@ export const BASELINE_FILE_PATTERN =
   /^manual-audit-(?!example\.json$)(?!.*-violations)([\w-]+)\.json$/;
 export const DEFAULT_MANUAL_PLACEHOLDER_NOTE =
   'Manual audit pending. Phase 3 results will be merged into this report.';
-export const UNKNOWN_CATEGORY = 'unknown';
-export const UNKNOWN_FRAMEWORK = 'unknown';

@@ -1,7 +1,7 @@
 import {html, nothing} from 'lit';
 import {Directive, directive} from 'lit/directive.js';
 
-export interface RefineToggleGuardProps {
+interface RefineToggleGuardProps {
   hasError: boolean;
   firstRequestExecuted: boolean;
   hasItems: boolean;

@@ -1,6 +1,10 @@
 import {
+  selectAccessToken,
   selectAgentId,
+  selectDebugAgentSession,
+  selectEnvironment,
   selectLocale,
+  selectOrganizationId,
   selectTimezone,
 } from './configuration-selectors.js';
 import {getConfigurationInitialState} from './configuration-state.js';
@@ -40,6 +44,45 @@ describe('configuration selectors', () => {
     });
   });
 
+  describe('selectAccessToken', () => {
+    it('returns the access token from configuration', () => {
+      const state = {
+        configuration: {
+          ...getConfigurationInitialState(),
+          accessToken: 'token-123',
+        },
+      };
+
+      expect(selectAccessToken(state)).toBe('token-123');
+    });
+  });
+
+  describe('selectOrganizationId', () => {
+    it('returns the organization id from configuration', () => {
+      const state = {
+        configuration: {
+          ...getConfigurationInitialState(),
+          organizationId: 'my-org-id',
+        },
+      };
+
+      expect(selectOrganizationId(state)).toBe('my-org-id');
+    });
+  });
+
+  describe('selectEnvironment', () => {
+    it('returns the environment from configuration', () => {
+      const state = {
+        configuration: {
+          ...getConfigurationInitialState(),
+          environment: 'dev' as const,
+        },
+      };
+
+      expect(selectEnvironment(state)).toBe('dev');
+    });
+  });
+
   describe('selectAgentId', () => {
     it('returns agentId when present', () => {
       const state = {
@@ -75,6 +118,31 @@ describe('configuration selectors', () => {
       };
 
       expect(selectAgentId(state)).toBeUndefined();
+    });
+  });
+
+  describe('selectDebugAgentSession', () => {
+    it('returns true when debugAgentSession is enabled', () => {
+      const state = {
+        configuration: {
+          ...getConfigurationInitialState(),
+          knowledge: {
+            answerConfigurationId: '',
+            agentId: 'test-agent-123',
+            debugAgentSession: true,
+          },
+        },
+      };
+
+      expect(selectDebugAgentSession(state)).toBe(true);
+    });
+
+    it('returns undefined when debugAgentSession is not set', () => {
+      const state = {
+        configuration: getConfigurationInitialState(),
+      };
+
+      expect(selectDebugAgentSession(state)).toBeUndefined();
     });
   });
 });

@@ -4,6 +4,7 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {MockInsightApi} from '@/storybook-utils/api/insight/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
+import '@/src/components/insight/atomic-insight-smart-snippet/atomic-insight-smart-snippet.js';
 
 const mockInsightApi = new MockInsightApi();
 
@@ -76,6 +77,4 @@ const meta: Meta = {
 
 export default meta;
 
-export const Default: Story = {
-  tags: ['!dev'],
-};
+export const Default: Story = {};

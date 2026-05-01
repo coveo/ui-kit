@@ -19,7 +19,7 @@ export function buildController<T extends object>(
   engine: CoreEngine<T> | CoreEngineNext<T>
 ): Controller {
   let prevState: string;
-  const listeners: Map<Symbol, () => void> = new Map();
+  const listeners: Map<symbol, () => void> = new Map();
   const hasNoListeners = () => listeners.size === 0;
 
   const hasStateChanged = (currentState: Record<string, unknown>): boolean => {

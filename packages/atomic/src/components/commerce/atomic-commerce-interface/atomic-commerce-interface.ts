@@ -42,8 +42,8 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
-import {waitForAtomicChildrenToBeDefined} from '@/src/utils/custom-element-tags';
 import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue';
+import {waitForAtomicChildrenToBeDefined} from '@/src/utils/initialization-common-utils';
 import {
   SafeStorage,
   type StandaloneSearchBoxData,
@@ -52,7 +52,7 @@ import {
 import {getAnalyticsConfig} from './analytics-config';
 import {type CommerceStore, createCommerceStore} from './store';
 
-export type CommerceInitializationOptions = CommerceEngineConfiguration;
+type CommerceInitializationOptions = CommerceEngineConfiguration;
 export type CommerceBindings = CommonBindings<
   CommerceEngine,
   CommerceStore,
@@ -545,7 +545,7 @@ export class AtomicCommerceInterface
   private updateHash() {
     const newFragment = this.urlManager.state.fragment;
 
-    if (!this.searchOrListing.state.isLoading) {
+    if (!this.summary.state.firstRequestExecuted) {
       history.replaceState(null, document.title, `#${newFragment}`);
       this.bindings.engine.logger.info(`History replaceState #${newFragment}`);
 

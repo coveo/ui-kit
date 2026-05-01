@@ -11,11 +11,11 @@ import {SolutionType} from '../../types/controller-constants.js';
 import type {SearchAndListingControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
 
 export type {
+  CorePaginationOptions,
   Pagination,
+  PaginationOptions,
   PaginationProps,
   PaginationState,
-  PaginationOptions,
-  CorePaginationOptions,
 };
 
 export type PaginationDefinition =

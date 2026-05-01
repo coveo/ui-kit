@@ -68,7 +68,7 @@ const iframeConnectedEvent = async (
   });
 };
 
-export interface QuickviewIframeProps {
+interface QuickviewIframeProps {
   title: string;
   content?: string;
   onSetIframeRef: (ref: HTMLIFrameElement) => void;
@@ -142,7 +142,7 @@ export const renderQuickviewIframe: FunctionalComponent<
     src="about:blank"
     class="h-full w-full"
     sandbox=${
-      // biome-ignore lint/suspicious/noExplicitAny: ifDefined requires 'any' for optional HTML attributes
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- ifDefined requires 'any' for optional HTML attributes
       ifDefined(sandbox) as any
     }
     ${ref(handleRef)}

@@ -11,22 +11,9 @@ import {expect, userEvent, waitFor} from 'storybook/test';
  * `role="application"`, not `role="listbox"`. These tests assert the actual
  * Atomic implementation rather than the WAI-ARIA APG combobox pattern.
  */
-export const COVERED_CRITERIA = [
-  '2.1.1',
-  '2.1.2',
-  '2.4.3',
-  '2.4.7',
-  '4.1.2',
-] as const;
+export const COVERED_CRITERIA = ['2.1.1', '2.1.2', '4.1.2'] as const;
 
-export interface ComboboxA11yOptions {
-  inputSelector: string;
-}
-
-export async function testComboboxA11y(
-  context: StoryContext,
-  _options: ComboboxA11yOptions
-): Promise<void> {
+export async function testComboboxA11y(context: StoryContext): Promise<void> {
   const {canvasElement, step} = context;
   const root = within(canvasElement);
 
@@ -60,9 +47,7 @@ export async function testComboboxA11y(
 
       await waitFor(
         () => {
-          const value =
-            (input as HTMLTextAreaElement).value ||
-            (input as HTMLInputElement).value;
+          const value = (input as HTMLTextAreaElement | HTMLInputElement).value;
           expect(value.length).toBeGreaterThan(0);
         },
         {timeout: 3000}

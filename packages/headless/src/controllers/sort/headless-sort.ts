@@ -13,7 +13,7 @@ import {
   type SortState,
 } from '../core/sort/headless-core-sort.js';
 
-export type {Sort, SortProps, SortState, SortInitialState};
+export type {Sort, SortInitialState, SortProps, SortState};
 
 /**
  * Creates a `Sort` controller instance.

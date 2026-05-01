@@ -4,8 +4,9 @@
     "module": "ES2020",
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "moduleResolution": "node",
-    "outDir": "dist"
+    "moduleResolution": "bundler",
+    "outDir": "dist",
+    "rootDir": "src"
   },
   "include": ["src/**/*"]
 }

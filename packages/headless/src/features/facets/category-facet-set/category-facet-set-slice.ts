@@ -1,9 +1,11 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions.js';
 import {disableFacet} from '../../facet-options/facet-options-actions.js';
+import {isFacetVisibleOnTab} from '../../facet-options/facet-options-utils.js';
 import {change} from '../../history/history-actions.js';
 import {executeSearch, fetchFacetValues} from '../../search/search-actions.js';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions.js';
+import {updateActiveTab} from '../../tab-set/tab-set-actions.js';
 import {selectCategoryFacetSearchResult} from '../facet-search-set/category/category-facet-search-actions.js';
 import {updateFacetAutoSelection} from '../generic/facet-actions.js';
 import {handleFacetUpdateNumberOfValues} from '../generic/facet-reducer-helpers.js';
@@ -39,7 +41,7 @@ export const categoryFacetSetReducer = createReducer(
     builder
       .addCase(registerCategoryFacet, (state, action) => {
         const options = action.payload;
-        const {facetId} = options;
+        const {facetId, tabs} = options;
 
         if (facetId in state) {
           return;
@@ -47,7 +49,7 @@ export const categoryFacetSetReducer = createReducer(
 
         const request = buildCategoryFacetRequest(options);
         const initialNumberOfValues = request.numberOfValues;
-        state[facetId] = {request, initialNumberOfValues};
+        state[facetId] = {request, initialNumberOfValues, tabs};
       })
       .addCase(
         change.fulfilled,
@@ -55,12 +57,27 @@ export const categoryFacetSetReducer = createReducer(
       )
       .addCase(restoreSearchParameters, (state, action) => {
         const cf = action.payload.cf || {};
+        const activeTab = action.payload.tab;
 
         Object.keys(state).forEach((id) => {
-          const request = state[id]!.request;
+          const facetSlice = state[id]!;
+          const request = facetSlice.request;
+
+          // Don't restore values for tab-managed facets that aren't visible on the active tab.
+          // The FacetConditionsManager handles their enabled state based on the active tab.
+          const hasTabs =
+            facetSlice.tabs?.included?.length ||
+            facetSlice.tabs?.excluded?.length;
+          if (hasTabs && !isFacetVisibleOnTab(facetSlice.tabs, activeTab)) {
+            if (request.currentValues.length) {
+              selectPath(request, [], facetSlice.initialNumberOfValues);
+            }
+            return;
+          }
+
           const path = cf[id] || [];
           if (path.length || request.currentValues.length) {
-            selectPath(request, path, state[id]!.initialNumberOfValues);
+            selectPath(request, path, facetSlice.initialNumberOfValues);
           }
         });
       })
@@ -172,6 +189,18 @@ export const categoryFacetSetReducer = createReducer(
       })
       .addCase(disableFacet, (state, action) => {
         handleCategoryFacetDeselectAll(state, action.payload);
+      })
+      .addCase(updateActiveTab, (state, action) => {
+        const newActiveTab = action.payload;
+        Object.keys(state).forEach((facetId) => {
+          const facetSlice = state[facetId]!;
+          const hasTabs =
+            facetSlice.tabs?.included?.length ||
+            facetSlice.tabs?.excluded?.length;
+          if (hasTabs && !isFacetVisibleOnTab(facetSlice.tabs, newActiveTab)) {
+            handleCategoryFacetDeselectAll(state, facetId);
+          }
+        });
       });
   }
 );

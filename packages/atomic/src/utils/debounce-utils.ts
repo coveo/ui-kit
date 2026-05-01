@@ -1,4 +1,4 @@
-export interface DebouncedQueueOptions {
+interface DebouncedQueueOptions {
   delay: number;
 }
 

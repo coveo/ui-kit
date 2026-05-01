@@ -49,6 +49,8 @@ vi.mock(
   '../../../features/generated-answer/generated-answer-analytics-actions'
 );
 
+const providedAnswerId = 'provided-answer-id';
+
 describe('generated answer', () => {
   let generatedAnswer: GeneratedAnswer;
   let engine: MockedSearchEngine;
@@ -145,7 +147,20 @@ describe('generated answer', () => {
   it('#logCitationClick dispatches analytics action', () => {
     const testCitation = buildMockCitation();
     generatedAnswer.logCitationClick(testCitation.id);
-    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(testCitation.id);
+    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(
+      testCitation.id,
+      undefined
+    );
+  });
+
+  it('#logCitationClick dispatches analytics action with provided answerId', () => {
+    const testCitation = buildMockCitation();
+    generatedAnswer.logCitationClick(testCitation.id, providedAnswerId);
+
+    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(
+      testCitation.id,
+      providedAnswerId
+    );
   });
 
   it('#logCitationHover dispatches analytics action', () => {
@@ -155,13 +170,37 @@ describe('generated answer', () => {
     generatedAnswer.logCitationHover(testCitation.id, exampleDuration);
     expect(logHoverCitation).toHaveBeenCalledWith(
       testCitation.id,
-      exampleDuration
+      exampleDuration,
+      undefined
+    );
+  });
+
+  it('#logCitationHover dispatches analytics action with provided answerId', () => {
+    const testCitation = buildMockCitation();
+    const exampleDuration = 100;
+
+    generatedAnswer.logCitationHover(
+      testCitation.id,
+      exampleDuration,
+      providedAnswerId
+    );
+
+    expect(logHoverCitation).toHaveBeenCalledWith(
+      testCitation.id,
+      exampleDuration,
+      providedAnswerId
     );
   });
 
   it('#logCopyToClipboard dispatches analytics action', () => {
     generatedAnswer.logCopyToClipboard();
     expect(logCopyGeneratedAnswer).toHaveBeenCalled();
+  });
+
+  it('#logCopyToClipboard dispatches analytics action with provided answerId', () => {
+    generatedAnswer.logCopyToClipboard(providedAnswerId);
+
+    expect(logCopyGeneratedAnswer).toHaveBeenCalledWith(providedAnswerId);
   });
 
   describe('#show', () => {

@@ -5,13 +5,10 @@ file_patterns:
   - .nvmrc
 
   # Manifests everywhere
-  - "**/pnpm-workspace.yaml"
-  - "**/pnpm-lock.yaml"
-  - "**/package.json"
+  - '**/pnpm-workspace.yaml'
+  - '**/pnpm-lock.yaml'
+  - '**/package.json'
 
 reviewers:
   dxui:
     minimum_approvals: 1
-
-review_bypass:
-  integration/139346: exempt # Developer eXperience Bot. Important for releases

@@ -11,7 +11,7 @@ import {
 } from './product-enrichment-actions.js';
 import {productEnrichmentReducer as productEnrichment} from './product-enrichment-slice.js';
 
-export type {RegisterProductEnrichmentOptionsPayload, FetchBadgesPayload};
+export type {FetchBadgesPayload, RegisterProductEnrichmentOptionsPayload};
 /**
  * The product enrichment action creators.
  *

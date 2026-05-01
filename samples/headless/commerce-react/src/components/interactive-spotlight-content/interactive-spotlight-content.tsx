@@ -24,19 +24,26 @@ export default function InteractiveSpotlightContent(
         type="button"
         className="SpotlightContentLink"
         onClick={clickSpotlightContent}
+        style={{color: spotlightContent.nameFontColor}}
       >
         {spotlightContent.name ?? 'Spotlight Content name not available'}
       </button>
       <div className="SpotlightContentImageWrapper">
         <img
           src={spotlightContent.desktopImage}
-          alt={spotlightContent.name ?? 'Spotlight Content image'}
+          alt={
+            spotlightContent.altText ||
+            spotlightContent.name ||
+            'Spotlight content'
+          }
           height={100}
         />
       </div>
       {spotlightContent.description ? (
         <div className="SpotlightContentDescription">
-          <p>{spotlightContent.description}</p>
+          <p style={{color: spotlightContent.descriptionFontColor}}>
+            {spotlightContent.description}
+          </p>
         </div>
       ) : null}
       <hr />

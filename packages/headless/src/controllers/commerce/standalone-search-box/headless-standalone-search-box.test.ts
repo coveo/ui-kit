@@ -6,6 +6,7 @@ import {
   registerQuerySetQuery,
   updateQuerySetQuery,
 } from '../../../features/commerce/query-set/query-set-actions.js';
+import {commerceQuerySuggestReducer as querySuggest} from '../../../features/commerce/query-suggest/commerce-query-suggest-slice.js';
 import {selectQuerySuggestion} from '../../../features/commerce/query-suggest/query-suggest-actions.js';
 import {
   fetchRedirectUrl,
@@ -13,8 +14,6 @@ import {
   resetStandaloneSearchBox,
 } from '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-actions.js';
 import {commerceStandaloneSearchBoxSetReducer as commerceStandaloneSearchBoxSet} from '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-slice.js';
-// TODO: KIT-3127: import from commerce
-import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice.js';
 import type {CommerceAppState} from '../../../state/commerce-app-state.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {

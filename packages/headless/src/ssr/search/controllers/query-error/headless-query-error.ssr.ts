@@ -7,8 +7,10 @@ import type {ControllerDefinitionWithoutProps} from '../../../common/types/contr
 
 export * from '../../../../controllers/query-error/headless-query-error.js';
 
-export interface QueryErrorDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, QueryError> {}
+export interface QueryErrorDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  QueryError
+> {}
 
 /**
  * Defines a `QueryError` controller instance.

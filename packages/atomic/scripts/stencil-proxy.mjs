@@ -1,11 +1,5 @@
-import {
-  cpSync,
-  readdirSync,
-  readFileSync,
-  renameSync,
-  writeFileSync,
-} from 'node:fs';
-import {dirname, join, relative, resolve, sep} from 'node:path';
+import {cpSync, readdirSync, readFileSync, writeFileSync} from 'node:fs';
+import {dirname, join, relative, resolve} from 'node:path';
 
 const headlessVersion = JSON.parse(
   readFileSync('../headless/package.json', 'utf8')
@@ -26,15 +20,11 @@ const files = readdirSync(srcDir, {
   return aPath.localeCompare(bPath);
 });
 
-const prefixFileWithUnderscore = (file) =>
-  `${file.split(sep).slice(0, -1).join(sep) + sep}_${file.split(sep).pop()}`;
-
 for (const file of files) {
   if (file.isFile()) {
     const filePath = relative(srcDir, join(file.parentPath, file.name));
     const proxyFile = join(srcDir, filePath);
     const proxiedFile = join(distDir, filePath);
-    renameSync(proxiedFile, prefixFileWithUnderscore(proxiedFile));
     cpSync(proxyFile, proxiedFile, {recursive: true, overwrite: true});
 
     if (filePath.includes('loader.js')) {
