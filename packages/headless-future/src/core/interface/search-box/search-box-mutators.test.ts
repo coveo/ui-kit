@@ -1,42 +1,36 @@
-/**
- * SearchBox Mutations Tests
- */
-
-import {describe, it, expect, beforeEach} from 'vitest';
+import {describe, it, expect, vi, beforeEach} from 'vitest';
 import * as mutations from './search-box-mutators.js';
-import {createTestEngine} from '@/src/test/test-utils.js';
-import * as selectors from './search-box-selectors.js';
-import {searchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
 import {Engine} from '@/src/core/interface/engine/engine.js';
+import {searchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
 
 describe('searchBoxMutations', () => {
   let engine: Engine;
+  let mutateSpy: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
-    engine = createTestEngine();
-    engine.adoptSlice(searchBoxSlice);
+    mutateSpy = vi.fn();
+    engine = {
+      mutate: mutateSpy,
+    } as unknown as Engine;
   });
 
   describe('setQuery()', () => {
-    it('should return StateMutation object', () => {
-      const mutation = mutations.setQuery('laptops');
+    it('should call engine.mutate with the setQuery mutation', () => {
+      mutations.setQuery(engine, 'test query');
 
-      expect(mutation).toEqual({
-        type: 'searchBox/setQuery',
-        payload: 'laptops',
-      });
+      expect(mutateSpy).toHaveBeenCalledTimes(1);
+      expect(mutateSpy).toHaveBeenCalledWith(
+        searchBoxSlice.actions.setQuery('test query')
+      );
     });
 
-    it('should update state when used with mutate()', () => {
-      engine.mutate(mutations.setQuery('test query'));
+    it('should call engine.mutate with empty query', () => {
+      mutations.setQuery(engine, '');
 
-      expect(engine.read(selectors.query)).toBe('test query');
-    });
-
-    it('should accept empty string', () => {
-      engine.mutate(mutations.setQuery(''));
-
-      expect(engine.read(selectors.query)).toBe('');
+      expect(mutateSpy).toHaveBeenCalledTimes(1);
+      expect(mutateSpy).toHaveBeenCalledWith(
+        searchBoxSlice.actions.setQuery('')
+      );
     });
   });
 });

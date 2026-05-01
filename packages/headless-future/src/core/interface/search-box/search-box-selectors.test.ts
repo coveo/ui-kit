@@ -1,7 +1,3 @@
-/**
- * SearchBox Selectors Tests
- */
-
 import {describe, it, expect, beforeEach} from 'vitest';
 import {createTestEngine} from '@/src/test/test-utils.js';
 import * as selectors from './search-box-selectors.js';
@@ -24,7 +20,7 @@ describe('searchBox selectors', () => {
     });
 
     it('should return updated query after mutation', () => {
-      engine.mutate(mutations.setQuery('laptops'));
+      mutations.setQuery(engine, 'laptops');
       const query = engine.read(selectors.query);
       expect(query).toBe('laptops');
     });

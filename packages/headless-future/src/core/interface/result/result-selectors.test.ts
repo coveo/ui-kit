@@ -24,7 +24,7 @@ describe('result selectors', () => {
     });
 
     it('should return all result states after initialization', () => {
-      engine.mutate(mutations.initializeResults(['r1', 'r2']));
+      mutations.initializeResults(engine, ['r1', 'r2']);
 
       const all = engine.read(selectors.all);
       expect(Object.keys(all)).toEqual(['r1', 'r2']);
@@ -40,15 +40,15 @@ describe('result selectors', () => {
     });
 
     it('should return state for an existing result', () => {
-      engine.mutate(mutations.initializeResults(['r1']));
+      mutations.initializeResults(engine, ['r1']);
 
       const result = engine.read(selectors.byId('r1'));
       expect(result).toEqual({isSelected: false, isExpanded: false});
     });
 
     it('should reflect mutations', () => {
-      engine.mutate(mutations.initializeResults(['r1']));
-      engine.mutate(mutations.setSelected('r1', true));
+      mutations.initializeResults(engine, ['r1']);
+      mutations.setSelected(engine, 'r1', true);
 
       const result = engine.read(selectors.byId('r1'));
       expect(result?.isSelected).toBe(true);
@@ -63,19 +63,19 @@ describe('result selectors', () => {
     });
 
     it('should return IDs of selected results', () => {
-      engine.mutate(mutations.initializeResults(['r1', 'r2', 'r3']));
-      engine.mutate(mutations.setSelected('r1', true));
-      engine.mutate(mutations.setSelected('r3', true));
+      mutations.initializeResults(engine, ['r1', 'r2', 'r3']);
+      mutations.setSelected(engine, 'r1', true);
+      mutations.setSelected(engine, 'r3', true);
 
       const ids = engine.read(selectors.selectedIds);
       expect(ids).toEqual(['r1', 'r3']);
     });
 
     it('should exclude deselected results', () => {
-      engine.mutate(mutations.initializeResults(['r1', 'r2']));
-      engine.mutate(mutations.setSelected('r1', true));
-      engine.mutate(mutations.setSelected('r2', true));
-      engine.mutate(mutations.setSelected('r1', false));
+      mutations.initializeResults(engine, ['r1', 'r2']);
+      mutations.setSelected(engine, 'r1', true);
+      mutations.setSelected(engine, 'r2', true);
+      mutations.setSelected(engine, 'r1', false);
 
       const ids = engine.read(selectors.selectedIds);
       expect(ids).toEqual(['r2']);
@@ -89,18 +89,18 @@ describe('result selectors', () => {
     });
 
     it('should return IDs of expanded results', () => {
-      engine.mutate(mutations.initializeResults(['r1', 'r2', 'r3']));
-      engine.mutate(mutations.setExpanded('r2', true));
+      mutations.initializeResults(engine, ['r1', 'r2', 'r3']);
+      mutations.setExpanded(engine, 'r2', true);
 
       const ids = engine.read(selectors.expandedIds);
       expect(ids).toEqual(['r2']);
     });
 
     it('should exclude collapsed results', () => {
-      engine.mutate(mutations.initializeResults(['r1', 'r2']));
-      engine.mutate(mutations.setExpanded('r1', true));
-      engine.mutate(mutations.setExpanded('r2', true));
-      engine.mutate(mutations.setExpanded('r1', false));
+      mutations.initializeResults(engine, ['r1', 'r2']);
+      mutations.setExpanded(engine, 'r1', true);
+      mutations.setExpanded(engine, 'r2', true);
+      mutations.setExpanded(engine, 'r1', false);
 
       const ids = engine.read(selectors.expandedIds);
       expect(ids).toEqual(['r2']);

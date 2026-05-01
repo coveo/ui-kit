@@ -4,6 +4,7 @@
  * Common helpers and mock data builders for unit tests
  */
 
+import {vi} from 'vitest';
 import {Engine} from '../core/interface/engine/engine.js';
 import type {
   SearchResult,
@@ -79,4 +80,32 @@ export function createMockFacetValues(count: number): FacetValue[] {
  */
 export function nextTick(): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, 0));
+}
+
+/**
+ * Create a mock Engine for testing controller/integration logic
+ * Returns the engine mock and individual spy functions for assertions
+ */
+export function createMockEngine(): {
+  engine: Engine;
+  adoptSliceSpy: ReturnType<typeof vi.fn>;
+  readSpy: ReturnType<typeof vi.fn>;
+  subscribeSpy: ReturnType<typeof vi.fn>;
+} {
+  const adoptSliceSpy = vi.fn();
+  const readSpy = vi.fn();
+  const subscribeSpy = vi.fn();
+
+  const engine = {
+    adoptSlice: adoptSliceSpy,
+    read: readSpy,
+    subscribe: subscribeSpy,
+  } as unknown as Engine;
+
+  return {
+    engine,
+    adoptSliceSpy,
+    readSpy,
+    subscribeSpy,
+  };
 }

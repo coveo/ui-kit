@@ -30,7 +30,7 @@ describe('createConfigurationSelectors()', () => {
     });
 
     it('should return updated organization ID after mutation', () => {
-      engine.mutate(mutations.setOrganizationId('my-org-123'));
+      mutations.setOrganizationId(engine, 'my-org-123');
       const orgId = engine.read(selectors.organizationId);
       expect(orgId).toBe('my-org-123');
     });
@@ -43,7 +43,7 @@ describe('createConfigurationSelectors()', () => {
     });
 
     it('should return updated access token after mutation', () => {
-      engine.mutate(mutations.setAccessToken('abc123token'));
+      mutations.setAccessToken(engine, 'abc123token');
       const token = engine.read(selectors.accessToken);
       expect(token).toBe('abc123token');
     });
@@ -56,14 +56,14 @@ describe('createConfigurationSelectors()', () => {
     });
 
     it('should return updated endpoint after mutation', () => {
-      engine.mutate(mutations.setEndpoint('https://custom.api.com'));
+      mutations.setEndpoint(engine, 'https://custom.api.com');
       const endpoint = engine.read(selectors.endpoint);
       expect(endpoint).toBe('https://custom.api.com');
     });
 
     it('should return undefined when explicitly cleared', () => {
-      engine.mutate(mutations.setEndpoint('https://api.com'));
-      engine.mutate(mutations.setEndpoint(undefined));
+      mutations.setEndpoint(engine, 'https://api.com');
+      mutations.setEndpoint(engine, undefined);
       const endpoint = engine.read(selectors.endpoint);
       expect(endpoint).toBeUndefined();
     });
@@ -71,13 +71,11 @@ describe('createConfigurationSelectors()', () => {
 
   describe('Configuration selectors integration', () => {
     it('should reflect complete configuration state', () => {
-      engine.mutate(
-        mutations.setConfiguration({
-          organizationId: 'test-org',
-          accessToken: 'test-token',
-          endpoint: 'https://test.api.com',
-        })
-      );
+      mutations.setConfiguration(engine, {
+        organizationId: 'test-org',
+        accessToken: 'test-token',
+        endpoint: 'https://test.api.com',
+      });
 
       expect(engine.read(selectors.organizationId)).toBe('test-org');
       expect(engine.read(selectors.accessToken)).toBe('test-token');
@@ -85,14 +83,14 @@ describe('createConfigurationSelectors()', () => {
     });
 
     it('should reflect individual field updates', () => {
-      engine.mutate(mutations.setOrganizationId('org-1'));
+      mutations.setOrganizationId(engine, 'org-1');
       expect(engine.read(selectors.organizationId)).toBe('org-1');
 
-      engine.mutate(mutations.setAccessToken('token-2'));
+      mutations.setAccessToken(engine, 'token-2');
       expect(engine.read(selectors.accessToken)).toBe('token-2');
       expect(engine.read(selectors.organizationId)).toBe('org-1');
 
-      engine.mutate(mutations.setEndpoint('https://api.example.com'));
+      mutations.setEndpoint(engine, 'https://api.example.com');
       expect(engine.read(selectors.endpoint)).toBe('https://api.example.com');
       expect(engine.read(selectors.organizationId)).toBe('org-1');
       expect(engine.read(selectors.accessToken)).toBe('token-2');

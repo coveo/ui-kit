@@ -1,11 +1,8 @@
-/**
- * SearchBox Controller Tests
- */
-
 import {describe, it, expect, beforeEach, vi} from 'vitest';
-import {createTestEngine} from '@/src/test/test-utils.js';
-import {Engine} from '@/src/core/interface/engine/engine.js';
 import * as searchBoxSelectors from '@/src/core/interface/search-box/search-box-selectors.js';
+import * as searchBoxMutators from '@/src/core/interface/search-box/search-box-mutators.js';
+import {searchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
+import {createMockEngine} from '@/src/test/test-utils.js';
 import {buildSearchBoxController} from './search-box-controller.js';
 
 vi.mock('@/src/api/index.js', () => ({
@@ -15,103 +12,96 @@ vi.mock('@/src/api/index.js', () => ({
 import {executeSearchAPI} from '@/src/api/index.js';
 
 describe('buildSearchBoxController', () => {
-  let engine: Engine;
+  let mockEngine: ReturnType<typeof createMockEngine>;
 
   beforeEach(() => {
     vi.clearAllMocks();
-    engine = createTestEngine();
+    mockEngine = createMockEngine();
   });
 
   it('should adopt the searchBox slice', () => {
-    buildSearchBoxController(engine);
+    buildSearchBoxController(mockEngine.engine);
 
-    // If the slice was adopted, reading from it should not throw
-    expect(engine.read(searchBoxSelectors.query)).toBe('');
+    expect(mockEngine.adoptSliceSpy).toHaveBeenCalledExactlyOnceWith(
+      searchBoxSlice
+    );
   });
 
   describe('updateQuery()', () => {
-    it('should update the query in state', () => {
-      const controller = buildSearchBoxController(engine);
+    it('should call setQuery mutator with engine and query', () => {
+      const setQuerySpy = vi
+        .spyOn(searchBoxMutators, 'setQuery')
+        .mockImplementation(() => {});
+      const controller = buildSearchBoxController(mockEngine.engine);
 
       controller.updateQuery('laptops');
 
-      expect(engine.read(searchBoxSelectors.query)).toBe('laptops');
-    });
-
-    it('should reset the query with an empty string', () => {
-      const controller = buildSearchBoxController(engine);
-
-      controller.updateQuery('something');
-      controller.updateQuery('');
-
-      expect(engine.read(searchBoxSelectors.query)).toBe('');
+      expect(setQuerySpy).toHaveBeenCalledExactlyOnceWith(
+        mockEngine.engine,
+        'laptops'
+      );
     });
   });
 
   describe('submit()', () => {
     it('should call executeSearchAPI with the engine', () => {
-      const controller = buildSearchBoxController(engine);
+      const controller = buildSearchBoxController(mockEngine.engine);
 
       controller.submit();
 
-      expect(executeSearchAPI).toHaveBeenCalledOnce();
-      expect(executeSearchAPI).toHaveBeenCalledWith(engine);
+      expect(executeSearchAPI).toHaveBeenCalledExactlyOnceWith(
+        mockEngine.engine
+      );
     });
   });
 
   describe('state getter', () => {
-    it('should return initial state', () => {
-      const controller = buildSearchBoxController(engine);
+    it('should call engine.read with a selector and return its output', () => {
+      mockEngine.readSpy.mockReturnValue({query: 'from-engine'});
+      const controller = buildSearchBoxController(mockEngine.engine);
 
-      expect(controller.state).toEqual({query: ''});
+      expect(controller.state).toEqual({query: 'from-engine'});
+      expect(mockEngine.readSpy).toHaveBeenCalledExactlyOnceWith(
+        expect.any(Function)
+      );
     });
 
-    it('should reflect updated query', () => {
-      const controller = buildSearchBoxController(engine);
+    it('should use the same selector as subscribe()', () => {
+      const controller = buildSearchBoxController(mockEngine.engine);
+      const callback = vi.fn();
 
-      controller.updateQuery('test');
+      controller.subscribe(callback);
+      void controller.state;
 
-      expect(controller.state).toEqual({query: 'test'});
+      const subscribedSelector = mockEngine.subscribeSpy.mock.calls[0][0];
+      const stateSelector = mockEngine.readSpy.mock.calls[0][0];
+      expect(stateSelector).toBe(subscribedSelector);
     });
   });
 
   describe('query getter', () => {
-    it('should return the initial query', () => {
-      const controller = buildSearchBoxController(engine);
-
-      expect(controller.query).toBe('');
-    });
-
-    it('should return the updated query', () => {
-      const controller = buildSearchBoxController(engine);
-
-      controller.updateQuery('headphones');
+    it('should call engine.read with query selector', () => {
+      mockEngine.readSpy.mockReturnValue('headphones');
+      const controller = buildSearchBoxController(mockEngine.engine);
 
       expect(controller.query).toBe('headphones');
+      expect(mockEngine.readSpy).toHaveBeenCalledExactlyOnceWith(
+        searchBoxSelectors.query
+      );
     });
   });
 
   describe('subscribe()', () => {
-    it('should invoke callback when query changes', () => {
-      const controller = buildSearchBoxController(engine);
+    it('should call engine.subscribe with selector and callback', () => {
+      const controller = buildSearchBoxController(mockEngine.engine);
       const callback = vi.fn();
 
       controller.subscribe(callback);
-      controller.updateQuery('new query');
 
-      expect(callback).toHaveBeenCalledTimes(1);
-    });
-
-    it('should invoke callback for each distinct change', () => {
-      const controller = buildSearchBoxController(engine);
-      const callback = vi.fn();
-
-      controller.subscribe(callback);
-      controller.updateQuery('first');
-      controller.updateQuery('second');
-      controller.updateQuery('third');
-
-      expect(callback).toHaveBeenCalledTimes(3);
+      expect(mockEngine.subscribeSpy).toHaveBeenCalledExactlyOnceWith(
+        expect.any(Function),
+        callback
+      );
     });
   });
 });

@@ -28,7 +28,7 @@ describe('results selectors', () => {
 
     it('should return updated results after mutation', () => {
       const mockResults = createMockSearchResults(3);
-      engine.mutate(mutations.setResults(mockResults));
+      mutations.setResults(engine, mockResults);
 
       const results = engine.read(selectors.results);
       expect(results).toEqual(mockResults);
@@ -43,7 +43,7 @@ describe('results selectors', () => {
     });
 
     it('should return true when loading', () => {
-      engine.mutate(mutations.setLoading(true));
+      mutations.setLoading(engine, true);
       const isLoading = engine.read(selectors.isLoading);
       expect(isLoading).toBe(true);
     });
@@ -56,7 +56,7 @@ describe('results selectors', () => {
     });
 
     it('should return error message when set', () => {
-      engine.mutate(mutations.setError('Search failed'));
+      mutations.setError(engine, 'Search failed');
       const error = engine.read(selectors.error);
       expect(error).toBe('Search failed');
     });
@@ -69,7 +69,7 @@ describe('results selectors', () => {
     });
 
     it('should return true when results are present', () => {
-      engine.mutate(mutations.setResults(createMockSearchResults(2)));
+      mutations.setResults(engine, createMockSearchResults(2));
       const hasResults = engine.read(selectors.hasSearchResults);
       expect(hasResults).toBe(true);
     });

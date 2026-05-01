@@ -24,8 +24,8 @@ describe('executeHttpRequest()', () => {
     engine = createTestEngine();
     engine.adoptSlice(configurationSlice); // Ensure slice is loaded
     // Configure engine with required settings
-    engine.mutate(configurationMutations.setOrganizationId('test-org-id'));
-    engine.mutate(configurationMutations.setAccessToken('test-access-token'));
+    configurationMutations.setOrganizationId(engine, 'test-org-id');
+    configurationMutations.setAccessToken(engine, 'test-access-token');
 
     // Clear any previous fetch mocks
     vi.restoreAllMocks();
@@ -39,7 +39,7 @@ describe('executeHttpRequest()', () => {
     it('should return error when organizationId is not set', async () => {
       const emptyEngine = createTestEngine();
       emptyEngine.adoptSlice(configurationSlice);
-      emptyEngine.mutate(configurationMutations.setAccessToken('token'));
+      configurationMutations.setAccessToken(emptyEngine, 'token');
 
       const response = await executeHttpRequest(emptyEngine, {
         path: '/test',
@@ -53,7 +53,7 @@ describe('executeHttpRequest()', () => {
     it('should return error when accessToken is not set', async () => {
       const emptyEngine = createTestEngine();
       emptyEngine.adoptSlice(configurationSlice);
-      emptyEngine.mutate(configurationMutations.setOrganizationId('org-id'));
+      configurationMutations.setOrganizationId(emptyEngine, 'org-id');
 
       const response = await executeHttpRequest(emptyEngine, {
         path: '/test',
@@ -129,9 +129,7 @@ describe('executeHttpRequest()', () => {
     });
 
     it('should use custom endpoint when configured', async () => {
-      engine.mutate(
-        configurationMutations.setEndpoint('https://custom.coveo.com')
-      );
+      configurationMutations.setEndpoint(engine, 'https://custom.coveo.com');
 
       const mockFetch: MockedFunction<typeof fetch> = vi.fn(() =>
         Promise.resolve(new Response(JSON.stringify({}), {status: 200}))

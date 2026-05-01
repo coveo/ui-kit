@@ -34,7 +34,7 @@ describe('search-box actions', () => {
       const actions = loadSearchBoxActions(engine);
       await new Promise((r) => setTimeout(r, 0));
 
-      actions.setQuery('hello world');
+      actions.setQuery(engine, 'hello world');
       expect(engine.read(selectors.query)).toBe('hello world');
     });
 
@@ -42,8 +42,8 @@ describe('search-box actions', () => {
       const actions = loadSearchBoxActions(engine);
       await new Promise((r) => setTimeout(r, 0));
 
-      actions.setQuery('something');
-      actions.setQuery('');
+      actions.setQuery(engine, 'something');
+      actions.setQuery(engine, '');
       expect(engine.read(selectors.query)).toBe('');
     });
 
@@ -51,10 +51,10 @@ describe('search-box actions', () => {
       const actions = loadSearchBoxActions(engine);
       await new Promise((r) => setTimeout(r, 0));
 
-      actions.setQuery('first');
+      actions.setQuery(engine, 'first');
       expect(engine.read(selectors.query)).toBe('first');
 
-      actions.setQuery('second');
+      actions.setQuery(engine, 'second');
       expect(engine.read(selectors.query)).toBe('second');
     });
   });

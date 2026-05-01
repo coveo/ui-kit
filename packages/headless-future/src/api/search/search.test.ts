@@ -46,9 +46,9 @@ describe('executeSearchAPI()', () => {
     engine.adoptSlice(facetsSlice);
 
     // Configure engine
-    engine.mutate(configurationMutations.setOrganizationId('test-org'));
-    engine.mutate(configurationMutations.setAccessToken('test-token'));
-    engine.mutate(searchBoxMutations.setQuery('test query'));
+    configurationMutations.setOrganizationId(engine, 'test-org');
+    configurationMutations.setAccessToken(engine, 'test-token');
+    searchBoxMutations.setQuery(engine, 'test query');
 
     // Clear any previous mocks
     vi.restoreAllMocks();
@@ -117,7 +117,7 @@ describe('executeSearchAPI()', () => {
 
     it('should clear error before request', async () => {
       // Set initial error
-      engine.mutate(resultsMutations.setError('Previous error'));
+      resultsMutations.setError(engine, 'Previous error');
 
       vi.stubGlobal(
         'fetch',
@@ -138,7 +138,7 @@ describe('executeSearchAPI()', () => {
 
   describe('Request building', () => {
     it('should include query from state', async () => {
-      engine.mutate(searchBoxMutations.setQuery('laptops'));
+      searchBoxMutations.setQuery(engine, 'laptops');
 
       const mockFetch: MockedFunction<typeof fetch> = vi.fn(() =>
         Promise.resolve(
@@ -160,8 +160,8 @@ describe('executeSearchAPI()', () => {
 
     it('should include pagination parameters', async () => {
       // Note: setPageSize must be called before setPage because it resets page to 1
-      engine.mutate(paginationMutations.setPageSize(20));
-      engine.mutate(paginationMutations.setPage(2));
+      paginationMutations.setPageSize(engine, 20);
+      paginationMutations.setPage(engine, 2);
 
       const mockFetch: MockedFunction<typeof fetch> = vi.fn(() =>
         Promise.resolve(
@@ -183,14 +183,12 @@ describe('executeSearchAPI()', () => {
     });
 
     it('should build facet requests from state', async () => {
-      engine.mutate(
-        facetMutations.setFacet({
-          id: 'author',
-          label: 'Author',
-          values: [],
-          selectedValues: ['john', 'jane'],
-        })
-      );
+      facetMutations.setFacet(engine, {
+        id: 'author',
+        label: 'Author',
+        values: [],
+        selectedValues: ['john', 'jane'],
+      });
 
       const mockFetch: MockedFunction<typeof fetch> = vi.fn(() =>
         Promise.resolve(
@@ -216,22 +214,18 @@ describe('executeSearchAPI()', () => {
     });
 
     it('should build advanced query from facet selections', async () => {
-      engine.mutate(
-        facetMutations.setFacet({
-          id: 'author',
-          label: 'Author',
-          values: [],
-          selectedValues: ['john'],
-        })
-      );
-      engine.mutate(
-        facetMutations.setFacet({
-          id: 'category',
-          label: 'Category',
-          values: [],
-          selectedValues: ['blog', 'article'],
-        })
-      );
+      facetMutations.setFacet(engine, {
+        id: 'author',
+        label: 'Author',
+        values: [],
+        selectedValues: ['john'],
+      });
+      facetMutations.setFacet(engine, {
+        id: 'category',
+        label: 'Category',
+        values: [],
+        selectedValues: ['blog', 'article'],
+      });
 
       const mockFetch: MockedFunction<typeof fetch> = vi.fn(() =>
         Promise.resolve(
@@ -342,14 +336,12 @@ describe('executeSearchAPI()', () => {
 
     it('should update facet values from response', async () => {
       // Set up initial facet
-      engine.mutate(
-        facetMutations.setFacet({
-          id: 'author',
-          label: 'Author',
-          values: [],
-          selectedValues: [],
-        })
-      );
+      facetMutations.setFacet(engine, {
+        id: 'author',
+        label: 'Author',
+        values: [],
+        selectedValues: [],
+      });
 
       const mockResponse: CoveoSearchResponse = {
         totalCount: 10,
@@ -449,7 +441,7 @@ describe('executeSearchAPI()', () => {
 
     it('should not update results on error', async () => {
       // Set initial results
-      engine.mutate(resultsMutations.setResults(createMockSearchResults(3)));
+      resultsMutations.setResults(engine, createMockSearchResults(3));
 
       vi.stubGlobal(
         'fetch',

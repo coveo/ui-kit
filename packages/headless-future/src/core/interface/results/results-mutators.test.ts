@@ -1,160 +1,51 @@
-/**
- * Results Mutations Tests
- */
-
-import {describe, it, expect, beforeEach} from 'vitest';
+import {describe, it, expect, vi, beforeEach} from 'vitest';
 import * as mutations from './results-mutators.js';
-import {
-  createTestEngine,
-  createMockSearchResults,
-} from '@/src/test/test-utils.js';
-import * as selectors from './results-selectors.js';
+import {createMockSearchResults} from '@/src/test/test-utils.js';
 import {resultsSlice} from '@/src/core/internal/results/results-slice.js';
 import {Engine} from '@/src/core/interface/engine/engine.js';
 
 describe('resultsMutations', () => {
   let engine: Engine;
+  let mutateSpy: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
-    engine = createTestEngine();
-    engine.adoptSlice(resultsSlice);
+    mutateSpy = vi.fn();
+    engine = {
+      mutate: mutateSpy,
+    } as unknown as Engine;
   });
 
-  describe('setResults()', () => {
-    it('should return StateMutation object', () => {
-      const results = createMockSearchResults(2);
-      const mutation = mutations.setResults(results);
+  it('setResults() should call engine.mutate with setResults action', () => {
+    const results = createMockSearchResults(2);
 
-      expect(mutation).toEqual({
-        type: 'results/setResults',
-        payload: results,
-      });
-    });
+    mutations.setResults(engine, results);
 
-    it('should update state when used with mutate()', () => {
-      const mockResults = createMockSearchResults(3);
-
-      engine.mutate(mutations.setResults(mockResults));
-
-      expect(engine.read(selectors.results)).toEqual(mockResults);
-    });
-
-    it('should accept empty array', () => {
-      engine.mutate(mutations.setResults([]));
-
-      expect(engine.read(selectors.results)).toEqual([]);
-    });
+    expect(mutateSpy).toHaveBeenCalledExactlyOnceWith(
+      resultsSlice.actions.setResults(results)
+    );
   });
 
-  describe('setLoading()', () => {
-    it('should return StateMutation object for true', () => {
-      const mutation = mutations.setLoading(true);
+  it('setLoading() should call engine.mutate with setLoading action', () => {
+    mutations.setLoading(engine, true);
 
-      expect(mutation).toEqual({
-        type: 'results/setLoading',
-        payload: true,
-      });
-    });
-
-    it('should return StateMutation object for false', () => {
-      const mutation = mutations.setLoading(false);
-
-      expect(mutation).toEqual({
-        type: 'results/setLoading',
-        payload: false,
-      });
-    });
-
-    it('should update state when used with mutate()', () => {
-      engine.mutate(mutations.setLoading(true));
-      expect(engine.read(selectors.isLoading)).toBe(true);
-
-      engine.mutate(mutations.setLoading(false));
-      expect(engine.read(selectors.isLoading)).toBe(false);
-    });
+    expect(mutateSpy).toHaveBeenCalledExactlyOnceWith(
+      resultsSlice.actions.setLoading(true)
+    );
   });
 
-  describe('setError()', () => {
-    it('should return StateMutation object with error message', () => {
-      const mutation = mutations.setError('Search failed');
+  it('setError() should call engine.mutate with setError action', () => {
+    mutations.setError(engine, 'Search failed');
 
-      expect(mutation).toEqual({
-        type: 'results/setError',
-        payload: 'Search failed',
-      });
-    });
-
-    it('should return StateMutation object with null', () => {
-      const mutation = mutations.setError(null);
-
-      expect(mutation).toEqual({
-        type: 'results/setError',
-        payload: null,
-      });
-    });
-
-    it('should update state when used with mutate()', () => {
-      engine.mutate(mutations.setError('Error occurred'));
-
-      expect(engine.read(selectors.error)).toBe('Error occurred');
-    });
-
-    it('should clear error with null', () => {
-      engine.mutate(mutations.setError('Some error'));
-      engine.mutate(mutations.setError(null));
-
-      expect(engine.read(selectors.error)).toBeNull();
-    });
+    expect(mutateSpy).toHaveBeenCalledExactlyOnceWith(
+      resultsSlice.actions.setError('Search failed')
+    );
   });
 
-  describe('clearResults()', () => {
-    it('should return StateMutation object without payload', () => {
-      const mutation = mutations.clearResults();
+  it('clearResults() should call engine.mutate with clearResults action', () => {
+    mutations.clearResults(engine);
 
-      expect(mutation).toEqual({
-        type: 'results/clearResults',
-      });
-    });
-
-    it('should clear results when used with mutate()', () => {
-      engine.mutate(mutations.setResults(createMockSearchResults(5)));
-      engine.mutate(mutations.clearResults());
-
-      expect(engine.read(selectors.results)).toEqual([]);
-    });
-
-    it('should clear error when used with mutate()', () => {
-      engine.mutate(mutations.setError('Some error'));
-      engine.mutate(mutations.clearResults());
-
-      expect(engine.read(selectors.error)).toBeNull();
-    });
-
-    it('should preserve loading state', () => {
-      engine.mutate(mutations.setLoading(true));
-      engine.mutate(mutations.clearResults());
-
-      expect(engine.read(selectors.isLoading)).toBe(true);
-    });
-  });
-
-  describe('Integration: multiple mutations', () => {
-    it('should work correctly in sequence', () => {
-      engine.mutate(mutations.setResults(createMockSearchResults(3)));
-      engine.mutate(mutations.setLoading(false));
-
-      expect(engine.read(selectors.results).length).toBe(3);
-      expect(engine.read(selectors.isLoading)).toBe(false);
-      expect(engine.read(selectors.error)).toBeNull();
-    });
-
-    it('should handle error flow', () => {
-      engine.mutate(mutations.setLoading(true));
-      engine.mutate(mutations.setError('API error'));
-      engine.mutate(mutations.setLoading(false));
-
-      expect(engine.read(selectors.error)).toBe('API error');
-      expect(engine.read(selectors.isLoading)).toBe(false);
-    });
+    expect(mutateSpy).toHaveBeenCalledExactlyOnceWith(
+      resultsSlice.actions.clearResults()
+    );
   });
 });
