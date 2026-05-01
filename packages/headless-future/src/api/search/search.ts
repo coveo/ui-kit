@@ -53,17 +53,16 @@ import type {
  * @returns Promise that resolves when search completes (check state for results)
  */
 export async function executeSearchAPI(engine: FullEngine): Promise<void> {
-  const fullEngine = engine;
   // Set loading state before making the request
-  fullEngine.mutate(resultsMutations.setLoading(true));
-  fullEngine.mutate(resultsMutations.setError(null));
+  engine.mutate(resultsMutations.setLoading(true));
+  engine.mutate(resultsMutations.setError(null));
 
   try {
     // Read current state to build request
-    const query: string = fullEngine.read((state: State): string =>
+    const query: string = engine.read((state: State): string =>
       searchBoxSelectors.query({searchBox: state.searchBox ?? {query: ''}})
     );
-    const currentPage: number = fullEngine.read((state: State): number =>
+    const currentPage: number = engine.read((state: State): number =>
       paginationSelectors.currentPage({
         pagination: state.pagination ?? {
           currentPage: 1,
@@ -72,7 +71,7 @@ export async function executeSearchAPI(engine: FullEngine): Promise<void> {
         },
       })
     );
-    const pageSize: number = fullEngine.read((state: State): number =>
+    const pageSize: number = engine.read((state: State): number =>
       paginationSelectors.pageSize({
         pagination: state.pagination ?? {
           currentPage: 1,
@@ -81,7 +80,7 @@ export async function executeSearchAPI(engine: FullEngine): Promise<void> {
         },
       })
     );
-    const allFacets: FacetsState = fullEngine.read(
+    const allFacets: FacetsState = engine.read(
       (state: State): FacetsState =>
         facetSelectors.all({facets: state.facets ?? {}})
     );
@@ -114,7 +113,7 @@ export async function executeSearchAPI(engine: FullEngine): Promise<void> {
     };
 
     // Execute HTTP request
-    const response = await executeHttpRequest<CoveoSearchResponse>(fullEngine, {
+    const response = await executeHttpRequest<CoveoSearchResponse>(engine, {
       path: '/rest/search/v2',
       method: 'POST',
       body: requestBody,
@@ -123,35 +122,33 @@ export async function executeSearchAPI(engine: FullEngine): Promise<void> {
     // Handle response
     if (!response.success) {
       // API call failed - update error state
-      fullEngine.mutate(
+      engine.mutate(
         resultsMutations.setError(response.error || 'Search failed')
       );
-      fullEngine.mutate(resultsMutations.setLoading(false));
+      engine.mutate(resultsMutations.setLoading(false));
       return;
     }
 
     // Transform and update state with results
     const searchResults = transformCoveoResults(response.data!.results);
-    fullEngine.mutate(resultsMutations.setResults(searchResults));
+    engine.mutate(resultsMutations.setResults(searchResults));
 
     // Update total count for pagination
-    fullEngine.mutate(
-      paginationMutations.setTotalCount(response.data!.totalCount)
-    );
+    engine.mutate(paginationMutations.setTotalCount(response.data!.totalCount));
 
     // Update facets with response data
     if (response.data!.facets) {
-      updateFacetsFromResponse(fullEngine, response.data!.facets, allFacets);
+      updateFacetsFromResponse(engine, response.data!.facets, allFacets);
     }
 
     // Clear loading state
-    fullEngine.mutate(resultsMutations.setLoading(false));
+    engine.mutate(resultsMutations.setLoading(false));
   } catch (error) {
     // Unexpected error (should be rare since executeHttpRequest catches most errors)
     const errorMessage =
       error instanceof Error ? error.message : 'An unexpected error occurred';
-    fullEngine.mutate(resultsMutations.setError(errorMessage));
-    fullEngine.mutate(resultsMutations.setLoading(false));
+    engine.mutate(resultsMutations.setError(errorMessage));
+    engine.mutate(resultsMutations.setLoading(false));
   }
 }
 
