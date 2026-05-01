@@ -170,7 +170,7 @@ For example, if `atomic-search-box` reports `pass` and `atomic-result-list` repo
 
 Manual audits are one of four conformance sources. The full priority chain (highest to lowest):
 
-1. **Overrides** (`a11y-overrides.json`) — explicit exceptions set by engineering
+1. **Overrides** (`a11y/a11y-overrides.json`) — explicit exceptions set by engineering
 2. **Manual audits** — your baseline files (as described in this guide)
 3. **Existing report conformance** — previously computed values in the JSON report
 4. **Automated results** — derived from axe-core pass/fail counts
