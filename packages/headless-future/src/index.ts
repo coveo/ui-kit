@@ -25,6 +25,13 @@ export type {
   RetryPolicy,
 } from './api/adapters/types.js';
 
+// Concrete adapter implementations (ready-to-use defaults)
+export {BrowserTransportAdapter} from './api/adapters/browser-transport.js';
+export type {BrowserTransportOptions} from './api/adapters/browser-transport.js';
+export {DefaultAuthAdapter} from './api/adapters/default-auth.js';
+export type {DefaultAuthOptions} from './api/adapters/default-auth.js';
+export {LocalHeuristicOrchestrationAdapter} from './api/adapters/local-heuristic-orchestration.js';
+
 // Protocol types (normalized stream events)
 export type {NormalizedStreamEvent} from './api/protocol/types.js';
 
