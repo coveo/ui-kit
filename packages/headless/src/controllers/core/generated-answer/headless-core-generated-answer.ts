@@ -135,38 +135,36 @@ export interface GeneratedAnswer extends Controller {
 }
 
 export interface GeneratedAnswerAnalyticsClient {
-  logLikeGeneratedAnswer(options?: {
-    answerId?: string;
-    conversationId?: string;
-  }): CustomAction;
-  logDislikeGeneratedAnswer(options?: {
-    answerId?: string;
-    conversationId?: string;
-  }): CustomAction;
+  /** @deprecated */
+  logLikeGeneratedAnswer(): CustomAction;
+  logLikeGeneratedAnswer(answerId?: string): CustomAction;
+  /** @deprecated */
+  logDislikeGeneratedAnswer(): CustomAction;
+  logDislikeGeneratedAnswer(answerId?: string): CustomAction;
   logGeneratedAnswerFeedback: (
     feedback: GeneratedAnswerFeedback
   ) => CustomAction;
+  /** @deprecated */
+  logOpenGeneratedAnswerSource(citationId: string): CustomAction;
   logOpenGeneratedAnswerSource(
     citationId: string,
-    options?: {
-      answerId?: string;
-      conversationId?: string;
-    }
+    answerId?: string
+  ): CustomAction;
+  /** @deprecated */
+  logHoverCitation(
+    citationId: string,
+    citationHoverTimeMs: number
   ): CustomAction;
   logHoverCitation(
     citationId: string,
     citationHoverTimeMs: number,
-    options?: {
-      answerId?: string;
-      conversationId?: string;
-    }
+    answerId?: string
   ): CustomAction;
   logGeneratedAnswerShowAnswers: () => CustomAction;
   logGeneratedAnswerHideAnswers: () => CustomAction;
-  logCopyGeneratedAnswer(options?: {
-    answerId?: string;
-    conversationId?: string;
-  }): CustomAction;
+  /** @deprecated */
+  logCopyGeneratedAnswer(): CustomAction;
+  logCopyGeneratedAnswer(answerId?: string): CustomAction;
   logRetryGeneratedAnswer: () => LegacySearchAction;
   logGeneratedAnswerExpand: () => CustomAction;
   logGeneratedAnswerCollapse: () => CustomAction;
@@ -264,11 +262,7 @@ export function buildCoreGeneratedAnswer(
     like() {
       if (!this.state.liked) {
         dispatch(likeGeneratedAnswer());
-        dispatch(
-          analyticsClient.logLikeGeneratedAnswer({
-            answerId: this.state.answerId,
-          })
-        );
+        dispatch(analyticsClient.logLikeGeneratedAnswer(this.state.answerId));
       }
     },
 
@@ -276,9 +270,7 @@ export function buildCoreGeneratedAnswer(
       if (!this.state.disliked) {
         dispatch(dislikeGeneratedAnswer());
         dispatch(
-          analyticsClient.logDislikeGeneratedAnswer({
-            answerId: this.state.answerId,
-          })
+          analyticsClient.logDislikeGeneratedAnswer(this.state.answerId)
         );
       }
     },
@@ -299,9 +291,7 @@ export function buildCoreGeneratedAnswer(
     // TODO: SFINT-6665
     logCitationClick(citationId: string, answerId?: string) {
       dispatch(
-        analyticsClient.logOpenGeneratedAnswerSource(citationId, {
-          answerId: answerId ?? this.state.answerId,
-        })
+        analyticsClient.logOpenGeneratedAnswerSource(citationId, answerId)
       );
     },
 
@@ -312,9 +302,11 @@ export function buildCoreGeneratedAnswer(
       answerId?: string
     ) {
       dispatch(
-        analyticsClient.logHoverCitation(citationId, citationHoverTimeMs, {
-          answerId: answerId ?? this.state.answerId,
-        })
+        analyticsClient.logHoverCitation(
+          citationId,
+          citationHoverTimeMs,
+          answerId
+        )
       );
     },
 
@@ -360,11 +352,7 @@ export function buildCoreGeneratedAnswer(
 
     // TODO: SFINT-6665
     logCopyToClipboard(answerId?: string) {
-      dispatch(
-        analyticsClient.logCopyGeneratedAnswer({
-          answerId: answerId ?? this.state.answerId,
-        })
-      );
+      dispatch(analyticsClient.logCopyGeneratedAnswer(answerId));
     },
 
     retry() {},

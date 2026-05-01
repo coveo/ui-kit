@@ -147,18 +147,20 @@ describe('generated answer', () => {
   it('#logCitationClick dispatches analytics action', () => {
     const testCitation = buildMockCitation();
     generatedAnswer.logCitationClick(testCitation.id);
-    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(testCitation.id, {
-      answerId: state.generatedAnswer.answerId,
-    });
+    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(
+      testCitation.id,
+      undefined
+    );
   });
 
   it('#logCitationClick dispatches analytics action with provided answerId', () => {
     const testCitation = buildMockCitation();
     generatedAnswer.logCitationClick(testCitation.id, providedAnswerId);
 
-    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(testCitation.id, {
-      answerId: providedAnswerId,
-    });
+    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(
+      testCitation.id,
+      providedAnswerId
+    );
   });
 
   it('#logCitationHover dispatches analytics action', () => {
@@ -169,7 +171,7 @@ describe('generated answer', () => {
     expect(logHoverCitation).toHaveBeenCalledWith(
       testCitation.id,
       exampleDuration,
-      {answerId: state.generatedAnswer.answerId}
+      undefined
     );
   });
 
@@ -186,23 +188,19 @@ describe('generated answer', () => {
     expect(logHoverCitation).toHaveBeenCalledWith(
       testCitation.id,
       exampleDuration,
-      {answerId: providedAnswerId}
+      providedAnswerId
     );
   });
 
   it('#logCopyToClipboard dispatches analytics action', () => {
     generatedAnswer.logCopyToClipboard();
-    expect(logCopyGeneratedAnswer).toHaveBeenCalledWith({
-      answerId: state.generatedAnswer.answerId,
-    });
+    expect(logCopyGeneratedAnswer).toHaveBeenCalled();
   });
 
   it('#logCopyToClipboard dispatches analytics action with provided answerId', () => {
     generatedAnswer.logCopyToClipboard(providedAnswerId);
 
-    expect(logCopyGeneratedAnswer).toHaveBeenCalledWith({
-      answerId: providedAnswerId,
-    });
+    expect(logCopyGeneratedAnswer).toHaveBeenCalledWith(providedAnswerId);
   });
 
   describe('#show', () => {

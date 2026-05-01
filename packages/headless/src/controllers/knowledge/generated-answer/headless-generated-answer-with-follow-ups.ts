@@ -19,7 +19,6 @@ import {
 import {followUpAnswersReducer as followUpAnswers} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import type {FollowUpAnswersState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
 import {withGeneratedAnswerSseErrorHelpers} from '../../../features/generated-answer/sse-generated-answer-errors.js';
-import {selectFollowUpAnswersConversationId} from '../../../features/generated-answer/generated-answer-selectors.js';
 import type {GeneratedAnswerState} from '../../../index.js';
 import type {
   FollowUpAnswersSection,
@@ -174,12 +173,7 @@ export function buildGeneratedAnswerWithFollowUps(
       }
       if (!followUpAnswer.liked) {
         engine.dispatch(likeFollowUp({answerId}));
-        engine.dispatch(
-          analyticsClient.logLikeGeneratedAnswer({
-            answerId,
-            conversationId: selectFollowUpAnswersConversationId(getState()),
-          })
-        );
+        engine.dispatch(analyticsClient.logLikeGeneratedAnswer(answerId));
       }
     },
 
@@ -200,12 +194,7 @@ export function buildGeneratedAnswerWithFollowUps(
       }
       if (!followUpAnswer.disliked) {
         engine.dispatch(dislikeFollowUp({answerId}));
-        engine.dispatch(
-          analyticsClient.logDislikeGeneratedAnswer({
-            answerId,
-            conversationId: selectFollowUpAnswersConversationId(getState()),
-          })
-        );
+        engine.dispatch(analyticsClient.logDislikeGeneratedAnswer(answerId));
       }
     },
 
@@ -215,12 +204,7 @@ export function buildGeneratedAnswerWithFollowUps(
         controller.logCopyToClipboard();
         return;
       }
-      engine.dispatch(
-        analyticsClient.logCopyGeneratedAnswer({
-          answerId,
-          conversationId: selectFollowUpAnswersConversationId(getState()),
-        })
-      );
+      engine.dispatch(analyticsClient.logCopyGeneratedAnswer(answerId));
     },
 
     // TODO: SFINT-6665
@@ -230,10 +214,7 @@ export function buildGeneratedAnswerWithFollowUps(
         return;
       }
       engine.dispatch(
-        analyticsClient.logOpenGeneratedAnswerSource(citationId, {
-          answerId,
-          conversationId: selectFollowUpAnswersConversationId(getState()),
-        })
+        analyticsClient.logOpenGeneratedAnswerSource(citationId, answerId)
       );
     },
 
@@ -248,10 +229,11 @@ export function buildGeneratedAnswerWithFollowUps(
         return;
       }
       engine.dispatch(
-        analyticsClient.logHoverCitation(citationId, citationHoverTimeMs, {
-          answerId,
-          conversationId: selectFollowUpAnswersConversationId(getState()),
-        })
+        analyticsClient.logHoverCitation(
+          citationId,
+          citationHoverTimeMs,
+          answerId
+        )
       );
     },
 

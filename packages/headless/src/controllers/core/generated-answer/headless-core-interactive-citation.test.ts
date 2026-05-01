@@ -49,9 +49,10 @@ describe('InteractiveCitation', () => {
 
   it('when calling select(), logs openGeneratedAnswerSource', () => {
     interactiveCitation.select();
-    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(mockCitation.id, {
-      answerId: undefined,
-    });
+    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(
+      mockCitation.id,
+      undefined
+    );
   });
 
   it('when an answerId is provided, passes it to logOpenGeneratedAnswerSource', () => {
@@ -59,9 +60,10 @@ describe('InteractiveCitation', () => {
 
     interactiveCitation.select();
 
-    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(mockCitation.id, {
-      answerId: 'answer-id',
-    });
+    expect(logOpenGeneratedAnswerSource).toHaveBeenCalledWith(
+      mockCitation.id,
+      'answer-id'
+    );
   });
 
   it('when calling select() more than once, logs openGeneratedAnswerSource only once', () => {

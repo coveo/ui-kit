@@ -94,8 +94,8 @@ catalogs:
       specifier: 4.0.16
       version: 4.0.16
     coveo.analytics:
-      specifier: 2.30.54
-      version: 2.30.54
+      specifier: 2.30.55
+      version: 2.30.55
     cypress:
       specifier: 13.7.3
       version: 13.7.3
@@ -811,7 +811,7 @@ importers:
         version: 1.7.8
       coveo.analytics:
         specifier: 'catalog:'
-        version: 2.30.54(encoding@0.1.13)(react-native@0.85.0(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.5))
+        version: 2.30.55(encoding@0.1.13)(react-native@0.85.0(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.5))
       dayjs:
         specifier: 'catalog:'
         version: 1.11.20
@@ -8608,6 +8608,9 @@ packages:
   coveo.analytics@2.30.54:
     resolution: {integrity: sha512-0wzKL9VqEFKqn+yUSeTsRzK93vFL8lvR1YGhMlq2RtprO96Id3TWPgvG31TgPEYtdO3355HcZ1te8Q6nspAbcA==}
 
+  coveo.analytics@2.30.55:
+    resolution: {integrity: sha512-7uANW7ABdnxhek0BZk8WbFVwj7oTPlMadyBBxBbYLi0iRUPAVl/0fCsPzS/KdG0wGoIZho4LoTFdbcpYDTxzNw==}
+
   create-jest@29.7.0:
     resolution: {integrity: sha512-Adz2bdH0Vq3F53KEMJOoftQFutWCukm6J24wbPWRO4k1kMY7gS7ds/uoJkNuV8wDCtWWnuwGcJwpWcih+zEW1Q==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -14801,7 +14804,7 @@ packages:
 
   uuid@3.4.0:
     resolution: {integrity: sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==}
-    deprecated: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   uuid@8.3.2:
@@ -23218,6 +23221,16 @@ snapshots:
       typescript: 6.0.2
 
   coveo.analytics@2.30.54(encoding@0.1.13)(react-native@0.85.0(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.5)):
+    dependencies:
+      '@types/uuid': 9.0.8
+      cross-fetch: 3.2.0(encoding@0.1.13)
+      react-native-get-random-values: 1.11.0(react-native@0.85.0(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.5))
+      uuid: 9.0.1
+    transitivePeerDependencies:
+      - encoding
+      - react-native
+
+  coveo.analytics@2.30.55(encoding@0.1.13)(react-native@0.85.0(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.5)):
     dependencies:
       '@types/uuid': 9.0.8
       cross-fetch: 3.2.0(encoding@0.1.13)
