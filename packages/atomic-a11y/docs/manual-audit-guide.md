@@ -108,6 +108,54 @@ The system extracts the numeric ID using the regex `/^(\d+(?:\.\d+)+)-/`, so wha
 
 Any other status value is logged as a warning and skipped.
 
+### Adding remarks (optional)
+
+For each criterion, you can optionally provide `remarks` to document **why** you assigned that status. This helps engineers understand the auditor's reasoning and makes it easier to track remediation efforts.
+
+**Two formats are supported:**
+
+**Simple format** (legacy, no remarks):
+```json
+"1.1.1-non-text-content": "pass"
+```
+
+**Object format** (with remarks):
+```json
+"1.1.1-non-text-content": {
+  "conformance": "pass",
+  "remarks": "All images have meaningful alt text"
+}
+```
+
+**Complete example:**
+
+```json
+{
+  "name": "atomic-search-box",
+  "category": "search",
+  "manual": {
+    "status": "complete",
+    "wcag22Criteria": {
+      "1.1.1-non-text-content": {
+        "conformance": "pass",
+        "remarks": "All images have alt text; icons use aria-label"
+      },
+      "1.4.3-contrast-minimum": {
+        "conformance": "partial",
+        "remarks": "Pass ratio meets AA standards. Focus indicators on dark backgrounds need refinement."
+      },
+      "2.4.1-bypass-blocks": {
+        "conformance": "fail",
+        "remarks": "No skip-to-main-content link. Keyboard users must tab through search filters."
+      },
+      "2.1.1-keyboard": "pass"
+    }
+  }
+}
+```
+
+Remarks are included in the OpenACR report and help reviewers understand which criteria need attention or may require follow-up testing.
+
 ## How conformance is resolved
 
 When multiple components report on the same criterion, the system applies **worst-wins** precedence:

@@ -28,12 +28,17 @@ export interface A11yOverrideEntry {
   reason: string;
 }
 
+export interface ManualAuditCriterionValue {
+  conformance: string;
+  remarks?: string;
+}
+
 export interface ManualAuditBaselineEntry {
   name: string;
   category: string;
   manual: {
     status: string;
-    wcag22Criteria: Record<string, string>;
+    wcag22Criteria: Record<string, string | ManualAuditCriterionValue>;
   };
 }
 
@@ -41,6 +46,7 @@ export interface ManualAuditAggregate {
   componentName: string;
   criterionId: string;
   conformance: OpenAcrConformance;
+  remarks?: string;
 }
 
 export interface OpenAcrCriterionComponent {

@@ -62,6 +62,29 @@ function isValidManualBaselineEntry(
   );
 }
 
+function extractCriterionStatus(
+  statusValue: unknown
+): {status: string; remarks?: string} | null {
+  if (typeof statusValue === 'string') {
+    return {status: statusValue};
+  }
+
+  if (isRecord(statusValue)) {
+    if (typeof statusValue.conformance !== 'string') {
+      return null;
+    }
+    return {
+      status: statusValue.conformance,
+      remarks:
+        typeof statusValue.remarks === 'string'
+          ? statusValue.remarks
+          : undefined,
+    };
+  }
+
+  return null;
+}
+
 function parseManualBaseline(
   content: string,
   filePath: string
@@ -104,7 +127,8 @@ function parseManualBaseline(
     for (const [criterionKey, statusValue] of Object.entries(
       entry.manual.wcag22Criteria
     )) {
-      if (typeof statusValue !== 'string') {
+      const extracted = extractCriterionStatus(statusValue);
+      if (!extracted) {
         continue;
       }
 
@@ -114,12 +138,12 @@ function parseManualBaseline(
       }
 
       const criterionId = match[1];
-      const conformance = manualStatusToConformance[statusValue];
+      const conformance = manualStatusToConformance[extracted.status];
 
       if (!conformance) {
         console.warn(
           LOG_PREFIX,
-          `Unknown manual status "${statusValue}" for criterion ${criterionId} in component ${entry.name}.`
+          `Unknown manual status "${extracted.status}" for criterion ${criterionId} in component ${entry.name}.`
         );
         continue;
       }
@@ -128,6 +152,7 @@ function parseManualBaseline(
         componentName: entry.name,
         criterionId,
         conformance,
+        ...(extracted.remarks && {remarks: extracted.remarks}),
       };
 
       const key = `${entry.name}:${criterionId}`;

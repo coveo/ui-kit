@@ -176,7 +176,21 @@ export function buildRemarks(context: RemarksContext): string {
     if (notApplicable > 0) summaryParts.push(`${notApplicable} not-applicable`);
 
     const summary = summaryParts.join(', ');
-    return `Manual audit: ${summary} across ${manualAggregates.length} component(s).`;
+    let result = `Manual audit: ${summary} across ${manualAggregates.length} component(s).`;
+
+    // Append individual component remarks if available
+    const remarksLines: string[] = [];
+    for (const aggregate of manualAggregates) {
+      if (aggregate.remarks) {
+        remarksLines.push(`${aggregate.componentName}: ${aggregate.remarks}`);
+      }
+    }
+
+    if (remarksLines.length > 0) {
+      result += ` [Details: ${remarksLines.join(' | ')}]`;
+    }
+
+    return result;
   }
 
   const interactiveDrives =
