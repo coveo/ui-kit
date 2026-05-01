@@ -38,6 +38,26 @@ export interface A11yReporterOptions {
 
   /** Path to a `package.json` from which product/tool versions are read (e.g. atomic package). */
   packageJsonPath?: string;
+
+  /**
+   * If `true` (default), the reporter sets `process.exitCode = 1` at the end
+   * of a test run when any axe-core violations were captured — so CI fails
+   * even though individual stories don't throw at test time.
+   *
+   * Set this to `false` to capture violations in the report without gating
+   * the run.
+   */
+  failOnViolations?: boolean;
+}
+
+interface ViolationRecord {
+  componentName: string;
+  storyId: string;
+  ruleId: string;
+  impact: string;
+  helpUrl: string;
+  wcagCriteria: string[];
+  nodes: number;
 }
 
 /**
@@ -52,7 +72,21 @@ export interface A11yReporterOptions {
  * 2. The reporter filters for Storybook projects, extracts axe results from
  *    test metadata, and accumulates per-component violation/pass/incomplete/inapplicable counts.
  * 3. At the end of the run, {@link onTestRunEnd} builds the final
- *    {@link A11yReport} and writes it to disk.
+ *    {@link A11yReport} and writes it to disk. If any violations were
+ *    captured (and `failOnViolations` is enabled), the reporter prints a
+ *    structured summary and sets `process.exitCode = 1` — providing a CI
+ *    gate driven by complete data instead of relying on per-test throws,
+ *    which would otherwise prevent `task.meta.reports` from being populated
+ *    by `@storybook/addon-vitest`.
+ *
+ * ## Configuration
+ *
+ * Pair this reporter with `parameters.a11y.test = 'todo'` in your Storybook
+ * preview. In `'todo'` mode, addon-a11y still records every axe result via
+ * `reporting.addReport(...)` (which `@storybook/addon-vitest` mirrors onto
+ * `task.meta.reports`) but does **not** throw, so the reporter receives
+ * complete data for every story. Gating is then performed at run-end based
+ * on aggregated violations.
  *
  * ## Output
  *
@@ -77,12 +111,15 @@ export class VitestA11yReporter implements Reporter {
   private readonly outputFile: string;
   private readonly shardInfo: ShardInfo | null;
   private readonly packageMetadata: PackageMetadata;
+  private readonly failOnViolations: boolean;
+  private readonly violations: ViolationRecord[] = [];
   private detectedAxeCoreVersion: string | null = null;
 
   public constructor(options: A11yReporterOptions) {
     this.outputFile = options.outputFile;
     this.shardInfo = resolveShardInfo();
     this.packageMetadata = readPackageMetadata(options.packageJsonPath);
+    this.failOnViolations = options.failOnViolations ?? true;
   }
 
   /**
@@ -139,6 +176,18 @@ export class VitestA11yReporter implements Reporter {
         this.collectCriteria(component, axeResults.incomplete);
         this.collectCriteria(component, axeResults.inapplicable);
 
+        for (const violationRule of axeResults.violations) {
+          this.violations.push({
+            componentName,
+            storyId,
+            ruleId: violationRule.id,
+            impact: violationRule.impact ?? 'unknown',
+            helpUrl: violationRule.helpUrl ?? '',
+            wcagCriteria: getCriteriaForRule(violationRule),
+            nodes: violationRule.nodes.length,
+          });
+        }
+
         for (const incompleteRule of axeResults.incomplete) {
           component.automated.incompleteDetails.push({
             ruleId: incompleteRule.id,
@@ -192,18 +241,25 @@ export class VitestA11yReporter implements Reporter {
 
   /**
    * Builds the {@link A11yReport} from accumulated results and writes it as
-   * JSON to the configured output directory. No-ops if no results were captured.
+   * JSON to the configured output directory. Always writes a report — even
+   * when no Storybook a11y data was captured — to avoid leaving a stale
+   * report from a previous run on disk.
+   *
+   * After writing, if any axe-core violations were captured and
+   * `failOnViolations` is enabled, prints a structured summary and sets
+   * `process.exitCode = 1` to fail the run. This is the documented Vitest
+   * idiom for failing a run from a custom reporter (see
+   * https://vitest.dev/advanced/api/reporters).
+   *
+   * Skips the gate when the run was interrupted (e.g. SIGINT) — interrupted
+   * runs already exit non-zero and the violation set may be incomplete.
    */
   public async onTestRunEnd(
     _testModules: ReadonlyArray<TestModule>,
     _unhandledErrors: ReadonlyArray<SerializedError>,
-    _reason: TestRunEndReason
+    reason: TestRunEndReason
   ): Promise<void> {
     try {
-      if (this.componentResults.size === 0) {
-        return;
-      }
-
       const report = buildA11yReport(
         this.componentResults,
         this.packageMetadata,
@@ -221,6 +277,69 @@ export class VitestA11yReporter implements Reporter {
     } catch (error) {
       this.warn('Unable to write the accessibility report JSON file.', error);
     }
+
+    if (
+      this.failOnViolations &&
+      reason !== 'interrupted' &&
+      this.violations.length > 0
+    ) {
+      this.printViolationsSummary();
+      process.exitCode = 1;
+    }
+  }
+
+  private printViolationsSummary(): void {
+    const byComponent = new Map<string, ViolationRecord[]>();
+    for (const violation of this.violations) {
+      const list = byComponent.get(violation.componentName) ?? [];
+      list.push(violation);
+      byComponent.set(violation.componentName, list);
+    }
+
+    const totalNodes = this.violations.reduce((sum, v) => sum + v.nodes, 0);
+    const lines: string[] = [
+      '',
+      '──────────────────────────────────────────────────────────────',
+      ' Accessibility violations detected',
+      '──────────────────────────────────────────────────────────────',
+      ` Components affected : ${byComponent.size}`,
+      ` Violations          : ${this.violations.length}`,
+      ` Affected nodes      : ${totalNodes}`,
+      '',
+    ];
+
+    for (const [componentName, records] of byComponent) {
+      lines.push(`• ${componentName}`);
+      const byStory = new Map<string, ViolationRecord[]>();
+      for (const record of records) {
+        const list = byStory.get(record.storyId) ?? [];
+        list.push(record);
+        byStory.set(record.storyId, list);
+      }
+      for (const [storyId, storyRecords] of byStory) {
+        lines.push(`  └─ ${storyId}`);
+        for (const record of storyRecords) {
+          const wcag = record.wcagCriteria.length
+            ? ` [WCAG ${record.wcagCriteria.join(', ')}]`
+            : '';
+          lines.push(
+            `     • ${record.ruleId} (${record.impact}) — ${record.nodes} node(s)${wcag}`
+          );
+          if (record.helpUrl) {
+            lines.push(`       ${record.helpUrl}`);
+          }
+        }
+      }
+    }
+
+    lines.push(
+      '',
+      ' See reports/a11y-report.json for the full machine-readable report.',
+      '──────────────────────────────────────────────────────────────',
+      ''
+    );
+
+    process.stderr.write(`${lines.join('\n')}\n`);
   }
 
   private getOrCreateComponent(componentName: string): ComponentAccumulator {
