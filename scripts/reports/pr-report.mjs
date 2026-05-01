@@ -4,7 +4,6 @@ import {
   getPullRequestComments,
   updatePullRequestComment,
 } from './github-client.mjs';
-import {buildLiveExampleReport} from './live-examples/live-examples.mjs';
 import {buildTitleReport} from './title/verify-title.mjs';
 
 const reportCommentIdentifier = '<!-- pr-report -->';
@@ -18,13 +17,11 @@ async function main() {
 
 async function buildReport() {
   const titleFormatReport = await buildTitleReport();
-  const liveExamplesReport = await buildLiveExampleReport();
   const bundleSizeReport = await buildBundleSizeReport();
 
   return [
     reportTitle,
     titleFormatReport,
-    liveExamplesReport,
     bundleSizeReport,
     reportCommentIdentifier,
   ].join('\n\n');

@@ -9,15 +9,17 @@
     "dev": "pnpm run build:assets && pnpm run dev:vue",
     "dev:vue": "vite",
     "build:vue": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "e2e": "playwright test",
+    "e2e:watch": "playwright test --ui"
   },
   "dependencies": {
     "@coveo/atomic": "workspace:*",
-    "vue": "3.5.32"
+    "vue": "3.5.33"
   },
   "devDependencies": {
+    "@playwright/test": "catalog:",
     "@vitejs/plugin-vue": "6.0.6",
-    "cypress": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:"
   }

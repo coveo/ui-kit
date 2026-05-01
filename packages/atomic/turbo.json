@@ -2,7 +2,7 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "dependsOn": ["build:storybook", "build:lit", "build:cdn"],
+      "dependsOn": ["tsc:check", "build:storybook", "build:lit", "build:cdn"],
       "outputs": []
     },
     "build:locales": {
@@ -83,6 +83,10 @@
         "./dist/themes/**",
         "./rsbuild.cdn.mjs"
       ]
+    },
+    "tsc:check": {
+      "dependsOn": ["^build", "build:locales"],
+      "outputs": []
     },
     "test:lit": {
       "dependsOn": ["^build"],

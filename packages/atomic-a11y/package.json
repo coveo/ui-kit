@@ -9,9 +9,14 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc -p tsconfig.json"
+    "build": "tsc -p tsconfig.json",
+    "a11y:merge-shards": "pnpm build && node scripts/merge-shards-cli.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "devDependencies": {
-    "typescript": "catalog:"
+    "axe-core": "4.10.3",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   }
 }

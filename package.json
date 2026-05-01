@@ -23,8 +23,7 @@
     "knip": "knip"
   },
   "devDependencies": {
-    "@actions/core": "3.0.0",
-    "@actions/github": "9.1.0",
+    "@actions/github": "9.1.1",
     "@changesets/changelog-github": "0.6.0",
     "@changesets/cli": "2.30.0",
     "@cspell/dict-fr-fr": "2.3.2",
@@ -38,10 +37,10 @@
     "esbuild-plugin-alias": "0.2.1",
     "esbuild-plugin-umd-wrapper": "3.0.0",
     "husky": "9.1.7",
-    "knip": "6.4.1",
+    "knip": "6.6.1",
     "lint-staged": "16.4.0",
-    "oxfmt": "0.45.0",
-    "oxlint": "1.60.0",
+    "oxfmt": "0.46.0",
+    "oxlint": "1.61.0",
     "playwright": "catalog:",
     "publint": "0.3.18",
     "semver": "7.7.4",
@@ -53,12 +52,12 @@
     "node": "^22.14.0 || ^24.11.0",
     "pnpm": ">=10.0.0"
   },
-  "packageManager": "pnpm@10.33.0",
+  "packageManager": "pnpm@10.33.2",
   "pnpm": {
     "patchedDependencies": {
       "@stencil/core@4.20.0": "patches/@stencil+core+4.20.0.patch",
       "jest-environment-jsdom@29.7.0": "patches/jest-environment-jsdom+29.7.0.patch",
-      "@wc-toolkit/storybook-helpers@10.2.3": "patches/@wc-toolkit__storybook-helpers@10.2.3.patch"
+      "@wc-toolkit/storybook-helpers@10.3.0": "patches/@wc-toolkit__storybook-helpers@10.3.0.patch"
     },
     "overrides": {
       "braces": "3.0.3",

@@ -29,6 +29,6 @@
     "typescript": "catalog:"
   },
   "peerDependencies": {
-    "vitest": "4.1.3"
+    "vitest": "4.1.5"
   }
 }
