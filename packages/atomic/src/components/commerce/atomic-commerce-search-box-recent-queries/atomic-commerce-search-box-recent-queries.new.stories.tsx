@@ -22,7 +22,7 @@ const meta: Meta = {
   decorators: [commerceSearchBoxDecorator, commerceInterfaceDecorator],
   parameters: {
     ...parameters,
-    chromatic: {disableSnapshot: true},
+    chromatic: {disableSnapshot: false},
     actions: {
       handles: events,
     },

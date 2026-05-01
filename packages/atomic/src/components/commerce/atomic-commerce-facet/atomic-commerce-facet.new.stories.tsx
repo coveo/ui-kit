@@ -26,7 +26,7 @@ const meta: Meta = {
   decorators: [commerceFacetWidthDecorator, decorator],
   parameters: {
     ...parameters,
-    chromatic: {disableSnapshot: true},
+    chromatic: {disableSnapshot: false},
     actions: {
       handles: events,
     },

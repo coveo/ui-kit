@@ -17,6 +17,7 @@ const meta: Meta = {
   title: 'Search/Tab',
   id: 'atomic-tab',
   render: () => html`<atomic-tab-manager>
+    <button></button>
     <atomic-tab label="All" name="all"></atomic-tab>
     <atomic-tab label="Images" name="images"></atomic-tab>
     <atomic-tab label="Articles" name="articles"></atomic-tab>
@@ -24,7 +25,7 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
-    chromatic: {disableSnapshot: true},
+    chromatic: {disableSnapshot: false},
     actions: {
       handles: events,
     },
