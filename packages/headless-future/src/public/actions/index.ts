@@ -1,1 +1,1 @@
-export * from './search-box.js';
+export * from './search-box/search-box-actions.js';
