@@ -1,6 +1,6 @@
 # Slice Adoption Mechanism
 
-> Part of the [Thermidor architecture](docs/architecture.md). See the [Glossary](docs/glossary.md) for term definitions.
+> Part of the `@coveo/headless-future` [architecture](docs/architecture.md). See the [glossary](docs/glossary.md) for term definitions.
 
 ## Overview
 
@@ -38,7 +38,7 @@ sequenceDiagram
 When `initialize()` is called, the store starts with **zero slices**:
 
 ```typescript
-import {initialize} from '@thermidor/headless/core';
+import {initialize} from '@coveo/headless-future/core';
 
 initialize(); // Store is created but empty
 ```
@@ -56,7 +56,7 @@ import {
   mutate,
   searchSelectors,
   searchMutations,
-} from '@thermidor/headless/core';
+} from '@coveo/headless-future/core';
 
 // This automatically adopts the 'search' slice
 const query = read(searchSelectors.query);
