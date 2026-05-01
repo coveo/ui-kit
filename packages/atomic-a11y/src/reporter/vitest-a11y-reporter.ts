@@ -77,6 +77,7 @@ export class VitestA11yReporter implements Reporter {
   private readonly outputFile: string;
   private readonly shardInfo: ShardInfo | null;
   private readonly packageMetadata: PackageMetadata;
+  private detectedAxeCoreVersion: string | null = null;
 
   public constructor(options: A11yReporterOptions) {
     this.outputFile = options.outputFile;
@@ -126,6 +127,8 @@ export class VitestA11yReporter implements Reporter {
       component.storyIds.add(storyId);
 
       if (axeResults) {
+        this.captureAxeCoreVersion(axeResults);
+
         component.automated.violations += axeResults.violations.length;
         component.automated.passes += axeResults.passes.length;
         component.automated.incomplete += axeResults.incomplete.length;
@@ -203,7 +206,8 @@ export class VitestA11yReporter implements Reporter {
 
       const report = buildA11yReport(
         this.componentResults,
-        this.packageMetadata
+        this.packageMetadata,
+        this.detectedAxeCoreVersion ?? undefined
       );
       const serializedReport = `${JSON.stringify(report, null, 2)}\n`;
       const outputPaths = this.getOutputPaths();
@@ -250,6 +254,17 @@ export class VitestA11yReporter implements Reporter {
       for (const criterion of getCriteriaForRule(rule)) {
         component.automated.criteriaCovered.add(criterion);
       }
+    }
+  }
+
+  private captureAxeCoreVersion(axeResults: AxeResults): void {
+    const testEngine = axeResults.testEngine;
+    if (testEngine?.name !== 'axe-core' || !testEngine.version) {
+      return;
+    }
+
+    if (!this.detectedAxeCoreVersion) {
+      this.detectedAxeCoreVersion = testEngine.version;
     }
   }
 
