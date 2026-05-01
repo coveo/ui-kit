@@ -31,7 +31,7 @@ export default {
   },
   controllers: {
     summary: defineSummary(),
-    productList: defineProductList(),
+    productList: defineProductList({enableResults: true}),
     popularViewed: defineRecommendations({
       options: {
         slotId: 'd73afbd2-8521-4ee6-a9b8-31f064721e73',
@@ -48,7 +48,7 @@ export default {
       },
     }),
     cart: defineCart(),
-    searchBox: defineSearchBox(),
+    searchBox: defineSearchBox({options: {enableResults: true}}),
     context: defineContext(),
     recentQueriesList: defineRecentQueriesList(),
     notifyTrigger: defineNotifyTrigger(),

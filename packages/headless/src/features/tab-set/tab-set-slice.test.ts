@@ -38,6 +38,16 @@ describe('tab set slice', () => {
   });
 
   describe('#registerTab', () => {
+    it('stores the tab under a key that matches #id', () => {
+      const id = 'invariant-tab-id';
+      const tab = buildMockTabSlice({id});
+
+      const finalState = tabSetReducer(undefined, registerTab(tab));
+
+      expect(Object.keys(finalState)).toEqual([id]);
+      expect(finalState[id].id).toBe(id);
+    });
+
     it('when the id does not exist, it registers the tab', () => {
       const tab = buildMockTabSlice({id: 'a'});
       const action = registerTab(tab);

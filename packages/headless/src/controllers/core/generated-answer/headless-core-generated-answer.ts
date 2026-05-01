@@ -20,6 +20,7 @@ import type {GeneratedAnswerFeedback} from '../../../features/generated-answer/g
 import {generatedAnswerReducer as generatedAnswer} from '../../../features/generated-answer/generated-answer-slice.js';
 import type {GeneratedAnswerState} from '../../../features/generated-answer/generated-answer-state.js';
 import type {GeneratedResponseFormat} from '../../../features/generated-answer/generated-response-format.js';
+import {withGeneratedAnswerSseErrorHelpers} from '../../../features/generated-answer/sse-generated-answer-errors.js';
 import type {
   DebugSection,
   GeneratedAnswerSection,
@@ -68,11 +69,6 @@ export interface GeneratedAnswer extends Controller {
    */
   sendFeedback(feedback: GeneratedAnswerFeedback): void;
   /**
-   * Logs a custom event indicating a cited source link was clicked.
-   * @param id - The ID of the clicked citation.
-   */
-  logCitationClick(id: string): void;
-  /**
    * Displays the generated answer.
    */
   show(): void;
@@ -98,30 +94,77 @@ export interface GeneratedAnswer extends Controller {
   disable(): void;
   /**
    * Logs a custom event indicating the generated answer was copied to the clipboard.
+   * @deprecated The `logCopyToClipboard` method is deprecated and will be removed in a future major version. The method will now take a required `answerId` parameter to specify which answer is being copied, and will log the copy action with the provided `answerId` for analytics.
    */
   logCopyToClipboard(): void;
   /**
-   * Logs a custom event indicating a cited source link was hovered.
+   * Logs a custom event indicating the generated answer was copied to the clipboard.
+   * @param answerId - Answer Id of the copied answer.
+   */
+  logCopyToClipboard(answerId: string): void;
+  /**
+   * Logs a custom event indicating a cited source link was clicked.
    * @param citationId - The ID of the clicked citation.
+   * @deprecated The `logCitationClick` method is deprecated and will be removed in a future major version. The method will now take a required `answerId` parameter to specify which answer is being clicked, and will log the click action with the provided `answerId` for analytics.
+   */
+  logCitationClick(citationId: string): void;
+  /**
+   * Logs a custom event indicating a cited source link was clicked.
+   * @param citationId - The ID of the clicked citation.
+   * @param answerId - Answer Id of the clicked citation's answer.
+   */
+  logCitationClick(citationId: string, answerId: string): void;
+  /**
+   * Logs a custom event indicating a cited source link was hovered.
+   * @param citationId - The ID of the hovered citation.
    * @param citationHoverTimeMs - The number of milliseconds spent hovering over the citation.
+   * @deprecated The `logCitationHover` method is deprecated and will be removed in a future major version. The method will now take a required `answerId` parameter to specify which answer is being hovered, and will log the hover action with the provided `answerId` for analytics.
    */
   logCitationHover(citationId: string, citationHoverTimeMs: number): void;
+  /**
+   * Logs a custom event indicating a cited source link was hovered.
+   * @param citationId - The ID of the hovered citation.
+   * @param citationHoverTimeMs - The number of milliseconds spent hovering over the citation.
+   * @param answerId - Answer Id of the hovered citation's answer.
+   */
+  logCitationHover(
+    citationId: string,
+    citationHoverTimeMs: number,
+    answerId: string
+  ): void;
 }
 
 export interface GeneratedAnswerAnalyticsClient {
-  logLikeGeneratedAnswer: () => CustomAction;
-  logDislikeGeneratedAnswer: () => CustomAction;
+  /** @deprecated */
+  logLikeGeneratedAnswer(): CustomAction;
+  logLikeGeneratedAnswer(answerId?: string): CustomAction;
+  /** @deprecated */
+  logDislikeGeneratedAnswer(): CustomAction;
+  logDislikeGeneratedAnswer(answerId?: string): CustomAction;
   logGeneratedAnswerFeedback: (
     feedback: GeneratedAnswerFeedback
   ) => CustomAction;
-  logOpenGeneratedAnswerSource: (citationId: string) => CustomAction;
-  logHoverCitation: (
+  /** @deprecated */
+  logOpenGeneratedAnswerSource(citationId: string): CustomAction;
+  logOpenGeneratedAnswerSource(
+    citationId: string,
+    answerId?: string
+  ): CustomAction;
+  /** @deprecated */
+  logHoverCitation(
     citationId: string,
     citationHoverTimeMs: number
-  ) => CustomAction;
+  ): CustomAction;
+  logHoverCitation(
+    citationId: string,
+    citationHoverTimeMs: number,
+    answerId?: string
+  ): CustomAction;
   logGeneratedAnswerShowAnswers: () => CustomAction;
   logGeneratedAnswerHideAnswers: () => CustomAction;
-  logCopyGeneratedAnswer: () => CustomAction;
+  /** @deprecated */
+  logCopyGeneratedAnswer(): CustomAction;
+  logCopyGeneratedAnswer(answerId?: string): CustomAction;
   logRetryGeneratedAnswer: () => LegacySearchAction;
   logGeneratedAnswerExpand: () => CustomAction;
   logGeneratedAnswerCollapse: () => CustomAction;
@@ -209,20 +252,26 @@ export function buildCoreGeneratedAnswer(
     ...controller,
 
     get state() {
-      return getState().generatedAnswer;
+      const state = getState().generatedAnswer;
+      return {
+        ...state,
+        error: withGeneratedAnswerSseErrorHelpers(state.error),
+      };
     },
 
     like() {
       if (!this.state.liked) {
         dispatch(likeGeneratedAnswer());
-        dispatch(analyticsClient.logLikeGeneratedAnswer());
+        dispatch(analyticsClient.logLikeGeneratedAnswer(this.state.answerId));
       }
     },
 
     dislike() {
       if (!this.state.disliked) {
         dispatch(dislikeGeneratedAnswer());
-        dispatch(analyticsClient.logDislikeGeneratedAnswer());
+        dispatch(
+          analyticsClient.logDislikeGeneratedAnswer(this.state.answerId)
+        );
       }
     },
 
@@ -239,13 +288,25 @@ export function buildCoreGeneratedAnswer(
       dispatch(sendGeneratedAnswerFeedback());
     },
 
-    logCitationClick(citationId: string) {
-      dispatch(analyticsClient.logOpenGeneratedAnswerSource(citationId));
+    // TODO: SFINT-6665
+    logCitationClick(citationId: string, answerId?: string) {
+      dispatch(
+        analyticsClient.logOpenGeneratedAnswerSource(citationId, answerId)
+      );
     },
 
-    logCitationHover(citationId: string, citationHoverTimeMs: number) {
+    // TODO: SFINT-6665
+    logCitationHover(
+      citationId: string,
+      citationHoverTimeMs: number,
+      answerId?: string
+    ) {
       dispatch(
-        analyticsClient.logHoverCitation(citationId, citationHoverTimeMs)
+        analyticsClient.logHoverCitation(
+          citationId,
+          citationHoverTimeMs,
+          answerId
+        )
       );
     },
 
@@ -289,8 +350,9 @@ export function buildCoreGeneratedAnswer(
       }
     },
 
-    logCopyToClipboard() {
-      dispatch(analyticsClient.logCopyGeneratedAnswer());
+    // TODO: SFINT-6665
+    logCopyToClipboard(answerId?: string) {
+      dispatch(analyticsClient.logCopyGeneratedAnswer(answerId));
     },
 
     retry() {},

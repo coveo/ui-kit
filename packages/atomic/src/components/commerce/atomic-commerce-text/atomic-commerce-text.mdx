@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicCommerceTextStories from './atomic-commerce-text.new.stories';
+import meta, { Default, WithTranslations } from './atomic-commerce-text.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicCommerceTextStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicCommerceTextStories}
+  stories={{ Default, WithTranslations }}
   githubPath="commerce/atomic-commerce-text/atomic-commerce-text.ts"
   tagName="atomic-commerce-text"
   className="AtomicCommerceText"

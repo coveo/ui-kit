@@ -11,8 +11,7 @@ import {AppContext} from '../../../context/engine';
 type CategoryFieldSuggestionsFacetOptions =
   CategoryFieldSuggestionsOptions['facet'];
 
-interface CategoryFieldSuggestionsProps
-  extends CategoryFieldSuggestionsFacetOptions {
+interface CategoryFieldSuggestionsProps extends CategoryFieldSuggestionsFacetOptions {
   facetId: string;
 }
 

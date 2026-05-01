@@ -24,6 +24,7 @@ import {
   updateAnswerConfigurationId,
 } from '../../../features/generated-answer/generated-answer-actions.js';
 import type {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
+import {withGeneratedAnswerSseErrorHelpers} from '../../../features/generated-answer/sse-generated-answer-errors.js';
 import {filterOutDuplicatedCitations} from '../../../features/generated-answer/utils/generated-answer-citation-utils.js';
 import {queryReducer as query} from '../../../features/query/query-slice.js';
 import type {
@@ -38,8 +39,10 @@ import {
   type GeneratedAnswerProps,
 } from '../../core/generated-answer/headless-core-generated-answer.js';
 
-interface AnswerApiGeneratedAnswer
-  extends Omit<GeneratedAnswer, 'sendFeedback'> {
+interface AnswerApiGeneratedAnswer extends Omit<
+  GeneratedAnswer,
+  'sendFeedback'
+> {
   /**
    * Resets the last answer.
    */
@@ -53,8 +56,7 @@ interface AnswerApiGeneratedAnswer
 
 interface AnswerApiGeneratedAnswerProps extends GeneratedAnswerProps {}
 
-interface SearchAPIGeneratedAnswerAnalyticsClient
-  extends GeneratedAnswerAnalyticsClient {}
+interface SearchAPIGeneratedAnswerAnalyticsClient extends GeneratedAnswerAnalyticsClient {}
 
 interface ParseEvaluationArgumentsParams {
   feedback: GeneratedAnswerFeedback;
@@ -164,10 +166,10 @@ export function buildAnswerApiGeneratedAnswer(
         citations: filterOutDuplicatedCitations(
           answerApiState?.citations ?? []
         ),
-        error: {
+        error: withGeneratedAnswerSseErrorHelpers({
           message: answerApiState?.error?.message,
-          statusCode: answerApiState?.error?.code,
-        },
+          code: answerApiState?.error?.code,
+        }),
         isLoading: answerApiState?.isLoading ?? false,
         isStreaming: answerApiState?.isStreaming ?? false,
         answerContentFormat: answerApiState?.contentFormat ?? 'text/plain',

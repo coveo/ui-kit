@@ -1,3 +1,4 @@
+import '@/src/components/insight/atomic-insight-result-template/atomic-insight-result-template.js';
 import {Decorator} from '@storybook/web-components-vite';
 import {html, TemplateResult, render} from 'lit';
 
@@ -27,7 +28,9 @@ export const wrapInInsightResultTemplate = (
       templateTag.id = 'code-root';
     }
     return html`
-      <atomic-insight-result-template>${templateTag}</atomic-insight-result-template>
+      <atomic-insight-result-template
+        >${templateTag}</atomic-insight-result-template
+      >
     `;
   };
 

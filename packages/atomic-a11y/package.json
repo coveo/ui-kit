@@ -1,24 +1,26 @@
 {
-  "private": true,
-  "version": "1.0.0",
   "name": "@coveo/atomic-a11y",
+  "version": "1.0.0",
+  "private": true,
   "description": "Accessibility utilities and tools for Coveo Atomic components",
-  "type": "module",
-  "main": "dist/index.js",
   "files": [
     "dist"
   ],
+  "type": "module",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "a11y:merge-shards": "pnpm build && node scripts/merge-shards-cli.mjs",
     "test": "vitest run",
-    "a11y:vpat": "npx tsx src/reporter/json-to-openacr.ts && npx --yes @openacr/openacr output -f reports/openacr.yaml -o reports/vpat-2.5-coveo-atomic.md -t scripts/vpat-from-openacr.handlebars",
-    "a11y:merge-shards": "npx tsx src/reporter/merge-shards.ts"
+    "test:watch": "vitest",
+    "a11y:vpat": "pnpm build && node scripts/json-to-openacr.mjs && npx --yes @openacr/openacr output -f reports/openacr.yaml -o reports/vpat-2.5-coveo-atomic.md -t scripts/vpat-from-openacr.handlebars"
   },
   "dependencies": {
-    "axe-core": "4.10.3"
+    "yaml": "catalog:"
   },
   "devDependencies": {
-    "typescript": "5.8.3",
-    "vitest": "4.0.10"
+    "axe-core": "4.10.3",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   }
 }

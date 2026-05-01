@@ -3,6 +3,8 @@ import {isRecord} from '../shared/guards.js';
 import type {A11yOverrideEntry, OpenAcrConformance} from './types.js';
 import {VALID_OVERRIDE_CONFORMANCE_VALUES} from './types.js';
 
+const LOG_PREFIX = '[json-to-openacr]';
+
 function isValidOverrideEntry(entry: unknown): entry is A11yOverrideEntry {
   if (!isRecord(entry)) {
     return false;
@@ -30,21 +32,23 @@ function parseOverrides(
     parsed = JSON.parse(content);
   } catch {
     console.warn(
-      `[json-to-openacr] Unable to parse overrides file ${filePath} as JSON.`
+      LOG_PREFIX,
+      `Unable to parse overrides file ${filePath} as JSON.`
     );
     return overrides;
   }
 
   if (!isRecord(parsed) || !Array.isArray(parsed.overrides)) {
     console.warn(
-      `[json-to-openacr] Overrides file ${filePath} does not contain a valid "overrides" array.`
+      LOG_PREFIX,
+      `Overrides file ${filePath} does not contain a valid "overrides" array.`
     );
     return overrides;
   }
 
   for (const entry of parsed.overrides) {
     if (!isValidOverrideEntry(entry)) {
-      console.warn(`[json-to-openacr] Skipping invalid override entry:`, entry);
+      console.warn(LOG_PREFIX, `Skipping invalid override entry:`, entry);
       continue;
     }
 
@@ -71,7 +75,8 @@ export async function loadOverrides(
     }
 
     console.warn(
-      `[json-to-openacr] Unable to read overrides file ${filePath}.`,
+      LOG_PREFIX,
+      `Unable to read overrides file ${filePath}.`,
       error
     );
     return new Map();

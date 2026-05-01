@@ -14,11 +14,6 @@ export type CriterionLevel = 'A' | 'AA' | 'AAA' | 'unknown';
 export type WCAGVersion = '2.0' | '2.1' | '2.2' | 'unknown';
 
 /**
- * Supported framework types.
- */
-export type SupportedFramework = 'lit' | 'stencil' | 'unknown';
-
-/**
  * Metadata for a WCAG criterion.
  */
 export interface CriterionMetadata {
@@ -51,14 +46,24 @@ export interface A11yAutomatedResults {
 }
 
 /**
+ * Interactive accessibility test results from Storybook play() functions.
+ */
+export interface A11yInteractiveResults {
+  criteriaCovered: string[];
+  testCount: number;
+  passedCount: number;
+  failedCount: number;
+  failedCriteria: string[];
+}
+
+/**
  * Component accessibility report.
  */
 export interface A11yComponentReport {
   name: string;
-  category: string;
-  framework: SupportedFramework;
   storyCount: number;
   automated: A11yAutomatedResults;
+  interactive?: A11yInteractiveResults;
 }
 
 /**
@@ -76,15 +81,16 @@ export interface A11yCriterionReport {
     | 'notApplicable'
     | 'notEvaluated';
   automatedCoverage: boolean;
+  interactiveCoverage: boolean;
+  interactiveStatus?: 'passed' | 'failed' | 'mixed';
   manualVerified: boolean;
-  remarks: string;
   affectedComponents: string[];
 }
 
 /**
  * Story coverage information.
  */
-export interface StoryCoverage {
+interface StoryCoverage {
   total: number;
   withA11y: number;
   excludedFromA11y: number;
@@ -95,9 +101,6 @@ export interface StoryCoverage {
  */
 export interface A11ySummary {
   totalComponents: number;
-  litComponents: number;
-  stencilComponents: number;
-  stencilExcluded: boolean;
   storyCoverage: StoryCoverage;
   totalCriteria: number;
   supports: number;
@@ -106,13 +109,15 @@ export interface A11ySummary {
   notApplicable: number;
   notEvaluated: number;
   automatedCoverage: string;
+  interactiveCoverage: string;
+  interactivePassRate: string;
   manualCoverage: string;
 }
 
 /**
  * Report metadata.
  */
-export interface A11yReportMetadata {
+interface A11yReportMetadata {
   product: string;
   version: string;
   standard: string;

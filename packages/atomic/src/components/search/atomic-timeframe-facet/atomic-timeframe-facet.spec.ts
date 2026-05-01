@@ -106,21 +106,21 @@ describe('atomic-timeframe-facet', () => {
     const {element} = await renderInAtomicSearchInterface<AtomicTimeframeFacet>(
       {
         template: html`<atomic-timeframe-facet
-        field=${props?.field ?? 'date'}
-        label=${props?.label ?? 'Date'}
-        facet-id=${ifDefined(props?.facetId)}
-        sort-criteria=${ifDefined(props?.sortCriteria)}
-        injection-depth=${ifDefined(props?.injectionDepth)}
-        heading-level=${ifDefined(props?.headingLevel)}
-        .tabsIncluded=${props?.tabsIncluded || []}
-        .tabsExcluded=${props?.tabsExcluded || []}
-        .dependsOn=${props?.dependsOn || {}}
-        ?filter-facet-count=${props?.filterFacetCount}
-        ?is-collapsed=${props?.isCollapsed}
-        ?with-date-picker=${props?.withDatePicker}
-        min=${ifDefined(props?.min)}
-        max=${ifDefined(props?.max)}
-      ></atomic-timeframe-facet>`,
+          field=${props?.field ?? 'date'}
+          label=${props?.label ?? 'Date'}
+          facet-id=${ifDefined(props?.facetId)}
+          sort-criteria=${ifDefined(props?.sortCriteria)}
+          injection-depth=${ifDefined(props?.injectionDepth)}
+          heading-level=${ifDefined(props?.headingLevel)}
+          .tabsIncluded=${props?.tabsIncluded || []}
+          .tabsExcluded=${props?.tabsExcluded || []}
+          .dependsOn=${props?.dependsOn || {}}
+          ?filter-facet-count=${props?.filterFacetCount}
+          ?is-collapsed=${props?.isCollapsed}
+          ?with-date-picker=${props?.withDatePicker}
+          min=${ifDefined(props?.min)}
+          max=${ifDefined(props?.max)}
+        ></atomic-timeframe-facet>`,
         selector: 'atomic-timeframe-facet',
         bindings: (bindings) => ({
           ...bindings,
@@ -228,7 +228,7 @@ describe('atomic-timeframe-facet', () => {
       async ({prop, validValue, invalidValue}) => {
         const {element} = await setupElement({[prop]: validValue});
 
-        // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+        // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
         (element as any)[prop] = invalidValue;
         await element.updateComplete;
 

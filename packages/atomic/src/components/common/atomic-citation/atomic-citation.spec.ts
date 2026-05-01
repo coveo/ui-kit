@@ -5,7 +5,11 @@ import type {
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
+import * as citationAnchoringUtils from './citation-anchoring-utils';
 import type {AtomicCitation} from './atomic-citation';
+
+vi.mock('./citation-anchoring-utils', {spy: true});
+
 import './atomic-citation';
 
 describe('atomic-citation', () => {
@@ -48,7 +52,7 @@ describe('atomic-citation', () => {
         .index=${index}
         .sendHoverEndEvent=${sendHoverEndEvent}
         .interactiveCitation=${interactiveCitation}
-        ?disable-citation-anchoring=${disableCitationAnchoring}
+        .disableCitationAnchoring=${disableCitationAnchoring}
       ></atomic-citation>
     `);
 
@@ -104,7 +108,18 @@ describe('atomic-citation', () => {
 
       expect(popover).toHaveClass('hidden');
       expect(popover?.textContent).toContain('Test Citation Title');
-      expect(popover?.textContent).toContain('https://example.com/test');
+      expect(popover?.textContent).toContain('https://example.com/test-click');
+    });
+
+    it('should render uri in the popover when clickUri is missing', async () => {
+      const citationWithoutClickUri = {...mockCitation, clickUri: undefined};
+      const {locators} = await renderComponent({
+        citation: citationWithoutClickUri,
+      });
+
+      expect(locators.citationPopover?.textContent).toContain(
+        'https://example.com/test'
+      );
     });
 
     it('should truncate citation text longer than 200 characters', async () => {
@@ -124,6 +139,62 @@ describe('atomic-citation', () => {
       const {locators} = await renderComponent();
 
       expect(locators.citationLink?.href).toContain('#:~:text=');
+      expect(
+        citationAnchoringUtils.generateTextFragmentUrl
+      ).toHaveBeenCalledWith(
+        'https://example.com/test-click',
+        mockCitation.text,
+        'html'
+      );
+    });
+
+    it('should prefer the top-level filetype when using agent API', async () => {
+      const citationWithTopLevelFiletype: GeneratedAnswerCitation = {
+        ...mockCitation,
+        filetype: 'html',
+        fields: {
+          urihash: 'hash-123',
+          filetype: 'pdf',
+        },
+      };
+
+      const {locators} = await renderComponent({
+        citation: citationWithTopLevelFiletype,
+      });
+
+      expect(locators.citationLink?.href).toContain('#:~:text=');
+      expect(
+        citationAnchoringUtils.generateTextFragmentUrl
+      ).toHaveBeenCalledWith(
+        'https://example.com/test-click',
+        mockCitation.text,
+        'html'
+      );
+    });
+
+    it('should use the PDF anchoring helper for PDF files', async () => {
+      const citationWithPdfFiletype: GeneratedAnswerCitation = {
+        ...mockCitation,
+        fields: {
+          urihash: 'hash-123',
+          filetype: 'pdf',
+        },
+      };
+
+      const {locators} = await renderComponent({
+        citation: citationWithPdfFiletype,
+      });
+
+      expect(citationAnchoringUtils.generatePdfPageUrl).toHaveBeenCalledWith(
+        'https://example.com/test-click',
+        undefined
+      );
+      expect(
+        citationAnchoringUtils.generateTextFragmentUrl
+      ).not.toHaveBeenCalled();
+      expect(locators.citationLink?.href).toBe(
+        'https://example.com/test-click'
+      );
     });
 
     it('should not modify URL when citation anchoring is disabled', async () => {
@@ -214,7 +285,7 @@ describe('atomic-citation', () => {
     element.remove();
 
     expect(element.isConnected).toBe(false);
-    // biome-ignore lint/suspicious/noExplicitAny: Testing private property
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Testing private property
     expect((element as any).popperInstance).toBeUndefined();
   });
 });

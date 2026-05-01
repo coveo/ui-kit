@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicRecsErrorStories from './atomic-recs-error.new.stories';
+import meta, { Default, WithDisconnected, WithOrganizationPaused } from './atomic-recs-error.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicRecsErrorStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicRecsErrorStories}
+  stories={{ Default, WithDisconnected, WithOrganizationPaused }}
   githubPath="recommendations/atomic-recs-error/atomic-recs-error.ts"
   tagName="atomic-recs-error"
   className="AtomicRecsError"

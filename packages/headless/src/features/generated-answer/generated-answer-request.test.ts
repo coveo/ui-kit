@@ -531,12 +531,7 @@ describe('constructGenerateHeadAnswerParams', () => {
 
     expect(params).toMatchObject({
       q: 'test query',
-      pipelineRuleParameters: {
-        mlGenerativeQuestionAnswering: {
-          responseFormat: {contentFormat: ['text/plain']},
-          citationsFieldToInclude: ['field1', 'field2'],
-        },
-      },
+      citationsFieldToInclude: ['field1', 'field2'],
       searchHub: 'test-hub',
       pipeline: 'test-pipeline',
       locale: 'en',
@@ -566,6 +561,34 @@ describe('constructGenerateHeadAnswerParams', () => {
       buildMockNavigatorContextProvider()()
     );
     expect(params.pipeline).toBeUndefined();
+  });
+
+  it('includes search context when present', () => {
+    const params = constructGenerateHeadAnswerParams(
+      buildState({
+        context: {
+          contextValues: {
+            userRole: 'admin',
+            locale: ['en', 'fr'],
+          },
+        },
+      }),
+      buildMockNavigatorContextProvider()()
+    );
+
+    expect(params.context).toEqual({
+      userRole: 'admin',
+      locale: ['en', 'fr'],
+    });
+  });
+
+  it('does not include search context when absent', () => {
+    const params = constructGenerateHeadAnswerParams(
+      buildState({context: undefined}),
+      buildMockNavigatorContextProvider()()
+    );
+
+    expect(params.context).toBeUndefined();
   });
 
   it('includes facets when present and sorts them alphabetically', () => {

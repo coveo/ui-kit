@@ -106,7 +106,7 @@ describe('atomic-recs-result', () => {
 
       expect(element.error).toBeUndefined();
 
-      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
       (element as any)[prop] = invalidValue;
       await element.updateComplete;
 
@@ -142,7 +142,7 @@ describe('atomic-recs-result', () => {
 
       expect(element.error).toBeUndefined();
 
-      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
       (element as any)[prop] = invalidValue;
       await element.updateComplete;
 
@@ -289,7 +289,7 @@ describe('atomic-recs-result', () => {
     const element = await renderResult();
     element.store = {
       unsetLoadingFlag: unsetLoadingFlagSpy,
-      // biome-ignore lint/suspicious/noExplicitAny: testing with mock store
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing with mock store
     } as any;
     element.loadingFlag = 'test-flag';
 

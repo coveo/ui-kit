@@ -15,7 +15,7 @@ import {
   type PagerState,
 } from '../core/pager/headless-core-pager.js';
 
-export type {PagerInitialState, PagerOptions, PagerProps, Pager, PagerState};
+export type {Pager, PagerInitialState, PagerOptions, PagerProps, PagerState};
 
 /**
  * Creates a `Pager` controller instance.

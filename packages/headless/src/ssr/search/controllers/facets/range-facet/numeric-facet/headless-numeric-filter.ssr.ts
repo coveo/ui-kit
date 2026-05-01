@@ -8,8 +8,10 @@ import type {ControllerDefinitionWithoutProps} from '../../../../../common/types
 
 export * from '../../../../../../controllers/facets/range-facet/numeric-facet/headless-numeric-filter.js';
 
-export interface NumericFilterDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, NumericFilter> {}
+export interface NumericFilterDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  NumericFilter
+> {}
 
 /**
  * Defines a `NumericFilter` controller instance.

@@ -305,7 +305,7 @@ describe('atomic-generated-answer-feedback-modal', () => {
       firstRadioButton.click();
       await element.updateComplete;
 
-      // biome-ignore lint/suspicious/noExplicitAny: <>
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
       const currentAnswer = (element as any).currentAnswer;
       expect(Object.values(currentAnswer)).toContain('yes');
     });

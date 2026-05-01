@@ -23,9 +23,9 @@ export const renderCardHeader: FunctionalComponent<RenderCardHeaderProps> = ({
 
   return html` <div
     part="header"
-    class="flex items-center ${
-      isAnswerVisible ? 'border-b-1 border-gray-200' : ''
-    } px-6 py-3"
+    class="flex items-center ${isAnswerVisible
+      ? 'border-b-1 border-gray-200'
+      : ''} px-6 py-3"
   >
     <atomic-icon
       part="header-icon"

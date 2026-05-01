@@ -1,5 +1,6 @@
 import {readFileSync} from 'node:fs';
 import path, {dirname, resolve} from 'node:path';
+import {VitestA11yReporter} from '@coveo/atomic-a11y';
 import replacePlugin from '@rollup/plugin-replace';
 import {storybookTest} from '@storybook/addon-vitest/vitest-plugin';
 import tailwindcss from '@tailwindcss/vite';
@@ -37,7 +38,6 @@ function replace() {
   return replacePlugin({
     values: {
       'process.env.VERSION': `"0.0.0"`,
-      'import.meta.env.RESOURCE_URL': `"${resourceUrl}"`,
       __ATOMIC_VERSION__: `"${packageJson.version}"`,
       __HEADLESS_VERSION__: `"${packageJsonHeadless.version}"`,
     },
@@ -154,6 +154,28 @@ const atomicDefault = defineConfig({
   },
 });
 
+// Pure function tests for Storybook utilities (Node.js, no browser needed)
+const storybookPure = defineConfig({
+  name: 'storybookPure',
+  test: {
+    name: 'storybookPure',
+    include: ['storybook-utils/**/*.spec.ts'],
+    environment: 'node',
+  },
+});
+
 export default mergeConfig(atomicDefault, {
-  test: {projects: [atomicDefault, storybook]},
+  test: {
+    reporters: [
+      'default',
+      new VitestA11yReporter({
+        outputFile: path.resolve(
+          import.meta.dirname,
+          'reports/a11y-report.json'
+        ),
+        packageJsonPath: path.resolve(import.meta.dirname, 'package.json'),
+      }),
+    ],
+    projects: [atomicDefault, storybookPure, storybook],
+  },
 });

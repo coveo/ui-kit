@@ -9,9 +9,47 @@ import type {
 } from './types.js';
 import {manualStatusToConformance} from './types.js';
 
+interface ManualConformanceCounts {
+  pass: number;
+  fail: number;
+  partial: number;
+  notApplicable: number;
+}
+
+export function countManualConformances(
+  aggregates: ManualAuditAggregate[]
+): ManualConformanceCounts {
+  let pass = 0;
+  let fail = 0;
+  let partial = 0;
+  let notApplicable = 0;
+
+  for (const aggregate of aggregates) {
+    switch (aggregate.conformance) {
+      case 'supports':
+        pass++;
+        break;
+      case 'does-not-support':
+        fail++;
+        break;
+      case 'partially-supports':
+        partial++;
+        break;
+      case 'not-applicable':
+        notApplicable++;
+        break;
+    }
+  }
+
+  return {pass, fail, partial, notApplicable};
+}
+const LOG_PREFIX = '[json-to-openacr]';
+const BASELINE_FILE_PREFIX = 'manual-audit-';
+const BASELINE_FILE_EXTENSION = '.json';
+
 const CRITERION_KEY_REGEX = /^(\d+(?:\.\d+)+)-/;
 
-export function isValidManualBaselineEntry(
+function isValidManualBaselineEntry(
   entry: unknown
 ): entry is ManualAuditBaselineEntry {
   return (
@@ -24,7 +62,30 @@ export function isValidManualBaselineEntry(
   );
 }
 
-export function parseManualBaseline(
+function extractCriterionStatus(
+  statusValue: unknown
+): {status: string; remarks?: string} | null {
+  if (typeof statusValue === 'string') {
+    return {status: statusValue};
+  }
+
+  if (isRecord(statusValue)) {
+    if (typeof statusValue.conformance !== 'string') {
+      return null;
+    }
+    return {
+      status: statusValue.conformance,
+      remarks:
+        typeof statusValue.remarks === 'string'
+          ? statusValue.remarks
+          : undefined,
+    };
+  }
+
+  return null;
+}
+
+function parseManualBaseline(
   content: string,
   filePath: string
 ): Map<string, ManualAuditAggregate[]> {
@@ -35,14 +96,16 @@ export function parseManualBaseline(
     parsed = JSON.parse(content);
   } catch {
     console.warn(
-      `[json-to-openacr] Unable to parse manual baseline file ${filePath} as JSON.`
+      LOG_PREFIX,
+      `Unable to parse manual baseline file ${filePath} as JSON.`
     );
     return aggregates;
   }
 
   if (!Array.isArray(parsed)) {
     console.warn(
-      `[json-to-openacr] Manual baseline file ${filePath} does not contain a valid array of entries.`
+      LOG_PREFIX,
+      `Manual baseline file ${filePath} does not contain a valid array of entries.`
     );
     return aggregates;
   }
@@ -50,7 +113,8 @@ export function parseManualBaseline(
   for (const entry of parsed) {
     if (!isValidManualBaselineEntry(entry)) {
       console.warn(
-        `[json-to-openacr] Skipping invalid manual baseline entry:`,
+        LOG_PREFIX,
+        `Skipping invalid manual baseline entry:`,
         entry
       );
       continue;
@@ -63,7 +127,8 @@ export function parseManualBaseline(
     for (const [criterionKey, statusValue] of Object.entries(
       entry.manual.wcag22Criteria
     )) {
-      if (typeof statusValue !== 'string') {
+      const extracted = extractCriterionStatus(statusValue);
+      if (!extracted) {
         continue;
       }
 
@@ -73,11 +138,12 @@ export function parseManualBaseline(
       }
 
       const criterionId = match[1];
-      const conformance = manualStatusToConformance[statusValue];
+      const conformance = manualStatusToConformance[extracted.status];
 
       if (!conformance) {
         console.warn(
-          `[json-to-openacr] Unknown manual status "${statusValue}" for criterion ${criterionId} in component ${entry.name}.`
+          LOG_PREFIX,
+          `Unknown manual status "${extracted.status}" for criterion ${criterionId} in component ${entry.name}.`
         );
         continue;
       }
@@ -86,6 +152,7 @@ export function parseManualBaseline(
         componentName: entry.name,
         criterionId,
         conformance,
+        ...(extracted.remarks && {remarks: extracted.remarks}),
       };
 
       const key = `${entry.name}:${criterionId}`;
@@ -103,12 +170,11 @@ export async function loadManualAuditData(
   const allAggregates = new Map<string, ManualAuditAggregate[]>();
   let loadedCount = 0;
   let fileCount = 0;
+  let baselineFiles: string[] = [];
 
   try {
     const files = await readdir(dirPath);
-    const baselineFiles = files.filter((file) =>
-      BASELINE_FILE_PATTERN.test(file)
-    );
+    baselineFiles = files.filter((file) => BASELINE_FILE_PATTERN.test(file));
     fileCount = baselineFiles.length;
 
     for (const file of baselineFiles) {
@@ -124,7 +190,8 @@ export async function loadManualAuditData(
         }
       } catch (error) {
         console.warn(
-          `[json-to-openacr] Unable to read manual baseline file ${filePath}.`,
+          LOG_PREFIX,
+          `Unable to read manual baseline file ${filePath}.`,
           error
         );
       }
@@ -140,7 +207,8 @@ export async function loadManualAuditData(
     }
 
     console.warn(
-      `[json-to-openacr] Unable to read manual audit directory ${dirPath}.`,
+      LOG_PREFIX,
+      `Unable to read manual audit directory ${dirPath}.`,
       error
     );
     return new Map();
@@ -152,8 +220,18 @@ export async function loadManualAuditData(
       const [, criterionId] = key.split(':');
       criteriaSet.add(criterionId);
     }
+    const baselineNames = baselineFiles
+      .map((file) => file.replace(BASELINE_FILE_PREFIX, ''))
+      .map((file) =>
+        file.endsWith(BASELINE_FILE_EXTENSION)
+          ? file.slice(0, -BASELINE_FILE_EXTENSION.length)
+          : file
+      )
+      .filter(Boolean);
+    const baselineList = baselineNames.join(', ');
     console.log(
-      `[json-to-openacr] Loaded ${loadedCount} manual audit entries across ${criteriaSet.size} criteria from ${fileCount} baseline file(s).`
+      LOG_PREFIX,
+      `Loaded ${loadedCount} manual audit entries across ${criteriaSet.size} criteria from ${fileCount} baseline file(s): ${baselineList}.`
     );
   }
 
@@ -167,42 +245,13 @@ export function resolveManualConformance(
     return undefined;
   }
 
-  // Count conformances to apply precedence: fail > partial > pass > not-applicable
-  let failCount = 0;
-  let partialCount = 0;
-  let passCount = 0;
-  let notApplicableCount = 0;
+  const {fail, partial, pass, notApplicable} =
+    countManualConformances(manualAggregates);
 
-  for (const aggregate of manualAggregates) {
-    switch (aggregate.conformance) {
-      case 'does-not-support':
-        failCount++;
-        break;
-      case 'partially-supports':
-        partialCount++;
-        break;
-      case 'supports':
-        passCount++;
-        break;
-      case 'not-applicable':
-        notApplicableCount++;
-        break;
-    }
-  }
-
-  // Apply resolution precedence
-  if (failCount > 0) {
-    return 'does-not-support';
-  }
-  if (partialCount > 0) {
-    return 'partially-supports';
-  }
-  if (passCount > 0) {
-    return 'supports';
-  }
-  if (notApplicableCount > 0) {
-    return 'not-applicable';
-  }
+  if (fail > 0) return 'does-not-support';
+  if (partial > 0) return 'partially-supports';
+  if (pass > 0) return 'supports';
+  if (notApplicable > 0) return 'not-applicable';
 
   return undefined;
 }

@@ -1,4 +1,4 @@
-import type {InitializeEventHandler} from './initialization-lit-stencil-common-utils';
+import type {InitializeEventHandler} from './initialization-common-utils';
 
 export type InitializeEvent = CustomEvent<InitializeEventHandler>;
 

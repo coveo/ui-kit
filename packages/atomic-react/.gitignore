@@ -1,5 +1,6 @@
 node_modules/
 dist
 
-# Stencil generated files
-stencil-generated/
+# Generated files
+src/components/search/components.ts
+src/components/commerce/components.ts

@@ -1,7 +1,7 @@
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {initializeEventName} from '@/src/utils/initialization-lit-stencil-common-utils';
+import {initializeEventName} from '@/src/utils/initialization-common-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import type {AtomicExternal} from './atomic-external';
 import './atomic-external';

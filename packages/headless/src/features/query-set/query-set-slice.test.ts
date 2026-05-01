@@ -1,11 +1,4 @@
-import type {SearchCommerceSuccessResponse} from '../../api/commerce/search/response.js';
 import {buildMockSearch} from '../../test/mock-search.js';
-import {selectQuerySuggestion as selectCommerceQuerySuggestion} from '../commerce/query-suggest/query-suggest-actions.js';
-import {
-  executeSearch as commerceExecuteSearch,
-  type QuerySearchCommerceAPIThunkReturn,
-} from '../commerce/search/search-actions.js';
-import {restoreSearchParameters as commerceRestoreSearchParameters} from '../commerce/search-parameters/search-parameters-actions.js';
 import {change} from '../history/history-actions.js';
 import {getHistoryInitialState} from '../history/history-state.js';
 import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions.js';
@@ -82,17 +75,13 @@ describe('querySet slice', () => {
     expect(finalState[id]).toBe(query);
   });
 
-  const describeSelectSuggestion = (
-    selectSuggestion:
-      | typeof selectQuerySuggestion
-      | typeof selectCommerceQuerySuggestion
-  ) => {
+  describe('#selectQuerySuggestion', () => {
     it('updates the query if the id exists', () => {
       const id = '1';
       const query = 'query';
 
       registerQueryWithId(id);
-      const action = selectSuggestion({id, expression: query});
+      const action = selectQuerySuggestion({id, expression: query});
       const finalState = querySetReducer(state, action);
 
       expect(finalState[id]).toBe(query);
@@ -101,92 +90,43 @@ describe('querySet slice', () => {
     it('does not update the query if the id does not exist', () => {
       const id = '1';
 
-      const action = selectSuggestion({id, expression: 'query'});
+      const action = selectQuerySuggestion({id, expression: 'query'});
       const finalState = querySetReducer(state, action);
 
       expect(finalState[id]).toBe(undefined);
     });
-  };
-
-  describe('#selectQuerySuggestion', () => {
-    describeSelectSuggestion(selectQuerySuggestion);
   });
 
-  describe('#selectCommerceQuerySuggestion', () => {
-    describeSelectSuggestion(selectCommerceQuerySuggestion);
+  it('sets all queries to queryExecuted on executeSearch.fulfilled', () => {
+    registerQueryWithId('foo');
+    registerQueryWithId('bar');
+
+    const expectedQuerySet = {foo: 'world', bar: 'world'};
+    const searchState = buildMockSearch({queryExecuted: 'world'});
+    const nextState = querySetReducer(
+      state,
+      executeSearch.fulfilled(
+        searchState as unknown as ExecuteSearchThunkReturn,
+        '',
+        {legacy: null as never}
+      )
+    );
+    expect(nextState).toEqual(expectedQuerySet);
   });
 
-  it.each([{action: executeSearch}, {action: commerceExecuteSearch}])(
-    'sets all queries to queryExecuted on executeSearch.fulfilled',
-    ({action}) => {
-      registerQueryWithId('foo');
-      registerQueryWithId('bar');
-
-      const expectedQuerySet = {foo: 'world', bar: 'world'};
-      const searchState = buildMockSearch({queryExecuted: 'world'});
-      const nextState = querySetReducer(
-        state,
-        action.fulfilled(
-          searchState as unknown as ExecuteSearchThunkReturn &
-            QuerySearchCommerceAPIThunkReturn,
-          ''
-        )
-      );
-      expect(nextState).toEqual(expectedQuerySet);
-    }
-  );
-
-  it('sets all queries to queryExecuted on commerce executeSearch.fulfilled', () => {
+  it('sets all queries to q on #restoreSearchParameters, when "q" defined', () => {
     registerQueryWithId('foo');
     registerQueryWithId('bar');
 
     const expectedQuerySet = {foo: 'world', bar: 'world'};
     const nextState = querySetReducer(
       state,
-      commerceExecuteSearch.fulfilled(
-        {
-          queryExecuted: 'world',
-          response: {
-            responseId: 'someid',
-          } as unknown as SearchCommerceSuccessResponse,
-        } as QuerySearchCommerceAPIThunkReturn,
-        ''
-      )
+      restoreSearchParameters({q: 'world'})
     );
     expect(nextState).toEqual(expectedQuerySet);
   });
 
-  it.each([
-    {action: restoreSearchParameters},
-    {action: commerceRestoreSearchParameters},
-  ])('sets all queries to q on #$action, when "q" defined', ({action}) => {
-    registerQueryWithId('foo');
-    registerQueryWithId('bar');
-
-    const expectedQuerySet = {foo: 'world', bar: 'world'};
-    // biome-ignore lint/suspicious/noExplicitAny: <>
-    const nextState = querySetReducer(state, (action as any)({q: 'world'}));
-    expect(nextState).toEqual(expectedQuerySet);
-  });
-
-  it.each([
-    {
-      action: restoreSearchParameters,
-    },
-    {
-      action: commerceRestoreSearchParameters,
-    },
-  ])('does not modify query on #$action, when "q" not defined', ({action}) => {
-    registerQueryWithId('foo', 'foo');
-    registerQueryWithId('bar', 'bar');
-
-    const expectedQuerySet = {foo: 'foo', bar: 'bar'};
-    // biome-ignore lint/suspicious/noExplicitAny: <>
-    const nextState = querySetReducer(state, (action as any)({}));
-    expect(nextState).toEqual(expectedQuerySet);
-  });
-
-  it('does not modify query on #$action, when "q" not defined', () => {
+  it('does not modify query on #restoreSearchParameters, when "q" not defined', () => {
     registerQueryWithId('foo', 'foo');
     registerQueryWithId('bar', 'bar');
 

@@ -137,7 +137,6 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
               <label className="FacetSearchResultLabel" htmlFor={id}>
                 <span
                   className="FacetSearchResultName"
-                  // biome-ignore lint/security/noDangerouslySetInnerHtml: <>
                   dangerouslySetInnerHTML={{
                     __html: highlightFacetSearchResult(value.displayValue),
                   }}

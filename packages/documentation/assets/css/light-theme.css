@@ -604,6 +604,18 @@ code.code-text-red mark {
   color: #525296 !important;
 }
 
+.tsd-page-navigation {
+  background-color: #f1f2ff;
+}
+
+.tsd-page-navigation a {
+  color: #333357;
+}
+
+.tsd-page-navigation-section > .tsd-accordion-summary + h3 {
+  color: #333357;
+}
+
 .btn-outline-primary.toc-thumbs-up-btn,
 .btn-outline-primary.toc-thumbs-down-btn {
   border: none;
@@ -1751,4 +1763,19 @@ summary:hover {
   fill: #000;
   user-select: none;
   -webkit-user-select: none;
+}
+
+/* Header nav bar – light theme */
+.header-nav-dropdown .dropdown-menu {
+  background: #fff;
+  border: 1px solid #e5e8e8;
+  box-shadow: rgba(229, 232, 232, 0.75) 0px 2px 16px 0px;
+}
+
+.header-nav-dropdown .header-nav-dropdown-item {
+  --bs-dropdown-link-color: #282829;
+  --bs-dropdown-link-hover-color: #1372ec;
+  --bs-dropdown-link-hover-bg: transparent;
+  --bs-dropdown-link-active-color: #1372ec;
+  --bs-dropdown-link-active-bg: transparent;
 }

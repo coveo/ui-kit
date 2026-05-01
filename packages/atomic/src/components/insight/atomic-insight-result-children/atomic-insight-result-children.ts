@@ -32,6 +32,7 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 import {elementHasAncestorTag} from '@/src/utils/utils';
 import '@/src/components/insight/atomic-insight-result/atomic-insight-result';
+import '@/src/components/insight/atomic-insight-result-children-template/atomic-insight-result-children-template';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {errorGuard} from '@/src/decorators/error-guard';
@@ -60,15 +61,20 @@ export class AtomicInsightResultChildren
   implements InitializableComponent<InsightBindings>
 {
   static styles = css`
-  @reference '../../../utils/tailwind.global.tw.css';
-@import '../../../components/common/result-children/result-children.pcss';
+    @reference '../../../utils/tailwind.global.tw.css';
+    @import '../../../components/common/result-children/result-children.css';
 
-[part='children-root'] {
-  @apply border-neutral border-l;
-  padding-left: 1rem;
-  margin-top: 1rem;
-}
+    [part='children-root'] {
+      @apply border-neutral border-l;
+      padding-left: 1rem;
+      margin-top: 1rem;
+    }
 
+    [part='children-root'] {
+      @apply border-neutral border-l;
+      padding-left: 1rem;
+      margin-top: 1rem;
+    }
   `;
 
   /**

@@ -176,4 +176,19 @@ export class GeneratedAnswerPageObject extends BasePageObject {
 
     return analyticsRequest;
   }
+
+  async waitForLegacyAnalyticsSearchboxSubmitRequest() {
+    const legacyAnalyticsRequest = await this.page.waitForRequest((request) => {
+      if (
+        request.method() === 'POST' &&
+        /\/rest\/v15\/analytics\/search/.test(request.url())
+      ) {
+        const body = request.postDataJSON();
+        return body?.actionCause === 'searchboxSubmit';
+      }
+      return false;
+    });
+
+    return legacyAnalyticsRequest;
+  }
 }

@@ -132,8 +132,7 @@ describe('atomic-commerce-search-box', () => {
           number-of-queries=${ifDefined(numberOfQueries)}
           clear-filters=${ifDefined(clearFilters)}
         >
-          ${suggestions}
-          ${additionalChildren}
+          ${suggestions} ${additionalChildren}
         </atomic-commerce-search-box>`,
         selector: 'atomic-commerce-search-box',
         bindings: (bindings) => {
@@ -364,6 +363,13 @@ describe('atomic-commerce-search-box', () => {
         'There are no search suggestions.'
       );
     });
+
+    it('should be focusable & delegate focus to the text area', async () => {
+      const {element, textArea} = await renderSearchBox();
+      element.focus();
+      expect(document.activeElement).toBe(element);
+      expect(element.shadowRoot!.activeElement).toBe(textArea);
+    });
   });
 
   describe('when inputting text in the search box', () => {
@@ -391,6 +397,15 @@ describe('atomic-commerce-search-box', () => {
       await userEvent.type(textArea, '{enter}');
 
       expect(submitMock).toHaveBeenCalled();
+    });
+
+    it('should not trigger the submit event when Shift+Enter is pressed', async () => {
+      const {textArea} = await renderSearchBox();
+
+      submitMock.mockClear();
+      await userEvent.type(textArea, '{shift>}{enter}{/shift}');
+
+      expect(submitMock).not.toHaveBeenCalled();
     });
 
     it('should clear suggestions when the Escape key is pressed', async () => {

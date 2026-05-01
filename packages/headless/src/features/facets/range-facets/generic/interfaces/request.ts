@@ -28,7 +28,8 @@ export interface AutomaticRanges<T extends boolean> {
 }
 
 export interface BaseRangeFacetRequest
-  extends BaseFacetRequest,
+  extends
+    BaseFacetRequest,
     AutomaticRanges<boolean>,
     SortCriteria<RangeFacetSortCriterion>,
     RangeAlgorithm<RangeFacetRangeAlgorithm> {

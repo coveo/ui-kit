@@ -2,7 +2,7 @@ import type {CriterionLevel, WCAGVersion} from '../shared/types.js';
 
 type ChapterId = 'success_criteria_level_a' | 'success_criteria_level_aa';
 
-export interface WcagCriterionDefinition {
+interface WcagCriterionDefinition {
   id: string;
   handle: string;
   level: CriterionLevel;
@@ -219,13 +219,6 @@ export const wcagCriteriaDefinitions: WcagCriterionDefinition[] = [
     handle: 'Redundant Entry',
     level: 'A',
     wcagVersion: '2.2',
-    chapterId: 'success_criteria_level_a',
-  },
-  {
-    id: '4.1.1',
-    handle: 'Parsing',
-    level: 'A',
-    wcagVersion: '2.0',
     chapterId: 'success_criteria_level_a',
   },
   {

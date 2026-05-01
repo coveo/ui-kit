@@ -14,7 +14,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import ArrowBottomIcon from '@/src/images/arrow-bottom-rounded.svg';
+import ArrowBottomIcon from '../../../images/arrow-bottom-rounded.svg';
 
 /**
  * The `atomic-tab-popover` is an internal component that provides a popover menu for tab overflow.
@@ -243,9 +243,10 @@ export class AtomicTabPopover
       </span>
       <atomic-icon
         part="arrow-icon"
-        class="group-hover:text-primary group-focus:text-primary ml-auto w-2 ${
-          this.isOpen ? 'rotate-180' : ''
-        }"
+        class="group-hover:text-primary group-focus:text-primary ml-auto w-2 ${this
+          .isOpen
+          ? 'rotate-180'
+          : ''}"
         .icon=${ArrowBottomIcon}
       ></atomic-icon>
     `);
@@ -267,9 +268,10 @@ export class AtomicTabPopover
           id=${this.popoverId}
           ${ref(this.popupRef)}
           part="overflow-tabs"
-          class="bg-background border-neutral absolute rounded-lg border py-2 shadow-lg ${
-            this.isOpen ? 'flex' : 'hidden'
-          }"
+          class="bg-background border-neutral absolute rounded-lg border py-2 shadow-lg ${this
+            .isOpen
+            ? 'flex'
+            : 'hidden'}"
         >
           <slot></slot>
         </ul>
@@ -283,7 +285,7 @@ export class AtomicTabPopover
     this.classList.toggle('visibility-hidden', !this.show);
     this.ariaHidden = String(!this.show);
     return html`
-        ${this.renderPopover()} ${when(this.isOpen, () => this.renderBackdrop())}
+      ${this.renderPopover()} ${when(this.isOpen, () => this.renderBackdrop())}
     `;
   }
 }

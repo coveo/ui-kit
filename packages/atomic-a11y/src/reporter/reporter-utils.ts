@@ -1,35 +1,92 @@
-import {readFileSync} from 'node:fs';
+import {existsSync, readFileSync} from 'node:fs';
+import {findPackageJSON} from 'node:module';
 import path from 'node:path';
-import {fileURLToPath} from 'node:url';
-import type {TestCase} from 'vitest/node';
 import {getCriterionMetadata as lookupCriterionMetadata} from '../data/criterion-metadata.js';
-import type {CriterionMetadata, SupportedFramework} from '../shared/types.js';
+import {isRecord} from '../shared/guards.js';
+import type {CriterionMetadata} from '../shared/types.js';
 
 export interface PackageMetadata {
-  version?: string;
+  version: string;
   dependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
 }
 
-export interface StorybookTaskMeta {
-  storyId?: unknown;
-  reports?: unknown;
-}
-
 export interface StorybookReport {
-  type?: unknown;
+  type: string;
   result?: unknown;
 }
 
-export interface ShardInfo {
-  index: number;
-  total: number;
+export interface StorybookTaskMeta {
+  storyId?: string;
+  reports?: StorybookReport[];
+}
+
+function isStorybookReport(value: unknown): value is StorybookReport {
+  return isRecord(value) && typeof value.type === 'string';
+}
+
+export function isStorybookTaskMeta(
+  value: unknown
+): value is StorybookTaskMeta {
+  if (!isRecord(value)) {
+    return false;
+  }
+
+  if (Object.hasOwn(value, 'storyId') && typeof value.storyId !== 'string') {
+    return false;
+  }
+
+  if (Object.hasOwn(value, 'reports')) {
+    return (
+      Array.isArray(value.reports) && value.reports.every(isStorybookReport)
+    );
+  }
+
+  return true;
+}
+
+export interface StorybookInteractiveReport {
+  type: 'a11y-interactive';
+  version: number;
+  status: 'passed' | 'failed' | 'warning';
+  result: {
+    criteriaCovered: string[];
+  };
+}
+
+export function isInteractiveReport(
+  report: unknown
+): report is StorybookInteractiveReport {
+  if (!isRecord(report)) {
+    return false;
+  }
+
+  if (report.type !== 'a11y-interactive') {
+    return false;
+  }
+
+  if (typeof report.version !== 'number') {
+    return false;
+  }
+
+  const status = report.status;
+  if (status !== 'passed' && status !== 'failed' && status !== 'warning') {
+    return false;
+  }
+
+  if (!isRecord(report.result)) {
+    return false;
+  }
+
+  const {criteriaCovered} = report.result;
+  return (
+    Array.isArray(criteriaCovered) &&
+    criteriaCovered.every((criterion) => typeof criterion === 'string')
+  );
 }
 
 export interface ComponentAccumulator {
   name: string;
-  category: string;
-  framework: SupportedFramework;
   storyIds: Set<string>;
   automated: {
     violations: number;
@@ -45,269 +102,47 @@ export interface ComponentAccumulator {
       message: string;
     }>;
   };
-}
-
-export const UNKNOWN_CATEGORY = 'unknown';
-export const UNKNOWN_FRAMEWORK = 'unknown';
-const AXE_RULE_URL_PATTERN = /rules\/axe\/[\d.]+\/([a-z0-9-]+)/gi;
-const AXE_RULE_TOKEN_PATTERN = /\(([a-z0-9-]+)\)/gi;
-// TODO: Consider using a more robust ANSI escape code parser if needed, such as the 'ansi-regex' package.
-// biome-ignore lint/suspicious/noControlCharactersInRegex: In progress...
-const ANSI_ESCAPE_PATTERN = /\u001B\[[0-?]*[ -/]*[@-~]/g;
-
-export function normalizePath(filePath: string): string {
-  return filePath.replaceAll('\\', '/');
-}
-
-export function parseShardDescriptor(
-  descriptor: string | undefined
-): ShardInfo | null {
-  if (!descriptor) {
-    return null;
-  }
-
-  const shardMatch = descriptor.match(/^(\d+)\/(\d+)$/);
-  if (!shardMatch) {
-    return null;
-  }
-
-  const [, rawIndex, rawTotal] = shardMatch;
-  const index = Number.parseInt(rawIndex, 10);
-  const total = Number.parseInt(rawTotal, 10);
-
-  if (Number.isNaN(index) || Number.isNaN(total) || total <= 0) {
-    return null;
-  }
-
-  return {index, total};
-}
-
-export function extractCliShardDescriptor(argv: string[]): string | undefined {
-  for (let index = 0; index < argv.length; index += 1) {
-    const argument = argv[index];
-    if (argument.startsWith('--shard=')) {
-      return argument.slice('--shard='.length);
-    }
-
-    if (argument === '--shard') {
-      return argv[index + 1];
-    }
-  }
-
-  return undefined;
-}
-
-export function resolveShardInfo(): ShardInfo | null {
-  const byDescriptor = [
-    process.env.A11Y_REPORT_SHARD,
-    process.env.VITEST_SHARD,
-    extractCliShardDescriptor(process.argv),
-  ]
-    .map((descriptor) => parseShardDescriptor(descriptor))
-    .find((parsed): parsed is ShardInfo => parsed !== null);
-
-  if (byDescriptor) {
-    return byDescriptor;
-  }
-
-  const rawIndex =
-    process.env.CI_NODE_INDEX ??
-    process.env.CIRCLE_NODE_INDEX ??
-    process.env.BUILDKITE_PARALLEL_JOB;
-  const rawTotal =
-    process.env.CI_NODE_TOTAL ??
-    process.env.CIRCLE_NODE_TOTAL ??
-    process.env.BUILDKITE_PARALLEL_JOB_COUNT;
-
-  if (!rawIndex || !rawTotal) {
-    return null;
-  }
-
-  const parsedIndex = Number.parseInt(rawIndex, 10);
-  const parsedTotal = Number.parseInt(rawTotal, 10);
-
-  if (
-    Number.isNaN(parsedIndex) ||
-    Number.isNaN(parsedTotal) ||
-    parsedTotal <= 0
-  ) {
-    return null;
-  }
-
-  const normalizedIndex =
-    parsedIndex >= 1 && parsedIndex <= parsedTotal
-      ? parsedIndex
-      : parsedIndex >= 0 && parsedIndex < parsedTotal
-        ? parsedIndex + 1
-        : parsedIndex;
-
-  if (normalizedIndex < 1 || normalizedIndex > parsedTotal) {
-    return null;
-  }
-
-  return {
-    index: normalizedIndex,
-    total: parsedTotal,
+  interactive?: {
+    criteriaCovered: Set<string>;
+    testCount: number;
+    passedCount: number;
+    failedCount: number;
+    passedCriteria: Set<string>;
+    failedCriteria: Set<string>;
   };
+}
+
+function resolvePackageJsonPath(packageJsonPath?: string): string {
+  const searchRoot = process.cwd();
+  const resolvedPath = packageJsonPath
+    ? path.resolve(packageJsonPath)
+    : findPackageJSON('.', `${searchRoot}${path.sep}`);
+
+  if (resolvedPath && existsSync(resolvedPath)) {
+    return resolvedPath;
+  }
+
+  throw new Error(
+    `[VitestA11yReporter] package.json not found from "${packageJsonPath ?? searchRoot}". ` +
+      'Provide A11yReporterOptions.packageJsonPath explicitly.'
+  );
 }
 
 export function readPackageMetadata(packageJsonPath?: string): PackageMetadata {
+  const resolvedPath = resolvePackageJsonPath(packageJsonPath);
+  const content = readFileSync(resolvedPath, 'utf8');
+
+  let parsedMetadata: unknown;
   try {
-    const currentFilePath = fileURLToPath(import.meta.url);
-    const resolvedPackageJsonPath =
-      packageJsonPath ??
-      path.resolve(path.dirname(currentFilePath), '../../package.json');
-    const packageJsonContent = readFileSync(resolvedPackageJsonPath, 'utf8');
-    return JSON.parse(packageJsonContent) as PackageMetadata;
-  } catch {
-    return {};
-  }
-}
-
-export function extractComponentName(
-  modulePath: string,
-  storyId: string
-): string | null {
-  const componentPathMatch = modulePath.match(/\/((atomic-[a-z0-9-]+))\//i);
-  if (componentPathMatch?.[1]) {
-    return componentPathMatch[1].toLowerCase();
-  }
-
-  const storyPathMatch = modulePath.match(
-    /(atomic-[a-z0-9-]+)\.new\.stories\.[jt]sx?$/i
-  );
-  if (storyPathMatch?.[1]) {
-    return storyPathMatch[1].toLowerCase();
-  }
-
-  const storyIdMatch = storyId.match(/(atomic-[a-z0-9-]+)/i);
-  if (storyIdMatch?.[1]) {
-    return storyIdMatch[1].toLowerCase();
-  }
-
-  return null;
-}
-
-export function extractCategory(modulePath: string, storyId: string): string {
-  const categoryFromPath = modulePath.match(
-    /components\/(commerce|search|insight|ipx|common|recommendations)\//i
-  );
-
-  if (categoryFromPath?.[1]) {
-    return categoryFromPath[1].toLowerCase();
-  }
-
-  const categoryFromStoryId = storyId.match(
-    /^(commerce|search|insight|ipx|common|recommendations)-/i
-  );
-
-  if (categoryFromStoryId?.[1]) {
-    return categoryFromStoryId[1].toLowerCase();
-  }
-
-  return UNKNOWN_CATEGORY;
-}
-
-export function extractFramework(modulePath: string): SupportedFramework {
-  if (modulePath.endsWith('.new.stories.tsx')) {
-    return 'lit';
-  }
-
-  if (modulePath.endsWith('.stories.tsx')) {
-    return 'stencil';
-  }
-
-  return UNKNOWN_FRAMEWORK;
-}
-
-export function stripAnsiSequences(text: string): string {
-  return text.replace(ANSI_ESCAPE_PATTERN, '');
-}
-
-export function extractErrorText(error: unknown): string {
-  if (typeof error === 'string') {
-    return error;
-  }
-
-  if (error instanceof Error) {
-    return `${error.message}\n${error.stack ?? ''}`;
-  }
-
-  const isRecord = (value: unknown): value is Record<string, unknown> => {
-    return typeof value === 'object' && value !== null && !Array.isArray(value);
-  };
-
-  if (!isRecord(error)) {
-    return '';
-  }
-
-  const message = typeof error.message === 'string' ? error.message : '';
-  const stack = typeof error.stack === 'string' ? error.stack : '';
-  return `${message}\n${stack}`;
-}
-
-export function collectRuleIdMatches(
-  source: string,
-  matcher: RegExp,
-  target: Set<string>,
-  getCriteriaForRuleIdFn: (ruleId: string) => string[]
-): void {
-  matcher.lastIndex = 0;
-  let match = matcher.exec(source);
-
-  while (match) {
-    const matchedRuleId = match[1]?.toLowerCase();
-    if (matchedRuleId && getCriteriaForRuleIdFn(matchedRuleId).length > 0) {
-      target.add(matchedRuleId);
-    }
-
-    match = matcher.exec(source);
-  }
-}
-
-export function extractA11yRuleIdsFromTestErrors(
-  testCase: TestCase,
-  getCriteriaForRuleIdFn: (ruleId: string) => string[]
-): string[] {
-  const errors = testCase.result().errors;
-  if (!errors || errors.length === 0) {
-    return [];
-  }
-
-  const extractedRuleIds = new Set<string>();
-
-  for (const error of errors) {
-    const errorText = stripAnsiSequences(extractErrorText(error));
-    if (!errorText) {
-      continue;
-    }
-
-    const normalizedErrorText = errorText.toLowerCase();
-    const appearsToBeA11yAssertionFailure =
-      normalizedErrorText.includes('tohavenoviolations') ||
-      normalizedErrorText.includes('application=axeapi');
-
-    if (!appearsToBeA11yAssertionFailure) {
-      continue;
-    }
-
-    collectRuleIdMatches(
-      errorText,
-      AXE_RULE_URL_PATTERN,
-      extractedRuleIds,
-      getCriteriaForRuleIdFn
-    );
-    collectRuleIdMatches(
-      errorText,
-      AXE_RULE_TOKEN_PATTERN,
-      extractedRuleIds,
-      getCriteriaForRuleIdFn
+    parsedMetadata = JSON.parse(content);
+  } catch (error) {
+    throw new Error(
+      `[VitestA11yReporter] Invalid JSON in package metadata file "${resolvedPath}".`,
+      {cause: error}
     );
   }
 
-  return [...extractedRuleIds].sort((a, b) =>
-    a.localeCompare(b, 'en-US', {numeric: true})
-  );
+  return parsedMetadata as PackageMetadata;
 }
 
 export function formatDate(date: Date): string {

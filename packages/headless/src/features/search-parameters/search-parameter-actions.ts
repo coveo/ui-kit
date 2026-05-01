@@ -87,7 +87,6 @@ export interface SearchParameters {
 
   /**
    * The active tab id.
-   * @deprecated Restoring the tab with the restoreSearchParameters action can cause components to be visible/hidden on the wrong tab. The `restoreTab` action is also deprecated and will be removed in V4. Use alternative tab management methods instead.
    */
   tab?: string;
 

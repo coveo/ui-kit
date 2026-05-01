@@ -9,7 +9,7 @@ vi.mock('@coveo/headless', {spy: true});
 vi.mock('@/src/mixins/bindings-mixin', () => ({
   InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
     return class extends superClass {
-      // biome-ignore lint/complexity/noUselessConstructor: <mocking the mixin for testing>
+      // oxlint-disable-next-line no-useless-constructor -- <mocking the mixin for testing>
       constructor(...args: unknown[]) {
         super(...args);
       }
@@ -50,21 +50,15 @@ describe('atomic-ipx-modal', () => {
           .source=${props.source}
           .container=${props.container}
         >
-          ${
-            slottedContent.header
-              ? html`<div slot="header">${slottedContent.header}</div>`
-              : ''
-          }
-          ${
-            slottedContent.body
-              ? html`<div slot="body">${slottedContent.body}</div>`
-              : ''
-          }
-          ${
-            slottedContent.footer
-              ? html`<div slot="footer">${slottedContent.footer}</div>`
-              : ''
-          }
+          ${slottedContent.header
+            ? html`<div slot="header">${slottedContent.header}</div>`
+            : ''}
+          ${slottedContent.body
+            ? html`<div slot="body">${slottedContent.body}</div>`
+            : ''}
+          ${slottedContent.footer
+            ? html`<div slot="footer">${slottedContent.footer}</div>`
+            : ''}
         </atomic-ipx-modal>
       `,
       selector: 'atomic-ipx-modal',
@@ -172,6 +166,20 @@ describe('atomic-ipx-modal', () => {
       });
 
       expect(element.id).toBe('custom-id');
+    });
+
+    it('should apply atomic-ipx-modal-opened to the interface element on init when isOpen=true', async () => {
+      const {atomicInterface} =
+        await renderInAtomicSearchInterface<AtomicIpxModal>({
+          template: html`<atomic-ipx-modal .isOpen=${true}></atomic-ipx-modal>`,
+          selector: 'atomic-ipx-modal',
+          bindings: (bindings) => {
+            bindings.engine = mockedEngine;
+            return bindings;
+          },
+        });
+
+      expect(atomicInterface).toHaveClass('atomic-ipx-modal-opened');
     });
   });
 
@@ -289,7 +297,9 @@ describe('atomic-ipx-modal', () => {
 
   describe('when integrating with ipx-body functional component', () => {
     it('should render container with visible class when isOpen=true', async () => {
-      const {element, parts} = await renderIPXModal({props: {isOpen: true}});
+      const {element, parts} = await renderIPXModal({
+        props: {isOpen: true},
+      });
 
       await element.updateComplete;
 
@@ -297,7 +307,9 @@ describe('atomic-ipx-modal', () => {
     });
 
     it('should render container with invisible class when isOpen=false', async () => {
-      const {element, parts} = await renderIPXModal({props: {isOpen: false}});
+      const {element, parts} = await renderIPXModal({
+        props: {isOpen: false},
+      });
 
       await element.updateComplete;
 
