@@ -15,7 +15,7 @@ import type {
   StateSelector,
   StateChangeCallback,
   StateMutation,
-} from '@/src/core/interface/types.js';
+} from '@/src/core/interface/interface-types.js';
 
 /**
  * Store engine wrapper object to encapsulate state and avoid module-level side effects
