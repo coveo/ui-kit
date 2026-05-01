@@ -17,8 +17,8 @@ export const loadSearchBoxActions = (
   engine.adoptSlice(searchBoxSlice);
   loadedEngine.add(engine);
   return {
-    setQuery: (query: string) => {
-      engine.mutate(searchBoxMutators.setQuery(query));
+    setQuery: (engine, query: string) => {
+      searchBoxMutators.setQuery(engine, query);
     },
   };
 };
@@ -30,6 +30,6 @@ export const setQuery = (engine: Engine) => {
   }
 
   return (query: string) => {
-    engine.mutate(searchBoxMutators.setQuery(query));
+    searchBoxMutators.setQuery(engine, query);
   };
 };

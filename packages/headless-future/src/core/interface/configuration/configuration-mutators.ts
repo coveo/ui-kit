@@ -9,24 +9,27 @@
  */
 
 import {configurationSlice} from '@/src/core/internal/configuration/configuration-slice.js';
-import type {StateMutation} from '@/src/core/interface/interface-types.js';
+import {Engine} from '@/src/core/interface/engine/engine.js';
 import type {ConfigurationState} from './configuration-types.js';
 
 /**
  * Configuration mutations
  */
-export const setOrganizationId = (organizationId: string): StateMutation => {
-  return configurationSlice.actions.setOrganizationId(organizationId);
+export const setOrganizationId = (engine: Engine, organizationId: string) => {
+  engine.mutate(configurationSlice.actions.setOrganizationId(organizationId));
 };
 
-export const setAccessToken = (accessToken: string): StateMutation => {
-  return configurationSlice.actions.setAccessToken(accessToken);
+export const setAccessToken = (engine: Engine, accessToken: string) => {
+  engine.mutate(configurationSlice.actions.setAccessToken(accessToken));
 };
 
-export const setEndpoint = (endpoint: string | undefined): StateMutation => {
-  return configurationSlice.actions.setEndpoint(endpoint);
+export const setEndpoint = (engine: Engine, endpoint: string | undefined) => {
+  engine.mutate(configurationSlice.actions.setEndpoint(endpoint));
 };
 
-export const setConfiguration = (config: ConfigurationState): StateMutation => {
-  return configurationSlice.actions.setConfiguration(config);
+export const setConfiguration = (
+  engine: Engine,
+  config: ConfigurationState
+) => {
+  engine.mutate(configurationSlice.actions.setConfiguration(config));
 };

@@ -13,7 +13,7 @@ export const buildSearchBoxController = (engine: Engine) => {
   engine.adoptSlice(searchBoxSlice);
   return {
     updateQuery: (query: string) => {
-      engine.mutate(searchBoxMutators.setQuery(query));
+      searchBoxMutators.setQuery(engine, query);
     },
     submit: () => {
       executeSearchAPI(engine);

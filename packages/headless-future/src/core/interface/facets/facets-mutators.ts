@@ -9,27 +9,29 @@
  */
 
 import {facetsSlice} from '@/src/core/internal/facets/facets-slice.js';
-import type {StateMutation} from '@/src/core/interface/interface-types.js';
+import {Engine} from '@/src/core/interface/engine/engine.js';
 import type {FacetState, FacetValue} from './facets-types.js';
 
 export const toggleValue = (
+  engine: Engine,
   facetId: string,
   valueId: string
-): StateMutation => {
-  return facetsSlice.actions.toggleFacetValue({facetId, valueId});
+) => {
+  engine.mutate(facetsSlice.actions.toggleFacetValue({facetId, valueId}));
 };
 
-export const clearSelections = (facetId: string): StateMutation => {
-  return facetsSlice.actions.clearFacetSelections(facetId);
+export const clearSelections = (engine: Engine, facetId: string) => {
+  engine.mutate(facetsSlice.actions.clearFacetSelections(facetId));
 };
 
-export const setFacet = (facet: FacetState): StateMutation => {
-  return facetsSlice.actions.setFacet(facet);
+export const setFacet = (engine: Engine, facet: FacetState) => {
+  engine.mutate(facetsSlice.actions.setFacet(facet));
 };
 
 export const updateValues = (
+  engine: Engine,
   facetId: string,
   values: FacetValue[]
-): StateMutation => {
-  return facetsSlice.actions.updateFacetValues({facetId, values});
+) => {
+  engine.mutate(facetsSlice.actions.updateFacetValues({facetId, values}));
 };

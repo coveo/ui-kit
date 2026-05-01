@@ -9,25 +9,25 @@
  */
 
 import {resultsSlice} from '@/src/core/internal/results/results-slice.js';
-import type {StateMutation} from '@/src/core/interface/interface-types.js';
+import {Engine} from '@/src/core/interface/engine/engine.js';
 import type {SearchResult} from './results-types.js';
 
 /**
  * Results mutations
  */
 
-export const setResults = (results: SearchResult[]): StateMutation => {
-  return resultsSlice.actions.setResults(results);
+export const setResults = (engine: Engine, results: SearchResult[]) => {
+  engine.mutate(resultsSlice.actions.setResults(results));
 };
 
-export const setLoading = (isLoading: boolean): StateMutation => {
-  return resultsSlice.actions.setLoading(isLoading);
+export const setLoading = (engine: Engine, isLoading: boolean) => {
+  engine.mutate(resultsSlice.actions.setLoading(isLoading));
 };
 
-export const setError = (error: string | null): StateMutation => {
-  return resultsSlice.actions.setError(error);
+export const setError = (engine: Engine, error: string | null) => {
+  engine.mutate(resultsSlice.actions.setError(error));
 };
 
-export const clearResults = (): StateMutation => {
-  return resultsSlice.actions.clearResults();
+export const clearResults = (engine: Engine) => {
+  engine.mutate(resultsSlice.actions.clearResults());
 };

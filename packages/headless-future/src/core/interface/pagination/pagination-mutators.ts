@@ -9,32 +9,32 @@
  */
 
 import {paginationSlice} from '@/src/core/internal/pagination/pagination-slice.js';
-import type {StateMutation} from '@/src/core/interface/interface-types.js';
+import {Engine} from '@/src/core/interface/engine/engine.js';
 
 /**
  * Pagination mutations
  */
 
-export const setPage = (page: number): StateMutation => {
-  return paginationSlice.actions.setPage(page);
+export const setPage = (engine: Engine, page: number) => {
+  engine.mutate(paginationSlice.actions.setPage(page));
 };
 
-export const setPageSize = (pageSize: number): StateMutation => {
-  return paginationSlice.actions.setPageSize(pageSize);
+export const setPageSize = (engine: Engine, pageSize: number) => {
+  engine.mutate(paginationSlice.actions.setPageSize(pageSize));
 };
 
-export const setTotalCount = (totalCount: number): StateMutation => {
-  return paginationSlice.actions.setTotalCount(totalCount);
+export const setTotalCount = (engine: Engine, totalCount: number) => {
+  engine.mutate(paginationSlice.actions.setTotalCount(totalCount));
 };
 
-export const nextPage = (): StateMutation => {
-  return paginationSlice.actions.nextPage();
+export const nextPage = (engine: Engine) => {
+  engine.mutate(paginationSlice.actions.nextPage());
 };
 
-export const previousPage = (): StateMutation => {
-  return paginationSlice.actions.previousPage();
+export const previousPage = (engine: Engine) => {
+  engine.mutate(paginationSlice.actions.previousPage());
 };
 
-export const resetToFirstPage = (): StateMutation => {
-  return paginationSlice.actions.resetToFirstPage();
+export const resetToFirstPage = (engine: Engine) => {
+  engine.mutate(paginationSlice.actions.resetToFirstPage());
 };

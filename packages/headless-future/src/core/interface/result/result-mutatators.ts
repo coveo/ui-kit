@@ -9,33 +9,41 @@
  */
 
 import {resultSlice} from '@/src/core/internal/result/result-slice.js';
-import type {StateMutation} from '@/src/core/interface/interface-types.js';
+import {Engine} from '@/src/core/interface/engine/engine.js';
 
 /**
  * Initialize result UI state for a set of result IDs.
  * Replaces any existing state entirely.
  */
-export const initializeResults = (ids: string[]): StateMutation => {
-  return resultSlice.actions.initializeResults(ids);
+export const initializeResults = (engine: Engine, ids: string[]) => {
+  engine.mutate(resultSlice.actions.initializeResults(ids));
 };
 
 /**
  * Set whether a specific result is selected.
  */
-export const setSelected = (id: string, isSelected: boolean): StateMutation => {
-  return resultSlice.actions.setSelected({id, isSelected});
+export const setSelected = (
+  engine: Engine,
+  id: string,
+  isSelected: boolean
+) => {
+  engine.mutate(resultSlice.actions.setSelected({id, isSelected}));
 };
 
 /**
  * Set whether a specific result is expanded.
  */
-export const setExpanded = (id: string, isExpanded: boolean): StateMutation => {
-  return resultSlice.actions.setExpanded({id, isExpanded});
+export const setExpanded = (
+  engine: Engine,
+  id: string,
+  isExpanded: boolean
+) => {
+  engine.mutate(resultSlice.actions.setExpanded({id, isExpanded}));
 };
 
 /**
  * Clear all per-result UI state.
  */
-export const clearAll = (): StateMutation => {
-  return resultSlice.actions.clearAll();
+export const clearAll = (engine: Engine) => {
+  engine.mutate(resultSlice.actions.clearAll());
 };

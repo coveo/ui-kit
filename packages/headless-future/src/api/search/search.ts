@@ -54,8 +54,8 @@ import type {
  */
 export async function executeSearchAPI(engine: Engine): Promise<void> {
   // Set loading state before making the request
-  engine.mutate(resultsMutations.setLoading(true));
-  engine.mutate(resultsMutations.setError(null));
+  resultsMutations.setLoading(engine, true);
+  resultsMutations.setError(engine, null);
 
   try {
     // Read current state to build request
@@ -122,19 +122,17 @@ export async function executeSearchAPI(engine: Engine): Promise<void> {
     // Handle response
     if (!response.success) {
       // API call failed - update error state
-      engine.mutate(
-        resultsMutations.setError(response.error || 'Search failed')
-      );
-      engine.mutate(resultsMutations.setLoading(false));
+      resultsMutations.setError(engine, response.error || 'Search failed');
+      resultsMutations.setLoading(engine, false);
       return;
     }
 
     // Transform and update state with results
     const searchResults = transformCoveoResults(response.data!.results);
-    engine.mutate(resultsMutations.setResults(searchResults));
+    resultsMutations.setResults(engine, searchResults);
 
     // Update total count for pagination
-    engine.mutate(paginationMutations.setTotalCount(response.data!.totalCount));
+    paginationMutations.setTotalCount(engine, response.data!.totalCount);
 
     // Update facets with response data
     if (response.data!.facets) {
@@ -142,13 +140,13 @@ export async function executeSearchAPI(engine: Engine): Promise<void> {
     }
 
     // Clear loading state
-    engine.mutate(resultsMutations.setLoading(false));
+    resultsMutations.setLoading(engine, false);
   } catch (error) {
     // Unexpected error (should be rare since executeHttpRequest catches most errors)
     const errorMessage =
       error instanceof Error ? error.message : 'An unexpected error occurred';
-    engine.mutate(resultsMutations.setError(errorMessage));
-    engine.mutate(resultsMutations.setLoading(false));
+    resultsMutations.setError(engine, errorMessage);
+    resultsMutations.setLoading(engine, false);
   }
 }
 
@@ -231,6 +229,6 @@ function updateFacetsFromResponse(
     }));
 
     // Update facet values while preserving selections
-    engine.mutate(facetMutations.updateValues(coveoFacet.facetId, facetValues));
+    facetMutations.updateValues(engine, coveoFacet.facetId, facetValues);
   }
 }
