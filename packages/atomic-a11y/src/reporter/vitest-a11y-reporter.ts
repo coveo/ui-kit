@@ -8,6 +8,7 @@ import type {
   TestModule,
   TestRunEndReason,
 } from 'vitest/node';
+
 import {
   getCriteriaForRule,
   getIncompleteMessage,

@@ -14,11 +14,11 @@ import type {
 import {reportConformanceToOpenAcr} from './types.js';
 
 interface ConformanceContext {
-  criterion: A11yCriterionReport | undefined;
-  aggregate: CriterionAggregate | undefined;
-  interactiveAggregate: InteractiveAggregate | undefined;
-  manualAggregates: ManualAuditAggregate[] | undefined;
-  override: A11yOverrideEntry | undefined;
+  criterion?: A11yCriterionReport;
+  aggregate?: CriterionAggregate;
+  interactiveAggregate?: InteractiveAggregate;
+  manualAggregates?: ManualAuditAggregate[];
+  override?: A11yOverrideEntry;
 }
 
 interface RemarksContext extends ConformanceContext {

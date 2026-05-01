@@ -16,7 +16,7 @@
     "a11y:vpat": "pnpm build && node scripts/json-to-openacr.mjs && npx --yes @openacr/openacr output -f reports/openacr.yaml -o reports/vpat-2.5-coveo-atomic.md -t scripts/vpat-from-openacr.handlebars"
   },
   "dependencies": {
-    "yaml": "2.8.0"
+    "yaml": "catalog:"
   },
   "devDependencies": {
     "axe-core": "4.10.3",
