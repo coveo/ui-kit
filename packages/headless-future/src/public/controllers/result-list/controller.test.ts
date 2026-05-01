@@ -7,16 +7,16 @@ import {
   createTestEngine,
   createMockSearchResults,
 } from '@/src/core/test-utils.js';
-import {Engine} from '@/src/core/interface/engine/engine.js';
+import {FullEngine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {resultsSlice} from '@/src/core/internal/results/slice.js';
 import {resultSlice} from '@/src/core/internal/result/slice.js';
 import {buildResultListController} from './controller.js';
 
 describe('buildResultListController', () => {
-  let engine: Engine;
+  let engine: FullEngine;
 
   beforeEach(() => {
-    engine = createTestEngine();
+    engine = getFullEngine(createTestEngine());
   });
 
   it('should adopt the result slice', () => {

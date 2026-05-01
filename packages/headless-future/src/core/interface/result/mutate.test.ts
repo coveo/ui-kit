@@ -7,13 +7,13 @@ import * as mutations from './mutate.js';
 import * as selectors from './selectors.js';
 import {resultSlice} from '@/src/core/internal/result/slice.js';
 import {createTestEngine} from '@/src/core/test-utils.js';
-import {Engine} from '@/src/core/interface/engine/engine.js';
+import {FullEngine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 
 describe('resultMutations', () => {
-  let engine: Engine;
+  let engine: FullEngine;
 
   beforeEach(() => {
-    engine = createTestEngine();
+    engine = getFullEngine(createTestEngine());
     engine.adoptSlice(resultSlice);
   });
 

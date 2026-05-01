@@ -9,15 +9,15 @@ import {
 } from '@/src/core/test-utils.js';
 import * as selectors from './selectors.js';
 import * as mutations from './mutate.js';
-import {Engine} from '@/src/core/interface/engine/engine.js';
+import {FullEngine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {facetsSlice} from '@/src/core/internal/facets/slice.js';
 import {FacetState} from './types.js';
 
 describe('createFacetsSelectors()', () => {
-  let engine: Engine;
+  let engine: FullEngine;
 
   beforeEach(() => {
-    engine = createTestEngine();
+    engine = getFullEngine(createTestEngine());
     engine.adoptSlice(facetsSlice); // Ensure slice is loaded for selectors
   });
 

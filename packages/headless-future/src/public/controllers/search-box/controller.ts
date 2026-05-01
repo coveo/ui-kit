@@ -1,5 +1,5 @@
 import {executeSearchAPI} from '@/src/api/index.js';
-import {Engine} from '@/src/core/interface/engine/engine.js';
+import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {searchBoxSlice} from '@/src/core/internal/searchBox/slice.js';
 import * as searchBoxSelectors from '@/src/core/interface/search-box/selectors.js';
 import * as searchBoxMutators from '@/src/core/interface/search-box/mutate.js';
@@ -10,22 +10,23 @@ const stateSelect = createSelector([searchBoxSelectors.query], (query) => ({
 }));
 
 export const buildSearchBoxController = (engine: Engine) => {
-  engine.adoptSlice(searchBoxSlice);
+  const fullEngine = getFullEngine(engine);
+  fullEngine.adoptSlice(searchBoxSlice);
   return {
     updateQuery: (query: string) => {
-      engine.mutate(searchBoxMutators.setQuery(query));
+      fullEngine.mutate(searchBoxMutators.setQuery(query));
     },
     submit: () => {
-      executeSearchAPI(engine);
+      executeSearchAPI(fullEngine);
     },
     get state() {
-      return engine.read(stateSelect);
+      return fullEngine.read(stateSelect);
     },
     get query() {
-      return engine.read(searchBoxSelectors.query);
+      return fullEngine.read(searchBoxSelectors.query);
     },
     subscribe(callback: () => void) {
-      engine.subscribe(stateSelect, callback);
+      fullEngine.subscribe(stateSelect, callback);
     },
   };
 };

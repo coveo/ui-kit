@@ -6,14 +6,14 @@ import {describe, it, expect, beforeEach} from 'vitest';
 import {createTestEngine} from '@/src/core/test-utils.js';
 import * as selectors from './selectors.js';
 import * as mutations from './mutate.js';
-import {Engine} from '@/src/core/interface/engine/engine.js';
+import {FullEngine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {resultSlice} from '@/src/core/internal/result/slice.js';
 
 describe('result selectors', () => {
-  let engine: Engine;
+  let engine: FullEngine;
 
   beforeEach(() => {
-    engine = createTestEngine();
+    engine = getFullEngine(createTestEngine());
     engine.adoptSlice(resultSlice);
   });
 

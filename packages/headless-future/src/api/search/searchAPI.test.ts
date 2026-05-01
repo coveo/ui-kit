@@ -25,7 +25,7 @@ import * as resultsSelectors from '@/src/core/interface/results/selectors.js';
 import * as paginationSelectors from '@/src/core/interface/pagination/selectors.js';
 import * as facetSelectors from '@/src/core/interface/facets/selectors.js';
 import type {CoveoSearchResponse} from './types.js';
-import {Engine} from '@/src/core/interface/engine/engine.js';
+import {FullEngine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {configurationSlice} from '@/src/core/internal/configuration/slice.js';
 import {searchBoxSlice} from '@/src/core/internal/searchBox/slice.js';
 import {resultsSlice} from '@/src/core/internal/results/slice.js';
@@ -33,10 +33,10 @@ import {paginationSlice} from '@/src/core/internal/pagination/slice.js';
 import {facetsSlice} from '@/src/core/internal/facets/slice.js';
 
 describe('executeSearchAPI()', () => {
-  let engine: Engine;
+  let engine: FullEngine;
 
   beforeEach(() => {
-    engine = createTestEngine();
+    engine = getFullEngine(createTestEngine());
 
     // Adopt all slices needed for these tests
     engine.adoptSlice(configurationSlice);

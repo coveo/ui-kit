@@ -10,14 +10,14 @@ import {
   createMockFacetValues,
 } from '@/src/core/test-utils.js';
 import type {FacetState} from './types.js';
-import {Engine} from '@/src/core/interface/engine/engine.js';
+import {FullEngine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {facetsSlice} from '@/src/core/internal/facets/slice.js';
 
 describe('facetMutations', () => {
-  let engine: Engine;
+  let engine: FullEngine;
 
   beforeEach(() => {
-    engine = createTestEngine();
+    engine = getFullEngine(createTestEngine());
     engine.adoptSlice(facetsSlice); // Ensure slice is loaded for mutations
   });
 

@@ -14,14 +14,14 @@ import {
 import {executeHttpRequest} from './httpClient.js';
 import {createTestEngine} from '@/src/core/test-utils.js';
 import * as configurationMutations from '@/src/core/interface/configuration/mutate.js';
-import type {Engine} from '@/src/core/interface/engine/engine.js';
+import {FullEngine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {configurationSlice} from '@/src/core/internal/configuration/slice.js';
 
 describe('executeHttpRequest()', () => {
-  let engine: Engine;
+  let engine: FullEngine;
 
   beforeEach(() => {
-    engine = createTestEngine();
+    engine = getFullEngine(createTestEngine());
     engine.adoptSlice(configurationSlice); // Ensure slice is loaded
     // Configure engine with required settings
     engine.mutate(configurationMutations.setOrganizationId('test-org-id'));
@@ -37,7 +37,7 @@ describe('executeHttpRequest()', () => {
 
   describe('Configuration validation', () => {
     it('should return error when organizationId is not set', async () => {
-      const emptyEngine = createTestEngine();
+      const emptyEngine = getFullEngine(createTestEngine());
       emptyEngine.adoptSlice(configurationSlice);
       emptyEngine.mutate(configurationMutations.setAccessToken('token'));
 
@@ -51,7 +51,7 @@ describe('executeHttpRequest()', () => {
     });
 
     it('should return error when accessToken is not set', async () => {
-      const emptyEngine = createTestEngine();
+      const emptyEngine = getFullEngine(createTestEngine());
       emptyEngine.adoptSlice(configurationSlice);
       emptyEngine.mutate(configurationMutations.setOrganizationId('org-id'));
 

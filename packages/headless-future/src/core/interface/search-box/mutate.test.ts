@@ -7,13 +7,13 @@ import * as mutations from './mutate.js';
 import {createTestEngine} from '@/src/core/test-utils.js';
 import * as selectors from './selectors.js';
 import {searchBoxSlice} from '@/src/core/internal/searchBox/slice.js';
-import {Engine} from '@/src/core/interface/engine/engine.js';
+import {FullEngine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 
 describe('searchBoxMutations', () => {
-  let engine: Engine;
+  let engine: FullEngine;
 
   beforeEach(() => {
-    engine = createTestEngine();
+    engine = getFullEngine(createTestEngine());
     engine.adoptSlice(searchBoxSlice);
   });
 

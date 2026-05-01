@@ -1,6 +1,6 @@
 import {searchBoxSlice} from '@/src/core/internal/searchBox/slice.js';
 import * as searchBoxMutators from '@/src/core/interface/search-box/mutate.js';
-import {Engine} from '@/src/core/interface/engine/engine.js';
+import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 
 type MutatorToAction<T> = T extends (...args: infer A) => any
   ? (...args: A) => void
@@ -14,22 +14,25 @@ const loadedEngine = new WeakSet<Engine>();
 export const loadSearchBoxActions = (
   engine: Engine
 ): MutatorsToActions<typeof searchBoxMutators> => {
-  engine.adoptSlice(searchBoxSlice);
+  const fullEngine = getFullEngine(engine);
+  fullEngine.adoptSlice(searchBoxSlice);
   loadedEngine.add(engine);
   return {
     setQuery: (query: string) => {
-      engine.mutate(searchBoxMutators.setQuery(query));
+      fullEngine.mutate(searchBoxMutators.setQuery(query));
     },
   };
 };
 
 export const setQuery = (engine: Engine) => {
   if (!loadedEngine.has(engine)) {
-    engine.adoptSlice(searchBoxSlice);
+    const fullEngine = getFullEngine(engine);
+    fullEngine.adoptSlice(searchBoxSlice);
     loadedEngine.add(engine);
   }
 
   return (query: string) => {
-    engine.mutate(searchBoxMutators.setQuery(query));
+    const fullEngine = getFullEngine(engine);
+    fullEngine.mutate(searchBoxMutators.setQuery(query));
   };
 };

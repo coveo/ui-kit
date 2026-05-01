@@ -9,14 +9,14 @@ import {
 } from '@/src/core/test-utils.js';
 import * as selectors from './selectors.js';
 import * as mutations from './mutate.js';
-import {Engine} from '@/src/core/interface/engine/engine.js';
+import {FullEngine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {resultsSlice} from '@/src/core/internal/results/slice.js';
 
 describe('results selectors', () => {
-  let engine: Engine;
+  let engine: FullEngine;
 
   beforeEach(() => {
-    engine = createTestEngine();
+    engine = getFullEngine(createTestEngine());
     engine.adoptSlice(resultsSlice);
   });
 

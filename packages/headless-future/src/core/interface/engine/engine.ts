@@ -17,6 +17,13 @@ import type {
   StateMutation,
 } from '@/src/core/interface/types.js';
 
+export type FullEngine = Engine & {
+  adoptSlice(slice: Slice): Promise<void>;
+  mutate(mutation: StateMutation): void;
+};
+
+export let getFullEngine: (engine: Engine) => FullEngine;
+
 /**
  * Store engine wrapper object to encapsulate state and avoid module-level side effects
  * Following the pattern from Coveo Headless
@@ -31,6 +38,19 @@ export class Engine {
   constructor() {
     this.#adoptedSlices = new WeakSet<Slice>();
     this.#store = configureStore({reducer: this.#rootReducer});
+  }
+
+  static {
+    getFullEngine = (engine: Engine) =>
+      ({
+        read: <T>(selector: StateSelector<T>) => engine.read(selector),
+        subscribe: <T>(
+          selector: StateSelector<T>,
+          callback: StateChangeCallback<T>
+        ) => engine.subscribe(selector, callback),
+        adoptSlice: (slice: Slice) => engine.#adoptSlice(slice),
+        mutate: (mutation: StateMutation) => engine.#mutate(mutation),
+      }) as FullEngine;
   }
 
   #getStore() {
@@ -127,7 +147,7 @@ export class Engine {
    * engine.mutate({ type: 'search/setQuery', payload: 'laptops' });
    * ```
    */
-  mutate(mutation: StateMutation): void {
+  #mutate(mutation: StateMutation): void {
     this.#dispatch(mutation);
   }
 
@@ -146,7 +166,7 @@ export class Engine {
    * engine.adoptSlice('search');
    * ```
    */
-  async adoptSlice(slice: Slice) {
+  async #adoptSlice(slice: Slice) {
     if (!this.#store) {
       throw new Error('Cannot adopt slice before store is initialized');
     }

@@ -7,13 +7,13 @@ import {createTestEngine} from '@/src/core/test-utils.js';
 import * as selectors from './selectors.js';
 import * as configurationMutations from './mutate.js';
 import {configurationSlice} from '@/src/core/internal/configuration/slice.js';
-import {Engine} from '@/src/core/interface/engine/engine.js';
+import {getFullEngine, FullEngine} from '@/src/core/interface/engine/engine.js';
 
 describe('configurationMutations', () => {
-  let engine: Engine;
+  let engine: FullEngine;
 
   beforeEach(() => {
-    engine = createTestEngine();
+    engine = getFullEngine(createTestEngine());
     engine.adoptSlice(configurationSlice); // Ensure slice is loaded for mutations
   });
 
