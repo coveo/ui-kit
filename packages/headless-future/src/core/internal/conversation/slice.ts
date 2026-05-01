@@ -34,6 +34,12 @@ export const conversationSlice = createSlice({
   name: 'conversation',
   initialState: initialConversationState,
   reducers: {
+    rehydrateConversation: (
+      _state,
+      action: PayloadAction<ConversationState>
+    ) => {
+      return action.payload;
+    },
     addMessage: (state, action: PayloadAction<ConversationMessage>) => {
       state.messages.push(action.payload);
     },

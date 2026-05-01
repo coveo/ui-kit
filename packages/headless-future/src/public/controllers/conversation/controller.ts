@@ -22,8 +22,10 @@ import {createBufferProcessor} from '@/src/api/protocol/buffer.js';
 import {parseSSEEvent} from '@/src/api/protocol/sse-parser.js';
 import type {NormalizedStreamEvent} from '@/src/api/protocol/types.js';
 import type {UnifiedAdapters} from '@/src/api/adapters/types.js';
+import {CONVERSATION_PERSISTENCE_KEY} from '@/src/api/adapters/persistence-keys.js';
 import type {
   ConversationMessage,
+  ConversationState,
   ConversationSession,
 } from '@/src/core/interface/conversation/types.js';
 import {createSelector} from '@reduxjs/toolkit';
@@ -53,11 +55,38 @@ const stateSelect = createSelector(
 
 export const buildConversationController = (
   engine: Engine,
-  adapters: Pick<UnifiedAdapters, 'transport' | 'auth'>
+  adapters: Pick<UnifiedAdapters, 'transport' | 'auth' | 'persistence'>
 ) => {
   engine.adoptSlice(conversationSlice);
   engine.adoptSlice(streamingSlice);
   engine.adoptSlice(surfacesSlice);
+
+  const selectConversationState = (state: {conversation?: ConversationState}) =>
+    state.conversation;
+
+  const persistConversationState = async (state: ConversationState) => {
+    await adapters.persistence.save(CONVERSATION_PERSISTENCE_KEY, state);
+  };
+
+  void (async () => {
+    const persisted = await adapters.persistence.load(
+      CONVERSATION_PERSISTENCE_KEY
+    );
+    if (persisted && typeof persisted === 'object') {
+      engine.mutate(
+        conversationMutators.rehydrateConversation(
+          persisted as ConversationState
+        )
+      );
+    }
+
+    engine.subscribe(selectConversationState, (state) => {
+      if (!state) {
+        return;
+      }
+      void persistConversationState(state);
+    });
+  })();
 
   // Track the active AbortController outside state (non-serializable)
   let activeAbortController: AbortController | null = null;
@@ -287,6 +316,7 @@ export const buildConversationController = (
       engine.mutate(conversationMutators.clearConversation());
       engine.mutate(streamingMutators.resetStream());
       engine.mutate(surfacesMutators.clearAllSurfaces());
+      void adapters.persistence.delete(CONVERSATION_PERSISTENCE_KEY);
     },
 
     get state() {

@@ -6,7 +6,10 @@
 
 import {sharedContextSlice} from '@/src/core/internal/shared-context/slice.js';
 import type {StateMutation} from '@/src/core/interface/types.js';
-import type {CitationLink} from './types.js';
+import type {CitationLink, SharedContextState} from './types.js';
+
+export const rehydrateContext = (payload: SharedContextState): StateMutation =>
+  sharedContextSlice.actions.rehydrateContext(payload);
 
 export const setSelectedProducts = (products: string[]): StateMutation =>
   sharedContextSlice.actions.setSelectedProducts(products);

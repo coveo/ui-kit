@@ -14,10 +14,41 @@ import {Engine} from '@/src/core/interface/engine/engine.js';
 import {surfacesSlice} from '@/src/core/internal/surfaces/slice.js';
 import * as surfacesSelectors from '@/src/core/interface/surfaces/selectors.js';
 import * as surfacesMutators from '@/src/core/interface/surfaces/mutate.js';
+import {SURFACES_PERSISTENCE_KEY} from '@/src/api/adapters/persistence-keys.js';
+import type {PersistenceAdapter} from '@/src/api/adapters/types.js';
 import type {StructuredSurface} from '@/src/core/interface/surfaces/types.js';
 
-export const buildSurfaceController = (engine: Engine) => {
+export const buildSurfaceController = (
+  engine: Engine,
+  persistence?: PersistenceAdapter
+) => {
   engine.adoptSlice(surfacesSlice);
+
+  const persistenceAdapter: PersistenceAdapter = persistence ?? {
+    save: async () => undefined,
+    load: async () => null,
+    delete: async () => undefined,
+    list: async () => [],
+  };
+
+  void (async () => {
+    const persisted = await persistenceAdapter.load(SURFACES_PERSISTENCE_KEY);
+    if (persisted && typeof persisted === 'object') {
+      engine.mutate(
+        surfacesMutators.rehydrateSurfaces(
+          persisted as Record<string, StructuredSurface>
+        )
+      );
+    }
+
+    engine.subscribe(surfacesSelectors.surfaces, (nextSurfaces) => {
+      if (Object.keys(nextSurfaces).length === 0) {
+        void persistenceAdapter.delete(SURFACES_PERSISTENCE_KEY);
+        return;
+      }
+      void persistenceAdapter.save(SURFACES_PERSISTENCE_KEY, nextSurfaces);
+    });
+  })();
 
   return {
     get surfaces(): Map<string, StructuredSurface> {

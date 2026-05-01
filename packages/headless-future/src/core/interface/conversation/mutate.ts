@@ -10,8 +10,13 @@ import type {
   ConversationMessage,
   ConversationTurn,
   ConversationSession,
+  ConversationState,
   TurnStatus,
 } from './types.js';
+
+export const rehydrateConversation = (
+  payload: ConversationState
+): StateMutation => conversationSlice.actions.rehydrateConversation(payload);
 
 export const addMessage = (message: ConversationMessage): StateMutation =>
   conversationSlice.actions.addMessage(message);

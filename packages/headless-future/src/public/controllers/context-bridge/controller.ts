@@ -20,7 +20,12 @@ import {sharedContextSlice} from '@/src/core/internal/shared-context/slice.js';
 import * as sharedContextSelectors from '@/src/core/interface/shared-context/selectors.js';
 import * as sharedContextMutators from '@/src/core/interface/shared-context/mutate.js';
 import * as conversationMutators from '@/src/core/interface/conversation/mutate.js';
-import type {CitationLink} from '@/src/core/interface/shared-context/types.js';
+import {SHARED_CONTEXT_PERSISTENCE_KEY} from '@/src/api/adapters/persistence-keys.js';
+import type {PersistenceAdapter} from '@/src/api/adapters/types.js';
+import type {
+  CitationLink,
+  SharedContextState,
+} from '@/src/core/interface/shared-context/types.js';
 import {createSelector} from '@reduxjs/toolkit';
 
 const stateSelect = createSelector(
@@ -38,8 +43,52 @@ const stateSelect = createSelector(
   })
 );
 
-export const buildContextBridgeController = (engine: Engine) => {
+export const buildContextBridgeController = (
+  engine: Engine,
+  persistence?: PersistenceAdapter
+) => {
   engine.adoptSlice(sharedContextSlice);
+
+  const persistenceAdapter: PersistenceAdapter = persistence ?? {
+    save: async () => undefined,
+    load: async () => null,
+    delete: async () => undefined,
+    list: async () => [],
+  };
+
+  const selectSharedContextState = (state: {
+    sharedContext?: SharedContextState;
+  }) => state.sharedContext;
+
+  void (async () => {
+    const persisted = await persistenceAdapter.load(
+      SHARED_CONTEXT_PERSISTENCE_KEY
+    );
+    if (persisted && typeof persisted === 'object') {
+      engine.mutate(
+        sharedContextMutators.rehydrateContext(persisted as SharedContextState)
+      );
+    }
+
+    engine.subscribe(selectSharedContextState, (nextState) => {
+      if (!nextState) {
+        return;
+      }
+
+      const isEmptyContext =
+        nextState.selectedProducts.length === 0 &&
+        nextState.citations.length === 0 &&
+        Object.keys(nextState.activeFilters).length === 0 &&
+        !nextState.activeQuery;
+
+      if (isEmptyContext) {
+        void persistenceAdapter.delete(SHARED_CONTEXT_PERSISTENCE_KEY);
+        return;
+      }
+
+      void persistenceAdapter.save(SHARED_CONTEXT_PERSISTENCE_KEY, nextState);
+    });
+  })();
 
   return {
     /**

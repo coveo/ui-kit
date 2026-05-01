@@ -21,6 +21,9 @@ export const sharedContextSlice = createSlice({
   name: 'sharedContext',
   initialState: initialSharedContextState,
   reducers: {
+    rehydrateContext: (_state, action: PayloadAction<SharedContextState>) => {
+      return action.payload;
+    },
     setSelectedProducts: (state, action: PayloadAction<string[]>) => {
       state.selectedProducts = action.payload;
     },
