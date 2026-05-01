@@ -20,6 +20,12 @@ packages/atomic-a11y/
 
 **Default directory**: `a11y/reports`
 
+## Source of truth
+
+The `manual-audit-*.json` baseline files in `a11y/reports` are the source of truth for manual audits.
+
+Auditors should edit these baseline files directly. There is no separate delta merge step in the standard `pnpm a11y:vpat` workflow.
+
 ## File naming
 
 Files **must** match this pattern:
@@ -114,7 +120,7 @@ For each criterion, you can optionally provide `remarks` to document **why** you
 
 **Two formats are supported:**
 
-**Simple format** (legacy, no remarks):
+**Simple format** (no remarks):
 ```json
 "1.1.1-non-text-content": "pass"
 ```
@@ -229,7 +235,7 @@ The system validates each entry before processing. An entry is **skipped with a 
 
 Additionally, individual criterion entries within `wcag22Criteria` are skipped if:
 
-- The value is not a string
+- The value is neither a string nor an object with string `conformance`
 - The key doesn't match the `{numeric-id}-{slug}` pattern
 - The status value is not one of `pass`, `fail`, `partial`, `not-applicable`
 
