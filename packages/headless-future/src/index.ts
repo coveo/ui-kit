@@ -1,5 +1,5 @@
 /**
- * @thermidor/headless - Headless State Management Library
+ * @coveo/headless-future - Headless State Management Library
  *
  * Layer 0 POC Implementation
  *

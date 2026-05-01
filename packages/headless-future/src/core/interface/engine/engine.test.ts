@@ -3,15 +3,15 @@
  */
 
 import {describe, it, expect, beforeEach, vi} from 'vitest';
-import {createTestEngine} from '@/src/core/test-utils.js';
-import * as searchBoxMutations from '@/src/core/interface/search-box/mutate.js';
-import * as searchBoxSelectors from '@/src/core/interface/search-box/selectors.js';
-import * as resultsMutations from '@/src/core/interface/results/mutate.js';
-import * as resultsSelectors from '@/src/core/interface/results/selectors.js';
+import {createTestEngine} from '@/src/test/test-utils.js';
+import * as searchBoxMutations from '@/src/core/interface/search-box/search-box-mutators.js';
+import * as searchBoxSelectors from '@/src/core/interface/search-box/search-box-selectors.js';
+import * as resultsMutations from '@/src/core/interface/results/results-mutators.js';
+import * as resultsSelectors from '@/src/core/interface/results/results-selectors.js';
 import {FullEngine, getFullEngine} from './engine.js';
-import {searchBoxSlice} from '@/src/core/internal/searchBox/slice.js';
-import {resultsSlice} from '@/src/core/internal/results/slice.js';
-import type {State} from '@/src/core/interface/types.js';
+import {searchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
+import {resultsSlice} from '@/src/core/internal/results/results-slice.js';
+import type {State} from '@/src/core/interface/interface-types.js';
 
 describe('Engine: read()', () => {
   let engine: FullEngine;

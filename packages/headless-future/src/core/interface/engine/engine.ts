@@ -15,7 +15,7 @@ import type {
   StateSelector,
   StateChangeCallback,
   StateMutation,
-} from '@/src/core/interface/types.js';
+} from '@/src/core/interface/interface-types.js';
 
 export type FullEngine = Engine & {
   adoptSlice(slice: Slice): Promise<void>;
