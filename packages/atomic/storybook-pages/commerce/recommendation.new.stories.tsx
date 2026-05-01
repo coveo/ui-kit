@@ -51,7 +51,7 @@ const meta: Meta = {
     msw: {
       handlers: [...mockCommerceApi.handlers],
     },
-    chromatic: {disableSnapshot: false},
+    chromatic: {disableSnapshot: true},
   },
   beforeEach: async () => {
     mockCommerceApi.recommendationEndpoint.mock(

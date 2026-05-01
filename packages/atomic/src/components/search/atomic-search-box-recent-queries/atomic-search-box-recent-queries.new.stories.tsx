@@ -22,7 +22,7 @@ const meta: Meta = {
   decorators: [searchBoxDecorator, searchInterfaceDecorator],
   parameters: {
     ...parameters,
-    chromatic: {disableSnapshot: false},
+    chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
     },

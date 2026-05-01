@@ -79,7 +79,7 @@ const preview: Preview = {
       // - 'todo' - record violations, never throw; gating handled by the reporter
       // - 'error' - throws on violation but loses report data (do not use)
       // - 'off' - skip a11y checks entirely
-      test: 'todo',
+      test: 'error',
       options: {
         runOnly: {
           type: 'tag',

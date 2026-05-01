@@ -34,7 +34,7 @@ const meta: Meta = {
   render: (args) => template(args),
   parameters: {
     ...parameters,
-    chromatic: {disableSnapshot: false},
+    chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
     },

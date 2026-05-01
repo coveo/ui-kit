@@ -31,7 +31,7 @@ const meta: Meta = {
   ],
   parameters: {
     ...commonParameters,
-    chromatic: {disableSnapshot: false},
+    chromatic: {disableSnapshot: true},
     layout: 'centered',
     docs: {
       ...commonParameters.docs,

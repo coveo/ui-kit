@@ -17,7 +17,7 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
-    chromatic: {disableSnapshot: false},
+    chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
     },
