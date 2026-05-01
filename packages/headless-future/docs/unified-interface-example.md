@@ -26,21 +26,30 @@ The unified UI still needs environment-specific I/O. That is what the adapters p
 
 - `transport` is the runtime transport implementation used to send HTTP requests and open streaming connections. In a browser app, this would typically wrap `fetch` and SSE-style streaming behavior.
 - `auth` is the token provider used by API-backed conversational flows. It knows how to retrieve and refresh the current access token for the experience.
+- `persistence` is the runtime persistence implementation used to hydrate and save controller state across reloads. In a browser app, this can use IndexedDB.
 - `orchestrationAdapter` is the decision provider used by `OrchestrationController`. It decides whether the next interaction should stay search-first, switch to assistant-first, or run in blended mode.
 
 These values are usually created during app bootstrap and then passed into the feature shell that builds controllers.
 
 ```typescript
-import type {
-  AuthAdapter,
-  OrchestrationAdapter,
-  TransportAdapter,
+import {
+  BrowserTransportAdapter,
+  DefaultAuthAdapter,
+  IndexedDbPersistenceAdapter,
+  LocalHeuristicOrchestrationAdapter,
 } from '@coveo/headless-future';
 
-const transport: TransportAdapter = createBrowserTransportAdapter();
-const auth: AuthAdapter = createPlatformAuthAdapter();
-const orchestrationAdapter: OrchestrationAdapter =
-  createLocalHeuristicOrchestrationAdapter();
+const auth = new DefaultAuthAdapter({
+  tokenEndpoint: '/token',
+});
+
+const transport = new BrowserTransportAdapter({
+  baseUrl: 'https://platform.cloud.coveo.com',
+  getAuthToken: () => auth.getToken(),
+});
+
+const persistence = new IndexedDbPersistenceAdapter();
+const orchestrationAdapter = new LocalHeuristicOrchestrationAdapter();
 ```
 
 The example below assumes those adapter instances already exist.
@@ -65,6 +74,7 @@ const engine = new Engine();
 // These adapter instances also come from bootstrap code:
 // - transport: request/stream transport implementation
 // - auth: token provider for authenticated conversational requests
+// - persistence: browser persistence implementation (IndexedDB)
 // - orchestrationAdapter: mode-decision provider for search vs assistant handoff
 
 const searchBox = buildSearchBoxController(engine);
@@ -72,14 +82,15 @@ const resultList = buildResultListController(engine);
 const conversation = buildConversationController(engine, {
   transport,
   auth,
+  persistence,
 });
 const streaming = buildStreamingController(engine);
 const orchestration = buildOrchestrationController(
   engine,
   orchestrationAdapter
 );
-const surfaces = buildSurfaceController(engine);
-const contextBridge = buildContextBridgeController(engine);
+const surfaces = buildSurfaceController(engine, persistence);
+const contextBridge = buildContextBridgeController(engine, persistence);
 ```
 
 Every controller above talks to the same engine state.
@@ -95,6 +106,10 @@ That means:
 
 ```typescript
 import {
+  BrowserTransportAdapter,
+  DefaultAuthAdapter,
+  IndexedDbPersistenceAdapter,
+  LocalHeuristicOrchestrationAdapter,
   Engine,
   buildSearchBoxController,
   buildResultListController,
@@ -112,22 +127,33 @@ const engine = new Engine();
 // Assume configuration already happened during app initialization.
 // For example, bootstrap code would populate the configuration slice
 // before this feature starts making API calls.
-// The transport, auth, and orchestrationAdapter instances are also assumed
-// to have been created earlier by application bootstrap.
+
+const auth = new DefaultAuthAdapter({
+  tokenEndpoint: '/token',
+});
+
+const transport = new BrowserTransportAdapter({
+  baseUrl: 'https://platform.cloud.coveo.com',
+  getAuthToken: () => auth.getToken(),
+});
+
+const persistence = new IndexedDbPersistenceAdapter();
+const orchestrationAdapter = new LocalHeuristicOrchestrationAdapter();
 
 const searchBox = buildSearchBoxController(engine);
 const resultList = buildResultListController(engine);
 const conversation = buildConversationController(engine, {
   transport,
   auth,
+  persistence,
 });
 const streaming = buildStreamingController(engine);
 const orchestration = buildOrchestrationController(
   engine,
   orchestrationAdapter
 );
-const surfaces = buildSurfaceController(engine);
-const contextBridge = buildContextBridgeController(engine);
+const surfaces = buildSurfaceController(engine, persistence);
+const contextBridge = buildContextBridgeController(engine, persistence);
 
 let currentMode: UnifiedMode = 'search-first';
 
@@ -267,6 +293,12 @@ Examples:
 ### 5. Structured surfaces stay render-agnostic
 
 `SurfaceController` exposes a normalized collection of structured assistant surfaces. The UI decides how to render them, but the core state remains serializable and framework-agnostic.
+
+### 6. Persistence wiring stays centralized
+
+`IndexedDbPersistenceAdapter` is created once during bootstrap and shared across persistence-aware controllers.
+
+That gives conversation, surfaces, and shared context a consistent hydration and persistence model without creating separate storage code paths in the UI shell.
 
 ## Recommended UI Composition
 
