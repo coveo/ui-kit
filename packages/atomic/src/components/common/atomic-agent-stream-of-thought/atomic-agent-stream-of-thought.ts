@@ -89,10 +89,9 @@ export class AtomicAgentStreamOfThought extends LitElement {
     const isCollapsible = resolvedSteps.length > 1;
 
     if (isComplete && !this.expanded && isCollapsible) {
-      const lastStep = resolvedSteps[resolvedSteps.length - 1];
       return html`
         <div part="agent-stream-of-thought" class="timeline">
-          ${this.renderCollapsedRow(lastStep)}
+          ${this.renderCollapsedTimelineSummary()}
         </div>
       `;
     }
@@ -122,7 +121,13 @@ export class AtomicAgentStreamOfThought extends LitElement {
     `;
   }
 
-  private renderCollapsedRow(step: ResolvedStep) {
+  private renderCollapsedTimelineSummary() {
+    const resolvedSteps = resolveSteps(this.agentSteps);
+    if (resolvedSteps.length === 0) {
+      return nothing;
+    }
+
+    const step = resolvedSteps[resolvedSteps.length - 1];
     const labelKey = stepLabelKeys[step.type].completed;
     const label = this.i18n.t(labelKey);
 
