@@ -8,6 +8,7 @@ import {
 } from '../analytics/analytics-utils.js';
 import {SearchPageEvents} from '../analytics/search-action-cause.js';
 import type {SearchAction} from '../search/search-actions.js';
+import type {InlineLink} from '../../utils/inline-link.js';
 import {
   citationSourceSelector,
   generativeQuestionAnsweringIdSelector,
@@ -145,6 +146,21 @@ export function logHoverCitation(
   });
 }
 
+export function logGeneratedAnswerOpenInlineLink(
+  inlineLink: InlineLink,
+  answerId: string
+): CustomAction {
+  return makeAnalyticsAction({
+    prefix: 'analytics/generatedAnswer/openInlineLink',
+    __legacy__getBuilder: (client) => {
+      return client.makeGeneratedAnswerOpenInlineLink({
+        generativeQuestionAnsweringId: answerId,
+        ...inlineLink,
+      });
+    },
+  });
+}
+
 // TODO: SFINT-6665
 // Overloading the function here for backward compatibility because #logLikeGeneratedAnswer will eventually take an answerId.
 export function logLikeGeneratedAnswer(): CustomAction;
@@ -261,18 +277,13 @@ export const logGeneratedAnswerStreamEnd = (
     __legacy__getBuilder: (client, state) => {
       const generativeQuestionAnsweringId =
         answerId ?? generativeQuestionAnsweringIdSelector(state);
-      const resolvedAnswerTextIsEmpty = answerGenerated
-        ? (answerTextIsEmpty ??
-          (!state.generatedAnswer?.answer ||
-            !state.generatedAnswer?.answer.length))
-        : undefined;
       if (!generativeQuestionAnsweringId) {
         return null;
       }
       return client.makeGeneratedAnswerStreamEnd({
         generativeQuestionAnsweringId,
         answerGenerated,
-        answerTextIsEmpty: resolvedAnswerTextIsEmpty,
+        answerTextIsEmpty,
         ...(conversationId && {conversationId}),
       });
     },
@@ -446,6 +457,7 @@ export const generatedAnswerAnalyticsClient = {
   logGeneratedAnswerFeedback,
   logDislikeGeneratedAnswer,
   logLikeGeneratedAnswer,
+  logGeneratedAnswerOpenInlineLink,
   logHoverCitation,
   logOpenGeneratedAnswerSource,
   logRetryGeneratedAnswer,
