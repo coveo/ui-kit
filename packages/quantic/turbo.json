@@ -39,7 +39,7 @@
     },
     "test": {
       "outputs": [],
-      "dependsOn": ["test:unit", "lint:check:tests", "validate:types"]
+      "dependsOn": ["test:unit", "lint:check:tests", "validate:types", "validate:types:build-scripts"]
     },
     "test:unit": {
       "dependsOn": ["build"],
@@ -47,6 +47,9 @@
     },
     "validate:types": {
       "dependsOn": ["build"],
+      "outputs": []
+    },
+    "validate:types:build-scripts": {
       "outputs": []
     },
     "lint:check:tests": {

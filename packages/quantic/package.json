@@ -23,6 +23,7 @@
     "test:unit:watch": "lwc-jest --watch",
     "test:unit:coverage": "lwc-jest --coverage",
     "validate:types": "tsc",
+    "validate:types:build-scripts": "tsc --noEmit --project scripts/build/tsconfig.json",
     "e2e:playwright": "npx playwright test",
     "e2e:playwright:lws-enabled": "npx playwright test --project=LWS-enabled",
     "e2e:playwright:lws-disabled": "npx playwright test --project=LWS-disabled",
@@ -46,8 +47,8 @@
   "dependencies": {
     "@coveo/bueno": "workspace:*",
     "@coveo/headless": "workspace:*",
-    "coveo.analytics": "2.30.54",
-    "dompurify": "3.4.0",
+    "coveo.analytics": "catalog:",
+    "dompurify": "3.4.1",
     "marked": "12.0.2"
   },
   "engines": {
