@@ -17,25 +17,25 @@ Storybook tests (axe-core)
 
 ```ts
 // vitest.config.ts — capture axe results during Storybook tests
-import { VitestA11yReporter } from '@coveo/atomic-a11y';
+import {VitestA11yReporter} from '@coveo/atomic-a11y';
 
 export default defineConfig({
   test: {
-    reporters: [new VitestA11yReporter({ outputDir: 'reports' })],
+    reporters: [new VitestA11yReporter({outputDir: 'reports'})],
   },
 });
 ```
 
 ```ts
 // After test run — merge shards (if using --shard)
-import { mergeA11yShardReports } from '@coveo/atomic-a11y';
+import {mergeA11yShardReports} from '@coveo/atomic-a11y';
 
-await mergeA11yShardReports({ inputDir: 'reports' });
+await mergeA11yShardReports({inputDir: 'reports'});
 ```
 
 ```ts
 // Generate OpenACR YAML for VPAT
-import { transformJsonToOpenAcr } from '@coveo/atomic-a11y';
+import {transformJsonToOpenAcr} from '@coveo/atomic-a11y';
 
 await transformJsonToOpenAcr({
   inputFile: 'reports/a11y-report.json',

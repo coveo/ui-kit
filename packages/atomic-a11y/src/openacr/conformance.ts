@@ -41,7 +41,7 @@ function mapCriterionConformance(
 }
 
 function resolveInteractiveConformance(
-  interactiveAggregate: InteractiveAggregate | undefined
+  interactiveAggregate?: InteractiveAggregate
 ): OpenAcrConformance | null {
   const coveredCount = interactiveAggregate?.coveredComponents.size ?? 0;
   if (coveredCount === 0) {
@@ -61,7 +61,7 @@ function resolveInteractiveConformance(
 }
 
 function resolveAutomatedConformance(
-  aggregate: CriterionAggregate | undefined
+  aggregate?: CriterionAggregate
 ): OpenAcrConformance {
   const coveredCount = aggregate?.coveredComponents.size ?? 0;
   if (coveredCount === 0) {
@@ -126,10 +126,10 @@ function buildInteractiveSuffix(
 
   const failedCount = interactiveFailedComponents.length;
   if (failedCount === 0) {
-    return ` Interactive keyboard/screen-reader testing passed across ${coveredCount} component(s).`;
+    return `Interactive keyboard/screen-reader testing passed across ${coveredCount} component(s).`;
   }
 
-  return ` Interactive keyboard/screen-reader testing found failures in ${failedCount} of ${coveredCount} component(s).`;
+  return `Interactive keyboard/screen-reader testing found failures in ${failedCount} of ${coveredCount} component(s).`;
 }
 
 function buildAutomatedSuffix(
@@ -143,10 +143,10 @@ function buildAutomatedSuffix(
 
   const violatingCount = violatingComponents.length;
   if (violatingCount === 0) {
-    return ` Automated axe-core testing found no violations across ${coveredCount} component(s).`;
+    return `Automated axe-core testing found no violations across ${coveredCount} component(s).`;
   }
 
-  return ` Automated axe-core testing found violations in ${violatingCount} of ${coveredCount} component(s).`;
+  return `Automated axe-core testing found violations in ${violatingCount} of ${coveredCount} component(s).`;
 }
 
 export function buildRemarks(context: RemarksContext): string {

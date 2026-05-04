@@ -29,7 +29,7 @@
 | --- | --- | --- |
 {{#each standards}}
 {{#each chapters}}
-{{#with (lookup ../../chapters chapter_id)}}
+{{#with (lookup @root.chapters chapter_id)}}
 {{#each criteria}}
 | {{num}} {{handle}} ({{level}}) | {{conformance}} | {{remarks}} |
 {{/each}}

@@ -19,29 +19,31 @@ interface ManualConformanceCounts {
 export function countManualConformances(
   aggregates: ManualAuditAggregate[]
 ): ManualConformanceCounts {
-  let pass = 0;
-  let fail = 0;
-  let partial = 0;
-  let notApplicable = 0;
+  const conformanceCounts = {
+    pass: 0,
+    fail: 0,
+    partial: 0,
+    notApplicable: 0,
+  };
 
   for (const aggregate of aggregates) {
     switch (aggregate.conformance) {
       case 'supports':
-        pass++;
+        conformanceCounts.pass++;
         break;
       case 'does-not-support':
-        fail++;
+        conformanceCounts.fail++;
         break;
       case 'partially-supports':
-        partial++;
+        conformanceCounts.partial++;
         break;
       case 'not-applicable':
-        notApplicable++;
+        conformanceCounts.notApplicable++;
         break;
     }
   }
 
-  return {pass, fail, partial, notApplicable};
+  return conformanceCounts;
 }
 const LOG_PREFIX = '[json-to-openacr]';
 const BASELINE_FILE_PREFIX = 'manual-audit-';
@@ -311,7 +313,7 @@ export async function loadManualAuditData(
 }
 
 export function resolveManualConformance(
-  manualAggregates: ManualAuditAggregate[] | undefined
+  manualAggregates?: ManualAuditAggregate[]
 ): OpenAcrConformance | undefined {
   if (!manualAggregates || manualAggregates.length === 0) {
     return undefined;

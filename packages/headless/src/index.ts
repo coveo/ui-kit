@@ -239,6 +239,12 @@ export type {
 } from './controllers/generated-answer/headless-interactive-citation.js';
 export {buildInteractiveCitation} from './controllers/generated-answer/headless-interactive-citation.js';
 export type {
+  InteractiveGeneratedAnswerInlineLink,
+  InteractiveGeneratedAnswerInlineLinkOptions,
+  InteractiveGeneratedAnswerInlineLinkProps,
+} from './controllers/generated-answer/headless-interactive-generated-answer-inline-link.js';
+export {buildInteractiveGeneratedAnswerInlineLink} from './controllers/generated-answer/headless-interactive-generated-answer-inline-link.js';
+export type {
   HistoryManager,
   HistoryManagerState,
 } from './controllers/history-manager/headless-history-manager.js';
