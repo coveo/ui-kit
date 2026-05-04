@@ -26,5 +26,10 @@ export const setStreamError = (error: StreamError | undefined): StateMutation =>
 export const setAborted = (aborted: boolean): StateMutation =>
   streamingSlice.actions.setAborted(aborted);
 
+export const rehydrateStreamingMarkers = (payload: {
+  aborted: boolean;
+  lastEventAt?: number;
+}): StateMutation => streamingSlice.actions.rehydrateStreamingMarkers(payload);
+
 export const resetStream = (): StateMutation =>
   streamingSlice.actions.resetStream();

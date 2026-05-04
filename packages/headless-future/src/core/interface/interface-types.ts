@@ -31,6 +31,9 @@ export type {
   TurnStatus,
   CitationRef,
   ToolState,
+  ConversationWarningCode,
+  ConversationErrorSource,
+  StructuredConversationError,
 } from './conversation/types.js';
 export type {StreamingState, StreamError} from './streaming/types.js';
 export type {

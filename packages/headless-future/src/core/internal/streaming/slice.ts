@@ -51,6 +51,16 @@ export const streamingSlice = createSlice({
         state.isConnected = false;
       }
     },
+    rehydrateStreamingMarkers: (
+      state,
+      action: PayloadAction<{aborted: boolean; lastEventAt?: number}>
+    ) => {
+      state.aborted = action.payload.aborted;
+      state.lastEventAt = action.payload.lastEventAt;
+      if (action.payload.aborted) {
+        state.isConnected = false;
+      }
+    },
     resetStream: (state) => {
       state.isConnected = false;
       state.isBuffering = false;

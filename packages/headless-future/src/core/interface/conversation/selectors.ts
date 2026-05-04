@@ -27,6 +27,9 @@ export const isLoading = (state: StateWithConversationSlice) =>
 export const error = (state: StateWithConversationSlice) =>
   conversationSlice.selectors.error(state);
 
+export const structuredError = (state: StateWithConversationSlice) =>
+  conversationSlice.selectors.structuredError(state);
+
 export const activeTurn = (
   state: StateWithConversationSlice
 ): ConversationTurn | null => {

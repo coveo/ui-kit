@@ -19,6 +19,27 @@ export type ToolState = {
   status: 'pending' | 'completed' | 'failed';
 };
 
+export type ConversationWarningCode =
+  | 'missing_terminal_event'
+  | 'unknown_stream_event'
+  | 'invalid_state_transition'
+  | 'double_finalization_attempt';
+
+export type ConversationErrorSource =
+  | 'transport'
+  | 'protocol'
+  | 'controller'
+  | 'persistence';
+
+export type StructuredConversationError = {
+  code: string;
+  message: string;
+  source: ConversationErrorSource;
+  recoverable: boolean;
+  timestamp: number;
+  turnId?: string;
+};
+
 export type ConversationMessage = {
   id: string;
   role: ConversationMessageRole;
@@ -35,6 +56,7 @@ export type TurnStatus =
   | 'pending'
   | 'streaming'
   | 'completed'
+  | 'completed_with_warnings'
   | 'failed'
   | 'aborted';
 
@@ -46,6 +68,7 @@ export type ConversationTurn = {
   createdAt: number;
   finalizedAt?: number;
   reason?: string;
+  warningCodes?: ConversationWarningCode[];
 };
 
 export type ConversationSession = {
@@ -70,4 +93,6 @@ export interface ConversationState {
   isLoading: boolean;
   /** Human-readable error if the last operation failed */
   error: string | null;
+  /** Structured error payload to support richer diagnostics */
+  structuredError: StructuredConversationError | null;
 }

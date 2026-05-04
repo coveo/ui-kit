@@ -11,6 +11,8 @@ import type {
   ConversationTurn,
   ConversationSession,
   ConversationState,
+  ConversationWarningCode,
+  StructuredConversationError,
   TurnStatus,
 } from './types.js';
 
@@ -41,9 +43,16 @@ export const updateTurnStatus = (
     finalizedAt?: number;
     reason?: string;
     assistantMessageId?: string;
+    warningCodes?: ConversationWarningCode[];
   }
 ): StateMutation =>
   conversationSlice.actions.updateTurnStatus({id, status, ...extras});
+
+export const addTurnWarnings = (
+  id: string,
+  warningCodes: ConversationWarningCode[]
+): StateMutation =>
+  conversationSlice.actions.addTurnWarnings({id, warningCodes});
 
 export const setActiveTurnId = (id: string | null): StateMutation =>
   conversationSlice.actions.setActiveTurnId(id);
@@ -57,6 +66,10 @@ export const setLoading = (isLoading: boolean): StateMutation =>
 
 export const setError = (error: string | null): StateMutation =>
   conversationSlice.actions.setError(error);
+
+export const setStructuredError = (
+  error: StructuredConversationError | null
+): StateMutation => conversationSlice.actions.setStructuredError(error);
 
 export const clearConversation = (): StateMutation =>
   conversationSlice.actions.clearConversation();

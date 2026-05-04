@@ -10,6 +10,8 @@ import type {
   ConversationMessage,
   ConversationTurn,
   ConversationSession,
+  ConversationWarningCode,
+  StructuredConversationError,
   TurnStatus,
 } from '@/src/core/interface/conversation/types.js';
 
@@ -28,6 +30,7 @@ export const initialConversationState: ConversationState = {
   session: initialConversationSession,
   isLoading: false,
   error: null,
+  structuredError: null,
 };
 
 export const conversationSlice = createSlice({
@@ -75,6 +78,7 @@ export const conversationSlice = createSlice({
         finalizedAt?: number;
         reason?: string;
         assistantMessageId?: string;
+        warningCodes?: ConversationWarningCode[];
       }>
     ) => {
       const turn = state.turns.find((t) => t.id === action.payload.id);
@@ -89,7 +93,30 @@ export const conversationSlice = createSlice({
         if (action.payload.assistantMessageId !== undefined) {
           turn.assistantMessageId = action.payload.assistantMessageId;
         }
+        if (action.payload.warningCodes?.length) {
+          const existing = turn.warningCodes ?? [];
+          turn.warningCodes = Array.from(
+            new Set([...existing, ...action.payload.warningCodes])
+          );
+        }
       }
+    },
+    addTurnWarnings: (
+      state,
+      action: PayloadAction<{
+        id: string;
+        warningCodes: ConversationWarningCode[];
+      }>
+    ) => {
+      const turn = state.turns.find((t) => t.id === action.payload.id);
+      if (!turn || action.payload.warningCodes.length === 0) {
+        return;
+      }
+
+      const existing = turn.warningCodes ?? [];
+      turn.warningCodes = Array.from(
+        new Set([...existing, ...action.payload.warningCodes])
+      );
     },
     setActiveTurnId: (state, action: PayloadAction<string | null>) => {
       state.activeTurnId = action.payload;
@@ -106,6 +133,12 @@ export const conversationSlice = createSlice({
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
     },
+    setStructuredError: (
+      state,
+      action: PayloadAction<StructuredConversationError | null>
+    ) => {
+      state.structuredError = action.payload;
+    },
     clearConversation: (state) => {
       state.messages = [];
       state.turns = [];
@@ -117,6 +150,7 @@ export const conversationSlice = createSlice({
       };
       state.isLoading = false;
       state.error = null;
+      state.structuredError = null;
     },
   },
   selectors: {
@@ -126,5 +160,6 @@ export const conversationSlice = createSlice({
     session: (state) => state.session,
     isLoading: (state) => state.isLoading,
     error: (state) => state.error,
+    structuredError: (state) => state.structuredError,
   },
 });
