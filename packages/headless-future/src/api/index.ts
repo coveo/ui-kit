@@ -9,11 +9,11 @@
  */
 
 // Search API
-export {executeSearchAPI} from './search/searchAPI.js';
+export {executeSearchAPI} from './search/search.js';
 
 // HTTP utilities (for future API clients)
-export {executeHttpRequest} from './shared/httpClient.js';
-export type {HttpRequestOptions, HttpResponse} from './shared/httpClient.js';
+export {executeHttpRequest} from './shared/http-client.js';
+export type {HttpRequestOptions, HttpResponse} from './shared/http-client.js';
 
 // Error handling utilities (for future API clients)
-export {transformError, isSuccessResponse} from './shared/errorHandling.js';
+export {transformError, isSuccessResponse} from './shared/error-handling.js';

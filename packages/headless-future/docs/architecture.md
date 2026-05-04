@@ -1,10 +1,10 @@
 # Architecture Guide
 
-This document explains how Thermidor's headless library is structured, why each layer exists, and how they connect. It's written for Coveo engineers — you don't need deep knowledge of the current `@coveo/headless`, but Coveo context (org IDs, access tokens, search API) is assumed.
+This document explains how the `@coveo/headless-future` library is structured, why each layer exists, and how they connect. It's written for Coveo engineers — you don't need deep knowledge of the current `@coveo/headless`, but Coveo context (org IDs, access tokens, search API) is assumed.
 
 ## The Core Idea
 
-Today's `@coveo/headless` exposes Redux concepts to consumers (action creators, reducers, middleware). Thermidor's thesis: **wrap Redux behind a library-agnostic abstraction so the state management library becomes a swappable implementation detail.**
+Today's `@coveo/headless` exposes Redux concepts to consumers (action creators, reducers, middleware). `@coveo/headless-future`'s thesis: **wrap Redux behind a library-agnostic abstraction so the state management library becomes a swappable implementation detail.**
 
 If the abstraction works, you could replace Redux with Zustand in a day — and every controller, action, and API client would keep working unchanged.
 
@@ -360,7 +360,7 @@ sequenceDiagram
 
 For engineers familiar with the current `@coveo/headless`:
 
-| Concept                    | Current Headless                                             | Thermidor                                                               |
+| Concept                    | Current Headless                                             | Headless-future                                                         |
 | -------------------------- | ------------------------------------------------------------ | ----------------------------------------------------------------------- |
 | **State library**          | Redux exposed to consumers (actions, reducers, middleware)   | Redux hidden behind `Engine` abstraction                                |
 | **Creating the engine**    | `buildSearchEngine({ configuration })` with Redux middleware | `new Engine()` — empty store, configure via mutations                   |

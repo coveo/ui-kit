@@ -1,5 +1,5 @@
 /**
- * @thermidor/headless - Unified Headless State Management Library
+ * @coveo/headless-future - Headless State Management Library
  *
  * Exports:
  * - Layer 2: Public Controllers (search, conversation, streaming, orchestration, surfaces, context-bridge)
@@ -49,4 +49,4 @@ export type {
   OrchestrationSnapshot,
   OrchestrationMode,
   StructuredSurface,
-} from './core/interface/types.js';
+} from './core/interface/interface-types.js';

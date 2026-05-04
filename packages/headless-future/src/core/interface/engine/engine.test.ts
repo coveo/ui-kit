@@ -3,21 +3,24 @@
  */
 
 import {describe, it, expect, beforeEach, vi} from 'vitest';
-import {createTestEngine} from '@/src/core/test-utils.js';
-import * as searchBoxMutations from '@/src/core/interface/search-box/mutate.js';
-import * as searchBoxSelectors from '@/src/core/interface/search-box/selectors.js';
-import * as resultsMutations from '@/src/core/interface/results/mutate.js';
-import * as resultsSelectors from '@/src/core/interface/results/selectors.js';
-import {Engine} from './engine.js';
-import {searchBoxSlice} from '@/src/core/internal/searchBox/slice.js';
-import {resultsSlice} from '@/src/core/internal/results/slice.js';
-import type {State} from '@/src/core/interface/types.js';
+import {createTestEngine} from '@/src/test/test-utils.js';
+import * as searchBoxMutations from '@/src/core/interface/search-box/search-box-mutators.js';
+import * as searchBoxSelectors from '@/src/core/interface/search-box/search-box-selectors.js';
+import * as resultsMutations from '@/src/core/interface/results/results-mutators.js';
+import * as resultsSelectors from '@/src/core/interface/results/results-selectors.js';
+import {Engine, FullEngine, getFullEngine} from './engine.js';
+import {searchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
+import {resultsSlice} from '@/src/core/internal/results/results-slice.js';
+import type {
+  ConfigurationState,
+  State,
+} from '@/src/core/interface/interface-types.js';
 
 describe('Engine: read()', () => {
-  let engine: Engine;
+  let engine: FullEngine;
 
   beforeEach(() => {
-    engine = createTestEngine();
+    engine = getFullEngine(createTestEngine());
     engine.adoptSlice(searchBoxSlice);
     engine.adoptSlice(resultsSlice);
   });
@@ -45,10 +48,10 @@ describe('Engine: read()', () => {
 });
 
 describe('Engine: subscribe()', () => {
-  let engine: Engine;
+  let engine: FullEngine;
 
   beforeEach(() => {
-    engine = createTestEngine();
+    engine = getFullEngine(createTestEngine());
     engine.adoptSlice(searchBoxSlice);
     engine.adoptSlice(resultsSlice);
   });
@@ -142,10 +145,10 @@ describe('Engine: subscribe()', () => {
 });
 
 describe('Engine: mutate()', () => {
-  let engine: Engine;
+  let engine: FullEngine;
 
   beforeEach(() => {
-    engine = createTestEngine();
+    engine = getFullEngine(createTestEngine());
     engine.adoptSlice(searchBoxSlice);
     engine.adoptSlice(resultsSlice);
   });
@@ -171,5 +174,55 @@ describe('Engine: mutate()', () => {
     engine.mutate({type: 'searchBox/setQuery', payload: 'test'});
 
     expect(engine.read(searchBoxSelectors.query)).toBe('test');
+  });
+});
+
+describe('Engine: constructor()', () => {
+  it('should not include configuration state when no configuration is passed', () => {
+    const engine = new Engine();
+
+    const configState = engine.read((state) => state.configuration);
+
+    expect(configState).toBeUndefined();
+  });
+
+  it('should set organizationId and accessToken when configuration is passed', () => {
+    const config: ConfigurationState = {
+      organizationId: 'my-org',
+      accessToken: 'my-token',
+    };
+    const engine = new Engine(config);
+
+    expect(engine.read((state) => state.configuration?.organizationId)).toBe(
+      'my-org'
+    );
+    expect(engine.read((state) => state.configuration?.accessToken)).toBe(
+      'my-token'
+    );
+  });
+
+  it('should set endpoint when provided in configuration', () => {
+    const config: ConfigurationState = {
+      organizationId: 'my-org',
+      accessToken: 'my-token',
+      endpoint: 'https://my-endpoint.coveo.com',
+    };
+    const engine = new Engine(config);
+
+    expect(engine.read((state) => state.configuration?.endpoint)).toBe(
+      'https://my-endpoint.coveo.com'
+    );
+  });
+
+  it('should leave endpoint undefined when not provided in configuration', () => {
+    const config: ConfigurationState = {
+      organizationId: 'my-org',
+      accessToken: 'my-token',
+    };
+    const engine = new Engine(config);
+
+    expect(
+      engine.read((state) => state.configuration?.endpoint)
+    ).toBeUndefined();
   });
 });

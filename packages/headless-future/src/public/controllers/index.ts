@@ -1,5 +1,5 @@
-export {buildSearchBoxController} from './search-box/controller.js';
-export {buildResultListController} from './result-list/controller.js';
+export {buildSearchBoxController} from './search-box/search-box-controller.js';
+export {buildResultListController} from './result-list/result-list-controller.js';
 export {buildConversationController} from './conversation/controller.js';
 export type {ConversationController} from './conversation/controller.js';
 export {buildStreamingController} from './streaming/controller.js';
