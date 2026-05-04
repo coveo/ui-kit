@@ -121,11 +121,13 @@ For each criterion, you can optionally provide `remarks` to document **why** you
 **Two formats are supported:**
 
 **Simple format** (no remarks):
+
 ```json
 "1.1.1-non-text-content": "pass"
 ```
 
 **Object format** (with remarks):
+
 ```json
 "1.1.1-non-text-content": {
   "conformance": "pass",
@@ -248,6 +250,7 @@ Additionally, individual criterion entries within `wcag22Criteria` are skipped i
    b. Add criterion results to wcag22Criteria
 4. Commit the file
 5. The CI pipeline runs:
+
 ```
    pnpm a11y:vpat
      → reads a11y-report.json (automated)
