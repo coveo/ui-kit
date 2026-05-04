@@ -10,7 +10,7 @@
  * orchestration decisions.
  */
 
-import {Engine} from '@/src/core/interface/engine/engine.js';
+import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {surfacesSlice} from '@/src/core/internal/surfaces/slice.js';
 import * as surfacesSelectors from '@/src/core/interface/surfaces/selectors.js';
 import * as surfacesMutators from '@/src/core/interface/surfaces/mutate.js';
@@ -22,7 +22,9 @@ export const buildSurfaceController = (
   engine: Engine,
   persistence?: PersistenceAdapter
 ) => {
-  engine.adoptSlice(surfacesSlice);
+  const fullEngine = getFullEngine(engine);
+
+  fullEngine.adoptSlice(surfacesSlice);
 
   const persistenceAdapter: PersistenceAdapter = persistence ?? {
     save: async () => undefined,
@@ -34,7 +36,7 @@ export const buildSurfaceController = (
   void (async () => {
     const persisted = await persistenceAdapter.load(SURFACES_PERSISTENCE_KEY);
     if (persisted && typeof persisted === 'object') {
-      engine.mutate(
+      fullEngine.mutate(
         surfacesMutators.rehydrateSurfaces(
           persisted as Record<string, StructuredSurface>
         )
@@ -63,7 +65,7 @@ export const buildSurfaceController = (
       surfaceId: string;
       updates: Partial<StructuredSurface>;
     }): void {
-      engine.mutate(
+      fullEngine.mutate(
         surfacesMutators.applySurfaceUpdate(event.surfaceId, event.updates)
       );
     },
@@ -72,7 +74,7 @@ export const buildSurfaceController = (
      * Remove a surface by ID.
      */
     clearSurface(surfaceId: string): void {
-      engine.mutate(surfacesMutators.clearSurface(surfaceId));
+      fullEngine.mutate(surfacesMutators.clearSurface(surfaceId));
     },
 
     /**
@@ -88,7 +90,7 @@ export const buildSurfaceController = (
      * Replaces the current surface map entirely.
      */
     rehydrate(payload: Record<string, StructuredSurface>): void {
-      engine.mutate(surfacesMutators.rehydrateSurfaces(payload));
+      fullEngine.mutate(surfacesMutators.rehydrateSurfaces(payload));
     },
 
     subscribe(callback: () => void) {

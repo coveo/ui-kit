@@ -5,7 +5,7 @@
  */
 
 import {orchestrationSlice} from '@/src/core/internal/orchestration/slice.js';
-import type {StateMutation} from '@/src/core/interface/types.js';
+import type {StateMutation} from '@/src/core/interface/interface-types.js';
 import type {OrchestrationSnapshot} from './types.js';
 
 export const applySnapshot = (snapshot: OrchestrationSnapshot): StateMutation =>

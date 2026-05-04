@@ -6,7 +6,7 @@
  * provides a read-only view of connection status, counters, and errors.
  */
 
-import {Engine} from '@/src/core/interface/engine/engine.js';
+import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {streamingSlice} from '@/src/core/internal/streaming/slice.js';
 import * as streamingSelectors from '@/src/core/interface/streaming/selectors.js';
 import {createSelector} from '@reduxjs/toolkit';
@@ -38,7 +38,9 @@ const stateSelect = createSelector(
 );
 
 export const buildStreamingController = (engine: Engine) => {
-  engine.adoptSlice(streamingSlice);
+  const fullEngine = getFullEngine(engine);
+
+  fullEngine.adoptSlice(streamingSlice);
 
   return {
     get state() {

@@ -15,7 +15,7 @@
  * search state). Active mutation of search state is planned for a future iteration.
  */
 
-import {Engine} from '@/src/core/interface/engine/engine.js';
+import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {sharedContextSlice} from '@/src/core/internal/shared-context/slice.js';
 import * as sharedContextSelectors from '@/src/core/interface/shared-context/selectors.js';
 import * as sharedContextMutators from '@/src/core/interface/shared-context/mutate.js';
@@ -47,7 +47,9 @@ export const buildContextBridgeController = (
   engine: Engine,
   persistence?: PersistenceAdapter
 ) => {
-  engine.adoptSlice(sharedContextSlice);
+  const fullEngine = getFullEngine(engine);
+
+  fullEngine.adoptSlice(sharedContextSlice);
 
   const persistenceAdapter: PersistenceAdapter = persistence ?? {
     save: async () => undefined,
@@ -65,7 +67,7 @@ export const buildContextBridgeController = (
       SHARED_CONTEXT_PERSISTENCE_KEY
     );
     if (persisted && typeof persisted === 'object') {
-      engine.mutate(
+      fullEngine.mutate(
         sharedContextMutators.rehydrateContext(persisted as SharedContextState)
       );
     }
@@ -105,7 +107,7 @@ export const buildContextBridgeController = (
       const activeQuery = engine.read(sharedContextSelectors.activeQuery);
       const activeFilters = engine.read(sharedContextSelectors.activeFilters);
 
-      engine.mutate(
+      fullEngine.mutate(
         conversationMutators.updateMessage(turnId, {
           metadata: {
             turnId,
@@ -115,9 +117,9 @@ export const buildContextBridgeController = (
       );
 
       // Store correlation in shared context for analytics continuity
-      engine.mutate(sharedContextMutators.setActiveQuery(activeQuery));
-      engine.mutate(sharedContextMutators.setActiveFilters(activeFilters));
-      engine.mutate(
+      fullEngine.mutate(sharedContextMutators.setActiveQuery(activeQuery));
+      fullEngine.mutate(sharedContextMutators.setActiveFilters(activeFilters));
+      fullEngine.mutate(
         sharedContextMutators.setSelectedProducts(selectedProducts)
       );
     },
@@ -133,11 +135,11 @@ export const buildContextBridgeController = (
       products: string[];
       filters?: Record<string, string[]>;
     }): void {
-      engine.mutate(
+      fullEngine.mutate(
         sharedContextMutators.setSelectedProducts(selections.products)
       );
       if (selections.filters) {
-        engine.mutate(
+        fullEngine.mutate(
           sharedContextMutators.setActiveFilters(selections.filters)
         );
       }
@@ -147,7 +149,7 @@ export const buildContextBridgeController = (
      * Record a citation link surfaced by the assistant.
      */
     addCitation(citation: CitationLink): void {
-      engine.mutate(sharedContextMutators.addCitation(citation));
+      fullEngine.mutate(sharedContextMutators.addCitation(citation));
     },
 
     /**
@@ -155,14 +157,14 @@ export const buildContextBridgeController = (
      * Called when the search state changes so conversation has latest query context.
      */
     syncSearchQuery(query: string): void {
-      engine.mutate(sharedContextMutators.setActiveQuery(query));
+      fullEngine.mutate(sharedContextMutators.setActiveQuery(query));
     },
 
     /**
      * Update the active filters in the shared context.
      */
     syncSearchFilters(filters: Record<string, string[]>): void {
-      engine.mutate(sharedContextMutators.setActiveFilters(filters));
+      fullEngine.mutate(sharedContextMutators.setActiveFilters(filters));
     },
 
     get state() {

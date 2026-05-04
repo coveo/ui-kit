@@ -5,7 +5,7 @@
  */
 
 import {surfacesSlice} from '@/src/core/internal/surfaces/slice.js';
-import type {StateMutation} from '@/src/core/interface/types.js';
+import type {StateMutation} from '@/src/core/interface/interface-types.js';
 import type {StructuredSurface} from './types.js';
 
 export const applySurfaceUpdate = (

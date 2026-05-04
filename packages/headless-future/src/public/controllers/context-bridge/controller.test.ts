@@ -1,5 +1,5 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {createTestEngine, nextTick} from '@/src/core/test-utils.js';
+import {createTestEngine, nextTick} from '@/src/test/test-utils.js';
 import type {Engine} from '@/src/core/interface/engine/engine.js';
 import {
   buildContextBridgeController,

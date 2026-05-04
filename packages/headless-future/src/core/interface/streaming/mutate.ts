@@ -5,7 +5,7 @@
  */
 
 import {streamingSlice} from '@/src/core/internal/streaming/slice.js';
-import type {StateMutation} from '@/src/core/interface/types.js';
+import type {StateMutation} from '@/src/core/interface/interface-types.js';
 import type {StreamError} from './types.js';
 
 export const setConnected = (isConnected: boolean): StateMutation =>

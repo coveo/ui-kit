@@ -10,7 +10,7 @@
  * orchestration policy. Those concerns live in dedicated controllers/adapters.
  */
 
-import {Engine} from '@/src/core/interface/engine/engine.js';
+import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {conversationSlice} from '@/src/core/internal/conversation/slice.js';
 import * as conversationSelectors from '@/src/core/interface/conversation/selectors.js';
 import * as conversationMutators from '@/src/core/interface/conversation/mutate.js';
@@ -57,9 +57,11 @@ export const buildConversationController = (
   engine: Engine,
   adapters: Pick<UnifiedAdapters, 'transport' | 'auth' | 'persistence'>
 ) => {
-  engine.adoptSlice(conversationSlice);
-  engine.adoptSlice(streamingSlice);
-  engine.adoptSlice(surfacesSlice);
+  const fullEngine = getFullEngine(engine);
+
+  fullEngine.adoptSlice(conversationSlice);
+  fullEngine.adoptSlice(streamingSlice);
+  fullEngine.adoptSlice(surfacesSlice);
 
   const selectConversationState = (state: {conversation?: ConversationState}) =>
     state.conversation;
@@ -73,7 +75,7 @@ export const buildConversationController = (
       CONVERSATION_PERSISTENCE_KEY
     );
     if (persisted && typeof persisted === 'object') {
-      engine.mutate(
+      fullEngine.mutate(
         conversationMutators.rehydrateConversation(
           persisted as ConversationState
         )
@@ -98,7 +100,7 @@ export const buildConversationController = (
     event: NormalizedStreamEvent,
     assistantMessageId: string
   ) => {
-    engine.mutate(streamingMutators.recordEvent(Date.now()));
+    fullEngine.mutate(streamingMutators.recordEvent(Date.now()));
 
     switch (event.type) {
       case 'turn_started': {
@@ -110,7 +112,7 @@ export const buildConversationController = (
           updates.conversationToken = event.conversationToken;
         }
         if (Object.keys(updates).length > 0) {
-          engine.mutate(conversationMutators.updateSession(updates));
+          fullEngine.mutate(conversationMutators.updateSession(updates));
         }
         break;
       }
@@ -120,7 +122,7 @@ export const buildConversationController = (
       }
       case 'TEXT_MESSAGE_CONTENT': {
         if (event.messageId === assistantMessageId) {
-          engine.mutate(
+          fullEngine.mutate(
             conversationMutators.appendMessageContent(
               assistantMessageId,
               event.delta
@@ -135,7 +137,7 @@ export const buildConversationController = (
         break;
       }
       case 'RUN_ERROR': {
-        engine.mutate(
+        fullEngine.mutate(
           conversationMutators.setError(event.message ?? 'Stream error')
         );
         break;
@@ -176,9 +178,9 @@ export const buildConversationController = (
       };
 
       // Register messages and turn in state
-      engine.mutate(conversationMutators.addMessage(userMessage));
-      engine.mutate(conversationMutators.addMessage(assistantMessage));
-      engine.mutate(
+      fullEngine.mutate(conversationMutators.addMessage(userMessage));
+      fullEngine.mutate(conversationMutators.addMessage(assistantMessage));
+      fullEngine.mutate(
         conversationMutators.addTurn({
           id: turnId,
           userMessageId,
@@ -187,10 +189,10 @@ export const buildConversationController = (
           createdAt: now,
         })
       );
-      engine.mutate(conversationMutators.setActiveTurnId(turnId));
-      engine.mutate(conversationMutators.setLoading(true));
-      engine.mutate(conversationMutators.setError(null));
-      engine.mutate(streamingMutators.resetStream());
+      fullEngine.mutate(conversationMutators.setActiveTurnId(turnId));
+      fullEngine.mutate(conversationMutators.setLoading(true));
+      fullEngine.mutate(conversationMutators.setError(null));
+      fullEngine.mutate(streamingMutators.resetStream());
 
       activeAbortController = new AbortController();
 
@@ -198,10 +200,10 @@ export const buildConversationController = (
         const session = engine.read(conversationStateSelectors.session);
         const messages = engine.read(conversationStateSelectors.messages);
 
-        engine.mutate(
+        fullEngine.mutate(
           conversationMutators.updateTurnStatus(turnId, 'streaming')
         );
-        engine.mutate(streamingMutators.setConnected(true));
+        fullEngine.mutate(streamingMutators.setConnected(true));
 
         const decoder = new TextDecoder();
         const bufferProcessor = createBufferProcessor((rawEvent) => {
@@ -222,31 +224,31 @@ export const buildConversationController = (
           signal: activeAbortController.signal,
           onChunk: (chunk) => {
             const text = decoder.decode(chunk, {stream: true});
-            engine.mutate(streamingMutators.addBytes(chunk.byteLength));
+            fullEngine.mutate(streamingMutators.addBytes(chunk.byteLength));
             bufferProcessor.processChunk(text);
           },
           onError: (error) => {
-            engine.mutate(streamingMutators.setStreamError(error));
-            engine.mutate(
+            fullEngine.mutate(streamingMutators.setStreamError(error));
+            fullEngine.mutate(
               conversationMutators.updateTurnStatus(turnId, 'failed', {
                 finalizedAt: Date.now(),
                 reason: error.message,
               })
             );
-            engine.mutate(conversationMutators.setActiveTurnId(null));
-            engine.mutate(conversationMutators.setLoading(false));
+            fullEngine.mutate(conversationMutators.setActiveTurnId(null));
+            fullEngine.mutate(conversationMutators.setLoading(false));
           },
           onClose: () => {
             bufferProcessor.flush();
-            engine.mutate(streamingMutators.setConnected(false));
-            engine.mutate(
+            fullEngine.mutate(streamingMutators.setConnected(false));
+            fullEngine.mutate(
               conversationMutators.updateTurnStatus(turnId, 'completed', {
                 finalizedAt: Date.now(),
                 assistantMessageId,
               })
             );
-            engine.mutate(conversationMutators.setActiveTurnId(null));
-            engine.mutate(conversationMutators.setLoading(false));
+            fullEngine.mutate(conversationMutators.setActiveTurnId(null));
+            fullEngine.mutate(conversationMutators.setLoading(false));
           },
         });
       } catch (err) {
@@ -254,16 +256,16 @@ export const buildConversationController = (
           err instanceof Error
             ? err.message
             : 'Unknown error during submitTurn';
-        engine.mutate(conversationMutators.setError(message));
-        engine.mutate(
+        fullEngine.mutate(conversationMutators.setError(message));
+        fullEngine.mutate(
           conversationMutators.updateTurnStatus(turnId, 'failed', {
             finalizedAt: Date.now(),
             reason: message,
           })
         );
-        engine.mutate(conversationMutators.setActiveTurnId(null));
-        engine.mutate(conversationMutators.setLoading(false));
-        engine.mutate(streamingMutators.setConnected(false));
+        fullEngine.mutate(conversationMutators.setActiveTurnId(null));
+        fullEngine.mutate(conversationMutators.setLoading(false));
+        fullEngine.mutate(streamingMutators.setConnected(false));
       } finally {
         activeAbortController = null;
       }
@@ -279,16 +281,16 @@ export const buildConversationController = (
       }
       const turnId = engine.read(conversationSelectors.activeTurnId);
       if (turnId) {
-        engine.mutate(
+        fullEngine.mutate(
           conversationMutators.updateTurnStatus(turnId, 'aborted', {
             finalizedAt: Date.now(),
             reason: reason ?? 'user-abort',
           })
         );
-        engine.mutate(conversationMutators.setActiveTurnId(null));
+        fullEngine.mutate(conversationMutators.setActiveTurnId(null));
       }
-      engine.mutate(streamingMutators.setAborted(true));
-      engine.mutate(conversationMutators.setLoading(false));
+      fullEngine.mutate(streamingMutators.setAborted(true));
+      fullEngine.mutate(conversationMutators.setLoading(false));
     },
 
     /**
@@ -313,9 +315,9 @@ export const buildConversationController = (
      */
     clearConversation(): void {
       this.abortTurn('clear');
-      engine.mutate(conversationMutators.clearConversation());
-      engine.mutate(streamingMutators.resetStream());
-      engine.mutate(surfacesMutators.clearAllSurfaces());
+      fullEngine.mutate(conversationMutators.clearConversation());
+      fullEngine.mutate(streamingMutators.resetStream());
+      fullEngine.mutate(surfacesMutators.clearAllSurfaces());
       void adapters.persistence.delete(CONVERSATION_PERSISTENCE_KEY);
     },
 

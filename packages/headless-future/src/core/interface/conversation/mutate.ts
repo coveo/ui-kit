@@ -5,7 +5,7 @@
  */
 
 import {conversationSlice} from '@/src/core/internal/conversation/slice.js';
-import type {StateMutation} from '@/src/core/interface/types.js';
+import type {StateMutation} from '@/src/core/interface/interface-types.js';
 import type {
   ConversationMessage,
   ConversationTurn,

@@ -16,7 +16,7 @@
  * Swapping implementations requires no controller changes.
  */
 
-import {Engine} from '@/src/core/interface/engine/engine.js';
+import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {orchestrationSlice} from '@/src/core/internal/orchestration/slice.js';
 import * as orchestrationSelectors from '@/src/core/interface/orchestration/selectors.js';
 import * as orchestrationMutators from '@/src/core/interface/orchestration/mutate.js';
@@ -51,7 +51,9 @@ export const buildOrchestrationController = (
   engine: Engine,
   adapter: OrchestrationAdapter
 ) => {
-  engine.adoptSlice(orchestrationSlice);
+  const fullEngine = getFullEngine(engine);
+
+  fullEngine.adoptSlice(orchestrationSlice);
 
   return {
     /**
@@ -59,7 +61,7 @@ export const buildOrchestrationController = (
      * Use this when the backend pushes a snapshot via SSE or HTTP.
      */
     applyServerSnapshot(snapshot: OrchestrationSnapshot): void {
-      engine.mutate(orchestrationMutators.applySnapshot(snapshot));
+      fullEngine.mutate(orchestrationMutators.applySnapshot(snapshot));
     },
 
     /**
@@ -75,10 +77,10 @@ export const buildOrchestrationController = (
     }): Promise<void> {
       try {
         const snapshot = await adapter.getSnapshot(context);
-        engine.mutate(orchestrationMutators.applySnapshot(snapshot));
+        fullEngine.mutate(orchestrationMutators.applySnapshot(snapshot));
       } catch {
         // Endpoint unavailable — fall back to default mode (search-first)
-        engine.mutate(orchestrationMutators.setUnavailable(true));
+        fullEngine.mutate(orchestrationMutators.setUnavailable(true));
       }
     },
 
