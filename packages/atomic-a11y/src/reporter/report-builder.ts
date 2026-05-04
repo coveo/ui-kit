@@ -18,6 +18,9 @@ export function buildA11yReport(
 ): A11yReport {
   const components = buildComponents(componentResults);
   const criteria = buildCriteria(componentResults);
+  const hasInteractiveData = [...componentResults.values()].some(
+    (c) => c.interactive !== undefined
+  );
 
   const axeCoreVersion =
     packageMetadata.devDependencies?.['axe-core'] ??
@@ -44,6 +47,7 @@ export function buildA11yReport(
       evaluationMethods: [
         `axe-core ${axeCoreVersion}`,
         'Storybook addon-a11y',
+        ...(hasInteractiveData ? ['Storybook interactive play() tests'] : []),
         'Manual audit',
       ],
       axeCoreVersion,
@@ -73,6 +77,19 @@ function buildComponents(
           ),
           incompleteDetails: component.automated.incompleteDetails,
         },
+        interactive: component.interactive
+          ? {
+              criteriaCovered: [...component.interactive.criteriaCovered].sort(
+                compareByNumericId
+              ),
+              testCount: component.interactive.testCount,
+              passedCount: component.interactive.passedCount,
+              failedCount: component.interactive.failedCount,
+              failedCriteria: [...component.interactive.failedCriteria].sort(
+                compareByNumericId
+              ),
+            }
+          : undefined,
       };
     })
     .sort((first, second) => compareByName(first.name, second.name));
@@ -85,26 +102,35 @@ function buildCriteria(
 
   for (const component of componentResults.values()) {
     for (const criterionId of component.automated.criteriaCovered) {
-      let criterion = criteriaById.get(criterionId);
-      if (!criterion) {
-        const metadata = getCriterionMetadata(criterionId);
-        criterion = {
-          id: criterionId,
-          name: metadata.name,
-          level: metadata.level,
-          wcagVersion: metadata.wcagVersion,
-          // Conformance is intentionally deferred — the automated report only captures
-          // coverage data, not the final judgment. The OpenACR pipeline (conformance.ts)
-          // resolves actual conformance using: overrides → manual audit → interactive tests → automated results.
-          conformance: 'notEvaluated',
-          automatedCoverage: true,
-          manualVerified: false,
-          affectedComponents: [],
-        };
-        criteriaById.set(criterionId, criterion);
-      }
+      const criterion = getOrCreateCriterion(criteriaById, criterionId);
+      criterion.automatedCoverage = true;
+      addAffectedComponent(criterion, component.name);
+    }
 
-      criterion.affectedComponents.push(component.name);
+    if (component.interactive) {
+      for (const criterionId of component.interactive.criteriaCovered) {
+        const criterion = getOrCreateCriterion(criteriaById, criterionId);
+        criterion.interactiveCoverage = true;
+        addAffectedComponent(criterion, component.name);
+
+        const isFailed = component.interactive.failedCriteria.has(criterionId);
+        const isPassed = component.interactive.passedCriteria.has(criterionId);
+        if (!isFailed && !isPassed) {
+          continue;
+        }
+
+        const nextStatus: 'passed' | 'failed' = isFailed ? 'failed' : 'passed';
+        const currentStatus = criterion.interactiveStatus;
+
+        if (!currentStatus) {
+          criterion.interactiveStatus = nextStatus;
+          continue;
+        }
+
+        if (currentStatus !== nextStatus) {
+          criterion.interactiveStatus = 'mixed';
+        }
+      }
     }
   }
 
@@ -116,4 +142,41 @@ function buildCriteria(
   return criteria.sort((first, second) =>
     compareByNumericId(first.id, second.id)
   );
+}
+
+function getOrCreateCriterion(
+  criteriaById: Map<string, A11yCriterionReport>,
+  criterionId: string
+): A11yCriterionReport {
+  const existing = criteriaById.get(criterionId);
+  if (existing) {
+    return existing;
+  }
+
+  const metadata = getCriterionMetadata(criterionId);
+  const criterion: A11yCriterionReport = {
+    id: criterionId,
+    name: metadata.name,
+    level: metadata.level,
+    wcagVersion: metadata.wcagVersion,
+    // Conformance is intentionally deferred — the automated report only captures
+    // coverage data, not the final judgment. The OpenACR pipeline (conformance.ts)
+    // resolves actual conformance using: overrides → manual audit → interactive tests → automated results.
+    conformance: 'notEvaluated',
+    automatedCoverage: false,
+    interactiveCoverage: false,
+    manualVerified: false,
+    affectedComponents: [],
+  };
+  criteriaById.set(criterionId, criterion);
+  return criterion;
+}
+
+function addAffectedComponent(
+  criterion: A11yCriterionReport,
+  componentName: string
+): void {
+  if (!criterion.affectedComponents.includes(componentName)) {
+    criterion.affectedComponents.push(componentName);
+  }
 }

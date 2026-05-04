@@ -45,6 +45,46 @@ export function isStorybookTaskMeta(
   return true;
 }
 
+export interface StorybookInteractiveReport {
+  type: 'a11y-interactive';
+  version: number;
+  status: 'passed' | 'failed' | 'warning';
+  result: {
+    criteriaCovered: string[];
+  };
+}
+
+export function isInteractiveReport(
+  report: unknown
+): report is StorybookInteractiveReport {
+  if (!isRecord(report)) {
+    return false;
+  }
+
+  if (report.type !== 'a11y-interactive') {
+    return false;
+  }
+
+  if (typeof report.version !== 'number') {
+    return false;
+  }
+
+  const status = report.status;
+  if (status !== 'passed' && status !== 'failed' && status !== 'warning') {
+    return false;
+  }
+
+  if (!isRecord(report.result)) {
+    return false;
+  }
+
+  const {criteriaCovered} = report.result;
+  return (
+    Array.isArray(criteriaCovered) &&
+    criteriaCovered.every((criterion) => typeof criterion === 'string')
+  );
+}
+
 export interface ComponentAccumulator {
   name: string;
   storyIds: Set<string>;
@@ -61,6 +101,14 @@ export interface ComponentAccumulator {
       nodes: number;
       message: string;
     }>;
+  };
+  interactive?: {
+    criteriaCovered: Set<string>;
+    testCount: number;
+    passedCount: number;
+    failedCount: number;
+    passedCriteria: Set<string>;
+    failedCriteria: Set<string>;
   };
 }
 

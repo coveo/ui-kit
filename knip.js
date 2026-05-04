@@ -105,6 +105,9 @@ export default {
         // cannot trace spec → fixture imports. Declaring them as entry
         // points preserves their exports from false-positive removal.
         'vitest-utils/**/*.ts',
+        // Interactive a11y Storybook helpers — will be consumed by stories
+        // in an upcoming PR. Knip cannot trace them yet.
+        'storybook-utils/a11y/**/*.ts',
       ],
       ignore: [
         // Ambient type declaration file, not an ES module
