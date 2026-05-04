@@ -5,15 +5,15 @@
 import {describe, it, expect, beforeEach} from 'vitest';
 import {createTestEngine} from '@/src/test/test-utils.js';
 import * as selectors from './result-selectors.js';
-import * as mutations from './result-mutatators.js';
-import {Engine} from '@/src/core/interface/engine/engine.js';
+import * as mutations from './result-mutators.js';
+import {FullEngine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {resultSlice} from '@/src/core/internal/result/result-slice.js';
 
 describe('result selectors', () => {
-  let engine: Engine;
+  let engine: FullEngine;
 
   beforeEach(() => {
-    engine = createTestEngine();
+    engine = getFullEngine(createTestEngine());
     engine.adoptSlice(resultSlice);
   });
 

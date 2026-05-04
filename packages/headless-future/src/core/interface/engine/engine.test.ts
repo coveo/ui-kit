@@ -8,7 +8,7 @@ import * as searchBoxMutations from '@/src/core/interface/search-box/search-box-
 import * as searchBoxSelectors from '@/src/core/interface/search-box/search-box-selectors.js';
 import * as resultsMutations from '@/src/core/interface/results/results-mutators.js';
 import * as resultsSelectors from '@/src/core/interface/results/results-selectors.js';
-import {Engine} from './engine.js';
+import {FullEngine, getFullEngine} from './engine.js';
 import {searchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
 import {resultsSlice} from '@/src/core/internal/results/results-slice.js';
 import type {
@@ -17,10 +17,10 @@ import type {
 } from '@/src/core/interface/interface-types.js';
 
 describe('Engine: read()', () => {
-  let engine: Engine;
+  let engine: FullEngine;
 
   beforeEach(() => {
-    engine = createTestEngine();
+    engine = getFullEngine(createTestEngine());
     engine.adoptSlice(searchBoxSlice);
     engine.adoptSlice(resultsSlice);
   });
@@ -48,10 +48,10 @@ describe('Engine: read()', () => {
 });
 
 describe('Engine: subscribe()', () => {
-  let engine: Engine;
+  let engine: FullEngine;
 
   beforeEach(() => {
-    engine = createTestEngine();
+    engine = getFullEngine(createTestEngine());
     engine.adoptSlice(searchBoxSlice);
     engine.adoptSlice(resultsSlice);
   });
@@ -145,10 +145,10 @@ describe('Engine: subscribe()', () => {
 });
 
 describe('Engine: mutate()', () => {
-  let engine: Engine;
+  let engine: FullEngine;
 
   beforeEach(() => {
-    engine = createTestEngine();
+    engine = getFullEngine(createTestEngine());
     engine.adoptSlice(searchBoxSlice);
     engine.adoptSlice(resultsSlice);
   });

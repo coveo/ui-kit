@@ -1,4 +1,4 @@
-import {Engine} from '@/src/core/interface/engine/engine.js';
+import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {resultSlice} from '@/src/core/internal/result/result-slice.js';
 import * as resultsSelectors from '@/src/core/interface/results/results-selectors.js';
 import {createSelector} from '@reduxjs/toolkit';
@@ -8,13 +8,14 @@ const stateSelect = createSelector([resultsSelectors.results], (results) => ({
 }));
 
 export const buildResultListController = (engine: Engine) => {
-  engine.adoptSlice(resultSlice);
+  const fullEngine = getFullEngine(engine);
+  fullEngine.adoptSlice(resultSlice);
   return {
     get state() {
-      return engine.read(stateSelect);
+      return fullEngine.read(stateSelect);
     },
     subscribe(callback: () => void) {
-      engine.subscribe(stateSelect, callback);
+      fullEngine.subscribe(stateSelect, callback);
     },
   };
 };

@@ -10,13 +10,13 @@ import {
 } from '@/src/test/test-utils.js';
 import * as selectors from './results-selectors.js';
 import {resultsSlice} from '@/src/core/internal/results/results-slice.js';
-import {Engine} from '@/src/core/interface/engine/engine.js';
+import {FullEngine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 
 describe('resultsMutations', () => {
-  let engine: Engine;
+  let engine: FullEngine;
 
   beforeEach(() => {
-    engine = createTestEngine();
+    engine = getFullEngine(createTestEngine());
     engine.adoptSlice(resultsSlice);
   });
 

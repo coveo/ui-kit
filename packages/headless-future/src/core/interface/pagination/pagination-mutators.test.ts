@@ -6,14 +6,14 @@ import {describe, it, expect, beforeEach} from 'vitest';
 import {createTestEngine} from '@/src/test/test-utils.js';
 import * as mutations from './pagination-mutators.js';
 import * as selectors from './pagination-selectors.js';
-import {Engine} from '@/src/core/interface/engine/engine.js';
+import {FullEngine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {paginationSlice} from '@/src/core/internal/pagination/pagination-slice.js';
 
 describe('paginationMutations', () => {
-  let engine: Engine;
+  let engine: FullEngine;
 
   beforeEach(() => {
-    engine = createTestEngine();
+    engine = getFullEngine(createTestEngine());
     engine.adoptSlice(paginationSlice);
   });
 

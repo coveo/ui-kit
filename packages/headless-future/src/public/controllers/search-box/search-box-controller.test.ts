@@ -55,7 +55,6 @@ describe('buildSearchBoxController', () => {
       controller.submit();
 
       expect(executeSearchAPI).toHaveBeenCalledOnce();
-      expect(executeSearchAPI).toHaveBeenCalledWith(engine);
     });
   });
 

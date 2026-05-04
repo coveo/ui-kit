@@ -3,17 +3,17 @@
  */
 
 import {describe, it, expect, beforeEach} from 'vitest';
-import * as mutations from './result-mutatators.js';
+import * as mutations from './result-mutators.js';
 import * as selectors from './result-selectors.js';
 import {resultSlice} from '@/src/core/internal/result/result-slice.js';
 import {createTestEngine} from '@/src/test/test-utils.js';
-import {Engine} from '@/src/core/interface/engine/engine.js';
+import {FullEngine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 
 describe('resultMutations', () => {
-  let engine: Engine;
+  let engine: FullEngine;
 
   beforeEach(() => {
-    engine = createTestEngine();
+    engine = getFullEngine(createTestEngine());
     engine.adoptSlice(resultSlice);
   });
 
