@@ -1,6 +1,6 @@
 import {mkdir, readFile, writeFile} from 'node:fs/promises';
 import path from 'node:path';
-import yaml from 'js-yaml';
+import {stringify} from 'yaml';
 import {
   DEFAULT_A11Y_REPORT_FILENAME,
   DEFAULT_A11Y_REPORT_OUTPUT_DIR,
@@ -130,7 +130,7 @@ export async function transformJsonToOpenAcr(
   const manualAggregates = await loadManualAuditData(manualAuditDir);
 
   const openAcrReport = buildOpenAcrReport(report, overrides, manualAggregates);
-  const serialized = yaml.dump(openAcrReport);
+  const serialized = stringify(openAcrReport);
 
   await mkdir(path.dirname(outputFile), {recursive: true});
   await writeFile(outputFile, serialized, 'utf8');

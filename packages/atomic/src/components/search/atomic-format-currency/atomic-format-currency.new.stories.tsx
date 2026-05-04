@@ -7,6 +7,9 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
 import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-format-currency/atomic-format-currency.js';
+import '@/src/components/search/atomic-numeric-facet/atomic-numeric-facet.js';
+import '@/src/components/search/atomic-result-number/atomic-result-number.js';
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-format-currency',
@@ -114,7 +117,7 @@ export const Result: Story = {
       ...response,
       results: (response as SearchResponse).results
         .slice(0, 1)
-        // biome-ignore lint/suspicious/noExplicitAny: raw fields are dynamically added
+        // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- raw fields are dynamically added
         .map((result: any) => ({
           ...result,
           raw: {

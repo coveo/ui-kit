@@ -361,7 +361,7 @@ describe('atomic-product-image', () => {
           null,
           {},
           'https://example.com/another-valid-image.jpg',
-          // biome-ignore lint/suspicious/noExplicitAny: <>
+          // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
         ] as any,
       }),
     });

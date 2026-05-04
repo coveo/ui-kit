@@ -1,16 +1,12 @@
 import {mkdir, readdir, readFile, writeFile} from 'node:fs/promises';
 import path from 'node:path';
-import {
-  DEFAULT_A11Y_REPORT_FILENAME,
-  DEFAULT_A11Y_REPORT_OUTPUT_DIR,
-  DEFAULT_WCAG_22_AA_CRITERIA_COUNT,
-} from '../shared/constants.js';
 import {isA11yReport} from '../shared/guards.js';
 import {compareByName, compareByNumericId} from '../shared/sorting.js';
 import type {
   A11yAutomatedResults,
   A11yComponentReport,
   A11yCriterionReport,
+  A11yInteractiveResults,
   A11yReport,
 } from '../shared/types.js';
 import {formatDate, getCriterionMetadata} from './reporter-utils.js';
@@ -19,23 +15,37 @@ import {createSummary} from './summary.js';
 const SHARD_FILE_PATTERN = /^a11y-report\.shard-(\d+)\.json$/;
 
 interface MergeShardOptions {
-  inputDir?: string;
-  outputFile?: string;
-  totalCriteria?: number;
+  /** Full path (directory + filename) where the merged report is written. Shard files are read from the same directory. */
+  outputFile: string;
 }
 
-interface MutableAutomatedResults
-  extends Omit<A11yAutomatedResults, 'criteriaCovered'> {
+interface MutableAutomatedResults extends Omit<
+  A11yAutomatedResults,
+  'criteriaCovered'
+> {
   criteriaCovered: Set<string>;
 }
 
-interface MutableComponentReport
-  extends Omit<A11yComponentReport, 'automated'> {
-  automated: MutableAutomatedResults;
+interface MutableInteractiveResults extends Omit<
+  A11yInteractiveResults,
+  'criteriaCovered' | 'failedCriteria'
+> {
+  criteriaCovered: Set<string>;
+  failedCriteria: Set<string>;
 }
 
-interface MutableCriterionReport
-  extends Omit<A11yCriterionReport, 'affectedComponents'> {
+interface MutableComponentReport extends Omit<
+  A11yComponentReport,
+  'automated' | 'interactive'
+> {
+  automated: MutableAutomatedResults;
+  interactive?: MutableInteractiveResults;
+}
+
+interface MutableCriterionReport extends Omit<
+  A11yCriterionReport,
+  'affectedComponents'
+> {
   affectedComponents: Set<string>;
 }
 
@@ -49,6 +59,13 @@ function toMutableComponent(
       criteriaCovered: new Set(component.automated.criteriaCovered),
       incompleteDetails: [...component.automated.incompleteDetails],
     },
+    interactive: component.interactive
+      ? {
+          ...component.interactive,
+          criteriaCovered: new Set(component.interactive.criteriaCovered),
+          failedCriteria: new Set(component.interactive.failedCriteria),
+        }
+      : undefined,
   };
 }
 
@@ -62,27 +79,24 @@ function toMutableCriterion(
 }
 
 async function readShardReports(shardFiles: string[]): Promise<A11yReport[]> {
-  const results = await Promise.allSettled(
-    shardFiles.map(async (shardFile) => {
+  const reports: A11yReport[] = [];
+
+  for (const shardFile of shardFiles) {
+    try {
       const content = await readFile(shardFile, 'utf8');
       const parsed = JSON.parse(content) as unknown;
 
       if (!isA11yReport(parsed)) {
-        throw new Error('Invalid report structure');
+        console.warn(
+          `[merge-shards] Skipping shard file: ${path.basename(shardFile)} — Invalid report structure`
+        );
+        continue;
       }
 
-      return parsed;
-    })
-  );
-
-  const reports: A11yReport[] = [];
-  for (let i = 0; i < results.length; i++) {
-    const result = results[i];
-    if (result.status === 'fulfilled') {
-      reports.push(result.value);
-    } else {
+      reports.push(parsed);
+    } catch (error) {
       console.warn(
-        `[merge-shards] Skipping shard file: ${path.basename(shardFiles[i])} — ${result.reason instanceof Error ? result.reason.message : 'unknown error'}`
+        `[merge-shards] Skipping shard file: ${path.basename(shardFile)} — ${error instanceof Error ? error.message : 'unknown error'}`
       );
     }
   }
@@ -114,6 +128,10 @@ export function mergeComponents(reports: A11yReport[]): A11yComponentReport[] {
       existing.automated.incompleteDetails.push(
         ...component.automated.incompleteDetails
       );
+
+      if (component.interactive) {
+        mergeInteractiveResults(existing, component.interactive);
+      }
     }
   }
 
@@ -127,9 +145,48 @@ export function mergeComponents(reports: A11yReport[]): A11yComponentReport[] {
             compareByNumericId
           ),
         },
+        interactive: component.interactive
+          ? {
+              ...component.interactive,
+              criteriaCovered: [...component.interactive.criteriaCovered].sort(
+                compareByNumericId
+              ),
+              failedCriteria: [...component.interactive.failedCriteria].sort(
+                compareByNumericId
+              ),
+            }
+          : undefined,
       };
     })
     .sort((first, second) => compareByName(first.name, second.name));
+}
+
+function mergeInteractiveResults(
+  target: MutableComponentReport,
+  source: A11yInteractiveResults
+): void {
+  if (!target.interactive) {
+    target.interactive = {
+      criteriaCovered: new Set(source.criteriaCovered),
+      testCount: source.testCount,
+      passedCount: source.passedCount,
+      failedCount: source.failedCount,
+      failedCriteria: new Set(source.failedCriteria),
+    };
+    return;
+  }
+
+  target.interactive.testCount += source.testCount;
+  target.interactive.passedCount += source.passedCount;
+  target.interactive.failedCount += source.failedCount;
+
+  for (const criterion of source.criteriaCovered) {
+    target.interactive.criteriaCovered.add(criterion);
+  }
+
+  for (const criterion of source.failedCriteria) {
+    target.interactive.failedCriteria.add(criterion);
+  }
 }
 
 export function mergeCriteria(
@@ -148,6 +205,17 @@ export function mergeCriteria(
 
       for (const componentName of criterion.affectedComponents) {
         existing.affectedComponents.add(componentName);
+      }
+
+      if (criterion.interactiveCoverage) {
+        existing.interactiveCoverage = true;
+      }
+
+      if (criterion.interactiveStatus) {
+        existing.interactiveStatus = mergeInteractiveStatus(
+          existing.interactiveStatus,
+          criterion.interactiveStatus
+        );
       }
     }
   }
@@ -171,10 +239,29 @@ export function mergeCriteria(
         wcagVersion: metadata.wcagVersion,
         conformance: 'notEvaluated',
         automatedCoverage: true,
+        interactiveCoverage: false,
         manualVerified: false,
-        remarks: '',
         affectedComponents: new Set([component.name]),
       });
+    }
+
+    if (component.interactive) {
+      for (const criterionId of component.interactive.criteriaCovered) {
+        const existing = criteriaById.get(criterionId);
+        if (existing) {
+          existing.interactiveCoverage = true;
+          const isFailed =
+            component.interactive.failedCriteria.includes(criterionId);
+          const nextStatus: 'passed' | 'failed' = isFailed
+            ? 'failed'
+            : 'passed';
+          existing.interactiveStatus = mergeInteractiveStatus(
+            existing.interactiveStatus,
+            nextStatus
+          );
+          existing.affectedComponents.add(component.name);
+        }
+      }
     }
   }
 
@@ -196,18 +283,36 @@ export function mergeCriteria(
     .sort((first, second) => compareByNumericId(first.id, second.id));
 }
 
-export async function mergeA11yShardReports(
-  options: MergeShardOptions = {}
-): Promise<A11yReport | null> {
-  const inputDir = path.resolve(
-    options.inputDir ?? DEFAULT_A11Y_REPORT_OUTPUT_DIR
-  );
-  const outputFile = path.resolve(
-    options.outputFile ?? path.join(inputDir, DEFAULT_A11Y_REPORT_FILENAME)
-  );
-  const totalCriteria =
-    options.totalCriteria ?? DEFAULT_WCAG_22_AA_CRITERIA_COUNT;
+function mergeInteractiveStatus(
+  current: 'passed' | 'failed' | 'mixed' | undefined,
+  incoming: 'passed' | 'failed' | 'mixed'
+): 'passed' | 'failed' | 'mixed' {
+  if (!current) {
+    return incoming;
+  }
 
+  if (current === incoming) {
+    return current;
+  }
+
+  return 'mixed';
+}
+
+function mergeEvaluationMethods(reports: A11yReport[]): string[] {
+  const methods = new Set<string>();
+  for (const report of reports) {
+    for (const method of report.report.evaluationMethods) {
+      methods.add(method);
+    }
+  }
+  return [...methods];
+}
+
+export async function mergeA11yShardReports(
+  options: MergeShardOptions
+): Promise<A11yReport | null> {
+  const outputFile = path.resolve(options.outputFile);
+  const inputDir = path.dirname(outputFile);
   console.log(`[merge-shards] Scanning for shard reports in ${inputDir}`);
 
   let directoryEntries: string[];
@@ -249,14 +354,16 @@ export async function mergeA11yShardReports(
   const components = mergeComponents(shardReports);
   const criteria = mergeCriteria(shardReports, components);
   const baseReport = shardReports[0];
+  const evaluationMethods = mergeEvaluationMethods(shardReports);
   const mergedReport: A11yReport = {
     report: {
       ...baseReport.report,
       reportDate: formatDate(new Date()),
+      evaluationMethods,
     },
     components,
     criteria,
-    summary: createSummary(components, criteria, totalCriteria),
+    summary: createSummary(components, criteria),
   };
 
   await mkdir(path.dirname(outputFile), {recursive: true});

@@ -344,12 +344,10 @@ export class AtomicSmartSnippet
                   'source-anchor-attributes'
                 )}
                 @selectSource=${this.smartSnippet.selectSource}
-                @beginDelayedSelectSource=${
-                  this.smartSnippet.beginDelayedSelectSource
-                }
-                @cancelPendingSelectSource=${
-                  this.smartSnippet.cancelPendingSelectSource
-                }
+                @beginDelayedSelectSource=${this.smartSnippet
+                  .beginDelayedSelectSource}
+                @cancelPendingSelectSource=${this.smartSnippet
+                  .cancelPendingSelectSource}
               ></atomic-smart-snippet-source>
             `
           )}

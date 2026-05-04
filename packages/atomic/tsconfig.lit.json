@@ -4,21 +4,22 @@
     "module": "ES2022",
     "target": "ES2021",
     "moduleResolution": "bundler",
-    "lib": ["dom", "ES2024"],
+    "lib": ["dom", "ES2024", "DOM.Iterable"],
     "declaration": true,
+    "resolveJsonModule": true,
     "declarationDir": "dist/types",
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
-    "outDir": "dist/atomic/components",
+    "rootDir": "src",
+    "outDir": "dist/esm",
     "paths": {
       "@/*": ["./*"]
     }
   },
   "files": [
+    "src/index.ts",
+    "src/loader.ts",
     "src/components/index.ts",
-    "src/components/lazy-index.ts",
-    "src/components.d.ts",
-    "src/lit-components.d.ts",
     "src/icons.d.ts"
   ]
 }

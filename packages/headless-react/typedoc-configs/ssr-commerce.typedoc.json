@@ -5,6 +5,7 @@
     "includeFolders": true
   },
   "categorizeByGroup": true,
+  "readme": "../source_docs/ssr-commerce-overview.md",
   "name": "SSR Commerce",
   "entryPoints": ["../src/ssr-commerce/index.ts"],
   "gitRevision": "main",

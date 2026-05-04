@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicResultRatingStories from './atomic-result-rating.new.stories';
+import meta, { Default, WithAMaxValueInIndex, WithADifferentIcon } from './atomic-result-rating.new.stories';
 import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicResultRatingStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicResultRatingStories}
+  stories={{ Default, WithAMaxValueInIndex, WithADifferentIcon }}
   githubPath="search/atomic-result-rating/atomic-result-rating.ts"
   tagName="atomic-result-rating"
   className="AtomicResultRating"

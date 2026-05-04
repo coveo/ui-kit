@@ -9,8 +9,8 @@ import {bindings} from '@/src/decorators/bindings.js';
 import {errorGuard} from '@/src/decorators/error-guard.js';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import ArrowDown from '@/src/images/arrow-down.svg';
 import {buildCustomEvent, listenOnce} from '@/src/utils/event-utils.js';
+import ArrowDown from '../../../images/arrow-down.svg';
 import styles from './atomic-smart-snippet-expandable-answer.tw.css.js';
 import '@/src/components/common/atomic-icon/atomic-icon.js';
 import '@/src/components/common/atomic-smart-snippet-answer/atomic-smart-snippet-answer';
@@ -175,12 +175,10 @@ export class AtomicSmartSnippetExpandableAnswer
             this.fullHeight = e.detail.height;
           }}
           @selectInlineLink=${this.handleSelectInlineLink}
-          @beginDelayedSelectInlineLink=${
-            this.handleBeginDelayedSelectInlineLink
-          }
-          @cancelPendingSelectInlineLink=${
-            this.handleCancelPendingSelectInlineLink
-          }
+          @beginDelayedSelectInlineLink=${this
+            .handleBeginDelayedSelectInlineLink}
+          @cancelPendingSelectInlineLink=${this
+            .handleCancelPendingSelectInlineLink}
         ></atomic-smart-snippet-answer>
       </div>
     `;

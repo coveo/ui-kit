@@ -1,4 +1,4 @@
-# Atomic 
+# Atomic
 
 Atomic is a component library for building Coveo interfaces. It provides pre-built web components that can be used across different frameworks and platforms.
 
@@ -30,10 +30,10 @@ node scripts/generate-component.mjs atomic-test-component src/components/search
 **Important:** Should be run from the `packages/atomic` directory.
 
 This command will:
+
 1. Create a new component directory with all required files
 2. Generate the component scaffolding based on the Lit template
 3. Set up the proper file structure and naming conventions
-
 
 ## Component Files Overview
 
@@ -44,6 +44,7 @@ Each Atomic component follows a standardized file structure. Here's what each fi
 The primary component implementation using Lit web components.
 
 **Key characteristics:**
+
 - Uses `@customElement('atomic-component-name')` decorator
 - Implements reactive properties with `@property()` decorator and state with `@state()` decorator
 - Multi-word properties use kebab-case attributes: `@property({attribute: 'my-attribute'})`
@@ -56,6 +57,7 @@ The primary component implementation using Lit web components.
 **Development tip:** You can use the `/migrate-to-stencil` prompt in GitHub Copilot Chat to help convert existing Stencil components to Lit format when migrating components.
 
 **Example structure:**
+
 ```typescript
 import {LitElement, html} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
@@ -70,19 +72,20 @@ import commonStyles from '../../common/component/common.tw.css';
 @customElement('atomic-my-component')
 @bindings()
 @withTailwindStyles
-export class AtomicMyComponent 
-  extends LitElement 
-  implements InitializableComponent<CommerceBindings> {
-  
+export class AtomicMyComponent
+  extends LitElement
+  implements InitializableComponent<CommerceBindings>
+{
   static styles: CssResultGroup = [
     commonStyles,
     css`
-    @reference '../../../utils/tailwind.global.tw.css';
-    [part~="active-parent"] {
-      @apply pl-9;
-    }`,
-  ]
-  
+      @reference '../../../utils/tailwind.global.tw.css';
+      [part~='active-parent'] {
+        @apply pl-9;
+      }
+    `,
+  ];
+
   @state() bindings!: CommerceBindings;
   @state() error!: Error;
 
@@ -90,7 +93,7 @@ export class AtomicMyComponent
   @state()
   public myControllerState!: MyControllerState;
 
-  @property({type: String, attribute: 'my-attribute'}) 
+  @property({type: String, attribute: 'my-attribute'})
   myAttribute = '';
 
   public myController!: MyHeadlessController;
@@ -119,13 +122,15 @@ declare global {
 Interactive component demonstrations for development and testing.
 
 **Key principles:**
+
 - **Isolate the component** - showcase specific functionality without external dependencies
-- **Focus on the component alone** - avoid "In a page" examples with multiple components  
+- **Focus on the component alone** - avoid "In a page" examples with multiple components
 - Each story demonstrates one specific aspect or variation of the component
 - **Always include a Default story** - shows the component with default settings and no customization
 - **Title structure** - The `title` property determines where stories appear in the Storybook sidebar and must follow the strict standard: `{use_case}/My Component` where the component name excludes the `atomic-` prefix and uses proper title case (e.g., `Commerce/Product List`, `Search/Facet Manager`)
 
 **Example structure:**
+
 ```typescript
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
@@ -162,12 +167,14 @@ export const WithCustomIcons: Story = {
 Comprehensive component documentation with examples and usage instructions.
 
 **Key structure:**
+
 - **Must use the `AtomicDocTemplate` Storybook block** - This provides consistent documentation structure and integrates with Storybook stories
 - **Usage section as children** - Component-specific usage instructions and examples are provided as children of the template
 - The template automatically handles property/attribute reference, event documentation, and API integration
 
 **Example structure:**
-```typescript
+
+````typescript
 import { Meta } from '@storybook/addons-docs/blocks';
 import * as AtomicMyComponentStories from './atomic-my-component.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
@@ -190,18 +197,19 @@ This component provides [component description and purpose].
   <atomic-commerce-layout>
     ...
     <atomic-layout-section section="main">
-      
+
       <atomic-my-component></atomic-my-component>
 
     </atomic-layout-section>
   </atomic-commerce-layout>
 </atomic-commerce-interface>
-```
+````
 
 </AtomicDocTemplate>
 ```
 
 **Required content within the template for the Usage section:**
+
 - Component description and purpose
 - Basic usage examples with proper HTML structure
 - Any important notes or constraints
@@ -212,12 +220,14 @@ This component provides [component description and purpose].
 Comprehensive unit testing for component logic and behavior.
 
 **Testing principles:**
+
 - Follow the [Atomic test conventions](https://coveord.atlassian.net/wiki/spaces/JSUI/pages/5221122259/Atomic+test+conventions)
 - Wrap all tests under a single `describe` with the component name
 - Use `it` function (not `test`) for individual test cases
 - Start test descriptions with "should"
 
 **Required test coverage:**
+
 - **Test all possible functionalities** - Every prop and public method of the component must be tested
 - **Test all condition paths** - Cover all if/else branches, switch cases, and conditional logic
 - **Test all DOM attributes** - Validate proper rendering of ARIA labels, CSS parts, and other DOM properties
@@ -232,11 +242,13 @@ Comprehensive unit testing for component logic and behavior.
 Integration testing that validates component behavior in real browser environments.
 
 **Files in e2e/ directory:**
+
 - `atomic-component-name.e2e.ts`: Main E2E test file
 - `fixture.ts`: Test setup and configuration
 - `page-object.ts`: Abstraction layer for component interactions
 
 **Purpose:**
+
 - Follow the [Atomic test conventions](https://coveord.atlassian.net/wiki/spaces/JSUI/pages/5221122259/Atomic+test+conventions)
 - **Test the golden path** - Focus on the most common, successful user journey through the component
 - **Keep it simple** - Usually should only include the default story and test a very simple golden path
@@ -288,7 +300,7 @@ pnpm --filter=@coveo/atomic exec playwright test src/components/commerce/atomic-
 - **`src/components/commerce/`** - Commerce components
 - **`src/components/common/`** - Shared functional components, utilities and CSS used across different interfaces
 - **`src/components/search/`** - Search components
-- **`src/components/insight/`** - Insight components 
+- **`src/components/insight/`** - Insight components
 - **`src/components/ipx/`** - IPX components
 - **`src/components/recommendations/`** - Recommendation components
 - **`storybook-utils/`** - Utilities and helpers for Storybook stories
@@ -298,26 +310,27 @@ pnpm --filter=@coveo/atomic exec playwright test src/components/commerce/atomic-
 
 ### Component Directory Structure for Lit Components
 
-When creating or migrating Lit components, **you MUST place the component directory directly under the use-case folder** (e.g., `insight/`, `search/`, `commerce/`). 
+When creating or migrating Lit components, **you MUST place the component directory directly under the use-case folder** (e.g., `insight/`, `search/`, `commerce/`).
 
 The `scripts/generate-lit-exports.mjs` script only scans **first-level directories** to auto-generate the `index.ts` and `lazy-index.ts` exports. Components in nested subdirectories will **NOT be registered** as custom elements.
 
 **✅ CORRECT structure:**
+
 ```
 src/components/insight/atomic-insight-smart-snippet-suggestions/
                         └── atomic-insight-smart-snippet-suggestions.ts
 ```
 
 **❌ INCORRECT structure (component will NOT be exported):**
+
 ```
 src/components/insight/smart-snippets/atomic-insight-smart-snippet-suggestions/
                                        └── atomic-insight-smart-snippet-suggestions.ts
 ```
 
 **What happens if you use the wrong structure:**
+
 1. The component will not be exported in `index.ts` or `lazy-index.ts`
 2. The custom element will never be registered with the browser
 3. The parent interface (e.g., `atomic-insight-interface`) will hang indefinitely during initialization, waiting for the component to be defined
 4. Search results will not load and no console errors will appear (making this very hard to debug)
-
-

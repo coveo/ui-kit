@@ -12,7 +12,7 @@
 import {readFileSync} from 'node:fs';
 import {resolve} from 'node:path';
 import Ajv from 'ajv';
-import yaml from 'js-yaml';
+import {parse} from 'yaml';
 
 const LOG_PREFIX = '[validate-openacr]';
 const SCHEMA_URL =
@@ -31,7 +31,7 @@ async function fetchSchema() {
 
 function loadYaml(filePath) {
   const content = readFileSync(filePath, 'utf8');
-  return yaml.load(content);
+  return parse(content);
 }
 
 async function main() {

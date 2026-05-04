@@ -111,7 +111,7 @@ export class AnalyticsObject {
         if (event.meta?.config?.trackingId !== exampleTrackingId) return false;
         if (additionalMatch && !additionalMatch(event)) return false;
 
-        await this.validateEventWithEventAPI(request.url(), event);
+        await this.validateEventWithEventAPI(request, event);
 
         return true;
       }
@@ -120,15 +120,20 @@ export class AnalyticsObject {
     return analyticsRequest;
   }
 
-  async validateEventWithEventAPI(url: string, body: object) {
-    const validateUrl = url.replace('/v1', '/v1/validate');
+  async validateEventWithEventAPI(request: Request, body: object) {
+    const validateUrl = request.url().replace('/v1', '/v1/validate');
+    const authHeader = await request.headerValue('authorization');
+    const headers: Record<string, string> = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    };
+    if (authHeader) {
+      headers['Authorization'] = authHeader;
+    }
     const response = await fetch(validateUrl, {
       method: 'POST',
       body: JSON.stringify([body]),
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
     const parsedResponse = (await response.json())?.[0];
 

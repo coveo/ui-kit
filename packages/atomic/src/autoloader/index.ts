@@ -1,5 +1,4 @@
-//@ts-expect-error TODO: Simplify path to target some kind of index file?
-import elementMap from '../components/components/lazy-index.js';
+import elementMap from '@/src/components/lazy-index.js';
 
 export function registerAutoloader(
   roots?:
@@ -49,13 +48,8 @@ export function registerAutoloader(
   const discover = async (root: Element | ShadowRoot | DocumentFragment) => {
     visitedNodes.add(root);
 
-    // TODO: KIT-5085 remove once we get rid of cypress
     const rootTagName =
-      (root.ownerDocument.defaultView &&
-        root instanceof root.ownerDocument.defaultView.Element) ||
-      root instanceof Element
-        ? root.tagName.toLowerCase()
-        : '';
+      root instanceof Element ? root.tagName.toLowerCase() : '';
     const rootIsCustomElement = rootTagName?.includes('-');
     const allCustomElements = [...root.querySelectorAll('*')].filter((el) =>
       el.tagName.toLowerCase().includes('-')
@@ -64,9 +58,7 @@ export function registerAutoloader(
     // If the root element is an undefined Atomic component, add it to the list
     if (
       rootIsCustomElement &&
-      ((root.ownerDocument.defaultView &&
-        root instanceof root.ownerDocument.defaultView.Element) ||
-        root instanceof Element) &&
+      root instanceof Element &&
       !customElements.get(rootTagName) &&
       !allCustomElements.includes(root)
     ) {

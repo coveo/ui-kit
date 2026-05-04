@@ -61,42 +61,42 @@ export class AtomicQuickviewModal
 {
   static styles: CSSResultGroup = css`
     @reference '../../../utils/tailwind.global.tw.css';
-   @reference '../../../utils/tailwind-utilities/link-style.css';
+    @reference '../../../utils/tailwind-utilities/link-style.css';
 
-.atomic-quickview-modal {
-  &::part(backdrop) {
-    grid-template-columns: 1fr max(80vw, 30rem) 1fr;
-  }
-  &::part(body),
-  &::part(header),
-  &::part(footer) {
-    @apply max-w-full;
-  }
+    .atomic-quickview-modal {
+      &::part(backdrop) {
+        grid-template-columns: 1fr max(80vw, 30rem) 1fr;
+      }
+      &::part(body),
+      &::part(header),
+      &::part(footer) {
+        @apply max-w-full;
+      }
 
-  &::part(footer) {
-    @apply flex justify-center;
-  }
+      &::part(footer) {
+        @apply flex justify-center;
+      }
 
-  &::part(body-wrapper) {
-    @apply h-full overflow-hidden p-0;
-  }
+      &::part(body-wrapper) {
+        @apply h-full overflow-hidden p-0;
+      }
 
-  &::part(body) {
-    @apply h-full;
-  }
+      &::part(body) {
+        @apply h-full;
+      }
 
-  &::part(backdrop) {
-    grid-template-rows: 1fr 100% 3fr;
-  }
+      &::part(backdrop) {
+        grid-template-rows: 1fr 100% 3fr;
+      }
 
-  &::part(header-wrapper) {
-    @apply bg-neutral-light;
-  }
+      &::part(header-wrapper) {
+        @apply bg-neutral-light;
+      }
 
-  a {
-    @apply link-style;
-  }
-} 
+      a {
+        @apply link-style;
+      }
+    }
   `;
 
   @state()

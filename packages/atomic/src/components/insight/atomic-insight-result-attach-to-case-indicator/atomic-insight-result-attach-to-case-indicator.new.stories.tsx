@@ -9,6 +9,22 @@ import type {AtomicInsightInterface} from '@/src/components/insight/atomic-insig
 import {MockInsightApi} from '@/storybook-utils/api/insight/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
+import '@/src/components/search/atomic-field-condition/atomic-field-condition.js';
+import '@/src/components/insight/atomic-insight-layout/atomic-insight-layout.js';
+import '@/src/components/insight/atomic-insight-result-action-bar/atomic-insight-result-action-bar.js';
+import '@/src/components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action.js';
+import '@/src/components/insight/atomic-insight-result-attach-to-case-indicator/atomic-insight-result-attach-to-case-indicator.js';
+import '@/src/components/insight/atomic-insight-result-list/atomic-insight-result-list.js';
+import '@/src/components/insight/atomic-insight-result-template/atomic-insight-result-template.js';
+import '@/src/components/common/atomic-layout-section/atomic-layout-section.js';
+import '@/src/components/search/atomic-result-fields-list/atomic-result-fields-list.js';
+import '@/src/components/search/atomic-result-link/atomic-result-link.js';
+import '@/src/components/search/atomic-result-section-actions/atomic-result-section-actions.js';
+import '@/src/components/search/atomic-result-section-bottom-metadata/atomic-result-section-bottom-metadata.js';
+import '@/src/components/search/atomic-result-section-excerpt/atomic-result-section-excerpt.js';
+import '@/src/components/search/atomic-result-section-title/atomic-result-section-title.js';
+import '@/src/components/search/atomic-result-text/atomic-result-text.js';
+import '@/src/components/search/atomic-text/atomic-text.js';
 
 const mockInsightApi = new MockInsightApi();
 

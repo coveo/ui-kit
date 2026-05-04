@@ -67,7 +67,7 @@ describe('case assist api client', () => {
 
       await client.getCaseClassifications(request);
 
-      expect(platformCallMock).toBeCalled();
+      expect(platformCallMock).toHaveBeenCalled();
       const mockRequest = platformCallMock.mock.calls[0][0];
       expect(mockRequest).toMatchObject({
         method: 'POST',
@@ -185,7 +185,7 @@ describe('case assist api client', () => {
 
       await client.getDocumentSuggestions(request);
 
-      expect(platformCallMock).toBeCalled();
+      expect(platformCallMock).toHaveBeenCalled();
       const mockRequest = platformCallMock.mock.calls[0][0];
       expect(mockRequest).toMatchObject({
         method: 'POST',

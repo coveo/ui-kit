@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicInsightUserActionsTimelineStories from './atomic-insight-user-actions-timeline.new.stories';
+import meta, { Default } from './atomic-insight-user-actions-timeline.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicInsightUserActionsTimelineStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicInsightUserActionsTimelineStories}
+  stories={{ Default }}
   githubPath="insight/atomic-insight-user-actions-timeline/atomic-insight-user-actions-timeline.ts"
   tagName="atomic-insight-user-actions-timeline"
   className="AtomicInsightUserActionsTimeline"

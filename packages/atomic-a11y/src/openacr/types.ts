@@ -16,10 +16,21 @@ export interface CriterionAggregate {
   violatingComponents: Set<string>;
 }
 
+export interface InteractiveAggregate {
+  coveredComponents: Set<string>;
+  passedComponents: Set<string>;
+  failedComponents: Set<string>;
+}
+
 export interface A11yOverrideEntry {
   criterion: string;
   conformance: OpenAcrConformance;
   reason: string;
+}
+
+export interface ManualAuditCriterionValue {
+  conformance: string;
+  remarks?: string;
 }
 
 export interface ManualAuditBaselineEntry {
@@ -27,7 +38,7 @@ export interface ManualAuditBaselineEntry {
   category: string;
   manual: {
     status: string;
-    wcag22Criteria: Record<string, string>;
+    wcag22Criteria: Record<string, string | ManualAuditCriterionValue>;
   };
 }
 
@@ -35,6 +46,7 @@ export interface ManualAuditAggregate {
   componentName: string;
   criterionId: string;
   conformance: OpenAcrConformance;
+  remarks?: string;
 }
 
 export interface OpenAcrCriterionComponent {

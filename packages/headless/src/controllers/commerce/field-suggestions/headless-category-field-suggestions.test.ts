@@ -1,3 +1,4 @@
+import {commerceCategoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/commerce/facets/facet-search-set/category/commerce-category-facet-search-set-slice.js';
 import {
   executeCommerceFacetSearch,
   getFacetIdWithCommerceFieldSuggestionNamespace,
@@ -5,7 +6,6 @@ import {
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice.js';
 import type {CategoryFacetRequest} from '../../../features/commerce/facets/facet-set/interfaces/request.js';
 import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice.js';
-import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice.js';
 import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
 import type {CommerceAppState} from '../../../state/commerce-app-state.js';
 import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search.js';

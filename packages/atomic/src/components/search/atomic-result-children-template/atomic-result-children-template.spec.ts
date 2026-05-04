@@ -89,7 +89,7 @@ describe('atomic-result-children-template', () => {
       };
       const spy = vi
         .spyOn(ResultTemplateController.prototype, 'getTemplate')
-        .mockResolvedValue(fakeTemplate);
+        .mockReturnValue(fakeTemplate);
 
       const template = await element.getTemplate();
       expect(template).not.toBeNull();
@@ -108,7 +108,7 @@ describe('atomic-result-children-template', () => {
       };
       const spy = vi
         .spyOn(ResultTemplateController.prototype, 'getTemplate')
-        .mockResolvedValue(fakeTemplate);
+        .mockReturnValue(fakeTemplate);
       const element = await setupElement({conditions: [titleConditions]});
       const result = await element.getTemplate();
 
@@ -145,7 +145,7 @@ describe('atomic-result-children-template', () => {
     const errorComponent = element.shadowRoot?.querySelector(
       'atomic-component-error'
     );
-    expect(errorComponent).toBeDefined();
+    expect(errorComponent).not.toBeNull();
     mockedConsoleError.mockRestore();
   });
 });

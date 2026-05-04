@@ -1,6 +1,6 @@
 # Manual Audit Guide
 
-This guide explains how to create manual audit baseline files for the Coveo Atomic accessibility pipeline. These files capture human-reviewed WCAG 2.2 conformance results that feed into the final VPAT (Voluntary Product Accessibility Template) report.
+This guide explains how to create manual audit baseline files for the Coveo Atomic accessibility pipeline. These files capture human-reviewed WCAG conformance results that feed into the final VPAT (Voluntary Product Accessibility Template) report.
 
 ## Why manual audits?
 
@@ -19,6 +19,12 @@ packages/atomic-a11y/
 ```
 
 **Default directory**: `a11y/reports`
+
+## Source of truth
+
+The `manual-audit-*.json` baseline files in `a11y/reports` are the source of truth for manual audits.
+
+Auditors should edit these baseline files directly. There is no separate delta merge step in the standard `pnpm a11y:vpat` workflow.
 
 ## File naming
 
@@ -86,7 +92,7 @@ Keys in `wcag22Criteria` must follow this pattern:
 {numeric-id}-{slug}
 ```
 
-The system extracts the numeric ID using the regex `/^(\d+(?:\.\d+)+)-/`, so the slug after the hyphen can be anything descriptive. Convention is to use the WCAG criterion handle in lowercase kebab-case.
+The system extracts the numeric ID using the regex `/^(\d+(?:\.\d+)+)-/`, so what follows the first hyphen can be anything descriptive. Convention is to use the WCAG criterion handle in lowercase kebab-case.
 
 **Examples:**
 
@@ -108,6 +114,56 @@ The system extracts the numeric ID using the regex `/^(\d+(?:\.\d+)+)-/`, so the
 
 Any other status value is logged as a warning and skipped.
 
+### Adding remarks (optional)
+
+For each criterion, you can optionally provide `remarks` to document **why** you assigned that status. This helps engineers understand the auditor's reasoning and makes it easier to track remediation efforts.
+
+**Two formats are supported:**
+
+**Simple format** (no remarks):
+
+```json
+"1.1.1-non-text-content": "pass"
+```
+
+**Object format** (with remarks):
+
+```json
+"1.1.1-non-text-content": {
+  "conformance": "pass",
+  "remarks": "All images have meaningful alt text"
+}
+```
+
+**Complete example:**
+
+```json
+{
+  "name": "atomic-search-box",
+  "category": "search",
+  "manual": {
+    "status": "complete",
+    "wcag22Criteria": {
+      "1.1.1-non-text-content": {
+        "conformance": "pass",
+        "remarks": "All images have alt text; icons use aria-label"
+      },
+      "1.4.3-contrast-minimum": {
+        "conformance": "partial",
+        "remarks": "Pass ratio meets AA standards. Focus indicators on dark backgrounds need refinement."
+      },
+      "2.4.1-bypass-blocks": {
+        "conformance": "fail",
+        "remarks": "No skip-to-main-content link. Keyboard users must tab through search filters."
+      },
+      "2.1.1-keyboard": "pass"
+    }
+  }
+}
+```
+
+Remarks are included in the OpenACR report and help reviewers understand which criteria need attention or may require follow-up testing.
+
 ## How conformance is resolved
 
 When multiple components report on the same criterion, the system applies **worst-wins** precedence:
@@ -122,8 +178,8 @@ For example, if `atomic-search-box` reports `pass` and `atomic-result-list` repo
 
 Manual audits are one of four conformance sources. The full priority chain (highest to lowest):
 
-1. **Overrides** (`a11y-overrides.json`) — explicit exceptions set by engineering
-2. **Manual audits** — your baseline files (this guide)
+1. **Overrides** (`a11y/a11y-overrides.json`) — explicit exceptions set by engineering
+2. **Manual audits** — your baseline files (as described in this guide)
 3. **Existing report conformance** — previously computed values in the JSON report
 4. **Automated results** — derived from axe-core pass/fail counts
 
@@ -181,7 +237,7 @@ The system validates each entry before processing. An entry is **skipped with a 
 
 Additionally, individual criterion entries within `wcag22Criteria` are skipped if:
 
-- The value is not a string
+- The value is neither a string nor an object with string `conformance`
 - The key doesn't match the `{numeric-id}-{slug}` pattern
 - The status value is not one of `pass`, `fail`, `partial`, `not-applicable`
 
@@ -194,6 +250,7 @@ Additionally, individual criterion entries within `wcag22Criteria` are skipped i
    b. Add criterion results to wcag22Criteria
 4. Commit the file
 5. The CI pipeline runs:
+
 ```
    pnpm a11y:vpat
      → reads a11y-report.json (automated)

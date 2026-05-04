@@ -74,7 +74,10 @@ describe('atomic-ipx-result-link', () => {
       await renderInAtomicResult<AtomicIpxResultLink>({
         template: html`<atomic-ipx-result-link
           href-template=${ifDefined(props.hrefTemplate)}
-        >${slottedContent ? unsafeHTML(slottedContent) : ''}</atomic-ipx-result-link>`,
+          >${slottedContent
+            ? unsafeHTML(slottedContent)
+            : ''}</atomic-ipx-result-link
+        >`,
         selector: 'atomic-ipx-result-link',
         result,
         interactiveResult,

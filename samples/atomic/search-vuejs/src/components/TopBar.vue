@@ -8,15 +8,13 @@
         expression="relevancy"
       ></atomic-sort-expression>
       <atomic-sort-expression
-        label="Price (low to high)"
-        expression="ec_price ascending"
-      >
-      </atomic-sort-expression>
+        label="Date (Newest)"
+        expression="date descending"
+      ></atomic-sort-expression>
       <atomic-sort-expression
-        label="Price (high to low)"
-        expression="ec_price descending"
-      >
-      </atomic-sort-expression>
+        label="Date (Oldest)"
+        expression="date ascending"
+      ></atomic-sort-expression>
     </atomic-sort-dropdown>
   </div>
 </template>

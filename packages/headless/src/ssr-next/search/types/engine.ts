@@ -81,11 +81,12 @@ export interface SearchEngineDefinition<
  */
 export type SearchEngineDefinitionControllersPropsOption<
   TControllersPropsMap extends ControllersPropsMap,
-> = HasKeys<TControllersPropsMap> extends false
-  ? {}
-  : {
-      controllers: TControllersPropsMap;
-    };
+> =
+  HasKeys<TControllersPropsMap> extends false
+    ? {}
+    : {
+        controllers: TControllersPropsMap;
+      };
 
 export interface SearchEngineDefinitionBuildResult<
   TEngine extends CoreEngine | CoreEngineNext,

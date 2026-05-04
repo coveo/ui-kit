@@ -11,9 +11,9 @@ import {
 } from './facet-options-actions.js';
 
 export type {
-  UpdateFacetOptionsActionCreatorPayload,
-  EnableFacetActionCreatorPayload,
   DisableFacetActionCreatorPayload,
+  EnableFacetActionCreatorPayload,
+  UpdateFacetOptionsActionCreatorPayload,
 };
 
 /**

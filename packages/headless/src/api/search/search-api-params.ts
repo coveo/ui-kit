@@ -131,7 +131,7 @@ export interface PipelineRuleParams {
   pipelineRuleParameters?: PipelineRuleParameters;
 }
 
-export type PipelineRuleParameters = {
+type PipelineRuleParameters = {
   mlGenerativeQuestionAnswering?: GenQAParameters;
 };
 

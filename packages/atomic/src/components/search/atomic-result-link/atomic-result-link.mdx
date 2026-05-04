@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicResultLinkStories from './atomic-result-link.new.stories';
+import meta, { Default, WithSlotsAttributes, WithAlternativeContent, WithHrefTemplate } from './atomic-result-link.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicResultLinkStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicResultLinkStories}
+  stories={{ Default, WithSlotsAttributes, WithAlternativeContent, WithHrefTemplate }}
   githubPath="search/atomic-result-link/atomic-result-link.ts"
   tagName="atomic-result-link"
   className="AtomicResultLink"

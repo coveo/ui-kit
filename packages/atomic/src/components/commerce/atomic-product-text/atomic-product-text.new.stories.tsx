@@ -5,6 +5,8 @@ import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-pro
 import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product-template-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {updateQuery} from '../../../../../headless/src/features/commerce/query/query-actions';
+import '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface.js';
+import '@/src/components/commerce/atomic-product-text/atomic-product-text.js';
 
 const {
   decorator: commerceInterfaceDecorator,
@@ -47,6 +49,7 @@ const meta: Meta = {
   ],
   parameters: {
     ...parameters,
+    chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
     },

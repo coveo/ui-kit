@@ -54,6 +54,7 @@ vi.mock('@coveo/headless/commerce', {spy: true});
 vi.mock('@/src/utils/init-queue', {spy: true});
 vi.mock('./analytics-config', {spy: true});
 vi.mock('./store', {spy: true});
+vi.mock('@/src/utils/initialization-common-utils', {spy: true});
 
 @customElement('test-element')
 @bindings()
@@ -707,14 +708,14 @@ describe('atomic-commerce-interface', () => {
           pushStateSpy = vi.spyOn(history, 'pushState');
         });
 
-        describe('when the interface is not loading', () => {
+        describe('when the first request has not been executed', () => {
           let urlManagerSubscribeCallback: () => void;
           let loggerSpy: MockInstance;
 
           beforeEach(async () => {
             await callTestedInitMethod(element);
 
-            element.searchOrListing.state.isLoading = false;
+            element.summary.state.firstRequestExecuted = false;
             element.urlManager!.state.fragment = 'test-fragment';
             urlManagerSubscribeCallback =
               urlManagerSubscribeSpy.mock.calls[0][0];
@@ -747,14 +748,14 @@ describe('atomic-commerce-interface', () => {
           });
         });
 
-        describe('when the interface is loading', () => {
+        describe('when the first search has been executed', () => {
           let urlManagerSubscribeCallback: () => void;
           let loggerSpy: MockInstance;
 
           beforeEach(async () => {
             await callTestedInitMethod(element);
 
-            element.searchOrListing.state.isLoading = true;
+            element.summary.state.firstRequestExecuted = true;
             element.urlManager!.state.fragment = 'test-fragment';
             urlManagerSubscribeCallback =
               urlManagerSubscribeSpy.mock.calls[0][0];

@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicProductMultiValueTextStories from './atomic-product-multi-value-text.new.stories';
+import meta, { Default, WithMaxValuesToDisplaySetToMinimum, WithMaxValuesToDisplaySetToTotalNumberOfValues } from './atomic-product-multi-value-text.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicProductMultiValueTextStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicProductMultiValueTextStories}
+  stories={{ Default, WithMaxValuesToDisplaySetToMinimum, WithMaxValuesToDisplaySetToTotalNumberOfValues }}
   githubPath="commerce/atomic-product-multi-value-text/atomic-product-multi-value-text.ts"
   tagName="atomic-product-multi-value-text"
   className="AtomicProductMultiValueText"

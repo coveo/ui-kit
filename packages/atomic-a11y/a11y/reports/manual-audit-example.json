@@ -1,1 +1,35 @@
-[]
+[
+  {
+    "name": "atomic-search-box",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "1.1.1-non-text-content": {
+          "conformance": "pass",
+          "remarks": "All search icon images have aria-labels. Magnifying glass icon properly labeled."
+        },
+        "1.3.1-info-and-relationships": "pass",
+        "1.3.2-meaningful-sequence": "pass",
+        "2.1.1-keyboard": "pass",
+        "2.4.3-focus-order": "pass",
+        "2.4.7-focus-visible": "pass",
+        "3.2.1-on-focus": "pass",
+        "3.2.2-on-input": "pass",
+        "3.3.2-labels-or-instructions": "pass",
+        "4.1.2-name-role-value": {
+          "conformance": "partial",
+          "remarks": "Component tree is accessible. Screen reader announces query field and suggestions. Live region update timing could be improved."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-search-box-instant-results",
+    "category": "search",
+    "manual": {
+      "status": "pending",
+      "wcag22Criteria": {}
+    }
+  }
+]

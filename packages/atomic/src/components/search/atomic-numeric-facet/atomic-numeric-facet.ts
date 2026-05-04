@@ -303,12 +303,14 @@ export class AtomicNumericFacet
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.filterDependenciesManager?.stopWatching();
-    this.removeNumberFormatListener?.();
-    this.removeNumberInputApplyListener?.();
-    this.unsubscribeFacetForRange?.();
-    this.unsubscribeFacetForInput?.();
-    this.unsubscribeFilter?.();
+    if (!this.isConnected) {
+      this.filterDependenciesManager?.stopWatching();
+      this.removeNumberFormatListener?.();
+      this.removeNumberInputApplyListener?.();
+      this.unsubscribeFacetForRange?.();
+      this.unsubscribeFacetForInput?.();
+      this.unsubscribeFilter?.();
+    }
   }
 
   private get focusTarget(): FocusTargetController {
@@ -493,14 +495,10 @@ export class AtomicNumericFacet
   }
 
   private initializeDependenciesManager(facetId: string) {
-    if (!this.dependsOn || Object.keys(this.dependsOn).length === 0) {
-      return;
-    }
-
     return buildFacetConditionsManager(this.bindings.engine, {
       facetId,
       conditions: parseDependsOn<FacetValueRequest | CategoryFacetValueRequest>(
-        this.dependsOn
+        this.dependsOn || {}
       ),
     });
   }

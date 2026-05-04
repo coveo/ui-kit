@@ -21,7 +21,11 @@ describe('atomic-layout-section', () => {
     maxWidth,
   }: LayoutSectionProps = {}) => {
     const element = await fixture<AtomicLayoutSection>(html`
-      <atomic-layout-section section="${section}" min-width="${ifDefined(minWidth)}" max-width="${ifDefined(maxWidth)}">
+      <atomic-layout-section
+        section="${section}"
+        min-width="${ifDefined(minWidth)}"
+        max-width="${ifDefined(maxWidth)}"
+      >
         <h1>Hello World</h1>
       </atomic-layout-section>
     `);

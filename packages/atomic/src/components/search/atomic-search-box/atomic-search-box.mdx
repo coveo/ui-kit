@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicSearchBoxStories from './atomic-search-box.new.stories';
+import meta, { Default, RichSearchBox, StandaloneSearchBox } from './atomic-search-box.new.stories';
 import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicSearchBoxStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicSearchBoxStories}
+  stories={{ Default, RichSearchBox, StandaloneSearchBox }}
   githubPath="search/atomic-search-box/atomic-search-box.ts"
   tagName="atomic-search-box"
   className="AtomicSearchBox"

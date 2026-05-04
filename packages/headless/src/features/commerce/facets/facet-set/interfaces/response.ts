@@ -18,8 +18,7 @@ interface NonLocationFacetValue {
 }
 
 export interface CategoryFacetValue
-  extends BaseFacetValue,
-    NonLocationFacetValue {
+  extends BaseFacetValue, NonLocationFacetValue {
   value: string;
   path: string[];
   isLeafValue: boolean;
@@ -45,8 +44,7 @@ export type RegularFacetResponse = BaseFacetResponse<
 >;
 
 export interface RegularFacetValue
-  extends BaseFacetValue,
-    NonLocationFacetValue {
+  extends BaseFacetValue, NonLocationFacetValue {
   value: string;
   /**
    * @deprecated Use the facet's `moreValuesAvailable` property instead.

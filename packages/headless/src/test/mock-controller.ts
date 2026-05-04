@@ -3,6 +3,9 @@ import type {CoreEngine, CoreEngineNext} from '../app/engine.js';
 import type {Controller} from '../controllers/controller/headless-controller.js';
 import type {SSRCommerceEngine} from '../ssr/commerce/factories/build-factory.js';
 
+export {buildMockProductListingController} from './mock-product-listing-controller.js';
+export {buildMockSearchController} from './mock-search-controller.js';
+
 interface MockController {
   initialState?: Record<string, unknown>;
 }

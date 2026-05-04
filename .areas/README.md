@@ -9,16 +9,16 @@ Each YAML file defines an "area" of the codebase and the review requirements for
 ```yaml
 description: Human-readable description of this area
 file_patterns:
-  - "packages/example/**"
+  - 'packages/example/**'
 
 reviewers:
   team-slug:
-    minimum_approvals: 1  # Blocking
+    minimum_approvals: 1 # Blocking
   other-team:
-    minimum_approvals: 0  # Request Only (Non-blocking)
+    minimum_approvals: 0 # Request Only (Non-blocking)
 
 review_bypass:
-  trusted-team: pull_request  # Can bypass these rules
+  trusted-team: pull_request # Can bypass these rules
   integration/139346: exempt # Developer eXperience Bot. Important for releases
 ```
 

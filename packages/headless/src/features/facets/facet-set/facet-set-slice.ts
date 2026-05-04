@@ -4,9 +4,11 @@ import {
   deselectAllNonBreadcrumbs,
 } from '../../breadcrumb/breadcrumb-actions.js';
 import {disableFacet} from '../../facet-options/facet-options-actions.js';
+import {isFacetVisibleOnTab} from '../../facet-options/facet-options-utils.js';
 import {change} from '../../history/history-actions.js';
 import {executeSearch, fetchFacetValues} from '../../search/search-actions.js';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions.js';
+import {updateActiveTab} from '../../tab-set/tab-set-actions.js';
 import {
   excludeFacetSearchResult,
   selectFacetSearchResult,
@@ -42,14 +44,15 @@ export const facetSetReducer = createReducer(
   (builder) => {
     builder
       .addCase(registerFacet, (state, action) => {
-        const {facetId} = action.payload;
+        const {facetId, tabs} = action.payload;
 
         if (facetId in state) {
           return;
         }
 
         state[facetId] = getFacetSetSliceInitialState(
-          buildFacetRequest(action.payload)
+          buildFacetRequest(action.payload),
+          tabs
         );
       })
       .addCase(change.fulfilled, (_, action) => {
@@ -254,6 +257,18 @@ export const facetSetReducer = createReducer(
         }
         const {request} = state[action.payload]!;
         handleFacetDeselectAll(request);
+      })
+      .addCase(updateActiveTab, (state, action) => {
+        const newActiveTab = action.payload;
+        Object.keys(state).forEach((facetId) => {
+          const facetSlice = state[facetId]!;
+          const hasTabs =
+            facetSlice.tabs?.included?.length ||
+            facetSlice.tabs?.excluded?.length;
+          if (hasTabs && !isFacetVisibleOnTab(facetSlice.tabs, newActiveTab)) {
+            handleFacetDeselectAll(facetSlice.request);
+          }
+        });
       });
   }
 );

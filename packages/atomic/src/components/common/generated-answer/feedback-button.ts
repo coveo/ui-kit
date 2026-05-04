@@ -29,7 +29,8 @@ export const renderFeedbackButton: FunctionalComponent<FeedbackButtonProps> = ({
   const classNames = multiClassMap(
     tw({
       [baseClassName]: true,
-      'feedback-button rounded-md p-2 text-neutral-dark': true,
+      'feedback-button rounded-md p-2': true,
+      'text-neutral-dark': !props.active,
       [props.variant]: true,
       active: props.active,
       'hover:text-success': props.variant === 'like',

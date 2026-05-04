@@ -12,10 +12,10 @@ import {
 } from 'vitest';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import type {InitializableComponent} from '@/src/decorators/types';
-import {fetchBindings} from '@/src/utils/initialization-lit-stencil-common-utils';
+import {fetchBindings} from '@/src/utils/initialization-common-utils';
 import {InitializeBindingsMixin} from './bindings-mixin';
 
-vi.mock('@/src/utils/initialization-lit-stencil-common-utils', {spy: true});
+vi.mock('@/src/utils/initialization-common-utils', {spy: true});
 
 const mockBindings = () =>
   ({
@@ -23,7 +23,7 @@ const mockBindings = () =>
   }) as Bindings;
 
 @customElement('test-element')
-// biome-ignore lint/correctness/noUnusedVariables: <used as an element>
+// oxlint-disable-next-line @typescript-eslint/no-unused-vars -- <used as an element>
 class TestElement
   extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<Bindings>

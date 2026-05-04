@@ -2,7 +2,7 @@ import {expect, test} from './fixture';
 
 test.describe('atomic-quickview-modal', () => {
   test.beforeEach(async ({quickviewModal}) => {
-    await quickviewModal.load();
+    await quickviewModal.load({story: 'closed'});
     await quickviewModal.quickviewButton.waitFor();
   });
 

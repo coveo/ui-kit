@@ -24,11 +24,23 @@ const styles = css`
   [part='generated-text'] [part='answer-heading-4'],
   [part='generated-text'] [part='answer-heading-5'],
   [part='generated-text'] [part='answer-heading-6'] {
-    @apply mt-4 mb-2 font-bold;
+    @apply mt-3 mb-2 font-bold;
   }
 
   [part='generated-text'] [part='answer-paragraph'] {
-    @apply mb-6;
+    @apply mb-3;
+  }
+
+  [part='generated-text']
+    [part^='answer-heading-']
+    atomic-generated-answer-inline-link::part(answer-link) {
+    @apply text-inherit;
+  }
+
+  [part='generated-text']
+    [part^='answer-heading-']
+    atomic-generated-answer-inline-link::part(answer-link-text) {
+    @apply no-underline;
   }
 
   [part='generated-text'] [part='answer-list-item'],
@@ -36,7 +48,7 @@ const styles = css`
   [part='generated-text'] [part='answer-quote-block'],
   [part='generated-text'] [part='answer-table-header'],
   [part='generated-text'] [part='answer-table-content'] {
-    @apply leading-6;
+    @apply leading-5;
   }
 
   [part='generated-text'] [part='answer-strong'] {

@@ -1,11 +1,11 @@
 import {Meta} from '@storybook/addon-docs/blocks';
-import * as AtomicGeneratedAnswerStories from './atomic-generated-answer.new.stories';
+import meta, { Default, DisableCitationAnchoring, WithLegacyAnalytics } from './atomic-generated-answer.new.stories';
 import {AtomicDocTemplate} from '../../../../storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicGeneratedAnswerStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicGeneratedAnswerStories}
+  stories={{ Default, DisableCitationAnchoring, WithLegacyAnalytics }}
   githubPath="search/atomic-generated-answer/atomic-generated-answer.ts"
   tagName="atomic-generated-answer"
   className="AtomicGeneratedAnswer"
@@ -30,8 +30,9 @@ The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) m
 ## Key Features
 
 - **AI-Generated Answers**: Automatically generates answers to user queries using Coveo ML
+- **Conversational Experience**: Ask follow-up questions and maintain context across a multi-turn conversation
 - **Source Citations**: Displays citations to the sources used to generate the answer
-- **Feedback Collection**: Built-in like/dislike buttons to collect user feedback
+- **Feedback Collection**: Built-in like/dislike buttons to collect user feedback on specific answers
 - **Copy to Clipboard**: Users can easily copy the generated answer
 - **Collapsible Mode**: Allows long answers to be collapsed for better UI management
 - **Tab Integration**: Show/hide the component based on active tabs
@@ -73,6 +74,26 @@ Specify a particular answer configuration to use:
 ```html
 <atomic-generated-answer
   answer-configuration-id="my-config-id">
+</atomic-generated-answer>
+```
+
+### Conversational Experience (Multi-Turn)
+
+Enable the conversational experience by providing an `agent-id`. This activates multi-turn interactions, allowing users to ask follow-up questions after the initial answer is generated.
+
+> **Note:** Setting `agent-id` is required to enable multi-turn, but the conversational UI (threaded timeline and follow-up input) only appears when the follow-up capability is enabled for the configured agent on the server side. If the agent does not support follow-ups, the component behaves like a single-turn answer generation experience.
+
+When an `agent-id` is set and the agent has the follow-up capability enabled, the component:
+- Displays the initial answer along with a follow-up input field
+- Lets users ask follow-up questions that maintain the conversation context
+- Renders the full conversation as a threaded timeline, where each answer has its own citations, feedback buttons, and copy-to-clipboard action
+- Tracks analytics (citation clicks, hovers, likes/dislikes, copy) independently for each answer in the conversation
+
+For more information, see [Configure a search interface for the Search Agent](https://docs.coveo.com/en/q32d5507/leverage-machine-learning/configure-a-search-interface-for-the-search-agent).
+
+```html
+<atomic-generated-answer
+  agent-id="my-agent-id">
 </atomic-generated-answer>
 ```
 

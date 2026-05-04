@@ -15,11 +15,11 @@ import {
 } from '../core/recent-queries-list/headless-core-recent-queries-list.js';
 
 export type {
-  RecentQueriesListProps,
-  RecentQueriesListOptions,
   RecentQueriesList,
-  RecentQueriesState,
   RecentQueriesListInitialState,
+  RecentQueriesListOptions,
+  RecentQueriesListProps,
+  RecentQueriesState,
 };
 
 /**

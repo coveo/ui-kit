@@ -102,7 +102,7 @@ describe('atomic-recs-list', () => {
 
       expect(element.error).toBeUndefined();
 
-      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
       (element as any)[prop] = invalidValue;
       await element.updateComplete;
 
@@ -144,7 +144,7 @@ describe('atomic-recs-list', () => {
 
       const element = await setupElement({[prop]: validValue});
 
-      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- testing invalid values
       (element as any)[prop] = invalidValue;
       await element.updateComplete;
 
@@ -164,7 +164,7 @@ describe('atomic-recs-list', () => {
   );
 
   describe('#willUpdate', () => {
-    // biome-ignore lint/suspicious/noExplicitAny: accessing private properties in tests
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- accessing private properties in tests
     let element: any;
 
     beforeEach(async () => {
@@ -524,18 +524,18 @@ describe('atomic-recs-list', () => {
   } = {}) => {
     const {element} = await renderInAtomicRecsInterface<AtomicRecsList>({
       template: html`<atomic-recs-list
-          .display=${display}
-          .density=${density}
-          .imageSize=${imageSize}
-          .label=${label}
-          .numberOfRecommendationsPerPage=${numberOfRecommendationsPerPage}
-        >
-          <atomic-recs-result-template>
-            <template>
-              <div>Result Content</div>
-            </template>
-          </atomic-recs-result-template>
-        </atomic-recs-list>`,
+        .display=${display}
+        .density=${density}
+        .imageSize=${imageSize}
+        .label=${label}
+        .numberOfRecommendationsPerPage=${numberOfRecommendationsPerPage}
+      >
+        <atomic-recs-result-template>
+          <template>
+            <div>Result Content</div>
+          </template>
+        </atomic-recs-result-template>
+      </atomic-recs-list>`,
       selector: 'atomic-recs-list',
       bindings: (bindings) => {
         bindings.store.state.loadingFlags = isAppLoaded ? [] : ['loading-flag'];

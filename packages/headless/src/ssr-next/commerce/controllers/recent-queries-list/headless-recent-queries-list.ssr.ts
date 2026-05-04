@@ -9,11 +9,11 @@ import {
 import type {NonRecommendationControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
 
 export type {
+  RecentQueriesList,
   RecentQueriesListInitialState,
   RecentQueriesListOptions,
-  RecentQueriesState,
-  RecentQueriesList,
   RecentQueriesListProps,
+  RecentQueriesState,
 };
 
 export type RecentQueriesListDefinition =

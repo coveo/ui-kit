@@ -10,6 +10,7 @@ import type {
   A11yOverrideEntry,
   ChapterId,
   CriterionAggregate,
+  InteractiveAggregate,
   ManualAuditAggregate,
   OpenAcrConformance,
   OpenAcrCriterion,
@@ -19,7 +20,6 @@ import type {
 
 const DEFAULT_REPORT_TITLE = 'Coveo Accessibility Conformance Report';
 const DEFAULT_REPORT_PRODUCT_NAME = 'Coveo Atomic';
-const DEFAULT_REPORT_PRODUCT_VERSION = '3.x.x';
 const DEFAULT_REPORT_DATE = new Date().toISOString().slice(0, 10);
 
 function buildCriterionAggregates(
@@ -52,6 +52,38 @@ function buildCriterionAggregates(
     }
 
     aggregates.set(criterion.id, aggregate);
+  }
+
+  return aggregates;
+}
+
+function buildInteractiveAggregates(
+  components: A11yComponentReport[]
+): Map<string, InteractiveAggregate> {
+  const aggregates = new Map<string, InteractiveAggregate>();
+
+  for (const component of components) {
+    if (!component.interactive) {
+      continue;
+    }
+
+    for (const criterionId of component.interactive.criteriaCovered) {
+      const aggregate = aggregates.get(criterionId) ?? {
+        coveredComponents: new Set<string>(),
+        passedComponents: new Set<string>(),
+        failedComponents: new Set<string>(),
+      };
+
+      aggregate.coveredComponents.add(component.name);
+
+      if (component.interactive.failedCriteria.includes(criterionId)) {
+        aggregate.failedComponents.add(component.name);
+      } else {
+        aggregate.passedComponents.add(component.name);
+      }
+
+      aggregates.set(criterionId, aggregate);
+    }
   }
 
   return aggregates;
@@ -99,6 +131,9 @@ function buildOpenAcrCriteria(
     report?.components ?? [],
     report?.criteria ?? []
   );
+  const interactiveAggregates = buildInteractiveAggregates(
+    report?.components ?? []
+  );
   const manualByCriterion = buildManualAggregateIndex(manualAggregates);
 
   const criteriaByChapter: Record<ChapterId, OpenAcrCriterion[]> = {
@@ -117,10 +152,18 @@ function buildOpenAcrCriteria(
       ...(aggregate?.violatingComponents ?? []),
     ].sort(compareByNumericId);
     const manualForCriterion = manualByCriterion.get(definition.id);
+    const interactiveAggregate = interactiveAggregates.get(definition.id);
+    const interactiveCoveredComponents = [
+      ...(interactiveAggregate?.coveredComponents ?? []),
+    ].sort(compareByNumericId);
+    const interactiveFailedComponents = [
+      ...(interactiveAggregate?.failedComponents ?? []),
+    ].sort(compareByNumericId);
 
     const conformanceContext = {
       criterion: criterionFromReport,
       aggregate,
+      interactiveAggregate,
       manualAggregates: manualForCriterion,
       override,
     };
@@ -132,6 +175,8 @@ function buildOpenAcrCriteria(
       conformance,
       coveredComponents,
       violatingComponents,
+      interactiveCoveredComponents,
+      interactiveFailedComponents,
     });
 
     criteriaByChapter[definition.chapterId].push({
@@ -151,8 +196,9 @@ export function buildOpenAcrReport(
   const reportDate = report?.report.reportDate ?? DEFAULT_REPORT_DATE;
   const reportProductName =
     report?.report.product ?? DEFAULT_REPORT_PRODUCT_NAME;
-  const reportProductVersion =
-    report?.report.version ?? DEFAULT_REPORT_PRODUCT_VERSION;
+  if (!report?.report.version) {
+    throw new Error('Report version is required for OpenACR generation.');
+  }
 
   let evaluationMethods = report?.report.evaluationMethods?.length
     ? report.report.evaluationMethods.join('; ')
@@ -172,11 +218,14 @@ export function buildOpenAcrReport(
     manualAggregates
   );
 
+  const successNotes =
+    'Conformance is based on automated Storybook + axe-core output, interactive keyboard/screen-reader testing, and pending manual validation.';
+
   return {
     title: DEFAULT_REPORT_TITLE,
     product: {
       name: reportProductName,
-      version: reportProductVersion,
+      version: report.report.version,
       description:
         'Coveo Atomic is a web component library for building search and commerce interfaces.',
     },
@@ -202,13 +251,11 @@ export function buildOpenAcrReport(
     catalog: '2.5-edition-wcag-2.2-en',
     chapters: {
       success_criteria_level_a: {
-        notes:
-          'Conformance is based on automated Storybook + axe-core output and pending manual validation.',
+        notes: successNotes,
         criteria: criteriaByChapter.success_criteria_level_a,
       },
       success_criteria_level_aa: {
-        notes:
-          'Conformance is based on automated Storybook + axe-core output and pending manual validation.',
+        notes: successNotes,
         criteria: criteriaByChapter.success_criteria_level_aa,
       },
       success_criteria_level_aaa: {

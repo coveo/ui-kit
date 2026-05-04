@@ -2,7 +2,7 @@ import {getOrganizationEndpoint} from '@coveo/headless';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {page} from 'vitest/browser';
-import type {AtomicModal} from '@/src/components/common';
+import type {AtomicModal} from '@/src/components/common/atomic-modal/atomic-modal';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
 import type {AtomicRelevanceInspector} from './atomic-relevance-inspector';

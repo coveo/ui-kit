@@ -6,7 +6,7 @@ import type {
 } from 'lit';
 import type {AnyBindings} from '../components/common/interface/bindings';
 import type {InitializableComponent} from '../decorators/types';
-import {fetchBindings} from '../utils/initialization-lit-stencil-common-utils';
+import {fetchBindings} from '../utils/initialization-common-utils';
 import type {Constructor} from './mixin-common';
 
 function initializeBindings<
@@ -52,7 +52,7 @@ function initializeBindings<
  * ```
  *
  */
-export class BindingController implements ReactiveController {
+class BindingController implements ReactiveController {
   host: ReactiveControllerHost;
 
   private unsubscribeLanguage = () => {};
@@ -99,7 +99,7 @@ export const InitializeBindingsMixin = <T extends Constructor<LitElement>>(
   superClass: T
 ) => {
   class BindingControllerMixinClass extends superClass {
-    // biome-ignore lint/suspicious/noExplicitAny: <>
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
     constructor(...args: any[]) {
       super(...args);
       this.initBindings();

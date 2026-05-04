@@ -1,0 +1,10 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ui-kit
+  annotations:
+    github.com/project-slug: coveo/ui-kit
+spec:
+  type: other
+  lifecycle: unknown
+  owner: dxui

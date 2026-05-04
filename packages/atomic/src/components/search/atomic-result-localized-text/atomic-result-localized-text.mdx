@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicResultLocalizedTextStories from './atomic-result-localized-text.new.stories';
+import meta, { Default } from './atomic-result-localized-text.new.stories';
 import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicResultLocalizedTextStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicResultLocalizedTextStories}
+  stories={{ Default }}
   githubPath="search/atomic-result-localized-text/atomic-result-localized-text.ts"
   tagName="atomic-result-localized-text"
   className="AtomicResultLocalizedText"

@@ -48,7 +48,3 @@ export class ItemDisplayConfigContextController implements ReactiveController {
     }
   }
 }
-
-type ItemDisplayConfigContextEventHandler = (config: DisplayConfig) => void;
-export type ItemDisplayConfigContextEvent =
-  CustomEvent<ItemDisplayConfigContextEventHandler>;

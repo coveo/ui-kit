@@ -7,8 +7,10 @@ import type {ControllerDefinitionWithoutProps} from '../../types/controller-defi
 
 export * from '../../../../controllers/tab-manager/headless-tab-manager.js';
 
-interface TabManagerDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, TabManager> {}
+interface TabManagerDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  TabManager
+> {}
 
 /**
  * Defines a `TabManager` controller instance.

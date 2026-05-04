@@ -24,7 +24,7 @@ describe('atomic-segmented-facet-scrollable', () => {
       await renderInAtomicSearchInterface<AtomicSegmentedFacetScrollable>({
         template: html`<atomic-segmented-facet-scrollable>
           ${options.children}
-          </atomic-segmented-facet-scrollable>`,
+        </atomic-segmented-facet-scrollable>`,
         selector: 'atomic-segmented-facet-scrollable',
         bindings: (bindings) => {
           bindings.engine = mockedEngine;

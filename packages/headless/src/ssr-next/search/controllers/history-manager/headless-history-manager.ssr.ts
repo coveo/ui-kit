@@ -7,8 +7,10 @@ import type {ControllerDefinitionWithoutProps} from '../../types/controller-defi
 
 export * from '../../../../controllers/history-manager/headless-history-manager.js';
 
-export interface HistoryManagerDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, HistoryManager> {}
+export interface HistoryManagerDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  HistoryManager
+> {}
 
 /**
  * Defines a `HistoryManager` controller instance.
