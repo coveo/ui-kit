@@ -10,6 +10,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "a11y:merge-shards": "pnpm build && node scripts/merge-shards-cli.mjs",
     "test": "vitest run",
     "test:watch": "vitest"
   },
