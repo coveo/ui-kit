@@ -49,11 +49,19 @@ const handleMessage = (
   draft: GeneratedAnswerStream,
   payload: Pick<StreamPayload, 'textDelta'>
 ) => {
-  if (draft.answer === undefined) {
-    draft.answer = payload.textDelta;
-  } else if (typeof payload.textDelta === 'string') {
-    draft.answer = draft.answer.concat(payload.textDelta);
+  const {textDelta} = payload;
+
+  if (typeof textDelta !== 'string') {
+    return;
   }
+
+  const answer = draft.answer;
+
+  if (!answer?.trim() && !textDelta.trim()) {
+    return;
+  }
+
+  draft.answer = answer?.trim() ? answer.concat(textDelta) : textDelta;
 };
 
 const handleCitations = (
@@ -119,7 +127,7 @@ export const updateCacheWithEvent = (
       }
       break;
     case 'genqa.messageType':
-      if (parsedPayload.textDelta) {
+      if (typeof parsedPayload.textDelta === 'string') {
         handleMessage(draft, parsedPayload);
         dispatch(updateMessage({textDelta: parsedPayload.textDelta}));
       }
@@ -135,7 +143,7 @@ export const updateCacheWithEvent = (
       const answerId = draft.answerId;
       const answerGenerated = parsedPayload.answerGenerated ?? false;
       const answerTextIsEmpty = answerGenerated
-        ? !draft.answer?.length
+        ? !draft.answer?.trim()
         : undefined;
       dispatch(
         logGeneratedAnswerStreamEnd(
