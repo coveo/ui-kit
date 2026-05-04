@@ -59,7 +59,7 @@ export type {
   ResultMapState,
 } from './interface/result/result-types.js';
 
-export * as resultMutations from './interface/result/result-mutatators.js';
+export * as resultMutations from './interface/result/result-mutators.js';
 
 export * as resultSelectors from './interface/result/result-selectors.js';
 

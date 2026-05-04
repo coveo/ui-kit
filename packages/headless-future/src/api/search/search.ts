@@ -11,7 +11,7 @@
  * - Returns Promise<void> - updates state via mutations, doesn't return data
  */
 
-import type {Engine} from '@/src/core/interface/engine/engine.js';
+import {FullEngine} from '@/src/core/interface/engine/engine.js';
 import type {State} from '@/src/core/interface/interface-types.js';
 import type {SearchResult} from '@/src/core/interface/results/results-types.js';
 import type {
@@ -49,10 +49,10 @@ import type {
  * - Success: setResults(), setTotalCount(), updateFacets(), setLoading(false)
  * - Failure: setError(), setLoading(false)
  *
- * @param engine - The headless engine instance
+ * @param fullEngine - The headless engine instance
  * @returns Promise that resolves when search completes (check state for results)
  */
-export async function executeSearchAPI(engine: Engine): Promise<void> {
+export async function executeSearchAPI(engine: FullEngine): Promise<void> {
   // Set loading state before making the request
   engine.mutate(resultsMutations.setLoading(true));
   engine.mutate(resultsMutations.setError(null));
@@ -205,10 +205,10 @@ function buildAdvancedQueryFromFacets(
  *
  * @param engine - The headless engine
  * @param coveoFacets - Facet data from Coveo response
- * @param currentFacets - CurrenFacetState
+ * @param currentFacets - CurrentFacetState
  */
 function updateFacetsFromResponse(
-  engine: Engine,
+  engine: FullEngine,
   coveoFacets: CoveoFacetResponse[],
   currentFacets: Record<
     string,
