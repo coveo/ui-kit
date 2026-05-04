@@ -18,6 +18,7 @@
     "**/packages/headless/**/coveo.analytics/**/*",
     "**/samples/headless/rga-angular/**/*.html",
     "**/*.hbs",
+    "**/*.handlebars",
     "**/*.tw.css",
     "**/*.mdx",
     "**/CHANGELOG.md",
