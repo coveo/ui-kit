@@ -227,8 +227,7 @@ export const logGeneratedAnswerStreamEnd = (
       const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
       const answerTextIsEmpty = answerGenerated
-        ? !state.generatedAnswer?.answer ||
-          !state.generatedAnswer?.answer.length
+        ? !state.generatedAnswer?.answer?.trim()
         : undefined;
       if (!generativeQuestionAnsweringId) {
         return null;

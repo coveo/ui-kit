@@ -112,6 +112,27 @@ describe('#streamAnswerApi', () => {
       });
     });
 
+    it('should not initialize the cached answer with blank-only first chunk', () => {
+      const dispatch = vi.fn();
+      const event = buildSuccessEvent({
+        payloadType: 'genqa.messageType',
+        payload: {
+          textDelta: '   ',
+        },
+      });
+      const draft = buildDefaultDraft({answer: undefined});
+
+      updateCacheWithEvent(event, draft, dispatch);
+
+      expect(draft.answer).toBeUndefined();
+      expect(dispatch).toHaveBeenCalledWith({
+        type: 'generatedAnswer/updateMessage',
+        payload: {
+          textDelta: '   ',
+        },
+      });
+    });
+
     it('should handle message type and append answer', () => {
       const dispatch = vi.fn();
       const event = buildSuccessEvent({
@@ -131,6 +152,21 @@ describe('#streamAnswerApi', () => {
           textDelta: 'with some more info',
         },
       });
+    });
+
+    it('should ignore message payloads when textDelta is not a string', () => {
+      const dispatch = vi.fn();
+      const event = buildSuccessEvent({
+        payloadType: 'genqa.messageType',
+        payload: {
+          textDelta: {not: 'a simple string'},
+        },
+      });
+      const draft = buildDefaultDraft({answer: 'existing answer'});
+
+      expect(() => updateCacheWithEvent(event, draft, dispatch)).not.toThrow();
+      expect(draft).toHaveProperty('answer', 'existing answer');
+      expect(dispatch).not.toHaveBeenCalled();
     });
 
     it('should handle citations message', () => {

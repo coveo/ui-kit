@@ -22,8 +22,12 @@ Before getting started, make sure that:
 Use [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) to install the package along with its peer dependencies:
 
 ```
-npm install @coveo/headless-react @coveo/headless react react-dom
+npm install @coveo/headless-react@{{packageVersion}} react react-dom
 ```
+
+> [!TIP]
+>
+> We recommend pinning your `@coveo/headless-react` dependency to a specific version to avoid unexpected changes.
 
 > [!NOTE]
 >
