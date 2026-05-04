@@ -8,8 +8,9 @@ inputs:
     description: 'The total number of shards'
     required: true
   testsToRun:
-    description: 'The tests to run'
-    required: true
+    description: 'Specific tests to run (empty = all tests)'
+    required: false
+    default: ''
   uploadArtifacts:
     description: 'Whether to upload artifacts'
     required: false
