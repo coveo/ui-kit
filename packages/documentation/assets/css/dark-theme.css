@@ -1770,3 +1770,18 @@ summary:hover {
   user-select: none;
   -webkit-user-select: none;
 }
+
+/* Header nav bar – dark theme */
+.header-nav-dropdown .dropdown-menu {
+  background: #525296;
+  border: 1px solid #525296;
+  box-shadow: none;
+}
+
+.header-nav-dropdown .header-nav-dropdown-item {
+  --bs-dropdown-link-color: #f1f2ff;
+  --bs-dropdown-link-hover-color: #399ffe;
+  --bs-dropdown-link-hover-bg: transparent;
+  --bs-dropdown-link-active-color: #399ffe;
+  --bs-dropdown-link-active-bg: transparent;
+}

@@ -1,4 +1,4 @@
-import {cpSync} from 'node:fs';
+import {cpSync, readFileSync} from 'node:fs';
 import {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {
@@ -16,7 +16,10 @@ import {
   Renderer,
   RendererEvent,
 } from 'typedoc';
-import {handleRendererEndPage} from './calloutParsing.js';
+import {
+  handleRendererEndPage,
+  setCodeBlockVariables,
+} from './calloutParsing.js';
 import {formatRightToc} from './formatRightToc.js';
 import {formatTypeDocToolbar} from './formatTypeDocToolbar.js';
 import {hoistOtherCategoryInArray, hoistOtherCategoryInNav} from './hoist.js';
@@ -28,6 +31,7 @@ import {insertMetaTags} from './insertMetaTags.js';
 import {insertSiteHeaderBar} from './insertSiteHeaderBar.js';
 import {removeNavSettings} from './removeNavSettings.js';
 import {applyTopLevelRenameArray} from './renaming.js';
+import {buildReplaceVariables} from './replaceVariables.js';
 import {
   applyNestedOrderingArray,
   applyNestedOrderingNode,
@@ -82,6 +86,12 @@ export const load = (app: Application) => {
   app.options.addDeclaration({
     name: 'hoistOther.renameModulesTo',
     help: "If set, rename any top-level group titled 'Modules' to this string.",
+    type: ParameterType.String,
+  });
+
+  app.options.addDeclaration({
+    name: 'headerNav.activeEntry',
+    help: "Title of the Developer tools dropdown entry to highlight as active (e.g. 'Headless').",
     type: ParameterType.String,
   });
 
@@ -204,7 +214,7 @@ export const load = (app: Application) => {
       </script>
       <script>
         <JSX.Raw
-          html={`(${insertSiteHeaderBar.toString()})('${event.relativeURL('assets')}');`}
+          html={`(${insertSiteHeaderBar.toString()})('${event.relativeURL('assets')}', '${(app.options.getValue('headerNav.activeEntry') as string) || ''}');`}
         />
       </script>
       <script>
@@ -298,6 +308,31 @@ export const load = (app: Application) => {
     originalMethod = null;
 
     cpSync(darkModeJs.from, darkModeJs.to);
+  });
+
+  app.renderer.on(RendererEvent.BEGIN, (event: RendererEvent) => {
+    let version = event.project.packageVersion ?? '';
+
+    if (!version) {
+      const pkgPath = resolve(process.cwd(), 'package.json');
+      try {
+        const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
+        version = pkg.version;
+      } catch {
+        throw new Error(
+          `Failed to determine packageVersion: could not read or parse ${pkgPath}`
+        );
+      }
+      if (!version) {
+        throw new Error(
+          `Failed to determine packageVersion: no "version" field found in ${pkgPath}`
+        );
+      }
+    }
+
+    const variables = {packageVersion: version};
+    setCodeBlockVariables(variables);
+    app.renderer.on(PageEvent.END, buildReplaceVariables(variables));
   });
 
   app.renderer.on(PageEvent.END, insertMetaTags);
