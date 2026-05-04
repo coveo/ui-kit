@@ -30,6 +30,12 @@ export class AtomicAskFollowUpInput extends LitElement {
   @property({attribute: false})
   public askFollowUp!: (query: string) => Promise<void>;
 
+  /**
+   * Whether to display a colored border around the input.
+   */
+  @property({type: Boolean, attribute: false})
+  public withColoredBorder = false;
+
   @state()
   private isSubmitting: boolean = false;
 
@@ -96,7 +102,7 @@ export class AtomicAskFollowUpInput extends LitElement {
     return html`
       <div
         part="input-container"
-        class="relative flex rounded-md border border-neutral"
+        class=${`relative flex rounded-md border border-neutral ${this.withColoredBorder ? 'colored-border border-2' : ''}`}
       >
         <div part="textarea-expander" class="grid grow overflow-hidden">
           <textarea

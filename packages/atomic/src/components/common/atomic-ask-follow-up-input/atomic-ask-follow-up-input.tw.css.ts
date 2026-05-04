@@ -8,6 +8,29 @@ const styles = css`
        When textarea-expander becomes position:absolute on expand it leaves normal flow,
        which would otherwise collapse the container and cause a layout jump. */
     min-height: calc(2.5rem + 2px);
+    background:
+      linear-gradient(var(--atomic-background), var(--atomic-background))
+        padding-box,
+      linear-gradient(
+          100deg,
+          var(--atomic-primary-dark) 0%,
+          var(--atomic-primary) 35%,
+          var(--atomic-primary-light) 50%,
+          var(--atomic-primary) 65%,
+          var(--atomic-primary-dark) 100%
+        )
+        border-box;
+    transition: border-color 240ms ease-in-out;
+  }
+
+  [part='input-container'].colored-border {
+    border-color: transparent;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [part='input-container'] {
+      transition-duration: 1ms;
+    }
   }
 
   [part='textarea-expander']::after {
