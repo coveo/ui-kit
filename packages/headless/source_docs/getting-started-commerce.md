@@ -14,8 +14,12 @@ This guide walks you through installing and verifying a minimal Commerce setup.
 Install `@coveo/headless` using npm (or any other package manager such as pnpm or yarn):
 
 ```bash
-npm install @coveo/headless
+npm install @coveo/headless@{{packageVersion}}
 ```
+
+> [!TIP]
+>
+> We recommend pinning your `@coveo/headless` dependency to a specific version to avoid unexpected changes.
 
 Once installed, you can import from the Commerce sub-package:
 
@@ -37,7 +41,7 @@ If you prefer not to use a package manager, you can load the Commerce bundle dir
   import {
     buildCommerceEngine,
     getSampleCommerceEngineConfiguration,
-  } from 'https://static.cloud.coveo.com/headless/v3/commerce/headless.esm.js';
+  } from 'https://static.cloud.coveo.com/headless/v{{packageVersion}}/commerce/headless.esm.js';
 
   // You can now use the imported functions.
 </script>
@@ -46,17 +50,13 @@ If you prefer not to use a package manager, you can load the Commerce bundle dir
 ### UMD (Classic Script Tag)
 
 ```html
-<script src="https://static.cloud.coveo.com/headless/v3/commerce/headless.js"></script>
+<script src="https://static.cloud.coveo.com/headless/v{{packageVersion}}/commerce/headless.js"></script>
 <script>
   // All exports are available on the global CoveoHeadlessCommerce object.
   const {buildCommerceEngine, getSampleCommerceEngineConfiguration} =
     CoveoHeadlessCommerce;
 </script>
 ```
-
-> [!TIP]
->
-> Replace `v3` in the URL with a specific version (for example, `v3.46.0`) to pin your application to a known release.
 
 ## Verify Your Installation
 
@@ -107,7 +107,7 @@ search.executeFirstSearch();
         buildCommerceEngine,
         buildSearch,
         getSampleCommerceEngineConfiguration,
-      } from 'https://static.cloud.coveo.com/headless/v3/commerce/headless.esm.js';
+      } from 'https://static.cloud.coveo.com/headless/v{{packageVersion}}/commerce/headless.esm.js';
 
       const engine = buildCommerceEngine({
         configuration: getSampleCommerceEngineConfiguration(),

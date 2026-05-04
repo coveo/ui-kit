@@ -102,7 +102,7 @@ export class GeneratedAnswerController implements ReactiveController {
 
     const isHidden = !state.isVisible;
     const isGenerating = !!state.isStreaming;
-    const hasAnswer = !!state.answer;
+    const hasNonEmptyAnswer = !!state.answer?.trim();
     const hasError = !!state.error;
 
     if (isHidden) {
@@ -117,7 +117,7 @@ export class GeneratedAnswerController implements ReactiveController {
       return bindings.i18n.t('answer-could-not-be-generated');
     }
 
-    if (hasAnswer) {
+    if (hasNonEmptyAnswer) {
       return bindings.i18n.t('answer-generated', {
         answer: state.answer,
       });
@@ -140,9 +140,12 @@ export class GeneratedAnswerController implements ReactiveController {
    */
   public get hasNoAnswerGenerated(): boolean {
     const {answer, citations} = this.options.getGeneratedAnswerState() ?? {};
-    return (
-      answer === undefined && !citations?.length && !this.hasRetryableError
-    );
+
+    const isAnswerEmpty = !answer?.trim();
+    const hasNoCitations = !citations?.length;
+    const hasNoRetryableError = !this.hasRetryableError;
+
+    return isAnswerEmpty && hasNoCitations && hasNoRetryableError;
   }
 
   /**
