@@ -261,13 +261,18 @@ export const logGeneratedAnswerStreamEnd = (
     __legacy__getBuilder: (client, state) => {
       const generativeQuestionAnsweringId =
         answerId ?? generativeQuestionAnsweringIdSelector(state);
+      const resolvedAnswerTextIsEmpty = answerGenerated
+        ? (answerTextIsEmpty ??
+          (!state.generatedAnswer?.answer ||
+            !state.generatedAnswer?.answer.length))
+        : undefined;
       if (!generativeQuestionAnsweringId) {
         return null;
       }
       return client.makeGeneratedAnswerStreamEnd({
         generativeQuestionAnsweringId,
         answerGenerated,
-        answerTextIsEmpty,
+        answerTextIsEmpty: resolvedAnswerTextIsEmpty,
         ...(conversationId && {conversationId}),
       });
     },
