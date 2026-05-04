@@ -23,20 +23,20 @@ const stepLabelKeys: Record<
   {active: string; completed: string}
 > = {
   'thinking-before-search': {
-    active: 'agent-step-analyzing-question-active',
-    completed: 'agent-step-analyzing-question-completed',
+    active: 'agent-generation-step-analyzing-question',
+    completed: 'agent-generation-step-analyzing-question-completed',
   },
   searching: {
     active: 'agent-generation-step-search',
-    completed: 'agent-step-searching-completed',
+    completed: 'agent-generation-step-search-completed',
   },
   'thinking-after-search': {
-    active: 'agent-step-analyzing-results-active',
-    completed: 'agent-step-analyzing-results-completed',
+    active: 'agent-generation-step-analyzing-results',
+    completed: 'agent-generation-step-analyzing-results-completed',
   },
   answering: {
-    active: 'generating-answer',
-    completed: 'agent-step-answering-completed',
+    active: 'agent-generation-step-answering',
+    completed: 'agent-generation-step-answering-completed',
   },
 };
 
@@ -151,7 +151,7 @@ export class AtomicAgentStreamOfThought extends LitElement {
         @click=${this.handleToggle}
         aria-expanded=${this.expanded}
       >
-        <span class="toggle-label">${this.i18n.t('agent-step-collapse')}</span>
+        <span class="toggle-label">${this.i18n.t('collapse')}</span>
         ${this.renderChevron()}
       </button>
     `;
