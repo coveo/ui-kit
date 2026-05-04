@@ -230,7 +230,7 @@ describe('atomic-agent-stream-of-thought', () => {
       });
 
       expect(steps[0].textContent).toContain(
-        i18n.t('agent-step-analyzing-question-active')
+        i18n.t('agent-generation-step-analyzing-question')
       );
     });
 
@@ -259,7 +259,7 @@ describe('atomic-agent-stream-of-thought', () => {
       });
 
       expect(steps[2].textContent).toContain(
-        i18n.t('agent-step-analyzing-results-active')
+        i18n.t('agent-generation-step-analyzing-results')
       );
     });
 
@@ -276,10 +276,10 @@ describe('atomic-agent-stream-of-thought', () => {
       });
 
       expect(steps[2].textContent).toContain(
-        i18n.t('agent-step-analyzing-results-completed')
+        i18n.t('agent-generation-step-analyzing-results-completed')
       );
       expect(steps[4].textContent).toContain(
-        i18n.t('agent-step-analyzing-results-active')
+        i18n.t('agent-generation-step-analyzing-results')
       );
     });
 
@@ -294,7 +294,9 @@ describe('atomic-agent-stream-of-thought', () => {
         isStreaming: true,
       });
 
-      expect(steps[3].textContent).toContain(i18n.t('generating-answer'));
+      expect(steps[3].textContent).toContain(
+        i18n.t('agent-generation-step-answering')
+      );
     });
 
     it('should display completed label for completed steps', async () => {
@@ -307,7 +309,7 @@ describe('atomic-agent-stream-of-thought', () => {
       });
 
       expect(steps[0].textContent).toContain(
-        i18n.t('agent-step-analyzing-question-completed')
+        i18n.t('agent-generation-step-analyzing-question-completed')
       );
     });
   });
@@ -326,7 +328,7 @@ describe('atomic-agent-stream-of-thought', () => {
 
       expect(collapsedTimelineSummary).not.toBeNull();
       expect(collapsedTimelineSummary?.textContent).toContain(
-        i18n.t('agent-step-answering-completed')
+        i18n.t('agent-generation-step-answering-completed')
       );
     });
 
@@ -357,7 +359,7 @@ describe('atomic-agent-stream-of-thought', () => {
       });
 
       expect(collapsedTimelineSummary?.textContent).toContain(
-        i18n.t('agent-step-answering-completed')
+        i18n.t('agent-generation-step-answering-completed')
       );
     });
 
@@ -423,9 +425,7 @@ describe('atomic-agent-stream-of-thought', () => {
 
       const toggleButton = element.shadowRoot?.querySelector('.toggle-button');
       expect(toggleButton).not.toBeNull();
-      expect(toggleButton?.textContent).toContain(
-        i18n.t('agent-step-collapse')
-      );
+      expect(toggleButton?.textContent).toContain(i18n.t('collapse'));
     });
 
     it('should collapse back when toggle button is clicked', async () => {
@@ -560,7 +560,7 @@ describe('atomic-agent-stream-of-thought', () => {
       expect(steps.length).toBe(1);
       expect(checkmarks.length).toBe(1);
       expect(steps[0].textContent).toContain(
-        i18n.t('agent-step-answering-completed')
+        i18n.t('agent-generation-step-answering-completed')
       );
     });
   });
