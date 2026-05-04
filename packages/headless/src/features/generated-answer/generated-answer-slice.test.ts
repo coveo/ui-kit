@@ -64,6 +64,19 @@ describe('generated answer slice', () => {
       expect(finalState.isLoading).toBe(false);
       expect(finalState.isStreaming).toBe(true);
     });
+
+    it('does not initialize the answer with blank-only text', () => {
+      const finalState = generatedAnswerReducer(
+        getGeneratedAnswerInitialState(),
+        updateMessage({
+          textDelta: '   ',
+        })
+      );
+
+      expect(finalState.answer).toBeUndefined();
+      expect(finalState.isLoading).toBe(false);
+      expect(finalState.isStreaming).toBe(true);
+    });
   });
 
   describe('#updateCitations', () => {

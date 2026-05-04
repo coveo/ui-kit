@@ -14,7 +14,7 @@ import {createSummary} from './summary.js';
 
 const SHARD_FILE_PATTERN = /^a11y-report\.shard-(\d+)\.json$/;
 
-export interface MergeShardOptions {
+interface MergeShardOptions {
   /** Full path (directory + filename) where the merged report is written. Shard files are read from the same directory. */
   outputFile: string;
 }
