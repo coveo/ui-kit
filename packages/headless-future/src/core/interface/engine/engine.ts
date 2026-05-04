@@ -64,8 +64,24 @@ export class Engine {
     return this.#getStore().getState() as State;
   }
 
-  #dispatch(action: StateMutation) {
-    return this.#getStore().dispatch(action);
+  #mutate(mutation: StateMutation): void {
+    this.#getStore().dispatch(mutation);
+  }
+
+  async #adoptSlice(slice: Slice) {
+    if (!this.#store) {
+      throw new Error('Cannot adopt slice before store is initialized');
+    }
+
+    if (this.#adoptedSlices.has(slice)) {
+      // Slice already adopted, nothing to do
+      return;
+    }
+    // Add slice to adopted set and update store reducer
+    this.#adoptedSlices.add(slice);
+    // Replace the store's reducer with the updated combined reducer
+    this.#rootReducer.inject(slice);
+    this.#mutate({type: '@@engine/ADOPT_SLICE'}); // Optional: dispatch an action to trigger state update
   }
 
   // ============================================================================
@@ -132,53 +148,5 @@ export class Engine {
     });
 
     return unsubscribe;
-  }
-
-  /**
-   * Dispatch a state mutation
-   *
-   * This is the primary way to change application state.
-   * Accepts a library-agnostic mutation object.
-   *
-   * @param mutation The mutation to apply
-   *
-   * @example
-   * ```typescript
-   * engine.mutate({ type: 'search/setQuery', payload: 'laptops' });
-   * ```
-   */
-  #mutate(mutation: StateMutation): void {
-    this.#dispatch(mutation);
-  }
-
-  /**
-   * Adopt a slice into the engine
-   *
-   * This dynamically adds a slice's reducer to the store.
-   * Must be called before reading or mutating state for that slice.
-   * Idempotent - calling multiple times has no additional effect.
-   * Aysnchronous to allow for dynamic imports in future.
-   *
-   * @param slice The name of the slice to adopt
-   *
-   * @example
-   * ```typescript
-   * engine.adoptSlice('search');
-   * ```
-   */
-  async #adoptSlice(slice: Slice) {
-    if (!this.#store) {
-      throw new Error('Cannot adopt slice before store is initialized');
-    }
-
-    if (this.#adoptedSlices.has(slice)) {
-      // Slice already adopted, nothing to do
-      return;
-    }
-    // Add slice to adopted set and update store reducer
-    this.#adoptedSlices.add(slice);
-    // Replace the store's reducer with the updated combined reducer
-    this.#rootReducer.inject(slice);
-    this.#dispatch({type: '@@engine/ADOPT_SLICE'}); // Optional: dispatch an action to trigger state update
   }
 }
