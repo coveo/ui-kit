@@ -133,7 +133,7 @@ export class AtomicAgentStreamOfThought extends LitElement {
 
     return html`
       <button
-        class="collapsed-row"
+        class="collapsed-timeline-summary"
         @click=${this.handleToggle}
         aria-expanded=${this.expanded}
       >

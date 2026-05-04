@@ -22,13 +22,13 @@ const styles = css`
     @apply flex items-center gap-2;
   }
 
-  .collapsed-row {
+  .collapsed-timeline-summary {
     @apply flex cursor-pointer items-center gap-2 border-none bg-transparent p-0 text-left;
     font: inherit;
     color: inherit;
   }
 
-  .collapsed-row:focus-visible {
+  .collapsed-timeline-summary:focus-visible {
     @apply rounded outline-2 outline-offset-2;
     outline-color: var(--atomic-primary);
   }

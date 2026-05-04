@@ -73,12 +73,14 @@ describe('atomic-agent-stream-of-thought', () => {
           element.shadowRoot?.querySelector<HTMLButtonElement>(
             '.toggle-button'
           ) ??
-          element.shadowRoot?.querySelector<HTMLButtonElement>('.collapsed-row')
+          element.shadowRoot?.querySelector<HTMLButtonElement>(
+            '.collapsed-timeline-summary'
+          )
         );
       },
-      get collapsedRow() {
+      get collapsedTimelineSummary() {
         return element.shadowRoot?.querySelector<HTMLButtonElement>(
-          '.collapsed-row'
+          '.collapsed-timeline-summary'
         );
       },
       get chevron() {
@@ -312,7 +314,7 @@ describe('atomic-agent-stream-of-thought', () => {
 
   describe('after streaming completes', () => {
     it('should auto-collapse to show only the last step', async () => {
-      const {collapsedRow} = await renderComponent({
+      const {collapsedTimelineSummary} = await renderComponent({
         agentSteps: [
           buildStep({name: 'thinking', status: 'completed'}),
           buildStep({name: 'searching', status: 'completed'}),
@@ -322,14 +324,14 @@ describe('atomic-agent-stream-of-thought', () => {
         isStreaming: false,
       });
 
-      expect(collapsedRow).not.toBeNull();
-      expect(collapsedRow?.textContent).toContain(
+      expect(collapsedTimelineSummary).not.toBeNull();
+      expect(collapsedTimelineSummary?.textContent).toContain(
         i18n.t('agent-step-answering-completed')
       );
     });
 
     it('should show a chevron beside the last step when collapsed', async () => {
-      const {collapsedRow} = await renderComponent({
+      const {collapsedTimelineSummary} = await renderComponent({
         agentSteps: [
           buildStep({name: 'thinking', status: 'completed'}),
           buildStep({name: 'answering', status: 'completed'}),
@@ -337,12 +339,14 @@ describe('atomic-agent-stream-of-thought', () => {
         isStreaming: false,
       });
 
-      expect(collapsedRow).not.toBeNull();
-      expect(collapsedRow?.querySelector('.chevron')).not.toBeNull();
+      expect(collapsedTimelineSummary).not.toBeNull();
+      expect(
+        collapsedTimelineSummary?.querySelector('.chevron')
+      ).not.toBeNull();
     });
 
     it('should show the last step completed label', async () => {
-      const {collapsedRow} = await renderComponent({
+      const {collapsedTimelineSummary} = await renderComponent({
         agentSteps: [
           buildStep({name: 'thinking', status: 'completed'}),
           buildStep({name: 'searching', status: 'completed'}),
@@ -352,13 +356,13 @@ describe('atomic-agent-stream-of-thought', () => {
         isStreaming: false,
       });
 
-      expect(collapsedRow?.textContent).toContain(
+      expect(collapsedTimelineSummary?.textContent).toContain(
         i18n.t('agent-step-answering-completed')
       );
     });
 
     it('should show a checkmark icon on the collapsed step', async () => {
-      const {collapsedRow} = await renderComponent({
+      const {collapsedTimelineSummary} = await renderComponent({
         agentSteps: [
           buildStep({name: 'thinking', status: 'completed'}),
           buildStep({name: 'answering', status: 'completed'}),
@@ -366,11 +370,13 @@ describe('atomic-agent-stream-of-thought', () => {
         isStreaming: false,
       });
 
-      expect(collapsedRow?.querySelector('.checkmark-icon')).not.toBeNull();
+      expect(
+        collapsedTimelineSummary?.querySelector('.checkmark-icon')
+      ).not.toBeNull();
     });
 
     it('should have aria-expanded set to false when collapsed', async () => {
-      const {collapsedRow} = await renderComponent({
+      const {collapsedTimelineSummary} = await renderComponent({
         agentSteps: [
           buildStep({name: 'thinking', status: 'completed'}),
           buildStep({name: 'answering', status: 'completed'}),
@@ -378,13 +384,15 @@ describe('atomic-agent-stream-of-thought', () => {
         isStreaming: false,
       });
 
-      expect(collapsedRow?.getAttribute('aria-expanded')).toBe('false');
+      expect(collapsedTimelineSummary?.getAttribute('aria-expanded')).toBe(
+        'false'
+      );
     });
   });
 
   describe('expand/collapse interaction', () => {
     it('should expand to show all steps when collapsed row is clicked', async () => {
-      const {element, collapsedRow} = await renderComponent({
+      const {element, collapsedTimelineSummary} = await renderComponent({
         agentSteps: [
           buildStep({name: 'thinking', status: 'completed'}),
           buildStep({name: 'searching', status: 'completed'}),
@@ -394,7 +402,7 @@ describe('atomic-agent-stream-of-thought', () => {
         isStreaming: false,
       });
 
-      collapsedRow?.click();
+      collapsedTimelineSummary?.click();
       await element.updateComplete;
 
       const steps = element.shadowRoot?.querySelectorAll('.step') ?? [];
@@ -402,7 +410,7 @@ describe('atomic-agent-stream-of-thought', () => {
     });
 
     it('should show a toggle button with collapse label below steps when expanded', async () => {
-      const {element, collapsedRow} = await renderComponent({
+      const {element, collapsedTimelineSummary} = await renderComponent({
         agentSteps: [
           buildStep({name: 'thinking', status: 'completed'}),
           buildStep({name: 'answering', status: 'completed'}),
@@ -410,7 +418,7 @@ describe('atomic-agent-stream-of-thought', () => {
         isStreaming: false,
       });
 
-      collapsedRow?.click();
+      collapsedTimelineSummary?.click();
       await element.updateComplete;
 
       const toggleButton = element.shadowRoot?.querySelector('.toggle-button');
@@ -421,7 +429,7 @@ describe('atomic-agent-stream-of-thought', () => {
     });
 
     it('should collapse back when toggle button is clicked', async () => {
-      const {element, collapsedRow} = await renderComponent({
+      const {element, collapsedTimelineSummary} = await renderComponent({
         agentSteps: [
           buildStep({name: 'thinking', status: 'completed'}),
           buildStep({name: 'searching', status: 'completed'}),
@@ -430,7 +438,7 @@ describe('atomic-agent-stream-of-thought', () => {
         isStreaming: false,
       });
 
-      collapsedRow?.click();
+      collapsedTimelineSummary?.click();
       await element.updateComplete;
 
       const expandedToggle =
@@ -439,12 +447,12 @@ describe('atomic-agent-stream-of-thought', () => {
       await element.updateComplete;
 
       expect(
-        element.shadowRoot?.querySelector('.collapsed-row')
+        element.shadowRoot?.querySelector('.collapsed-timeline-summary')
       ).not.toBeNull();
     });
 
     it('should show chevron pointing up when expanded', async () => {
-      const {element, collapsedRow} = await renderComponent({
+      const {element, collapsedTimelineSummary} = await renderComponent({
         agentSteps: [
           buildStep({name: 'thinking', status: 'completed'}),
           buildStep({name: 'answering', status: 'completed'}),
@@ -452,7 +460,7 @@ describe('atomic-agent-stream-of-thought', () => {
         isStreaming: false,
       });
 
-      collapsedRow?.click();
+      collapsedTimelineSummary?.click();
       await element.updateComplete;
 
       const chevron = element.shadowRoot?.querySelector('.chevron');
@@ -472,7 +480,7 @@ describe('atomic-agent-stream-of-thought', () => {
     });
 
     it('should set aria-expanded to true when expanded', async () => {
-      const {element, collapsedRow} = await renderComponent({
+      const {element, collapsedTimelineSummary} = await renderComponent({
         agentSteps: [
           buildStep({name: 'thinking', status: 'completed'}),
           buildStep({name: 'answering', status: 'completed'}),
@@ -480,7 +488,7 @@ describe('atomic-agent-stream-of-thought', () => {
         isStreaming: false,
       });
 
-      collapsedRow?.click();
+      collapsedTimelineSummary?.click();
       await element.updateComplete;
 
       const expandedToggle =
@@ -514,21 +522,22 @@ describe('atomic-agent-stream-of-thought', () => {
       steps = element.shadowRoot?.querySelectorAll('.step') ?? [];
       expect(steps.length).toBe(0);
       expect(
-        element.shadowRoot?.querySelector('.collapsed-row')
+        element.shadowRoot?.querySelector('.collapsed-timeline-summary')
       ).not.toBeNull();
     });
   });
 
   describe('single answering step', () => {
     it('should show the step without a toggle button when only answering exists', async () => {
-      const {steps, toggleButton, collapsedRow} = await renderComponent({
-        agentSteps: [buildStep({name: 'answering', status: 'completed'})],
-        isStreaming: false,
-      });
+      const {steps, toggleButton, collapsedTimelineSummary} =
+        await renderComponent({
+          agentSteps: [buildStep({name: 'answering', status: 'completed'})],
+          isStreaming: false,
+        });
 
       expect(steps.length).toBe(1);
       expect(toggleButton).toBeNull();
-      expect(collapsedRow).toBeNull();
+      expect(collapsedTimelineSummary).toBeNull();
     });
 
     it('should show the answering step with a spinner while streaming', async () => {
