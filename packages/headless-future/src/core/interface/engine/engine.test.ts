@@ -11,7 +11,10 @@ import * as resultsSelectors from '@/src/core/interface/results/results-selector
 import {Engine} from './engine.js';
 import {searchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
 import {resultsSlice} from '@/src/core/internal/results/results-slice.js';
-import type {State} from '@/src/core/interface/interface-types.js';
+import type {
+  ConfigurationState,
+  State,
+} from '@/src/core/interface/interface-types.js';
 
 describe('Engine: read()', () => {
   let engine: Engine;
@@ -171,5 +174,55 @@ describe('Engine: mutate()', () => {
     engine.mutate({type: 'searchBox/setQuery', payload: 'test'});
 
     expect(engine.read(searchBoxSelectors.query)).toBe('test');
+  });
+});
+
+describe('Engine: constructor()', () => {
+  it('should not include configuration state when no configuration is passed', () => {
+    const engine = new Engine();
+
+    const configState = engine.read((state) => state.configuration);
+
+    expect(configState).toBeUndefined();
+  });
+
+  it('should set organizationId and accessToken when configuration is passed', () => {
+    const config: ConfigurationState = {
+      organizationId: 'my-org',
+      accessToken: 'my-token',
+    };
+    const engine = new Engine(config);
+
+    expect(engine.read((state) => state.configuration?.organizationId)).toBe(
+      'my-org'
+    );
+    expect(engine.read((state) => state.configuration?.accessToken)).toBe(
+      'my-token'
+    );
+  });
+
+  it('should set endpoint when provided in configuration', () => {
+    const config: ConfigurationState = {
+      organizationId: 'my-org',
+      accessToken: 'my-token',
+      endpoint: 'https://my-endpoint.coveo.com',
+    };
+    const engine = new Engine(config);
+
+    expect(engine.read((state) => state.configuration?.endpoint)).toBe(
+      'https://my-endpoint.coveo.com'
+    );
+  });
+
+  it('should leave endpoint undefined when not provided in configuration', () => {
+    const config: ConfigurationState = {
+      organizationId: 'my-org',
+      accessToken: 'my-token',
+    };
+    const engine = new Engine(config);
+
+    expect(
+      engine.read((state) => state.configuration?.endpoint)
+    ).toBeUndefined();
   });
 });

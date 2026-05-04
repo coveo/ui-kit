@@ -15,7 +15,9 @@ import type {
   StateSelector,
   StateChangeCallback,
   StateMutation,
+  ConfigurationState,
 } from '@/src/core/interface/interface-types.js';
+import {configurationSlice} from '../../internal/configuration/configuration-slice.js';
 
 /**
  * Store engine wrapper object to encapsulate state and avoid module-level side effects
@@ -28,9 +30,10 @@ export class Engine {
   #adoptedSlices: WeakSet<Slice>;
   #rootReducer = combineSlices({});
 
-  constructor() {
+  constructor(configuration?: ConfigurationState) {
     this.#adoptedSlices = new WeakSet<Slice>();
     this.#store = configureStore({reducer: this.#rootReducer});
+    this.#initializeConfiguration(configuration);
   }
 
   #getStore() {
@@ -42,6 +45,15 @@ export class Engine {
 
   #getState(): State {
     return this.#getStore().getState() as State;
+  }
+
+  #initializeConfiguration(configuration?: ConfigurationState) {
+    if (!configuration) {
+      return;
+    }
+
+    this.adoptSlice(configurationSlice);
+    this.mutate(configurationSlice.actions.setConfiguration(configuration));
   }
 
   #dispatch(action: StateMutation) {
