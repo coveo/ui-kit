@@ -49,12 +49,17 @@ export const generatedAnswerReducer = createReducer(
       .addCase(updateMessage, (state, {payload}) => {
         state.isLoading = false;
         state.isStreaming = true;
-        if (!state.answer) {
-          state.answer = '';
+        delete state.error;
+        const incomingText = payload.textDelta;
+        const hasExistingAnswer = Boolean(state.answer?.trim());
+        const shouldStartAnswer = incomingText.trim().length > 0;
+
+        if (hasExistingAnswer) {
+          state.answer += incomingText;
+          return;
         }
 
-        state.answer += payload.textDelta;
-        delete state.error;
+        state.answer = shouldStartAnswer ? incomingText : undefined;
       })
       .addCase(updateCitations, (state, {payload}) => {
         state.isLoading = false;
