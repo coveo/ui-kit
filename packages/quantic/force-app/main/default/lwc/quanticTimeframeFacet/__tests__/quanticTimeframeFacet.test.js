@@ -13,14 +13,14 @@ jest.mock('c/quanticUtils', () => ({
   },
   I18nUtils: {
     format: jest.fn(),
+    getLabelNameWithCount: jest.fn(),
+  },
+  DateUtils: {
     formatDate: jest.fn(
       (date) =>
         `${date.getUTCFullYear()}-${date.getUTCMonth() + 1}-${date.getUTCDate()}`
     ),
     getShortDatePattern: jest.fn(),
-    getLabelNameWithCount: jest.fn(),
-  },
-  DateUtils: {
     fromLocalIsoDate: jest.fn((value) => value),
     toLocalSearchApiDate: jest.fn((value) => value),
   },

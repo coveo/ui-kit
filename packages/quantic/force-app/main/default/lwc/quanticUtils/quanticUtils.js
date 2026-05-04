@@ -1,8 +1,4 @@
 import LOCALE from '@salesforce/i18n/locale';
-import {
-  formatDate as formatLocalizedDate,
-  getShortDatePattern as getLocalizedShortDatePattern,
-} from './timeAndDateUtils';
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").SortCriterion} SortCriterion */
@@ -165,24 +161,6 @@ export class I18nUtils {
 
   static isSingular(count) {
     return new Intl.PluralRules(LOCALE).select(count) === 'one';
-  }
-
-  /**
-   * Formats the date in the current locale.
-   * @param {Date} date
-   * @returns {string} The formatted date.
-   */
-  static formatDate(date) {
-    return formatLocalizedDate(date);
-  }
-
-  /**
-   * Gets the short date pattern for the current locale.
-   * @returns {string} The short date pattern.
-   * @example `M/d/yyyy` for `en-US`, `d/M/yyyy` for `fr-FR`, etc.
-   */
-  static getShortDatePattern() {
-    return getLocalizedShortDatePattern();
   }
 
   /**

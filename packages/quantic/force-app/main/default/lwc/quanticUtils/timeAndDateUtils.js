@@ -175,6 +175,24 @@ export class TimeSpan {
  */
 export class DateUtils {
   /**
+   * Formats the date in the current locale.
+   * @param {Date} date
+   * @returns {string} The formatted date.
+   */
+  static formatDate(date) {
+    return formatDate(date);
+  }
+
+  /**
+   * Gets the short date pattern for the current locale.
+   * @returns {string} The short date pattern.
+   * @example `M/d/yyyy` for `en-US`, `d/M/yyyy` for `fr-FR`, etc.
+   */
+  static getShortDatePattern() {
+    return getShortDatePattern();
+  }
+
+  /**
    * Converts a date string from the Coveo Search API format to the ISO-8601 format.
    * Replace `/` characters in date string with `-`.
    * Replace `@` characters in date string with `T`.
