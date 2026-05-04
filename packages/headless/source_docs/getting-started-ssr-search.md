@@ -62,10 +62,6 @@ If you prefer not to use a package manager, you can load Headless SSR directly f
 </script>
 ```
 
-> [!TIP]
->
-> Replace `v{{packageVersion}}` in the URL with `v3` to always use the latest major version.
-
 ## Verify Your Installation
 
 The following example defines a search engine with a result list controller using the built-in sample configuration.

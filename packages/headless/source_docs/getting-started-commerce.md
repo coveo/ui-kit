@@ -58,10 +58,6 @@ If you prefer not to use a package manager, you can load the Commerce bundle dir
 </script>
 ```
 
-> [!TIP]
->
-> Replace `v{{packageVersion}}` in the URL with `v3` to always use the latest major version.
-
 ## Verify Your Installation
 
 The following example builds a commerce engine using the built-in sample configuration, executes a search, and logs the results.

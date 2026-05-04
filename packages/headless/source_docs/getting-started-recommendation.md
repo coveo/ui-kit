@@ -59,10 +59,6 @@ If you prefer not to use a package manager, you can load Headless Recommendation
 </script>
 ```
 
-> [!TIP]
->
-> Replace `v{{packageVersion}}` in the URL with `v3` to always use the latest major version.
-
 ## Verify Your Installation
 
 The following example builds a recommendation engine using the built-in sample configuration, fetches recommendations, and logs the results.
