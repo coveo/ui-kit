@@ -247,7 +247,7 @@ export class AtomicGeneratedAnswer
 
   private ariaMessage = new AriaLiveRegionController(this, 'generated-answer');
   private followUpInputColoredBorderTimeout?: number;
-  private latestHighlightedAnswerKey = '';
+  private lastHighlightedAnswerKey = '';
 
   constructor() {
     super();
@@ -773,33 +773,32 @@ export class AtomicGeneratedAnswer
     }
   }
 
-  // The key is either the answerId (if available) or the answer text. This is used to determine when to trigger the follow-up input colored border animation, which should happen when a new answer is completed.
-  // We don't want to trigger the animation when an answer is still being generated, as that could be distracting for the user.
-  private get latestCompletedAnswerKey() {
-    const latestAnswer =
-      this.generatedAnswerWithFollowUps?.state.followUpAnswers?.followUpAnswers.at(
-        -1
-      ) ?? this.generatedAnswerState;
-
-    return !this.isAnswerGenerationOngoing && latestAnswer.answer?.trim()
-      ? (latestAnswer.answerId ?? latestAnswer.answer)
-      : '';
-  }
-
   private updateFollowUpInputColoredBorder() {
-    if (!this.generatedAnswerState || !this.areFollowUpsEnabled) {
-      return;
-    }
-
-    const latestAnswerKey = this.latestCompletedAnswerKey;
     if (
-      !latestAnswerKey ||
-      latestAnswerKey === this.latestHighlightedAnswerKey
+      !this.generatedAnswerState ||
+      !this.areFollowUpsEnabled ||
+      this.isAnswerGenerationOngoing
     ) {
       return;
     }
 
-    this.latestHighlightedAnswerKey = latestAnswerKey;
+    const latestAnswer =
+      this.generatedAnswerWithFollowUps?.state.followUpAnswers?.followUpAnswers.at(
+        -1
+      ) ?? this.generatedAnswerState;
+    const latestAnswerKey = latestAnswer.answer?.trim()
+      ? (latestAnswer.answerId ?? latestAnswer.answer)
+      : '';
+
+    if (!latestAnswerKey || latestAnswerKey === this.lastHighlightedAnswerKey) {
+      return;
+    }
+
+    this.lastHighlightedAnswerKey = latestAnswerKey;
+    this.highlightFollowUpInput();
+  }
+
+  private highlightFollowUpInput() {
     window.clearTimeout(this.followUpInputColoredBorderTimeout);
     this.withFollowUpInputColoredBorder = true;
     this.followUpInputColoredBorderTimeout = window.setTimeout(() => {
