@@ -20,7 +20,6 @@ import type {
 
 const DEFAULT_REPORT_TITLE = 'Coveo Accessibility Conformance Report';
 const DEFAULT_REPORT_PRODUCT_NAME = 'Coveo Atomic';
-const DEFAULT_REPORT_PRODUCT_VERSION = '3.x.x';
 const DEFAULT_REPORT_DATE = new Date().toISOString().slice(0, 10);
 
 function buildCriterionAggregates(
@@ -197,8 +196,9 @@ export function buildOpenAcrReport(
   const reportDate = report?.report.reportDate ?? DEFAULT_REPORT_DATE;
   const reportProductName =
     report?.report.product ?? DEFAULT_REPORT_PRODUCT_NAME;
-  const reportProductVersion =
-    report?.report.version ?? DEFAULT_REPORT_PRODUCT_VERSION;
+  if (!report?.report.version) {
+    throw new Error('Report version is required for OpenACR generation.');
+  }
 
   let evaluationMethods = report?.report.evaluationMethods?.length
     ? report.report.evaluationMethods.join('; ')
@@ -218,11 +218,14 @@ export function buildOpenAcrReport(
     manualAggregates
   );
 
+  const successNotes =
+    'Conformance is based on automated Storybook + axe-core output, interactive keyboard/screen-reader testing, and pending manual validation.';
+
   return {
     title: DEFAULT_REPORT_TITLE,
     product: {
       name: reportProductName,
-      version: reportProductVersion,
+      version: report.report.version,
       description:
         'Coveo Atomic is a web component library for building search and commerce interfaces.',
     },
@@ -248,13 +251,11 @@ export function buildOpenAcrReport(
     catalog: '2.5-edition-wcag-2.2-en',
     chapters: {
       success_criteria_level_a: {
-        notes:
-          'Conformance is based on automated Storybook + axe-core output, interactive keyboard/screen-reader testing, and pending manual validation.',
+        notes: successNotes,
         criteria: criteriaByChapter.success_criteria_level_a,
       },
       success_criteria_level_aa: {
-        notes:
-          'Conformance is based on automated Storybook + axe-core output, interactive keyboard/screen-reader testing, and pending manual validation.',
+        notes: successNotes,
         criteria: criteriaByChapter.success_criteria_level_aa,
       },
       success_criteria_level_aaa: {

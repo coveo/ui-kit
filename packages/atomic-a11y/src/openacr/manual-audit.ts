@@ -85,6 +85,62 @@ function extractCriterionStatus(
   return null;
 }
 
+function parseCriterionEntry(
+  criterionKey: string,
+  statusValue: unknown,
+  componentName: string
+): ManualAuditAggregate | null {
+  const extracted = extractCriterionStatus(statusValue);
+  if (!extracted) {
+    return null;
+  }
+
+  const match = criterionKey.match(CRITERION_KEY_REGEX);
+  if (!match) {
+    return null;
+  }
+
+  const criterionId = match[1];
+  const conformance = manualStatusToConformance[extracted.status];
+
+  if (!conformance) {
+    console.warn(
+      LOG_PREFIX,
+      `Unknown manual status "${extracted.status}" for criterion ${criterionId} in component ${componentName}.`
+    );
+    return null;
+  }
+
+  return {
+    componentName,
+    criterionId,
+    conformance,
+    ...(extracted.remarks && {remarks: extracted.remarks}),
+  };
+}
+
+function collectEntryAggregates(
+  entry: ManualAuditBaselineEntry,
+  aggregates: Map<string, ManualAuditAggregate[]>
+): void {
+  for (const [criterionKey, statusValue] of Object.entries(
+    entry.manual.wcag22Criteria
+  )) {
+    const aggregate = parseCriterionEntry(
+      criterionKey,
+      statusValue,
+      entry.name
+    );
+    if (!aggregate) {
+      continue;
+    }
+
+    const key = `${entry.name}:${aggregate.criterionId}`;
+    const existing = aggregates.get(key) ?? [];
+    aggregates.set(key, [...existing, aggregate]);
+  }
+}
+
 function parseManualBaseline(
   content: string,
   filePath: string
@@ -124,78 +180,96 @@ function parseManualBaseline(
       continue;
     }
 
-    for (const [criterionKey, statusValue] of Object.entries(
-      entry.manual.wcag22Criteria
-    )) {
-      const extracted = extractCriterionStatus(statusValue);
-      if (!extracted) {
-        continue;
-      }
-
-      const match = criterionKey.match(CRITERION_KEY_REGEX);
-      if (!match) {
-        continue;
-      }
-
-      const criterionId = match[1];
-      const conformance = manualStatusToConformance[extracted.status];
-
-      if (!conformance) {
-        console.warn(
-          LOG_PREFIX,
-          `Unknown manual status "${extracted.status}" for criterion ${criterionId} in component ${entry.name}.`
-        );
-        continue;
-      }
-
-      const aggregate: ManualAuditAggregate = {
-        componentName: entry.name,
-        criterionId,
-        conformance,
-        ...(extracted.remarks && {remarks: extracted.remarks}),
-      };
-
-      const key = `${entry.name}:${criterionId}`;
-      const existing = aggregates.get(key) ?? [];
-      aggregates.set(key, [...existing, aggregate]);
-    }
+    collectEntryAggregates(entry, aggregates);
   }
 
   return aggregates;
 }
 
-export async function loadManualAuditData(
-  dirPath: string
+function mergeAggregates(
+  target: Map<string, ManualAuditAggregate[]>,
+  source: Map<string, ManualAuditAggregate[]>
+): number {
+  let mergedCount = 0;
+
+  for (const [key, entries] of source) {
+    const existing = target.get(key) ?? [];
+    target.set(key, [...existing, ...entries]);
+    mergedCount += entries.length;
+  }
+
+  return mergedCount;
+}
+
+function listBaselineFiles(files: string[]): string[] {
+  return files.filter((file) => BASELINE_FILE_PATTERN.test(file));
+}
+
+function getBaselineNames(files: string[]): string[] {
+  return files
+    .map((file) => file.replace(BASELINE_FILE_PREFIX, ''))
+    .map((file) =>
+      file.endsWith(BASELINE_FILE_EXTENSION)
+        ? file.slice(0, -BASELINE_FILE_EXTENSION.length)
+        : file
+    )
+    .filter(Boolean);
+}
+
+function getUniqueCriterionCount(
+  aggregates: Map<string, ManualAuditAggregate[]>
+): number {
+  const criteriaSet = new Set<string>();
+
+  for (const key of aggregates.keys()) {
+    const [, criterionId] = key.split(':');
+    criteriaSet.add(criterionId);
+  }
+
+  return criteriaSet.size;
+}
+
+function logManualAuditSummary(
+  loadedCount: number,
+  baselineFiles: string[],
+  aggregates: Map<string, ManualAuditAggregate[]>
+): void {
+  if (loadedCount <= 0) {
+    return;
+  }
+
+  const criteriaCount = getUniqueCriterionCount(aggregates);
+  const baselineList = getBaselineNames(baselineFiles).join(', ');
+
+  console.log(
+    LOG_PREFIX,
+    `Loaded ${loadedCount} manual audit entries across ${criteriaCount} criteria from ${baselineFiles.length} baseline file(s): ${baselineList}.`
+  );
+}
+
+async function readBaselineFileAggregates(
+  dirPath: string,
+  file: string
 ): Promise<Map<string, ManualAuditAggregate[]>> {
-  const allAggregates = new Map<string, ManualAuditAggregate[]>();
-  let loadedCount = 0;
-  let fileCount = 0;
-  let baselineFiles: string[] = [];
+  const filePath = path.join(dirPath, file);
 
   try {
+    const content = await readFile(filePath, 'utf8');
+    return parseManualBaseline(content, filePath);
+  } catch (error) {
+    console.warn(
+      LOG_PREFIX,
+      `Unable to read manual baseline file ${filePath}.`,
+      error
+    );
+    return new Map();
+  }
+}
+
+async function loadBaselineFiles(dirPath: string): Promise<string[] | null> {
+  try {
     const files = await readdir(dirPath);
-    baselineFiles = files.filter((file) => BASELINE_FILE_PATTERN.test(file));
-    fileCount = baselineFiles.length;
-
-    for (const file of baselineFiles) {
-      const filePath = path.join(dirPath, file);
-      try {
-        const content = await readFile(filePath, 'utf8');
-        const aggregates = parseManualBaseline(content, filePath);
-
-        for (const [key, entries] of aggregates) {
-          const existing = allAggregates.get(key) ?? [];
-          allAggregates.set(key, [...existing, ...entries]);
-          loadedCount += entries.length;
-        }
-      } catch (error) {
-        console.warn(
-          LOG_PREFIX,
-          `Unable to read manual baseline file ${filePath}.`,
-          error
-        );
-      }
-    }
+    return listBaselineFiles(files);
   } catch (error) {
     const errorCode =
       isRecord(error) && typeof error.code === 'string'
@@ -203,7 +277,7 @@ export async function loadManualAuditData(
         : undefined;
 
     if (errorCode === 'ENOENT') {
-      return new Map();
+      return null;
     }
 
     console.warn(
@@ -211,29 +285,27 @@ export async function loadManualAuditData(
       `Unable to read manual audit directory ${dirPath}.`,
       error
     );
-    return new Map();
+    return null;
+  }
+}
+
+export async function loadManualAuditData(
+  dirPath: string
+): Promise<Map<string, ManualAuditAggregate[]>> {
+  const allAggregates = new Map<string, ManualAuditAggregate[]>();
+  let loadedCount = 0;
+
+  const baselineFiles = await loadBaselineFiles(dirPath);
+  if (!baselineFiles) {
+    return allAggregates;
   }
 
-  if (loadedCount > 0) {
-    const criteriaSet = new Set<string>();
-    for (const key of allAggregates.keys()) {
-      const [, criterionId] = key.split(':');
-      criteriaSet.add(criterionId);
-    }
-    const baselineNames = baselineFiles
-      .map((file) => file.replace(BASELINE_FILE_PREFIX, ''))
-      .map((file) =>
-        file.endsWith(BASELINE_FILE_EXTENSION)
-          ? file.slice(0, -BASELINE_FILE_EXTENSION.length)
-          : file
-      )
-      .filter(Boolean);
-    const baselineList = baselineNames.join(', ');
-    console.log(
-      LOG_PREFIX,
-      `Loaded ${loadedCount} manual audit entries across ${criteriaSet.size} criteria from ${fileCount} baseline file(s): ${baselineList}.`
-    );
+  for (const file of baselineFiles) {
+    const fileAggregates = await readBaselineFileAggregates(dirPath, file);
+    loadedCount += mergeAggregates(allAggregates, fileAggregates);
   }
+
+  logManualAuditSummary(loadedCount, baselineFiles, allAggregates);
 
   return allAggregates;
 }
