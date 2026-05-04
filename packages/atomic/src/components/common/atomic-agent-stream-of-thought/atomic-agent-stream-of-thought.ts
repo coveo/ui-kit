@@ -7,13 +7,13 @@ import {map} from 'lit/directives/map.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import styles from './atomic-agent-stream-of-thought.tw.css.js';
 
-export type ResolvedStepType =
+type ResolvedStepType =
   | 'thinking-before-search'
   | 'searching'
   | 'thinking-after-search'
   | 'answering';
 
-export interface ResolvedStep {
+interface ResolvedStep {
   type: ResolvedStepType;
   status: 'active' | 'completed';
 }
