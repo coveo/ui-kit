@@ -35,28 +35,15 @@ function emitEvent(request: StreamRequest, payload: object): void {
 
 describe('buildConversationController', () => {
   let engine: Engine;
-  let controller: ConversationController;
   let persistence: PersistenceAdapter;
 
-  beforeEach(() => {
+  const createController = (
+    streamScript: StreamScript
+  ): ConversationController => {
     engine = createTestEngine();
 
-    persistence = {
-      save: vi.fn(async () => undefined),
-      load: vi.fn(async () => null),
-      delete: vi.fn(async () => undefined),
-      list: vi.fn(async () => []),
-    };
-
-    controller = buildConversationController(engine, {
-      transport: createScriptedTransport((request) => {
-        emitEvent(request, {
-          type: 'RUN_FINISHED',
-          threadId: 'thread-1',
-          runId: 'run-1',
-        });
-        request.onClose();
-      }),
+    return buildConversationController(engine, {
+      transport: createScriptedTransport(streamScript),
       auth: {
         getToken: vi.fn(async () => 'token'),
         refreshToken: vi.fn(async () => 'token'),
@@ -64,6 +51,15 @@ describe('buildConversationController', () => {
       },
       persistence,
     });
+  };
+
+  beforeEach(() => {
+    persistence = {
+      save: vi.fn(async () => undefined),
+      load: vi.fn(async () => null),
+      delete: vi.fn(async () => undefined),
+      list: vi.fn(async () => []),
+    };
   });
 
   it('hydrates from checkpoint envelope on startup', async () => {
@@ -94,18 +90,9 @@ describe('buildConversationController', () => {
       },
     });
 
-    controller = buildConversationController(engine, {
-      transport: createScriptedTransport((request) => {
-        request.onClose();
-      }),
-      auth: {
-        getToken: vi.fn(async () => 'token'),
-        refreshToken: vi.fn(async () => 'token'),
-        getTokenMetadata: vi.fn(() => ({})),
-      },
-      persistence,
+    const controller = createController((request) => {
+      request.onClose();
     });
-
     await nextTick();
 
     expect(controller.state.messages).toEqual([
@@ -116,9 +103,19 @@ describe('buildConversationController', () => {
   });
 
   it('persists checkpoints during submitTurn initialization and finalization', async () => {
+    const controller = createController((request) => {
+      emitEvent(request, {
+        type: 'RUN_FINISHED',
+        threadId: 'thread-1',
+        runId: 'run-1',
+      });
+      request.onClose();
+    });
+
     await nextTick();
 
-    await controller.submitTurn('hello');
+    const result = await controller.submitTurn('hello');
+    expect(result.accepted).toBe(true);
 
     expect(persistence.save).toHaveBeenCalledWith(
       CONVERSATION_PERSISTENCE_KEY,
@@ -138,16 +135,8 @@ describe('buildConversationController', () => {
   });
 
   it('marks turn as completed_with_warnings when stream closes without terminal event', async () => {
-    controller = buildConversationController(engine, {
-      transport: createScriptedTransport((request) => {
-        request.onClose();
-      }),
-      auth: {
-        getToken: vi.fn(async () => 'token'),
-        refreshToken: vi.fn(async () => 'token'),
-        getTokenMetadata: vi.fn(() => ({})),
-      },
-      persistence,
+    const controller = createController((request) => {
+      request.onClose();
     });
 
     await nextTick();
@@ -167,21 +156,13 @@ describe('buildConversationController', () => {
       resolve?: () => void;
     } = {};
 
-    controller = buildConversationController(engine, {
-      transport: createScriptedTransport(
-        (request) =>
-          new Promise<void>((resolve) => {
-            streamHandles.request = request;
-            streamHandles.resolve = () => resolve();
-          })
-      ),
-      auth: {
-        getToken: vi.fn(async () => 'token'),
-        refreshToken: vi.fn(async () => 'token'),
-        getTokenMetadata: vi.fn(() => ({})),
-      },
-      persistence,
-    });
+    const controller = createController(
+      (request) =>
+        new Promise<void>((resolve) => {
+          streamHandles.request = request;
+          streamHandles.resolve = () => resolve();
+        })
+    );
 
     await nextTick();
 
@@ -200,6 +181,15 @@ describe('buildConversationController', () => {
   });
 
   it('retryTurn creates a new turn with lineage metadata', async () => {
+    const controller = createController((request) => {
+      emitEvent(request, {
+        type: 'RUN_FINISHED',
+        threadId: 'thread-1',
+        runId: 'run-1',
+      });
+      request.onClose();
+    });
+
     await nextTick();
 
     await controller.submitTurn('hello');
@@ -231,6 +221,15 @@ describe('buildConversationController', () => {
   });
 
   it('deletes persisted key when conversation is cleared', async () => {
+    const controller = createController((request) => {
+      emitEvent(request, {
+        type: 'RUN_FINISHED',
+        threadId: 'thread-1',
+        runId: 'run-1',
+      });
+      request.onClose();
+    });
+
     await nextTick();
 
     controller.clearConversation();

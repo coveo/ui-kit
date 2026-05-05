@@ -11,6 +11,13 @@ export type TurnContext = {
   assistantMessageId: string;
 };
 
+export type ConverseRequestBody = {
+  query: string;
+  sessionId?: string;
+  conversationToken?: string;
+  messages: Array<{role: 'user' | 'assistant'; content: string}>;
+};
+
 export const initializeTurn = (
   fullEngine: FullEngine,
   input: string,
@@ -61,12 +68,7 @@ export const initializeTurn = (
 export const buildConverseRequestBody = (
   fullEngine: FullEngine,
   input: string
-): {
-  query: string;
-  sessionId?: string;
-  conversationToken?: string;
-  messages: Array<{role: 'user' | 'assistant'; content: string}>;
-} => {
+): ConverseRequestBody => {
   const session = fullEngine.read(conversationSelectors.session);
   const messages = fullEngine.read(conversationSelectors.messages);
   const isConverseMessage = (
