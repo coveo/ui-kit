@@ -14,11 +14,11 @@ import type {
 import {reportConformanceToOpenAcr} from './types.js';
 
 interface ConformanceContext {
-  criterion: A11yCriterionReport | undefined;
-  aggregate: CriterionAggregate | undefined;
-  interactiveAggregate: InteractiveAggregate | undefined;
-  manualAggregates: ManualAuditAggregate[] | undefined;
-  override: A11yOverrideEntry | undefined;
+  criterion?: A11yCriterionReport;
+  aggregate?: CriterionAggregate;
+  interactiveAggregate?: InteractiveAggregate;
+  manualAggregates?: ManualAuditAggregate[];
+  override?: A11yOverrideEntry;
 }
 
 interface RemarksContext extends ConformanceContext {
@@ -41,7 +41,7 @@ function mapCriterionConformance(
 }
 
 function resolveInteractiveConformance(
-  interactiveAggregate: InteractiveAggregate | undefined
+  interactiveAggregate?: InteractiveAggregate
 ): OpenAcrConformance | null {
   const coveredCount = interactiveAggregate?.coveredComponents.size ?? 0;
   if (coveredCount === 0) {
@@ -61,7 +61,7 @@ function resolveInteractiveConformance(
 }
 
 function resolveAutomatedConformance(
-  aggregate: CriterionAggregate | undefined
+  aggregate?: CriterionAggregate
 ): OpenAcrConformance {
   const coveredCount = aggregate?.coveredComponents.size ?? 0;
   if (coveredCount === 0) {
@@ -126,10 +126,10 @@ function buildInteractiveSuffix(
 
   const failedCount = interactiveFailedComponents.length;
   if (failedCount === 0) {
-    return ` Interactive keyboard/screen-reader testing passed across ${coveredCount} component(s).`;
+    return `Interactive keyboard/screen-reader testing passed across ${coveredCount} component(s).`;
   }
 
-  return ` Interactive keyboard/screen-reader testing found failures in ${failedCount} of ${coveredCount} component(s).`;
+  return `Interactive keyboard/screen-reader testing found failures in ${failedCount} of ${coveredCount} component(s).`;
 }
 
 function buildAutomatedSuffix(
@@ -143,10 +143,10 @@ function buildAutomatedSuffix(
 
   const violatingCount = violatingComponents.length;
   if (violatingCount === 0) {
-    return ` Automated axe-core testing found no violations across ${coveredCount} component(s).`;
+    return `Automated axe-core testing found no violations across ${coveredCount} component(s).`;
   }
 
-  return ` Automated axe-core testing found violations in ${violatingCount} of ${coveredCount} component(s).`;
+  return `Automated axe-core testing found violations in ${violatingCount} of ${coveredCount} component(s).`;
 }
 
 export function buildRemarks(context: RemarksContext): string {
@@ -176,7 +176,21 @@ export function buildRemarks(context: RemarksContext): string {
     if (notApplicable > 0) summaryParts.push(`${notApplicable} not-applicable`);
 
     const summary = summaryParts.join(', ');
-    return `Manual audit: ${summary} across ${manualAggregates.length} component(s).`;
+    let result = `Manual audit: ${summary} across ${manualAggregates.length} component(s).`;
+
+    // Append individual component remarks if available
+    const remarksLines: string[] = [];
+    for (const aggregate of manualAggregates) {
+      if (aggregate.remarks) {
+        remarksLines.push(`${aggregate.componentName}: ${aggregate.remarks}`);
+      }
+    }
+
+    if (remarksLines.length > 0) {
+      result += ` [Details: ${remarksLines.join(' | ')}]`;
+    }
+
+    return result;
   }
 
   const interactiveDrives =

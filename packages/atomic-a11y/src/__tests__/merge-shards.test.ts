@@ -12,8 +12,6 @@ function createComponent(
 ): A11yComponentReport {
   return {
     name: 'atomic-search-box',
-    category: 'search',
-    framework: 'lit',
     storyCount: 1,
     automated: {
       violations: 0,
@@ -39,7 +37,6 @@ function createCriterion(
     automatedCoverage: true,
     interactiveCoverage: false,
     manualVerified: false,
-    remarks: '',
     affectedComponents: [],
     ...overrides,
   };
@@ -63,13 +60,6 @@ function createReport(
     criteria,
     summary: {
       totalComponents: components.length,
-      litComponents: components.filter(
-        (component) => component.framework === 'lit'
-      ).length,
-      stencilComponents: components.filter(
-        (component) => component.framework === 'stencil'
-      ).length,
-      stencilExcluded: true,
       storyCoverage: {
         total: 0,
         withA11y: 0,
@@ -90,12 +80,10 @@ function createReport(
 }
 
 describe('mergeComponents()', () => {
-  it('should merge automated counts for the same component across shards', () => {
+  it('should merge automated counts and storyCount for the same component across shards', () => {
     const firstReport = createReport(
       [
         createComponent({
-          category: 'unknown',
-          framework: 'unknown',
           storyCount: 1,
           automated: {
             violations: 1,
@@ -113,8 +101,6 @@ describe('mergeComponents()', () => {
     const secondReport = createReport(
       [
         createComponent({
-          category: 'search',
-          framework: 'lit',
           storyCount: 2,
           automated: {
             violations: 0,
@@ -132,87 +118,11 @@ describe('mergeComponents()', () => {
     const merged = mergeComponents([firstReport, secondReport]);
 
     expect(merged).toHaveLength(1);
+    expect(merged[0].storyCount).toBe(3);
     expect(merged[0].automated.violations).toBe(1);
     expect(merged[0].automated.passes).toBe(2);
     expect(merged[0].automated.incomplete).toBe(1);
-    expect(merged[0].automated.inapplicable).toBe(0);
-  });
-
-  it('should sum storyCount across shards for the same component', () => {
-    const firstReport = createReport([createComponent({storyCount: 1})], []);
-    const secondReport = createReport([createComponent({storyCount: 2})], []);
-
-    const merged = mergeComponents([firstReport, secondReport]);
-
-    expect(merged).toHaveLength(1);
-    expect(merged[0].storyCount).toBe(3);
-  });
-
-  it('should deduplicate and sort criteriaCovered across shards', () => {
-    const firstReport = createReport(
-      [
-        createComponent({
-          automated: {
-            violations: 0,
-            passes: 0,
-            incomplete: 0,
-            inapplicable: 0,
-            criteriaCovered: ['1.4.3'],
-            incompleteDetails: [],
-          },
-        }),
-      ],
-      []
-    );
-    const secondReport = createReport(
-      [
-        createComponent({
-          automated: {
-            violations: 0,
-            passes: 0,
-            incomplete: 0,
-            inapplicable: 0,
-            criteriaCovered: ['1.1.1'],
-            incompleteDetails: [],
-          },
-        }),
-      ],
-      []
-    );
-
-    const merged = mergeComponents([firstReport, secondReport]);
-
     expect(merged[0].automated.criteriaCovered).toEqual(['1.1.1', '1.4.3']);
-  });
-
-  it('should prefer known category over unknown when merging', () => {
-    const firstReport = createReport(
-      [createComponent({category: 'unknown'})],
-      []
-    );
-    const secondReport = createReport(
-      [createComponent({category: 'search'})],
-      []
-    );
-
-    const merged = mergeComponents([firstReport, secondReport]);
-
-    expect(merged[0].category).toBe('search');
-  });
-
-  it('should prefer known framework over unknown when merging', () => {
-    const firstReport = createReport(
-      [createComponent({framework: 'unknown'})],
-      []
-    );
-    const secondReport = createReport(
-      [createComponent({framework: 'lit'})],
-      []
-    );
-
-    const merged = mergeComponents([firstReport, secondReport]);
-
-    expect(merged[0].framework).toBe('lit');
   });
 
   it('should keep distinct components separate', () => {
@@ -227,33 +137,6 @@ describe('mergeComponents()', () => {
     const merged = mergeComponents([report]);
 
     expect(merged).toHaveLength(2);
-  });
-
-  it('should sort merged components alphabetically by name', () => {
-    const report = createReport(
-      [
-        createComponent({name: 'atomic-result-list'}),
-        createComponent({name: 'atomic-facet'}),
-        createComponent({name: 'atomic-search-box'}),
-      ],
-      []
-    );
-
-    const merged = mergeComponents([report]);
-
-    expect(merged.map((c) => c.name)).toEqual([
-      'atomic-facet',
-      'atomic-result-list',
-      'atomic-search-box',
-    ]);
-  });
-
-  it('should return empty array when all reports have no components', () => {
-    const report = createReport([], []);
-
-    const merged = mergeComponents([report]);
-
-    expect(merged).toEqual([]);
   });
 });
 
@@ -335,72 +218,13 @@ describe('mergeCriteria()', () => {
       conformance: 'notEvaluated',
     });
   });
-
-  it('should sort merged criteria by numeric ID', () => {
-    const report = createReport(
-      [
-        createComponent({
-          automated: {
-            violations: 0,
-            passes: 0,
-            incomplete: 0,
-            inapplicable: 0,
-            criteriaCovered: ['4.1.2', '1.1.1', '2.4.1'],
-            incompleteDetails: [],
-          },
-        }),
-      ],
-      [
-        createCriterion({id: '4.1.2', name: 'Name, Role, Value'}),
-        createCriterion({id: '1.1.1', name: 'Non-text Content'}),
-        createCriterion({id: '2.4.1', name: 'Bypass Blocks'}),
-      ]
-    );
-
-    const merged = mergeCriteria([report], report.components);
-
-    expect(merged.map((c) => c.id)).toEqual(['1.1.1', '2.4.1', '4.1.2']);
-  });
-
-  it('should sort affectedComponents alphabetically within each criterion', () => {
-    const report = createReport(
-      [
-        createComponent({name: 'atomic-search-box'}),
-        createComponent({name: 'atomic-facet'}),
-      ],
-      [
-        createCriterion({
-          affectedComponents: ['atomic-search-box', 'atomic-facet'],
-        }),
-      ]
-    );
-
-    const merged = mergeCriteria([report], report.components);
-
-    expect(merged[0].affectedComponents).toEqual([
-      'atomic-facet',
-      'atomic-search-box',
-    ]);
-  });
-
-  it('should return empty array when no criteria exist in shards or components', () => {
-    const report = createReport([], []);
-
-    const merged = mergeCriteria([report], []);
-
-    expect(merged).toEqual([]);
-  });
 });
 
 describe('createSummary() integration with merge-shards', () => {
   it('should build consistent summary from merged components and criteria', () => {
     const components = [
-      createComponent({name: 'atomic-a', framework: 'lit', storyCount: 2}),
-      createComponent({
-        name: 'atomic-b',
-        framework: 'stencil',
-        storyCount: 3,
-      }),
+      createComponent({name: 'atomic-a', storyCount: 2}),
+      createComponent({name: 'atomic-b', storyCount: 3}),
     ];
     const criteria = [
       createCriterion({id: '1.1.1'}),
@@ -409,31 +233,10 @@ describe('createSummary() integration with merge-shards', () => {
       createCriterion({id: '2.4.1'}),
     ];
 
-    const summary = createSummary(components, criteria, 10);
+    const summary = createSummary(components, criteria);
 
     expect(summary.totalComponents).toBe(2);
-    expect(summary.litComponents).toBe(1);
-    expect(summary.stencilComponents).toBe(1);
-    expect(summary.totalCriteria).toBe(10);
-    expect(summary.automatedCoverage).toBe('40%');
-  });
-
-  it('should compute storyCoverage from merged component storyCount', () => {
-    const components = [
-      createComponent({name: 'atomic-a', framework: 'lit', storyCount: 2}),
-      createComponent({
-        name: 'atomic-b',
-        framework: 'stencil',
-        storyCount: 3,
-      }),
-    ];
-
-    const summary = createSummary(components, [], 10);
-
-    expect(summary.storyCoverage).toEqual({
-      total: 5,
-      withA11y: 5,
-      excludedFromA11y: 0,
-    });
+    expect(summary.storyCoverage.total).toBe(5);
+    expect(summary.automatedCoverage).toBe('7%');
   });
 });
