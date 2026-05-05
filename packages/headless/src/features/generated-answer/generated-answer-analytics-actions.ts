@@ -12,6 +12,7 @@ import type {InlineLink} from '../../utils/inline-link.js';
 import {
   citationSourceSelector,
   generativeQuestionAnsweringIdSelector,
+  selectFollowUpAnswersConversationId,
 } from './generated-answer-selectors.js';
 
 export type GeneratedAnswerFeedbackOption = 'yes' | 'unknown' | 'no';
@@ -64,6 +65,7 @@ export function logOpenGeneratedAnswerSource(
       if (!resolvedAnswerId || !citation) {
         return null;
       }
+      const conversationId = selectFollowUpAnswersConversationId(state);
 
       return client.makeGeneratedAnswerCitationClick(
         partialCitationInformation(citation, state),
@@ -71,6 +73,7 @@ export function logOpenGeneratedAnswerSource(
           generativeQuestionAnsweringId: resolvedAnswerId,
           citationId: citation.id,
           documentId: citationDocumentIdentifier(citation),
+          ...(conversationId && {conversationId}),
         }
       );
     },
@@ -119,11 +122,13 @@ export function logHoverCitation(
       if (!resolvedAnswerId || !citation) {
         return null;
       }
+      const conversationId = selectFollowUpAnswersConversationId(state);
       return client.makeGeneratedAnswerSourceHover({
         generativeQuestionAnsweringId: resolvedAnswerId,
         permanentId: citation.permanentid,
         citationId: citation.id,
         citationHoverTimeMs: citationHoverTimeInMs,
+        ...(conversationId && {conversationId}),
       });
     },
     analyticsType: 'Rga.CitationHover',
@@ -174,8 +179,10 @@ export function logLikeGeneratedAnswer(answerId?: string): CustomAction {
       if (!resolvedAnswerId) {
         return null;
       }
+      const conversationId = selectFollowUpAnswersConversationId(state);
       return client.makeLikeGeneratedAnswer({
         generativeQuestionAnsweringId: resolvedAnswerId,
+        ...(conversationId && {conversationId}),
       });
     },
     analyticsType: 'Rga.AnswerAction',
@@ -203,8 +210,10 @@ export function logDislikeGeneratedAnswer(answerId?: string): CustomAction {
       if (!resolvedAnswerId) {
         return null;
       }
+      const conversationId = selectFollowUpAnswersConversationId(state);
       return client.makeDislikeGeneratedAnswer({
         generativeQuestionAnsweringId: resolvedAnswerId,
+        ...(conversationId && {conversationId}),
       });
     },
     analyticsType: 'Rga.AnswerAction',
@@ -269,8 +278,7 @@ export const logGeneratedAnswerFeedback = (
 export const logGeneratedAnswerStreamEnd = (
   answerGenerated: boolean,
   answerId?: string,
-  answerTextIsEmpty?: boolean,
-  conversationId?: string
+  answerTextIsEmpty?: boolean
 ): CustomAction =>
   makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/streamEnd',
@@ -280,6 +288,7 @@ export const logGeneratedAnswerStreamEnd = (
       if (!generativeQuestionAnsweringId) {
         return null;
       }
+      const conversationId = selectFollowUpAnswersConversationId(state);
       return client.makeGeneratedAnswerStreamEnd({
         generativeQuestionAnsweringId,
         answerGenerated,
@@ -429,8 +438,10 @@ export function logCopyGeneratedAnswer(answerId?: string): CustomAction {
       if (!resolvedAnswerId) {
         return null;
       }
+      const conversationId = selectFollowUpAnswersConversationId(state);
       return client.makeGeneratedAnswerCopyToClipboard({
         generativeQuestionAnsweringId: resolvedAnswerId,
+        ...(conversationId && {conversationId}),
       });
     },
     analyticsType: 'Rga.AnswerAction',

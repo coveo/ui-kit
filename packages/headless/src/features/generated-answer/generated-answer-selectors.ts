@@ -59,6 +59,10 @@ export const selectFieldsToIncludeInCitation = (
   state: Partial<GeneratedAnswerSection>
 ) => state.generatedAnswer?.fieldsToIncludeInCitations;
 
+export const selectFollowUpAnswersConversationId = (
+  state: Partial<FollowUpAnswersSection>
+) => state.followUpAnswers?.conversationId;
+
 const getHeadCitations = (
   state: Partial<GeneratedAnswerSection & FollowUpAnswersSection>
 ) => state.generatedAnswer?.citations;
