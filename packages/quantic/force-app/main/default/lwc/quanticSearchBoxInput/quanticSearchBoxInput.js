@@ -223,7 +223,7 @@ export default class QuanticSearchBoxInput extends LightningElement {
    * @param {KeyboardEvent} event
    */
   onKeyDown(event) {
-    // Let the browser commit IME text before handling shortcuts like Enter. For japanese/korean/chinese input.
+    // Let the browser commit IME text before handling shortcuts like Enter during composition.
     if (event.isComposing || event.keyCode === 229) {
       return;
     }
