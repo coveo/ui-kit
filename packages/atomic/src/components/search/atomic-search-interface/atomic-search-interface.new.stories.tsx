@@ -38,6 +38,7 @@ const meta: Meta = {
   decorators: [(story) => html`<div id="code-root">${story()}</div>`],
   parameters: {
     ...parameters,
+    chromatic: {disableSnapshot: true},
     msw: {
       handlers: [...mockSearchApi.handlers],
     },

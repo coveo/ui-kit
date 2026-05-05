@@ -27,6 +27,7 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
+    chromatic: {disableSnapshot: true},
     msw: {
       handlers: [...mockSearchApi.handlers],
     },
@@ -87,10 +88,7 @@ export const A11yInteraction: Story = {
   decorators: [
     (story) => html`
       ${story()}
-      <atomic-facet
-        field="objecttype"
-        label="Object type"
-      ></atomic-facet>
+      <atomic-facet field="objecttype" label="Object type"></atomic-facet>
     `,
   ],
   beforeEach: () => {

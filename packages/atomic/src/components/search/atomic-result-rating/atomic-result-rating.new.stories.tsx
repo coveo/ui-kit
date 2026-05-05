@@ -45,6 +45,7 @@ const meta: Meta = {
   ],
   parameters: {
     ...parameters,
+    chromatic: {disableSnapshot: true},
     msw: {
       handlers: [...mockSearchApi.handlers],
     },

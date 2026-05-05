@@ -196,9 +196,6 @@ const meta: Meta = {
   render: (args) => template(args),
   parameters: {
     ...parameters,
-    msw: {
-      handlers: [...mockSearchApi.handlers],
-    },
     actions: {
       handles: events,
     },

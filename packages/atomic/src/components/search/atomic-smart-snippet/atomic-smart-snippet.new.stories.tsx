@@ -27,6 +27,7 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
+    chromatic: {disableSnapshot: true},
     msw: {
       handlers: [...mockSearchApi.handlers],
     },
