@@ -1,3 +1,20 @@
+## 3.57.2
+
+### Patch Changes
+
+- [#7490](https://github.com/coveo/ui-kit/pull/7490) [`21c4042`](https://github.com/coveo/ui-kit/commit/21c40423ce461e4dd960b91f1441407905b6111c) Thanks [@renovate-coveo](https://github.com/apps/renovate-coveo)! - - Bump coveo.analytics from 2.30.54 to 2.30.55
+  - Bump cssnano from 7.1.5 to 7.1.7
+  - Bump dompurify from 3.4.0 to 3.4.1
+  - Bump i18next-http-backend from 3.0.4 to 3.0.5
+
+- [#7454](https://github.com/coveo/ui-kit/pull/7454) [`cc116bf`](https://github.com/coveo/ui-kit/commit/cc116bf10f4708d9636eb3e0279af57a1e43e050) Thanks [@SimonMilord](https://github.com/SimonMilord)! - Treat blank streamed original generated-answer prefixes as empty in Headless state and prevent Atomic from rendering an empty answer card.
+
+- [#7464](https://github.com/coveo/ui-kit/pull/7464) [`925acd8`](https://github.com/coveo/ui-kit/commit/925acd8912103422c19ae02fff22972634e14a28) Thanks [@mmitiche](https://github.com/mmitiche)! - Added generated answer inline link analytics support in Headless and Atomic, including a dedicated interactive inline-link controller and Atomic markdown link tracking/styling.
+
+- Updated dependencies [[`a191d11`](https://github.com/coveo/ui-kit/commit/a191d119ea1913c76aacb266c1345be6e4eecbe0), [`cc116bf`](https://github.com/coveo/ui-kit/commit/cc116bf10f4708d9636eb3e0279af57a1e43e050), [`925acd8`](https://github.com/coveo/ui-kit/commit/925acd8912103422c19ae02fff22972634e14a28)]:
+  - @coveo/headless@3.50.1
+  - @coveo/atomic-legacy@0.0.15
+
 ## 3.57.1
 
 ### Patch Changes
