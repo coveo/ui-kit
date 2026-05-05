@@ -16,7 +16,7 @@
  */
 
 import type {OrchestrationAdapter, OrchestrationContext} from './types.js';
-import type {OrchestrationSnapshot} from '@/src/core/interface/orchestration/types.js';
+import type {OrchestrationSnapshot} from '@/src/core/interface/orchestration/orchestration-types.js';
 
 // ---------------------------------------------------------------------------
 // Heuristic patterns

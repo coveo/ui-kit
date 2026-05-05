@@ -4,7 +4,7 @@ import type {Engine} from '@/src/core/interface/engine/engine.js';
 import {
   buildContextBridgeController,
   type ContextBridgeController,
-} from './controller.js';
+} from './context-bridge-controller.js';
 import {SHARED_CONTEXT_PERSISTENCE_KEY} from '@/src/api/adapters/persistence-keys.js';
 import type {PersistenceAdapter} from '@/src/api/adapters/types.js';
 

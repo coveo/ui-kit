@@ -4,9 +4,9 @@
  * Library-agnostic mutation API. No Redux types exposed.
  */
 
-import {surfacesSlice} from '@/src/core/internal/surfaces/slice.js';
+import {surfacesSlice} from '@/src/core/internal/surfaces/surfaces-slice.js';
 import type {StateMutation} from '@/src/core/interface/interface-types.js';
-import type {StructuredSurface} from './types.js';
+import type {StructuredSurface} from './surfaces-types.js';
 
 export const applySurfaceUpdate = (
   surfaceId: string,

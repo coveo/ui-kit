@@ -8,7 +8,7 @@ import {createSlice, type PayloadAction} from '@reduxjs/toolkit';
 import type {
   OrchestrationState,
   OrchestrationSnapshot,
-} from '@/src/core/interface/orchestration/types.js';
+} from '@/src/core/interface/orchestration/orchestration-types.js';
 
 export const initialOrchestrationState: OrchestrationState = {
   currentMode: 'search-first',

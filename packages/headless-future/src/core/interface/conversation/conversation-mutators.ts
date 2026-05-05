@@ -4,7 +4,7 @@
  * Library-agnostic mutation API. No Redux types exposed.
  */
 
-import {conversationSlice} from '@/src/core/internal/conversation/slice.js';
+import {conversationSlice} from '@/src/core/internal/conversation/conversation-slice.js';
 import type {StateMutation} from '@/src/core/interface/interface-types.js';
 import type {
   ConversationMessage,
@@ -14,7 +14,7 @@ import type {
   ConversationWarningCode,
   StructuredConversationError,
   TurnStatus,
-} from './types.js';
+} from './conversation-types.js';
 
 export const rehydrateConversation = (
   payload: ConversationState

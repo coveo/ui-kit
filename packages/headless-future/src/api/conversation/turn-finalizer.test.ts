@@ -1,9 +1,9 @@
 import {describe, expect, it} from 'vitest';
 import {createTestEngine} from '@/src/test/test-utils.js';
 import {getFullEngine} from '@/src/core/interface/engine/engine.js';
-import {conversationSlice} from '@/src/core/internal/conversation/slice.js';
-import {streamingSlice} from '@/src/core/internal/streaming/slice.js';
-import * as conversationMutators from '@/src/core/interface/conversation/mutate.js';
+import {conversationSlice} from '@/src/core/internal/conversation/conversation-slice.js';
+import {streamingSlice} from '@/src/core/internal/streaming/streaming-slice.js';
+import * as conversationMutators from '@/src/core/interface/conversation/conversation-mutators.js';
 import {
   finalizeTurnCompleted,
   finalizeTurnAborted,

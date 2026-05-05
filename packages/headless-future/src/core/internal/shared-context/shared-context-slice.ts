@@ -8,7 +8,7 @@ import {createSlice, type PayloadAction} from '@reduxjs/toolkit';
 import type {
   SharedContextState,
   CitationLink,
-} from '@/src/core/interface/shared-context/types.js';
+} from '@/src/core/interface/shared-context/shared-context-types.js';
 
 export const initialSharedContextState: SharedContextState = {
   selectedProducts: [],

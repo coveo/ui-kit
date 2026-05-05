@@ -4,14 +4,14 @@ import type {Engine} from '@/src/core/interface/engine/engine.js';
 import {
   buildConversationController,
   type ConversationController,
-} from './controller.js';
+} from './conversation-controller.js';
 import {CONVERSATION_PERSISTENCE_KEY} from '@/src/api/adapters/persistence-keys.js';
 import type {
   PersistenceAdapter,
   StreamRequest,
   TransportAdapter,
 } from '@/src/api/adapters/types.js';
-import * as streamingSelectors from '@/src/core/interface/streaming/selectors.js';
+import * as streamingSelectors from '@/src/core/interface/streaming/streaming-selectors.js';
 
 const encoder = new TextEncoder();
 

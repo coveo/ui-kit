@@ -4,8 +4,8 @@
  * Library-agnostic selectors. No Redux types exposed.
  */
 
-import {orchestrationSlice} from '@/src/core/internal/orchestration/slice.js';
-import type {OrchestrationState} from './types.js';
+import {orchestrationSlice} from '@/src/core/internal/orchestration/orchestration-slice.js';
+import type {OrchestrationState} from './orchestration-types.js';
 
 export type StateWithOrchestrationSlice = {orchestration: OrchestrationState};
 

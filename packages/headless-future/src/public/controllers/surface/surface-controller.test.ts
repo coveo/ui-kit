@@ -1,7 +1,10 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {createTestEngine, nextTick} from '@/src/test/test-utils.js';
 import type {Engine} from '@/src/core/interface/engine/engine.js';
-import {buildSurfaceController, type SurfaceController} from './controller.js';
+import {
+  buildSurfaceController,
+  type SurfaceController,
+} from './surface-controller.js';
 import {SURFACES_PERSISTENCE_KEY} from '@/src/api/adapters/persistence-keys.js';
 import type {PersistenceAdapter} from '@/src/api/adapters/types.js';
 

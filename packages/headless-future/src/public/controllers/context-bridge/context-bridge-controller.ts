@@ -16,16 +16,16 @@
  */
 
 import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
-import {sharedContextSlice} from '@/src/core/internal/shared-context/slice.js';
-import * as sharedContextSelectors from '@/src/core/interface/shared-context/selectors.js';
-import * as sharedContextMutators from '@/src/core/interface/shared-context/mutate.js';
-import * as conversationMutators from '@/src/core/interface/conversation/mutate.js';
+import {sharedContextSlice} from '@/src/core/internal/shared-context/shared-context-slice.js';
+import * as sharedContextSelectors from '@/src/core/interface/shared-context/shared-context-selectors.js';
+import * as sharedContextMutators from '@/src/core/interface/shared-context/shared-context-mutators.js';
+import * as conversationMutators from '@/src/core/interface/conversation/conversation-mutators.js';
 import {SHARED_CONTEXT_PERSISTENCE_KEY} from '@/src/api/adapters/persistence-keys.js';
 import type {PersistenceAdapter} from '@/src/api/adapters/types.js';
 import type {
   CitationLink,
   SharedContextState,
-} from '@/src/core/interface/shared-context/types.js';
+} from '@/src/core/interface/shared-context/shared-context-types.js';
 import {createSelector} from '@reduxjs/toolkit';
 
 const stateSelect = createSelector(

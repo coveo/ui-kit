@@ -4,9 +4,9 @@
  * Library-agnostic mutation API. No Redux types exposed.
  */
 
-import {streamingSlice} from '@/src/core/internal/streaming/slice.js';
+import {streamingSlice} from '@/src/core/internal/streaming/streaming-slice.js';
 import type {StateMutation} from '@/src/core/interface/interface-types.js';
-import type {StreamError} from './types.js';
+import type {StreamError} from './streaming-types.js';
 
 export const setConnected = (isConnected: boolean): StateMutation =>
   streamingSlice.actions.setConnected(isConnected);

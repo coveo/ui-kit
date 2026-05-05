@@ -11,12 +11,12 @@
  */
 
 import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
-import {surfacesSlice} from '@/src/core/internal/surfaces/slice.js';
-import * as surfacesSelectors from '@/src/core/interface/surfaces/selectors.js';
-import * as surfacesMutators from '@/src/core/interface/surfaces/mutate.js';
+import {surfacesSlice} from '@/src/core/internal/surfaces/surfaces-slice.js';
+import * as surfacesSelectors from '@/src/core/interface/surfaces/surfaces-selectors.js';
+import * as surfacesMutators from '@/src/core/interface/surfaces/surfaces-mutators.js';
 import {SURFACES_PERSISTENCE_KEY} from '@/src/api/adapters/persistence-keys.js';
 import type {PersistenceAdapter} from '@/src/api/adapters/types.js';
-import type {StructuredSurface} from '@/src/core/interface/surfaces/types.js';
+import type {StructuredSurface} from '@/src/core/interface/surfaces/surfaces-types.js';
 
 export const buildSurfaceController = (
   engine: Engine,

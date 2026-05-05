@@ -8,10 +8,10 @@ import {
   type FullEngine,
   getFullEngine,
 } from '@/src/core/interface/engine/engine.js';
-import * as conversationMutators from '@/src/core/interface/conversation/mutate.js';
-import * as conversationSelectors from '@/src/core/interface/conversation/selectors.js';
-import * as streamingMutators from '@/src/core/interface/streaming/mutate.js';
-import * as surfacesMutators from '@/src/core/interface/surfaces/mutate.js';
+import * as conversationMutators from '@/src/core/interface/conversation/conversation-mutators.js';
+import * as conversationSelectors from '@/src/core/interface/conversation/conversation-selectors.js';
+import * as streamingMutators from '@/src/core/interface/streaming/streaming-mutators.js';
+import * as surfacesMutators from '@/src/core/interface/surfaces/surfaces-mutators.js';
 import {executeConverseStream} from './execute-converse-stream.js';
 import {dispatchStreamEvent} from './event-dispatcher.js';
 import {finalizeFromStreamOutcome} from './stream-outcome-finalizer.js';

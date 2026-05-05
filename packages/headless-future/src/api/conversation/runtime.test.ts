@@ -2,16 +2,16 @@ import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {createTestEngine} from '@/src/test/test-utils.js';
 import type {Engine} from '@/src/core/interface/engine/engine.js';
 import {getFullEngine} from '@/src/core/interface/engine/engine.js';
-import {conversationSlice} from '@/src/core/internal/conversation/slice.js';
-import {streamingSlice} from '@/src/core/internal/streaming/slice.js';
-import {surfacesSlice} from '@/src/core/internal/surfaces/slice.js';
+import {conversationSlice} from '@/src/core/internal/conversation/conversation-slice.js';
+import {streamingSlice} from '@/src/core/internal/streaming/streaming-slice.js';
+import {surfacesSlice} from '@/src/core/internal/surfaces/surfaces-slice.js';
 import type {
   PersistenceAdapter,
   StreamRequest,
   TransportAdapter,
 } from '@/src/api/adapters/types.js';
-import * as conversationMutators from '@/src/core/interface/conversation/mutate.js';
-import * as conversationSelectors from '@/src/core/interface/conversation/selectors.js';
+import * as conversationMutators from '@/src/core/interface/conversation/conversation-mutators.js';
+import * as conversationSelectors from '@/src/core/interface/conversation/conversation-selectors.js';
 import {getConversationRuntime, type ConversationRuntime} from './runtime.js';
 import {defaultConversationIdStrategy} from './id-strategy.js';
 

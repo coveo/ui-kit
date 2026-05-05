@@ -8,7 +8,7 @@ import {createSlice, type PayloadAction} from '@reduxjs/toolkit';
 import type {
   StreamingState,
   StreamError,
-} from '@/src/core/interface/streaming/types.js';
+} from '@/src/core/interface/streaming/streaming-types.js';
 
 export const initialStreamingState: StreamingState = {
   isConnected: false,

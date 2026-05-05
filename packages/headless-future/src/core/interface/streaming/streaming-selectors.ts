@@ -4,8 +4,8 @@
  * Library-agnostic selectors. No Redux types exposed.
  */
 
-import {streamingSlice} from '@/src/core/internal/streaming/slice.js';
-import type {StreamingState} from './types.js';
+import {streamingSlice} from '@/src/core/internal/streaming/streaming-slice.js';
+import type {StreamingState} from './streaming-types.js';
 
 export type StateWithStreamingSlice = {streaming: StreamingState};
 

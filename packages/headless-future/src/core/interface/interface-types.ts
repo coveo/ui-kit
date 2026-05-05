@@ -34,15 +34,21 @@ export type {
   ConversationWarningCode,
   ConversationErrorSource,
   StructuredConversationError,
-} from './conversation/types.js';
-export type {StreamingState, StreamError} from './streaming/types.js';
+} from './conversation/conversation-types.js';
+export type {StreamingState, StreamError} from './streaming/streaming-types.js';
 export type {
   OrchestrationState,
   OrchestrationSnapshot,
   OrchestrationMode,
-} from './orchestration/types.js';
-export type {SurfacesState, StructuredSurface} from './surfaces/types.js';
-export type {SharedContextState, CitationLink} from './shared-context/types.js';
+} from './orchestration/orchestration-types.js';
+export type {
+  SurfacesState,
+  StructuredSurface,
+} from './surfaces/surfaces-types.js';
+export type {
+  SharedContextState,
+  CitationLink,
+} from './shared-context/shared-context-types.js';
 
 // Import for use in State interface below
 import type {SearchBoxState} from './search-box/search-box-types.js';
@@ -51,11 +57,11 @@ import type {ResultsState} from './results/results-types.js';
 import type {FacetState} from './facets/facets-types.js';
 import type {PaginationState} from './pagination/pagination-types.js';
 import type {ConfigurationState} from './configuration/configuration-types.js';
-import type {ConversationState} from './conversation/types.js';
-import type {StreamingState} from './streaming/types.js';
-import type {OrchestrationState} from './orchestration/types.js';
-import type {SurfacesState} from './surfaces/types.js';
-import type {SharedContextState} from './shared-context/types.js';
+import type {ConversationState} from './conversation/conversation-types.js';
+import type {StreamingState} from './streaming/streaming-types.js';
+import type {OrchestrationState} from './orchestration/orchestration-types.js';
+import type {SurfacesState} from './surfaces/surfaces-types.js';
+import type {SharedContextState} from './shared-context/shared-context-types.js';
 
 // ============================================================================
 // Root State Interface

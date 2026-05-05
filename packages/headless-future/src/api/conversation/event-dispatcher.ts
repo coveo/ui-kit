@@ -1,11 +1,11 @@
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
 import type {NormalizedStreamEvent} from '@/src/api/protocol/types.js';
-import * as conversationMutators from '@/src/core/interface/conversation/mutate.js';
-import * as streamingMutators from '@/src/core/interface/streaming/mutate.js';
+import * as conversationMutators from '@/src/core/interface/conversation/conversation-mutators.js';
+import * as streamingMutators from '@/src/core/interface/streaming/streaming-mutators.js';
 import type {
   ConversationSession,
   ConversationWarningCode,
-} from '@/src/core/interface/conversation/types.js';
+} from '@/src/core/interface/conversation/conversation-types.js';
 
 export type EventDispatchResult = {
   receivedTerminalEvent: boolean;

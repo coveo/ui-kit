@@ -4,8 +4,11 @@
  * Library-agnostic selectors. No Redux types exposed.
  */
 
-import {conversationSlice} from '@/src/core/internal/conversation/slice.js';
-import type {ConversationState, ConversationTurn} from './types.js';
+import {conversationSlice} from '@/src/core/internal/conversation/conversation-slice.js';
+import type {
+  ConversationState,
+  ConversationTurn,
+} from './conversation-types.js';
 
 export type StateWithConversationSlice = {conversation: ConversationState};
 

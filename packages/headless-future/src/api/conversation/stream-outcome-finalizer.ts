@@ -1,6 +1,6 @@
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
 import type {ConverseStreamOutcome} from '@/src/api/conversation/execute-converse-stream.js';
-import * as streamingMutators from '@/src/core/interface/streaming/mutate.js';
+import * as streamingMutators from '@/src/core/interface/streaming/streaming-mutators.js';
 import {
   finalizeTurnAborted,
   finalizeTurnCompleted,

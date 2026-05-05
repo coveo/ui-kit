@@ -1,10 +1,10 @@
 import type {PersistenceAdapter} from '@/src/api/adapters/types.js';
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
-import * as conversationMutators from '@/src/core/interface/conversation/mutate.js';
-import * as streamingMutators from '@/src/core/interface/streaming/mutate.js';
-import * as streamingSelectors from '@/src/core/interface/streaming/selectors.js';
+import * as conversationMutators from '@/src/core/interface/conversation/conversation-mutators.js';
+import * as streamingMutators from '@/src/core/interface/streaming/streaming-mutators.js';
+import * as streamingSelectors from '@/src/core/interface/streaming/streaming-selectors.js';
 import {CONVERSATION_PERSISTENCE_KEY} from '@/src/api/adapters/persistence-keys.js';
-import type {ConversationState} from '@/src/core/interface/conversation/types.js';
+import type {ConversationState} from '@/src/core/interface/conversation/conversation-types.js';
 
 type PersistedConversationEnvelope = {
   conversation: ConversationState;

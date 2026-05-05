@@ -1,8 +1,8 @@
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
-import * as conversationMutators from '@/src/core/interface/conversation/mutate.js';
-import * as conversationSelectors from '@/src/core/interface/conversation/selectors.js';
-import * as streamingMutators from '@/src/core/interface/streaming/mutate.js';
-import type {ConversationMessage} from '@/src/core/interface/conversation/types.js';
+import * as conversationMutators from '@/src/core/interface/conversation/conversation-mutators.js';
+import * as conversationSelectors from '@/src/core/interface/conversation/conversation-selectors.js';
+import * as streamingMutators from '@/src/core/interface/streaming/streaming-mutators.js';
+import type {ConversationMessage} from '@/src/core/interface/conversation/conversation-types.js';
 import type {ConversationIdStrategy} from './id-strategy.js';
 
 export type TurnContext = {

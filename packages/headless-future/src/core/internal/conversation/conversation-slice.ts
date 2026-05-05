@@ -13,7 +13,7 @@ import type {
   ConversationWarningCode,
   StructuredConversationError,
   TurnStatus,
-} from '@/src/core/interface/conversation/types.js';
+} from '@/src/core/interface/conversation/conversation-types.js';
 
 const now = () => Date.now();
 

@@ -17,10 +17,10 @@
  */
 
 import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
-import {orchestrationSlice} from '@/src/core/internal/orchestration/slice.js';
-import * as orchestrationSelectors from '@/src/core/interface/orchestration/selectors.js';
-import * as orchestrationMutators from '@/src/core/interface/orchestration/mutate.js';
-import type {OrchestrationSnapshot} from '@/src/core/interface/orchestration/types.js';
+import {orchestrationSlice} from '@/src/core/internal/orchestration/orchestration-slice.js';
+import * as orchestrationSelectors from '@/src/core/interface/orchestration/orchestration-selectors.js';
+import * as orchestrationMutators from '@/src/core/interface/orchestration/orchestration-mutators.js';
+import type {OrchestrationSnapshot} from '@/src/core/interface/orchestration/orchestration-types.js';
 import type {OrchestrationAdapter} from '@/src/api/adapters/types.js';
 import {createSelector} from '@reduxjs/toolkit';
 

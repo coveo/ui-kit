@@ -4,8 +4,8 @@
  * Library-agnostic selectors. No Redux types exposed.
  */
 
-import {sharedContextSlice} from '@/src/core/internal/shared-context/slice.js';
-import type {SharedContextState} from './types.js';
+import {sharedContextSlice} from '@/src/core/internal/shared-context/shared-context-slice.js';
+import type {SharedContextState} from './shared-context-types.js';
 
 export type StateWithSharedContextSlice = {sharedContext: SharedContextState};
 

@@ -8,7 +8,7 @@ import {createSlice, type PayloadAction} from '@reduxjs/toolkit';
 import type {
   SurfacesState,
   StructuredSurface,
-} from '@/src/core/interface/surfaces/types.js';
+} from '@/src/core/interface/surfaces/surfaces-types.js';
 
 export const initialSurfacesState: SurfacesState = {
   surfaces: {},

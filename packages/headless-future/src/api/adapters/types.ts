@@ -8,7 +8,7 @@
  * to controllers. They never import from Layer 0 state interfaces.
  */
 
-import type {OrchestrationSnapshot} from '@/src/core/interface/orchestration/types.js';
+import type {OrchestrationSnapshot} from '@/src/core/interface/orchestration/orchestration-types.js';
 
 // ============================================================================
 // TransportAdapter
