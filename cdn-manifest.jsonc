@@ -5,21 +5,25 @@
 //   - source:  Build output directory to upload
 //   - cdnPath: CDN path pattern. $VERSION is replaced with the semver version at deploy time.
 //              Most packages follow "{name}/v$VERSION"; exceptions have extra nesting.
+//   - entry:   Main entry file served from the CDN (used for pointer generation)
 [
   {
     "name": "bueno",
     "source": "packages/bueno/cdn",
     "cdnPath": "bueno/v$VERSION",
+    "entry": "bueno.esm.js",
   },
   {
     "name": "headless",
     "source": "packages/headless/cdn",
     "cdnPath": "headless/v$VERSION",
+    "entry": "headless.esm.js",
   },
   {
     "name": "atomic",
     "source": "packages/atomic/cdn",
     "cdnPath": "atomic/v$VERSION",
+    "entry": "atomic.esm.js",
   },
   {
     // Storybook is nested inside the atomic CDN directory
@@ -31,16 +35,19 @@
     "name": "atomic-react",
     "source": "packages/atomic-react/dist",
     "cdnPath": "atomic-react/v$VERSION",
+    "entry": "esm/atomic-react.mjs",
   },
   {
     // Hosted page has an extra subdirectory after the version
     "name": "atomic-hosted-page",
     "source": "packages/atomic-hosted-page/cdn",
     "cdnPath": "atomic-hosted-page/v$VERSION/atomic-hosted-page",
+    "entry": "atomic-hosted-page.esm.js",
   },
   {
     "name": "shopify",
     "source": "packages/shopify/cdn",
     "cdnPath": "shopify/v$VERSION",
+    "entry": "headless.esm.js",
   },
 ]
