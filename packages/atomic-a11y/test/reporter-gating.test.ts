@@ -178,6 +178,53 @@ describe('VitestA11yReporter — run-end gating', () => {
     expect(totalViolations).toBe(2);
   });
 
+  it('resets accumulated state between test runs', async () => {
+    const reporter = new VitestA11yReporter({outputFile, packageJsonPath});
+
+    reporter.onTestRunStart();
+    reporter.onTestCaseResult(
+      // biome-ignore lint/suspicious/noExplicitAny: simplified test fixture
+      buildTestCase({
+        storyId: 'atomic-tab--broken',
+        modulePath: 'src/components/common/atomic-tab/atomic-tab.stories.tsx',
+        axeResults: buildAxeResults({
+          violations: [buildAxeRule('image-alt', ['wcag2a', 'wcag111'], 1)],
+        }),
+      }) as any
+    );
+
+    await reporter.onTestRunEnd([], [], 'passed');
+    expect(process.exitCode).toBe(1);
+
+    process.exitCode = 0;
+    stderrSpy.mockClear();
+
+    reporter.onTestRunStart();
+    reporter.onTestCaseResult(
+      // biome-ignore lint/suspicious/noExplicitAny: simplified test fixture
+      buildTestCase({
+        storyId: 'atomic-tab--broken',
+        modulePath: 'src/components/common/atomic-tab/atomic-tab.stories.tsx',
+        axeResults: buildAxeResults({
+          passes: [buildAxeRule('color-contrast', ['wcag2aa', 'wcag143'], 1)],
+        }),
+      }) as any
+    );
+
+    await reporter.onTestRunEnd([], [], 'passed');
+
+    expect(process.exitCode).toBe(0);
+    expect(stderrSpy).not.toHaveBeenCalled();
+
+    const written = JSON.parse(await readFile(outputFile, 'utf8'));
+    const totalViolations = written.components.reduce(
+      (sum: number, c: {automated?: {violations?: number}}) =>
+        sum + (c.automated?.violations ?? 0),
+      0
+    );
+    expect(totalViolations).toBe(0);
+  });
+
   it('does not gate when failOnViolations is disabled', async () => {
     const reporter = new VitestA11yReporter({
       outputFile,

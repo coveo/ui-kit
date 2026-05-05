@@ -120,6 +120,17 @@ export class VitestA11yReporter implements Reporter {
     this.shardInfo = resolveShardInfo();
     this.packageMetadata = readPackageMetadata(options.packageJsonPath);
     this.failOnViolations = options.failOnViolations ?? true;
+    this.resetRunState();
+  }
+
+  /**
+   * Resets reporter state before each test run.
+   *
+   * Vitest reuses reporter instances in watch mode, so per-run accumulators
+   * must be cleared at run start to avoid leaking stale violations.
+   */
+  public onTestRunStart(): void {
+    this.resetRunState();
   }
 
   /**
@@ -340,6 +351,12 @@ export class VitestA11yReporter implements Reporter {
     );
 
     process.stderr.write(`${lines.join('\n')}\n`);
+  }
+
+  private resetRunState(): void {
+    this.componentResults.clear();
+    this.violations.length = 0;
+    this.detectedAxeCoreVersion = null;
   }
 
   private getOrCreateComponent(componentName: string): ComponentAccumulator {
