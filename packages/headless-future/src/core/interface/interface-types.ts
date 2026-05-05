@@ -46,9 +46,9 @@ export type {
   StructuredSurface,
 } from './surfaces/surfaces-types.js';
 export type {
-  SharedContextState,
+  ContextBridgeState,
   CitationLink,
-} from './shared-context/shared-context-types.js';
+} from './context-bridge/context-bridge-types.js';
 
 // Import for use in State interface below
 import type {SearchBoxState} from './search-box/search-box-types.js';
@@ -60,7 +60,7 @@ import type {ConfigurationState} from './configuration/configuration-types.js';
 import type {ConversationState} from './conversation/conversation-types.js';
 import type {OrchestrationState} from './orchestration/orchestration-types.js';
 import type {SurfacesState} from './surfaces/surfaces-types.js';
-import type {SharedContextState} from './shared-context/shared-context-types.js';
+import type {ContextBridgeState} from './context-bridge/context-bridge-types.js';
 
 // ============================================================================
 // Root State Interface
@@ -91,8 +91,8 @@ export interface State {
   orchestration?: OrchestrationState;
   /** Surfaces domain: normalized structured UI surfaces */
   surfaces?: SurfacesState;
-  /** SharedContext domain: cross-domain context bridge state */
-  sharedContext?: SharedContextState;
+  /** ContextBridge domain: cross-domain context bridge state */
+  contextBridge?: ContextBridgeState;
 }
 
 // ============================================================================

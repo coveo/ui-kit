@@ -35,7 +35,7 @@ export {IndexedDbPersistenceAdapter} from './api/adapters/indexeddb-persistence.
 export {
   CONVERSATION_PERSISTENCE_KEY,
   SURFACES_PERSISTENCE_KEY,
-  SHARED_CONTEXT_PERSISTENCE_KEY,
+  CONTEXT_BRIDGE_PERSISTENCE_KEY,
 } from './api/adapters/persistence-keys.js';
 
 // Protocol types (normalized stream events)

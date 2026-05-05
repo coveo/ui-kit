@@ -16,24 +16,24 @@
  */
 
 import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
-import {sharedContextSlice} from '@/src/core/internal/shared-context/shared-context-slice.js';
-import * as sharedContextSelectors from '@/src/core/interface/shared-context/shared-context-selectors.js';
-import * as sharedContextMutators from '@/src/core/interface/shared-context/shared-context-mutators.js';
+import {contextBridgeSlice} from '@/src/core/internal/context-bridge/context-bridge-slice.js';
+import * as contextBridgeSelectors from '@/src/core/interface/context-bridge/context-bridge-selectors.js';
+import * as contextBridgeMutators from '@/src/core/interface/context-bridge/context-bridge-mutators.js';
 import * as conversationMutators from '@/src/core/interface/conversation/conversation-mutators.js';
-import {SHARED_CONTEXT_PERSISTENCE_KEY} from '@/src/api/adapters/persistence-keys.js';
+import {CONTEXT_BRIDGE_PERSISTENCE_KEY} from '@/src/api/adapters/persistence-keys.js';
 import type {PersistenceAdapter} from '@/src/api/adapters/types.js';
 import type {
   CitationLink,
-  SharedContextState,
-} from '@/src/core/interface/shared-context/shared-context-types.js';
+  ContextBridgeState,
+} from '@/src/core/interface/context-bridge/context-bridge-types.js';
 import {createSelector} from '@reduxjs/toolkit';
 
 const stateSelect = createSelector(
   [
-    sharedContextSelectors.selectedProducts,
-    sharedContextSelectors.activeQuery,
-    sharedContextSelectors.activeFilters,
-    sharedContextSelectors.citations,
+    contextBridgeSelectors.selectedProducts,
+    contextBridgeSelectors.activeQuery,
+    contextBridgeSelectors.activeFilters,
+    contextBridgeSelectors.citations,
   ],
   (selectedProducts, activeQuery, activeFilters, citations) => ({
     selectedProducts,
@@ -49,7 +49,7 @@ export const buildContextBridgeController = (
 ) => {
   const fullEngine = getFullEngine(engine);
 
-  fullEngine.adoptSlice(sharedContextSlice);
+  fullEngine.adoptSlice(contextBridgeSlice);
 
   const persistenceAdapter: PersistenceAdapter = persistence ?? {
     save: async () => undefined,
@@ -58,21 +58,22 @@ export const buildContextBridgeController = (
     list: async () => [],
   };
 
-  const selectSharedContextState = (state: {
-    sharedContext?: SharedContextState;
-  }) => state.sharedContext;
+  const selectContextBridgeState = (state: {
+    contextBridge?: ContextBridgeState;
+  }) => state.contextBridge;
 
   void (async () => {
-    const persisted = await persistenceAdapter.load(
-      SHARED_CONTEXT_PERSISTENCE_KEY
+    let persisted = await persistenceAdapter.load(
+      CONTEXT_BRIDGE_PERSISTENCE_KEY
     );
+
     if (persisted && typeof persisted === 'object') {
       fullEngine.mutate(
-        sharedContextMutators.rehydrateContext(persisted as SharedContextState)
+        contextBridgeMutators.rehydrateContext(persisted as ContextBridgeState)
       );
     }
 
-    engine.subscribe(selectSharedContextState, (nextState) => {
+    engine.subscribe(selectContextBridgeState, (nextState) => {
       if (!nextState) {
         return;
       }
@@ -84,11 +85,11 @@ export const buildContextBridgeController = (
         !nextState.activeQuery;
 
       if (isEmptyContext) {
-        void persistenceAdapter.delete(SHARED_CONTEXT_PERSISTENCE_KEY);
+        void persistenceAdapter.delete(CONTEXT_BRIDGE_PERSISTENCE_KEY);
         return;
       }
 
-      void persistenceAdapter.save(SHARED_CONTEXT_PERSISTENCE_KEY, nextState);
+      void persistenceAdapter.save(CONTEXT_BRIDGE_PERSISTENCE_KEY, nextState);
     });
   })();
 
@@ -102,10 +103,10 @@ export const buildContextBridgeController = (
      */
     attachSearchContextToTurn(turnId: string): void {
       const selectedProducts = engine.read(
-        sharedContextSelectors.selectedProducts
+        contextBridgeSelectors.selectedProducts
       );
-      const activeQuery = engine.read(sharedContextSelectors.activeQuery);
-      const activeFilters = engine.read(sharedContextSelectors.activeFilters);
+      const activeQuery = engine.read(contextBridgeSelectors.activeQuery);
+      const activeFilters = engine.read(contextBridgeSelectors.activeFilters);
 
       fullEngine.mutate(
         conversationMutators.updateMessage(turnId, {
@@ -116,11 +117,11 @@ export const buildContextBridgeController = (
         })
       );
 
-      // Store correlation in shared context for analytics continuity
-      fullEngine.mutate(sharedContextMutators.setActiveQuery(activeQuery));
-      fullEngine.mutate(sharedContextMutators.setActiveFilters(activeFilters));
+      // Store correlation in context bridge state for analytics continuity
+      fullEngine.mutate(contextBridgeMutators.setActiveQuery(activeQuery));
+      fullEngine.mutate(contextBridgeMutators.setActiveFilters(activeFilters));
       fullEngine.mutate(
-        sharedContextMutators.setSelectedProducts(selectedProducts)
+        contextBridgeMutators.setSelectedProducts(selectedProducts)
       );
     },
 
@@ -128,7 +129,7 @@ export const buildContextBridgeController = (
      * Publish assistant-surfaced product selections back to the search context.
      * These can be used to pre-filter or annotate subsequent search queries.
      *
-     * v1: writes to sharedContext only. Future iterations may dispatch
+     * v1: writes to contextBridge only. Future iterations may dispatch
      * search state mutations directly.
      */
     publishAssistantSelectionsToSearch(selections: {
@@ -136,11 +137,11 @@ export const buildContextBridgeController = (
       filters?: Record<string, string[]>;
     }): void {
       fullEngine.mutate(
-        sharedContextMutators.setSelectedProducts(selections.products)
+        contextBridgeMutators.setSelectedProducts(selections.products)
       );
       if (selections.filters) {
         fullEngine.mutate(
-          sharedContextMutators.setActiveFilters(selections.filters)
+          contextBridgeMutators.setActiveFilters(selections.filters)
         );
       }
     },
@@ -149,22 +150,22 @@ export const buildContextBridgeController = (
      * Record a citation link surfaced by the assistant.
      */
     addCitation(citation: CitationLink): void {
-      fullEngine.mutate(sharedContextMutators.addCitation(citation));
+      fullEngine.mutate(contextBridgeMutators.addCitation(citation));
     },
 
     /**
-     * Update the active search query in the shared context.
+     * Update the active search query in the context bridge state.
      * Called when the search state changes so conversation has latest query context.
      */
     syncSearchQuery(query: string): void {
-      fullEngine.mutate(sharedContextMutators.setActiveQuery(query));
+      fullEngine.mutate(contextBridgeMutators.setActiveQuery(query));
     },
 
     /**
-     * Update the active filters in the shared context.
+     * Update the active filters in the context bridge state.
      */
     syncSearchFilters(filters: Record<string, string[]>): void {
-      fullEngine.mutate(sharedContextMutators.setActiveFilters(filters));
+      fullEngine.mutate(contextBridgeMutators.setActiveFilters(filters));
     },
 
     get state() {

@@ -5,7 +5,7 @@ import {
   buildContextBridgeController,
   type ContextBridgeController,
 } from './context-bridge-controller.js';
-import {SHARED_CONTEXT_PERSISTENCE_KEY} from '@/src/api/adapters/persistence-keys.js';
+import {CONTEXT_BRIDGE_PERSISTENCE_KEY} from '@/src/api/adapters/persistence-keys.js';
 import type {PersistenceAdapter} from '@/src/api/adapters/types.js';
 
 describe('buildContextBridgeController persistence integration', () => {
@@ -26,7 +26,7 @@ describe('buildContextBridgeController persistence integration', () => {
     controller = buildContextBridgeController(engine, persistence);
   });
 
-  it('hydrates shared context from persistence on startup', async () => {
+  it('hydrates context bridge state from persistence on startup', async () => {
     (persistence.load as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
       selectedProducts: ['p-1'],
       activeQuery: 'boots',
@@ -45,13 +45,13 @@ describe('buildContextBridgeController persistence integration', () => {
     });
   });
 
-  it('persists shared context changes', async () => {
+  it('persists context bridge changes', async () => {
     await nextTick();
 
     controller.syncSearchQuery('winter boots');
 
     expect(persistence.save).toHaveBeenCalledWith(
-      SHARED_CONTEXT_PERSISTENCE_KEY,
+      CONTEXT_BRIDGE_PERSISTENCE_KEY,
       expect.objectContaining({activeQuery: 'winter boots'})
     );
   });

@@ -1,27 +1,27 @@
 /**
- * SharedContext Feature Slice (Redux Implementation)
+ * ContextBridge Feature Slice (Redux Implementation)
  *
  * INTERNAL to Layer 0. NEVER export from core/index.ts.
  */
 
 import {createSlice, type PayloadAction} from '@reduxjs/toolkit';
 import type {
-  SharedContextState,
+  ContextBridgeState,
   CitationLink,
-} from '@/src/core/interface/shared-context/shared-context-types.js';
+} from '@/src/core/interface/context-bridge/context-bridge-types.js';
 
-export const initialSharedContextState: SharedContextState = {
+export const initialContextBridgeState: ContextBridgeState = {
   selectedProducts: [],
   activeQuery: undefined,
   activeFilters: {},
   citations: [],
 };
 
-export const sharedContextSlice = createSlice({
-  name: 'sharedContext',
-  initialState: initialSharedContextState,
+export const contextBridgeSlice = createSlice({
+  name: 'contextBridge',
+  initialState: initialContextBridgeState,
   reducers: {
-    rehydrateContext: (_state, action: PayloadAction<SharedContextState>) => {
+    rehydrateContext: (_state, action: PayloadAction<ContextBridgeState>) => {
       return action.payload;
     },
     setSelectedProducts: (state, action: PayloadAction<string[]>) => {
