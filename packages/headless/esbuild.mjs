@@ -74,6 +74,7 @@ const base = {
 const browserEsm = Object.entries(useCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
   const outDir = getUseCaseDir('cdn', useCase);
+  // If this filename changes, update the `entry` field in cdn-manifest.jsonc
   const outfile = `${outDir}/headless.esm.js`;
 
   const buenoPath = `/bueno/${buenoVersion}/bueno.esm.js`;

@@ -126,6 +126,7 @@ const outputCJS = ({useCase}) => ({
   inlineDynamicImports: true,
 });
 
+// If this filename changes, update the `entry` field in cdn-manifest.jsonc
 /** @returns {import('rollup').OutputOptions} */
 const outputESM = ({useCase}) => ({
   file: `dist/esm/${useCase}atomic-react.mjs`,

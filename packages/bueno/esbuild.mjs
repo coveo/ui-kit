@@ -40,6 +40,7 @@ function browserEsm() {
   return build({
     ...base,
     platform: 'browser',
+    // If this filename changes, update the `entry` field in cdn-manifest.jsonc
     outfile: 'cdn/bueno.esm.js',
     format: 'esm',
     watch: devMode,

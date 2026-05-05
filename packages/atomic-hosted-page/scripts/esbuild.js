@@ -41,6 +41,7 @@ const externalizeDependenciesPlugin = {
   },
 };
 
+// If the CDN entry point filename changes, update the `entry` field in cdn-manifest.jsonc
 esbuild
   .build({
     format: 'esm',

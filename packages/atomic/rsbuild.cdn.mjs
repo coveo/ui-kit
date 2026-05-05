@@ -16,6 +16,7 @@ const rsbuild = await rsbuildApi.createRsbuild({
   cwd: __dirname,
   rsbuildConfig: {
     source: {
+      // If the 'atomic.esm' entry key changes, update the `entry` field in cdn-manifest.jsonc
       entry: {
         'atomic.esm': './src/cdn.ts',
         index: './src/loader.ts',

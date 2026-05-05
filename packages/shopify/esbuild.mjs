@@ -25,6 +25,7 @@ const buenoPath = isCDN
  * @type {import('esbuild').BuildOptions}
  */
 
+// If these filenames change, update the `entry` field in cdn-manifest.jsonc
 const entries = [
   {
     entryPoint: 'src/headless/index.ts',
