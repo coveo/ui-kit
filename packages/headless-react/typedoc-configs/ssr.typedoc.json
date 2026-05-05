@@ -5,6 +5,7 @@
     "includeFolders": true
   },
   "categorizeByGroup": true,
+  "readme": "../source_docs/ssr-search-overview.md",
   "name": "SSR Search",
   "entryPoints": ["../src/ssr/index.ts"],
   "gitRevision": "main",

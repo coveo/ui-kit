@@ -7,7 +7,7 @@ This guide explains how to use the MSW API harness utilities in your Storybook s
 ### 1. Import the Mock API
 
 ```typescript
-import { MockSearchApi } from '@/storybook-utils/api/search/mock';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 ```
 
 ### 2. Create an Instance
@@ -34,12 +34,12 @@ const meta: Meta = {
 ### Simple Story with Default Responses
 
 ```typescript
-import type { Meta, StoryObj as Story } from '@storybook/web-components-vite';
-import { MockSearchApi } from '@/storybook-utils/api/search/mock';
-import { wrapInSearchInterface } from '@/storybook-utils/search/search-interface-wrapper';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
 const searchApiHarness = new MockSearchApi();
-const { decorator, play } = wrapInSearchInterface();
+const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-search-box',
@@ -97,10 +97,10 @@ searchApiHarness.searchEndpoint.mockOnce((response) => ({
 **Optional second parameter** for HTTP response options:
 
 ```typescript
-searchApiHarness.searchEndpoint.mockOnce(
-  (response) => response,
-  { status: 201, headers: { 'X-Custom': 'value' } }
-);
+searchApiHarness.searchEndpoint.mockOnce((response) => response, {
+  status: 201,
+  headers: {'X-Custom': 'value'},
+});
 ```
 
 ### `mockErrorOnce()`
@@ -121,7 +121,7 @@ Clears all queued responses, returning to the base response behavior.
 ```typescript
 beforeEach: () => {
   searchApiHarness.searchEndpoint.clear();
-}
+};
 ```
 
 ### `reset()`
@@ -143,19 +143,19 @@ const meta: Meta = {
   // ... config
   beforeEach: () => {
     searchApiHarness.searchEndpoint.clear();
-    
+
     // First page: results 0-40
     searchApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
       results: response.results.slice(0, 40),
     }));
-    
+
     // Second page: results 40-80
     searchApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
       results: response.results.slice(40, 80),
     }));
-    
+
     // Third page: results 80-120
     searchApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
@@ -251,8 +251,8 @@ const meta: Meta = {
 Combine handlers from multiple APIs when your component uses different services:
 
 ```typescript
-import { MockSearchApi } from '@/storybook-utils/api/search/mock';
-import { MockAnswerApi } from '@/storybook-utils/api/answer/mock';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {MockAnswerApi} from '@/storybook-utils/api/answer/mock';
 
 const searchApiHarness = new MockSearchApi();
 const answerApiHarness = new MockAnswerApi();
@@ -260,10 +260,7 @@ const answerApiHarness = new MockAnswerApi();
 const meta: Meta = {
   parameters: {
     msw: {
-      handlers: [
-        ...searchApiHarness.handlers,
-        ...answerApiHarness.handlers,
-      ],
+      handlers: [...searchApiHarness.handlers, ...answerApiHarness.handlers],
     },
   },
 };
@@ -306,7 +303,7 @@ const meta: Meta = {
 For streaming endpoints like Retrieval Generated Answering (RGA):
 
 ```typescript
-import { MockAnswerApi } from '@/storybook-utils/api/answer/mock';
+import {MockAnswerApi} from '@/storybook-utils/api/answer/mock';
 
 const answerApiHarness = new MockAnswerApi();
 
@@ -325,18 +322,18 @@ const meta: Meta = {
 The streaming response is handled automatically by the harness. You can still enqueue custom streaming responses if needed:
 
 ```typescript
-import { buildAnsweringStreamingResponse } from '@/storybook-utils/api/answer/generate-response';
+import {buildAnsweringStreamingResponse} from '@/storybook-utils/api/answer/generate-response';
 
-answerApiHarness.generateEndpoint.mockOnce(
-  () => buildAnsweringStreamingResponse({ delayBetweenMessages: 0 })
+answerApiHarness.generateEndpoint.mockOnce(() =>
+  buildAnsweringStreamingResponse({delayBetweenMessages: 0})
 );
 ```
 
 ## Commerce API Example
 
 ```typescript
-import { MockCommerceApi } from '@/storybook-utils/api/commerce/mock';
-import { wrapInCommerceInterface } from '@/storybook-utils/commerce/commerce-interface-wrapper';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
+import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 
 const commerceApiHarness = new MockCommerceApi();
 
@@ -346,7 +343,7 @@ commerceApiHarness.searchEndpoint.mock((response) => ({
   products: response.products.slice(0, 12),
 }));
 
-const { decorator, play } = wrapInCommerceInterface();
+const {decorator, play} = wrapInCommerceInterface();
 
 const meta: Meta = {
   component: 'atomic-commerce-product-list',
@@ -382,10 +379,18 @@ export const NoProducts: Story = {
 Each story should test one specific behavior or state:
 
 ```typescript
-export const Loading: Story = { /* ... */ };
-export const WithResults: Story = { /* ... */ };
-export const NoResults: Story = { /* ... */ };
-export const Error: Story = { /* ... */ };
+export const Loading: Story = {
+  /* ... */
+};
+export const WithResults: Story = {
+  /* ... */
+};
+export const NoResults: Story = {
+  /* ... */
+};
+export const Error: Story = {
+  /* ... */
+};
 ```
 
 ### 2. Use Descriptive Names
@@ -407,12 +412,12 @@ Add comments when using multiple queued responses:
 beforeEach: () => {
   // Queue 3 responses to demonstrate pagination behavior:
   // 1. First page shows results 0-40
-  // 2. Second page shows results 40-80  
+  // 2. Second page shows results 40-80
   // 3. Third page shows final results (80+)
   searchApiHarness.searchEndpoint.mockOnce(/* ... */);
   searchApiHarness.searchEndpoint.mockOnce(/* ... */);
   searchApiHarness.searchEndpoint.mockOnce(/* ... */);
-}
+};
 ```
 
 ### 4. Flush in beforeEach
@@ -423,7 +428,7 @@ Always flush queued responses in `beforeEach` to ensure each story starts clean:
 beforeEach: () => {
   searchApiHarness.searchEndpoint.clear();
   // Then queue responses specific to this story
-}
+};
 ```
 
 ### 5. Test User Journeys
@@ -438,7 +443,7 @@ beforeEach: () => {
   searchApiHarness.searchEndpoint.mockOnce(/* page 2 */);
   // User reaches end
   searchApiHarness.searchEndpoint.mockOnce(/* final page */);
-}
+};
 ```
 
 ## Troubleshooting
@@ -448,6 +453,7 @@ beforeEach: () => {
 **Problem:** Queued responses aren't being consumed.
 
 **Solution:** Check that:
+
 1. The endpoint path in the harness matches the actual API call
 2. The HTTP method (GET/POST) is correct
 3. The handlers are included in the MSW parameters
@@ -462,7 +468,7 @@ beforeEach: () => {
 beforeEach: () => {
   harness.searchEndpoint.clear();
   // Then enqueue in the correct order
-}
+};
 ```
 
 ### TypeScript Errors
@@ -476,12 +482,12 @@ beforeEach: () => {
 mockOnce((response) => ({
   ...response,
   results: [],
-}))
+}));
 
 // ❌ Bad - missing fields
 mockOnce(() => ({
   results: [],
-}))
+}));
 ```
 
 ## Available Mock APIs

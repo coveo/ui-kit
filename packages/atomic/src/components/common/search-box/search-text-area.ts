@@ -104,7 +104,7 @@ export const renderSearchBoxTextArea: FunctionalComponent<Props> = ({
         }}
         @keyup=${(e: KeyboardEvent) => {
           onKeyUp?.(e);
-          if (e.key === 'Enter') {
+          if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             return;
           }

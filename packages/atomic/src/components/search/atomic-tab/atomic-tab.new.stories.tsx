@@ -4,6 +4,8 @@ import {html} from 'lit';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-tab/atomic-tab.js';
+import '@/src/components/search/atomic-tab-manager/atomic-tab-manager.js';
 
 const mockSearchApi = new MockSearchApi();
 
@@ -18,19 +20,10 @@ const meta: Meta = {
   title: 'Search/Tab',
   id: 'atomic-tab',
   render: () => html`<atomic-tab-manager>
-          <atomic-tab
-            label="All"
-            name="all"
-          ></atomic-tab>
-          <atomic-tab
-            label="Images"
-            name="images"
-          ></atomic-tab>
-          <atomic-tab
-            label="Articles"
-            name="articles"
-          ></atomic-tab>
-        </atomic-tab-manager>`,
+    <atomic-tab label="All" name="all"></atomic-tab>
+    <atomic-tab label="Images" name="images"></atomic-tab>
+    <atomic-tab label="Articles" name="articles"></atomic-tab>
+  </atomic-tab-manager>`,
   decorators: [decorator],
   parameters: {
     ...parameters,

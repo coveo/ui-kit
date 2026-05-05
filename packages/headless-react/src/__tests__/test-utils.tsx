@@ -4,7 +4,7 @@ import type {PropsWithChildren, ReactElement} from 'react';
 interface ProviderWrapperOptions {
   controllers?: unknown;
   engine?: unknown;
-  // biome-ignore lint/suspicious/noExplicitAny: Provider types are complex and vary
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Provider types are complex and vary
   provider?: React.ComponentType<any>;
 }
 

@@ -2,7 +2,7 @@ import type {StoryContext} from '@storybook/web-components-vite';
 import {within} from 'shadow-dom-testing-library';
 import {expect, userEvent, waitFor} from 'storybook/test';
 
-export const COVERED_CRITERIA = ['2.1.2', '2.4.3', '2.4.7', '4.1.2'] as const;
+export const COVERED_CRITERIA = ['2.1.2', '4.1.2'] as const;
 
 export interface DialogA11yOptions {
   triggerLabel: string;

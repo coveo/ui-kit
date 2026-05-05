@@ -8,13 +8,15 @@ import {parameters as commonParameters} from '@/storybook-utils/common/common-me
 import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
 import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-quickview/atomic-quickview.js';
+import '@/src/components/search/atomic-quickview-modal/atomic-quickview-modal.js';
 
 const searchApiHarness = new MockSearchApi();
 
-// biome-ignore lint/suspicious/noExplicitAny: Mock API response types are loosely defined
+// oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Mock API response types are loosely defined
 searchApiHarness.searchEndpoint.mock((response: any) => ({
   ...response,
-  // biome-ignore lint/suspicious/noExplicitAny: Mock API result types are loosely defined
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Mock API result types are loosely defined
   results: response.results.slice(0, 1).map((result: any) => ({
     ...result,
     title:
@@ -54,9 +56,12 @@ const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
 const {decorator: resultListDecorator} = wrapInResultList('list', false);
 const {decorator: resultTemplateDecorator} = wrapInResultTemplate();
 
-const {events, args, argTypes} = getStorybookHelpers('atomic-quickview-modal', {
-  excludeCategories: ['methods'],
-});
+const {events, args, argTypes, styleTemplate} = getStorybookHelpers(
+  'atomic-quickview-modal',
+  {
+    excludeCategories: ['methods'],
+  }
+);
 
 const meta: Meta = {
   component: 'atomic-quickview-modal',
@@ -67,6 +72,7 @@ const meta: Meta = {
     resultTemplateDecorator,
     resultListDecorator,
     searchInterfaceDecorator,
+    (story, {args}) => html` ${styleTemplate(args)} ${story()} `,
   ],
   parameters: {
     ...commonParameters,
@@ -86,6 +92,12 @@ const meta: Meta = {
   },
   args,
   argTypes,
+  play,
+};
+
+export default meta;
+
+export const Default: Story = {
   play: async (context) => {
     await play(context);
     const {canvasElement, step, userEvent} = context;
@@ -100,10 +112,6 @@ const meta: Meta = {
     await new Promise((resolve) => setTimeout(resolve, 600));
   },
 };
-
-export default meta;
-
-export const Default: Story = {};
 
 export const A11yInteraction: Story = {
   tags: ['!dev'],

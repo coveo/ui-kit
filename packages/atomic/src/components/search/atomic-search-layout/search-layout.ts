@@ -1,7 +1,7 @@
 import {buildCommonLayout} from '../../common/atomic-layout-section/layout';
 
-export const layoutWebComponentTagName = 'atomic-search-layout';
-export const containerWebComponentTagName = 'atomic-search-interface';
+const layoutWebComponentTagName = 'atomic-search-layout';
+const containerWebComponentTagName = 'atomic-search-interface';
 export const noResultsSelector = `${containerWebComponentTagName}-no-results`;
 export const errorSelector = `${containerWebComponentTagName}-error`;
 export const firstSearchExecutedSelector = `${containerWebComponentTagName}-search-executed`;

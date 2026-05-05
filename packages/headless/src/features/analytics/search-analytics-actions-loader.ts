@@ -91,22 +91,22 @@ import type {CustomAction, LegacySearchAction} from './analytics-utils.js';
 
 export type {
   LogCategoryFacetBreadcrumbActionCreatorPayload,
-  LogFacetBreadcrumbActionCreatorPayload,
-  LogFacetExcludeActionCreatorPayload,
-  LogFacetUnexcludeActionCreatorPayload,
-  LogFacetDeselectActionCreatorPayload,
-  LogFacetSelectActionCreatorPayload,
-  LogFacetUpdateSortActionCreatorPayload,
   LogDateFacetBreadcrumbActionCreatorPayload,
+  LogFacetBreadcrumbActionCreatorPayload,
+  LogFacetDeselectActionCreatorPayload,
+  LogFacetExcludeActionCreatorPayload,
+  LogFacetSelectActionCreatorPayload,
+  LogFacetUnexcludeActionCreatorPayload,
+  LogFacetUpdateSortActionCreatorPayload,
   LogNumericFacetBreadcrumbActionCreatorPayload,
   LogQuerySuggestionClickActionCreatorPayload,
-  QuestionAnsweringUniqueIdentifierActionCreatorPayload,
-  QuestionAnsweringInlineLinkActionCreatorPayload,
-  LogStaticFilterToggleValueActionCreatorPayload,
   LogStaticFilterClearAllActionCreatorPayload,
-  StaticFilterValueMetadata,
-  SmartSnippetFeedback,
+  LogStaticFilterToggleValueActionCreatorPayload,
   LogUndoTriggerQueryActionCreatorPayload,
+  QuestionAnsweringInlineLinkActionCreatorPayload,
+  QuestionAnsweringUniqueIdentifierActionCreatorPayload,
+  SmartSnippetFeedback,
+  StaticFilterValueMetadata,
 };
 
 /**

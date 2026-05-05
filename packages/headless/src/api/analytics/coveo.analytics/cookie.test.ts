@@ -8,7 +8,8 @@ describe('Cookie', () => {
 
   const mockWindow = {
     location: {
-      hostname: 'example.com',
+      hostname: '',
+      protocol: '',
     },
   };
 
@@ -17,12 +18,17 @@ describe('Cookie', () => {
     vi.stubGlobal('document', mockDocument);
     vi.stubGlobal('window', mockWindow);
 
+    // Reset window properties before each test
+    mockWindow.location.hostname = 'example.com';
+    mockWindow.location.protocol = 'http:';
+
     // Reset document.cookie before each test
     mockDocument.cookie = '';
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.unstubAllGlobals();
   });
 
   describe('set', () => {
@@ -76,6 +82,17 @@ describe('Cookie', () => {
 
       expect(mockDocument.cookie).toBe(
         'testCookie=testValue;domain=co.uk;path=/;SameSite=Lax'
+      );
+    });
+
+    it('should set cookie with Secure attribute when protocol is https', () => {
+      mockWindow.location.protocol = 'https:';
+      mockWindow.location.hostname = 'localhost';
+
+      Cookie.set('testCookie', 'testValue');
+
+      expect(mockDocument.cookie).toBe(
+        'testCookie=testValue;path=/;SameSite=Lax;Secure'
       );
     });
   });

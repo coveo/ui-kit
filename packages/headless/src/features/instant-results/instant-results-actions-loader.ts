@@ -12,10 +12,10 @@ import {
 } from './instant-results-actions.js';
 
 export type {
-  UpdateInstantResultQueryActionCreatorPayload,
-  RegisterInstantResultActionCreatorPayload,
   ClearExpiredInstantResultsActionCreatorPayload,
   FetchInstantResultsActionCreatorPayload,
+  RegisterInstantResultActionCreatorPayload,
+  UpdateInstantResultQueryActionCreatorPayload,
 };
 
 /**

@@ -1,9 +1,4 @@
 import type {AtomicCommerceRecommendationList} from '@coveo/atomic/components';
-import type {
-  ItemDisplayBasicLayout,
-  ItemDisplayDensity,
-  ItemDisplayImageSize,
-} from '@coveo/atomic/loader';
 import type {Product} from '@coveo/headless/commerce';
 import React, {type JSX, useEffect, useRef} from 'react';
 import {flushSync} from 'react-dom';
@@ -22,15 +17,15 @@ interface AtomicCommerceRecommendationListProps {
   /**
    * The spacing of various elements in the recommendation list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
    */
-  density?: ItemDisplayDensity;
+  density?: AtomicCommerceRecommendationList['density'];
   /**
    * The desired layout to use when displaying recommendations. Layouts affect how many products to display per row and how visually distinct they are from each other.
    */
-  display?: ItemDisplayBasicLayout;
+  display?: AtomicCommerceRecommendationList['display'];
   /**
    * The expected size of the image displayed for recommendations.
    */
-  imageSize?: ItemDisplayImageSize;
+  imageSize?: AtomicCommerceRecommendationList['imageSize'];
   /**
    * The desired number of placeholders to display while the recommendation list is loading.
    */
@@ -42,10 +37,9 @@ interface AtomicCommerceRecommendationListProps {
 }
 
 interface HTMLAtomicCommerceRecommendationListElement
-  extends AtomicCommerceRecommendationList,
-    HTMLElement {}
+  extends AtomicCommerceRecommendationList, HTMLElement {}
 
-// biome-ignore lint/correctness/noUnusedVariables: <>
+// oxlint-disable-next-line @typescript-eslint/no-unused-vars -- <>
 var HTMLAtomicCommerceRecommendationListElement: {
   prototype: HTMLAtomicCommerceRecommendationListElement;
   new (): HTMLAtomicCommerceRecommendationListElement;
@@ -91,7 +85,7 @@ export const ListWrapper: React.FC<WrapperProps> = (props) => {
             contentRoot.render(templateResult);
             otherProps.display === 'grid'
               ? linkRoot.render(<AtomicProductLink></AtomicProductLink>)
-              : // biome-ignore lint/complexity/noUselessFragments: <>
+              : // oxlint-disable-next-line react/jsx-no-useless-fragment -- <>
                 linkRoot.render(<></>);
           });
           return root.innerHTML;

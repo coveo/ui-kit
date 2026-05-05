@@ -8,7 +8,7 @@ import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 const highlightKeywordsCheckboxId =
   'atomic-quickview-sidebar-highlight-keywords';
 
-export interface HighlightKeywordsCheckboxProps {
+interface HighlightKeywordsCheckboxProps {
   i18n: i18n;
   highlightKeywords: HighlightKeywords;
   onHighlightKeywords: (highlight: HighlightKeywords) => void;
@@ -40,7 +40,8 @@ export const renderHighlightKeywordsCheckbox: FunctionalComponent<
         <label
           class="cursor-pointer font-bold whitespace-nowrap"
           for=${highlightKeywordsCheckboxId}
-        >${label}</label>
+          >${label}</label
+        >
       `
     )}
   `;

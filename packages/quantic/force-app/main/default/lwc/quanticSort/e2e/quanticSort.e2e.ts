@@ -47,25 +47,22 @@ useCaseTestCases.forEach((useCase) => {
     });
 
     test.describe('when testing accessibility', () => {
-      test('should be accessible to keyboard', async ({sort, page}) => {
-        let selectedSortLabel = await sort.sortDropDown.textContent();
-        expect(selectedSortLabel).toEqual(sortArrOptions[0]);
+      test('should be accessible to keyboard', async ({sort}) => {
+        await expect(sort.sortDropDown).toHaveText(sortArrOptions[0]);
 
         // Selecting the next sort using Enter to open dropdown, the ArrowDown, then ENTER key
         await sort.focusSortDropDown();
         await sort.openSortDropdownUsingKeyboardEnter();
-        await page.keyboard.press('ArrowDown');
-        await page.keyboard.press('Enter');
-        selectedSortLabel = await sort.sortDropDown.textContent();
-        expect(selectedSortLabel).toEqual(sortArrOptions[1]);
+        await sort.sortDropDown.press('ArrowDown');
+        await sort.sortDropDown.press('Enter');
+        await expect(sort.sortDropDown).toHaveText(sortArrOptions[1]);
 
         // Selecting the next sort using Space to open dropdown, the ArrowDown, then ENTER key
         await sort.focusSortDropDown();
         await sort.openSortDropdownUsingKeyboardEnter(false);
-        await page.keyboard.press('ArrowDown');
-        await page.keyboard.press('Enter');
-        selectedSortLabel = await sort.sortDropDown.textContent();
-        expect(selectedSortLabel).toEqual(sortArrOptions[2]);
+        await sort.sortDropDown.press('ArrowDown');
+        await sort.sortDropDown.press('Enter');
+        await expect(sort.sortDropDown).toHaveText(sortArrOptions[2]);
       });
     });
 

@@ -117,7 +117,6 @@ export const SmartSnippet: FunctionComponent<SmartSnippetProps> = (props) => {
         <dt>{question}</dt>
         <dd>
           <div
-            // biome-ignore lint/security/noDangerouslySetInnerHtml: <>
             dangerouslySetInnerHTML={{__html: answer}}
             style={answerStyles(expanded)}
           ></div>

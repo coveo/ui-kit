@@ -56,10 +56,10 @@ import {
 } from './headless-core-category-facet-options.js';
 
 export type {
-  CategoryFacetValueCommon,
-  CategoryFacetValue,
   CategoryFacetOptions,
   CategoryFacetSearchOptions,
+  CategoryFacetValue,
+  CategoryFacetValueCommon,
 };
 
 export interface CategoryFacetProps {

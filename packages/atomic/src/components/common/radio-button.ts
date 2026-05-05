@@ -104,7 +104,7 @@ export const renderRadioButton: FunctionalComponent<RadioButtonProps> = ({
     buttons: HTMLInputElement[],
     currentButton: HTMLInputElement
   ) => {
-    return buttons.findIndex((button) => button === currentButton);
+    return buttons.indexOf(currentButton);
   };
 
   const getNewIndex = (key: string, currentIndex: number, length: number) => {

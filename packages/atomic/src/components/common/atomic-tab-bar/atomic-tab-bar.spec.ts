@@ -106,9 +106,7 @@ describe('atomic-tab-bar', () => {
     ];
 
     const element = await fixture<AtomicTabBar>(html`
-      <atomic-tab-bar>
-        ${tabs.map((tab) => tab)}
-      </atomic-tab-bar>
+      <atomic-tab-bar> ${tabs.map((tab) => tab)} </atomic-tab-bar>
     `);
 
     // Set container width if specified

@@ -20,8 +20,10 @@ import {answerSlice} from './answer-slice.js';
 import type {GeneratedAnswerStream} from './generated-answer-stream.js';
 import type {StreamAnswerAPIState} from './stream-answer-api-state.js';
 
-interface StreamPayload
-  extends Pick<GeneratedAnswerStream, 'contentFormat' | 'citations'> {
+interface StreamPayload extends Pick<
+  GeneratedAnswerStream,
+  'contentFormat' | 'citations'
+> {
   textDelta?: string;
   padding?: string;
   answerGenerated?: boolean;
@@ -47,11 +49,19 @@ const handleMessage = (
   draft: GeneratedAnswerStream,
   payload: Pick<StreamPayload, 'textDelta'>
 ) => {
-  if (draft.answer === undefined) {
-    draft.answer = payload.textDelta;
-  } else if (typeof payload.textDelta === 'string') {
-    draft.answer = draft.answer.concat(payload.textDelta);
+  const {textDelta} = payload;
+
+  if (typeof textDelta !== 'string') {
+    return;
   }
+
+  const answer = draft.answer;
+
+  if (!answer?.trim() && !textDelta.trim()) {
+    return;
+  }
+
+  draft.answer = answer?.trim() ? answer.concat(textDelta) : textDelta;
 };
 
 const handleCitations = (
@@ -117,7 +127,7 @@ export const updateCacheWithEvent = (
       }
       break;
     case 'genqa.messageType':
-      if (parsedPayload.textDelta) {
+      if (typeof parsedPayload.textDelta === 'string') {
         handleMessage(draft, parsedPayload);
         dispatch(updateMessage({textDelta: parsedPayload.textDelta}));
       }
@@ -128,13 +138,23 @@ export const updateCacheWithEvent = (
         dispatch(updateCitations({citations: parsedPayload.citations}));
       }
       break;
-    case 'genqa.endOfStreamType':
+    case 'genqa.endOfStreamType': {
       handleEndOfStream(draft, parsedPayload);
+      const answerId = draft.answerId;
+      const answerGenerated = parsedPayload.answerGenerated ?? false;
+      const answerTextIsEmpty = answerGenerated
+        ? !draft.answer?.trim()
+        : undefined;
       dispatch(
-        logGeneratedAnswerStreamEnd(parsedPayload.answerGenerated ?? false)
+        logGeneratedAnswerStreamEnd(
+          answerGenerated,
+          answerId,
+          answerTextIsEmpty
+        )
       );
       dispatch(logGeneratedAnswerResponseLinked());
       break;
+    }
   }
 };
 

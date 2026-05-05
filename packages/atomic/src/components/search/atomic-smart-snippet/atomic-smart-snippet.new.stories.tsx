@@ -5,6 +5,7 @@ import {testCollapsibleA11y} from '@/storybook-utils/a11y/';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-smart-snippet/atomic-smart-snippet.js';
 
 const mockSearchApi = new MockSearchApi();
 

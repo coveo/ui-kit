@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicProductImageStories from './atomic-product-image.new.stories';
+import meta, { Default, withAFallbackImage } from './atomic-product-image.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicProductImageStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicProductImageStories}
+  stories={{ Default, withAFallbackImage }}
   githubPath="commerce/atomic-product-image/atomic-product-image.ts"
   tagName="atomic-product-image"
   className="AtomicProductImage"

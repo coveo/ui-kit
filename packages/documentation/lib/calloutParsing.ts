@@ -1,6 +1,9 @@
 import type {PageEvent, RouterTarget} from 'typedoc';
 
+type VariableMap = Record<string, string>;
+
 let BLOCK_COUNTER = 0;
+let VARIABLES: VariableMap = {};
 const CODE_BLOCK_REGEX =
   /<pre\b[^>]*>[\s\S]*?<code\b[^>]*>[\s\S]*?<\/code>[\s\S]*?<\/pre>/gi;
 
@@ -82,7 +85,7 @@ const sanitizeCalloutHtml = (input: string): string => {
     const isSafe =
       /^https?:\/\//i.test(href) ||
       /^mailto:/i.test(href) ||
-      /^#/i.test(href) ||
+      href.startsWith('#') ||
       /^\.{0,2}\//.test(href);
 
     if (!href || !isSafe) return '';
@@ -145,6 +148,43 @@ const codifyCallout = (callout: string): string => {
   return callout.replace(/`([^`]+)`/g, '<code>$1</code>');
 };
 
+const replaceVariablesInCodeBlock = (html: string): string => {
+  if (Object.keys(VARIABLES).length === 0) return html;
+
+  let result = '';
+  let cursor = 0;
+
+  while (cursor < html.length) {
+    const open = html.indexOf('{{', cursor);
+    if (open === -1) {
+      result += html.slice(cursor);
+      break;
+    }
+
+    result += html.slice(cursor, open);
+
+    const close = html.indexOf('}}', open + 2);
+    if (close === -1) {
+      result += html.slice(open);
+      break;
+    }
+
+    const match = html.slice(open, close + 2);
+    const raw = html.slice(open + 2, close);
+    const key = stripAllTags(raw);
+
+    if (/^\w+$/.test(key) && key in VARIABLES) {
+      result += VARIABLES[key];
+    } else {
+      result += match;
+    }
+
+    cursor = close + 2;
+  }
+
+  return result;
+};
+
 const transformCodeBlockHtml = (blockHtml: string): string => {
   const codeStart = blockHtml.indexOf('<code');
   const codeTagEnd = blockHtml.indexOf('>', codeStart);
@@ -154,11 +194,14 @@ const transformCodeBlockHtml = (blockHtml: string): string => {
     return blockHtml;
 
   const beforeCode = blockHtml.slice(0, codeTagEnd + 1);
-  const originalCodeInner = blockHtml.slice(codeTagEnd + 1, codeClose);
   const afterCode = blockHtml.slice(codeClose);
+  const originalCodeInner = replaceVariablesInCodeBlock(
+    blockHtml.slice(codeTagEnd + 1, codeClose)
+  );
 
   const {codeInner, callouts} = processCodeInnerHtml(originalCodeInner);
-  if (callouts.length === 0) return blockHtml;
+  if (callouts.length === 0)
+    return `${beforeCode}${originalCodeInner}${afterCode}`;
 
   const calloutLineItems = callouts
     .map(
@@ -169,6 +212,10 @@ const transformCodeBlockHtml = (blockHtml: string): string => {
   const calloutsHtml = `<section class="code-callout-list"><ol>${calloutLineItems}</ol></section>`;
 
   return `${beforeCode}${codeInner}${afterCode}${calloutsHtml}`;
+};
+
+export const setCodeBlockVariables = (variables: VariableMap): void => {
+  VARIABLES = variables;
 };
 
 export const handleRendererEndPage = (page: PageEvent<RouterTarget>): void => {

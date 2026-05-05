@@ -11,10 +11,9 @@ import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {renderGeneratingAnswerLabel} from './render-generating-answer-label';
 import '@/src/components/common/atomic-icon/atomic-icon';
 
-interface GeneratedAnswer extends GeneratedAnswerBase {
-  question: string;
+type GeneratedAnswer = GeneratedAnswerBase & {
   expanded?: boolean;
-}
+};
 
 export interface RenderAnswerContentProps {
   i18n: i18n;
@@ -27,7 +26,7 @@ export interface RenderAnswerContentProps {
 }
 
 /**
- * Renders the answer content of a given generated answer including question, answer text, and citations.
+ * Renders the answer content of a given generated answer including answer text and citations.
  */
 export const renderAnswerContent: FunctionalComponent<
   RenderAnswerContentProps
@@ -42,59 +41,29 @@ export const renderAnswerContent: FunctionalComponent<
     onClickShowButton,
   } = props;
 
-  const {
-    answer,
-    question,
-    isStreaming,
-    citations,
-    answerContentFormat,
-    expanded,
-    error,
-  } = generatedAnswer;
-  const isExpanded = collapsible ? expanded : true;
-  const trimmedQuestion = question.trim();
+  const {answer, isStreaming, citations, answerContentFormat, expanded, error} =
+    generatedAnswer;
   const hasRetryableError = error?.isRetryable === true;
 
   return html`
     <div>
-      <div class="mt-6 flex gap-3">
-        <p
-          class="question-text min-w-0 flex-1 text-base font-semibold leading-6"
-        >
-          ${trimmedQuestion}
-        </p>
-        ${when(
-          !hasRetryableError && isExpanded,
-          () => html`
-            <div
-              part="feedback-and-copy-buttons"
-              class="flex h-9 shrink-0 items-center justify-end gap-2"
-            >
-              ${renderFeedbackAndCopyButtonsSlot()}
-            </div>
-          `
-        )}
-      </div>
-      ${
-        hasRetryableError
-          ? renderRetryPrompt({
-              props: {
-                onClick: onRetry,
-                buttonLabel: i18n.t('retry'),
-                message: i18n.t('retry-stream-message'),
-              },
-            })
-          : nothing
-      }
-      ${
-        !hasRetryableError
-          ? renderGeneratedContentContainer({
-              props: {
-                answer,
-                answerContentFormat,
-                isStreaming: !!isStreaming,
-              },
-            })(html`
+      ${hasRetryableError
+        ? renderRetryPrompt({
+            props: {
+              onClick: onRetry,
+              buttonLabel: i18n.t('retry'),
+              message: i18n.t('retry-stream-message'),
+            },
+          })
+        : nothing}
+      ${!hasRetryableError
+        ? renderGeneratedContentContainer({
+            props: {
+              answer,
+              answerContentFormat,
+              isStreaming: !!isStreaming,
+            },
+          })(html`
             ${renderSourceCitations({
               props: {
                 label: i18n.t('citations'),
@@ -102,30 +71,33 @@ export const renderAnswerContent: FunctionalComponent<
               },
             })(renderCitationsSlot())}
           `)
-          : nothing
-      }
-      ${
-        !hasRetryableError
-          ? html`
+        : nothing}
+      ${when(
+        !hasRetryableError && (collapsible ? expanded : true),
+        () => html`
+          <div class="mt-4" part="feedback-and-copy-buttons">
+            ${renderFeedbackAndCopyButtonsSlot()}
+          </div>
+        `
+      )}
+      ${!hasRetryableError
+        ? html`
             <div part="generated-answer-footer" class="mt-6">
               ${renderGeneratingAnswerLabel({
                 props: {i18n, isStreaming: !!isStreaming, collapsible},
               })}
-              ${
-                collapsible && !isStreaming
-                  ? renderShowButton({
-                      props: {
-                        i18n,
-                        onClick: onClickShowButton,
-                        isCollapsed: !expanded,
-                      },
-                    })
-                  : nothing
-              }
+              ${collapsible && !isStreaming
+                ? renderShowButton({
+                    props: {
+                      i18n,
+                      onClick: onClickShowButton,
+                      isCollapsed: !expanded,
+                    },
+                  })
+                : nothing}
             </div>
           `
-          : nothing
-      }
+        : nothing}
     </div>
   `;
 };

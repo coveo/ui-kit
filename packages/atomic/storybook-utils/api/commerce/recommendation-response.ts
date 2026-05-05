@@ -9,6 +9,8 @@ export const baseResponse = {
       clickUri: 'https://example.com/product/rec-1',
       ec_brand: 'Rec Brand',
       ec_category: 'Accessories',
+      children: [],
+      additionalFields: {},
     },
     {
       permanentid: 'rec-product-2',
@@ -17,6 +19,8 @@ export const baseResponse = {
       clickUri: 'https://example.com/product/rec-2',
       ec_brand: 'Rec Brand',
       ec_category: 'Accessories',
+      children: [],
+      additionalFields: {},
     },
   ],
   pagination: {

@@ -14,9 +14,9 @@ import type {
 } from './analytics-utils.js';
 
 export type {
-  LogSearchEventActionCreatorPayload,
   LogClickEventActionCreatorPayload,
   LogCustomEventActionCreatorPayload,
+  LogSearchEventActionCreatorPayload,
 };
 
 /**

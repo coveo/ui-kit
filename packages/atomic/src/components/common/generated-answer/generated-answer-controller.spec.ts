@@ -157,6 +157,18 @@ describe('GeneratedAnswerController', () => {
         'Generated answer: Test answer'
       );
     });
+
+    it('should return empty string when the answer only contains whitespace', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => ({
+          isVisible: true,
+          isStreaming: false,
+          answer: '   ',
+        }),
+      });
+
+      expect(controller.getGeneratedAnswerStatus()).toBe('');
+    });
   });
 
   describe('#hasRetryableError', () => {
@@ -203,6 +215,52 @@ describe('GeneratedAnswerController', () => {
       });
 
       expect(controller.hasNoAnswerGenerated).toBe(false);
+    });
+
+    it('should return true when answer is an empty string', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => ({
+          answer: '',
+          citations: [],
+        }),
+      });
+
+      expect(controller.hasNoAnswerGenerated).toBe(true);
+    });
+
+    it('should return true when answer only contains whitespace', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => ({
+          answer: '   ',
+          citations: [],
+        }),
+      });
+
+      expect(controller.hasNoAnswerGenerated).toBe(true);
+    });
+
+    it('should return true when the blank answer has a non-retryable error', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => ({
+          answer: '   ',
+          citations: [],
+          error: {message: 'Internal server error.', code: 500},
+        }),
+      });
+
+      expect(controller.hasNoAnswerGenerated).toBe(true);
+    });
+
+    it('should return true when the blank answer is still streaming', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => ({
+          answer: '   ',
+          citations: [],
+          isStreaming: true,
+        }),
+      });
+
+      expect(controller.hasNoAnswerGenerated).toBe(true);
     });
   });
 

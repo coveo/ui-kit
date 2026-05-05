@@ -4,6 +4,7 @@ import {baseResponse as baseGeneratedAnswer} from './generate-response.js';
 
 export class MockAnswerApi implements MockApi {
   readonly generateEndPoint;
+  readonly insightGenerateEndPoint;
 
   constructor(basePath: string = 'https://:orgId.org.coveo.com') {
     this.generateEndPoint = new EndpointHarness<
@@ -14,13 +15,25 @@ export class MockAnswerApi implements MockApi {
       baseGeneratedAnswer,
       (response) => response()
     );
+    this.insightGenerateEndPoint = new EndpointHarness<
+      () => HttpResponse<DefaultBodyType>
+    >(
+      'POST',
+      `${basePath}/rest/organizations/:orgId/insight/v1/configs/:insightId/answer/:configId/generate`,
+      baseGeneratedAnswer,
+      (response) => response()
+    );
   }
 
   get handlers(): HttpHandler[] {
-    return [this.generateEndPoint.generateHandler()];
+    return [
+      this.generateEndPoint.generateHandler(),
+      this.insightGenerateEndPoint.generateHandler(),
+    ];
   }
 
   clearAll(): void {
     this.generateEndPoint.clear();
+    this.insightGenerateEndPoint.clear();
   }
 }

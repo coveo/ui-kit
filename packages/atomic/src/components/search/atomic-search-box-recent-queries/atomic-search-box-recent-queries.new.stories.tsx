@@ -5,6 +5,7 @@ import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
 import {wrapInSearchBox} from '@/storybook-utils/search/search-box-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-search-box-recent-queries/atomic-search-box-recent-queries.js';
 
 const mockSearchApi = new MockSearchApi();
 

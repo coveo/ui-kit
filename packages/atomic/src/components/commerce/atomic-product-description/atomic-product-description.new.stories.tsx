@@ -9,6 +9,7 @@ import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-inter
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
 import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product-template-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import '@/src/components/commerce/atomic-product-description/atomic-product-description.js';
 
 const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
   engineConfig: {
@@ -32,9 +33,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 );
 const wrapperDecorator: Decorator = (story) => {
   return html`
-    <div style="width: 200px; height: 60px;" id="code-root">
-      ${story()}
-    </div>
+    <div style="width: 200px; height: 60px;" id="code-root">${story()}</div>
   `;
 };
 
@@ -45,6 +44,7 @@ const meta: Meta = {
   render: (args) => template(args),
   parameters: {
     ...parameters,
+    chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
     },

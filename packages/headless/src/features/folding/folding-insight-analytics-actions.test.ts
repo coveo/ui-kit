@@ -35,6 +35,7 @@ describe('folding insight analytics actions', () => {
     documentUri: 'example documentUri',
     documentUriHash: 'example documentUriHash',
     collectionName: 'example collectionName',
+    documentCategory: 'example objectType',
     sourceName: 'example sourceName',
     documentPosition: 1,
     documentTitle: 'example documentTitle',
@@ -58,6 +59,7 @@ describe('folding insight analytics actions', () => {
       source: 'example sourceName',
       collection: 'example collectionName',
       permanentid: examplePermanentId,
+      objecttype: 'example objectType',
     }),
   };
   const exampleResult = buildMockResult(resultParams);

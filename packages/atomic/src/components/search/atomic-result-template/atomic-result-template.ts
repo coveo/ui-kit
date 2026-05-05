@@ -9,8 +9,8 @@ import {mapProperty} from '@/src/utils/props-utils';
 import '@/src/components/common/atomic-component-error/atomic-component-error';
 import {arrayConverter} from '@/src/converters/array-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
-import '../atomic-result/atomic-result';
 import type {LitElementWithError} from '@/src/decorators/types';
+import '@/src/components/search/atomic-result/atomic-result';
 
 /**
  * A result template determines the format of the query results, depending on the conditions that are defined for each template.

@@ -4,6 +4,7 @@ import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import type {AtomicSearchInterface} from '../atomic-search-interface/atomic-search-interface';
+import '@/src/components/search/atomic-text/atomic-text.js';
 
 const mockSearchApi = new MockSearchApi();
 

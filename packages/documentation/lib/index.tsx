@@ -1,4 +1,4 @@
-import {cpSync} from 'node:fs';
+import {cpSync, readFileSync} from 'node:fs';
 import {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {
@@ -16,15 +16,22 @@ import {
   Renderer,
   RendererEvent,
 } from 'typedoc';
-import {handleRendererEndPage} from './calloutParsing.js';
+import {
+  handleRendererEndPage,
+  setCodeBlockVariables,
+} from './calloutParsing.js';
+import {formatRightToc} from './formatRightToc.js';
 import {formatTypeDocToolbar} from './formatTypeDocToolbar.js';
 import {hoistOtherCategoryInArray, hoistOtherCategoryInNav} from './hoist.js';
 import {insertAtomicSearchBox} from './insertAtomicSearchBox.js';
 import {insertBetaNote} from './insertBetaNote.js';
 import {insertCustomComments} from './insertCustomComments.js';
+import {insertEditInGithub} from './insertEditInGithub.js';
 import {insertMetaTags} from './insertMetaTags.js';
 import {insertSiteHeaderBar} from './insertSiteHeaderBar.js';
+import {removeNavSettings} from './removeNavSettings.js';
 import {applyTopLevelRenameArray} from './renaming.js';
+import {buildReplaceVariables} from './replaceVariables.js';
 import {
   applyNestedOrderingArray,
   applyNestedOrderingNode,
@@ -79,6 +86,12 @@ export const load = (app: Application) => {
   app.options.addDeclaration({
     name: 'hoistOther.renameModulesTo',
     help: "If set, rename any top-level group titled 'Modules' to this string.",
+    type: ParameterType.String,
+  });
+
+  app.options.addDeclaration({
+    name: 'headerNav.activeEntry',
+    help: "Title of the Developer tools dropdown entry to highlight as active (e.g. 'Headless').",
     type: ParameterType.String,
   });
 
@@ -152,11 +165,7 @@ export const load = (app: Application) => {
         }
 
         hoistOtherCategoryInNav(nav as TNavNode, fallback);
-        if (
-          (nav as TNavNode).children &&
-          topLevelOrder &&
-          topLevelOrder.length
-        ) {
+        if ((nav as TNavNode).children && topLevelOrder?.length) {
           applyTopLevelOrderingNode(nav as TNavNode, topLevelOrder);
         }
         applyNestedOrderingNode(nav as TNavNode, typedNestedOrder);
@@ -167,6 +176,7 @@ export const load = (app: Application) => {
 
   app.renderer.hooks.on('head.end', (event) => (
     <>
+      <link rel="stylesheet" href="https://use.typekit.net/bqa0xml.css" />
       <script>
         <JSX.Raw html={`(${insertBetaNote.toString()})();`} />
       </script>
@@ -204,7 +214,7 @@ export const load = (app: Application) => {
       </script>
       <script>
         <JSX.Raw
-          html={`(${insertSiteHeaderBar.toString()})('${event.relativeURL('assets')}');`}
+          html={`(${insertSiteHeaderBar.toString()})('${event.relativeURL('assets')}', '${(app.options.getValue('headerNav.activeEntry') as string) || ''}');`}
         />
       </script>
       <script>
@@ -267,6 +277,7 @@ export const load = (app: Application) => {
       'css/dark-theme.css',
       'favicon.ico',
       'icons/coveo-docs-logo.svg',
+      'icons/github.svg',
       'icons/more.svg',
       'icons/external-action-4.svg',
       'icons/external-action-6.svg',
@@ -299,7 +310,35 @@ export const load = (app: Application) => {
     cpSync(darkModeJs.from, darkModeJs.to);
   });
 
+  app.renderer.on(RendererEvent.BEGIN, (event: RendererEvent) => {
+    let version = event.project.packageVersion ?? '';
+
+    if (!version) {
+      const pkgPath = resolve(process.cwd(), 'package.json');
+      try {
+        const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
+        version = pkg.version;
+      } catch {
+        throw new Error(
+          `Failed to determine packageVersion: could not read or parse ${pkgPath}`
+        );
+      }
+      if (!version) {
+        throw new Error(
+          `Failed to determine packageVersion: no "version" field found in ${pkgPath}`
+        );
+      }
+    }
+
+    const variables = {packageVersion: version};
+    setCodeBlockVariables(variables);
+    app.renderer.on(PageEvent.END, buildReplaceVariables(variables));
+  });
+
   app.renderer.on(PageEvent.END, insertMetaTags);
+  app.renderer.on(PageEvent.END, formatRightToc);
+  app.renderer.on(PageEvent.END, removeNavSettings);
+  app.renderer.on(PageEvent.END, insertEditInGithub);
   app.renderer.on(Renderer.EVENT_END_PAGE, handleRendererEndPage);
 
   app.renderer.defineRouter('kebab', KebabRouter);

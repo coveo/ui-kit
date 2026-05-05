@@ -115,7 +115,7 @@ export class AtomicCitation extends LitElement {
             href: this.anchorUrl(
               this.citation.clickUri ?? this.citation.uri,
               this.citation.text,
-              this.citation.fields?.filetype
+              this.citation.filetype ?? this.citation.fields?.filetype
             ),
             ref: this.citationRef,
             part: 'citation',
@@ -257,7 +257,7 @@ export class AtomicCitation extends LitElement {
         @mouseleave=${this.delayedClosePopover}
       >
         <div class="text-neutral-dark truncate text-sm">
-          ${this.citation.uri}
+          ${this.citation.clickUri ?? this.citation.uri}
         </div>
         ${renderHeading({
           props: {

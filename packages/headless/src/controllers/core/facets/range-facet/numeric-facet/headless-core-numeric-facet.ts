@@ -36,7 +36,7 @@ import {
 } from './headless-numeric-facet-options.js';
 import {buildNumericRange, type NumericRangeOptions} from './numeric-range.js';
 
-export type {NumericRangeOptions, NumericRangeRequest, NumericFacetOptions};
+export type {NumericFacetOptions, NumericRangeOptions, NumericRangeRequest};
 export {buildNumericRange};
 
 export interface NumericFacetProps {

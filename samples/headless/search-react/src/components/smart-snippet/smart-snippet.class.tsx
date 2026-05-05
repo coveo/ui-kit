@@ -150,7 +150,6 @@ export class SmartSnippet extends Component<{}, SmartSnippetState> {
           <dt>{question}</dt>
           <dd>
             <div
-              // biome-ignore lint/security/noDangerouslySetInnerHtml: <>
               dangerouslySetInnerHTML={{__html: answer}}
               style={this.answerStyles(expanded)}
             ></div>

@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicDidYouMeanStories from './atomic-did-you-mean.new.stories';
+import meta, { WithAutomaticQueryCorrection, WithoutAutomaticQueryCorrection } from './atomic-did-you-mean.new.stories';
 import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicDidYouMeanStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicDidYouMeanStories}
+  stories={{ WithAutomaticQueryCorrection, WithoutAutomaticQueryCorrection }}
   githubPath="search/atomic-did-you-mean/atomic-did-you-mean.ts"
   tagName="atomic-did-you-mean"
   className="AtomicDidYouMean"

@@ -33,10 +33,9 @@ interface AtomicCommerceProductListProps {
 }
 
 interface HTMLAtomicCommerceProductListElement
-  extends AtomicCommerceProductList,
-    HTMLElement {}
+  extends AtomicCommerceProductList, HTMLElement {}
 
-// biome-ignore lint/correctness/noUnusedVariables: <>
+// oxlint-disable-next-line @typescript-eslint/no-unused-vars -- <>
 var HTMLAtomicCommerceProductListElement: {
   prototype: HTMLAtomicCommerceProductListElement;
   new (): HTMLAtomicCommerceProductListElement;
@@ -106,7 +105,7 @@ function renderJSXTemplate(
     }
     display === 'grid'
       ? linkRoot.render(<AtomicProductLink></AtomicProductLink>)
-      : // biome-ignore lint/complexity/noUselessFragments: <>
+      : // oxlint-disable-next-line react/jsx-no-useless-fragment -- <>
         linkRoot.render(<></>);
   });
   return root.innerHTML;

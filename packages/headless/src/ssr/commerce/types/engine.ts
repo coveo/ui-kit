@@ -25,14 +25,14 @@ import type {
 } from './hydrate-static-state.js';
 
 export type {
+  Build,
+  BuildOptions,
+  FetchStaticState,
+  FetchStaticStateOptions,
   FromBuildResult,
   FromBuildResultOptions,
   HydrateStaticState,
   HydrateStaticStateOptions,
-  FetchStaticState,
-  FetchStaticStateOptions,
-  Build,
-  BuildOptions,
 };
 
 export interface EngineStaticState<

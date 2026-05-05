@@ -8,6 +8,7 @@ import {
   getResultSectionDecorators,
 } from '@/storybook-utils/search/result-section-story-utils';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-result-section-emphasized/atomic-result-section-emphasized.js';
 
 const mockSearchApi = new MockSearchApi();
 

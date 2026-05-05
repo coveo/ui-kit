@@ -1,7 +1,7 @@
 import {clearAllCoreFacets} from '../../../../../features/commerce/facets/core-facet/core-facet-actions.js';
+import {commerceFacetOrderReducer as facetOrder} from '../../../../../features/commerce/facets/facet-order/commerce-facet-order-slice.js';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../../features/commerce/facets/facet-set/facet-set-slice.js';
 import type {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common.js';
-import {facetOrderReducer as facetOrder} from '../../../../../features/facets/facet-order/facet-order-slice.js';
 import type {CommerceAppState} from '../../../../../state/commerce-app-state.js';
 import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search.js';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request.js';

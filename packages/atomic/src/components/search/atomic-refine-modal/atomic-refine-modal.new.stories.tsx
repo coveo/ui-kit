@@ -10,6 +10,11 @@ import {testDialogA11y} from '@/storybook-utils/a11y/';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-facet/atomic-facet.js';
+import '@/src/components/search/atomic-refine-modal/atomic-refine-modal.js';
+import '@/src/components/search/atomic-refine-toggle/atomic-refine-toggle.js';
+import '@/src/components/search/atomic-sort-dropdown/atomic-sort-dropdown.js';
+import '@/src/components/search/atomic-sort-expression/atomic-sort-expression.js';
 
 const searchApiHarness = new MockSearchApi();
 const {decorator, play} = wrapInSearchInterface();
@@ -75,9 +80,14 @@ export default meta;
 export const Default: Story = {
   decorators: [
     () => html`
-     <atomic-refine-toggle></atomic-refine-toggle>
+      <atomic-refine-toggle></atomic-refine-toggle>
       <div style="display:none;">
-        <atomic-sort-dropdown><atomic-sort-expression label="relevance" expression="relevancy"></atomic-sort-expression></atomic-sort-dropdown>
+        <atomic-sort-dropdown
+          ><atomic-sort-expression
+            label="relevance"
+            expression="relevancy"
+          ></atomic-sort-expression
+        ></atomic-sort-dropdown>
         <atomic-facet field="author" label="Authors"></atomic-facet>
         <atomic-facet field="language" label="Language"></atomic-facet>
         <atomic-facet

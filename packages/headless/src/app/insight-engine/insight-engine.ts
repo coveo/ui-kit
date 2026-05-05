@@ -5,7 +5,10 @@ import {NoopPreprocessRequest} from '../../api/preprocess-request.js';
 import {InsightAPIClient} from '../../api/service/insight/insight-api-client.js';
 import {interfaceLoad} from '../../features/analytics/analytics-actions.js';
 import type {LegacySearchAction} from '../../features/analytics/analytics-utils.js';
-import {updateSearchConfiguration} from '../../features/configuration/configuration-actions.js';
+import {
+  type UpdateSearchConfigurationActionCreatorPayload,
+  updateSearchConfiguration,
+} from '../../features/configuration/configuration-actions.js';
 import {setInsightConfiguration} from '../../features/insight-configuration/insight-configuration-actions.js';
 import {insightConfigurationReducer as insightConfiguration} from '../../features/insight-configuration/insight-configuration-slice.js';
 import {fetchInterface} from '../../features/insight-interface/insight-interface-actions.js';
@@ -53,13 +56,32 @@ type InsightEngineReducers = typeof insightEngineReducers;
 type InsightEngineState = StateFromReducersMapObject<InsightEngineReducers> &
   Partial<InsightAppState>;
 
+function getUpdateSearchConfigurationPayload(
+  configuration: InsightEngineConfiguration
+): UpdateSearchConfigurationActionCreatorPayload | undefined {
+  const {search} = configuration;
+
+  if (!search) {
+    return;
+  }
+
+  const {locale, proxyBaseUrl} = search;
+
+  return {
+    locale,
+    proxyBaseUrl,
+  };
+}
+
 /**
  * The engine for powering insight experiences.
  *
  * @group Engine
  */
-export interface InsightEngine<State extends object = {}>
-  extends CoreEngine<State & InsightEngineState, InsightThunkExtraArguments> {
+export interface InsightEngine<State extends object = {}> extends CoreEngine<
+  State & InsightEngineState,
+  InsightThunkExtraArguments
+> {
   /**
    * Executes the first search.
    *
@@ -73,8 +95,7 @@ export interface InsightEngine<State extends object = {}>
  *
  * @group Engine
  */
-export interface InsightEngineOptions
-  extends ExternalEngineOptions<InsightEngineState> {
+export interface InsightEngineOptions extends ExternalEngineOptions<InsightEngineState> {
   /**
    * The insight engine configuration options.
    */
@@ -120,7 +141,8 @@ export function buildInsightEngine(
     engine.state.configuration.analytics.analyticsMode
   );
 
-  const {insightId, search} = options.configuration;
+  const {insightId} = options.configuration;
+  const search = getUpdateSearchConfigurationPayload(options.configuration);
 
   engine.dispatch(
     setInsightConfiguration({

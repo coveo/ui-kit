@@ -1,12 +1,12 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicResultBadgeStories from './atomic-result-badge.new.stories';
+import meta, { Default, WithLabel, WithIcon } from './atomic-result-badge.new.stories';
 import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicResultBadgeStories} />
+<Meta of={meta} />
 
 <AtomicDocTemplate
-  stories={AtomicResultBadgeStories}
+  stories={{ Default, WithLabel, WithIcon }}
   githubPath="search/atomic-result-badge/atomic-result-badge.ts"
   tagName="atomic-result-badge"
   className="AtomicResultBadge"

@@ -60,13 +60,13 @@ export class AtomicInsightPager
   static styles = css`
     @reference '../../../utils/tailwind.global.tw.css';
 
-  [part='page-button'] {
-    @apply bg-transparent;
-  }
+    [part='page-button'] {
+      @apply bg-transparent;
+    }
 
-  :host {
-    @apply bg-neutral-light box-content flex h-full items-center justify-center px-6 py-4;
-  }
+    :host {
+      @apply bg-neutral-light box-content flex h-full items-center justify-center px-6 py-4;
+    }
   `;
 
   @state() public bindings!: InsightBindings;

@@ -5,6 +5,11 @@ import {testDisclosureA11y} from '@/storybook-utils/a11y/';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-external/atomic-external.js';
+import '@/src/components/search/atomic-facet/atomic-facet.js';
+import '@/src/components/common/atomic-layout-section/atomic-layout-section.js';
+import '@/src/components/search/atomic-refine-toggle/atomic-refine-toggle.js';
+import '@/src/components/search/atomic-search-interface/atomic-search-interface.js';
 
 const mockSearchApi = new MockSearchApi();
 
@@ -100,7 +105,7 @@ export const WithAtomicExternals: Story = {
         </atomic-layout-section>
         <atomic-facet field="author" label="facet8"></atomic-facet>
       </atomic-external>
- 
+
       <atomic-external selector="#foo">
         <h1>External 3</h1>
         <atomic-layout-section section="horizontal-facets">

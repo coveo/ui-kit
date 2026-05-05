@@ -54,11 +54,11 @@ describe('atomic-product-rating', () => {
     const productToUse = 'product' in options ? options.product : mockProduct;
     const {element} = await renderInAtomicProduct<AtomicProductRating>({
       template: html`<atomic-product-rating
-          field=${ifDefined(options.field)}
-          rating-details-field=${ifDefined(options.ratingDetailsField)}
-          max-value-in-index=${ifDefined(options.maxValueInIndex)}
-          icon=${ifDefined(options.icon)}
-        ></atomic-product-rating>`,
+        field=${ifDefined(options.field)}
+        rating-details-field=${ifDefined(options.ratingDetailsField)}
+        max-value-in-index=${ifDefined(options.maxValueInIndex)}
+        icon=${ifDefined(options.icon)}
+      ></atomic-product-rating>`,
       selector: 'atomic-product-rating',
       product: productToUse === null ? undefined : productToUse,
       bindings: (bindings) => {
