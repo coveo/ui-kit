@@ -83,7 +83,14 @@ const preview: Preview = {
       options: {
         runOnly: {
           type: 'tag',
-          values: ['wcag2a', 'wcag21a', 'wcag2aa', 'wcag21aa', 'wcag22aa'],
+          values: [
+            'wcag2a',
+            'wcag21a',
+            'wcag22a',
+            'wcag2aa',
+            'wcag21aa',
+            'wcag22aa',
+          ],
         },
       },
     },
