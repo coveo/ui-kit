@@ -3,7 +3,7 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
 import {within} from 'shadow-dom-testing-library';
 import {expect, waitFor} from 'storybook/test';
-import {testInteractiveA11y} from '@/storybook-utils/a11y/';
+import {testListboxA11y} from '@/storybook-utils/a11y/listbox';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -121,7 +121,7 @@ export const A11yInteraction: Story = {
       {timeout: 30e3}
     );
 
-    await testInteractiveA11y(context, {
+    await testListboxA11y(context, {
       selectionControl: false,
       activatableButtons: [{name: /People/i}],
     });

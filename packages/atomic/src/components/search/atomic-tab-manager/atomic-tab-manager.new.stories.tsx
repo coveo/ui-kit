@@ -5,7 +5,7 @@ import type {
 } from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
-import {testInteractiveA11y} from '@/storybook-utils/a11y/';
+import {testListboxA11y} from '@/storybook-utils/a11y/listbox';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -79,7 +79,7 @@ export const A11yInteraction: Story = {
   },
   play: async (context) => {
     await play(context);
-    await testInteractiveA11y(context, {
+    await testListboxA11y(context, {
       selectionControl: false,
       activatableButtons: [{name: /Documentation/i}],
     });
