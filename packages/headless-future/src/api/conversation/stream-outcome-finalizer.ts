@@ -1,6 +1,5 @@
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
 import type {ConverseStreamOutcome} from '@/src/api/conversation/execute-converse-stream.js';
-import * as streamingMutators from '@/src/core/interface/streaming/streaming-mutators.js';
 import {
   finalizeTurnAborted,
   finalizeTurnCompleted,
@@ -35,12 +34,6 @@ export const finalizeFromStreamOutcome = (
     case 'aborted':
       return finalizeTurnAborted(fullEngine, turn.turnId, 'stream-abort');
     case 'transport_error':
-      fullEngine.mutate(
-        streamingMutators.setStreamError({
-          code: outcome.code,
-          message: outcome.message,
-        })
-      );
       return finalizeTurnFailed(fullEngine, turn.turnId, {
         code: outcome.code,
         message: outcome.message,

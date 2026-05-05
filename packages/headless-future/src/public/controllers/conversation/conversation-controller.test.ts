@@ -11,7 +11,6 @@ import type {
   StreamRequest,
   TransportAdapter,
 } from '@/src/api/adapters/types.js';
-import * as streamingSelectors from '@/src/core/interface/streaming/streaming-selectors.js';
 
 const encoder = new TextEncoder();
 
@@ -62,29 +61,30 @@ describe('buildConversationController', () => {
     };
   });
 
-  it('hydrates from checkpoint envelope on startup', async () => {
+  it('hydrates from conversation checkpoint on startup', async () => {
     (persistence.load as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
-      conversation: {
-        messages: [
-          {
-            id: 'm1',
-            role: 'user',
-            content: 'hello',
-            createdAt: 1,
-          },
-        ],
-        turns: [],
-        activeTurnId: null,
-        session: {
-          sessionId: 's1',
+      messages: [
+        {
+          id: 'm1',
+          role: 'user',
+          content: 'hello',
           createdAt: 1,
-          updatedAt: 1,
         },
-        isLoading: false,
-        error: null,
-        structuredError: null,
+      ],
+      turns: [],
+      activeTurnId: null,
+      session: {
+        sessionId: 's1',
+        createdAt: 1,
+        updatedAt: 1,
       },
+      isLoading: false,
+      error: null,
+      structuredError: null,
       streaming: {
+        isConnected: false,
+        bytesReceived: 0,
+        eventsReceived: 0,
         aborted: true,
         lastEventAt: 123,
       },
@@ -98,8 +98,8 @@ describe('buildConversationController', () => {
     expect(controller.state.messages).toEqual([
       expect.objectContaining({id: 'm1', content: 'hello'}),
     ]);
-    expect(engine.read(streamingSelectors.aborted)).toBe(true);
-    expect(engine.read(streamingSelectors.lastEventAt)).toBe(123);
+    expect(controller.state.streaming.aborted).toBe(true);
+    expect(controller.state.streaming.lastEventAt).toBe(123);
   });
 
   it('persists checkpoints during submitTurn initialization and finalization', async () => {
@@ -120,10 +120,8 @@ describe('buildConversationController', () => {
     expect(persistence.save).toHaveBeenCalledWith(
       CONVERSATION_PERSISTENCE_KEY,
       expect.objectContaining({
-        conversation: expect.objectContaining({
-          messages: expect.any(Array),
-          turns: expect.any(Array),
-        }),
+        messages: expect.any(Array),
+        turns: expect.any(Array),
         streaming: expect.objectContaining({
           aborted: expect.any(Boolean),
         }),
@@ -143,11 +141,48 @@ describe('buildConversationController', () => {
 
     await controller.submitTurn('hello');
 
-    expect(controller.state.activeTurn).toBeNull();
+    expect(controller.state.activeTurnId).toBeNull();
     const turns = engine.read((state) => state.conversation?.turns ?? []);
     expect(turns).toHaveLength(1);
     expect(turns[0].status).toBe('completed_with_warnings');
     expect(turns[0].warningCodes).toContain('missing_terminal_event');
+  });
+
+  it('resets streaming telemetry at the start of each turn', async () => {
+    let streamCallCount = 0;
+    const controller = createController((request) => {
+      streamCallCount += 1;
+
+      if (streamCallCount === 1) {
+        emitEvent(request, {
+          type: 'TEXT_MESSAGE_CONTENT',
+          messageId: 'assistant-ignored',
+          delta: 'hello',
+        });
+        emitEvent(request, {
+          type: 'RUN_FINISHED',
+          threadId: 'thread-1',
+          runId: 'run-1',
+        });
+        request.onClose();
+        return;
+      }
+
+      emitEvent(request, {
+        type: 'RUN_FINISHED',
+        threadId: 'thread-2',
+        runId: 'run-2',
+      });
+      request.onClose();
+    });
+
+    await nextTick();
+
+    await controller.submitTurn('first');
+    expect(controller.state.streaming.eventsReceived).toBe(2);
+
+    await controller.submitTurn('second');
+    expect(controller.state.streaming.eventsReceived).toBe(1);
   });
 
   it('keeps aborted as terminal when close fires after abort', async () => {
@@ -178,6 +213,69 @@ describe('buildConversationController', () => {
     expect(turns).toHaveLength(1);
     expect(turns[0].status).toBe('aborted');
     expect(turns[0].reason).toBe('manual-stop');
+  });
+
+  it('ignores late stream events after abort', async () => {
+    const streamHandles: {
+      request?: StreamRequest;
+      resolve?: () => void;
+    } = {};
+
+    const controller = createController(
+      (request) =>
+        new Promise<void>((resolve) => {
+          streamHandles.request = request;
+          streamHandles.resolve = () => resolve();
+        })
+    );
+
+    await nextTick();
+
+    const submitPromise = controller.submitTurn('hello');
+    await nextTick();
+
+    const activeTurn = engine.read((state) => state.conversation?.turns?.[0]);
+    expect(activeTurn).toBeDefined();
+    if (!activeTurn) {
+      throw new Error('expected active turn to exist');
+    }
+
+    const assistantMessageId = activeTurn.assistantMessageId;
+    controller.abortTurn('manual-stop');
+
+    const request = streamHandles.request;
+    expect(request).toBeDefined();
+    if (!request) {
+      throw new Error('expected stream request to be captured');
+    }
+
+    emitEvent(request, {
+      type: 'TEXT_MESSAGE_CONTENT',
+      messageId: assistantMessageId,
+      delta: 'late-content',
+    });
+    emitEvent(request, {
+      type: 'RUN_FINISHED',
+      threadId: 'thread-late',
+      runId: 'run-late',
+    });
+    request.onClose();
+    streamHandles.resolve?.();
+
+    await submitPromise;
+
+    const assistantMessage = engine.read((state) =>
+      (state.conversation?.messages ?? []).find(
+        (message) => message.id === assistantMessageId
+      )
+    );
+
+    expect(assistantMessage?.content).toBe('');
+    expect(controller.state.streaming.eventsReceived).toBe(0);
+
+    const turns = engine.read((state) => state.conversation?.turns ?? []);
+    expect(turns).toHaveLength(1);
+    expect(turns[0].status).toBe('aborted');
   });
 
   it('retryTurn creates a new turn with lineage metadata', async () => {

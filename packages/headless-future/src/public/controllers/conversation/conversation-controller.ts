@@ -8,7 +8,6 @@ import {createSelector} from '@reduxjs/toolkit';
 import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import * as conversationSelectors from '@/src/core/interface/conversation/conversation-selectors.js';
 import {conversationSlice} from '@/src/core/internal/conversation/conversation-slice.js';
-import {streamingSlice} from '@/src/core/internal/streaming/streaming-slice.js';
 import {surfacesSlice} from '@/src/core/internal/surfaces/surfaces-slice.js';
 import type {UnifiedAdapters} from '@/src/api/adapters/types.js';
 import {
@@ -23,19 +22,32 @@ import {
 const stateSelect = createSelector(
   [
     conversationSelectors.messages,
-    conversationSelectors.activeTurn,
+    conversationSelectors.turns,
+    conversationSelectors.activeTurnId,
     conversationSelectors.session,
     conversationSelectors.isLoading,
     conversationSelectors.error,
     conversationSelectors.structuredError,
+    conversationSelectors.streaming,
   ],
-  (messages, activeTurn, session, isLoading, error, structuredError) => ({
+  (
     messages,
-    activeTurn,
+    turns,
+    activeTurnId,
     session,
     isLoading,
     error,
     structuredError,
+    streaming
+  ) => ({
+    messages,
+    turns,
+    activeTurnId,
+    session,
+    isLoading,
+    error,
+    structuredError,
+    streaming,
   })
 );
 
@@ -54,7 +66,6 @@ export const buildConversationController = (
   const idStrategy = options?.idStrategy ?? defaultConversationIdStrategy;
 
   fullEngine.adoptSlice(conversationSlice);
-  fullEngine.adoptSlice(streamingSlice);
   fullEngine.adoptSlice(surfacesSlice);
 
   const runtime = getConversationRuntime(engine, {

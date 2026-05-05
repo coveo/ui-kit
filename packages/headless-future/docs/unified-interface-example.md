@@ -62,7 +62,6 @@ import {
   buildSearchBoxController,
   buildResultListController,
   buildConversationController,
-  buildStreamingController,
   buildOrchestrationController,
   buildSurfaceController,
   buildContextBridgeController,
@@ -84,7 +83,6 @@ const conversation = buildConversationController(engine, {
   auth,
   persistence,
 });
-const streaming = buildStreamingController(engine);
 const orchestration = buildOrchestrationController(
   engine,
   orchestrationAdapter
@@ -114,7 +112,6 @@ import {
   buildSearchBoxController,
   buildResultListController,
   buildConversationController,
-  buildStreamingController,
   buildOrchestrationController,
   buildSurfaceController,
   buildContextBridgeController,
@@ -147,7 +144,6 @@ const conversation = buildConversationController(engine, {
   auth,
   persistence,
 });
-const streaming = buildStreamingController(engine);
 const orchestration = buildOrchestrationController(
   engine,
   orchestrationAdapter
@@ -166,7 +162,7 @@ function render() {
   const conversationState = conversation.state;
   const orchestrationState = orchestration.state;
   const surfaceState = surfaces.surfaces;
-  const streamState = streaming.state;
+  const streamState = conversation.state.streaming;
 
   renderUnifiedShell({
     mode: currentMode,
@@ -188,10 +184,6 @@ resultList.subscribe(() => {
 });
 
 conversation.subscribe(() => {
-  render();
-});
-
-streaming.subscribe(() => {
   render();
 });
 
@@ -286,9 +278,9 @@ Examples:
 - selected products can be published with `publishAssistantSelectionsToSearch`
 - the UI can later use shared context to enrich conversation requests or annotate search results
 
-### 4. Streaming is a separate concern from conversation state
+### 4. Streaming telemetry is nested in conversation state
 
-`ConversationController` owns turns and message history. `StreamingController` exposes connection and telemetry state such as buffering, byte counts, event counts, and stream errors. The UI can render both without mixing responsibilities.
+`ConversationController` owns turns, message history, and streaming telemetry in `conversation.state.streaming`. The UI reads one controller state object without coordinating a separate streaming controller.
 
 ### 5. Structured surfaces stay render-agnostic
 
@@ -326,7 +318,7 @@ The typical handoff from search to assistant looks like this:
 3. If the interaction remains search-first, the UI submits through `SearchBoxController`.
 4. If the interaction becomes assistant-first, the UI submits through `ConversationController`.
 5. Before the assistant turn starts, `ContextBridgeController` synchronizes the current discovery context.
-6. Assistant responses stream in through the conversation and streaming controllers.
+6. Assistant responses stream in through `ConversationController` state updates.
 7. Any structured surfaces are exposed through `SurfaceController`.
 
 ## Why This Matters

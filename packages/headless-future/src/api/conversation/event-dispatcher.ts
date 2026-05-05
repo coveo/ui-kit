@@ -1,7 +1,6 @@
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
 import type {NormalizedStreamEvent} from '@/src/api/protocol/types.js';
 import * as conversationMutators from '@/src/core/interface/conversation/conversation-mutators.js';
-import * as streamingMutators from '@/src/core/interface/streaming/streaming-mutators.js';
 import type {
   ConversationSession,
   ConversationWarningCode,
@@ -21,7 +20,7 @@ export const dispatchStreamEvent = (
   turnId: string,
   assistantMessageId: string
 ): EventDispatchResult => {
-  fullEngine.mutate(streamingMutators.recordEvent(Date.now()));
+  fullEngine.mutate(conversationMutators.recordStreamingEvent(Date.now()));
 
   switch (event.type) {
     case 'turn_started': {

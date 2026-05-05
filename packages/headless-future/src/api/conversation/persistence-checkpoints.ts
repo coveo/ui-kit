@@ -1,40 +1,29 @@
 import type {PersistenceAdapter} from '@/src/api/adapters/types.js';
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
 import * as conversationMutators from '@/src/core/interface/conversation/conversation-mutators.js';
-import * as streamingMutators from '@/src/core/interface/streaming/streaming-mutators.js';
-import * as streamingSelectors from '@/src/core/interface/streaming/streaming-selectors.js';
 import {CONVERSATION_PERSISTENCE_KEY} from '@/src/api/adapters/persistence-keys.js';
 import type {ConversationState} from '@/src/core/interface/conversation/conversation-types.js';
 
-type PersistedConversationEnvelope = {
-  conversation: ConversationState;
-  streaming: {
-    aborted: boolean;
-    lastEventAt?: number;
-  };
-};
-
-function isLegacyConversationState(value: unknown): value is ConversationState {
+function isConversationState(value: unknown): value is ConversationState {
   if (!value || typeof value !== 'object') {
     return false;
   }
 
   const candidate = value as Partial<ConversationState>;
-  return Array.isArray(candidate.messages) && Array.isArray(candidate.turns);
-}
+  const streaming = candidate.streaming as
+    | Partial<ConversationState['streaming']>
+    | undefined;
 
-function isPersistedEnvelope(
-  value: unknown
-): value is PersistedConversationEnvelope {
-  if (!value || typeof value !== 'object') {
-    return false;
-  }
-
-  const candidate = value as Partial<PersistedConversationEnvelope>;
   return (
-    candidate.conversation !== undefined &&
-    candidate.streaming !== undefined &&
-    isLegacyConversationState(candidate.conversation)
+    Array.isArray(candidate.messages) &&
+    Array.isArray(candidate.turns) &&
+    typeof candidate.session === 'object' &&
+    !!streaming &&
+    typeof streaming === 'object' &&
+    typeof streaming.isConnected === 'boolean' &&
+    typeof streaming.bytesReceived === 'number' &&
+    typeof streaming.eventsReceived === 'number' &&
+    typeof streaming.aborted === 'boolean'
   );
 }
 
@@ -43,24 +32,8 @@ export const loadConversationCheckpoints = async (
   persistence: PersistenceAdapter
 ): Promise<void> => {
   const persisted = await persistence.load(CONVERSATION_PERSISTENCE_KEY);
-  if (!persisted) {
-    return;
-  }
 
-  if (isPersistedEnvelope(persisted)) {
-    fullEngine.mutate(
-      conversationMutators.rehydrateConversation(persisted.conversation)
-    );
-    fullEngine.mutate(
-      streamingMutators.rehydrateStreamingMarkers({
-        aborted: persisted.streaming.aborted,
-        lastEventAt: persisted.streaming.lastEventAt,
-      })
-    );
-    return;
-  }
-
-  if (isLegacyConversationState(persisted)) {
+  if (isConversationState(persisted)) {
     fullEngine.mutate(conversationMutators.rehydrateConversation(persisted));
   }
 };
@@ -74,13 +47,5 @@ export const saveConversationCheckpoint = async (
     return;
   }
 
-  const envelope: PersistedConversationEnvelope = {
-    conversation,
-    streaming: {
-      aborted: fullEngine.read(streamingSelectors.aborted),
-      lastEventAt: fullEngine.read(streamingSelectors.lastEventAt),
-    },
-  };
-
-  await persistence.save(CONVERSATION_PERSISTENCE_KEY, envelope);
+  await persistence.save(CONVERSATION_PERSISTENCE_KEY, conversation);
 };

@@ -3,7 +3,6 @@ import {createTestEngine} from '@/src/test/test-utils.js';
 import type {Engine} from '@/src/core/interface/engine/engine.js';
 import {getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {conversationSlice} from '@/src/core/internal/conversation/conversation-slice.js';
-import {streamingSlice} from '@/src/core/internal/streaming/streaming-slice.js';
 import {surfacesSlice} from '@/src/core/internal/surfaces/surfaces-slice.js';
 import type {
   PersistenceAdapter,
@@ -42,7 +41,6 @@ describe('getConversationRuntime', () => {
   const adoptConversationSlices = async (targetEngine: Engine) => {
     const fullEngine = getFullEngine(targetEngine);
     await fullEngine.adoptSlice(conversationSlice);
-    await fullEngine.adoptSlice(streamingSlice);
     await fullEngine.adoptSlice(surfacesSlice);
     return fullEngine;
   };

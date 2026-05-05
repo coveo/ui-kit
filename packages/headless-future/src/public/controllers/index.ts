@@ -2,8 +2,6 @@ export {buildSearchBoxController} from './search-box/search-box-controller.js';
 export {buildResultListController} from './result-list/result-list-controller.js';
 export {buildConversationController} from './conversation/conversation-controller.js';
 export type {ConversationController} from './conversation/conversation-controller.js';
-export {buildStreamingController} from './streaming/streaming-controller.js';
-export type {StreamingController} from './streaming/streaming-controller.js';
 export {buildOrchestrationController} from './orchestration/orchestration-controller.js';
 export type {OrchestrationController} from './orchestration/orchestration-controller.js';
 export {buildSurfaceController} from './surface/surface-controller.js';

@@ -10,7 +10,6 @@ import {
 } from '@/src/core/interface/engine/engine.js';
 import * as conversationMutators from '@/src/core/interface/conversation/conversation-mutators.js';
 import * as conversationSelectors from '@/src/core/interface/conversation/conversation-selectors.js';
-import * as streamingMutators from '@/src/core/interface/streaming/streaming-mutators.js';
 import * as surfacesMutators from '@/src/core/interface/surfaces/surfaces-mutators.js';
 import {executeConverseStream} from './execute-converse-stream.js';
 import {dispatchStreamEvent} from './event-dispatcher.js';
@@ -224,6 +223,18 @@ const createConversationRuntime = (
     params.persistence
   ).catch(recordLoadError);
 
+  const shouldAcceptStreamUpdates = (turnId: string): boolean => {
+    if (fullEngine.read(conversationSelectors.activeTurnId) !== turnId) {
+      return false;
+    }
+
+    const turn = fullEngine
+      .read(conversationSelectors.turns)
+      .find((existingTurn) => existingTurn.id === turnId);
+
+    return turn?.status === 'streaming';
+  };
+
   const registerHooks = (hooks?: ConversationLifecycleHooks) => {
     if (!hooks) {
       return;
@@ -270,10 +281,16 @@ const createConversationRuntime = (
         signal: activeAbortController?.signal,
         callbacks: {
           onNormalizedEvent: (event) => {
+            if (!shouldAcceptStreamUpdates(turnId)) {
+              return;
+            }
             dispatchStreamEvent(fullEngine, event, turnId, assistantMessageId);
           },
           onBytesReceived: (bytes) => {
-            fullEngine.mutate(streamingMutators.addBytes(bytes));
+            if (!shouldAcceptStreamUpdates(turnId)) {
+              return;
+            }
+            fullEngine.mutate(conversationMutators.addStreamingBytes(bytes));
           },
           onLifecycle: (event) => {
             if (event.type === 'closed') {
@@ -299,7 +316,6 @@ const createConversationRuntime = (
     ) {
       fullEngine.mutate(conversationMutators.setError(null));
       fullEngine.mutate(conversationMutators.setStructuredError(null));
-      fullEngine.mutate(streamingMutators.setStreamError(undefined));
 
       const secondAttempt = await runAttempt({
         ...body,
@@ -365,7 +381,7 @@ const createConversationRuntime = (
     activeAbortController = new AbortController();
 
     markTurnStreaming(fullEngine, turn.turnId);
-    fullEngine.mutate(streamingMutators.setConnected(true));
+    fullEngine.mutate(conversationMutators.setStreamingConnected(true));
     invokeHook('stream_opened', turn.turnId);
 
     try {
@@ -425,7 +441,7 @@ const createConversationRuntime = (
       }
     }
 
-    fullEngine.mutate(streamingMutators.setConnected(false));
+    fullEngine.mutate(conversationMutators.setStreamingConnected(false));
   };
 
   const retryTurn = async (turnId: string): Promise<RetryTurnResult> => {
@@ -475,7 +491,6 @@ const createConversationRuntime = (
   const clearConversation = (): void => {
     abortActiveTurn('clear', false);
     fullEngine.mutate(conversationMutators.clearConversation());
-    fullEngine.mutate(streamingMutators.resetStream());
     fullEngine.mutate(surfacesMutators.clearAllSurfaces());
     snapshotsByTurnId.clear();
     void params.persistence.delete(CONVERSATION_PERSISTENCE_KEY);

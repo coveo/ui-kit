@@ -1,7 +1,6 @@
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
 import * as conversationMutators from '@/src/core/interface/conversation/conversation-mutators.js';
 import * as conversationSelectors from '@/src/core/interface/conversation/conversation-selectors.js';
-import * as streamingMutators from '@/src/core/interface/streaming/streaming-mutators.js';
 import type {ConversationMessage} from '@/src/core/interface/conversation/conversation-types.js';
 import type {ConversationIdStrategy} from './id-strategy.js';
 
@@ -60,7 +59,7 @@ export const initializeTurn = (
   fullEngine.mutate(conversationMutators.setLoading(true));
   fullEngine.mutate(conversationMutators.setError(null));
   fullEngine.mutate(conversationMutators.setStructuredError(null));
-  fullEngine.mutate(streamingMutators.resetStream());
+  fullEngine.mutate(conversationMutators.resetStreamingForTurn());
 
   return {turnId, userMessageId, assistantMessageId};
 };

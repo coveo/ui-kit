@@ -27,6 +27,7 @@ export type {
   ConversationMessage,
   ConversationTurn,
   ConversationSession,
+  ConversationStreamingState,
   ConversationMessageRole,
   TurnStatus,
   CitationRef,
@@ -35,7 +36,6 @@ export type {
   ConversationErrorSource,
   StructuredConversationError,
 } from './conversation/conversation-types.js';
-export type {StreamingState, StreamError} from './streaming/streaming-types.js';
 export type {
   OrchestrationState,
   OrchestrationSnapshot,
@@ -58,7 +58,6 @@ import type {FacetState} from './facets/facets-types.js';
 import type {PaginationState} from './pagination/pagination-types.js';
 import type {ConfigurationState} from './configuration/configuration-types.js';
 import type {ConversationState} from './conversation/conversation-types.js';
-import type {StreamingState} from './streaming/streaming-types.js';
 import type {OrchestrationState} from './orchestration/orchestration-types.js';
 import type {SurfacesState} from './surfaces/surfaces-types.js';
 import type {SharedContextState} from './shared-context/shared-context-types.js';
@@ -88,8 +87,6 @@ export interface State {
   configuration?: ConfigurationState;
   /** Conversation domain: messages, turns, session continuity */
   conversation?: ConversationState;
-  /** Streaming domain: SSE connection status and telemetry */
-  streaming?: StreamingState;
   /** Orchestration domain: backend-driven mode/phase transitions */
   orchestration?: OrchestrationState;
   /** Surfaces domain: normalized structured UI surfaces */

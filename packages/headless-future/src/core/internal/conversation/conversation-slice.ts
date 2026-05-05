@@ -10,6 +10,7 @@ import type {
   ConversationMessage,
   ConversationTurn,
   ConversationSession,
+  ConversationStreamingState,
   ConversationWarningCode,
   StructuredConversationError,
   TurnStatus,
@@ -23,6 +24,14 @@ export const initialConversationSession: ConversationSession = {
   updatedAt: 0,
 };
 
+export const initialConversationStreamingState: ConversationStreamingState = {
+  isConnected: false,
+  bytesReceived: 0,
+  eventsReceived: 0,
+  lastEventAt: undefined,
+  aborted: false,
+};
+
 export const initialConversationState: ConversationState = {
   messages: [],
   turns: [],
@@ -31,6 +40,7 @@ export const initialConversationState: ConversationState = {
   isLoading: false,
   error: null,
   structuredError: null,
+  streaming: initialConversationStreamingState,
 };
 
 export const conversationSlice = createSlice({
@@ -139,6 +149,28 @@ export const conversationSlice = createSlice({
     ) => {
       state.structuredError = action.payload;
     },
+    setStreamingConnected: (state, action: PayloadAction<boolean>) => {
+      state.streaming.isConnected = action.payload;
+      if (action.payload) {
+        state.streaming.aborted = false;
+      }
+    },
+    addStreamingBytes: (state, action: PayloadAction<number>) => {
+      state.streaming.bytesReceived += action.payload;
+    },
+    recordStreamingEvent: (state, action: PayloadAction<number>) => {
+      state.streaming.eventsReceived += 1;
+      state.streaming.lastEventAt = action.payload;
+    },
+    setStreamingAborted: (state, action: PayloadAction<boolean>) => {
+      state.streaming.aborted = action.payload;
+      if (action.payload) {
+        state.streaming.isConnected = false;
+      }
+    },
+    resetStreamingForTurn: (state) => {
+      state.streaming = {...initialConversationStreamingState};
+    },
     clearConversation: (state) => {
       state.messages = [];
       state.turns = [];
@@ -151,6 +183,7 @@ export const conversationSlice = createSlice({
       state.isLoading = false;
       state.error = null;
       state.structuredError = null;
+      state.streaming = {...initialConversationStreamingState};
     },
   },
   selectors: {
@@ -161,5 +194,11 @@ export const conversationSlice = createSlice({
     isLoading: (state) => state.isLoading,
     error: (state) => state.error,
     structuredError: (state) => state.structuredError,
+    streaming: (state) => state.streaming,
+    streamingConnected: (state) => state.streaming.isConnected,
+    streamingBytesReceived: (state) => state.streaming.bytesReceived,
+    streamingEventsReceived: (state) => state.streaming.eventsReceived,
+    streamingLastEventAt: (state) => state.streaming.lastEventAt,
+    streamingAborted: (state) => state.streaming.aborted,
   },
 });

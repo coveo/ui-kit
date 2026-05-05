@@ -71,5 +71,20 @@ export const setStructuredError = (
   error: StructuredConversationError | null
 ): StateMutation => conversationSlice.actions.setStructuredError(error);
 
+export const setStreamingConnected = (isConnected: boolean): StateMutation =>
+  conversationSlice.actions.setStreamingConnected(isConnected);
+
+export const addStreamingBytes = (count: number): StateMutation =>
+  conversationSlice.actions.addStreamingBytes(count);
+
+export const recordStreamingEvent = (timestamp: number): StateMutation =>
+  conversationSlice.actions.recordStreamingEvent(timestamp);
+
+export const setStreamingAborted = (aborted: boolean): StateMutation =>
+  conversationSlice.actions.setStreamingAborted(aborted);
+
+export const resetStreamingForTurn = (): StateMutation =>
+  conversationSlice.actions.resetStreamingForTurn();
+
 export const clearConversation = (): StateMutation =>
   conversationSlice.actions.clearConversation();

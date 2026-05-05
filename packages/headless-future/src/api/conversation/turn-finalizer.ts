@@ -1,7 +1,6 @@
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
 import * as conversationSelectors from '@/src/core/interface/conversation/conversation-selectors.js';
 import * as conversationMutators from '@/src/core/interface/conversation/conversation-mutators.js';
-import * as streamingMutators from '@/src/core/interface/streaming/streaming-mutators.js';
 import type {
   ConversationErrorSource,
   ConversationWarningCode,
@@ -84,7 +83,7 @@ function applyTurnStatusTransition(
   if (isTerminalStatus(nextStatus)) {
     fullEngine.mutate(conversationMutators.setActiveTurnId(null));
     fullEngine.mutate(conversationMutators.setLoading(false));
-    fullEngine.mutate(streamingMutators.setConnected(false));
+    fullEngine.mutate(conversationMutators.setStreamingConnected(false));
   }
 
   return true;
@@ -152,7 +151,7 @@ export const finalizeTurnAborted = (
   turnId: string,
   reason: string
 ): boolean => {
-  fullEngine.mutate(streamingMutators.setAborted(true));
+  fullEngine.mutate(conversationMutators.setStreamingAborted(true));
 
   return applyTurnStatusTransition(fullEngine, turnId, 'aborted', {
     finalizedAt: Date.now(),

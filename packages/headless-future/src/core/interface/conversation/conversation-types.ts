@@ -80,6 +80,19 @@ export type ConversationSession = {
   updatedAt: number;
 };
 
+export type ConversationStreamingState = {
+  /** Whether the stream connection is currently open for the active turn */
+  isConnected: boolean;
+  /** Total bytes received for the current turn */
+  bytesReceived: number;
+  /** Total normalized events accepted for the current turn */
+  eventsReceived: number;
+  /** Timestamp (ms) of the last accepted event for the current turn */
+  lastEventAt?: number;
+  /** Whether the active turn was explicitly aborted */
+  aborted: boolean;
+};
+
 export interface ConversationState {
   /** Ordered list of all messages in the conversation */
   messages: ConversationMessage[];
@@ -95,4 +108,6 @@ export interface ConversationState {
   error: string | null;
   /** Structured error payload to support richer diagnostics */
   structuredError: StructuredConversationError | null;
+  /** Streaming telemetry scoped to the active/current turn */
+  streaming: ConversationStreamingState;
 }

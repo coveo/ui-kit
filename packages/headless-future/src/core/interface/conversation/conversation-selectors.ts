@@ -33,6 +33,24 @@ export const error = (state: StateWithConversationSlice) =>
 export const structuredError = (state: StateWithConversationSlice) =>
   conversationSlice.selectors.structuredError(state);
 
+export const streaming = (state: StateWithConversationSlice) =>
+  conversationSlice.selectors.streaming(state);
+
+export const streamingConnected = (state: StateWithConversationSlice) =>
+  conversationSlice.selectors.streamingConnected(state);
+
+export const streamingBytesReceived = (state: StateWithConversationSlice) =>
+  conversationSlice.selectors.streamingBytesReceived(state);
+
+export const streamingEventsReceived = (state: StateWithConversationSlice) =>
+  conversationSlice.selectors.streamingEventsReceived(state);
+
+export const streamingLastEventAt = (state: StateWithConversationSlice) =>
+  conversationSlice.selectors.streamingLastEventAt(state);
+
+export const streamingAborted = (state: StateWithConversationSlice) =>
+  conversationSlice.selectors.streamingAborted(state);
+
 export const activeTurn = (
   state: StateWithConversationSlice
 ): ConversationTurn | null => {
