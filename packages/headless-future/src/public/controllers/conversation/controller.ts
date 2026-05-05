@@ -14,6 +14,7 @@ import * as surfacesMutators from '@/src/core/interface/surfaces/mutate.js';
 import {conversationSlice} from '@/src/core/internal/conversation/slice.js';
 import {streamingSlice} from '@/src/core/internal/streaming/slice.js';
 import {surfacesSlice} from '@/src/core/internal/surfaces/slice.js';
+import {executeConverseStream} from '@/src/api/conversation/execute-converse-stream.js';
 import type {UnifiedAdapters} from '@/src/api/adapters/types.js';
 import {CONVERSATION_PERSISTENCE_KEY} from '@/src/api/adapters/persistence-keys.js';
 import {
@@ -25,15 +26,20 @@ import {
   saveConversationCheckpoint,
 } from './persistence-checkpoints.js';
 import {initializeTurn, buildConverseRequestBody} from './turn-orchestrator.js';
-import {
-  openConversationStreamWithLifecycle,
-  type ConversationLifecycleHooks,
-} from './stream-lifecycle-adapter.js';
+import {dispatchStreamEvent} from './event-dispatcher.js';
+import {finalizeFromStreamOutcome} from './stream-outcome-finalizer.js';
 import {
   finalizeTurnAborted,
   finalizeTurnFailed,
   markTurnStreaming,
 } from './turn-finalizer.js';
+
+export type ConversationLifecycleHooks = {
+  turn_initialized?: (turnId: string) => void;
+  stream_opened?: (turnId: string) => void;
+  stream_closed?: (turnId: string) => void;
+  turn_finalized?: (turnId: string) => void;
+};
 
 const stateSelect = createSelector(
   [
@@ -136,18 +142,39 @@ export const buildConversationController = (
       hooks?.stream_opened?.(turn.turnId);
 
       try {
-        await openConversationStreamWithLifecycle({
-          fullEngine,
+        const outcome = await executeConverseStream({
           transport: adapters.transport,
-          turnId: turn.turnId,
-          assistantMessageId: turn.assistantMessageId,
           body: buildConverseRequestBody(fullEngine, input),
           signal: activeAbortController.signal,
-          hooks,
-          onFinalized: () => {
-            void saveCheckpoint();
+          callbacks: {
+            onNormalizedEvent: (event) => {
+              void dispatchStreamEvent(
+                fullEngine,
+                event,
+                turn.turnId,
+                turn.assistantMessageId
+              );
+            },
+            onBytesReceived: (bytes) => {
+              fullEngine.mutate(streamingMutators.addBytes(bytes));
+            },
+            onLifecycle: (event) => {
+              if (event.type === 'closed') {
+                hooks?.stream_closed?.(turn.turnId);
+              }
+            },
           },
         });
+
+        const finalized = finalizeFromStreamOutcome(fullEngine, outcome, {
+          turnId: turn.turnId,
+          assistantMessageId: turn.assistantMessageId,
+        });
+
+        if (finalized) {
+          hooks?.turn_finalized?.(turn.turnId);
+          await saveCheckpoint();
+        }
       } catch (error) {
         const message =
           error instanceof Error
