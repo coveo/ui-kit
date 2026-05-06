@@ -79,7 +79,7 @@ const selectors = {
   generatedAnswerRetryButton: '[data-testid="generated-answer__retry-button"]',
   generatedAnswerActions: '[data-testid="generated-answer__actions"]',
   generatedAnswerToggleButton: 'c-quantic-generated-answer-toggle',
-  generatedAnswerContent: 'c-quantic-generated-answer-content',
+  generatedAnswerBody: 'c-quantic-generated-answer-body',
   generatingMessageWhenAnswerCollapsed:
     '[data-testid="generated-answer__collapse-generating-message"]',
   generatedAnswerCollapseToggle:
@@ -89,7 +89,6 @@ const selectors = {
     '[data-testid="generated-answer__no-answer-card"]',
   generatedAnswerNoAnswerMessage:
     '[data-testid="generated-answer__no-answer-message"]',
-  generatedAnswerCitations: 'c-quantic-source-citations',
   loadingSpinner: 'lightning-spinner',
 };
 
@@ -479,23 +478,23 @@ describe('c-quantic-generated-answer', () => {
         });
       });
 
-      it('should display the generated answer content', async () => {
+      it('should display the generated answer body', async () => {
         const element = createTestComponent();
         await flushPromises();
 
-        const generatedAnswerContent = element.shadowRoot.querySelector(
-          selectors.generatedAnswerContent
+        const generatedAnswerBody = element.shadowRoot.querySelector(
+          selectors.generatedAnswerBody
         );
 
-        expect(generatedAnswerContent).not.toBeNull();
-        expect(generatedAnswerContent.isStreaming).toBe(true);
-        expect(generatedAnswerContent.answer).toBe(exampleAnswer);
-        expect(generatedAnswerContent.answerContentFormat).toBe(
+        expect(generatedAnswerBody).not.toBeNull();
+        expect(generatedAnswerBody.generatedAnswer.answer).toBe(exampleAnswer);
+        expect(generatedAnswerBody.generatedAnswer.answerContentFormat).toBe(
           exampleAnswerContentFormat
         );
+        expect(generatedAnswerBody.generatedAnswer.isStreaming).toBe(true);
       });
 
-      it('should not display the generated answer actions', async () => {
+      it('should not pass the generated answer actions through body component', async () => {
         const element = createTestComponent();
         await flushPromises();
 
@@ -742,31 +741,32 @@ describe('c-quantic-generated-answer', () => {
         });
       });
 
-      it('should display the generated answer content', async () => {
+      it('should display the generated answer body', async () => {
         const element = createTestComponent();
         await flushPromises();
 
-        const generatedAnswerContent = element.shadowRoot.querySelector(
-          selectors.generatedAnswerContent
+        const generatedAnswerBody = element.shadowRoot.querySelector(
+          selectors.generatedAnswerBody
         );
 
-        expect(generatedAnswerContent).not.toBeNull();
-        expect(generatedAnswerContent.isStreaming).toBe(false);
-        expect(generatedAnswerContent.answer).toBe(exampleAnswer);
-        expect(generatedAnswerContent.answerContentFormat).toBe(
+        expect(generatedAnswerBody).not.toBeNull();
+        expect(generatedAnswerBody.generatedAnswer.answer).toBe(exampleAnswer);
+        expect(generatedAnswerBody.generatedAnswer.answerContentFormat).toBe(
           exampleAnswerContentFormat
         );
+        expect(generatedAnswerBody.generatedAnswer.isStreaming).toBe(false);
       });
 
-      it('should display the generated answer actions', async () => {
+      it('should display the generated answer actions through body component', async () => {
         const element = createTestComponent();
         await flushPromises();
 
-        const generatedAnswerActions = element.shadowRoot.querySelector(
-          selectors.generatedAnswerActions
+        const generatedAnswerBody = element.shadowRoot.querySelector(
+          selectors.generatedAnswerBody
         );
 
-        expect(generatedAnswerActions).not.toBeNull();
+        expect(generatedAnswerBody).not.toBeNull();
+        expect(generatedAnswerBody.engineId).toBe(defaultOptions.engineId);
       });
 
       it('should not display the generated answer disclaimer', async () => {
@@ -780,15 +780,15 @@ describe('c-quantic-generated-answer', () => {
         expect(generatedAnswerDisclaimer).not.toBeNull();
       });
 
-      it('should pass the disableCitationAnchoring property to the source citations component', async () => {
+      it('should pass the disableCitationAnchoring property to the generated answer body', async () => {
         const element = createTestComponent();
         await flushPromises();
 
-        const generatedAnswerCitations = element.shadowRoot.querySelector(
-          selectors.generatedAnswerCitations
+        const generatedAnswerBody = element.shadowRoot.querySelector(
+          selectors.generatedAnswerBody
         );
-        expect(generatedAnswerCitations).not.toBeNull();
-        expect(generatedAnswerCitations.disableCitationAnchoring).toBe(false);
+        expect(generatedAnswerBody).not.toBeNull();
+        expect(generatedAnswerBody.disableCitationAnchoring).toBe(false);
       });
     });
 

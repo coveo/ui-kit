@@ -5,7 +5,7 @@
 }
 
 .generated-answer__answer {
-  overflow: hidden;
+  /* overflow: hidden; */
   position: relative;
 }
 

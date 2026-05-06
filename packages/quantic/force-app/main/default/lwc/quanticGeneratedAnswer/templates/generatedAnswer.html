@@ -1,9 +1,11 @@
 <template>
   <template lwc:if={shouldDisplayGeneratedAnswer}>
     <div data-testid="generated-answer__card" class="slds-box">
-      <div class="generated-answer__card-header slds-grid slds-grid_vertical-align-center slds-border_bottom">
+      <div
+        class="generated-answer__card-header slds-grid slds-grid_vertical-align-center slds-border_bottom"
+      >
         <lightning-icon
-          icon-name="utility:sparkle"
+          icon-name="utility:sparkles"
           size="xx-small"
           class="slds-current-color slds-m-right_x-small generated-answer__header-icon"
         ></lightning-icon>
@@ -20,79 +22,57 @@
           </div>
         </template>
       </div>
-      
+
       <template lwc:if={isVisible}>
         <div class="generated-answer__content slds-var-m-top_medium">
           <div
             data-testid="generated-answer__answer"
             class={generatedAnswerClass}
           >
-            <c-quantic-generated-answer-content
-              answer-content-format={answerContentFormat}
-              answer={answer}
-              is-streaming={isStreaming}
-              onquantic__answercontentupdated={handleAnswerContentUpdated}
-            >
-            </c-quantic-generated-answer-content>
-          </div>
-          <template lwc:if={shouldDisplayCitations}>
-            <div class="slds-var-m-top_small">
-              <c-quantic-source-citations
+            <template lwc:if={shouldRenderThread}>
+              <c-quantic-generated-answer-thread
                 engine-id={engineId}
-                data-testid="generated-answer__citations"
-                citations={citations}
-                citation-hover-handler={handleCitationHover}
+                generated-answers={normalizedGeneratedAnswers}
                 disable-citation-anchoring={disableCitationAnchoring}
-              ></c-quantic-source-citations>
-            </div>
-          </template>
-          <template lwc:if={shouldDisplayActions}>
-            <div
-              data-testid="generated-answer__actions"
-              class="slds-grid slds-var-m-top_small"
-            >
-              <c-quantic-feedback
-                state={feedbackState}
+              ></c-quantic-generated-answer-thread>
+            </template>
+            <template lwc:else>
+              <c-quantic-generated-answer-body
+                engine-id={engineId}
+                generated-answer={state}
+                disable-citation-anchoring={disableCitationAnchoring}
                 onquantic__like={handleLike}
                 onquantic__dislike={handleDislike}
-                like-icon-name="utility:like"
-                like-label={labels.thisAnswerWasHelpful}
-                dislike-icon-name="utility:dislike"
-                dislike-label={labels.thisAnswerWasNotHelpful}
-                size="xx-small"
-                question=""
-                hide-explain-why-button
-                hide-labels
-              ></c-quantic-feedback>
-              <c-quantic-generated-answer-copy-to-clipboard
-                data-testid="generated-answer__copy-to-clipboard"
-                answer={answer}
-                class="slds-var-m-horizontal_xx-small"
-              ></c-quantic-generated-answer-copy-to-clipboard>
-            </div>
-          </template>
-          <div class="slds-grid slds-grid_align-spread slds-var-m-top_small">
-            <template lwc:if={shouldShowCollapseGeneratingMessage}>
-              <div
-                data-testid="generated-answer__collapse-generating-message"
-                class="generated-answer__collapse-generating-message"
-              >
-                {labels.generatingAnswer}...
-              </div>
-            </template>
-            <template lwc:if={shouldShowToggleCollapseAnswer}>
-              <lightning-button
-                data-testid="generated-answer__answer-toggle"
-                icon-name={toggleCollapseAnswerIcon}
-                variant="base"
-                label={toggleCollapseAnswerLabel}
-                title={toggleCollapseAnswerLabel}
-                onclick={handleToggleCollapseAnswer}
-                icon-position="right"
-                class="generated-answer__answer-toggle slds-shrink-none slds-var-m-right_large"
-              ></lightning-button>
+                onquantic__generatedanswercopy={handleGeneratedAnswerCopyToClipboard}
+                onquantic__citationhover={handleCitationHover}
+                onquantic__answercontentupdated={handleAnswerContentUpdated}
+              ></c-quantic-generated-answer-body>
             </template>
           </div>
+          <template lwc:if={shouldShowSingleAnswerCollapseControls}>
+            <div class="slds-grid slds-grid_align-spread slds-var-m-top_small">
+              <template lwc:if={shouldShowCollapseGeneratingMessage}>
+                <div
+                  data-testid="generated-answer__collapse-generating-message"
+                  class="generated-answer__collapse-generating-message"
+                >
+                  {labels.generatingAnswer}...
+                </div>
+              </template>
+              <template lwc:if={shouldShowToggleCollapseAnswer}>
+                <lightning-button
+                  data-testid="generated-answer__answer-toggle"
+                  icon-name={toggleCollapseAnswerIcon}
+                  variant="base"
+                  label={toggleCollapseAnswerLabel}
+                  title={toggleCollapseAnswerLabel}
+                  onclick={handleToggleCollapseAnswer}
+                  icon-position="right"
+                  class="generated-answer__answer-toggle slds-shrink-none slds-var-m-right_large"
+                ></lightning-button>
+              </template>
+            </div>
+          </template>
           <template lwc:if={areFollowUpsEnabled}>
             <c-quantic-ask-follow-up-input
               data-testid="generated-answer__ask-follow-up-input"
@@ -111,18 +91,19 @@
       </template>
     </div>
   </template>
-  
+
   <template lwc:if={cannotAnswer}>
     <template lwc:if={isManualAnswerGeneration}>
       <div data-testid="generated-answer__no-answer-card" class="slds-box">
-        <div class="generated-answer__card-header slds-grid slds-grid_vertical-align-center slds-border_bottom">
+        <div
+          class="generated-answer__card-header slds-grid slds-grid_vertical-align-center slds-border_bottom"
+        >
           <lightning-icon
             icon-name="utility:sparkle"
             size="xx-small"
             class="slds-current-color slds-m-right_x-small generated-answer__header-icon"
           ></lightning-icon>
-          <span
-            class="slds-text-title_bold generated-answer__badge"
+          <span class="slds-text-title_bold generated-answer__badge"
             >{labels.generatedAnswerForYou}</span
           >
         </div>
@@ -139,14 +120,15 @@
     <template lwc:else>
       <template lwc:if={hasCustomNoAnswerMessage}>
         <div data-testid="generated-answer__no-answer-card" class="slds-box">
-          <div class="generated-answer__card-header slds-grid slds-grid_vertical-align-center slds-border_bottom">
+          <div
+            class="generated-answer__card-header slds-grid slds-grid_vertical-align-center slds-border_bottom"
+          >
             <lightning-icon
               icon-name="utility:sparkle"
               size="xx-small"
               class="slds-current-color slds-m-right_x-small generated-answer__header-icon"
             ></lightning-icon>
-            <span
-              class="slds-text-title_bold generated-answer__badge"
+            <span class="slds-text-title_bold generated-answer__badge"
               >{labels.generatedAnswerForYou}</span
             >
           </div>

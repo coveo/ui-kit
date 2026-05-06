@@ -164,6 +164,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   /** @type {GeneratedAnswer} */
   generatedAnswer;
+  engine;
   /** @type {GeneratedAnswerState} */
   state;
   /** @type {FeedbackState} */
@@ -189,9 +190,19 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
+    this.template.addEventListener('quantic__like', this.handleLike);
+    this.template.addEventListener('quantic__dislike', this.handleDislike);
     this.template.addEventListener(
       'quantic__generatedanswercopy',
       this.handleGeneratedAnswerCopyToClipboard
+    );
+    this.template.addEventListener(
+      'quantic__citationhover',
+      this.handleCitationHoverEvent
+    );
+    this.template.addEventListener(
+      'quantic__answercontentupdated',
+      this.handleAnswerContentUpdated
     );
     this.template.addEventListener(
       'quantic__askfollowup',
@@ -218,6 +229,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   initialize = (engine) => {
     this.ariaLiveMessage = AriaLiveRegion('GeneratedAnswer', this);
     this.headless = getHeadlessBundle(this.engineId);
+    this.engine = engine;
     this.generatedAnswer = this.buildHeadlessGeneratedAnswerController(engine);
     this.searchStatus = this.headless.buildSearchStatus(engine);
 
@@ -256,9 +268,19 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   disconnectedCallback() {
     this.unsubscribeGeneratedAnswer?.();
+    this.template.removeEventListener('quantic__like', this.handleLike);
+    this.template.removeEventListener('quantic__dislike', this.handleDislike);
     this.template.removeEventListener(
       'quantic__generatedanswercopy',
       this.handleGeneratedAnswerCopyToClipboard
+    );
+    this.template.removeEventListener(
+      'quantic__citationhover',
+      this.handleCitationHoverEvent
+    );
+    this.template.removeEventListener(
+      'quantic__answercontentupdated',
+      this.handleAnswerContentUpdated
     );
     this.template.removeEventListener(
       'quantic__askfollowup',
@@ -337,11 +359,27 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   };
 
   /**
+   * handles the quantic__citationhover event from the body component.
+   * @param {CustomEvent} event
+   */
+  handleCitationHoverEvent = (event) => {
+    event.stopPropagation();
+    const {citationId, citationHoverTimeMs} = event.detail;
+    this.handleCitationHover(citationId, citationHoverTimeMs);
+  };
+
+  /**
    * handles liking the generated answer.
    * @param {CustomEvent} event
    */
-  async handleLike(event) {
+  handleLike = async (event) => {
     event.stopPropagation();
+    const answerId = event.detail?.answerId;
+    if (this.isFollowUpAnswer(answerId)) {
+      this.generatedAnswer.like?.(answerId);
+      return;
+    }
+
     if (!this._liked) {
       this._liked = true;
       this._disliked = false;
@@ -358,14 +396,20 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       });
       this.generatedAnswer.closeFeedbackModal();
     }
-  }
+  };
 
   /**
    * handles disliking the generated answer.
    * @param {CustomEvent} event
    */
-  async handleDislike(event) {
+  handleDislike = async (event) => {
     event.stopPropagation();
+    const answerId = event.detail?.answerId;
+    if (this.isFollowUpAnswer(answerId)) {
+      this.generatedAnswer.dislike?.(answerId);
+      return;
+    }
+
     if (!this._disliked) {
       this._disliked = true;
       this._liked = false;
@@ -382,7 +426,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       });
       this.generatedAnswer.closeFeedbackModal();
     }
-  }
+  };
 
   /**
    * Submits the feedback
@@ -399,7 +443,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   handleGeneratedAnswerCopyToClipboard = (event) => {
     event.stopPropagation();
-    this.generatedAnswer.logCopyToClipboard();
+    this.generatedAnswer.logCopyToClipboard(event.detail?.answerId);
   };
 
   handleAskFollowUp = async (event) => {
@@ -425,7 +469,9 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   };
 
   handleAnswerContentUpdated = (event) => {
-    event.stopPropagation();
+    if (event instanceof CustomEvent) {
+      event.stopPropagation();
+    }
     if (this.collapsible) {
       this._exceedsMaximumHeight = this.isMaximumHeightExceeded();
     }
@@ -486,21 +532,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return this?.state?.citations;
   }
 
-  get answerContentFormat() {
-    return this?.state?.answerContentFormat;
-  }
-
-  get shouldDisplayCitations() {
-    const hasCitations = !!this.citations?.length;
-    return hasCitations && !this.isAnswerCollapsed;
-  }
-
   get isStreaming() {
     return this?.state?.isStreaming;
-  }
-
-  get shouldDisplayActions() {
-    return this.isVisible && !this.isStreaming && !this.isAnswerCollapsed;
   }
 
   get isVisible() {
@@ -518,6 +551,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get generatedAnswerClass() {
+    if (this.shouldRenderThread) {
+      return 'generated-answer__answer';
+    }
+
     let collapsedStateClass = '';
     if (this._exceedsMaximumHeight) {
       collapsedStateClass = this.isExpanded
@@ -621,6 +658,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return this.isAnswerCollapsed ? this.labels.showMore : this.labels.showLess;
   }
 
+  get shouldShowSingleAnswerCollapseControls() {
+    return !this.shouldRenderThread;
+  }
+
   get isExpanded() {
     return this.state?.expanded;
   }
@@ -631,6 +672,28 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       typeof this.generatedAnswer?.askFollowUp === 'function' &&
       this.state?.followUpAnswers?.isEnabled === true
     );
+  }
+
+  get shouldRenderThread() {
+    return this.areFollowUpsEnabled;
+  }
+
+  get currentQuestion() {
+    return this.engine?.state?.query?.q ?? '';
+  }
+
+  get normalizedGeneratedAnswers() {
+    if (!this.state) {
+      return [];
+    }
+
+    return [
+      {
+        ...this.state,
+        question: this.currentQuestion,
+      },
+      ...(this.state?.followUpAnswers?.followUpAnswers ?? []),
+    ];
   }
 
   get isAnswerGenerationOngoing() {
@@ -663,6 +726,14 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   get isManualAnswerGeneration() {
     return this.state?.answerGenerationMode === 'manual';
+  }
+
+  isFollowUpAnswer(answerId) {
+    return (
+      this.areFollowUpsEnabled &&
+      !!answerId &&
+      this.state?.answerId !== answerId
+    );
   }
 
   /**
