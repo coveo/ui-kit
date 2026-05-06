@@ -1,7 +1,9 @@
 import {expect, test} from '@playwright/test';
 
 test.describe('Headless commerce sample', () => {
-  test('shows the sample search box and recommendations on the home page', async ({page}) => {
+  test('shows the sample search box and recommendations on the home page', async ({
+    page,
+  }) => {
     await page.goto('/');
 
     await expect(page.getByRole('heading', {name: 'Home'})).toBeVisible();
@@ -9,7 +11,9 @@ test.describe('Headless commerce sample', () => {
     await expect(page.locator('.ProductList').first()).toBeVisible();
   });
 
-  test('can search and display products with generated facets', async ({page}) => {
+  test('can search and display products with generated facets', async ({
+    page,
+  }) => {
     await page.goto('/');
     await page.getByLabel('Enter query').fill('kayak');
     await page.getByRole('button', {name: 'Submit query'}).click();

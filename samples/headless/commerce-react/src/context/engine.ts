@@ -17,7 +17,9 @@ export const getEngine = () => {
       ...sampleConfiguration,
       cart: {
         items:
-          loadCartItemsFromLocalStorage() ?? sampleConfiguration.cart?.items ?? [],
+          loadCartItemsFromLocalStorage() ??
+          sampleConfiguration.cart?.items ??
+          [],
       },
     },
   });
