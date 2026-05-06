@@ -43,6 +43,7 @@
     "source_docs/upgrade-from-v1-to-v2.md",
     "source_docs/upgrade-from-v2-to-v3.md",
     "source_docs/versions.md",
+    "source_docs/headless-commerce-instant-products-click-tracking.md",
     "README.md",
     "contributors/adding-a-controller.md",
     "contributors/adding-a-sub-package.md",
@@ -77,9 +78,9 @@
   ],
   "hoistOther.nestedOrder": {
     "contributing": ["Contributing", "*"],
-    "guides server-side rendering": ["Concepts", "*"],
-    "guides upgrade": ["Concepts", "*"],
-    "guides usage analytics": ["Concepts", "*"],
+    "guides server-side rendering": ["Introduction", "*"],
+    "guides upgrade": ["*"],
+    "guides usage analytics": ["Introduction", "*"],
     "getting started": [
       "Getting Started with Search",
       "Getting Started with Case Assist",
@@ -89,7 +90,7 @@
       "Getting Started with SSR Search",
       "Getting Started with SSR Commerce"
     ],
-    "guides": ["Concepts", "*"],
+    "guides": ["*"],
     "reference search": [
       "Engine",
       "Controllers",
