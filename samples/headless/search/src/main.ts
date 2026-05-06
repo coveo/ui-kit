@@ -95,12 +95,19 @@ sort.subscribe(renderSort);
 renderSort();
 
 // Facets
-const objectTypeFacet = buildFacet(engine, {options: {field: 'objecttype', facetId: 'objecttype'}});
-const authorFacet = buildFacet(engine, {options: {field: 'author', facetId: 'author'}});
+const objectTypeFacet = buildFacet(engine, {
+  options: {field: 'objecttype', facetId: 'objecttype'},
+});
+const authorFacet = buildFacet(engine, {
+  options: {field: 'author', facetId: 'author'},
+});
 
 const facetsEl = document.getElementById('facets')!;
 
-function renderFacet(facet: ReturnType<typeof buildFacet>, label: string): HTMLElement {
+function renderFacet(
+  facet: ReturnType<typeof buildFacet>,
+  label: string
+): HTMLElement {
   const container = document.createElement('div');
   container.className = 'facet';
   const h3 = document.createElement('h3');
