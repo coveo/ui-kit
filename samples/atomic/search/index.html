@@ -1,0 +1,93 @@
+<!doctype html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Atomic Search Sample</title>
+    <script type="module">
+      import {defineCustomElements} from '@coveo/atomic/loader';
+      import '@coveo/atomic/themes/coveo.css';
+      defineCustomElements();
+    </script>
+    <script type="module">
+      await customElements.whenDefined('atomic-search-interface');
+      const searchInterface = document.querySelector('atomic-search-interface');
+
+      await searchInterface.initialize({
+        accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+        organizationId: 'searchuisamples',
+      });
+
+      searchInterface.executeFirstSearch();
+    </script>
+    <style>
+      body {
+        margin: 0;
+        font-family: sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <atomic-search-interface>
+      <atomic-search-layout>
+        <atomic-layout-section section="search">
+          <atomic-search-box>
+            <atomic-search-box-recent-queries></atomic-search-box-recent-queries>
+            <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
+          </atomic-search-box>
+        </atomic-layout-section>
+        <atomic-layout-section section="facets">
+          <atomic-facet-manager>
+            <atomic-automatic-facet-generator desired-count="5"></atomic-automatic-facet-generator>
+            <atomic-facet field="objecttype" label="Type"></atomic-facet>
+            <atomic-facet field="filetype" label="File Type"></atomic-facet>
+            <atomic-facet field="author" label="Author"></atomic-facet>
+          </atomic-facet-manager>
+        </atomic-layout-section>
+        <atomic-layout-section section="main">
+          <atomic-layout-section section="status">
+            <atomic-breadbox></atomic-breadbox>
+            <atomic-query-summary></atomic-query-summary>
+            <atomic-sort-dropdown>
+              <atomic-sort-expression label="Relevance" expression="relevancy"></atomic-sort-expression>
+              <atomic-sort-expression label="Date (newest)" expression="date descending"></atomic-sort-expression>
+              <atomic-sort-expression label="Date (oldest)" expression="date ascending"></atomic-sort-expression>
+            </atomic-sort-dropdown>
+            <atomic-did-you-mean></atomic-did-you-mean>
+            <atomic-refine-toggle></atomic-refine-toggle>
+          </atomic-layout-section>
+          <atomic-layout-section section="results">
+            <atomic-smart-snippet></atomic-smart-snippet>
+            <atomic-result-list>
+              <atomic-result-template>
+                <template>
+                  <atomic-result-section-title>
+                    <atomic-result-link></atomic-result-link>
+                  </atomic-result-section-title>
+                  <atomic-result-section-excerpt>
+                    <atomic-result-text field="excerpt"></atomic-result-text>
+                  </atomic-result-section-excerpt>
+                  <atomic-result-section-bottom-metadata>
+                    <atomic-result-fields-list>
+                      <atomic-field-condition if-defined="author">
+                        <atomic-result-text field="author"></atomic-result-text>
+                      </atomic-field-condition>
+                      <atomic-field-condition if-defined="source">
+                        <atomic-result-text field="source"></atomic-result-text>
+                      </atomic-field-condition>
+                    </atomic-result-fields-list>
+                  </atomic-result-section-bottom-metadata>
+                </template>
+              </atomic-result-template>
+            </atomic-result-list>
+            <atomic-query-error></atomic-query-error>
+            <atomic-no-results></atomic-no-results>
+          </atomic-layout-section>
+          <atomic-layout-section section="pagination">
+            <atomic-pager></atomic-pager>
+          </atomic-layout-section>
+        </atomic-layout-section>
+      </atomic-search-layout>
+    </atomic-search-interface>
+  </body>
+</html>
