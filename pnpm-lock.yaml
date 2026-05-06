@@ -43,11 +43,11 @@ catalogs:
       specifier: 2.1.1
       version: 2.1.1
     '@coveo/relay-event-types':
-      specifier: 19.5.0
-      version: 19.5.0
+      specifier: 19.6.0
+      version: 19.6.0
     '@playwright/mcp':
-      specifier: 0.0.70
-      version: 0.0.70
+      specifier: 0.0.71
+      version: 0.0.71
     '@playwright/test':
       specifier: 1.59.1
       version: 1.59.1
@@ -186,7 +186,7 @@ importers:
         version: 2.3.2
       '@playwright/mcp':
         specifier: 'catalog:'
-        version: 0.0.70
+        version: 0.0.71
       '@tsconfig/node22':
         specifier: 22.0.5
         version: 22.0.5
@@ -258,7 +258,7 @@ importers:
         version: link:../headless
       '@coveo/relay-event-types':
         specifier: 'catalog:'
-        version: 19.5.0
+        version: 19.6.0
       '@lit/context':
         specifier: 1.1.6
         version: 1.1.6
@@ -812,7 +812,7 @@ importers:
         version: 2.1.1
       '@coveo/relay-event-types':
         specifier: 'catalog:'
-        version: 19.5.0
+        version: 19.6.0
       '@reduxjs/toolkit':
         specifier: 2.11.2
         version: 2.11.2(react@19.2.5)
@@ -935,7 +935,7 @@ importers:
         version: 7.27.1(@babel/core@7.29.0)
       '@coveo/relay-event-types':
         specifier: 'catalog:'
-        version: 19.5.0
+        version: 19.6.0
       '@octokit/graphql':
         specifier: 9.0.3
         version: 9.0.3
@@ -1280,7 +1280,7 @@ importers:
     devDependencies:
       '@coveo/relay-event-types':
         specifier: 'catalog:'
-        version: 19.5.0
+        version: 19.6.0
       '@react-router/dev':
         specifier: 'catalog:'
         version: 7.14.2(@react-router/serve@7.14.2(react-router@7.14.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(typescript@6.0.3))(@types/node@25.6.0)(jiti@2.6.1)(less@4.6.4)(lightningcss@1.32.0)(react-router@7.14.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(sass@1.99.0)(terser@5.46.2)(typescript@6.0.3)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(terser@5.46.2)(yaml@2.8.3))(yaml@2.8.3)
@@ -2691,8 +2691,8 @@ packages:
   '@coveo/platform-client@62.0.0':
     resolution: {integrity: sha512-ATiguoYVKcfNSHWTBaMQmVdaZ6e+T/cKubjlvV/201O7p9+97WbLFnHkviD/IprfY0oP40pDs3dxECU/iAXw3g==}
 
-  '@coveo/relay-event-types@19.5.0':
-    resolution: {integrity: sha512-ioMSnQK+WEtUqpsEE17dVe+Zh0QUYtCuKr+LRx3d6CUIWhz1ShMtGgCc9xL5zLvzx7AuyfKFIfBktNroDtAlOA==}
+  '@coveo/relay-event-types@19.6.0':
+    resolution: {integrity: sha512-i05oSkIkUmPnle+BsKqEgISPydaD4REmRoWFA0nGt7T+RA5fRXv4/Warmenzr/NQXmiXuTx6kKUNpKYFB/1rYA==}
 
   '@coveo/relay@2.1.1':
     resolution: {integrity: sha512-m1MdYA8rTgzpiL/G8K0tTMibo/1y/bVXEkhxB6nrMBAqp4dX6GsP7wGBfkb8OqM7czdGqY9nxSfuTcamggCx5g==}
@@ -5509,8 +5509,8 @@ packages:
     resolution: {integrity: sha512-QNqXyfVS2wm9hweSYD2O7F0G06uurj9kZ96TRQE5Y9hU7+tgdZwIkbAKc5Ocy1HxEY2kuDQa6cQ1WRs/O5LFKA==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
 
-  '@playwright/mcp@0.0.70':
-    resolution: {integrity: sha512-Kl0a6l9VL8rvT1oBou3hS5yArjwWV9UlwAkq+0skfK1YVg8XfmmNaAmwZhMeNx/ZhGiWXfCllo6rD/jvZz+WuA==}
+  '@playwright/mcp@0.0.71':
+    resolution: {integrity: sha512-HA9P47dhLVNCnXD76fNaEF/Mr77eOjB74hvapExZZOrjXADS8sK2RIySK27bXuQzFAmk9UNFlSch9kbtAzfpVA==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -7019,6 +7019,7 @@ packages:
 
   '@ungap/structured-clone@1.3.0':
     resolution: {integrity: sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==}
+    deprecated: Potential CWE-502 - Update to 1.3.1 or higher
 
   '@unrs/resolver-binding-android-arm-eabi@1.11.1':
     resolution: {integrity: sha512-ppLRUgHVaGRWUx0R0Ut06Mjo9gBaBkg3v/8AxusGLhsIotbBLuRk51rAzqLC8gq6NyyAojEXglNjzf6R948DNw==}
@@ -12406,8 +12407,8 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  playwright-core@1.60.0-alpha-1774999321000:
-    resolution: {integrity: sha512-ams3Zo4VXxeOg5ZTTh16GkE8g48Bmxo/9pg9gXl9SVKlVohCU7Jaog7XntY8yFuzENA6dJc1Fz7Z/NNTm9nGEw==}
+  playwright-core@1.60.0-alpha-2026-04-27:
+    resolution: {integrity: sha512-9qAlRpGkWsYia99qdlp5KiBz+f+XrAaBAW8hGJ+qOmTXZuLSF+t9tX4dFSUqG+yOVAsWIIQFRVm1ZKLAP6w0kg==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -12416,8 +12417,8 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  playwright@1.60.0-alpha-1774999321000:
-    resolution: {integrity: sha512-Bd5DkzYKG+2g1jLO6NeTXmGLbBYSFffJIOsR4l4hUBkJvzvGGdLZ7jZb2tOtb0WIoWXQKdQj3Ap6WthV4DBS8w==}
+  playwright@1.60.0-alpha-2026-04-27:
+    resolution: {integrity: sha512-a3gvTeo6AgERUQ8fMSPdbIl5TQqA79CUg3KtEuta7sX4UTEIT0Lkea8IDX2R5tUrl1JJFFoIA7dJTR+tPemtxQ==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -16774,7 +16775,7 @@ snapshots:
       query-string-cjs: query-string@7.1.3
       query-string-esm: query-string@9.3.1
 
-  '@coveo/relay-event-types@19.5.0': {}
+  '@coveo/relay-event-types@19.6.0': {}
 
   '@coveo/relay@2.1.1':
     dependencies:
@@ -19466,10 +19467,10 @@ snapshots:
 
   '@pkgr/core@0.2.9': {}
 
-  '@playwright/mcp@0.0.70':
+  '@playwright/mcp@0.0.71':
     dependencies:
-      playwright: 1.60.0-alpha-1774999321000
-      playwright-core: 1.60.0-alpha-1774999321000
+      playwright: 1.60.0-alpha-2026-04-27
+      playwright-core: 1.60.0-alpha-2026-04-27
 
   '@playwright/test@1.59.1':
     dependencies:
@@ -28113,7 +28114,7 @@ snapshots:
 
   playwright-core@1.59.1: {}
 
-  playwright-core@1.60.0-alpha-1774999321000: {}
+  playwright-core@1.60.0-alpha-2026-04-27: {}
 
   playwright@1.59.1:
     dependencies:
@@ -28121,9 +28122,9 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.2
 
-  playwright@1.60.0-alpha-1774999321000:
+  playwright@1.60.0-alpha-2026-04-27:
     dependencies:
-      playwright-core: 1.60.0-alpha-1774999321000
+      playwright-core: 1.60.0-alpha-2026-04-27
     optionalDependencies:
       fsevents: 2.3.2
 
