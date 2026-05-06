@@ -1,0 +1,66 @@
+<!doctype html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recommendations — Atomic Commerce Sample</title>
+    <script type="module">
+      import {defineCustomElements} from '@coveo/atomic/loader';
+      import '@coveo/atomic/themes/coveo.css';
+      defineCustomElements();
+    </script>
+    <script type="module">
+      import {
+        buildCommerceEngine,
+        getSampleCommerceEngineConfiguration,
+      } from '@coveo/headless/commerce';
+
+      const engine = buildCommerceEngine({
+        configuration: getSampleCommerceEngineConfiguration(),
+      });
+
+      await customElements.whenDefined('atomic-commerce-recommendation-interface');
+      const recsInterface = document.querySelector('atomic-commerce-recommendation-interface');
+      await recsInterface.initializeWithEngine(engine);
+    </script>
+    <style>
+      body { margin: 0; font-family: sans-serif; }
+      nav { padding: 0.75rem 1rem; background: #f5f5f5; border-bottom: 1px solid #ddd; font-size: 0.875rem; }
+      nav a { color: #1a73e8; text-decoration: none; }
+      nav a:hover { text-decoration: underline; }
+      h2 { padding: 1rem; }
+    </style>
+  </head>
+  <body>
+    <nav><a href="./index.html">← Back</a></nav>
+    <h2>Product Recommendations</h2>
+
+    <atomic-commerce-recommendation-interface>
+      <atomic-commerce-recommendation-list
+        slot-id="af4fb7ba-6641-4b67-9cf9-be67e9f30174"
+        products-per-page="6"
+      >
+        <atomic-product-template>
+          <template>
+            <atomic-product-section-name>
+              <atomic-product-link></atomic-product-link>
+            </atomic-product-section-name>
+            <atomic-product-section-visual>
+              <atomic-product-field-condition if-defined="ec_thumbnails">
+                <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+              </atomic-product-field-condition>
+            </atomic-product-section-visual>
+            <atomic-product-section-metadata>
+              <atomic-product-field-condition if-defined="ec_brand">
+                <atomic-product-text field="ec_brand"></atomic-product-text>
+              </atomic-product-field-condition>
+            </atomic-product-section-metadata>
+            <atomic-product-section-emphasized>
+              <atomic-product-price></atomic-product-price>
+            </atomic-product-section-emphasized>
+          </template>
+        </atomic-product-template>
+      </atomic-commerce-recommendation-list>
+    </atomic-commerce-recommendation-interface>
+  </body>
+</html>

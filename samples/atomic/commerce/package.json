@@ -1,0 +1,21 @@
+{
+  "name": "@samples/atomic-commerce",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "copy-resources": "node ./scripts/copy-resources.mjs",
+    "dev": "pnpm copy-resources && vite",
+    "build": "pnpm copy-resources && vite build",
+    "e2e": "playwright test",
+    "e2e:watch": "playwright test --ui"
+  },
+  "dependencies": {
+    "@coveo/atomic": "workspace:*",
+    "@coveo/headless": "workspace:*"
+  },
+  "devDependencies": {
+    "@playwright/test": "catalog:",
+    "vite": "catalog:"
+  }
+}
