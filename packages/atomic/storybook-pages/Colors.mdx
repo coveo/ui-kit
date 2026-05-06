@@ -1,0 +1,42 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Colors" />
+
+# Color Tokens
+
+Tokens are a method of applying color in a consistent, reusable, and scalable way. They are used in place of hard-coded values, like hex codes. These tokens map to CSS variables and can be customized to match your brand.
+
+### Primary
+
+| Token | Role / Use case | Value |
+| --- | --- | --- |
+| `--atomic-primary` | A frequently used color for interactive elements of the interface. | <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}><div style={{width: '16px', height: '16px', backgroundColor: '#126ce0', borderRadius: '4px', border: '1px solid #ccc'}}></div> `#126ce0`</div> |
+| `--atomic-primary-light` | A lighter variant of the primary color, often used for states such as hover and focus. | <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}><div style={{width: '16px', height: '16px', backgroundColor: '#399ffe', borderRadius: '4px', border: '1px solid #ccc'}}></div> `#399ffe`</div> |
+| `--atomic-primary-dark` | A darker variant of the primary color. This is rarely used. | <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}><div style={{width: '16px', height: '16px', backgroundColor: '#1a50ad', borderRadius: '4px', border: '1px solid #ccc'}}></div> `#1a50ad`</div> |
+| `--atomic-on-primary` | The color used for contrast in elements that use the primary color (for example, the color of text on a button). | <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}><div style={{width: '16px', height: '16px', backgroundColor: '#ffffff', borderRadius: '4px', border: '1px solid #ccc'}}></div> `#ffffff`</div> |
+| `--atomic-ring-primary` | The color used to indicate the focus state of inputs and some buttons. We recommended that you use the primary color, but with a lower opacity. | <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}><div style={{width: '16px', height: '16px', backgroundColor: 'rgba(19, 114, 236, 0.5)', borderRadius: '4px', border: '1px solid #ccc'}}></div> `rgba(19, 114, 236, 0.5)`</div> |
+
+### Neutral
+
+| Token | Role / Use case | Value |
+| --- | --- | --- |
+| `--atomic-neutral-dark` | A darker variant of the neutral color. This is often used for alternative text. | <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}><div style={{width: '16px', height: '16px', backgroundColor: '#626971', borderRadius: '4px', border: '1px solid #ccc'}}></div> `#626971`</div> |
+| `--atomic-neutral-dim` | Dimmed neutral, used for secondary borders/icons | <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}><div style={{width: '16px', height: '16px', backgroundColor: '#bfc4c8', borderRadius: '4px', border: '1px solid #ccc'}}></div> `#bfc4c8`</div> |
+| `--atomic-neutral` | The color used for borders, backgrounds, and effects. We recommend that you use a greyish color. | <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}><div style={{width: '16px', height: '16px', backgroundColor: '#e5e8e8', borderRadius: '4px', border: '1px solid #ccc'}}></div> `#e5e8e8`</div> |
+| `--atomic-neutral-light` | A lighter variant of the neutral color. This is often used for backgrounds. | <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}><div style={{width: '16px', height: '16px', backgroundColor: '#f6f7f9', borderRadius: '4px', border: '1px solid #ccc'}}></div> `#f6f7f9`</div> |
+| `--atomic-neutral-lighter` | Lightest neutral, used for secondary container backgrounds | <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}><div style={{width: '16px', height: '16px', backgroundColor: '#f2f2f2', borderRadius: '4px', border: '1px solid #ccc'}}></div> `#f2f2f2`</div> |
+
+### Semantic
+
+| Token | Role / Use case | Value |
+| --- | --- | --- |
+| `--atomic-background` | The background color of the interface components. This is generally white. | <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}><div style={{width: '16px', height: '16px', backgroundColor: '#ffffff', borderRadius: '4px', border: '1px solid #ccc'}}></div> `#ffffff`</div> |
+| `--atomic-on-background` | The text color used throughout most of the interface. | <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}><div style={{width: '16px', height: '16px', backgroundColor: '#282829', borderRadius: '4px', border: '1px solid #ccc'}}></div> `#282829`</div> |
+| `--atomic-success` | The color generally representing a success or positive state. | <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}><div style={{width: '16px', height: '16px', backgroundColor: '#12a244', borderRadius: '4px', border: '1px solid #ccc'}}></div> `#12a244`</div> |
+| `--atomic-error` | The color generally representing an error or negative state. | <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}><div style={{width: '16px', height: '16px', backgroundColor: '#ce3f00', borderRadius: '4px', border: '1px solid #ccc'}}></div> `#ce3f00`</div> |
+| `--atomic-visited` | The color of a visited link. | <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}><div style={{width: '16px', height: '16px', backgroundColor: '#752e9c', borderRadius: '4px', border: '1px solid #ccc'}}></div> `#752e9c`</div> |
+| `--atomic-disabled` | The color generally representing a disabled or read-only state. | <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}><div style={{width: '16px', height: '16px', backgroundColor: '#c5cacf', borderRadius: '4px', border: '1px solid #ccc'}}></div> `#c5cacf`</div> |
+| `--atomic-success-background` | Background color for success alerts | <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}><div style={{width: '16px', height: '16px', backgroundColor: '#d4fcf0', borderRadius: '4px', border: '1px solid #ccc'}}></div> `#d4fcf0`</div> |
+| `--atomic-error-background` | Background color for error alerts | <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}><div style={{width: '16px', height: '16px', backgroundColor: '#fcbdc0', borderRadius: '4px', border: '1px solid #ccc'}}></div> `#fcbdc0`</div> |
+| `--atomic-primary-background` | Background color for primary active states | <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}><div style={{width: '16px', height: '16px', backgroundColor: '#edf6ff', borderRadius: '4px', border: '1px solid #ccc'}}></div> `#edf6ff`</div> |
+| `--atomic-inline-code` | Text color for inline code blocks | <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}><div style={{width: '16px', height: '16px', backgroundColor: '#cd2113', borderRadius: '4px', border: '1px solid #ccc'}}></div> `#cd2113`</div> |

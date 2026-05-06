@@ -1,0 +1,122 @@
+import { Meta, ColorPalette, ColorItem } from '@storybook/addon-docs/blocks';
+
+<Meta title="Colors (Tape B)" />
+
+# Color Tokens (Tape B)
+
+This is an alternative ("Tape B") version using Storybook's native `<ColorPalette>` and `<ColorItem>` blocks. It provides a more integrated visual experience while preserving the detailed documentation from Coveo.
+
+### Primary
+
+<ColorPalette>
+  <ColorItem
+    title="--atomic-primary"
+    subtitle="A frequently used color for interactive elements of the interface."
+    colors={{ 'Hex': '#126ce0' }}
+  />
+  <ColorItem
+    title="--atomic-primary-light"
+    subtitle="A lighter variant of the primary color, often used for states such as hover and focus."
+    colors={{ 'Hex': '#399ffe' }}
+  />
+  <ColorItem
+    title="--atomic-primary-dark"
+    subtitle="A darker variant of the primary color. This is rarely used."
+    colors={{ 'Hex': '#1a50ad' }}
+  />
+  <ColorItem
+    title="--atomic-on-primary"
+    subtitle="The color used for contrast in elements that use the primary color (for example, the color of text on a button)."
+    colors={{ 'Hex': '#ffffff' }}
+  />
+  <ColorItem
+    title="--atomic-ring-primary"
+    subtitle="The color used to indicate the focus state of inputs and some buttons. We recommended that you use the primary color, but with a lower opacity."
+    colors={{ 'RGB': 'rgb(19, 114, 236, 0.5)' }}
+  />
+</ColorPalette>
+
+### Neutral
+
+<ColorPalette>
+  <ColorItem
+    title="--atomic-neutral-dark"
+    subtitle="A darker variant of the neutral color. This is often used for alternative text."
+    colors={{ 'Hex': '#626971' }}
+  />
+  <ColorItem
+    title="--atomic-neutral-dim"
+    subtitle="Dimmed neutral, used for secondary borders/icons"
+    colors={{ 'Hex': '#bfc4c8' }}
+  />
+  <ColorItem
+    title="--atomic-neutral"
+    subtitle="The color used for borders, backgrounds, and effects. We recommend that you use a greyish color."
+    colors={{ 'Hex': '#e5e8e8' }}
+  />
+  <ColorItem
+    title="--atomic-neutral-light"
+    subtitle="A lighter variant of the neutral color. This is often used for backgrounds."
+    colors={{ 'Hex': '#f6f7f9' }}
+  />
+  <ColorItem
+    title="--atomic-neutral-lighter"
+    subtitle="Lightest neutral, used for secondary container backgrounds"
+    colors={{ 'Hex': '#f2f2f2' }}
+  />
+</ColorPalette>
+
+### Semantic
+
+<ColorPalette>
+  <ColorItem
+    title="--atomic-background"
+    subtitle="The background color of the interface components. This is generally white."
+    colors={{ 'Hex': '#ffffff' }}
+  />
+  <ColorItem
+    title="--atomic-on-background"
+    subtitle="The text color used throughout most of the interface."
+    colors={{ 'Hex': '#282829' }}
+  />
+  <ColorItem
+    title="--atomic-success"
+    subtitle="The color generally representing a success or positive state."
+    colors={{ 'Hex': '#12a244' }}
+  />
+  <ColorItem
+    title="--atomic-error"
+    subtitle="The color generally representing an error or negative state."
+    colors={{ 'Hex': '#ce3f00' }}
+  />
+  <ColorItem
+    title="--atomic-visited"
+    subtitle="The color of a visited link."
+    colors={{ 'Hex': '#752e9c' }}
+  />
+  <ColorItem
+    title="--atomic-disabled"
+    subtitle="The color generally representing a disabled or read-only state."
+    colors={{ 'Hex': '#c5cacf' }}
+  />
+  <ColorItem
+    title="--atomic-success-background"
+    subtitle="Background color for success alerts"
+    colors={{ 'Hex': '#d4fcf0' }}
+  />
+  <ColorItem
+    title="--atomic-error-background"
+    subtitle="Background color for error alerts"
+    colors={{ 'Hex': '#fcbdc0' }}
+  />
+  <ColorItem
+    title="--atomic-primary-background"
+    subtitle="Background color for primary active states"
+    colors={{ 'Hex': '#edf6ff' }}
+  />
+  <ColorItem
+    title="--atomic-inline-code"
+    subtitle="Text color for inline code blocks"
+    colors={{ 'Hex': '#cd2113' }}
+  />
+</ColorPalette>
