@@ -26,10 +26,13 @@ test.describe('Atomic Commerce React Sample', () => {
 
     const summaryContainer = querySummary.locator('div[part="container"]');
     await expect
-      .poll(async () => {
-        const text = await summaryContainer.textContent();
-        return text ?? '';
-      }, {timeout: 5000})
+      .poll(
+        async () => {
+          const text = await summaryContainer.textContent();
+          return text ?? '';
+        },
+        {timeout: 5000}
+      )
       .toMatch(/Products? 1-[1-9]?[0-9]* of \d+ for shoe/);
 
     const productList = page.locator('atomic-commerce-product-list');
@@ -53,7 +56,9 @@ test.describe('Atomic Commerce React Sample', () => {
     await expect(recommendationsButton).toBeVisible({timeout: 30000});
     await recommendationsButton.click();
 
-    const recommendationList = page.locator('atomic-commerce-recommendation-list');
+    const recommendationList = page.locator(
+      'atomic-commerce-recommendation-list'
+    );
     await expect(recommendationList).toBeVisible();
 
     const firstProduct = recommendationList.locator('atomic-product').first();
