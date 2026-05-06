@@ -16,6 +16,15 @@
   "dependencies": {
     "@coveo/auth": "workspace:*",
     "@coveo/headless": "workspace:*",
+    "dayjs": "catalog:",
+    "escape-html": "1.0.3",
+    "express": "5.2.1",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-router": "catalog:"
+  },
+  "devDependencies": {
+    "@playwright/test": "catalog:",
     "@testing-library/jest-dom": "6.9.1",
     "@testing-library/react": "catalog:",
     "@types/escape-html": "1.0.4",
@@ -23,17 +32,8 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "dayjs": "catalog:",
-    "escape-html": "1.0.3",
-    "express": "5.2.1",
-    "react": "catalog:",
-    "react-dom": "catalog:",
-    "react-router": "catalog:",
-    "typescript": "catalog:"
-  },
-  "devDependencies": {
-    "@playwright/test": "catalog:",
     "@vitejs/plugin-react": "catalog:",
+    "typescript": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:"
   },
