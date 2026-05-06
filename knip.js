@@ -80,6 +80,10 @@ export default {
     },
     'samples/headless-ssr/commerce-nextjs': {},
     'samples/headless-ssr/commerce-nextjs-v4': {},
+    'samples/headless/commerce': {
+      // Vanilla HTML sample - entry points are in HTML <script>/<link> tags, not traceable by knip.
+      ignore: ['**/*'],
+    },
     'utils/ci': {},
     'utils/cdn': {
       ignoreDependencies: ['local-web-server'],

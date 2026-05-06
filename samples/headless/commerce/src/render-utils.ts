@@ -233,9 +233,9 @@ function renderCategoryFacet(container: HTMLElement, facet: CategoryFacet) {
   const values = facet.state.hasActiveValues
     ? [
         ...(facet.state.selectedValueAncestry ?? []),
-        ...((facet.state.selectedValueAncestry?.at(-1)?.children ?? []).filter(
+        ...(facet.state.selectedValueAncestry?.at(-1)?.children ?? []).filter(
           (value) => !facet.isValueSelected(value)
-        )),
+        ),
       ]
     : facet.state.values;
 
@@ -272,7 +272,10 @@ function renderCategoryFacet(container: HTMLElement, facet: CategoryFacet) {
   );
 }
 
-export function renderFacets(facetsEl: HTMLElement, facetGenerator: FacetGenerator) {
+export function renderFacets(
+  facetsEl: HTMLElement,
+  facetGenerator: FacetGenerator
+) {
   facetsEl.innerHTML = '';
 
   facetGenerator.facets.forEach((facet) => {
