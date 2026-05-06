@@ -26,6 +26,7 @@ packages:
   - packages/create-atomic-result-component/template/src/components/sample-result-component
   - samples/atomic/*
   - samples/headless/*
+  - samples/headless-future/*
   - samples/headless-ssr/*
   - samples/pkg-new-template
   - utils/cdn
