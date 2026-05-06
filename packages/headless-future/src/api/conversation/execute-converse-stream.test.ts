@@ -32,7 +32,8 @@ describe('executeConverseStream', () => {
 
     await executeConverseStream({
       transport,
-      body: {query: 'hello'},
+      organizationId: 'my-org',
+      body: {message: 'hello'},
       callbacks: {
         onNormalizedEvent: (event) => events.push(event.type),
       },
@@ -53,7 +54,8 @@ describe('executeConverseStream', () => {
 
     const outcome = await executeConverseStream({
       transport,
-      body: {query: 'hello'},
+      organizationId: 'my-org',
+      body: {message: 'hello'},
     });
 
     expect(outcome.kind).toBe('completed');
@@ -67,7 +69,8 @@ describe('executeConverseStream', () => {
 
     const outcome = await executeConverseStream({
       transport,
-      body: {query: 'hello'},
+      organizationId: 'my-org',
+      body: {message: 'hello'},
       signal: controller.signal,
     });
 
@@ -81,7 +84,8 @@ describe('executeConverseStream', () => {
 
     const outcome = await executeConverseStream({
       transport,
-      body: {query: 'hello'},
+      organizationId: 'my-org',
+      body: {message: 'hello'},
     });
 
     expect(outcome).toEqual({
@@ -102,7 +106,8 @@ describe('executeConverseStream', () => {
 
     await executeConverseStream({
       transport,
-      body: {query: 'hello'},
+      organizationId: 'my-org',
+      body: {message: 'hello'},
       callbacks: {
         onLifecycle: (event) => lifecycle.push(event.type),
         onUnknownEvent: (event) => unknowns.push(event.type),
@@ -125,7 +130,8 @@ describe('executeConverseStream', () => {
 
     const outcome = await executeConverseStream({
       transport,
-      body: {query: 'hello'},
+      organizationId: 'my-org',
+      body: {message: 'hello'},
     });
 
     expect(outcome).toEqual({
@@ -133,5 +139,23 @@ describe('executeConverseStream', () => {
       code: 'MODEL_FAIL',
       message: 'boom',
     });
+  });
+
+  it('uses the commerce agentic endpoint with organization substitution', async () => {
+    const transport = createScriptedTransport((request) => {
+      request.onClose();
+    });
+
+    await executeConverseStream({
+      transport,
+      organizationId: 'org-subst',
+      body: {message: 'hello'},
+    });
+
+    expect(transport.openStream).toHaveBeenCalledWith(
+      expect.objectContaining({
+        path: '/rest/organizations/org-subst/commerce/unstable/agentic',
+      })
+    );
   });
 });

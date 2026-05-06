@@ -24,6 +24,7 @@ export type ConverseStreamOutcome =
 
 export type ExecuteConverseStreamParams = {
   transport: TransportAdapter;
+  organizationId: string;
   body: unknown;
   signal?: AbortSignal;
   callbacks?: ConverseStreamCallbacks;
@@ -31,6 +32,7 @@ export type ExecuteConverseStreamParams = {
 
 export async function executeConverseStream({
   transport,
+  organizationId,
   body,
   signal,
   callbacks,
@@ -75,7 +77,7 @@ export async function executeConverseStream({
     callbacks?.onLifecycle?.({type: 'opened'});
 
     await transport.openStream({
-      path: '/rest/organizations/{organizationId}/ai/v1/converse',
+      path: `/rest/organizations/${organizationId}/commerce/unstable/agentic`,
       body,
       signal,
       onChunk: (chunk) => {

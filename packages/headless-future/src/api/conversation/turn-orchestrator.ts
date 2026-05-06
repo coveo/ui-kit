@@ -2,6 +2,7 @@ import type {FullEngine} from '@/src/core/interface/engine/engine.js';
 import * as conversationMutators from '@/src/core/interface/conversation/conversation-mutators.js';
 import * as conversationSelectors from '@/src/core/interface/conversation/conversation-selectors.js';
 import type {ConversationMessage} from '@/src/core/interface/conversation/conversation-types.js';
+import {getProductsFromCartState} from '@/src/core/interface/cart/cart-types.js';
 import type {ConversationIdStrategy} from './id-strategy.js';
 
 export type TurnContext = {
@@ -11,10 +12,25 @@ export type TurnContext = {
 };
 
 export type ConverseRequestBody = {
-  query: string;
-  sessionId?: string;
+  trackingId: string;
+  language: string;
+  country: string;
+  currency: string;
+  clientId: string;
+  message: string;
+  context: {
+    user: {
+      userAgent?: string;
+    };
+    view: {
+      url: string;
+      referrer?: string;
+    };
+    cart: Array<{productId: string; quantity: number}>;
+  };
+  conversationSessionId?: string;
   conversationToken?: string;
-  messages: Array<{role: 'user' | 'assistant'; content: string}>;
+  targetEngine: 'AGENT_CORE';
 };
 
 export const initializeTurn = (
@@ -69,18 +85,50 @@ export const buildConverseRequestBody = (
   input: string
 ): ConverseRequestBody => {
   const session = fullEngine.read(conversationSelectors.session);
-  const messages = fullEngine.read(conversationSelectors.messages);
-  const isConverseMessage = (
-    message: ConversationMessage
-  ): message is ConversationMessage & {role: 'user' | 'assistant'} =>
-    message.role !== 'system';
+  const configuration =
+    fullEngine.read((state) => state.configuration) ??
+    ({
+      trackingId: '',
+      language: '',
+      country: '',
+      currency: '',
+    } as const);
+  const navigatorContext =
+    fullEngine.read((state) => state.navigatorContext) ??
+    ({
+      clientId: '',
+      userAgent: null,
+      url: null,
+      referrer: null,
+    } as const);
+  const cart = fullEngine.read((state) => state.cart);
+
+  const contextUser: {userAgent?: string} = {};
+  if (navigatorContext.userAgent) {
+    contextUser.userAgent = navigatorContext.userAgent;
+  }
+
+  const contextView: {url: string; referrer?: string} = {
+    url: navigatorContext.url ?? '',
+  };
+  if (navigatorContext.referrer) {
+    contextView.referrer = navigatorContext.referrer;
+  }
 
   return {
-    query: input,
-    sessionId: session?.sessionId || undefined,
+    trackingId: configuration.trackingId,
+    language: configuration.language,
+    country: configuration.country,
+    currency: configuration.currency,
+    clientId: navigatorContext.clientId,
+    message: input,
+    context: {
+      user: contextUser,
+      view: contextView,
+      cart: cart ? getProductsFromCartState(cart) : [],
+    },
+    conversationSessionId: session?.conversationSessionId || undefined,
     conversationToken: session?.conversationToken || undefined,
-    messages: messages
-      .filter(isConverseMessage)
-      .map((message) => ({role: message.role, content: message.content})),
+    targetEngine: 'AGENT_CORE',
   };
 };

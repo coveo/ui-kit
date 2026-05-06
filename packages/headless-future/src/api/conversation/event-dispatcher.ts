@@ -26,7 +26,7 @@ export const dispatchStreamEvent = (
     case 'turn_started': {
       const updates: Partial<ConversationSession> = {};
       if (event.conversationSessionId) {
-        updates.sessionId = event.conversationSessionId;
+        updates.conversationSessionId = event.conversationSessionId;
       }
       if (event.conversationToken) {
         updates.conversationToken = event.conversationToken;

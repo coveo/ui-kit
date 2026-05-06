@@ -153,6 +153,38 @@ describe('getConversationRuntime', () => {
     expect(persistence.save).toHaveBeenCalledTimes(2);
   });
 
+  it('builds the outbound payload with the new converse contract', async () => {
+    const observedBodies: unknown[] = [];
+
+    const runtime = createRuntime(
+      createScriptedTransport((request) => {
+        observedBodies.push(request.body);
+        request.onClose();
+      })
+    );
+
+    await runtime.submitTurn('hello');
+
+    expect(observedBodies[0]).toEqual({
+      trackingId: '',
+      language: '',
+      country: '',
+      currency: '',
+      clientId: '',
+      message: 'hello',
+      context: {
+        user: {},
+        view: {
+          url: '',
+        },
+        cart: [],
+      },
+      conversationSessionId: undefined,
+      conversationToken: undefined,
+      targetEngine: 'AGENT_CORE',
+    });
+  });
+
   it('retries using snapshot token first and falls back to latest token', async () => {
     const observedTokens: Array<string | undefined> = [];
 
@@ -182,7 +214,7 @@ describe('getConversationRuntime', () => {
     const fullEngine = getFullEngine(engine);
     fullEngine.mutate(
       conversationMutators.updateSession({
-        sessionId: 'session-1',
+        conversationSessionId: 'session-1',
         conversationToken: 'old-token',
       })
     );
@@ -237,7 +269,7 @@ describe('getConversationRuntime', () => {
     const fullEngine = getFullEngine(engine);
     fullEngine.mutate(
       conversationMutators.updateSession({
-        sessionId: 'session-1',
+        conversationSessionId: 'session-1',
         conversationToken: 'old-token',
       })
     );
@@ -296,7 +328,7 @@ describe('getConversationRuntime', () => {
     const fullEngine = getFullEngine(engine);
     fullEngine.mutate(
       conversationMutators.updateSession({
-        sessionId: 'session-1',
+        conversationSessionId: 'session-1',
         conversationToken: 'old-token',
       })
     );

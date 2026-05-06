@@ -73,7 +73,7 @@ export type ConversationTurn = {
 
 export type ConversationSession = {
   /** Backend-assigned session ID. Empty string until the first turn is started. */
-  sessionId: string;
+  conversationSessionId: string;
   conversationToken?: string;
   threadId?: string;
   createdAt: number;

@@ -74,7 +74,7 @@ describe('buildConversationController', () => {
       turns: [],
       activeTurnId: null,
       session: {
-        sessionId: 's1',
+        conversationSessionId: 's1',
         createdAt: 1,
         updatedAt: 1,
       },

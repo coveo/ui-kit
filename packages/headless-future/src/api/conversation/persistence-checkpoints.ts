@@ -13,11 +13,16 @@ function isConversationState(value: unknown): value is ConversationState {
   const streaming = candidate.streaming as
     | Partial<ConversationState['streaming']>
     | undefined;
+  const session = candidate.session as
+    | Partial<ConversationState['session']>
+    | undefined;
 
   return (
     Array.isArray(candidate.messages) &&
     Array.isArray(candidate.turns) &&
     typeof candidate.session === 'object' &&
+    !!session &&
+    typeof session.conversationSessionId === 'string' &&
     !!streaming &&
     typeof streaming === 'object' &&
     typeof streaming.isConnected === 'boolean' &&

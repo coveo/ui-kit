@@ -19,7 +19,7 @@ import type {
 const now = () => Date.now();
 
 export const initialConversationSession: ConversationSession = {
-  sessionId: '',
+  conversationSessionId: '',
   createdAt: 0,
   updatedAt: 0,
 };

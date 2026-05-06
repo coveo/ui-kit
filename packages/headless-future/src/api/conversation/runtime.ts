@@ -277,6 +277,8 @@ const createConversationRuntime = (
 
       const outcome = await executeConverseStream({
         transport: params.transport,
+        organizationId:
+          fullEngine.read((state) => state.configuration?.organizationId) ?? '',
         body: requestBody,
         signal: activeAbortController?.signal,
         callbacks: {
