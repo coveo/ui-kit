@@ -9,7 +9,7 @@
  * - Downstream controllers and reducers can use exhaustive switch statements
  */
 
-import type {NormalizedStreamEvent, RawSSEEvent} from './types.js';
+import type {NormalizedStreamEvent, RawSSEEvent} from './stream-types.js';
 
 function readTrimmedString(value: unknown): string | null {
   if (typeof value !== 'string') return null;

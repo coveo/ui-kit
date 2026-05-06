@@ -10,7 +10,6 @@
 
 // Search API
 export {executeSearchAPI} from './search/search.js';
-export {executeConverseStream} from './conversation/execute-converse-stream.js';
 
 // HTTP utilities (for future API clients)
 export {executeHttpRequest} from './shared/http-client.js';

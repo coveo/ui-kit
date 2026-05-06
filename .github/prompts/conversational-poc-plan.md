@@ -34,32 +34,32 @@ Deliver an end-to-end agentic conversation flow in three phases, each built bott
 
 ## Locked Decisions
 
-| # | Decision | Chosen |
-|---|---|---|
-| 1 | PR scope | Phase 0 (hard reset) first, then 1 sub-phase per PR |
-| 2 | Phase 1 scope | Banned: A2UI, persistence, retry, orchestration, context-bridge |
-| 3 | Phase 1 success | User submits prompt, sees streamed text in sample |
-| 4 | Controller style | Factory function returning plain object |
-| 5 | submitTurn return | `Promise<void>` — errors in state |
-| 6 | abortTurn with no turn | Silent no-op |
-| 7 | State minimal | messages, turns, activeTurnId, session, isLoading, error, streaming.isConnected |
-| 8 | subscribe callback | `() => void`; consumer reads controller.state |
-| 9 | HTTP/stream split | `api/shared/http.ts` + `api/shared/stream.ts` |
-| 10 | SSE parsing location | Moved flat into `api/shared/` |
-| 11 | Auth | accessToken from configuration state |
-| 12 | Token refresh | No in Phase 1; set error in state |
-| 13 | Request body | Barca wire format, read from engine state |
-| 14 | Event scope Phase 1 | Parse broadly, store only essential fields |
-| 15 | Unknown/custom events | Record warning in turn state |
-| 16 | Missing terminal event | Failed/interrupted (barca parity) |
-| 17 | Session continuity | In-memory across turns via conversation.session |
-| 18 | Adapters | Deleted entirely in Phase 0 |
-| 19 | Orchestration/context-bridge | Deleted in Phase 0; reintroduced in Phase 3 |
-| 20 | Navigator context slice | Deleted; provider pattern replaces it |
-| 21 | Engine constructor update | Separate PR in Phase 1.2 (not in cleanup) |
-| 22 | Cart controller scope | `setItems(items[])` only |
-| 23 | A2UI contract style | Typed operation union + normalized render-agnostic state |
-| 24 | Phase 3 mode model | `search-first \| assistant-first` only |
+| #   | Decision                     | Chosen                                                                          |
+| --- | ---------------------------- | ------------------------------------------------------------------------------- |
+| 1   | PR scope                     | Phase 0 (hard reset) first, then 1 sub-phase per PR                             |
+| 2   | Phase 1 scope                | Banned: A2UI, persistence, retry, orchestration, context-bridge                 |
+| 3   | Phase 1 success              | User submits prompt, sees streamed text in sample                               |
+| 4   | Controller style             | Factory function returning plain object                                         |
+| 5   | submitTurn return            | `Promise<void>` — errors in state                                               |
+| 6   | abortTurn with no turn       | Silent no-op                                                                    |
+| 7   | State minimal                | messages, turns, activeTurnId, session, isLoading, error, streaming.isConnected |
+| 8   | subscribe callback           | `() => void`; consumer reads controller.state                                   |
+| 9   | HTTP/stream split            | `api/shared/http.ts` + `api/shared/stream.ts`                                   |
+| 10  | SSE parsing location         | Moved flat into `api/shared/`                                                   |
+| 11  | Auth                         | accessToken from configuration state                                            |
+| 12  | Token refresh                | No in Phase 1; set error in state                                               |
+| 13  | Request body                 | Barca wire format, read from engine state                                       |
+| 14  | Event scope Phase 1          | Parse broadly, store only essential fields                                      |
+| 15  | Unknown/custom events        | Record warning in turn state                                                    |
+| 16  | Missing terminal event       | Failed/interrupted (barca parity)                                               |
+| 17  | Session continuity           | In-memory across turns via conversation.session                                 |
+| 18  | Adapters                     | Deleted entirely in Phase 0                                                     |
+| 19  | Orchestration/context-bridge | Deleted in Phase 0; reintroduced in Phase 3                                     |
+| 20  | Navigator context slice      | Deleted; provider pattern replaces it                                           |
+| 21  | Engine constructor update    | Separate PR in Phase 1.2 (not in cleanup)                                       |
+| 22  | Cart controller scope        | `setItems(items[])` only                                                        |
+| 23  | A2UI contract style          | Typed operation union + normalized render-agnostic state                        |
+| 24  | Phase 3 mode model           | `search-first \| assistant-first` only                                          |
 
 ---
 
@@ -105,24 +105,24 @@ Create `samples/headless-future/` — Vite + React 18 + TypeScript. Engine insta
 
 ## Status Tracker
 
-| Sub-phase | Branch | Status |
-|---|---|---|
-| Phase 0 | — | ⬜ not started |
-| Phase 0.5 | — | ⬜ not started |
-| Phase 1.0 | — | ⬜ not started |
-| Phase 1.1 | — | ⬜ not started |
-| Phase 1.2 | — | ⬜ not started |
-| Phase 1.3 | — | ⬜ not started |
-| Phase 1.4 | — | ⬜ not started |
-| Phase 1.5 | — | ⬜ not started |
-| Phase 1.6 | — | ⬜ not started |
-| Phase 1.7 | — | ⬜ not started |
-| Phase 1.8 | — | ⬜ not started |
-| Phase 1.9 | — | ⬜ not started |
-| Phase 2.0 | — | ⬜ not started |
-| Phase 2.1 | — | ⬜ not started |
-| Phase 2.2 | — | ⬜ not started |
-| Phase 2.3 | — | ⬜ not started |
-| Phase 3.0 | — | ⬜ not started |
-| Phase 3.1 | — | ⬜ not started |
-| Phase 3.2 | — | ⬜ not started |
+| Sub-phase | Branch                     | Status         |
+| --------- | -------------------------- | -------------- |
+| Phase 0   | add-conversational-support | ✅ completed   |
+| Phase 0.5 | —                          | ⬜ not started |
+| Phase 1.0 | —                          | ⬜ not started |
+| Phase 1.1 | —                          | ⬜ not started |
+| Phase 1.2 | —                          | ⬜ not started |
+| Phase 1.3 | —                          | ⬜ not started |
+| Phase 1.4 | —                          | ⬜ not started |
+| Phase 1.5 | —                          | ⬜ not started |
+| Phase 1.6 | —                          | ⬜ not started |
+| Phase 1.7 | —                          | ⬜ not started |
+| Phase 1.8 | —                          | ⬜ not started |
+| Phase 1.9 | —                          | ⬜ not started |
+| Phase 2.0 | —                          | ⬜ not started |
+| Phase 2.1 | —                          | ⬜ not started |
+| Phase 2.2 | —                          | ⬜ not started |
+| Phase 2.3 | —                          | ⬜ not started |
+| Phase 3.0 | —                          | ⬜ not started |
+| Phase 3.1 | —                          | ⬜ not started |
+| Phase 3.2 | —                          | ⬜ not started |

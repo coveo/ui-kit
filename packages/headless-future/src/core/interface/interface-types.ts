@@ -22,35 +22,7 @@ export type {ResultsState} from './results/results-types.js';
 export type {FacetState, FacetValue} from './facets/facets-types.js';
 export type {PaginationState} from './pagination/pagination-types.js';
 export type {ConfigurationState} from './configuration/configuration-types.js';
-export type {NavigatorContextState} from './navigator-context/navigator-context-types.js';
 export type {CartState, CartItem, CartItemParam} from './cart/cart-types.js';
-export type {
-  ConversationState,
-  ConversationMessage,
-  ConversationTurn,
-  ConversationSession,
-  ConversationStreamingState,
-  ConversationMessageRole,
-  TurnStatus,
-  CitationRef,
-  ToolState,
-  ConversationWarningCode,
-  ConversationErrorSource,
-  StructuredConversationError,
-} from './conversation/conversation-types.js';
-export type {
-  OrchestrationState,
-  OrchestrationSnapshot,
-  OrchestrationMode,
-} from './orchestration/orchestration-types.js';
-export type {
-  SurfacesState,
-  StructuredSurface,
-} from './surfaces/surfaces-types.js';
-export type {
-  ContextBridgeState,
-  CitationLink,
-} from './context-bridge/context-bridge-types.js';
 
 // Import for use in State interface below
 import type {SearchBoxState} from './search-box/search-box-types.js';
@@ -59,12 +31,7 @@ import type {ResultsState} from './results/results-types.js';
 import type {FacetState} from './facets/facets-types.js';
 import type {PaginationState} from './pagination/pagination-types.js';
 import type {ConfigurationState} from './configuration/configuration-types.js';
-import type {NavigatorContextState} from './navigator-context/navigator-context-types.js';
 import type {CartState} from './cart/cart-types.js';
-import type {ConversationState} from './conversation/conversation-types.js';
-import type {OrchestrationState} from './orchestration/orchestration-types.js';
-import type {SurfacesState} from './surfaces/surfaces-types.js';
-import type {ContextBridgeState} from './context-bridge/context-bridge-types.js';
 
 // ============================================================================
 // Root State Interface
@@ -89,18 +56,8 @@ export interface State {
   pagination?: PaginationState;
   /** Configuration state (available after adoption) */
   configuration?: ConfigurationState;
-  /** Navigator context state (available after adoption) */
-  navigatorContext?: NavigatorContextState;
   /** Cart state (available after adoption) */
   cart?: CartState;
-  /** Conversation domain: messages, turns, session continuity */
-  conversation?: ConversationState;
-  /** Orchestration domain: backend-driven mode/phase transitions */
-  orchestration?: OrchestrationState;
-  /** Surfaces domain: normalized structured UI surfaces */
-  surfaces?: SurfacesState;
-  /** ContextBridge domain: cross-domain context bridge state */
-  contextBridge?: ContextBridgeState;
 }
 
 // ============================================================================

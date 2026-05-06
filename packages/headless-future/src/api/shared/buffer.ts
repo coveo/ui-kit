@@ -7,7 +7,7 @@
  * Handles both LF (\n\n) and CRLF (\r\n\r\n) event boundaries.
  */
 
-import type {RawSSEEvent} from './types.js';
+import type {RawSSEEvent} from './stream-types.js';
 
 export type EventProcessor = (event: RawSSEEvent) => void;
 
