@@ -84,7 +84,20 @@ Completed checklist:
 
 ### Phase 0.5 — Sample Bootstrap
 
-Create `samples/headless-future/` — Vite + React 18 + TypeScript. Engine instantiated from env vars. Listed in `pnpm-workspace.yaml`.
+Create `samples/headless-future/` — Vite + React + TypeScript. Engine instantiated from env vars. Listed in `pnpm-workspace.yaml`.
+
+Completed checklist:
+
+- [x] Created new sample app at `samples/headless-future/conversation-react` (Vite + React + TypeScript scaffold)
+- [x] Added sample package scripts and workspace wiring (`dev`, `build`, `preview`, `test`, `e2e`, `e2e:watch`) and included `samples/headless-future/*` in `pnpm-workspace.yaml`
+- [x] Added environment bootstrap files (`.env.example`, `.env.e2e`) and runtime env loader enforcing required Coveo vars
+- [x] Initialized Headless Future engine from sample env-backed configuration in sample runtime
+- [x] Added minimal sample UI shell rendering initialized configuration metadata
+- [x] Added sample unit smoke test (Vitest) and browser smoke test (Playwright) for app-load validation
+- [x] Added sample test config split (`vite.config.ts` + `vitest.config.ts`) with alias resolution needed by `@coveo/headless-future`
+- [x] Updated sample documentation (`samples/README.md` and sample-local README) to include the new Headless Future category and setup
+- [x] Verified sample health with `pnpm --filter @samples/headless-future-conversation-react test` and `pnpm --filter @samples/headless-future-conversation-react e2e`
+- [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
 
 ### Phase 1 — Basic Conversation Flow
 
@@ -119,7 +132,7 @@ Create `samples/headless-future/` — Vite + React 18 + TypeScript. Engine insta
 | Sub-phase | Branch                     | Status         |
 | --------- | -------------------------- | -------------- |
 | Phase 0   | add-conversational-support | ✅ completed   |
-| Phase 0.5 | —                          | ⬜ not started |
+| Phase 0.5 | add-conversational-support | ✅ completed   |
 | Phase 1.0 | —                          | ⬜ not started |
 | Phase 1.1 | —                          | ⬜ not started |
 | Phase 1.2 | —                          | ⬜ not started |
