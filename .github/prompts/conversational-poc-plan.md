@@ -112,6 +112,17 @@ Completed checklist:
 - **1.8** Conversation controller (Layer 2) + export
 - **1.9** Sample: wire controller to real endpoint — full end-to-end
 
+Completed checklist for 1.0:
+
+- [x] Added Layer 0 conversation interface types under `src/core/interface/conversation/conversation-types.ts`
+- [x] Defined documented `ConversationController` public interface in `src/public/controllers/conversation/conversation-controller.ts`
+- [x] Exported `ConversationController` and `ConversationControllerState` through `src/public/controllers/index.ts`
+- [x] Re-exported conversation interface types and added optional `conversation` state to the root `State` interface in `src/core/interface/interface-types.ts`
+- [x] Kept the public contract minimal for Phase 1.0: `submitTurn(input)`, `abortTurn()`, `state`, and `subscribe(callback)`
+- [x] Refined the conversation domain shape during Phase 1.0 review: roles are `user | agent`, `TurnStatus` is a discriminated union derived from a `TurnStatusMap`, turns use ordered `messageIds`, and session continuity includes optional `conversationToken`
+- [x] Added a shell test file placeholder for future controller implementation tests in Phase 1.8
+- [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
+
 ### Phase 2 — A2UI Surface Parsing
 
 - **2.0** A2UI protocol contract in `stream-types.ts`
@@ -133,7 +144,7 @@ Completed checklist:
 | --------- | -------------------------- | -------------- |
 | Phase 0   | add-conversational-support | ✅ completed   |
 | Phase 0.5 | add-conversational-support | ✅ completed   |
-| Phase 1.0 | —                          | ⬜ not started |
+| Phase 1.0 | add-conversation-types     | ✅ completed   |
 | Phase 1.1 | —                          | ⬜ not started |
 | Phase 1.2 | —                          | ⬜ not started |
 | Phase 1.3 | —                          | ⬜ not started |

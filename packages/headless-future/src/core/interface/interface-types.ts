@@ -23,6 +23,13 @@ export type {FacetState, FacetValue} from './facets/facets-types.js';
 export type {PaginationState} from './pagination/pagination-types.js';
 export type {ConfigurationState} from './configuration/configuration-types.js';
 export type {CartState, CartItem, CartItemParam} from './cart/cart-types.js';
+export type {
+  ConversationMessage,
+  ConversationTurn,
+  ConversationSession,
+  ConversationStreamingState,
+  ConversationControllerState,
+} from './conversation/conversation-types.js';
 
 // Import for use in State interface below
 import type {SearchBoxState} from './search-box/search-box-types.js';
@@ -32,6 +39,7 @@ import type {FacetState} from './facets/facets-types.js';
 import type {PaginationState} from './pagination/pagination-types.js';
 import type {ConfigurationState} from './configuration/configuration-types.js';
 import type {CartState} from './cart/cart-types.js';
+import type {ConversationControllerState} from './conversation/conversation-types.js';
 
 // ============================================================================
 // Root State Interface
@@ -58,6 +66,8 @@ export interface State {
   configuration?: ConfigurationState;
   /** Cart state (available after adoption) */
   cart?: CartState;
+  /** Conversation state (available after adoption) */
+  conversation?: ConversationControllerState;
 }
 
 // ============================================================================
