@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Listing — Headless Commerce Sample</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <nav><a href="./index.html">← Back</a></nav>
+    <div id="app">
+      <h1>Product Listing</h1>
+      <div id="main">
+        <aside id="facets"></aside>
+        <section id="results-section">
+          <div id="query-summary"></div>
+          <div id="sort"></div>
+          <div id="product-list"></div>
+          <div id="pager"></div>
+        </section>
+      </div>
+    </div>
+    <script type="module" src="/src/listing.ts"></script>
+  </body>
+</html>

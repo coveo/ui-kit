@@ -1334,6 +1334,19 @@ importers:
         specifier: 6.0.3
         version: 6.0.3
 
+  samples/headless/commerce:
+    dependencies:
+      '@coveo/headless':
+        specifier: workspace:*
+        version: link:../../../packages/headless
+    devDependencies:
+      '@playwright/test':
+        specifier: 'catalog:'
+        version: 1.59.1
+      vite:
+        specifier: 'catalog:'
+        version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(terser@5.46.2)(yaml@2.8.3)
+
   samples/headless/commerce-react:
     dependencies:
       '@coveo/headless':
