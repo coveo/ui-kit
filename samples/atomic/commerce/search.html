@@ -27,15 +27,30 @@
       });
 
       await customElements.whenDefined('atomic-commerce-interface');
-      const commerceInterface = document.querySelector('atomic-commerce-interface');
+      const commerceInterface = document.querySelector(
+        'atomic-commerce-interface'
+      );
       await commerceInterface.initializeWithEngine(engine);
       commerceInterface.executeFirstRequest();
     </script>
     <style>
-      body { margin: 0; font-family: sans-serif; }
-      nav { padding: 0.75rem 1rem; background: #f5f5f5; border-bottom: 1px solid #ddd; font-size: 0.875rem; }
-      nav a { color: #1a73e8; text-decoration: none; }
-      nav a:hover { text-decoration: underline; }
+      body {
+        margin: 0;
+        font-family: sans-serif;
+      }
+      nav {
+        padding: 0.75rem 1rem;
+        background: #f5f5f5;
+        border-bottom: 1px solid #ddd;
+        font-size: 0.875rem;
+      }
+      nav a {
+        color: #1a73e8;
+        text-decoration: none;
+      }
+      nav a:hover {
+        text-decoration: underline;
+      }
     </style>
   </head>
   <body>
@@ -61,7 +76,11 @@
             <atomic-commerce-refine-toggle></atomic-commerce-refine-toggle>
           </atomic-layout-section>
           <atomic-layout-section section="products">
-            <atomic-commerce-product-list display="grid" density="compact" image-size="small">
+            <atomic-commerce-product-list
+              display="grid"
+              density="compact"
+              image-size="small"
+            >
               <atomic-product-template>
                 <template>
                   <atomic-product-section-name>
@@ -69,12 +88,16 @@
                   </atomic-product-section-name>
                   <atomic-product-section-visual>
                     <atomic-product-field-condition if-defined="ec_thumbnails">
-                      <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+                      <atomic-product-image
+                        field="ec_thumbnails"
+                      ></atomic-product-image>
                     </atomic-product-field-condition>
                   </atomic-product-section-visual>
                   <atomic-product-section-metadata>
                     <atomic-product-field-condition if-defined="ec_brand">
-                      <atomic-product-text field="ec_brand"></atomic-product-text>
+                      <atomic-product-text
+                        field="ec_brand"
+                      ></atomic-product-text>
                     </atomic-product-field-condition>
                   </atomic-product-section-metadata>
                   <atomic-product-section-emphasized>
