@@ -3,6 +3,7 @@ import type {Preview} from '@storybook/web-components-vite';
 import {setCustomElementsManifest} from '@storybook/web-components-vite';
 import {setStorybookHelpersConfig} from '@wc-toolkit/storybook-helpers';
 import {render} from 'lit';
+import {isTemplateResult} from 'lit/directive-helpers.js';
 import {initialize, mswLoader} from 'msw-storybook-addon';
 import {within} from 'shadow-dom-testing-library';
 import {create} from 'storybook/theming';
@@ -38,7 +39,7 @@ setStorybookHelpersConfig({
   hideArgRef: true,
 });
 
-function disableAnalytics(container, selectors) {
+function disableAnalytics(container: Element, selectors: string[]) {
   selectors.forEach((selector) => {
     container.querySelectorAll(selector).forEach((element) => {
       element.setAttribute('analytics', 'false');
@@ -94,7 +95,7 @@ const preview: Preview = {
     (Story) => {
       const story = Story();
 
-      if (story?._$litType$) {
+      if (isTemplateResult(story)) {
         const container = document.createElement('div');
 
         render(story, container);
@@ -115,6 +116,8 @@ const preview: Preview = {
 
         return story;
       }
+
+      return story;
     },
   ],
   beforeEach({canvasElement, canvas}) {
