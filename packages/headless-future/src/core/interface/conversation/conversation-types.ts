@@ -38,16 +38,16 @@ export interface ConversationSession {
   conversationToken?: string;
 }
 
-export interface ConversationStreamingState {
+export interface ConversationStreaming {
   isConnected: boolean;
 }
 
-export interface ConversationControllerState {
+export interface ConversationState {
   messages: ConversationMessage[];
   turns: ConversationTurn[];
   activeTurnId: string | null;
   session: ConversationSession;
   isLoading: boolean;
   error: string | null;
-  streaming: ConversationStreamingState;
+  streaming: ConversationStreaming;
 }

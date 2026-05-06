@@ -1,8 +1,8 @@
 import type {Engine} from '@/src/core/interface/engine/engine.js';
 import type {Unsubscribe} from '@/src/core/interface/interface-types.js';
-import type {ConversationControllerState} from '@/src/core/interface/conversation/conversation-types.js';
+import type {ConversationState} from '@/src/core/interface/conversation/conversation-types.js';
 
-export type {ConversationControllerState};
+export type {ConversationState};
 
 /**
  * Conversation Controller
@@ -29,7 +29,7 @@ export interface ConversationController {
    * Current conversation state including messages, turns, session, and
    * telemetry.
    */
-  readonly state: ConversationControllerState;
+  readonly state: ConversationState;
 
   /**
    * Subscribe to state changes.

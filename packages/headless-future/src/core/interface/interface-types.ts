@@ -27,8 +27,8 @@ export type {
   ConversationMessage,
   ConversationTurn,
   ConversationSession,
-  ConversationStreamingState,
-  ConversationControllerState,
+  ConversationStreaming,
+  ConversationState,
 } from './conversation/conversation-types.js';
 
 // Import for use in State interface below
@@ -39,7 +39,7 @@ import type {FacetState} from './facets/facets-types.js';
 import type {PaginationState} from './pagination/pagination-types.js';
 import type {ConfigurationState} from './configuration/configuration-types.js';
 import type {CartState} from './cart/cart-types.js';
-import type {ConversationControllerState} from './conversation/conversation-types.js';
+import type {ConversationState} from './conversation/conversation-types.js';
 
 // ============================================================================
 // Root State Interface
@@ -67,7 +67,7 @@ export interface State {
   /** Cart state (available after adoption) */
   cart?: CartState;
   /** Conversation state (available after adoption) */
-  conversation?: ConversationControllerState;
+  conversation?: ConversationState;
 }
 
 // ============================================================================
