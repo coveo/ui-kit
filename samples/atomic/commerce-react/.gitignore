@@ -1,0 +1,7 @@
+node_modules
+dist
+playwright-report
+test-results
+public/assets
+public/lang
+public/themes

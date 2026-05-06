@@ -1,0 +1,33 @@
+header nav {
+  padding: 0.75rem 1rem;
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+header nav button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+header nav button.active {
+  background: #1a73e8;
+  color: white;
+  border-color: #1a73e8;
+}
+
+atomic-commerce-recommendation-list {
+  margin-top: var(--atomic-layout-spacing-y);
+  --atomic-recs-number-of-columns: 3;
+}
+
+@media only screen and (max-width: 1024px) {
+  atomic-commerce-recommendation-list {
+    --atomic-recs-number-of-columns: 1;
+    --atomic-recs-number-of-rows: 3;
+  }
+}
