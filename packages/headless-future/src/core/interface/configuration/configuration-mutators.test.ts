@@ -94,11 +94,37 @@ describe('configurationMutations', () => {
     });
   });
 
+  describe('new locale and tracking mutators', () => {
+    it('setTrackingId should update state', () => {
+      engine.mutate(configurationMutations.setTrackingId('tracking-123'));
+      expect(engine.read(selectors.trackingId)).toBe('tracking-123');
+    });
+
+    it('setLanguage should update state', () => {
+      engine.mutate(configurationMutations.setLanguage('en'));
+      expect(engine.read(selectors.language)).toBe('en');
+    });
+
+    it('setCountry should update state', () => {
+      engine.mutate(configurationMutations.setCountry('US'));
+      expect(engine.read(selectors.country)).toBe('US');
+    });
+
+    it('setCurrency should update state', () => {
+      engine.mutate(configurationMutations.setCurrency('USD'));
+      expect(engine.read(selectors.currency)).toBe('USD');
+    });
+  });
+
   describe('setConfiguration()', () => {
     it('should return StateMutation object', () => {
       const config = {
         organizationId: 'my-org',
         accessToken: 'my-token',
+        trackingId: 'tracking-1',
+        language: 'en',
+        country: 'US',
+        currency: 'USD',
         endpoint: 'https://custom.api.com',
       };
 
@@ -115,12 +141,20 @@ describe('configurationMutations', () => {
         configurationMutations.setConfiguration({
           organizationId: 'complete-org',
           accessToken: 'complete-token',
+          trackingId: 'tracking-1',
+          language: 'en',
+          country: 'US',
+          currency: 'USD',
           endpoint: 'https://complete.api.com',
         })
       );
 
       expect(engine.read(selectors.organizationId)).toBe('complete-org');
       expect(engine.read(selectors.accessToken)).toBe('complete-token');
+      expect(engine.read(selectors.trackingId)).toBe('tracking-1');
+      expect(engine.read(selectors.language)).toBe('en');
+      expect(engine.read(selectors.country)).toBe('US');
+      expect(engine.read(selectors.currency)).toBe('USD');
       expect(engine.read(selectors.endpoint)).toBe('https://complete.api.com');
     });
 
@@ -129,6 +163,10 @@ describe('configurationMutations', () => {
         configurationMutations.setConfiguration({
           organizationId: 'org',
           accessToken: 'token',
+          trackingId: 'tracking-1',
+          language: 'en',
+          country: 'US',
+          currency: 'USD',
         })
       );
 
@@ -142,6 +180,10 @@ describe('configurationMutations', () => {
         configurationMutations.setConfiguration({
           organizationId: 'old-org',
           accessToken: 'old-token',
+          trackingId: 'tracking-old',
+          language: 'en',
+          country: 'US',
+          currency: 'USD',
           endpoint: 'https://old.api.com',
         })
       );
@@ -150,11 +192,19 @@ describe('configurationMutations', () => {
         configurationMutations.setConfiguration({
           organizationId: 'new-org',
           accessToken: 'new-token',
+          trackingId: 'tracking-new',
+          language: 'fr',
+          country: 'CA',
+          currency: 'CAD',
         })
       );
 
       expect(engine.read(selectors.organizationId)).toBe('new-org');
       expect(engine.read(selectors.accessToken)).toBe('new-token');
+      expect(engine.read(selectors.trackingId)).toBe('tracking-new');
+      expect(engine.read(selectors.language)).toBe('fr');
+      expect(engine.read(selectors.country)).toBe('CA');
+      expect(engine.read(selectors.currency)).toBe('CAD');
       expect(engine.read(selectors.endpoint)).toBeUndefined();
     });
   });
@@ -182,6 +232,10 @@ describe('configurationMutations', () => {
         configurationMutations.setConfiguration({
           organizationId: 'initial-org',
           accessToken: 'initial-token',
+          trackingId: 'tracking-initial',
+          language: 'en',
+          country: 'US',
+          currency: 'USD',
           endpoint: 'https://initial.api.com',
         })
       );

@@ -190,6 +190,10 @@ describe('Engine: constructor()', () => {
     const config: ConfigurationState = {
       organizationId: 'my-org',
       accessToken: 'my-token',
+      trackingId: '',
+      language: '',
+      country: '',
+      currency: '',
     };
     const engine = new Engine(config);
 
@@ -205,6 +209,10 @@ describe('Engine: constructor()', () => {
     const config: ConfigurationState = {
       organizationId: 'my-org',
       accessToken: 'my-token',
+      trackingId: '',
+      language: '',
+      country: '',
+      currency: '',
       endpoint: 'https://my-endpoint.coveo.com',
     };
     const engine = new Engine(config);
@@ -218,6 +226,10 @@ describe('Engine: constructor()', () => {
     const config: ConfigurationState = {
       organizationId: 'my-org',
       accessToken: 'my-token',
+      trackingId: '',
+      language: '',
+      country: '',
+      currency: '',
     };
     const engine = new Engine(config);
 

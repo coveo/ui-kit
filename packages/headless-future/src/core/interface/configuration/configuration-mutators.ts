@@ -23,6 +23,22 @@ export const setAccessToken = (accessToken: string): StateMutation => {
   return configurationSlice.actions.setAccessToken(accessToken);
 };
 
+export const setTrackingId = (trackingId: string): StateMutation => {
+  return configurationSlice.actions.setTrackingId(trackingId);
+};
+
+export const setLanguage = (language: string): StateMutation => {
+  return configurationSlice.actions.setLanguage(language);
+};
+
+export const setCountry = (country: string): StateMutation => {
+  return configurationSlice.actions.setCountry(country);
+};
+
+export const setCurrency = (currency: string): StateMutation => {
+  return configurationSlice.actions.setCurrency(currency);
+};
+
 export const setEndpoint = (endpoint: string | undefined): StateMutation => {
   return configurationSlice.actions.setEndpoint(endpoint);
 };

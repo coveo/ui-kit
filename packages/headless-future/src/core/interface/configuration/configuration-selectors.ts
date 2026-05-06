@@ -16,6 +16,18 @@ export const organizationId = (state: StateWithConfigurationSlice) => {
 export const accessToken = (state: StateWithConfigurationSlice) => {
   return configurationSlice.selectors.accessToken(state);
 };
+export const trackingId = (state: StateWithConfigurationSlice) => {
+  return configurationSlice.selectors.trackingId(state);
+};
+export const language = (state: StateWithConfigurationSlice) => {
+  return configurationSlice.selectors.language(state);
+};
+export const country = (state: StateWithConfigurationSlice) => {
+  return configurationSlice.selectors.country(state);
+};
+export const currency = (state: StateWithConfigurationSlice) => {
+  return configurationSlice.selectors.currency(state);
+};
 export const endpoint = (state: StateWithConfigurationSlice) => {
   return configurationSlice.selectors.endpoint(state);
 };
