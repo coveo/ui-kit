@@ -91,35 +91,37 @@ const preview: Preview = {
     },
     chromatic: {disableSnapshot: true},
   },
-  decorators: [
-    (Story) => {
-      const story = Story();
+  // TEMPORARY !!!!
+  // - Disable decorator to see if changes anything since the return value was always the unmodified story
+  // decorators: [
+  //   (Story) => {
+  //     const story = Story();
 
-      if (isTemplateResult(story)) {
-        const container = document.createElement('div');
+  //     if (isTemplateResult(story)) {
+  //       const container = document.createElement('div');
 
-        render(story, container);
+  //       render(story, container);
 
-        const isTestMode =
-          typeof window !== 'undefined' &&
-          window.location.href.includes('localhost');
+  //       const isTestMode =
+  //         typeof window !== 'undefined' &&
+  //         window.location.href.includes('localhost');
 
-        if (!isTestMode) {
-          disableAnalytics(container, [
-            'atomic-recs-interface',
-            'atomic-insight-interface',
-            'atomic-search-interface',
-            'atomic-commerce-interface',
-            'atomic-commerce-recommendation-interface',
-          ]);
-        }
+  //       if (!isTestMode) {
+  //         disableAnalytics(container, [
+  //           'atomic-recs-interface',
+  //           'atomic-insight-interface',
+  //           'atomic-search-interface',
+  //           'atomic-commerce-interface',
+  //           'atomic-commerce-recommendation-interface',
+  //         ]);
+  //       }
 
-        return story;
-      }
+  //       return story;
+  //     }
 
-      return story;
-    },
-  ],
+  //     return story;
+  //   },
+  // ],
   beforeEach({canvasElement, canvas}) {
     Object.assign(canvas, {...within(canvasElement)});
   },
