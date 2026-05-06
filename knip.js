@@ -80,6 +80,10 @@ export default {
     },
     'samples/headless-ssr/commerce-nextjs': {},
     'samples/headless-ssr/commerce-nextjs-v4': {},
+    'samples/atomic/search': {
+      // Vanilla HTML sample - deps are imported in inline <script> tags within HTML, not traceable by knip.
+      ignore: ['**/*'],
+    },
     'utils/ci': {},
     'utils/cdn': {
       ignoreDependencies: ['local-web-server'],

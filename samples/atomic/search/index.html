@@ -38,7 +38,9 @@
         </atomic-layout-section>
         <atomic-layout-section section="facets">
           <atomic-facet-manager>
-            <atomic-automatic-facet-generator desired-count="5"></atomic-automatic-facet-generator>
+            <atomic-automatic-facet-generator
+              desired-count="5"
+            ></atomic-automatic-facet-generator>
             <atomic-facet field="objecttype" label="Type"></atomic-facet>
             <atomic-facet field="filetype" label="File Type"></atomic-facet>
             <atomic-facet field="author" label="Author"></atomic-facet>
@@ -49,9 +51,18 @@
             <atomic-breadbox></atomic-breadbox>
             <atomic-query-summary></atomic-query-summary>
             <atomic-sort-dropdown>
-              <atomic-sort-expression label="Relevance" expression="relevancy"></atomic-sort-expression>
-              <atomic-sort-expression label="Date (newest)" expression="date descending"></atomic-sort-expression>
-              <atomic-sort-expression label="Date (oldest)" expression="date ascending"></atomic-sort-expression>
+              <atomic-sort-expression
+                label="Relevance"
+                expression="relevancy"
+              ></atomic-sort-expression>
+              <atomic-sort-expression
+                label="Date (newest)"
+                expression="date descending"
+              ></atomic-sort-expression>
+              <atomic-sort-expression
+                label="Date (oldest)"
+                expression="date ascending"
+              ></atomic-sort-expression>
             </atomic-sort-dropdown>
             <atomic-did-you-mean></atomic-did-you-mean>
             <atomic-refine-toggle></atomic-refine-toggle>

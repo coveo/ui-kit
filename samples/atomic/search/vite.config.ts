@@ -6,7 +6,10 @@ export default defineConfig({
     alias: [
       {
         find: '@coveo/headless/package.json',
-        replacement: resolve(__dirname, '../../../packages/headless/package.json'),
+        replacement: resolve(
+          __dirname,
+          '../../../packages/headless/package.json'
+        ),
       },
       {
         find: '../../../generated/availableLocales.json',
