@@ -191,11 +191,14 @@ const config: StorybookConfig = {
         'process.env.NODE_ENV': JSON.stringify('development'),
       },
       resolve: {
-        alias: {
-          'coveo.analytics': createRequire(import.meta.url).resolve(
-            'coveo.analytics/dist/browser.mjs'
-          ),
-        },
+        alias: [
+          {
+            find: /^coveo\.analytics$/,
+            replacement: createRequire(import.meta.url).resolve(
+              'coveo.analytics/dist/browser.mjs'
+            ),
+          },
+        ],
       },
       optimizeDeps: {
         include: [
