@@ -252,7 +252,7 @@ export default function StandaloneSearchBox(props: IStandaloneSearchBoxProps) {
         X
       </button>
       <button
-        arial-label="Submit query"
+        aria-label="Submit query"
         className="SearchBoxSubmit"
         disabled={state.isLoading}
         onClick={onClickSearchBoxSubmit}

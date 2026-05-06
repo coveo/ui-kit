@@ -1,5 +1,6 @@
 import {
   buildCommerceEngine,
+  getSampleCommerceEngineConfiguration,
   type CommerceEngine,
 } from '@coveo/headless/commerce';
 import {loadCartItemsFromLocalStorage} from '../utils/cart-utils.js';
@@ -9,31 +10,14 @@ export const getEngine = () => {
     return _engine;
   }
 
-  const organizationId = 'searchuisamples';
+  const sampleConfiguration = getSampleCommerceEngineConfiguration();
 
   _engine = buildCommerceEngine({
     configuration: {
-      accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-      organizationId,
-      analytics: {
-        trackingId: 'sports-ui-samples',
-      },
-      context: {
-        language: 'en',
-        country: 'US',
-        currency: 'USD',
-        view: {
-          url: 'https://sports.barca.group',
-        },
-        custom: {
-          stringKey: 'sampleValue',
-          numberKey: 42,
-          arrayKey: [1, 2, 3],
-          objectKey: {nested: 'value'},
-        },
-      },
+      ...sampleConfiguration,
       cart: {
-        items: loadCartItemsFromLocalStorage() ?? [],
+        items:
+          loadCartItemsFromLocalStorage() ?? sampleConfiguration.cart?.items ?? [],
       },
     },
   });

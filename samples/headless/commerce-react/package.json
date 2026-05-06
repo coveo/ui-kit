@@ -2,15 +2,17 @@
   "name": "@samples/headless-commerce-react",
   "version": "0.1.0",
   "private": true,
+  "description": "React sample for Coveo Headless Commerce controllers",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "e2e": "playwright test",
     "test": "vitest run"
   },
   "dependencies": {
-    "@coveo/headless": "workspace:*",
+    "@coveo/headless": "npm:@coveo/headless@3.50.1",
     "react": "catalog:",
     "react-dom": "catalog:"
   },
@@ -34,5 +36,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "engines": {
+    "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
   }
 }

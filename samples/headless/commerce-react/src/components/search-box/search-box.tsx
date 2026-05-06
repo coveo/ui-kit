@@ -216,6 +216,7 @@ export default function SearchBox(props: ISearchBoxProps) {
   return (
     <div className="Searchbox">
       <input
+        aria-label="Enter query"
         className="SearchBoxInput"
         id="search-box"
         onInput={onSearchBoxInputChange}
@@ -236,7 +237,7 @@ export default function SearchBox(props: ISearchBoxProps) {
         X
       </button>
       <button
-        arial-label="Submit query"
+        aria-label="Submit query"
         className="SearchBoxSubmit"
         disabled={state.isLoading}
         onClick={onClickSearchBoxSubmit}
