@@ -39,9 +39,9 @@ setStorybookHelpersConfig({
   hideArgRef: true,
 });
 
-function disableAnalytics(container: Element, selectors: string[]) {
+function disableAnalytics(fragment: DocumentFragment, selectors: string[]) {
   selectors.forEach((selector) => {
-    container.querySelectorAll(selector).forEach((element) => {
+    fragment.querySelectorAll(selector).forEach((element) => {
       element.setAttribute('analytics', 'false');
     });
   });
@@ -96,16 +96,16 @@ const preview: Preview = {
       const story = Story();
 
       if (isTemplateResult(story)) {
-        const container = document.createElement('div');
+        const fragment = document.createDocumentFragment();
 
-        render(story, container);
+        render(story, fragment);
 
         const isTestMode =
           typeof window !== 'undefined' &&
           window.location.href.includes('localhost');
 
         if (!isTestMode) {
-          disableAnalytics(container, [
+          disableAnalytics(fragment, [
             'atomic-recs-interface',
             'atomic-insight-interface',
             'atomic-search-interface',
@@ -114,7 +114,7 @@ const preview: Preview = {
           ]);
         }
 
-        return container;
+        return fragment;
       }
 
       return story;
