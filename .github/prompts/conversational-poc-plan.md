@@ -71,6 +71,17 @@ Delete: `api/adapters/`, current `api/conversation/`, `api/protocol/` (move firs
 Move: `api/protocol/*.ts` → `api/shared/` (rename `types.ts` → `stream-types.ts`).
 Update exports in `src/index.ts`, `core/index.ts`, `interface-types.ts`, `controllers/index.ts`, `actions/index.ts`.
 
+Completed checklist:
+
+- [x] Deleted `api/adapters/` and `api/conversation/` (including associated tests)
+- [x] Moved protocol files to `api/shared/` and renamed `types.ts` to `stream-types.ts`
+- [x] Deleted targeted Layer 0 domains under `core/internal/` and `core/interface/` for conversation, surfaces, orchestration, context-bridge, and navigator-context
+- [x] Deleted targeted Layer 2/3 modules: conversation/surface/orchestration/context-bridge controllers and navigator-context actions
+- [x] Updated exports and references in `src/index.ts`, `src/api/index.ts`, `core/interface/interface-types.ts`, `public/controllers/index.ts`, and `public/actions/index.ts`
+- [x] Deleted obsolete doc `packages/headless-future/docs/unified-interface-example.md`
+- [x] Updated conversational POC plan trackers (`.github/prompts/conversational-poc-plan.md` and `/memories/repo/conversational-poc-plan.md`) with Phase 0 completion details
+- [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
+
 ### Phase 0.5 — Sample Bootstrap
 
 Create `samples/headless-future/` — Vite + React 18 + TypeScript. Engine instantiated from env vars. Listed in `pnpm-workspace.yaml`.
