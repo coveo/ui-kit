@@ -66,6 +66,7 @@
     "build:angular": "npx turbo gen:lit --filter=@coveo/atomic-angular-builder",
     "build:react": "npx turbo gen:lit --filter=@coveo/atomic-react",
     "dev:storybook": "storybook dev -p 4400",
+    "prod": "ws --directory dist-storybook --port 4400 --spa index.html",
     "web:dev": "npx vite serve dev",
     "web:cdn": "node ./scripts/start-cdn.mjs",
     "test": "pnpm run test:lit",
