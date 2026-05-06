@@ -1,0 +1,47 @@
+<template>
+  <div data-testid="generated-answer__body">
+    <div class="generated-answer__answer">
+      <c-quantic-generated-answer-content
+        answer-content-format={generatedAnswer.answerContentFormat}
+        answer={generatedAnswer.answer}
+        is-streaming={generatedAnswer.isStreaming}
+      ></c-quantic-generated-answer-content>
+    </div>
+
+    <template lwc:if={shouldDisplayCitations}>
+      <div class="slds-var-m-top_small">
+        <c-quantic-source-citations
+          engine-id={engineId}
+          data-testid="generated-answer__citations"
+          citations={generatedAnswer.citations}
+          citation-hover-handler={handleCitationHover}
+          disable-citation-anchoring={disableCitationAnchoring}
+        ></c-quantic-source-citations>
+      </div>
+    </template>
+
+    <template lwc:if={shouldDisplayActions}>
+      <div data-testid="generated-answer__actions" class="slds-grid slds-var-m-top_small">
+        <c-quantic-feedback
+          state={feedbackState}
+          like-icon-name="utility:like"
+          like-label={labels.thisAnswerWasHelpful}
+          dislike-icon-name="utility:dislike"
+          dislike-label={labels.thisAnswerWasNotHelpful}
+          size="xx-small"
+          question=""
+          hide-explain-why-button
+          hide-labels
+          onquantic__like={handleLike}
+          onquantic__dislike={handleDislike}
+        ></c-quantic-feedback>
+        <c-quantic-generated-answer-copy-to-clipboard
+          data-testid="generated-answer__copy-to-clipboard"
+          answer={generatedAnswer.answer}
+          class="slds-var-m-horizontal_xx-small"
+          onquantic__generatedanswercopy={handleGeneratedAnswerCopy}
+        ></c-quantic-generated-answer-copy-to-clipboard>
+      </div>
+    </template>
+  </div>
+</template>
