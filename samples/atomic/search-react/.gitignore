@@ -1,0 +1,5 @@
+node_modules
+dist
+public/assets
+public/lang
+public/themes

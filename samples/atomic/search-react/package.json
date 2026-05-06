@@ -1,0 +1,31 @@
+{
+  "name": "@samples/atomic-search-react",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:assets": "node ../../../utils/ci/copy-files.mjs ../../../packages/atomic-react/dist/assets public/assets ../../../packages/atomic-react/dist/lang public/lang ../../../packages/atomic/dist/themes public/themes",
+    "dev": "pnpm build:assets && pnpm dev:vite",
+    "dev:vite": "vite",
+    "build": "pnpm build:ts && pnpm build:vite",
+    "build:ts": "tsc -b",
+    "build:vite": "vite build",
+    "e2e": "playwright test",
+    "e2e:watch": "playwright test --ui"
+  },
+  "dependencies": {
+    "@coveo/atomic-react": "workspace:*",
+    "@coveo/headless": "workspace:*",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@playwright/test": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  }
+}

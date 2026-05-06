@@ -1142,6 +1142,43 @@ importers:
         specifier: 6.0.3
         version: 6.0.3
 
+  samples/atomic/search-react:
+    dependencies:
+      '@coveo/atomic-react':
+        specifier: workspace:*
+        version: link:../../../packages/atomic-react
+      '@coveo/headless':
+        specifier: workspace:*
+        version: link:../../../packages/headless
+      react:
+        specifier: 19.2.5
+        version: 19.2.5
+      react-dom:
+        specifier: 19.2.5
+        version: 19.2.5(react@19.2.5)
+    devDependencies:
+      '@playwright/test':
+        specifier: 'catalog:'
+        version: 1.59.1
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.12.2
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.2.3(@types/react@19.2.14)
+      '@vitejs/plugin-react':
+        specifier: 'catalog:'
+        version: 6.0.1(vite@8.0.10(@types/node@24.12.2)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(terser@5.46.2)(yaml@2.8.3))
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vite:
+        specifier: 'catalog:'
+        version: 8.0.10(@types/node@24.12.2)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(terser@5.46.2)(yaml@2.8.3)
+
   samples/atomic/search-vuejs:
     dependencies:
       '@coveo/atomic':
