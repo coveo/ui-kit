@@ -99,6 +99,13 @@
     <shortDescription>- Show less</shortDescription>
   </labels>
   <labels>
+    <fullName>quantic_ShowPreviousQuestions</fullName>
+    <value>Show previous questions</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Show previous questions</shortDescription>
+  </labels>
+  <labels>
     <fullName>quantic_ShowMoreFacetValues</fullName>
     <value>Show more values for the {{0}} facet</value>
     <language>en_US</language>
