@@ -123,6 +123,18 @@ Completed checklist for 1.0:
 - [x] Added a shell test file placeholder for future controller implementation tests in Phase 1.8
 - [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
 
+Completed checklist for 1.1:
+
+- [x] Added the Layer 0 conversation slice under `src/core/internal/conversation/conversation-slice.ts`
+- [x] Implemented the Phase 1.1 reducer surface: `startTurn`, `appendAgentChunk`, `completeTurn`, `failTurn`, `abortTurn`, `setSession`, `setError`, and `setStreamingConnected`
+- [x] Kept reducers pure with caller-supplied turn/message IDs and silent no-op behavior for unknown turns
+- [x] Modeled agreed lifecycle behavior: eager placeholder agent message creation, terminal action cleanup, abort placeholder removal, and full session replacement
+- [x] Added library-agnostic conversation mutators and selectors under `src/core/interface/conversation/`
+- [x] Added reducer and engine-backed selector/mutator coverage for the conversation state domain
+- [x] Documented public operation payload types and normalized JSDoc formatting in `src/core/interface/conversation/conversation-types.ts`
+- [x] Strengthened slice test coverage: added high-priority test cases for fail/abort no-ops, fail-after-streaming, and multi-turn accumulation (16 tests total)
+- [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
+
 ### Phase 2 — A2UI Surface Parsing
 
 - **2.0** A2UI protocol contract in `stream-types.ts`
@@ -140,24 +152,24 @@ Completed checklist for 1.0:
 
 ## Status Tracker
 
-| Sub-phase | Branch                     | Status         |
-| --------- | -------------------------- | -------------- |
-| Phase 0   | add-conversational-support | ✅ completed   |
-| Phase 0.5 | add-conversational-support | ✅ completed   |
-| Phase 1.0 | add-conversation-types     | ✅ completed   |
-| Phase 1.1 | —                          | ⬜ not started |
-| Phase 1.2 | —                          | ⬜ not started |
-| Phase 1.3 | —                          | ⬜ not started |
-| Phase 1.4 | —                          | ⬜ not started |
-| Phase 1.5 | —                          | ⬜ not started |
-| Phase 1.6 | —                          | ⬜ not started |
-| Phase 1.7 | —                          | ⬜ not started |
-| Phase 1.8 | —                          | ⬜ not started |
-| Phase 1.9 | —                          | ⬜ not started |
-| Phase 2.0 | —                          | ⬜ not started |
-| Phase 2.1 | —                          | ⬜ not started |
-| Phase 2.2 | —                          | ⬜ not started |
-| Phase 2.3 | —                          | ⬜ not started |
-| Phase 3.0 | —                          | ⬜ not started |
-| Phase 3.1 | —                          | ⬜ not started |
-| Phase 3.2 | —                          | ⬜ not started |
+| Sub-phase | Branch                           | Status         |
+| --------- | -------------------------------- | -------------- |
+| Phase 0   | add-conversational-support       | ✅ completed   |
+| Phase 0.5 | add-conversational-support       | ✅ completed   |
+| Phase 1.0 | add-conversation-types           | ✅ completed   |
+| Phase 1.1 | add-slice-mutators-and-selectors | ✅ completed   |
+| Phase 1.2 | —                                | ⬜ not started |
+| Phase 1.3 | —                                | ⬜ not started |
+| Phase 1.4 | —                                | ⬜ not started |
+| Phase 1.5 | —                                | ⬜ not started |
+| Phase 1.6 | —                                | ⬜ not started |
+| Phase 1.7 | —                                | ⬜ not started |
+| Phase 1.8 | —                                | ⬜ not started |
+| Phase 1.9 | —                                | ⬜ not started |
+| Phase 2.0 | —                                | ⬜ not started |
+| Phase 2.1 | —                                | ⬜ not started |
+| Phase 2.2 | —                                | ⬜ not started |
+| Phase 2.3 | —                                | ⬜ not started |
+| Phase 3.0 | —                                | ⬜ not started |
+| Phase 3.1 | —                                | ⬜ not started |
+| Phase 3.2 | —                                | ⬜ not started |
