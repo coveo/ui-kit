@@ -140,11 +140,12 @@ Completed checklist for 1.2:
 - [x] Added `EngineOptions` under `src/core/interface/engine/engine-options.ts` with optional `configuration` and `navigatorContextProvider`
 - [x] Added minimal navigator context types under `src/core/interface/navigator-context/navigator-context-types.ts` (`clientId`, `location`, `referrer`, `userAgent`)
 - [x] Updated `Engine` constructor to `new Engine(options?: EngineOptions)` and wired navigator context provider storage for lazy retrieval
-- [x] Added `getNavigatorContextProvider()` on `Engine` for Phase 1.5 request-builder integration
+- [x] Implemented `getNavigatorContextProvider()` for Phase 1.5 request-builder integration (exposed via `FullEngine` type only; internal to preserve minimal public API)
 - [x] Restored planned missing-provider behavior: warn and continue when no `navigatorContextProvider` is configured (warn-on-first-use)
 - [x] Updated `Engine` constructor tests to cover options-based configuration, provider wiring, and missing-provider warning behavior
 - [x] Exported `EngineOptions`, `NavigatorContext`, and `NavigatorContextProvider` via `src/core/index.ts` and package root `src/index.ts`
 - [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
+- [x] Post-Phase-1.2 refinement: moved `getNavigatorContextProvider()` from public `Engine` to internal `FullEngine` type to minimize public API surface
 
 ### Phase 2 — A2UI Surface Parsing
 
