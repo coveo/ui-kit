@@ -15,9 +15,11 @@ import type {
   StateSelector,
   StateChangeCallback,
   StateMutation,
-  ConfigurationState,
 } from '@/src/core/interface/interface-types.js';
+import type {ConfigurationState} from '@/src/core/interface/configuration/configuration-types.js';
 import {configurationSlice} from '../../internal/configuration/configuration-slice.js';
+import type {EngineOptions} from '@/src/core/interface/engine/engine-options.js';
+import type {NavigatorContextProvider} from '@/src/core/interface/navigator-context/navigator-context-types.js';
 
 export type FullEngine = Engine & {
   adoptSlice(slice: Slice): Promise<void>;
@@ -36,11 +38,15 @@ export class Engine {
   #store: ReturnType<typeof configureStore>;
   #adoptedSlices: WeakSet<Slice>;
   #rootReducer = combineSlices({});
+  #navigatorContextProvider: NavigatorContextProvider | undefined;
+  #didWarnMissingNavigatorContextProvider = false;
 
-  constructor(configuration?: ConfigurationState) {
+  constructor(options?: EngineOptions) {
     this.#adoptedSlices = new WeakSet<Slice>();
     this.#store = configureStore({reducer: this.#rootReducer});
-    this.#initializeConfiguration(configuration);
+
+    this.#initializeConfiguration(options?.configuration);
+    this.#initializeNavigatorContext(options?.navigatorContextProvider);
   }
 
   static {
@@ -76,6 +82,10 @@ export class Engine {
     this.#mutate(configurationSlice.actions.setConfiguration(configuration));
   }
 
+  #initializeNavigatorContext(provider?: NavigatorContextProvider) {
+    this.#navigatorContextProvider = provider;
+  }
+
   #mutate(mutation: StateMutation): void {
     this.#getStore().dispatch(mutation);
   }
@@ -99,6 +109,28 @@ export class Engine {
   // ============================================================================
   // Public Instance Methods
   // ============================================================================
+
+  /**
+   * Get the navigator context provider function.
+   *
+   * This provider is called lazily (per turn) to retrieve client context
+   * (referrer, userAgent, location, clientId) for API requests.
+   *
+   * @returns The navigator context provider function, or undefined if not provided.
+   */
+  getNavigatorContextProvider(): NavigatorContextProvider | undefined {
+    if (
+      !this.#navigatorContextProvider &&
+      !this.#didWarnMissingNavigatorContextProvider
+    ) {
+      this.#didWarnMissingNavigatorContextProvider = true;
+      console.warn(
+        '[WARNING] Missing navigator context provider. Provide `navigatorContextProvider` in Engine options before using conversational requests.'
+      );
+    }
+
+    return this.#navigatorContextProvider;
+  }
 
   /**
    * Read a value from the current state

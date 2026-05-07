@@ -23,6 +23,11 @@
 // ============================================================================
 
 export {Engine} from './interface/engine/engine.js';
+export type {EngineOptions} from './interface/engine/engine-options.js';
+export type {
+  NavigatorContext,
+  NavigatorContextProvider,
+} from './interface/navigator-context/navigator-context-types.js';
 
 // ============================================================================
 // Shared Types
