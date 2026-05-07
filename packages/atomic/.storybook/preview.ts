@@ -54,6 +54,7 @@ const preview: Preview = {
         method: 'alphabetical',
         order: [
           'Coveo Atomic Storybook',
+          'Colors',
           'Search',
           ['Introduction', 'Example Pages', '*'],
           'Commerce',
