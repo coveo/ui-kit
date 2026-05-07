@@ -198,6 +198,7 @@ jobs:
           private-key: ${{ secrets.APP_COVEO_DEV_TOOLS_PRIVATE_KEY }}
           repositories: doc_jekyll-public-site
       - name: Notify Docs
+        continue-on-error: true
         run: pnpm run notify:docs
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
