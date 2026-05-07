@@ -126,6 +126,11 @@ describe('atomic-generated-answer', () => {
       get generatedContent() {
         return element.shadowRoot?.querySelector('[part="generated-content"]')!;
       },
+      get generatedAnswerContentWrapper() {
+        return element.shadowRoot?.querySelector(
+          '[part="generated-content-container"] > div:first-child'
+        )!;
+      },
       get scrollableContainer() {
         return element.shadowRoot?.querySelector(
           '[part="generated-content-container"] .agent-scrollable'
@@ -984,6 +989,38 @@ describe('atomic-generated-answer', () => {
   });
 
   describe('follow up capability', () => {
+    it('should style the generated answer content wrapper with a light gray background when follow-ups are enabled', async () => {
+      const {generatedAnswerContentWrapper} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-123'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          isEnabled: true,
+        }),
+        generatedAnswerOverrides: {
+          askFollowUp: vi.fn(),
+        },
+      });
+
+      expect(
+        getComputedStyle(generatedAnswerContentWrapper).backgroundColor
+      ).toBe('rgb(249, 250, 251)');
+    });
+
+    it('should not style the generated answer content wrapper when follow-ups are disabled', async () => {
+      const {generatedAnswerContentWrapper} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-123'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          isEnabled: false,
+        }),
+        generatedAnswerOverrides: {
+          askFollowUp: vi.fn(),
+        },
+      });
+
+      expect(
+        getComputedStyle(generatedAnswerContentWrapper).backgroundColor
+      ).not.toBe('rgb(249, 250, 251)');
+    });
+
     it('should render a scrollable content container when agentId is provided', async () => {
       const {scrollableContainer} = await renderGeneratedAnswer({
         props: {agentId: 'agent-123'},

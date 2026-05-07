@@ -138,6 +138,16 @@ const baseStyle = css`
   }
 
   /**
+   * @prop --atomic-generated-answer-content-background: The background color of the generated answer content wrapper.
+   */
+  .generated-answer-content-background {
+    background-color: var(
+      --atomic-generated-answer-content-background,
+      var(--atomic-background)
+    );
+  }
+
+  /**
    * @prop --atomic-generated-answer-content-fixed-height: The fixed height of the generated answer content when agent-id is set.
    */
   [part='generated-content-container'] .agent-scrollable {

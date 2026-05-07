@@ -417,6 +417,8 @@ export class AtomicGeneratedAnswer
                   <div
                     class=${classMap({
                       'px-6': true,
+                      'generated-answer-content-background':
+                        this.areFollowUpsEnabled,
                       'agent-scrollable': this.areFollowUpsEnabled,
                     })}
                   >
@@ -772,7 +774,7 @@ export class AtomicGeneratedAnswer
     if (!this.areFollowUpsEnabled) {
       return nothing;
     }
-    return html` <div class="mb-2">
+    return html` <div class="mb-2 mt-2">
       <atomic-ask-follow-up-input
         .i18n=${this.bindings.i18n}
         .askFollowUp=${this.handleAskFollowUp.bind(this)}
