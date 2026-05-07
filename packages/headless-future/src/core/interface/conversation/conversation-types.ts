@@ -1,13 +1,30 @@
+/**
+ * ============================================================================
+ * Domain types (for state / selectors)
+ * ============================================================================
+ */
+
 export type ConversationMessageRole = 'user' | 'agent';
 
 export interface ConversationMessage {
-  /** The unique identifier of the message. */
+  /**
+   * The unique identifier of the message.
+   */
   id: string;
-  /** The origin of the message. */
+
+  /**
+   * The origin of the message.
+   */
   role: ConversationMessageRole;
-  /** The message content. */
+
+  /**
+   * The message content.
+   */
   content: string;
-  /** The message creation time in epoch milliseconds. */
+
+  /**
+   * The message creation time in epoch milliseconds.
+   */
   createdAt: number;
 }
 
@@ -30,43 +47,148 @@ export type TurnStatus = {
 }[keyof TurnStatusMap];
 
 export interface ConversationTurn {
-  /** The unique identifier of the turn. */
+  /**
+   * The unique identifier of the turn.
+   */
   id: string;
-  /** The ordered references to the messages that belong to this turn. */
+
+  /**
+   * The ordered references to the messages that belong to this turn.
+   */
   messageIds: string[];
-  /** The current lifecycle status for this turn. */
+
+  /**
+   * The current lifecycle status for this turn.
+   */
   status: TurnStatus;
-  /** The turn creation time in epoch milliseconds. */
+
+  /**
+   * The turn creation time in epoch milliseconds.
+   */
   createdAt: number;
-  /** The turn completion time in epoch milliseconds, if available. */
+
+  /**
+   * The turn completion time in epoch milliseconds, if available.
+   */
   finalizedAt?: number;
 }
 
 export interface ConversationSession {
-  /** The backend-issued session id used for continuity across turns. */
+  /**
+   * The backend-issued session id used for continuity across turns.
+   */
   conversationSessionId?: string;
-  /** The token issued by the backend after the first turn. */
+
+  /**
+   * The token issued by the backend after the first turn.
+   */
   conversationToken?: string;
 }
 
 export interface ConversationStreaming {
-  /** Whether the stream is currently connected for the active turn. */
+  /**
+   * Whether the stream is currently connected for the active turn.
+   */
   isConnected: boolean;
 }
 
 export interface ConversationState {
-  /** The conversation messages. */
+  /**
+   * The conversation messages.
+   */
   messages: ConversationMessage[];
-  /** The turn records used to track lifecycle and warnings/errors. */
+
+  /**
+   * The turn records used to track lifecycle and warnings/errors.
+   */
   turns: ConversationTurn[];
-  /** The pointer to the currently active turn (if any). */
+
+  /**
+   * The pointer to the currently active turn (if any).
+   */
   activeTurnId: string | null;
-  /** The in-memory session continuity payload for the converse endpoint. */
+
+  /**
+   * The in-memory session continuity payload for the converse endpoint.
+   */
   session: ConversationSession;
-  /** Whether a conversation operation is currently in progress. */
+
+  /**
+   * Whether a conversation operation is currently in progress.
+   */
   isLoading: boolean;
-  /** The last human-readable error associated with conversation operations. */
+
+  /**
+   * The last human-readable error associated with conversation operations.
+   */
   error: string | null;
-  /** The streaming connection state for the active conversation turn. */
+
+  /**
+   * The streaming connection state for the active conversation turn.
+   */
   streaming: ConversationStreaming;
+}
+
+/**
+ * ============================================================================
+ * Operation types (for mutations / actions)
+ * ============================================================================
+ */
+
+export interface StartTurnPayload {
+  /**
+   * The unique identifier for the turn to create.
+   */
+  turnId: string;
+
+  /**
+   * The identifier for the user-authored message in this turn.
+   */
+  userMessageId: string;
+
+  /**
+   * The identifier for the placeholder agent message in this turn.
+   */
+  agentMessageId: string;
+
+  /**
+   * The raw user input text submitted for this turn.
+   */
+  input: string;
+
+  /**
+   * The client timestamp (epoch ms) used as turn and message creation time.
+   */
+  createdAt: number;
+}
+
+export interface AppendAgentChunkPayload {
+  /**
+   * The identifier of the turn receiving streamed assistant content.
+   */
+  turnId: string;
+
+  /**
+   * The incremental assistant text chunk to append to the agent message.
+   */
+  chunk: string;
+}
+
+export interface FinalizeTurnPayload {
+  /**
+   * The identifier of the turn to finalize.
+   */
+  turnId: string;
+
+  /**
+   * The client timestamp (epoch ms) for terminal transition completion.
+   */
+  finalizedAt: number;
+}
+
+export interface FailTurnPayload extends FinalizeTurnPayload {
+  /**
+   * The normalized terminal failure reason for the turn lifecycle.
+   */
+  reason: Extract<TurnStatus, {type: 'failed'}>['reason'];
 }
