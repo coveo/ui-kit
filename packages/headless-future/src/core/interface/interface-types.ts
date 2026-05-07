@@ -26,7 +26,7 @@ export type {
   NavigatorContext,
   NavigatorContextProvider,
 } from './navigator-context/navigator-context-types.js';
-export type {CartState, CartItem, CartItemParam} from './cart/cart-types.js';
+export type {CartState, CartItem} from './cart/cart-types.js';
 export type {
   ConversationMessage,
   ConversationTurn,
