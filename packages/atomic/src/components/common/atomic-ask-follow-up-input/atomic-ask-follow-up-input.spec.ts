@@ -27,6 +27,7 @@ describe('atomic-ask-follow-up-input', () => {
     props: {
       submitButtonDisabled?: boolean;
       askFollowUp?: (query: string) => Promise<void>;
+      withColoredBorder?: boolean;
     } = {}
   ) => {
     const element = await fixture<AtomicAskFollowUpInput>(html`
@@ -35,6 +36,7 @@ describe('atomic-ask-follow-up-input', () => {
         .submitButtonDisabled=${props.submitButtonDisabled ?? false}
         .askFollowUp=${props.askFollowUp ??
         vi.fn().mockResolvedValue(undefined)}
+        .withColoredBorder=${props.withColoredBorder ?? false}
       ></atomic-ask-follow-up-input>
     `);
 
@@ -117,6 +119,18 @@ describe('atomic-ask-follow-up-input', () => {
       const {submitButton} = await renderComponent();
       const buttonElement = submitButton.element() as HTMLButtonElement;
       expect(buttonElement.type).toBe('button');
+    });
+
+    it('should display a colored border when enabled', async () => {
+      const {parts} = await renderComponent({withColoredBorder: true});
+
+      expect(parts().inputContainer).toHaveClass('colored-border');
+    });
+
+    it('should not display a colored border by default', async () => {
+      const {parts} = await renderComponent();
+
+      expect(parts().inputContainer).not.toHaveClass('colored-border');
     });
   });
 

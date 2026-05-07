@@ -245,7 +245,12 @@ export class AtomicGeneratedAnswer
   @state()
   private copyError = false;
 
+  @state()
+  private withFollowUpInputColoredBorder = false;
+
   private ariaMessage = new AriaLiveRegionController(this, 'generated-answer');
+  private followUpInputColoredBorderTimeout?: number;
+  private lastHighlightedAnswerKey = '';
 
   constructor() {
     super();
@@ -307,9 +312,12 @@ export class AtomicGeneratedAnswer
   disconnectedCallback() {
     super.disconnectedCallback();
     this.resizeObserver?.disconnect();
+    window.clearTimeout(this.followUpInputColoredBorderTimeout);
   }
 
   protected willUpdate(changedProperties: PropertyValueMap<this>) {
+    this.updateFollowUpInputColoredBorder();
+
     if (changedProperties.has('tabManagerState' as keyof this)) {
       const oldValue = changedProperties.get(
         'tabManagerState' as keyof this
@@ -768,15 +776,49 @@ export class AtomicGeneratedAnswer
     }
   }
 
+  private updateFollowUpInputColoredBorder() {
+    if (
+      !this.generatedAnswerState ||
+      !this.areFollowUpsEnabled ||
+      this.isAnswerGenerationOngoing
+    ) {
+      return;
+    }
+
+    const latestAnswer =
+      this.generatedAnswerWithFollowUps?.state.followUpAnswers?.followUpAnswers.at(
+        -1
+      ) ?? this.generatedAnswerState;
+    const latestAnswerKey = latestAnswer.answer?.trim()
+      ? (latestAnswer.answerId ?? latestAnswer.answer)
+      : '';
+
+    if (!latestAnswerKey || latestAnswerKey === this.lastHighlightedAnswerKey) {
+      return;
+    }
+
+    this.lastHighlightedAnswerKey = latestAnswerKey;
+    this.highlightFollowUpInput();
+  }
+
+  private highlightFollowUpInput() {
+    window.clearTimeout(this.followUpInputColoredBorderTimeout);
+    this.withFollowUpInputColoredBorder = true;
+    this.followUpInputColoredBorderTimeout = window.setTimeout(() => {
+      this.withFollowUpInputColoredBorder = false;
+    }, 3000);
+  }
+
   private renderAskFollowUpInputWrapper() {
     if (!this.areFollowUpsEnabled) {
       return nothing;
     }
-    return html` <div class="mb-2">
+    return html` <div class="mb-2 mt-2">
       <atomic-ask-follow-up-input
         .i18n=${this.bindings.i18n}
         .askFollowUp=${this.handleAskFollowUp.bind(this)}
         .submitButtonDisabled=${this.isAnswerGenerationOngoing}
+        .withColoredBorder=${this.withFollowUpInputColoredBorder}
       >
       </atomic-ask-follow-up-input>
     </div>`;

@@ -13,7 +13,7 @@ import {
 } from '@coveo/headless';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderAnswerContent} from '@/src/components/common/generated-answer/render-answer-content';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
@@ -207,6 +207,15 @@ describe('atomic-generated-answer', () => {
           ) as HTMLButtonElement | null) ?? null
         );
       },
+      get followUpInputWithColoredBorder() {
+        return (
+          (
+            this.followUpInputComponent as
+              | (HTMLElement & {withColoredBorder?: boolean})
+              | null
+          )?.withColoredBorder ?? false
+        );
+      },
     };
   };
 
@@ -249,6 +258,10 @@ describe('atomic-generated-answer', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   describe('when answer is available', () => {
@@ -1236,6 +1249,47 @@ describe('atomic-generated-answer', () => {
       await vi.waitFor(() => {
         expect(askFollowUp).toHaveBeenCalledWith('Follow up question');
       });
+    });
+
+    it('should highlight the follow-up input border for 3 seconds when answers complete', async () => {
+      vi.useFakeTimers();
+      const rendered = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState({
+          followUpAnswers: [],
+          stateOverrides: {
+            answer: 'Initial answer',
+            isLoading: false,
+            isStreaming: false,
+          },
+        }),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      expect(rendered.followUpInputWithColoredBorder).toBe(true);
+
+      vi.advanceTimersByTime(3000);
+      await rendered.element.updateComplete;
+      expect(rendered.followUpInputWithColoredBorder).toBe(false);
+
+      const generatedAnswerWithFollowUps = rendered.element
+        .generatedAnswer as GeneratedAnswerWithFollowUps;
+      generatedAnswerWithFollowUps.state.followUpAnswers.followUpAnswers = [
+        buildFollowUpAnswerEntry({
+          answerId: 'followup-answer-id',
+          answer: 'Follow-up answer',
+          isLoading: false,
+          isStreaming: false,
+        }),
+      ];
+      rendered.element.requestUpdate();
+      await rendered.element.updateComplete;
+
+      expect(rendered.followUpInputWithColoredBorder).toBe(true);
+
+      vi.advanceTimersByTime(3000);
+      await rendered.element.updateComplete;
+      expect(rendered.followUpInputWithColoredBorder).toBe(false);
     });
   });
 
