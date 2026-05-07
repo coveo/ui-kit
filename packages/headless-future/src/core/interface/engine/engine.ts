@@ -24,6 +24,7 @@ import type {NavigatorContextProvider} from '@/src/core/interface/navigator-cont
 export type FullEngine = Engine & {
   adoptSlice(slice: Slice): Promise<void>;
   mutate(mutation: StateMutation): void;
+  getNavigatorContextProvider(): NavigatorContextProvider | undefined;
 };
 
 export let getFullEngine: (engine: Engine) => FullEngine;
@@ -59,6 +60,8 @@ export class Engine {
         ) => engine.subscribe(selector, callback),
         adoptSlice: (slice: Slice) => engine.#adoptSlice(slice),
         mutate: (mutation: StateMutation) => engine.#mutate(mutation),
+        getNavigatorContextProvider: () =>
+          engine.#getNavigatorContextProvider(),
       }) as FullEngine;
   }
 
@@ -107,18 +110,10 @@ export class Engine {
   }
 
   // ============================================================================
-  // Public Instance Methods
+  // Private Methods for Navigator Context Access
   // ============================================================================
 
-  /**
-   * Get the navigator context provider function.
-   *
-   * This provider is called lazily (per turn) to retrieve client context
-   * (referrer, userAgent, location, clientId) for API requests.
-   *
-   * @returns The navigator context provider function, or undefined if not provided.
-   */
-  getNavigatorContextProvider(): NavigatorContextProvider | undefined {
+  #getNavigatorContextProvider(): NavigatorContextProvider | undefined {
     if (
       !this.#navigatorContextProvider &&
       !this.#didWarnMissingNavigatorContextProvider
@@ -131,6 +126,10 @@ export class Engine {
 
     return this.#navigatorContextProvider;
   }
+
+  // ============================================================================
+  // Public Instance Methods
+  // ============================================================================
 
   /**
    * Read a value from the current state

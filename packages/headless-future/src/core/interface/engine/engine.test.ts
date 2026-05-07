@@ -271,10 +271,10 @@ describe('Engine: constructor()', () => {
     const options: EngineOptions = {
       navigatorContextProvider: mockProvider,
     };
-    const engine = new Engine(options);
+    const fullEngine = getFullEngine(new Engine(options));
 
     // Verify provider can be retrieved and called
-    const provider = engine.getNavigatorContextProvider();
+    const provider = fullEngine.getNavigatorContextProvider();
     expect(provider).toBe(mockProvider);
     expect(provider?.()).toEqual({
       clientId: 'test-client-id',
@@ -286,9 +286,9 @@ describe('Engine: constructor()', () => {
 
   it('should return undefined navigator context provider when not provided', () => {
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    const engine = new Engine();
+    const fullEngine = getFullEngine(new Engine());
 
-    const provider = engine.getNavigatorContextProvider();
+    const provider = fullEngine.getNavigatorContextProvider();
     expect(provider).toBeUndefined();
     expect(warnSpy).toHaveBeenCalledWith(
       '[WARNING] Missing navigator context provider. Provide `navigatorContextProvider` in Engine options before using conversational requests.'
@@ -299,10 +299,10 @@ describe('Engine: constructor()', () => {
 
   it('should warn only once when navigator context provider is missing', () => {
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    const engine = new Engine();
+    const fullEngine = getFullEngine(new Engine());
 
-    engine.getNavigatorContextProvider();
-    engine.getNavigatorContextProvider();
+    fullEngine.getNavigatorContextProvider();
+    fullEngine.getNavigatorContextProvider();
 
     expect(warnSpy).toHaveBeenCalledTimes(1);
 
@@ -328,11 +328,11 @@ describe('Engine: constructor()', () => {
       },
       navigatorContextProvider: mockProvider,
     };
-    const engine = new Engine(options);
+    const fullEngine = getFullEngine(new Engine(options));
 
-    expect(engine.read((state) => state.configuration?.organizationId)).toBe(
-      'my-org'
-    );
-    expect(engine.getNavigatorContextProvider()).toBe(mockProvider);
+    expect(
+      fullEngine.read((state) => state.configuration?.organizationId)
+    ).toBe('my-org');
+    expect(fullEngine.getNavigatorContextProvider()).toBe(mockProvider);
   });
 });
