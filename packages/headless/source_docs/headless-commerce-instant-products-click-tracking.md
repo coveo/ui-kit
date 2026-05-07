@@ -7,25 +7,9 @@ slug: usage/usage-analytics/instant-products-click-tracking
 
 # Click tracking for Instant Products
 
-When building a commerce search experience with [Instant Products](../../../interfaces/Commerce.InstantProducts.html) (product suggestions that appear as the user types), you must use the `InteractiveProduct` sub-controller to track click events.
+When building a commerce search experience with [Instant Products](../../../interfaces/Commerce.InstantProducts.html) (product suggestions that appear as the user types), use the `InteractiveProduct` sub-controller to track click events.
 
-This article explains why manual event emission doesn't work for Instant Products and provides the recommended implementation approach.
-
-## Why Instant Products require a different approach
-
-For Search and Product Listing controllers, the `responseId` is exposed directly in the controller state.
-This means you _could_ manually construct an analytics event payload and emit it via Relay, because you have access to all the required metadata.
-
-The Instant Products controller is different.
-It does not expose the `responseId` in its state.
-As a result, if you attempt manual event emission (for example, `relay.emit('ec.productClick', ...)`), the `responseId` field will be `undefined`, producing an invalid analytics event.
-
-> [!IMPORTANT]
->
-> Do not use manual `relay.emit('ec.productClick', ...)` calls for products returned by the Instant Products controller.
-> The required metadata is not available in the controller state for manual construction.
-
-## Recommended approach: the `InteractiveProduct` sub-controller
+## How click tracking works for Instant Products
 
 The [`InteractiveProduct`](../../../interfaces/Commerce.InteractiveProduct.html) sub-controller is available on the Instant Products controller via the [`interactiveProduct`](../../../interfaces/Commerce.InstantProducts.html#interactiveproduct-1) method.
 
@@ -35,11 +19,11 @@ When you call `select()` on this sub-controller, it automatically:
 - Includes all required product metadata in the analytics event.
 - Logs a valid click event through the [Event Protocol](https://docs.coveo.com/en/o9je0592/).
 
-This is the same `InteractiveProduct` pattern used for Search and Product Listing controllers, but it's **required** for Instant Products because the metadata cannot be assembled manually.
+This is the same `InteractiveProduct` pattern used for Search and Product Listing controllers.
 
 ## Implementation
 
-Use the `interactiveProduct` method on the `InstantProducts` controller, passing the product the user clicked, and then call `select()`.
+Use the `interactiveProduct` method on the `InstantProducts` controller, passing the product the user clicked, then call `select()`.
 
 ### Basic usage
 
@@ -61,7 +45,7 @@ The `InteractiveProduct` sub-controller also supports [`beginDelayedSelect`](../
 
 ## Common mistake: reusing the Search/Listing analytics pattern
 
-A common implementation error is to reuse the same manual Relay emission pattern that works for Search and Product Listing:
+A common implementation error is to attempt manually emitting an `ec.productClick` event using the product data from Instant Products state:
 
 ```typescript
 // ❌ WRONG: This does NOT work for Instant Products
@@ -76,25 +60,14 @@ relay.emit('ec.productClick', {
 });
 ```
 
-The above code fails because `instantProductsState.responseId` does not exist.
-The `responseId` for product suggestions is managed internally by Headless and is only accessible through the `InteractiveProduct` sub-controller.
+This fails because `instantProductsState.responseId` does not exist — the `responseId` for product suggestions is managed internally by Headless and is only accessible through the `InteractiveProduct` sub-controller.
 
-> [!IMPORTANT]
-
-> Always use the `interactiveProduct` sub-controller to ensure valid analytics events.
+Always use the `interactiveProduct` sub-controller instead:
 
 ```typescript
-// ✅ CORRECT: Use the InteractiveProduct sub-controller
+// ✅ CORRECT
 controller.interactiveProduct({options: {product}}).select();
 ```
-
-## Summary
-
-| Controller       | `responseId` in state | Manual event emission       | `InteractiveProduct` sub-controller |
-| ---------------- | --------------------- | --------------------------- | ----------------------------------- |
-| Search           | ✅ Yes                | Works (but not recommended) | ✅ Recommended                      |
-| Product Listing  | ✅ Yes                | Works (but not recommended) | ✅ Recommended                      |
-| Instant Products | ❌ No                 | ❌ Produces invalid events  | ✅ Required                         |
 
 ## Related resources
 
