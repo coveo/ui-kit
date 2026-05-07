@@ -158,13 +158,11 @@ const getAgentMessageIndex = (
   state: ConversationState,
   turn: ConversationTurn
 ) => {
-  const agentMessageId = [...turn.messageIds]
-    .reverse()
-    .find((messageId) =>
-      state.messages.some(
-        (message) => message.id === messageId && message.role === 'agent'
-      )
-    );
+  const agentMessageId = turn.messageIds.findLast((messageId) =>
+    state.messages.some(
+      (message) => message.id === messageId && message.role === 'agent'
+    )
+  );
 
   if (!agentMessageId) {
     return -1;
