@@ -17,7 +17,7 @@ import type {
   ConfigurationState,
   State,
 } from '@/src/core/interface/interface-types.js';
-import type {EngineOptions} from '@/src/core/interface/engine/engine-options.js';
+import type {EngineOptions} from '@/src/core/interface/engine/engine-types.js';
 import type {NavigatorContextProvider} from '@/src/core/interface/navigator-context/navigator-context-types.js';
 
 describe('Engine: read()', () => {

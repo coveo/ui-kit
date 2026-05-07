@@ -18,7 +18,7 @@ import type {
 } from '@/src/core/interface/interface-types.js';
 import type {ConfigurationState} from '@/src/core/interface/configuration/configuration-types.js';
 import {configurationSlice} from '../../internal/configuration/configuration-slice.js';
-import type {EngineOptions} from '@/src/core/interface/engine/engine-options.js';
+import type {EngineOptions} from '@/src/core/interface/engine/engine-types.js';
 import type {NavigatorContextProvider} from '@/src/core/interface/navigator-context/navigator-context-types.js';
 
 export type FullEngine = Engine & {
