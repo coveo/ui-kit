@@ -1,3 +1,4 @@
+export {main as manualAuditDelta} from './audit/manual-audit-delta.js';
 export {
   type JsonToOpenAcrOptions,
   transformJsonToOpenAcr,
@@ -17,7 +18,10 @@ export type {
   A11yInteractiveResults,
   A11yReport,
   A11ySummary,
+  BaselineEntry,
   CriterionLevel,
   CriterionMetadata,
+  DeltaEntry,
+  DeltaFile,
   WCAGVersion,
 } from './shared/types.js';

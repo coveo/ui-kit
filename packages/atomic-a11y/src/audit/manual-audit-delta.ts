@@ -1,0 +1,590 @@
+/**
+ * manual-audit-delta.ts
+ *
+ * QA workflow tool for maintaining manual accessibility audits.
+ *
+ * Commands:
+ *   node ./scripts/manual-audit-delta.mjs validate <delta-file>
+ *   node ./scripts/manual-audit-delta.mjs merge [--dry-run]
+ *   node ./scripts/manual-audit-delta.mjs status
+ *
+ * Delta files live in a11y/reports/deltas/ and follow a strict schema.
+ * The merge command folds all deltas into the baseline audit files,
+ * then moves processed deltas to a11y/reports/deltas/archived/.
+ *
+ * CWD assumption: run from a package root that contains ./a11y/reports.
+ */
+
+import {mkdir, readdir, readFile, rename, writeFile} from 'node:fs/promises';
+import path from 'node:path';
+import {
+  A11Y_MANUAL_CRITERIA_FILE,
+  A11Y_OVERRIDES_FILE,
+  ARCHIVE_DIR,
+  BASELINE_FILE_PATTERN,
+  DELTA_PATTERN,
+  DELTAS_DIR,
+  REPORTS_DIR,
+  VALID_STATUSES,
+  VALID_SURFACES,
+} from '../shared/constants.js';
+import {readJsonFile} from '../shared/file-utils.js';
+import {isRecord} from '../shared/guards.js';
+
+import type {BaselineEntry, DeltaEntry, DeltaFile} from '../shared/types.js';
+
+const LOG_PREFIX = '[manual-audit-delta]';
+
+/** Maps OpenACR conformance values to manual audit status values. */
+const CONFORMANCE_TO_STATUS: Record<string, string> = {
+  supports: 'pass',
+  'does-not-support': 'fail',
+  'partially-supports': 'partial',
+  'not-applicable': 'not-applicable',
+};
+
+/**
+ * Loads default WCAG criteria values for new baseline entries from
+ * the a11y overrides JSON file (`a11y/a11y-overrides.json`).
+ *
+ * Reads the `overrides` array and extracts criteria with their conformance
+ * values, converting them to manual audit status format. This ensures a
+ * single source of truth for product-wide criterion exceptions.
+ *
+ * Falls back to an empty object if the file is missing or malformed,
+ * so the merge command never fails due to missing defaults.
+ */
+async function loadNewComponentDefaults(
+  manualCriteriaKeys: Set<string>
+): Promise<Record<string, string>> {
+  try {
+    const content = await readFile(A11Y_OVERRIDES_FILE, 'utf8');
+    const parsed: unknown = JSON.parse(content);
+
+    if (!isRecord(parsed) || !Array.isArray(parsed.overrides)) {
+      return {};
+    }
+
+    const criteria: Record<string, string> = {};
+    for (const entry of parsed.overrides) {
+      if (!isRecord(entry)) continue;
+
+      const criterion = entry.criterion;
+      const conformance = entry.conformance;
+
+      if (typeof criterion !== 'string' || typeof conformance !== 'string') {
+        continue;
+      }
+
+      const status = CONFORMANCE_TO_STATUS[conformance];
+      if (!status) {
+        console.warn(
+          LOG_PREFIX,
+          `Skipping override for "${criterion}": unknown conformance "${conformance}".`
+        );
+        continue;
+      }
+
+      for (const key of manualCriteriaKeys) {
+        if (key.startsWith(`${criterion}-`)) {
+          criteria[key] = status;
+          break;
+        }
+      }
+    }
+
+    return criteria;
+  } catch {
+    return {};
+  }
+}
+
+async function loadManualCriteriaKeys(): Promise<Set<string>> {
+  try {
+    const parsed = await readJsonFile<Record<string, unknown>>(
+      A11Y_MANUAL_CRITERIA_FILE
+    );
+
+    if (!Array.isArray(parsed.criteria)) {
+      console.warn(
+        LOG_PREFIX,
+        `${A11Y_MANUAL_CRITERIA_FILE} must contain a "criteria" array.`
+      );
+      return new Set();
+    }
+
+    const keys = parsed.criteria.filter(
+      (entry): entry is string => typeof entry === 'string'
+    );
+    return new Set(keys);
+  } catch (error) {
+    console.warn(
+      LOG_PREFIX,
+      `Unable to read ${A11Y_MANUAL_CRITERIA_FILE}.`,
+      error
+    );
+    return new Set();
+  }
+}
+
+function validateDeltaEntry(
+  entry: unknown,
+  index: number,
+  manualCriteriaKeys: Set<string>
+): string[] {
+  const errors: string[] = [];
+  const prefix = `entries[${index}]`;
+
+  if (!isRecord(entry)) {
+    errors.push(`${prefix}: must be an object`);
+    return errors;
+  }
+
+  if (typeof entry.name !== 'string' || entry.name.length === 0) {
+    errors.push(`${prefix}.name: must be a non-empty string`);
+  }
+
+  if (!VALID_SURFACES.has(entry.surface as string)) {
+    errors.push(
+      `${prefix}.surface: must be one of: ${[...VALID_SURFACES].join(', ')} (got "${entry.surface}")`
+    );
+  }
+
+  if (typeof entry.auditor !== 'string' || entry.auditor.length === 0) {
+    errors.push(
+      `${prefix}.auditor: must be a non-empty string (who performed this audit)`
+    );
+  }
+
+  if (!isRecord(entry.results)) {
+    errors.push(`${prefix}.results: must be an object`);
+    return errors;
+  }
+
+  const results = entry.results as Record<string, unknown>;
+
+  for (const field of ['keyboardNav', 'screenReader', 'focusManagement']) {
+    if (
+      results[field] !== undefined &&
+      !VALID_STATUSES.has(results[field] as string)
+    ) {
+      errors.push(
+        `${prefix}.results.${field}: must be one of: ${[...VALID_STATUSES].join(', ')} (got "${results[field]}")`
+      );
+    }
+  }
+
+  if (isRecord(results.wcag22Criteria)) {
+    for (const [key, value] of Object.entries(results.wcag22Criteria)) {
+      if (manualCriteriaKeys.size > 0 && !manualCriteriaKeys.has(key)) {
+        errors.push(
+          `${prefix}.results.wcag22Criteria.${key}: unknown criterion key`
+        );
+      }
+      if (!VALID_STATUSES.has(value as string)) {
+        errors.push(
+          `${prefix}.results.wcag22Criteria.${key}: must be one of: ${[...VALID_STATUSES].join(', ')} (got "${value}")`
+        );
+      }
+    }
+  }
+
+  if (typeof results.notes !== 'string' || results.notes.length === 0) {
+    errors.push(
+      `${prefix}.results.notes: must be a non-empty string describing what was tested`
+    );
+  }
+
+  return errors;
+}
+
+function validateDeltaFile(
+  content: string,
+  filePath: string,
+  manualCriteriaKeys: Set<string>
+): string[] {
+  const errors: string[] = [];
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(content);
+  } catch {
+    return [`${filePath}: invalid JSON`];
+  }
+
+  if (!isRecord(parsed)) {
+    return [`${filePath}: root must be an object`];
+  }
+
+  if (
+    typeof parsed.date !== 'string' ||
+    !/^\d{4}-\d{2}-\d{2}$/.test(parsed.date)
+  ) {
+    errors.push(
+      `${filePath}: date must be in YYYY-MM-DD format (got "${parsed.date}")`
+    );
+  }
+
+  if (typeof parsed.pr !== 'string' && typeof parsed.pr !== 'number') {
+    errors.push(
+      `${filePath}: pr must be a string or number (PR number or "quarterly-2026-Q1")`
+    );
+  }
+
+  if (typeof parsed.auditor !== 'string' || parsed.auditor.length === 0) {
+    errors.push(`${filePath}: auditor must be a non-empty string`);
+  }
+
+  if (!Array.isArray(parsed.entries) || parsed.entries.length === 0) {
+    errors.push(`${filePath}: entries must be a non-empty array`);
+    return errors;
+  }
+
+  for (let i = 0; i < parsed.entries.length; i++) {
+    const entryErrors = validateDeltaEntry(
+      parsed.entries[i],
+      i,
+      manualCriteriaKeys
+    );
+    for (const error of entryErrors) {
+      errors.push(`${filePath}: ${error}`);
+    }
+  }
+
+  return errors;
+}
+
+interface Baseline {
+  filePath: string;
+  entries: BaselineEntry[];
+}
+
+async function loadBaselines(): Promise<Map<string, Baseline>> {
+  const files = await readdir(REPORTS_DIR);
+  const baselines = new Map<string, Baseline>();
+
+  for (const file of files) {
+    const match = file.match(BASELINE_FILE_PATTERN);
+    if (!match) continue;
+
+    const surface = match[1];
+    const filePath = path.join(REPORTS_DIR, file);
+    const entries = await readJsonFile<BaselineEntry[]>(filePath);
+    if (!Array.isArray(entries)) continue;
+
+    baselines.set(surface, {filePath, entries});
+  }
+
+  return baselines;
+}
+
+async function loadDeltas(
+  manualCriteriaKeys: Set<string>
+): Promise<DeltaFile[]> {
+  let files: string[];
+  try {
+    files = await readdir(DELTAS_DIR);
+  } catch {
+    return [];
+  }
+
+  const deltas: DeltaFile[] = [];
+  for (const file of files) {
+    if (!DELTA_PATTERN.test(file)) continue;
+
+    const filePath = path.join(DELTAS_DIR, file);
+    const content = await readFile(filePath, 'utf8');
+    const errors = validateDeltaFile(content, filePath, manualCriteriaKeys);
+
+    if (errors.length > 0) {
+      console.error(`Skipping invalid delta ${file}:`);
+      for (const error of errors) {
+        console.error(`  ${error}`);
+      }
+      continue;
+    }
+
+    const parsed = JSON.parse(content) as DeltaFile['data'];
+    deltas.push({file, filePath, data: parsed});
+  }
+
+  return deltas.sort((a, b) => a.data.date.localeCompare(b.data.date));
+}
+
+function applyDelta(
+  baseline: BaselineEntry[],
+  deltaEntry: DeltaEntry,
+  newComponentDefaults: Record<string, string>
+): 'updated' | 'added' {
+  const existing = baseline.find((entry) => entry.name === deltaEntry.name);
+  const {results} = deltaEntry;
+
+  if (existing) {
+    if (results.keyboardNav !== undefined) {
+      existing.manual.keyboardNav = results.keyboardNav;
+    }
+    if (results.screenReader !== undefined) {
+      existing.manual.screenReader = results.screenReader;
+    }
+    if (results.focusManagement !== undefined) {
+      existing.manual.focusManagement = results.focusManagement;
+    }
+    if (isRecord(results.wcag22Criteria)) {
+      for (const [key, value] of Object.entries(results.wcag22Criteria)) {
+        existing.manual.wcag22Criteria[key] = value;
+      }
+    }
+    existing.manual.notes = results.notes;
+    existing.manual.status = 'complete';
+    existing.manual.lastAuditDate = deltaEntry.auditDate;
+    existing.manual.auditor = deltaEntry.auditor;
+    return 'updated';
+  }
+
+  baseline.push({
+    name: deltaEntry.name,
+    category: deltaEntry.surface,
+    manual: {
+      status: 'complete',
+      tier: 2,
+      keyboardNav: results.keyboardNav ?? 'not-applicable',
+      screenReader: results.screenReader ?? 'not-applicable',
+      focusManagement: results.focusManagement ?? 'not-applicable',
+      wcag22Criteria: {
+        ...newComponentDefaults,
+        ...(results.wcag22Criteria ?? {}),
+      },
+      notes: results.notes,
+      lastAuditDate: deltaEntry.auditDate,
+      auditor: deltaEntry.auditor,
+    },
+  });
+  return 'added';
+}
+
+async function runValidate(filePath: string | undefined): Promise<void> {
+  if (!filePath) {
+    console.error(
+      'Usage: node ./scripts/manual-audit-delta.mjs validate <delta-file>'
+    );
+    process.exit(1);
+  }
+
+  const manualCriteriaKeys = await loadManualCriteriaKeys();
+  const content = await readFile(filePath, 'utf8');
+  const errors = validateDeltaFile(content, filePath, manualCriteriaKeys);
+
+  if (errors.length === 0) {
+    console.log(`✅ ${filePath} is valid`);
+    const parsed = JSON.parse(content) as DeltaFile['data'];
+    console.log(
+      `   ${parsed.entries.length} component(s), auditor: ${parsed.auditor}, date: ${parsed.date}`
+    );
+  } else {
+    console.error(`❌ ${filePath} has ${errors.length} error(s):\n`);
+    for (const error of errors) {
+      console.error(`  ${error}`);
+    }
+    process.exit(1);
+  }
+}
+
+interface Change {
+  component: string;
+  surface: string;
+  action: 'added' | 'updated';
+  delta: string;
+}
+
+async function runMerge(dryRun: boolean): Promise<void> {
+  const baselines = await loadBaselines();
+  const manualCriteriaKeys = await loadManualCriteriaKeys();
+  const deltas = await loadDeltas(manualCriteriaKeys);
+
+  if (deltas.length === 0) {
+    console.log(
+      'No delta files found in a11y/reports/deltas/. Nothing to merge.'
+    );
+    return;
+  }
+
+  const newComponentDefaults =
+    await loadNewComponentDefaults(manualCriteriaKeys);
+  if (Object.keys(newComponentDefaults).length > 0) {
+    console.log(
+      `Loaded ${Object.keys(newComponentDefaults).length} default criteria value(s) from ${A11Y_OVERRIDES_FILE}.`
+    );
+  }
+
+  console.log(`Found ${deltas.length} delta file(s) to merge.\n`);
+
+  const changes: Change[] = [];
+
+  for (const delta of deltas) {
+    console.log(
+      `Processing: ${delta.file} (${delta.data.date}, PR: ${delta.data.pr})`
+    );
+
+    for (const entry of delta.data.entries) {
+      const surface = entry.surface;
+      let baseline = baselines.get(surface);
+
+      if (!baseline) {
+        const newFilePath = path.join(
+          REPORTS_DIR,
+          `manual-audit-${surface}.json`
+        );
+        baseline = {filePath: newFilePath, entries: []};
+        baselines.set(surface, baseline);
+        console.log(`  Creating new baseline: manual-audit-${surface}.json`);
+      }
+
+      const entryWithMeta: DeltaEntry = {
+        ...entry,
+        auditDate: delta.data.date,
+        auditor: entry.auditor || delta.data.auditor,
+      };
+      const action = applyDelta(
+        baseline.entries,
+        entryWithMeta,
+        newComponentDefaults
+      );
+      changes.push({
+        component: entry.name,
+        surface,
+        action,
+        delta: delta.file,
+      });
+      console.log(
+        `  ${action === 'added' ? '➕' : '✏️'}  ${entry.name} (${surface})`
+      );
+    }
+  }
+
+  console.log(
+    `\n${changes.length} component(s) affected across ${baselines.size} surface(s).`
+  );
+
+  if (dryRun) {
+    console.log(
+      '\n[DRY RUN] No files written. Remove --dry-run to apply changes.'
+    );
+    return;
+  }
+
+  for (const [, baseline] of baselines) {
+    baseline.entries.sort((a, b) => a.name.localeCompare(b.name, 'en-US'));
+    await writeFile(
+      baseline.filePath,
+      `${JSON.stringify(baseline.entries, null, 2)}\n`,
+      'utf8'
+    );
+    console.log(`  Wrote: ${baseline.filePath}`);
+  }
+
+  await mkdir(ARCHIVE_DIR, {recursive: true});
+  for (const delta of deltas) {
+    const archivePath = path.join(ARCHIVE_DIR, delta.file);
+    await rename(delta.filePath, archivePath);
+    console.log(`  Archived: ${delta.file} → deltas/archived/`);
+  }
+
+  console.log('\n✅ Merge complete.');
+}
+
+async function runStatus(): Promise<void> {
+  const baselines = await loadBaselines();
+  const manualCriteriaKeys = await loadManualCriteriaKeys();
+  const deltas = await loadDeltas(manualCriteriaKeys);
+
+  console.log('=== Baseline Audit Files ===\n');
+  if (baselines.size === 0) {
+    console.log('  No baseline files found.');
+  }
+  for (const [surface, baseline] of baselines) {
+    const total = baseline.entries.length;
+    const withAuditor = baseline.entries.filter(
+      (e) => e.manual?.auditor
+    ).length;
+    const fails = baseline.entries.filter((e) => {
+      const m = e.manual;
+      if (!m) return false;
+      if (
+        m.keyboardNav === 'fail' ||
+        m.screenReader === 'fail' ||
+        m.focusManagement === 'fail'
+      )
+        return true;
+      const wcag = m.wcag22Criteria;
+      if (!wcag) return false;
+      return Object.values(wcag).some((v) => v === 'fail');
+    }).length;
+    console.log(
+      `  ${surface}: ${total} components, ${fails} failing, ${withAuditor} with auditor attribution`
+    );
+  }
+
+  console.log('\n=== Pending Deltas ===\n');
+  if (deltas.length === 0) {
+    console.log('  No pending deltas.');
+  }
+  for (const delta of deltas) {
+    console.log(
+      `  ${delta.file}: ${delta.data.entries.length} component(s), auditor: ${delta.data.auditor}, date: ${delta.data.date}`
+    );
+  }
+
+  let archivedCount = 0;
+  try {
+    const archived = await readdir(ARCHIVE_DIR);
+    archivedCount = archived.filter((f) => DELTA_PATTERN.test(f)).length;
+  } catch {
+    // no archive dir yet
+  }
+  console.log(`\n=== Archived Deltas: ${archivedCount} ===`);
+}
+
+export async function main(): Promise<void> {
+  const [command, ...args] = process.argv.slice(2);
+
+  switch (command) {
+    case 'validate':
+      await runValidate(args[0]);
+      break;
+    case 'merge':
+      await runMerge(args.includes('--dry-run'));
+      break;
+    case 'status':
+      await runStatus();
+      break;
+    default:
+      console.log(`Usage:
+  node ./scripts/manual-audit-delta.mjs validate <delta-file>
+  node ./scripts/manual-audit-delta.mjs merge [--dry-run]
+  node ./scripts/manual-audit-delta.mjs status
+
+Delta file format (a11y/reports/deltas/delta-YYYY-MM-DD-<context>.json):
+{
+  "date": "2026-02-15",
+  "pr": "1234",
+  "auditor": "Jane Doe",
+  "entries": [
+    {
+      "name": "atomic-commerce-facet",
+      "surface": "commerce",
+      "auditor": "Jane Doe",
+      "results": {
+        "keyboardNav": "pass",
+        "screenReader": "pass",
+        "focusManagement": "pass",
+        "wcag22Criteria": {
+          "2.5.8-target-size": "pass"
+        },
+        "notes": "Verified after PR #1234 fixed button min-size to 24x24."
+      }
+    }
+  ]
+}`);
+      break;
+  }
+}
