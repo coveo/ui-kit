@@ -34,7 +34,7 @@ export interface ConversationController {
   /**
    * Subscribe to state changes.
    *
-   * @param callback Invoked whenever state changes.
+   * @param callback Invoked whenever the conversation state changes.
    * @returns Unsubscribe function.
    */
   subscribe(callback: () => void): Unsubscribe;
