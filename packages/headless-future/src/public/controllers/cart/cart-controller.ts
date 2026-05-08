@@ -27,6 +27,9 @@ export const buildCartController = (
     setItems(payload) {
       fullEngine.mutate(cartMutators.setItems(payload));
     },
+    updateItemQuantity(payload) {
+      fullEngine.mutate(cartMutators.updateItemQuantity(payload));
+    },
     subscribe(callback) {
       return fullEngine.subscribe(cartSelectors.items, callback);
     },

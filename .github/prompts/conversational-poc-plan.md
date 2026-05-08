@@ -158,6 +158,7 @@ Completed checklist for 1.3:
 - [x] Simplified cart domain types by removing unused aggregation types/utilities (`CartItemParam`, `getProductsFromCartState`)
 - [x] Refactored Layer 3 cart actions to named payload-based exports (`setCartItems`, `updateCartItemQuantity`)
 - [x] Added/updated cart domain coverage: selector unit tests (pure fixtures), mutator shape tests, controller tests, and action wiring tests
+- [x] Refined cart controller tests to a hybrid strategy: public behavior coverage (including explicit `state` getter assertions) plus minimal isolated wiring checks
 - [x] Added JSDoc for cart controller and cart actions public contracts
 - [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
 

@@ -1,6 +1,7 @@
 import {
   CartState,
   SetCartItemsPayload,
+  UpdateItemQuantityPayload,
 } from '@/src/core/interface/cart/cart-types.js';
 import {
   Controller,
@@ -16,6 +17,13 @@ export interface CartController extends Controller {
    * @param payload - The cart items to store.
    */
   setItems(payload: SetCartItemsPayload): void;
+
+  /**
+   * Updates the quantity of an existing cart item.
+   *
+   * @param payload - The item with updated quantity.
+   */
+  updateItemQuantity(payload: UpdateItemQuantityPayload): void;
 }
 
 export interface CartControllerOptions extends ControllerOptions {}
