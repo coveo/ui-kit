@@ -8,5 +8,7 @@ export function onClickProduct(
   controller.interactiveProduct({options: {product}}).select();
 
   const productId = product.ec_product_id ?? product.permanentid;
-  navigate(`/product/${productId}`);
+  const productName = product.ec_name ?? product.permanentid;
+  const productPrice = product.ec_promo_price ?? product.ec_price ?? NaN;
+  navigate(`/product/${productId}/${productName}/${productPrice}`);
 }
