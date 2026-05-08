@@ -11,7 +11,7 @@
   --atomic-neutral-dim: #bfc4c8;
   --atomic-neutral: #e5e8e8;
   --atomic-neutral-light: #f6f7f9;
-  --atomic-neutral-lighter: #f2f2f2;
+  --atomic-neutral-lighter: #f9fafb;
 
   /* Semantic colors */
   --atomic-background: #ffffff;
@@ -23,7 +23,6 @@
   --atomic-success-background: #d4fcf0;
   --atomic-error-background: #fcbdc0;
   --atomic-primary-background: #edf6ff;
-  --atomic-generated-answer-content-background: #f9fafb;
   --atomic-inline-code: #cd2113;
 
   /* Border radius */

@@ -138,13 +138,10 @@ const baseStyle = css`
   }
 
   /**
-   * @prop --atomic-generated-answer-content-background: The background color of the generated answer content wrapper.
+   * @prop --atomic-neutral-lighter: The background color of the generated answer content wrapper.
    */
   .generated-answer-content-background {
-    background-color: var(
-      --atomic-generated-answer-content-background,
-      var(--atomic-background)
-    );
+    background-color: var(--atomic-neutral-lighter, var(--atomic-background));
   }
 
   /**
