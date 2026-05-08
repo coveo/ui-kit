@@ -10,11 +10,6 @@ import {
 } from 'vitest';
 import {loadDayjsLocale} from './dayjs-locales';
 
-vi.mock('dayjs', () => ({
-  __esModule: true,
-  default: {locale: vi.fn()},
-}));
-
 vi.mock('@/src/generated/dayjs-locales-data', () => {
   const mockLocales = {
     en: vi.fn(() => Promise.resolve()),
@@ -27,12 +22,15 @@ vi.mock('@/src/generated/dayjs-locales-data', () => {
   };
 });
 
+const flushPromises = () =>
+  new Promise<void>((resolve) => setTimeout(resolve, 0));
+
 describe('#loadDayjsLocale', () => {
   let mockLocales: Record<string, ReturnType<typeof vi.fn>>;
   let originalWarn: typeof console.warn;
+  let localeSpy: ReturnType<typeof vi.spyOn>;
 
   beforeAll(async () => {
-    // Dynamically import the getter after mocks are set up
     const localesData = await import('../generated/dayjs-locales-data');
     mockLocales = (
       localesData as unknown as {
@@ -43,28 +41,28 @@ describe('#loadDayjsLocale', () => {
   });
 
   beforeEach(() => {
-    vi.useFakeTimers();
+    localeSpy = vi.spyOn(dayjs, 'locale').mockImplementation(() => '');
     Object.values(mockLocales).forEach((fn) => fn.mockReset?.());
     console.warn = vi.fn();
   });
 
   afterEach(() => {
-    vi.useRealTimers();
+    localeSpy.mockRestore();
     console.warn = originalWarn;
   });
 
   it('should load the exact locale when available', async () => {
     loadDayjsLocale('en-US');
-    await vi.runAllTimersAsync();
+    await flushPromises();
 
-    expect(dayjs.locale).toHaveBeenCalledWith('en-US');
+    expect(localeSpy).toHaveBeenCalledWith('en-US');
   });
 
   it('should fall back to regionless language when region is not available', async () => {
     loadDayjsLocale('en-CA');
-    await vi.runAllTimersAsync();
+    await flushPromises();
 
-    expect(dayjs.locale).toHaveBeenCalledWith('en');
+    expect(localeSpy).toHaveBeenCalledWith('en');
   });
 
   it('should warn when locale is not available', () => {
