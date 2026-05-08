@@ -15,7 +15,9 @@ export function getProductHoverHandlers(
     onClick: () => {
       interactiveProduct.select();
       const productId = product.ec_product_id ?? product.permanentid;
-      const productName = product.ec_name ?? product.permanentid;
+      const productName = encodeURIComponent(
+        product.ec_name ?? product.permanentid
+      );
       const productPrice = product.ec_promo_price ?? product.ec_price ?? NaN;
       navigate(`/product/${productId}/${productName}/${productPrice}`);
     },
