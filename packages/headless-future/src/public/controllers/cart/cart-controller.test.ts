@@ -9,6 +9,7 @@ import {createTestEngine} from '@/src/test/test-utils.js';
 import {cartSlice} from '@/src/core/internal/cart/cart-slice.js';
 import {searchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
 import * as cartMutators from '@/src/core/interface/cart/cart-mutators.js';
+import * as cartSelectors from '@/src/core/interface/cart/cart-selectors.js';
 import {buildCartController} from './cart-controller.js';
 
 describe('buildCartController', () => {
@@ -17,6 +18,32 @@ describe('buildCartController', () => {
 
     beforeEach(() => {
       engine = createTestEngine();
+    });
+
+    describe('subscribe()', () => {
+      it('invokes callback when cart state changes', () => {
+        const controller = buildCartController({engine});
+        const callback = vi.fn();
+
+        controller.subscribe(callback);
+        controller.setItems({
+          items: [{productId: 'p1', name: 'A', price: 1, quantity: 1}],
+        });
+
+        expect(callback).toHaveBeenCalledTimes(1);
+      });
+
+      it('does not invoke callback for unrelated state changes', () => {
+        const controller = buildCartController({engine});
+        const callback = vi.fn();
+        const fullEngine = getFullEngine(engine);
+
+        fullEngine.adoptSlice(searchBoxSlice);
+        controller.subscribe(callback);
+        fullEngine.mutate(searchBoxSlice.actions.setQuery('q'));
+
+        expect(callback).not.toHaveBeenCalled();
+      });
     });
 
     describe('state', () => {
@@ -56,32 +83,6 @@ describe('buildCartController', () => {
         });
       });
     });
-
-    describe('subscribe()', () => {
-      it('invokes callback when cart state changes', () => {
-        const controller = buildCartController({engine});
-        const callback = vi.fn();
-
-        controller.subscribe(callback);
-        controller.setItems({
-          items: [{productId: 'p1', name: 'A', price: 1, quantity: 1}],
-        });
-
-        expect(callback).toHaveBeenCalledTimes(1);
-      });
-
-      it('does not invoke callback for unrelated state changes', () => {
-        const controller = buildCartController({engine});
-        const callback = vi.fn();
-        const fullEngine = getFullEngine(engine);
-
-        fullEngine.adoptSlice(searchBoxSlice);
-        controller.subscribe(callback);
-        fullEngine.mutate(searchBoxSlice.actions.setQuery('q'));
-
-        expect(callback).not.toHaveBeenCalled();
-      });
-    });
   });
 
   describe('wiring', () => {
@@ -92,6 +93,7 @@ describe('buildCartController', () => {
       engine = {} as Engine;
       fullEngine = {
         adoptSlice: vi.fn(),
+        read: vi.fn(),
         mutate: vi.fn(),
       } as unknown as FullEngine;
 
@@ -133,6 +135,14 @@ describe('buildCartController', () => {
 
       expect(cartMutators.updateItemQuantity).toHaveBeenCalledWith(payload);
       expect(fullEngine.mutate).toHaveBeenCalledWith(mutation);
+    });
+
+    it('state getter reads using the cart items selector', () => {
+      const controller = buildCartController({engine});
+
+      void controller.state;
+
+      expect(fullEngine.read).toHaveBeenCalledWith(cartSelectors.items);
     });
   });
 

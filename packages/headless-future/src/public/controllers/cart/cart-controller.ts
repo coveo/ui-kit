@@ -21,9 +21,6 @@ export const buildCartController = (
   fullEngine.adoptSlice(cartSlice);
 
   return {
-    get state() {
-      return {items: fullEngine.read(cartSelectors.items)};
-    },
     setItems(payload) {
       fullEngine.mutate(cartMutators.setItems(payload));
     },
@@ -32,6 +29,9 @@ export const buildCartController = (
     },
     subscribe(callback) {
       return fullEngine.subscribe(cartSelectors.items, callback);
+    },
+    get state() {
+      return {items: fullEngine.read(cartSelectors.items)};
     },
   };
 };

@@ -27,7 +27,7 @@ export const setItems = (engine: Engine, payload: SetCartItemsPayload) => {
  * @param engine - The engine instance to perform the action on.
  * @param payload - The action payload.
  */
-export const updatetemQuantity = (
+export const updateItemQuantity = (
   engine: Engine,
   payload: UpdateItemQuantityPayload
 ) => {

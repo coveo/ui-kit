@@ -6,7 +6,7 @@ import {
 import * as engineModule from '@/src/core/interface/engine/engine.js';
 import {cartSlice} from '@/src/core/internal/cart/cart-slice.js';
 import * as cartMutators from '@/src/core/interface/cart/cart-mutators.js';
-import {setCartItems, updateCartItemQuantity} from './cart-actions.js';
+import {setItems, updateItemQuantity} from './cart-actions.js';
 
 describe('cart actions', () => {
   let engine: Engine;
@@ -22,19 +22,19 @@ describe('cart actions', () => {
     vi.spyOn(engineModule, 'getFullEngine').mockReturnValue(fullEngine);
   });
 
-  it('setCartItems adopts cart slice', () => {
+  it('setItems adopts cart slice', () => {
     const items = [
       {productId: 'p1', name: 'A', price: 1, quantity: 1},
       {productId: 'p1', name: 'A', price: 1, quantity: 2},
     ];
     const payload = {items};
 
-    setCartItems(engine, payload);
+    setItems(engine, payload);
 
     expect(fullEngine.adoptSlice).toHaveBeenCalledWith(cartSlice);
   });
 
-  it('setCartItems dispatches setItems mutation', () => {
+  it('setItems dispatches setItems mutation', () => {
     const items = [
       {productId: 'p1', name: 'A', price: 1, quantity: 1},
       {productId: 'p1', name: 'A', price: 1, quantity: 2},
@@ -44,23 +44,23 @@ describe('cart actions', () => {
 
     vi.spyOn(cartMutators, 'setItems').mockReturnValue(mutation);
 
-    setCartItems(engine, payload);
+    setItems(engine, payload);
 
     expect(cartMutators.setItems).toHaveBeenCalledWith(payload);
     expect(fullEngine.mutate).toHaveBeenCalledWith(mutation);
   });
 
-  it('updateCartItemQuantity adopts cart slice', () => {
+  it('updateItemQuantity adopts cart slice', () => {
     const payload = {
       item: {productId: 'p1', name: 'A', price: 1, quantity: 0},
     };
 
-    updateCartItemQuantity(engine, payload);
+    updateItemQuantity(engine, payload);
 
     expect(fullEngine.adoptSlice).toHaveBeenCalledWith(cartSlice);
   });
 
-  it('updateCartItemQuantity dispatches updateItemQuantity mutation', () => {
+  it('updateItemQuantity dispatches updateItemQuantity mutation', () => {
     const payload = {
       item: {productId: 'p1', name: 'A', price: 1, quantity: 0},
     };
@@ -68,7 +68,7 @@ describe('cart actions', () => {
 
     vi.spyOn(cartMutators, 'updateItemQuantity').mockReturnValue(mutation);
 
-    updateCartItemQuantity(engine, payload);
+    updateItemQuantity(engine, payload);
 
     expect(cartMutators.updateItemQuantity).toHaveBeenCalledWith(payload);
     expect(fullEngine.mutate).toHaveBeenCalledWith(mutation);
