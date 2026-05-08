@@ -57,7 +57,7 @@ Deliver an end-to-end agentic conversation flow in three phases, each built bott
 | 19  | Orchestration/context-bridge | Deleted in Phase 0; reintroduced in Phase 3                                     |
 | 20  | Navigator context slice      | Deleted; provider pattern replaces it                                           |
 | 21  | Engine constructor update    | Separate PR in Phase 1.2 (not in cleanup)                                       |
-| 22  | Cart controller scope        | `setItems(payload)` only                                                        |
+| 22  | Cart controller scope        | `setItems(payload)` and `updateItemQuantity(payload)`                           |
 | 23  | A2UI contract style          | Typed operation union + normalized render-agnostic state                        |
 | 24  | Phase 3 mode model           | `search-first \| assistant-first` only                                          |
 
@@ -104,7 +104,7 @@ Completed checklist:
 - **1.0** Types-only PR: `ConversationController` interface + `ConversationControllerState`
 - **1.1** Conversation state domain (Layer 0): slice, mutators, selectors, tests
 - **1.2** Engine constructor + `EngineOptions` + navigator context provider
-- **1.3** Cart controller: `buildCartController` with `setItems` only
+- **1.3** Cart controller: `buildCartController` with `setItems` and `updateItemQuantity`
 - **1.4** HTTP + stream utilities: `api/shared/http.ts` + `api/shared/stream.ts`
 - **1.5** Request builder: `buildConverseRequestBody(engine, input)`
 - **1.6** Event dispatcher + turn lifecycle helpers
@@ -151,7 +151,7 @@ Completed checklist for 1.3:
 
 - [x] Added the Layer 2 cart controller under `src/public/controllers/cart/cart-controller.ts`
 - [x] Added dedicated cart controller contracts under `src/public/controllers/cart/cart-controller-types.ts` and shared base contracts under `src/public/controllers/controller-types.ts`
-- [x] Implemented `buildCartController(options)` with `state`, `setItems(payload)`, and `subscribe(callback)`
+- [x] Implemented `buildCartController(options)` with `state`, `setItems(payload)`, `updateItemQuantity(payload)`, and `subscribe(callback)`
 - [x] Kept cart controller state minimal (`{items}`) and removed derived `products` exposure from the public cart selector surface
 - [x] Exported `buildCartController`, `CartController`, and `CartControllerOptions` through `src/public/controllers/index.ts`
 - [x] Refactored cart mutators to payload-based contracts (`SetCartItemsPayload`, `UpdateItemQuantityPayload`)
