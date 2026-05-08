@@ -5,8 +5,8 @@ export function onClickProduct(
   controller: InstantProducts,
   navigate: (pathName: string) => void
 ) {
-  controller.interactiveProduct({options: {product}}).select(); // callout[Calling `select()` on the `InteractiveProduct` sub-controller logs the click event with all required metadata, including the `responseId`.]
+  controller.interactiveProduct({options: {product}}).select();
 
   const productId = product.ec_product_id ?? product.permanentid;
-  navigate(`/product/${productId}`); // callout[After logging the event, navigate to the product detail page.]
+  navigate(`/product/${productId}`);
 }
