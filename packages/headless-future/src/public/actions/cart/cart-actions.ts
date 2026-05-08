@@ -1,8 +1,8 @@
 import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {cartSlice} from '@/src/core/internal/cart/cart-slice.js';
 import {
-  setItems,
-  updateItemQuantity,
+  setItems as setItemsMutator,
+  updateItemQuantity as updateItemQuantityMutator,
 } from '@/src/core/interface/cart/cart-mutators.js';
 import type {
   SetCartItemsPayload,
@@ -15,10 +15,10 @@ import type {
  * @param engine - The engine instance to perform the action on.
  * @param payload - The action payload.
  */
-export const setCartItems = (engine: Engine, payload: SetCartItemsPayload) => {
+export const setItems = (engine: Engine, payload: SetCartItemsPayload) => {
   const fullEngine = getFullEngine(engine);
   fullEngine.adoptSlice(cartSlice);
-  fullEngine.mutate(setItems(payload));
+  fullEngine.mutate(setItemsMutator(payload));
 };
 
 /**
@@ -27,11 +27,11 @@ export const setCartItems = (engine: Engine, payload: SetCartItemsPayload) => {
  * @param engine - The engine instance to perform the action on.
  * @param payload - The action payload.
  */
-export const updateCartItemQuantity = (
+export const updatetemQuantity = (
   engine: Engine,
   payload: UpdateItemQuantityPayload
 ) => {
   const fullEngine = getFullEngine(engine);
   fullEngine.adoptSlice(cartSlice);
-  fullEngine.mutate(updateItemQuantity(payload));
+  fullEngine.mutate(updateItemQuantityMutator(payload));
 };
