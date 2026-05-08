@@ -161,25 +161,15 @@ describe('atomic-agent-stream-of-thought', () => {
     });
   });
 
-  it('should render nothing when there are no steps', async () => {
-    const {timeline} = await renderComponent({
-      agentSteps: [],
-      isStreaming: true,
-    });
-
-    expect(timeline).toBeNull();
-  });
-
-  it('should render nothing when there are no steps and not streaming', async () => {
-    const {timeline} = await renderComponent({
-      agentSteps: [],
-      isStreaming: false,
-    });
-
-    expect(timeline).toBeNull();
-  });
-
   describe('during streaming', () => {
+    it('should render nothing when there are no steps', async () => {
+      const {timeline} = await renderComponent({
+        agentSteps: [],
+        isStreaming: true,
+      });
+
+      expect(timeline).toBeNull();
+    });
     it('should show all steps progressively', async () => {
       const {steps} = await renderComponent({
         agentSteps: [
@@ -389,6 +379,15 @@ describe('atomic-agent-stream-of-thought', () => {
       expect(collapsedTimelineSummary?.getAttribute('aria-expanded')).toBe(
         'false'
       );
+    });
+
+    it('should render nothing when there are no steps and not streaming', async () => {
+      const {timeline} = await renderComponent({
+        agentSteps: [],
+        isStreaming: false,
+      });
+
+      expect(timeline).toBeNull();
     });
   });
 
