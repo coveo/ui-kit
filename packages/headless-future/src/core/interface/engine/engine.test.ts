@@ -183,7 +183,7 @@ describe('Engine: mutate()', () => {
 
 describe('Engine: constructor()', () => {
   it('should not include configuration state when no configuration is passed', () => {
-    const engine = new Engine();
+    const engine = getFullEngine(new Engine());
 
     const configState = engine.read((state) => state.configuration);
 
@@ -199,7 +199,7 @@ describe('Engine: constructor()', () => {
       country: '',
       currency: '',
     };
-    const engine = new Engine({configuration: config});
+    const engine = getFullEngine(new Engine({configuration: config}));
 
     expect(engine.read((state) => state.configuration?.organizationId)).toBe(
       'my-org'
@@ -219,7 +219,7 @@ describe('Engine: constructor()', () => {
       currency: '',
       endpoint: 'https://my-endpoint.coveo.com',
     };
-    const engine = new Engine({configuration: config});
+    const engine = getFullEngine(new Engine({configuration: config}));
 
     expect(engine.read((state) => state.configuration?.endpoint)).toBe(
       'https://my-endpoint.coveo.com'
@@ -235,7 +235,7 @@ describe('Engine: constructor()', () => {
       country: '',
       currency: '',
     };
-    const engine = new Engine({configuration: config});
+    const engine = getFullEngine(new Engine({configuration: config}));
 
     expect(
       engine.read((state) => state.configuration?.endpoint)
@@ -253,7 +253,7 @@ describe('Engine: constructor()', () => {
         currency: '',
       },
     };
-    const engine = new Engine(options);
+    const engine = getFullEngine(new Engine(options));
 
     expect(engine.read((state) => state.configuration?.organizationId)).toBe(
       'my-org'

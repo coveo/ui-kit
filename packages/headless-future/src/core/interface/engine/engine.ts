@@ -23,8 +23,13 @@ import type {NavigatorContextProvider} from '@/src/core/interface/navigator-cont
 
 export type FullEngine = Engine & {
   adoptSlice(slice: Slice): Promise<void>;
-  mutate(mutation: StateMutation): void;
   getNavigatorContextProvider(): NavigatorContextProvider | undefined;
+  mutate(mutation: StateMutation): void;
+  read<T>(selector: StateSelector<T>): T;
+  subscribe<T>(
+    selector: StateSelector<T>,
+    callback: StateChangeCallback<T>
+  ): Unsubscribe;
 };
 
 export let getFullEngine: (engine: Engine) => FullEngine;
@@ -46,51 +51,23 @@ export class Engine {
     this.#adoptedSlices = new WeakSet<Slice>();
     this.#store = configureStore({reducer: this.#rootReducer});
 
-    this.#initializeConfiguration(options?.configuration);
-    this.#initializeNavigatorContext(options?.navigatorContextProvider);
+    this.#_initializeConfiguration(options?.configuration);
+    this.#_initializeNavigatorContext(options?.navigatorContextProvider);
   }
 
   static {
     getFullEngine = (engine: Engine) =>
       ({
-        read: <T>(selector: StateSelector<T>) => engine.read(selector),
+        adoptSlice: (slice: Slice) => engine.#adoptSlice(slice),
+        getNavigatorContextProvider: () =>
+          engine.#getNavigatorContextProvider(),
+        mutate: (mutation: StateMutation) => engine.#mutate(mutation),
+        read: <T>(selector: StateSelector<T>) => engine.#read(selector),
         subscribe: <T>(
           selector: StateSelector<T>,
           callback: StateChangeCallback<T>
-        ) => engine.subscribe(selector, callback),
-        adoptSlice: (slice: Slice) => engine.#adoptSlice(slice),
-        mutate: (mutation: StateMutation) => engine.#mutate(mutation),
-        getNavigatorContextProvider: () =>
-          engine.#getNavigatorContextProvider(),
+        ) => engine.#subscribe(selector, callback),
       }) as FullEngine;
-  }
-
-  #getStore() {
-    if (!this.#store) {
-      throw new Error('Headless not initialized. Call initialize() first.');
-    }
-    return this.#store;
-  }
-
-  #getState(): State {
-    return this.#getStore().getState() as State;
-  }
-
-  #initializeConfiguration(configuration?: ConfigurationState) {
-    if (!configuration) {
-      return;
-    }
-
-    this.#adoptSlice(configurationSlice);
-    this.#mutate(configurationSlice.actions.setConfiguration(configuration));
-  }
-
-  #initializeNavigatorContext(provider?: NavigatorContextProvider) {
-    this.#navigatorContextProvider = provider;
-  }
-
-  #mutate(mutation: StateMutation): void {
-    this.#getStore().dispatch(mutation);
   }
 
   async #adoptSlice(slice: Slice) {
@@ -99,19 +76,13 @@ export class Engine {
     }
 
     if (this.#adoptedSlices.has(slice)) {
-      // Slice already adopted, nothing to do
       return;
     }
-    // Add slice to adopted set and update store reducer
-    this.#adoptedSlices.add(slice);
-    // Replace the store's reducer with the updated combined reducer
-    this.#rootReducer.inject(slice);
-    this.#mutate({type: '@@engine/ADOPT_SLICE'}); // Optional: dispatch an action to trigger state update
-  }
 
-  // ============================================================================
-  // Private Methods for Navigator Context Access
-  // ============================================================================
+    this.#adoptedSlices.add(slice);
+    this.#rootReducer.inject(slice);
+    this.#mutate({type: '@@engine/ADOPT_SLICE'});
+  }
 
   #getNavigatorContextProvider(): NavigatorContextProvider | undefined {
     if (
@@ -127,61 +98,24 @@ export class Engine {
     return this.#navigatorContextProvider;
   }
 
-  // ============================================================================
-  // Public Instance Methods
-  // ============================================================================
-
-  /**
-   * Read a value from the current state
-   *
-   * This provides synchronous access to state using a selector function.
-   *
-   * @template T The type of value to select
-   * @param selector Function that extracts value from state
-   * @returns The selected value
-   *
-   * @example
-   * ```typescript
-   * const query = engine.read(state => state.search.query);
-   * const results = engine.read(state => state.search.results);
-   * ```
-   */
-  read<T>(selector: StateSelector<T>): T {
-    return selector(this.#getState());
+  #mutate(mutation: StateMutation): void {
+    this.#_getStore().dispatch(mutation);
   }
 
-  /**
-   * Subscribe to state changes
-   *
-   * Invokes the callback whenever the selected value changes.
-   * Uses shallow equality check to detect changes.
-   *
-   * @template T The type of value to observe
-   * @param selector Function that extracts value from state
-   * @param callback Function invoked when value changes
-   * @returns Unsubscribe function to cleanup subscription
-   *
-   * @example
-   * ```typescript
-   * const unsubscribe = engine.subscribe(
-   *   state => state.search.query,
-   *   (query) => console.log('Query changed:', query)
-   * );
-   *
-   * // Later, cleanup
-   * unsubscribe();
-   * ```
-   */
-  subscribe<T>(
+  #read<T>(selector: StateSelector<T>): T {
+    return selector(this.#_getState());
+  }
+
+  #subscribe<T>(
     selector: StateSelector<T>,
     callback: StateChangeCallback<T>
   ): Unsubscribe {
     // Track previous value to detect changes
-    let previousValue = selector(this.#getState());
+    let previousValue = selector(this.#_getState());
 
     // Subscribe to store updates
-    const unsubscribe = this.#getStore().subscribe(() => {
-      const currentValue = selector(this.#getState());
+    const unsubscribe = this.#_getStore().subscribe(() => {
+      const currentValue = selector(this.#_getState());
 
       // Only invoke callback if value changed
       if (currentValue !== previousValue) {
@@ -191,5 +125,29 @@ export class Engine {
     });
 
     return unsubscribe;
+  }
+
+  #_getStore() {
+    if (!this.#store) {
+      throw new Error('Headless not initialized. Call initialize() first.');
+    }
+    return this.#store;
+  }
+
+  #_getState(): State {
+    return this.#_getStore().getState() as State;
+  }
+
+  #_initializeConfiguration(configuration?: ConfigurationState) {
+    if (!configuration) {
+      return;
+    }
+
+    this.#adoptSlice(configurationSlice);
+    this.#mutate(configurationSlice.actions.setConfiguration(configuration));
+  }
+
+  #_initializeNavigatorContext(provider?: NavigatorContextProvider) {
+    this.#navigatorContextProvider = provider;
   }
 }
