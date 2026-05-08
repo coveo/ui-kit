@@ -73,6 +73,9 @@ import atomicGeneratedAnswerStyles from './atomic-generated-answer.tw.css.js';
  * @part answer-heading-5 - The generated answer level 5 heading elements.
  * @part answer-heading-6 - The generated answer level 6 heading elements.
  * @part answer-list-item - The generated answer list item elements for both ordered and unordered lists.
+ * @part answer-link - The generated answer inline link elements.
+ * @part answer-link-text - The text content of the inline link element.
+ * @part answer-link-icon - The icon of the the inline link element.
  * @part answer-ordered-list - The generated answer ordered list elements.
  * @part answer-paragraph - The generated answer paragraph elements.
  * @part answer-quote-block - The generated answer quote block elements.

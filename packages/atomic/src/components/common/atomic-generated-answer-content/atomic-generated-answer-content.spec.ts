@@ -162,7 +162,7 @@ describe('atomic-generated-answer-content', () => {
     expect(streamOfThoughtElement?.isStreaming).toBe(false);
   });
 
-  it('should render stream-of-thought when streaming without answer content', async () => {
+  it('should render stream-of-thought when streaming event when answer is undefined', async () => {
     const {getStreamOfThought} = await renderComponent({
       generatedAnswer: {
         answer: undefined,

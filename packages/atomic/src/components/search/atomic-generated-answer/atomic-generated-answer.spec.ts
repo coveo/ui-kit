@@ -826,6 +826,19 @@ describe('atomic-generated-answer', () => {
     expect(generatedContent).not.toBeInTheDocument();
   });
 
+  it('should not render the generated answer card when the answer streaming only contains blank chunks', async () => {
+    const {container} = await renderGeneratedAnswer({
+      generatedAnswerState: {
+        isVisible: true,
+        answer: '   ',
+        citations: [],
+        isStreaming: true,
+      },
+    });
+
+    expect(container).not.toBeInTheDocument();
+  });
+
   it('should not render feedback buttons when streaming', async () => {
     const {feedbackButtons} = await renderGeneratedAnswer({
       generatedAnswerState: {

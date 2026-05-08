@@ -18,6 +18,7 @@ import {
   logGeneratedAnswerExpand,
   logGeneratedAnswerFeedback,
   logGeneratedAnswerHideAnswers,
+  logGeneratedAnswerOpenInlineLink,
   logGeneratedAnswerResponseLinked,
   logGeneratedAnswerShowAnswers,
   logGeneratedAnswerStreamEnd,
@@ -39,6 +40,9 @@ const mockMakeGeneratedAnswerCitationClick = vi.fn((..._args) => ({
   log: mockLogFunction,
 }));
 const mockMakeGeneratedAnswerSourceHover = vi.fn(() => ({
+  log: mockLogFunction,
+}));
+const mockMakeGeneratedAnswerOpenInlineLink = vi.fn(() => ({
   log: mockLogFunction,
 }));
 const mockMakeLikeGeneratedAnswer = vi.fn(() => ({
@@ -95,6 +99,10 @@ const exampleGenerativeQuestionAnsweringId =
   '94b77748-2479-4e4b-a4e8-010fa62b04a0';
 const exampleProvidedAnswerId = 'explicit-answer-id';
 const exampleSearchUid = '456';
+const exampleInlineLink = {
+  linkText: 'Open inline link',
+  linkURL: 'https://example.com/inline-link',
+};
 
 const exampleCitation: GeneratedAnswerCitation = {
   id: 'some-citation-id',
@@ -150,6 +158,8 @@ describe('generated answer analytics actions', () => {
           mockMakeGeneratedAnswerCitationClick as unknown as typeof this.makeGeneratedAnswerCitationClick;
         this.makeGeneratedAnswerSourceHover =
           mockMakeGeneratedAnswerSourceHover as unknown as typeof this.makeGeneratedAnswerSourceHover;
+        this.makeGeneratedAnswerOpenInlineLink =
+          mockMakeGeneratedAnswerOpenInlineLink as unknown as typeof this.makeGeneratedAnswerOpenInlineLink;
         this.makeLikeGeneratedAnswer =
           mockMakeLikeGeneratedAnswer as unknown as typeof this.makeLikeGeneratedAnswer;
         this.makeDislikeGeneratedAnswer =
@@ -286,6 +296,22 @@ describe('generated answer analytics actions', () => {
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
+    it('should log #logGeneratedAnswerOpenInlineLink with the provided answerId', async () => {
+      await logGeneratedAnswerOpenInlineLink(
+        exampleInlineLink,
+        exampleProvidedAnswerId
+      )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+
+      const mockToUse = mockMakeGeneratedAnswerOpenInlineLink;
+
+      expect(mockToUse).toHaveBeenCalledTimes(1);
+      expect(mockToUse).toHaveBeenCalledWith({
+        generativeQuestionAnsweringId: exampleProvidedAnswerId,
+        ...exampleInlineLink,
+      });
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
+    });
+
     it('should log #logLikeGeneratedAnswer with the right payload', async () => {
       await logLikeGeneratedAnswer()()(
         engine.dispatch,
@@ -370,11 +396,11 @@ describe('generated answer analytics actions', () => {
 
     [false, true].map((answerGenerated) => {
       it(`should log #logGeneratedAnswerStreamEnd with ${answerGenerated ? 'generated' : 'not generated'} and 'empty' answer`, async () => {
-        await logGeneratedAnswerStreamEnd(answerGenerated)()(
-          engine.dispatch,
-          () => engine.state,
-          {} as ThunkExtraArguments
-        );
+        await logGeneratedAnswerStreamEnd(
+          answerGenerated,
+          undefined,
+          answerGenerated ? true : undefined
+        )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
         const mockToUse = mockMakeGeneratedAnswerStreamEnd;
 
@@ -388,7 +414,7 @@ describe('generated answer analytics actions', () => {
       });
     });
 
-    it('should prefer a provided answerTextIsEmpty over the state fallback', async () => {
+    it('should use a provided answerTextIsEmpty value', async () => {
       await logGeneratedAnswerStreamEnd(true, undefined, false)()(
         engine.dispatch,
         () => engine.state,
@@ -805,11 +831,11 @@ describe('generated answer analytics actions', () => {
 
     [false, true].map((answerGenerated) => {
       it(`should log #logGeneratedAnswerStreamEnd with ${answerGenerated ? 'generated' : 'not generated'} and 'empty' answer`, async () => {
-        await logGeneratedAnswerStreamEnd(answerGenerated)()(
-          engine.dispatch,
-          () => engine.state,
-          {} as ThunkExtraArguments
-        );
+        await logGeneratedAnswerStreamEnd(
+          answerGenerated,
+          undefined,
+          answerGenerated ? true : undefined
+        )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
 
         expect(emit).toHaveBeenCalledTimes(1);
         expect(emit.mock.calls[0]).toMatchSnapshot();
@@ -817,7 +843,7 @@ describe('generated answer analytics actions', () => {
     });
 
     it('should log #logGeneratedAnswerStreamEnd with a provided answerId', async () => {
-      await logGeneratedAnswerStreamEnd(true, exampleProvidedAnswerId)()(
+      await logGeneratedAnswerStreamEnd(true, exampleProvidedAnswerId, true)()(
         engine.dispatch,
         () => engine.state,
         {} as ThunkExtraArguments
