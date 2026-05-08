@@ -1,3 +1,9 @@
+## 3.57.3
+
+### Patch Changes
+
+- [#7532](https://github.com/coveo/ui-kit/pull/7532) [`a6c0c42`](https://github.com/coveo/ui-kit/commit/a6c0c42b33be3068ba95ef1729576d7bc4674ba3) Thanks [@renovate-coveo](https://github.com/apps/renovate-coveo)! - fix(deps): update all production dependencies j:kit-282
+
 ## 3.57.2
 
 ### Patch Changes
