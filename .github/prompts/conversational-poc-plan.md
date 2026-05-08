@@ -162,6 +162,15 @@ Completed checklist for 1.3:
 - [x] Added JSDoc for cart controller and cart actions public contracts
 - [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
 
+Completed checklist for 1.4:
+
+- [x] Replaced legacy shared HTTP client module with `src/api/shared/http.ts` while preserving the result-style `executeHttpRequest` contract
+- [x] Added callback-based raw SSE stream utility in `src/api/shared/stream.ts` (`readEventStream`)
+- [x] Updated Layer 1 exports in `src/api/index.ts` and migrated search API wiring to import HTTP utility from `src/api/shared/http.ts`
+- [x] Added HTTP utility unit coverage in `src/api/shared/http.test.ts`
+- [x] Added stream utility unit coverage in `src/api/shared/stream.test.ts`
+- [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
+
 ### Phase 2 — A2UI Surface Parsing
 
 - **2.0** A2UI protocol contract in `stream-types.ts`
@@ -187,7 +196,7 @@ Completed checklist for 1.3:
 | Phase 1.1 | add-slice-mutators-and-selectors | ✅ completed   |
 | Phase 1.2 | add-navigator-context            | ✅ completed   |
 | Phase 1.3 | adjust-cart                      | ✅ completed   |
-| Phase 1.4 | —                                | ⬜ not started |
+| Phase 1.4 | add-stream-utils                 | ✅ completed   |
 | Phase 1.5 | —                                | ⬜ not started |
 | Phase 1.6 | —                                | ⬜ not started |
 | Phase 1.7 | —                                | ⬜ not started |

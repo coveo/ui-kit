@@ -24,7 +24,7 @@ import * as paginationSelectors from '@/src/core/interface/pagination/pagination
 import * as paginationMutations from '@/src/core/interface/pagination/pagination-mutators.js';
 import * as facetSelectors from '@/src/core/interface/facets/facets-selectors.js';
 import * as facetMutations from '@/src/core/interface/facets/facets-mutators.js';
-import {executeHttpRequest} from '@/src/api/shared/http-client.js';
+import {executeHttpRequest} from '@/src/api/shared/http.js';
 import type {
   CoveoSearchRequest,
   CoveoSearchResponse,

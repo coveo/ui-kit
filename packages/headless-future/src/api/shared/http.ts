@@ -1,7 +1,7 @@
 /**
- * Layer 1: API Client - HTTP Client Utilities
+ * Layer 1: API Client - HTTP Utilities
  *
- * Base HTTP client that reads configuration from state and provides
+ * Base HTTP utility that reads configuration from state and provides
  * authenticated requests to the Coveo Platform APIs.
  *
  * Architecture constraints:
@@ -66,26 +66,20 @@ export interface HttpResponse<T> {
 }
 
 /**
- * Execute an HTTP request to the Coveo Platform API
+ * Execute an HTTP request to the Coveo Platform API.
  *
  * Reads configuration (organizationId, accessToken, endpoint) from engine state.
  * Returns a typed response with success/error status instead of throwing exceptions.
- *
- * @param engine - The headless engine instance
- * @param options - Request options (path, method, body, headers)
- * @returns Promise resolving to HttpResponse with typed data or error
  */
 export async function executeHttpRequest<T>(
   engine: Engine,
   options: HttpRequestOptions
 ): Promise<HttpResponse<T>> {
   try {
-    // Read configuration from state
     const orgId = engine.read(configurationSelectors.organizationId);
     const token = engine.read(configurationSelectors.accessToken);
     const customEndpoint = engine.read(configurationSelectors.endpoint);
 
-    // Validate required configuration
     if (!orgId) {
       return {
         success: false,
@@ -102,32 +96,26 @@ export async function executeHttpRequest<T>(
       };
     }
 
-    // Build full URL
     const baseEndpoint = customEndpoint || DEFAULT_COVEO_ENDPOINT;
     const url = `${baseEndpoint}${options.path}`;
 
-    // Build headers
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
       ...options.headers,
     };
 
-    // Build fetch request
     const requestInit: RequestInit = {
       method: options.method,
       headers,
     };
 
-    // Add body for non-GET requests
     if (options.body && options.method !== 'GET') {
       requestInit.body = JSON.stringify(options.body);
     }
 
-    // Execute request
     const response = await fetch(url, requestInit);
 
-    // Check if response is successful
     if (!isSuccessResponse(response)) {
       return {
         success: false,
@@ -135,7 +123,6 @@ export async function executeHttpRequest<T>(
       };
     }
 
-    // Parse JSON response
     const data = (await response.json()) as T;
 
     return {
@@ -143,7 +130,6 @@ export async function executeHttpRequest<T>(
       data,
     };
   } catch (error) {
-    // Transform any error (network, parsing, etc.) into error message
     return {
       success: false,
       error: transformError(error),

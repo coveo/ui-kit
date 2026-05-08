@@ -1,5 +1,5 @@
 /**
- * HTTP Client Tests
+ * HTTP Utility Tests
  */
 
 import {
@@ -11,7 +11,7 @@ import {
   vi,
   MockedFunction,
 } from 'vitest';
-import {executeHttpRequest} from './http-client.js';
+import {executeHttpRequest} from './http.js';
 import {createTestEngine} from '@/src/test/test-utils.js';
 import * as configurationMutations from '@/src/core/interface/configuration/configuration-mutators.js';
 import {FullEngine, getFullEngine} from '@/src/core/interface/engine/engine.js';
@@ -22,12 +22,10 @@ describe('executeHttpRequest()', () => {
 
   beforeEach(() => {
     engine = getFullEngine(createTestEngine());
-    engine.adoptSlice(configurationSlice); // Ensure slice is loaded
-    // Configure engine with required settings
+    engine.adoptSlice(configurationSlice);
     engine.mutate(configurationMutations.setOrganizationId('test-org-id'));
     engine.mutate(configurationMutations.setAccessToken('test-access-token'));
 
-    // Clear any previous fetch mocks
     vi.restoreAllMocks();
   });
 
