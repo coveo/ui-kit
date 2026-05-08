@@ -26,9 +26,6 @@ export interface CartItem {
   quantity: number;
 }
 
-/**
- * Represents the normalized cart state, tracking all items added by the user.
- */
 export interface CartState {
   /**
    * The list of items currently in the cart.
@@ -38,13 +35,10 @@ export interface CartState {
 
 /**
  * ============================================================================
- * Mutation payloads (for extensibility)
+ * Operation types (for mutations / actions)
  * ============================================================================
  */
 
-/**
- * Payload for replacing all items in the cart.
- */
 export interface SetCartItemsPayload {
   /**
    * The items to set in the cart.
@@ -52,9 +46,6 @@ export interface SetCartItemsPayload {
   items: CartItem[];
 }
 
-/**
- * Payload for updating the quantity of a cart item.
- */
 export interface UpdateItemQuantityPayload {
   /**
    * The item with updated quantity.
