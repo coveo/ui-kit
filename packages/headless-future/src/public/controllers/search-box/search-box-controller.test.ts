@@ -4,7 +4,11 @@
 
 import {describe, it, expect, beforeEach, vi} from 'vitest';
 import {createTestEngine} from '@/src/test/test-utils.js';
-import {Engine} from '@/src/core/interface/engine/engine.js';
+import {
+  Engine,
+  FullEngine,
+  getFullEngine,
+} from '@/src/core/interface/engine/engine.js';
 import * as searchBoxSelectors from '@/src/core/interface/search-box/search-box-selectors.js';
 import {buildSearchBoxController} from './search-box-controller.js';
 
@@ -16,17 +20,19 @@ import {executeSearchAPI} from '@/src/api/index.js';
 
 describe('buildSearchBoxController', () => {
   let engine: Engine;
+  let fullEngine: FullEngine;
 
   beforeEach(() => {
     vi.clearAllMocks();
     engine = createTestEngine();
+    fullEngine = getFullEngine(engine);
   });
 
   it('should adopt the searchBox slice', () => {
     buildSearchBoxController(engine);
 
     // If the slice was adopted, reading from it should not throw
-    expect(engine.read(searchBoxSelectors.query)).toBe('');
+    expect(fullEngine.read(searchBoxSelectors.query)).toBe('');
   });
 
   describe('updateQuery()', () => {
@@ -35,7 +41,7 @@ describe('buildSearchBoxController', () => {
 
       controller.updateQuery('laptops');
 
-      expect(engine.read(searchBoxSelectors.query)).toBe('laptops');
+      expect(fullEngine.read(searchBoxSelectors.query)).toBe('laptops');
     });
 
     it('should reset the query with an empty string', () => {
@@ -44,7 +50,7 @@ describe('buildSearchBoxController', () => {
       controller.updateQuery('something');
       controller.updateQuery('');
 
-      expect(engine.read(searchBoxSelectors.query)).toBe('');
+      expect(fullEngine.read(searchBoxSelectors.query)).toBe('');
     });
   });
 
