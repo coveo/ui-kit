@@ -2,4 +2,4 @@
 "@coveo/atomic": patch
 ---
 
-fix disabling of analytics on production environments for storybook documentation
+disable Coveo analytics in Storybook when running outside of local environment (e.g., on the documentation site)
