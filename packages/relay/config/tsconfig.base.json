@@ -1,0 +1,12 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ES2022", "DOM"],
+    "target": "ES2022",
+    "module": "node16",
+    "moduleResolution": "node16",
+    "outDir": "../lib",
+    "declarationDir": "../lib/npm"
+  },
+  "exclude": ["node_modules", "../**/*.test.ts", "../src/__mocks__/**/*.ts"]
+}
