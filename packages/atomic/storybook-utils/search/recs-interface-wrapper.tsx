@@ -5,6 +5,7 @@ import {
 import {Decorator, StoryContext} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import {spreadProps} from '@open-wc/lit-helpers';
+import {isTestMode} from '@/storybook-utils/common/is-test-mode';
 import type {AtomicRecsInterface} from '@/src/components/recommendations/atomic-recs-interface/atomic-recs-interface.js';
 import '@/src/components/recommendations/atomic-recs-interface/atomic-recs-interface.js';
 
@@ -13,11 +14,13 @@ export const wrapInRecommendationInterface = ({
   skipFirstQuery = false,
   skipInitialization = false,
   includeCodeRoot = true,
+  analytics = isTestMode(),
 }: {
   config?: Partial<RecommendationEngineConfiguration>;
   skipFirstQuery?: boolean;
   skipInitialization?: boolean;
   includeCodeRoot?: boolean;
+  analytics?: boolean;
 } = {}): {
   decorator: Decorator;
   play: (context: StoryContext) => Promise<void>;
@@ -25,6 +28,7 @@ export const wrapInRecommendationInterface = ({
   decorator: (story) => html`
     <atomic-recs-interface
       ${spreadProps(includeCodeRoot ? {id: 'code-root'} : {})}
+      .analytics=${analytics}
     >
       ${story()}
     </atomic-recs-interface>
