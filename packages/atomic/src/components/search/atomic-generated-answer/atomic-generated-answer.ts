@@ -417,14 +417,22 @@ export class AtomicGeneratedAnswer
                   <div
                     class=${classMap({
                       'px-6': true,
+                      'pt-6': true,
                       'generated-answer-content-background':
-                        this.areFollowUpsEnabled,
+                        this.hasAgentIdAndFollowUpsEnabled,
                       'agent-scrollable': this.areFollowUpsEnabled,
                     })}
                   >
                     <article>${this.renderAnswerContent()}</article>
                   </div>
-                  <div class="px-6 pt-2">
+                  <div
+                    class=${classMap({
+                      'px-6': true,
+                      'pt-2': true,
+                      'border-t': this.hasAgentIdAndFollowUpsEnabled,
+                      'border-gray-200': this.hasAgentIdAndFollowUpsEnabled,
+                    })}
+                  >
                     ${this.renderAskFollowUpInputWrapper()}
                     ${renderDisclaimer({
                       props: {
@@ -714,6 +722,10 @@ export class AtomicGeneratedAnswer
       this.generatedAnswerWithFollowUps?.state.followUpAnswers?.isEnabled ===
       true
     );
+  }
+
+  private get hasAgentIdAndFollowUpsEnabled() {
+    return this.hasAgentId && this.areFollowUpsEnabled;
   }
 
   private get isCollapsibleEnabled() {
