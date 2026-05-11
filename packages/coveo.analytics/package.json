@@ -1,0 +1,92 @@
+{
+    "name": "coveo.analytics",
+    "version": "2.30.55",
+    "description": "📈 Coveo analytics client (node and browser compatible) ",
+    "main": "dist/library.cjs",
+    "module": "dist/browser.mjs",
+    "browser": "dist/coveoua.browser.js",
+    "types": "dist/definitions/coveoua/library.d.ts",
+    "scripts": {
+        "lint:check": "prettier --check .",
+        "lint:fix": "prettier --write .",
+        "build": "rollup -c",
+        "start": "rollup -c -w --environment SERVE",
+        "test": "jest --clearCache && jest --coverage --silent",
+        "test:watch": "jest --clearCache && jest --watch --silent",
+        "prepare-deploy": "mkdir -p deploy && cp dist/coveoua*.js dist/coveoua*.js.map deploy",
+        "clean": "rimraf -rf dist dist_test coverage"
+    },
+    "author": "Coveo",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/coveo/coveo.analytics.js.git"
+    },
+    "license": "MIT",
+    "dependencies": {
+        "@types/uuid": "^9.0.0",
+        "cross-fetch": "^3.1.5",
+        "react-native-get-random-values": "^1.11.0",
+        "uuid": "^9.0.0"
+    },
+    "devDependencies": {
+        "@actions/core": "1.10.1",
+        "@actions/github": "6.0.0",
+        "@babel/core": "^7.23.2",
+        "@babel/preset-env": "7.23.2",
+        "@babel/register": "^7.22.15",
+        "@octokit/rest": "^20.1.2",
+        "@rollup/plugin-alias": "^5.0.0",
+        "@rollup/plugin-commonjs": "^24.1.0",
+        "@rollup/plugin-json": "^6.0.0",
+        "@rollup/plugin-node-resolve": "^15.0.2",
+        "@rollup/plugin-replace": "^5.0.2",
+        "@rollup/plugin-terser": "^0.4.1",
+        "@types/fetch-mock": "^7.3.5",
+        "@types/jest": "^29.1.0",
+        "@types/jsdom": "^21.1.1",
+        "@types/mime": "0.0.29",
+        "@types/node": "^6.0.45",
+        "@types/uuid": "^9.0.0",
+        "coveralls-next": "^5.0.0",
+        "exports-loader": "0.6.4",
+        "fetch-mock": "^9.11.0",
+        "husky": "^4.3.0",
+        "jest": "^29.1.0",
+        "jest-environment-jsdom": "^29.5.0",
+        "jsdom": "^27.0.0",
+        "lint-staged": "^13.2.1",
+        "prettier": "^3.6.2",
+        "rimraf": "^6.0.1",
+        "rollup": "^3.29.5",
+        "rollup-plugin-copy": "^3.5.0",
+        "rollup-plugin-serve": "^1.0.1",
+        "rollup-plugin-typescript2": "^0.34.0",
+        "stylelint": "^16.23.1",
+        "ts-jest": "^29.1.0",
+        "typescript": "^5.0.4"
+    },
+    "overrides": {
+        "plist": "3.0.5"
+    },
+    "files": [
+        "modules/",
+        "dist/**/*.d.ts",
+        "dist/**/*.js",
+        "dist/**/*.mjs",
+        "dist/**/*.cjs",
+        "dist/**/*.js.map",
+        "dist/**/*.mjs.map",
+        "dist/**/*.cjs.map",
+        "src/**/*.ts",
+        "react-native/",
+        "LICENSE"
+    ],
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
+    },
+    "lint-staged": {
+        "*": "prettier --write"
+    }
+}

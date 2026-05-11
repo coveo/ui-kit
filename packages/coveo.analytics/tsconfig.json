@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "module": "ESNext",
+        "moduleResolution": "Node",
+        "target": "es5",
+        "declarationDir": "./dist/definitions",
+        "declaration": true,
+        "noImplicitAny": true,
+        "removeComments": true,
+        "sourceMap": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "lib": ["es5", "dom", "scripthost", "es6"]
+    },
+    "include": ["src/**/*.ts"],
+    "exclude": ["src/**/*.spec.ts"]
+}
