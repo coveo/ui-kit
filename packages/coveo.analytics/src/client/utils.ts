@@ -2,7 +2,7 @@
 // see https://github.com/microsoft/TypeScript/pull/12253#issuecomment-393954723
 export const keysOf = Object.keys as <T>(o: T) => Extract<keyof T, string>[];
 export function isObject(o: any): boolean {
-    return o !== null && typeof o === 'object' && !Array.isArray(o);
+  return o !== null && typeof o === 'object' && !Array.isArray(o);
 }
 
 /**
@@ -13,7 +13,9 @@ export function isObject(o: any): boolean {
  * @returns The input, possibly coerced to a number.
  */
 export function coerceToNumber(input: any): any {
-    return typeof input === 'string' && input != '' && !Number.isNaN(+input) ? +input : input;
+  return typeof input === 'string' && input != '' && !Number.isNaN(+input)
+    ? +input
+    : input;
 }
 
 /**
@@ -29,16 +31,16 @@ const UTF8_HEADER_3 = 0b1110_0000;
 const UTF8_HEADER_4 = 0b1111_0000;
 
 function utf8ByteCountFromFirstByte(firstByte: number): number {
-    if ((firstByte & 0b1111_1000) === UTF8_HEADER_4) {
-        return 4;
-    }
-    if ((firstByte & UTF8_HEADER_4) === UTF8_HEADER_3) {
-        return 3;
-    }
-    if ((firstByte & UTF8_HEADER_3) === UTF8_HEADER_2) {
-        return 2;
-    }
-    return 1;
+  if ((firstByte & 0b1111_1000) === UTF8_HEADER_4) {
+    return 4;
+  }
+  if ((firstByte & UTF8_HEADER_4) === UTF8_HEADER_3) {
+    return 3;
+  }
+  if ((firstByte & UTF8_HEADER_3) === UTF8_HEADER_2) {
+    return 2;
+  }
+  return 1;
 }
 
 /**
@@ -49,34 +51,34 @@ function utf8ByteCountFromFirstByte(firstByte: number): number {
  * @returns The URL, possibly truncated to a length near limit (at most 11 characters less than limit).
  */
 export function truncateUrl(input: string, limit: number): string {
-    if (limit < 0 || input.length <= limit) {
-        return input;
+  if (limit < 0 || input.length <= limit) {
+    return input;
+  }
+  // A valid escape sequence is a percent followed by 2 hexadecimal characters; check if we split one up.
+  let end = input.indexOf('%', limit - 2);
+  if (end < 0 || end > limit) {
+    end = limit;
+  } else {
+    limit = end;
+  }
+  // Check that truncating at end won't break up an UTF-8 multibyte sequence half-way,
+  // by peeking backwards to find the first byte of an UTF-8 sequence (if present).
+  while (end > 2 && input.charAt(end - 3) == '%') {
+    const peekByte = Number.parseInt(input.substring(end - 2, end), 16);
+    // Note: if parsing fails, NaN gets coerced to 0 by the bitwise and.
+    if ((peekByte & UTF8_HIGH_BIT) != UTF8_HIGH_BIT) {
+      break;
     }
-    // A valid escape sequence is a percent followed by 2 hexadecimal characters; check if we split one up.
-    let end = input.indexOf('%', limit - 2);
-    if (end < 0 || end > limit) {
+    end -= 3;
+    // Check if we reached the first byte by checking it is not a "follow byte": 10xx_xxxx.
+    if ((peekByte & UTF8_HEADER_2) != UTF8_HIGH_BIT) {
+      // If the full code point is there, keep it.
+      if (limit - end >= utf8ByteCountFromFirstByte(peekByte) * 3) {
         end = limit;
-    } else {
-        limit = end;
+      }
+      // Otherwise, end is already set at the correct point to truncate at (the start of the multibyte sequence).
+      break;
     }
-    // Check that truncating at end won't break up an UTF-8 multibyte sequence half-way,
-    // by peeking backwards to find the first byte of an UTF-8 sequence (if present).
-    while (end > 2 && input.charAt(end - 3) == '%') {
-        const peekByte = Number.parseInt(input.substring(end - 2, end), 16);
-        // Note: if parsing fails, NaN gets coerced to 0 by the bitwise and.
-        if ((peekByte & UTF8_HIGH_BIT) != UTF8_HIGH_BIT) {
-            break;
-        }
-        end -= 3;
-        // Check if we reached the first byte by checking it is not a "follow byte": 10xx_xxxx.
-        if ((peekByte & UTF8_HEADER_2) != UTF8_HIGH_BIT) {
-            // If the full code point is there, keep it.
-            if (limit - end >= utf8ByteCountFromFirstByte(peekByte) * 3) {
-                end = limit;
-            }
-            // Otherwise, end is already set at the correct point to truncate at (the start of the multibyte sequence).
-            break;
-        }
-    }
-    return input.substring(0, end);
+  }
+  return input.substring(0, end);
 }

@@ -1,16 +1,20 @@
-import * as fm from 'fetch-mock';
-import * as CrossFetch from 'cross-fetch';
+import fetchMockModule from 'fetch-mock';
 
 export function mockFetch() {
-    const fetchMock = fm.sandbox();
-    return {
-        fetchMock,
-        fetchMockBeforeEach: () => jest.spyOn(CrossFetch, 'fetch').mockImplementation(fetchMock as any),
-    };
+  const fetchMock = fetchMockModule.sandbox();
+  const crossFetchMock = require('./cross-fetch-mock');
+  return {
+    fetchMock,
+    fetchMockBeforeEach: () => {
+      crossFetchMock.setFetchMock(fetchMock);
+    },
+  };
 }
 
-export function lastCallBody(fetchMock: fm.FetchMockSandbox): string {
-    const [, res]: any = fetchMock.lastCall();
-    const {body} = res!;
-    return body!.toString();
+export function lastCallBody(
+  fetchMock: fetchMockModule.FetchMockSandbox
+): string {
+  const [, res]: any = fetchMock.lastCall();
+  const {body} = res!;
+  return body!.toString();
 }

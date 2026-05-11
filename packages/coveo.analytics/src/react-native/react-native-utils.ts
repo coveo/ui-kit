@@ -5,5 +5,5 @@ export const ReactNativeRuntimeWarning = `
     `;
 
 export function isReactNative() {
-    return typeof navigator != 'undefined' && navigator.product == 'ReactNative';
+  return typeof navigator != 'undefined' && navigator.product == 'ReactNative';
 }

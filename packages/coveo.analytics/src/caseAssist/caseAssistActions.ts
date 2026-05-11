@@ -1,93 +1,95 @@
 import {TicketProperties} from '../plugins/svc';
 
 export enum CaseAssistEvents {
-    click = 'click',
-    flowStart = 'flowStart',
+  click = 'click',
+  flowStart = 'flowStart',
 }
 
 export enum CaseAssistActions {
-    enterInterface = 'ticket_create_start',
-    fieldUpdate = 'ticket_field_update',
-    fieldSuggestionClick = 'ticket_classification_click',
-    documentSuggestionClick = 'documentSuggestionClick',
-    documentSuggestionQuickview = 'documentSuggestionQuickview',
-    suggestionRate = 'suggestion_rate',
-    nextCaseStep = 'ticket_next_stage',
-    caseCancelled = 'ticket_cancel',
-    caseSolved = 'ticket_cancel',
-    caseCreated = 'ticket_create',
+  enterInterface = 'ticket_create_start',
+  fieldUpdate = 'ticket_field_update',
+  fieldSuggestionClick = 'ticket_classification_click',
+  documentSuggestionClick = 'documentSuggestionClick',
+  documentSuggestionQuickview = 'documentSuggestionQuickview',
+  suggestionRate = 'suggestion_rate',
+  nextCaseStep = 'ticket_next_stage',
+  // oxlint-disable-next-line @typescript-eslint/no-duplicate-enum-values
+  caseCancelled = 'ticket_cancel',
+  // oxlint-disable-next-line @typescript-eslint/no-duplicate-enum-values
+  caseSolved = 'ticket_cancel',
+  caseCreated = 'ticket_create',
 }
 
 export enum CaseCancelledReasons {
-    quit = 'Quit',
-    solved = 'Solved',
+  quit = 'Quit',
+  solved = 'Solved',
 }
 
 export interface EnterInterfaceMetadata {
-    ticket: TicketProperties;
+  ticket: TicketProperties;
 }
 
 export interface UpdateCaseFieldMetadata {
-    fieldName: string;
-    ticket: TicketProperties;
+  fieldName: string;
+  ticket: TicketProperties;
 }
 
 export interface SelectFieldSuggestionMetadata {
-    suggestion: FieldSuggestion;
-    ticket: TicketProperties;
+  suggestion: FieldSuggestion;
+  ticket: TicketProperties;
 }
 
 export interface SelectDocumentSuggestionMetadata {
-    suggestion: DocumentSuggestion;
-    ticket: TicketProperties;
+  suggestion: DocumentSuggestion;
+  ticket: TicketProperties;
 }
 
 export interface RateDocumentSuggestionMetadata {
-    rating: number;
-    suggestion: DocumentSuggestion;
-    ticket: TicketProperties;
+  rating: number;
+  suggestion: DocumentSuggestion;
+  ticket: TicketProperties;
 }
 
 export interface MoveToNextCaseStepMetadata {
-    ticket: TicketProperties;
-    stage?: string;
+  ticket: TicketProperties;
+  stage?: string;
 }
 
 export interface CaseCancelledMetadata {
-    ticket: TicketProperties;
+  ticket: TicketProperties;
 }
 
 export interface CaseSolvedMetadata {
-    ticket: TicketProperties;
+  ticket: TicketProperties;
 }
 
 export interface CaseCreatedMetadata {
-    ticket: TicketProperties;
+  ticket: TicketProperties;
 }
 
 export interface FieldSuggestion {
-    classificationId: string;
-    responseId: string;
-    fieldName: string;
-    classification: {
-        value: string;
-        confidence: number;
-    };
-    autoSelection?: boolean;
+  classificationId: string;
+  responseId: string;
+  fieldName: string;
+  classification: {
+    value: string;
+    confidence: number;
+  };
+  autoSelection?: boolean;
 }
 
 export interface DocumentSuggestion {
-    suggestionId: string;
-    responseId: string;
-    permanentId: string;
-    suggestion: {
-        documentUri: string;
-        documentUriHash: string;
-        documentTitle: string;
-        documentUrl: string;
-        documentPosition: number;
-        sourceName: string;
-    };
-    fromQuickview?: boolean;
-    openDocument?: boolean;
+  suggestionId: string;
+  responseId: string;
+  permanentId: string;
+  suggestion: {
+    documentUri: string;
+    documentUriHash: string;
+    documentTitle: string;
+    documentUrl: string;
+    documentPosition: number;
+    sourceName: string;
+  };
+  fromQuickview?: boolean;
+  openDocument?: boolean;
 }
