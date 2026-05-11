@@ -11,7 +11,7 @@
  * - Reads config from state, never accepts it as parameters
  */
 
-import type {Engine} from '@/src/core/interface/engine/engine.js';
+import type {FullEngine} from '@/src/core/interface/engine/engine.js';
 import * as configurationSelectors from '@/src/core/interface/configuration/configuration-selectors.js';
 import {isSuccessResponse, transformError} from './error-handling.js';
 
@@ -72,7 +72,7 @@ export interface HttpResponse<T> {
  * Returns a typed response with success/error status instead of throwing exceptions.
  */
 export async function executeHttpRequest<T>(
-  engine: Engine,
+  engine: FullEngine,
   options: HttpRequestOptions
 ): Promise<HttpResponse<T>> {
   try {
