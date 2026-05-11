@@ -57,7 +57,7 @@ Deliver an end-to-end agentic conversation flow in three phases, each built bott
 | 19  | Orchestration/context-bridge | Deleted in Phase 0; reintroduced in Phase 3                                     |
 | 20  | Navigator context slice      | Deleted; provider pattern replaces it                                           |
 | 21  | Engine constructor update    | Separate PR in Phase 1.2 (not in cleanup)                                       |
-| 22  | Cart controller scope        | `setItems(items[])` only                                                        |
+| 22  | Cart controller scope        | `setItems(payload)` and `updateItemQuantity(payload)`                           |
 | 23  | A2UI contract style          | Typed operation union + normalized render-agnostic state                        |
 | 24  | Phase 3 mode model           | `search-first \| assistant-first` only                                          |
 
@@ -104,7 +104,7 @@ Completed checklist:
 - **1.0** Types-only PR: `ConversationController` interface + `ConversationControllerState`
 - **1.1** Conversation state domain (Layer 0): slice, mutators, selectors, tests
 - **1.2** Engine constructor + `EngineOptions` + navigator context provider
-- **1.3** Cart controller: `buildCartController` with `setItems` only
+- **1.3** Cart controller: `buildCartController` with `setItems` and `updateItemQuantity`
 - **1.4** HTTP + stream utilities: `api/shared/http.ts` + `api/shared/stream.ts`
 - **1.5** Request builder: `buildConverseRequestBody(engine, input)`
 - **1.6** Event dispatcher + turn lifecycle helpers
@@ -147,6 +147,21 @@ Completed checklist for 1.2:
 - [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
 - [x] Post-Phase-1.2 refinement: moved `getNavigatorContextProvider()` from public `Engine` to internal `FullEngine` type to minimize public API surface
 
+Completed checklist for 1.3:
+
+- [x] Added the Layer 2 cart controller under `src/public/controllers/cart/cart-controller.ts`
+- [x] Added dedicated cart controller contracts under `src/public/controllers/cart/cart-controller-types.ts` and shared base contracts under `src/public/controllers/controller-types.ts`
+- [x] Implemented `buildCartController(options)` with `state`, `setItems(payload)`, `updateItemQuantity(payload)`, and `subscribe(callback)`
+- [x] Kept cart controller state minimal (`{items}`) and removed derived `products` exposure from the public cart selector surface
+- [x] Exported `buildCartController`, `CartController`, and `CartControllerOptions` through `src/public/controllers/index.ts`
+- [x] Refactored cart mutators to payload-based contracts (`SetCartItemsPayload`, `UpdateItemQuantityPayload`)
+- [x] Simplified cart domain types by removing unused aggregation types/utilities (`CartItemParam`, `getProductsFromCartState`)
+- [x] Refactored Layer 3 cart actions to named payload-based exports (`setCartItems`, `updateCartItemQuantity`)
+- [x] Added/updated cart domain coverage: selector unit tests (pure fixtures), mutator shape tests, controller tests, and action wiring tests
+- [x] Refined cart controller tests to a hybrid strategy: public behavior coverage (including explicit `state` getter assertions) plus minimal isolated wiring checks
+- [x] Added JSDoc for cart controller and cart actions public contracts
+- [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
+
 ### Phase 2 — A2UI Surface Parsing
 
 - **2.0** A2UI protocol contract in `stream-types.ts`
@@ -171,7 +186,7 @@ Completed checklist for 1.2:
 | Phase 1.0 | add-conversation-types           | ✅ completed   |
 | Phase 1.1 | add-slice-mutators-and-selectors | ✅ completed   |
 | Phase 1.2 | add-navigator-context            | ✅ completed   |
-| Phase 1.3 | —                                | ⬜ not started |
+| Phase 1.3 | adjust-cart                      | ✅ completed   |
 | Phase 1.4 | —                                | ⬜ not started |
 | Phase 1.5 | —                                | ⬜ not started |
 | Phase 1.6 | —                                | ⬜ not started |

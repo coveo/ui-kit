@@ -1,40 +1,37 @@
 import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {cartSlice} from '@/src/core/internal/cart/cart-slice.js';
-import * as cartMutators from '@/src/core/interface/cart/cart-mutators.js';
-import type {CartItem} from '@/src/core/interface/cart/cart-types.js';
+import {
+  setItems as setItemsMutator,
+  updateItemQuantity as updateItemQuantityMutator,
+} from '@/src/core/interface/cart/cart-mutators.js';
+import type {
+  SetCartItemsPayload,
+  UpdateItemQuantityPayload,
+} from '@/src/core/interface/cart/cart-types.js';
 
-type MutatorToAction<T> = T extends (...args: infer A) => any
-  ? (...args: A) => void
-  : never;
-
-type MutatorsToActions<T> = {
-  [K in keyof T]: MutatorToAction<T[K]>;
-};
-
-const loadedEngine = new WeakSet<Engine>();
-
-const ensureLoaded = (engine: Engine) => {
-  if (loadedEngine.has(engine)) {
-    return;
-  }
-
+/**
+ * Sets the items in the cart.
+ *
+ * @param engine - The engine instance to perform the action on.
+ * @param payload - The action payload.
+ */
+export const setItems = (engine: Engine, payload: SetCartItemsPayload) => {
   const fullEngine = getFullEngine(engine);
   fullEngine.adoptSlice(cartSlice);
-  loadedEngine.add(engine);
+  fullEngine.mutate(setItemsMutator(payload));
 };
 
-export const loadCartActions = (
-  engine: Engine
-): MutatorsToActions<typeof cartMutators> => {
-  ensureLoaded(engine);
+/**
+ * Updates the quantity of an item in the cart.
+ *
+ * @param engine - The engine instance to perform the action on.
+ * @param payload - The action payload.
+ */
+export const updateItemQuantity = (
+  engine: Engine,
+  payload: UpdateItemQuantityPayload
+) => {
   const fullEngine = getFullEngine(engine);
-
-  return {
-    setItems: (items: CartItem[]) => {
-      fullEngine.mutate(cartMutators.setItems(items));
-    },
-    updateItemQuantity: (item: CartItem) => {
-      fullEngine.mutate(cartMutators.updateItemQuantity(item));
-    },
-  };
+  fullEngine.adoptSlice(cartSlice);
+  fullEngine.mutate(updateItemQuantityMutator(payload));
 };
