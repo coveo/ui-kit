@@ -176,7 +176,7 @@ Completed checklist for 1.5:
 - [x] Added `buildConverseRequestBody(engine, input)` in `src/api/conversation/build-converse-request-body.ts`
 - [x] Added `ConverseRequestBody` payload contract aligned to Barca-style converse body fields
 - [x] Mapped payload fields from engine state: configuration, conversation session, cart, and navigator context provider
-- [x] All payload fields are mandatory; missing values default to empty strings (or empty array for `cart`)
+- [x] Implemented raw pass-through payload semantics: no value transformation, preserving `null`/`undefined` from state and navigator context (with `cart` defaulting to `[]` only when cart state is absent)
 - [x] Kept implementation flat — no helper functions; inlined `engine.getNavigatorContextProvider()?.()` directly
 - [x] Added unit coverage in `src/api/conversation/build-converse-request-body.test.ts`
 - [x] Exported `buildConverseRequestBody` and `ConverseRequestBody` from `src/api/index.ts`

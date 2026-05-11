@@ -82,7 +82,7 @@ describe('buildConverseRequestBody()', () => {
     });
   });
 
-  it('defaults missing fields to empty strings', async () => {
+  it('passes raw values from state including null', async () => {
     const engine = getFullEngine(
       new Engine({
         configuration: {
@@ -121,16 +121,16 @@ describe('buildConverseRequestBody()', () => {
       message: 'hello',
       context: {
         user: {
-          userAgent: '',
+          userAgent: null,
         },
         view: {
-          url: '',
-          referrer: '',
+          url: null,
+          referrer: null,
         },
         cart: [],
       },
       conversationSessionId: '',
-      conversationToken: '',
+      conversationToken: undefined,
       targetEngine: 'AGENT_CORE',
     });
   });
@@ -142,24 +142,24 @@ describe('buildConverseRequestBody()', () => {
     const payload = buildConverseRequestBody(engine, 'hello');
 
     expect(payload).toEqual({
-      trackingId: '',
-      language: '',
-      country: '',
-      currency: '',
-      clientId: '',
+      trackingId: undefined,
+      language: undefined,
+      country: undefined,
+      currency: undefined,
+      clientId: undefined,
       message: 'hello',
       context: {
         user: {
-          userAgent: '',
+          userAgent: undefined,
         },
         view: {
-          url: '',
-          referrer: '',
+          url: undefined,
+          referrer: undefined,
         },
         cart: [],
       },
-      conversationSessionId: '',
-      conversationToken: '',
+      conversationSessionId: undefined,
+      conversationToken: undefined,
       targetEngine: 'AGENT_CORE',
     });
 
@@ -189,19 +189,19 @@ describe('buildConverseRequestBody()', () => {
     const payload = buildConverseRequestBody(engine, 'show hats');
 
     expect(payload).toEqual({
-      trackingId: '',
-      language: '',
-      country: '',
-      currency: '',
-      clientId: '',
+      trackingId: undefined,
+      language: undefined,
+      country: undefined,
+      currency: undefined,
+      clientId: undefined,
       message: 'show hats',
       context: {
         user: {
-          userAgent: '',
+          userAgent: undefined,
         },
         view: {
-          url: '',
-          referrer: '',
+          url: undefined,
+          referrer: undefined,
         },
         cart: [
           {
@@ -212,8 +212,8 @@ describe('buildConverseRequestBody()', () => {
           },
         ],
       },
-      conversationSessionId: '',
-      conversationToken: '',
+      conversationSessionId: undefined,
+      conversationToken: undefined,
       targetEngine: 'AGENT_CORE',
     });
   });
