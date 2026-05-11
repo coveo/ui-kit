@@ -1,3 +1,5 @@
+// TODO: these tests are integration-ish. Rework into actual unit tests.
+
 /**
  * Core Engine Operations Tests
  */
@@ -15,6 +17,8 @@ import type {
   ConfigurationState,
   State,
 } from '@/src/core/interface/interface-types.js';
+import type {EngineOptions} from '@/src/core/interface/engine/engine-types.js';
+import type {NavigatorContextProvider} from '@/src/core/interface/navigator-context/navigator-context-types.js';
 
 describe('Engine: read()', () => {
   let engine: FullEngine;
@@ -195,7 +199,7 @@ describe('Engine: constructor()', () => {
       country: '',
       currency: '',
     };
-    const engine = new Engine(config);
+    const engine = new Engine({configuration: config});
 
     expect(engine.read((state) => state.configuration?.organizationId)).toBe(
       'my-org'
@@ -215,7 +219,7 @@ describe('Engine: constructor()', () => {
       currency: '',
       endpoint: 'https://my-endpoint.coveo.com',
     };
-    const engine = new Engine(config);
+    const engine = new Engine({configuration: config});
 
     expect(engine.read((state) => state.configuration?.endpoint)).toBe(
       'https://my-endpoint.coveo.com'
@@ -231,10 +235,104 @@ describe('Engine: constructor()', () => {
       country: '',
       currency: '',
     };
-    const engine = new Engine(config);
+    const engine = new Engine({configuration: config});
 
     expect(
       engine.read((state) => state.configuration?.endpoint)
     ).toBeUndefined();
+  });
+
+  it('should accept EngineOptions with configuration', () => {
+    const options: EngineOptions = {
+      configuration: {
+        organizationId: 'my-org',
+        accessToken: 'my-token',
+        trackingId: '',
+        language: '',
+        country: '',
+        currency: '',
+      },
+    };
+    const engine = new Engine(options);
+
+    expect(engine.read((state) => state.configuration?.organizationId)).toBe(
+      'my-org'
+    );
+  });
+
+  it('should store navigator context provider when provided', () => {
+    const mockProvider: NavigatorContextProvider = () => ({
+      clientId: 'test-client-id',
+      location: 'https://example.com',
+      referrer: 'https://google.com',
+      userAgent: 'Mozilla/5.0',
+    });
+
+    const options: EngineOptions = {
+      navigatorContextProvider: mockProvider,
+    };
+    const fullEngine = getFullEngine(new Engine(options));
+
+    // Verify provider can be retrieved and called
+    const provider = fullEngine.getNavigatorContextProvider();
+    expect(provider).toBe(mockProvider);
+    expect(provider?.()).toEqual({
+      clientId: 'test-client-id',
+      location: 'https://example.com',
+      referrer: 'https://google.com',
+      userAgent: 'Mozilla/5.0',
+    });
+  });
+
+  it('should return undefined navigator context provider when not provided', () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const fullEngine = getFullEngine(new Engine());
+
+    const provider = fullEngine.getNavigatorContextProvider();
+    expect(provider).toBeUndefined();
+    expect(warnSpy).toHaveBeenCalledWith(
+      '[WARNING] Missing navigator context provider. Provide `navigatorContextProvider` in Engine options before using conversational requests.'
+    );
+
+    warnSpy.mockRestore();
+  });
+
+  it('should warn only once when navigator context provider is missing', () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const fullEngine = getFullEngine(new Engine());
+
+    fullEngine.getNavigatorContextProvider();
+    fullEngine.getNavigatorContextProvider();
+
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+
+    warnSpy.mockRestore();
+  });
+
+  it('should accept both configuration and navigator context provider', () => {
+    const mockProvider: NavigatorContextProvider = () => ({
+      clientId: 'client-123',
+      location: 'https://example.com',
+      referrer: null,
+      userAgent: null,
+    });
+
+    const options: EngineOptions = {
+      configuration: {
+        organizationId: 'my-org',
+        accessToken: 'my-token',
+        trackingId: '',
+        language: '',
+        country: '',
+        currency: '',
+      },
+      navigatorContextProvider: mockProvider,
+    };
+    const fullEngine = getFullEngine(new Engine(options));
+
+    expect(
+      fullEngine.read((state) => state.configuration?.organizationId)
+    ).toBe('my-org');
+    expect(fullEngine.getNavigatorContextProvider()).toBe(mockProvider);
   });
 });

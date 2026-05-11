@@ -22,6 +22,10 @@ export type {ResultsState} from './results/results-types.js';
 export type {FacetState, FacetValue} from './facets/facets-types.js';
 export type {PaginationState} from './pagination/pagination-types.js';
 export type {ConfigurationState} from './configuration/configuration-types.js';
+export type {
+  NavigatorContext,
+  NavigatorContextProvider,
+} from './navigator-context/navigator-context-types.js';
 export type {CartState, CartItem, CartItemParam} from './cart/cart-types.js';
 export type {
   ConversationMessage,
