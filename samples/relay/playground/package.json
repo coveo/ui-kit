@@ -7,8 +7,6 @@
     "build": "next build",
     "preview": "serve out/ -c ../serve.json",
     "start": "next start",
-    "lint": "eslint app/**",
-    "lint:fix": "npm run lint -- --fix",
     "test": "npm run test:relay-node",
     "test:relay-node": "node ./tests/relay-node.js && node ./tests/relay-node.mjs"
   },
@@ -24,10 +22,6 @@
   "devDependencies": {
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "serve": "^14.2.1",
-    "tsconfig": "workspace:*",
-    "globals": "17.4.0",
-    "@eslint/js": "^10.0.0",
-    "@eslint/eslintrc": "3.3.4"
+    "serve": "^14.2.1"
   }
 }

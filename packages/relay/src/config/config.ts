@@ -1,4 +1,4 @@
-import { CustomEnvironment } from "../environment/custom/custom.js";
+import {CustomEnvironment} from '../environment/custom/custom.js';
 
 /**
  * The `RelayConfig` object defines the configuration options for initializing a Relay instance.
@@ -26,7 +26,7 @@ export interface RelayConfig {
    * `disabled` prevents the emission of events and does not trigger callbacks.
    * @default emit
    */
-  mode?: "emit" | "disabled";
+  mode?: 'emit' | 'disabled';
 
   /**
    * Optionally allows a Relay integration to specify the names of software packages relay is
@@ -57,21 +57,21 @@ function pick({
     url,
     token,
     trackingId,
-    ...(!!rest.mode && { mode: rest.mode }),
-    ...(!!rest.source && { source: rest.source }),
-    ...(!!rest.environment && { environment: rest.environment }),
+    ...(!!rest.mode && {mode: rest.mode}),
+    ...(!!rest.source && {source: rest.source}),
+    ...(!!rest.environment && {environment: rest.environment}),
   });
 }
 
 export function createConfigManager(
-  initialConfig: RelayConfig,
+  initialConfig: RelayConfig
 ): Readonly<ConfigManager> {
   let _config: Readonly<RelayConfig> = pick(initialConfig);
 
   return {
     get: () => _config,
     update: (updatedConfig: Partial<RelayConfig>) => {
-      _config = pick({ ..._config, ...updatedConfig });
+      _config = pick({..._config, ...updatedConfig});
     },
   };
 }

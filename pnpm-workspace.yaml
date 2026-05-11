@@ -27,6 +27,8 @@ packages:
   - samples/headless/*
   - samples/headless-ssr/*
   - samples/pkg-new-template
+  - packages/relay
+  - samples/relay/*
   - utils/cdn
   - utils/ci
 
@@ -44,7 +46,6 @@ catalog:
   '@angular/platform-browser-dynamic': 21.2.10
   '@angular/platform-server': 21.2.10
   '@angular/router': 21.2.10
-  '@coveo/relay': 2.1.1
   '@coveo/relay-event-types': 19.6.0
   '@playwright/mcp': 0.0.71
   '@playwright/test': 1.59.1

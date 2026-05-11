@@ -1,4 +1,4 @@
-import type { RelayEvent } from "../event/relay-event.js";
+import type {RelayEvent} from '../event/relay-event.js';
 
 /**
  * Platform abstraction interface used by Relay to operate in different execution environments,
@@ -12,7 +12,7 @@ export interface Environment {
    * `"custom"` represents a user-supplied environment.
    * @type {"browser" | "null" | "custom"}
    */
-  runtime: "browser" | "null" | "custom";
+  runtime: 'browser' | 'null' | 'custom';
 
   /**
    * Sends an analytics event to the Event API.

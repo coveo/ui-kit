@@ -1,1 +1,1 @@
-export const clientIdKey = "visitorId";
+export const clientIdKey = 'visitorId';

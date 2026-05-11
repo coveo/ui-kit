@@ -1,0 +1,6 @@
+description: Relay analytics library
+file_patterns:
+  - packages/relay/**
+  - samples/relay/**
+reviewers:
+  dxui: ~

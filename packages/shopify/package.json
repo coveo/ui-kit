@@ -55,7 +55,7 @@
   },
   "dependencies": {
     "@coveo/headless": "workspace:*",
-    "@coveo/relay": "catalog:",
+    "@coveo/relay": "workspace:^",
     "uuid": "^13.0.0"
   },
   "devDependencies": {

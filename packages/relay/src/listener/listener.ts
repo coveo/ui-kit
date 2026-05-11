@@ -1,6 +1,6 @@
-import type { RelayEvent } from "../event/relay-event.js";
+import type {RelayEvent} from '../event/relay-event.js';
 
-const ANY_EVENT_TYPE = "*";
+const ANY_EVENT_TYPE = '*';
 
 /**
  * Callback to perform an action when a specified event is emitted.
@@ -24,14 +24,14 @@ export interface ListenerManager {
 export function createListenerManager(): ListenerManager {
   const listeners: Listener[] = [];
 
-  function getListenerIndex({ type, callback }: Listener): number {
+  function getListenerIndex({type, callback}: Listener): number {
     return listeners.findIndex(
-      (listener) => listener.type === type && listener.callback === callback,
+      (listener) => listener.type === type && listener.callback === callback
     );
   }
 
   function isMatchesType(listener: Listener, type: string): boolean {
-    return listener.type === "*" || type === listener.type;
+    return listener.type === '*' || type === listener.type;
   }
 
   function add(listener: Listener): () => void {
@@ -74,7 +74,7 @@ export function createListenerManager(): ListenerManager {
 
   function remove(type: string, callback?: EventCallback) {
     if (callback) {
-      removeOne({ type, callback });
+      removeOne({type, callback});
     } else {
       removeMultiple(type);
     }

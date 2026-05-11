@@ -1,8 +1,8 @@
-import { vi } from "vitest";
+import {vi} from 'vitest';
 
 const createExplorerMessenger = () => {
   const sendMessage = () => vi.fn();
-  return { sendMessage };
+  return {sendMessage};
 };
 
 module.exports = {

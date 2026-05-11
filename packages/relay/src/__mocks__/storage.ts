@@ -1,5 +1,5 @@
-import { vi } from "vitest";
-import type { Storage } from "../environment/storage.js";
+import {vi} from 'vitest';
+import type {Storage} from '../environment/storage.js';
 
 export function createMockStorage(storage: Partial<Storage> = {}): Storage {
   return {

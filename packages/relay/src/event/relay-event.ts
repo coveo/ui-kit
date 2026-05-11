@@ -1,7 +1,7 @@
-import type { Environment } from "../environment/environment.js";
-import type { RelayPayload } from "../relay-payload.js";
-import type { RelayConfig } from "../relay.js";
-import { createMeta, type Meta } from "./meta/meta.js";
+import type {Environment} from '../environment/environment.js';
+import type {RelayPayload} from '../relay-payload.js';
+import type {RelayConfig} from '../relay.js';
+import {createMeta, type Meta} from './meta/meta.js';
 
 /**
  * Defines the structure of a RelayEvent, extending the RelayPayload.
@@ -17,7 +17,7 @@ export function createRelayEvent(
   type: string,
   payload: RelayPayload,
   config: RelayConfig,
-  environment: Environment,
+  environment: Environment
 ): Readonly<RelayEvent> {
   return {
     ...payload,

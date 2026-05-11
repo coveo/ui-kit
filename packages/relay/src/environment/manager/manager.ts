@@ -1,15 +1,15 @@
-import type { ConfigManager } from "../../config/config.js";
-import { buildBrowserEnvironment } from "../browser/browser.js";
-import { localStorageAvailable } from "../browser/storage/availability.js";
-import type { Environment } from "../environment.js";
-import { buildNullEnvironment } from "../null/null.js";
+import type {ConfigManager} from '../../config/config.js';
+import {buildBrowserEnvironment} from '../browser/browser.js';
+import {localStorageAvailable} from '../browser/storage/availability.js';
+import type {Environment} from '../environment.js';
+import {buildNullEnvironment} from '../null/null.js';
 
 export interface EnvironmentManager {
   get: () => Readonly<Environment>;
 }
 
 function buildEnvironment(configManager: ConfigManager): Environment {
-  const active = configManager.get().mode !== "disabled";
+  const active = configManager.get().mode !== 'disabled';
 
   const environmentFromConfig = configManager.get().environment;
   const nullEnvironment = buildNullEnvironment();
@@ -17,7 +17,7 @@ function buildEnvironment(configManager: ConfigManager): Environment {
   if (active && environmentFromConfig) {
     return {
       ...environmentFromConfig,
-      runtime: "custom",
+      runtime: 'custom',
     };
   }
 
@@ -30,14 +30,14 @@ function buildEnvironment(configManager: ConfigManager): Environment {
 
 function isBrowser() {
   try {
-    return typeof window === "object";
+    return typeof window === 'object';
   } catch {
     return false;
   }
 }
 
 export function createEnvironmentManager(
-  configManager: ConfigManager,
+  configManager: ConfigManager
 ): Readonly<EnvironmentManager> {
   return {
     get: () => Object.freeze(buildEnvironment(configManager)),

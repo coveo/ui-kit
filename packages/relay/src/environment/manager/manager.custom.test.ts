@@ -1,13 +1,13 @@
 import {
   createMockConfig,
   createMockConfigManager,
-} from "../../__mocks__/config.js";
-import { createMockEnvironment } from "../../__mocks__/environment.js";
-import { createEnvironmentManager } from "./manager.js";
+} from '../../__mocks__/config.js';
+import {createMockEnvironment} from '../../__mocks__/environment.js';
+import {createEnvironmentManager} from './manager.js';
 
-describe("createEnvironmentManager - custom", () => {
-  describe("get", () => {
-    it("gets the custom environment when configured", () => {
+describe('createEnvironmentManager - custom', () => {
+  describe('get', () => {
+    it('gets the custom environment when configured', () => {
       const configManager = createMockConfigManager({
         get: () =>
           createMockConfig({
@@ -16,20 +16,20 @@ describe("createEnvironmentManager - custom", () => {
       });
       const environmentManager = createEnvironmentManager(configManager);
 
-      expect(environmentManager.get().runtime).toBe("custom");
+      expect(environmentManager.get().runtime).toBe('custom');
     });
 
-    it("gets a null environment instead of custom if the config mode is disabled", () => {
+    it('gets a null environment instead of custom if the config mode is disabled', () => {
       const configManager = createMockConfigManager({
         get: () =>
           createMockConfig({
             environment: createMockEnvironment(),
-            mode: "disabled",
+            mode: 'disabled',
           }),
       });
       const environmentManager = createEnvironmentManager(configManager);
 
-      expect(environmentManager.get().runtime).toBe("null");
+      expect(environmentManager.get().runtime).toBe('null');
     });
   });
 });

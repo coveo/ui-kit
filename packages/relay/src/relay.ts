@@ -1,18 +1,18 @@
-import { emit } from "./emit/emit.js";
-import { createRelayEvent, type RelayEvent } from "./event/relay-event.js";
-import { version } from "./version.js";
-import { createMeta, type Meta, type EventConfig } from "./event/meta/meta.js";
+import {emit} from './emit/emit.js';
+import {createRelayEvent, type RelayEvent} from './event/relay-event.js';
+import {version} from './version.js';
+import {createMeta, type Meta, type EventConfig} from './event/meta/meta.js';
 import {
   createListenerManager,
   type EventCallback,
-} from "./listener/listener.js";
-import { createConfigManager, type RelayConfig } from "./config/config.js";
-import type { Environment } from "./environment/environment.js";
-import type { CustomEnvironment } from "./environment/custom/custom.js";
-import { createEnvironmentManager } from "./environment/manager/manager.js";
-import type { RelayPayload } from "./relay-payload.js";
-export { buildBrowserEnvironment } from "./environment/browser/browser.js";
-export { clientIdKey } from "./constants.js";
+} from './listener/listener.js';
+import {createConfigManager, type RelayConfig} from './config/config.js';
+import type {Environment} from './environment/environment.js';
+import type {CustomEnvironment} from './environment/custom/custom.js';
+import {createEnvironmentManager} from './environment/manager/manager.js';
+import type {RelayPayload} from './relay-payload.js';
+export {buildBrowserEnvironment} from './environment/browser/browser.js';
+export {clientIdKey} from './constants.js';
 
 /**
  * Function that detaches an event callback.
@@ -101,7 +101,7 @@ export function createRelay(initialConfig: RelayConfig): Relay {
     getMeta: (type: string) =>
       createMeta(type, configManager.get(), environmentManager.get()),
     on: (type: string, callback: EventCallback) =>
-      listenerManager.add({ type, callback }),
+      listenerManager.add({type, callback}),
     off: (type: string, callback?: EventCallback) =>
       listenerManager.remove(type, callback),
     updateConfig: (config: Partial<RelayConfig>) =>

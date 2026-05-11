@@ -1,9 +1,9 @@
-import { cookies } from "next/headers";
-import { search } from "./search";
-import config from "../../../next.config";
+import {cookies} from 'next/headers';
+import {search} from './search';
+import config from '../../../next.config';
 
-const COOKIE_NAME = "coveo_visitorId";
-export const dynamic = "force-static";
+const COOKIE_NAME = 'coveo_visitorId';
+export const dynamic = 'force-static';
 
 interface Product {
   ec_name: string;
@@ -41,7 +41,7 @@ const nav = `
 const generateHtmlResponse = (
   cookieValue: string,
   cookieStatus: string,
-  products: Product[],
+  products: Product[]
 ): string => `
   <!DOCTYPE html>
   <html lang="en">
@@ -86,9 +86,9 @@ const generateHtmlResponse = (
               <p><strong>Price:</strong> ${product.ec_price}</p>
               <img src="${product.ec_thumbnails[0]}" alt="${product.ec_name}" style="width: 150px; height: 150px; object-fit: cover;" />
             </li>
-          `,
+          `
             )
-            .join("")}
+            .join('')}
         </ul>
       `
           : `<p>No products found.</p>`
@@ -103,13 +103,13 @@ const getOrCreateClientId = async () => {
   if (existingClientId) {
     return {
       value: existingClientId.value,
-      status: "retrieved",
+      status: 'retrieved',
     };
   } else {
     const newClientId = crypto.randomUUID();
     return {
       value: newClientId,
-      status: "generated",
+      status: 'generated',
     };
   }
 };
@@ -136,25 +136,24 @@ export const GET = async (request: Request) => {
     return new Response(htmlResponse, {
       status: 200,
       headers: {
-        "Content-Type": "text/html",
+        'Content-Type': 'text/html',
       },
     });
   }
 
-  const { value: clientId, status: cliendIdStatus } =
-    await getOrCreateClientId();
+  const {value: clientId, status: cliendIdStatus} = await getOrCreateClientId();
 
-  const query = "kayak";
-  const userAgent = request.headers.get("user-agent") || "";
+  const query = 'kayak';
+  const userAgent = request.headers.get('user-agent') || '';
   const locationUrl = request.url;
-  const referrer = request.headers.get("referer") || "";
+  const referrer = request.headers.get('referer') || '';
 
   const searchResults = await search(
     query,
     clientId,
     userAgent,
     locationUrl,
-    referrer,
+    referrer
   );
 
   const products: Product[] = searchResults.success
@@ -166,8 +165,8 @@ export const GET = async (request: Request) => {
   return new Response(htmlResponse, {
     status: 200,
     headers: {
-      "Content-Type": "text/html",
-      "Set-Cookie": `${COOKIE_NAME}=${clientId}; Path=/;`,
+      'Content-Type': 'text/html',
+      'Set-Cookie': `${COOKIE_NAME}=${clientId}; Path=/;`,
     },
   });
 };

@@ -7,22 +7,22 @@ export interface CookieManager {
 export const cookieManager: CookieManager = createCookieManager();
 
 function createCookieManager(): CookieManager {
-  const prefix = "coveo_";
+  const prefix = 'coveo_';
   const getDomain = (host: string) => {
-    const parts = host.split(".").slice(-2);
-    return parts.length == 2 ? parts.join(".") : "";
+    const parts = host.split('.').slice(-2);
+    return parts.length == 2 ? parts.join('.') : '';
   };
 
   return {
     getItem(key: string): string | null {
       const cookiePrefix = `${prefix}${key}=`;
-      const cookieArray = document.cookie.split(";");
+      const cookieArray = document.cookie.split(';');
       for (const cookie of cookieArray) {
-        const prettifyCookie = cookie.replace(/^\s+/, "");
+        const prettifyCookie = cookie.replace(/^\s+/, '');
         if (prettifyCookie.lastIndexOf(cookiePrefix, 0) === 0) {
           return prettifyCookie.substring(
             cookiePrefix.length,
-            prettifyCookie.length,
+            prettifyCookie.length
           );
         }
       }
@@ -31,14 +31,14 @@ function createCookieManager(): CookieManager {
     setItem(key: string, data: string, expire: number): void {
       const domain = getDomain(window.location.hostname);
       const expireSection = `;expires=${new Date(
-        new Date().getTime() + expire,
+        new Date().getTime() + expire
       ).toUTCString()}`;
-      const domainSection = domain ? `;domain=${domain}` : "";
+      const domainSection = domain ? `;domain=${domain}` : '';
       document.cookie = `${prefix}${key}=${data}${expireSection}${domainSection};path=/;SameSite=Lax`;
     },
 
     removeItem(key: string): void {
-      this.setItem(key, "", -1);
+      this.setItem(key, '', -1);
     },
   };
 }
