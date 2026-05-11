@@ -107,7 +107,7 @@ const meta: Meta = {
     <atomic-insight-interface
       language-assets-path="./lang"
       icon-assets-path="./assets"
-      analytics="${isTestMode()}"
+      .analytics=${isTestMode()}
     >
       <atomic-insight-full-search-button
         slot="full-search"

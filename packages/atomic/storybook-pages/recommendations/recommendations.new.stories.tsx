@@ -110,7 +110,7 @@ const meta: Meta = {
         fields-to-include='["author", "date", "category", "source"]'
         language-assets-path="./lang"
         icon-assets-path="./assets"
-        analytics="${isTestMode()}"
+        .analytics=${isTestMode()}
       >
         <atomic-recs-list
           label="Recommended Articles"

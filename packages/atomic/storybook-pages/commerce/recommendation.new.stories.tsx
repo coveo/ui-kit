@@ -60,7 +60,7 @@ const meta: Meta = {
     );
   },
   render: () => html`
-    <atomic-commerce-recommendation-interface analytics="${isTestMode()}">
+    <atomic-commerce-recommendation-interface .analytics=${isTestMode()}>
       <atomic-commerce-recommendation-list
         display="list"
         density="normal"

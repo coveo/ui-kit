@@ -74,7 +74,7 @@ const meta: Meta = {
       type="search"
       language-assets-path="./lang"
       icon-assets-path="./assets"
-      analytics="${isTestMode()}"
+      .analytics=${isTestMode()}
     >
       <atomic-commerce-layout>
         <atomic-layout-section section="search">

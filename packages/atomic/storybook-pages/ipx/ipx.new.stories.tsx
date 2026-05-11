@@ -114,7 +114,7 @@ const meta: Meta = {
     <atomic-search-interface
       language-assets-path="./lang"
       icon-assets-path="./assets"
-      analytics="${isTestMode()}"
+      .analytics=${isTestMode()}
     >
       <atomic-ipx-modal is-open="true">
         <div slot="header">

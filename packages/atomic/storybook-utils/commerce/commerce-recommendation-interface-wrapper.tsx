@@ -21,7 +21,7 @@ export const wrapInCommerceRecommendationInterface = (
   decorator: (story) => html`
     <atomic-commerce-recommendation-interface
       ${spreadProps(includeCodeRoot ? {id: 'code-root'} : {})}
-      .analytics="${analytics}"
+      .analytics=${analytics}
     >
       ${story()}
     </atomic-commerce-recommendation-interface>

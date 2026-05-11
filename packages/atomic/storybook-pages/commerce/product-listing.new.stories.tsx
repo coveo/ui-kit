@@ -87,7 +87,7 @@ const meta: Meta = {
       type="product-listing"
       language-assets-path="./lang"
       icon-assets-path="./assets"
-      analytics="${isTestMode()}"
+      .analytics=${isTestMode()}
     >
       <atomic-commerce-layout>
         <atomic-layout-section section="facets"

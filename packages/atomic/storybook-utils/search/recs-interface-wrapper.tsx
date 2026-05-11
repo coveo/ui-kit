@@ -28,7 +28,7 @@ export const wrapInRecommendationInterface = ({
   decorator: (story) => html`
     <atomic-recs-interface
       ${spreadProps(includeCodeRoot ? {id: 'code-root'} : {})}
-      .analytics="${analytics}"
+      .analytics=${isTestMode()}
     >
       ${story()}
     </atomic-recs-interface>
