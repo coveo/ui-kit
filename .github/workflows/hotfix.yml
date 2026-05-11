@@ -1,13 +1,18 @@
 # Hotfix workflow
 #
-# Triggered on push to hotfix/* branches.
+# Triggered on push to hotfix/** branches.
 # Builds CDN artifacts and dispatches to ui-kit-cd to upload commit artifacts
-# and update stable pointers directly (skipping preview/bake).
+# and update major version pointers (vX/) directly, bypassing preview and bake.
+#
+# The 'hotfix' channel is a separate path from the normal stable promotion flow.
+# It writes to the same major version folders (vX/) but is routed through its own
+# job in update-cdn-pointers.yml, gated by the 'cdn-hotfix' environment in ui-kit-cd.
 #
 # Usage:
 #   git checkout -b hotfix/critical-fix v3.2.0   # branch from last release tag
 #   git cherry-pick <fix-sha>                     # cherry-pick the fix
 #   git push origin hotfix/critical-fix           # triggers this workflow
+#   # Approve the 'cdn-hotfix' environment gate in ui-kit-cd to deploy
 #
 # See: https://coveord.atlassian.net/browse/KIT-5700
 name: Hotfix CDN release
@@ -31,10 +36,9 @@ jobs:
       - uses: ./.github/actions/build-cdn
 
   hotfix-deploy:
-    name: Deploy hotfix to CDN (stable)
+    name: Deploy hotfix to CDN
     needs: build-cdn
     runs-on: ubuntu-latest
-    environment: 'Hotfix (CDN)'
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
@@ -45,8 +49,8 @@ jobs:
         with:
           skip-build: 'true'
           load-cache: 'false'
-      - name: Trigger commit artifact upload and stable pointer update
+      - name: Trigger commit artifact upload and hotfix pointer update
         run: node ./scripts/deploy/trigger-commit-upload.mjs
         env:
           GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
-          CHANNELS: 'stable'
+          CHANNELS: 'hotfix'
