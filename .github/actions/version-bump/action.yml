@@ -1,8 +1,0 @@
-name: VersionBumped
-description: Bump versions of changed packages
-runs:
-  using: composite
-  steps:
-    - name: Bump versions
-      shell: bash
-      run: pnpm version-bump
