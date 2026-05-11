@@ -12,8 +12,12 @@
 export {executeSearchAPI} from './search/search.js';
 
 // HTTP utilities (for future API clients)
-export {executeHttpRequest} from './shared/http-client.js';
-export type {HttpRequestOptions, HttpResponse} from './shared/http-client.js';
+export {executeHttpRequest} from './shared/http.js';
+export type {HttpRequestOptions, HttpResponse} from './shared/http.js';
+
+// Stream utilities (for future conversational clients)
+export {readEventStream} from './shared/stream.js';
+export type {ReadEventStreamOptions} from './shared/stream.js';
 
 // Error handling utilities (for future API clients)
 export {transformError, isSuccessResponse} from './shared/error-handling.js';
