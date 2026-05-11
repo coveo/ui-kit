@@ -1,8 +1,0 @@
-{
-    "typescript.tsdk": "node_modules\\typescript\\lib",
-    "files.exclude": {
-        ".nyc_output": true,
-        "dist_test": true
-    },
-    "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false
-}
