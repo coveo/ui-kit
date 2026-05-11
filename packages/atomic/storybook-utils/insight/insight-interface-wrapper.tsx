@@ -31,7 +31,7 @@ export const wrapInInsightInterface = (
     </style>
     <atomic-insight-interface
       ${spreadProps(includeCodeRoot ? {id: 'code-root'} : {})}
-      .analytics=${isTestMode()}
+      .analytics=${analytics}
     >
       ${story()}
     </atomic-insight-interface>

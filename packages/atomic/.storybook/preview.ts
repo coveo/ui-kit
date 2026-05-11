@@ -37,14 +37,6 @@ setStorybookHelpersConfig({
   hideArgRef: true,
 });
 
-function disableAnalytics(container: Element, selectors: string[]) {
-  selectors.forEach((selector) => {
-    container.querySelectorAll(selector).forEach((element) => {
-      element.setAttribute('analytics', 'false');
-    });
-  });
-}
-
 const preview: Preview = {
   loaders: [mswLoader],
   parameters: {
