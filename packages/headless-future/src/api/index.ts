@@ -19,5 +19,11 @@ export type {HttpRequestOptions, HttpResponse} from './shared/http.js';
 export {readEventStream} from './shared/stream.js';
 export type {ReadEventStreamOptions} from './shared/stream.js';
 
+// Conversation request utilities
+export {
+  buildConverseRequestBody,
+  type ConverseRequestBody,
+} from './conversation/build-converse-request-body.js';
+
 // Error handling utilities (for future API clients)
 export {transformError, isSuccessResponse} from './shared/error-handling.js';

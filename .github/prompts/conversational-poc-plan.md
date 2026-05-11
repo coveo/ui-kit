@@ -171,6 +171,17 @@ Completed checklist for 1.4:
 - [x] Added stream utility unit coverage in `src/api/shared/stream.test.ts`
 - [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
 
+Completed checklist for 1.5:
+
+- [x] Added `buildConverseRequestBody(engine, input)` in `src/api/conversation/build-converse-request-body.ts`
+- [x] Added `ConverseRequestBody` payload contract aligned to Barca-style converse body fields
+- [x] Mapped payload fields from engine state: configuration, conversation session, cart, and navigator context provider
+- [x] All payload fields are mandatory; missing values default to empty strings (or empty array for `cart`)
+- [x] Kept implementation flat — no helper functions; inlined `engine.getNavigatorContextProvider()?.()` directly
+- [x] Added unit coverage in `src/api/conversation/build-converse-request-body.test.ts`
+- [x] Exported `buildConverseRequestBody` and `ConverseRequestBody` from `src/api/index.ts`
+- [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
+
 ### Phase 2 — A2UI Surface Parsing
 
 - **2.0** A2UI protocol contract in `stream-types.ts`
@@ -197,7 +208,7 @@ Completed checklist for 1.4:
 | Phase 1.2 | add-navigator-context            | ✅ completed   |
 | Phase 1.3 | adjust-cart                      | ✅ completed   |
 | Phase 1.4 | add-stream-utils                 | ✅ completed   |
-| Phase 1.5 | —                                | ⬜ not started |
+| Phase 1.5 | add-build-converse-request-body  | ✅ completed   |
 | Phase 1.6 | —                                | ⬜ not started |
 | Phase 1.7 | —                                | ⬜ not started |
 | Phase 1.8 | —                                | ⬜ not started |
