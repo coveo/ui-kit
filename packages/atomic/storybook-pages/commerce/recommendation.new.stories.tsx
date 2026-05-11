@@ -10,6 +10,7 @@ import {
   richResponse,
 } from '@/storybook-utils/api/commerce/recommendation-response';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
+import {isTestMode} from '@/storybook-utils/common/is-test-mode';
 import '@/src/components/commerce/atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface.js';
 import '@/src/components/commerce/atomic-commerce-recommendation-list/atomic-commerce-recommendation-list.js';
 import '@/src/components/commerce/atomic-product-children/atomic-product-children.js';
@@ -59,7 +60,7 @@ const meta: Meta = {
     );
   },
   render: () => html`
-    <atomic-commerce-recommendation-interface>
+    <atomic-commerce-recommendation-interface analytics="${isTestMode()}">
       <atomic-commerce-recommendation-list
         display="list"
         density="normal"

@@ -6,12 +6,14 @@ import {
 import {Decorator, StoryContext} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import {spreadProps} from '@open-wc/lit-helpers';
+import {isTestMode} from '@/storybook-utils/common/is-test-mode';
 import type {AtomicCommerceRecommendationInterface} from '@/src/components/commerce/atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface.js';
 import '@/src/components/commerce/atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface.js';
 
 export const wrapInCommerceRecommendationInterface = (
   engineConfig?: Partial<CommerceEngineConfiguration>,
-  includeCodeRoot: boolean = true
+  includeCodeRoot: boolean = true,
+  analytics = isTestMode()
 ): {
   decorator: Decorator;
   play: (context: StoryContext) => Promise<void>;
@@ -19,6 +21,7 @@ export const wrapInCommerceRecommendationInterface = (
   decorator: (story) => html`
     <atomic-commerce-recommendation-interface
       ${spreadProps(includeCodeRoot ? {id: 'code-root'} : {})}
+      .analytics="${analytics}"
     >
       ${story()}
     </atomic-commerce-recommendation-interface>

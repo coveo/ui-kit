@@ -2,8 +2,6 @@ import '@/src/themes/coveo.css';
 import type {Preview} from '@storybook/web-components-vite';
 import {setCustomElementsManifest} from '@storybook/web-components-vite';
 import {setStorybookHelpersConfig} from '@wc-toolkit/storybook-helpers';
-import {render} from 'lit';
-import {isTemplateResult} from 'lit/directive-helpers.js';
 import {initialize, mswLoader} from 'msw-storybook-addon';
 import {within} from 'shadow-dom-testing-library';
 import {create} from 'storybook/theming';
@@ -91,35 +89,6 @@ const preview: Preview = {
     },
     chromatic: {disableSnapshot: true},
   },
-  decorators: [
-    (Story) => {
-      const story = Story();
-
-      if (isTemplateResult(story)) {
-        const container = document.createElement('div');
-
-        render(story, container);
-
-        const isTestMode =
-          typeof window !== 'undefined' &&
-          window.location.href.includes('localhost');
-
-        if (!isTestMode) {
-          disableAnalytics(container, [
-            'atomic-recs-interface',
-            'atomic-insight-interface',
-            'atomic-search-interface',
-            'atomic-commerce-interface',
-            'atomic-commerce-recommendation-interface',
-          ]);
-        }
-
-        return story;
-      }
-
-      return story;
-    },
-  ],
   beforeEach({canvasElement, canvas}) {
     Object.assign(canvas, {...within(canvasElement)});
   },

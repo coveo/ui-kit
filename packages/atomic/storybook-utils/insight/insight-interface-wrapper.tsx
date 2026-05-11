@@ -5,13 +5,15 @@ import {
 import {Decorator, StoryContext} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import {spreadProps} from '@open-wc/lit-helpers';
+import {isTestMode} from '@/storybook-utils/common/is-test-mode';
 import type {AtomicInsightInterface} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface.js';
 import '@/src/components/insight/atomic-insight-interface/atomic-insight-interface.js';
 
 export const wrapInInsightInterface = (
   config?: Partial<InsightEngineConfiguration>,
   skipFirstSearch = false,
-  includeCodeRoot: boolean = true
+  includeCodeRoot: boolean = true,
+  analytics = isTestMode()
 ): {
   decorator: Decorator;
   play: (context: StoryContext) => Promise<void>;
@@ -29,6 +31,7 @@ export const wrapInInsightInterface = (
     </style>
     <atomic-insight-interface
       ${spreadProps(includeCodeRoot ? {id: 'code-root'} : {})}
+      .analytics="${analytics}"
     >
       ${story()}
     </atomic-insight-interface>
