@@ -7,16 +7,16 @@ import * as conversationMutators from '@/src/core/interface/conversation/convers
 import {buildConverseRequestBody} from './build-converse-request-body.js';
 
 describe('buildConverseRequestBody()', () => {
-  it('builds a Barca-shaped payload from engine state', async () => {
+  it('builds a payload from engine state', async () => {
     const engine = getFullEngine(
       new Engine({
         configuration: {
           organizationId: 'org-id',
           accessToken: 'token',
           trackingId: 'market_123',
-          language: 'EN',
-          country: 'ca',
-          currency: 'cad',
+          language: 'en',
+          country: 'CA',
+          currency: 'CAD',
         },
         navigatorContextProvider: () => ({
           clientId: 'client-1',
@@ -54,9 +54,9 @@ describe('buildConverseRequestBody()', () => {
 
     expect(payload).toEqual({
       trackingId: 'market_123',
-      language: 'EN',
-      country: 'ca',
-      currency: 'cad',
+      language: 'en',
+      country: 'CA',
+      currency: 'CAD',
       clientId: 'client-1',
       message: 'Need running shoes',
       context: {
