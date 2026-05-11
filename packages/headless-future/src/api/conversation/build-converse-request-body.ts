@@ -1,59 +1,44 @@
-import type {CartItem} from '@/src/core/interface/cart/cart-types.js';
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
-
-type ConverseRequestBodyContext = {
-  user: {
-    userAgent: string | null | undefined;
-  };
-  view: {
-    url: string | null | undefined;
-    referrer: string | null | undefined;
-  };
-  cart: CartItem[];
-};
-
-export type ConverseRequestBody = {
-  trackingId: string | undefined;
-  language: string | undefined;
-  country: string | undefined;
-  currency: string | undefined;
-  clientId: string | undefined;
-  message: string;
-  context: ConverseRequestBodyContext;
-  conversationSessionId: string | undefined;
-  conversationToken: string | undefined;
-  targetEngine: 'AGENT_CORE';
-};
+import type {ConverseRequestBody} from './converse-types.js';
 
 export function buildConverseRequestBody(
   engine: FullEngine,
-  input: string
+  message: string
 ): ConverseRequestBody {
-  const configuration = engine.read((state) => state.configuration);
-  const conversation = engine.read((state) => state.conversation);
-  const cartItems = engine.read((state) => state.cart?.items) ?? [];
+  const {country, currency, language, trackingId} =
+    engine.read((state) => state.configuration) ?? {};
 
-  const navigatorContext = engine.getNavigatorContextProvider()?.();
+  const {
+    clientId,
+    referrer,
+    location: url,
+    userAgent,
+  } = engine.getNavigatorContextProvider()?.() ?? {};
+
+  const {items: cart} = engine.read((state) => state.cart) ?? {items: []};
+
+  const {conversationSessionId, conversationToken} =
+    engine.read((state) => state.conversation?.session) ?? {};
 
   return {
-    trackingId: configuration?.trackingId,
-    language: configuration?.language,
-    country: configuration?.country,
-    currency: configuration?.currency,
-    clientId: navigatorContext?.clientId,
-    message: input,
+    country,
+    currency,
+    language,
+    trackingId,
+    clientId,
     context: {
+      cart,
       user: {
-        userAgent: navigatorContext?.userAgent,
+        userAgent,
       },
       view: {
-        url: navigatorContext?.location,
-        referrer: navigatorContext?.referrer,
+        referrer,
+        url,
       },
-      cart: cartItems,
     },
-    conversationSessionId: conversation?.session.conversationSessionId,
-    conversationToken: conversation?.session.conversationToken,
+    conversationSessionId,
+    conversationToken,
+    message,
     targetEngine: 'AGENT_CORE',
   };
 }

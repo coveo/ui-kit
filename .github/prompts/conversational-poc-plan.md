@@ -178,8 +178,9 @@ Completed checklist for 1.5:
 - [x] Mapped payload fields from engine state: configuration, conversation session, cart, and navigator context provider
 - [x] Implemented raw pass-through payload semantics: no value transformation, preserving `null`/`undefined` from state and navigator context (with `cart` defaulting to `[]` only when cart state is absent)
 - [x] Kept implementation flat — no helper functions; inlined `engine.getNavigatorContextProvider()?.()` directly
+- [x] Extracted converse request payload typing into `src/api/conversation/converse-types.ts` with local cart item shape (no import from core cart types)
 - [x] Added unit coverage in `src/api/conversation/build-converse-request-body.test.ts`
-- [x] Exported `buildConverseRequestBody` and `ConverseRequestBody` from `src/api/index.ts`
+- [x] Kept request-builder details internal to Layer 1: `buildConverseRequestBody`, `ConverseRequestBody`, and shared helpers are no longer exposed from `src/api/index.ts`
 - [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
 
 ### Phase 2 — A2UI Surface Parsing
