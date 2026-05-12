@@ -1,3 +1,13 @@
+## 3.50.1
+
+### Patch Changes
+
+- [#7519](https://github.com/coveo/ui-kit/pull/7519) [`a191d11`](https://github.com/coveo/ui-kit/commit/a191d119ea1913c76aacb266c1345be6e4eecbe0) Thanks [@erocheleau](https://github.com/erocheleau)! - Include the follow-up conversation ID in generated answer analytics.
+
+- [#7454](https://github.com/coveo/ui-kit/pull/7454) [`cc116bf`](https://github.com/coveo/ui-kit/commit/cc116bf10f4708d9636eb3e0279af57a1e43e050) Thanks [@SimonMilord](https://github.com/SimonMilord)! - Treat blank streamed original generated-answer prefixes as empty in Headless state and prevent Atomic from rendering an empty answer card.
+
+- [#7464](https://github.com/coveo/ui-kit/pull/7464) [`925acd8`](https://github.com/coveo/ui-kit/commit/925acd8912103422c19ae02fff22972634e14a28) Thanks [@mmitiche](https://github.com/mmitiche)! - Added generated answer inline link analytics support in Headless and Atomic, including a dedicated interactive inline-link controller and Atomic markdown link tracking/styling.
+
 ## 3.50.0
 
 ### Minor Changes

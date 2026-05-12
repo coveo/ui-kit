@@ -14,7 +14,7 @@ slug: versioned-documentation
 >
 > As of v1.28.2 the default analytics endpoint has moved to `https://analytics.cloud.coveo.com/rest/ua`
 
-## Latest version (v3.35.0)
+## Latest version (v{{packageVersion}})
 
 [Documentation](./index.html)
 

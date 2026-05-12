@@ -18,8 +18,12 @@ The SSR Search engine enables server-side rendering of search interfaces.
 Install `@coveo/headless` using npm (or any other package manager such as pnpm or yarn):
 
 ```bash
-npm install @coveo/headless
+npm install @coveo/headless@{{packageVersion}}
 ```
+
+> [!TIP]
+>
+> We recommend pinning your `@coveo/headless` dependency to a specific version to avoid unexpected changes.
 
 Once installed, you can import from the SSR sub-path in your project:
 
@@ -41,7 +45,7 @@ If you prefer not to use a package manager, you can load Headless SSR directly f
   import {
     defineSearchEngine,
     getSampleSearchEngineConfiguration,
-  } from 'https://static.cloud.coveo.com/headless/v3/ssr/headless.esm.js';
+  } from 'https://static.cloud.coveo.com/headless/v{{packageVersion}}/ssr/headless.esm.js';
 
   // You can now use the imported functions.
 </script>
@@ -50,17 +54,13 @@ If you prefer not to use a package manager, you can load Headless SSR directly f
 ### UMD (Classic Script Tag)
 
 ```html
-<script src="https://static.cloud.coveo.com/headless/v3/ssr/headless.js"></script>
+<script src="https://static.cloud.coveo.com/headless/v{{packageVersion}}/ssr/headless.js"></script>
 <script>
   // All exports are available on the global CoveoHeadlessSSR object.
   const {defineSearchEngine, getSampleSearchEngineConfiguration} =
     CoveoHeadlessSSR;
 </script>
 ```
-
-> [!TIP]
->
-> Replace `v3` in the URL with a specific version (for example, `v3.46.0`) to pin your application to a known release.
 
 ## Verify Your Installation
 

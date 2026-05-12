@@ -20,8 +20,12 @@ This article provides an overview of the core Headless concepts.
 Use [npm](https://www.npmjs.com/get-npm) to install the Headless library.
 
 ```
-npm install @coveo/headless
+npm install @coveo/headless@{{packageVersion}}
 ```
+
+> [!TIP]
+>
+> We recommend pinning your `@coveo/headless` dependency to a specific version to avoid unexpected changes.
 
 Headless requires Node.js version 20.
 
