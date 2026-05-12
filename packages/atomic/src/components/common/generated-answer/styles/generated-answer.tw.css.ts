@@ -111,6 +111,10 @@ const baseStyle = css`
     @apply hidden;
   }
 
+  .generated-answer-content-background {
+    background-color: var(--atomic-neutral-lighter, var(--atomic-background));
+  }
+
   /**
    * @prop --atomic-generated-answer-content-fixed-height: The fixed height of the generated answer content when agent-id is set.
    */
