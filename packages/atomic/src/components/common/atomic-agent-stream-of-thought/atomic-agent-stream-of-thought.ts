@@ -45,7 +45,6 @@ const stepLabelKeys: Record<
  * steps during answer generation, showing real-time progress and completion status.
  *
  * @internal
- * @part agent-stream-of-thought - The main container for the stream-of-thought timeline.
  */
 @customElement('atomic-agent-stream-of-thought')
 @withTailwindStyles
@@ -90,14 +89,12 @@ export class AtomicAgentStreamOfThought extends LitElement {
 
     if (isComplete && !this.expanded && isCollapsible) {
       return html`
-        <div part="agent-stream-of-thought" class="timeline">
-          ${this.renderCollapsedTimelineSummary()}
-        </div>
+        <div class="timeline">${this.renderCollapsedTimelineSummary()}</div>
       `;
     }
 
     return html`
-      <div part="agent-stream-of-thought" class="timeline">
+      <div class="timeline">
         ${map(resolvedSteps, (step) => this.renderStep(step))}
         ${isComplete && isCollapsible ? this.renderToggleButton() : nothing}
       </div>

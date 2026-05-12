@@ -55,9 +55,7 @@ describe('atomic-agent-stream-of-thought', () => {
     return {
       element,
       get timeline() {
-        return element.shadowRoot?.querySelector(
-          '[part="agent-stream-of-thought"]'
-        );
+        return element.shadowRoot?.querySelector('.timeline');
       },
       get steps() {
         return element.shadowRoot?.querySelectorAll('.step') ?? [];
