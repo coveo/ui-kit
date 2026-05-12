@@ -38,10 +38,9 @@ const dynamicBaseQuery: BaseQueryFn<
       organizationId,
       environment
     );
-    const data = fetchBaseQuery({
+    return fetchBaseQuery({
       baseUrl: `${platformEndpoint}/rest/organizations/${organizationId}/answer/v1/configs/${answerConfigurationId}`,
     })(updatedArgs, api, extraOptions);
-    return {data};
   } catch (error) {
     return {error: error as FetchBaseQueryError};
   }
