@@ -33,6 +33,13 @@ describe('atomic-generated-answer-thread-item', () => {
           element.shadowRoot?.querySelector('[part="thread-item-title"]') ??
           null,
         titleButton: element.shadowRoot?.querySelector('button') ?? null,
+        timelineDotContainer:
+          element.shadowRoot?.querySelector(
+            'div.items-center.justify-center'
+          ) ?? null,
+        timelineLineContainer:
+          element.shadowRoot?.querySelector('div.justify-center > span.w-px')
+            ?.parentElement ?? null,
         contentRegion:
           element.shadowRoot?.querySelector(
             'div[id^="atomic-generated-answer-thread-item-content-"]'
@@ -117,6 +124,32 @@ describe('atomic-generated-answer-thread-item', () => {
 
     const titleButton = locators().titleButton as HTMLButtonElement;
     titleButton.click();
+    await element.updateComplete;
+
+    expect(locators().contentState).not.toHaveAttribute('hidden');
+  });
+
+  it('should toggle expanded state when the timeline dot area is clicked', async () => {
+    const {element, locators} = await renderComponent({
+      disableCollapse: false,
+      isExpanded: false,
+    });
+
+    const dotContainer = locators().timelineDotContainer as HTMLDivElement;
+    dotContainer.click();
+    await element.updateComplete;
+
+    expect(locators().contentState).not.toHaveAttribute('hidden');
+  });
+
+  it('should toggle expanded state when the timeline line area is clicked', async () => {
+    const {element, locators} = await renderComponent({
+      disableCollapse: false,
+      isExpanded: false,
+    });
+
+    const lineContainer = locators().timelineLineContainer as HTMLDivElement;
+    lineContainer.click();
     await element.updateComplete;
 
     expect(locators().contentState).not.toHaveAttribute('hidden');

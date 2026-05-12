@@ -125,6 +125,14 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
       'bg-neutral-dark': this.isExpanded,
       'bg-neutral-dim': !this.isExpanded,
     });
+    const timelineToggleClasses = classMap({
+      flex: true,
+      'w-[10px]': true,
+      'shrink-0': true,
+      'justify-center': true,
+      'items-center': true,
+      'cursor-pointer': !this.disableCollapse,
+    });
     const timelineBodyRowClasses = classMap({
       flex: true,
       'min-w-0': true,
@@ -132,12 +140,12 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
       'min-h-3': !this.isExpanded,
     });
     const timelineConnectorClasses =
-      "relative h-full w-px bg-neutral before:absolute before:left-0 before:top-[-8px] before:h-[8px] before:w-px before:bg-neutral before:content-[''] after:absolute after:bottom-[-8px] after:left-0 after:h-[8px] after:w-px after:bg-neutral after:content-['']";
+      "relative h-full w-px bg-neutral transition-colors duration-150 hover:bg-neutral-dark before:absolute before:left-0 before:top-[-8px] before:h-[8px] before:w-px before:bg-neutral before:transition-colors before:duration-150 hover:before:bg-neutral-dark before:content-[''] after:absolute after:bottom-[-8px] after:left-0 after:h-[8px] after:w-px after:bg-neutral after:transition-colors after:duration-150 hover:after:bg-neutral-dark after:content-['']";
 
     return html`
       <li class="grid min-w-0">
         <div class="flex min-w-0 items-center gap-3">
-          <div class="flex w-[10px] shrink-0 items-center justify-center">
+          <div class=${timelineToggleClasses} @click=${this.toggle}>
             ${when(
               this.showTimelineDot,
               () => html` <span class=${timelineDotClasses}></span> `
@@ -169,7 +177,7 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
           </div>
         </div>
         <div class=${timelineBodyRowClasses}>
-          <div class="flex w-[10px] shrink-0 justify-center">
+          <div class=${timelineToggleClasses} @click=${this.toggle}>
             ${when(
               this.hideLine,
               () => html``,
