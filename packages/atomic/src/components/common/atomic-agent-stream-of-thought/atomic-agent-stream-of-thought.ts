@@ -133,6 +133,7 @@ export class AtomicAgentStreamOfThought extends LitElement {
         class="collapsed-timeline-summary"
         @click=${this.handleToggle}
         aria-expanded=${this.expanded}
+        type="button"
       >
         ${this.renderCheckmark()}
         <span class="step-label">${label}</span>
@@ -147,6 +148,7 @@ export class AtomicAgentStreamOfThought extends LitElement {
         class="toggle-button"
         @click=${this.handleToggle}
         aria-expanded=${this.expanded}
+        type="button"
       >
         <span class="toggle-label">${this.i18n.t('collapse')}</span>
         ${this.renderChevron()}
@@ -156,7 +158,7 @@ export class AtomicAgentStreamOfThought extends LitElement {
 
   private renderSpinner() {
     return html`<span class="step-icon"
-      ><span class="spinner" role="status"></span
+      ><span class="spinner" aria-hidden="true"></span
     ></span>`;
   }
 
@@ -169,6 +171,7 @@ export class AtomicAgentStreamOfThought extends LitElement {
           viewBox="0 0 12 9"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
         >
           <path
             d="M1 4.33333L4.33333 7.66667L11 1"
