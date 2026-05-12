@@ -419,7 +419,7 @@ export class AtomicGeneratedAnswer
                       'px-6': true,
                       'pt-6': true,
                       'generated-answer-content-background':
-                        this.hasAgentIdAndFollowUpsEnabled,
+                        this.areFollowUpsEnabled,
                       'agent-scrollable': this.areFollowUpsEnabled,
                     })}
                   >
@@ -429,8 +429,8 @@ export class AtomicGeneratedAnswer
                     class=${classMap({
                       'px-6': true,
                       'pt-2': true,
-                      'border-t': this.hasAgentIdAndFollowUpsEnabled,
-                      'border-gray-200': this.hasAgentIdAndFollowUpsEnabled,
+                      'border-t': this.areFollowUpsEnabled,
+                      'border-gray-200': this.areFollowUpsEnabled,
                     })}
                   >
                     ${this.renderAskFollowUpInputWrapper()}
@@ -724,10 +724,6 @@ export class AtomicGeneratedAnswer
     );
   }
 
-  private get hasAgentIdAndFollowUpsEnabled() {
-    return this.hasAgentId && this.areFollowUpsEnabled;
-  }
-
   private get isCollapsibleEnabled() {
     return (
       this.collapsible &&
@@ -786,7 +782,7 @@ export class AtomicGeneratedAnswer
     if (!this.areFollowUpsEnabled) {
       return nothing;
     }
-    return html` <div class="mb-2 mt-2">
+    return html` <div class="my-2">
       <atomic-ask-follow-up-input
         .i18n=${this.bindings.i18n}
         .askFollowUp=${this.handleAskFollowUp.bind(this)}

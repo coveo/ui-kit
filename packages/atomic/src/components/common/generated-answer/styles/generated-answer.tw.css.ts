@@ -137,9 +137,6 @@ const baseStyle = css`
     @apply hidden;
   }
 
-  /**
-   * @prop --atomic-neutral-lighter: The background color of the generated answer content wrapper.
-   */
   .generated-answer-content-background {
     background-color: var(--atomic-neutral-lighter, var(--atomic-background));
   }
