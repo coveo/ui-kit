@@ -4,7 +4,7 @@
  * Common helpers and mock data builders for unit tests
  */
 
-import {Engine} from '../core/interface/engine/engine.js';
+import {Engine, FullEngine} from '../core/interface/engine/engine.js';
 import type {
   SearchResult,
   FacetValue,
@@ -79,4 +79,22 @@ export function createMockFacetValues(count: number): FacetValue[] {
  */
 export function nextTick(): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, 0));
+}
+
+export type MockNavigatorContext = {
+  clientId?: string;
+  userAgent?: string | null;
+  location?: string | null;
+  referrer?: string | null;
+};
+
+export function buildMockFullEngine<TState>(
+  state: TState,
+  navigatorContext?: MockNavigatorContext
+): FullEngine {
+  return {
+    read: <T>(selector: (s: TState) => T) => selector(state),
+    getNavigatorContextProvider: () =>
+      navigatorContext ? () => navigatorContext : undefined,
+  } as unknown as FullEngine;
 }
