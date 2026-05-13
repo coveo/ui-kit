@@ -2,4 +2,4 @@
 "@coveo/headless": patch
 ---
 
-SFINT-6796 fix(headless): answer api sendFeedback error log
+SFINT-6796 fix(headless): fix answer api sendFeedback logs error messages about non-serializable values
