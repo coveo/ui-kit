@@ -122,8 +122,10 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
       'h-2': true,
       'w-2': true,
       'rounded-full': true,
+      'transition-colors': true,
       'bg-neutral-dark': this.isExpanded,
       'bg-neutral-dim': !this.isExpanded,
+      'group-hover:bg-neutral-dark': !this.isExpanded && !this.disableCollapse,
     });
     const timelineToggleClasses = classMap({
       flex: true,
@@ -131,6 +133,7 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
       'shrink-0': true,
       'justify-center': true,
       'items-center': true,
+      group: !this.disableCollapse,
       'cursor-pointer': !this.disableCollapse,
     });
     const timelineBodyRowClasses = classMap({
@@ -140,7 +143,7 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
       'min-h-3': !this.isExpanded,
     });
     const timelineConnectorClasses =
-      "relative h-full w-px bg-neutral transition-colors duration-150 hover:bg-neutral-dark before:absolute before:left-0 before:top-[-8px] before:h-[8px] before:w-px before:bg-neutral before:transition-colors before:duration-150 hover:before:bg-neutral-dark before:content-[''] after:absolute after:bottom-[-8px] after:left-0 after:h-[8px] after:w-px after:bg-neutral after:transition-colors after:duration-150 hover:after:bg-neutral-dark after:content-['']";
+      "relative h-full w-px bg-neutral transition-colors duration-150 group-hover:bg-neutral-dark before:absolute before:left-0 before:top-[-8px] before:h-[8px] before:w-px before:bg-neutral before:transition-colors before:duration-150 group-hover:before:bg-neutral-dark before:content-[''] after:absolute after:bottom-[-8px] after:left-0 after:h-[8px] after:w-px after:bg-neutral after:transition-colors after:duration-150 group-hover:after:bg-neutral-dark after:content-['']";
 
     return html`
       <li class="grid min-w-0">

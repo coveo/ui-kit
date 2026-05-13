@@ -75,18 +75,11 @@ const {play: playWithLegacyAnalytics} = wrapInSearchInterface({
 });
 
 const generatedAnswerQuery = 'how to resolve netflix connection with tivo';
-const generatedAnswerFollowUpQuery = 'what else should i try if this fails';
 
 async function submitGeneratedAnswerQuery(storyContext: StoryContext) {
   const searchBox =
     await storyContext.canvas.findByShadowPlaceholderText('Search');
   await userEvent.type(searchBox, `${generatedAnswerQuery}{enter}`);
-}
-
-async function submitFollowUpQuery(storyContext: StoryContext) {
-  const followUpInput =
-    await storyContext.canvas.findByShadowPlaceholderText('Ask follow-up');
-  await userEvent.type(followUpInput, `${generatedAnswerFollowUpQuery}{enter}`);
 }
 
 const meta: Meta = {
@@ -155,42 +148,5 @@ export const WithAgentId: Story = {
   play: async (storyContext) => {
     await playWithLegacyAnalytics(storyContext);
     await submitGeneratedAnswerQuery(storyContext);
-  },
-};
-
-export const ThreadTimelineCollapsible: Story = {
-  name: 'Thread Timeline Collapsible',
-  parameters: {
-    a11y: {disable: true},
-  },
-  args: {
-    'agent-id': 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
-    'answer-configuration-id': undefined,
-  },
-  play: async (storyContext) => {
-    await playWithLegacyAnalytics(storyContext);
-    await submitGeneratedAnswerQuery(storyContext);
-    await submitFollowUpQuery(storyContext);
-
-    const generatedAnswer = storyContext.canvasElement.querySelector(
-      'atomic-generated-answer'
-    ) as HTMLElement | null;
-    const generatedAnswerThread = generatedAnswer?.shadowRoot?.querySelector(
-      'atomic-generated-answer-thread'
-    ) as HTMLElement | null;
-    const firstCollapsibleThreadItem =
-      generatedAnswerThread?.shadowRoot?.querySelector(
-        'atomic-generated-answer-thread-item:not([disable-collapse])'
-      ) as HTMLElement | null;
-    const timelineToggle =
-      firstCollapsibleThreadItem?.shadowRoot?.querySelector(
-        'div.items-center.justify-center'
-      ) as HTMLElement | null;
-
-    if (!timelineToggle) {
-      throw new Error('Could not find timeline toggle for thread item');
-    }
-
-    await userEvent.click(timelineToggle);
   },
 };
