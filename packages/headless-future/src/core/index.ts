@@ -22,7 +22,7 @@
 // Engine Type
 // ============================================================================
 
-export {Engine} from './interface/engine/engine.js';
+export {Engine, getFullEngine} from './interface/engine/engine.js';
 export type {EngineOptions} from './interface/engine/engine-types.js';
 export type {
   NavigatorContext,
