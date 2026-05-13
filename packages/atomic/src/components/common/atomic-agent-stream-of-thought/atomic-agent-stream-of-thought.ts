@@ -110,9 +110,7 @@ export class AtomicAgentStreamOfThought extends LitElement {
 
     return html`
       <div class="step">
-        ${step.status === 'active'
-          ? this.renderSpinner()
-          : this.renderCheckmark()}
+        ${step.status === 'active' ? '' : this.renderCheckmark()}
         <span class="step-label">${label}</span>
       </div>
     `;
@@ -154,12 +152,6 @@ export class AtomicAgentStreamOfThought extends LitElement {
         ${this.renderChevron()}
       </button>
     `;
-  }
-
-  private renderSpinner() {
-    return html`<span class="step-icon"
-      ><span class="spinner" aria-hidden="true"></span
-    ></span>`;
   }
 
   private renderCheckmark() {
