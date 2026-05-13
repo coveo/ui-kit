@@ -1,15 +1,50 @@
 import {describe, expect, it, vi} from 'vitest';
 import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
-import {cartSlice} from '@/src/core/internal/cart/cart-slice.js';
+import {
+  buildMockFullEngine,
+  MockNavigatorContext,
+} from '@/src/test/test-utils.js';
 import {conversationSlice} from '@/src/core/internal/conversation/conversation-slice.js';
-import * as cartMutators from '@/src/core/interface/cart/cart-mutators.js';
 import * as conversationMutators from '@/src/core/interface/conversation/conversation-mutators.js';
+import {buildCartController} from '@/src/public/controllers/cart/cart-controller.js';
 import {buildConverseRequestBody} from './build-converse-request-body.js';
 
+type BuildConverseEngine = Parameters<typeof buildConverseRequestBody>[0];
+
+type MockState = {
+  configuration?: {
+    trackingId?: string;
+    language?: string;
+    country?: string;
+    currency?: string;
+  };
+  conversation?: {
+    session?: {
+      conversationSessionId?: string;
+      conversationToken?: string;
+    };
+  };
+  cart?: {
+    items?: Array<{
+      productId: string;
+      name: string;
+      price: number;
+      quantity: number;
+    }>;
+  };
+};
+
+function buildMockEngine(
+  state: MockState,
+  navigatorContext?: MockNavigatorContext
+): BuildConverseEngine {
+  return buildMockFullEngine(state, navigatorContext) as BuildConverseEngine;
+}
+
 describe('buildConverseRequestBody()', () => {
-  it('builds a payload from engine state', async () => {
-    const engine = getFullEngine(
-      new Engine({
+  describe('integration (real engine)', () => {
+    it('builds a payload from engine state', async () => {
+      const engine = new Engine({
         configuration: {
           organizationId: 'org-id',
           accessToken: 'token',
@@ -24,14 +59,9 @@ describe('buildConverseRequestBody()', () => {
           referrer: 'https://example.com/home',
           userAgent: 'Mozilla/5.0',
         }),
-      })
-    );
-
-    await engine.adoptSlice(cartSlice);
-    await engine.adoptSlice(conversationSlice);
-
-    engine.mutate(
-      cartMutators.setItems({
+      });
+      const cartController = buildCartController({engine});
+      cartController.setItems({
         items: [
           {
             productId: 'sku-1',
@@ -40,181 +70,169 @@ describe('buildConverseRequestBody()', () => {
             quantity: 2,
           },
         ],
-      })
-    );
+      });
 
-    engine.mutate(
-      conversationMutators.setSession({
+      const fullEngine = getFullEngine(engine);
+      await fullEngine.adoptSlice(conversationSlice);
+      fullEngine.mutate(
+        conversationMutators.setSession({
+          conversationSessionId: 'session-123',
+          conversationToken: 'token-abc',
+        })
+      );
+
+      const payload = buildConverseRequestBody(
+        fullEngine,
+        'Need running shoes'
+      );
+
+      expect(payload).toEqual({
+        trackingId: 'market_123',
+        language: 'en',
+        country: 'CA',
+        currency: 'CAD',
+        clientId: 'client-1',
+        message: 'Need running shoes',
+        context: {
+          user: {
+            userAgent: 'Mozilla/5.0',
+          },
+          view: {
+            url: 'https://example.com/products',
+            referrer: 'https://example.com/home',
+          },
+          cart: [
+            {
+              productId: 'sku-1',
+              name: 'Shoe',
+              price: 120,
+              quantity: 2,
+            },
+          ],
+        },
         conversationSessionId: 'session-123',
         conversationToken: 'token-abc',
-      })
-    );
+        targetEngine: 'AGENT_CORE',
+      });
+    });
 
-    const payload = buildConverseRequestBody(engine, 'Need running shoes');
+    it('calls Engine navigator-provider warning path when provider is missing', () => {
+      const engine = new Engine();
+      const fullEngine = getFullEngine(engine);
+      const warningSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
-    expect(payload).toEqual({
-      trackingId: 'market_123',
-      language: 'en',
-      country: 'CA',
-      currency: 'CAD',
-      clientId: 'client-1',
-      message: 'Need running shoes',
-      context: {
-        user: {
-          userAgent: 'Mozilla/5.0',
-        },
-        view: {
-          url: 'https://example.com/products',
-          referrer: 'https://example.com/home',
-        },
-        cart: [
-          {
-            productId: 'sku-1',
-            name: 'Shoe',
-            price: 120,
-            quantity: 2,
+      const payload = buildConverseRequestBody(fullEngine, 'hello');
+
+      expect(payload).toEqual({
+        trackingId: undefined,
+        language: undefined,
+        country: undefined,
+        currency: undefined,
+        clientId: undefined,
+        message: 'hello',
+        context: {
+          user: {
+            userAgent: undefined,
           },
-        ],
-      },
-      conversationSessionId: 'session-123',
-      conversationToken: 'token-abc',
-      targetEngine: 'AGENT_CORE',
+          view: {
+            url: undefined,
+            referrer: undefined,
+          },
+          cart: [],
+        },
+        conversationSessionId: undefined,
+        conversationToken: undefined,
+        targetEngine: 'AGENT_CORE',
+      });
+
+      expect(warningSpy).toHaveBeenCalledTimes(1);
+      expect(warningSpy.mock.calls[0][0]).toContain(
+        'Missing navigator context provider'
+      );
     });
   });
 
-  it('passes raw values from state including null', async () => {
-    const engine = getFullEngine(
-      new Engine({
-        configuration: {
-          organizationId: 'org-id',
-          accessToken: 'token',
-          trackingId: '',
-          language: '',
-          country: '',
-          currency: '',
+  describe('unit (mocked engine)', () => {
+    it('passes raw values from state including null', () => {
+      const engine = buildMockEngine(
+        {
+          configuration: {
+            trackingId: '',
+            language: '',
+            country: '',
+            currency: '',
+          },
+          conversation: {
+            session: {
+              conversationSessionId: '',
+            },
+          },
+          cart: {
+            items: [],
+          },
         },
-        navigatorContextProvider: () => ({
+        {
           clientId: '',
           location: null,
           referrer: null,
           userAgent: null,
-        }),
-      })
-    );
+        }
+      );
 
-    await engine.adoptSlice(conversationSlice);
+      const payload = buildConverseRequestBody(engine, 'hello');
 
-    engine.mutate(
-      conversationMutators.setSession({
+      expect(payload).toEqual({
+        trackingId: '',
+        language: '',
+        country: '',
+        currency: '',
+        clientId: '',
+        message: 'hello',
+        context: {
+          user: {
+            userAgent: null,
+          },
+          view: {
+            url: null,
+            referrer: null,
+          },
+          cart: [],
+        },
         conversationSessionId: '',
-      })
-    );
-
-    const payload = buildConverseRequestBody(engine, 'hello');
-
-    expect(payload).toEqual({
-      trackingId: '',
-      language: '',
-      country: '',
-      currency: '',
-      clientId: '',
-      message: 'hello',
-      context: {
-        user: {
-          userAgent: null,
-        },
-        view: {
-          url: null,
-          referrer: null,
-        },
-        cart: [],
-      },
-      conversationSessionId: '',
-      conversationToken: undefined,
-      targetEngine: 'AGENT_CORE',
-    });
-  });
-
-  it('calls Engine navigator-provider warning path when provider is missing', () => {
-    const engine = getFullEngine(new Engine());
-    const warningSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-
-    const payload = buildConverseRequestBody(engine, 'hello');
-
-    expect(payload).toEqual({
-      trackingId: undefined,
-      language: undefined,
-      country: undefined,
-      currency: undefined,
-      clientId: undefined,
-      message: 'hello',
-      context: {
-        user: {
-          userAgent: undefined,
-        },
-        view: {
-          url: undefined,
-          referrer: undefined,
-        },
-        cart: [],
-      },
-      conversationSessionId: undefined,
-      conversationToken: undefined,
-      targetEngine: 'AGENT_CORE',
+        conversationToken: undefined,
+        targetEngine: 'AGENT_CORE',
+      });
     });
 
-    expect(warningSpy).toHaveBeenCalledTimes(1);
-    expect(warningSpy.mock.calls[0][0]).toContain(
-      'Missing navigator context provider'
-    );
-  });
+    it('falls back to empty cart when cart slice is missing', () => {
+      const engine = buildMockEngine({
+        configuration: {},
+        conversation: {},
+      });
 
-  it('works when configuration slice is not adopted', async () => {
-    const engine = getFullEngine(new Engine());
-    await engine.adoptSlice(cartSlice);
+      const payload = buildConverseRequestBody(engine, 'show hats');
 
-    engine.mutate(
-      cartMutators.setItems({
-        items: [
-          {
-            productId: 'sku-2',
-            name: 'Hat',
-            price: 40,
-            quantity: 1,
+      expect(payload).toEqual({
+        trackingId: undefined,
+        language: undefined,
+        country: undefined,
+        currency: undefined,
+        clientId: undefined,
+        message: 'show hats',
+        context: {
+          user: {
+            userAgent: undefined,
           },
-        ],
-      })
-    );
-
-    const payload = buildConverseRequestBody(engine, 'show hats');
-
-    expect(payload).toEqual({
-      trackingId: undefined,
-      language: undefined,
-      country: undefined,
-      currency: undefined,
-      clientId: undefined,
-      message: 'show hats',
-      context: {
-        user: {
-          userAgent: undefined,
-        },
-        view: {
-          url: undefined,
-          referrer: undefined,
-        },
-        cart: [
-          {
-            productId: 'sku-2',
-            name: 'Hat',
-            price: 40,
-            quantity: 1,
+          view: {
+            url: undefined,
+            referrer: undefined,
           },
-        ],
-      },
-      conversationSessionId: undefined,
-      conversationToken: undefined,
-      targetEngine: 'AGENT_CORE',
+          cart: [],
+        },
+        conversationSessionId: undefined,
+        conversationToken: undefined,
+        targetEngine: 'AGENT_CORE',
+      });
     });
   });
 });
