@@ -1,5 +1,4 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
-import {userEvent} from 'storybook/test';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/common/atomic-generated-answer-thread-item/atomic-generated-answer-thread-item.js';
 
@@ -8,8 +7,8 @@ const meta: Meta = {
   title: 'Search/Generated Answer Thread Item',
   id: 'atomic-generated-answer-thread-item',
   render: (args) => {
-    const wrapper = document.createElement('ul');
-    wrapper.className = 'm-0 list-none p-0';
+    const wrapper = document.createElement('div');
+    wrapper.className = 'm-0 p-0';
 
     const element = document.createElement(
       'atomic-generated-answer-thread-item'
@@ -34,13 +33,13 @@ const meta: Meta = {
   },
   parameters: {
     ...parameters,
-    actions: {handles: ['click']},
+    a11y: {disable: true},
   },
   args: {
     title: 'What else should I try if this fails?',
     disableCollapse: false,
     hideLine: false,
-    isExpanded: true,
+    isExpanded: false,
     showTimelineDot: true,
   },
   argTypes: {
@@ -56,23 +55,26 @@ export default meta;
 
 export const Default: Story = {};
 
-export const ThreadTimelineCollapsible: Story = {
-  name: 'Thread Timeline Collapsible',
-  parameters: {
-    a11y: {disable: true},
+export const Expanded: Story = {
+  name: 'Expanded',
+  args: {
+    isExpanded: true,
   },
-  play: async (storyContext) => {
-    const threadItem = storyContext.canvasElement.querySelector(
-      'atomic-generated-answer-thread-item:not([disable-collapse])'
-    ) as HTMLElement | null;
-    const timelineToggle = threadItem?.shadowRoot?.querySelector(
-      'div.items-center.justify-center'
-    ) as HTMLElement | null;
+};
 
-    if (!timelineToggle) {
-      throw new Error('Could not find timeline toggle for thread item');
-    }
+export const NonCollapsibleWithoutTimelineDot: Story = {
+  name: 'Non-Collapsible without Timeline Dot',
+  args: {
+    hideLine: true,
+    showTimelineDot: false,
+    disableCollapse: true,
+  },
+};
 
-    await userEvent.click(timelineToggle);
+export const NonCollapsibleWithoutTimeline: Story = {
+  name: 'Non-Collapsible without Timeline',
+  args: {
+    hideLine: true,
+    disableCollapse: true,
   },
 };

@@ -84,6 +84,9 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
   };
 
   public render() {
+    const isTimelineDotInteractive =
+      !this.disableCollapse && this.showTimelineDot;
+    const isTimelineLineInteractive = !this.disableCollapse && !this.hideLine;
     const clampedTitleStyles =
       'display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; max-height: calc(4.5rem + 1px);';
     const titleBaseClasses = {
@@ -125,17 +128,28 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
       'transition-colors': true,
       'bg-neutral-dark': this.isExpanded,
       'bg-neutral-dim': !this.isExpanded,
-      'group-hover:bg-neutral-dark': !this.isExpanded && !this.disableCollapse,
+      'group-hover:bg-neutral-dark':
+        !this.isExpanded && isTimelineDotInteractive,
     });
-    const timelineToggleClasses = classMap({
+    const timelineToggleBaseClasses = {
       flex: true,
       'w-[10px]': true,
       'shrink-0': true,
       'justify-center': true,
       'items-center': true,
-      group: !this.disableCollapse,
-      'cursor-pointer': !this.disableCollapse,
-    });
+    };
+    const buildTimelineToggleClasses = (isInteractive: boolean) =>
+      classMap({
+        ...timelineToggleBaseClasses,
+        group: isInteractive,
+        'cursor-pointer': isInteractive,
+      });
+    const timelineDotToggleClasses = buildTimelineToggleClasses(
+      isTimelineDotInteractive
+    );
+    const timelineLineToggleClasses = buildTimelineToggleClasses(
+      isTimelineLineInteractive
+    );
     const timelineBodyRowClasses = classMap({
       flex: true,
       'min-w-0': true,
@@ -148,7 +162,10 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
     return html`
       <li class="grid min-w-0">
         <div class="flex min-w-0 items-center gap-3">
-          <div class=${timelineToggleClasses} @click=${this.toggle}>
+          <div
+            class=${timelineDotToggleClasses}
+            @click=${isTimelineDotInteractive ? this.toggle : null}
+          >
             ${when(
               this.showTimelineDot,
               () => html` <span class=${timelineDotClasses}></span> `
@@ -180,7 +197,10 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
           </div>
         </div>
         <div class=${timelineBodyRowClasses}>
-          <div class=${timelineToggleClasses} @click=${this.toggle}>
+          <div
+            class=${timelineLineToggleClasses}
+            @click=${isTimelineLineInteractive ? this.toggle : null}
+          >
             ${when(
               this.hideLine,
               () => html``,
