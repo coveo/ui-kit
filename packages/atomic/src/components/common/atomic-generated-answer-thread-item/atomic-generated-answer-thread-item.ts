@@ -147,9 +147,13 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
     const timelineDotToggleClasses = buildTimelineToggleClasses(
       isTimelineDotInteractive
     );
-    const timelineLineToggleClasses = buildTimelineToggleClasses(
-      isTimelineLineInteractive
-    );
+    const timelineLineToggleClasses = classMap({
+      ...timelineToggleBaseClasses,
+      group: isTimelineLineInteractive,
+      'cursor-pointer': isTimelineLineInteractive,
+      'py-2': true,
+      '-my-2': true,
+    });
     const timelineBodyRowClasses = classMap({
       flex: true,
       'min-w-0': true,
