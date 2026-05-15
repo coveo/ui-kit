@@ -9,8 +9,6 @@ import {
 } from '@/src/public/controllers/controller-types.js';
 
 export interface CartController extends Controller {
-  readonly state: CartState;
-
   /**
    * Replaces the current cart items.
    *
@@ -24,6 +22,8 @@ export interface CartController extends Controller {
    * @param payload - The item with updated quantity.
    */
   updateItemQuantity(payload: UpdateItemQuantityPayload): void;
+
+  readonly state: CartState;
 }
 
 export interface CartControllerOptions extends ControllerOptions {}

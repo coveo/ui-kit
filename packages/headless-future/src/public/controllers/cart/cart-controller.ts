@@ -20,6 +20,10 @@ export const buildCartController = (
   const fullEngine = getFullEngine(engine);
   fullEngine.adoptSlice(cartSlice);
 
+  const stateSelect = () => ({
+    items: fullEngine.read(cartSelectors.items),
+  });
+
   return {
     setItems(payload) {
       fullEngine.mutate(cartMutators.setItems(payload));
@@ -28,10 +32,10 @@ export const buildCartController = (
       fullEngine.mutate(cartMutators.updateItemQuantity(payload));
     },
     subscribe(callback) {
-      return fullEngine.subscribe(cartSelectors.items, callback);
+      return fullEngine.subscribe(stateSelect, callback);
     },
     get state() {
-      return {items: fullEngine.read(cartSelectors.items)};
+      return stateSelect();
     },
   };
 };

@@ -13,15 +13,15 @@
 // ============================================================================
 
 export type {SearchBoxState} from './search-box/search-box-types.js';
-export type {
-  SearchResult,
-  ResultState,
-  ResultMapState,
-} from './result/result-types.js';
-export type {ResultsState} from './results/results-types.js';
+export type {ResultListState as ResultsState} from './result-list/result-list-types.js';
+export type {SearchResult} from './result-list/result-list-types.js';
 export type {FacetState, FacetValue} from './facets/facets-types.js';
 export type {PaginationState} from './pagination/pagination-types.js';
 export type {ConfigurationState} from './configuration/configuration-types.js';
+export type {
+  SearchApiState,
+  SearchApiStatus,
+} from './api/search-api/search-api-types.js';
 export type {
   NavigatorContext,
   NavigatorContextProvider,
@@ -37,11 +37,11 @@ export type {
 
 // Import for use in State interface below
 import type {SearchBoxState} from './search-box/search-box-types.js';
-import type {ResultMapState} from './result/result-types.js';
-import type {ResultsState} from './results/results-types.js';
+import type {ResultListState} from './result-list/result-list-types.js';
 import type {FacetState} from './facets/facets-types.js';
 import type {PaginationState} from './pagination/pagination-types.js';
 import type {ConfigurationState} from './configuration/configuration-types.js';
+import type {SearchApiState} from './api/search-api/search-api-types.js';
 import type {CartState} from './cart/cart-types.js';
 import type {ConversationState} from './conversation/conversation-types.js';
 
@@ -58,16 +58,16 @@ import type {ConversationState} from './conversation/conversation-types.js';
 export interface State {
   /** SearchBox state (available after adoption) */
   searchBox?: SearchBoxState;
-  /** Per-result UI state (available after adoption) */
-  result?: ResultMapState;
   /** Results collection state (available after adoption) */
-  results?: ResultsState;
+  results?: ResultListState;
   /** Facets by ID (map structure, available after adoption) */
   facets?: Record<string, FacetState>;
   /** Pagination state (available after adoption) */
   pagination?: PaginationState;
   /** Configuration state (available after adoption) */
   configuration?: ConfigurationState;
+  /** Search API request state (available after adoption) */
+  searchApi?: SearchApiState;
   /** Cart state (available after adoption) */
   cart?: CartState;
   /** Conversation state (available after adoption) */

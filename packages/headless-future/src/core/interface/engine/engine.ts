@@ -1,12 +1,3 @@
-/**
- * Layer 0 Interface: Core Engine Operations
- *
- * Provides library-agnostic read, subscribe, and mutation API.
- * This file is PUBLIC to Layers 1-3 (via core/index.ts).
- *
- * CRITICAL: NO Redux or Immer types exposed.
- */
-
 import {configureStore, combineSlices} from '@reduxjs/toolkit';
 import type {Slice} from '@reduxjs/toolkit';
 import type {
@@ -17,7 +8,7 @@ import type {
   StateMutation,
 } from '@/src/core/interface/interface-types.js';
 import type {ConfigurationState} from '@/src/core/interface/configuration/configuration-types.js';
-import {configurationSlice} from '../../internal/configuration/configuration-slice.js';
+import {configurationSlice} from '@/src/core/internal/configuration/configuration-slice.js';
 import type {EngineOptions} from '@/src/core/interface/engine/engine-types.js';
 import type {NavigatorContextProvider} from '@/src/core/interface/navigator-context/navigator-context-types.js';
 

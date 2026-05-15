@@ -1,32 +1,76 @@
-import {executeSearchAPI} from '@/src/api/index.js';
-import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
-import {searchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
-import * as searchBoxSelectors from '@/src/core/interface/search-box/search-box-selectors.js';
-import * as searchBoxMutators from '@/src/core/interface/search-box/search-box-mutators.js';
-import {createSelector} from '@reduxjs/toolkit';
+import {
+  getFullEngine,
+  searchBoxSelectors,
+  searchBoxMutators,
+  loadSearchBox,
+} from '@/src/core/index.js';
+import {SearchEndpointFacade} from '@/src/api/index.js';
+import {
+  Controller,
+  ControllerOptions,
+} from '@/src/public/controllers/controller-types.js';
 
-const stateSelect = createSelector([searchBoxSelectors.query], (query) => ({
-  query,
-}));
+/**
+ * Builds a `SearchBoxController` instance.
+ * @param options - The options to build the controller.
+ * @returns A `SearchBoxController` instance.
+ */
+export const buildSearchBoxController: (
+  options: SearchBoxControllerOptions
+) => SearchBoxController = (options) => {
+  const fullEngine = getFullEngine(options.engine);
+  loadSearchBox(fullEngine);
 
-export const buildSearchBoxController = (engine: Engine) => {
-  const fullEngine = getFullEngine(engine);
-  fullEngine.adoptSlice(searchBoxSlice);
+  const facade = SearchEndpointFacade.getInstance(fullEngine);
+
+  const stateSelect = () => ({
+    query: fullEngine.read(searchBoxSelectors.getQuery),
+  });
+
   return {
-    updateQuery: (query: string) => {
-      fullEngine.mutate(searchBoxMutators.setQuery(query));
+    setQuery: (options: SetQueryOptions) => {
+      fullEngine.mutate(searchBoxMutators.setQuery(options.query));
     },
     submit: () => {
-      executeSearchAPI(fullEngine);
+      facade.callEndpoint();
     },
     get state() {
-      return fullEngine.read(stateSelect);
-    },
-    get query() {
-      return fullEngine.read(searchBoxSelectors.query);
+      return stateSelect();
     },
     subscribe(callback: () => void) {
-      fullEngine.subscribe(stateSelect, callback);
+      return fullEngine.subscribe(stateSelect, callback);
     },
   };
 };
+
+export interface SearchBoxControllerOptions extends ControllerOptions {}
+
+export interface SearchBoxController extends Controller {
+  /**
+   * Updates the search query.
+   *
+   * @param options - The options for setting the query.
+   */
+  setQuery(options: SetQueryOptions): void;
+
+  /**
+   * Executes the search query.
+   */
+  submit(): void;
+
+  readonly state: SearchBoxControllerState;
+}
+
+export interface SetQueryOptions {
+  /**
+   * The new search query.
+   */
+  query: string;
+}
+
+export interface SearchBoxControllerState {
+  /**
+   * The current search query.
+   */
+  query: string;
+}

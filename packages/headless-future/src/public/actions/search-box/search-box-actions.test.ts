@@ -27,7 +27,7 @@ describe('search-box actions', () => {
       // After adopting, the slice should be available and query should be default
       // Give time for adoptSlice (async) to settle
       await new Promise((r) => setTimeout(r, 0));
-      expect(fullEngine.read(selectors.query)).toBe('');
+      expect(fullEngine.read(selectors.getQuery)).toBe('');
     });
 
     it('should return an object with a setQuery action', () => {
@@ -41,7 +41,7 @@ describe('search-box actions', () => {
       await new Promise((r) => setTimeout(r, 0));
 
       actions.setQuery('hello world');
-      expect(fullEngine.read(selectors.query)).toBe('hello world');
+      expect(fullEngine.read(selectors.getQuery)).toBe('hello world');
     });
 
     it('should accept empty string via setQuery action', async () => {
@@ -50,7 +50,7 @@ describe('search-box actions', () => {
 
       actions.setQuery('something');
       actions.setQuery('');
-      expect(fullEngine.read(selectors.query)).toBe('');
+      expect(fullEngine.read(selectors.getQuery)).toBe('');
     });
 
     it('should handle multiple calls to setQuery', async () => {
@@ -58,10 +58,10 @@ describe('search-box actions', () => {
       await new Promise((r) => setTimeout(r, 0));
 
       actions.setQuery('first');
-      expect(fullEngine.read(selectors.query)).toBe('first');
+      expect(fullEngine.read(selectors.getQuery)).toBe('first');
 
       actions.setQuery('second');
-      expect(fullEngine.read(selectors.query)).toBe('second');
+      expect(fullEngine.read(selectors.getQuery)).toBe('second');
     });
   });
 
@@ -74,7 +74,7 @@ describe('search-box actions', () => {
     it('should adopt the slice if not already adopted', async () => {
       setQuery(engine);
       await new Promise((r) => setTimeout(r, 0));
-      expect(fullEngine.read(selectors.query)).toBe('');
+      expect(fullEngine.read(selectors.getQuery)).toBe('');
     });
 
     it('should update state when the returned function is called', async () => {
@@ -82,7 +82,7 @@ describe('search-box actions', () => {
       await new Promise((r) => setTimeout(r, 0));
 
       action('test query');
-      expect(fullEngine.read(selectors.query)).toBe('test query');
+      expect(fullEngine.read(selectors.getQuery)).toBe('test query');
     });
 
     it('should not re-adopt the slice on subsequent calls with the same engine', async () => {
@@ -91,12 +91,12 @@ describe('search-box actions', () => {
       await new Promise((r) => setTimeout(r, 0));
 
       action1('first');
-      expect(fullEngine.read(selectors.query)).toBe('first');
+      expect(fullEngine.read(selectors.getQuery)).toBe('first');
 
       // Second call should skip adoption but still work
       const action2 = setQuery(engine);
       action2('second');
-      expect(fullEngine.read(selectors.query)).toBe('second');
+      expect(fullEngine.read(selectors.getQuery)).toBe('second');
     });
 
     it('should work with different engine instances independently', async () => {
@@ -110,8 +110,8 @@ describe('search-box actions', () => {
       action1('engine1 query');
       action2('engine2 query');
 
-      expect(fullEngine.read(selectors.query)).toBe('engine1 query');
-      expect(fullEngine2.read(selectors.query)).toBe('engine2 query');
+      expect(fullEngine.read(selectors.getQuery)).toBe('engine1 query');
+      expect(fullEngine2.read(selectors.getQuery)).toBe('engine2 query');
     });
 
     it('should work after loadSearchBoxActions has already adopted the slice', async () => {
@@ -122,7 +122,7 @@ describe('search-box actions', () => {
       // Named export should still work (slice already adopted)
       const action = setQuery(engine);
       action('after load');
-      expect(fullEngine.read(selectors.query)).toBe('after load');
+      expect(fullEngine.read(selectors.getQuery)).toBe('after load');
     });
   });
 });

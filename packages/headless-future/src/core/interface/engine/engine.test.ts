@@ -8,11 +8,13 @@ import {describe, it, expect, beforeEach, vi} from 'vitest';
 import {createTestEngine} from '@/src/test/test-utils.js';
 import * as searchBoxMutations from '@/src/core/interface/search-box/search-box-mutators.js';
 import * as searchBoxSelectors from '@/src/core/interface/search-box/search-box-selectors.js';
-import * as resultsMutations from '@/src/core/interface/results/results-mutators.js';
-import * as resultsSelectors from '@/src/core/interface/results/results-selectors.js';
+import * as resultsSelectors from '@/src/core/interface/result-list/result-list-selectors.js';
+import * as searchApiMutations from '@/src/core/interface/api/search-api/search-api-mutators.js';
+import * as searchApiSelectors from '@/src/core/interface/api/search-api/search-api-selectors.js';
 import {Engine, FullEngine, getFullEngine} from './engine.js';
 import {searchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
-import {resultsSlice} from '@/src/core/internal/results/results-slice.js';
+import {resultsSlice} from '@/src/core/internal/result-list/result-list-slice.js';
+import {searchApiSlice} from '@/src/core/internal/api/search-api/search-api-slice.js';
 import type {
   ConfigurationState,
   State,
@@ -27,17 +29,18 @@ describe('Engine: read()', () => {
     engine = getFullEngine(createTestEngine());
     engine.adoptSlice(searchBoxSlice);
     engine.adoptSlice(resultsSlice);
+    engine.adoptSlice(searchApiSlice);
   });
 
   it('should read values from state using a selector', () => {
-    const query = engine.read(searchBoxSelectors.query);
+    const query = engine.read(searchBoxSelectors.getQuery);
 
     expect(query).toBe('');
   });
 
   it('should return updated values after mutations', () => {
     engine.mutate(searchBoxMutations.setQuery('laptops'));
-    const query = engine.read(searchBoxSelectors.query);
+    const query = engine.read(searchBoxSelectors.getQuery);
 
     expect(query).toBe('laptops');
   });
@@ -63,7 +66,7 @@ describe('Engine: subscribe()', () => {
   it('should trigger callback when subscribed value changes', () => {
     const callback = vi.fn();
 
-    engine.subscribe(searchBoxSelectors.query, callback);
+    engine.subscribe(searchBoxSelectors.getQuery, callback);
     engine.mutate(searchBoxMutations.setQuery('laptops'));
 
     expect(callback).toHaveBeenCalledWith('laptops');
@@ -77,7 +80,7 @@ describe('Engine: subscribe()', () => {
     engine.mutate(searchBoxMutations.setQuery('test'));
 
     // Subscribe after value is set
-    engine.subscribe(searchBoxSelectors.query, callback);
+    engine.subscribe(searchBoxSelectors.getQuery, callback);
 
     // Set to same value
     engine.mutate(searchBoxMutations.setQuery('test'));
@@ -88,10 +91,9 @@ describe('Engine: subscribe()', () => {
   it('should not trigger callback when unrelated state changes', () => {
     const callback = vi.fn();
 
-    engine.subscribe(searchBoxSelectors.query, callback);
+    engine.subscribe(searchBoxSelectors.getQuery, callback);
 
-    // Change loading state, not query
-    engine.mutate(resultsMutations.setLoading(true));
+    engine.mutate(searchApiMutations.setStatus('pending'));
 
     expect(callback).not.toHaveBeenCalled();
   });
@@ -99,7 +101,7 @@ describe('Engine: subscribe()', () => {
   it('should trigger callback for each distinct change', () => {
     const callback = vi.fn();
 
-    engine.subscribe(searchBoxSelectors.query, callback);
+    engine.subscribe(searchBoxSelectors.getQuery, callback);
 
     engine.mutate(searchBoxMutations.setQuery('first'));
     engine.mutate(searchBoxMutations.setQuery('second'));
@@ -112,7 +114,7 @@ describe('Engine: subscribe()', () => {
   });
 
   it('should return an unsubscribe function', () => {
-    const unsubscribe = engine.subscribe(searchBoxSelectors.query, vi.fn());
+    const unsubscribe = engine.subscribe(searchBoxSelectors.getQuery, vi.fn());
 
     expect(typeof unsubscribe).toBe('function');
   });
@@ -120,7 +122,7 @@ describe('Engine: subscribe()', () => {
   it('should stop triggering callback after unsubscribe', () => {
     const callback = vi.fn();
 
-    const unsubscribe = engine.subscribe(searchBoxSelectors.query, callback);
+    const unsubscribe = engine.subscribe(searchBoxSelectors.getQuery, callback);
 
     // Should trigger
     engine.mutate(searchBoxMutations.setQuery('first'));
@@ -138,8 +140,8 @@ describe('Engine: subscribe()', () => {
     const callback1 = vi.fn();
     const callback2 = vi.fn();
 
-    engine.subscribe(searchBoxSelectors.query, callback1);
-    engine.subscribe(searchBoxSelectors.query, callback2);
+    engine.subscribe(searchBoxSelectors.getQuery, callback1);
+    engine.subscribe(searchBoxSelectors.getQuery, callback2);
 
     engine.mutate(searchBoxMutations.setQuery('test'));
 
@@ -155,29 +157,30 @@ describe('Engine: mutate()', () => {
     engine = getFullEngine(createTestEngine());
     engine.adoptSlice(searchBoxSlice);
     engine.adoptSlice(resultsSlice);
+    engine.adoptSlice(searchApiSlice);
   });
 
   it('should update state correctly', () => {
     engine.mutate(searchBoxMutations.setQuery('test query'));
 
-    expect(engine.read(searchBoxSelectors.query)).toBe('test query');
+    expect(engine.read(searchBoxSelectors.getQuery)).toBe('test query');
   });
 
   it('should handle multiple mutations in sequence', () => {
     engine.mutate(searchBoxMutations.setQuery('laptops'));
-    engine.mutate(resultsMutations.setLoading(true));
+    engine.mutate(searchApiMutations.setStatus('pending'));
 
-    expect(engine.read(searchBoxSelectors.query)).toBe('laptops');
-    expect(engine.read(resultsSelectors.isLoading)).toBe(true);
+    expect(engine.read(searchBoxSelectors.getQuery)).toBe('laptops');
+    expect(engine.read(searchApiSelectors.isLoading)).toBe(true);
   });
 
   it('should accept library-agnostic StateMutation objects', () => {
     // Ensure slice is adopted first
-    engine.read(searchBoxSelectors.query);
+    engine.read(searchBoxSelectors.getQuery);
 
     engine.mutate({type: 'searchBox/setQuery', payload: 'test'});
 
-    expect(engine.read(searchBoxSelectors.query)).toBe('test');
+    expect(engine.read(searchBoxSelectors.getQuery)).toBe('test');
   });
 });
 

@@ -19,13 +19,13 @@ describe('searchBox selectors', () => {
 
   describe('query selector', () => {
     it('should return empty string initially', () => {
-      const query = engine.read(selectors.query);
+      const query = engine.read(selectors.getQuery);
       expect(query).toBe('');
     });
 
     it('should return updated query after mutation', () => {
       engine.mutate(mutations.setQuery('laptops'));
-      const query = engine.read(selectors.query);
+      const query = engine.read(selectors.getQuery);
       expect(query).toBe('laptops');
     });
   });

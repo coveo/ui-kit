@@ -8,7 +8,8 @@ import {
   createMockSearchResults,
 } from '@/src/test/test-utils.js';
 import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
-import {resultsSlice} from '@/src/core/internal/results/results-slice.js';
+import {resultsSlice} from '@/src/core/internal/result-list/result-list-slice.js';
+import {searchApiSlice} from '@/src/core/internal/api/search-api/search-api-slice.js';
 import {buildResultListController} from './result-list-controller.js';
 
 describe('buildResultListController', () => {
@@ -96,13 +97,13 @@ describe('buildResultListController', () => {
     it('should not invoke callback when unrelated state changes', async () => {
       const fullEngine = getFullEngine(engine);
       await fullEngine.adoptSlice(resultsSlice);
+      await fullEngine.adoptSlice(searchApiSlice);
       const controller = buildResultListController(engine);
       const callback = vi.fn();
 
       controller.subscribe(callback);
-      // Changing loading state doesn't affect the results selector
-      fullEngine.mutate(resultsSlice.actions.setLoading(true));
-      fullEngine.mutate(resultsSlice.actions.setLoading(false));
+      fullEngine.mutate(searchApiSlice.actions.setStatus('pending'));
+      fullEngine.mutate(searchApiSlice.actions.setStatus('idle'));
 
       expect(callback).not.toHaveBeenCalled();
     });

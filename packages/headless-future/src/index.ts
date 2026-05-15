@@ -17,4 +17,4 @@ export * from './public/actions/index.js';
 export * from './public/controllers/index.js';
 
 // Protocol types (normalized stream events)
-export type {NormalizedStreamEvent} from './api/shared/stream-types.js';
+export type {NormalizedStreamEvent} from './api/internal/protocol/stream-types.js';
