@@ -3,7 +3,7 @@
 ## Prerequisites
 
 - **Node.js**: Version pinned in `.nvmrc` (use `nvm use` or the devcontainer)
-- **pnpm**: Pinned in `package.json` `packageManager` field. Run `corepack enable` to activate it.
+- **pnpm**: Pinned in `package.json` `packageManager` field. Run `corepack enable` to activate it
 
 ## Commands
 
