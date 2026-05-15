@@ -130,7 +130,20 @@ describe('atomic-generated-answer-thread-item', () => {
     expect(locators().contentState).not.toHaveAttribute('hidden');
   });
 
-  it('should toggle expanded state when the timeline dot area is clicked', async () => {
+  it('should toggle expanded state when the timeline dot is clicked', async () => {
+    const {element, locators} = await renderComponent({
+      disableCollapse: false,
+      isExpanded: false,
+    });
+
+    const dot = locators().timelineDot as HTMLSpanElement;
+    dot.click();
+    await element.updateComplete;
+
+    expect(locators().contentState).not.toHaveAttribute('hidden');
+  });
+
+  it('should not toggle expanded state when the timeline dot container is clicked', async () => {
     const {element, locators} = await renderComponent({
       disableCollapse: false,
       isExpanded: false,
@@ -140,7 +153,7 @@ describe('atomic-generated-answer-thread-item', () => {
     dotContainer.click();
     await element.updateComplete;
 
-    expect(locators().contentState).not.toHaveAttribute('hidden');
+    expect(locators().contentState).toHaveAttribute('hidden');
   });
 
   it('should not toggle expanded state when the timeline dot is hidden', async () => {

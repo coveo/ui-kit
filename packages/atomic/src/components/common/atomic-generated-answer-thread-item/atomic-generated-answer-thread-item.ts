@@ -128,6 +128,7 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
       'transition-colors': true,
       'bg-neutral-dark': this.isExpanded,
       'bg-neutral-dim': !this.isExpanded,
+      'cursor-pointer': isTimelineDotInteractive,
       'group-hover:bg-neutral-dark':
         !this.isExpanded && isTimelineDotInteractive,
     });
@@ -166,13 +167,15 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
     return html`
       <li class="grid min-w-0">
         <div class="flex min-w-0 items-center gap-3">
-          <div
-            class=${timelineDotToggleClasses}
-            @click=${isTimelineDotInteractive ? this.toggle : null}
-          >
+          <div class=${timelineDotToggleClasses}>
             ${when(
               this.showTimelineDot,
-              () => html` <span class=${timelineDotClasses}></span> `
+              () => html`
+                <span
+                  class=${timelineDotClasses}
+                  @click=${isTimelineDotInteractive ? this.toggle : null}
+                ></span>
+              `
             )}
           </div>
           <div class="flex min-w-0 flex-col">
