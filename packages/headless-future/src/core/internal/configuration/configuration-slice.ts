@@ -1,16 +1,6 @@
-/**
- * Configuration Feature Slice (Redux Implementation)
- *
- * This file contains Redux-specific implementation for the configuration feature.
- * It is INTERNAL to Layer 0 and must NEVER be exported from core/index.ts.
- */
-
 import {createSlice, type PayloadAction} from '@reduxjs/toolkit';
 import type {ConfigurationState} from '@/src/core/interface/configuration/configuration-types.js';
 
-/**
- * Initial configuration state
- */
 export const initialConfigurationState: ConfigurationState = {
   organizationId: '',
   accessToken: '',
@@ -21,9 +11,6 @@ export const initialConfigurationState: ConfigurationState = {
   endpoint: undefined,
 };
 
-/**
- * Configuration slice manages API credentials and settings
- */
 export const configurationSlice = createSlice({
   name: 'configuration',
   initialState: initialConfigurationState,

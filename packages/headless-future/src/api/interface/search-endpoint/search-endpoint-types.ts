@@ -1,19 +1,4 @@
-/**
- * Layer 1: API Client - Coveo Search API Types
- *
- * Type definitions for the Coveo Search API (POST /rest/search/v2)
- * These types are internal to Layer 1 and should not be exposed to
- * Layer 2 or Layer 3.
- *
- * API Documentation: https://platform.cloud.coveo.com/api-docs/SearchApi
- */
-
-/**
- * Coveo Search API Request Body
- *
- * POST /rest/search/v2
- */
-export interface CoveoSearchRequest {
+export interface CoveoSearchEndpointRequest {
   /**
    * The basic query expression (user's search query)
    */
@@ -89,7 +74,7 @@ export interface CoveoFacetRequest {
 /**
  * Coveo Search API Response
  */
-export interface CoveoSearchResponse {
+export interface CoveoSearchEndpointResponse {
   /**
    * Total number of results matching the query
    */
@@ -202,4 +187,28 @@ export interface CoveoFacetValue {
    * Current state of the value (selected or not)
    */
   state?: 'selected' | 'idle';
+}
+
+export type CoveoSearchEndpointRequestMiddleware = (
+  request: CoveoSearchEndpointRequest
+) => CoveoSearchEndpointRequest;
+
+export type CoveoSearchEndpointResponseListener = (
+  response: Readonly<CoveoSearchEndpointResponse>
+) => void;
+
+export type SearchEndpointClientResult =
+  | {
+      success: true;
+      data?: CoveoSearchEndpointResponse;
+    }
+  | {
+      success: false;
+      error: string;
+    };
+
+export interface SearchEndpointClient {
+  call: (
+    request: CoveoSearchEndpointRequest
+  ) => Promise<SearchEndpointClientResult>;
 }

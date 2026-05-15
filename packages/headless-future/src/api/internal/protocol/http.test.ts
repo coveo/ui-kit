@@ -2,69 +2,17 @@
  * HTTP Utility Tests
  */
 
-import {
-  describe,
-  it,
-  expect,
-  beforeEach,
-  afterEach,
-  vi,
-  MockedFunction,
-} from 'vitest';
+import {describe, it, expect, afterEach, vi, MockedFunction} from 'vitest';
 import {executeHttpRequest} from './http.js';
-import {createTestEngine} from '@/src/test/test-utils.js';
-import * as configurationMutations from '@/src/core/interface/configuration/configuration-mutators.js';
-import {FullEngine, getFullEngine} from '@/src/core/interface/engine/engine.js';
-import {configurationSlice} from '@/src/core/internal/configuration/configuration-slice.js';
 
 describe('executeHttpRequest()', () => {
-  let engine: FullEngine;
-
-  beforeEach(() => {
-    engine = getFullEngine(createTestEngine());
-    engine.adoptSlice(configurationSlice);
-    engine.mutate(configurationMutations.setOrganizationId('test-org-id'));
-    engine.mutate(configurationMutations.setAccessToken('test-access-token'));
-
-    vi.restoreAllMocks();
-  });
-
   afterEach(() => {
+    vi.restoreAllMocks();
     vi.unstubAllGlobals();
   });
 
-  describe('Configuration validation', () => {
-    it('should return error when organizationId is not set', async () => {
-      const emptyEngine = getFullEngine(createTestEngine());
-      emptyEngine.adoptSlice(configurationSlice);
-      emptyEngine.mutate(configurationMutations.setAccessToken('token'));
-
-      const response = await executeHttpRequest(emptyEngine, {
-        path: '/test',
-        method: 'GET',
-      });
-
-      expect(response.success).toBe(false);
-      expect(response.error).toContain('Organization ID is not set');
-    });
-
-    it('should return error when accessToken is not set', async () => {
-      const emptyEngine = getFullEngine(createTestEngine());
-      emptyEngine.adoptSlice(configurationSlice);
-      emptyEngine.mutate(configurationMutations.setOrganizationId('org-id'));
-
-      const response = await executeHttpRequest(emptyEngine, {
-        path: '/test',
-        method: 'GET',
-      });
-
-      expect(response.success).toBe(false);
-      expect(response.error).toContain('Access token is not set');
-    });
-  });
-
   describe('Successful requests', () => {
-    it('should execute GET request with default endpoint', async () => {
+    it('should execute GET request', async () => {
       const mockData = {results: [{id: 1}]};
       const mockFetch: MockedFunction<typeof fetch> = vi.fn(() =>
         Promise.resolve(
@@ -76,9 +24,13 @@ describe('executeHttpRequest()', () => {
       );
       vi.stubGlobal('fetch', mockFetch);
 
-      const response = await executeHttpRequest<typeof mockData>(engine, {
-        path: '/rest/search/v2',
+      const response = await executeHttpRequest<typeof mockData>({
+        url: 'https://platform.cloud.coveo.com/rest/search/v2',
         method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer test-access-token',
+        },
       });
 
       expect(response.success).toBe(true);
@@ -109,10 +61,13 @@ describe('executeHttpRequest()', () => {
       );
       vi.stubGlobal('fetch', mockFetch);
 
-      const response = await executeHttpRequest<typeof mockData>(engine, {
-        path: '/rest/search/v2',
+      const response = await executeHttpRequest<typeof mockData>({
+        url: 'https://platform.cloud.coveo.com/rest/search/v2',
         method: 'POST',
         body: requestBody,
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
 
       expect(response.success).toBe(true);
@@ -126,37 +81,17 @@ describe('executeHttpRequest()', () => {
       );
     });
 
-    it('should use custom endpoint when configured', async () => {
-      engine.mutate(
-        configurationMutations.setEndpoint('https://custom.coveo.com')
-      );
-
-      const mockFetch: MockedFunction<typeof fetch> = vi.fn(() =>
-        Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
-      );
-      vi.stubGlobal('fetch', mockFetch);
-
-      await executeHttpRequest(engine, {
-        path: '/api/test',
-        method: 'GET',
-      });
-
-      expect(mockFetch).toHaveBeenCalledWith(
-        'https://custom.coveo.com/api/test',
-        expect.any(Object)
-      );
-    });
-
     it('should include additional headers', async () => {
       const mockFetch: MockedFunction<typeof fetch> = vi.fn(() =>
         Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
       );
       vi.stubGlobal('fetch', mockFetch);
 
-      await executeHttpRequest(engine, {
-        path: '/test',
+      await executeHttpRequest({
+        url: 'https://platform.cloud.coveo.com/test',
         method: 'GET',
         headers: {
+          'Content-Type': 'application/json',
           'X-Custom-Header': 'custom-value',
         },
       });
@@ -183,8 +118,8 @@ describe('executeHttpRequest()', () => {
         )
       );
 
-      const response = await executeHttpRequest(engine, {
-        path: '/test',
+      const response = await executeHttpRequest({
+        url: 'https://platform.cloud.coveo.com/test',
         method: 'GET',
       });
 
@@ -198,8 +133,8 @@ describe('executeHttpRequest()', () => {
         vi.fn(() => Promise.reject(new TypeError('fetch failed')))
       );
 
-      const response = await executeHttpRequest(engine, {
-        path: '/test',
+      const response = await executeHttpRequest({
+        url: 'https://platform.cloud.coveo.com/test',
         method: 'GET',
       });
 
@@ -220,8 +155,8 @@ describe('executeHttpRequest()', () => {
         )
       );
 
-      const response = await executeHttpRequest(engine, {
-        path: '/test',
+      const response = await executeHttpRequest({
+        url: 'https://platform.cloud.coveo.com/test',
         method: 'GET',
       });
 
@@ -237,8 +172,8 @@ describe('executeHttpRequest()', () => {
       );
       vi.stubGlobal('fetch', mockFetch);
 
-      await executeHttpRequest(engine, {
-        path: '/test',
+      await executeHttpRequest({
+        url: 'https://platform.cloud.coveo.com/test',
         method: 'PUT',
         body: {data: 'test'},
       });
@@ -255,8 +190,8 @@ describe('executeHttpRequest()', () => {
       );
       vi.stubGlobal('fetch', mockFetch);
 
-      await executeHttpRequest(engine, {
-        path: '/test',
+      await executeHttpRequest({
+        url: 'https://platform.cloud.coveo.com/test',
         method: 'DELETE',
       });
 
@@ -272,8 +207,8 @@ describe('executeHttpRequest()', () => {
       );
       vi.stubGlobal('fetch', mockFetch);
 
-      await executeHttpRequest(engine, {
-        path: '/test',
+      await executeHttpRequest({
+        url: 'https://platform.cloud.coveo.com/test',
         method: 'PATCH',
         body: {field: 'value'},
       });
@@ -290,8 +225,8 @@ describe('executeHttpRequest()', () => {
       );
       vi.stubGlobal('fetch', mockFetch);
 
-      await executeHttpRequest(engine, {
-        path: '/test',
+      await executeHttpRequest({
+        url: 'https://platform.cloud.coveo.com/test',
         method: 'GET',
         body: {shouldBeIgnored: true},
       });
