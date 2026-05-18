@@ -58,7 +58,7 @@ To create a new Lightning Web Component bundle, run from `packages/quantic`:
 sf lightning generate component --type lwc --name <componentName> --output-dir force-app/main/default/lwc
 ```
 
-This generates the component bundle with the correct API version already set in the `.js-meta.xml` file.
+> **Never create the component files manually.** The `sf` command derives the `apiVersion` from `sfdx-project.json`, ensuring new components always use the latest configured version. Manually created `.js-meta.xml` files risk using an outdated version.
 
 ---
 
@@ -174,6 +174,63 @@ labels = {
 ```
 
 Reference in templates via `{labels.propertyName}`.
+
+### Interpolating variables into labels
+
+When a label contains placeholders (`{{0}}`, `{{1}}`, etc.), always use `I18nUtils.format()` to substitute values. **Never use `.replace()` or string concatenation on labels.**
+
+```javascript
+import {I18nUtils} from 'c/quanticUtils';
+
+// Label value: "Showing {{0}} of {{1}} results"
+get showingResultsLabel() {
+  return I18nUtils.format(this.labels.showingResultsOf, this.first, this.total);
+}
+```
+
+Arguments are positional and map to `{{0}}`, `{{1}}`, etc.
+
+### Plural, singular, and zero label variants
+
+When a label needs different text based on count (e.g., "1 result" vs. "2 results" vs. "No results"), define three label variants using the suffixes ``, `_plural`, and `_zero`, then use `I18nUtils.getLabelNameWithCount()` to select the right one:
+
+**Label definitions:**
+```xml
+<!-- singular (no suffix) -->
+<fullName>quantic_InclusionFilter</fullName>
+<value>Inclusion filter on {{0}}; {{1}} result</value>
+
+<!-- plural -->
+<fullName>quantic_InclusionFilter_plural</fullName>
+<value>Inclusion filter on {{0}}; {{1}} results</value>
+
+<!-- zero -->
+<fullName>quantic_InclusionFilter_zero</fullName>
+<value>Inclusion filter on {{0}}; no results</value>
+```
+
+**Import and group all three variants:**
+```javascript
+import inclusionFilter from '@salesforce/label/c.quantic_InclusionFilter';
+import inclusionFilter_plural from '@salesforce/label/c.quantic_InclusionFilter_plural';
+import inclusionFilter_zero from '@salesforce/label/c.quantic_InclusionFilter_zero';
+
+labels = {
+  inclusionFilter,
+  inclusionFilter_plural,
+  inclusionFilter_zero,
+};
+```
+
+**Select the correct variant by count, then format:**
+```javascript
+get inclusionFilterLabel() {
+  const labelName = I18nUtils.getLabelNameWithCount('inclusionFilter', this.count);
+  return I18nUtils.format(this.labels[labelName], this.value, this.count);
+}
+```
+
+`getLabelNameWithCount(baseName, count)` returns `baseName` (singular), `baseName_plural`, or `baseName_zero` based on the count. All three translation variants must also be added to both translation files.
 
 ### Naming convention
 

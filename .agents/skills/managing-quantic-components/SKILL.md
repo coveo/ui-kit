@@ -54,11 +54,13 @@ quantic{ComponentName}/
 | Unsubscribe | Always call `this.unsubscribe?.()` in `disconnectedCallback` |
 | Custom events | Prefix with `quantic__` (e.g. `quantic__like`) |
 | Labels | Every user-visible string must be a localized label — never hardcode text. Import from `@salesforce/label/c.quantic_LabelName`; group into a `labels = {}` instance field |
+| Label interpolation | Use `I18nUtils.format(label, ...args)` for `{{0}}`/`{{1}}` placeholders — never `.replace()` or string concatenation |
+| Label pluralization | For count-sensitive labels, define `_plural` and `_zero` variants and use `I18nUtils.getLabelNameWithCount(baseName, count)` to select the right one |
 | Label translations | Every new label **must** have a translation entry added to both `force-app/main/translations/fr.translation-meta.xml` and `es.translation-meta.xml` |
 | Error handling | `hasInitializationError` flag + `<c-quantic-component-error>` in template |
 | CSS naming | BEM-like with component prefix: `.generated-answer__card-header--collapsed` |
 | SLDS tokens | Use `var(--lwc-*)` design tokens; always use SLDS utility classes first — write custom CSS only when no SLDS class achieves the needed result |
-| Meta XML | `isExposed: false`; no `targets` or `targetConfigs` |
+| Meta XML | `isExposed: false`; no `targets` or `targetConfigs`; **always generated via `sf lightning generate component`** — never created manually (manual creation risks using a stale `apiVersion`) |
 | `render()` | Only for multi-template components; always the **last method** in the class |
 | Comments | Avoid code comments — write simple, self-explanatory code instead. Comments are acceptable only when the logic is genuinely non-obvious and cannot be clarified through naming or structure |
 | Constants | Extract magic strings and numbers into named constants at the top of the file |
