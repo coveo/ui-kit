@@ -102,8 +102,34 @@ Do not duplicate upstream Headless coverage unless the Quantic component adds be
 4. Update JSDoc and metadata consistently with the component’s public surface.
 5. Run `pnpm run lint:fix` from `packages/quantic` before considering the work done.
 6. Run targeted Quantic tests first, then broader checks only if needed.
+7. **Run the Definition of Done checklist below before marking the task complete.**
 
 ---
+
+## Definition of Done
+
+Before marking any task as complete, verify every applicable item and output this table:
+
+```
+| Check | Status | Notes |
+|---|---|---|
+| No hardcoded strings | ✅/❌ | |
+| Labels defined + translated (FR + ES) | ✅/❌ | |
+| Placeholder labels use I18nUtils.format | ✅/❌/N/A | |
+| Count-sensitive label variants (_plural/_zero) | ✅/❌/N/A | |
+| sf command used; apiVersion correct | ✅/❌ | |
+| isExposed false, no targets | ✅/❌ | |
+| Component class JSDoc complete | ✅/❌ | |
+| All @api props documented | ✅/❌ | |
+| @example reflects actual API | ✅/❌ | |
+| Field/method order correct | ✅/❌ | |
+| Headless lifecycle correct | ✅/❌/N/A | |
+| Error handling present | ✅/❌/N/A | |
+
+**Result: PASS / FAIL** — Failing items: <list ❌ items with required fix>
+```
+
+
 
 ## Progressive Disclosure
 
