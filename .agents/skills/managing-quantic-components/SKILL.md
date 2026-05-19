@@ -38,6 +38,8 @@ quantic{ComponentName}/
 ├── __tests__/
 │   └── quantic{ComponentName}.test.js
 ├── e2e/ (optional)
+│   ├── fixture.ts
+│   ├── pageObject.ts
 │   └── quantic{ComponentName}.e2e.ts
 └── templates/ (multi-template only)
     ├── {templateName}.html
@@ -111,25 +113,24 @@ Do not duplicate upstream Headless coverage unless the Quantic component adds be
 
 Before marking any task as complete, verify every applicable item and output this table:
 
-```
-| Check | Status | Notes |
-|---|---|---|
-| No hardcoded strings | ✅/❌ | |
-| Labels defined + translated (FR + ES) | ✅/❌ | |
-| Placeholder labels use I18nUtils.format | ✅/❌/N/A | |
-| Labels with variables tested with `0`, `1`, and `>1` | ✅/❌/N/A | If the surrounding sentence changes grammatically or orthographically across those cases in English, French, or Spanish, add singular / `_plural` / `_zero` label variants and test the selected output |
-| Count-sensitive label variants (_plural/_zero) | ✅/❌/N/A | |
-| sf command used; apiVersion correct | ✅/❌ | |
-| isExposed false, no targets | ✅/❌ | |
-| Component class JSDoc complete | ✅/❌ | |
-| All @api props documented | ✅/❌ | |
-| @example reflects actual API | ✅/❌ | |
-| Field/method order correct | ✅/❌ | |
-| Headless lifecycle correct | ✅/❌/N/A | |
-| Error handling present | ✅/❌/N/A | |
+
+| Check | Status |
+|---|---|
+| No hardcoded strings | ✅/❌ |
+| Labels defined + translated (FR + ES) | ✅/❌ |
+| Placeholder labels use I18nUtils.format | ✅/❌/N/A |
+| Labels with variables tested with `0`, `1`, and `>1` — add `_plural`/`_zero` variants if sentence changes in EN, FR, or ES | ✅/❌/N/A |
+| sf command used; apiVersion correct | ✅/❌ |
+| isExposed false, no targets | ✅/❌ |
+| Component class JSDoc complete | ✅/❌ |
+| All @api props documented | ✅/❌ |
+| @example reflects actual API | ✅/❌ |
+| Field/method order correct | ✅/❌ |
+| Headless lifecycle correct | ✅/❌/N/A |
+| Error handling present | ✅/❌/N/A |
 
 **Result: PASS / FAIL** — Failing items: <list ❌ items with required fix>
-```
+
 
 
 
