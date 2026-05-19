@@ -30,6 +30,7 @@ export type {LoggerOptions, LogLevel} from './app/logger.js';
 export type {NavigatorContext} from './app/navigator-context-provider.js';
 // Main App
 export type {
+  KnowledgeConfigurationOptions,
   SearchConfigurationOptions,
   SearchEngine,
   SearchEngineConfiguration,
