@@ -211,10 +211,9 @@ export const answerApi = answerSlice.injectEndpoints({
         const {configuration, generatedAnswer, insightConfiguration} =
           getState() as unknown as StreamAnswerAPIState;
         const {organizationId, environment, accessToken} = configuration;
-        const platformEndpoint = getOrganizationEndpoint(
-          organizationId,
-          environment
-        );
+        const platformEndpoint =
+          configuration.knowledge.apiBaseUrl ||
+          getOrganizationEndpoint(organizationId, environment);
         const answerEndpoint = buildAnswerEndpoint(
           platformEndpoint,
           organizationId,

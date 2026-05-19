@@ -1,4 +1,4 @@
-import {RecordValue, Schema} from '@coveo/bueno';
+import {RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {
   nonEmptyString,
   requiredNonEmptyString,
@@ -21,6 +21,25 @@ export interface InsightEngineConfiguration extends EngineConfiguration {
    * Specifies the configuration for the insight search.
    */
   search?: InsightEngineSearchConfigurationOptions;
+  /**
+   * The configuration options for the Answer API (GenAI streaming).
+   */
+  knowledge?: InsightEngineKnowledgeConfigurationOptions;
+}
+
+/**
+ * The insight engine knowledge configuration options.
+ */
+export interface InsightEngineKnowledgeConfigurationOptions {
+  /**
+   * The base URL to use to proxy Coveo Answer API requests (for example, `https://example.com/answer`).
+   *
+   * This is an advanced option that you only set if you proxy Coveo Answer API requests through your own
+   * server. In most cases, you should not set this option.
+   *
+   * By default, the Answer API endpoint will use the platform endpoint resolved from the organization ID.
+   */
+  proxyBaseUrl?: string;
 }
 
 /**
@@ -56,6 +75,14 @@ export const insightEngineConfigurationSchema =
       },
       values: {
         locale: nonEmptyString,
+      },
+    }),
+    knowledge: new RecordValue({
+      options: {
+        required: false,
+      },
+      values: {
+        proxyBaseUrl: new StringValue({required: false, url: true}),
       },
     }),
   });

@@ -22,6 +22,22 @@ export interface SearchEngineConfiguration extends EngineConfiguration {
    * The global headless engine configuration options specific to the SearchAPI.
    */
   search?: SearchConfigurationOptions;
+  /**
+   * The global headless engine configuration options specific to the Answer API (GenAI streaming).
+   */
+  knowledge?: KnowledgeConfigurationOptions;
+}
+
+export interface KnowledgeConfigurationOptions {
+  /**
+   * The base URL to use to proxy Coveo Answer API requests (for example, `https://example.com/answer`).
+   *
+   * This is an advanced option that you only set if you proxy Coveo Answer API requests through your own
+   * server. In most cases, you should not set this option.
+   *
+   * By default, the Answer API endpoint will use the platform endpoint resolved from the organization ID.
+   */
+  proxyBaseUrl?: string;
 }
 
 export interface SearchConfigurationOptions {
@@ -98,6 +114,14 @@ export const searchEngineConfigurationSchema =
           required: false,
           each: requiredNonEmptyString,
         }),
+        proxyBaseUrl: new StringValue({required: false, url: true}),
+      },
+    }),
+    knowledge: new RecordValue({
+      options: {
+        required: false,
+      },
+      values: {
         proxyBaseUrl: new StringValue({required: false, url: true}),
       },
     }),

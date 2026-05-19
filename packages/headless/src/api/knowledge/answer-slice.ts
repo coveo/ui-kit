@@ -34,10 +34,9 @@ const dynamicBaseQuery: BaseQueryFn<
     },
   };
   try {
-    const platformEndpoint = getOrganizationEndpoint(
-      organizationId,
-      environment
-    );
+    const platformEndpoint =
+      state.configuration.knowledge.apiBaseUrl ||
+      getOrganizationEndpoint(organizationId, environment);
     return fetchBaseQuery({
       baseUrl: `${platformEndpoint}/rest/organizations/${organizationId}/answer/v1/configs/${answerConfigurationId}`,
     })(updatedArgs, api, extraOptions);

@@ -13,9 +13,11 @@ import {
   setOriginLevel3,
   type UpdateAnalyticsConfigurationActionCreatorPayload,
   type UpdateBasicConfigurationActionCreatorPayload,
+  type UpdateKnowledgeConfigurationActionCreatorPayload,
   type UpdateSearchConfigurationActionCreatorPayload,
   updateAnalyticsConfiguration,
   updateBasicConfiguration,
+  updateKnowledgeConfiguration,
   updateSearchConfiguration,
 } from './configuration-actions.js';
 import {
@@ -65,6 +67,9 @@ export const configurationReducer = createReducer(
       })
       .addCase(setAgentId, (state, {payload}) => {
         handleUpdateAgentId(state, payload);
+      })
+      .addCase(updateKnowledgeConfiguration, (state, action) => {
+        handleUpdateKnowledgeConfiguration(state, action.payload);
       })
 );
 
@@ -163,4 +168,13 @@ function handleUpdateAgentId(state: ConfigurationState, payload: string) {
       state.knowledge.debugAgentSession = true;
     }
   } catch (_) {}
+}
+
+function handleUpdateKnowledgeConfiguration(
+  state: ConfigurationState,
+  payload: UpdateKnowledgeConfigurationActionCreatorPayload
+) {
+  if (!isNullOrUndefined(payload.proxyBaseUrl)) {
+    state.knowledge.apiBaseUrl = payload.proxyBaseUrl;
+  }
 }

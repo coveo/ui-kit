@@ -252,6 +252,27 @@ export const setOriginLevel3 = createAction(
     validatePayload(payload, {originLevel3: originSchemaOnUpdate()})
 );
 
+export interface UpdateKnowledgeConfigurationActionCreatorPayload {
+  /**
+   * The base URL to use to proxy Coveo Answer API requests (for example, `https://example.com/answer`).
+   *
+   * This is an advanced option that you only set if you proxy Coveo Answer API requests through your own
+   * server. In most cases, you should not set this option.
+   *
+   * By default, the Answer API streaming endpoint will use the platform endpoint resolved from the organization ID.
+   */
+  proxyBaseUrl?: string;
+}
+
+export const updateKnowledgeConfiguration = createAction(
+  'configuration/updateKnowledgeConfiguration',
+  (payload: UpdateKnowledgeConfigurationActionCreatorPayload) => {
+    return validatePayload(payload, {
+      proxyBaseUrl: new StringValue({required: false, url: true}),
+    });
+  }
+);
+
 export const setAgentId = createAction(
   'knowledge/setAgentId',
   (payload: string) =>

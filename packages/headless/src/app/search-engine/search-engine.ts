@@ -19,6 +19,7 @@ import {
 import type {LegacySearchAction} from '../../features/analytics/analytics-utils.js';
 import {
   type UpdateSearchConfigurationActionCreatorPayload,
+  updateKnowledgeConfiguration,
   updateSearchConfiguration,
 } from '../../features/configuration/configuration-actions.js';
 import type {ConfigurationState} from '../../features/configuration/configuration-state.js';
@@ -42,12 +43,17 @@ import {buildThunkExtraArguments} from '../thunk-extra-arguments.js';
 import {jwtReducer} from './jwt-reducer.js';
 import {
   getSampleSearchEngineConfiguration,
+  type KnowledgeConfigurationOptions,
   type SearchConfigurationOptions,
   type SearchEngineConfiguration,
   searchEngineConfigurationSchema,
 } from './search-engine-configuration.js';
 
-export type {SearchConfigurationOptions, SearchEngineConfiguration};
+export type {
+  KnowledgeConfigurationOptions,
+  SearchConfigurationOptions,
+  SearchEngineConfiguration,
+};
 export {getSampleSearchEngineConfiguration};
 
 const searchEngineReducers = {debug, pipeline, searchHub, search};
@@ -151,6 +157,13 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
 
   if (search) {
     engine.dispatch(updateSearchConfiguration(search));
+  }
+
+  const knowledge = configuration.knowledge;
+  if (knowledge?.proxyBaseUrl) {
+    engine.dispatch(
+      updateKnowledgeConfiguration({proxyBaseUrl: knowledge.proxyBaseUrl})
+    );
   }
 
   return {

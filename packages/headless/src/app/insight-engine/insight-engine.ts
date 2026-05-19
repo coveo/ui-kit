@@ -7,6 +7,7 @@ import {interfaceLoad} from '../../features/analytics/analytics-actions.js';
 import type {LegacySearchAction} from '../../features/analytics/analytics-utils.js';
 import {
   type UpdateSearchConfigurationActionCreatorPayload,
+  updateKnowledgeConfiguration,
   updateSearchConfiguration,
 } from '../../features/configuration/configuration-actions.js';
 import {setInsightConfiguration} from '../../features/insight-configuration/insight-configuration-actions.js';
@@ -153,6 +154,13 @@ export function buildInsightEngine(
 
   if (search) {
     engine.dispatch(updateSearchConfiguration(search));
+  }
+
+  const knowledge = options.configuration.knowledge;
+  if (knowledge?.proxyBaseUrl) {
+    engine.dispatch(
+      updateKnowledgeConfiguration({proxyBaseUrl: knowledge.proxyBaseUrl})
+    );
   }
 
   return {
