@@ -65,28 +65,43 @@ quantic{ComponentName}/
 | SLDS tokens | Use `var(--lwc-*)` design tokens; always use SLDS utility classes first — write custom CSS only when no SLDS class achieves the needed result |
 | Meta XML | `isExposed: false`; no `targets` or `targetConfigs`; **always generated via `sf lightning generate component`** — never created manually (manual creation risks using a stale `apiVersion`) |
 | `render()` | Only for multi-template components; always the **last method** in the class |
+| Property validation | Use `getBueno(this)` from `c/quanticHeadlessLoader` to validate user-supplied `@api` props (strings, numbers). Log via `console.error` with `this.template.host.localName` and call `this.setInitializationError()` on failure |
+| `@api` getter/setter | When an `@api` prop needs validation or side-effects, use a getter/setter pair with a `_`-prefixed backing field (e.g. `_isCollapsed`) |
+| `registerToStore` | Facet components must register themselves in the global store via `registerToStore(this.engineId, Store.facetTypes.FACETS, { label, facetId, element: this.template.host })` inside `initialize` |
+| `static attributes` | Facet components declare `static attributes = [...]` listing all `@api` property names for runtime discovery |
+| AriaLiveRegion | Components that announce status changes (results loaded, errors, etc.) must create an `AriaLiveRegion` from `c/quanticUtils` and dispatch messages on state updates |
+| Event `composed` | Events that must cross shadow DOM boundaries (e.g. `quantic__renderfacet` consumed by a parent interface) need both `bubbles: true` and `composed: true`. Events staying within the immediate component tree need only `bubbles: true` |
 | Comments | Avoid code comments — write simple, self-explanatory code instead. Comments are acceptable only when the logic is genuinely non-obvious and cannot be clarified through naming or structure |
 | Constants | Extract magic strings and numbers into named constants at the top of the file |
 
-### Field declaration order
+### Ordering conventions
 
-1. `@api` public properties (required → optional → getter/setter with validation)
-2. `labels` object
-3. `@track state` (only needed for objects/arrays; primitives are reactive by default in modern LWC)
-4. Regular instance fields (controllers → state snapshots → unsubscribe functions → `headless` reference → flags)
+Follow this canonical ordering within a component file:
 
-### Method declaration order
+```
+1. Imports: @salesforce/label → third-party modules → c/ modules
+2. Constants (named, extracted magic values)
+3. @typedef JSDoc comments
+4. Class declaration (with class-level JSDoc)
+5. static attributes = [...] (facets only)
+6. @api properties (public surface)
+7. Tracked/reactive private fields
+8. labels = {} instance field
+9. Non-reactive private fields (state, unsubscribe, controller refs)
+10. Lifecycle hooks: connectedCallback → renderedCallback → disconnectedCallback
+11. initialize = (engine) => { ... }
+12. State updaters: updateState, updateSearchStatusState, etc.
+13. Computed getters
+14. Event handlers (arrow functions)
+15. Private helper methods
+16. render() (multi-template components only — always last)
+```
 
-1. Lifecycle hooks: `connectedCallback` → `renderedCallback` → `disconnectedCallback`
-2. `initialize` arrow function
-3. State updaters: `updateState`, `updateSearchStatusState`, …
-4. Event handlers (arrow functions for `addEventListener`; regular methods for template handlers)
-5. Computed getters: `get shouldDisplayX()`, `get isX()`
-6. `render()` (multi-template only — always last)
+When a peer component closely matches your use case, also inspect its structure for nuances not captured above.
 
 ### Documentation Requirements
 
-Quantic reference docs are generated from component JSDoc. Every component class and `@api` property must be documented. See the full rules, valid categories, and code templates in **Section 10** of `references/quantic-component-workflow.md`.
+Quantic reference docs are generated from component JSDoc. Every component class and `@api` property must be documented. See the full rules, valid categories, and code templates in **Section 8** of `references/quantic-component-workflow.md`.
 
 ### Testing Strategy
 
@@ -125,7 +140,6 @@ Before marking any task as complete, verify every applicable item and output thi
 | Component class JSDoc complete | ✅/❌ |
 | All @api props documented | ✅/❌ |
 | @example reflects actual API | ✅/❌ |
-| Field/method order correct | ✅/❌ |
 | Headless lifecycle correct | ✅/❌/N/A |
 | Error handling present | ✅/❌/N/A |
 
@@ -138,8 +152,8 @@ Before marking any task as complete, verify every applicable item and output thi
 
 **For reading, debugging, or light edits** the Quick Reference above is sufficient.
 
-**For creating, implementing, or substantially modifying a component**, load the full workflow guide before writing any code:
+**For creating, implementing, or substantially modifying a component**, load the relevant workflow guides before writing any code:
 
-- [quantic-component-workflow.md](references/quantic-component-workflow.md) 
-
-It covers: complete headless lifecycle patterns, label management, template directives, slot detection, CSS patterns, event dispatch/listening, multi-template rendering, unit test setup, shared utilities, and documentation requirements.
+- [headless-and-lifecycle.md](references/headless-and-lifecycle.md) — Scaffolding, headless lifecycle, error handling, property validation (Bueno), store registration, shared utilities
+- [ui-patterns.md](references/ui-patterns.md) — Label management, template directives, CSS patterns, event dispatch/listening, multi-template rendering
+- [docs-accessibility-testing.md](references/docs-accessibility-testing.md) — JSDoc documentation requirements, AriaLiveRegion accessibility, testing strategy
