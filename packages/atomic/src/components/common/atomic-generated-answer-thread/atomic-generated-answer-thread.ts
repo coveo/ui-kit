@@ -77,14 +77,14 @@ export class AtomicGeneratedAnswerThread extends LitElement {
         this.generatedAnswers[this.generatedAnswers.length - 1];
 
       return html`
-        <ul class="mt-6">
+        <ul>
           ${this.renderShowPreviousAnswersButton()}
           ${this.renderThread([lastGeneratedAnswer])}
         </ul>
       `;
     }
     return html`
-      <ul class="mt-6">
+      <ul>
         ${this.renderThread(this.generatedAnswers)}
       </ul>
     `;

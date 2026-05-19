@@ -120,6 +120,17 @@ const agentMessages: AgentEvent[] = [
   }),
   buildMessage({
     type: EventType.STEP_STARTED,
+    stepName: 'Thinking',
+  }),
+  buildMessage(
+    {
+      type: EventType.STEP_FINISHED,
+      stepName: 'Thinking',
+    },
+    1500
+  ),
+  buildMessage({
+    type: EventType.STEP_STARTED,
     stepName: 'Searching',
   }),
   buildMessage(
