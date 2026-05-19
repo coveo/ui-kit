@@ -61,7 +61,7 @@ export interface EngineConfiguration {
   experimental?: ExperimentalEngineConfiguration;
 }
 
-interface ExperimentalEngineConfiguration {
+export interface ExperimentalEngineConfiguration {
   /**
    * Set to true to handle privacy control outside Headless, even with legacy analytics mode.
    * This is useful for implementers who want to handle Do Not Track (DNT) or similar privacy controls on their own,
