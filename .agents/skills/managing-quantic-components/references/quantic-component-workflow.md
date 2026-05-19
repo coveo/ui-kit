@@ -58,7 +58,7 @@ To create a new Lightning Web Component bundle, run from `packages/quantic`:
 sf lightning generate component --type lwc --name <componentName> --output-dir force-app/main/default/lwc
 ```
 
-> **Never create the component files manually.** The `sf` command derives the `apiVersion` from `sfdx-project.json`, ensuring new components always use the latest configured version. Manually created `.js-meta.xml` files risk using an outdated version.
+> **Never create the component files manually.** The `sf` command ensures new components always use the latest configured version. Manually created `.js-meta.xml` files risk using an outdated version.
 
 ---
 
@@ -121,13 +121,6 @@ disconnectedCallback() {
   // Remove event listeners here
 }
 ```
-
-### Key rules
-
-- `initialize` is always an **arrow function** assigned to an instance field (preserves `this` context for the callback)
-- `registerComponentForInit` goes in `connectedCallback`
-- `initializeWithHeadless` goes in `renderedCallback` (needs DOM to be ready)
-- Always unsubscribe in `disconnectedCallback`
 
 ### Type definitions
 
@@ -264,7 +257,7 @@ Add a `<customLabels>` block for each file:
 </customLabels>
 ```
 
-Append the new entry to the end of the existing `<customLabels>` list in each file, preserving alphabetical or insertion order as found in the file.
+Append the new entry to the end of the existing `<customLabels>` list in each file, preserving  insertion order.
 
 ---
 
@@ -302,7 +295,7 @@ Child Quantic components use the `c-` prefix with kebab-case:
 
 **Always use SLDS utility classes first. Write custom CSS only when no SLDS class achieves the needed result.**
 
-The following are commonly used classes — the full SLDS utility library is available at [lightningdesignsystem.com/utilities](https://www.lightningdesignsystem.com/utilities/alignment/):
+The following are commonly used classes:
 
 | Purpose | Examples |
 |---|---|
@@ -522,6 +515,24 @@ Every `@api` property must have a JSDoc comment with:
 ```
 
 Match existing Quantic wording and formatting conventions instead of introducing a new documentation style.
+
+### Method JSDoc
+
+Add `@param` and `@returns` JSDoc to methods and getters that handle typed data:
+
+```javascript
+/**
+ * @param {CustomEvent<number>} event
+ */
+goto(event) {
+  this.pager.selectPage(event.detail);
+}
+
+/**
+ * @returns {Array<{number: number, selected: boolean, ariaLabelValue: string}>}
+ */
+get currentPagesObjects() { /* ... */ }
+```
 
 ---
 
