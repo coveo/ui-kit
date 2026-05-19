@@ -55,6 +55,7 @@ quantic{ComponentName}/
 | Custom events | Prefix with `quantic__` (e.g. `quantic__like`) |
 | Labels | Every user-visible string must be a localized label — never hardcode text. Import from `@salesforce/label/c.quantic_LabelName`; group into a `labels = {}` instance field |
 | Label interpolation | Use `I18nUtils.format(label, ...args)` for `{{0}}`/`{{1}}` placeholders — never `.replace()` or string concatenation |
+| Labels with variables | Every added or modified localized label that contains variables must be tested with `0`, `1`, and a value greater than `1` for each count-sensitive variable to verify whether the wording changes |
 | Label pluralization | For count-sensitive labels, define `_plural` and `_zero` variants and use `I18nUtils.getLabelNameWithCount(baseName, count)` to select the right one |
 | Label translations | Every new label **must** have a translation entry added to both `force-app/main/translations/fr.translation-meta.xml` and `es.translation-meta.xml` |
 | Error handling | `hasInitializationError` flag + `<c-quantic-component-error>` in template |
@@ -116,6 +117,7 @@ Before marking any task as complete, verify every applicable item and output thi
 | No hardcoded strings | ✅/❌ | |
 | Labels defined + translated (FR + ES) | ✅/❌ | |
 | Placeholder labels use I18nUtils.format | ✅/❌/N/A | |
+| Labels with variables tested with `0`, `1`, and `>1` | ✅/❌/N/A | If wording changes across those cases in any locale, add singular / `_plural` / `_zero` label variants and test the selected output |
 | Count-sensitive label variants (_plural/_zero) | ✅/❌/N/A | |
 | sf command used; apiVersion correct | ✅/❌ | |
 | isExposed false, no targets | ✅/❌ | |
