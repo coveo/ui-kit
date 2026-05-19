@@ -10,6 +10,8 @@ import {
   selectEnvironment,
   selectOrganizationId,
 } from '../../../features/configuration/configuration-selectors.js';
+import {selectAdvancedSearchQueries} from '../../../features/advanced-search-queries/advanced-search-query-selectors.js';
+import {advancedSearchQueriesReducer as advancedSearchQueries} from '../../../features/advanced-search-queries/advanced-search-queries-slice.js';
 import {
   activeFollowUpStartFailed,
   createFollowUpAnswer,
@@ -31,6 +33,7 @@ import {
   type GeneratedAnswerAnalyticsClient,
   type GeneratedAnswerProps,
 } from '../../core/generated-answer/headless-core-generated-answer.js';
+import {selectActiveTab} from '../../../features/tab-set/tab-set-selectors.js';
 
 export interface GeneratedAnswerWithFollowUpsState extends GeneratedAnswerState {
   followUpAnswers: FollowUpAnswersState;
@@ -260,6 +263,9 @@ export function buildGeneratedAnswerWithFollowUps(
 
       followUpAgent.abortRun();
       engine.dispatch(createFollowUpAnswer({question}));
+      const {aq, cq} = selectAdvancedSearchQueries(getState());
+      const tab = selectActiveTab(getState().tabSet) || 'default';
+      const referrer = engine.navigatorContext.referrer || '';
       const analyticsParams = fromAnalyticsStateToAnalyticsParams(
         getState().configuration.analytics,
         engine.navigatorContext
@@ -272,6 +278,10 @@ export function buildGeneratedAnswerWithFollowUps(
               analytics: analyticsParams.analytics,
               conversationId,
               conversationToken,
+              ...(aq && {aq}),
+              ...(cq && {cq}),
+              tab,
+              referrer,
               accessToken,
             },
           },
@@ -294,6 +304,7 @@ function loadReducers(
   engine: SearchEngine | InsightEngine
 ): engine is SearchEngine<GeneratedAnswerSection & FollowUpAnswersSection> {
   engine.addReducers({
+    advancedSearchQueries,
     followUpAnswers,
   });
   return true;

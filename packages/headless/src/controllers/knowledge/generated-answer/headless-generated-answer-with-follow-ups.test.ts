@@ -3,6 +3,7 @@ import * as followUpAgentModule from '../../../api/knowledge/answer-generation/a
 import * as followUpStrategyModule from '../../../api/knowledge/answer-generation/agents/follow-up-agent/follow-up-answer-strategy.js';
 import {setAgentId} from '../../../features/configuration/configuration-actions.js';
 import {getConfigurationInitialState} from '../../../features/configuration/configuration-state.js';
+import {advancedSearchQueriesReducer} from '../../../features/advanced-search-queries/advanced-search-queries-slice.js';
 import {
   activeFollowUpStartFailed,
   createFollowUpAnswer,
@@ -176,6 +177,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
   it('adds the followUpAnswers reducers to engine', () => {
     createGeneratedAnswerWithFollowUps();
     expect(engine.addReducers).toHaveBeenCalledWith({
+      advancedSearchQueries: advancedSearchQueriesReducer,
       followUpAnswers: followUpAnswersReducer,
     });
   });
@@ -652,15 +654,43 @@ describe('GeneratedAnswerWithFollowUps', () => {
     const question = 'Could you elaborate?';
     const conversationId = 'conversation-123';
     const conversationToken = 'token-123';
+    const aq = '@filetype=="pdf"';
+    const cq = '@language=="en"';
+    const tab = 'all';
+    const referrer = 'https://search.test.com';
 
     it('dispatches createFollowUpAnswer and runs the follow-up agent', () => {
       engine = buildEngineWithGeneratedAnswer({
+        advancedSearchQueries: {
+          aq,
+          cq,
+          dq: '',
+          lq: '',
+          aqWasSet: false,
+          cqWasSet: false,
+          dqWasSet: false,
+          lqWasSet: false,
+          defaultFilters: {
+            aq: '',
+            cq: '',
+            dq: '',
+            lq: '',
+          },
+        },
+        tabSet: {
+          all: {
+            id: tab,
+            expression: '',
+            isActive: true,
+          },
+        },
         followUpAnswers: {
           ...getFollowUpAnswersInitialState(),
           conversationId,
           conversationToken,
         },
       });
+      engine.navigatorContext.referrer = referrer;
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.askFollowUp(question);
@@ -680,6 +710,10 @@ describe('GeneratedAnswerWithFollowUps', () => {
             }),
             conversationId,
             conversationToken,
+            aq,
+            cq,
+            tab,
+            referrer,
             accessToken: 'foo',
           },
         },
