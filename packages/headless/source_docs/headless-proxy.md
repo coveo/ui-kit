@@ -78,6 +78,31 @@ If you’re setting the `proxyBaseUrl` option in your search engine or action co
 - `POST` `/html` to proxy requests to `POST` [`<ORGANIZATION_ID>.org<ENVIRONMENT|>.coveo.com/rest/search/v2/html`](https://docs.coveo.com/en/13#tag/Search-V2/operation/htmlPost)
 - `GET` `/fields` to proxy requests to `GET` [`<ORGANIZATION_ID>.org<ENVIRONMENT|>.coveo.com/rest/search/v2/fields`](https://docs.coveo.com/en/13#tag/Search-V2/operation/fields)
 
+If you're using Search API-based generated answers (CRGA without an `answerConfigurationId`), you must also implement:
+
+- `GET` `/rest/organizations/<ORGANIZATION_ID>/machinelearning/streaming/<STREAM_ID>` to proxy requests to `GET` `<ORGANIZATION_ID>.org<ENVIRONMENT|>.coveo.com/rest/organizations/<ORGANIZATION_ID>/machinelearning/streaming/<STREAM_ID>`
+
+## Knowledge (GenAI)
+
+**Example**
+
+```ts
+import {buildSearchEngine} from '@coveo/headless';
+
+const searchEngine = buildSearchEngine({
+  organizationId: 'my-org-id',
+  accessToken: 'my-access-token',
+  knowledge: {
+    proxyBaseUrl: 'https://knowledge-proxy.example.com',
+  },
+});
+```
+
+If you're setting the `knowledge.proxyBaseUrl` option in your search engine or insight engine configuration, you must also implement the following proxy endpoints in your server to support Answer API (GenAI streaming) requests:
+
+- `POST` `/rest/organizations/<ORGANIZATION_ID>/answer/v1/configs/<ANSWER_CONFIG_ID>/generate` to proxy requests to `POST` `<ORGANIZATION_ID>.org<ENVIRONMENT|>.coveo.com/rest/organizations/<ORGANIZATION_ID>/answer/v1/configs/<ANSWER_CONFIG_ID>/generate`
+- `POST` `/rest/organizations/<ORGANIZATION_ID>/answer/v1/configs/<ANSWER_CONFIG_ID>/evaluations` to proxy requests to `POST` `<ORGANIZATION_ID>.org<ENVIRONMENT|>.coveo.com/rest/organizations/<ORGANIZATION_ID>/answer/v1/configs/<ANSWER_CONFIG_ID>/evaluations`
+
 ## Case Assist
 
 **Example**

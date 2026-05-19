@@ -11,6 +11,7 @@ import {
   setOriginLevel3,
   updateAnalyticsConfiguration,
   updateBasicConfiguration,
+  updateKnowledgeConfiguration,
   updateSearchConfiguration,
 } from './configuration-actions.js';
 import {configurationReducer} from './configuration-slice.js';
@@ -237,6 +238,58 @@ describe('configuration slice', () => {
     it('setting apiBaseUrl to a non-URL returns an error', () => {
       const proxyBaseUrl = '/search';
       const action = updateSearchConfiguration({proxyBaseUrl});
+      expect('error' in action).toBe(true);
+    });
+  });
+
+  describe('updateKnowledgeConfiguration', () => {
+    it('works on initial state', () => {
+      const expectedState: ConfigurationState = {
+        ...getConfigurationInitialState(),
+        knowledge: {
+          answerConfigurationId: '',
+          apiBaseUrl: 'https://example.com/knowledge',
+        },
+      };
+
+      expect(
+        configurationReducer(
+          undefined,
+          updateKnowledgeConfiguration({
+            proxyBaseUrl: 'https://example.com/knowledge',
+          })
+        )
+      ).toEqual(expectedState);
+    });
+
+    it('works on existing state', () => {
+      const expectedState: ConfigurationState = {
+        ...existingState,
+        knowledge: {
+          ...existingState.knowledge,
+          apiBaseUrl: 'https://example.com/knowledge',
+        },
+      };
+
+      expect(
+        configurationReducer(
+          existingState,
+          updateKnowledgeConfiguration({
+            proxyBaseUrl: 'https://example.com/knowledge',
+          })
+        )
+      ).toEqual(expectedState);
+    });
+
+    it('setting proxyBaseUrl to a URL does not return an error', () => {
+      const proxyBaseUrl = 'https://example.com/knowledge';
+      const action = updateKnowledgeConfiguration({proxyBaseUrl});
+      expect('error' in action).toBe(false);
+    });
+
+    it('setting proxyBaseUrl to a non-URL returns an error', () => {
+      const proxyBaseUrl = '/knowledge';
+      const action = updateKnowledgeConfiguration({proxyBaseUrl});
       expect('error' in action).toBe(true);
     });
   });
