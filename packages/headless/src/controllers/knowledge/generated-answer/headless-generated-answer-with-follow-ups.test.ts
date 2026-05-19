@@ -689,6 +689,14 @@ describe('GeneratedAnswerWithFollowUps', () => {
     });
 
     it('does not run the agent when the question is empty', () => {
+      engine = buildEngineWithGeneratedAnswer({
+        followUpAnswers: {
+          ...getFollowUpAnswersInitialState(),
+          conversationId,
+          conversationToken,
+          isEnabled: true,
+        },
+      });
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.askFollowUp('   ');
@@ -720,6 +728,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
         followUpAnswers: {
           ...getFollowUpAnswersInitialState(),
           isEnabled: true,
+          conversationToken,
         },
       });
       const consoleWarnSpy = vi
