@@ -705,7 +705,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
       expect(mockFollowUpAgent.runAgent).not.toHaveBeenCalled();
     });
 
-    it('does not run the agent when the follow-up capability is not enabled', () => {
+    it('does not run the follow-up agent when the follow-up capability is not enabled', () => {
       engine = buildEngineWithGeneratedAnswer({
         followUpAnswers: {
           ...getFollowUpAnswersInitialState(),
