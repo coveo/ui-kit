@@ -71,10 +71,12 @@ export const buildStreamingRequest = async (
 ): Promise<GeneratedAnswerStreamRequest> => ({
   accessToken: state.configuration.accessToken,
   organizationId: state.configuration.organizationId,
-  url: getOrganizationEndpoint(
-    state.configuration.organizationId,
-    state.configuration.environment
-  ),
+  url:
+    state.configuration.search.apiBaseUrl ||
+    getOrganizationEndpoint(
+      state.configuration.organizationId,
+      state.configuration.environment
+    ),
   streamId: state.search.extendedResults?.generativeQuestionAnsweringId,
 });
 
