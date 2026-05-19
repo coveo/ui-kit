@@ -7,9 +7,18 @@ import * as Store from '../app/store.js';
 import {updateAnalyticsConfiguration} from '../features/configuration/configuration-actions.js';
 import {buildMockNavigatorContextProvider} from '../test/mock-navigator-context-provider.js';
 import {buildMockThunkExtraArguments} from '../test/mock-thunk-extra-arguments.js';
+import {doNotTrack} from '../utils/utils.js';
 import {configuration} from './common-reducers.js';
 import {buildEngine, type CoreEngine, type EngineOptions} from './engine.js';
 import {getSampleEngineConfiguration} from './engine-configuration.js';
+
+vi.mock(import('../utils/utils.js'), async (importOriginal) => {
+  const mod = await importOriginal();
+  return {
+    ...mod,
+    doNotTrack: vi.fn(() => false),
+  };
+});
 
 vi.mock(import('pino'), async (importOriginal) => {
   const mod = await importOriginal(); // type is inferred
@@ -32,6 +41,7 @@ describe('engine', () => {
   }
 
   beforeEach(() => {
+    vi.mocked(doNotTrack).mockReturnValue(false);
     organizationId = 'orgId';
     options = {
       configuration: {
@@ -103,6 +113,25 @@ describe('engine', () => {
     const {analytics} = engine.state.configuration;
     expect(analytics.enabled).toBe(true);
     expect(analytics.trackingId).toBeUndefined();
+  });
+
+  it('when doNotTrack is active and own privacy control is disabled, it disables analytics', () => {
+    options.configuration.analytics = {analyticsMode: 'legacy'};
+    vi.mocked(doNotTrack).mockReturnValue(true);
+
+    const engine = initEngine();
+
+    expect(engine.state.configuration.analytics.enabled).toBe(false);
+  });
+
+  it('when doNotTrack is active and own privacy control is enabled, it keeps analytics enabled', () => {
+    options.configuration.analytics = {analyticsMode: 'legacy'};
+    options.configuration.experimental = {useOwnPrivacyControl: true};
+    vi.mocked(doNotTrack).mockReturnValue(true);
+
+    const engine = initEngine();
+
+    expect(engine.state.configuration.analytics.enabled).toBe(true);
   });
 
   it('calling #enableAnalytics sets #analytics.enabled to true', () => {

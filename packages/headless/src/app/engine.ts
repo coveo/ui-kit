@@ -196,6 +196,8 @@ function getUpdateAnalyticsConfigurationPayload(
   logger: Logger
 ): UpdateAnalyticsConfigurationActionCreatorPayload | null {
   const {analytics} = configuration;
+  const useOwnPrivacyControl =
+    configuration.experimental?.useOwnPrivacyControl ?? false;
   const {analyticsClientMiddleware: _, ...payload} = analytics ?? {};
 
   const payloadWithURL = {
@@ -207,7 +209,11 @@ function getUpdateAnalyticsConfigurationPayload(
   };
 
   // TODO KIT-2844
-  if (payloadWithURL.analyticsMode !== 'next' && doNotTrack()) {
+  if (
+    payloadWithURL.analyticsMode !== 'next' &&
+    !useOwnPrivacyControl &&
+    doNotTrack()
+  ) {
     logger.info('Analytics disabled since doNotTrack is active.');
     return {
       ...payloadWithURL,

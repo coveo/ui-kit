@@ -54,6 +54,20 @@ export interface EngineConfiguration {
    * Defaults to `prod`.
    */
   environment?: PlatformEnvironment;
+  /**
+   * The experimental options. These options are not covered by semver and can be changed or removed without a major version bump.
+   * They are meant to be used for testing new features before they are officially released.
+   */
+  experimental?: ExperimentalEngineConfiguration;
+}
+
+interface ExperimentalEngineConfiguration {
+  /**
+   * Set to true to handle privacy control outside Headless, even with legacy analytics mode.
+   * This is useful for implementers who want to handle Do Not Track (DNT) or similar privacy controls on their own,
+   * without relying on Headless to do it for them.
+   */
+  useOwnPrivacyControl?: boolean;
 }
 
 /**
