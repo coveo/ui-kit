@@ -132,24 +132,19 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
       'group-hover:bg-neutral-dark':
         !this.isExpanded && isTimelineDotInteractive,
     });
-    const timelineToggleBaseClasses = {
+    const timelineDotToggleClasses = classMap({
       flex: true,
       'w-[10px]': true,
       'shrink-0': true,
       'justify-center': true,
       'items-center': true,
-    };
-    const buildTimelineToggleClasses = (isInteractive: boolean) =>
-      classMap({
-        ...timelineToggleBaseClasses,
-        group: isInteractive,
-        'cursor-pointer': isInteractive,
-      });
-    const timelineDotToggleClasses = buildTimelineToggleClasses(
-      isTimelineDotInteractive
-    );
+    });
     const timelineLineToggleClasses = classMap({
-      ...timelineToggleBaseClasses,
+      flex: true,
+      'w-[10px]': true,
+      'shrink-0': true,
+      'justify-center': true,
+      'items-center': true,
       group: isTimelineLineInteractive,
       'cursor-pointer': isTimelineLineInteractive,
       'py-2': true,
