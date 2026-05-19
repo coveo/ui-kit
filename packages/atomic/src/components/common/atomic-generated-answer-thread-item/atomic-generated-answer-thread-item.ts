@@ -84,6 +84,9 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
   };
 
   public render() {
+    const isTimelineDotInteractive =
+      !this.disableCollapse && this.showTimelineDot;
+    const isTimelineLineInteractive = !this.disableCollapse && !this.hideLine;
     const clampedTitleStyles =
       'display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; max-height: calc(4.5rem + 1px);';
     const titleBaseClasses = {
@@ -122,8 +125,30 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
       'h-2': true,
       'w-2': true,
       'rounded-full': true,
+      'transition-colors': true,
       'bg-neutral-dark': this.isExpanded,
       'bg-neutral-dim': !this.isExpanded,
+      'cursor-pointer': isTimelineDotInteractive,
+      'group-hover:bg-neutral-dark':
+        !this.isExpanded && isTimelineDotInteractive,
+    });
+    const timelineDotToggleClasses = classMap({
+      flex: true,
+      'w-[10px]': true,
+      'shrink-0': true,
+      'justify-center': true,
+      'items-center': true,
+    });
+    const timelineLineToggleClasses = classMap({
+      flex: true,
+      'w-[10px]': true,
+      'shrink-0': true,
+      'justify-center': true,
+      'items-center': true,
+      group: isTimelineLineInteractive,
+      'cursor-pointer': isTimelineLineInteractive,
+      'py-2': true,
+      '-my-2': true,
     });
     const timelineBodyRowClasses = classMap({
       flex: true,
@@ -132,15 +157,20 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
       'min-h-3': !this.isExpanded,
     });
     const timelineConnectorClasses =
-      "relative h-full w-px bg-neutral before:absolute before:left-0 before:top-[-8px] before:h-[8px] before:w-px before:bg-neutral before:content-[''] after:absolute after:bottom-[-8px] after:left-0 after:h-[8px] after:w-px after:bg-neutral after:content-['']";
+      "relative h-full w-px bg-neutral transition-colors duration-150 group-hover:bg-neutral-dark before:absolute before:left-0 before:top-[-8px] before:h-[8px] before:w-px before:bg-neutral before:transition-colors before:duration-150 group-hover:before:bg-neutral-dark before:content-[''] after:absolute after:bottom-[-8px] after:left-0 after:h-[8px] after:w-px after:bg-neutral after:transition-colors after:duration-150 group-hover:after:bg-neutral-dark after:content-['']";
 
     return html`
       <li class="grid min-w-0">
         <div class="flex min-w-0 items-center gap-3">
-          <div class="flex w-[10px] shrink-0 items-center justify-center">
+          <div class=${timelineDotToggleClasses}>
             ${when(
               this.showTimelineDot,
-              () => html` <span class=${timelineDotClasses}></span> `
+              () => html`
+                <span
+                  class=${timelineDotClasses}
+                  @click=${isTimelineDotInteractive ? this.toggle : null}
+                ></span>
+              `
             )}
           </div>
           <div class="flex min-w-0 flex-col">
@@ -169,7 +199,10 @@ export class AtomicGeneratedAnswerThreadItem extends LitElement {
           </div>
         </div>
         <div class=${timelineBodyRowClasses}>
-          <div class="flex w-[10px] shrink-0 justify-center">
+          <div
+            class=${timelineLineToggleClasses}
+            @click=${isTimelineLineInteractive ? this.toggle : null}
+          >
             ${when(
               this.hideLine,
               () => html``,
