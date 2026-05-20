@@ -427,6 +427,50 @@ jobs:
       - uses: ./.github/actions/setup
       - run: npm run test:storybook -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
         working-directory: packages/atomic
+      - name: 'Upload a11y shard report'
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: a11y-report-shard-${{ matrix.shardIndex }}
+          path: packages/atomic/reports/a11y-report.shard-${{ matrix.shardIndex }}.json
+          retention-days: 1
+          if-no-files-found: warn
+  merge-storybook-a11y-reports:
+    name: 'Merge Storybook a11y reports'
+    needs: [affected, storybook-atomic]
+    if: always() && contains(needs.affected.outputs.projects, '@coveo/atomic')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          fetch-depth: 0
+          filter: blob:none
+      - uses: ./.github/actions/setup
+        with:
+          skip-build: 'true'
+      - name: 'Download a11y shard reports'
+        continue-on-error: true
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          pattern: a11y-report-shard-*
+          path: packages/atomic/reports
+          merge-multiple: true
+      - name: 'Merge a11y shard reports'
+        run: pnpm run a11y:merge-shards -- ../atomic/reports/a11y-report.json
+        working-directory: packages/atomic-a11y
+      - name: 'Upload merged a11y report'
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: atomic-storybook-a11y-report
+          path: packages/atomic/reports/a11y-report.json
+          retention-days: 7
+          if-no-files-found: warn
   playwright-atomic-search-commerce-react-test:
     name: 'Run e2e tests on Atomic Search Commerce React'
     needs: affected
