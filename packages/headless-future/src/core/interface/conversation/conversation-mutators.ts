@@ -1,5 +1,5 @@
 import {conversationSlice} from '@/src/core/internal/conversation/conversation-slice.js';
-import type {StateMutation} from '@/src/core/interface/interface-types.js';
+import type {StateMutation} from '@/src/core/interface/engine/engine-types.js';
 import type {
   AppendAgentChunkPayload,
   ConversationSession,

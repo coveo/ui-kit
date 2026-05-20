@@ -1,8 +1,10 @@
-import type {Engine} from '@/src/core/interface/engine/engine.js';
-import type {Unsubscribe} from '@/src/core/interface/interface-types.js';
-import type {ConversationState} from '@/src/core/interface/conversation/conversation-types.js';
-
-export type {ConversationState};
+import type {
+  ConversationMessage,
+  ConversationSession,
+  ConversationStreaming,
+  ConversationTurn,
+} from '@/src/core/interface/conversation/conversation-types.js';
+import {Controller, ControllerOptions} from '../controller-types.js';
 
 /**
  * Conversation Controller
@@ -10,7 +12,7 @@ export type {ConversationState};
  * Manages conversational turn submission, abortion, state access, and
  * subscriptions.
  */
-export interface ConversationController {
+export interface ConversationController extends Controller {
   /**
    * Submit a user message and stream the assistant response.
    *
@@ -25,21 +27,26 @@ export interface ConversationController {
    */
   abortTurn(): void;
 
-  /**
-   * Current conversation state including messages, turns, session, and
-   * telemetry.
-   */
-  readonly state: ConversationState;
-
-  /**
-   * Subscribe to state changes.
-   *
-   * @param callback Invoked whenever the conversation state changes.
-   * @returns Unsubscribe function.
-   */
-  subscribe(callback: () => void): Unsubscribe;
+  readonly state: ConversationControllerState;
 }
 
+export type ConversationControllerMessage = ConversationMessage;
+export type ConversationControllerTurn = ConversationTurn;
+export type ConversationControllerSession = ConversationSession;
+export type ConversationControllerStreaming = ConversationStreaming;
+
+export interface ConversationControllerState {
+  messages: ConversationControllerMessage[];
+  turns: ConversationControllerTurn[];
+  activeTurnId: string | null;
+  session: ConversationControllerSession;
+  isLoading: boolean;
+  error: string | null;
+  streaming: ConversationControllerStreaming;
+}
+
+export interface ConversationControllerOptions extends ControllerOptions {}
+
 export declare const buildConversationController: (
-  engine: Engine
+  options: ConversationControllerOptions
 ) => ConversationController;

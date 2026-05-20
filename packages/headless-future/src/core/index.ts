@@ -2,33 +2,21 @@ export {
   Engine,
   type FullEngine,
   getFullEngine,
-} from './interface/engine/engine.js';
-export type {EngineOptions} from './interface/engine/engine-types.js';
+} from '@/src/core/interface/engine/engine.js';
+export {getSampleEngineConfiguration} from '@/src/core/interface/engine/engine-configuration.js';
 export type {
   NavigatorContext,
   NavigatorContextProvider,
 } from './interface/navigator-context/navigator-context-types.js';
 
-// ============================================================================
-// Shared Types
-// ============================================================================
-
 export type {
-  // Root state
-  State,
-
-  // Library-agnostic primitives
-  StateSelector,
-  StateMutation,
+  EngineOptions,
   Unsubscribe,
-  StateChangeCallback,
-} from './interface/interface-types.js';
+} from '@/src/core/interface/engine/engine-types.js';
 
 // ============================================================================
 // SearchBox Feature
 // ============================================================================
-
-export type {SearchBoxState} from './interface/search-box/search-box-types.js';
 
 export * as searchBoxMutators from './interface/search-box/search-box-mutators.js';
 
@@ -49,21 +37,24 @@ export * as resultsMutations from './interface/result-list/result-list-mutators.
 
 export * as resultsSelectors from './interface/result-list/result-list-selectors.js';
 
+export {loadResultList} from './interface/result-list/result-list-loader.js';
+
 // ============================================================================
 // Search API Feature (request status, error, configuration)
 // ============================================================================
 
 export type {
-  SearchApiState,
-  SearchApiStatus,
-} from './interface/api/search-api/search-api-types.js';
+  SearchEndpointState,
+  SearchEndpointStatus,
+} from './interface/api/search-endpoint/search-endpoint-types.js';
 
-export * as searchApiMutators from './interface/api/search-api/search-api-mutators.js';
+export * as searchEndpointMutators from './interface/api/search-endpoint/search-endpoint-mutators.js';
 
-export * as searchApiSelectors from './interface/api/search-api/search-api-selectors.js';
+export * as searchEndpointSelectors from './interface/api/search-endpoint/search-endpoint-selectors.js';
 
-export {loadSearchEndpoint} from './interface/api/search-api/search-endpoint-loader.js';
+export {loadSearchEndpoint} from './interface/api/search-endpoint/search-endpoint-loader.js';
 
+export {SearchEndpointFacade} from './interface/api/search-endpoint/search-endpoint-facade.js';
 // ============================================================================
 // Facets Feature
 // ============================================================================

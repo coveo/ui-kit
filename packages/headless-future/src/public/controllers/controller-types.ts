@@ -1,5 +1,5 @@
+import {Unsubscribe} from '@/src/core/index.js';
 import {Engine} from '@/src/core/interface/engine/engine.js';
-import {Unsubscribe} from '@/src/core/interface/interface-types.js';
 
 export interface Controller {
   /**

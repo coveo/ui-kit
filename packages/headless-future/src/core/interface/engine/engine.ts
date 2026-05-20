@@ -1,16 +1,16 @@
 import {configureStore, combineSlices} from '@reduxjs/toolkit';
 import type {Slice} from '@reduxjs/toolkit';
-import type {
-  State,
-  Unsubscribe,
-  StateSelector,
-  StateChangeCallback,
-  StateMutation,
-} from '@/src/core/interface/interface-types.js';
 import type {ConfigurationState} from '@/src/core/interface/configuration/configuration-types.js';
 import {configurationSlice} from '@/src/core/internal/configuration/configuration-slice.js';
-import type {EngineOptions} from '@/src/core/interface/engine/engine-types.js';
 import type {NavigatorContextProvider} from '@/src/core/interface/navigator-context/navigator-context-types.js';
+import {
+  EngineOptions,
+  State,
+  StateChangeCallback,
+  StateMutation,
+  StateSelector,
+  Unsubscribe,
+} from './engine-types.js';
 
 export type FullEngine = Engine & {
   adoptSlice(slice: Slice): Promise<void>;
@@ -24,6 +24,8 @@ export type FullEngine = Engine & {
 };
 
 export let getFullEngine: (engine: Engine) => FullEngine;
+
+const fullEngineWrappers = new WeakMap<Engine, FullEngine>();
 
 /**
  * Store engine wrapper object to encapsulate state and avoid module-level side effects
@@ -47,8 +49,13 @@ export class Engine {
   }
 
   static {
-    getFullEngine = (engine: Engine) =>
-      ({
+    getFullEngine = (engine: Engine) => {
+      const existingWrapper = fullEngineWrappers.get(engine);
+      if (existingWrapper) {
+        return existingWrapper;
+      }
+
+      const wrapper = {
         adoptSlice: (slice: Slice) => engine.#adoptSlice(slice),
         getNavigatorContextProvider: () =>
           engine.#getNavigatorContextProvider(),
@@ -58,7 +65,11 @@ export class Engine {
           selector: StateSelector<T>,
           callback: StateChangeCallback<T>
         ) => engine.#subscribe(selector, callback),
-      }) as FullEngine;
+      } as FullEngine;
+
+      fullEngineWrappers.set(engine, wrapper);
+      return wrapper;
+    };
   }
 
   async #adoptSlice(slice: Slice) {

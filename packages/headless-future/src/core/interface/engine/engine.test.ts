@@ -6,21 +6,17 @@
 
 import {describe, it, expect, beforeEach, vi} from 'vitest';
 import {createTestEngine} from '@/src/test/test-utils.js';
-import * as searchBoxMutations from '@/src/core/interface/search-box/search-box-mutators.js';
 import * as searchBoxSelectors from '@/src/core/interface/search-box/search-box-selectors.js';
-import * as resultsSelectors from '@/src/core/interface/result-list/result-list-selectors.js';
-import * as searchApiMutations from '@/src/core/interface/api/search-api/search-api-mutators.js';
-import * as searchApiSelectors from '@/src/core/interface/api/search-api/search-api-selectors.js';
+import * as searchBoxMutations from '@/src/core/interface/search-box/search-box-mutators.js';
+import * as searchEndpointMutations from '@/src/core/interface/api/search-endpoint/search-endpoint-mutators.js';
+import * as searchEndpointSelectors from '@/src/core/interface/api/search-endpoint/search-endpoint-selectors.js';
 import {Engine, FullEngine, getFullEngine} from './engine.js';
 import {searchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
 import {resultsSlice} from '@/src/core/internal/result-list/result-list-slice.js';
-import {searchApiSlice} from '@/src/core/internal/api/search-api/search-api-slice.js';
-import type {
-  ConfigurationState,
-  State,
-} from '@/src/core/interface/interface-types.js';
-import type {EngineOptions} from '@/src/core/interface/engine/engine-types.js';
+import {searchEndpointSlice} from '@/src/core/internal/api/search-endpoint/search-endpoint-slice.js';
 import type {NavigatorContextProvider} from '@/src/core/interface/navigator-context/navigator-context-types.js';
+import {EngineOptions, State} from './engine-types.js';
+import {ConfigurationState} from '../configuration/configuration-types.js';
 
 describe('Engine: read()', () => {
   let engine: FullEngine;
@@ -29,7 +25,7 @@ describe('Engine: read()', () => {
     engine = getFullEngine(createTestEngine());
     engine.adoptSlice(searchBoxSlice);
     engine.adoptSlice(resultsSlice);
-    engine.adoptSlice(searchApiSlice);
+    engine.adoptSlice(searchEndpointSlice);
   });
 
   it('should read values from state using a selector', () => {
@@ -93,7 +89,7 @@ describe('Engine: subscribe()', () => {
 
     engine.subscribe(searchBoxSelectors.getQuery, callback);
 
-    engine.mutate(searchApiMutations.setStatus('pending'));
+    engine.mutate(searchEndpointMutations.setStatus('pending'));
 
     expect(callback).not.toHaveBeenCalled();
   });
@@ -157,7 +153,7 @@ describe('Engine: mutate()', () => {
     engine = getFullEngine(createTestEngine());
     engine.adoptSlice(searchBoxSlice);
     engine.adoptSlice(resultsSlice);
-    engine.adoptSlice(searchApiSlice);
+    engine.adoptSlice(searchEndpointSlice);
   });
 
   it('should update state correctly', () => {
@@ -168,10 +164,10 @@ describe('Engine: mutate()', () => {
 
   it('should handle multiple mutations in sequence', () => {
     engine.mutate(searchBoxMutations.setQuery('laptops'));
-    engine.mutate(searchApiMutations.setStatus('pending'));
+    engine.mutate(searchEndpointMutations.setStatus('pending'));
 
     expect(engine.read(searchBoxSelectors.getQuery)).toBe('laptops');
-    expect(engine.read(searchApiSelectors.isLoading)).toBe(true);
+    expect(engine.read(searchEndpointSelectors.isLoading)).toBe(true);
   });
 
   it('should accept library-agnostic StateMutation objects', () => {
@@ -185,6 +181,15 @@ describe('Engine: mutate()', () => {
 });
 
 describe('Engine: constructor()', () => {
+  it('should return the same FullEngine wrapper for the same Engine instance', () => {
+    const engine = new Engine();
+
+    const firstWrapper = getFullEngine(engine);
+    const secondWrapper = getFullEngine(engine);
+
+    expect(firstWrapper).toBe(secondWrapper);
+  });
+
   it('should not include configuration state when no configuration is passed', () => {
     const engine = getFullEngine(new Engine());
 
