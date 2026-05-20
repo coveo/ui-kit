@@ -3,6 +3,7 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import {MockRecommendationApi} from '@/storybook-utils/api/recommendation/mock.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
+import {isTestMode} from '@/storybook-utils/common/is-test-mode';
 import '@/src/components/search/atomic-field-condition/atomic-field-condition.js';
 import '@/src/components/recommendations/atomic-recs-error/atomic-recs-error.js';
 import '@/src/components/recommendations/atomic-recs-interface/atomic-recs-interface.js';
@@ -109,6 +110,7 @@ const meta: Meta = {
         fields-to-include='["author", "date", "category", "source"]'
         language-assets-path="./lang"
         icon-assets-path="./assets"
+        .analytics=${isTestMode()}
       >
         <atomic-recs-list
           label="Recommended Articles"

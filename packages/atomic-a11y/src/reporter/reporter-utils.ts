@@ -11,7 +11,7 @@ export interface PackageMetadata {
   devDependencies?: Record<string, string>;
 }
 
-export interface StorybookReport {
+interface StorybookReport {
   type: string;
   result?: unknown;
 }

@@ -1,3 +1,6 @@
+// ⚠️  CDN OUTPUT: This build outputs to "cdn/". If you change this path,
+// you MUST also update the corresponding "source" field in ui-kit-cd
+// (.deployment.config/{commit,dev,prd}.json) and deploy-local-cdn.mjs.
 import {readFileSync} from 'node:fs';
 import {dirname, join, resolve} from 'node:path';
 import {relative} from 'node:path/posix';
@@ -17,6 +20,7 @@ const rsbuild = await rsbuildApi.createRsbuild({
   rsbuildConfig: {
     source: {
       entry: {
+        // ⚠️  Changing these entry names affects CDN pointer files in ui-kit-cd.
         'atomic.esm': './src/cdn.ts',
         index: './src/loader.ts',
         'index.esm': './src/index.ts',
