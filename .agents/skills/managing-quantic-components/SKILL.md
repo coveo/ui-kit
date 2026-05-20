@@ -62,7 +62,7 @@ quantic{ComponentName}/
 | Label translations | Every new label **must** have a translation entry added to both `force-app/main/translations/fr.translation-meta.xml` and `es.translation-meta.xml` |
 | Error handling | `hasInitializationError` flag + `<c-quantic-component-error>` in template |
 | CSS naming | BEM-like with component prefix: `.generated-answer__card-header--collapsed` |
-| SLDS tokens | Use `var(--lwc-*)` design tokens; always use SLDS utility classes first — write custom CSS only when no SLDS class achieves the needed result |
+| SLDS tokens | Use `var(--lwc-*)` design tokens; **always use SLDS utility classes first — for every style need, ask yourself whether an SLDS class covers it before writing a single line of custom CSS**. Custom CSS is only permitted when no SLDS class achieves the needed result |
 | Meta XML | `isExposed: false`; no `targets` or `targetConfigs`; **always generated via `sf lightning generate component`** — never created manually (manual creation risks using a stale `apiVersion`) |
 | `render()` | Only for multi-template components; always the **last method** in the class |
 | Property validation | Use `getBueno(this)` from `c/quanticHeadlessLoader` to validate user-supplied `@api` props (strings, numbers). Log via `console.error` with `this.template.host.localName` and call `this.setInitializationError()` on failure |
@@ -71,7 +71,7 @@ quantic{ComponentName}/
 | `static attributes` | Facet components declare `static attributes = [...]` listing all `@api` property names for runtime discovery |
 | AriaLiveRegion | Components that announce status changes (results loaded, errors, etc.) must create an `AriaLiveRegion` from `c/quanticUtils` and dispatch messages on state updates |
 | Event `composed` | Events that must cross shadow DOM boundaries (e.g. `quantic__renderfacet` consumed by a parent interface) need both `bubbles: true` and `composed: true`. Events staying within the immediate component tree need only `bubbles: true` |
-| Comments | Avoid code comments — write simple, self-explanatory code instead. Comments are acceptable only when the logic is genuinely non-obvious and cannot be clarified through naming or structure |
+| Comments | Avoid comments in all files (JS, HTML, CSS). Write self-explanatory code instead. Comments are only acceptable when logic is genuinely non-obvious and cannot be clarified through naming or structure |
 | Constants | Extract magic strings and numbers into named constants at the top of the file |
 
 ### Ordering conventions
@@ -117,10 +117,11 @@ Do not duplicate upstream Headless coverage unless the Quantic component adds be
 1. Inspect the target component folder and a similar existing Quantic component before editing.
 2. Keep changes inside `packages/quantic/force-app/main/default/lwc` unless the request also needs examples, community pages, or tests.
 3. If the change needs E2E coverage, update or add the matching example-community component and route assets as needed.
-4. Update JSDoc and metadata consistently with the component’s public surface.
-5. Run `pnpm run lint:fix` from `packages/quantic` before considering the work done.
-6. Run targeted Quantic tests first, then broader checks only if needed.
-7. **Run the Definition of Done checklist below before marking the task complete.**
+4. **Before writing any CSS:** go through every style need and verify whether an SLDS utility class satisfies it. Only write custom CSS for styles that SLDS cannot achieve. When replicating a component from another library (e.g. Atomic), do not port its custom CSS directly — re-implement the layout and styling using SLDS classes.
+5. Update JSDoc and metadata consistently with the component's public surface.
+6. Run `pnpm run lint:fix` from `packages/quantic` before considering the work done.
+7. Run targeted Quantic tests first, then broader checks only if needed.
+8. **Run the Definition of Done checklist below before marking the task complete.**
 
 ---
 
