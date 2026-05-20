@@ -75,6 +75,7 @@ const {play: playWithLegacyAnalytics} = wrapInSearchInterface({
 });
 
 const generatedAnswerQuery = 'how to resolve netflix connection with tivo';
+
 async function submitGeneratedAnswerQuery(storyContext: StoryContext) {
   const searchBox =
     await storyContext.canvas.findByShadowPlaceholderText('Search');
