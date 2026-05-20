@@ -42,7 +42,6 @@ export type {
 export type {
   InsightEngine,
   InsightEngineConfiguration,
-  InsightEngineKnowledgeConfigurationOptions,
   InsightEngineOptions,
   InsightEngineSearchConfigurationOptions,
 } from './app/insight-engine/insight-engine.js';

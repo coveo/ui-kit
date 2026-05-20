@@ -221,24 +221,6 @@ describe('searchEngine', () => {
       });
     });
 
-    describe('when passing a knowledge configuration', () => {
-      const proxyBaseUrl = 'https://example.com/knowledge';
-
-      beforeEach(() => {
-        options.configuration.knowledge = {
-          proxyBaseUrl,
-        };
-
-        initEngine();
-      });
-
-      it('sets the knowledge apiBaseUrl correctly', () => {
-        expect(engine.state.configuration.knowledge.apiBaseUrl).toBe(
-          proxyBaseUrl
-        );
-      });
-    });
-
     it('should ensure that engine.relay is the same reference as thunk extra args relay', async () => {
       const thunkRelay = await engine.dispatch(
         (_dispatch, _getState, extra) => extra.relay

@@ -7,7 +7,6 @@ import {interfaceLoad} from '../../features/analytics/analytics-actions.js';
 import type {LegacySearchAction} from '../../features/analytics/analytics-utils.js';
 import {
   type UpdateSearchConfigurationActionCreatorPayload,
-  updateKnowledgeConfiguration,
   updateSearchConfiguration,
 } from '../../features/configuration/configuration-actions.js';
 import {setInsightConfiguration} from '../../features/insight-configuration/insight-configuration-actions.js';
@@ -35,14 +34,12 @@ import {buildThunkExtraArguments} from '../thunk-extra-arguments.js';
 import {
   getSampleInsightEngineConfiguration,
   type InsightEngineConfiguration,
-  type InsightEngineKnowledgeConfigurationOptions,
   type InsightEngineSearchConfigurationOptions,
   insightEngineConfigurationSchema,
 } from './insight-engine-configuration.js';
 
 export type {
   InsightEngineConfiguration,
-  InsightEngineKnowledgeConfigurationOptions,
   InsightEngineSearchConfigurationOptions,
 };
 export {getSampleInsightEngineConfiguration};
@@ -156,13 +153,6 @@ export function buildInsightEngine(
 
   if (search) {
     engine.dispatch(updateSearchConfiguration(search));
-  }
-
-  const knowledge = options.configuration.knowledge;
-  if (knowledge?.proxyBaseUrl) {
-    engine.dispatch(
-      updateKnowledgeConfiguration({proxyBaseUrl: knowledge.proxyBaseUrl})
-    );
   }
 
   return {

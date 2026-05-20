@@ -178,17 +178,6 @@ export interface CoreAnalyticsState {
 }
 
 interface KnowledgeState {
-  /**
-   * The Answer API base URL to use.
-   *
-   * By default, will use the automatically resolved platform
-   * [organization endpoint](https://docs.coveo.com/en/mcc80216)
-   * (that is, `https://<ORG_ID>.org<hipaa|dev|stg|>.coveo.com`)
-   *
-   * If necessary, you can override this value by specifying a `proxyBaseUrl` in the `knowledge` object of your engine
-   * configuration, or when manually dispatching the `updateKnowledgeConfiguration` action.
-   */
-  apiBaseUrl?: string;
   answerConfigurationId: string;
   agentId?: string;
   debugAgentSession?: boolean;

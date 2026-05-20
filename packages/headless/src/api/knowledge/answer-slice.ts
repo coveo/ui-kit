@@ -35,7 +35,7 @@ const dynamicBaseQuery: BaseQueryFn<
   };
   try {
     const platformEndpoint =
-      state.configuration.knowledge?.apiBaseUrl ||
+      state.configuration.search?.apiBaseUrl ||
       getOrganizationEndpoint(organizationId, environment);
     return fetchBaseQuery({
       baseUrl: `${platformEndpoint}/rest/organizations/${organizationId}/answer/v1/configs/${answerConfigurationId}`,
