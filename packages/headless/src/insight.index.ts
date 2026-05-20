@@ -37,6 +37,7 @@ export type {
   AnalyticsConfiguration,
   AnalyticsRuntimeEnvironment,
   EngineConfiguration,
+  ExperimentalEngineConfiguration,
 } from './app/engine-configuration.js';
 // Main App
 export type {

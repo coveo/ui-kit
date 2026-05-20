@@ -213,6 +213,16 @@ export const engineConfigurationDefinitions: SchemaDefinition<EngineConfiguratio
       default: 'prod',
       constrainTo: ['prod', 'hipaa', 'stg', 'dev'],
     }),
+    experimental: new RecordValue({
+      options: {
+        required: false,
+      },
+      values: {
+        useOwnPrivacyControl: new BooleanValue({
+          required: false,
+        }),
+      },
+    }),
   };
 
 export function getSampleEngineConfiguration(): EngineConfiguration {
