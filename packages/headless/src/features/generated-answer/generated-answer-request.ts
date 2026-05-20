@@ -2,7 +2,7 @@ import type {HistoryElement} from '../../api/analytics/coveo.analytics/history-s
 import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import type {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
 import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
-import {getOrganizationEndpoint} from '../../api/platform-client.js';
+import {getApiBaseUrlOrOrganizationEndpoint} from '../../api/platform-client.js';
 import type {
   BaseParam,
   ContextParam,
@@ -71,12 +71,11 @@ export const buildStreamingRequest = async (
 ): Promise<GeneratedAnswerStreamRequest> => ({
   accessToken: state.configuration.accessToken,
   organizationId: state.configuration.organizationId,
-  url:
-    state.configuration.search.apiBaseUrl ||
-    getOrganizationEndpoint(
-      state.configuration.organizationId,
-      state.configuration.environment
-    ),
+  url: getApiBaseUrlOrOrganizationEndpoint(
+    state.configuration.search.apiBaseUrl,
+    state.configuration.organizationId,
+    state.configuration.environment
+  ),
   streamId: state.search.extendedResults?.generativeQuestionAnsweringId,
 });
 

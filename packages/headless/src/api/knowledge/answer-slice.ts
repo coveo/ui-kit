@@ -10,7 +10,7 @@ import type {
   ConfigurationSection,
   GeneratedAnswerSection,
 } from '../../state/state-sections.js';
-import {getOrganizationEndpoint} from '../platform-client.js';
+import {getApiBaseUrlOrOrganizationEndpoint} from '../platform-client.js';
 
 type StateNeededByAnswerSlice = ConfigurationSection & GeneratedAnswerSection;
 
@@ -34,9 +34,11 @@ const dynamicBaseQuery: BaseQueryFn<
     },
   };
   try {
-    const platformEndpoint =
-      state.configuration.search?.apiBaseUrl ||
-      getOrganizationEndpoint(organizationId, environment);
+    const platformEndpoint = getApiBaseUrlOrOrganizationEndpoint(
+      state.configuration.search?.apiBaseUrl,
+      organizationId,
+      environment
+    );
     return fetchBaseQuery({
       baseUrl: `${platformEndpoint}/rest/organizations/${organizationId}/answer/v1/configs/${answerConfigurationId}`,
     })(updatedArgs, api, extraOptions);
