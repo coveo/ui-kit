@@ -15,7 +15,7 @@ import {buildSearchBoxController} from './search-box-controller.js';
 const mockExecuteSearch = vi.fn();
 
 vi.mock(
-  '@/src/api/interface/search-endpoint/search-endpoint-facade.js',
+  '@/src/core/interface/api/search-endpoint/search-endpoint-facade.js',
   () => ({
     SearchEndpointFacade: {
       getInstance: vi.fn(() => ({

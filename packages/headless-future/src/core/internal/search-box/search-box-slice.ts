@@ -1,5 +1,8 @@
 import {createSlice, type PayloadAction} from '@reduxjs/toolkit';
-import type {SearchBoxState} from '@/src/core/interface/search-box/search-box-types.js';
+
+export interface SearchBoxState {
+  query: string;
+}
 
 export const initialSearchBoxState: SearchBoxState = {
   query: '',

@@ -1,6 +1,3 @@
-/**
- * Results feature state (collection)
- */
 export interface ResultListState {
   /** Array of search results */
   results: SearchResult[];

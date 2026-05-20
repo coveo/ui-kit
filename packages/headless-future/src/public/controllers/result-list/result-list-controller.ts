@@ -1,29 +1,38 @@
-import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
-import {resultsSlice} from '@/src/core/internal/result-list/result-list-slice.js';
+import {getFullEngine} from '@/src/core/interface/engine/engine.js';
+import {loadResultList} from '@/src/core/index.js';
 import * as resultsSelectors from '@/src/core/interface/result-list/result-list-selectors.js';
 import {createSelector} from '@reduxjs/toolkit';
-import {SearchEndpointFacade} from '@/src/api/interface/search-endpoint/search-endpoint-facade.js';
-import * as resultListMiddlewares from '@/src/core/interface/result-list/result-list-middlewares.js';
+import {
+  ResultListController,
+  ResultListControllerOptions,
+  ResultListControllerState,
+} from './result-list-controller-types.js';
 
-const stateSelect = createSelector([resultsSelectors.results], (results) => ({
-  results,
-}));
+const stateSelect = createSelector(
+  [resultsSelectors.results],
+  (results): ResultListControllerState => ({
+    results: results.map((result) => ({
+      id: result.id,
+      title: result.title,
+      uri: result.uri,
+      excerpt: result.excerpt,
+    })),
+  })
+);
 
-export const buildResultListController = (engine: Engine) => {
+export const buildResultListController = (
+  options: ResultListControllerOptions
+): ResultListController => {
+  const {engine} = options;
   const fullEngine = getFullEngine(engine);
-  const facade = SearchEndpointFacade.getInstance(fullEngine);
+  loadResultList(fullEngine);
 
-  facade.onResponse((response) => {
-    resultListMiddlewares.searchResponseMiddleware(response);
-  });
-
-  fullEngine.adoptSlice(resultsSlice);
   return {
     get state() {
       return fullEngine.read(stateSelect);
     },
     subscribe(callback: () => void) {
-      fullEngine.subscribe(stateSelect, callback);
+      return fullEngine.subscribe(stateSelect, callback);
     },
   };
 };

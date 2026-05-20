@@ -4,7 +4,7 @@ import {
   searchBoxMutators,
   loadSearchBox,
 } from '@/src/core/index.js';
-import {SearchEndpointFacade} from '@/src/api/index.js';
+import {SearchEndpointFacade} from '@/src/core/interface/api/search-endpoint/search-endpoint-facade.js';
 import {
   Controller,
   ControllerOptions,
@@ -21,18 +21,18 @@ export const buildSearchBoxController: (
   const fullEngine = getFullEngine(options.engine);
   loadSearchBox(fullEngine);
 
-  const facade = SearchEndpointFacade.getInstance(fullEngine);
+  const searchEndpointFacade = SearchEndpointFacade.getInstance(fullEngine);
 
-  const stateSelect = () => ({
+  const stateSelect = (): SearchBoxControllerState => ({
     query: fullEngine.read(searchBoxSelectors.getQuery),
   });
 
   return {
-    setQuery: (options: SetQueryOptions) => {
+    setQuery: (options: SearchBoxControllerSetQueryOptions) => {
       fullEngine.mutate(searchBoxMutators.setQuery(options.query));
     },
     submit: () => {
-      facade.callEndpoint();
+      searchEndpointFacade.callEndpoint();
     },
     get state() {
       return stateSelect();
@@ -51,7 +51,7 @@ export interface SearchBoxController extends Controller {
    *
    * @param options - The options for setting the query.
    */
-  setQuery(options: SetQueryOptions): void;
+  setQuery(options: SearchBoxControllerSetQueryOptions): void;
 
   /**
    * Executes the search query.
@@ -61,7 +61,7 @@ export interface SearchBoxController extends Controller {
   readonly state: SearchBoxControllerState;
 }
 
-export interface SetQueryOptions {
+export interface SearchBoxControllerSetQueryOptions {
   /**
    * The new search query.
    */

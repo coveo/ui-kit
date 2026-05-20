@@ -1,7 +1,7 @@
 import {searchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
-import * as searchBoxMiddlewares from '@/src/core/internal/search-box/search-box-middlewares.js';
 import {FullEngine} from '@/src/core/interface/engine/engine.js';
-import {SearchEndpointFacade} from '@/src/api/interface/search-endpoint/search-endpoint-facade.js';
+import {SearchEndpointFacade} from '@/src/core/interface/api/search-endpoint/search-endpoint-facade.js';
+import * as searchBoxSelectors from './search-box-selectors.js';
 
 const searchBoxLoadedEngines = new WeakSet<FullEngine>();
 
@@ -11,8 +11,10 @@ export const loadSearchBox = (engine: FullEngine) => {
   }
 
   engine.adoptSlice(searchBoxSlice);
-  const searchFacade = SearchEndpointFacade.getInstance(engine);
-  searchFacade.onRequest(searchBoxMiddlewares.onSearchEndpointRequest(engine));
+  const searchEndpointFacade = SearchEndpointFacade.getInstance(engine);
+  searchEndpointFacade.onRequest(() => ({
+    q: engine.read(searchBoxSelectors.getQuery),
+  }));
 
   searchBoxLoadedEngines.add(engine);
 };

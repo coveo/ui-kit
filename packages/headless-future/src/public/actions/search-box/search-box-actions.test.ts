@@ -40,7 +40,7 @@ describe('search-box actions', () => {
       const actions = loadSearchBoxActions(engine);
       await new Promise((r) => setTimeout(r, 0));
 
-      actions.setQuery('hello world');
+      actions.setQuery({query: 'hello world'});
       expect(fullEngine.read(selectors.getQuery)).toBe('hello world');
     });
 
@@ -48,8 +48,8 @@ describe('search-box actions', () => {
       const actions = loadSearchBoxActions(engine);
       await new Promise((r) => setTimeout(r, 0));
 
-      actions.setQuery('something');
-      actions.setQuery('');
+      actions.setQuery({query: 'something'});
+      actions.setQuery({query: ''});
       expect(fullEngine.read(selectors.getQuery)).toBe('');
     });
 
@@ -57,10 +57,10 @@ describe('search-box actions', () => {
       const actions = loadSearchBoxActions(engine);
       await new Promise((r) => setTimeout(r, 0));
 
-      actions.setQuery('first');
+      actions.setQuery({query: 'first'});
       expect(fullEngine.read(selectors.getQuery)).toBe('first');
 
-      actions.setQuery('second');
+      actions.setQuery({query: 'second'});
       expect(fullEngine.read(selectors.getQuery)).toBe('second');
     });
   });
@@ -81,7 +81,7 @@ describe('search-box actions', () => {
       const action = setQuery(engine);
       await new Promise((r) => setTimeout(r, 0));
 
-      action('test query');
+      action({query: 'test query'});
       expect(fullEngine.read(selectors.getQuery)).toBe('test query');
     });
 
@@ -90,12 +90,12 @@ describe('search-box actions', () => {
       const action1 = setQuery(engine);
       await new Promise((r) => setTimeout(r, 0));
 
-      action1('first');
+      action1({query: 'first'});
       expect(fullEngine.read(selectors.getQuery)).toBe('first');
 
       // Second call should skip adoption but still work
       const action2 = setQuery(engine);
-      action2('second');
+      action2({query: 'second'});
       expect(fullEngine.read(selectors.getQuery)).toBe('second');
     });
 
@@ -107,8 +107,8 @@ describe('search-box actions', () => {
       const action2 = setQuery(engine2);
       await new Promise((r) => setTimeout(r, 0));
 
-      action1('engine1 query');
-      action2('engine2 query');
+      action1({query: 'engine1 query'});
+      action2({query: 'engine2 query'});
 
       expect(fullEngine.read(selectors.getQuery)).toBe('engine1 query');
       expect(fullEngine2.read(selectors.getQuery)).toBe('engine2 query');
@@ -121,7 +121,7 @@ describe('search-box actions', () => {
 
       // Named export should still work (slice already adopted)
       const action = setQuery(engine);
-      action('after load');
+      action({query: 'after load'});
       expect(fullEngine.read(selectors.getQuery)).toBe('after load');
     });
   });

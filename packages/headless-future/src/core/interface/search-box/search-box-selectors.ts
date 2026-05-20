@@ -1,5 +1,7 @@
-import {searchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
-import type {SearchBoxState} from './search-box-types.js';
+import {
+  searchBoxSlice,
+  SearchBoxState,
+} from '@/src/core/internal/search-box/search-box-slice.js';
 
 export type StateWithSearchBoxSlice = {searchBox: SearchBoxState};
 
