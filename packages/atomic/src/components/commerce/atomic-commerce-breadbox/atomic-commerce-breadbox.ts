@@ -429,7 +429,7 @@ export class AtomicCommerceBreadbox
           numberOfCollapsedBreadcrumbs: this.numberOfCollapsedBreadcrumbs,
           value: this.showMoreText,
           ariaLabel: this.bindings.i18n.t('show-n-more-filters', {
-            value: this.showMoreText,
+            value: this.numberOfCollapsedBreadcrumbs,
           }),
         },
       })}
