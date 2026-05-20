@@ -3,58 +3,52 @@
  */
 
 import {describe, it, expect, beforeEach, vi, MockedFunction} from 'vitest';
-import {callSearchEndpoint} from './search-endpoint-client.js';
+import {createSearchEndpointClient} from './search-endpoint-client.js';
 import {executeHttpRequest} from '@/src/api/internal/protocol/http.js';
-import {createTestEngine} from '@/src/test/test-utils.js';
-import {FullEngine, getFullEngine} from '@/src/core/interface/engine/engine.js';
-import {configurationSlice} from '@/src/core/internal/configuration/configuration-slice.js';
-import * as configurationMutations from '@/src/core/interface/configuration/configuration-mutators.js';
 
 vi.mock('@/src/api/internal/protocol/http.js', () => ({
   executeHttpRequest: vi.fn(),
 }));
 
-describe('callSearchEndpoint()', () => {
-  let engine: FullEngine;
+describe('SearchEndpointClient', () => {
+  let client: ReturnType<typeof createSearchEndpointClient>;
   let mockedExecuteHttpRequest: MockedFunction<typeof executeHttpRequest>;
 
   beforeEach(() => {
-    engine = getFullEngine(createTestEngine());
-    engine.adoptSlice(configurationSlice);
+    client = createSearchEndpointClient();
     mockedExecuteHttpRequest = vi.mocked(executeHttpRequest);
     mockedExecuteHttpRequest.mockReset();
   });
 
   it('should return configuration error when organizationId is missing', async () => {
-    engine.mutate(configurationMutations.setAccessToken('test-token'));
-
-    const response = await callSearchEndpoint(engine, {q: 'test'});
+    const response = await client.call(
+      {q: 'test'},
+      {accessToken: 'test-token'}
+    );
 
     expect(response.success).toBe(false);
     if (response.success) {
-      throw new Error('Expected callSearchEndpoint to fail');
+      throw new Error('Expected search endpoint call to fail');
     }
     expect(response.error).toContain('Organization ID is not set');
     expect(mockedExecuteHttpRequest).not.toHaveBeenCalled();
   });
 
   it('should return configuration error when accessToken is missing', async () => {
-    engine.mutate(configurationMutations.setOrganizationId('test-org-id'));
-
-    const response = await callSearchEndpoint(engine, {q: 'test'});
+    const response = await client.call(
+      {q: 'test'},
+      {organizationId: 'test-org-id'}
+    );
 
     expect(response.success).toBe(false);
     if (response.success) {
-      throw new Error('Expected callSearchEndpoint to fail');
+      throw new Error('Expected search endpoint call to fail');
     }
     expect(response.error).toContain('Access token is not set');
     expect(mockedExecuteHttpRequest).not.toHaveBeenCalled();
   });
 
   it('should call executeHttpRequest with built request options', async () => {
-    engine.mutate(configurationMutations.setOrganizationId('test-org-id'));
-    engine.mutate(configurationMutations.setAccessToken('test-token'));
-
     mockedExecuteHttpRequest.mockResolvedValue({
       success: true,
       data: {
@@ -64,11 +58,14 @@ describe('callSearchEndpoint()', () => {
     });
 
     const request = {q: 'test query'};
-    const response = await callSearchEndpoint(engine, request);
+    const response = await client.call(request, {
+      organizationId: 'test-org-id',
+      accessToken: 'test-token',
+    });
 
     expect(response.success).toBe(true);
     expect(mockedExecuteHttpRequest).toHaveBeenCalledWith({
-      url: 'https://platform.cloud.coveo.com/rest/search/v2',
+      url: 'https://test-org-id.org.coveo.com/rest/search/v2',
       method: 'POST',
       body: request,
       headers: {
@@ -80,18 +77,19 @@ describe('callSearchEndpoint()', () => {
   });
 
   it('should use configured custom endpoint', async () => {
-    engine.mutate(configurationMutations.setOrganizationId('test-org-id'));
-    engine.mutate(configurationMutations.setAccessToken('test-token'));
-    engine.mutate(
-      configurationMutations.setEndpoint('https://custom.platform.coveo.com')
-    );
-
     mockedExecuteHttpRequest.mockResolvedValue({
       success: true,
       data: {},
     } as any);
 
-    await callSearchEndpoint(engine, {q: 'test'});
+    await client.call(
+      {q: 'test'},
+      {
+        organizationId: 'test-org-id',
+        accessToken: 'test-token',
+        endpoint: 'https://custom.platform.coveo.com',
+      }
+    );
 
     expect(mockedExecuteHttpRequest).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -101,18 +99,32 @@ describe('callSearchEndpoint()', () => {
   });
 
   it('should normalize missing transport error message', async () => {
-    engine.mutate(configurationMutations.setOrganizationId('test-org-id'));
-    engine.mutate(configurationMutations.setAccessToken('test-token'));
-
     mockedExecuteHttpRequest.mockResolvedValue({
       success: false,
     });
 
-    const response = await callSearchEndpoint(engine, {q: 'test'});
+    const response = await client.call(
+      {q: 'test'},
+      {organizationId: 'test-org-id', accessToken: 'test-token'}
+    );
 
     expect(response).toEqual({
       success: false,
       error: 'Search request failed.',
+    });
+  });
+
+  it('should transform thrown errors into failed client results', async () => {
+    mockedExecuteHttpRequest.mockRejectedValue(new Error('network down'));
+
+    const response = await client.call(
+      {q: 'test'},
+      {organizationId: 'test-org-id', accessToken: 'test-token'}
+    );
+
+    expect(response).toEqual({
+      success: false,
+      error: 'network down',
     });
   });
 });
