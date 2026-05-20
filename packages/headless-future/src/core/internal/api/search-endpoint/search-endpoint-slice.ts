@@ -1,20 +1,20 @@
 import {
-  SearchApiState,
-  SearchApiStatus,
-} from '@/src/core/interface/api/search-api/search-api-types.js';
+  SearchEndpointState,
+  SearchEndpointStatus,
+} from '@/src/core/interface/api/search-endpoint/search-endpoint-types.js';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-export const initialSearchApiState: SearchApiState = {
+export const initialSearchEndpointState: SearchEndpointState = {
   configuration: {},
   status: 'idle',
   error: null,
 };
 
-export const searchApiSlice = createSlice({
-  name: 'searchApi',
-  initialState: initialSearchApiState,
+export const searchEndpointSlice = createSlice({
+  name: 'searchEndpoint',
+  initialState: initialSearchEndpointState,
   reducers: {
-    setStatus: (state, action: PayloadAction<SearchApiStatus>) => {
+    setStatus: (state, action: PayloadAction<SearchEndpointStatus>) => {
       state.status = action.payload;
     },
     setError: (state, action: PayloadAction<string | null>) => {
