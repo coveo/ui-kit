@@ -185,6 +185,48 @@ Manual audits are one of four conformance sources. The full priority chain (high
 
 This means manual audit results **override** automated findings, but are themselves overridden by explicit overrides.
 
+## WCAG Rule Blacklist Strategy
+
+All WCAG 2.2 AA criteria have been intentionally marked as `"not-evaluated"` in `a11y/a11y-overrides.json`. This is a **gradual enablement strategy** to prevent CI failures when accessibility auditing is enabled.
+
+### Why blacklist all rules?
+
+When PR #7134 enables automated accessibility testing in CI, it will detect violations across many components. Blacklisting rules temporarily prevents CI from failing and allows the team to address accessibility debt incrementally as components are remediated.
+
+### How to enable rules (contributor workflow)
+
+As your components become compliant with WCAG criteria, gradually remove them from the blacklist:
+
+1. **Identify a criterion to remediate** — choose one WCAG rule you're ready to commit to (e.g., `1.1.1` for non-text content)
+2. **Edit** `a11y/a11y-overrides.json`:
+  - Find the corresponding entry (e.g., `"criterion": "1.1.1"`)
+  - Remove that entire entry from the `overrides` array
+3. **Run audits** to verify compliance:
+  - Run automated tests: `pnpm test` or `pnpm a11y:scan`
+  - Verify your components pass the criterion using axe DevTools or manual testing
+  - Update manual audit baselines if needed
+4. **Submit PR** with:
+  - Updated `a11y/a11y-overrides.json` (one rule removed)
+  - Any necessary component fixes or manual audit files
+  - Description: list which criterion was enabled and how it was validated
+
+### Rules marked "not-applicable"
+
+Some rules are permanently excluded because they don't apply to a component library:
+
+- **Media criteria** (1.2.1-1.2.5): Atomic includes no audio/video components
+- **Timing & motion** (2.2.1, 2.2.2, 2.3.1, 2.5.4): No time limits or motion-triggered features
+- **Host-level concerns** (2.4.2, 2.4.5, 3.1.1, 3.2.3, 3.2.4): Page titles, navigation, language - set by the application, not components
+- **Multi-step forms & auth** (3.3.7, 3.3.8): Atomic doesn't include form flows or authentication
+
+These are distinguished from "not-evaluated" rules and won't be removed during gradual enablement.
+
+### Strategy timeline
+
+- **Current phase**: All criteria are blacklisted (not-evaluated) to allow foundation work
+- **Next phase**: Teams pick criteria to remediate and remove from the override file one at a time
+- **Final phase**: Once components are WCAG 2.2 AA compliant, the override file will only contain the 17 "not-applicable" rules
+
 ## Complete example
 
 A minimal but complete baseline file for search components (`manual-audit-search.json`):
