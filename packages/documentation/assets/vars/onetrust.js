@@ -49,3 +49,32 @@ export function isActiveGroup(groupsToVerify) {
   }
   return true;
 }
+
+// Auto-initialize docs analytics when OneTrust functional cookies are active.
+// Uses window.docsAnalytics (our event-handler wrapper) which in turn delegates
+// to the Amplitude Browser SDK via window.amplitude.
+(function initAnalyticsWhenAllowed() {
+  try {
+    const analytics = window.docsAnalytics;
+    if (!analytics) return;
+
+    // If C0003 consent already present (returning visitor), init immediately
+    if (isActiveGroup('C0003')) {
+      analytics.initAmplitude();
+      return;
+    }
+
+    // Otherwise wait for the user to interact with the consent banner
+    window.addEventListener('consent.onetrust', function () {
+      if (isActiveGroup('C0003')) {
+        analytics.initAmplitude();
+      } else {
+        analytics.setOptOut(true);
+      }
+    });
+  } catch (e) {
+    // don't break the page if analytics fails
+    // eslint-disable-next-line no-console
+    console.warn('[docs-analytics] Failed to initialize', e);
+  }
+})();
