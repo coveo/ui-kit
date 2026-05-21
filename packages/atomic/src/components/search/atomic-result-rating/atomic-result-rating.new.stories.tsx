@@ -3,6 +3,7 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
 import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-result-rating/atomic-result-rating.js';
 
@@ -13,6 +14,8 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-result-rating',
   {excludeCategories: ['methods']}
 );
+
+const searchApiHarness = new MockSearchApi();
 
 const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
   config: {
@@ -43,6 +46,7 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     chromatic: {disableSnapshot: true},
+    msw: {handlers: [...searchApiHarness.handlers]},
     actions: {
       handles: events,
     },

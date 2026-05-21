@@ -5,6 +5,7 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {html} from 'lit/static-html.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-field-condition/atomic-field-condition.js';
 import '@/src/components/search/atomic-folded-result-list/atomic-folded-result-list.js';
@@ -116,6 +117,8 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
+const searchApiHarness = new MockSearchApi();
+
 const meta: Meta = {
   component: 'atomic-result-children-template',
   title: 'Search/Result Children Template',
@@ -124,6 +127,7 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     chromatic: {disableSnapshot: true},
+    msw: {handlers: [...searchApiHarness.handlers]},
     actions: {
       handles: events,
     },

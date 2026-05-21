@@ -5,6 +5,7 @@ import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
 import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-format-currency/atomic-format-currency.js';
 import '@/src/components/search/atomic-format-number/atomic-format-number.js';
@@ -15,6 +16,8 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-result-number',
   {excludeCategories: ['methods']}
 );
+
+const searchApiHarness = new MockSearchApi();
 
 const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
   config: {
@@ -44,6 +47,7 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     chromatic: {disableSnapshot: true},
+    msw: {handlers: [...searchApiHarness.handlers]},
     actions: {
       handles: events,
     },
