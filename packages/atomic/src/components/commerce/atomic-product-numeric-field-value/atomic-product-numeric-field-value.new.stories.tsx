@@ -9,6 +9,24 @@ import '@/src/components/commerce/atomic-product-numeric-field-value/atomic-prod
 
 const commerceApiHarness = new MockCommerceApi();
 
+// Limit to 1 product with no children to avoid strict mode violations in e2e tests
+commerceApiHarness.searchEndpoint.mock((response) => ({
+  ...response,
+  products: [
+    {
+      ...response.products[0],
+      children: [],
+      totalNumberOfChildren: 0,
+    },
+  ],
+  pagination: {
+    ...response.pagination,
+    totalCount: 1,
+    perPage: 1,
+    totalPages: 1,
+  },
+}));
+
 const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
   engineConfig: {
     preprocessRequest: (request) => {
