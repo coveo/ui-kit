@@ -5,6 +5,7 @@ import {buildCreateTestComponent, cleanup, flushPromises} from 'c/testUtils';
 const selectors = {
   titleButton: '[data-testid="thread-item-title-button"]',
   titleSpan: '[data-testid="thread-item-title-static"]',
+  boldTitle: '.slds-text-title_bold',
   contentWrapper: '[data-testid="thread-item-content"]',
   visibleContent: '[data-testid="thread-item-content"] > div:not([hidden])',
   line: '[data-testid="thread-item-line"]',
@@ -143,6 +144,15 @@ describe('c-quantic-thread-item', () => {
 
       const content = element.shadowRoot.querySelector(selectors.visibleContent);
       expect(content).not.toBeNull();
+    });
+
+    it('renders a bold title when collapse is disabled', async () => {
+      const element = createTestComponent({disableCollapse: true, isExpanded: false});
+      await flushPromises();
+
+      const title = element.shadowRoot.querySelector(selectors.titleSpan);
+      expect(title.className).toContain('slds-text-title_bold');
+      expect(element.shadowRoot.querySelector(selectors.boldTitle)).not.toBeNull();
     });
   });
 });

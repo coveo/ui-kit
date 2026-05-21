@@ -62,6 +62,10 @@ export default class QuanticThreadItem extends LightningElement {
     return !this._isExpanded;
   }
 
+  get titleClass() {
+    return `thread-item__clamped-text slds-text-body_regular slds-p-horizontal_x-small slds-p-vertical_xx-small${this._isExpanded ? ' slds-text-title_bold' : ''}`;
+  }
+
   get titleButtonClass() {
     return `slds-button_reset slds-p-horizontal_x-small slds-p-vertical_xx-small thread-item__title-button thread-item__clamped-text${this._isExpanded ? ' slds-text-title_bold' : ''}`;
   }
