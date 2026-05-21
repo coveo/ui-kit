@@ -38,9 +38,9 @@ export class EndpointContributorRegistry {
 
   getOrderedContributors<TRequest extends object>(
     endpoint: EndpointKey
-  ): Array<RequestContributor<TRequest>> {
+  ): ReadonlyArray<RequestContributor<TRequest>> {
     const contributors = this.#contributorsByEndpoint.get(endpoint) ?? [];
-    return contributors as Array<RequestContributor<TRequest>>;
+    return [...contributors] as ReadonlyArray<RequestContributor<TRequest>>;
   }
 
   getRegisteredContributorCount(endpoint: EndpointKey): number {

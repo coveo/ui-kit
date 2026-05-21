@@ -82,6 +82,24 @@ describe('EndpointContributorRegistry', () => {
     expect(registry.getRegisteredContributorCount('conversation')).toBe(2);
     expect(registry.getRegisteredContributorCount('commerce-listing')).toBe(0);
   });
+
+  it('returns a snapshot so caller-side mutations do not alter registry state', () => {
+    const registry = new EndpointContributorRegistry();
+    const contributor = vi.fn(() => ({message: 'first'}));
+
+    registry.register<ConversationRequest>('conversation', contributor);
+
+    const contributors = registry.getOrderedContributors<ConversationRequest>(
+      'conversation'
+    ) as Array<() => Partial<ConversationRequest>>;
+
+    contributors.pop();
+
+    expect(registry.getRegisteredContributorCount('conversation')).toBe(1);
+    expect(registry.getOrderedContributors('conversation')).toEqual([
+      contributor,
+    ]);
+  });
 });
 
 describe('getEndpointContributorRegistry', () => {
