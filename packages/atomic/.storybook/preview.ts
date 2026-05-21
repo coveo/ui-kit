@@ -16,11 +16,13 @@ if (import.meta.env.VITE_IS_CDN === 'true') {
   import(url.href);
 }
 
-initialize(
-  import.meta.env.DEV || import.meta.env.VITE_IS_CDN === 'true'
+initialize({
+  quiet: true,
+  onUnhandledRequest: 'bypass',
+  ...(import.meta.env.DEV || import.meta.env.VITE_IS_CDN === 'true'
     ? {serviceWorker: {url: './mockServiceWorker.js'}}
-    : {}
-);
+    : {}),
+});
 
 setCustomElementsManifest(customElements);
 
