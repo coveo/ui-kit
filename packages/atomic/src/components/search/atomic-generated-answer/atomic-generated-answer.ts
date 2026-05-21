@@ -127,6 +127,11 @@ const FOLLOW_UP_INPUT_EXPORT_PARTS = [
  *
  * @part citation - The link that allows the user to navigate to the item.
  * @part citation-popover - The pop-up that shows an item preview when the user hovers over the citation.
+ *
+ * @part input-container - The follow-up input container.
+ * @part input-field - The follow-up textarea input field.
+ * @part submit-button - The follow-up submit button.
+ * @part submit-icon - The icon displayed in the follow-up submit button.
  */
 @customElement('atomic-generated-answer')
 @bindings()
