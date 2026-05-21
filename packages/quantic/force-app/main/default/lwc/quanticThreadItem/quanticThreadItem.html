@@ -1,38 +1,51 @@
 <template>
-    <li class="thread-item">
-        <div class="slds-grid slds-grid_vertical-align-center">
-            <div
-                class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-shrink-none slds-m-right_x-small thread-item__dot-column">
-                <span class={dotClass} data-testid="thread-item-dot"></span>
-            </div>
-            <div class="slds-col slds-has-flexi-truncate">
-                <template lwc:if={disableCollapse}>
-                    <span
-                        class="thread-item__clamped-text slds-text-body_regular slds-p-horizontal_x-small slds-p-vertical_xx-small"
-                        data-testid="thread-item-title-static">{title}</span>
-                </template>
-                <template lwc:else>
-                    <button type="button" class={titleButtonClass} aria-expanded={titleButtonAriaExpanded}
-                        data-testid="thread-item-title-button"
-                        onclick={handleTitleClick}>
-                        {title}
-                    </button>
-                </template>
-            </div>
+  <li class="thread-item">
+    <div class="slds-grid slds-grid_vertical-align-center">
+      <div
+        class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-shrink-none slds-m-right_x-small thread-item__dot-column"
+      >
+        <span class={dotClass} data-testid="thread-item-dot"></span>
+      </div>
+      <div class="slds-col slds-has-flexi-truncate">
+        <template lwc:if={disableCollapse}>
+          <span
+            class="thread-item__clamped-text slds-text-body_regular slds-p-horizontal_x-small slds-p-vertical_xx-small"
+            data-testid="thread-item-title-static"
+            >{title}</span
+          >
+        </template>
+        <template lwc:else>
+          <button
+            type="button"
+            class={titleButtonClass}
+            aria-expanded={isExpanded}
+            data-testid="thread-item-title-button"
+            onclick={handleTitleClick}
+            aria-controls="thread-item-content"
+          >
+            {title}
+          </button>
+        </template>
+      </div>
+    </div>
+    <div class="slds-grid">
+      <div
+        class="slds-grid slds-grid_align-center slds-shrink-none thread-item__line-column slds-m-right_x-small"
+      >
+        <template lwc:if={hideLine}></template>
+        <template lwc:else>
+          <span class="thread-item__line" data-testid="thread-item-line"></span>
+        </template>
+      </div>
+      <div
+        id="thread-item-content"
+        class="slds-col slds-p-left_x-small slds-p-vertical_xx-small"
+        data-testid="thread-item-content"
+      >
+        <div hidden={contentHidden}>
+          <slot></slot>
         </div>
-        <div class="slds-grid">
-            <div
-                class="slds-grid slds-grid_align-center slds-shrink-none thread-item__line-column slds-m-right_x-small">
-                <template lwc:if={hideLine}></template>
-                <template lwc:else>
-                    <span class="thread-item__line" data-testid="thread-item-line"></span>
-                </template>
-            </div>
-            <div class="slds-col slds-p-left_x-small slds-p-vertical_xx-small" aria-hidden={contentHidden} data-testid="thread-item-content">
-                <div hidden={contentHidden}>
-                    <slot></slot>
-                </div>
-            </div>
-        </div>
-    </li>
+      </div>
+    </div>
+  </li>
 </template>

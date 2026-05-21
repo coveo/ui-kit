@@ -45,7 +45,7 @@ export default class QuanticThreadItem extends LightningElement {
   }
 
   /** @type {boolean} */
-  @track _isExpanded = false;
+  _isExpanded = false;
 
   connectedCallback() {
     this._isExpanded = this.disableCollapse ? true : this.isExpanded;
@@ -56,10 +56,6 @@ export default class QuanticThreadItem extends LightningElement {
       return;
     }
     this._isExpanded = !this._isExpanded;
-  }
-
-  get titleButtonAriaExpanded() {
-    return String(this._isExpanded);
   }
 
   get contentHidden() {

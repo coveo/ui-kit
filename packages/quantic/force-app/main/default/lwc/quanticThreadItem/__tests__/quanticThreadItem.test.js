@@ -6,6 +6,7 @@ const selectors = {
   titleButton: '[data-testid="thread-item-title-button"]',
   titleSpan: '[data-testid="thread-item-title-static"]',
   contentWrapper: '[data-testid="thread-item-content"]',
+  visibleContent: '[data-testid="thread-item-content"] > div:not([hidden])',
   line: '[data-testid="thread-item-line"]',
   dot: '[data-testid="thread-item-dot"]',
 };
@@ -60,12 +61,12 @@ describe('c-quantic-thread-item', () => {
   });
 
   describe('collapsed state', () => {
-    it('starts collapsed by default', async () => {
+    it('does not render the content by default', async () => {
       const element = createTestComponent();
       await flushPromises();
 
-      const content = element.shadowRoot.querySelector(selectors.contentWrapper);
-      expect(content.getAttribute('aria-hidden')).toBe('true');
+      const content = element.shadowRoot.querySelector(selectors.visibleContent);
+      expect(content).toBeNull();
     });
 
     it('button has aria-expanded set to false when collapsed', async () => {
@@ -86,12 +87,12 @@ describe('c-quantic-thread-item', () => {
   });
 
   describe('expanded state', () => {
-    it('starts expanded when isExpanded is true', async () => {
+    it('renders the content when isExpanded is true', async () => {
       const element = createTestComponent({isExpanded: true});
       await flushPromises();
 
-      const content = element.shadowRoot.querySelector(selectors.contentWrapper);
-      expect(content.getAttribute('aria-hidden')).toBe('false');
+      const content = element.shadowRoot.querySelector(selectors.visibleContent);
+      expect(content).not.toBeNull();
     });
 
     it('button has aria-expanded set to true when expanded', async () => {
@@ -112,26 +113,26 @@ describe('c-quantic-thread-item', () => {
   });
 
   describe('toggle interaction', () => {
-    it('expands content when the button is clicked while collapsed', async () => {
+    it('renders the content when the button is clicked while collapsed', async () => {
       const element = createTestComponent();
       await flushPromises();
 
       element.shadowRoot.querySelector(selectors.titleButton).click();
       await flushPromises();
 
-      const content = element.shadowRoot.querySelector(selectors.contentWrapper);
-      expect(content.getAttribute('aria-hidden')).toBe('false');
+      const content = element.shadowRoot.querySelector(selectors.visibleContent);
+      expect(content).not.toBeNull();
     });
 
-    it('collapses content when the button is clicked while expanded', async () => {
+    it('does not render the content when the button is clicked while expanded', async () => {
       const element = createTestComponent({isExpanded: true});
       await flushPromises();
 
       element.shadowRoot.querySelector(selectors.titleButton).click();
       await flushPromises();
 
-      const content = element.shadowRoot.querySelector(selectors.contentWrapper);
-      expect(content.getAttribute('aria-hidden')).toBe('true');
+      const content = element.shadowRoot.querySelector(selectors.visibleContent);
+      expect(content).toBeNull();
     });
   });
 
@@ -140,8 +141,8 @@ describe('c-quantic-thread-item', () => {
       const element = createTestComponent({disableCollapse: true, isExpanded: false});
       await flushPromises();
 
-      const content = element.shadowRoot.querySelector(selectors.contentWrapper);
-      expect(content.getAttribute('aria-hidden')).toBe('false');
+      const content = element.shadowRoot.querySelector(selectors.visibleContent);
+      expect(content).not.toBeNull();
     });
   });
 });
