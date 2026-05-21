@@ -64,34 +64,36 @@ export class ConversationEndpointFacade extends EndpointFacade<CoveoConversation
     engine.mutate(conversationEndpointMutators.setStatus('pending'));
     engine.mutate(conversationEndpointMutators.setError(null));
 
-    try {
-      const finalRequest = buildRequest<CoveoConversationEndpointRequest>([
-        () => ({
-          message: input,
-        }),
-        ...contributorRegistry.getOrderedContributors<CoveoConversationEndpointRequest>(
-          conversationEndpointKey
-        ),
-        ...this.getOrderedRequestContributors(),
-      ]);
+    const finalRequest = buildRequest<CoveoConversationEndpointRequest>([
+      () => ({
+        message: input,
+      }),
+      ...contributorRegistry.getOrderedContributors<CoveoConversationEndpointRequest>(
+        conversationEndpointKey
+      ),
+      ...this.getOrderedRequestContributors(),
+    ]);
 
-      const clientConfiguration: ConversationEndpointClientConfiguration = {
-        organizationId: engine.read(configurationSelectors.organizationId),
-        accessToken: engine.read(configurationSelectors.accessToken),
-        endpoint: engine.read(configurationSelectors.endpoint),
-      };
+    const clientConfiguration: ConversationEndpointClientConfiguration = {
+      organizationId: engine.read(configurationSelectors.organizationId),
+      accessToken: engine.read(configurationSelectors.accessToken),
+      endpoint: engine.read(configurationSelectors.endpoint),
+    };
 
-      const result = await this.#client.call(finalRequest, clientConfiguration);
+    const result = await this.#client.call(finalRequest, clientConfiguration);
 
-      if (!result.success) {
-        engine.mutate(conversationEndpointMutators.setError(result.error));
-      }
-
-      return result;
-    } finally {
+    if (!result.success) {
+      engine.mutate(conversationEndpointMutators.setError(result.error));
       engine.mutate(conversationEndpointMutators.setStatus('idle'));
       engine.mutate(conversationEndpointMutators.setStreamingConnected(false));
+      return result;
     }
+
+    // Runtime/dispatcher will own terminal lifecycle transitions after stream consumption.
+    engine.mutate(conversationEndpointMutators.setStatus('streaming'));
+    engine.mutate(conversationEndpointMutators.setStreamingConnected(true));
+
+    return result;
   }
 
   getRequestCompositionDebugInfo() {

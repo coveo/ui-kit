@@ -6,6 +6,14 @@ interface TestRequest {
   q?: string;
   numberOfResults?: number;
   fieldsToInclude?: string[];
+  context?: {
+    user?: {
+      userAgent?: string;
+    };
+    cart?: {
+      items?: string[];
+    };
+  };
 }
 
 describe('buildRequest', () => {
@@ -50,5 +58,19 @@ describe('buildRequest', () => {
     ];
 
     expect(buildRequest(contributors)).toEqual({fieldsToInclude: ['uri']});
+  });
+
+  it('should deep merge nested plain objects', () => {
+    const contributors: Array<RequestContributor<TestRequest>> = [
+      () => ({context: {user: {userAgent: 'Mozilla/5.0'}}}),
+      () => ({context: {cart: {items: ['sku-1']}}}),
+    ];
+
+    expect(buildRequest(contributors)).toEqual({
+      context: {
+        user: {userAgent: 'Mozilla/5.0'},
+        cart: {items: ['sku-1']},
+      },
+    });
   });
 });
