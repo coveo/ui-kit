@@ -171,6 +171,38 @@ Completed checklist for 1.4:
 - [x] Added stream utility unit coverage in `src/api/shared/stream.test.ts`
 - [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
 
+Completed checklist for 1.5:
+
+- [x] Added dedicated conversation endpoint client contracts under `src/api/interface/conversation-endpoint/conversation-endpoint-types.ts`
+- [x] Added Layer 1 conversation endpoint client under `src/api/interface/conversation-endpoint/conversation-endpoint-client.ts` for converse transport calls
+- [x] Implemented converse request contract mapping to include tracking/config fields, navigator context, cart context, session continuity, and hardcoded `targetEngine: 'AGENT_CORE'`
+- [x] Added conversation endpoint client unit coverage in `src/api/interface/conversation-endpoint/conversation-endpoint-client.test.ts`
+- [x] Added Layer 1 conversation API facade under `src/core/interface/api/conversation-endpoint/conversation-endpoint-facade.ts`
+- [x] Introduced pull-model request contribution infrastructure with engine-scoped endpoint-keyed registry in `src/core/internal/api/base-facade/endpoint-contributor-registry.ts`
+- [x] Added conversation endpoint state ownership (`status`, `error`, `streaming.isConnected`, `configuration`) under `src/core/internal/api/conversation-endpoint/` with interface wrappers/tests in `src/core/interface/api/conversation-endpoint/`
+- [x] Narrowed conversation domain ownership by removing endpoint-operational fields (`isLoading`, `error`, `streaming`) from `src/core/internal/conversation/conversation-slice.ts` and corresponding conversation selector/mutator surface
+- [x] Added feature-owned loaders for pull-model contributions:
+  - [x] `src/core/interface/api/conversation-endpoint/conversation-endpoint-loader.ts`
+  - [x] `src/core/interface/conversation/conversation-loader.ts`
+  - [x] `src/core/interface/cart/cart-loader.ts`
+- [x] Updated request composition merging to safely compose nested cross-feature fragments in `src/core/internal/api/base-facade/endpoint-facade-request-builder.ts`
+- [x] Inlined conversation endpoint default contributor registration into `conversation-endpoint-loader` and removed standalone helper module
+- [x] Hardened contributor registry API by returning readonly snapshots (no mutable internal array exposure)
+- [x] Removed request-configuration double source ambiguity by making contributors read canonical configuration selectors directly (no endpoint-config snapshot write dependency in the facade)
+- [x] Centralized endpoint keys as shared exported constants under `src/core/internal/api/base-facade/endpoint-keys.ts`
+- [x] Added/updated unit coverage for new loaders, registry, request-builder behavior, and conversation endpoint facade behavior
+- [x] Exported conversation endpoint facade/contracts through `src/core/index.ts` and `src/api/index.ts`
+- [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
+
+Carry-forward checklist (to avoid losing architectural intent in 1.6/1.7/1.8):
+
+- [ ] **1.6** Move conversation endpoint terminal lifecycle transitions fully into event dispatcher flow (`pending -> streaming -> completed/failed/aborted`) so endpoint status represents full turn+stream lifecycle
+- [ ] **1.6** Ensure stream connectivity (`streaming.isConnected`) is driven by stream open/close events rather than request completion timing
+- [ ] **1.7** Keep conversation runtime as owner of stream consumption and terminal status/error mutations; facade should remain transport/request orchestration only
+- [ ] **1.7** Add runtime-level safeguards for overlapping submissions/aborts so concurrent turns cannot leave endpoint status in inconsistent state
+- [ ] **1.8** Compose controller state from conversation domain + conversation endpoint state and verify subscribe semantics remain stable across both slices
+- [ ] **1.8** Add controller-focused tests asserting lifecycle visibility (loading/streaming/error) against runtime-driven transitions
+
 ### Phase 2 — A2UI Surface Parsing
 
 - **2.0** A2UI protocol contract in `stream-types.ts`
@@ -197,7 +229,7 @@ Completed checklist for 1.4:
 | Phase 1.2 | add-navigator-context            | ✅ completed   |
 | Phase 1.3 | adjust-cart                      | ✅ completed   |
 | Phase 1.4 | add-stream-utils                 | ✅ completed   |
-| Phase 1.5 | —                                | ⬜ not started |
+| Phase 1.5 | add-conversation-endpoint        | ✅ completed   |
 | Phase 1.6 | —                                | ⬜ not started |
 | Phase 1.7 | —                                | ⬜ not started |
 | Phase 1.8 | —                                | ⬜ not started |
