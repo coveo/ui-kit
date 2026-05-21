@@ -2,7 +2,6 @@ import {beforeEach, describe, expect, it, vi} from 'vitest';
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
 import * as searchEndpointMutators from '@/src/core/interface/api/search-endpoint/search-endpoint-mutators.js';
 import * as searchEndpointSelectors from '@/src/core/interface/api/search-endpoint/search-endpoint-selectors.js';
-import * as configurationSelectors from '@/src/core/interface/configuration/configuration-selectors.js';
 import {createSearchEndpointClient} from '@/src/api/interface/search-endpoint/search-endpoint-client.js';
 import {buildRequest} from '@/src/core/internal/api/base-facade/endpoint-facade-request-builder.js';
 import {SearchEndpointFacade} from './search-endpoint-facade.js';
@@ -35,22 +34,23 @@ type MockEngine = FullEngine & {
 };
 
 const createMockEngine = (): MockEngine => {
+  const state = {
+    configuration: {
+      organizationId: 'test-org-id',
+      accessToken: 'test-token',
+      endpoint: 'https://platform.cloud.coveo.com',
+      trackingId: '',
+      language: '',
+      country: '',
+      currency: '',
+    },
+  };
+
   return {
     adoptSlice: vi.fn(async () => undefined),
     getNavigatorContextProvider: vi.fn(),
     mutate: vi.fn(),
-    read: vi.fn((selector) => {
-      if (selector === configurationSelectors.organizationId) {
-        return 'test-org-id';
-      }
-      if (selector === configurationSelectors.accessToken) {
-        return 'test-token';
-      }
-      if (selector === configurationSelectors.endpoint) {
-        return 'https://platform.cloud.coveo.com';
-      }
-      return undefined;
-    }),
+    read: vi.fn((selector) => selector(state)),
     subscribe: vi.fn(() => vi.fn()),
   } as unknown as MockEngine;
 };

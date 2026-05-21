@@ -4,10 +4,6 @@ import {
   createConversationEndpointClient,
   type ConversationEndpointClientResult,
 } from '@/src/api/index.js';
-import * as configurationSelectors from '@/src/core/interface/configuration/configuration-selectors.js';
-import * as cartSelectors from '@/src/core/interface/cart/cart-selectors.js';
-import * as conversationSelectors from '@/src/core/interface/conversation/conversation-selectors.js';
-import * as conversationEndpointSelectors from './conversation-endpoint-selectors.js';
 import {ConversationEndpointFacade} from './conversation-endpoint-facade.js';
 
 const mockClientCall = vi.fn();
@@ -32,58 +28,39 @@ type MockEngine = FullEngine & {
 };
 
 const createMockEngine = (): MockEngine => {
+  const state = {
+    configuration: {
+      organizationId: 'test-org-id',
+      accessToken: 'test-token',
+      endpoint: 'https://platform.cloud.coveo.com',
+      trackingId: 'tracking-id',
+      language: 'en',
+      country: 'US',
+      currency: 'USD',
+    },
+    cart: {
+      items: [
+        {
+          productId: 'p1',
+          name: 'Laptop',
+          price: 999,
+          quantity: 1,
+        },
+      ],
+    },
+    conversation: {
+      session: {
+        conversationSessionId: 'session-1',
+        conversationToken: 'token-1',
+      },
+    },
+  };
+
   return {
     adoptSlice: vi.fn(async () => undefined),
     getNavigatorContextProvider: vi.fn(),
     mutate: vi.fn(),
-    read: vi.fn((selector) => {
-      if (selector === configurationSelectors.organizationId) {
-        return 'test-org-id';
-      }
-      if (selector === configurationSelectors.accessToken) {
-        return 'test-token';
-      }
-      if (selector === configurationSelectors.endpoint) {
-        return 'https://platform.cloud.coveo.com';
-      }
-      if (selector === configurationSelectors.trackingId) {
-        return 'tracking-id';
-      }
-      if (selector === configurationSelectors.language) {
-        return 'en';
-      }
-      if (selector === configurationSelectors.country) {
-        return 'US';
-      }
-      if (selector === configurationSelectors.currency) {
-        return 'USD';
-      }
-      if (selector === conversationEndpointSelectors.configuration) {
-        return {
-          trackingId: 'tracking-id',
-          language: 'en',
-          country: 'US',
-          currency: 'USD',
-        };
-      }
-      if (selector === cartSelectors.items) {
-        return [
-          {
-            productId: 'p1',
-            name: 'Laptop',
-            price: 999,
-            quantity: 1,
-          },
-        ];
-      }
-      if (selector === conversationSelectors.session) {
-        return {
-          conversationSessionId: 'session-1',
-          conversationToken: 'token-1',
-        };
-      }
-      return undefined;
-    }),
+    read: vi.fn((selector) => selector(state)),
     subscribe: vi.fn(() => vi.fn()),
   } as unknown as MockEngine;
 };
@@ -179,44 +156,25 @@ describe('ConversationEndpointFacade', () => {
   it('continues without navigator context provider and without session values', async () => {
     const engine = createMockEngine();
     engine.getNavigatorContextProvider.mockReturnValue(undefined);
-    engine.read.mockImplementation((selector) => {
-      if (selector === configurationSelectors.organizationId) {
-        return 'test-org-id';
-      }
-      if (selector === configurationSelectors.accessToken) {
-        return 'test-token';
-      }
-      if (selector === configurationSelectors.endpoint) {
-        return 'https://platform.cloud.coveo.com';
-      }
-      if (selector === configurationSelectors.trackingId) {
-        return 'tracking-id';
-      }
-      if (selector === configurationSelectors.language) {
-        return 'en';
-      }
-      if (selector === configurationSelectors.country) {
-        return 'US';
-      }
-      if (selector === configurationSelectors.currency) {
-        return 'USD';
-      }
-      if (selector === conversationEndpointSelectors.configuration) {
-        return {
+    engine.read.mockImplementation((selector) =>
+      selector({
+        configuration: {
+          organizationId: 'test-org-id',
+          accessToken: 'test-token',
+          endpoint: 'https://platform.cloud.coveo.com',
           trackingId: 'tracking-id',
           language: 'en',
           country: 'US',
           currency: 'USD',
-        };
-      }
-      if (selector === cartSelectors.items) {
-        return [];
-      }
-      if (selector === conversationSelectors.session) {
-        return {};
-      }
-      return undefined;
-    });
+        },
+        cart: {
+          items: [],
+        },
+        conversation: {
+          session: {},
+        },
+      })
+    );
 
     const facade = ConversationEndpointFacade.getInstance(engine);
     mockClientCall.mockResolvedValue({success: true, data: {stream: null}});

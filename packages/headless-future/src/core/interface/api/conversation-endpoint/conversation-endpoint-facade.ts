@@ -1,15 +1,14 @@
 import {
   createConversationEndpointClient,
   type ConversationEndpointClient,
-  type ConversationEndpointClientConfiguration,
   type CoveoConversationEndpointRequest,
 } from '@/src/api/index.js';
 import {EndpointFacade} from '@/src/core/internal/api/base-facade/endpoint-facade.js';
 import {buildRequest} from '@/src/core/internal/api/base-facade/endpoint-facade-request-builder.js';
+import {buildEndpointClientConfiguration} from '@/src/core/internal/api/base-facade/endpoint-client-configuration.js';
 import {getEndpointContributorRegistry} from '@/src/core/internal/api/base-facade/endpoint-contributor-registry.js';
 import {conversationEndpointKey} from '@/src/core/internal/api/base-facade/endpoint-keys.js';
 import {FullEngine} from '@/src/core/interface/engine/engine.js';
-import * as configurationSelectors from '@/src/core/interface/configuration/configuration-selectors.js';
 import * as conversationEndpointMutators from './conversation-endpoint-mutators.js';
 import type {ConversationEndpointCallResult} from './conversation-endpoint-types.js';
 import {loadConversationEndpoint} from './conversation-endpoint-loader.js';
@@ -61,11 +60,7 @@ export class ConversationEndpointFacade extends EndpointFacade<CoveoConversation
       ...this.getOrderedRequestContributors(),
     ]);
 
-    const clientConfiguration: ConversationEndpointClientConfiguration = {
-      organizationId: engine.read(configurationSelectors.organizationId),
-      accessToken: engine.read(configurationSelectors.accessToken),
-      endpoint: engine.read(configurationSelectors.endpoint),
-    };
+    const clientConfiguration = buildEndpointClientConfiguration(engine);
 
     const result = await this.#client.call(finalRequest, clientConfiguration);
 
