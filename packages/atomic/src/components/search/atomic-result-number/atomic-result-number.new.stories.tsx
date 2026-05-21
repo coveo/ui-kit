@@ -18,6 +18,13 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 );
 
 const searchApiHarness = new MockSearchApi();
+searchApiHarness.searchEndpoint.mock((response) => ({
+  ...response,
+  results: response.results.map((r: Record<string, unknown>) => ({
+    ...r,
+    raw: {...(r.raw as object), size: 42345},
+  })),
+}));
 
 const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
   config: {
