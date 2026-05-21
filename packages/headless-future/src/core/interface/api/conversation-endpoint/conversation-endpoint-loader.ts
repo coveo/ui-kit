@@ -1,8 +1,8 @@
 import {conversationEndpointSlice} from '@/src/core/internal/api/conversation-endpoint/conversation-endpoint-slice.js';
 import {getEndpointContributorRegistry} from '@/src/core/internal/api/base-facade/endpoint-contributor-registry.js';
 import {conversationEndpointKey} from '@/src/core/internal/api/base-facade/endpoint-keys.js';
+import {readConversationRequestDefaults} from '@/src/core/internal/configuration/configuration-reader.js';
 import {FullEngine} from '@/src/core/interface/engine/engine.js';
-import * as configurationSelectors from '@/src/core/interface/configuration/configuration-selectors.js';
 
 const conversationEndpointLoadedEngines = new WeakSet<FullEngine>();
 
@@ -21,12 +21,7 @@ const registerDefaultRequestContributors = (engine: FullEngine) => {
   const registry = getEndpointContributorRegistry(engine);
 
   registry.register(conversationEndpointKey, () => {
-    return {
-      trackingId: engine.read(configurationSelectors.trackingId),
-      language: engine.read(configurationSelectors.language),
-      country: engine.read(configurationSelectors.country),
-      currency: engine.read(configurationSelectors.currency),
-    };
+    return readConversationRequestDefaults(engine);
   });
 
   registry.register(conversationEndpointKey, () => {

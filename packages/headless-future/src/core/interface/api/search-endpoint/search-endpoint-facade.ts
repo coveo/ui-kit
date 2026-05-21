@@ -7,9 +7,9 @@ import {
   createSearchEndpointClient,
   type SearchEndpointClient,
 } from '@/src/api/index.js';
-import {buildEndpointClientConfiguration} from '@/src/core/internal/api/base-facade/endpoint-client-configuration.js';
 import {EndpointFacade} from '@/src/core/internal/api/base-facade/endpoint-facade.js';
 import {buildRequest} from '@/src/core/internal/api/base-facade/endpoint-facade-request-builder.js';
+import {readEndpointClientConfiguration} from '@/src/core/internal/configuration/configuration-reader.js';
 import {FullEngine} from '@/src/core/interface/engine/engine.js';
 import * as searchEndpointMutators from './search-endpoint-mutators.js';
 import * as searchEndpointSelectors from './search-endpoint-selectors.js';
@@ -66,7 +66,7 @@ export class SearchEndpointFacade extends EndpointFacade<CoveoSearchEndpointRequ
 
     try {
       const finalRequest = buildRequest(this.getOrderedRequestContributors());
-      const clientConfiguration = buildEndpointClientConfiguration(engine);
+      const clientConfiguration = readEndpointClientConfiguration(engine);
 
       const httpResponse = await this.#client.call(
         finalRequest,
