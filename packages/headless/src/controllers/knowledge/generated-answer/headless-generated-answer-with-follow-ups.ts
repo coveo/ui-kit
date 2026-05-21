@@ -238,6 +238,9 @@ export function buildGeneratedAnswerWithFollowUps(
     },
 
     async askFollowUp(question: string) {
+      if (!this.state.followUpAnswers.isEnabled) {
+        return;
+      }
       if (!question || question.trim() === '') {
         return;
       }
