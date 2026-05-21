@@ -188,8 +188,10 @@ Completed checklist for 1.5:
 - [x] Updated request composition merging to safely compose nested cross-feature fragments in `src/core/internal/api/base-facade/endpoint-facade-request-builder.ts`
 - [x] Inlined conversation endpoint default contributor registration into `conversation-endpoint-loader` and removed standalone helper module
 - [x] Hardened contributor registry API by returning readonly snapshots (no mutable internal array exposure)
-- [x] Removed request-configuration double source ambiguity by making contributors read canonical configuration selectors directly (no endpoint-config snapshot write dependency in the facade)
+- [x] Removed request-configuration double source ambiguity by centralizing configuration reads in internal `configuration-reader` helpers reused by facades/loaders (no endpoint-config snapshot write dependency in the facade)
 - [x] Centralized endpoint keys as shared exported constants under `src/core/internal/api/base-facade/endpoint-keys.ts`
+- [x] Tightened interface boundaries by removing cross-interface loader calls from `conversation-endpoint-facade` (it now loads only `conversation-endpoint`)
+- [x] Removed pure-indirection `endpoint-client-configuration` wrapper in favor of direct usage of internal `configuration-reader` helpers
 - [x] Added/updated unit coverage for new loaders, registry, request-builder behavior, and conversation endpoint facade behavior
 - [x] Exported conversation endpoint facade/contracts through `src/core/index.ts` and `src/api/index.ts`
 - [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
