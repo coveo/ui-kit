@@ -12,8 +12,6 @@ import {FullEngine} from '@/src/core/interface/engine/engine.js';
 import * as conversationEndpointMutators from './conversation-endpoint-mutators.js';
 import type {ConversationEndpointCallResult} from './conversation-endpoint-types.js';
 import {loadConversationEndpoint} from './conversation-endpoint-loader.js';
-import {loadConversation} from '@/src/core/interface/conversation/conversation-loader.js';
-import {loadCart} from '@/src/core/interface/cart/cart-loader.js';
 
 export class ConversationEndpointFacade extends EndpointFacade<CoveoConversationEndpointRequest> {
   readonly #client: ConversationEndpointClient;
@@ -22,8 +20,6 @@ export class ConversationEndpointFacade extends EndpointFacade<CoveoConversation
     super(engine);
     this.#client = client;
     loadConversationEndpoint(engine);
-    loadConversation(engine);
-    loadCart(engine);
   }
 
   private static engineToFacadeMap = new WeakMap<

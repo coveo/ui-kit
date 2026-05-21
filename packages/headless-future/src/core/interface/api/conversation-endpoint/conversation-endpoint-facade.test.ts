@@ -130,19 +130,7 @@ describe('ConversationEndpointFacade', () => {
             url: 'https://example.com/page',
             referrer: 'https://example.com/ref',
           },
-          cart: {
-            items: [
-              {
-                productId: 'p1',
-                name: 'Laptop',
-                price: 999,
-                quantity: 1,
-              },
-            ],
-          },
         },
-        conversationSessionId: 'session-1',
-        conversationToken: 'token-1',
         targetEngine: 'AGENT_CORE',
       },
       {
@@ -191,9 +179,6 @@ describe('ConversationEndpointFacade', () => {
         context: {
           user: {},
           view: {},
-          cart: {
-            items: [],
-          },
         },
         targetEngine: 'AGENT_CORE',
       },
