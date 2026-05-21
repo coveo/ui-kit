@@ -247,5 +247,3 @@ export const docsAnalytics = new DocsAnalytics();
 if (typeof window !== 'undefined') {
   window.docsAnalytics = docsAnalytics;
 }
-
-export default docsAnalytics;
