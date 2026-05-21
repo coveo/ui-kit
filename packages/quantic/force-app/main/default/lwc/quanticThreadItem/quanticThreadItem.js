@@ -4,7 +4,7 @@ import {LightningElement, api, track} from 'lwc';
  * The `QuanticThreadItem` component renders a thread item with timeline visuals and collapsible content.
  * @category Internal
  * @example
- * <c-quantic-thread-item title="Step title" disable-collapse hide-line is-expanded></c-quantic-thread-item>
+ * <c-quantic-thread-item title="Step title" hide-line is-expanded></c-quantic-thread-item>
  */
 export default class QuanticThreadItem extends LightningElement {
   /**
