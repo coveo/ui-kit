@@ -2,8 +2,8 @@ import {beforeEach, describe, expect, it, vi} from 'vitest';
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
 import {conversationEndpointSlice} from '@/src/core/internal/api/conversation-endpoint/conversation-endpoint-slice.js';
 import {getEndpointContributorRegistry} from '@/src/core/internal/api/base-facade/endpoint-contributor-registry.js';
+import {conversationEndpointKey} from '@/src/core/internal/api/base-facade/endpoint-keys.js';
 import {loadConversationEndpoint} from './conversation-endpoint-loader.js';
-import {conversationEndpointKey} from './conversation-endpoint-types.js';
 
 type MockEngine = FullEngine & {
   adoptSlice: ReturnType<typeof vi.fn>;

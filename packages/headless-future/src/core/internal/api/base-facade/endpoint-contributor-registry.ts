@@ -1,7 +1,6 @@
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
 import type {RequestContributor} from './endpoint-facade-types.js';
-
-type EndpointKey = string;
+import type {EndpointKey} from './endpoint-keys.js';
 
 export class EndpointContributorRegistry {
   readonly #contributorsByEndpoint = new Map<

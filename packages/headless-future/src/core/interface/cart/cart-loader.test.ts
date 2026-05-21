@@ -2,7 +2,7 @@ import {beforeEach, describe, expect, it, vi} from 'vitest';
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
 import {cartSlice} from '@/src/core/internal/cart/cart-slice.js';
 import {getEndpointContributorRegistry} from '@/src/core/internal/api/base-facade/endpoint-contributor-registry.js';
-import {conversationEndpointKey} from '@/src/core/interface/api/conversation-endpoint/conversation-endpoint-types.js';
+import {conversationEndpointKey} from '@/src/core/internal/api/base-facade/endpoint-keys.js';
 import {loadCart} from './cart-loader.js';
 
 type MockEngine = FullEngine & {

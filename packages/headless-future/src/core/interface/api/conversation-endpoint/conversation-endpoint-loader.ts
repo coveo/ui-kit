@@ -1,8 +1,8 @@
 import {conversationEndpointSlice} from '@/src/core/internal/api/conversation-endpoint/conversation-endpoint-slice.js';
 import {getEndpointContributorRegistry} from '@/src/core/internal/api/base-facade/endpoint-contributor-registry.js';
+import {conversationEndpointKey} from '@/src/core/internal/api/base-facade/endpoint-keys.js';
 import {FullEngine} from '@/src/core/interface/engine/engine.js';
 import * as configurationSelectors from '@/src/core/interface/configuration/configuration-selectors.js';
-import {conversationEndpointKey} from './conversation-endpoint-types.js';
 
 const conversationEndpointLoadedEngines = new WeakSet<FullEngine>();
 

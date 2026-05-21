@@ -1,8 +1,8 @@
 import {getEndpointContributorRegistry} from '@/src/core/internal/api/base-facade/endpoint-contributor-registry.js';
+import {conversationEndpointKey} from '@/src/core/internal/api/base-facade/endpoint-keys.js';
 import {cartSlice} from '@/src/core/internal/cart/cart-slice.js';
 import {FullEngine} from '@/src/core/interface/engine/engine.js';
 import * as cartSelectors from './cart-selectors.js';
-import {conversationEndpointKey} from '@/src/core/interface/api/conversation-endpoint/conversation-endpoint-types.js';
 
 const cartLoadedEngines = new WeakSet<FullEngine>();
 

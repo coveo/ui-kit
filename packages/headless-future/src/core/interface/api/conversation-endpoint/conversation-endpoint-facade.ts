@@ -7,14 +7,11 @@ import {
 import {EndpointFacade} from '@/src/core/internal/api/base-facade/endpoint-facade.js';
 import {buildRequest} from '@/src/core/internal/api/base-facade/endpoint-facade-request-builder.js';
 import {getEndpointContributorRegistry} from '@/src/core/internal/api/base-facade/endpoint-contributor-registry.js';
+import {conversationEndpointKey} from '@/src/core/internal/api/base-facade/endpoint-keys.js';
 import {FullEngine} from '@/src/core/interface/engine/engine.js';
 import * as configurationSelectors from '@/src/core/interface/configuration/configuration-selectors.js';
 import * as conversationEndpointMutators from './conversation-endpoint-mutators.js';
 import type {ConversationEndpointCallResult} from './conversation-endpoint-types.js';
-import {
-  conversationEndpointKey,
-  type ConversationEndpointState,
-} from './conversation-endpoint-types.js';
 import {loadConversationEndpoint} from './conversation-endpoint-loader.js';
 import {loadConversation} from '@/src/core/interface/conversation/conversation-loader.js';
 import {loadCart} from '@/src/core/interface/cart/cart-loader.js';
@@ -51,16 +48,6 @@ export class ConversationEndpointFacade extends EndpointFacade<CoveoConversation
     const engine = this.engine;
     const contributorRegistry = getEndpointContributorRegistry(engine);
 
-    const endpointConfiguration: ConversationEndpointState['configuration'] = {
-      trackingId: engine.read(configurationSelectors.trackingId),
-      language: engine.read(configurationSelectors.language),
-      country: engine.read(configurationSelectors.country),
-      currency: engine.read(configurationSelectors.currency),
-    };
-
-    engine.mutate(
-      conversationEndpointMutators.setConfiguration(endpointConfiguration)
-    );
     engine.mutate(conversationEndpointMutators.setStatus('pending'));
     engine.mutate(conversationEndpointMutators.setError(null));
 

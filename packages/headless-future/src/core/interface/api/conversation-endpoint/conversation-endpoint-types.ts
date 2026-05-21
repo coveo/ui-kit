@@ -3,8 +3,6 @@ import type {
   CoveoConversationEndpointRequest,
 } from '@/src/api/index.js';
 
-export const conversationEndpointKey = 'conversation';
-
 export type ConversationEndpointStatus = 'idle' | 'pending' | 'streaming';
 
 export interface ConversationEndpointStreaming {
