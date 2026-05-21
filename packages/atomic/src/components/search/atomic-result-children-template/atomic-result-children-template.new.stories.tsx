@@ -34,7 +34,7 @@ const CHILD_TEMPLATE_EXAMPLE = `<template>
     }
   </style>
   <atomic-result-section-visual>
-    <img loading="lazy" src="https://picsum.photos/seed/picsum/350" class="thumbnail" />
+    <img loading="lazy" src="https://picsum.photos/seed/picsum/350" alt="" class="thumbnail" />
   </atomic-result-section-visual>
   <atomic-result-section-title>
     <atomic-result-link></atomic-result-link>
@@ -82,7 +82,7 @@ const PARENT_TEMPLATE_EXAMPLE = `<template>
     }
   </style>
   <atomic-result-section-visual>
-    <img loading="lazy" src="https://picsum.photos/seed/picsum/350" class="thumbnail" />
+    <img loading="lazy" src="https://picsum.photos/seed/picsum/350" alt="" class="thumbnail" />
   </atomic-result-section-visual>
   <atomic-result-section-title>
     <atomic-result-link></atomic-result-link>
@@ -118,6 +118,12 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 );
 
 const searchApiHarness = new MockSearchApi();
+searchApiHarness.searchEndpoint.mock((response) => ({
+  ...response,
+  totalCount: 4,
+  totalCountFiltered: 4,
+  results: response.results.slice(0, 4),
+}));
 
 const meta: Meta = {
   component: 'atomic-result-children-template',

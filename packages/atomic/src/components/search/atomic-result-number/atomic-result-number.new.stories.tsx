@@ -20,22 +20,15 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 const searchApiHarness = new MockSearchApi();
 searchApiHarness.searchEndpoint.mock((response) => ({
   ...response,
-  results: response.results.map((r: Record<string, unknown>) => ({
+  totalCount: 1,
+  totalCountFiltered: 1,
+  results: response.results.slice(0, 1).map((r: Record<string, unknown>) => ({
     ...r,
     raw: {...(r.raw as object), size: 42345},
   })),
 }));
 
 const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
-  config: {
-    preprocessRequest: (request) => {
-      const parsed = JSON.parse(request.body as string);
-      parsed.fieldsToInclude = [...parsed.fieldsToInclude, 'size'];
-      parsed.numberOfResults = 1;
-      request.body = JSON.stringify(parsed);
-      return request;
-    },
-  },
   includeCodeRoot: false,
 });
 const {decorator: resultListDecorator} = wrapInResultList('list', false);

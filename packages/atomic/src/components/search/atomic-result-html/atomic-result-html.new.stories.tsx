@@ -13,27 +13,22 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 );
 
 const searchApiHarness = new MockSearchApi();
+searchApiHarness.searchEndpoint.mock((response) => ({
+  ...response,
+  totalCount: 1,
+  totalCountFiltered: 1,
+  results: response.results.slice(0, 1).map((r: Record<string, unknown>) => ({
+    ...r,
+    excerpt: '<div>Some <b>HTML</b> content</div>',
+    title: '<h2>HTML Title <em>with emphasis</em></h2>',
+    raw: {
+      ...(r.raw as object),
+      custom_html_field: '<p>Custom <strong>HTML</strong> field</p>',
+    },
+  })),
+}));
 
-const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
-  config: {
-    preprocessRequest: (request) => {
-      const parsed = JSON.parse(request.body as string);
-      parsed.numberOfResults = 1;
-      request.body = JSON.stringify(parsed);
-      return request;
-    },
-    search: {
-      preprocessSearchResponseMiddleware: (res) => {
-        res.body.results.forEach((r) => {
-          r.excerpt = '<div>Some <b>HTML</b> content</div>';
-          r.title = '<h2>HTML Title <em>with emphasis</em></h2>';
-          r.raw.custom_html_field = '<p>Custom <strong>HTML</strong> field</p>';
-        });
-        return res;
-      },
-    },
-  },
-});
+const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface();
 
 const {decorator: resultListDecorator} = wrapInResultList(undefined, false);
 const {decorator: resultTemplateDecorator} = wrapInResultTemplate();
