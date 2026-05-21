@@ -2,7 +2,7 @@ import {LightningElement, api, track} from 'lwc';
 
 /**
  * The `QuanticThreadItem` component renders a thread item with timeline visuals and collapsible content.
- * @category Utility
+ * @category Internal
  * @example
  * <c-quantic-thread-item title="Step title" disable-collapse hide-line is-expanded></c-quantic-thread-item>
  */
@@ -23,7 +23,7 @@ export default class QuanticThreadItem extends LightningElement {
   @api disableCollapse = false;
 
   /**
-   * Whether the timeline line should be hidden (e.g., for the last item).
+   * Whether the timeline line should be hidden.
    * @api
    * @type {boolean}
    * @defaultValue `false`
@@ -40,7 +40,6 @@ export default class QuanticThreadItem extends LightningElement {
   get isExpanded() {
     return this._isExpanded;
   }
-
   set isExpanded(value) {
     this._isExpanded = value;
   }
