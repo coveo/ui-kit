@@ -11,10 +11,11 @@ import '@/src/components/commerce/atomic-product-section-visual/atomic-product-s
 
 const commerceApiHarness = new MockCommerceApi();
 
-// Limit to 2 products so carousel image indices are predictable in e2e tests
+// Order: non-carousel product first (1 image), carousel product second (2+ images)
+// This matches the e2e test page object: noCarouselImage=nth(0), carouselImage=nth(1)
 commerceApiHarness.productListingEndpoint.mock((response) => ({
   ...response,
-  products: response.products.slice(0, 2),
+  products: [response.products[1], response.products[0]],
   pagination: {
     ...response.pagination,
     totalCount: 2,
