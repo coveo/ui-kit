@@ -1,12 +1,14 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
-import {createConversationEndpointClient} from '@/src/api/index.js';
+import {
+  createConversationEndpointClient,
+  type ConversationEndpointClientResult,
+} from '@/src/api/index.js';
 import * as configurationSelectors from '@/src/core/interface/configuration/configuration-selectors.js';
 import * as cartSelectors from '@/src/core/interface/cart/cart-selectors.js';
 import * as conversationSelectors from '@/src/core/interface/conversation/conversation-selectors.js';
 import * as conversationEndpointSelectors from './conversation-endpoint-selectors.js';
 import {ConversationEndpointFacade} from './conversation-endpoint-facade.js';
-import type {ConversationEndpointClientResult} from '@/src/api/index.js';
 
 const mockClientCall = vi.fn();
 

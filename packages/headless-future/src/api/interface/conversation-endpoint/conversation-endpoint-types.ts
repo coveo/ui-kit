@@ -1,4 +1,9 @@
-import type {CartItem} from '@/src/core/interface/cart/cart-types.js';
+export interface CoveoConversationCartItem {
+  productId: string;
+  name: string;
+  price: number;
+  quantity: number;
+}
 
 export interface CoveoConversationEndpointRequest {
   trackingId?: string;
@@ -16,7 +21,7 @@ export interface CoveoConversationEndpointRequest {
       referrer?: string | null;
     };
     cart?: {
-      items: CartItem[];
+      items: CoveoConversationCartItem[];
     };
   };
   conversationSessionId?: string;
