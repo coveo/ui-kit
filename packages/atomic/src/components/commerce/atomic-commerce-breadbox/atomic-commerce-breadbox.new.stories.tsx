@@ -9,6 +9,10 @@ import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-inter
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/commerce/atomic-commerce-breadbox/atomic-commerce-breadbox.js';
 import '@/src/components/commerce/atomic-commerce-facets/atomic-commerce-facets.js';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
+
+const commerceApiHarness = new MockCommerceApi();
+commerceApiHarness.enableInteractiveFacets();
 
 const {context, ...restOfConfiguration} =
   getSampleCommerceEngineConfiguration();
@@ -46,6 +50,9 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
+    msw: {
+      handlers: commerceApiHarness.handlers,
+    },
     chromatic: {disableSnapshot: true},
     layout: 'fullscreen',
     actions: {
@@ -56,6 +63,9 @@ const meta: Meta = {
   argTypes,
 
   play,
+  beforeEach: () => {
+    commerceApiHarness.clearAll();
+  },
 };
 
 export default meta;
@@ -68,7 +78,8 @@ export const Default: Story = {
         Select facet value(s) to see the Breadbox component.
       </div>
       <div style="display: flex; justify-content: flex-start;">
-        <atomic-commerce-facets> </atomic-commerce-facets>
+        <atomic-commerce-facets collapse-facets-after="-1">
+        </atomic-commerce-facets>
       </div>
     `,
   ],

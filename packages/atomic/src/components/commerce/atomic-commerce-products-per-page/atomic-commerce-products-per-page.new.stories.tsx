@@ -3,6 +3,10 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/commerce/atomic-commerce-products-per-page/atomic-commerce-products-per-page.js';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
+
+const commerceApiHarness = new MockCommerceApi();
+commerceApiHarness.enableInteractiveFacets();
 
 const {decorator, play} = wrapInCommerceInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -18,6 +22,9 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
+    msw: {
+      handlers: commerceApiHarness.handlers,
+    },
     chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
@@ -26,6 +33,9 @@ const meta: Meta = {
   args,
   argTypes,
   play,
+  beforeEach: () => {
+    commerceApiHarness.clearAll();
+  },
 };
 
 export default meta;
