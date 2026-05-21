@@ -1,4 +1,4 @@
-import {LightningElement, api, track} from 'lwc';
+import {LightningElement, api} from 'lwc';
 
 /**
  * The `QuanticThreadItem` component renders a thread item with timeline visuals and collapsible content.
