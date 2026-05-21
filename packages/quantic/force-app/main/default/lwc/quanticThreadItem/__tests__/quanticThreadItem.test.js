@@ -1,6 +1,6 @@
 // @ts-ignore
-import {createElement} from 'lwc';
 import QuanticThreadItem from '../quanticThreadItem';
+import {buildCreateTestComponent, cleanup, flushPromises} from 'c/testUtils';
 
 const selectors = {
   titleButton: '[data-testid="thread-item-title-button"]',
@@ -10,27 +10,17 @@ const selectors = {
   dot: '[data-testid="thread-item-dot"]',
 };
 
-function createTestComponent(props = {}) {
-  const element = createElement('c-quantic-thread-item', {
-    is: QuanticThreadItem,
-  });
-  element.title = 'Test title';
-  for (const [key, value] of Object.entries(props)) {
-    element[key] = value;
+const createTestComponent = buildCreateTestComponent(
+  QuanticThreadItem,
+  'c-quantic-thread-item',
+  {
+    title: 'Test title',
   }
-  document.body.appendChild(element);
-  return element;
-}
-
-function flushPromises() {
-  return new Promise((resolve) => setTimeout(resolve, 0));
-}
+);
 
 describe('c-quantic-thread-item', () => {
   afterEach(() => {
-    while (document.body.firstChild) {
-      document.body.removeChild(document.body.firstChild);
-    }
+    cleanup();
   });
 
   describe('initial rendering', () => {
