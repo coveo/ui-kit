@@ -74,7 +74,7 @@ const selectors = {
   initializationError: 'c-quantic-component-error',
   generatedAnswerCard: '[data-testid="generated-answer__card"]',
   generatedAnswer: '[data-testid="generated-answer__answer"]',
-  generatedAnswerBadge: '[data-testid="generated-answer__badge"]',
+  generatedAnswerBadge: '[data-testid="generated-answer__header-title"]',
   generatedAnswerRetryButton: '[data-testid="generated-answer__retry-button"]',
   generatedAnswerActions: '[data-testid="generated-answer__actions"]',
   generatedAnswerToggleButton: 'c-quantic-generated-answer-toggle',
