@@ -1,5 +1,6 @@
-import {useMemo} from 'react';
+import {useEffect} from 'react';
 import {buildSampleEngine} from './engine.js';
+import {getSampleConfiguration} from './env.js';
 
 interface SampleConfiguration {
   organizationId: string;
@@ -10,15 +11,12 @@ interface SampleConfiguration {
   currency: string;
 }
 
-interface SampleState {
-  configuration?: SampleConfiguration;
-}
-
 export default function App() {
-  const engine = useMemo(() => buildSampleEngine(), []);
-  const configuration = engine.read<SampleConfiguration | undefined>(
-    (state: SampleState) => state.configuration
-  );
+  const configuration: SampleConfiguration = getSampleConfiguration();
+
+  useEffect(() => {
+    buildSampleEngine();
+  }, []);
 
   return (
     <main>
