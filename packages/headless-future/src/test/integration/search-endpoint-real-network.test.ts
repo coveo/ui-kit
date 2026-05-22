@@ -41,6 +41,7 @@ function getResponseOrThrow(
 }
 
 describe('search endpoint real-network sanity check', () => {
+  // Temporary e2e sanity check while headless-future is in development; when production-ready, prefer MSW-mocked network requests.
   it('runs query end-to-end and updates state from real response', async () => {
     const engine = new Engine();
     const fullEngine = getFullEngine(engine);
