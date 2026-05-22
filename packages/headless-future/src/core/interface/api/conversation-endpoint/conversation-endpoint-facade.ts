@@ -1,5 +1,6 @@
 import {
   createConversationEndpointClient,
+  type ConversationEndpointCallOptions,
   type ConversationEndpointClient,
   type CoveoConversationEndpointRequest,
 } from '@/src/api/index.js';
@@ -39,7 +40,10 @@ export class ConversationEndpointFacade extends EndpointFacade<CoveoConversation
     return instance;
   }
 
-  async callEndpoint(input: string): Promise<ConversationEndpointCallResult> {
+  async callEndpoint(
+    input: string,
+    options?: ConversationEndpointCallOptions
+  ): Promise<ConversationEndpointCallResult> {
     const engine = this.engine;
     const contributorRegistry = getEndpointContributorRegistry(engine);
 
@@ -59,7 +63,9 @@ export class ConversationEndpointFacade extends EndpointFacade<CoveoConversation
 
       const clientConfiguration = readEndpointClientConfiguration(engine);
 
-      const result = await this.#client.call(finalRequest, clientConfiguration);
+      const result = options
+        ? await this.#client.call(finalRequest, clientConfiguration, options)
+        : await this.#client.call(finalRequest, clientConfiguration);
 
       if (!result.success) {
         engine.mutate(conversationEndpointMutators.setError(result.error));

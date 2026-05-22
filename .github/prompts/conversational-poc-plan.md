@@ -200,8 +200,8 @@ Carry-forward checklist (to avoid losing architectural intent in 1.6/1.7/1.8):
 
 - [x] **1.6** Move conversation endpoint terminal lifecycle transitions fully into event dispatcher flow (`pending -> streaming -> completed/failed/aborted`) so endpoint status represents full turn+stream lifecycle
 - [x] **1.6** Ensure stream connectivity (`streaming.isConnected`) is driven by stream open/close events rather than request completion timing
-- [ ] **1.7** Keep conversation runtime as owner of stream consumption and terminal status/error mutations; facade should remain transport/request orchestration only
-- [ ] **1.7** Add runtime-level safeguards for overlapping submissions/aborts so concurrent turns cannot leave endpoint status in inconsistent state
+- [x] **1.7** Keep conversation runtime as owner of stream consumption and terminal status/error mutations; facade should remain transport/request orchestration only
+- [x] **1.7** Add runtime-level safeguards for overlapping submissions/aborts so concurrent turns cannot leave endpoint status in inconsistent state
 - [ ] **1.8** Compose controller state from conversation domain + conversation endpoint state and verify subscribe semantics remain stable across both slices
 - [ ] **1.8** Add controller-focused tests asserting lifecycle visibility (loading/streaming/error) against runtime-driven transitions
 
@@ -214,6 +214,20 @@ Completed checklist for 1.6:
 - [x] Updated conversation endpoint facade to keep lifecycle in `pending` after successful call and defer `streaming` promotion to stream lifecycle/dispatcher flow
 - [x] Added unit coverage for lifecycle helpers, event dispatcher, and updated facade lifecycle behavior
 - [x] Hardened conversation endpoint facade error handling to normalize unexpected thrown errors into failure results and reset endpoint lifecycle (`status: idle`, `streaming.isConnected: false`) to avoid pending-state leaks
+- [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
+
+Completed checklist for 1.7:
+
+- [x] Added Layer 1 conversation runtime singleton under `src/core/interface/api/conversation-endpoint/conversation-runtime.ts` using engine-scoped `WeakMap` instance management
+- [x] Made runtime the owner of turn orchestration: start turn, endpoint call, stream consumption, event dispatch, and terminal lifecycle mutations
+- [x] Kept `conversation-endpoint-facade` focused on transport/request orchestration and added optional call options passthrough for abort signal wiring
+- [x] Implemented abort behavior for active turns as immediate local terminal mutation (`aborted`) followed by request/stream cancellation
+- [x] Implemented overlapping submit safeguard with a simple initial policy: reject while a turn is active and set a user-facing conversation error
+- [x] Preserved warning semantics for unknown/custom stream events without interrupting successful terminal completion
+- [x] Enforced missing-terminal handling when streams close without terminal events (`stream_interrupted`)
+- [x] Added runtime-level guards so late async settlements (post-abort/post-replacement) cannot overwrite active lifecycle state
+- [x] Added focused runtime unit coverage in `src/core/interface/api/conversation-endpoint/conversation-runtime.test.ts` for singleton behavior, submit flow, overlap rejection, abort flow, stream lifecycle, warning preservation, and late-settlement race protection
+- [x] Exported `ConversationRuntime` through `src/core/index.ts` for controller wiring in Phase 1.8
 - [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
 
 ### Phase 2 — A2UI Surface Parsing
@@ -244,7 +258,7 @@ Completed checklist for 1.6:
 | Phase 1.4 | add-stream-utils                         | ✅ completed   |
 | Phase 1.5 | add-conversation-endpoint                | ✅ completed   |
 | Phase 1.6 | add-conversation-runtime-building-blocks | ✅ completed   |
-| Phase 1.7 | —                                        | ⬜ not started |
+| Phase 1.7 | add-conversation-runtime-building-blocks | ✅ completed   |
 | Phase 1.8 | —                                        | ⬜ not started |
 | Phase 1.9 | —                                        | ⬜ not started |
 | Phase 2.0 | —                                        | ⬜ not started |
