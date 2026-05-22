@@ -2,25 +2,32 @@
   <template lwc:if={shouldDisplayGeneratedAnswer}>
     <div
       data-testid="generated-answer__card"
-      class="slds-box"
+      class="slds-box slds-p-around_none"
     >
       <div
-        class="slds-var-m-bottom_medium slds-grid generated-answer__card-header"
+        class="generated-answer__card-header slds-grid slds-grid_vertical-align-center slds-border_bottom slds-p-vertical_small slds-p-horizontal_large"
       >
-        <span
-          class="generated-answer__badge slds-var-p-around_x-small slds-text-title_bold"
+        <lightning-icon
+          icon-name="utility:sparkles"
+          size="x-small"
+          alternative-text={labels.generatedAnswerForYou}
+          class="generated-answer__header-title-icon slds-var-m-right_x-small"
+        ></lightning-icon>
+        <span class="generated-answer__badge slds-text-title_bold"
           >{labels.generatedAnswerForYou}</span
         >
       </div>
-      <div>{labels.couldNotGenerateAnAnswer}</div>
-      <div class="slds-var-m-top_small">
-        <lightning-button
-          data-testid="generated-answer__retry-button"
-          variant="brand-outline"
-          label={labels.tryAgain}
-          title={labels.tryAgain}
-          onclick={handleRetry}
-        ></lightning-button>
+      <div class="slds-p-around_large">
+        <div>{labels.couldNotGenerateAnAnswer}</div>
+        <div class="slds-var-m-top_medium">
+          <lightning-button
+            data-testid="generated-answer__retry-button"
+            variant="brand-outline"
+            label={labels.tryAgain}
+            title={labels.tryAgain}
+            onclick={handleRetry}
+          ></lightning-button>
+        </div>
       </div>
     </div>
   </template>

@@ -1,10 +1,8 @@
-.generated-answer__card-header {
-  justify-content: space-between;
-  align-items: center;
+.generated-answer__badge {
+  color: var(--lwc-brandPrimary, #1b96ff);
 }
 
-.generated-answer__badge {
-  background-color: var(--lwc-colorBackgroundButtonDefaultHover, #eef4ff);
+.generated-answer__header-title-icon {
   color: var(--lwc-brandPrimary, #1b96ff);
-  border-radius: var(--lwc-border-radius-medium, 0.25rem);
+  --slds-c-icon-color-foreground-default: var(--lwc-brandPrimary, #1b96ff);
 }
