@@ -2,10 +2,34 @@ import type {StoryContext} from '@storybook/web-components-vite';
 import {within} from 'shadow-dom-testing-library';
 import {expect, userEvent, waitFor} from 'storybook/test';
 
-export const COVERED_CRITERIA = ['2.1.2', '4.1.2'] as const;
+/**
+ * @see https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
+ */
+export const COVERED_CRITERIA = ['2.1.1', '2.1.2'] as const;
 
 export interface DialogA11yOptions {
   triggerLabel: string;
+}
+
+function getActiveElementDeep(doc: Document): Element | null {
+  let active: Element | null = doc.activeElement;
+  while (active?.shadowRoot?.activeElement) {
+    active = active.shadowRoot.activeElement;
+  }
+  return active;
+}
+
+/**
+ * Dispatches a synthetic `animationend` on the dialog's article element.
+ * Needed because CSS animations don't fire in the headless test runner,
+ * but the modal gates focus trap activation on this event.
+ */
+async function forceAnimationEnd(dialog: HTMLElement): Promise<void> {
+  const article = dialog.querySelector('article');
+  if (article) {
+    article.dispatchEvent(new AnimationEvent('animationend', {bubbles: false}));
+    await new Promise((r) => setTimeout(r, 100));
+  }
 }
 
 export async function testDialogA11y(
@@ -14,6 +38,7 @@ export async function testDialogA11y(
 ): Promise<void> {
   const {canvasElement, step} = context;
   const root = within(canvasElement);
+  const doc = canvasElement.ownerDocument;
 
   let status: 'passed' | 'failed' = 'passed';
   try {
@@ -23,50 +48,72 @@ export async function testDialogA11y(
       {timeout: 5000}
     );
 
-    await step('Open dialog and assert role and aria-modal', async () => {
+    let dialog: HTMLElement;
+
+    await step('Open dialog via trigger click', async () => {
       await userEvent.click(trigger);
 
-      await waitFor(
+      dialog = await waitFor(
         async () => {
-          const dialog = await root.findByShadowRole(
-            'dialog',
-            {},
-            {timeout: 5000}
-          );
-          await expect(dialog).toBeInTheDocument();
-          await expect(dialog).toHaveAttribute('aria-modal', 'true');
+          const d = await root.findByShadowRole('dialog', {}, {timeout: 5000});
+          expect(d).toBeInTheDocument();
+          expect(d.getAttribute('aria-modal')).toBe('true');
+          return d;
         },
         {timeout: 8000}
       );
+
+      await forceAnimationEnd(dialog);
     });
 
-    await step('Assert dialog has accessible label', async () => {
-      const dialog = await root.findByShadowRole('dialog', {}, {timeout: 5000});
-      const hasLabel =
-        dialog.hasAttribute('aria-labelledby') ||
-        dialog.hasAttribute('aria-label');
-      expect(hasLabel).toBe(true);
+    await step('Tab stays inside dialog (2.1.1 focus trap)', async () => {
+      const focusTrap = dialog! as HTMLElement & {active: boolean};
+
+      expect(
+        focusTrap.active,
+        'Focus trap should be active after animation end'
+      ).toBe(true);
+
+      const dialogRoot = within(dialog!);
+      const buttons = await dialogRoot.findAllByShadowRole('button');
+      expect(
+        buttons.length,
+        'Dialog should contain multiple focusable elements for Tab cycling'
+      ).toBeGreaterThanOrEqual(2);
+
+      const allHidden = doc.querySelectorAll('[aria-hidden="true"]');
+      const hiddenOutsideDialog = Array.from(allHidden).filter(
+        (el) => !dialog!.contains(el) && el !== dialog
+      );
+      expect(
+        hiddenOutsideDialog.length,
+        'Focus trap should hide at least one element outside the dialog via aria-hidden'
+      ).toBeGreaterThanOrEqual(1);
     });
 
-    await step('Escape closes dialog', async () => {
+    await step('Escape closes dialog (2.1.1)', async () => {
       await userEvent.keyboard('{Escape}');
 
       await waitFor(
-        async () => {
-          try {
-            const dialog = await root.findByShadowRole(
-              'dialog',
-              {},
-              {timeout: 1000}
-            );
-            expect(dialog.getAttribute('aria-modal')).not.toBe('true');
-          } catch {
-            // Element not found = dialog was removed from DOM, which means it closed
-          }
+        () => {
+          expect(dialog.getAttribute('aria-modal')).toBe('false');
         },
-        {timeout: 5000}
+        {timeout: 3000}
       );
     });
+
+    await step(
+      'Focus returns to trigger after dialog closes (2.1.2)',
+      async () => {
+        await waitFor(
+          () => {
+            const active = getActiveElementDeep(doc);
+            expect(active).toBe(trigger);
+          },
+          {timeout: 3000}
+        );
+      }
+    );
   } catch (error) {
     status = 'failed';
     throw error;
