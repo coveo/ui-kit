@@ -1,10 +1,12 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/common/atomic-component-error/atomic-component-error.js';
 
+const searchApiHarness = new MockSearchApi();
 const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes} = getStorybookHelpers('atomic-component-error', {
   excludeCategories: ['methods'],
@@ -24,6 +26,7 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
+    msw: {handlers: [...searchApiHarness.handlers]},
     chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
