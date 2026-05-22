@@ -225,6 +225,83 @@ describe('ConversationEndpointFacade', () => {
     expect(result).toBe(expectedResult);
   });
 
+  it('keeps endpoint status pending after successful call for runtime-owned stream lifecycle', async () => {
+    const engine = createMockEngine();
+    const facade = ConversationEndpointFacade.getInstance(engine);
+    mockClientCall.mockResolvedValue({
+      success: true,
+      data: {stream: null},
+    });
+
+    await facade.callEndpoint('hello');
+
+    expect(engine.mutate).toHaveBeenCalledWith({
+      type: 'conversationEndpoint/setStatus',
+      payload: 'pending',
+    });
+    expect(engine.mutate).toHaveBeenCalledWith({
+      type: 'conversationEndpoint/setError',
+      payload: null,
+    });
+    expect(engine.mutate).not.toHaveBeenCalledWith({
+      type: 'conversationEndpoint/setStatus',
+      payload: 'streaming',
+    });
+    expect(engine.mutate).not.toHaveBeenCalledWith({
+      type: 'conversationEndpoint/setStreamingConnected',
+      payload: true,
+    });
+  });
+
+  it('resets endpoint lifecycle on client failure before stream starts', async () => {
+    const engine = createMockEngine();
+    const facade = ConversationEndpointFacade.getInstance(engine);
+    mockClientCall.mockResolvedValue({
+      success: false,
+      error: 'network down',
+    });
+
+    await facade.callEndpoint('hello');
+
+    expect(engine.mutate).toHaveBeenCalledWith({
+      type: 'conversationEndpoint/setError',
+      payload: 'network down',
+    });
+    expect(engine.mutate).toHaveBeenCalledWith({
+      type: 'conversationEndpoint/setStatus',
+      payload: 'idle',
+    });
+    expect(engine.mutate).toHaveBeenCalledWith({
+      type: 'conversationEndpoint/setStreamingConnected',
+      payload: false,
+    });
+  });
+
+  it('returns failure result and resets lifecycle when client throws unexpectedly', async () => {
+    const engine = createMockEngine();
+    const facade = ConversationEndpointFacade.getInstance(engine);
+    mockClientCall.mockRejectedValue(new Error('unexpected boom'));
+
+    const result = await facade.callEndpoint('hello');
+
+    expect(result).toEqual({
+      success: false,
+      error: 'unexpected boom',
+    });
+    expect(engine.mutate).toHaveBeenCalledWith({
+      type: 'conversationEndpoint/setError',
+      payload: 'unexpected boom',
+    });
+    expect(engine.mutate).toHaveBeenCalledWith({
+      type: 'conversationEndpoint/setStatus',
+      payload: 'idle',
+    });
+    expect(engine.mutate).toHaveBeenCalledWith({
+      type: 'conversationEndpoint/setStreamingConnected',
+      payload: false,
+    });
+  });
+
   it('returns composition debug information with registered contributors', () => {
     const engine = createMockEngine();
     const facade = ConversationEndpointFacade.getInstance(engine);

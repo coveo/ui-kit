@@ -46,32 +46,41 @@ export class ConversationEndpointFacade extends EndpointFacade<CoveoConversation
     engine.mutate(conversationEndpointMutators.setStatus('pending'));
     engine.mutate(conversationEndpointMutators.setError(null));
 
-    const finalRequest = buildRequest<CoveoConversationEndpointRequest>([
-      () => ({
-        message: input,
-      }),
-      ...contributorRegistry.getOrderedContributors<CoveoConversationEndpointRequest>(
-        conversationEndpointKey
-      ),
-      ...this.getOrderedRequestContributors(),
-    ]);
+    try {
+      const finalRequest = buildRequest<CoveoConversationEndpointRequest>([
+        () => ({
+          message: input,
+        }),
+        ...contributorRegistry.getOrderedContributors<CoveoConversationEndpointRequest>(
+          conversationEndpointKey
+        ),
+        ...this.getOrderedRequestContributors(),
+      ]);
 
-    const clientConfiguration = readEndpointClientConfiguration(engine);
+      const clientConfiguration = readEndpointClientConfiguration(engine);
 
-    const result = await this.#client.call(finalRequest, clientConfiguration);
+      const result = await this.#client.call(finalRequest, clientConfiguration);
 
-    if (!result.success) {
-      engine.mutate(conversationEndpointMutators.setError(result.error));
+      if (!result.success) {
+        engine.mutate(conversationEndpointMutators.setError(result.error));
+        engine.mutate(conversationEndpointMutators.setStatus('idle'));
+        engine.mutate(
+          conversationEndpointMutators.setStreamingConnected(false)
+        );
+        return result;
+      }
+
+      return result;
+    } catch (error) {
+      const transformedError = transformUnexpectedError(error);
+      engine.mutate(conversationEndpointMutators.setError(transformedError));
       engine.mutate(conversationEndpointMutators.setStatus('idle'));
       engine.mutate(conversationEndpointMutators.setStreamingConnected(false));
-      return result;
+      return {
+        success: false,
+        error: transformedError,
+      };
     }
-
-    // Runtime/dispatcher will own terminal lifecycle transitions after stream consumption.
-    engine.mutate(conversationEndpointMutators.setStatus('streaming'));
-    engine.mutate(conversationEndpointMutators.setStreamingConnected(true));
-
-    return result;
   }
 
   getRequestCompositionDebugInfo() {
@@ -84,4 +93,12 @@ export class ConversationEndpointFacade extends EndpointFacade<CoveoConversation
         this.getRegisteredRequestContributorCount() + pullContributorCount,
     };
   }
+}
+
+function transformUnexpectedError(error: unknown): string {
+  if (error instanceof Error && error.message.trim()) {
+    return error.message;
+  }
+
+  return 'An unexpected error occurred. Please try again.';
 }
