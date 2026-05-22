@@ -1,7 +1,7 @@
 import type {FullEngine} from '@/src/core/index.js';
 import type {RequestContributor} from './endpoint-facade-types.js';
 
-export class EndpointFacade<TRequest extends object> {
+export abstract class EndpointFacade<TRequest extends object> {
   readonly #requestContributors: Array<RequestContributor<TRequest>> = [];
 
   protected readonly engine: FullEngine;
