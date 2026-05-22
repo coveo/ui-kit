@@ -233,24 +233,24 @@ Completed checklist for 1.6:
 
 ## Status Tracker
 
-| Sub-phase | Branch                           | Status         |
-| --------- | -------------------------------- | -------------- |
-| Phase 0   | add-conversational-support       | ✅ completed   |
-| Phase 0.5 | add-conversational-support       | ✅ completed   |
-| Phase 1.0 | add-conversation-types           | ✅ completed   |
-| Phase 1.1 | add-slice-mutators-and-selectors | ✅ completed   |
-| Phase 1.2 | add-navigator-context            | ✅ completed   |
-| Phase 1.3 | adjust-cart                      | ✅ completed   |
-| Phase 1.4 | add-stream-utils                 | ✅ completed   |
-| Phase 1.5 | add-conversation-endpoint        | ✅ completed   |
+| Sub-phase | Branch                                   | Status         |
+| --------- | ---------------------------------------- | -------------- |
+| Phase 0   | add-conversational-support               | ✅ completed   |
+| Phase 0.5 | add-conversational-support               | ✅ completed   |
+| Phase 1.0 | add-conversation-types                   | ✅ completed   |
+| Phase 1.1 | add-slice-mutators-and-selectors         | ✅ completed   |
+| Phase 1.2 | add-navigator-context                    | ✅ completed   |
+| Phase 1.3 | adjust-cart                              | ✅ completed   |
+| Phase 1.4 | add-stream-utils                         | ✅ completed   |
+| Phase 1.5 | add-conversation-endpoint                | ✅ completed   |
 | Phase 1.6 | add-conversation-runtime-building-blocks | ✅ completed   |
-| Phase 1.7 | —                                | ⬜ not started |
-| Phase 1.8 | —                                | ⬜ not started |
-| Phase 1.9 | —                                | ⬜ not started |
-| Phase 2.0 | —                                | ⬜ not started |
-| Phase 2.1 | —                                | ⬜ not started |
-| Phase 2.2 | —                                | ⬜ not started |
-| Phase 2.3 | —                                | ⬜ not started |
-| Phase 3.0 | —                                | ⬜ not started |
-| Phase 3.1 | —                                | ⬜ not started |
-| Phase 3.2 | —                                | ⬜ not started |
+| Phase 1.7 | —                                        | ⬜ not started |
+| Phase 1.8 | —                                        | ⬜ not started |
+| Phase 1.9 | —                                        | ⬜ not started |
+| Phase 2.0 | —                                        | ⬜ not started |
+| Phase 2.1 | —                                        | ⬜ not started |
+| Phase 2.2 | —                                        | ⬜ not started |
+| Phase 2.3 | —                                        | ⬜ not started |
+| Phase 3.0 | —                                        | ⬜ not started |
+| Phase 3.1 | —                                        | ⬜ not started |
+| Phase 3.2 | —                                        | ⬜ not started |
