@@ -202,8 +202,8 @@ Carry-forward checklist (to avoid losing architectural intent in 1.6/1.7/1.8):
 - [x] **1.6** Ensure stream connectivity (`streaming.isConnected`) is driven by stream open/close events rather than request completion timing
 - [x] **1.7** Keep conversation runtime as owner of stream consumption and terminal status/error mutations; facade should remain transport/request orchestration only
 - [x] **1.7** Add runtime-level safeguards for overlapping submissions/aborts so concurrent turns cannot leave endpoint status in inconsistent state
-- [ ] **1.8** Compose controller state from conversation domain + conversation endpoint state and verify subscribe semantics remain stable across both slices
-- [ ] **1.8** Add controller-focused tests asserting lifecycle visibility (loading/streaming/error) against runtime-driven transitions
+- [x] **1.8** Compose controller state from conversation domain + conversation endpoint state and verify subscribe semantics remain stable across both slices
+- [x] **1.8** Add controller-focused tests asserting lifecycle visibility (loading/streaming/error) against runtime-driven transitions
 
 Completed checklist for 1.6:
 
@@ -228,6 +228,18 @@ Completed checklist for 1.7:
 - [x] Added runtime-level guards so late async settlements (post-abort/post-replacement) cannot overwrite active lifecycle state
 - [x] Added focused runtime unit coverage in `src/core/interface/api/conversation-endpoint/conversation-runtime.test.ts` for singleton behavior, submit flow, overlap rejection, abort flow, stream lifecycle, warning preservation, and late-settlement race protection
 - [x] Exported `ConversationRuntime` through `src/core/index.ts` for controller wiring in Phase 1.8
+- [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
+
+Completed checklist for 1.8:
+
+- [x] Implemented Layer 2 conversation controller builder in `src/public/controllers/conversation/conversation-controller.ts`
+- [x] Wired eager domain loading for conversation and conversation-endpoint slices during controller construction
+- [x] Wired runtime delegation for `submitTurn(input)` and `abortTurn()` through `ConversationRuntime`
+- [x] Composed controller `state` from conversation selectors (`messages`, `turns`, `activeTurnId`, `session`) and conversation-endpoint selectors (`isLoading`, `error`, `streaming`)
+- [x] Stabilized controller subscribe semantics across both slices with a memoized composed selector
+- [x] Added a reusable framework-agnostic selector helper (`createMemoizedStateSelector`) under `src/core/interface/utils/` and reused it in the conversation controller state composition
+- [x] Updated conversation controller core imports to come through the `src/core/index.ts` barrel and expanded barrel exports for conversation feature selectors/loaders
+- [x] Added public-behavior controller tests in `src/public/controllers/conversation/conversation-controller.test.ts` covering state composition, delegation, lifecycle visibility, and cross-slice subscription triggers
 - [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
 
 ### Phase 2 — A2UI Surface Parsing
@@ -259,7 +271,7 @@ Completed checklist for 1.7:
 | Phase 1.5 | add-conversation-endpoint                | ✅ completed   |
 | Phase 1.6 | add-conversation-runtime-building-blocks | ✅ completed   |
 | Phase 1.7 | add-conversation-runtime-building-blocks | ✅ completed   |
-| Phase 1.8 | —                                        | ⬜ not started |
+| Phase 1.8 | implement-conversation-controller        | ✅ completed   |
 | Phase 1.9 | —                                        | ⬜ not started |
 | Phase 2.0 | —                                        | ⬜ not started |
 | Phase 2.1 | —                                        | ⬜ not started |

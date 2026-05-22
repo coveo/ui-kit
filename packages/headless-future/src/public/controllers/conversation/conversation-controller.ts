@@ -3,7 +3,16 @@ import type {
   ConversationSession,
   ConversationStreaming,
   ConversationTurn,
-} from '@/src/core/interface/conversation/conversation-types.js';
+} from '@/src/core/index.js';
+import {
+  ConversationRuntime,
+  conversationEndpointSelectors,
+  conversationSelectors,
+  createMemoizedStateSelector,
+  getFullEngine,
+  loadConversation,
+  loadConversationEndpoint,
+} from '@/src/core/index.js';
 import {Controller, ControllerOptions} from '../controller-types.js';
 
 /**
@@ -47,6 +56,76 @@ export interface ConversationControllerState {
 
 export interface ConversationControllerOptions extends ControllerOptions {}
 
-export declare const buildConversationController: (
+type ConversationSelectionState = Parameters<
+  typeof conversationSelectors.messages
+>[0] &
+  Parameters<typeof conversationEndpointSelectors.isLoading>[0];
+
+const buildStateSelector = () => {
+  return createMemoizedStateSelector<
+    ConversationSelectionState,
+    [
+      ConversationControllerMessage[],
+      ConversationControllerTurn[],
+      string | null,
+      ConversationControllerSession,
+      boolean,
+      string | null,
+      ConversationControllerStreaming,
+    ],
+    ConversationControllerState
+  >(
+    [
+      (state) => conversationSelectors.messages(state),
+      (state) => conversationSelectors.turns(state),
+      (state) => conversationSelectors.activeTurnId(state),
+      (state) => conversationSelectors.session(state),
+      (state) => conversationEndpointSelectors.isLoading(state),
+      (state) => conversationEndpointSelectors.error(state),
+      (state) => conversationEndpointSelectors.streaming(state),
+    ],
+    (
+      messages,
+      turns,
+      activeTurnId,
+      session,
+      isLoading,
+      error,
+      streaming
+    ): ConversationControllerState => ({
+      messages,
+      turns,
+      activeTurnId,
+      session,
+      isLoading,
+      error,
+      streaming,
+    })
+  );
+};
+
+export const buildConversationController: (
   options: ConversationControllerOptions
-) => ConversationController;
+) => ConversationController = (options) => {
+  const fullEngine = getFullEngine(options.engine);
+  loadConversation(fullEngine);
+  loadConversationEndpoint(fullEngine);
+
+  const runtime = ConversationRuntime.getInstance(fullEngine);
+  const stateSelect = buildStateSelector();
+
+  return {
+    submitTurn(input) {
+      return runtime.submitTurn(input);
+    },
+    abortTurn() {
+      runtime.abortTurn();
+    },
+    subscribe(callback) {
+      return fullEngine.subscribe(stateSelect, callback);
+    },
+    get state() {
+      return fullEngine.read(stateSelect);
+    },
+  };
+};
