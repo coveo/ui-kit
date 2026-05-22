@@ -38,9 +38,12 @@ const defaultOptions = {
 };
 
 function createTestComponent(options = defaultOptions) {
-  const element = createElement('c-quantic-generated-answer-copy-to-clipboard', {
-    is: QuanticGeneratedAnswerCopyToClipboard,
-  });
+  const element = createElement(
+    'c-quantic-generated-answer-copy-to-clipboard',
+    {
+      is: QuanticGeneratedAnswerCopyToClipboard,
+    }
+  );
 
   for (const [key, value] of Object.entries(options)) {
     element[key] = value;

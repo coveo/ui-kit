@@ -12,7 +12,7 @@ import {LightningElement, api} from 'lwc';
 export default class QuanticGeneratedAnswerCopyToClipboard extends LightningElement {
   /**
    * The answer to copy
-  * @type {string}
+   * @type {string}
    */
   @api answer = '';
 

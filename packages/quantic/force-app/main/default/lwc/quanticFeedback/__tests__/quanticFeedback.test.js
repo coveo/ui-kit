@@ -110,7 +110,9 @@ describe('c-quantic-feedback', () => {
     const element = createTestComponent({...defaultOptions, question: ''});
     await flushPromises();
 
-    const question = element.shadowRoot.querySelector(selectors.feedbackQuestion);
+    const question = element.shadowRoot.querySelector(
+      selectors.feedbackQuestion
+    );
 
     expect(question).toBeNull();
   });
