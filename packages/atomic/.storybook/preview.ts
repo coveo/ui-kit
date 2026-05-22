@@ -2,8 +2,6 @@ import '@/src/themes/coveo.css';
 import type {Preview} from '@storybook/web-components-vite';
 import {setCustomElementsManifest} from '@storybook/web-components-vite';
 import {setStorybookHelpersConfig} from '@wc-toolkit/storybook-helpers';
-import {render} from 'lit';
-import {isTemplateResult} from 'lit/directive-helpers.js';
 import {initialize, mswLoader} from 'msw-storybook-addon';
 import {within} from 'shadow-dom-testing-library';
 import {create} from 'storybook/theming';
@@ -18,11 +16,13 @@ if (import.meta.env.VITE_IS_CDN === 'true') {
   import(url.href);
 }
 
-initialize(
-  import.meta.env.DEV || import.meta.env.VITE_IS_CDN === 'true'
+initialize({
+  quiet: true,
+  onUnhandledRequest: 'bypass',
+  ...(import.meta.env.DEV || import.meta.env.VITE_IS_CDN === 'true'
     ? {serviceWorker: {url: './mockServiceWorker.js'}}
-    : {}
-);
+    : {}),
+});
 
 setCustomElementsManifest(customElements);
 
@@ -38,14 +38,6 @@ setStorybookHelpersConfig({
   ],
   hideArgRef: true,
 });
-
-function disableAnalytics(container: Element, selectors: string[]) {
-  selectors.forEach((selector) => {
-    container.querySelectorAll(selector).forEach((element) => {
-      element.setAttribute('analytics', 'false');
-    });
-  });
-}
 
 const preview: Preview = {
   loaders: [mswLoader],
@@ -73,10 +65,27 @@ const preview: Preview = {
       expanded: true,
     },
     a11y: {
-      // 'todo' - show a11y violations in the test UI only
-      // 'error' - fail CI on a11y violations
-      // 'off' - skip a11y checks entirely
-      test: 'error',
+      // Always 'todo' here: the @coveo/atomic-a11y reporter (VitestA11yReporter)
+      // gates CI at the run-end level via `process.exitCode`. We need every
+      // axe result to flow through `task.meta.reports` for the JSON report,
+      // which only happens when addon-a11y does NOT throw at test time.
+      // - 'todo' - record violations, never throw; gating handled by the reporter
+      // - 'error' - throws on violation but loses report data (do not use)
+      // - 'off' - skip a11y checks entirely
+      test: 'todo',
+      options: {
+        runOnly: {
+          type: 'tag',
+          values: [
+            'wcag2a',
+            'wcag21a',
+            'wcag22a',
+            'wcag2aa',
+            'wcag21aa',
+            'wcag22aa',
+          ],
+        },
+      },
     },
     docs: {
       theme: create({
@@ -91,35 +100,6 @@ const preview: Preview = {
     },
     chromatic: {disableSnapshot: true},
   },
-  decorators: [
-    (Story) => {
-      const story = Story();
-
-      if (isTemplateResult(story)) {
-        const container = document.createElement('div');
-
-        render(story, container);
-
-        const isTestMode =
-          typeof window !== 'undefined' &&
-          window.location.href.includes('localhost');
-
-        if (!isTestMode) {
-          disableAnalytics(container, [
-            'atomic-recs-interface',
-            'atomic-insight-interface',
-            'atomic-search-interface',
-            'atomic-commerce-interface',
-            'atomic-commerce-recommendation-interface',
-          ]);
-        }
-
-        return story;
-      }
-
-      return story;
-    },
-  ],
   beforeEach({canvasElement, canvas}) {
     Object.assign(canvas, {...within(canvasElement)});
   },

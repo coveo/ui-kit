@@ -1,5 +1,5 @@
 import type {EventDescription} from 'coveo.analytics';
-import {getOrganizationEndpoint} from '../../api/platform-client.js';
+import {getApiBaseUrlOrOrganizationEndpoint} from '../../api/platform-client.js';
 import type {InsightQueryRequest} from '../../api/service/insight/query/query-request.js';
 import type {InsightAppState} from '../../state/insight-app-state.js';
 import type {
@@ -28,12 +28,11 @@ export const buildInsightBaseRequest = async (
   return mapSearchRequest<InsightQueryRequest>({
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
-    url:
-      state.configuration.search.apiBaseUrl ??
-      getOrganizationEndpoint(
-        state.configuration.organizationId,
-        state.configuration.environment
-      ),
+    url: getApiBaseUrlOrOrganizationEndpoint(
+      state.configuration.search.apiBaseUrl,
+      state.configuration.organizationId,
+      state.configuration.environment
+    ),
     locale: state.configuration.search.locale,
     insightId: state.insightConfiguration.insightId,
     ...(state.configuration.analytics.enabled &&
