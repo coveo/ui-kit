@@ -41,7 +41,7 @@ export default class QuanticGeneratedAnswerCopyToClipboard extends LightningElem
   isSelected = false;
   tooltip = this.labels.copy;
 
-    dispatchCopyToClipboardEvent(option) {
+  dispatchCopyToClipboardEvent(option) {
     this.dispatchEvent(
       new CustomEvent('quantic__generatedanswercopy', {
         detail: option,
