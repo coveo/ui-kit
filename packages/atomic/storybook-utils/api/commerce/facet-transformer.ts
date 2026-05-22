@@ -227,13 +227,34 @@ function applyRangeSelection(
 function applyHierarchicalSelection(
   resFacet: ResponseFacet,
   reqValues: FacetValueRequest[],
-  _preventAutoSelect: boolean
+  preventAutoSelect: boolean
 ): ResponseFacetValue[] {
   const selectedNodes = findAllSelectedNodes(reqValues);
   if (selectedNodes.length === 0) return resFacet.values;
 
   const deepest = selectedNodes.reduce((a, b) => (a.depth > b.depth ? a : b));
   const selectedValue = deepest.node.value!;
+
+  if (preventAutoSelect && deepest.parentValue) {
+    const knownSiblings = CATEGORY_CHILDREN[deepest.parentValue];
+    // Only navigate up if the selected value is a known child of its parent.
+    // Unknown values (e.g., from URL restoration) are kept as-is.
+    if (knownSiblings && knownSiblings.includes(selectedValue)) {
+      const parentNode: SelectedNodeInfo = {
+        node: {value: deepest.parentValue, state: 'selected', children: []},
+        depth: deepest.depth - 1,
+        parentValue:
+          deepest.ancestorPath[deepest.ancestorPath.length - 2] ?? null,
+        ancestorPath: deepest.ancestorPath.slice(0, -1),
+      };
+      return buildHierarchicalTree(
+        reqValues,
+        parentNode,
+        knownSiblings,
+        resFacet
+      );
+    }
+  }
 
   const children = CATEGORY_CHILDREN[selectedValue] || ['SubItem1', 'SubItem2'];
   return buildHierarchicalTree(reqValues, deepest, children, resFacet);
