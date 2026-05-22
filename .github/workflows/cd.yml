@@ -194,8 +194,8 @@ jobs:
         id: app-token
         uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3
         with:
-          app-id: ${{ secrets.APP_COVEO_DEV_TOOLS_ID }}
-          private-key: ${{ secrets.APP_COVEO_DEV_TOOLS_PRIVATE_KEY }}
+          app-id: ${{ secrets.DOC_APP_ID }}
+          private-key: ${{ secrets.DOC_APP_PRIVATE_KEY }}
           repositories: doc_jekyll-public-site
       - name: Notify Docs
         continue-on-error: true
