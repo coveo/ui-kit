@@ -196,6 +196,7 @@ jobs:
         with:
           app-id: ${{ secrets.DOC_APP_ID }}
           private-key: ${{ secrets.DOC_APP_PRIVATE_KEY }}
+          owner: coveo
           repositories: doc_jekyll-public-site
       - name: Notify Docs
         continue-on-error: true
