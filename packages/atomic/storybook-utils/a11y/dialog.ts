@@ -19,19 +19,6 @@ function getActiveElementDeep(doc: Document): Element | null {
   return active;
 }
 
-/**
- * Dispatches a synthetic `animationend` on the dialog's article element.
- * Needed because CSS animations don't fire in the headless test runner,
- * but the modal gates focus trap activation on this event.
- */
-async function forceAnimationEnd(dialog: HTMLElement): Promise<void> {
-  const article = dialog.querySelector('article');
-  if (article) {
-    article.dispatchEvent(new AnimationEvent('animationend', {bubbles: false}));
-    await new Promise((r) => setTimeout(r, 100));
-  }
-}
-
 export async function testDialogA11y(
   context: StoryContext,
   options: DialogA11yOptions
@@ -62,17 +49,20 @@ export async function testDialogA11y(
         },
         {timeout: 8000}
       );
-
-      await forceAnimationEnd(dialog);
     });
 
     await step('Tab stays inside dialog (2.1.1 focus trap)', async () => {
       const focusTrap = dialog! as HTMLElement & {active: boolean};
 
-      expect(
-        focusTrap.active,
-        'Focus trap should be active after animation end'
-      ).toBe(true);
+      await waitFor(
+        () => {
+          expect(
+            focusTrap.active,
+            'Focus trap should be active after animation end'
+          ).toBe(true);
+        },
+        {timeout: 3000}
+      );
 
       const dialogRoot = within(dialog!);
       const buttons = await dialogRoot.findAllByShadowRole('button');
@@ -82,6 +72,11 @@ export async function testDialogA11y(
       ).toBeGreaterThanOrEqual(2);
 
       const allHidden = doc.querySelectorAll('[aria-hidden="true"]');
+      expect(
+        allHidden.length,
+        'At least one element should be hidden outside the dialog'
+      ).toBeGreaterThanOrEqual(1);
+
       const hiddenOutsideDialog = Array.from(allHidden).filter(
         (el) => !dialog!.contains(el) && el !== dialog
       );
