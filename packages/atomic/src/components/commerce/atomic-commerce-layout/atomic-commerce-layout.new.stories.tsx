@@ -3,6 +3,9 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/commerce/atomic-commerce-layout/atomic-commerce-layout.js';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
+
+const commerceApiHarness = new MockCommerceApi();
 
 const {decorator, play} = wrapInCommerceInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -18,6 +21,7 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
+    msw: {handlers: [...commerceApiHarness.handlers]},
     chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
@@ -29,6 +33,9 @@ const meta: Meta = {
   args: {
     ...args,
     'default-slot': `<span>Layout content</span>`,
+  },
+  beforeEach: () => {
+    commerceApiHarness.clearAll();
   },
 };
 
