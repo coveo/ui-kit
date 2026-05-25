@@ -71,11 +71,11 @@ const colorArgTypes = {
   success: {control: 'color', name: 'Success'},
   error: {control: 'color', name: 'Error'},
   visited: {control: 'color', name: 'Visited'},
-};
+} as const;
 
 const colorArgs = {
   primary: '#126ce0',
-  neutral: '#9eaab8',
+  neutral: '#e5e8e8',
   success: '#12a244',
   error: '#ce3f00',
   visited: '#752e9c',

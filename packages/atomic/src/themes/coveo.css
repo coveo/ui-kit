@@ -3,8 +3,8 @@
    * BASE COLORS — the only values a theme author needs to change (≤ 5)
    * ===================================================================== */
 
-  --atomic-primary: oklch(0.52 0.20 258); /* brand blue */
-  --atomic-neutral: oklch(0.72 0.012 240); /* mid-tone anchor; was light #e5e8e8 — see migration note */
+  --atomic-primary: oklch(0.52 0.2 258); /* brand blue */
+  --atomic-neutral: oklch(0.9287 0.00326 198.887);
   --atomic-success: oklch(0.55 0.16 142);
   --atomic-error: oklch(0.52 0.18 35);
   --atomic-visited: oklch(0.44 0.18 303);
@@ -14,10 +14,18 @@
    * ===================================================================== */
 
   /* Primary scale */
-  --atomic-on-primary: oklch(from var(--atomic-primary) clamp(0, (0.6 - l) * 1000, 1) 0 h); /* @supports override below */
-  --atomic-primary-light: oklch(from var(--atomic-primary) calc(l + 0.15) calc(c * 0.85) h);
-  --atomic-primary-dark: oklch(from var(--atomic-primary) calc(l - 0.12) calc(c * 1.1) h);
-  --atomic-primary-background: oklch(from var(--atomic-primary) 0.97 calc(c * 0.12) h);
+  --atomic-on-primary: oklch(
+    from var(--atomic-primary) clamp(0, (0.6 - l) * 1000, 1) 0 h
+  ); /* @supports override below */
+  --atomic-primary-light: oklch(
+    from var(--atomic-primary) calc(l + 0.15) calc(c * 0.85) h
+  );
+  --atomic-primary-dark: oklch(
+    from var(--atomic-primary) calc(l - 0.12) calc(c * 1.1) h
+  );
+  --atomic-primary-background: oklch(
+    from var(--atomic-primary) 0.97 calc(c * 0.12) h
+  );
   --atomic-ring-primary: oklch(from var(--atomic-primary) l c h / 50%);
 
   /* Neutral scale
@@ -25,25 +33,33 @@
    * for the old --atomic-neutral (#e5e8e8) border/divider shade.
    * Migration: if you were setting --atomic-neutral as a border color,
    * set --atomic-neutral-dim instead. */
-  --atomic-neutral-dark: oklch(from var(--atomic-neutral) calc(l - 0.26) c h);
-  --atomic-neutral-dim: var(--atomic-neutral);
-  --atomic-neutral-light: oklch(from var(--atomic-neutral) calc(l + 0.16) calc(c * 0.6) h);
-  --atomic-neutral-lighter: oklch(from var(--atomic-neutral) calc(l + 0.23) calc(c * 0.35) h);
-  --atomic-disabled: oklch(from var(--atomic-neutral) calc(l + 0.12) calc(c * 0.75) h);
+  --atomic-neutral-dark: oklch(from var(--atomic-neutral) calc(l - 0.4112) c h);
+  --atomic-neutral-dim: oklch(from var(--atomic-neutral) calc(l - 0.1111) c h);
+  --atomic-neutral-light: oklch(
+    from var(--atomic-neutral) calc(l + 0.0472) c h
+  );
+  --atomic-neutral-lighter: oklch(
+    from var(--atomic-neutral) calc(l + 0.0559) c h
+  );
+  --atomic-disabled: oklch(from var(--atomic-neutral) calc(l - 0.0921) c h);
 
   /* Surfaces */
   --atomic-background: oklch(1 0 0);
   --atomic-on-background: oklch(from var(--atomic-neutral) 0.18 calc(c * 2) h);
 
   /* Semantic state backgrounds */
-  --atomic-success-background: oklch(from var(--atomic-success) 0.95 calc(c * 0.18) h);
-  --atomic-error-background: oklch(from var(--atomic-error) 0.95 calc(c * 0.18) h);
+  --atomic-success-background: oklch(
+    from var(--atomic-success) 0.95 calc(c * 0.18) h
+  );
+  --atomic-error-background: oklch(
+    from var(--atomic-error) 0.95 calc(c * 0.18) h
+  );
 
   /* =====================================================================
    * OPINIONATED CONSTANTS — overridable but not brand theming knobs
    * ===================================================================== */
 
-  --atomic-inline-code: oklch(0.46 0.20 25);
+  --atomic-inline-code: oklch(0.46 0.2 25);
   --atomic-rating-icon-active-color: oklch(0.87 0.17 87);
   --atomic-rating-icon-outline: none;
   --atomic-user-actions-timeline-separator-background: oklch(
@@ -88,23 +104,5 @@
 @supports (color: contrast-color(red)) {
   :root {
     --atomic-on-primary: contrast-color(var(--atomic-primary));
-  }
-}
-
-/* Dark mode — surface layer only; brand base colors do not change */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --atomic-background: oklch(0.13 0 0);
-
-    /* Neutral scale inverts around the anchor */
-    --atomic-neutral-dark: oklch(from var(--atomic-neutral) calc(l + 0.26) c h);
-    --atomic-neutral-light: oklch(from var(--atomic-neutral) calc(l - 0.18) calc(c * 0.6) h);
-    --atomic-neutral-lighter: oklch(from var(--atomic-neutral) calc(l - 0.50) calc(c * 0.35) h);
-    --atomic-disabled: oklch(from var(--atomic-neutral) calc(l - 0.30) calc(c * 0.75) h);
-
-    /* State backgrounds push toward near-black */
-    --atomic-primary-background: oklch(from var(--atomic-primary) 0.17 calc(c * 0.25) h);
-    --atomic-success-background: oklch(from var(--atomic-success) 0.17 calc(c * 0.30) h);
-    --atomic-error-background: oklch(from var(--atomic-error) 0.17 calc(c * 0.30) h);
   }
 }
