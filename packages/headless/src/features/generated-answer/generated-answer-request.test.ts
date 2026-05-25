@@ -562,6 +562,15 @@ describe('constructGenerateHeadAnswerParams', () => {
     expect(params.cq).toBe('@bar');
   });
 
+  it('merges active tab expression into cq', () => {
+    const params = constructGenerateHeadAnswerParams(
+      streamAnswerAPIStateMockWithATabWithAnExpression,
+      buildMockNavigatorContextProvider()()
+    );
+
+    expect(params.cq).toBe('cq-test-query AND @fileType=html');
+  });
+
   it('includes active tab when available', () => {
     const params = constructGenerateHeadAnswerParams(
       buildState({

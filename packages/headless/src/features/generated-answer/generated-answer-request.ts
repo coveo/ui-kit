@@ -208,7 +208,7 @@ export const constructGenerateHeadAnswerParams = (
   const locale = selectLocale(state);
   const tab = selectActiveTab(state.tabSet) || 'default';
   const referrer = navigatorContext.referrer || '';
-  const {aq, cq} = selectAdvancedSearchQueries(state);
+  const {aq, cq} = buildAdvancedSearchQueryParams(state);
 
   const searchHub = selectSearchHub(state);
   const pipeline = selectPipeline(state);
@@ -250,7 +250,12 @@ const getActionsHistory = (
     : [],
 });
 
-const buildAdvancedSearchQueryParams = (state: StreamAnswerAPIState) => {
+type StateNeededByGeneratedAnswerAdvancedSearchQueryParams =
+  ConfigurationSection & Partial<SearchAppState>;
+
+const buildAdvancedSearchQueryParams = (
+  state: StateNeededByGeneratedAnswerAdvancedSearchQueryParams
+) => {
   const advancedSearchQueryParams = selectAdvancedSearchQueries(state);
   const mergedCq = buildConstantQuery(state);
 
