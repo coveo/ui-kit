@@ -55,8 +55,9 @@
     "./custom-elements-manifest": "./custom-elements.json"
   },
   "scripts": {
-    "clean": "node ../../utils/ci/rm-rf.mjs dist/* dist-storybook/* www/* docs/* playwright-report/*",
+    "clean": "node ../../utils/ci/rm-rf.mjs dist/* dist-storybook/* dist-storybook-cdn/* www/* docs/* playwright-report/*",
     "build:storybook": "storybook build -o dist-storybook --stats-json",
+    "build:storybook:cdn": "DEPLOYMENT_ENVIRONMENT=CDN storybook build -o dist-storybook-cdn --stats-json",
     "build:cem": "cem analyze",
     "build:locales": "node scripts/build-locales.mjs",
     "build:assets": "node scripts/build-assets.mjs",

@@ -21,6 +21,10 @@
       "dependsOn": ["^build", "build:cem", "build:locales"],
       "outputs": ["./dist-storybook/**"]
     },
+    "build:storybook:cdn": {
+      "dependsOn": ["^build", "build:cem", "build:locales"],
+      "outputs": ["./dist-storybook-cdn/**"]
+    },
     "chromatic": {
       "dependsOn": ["build:storybook"],
       "outputs": [],
