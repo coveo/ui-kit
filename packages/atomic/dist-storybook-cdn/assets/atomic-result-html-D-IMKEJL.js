@@ -1,0 +1,8 @@
+import{n as e}from"./chunk-jRWAZmH_.js";import{r as t}from"./react-FtSvzJ4N.js";import{a as n}from"./chunk-RD3KTAHR-zATRA5tJ.js";import{l as r,p as i}from"./blocks-CvL71tRc.js";import{t as a}from"./mdx-react-shim-DJpA_GAc.js";import{n as o,t as s}from"./atomic-doc-template-BrmV5DRP.js";import c,{Default as l,t as u}from"./atomic-result-html.new.stories-C85kkBdh.js";function d(e){let n={code:`code`,p:`p`,pre:`pre`,strong:`strong`,...t(),...e.components};return(0,p.jsxs)(p.Fragment,{children:[(0,p.jsx)(r,{of:c}),`
+`,(0,p.jsxs)(s,{stories:{Default:l},githubPath:`search/atomic-result-html/atomic-result-html.ts`,tagName:`atomic-result-html`,className:`AtomicResultHtml`,children:[(0,p.jsx)(n.p,{children:`This component is typically used within result templates to display HTML content from result fields:`}),(0,p.jsxs)(n.p,{children:[(0,p.jsx)(n.strong,{children:`Important:`}),` This component must be a child of an `,(0,p.jsx)(n.code,{children:`atomic-result`}),` element or any result-related element to function properly.`]}),(0,p.jsx)(n.pre,{children:(0,p.jsx)(n.code,{className:`language-html`,children:`<atomic-result-template>
+  <template>
+    <atomic-result-html field="title"></atomic-result-html>
+    <atomic-result-html field="excerpt" sanitize="false"></atomic-result-html>
+  </template>
+</atomic-result-template>
+`})})]})]})}function f(e={}){let{wrapper:n}={...t(),...e.components};return n?(0,p.jsx)(n,{...e,children:(0,p.jsx)(d,{...e})}):d(e)}var p;e((()=>{p=n(),a(),i(),u(),o()}))();export{f as default};

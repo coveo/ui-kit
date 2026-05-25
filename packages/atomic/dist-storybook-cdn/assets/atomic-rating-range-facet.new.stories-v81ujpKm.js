@@ -1,0 +1,7 @@
+import{n as e}from"./chunk-jRWAZmH_.js";import{D as t,E as n}from"./iframe-cSkD6HDI.js";import{n as r,t as i}from"./common-meta-parameters-BmIbTEf7.js";import{r as a,t as o}from"./search-interface-wrapper-DyJSRxFL.js";import{n as s,t as c}from"./facets-decorator-DYB9S-w4.js";var l,u,d,f,p,m,h,g,_,v=e((()=>{t(),i(),s(),o(),{decorator:l,play:u}=a(),{events:d,args:f,argTypes:p,template:m}=n(`atomic-rating-range-facet`,{excludeCategories:[`methods`]}),h={component:`atomic-rating-range-facet`,title:`Search/RatingRangeFacet`,id:`atomic-rating-range-facet`,render:e=>m(e),decorators:[l],parameters:{...r,chromatic:{disableSnapshot:!0},actions:{handles:d}},argTypes:{...p,"tabs-included":{control:{type:`object`}},"tabs-excluded":{control:{type:`object`}},"depends-on":{control:{type:`object`}},"allowed-values":{control:{type:`object`}}},play:u,args:{...f,"number-of-values":8,"tabs-included":`[]`,"tabs-excluded":`[]`,"allowed-values":`[]`,"depends-on":`{}`}},g={name:`atomic-rating-range-facet`,args:{field:`snrating`},decorators:[c]},g.parameters={...g.parameters,docs:{...g.parameters?.docs,source:{originalSource:`{
+  name: 'atomic-rating-range-facet',
+  args: {
+    field: 'snrating'
+  },
+  decorators: [facetDecorator]
+}`,...g.parameters?.docs?.source}}},_=[`Default`]}));v();export{g as Default,_ as __namedExportsOrder,h as default,v as t};

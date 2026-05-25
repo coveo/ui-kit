@@ -1,0 +1,12 @@
+import{n as e}from"./chunk-jRWAZmH_.js";import{D as t,E as n}from"./iframe-cSkD6HDI.js";import{n as r,t as i}from"./common-meta-parameters-BmIbTEf7.js";import{r as a,t as o}from"./search-interface-wrapper-DyJSRxFL.js";var s,c,l,u,d,f,p,m,h,g,_,v=e((()=>{t(),i(),o(),{decorator:s,play:c}=a(),{events:l,args:u,argTypes:d,template:f}=n(`atomic-pager`,{excludeCategories:[`methods`]}),p={component:`atomic-pager`,title:`Search/Pager`,id:`atomic-pager`,render:e=>f(e),decorators:[s],parameters:{...r,chromatic:{disableSnapshot:!0},actions:{handles:l}},args:{...u,"previous-button-icon":`<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="m11.5 4.8-4.3 4.5c-.3.4-.3.9 0 1.3l4.3 4.6c.3.4.9.4 1.2 0s.3-.9 0-1.3l-3.7-4 3.7-3.9c.3-.4.3-.9 0-1.3-.3-.3-.9-.3-1.2.1z"/></svg>`,"next-button-icon":`<svg viewBox="0 0 20 20"><path d="m8.5 15.2 4.3-4.6c.3-.4.3-.9 0-1.3l-4.4-4.5c-.3-.4-.9-.4-1.2 0s-.3.9 0 1.3l3.7 4-3.7 3.9c-.3.4-.3.9 0 1.3.4.3 1 .3 1.3-.1z"/></svg>`},argTypes:d,play:c},m={},h={name:`With custom icons`,args:{"previous-button-icon":`https://raw.githubusercontent.com/coveo/ui-kit/main/packages/atomic/src/images/arrow-top-rounded.svg`,"next-button-icon":`https://raw.githubusercontent.com/coveo/ui-kit/main/packages/atomic/src/images/arrow-top-rounded.svg`}},g={name:`With a custom number of pages`,args:{"number-of-pages":`10`}},m.parameters={...m.parameters,docs:{...m.parameters?.docs,source:{originalSource:`{}`,...m.parameters?.docs?.source}}},h.parameters={...h.parameters,docs:{...h.parameters?.docs,source:{originalSource:`{
+  name: 'With custom icons',
+  args: {
+    'previous-button-icon': 'https://raw.githubusercontent.com/coveo/ui-kit/main/packages/atomic/src/images/arrow-top-rounded.svg',
+    'next-button-icon': 'https://raw.githubusercontent.com/coveo/ui-kit/main/packages/atomic/src/images/arrow-top-rounded.svg'
+  }
+}`,...h.parameters?.docs?.source}}},g.parameters={...g.parameters,docs:{...g.parameters?.docs,source:{originalSource:`{
+  name: 'With a custom number of pages',
+  args: {
+    'number-of-pages': '10'
+  }
+}`,...g.parameters?.docs?.source}}},_=[`Default`,`CustomIcon`,`WithACustomNumberOfPages`]}));v();export{h as CustomIcon,m as Default,g as WithACustomNumberOfPages,_ as __namedExportsOrder,p as default,v as t};

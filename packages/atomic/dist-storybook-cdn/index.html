@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>storybook - Storybook</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    
+    <style>
+      @font-face {
+        font-family: 'Nunito Sans';
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url('./sb-common-assets/nunito-sans-regular.woff2') format('woff2');
+      }
+
+      @font-face {
+        font-family: 'Nunito Sans';
+        font-style: italic;
+        font-weight: 400;
+        font-display: swap;
+        src: url('./sb-common-assets/nunito-sans-italic.woff2') format('woff2');
+      }
+
+      @font-face {
+        font-family: 'Nunito Sans';
+        font-style: normal;
+        font-weight: 700;
+        font-display: swap;
+        src: url('./sb-common-assets/nunito-sans-bold.woff2') format('woff2');
+      }
+
+      @font-face {
+        font-family: 'Nunito Sans';
+        font-style: italic;
+        font-weight: 700;
+        font-display: swap;
+        src: url('./sb-common-assets/nunito-sans-bold-italic.woff2') format('woff2');
+      }
+    </style>
+
+    <link href="./sb-manager/runtime.js" rel="modulepreload" />
+
+    
+    <link href="./sb-addons/storybook-core-server-presets-0/common-manager-bundle.js" rel="modulepreload" />
+    
+    <link href="./sb-addons/a11y-1/manager-bundle.js" rel="modulepreload" />
+    
+    <link href="./sb-addons/docs-2/manager-bundle.js" rel="modulepreload" />
+    
+    <link href="./sb-addons/vitest-3/manager-bundle.js" rel="modulepreload" />
+    
+    <link href="./sb-addons/storybook-4/manager-bundle.js" rel="modulepreload" />
+      <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+<script
+  type="module"
+  src="https://static.cloud.coveo.com/atomic/v3/atomic.esm.js"
+></script>
+<link
+  rel="stylesheet"
+  href="https://static.cloud.coveo.com/atomic/v3/themes/coveo.css"
+/>
+<style>
+  /* Storybook-internal selectors — not part of Storybook's public API.
+     These may break on Storybook upgrades. Validated by:
+     src/storybook-manager/e2e/storybook-manager.e2e.ts */
+  section.sb-bar {
+    overflow: visible;
+    height: 58px;
+    display: flex;
+    align-items: center;
+  }
+
+  section.sb-bar > div > div:first-child {
+    flex: 1;
+  }
+
+  #coveo-docs-search-container {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    flex: 1;
+    position: relative;
+  }
+
+  #coveo-docs-search-container atomic-search-interface {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #coveo-docs-search-container atomic-search-box {
+    --atomic-search-box-height: 34px;
+    --atomic-search-box-border-radius: 17px;
+    --atomic-text-base: 13px;
+    height: 34px;
+    width: min(380px, 100%);
+  }
+
+  @media (min-width: 1500px) {
+    #coveo-docs-search-container atomic-search-box {
+      width: 50%;
+    }
+  }
+
+  #coveo-docs-search-container atomic-search-box::part(wrapper) {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    height: 34px;
+    align-items: center;
+  }
+
+  #coveo-docs-search-container
+    atomic-search-box::part(textarea-expander)::after,
+  #coveo-docs-search-container atomic-search-box::part(textarea) {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  #coveo-docs-search-container atomic-search-box::part(wrapper):focus-within {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+
+  #coveo-docs-search-container atomic-search-box::part(input) {
+    color: #fff;
+    line-height: 34px;
+    padding: 0 12px;
+  }
+
+  #coveo-docs-search-container atomic-search-box::part(input)::placeholder,
+  #coveo-docs-search-container atomic-search-box::part(textarea)::placeholder {
+    color: transparent;
+  }
+
+  #coveo-docs-search-container atomic-search-box::part(submit-icon),
+  #coveo-docs-search-container atomic-search-box::part(clear-icon) {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  #coveo-docs-search-container atomic-search-box::part(submit-button) {
+    width: 34px;
+    height: 34px;
+    background: transparent;
+  }
+
+  #coveo-docs-search-container atomic-search-box::part(suggestions-wrapper) {
+    z-index: 9999;
+  }
+
+  #coveo-docs-search-container
+    atomic-search-box::part(suggestions-single-list) {
+    white-space: normal;
+  }
+</style>
+<script type="module">
+  import {disableBlockedKeys, updateCookieSettings} from './cookieManager.js';
+
+  updateCookieSettings();
+  disableBlockedKeys();
+
+  window.OptanonWrapper = () => {
+    updateCookieSettings();
+    disableBlockedKeys();
+  };
+</script>
+<script
+  src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js"
+  type="text/javascript"
+  charset="UTF-8"
+  data-domain-script="01966379-8a54-7121-b5b0-1c7621a24bd1-test"
+></script>
+ 
+
+    <style>
+      #storybook-root[hidden] {
+        display: none !important;
+      }
+    </style>
+
+    
+  </head>
+  <body>
+    <div id="root"></div>
+
+    
+    <script>
+      
+        
+          window['FEATURES'] = {
+  "argTypeTargetsV7": true,
+  "legacyDecoratorFileOrder": false,
+  "disallowImplicitActionsInRenderV8": true,
+  "viewport": true,
+  "highlight": true,
+  "controls": true,
+  "interactions": true,
+  "actions": true,
+  "backgrounds": true,
+  "outline": true,
+  "measure": true,
+  "sidebarOnboardingChecklist": true,
+  "componentsManifest": true
+};
+        
+      
+        
+          window['REFS'] = {};
+        
+      
+        
+          window['LOGLEVEL'] = "info";
+        
+      
+        
+          window['DOCS_OPTIONS'] = {
+  "defaultName": "Docs"
+};
+        
+      
+        
+          window['CONFIG_TYPE'] = "PRODUCTION";
+        
+      
+        
+      
+        
+      
+        
+          window['TAGS_OPTIONS'] = {};
+        
+      
+        
+          window['STORYBOOK_BUILDER'] = "vite";
+        
+      
+        
+          window['STORYBOOK_FRAMEWORK'] = "web-components-vite";
+        
+      
+        
+          window['STORYBOOK_RENDERER'] = "web-components";
+        
+      
+        
+      
+    </script>
+    
+
+    <script type="module">
+      import './sb-manager/globals-runtime.js';
+
+      
+        import './sb-addons/storybook-core-server-presets-0/common-manager-bundle.js';
+      
+        import './sb-addons/a11y-1/manager-bundle.js';
+      
+        import './sb-addons/docs-2/manager-bundle.js';
+      
+        import './sb-addons/vitest-3/manager-bundle.js';
+      
+        import './sb-addons/storybook-4/manager-bundle.js';
+      
+
+      import './sb-manager/runtime.js';
+    </script>
+  </body>
+</html>

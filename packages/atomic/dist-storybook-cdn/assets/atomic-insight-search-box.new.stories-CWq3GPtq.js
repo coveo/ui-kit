@@ -1,0 +1,6 @@
+import{n as e}from"./chunk-jRWAZmH_.js";import{D as t,E as n,St as r,Tt as i}from"./iframe-cSkD6HDI.js";import{n as a,t as o}from"./common-meta-parameters-BmIbTEf7.js";import{n as s,t as c}from"./mock-CijMLWxR.js";import{n as l,t as u}from"./insight-interface-wrapper-BwybnAhf.js";var d,f,p,m,h,g,_,v,y,b,x,S,C=e((()=>{t(),r(),s(),o(),u(),{events:d,args:f,argTypes:p,template:m}=n(`atomic-insight-search-box`,{excludeCategories:[`methods`]}),{decorator:h,play:g}=l({},!0),_=new c,v=e=>i`<div style="min-width: 400px;" id="code-root">${e()}</div>`,y={component:`atomic-insight-search-box`,title:`Insight/Search Box`,id:`atomic-insight-search-box`,render:e=>m(e),decorators:[v,h],parameters:{...a,actions:{handles:d},msw:{handlers:[..._.handlers]}},args:f,argTypes:p,play:g},b={},x={name:`With disabled search`,args:{"disable-search":!0}},b.parameters={...b.parameters,docs:{...b.parameters?.docs,source:{originalSource:`{}`,...b.parameters?.docs?.source}}},x.parameters={...x.parameters,docs:{...x.parameters?.docs,source:{originalSource:`{
+  name: 'With disabled search',
+  args: {
+    'disable-search': true
+  }
+}`,...x.parameters?.docs?.source}}},S=[`Default`,`WithDisabledSearch`]}));C();export{b as Default,x as WithDisabledSearch,S as __namedExportsOrder,y as default,C as t};

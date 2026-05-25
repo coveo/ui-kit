@@ -1,0 +1,3 @@
+import{n as e}from"./chunk-jRWAZmH_.js";import{St as t,Tt as n,wt as r}from"./iframe-cSkD6HDI.js";var i,a=e((()=>{t(),i=(e=!0)=>({decorator:t=>{let i=document.createElement(`template`),a=document.createElement(`div`),o=t();return o&&typeof o==`object`&&`_$litType$`in o?(r(o,a),i.innerHTML=a.innerHTML):i.innerHTML=String(o),e&&(i.id=`code-root`),n`
+      <atomic-product-template>${i}</atomic-product-template>
+    `}})}));export{i as n,a as t};

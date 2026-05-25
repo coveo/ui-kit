@@ -1,0 +1,11 @@
+import{n as e}from"./chunk-jRWAZmH_.js";import{D as t,E as n}from"./iframe-cSkD6HDI.js";import{i as r,r as i}from"./commerce-interface-wrapper-BFOjNQs_.js";import{n as a,t as o}from"./common-meta-parameters-BmIbTEf7.js";import{n as s,t as c}from"./commerce-product-list-wrapper-CNTwHksc.js";import{n as l,t as u}from"./commerce-product-template-wrapper-BOcgCT4i.js";var d,f,p,m,h,g,_,v,y,b,x,S,C,w=e((()=>{t(),i(),c(),u(),o(),{decorator:d}=l(),{decorator:f}=s(`list`,!1),{events:p,args:m,argTypes:h,template:g}=n(`atomic-product-multi-value-text`,{excludeCategories:[`methods`]}),{decorator:_,play:v}=r({engineConfig:{preprocessRequest:e=>{let t=JSON.parse(e.body);return t.perPage=1,e.body=JSON.stringify(t),e}},includeCodeRoot:!1}),y={component:`atomic-product-multi-value-text`,title:`Commerce/Product Multi-Value Text`,id:`atomic-product-multi-value-text`,render:e=>g(e),parameters:{...a,chromatic:{disableSnapshot:!0},actions:{handles:p}},argTypes:h,decorators:[d,f,_],play:v,args:{...m,field:`cat_available_sizes`}},b={},x={name:`With max-values-set-to-display set to minimum`,args:{"max-values-to-display":1}},S={name:`With max-values-set-to-display set to total number of values`,args:{"max-values-to-display":6}},b.parameters={...b.parameters,docs:{...b.parameters?.docs,source:{originalSource:`{}`,...b.parameters?.docs?.source}}},x.parameters={...x.parameters,docs:{...x.parameters?.docs,source:{originalSource:`{
+  name: 'With max-values-set-to-display set to minimum',
+  args: {
+    'max-values-to-display': 1
+  }
+}`,...x.parameters?.docs?.source}}},S.parameters={...S.parameters,docs:{...S.parameters?.docs,source:{originalSource:`{
+  name: 'With max-values-set-to-display set to total number of values',
+  args: {
+    'max-values-to-display': 6
+  }
+}`,...S.parameters?.docs?.source}}},C=[`Default`,`WithMaxValuesToDisplaySetToMinimum`,`WithMaxValuesToDisplaySetToTotalNumberOfValues`]}));w();export{b as Default,x as WithMaxValuesToDisplaySetToMinimum,S as WithMaxValuesToDisplaySetToTotalNumberOfValues,C as __namedExportsOrder,y as default,w as t};

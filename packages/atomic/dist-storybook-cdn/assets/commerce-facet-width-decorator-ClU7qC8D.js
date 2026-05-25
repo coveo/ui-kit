@@ -1,0 +1,1 @@
+import{n as e}from"./chunk-jRWAZmH_.js";import{St as t,Tt as n}from"./iframe-cSkD6HDI.js";var r,i=e((()=>{t(),r=e=>n`<div style="min-width: 470px;">${e()}</div> `}));export{i as n,r as t};

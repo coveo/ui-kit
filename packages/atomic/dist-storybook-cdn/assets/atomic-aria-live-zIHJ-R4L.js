@@ -1,0 +1,12 @@
+import{n as e}from"./chunk-jRWAZmH_.js";import{r as t}from"./react-FtSvzJ4N.js";import{a as n}from"./chunk-RD3KTAHR-zATRA5tJ.js";import{l as r,p as i}from"./blocks-CvL71tRc.js";import{t as a}from"./mdx-react-shim-DJpA_GAc.js";import{n as o,t as s}from"./atomic-doc-template-BrmV5DRP.js";import c,{Default as l,t as u}from"./atomic-aria-live.new.stories-B58gJBOd.js";function d(e){let n={code:`code`,p:`p`,pre:`pre`,...t(),...e.components};return(0,p.jsxs)(p.Fragment,{children:[(0,p.jsx)(r,{of:c}),`
+`,(0,p.jsxs)(s,{stories:{Default:l},githubPath:`common/atomic-aria-live/atomic-aria-live.ts`,tagName:`atomic-aria-live`,className:`AtomicAriaLive`,children:[(0,p.jsxs)(n.p,{children:[`This component should not be needed if you use an interface, as those will automatically create an `,(0,p.jsx)(n.code,{children:`atomic-aria-live`}),` component. However, you might want to be able to add regions and messages to that aria-live region from another custom component. You can do so using the `,(0,p.jsx)(n.code,{children:`findAriaLive`}),` event.`]}),(0,p.jsxs)(n.p,{children:[`The `,(0,p.jsx)(n.code,{children:`atomic-aria-live`}),` component listens for `,(0,p.jsx)(n.code,{children:`atomic/accessibility/findAriaLive`}),` events dispatched on the document. When such an event is received, it sets itself as the `,(0,p.jsx)(n.code,{children:`element`}),` property in the event details, allowing other components to interact with it programmatically.`]}),(0,p.jsx)(n.p,{children:`To use this from a custom component, you can dispatch the event and then call methods on the returned element:`}),(0,p.jsx)(n.pre,{children:(0,p.jsx)(n.code,{className:`language-typescript`,children:`// Find the aria-live component
+const event = new CustomEvent('atomic/accessibility/findAriaLive', {
+  detail: {}
+});
+document.dispatchEvent(event);
+const ariaLiveElement = event.detail.element;
+
+// Register a new region and update its message
+ariaLiveElement?.registerRegion('my-region', false); // false = polite, true = assertive
+ariaLiveElement?.updateMessage('my-region', 'This is an announcement', false);
+`})})]})]})}function f(e={}){let{wrapper:n}={...t(),...e.components};return n?(0,p.jsx)(n,{...e,children:(0,p.jsx)(d,{...e})}):d(e)}var p;e((()=>{p=n(),a(),i(),u(),o()}))();export{f as default};

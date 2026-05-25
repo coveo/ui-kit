@@ -1,0 +1,9 @@
+import{n as e}from"./chunk-jRWAZmH_.js";import{r as t}from"./react-FtSvzJ4N.js";import{a as n}from"./chunk-RD3KTAHR-zATRA5tJ.js";import{l as r,p as i}from"./blocks-CvL71tRc.js";import{t as a}from"./mdx-react-shim-DJpA_GAc.js";import{n as o,t as s}from"./atomic-doc-template-BrmV5DRP.js";import c,{AsCarousel as l,Default as u,NoRecommendations as d,WithFullTemplate as f,t as p}from"./atomic-commerce-recommendation-list.new.stories-CuCAq0GK.js";function m(e){let n={code:`code`,p:`p`,pre:`pre`,...t(),...e.components};return(0,g.jsxs)(g.Fragment,{children:[(0,g.jsx)(r,{of:c}),`
+`,(0,g.jsxs)(s,{stories:{Default:u,WithFullTemplate:f,AsCarousel:l,NoRecommendations:d},githubPath:`commerce/atomic-commerce-recommendation-list/atomic-commerce-recommendation-list.ts`,tagName:`atomic-commerce-recommendation-list`,className:`AtomicCommerceRecommendationList`,children:[(0,g.jsxs)(n.p,{children:[`The `,(0,g.jsx)(n.code,{children:`atomic-commerce-recommendation-list`}),` component must be placed inside an `,(0,g.jsx)(n.code,{children:`atomic-commerce-recommendation-interface`}),` to work properly.`]}),(0,g.jsx)(n.pre,{children:(0,g.jsx)(n.code,{className:`language-html`,children:`<atomic-commerce-recommendation-interface>
+  <atomic-commerce-recommendation-list></atomic-commerce-recommendation-list>
+</atomic-commerce-recommendation-interface>
+`})}),(0,g.jsx)(n.p,{children:`You can include multiple recommendation lists within a single interface:`}),(0,g.jsx)(n.pre,{children:(0,g.jsx)(n.code,{className:`language-html`,children:`<atomic-commerce-recommendation-interface>
+  <atomic-commerce-recommendation-list></atomic-commerce-recommendation-list>
+  <atomic-commerce-recommendation-list></atomic-commerce-recommendation-list>
+</atomic-commerce-recommendation-interface>
+`})})]})]})}function h(e={}){let{wrapper:n}={...t(),...e.components};return n?(0,g.jsx)(n,{...e,children:(0,g.jsx)(m,{...e})}):m(e)}var g;e((()=>{g=n(),a(),i(),p(),o()}))();export{h as default};

@@ -1,0 +1,8 @@
+import{n as e}from"./chunk-jRWAZmH_.js";import{D as t,E as n}from"./iframe-cSkD6HDI.js";import{n as r,t as i}from"./common-meta-parameters-BmIbTEf7.js";import{r as a,t as o}from"./search-interface-wrapper-DyJSRxFL.js";import{i as s,n as c,r as l,t as u}from"./result-section-story-utils-BOiyhMsV.js";var d,f,p,m,h,g,_,v,y=e((()=>{t(),i(),s(),o(),{play:d}=a({config:{preprocessRequest:e=>{let t=JSON.parse(e.body);return t.numberOfResults=1,e.body=JSON.stringify(t),e}},includeCodeRoot:!1}),{events:f,args:p,argTypes:m,template:h}=n(`atomic-result-section-excerpt`,{excludeCategories:[`methods`]}),g={component:`atomic-result-section-excerpt`,title:`Search/Result Sections`,id:`atomic-result-section-excerpt`,render:e=>h(e),parameters:{...r,chromatic:{disableSnapshot:!0},actions:{handles:f}},args:{...p,...c()},argTypes:{...m,...u()}},_={name:`atomic-result-section-excerpt`,decorators:l(),play:d,args:{"default-slot":`<p class="text-sm text-gray-600">The palm cockatoo is thought to be the only bird species to use tools musically – drumming wood to attract a mate.</p>`}},_.parameters={..._.parameters,docs:{..._.parameters?.docs,source:{originalSource:`{
+  name: 'atomic-result-section-excerpt',
+  decorators: getResultSectionDecorators(),
+  play,
+  args: {
+    'default-slot': \`<p class="text-sm text-gray-600">The palm cockatoo is thought to be the only bird species to use tools musically – drumming wood to attract a mate.</p>\`
+  }
+}`,..._.parameters?.docs?.source}}},v=[`Default`]}));y();export{_ as Default,v as __namedExportsOrder,g as default,y as t};

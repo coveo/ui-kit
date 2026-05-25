@@ -1,0 +1,5 @@
+import{n as e}from"./chunk-jRWAZmH_.js";import{t}from"./iframe-cSkD6HDI.js";import{a as n}from"./chunk-RD3KTAHR-zATRA5tJ.js";import{a as r,c as i,d as a,f as o,n as s,p as c,u as l}from"./blocks-CvL71tRc.js";import{n as u,t as d}from"./canvas-with-github-9ODpV0yx.js";var f,p,m=e((()=>{c(),t(),u(),f=n(),p=({stories:e,githubPath:t,tagName:n,className:c,defaultStory:u=`Default`,children:p})=>{let m=n?`
+\`\`\`html
+<${n}></${n}>
+\`\`\`
+  `.trim():``;return(0,f.jsxs)(f.Fragment,{children:[(0,f.jsx)(o,{}),n&&c&&(0,f.jsxs)(`div`,{style:{fontSize:`14px`,color:`#6b7280`,marginBottom:`16px`,fontFamily:`ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace`},children:[`<`,n,`> | `,c]}),(0,f.jsx)(a,{children:(0,f.jsx)(r,{})}),m&&(0,f.jsx)(i,{children:m}),(0,f.jsx)(d,{of:e[u],githubPath:t}),(0,f.jsx)(`h2`,{children:`Usage`}),p,(0,f.jsx)(`h2`,{children:`Examples`}),(0,f.jsx)(l,{title:``}),(0,f.jsx)(`h2`,{children:`Reference`}),(0,f.jsx)(s,{})]})}}));export{m as n,p as t};

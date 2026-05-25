@@ -1,0 +1,8 @@
+import{n as e}from"./chunk-jRWAZmH_.js";import{r as t}from"./react-FtSvzJ4N.js";import{a as n}from"./chunk-RD3KTAHR-zATRA5tJ.js";import{l as r,p as i}from"./blocks-CvL71tRc.js";import{t as a}from"./mdx-react-shim-DJpA_GAc.js";import{n as o,t as s}from"./atomic-doc-template-BrmV5DRP.js";import c,{Default as l,WithLabel as u,t as d}from"./atomic-ipx-button.new.stories-Bs6yKH7R.js";function f(e){let n={code:`code`,h2:`h2`,p:`p`,pre:`pre`,...t(),...e.components};return(0,m.jsxs)(m.Fragment,{children:[(0,m.jsx)(r,{of:c,name:`Docs`}),`
+`,(0,m.jsxs)(s,{stories:{Default:l,WithLabel:u},githubPath:`ipx/atomic-ipx-button/atomic-ipx-button.ts`,tagName:`atomic-ipx-button`,className:`AtomicIpxButton`,children:[(0,m.jsxs)(n.p,{children:[`The `,(0,m.jsx)(n.code,{children:`atomic-ipx-button`}),` component displays a floating button that toggles the visibility of the IPX modal. This button is typically positioned at the bottom-right corner of the screen and provides users with quick access to the IPX search experience.`]}),(0,m.jsx)(n.h2,{id:`usage`,children:`Usage`}),(0,m.jsxs)(n.p,{children:[`This component must be used alongside `,(0,m.jsx)(n.code,{children:`atomic-ipx-modal`}),` within an `,(0,m.jsx)(n.code,{children:`atomic-search-interface`}),`:`]}),(0,m.jsx)(n.pre,{children:(0,m.jsx)(n.code,{className:`language-html`,children:`<atomic-search-interface>
+  <atomic-ipx-modal>
+    <!-- Modal content -->
+  </atomic-ipx-modal>
+  <atomic-ipx-button label="Help"></atomic-ipx-button>
+</atomic-search-interface>
+`})})]})]})}function p(e={}){let{wrapper:n}={...t(),...e.components};return n?(0,m.jsx)(n,{...e,children:(0,m.jsx)(f,{...e})}):f(e)}var m;e((()=>{m=n(),a(),i(),d(),o()}))();export{p as default};

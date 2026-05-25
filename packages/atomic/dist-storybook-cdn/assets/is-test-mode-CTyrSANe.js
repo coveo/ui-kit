@@ -1,0 +1,1 @@
+import{n as e}from"./chunk-jRWAZmH_.js";function t(){return typeof window<`u`&&[`localhost`,`127.0.0.1`,`[::1]`].includes(window.location.hostname)}var n=e((()=>{}));export{t as n,n as t};

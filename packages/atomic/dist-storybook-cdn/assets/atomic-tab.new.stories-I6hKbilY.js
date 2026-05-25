@@ -1,0 +1,5 @@
+import{n as e}from"./chunk-jRWAZmH_.js";import{D as t,E as n,St as r,Tt as i}from"./iframe-cSkD6HDI.js";import{n as a,t as o}from"./common-meta-parameters-BmIbTEf7.js";import{r as s,t as c}from"./search-interface-wrapper-DyJSRxFL.js";var l,u,d,f,p,m,h,g=e((()=>{t(),r(),o(),c(),{decorator:l,play:u}=s(),{events:d,argTypes:f}=n(`atomic-tab`,{excludeCategories:[`methods`]}),p={component:`atomic-tab`,title:`Search/Tab`,id:`atomic-tab`,render:()=>i`<atomic-tab-manager>
+    <atomic-tab label="All" name="all"></atomic-tab>
+    <atomic-tab label="Images" name="images"></atomic-tab>
+    <atomic-tab label="Articles" name="articles"></atomic-tab>
+  </atomic-tab-manager>`,decorators:[l],parameters:{...a,chromatic:{disableSnapshot:!0},actions:{handles:d}},argTypes:f,play:u},m={},m.parameters={...m.parameters,docs:{...m.parameters?.docs,source:{originalSource:`{}`,...m.parameters?.docs?.source}}},h=[`Default`]}));g();export{m as Default,h as __namedExportsOrder,p as default,g as t};

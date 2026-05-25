@@ -1,0 +1,7 @@
+import{n as e}from"./chunk-jRWAZmH_.js";import{D as t,E as n}from"./iframe-cSkD6HDI.js";import{i as r,r as i}from"./commerce-interface-wrapper-BFOjNQs_.js";import{n as a,t as o}from"./common-meta-parameters-BmIbTEf7.js";var s,c,l,u,d,f,p,m,h,g,_=e((()=>{t(),i(),o(),{decorator:s,play:c}=r(),{events:l,args:u,argTypes:d,template:f}=n(`atomic-commerce-products-per-page`,{excludeCategories:[`methods`]}),p={component:`atomic-commerce-products-per-page`,title:`Commerce/Products Per Page`,id:`atomic-commerce-products-per-page`,render:e=>f(e),decorators:[s],parameters:{...a,chromatic:{disableSnapshot:!0},actions:{handles:l}},args:u,argTypes:d,play:c},m={},h={name:`With custom choices displayed`,args:{"choices-displayed":`2,5,10,25`,"initial-choice":`2`}},m.parameters={...m.parameters,docs:{...m.parameters?.docs,source:{originalSource:`{}`,...m.parameters?.docs?.source}}},h.parameters={...h.parameters,docs:{...h.parameters?.docs,source:{originalSource:`{
+  name: 'With custom choices displayed',
+  args: {
+    'choices-displayed': '2,5,10,25',
+    'initial-choice': '2'
+  }
+}`,...h.parameters?.docs?.source}}},g=[`Default`,`WithCustomChoicesDisplayed`]}));_();export{m as Default,h as WithCustomChoicesDisplayed,g as __namedExportsOrder,p as default,_ as t};

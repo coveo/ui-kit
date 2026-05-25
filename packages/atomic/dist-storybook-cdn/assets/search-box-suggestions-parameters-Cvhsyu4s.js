@@ -1,0 +1,1 @@
+import{n as e}from"./chunk-jRWAZmH_.js";import{n as t,t as n}from"./common-meta-parameters-BmIbTEf7.js";var r,i=e((()=>{n(),r={...t,docs:{...t.docs,story:{...t.docs?.story,height:`400px`}}}}));export{r as n,i as t};

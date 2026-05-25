@@ -1,0 +1,6 @@
+import{n as e}from"./chunk-jRWAZmH_.js";import{D as t,E as n}from"./iframe-cSkD6HDI.js";import{n as r,t as i}from"./common-meta-parameters-BmIbTEf7.js";import{n as a,t as o}from"./mock-CijMLWxR.js";import{n as s,t as c}from"./insight-interface-wrapper-BwybnAhf.js";var l,u,d,f,p,m,h,g,_,v,y;e((()=>{t(),a(),i(),c(),l=new o,{decorator:u,play:d}=s(),{events:f,args:p,argTypes:m,template:h}=n(`atomic-insight-generate-answer-button`,{excludeCategories:[`methods`]}),g={component:`atomic-insight-generate-answer-button`,title:`Insight/Generate Answer Button`,id:`atomic-insight-generate-answer-button`,render:e=>h(e),decorators:[u],parameters:{...r,chromatic:{disableSnapshot:!0},actions:{handles:f},msw:{handlers:[...l.handlers]}},beforeEach:()=>{l.searchEndpoint.clear(),l.querySuggestEndpoint.clear()},args:p,argTypes:m,play:d,tags:[`!dev`]},_={},v={name:`With tooltip`,args:{tooltip:`Generate Answer`}},_.parameters={..._.parameters,docs:{..._.parameters?.docs,source:{originalSource:`{}`,..._.parameters?.docs?.source}}},v.parameters={...v.parameters,docs:{...v.parameters?.docs,source:{originalSource:`{
+  name: 'With tooltip',
+  args: {
+    tooltip: 'Generate Answer'
+  }
+}`,...v.parameters?.docs?.source}}},y=[`Default`,`Tooltip`]}))();export{_ as Default,v as Tooltip,y as __namedExportsOrder,g as default};

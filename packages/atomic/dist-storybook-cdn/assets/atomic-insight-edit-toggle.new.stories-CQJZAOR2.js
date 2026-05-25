@@ -1,0 +1,6 @@
+import{n as e}from"./chunk-jRWAZmH_.js";import{D as t,E as n}from"./iframe-cSkD6HDI.js";import{n as r,t as i}from"./common-meta-parameters-BmIbTEf7.js";import{n as a,t as o}from"./mock-CijMLWxR.js";import{n as s,t as c}from"./insight-interface-wrapper-BwybnAhf.js";var l,u,d,f,p,m,h,g,_,v,y,b=e((()=>{t(),a(),i(),c(),l=new o,{decorator:u,play:d}=s(),{events:f,args:p,argTypes:m,template:h}=n(`atomic-insight-edit-toggle`,{excludeCategories:[`methods`]}),g={component:`atomic-insight-edit-toggle`,title:`Insight/Edit Toggle`,id:`atomic-insight-edit-toggle`,render:e=>h(e),decorators:[u],parameters:{...r,chromatic:{disableSnapshot:!0},actions:{handles:f},msw:{handlers:[...l.handlers]}},beforeEach:()=>{l.searchEndpoint.clear(),l.querySuggestEndpoint.clear()},args:p,argTypes:m,play:d},_={},v={name:`With tooltip`,args:{tooltip:`Click to edit this item`}},_.parameters={..._.parameters,docs:{..._.parameters?.docs,source:{originalSource:`{}`,..._.parameters?.docs?.source}}},v.parameters={...v.parameters,docs:{...v.parameters?.docs,source:{originalSource:`{
+  name: 'With tooltip',
+  args: {
+    tooltip: 'Click to edit this item'
+  }
+}`,...v.parameters?.docs?.source}}},y=[`Default`,`WithTooltip`]}));b();export{_ as Default,v as WithTooltip,y as __namedExportsOrder,g as default,b as t};

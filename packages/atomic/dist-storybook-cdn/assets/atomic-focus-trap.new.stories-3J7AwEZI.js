@@ -1,0 +1,3 @@
+import{n as e}from"./chunk-jRWAZmH_.js";import{D as t,E as n}from"./iframe-cSkD6HDI.js";import{n as r,t as i}from"./common-meta-parameters-BmIbTEf7.js";var a,o,s,c,l,u,d;e((()=>{t(),i(),{events:a,args:o,argTypes:s,template:c}=n(`atomic-focus-trap`,{excludeCategories:[`methods`]}),l={component:`atomic-focus-trap`,title:`Common/Focus Trap`,id:`atomic-focus-trap`,render:e=>c(e),parameters:{...r,chromatic:{disableSnapshot:!0},actions:{handles:a}},args:o,argTypes:s},u={tags:[`!dev`]},u.parameters={...u.parameters,docs:{...u.parameters?.docs,source:{originalSource:`{
+  tags: ['!dev']
+}`,...u.parameters?.docs?.source}}},d=[`Default`]}))();export{u as Default,d as __namedExportsOrder,l as default};

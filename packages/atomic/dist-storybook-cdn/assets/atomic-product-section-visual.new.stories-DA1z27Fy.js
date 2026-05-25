@@ -1,0 +1,8 @@
+import{n as e}from"./chunk-jRWAZmH_.js";import{D as t,E as n}from"./iframe-cSkD6HDI.js";import{i as r,r as i}from"./commerce-interface-wrapper-BFOjNQs_.js";import{n as a,t as o}from"./common-meta-parameters-BmIbTEf7.js";import{i as s,n as c,r as l,t as u}from"./product-section-story-utils-Dxz0Hyny.js";var d,f,p,m,h,g,_,v,y=e((()=>{t(),i(),s(),o(),{events:d,args:f,argTypes:p,template:m}=n(`atomic-product-section-visual`,{excludeCategories:[`methods`]}),{play:h}=r({engineConfig:{preprocessRequest:e=>{let t=JSON.parse(e.body);return t.perPage=1,e.body=JSON.stringify(t),e}},includeCodeRoot:!1}),g={component:`atomic-product-section-visual`,title:`Commerce/Product Sections`,id:`atomic-product-section-visual`,render:e=>m(e),parameters:{...a,chromatic:{disableSnapshot:!0},actions:{handles:d}},args:{...f,...c()},argTypes:{...p,...u()}},_={name:`atomic-product-section-visual`,decorators:l(),play:h,args:{"default-slot":`<img src="https://images.barca.group/Sports/mj/Clothing/Pants/67_Men_Gray_Elastane/cb1a7d3c9ac3_bottom_left.webp" alt="Product Image" class="w-full h-auto rounded-lg">`}},_.parameters={..._.parameters,docs:{..._.parameters?.docs,source:{originalSource:`{
+  name: 'atomic-product-section-visual',
+  decorators: getProductSectionDecorators(),
+  play,
+  args: {
+    'default-slot': \`<img src="https://images.barca.group/Sports/mj/Clothing/Pants/67_Men_Gray_Elastane/cb1a7d3c9ac3_bottom_left.webp" alt="Product Image" class="w-full h-auto rounded-lg">\`
+  }
+}`,..._.parameters?.docs?.source}}},v=[`Default`]}));y();export{_ as Default,v as __namedExportsOrder,g as default,y as t};
