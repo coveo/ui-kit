@@ -1,6 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
+import {richResponse as richRecommendationResponse} from '@/storybook-utils/api/commerce/recommendation-response';
 import {wrapInCommerceRecommendationInterface} from '@/storybook-utils/commerce/commerce-recommendation-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/commerce/atomic-commerce-recommendation-list/atomic-commerce-recommendation-list.js';
@@ -22,6 +23,8 @@ import '@/src/components/commerce/atomic-product-template/atomic-product-templat
 import '@/src/components/commerce/atomic-product-text/atomic-product-text.js';
 
 const mockCommerceApi = new MockCommerceApi();
+
+mockCommerceApi.recommendationEndpoint.mock(() => richRecommendationResponse);
 
 const {decorator, play} = wrapInCommerceRecommendationInterface({});
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -69,7 +72,7 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
-    handlers: [...mockCommerceApi.handlers],
+    msw: {handlers: [...mockCommerceApi.handlers]},
   },
   beforeEach: async () => {
     mockCommerceApi.recommendationEndpoint.clear();
