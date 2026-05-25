@@ -84,7 +84,7 @@ const customRenderer = {
       return `<span>${text}</span>`;
     }
 
-    return `<atomic-generated-answer-inline-link href="${safeHref}"${titleAttribute}>${text}</atomic-generated-answer-inline-link>`;
+    return `<atomic-generated-answer-inline-link href="${safeHref}"${titleAttribute} exportparts="answer-link,answer-link-text,answer-link-icon">${text}</atomic-generated-answer-inline-link>`;
   },
 
   /**

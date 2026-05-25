@@ -97,7 +97,7 @@ describe('#renderGeneratedMarkdownContent', () => {
       ADD_ATTR: ['part'],
       CUSTOM_ELEMENT_HANDLING: {
         tagNameCheck: /^atomic-generated-answer-inline-link$/,
-        attributeNameCheck: /^(href|title)$/,
+        attributeNameCheck: /^(href|title|exportparts)$/,
       },
     });
   });
