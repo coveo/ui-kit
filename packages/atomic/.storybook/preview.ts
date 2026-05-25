@@ -1,4 +1,5 @@
 import '@/src/themes/coveo.css';
+import '@/src/themes/coveo.experimental.css';
 import type {Preview} from '@storybook/web-components-vite';
 import {setCustomElementsManifest} from '@storybook/web-components-vite';
 import {setStorybookHelpersConfig} from '@wc-toolkit/storybook-helpers';

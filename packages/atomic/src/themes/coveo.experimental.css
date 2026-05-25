@@ -1,0 +1,126 @@
+/**
+ * Experimental color system for Atomic.
+ *
+ * Load this stylesheet AFTER coveo.css to opt in:
+ *
+ *   <link rel="stylesheet" href="coveo.css" />
+ *   <link rel="stylesheet" href="coveo.experimental.css" />
+ *
+ * This replaces all hardcoded color values with 5 OKLCH base tokens.
+ * Changing any base token automatically cascades to all derived variants.
+ * Includes built-in dark mode via prefers-color-scheme.
+ *
+ * Base tokens (the only values you need to override to theme the library):
+ *   --atomic-primary
+ *   --atomic-neutral   (mid-tone anchor ~oklch(0.72); see migration note below)
+ *   --atomic-success
+ *   --atomic-error
+ *   --atomic-visited
+ *
+ * Migration note — --atomic-neutral:
+ *   This file changes --atomic-neutral from a light border shade (#e5e8e8)
+ *   to a mid-tone anchor (~oklch(0.72)). If you were overriding
+ *   --atomic-neutral to set a border color, override --atomic-neutral-dim
+ *   instead. The old visual appearance is preserved by default.
+ *
+ * Browser support: CSS relative color syntax — Chrome 119+, Firefox 128+,
+ *   Safari 16.4+ (~92% global). No PostCSS fallback is provided.
+ */
+
+:root {
+  /* ===================================================================
+   * BASE COLORS — the only values a theme author needs to change (≤ 5)
+   * =================================================================== */
+
+  --atomic-primary: oklch(0.52 0.2 258);
+  --atomic-neutral: oklch(0.72 0.012 240); /* mid-tone anchor */
+  --atomic-success: oklch(0.55 0.16 142);
+  --atomic-error: oklch(0.52 0.18 35);
+  --atomic-visited: oklch(0.44 0.18 303);
+
+  /* ===================================================================
+   * DERIVED COLORS — computed from base colors, do not override directly
+   * =================================================================== */
+
+  /* Primary scale */
+  --atomic-on-primary: oklch(
+    from var(--atomic-primary) clamp(0, (0.6 - l) * 1000, 1) 0 h
+  );
+  --atomic-primary-light: oklch(
+    from var(--atomic-primary) calc(l + 0.15) calc(c * 0.85) h
+  );
+  --atomic-primary-dark: oklch(
+    from var(--atomic-primary) calc(l - 0.12) calc(c * 1.1) h
+  );
+  --atomic-primary-background: oklch(
+    from var(--atomic-primary) 0.97 calc(c * 0.12) h
+  );
+  --atomic-ring-primary: oklch(from var(--atomic-primary) l c h / 50%);
+
+  /* Neutral scale */
+  --atomic-neutral-dark: oklch(from var(--atomic-neutral) calc(l - 0.26) c h);
+  --atomic-neutral-dim: var(--atomic-neutral);
+  --atomic-neutral-light: oklch(
+    from var(--atomic-neutral) calc(l + 0.16) calc(c * 0.6) h
+  );
+  --atomic-neutral-lighter: oklch(
+    from var(--atomic-neutral) calc(l + 0.23) calc(c * 0.35) h
+  );
+  --atomic-disabled: oklch(
+    from var(--atomic-neutral) calc(l + 0.12) calc(c * 0.75) h
+  );
+
+  /* Surfaces */
+  --atomic-background: oklch(1 0 0);
+  --atomic-on-background: oklch(from var(--atomic-neutral) 0.18 calc(c * 2) h);
+
+  /* Semantic state backgrounds */
+  --atomic-success-background: oklch(
+    from var(--atomic-success) 0.95 calc(c * 0.18) h
+  );
+  --atomic-error-background: oklch(
+    from var(--atomic-error) 0.95 calc(c * 0.18) h
+  );
+
+  /* Opinionated constants */
+  --atomic-inline-code: oklch(0.46 0.2 25);
+  --atomic-rating-icon-active-color: oklch(0.87 0.17 87);
+  --atomic-user-actions-timeline-separator-background: oklch(
+    from var(--atomic-neutral) calc(l + 0.15) calc(c * 0.5) h
+  );
+}
+
+/* contrast-color() gives a better result where supported */
+@supports (color: contrast-color(red)) {
+  :root {
+    --atomic-on-primary: contrast-color(var(--atomic-primary));
+  }
+}
+
+/* Dark mode — surface layer only; brand base colors do not change */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --atomic-background: oklch(0.13 0 0);
+
+    --atomic-neutral-dark: oklch(from var(--atomic-neutral) calc(l + 0.26) c h);
+    --atomic-neutral-light: oklch(
+      from var(--atomic-neutral) calc(l - 0.18) calc(c * 0.6) h
+    );
+    --atomic-neutral-lighter: oklch(
+      from var(--atomic-neutral) calc(l - 0.5) calc(c * 0.35) h
+    );
+    --atomic-disabled: oklch(
+      from var(--atomic-neutral) calc(l - 0.3) calc(c * 0.75) h
+    );
+
+    --atomic-primary-background: oklch(
+      from var(--atomic-primary) 0.17 calc(c * 0.25) h
+    );
+    --atomic-success-background: oklch(
+      from var(--atomic-success) 0.17 calc(c * 0.3) h
+    );
+    --atomic-error-background: oklch(
+      from var(--atomic-error) 0.17 calc(c * 0.3) h
+    );
+  }
+}
