@@ -269,7 +269,9 @@ export class AtomicSegmentedFacet
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.tabManager = buildTabManager(this.bindings.engine);
 
-    this.facet = buildFacet(this.bindings.engine, {options: this.facetOptions});
+    this.facet = buildFacet(this.bindings.engine, {
+      options: this.facetOptions,
+    });
     this.facetId = this.facet.state.facetId;
     this.dependenciesManager = buildFacetConditionsManager(
       this.bindings.engine,
@@ -362,7 +364,10 @@ export class AtomicSegmentedFacet
   private renderLabel() {
     return when(
       this.label,
-      () => html` <b class="mr-2" part="label"> ${this.label}: </b> `
+      () =>
+        html` <b class="text-on-background mr-2" part="label">
+          ${this.label}:
+        </b>`
     );
   }
 
