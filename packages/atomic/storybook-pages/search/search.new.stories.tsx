@@ -75,10 +75,28 @@ async function initializeSearchInterface(canvasElement: HTMLElement) {
 
 const mockSearchApi = new MockSearchApi();
 
+const colorArgTypes = {
+  primary: {control: 'color', name: 'Primary'},
+  neutral: {control: 'color', name: 'Neutral (mid-tone anchor)'},
+  success: {control: 'color', name: 'Success'},
+  error: {control: 'color', name: 'Error'},
+  visited: {control: 'color', name: 'Visited'},
+};
+
+const colorArgs = {
+  primary: '#126ce0',
+  neutral: '#9eaab8',
+  success: '#12a244',
+  error: '#ce3f00',
+  visited: '#752e9c',
+};
+
 const meta: Meta = {
   component: 'rich-search-page',
   title: 'Search/Example Pages',
   id: 'rich-search-page',
+  argTypes: colorArgTypes,
+  args: colorArgs,
   parameters: {
     ...parameters,
     layout: 'fullscreen',
@@ -92,7 +110,16 @@ const meta: Meta = {
       () => richResponse as unknown as typeof baseResponse
     );
   },
-  render: () => html`
+  render: ({primary, neutral, success, error, visited}) => html`
+    <style>
+      :root {
+        --atomic-primary: ${primary};
+        --atomic-neutral: ${neutral};
+        --atomic-success: ${success};
+        --atomic-error: ${error};
+        --atomic-visited: ${visited};
+      }
+    </style>
     <atomic-search-interface
       language-assets-path="./lang"
       icon-assets-path="./assets"

@@ -43,10 +43,28 @@ async function initializeCommerceRecommendationInterface(
   );
 }
 
+const colorArgTypes = {
+  primary: {control: 'color', name: 'Primary'},
+  neutral: {control: 'color', name: 'Neutral (mid-tone anchor)'},
+  success: {control: 'color', name: 'Success'},
+  error: {control: 'color', name: 'Error'},
+  visited: {control: 'color', name: 'Visited'},
+};
+
+const colorArgs = {
+  primary: '#126ce0',
+  neutral: '#9eaab8',
+  success: '#12a244',
+  error: '#ce3f00',
+  visited: '#752e9c',
+};
+
 const meta: Meta = {
   component: 'recommendations',
   title: 'Commerce/Example Pages',
   id: 'recommendations',
+  argTypes: colorArgTypes,
+  args: colorArgs,
   parameters: {
     ...parameters,
     msw: {
@@ -59,7 +77,16 @@ const meta: Meta = {
       () => richResponse as unknown as typeof baseResponse
     );
   },
-  render: () => html`
+  render: ({primary, neutral, success, error, visited}) => html`
+    <style>
+      :root {
+        --atomic-primary: ${primary};
+        --atomic-neutral: ${neutral};
+        --atomic-success: ${success};
+        --atomic-error: ${error};
+        --atomic-visited: ${visited};
+      }
+    </style>
     <atomic-commerce-recommendation-interface .analytics=${isTestMode()}>
       <atomic-commerce-recommendation-list
         display="list"

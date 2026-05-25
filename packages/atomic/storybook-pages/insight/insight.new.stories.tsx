@@ -65,10 +65,28 @@ async function initializeInsightInterface(canvasElement: HTMLElement) {
 
 const mockInsightApi = new MockInsightApi();
 
+const colorArgTypes = {
+  primary: {control: 'color', name: 'Primary'},
+  neutral: {control: 'color', name: 'Neutral (mid-tone anchor)'},
+  success: {control: 'color', name: 'Success'},
+  error: {control: 'color', name: 'Error'},
+  visited: {control: 'color', name: 'Visited'},
+};
+
+const colorArgs = {
+  primary: '#126ce0',
+  neutral: '#9eaab8',
+  success: '#12a244',
+  error: '#ce3f00',
+  visited: '#752e9c',
+};
+
 const meta: Meta = {
   component: 'insight-page',
   title: 'Insight/Example Pages',
   id: 'insight-page',
+  argTypes: colorArgTypes,
+  args: colorArgs,
   parameters: {
     ...parameters,
     layout: 'fullscreen',
@@ -82,7 +100,16 @@ const meta: Meta = {
       () => richResponse as unknown as typeof baseResponse
     );
   },
-  render: () => html`
+  render: ({primary, neutral, success, error, visited}) => html`
+    <style>
+      :root {
+        --atomic-primary: ${primary};
+        --atomic-neutral: ${neutral};
+        --atomic-success: ${success};
+        --atomic-error: ${error};
+        --atomic-visited: ${visited};
+      }
+    </style>
     <style>
       atomic-insight-interface:not([widget='false']),
       atomic-insight-layout:not([widget='false']) {
