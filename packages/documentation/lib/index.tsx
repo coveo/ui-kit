@@ -55,6 +55,16 @@ class KebabRouter extends KindRouter {
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+let headlessVersion = '';
+try {
+  const pkgPath = resolve(
+    dirname(fileURLToPath(import.meta.url)),
+    '../../headless/package.json'
+  );
+  const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
+  headlessVersion = pkg.version || '';
+} catch {}
+
 /**
  * Called by TypeDoc when loaded as a plugin.
  */
@@ -175,17 +185,6 @@ export const load = (app: Application) => {
   });
 
   app.renderer.hooks.on('head.end', (event) => {
-    // Inject headless version as data attribute for analytics
-    let headlessVersion = '';
-    try {
-      const pkgPath = resolve(
-        dirname(fileURLToPath(import.meta.url)),
-        '../../headless/package.json'
-      );
-      const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
-      headlessVersion = pkg.version || '';
-    } catch {}
-
     return (
       <>
         {headlessVersion && (

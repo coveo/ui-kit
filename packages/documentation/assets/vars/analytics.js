@@ -7,12 +7,11 @@ class DocsAnalytics {
   constructor() {
     this.isInit = false;
     this._disabled = false;
-    // Events buffered before onetrust.js calls init()
+
     this._buffer = [];
     this._attachDefaultHandlers();
   }
 
-  // Mirrors Jekyll: selectAmplitudeKey()
   selectAmplitudeKey() {
     const allowedHosts = ['docs.coveo.com'];
     const url = new URL(window.location.href);
@@ -21,13 +20,10 @@ class DocsAnalytics {
       : 'dc44628be4bc3b55860e60d1637ee897';
   }
 
-  // Mirrors Jekyll: initAmplitude()
-  // Called by onetrust.js when C0003 functional consent is granted.
   initAmplitude() {
     if (window.amplitude && !this.isInit) {
       const apiKey = this.selectAmplitudeKey();
-      
-      // Enrichment plugin: adds headless/typedoc version + pageId to ALL events (including autocapture)
+
       const enrichmentPlugin = () => ({
         name: 'docs-enrichment',
         type: 'enrichment',
@@ -48,17 +44,16 @@ class DocsAnalytics {
         },
       });
       window.amplitude.add(enrichmentPlugin());
+
+      this.isInit = true;
+      this._disabled = false;
+
+      this._buffer.splice(0).forEach(({name, props}) =>
+        this.trackEvent(name, props)
+      );
     }
-    this.isInit = true;
-    this._disabled = false;
-    // Flush events buffered before consent
-    this._buffer.splice(0).forEach(({name, props}) =>
-      window.amplitude && window.amplitude.track(name, props)
-    );
   }
 
-  // Mirrors Jekyll: trackEvent()
-  // Enriches properties with URL/page metadata then delegates to window.amplitude.
   trackEvent(eventName, eventProperties = {}) {
     const url = new URL(window.location.href);
     eventProperties.pageUrl = url.href;
@@ -73,8 +68,6 @@ class DocsAnalytics {
     }
   }
 
-  // Mirrors Jekyll: setOptOut()
-  // Called by onetrust.js when C0003 consent is denied or withdrawn.
   setOptOut(isOptOut) {
     this._disabled = isOptOut;
     this.isInit = !isOptOut;
@@ -85,8 +78,6 @@ class DocsAnalytics {
       window.amplitude.setOptOut(isOptOut);
     }
   }
-
-  // --- Typedoc-specific additions below ---
 
   _isExternalLink(anchor) {
     try {
@@ -206,15 +197,15 @@ class DocsAnalytics {
       // Extract context from the code block
       const pre = btn.parentElement;
       const code = pre?.querySelector('code');
-      
+
       let language = '';
       let codeSnippet = '';
-      
+
       if (code) {
         // Extract language from class (e.g., "language-typescript" → "typescript")
         const langClass = Array.from(code.classList).find(cls => cls.startsWith('language-'));
         language = langClass ? langClass.replace('language-', '') : '';
-        
+
         // Get first ~100 chars of the code as a snippet
         const fullCode = code.textContent || '';
         codeSnippet = fullCode.trim().slice(0, 100);
@@ -229,9 +220,6 @@ class DocsAnalytics {
     }, true);
   }
 
-  // Unified track(): buffers pre-consent, delegates post-consent.
-  // Use this instead of trackEvent() for all internal handler calls
-  // so buffering works correctly before onetrust.js calls initAmplitude().
   track(eventName, props = {}) {
     if (this._disabled) return;
     if (!this.isInit) {

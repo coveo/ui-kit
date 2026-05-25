@@ -58,20 +58,33 @@ export function isActiveGroup(groupsToVerify) {
     const analytics = window.docsAnalytics;
     if (!analytics) return;
 
+    function handleConsentChange() {
+      if (isActiveGroup('C0003')) {
+        analytics.initAmplitude();
+      } else {
+        analytics.setOptOut(true);
+      }
+    }
+
     // If C0003 consent already present (returning visitor), init immediately
     if (isActiveGroup('C0003')) {
       analytics.initAmplitude();
       return;
     }
 
-    // Otherwise wait for the user to interact with the consent banner
-    window.addEventListener('consent.onetrust', function () {
-      if (isActiveGroup('C0003')) {
-        analytics.initAmplitude();
-      } else {
-        analytics.setOptOut(true);
+    // OneTrust integrations in this repo rely on the global OptanonWrapper callback.
+    // Preserve any existing wrapper and run the analytics consent handler after it.
+    const existingOptanonWrapper = window.OptanonWrapper;
+    window.OptanonWrapper = function () {
+      if (typeof existingOptanonWrapper === 'function') {
+        existingOptanonWrapper();
       }
-    });
+      handleConsentChange();
+    };
+
+    // Keep listening for the custom event as a compatibility fallback in case
+    // another integration dispatches it.
+    window.addEventListener('consent.onetrust', handleConsentChange);
   } catch (e) {
     // don't break the page if analytics fails
     // eslint-disable-next-line no-console
