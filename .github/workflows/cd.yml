@@ -190,10 +190,19 @@ jobs:
         with:
           ref: 'release/v3'
       - uses: ./.github/actions/setup
+      - name: Create GitHub App token for docs dispatch
+        id: app-token
+        uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3
+        with:
+          app-id: ${{ secrets.DOC_APP_ID }}
+          private-key: ${{ secrets.DOC_APP_PRIVATE_KEY }}
+          owner: coveo
+          repositories: doc_jekyll-public-site
       - name: Notify Docs
+        continue-on-error: true
         run: pnpm run notify:docs
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
   build-cdn:
     name: Build CDN
     runs-on: ubuntu-latest
