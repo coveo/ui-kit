@@ -8,9 +8,7 @@
       </div>
       <div class="slds-col slds-has-flexi-truncate">
         <template lwc:if={disableCollapse}>
-          <span
-            class={titleClass}
-            data-testid="thread-item-title-static"
+          <span class={titleClass} data-testid="thread-item-title-static"
             >{title}</span
           >
         </template>
@@ -32,8 +30,7 @@
       <div
         class="slds-grid slds-grid_align-center slds-shrink-none thread-item__line-column slds-m-right_x-small"
       >
-        <template lwc:if={hideLine}></template>
-        <template lwc:else>
+        <template lwc:if={shouldDisplayLine}>
           <span class="thread-item__line" data-testid="thread-item-line"></span>
         </template>
       </div>

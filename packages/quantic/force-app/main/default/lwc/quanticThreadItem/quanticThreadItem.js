@@ -31,7 +31,7 @@ export default class QuanticThreadItem extends LightningElement {
   @api hideLine = false;
 
   /**
-   * Whether the thread item is initially expanded.
+   * Whether the thread item is expanded.
    * @api
    * @type {boolean}
    * @defaultValue `false`
@@ -56,6 +56,10 @@ export default class QuanticThreadItem extends LightningElement {
       return;
     }
     this._isExpanded = !this._isExpanded;
+  }
+
+  get shouldDisplayLine() {
+    return !this.hideLine;
   }
 
   get contentHidden() {

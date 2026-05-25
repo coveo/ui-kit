@@ -66,7 +66,9 @@ describe('c-quantic-thread-item', () => {
       const element = createTestComponent();
       await flushPromises();
 
-      const content = element.shadowRoot.querySelector(selectors.visibleContent);
+      const content = element.shadowRoot.querySelector(
+        selectors.visibleContent
+      );
       expect(content).toBeNull();
     });
 
@@ -92,7 +94,9 @@ describe('c-quantic-thread-item', () => {
       const element = createTestComponent({isExpanded: true});
       await flushPromises();
 
-      const content = element.shadowRoot.querySelector(selectors.visibleContent);
+      const content = element.shadowRoot.querySelector(
+        selectors.visibleContent
+      );
       expect(content).not.toBeNull();
     });
 
@@ -121,7 +125,9 @@ describe('c-quantic-thread-item', () => {
       element.shadowRoot.querySelector(selectors.titleButton).click();
       await flushPromises();
 
-      const content = element.shadowRoot.querySelector(selectors.visibleContent);
+      const content = element.shadowRoot.querySelector(
+        selectors.visibleContent
+      );
       expect(content).not.toBeNull();
     });
 
@@ -132,27 +138,39 @@ describe('c-quantic-thread-item', () => {
       element.shadowRoot.querySelector(selectors.titleButton).click();
       await flushPromises();
 
-      const content = element.shadowRoot.querySelector(selectors.visibleContent);
+      const content = element.shadowRoot.querySelector(
+        selectors.visibleContent
+      );
       expect(content).toBeNull();
     });
   });
 
   describe('disableCollapse', () => {
     it('forces item to be expanded regardless of isExpanded prop', async () => {
-      const element = createTestComponent({disableCollapse: true, isExpanded: false});
+      const element = createTestComponent({
+        disableCollapse: true,
+        isExpanded: false,
+      });
       await flushPromises();
 
-      const content = element.shadowRoot.querySelector(selectors.visibleContent);
+      const content = element.shadowRoot.querySelector(
+        selectors.visibleContent
+      );
       expect(content).not.toBeNull();
     });
 
     it('renders a bold title when collapse is disabled', async () => {
-      const element = createTestComponent({disableCollapse: true, isExpanded: false});
+      const element = createTestComponent({
+        disableCollapse: true,
+        isExpanded: false,
+      });
       await flushPromises();
 
       const title = element.shadowRoot.querySelector(selectors.titleSpan);
       expect(title.className).toContain('slds-text-title_bold');
-      expect(element.shadowRoot.querySelector(selectors.boldTitle)).not.toBeNull();
+      expect(
+        element.shadowRoot.querySelector(selectors.boldTitle)
+      ).not.toBeNull();
     });
   });
 });
