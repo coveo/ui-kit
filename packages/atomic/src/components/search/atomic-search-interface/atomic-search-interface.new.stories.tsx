@@ -2,6 +2,7 @@ import {getSampleSearchEngineConfiguration} from '@coveo/headless';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/search/atomic-breadbox/atomic-breadbox.js';
 import '@/src/components/search/atomic-facet/atomic-facet.js';
@@ -13,6 +14,8 @@ import '@/src/components/search/atomic-search-interface/atomic-search-interface.
 import '@/src/components/search/atomic-search-layout/atomic-search-layout.js';
 import '@/src/components/search/atomic-sort-dropdown/atomic-sort-dropdown.js';
 import '@/src/components/search/atomic-sort-expression/atomic-sort-expression.js';
+
+const searchApiHarness = new MockSearchApi();
 
 async function initializeSearchInterface(canvasElement: HTMLElement) {
   await customElements.whenDefined('atomic-search-interface');
@@ -36,6 +39,7 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     chromatic: {disableSnapshot: true},
+    msw: {handlers: [...searchApiHarness.handlers]},
     actions: {
       handles: events,
     },

@@ -1,24 +1,19 @@
-import {getSampleSearchEngineConfiguration} from '@coveo/headless';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/ipx/atomic-ipx-button/atomic-ipx-button.js';
 import '@/src/components/ipx/atomic-ipx-modal/atomic-ipx-modal.js';
-import '@/src/components/search/atomic-search-interface/atomic-search-interface.js';
 
+const mockSearchApi = new MockSearchApi();
+
+const {decorator, play} = wrapInSearchInterface({skipFirstSearch: true});
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-ipx-button',
   {excludeCategories: ['methods']}
 );
-
-async function initializeInterface(canvasElement: HTMLElement) {
-  await customElements.whenDefined('atomic-search-interface');
-  const searchInterface = canvasElement.querySelector(
-    'atomic-search-interface'
-  );
-  await searchInterface!.initialize(getSampleSearchEngineConfiguration());
-}
 
 const meta: Meta = {
   component: 'atomic-ipx-button',
@@ -36,29 +31,30 @@ const meta: Meta = {
         inset: auto;
       }
     </style>
-    <atomic-search-interface>
-      <atomic-ipx-modal>
-        <div slot="header"><p>Header Content</p></div>
-        <div slot="body"><p>Body Content</p></div>
-        <div slot="footer"><p>Footer Content</p></div>
-      </atomic-ipx-modal>
-      ${template(args)}
-    </atomic-search-interface>
+    <atomic-ipx-modal>
+      <div slot="header"><p>Header Content</p></div>
+      <div slot="body"><p>Body Content</p></div>
+      <div slot="footer"><p>Footer Content</p></div>
+    </atomic-ipx-modal>
+    ${template(args)}
   `,
+  decorators: [decorator],
   parameters: {
     ...parameters,
     chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
     },
+    msw: {handlers: [...mockSearchApi.handlers]},
   },
   args: {
     ...args,
   },
   argTypes,
-  play: async (context) => {
-    await initializeInterface(context.canvasElement);
+  beforeEach: () => {
+    mockSearchApi.searchEndpoint.clear();
   },
+  play,
 };
 
 export default meta;

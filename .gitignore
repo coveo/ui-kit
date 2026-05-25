@@ -32,3 +32,4 @@ packages/atomic/custom-elements.json
 
 samples/headless/headless-rga-angular/.angular
 *.tsbuildinfo
+packages/atomic/reports/

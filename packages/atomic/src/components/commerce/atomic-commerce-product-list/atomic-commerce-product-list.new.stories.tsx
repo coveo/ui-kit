@@ -23,6 +23,9 @@ import '@/src/components/commerce/atomic-product-section-visual/atomic-product-s
 import '@/src/components/commerce/atomic-product-template/atomic-product-template.js';
 import '@/src/components/commerce/atomic-product-text/atomic-product-text.js';
 import '@/src/components/search/atomic-table-element/atomic-table-element.js';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
+
+const commerceApiHarness = new MockCommerceApi();
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-commerce-product-list',
@@ -72,6 +75,7 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
+    msw: {handlers: [...commerceApiHarness.handlers]},
     chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
@@ -79,6 +83,9 @@ const meta: Meta = {
   },
   argTypes,
   play,
+  beforeEach: () => {
+    commerceApiHarness.clearAll();
+  },
 };
 
 export default meta;

@@ -260,6 +260,30 @@ export function parseXML(string) {
 }
 
 /**
+ * Recursively clones objects to break Locker proxy chains.
+ * @param {any} value
+ * @returns {any}
+ */
+export function unwrapLockerProxiedObject(value) {
+  if (value === null || typeof value !== 'object') {
+    return value;
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => unwrapLockerProxiedObject(item));
+  }
+
+  const unwrappedValue = {};
+  for (const key in value) {
+    if (Object.prototype.hasOwnProperty.call(value, key)) {
+      unwrappedValue[key] = unwrapLockerProxiedObject(value[key]);
+    }
+  }
+
+  return unwrappedValue;
+}
+
+/**
  * Utility class for managing a simple in-memory store.
  * Supports registering and retrieving facet and sort option data.
  */
