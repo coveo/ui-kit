@@ -28,7 +28,7 @@ export interface A11yOverrideEntry {
   reason: string;
 }
 
-export interface ManualAuditCriterionValue {
+interface ManualAuditCriterionValue {
   conformance: string;
   remarks?: string;
 }

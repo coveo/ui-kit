@@ -28,6 +28,8 @@ import {
   buildController,
   type Controller,
 } from '../../controller/headless-controller.js';
+import type {DateRangeRequest} from '../facets/range-facet/date-facet/headless-core-date-facet.js';
+import type {NumericRangeRequest} from '../facets/range-facet/numeric-facet/headless-core-numeric-facet.js';
 
 export interface SearchParameterManagerProps {
   /**
@@ -134,9 +136,30 @@ export function enrichParameters(
   engine: CoreEngine,
   parameters: SearchParameters
 ): Required<SearchParameters> {
-  return {
-    ...initialSearchParameterSelector(engine.state),
+  const initial = initialSearchParameterSelector(engine.state);
+  const merged = {
+    ...initial,
     ...parameters,
+  };
+
+  const registeredDf: Record<string, DateRangeRequest[]> = {};
+  if (engine.state.dateFacetSet) {
+    for (const id of Object.keys(engine.state.dateFacetSet)) {
+      registeredDf[id] = [];
+    }
+  }
+
+  const registeredNf: Record<string, NumericRangeRequest[]> = {};
+  if (engine.state.numericFacetSet) {
+    for (const id of Object.keys(engine.state.numericFacetSet)) {
+      registeredNf[id] = [];
+    }
+  }
+
+  return {
+    ...merged,
+    df: {...registeredDf, ...merged.df},
+    nf: {...registeredNf, ...merged.nf},
   };
 }
 

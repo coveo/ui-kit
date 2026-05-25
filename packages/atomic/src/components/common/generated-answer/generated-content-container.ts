@@ -33,7 +33,7 @@ export const renderGeneratedContentContainer: FunctionalComponentWithChildren<
               isStreaming: props.isStreaming,
             } satisfies GeneratedTextContentProps,
           })}
-      <div class="footer mt-6">${children}</div>
+      <div class="footer">${children}</div>
     </div>
   `;
 };

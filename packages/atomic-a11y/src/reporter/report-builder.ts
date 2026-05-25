@@ -14,7 +14,8 @@ import {createSummary} from './summary.js';
 
 export function buildA11yReport(
   componentResults: Map<string, ComponentAccumulator>,
-  packageMetadata: PackageMetadata
+  packageMetadata: PackageMetadata,
+  detectedAxeCoreVersion?: string
 ): A11yReport {
   const components = buildComponents(componentResults);
   const criteria = buildCriteria(componentResults);
@@ -23,16 +24,14 @@ export function buildA11yReport(
   );
 
   const axeCoreVersion =
+    detectedAxeCoreVersion ??
     packageMetadata.devDependencies?.['axe-core'] ??
-    packageMetadata.dependencies?.['axe-core'];
+    packageMetadata.dependencies?.['axe-core'] ??
+    'unknown';
 
   const storybookVersion =
     packageMetadata.devDependencies?.storybook ??
     packageMetadata.dependencies?.storybook;
-
-  if (!axeCoreVersion) {
-    throw new Error('axe-core version not found in package metadata');
-  }
 
   if (!storybookVersion) {
     throw new Error('storybook version not found in package metadata');

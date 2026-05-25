@@ -20,8 +20,8 @@
     "yaml": "catalog:"
   },
   "devDependencies": {
-    "ajv": "8.18.0",
-    "axe-core": "4.10.3",
+    "ajv": "8.20.0",
+    "axe-core": "4.11.4",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }
