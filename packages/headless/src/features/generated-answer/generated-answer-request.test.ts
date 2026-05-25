@@ -33,6 +33,7 @@ import {
   streamAnswerAPIStateMockWithStaticFiltersSelected,
 } from './generated-answer-mocks.js';
 import {
+  buildStreamingRequest,
   constructAnswerAPIQueryParams,
   constructGenerateHeadAnswerParams,
   type StateNeededForHeadAnswerParams,
@@ -627,5 +628,61 @@ describe('constructGenerateHeadAnswerParams', () => {
       buildMockNavigatorContextProvider()()
     );
     expect(params.facets).toBeUndefined();
+  });
+});
+
+describe('buildStreamingRequest', () => {
+  const buildState = (overrides = {}) => ({
+    configuration: {
+      ...getConfigurationInitialState(),
+      accessToken: 'test-token',
+      organizationId: 'myorg',
+      environment: 'prod' as const,
+      search: {
+        locale: 'en',
+        timezone: 'America/New_York',
+        authenticationProviders: [],
+      },
+    },
+    search: {
+      response: {results: [], searchUid: '', totalCountFiltered: 0, facets: []},
+      extendedResults: {generativeQuestionAnsweringId: 'stream-123'},
+      isLoading: false,
+      error: null,
+      requestId: '',
+    },
+    generatedAnswer: {
+      ...getGeneratedAnswerInitialState(),
+    },
+    ...overrides,
+  });
+
+  it('uses search.apiBaseUrl as the URL when set (proxy path)', async () => {
+    const proxyUrl = 'https://proxy.example.com';
+    const state = buildState({
+      configuration: {
+        ...buildState().configuration,
+        search: {
+          ...buildState().configuration.search,
+          apiBaseUrl: proxyUrl,
+        },
+      },
+    });
+
+    const request = await buildStreamingRequest(state as any);
+    expect(request.url).toBe(proxyUrl);
+  });
+
+  it('falls back to organization endpoint when search.apiBaseUrl is not set', async () => {
+    const state = buildState();
+    const request = await buildStreamingRequest(state as any);
+    expect(request.url).toContain('myorg');
+    expect(request.url).not.toContain('proxy');
+  });
+
+  it('includes the streamId from extendedResults', async () => {
+    const state = buildState();
+    const request = await buildStreamingRequest(state as any);
+    expect(request.streamId).toBe('stream-123');
   });
 });

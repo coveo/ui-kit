@@ -1,6 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {
   playExecuteFirstSearch,
   wrapInSearchInterface,
@@ -75,6 +76,8 @@ const defaultTemplateContent = `<atomic-result-template>
   </template>
 </atomic-result-template>`;
 
+const searchApiHarness = new MockSearchApi();
+
 const {decorator, play} = wrapInSearchInterface({
   config: {
     search: {
@@ -118,6 +121,7 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     chromatic: {disableSnapshot: true},
+    msw: {handlers: [...searchApiHarness.handlers]},
     layout: 'fullscreen',
     actions: {
       handles: events,
