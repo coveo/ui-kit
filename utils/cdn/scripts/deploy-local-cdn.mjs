@@ -19,7 +19,7 @@ const packages = [
   {name: 'atomic', source: 'packages/atomic/cdn', cdnPath: 'atomic/v$VERSION'},
   {
     name: 'atomic-storybook',
-    source: 'packages/atomic/dist-storybook',
+    source: 'packages/atomic/dist-storybook-cdn',
     cdnPath: 'atomic/v$VERSION/storybook',
   },
   {

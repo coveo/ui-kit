@@ -4,6 +4,7 @@
     "build": {
       "dependsOn": [
         "@coveo/atomic#build",
+        "@coveo/atomic#build:storybook:cdn",
         "@coveo/atomic-angular#build",
         "@coveo/atomic-react#build",
         "@coveo/atomic-hosted-page#build",
