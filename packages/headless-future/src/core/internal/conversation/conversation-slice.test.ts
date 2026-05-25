@@ -315,6 +315,23 @@ describe('conversationSlice: session and error', () => {
     expect(state.session).toEqual({conversationSessionId: 'session-2'});
   });
 
+  it('should merge partial session updates', () => {
+    const state = conversationSlice.reducer(
+      {
+        ...initialConversationState,
+        session: {
+          conversationSessionId: 'session-1',
+        },
+      },
+      conversationSlice.actions.patchSession({conversationToken: 'token-2'})
+    );
+
+    expect(state.session).toEqual({
+      conversationSessionId: 'session-1',
+      conversationToken: 'token-2',
+    });
+  });
+
   it('should set and clear the error message', () => {
     const withError = conversationSlice.reducer(
       initialConversationState,

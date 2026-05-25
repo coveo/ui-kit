@@ -7,6 +7,7 @@ import type {
 import {
   ConversationRuntime,
   conversationEndpointSelectors,
+  conversationMutators,
   conversationSelectors,
   createMemoizedStateSelector,
   getFullEngine,
@@ -26,9 +27,14 @@ export interface ConversationController extends Controller {
    * Submit a user message and stream the assistant response.
    *
    * @param input The user's message text.
+   * @param options Optional continuity fields to force into the request before
+   * the turn starts (useful for the first request when resuming a conversation).
    * @returns A promise that resolves when the turn lifecycle completes.
    */
-  submitTurn(input: string): Promise<void>;
+  submitTurn(
+    input: string,
+    options?: ConversationControllerSubmitTurnOptions
+  ): Promise<void>;
 
   /**
    * Abort the currently active turn.
@@ -55,6 +61,20 @@ export interface ConversationControllerState {
 }
 
 export interface ConversationControllerOptions extends ControllerOptions {}
+
+export interface ConversationControllerSubmitTurnOptions {
+  /**
+   * Optional explicit session id for the upcoming request.
+   * Pass null to clear a previously stored value.
+   */
+  conversationSessionId?: string | null;
+
+  /**
+   * Optional explicit conversation token for the upcoming request.
+   * Pass null to clear a previously stored value.
+   */
+  conversationToken?: string | null;
+}
 
 type ConversationSelectionState = Parameters<
   typeof conversationSelectors.messages
@@ -111,12 +131,40 @@ export const buildConversationController: (
   loadConversation(fullEngine);
   loadConversationEndpoint(fullEngine);
 
-  const runtime = ConversationRuntime.getInstance(fullEngine);
+  const runtime = ConversationRuntime.getInstance(fullEngine, {
+    readSession: () => fullEngine.read(conversationSelectors.session),
+    setSession: (session) => {
+      fullEngine.mutate(conversationMutators.setSession(session));
+    },
+    patchSession: (sessionPatch) => {
+      fullEngine.mutate(conversationMutators.patchSession(sessionPatch));
+    },
+    setError: (error) => {
+      fullEngine.mutate(conversationMutators.setError(error));
+    },
+    startTurn: (payload) => {
+      fullEngine.mutate(conversationMutators.startTurn(payload));
+    },
+    abortTurn: (payload) => {
+      fullEngine.mutate(conversationMutators.abortTurn(payload));
+    },
+    appendAgentChunk: (payload) => {
+      fullEngine.mutate(conversationMutators.appendAgentChunk(payload));
+    },
+    completeTurn: (payload) => {
+      fullEngine.mutate(conversationMutators.completeTurn(payload));
+    },
+    failTurn: (payload) => {
+      fullEngine.mutate(conversationMutators.failTurn(payload));
+    },
+  });
   const stateSelect = buildStateSelector();
 
   return {
-    submitTurn(input) {
-      return runtime.submitTurn(input);
+    submitTurn(input, options) {
+      return options
+        ? runtime.submitTurn(input, options)
+        : runtime.submitTurn(input);
     },
     abortTurn() {
       runtime.abortTurn();

@@ -2,14 +2,8 @@ import {describe, expect, it} from 'vitest';
 import {dispatchConversationEvent} from './conversation-event-dispatcher.js';
 
 describe('dispatchConversationEvent', () => {
-  const baseOptions = {
-    turnId: 'turn-1',
-    finalizedAt: 123,
-  };
-
-  it('returns stream chunk mutations for TEXT_MESSAGE_CONTENT', () => {
+  it('returns stream chunk effects for TEXT_MESSAGE_CONTENT', () => {
     const result = dispatchConversationEvent({
-      ...baseOptions,
       event: {
         type: 'TEXT_MESSAGE_CONTENT',
         messageId: 'm-1',
@@ -19,20 +13,16 @@ describe('dispatchConversationEvent', () => {
 
     expect(result.isMeaningfulEvent).toBe(true);
     expect(result.isTerminalEvent).toBe(false);
-    expect(result.mutations).toEqual([
+    expect(result.effects).toEqual([
       {
-        type: 'conversation/appendAgentChunk',
-        payload: {
-          turnId: 'turn-1',
-          chunk: 'hello',
-        },
+        type: 'append_agent_chunk',
+        chunk: 'hello',
       },
     ]);
   });
 
-  it('returns no chunk mutation for empty TEXT_MESSAGE_CONTENT deltas', () => {
+  it('returns no chunk effects for empty TEXT_MESSAGE_CONTENT deltas', () => {
     const result = dispatchConversationEvent({
-      ...baseOptions,
       event: {
         type: 'TEXT_MESSAGE_CONTENT',
         messageId: 'm-1',
@@ -42,12 +32,11 @@ describe('dispatchConversationEvent', () => {
 
     expect(result.isMeaningfulEvent).toBe(true);
     expect(result.isTerminalEvent).toBe(false);
-    expect(result.mutations).toEqual([]);
+    expect(result.effects).toEqual([]);
   });
 
-  it('updates session on turn_started when session values are present', () => {
+  it('returns a patch_session effect on turn_started when session values are present', () => {
     const result = dispatchConversationEvent({
-      ...baseOptions,
       event: {
         type: 'turn_started',
         conversationSessionId: 'session-123',
@@ -57,10 +46,10 @@ describe('dispatchConversationEvent', () => {
 
     expect(result.isMeaningfulEvent).toBe(true);
     expect(result.isTerminalEvent).toBe(false);
-    expect(result.mutations).toEqual([
+    expect(result.effects).toEqual([
       {
-        type: 'conversation/setSession',
-        payload: {
+        type: 'patch_session',
+        sessionPatch: {
           conversationSessionId: 'session-123',
           conversationToken: 'token-123',
         },
@@ -68,9 +57,52 @@ describe('dispatchConversationEvent', () => {
     ]);
   });
 
-  it('returns successful terminal mutations on turn_complete', () => {
+  it('returns a patch_session effect with conversationSessionId on RUN_STARTED', () => {
     const result = dispatchConversationEvent({
-      ...baseOptions,
+      event: {
+        type: 'RUN_STARTED',
+        runId: 'run-1',
+        threadId: 'thread-123',
+      },
+    });
+
+    expect(result.isMeaningfulEvent).toBe(true);
+    expect(result.isTerminalEvent).toBe(false);
+    expect(result.effects).toEqual([
+      {
+        type: 'patch_session',
+        sessionPatch: {
+          conversationSessionId: 'thread-123',
+        },
+      },
+    ]);
+  });
+
+  it('returns a patch_session effect from CUSTOM header events', () => {
+    const result = dispatchConversationEvent({
+      event: {
+        type: 'CUSTOM',
+        name: 'header',
+        value: {
+          conversationToken: 'token-abc',
+        },
+      },
+    });
+
+    expect(result.isMeaningfulEvent).toBe(true);
+    expect(result.isTerminalEvent).toBe(false);
+    expect(result.effects).toEqual([
+      {
+        type: 'patch_session',
+        sessionPatch: {
+          conversationToken: 'token-abc',
+        },
+      },
+    ]);
+  });
+
+  it('returns a terminal complete_turn effect on turn_complete', () => {
+    const result = dispatchConversationEvent({
       event: {
         type: 'turn_complete',
       },
@@ -78,28 +110,15 @@ describe('dispatchConversationEvent', () => {
 
     expect(result.isMeaningfulEvent).toBe(true);
     expect(result.isTerminalEvent).toBe(true);
-    expect(result.mutations).toEqual([
+    expect(result.effects).toEqual([
       {
-        type: 'conversation/completeTurn',
-        payload: {
-          turnId: 'turn-1',
-          finalizedAt: 123,
-        },
-      },
-      {
-        type: 'conversationEndpoint/setStatus',
-        payload: 'idle',
-      },
-      {
-        type: 'conversationEndpoint/setStreamingConnected',
-        payload: false,
+        type: 'complete_turn',
       },
     ]);
   });
 
-  it('maps RUN_ERROR to protocol_error failure mutations', () => {
+  it('maps RUN_ERROR to a protocol_error fail_turn effect', () => {
     const result = dispatchConversationEvent({
-      ...baseOptions,
       event: {
         type: 'RUN_ERROR',
         message: 'payload mismatch',
@@ -108,37 +127,17 @@ describe('dispatchConversationEvent', () => {
 
     expect(result.isMeaningfulEvent).toBe(true);
     expect(result.isTerminalEvent).toBe(true);
-    expect(result.mutations).toEqual([
+    expect(result.effects).toEqual([
       {
-        type: 'conversation/failTurn',
-        payload: {
-          turnId: 'turn-1',
-          finalizedAt: 123,
-          reason: 'protocol_error',
-        },
-      },
-      {
-        type: 'conversation/setError',
-        payload: 'payload mismatch',
-      },
-      {
-        type: 'conversationEndpoint/setError',
-        payload: 'payload mismatch',
-      },
-      {
-        type: 'conversationEndpoint/setStatus',
-        payload: 'idle',
-      },
-      {
-        type: 'conversationEndpoint/setStreamingConnected',
-        payload: false,
+        type: 'fail_turn',
+        reason: 'protocol_error',
+        error: 'payload mismatch',
       },
     ]);
   });
 
-  it('records warning for unknown events and keeps stream alive', () => {
+  it('returns endpoint warning effect for unknown events and keeps stream alive', () => {
     const result = dispatchConversationEvent({
-      ...baseOptions,
       event: {
         type: 'UNKNOWN',
         event: 'tool_mystery',
@@ -148,18 +147,16 @@ describe('dispatchConversationEvent', () => {
 
     expect(result.isMeaningfulEvent).toBe(false);
     expect(result.isTerminalEvent).toBe(false);
-    expect(result.mutations).toEqual([
+    expect(result.effects).toEqual([
       {
-        type: 'conversationEndpoint/setError',
-        payload:
-          'Conversation stream warning: unsupported event "tool_mystery".',
+        type: 'set_endpoint_error',
+        error: 'Conversation stream warning: unsupported event "tool_mystery".',
       },
     ]);
   });
 
-  it('records warning for custom events and keeps stream alive', () => {
+  it('returns endpoint warning effect for ignored custom events and keeps stream alive', () => {
     const result = dispatchConversationEvent({
-      ...baseOptions,
       event: {
         type: 'CUSTOM',
         name: 'diagnostic',
@@ -169,10 +166,10 @@ describe('dispatchConversationEvent', () => {
 
     expect(result.isMeaningfulEvent).toBe(false);
     expect(result.isTerminalEvent).toBe(false);
-    expect(result.mutations).toEqual([
+    expect(result.effects).toEqual([
       {
-        type: 'conversationEndpoint/setError',
-        payload:
+        type: 'set_endpoint_error',
+        error:
           'Conversation stream warning: custom event "diagnostic" was ignored.',
       },
     ]);

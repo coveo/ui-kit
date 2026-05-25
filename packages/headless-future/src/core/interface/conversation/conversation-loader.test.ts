@@ -11,9 +11,43 @@ type MockEngine = FullEngine & {
 };
 
 const createMockEngine = (): MockEngine => {
+  const state = {
+    conversation: {
+      messages: [
+        {
+          id: 'user-message-1',
+          role: 'user',
+          content: 'hello',
+          createdAt: 111,
+        },
+        {
+          id: 'agent-message-1',
+          role: 'agent',
+          content: '',
+          createdAt: 111,
+        },
+      ],
+      turns: [
+        {
+          id: 'turn-1',
+          status: {type: 'pending'},
+          messageIds: ['user-message-1', 'agent-message-1'],
+          createdAt: 111,
+        },
+      ],
+      activeTurnId: 'turn-1',
+      session: {
+        conversationSessionId: 'session-1',
+      },
+      isLoading: true,
+      error: null,
+      streaming: {isConnected: false},
+    },
+  };
+
   return {
     adoptSlice: vi.fn(async () => undefined),
-    read: vi.fn(() => ({conversationSessionId: 'session-1'})),
+    read: vi.fn((selector) => selector(state)),
   } as unknown as MockEngine;
 };
 
@@ -22,7 +56,7 @@ describe('loadConversation', () => {
     vi.clearAllMocks();
   });
 
-  it('adopts conversation slice and registers session provider once per engine', () => {
+  it('adopts conversation slice and registers request contributor once per engine', () => {
     const engine = createMockEngine();
 
     loadConversation(engine);
@@ -35,5 +69,13 @@ describe('loadConversation', () => {
     expect(
       registry.getRegisteredContributorCount(conversationEndpointKey)
     ).toBe(1);
+
+    const [contributor] = registry.getOrderedContributors(
+      conversationEndpointKey
+    );
+    expect(contributor()).toEqual({
+      message: 'hello',
+      conversationSessionId: 'session-1',
+    });
   });
 });

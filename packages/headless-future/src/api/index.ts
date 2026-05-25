@@ -25,5 +25,11 @@ export type {
   ConversationEndpointClientResult,
 } from '@/src/api/interface/conversation-endpoint/conversation-endpoint-client.js';
 
+export type {
+  ConversationStreamEvent,
+  ReadConversationEventStreamOptions,
+} from '@/src/api/interface/conversation-endpoint/conversation-event-stream.js';
+
 export {createSearchEndpointClient} from '@/src/api/interface/search-endpoint/search-endpoint-client.js';
 export {createConversationEndpointClient} from '@/src/api/interface/conversation-endpoint/conversation-endpoint-client.js';
+export {readConversationEventStream} from '@/src/api/interface/conversation-endpoint/conversation-event-stream.js';

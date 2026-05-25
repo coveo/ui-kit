@@ -12,6 +12,36 @@ export const turns = (state: StateWithConversationSlice) =>
 export const activeTurnId = (state: StateWithConversationSlice) =>
   conversationSlice.selectors.activeTurnId(state);
 
+export const activeTurnUserMessage = (state: StateWithConversationSlice) => {
+  const currentActiveTurnId = activeTurnId(state);
+
+  if (!currentActiveTurnId) {
+    return undefined;
+  }
+
+  const activeTurn = turns(state).find(
+    (turn) => turn.id === currentActiveTurnId
+  );
+
+  if (!activeTurn) {
+    return undefined;
+  }
+
+  const messageById = new Map(
+    messages(state).map((message) => [message.id, message])
+  );
+
+  for (const messageId of activeTurn.messageIds) {
+    const message = messageById.get(messageId);
+
+    if (message?.role === 'user') {
+      return message.content;
+    }
+  }
+
+  return undefined;
+};
+
 export const session = (state: StateWithConversationSlice) =>
   conversationSlice.selectors.session(state);
 

@@ -7,9 +7,16 @@ import {
 } from '@/src/core/interface/engine/engine.js';
 import * as conversationMutators from '@/src/core/interface/conversation/conversation-mutators.js';
 import * as conversationEndpointMutators from '@/src/core/interface/api/conversation-endpoint/conversation-endpoint-mutators.js';
+import type {ConversationControllerSubmitTurnOptions} from './conversation-controller.js';
 import {buildConversationController} from './conversation-controller.js';
 
-const mockSubmitTurn = vi.fn<(input: string) => Promise<void>>();
+const mockSubmitTurn =
+  vi.fn<
+    (
+      input: string,
+      options?: ConversationControllerSubmitTurnOptions
+    ) => Promise<void>
+  >();
 const mockAbortTurn = vi.fn();
 
 vi.mock(
@@ -128,6 +135,21 @@ describe('buildConversationController', () => {
       await controller.submitTurn('hello world');
 
       expect(mockSubmitTurn).toHaveBeenCalledWith('hello world');
+      expect(mockSubmitTurn).toHaveBeenCalledTimes(1);
+    });
+
+    it('forwards continuity overrides to the conversation runtime', async () => {
+      const controller = buildController();
+
+      await controller.submitTurn('hello world', {
+        conversationSessionId: 'session-1',
+        conversationToken: 'token-1',
+      });
+
+      expect(mockSubmitTurn).toHaveBeenCalledWith('hello world', {
+        conversationSessionId: 'session-1',
+        conversationToken: 'token-1',
+      });
       expect(mockSubmitTurn).toHaveBeenCalledTimes(1);
     });
   });

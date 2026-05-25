@@ -1,21 +1,19 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
-import type {RawSSEEvent} from '@/src/api/internal/protocol/stream-types.js';
 import type {ConversationEndpointCallResult} from './conversation-endpoint-types.js';
-import {ConversationRuntime} from './conversation-runtime.js';
+import {
+  ConversationRuntime,
+  type ConversationRuntimeStatePort,
+} from './conversation-runtime.js';
 
 const {
   mockCallEndpoint,
-  mockReadEventStream,
-  mockParseSSEEvent,
-  mockLoadConversation,
+  mockReadConversationEventStream,
   mockLoadConversationEndpoint,
 } = vi.hoisted(() => {
   return {
     mockCallEndpoint: vi.fn(),
-    mockReadEventStream: vi.fn(),
-    mockParseSSEEvent: vi.fn(),
-    mockLoadConversation: vi.fn(),
+    mockReadConversationEventStream: vi.fn(),
     mockLoadConversationEndpoint: vi.fn(),
   };
 });
@@ -30,23 +28,14 @@ vi.mock('./conversation-endpoint-facade.js', () => {
   };
 });
 
-vi.mock('@/src/api/internal/protocol/stream.js', () => {
-  return {
-    readEventStream: mockReadEventStream,
-  };
-});
-
-vi.mock('@/src/api/internal/protocol/sse-parser.js', () => {
-  return {
-    parseSSEEvent: mockParseSSEEvent,
-  };
-});
-
-vi.mock('@/src/core/interface/conversation/conversation-loader.js', () => {
-  return {
-    loadConversation: mockLoadConversation,
-  };
-});
+vi.mock(
+  '@/src/api/interface/conversation-endpoint/conversation-event-stream.js',
+  () => {
+    return {
+      readConversationEventStream: mockReadConversationEventStream,
+    };
+  }
+);
 
 vi.mock('./conversation-endpoint-loader.js', () => {
   return {
@@ -56,11 +45,21 @@ vi.mock('./conversation-endpoint-loader.js', () => {
 
 type MockEngine = FullEngine & {
   mutate: ReturnType<typeof vi.fn>;
+  read: ReturnType<typeof vi.fn>;
 };
 
-const createMockEngine = (): MockEngine => {
+const createMockEngine = (
+  session: {conversationSessionId?: string; conversationToken?: string} = {}
+): MockEngine => {
   return {
     mutate: vi.fn(),
+    read: vi.fn((selector) =>
+      selector({
+        conversation: {
+          session,
+        },
+      })
+    ),
   } as unknown as MockEngine;
 };
 
@@ -79,48 +78,108 @@ const deferred = <T>() => {
 const getMutations = (engine: MockEngine) =>
   engine.mutate.mock.calls.map(([mutation]) => mutation);
 
+const createConversationStatePort = (
+  engine: MockEngine
+): ConversationRuntimeStatePort => {
+  return {
+    readSession: () =>
+      engine.read((state) => state.conversation?.session ?? {}),
+    setSession: (session) => {
+      engine.mutate({
+        type: 'conversation/setSession',
+        payload: session,
+      });
+    },
+    patchSession: (sessionPatch) => {
+      engine.mutate({
+        type: 'conversation/patchSession',
+        payload: sessionPatch,
+      });
+    },
+    setError: (error) => {
+      engine.mutate({
+        type: 'conversation/setError',
+        payload: error,
+      });
+    },
+    startTurn: (payload) => {
+      engine.mutate({
+        type: 'conversation/startTurn',
+        payload,
+      });
+    },
+    abortTurn: (payload) => {
+      engine.mutate({
+        type: 'conversation/abortTurn',
+        payload,
+      });
+    },
+    appendAgentChunk: (payload) => {
+      engine.mutate({
+        type: 'conversation/appendAgentChunk',
+        payload,
+      });
+    },
+    completeTurn: (payload) => {
+      engine.mutate({
+        type: 'conversation/completeTurn',
+        payload,
+      });
+    },
+    failTurn: (payload) => {
+      engine.mutate({
+        type: 'conversation/failTurn',
+        payload,
+      });
+    },
+  };
+};
+
 describe('ConversationRuntime', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockReadEventStream.mockResolvedValue(undefined);
-    mockParseSSEEvent.mockImplementation((event: RawSSEEvent) => {
-      return {
-        type: event.event,
-      };
-    });
+    mockReadConversationEventStream.mockResolvedValue(undefined);
   });
 
   it('returns the same runtime instance for the same engine', () => {
     const engine = createMockEngine();
 
-    const first = ConversationRuntime.getInstance(engine);
-    const second = ConversationRuntime.getInstance(engine);
+    const first = ConversationRuntime.getInstance(
+      engine,
+      createConversationStatePort(engine)
+    );
+    const second = ConversationRuntime.getInstance(
+      engine,
+      createConversationStatePort(engine)
+    );
 
     expect(first).toBe(second);
-    expect(mockLoadConversation).toHaveBeenCalledTimes(1);
     expect(mockLoadConversationEndpoint).toHaveBeenCalledTimes(1);
   });
 
   it('starts turn and calls endpoint with an abort signal', async () => {
     const engine = createMockEngine();
-    const runtime = ConversationRuntime.getInstance(engine);
+    const runtime = ConversationRuntime.getInstance(
+      engine,
+      createConversationStatePort(engine)
+    );
     const stream = {} as ReadableStream<Uint8Array>;
 
     mockCallEndpoint.mockResolvedValue({
       success: true,
       data: {stream},
     } satisfies ConversationEndpointCallResult);
-    mockReadEventStream.mockImplementation(async ({onEvent, onDone}) => {
-      onEvent({event: 'turn_complete', data: '{}'});
-      onDone?.();
-    });
-    mockParseSSEEvent.mockReturnValueOnce({type: 'turn_complete'});
+    mockReadConversationEventStream.mockImplementation(
+      async ({onEvent, onDone}) => {
+        onEvent({type: 'turn_complete'});
+        onDone?.();
+      }
+    );
 
     await runtime.submitTurn('hello');
 
     expect(mockCallEndpoint).toHaveBeenCalledTimes(1);
     expect(mockCallEndpoint).toHaveBeenCalledWith(
-      'hello',
       expect.objectContaining({
         signal: expect.any(Object),
       })
@@ -135,9 +194,48 @@ describe('ConversationRuntime', () => {
     });
   });
 
+  it('applies continuity overrides before the endpoint request', async () => {
+    const engine = createMockEngine({
+      conversationSessionId: 'existing-session',
+      conversationToken: 'existing-token',
+    });
+    const runtime = ConversationRuntime.getInstance(
+      engine,
+      createConversationStatePort(engine)
+    );
+    const stream = {} as ReadableStream<Uint8Array>;
+
+    mockCallEndpoint.mockResolvedValue({
+      success: true,
+      data: {stream},
+    } satisfies ConversationEndpointCallResult);
+    mockReadConversationEventStream.mockImplementation(
+      async ({onEvent, onDone}) => {
+        onEvent({type: 'turn_complete'});
+        onDone?.();
+      }
+    );
+
+    await runtime.submitTurn('hello', {
+      conversationSessionId: 'seed-session',
+      conversationToken: null,
+    });
+
+    expect(engine.mutate).toHaveBeenCalledWith({
+      type: 'conversation/setSession',
+      payload: {
+        conversationSessionId: 'seed-session',
+      },
+    });
+    expect(mockCallEndpoint).toHaveBeenCalledTimes(1);
+  });
+
   it('rejects overlapping submit requests while a turn is active', async () => {
     const engine = createMockEngine();
-    const runtime = ConversationRuntime.getInstance(engine);
+    const runtime = ConversationRuntime.getInstance(
+      engine,
+      createConversationStatePort(engine)
+    );
     const callDeferred = deferred<ConversationEndpointCallResult>();
     mockCallEndpoint.mockReturnValue(callDeferred.promise);
 
@@ -159,14 +257,19 @@ describe('ConversationRuntime', () => {
 
   it('aborts active turn immediately and cancels pending request', async () => {
     const engine = createMockEngine();
-    const runtime = ConversationRuntime.getInstance(engine);
+    const runtime = ConversationRuntime.getInstance(
+      engine,
+      createConversationStatePort(engine)
+    );
     const callDeferred = deferred<ConversationEndpointCallResult>();
     let capturedSignal: AbortSignal | undefined;
 
-    mockCallEndpoint.mockImplementation((_, options) => {
-      capturedSignal = options?.signal;
-      return callDeferred.promise;
-    });
+    mockCallEndpoint.mockImplementation(
+      (options: {signal?: AbortSignal} | undefined) => {
+        capturedSignal = options?.signal;
+        return callDeferred.promise;
+      }
+    );
 
     const submitPromise = runtime.submitTurn('hello');
     await Promise.resolve();
@@ -195,27 +298,27 @@ describe('ConversationRuntime', () => {
 
   it('handles stream events and completes turn on terminal event', async () => {
     const engine = createMockEngine();
-    const runtime = ConversationRuntime.getInstance(engine);
+    const runtime = ConversationRuntime.getInstance(
+      engine,
+      createConversationStatePort(engine)
+    );
     const stream = {} as ReadableStream<Uint8Array>;
 
     mockCallEndpoint.mockResolvedValue({
       success: true,
       data: {stream},
     } satisfies ConversationEndpointCallResult);
-    mockReadEventStream.mockImplementation(async ({onEvent, onDone}) => {
-      onEvent({event: 'TEXT_MESSAGE_CONTENT', data: '{"delta":"hello"}'});
-      onEvent({event: 'turn_complete', data: '{}'});
-      onDone?.();
-    });
-    mockParseSSEEvent
-      .mockReturnValueOnce({
-        type: 'TEXT_MESSAGE_CONTENT',
-        messageId: 'm-1',
-        delta: 'hello',
-      })
-      .mockReturnValueOnce({
-        type: 'turn_complete',
-      });
+    mockReadConversationEventStream.mockImplementation(
+      async ({onEvent, onDone}) => {
+        onEvent({
+          type: 'TEXT_MESSAGE_CONTENT',
+          messageId: 'm-1',
+          delta: 'hello',
+        });
+        onEvent({type: 'turn_complete'});
+        onDone?.();
+      }
+    );
 
     await runtime.submitTurn('hello');
 
@@ -243,14 +346,17 @@ describe('ConversationRuntime', () => {
 
   it('fails turn when stream closes without a terminal event', async () => {
     const engine = createMockEngine();
-    const runtime = ConversationRuntime.getInstance(engine);
+    const runtime = ConversationRuntime.getInstance(
+      engine,
+      createConversationStatePort(engine)
+    );
     const stream = {} as ReadableStream<Uint8Array>;
 
     mockCallEndpoint.mockResolvedValue({
       success: true,
       data: {stream},
     } satisfies ConversationEndpointCallResult);
-    mockReadEventStream.mockImplementation(async ({onDone}) => {
+    mockReadConversationEventStream.mockImplementation(async ({onDone}) => {
       onDone?.();
     });
 
@@ -266,27 +372,27 @@ describe('ConversationRuntime', () => {
 
   it('preserves warning errors on successful completion', async () => {
     const engine = createMockEngine();
-    const runtime = ConversationRuntime.getInstance(engine);
+    const runtime = ConversationRuntime.getInstance(
+      engine,
+      createConversationStatePort(engine)
+    );
     const stream = {} as ReadableStream<Uint8Array>;
 
     mockCallEndpoint.mockResolvedValue({
       success: true,
       data: {stream},
     } satisfies ConversationEndpointCallResult);
-    mockReadEventStream.mockImplementation(async ({onEvent, onDone}) => {
-      onEvent({event: 'UNKNOWN', data: '{}'});
-      onEvent({event: 'turn_complete', data: '{}'});
-      onDone?.();
-    });
-    mockParseSSEEvent
-      .mockReturnValueOnce({
-        type: 'UNKNOWN',
-        event: 'mystery_event',
-        payload: {},
-      })
-      .mockReturnValueOnce({
-        type: 'turn_complete',
-      });
+    mockReadConversationEventStream.mockImplementation(
+      async ({onEvent, onDone}) => {
+        onEvent({
+          type: 'UNKNOWN',
+          event: 'mystery_event',
+          payload: {},
+        });
+        onEvent({type: 'turn_complete'});
+        onDone?.();
+      }
+    );
 
     await runtime.submitTurn('hello');
 
@@ -305,7 +411,10 @@ describe('ConversationRuntime', () => {
 
   it('does not overwrite aborted turn when pending request settles after abort', async () => {
     const engine = createMockEngine();
-    const runtime = ConversationRuntime.getInstance(engine);
+    const runtime = ConversationRuntime.getInstance(
+      engine,
+      createConversationStatePort(engine)
+    );
     const callDeferred = deferred<ConversationEndpointCallResult>();
 
     mockCallEndpoint.mockReturnValue(callDeferred.promise);
@@ -332,7 +441,10 @@ describe('ConversationRuntime', () => {
 
   it('is a silent no-op when aborting without an active turn', () => {
     const engine = createMockEngine();
-    const runtime = ConversationRuntime.getInstance(engine);
+    const runtime = ConversationRuntime.getInstance(
+      engine,
+      createConversationStatePort(engine)
+    );
 
     runtime.abortTurn();
 

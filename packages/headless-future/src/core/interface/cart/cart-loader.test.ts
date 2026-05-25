@@ -35,5 +35,15 @@ describe('loadCart', () => {
     expect(
       registry.getRegisteredContributorCount(conversationEndpointKey)
     ).toBe(1);
+
+    const contributors = registry.getOrderedContributors(
+      conversationEndpointKey
+    );
+    expect(contributors).toHaveLength(1);
+    expect(contributors[0]()).toEqual({
+      context: {
+        cart: [],
+      },
+    });
   });
 });

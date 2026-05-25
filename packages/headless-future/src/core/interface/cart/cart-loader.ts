@@ -16,9 +16,7 @@ export const loadCart = (engine: FullEngine) => {
 
   registry.register(conversationEndpointKey, () => ({
     context: {
-      cart: {
-        items: engine.read(cartSelectors.items),
-      },
+      cart: engine.read(cartSelectors.items),
     },
   }));
 
