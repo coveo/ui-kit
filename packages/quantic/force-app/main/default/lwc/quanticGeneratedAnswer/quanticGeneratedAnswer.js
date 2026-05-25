@@ -547,10 +547,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       : headerBaseClass;
   }
 
-  get generatedAnswerFooterRowClass() {
-    return 'generated-answer__footer-row slds-grid slds-col slds-size_1-of-1 slds-wrap slds-grid_align-spread';
-  }
-
   get citationFields() {
     const userCitationFields =
       this.fieldsToIncludeInCitations

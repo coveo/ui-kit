@@ -7,15 +7,17 @@
       <div
         class="generated-answer__card-header slds-grid slds-grid_vertical-align-center slds-border_bottom slds-p-vertical_small slds-p-horizontal_large"
       >
-        <lightning-icon
-          icon-name="utility:sparkles"
-          size="x-small"
-          alternative-text={labels.generatedAnswerForYou}
-          class="generated-answer__header-title-icon slds-var-m-right_x-small"
-        ></lightning-icon>
-        <span class="generated-answer__header-title slds-text-title_bold slds-p-vertical_x-small"
-          >{labels.generatedAnswerForYou}</span
-        >
+        <div class="generated-answer__header-title slds-grid slds-grid_vertical-align-center">
+          <lightning-icon
+            icon-name="utility:sparkles"
+            size="x-small"
+            alternative-text={labels.generatedAnswerForYou}
+            class="slds-current-color slds-var-m-right_x-small"
+          ></lightning-icon>
+          <span class="slds-text-title_bold slds-p-vertical_x-small"
+            >{labels.generatedAnswerForYou}</span
+          >
+        </div>
       </div>
       <div class="slds-p-around_large">
         <div>{labels.couldNotGenerateAnAnswer}</div>
