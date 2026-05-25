@@ -535,10 +535,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     ];
   }
 
-  get generatedAnswerFooterCssClass() {
-    return 'slds-grid slds-wrap slds-grid_align-spread generated-answer__footer';
-  }
-
   get generatedAnswerHeaderClass() {
     const headerBaseClass =
       'generated-answer__card-header slds-grid slds-grid_vertical-align-center slds-grid_align-spread slds-p-horizontal_large slds-p-vertical_small';

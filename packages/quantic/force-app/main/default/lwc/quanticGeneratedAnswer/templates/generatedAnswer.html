@@ -1,7 +1,10 @@
 <template>
   <template lwc:if={shouldDisplayGeneratedAnswer}>
     <div data-testid="generated-answer__card" class="slds-box slds-p-around_none">
-      <div class={generatedAnswerHeaderClass}>
+      <header
+        data-testid="generated-answer__header"
+        class={generatedAnswerHeaderClass}
+      >
         <div class="generated-answer__header-title slds-grid slds-grid_vertical-align-center">
           <lightning-icon
             icon-name="utility:sparkles"
@@ -20,9 +23,12 @@
             is-generated-answer-visible={isVisible}
           ></c-quantic-generated-answer-toggle>
         </template>
-      </div>
+      </header>
       <template lwc:if={isVisible}>
-        <div class="generated-answer__content slds-p-around_large">
+        <section
+          data-testid="generated-answer__body"
+          class="generated-answer__content slds-p-top_large slds-p-horizontal_large"
+        >
           <div
             data-testid="generated-answer__answer"
             class={generatedAnswerClass}
@@ -35,48 +41,46 @@
             >
             </c-quantic-generated-answer-content>
           </div>
-          <div class={generatedAnswerFooterCssClass}>
-            <div class="slds-grid slds-grid_vertical">
-              <template lwc:if={shouldDisplayCitations}>
-                <div class="slds-size_1-of-1 slds-var-m-top_x-small">
-                  <c-quantic-source-citations
-                    engine-id={engineId}
-                    data-testid="generated-answer__citations"
-                    citations={citations}
-                    citation-hover-handler={handleCitationHover}
-                    disable-citation-anchoring={disableCitationAnchoring}
-                  ></c-quantic-source-citations>
+          <div class="slds-grid slds-grid_vertical">
+            <template lwc:if={shouldDisplayCitations}>
+              <div class="slds-size_1-of-1 slds-var-m-top_x-small">
+                <c-quantic-source-citations
+                  engine-id={engineId}
+                  data-testid="generated-answer__citations"
+                  citations={citations}
+                  citation-hover-handler={handleCitationHover}
+                  disable-citation-anchoring={disableCitationAnchoring}
+                ></c-quantic-source-citations>
+              </div>
+            </template>
+            <template lwc:if={shouldDisplayActions}>
+              <div class="slds-size_1-of-1 slds-grid slds-grid_vertical-align-center slds-var-m-top_x-small slds-grid_align-start">
+                <div
+                  data-testid="generated-answer__actions"
+                  class="slds-grid slds-grid_vertical-align-center"
+                >
+                  <c-quantic-feedback
+                    state={feedbackState}
+                    onquantic__like={handleLike}
+                    onquantic__dislike={handleDislike}
+                    like-icon-name="utility:like"
+                    like-label={labels.thisAnswerWasHelpful}
+                    dislike-icon-name="utility:dislike"
+                    dislike-label={labels.thisAnswerWasNotHelpful}
+                    size="x-small"
+                    question=""
+                    hide-explain-why-button
+                    hide-labels
+                  ></c-quantic-feedback>
+                  <c-quantic-generated-answer-copy-to-clipboard
+                    data-testid="generated-answer__copy-to-clipboard"
+                    answer={answer}
+                    size="x-small"
+                    class="slds-var-m-horizontal_xx-small"
+                  ></c-quantic-generated-answer-copy-to-clipboard>
                 </div>
-              </template>
-              <template lwc:if={shouldDisplayActions}>
-                <div class="slds-size_1-of-1 slds-grid slds-grid_vertical-align-center slds-var-m-top_x-small slds-grid_align-start">
-                  <div
-                    data-testid="generated-answer__actions"
-                    class="slds-grid slds-grid_vertical-align-center"
-                  >
-                    <c-quantic-feedback
-                      state={feedbackState}
-                      onquantic__like={handleLike}
-                      onquantic__dislike={handleDislike}
-                      like-icon-name="utility:like"
-                      like-label={labels.thisAnswerWasHelpful}
-                      dislike-icon-name="utility:dislike"
-                      dislike-label={labels.thisAnswerWasNotHelpful}
-                      size="x-small"
-                      question=""
-                      hide-explain-why-button
-                      hide-labels
-                    ></c-quantic-feedback>
-                    <c-quantic-generated-answer-copy-to-clipboard
-                      data-testid="generated-answer__copy-to-clipboard"
-                      answer={answer}
-                      size="x-small"
-                      class="slds-var-m-horizontal_xx-small"
-                    ></c-quantic-generated-answer-copy-to-clipboard>
-                  </div>
-                </div>
-              </template>
-            </div>
+              </div>
+            </template>
             <template lwc:if={shouldDisplayCollapseControls}>
               <div class="slds-grid slds-size_1-of-1 slds-wrap slds-grid_vertical-align-center slds-var-m-top_x-small">
                 <div class="slds-grid slds-wrap slds-grid_vertical-align-center">
@@ -104,15 +108,17 @@
               </div>
             </template>
           </div>
-          <template lwc:if={shouldShowDisclaimer}>
-            <div
-              class="generated-answer__disclaimer slds-grid slds-grid_vertical-align-center slds-grid_align-end slds-text-color_weak slds-text-body_small"
-              data-testid="generated-answer__disclaimer"
-            >
+        </section>
+        <template lwc:if={shouldShowDisclaimer}>
+          <footer
+            data-testid="generated-answer__footer"
+            class="generated-answer__disclaimer slds-grid slds-grid_vertical-align-center slds-grid_align-end slds-text-color_weak slds-text-body_small slds-p-horizontal_large slds-p-bottom_large"
+          >
+            <div data-testid="generated-answer__disclaimer">
               <slot name="disclaimer"> {labels.rgaDisclaimer} </slot>
             </div>
-          </template>
-        </div>
+          </footer>
+        </template>
       </template>
     </div>
   </template>
