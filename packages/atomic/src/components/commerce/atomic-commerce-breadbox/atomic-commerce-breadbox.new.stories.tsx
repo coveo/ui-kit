@@ -14,6 +14,31 @@ import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
 const commerceApiHarness = new MockCommerceApi();
 commerceApiHarness.enableInteractiveFacets();
 
+// Use shorter Brand values so breadcrumbs fit at narrow viewports (640px)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+commerceApiHarness.productListingEndpoint.mock((response: any) => ({
+  ...response,
+  facets: response.facets.map(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (facet: any) =>
+      facet.facetId === 'ec_brand'
+        ? {
+            ...facet,
+            values: [
+              {state: 'idle', numberOfResults: 14, value: 'NRS'},
+              {state: 'idle', numberOfResults: 9, value: 'BRP'},
+              {state: 'idle', numberOfResults: 7, value: 'Fox'},
+              {state: 'idle', numberOfResults: 27, value: 'Coast Guard and Co'},
+              {state: 'idle', numberOfResults: 4, value: 'Wax and More'},
+              {state: 'idle', numberOfResults: 1, value: 'Aqua Marina'},
+              {state: 'idle', numberOfResults: 1, value: 'Lockit'},
+              {state: 'idle', numberOfResults: 1, value: 'Surf and Co'},
+            ],
+          }
+        : facet
+  ),
+}));
+
 const {context, ...restOfConfiguration} =
   getSampleCommerceEngineConfiguration();
 
