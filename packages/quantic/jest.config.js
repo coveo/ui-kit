@@ -23,6 +23,8 @@ module.exports = {
       '<rootDir>/force-app/test/jest-mocks/lightning/modalHeader/modalHeader',
     '^c/quanticResult$':
       '<rootDir>/force-app/test/jest-mocks/quantic/quanticResult/quanticResult',
+    '^c/quanticSourceCitations$':
+      '<rootDir>/force-app/test/jest-mocks/quantic/quanticSourceCitations/quanticSourceCitations',
     '^lightning/navigation$':
       '<rootDir>/force-app/test/jest-mocks/lightning/navigation/navigation',
     '^c/quanticResultActionStyles$':

@@ -501,7 +501,7 @@ describe('c-quantic-generated-answer', () => {
           selectors.generatedAnswerDisclaimer
         );
 
-        expect(generatedAnswerDisclaimer).toBeNull();
+        expect(generatedAnswerDisclaimer).not.toBeNull();
       });
     });
 

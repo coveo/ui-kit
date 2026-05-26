@@ -112,7 +112,8 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
 
   get answerElementHeight() {
     return getAbsoluteHeight(
-      this.answerElement?.firstChild || this.answerElement
+      // @ts-ignore
+      this.answerElement?.firstElementChild || this.answerElement
     );
   }
 
@@ -120,6 +121,9 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
     event.stopPropagation();
     this.dispatchEvent(
       new CustomEvent('quantic__answercontentupdated', {
+        detail: {
+          answerElementHeight: this.answerElementHeight,
+        },
         bubbles: true,
         composed: true,
       })

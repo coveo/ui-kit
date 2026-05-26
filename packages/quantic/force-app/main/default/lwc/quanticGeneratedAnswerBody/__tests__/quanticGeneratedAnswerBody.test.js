@@ -56,6 +56,7 @@ const selectors = {
   body: '[data-testid="generated-answer-body"]',
   answer: '[data-testid="generated-answer-body__answer"]',
   actions: '[data-testid="generated-answer-body__actions"]',
+  citations: 'c-quantic-source-citations',
   feedback: 'c-quantic-feedback',
   copy: 'c-quantic-generated-answer-copy-to-clipboard',
   retry: '[data-testid="generated-answer-body__retry"]',
@@ -109,6 +110,19 @@ describe('c-quantic-generated-answer-body', () => {
     expect(answer.style.getPropertyValue('--maxHeight')).toBe('250px');
   });
 
+  it('should dispatch the answer height with answer content updates', async () => {
+    const element = createTestComponent();
+    const handler = jest.fn();
+    element.addEventListener('quantic__answercontentupdated', handler);
+    await flushPromises();
+
+    const content = element.shadowRoot.querySelector(selectors.content);
+    content.dispatchEvent(new CustomEvent('quantic__answercontentupdated'));
+
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler.mock.calls[0][0].detail).toEqual({answerElementHeight: 250});
+  });
+
   it('should dispatch the quantic__like event with the answerId', async () => {
     const element = createTestComponent();
     const handler = jest.fn();
@@ -149,12 +163,15 @@ describe('c-quantic-generated-answer-body', () => {
   });
 
   it('should dispatch the quantic__citationhover event with the answerId', async () => {
-    const element = createTestComponent();
+    const element = createTestComponent({...defaultOptions, showCitations: true});
     const handler = jest.fn();
     element.addEventListener('quantic__citationhover', handler);
     await flushPromises();
 
-    element.handleCitationHover('citation-1', 1200);
+    const citations = element.shadowRoot.querySelector(
+      'c-quantic-source-citations'
+    );    
+    citations.citationHoverHandler('citation-1', 1200);
 
     expect(handler).toHaveBeenCalledTimes(1);
     expect(handler.mock.calls[0][0].detail).toEqual({
