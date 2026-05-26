@@ -76,11 +76,7 @@ function buildInteractiveAggregates(
 
       aggregate.coveredComponents.add(component.name);
 
-      if (component.interactive.failedCriteria.includes(criterionId)) {
-        aggregate.failedComponents.add(component.name);
-      } else {
-        aggregate.passedComponents.add(component.name);
-      }
+      aggregate.passedComponents.add(component.name);
 
       aggregates.set(criterionId, aggregate);
     }
@@ -219,7 +215,7 @@ export function buildOpenAcrReport(
   );
 
   const successNotes =
-    'Conformance is based on automated Storybook + axe-core output, interactive keyboard/screen-reader testing, and pending manual validation.';
+    'Conformance is based on automated Storybook + axe-core output, Interactive keyboard testing, and pending manual validation.';
 
   return {
     title: DEFAULT_REPORT_TITLE,

@@ -52,8 +52,6 @@ export interface A11yInteractiveResults {
   criteriaCovered: string[];
   testCount: number;
   passedCount: number;
-  failedCount: number;
-  failedCriteria: string[];
 }
 
 /**

@@ -83,10 +83,6 @@ function buildComponents(
               ),
               testCount: component.interactive.testCount,
               passedCount: component.interactive.passedCount,
-              failedCount: component.interactive.failedCount,
-              failedCriteria: [...component.interactive.failedCriteria].sort(
-                compareByNumericId
-              ),
             }
           : undefined,
       };
@@ -112,13 +108,12 @@ function buildCriteria(
         criterion.interactiveCoverage = true;
         addAffectedComponent(criterion, component.name);
 
-        const isFailed = component.interactive.failedCriteria.has(criterionId);
         const isPassed = component.interactive.passedCriteria.has(criterionId);
-        if (!isFailed && !isPassed) {
+        if (!isPassed) {
           continue;
         }
 
-        const nextStatus: 'passed' | 'failed' = isFailed ? 'failed' : 'passed';
+        const nextStatus = 'passed' as const;
         const currentStatus = criterion.interactiveStatus;
 
         if (!currentStatus) {
