@@ -1,7 +1,7 @@
 import type {
   CoveoSearchEndpointRequest,
   CoveoSearchEndpointResponse,
-} from '@/src/api/interface/search-endpoint/search-endpoint-types.js';
+} from '@/src/api/index.js';
 
 export type SearchEndpointStatus = 'idle' | 'pending';
 
@@ -18,7 +18,7 @@ export type {
   CoveoFacetResponse,
   CoveoFacetValue,
   CoveoSearchResult,
-} from '@/src/api/interface/search-endpoint/search-endpoint-types.js';
+} from '@/src/api/index.js';
 
 export type CoveoSearchEndpointRequestContributor =
   () => Partial<CoveoSearchEndpointRequest>;

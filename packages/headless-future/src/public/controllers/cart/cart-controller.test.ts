@@ -8,6 +8,8 @@ import * as engineModule from '@/src/core/interface/engine/engine.js';
 import {createTestEngine} from '@/src/test/test-utils.js';
 import {cartSlice} from '@/src/core/internal/cart/cart-slice.js';
 import {searchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
+import {getEndpointContributorRegistry} from '@/src/core/internal/api/base-facade/endpoint-contributor-registry.js';
+import {conversationEndpointKey} from '@/src/core/internal/api/base-facade/endpoint-keys.js';
 import * as cartMutators from '@/src/core/interface/cart/cart-mutators.js';
 import * as cartSelectors from '@/src/core/interface/cart/cart-selectors.js';
 import {buildCartController} from './cart-controller.js';
@@ -43,6 +45,22 @@ describe('buildCartController', () => {
         fullEngine.mutate(searchBoxSlice.actions.setQuery('q'));
 
         expect(callback).not.toHaveBeenCalled();
+      });
+
+      it('registers the cart request contributor once per engine', () => {
+        const fullEngine = getFullEngine(engine);
+        const registry = getEndpointContributorRegistry(fullEngine);
+
+        expect(
+          registry.getRegisteredContributorCount(conversationEndpointKey)
+        ).toBe(0);
+
+        buildCartController({engine});
+        buildCartController({engine});
+
+        expect(
+          registry.getRegisteredContributorCount(conversationEndpointKey)
+        ).toBe(1);
       });
     });
 

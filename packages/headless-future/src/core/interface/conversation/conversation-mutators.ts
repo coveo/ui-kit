@@ -34,6 +34,12 @@ export const setSession = (session: ConversationSession): StateMutation => {
   return conversationSlice.actions.setSession(session);
 };
 
+export const patchSession = (
+  sessionPatch: ConversationSession
+): StateMutation => {
+  return conversationSlice.actions.patchSession(sessionPatch);
+};
+
 export const setError = (error: string | null): StateMutation => {
   return conversationSlice.actions.setError(error);
 };

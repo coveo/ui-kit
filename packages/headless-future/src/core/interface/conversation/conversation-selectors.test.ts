@@ -53,6 +53,7 @@ describe('conversation selectors', () => {
     expect(selectors.messages(initialState)).toEqual([]);
     expect(selectors.turns(initialState)).toEqual([]);
     expect(selectors.activeTurnId(initialState)).toBeNull();
+    expect(selectors.activeTurnUserMessage(initialState)).toBeUndefined();
     expect(selectors.session(initialState)).toEqual({});
     expect(selectors.isLoading(initialState)).toBe(false);
     expect(selectors.error(initialState)).toBeNull();
@@ -63,6 +64,7 @@ describe('conversation selectors', () => {
     expect(selectors.messages(populatedState)).toHaveLength(2);
     expect(selectors.turns(populatedState)).toHaveLength(1);
     expect(selectors.activeTurnId(populatedState)).toBe('turn-1');
+    expect(selectors.activeTurnUserMessage(populatedState)).toBe('Hello');
     expect(selectors.session(populatedState)).toEqual({
       conversationSessionId: 'session-1',
       conversationToken: 'token-1',
@@ -70,5 +72,25 @@ describe('conversation selectors', () => {
     expect(selectors.isLoading(populatedState)).toBe(true);
     expect(selectors.error(populatedState)).toBeNull();
     expect(selectors.streaming(populatedState)).toEqual({isConnected: true});
+  });
+
+  it('should return undefined when the active turn has no user message', () => {
+    const stateWithoutUserMessage = {
+      conversation: {
+        ...populatedConversationState,
+        messages: [
+          {
+            id: 'msg-agent-1',
+            role: 'agent' as const,
+            content: 'World',
+            createdAt: 100,
+          },
+        ],
+      },
+    };
+
+    expect(
+      selectors.activeTurnUserMessage(stateWithoutUserMessage)
+    ).toBeUndefined();
   });
 });

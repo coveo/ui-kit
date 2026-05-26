@@ -9,10 +9,10 @@ import {
 } from '@/src/api/index.js';
 import {EndpointFacade} from '@/src/core/internal/api/base-facade/endpoint-facade.js';
 import {buildRequest} from '@/src/core/internal/api/base-facade/endpoint-facade-request-builder.js';
+import {readEndpointClientConfiguration} from '@/src/core/internal/configuration/configuration-reader.js';
 import {FullEngine} from '@/src/core/interface/engine/engine.js';
 import * as searchEndpointMutators from './search-endpoint-mutators.js';
 import * as searchEndpointSelectors from './search-endpoint-selectors.js';
-import * as configurationSelectors from '@/src/core/interface/configuration/configuration-selectors.js';
 import {loadSearchEndpoint} from './search-endpoint-loader.js';
 
 export class SearchEndpointFacade extends EndpointFacade<CoveoSearchEndpointRequest> {
@@ -66,11 +66,7 @@ export class SearchEndpointFacade extends EndpointFacade<CoveoSearchEndpointRequ
 
     try {
       const finalRequest = buildRequest(this.getOrderedRequestContributors());
-      const clientConfiguration = {
-        organizationId: engine.read(configurationSelectors.organizationId),
-        accessToken: engine.read(configurationSelectors.accessToken),
-        endpoint: engine.read(configurationSelectors.endpoint),
-      };
+      const clientConfiguration = readEndpointClientConfiguration(engine);
 
       const httpResponse = await this.#client.call(
         finalRequest,
