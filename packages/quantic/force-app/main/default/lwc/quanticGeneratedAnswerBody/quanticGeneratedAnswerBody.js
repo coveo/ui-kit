@@ -110,7 +110,6 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
     tryAgain,
   };
 
-  @api
   get answerElementHeight() {
     return getAbsoluteHeight(
       this.answerElement?.firstChild || this.answerElement
@@ -154,7 +153,7 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
     );
   }
 
-  @api handleCitationHover = (citationId, citationHoverTimeMs) => {
+  handleCitationHover = (citationId, citationHoverTimeMs) => {
     this.dispatchEvent(
       new CustomEvent('quantic__citationhover', {
         detail: {
