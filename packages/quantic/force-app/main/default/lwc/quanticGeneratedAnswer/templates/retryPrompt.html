@@ -7,7 +7,9 @@
       <div
         class="generated-answer__card-header slds-grid slds-grid_vertical-align-center slds-border_bottom slds-p-vertical_small slds-p-horizontal_large"
       >
-        <div class="generated-answer__header-title slds-grid slds-grid_vertical-align-center">
+        <div
+          class="generated-answer__header-title slds-grid slds-grid_vertical-align-center"
+        >
           <lightning-icon
             icon-name="utility:sparkles"
             size="x-small"
@@ -19,18 +21,12 @@
           >
         </div>
       </div>
-      <div class="slds-p-vertical_medium slds-p-horizontal_large">
-        <div>{labels.couldNotGenerateAnAnswer}</div>
-        <div class="slds-var-m-top_medium">
-          <lightning-button
-            data-testid="generated-answer__retry-button"
-            variant="brand-outline"
-            label={labels.tryAgain}
-            title={labels.tryAgain}
-            onclick={handleRetry}
-          ></lightning-button>
-        </div>
-      </div>
+      <c-quantic-generated-answer-body
+        data-testid="generated-answer__body"
+        answer-id={answerId}
+        has-retryable-error
+        onquantic__retry={handleRetry}
+      ></c-quantic-generated-answer-body>
     </div>
   </template>
 </template>

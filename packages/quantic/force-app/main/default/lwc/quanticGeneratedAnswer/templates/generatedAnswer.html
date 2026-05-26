@@ -1,11 +1,16 @@
 <template>
   <template lwc:if={shouldDisplayGeneratedAnswer}>
-    <div data-testid="generated-answer__card" class="slds-box slds-p-around_none">
+    <div
+      data-testid="generated-answer__card"
+      class="slds-box slds-p-around_none"
+    >
       <header
         data-testid="generated-answer__header"
         class={generatedAnswerHeaderClass}
       >
-        <div class="generated-answer__header-title slds-grid slds-grid_vertical-align-center">
+        <div
+          class="generated-answer__header-title slds-grid slds-grid_vertical-align-center"
+        >
           <lightning-icon
             icon-name="utility:sparkles"
             size="x-small"
@@ -25,97 +30,61 @@
         </template>
       </header>
       <template lwc:if={isVisible}>
-        <section
+        <c-quantic-generated-answer-body
           data-testid="generated-answer__body"
-          class="generated-answer__content slds-p-top_medium slds-p-horizontal_large"
-        >
+          engine-id={engineId}
+          answer-id={answerId}
+          answer={answer}
+          answer-content-format={answerContentFormat}
+          citations={citations}
+          is-streaming={isStreaming}
+          feedback-state={feedbackState}
+          disable-citation-anchoring={disableCitationAnchoring}
+          answer-class={generatedAnswerClass}
+          max-collapsed-height={maxCollapsedHeight}
+          show-citations={shouldDisplayCitations}
+          show-actions={shouldDisplayActions}
+          onquantic__answercontentupdated={handleAnswerContentUpdated}
+          onquantic__like={handleLike}
+          onquantic__dislike={handleDislike}
+          onquantic__generatedanswercopy={handleGeneratedAnswerCopyToClipboard}
+          onquantic__citationhover={handleCitationHover}
+        ></c-quantic-generated-answer-body>
+        <template lwc:if={shouldDisplayCollapseControls}>
           <div
-            data-testid="generated-answer__answer"
-            class={generatedAnswerClass}
+            class={collapseControlsClass}
           >
-            <c-quantic-generated-answer-content
-              answer-content-format={answerContentFormat}
-              answer={answer}
-              is-streaming={isStreaming}
-              onquantic__answercontentupdated={handleAnswerContentUpdated}
-            >
-            </c-quantic-generated-answer-content>
-          </div>
-          <div class="slds-grid slds-grid_vertical">
-            <template lwc:if={shouldDisplayCitations}>
-              <div class="slds-size_1-of-1 slds-var-m-top_x-small">
-                <c-quantic-source-citations
-                  engine-id={engineId}
-                  data-testid="generated-answer__citations"
-                  citations={citations}
-                  citation-hover-handler={handleCitationHover}
-                  disable-citation-anchoring={disableCitationAnchoring}
-                ></c-quantic-source-citations>
-              </div>
-            </template>
-            <template lwc:if={shouldDisplayActions}>
-              <div class="slds-size_1-of-1 slds-grid slds-grid_vertical-align-center slds-var-m-top_x-small slds-grid_align-start">
+            <div class="slds-grid slds-wrap slds-grid_vertical-align-center">
+              <template lwc:if={shouldShowCollapseGeneratingMessage}>
                 <div
-                  data-testid="generated-answer__actions"
-                  class="slds-grid slds-grid_vertical-align-center"
+                  data-testid="generated-answer__collapse-generating-message"
+                  class="generated-answer__collapse-generating-message slds-var-m-right_small"
                 >
-                  <c-quantic-feedback
-                    state={feedbackState}
-                    onquantic__like={handleLike}
-                    onquantic__dislike={handleDislike}
-                    like-icon-name="utility:like"
-                    like-label={labels.thisAnswerWasHelpful}
-                    dislike-icon-name="utility:dislike"
-                    dislike-label={labels.thisAnswerWasNotHelpful}
-                    size="x-small"
-                    question=""
-                    hide-explain-why-button
-                    hide-labels
-                  ></c-quantic-feedback>
-                  <c-quantic-generated-answer-copy-to-clipboard
-                    data-testid="generated-answer__copy-to-clipboard"
-                    answer={answer}
-                    size="x-small"
-                    class="slds-var-m-horizontal_xx-small"
-                  ></c-quantic-generated-answer-copy-to-clipboard>
+                  {labels.generatingAnswer}...
                 </div>
-              </div>
-            </template>
-            <template lwc:if={isAnswerCollapsed}>
-              <div class="slds-grid slds-size_1-of-1 slds-wrap slds-grid_vertical-align-center slds-var-m-top_x-small">
-                <div class="slds-grid slds-wrap slds-grid_vertical-align-center">
-                  <template lwc:if={isStreaming}>
-                    <div
-                      data-testid="generated-answer__collapse-generating-message"
-                      class="generated-answer__collapse-generating-message slds-var-m-right_small"
-                    >
-                      {labels.generatingAnswer}...
-                    </div>
-                  </template>
-                  <template lwc:else>
-                    <lightning-button
-                      data-testid="generated-answer__answer-toggle"
-                      icon-name={toggleCollapseAnswerIcon}
-                      variant="base"
-                      label={toggleCollapseAnswerLabel}
-                      title={toggleCollapseAnswerLabel}
-                      onclick={handleToggleCollapseAnswer}
-                      icon-position="right"
-                      class="generated-answer__answer-toggle slds-shrink-none slds-var-m-right_large"
-                    ></lightning-button>
-                  </template>
-                </div>
-              </div>
-            </template>
+              </template>
+              <template lwc:if={shouldShowToggleCollapseAnswer}>
+                <lightning-button
+                  data-testid="generated-answer__answer-toggle"
+                  icon-name={toggleCollapseAnswerIcon}
+                  variant="base"
+                  label={toggleCollapseAnswerLabel}
+                  title={toggleCollapseAnswerLabel}
+                  onclick={handleToggleCollapseAnswer}
+                  icon-position="right"
+                  class="generated-answer__answer-toggle slds-shrink-none slds-var-m-right_large"
+                ></lightning-button>
+              </template>
+            </div>
           </div>
-        </section>
+        </template>
         <template lwc:if={shouldShowDisclaimer}>
           <footer
             data-testid="generated-answer__footer"
             class="generated-answer__disclaimer slds-grid slds-grid_vertical-align-center slds-grid_align-end slds-text-color_weak slds-text-body_small slds-p-horizontal_large slds-p-bottom_medium"
           >
             <div data-testid="generated-answer__disclaimer">
-              <slot name="disclaimer"> {labels.rgaDisclaimer} </slot>
+              <slot name="disclaimer">{labels.rgaDisclaimer}</slot>
             </div>
           </footer>
         </template>
@@ -125,39 +94,52 @@
   <template lwc:if={cannotAnswer}>
     <template lwc:if={isManualAnswerGeneration}>
       <div data-testid="generated-answer__no-answer-card" class="slds-box">
-        <div class="generated-answer__card-header slds-grid slds-grid_vertical-align-center slds-border_bottom slds-p-around_x-small">
-          <div class="generated-answer__header-title slds-grid slds-grid_vertical-align-center">
+        <div
+          class="generated-answer__card-header slds-grid slds-grid_vertical-align-center slds-border_bottom slds-p-around_x-small"
+        >
+          <div
+            class="generated-answer__header-title slds-grid slds-grid_vertical-align-center"
+          >
             <lightning-icon
               icon-name="utility:sparkles"
               size="x-small"
               alternative-text={labels.generatedAnswerForYou}
               class="slds-current-color slds-var-m-right_x-small"
             ></lightning-icon>
-            <span class="slds-text-title_bold">{labels.generatedAnswerForYou}</span>
+            <span class="slds-text-title_bold"
+              >{labels.generatedAnswerForYou}</span
+            >
           </div>
         </div>
         <div
           data-testid="generated-answer__no-answer-message"
-          class="generated-answer__content slds-var-m-top_medium"
+          class="slds-var-m-top_medium"
         >
-          <div class={generatedAnswerClass}>
-            <slot name="no-answer-message">{labels.noGeneratedAnswer}</slot>
-          </div>
+          <c-quantic-generated-answer-body
+            cannot-answer
+            answer-class={generatedAnswerClass}
+          ></c-quantic-generated-answer-body>
         </div>
       </div>
     </template>
     <template lwc:else>
       <template lwc:if={hasCustomNoAnswerMessage}>
         <div data-testid="generated-answer__no-answer-card" class="slds-box">
-          <div class="generated-answer__card-header slds-grid slds-grid_vertical-align-center slds-border_bottom slds-p-around_x-small">
-            <div class="generated-answer__header-title slds-grid slds-grid_vertical-align-center">
+          <div
+            class="generated-answer__card-header slds-grid slds-grid_vertical-align-center slds-border_bottom slds-p-around_x-small"
+          >
+            <div
+              class="generated-answer__header-title slds-grid slds-grid_vertical-align-center"
+            >
               <lightning-icon
                 icon-name="utility:sparkles"
                 size="x-small"
                 alternative-text={labels.generatedAnswerForYou}
                 class="slds-current-color slds-var-m-right_x-small"
               ></lightning-icon>
-              <span class="slds-text-title_bold">{labels.generatedAnswerForYou}</span>
+              <span class="slds-text-title_bold"
+                >{labels.generatedAnswerForYou}</span
+              >
             </div>
           </div>
           <div class="generated-answer__content slds-var-m-top_medium">

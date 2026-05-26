@@ -25,7 +25,7 @@ import {
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-import {AriaLiveRegion, I18nUtils, getAbsoluteHeight} from 'c/quanticUtils';
+import {AriaLiveRegion, I18nUtils} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 // @ts-ignore
 import errorTemplate from './templates/errorTemplate.html';
@@ -182,10 +182,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
-    this.template.addEventListener(
-      'quantic__generatedanswercopy',
-      this.handleGeneratedAnswerCopyToClipboard
-    );
     if (this.withToggle) {
       this.template.addEventListener(
         'quantic__generatedanswertoggle',
@@ -242,10 +238,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   disconnectedCallback() {
     this.unsubscribeGeneratedAnswer?.();
-    this.template.removeEventListener(
-      'quantic__generatedanswercopy',
-      this.handleGeneratedAnswerCopyToClipboard
-    );
     if (this.withToggle) {
       this.template.removeEventListener(
         'quantic__generatedanswertoggle',
@@ -314,8 +306,14 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * @param {string} id
    * @param {number} citationHoverTimeMs
    */
-  handleCitationHover = (id, citationHoverTimeMs) => {
-    this.generatedAnswer.logCitationHover(id, citationHoverTimeMs);
+  handleCitationHover = (event) => {
+    event.stopPropagation();
+    const {citationId, citationHoverTimeMs, answerId} = event.detail;
+    this.generatedAnswer.logCitationHover(
+      citationId,
+      citationHoverTimeMs,
+      answerId
+    );
   };
 
   /**
@@ -324,10 +322,11 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    */
   async handleLike(event) {
     event.stopPropagation();
+    const {answerId} = event.detail || {};
     if (!this._liked) {
       this._liked = true;
       this._disliked = false;
-      this.generatedAnswer.like?.();
+      this.generatedAnswer.like?.(answerId);
     }
     if (!this.feedbackSubmitted) {
       // @ts-ignore
@@ -348,10 +347,11 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    */
   async handleDislike(event) {
     event.stopPropagation();
+    const {answerId} = event.detail || {};
     if (!this._disliked) {
       this._disliked = true;
       this._liked = false;
-      this.generatedAnswer.dislike?.();
+      this.generatedAnswer.dislike?.(answerId);
     }
     if (!this.feedbackSubmitted) {
       // @ts-ignore
@@ -381,7 +381,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   handleGeneratedAnswerCopyToClipboard = (event) => {
     event.stopPropagation();
-    this.generatedAnswer.logCopyToClipboard();
+    const {answerId} = event.detail || {};
+    this.generatedAnswer.logCopyToClipboard(answerId);
   };
 
   handleGeneratedAnswerToggle = (event) => {
@@ -430,7 +431,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * @returns {HTMLElement}
    */
   get generatedAnswerElement() {
-    return this.template.querySelector('.generated-answer__answer');
+    return this.template.querySelector('c-quantic-generated-answer-body');
   }
 
   /**
@@ -438,19 +439,13 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * @returns {number}
    */
   get generatedAnswerElementHeight() {
-    // @ts-ignore
-    return getAbsoluteHeight(this.generatedAnswerElement?.firstChild);
+    return this.generatedAnswerElement?.answerElementHeight || 0;
   }
 
   /**
    * Sets the value of the CSS variable "--maxHeight" to the value of the maxCollapsedHeight property.
    */
-  updateGeneratedAnswerCSSVariables() {
-    if (this._exceedsMaximumHeight) {
-      const styles = this.generatedAnswerElement?.style;
-      styles?.setProperty('--maxHeight', `${this.maxCollapsedHeight}px`);
-    }
-  }
+  updateGeneratedAnswerCSSVariables() {}
 
   get answer() {
     return this?.state?.answer;
@@ -458,6 +453,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   get citations() {
     return this?.state?.citations;
+  }
+
+  get answerId() {
+    return this?.state?.answerId;
   }
 
   get answerContentFormat() {
@@ -558,7 +557,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get shouldShowDisclaimer() {
-    return this.isVisible && !this.isStreaming;
+    return this.isVisible && !this.isStreaming && !this.hasRetryableError;
   }
 
   get toggleCollapseAnswerIcon() {
@@ -617,9 +616,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     ) {
       return loadingTemplate;
     }
-    if (this.hasRetryableError) {
-      return retryPromptTemplate;
-    }
-    return generatedAnswerTemplate;
+    return this.hasRetryableError
+      ? retryPromptTemplate
+      : generatedAnswerTemplate;
   }
 }
