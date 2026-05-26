@@ -1,5 +1,4 @@
 import {
-  CartState,
   SetCartItemsPayload,
   UpdateItemQuantityPayload,
 } from '@/src/core/interface/cart/cart-types.js';
@@ -9,8 +8,6 @@ import {
 } from '@/src/public/controllers/controller-types.js';
 
 export interface CartController extends Controller {
-  readonly state: CartState;
-
   /**
    * Replaces the current cart items.
    *
@@ -24,6 +21,19 @@ export interface CartController extends Controller {
    * @param payload - The item with updated quantity.
    */
   updateItemQuantity(payload: UpdateItemQuantityPayload): void;
+
+  readonly state: CartControllerState;
 }
 
 export interface CartControllerOptions extends ControllerOptions {}
+
+export interface CartControllerItem {
+  productId: string;
+  name: string;
+  price: number;
+  quantity: number;
+}
+
+export interface CartControllerState {
+  items: CartControllerItem[];
+}

@@ -1,5 +1,5 @@
 import {conversationSlice} from '@/src/core/internal/conversation/conversation-slice.js';
-import type {StateMutation} from '@/src/core/interface/interface-types.js';
+import type {StateMutation} from '@/src/core/interface/engine/engine-types.js';
 import type {
   AppendAgentChunkPayload,
   ConversationSession,
@@ -32,6 +32,12 @@ export const abortTurn = (payload: FinalizeTurnPayload): StateMutation => {
 
 export const setSession = (session: ConversationSession): StateMutation => {
   return conversationSlice.actions.setSession(session);
+};
+
+export const patchSession = (
+  sessionPatch: ConversationSession
+): StateMutation => {
+  return conversationSlice.actions.patchSession(sessionPatch);
 };
 
 export const setError = (error: string | null): StateMutation => {

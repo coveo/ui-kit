@@ -1,11 +1,16 @@
 import {getFullEngine} from '@/src/core/interface/engine/engine.js';
-import {cartSlice} from '@/src/core/internal/cart/cart-slice.js';
+import {loadCart} from '@/src/core/interface/cart/cart-loader.js';
 import * as cartMutators from '@/src/core/interface/cart/cart-mutators.js';
 import * as cartSelectors from '@/src/core/interface/cart/cart-selectors.js';
+import {createSelector} from '@reduxjs/toolkit';
 import {
   CartController,
   CartControllerOptions,
 } from './cart-controller-types.js';
+
+const stateSelect = createSelector([cartSelectors.items], (items) => ({
+  items,
+}));
 
 /**
  * Creates a cart controller bound to an engine instance.
@@ -18,7 +23,7 @@ export const buildCartController = (
 ): CartController => {
   const {engine} = options;
   const fullEngine = getFullEngine(engine);
-  fullEngine.adoptSlice(cartSlice);
+  loadCart(fullEngine);
 
   return {
     setItems(payload) {
@@ -28,10 +33,12 @@ export const buildCartController = (
       fullEngine.mutate(cartMutators.updateItemQuantity(payload));
     },
     subscribe(callback) {
-      return fullEngine.subscribe(cartSelectors.items, callback);
+      return fullEngine.subscribe(stateSelect, callback);
     },
     get state() {
-      return {items: fullEngine.read(cartSelectors.items)};
+      return {
+        items: fullEngine.read(cartSelectors.items),
+      };
     },
   };
 };

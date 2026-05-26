@@ -12,109 +12,104 @@ import {
 import * as searchBoxSelectors from '@/src/core/interface/search-box/search-box-selectors.js';
 import {buildSearchBoxController} from './search-box-controller.js';
 
-vi.mock('@/src/api/index.js', () => ({
-  executeSearchAPI: vi.fn(),
-}));
+const mockExecuteSearch = vi.fn();
 
-import {executeSearchAPI} from '@/src/api/index.js';
+vi.mock(
+  '@/src/core/interface/api/search-endpoint/search-endpoint-facade.js',
+  () => ({
+    SearchEndpointFacade: {
+      getInstance: vi.fn(() => ({
+        callEndpoint: mockExecuteSearch,
+        onRequest: vi.fn(),
+      })),
+    },
+  })
+);
 
 describe('buildSearchBoxController', () => {
   let engine: Engine;
   let fullEngine: FullEngine;
 
+  const buildController = () => buildSearchBoxController({engine});
+
   beforeEach(() => {
     vi.clearAllMocks();
+    mockExecuteSearch.mockReset();
     engine = createTestEngine();
     fullEngine = getFullEngine(engine);
   });
 
   it('should adopt the searchBox slice', () => {
-    buildSearchBoxController(engine);
+    buildController();
 
     // If the slice was adopted, reading from it should not throw
-    expect(fullEngine.read(searchBoxSelectors.query)).toBe('');
+    expect(fullEngine.read(searchBoxSelectors.getQuery)).toBe('');
   });
 
-  describe('updateQuery()', () => {
+  describe('setQuery()', () => {
     it('should update the query in state', () => {
-      const controller = buildSearchBoxController(engine);
+      const controller = buildController();
 
-      controller.updateQuery('laptops');
+      controller.setQuery({query: 'laptops'});
 
-      expect(fullEngine.read(searchBoxSelectors.query)).toBe('laptops');
+      expect(fullEngine.read(searchBoxSelectors.getQuery)).toBe('laptops');
     });
 
     it('should reset the query with an empty string', () => {
-      const controller = buildSearchBoxController(engine);
+      const controller = buildController();
 
-      controller.updateQuery('something');
-      controller.updateQuery('');
+      controller.setQuery({query: 'something'});
+      controller.setQuery({query: ''});
 
-      expect(fullEngine.read(searchBoxSelectors.query)).toBe('');
+      expect(fullEngine.read(searchBoxSelectors.getQuery)).toBe('');
     });
   });
 
   describe('submit()', () => {
-    it('should call executeSearchAPI with the engine', () => {
-      const controller = buildSearchBoxController(engine);
+    it('should execute the search via the facade', () => {
+      const controller = buildController();
 
       controller.submit();
 
-      expect(executeSearchAPI).toHaveBeenCalledOnce();
+      expect(mockExecuteSearch).toHaveBeenCalledOnce();
     });
   });
 
   describe('state getter', () => {
     it('should return initial state', () => {
-      const controller = buildSearchBoxController(engine);
+      const controller = buildController();
 
       expect(controller.state).toEqual({query: ''});
     });
 
     it('should reflect updated query', () => {
-      const controller = buildSearchBoxController(engine);
+      const controller = buildController();
 
-      controller.updateQuery('test');
+      controller.setQuery({query: 'test'});
 
       expect(controller.state).toEqual({query: 'test'});
     });
   });
 
-  describe('query getter', () => {
-    it('should return the initial query', () => {
-      const controller = buildSearchBoxController(engine);
-
-      expect(controller.query).toBe('');
-    });
-
-    it('should return the updated query', () => {
-      const controller = buildSearchBoxController(engine);
-
-      controller.updateQuery('headphones');
-
-      expect(controller.query).toBe('headphones');
-    });
-  });
-
   describe('subscribe()', () => {
     it('should invoke callback when query changes', () => {
-      const controller = buildSearchBoxController(engine);
+      const controller = buildController();
       const callback = vi.fn();
 
       controller.subscribe(callback);
-      controller.updateQuery('new query');
+      controller.setQuery({query: 'new query'});
 
       expect(callback).toHaveBeenCalledTimes(1);
     });
 
     it('should invoke callback for each distinct change', () => {
-      const controller = buildSearchBoxController(engine);
+      const controller = buildController();
       const callback = vi.fn();
 
       controller.subscribe(callback);
-      controller.updateQuery('first');
-      controller.updateQuery('second');
-      controller.updateQuery('third');
+      controller.setQuery({query: 'first'});
+      controller.setQuery({query: 'second'});
+      controller.setQuery({query: 'third'});
 
       expect(callback).toHaveBeenCalledTimes(3);
     });

@@ -4,11 +4,8 @@
  * Common helpers and mock data builders for unit tests
  */
 
-import {Engine} from '../core/interface/engine/engine.js';
-import type {
-  SearchResult,
-  FacetValue,
-} from '../core/interface/interface-types.js';
+import {Engine} from '@/src/core/index.js';
+import type {SearchResult, FacetValue} from '@/src/core/index.js';
 
 /**
  * Create a fresh engine instance for testing

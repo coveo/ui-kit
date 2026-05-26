@@ -1,5 +1,5 @@
 import {cartSlice} from '@/src/core/internal/cart/cart-slice.js';
-import type {StateMutation} from '@/src/core/interface/interface-types.js';
+import type {StateMutation} from '@/src/core/interface/engine/engine-types.js';
 import type {
   SetCartItemsPayload,
   UpdateItemQuantityPayload,
