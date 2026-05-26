@@ -69,7 +69,7 @@ const styles = css`
 
   [part='generated-text'] [part='answer-code-block'] {
     @apply bg-neutral-light border-neutral text-on-background my-4 max-h-96 overflow-auto rounded-md border border-solid p-2 text-sm;
-    scrollbar-color: var(--atomic-neutral-dim);
+    scrollbar-color: var(--atomic-neutral);
   }
 
   [part='generated-text'] [part='answer-quote-block'] {

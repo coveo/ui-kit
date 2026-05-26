@@ -35,7 +35,7 @@ export class AtomicResultFieldsList
       width: 1px;
       height: 1rem;
       margin: 0 1rem;
-      background-color: var(--atomic-neutral-dim);
+      background-color: var(--atomic-neutral);
       vertical-align: middle;
     }
 

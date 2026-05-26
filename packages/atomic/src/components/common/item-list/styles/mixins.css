@@ -148,7 +148,7 @@
     transition: all 0.12s ease-out;
     &:hover {
       @apply border-neutral border;
-      box-shadow: 0px 10px 25px var(--atomic-neutral-light);
+      box-shadow: 0px 10px 25px var(--atomic-neutral);
       cursor: pointer;
     }
   }
