@@ -21,3 +21,41 @@ Changesets are **not required** for changes that only touch documentation, CI/CD
 ## Commenting on files not included in the PR
 
 If you spot changes that need to be made in files not included in the PR (e.g., if code changes in `packages/headless` affect documentation articles in `packages/headless/source_docs`, but the latter aren't touched in the PR), write a top-level comment to that effect in the PR (e.g., don't try to comment on the affected articles, because unless such files are included in the PR, the comment won't appear).
+
+## PR Announcement Format
+
+When creating PRs and preparing review messages, use this format (in French):
+
+```
+[N] PR[s] [de/pour] [contexte] (CI :white_check_mark:) :
+
+**[Titre descriptif]**
+https://github.com/coveo/ui-kit/pull/[XXXX]
+
+ - [Détails concis sur ce qui change]
+
+**[Titre descriptif]**
+https://github.com/coveo/ui-kit/pull/[XXXX]
+
+ - [Détails concis sur ce qui change]
+```
+
+Example:
+```
+3 PRs de nettoyage suite à l'audit du codebase (CI :white_check_mark:) :
+
+**Suppression de code mort et références obsolètes**
+https://github.com/coveo/ui-kit/pull/7639
+
+ - Workflow migration Lit, workspace packages/ssr, règle knip search-stencil, .dcignore
+
+**Suppression référence branche master**
+https://github.com/coveo/ui-kit/pull/7640
+
+ - Retire master de dependency-review.yml (branche gelée)
+
+**Migration @coveo/auth vers Vitest**
+https://github.com/coveo/ui-kit/pull/7641
+
+ - 23 tests passent, rapproche suppression du patch jest-environment-jsdom
+```
