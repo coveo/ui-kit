@@ -78,8 +78,6 @@ const defaultTemplateContent = `<atomic-result-template>
   </template>
 </atomic-result-template>`;
 
-const searchApiHarness = new MockSearchApi();
-
 const {decorator, play} = wrapInSearchInterface({
   config: {
     search: {
