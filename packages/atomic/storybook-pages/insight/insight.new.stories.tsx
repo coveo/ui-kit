@@ -6,6 +6,11 @@ import {
   type baseResponse,
   richResponse,
 } from '@/storybook-utils/api/insight/search-response';
+import {
+  colorArgs,
+  colorArgTypes,
+  colorDecorator,
+} from '@/storybook-utils/common/color-theme-args';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
 import {isTestMode} from '@/storybook-utils/common/is-test-mode';
 import '@/src/components/search/atomic-facet-manager/atomic-facet-manager.js';
@@ -69,6 +74,9 @@ const meta: Meta = {
   component: 'insight-page',
   title: 'Insight/Example Pages',
   id: 'insight-page',
+  decorators: [colorDecorator],
+  argTypes: colorArgTypes,
+  args: colorArgs,
   parameters: {
     ...parameters,
     layout: 'fullscreen',

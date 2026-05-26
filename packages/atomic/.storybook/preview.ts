@@ -1,5 +1,4 @@
-import '@/src/themes/coveo.css';
-import type {Preview} from '@storybook/web-components-vite';
+import type {Decorator, Preview} from '@storybook/web-components-vite';
 import {setCustomElementsManifest} from '@storybook/web-components-vite';
 import {setStorybookHelpersConfig} from '@wc-toolkit/storybook-helpers';
 import {initialize, mswLoader} from 'msw-storybook-addon';
@@ -7,7 +6,8 @@ import {within} from 'shadow-dom-testing-library';
 import {create} from 'storybook/theming';
 import customElements from '../custom-elements.json';
 import {COVEO_PRIMARY, FONT_BASE, FONT_CODE} from './theme';
-
+import {DecoratorHelpers} from '@storybook/addon-themes';
+import {html} from 'lit';
 // For CDN builds, we want to use the "true" lib hosted on our CDN instead of bundling it through
 // This allow us to have a more realistic test environment.
 if (import.meta.env.VITE_IS_CDN === 'true') {
@@ -39,8 +39,38 @@ setStorybookHelpersConfig({
   hideArgRef: true,
 });
 
+const {initializeThemeState, pluckThemeFromContext} = DecoratorHelpers;
+const defaultThemeUrl = new URL('../src/themes/coveo.css', import.meta.url)
+  .href;
+const experimentalThemeUrl = new URL(
+  '../src/themes/coveo.experimental.css',
+  import.meta.url
+).href;
+
+const ThemeDecorator = ({themes, defaultTheme}): Decorator => {
+  initializeThemeState(Object.keys(themes), defaultTheme);
+  return (story, context) => {
+    const selectedTheme = pluckThemeFromContext(context);
+    const {themeOverride} = context.parameters.themes ?? {};
+    const selected = themeOverride || selectedTheme || defaultTheme;
+    return html`
+      <link href="${themes[selected]}" rel="stylesheet" />
+      ${story()}
+    `;
+  };
+};
+
 const preview: Preview = {
   loaders: [mswLoader],
+  decorators: [
+    ThemeDecorator({
+      themes: {
+        Experimental: experimentalThemeUrl,
+        Default: defaultThemeUrl,
+      },
+      defaultTheme: 'Default',
+    }),
+  ],
   parameters: {
     options: {
       storySort: {

@@ -6,6 +6,11 @@ import {
   type baseResponse,
   richResponse,
 } from '@/storybook-utils/api/search/search-response';
+import {
+  colorArgs,
+  colorArgTypes,
+  colorDecorator,
+} from '@/storybook-utils/common/color-theme-args';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
 import {isTestMode} from '@/storybook-utils/common/is-test-mode';
 import '@/src/components/search/atomic-did-you-mean/atomic-did-you-mean.js';
@@ -58,6 +63,9 @@ const meta: Meta = {
   component: 'ipx-page',
   title: 'IPX/Example Pages',
   id: 'ipx-page',
+  decorators: [colorDecorator],
+  argTypes: colorArgTypes,
+  args: colorArgs,
   parameters: {
     ...parameters,
     layout: 'fullscreen',

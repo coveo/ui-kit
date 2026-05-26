@@ -1,0 +1,101 @@
+:root {
+  /* =====================================================================
+   * BASE COLORS — the only values a theme author needs to change (≤ 5)
+   * ===================================================================== */
+
+  --atomic-primary: oklch(0.52 0.2 258); /* brand blue */
+  --atomic-neutral: oklch(0.9287 0.00326 198.887);
+  --atomic-success: oklch(0.55 0.16 142);
+  --atomic-error: oklch(0.52 0.18 35);
+  --atomic-visited: oklch(0.44 0.18 303);
+
+  /* =====================================================================
+   * DERIVED COLORS — computed from base colors, do not override directly
+   * ===================================================================== */
+
+  /* Primary scale */
+  --atomic-on-primary: oklch(
+    from var(--atomic-primary) clamp(0, (0.6 - l) * 1000, 1) 0 h
+  ); /* @supports override below */
+  --atomic-primary-light: oklch(
+    from var(--atomic-primary) calc(l + 0.15) calc(c * 0.85) h
+  );
+  --atomic-primary-dark: oklch(
+    from var(--atomic-primary) calc(l - 0.12) calc(c * 1.1) h
+  );
+  --atomic-primary-background: oklch(
+    from var(--atomic-primary) 0.97 calc(c * 0.12) h
+  );
+  --atomic-ring-primary: oklch(from var(--atomic-primary) l c h / 50%);
+
+  /* Neutral scale
+   * --atomic-neutral-dim is an alias for the anchor — the visual replacement
+   * for the old --atomic-neutral (#e5e8e8) border/divider shade.
+   * Migration: if you were setting --atomic-neutral as a border color,
+   * set --atomic-neutral-dim instead. */
+  --atomic-neutral-dark: oklch(from var(--atomic-neutral) calc(l - 0.4112) c h);
+  --atomic-neutral-dim: oklch(from var(--atomic-neutral) calc(l - 0.1111) c h);
+  --atomic-neutral-light: oklch(
+    from var(--atomic-neutral) calc(l + 0.0472) c h
+  );
+  --atomic-neutral-lighter: oklch(
+    from var(--atomic-neutral) calc(l + 0.0559) c h
+  );
+  --atomic-disabled: oklch(from var(--atomic-neutral) calc(l - 0.0921) c h);
+
+  /* Surfaces */
+  --atomic-background: oklch(1 0 0);
+  --atomic-on-background: oklch(from var(--atomic-neutral) 0.18 calc(c * 2) h);
+
+  /* Semantic state backgrounds */
+  --atomic-success-background: oklch(
+    from var(--atomic-success) 0.95 calc(c * 0.18) h
+  );
+  --atomic-error-background: oklch(
+    from var(--atomic-error) 0.95 calc(c * 0.18) h
+  );
+
+  /* =====================================================================
+   * OPINIONATED CONSTANTS — overridable but not brand theming knobs
+   * ===================================================================== */
+
+  --atomic-inline-code: oklch(0.46 0.2 25);
+  --atomic-rating-icon-active-color: oklch(0.87 0.17 87);
+  --atomic-rating-icon-outline: none;
+  --atomic-user-actions-timeline-separator-background: oklch(
+    from var(--atomic-neutral) calc(l + 0.15) calc(c * 0.5) h
+  );
+
+  /* Border radius */
+  --atomic-border-radius: 0.25rem;
+  --atomic-border-radius-md: 0.5rem;
+  --atomic-border-radius-lg: 0.75rem;
+  --atomic-border-radius-xl: 1rem;
+
+  /* Font */
+  --atomic-font-family:
+    -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui,
+    helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif; /* Following https://systemfontstack.com/ */
+  --atomic-font-normal: 400;
+  --atomic-font-bold: 700;
+
+  /* Text size */
+  --atomic-text-base: 0.875rem; /* 14px */
+  --atomic-text-sm: 0.75rem; /* 12px */
+  --atomic-text-lg: 1rem; /* 16px */
+  --atomic-text-xl: 1.125rem; /* 18px */
+  --atomic-text-2xl: 1.5rem; /* 24px */
+  --atomic-line-height-ratio: 1.5;
+
+  /* Layout */
+  --atomic-layout-spacing-x: 1.5rem;
+  --atomic-layout-spacing-y: 1rem;
+
+  --animate-slide-down-modal: slideDown 0.5s linear forwards;
+  --animate-scale-up-modal: scaleUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1)
+    forwards;
+
+  --spacing: 0.25rem;
+  --container-lg: 32rem;
+  --tw-leading: 1.5;
+}

@@ -6,6 +6,11 @@ import {
   type baseResponse,
   richResponse,
 } from '@/storybook-utils/api/commerce/search-response';
+import {
+  colorArgs,
+  colorArgTypes,
+  colorDecorator,
+} from '@/storybook-utils/common/color-theme-args';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
 import {isTestMode} from '@/storybook-utils/common/is-test-mode';
 import '@/src/components/commerce/atomic-commerce-breadbox/atomic-commerce-breadbox.js';
@@ -56,6 +61,9 @@ const meta: Meta = {
   component: 'search-page',
   title: 'Commerce/Example Pages',
   id: 'search-page',
+  decorators: [colorDecorator],
+  argTypes: colorArgTypes,
+  args: colorArgs,
   parameters: {
     ...parameters,
     layout: 'fullscreen',

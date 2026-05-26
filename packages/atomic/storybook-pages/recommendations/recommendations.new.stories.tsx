@@ -2,6 +2,11 @@ import {getSampleRecommendationEngineConfiguration} from '@coveo/headless/recomm
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import {MockRecommendationApi} from '@/storybook-utils/api/recommendation/mock.js';
+import {
+  colorArgs,
+  colorArgTypes,
+  colorDecorator,
+} from '@/storybook-utils/common/color-theme-args';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
 import {isTestMode} from '@/storybook-utils/common/is-test-mode';
 import '@/src/components/search/atomic-field-condition/atomic-field-condition.js';
@@ -33,6 +38,9 @@ const meta: Meta = {
   component: 'content-recs-page',
   title: 'Recommendations/Example Pages',
   id: 'content-recs-page',
+  decorators: [colorDecorator],
+  argTypes: colorArgTypes,
+  args: colorArgs,
   parameters: {
     ...parameters,
     layout: 'fullscreen',

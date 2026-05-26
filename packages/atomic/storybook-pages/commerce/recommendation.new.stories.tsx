@@ -9,6 +9,11 @@ import {
   type baseResponse,
   richResponse,
 } from '@/storybook-utils/api/commerce/recommendation-response';
+import {
+  colorArgs,
+  colorArgTypes,
+  colorDecorator,
+} from '@/storybook-utils/common/color-theme-args';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
 import {isTestMode} from '@/storybook-utils/common/is-test-mode';
 import '@/src/components/commerce/atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface.js';
@@ -47,6 +52,9 @@ const meta: Meta = {
   component: 'recommendations',
   title: 'Commerce/Example Pages',
   id: 'recommendations',
+  decorators: [colorDecorator],
+  argTypes: colorArgTypes,
+  args: colorArgs,
   parameters: {
     ...parameters,
     msw: {

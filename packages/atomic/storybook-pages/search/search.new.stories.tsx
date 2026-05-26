@@ -6,6 +6,11 @@ import {
   type baseResponse,
   richResponse,
 } from '@/storybook-utils/api/search/search-response';
+import {
+  colorArgs,
+  colorArgTypes,
+  colorDecorator,
+} from '@/storybook-utils/common/color-theme-args';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
 import {isTestMode} from '@/storybook-utils/common/is-test-mode';
 import '@/src/components/search/atomic-automatic-facet-generator/atomic-automatic-facet-generator.js';
@@ -79,6 +84,9 @@ const meta: Meta = {
   component: 'rich-search-page',
   title: 'Search/Example Pages',
   id: 'rich-search-page',
+  decorators: [colorDecorator],
+  argTypes: {...colorArgTypes},
+  args: colorArgs,
   parameters: {
     ...parameters,
     layout: 'fullscreen',
