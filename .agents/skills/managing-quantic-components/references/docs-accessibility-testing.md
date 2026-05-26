@@ -109,10 +109,10 @@ An optional third argument `assertive = true` creates an assertive live region f
 
 ## Testing
 
-For the testing strategy rationale, see [packages/quantic/decisions/0001-testing-strategy.md](../../../decisions/0001-testing-strategy.md).
+For the testing strategy rationale, see [packages/quantic/decisions/0001-testing-strategy.md](../../../../packages/quantic/decisions/0001-testing-strategy.md).
 
 - **Jest unit tests** — Isolated component behavior, rendering, lifecycle, and headless interactions with mocks. When writing tests, examine an existing test file for a similar component and follow its mock scaffolding, selector patterns, and assertion style.
-- **Playwright E2E tests** — Real user workflows, analytics, API interactions, and Salesforce integration. See [packages/quantic/docs/adding-tests.md](../../../docs/adding-tests.md) for the full walkthrough.
+- **Playwright E2E tests** — Real user workflows, analytics, API interactions, and Salesforce integration. See [packages/quantic/docs/adding-tests.md](../../../../packages/quantic/docs/adding-tests.md) for the full walkthrough.
 
 ### Running tests
 

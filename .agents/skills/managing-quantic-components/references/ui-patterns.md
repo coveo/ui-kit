@@ -45,7 +45,7 @@ Arguments are positional and map to `{{0}}`, `{{1}}`, etc.
 
 ### Plural, singular, and zero label variants
 
-When a label needs different text based on count (e.g., "1 result" vs. "2 results" vs. "No results"), define three label variants using the suffixes ``, `_plural`, and `_zero`, then use `I18nUtils.getLabelNameWithCount()` to select the right one:
+When a label needs different text based on count (e.g., "1 result" vs. "2 results" vs. "No results"), define three label variants using the suffixes ``, `\_plural`, and `\_zero`, then use `I18nUtils.getLabelNameWithCount()` to select the right one:
 
 Define three label variants in `CustomLabels.labels-meta.xml` with suffixes: base (singular), `_plural`, and `_zero`. Then import and group all three:
 
@@ -62,6 +62,7 @@ labels = {
 ```
 
 **Select the correct variant by count, then format:**
+
 ```javascript
 get inclusionFilterLabel() {
   const labelName = I18nUtils.getLabelNameWithCount('inclusionFilter', this.count);
@@ -92,6 +93,9 @@ Examine existing entries for the exact XML structure.
 
 Use `lwc:if` / `lwc:elseif` / `lwc:else` for top-level conditional branches:
 
+> Note: the `<!-- prettier-ignore -->` below is a markdown formatting directive only — do not include it in real templates.
+
+<!-- prettier-ignore -->
 ```html
 <template lwc:if={hasInitializationError}>
   <c-quantic-component-error></c-quantic-component-error>
@@ -103,11 +107,13 @@ Use `lwc:if` / `lwc:elseif` / `lwc:else` for top-level conditional branches:
 
 > ⚠️ Legacy `if:true` / `if:false` directives exist in older components but must **not** be used in new code.
 
-
 ### Child component references
 
 Child Quantic components use the `c-` prefix with kebab-case:
 
+> Note: the `<!-- prettier-ignore -->` below is a markdown formatting directive only — do not include it in real templates.
+
+<!-- prettier-ignore -->
 ```html
 <c-quantic-feedback
   state={feedbackState}
@@ -129,12 +135,17 @@ Child Quantic components use the `c-` prefix with kebab-case:
 BEM-like with component prefix and double-dash modifiers:
 
 ```css
-.generated-answer__answer { }
-.generated-answer__answer--collapsed { }
-.generated-answer__card-header { }
+.generated-answer__answer {
+}
+.generated-answer__answer--collapsed {
+}
+.generated-answer__card-header {
+}
 ```
 
 ### Custom properties (SLDS design tokens)
+
+Always include a CSS fallback value when using `var(--lwc-*)` tokens — they are not guaranteed to be available in every environment (e.g. communities, embedded contexts):
 
 ```css
 color: var(--lwc-brandPrimary, #1b96ff);
@@ -179,7 +190,7 @@ this.dispatchEvent(
 Events that stay within the immediate parent-child component tree need only `bubbles: true`:
 
 ```javascript
-new CustomEvent('quantic__tabrendered', {bubbles: true})
+new CustomEvent('quantic__tabrendered', {bubbles: true});
 ```
 
 Events that must cross shadow DOM boundaries (e.g. `quantic__renderfacet` dispatched by a facet and consumed by a parent interface component) need **both** `bubbles: true` and `composed: true`:

@@ -16,6 +16,7 @@ pnpm run setup:examples
 ```
 
 This creates two scratch orgs:
+
 - `Quantic__LWS_enabled` — Lightning Web Security enabled
 - `Quantic__LWS_disabled` — Locker Service enabled (LWS disabled)
 
@@ -105,8 +106,8 @@ setInitializationError() {
 In templates:
 
 ```html
-<template lwc:if={hasInitializationError}>
-  <c-quantic-component-error component-name={template.host.localName}>
+<template lwc:if="{hasInitializationError}">
+  <c-quantic-component-error component-name="{template.host.localName}">
   </c-quantic-component-error>
 </template>
 ```

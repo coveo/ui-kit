@@ -14,11 +14,13 @@ Quantic components are LWC (Lightning Web Components) that integrate with a head
 ## Package Locations
 
 Production components live in:
+
 ```
 packages/quantic/force-app/main/default/lwc/<component-name>/
 ```
 
 Example-community components live in:
+
 ```
 packages/quantic/force-app/examples/main/lwc/<example-component-name>/
 ```
@@ -48,31 +50,32 @@ quantic{ComponentName}/
 
 ### Non-negotiable conventions
 
-| Concern | Rule |
-|---|---|
-| Class base | Always extends `LightningElement` |
-| Headless registration | `registerComponentForInit` in `connectedCallback`; `initializeWithHeadless` in `renderedCallback` |
-| `initialize` method | Always an **arrow function** field — preserves `this` for the headless callback |
-| Unsubscribe | Always call `this.unsubscribe?.()` in `disconnectedCallback` |
-| Custom events | Prefix with `quantic__` (e.g. `quantic__like`) |
-| Labels | Every user-visible string must be a localized label — never hardcode text. Import from `@salesforce/label/c.quantic_LabelName`; group into a `labels = {}` instance field |
-| Label interpolation | Use `I18nUtils.format(label, ...args)` for `{{0}}`/`{{1}}` placeholders — never `.replace()` or string concatenation |
-| Labels with variables | Treat a label as count-sensitive whenever a numeric value can change the surrounding sentence grammatically or orthographically in English, French, or Spanish, even if the variable is not itself a noun count |
-| Label pluralization | For count-sensitive labels, test `0`, `1`, and a value greater than `1`; if the sentence changes, define `_plural` and `_zero` variants and use `I18nUtils.getLabelNameWithCount(baseName, count)` |
-| Label translations | Every new label **must** have a translation entry added to both `force-app/main/translations/fr.translation-meta.xml` and `es.translation-meta.xml` |
-| Error handling | `hasInitializationError` flag + `<c-quantic-component-error>` in template |
-| CSS naming | BEM-like with component prefix: `.generated-answer__card-header--collapsed` |
-| SLDS tokens | Use `var(--lwc-*)` design tokens; **always use SLDS utility classes first — for every style need, ask yourself whether an SLDS class covers it before writing a single line of custom CSS**. Custom CSS is only permitted when no SLDS class achieves the needed result |
-| Meta XML | `isExposed: false`; no `targets` or `targetConfigs`; **always generated via `sf lightning generate component`** — never created manually (manual creation risks using a stale `apiVersion`) |
-| `render()` | Only for multi-template components; always the **last method** in the class |
-| Property validation | Use `getBueno(this)` from `c/quanticHeadlessLoader` to validate user-supplied `@api` props (strings, numbers). Log via `console.error` with `this.template.host.localName` and call `this.setInitializationError()` on failure |
-| `@api` getter/setter | When an `@api` prop needs validation or side-effects, use a getter/setter pair with a `_`-prefixed backing field (e.g. `_isCollapsed`) |
-| `registerToStore` | Facet components must register themselves in the global store via `registerToStore(this.engineId, Store.facetTypes.FACETS, { label, facetId, element: this.template.host })` inside `initialize` |
-| `static attributes` | Facet components declare `static attributes = [...]` listing all `@api` property names for runtime discovery |
-| AriaLiveRegion | Components that announce status changes (results loaded, errors, etc.) must create an `AriaLiveRegion` from `c/quanticUtils` and dispatch messages on state updates |
-| Event `composed` | Events that must cross shadow DOM boundaries (e.g. `quantic__renderfacet` consumed by a parent interface) need both `bubbles: true` and `composed: true`. Events staying within the immediate component tree need only `bubbles: true` |
-| Comments | Avoid comments in all files (JS, HTML, CSS). Write self-explanatory code instead. Comments are only acceptable when logic is genuinely non-obvious and cannot be clarified through naming or structure |
-| Constants | Extract magic strings and numbers into named constants at the top of the file |
+| Concern               | Rule                                                                                                                                                                                                                                                                    |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Class base            | Always extends `LightningElement`                                                                                                                                                                                                                                       |
+| Headless registration | `registerComponentForInit` in `connectedCallback`; `initializeWithHeadless` in `renderedCallback`                                                                                                                                                                       |
+| `initialize` method   | Always an **arrow function** field — preserves `this` for the headless callback                                                                                                                                                                                         |
+| Unsubscribe           | Always call `this.unsubscribe?.()` in `disconnectedCallback`                                                                                                                                                                                                            |
+| Custom events         | Prefix with `quantic__` (e.g. `quantic__like`)                                                                                                                                                                                                                          |
+| Labels                | Every user-visible string must be a localized label — never hardcode text. Import from `@salesforce/label/c.quantic_LabelName`; group into a `labels = {}` instance field                                                                                               |
+| Label interpolation   | Use `I18nUtils.format(label, ...args)` for `{{0}}`/`{{1}}` placeholders — never `.replace()` or string concatenation                                                                                                                                                    |
+| Labels with variables | Treat a label as count-sensitive whenever a numeric value can change the surrounding sentence grammatically or orthographically in English, French, or Spanish, even if the variable is not itself a noun count                                                         |
+| Label pluralization   | For count-sensitive labels, test `0`, `1`, and a value greater than `1`; if the sentence changes, define `_plural` and `_zero` variants and use `I18nUtils.getLabelNameWithCount(baseName, count)`                                                                      |
+| Label translations    | Every new label **must** have a translation entry added to both `force-app/main/translations/fr.translation-meta.xml` and `es.translation-meta.xml`                                                                                                                     |
+| Error handling        | `hasInitializationError` flag + `<c-quantic-component-error>` in template                                                                                                                                                                                               |
+| CSS naming            | BEM-like with component prefix: `.generated-answer__card-header--collapsed`                                                                                                                                                                                             |
+| SLDS tokens           | Use `var(--lwc-*)` design tokens; **always use SLDS utility classes first — for every style need, ask yourself whether an SLDS class covers it before writing a single line of custom CSS**. Custom CSS is only permitted when no SLDS class achieves the needed result |
+| Meta XML              | `isExposed: false`; no `targets` or `targetConfigs`; **always generated via `sf lightning generate component`** — never created manually (manual creation risks using a stale `apiVersion`)                                                                             |
+| `render()`            | Only for multi-template components; always the **last method** in the class                                                                                                                                                                                             |
+| Property validation   | Use `getBueno(this)` from `c/quanticHeadlessLoader` to validate user-supplied `@api` props (strings, numbers). Log via `console.error` with `this.template.host.localName` and call `this.setInitializationError()` on failure                                          |
+| `@api` getter/setter  | When an `@api` prop needs validation or side-effects, use a getter/setter pair with a `_`-prefixed backing field (e.g. `_isCollapsed`)                                                                                                                                  |
+| `registerToStore`     | Facet components must register themselves in the global store via `registerToStore(this.engineId, Store.facetTypes.FACETS, { label, facetId, element: this.template.host })` inside `initialize`                                                                        |
+| `static attributes`   | Facet components declare `static attributes = [...]` listing all `@api` property names for runtime discovery                                                                                                                                                            |
+| AriaLiveRegion        | Components that announce status changes (results loaded, errors, etc.) must create an `AriaLiveRegion` from `c/quanticUtils` and dispatch messages on state updates                                                                                                     |
+| Event `composed`      | Events that must cross shadow DOM boundaries (e.g. `quantic__renderfacet` consumed by a parent interface) need both `bubbles: true` and `composed: true`. Events staying within the immediate component tree need only `bubbles: true`                                  |
+| Template conditionals | Always use `lwc:if` / `lwc:elseif` / `lwc:else` — never the legacy `if:true` / `if:false` directives                                                                                                                                                                    |
+| Comments              | Avoid comments in all files (JS, HTML, CSS). Write self-explanatory code instead. Comments are only acceptable when logic is genuinely non-obvious and cannot be clarified through naming or structure                                                                  |
+| Constants             | Extract magic strings and numbers into named constants at the top of the file                                                                                                                                                                                           |
 
 ### Ordering conventions
 
@@ -101,7 +104,7 @@ When a peer component closely matches your use case, also inspect its structure 
 
 ### Documentation Requirements
 
-Quantic reference docs are generated from component JSDoc. Every component class and `@api` property must be documented. See the full rules, valid categories, and code templates in **Section 8** of `references/quantic-component-workflow.md`.
+Quantic reference docs are generated from component JSDoc. Every component class and `@api` property must be documented. See the full rules, valid categories, and code templates in **Section 8** of `references/docs-accessibility-testing.md`.
 
 ### Testing Strategy
 
@@ -129,25 +132,22 @@ Do not duplicate upstream Headless coverage unless the Quantic component adds be
 
 Before marking any task as complete, verify every applicable item and output this table:
 
-
-| Check | Status |
-|---|---|
-| No hardcoded strings | ✅/❌ |
-| Labels defined + translated (FR + ES) | ✅/❌ |
-| Placeholder labels use I18nUtils.format | ✅/❌/N/A |
+| Check                                                                                                                      | Status    |
+| -------------------------------------------------------------------------------------------------------------------------- | --------- |
+| No hardcoded strings                                                                                                       | ✅/❌     |
+| Labels defined + translated (FR + ES)                                                                                      | ✅/❌     |
+| Placeholder labels use I18nUtils.format                                                                                    | ✅/❌/N/A |
 | Labels with variables tested with `0`, `1`, and `>1` — add `_plural`/`_zero` variants if sentence changes in EN, FR, or ES | ✅/❌/N/A |
-| sf command used; apiVersion correct | ✅/❌ |
-| isExposed false, no targets | ✅/❌ |
-| Component class JSDoc complete | ✅/❌ |
-| All @api props documented | ✅/❌ |
-| @example reflects actual API | ✅/❌ |
-| Headless lifecycle correct | ✅/❌/N/A |
-| Error handling present | ✅/❌/N/A |
+| sf command used; apiVersion correct                                                                                        | ✅/❌     |
+| isExposed false, no targets                                                                                                | ✅/❌     |
+| Component class JSDoc complete                                                                                             | ✅/❌     |
+| All @api props documented                                                                                                  | ✅/❌     |
+| @example reflects actual API                                                                                               | ✅/❌     |
+| Headless lifecycle correct                                                                                                 | ✅/❌/N/A |
+| Error handling present                                                                                                     | ✅/❌/N/A |
+| No `if:true` / `if:false` directives used                                                                                  | ✅/❌/N/A |
 
 **Result: PASS / FAIL** — Failing items: <list ❌ items with required fix>
-
-
-
 
 ## Progressive Disclosure
 
