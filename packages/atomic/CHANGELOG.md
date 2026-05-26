@@ -1,3 +1,48 @@
+## 3.58.0
+
+### Minor Changes
+
+- [#7479](https://github.com/coveo/ui-kit/pull/7479) [`2d44e5f`](https://github.com/coveo/ui-kit/commit/2d44e5f3982b4996f224bce14b449af9038dae42) Thanks [@mmitiche](https://github.com/mmitiche)! - Replaced `renderAgentGenerationSteps` functional component with new `atomic-agent-stream-of-thought` custom element that displays a persistent "stream of thought" timeline during answer generation. Steps appear progressively with spinner/checkmark indicators, auto-collapse after completion, and support expand/collapse interaction.
+
+### Patch Changes
+
+- [#7599](https://github.com/coveo/ui-kit/pull/7599) [`86bc84d`](https://github.com/coveo/ui-kit/commit/86bc84d5509990e992df9a43dfe9c62d4d28ef44) Thanks [@alexprudhomme](https://github.com/alexprudhomme)! - Fixed the "Show More" button aria-label in `atomic-commerce-breadbox` to read "Show N more filters" instead of "Show + N more filters".
+
+- [#7594](https://github.com/coveo/ui-kit/pull/7594) [`f4b6b14`](https://github.com/coveo/ui-kit/commit/f4b6b1490109da992ef83cb985ee3a9212580fc7) Thanks [@alexprudhomme](https://github.com/alexprudhomme)! - Fixed "Not sure" button text overlapping borders in the generated answer feedback modal on iPhone devices by adding `whitespace-nowrap` to prevent text wrapping within the radio button options.
+
+- [#7580](https://github.com/coveo/ui-kit/pull/7580) [`d4500b8`](https://github.com/coveo/ui-kit/commit/d4500b84970534148fe4836a800b9bd5a10c89d2) Thanks [@SimonMilord](https://github.com/SimonMilord)! - Make generated answer thread items toggle when the left timeline dot or pipe area is clicked.
+
+- [#7566](https://github.com/coveo/ui-kit/pull/7566) [`d7d03a8`](https://github.com/coveo/ui-kit/commit/d7d03a82a31c4aa00a063fd093f487973f9ba7ae) Thanks [@SimonMilord](https://github.com/SimonMilord)! - Improving followup input visibility by setting a light gray background theme variable on generated answer content when follow-ups are enabled.
+
+- [#7573](https://github.com/coveo/ui-kit/pull/7573) [`50746b4`](https://github.com/coveo/ui-kit/commit/50746b454a187fface00bf5996a77f0bd0ec6b99) Thanks [@SimonMilord](https://github.com/SimonMilord)! - changed atomic-neutral-lighter color
+
+- Updated dependencies [[`41fdd60`](https://github.com/coveo/ui-kit/commit/41fdd609cb0b8b0d4b821f9818189fc49f727417), [`d12be29`](https://github.com/coveo/ui-kit/commit/d12be299fa235fe6810c268f2c89be296063ee60), [`8445bf2`](https://github.com/coveo/ui-kit/commit/8445bf241db3aab5f0cd148c43ac3f4425f22cb1), [`bd4bb98`](https://github.com/coveo/ui-kit/commit/bd4bb98837c2eb0acb7f38848c0d792f8bf1efa9)]:
+  - @coveo/headless@3.51.0
+  - @coveo/atomic-legacy@0.0.16
+
+## 3.57.3
+
+### Patch Changes
+
+- [#7532](https://github.com/coveo/ui-kit/pull/7532) [`a6c0c42`](https://github.com/coveo/ui-kit/commit/a6c0c42b33be3068ba95ef1729576d7bc4674ba3) Thanks [@renovate-coveo](https://github.com/apps/renovate-coveo)! - fix(deps): update all production dependencies j:kit-282
+
+## 3.57.2
+
+### Patch Changes
+
+- [#7490](https://github.com/coveo/ui-kit/pull/7490) [`21c4042`](https://github.com/coveo/ui-kit/commit/21c40423ce461e4dd960b91f1441407905b6111c) Thanks [@renovate-coveo](https://github.com/apps/renovate-coveo)! - - Bump coveo.analytics from 2.30.54 to 2.30.55
+  - Bump cssnano from 7.1.5 to 7.1.7
+  - Bump dompurify from 3.4.0 to 3.4.1
+  - Bump i18next-http-backend from 3.0.4 to 3.0.5
+
+- [#7454](https://github.com/coveo/ui-kit/pull/7454) [`cc116bf`](https://github.com/coveo/ui-kit/commit/cc116bf10f4708d9636eb3e0279af57a1e43e050) Thanks [@SimonMilord](https://github.com/SimonMilord)! - Treat blank streamed original generated-answer prefixes as empty in Headless state and prevent Atomic from rendering an empty answer card.
+
+- [#7464](https://github.com/coveo/ui-kit/pull/7464) [`925acd8`](https://github.com/coveo/ui-kit/commit/925acd8912103422c19ae02fff22972634e14a28) Thanks [@mmitiche](https://github.com/mmitiche)! - Added generated answer inline link analytics support in Headless and Atomic, including a dedicated interactive inline-link controller and Atomic markdown link tracking/styling.
+
+- Updated dependencies [[`a191d11`](https://github.com/coveo/ui-kit/commit/a191d119ea1913c76aacb266c1345be6e4eecbe0), [`cc116bf`](https://github.com/coveo/ui-kit/commit/cc116bf10f4708d9636eb3e0279af57a1e43e050), [`925acd8`](https://github.com/coveo/ui-kit/commit/925acd8912103422c19ae02fff22972634e14a28)]:
+  - @coveo/headless@3.50.1
+  - @coveo/atomic-legacy@0.0.15
+
 ## 3.57.1
 
 ### Patch Changes

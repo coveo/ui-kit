@@ -1,5 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {testDisclosureA11y} from '@/storybook-utils/a11y/disclosure.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-smart-snippet-suggestions/atomic-smart-snippet-suggestions.js';
@@ -184,4 +185,15 @@ export default meta;
 
 export const Default: Story = {
   name: 'atomic-smart-snippet-suggestions',
+};
+
+export const A11yDisclosure: Story = {
+  tags: ['a11y', 'test'],
+  play: async (context) => {
+    await play(context);
+    await testDisclosureA11y(context, {
+      trigger: {expanded: false},
+      assertControlledRegion: true,
+    });
+  },
 };

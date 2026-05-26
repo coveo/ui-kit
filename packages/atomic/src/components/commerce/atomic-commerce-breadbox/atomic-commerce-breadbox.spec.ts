@@ -97,7 +97,7 @@ describe('atomic-commerce-breadbox', () => {
       hierarchical: () => page.getByTitle('Hierarchical'),
       numericalRange: () => page.getByTitle('Numerical Range'),
       dateRange: () => page.getByTitle('Date Range'),
-      showMore: () => page.getByLabelText(/Show \+ \d+ more filters/),
+      showMore: () => page.getByLabelText(/Show \d+ more filters/),
       showLess: () => page.getByText('Show less'),
       clearAll: () => page.getByLabelText('Clear All Filters'),
       parts: (element: AtomicCommerceBreadbox) => {
@@ -284,7 +284,7 @@ describe('atomic-commerce-breadbox', () => {
     const {showMore} = await renderBreadbox();
     await expect
       .element(showMore())
-      .toHaveAttribute('aria-label', 'Show + 3 more filters');
+      .toHaveAttribute('aria-label', 'Show 3 more filters');
   });
 
   it('should expand and collapse the number of breadcrumbs when clicking on the show more button and on the show less button', async () => {

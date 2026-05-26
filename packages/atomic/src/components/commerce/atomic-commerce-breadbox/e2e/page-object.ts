@@ -57,7 +57,7 @@ export class AtomicCommerceBreadboxPageObject extends BasePageObject {
   }
 
   getShowMorebutton() {
-    return this.page.getByLabel(/Show\s*\+\s*\d+\s+more filters/);
+    return this.page.getByLabel(/Show\s*\d+\s+more filters/);
   }
 
   getClearAllButton() {

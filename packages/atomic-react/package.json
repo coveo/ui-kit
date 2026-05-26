@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic-react",
-  "version": "3.11.18",
+  "version": "3.11.21",
   "description": "React specific wrapper for the Atomic component library",
   "license": "Apache-2.0",
   "repository": {
@@ -54,7 +54,7 @@
     "@types/react-dom": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "rollup": "4.60.2",
+    "rollup": "4.60.3",
     "rollup-plugin-polyfill-node": "^0.13.0"
   },
   "peerDependencies": {

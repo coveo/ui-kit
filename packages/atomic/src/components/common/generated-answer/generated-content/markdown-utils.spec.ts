@@ -98,7 +98,7 @@ describe('markdownUtils', () => {
         removeLineBreaks(
           unindentHtml(`
             <p part="answer-paragraph">
-              <atomic-generated-answer-inline-link href="https://example.com">example</atomic-generated-answer-inline-link>
+              <atomic-generated-answer-inline-link href="https://example.com" exportparts="answer-link,answer-link-text,answer-link-icon">example</atomic-generated-answer-inline-link>
             </p>
           `)
         )
@@ -124,7 +124,7 @@ describe('markdownUtils', () => {
         removeLineBreaks(
           unindentHtml(`
             <p part="answer-paragraph">
-              <atomic-generated-answer-inline-link href="https://example.com"><strong part="answer-strong">bold</strong></atomic-generated-answer-inline-link>
+              <atomic-generated-answer-inline-link href="https://example.com" exportparts="answer-link,answer-link-text,answer-link-icon"><strong part="answer-strong">bold</strong></atomic-generated-answer-inline-link>
             </p>
           `)
         )

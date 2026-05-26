@@ -15,7 +15,7 @@ import {
 import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
 import {fetchEventSource} from '../../utils/fetch-event-source/fetch.js';
 import type {EventSourceMessage} from '../../utils/fetch-event-source/parse.js';
-import {getOrganizationEndpoint} from '../platform-client.js';
+import {getApiBaseUrlOrOrganizationEndpoint} from '../platform-client.js';
 import {answerSlice} from './answer-slice.js';
 import type {GeneratedAnswerStream} from './generated-answer-stream.js';
 import type {StreamAnswerAPIState} from './stream-answer-api-state.js';
@@ -211,7 +211,8 @@ export const answerApi = answerSlice.injectEndpoints({
         const {configuration, generatedAnswer, insightConfiguration} =
           getState() as unknown as StreamAnswerAPIState;
         const {organizationId, environment, accessToken} = configuration;
-        const platformEndpoint = getOrganizationEndpoint(
+        const platformEndpoint = getApiBaseUrlOrOrganizationEndpoint(
+          configuration.search.apiBaseUrl,
           organizationId,
           environment
         );

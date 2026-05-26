@@ -95,7 +95,8 @@ const virtualOpenApiModules = (): Plugin => {
 const externalizeDependencies = (
   configType: 'DEVELOPMENT' | 'PRODUCTION' | undefined
 ): Plugin => {
-  const packageMappings = generateExternalPackageMappings();
+  const packageMappings: Record<string, {cdn: string; local: string}> =
+    generateExternalPackageMappings();
   return {
     name: 'externalize-dependencies',
     enforce: 'pre',
@@ -188,6 +189,16 @@ const config: StorybookConfig = {
       define: {
         'process.env.VERSION': JSON.stringify(version),
         'process.env.NODE_ENV': JSON.stringify('development'),
+      },
+      resolve: {
+        alias: [
+          {
+            find: /^coveo\.analytics$/,
+            replacement: createRequire(import.meta.url).resolve(
+              'coveo.analytics/dist/browser.mjs'
+            ),
+          },
+        ],
       },
       optimizeDeps: {
         include: [
