@@ -30,13 +30,13 @@ describe('searchBoxMutations', () => {
     it('should update state when used with mutate()', () => {
       engine.mutate(mutations.setQuery('test query'));
 
-      expect(engine.read(selectors.query)).toBe('test query');
+      expect(engine.read(selectors.getQuery)).toBe('test query');
     });
 
     it('should accept empty string', () => {
       engine.mutate(mutations.setQuery(''));
 
-      expect(engine.read(selectors.query)).toBe('');
+      expect(engine.read(selectors.getQuery)).toBe('');
     });
   });
 });

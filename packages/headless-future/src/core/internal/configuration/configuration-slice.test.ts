@@ -8,11 +8,19 @@ import {
   initialConfigurationState,
 } from './configuration-slice.js';
 
+const localeDefaults = {
+  trackingId: '',
+  language: '',
+  country: '',
+  currency: '',
+};
+
 describe('configurationSlice: initialState', () => {
   it('should have correct initial state', () => {
     expect(initialConfigurationState).toEqual({
       organizationId: '',
       accessToken: '',
+      ...localeDefaults,
       endpoint: undefined,
     });
   });
@@ -32,6 +40,7 @@ describe('configurationSlice: setOrganizationId', () => {
     const initialState = {
       organizationId: '',
       accessToken: 'existing-token',
+      ...localeDefaults,
       endpoint: 'https://api.example.com',
     };
 
@@ -79,6 +88,7 @@ describe('configurationSlice: setAccessToken', () => {
     const initialState = {
       organizationId: 'my-org',
       accessToken: '',
+      ...localeDefaults,
       endpoint: 'https://api.example.com',
     };
 
@@ -130,6 +140,7 @@ describe('configurationSlice: setEndpoint', () => {
     const initialState = {
       organizationId: 'my-org',
       accessToken: 'my-token',
+      ...localeDefaults,
       endpoint: undefined,
     };
 
@@ -149,6 +160,7 @@ describe('configurationSlice: setConfiguration', () => {
     const newConfig = {
       organizationId: 'new-org',
       accessToken: 'new-token',
+      ...localeDefaults,
       endpoint: 'https://new.endpoint.com',
     };
 
@@ -164,12 +176,14 @@ describe('configurationSlice: setConfiguration', () => {
     const initialState = {
       organizationId: 'old-org',
       accessToken: 'old-token',
+      ...localeDefaults,
       endpoint: 'https://old.endpoint.com',
     };
 
     const newConfig = {
       organizationId: 'completely-new',
       accessToken: 'brand-new-token',
+      ...localeDefaults,
       endpoint: undefined,
     };
 
@@ -185,6 +199,7 @@ describe('configurationSlice: setConfiguration', () => {
     const newConfig = {
       organizationId: 'org-id',
       accessToken: 'token',
+      ...localeDefaults,
       endpoint: undefined,
     };
 
@@ -201,6 +216,7 @@ describe('configurationSlice: setConfiguration', () => {
     const newConfig = {
       organizationId: 'new',
       accessToken: 'new',
+      ...localeDefaults,
       endpoint: 'https://new.com',
     };
 

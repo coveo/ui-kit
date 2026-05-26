@@ -4,7 +4,7 @@ This directory contains code samples demonstrating how to use Coveo's UI-Kit in 
 
 ## 📚 Sample Categories
 
-The samples are organized into three main categories based on the Coveo libraries they use:
+The samples are organized into four main categories based on the Coveo libraries they use:
 
 ### [Atomic Samples](./atomic/)
 
@@ -25,6 +25,14 @@ Samples using `@coveo/headless` controllers to build fully custom search and com
 | -------------------------------------------- | ------------------------------------------------------------- | --------- | -------- |
 | [commerce-react](./headless/commerce-react/) | Custom commerce interface using Headless commerce controllers | React     | Commerce |
 | [search-react](./headless/search-react/)     | Custom search interface using Headless search controllers     | React     | Search   |
+
+### [Headless Future Samples](./headless-future/)
+
+Samples using `@coveo/headless-future` for upcoming conversational and search experiences.
+
+| Sample                                                      | Description                                                           | Framework    | Use Case     |
+| ----------------------------------------------------------- | --------------------------------------------------------------------- | ------------ | ------------ |
+| [conversation-react](./headless-future/conversation-react/) | React + Vite bootstrap for Headless Future conversational integration | React + Vite | Conversation |
 
 ### [Headless SSR Samples](./headless-ssr/)
 
@@ -76,6 +84,11 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines on creating and maintain
 - You need complete control over the UI and behavior
 - You want to build a custom design system
 - You're integrating with an existing component library
+
+**Use Headless Future samples when:**
+
+- You are evaluating or prototyping with `@coveo/headless-future`
+- You want to build conversational experiences on the upcoming architecture
 
 **Use Headless SSR samples when:**
 

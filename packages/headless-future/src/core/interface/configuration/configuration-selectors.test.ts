@@ -20,6 +20,10 @@ describe('createConfigurationSelectors()', () => {
   it('should return selector object with all selectors', () => {
     expect(selectors.organizationId).toBeDefined();
     expect(selectors.accessToken).toBeDefined();
+    expect(selectors.trackingId).toBeDefined();
+    expect(selectors.language).toBeDefined();
+    expect(selectors.country).toBeDefined();
+    expect(selectors.currency).toBeDefined();
     expect(selectors.endpoint).toBeDefined();
   });
 
@@ -75,12 +79,20 @@ describe('createConfigurationSelectors()', () => {
         mutations.setConfiguration({
           organizationId: 'test-org',
           accessToken: 'test-token',
+          trackingId: 'tracking-1',
+          language: 'en',
+          country: 'US',
+          currency: 'USD',
           endpoint: 'https://test.api.com',
         })
       );
 
       expect(engine.read(selectors.organizationId)).toBe('test-org');
       expect(engine.read(selectors.accessToken)).toBe('test-token');
+      expect(engine.read(selectors.trackingId)).toBe('tracking-1');
+      expect(engine.read(selectors.language)).toBe('en');
+      expect(engine.read(selectors.country)).toBe('US');
+      expect(engine.read(selectors.currency)).toBe('USD');
       expect(engine.read(selectors.endpoint)).toBe('https://test.api.com');
     });
 

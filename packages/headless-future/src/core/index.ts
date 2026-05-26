@@ -1,78 +1,88 @@
-/**
- * Layer 0: Core State Module - Public Interface
- *
- * This is the ONLY entry point for Layers 1-3 to access Layer 0.
- *
- * Exports:
- * - Initialization functions (initialize)
- * - Engine type and creation (createEngine)
- * - Library-agnostic state types
- * - Utility functions (createMutation)
- * - Feature-specific mutations and selectors
- *
- * Does NOT export:
- * - Redux store instance
- * - Redux/Immer types
- * - Internal implementation details
- *
- * Note: read(), subscribe(), and mutate() are now methods on the Engine instance
- */
-
-// ============================================================================
-// Engine Type
-// ============================================================================
-
-export {Engine} from './interface/engine/engine.js';
-
-// ============================================================================
-// Shared Types
-// ============================================================================
+export {
+  Engine,
+  type FullEngine,
+  getFullEngine,
+} from '@/src/core/interface/engine/engine.js';
+export {getSampleEngineConfiguration} from '@/src/core/interface/engine/engine-configuration.js';
+export type {
+  NavigatorContext,
+  NavigatorContextProvider,
+} from './interface/navigator-context/navigator-context-types.js';
 
 export type {
-  // Root state
-  State,
-
-  // Library-agnostic primitives
-  StateSelector,
-  StateMutation,
+  EngineOptions,
   Unsubscribe,
-  StateChangeCallback,
-} from './interface/interface-types.js';
+} from '@/src/core/interface/engine/engine-types.js';
+
+export {createMemoizedStateSelector} from './interface/utils/memoized-state-selector.js';
 
 // ============================================================================
 // SearchBox Feature
 // ============================================================================
 
-export type {SearchBoxState} from './interface/search-box/search-box-types.js';
-
-export * as searchBoxMutations from './interface/search-box/search-box-mutators.js';
+export * as searchBoxMutators from './interface/search-box/search-box-mutators.js';
 
 export * as searchBoxSelectors from './interface/search-box/search-box-selectors.js';
 
+export {loadSearchBox} from './interface/search-box/search-box-loader.js';
+
 // ============================================================================
-// Result Feature (Singular — individual result types & per-result UI state)
+// Results Feature (Collection — result list data)
 // ============================================================================
 
 export type {
+  ResultListState as ResultsState,
   SearchResult,
-  ResultState,
-  ResultMapState,
-} from './interface/result/result-types.js';
+} from './interface/result-list/result-list-types.js';
 
-export * as resultMutations from './interface/result/result-mutators.js';
+export * as resultsMutations from './interface/result-list/result-list-mutators.js';
 
-export * as resultSelectors from './interface/result/result-selectors.js';
+export * as resultsSelectors from './interface/result-list/result-list-selectors.js';
+
+export {loadResultList} from './interface/result-list/result-list-loader.js';
 
 // ============================================================================
-// Results Feature (Collection — result list, loading, error)
+// Search API Feature (request status, error, configuration)
 // ============================================================================
 
-export type {ResultsState} from './interface/results/results-types.js';
+export type {
+  SearchEndpointState,
+  SearchEndpointStatus,
+} from './interface/api/search-endpoint/search-endpoint-types.js';
 
-export * as resultsMutations from './interface/results/results-mutators.js';
+export * as searchEndpointMutators from './interface/api/search-endpoint/search-endpoint-mutators.js';
 
-export * as resultsSelectors from './interface/results/results-selectors.js';
+export * as searchEndpointSelectors from './interface/api/search-endpoint/search-endpoint-selectors.js';
 
+export {loadSearchEndpoint} from './interface/api/search-endpoint/search-endpoint-loader.js';
+
+export {SearchEndpointFacade} from './interface/api/search-endpoint/search-endpoint-facade.js';
+
+export {ConversationRuntime} from './interface/api/conversation-endpoint/conversation-runtime.js';
+
+// ============================================================================
+// Conversation Feature
+// ============================================================================
+
+export type {
+  ConversationMessage,
+  ConversationSession,
+  ConversationState,
+  ConversationStreaming,
+  ConversationTurn,
+} from './interface/conversation/conversation-types.js';
+
+export * as conversationMutators from './interface/conversation/conversation-mutators.js';
+
+export * as conversationSelectors from './interface/conversation/conversation-selectors.js';
+
+export {loadConversation} from './interface/conversation/conversation-loader.js';
+
+export * as conversationEndpointMutators from './interface/api/conversation-endpoint/conversation-endpoint-mutators.js';
+
+export * as conversationEndpointSelectors from './interface/api/conversation-endpoint/conversation-endpoint-selectors.js';
+
+export {loadConversationEndpoint} from './interface/api/conversation-endpoint/conversation-endpoint-loader.js';
 // ============================================================================
 // Facets Feature
 // ============================================================================

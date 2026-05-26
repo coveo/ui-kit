@@ -1,19 +1,5 @@
-/**
- * Pagination Feature Mutations
- *
- * Provides library-agnostic mutation API for pagination state changes.
- * CRITICAL: NO Redux or Immer types exposed.
- *
- * NOTE: Mutations are dispatched without slice adoption.
- * If the pagination slice is not loaded, mutations will have no effect.
- */
-
 import {paginationSlice} from '@/src/core/internal/pagination/pagination-slice.js';
-import type {StateMutation} from '@/src/core/interface/interface-types.js';
-
-/**
- * Pagination mutations
- */
+import type {StateMutation} from '@/src/core/interface/engine/engine-types.js';
 
 export const setPage = (page: number): StateMutation => {
   return paginationSlice.actions.setPage(page);

@@ -31,7 +31,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "catalog:"
+    "@reduxjs/toolkit": "catalog:",
+    "idb": "catalog:"
   },
   "devDependencies": {
     "typescript": "catalog:",
