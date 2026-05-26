@@ -15,4 +15,8 @@ export {
   COVERED_CRITERIA as LISTBOX_COVERED_CRITERIA,
   testListboxA11y,
 } from './listbox.js';
+export {
+  COVERED_CRITERIA as TABS_COVERED_CRITERIA,
+  testTabsA11y,
+} from './tabs.js';
 export type {InteractiveA11yOptions} from './types.js';
