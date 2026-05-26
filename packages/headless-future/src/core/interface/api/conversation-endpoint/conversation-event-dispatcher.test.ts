@@ -117,6 +117,73 @@ describe('dispatchConversationEvent', () => {
     ]);
   });
 
+  it('returns patch_session and complete_turn effects on turn_complete when session fields are present', () => {
+    const result = dispatchConversationEvent({
+      event: {
+        type: 'turn_complete',
+        conversationSessionId: 'session-456',
+        conversationToken: 'token-456',
+      },
+    });
+
+    expect(result.isMeaningfulEvent).toBe(true);
+    expect(result.isTerminalEvent).toBe(true);
+    expect(result.effects).toEqual([
+      {
+        type: 'patch_session',
+        sessionPatch: {
+          conversationSessionId: 'session-456',
+          conversationToken: 'token-456',
+        },
+      },
+      {
+        type: 'complete_turn',
+      },
+    ]);
+  });
+
+  it('ignores STATE_SNAPSHOT events without warnings', () => {
+    const result = dispatchConversationEvent({
+      event: {
+        type: 'STATE_SNAPSHOT',
+        snapshot: {
+          foo: 'bar',
+        },
+      },
+    });
+
+    expect(result.isMeaningfulEvent).toBe(true);
+    expect(result.isTerminalEvent).toBe(false);
+    expect(result.effects).toEqual([]);
+  });
+
+  it('ignores ACTIVITY_SNAPSHOT events without warnings', () => {
+    const result = dispatchConversationEvent({
+      event: {
+        type: 'ACTIVITY_SNAPSHOT',
+        timestamp: 1715638000000,
+        messageId: 'activity-message-1',
+        activityType: 'a2ui-surface',
+        content: {
+          operations: [
+            {
+              beginRendering: {
+                surfaceId: 'surface-1',
+                root: 'root',
+                catalogId: 'catalog-1',
+              },
+            },
+          ],
+        },
+        replace: true,
+      },
+    });
+
+    expect(result.isMeaningfulEvent).toBe(true);
+    expect(result.isTerminalEvent).toBe(false);
+    expect(result.effects).toEqual([]);
+  });
+
   it('maps RUN_ERROR to a protocol_error fail_turn effect', () => {
     const result = dispatchConversationEvent({
       event: {

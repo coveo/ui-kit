@@ -277,6 +277,16 @@ Completed hardening pass after 1.9 (same branch scope, before Phase 2):
 - **2.2** Surface operations processor (Layer 1)
 - **2.3** Surface controller (Layer 2) + sample rendering
 
+Completed checklist for 2.0:
+
+- [x] Added Layer 1 protocol contract types for `STATE_SNAPSHOT`, `A2UIOperation`, and `ACTIVITY_SNAPSHOT` in `src/api/internal/protocol/stream-types.ts`
+- [x] Kept `ACTIVITY_SNAPSHOT.activityType` strict as `'a2ui-surface'` and included optional `timestamp`
+- [x] Kept operation payload contracts strict (Barca-style typed operation union)
+- [x] Extended `turn_complete` protocol typing to optionally carry session continuity fields (`conversationSessionId`, `conversationToken`)
+- [x] Updated dispatcher behavior to patch session continuity from `turn_complete` before terminal completion
+- [x] Added dispatcher test coverage for `turn_complete` alignment and no-op handling for `STATE_SNAPSHOT`/`ACTIVITY_SNAPSHOT` without warnings
+- [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
+
 ### Phase 3 — Orchestration
 
 - **3.0** `OrchestrationMode` domain + local heuristic
@@ -302,7 +312,7 @@ Completed hardening pass after 1.9 (same branch scope, before Phase 2):
 | Phase 1.8           | implement-conversation-controller        | ✅ completed   |
 | Phase 1.9           | implement-conversation-controller        | ✅ completed   |
 | Phase 1.9 hardening | implement-conversation-controller        | ✅ completed   |
-| Phase 2.0           | —                                        | ⬜ not started |
+| Phase 2.0           | headless-next                            | ✅ completed   |
 | Phase 2.1           | —                                        | ⬜ not started |
 | Phase 2.2           | —                                        | ⬜ not started |
 | Phase 2.3           | —                                        | ⬜ not started |

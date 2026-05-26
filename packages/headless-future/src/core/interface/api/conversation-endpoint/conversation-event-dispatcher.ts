@@ -41,9 +41,10 @@ function hasSessionPatchValue(sessionPatch: SessionPatch): boolean {
   return Object.keys(sessionPatch).length > 0;
 }
 
-function getTurnStartedSessionPatch(
-  event: Extract<ConversationStreamEvent, {type: 'turn_started'}>
-): SessionPatch {
+function getTurnLifecycleSessionPatch(event: {
+  conversationSessionId?: string;
+  conversationToken?: string;
+}): SessionPatch {
   return {
     ...(event.conversationSessionId !== undefined
       ? {conversationSessionId: event.conversationSessionId}
@@ -110,12 +111,25 @@ export function dispatchConversationEvent({
   event,
 }: DispatchConversationEventOptions): DispatchConversationEventResult {
   switch (event.type) {
-    case 'turn_complete':
+    case 'turn_complete': {
+      const sessionPatch = getTurnLifecycleSessionPatch(event);
+      const effects: ConversationDispatchEffect[] = [];
+
+      if (hasSessionPatchValue(sessionPatch)) {
+        effects.push({
+          type: 'patch_session',
+          sessionPatch,
+        });
+      }
+
+      effects.push({type: 'complete_turn'});
+
       return {
-        effects: [{type: 'complete_turn'}],
+        effects,
         isTerminalEvent: true,
         isMeaningfulEvent: true,
       };
+    }
 
     case 'RUN_ERROR': {
       return {
@@ -148,7 +162,7 @@ export function dispatchConversationEvent({
     }
 
     case 'turn_started': {
-      const sessionPatch = getTurnStartedSessionPatch(event);
+      const sessionPatch = getTurnLifecycleSessionPatch(event);
 
       return {
         effects: hasSessionPatchValue(sessionPatch)
@@ -158,6 +172,14 @@ export function dispatchConversationEvent({
         isMeaningfulEvent: true,
       };
     }
+
+    case 'STATE_SNAPSHOT':
+    case 'ACTIVITY_SNAPSHOT':
+      return {
+        effects: [],
+        isTerminalEvent: false,
+        isMeaningfulEvent: true,
+      };
 
     case 'RUN_STARTED': {
       const sessionPatch = getRunStartedSessionPatch(event);

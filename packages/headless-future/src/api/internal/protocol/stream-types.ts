@@ -44,6 +44,8 @@ export type TurnStartedEvent = {
 
 export type TurnCompleteEvent = {
   type: 'turn_complete';
+  conversationSessionId?: string;
+  conversationToken?: string;
 };
 
 // ============================================================================
@@ -119,6 +121,61 @@ export type ToolCallResultEvent = {
 };
 
 // ============================================================================
+// Structured snapshot events (A2UI)
+// ============================================================================
+
+export type StateSnapshotEvent = {
+  type: 'STATE_SNAPSHOT';
+  snapshot: Record<string, unknown>;
+};
+
+export type A2UIOperation =
+  | {
+      beginRendering: {
+        surfaceId: string;
+        root: string;
+        catalogId?: string;
+      };
+    }
+  | {
+      surfaceUpdate: {
+        surfaceId: string;
+        components: Array<{
+          id: string;
+          component: Record<string, unknown>;
+        }>;
+      };
+    }
+  | {
+      dataModelUpdate: {
+        surfaceId: string;
+        contents: Array<{
+          key: string;
+          valueString?: string;
+          valueNumber?: number;
+          valueBoolean?: boolean;
+          valueMap?: Array<unknown>;
+        }>;
+      };
+    }
+  | {
+      deleteSurface: {
+        surfaceId: string;
+      };
+    };
+
+export type ActivitySnapshotEvent = {
+  type: 'ACTIVITY_SNAPSHOT';
+  timestamp?: number;
+  messageId: string;
+  activityType: 'a2ui-surface';
+  content: {
+    operations: A2UIOperation[];
+  };
+  replace?: boolean;
+};
+
+// ============================================================================
 // Custom / unknown fallback
 // ============================================================================
 
@@ -154,6 +211,8 @@ export type NormalizedStreamEvent =
   | ToolCallArgsEvent
   | ToolCallEndEvent
   | ToolCallResultEvent
+  | StateSnapshotEvent
+  | ActivitySnapshotEvent
   | CustomEvent
   | UnknownEvent;
 
