@@ -20,9 +20,7 @@ export interface CoveoConversationEndpointRequest {
       url?: string | null;
       referrer?: string | null;
     };
-    cart?: {
-      items: CoveoConversationCartItem[];
-    };
+    cart?: CoveoConversationCartItem[];
   };
   conversationSessionId?: string;
   conversationToken?: string;

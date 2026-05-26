@@ -28,9 +28,7 @@ describe('ConversationEndpointClient', () => {
         url: 'https://example.com/products',
         referrer: 'https://example.com',
       },
-      cart: {
-        items: [],
-      },
+      cart: [],
     },
     targetEngine: 'AGENT_CORE',
   };
@@ -88,7 +86,7 @@ describe('ConversationEndpointClient', () => {
 
     expect(response.data.stream).toBe(stream);
     expect(mockedFetch).toHaveBeenCalledWith(
-      'https://test-org-id.org.coveo.com/rest/organizations/test-org-id/commerce/unstable/agentic/converse',
+      'https://test-org-id.admin.org.coveo.com/rest/organizations/test-org-id/commerce/unstable/agentic/converse',
       {
         method: 'POST',
         signal: undefined,
@@ -97,7 +95,8 @@ describe('ConversationEndpointClient', () => {
           'Content-Type': 'application/json',
           Accept: 'text/event-stream',
           Authorization: 'Bearer test-token',
-          'Coveo-Organization-Id': 'test-org-id',
+          'X-Coveo-Feature-Flags-Overrides':
+            '{"use-demo-agent-core-runtime":false}',
         },
       }
     );
