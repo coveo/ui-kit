@@ -9,9 +9,20 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc -p tsconfig.json"
+    "build": "tsc -p tsconfig.json",
+    "a11y:merge-shards": "pnpm build && node scripts/merge-shards-cli.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "a11y:validate": "node scripts/validate-openacr.mjs",
+    "a11y:vpat": "pnpm build && node scripts/json-to-openacr.mjs && node scripts/validate-openacr.mjs && npx --yes @openacr/openacr output -f reports/openacr.yaml -o reports/vpat-2.5-coveo-atomic.md -t scripts/vpat-from-openacr.handlebars"
+  },
+  "dependencies": {
+    "yaml": "catalog:"
   },
   "devDependencies": {
-    "typescript": "catalog:"
+    "ajv": "8.20.0",
+    "axe-core": "4.11.4",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   }
 }

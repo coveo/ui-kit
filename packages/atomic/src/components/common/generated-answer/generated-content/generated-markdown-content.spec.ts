@@ -16,6 +16,9 @@ describe('#renderGeneratedMarkdownContent', () => {
     get generatedText() {
       return element.querySelector('div[part="generated-text"]');
     },
+    get inlineLink() {
+      return element.querySelector('atomic-generated-answer-inline-link');
+    },
   });
 
   const renderComponent = async (
@@ -78,7 +81,7 @@ describe('#renderGeneratedMarkdownContent', () => {
     expect(mockedTransformMarkdownToHtml).toHaveBeenCalledWith('');
   });
 
-  it('should call DOMPurify.sanitize with the transformed HTML and with ADD_ATTR config to preserve part attributes', async () => {
+  it('should call DOMPurify.sanitize with CUSTOM_ELEMENT_HANDLING to allow inline link component', async () => {
     const mockedTransformMarkdownToHtml = vi.mocked(transformMarkdownToHtml);
     const answer = '# Heading';
     const transformedHtml = '<h1 part="answer-heading-1">Heading</h1>';
@@ -92,6 +95,10 @@ describe('#renderGeneratedMarkdownContent', () => {
     expect(mockedTransformMarkdownToHtml).toHaveBeenCalledWith(answer);
     expect(DOMPurify.sanitize).toHaveBeenCalledWith(transformedHtml, {
       ADD_ATTR: ['part'],
+      CUSTOM_ELEMENT_HANDLING: {
+        tagNameCheck: /^atomic-generated-answer-inline-link$/,
+        attributeNameCheck: /^(href|title|exportparts)$/,
+      },
     });
   });
 

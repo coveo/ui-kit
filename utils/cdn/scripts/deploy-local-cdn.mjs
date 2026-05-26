@@ -6,11 +6,38 @@ const currentDir = import.meta.dirname;
 const repoRoot = path.resolve(currentDir, '../../..');
 const devCdnDir = path.resolve(currentDir, '../dist');
 
-const stripJsonComments = (text) =>
-  text
-    .replace(/\/\/.*$/gm, '')
-    .replace(/\/\*[\s\S]*?\*\//g, '')
-    .replace(/,\s*([}\]])/g, '$1');
+// ⚠️  WARNING: If a package's build output directory or CDN path changes,
+// update this list AND the corresponding deployment configs in ui-kit-cd
+// (.deployment.config/{commit,dev,prd}.json).
+const packages = [
+  {name: 'bueno', source: 'packages/bueno/cdn', cdnPath: 'bueno/v$VERSION'},
+  {
+    name: 'headless',
+    source: 'packages/headless/cdn',
+    cdnPath: 'headless/v$VERSION',
+  },
+  {name: 'atomic', source: 'packages/atomic/cdn', cdnPath: 'atomic/v$VERSION'},
+  {
+    name: 'atomic-storybook',
+    source: 'packages/atomic/dist-storybook',
+    cdnPath: 'atomic/v$VERSION/storybook',
+  },
+  {
+    name: 'atomic-react',
+    source: 'packages/atomic-react/dist',
+    cdnPath: 'atomic-react/v$VERSION',
+  },
+  {
+    name: 'atomic-hosted-page',
+    source: 'packages/atomic-hosted-page/cdn',
+    cdnPath: 'atomic-hosted-page/v$VERSION/atomic-hosted-page',
+  },
+  {
+    name: 'shopify',
+    source: 'packages/shopify/cdn',
+    cdnPath: 'shopify/v$VERSION',
+  },
+];
 
 const getVersion = async (packageName) => {
   const packageJsonPath = path.resolve(
@@ -37,13 +64,9 @@ const copyFiles = async (source, destination) => {
 };
 
 const main = async () => {
-  const manifestPath = path.resolve(repoRoot, 'cdn-manifest.jsonc');
-  const rawManifest = await fs.readFile(manifestPath, 'utf-8');
-  const manifest = JSON.parse(stripJsonComments(rawManifest));
-
   await fs.rm(devCdnDir, {recursive: true, force: true});
 
-  for (const entry of manifest) {
+  for (const entry of packages) {
     const sourcePath = path.resolve(repoRoot, entry.source);
     const packageName = entry.source.split('/')[1];
     const version = await getVersion(packageName);

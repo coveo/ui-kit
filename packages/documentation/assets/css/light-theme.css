@@ -14,7 +14,7 @@
   --atomic-neutral-dark: #565b66;
   --atomic-neutral: #bfc4c8;
   --atomic-neutral-light: #ececec;
-  --atomic-neutral-lighter: #f2f2f2;
+  --atomic-neutral-lighter: #f9fafb;
   --atomic-neutral-lightest: #f9f9f9;
   /* Semantic colors */
   --atomic-background: #fff;
@@ -1763,4 +1763,19 @@ summary:hover {
   fill: #000;
   user-select: none;
   -webkit-user-select: none;
+}
+
+/* Header nav bar – light theme */
+.header-nav-dropdown .dropdown-menu {
+  background: #fff;
+  border: 1px solid #e5e8e8;
+  box-shadow: rgba(229, 232, 232, 0.75) 0px 2px 16px 0px;
+}
+
+.header-nav-dropdown .header-nav-dropdown-item {
+  --bs-dropdown-link-color: #282829;
+  --bs-dropdown-link-hover-color: #1372ec;
+  --bs-dropdown-link-hover-bg: transparent;
+  --bs-dropdown-link-active-color: #1372ec;
+  --bs-dropdown-link-active-bg: transparent;
 }

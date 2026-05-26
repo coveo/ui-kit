@@ -76,6 +76,17 @@ const customRenderer = {
     return `${tag}${body}</${type}>`;
   },
 
+  link(href: string, title: string | null | undefined, text: string) {
+    const titleAttribute = title ? ` title="${escapeHtml(title)}"` : '';
+    const safeHref = href ? escapeHtml(href) : '';
+
+    if (!safeHref) {
+      return `<span>${text}</span>`;
+    }
+
+    return `<atomic-generated-answer-inline-link href="${safeHref}"${titleAttribute} exportparts="answer-link,answer-link-text,answer-link-icon">${text}</atomic-generated-answer-inline-link>`;
+  },
+
   /**
    * Custom Marked renderer to remove wrapping `<p>` element around list item content.
    * @param text The element text content.

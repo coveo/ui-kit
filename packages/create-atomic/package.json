@@ -60,7 +60,7 @@
   "devDependencies": {
     "@types/node": "catalog:",
     "typescript": "catalog:",
-    "yaml": "2.8.3"
+    "yaml": "catalog:"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0 || ^24.11.0"

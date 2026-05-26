@@ -8,9 +8,11 @@ import {
 } from '../analytics/analytics-utils.js';
 import {SearchPageEvents} from '../analytics/search-action-cause.js';
 import type {SearchAction} from '../search/search-actions.js';
+import type {InlineLink} from '../../utils/inline-link.js';
 import {
   citationSourceSelector,
   generativeQuestionAnsweringIdSelector,
+  selectFollowUpAnswersConversationId,
 } from './generated-answer-selectors.js';
 
 export type GeneratedAnswerFeedbackOption = 'yes' | 'unknown' | 'no';
@@ -63,6 +65,7 @@ export function logOpenGeneratedAnswerSource(
       if (!resolvedAnswerId || !citation) {
         return null;
       }
+      const conversationId = selectFollowUpAnswersConversationId(state);
 
       return client.makeGeneratedAnswerCitationClick(
         partialCitationInformation(citation, state),
@@ -70,6 +73,7 @@ export function logOpenGeneratedAnswerSource(
           generativeQuestionAnsweringId: resolvedAnswerId,
           citationId: citation.id,
           documentId: citationDocumentIdentifier(citation),
+          ...(conversationId && {conversationId}),
         }
       );
     },
@@ -118,11 +122,13 @@ export function logHoverCitation(
       if (!resolvedAnswerId || !citation) {
         return null;
       }
+      const conversationId = selectFollowUpAnswersConversationId(state);
       return client.makeGeneratedAnswerSourceHover({
         generativeQuestionAnsweringId: resolvedAnswerId,
         permanentId: citation.permanentid,
         citationId: citation.id,
         citationHoverTimeMs: citationHoverTimeInMs,
+        ...(conversationId && {conversationId}),
       });
     },
     analyticsType: 'Rga.CitationHover',
@@ -145,6 +151,21 @@ export function logHoverCitation(
   });
 }
 
+export function logGeneratedAnswerOpenInlineLink(
+  inlineLink: InlineLink,
+  answerId: string
+): CustomAction {
+  return makeAnalyticsAction({
+    prefix: 'analytics/generatedAnswer/openInlineLink',
+    __legacy__getBuilder: (client) => {
+      return client.makeGeneratedAnswerOpenInlineLink({
+        generativeQuestionAnsweringId: answerId,
+        ...inlineLink,
+      });
+    },
+  });
+}
+
 // TODO: SFINT-6665
 // Overloading the function here for backward compatibility because #logLikeGeneratedAnswer will eventually take an answerId.
 export function logLikeGeneratedAnswer(): CustomAction;
@@ -158,8 +179,10 @@ export function logLikeGeneratedAnswer(answerId?: string): CustomAction {
       if (!resolvedAnswerId) {
         return null;
       }
+      const conversationId = selectFollowUpAnswersConversationId(state);
       return client.makeLikeGeneratedAnswer({
         generativeQuestionAnsweringId: resolvedAnswerId,
+        ...(conversationId && {conversationId}),
       });
     },
     analyticsType: 'Rga.AnswerAction',
@@ -187,8 +210,10 @@ export function logDislikeGeneratedAnswer(answerId?: string): CustomAction {
       if (!resolvedAnswerId) {
         return null;
       }
+      const conversationId = selectFollowUpAnswersConversationId(state);
       return client.makeDislikeGeneratedAnswer({
         generativeQuestionAnsweringId: resolvedAnswerId,
+        ...(conversationId && {conversationId}),
       });
     },
     analyticsType: 'Rga.AnswerAction',
@@ -253,26 +278,21 @@ export const logGeneratedAnswerFeedback = (
 export const logGeneratedAnswerStreamEnd = (
   answerGenerated: boolean,
   answerId?: string,
-  answerTextIsEmpty?: boolean,
-  conversationId?: string
+  answerTextIsEmpty?: boolean
 ): CustomAction =>
   makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/streamEnd',
     __legacy__getBuilder: (client, state) => {
       const generativeQuestionAnsweringId =
         answerId ?? generativeQuestionAnsweringIdSelector(state);
-      const resolvedAnswerTextIsEmpty = answerGenerated
-        ? (answerTextIsEmpty ??
-          (!state.generatedAnswer?.answer ||
-            !state.generatedAnswer?.answer.length))
-        : undefined;
       if (!generativeQuestionAnsweringId) {
         return null;
       }
+      const conversationId = selectFollowUpAnswersConversationId(state);
       return client.makeGeneratedAnswerStreamEnd({
         generativeQuestionAnsweringId,
         answerGenerated,
-        answerTextIsEmpty: resolvedAnswerTextIsEmpty,
+        answerTextIsEmpty,
         ...(conversationId && {conversationId}),
       });
     },
@@ -418,8 +438,10 @@ export function logCopyGeneratedAnswer(answerId?: string): CustomAction {
       if (!resolvedAnswerId) {
         return null;
       }
+      const conversationId = selectFollowUpAnswersConversationId(state);
       return client.makeGeneratedAnswerCopyToClipboard({
         generativeQuestionAnsweringId: resolvedAnswerId,
+        ...(conversationId && {conversationId}),
       });
     },
     analyticsType: 'Rga.AnswerAction',
@@ -446,6 +468,7 @@ export const generatedAnswerAnalyticsClient = {
   logGeneratedAnswerFeedback,
   logDislikeGeneratedAnswer,
   logLikeGeneratedAnswer,
+  logGeneratedAnswerOpenInlineLink,
   logHoverCitation,
   logOpenGeneratedAnswerSource,
   logRetryGeneratedAnswer,

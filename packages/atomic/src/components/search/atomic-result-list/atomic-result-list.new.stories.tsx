@@ -1,6 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {
   playExecuteFirstSearch,
   wrapInSearchInterface,
@@ -33,7 +34,7 @@ const defaultTemplateContent = `<atomic-result-template>
       <atomic-result-section-actions><atomic-quickview></atomic-quickview></atomic-result-section-actions>
       <atomic-result-section-visual>
         <atomic-result-icon class="icon"></atomic-result-icon>
-        <img loading="lazy" src="https://picsum.photos/seed/picsum/350" class="thumbnail" />
+        <img loading="lazy" src="https://picsum.photos/seed/picsum/350" class="thumbnail" alt="" />
       </atomic-result-section-visual>
       <atomic-result-section-badges>
         <atomic-field-condition must-match-sourcetype="Salesforce">
@@ -74,6 +75,8 @@ const defaultTemplateContent = `<atomic-result-template>
       </atomic-result-section-bottom-metadata>
   </template>
 </atomic-result-template>`;
+
+const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface({
   config: {
@@ -118,6 +121,7 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     chromatic: {disableSnapshot: true},
+    msw: {handlers: [...searchApiHarness.handlers]},
     layout: 'fullscreen',
     actions: {
       handles: events,

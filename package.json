@@ -23,10 +23,9 @@
     "knip": "knip"
   },
   "devDependencies": {
-    "@actions/core": "3.0.1",
     "@actions/github": "9.1.1",
     "@changesets/changelog-github": "0.6.0",
-    "@changesets/cli": "2.30.0",
+    "@changesets/cli": "2.31.0",
     "@cspell/dict-fr-fr": "2.3.2",
     "@playwright/mcp": "catalog:",
     "@tsconfig/node22": "22.0.5",
@@ -38,14 +37,14 @@
     "esbuild-plugin-alias": "0.2.1",
     "esbuild-plugin-umd-wrapper": "3.0.0",
     "husky": "9.1.7",
-    "knip": "6.6.1",
+    "knip": "6.13.1",
     "lint-staged": "16.4.0",
-    "oxfmt": "0.46.0",
-    "oxlint": "1.61.0",
+    "oxfmt": "0.49.0",
+    "oxlint": "1.64.0",
     "playwright": "catalog:",
-    "publint": "0.3.18",
-    "semver": "7.7.4",
-    "turbo": "2.9.6",
+    "publint": "0.3.21",
+    "semver": "7.8.0",
+    "turbo": "2.9.12",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },
@@ -53,7 +52,7 @@
     "node": "^22.14.0 || ^24.11.0",
     "pnpm": ">=10.0.0"
   },
-  "packageManager": "pnpm@10.33.0",
+  "packageManager": "pnpm@10.33.2",
   "pnpm": {
     "patchedDependencies": {
       "@stencil/core@4.20.0": "patches/@stencil+core+4.20.0.patch",

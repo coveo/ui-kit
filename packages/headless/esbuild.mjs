@@ -1,3 +1,6 @@
+// ⚠️  CDN OUTPUT: This build outputs to "cdn/". If you change this path,
+// you MUST also update the corresponding "source" field in ui-kit-cd
+// (.deployment.config/{commit,dev,prd}.json) and deploy-local-cdn.mjs.
 import {readFileSync, writeFileSync} from 'node:fs';
 import {createRequire} from 'node:module';
 import {dirname, resolve} from 'node:path';
@@ -74,6 +77,7 @@ const base = {
 const browserEsm = Object.entries(useCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
   const outDir = getUseCaseDir('cdn', useCase);
+  // ⚠️  Changing this filename affects CDN pointer files in ui-kit-cd.
   const outfile = `${outDir}/headless.esm.js`;
 
   const buenoPath = `/bueno/${buenoVersion}/bueno.esm.js`;
