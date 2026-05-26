@@ -29,12 +29,14 @@ import '@/src/components/search/atomic-result-text/atomic-result-text.js';
 import '@/src/components/search/atomic-table-element/atomic-table-element.js';
 import '@/src/components/search/atomic-text/atomic-text.js';
 
+const mockSearchApi = new MockSearchApi();
+
 const defaultTemplateContent = `<atomic-result-template>
   <template>
       <atomic-result-section-actions><atomic-quickview></atomic-quickview></atomic-result-section-actions>
       <atomic-result-section-visual>
         <atomic-result-icon class="icon"></atomic-result-icon>
-        <img loading="lazy" src="https://picsum.photos/seed/picsum/350" class="thumbnail" />
+        <img loading="lazy" src="https://picsum.photos/seed/picsum/350" class="thumbnail" alt="" />
       </atomic-result-section-visual>
       <atomic-result-section-badges>
         <atomic-field-condition must-match-sourcetype="Salesforce">
@@ -121,7 +123,9 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     chromatic: {disableSnapshot: true},
-    msw: {handlers: [...searchApiHarness.handlers]},
+    msw: {
+      handlers: [...mockSearchApi.handlers],
+    },
     layout: 'fullscreen',
     actions: {
       handles: events,
