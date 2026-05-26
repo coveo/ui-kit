@@ -602,5 +602,5 @@ export type {FunctionExecutionTrigger} from './features/triggers/triggers-state.
 export type {HighlightKeyword} from './utils/highlight.js';
 export * from './utils/query-expression/query-expression.js';
 export type {PlatformEnvironment} from './utils/url-utils.js';
-export {VERSION} from './utils/version.js';
+export {VERSION, HOTFIX_TEST} from './utils/version.js';
 export {HighlightUtils};
