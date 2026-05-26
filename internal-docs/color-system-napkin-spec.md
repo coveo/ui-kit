@@ -32,13 +32,13 @@ Support: Chrome 119+, Firefox 128+, Safari 16.4+ (~92% global).
 
 ## The ≤ 5 Base Colors
 
-| Token | Approximate value | Role |
-|---|---|---|
-| `--atomic-primary` | `oklch(0.52 0.20 258)` | Brand / interactive actions |
+| Token              | Approximate value       | Role                                   |
+| ------------------ | ----------------------- | -------------------------------------- |
+| `--atomic-primary` | `oklch(0.52 0.20 258)`  | Brand / interactive actions            |
 | `--atomic-neutral` | `oklch(0.75 0.015 240)` | UI chrome: borders, dividers, surfaces |
-| `--atomic-success` | `oklch(0.55 0.16 142)` | Positive feedback |
-| `--atomic-error` | `oklch(0.52 0.18 35)` | Destructive actions, errors |
-| `--atomic-visited` | `oklch(0.44 0.18 303)` | Visited-link state |
+| `--atomic-success` | `oklch(0.55 0.16 142)`  | Positive feedback                      |
+| `--atomic-error`   | `oklch(0.52 0.18 35)`   | Destructive actions, errors            |
+| `--atomic-visited` | `oklch(0.44 0.18 303)`  | Visited-link state                     |
 
 > These are the only values a theme author needs to change.
 > `--atomic-neutral` is chosen as a **mid-tone anchor** (~50–75% lightness), so we can derive both lighter and darker steps in both directions.
@@ -53,26 +53,46 @@ All of the following are **computed, not hardcoded**:
 :root {
   /* --- Primary scale --- */
   /* Fallback: OKLCH lightness threshold (l < 0.6 → white, l > 0.6 → black) */
-  --atomic-on-primary:         oklch(from var(--atomic-primary) clamp(0, (0.6 - l) * 1000, 1) 0 h);
-  --atomic-primary-light:      oklch(from var(--atomic-primary) calc(l + 0.15) calc(c * 0.85) h);
-  --atomic-primary-dark:       oklch(from var(--atomic-primary) calc(l - 0.12) calc(c * 1.1) h);
-  --atomic-primary-background: oklch(from var(--atomic-primary) 0.97 calc(c * 0.12) h);
-  --atomic-ring-primary:       oklch(from var(--atomic-primary) l c h / 50%);
+  --atomic-on-primary: oklch(
+    from var(--atomic-primary) clamp(0, (0.6 - l) * 1000, 1) 0 h
+  );
+  --atomic-primary-light: oklch(
+    from var(--atomic-primary) calc(l + 0.15) calc(c * 0.85) h
+  );
+  --atomic-primary-dark: oklch(
+    from var(--atomic-primary) calc(l - 0.12) calc(c * 1.1) h
+  );
+  --atomic-primary-background: oklch(
+    from var(--atomic-primary) 0.97 calc(c * 0.12) h
+  );
+  --atomic-ring-primary: oklch(from var(--atomic-primary) l c h / 50%);
 
   /* --- Neutral scale --- */
-  --atomic-neutral-dark:       oklch(from var(--atomic-neutral) calc(l - 0.28) c h);
-  --atomic-neutral-dim:        oklch(from var(--atomic-neutral) calc(l - 0.10) c h);
-  --atomic-neutral-light:      oklch(from var(--atomic-neutral) calc(l + 0.18) calc(c * 0.6) h);
-  --atomic-neutral-lighter:    oklch(from var(--atomic-neutral) calc(l + 0.22) calc(c * 0.4) h);
-  --atomic-disabled:           oklch(from var(--atomic-neutral) calc(l + 0.10) calc(c * 0.8) h);
+  --atomic-neutral-dark: oklch(from var(--atomic-neutral) calc(l - 0.28) c h);
+  --atomic-neutral-dim: oklch(from var(--atomic-neutral) calc(l - 0.1) c h);
+  --atomic-neutral-light: oklch(
+    from var(--atomic-neutral) calc(l + 0.18) calc(c * 0.6) h
+  );
+  --atomic-neutral-lighter: oklch(
+    from var(--atomic-neutral) calc(l + 0.22) calc(c * 0.4) h
+  );
+  --atomic-disabled: oklch(
+    from var(--atomic-neutral) calc(l + 0.1) calc(c * 0.8) h
+  );
 
   /* --- Surfaces --- */
-  --atomic-background:         oklch(1 0 0);  /* always white; see open questions for dark mode */
-  --atomic-on-background:      oklch(from var(--atomic-neutral) 0.18 calc(c * 2) h);
+  --atomic-background: oklch(
+    1 0 0
+  ); /* always white; see open questions for dark mode */
+  --atomic-on-background: oklch(from var(--atomic-neutral) 0.18 calc(c * 2) h);
 
   /* --- Semantic state backgrounds --- */
-  --atomic-success-background: oklch(from var(--atomic-success) 0.95 calc(c * 0.18) h);
-  --atomic-error-background:   oklch(from var(--atomic-error) 0.95 calc(c * 0.18) h);
+  --atomic-success-background: oklch(
+    from var(--atomic-success) 0.95 calc(c * 0.18) h
+  );
+  --atomic-error-background: oklch(
+    from var(--atomic-error) 0.95 calc(c * 0.18) h
+  );
 }
 
 /* Enhance on-primary with contrast-color() where supported */
@@ -92,8 +112,10 @@ All of the following are **computed, not hardcoded**:
 A few colors have narrow, non-themeable roles. They are **overridable but not base colors**:
 
 ```css
---atomic-rating-icon-active-color: oklch(0.87 0.17 87);  /* gold — star ratings */
---atomic-inline-code:              oklch(0.46 0.20 25);   /* red — inline code */
+--atomic-rating-icon-active-color: oklch(
+  0.87 0.17 87
+); /* gold — star ratings */
+--atomic-inline-code: oklch(0.46 0.2 25); /* red — inline code */
 ```
 
 These exist outside the derived palette because no consumer of the design system should need to theme them as part of a brand identity.
@@ -105,9 +127,9 @@ These exist outside the derived palette because no consumer of the design system
 A consumer needs to override **at most 5** variables to fully theme the library:
 
 ```css
-[data-theme="my-brand"] {
-  --atomic-primary: oklch(0.55 0.22 160);   /* e.g. teal brand */
-  --atomic-neutral: oklch(0.80 0.008 200);  /* cool-gray UI chrome */
+[data-theme='my-brand'] {
+  --atomic-primary: oklch(0.55 0.22 160); /* e.g. teal brand */
+  --atomic-neutral: oklch(0.8 0.008 200); /* cool-gray UI chrome */
   /* success, error, visited → inherit defaults if not overriding */
 }
 ```
@@ -118,12 +140,12 @@ The accessible theme (`accessible.css`) becomes a set of **different base values
 
 ## Comparing Before / After
 
-| | Before | After |
-|---|---|---|
-| Hardcoded values per theme | ~20 | **5** |
-| Values a themer must change | ~20 | **≤ 5** |
-| Consistent lightness steps | Manual | **Computed** |
-| Dark mode ready | No | **Yes (auto via `prefers-color-scheme`)** |
+|                             | Before | After                                     |
+| --------------------------- | ------ | ----------------------------------------- |
+| Hardcoded values per theme  | ~20    | **5**                                     |
+| Values a themer must change | ~20    | **≤ 5**                                   |
+| Consistent lightness steps  | Manual | **Computed**                              |
+| Dark mode ready             | No     | **Yes (auto via `prefers-color-scheme`)** |
 
 ---
 
@@ -147,15 +169,29 @@ The default `:root` block defines light mode. A `@media (prefers-color-scheme: d
     --atomic-background: oklch(0.13 0 0);
 
     /* Neutral scale inverts: dark → light text, light → dark surfaces */
-    --atomic-neutral-dark:    oklch(from var(--atomic-neutral) calc(l + 0.26) c h);         /* ~0.98, near-white text */
-    --atomic-neutral-light:   oklch(from var(--atomic-neutral) calc(l - 0.18) calc(c * 0.6) h);  /* ~0.54, mid-dark surface */
-    --atomic-neutral-lighter: oklch(from var(--atomic-neutral) calc(l - 0.50) calc(c * 0.35) h); /* ~0.22, deep-dark surface */
-    --atomic-disabled:        oklch(from var(--atomic-neutral) calc(l - 0.30) calc(c * 0.75) h); /* ~0.42, muted */
+    --atomic-neutral-dark: oklch(
+      from var(--atomic-neutral) calc(l + 0.26) c h
+    ); /* ~0.98, near-white text */
+    --atomic-neutral-light: oklch(
+      from var(--atomic-neutral) calc(l - 0.18) calc(c * 0.6) h
+    ); /* ~0.54, mid-dark surface */
+    --atomic-neutral-lighter: oklch(
+      from var(--atomic-neutral) calc(l - 0.5) calc(c * 0.35) h
+    ); /* ~0.22, deep-dark surface */
+    --atomic-disabled: oklch(
+      from var(--atomic-neutral) calc(l - 0.3) calc(c * 0.75) h
+    ); /* ~0.42, muted */
 
     /* State backgrounds: push toward near-black instead of near-white */
-    --atomic-primary-background: oklch(from var(--atomic-primary) 0.17 calc(c * 0.25) h);
-    --atomic-success-background: oklch(from var(--atomic-success) 0.17 calc(c * 0.30) h);
-    --atomic-error-background:   oklch(from var(--atomic-error)   0.17 calc(c * 0.30) h);
+    --atomic-primary-background: oklch(
+      from var(--atomic-primary) 0.17 calc(c * 0.25) h
+    );
+    --atomic-success-background: oklch(
+      from var(--atomic-success) 0.17 calc(c * 0.3) h
+    );
+    --atomic-error-background: oklch(
+      from var(--atomic-error) 0.17 calc(c * 0.3) h
+    );
   }
 }
 ```
@@ -164,11 +200,11 @@ The default `:root` block defines light mode. A `@media (prefers-color-scheme: d
 
 ### The asymmetry is intentional
 
-| Token | Light offset | Dark offset | Reason |
-|---|---|---|---|
-| `neutral-dark` | −0.26 | +0.26 | Symmetric around anchor; cleanly inverts |
-| `neutral-light` | +0.16 | −0.18 | Slightly deeper dark to avoid mid-gray surfaces |
-| `neutral-lighter` | +0.23 | −0.50 | Dark mode needs near-black, not near-0.5 |
+| Token             | Light offset | Dark offset | Reason                                          |
+| ----------------- | ------------ | ----------- | ----------------------------------------------- |
+| `neutral-dark`    | −0.26        | +0.26       | Symmetric around anchor; cleanly inverts        |
+| `neutral-light`   | +0.16        | −0.18       | Slightly deeper dark to avoid mid-gray surfaces |
+| `neutral-lighter` | +0.23        | −0.50       | Dark mode needs near-black, not near-0.5        |
 
 ### Overriding the color scheme
 
@@ -176,15 +212,27 @@ The default `:root` block defines light mode. A `@media (prefers-color-scheme: d
 
 ```css
 /* Force dark */
-[data-color-scheme="dark"] {
+[data-color-scheme='dark'] {
   --atomic-background: oklch(0.13 0 0);
-  --atomic-neutral-dark:    oklch(from var(--atomic-neutral) calc(l + 0.26) c h);
-  --atomic-neutral-light:   oklch(from var(--atomic-neutral) calc(l - 0.18) calc(c * 0.6) h);
-  --atomic-neutral-lighter: oklch(from var(--atomic-neutral) calc(l - 0.50) calc(c * 0.35) h);
-  --atomic-disabled:        oklch(from var(--atomic-neutral) calc(l - 0.30) calc(c * 0.75) h);
-  --atomic-primary-background: oklch(from var(--atomic-primary) 0.17 calc(c * 0.25) h);
-  --atomic-success-background: oklch(from var(--atomic-success) 0.17 calc(c * 0.30) h);
-  --atomic-error-background:   oklch(from var(--atomic-error)   0.17 calc(c * 0.30) h);
+  --atomic-neutral-dark: oklch(from var(--atomic-neutral) calc(l + 0.26) c h);
+  --atomic-neutral-light: oklch(
+    from var(--atomic-neutral) calc(l - 0.18) calc(c * 0.6) h
+  );
+  --atomic-neutral-lighter: oklch(
+    from var(--atomic-neutral) calc(l - 0.5) calc(c * 0.35) h
+  );
+  --atomic-disabled: oklch(
+    from var(--atomic-neutral) calc(l - 0.3) calc(c * 0.75) h
+  );
+  --atomic-primary-background: oklch(
+    from var(--atomic-primary) 0.17 calc(c * 0.25) h
+  );
+  --atomic-success-background: oklch(
+    from var(--atomic-success) 0.17 calc(c * 0.3) h
+  );
+  --atomic-error-background: oklch(
+    from var(--atomic-error) 0.17 calc(c * 0.3) h
+  );
 }
 ```
 
@@ -198,9 +246,10 @@ The default `:root` block defines light mode. A `@media (prefers-color-scheme: d
 - **No PostCSS fallback.** Target browsers that support CSS relative color syntax natively (~92% global, Chrome 119+, Firefox 128+, Safari 16.4+).
 - **`--atomic-user-actions-timeline-separator-background`** derives from `--atomic-neutral`:
   ```css
-  --atomic-user-actions-timeline-separator-background:
-    var(--atomic-user-actions-timeline-separator-background,
-      oklch(from var(--atomic-neutral) calc(l + 0.15) calc(c * 0.5) h));
+  --atomic-user-actions-timeline-separator-background: var(
+    --atomic-user-actions-timeline-separator-background,
+    oklch(from var(--atomic-neutral) calc(l + 0.15) calc(c * 0.5) h)
+  );
   ```
   The outer `var()` fallback pattern preserves the consumer override escape hatch without adding a new base variable.
 
@@ -222,24 +271,30 @@ The old anchor (`oklch(0.93 ...)`) required a `calc(l - 0.46)` step to reach `ne
 
 ### New neutral scale
 
-| Token | OKLCH l (approx) | Role | Change |
-|---|---|---|---|
-| `--atomic-neutral-dark` | 0.46 | Body text on light bg | Derived (unchanged appearance) |
-| `--atomic-neutral-dim` | 0.72 | **New name for old `--atomic-neutral`** (borders, dividers) | **Renamed** |
-| `--atomic-neutral` | **0.72** ← anchor | Mid-tone base; themer sets this | **Semantic change** |
-| `--atomic-neutral-light` | 0.88 | Subtle surfaces | Derived (unchanged appearance) |
-| `--atomic-neutral-lighter` | 0.95 | Near-white backgrounds | Derived (unchanged appearance) |
+| Token                      | OKLCH l (approx)  | Role                                                        | Change                         |
+| -------------------------- | ----------------- | ----------------------------------------------------------- | ------------------------------ |
+| `--atomic-neutral-dark`    | 0.46              | Body text on light bg                                       | Derived (unchanged appearance) |
+| `--atomic-neutral-dim`     | 0.72              | **New name for old `--atomic-neutral`** (borders, dividers) | **Renamed**                    |
+| `--atomic-neutral`         | **0.72** ← anchor | Mid-tone base; themer sets this                             | **Semantic change**            |
+| `--atomic-neutral-light`   | 0.88              | Subtle surfaces                                             | Derived (unchanged appearance) |
+| `--atomic-neutral-lighter` | 0.95              | Near-white backgrounds                                      | Derived (unchanged appearance) |
 
 > `--atomic-neutral` and `--atomic-neutral-dim` share the same anchor value by default — `dim` is simply an alias. Consumers who override `--atomic-neutral` to a lighter or darker value will see `dim` track with it, which is the desired behaviour.
 
 ### Derived tokens with new offsets
 
 ```css
---atomic-neutral-dark:    oklch(from var(--atomic-neutral) calc(l - 0.26) c h);
---atomic-neutral-dim:     var(--atomic-neutral);  /* alias; same shade at default */
---atomic-neutral-light:   oklch(from var(--atomic-neutral) calc(l + 0.16) calc(c * 0.6) h);
---atomic-neutral-lighter: oklch(from var(--atomic-neutral) calc(l + 0.23) calc(c * 0.35) h);
---atomic-disabled:        oklch(from var(--atomic-neutral) calc(l + 0.12) calc(c * 0.75) h);
+--atomic-neutral-dark: oklch(from var(--atomic-neutral) calc(l - 0.26) c h);
+--atomic-neutral-dim: var(--atomic-neutral); /* alias; same shade at default */
+--atomic-neutral-light: oklch(
+  from var(--atomic-neutral) calc(l + 0.16) calc(c * 0.6) h
+);
+--atomic-neutral-lighter: oklch(
+  from var(--atomic-neutral) calc(l + 0.23) calc(c * 0.35) h
+);
+--atomic-disabled: oklch(
+  from var(--atomic-neutral) calc(l + 0.12) calc(c * 0.75) h
+);
 ```
 
 ### Migration note (for changelog / upgrade guide)

@@ -2,6 +2,11 @@ import {getSampleRecommendationEngineConfiguration} from '@coveo/headless/recomm
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import {MockRecommendationApi} from '@/storybook-utils/api/recommendation/mock.js';
+import {
+  colorArgs,
+  colorArgTypes,
+  colorDecorator,
+} from '@/storybook-utils/common/color-theme-args';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
 import {isTestMode} from '@/storybook-utils/common/is-test-mode';
 import '@/src/components/search/atomic-field-condition/atomic-field-condition.js';
@@ -29,26 +34,11 @@ async function initializeRecsInterface(canvasElement: HTMLElement) {
 
 const mockRecommendationApi = new MockRecommendationApi();
 
-const colorArgTypes = {
-  primary: {control: 'color', name: 'Primary'},
-  neutral: {control: 'color', name: 'Neutral (mid-tone anchor)'},
-  success: {control: 'color', name: 'Success'},
-  error: {control: 'color', name: 'Error'},
-  visited: {control: 'color', name: 'Visited'},
-} as const;
-
-const colorArgs = {
-  primary: '#126ce0',
-  neutral: '#e5e8e8',
-  success: '#12a244',
-  error: '#ce3f00',
-  visited: '#752e9c',
-};
-
 const meta: Meta = {
   component: 'content-recs-page',
   title: 'Recommendations/Example Pages',
   id: 'content-recs-page',
+  decorators: [colorDecorator],
   argTypes: colorArgTypes,
   args: colorArgs,
   parameters: {
@@ -59,16 +49,7 @@ const meta: Meta = {
     },
     chromatic: {disableSnapshot: false},
   },
-  render: ({primary, neutral, success, error, visited}) => html`
-    <style>
-      :root {
-        --atomic-primary: ${primary};
-        --atomic-neutral: ${neutral};
-        --atomic-success: ${success};
-        --atomic-error: ${error};
-        --atomic-visited: ${visited};
-      }
-    </style>
+  render: () => html`
     <style>
       .content-recs-layout {
         max-width: 1400px;

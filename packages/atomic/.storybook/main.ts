@@ -159,6 +159,7 @@ const config: StorybookConfig = {
     {from: './public', to: '/'},
   ],
   addons: [
+    '@storybook/addon-themes',
     '@storybook/addon-a11y',
     {
       name: '@storybook/addon-docs',

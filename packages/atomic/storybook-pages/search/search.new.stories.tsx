@@ -6,6 +6,11 @@ import {
   type baseResponse,
   richResponse,
 } from '@/storybook-utils/api/search/search-response';
+import {
+  colorArgs,
+  colorArgTypes,
+  colorDecorator,
+} from '@/storybook-utils/common/color-theme-args';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
 import {isTestMode} from '@/storybook-utils/common/is-test-mode';
 import '@/src/components/search/atomic-automatic-facet-generator/atomic-automatic-facet-generator.js';
@@ -75,26 +80,11 @@ async function initializeSearchInterface(canvasElement: HTMLElement) {
 
 const mockSearchApi = new MockSearchApi();
 
-const colorArgTypes = {
-  primary: {control: 'color', name: 'Primary'},
-  neutral: {control: 'color', name: 'Neutral (mid-tone anchor)'},
-  success: {control: 'color', name: 'Success'},
-  error: {control: 'color', name: 'Error'},
-  visited: {control: 'color', name: 'Visited'},
-} as const;
-
-const colorArgs = {
-  primary: '#126ce0',
-  neutral: '#e5e8e8',
-  success: '#12a244',
-  error: '#ce3f00',
-  visited: '#752e9c',
-};
-
 const meta: Meta = {
   component: 'rich-search-page',
   title: 'Search/Example Pages',
   id: 'rich-search-page',
+  decorators: [colorDecorator],
   argTypes: {...colorArgTypes},
   args: colorArgs,
   parameters: {
@@ -110,16 +100,7 @@ const meta: Meta = {
       () => richResponse as unknown as typeof baseResponse
     );
   },
-  render: ({primary, neutral, success, error, visited}) => html`
-    <style>
-      :root {
-        --atomic-primary: ${primary};
-        --atomic-neutral: ${neutral};
-        --atomic-success: ${success};
-        --atomic-error: ${error};
-        --atomic-visited: ${visited};
-      }
-    </style>
+  render: () => html`
     <atomic-search-interface
       language-assets-path="./lang"
       icon-assets-path="./assets"

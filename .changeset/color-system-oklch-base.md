@@ -1,16 +1,18 @@
 ---
-"@coveo/atomic": major
+"@coveo/atomic": minor
 ---
 
-Refactor color system to use 5 OKLCH base colors with CSS-derived variants.
+Add `coveo.experimental.css` — opt-in OKLCH-based color system.
 
-**Breaking change:** `--atomic-neutral` is now a mid-tone anchor (`oklch(0.72 0.012 240)`) instead of the previous light border/divider shade (`#e5e8e8`).
+Load this stylesheet after `coveo.css` to opt into the new color system:
 
-- If you were using `--atomic-neutral` directly as a border or divider color, switch to `--atomic-neutral-dim`.
-- If you were overriding `--atomic-neutral` to set your border color, override `--atomic-neutral-dim` instead (and set `--atomic-neutral` to your mid-tone value).
+```html
+<link rel="stylesheet" href="coveo.css" />
+<link rel="stylesheet" href="coveo.experimental.css" />
+```
 
-**New capabilities:**
-- All color variants (`-light`, `-dark`, `-background`, etc.) are now derived at runtime via CSS relative color syntax — changing a base color automatically updates the full scale.
-- Built-in dark mode via `@media (prefers-color-scheme: dark)` — no additional configuration needed.
-- `--atomic-on-primary` now uses `contrast-color()` where supported, with an OKLCH lightness-threshold fallback.
-- New `--atomic-neutral-dim` token (replaces the old `--atomic-neutral` border shade).
+5 OKLCH base color tokens drive all variants via CSS relative color syntax. Includes built-in dark mode via `prefers-color-scheme` and automatic `--atomic-on-primary` via `contrast-color()` where supported.
+
+**Breaking change (experimental only):** `--atomic-neutral` changes from a light border shade to a mid-tone anchor (`oklch(0.72)`). Use `--atomic-neutral-dim` for border/divider colors.
+
+`coveo.css` is unchanged — existing users are unaffected.

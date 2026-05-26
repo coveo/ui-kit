@@ -1,51 +1,22 @@
-/**
- * Experimental color system for Atomic.
- *
- * Load this stylesheet AFTER coveo.css to opt in:
- *
- *   <link rel="stylesheet" href="coveo.css" />
- *   <link rel="stylesheet" href="coveo.experimental.css" />
- *
- * This replaces all hardcoded color values with 5 OKLCH base tokens.
- * Changing any base token automatically cascades to all derived variants.
- * Includes built-in dark mode via prefers-color-scheme.
- *
- * Base tokens (the only values you need to override to theme the library):
- *   --atomic-primary
- *   --atomic-neutral   (mid-tone anchor ~oklch(0.72); see migration note below)
- *   --atomic-success
- *   --atomic-error
- *   --atomic-visited
- *
- * Migration note — --atomic-neutral:
- *   This file changes --atomic-neutral from a light border shade (#e5e8e8)
- *   to a mid-tone anchor (~oklch(0.72)). If you were overriding
- *   --atomic-neutral to set a border color, override --atomic-neutral-dim
- *   instead. The old visual appearance is preserved by default.
- *
- * Browser support: CSS relative color syntax — Chrome 119+, Firefox 128+,
- *   Safari 16.4+ (~92% global). No PostCSS fallback is provided.
- */
-
 :root {
-  /* ===================================================================
+  /* =====================================================================
    * BASE COLORS — the only values a theme author needs to change (≤ 5)
-   * =================================================================== */
+   * ===================================================================== */
 
-  --atomic-primary: oklch(0.52 0.2 258);
-  --atomic-neutral: oklch(0.72 0.012 240); /* mid-tone anchor */
+  --atomic-primary: oklch(0.52 0.2 258); /* brand blue */
+  --atomic-neutral: oklch(0.9287 0.00326 198.887);
   --atomic-success: oklch(0.55 0.16 142);
   --atomic-error: oklch(0.52 0.18 35);
   --atomic-visited: oklch(0.44 0.18 303);
 
-  /* ===================================================================
+  /* =====================================================================
    * DERIVED COLORS — computed from base colors, do not override directly
-   * =================================================================== */
+   * ===================================================================== */
 
   /* Primary scale */
   --atomic-on-primary: oklch(
     from var(--atomic-primary) clamp(0, (0.6 - l) * 1000, 1) 0 h
-  );
+  ); /* @supports override below */
   --atomic-primary-light: oklch(
     from var(--atomic-primary) calc(l + 0.15) calc(c * 0.85) h
   );
@@ -57,18 +28,20 @@
   );
   --atomic-ring-primary: oklch(from var(--atomic-primary) l c h / 50%);
 
-  /* Neutral scale */
-  --atomic-neutral-dark: oklch(from var(--atomic-neutral) calc(l - 0.26) c h);
-  --atomic-neutral-dim: var(--atomic-neutral);
+  /* Neutral scale
+   * --atomic-neutral-dim is an alias for the anchor — the visual replacement
+   * for the old --atomic-neutral (#e5e8e8) border/divider shade.
+   * Migration: if you were setting --atomic-neutral as a border color,
+   * set --atomic-neutral-dim instead. */
+  --atomic-neutral-dark: oklch(from var(--atomic-neutral) calc(l - 0.4112) c h);
+  --atomic-neutral-dim: oklch(from var(--atomic-neutral) calc(l - 0.1111) c h);
   --atomic-neutral-light: oklch(
-    from var(--atomic-neutral) calc(l + 0.16) calc(c * 0.6) h
+    from var(--atomic-neutral) calc(l + 0.0472) c h
   );
   --atomic-neutral-lighter: oklch(
-    from var(--atomic-neutral) calc(l + 0.23) calc(c * 0.35) h
+    from var(--atomic-neutral) calc(l + 0.0559) c h
   );
-  --atomic-disabled: oklch(
-    from var(--atomic-neutral) calc(l + 0.12) calc(c * 0.75) h
-  );
+  --atomic-disabled: oklch(from var(--atomic-neutral) calc(l - 0.0921) c h);
 
   /* Surfaces */
   --atomic-background: oklch(1 0 0);
@@ -82,45 +55,47 @@
     from var(--atomic-error) 0.95 calc(c * 0.18) h
   );
 
-  /* Opinionated constants */
+  /* =====================================================================
+   * OPINIONATED CONSTANTS — overridable but not brand theming knobs
+   * ===================================================================== */
+
   --atomic-inline-code: oklch(0.46 0.2 25);
   --atomic-rating-icon-active-color: oklch(0.87 0.17 87);
+  --atomic-rating-icon-outline: none;
   --atomic-user-actions-timeline-separator-background: oklch(
     from var(--atomic-neutral) calc(l + 0.15) calc(c * 0.5) h
   );
-}
 
-/* contrast-color() gives a better result where supported */
-@supports (color: contrast-color(red)) {
-  :root {
-    --atomic-on-primary: contrast-color(var(--atomic-primary));
-  }
-}
+  /* Border radius */
+  --atomic-border-radius: 0.25rem;
+  --atomic-border-radius-md: 0.5rem;
+  --atomic-border-radius-lg: 0.75rem;
+  --atomic-border-radius-xl: 1rem;
 
-/* Dark mode — surface layer only; brand base colors do not change */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --atomic-background: oklch(0.13 0 0);
+  /* Font */
+  --atomic-font-family:
+    -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui,
+    helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif; /* Following https://systemfontstack.com/ */
+  --atomic-font-normal: 400;
+  --atomic-font-bold: 700;
 
-    --atomic-neutral-dark: oklch(from var(--atomic-neutral) calc(l + 0.26) c h);
-    --atomic-neutral-light: oklch(
-      from var(--atomic-neutral) calc(l - 0.18) calc(c * 0.6) h
-    );
-    --atomic-neutral-lighter: oklch(
-      from var(--atomic-neutral) calc(l - 0.5) calc(c * 0.35) h
-    );
-    --atomic-disabled: oklch(
-      from var(--atomic-neutral) calc(l - 0.3) calc(c * 0.75) h
-    );
+  /* Text size */
+  --atomic-text-base: 0.875rem; /* 14px */
+  --atomic-text-sm: 0.75rem; /* 12px */
+  --atomic-text-lg: 1rem; /* 16px */
+  --atomic-text-xl: 1.125rem; /* 18px */
+  --atomic-text-2xl: 1.5rem; /* 24px */
+  --atomic-line-height-ratio: 1.5;
 
-    --atomic-primary-background: oklch(
-      from var(--atomic-primary) 0.17 calc(c * 0.25) h
-    );
-    --atomic-success-background: oklch(
-      from var(--atomic-success) 0.17 calc(c * 0.3) h
-    );
-    --atomic-error-background: oklch(
-      from var(--atomic-error) 0.17 calc(c * 0.3) h
-    );
-  }
+  /* Layout */
+  --atomic-layout-spacing-x: 1.5rem;
+  --atomic-layout-spacing-y: 1rem;
+
+  --animate-slide-down-modal: slideDown 0.5s linear forwards;
+  --animate-scale-up-modal: scaleUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1)
+    forwards;
+
+  --spacing: 0.25rem;
+  --container-lg: 32rem;
+  --tw-leading: 1.5;
 }

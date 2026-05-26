@@ -1,29 +1,29 @@
 @theme inline static {
   /* Primary colors */
-  --atomic-primary: oklch(0.52 0.20 258);
-  --atomic-primary-light: oklch(from var(--atomic-primary) calc(l + 0.15) calc(c * 0.85) h);
-  --atomic-primary-dark: oklch(from var(--atomic-primary) calc(l - 0.12) calc(c * 1.1) h);
-  --atomic-on-primary: oklch(from var(--atomic-primary) clamp(0, (0.6 - l) * 1000, 1) 0 h);
-  --atomic-ring-primary: oklch(from var(--atomic-primary) l c h / 50%);
+  --atomic-primary: var(--atomic-primary, #126ce0);
+  --atomic-primary-light: var(--atomic-primary-light, #399ffe);
+  --atomic-primary-dark: var(--atomic-primary-dark, #1a50ad);
+  --atomic-on-primary: var(--atomic-on-primary, #ffffff);
+  --atomic-ring-primary: var(--atomic-ring-primary, rgba(19, 114, 236, 0.5));
 
   /* Neutral colors */
-  --atomic-neutral: oklch(0.72 0.012 240);
-  --atomic-neutral-dark: oklch(from var(--atomic-neutral) calc(l - 0.26) c h);
-  --atomic-neutral-dim: var(--atomic-neutral);
-  --atomic-neutral-light: oklch(from var(--atomic-neutral) calc(l + 0.16) calc(c * 0.6) h);
-  --atomic-neutral-lighter: oklch(from var(--atomic-neutral) calc(l + 0.23) calc(c * 0.35) h);
-  --atomic-disabled: oklch(from var(--atomic-neutral) calc(l + 0.12) calc(c * 0.75) h);
+  --atomic-neutral-dark: var(--atomic-neutral-dark, #626971);
+  --atomic-neutral-dim: var(--atomic-neutral-dim, #bfc4c8);
+  --atomic-neutral: var(--atomic-neutral, #e5e8e8);
+  --atomic-neutral-light: var(--atomic-neutral-light, #f6f7f9);
+  --atomic-neutral-lighter: var(--atomic-neutral-lighter, #f9fafb);
 
   /* Semantic colors */
-  --atomic-background: oklch(1 0 0);
-  --atomic-on-background: oklch(from var(--atomic-neutral) 0.18 calc(c * 2) h);
-  --atomic-success: oklch(0.55 0.16 142);
-  --atomic-error: oklch(0.52 0.18 35);
-  --atomic-visited: oklch(0.44 0.18 303);
-  --atomic-success-background: oklch(from var(--atomic-success) 0.95 calc(c * 0.18) h);
-  --atomic-error-background: oklch(from var(--atomic-error) 0.95 calc(c * 0.18) h);
-  --atomic-primary-background: oklch(from var(--atomic-primary) 0.97 calc(c * 0.12) h);
-  --atomic-inline-code: oklch(0.46 0.20 25);
+  --atomic-background: var(--atomic-background, #ffffff);
+  --atomic-on-background: var(--atomic-on-background, #282829);
+  --atomic-success: var(--atomic-success, #12a244);
+  --atomic-error: var(--atomic-error, #ce3f00);
+  --atomic-visited: var(--atomic-visited, #752e9c);
+  --atomic-disabled: var(--atomic-disabled, #c5cacf);
+  --atomic-success-background: var(--atomic-success-background, #d4fcf0);
+  --atomic-error-background: var(--atomic-error-background, #fcbdc0);
+  --atomic-primary-background: var(--atomic-primary-background, #edf6ff);
+  --atomic-inline-code: var(--atomic-inline-code, #cd2113);
   /* Border radius */
   --atomic-border-radius: 0.25rem;
   --atomic-border-radius-md: 0.5rem;
