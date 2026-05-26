@@ -145,7 +145,7 @@ BEM-like with component prefix and double-dash modifiers:
 
 ### Custom properties (SLDS design tokens)
 
-Always include a CSS fallback value when using `var(--lwc-*)` tokens — they are not guaranteed to be available in every environment (e.g. communities, embedded contexts):
+Always include a CSS fallback value when using `var(--lwc-*)` tokens — they are not guaranteed to be available in every environment:
 
 ```css
 color: var(--lwc-brandPrimary, #1b96ff);
