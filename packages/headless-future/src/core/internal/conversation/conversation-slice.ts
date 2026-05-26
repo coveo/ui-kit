@@ -133,6 +133,12 @@ export const conversationSlice = createSlice({
     setSession: (state, action: PayloadAction<ConversationSession>) => {
       state.session = action.payload;
     },
+    patchSession: (state, action: PayloadAction<ConversationSession>) => {
+      state.session = {
+        ...state.session,
+        ...action.payload,
+      };
+    },
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
     },

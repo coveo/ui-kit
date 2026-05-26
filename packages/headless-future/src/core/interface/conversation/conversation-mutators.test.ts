@@ -101,6 +101,19 @@ describe('conversation mutators', () => {
       });
     });
 
+    it('patchSession returns expected mutation', () => {
+      expect(
+        mutators.patchSession({
+          conversationToken: 'token-2',
+        })
+      ).toEqual({
+        type: 'conversation/patchSession',
+        payload: {
+          conversationToken: 'token-2',
+        },
+      });
+    });
+
     it('setError returns expected mutation', () => {
       expect(mutators.setError('boom')).toEqual({
         type: 'conversation/setError',

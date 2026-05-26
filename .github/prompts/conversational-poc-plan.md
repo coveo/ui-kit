@@ -202,8 +202,8 @@ Carry-forward checklist (to avoid losing architectural intent in 1.6/1.7/1.8):
 - [x] **1.6** Ensure stream connectivity (`streaming.isConnected`) is driven by stream open/close events rather than request completion timing
 - [x] **1.7** Keep conversation runtime as owner of stream consumption and terminal status/error mutations; facade should remain transport/request orchestration only
 - [x] **1.7** Add runtime-level safeguards for overlapping submissions/aborts so concurrent turns cannot leave endpoint status in inconsistent state
-- [ ] **1.8** Compose controller state from conversation domain + conversation endpoint state and verify subscribe semantics remain stable across both slices
-- [ ] **1.8** Add controller-focused tests asserting lifecycle visibility (loading/streaming/error) against runtime-driven transitions
+- [x] **1.8** Compose controller state from conversation domain + conversation endpoint state and verify subscribe semantics remain stable across both slices
+- [x] **1.8** Add controller-focused tests asserting lifecycle visibility (loading/streaming/error) against runtime-driven transitions
 
 Completed checklist for 1.6:
 
@@ -230,6 +230,46 @@ Completed checklist for 1.7:
 - [x] Exported `ConversationRuntime` through `src/core/index.ts` for controller wiring in Phase 1.8
 - [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
 
+Completed checklist for 1.8:
+
+- [x] Implemented Layer 2 conversation controller builder in `src/public/controllers/conversation/conversation-controller.ts`
+- [x] Wired eager domain loading for conversation and conversation-endpoint slices during controller construction
+- [x] Wired runtime delegation for `submitTurn(input)` and `abortTurn()` through `ConversationRuntime`
+- [x] Composed controller `state` from conversation selectors (`messages`, `turns`, `activeTurnId`, `session`) and conversation-endpoint selectors (`isLoading`, `error`, `streaming`)
+- [x] Stabilized controller subscribe semantics across both slices with a memoized composed selector
+- [x] Added a reusable framework-agnostic selector helper (`createMemoizedStateSelector`) under `src/core/interface/utils/` and reused it in the conversation controller state composition
+- [x] Updated conversation controller core imports to come through the `src/core/index.ts` barrel and expanded barrel exports for conversation feature selectors/loaders
+- [x] Added public-behavior controller tests in `src/public/controllers/conversation/conversation-controller.test.ts` covering state composition, delegation, lifecycle visibility, and cross-slice subscription triggers
+- [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
+
+Completed checklist for 1.9:
+
+- [x] Wired `samples/headless-future/conversation-react` to `buildConversationController` for real converse endpoint usage
+- [x] Updated sample engine initialization to `EngineOptions` style with `navigatorContextProvider` built from browser context
+- [x] Initialized cart contribution with an explicit empty cart payload for request composition continuity
+- [x] Implemented sample submit UX as single-line Enter-to-submit input
+- [x] Implemented conditional abort UX with a Stop button visible only while a turn is active
+- [x] Rendered user and agent messages with live streaming updates
+- [x] Rendered turn lifecycle status and an in-app raw debug event log panel
+- [x] Added inline error banner rendering from conversation controller error state
+- [x] Added unit coverage for submit/abort UI behavior in `src/App.test.tsx`
+- [x] Added deterministic mocked-stream e2e coverage in `tests/smoke.spec.ts` to validate end-to-end submit/stream rendering
+- [x] Verified package health with `pnpm --filter @coveo/headless-future test && pnpm --filter @coveo/headless-future build`
+
+Completed hardening pass after 1.9 (same branch scope, before Phase 2):
+
+- [x] Added a dedicated stream adapter at `src/api/interface/conversation-endpoint/conversation-event-stream.ts` and covered it with focused tests
+- [x] Tightened API boundaries so production imports consume `@/src/api/index.js` while tests mock concrete client modules (not the API barrel)
+- [x] Added `activeTurnUserMessage` selector and updated `conversation-loader` to consume selector output directly for conversation request contribution
+- [x] Decoupled `ConversationRuntime` from direct conversation mutator/selector usage through injected `ConversationRuntimeStatePort`
+- [x] Refactored `conversation-event-dispatcher` to pure event -> effects mapping, with runtime applying effects to state
+- [x] Removed the thin `conversation-turn-lifecycle` indirection module and inlined endpoint stop/failure transitions in runtime
+- [x] Removed conversation slice loading from `conversation-endpoint-facade`; conversation loading is now explicit at controller/test integration points
+- [x] Refactored sample app composition into focused components/hooks (`src/components/*`, `src/hooks/use-conversation-event-log.ts`, `src/hooks/use-conversation-composer.ts`) while preserving submit/abort behavior
+- [x] Added sample-local controller bootstrap helper at `samples/headless-future/conversation-react/src/conversation-controller.ts` to isolate singleton wiring from UI components
+- [x] Stabilized sample resolution by aliasing `@coveo/headless-future` to source entry in sample Vite config to avoid stale `dist/` behavior during local dev/e2e
+- [x] Hardened smoke e2e assertions with scoped locators for streamed text and raw event log checks
+
 ### Phase 2 — A2UI Surface Parsing
 
 - **2.0** A2UI protocol contract in `stream-types.ts`
@@ -247,24 +287,25 @@ Completed checklist for 1.7:
 
 ## Status Tracker
 
-| Sub-phase | Branch                                   | Status         |
-| --------- | ---------------------------------------- | -------------- |
-| Phase 0   | add-conversational-support               | ✅ completed   |
-| Phase 0.5 | add-conversational-support               | ✅ completed   |
-| Phase 1.0 | add-conversation-types                   | ✅ completed   |
-| Phase 1.1 | add-slice-mutators-and-selectors         | ✅ completed   |
-| Phase 1.2 | add-navigator-context                    | ✅ completed   |
-| Phase 1.3 | adjust-cart                              | ✅ completed   |
-| Phase 1.4 | add-stream-utils                         | ✅ completed   |
-| Phase 1.5 | add-conversation-endpoint                | ✅ completed   |
-| Phase 1.6 | add-conversation-runtime-building-blocks | ✅ completed   |
-| Phase 1.7 | add-conversation-runtime-building-blocks | ✅ completed   |
-| Phase 1.8 | —                                        | ⬜ not started |
-| Phase 1.9 | —                                        | ⬜ not started |
-| Phase 2.0 | —                                        | ⬜ not started |
-| Phase 2.1 | —                                        | ⬜ not started |
-| Phase 2.2 | —                                        | ⬜ not started |
-| Phase 2.3 | —                                        | ⬜ not started |
-| Phase 3.0 | —                                        | ⬜ not started |
-| Phase 3.1 | —                                        | ⬜ not started |
-| Phase 3.2 | —                                        | ⬜ not started |
+| Sub-phase           | Branch                                   | Status         |
+| ------------------- | ---------------------------------------- | -------------- |
+| Phase 0             | add-conversational-support               | ✅ completed   |
+| Phase 0.5           | add-conversational-support               | ✅ completed   |
+| Phase 1.0           | add-conversation-types                   | ✅ completed   |
+| Phase 1.1           | add-slice-mutators-and-selectors         | ✅ completed   |
+| Phase 1.2           | add-navigator-context                    | ✅ completed   |
+| Phase 1.3           | adjust-cart                              | ✅ completed   |
+| Phase 1.4           | add-stream-utils                         | ✅ completed   |
+| Phase 1.5           | add-conversation-endpoint                | ✅ completed   |
+| Phase 1.6           | add-conversation-runtime-building-blocks | ✅ completed   |
+| Phase 1.7           | add-conversation-runtime-building-blocks | ✅ completed   |
+| Phase 1.8           | implement-conversation-controller        | ✅ completed   |
+| Phase 1.9           | implement-conversation-controller        | ✅ completed   |
+| Phase 1.9 hardening | implement-conversation-controller        | ✅ completed   |
+| Phase 2.0           | —                                        | ⬜ not started |
+| Phase 2.1           | —                                        | ⬜ not started |
+| Phase 2.2           | —                                        | ⬜ not started |
+| Phase 2.3           | —                                        | ⬜ not started |
+| Phase 3.0           | —                                        | ⬜ not started |
+| Phase 3.1           | —                                        | ⬜ not started |
+| Phase 3.2           | —                                        | ⬜ not started |

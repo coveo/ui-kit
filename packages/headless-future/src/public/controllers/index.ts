@@ -20,10 +20,12 @@ export type {
   CartControllerItem,
   CartControllerState,
 } from './cart/cart-controller-types.js';
+export {buildConversationController} from './conversation/conversation-controller.js';
 export type {
   ConversationController,
   ConversationControllerMessage,
   ConversationControllerOptions,
+  ConversationControllerSubmitTurnOptions,
   ConversationControllerSession,
   ConversationControllerStreaming,
   ConversationControllerState,

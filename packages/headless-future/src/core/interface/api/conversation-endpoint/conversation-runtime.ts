@@ -1,20 +1,16 @@
-import {type ConversationEndpointCallOptions} from '@/src/api/index.js';
-import {parseSSEEvent} from '@/src/api/internal/protocol/sse-parser.js';
-import {readEventStream} from '@/src/api/internal/protocol/stream.js';
-import type {RawSSEEvent} from '@/src/api/internal/protocol/stream-types.js';
-import * as conversationMutators from '@/src/core/interface/conversation/conversation-mutators.js';
-import {loadConversation} from '@/src/core/interface/conversation/conversation-loader.js';
+import {
+  type ConversationEndpointCallOptions,
+  readConversationEventStream,
+  type ConversationStreamEvent,
+} from '@/src/api/index.js';
 import {FullEngine} from '@/src/core/interface/engine/engine.js';
 import {ConversationEndpointFacade} from './conversation-endpoint-facade.js';
-import {dispatchConversationEvent} from './conversation-event-dispatcher.js';
+import {
+  dispatchConversationEvent,
+  type ConversationDispatchEffect,
+} from './conversation-event-dispatcher.js';
 import {loadConversationEndpoint} from './conversation-endpoint-loader.js';
 import * as conversationEndpointMutators from './conversation-endpoint-mutators.js';
-import {
-  getFailedTurnMutations,
-  getMissingTerminalMutations,
-  getStreamConnectedMutations,
-  getStreamStartedMutations,
-} from './conversation-turn-lifecycle.js';
 
 interface ActiveTurnContext {
   turnId: string;
@@ -25,6 +21,61 @@ interface ActiveTurnContext {
 const overlappingTurnErrorMessage =
   'A conversation turn is already in progress. Please wait for completion before submitting another turn.';
 
+const missingTerminalErrorMessage =
+  'Conversation stream ended before a terminal event was received.';
+
+export interface ConversationSubmitTurnOptions {
+  conversationSessionId?: string | null;
+  conversationToken?: string | null;
+}
+
+export interface ConversationRuntimeSession {
+  conversationSessionId?: string;
+  conversationToken?: string;
+}
+
+export interface ConversationRuntimeStartTurnPayload {
+  turnId: string;
+  userMessageId: string;
+  agentMessageId: string;
+  input: string;
+  createdAt: number;
+}
+
+export interface ConversationRuntimeFinalizeTurnPayload {
+  turnId: string;
+  finalizedAt: number;
+}
+
+export type ConversationRuntimeFailReason =
+  | 'network_error'
+  | 'auth_error'
+  | 'stream_interrupted'
+  | 'protocol_error';
+
+export interface ConversationRuntimeAppendAgentChunkPayload {
+  turnId: string;
+  chunk: string;
+}
+
+export interface ConversationRuntimeFailTurnPayload extends ConversationRuntimeFinalizeTurnPayload {
+  reason: ConversationRuntimeFailReason;
+}
+
+export interface ConversationRuntimeStatePort {
+  readSession: () => ConversationRuntimeSession;
+  setSession: (session: ConversationRuntimeSession) => void;
+  patchSession: (sessionPatch: ConversationRuntimeSession) => void;
+  setError: (error: string | null) => void;
+  startTurn: (payload: ConversationRuntimeStartTurnPayload) => void;
+  abortTurn: (payload: ConversationRuntimeFinalizeTurnPayload) => void;
+  appendAgentChunk: (
+    payload: ConversationRuntimeAppendAgentChunkPayload
+  ) => void;
+  completeTurn: (payload: ConversationRuntimeFinalizeTurnPayload) => void;
+  failTurn: (payload: ConversationRuntimeFailTurnPayload) => void;
+}
+
 export class ConversationRuntime {
   private static engineToRuntimeMap = new WeakMap<
     FullEngine,
@@ -33,19 +84,23 @@ export class ConversationRuntime {
 
   private constructor(
     private engine: FullEngine,
-    private endpointFacade: ConversationEndpointFacade
+    private endpointFacade: ConversationEndpointFacade,
+    private conversationState: ConversationRuntimeStatePort
   ) {
-    loadConversation(engine);
     loadConversationEndpoint(engine);
   }
 
-  static getInstance(engine: FullEngine): ConversationRuntime {
+  static getInstance(
+    engine: FullEngine,
+    conversationState: ConversationRuntimeStatePort
+  ): ConversationRuntime {
     let runtime = ConversationRuntime.engineToRuntimeMap.get(engine);
 
     if (!runtime) {
       runtime = new ConversationRuntime(
         engine,
-        ConversationEndpointFacade.getInstance(engine)
+        ConversationEndpointFacade.getInstance(engine),
+        conversationState
       );
       ConversationRuntime.engineToRuntimeMap.set(engine, runtime);
     }
@@ -55,13 +110,16 @@ export class ConversationRuntime {
 
   private activeTurnContext: ActiveTurnContext | null = null;
 
-  async submitTurn(input: string): Promise<void> {
+  async submitTurn(
+    input: string,
+    options?: ConversationSubmitTurnOptions
+  ): Promise<void> {
     if (this.activeTurnContext) {
-      this.engine.mutate(
-        conversationMutators.setError(overlappingTurnErrorMessage)
-      );
+      this.conversationState.setError(overlappingTurnErrorMessage);
       return;
     }
+
+    this.applySessionContinuationOverrides(options);
 
     const turnId = generateId();
     const createdAt = Date.now();
@@ -73,25 +131,21 @@ export class ConversationRuntime {
 
     this.activeTurnContext = context;
 
-    this.engine.mutate(
-      conversationMutators.startTurn({
-        turnId,
-        userMessageId: generateId(),
-        agentMessageId: generateId(),
-        input,
-        createdAt,
-      })
-    );
+    this.conversationState.startTurn({
+      turnId,
+      userMessageId: generateId(),
+      agentMessageId: generateId(),
+      input,
+      createdAt,
+    });
 
     const requestOptions: ConversationEndpointCallOptions = {
       signal: context.abortController.signal,
     };
 
     try {
-      const endpointResult = await this.endpointFacade.callEndpoint(
-        input,
-        requestOptions
-      );
+      const endpointResult =
+        await this.endpointFacade.callEndpoint(requestOptions);
 
       if (!this.isActiveContext(context)) {
         return;
@@ -117,14 +171,14 @@ export class ConversationRuntime {
 
     context.isAborted = true;
 
-    this.applyMutations([
-      conversationMutators.abortTurn({
-        turnId: context.turnId,
-        finalizedAt: Date.now(),
-      }),
-      conversationEndpointMutators.setStatus('idle'),
-      conversationEndpointMutators.setStreamingConnected(false),
-    ]);
+    const finalizedAt = Date.now();
+
+    this.conversationState.abortTurn({
+      turnId: context.turnId,
+      finalizedAt,
+    });
+
+    this.applyEndpointStoppedMutations();
 
     context.abortController.abort();
     this.clearActiveContext(context);
@@ -138,21 +192,22 @@ export class ConversationRuntime {
       return;
     }
 
-    this.applyMutations(getStreamConnectedMutations());
-    this.applyMutations(getStreamStartedMutations());
+    this.applyMutations([
+      conversationEndpointMutators.setStreamingConnected(true),
+      conversationEndpointMutators.setStatus('streaming'),
+    ]);
 
     let terminalEventReceived = false;
     let streamErrored = false;
 
-    const applyRawEvent = (rawEvent: RawSSEEvent) => {
-      const event = parseSSEEvent(rawEvent);
-      const result = dispatchConversationEvent({
-        event,
+    const applyEvent = (event: ConversationStreamEvent) => {
+      const result = dispatchConversationEvent({event});
+
+      this.applyEventEffects({
+        effects: result.effects,
         turnId: context.turnId,
         finalizedAt: Date.now(),
       });
-
-      this.applyMutations(result.mutations);
 
       if (result.isTerminalEvent) {
         terminalEventReceived = true;
@@ -160,10 +215,10 @@ export class ConversationRuntime {
     };
 
     try {
-      await readEventStream({
+      await readConversationEventStream({
         stream,
         signal: context.abortController.signal,
-        onEvent: applyRawEvent,
+        onEvent: applyEvent,
         onDone: () => {
           if (
             !this.isActiveContext(context) ||
@@ -174,12 +229,12 @@ export class ConversationRuntime {
             return;
           }
 
-          this.applyMutations(
-            getMissingTerminalMutations({
-              turnId: context.turnId,
-              finalizedAt: Date.now(),
-            })
-          );
+          this.applyFailedTurnLifecycle({
+            turnId: context.turnId,
+            finalizedAt: Date.now(),
+            reason: 'stream_interrupted',
+            error: missingTerminalErrorMessage,
+          });
         },
       });
     } catch (error) {
@@ -194,14 +249,12 @@ export class ConversationRuntime {
       streamErrored = true;
       const message = getErrorMessage(error);
 
-      this.applyMutations(
-        getFailedTurnMutations({
-          turnId: context.turnId,
-          finalizedAt: Date.now(),
-          reason: 'network_error',
-          error: message,
-        })
-      );
+      this.applyFailedTurnLifecycle({
+        turnId: context.turnId,
+        finalizedAt: Date.now(),
+        reason: 'network_error',
+        error: message,
+      });
     }
   }
 
@@ -214,14 +267,90 @@ export class ConversationRuntime {
       return;
     }
 
-    this.applyMutations(
-      getFailedTurnMutations({
-        turnId: context.turnId,
-        finalizedAt: Date.now(),
-        reason: getFailureReason(error),
-        error,
-      })
-    );
+    this.applyFailedTurnLifecycle({
+      turnId: context.turnId,
+      finalizedAt: Date.now(),
+      reason: getFailureReason(error),
+      error,
+    });
+  }
+
+  private applyEventEffects({
+    effects,
+    turnId,
+    finalizedAt,
+  }: {
+    effects: ConversationDispatchEffect[];
+    turnId: string;
+    finalizedAt: number;
+  }) {
+    for (const effect of effects) {
+      switch (effect.type) {
+        case 'append_agent_chunk':
+          this.conversationState.appendAgentChunk({
+            turnId,
+            chunk: effect.chunk,
+          });
+          break;
+
+        case 'patch_session':
+          this.conversationState.patchSession(effect.sessionPatch);
+          break;
+
+        case 'complete_turn':
+          this.conversationState.completeTurn({
+            turnId,
+            finalizedAt,
+          });
+          this.applyEndpointStoppedMutations();
+          break;
+
+        case 'fail_turn':
+          this.applyFailedTurnLifecycle({
+            turnId,
+            finalizedAt,
+            reason: effect.reason,
+            error: effect.error,
+          });
+          break;
+
+        case 'set_endpoint_error':
+          this.applyMutations([
+            conversationEndpointMutators.setError(effect.error),
+          ]);
+          break;
+      }
+    }
+  }
+
+  private applyFailedTurnLifecycle({
+    turnId,
+    finalizedAt,
+    reason,
+    error,
+  }: {
+    turnId: string;
+    finalizedAt: number;
+    reason: ConversationRuntimeFailReason;
+    error: string;
+  }) {
+    this.conversationState.failTurn({
+      turnId,
+      finalizedAt,
+      reason,
+    });
+    this.conversationState.setError(error);
+    this.applyEndpointStoppedMutations(error);
+  }
+
+  private applyEndpointStoppedMutations(error?: string) {
+    this.applyMutations([
+      ...(error !== undefined
+        ? [conversationEndpointMutators.setError(error)]
+        : []),
+      conversationEndpointMutators.setStatus('idle'),
+      conversationEndpointMutators.setStreamingConnected(false),
+    ]);
   }
 
   private applyMutations(mutations: Array<{type: string; payload?: unknown}>) {
@@ -239,6 +368,71 @@ export class ConversationRuntime {
       this.activeTurnContext = null;
     }
   }
+
+  private applySessionContinuationOverrides(
+    options?: ConversationSubmitTurnOptions
+  ) {
+    if (!options) {
+      return;
+    }
+
+    const hasSessionIdOverride = hasOwnKey(options, 'conversationSessionId');
+    const hasConversationTokenOverride = hasOwnKey(
+      options,
+      'conversationToken'
+    );
+
+    if (!hasSessionIdOverride && !hasConversationTokenOverride) {
+      return;
+    }
+
+    const currentSession = this.conversationState.readSession();
+    const nextSession = {...currentSession};
+
+    if (hasSessionIdOverride) {
+      const normalizedSessionId = normalizeContinuationField(
+        options.conversationSessionId
+      );
+
+      if (normalizedSessionId) {
+        nextSession.conversationSessionId = normalizedSessionId;
+      } else {
+        delete nextSession.conversationSessionId;
+      }
+    }
+
+    if (hasConversationTokenOverride) {
+      const normalizedConversationToken = normalizeContinuationField(
+        options.conversationToken
+      );
+
+      if (normalizedConversationToken) {
+        nextSession.conversationToken = normalizedConversationToken;
+      } else {
+        delete nextSession.conversationToken;
+      }
+    }
+
+    this.conversationState.setSession(nextSession);
+  }
+}
+
+function hasOwnKey<TObject extends object>(
+  value: TObject,
+  key: string
+): boolean {
+  return Object.prototype.hasOwnProperty.call(value, key);
+}
+
+function normalizeContinuationField(
+  value: string | null | undefined
+): string | undefined {
+  if (typeof value !== 'string') {
+    return undefined;
+  }
+
+  const trimmed = value.trim();
+  return trimmed || undefined;
 }
 
 function generateId(): string {

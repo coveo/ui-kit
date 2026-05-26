@@ -16,8 +16,10 @@ export const loadConversation = (engine: FullEngine) => {
   const registry = getEndpointContributorRegistry(engine);
   registry.register(conversationEndpointKey, () => {
     const session = engine.read(conversationSelectors.session);
+    const message = engine.read(conversationSelectors.activeTurnUserMessage);
 
     return {
+      ...(message !== undefined ? {message} : {}),
       ...(session.conversationSessionId !== undefined
         ? {conversationSessionId: session.conversationSessionId}
         : {}),

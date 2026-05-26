@@ -41,7 +41,6 @@ export class ConversationEndpointFacade extends EndpointFacade<CoveoConversation
   }
 
   async callEndpoint(
-    input: string,
     options?: ConversationEndpointCallOptions
   ): Promise<ConversationEndpointCallResult> {
     const engine = this.engine;
@@ -52,9 +51,6 @@ export class ConversationEndpointFacade extends EndpointFacade<CoveoConversation
 
     try {
       const finalRequest = buildRequest<CoveoConversationEndpointRequest>([
-        () => ({
-          message: input,
-        }),
         ...contributorRegistry.getOrderedContributors<CoveoConversationEndpointRequest>(
           conversationEndpointKey
         ),
