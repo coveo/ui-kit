@@ -1,0 +1,95 @@
+<template>
+  <template lwc:if={shouldDisplayAnswer}>
+    <section
+      data-testid="generated-answer-body"
+      class="generated-answer__content slds-p-top_large slds-p-horizontal_large"
+    >
+      <div
+        data-testid="generated-answer-body__answer"
+        class={answerClass}
+        style={answerStyle}
+      >
+        <c-quantic-generated-answer-content
+          answer-content-format={answerContentFormat}
+          answer={answer}
+          is-streaming={isStreaming}
+          onquantic__answercontentupdated={handleAnswerContentUpdated}
+        >
+        </c-quantic-generated-answer-content>
+      </div>
+      <div class="slds-grid slds-grid_vertical">
+        <template lwc:if={showCitations}>
+          <div class="slds-size_1-of-1 slds-var-m-top_x-small">
+            <c-quantic-source-citations
+              data-testid="generated-answer-body__citations"
+              engine-id={engineId}
+              citations={citations}
+              citation-hover-handler={handleCitationHover}
+              disable-citation-anchoring={disableCitationAnchoring}
+            ></c-quantic-source-citations>
+          </div>
+        </template>
+        <template lwc:if={showActions}>
+          <div
+            class="slds-size_1-of-1 slds-grid slds-grid_vertical-align-center slds-var-m-top_x-small slds-grid_align-start"
+          >
+            <div
+              data-testid="generated-answer-body__actions"
+              class="slds-grid slds-grid_vertical-align-center"
+            >
+              <c-quantic-feedback
+                state={feedbackState}
+                onquantic__like={handleLike}
+                onquantic__dislike={handleDislike}
+                like-icon-name="utility:like"
+                like-label={labels.thisAnswerWasHelpful}
+                dislike-icon-name="utility:dislike"
+                dislike-label={labels.thisAnswerWasNotHelpful}
+                size="x-small"
+                question=""
+                hide-explain-why-button
+                hide-labels
+              ></c-quantic-feedback>
+              <c-quantic-generated-answer-copy-to-clipboard
+                data-testid="generated-answer-body__copy-to-clipboard"
+                answer={answer}
+                size="x-small"
+                class="slds-var-m-horizontal_xx-small"
+                onquantic__generatedanswercopy={handleCopy}
+              ></c-quantic-generated-answer-copy-to-clipboard>
+            </div>
+          </div>
+        </template>
+      </div>
+    </section>
+  </template>
+
+  <template lwc:if={hasRetryableError}>
+    <div
+      data-testid="generated-answer-body__retry"
+      class="generated-answer__content slds-p-around_large"
+    >
+      <div>{labels.couldNotGenerateAnAnswer}</div>
+      <div class="slds-var-m-top_medium">
+        <lightning-button
+          data-testid="generated-answer-body__retry-button"
+          variant="brand-outline"
+          label={labels.tryAgain}
+          title={labels.tryAgain}
+          onclick={handleRetry}
+        ></lightning-button>
+      </div>
+    </div>
+  </template>
+
+  <template lwc:if={cannotAnswer}>
+    <div
+      data-testid="generated-answer-body__no-answer-message"
+      class="generated-answer__content slds-var-m-top_medium"
+    >
+      <div class={answerClass}>
+        <slot name="no-answer-message">{labels.noGeneratedAnswer}</slot>
+      </div>
+    </div>
+  </template>
+</template>
