@@ -29,8 +29,6 @@ import '@/src/components/search/atomic-result-text/atomic-result-text.js';
 import '@/src/components/search/atomic-table-element/atomic-table-element.js';
 import '@/src/components/search/atomic-text/atomic-text.js';
 
-const mockSearchApi = new MockSearchApi();
-
 const defaultTemplateContent = `<atomic-result-template>
   <template>
       <atomic-result-section-actions><atomic-quickview></atomic-quickview></atomic-result-section-actions>
@@ -78,6 +76,8 @@ const defaultTemplateContent = `<atomic-result-template>
   </template>
 </atomic-result-template>`;
 
+const searchApiHarness = new MockSearchApi();
+
 const {decorator, play} = wrapInSearchInterface({
   config: {
     search: {
@@ -121,9 +121,7 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     chromatic: {disableSnapshot: true},
-    msw: {
-      handlers: [...mockSearchApi.handlers],
-    },
+    msw: {handlers: [...searchApiHarness.handlers]},
     layout: 'fullscreen',
     actions: {
       handles: events,
