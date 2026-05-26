@@ -217,6 +217,7 @@ jobs:
     name: Upload commit artifacts to S3
     needs: [build-cdn, release]
     runs-on: ubuntu-latest
+    # TODO(KIT-5712): Rename to 'CDN Deploy' once token vending machine is available
     environment: 'Prerelease (CDN)'
     steps:
       - name: Harden Runner

@@ -5,6 +5,7 @@ export default defineConfig({
     projects: [
       './packages/atomic/vitest.config.js',
       './packages/atomic-a11y/vitest.config.ts',
+      './packages/auth/vitest.config.js',
       './packages/bueno/vitest.config.js',
       './packages/shopify/vitest.config.js',
       './packages/headless/vitest.config.js',

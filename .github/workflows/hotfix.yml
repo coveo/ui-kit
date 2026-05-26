@@ -39,6 +39,7 @@ jobs:
     name: Deploy hotfix to CDN
     needs: build-cdn
     runs-on: ubuntu-latest
+    # TODO(KIT-5712): Rename to 'CDN Deploy' once token vending machine is available
     environment: 'Prerelease (CDN)'
     steps:
       - name: Harden Runner
