@@ -4,7 +4,6 @@ packages:
   - packages/headless
   - packages/quantic
   - packages/headless-react
-  - packages/ssr
   - packages/atomic-hosted-page
   - packages/atomic-react
   - packages/atomic-angular

@@ -2,16 +2,20 @@ import type {HistoryElement} from '../../api/analytics/coveo.analytics/history-s
 import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import type {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
 import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
-import {getOrganizationEndpoint} from '../../api/platform-client.js';
+import {getApiBaseUrlOrOrganizationEndpoint} from '../../api/platform-client.js';
 import type {
   BaseParam,
   ContextParam,
 } from '../../api/platform-service-params.js';
 import type {SearchRequest} from '../../api/search/search/search-request.js';
 import type {
+  AdvancedQueryParam,
   AnalyticsParam,
   AuthenticationParam,
   AutomaticFacetsParams,
+  ConstantQueryParam,
+  ReferrerParam,
+  TabParam,
 } from '../../api/search/search-api-params.js';
 import type {CaseContextParam} from '../../api/service/insight/query/query-request.js';
 import type {NavigatorContext} from '../../app/navigator-context-provider.js';
@@ -71,7 +75,8 @@ export const buildStreamingRequest = async (
 ): Promise<GeneratedAnswerStreamRequest> => ({
   accessToken: state.configuration.accessToken,
   organizationId: state.configuration.organizationId,
-  url: getOrganizationEndpoint(
+  url: getApiBaseUrlOrOrganizationEndpoint(
+    state.configuration.search.apiBaseUrl,
     state.configuration.organizationId,
     state.configuration.environment
   ),
@@ -184,7 +189,11 @@ type HeadAnswerParams = {
   citationsFieldToInclude?: string[];
   locale: string;
 } & ContextParam &
-  AnalyticsParam;
+  AnalyticsParam &
+  AdvancedQueryParam &
+  ConstantQueryParam &
+  TabParam &
+  ReferrerParam;
 
 export const constructGenerateHeadAnswerParams = (
   state: StateNeededForHeadAnswerParams,
@@ -198,6 +207,9 @@ export const constructGenerateHeadAnswerParams = (
     {actionCause: selectSearchActionCause(state)}
   );
   const locale = selectLocale(state);
+  const tab = selectActiveTab(state.tabSet) || 'default';
+  const referrer = navigatorContext.referrer || '';
+  const {aq, cq} = buildAdvancedSearchQueryParams(state);
 
   const searchHub = selectSearchHub(state);
   const pipeline = selectPipeline(state);
@@ -211,6 +223,10 @@ export const constructGenerateHeadAnswerParams = (
     ...(searchHub?.length && {searchHub}),
     ...(pipeline?.length && {pipeline}),
     ...(context?.contextValues && {context: context.contextValues}),
+    ...(aq && {aq}),
+    ...(cq && {cq}),
+    tab,
+    referrer,
     ...analyticsParams,
     locale,
   };
@@ -235,7 +251,12 @@ const getActionsHistory = (
     : [],
 });
 
-const buildAdvancedSearchQueryParams = (state: StreamAnswerAPIState) => {
+type StateNeededByGeneratedAnswerAdvancedSearchQueryParams =
+  ConfigurationSection & Partial<SearchAppState>;
+
+const buildAdvancedSearchQueryParams = (
+  state: StateNeededByGeneratedAnswerAdvancedSearchQueryParams
+) => {
   const advancedSearchQueryParams = selectAdvancedSearchQueries(state);
   const mergedCq = buildConstantQuery(state);
 
