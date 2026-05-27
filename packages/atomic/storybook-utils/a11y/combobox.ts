@@ -24,6 +24,7 @@ export async function testComboboxA11y(context: StoryContext): Promise<void> {
   let status: 'passed' | 'failed' = 'passed';
   try {
     const input = await root.findByShadowRole('textbox', {}, {timeout: 5000});
+    const inputRoot = input.getRootNode() as Document | ShadowRoot;
 
     await step(
       'ArrowDown activates suggestion navigation (aria-activedescendant)',
@@ -34,7 +35,6 @@ export async function testComboboxA11y(context: StoryContext): Promise<void> {
         const popupId = input.getAttribute('aria-controls');
         await waitFor(
           () => {
-            const inputRoot = input.getRootNode() as Document | ShadowRoot;
             const popup = inputRoot.getElementById(popupId!);
             expect(popup).toBeTruthy();
             expect(popup!.classList.contains('hidden')).toBe(false);
@@ -71,23 +71,19 @@ export async function testComboboxA11y(context: StoryContext): Promise<void> {
       );
     });
 
-    await step(
-      'Enter accepts suggestion and closes popup (2.1.1)',
-      async () => {
-        await userEvent.keyboard('{Enter}');
+    await step('Enter closes suggestion popup (2.1.1)', async () => {
+      await userEvent.keyboard('{Enter}');
 
-        const popupId = input.getAttribute('aria-controls');
-        await waitFor(
-          () => {
-            const inputRoot = input.getRootNode() as Document | ShadowRoot;
-            const popup = inputRoot.getElementById(popupId!);
-            const isHidden = !popup || popup.classList.contains('hidden');
-            expect(isHidden, 'Popup should be hidden after Enter').toBe(true);
-          },
-          {timeout: 3000}
-        );
-      }
-    );
+      const popupId = input.getAttribute('aria-controls');
+      await waitFor(
+        () => {
+          const popup = inputRoot.getElementById(popupId!);
+          const isHidden = !popup || popup.classList.contains('hidden');
+          expect(isHidden, 'Popup should be hidden after Enter').toBe(true);
+        },
+        {timeout: 3000}
+      );
+    });
 
     await step(
       'Escape dismisses popup and focus stays on input (2.1.1)',
@@ -98,7 +94,6 @@ export async function testComboboxA11y(context: StoryContext): Promise<void> {
         const popupId = input.getAttribute('aria-controls');
         await waitFor(
           () => {
-            const inputRoot = input.getRootNode() as Document | ShadowRoot;
             const popup = inputRoot.getElementById(popupId!);
             expect(popup).toBeTruthy();
             expect(popup!.classList.contains('hidden')).toBe(false);
@@ -110,16 +105,23 @@ export async function testComboboxA11y(context: StoryContext): Promise<void> {
 
         await waitFor(
           () => {
+            const popup = inputRoot.getElementById(popupId!);
+            const isHidden = !popup || popup.classList.contains('hidden');
+            expect(isHidden, 'Popup should be hidden after Escape').toBe(true);
+          },
+          {timeout: 3000}
+        );
+
+        await waitFor(
+          () => {
             let active: Element | null =
               canvasElement.ownerDocument.activeElement;
             while (active?.shadowRoot?.activeElement) {
               active = active.shadowRoot.activeElement;
             }
-            const isOnInput =
-              active === input ||
-              active?.getAttribute('role') === 'textbox' ||
-              active?.tagName === 'TEXTAREA';
-            expect(isOnInput, 'Focus should remain on the input').toBe(true);
+            expect(active === input, 'Focus should remain on the input').toBe(
+              true
+            );
           },
           {timeout: 3000}
         );
