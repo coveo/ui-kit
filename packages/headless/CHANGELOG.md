@@ -1,3 +1,19 @@
+## 3.51.0
+
+### Minor Changes
+
+- [#7593](https://github.com/coveo/ui-kit/pull/7593) [`d12be29`](https://github.com/coveo/ui-kit/commit/d12be299fa235fe6810c268f2c89be296063ee60) Thanks [@alexprudhomme](https://github.com/alexprudhomme)! - Added `proxyBaseUrl` support for GenAI streaming endpoints:
+  - **Answer API**: Answer API requests (`/rest/organizations/{org}/answer/v1/configs/{id}/generate`) now honor the existing `search.proxyBaseUrl` configuration, routing them through the same proxy server as search requests.
+  - **Search API CRGA**: The `/rest/organizations/{org}/machinelearning/streaming/{streamId}` endpoint now correctly honors the existing `search.proxyBaseUrl` configuration, which was previously ignored.
+
+### Patch Changes
+
+- [#7500](https://github.com/coveo/ui-kit/pull/7500) [`41fdd60`](https://github.com/coveo/ui-kit/commit/41fdd609cb0b8b0d4b821f9818189fc49f727417) Thanks [@fbeaudoincoveo](https://github.com/fbeaudoincoveo)! - fix range facet URL restoration so browser back/forward clears stale range selections while preserving initial filter selections
+
+- [#7583](https://github.com/coveo/ui-kit/pull/7583) [`8445bf2`](https://github.com/coveo/ui-kit/commit/8445bf241db3aab5f0cd148c43ac3f4425f22cb1) Thanks [@mmitiche](https://github.com/mmitiche)! - fix(headless): guard follow-up requests when capability is disabled
+
+- [#7581](https://github.com/coveo/ui-kit/pull/7581) [`bd4bb98`](https://github.com/coveo/ui-kit/commit/bd4bb98837c2eb0acb7f38848c0d792f8bf1efa9) Thanks [@erocheleau](https://github.com/erocheleau)! - SFINT-6796 fix(headless): fix answer api sendFeedback logs error messages about non-serializable values
+
 ## 3.50.1
 
 ### Patch Changes
