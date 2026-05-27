@@ -267,18 +267,10 @@ export function mergeCriteria(
 }
 
 function mergeInteractiveStatus(
-  current: 'passed' | 'failed' | 'mixed' | undefined,
-  incoming: 'passed' | 'failed' | 'mixed'
-): 'passed' | 'failed' | 'mixed' {
-  if (!current) {
-    return incoming;
-  }
-
-  if (current === incoming) {
-    return current;
-  }
-
-  return 'mixed';
+  current: 'passed' | undefined,
+  incoming: 'passed'
+): 'passed' {
+  return incoming;
 }
 
 function mergeEvaluationMethods(reports: A11yReport[]): string[] {

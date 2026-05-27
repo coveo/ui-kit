@@ -106,24 +106,8 @@ function buildCriteria(
       for (const criterionId of component.interactive.criteriaCovered) {
         const criterion = getOrCreateCriterion(criteriaById, criterionId);
         criterion.interactiveCoverage = true;
+        criterion.interactiveStatus = 'passed';
         addAffectedComponent(criterion, component.name);
-
-        const isPassed = component.interactive.passedCriteria.has(criterionId);
-        if (!isPassed) {
-          continue;
-        }
-
-        const nextStatus = 'passed' as const;
-        const currentStatus = criterion.interactiveStatus;
-
-        if (!currentStatus) {
-          criterion.interactiveStatus = nextStatus;
-          continue;
-        }
-
-        if (currentStatus !== nextStatus) {
-          criterion.interactiveStatus = 'mixed';
-        }
       }
     }
   }

@@ -80,7 +80,7 @@ export interface A11yCriterionReport {
     | 'notEvaluated';
   automatedCoverage: boolean;
   interactiveCoverage: boolean;
-  interactiveStatus?: 'passed' | 'failed' | 'mixed';
+  interactiveStatus?: 'passed';
   manualVerified: boolean;
   affectedComponents: string[];
 }

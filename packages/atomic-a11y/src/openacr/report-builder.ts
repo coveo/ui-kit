@@ -70,12 +70,9 @@ function buildInteractiveAggregates(
     for (const criterionId of component.interactive.criteriaCovered) {
       const aggregate = aggregates.get(criterionId) ?? {
         coveredComponents: new Set<string>(),
-        passedComponents: new Set<string>(),
       };
 
       aggregate.coveredComponents.add(component.name);
-
-      aggregate.passedComponents.add(component.name);
 
       aggregates.set(criterionId, aggregate);
     }
