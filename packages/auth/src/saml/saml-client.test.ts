@@ -1,3 +1,4 @@
+import {describe, it, expect, vi, beforeEach, type Mock} from 'vitest';
 import {
   buildSamlClient,
   type SamlClient,
@@ -14,28 +15,28 @@ describe('buildSamlClient', () => {
 
   function buildMockSamlFlow(): SamlFlow.SamlFlow {
     return {
-      exchangeHandshakeToken: jest.fn().mockResolvedValue(''),
+      exchangeHandshakeToken: vi.fn().mockResolvedValue(''),
       handshakeTokenAvailable: false,
-      login: jest.fn(),
+      login: vi.fn(),
     };
   }
 
   function buildMockSamlState(): SamlState.SamlState {
     return {
       isLoginPending: false,
-      removeLoginPending: jest.fn(),
-      setLoginPending: jest.fn(),
+      removeLoginPending: vi.fn(),
+      setLoginPending: vi.fn(),
     };
   }
 
   beforeEach(() => {
     samlFlow = buildMockSamlFlow();
-    jest.spyOn(SamlFlow, 'buildSamlFlow').mockReturnValue(samlFlow);
+    vi.spyOn(SamlFlow, 'buildSamlFlow').mockReturnValue(samlFlow);
 
     samlState = buildMockSamlState();
-    jest.spyOn(SamlState, 'buildSamlState').mockReturnValue(samlState);
+    vi.spyOn(SamlState, 'buildSamlState').mockReturnValue(samlState);
 
-    console.warn = jest.fn();
+    console.warn = vi.fn();
 
     options = {
       organizationId: '',
@@ -86,9 +87,7 @@ describe('buildSamlClient', () => {
 
     beforeEach(() => {
       samlFlow.handshakeTokenAvailable = true;
-      samlFlow.exchangeHandshakeToken = jest
-        .fn()
-        .mockResolvedValue(accessToken);
+      samlFlow.exchangeHandshakeToken = vi.fn().mockResolvedValue(accessToken);
     });
 
     it('calls #exchangeHandshakeToken and returns an access token', async () => {
