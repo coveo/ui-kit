@@ -17,18 +17,21 @@
       "outputs": ["dist/themes/**"],
       "inputs": ["src/themes/**"]
     },
-    "build:storybook": {
+    "pre:storybook": {
       "dependsOn": [
-        "^build",
         "build:cem",
         "build:locales",
         "build:assets",
         "build:indexes"
       ],
+      "outputs": []
+    },
+    "build:storybook": {
+      "dependsOn": ["^build", "pre:storybook"],
       "outputs": ["./dist-storybook/**"]
     },
     "chromatic": {
-      "dependsOn": ["build:storybook"],
+      "dependsOn": ["^build", "pre:storybook"],
       "outputs": [],
       "env": [
         "CHROMATIC_PROJECT_TOKEN",
@@ -122,13 +125,7 @@
       "persistent": true
     },
     "dev:storybook": {
-      "dependsOn": [
-        "@coveo/atomic-legacy#build",
-        "build:cem",
-        "build:locales",
-        "build:assets",
-        "build:indexes"
-      ],
+      "dependsOn": ["@coveo/atomic-legacy#build", "pre:storybook"],
       "cache": false,
       "persistent": true
     },
