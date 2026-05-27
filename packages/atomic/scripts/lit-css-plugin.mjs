@@ -268,7 +268,6 @@ export function litCssPlugin() {
     setup(api) {
       api.onBeforeBuild(async () => {
         console.log(colors.blue('Generating Lit exports'));
-        await generateLitExports();
         generateCustomElementTags();
       });
 

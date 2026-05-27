@@ -10,7 +10,7 @@ const distRoot = join(packageDir, 'dist');
 /**
  * Copy Salesforce Design System icons to dist/assets.
  */
-function listAssets() {
+function buildAssets() {
   const salesforceDesignSystem = dirname(
     fileURLToPath(
       import.meta.resolve('@salesforce-ux/design-system/package.json')
@@ -56,6 +56,6 @@ function listAssets() {
   console.log(colors.bgGreen(`Copied ${count} asset icons`));
 }
 
-listAssets();
+buildAssets();
 
 console.log(colors.bold.blue('Assets build complete'));
