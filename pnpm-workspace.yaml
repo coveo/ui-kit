@@ -46,7 +46,7 @@ catalog:
   '@coveo/relay': 2.1.1
   '@coveo/relay-event-types': 19.6.0
   '@playwright/mcp': 0.0.71
-  '@playwright/test': 1.59.1
+  '@playwright/test': 1.60.0
   '@react-router/dev': 7.14.2
   '@react-router/fs-routes': 7.14.2
   '@react-router/node': 7.14.2
@@ -72,7 +72,7 @@ catalog:
   next: 16.2.6
   prettier: 3.8.3
   puppeteer: 24.42.0
-  playwright: 1.59.1
+  playwright: 1.60.0
   react: 19.2.5
   react-dom: 19.2.5
   rollup-plugin-string: 3.0.0
