@@ -1,7 +1,10 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {html} from 'lit';
+import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 import '@/src/components/search/atomic-sort-dropdown/atomic-sort-dropdown.js';
 import '@/src/components/search/atomic-sort-expression/atomic-sort-expression.js';
 
@@ -53,5 +56,31 @@ export const Default: Story = {
         expression="sncost ascending, date descending"
       ></atomic-sort-expression>
     `,
+  },
+};
+
+export const A11yStatusMessage: Story = {
+  name: 'A11y Status Message',
+  tags: ['a11y', 'test'],
+  decorators: [
+    (story) => html`<atomic-query-summary></atomic-query-summary>${story()}`,
+  ],
+  args: {
+    ...Default.args,
+  },
+  play: async (context) => {
+    await play(context);
+    await testStatusMessageA11y(context, {
+      triggerAction: async () => {
+        const {canvas} = context;
+        const select = await canvas.findByShadowRole('combobox', {
+          name: /sort by/i,
+        });
+        (select as HTMLSelectElement).value = 'date descending';
+        select.dispatchEvent(new Event('change', {bubbles: true}));
+      },
+      expectedText: /TODO:/i,
+      timeout: 5000,
+    });
   },
 };

@@ -2,10 +2,12 @@ import type {FacetSortCriterion} from '@coveo/headless';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-facet/atomic-facet.js';
+import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 
 const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers('atomic-facet', {
@@ -120,4 +122,31 @@ export const CustomSort: Story = {
       ></atomic-facet>`;
     },
   ],
+};
+
+export const A11yStatusMessage: Story = {
+  name: 'A11y Status Message',
+  tags: ['a11y', 'test'],
+  args: {
+    field: 'objecttype',
+  },
+  decorators: [
+    facetDecorator,
+    (story) => html`<atomic-query-summary></atomic-query-summary>${story()}`,
+  ],
+  play: async (context) => {
+    await play(context);
+    await testStatusMessageA11y(context, {
+      triggerAction: async () => {
+        const {canvas} = context;
+        const buttons = await canvas.findAllByShadowLabelText(
+          /Inclusion filter on/,
+          {exact: false}
+        );
+        buttons[0].click();
+      },
+      expectedText: /TODO:/i,
+      timeout: 5000,
+    });
+  },
 };
