@@ -535,12 +535,12 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     ];
   }
 
-  get generatedAnswerFooterCssClass() {
-    return 'slds-grid slds-wrap slds-grid_align-spread generated-answer__footer';
-  }
-
-  get generatedAnswerFooterRowClass() {
-    return 'generated-answer__footer-row slds-grid slds-col slds-size_1-of-1 slds-wrap slds-grid_align-spread';
+  get generatedAnswerHeaderClass() {
+    const headerBaseClass =
+      'generated-answer__card-header slds-grid slds-grid_vertical-align-center slds-grid_align-spread slds-p-horizontal_large slds-p-vertical_small';
+    return this.isVisible
+      ? `${headerBaseClass} slds-border_bottom`
+      : headerBaseClass;
   }
 
   get citationFields() {
@@ -563,28 +563,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   get toggleCollapseAnswerIcon() {
     return this.isAnswerCollapsed ? 'utility:chevrondown' : 'utility:chevronup';
-  }
-
-  get shouldShowCollapseGeneratingMessage() {
-    // If the answer is collapsed and is still streaming,
-    // we should show a message letting the user know it's still generating.
-    return (
-      this.collapsible &&
-      this.isVisible &&
-      this.isStreaming &&
-      this._exceedsMaximumHeight
-    );
-  }
-
-  get shouldShowToggleCollapseAnswer() {
-    // Only show the toggle collapse button if the answer is
-    // collapsible, visible, not streaming, and exceeds the maximum height.
-    return (
-      this.collapsible &&
-      this.isVisible &&
-      !this.isStreaming &&
-      this._exceedsMaximumHeight
-    );
   }
 
   /**
