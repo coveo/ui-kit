@@ -1,5 +1,4 @@
 import type {StoryContext} from '@storybook/web-components-vite';
-import {within} from 'shadow-dom-testing-library';
 import {expect, userEvent, waitFor} from 'storybook/test';
 
 /**
