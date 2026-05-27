@@ -36,10 +36,9 @@ export class AtomicInsightTabs
   }
 
   private handleTablistKeydown(event: KeyboardEvent) {
+    const tablist = event.currentTarget as HTMLElement;
     const tabs = Array.from(
-      (event.currentTarget as HTMLElement).querySelectorAll<HTMLElement>(
-        '[role="tab"]'
-      )
+      tablist.querySelectorAll<HTMLElement>('[role="tab"]')
     );
     const currentIndex = tabs.indexOf(event.target as HTMLElement);
     if (currentIndex === -1) {

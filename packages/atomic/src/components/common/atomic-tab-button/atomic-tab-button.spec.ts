@@ -36,15 +36,15 @@ describe('atomic-tab-button', () => {
     expect(button).toHaveTextContent('Products');
   });
 
-  it('should render with listitem role on host element', async () => {
+  it('should render with presentation role on host element', async () => {
     const {element} = await renderTabButton();
-    expect(element).toHaveAttribute('role', 'listitem');
+    expect(element).toHaveAttribute('role', 'presentation');
   });
 
   describe('when active is false', () => {
-    it('should set aria-current to false', async () => {
-      const {element} = await renderTabButton({active: false});
-      expect(element).toHaveAttribute('aria-current', 'false');
+    it('should set aria-selected to false on button', async () => {
+      const {button} = await renderTabButton({active: false});
+      expect(button).toHaveAttribute('aria-selected', 'false');
     });
 
     it('should have tab-button part on button', async () => {
@@ -65,9 +65,9 @@ describe('atomic-tab-button', () => {
   });
 
   describe('when active is true', () => {
-    it('should set aria-current to true', async () => {
-      const {element} = await renderTabButton({active: true});
-      expect(element).toHaveAttribute('aria-current', 'true');
+    it('should set aria-selected to true on button', async () => {
+      const {button} = await renderTabButton({active: true});
+      expect(button).toHaveAttribute('aria-selected', 'true');
     });
 
     it('should have tab-button-active part on button', async () => {

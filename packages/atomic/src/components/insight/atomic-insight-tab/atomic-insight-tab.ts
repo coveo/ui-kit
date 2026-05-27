@@ -6,7 +6,6 @@ import {buildTab as buildInsightTab} from '@coveo/headless/insight';
 import {css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
-import {renderButton} from '@/src/components/common/button';
 import {createAppLoadedListener} from '@/src/components/common/interface/store';
 import {
   dispatchTabLoaded,
@@ -76,6 +75,62 @@ export class AtomicInsightTab
 
   private tabId = randomID('insight-tab');
 
+  connectedCallback() {
+    super.connectedCallback();
+    this.setAttribute('role', 'tab');
+    if (!this.hasAttribute('tabindex')) {
+      this.tabIndex = this.active ? 0 : -1;
+    }
+    this.addEventListener('keydown', this.handleKeydown);
+    this.addEventListener('click', this.handleClick);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.removeEventListener('keydown', this.handleKeydown);
+    this.removeEventListener('click', this.handleClick);
+  }
+
+  private handleClick = () => {
+    this.tab?.select();
+  };
+
+  private handleKeydown = (event: KeyboardEvent) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.tab?.select();
+    } else if (
+      event.key === 'ArrowRight' ||
+      event.key === 'ArrowLeft' ||
+      event.key === 'Home' ||
+      event.key === 'End'
+    ) {
+      event.preventDefault();
+      const tablist = this.closest('[role="tablist"]');
+      if (!tablist) {
+        return;
+      }
+      const tabs = Array.from(
+        tablist.querySelectorAll<HTMLElement>('[role="tab"]')
+      );
+      const currentIndex = tabs.indexOf(this);
+      if (currentIndex === -1) {
+        return;
+      }
+      let nextIndex: number;
+      if (event.key === 'ArrowRight') {
+        nextIndex = (currentIndex + 1) % tabs.length;
+      } else if (event.key === 'ArrowLeft') {
+        nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+      } else if (event.key === 'Home') {
+        nextIndex = 0;
+      } else {
+        nextIndex = tabs.length - 1;
+      }
+      tabs[nextIndex].focus();
+    }
+  };
+
   public initialize() {
     this.tab = buildInsightTab(this.bindings.engine, {
       options: {expression: this.expression, id: this.tabId},
@@ -97,6 +152,12 @@ export class AtomicInsightTab
   protected updated() {
     if (this.tabState) {
       this.active = this.tabState.isActive;
+      this.setAttribute('role', 'tab');
+      this.setAttribute(
+        'aria-selected',
+        this.tabState.isActive ? 'true' : 'false'
+      );
+      this.tabIndex = this.tabState.isActive ? 0 : -1;
     }
     dispatchTabLoaded(this);
   }
@@ -104,22 +165,17 @@ export class AtomicInsightTab
   @errorGuard()
   @bindingGuard()
   render() {
-    return html`${when(this.isAppLoaded, () =>
-      renderButton({
-        props: {
-          style: 'text-transparent',
-          part: 'tab',
-          class: this.tabState.isActive ? 'active' : '',
-          role: 'tab',
-          ariaSelected: this.tabState.isActive ? 'true' : 'false',
-          ariaLabel: this.bindings.i18n.t('tab-search', {label: this.label}),
-          title: this.label,
-          tabIndex: this.tabState.isActive ? 0 : -1,
-          onClick: () => {
-            this.tab.select();
-          },
-        },
-      })(html`${this.label}`)
+    return html`${when(
+      this.isAppLoaded,
+      () =>
+        html`<span
+          part="tab"
+          class="btn-text-transparent ${this.tabState.isActive ? 'active' : ''}"
+          aria-label=${this.bindings.i18n.t('tab-search', {label: this.label})}
+          title=${this.label}
+          aria-hidden="true"
+          >${this.label}</span
+        >`
     )}`;
   }
 }
