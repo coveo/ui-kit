@@ -1,23 +1,16 @@
-import {
-  copyFileSync,
-  mkdirSync,
-  readdirSync,
-  readFileSync,
-  rmSync,
-  writeFileSync,
-} from 'node:fs';
+import {readdirSync, readFileSync, rmSync} from 'node:fs';
 import {createRequire} from 'node:module';
-import path, {dirname, extname, join, relative, resolve} from 'node:path';
+import path, {dirname, relative, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import type {StorybookConfig} from '@storybook/web-components-vite';
 import remarkGfm from 'remark-gfm';
 import type {Plugin} from 'vite';
 import {mergeConfig} from 'vite';
 import {generateExternalPackageMappings} from '../scripts/externalPackageMappings.mjs';
+import isChromatic from 'chromatic/isChromatic';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 const isVitest = process.env.VITEST !== undefined;
 
 const virtualCustomElementTags = (): Plugin => {
@@ -110,24 +103,20 @@ const externalizeDependencies = (
 
       const packageMapping = packageMappings[source];
 
-      if (!packageMapping || isVitest) {
+      if (!packageMapping || isVitest || isChromatic()) {
         return null;
-      }
-
-      if (isCDN) {
-        return {
-          id: packageMapping.cdn,
-          external: 'absolute',
-        };
       }
 
       if (configType === 'DEVELOPMENT') {
         return {
           id: packageMapping.local,
         };
+      } else {
+        return {
+          id: packageMapping.cdn,
+          external: 'absolute',
+        };
       }
-
-      return null;
     },
   };
 };
@@ -172,10 +161,6 @@ const config: StorybookConfig = {
     name: '@storybook/web-components-vite',
     options: {},
   },
-  env: (config) => ({
-    ...config,
-    VITE_IS_CDN: isCDN ? 'true' : 'false',
-  }),
   async viteFinal(config, {configType}) {
     const {default: tailwindcss} = await import('@tailwindcss/vite');
     const version = getPackageVersion();
@@ -362,7 +347,9 @@ const virtualAssetsList = (): Plugin => {
 };
 
 export default config;
-function markComponentImportsAsSideEffectful(): Plugin {
+function markComponentImportsAsSideEffectful(
+  configType: 'DEVELOPMENT' | 'PRODUCTION' | undefined
+): Plugin {
   const absolutePathToRoot = resolve(__dirname, '..');
   return {
     name: 'mark-components-as-side-effectful',
@@ -383,7 +370,7 @@ function markComponentImportsAsSideEffectful(): Plugin {
         ) {
           const resolution = await this.resolve(id, source, options);
 
-          if (isCDN) {
+          if (configType === 'PRODUCTION' && !isChromatic()) {
             // Drop component imports for CDN builds by resolving to virtual empty module
             return {
               id: `\0virtual-empty:${resolution!.id}`,
@@ -397,7 +384,11 @@ function markComponentImportsAsSideEffectful(): Plugin {
       return null;
     },
     load(id) {
-      if (isCDN && id.startsWith('\0virtual-empty:')) {
+      if (
+        configType === 'PRODUCTION' &&
+        !isChromatic() &&
+        id.startsWith('\0virtual-empty:')
+      ) {
         // Return empty exports for stubbed components
         return 'export default {};';
       }
