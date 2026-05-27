@@ -107,6 +107,17 @@ Use `lwc:if` / `lwc:elseif` / `lwc:else` for top-level conditional branches:
 
 > ⚠️ Legacy `if:true` / `if:false` directives exist in older components but must **not** be used in new code.
 
+### Template expression restrictions
+
+LWC template expressions have strict limitations that differ from other frameworks:
+
+- **No computed property access**: `{items[0]}` is invalid. Always use a getter: `get firstItem() { return this.items[0]; }`, then reference `{firstItem}` in the template.
+- **No literal values**: `{false}`, `{0}`, `{'text'}` are all invalid. To pass boolean values to child components:
+  - Pass `true` by using the bare attribute name: `<c-child hide-line></c-child>`
+  - Pass `false` by omitting the attribute entirely (the child's default applies)
+  - If the value is dynamic, use a getter that returns the computed boolean
+- **No inline expressions or operators**: `{a + b}`, `{!flag}`, `{a === b}` are all invalid. Use getters for any computed logic.
+
 ### Child component references
 
 Child Quantic components use the `c-` prefix with kebab-case:
