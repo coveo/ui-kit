@@ -33,6 +33,7 @@ import {
   streamAnswerAPIStateMockWithStaticFiltersSelected,
 } from './generated-answer-mocks.js';
 import {
+  buildStreamingRequest,
   constructAnswerAPIQueryParams,
   constructGenerateHeadAnswerParams,
   type StateNeededForHeadAnswerParams,
@@ -535,8 +536,86 @@ describe('constructGenerateHeadAnswerParams', () => {
       searchHub: 'test-hub',
       pipeline: 'test-pipeline',
       locale: 'en',
+      tab: 'default',
+      referrer: 'some-test-referrer',
       analytics: expect.any(Object),
     });
+  });
+
+  it('includes aq and cq when advanced search queries are present', () => {
+    const params = constructGenerateHeadAnswerParams(
+      buildState({
+        advancedSearchQueries: {
+          aq: '@foo',
+          cq: '@bar',
+          dq: '',
+          lq: '',
+          defaultFilters: {
+            aq: '',
+            cq: '',
+          },
+        },
+      }),
+      buildMockNavigatorContextProvider()()
+    );
+
+    expect(params.aq).toBe('@foo');
+    expect(params.cq).toBe('@bar');
+  });
+
+  it('merges active tab expression into cq', () => {
+    const params = constructGenerateHeadAnswerParams(
+      streamAnswerAPIStateMockWithATabWithAnExpression,
+      buildMockNavigatorContextProvider()()
+    );
+
+    expect(params.cq).toBe('cq-test-query AND @fileType=html');
+  });
+
+  it('includes active tab when available', () => {
+    const params = constructGenerateHeadAnswerParams(
+      buildState({
+        tabSet: {
+          all: {
+            id: 'all',
+            expression: '',
+            isActive: true,
+          },
+          support: {
+            id: 'support',
+            expression: '@source=="support"',
+            isActive: false,
+          },
+        },
+      }),
+      buildMockNavigatorContextProvider()()
+    );
+
+    expect(params.tab).toBe('all');
+  });
+
+  it('uses empty string referrer when navigator context has no referrer', () => {
+    const navigatorContext = buildMockNavigatorContextProvider()();
+    navigatorContext.referrer = null;
+
+    const params = constructGenerateHeadAnswerParams(
+      buildState(),
+      navigatorContext
+    );
+
+    expect(params.referrer).toBe('');
+  });
+
+  it('includes referrer when navigator context has one', () => {
+    const navigatorContext = buildMockNavigatorContextProvider()();
+    navigatorContext.referrer = 'https://www.example.com/from-page';
+
+    const params = constructGenerateHeadAnswerParams(
+      buildState(),
+      navigatorContext
+    );
+
+    expect(params.referrer).toBe('https://www.example.com/from-page');
   });
 
   it('uses empty string when query is undefined', () => {
@@ -627,5 +706,61 @@ describe('constructGenerateHeadAnswerParams', () => {
       buildMockNavigatorContextProvider()()
     );
     expect(params.facets).toBeUndefined();
+  });
+});
+
+describe('buildStreamingRequest', () => {
+  const buildState = (overrides = {}) => ({
+    configuration: {
+      ...getConfigurationInitialState(),
+      accessToken: 'test-token',
+      organizationId: 'myorg',
+      environment: 'prod' as const,
+      search: {
+        locale: 'en',
+        timezone: 'America/New_York',
+        authenticationProviders: [],
+      },
+    },
+    search: {
+      response: {results: [], searchUid: '', totalCountFiltered: 0, facets: []},
+      extendedResults: {generativeQuestionAnsweringId: 'stream-123'},
+      isLoading: false,
+      error: null,
+      requestId: '',
+    },
+    generatedAnswer: {
+      ...getGeneratedAnswerInitialState(),
+    },
+    ...overrides,
+  });
+
+  it('uses search.apiBaseUrl as the URL when set (proxy path)', async () => {
+    const proxyUrl = 'https://proxy.example.com';
+    const state = buildState({
+      configuration: {
+        ...buildState().configuration,
+        search: {
+          ...buildState().configuration.search,
+          apiBaseUrl: proxyUrl,
+        },
+      },
+    });
+
+    const request = await buildStreamingRequest(state as any);
+    expect(request.url).toBe(proxyUrl);
+  });
+
+  it('falls back to organization endpoint when search.apiBaseUrl is not set', async () => {
+    const state = buildState();
+    const request = await buildStreamingRequest(state as any);
+    expect(request.url).toContain('myorg');
+    expect(request.url).not.toContain('proxy');
+  });
+
+  it('includes the streamId from extendedResults', async () => {
+    const state = buildState();
+    const request = await buildStreamingRequest(state as any);
+    expect(request.streamId).toBe('stream-123');
   });
 });

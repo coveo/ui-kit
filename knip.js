@@ -135,9 +135,6 @@ export default {
     'packages/shopify': {
       ignore: ['**/*'],
     },
-    'samples/atomic/search-stencil': {
-      ignore: ['**/*'],
-    },
     'samples/headless-ssr/search-nextjs': {
       ignore: ['**/*'],
     },

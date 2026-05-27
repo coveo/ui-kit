@@ -1,7 +1,8 @@
 export {
-  COVERED_CRITERIA as COLLAPSIBLE_COVERED_CRITERIA,
-  testCollapsibleA11y,
-} from './collapsible.js';
+  COVERED_CRITERIA as DISCLOSURE_COVERED_CRITERIA,
+  testDisclosureA11y,
+  type DisclosureA11yOptions,
+} from './disclosure.js';
 export {
   COVERED_CRITERIA as COMBOBOX_COVERED_CRITERIA,
   testComboboxA11y,
@@ -11,7 +12,7 @@ export {
   testDialogA11y,
 } from './dialog.js';
 export {
-  COVERED_CRITERIA as LISTBOX_COVERED_CRITERIA,
-  testListboxA11y,
-} from './listbox.js';
-export type {InteractiveA11yOptions} from './types.js';
+  COVERED_CRITERIA as RADIOGROUP_COVERED_CRITERIA,
+  testRadioGroupA11y,
+  type RadioGroupA11yOptions,
+} from './radiogroup.js';
