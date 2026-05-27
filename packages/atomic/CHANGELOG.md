@@ -1,3 +1,25 @@
+## 3.58.0
+
+### Minor Changes
+
+- [#7479](https://github.com/coveo/ui-kit/pull/7479) [`2d44e5f`](https://github.com/coveo/ui-kit/commit/2d44e5f3982b4996f224bce14b449af9038dae42) Thanks [@mmitiche](https://github.com/mmitiche)! - Replaced `renderAgentGenerationSteps` functional component with new `atomic-agent-stream-of-thought` custom element that displays a persistent "stream of thought" timeline during answer generation. Steps appear progressively with spinner/checkmark indicators, auto-collapse after completion, and support expand/collapse interaction.
+
+### Patch Changes
+
+- [#7599](https://github.com/coveo/ui-kit/pull/7599) [`86bc84d`](https://github.com/coveo/ui-kit/commit/86bc84d5509990e992df9a43dfe9c62d4d28ef44) Thanks [@alexprudhomme](https://github.com/alexprudhomme)! - Fixed the "Show More" button aria-label in `atomic-commerce-breadbox` to read "Show N more filters" instead of "Show + N more filters".
+
+- [#7594](https://github.com/coveo/ui-kit/pull/7594) [`f4b6b14`](https://github.com/coveo/ui-kit/commit/f4b6b1490109da992ef83cb985ee3a9212580fc7) Thanks [@alexprudhomme](https://github.com/alexprudhomme)! - Fixed "Not sure" button text overlapping borders in the generated answer feedback modal on iPhone devices by adding `whitespace-nowrap` to prevent text wrapping within the radio button options.
+
+- [#7580](https://github.com/coveo/ui-kit/pull/7580) [`d4500b8`](https://github.com/coveo/ui-kit/commit/d4500b84970534148fe4836a800b9bd5a10c89d2) Thanks [@SimonMilord](https://github.com/SimonMilord)! - Make generated answer thread items toggle when the left timeline dot or pipe area is clicked.
+
+- [#7566](https://github.com/coveo/ui-kit/pull/7566) [`d7d03a8`](https://github.com/coveo/ui-kit/commit/d7d03a82a31c4aa00a063fd093f487973f9ba7ae) Thanks [@SimonMilord](https://github.com/SimonMilord)! - Improving followup input visibility by setting a light gray background theme variable on generated answer content when follow-ups are enabled.
+
+- [#7573](https://github.com/coveo/ui-kit/pull/7573) [`50746b4`](https://github.com/coveo/ui-kit/commit/50746b454a187fface00bf5996a77f0bd0ec6b99) Thanks [@SimonMilord](https://github.com/SimonMilord)! - changed atomic-neutral-lighter color
+
+- Updated dependencies [[`41fdd60`](https://github.com/coveo/ui-kit/commit/41fdd609cb0b8b0d4b821f9818189fc49f727417), [`d12be29`](https://github.com/coveo/ui-kit/commit/d12be299fa235fe6810c268f2c89be296063ee60), [`8445bf2`](https://github.com/coveo/ui-kit/commit/8445bf241db3aab5f0cd148c43ac3f4425f22cb1), [`bd4bb98`](https://github.com/coveo/ui-kit/commit/bd4bb98837c2eb0acb7f38848c0d792f8bf1efa9)]:
+  - @coveo/headless@3.51.0
+  - @coveo/atomic-legacy@0.0.16
+
 ## 3.57.3
 
 ### Patch Changes
