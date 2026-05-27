@@ -194,7 +194,7 @@ const config: StorybookConfig = {
         virtualOpenApiModules(),
         tailwindcss(),
         resolvePathAliases(),
-        markComponentImportsAsSideEffectful(),
+        markComponentImportsAsSideEffectful(configType),
         processInlineCssImports(),
         forceInlineCssImports(),
         svgTransform(),
