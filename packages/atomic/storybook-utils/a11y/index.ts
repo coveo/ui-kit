@@ -16,10 +16,6 @@ export {
   testListboxA11y,
 } from './listbox.js';
 export {
-  COVERED_CRITERIA as LABEL_IN_NAME_COVERED_CRITERIA,
-  testLabelInNameA11y,
-} from './label-in-name.js';
-export {
   COVERED_CRITERIA as ON_FOCUS_COVERED_CRITERIA,
   testOnFocusA11y,
 } from './on-focus.js';
