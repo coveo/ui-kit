@@ -62,6 +62,7 @@
     "build:locales": "node scripts/build-locales.mjs",
     "build:assets": "node scripts/build-assets.mjs",
     "build:themes": "node scripts/build-themes.mjs",
+    "prepare:build:indexes": "node scripts/generate-lit-exports.mjs",
     "build:lit": "rslib build",
     "build:cdn": "node rsbuild.cdn.mjs",
     "build:angular": "npx turbo gen:lit --filter=@coveo/atomic-angular-builder",

@@ -20,11 +20,6 @@ const __dirname = dirname(__filename);
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 const isVitest = process.env.VITEST !== undefined;
 
-// Ensure directories referenced in staticDirs exist before Storybook validates them.
-// The prepareStorybookAssets plugin populates these during buildStart, which runs later.
-mkdirSync(resolve(__dirname, 'static/assets'), {recursive: true});
-mkdirSync(resolve(__dirname, '../src/assets/lang'), {recursive: true});
-
 const virtualCustomElementTags = (): Plugin => {
   return {
     name: 'virtual-custom-element-tags',
@@ -218,7 +213,10 @@ const config: StorybookConfig = {
         processInlineCssImports(),
         forceInlineCssImports(),
         svgTransform(),
-        prepareStorybookAssets(),
+        ...(configType === 'DEVELOPMENT'
+          ? [prepareStorybookAssetsPlugin()]
+          : []),
+        virtualAssetsList(),
         externalizeDependencies(configType),
       ],
     });
@@ -344,102 +342,24 @@ const processInlineCssImports = (): Plugin => {
   };
 };
 
-/**
- * Generate static assets that Storybook needs at startup:
- * 1. Salesforce Design System icons → .storybook/static/assets/
- * 2. Per-locale JSON files from src/locales.json → src/assets/lang/
- * 3. dayjs locale import map → src/generated/dayjs-locales-data.ts
- */
-const prepareStorybookAssets = (): Plugin => {
-  const require = createRequire(import.meta.url);
-
+const virtualAssetsList = (): Plugin => {
+  let cachedModule: string | null = null;
   return {
-    name: 'prepare-storybook-assets',
-    buildStart() {
-      const srcDir = resolve(__dirname, '../src');
-      const assetsDir = resolve(__dirname, 'static/assets');
-
-      // ── 1. Copy Salesforce icons ──
-      const salesforceDir = dirname(
-        require.resolve('@salesforce-ux/design-system/package.json')
-      );
-      mkdirSync(assetsDir, {recursive: true});
-
-      for (const subpath of ['doctype', 'standard']) {
-        const icons = readdirSync(
-          join(salesforceDir, 'assets/icons', subpath),
-          {recursive: true, withFileTypes: true}
-        );
-        for (const icon of icons) {
-          if (icon.isFile() && extname(icon.name) === '.svg') {
-            copyFileSync(
-              join(salesforceDir, 'assets/icons', subpath, icon.name),
-              join(assetsDir, icon.name)
-            );
-          }
+    name: 'virtual-assets-list',
+    resolveId(id) {
+      if (id === 'virtual:assets-list') {
+        return id;
+      }
+      return null;
+    },
+    load(id) {
+      if (id === 'virtual:assets-list') {
+        if (!cachedModule) {
+          const assetsDir = resolve(__dirname, '../dist/assets');
+          cachedModule = `export default ${JSON.stringify({assets: readdirSync(assetsDir).sort()})};`;
         }
+        return cachedModule;
       }
-      copyFileSync(
-        join(salesforceDir, 'assets/icons/utility/sparkles.svg'),
-        join(assetsDir, 'sparkles.svg')
-      );
-
-      // Write docs/assets.json (consumed by atomic-icon stories)
-      const docsDir = resolve(__dirname, '../docs');
-      mkdirSync(docsDir, {recursive: true});
-      writeFileSync(
-        join(docsDir, 'assets.json'),
-        JSON.stringify({assets: readdirSync(assetsDir).sort()})
-      );
-
-      // ── 2. Generate locale files ──
-      const localesData = JSON.parse(
-        readFileSync(join(srcDir, 'locales.json'), 'utf8')
-      );
-      const localesMap: Record<string, Record<string, string>> = {dev: {}};
-      for (const [stringKey, stringValues] of Object.entries(localesData)) {
-        for (const [localeKey, localeStringValue] of Object.entries(
-          stringValues as Record<string, string>
-        )) {
-          if (!localesMap[localeKey]) localesMap[localeKey] = {};
-          localesMap[localeKey][stringKey] = localeStringValue;
-          localesMap.dev[stringKey] = stringKey;
-        }
-      }
-
-      const langDir = join(srcDir, 'assets/lang');
-      rmSync(langDir, {recursive: true, force: true});
-      mkdirSync(langDir, {recursive: true});
-      for (const [localeKey, localeData] of Object.entries(localesMap)) {
-        writeFileSync(
-          join(langDir, `${localeKey}.json`),
-          JSON.stringify(localeData)
-        );
-      }
-
-      const generatedDir = join(srcDir, 'generated');
-      mkdirSync(generatedDir, {recursive: true});
-      writeFileSync(
-        join(generatedDir, 'availableLocales.json'),
-        JSON.stringify(Object.keys(localesMap).map((k) => k.toLowerCase()))
-      );
-
-      // ── 3. Generate dayjs locale imports ──
-      const dayJsLocales = JSON.parse(
-        readFileSync(require.resolve('dayjs/locale.json'), 'utf8')
-      );
-      let fileContent =
-        'export const locales: Record<string, () => Promise<unknown>> = {';
-      for (const locale of dayJsLocales) {
-        const key = locale.key;
-        const parts = key.split('-');
-        const i18nKey =
-          parts.length > 1 ? `${parts[0]}-${parts[1].toUpperCase()}` : key;
-        const mapKey = i18nKey.includes('-') ? `'${i18nKey}'` : i18nKey;
-        fileContent += `\n  ${mapKey}: () => import('dayjs/locale/${key}'),`;
-      }
-      fileContent += '\n};\n';
-      writeFileSync(join(generatedDir, 'dayjs-locales-data.ts'), fileContent);
     },
   };
 };

@@ -2,7 +2,6 @@ import {readFileSync} from 'node:fs';
 import {dirname, join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {defineConfig} from '@rslib/core';
-import {litCssPlugin} from './scripts/lit-css-plugin.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const {version} = JSON.parse(
