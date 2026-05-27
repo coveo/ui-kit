@@ -2,6 +2,8 @@
 
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {html} from 'lit/static-html.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
@@ -20,6 +22,8 @@ import '@/src/components/search/atomic-result-section-visual/atomic-result-secti
 import '@/src/components/search/atomic-result-template/atomic-result-template.js';
 import '@/src/components/search/atomic-result-text/atomic-result-text.js';
 
+const mockSearchApi = new MockSearchApi();
+
 const CHILD_TEMPLATE_EXAMPLE = `<template>
   <style>
     .field {
@@ -33,7 +37,7 @@ const CHILD_TEMPLATE_EXAMPLE = `<template>
     }
   </style>
   <atomic-result-section-visual>
-    <img loading="lazy" src="https://picsum.photos/seed/picsum/350" class="thumbnail" />
+    <img loading="lazy" src="https://picsum.photos/seed/picsum/350" class="thumbnail" alt="Thumbnail image"/>
   </atomic-result-section-visual>
   <atomic-result-section-title>
     <atomic-result-link></atomic-result-link>
@@ -81,7 +85,7 @@ const PARENT_TEMPLATE_EXAMPLE = `<template>
     }
   </style>
   <atomic-result-section-visual>
-    <img loading="lazy" src="https://picsum.photos/seed/picsum/350" class="thumbnail" />
+    <img loading="lazy" src="https://picsum.photos/seed/picsum/350" class="thumbnail" alt="Thumbnail image"/>
   </atomic-result-section-visual>
   <atomic-result-section-title>
     <atomic-result-link></atomic-result-link>
@@ -124,6 +128,9 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     chromatic: {disableSnapshot: true},
+    msw: {
+      handlers: [...mockSearchApi.handlers],
+    },
     actions: {
       handles: events,
     },
