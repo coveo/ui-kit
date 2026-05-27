@@ -109,6 +109,6 @@ minimumReleaseAgeExclude:
   - react-router
   - '@react-router/*'
 
-# Allow to use the shell emulator for all commands, which is required for some commands to work properly on Windows.
+# Allow using the shell emulator for all commands, which is required for some commands to work properly on Windows.
 # https://pnpm.io/cli/run#shellemulator
 shellEmulator: true
