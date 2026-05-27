@@ -4,7 +4,6 @@ packages:
   - packages/headless
   - packages/quantic
   - packages/headless-react
-  - packages/ssr
   - packages/atomic-hosted-page
   - packages/atomic-react
   - packages/atomic-angular
@@ -31,10 +30,10 @@ packages:
   - utils/ci
 
 catalog:
-  '@angular-devkit/build-angular': 21.2.8
+  '@angular-devkit/build-angular': 21.2.11
   '@angular/animations': 21.2.13
-  '@angular/build': 21.2.8
-  '@angular/cli': 21.2.8
+  '@angular/build': 21.2.11
+  '@angular/cli': 21.2.11
   '@angular/common': 21.2.13
   '@angular/compiler': 21.2.13
   '@angular/compiler-cli': 21.2.13
@@ -47,7 +46,7 @@ catalog:
   '@coveo/relay': 2.1.1
   '@coveo/relay-event-types': 19.6.0
   '@playwright/mcp': 0.0.71
-  '@playwright/test': 1.59.1
+  '@playwright/test': 1.60.0
   '@react-router/dev': 7.14.2
   '@react-router/fs-routes': 7.14.2
   '@react-router/node': 7.14.2
@@ -59,7 +58,7 @@ catalog:
   '@testing-library/react': 16.3.2
   '@types/jest': 30.0.0
   '@types/node': 24.12.4
-  '@types/react': 19.2.14
+  '@types/react': 19.2.15
   '@types/react-dom': 19.2.3
   '@vitejs/plugin-react': 6.0.1
   '@vitest/browser-playwright': 4.1.5
@@ -73,9 +72,9 @@ catalog:
   next: 16.2.6
   prettier: 3.8.3
   puppeteer: 24.42.0
-  playwright: 1.59.1
-  react: 19.2.5
-  react-dom: 19.2.5
+  playwright: 1.60.0
+  react: 19.2.6
+  react-dom: 19.2.6
   rollup-plugin-string: 3.0.0
   rollup-plugin-node-polyfills: 0.2.1
   typedoc: 0.28.19

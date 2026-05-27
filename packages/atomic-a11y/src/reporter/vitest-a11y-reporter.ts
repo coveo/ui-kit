@@ -216,33 +216,20 @@ export class VitestA11yReporter implements Reporter {
             criteriaCovered: new Set<string>(),
             testCount: 0,
             passedCount: 0,
-            failedCount: 0,
             passedCriteria: new Set<string>(),
-            failedCriteria: new Set<string>(),
           };
         }
 
-        const testState = testCase.result()?.state;
-        const effectiveStatus: StorybookInteractiveReport['status'] =
-          testState === 'failed' ? 'failed' : interactiveReport.status;
-
         for (const criterion of interactiveReport.result.criteriaCovered) {
           component.interactive.criteriaCovered.add(criterion);
-          if (effectiveStatus === 'passed') {
+          if (interactiveReport.status === 'passed') {
             component.interactive.passedCriteria.add(criterion);
-          }
-          if (effectiveStatus === 'failed') {
-            component.interactive.failedCriteria.add(criterion);
           }
         }
 
         component.interactive.testCount++;
-        if (effectiveStatus === 'passed') {
+        if (interactiveReport.status === 'passed') {
           component.interactive.passedCount++;
-        }
-
-        if (effectiveStatus === 'failed') {
-          component.interactive.failedCount++;
         }
       }
     } catch (error) {
