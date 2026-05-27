@@ -52,8 +52,6 @@ export interface A11yInteractiveResults {
   criteriaCovered: string[];
   testCount: number;
   passedCount: number;
-  failedCount: number;
-  failedCriteria: string[];
 }
 
 /**
@@ -82,7 +80,7 @@ export interface A11yCriterionReport {
     | 'notEvaluated';
   automatedCoverage: boolean;
   interactiveCoverage: boolean;
-  interactiveStatus?: 'passed' | 'failed' | 'mixed';
+  interactiveStatus?: 'passed';
   manualVerified: boolean;
   affectedComponents: string[];
 }

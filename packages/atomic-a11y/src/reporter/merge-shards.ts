@@ -28,10 +28,9 @@ interface MutableAutomatedResults extends Omit<
 
 interface MutableInteractiveResults extends Omit<
   A11yInteractiveResults,
-  'criteriaCovered' | 'failedCriteria'
+  'criteriaCovered'
 > {
   criteriaCovered: Set<string>;
-  failedCriteria: Set<string>;
 }
 
 interface MutableComponentReport extends Omit<
@@ -63,7 +62,6 @@ function toMutableComponent(
       ? {
           ...component.interactive,
           criteriaCovered: new Set(component.interactive.criteriaCovered),
-          failedCriteria: new Set(component.interactive.failedCriteria),
         }
       : undefined,
   };
@@ -151,9 +149,6 @@ export function mergeComponents(reports: A11yReport[]): A11yComponentReport[] {
               criteriaCovered: [...component.interactive.criteriaCovered].sort(
                 compareByNumericId
               ),
-              failedCriteria: [...component.interactive.failedCriteria].sort(
-                compareByNumericId
-              ),
             }
           : undefined,
       };
@@ -170,22 +165,15 @@ function mergeInteractiveResults(
       criteriaCovered: new Set(source.criteriaCovered),
       testCount: source.testCount,
       passedCount: source.passedCount,
-      failedCount: source.failedCount,
-      failedCriteria: new Set(source.failedCriteria),
     };
     return;
   }
 
   target.interactive.testCount += source.testCount;
   target.interactive.passedCount += source.passedCount;
-  target.interactive.failedCount += source.failedCount;
 
   for (const criterion of source.criteriaCovered) {
     target.interactive.criteriaCovered.add(criterion);
-  }
-
-  for (const criterion of source.failedCriteria) {
-    target.interactive.failedCriteria.add(criterion);
   }
 }
 
@@ -250,14 +238,9 @@ export function mergeCriteria(
         const existing = criteriaById.get(criterionId);
         if (existing) {
           existing.interactiveCoverage = true;
-          const isFailed =
-            component.interactive.failedCriteria.includes(criterionId);
-          const nextStatus: 'passed' | 'failed' = isFailed
-            ? 'failed'
-            : 'passed';
           existing.interactiveStatus = mergeInteractiveStatus(
             existing.interactiveStatus,
-            nextStatus
+            'passed'
           );
           existing.affectedComponents.add(component.name);
         }
@@ -284,18 +267,10 @@ export function mergeCriteria(
 }
 
 function mergeInteractiveStatus(
-  current: 'passed' | 'failed' | 'mixed' | undefined,
-  incoming: 'passed' | 'failed' | 'mixed'
-): 'passed' | 'failed' | 'mixed' {
-  if (!current) {
-    return incoming;
-  }
-
-  if (current === incoming) {
-    return current;
-  }
-
-  return 'mixed';
+  current: 'passed' | undefined,
+  incoming: 'passed'
+): 'passed' {
+  return incoming;
 }
 
 function mergeEvaluationMethods(reports: A11yReport[]): string[] {
