@@ -222,6 +222,34 @@ describe('atomic-citation', () => {
       expect(locators.citationPopover).toHaveClass('hidden');
     });
 
+    it('should close popover on Escape key press', async () => {
+      const {element, locators} = await renderComponent();
+
+      locators.citationLink?.focus();
+      await element.updateComplete;
+      expect(locators.citationPopover).toHaveClass('desktop-only:flex');
+
+      document.dispatchEvent(
+        new KeyboardEvent('keydown', {key: 'Escape', bubbles: true})
+      );
+      await element.updateComplete;
+      expect(locators.citationPopover).toHaveClass('hidden');
+    });
+
+    it('should not close popover on other key presses', async () => {
+      const {element, locators} = await renderComponent();
+
+      locators.citationLink?.focus();
+      await element.updateComplete;
+      expect(locators.citationPopover).toHaveClass('desktop-only:flex');
+
+      document.dispatchEvent(
+        new KeyboardEvent('keydown', {key: 'Enter', bubbles: true})
+      );
+      await element.updateComplete;
+      expect(locators.citationPopover).toHaveClass('desktop-only:flex');
+    });
+
     it('should open popover on mouseover after delay', async () => {
       vi.useFakeTimers();
       const {element, locators} = await renderComponent();
