@@ -1,7 +1,9 @@
 <template>
   <div class="slds-grid feedback__main-section">
-    <span class="slds-var-p-right_small slds-text-color_weak feedback__question"
-      id="feedback__question">{question}</span>
+    <template if:true={question}>
+      <span class="slds-var-p-right_small slds-text-color_weak feedback__question"
+        id="feedback__question">{question}</span>
+    </template>
     <c-quantic-stateful-button selected={liked} data-testid="feedback__like-button" tooltip={likeLabel}
       icon-name={likeIconName} onquantic__select={handleLike} onquantic__deselect={handleLike} without-borders selected-state-color="#2e844a"
       label={likeButtonLabel} icon-size={size}></c-quantic-stateful-button>

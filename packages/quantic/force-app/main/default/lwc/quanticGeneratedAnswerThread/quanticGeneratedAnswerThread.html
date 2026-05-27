@@ -1,0 +1,48 @@
+<template>
+  <template lwc:if={visibleAnswers.length}>
+    <ul class="slds-var-m-top_medium">
+      <template lwc:if={shouldShowPreviousAnswersButton}>
+        <li class="slds-grid slds-grid_vertical slds-size_1-of-1">
+          <div class="slds-grid slds-grid_vertical-align-center slds-size_1-of-1">
+            <div
+              class="thread-row__timeline-marker slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-shrink-none"
+            >
+              <span class="thread-row__timeline-dot" aria-hidden="true"></span>
+            </div>
+            <div class="slds-col slds-grid slds-grid_vertical">
+              <button
+                type="button"
+                class="slds-button_reset slds-text-align_left slds-var-p-horizontal_x-small slds-var-p-vertical_x-small thread-row__button"
+                onclick={handleShowAllClick}
+              >
+                <span class="slds-text-body_regular">{showPreviousQuestionsLabel}</span>
+              </button>
+            </div>
+          </div>
+          <div class="slds-grid slds-size_1-of-1 thread-row__body-row">
+            <div class="thread-row__timeline-marker slds-shrink-none">
+              <span class="thread-row__timeline-line" aria-hidden="true"></span>
+            </div>
+          </div>
+        </li>
+      </template>
+
+      <template for:each={visibleAnswers} for:item="answer">
+        <c-quantic-generated-answer-thread-item
+          key={answer.key}
+          title={answer.question}
+          hide-line={answer.hideLine}
+          disable-collapse={answer.disableCollapse}
+          is-expanded={answer.isExpanded}
+          show-timeline-dot={answer.showTimelineDot}
+        >
+          <c-quantic-generated-answer-body
+            engine-id={engineId}
+            generated-answer={answer}
+            disable-citation-anchoring={disableCitationAnchoring}
+          ></c-quantic-generated-answer-body>
+        </c-quantic-generated-answer-thread-item>
+      </template>
+    </ul>
+  </template>
+</template>

@@ -1,0 +1,45 @@
+<template>
+  <li class="slds-grid slds-grid_vertical slds-size_1-of-1">
+    <div class="slds-grid slds-grid_vertical-align-center slds-size_1-of-1">
+      <div
+        class="thread-item__timeline-marker slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-shrink-none"
+      >
+        <template lwc:if={showTimelineDot}>
+          <span class={timelineDotClass} aria-hidden="true"></span>
+        </template>
+      </div>
+
+      <div class="slds-col slds-grid slds-grid_vertical">
+        <template lwc:if={isCollapsible}>
+          <button
+            type="button"
+            class={titleButtonClass}
+            aria-expanded={isContentVisible}
+            onclick={handleTitleClick}
+          >
+            <span class={titleClass}>{title}</span>
+          </button>
+        </template>
+        <template lwc:else>
+          <span class={titleClass}>{title}</span>
+        </template>
+      </div>
+    </div>
+
+    <div class={bodyRowClass}>
+      <div class="thread-item__timeline-marker slds-shrink-none">
+        <template lwc:if={shouldShowLine}>
+          <span class="thread-item__timeline-line" aria-hidden="true"></span>
+        </template>
+      </div>
+
+      <div
+        class="slds-col slds-var-p-vertical_x-small"
+        hidden={isContentHidden}
+        aria-hidden={isContentHidden}
+      >
+        <slot></slot>
+      </div>
+    </div>
+  </li>
+</template>

@@ -52,6 +52,7 @@ jest.mock(
 const defaultOptions = {
   fieldsToIncludeInCitations: 'sfid,sfkbid,sfkavid,filetype',
   answerConfigurationId: undefined,
+  agentId: undefined,
   withToggle: false,
   collapsible: false,
   maxCollapsedHeight: 250,
@@ -78,7 +79,7 @@ const selectors = {
   generatedAnswerRetryButton: '[data-testid="generated-answer__retry-button"]',
   generatedAnswerActions: '[data-testid="generated-answer__actions"]',
   generatedAnswerToggleButton: 'c-quantic-generated-answer-toggle',
-  generatedAnswerContent: 'c-quantic-generated-answer-content',
+  generatedAnswerBody: 'c-quantic-generated-answer-body',
   generatingMessageWhenAnswerCollapsed:
     '[data-testid="generated-answer__collapse-generating-message"]',
   generatedAnswerCollapseToggle:
@@ -88,7 +89,6 @@ const selectors = {
     '[data-testid="generated-answer__no-answer-card"]',
   generatedAnswerNoAnswerMessage:
     '[data-testid="generated-answer__no-answer-message"]',
-  generatedAnswerCitations: 'c-quantic-source-citations',
   loadingSpinner: 'lightning-spinner',
 };
 
@@ -333,6 +333,40 @@ describe('c-quantic-generated-answer', () => {
         );
       });
     });
+
+    describe('when the agent id property is passed to the component', () => {
+      it('should initialize the controller with the correct agent id value', async () => {
+        const exampleAgentIdValue = 'exampleAgentId';
+        createTestComponent({
+          ...defaultOptions,
+          agentId: exampleAgentIdValue,
+        });
+        await flushPromises();
+
+        expect(functionsMocks.buildGeneratedAnswer).toHaveBeenCalledTimes(1);
+        expect(functionsMocks.buildGeneratedAnswer).toHaveBeenCalledWith(
+          exampleEngine,
+          expect.objectContaining({
+            agentId: exampleAgentIdValue,
+          })
+        );
+      });
+    });
+
+    describe('when the agent id property is not passed to the component', () => {
+      it('should initialize the controller without the agent id value', async () => {
+        createTestComponent();
+        await flushPromises();
+
+        expect(functionsMocks.buildGeneratedAnswer).toHaveBeenCalledTimes(1);
+        expect(functionsMocks.buildGeneratedAnswer).toHaveBeenCalledWith(
+          exampleEngine,
+          expect.not.objectContaining({
+            agentId: expect.any(String),
+          })
+        );
+      });
+    });
   });
 
   describe('the rendering of the generated answer', () => {
@@ -444,23 +478,23 @@ describe('c-quantic-generated-answer', () => {
         });
       });
 
-      it('should display the generated answer content', async () => {
+      it('should display the generated answer body', async () => {
         const element = createTestComponent();
         await flushPromises();
 
-        const generatedAnswerContent = element.shadowRoot.querySelector(
-          selectors.generatedAnswerContent
+        const generatedAnswerBody = element.shadowRoot.querySelector(
+          selectors.generatedAnswerBody
         );
 
-        expect(generatedAnswerContent).not.toBeNull();
-        expect(generatedAnswerContent.isStreaming).toBe(true);
-        expect(generatedAnswerContent.answer).toBe(exampleAnswer);
-        expect(generatedAnswerContent.answerContentFormat).toBe(
+        expect(generatedAnswerBody).not.toBeNull();
+        expect(generatedAnswerBody.generatedAnswer.answer).toBe(exampleAnswer);
+        expect(generatedAnswerBody.generatedAnswer.answerContentFormat).toBe(
           exampleAnswerContentFormat
         );
+        expect(generatedAnswerBody.generatedAnswer.isStreaming).toBe(true);
       });
 
-      it('should not display the generated answer actions', async () => {
+      it('should not pass the generated answer actions through body component', async () => {
         const element = createTestComponent();
         await flushPromises();
 
@@ -707,31 +741,32 @@ describe('c-quantic-generated-answer', () => {
         });
       });
 
-      it('should display the generated answer content', async () => {
+      it('should display the generated answer body', async () => {
         const element = createTestComponent();
         await flushPromises();
 
-        const generatedAnswerContent = element.shadowRoot.querySelector(
-          selectors.generatedAnswerContent
+        const generatedAnswerBody = element.shadowRoot.querySelector(
+          selectors.generatedAnswerBody
         );
 
-        expect(generatedAnswerContent).not.toBeNull();
-        expect(generatedAnswerContent.isStreaming).toBe(false);
-        expect(generatedAnswerContent.answer).toBe(exampleAnswer);
-        expect(generatedAnswerContent.answerContentFormat).toBe(
+        expect(generatedAnswerBody).not.toBeNull();
+        expect(generatedAnswerBody.generatedAnswer.answer).toBe(exampleAnswer);
+        expect(generatedAnswerBody.generatedAnswer.answerContentFormat).toBe(
           exampleAnswerContentFormat
         );
+        expect(generatedAnswerBody.generatedAnswer.isStreaming).toBe(false);
       });
 
-      it('should display the generated answer actions', async () => {
+      it('should display the generated answer actions through body component', async () => {
         const element = createTestComponent();
         await flushPromises();
 
-        const generatedAnswerActions = element.shadowRoot.querySelector(
-          selectors.generatedAnswerActions
+        const generatedAnswerBody = element.shadowRoot.querySelector(
+          selectors.generatedAnswerBody
         );
 
-        expect(generatedAnswerActions).not.toBeNull();
+        expect(generatedAnswerBody).not.toBeNull();
+        expect(generatedAnswerBody.engineId).toBe(defaultOptions.engineId);
       });
 
       it('should not display the generated answer disclaimer', async () => {
@@ -745,15 +780,15 @@ describe('c-quantic-generated-answer', () => {
         expect(generatedAnswerDisclaimer).not.toBeNull();
       });
 
-      it('should pass the disableCitationAnchoring property to the source citations component', async () => {
+      it('should pass the disableCitationAnchoring property to the generated answer body', async () => {
         const element = createTestComponent();
         await flushPromises();
 
-        const generatedAnswerCitations = element.shadowRoot.querySelector(
-          selectors.generatedAnswerCitations
+        const generatedAnswerBody = element.shadowRoot.querySelector(
+          selectors.generatedAnswerBody
         );
-        expect(generatedAnswerCitations).not.toBeNull();
-        expect(generatedAnswerCitations.disableCitationAnchoring).toBe(false);
+        expect(generatedAnswerBody).not.toBeNull();
+        expect(generatedAnswerBody.disableCitationAnchoring).toBe(false);
       });
     });
 
