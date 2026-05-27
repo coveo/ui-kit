@@ -10,6 +10,7 @@ export {
 export {
   COVERED_CRITERIA as DIALOG_COVERED_CRITERIA,
   testDialogA11y,
+  type DialogA11yOptions,
 } from './dialog.js';
 export {
   COVERED_CRITERIA as RADIOGROUP_COVERED_CRITERIA,
