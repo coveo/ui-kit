@@ -110,9 +110,11 @@ export class AtomicInsightTab
           style: 'text-transparent',
           part: 'tab',
           class: this.tabState.isActive ? 'active' : '',
+          role: 'tab',
+          ariaSelected: this.tabState.isActive ? 'true' : 'false',
           ariaLabel: this.bindings.i18n.t('tab-search', {label: this.label}),
           title: this.label,
-          ariaPressed: this.tabState.isActive ? 'true' : 'false',
+          tabIndex: this.tabState.isActive ? 0 : -1,
           onClick: () => {
             this.tab.select();
           },

@@ -39,13 +39,12 @@ export class AtomicTabButton
 
   connectedCallback() {
     super.connectedCallback();
-    this.setAttribute('role', 'listitem');
+    this.setAttribute('role', 'presentation');
     this.updateHostClasses();
   }
 
   updated(changedProperties: PropertyValues<this>) {
     if (changedProperties.has('active')) {
-      this.setAttribute('aria-current', this.active ? 'true' : 'false');
       this.setAttribute(
         'part',
         this.active ? 'button-container-active' : 'button-container'
@@ -88,6 +87,9 @@ export class AtomicTabButton
           style: 'text-transparent',
           class: buttonClasses,
           part: this.active ? 'tab-button-active' : 'tab-button',
+          role: 'tab',
+          ariaSelected: this.active ? 'true' : 'false',
+          tabIndex: this.active ? 0 : -1,
           onClick: this.select,
         },
       })(html`${this.label}`)}

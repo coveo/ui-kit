@@ -121,10 +121,11 @@ export class AtomicTabManager
         exportparts="popover-button, value-label, arrow-icon, backdrop, overflow-tabs, popover-tab"
       >
         <div
-          role="list"
+          role="tablist"
           aria-label="tab-area"
           part="tab-area"
           class="border-neutral mb-2 flex w-full flex-row border-b"
+          @keydown=${this.handleTablistKeydown}
         >
           ${this.tabs.map((tab) => {
             const isActive = this.tabManagerState.activeTab === tab.name;
@@ -143,6 +144,34 @@ export class AtomicTabManager
         </div>
       </atomic-tab-bar>
     `;
+  }
+
+  private handleTablistKeydown(event: KeyboardEvent) {
+    const tabs = Array.from(
+      (event.currentTarget as HTMLElement).querySelectorAll<HTMLElement>(
+        '[role="tab"]'
+      )
+    );
+    const currentIndex = tabs.indexOf(event.target as HTMLElement);
+    if (currentIndex === -1) {
+      return;
+    }
+
+    let nextIndex: number | null = null;
+    if (event.key === 'ArrowRight') {
+      nextIndex = (currentIndex + 1) % tabs.length;
+    } else if (event.key === 'ArrowLeft') {
+      nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+    } else if (event.key === 'Home') {
+      nextIndex = 0;
+    } else if (event.key === 'End') {
+      nextIndex = tabs.length - 1;
+    }
+
+    if (nextIndex !== null) {
+      event.preventDefault();
+      tabs[nextIndex].focus();
+    }
   }
 }
 

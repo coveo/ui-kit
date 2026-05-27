@@ -5,6 +5,7 @@ import type {
 } from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {testTabsA11y} from '@/storybook-utils/a11y/tabs.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -64,3 +65,11 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {};
+
+export const A11yTabs: Story = {
+  tags: ['a11y', 'test'],
+  play: async (context) => {
+    await play(context);
+    await testTabsA11y(context);
+  },
+};

@@ -29,8 +29,38 @@ export class AtomicInsightTabs
   @errorGuard()
   protected render() {
     return html`<atomic-tab-bar
-      >${this.renderDefaultSlotContent()}</atomic-tab-bar
+      ><div role="tablist" @keydown=${this.handleTablistKeydown}>
+        ${this.renderDefaultSlotContent()}
+      </div></atomic-tab-bar
     >`;
+  }
+
+  private handleTablistKeydown(event: KeyboardEvent) {
+    const tabs = Array.from(
+      (event.currentTarget as HTMLElement).querySelectorAll<HTMLElement>(
+        '[role="tab"]'
+      )
+    );
+    const currentIndex = tabs.indexOf(event.target as HTMLElement);
+    if (currentIndex === -1) {
+      return;
+    }
+
+    let nextIndex: number | null = null;
+    if (event.key === 'ArrowRight') {
+      nextIndex = (currentIndex + 1) % tabs.length;
+    } else if (event.key === 'ArrowLeft') {
+      nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+    } else if (event.key === 'Home') {
+      nextIndex = 0;
+    } else if (event.key === 'End') {
+      nextIndex = tabs.length - 1;
+    }
+
+    if (nextIndex !== null) {
+      event.preventDefault();
+      tabs[nextIndex].focus();
+    }
   }
 }
 
