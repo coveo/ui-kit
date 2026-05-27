@@ -1,4 +1,4 @@
-import {readdirSync, readFileSync, rmSync} from 'node:fs';
+import {readdirSync, readFileSync} from 'node:fs';
 import {createRequire} from 'node:module';
 import path, {dirname, relative, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
