@@ -73,8 +73,11 @@ function createTestComponent(options = defaultOptions, assignedElements = []) {
 const selectors = {
   initializationError: 'c-quantic-component-error',
   generatedAnswerCard: '[data-testid="generated-answer__card"]',
+  generatedAnswerHeader: '[data-testid="generated-answer__header"]',
+  generatedAnswerBody: '[data-testid="generated-answer__body"]',
+  generatedAnswerFooter: '[data-testid="generated-answer__footer"]',
   generatedAnswer: '[data-testid="generated-answer__answer"]',
-  generatedAnswerBadge: '[data-testid="generated-answer__badge"]',
+  generatedAnswerBadge: '[data-testid="generated-answer__header-title"]',
   generatedAnswerRetryButton: '[data-testid="generated-answer__retry-button"]',
   generatedAnswerActions: '[data-testid="generated-answer__actions"]',
   generatedAnswerToggleButton: 'c-quantic-generated-answer-toggle',
@@ -471,7 +474,7 @@ describe('c-quantic-generated-answer', () => {
         expect(generatedAnswerActions).toBeNull();
       });
 
-      it('should not display the generated answer disclaimer', async () => {
+      it('should not display the generated answer disclaimer in the footer', async () => {
         const element = createTestComponent();
         await flushPromises();
 
@@ -727,22 +730,48 @@ describe('c-quantic-generated-answer', () => {
         const element = createTestComponent();
         await flushPromises();
 
+        const generatedAnswerBody = element.shadowRoot.querySelector(
+          selectors.generatedAnswerBody
+        );
         const generatedAnswerActions = element.shadowRoot.querySelector(
           selectors.generatedAnswerActions
         );
 
+        expect(generatedAnswerBody).not.toBeNull();
         expect(generatedAnswerActions).not.toBeNull();
+        expect(generatedAnswerActions.closest('section')).toBe(
+          generatedAnswerBody
+        );
       });
 
-      it('should not display the generated answer disclaimer', async () => {
+      it('should display the generated answer disclaimer', async () => {
         const element = createTestComponent();
         await flushPromises();
 
+        const generatedAnswerFooter = element.shadowRoot.querySelector(
+          selectors.generatedAnswerFooter
+        );
         const generatedAnswerDisclaimer = element.shadowRoot.querySelector(
           selectors.generatedAnswerDisclaimer
         );
 
+        expect(generatedAnswerFooter).not.toBeNull();
         expect(generatedAnswerDisclaimer).not.toBeNull();
+      });
+
+      it('should display the generated answer header content', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const generatedAnswerHeader = element.shadowRoot.querySelector(
+          selectors.generatedAnswerHeader
+        );
+        const generatedAnswerBadge = element.shadowRoot.querySelector(
+          selectors.generatedAnswerBadge
+        );
+
+        expect(generatedAnswerHeader).not.toBeNull();
+        expect(generatedAnswerBadge).not.toBeNull();
       });
 
       it('should pass the disableCitationAnchoring property to the source citations component', async () => {
