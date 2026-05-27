@@ -1,6 +1,6 @@
 import type {StoryContext} from '@storybook/web-components-vite';
 import {within} from 'shadow-dom-testing-library';
-import {expect, userEvent, waitFor} from 'storybook/test';
+import {expect, waitFor} from 'storybook/test';
 
 /**
  * WCAG 2.2 AA criteria covered by tabs interaction tests.
@@ -11,6 +11,16 @@ import {expect, userEvent, waitFor} from 'storybook/test';
  * @see https://www.w3.org/TR/WCAG22/#keyboard — WCAG 2.2 SC 2.1.1 Keyboard (Level A)
  */
 export const COVERED_CRITERIA = ['2.1.1'] as const;
+
+function getDeepActiveElement(element: Element | null): Element | null {
+  if (!element) {
+    return null;
+  }
+  if (element.shadowRoot?.activeElement) {
+    return getDeepActiveElement(element.shadowRoot.activeElement);
+  }
+  return element;
+}
 
 function getActiveTab(
   tabs: HTMLElement[],
@@ -25,12 +35,11 @@ function getActiveTab(
     }
   }
 
-  const docActive = canvasElement.ownerDocument.activeElement;
-  if (docActive?.shadowRoot) {
-    const shadowActive = docActive.shadowRoot.activeElement;
-    if (shadowActive && tabs.includes(shadowActive as HTMLElement)) {
-      return shadowActive as HTMLElement;
-    }
+  const deepActive = getDeepActiveElement(
+    canvasElement.ownerDocument.activeElement
+  );
+  if (deepActive && tabs.includes(deepActive as HTMLElement)) {
+    return deepActive as HTMLElement;
   }
 
   return null;
@@ -108,7 +117,13 @@ export async function testTabsA11y(context: StoryContext): Promise<void> {
         {timeout: 3000}
       );
 
-      await userEvent.keyboard('{ArrowRight}');
+      firstTab.dispatchEvent(
+        new KeyboardEvent('keydown', {
+          key: 'ArrowRight',
+          bubbles: true,
+          composed: true,
+        })
+      );
 
       await waitFor(
         () => {
@@ -131,7 +146,13 @@ export async function testTabsA11y(context: StoryContext): Promise<void> {
         {timeout: 3000}
       );
 
-      await userEvent.keyboard('{ArrowLeft}');
+      secondTab.dispatchEvent(
+        new KeyboardEvent('keydown', {
+          key: 'ArrowLeft',
+          bubbles: true,
+          composed: true,
+        })
+      );
 
       await waitFor(
         () => {
