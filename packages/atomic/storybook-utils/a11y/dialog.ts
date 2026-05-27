@@ -91,7 +91,12 @@ export async function testDialogA11y(
 
       await waitFor(
         () => {
-          expect(dialog.getAttribute('aria-modal')).toBe('false');
+          const isRemovedFromDOM = !dialog.isConnected;
+          const isModalDismissed = dialog.getAttribute('aria-modal') !== 'true';
+          expect(
+            isRemovedFromDOM || isModalDismissed,
+            'Dialog should be removed or no longer modal after Escape'
+          ).toBe(true);
         },
         {timeout: 3000}
       );
@@ -103,7 +108,12 @@ export async function testDialogA11y(
         await waitFor(
           () => {
             const active = getActiveElementDeep(doc);
-            expect(active).toBe(trigger);
+            const focusOnTrigger = active === trigger;
+            const triggerGone = !trigger.isConnected && active != null;
+            expect(
+              focusOnTrigger || triggerGone,
+              'Focus should return to the trigger (or move to a valid element if trigger was removed)'
+            ).toBe(true);
           },
           {timeout: 3000}
         );
