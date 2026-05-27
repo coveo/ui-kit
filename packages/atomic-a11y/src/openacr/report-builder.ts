@@ -71,7 +71,6 @@ function buildInteractiveAggregates(
       const aggregate = aggregates.get(criterionId) ?? {
         coveredComponents: new Set<string>(),
         passedComponents: new Set<string>(),
-        failedComponents: new Set<string>(),
       };
 
       aggregate.coveredComponents.add(component.name);
@@ -152,9 +151,6 @@ function buildOpenAcrCriteria(
     const interactiveCoveredComponents = [
       ...(interactiveAggregate?.coveredComponents ?? []),
     ].sort(compareByNumericId);
-    const interactiveFailedComponents = [
-      ...(interactiveAggregate?.failedComponents ?? []),
-    ].sort(compareByNumericId);
 
     const conformanceContext = {
       criterion: criterionFromReport,
@@ -172,7 +168,6 @@ function buildOpenAcrCriteria(
       coveredComponents,
       violatingComponents,
       interactiveCoveredComponents,
-      interactiveFailedComponents,
     });
 
     criteriaByChapter[definition.chapterId].push({
@@ -215,7 +210,7 @@ export function buildOpenAcrReport(
   );
 
   const successNotes =
-    'Conformance is based on automated Storybook + axe-core output, Interactive keyboard testing, and pending manual validation.';
+    'Conformance is based on automated Storybook + axe-core output, interactive keyboard testing, and pending manual validation.';
 
   return {
     title: DEFAULT_REPORT_TITLE,

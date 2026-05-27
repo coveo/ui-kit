@@ -27,7 +27,6 @@ interface RemarksContext extends ConformanceContext {
   coveredComponents: string[];
   violatingComponents: string[];
   interactiveCoveredComponents: string[];
-  interactiveFailedComponents: string[];
 }
 
 function mapCriterionConformance(
@@ -141,7 +140,6 @@ export function buildRemarks(context: RemarksContext): string {
     coveredComponents,
     violatingComponents,
     interactiveCoveredComponents,
-    interactiveFailedComponents,
     manualAggregates,
     override,
   } = context;

@@ -19,7 +19,6 @@ export interface CriterionAggregate {
 export interface InteractiveAggregate {
   coveredComponents: Set<string>;
   passedComponents: Set<string>;
-  failedComponents: Set<string>;
 }
 
 export interface A11yOverrideEntry {
