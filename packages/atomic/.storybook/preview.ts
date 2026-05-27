@@ -6,6 +6,7 @@ import {initialize, mswLoader} from 'msw-storybook-addon';
 import {within} from 'shadow-dom-testing-library';
 import {create} from 'storybook/theming';
 import customElements from '../custom-elements.json';
+import {runUniversalA11yTests} from '../storybook-utils/a11y/universal.js';
 import {COVEO_PRIMARY, FONT_BASE, FONT_CODE} from './theme';
 
 // For CDN builds, we want to use the "true" lib hosted on our CDN instead of bundling it through
@@ -102,6 +103,15 @@ const preview: Preview = {
   },
   beforeEach({canvasElement, canvas}) {
     Object.assign(canvas, {...within(canvasElement)});
+  },
+  afterEach(context) {
+    if (
+      import.meta.env.VITE_A11Y_UNIVERSAL !== 'true' &&
+      !context.tags?.includes('a11y-universal')
+    ) {
+      return;
+    }
+    return runUniversalA11yTests(context);
   },
 };
 
