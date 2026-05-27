@@ -12,6 +12,7 @@ export {
   testDialogA11y,
 } from './dialog.js';
 export {
+<<<<<<< a11y-tabs-agp-pattern
   COVERED_CRITERIA as LISTBOX_COVERED_CRITERIA,
   testListboxA11y,
 } from './listbox.js';
@@ -20,3 +21,9 @@ export {
   testTabsA11y,
 } from './tabs.js';
 export type {InteractiveA11yOptions} from './types.js';
+=======
+  COVERED_CRITERIA as RADIOGROUP_COVERED_CRITERIA,
+  testRadioGroupA11y,
+  type RadioGroupA11yOptions,
+} from './radiogroup.js';
+>>>>>>> main
