@@ -29,15 +29,13 @@ export interface ButtonProps {
     | 'toolbar'
     | 'listitem'
     | 'list'
-    | 'separator'
-    | 'tab';
+    | 'separator';
   disabled?: boolean;
   ariaLabel?: string;
   ariaExpanded?: 'true' | 'false';
   ariaPressed?: 'true' | 'false' | 'mixed';
   ariaChecked?: 'true' | 'false' | 'mixed';
   ariaCurrent?: 'page' | 'false';
-  ariaSelected?: 'true' | 'false';
   ariaControls?: string;
   ariaHidden?: 'true' | 'false';
   tabIndex?: number;
@@ -64,7 +62,6 @@ export const renderButton: FunctionalComponentWithChildren<ButtonProps> =
       aria-hidden=${ifDefined(props.ariaHidden)}
       aria-expanded=${ifDefined(props.ariaExpanded)}
       aria-current=${ifDefined(props.ariaCurrent)}
-      aria-selected=${ifDefined(props.ariaSelected)}
       aria-controls=${ifDefined(props.ariaControls)}
       aria-checked=${ifDefined(props.ariaChecked)}
       @mousedown=${(e: MouseEvent) => createRipple(e, {color: rippleColor})}

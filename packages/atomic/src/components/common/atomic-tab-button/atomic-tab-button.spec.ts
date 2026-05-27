@@ -22,7 +22,7 @@ describe('atomic-tab-button', () => {
 
     return {
       element,
-      button: element.querySelector('button'),
+      tabContent: element.querySelector('[part^="tab-button"]'),
     };
   };
 
@@ -32,24 +32,29 @@ describe('atomic-tab-button', () => {
   });
 
   it('should render the label text', async () => {
-    const {button} = await renderTabButton({label: 'Products'});
-    expect(button).toHaveTextContent('Products');
+    const {element} = await renderTabButton({label: 'Products'});
+    expect(element).toHaveTextContent('Products');
   });
 
-  it('should render with presentation role on host element', async () => {
+  it('should render with tab role on host element', async () => {
     const {element} = await renderTabButton();
-    expect(element).toHaveAttribute('role', 'presentation');
+    expect(element).toHaveAttribute('role', 'tab');
   });
 
   describe('when active is false', () => {
-    it('should set aria-selected to false on button', async () => {
-      const {button} = await renderTabButton({active: false});
-      expect(button).toHaveAttribute('aria-selected', 'false');
+    it('should set aria-selected to false on host', async () => {
+      const {element} = await renderTabButton({active: false});
+      expect(element).toHaveAttribute('aria-selected', 'false');
     });
 
-    it('should have tab-button part on button', async () => {
-      const {button} = await renderTabButton({active: false});
-      expect(button).toHaveAttribute('part', 'tab-button');
+    it('should not be in the tab order', async () => {
+      const {element} = await renderTabButton({active: false});
+      expect(element).toHaveAttribute('tabindex', '-1');
+    });
+
+    it('should have tab-button part on tab content', async () => {
+      const {tabContent} = await renderTabButton({active: false});
+      expect(tabContent).toHaveAttribute('part', 'tab-button');
     });
 
     it('should not have active indicator classes on host', async () => {
@@ -58,21 +63,26 @@ describe('atomic-tab-button', () => {
       expect(element.className).not.toContain('after:bg-primary');
     });
 
-    it('should have text-neutral-dark class on button', async () => {
-      const {button} = await renderTabButton({active: false});
-      expect(button.className).toContain('text-neutral-dark');
+    it('should have text-neutral-dark class on host', async () => {
+      const {element} = await renderTabButton({active: false});
+      expect(element.className).toContain('text-neutral-dark');
     });
   });
 
   describe('when active is true', () => {
-    it('should set aria-selected to true on button', async () => {
-      const {button} = await renderTabButton({active: true});
-      expect(button).toHaveAttribute('aria-selected', 'true');
+    it('should set aria-selected to true on host', async () => {
+      const {element} = await renderTabButton({active: true});
+      expect(element).toHaveAttribute('aria-selected', 'true');
     });
 
-    it('should have tab-button-active part on button', async () => {
-      const {button} = await renderTabButton({active: true});
-      expect(button).toHaveAttribute('part', 'tab-button-active');
+    it('should be in the tab order', async () => {
+      const {element} = await renderTabButton({active: true});
+      expect(element).toHaveAttribute('tabindex', '0');
+    });
+
+    it('should have tab-button-active part on tab content', async () => {
+      const {tabContent} = await renderTabButton({active: true});
+      expect(tabContent).toHaveAttribute('part', 'tab-button-active');
     });
 
     it('should have active indicator classes on host', async () => {
@@ -82,17 +92,26 @@ describe('atomic-tab-button', () => {
       expect(element.className).toContain('relative');
     });
 
-    it('should not have text-neutral-dark class on button', async () => {
-      const {button} = await renderTabButton({active: true});
-      expect(button.className).not.toContain('text-neutral-dark');
+    it('should not have text-neutral-dark class on host', async () => {
+      const {element} = await renderTabButton({active: true});
+      expect(element.className).not.toContain('text-neutral-dark');
     });
   });
 
-  it('should call select when button is clicked', async () => {
+  it('should call select when host is clicked', async () => {
     const selectFn = vi.fn();
-    const {button} = await renderTabButton({select: selectFn});
+    const {element} = await renderTabButton({select: selectFn});
 
-    button.click();
+    element.click();
+
+    expect(selectFn).toHaveBeenCalledOnce();
+  });
+
+  it('should call select when pressing Enter', async () => {
+    const selectFn = vi.fn();
+    const {element} = await renderTabButton({select: selectFn});
+
+    element.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
 
     expect(selectFn).toHaveBeenCalledOnce();
   });
