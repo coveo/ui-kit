@@ -127,7 +127,7 @@
     "msw-storybook-addon": "2.0.7",
     "natural-orderby": "5.0.0",
     "playwright": "catalog:",
-    "postcss": "8.5.14",
+    "postcss": "8.5.15",
     "postcss-load-config": "6.0.1",
     "prettier": "catalog:",
     "puppeteer": "catalog:",

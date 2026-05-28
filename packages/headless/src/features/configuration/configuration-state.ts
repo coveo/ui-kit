@@ -60,7 +60,7 @@ interface SearchState {
    */
   apiBaseUrl?: string;
   /**
-   * The locale of the current user. Must comply with IETF’s BCP 47 definition: https://www.rfc-editor.org/rfc/bcp/bcp47.txt.
+   * The locale of the current user. Must comply with IETF’s BCP 47 definition: https://www.rfc-editor.org/info/bcp47.
    */
   locale: string;
   /**
