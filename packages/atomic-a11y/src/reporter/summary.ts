@@ -28,6 +28,17 @@ export function createSummary(
     (criterion) => criterion.interactiveStatus !== undefined
   ).length;
 
+  const supports = criteria.filter((c) => c.conformance === 'supports').length;
+  const partiallySupports = criteria.filter(
+    (c) => c.conformance === 'partiallySupports'
+  ).length;
+  const doesNotSupport = criteria.filter(
+    (c) => c.conformance === 'doesNotSupport'
+  ).length;
+  const notApplicable = criteria.filter(
+    (c) => c.conformance === 'notApplicable'
+  ).length;
+
   return {
     totalComponents: components.length,
     storyCoverage: {
@@ -36,11 +47,16 @@ export function createSummary(
       excludedFromA11y: 0,
     },
     totalCriteria,
-    supports: 0,
-    partiallySupports: 0,
-    doesNotSupport: 0,
-    notApplicable: 0,
-    notEvaluated: totalCriteria,
+    supports,
+    partiallySupports,
+    doesNotSupport,
+    notApplicable,
+    notEvaluated:
+      totalCriteria -
+      supports -
+      partiallySupports -
+      doesNotSupport -
+      notApplicable,
     automatedCoverage: getAutomationCoveragePercentage(
       automatedCoveredCriteria,
       totalCriteria

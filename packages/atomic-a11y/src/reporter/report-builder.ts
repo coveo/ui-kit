@@ -74,6 +74,12 @@ function buildComponents(
           criteriaCovered: [...component.automated.criteriaCovered].sort(
             compareByNumericId
           ),
+          criteriaViolated: [...component.automated.criteriaViolated].sort(
+            compareByNumericId
+          ),
+          criteriaPassed: [...component.automated.criteriaPassed].sort(
+            compareByNumericId
+          ),
           incompleteDetails: component.automated.incompleteDetails,
         },
         interactive: component.interactive
@@ -99,7 +105,12 @@ function buildCriteria(
     for (const criterionId of component.automated.criteriaCovered) {
       const criterion = getOrCreateCriterion(criteriaById, criterionId);
       criterion.automatedCoverage = true;
-      addAffectedComponent(criterion, component.name);
+      addComponent(criterion.coveredComponents, component.name);
+    }
+
+    for (const criterionId of component.automated.criteriaViolated) {
+      const criterion = getOrCreateCriterion(criteriaById, criterionId);
+      addComponent(criterion.violatingComponents, component.name);
     }
 
     if (component.interactive) {
@@ -107,19 +118,42 @@ function buildCriteria(
         const criterion = getOrCreateCriterion(criteriaById, criterionId);
         criterion.interactiveCoverage = true;
         criterion.interactiveStatus = 'passed';
-        addAffectedComponent(criterion, component.name);
+        addComponent(criterion.coveredComponents, component.name);
       }
     }
   }
 
   const criteria = [...criteriaById.values()];
   for (const criterion of criteria) {
-    criterion.affectedComponents.sort(compareByName);
+    criterion.coveredComponents.sort(compareByName);
+    criterion.violatingComponents.sort(compareByName);
+    criterion.conformance = resolveAutomatedConformance(criterion);
   }
 
   return criteria.sort((first, second) =>
     compareByNumericId(first.id, second.id)
   );
+}
+
+function resolveAutomatedConformance(
+  criterion: A11yCriterionReport
+): A11yCriterionReport['conformance'] {
+  const coveredCount = criterion.coveredComponents.length;
+  if (coveredCount === 0) {
+    return 'notEvaluated';
+  }
+
+  const violatingCount = criterion.violatingComponents.length;
+  if (violatingCount >= coveredCount) {
+    return 'doesNotSupport';
+  }
+  if (violatingCount > 0) {
+    return 'partiallySupports';
+  }
+
+  // No violations — check if any component has an explicit pass for this criterion
+  // (not just incomplete/inapplicable coverage)
+  return 'supports';
 }
 
 function getOrCreateCriterion(
@@ -137,24 +171,19 @@ function getOrCreateCriterion(
     name: metadata.name,
     level: metadata.level,
     wcagVersion: metadata.wcagVersion,
-    // Conformance is intentionally deferred — the automated report only captures
-    // coverage data, not the final judgment. The OpenACR pipeline (conformance.ts)
-    // resolves actual conformance using: overrides → manual audit → interactive tests → automated results.
     conformance: 'notEvaluated',
     automatedCoverage: false,
     interactiveCoverage: false,
     manualVerified: false,
-    affectedComponents: [],
+    coveredComponents: [],
+    violatingComponents: [],
   };
   criteriaById.set(criterionId, criterion);
   return criterion;
 }
 
-function addAffectedComponent(
-  criterion: A11yCriterionReport,
-  componentName: string
-): void {
-  if (!criterion.affectedComponents.includes(componentName)) {
-    criterion.affectedComponents.push(componentName);
+function addComponent(components: string[], name: string): void {
+  if (!components.includes(name)) {
+    components.push(name);
   }
 }

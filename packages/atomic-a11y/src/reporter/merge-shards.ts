@@ -21,9 +21,11 @@ interface MergeShardOptions {
 
 interface MutableAutomatedResults extends Omit<
   A11yAutomatedResults,
-  'criteriaCovered'
+  'criteriaCovered' | 'criteriaViolated' | 'criteriaPassed'
 > {
   criteriaCovered: Set<string>;
+  criteriaViolated: Set<string>;
+  criteriaPassed: Set<string>;
 }
 
 interface MutableInteractiveResults extends Omit<
@@ -43,9 +45,10 @@ interface MutableComponentReport extends Omit<
 
 interface MutableCriterionReport extends Omit<
   A11yCriterionReport,
-  'affectedComponents'
+  'coveredComponents' | 'violatingComponents'
 > {
-  affectedComponents: Set<string>;
+  coveredComponents: Set<string>;
+  violatingComponents: Set<string>;
 }
 
 function toMutableComponent(
@@ -56,6 +59,8 @@ function toMutableComponent(
     automated: {
       ...component.automated,
       criteriaCovered: new Set(component.automated.criteriaCovered),
+      criteriaViolated: new Set(component.automated.criteriaViolated),
+      criteriaPassed: new Set(component.automated.criteriaPassed),
       incompleteDetails: [...component.automated.incompleteDetails],
     },
     interactive: component.interactive
@@ -72,7 +77,8 @@ function toMutableCriterion(
 ): MutableCriterionReport {
   return {
     ...criterion,
-    affectedComponents: new Set(criterion.affectedComponents),
+    coveredComponents: new Set(criterion.coveredComponents),
+    violatingComponents: new Set(criterion.violatingComponents),
   };
 }
 
@@ -123,6 +129,14 @@ export function mergeComponents(reports: A11yReport[]): A11yComponentReport[] {
         existing.automated.criteriaCovered.add(criterion);
       }
 
+      for (const criterion of component.automated.criteriaViolated) {
+        existing.automated.criteriaViolated.add(criterion);
+      }
+
+      for (const criterion of component.automated.criteriaPassed) {
+        existing.automated.criteriaPassed.add(criterion);
+      }
+
       existing.automated.incompleteDetails.push(
         ...component.automated.incompleteDetails
       );
@@ -140,6 +154,12 @@ export function mergeComponents(reports: A11yReport[]): A11yComponentReport[] {
         automated: {
           ...component.automated,
           criteriaCovered: [...component.automated.criteriaCovered].sort(
+            compareByNumericId
+          ),
+          criteriaViolated: [...component.automated.criteriaViolated].sort(
+            compareByNumericId
+          ),
+          criteriaPassed: [...component.automated.criteriaPassed].sort(
             compareByNumericId
           ),
         },
@@ -191,8 +211,12 @@ export function mergeCriteria(
         continue;
       }
 
-      for (const componentName of criterion.affectedComponents) {
-        existing.affectedComponents.add(componentName);
+      for (const componentName of criterion.coveredComponents) {
+        existing.coveredComponents.add(componentName);
+      }
+
+      for (const componentName of criterion.violatingComponents) {
+        existing.violatingComponents.add(componentName);
       }
 
       if (criterion.interactiveCoverage) {
@@ -214,12 +238,17 @@ export function mergeCriteria(
     for (const criterionId of component.automated.criteriaCovered) {
       const existing = criteriaById.get(criterionId);
       if (existing) {
-        existing.affectedComponents.add(component.name);
+        existing.coveredComponents.add(component.name);
+        if (component.automated.criteriaViolated.includes(criterionId)) {
+          existing.violatingComponents.add(component.name);
+        }
         continue;
       }
 
       inferredCriteriaCount++;
       const metadata = getCriterionMetadata(criterionId);
+      const violating =
+        component.automated.criteriaViolated.includes(criterionId);
       criteriaById.set(criterionId, {
         id: criterionId,
         name: metadata.name,
@@ -229,7 +258,8 @@ export function mergeCriteria(
         automatedCoverage: true,
         interactiveCoverage: false,
         manualVerified: false,
-        affectedComponents: new Set([component.name]),
+        coveredComponents: new Set([component.name]),
+        violatingComponents: violating ? new Set([component.name]) : new Set(),
       });
     }
 
@@ -242,7 +272,7 @@ export function mergeCriteria(
             existing.interactiveStatus,
             'passed'
           );
-          existing.affectedComponents.add(component.name);
+          existing.coveredComponents.add(component.name);
         }
       }
     }
@@ -256,14 +286,43 @@ export function mergeCriteria(
 
   return [...criteriaById.values()]
     .map((criterion): A11yCriterionReport => {
+      const coveredComponents = [...criterion.coveredComponents].sort(
+        compareByName
+      );
+      const violatingComponents = [...criterion.violatingComponents].sort(
+        compareByName
+      );
       return {
         ...criterion,
-        affectedComponents: [...criterion.affectedComponents].sort(
-          compareByName
+        coveredComponents,
+        violatingComponents,
+        conformance: resolveMergedConformance(
+          coveredComponents,
+          violatingComponents
         ),
       };
     })
     .sort((first, second) => compareByNumericId(first.id, second.id));
+}
+
+function resolveMergedConformance(
+  coveredComponents: string[],
+  violatingComponents: string[]
+): A11yCriterionReport['conformance'] {
+  const coveredCount = coveredComponents.length;
+  if (coveredCount === 0) {
+    return 'notEvaluated';
+  }
+
+  const violatingCount = violatingComponents.length;
+  if (violatingCount >= coveredCount) {
+    return 'doesNotSupport';
+  }
+  if (violatingCount > 0) {
+    return 'partiallySupports';
+  }
+
+  return 'supports';
 }
 
 function mergeInteractiveStatus(

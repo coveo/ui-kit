@@ -28,30 +28,11 @@ function buildCriterionAggregates(
 ): Map<string, CriterionAggregate> {
   const aggregates = new Map<string, CriterionAggregate>();
 
-  for (const component of components) {
-    for (const criterionId of component.automated.criteriaCovered) {
-      const aggregate = aggregates.get(criterionId) ?? {
-        coveredComponents: new Set<string>(),
-        violatingComponents: new Set<string>(),
-      };
-
-      aggregate.coveredComponents.add(component.name);
-      aggregates.set(criterionId, aggregate);
-    }
-  }
-
   for (const criterion of criteria) {
-    const aggregate = aggregates.get(criterion.id) ?? {
-      coveredComponents: new Set<string>(),
-      violatingComponents: new Set<string>(),
-    };
-
-    for (const componentName of criterion.affectedComponents) {
-      aggregate.coveredComponents.add(componentName);
-      aggregate.violatingComponents.add(componentName);
-    }
-
-    aggregates.set(criterion.id, aggregate);
+    aggregates.set(criterion.id, {
+      coveredComponents: new Set(criterion.coveredComponents),
+      violatingComponents: new Set(criterion.violatingComponents),
+    });
   }
 
   return aggregates;

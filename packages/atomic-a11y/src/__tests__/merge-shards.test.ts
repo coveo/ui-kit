@@ -19,6 +19,8 @@ function createComponent(
       incomplete: 0,
       inapplicable: 0,
       criteriaCovered: [],
+      criteriaViolated: [],
+      criteriaPassed: [],
       incompleteDetails: [],
     },
     ...overrides,
@@ -37,7 +39,8 @@ function createCriterion(
     automatedCoverage: true,
     interactiveCoverage: false,
     manualVerified: false,
-    affectedComponents: [],
+    coveredComponents: [],
+    violatingComponents: [],
     ...overrides,
   };
 }
@@ -91,6 +94,8 @@ describe('mergeComponents()', () => {
             incomplete: 0,
             inapplicable: 0,
             criteriaCovered: ['1.4.3'],
+            criteriaViolated: ['1.4.3'],
+            criteriaPassed: [],
             incompleteDetails: [],
           },
         }),
@@ -108,6 +113,8 @@ describe('mergeComponents()', () => {
             incomplete: 1,
             inapplicable: 0,
             criteriaCovered: ['1.1.1'],
+            criteriaViolated: [],
+            criteriaPassed: ['1.1.1'],
             incompleteDetails: [],
           },
         }),
@@ -123,6 +130,8 @@ describe('mergeComponents()', () => {
     expect(merged[0].automated.passes).toBe(2);
     expect(merged[0].automated.incomplete).toBe(1);
     expect(merged[0].automated.criteriaCovered).toEqual(['1.1.1', '1.4.3']);
+    expect(merged[0].automated.criteriaViolated).toEqual(['1.4.3']);
+    expect(merged[0].automated.criteriaPassed).toEqual(['1.1.1']);
   });
 
   it('should keep distinct components separate', () => {
@@ -141,7 +150,7 @@ describe('mergeComponents()', () => {
 });
 
 describe('mergeCriteria()', () => {
-  it('should merge affectedComponents from multiple shards for the same criterion', () => {
+  it('should merge coveredComponents from multiple shards for the same criterion', () => {
     const firstReport = createReport(
       [
         createComponent({
@@ -152,11 +161,13 @@ describe('mergeCriteria()', () => {
             incomplete: 0,
             inapplicable: 0,
             criteriaCovered: ['1.4.3'],
+            criteriaViolated: [],
+            criteriaPassed: ['1.4.3'],
             incompleteDetails: [],
           },
         }),
       ],
-      [createCriterion({affectedComponents: ['atomic-search-box']})]
+      [createCriterion({coveredComponents: ['atomic-search-box']})]
     );
 
     const secondReport = createReport(
@@ -169,11 +180,13 @@ describe('mergeCriteria()', () => {
             incomplete: 0,
             inapplicable: 0,
             criteriaCovered: ['1.4.3'],
+            criteriaViolated: [],
+            criteriaPassed: ['1.4.3'],
             incompleteDetails: [],
           },
         }),
       ],
-      [createCriterion({affectedComponents: ['atomic-result-list']})]
+      [createCriterion({coveredComponents: ['atomic-result-list']})]
     );
 
     const mergedComponents: A11yComponentReport[] = [
@@ -184,10 +197,11 @@ describe('mergeCriteria()', () => {
     const merged = mergeCriteria([firstReport, secondReport], mergedComponents);
 
     const criterion143 = merged.find((criterion) => criterion.id === '1.4.3');
-    expect(criterion143?.affectedComponents).toEqual([
+    expect(criterion143?.coveredComponents).toEqual([
       'atomic-result-list',
       'atomic-search-box',
     ]);
+    expect(criterion143?.conformance).toBe('supports');
   });
 
   it('should infer new criteria from component coverage not present in shard criteria', () => {
@@ -201,6 +215,8 @@ describe('mergeCriteria()', () => {
             incomplete: 0,
             inapplicable: 0,
             criteriaCovered: ['2.4.1'],
+            criteriaViolated: [],
+            criteriaPassed: ['2.4.1'],
             incompleteDetails: [],
           },
         }),
@@ -215,7 +231,7 @@ describe('mergeCriteria()', () => {
       id: '2.4.1',
       name: 'Bypass Blocks',
       level: 'A',
-      conformance: 'notEvaluated',
+      conformance: 'supports',
     });
   });
 });

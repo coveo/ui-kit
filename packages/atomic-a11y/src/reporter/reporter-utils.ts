@@ -94,6 +94,8 @@ export interface ComponentAccumulator {
     incomplete: number;
     inapplicable: number;
     criteriaCovered: Set<string>;
+    criteriaViolated: Set<string>;
+    criteriaPassed: Set<string>;
     incompleteDetails: Array<{
       ruleId: string;
       impact: string;
