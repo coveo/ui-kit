@@ -14,12 +14,13 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "a11y:validate": "node scripts/validate-openacr.mjs",
-    "a11y:vpat": "pnpm build && node scripts/json-to-openacr.mjs && node scripts/validate-openacr.mjs && npx --yes @openacr/openacr output -f reports/openacr.yaml -o reports/vpat-2.5-coveo-atomic.md -t scripts/vpat-from-openacr.handlebars"
+    "a11y:vpat": "pnpm build && node scripts/json-to-openacr.mjs && node scripts/validate-openacr.mjs && openacr output -f reports/openacr.yaml -c node_modules/@openacr/openacr/catalog/2.5-edition-wcag-2.2-en.yaml -o reports/vpat-2.5-coveo-atomic.md -t scripts/vpat-from-openacr.handlebars"
   },
   "dependencies": {
     "yaml": "catalog:"
   },
   "devDependencies": {
+    "@openacr/openacr": "latest",
     "ajv": "8.20.0",
     "axe-core": "4.11.4",
     "typescript": "catalog:",

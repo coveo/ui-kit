@@ -74,6 +74,8 @@ export interface JsonToOpenAcrOptions {
   /** Directory containing `manual-audit-*.json` baseline files.
    * @default 'a11y/reports' */
   manualAuditDir?: string;
+  /** Product version for the OpenACR report. */
+  version: string;
 }
 
 /**
@@ -99,7 +101,7 @@ export interface JsonToOpenAcrOptions {
  * ```
  */
 export async function transformJsonToOpenAcr(
-  options: JsonToOpenAcrOptions = {}
+  options: JsonToOpenAcrOptions
 ): Promise<OpenAcrReport> {
   const inputFile = path.resolve(
     options.inputFile ??
@@ -129,8 +131,13 @@ export async function transformJsonToOpenAcr(
   );
   const manualAggregates = await loadManualAuditData(manualAuditDir);
 
-  const openAcrReport = buildOpenAcrReport(report, overrides, manualAggregates);
-  const serialized = stringify(openAcrReport);
+  const openAcrReport = buildOpenAcrReport(
+    report,
+    overrides,
+    manualAggregates,
+    {version: options.version}
+  );
+  const serialized = stringify(openAcrReport, {version: '1.1'});
 
   await mkdir(path.dirname(outputFile), {recursive: true});
   await writeFile(outputFile, serialized, 'utf8');

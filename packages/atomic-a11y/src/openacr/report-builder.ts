@@ -179,14 +179,13 @@ function buildOpenAcrCriteria(
 export function buildOpenAcrReport(
   report: A11yReport | null,
   overrides: Map<string, A11yOverrideEntry>,
-  manualAggregates: Map<string, ManualAuditAggregate[]>
+  manualAggregates: Map<string, ManualAuditAggregate[]>,
+  options: {version: string}
 ): OpenAcrReport {
   const reportDate = report?.report.reportDate ?? DEFAULT_REPORT_DATE;
   const reportProductName =
     report?.report.product ?? DEFAULT_REPORT_PRODUCT_NAME;
-  if (!report?.report.version) {
-    throw new Error('Report version is required for OpenACR generation.');
-  }
+  const reportVersion = options.version;
 
   let evaluationMethods = report?.report.evaluationMethods?.length
     ? report.report.evaluationMethods.join('; ')
@@ -213,7 +212,7 @@ export function buildOpenAcrReport(
     title: DEFAULT_REPORT_TITLE,
     product: {
       name: reportProductName,
-      version: report.report.version,
+      version: reportVersion,
       description:
         'Coveo Atomic is a web component library for building search and commerce interfaces.',
     },
