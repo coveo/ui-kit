@@ -193,7 +193,7 @@ export const Default: Story = {
 };
 
 export const A11yDisclosure: Story = {
-  tags: ['a11y', 'test'],
+  tags: ['a11y', 'test', '!dev'],
   play: async (context) => {
     await play(context);
     await testDisclosureA11y(context, {

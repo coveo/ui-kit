@@ -86,7 +86,7 @@ export const WithoutAutomaticQueryCorrection: Story = {
 
 export const A11yStatusMessage: Story = {
   name: 'A11y Status Message',
-  tags: ['a11y', 'test'],
+  tags: ['a11y', 'test', '!dev'],
   args: {
     'automatically-correct-query': false,
   },

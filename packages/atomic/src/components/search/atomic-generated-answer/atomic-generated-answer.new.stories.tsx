@@ -154,7 +154,7 @@ export const WithAgentId: Story = {
 
 export const A11yStatusMessage: Story = {
   name: 'A11y Status Message',
-  tags: ['a11y', 'test'],
+  tags: ['a11y', 'test', '!dev'],
   args: {
     'answer-configuration-id': 'fc581be0-6e61-4039-ab26-a3f2f52f308f',
   },

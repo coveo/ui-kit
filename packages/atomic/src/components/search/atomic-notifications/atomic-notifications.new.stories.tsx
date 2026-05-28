@@ -76,7 +76,7 @@ export const CustomIcon: Story = {
 
 export const A11yStatusMessage: Story = {
   name: 'A11y Status Message',
-  tags: ['a11y', 'test'],
+  tags: ['a11y', 'test', '!dev'],
   beforeEach: async () => {
     mockSearchApi.searchEndpoint.mockOnce((response) => response);
     mockNotificationsResponse();

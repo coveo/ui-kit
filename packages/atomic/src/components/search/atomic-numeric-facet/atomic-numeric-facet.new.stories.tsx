@@ -256,7 +256,7 @@ export const WithSelectedValue: Story = {
 
 export const A11yStatusMessage: Story = {
   name: 'A11y Status Message',
-  tags: ['a11y', 'test'],
+  tags: ['a11y', 'test', '!dev'],
   decorators: [
     facetDecorator,
     (story) => html`<atomic-query-summary></atomic-query-summary>${story()}`,
