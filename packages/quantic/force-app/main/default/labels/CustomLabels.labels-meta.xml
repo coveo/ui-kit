@@ -1624,4 +1624,18 @@
     <protected>false</protected>
     <shortDescription>No generated answer available.</shortDescription>
   </labels>
+  <labels>
+    <fullName>quantic_AskFollowUp</fullName>
+    <value>Ask follow-up</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Ask follow-up</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_SubmitFollowUp</fullName>
+    <value>Submit follow-up</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Submit follow-up</shortDescription>
+  </labels>
 </CustomLabels>
