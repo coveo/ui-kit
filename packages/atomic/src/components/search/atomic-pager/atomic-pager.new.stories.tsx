@@ -1,8 +1,11 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {html} from 'lit';
+import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-pager/atomic-pager.js';
+import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 
 const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers('atomic-pager', {
@@ -52,5 +55,26 @@ export const WithACustomNumberOfPages: Story = {
   name: 'With a custom number of pages',
   args: {
     'number-of-pages': '10',
+  },
+};
+
+export const A11yStatusMessage: Story = {
+  name: 'A11y Status Message',
+  tags: ['a11y', 'test'],
+  decorators: [
+    (story) => html`<atomic-query-summary></atomic-query-summary>${story()}`,
+  ],
+
+  play: async (context) => {
+    await play(context);
+    await testStatusMessageA11y(context, {
+      triggerAction: async () => {
+        const {canvas} = context;
+        const nextButton = await canvas.findByShadowLabelText(/next/i);
+        nextButton.click();
+      },
+      expectedText: /Results loaded. Results .* of .*/i, // TODO: use msw to return a fixed number of results and assert against that for a more deterministic test
+      timeout: 5000,
+    });
   },
 };
