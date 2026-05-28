@@ -56,7 +56,7 @@
   },
   "scripts": {
     "clean": "node ../../utils/ci/rm-rf.mjs dist/* dist-storybook/* www/* docs/* playwright-report/*",
-    "build:storybook": "storybook build -o dist-storybook --stats-json",
+    "build:storybook": "storybook build -o dist-storybook",
     "build:cem": "cem analyze",
     "build:locales": "node scripts/build-locales.mjs",
     "build:assets": "node scripts/build-assets.mjs",
@@ -78,7 +78,7 @@
     "generate-component": "node ./scripts/generate-component.mjs",
     "tsc:check": "tsc --noEmit -p tsconfig.check.json",
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
-    "chromatic": "chromatic --build-command \"turbo run build:storybook --filter=@coveo/atomic\" --output-dir dist-storybook --only-changed --untraced \"/virtual:*\"",
+    "chromatic": "chromatic",
     "validate:light-dom-styles": "node ./scripts/check-light-dom-host-selectors.mjs",
     "validate:no-new-light-dom": "node ./scripts/check-no-new-light-dom-components.mjs"
   },
