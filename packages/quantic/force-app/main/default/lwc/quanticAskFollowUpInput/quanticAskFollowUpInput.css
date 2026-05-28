@@ -1,0 +1,17 @@
+:host {
+  --slds-c-input-shadow: none;
+}
+
+.follow-up-input__input {
+  border: none;
+  box-shadow: none;
+  outline: none;
+  width: 100%;
+  --slds-c-input-color-border: transparent;
+  --slds-c-input-shadow-focus: transparent
+  --slds-c-input-spacing-border: 0px;
+}
+
+.follow-up-input__input-container.follow-up-input__input-container--focused {
+  border-color: var(--lwc-brandAccessible, #0176d3);
+}
