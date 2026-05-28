@@ -9,11 +9,6 @@
       "reason": "Focus indicators provided by design system (Tailwind focus-visible:ring-* utilities). All instances of outline:none are paired with :focus-visible alternatives."
     },
     {
-      "criterion": "1.1.1",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
       "criterion": "1.2.1",
       "conformance": "not-applicable",
       "reason": "Atomic does not include audio-only or video-only media components."
@@ -39,89 +34,9 @@
       "reason": "Atomic does not include prerecorded video content requiring audio descriptions."
     },
     {
-      "criterion": "1.3.1",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
-      "criterion": "1.3.2",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
-      "criterion": "1.3.3",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
-      "criterion": "1.3.4",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
-      "criterion": "1.3.5",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
-      "criterion": "1.4.1",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
       "criterion": "1.4.2",
       "conformance": "not-applicable",
       "reason": "Atomic does not include components that auto-play audio."
-    },
-    {
-      "criterion": "1.4.3",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
-      "criterion": "1.4.4",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
-      "criterion": "1.4.5",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
-      "criterion": "1.4.10",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
-      "criterion": "1.4.11",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
-      "criterion": "1.4.12",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
-      "criterion": "1.4.13",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
-      "criterion": "2.1.1",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
-      "criterion": "2.1.2",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
-      "criterion": "2.1.4",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
     },
     {
       "criterion": "2.2.1",
@@ -139,24 +54,9 @@
       "reason": "Atomic does not include content that flashes more than three times per second."
     },
     {
-      "criterion": "2.4.1",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
       "criterion": "2.4.2",
       "conformance": "not-applicable",
       "reason": "Page titles are a host application concern, not a component library concern."
-    },
-    {
-      "criterion": "2.4.3",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
-      "criterion": "2.4.4",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
     },
     {
       "criterion": "2.4.5",
@@ -164,64 +64,14 @@
       "reason": "Multiple navigation ways are a host application concern, not a component library concern."
     },
     {
-      "criterion": "2.4.6",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
-      "criterion": "2.4.11",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
-      "criterion": "2.5.1",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
-      "criterion": "2.5.2",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
-      "criterion": "2.5.3",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
       "criterion": "2.5.4",
       "conformance": "not-applicable",
       "reason": "Atomic does not include functionality operated by device or user motion."
     },
     {
-      "criterion": "2.5.7",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
-      "criterion": "2.5.8",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
       "criterion": "3.1.1",
       "conformance": "not-applicable",
       "reason": "The lang attribute on the HTML element is a host application concern, not a component library concern."
-    },
-    {
-      "criterion": "3.1.2",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
-      "criterion": "3.2.1",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
-      "criterion": "3.2.2",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
     },
     {
       "criterion": "3.2.3",
@@ -234,31 +84,6 @@
       "reason": "Consistent identification across pages is a host application concern; individual Atomic components use consistent internal naming."
     },
     {
-      "criterion": "3.2.6",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
-      "criterion": "3.3.1",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
-      "criterion": "3.3.2",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
-      "criterion": "3.3.3",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
-      "criterion": "3.3.4",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
       "criterion": "3.3.7",
       "conformance": "not-applicable",
       "reason": "Atomic does not include multi-step forms that require redundant data entry."
@@ -267,16 +92,6 @@
       "criterion": "3.3.8",
       "conformance": "not-applicable",
       "reason": "Atomic does not include authentication flows."
-    },
-    {
-      "criterion": "4.1.2",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
-    },
-    {
-      "criterion": "4.1.3",
-      "conformance": "not-evaluated",
-      "reason": "Temporary blacklist - gradual enablement pending compliance review"
     }
   ]
 }
