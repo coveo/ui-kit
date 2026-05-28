@@ -1289,6 +1289,27 @@
     <shortDescription>Something went wrong and we couldn't generate an answer.</shortDescription>
   </labels>
   <labels>
+    <fullName>quantic_GeneratedAnswerErrorGeneric</fullName>
+    <value>Something went wrong while generating the answer. Please try again later.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Generic generated answer error.</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_GeneratedAnswerCannotGenerateAnswer</fullName>
+    <value>I couldn't find an answer to that. Try rephrasing your follow-up or check the related results below.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Generated answer cannot-answer message.</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_GeneratedAnswerErrorTurnLimitReached</fullName>
+    <value>Conversation turn limit reached. Please start a new conversation.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Generated answer conversation turn limit reached error.</shortDescription>
+  </labels>
+  <labels>
     <fullName>quantic_ShowingResultsFor</fullName>
     <value>Showing results for {{0}}</value>
     <language>en_US</language>

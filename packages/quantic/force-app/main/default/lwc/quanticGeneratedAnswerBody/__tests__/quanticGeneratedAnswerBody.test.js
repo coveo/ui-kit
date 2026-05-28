@@ -17,6 +17,29 @@ jest.mock(
   {virtual: true}
 );
 jest.mock(
+  '@salesforce/label/c.quantic_GeneratedAnswerCannotGenerateAnswer',
+  () => ({
+    default:
+      "I couldn't find an answer to that. Try rephrasing your follow-up or check the related results below.",
+  }),
+  {virtual: true}
+);
+jest.mock(
+  '@salesforce/label/c.quantic_GeneratedAnswerErrorGeneric',
+  () => ({
+    default:
+      'Something went wrong while generating the answer. Please try again later.',
+  }),
+  {virtual: true}
+);
+jest.mock(
+  '@salesforce/label/c.quantic_GeneratedAnswerErrorTurnLimitReached',
+  () => ({
+    default: 'Conversation turn limit reached. Please start a new conversation.',
+  }),
+  {virtual: true}
+);
+jest.mock(
   '@salesforce/label/c.quantic_NoGeneratedAnswer',
   () => ({default: 'No generated answer available.'}),
   {virtual: true}
@@ -61,6 +84,7 @@ const selectors = {
   copy: 'c-quantic-generated-answer-copy-to-clipboard',
   retry: '[data-testid="generated-answer-body__retry"]',
   retryButton: '[data-testid="generated-answer-body__retry-button"]',
+  error: '[data-testid="generated-answer-body__error"]',
   noAnswer: '[data-testid="generated-answer-body__no-answer-message"]',
   content: 'c-quantic-generated-answer-content',
 };
@@ -216,6 +240,46 @@ describe('c-quantic-generated-answer-body', () => {
     const noAnswer = element.shadowRoot.querySelector(selectors.noAnswer);
 
     expect(noAnswer).not.toBeNull();
-    expect(noAnswer.textContent).toContain('No generated answer available.');
+    expect(noAnswer.textContent).toContain(
+      "I couldn't find an answer to that. Try rephrasing your follow-up or check the related results below."
+    );
+  });
+
+  it('should render the generic error message for non-retryable errors', async () => {
+    const element = createTestComponent({
+      ...defaultOptions,
+      generatedAnswer: {
+        ...defaultOptions.generatedAnswer,
+        error: {},
+      },
+    });
+    await flushPromises();
+
+    const error = element.shadowRoot.querySelector(selectors.error);
+
+    expect(error).not.toBeNull();
+    expect(error.textContent).toContain(
+      'Something went wrong while generating the answer. Please try again later.'
+    );
+  });
+
+  it('should render the turn limit reached error message when applicable', async () => {
+    const element = createTestComponent({
+      ...defaultOptions,
+      generatedAnswer: {
+        ...defaultOptions.generatedAnswer,
+        error: {
+          isSseTurnLimitReachedError: () => true,
+        },
+      },
+    });
+    await flushPromises();
+
+    const error = element.shadowRoot.querySelector(selectors.error);
+
+    expect(error).not.toBeNull();
+    expect(error.textContent).toContain(
+      'Conversation turn limit reached. Please start a new conversation.'
+    );
   });
 });

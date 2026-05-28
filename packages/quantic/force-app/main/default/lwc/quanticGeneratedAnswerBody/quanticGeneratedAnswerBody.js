@@ -1,5 +1,7 @@
 import couldNotGenerateAnAnswer from '@salesforce/label/c.quantic_CouldNotGenerateAnAnswer';
-import noGeneratedAnswer from '@salesforce/label/c.quantic_NoGeneratedAnswer';
+import generatedAnswerCannotGenerateAnswer from '@salesforce/label/c.quantic_GeneratedAnswerCannotGenerateAnswer';
+import generatedAnswerErrorGeneric from '@salesforce/label/c.quantic_GeneratedAnswerErrorGeneric';
+import generatedAnswerErrorTurnLimitReached from '@salesforce/label/c.quantic_GeneratedAnswerErrorTurnLimitReached';
 import thisAnswerWasHelpful from '@salesforce/label/c.quantic_ThisAnswerWasHelpful';
 import thisAnswerWasNotHelpful from '@salesforce/label/c.quantic_ThisAnswerWasNotHelpful';
 import tryAgain from '@salesforce/label/c.quantic_TryAgain';
@@ -52,7 +54,9 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
 
   labels = {
     couldNotGenerateAnAnswer,
-    noGeneratedAnswer,
+    generatedAnswerCannotGenerateAnswer,
+    generatedAnswerErrorGeneric,
+    generatedAnswerErrorTurnLimitReached,
     thisAnswerWasHelpful,
     thisAnswerWasNotHelpful,
     tryAgain,
@@ -87,6 +91,24 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
 
   get hasRetryableError() {
     return !!this.generatedAnswer?.error?.isRetryable;
+  }
+
+  get hasError() {
+    return !!this.generatedAnswer?.error;
+  }
+
+  get shouldDisplayError() {
+    return this.hasError && !this.hasRetryableError;
+  }
+
+  get shouldDisplayCannotAnswer() {
+    return this.cannotAnswer || !!this.generatedAnswer?.cannotAnswer;
+  }
+
+  get errorMessage() {
+    return this.generatedAnswer?.error?.isSseTurnLimitReachedError?.()
+      ? this.labels.generatedAnswerErrorTurnLimitReached
+      : this.labels.generatedAnswerErrorGeneric;
   }
 
   get computedFeedbackState() {
@@ -185,9 +207,9 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
 
   get shouldDisplayAnswer() {
     return (
+      !this.shouldDisplayError &&
       !this.hasRetryableError &&
-      !this.cannotAnswer &&
-      !this.generatedAnswer?.cannotAnswer
+      !this.shouldDisplayCannotAnswer
     );
   }
 }

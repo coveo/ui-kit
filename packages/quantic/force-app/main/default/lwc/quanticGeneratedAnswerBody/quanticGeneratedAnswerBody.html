@@ -12,6 +12,14 @@
       ></lightning-button>
     </section>
   </template>
+  <template lwc:if={shouldDisplayError}>
+    <section
+      data-testid="generated-answer-body__error"
+      class="generated-answer__content slds-p-top_medium slds-p-horizontal_large"
+    >
+      <p>{errorMessage}</p>
+    </section>
+  </template>
   <template lwc:if={shouldDisplayAnswer}>
     <section
       data-testid="generated-answer-body"
@@ -72,13 +80,15 @@
       </div>
     </section>
   </template>
-  <template lwc:if={cannotAnswer}>
+  <template lwc:if={shouldDisplayCannotAnswer}>
     <div
       data-testid="generated-answer-body__no-answer-message"
       class="generated-answer__content slds-var-m-top_medium"
     >
       <div>
-        <slot name="no-answer-message">{labels.noGeneratedAnswer}</slot>
+        <slot name="no-answer-message"
+          >{labels.generatedAnswerCannotGenerateAnswer}</slot
+        >
       </div>
     </div>
   </template>

@@ -709,6 +709,18 @@
     <name>quantic_CouldNotGenerateAnAnswer</name>
   </customLabels>
   <customLabels>
+    <label>Une erreur est survenue lors de la génération de la réponse. Veuillez réessayer plus tard.</label>
+    <name>quantic_GeneratedAnswerErrorGeneric</name>
+  </customLabels>
+  <customLabels>
+    <label>Je n'ai pas pu trouver de réponse à cela. Essayez de reformuler votre question de suivi ou consultez les résultats associés ci-dessous.</label>
+    <name>quantic_GeneratedAnswerCannotGenerateAnswer</name>
+  </customLabels>
+  <customLabels>
+    <label>Limite de tours de conversation atteinte. Veuillez commencer une nouvelle conversation.</label>
+    <name>quantic_GeneratedAnswerErrorTurnLimitReached</name>
+  </customLabels>
+  <customLabels>
     <label>Résultats affichés pour {{0}}</label>
     <name>quantic_ShowingResultsFor</name>
   </customLabels>
