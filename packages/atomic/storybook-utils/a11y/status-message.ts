@@ -32,6 +32,24 @@ export interface StatusMessageA11yOptions {
   timeout?: number;
 }
 
+function isHiddenByAncestor(element: HTMLElement): boolean {
+  let current: Element | null = element.parentElement;
+  while (current) {
+    if (current instanceof HTMLElement) {
+      if (current.getAttribute('aria-hidden') === 'true') {
+        return true;
+      }
+    }
+    const root = current.getRootNode();
+    if (root instanceof ShadowRoot) {
+      current = root.host;
+    } else {
+      current = current.parentElement;
+    }
+  }
+  return false;
+}
+
 /**
  * Finds all live regions in the DOM (main + shadow DOMs).
  */
@@ -41,7 +59,6 @@ function findLiveRegions(root: HTMLElement): HTMLElement[] {
     '[role="status"]',
     '[role="alert"]',
     '[role="log"]',
-    '[role="progressbar"]',
   ].join(', ');
 
   const elements: HTMLElement[] = [];
@@ -56,7 +73,11 @@ function findLiveRegions(root: HTMLElement): HTMLElement[] {
     }
   }
 
-  return elements;
+  return elements.filter((el) => {
+    if (el.getAttribute('aria-live') === 'off') return false;
+    if (isHiddenByAncestor(el)) return false;
+    return true;
+  });
 }
 
 /**
@@ -82,9 +103,16 @@ export async function testStatusMessageA11y(
   const timeout = options.timeout ?? 5000;
 
   try {
-    await step('Live regions exist before action (baseline)', async () => {
-      // Just snapshot — we don't require them to exist before
-      findLiveRegions(canvasElement);
+    let baselineTexts: Set<string> = new Set();
+
+    await step('Capture baseline live region content', async () => {
+      const liveRegions = findLiveRegions(canvasElement);
+      for (const region of liveRegions) {
+        const text = region.textContent?.trim() ?? '';
+        if (text.length > 0) {
+          baselineTexts.add(text);
+        }
+      }
     });
 
     await step(
@@ -104,7 +132,8 @@ export async function testStatusMessageA11y(
             const populatedRegions = liveRegions.filter((region) => {
               if (region.getAttribute('aria-hidden') === 'true') return false;
               const text = region.textContent?.trim() ?? '';
-              return text.length > 0;
+              if (text.length === 0) return false;
+              return !baselineTexts.has(text);
             });
 
             expect(populatedRegions.length).toBeGreaterThan(0);
