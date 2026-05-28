@@ -5,6 +5,7 @@ import {
   type HttpResponseInit,
   http,
 } from 'msw';
+import type {RequestTransformer} from './_request-transformer.js';
 
 export abstract class MockApi {
   abstract get handlers(): HttpHandler[];
@@ -16,30 +17,6 @@ export abstract class MockApi {
   abstract clearAll(): void;
 }
 
-export type RequestTransformer<TResponse> = (
-  body: unknown,
-  response: TResponse
-) => TResponse;
-
-/**
- * Wraps a transformer so it skips API error responses (objects with `statusCode`).
- * This prevents transformers from corrupting error response shapes.
- */
-export function skipOnError<TResponse>(
-  transformer: RequestTransformer<TResponse>
-): RequestTransformer<TResponse> {
-  return (body, response) => {
-    if (
-      typeof response === 'object' &&
-      response !== null &&
-      'statusCode' in response
-    ) {
-      return response;
-    }
-    return transformer(body, response);
-  };
-}
-
 type HttpMethod = 'GET' | 'POST';
 export class EndpointHarness<TResponse extends {}> {
   private nextResponses: ('error' | ((response: TResponse) => TResponse))[] =
@@ -47,7 +24,7 @@ export class EndpointHarness<TResponse extends {}> {
   private nextResponseInit: HttpResponseInit[] = [];
   private baseResponse: Readonly<TResponse>;
   private initialBaseResponse: Readonly<TResponse>;
-  private requestTransformer?: RequestTransformer<TResponse>;
+  private requestTransformers: RequestTransformer<TResponse>[] = [];
   constructor(
     private method: HttpMethod,
     private path: string,
@@ -62,12 +39,38 @@ export class EndpointHarness<TResponse extends {}> {
   }
 
   /**
-   * Sets a request transformer that modifies the response based on the request body.
+   * Adds a request transformer that modifies the response based on the request body.
    * Unlike `mock()` which statically modifies the base response, this enables
    * dynamic responses that react to request content (e.g., facet selections, pagination).
+   * Multiple transformers are applied in the order they are added.
    */
-  withRequestTransformer(transformer: RequestTransformer<TResponse>) {
-    this.requestTransformer = transformer;
+  addRequestTransformer<TInput extends TResponse = TResponse>(
+    ...transformers: RequestTransformer<TInput>[]
+  ) {
+    for (const transformer of transformers) {
+      this.requestTransformers.push(
+        transformer as unknown as RequestTransformer<TResponse>
+      );
+    }
+    return this;
+  }
+
+  /**
+   * Removes a previously added request transformer by reference.
+   * Useful when a specific story doesn't need a transformer that was
+   * registered at module scope for other stories in the same file.
+   */
+  removeRequestTransformer<TInput extends TResponse = TResponse>(
+    ...transformers: RequestTransformer<TInput>[]
+  ) {
+    for (const transformer of transformers) {
+      const index = this.requestTransformers.indexOf(
+        transformer as unknown as RequestTransformer<TResponse>
+      );
+      if (index !== -1) {
+        this.requestTransformers.splice(index, 1);
+      }
+    }
     return this;
   }
 
@@ -122,9 +125,11 @@ export class EndpointHarness<TResponse extends {}> {
         }
 
         let finalResponse = response;
-        if (this.requestTransformer) {
+        if (this.requestTransformers.length > 0) {
           const body = await request.json().catch(() => ({}));
-          finalResponse = this.requestTransformer(body, finalResponse);
+          for (const transformer of this.requestTransformers) {
+            finalResponse = transformer(body, finalResponse);
+          }
         }
 
         return this.mswHttpResponseFactory(finalResponse, responseInit);

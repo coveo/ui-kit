@@ -1,13 +1,8 @@
 import type {HttpHandler} from 'msw';
-import {EndpointHarness, type MockApi, skipOnError} from '../_base.js';
+import {EndpointHarness, type MockApi} from '../_base.js';
 import type {APIErrorWithStatusCode} from '../_common/error.js';
-import {
-  commerceFacetTransformer,
-  createFacetSearchTransformer,
-  type FacetSearchResponse,
-} from './facet-transformer.js';
+import type {FacetSearchResponse} from './facet-transformer.js';
 import {richResponse as baseListingResponse} from './listing-response.js';
-import {commercePaginationTransformer} from './pagination-transformer.js';
 import {baseResponse as baseProductSuggestResponse} from './productSuggest-response.js';
 import {baseResponse as baseQuerySuggestResponse} from './querySuggest-response.js';
 import {baseResponse as baseRecommendationResponse} from './recommendation-response.js';
@@ -84,25 +79,5 @@ export class MockCommerceApi implements MockApi {
     this.productSuggestEndpoint.clear();
     this.productListingEndpoint.clear();
     this.facetSearchEndpoint.clear();
-  }
-
-  /**
-   * Enables interactive facet transformers on search, listing, and facet search endpoints.
-   * Call this when stories need to reflect facet selections, pagination, and facet search in responses.
-   */
-  enableInteractiveFacets(): void {
-    const transformer = skipOnError(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (body: unknown, response: any) => {
-        let result = commerceFacetTransformer(body, response);
-        result = commercePaginationTransformer(body, result);
-        return result;
-      }
-    );
-    this.searchEndpoint.withRequestTransformer(transformer);
-    this.productListingEndpoint.withRequestTransformer(transformer);
-    this.facetSearchEndpoint.withRequestTransformer(
-      createFacetSearchTransformer(baseSearchResponse)
-    );
   }
 }
