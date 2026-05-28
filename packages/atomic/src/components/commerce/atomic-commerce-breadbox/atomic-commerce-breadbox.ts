@@ -125,6 +125,15 @@ export class AtomicCommerceBreadbox
   @state() private isCollapsed = true;
   @state() private showMoreText = '';
 
+  /**
+   * Whether to disable the collapsing behavior of breadcrumbs.
+   *
+   * When set, all breadcrumbs are always displayed in a wrapping layout
+   * instead of being collapsed into a single row with a "+ N" show more button.
+   */
+  @property({type: Boolean, attribute: 'disable-collapse'})
+  disableCollapse = false;
+
   private breadboxAriaMessage = new AriaLiveRegionController(
     this,
     'breadbox',
@@ -166,7 +175,9 @@ export class AtomicCommerceBreadbox
     this.context = buildContext(this.bindings.engine);
     this.breadcrumbManager = this.searchOrListing.breadcrumbManager();
 
-    if (window.ResizeObserver && this.parentElement) {
+    if (this.disableCollapse) {
+      this.isCollapsed = false;
+    } else if (window.ResizeObserver && this.parentElement) {
       this.resizeObserver = new ResizeObserver(() => this.adaptBreadcrumbs());
       this.resizeObserver.observe(this.parentElement);
     }
@@ -224,7 +235,7 @@ export class AtomicCommerceBreadbox
   }
 
   private adaptBreadcrumbs() {
-    if (!this.breadcrumbs.length) {
+    if (this.disableCollapse || !this.breadcrumbs.length) {
       return;
     }
     this.showAllBreadcrumbs();
@@ -413,36 +424,38 @@ export class AtomicCommerceBreadbox
       },
     })(
       html`${this.renderBreadcrumbs(breadcrumbs)}
-      ${renderBreadcrumbShowMore({
-        props: {
-          refCallback: async (el) => {
-            await this.breadcrumbShowLessFocus.setTarget(el!);
-          },
-          onShowMore: () => {
-            this.firstExpandedBreadcrumbIndex =
-              this.numberOfBreadcrumbs - this.numberOfCollapsedBreadcrumbs;
-            this.breadcrumbShowMoreFocus.focusOnNextTarget();
-            this.isCollapsed = false;
-          },
-          isCollapsed: this.isCollapsed,
-          i18n: this.bindings.i18n,
-          numberOfCollapsedBreadcrumbs: this.numberOfCollapsedBreadcrumbs,
-          value: this.showMoreText,
-          ariaLabel: this.bindings.i18n.t('show-n-more-filters', {
-            value: this.numberOfCollapsedBreadcrumbs,
-          }),
-        },
-      })}
-      ${renderBreadcrumbShowLess({
-        props: {
-          onShowLess: () => {
-            this.breadcrumbShowLessFocus.focusOnNextTarget();
-            this.isCollapsed = true;
-          },
-          isCollapsed: this.isCollapsed,
-          i18n: this.bindings.i18n,
-        },
-      })}
+      ${this.disableCollapse
+        ? nothing
+        : html`${renderBreadcrumbShowMore({
+            props: {
+              refCallback: async (el) => {
+                await this.breadcrumbShowLessFocus.setTarget(el!);
+              },
+              onShowMore: () => {
+                this.firstExpandedBreadcrumbIndex =
+                  this.numberOfBreadcrumbs - this.numberOfCollapsedBreadcrumbs;
+                this.breadcrumbShowMoreFocus.focusOnNextTarget();
+                this.isCollapsed = false;
+              },
+              isCollapsed: this.isCollapsed,
+              i18n: this.bindings.i18n,
+              numberOfCollapsedBreadcrumbs: this.numberOfCollapsedBreadcrumbs,
+              value: this.showMoreText,
+              ariaLabel: this.bindings.i18n.t('show-n-more-filters', {
+                value: this.numberOfCollapsedBreadcrumbs,
+              }),
+            },
+          })}
+          ${renderBreadcrumbShowLess({
+            props: {
+              onShowLess: () => {
+                this.breadcrumbShowLessFocus.focusOnNextTarget();
+                this.isCollapsed = true;
+              },
+              isCollapsed: this.isCollapsed,
+              i18n: this.bindings.i18n,
+            },
+          })}`}
       ${renderBreadcrumbClearAll({
         props: {
           refCallback: async (ref) => {

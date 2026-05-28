@@ -109,6 +109,9 @@ export default {
         // Interactive a11y Storybook helpers — will be consumed by stories
         // in an upcoming PR. Knip cannot trace them yet.
         'storybook-utils/a11y/**/*.ts',
+        // Request transformer modules for interactive MSW stories.
+        // Wired by downstream feature branches via withRequestTransformer().
+        'storybook-utils/api/**/*-transformer.ts',
       ],
       ignore: [
         // Ambient type declaration file, not an ES module

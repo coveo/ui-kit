@@ -16,7 +16,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 );
 const {decorator, play} = wrapInInsightInterface({}, true);
 
-const mockInsightApi = new MockInsightApi();
+const insightApiHarness = new MockInsightApi();
 
 const normalWidthDecorator: Decorator = (story) =>
   html`<div style="min-width: 400px;" id="code-root">${story()}</div>`;
@@ -33,7 +33,7 @@ const meta: Meta = {
       handles: events,
     },
     msw: {
-      handlers: [...mockInsightApi.handlers],
+      handlers: [...insightApiHarness.handlers],
     },
   },
   args,

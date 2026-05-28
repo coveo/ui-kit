@@ -21,3 +21,8 @@ export {
   testRadioGroupA11y,
   type RadioGroupA11yOptions,
 } from './radiogroup.js';
+export {
+  COVERED_CRITERIA as CAROUSEL_COVERED_CRITERIA,
+  testCarouselA11y,
+  type CarouselA11yOptions,
+} from './carousel.js';

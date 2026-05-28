@@ -5,7 +5,7 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-query-error/atomic-query-error.js';
 
-const mockSearchApi = new MockSearchApi();
+const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface({
   config: {
@@ -30,12 +30,12 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
-    msw: {handlers: [...mockSearchApi.handlers]},
+    msw: {handlers: [...searchApiHarness.handlers]},
   },
   args,
   argTypes,
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.clear();
+    searchApiHarness.searchEndpoint.clear();
   },
   play,
 };
@@ -44,14 +44,14 @@ export default meta;
 
 export const Default: Story = {
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mockErrorOnce();
+    searchApiHarness.searchEndpoint.mockErrorOnce();
   },
 };
 
 export const WithInvalidToken: Story = {
   name: 'With Invalid Token Error',
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mockOnce(
+    searchApiHarness.searchEndpoint.mockOnce(
       () => ({
         ok: false,
         status: 401,
@@ -67,7 +67,7 @@ export const WithInvalidToken: Story = {
 export const WithDisconnected: Story = {
   name: 'With Disconnected Error',
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mockOnce(
+    searchApiHarness.searchEndpoint.mockOnce(
       () => ({
         ok: false,
         status: 0,
@@ -83,7 +83,7 @@ export const WithDisconnected: Story = {
 export const WithNoEndpoints: Story = {
   name: 'With No Endpoints Error',
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mockOnce(
+    searchApiHarness.searchEndpoint.mockOnce(
       () => ({
         ok: false,
         status: 404,
@@ -99,7 +99,7 @@ export const WithNoEndpoints: Story = {
 export const WithOrganizationPaused: Story = {
   name: 'With Organization Paused Error',
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mockOnce(
+    searchApiHarness.searchEndpoint.mockOnce(
       () => ({
         ok: false,
         status: 503,
