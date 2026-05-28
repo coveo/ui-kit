@@ -85,12 +85,8 @@
   <template lwc:if={cannotAnswer}>
     <template lwc:if={isManualAnswerGeneration}>
       <div data-testid="generated-answer__no-answer-card" class="slds-box">
-        <div
-          class="generated-answer__card-header slds-grid slds-grid_vertical-align-center slds-border_bottom slds-p-around_x-small"
-        >
-          <div
-            class="generated-answer__header-title slds-grid slds-grid_vertical-align-center"
-          >
+        <div class="generated-answer__card-header slds-grid slds-grid_vertical-align-center slds-border_bottom slds-p-around_x-small">
+          <div class="generated-answer__header-title slds-grid slds-grid_vertical-align-center"></div>
             <lightning-icon
               icon-name="utility:sparkles"
               size="x-small"
@@ -116,12 +112,8 @@
     <template lwc:else>
       <template lwc:if={hasCustomNoAnswerMessage}>
         <div data-testid="generated-answer__no-answer-card" class="slds-box">
-          <div
-            class="generated-answer__card-header slds-grid slds-grid_vertical-align-center slds-border_bottom slds-p-around_x-small"
-          >
-            <div
-              class="generated-answer__header-title slds-grid slds-grid_vertical-align-center"
-            >
+          <div class="generated-answer__card-header slds-grid slds-grid_vertical-align-center slds-border_bottom slds-p-around_x-small">
+            <div class="generated-answer__header-title slds-grid slds-grid_vertical-align-center">
               <lightning-icon
                 icon-name="utility:sparkles"
                 size="x-small"
