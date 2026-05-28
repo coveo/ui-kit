@@ -7,10 +7,6 @@
   width: 10px;
 }
 
-.thread-item__line-column {
-  align-items: stretch;
-}
-
 .thread-item__dot {
   height: 8px;
   width: 8px;
