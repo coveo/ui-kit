@@ -15,10 +15,10 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   }
 );
 
-const mockInsightApi = new MockInsightApi();
+const insightApiHarness = new MockInsightApi();
 
 const mockDefaultFacetResponse = () => {
-  mockInsightApi.searchEndpoint.mockOnce((response) => response);
+  insightApiHarness.searchEndpoint.mockOnce((response) => response);
 };
 
 const sortCriteriaOptions: FacetSortCriterion[] = [
@@ -44,7 +44,7 @@ const meta: Meta = {
       handles: events,
     },
     msw: {
-      handlers: [...mockInsightApi.handlers],
+      handlers: [...insightApiHarness.handlers],
     },
   },
   argTypes: {
@@ -57,7 +57,7 @@ const meta: Meta = {
   },
 
   beforeEach: () => {
-    mockInsightApi.searchEndpoint.clear();
+    insightApiHarness.searchEndpoint.clear();
   },
 
   play,
@@ -123,7 +123,7 @@ export const WithSelectedValue: Story = {
   decorators: [facetDecorator],
   beforeEach: () => {
     // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- MSW mock response structure is dynamic and known at runtime
-    mockInsightApi.searchEndpoint.mockOnce((response: any) => {
+    insightApiHarness.searchEndpoint.mockOnce((response: any) => {
       const selectedFacets = response.facets?.map(
         (facet: object & {field: string; values: object[]}) => {
           if (facet.field === 'objecttype') {
