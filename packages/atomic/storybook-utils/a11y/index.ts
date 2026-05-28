@@ -17,3 +17,8 @@ export {
   testRadioGroupA11y,
   type RadioGroupA11yOptions,
 } from './radiogroup.js';
+export {
+  COVERED_CRITERIA as STATUS_MESSAGE_COVERED_CRITERIA,
+  testStatusMessageA11y,
+  type StatusMessageA11yOptions,
+} from './status-message.js';
