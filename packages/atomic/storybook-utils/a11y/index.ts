@@ -22,6 +22,11 @@ export {
   type RadioGroupA11yOptions,
 } from './radiogroup.js';
 export {
+  COVERED_CRITERIA as STATUS_MESSAGE_COVERED_CRITERIA,
+  testStatusMessageA11y,
+  type StatusMessageA11yOptions,
+} from './status-message.js';
+export {
   COVERED_CRITERIA as HOVER_CONTENT_COVERED_CRITERIA,
   testHoverContentA11y,
   type HoverContentA11yOptions,
