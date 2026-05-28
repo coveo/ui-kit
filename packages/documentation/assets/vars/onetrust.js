@@ -60,7 +60,7 @@ export function isActiveGroup(groupsToVerify) {
 
     function handleConsentChange() {
       if (isActiveGroup('C0003')) {
-        analytics.initAmplitude();
+        analytics.setOptOut(false);
       } else {
         analytics.setOptOut(true);
       }

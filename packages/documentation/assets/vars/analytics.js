@@ -70,12 +70,16 @@ class DocsAnalytics {
 
   setOptOut(isOptOut) {
     this._disabled = isOptOut;
-    this.isInit = !isOptOut;
     if (isOptOut) {
       this._buffer = [];
+      this.isInit = false;
     }
     if (window.amplitude) {
       window.amplitude.setOptOut(isOptOut);
+    }
+    // Re-initialize when re-enabling cookies
+    if (!isOptOut && !this.isInit) {
+      this.initAmplitude();
     }
   }
 

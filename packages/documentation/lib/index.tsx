@@ -226,7 +226,7 @@ export const load = (app: Application) => {
         {/* Amplitude Browser SDK — loaded before analytics.js so window.amplitude is available */}
         <script
           src="https://cdn.amplitude.com/libs/analytics-browser-2.11.1-min.js.gz"
-          integrity="sha384-TQgP6oZ+yX8iXNS4m0H7LuWSyrhEfoifZx/7cP3qSQU869coM2r0irxJEPQ82Nl+"
+          integrity="sha384-XxDPxKDB79eXOLF+koPFe4h9iVF6LgQ1J6Do9sdhcohvTlVMK7EJE74b1b0iK3uK"
           crossOrigin="anonymous"
         ></script>
         <script
