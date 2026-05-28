@@ -86,6 +86,8 @@ export async function testHoverContentA11y(
           },
           {timeout: 5000}
         );
+
+        expect(canvasElement.ownerDocument.activeElement).toBe(focusedBefore);
       }
     );
 
