@@ -1,0 +1,47 @@
+.generated-answer-thread__dot-column,
+.generated-answer-thread__line-column {
+  width: 10px;
+}
+
+.generated-answer-thread__dot {
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+  background-color: var(--lwc-colorBorder, #dddbda);
+}
+
+.generated-answer-thread__connector {
+  position: relative;
+  width: 1px;
+  height: 100%;
+  min-height: 12px;
+  background-color: var(--lwc-colorBorder, #dddbda);
+}
+
+.generated-answer-thread__connector::before,
+.generated-answer-thread__connector::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 1px;
+  height: 8px;
+  background-color: var(--lwc-colorBorder, #dddbda);
+}
+
+.generated-answer-thread__connector::before {
+  top: -8px;
+}
+
+.generated-answer-thread__connector::after {
+  bottom: -8px;
+}
+
+.generated-answer-thread__show-previous-button {
+  width: fit-content;
+  border-radius: var(--slds-g-radius-border-2, 4px);
+  cursor: pointer;
+}
+
+.generated-answer-thread__show-previous-button:hover {
+  background-color: var(--lwc-colorBackgroundRowHover, #f3f2f2);
+}

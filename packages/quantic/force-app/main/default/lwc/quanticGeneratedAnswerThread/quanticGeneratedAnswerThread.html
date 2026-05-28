@@ -1,0 +1,72 @@
+<template>
+  <template lwc:if={isSingleAnswer}>
+    <c-quantic-generated-answer-body
+      engine-id={engineId}
+      generated-answer={headAnswer}
+      disable-citation-anchoring={disableCitationAnchoring}
+    ></c-quantic-generated-answer-body>
+  </template>
+
+  <template lwc:else>
+    <ul class="generated-answer-thread">
+      <template lwc:if={shouldCollapseOlderAnswers}>
+        <li class="generated-answer-thread__show-previous">
+          <div class="slds-grid slds-grid_vertical-align-center">
+            <div
+              class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-shrink-none slds-m-right_x-small generated-answer-thread__dot-column"
+            >
+              <span
+                class="generated-answer-thread__dot"
+                data-testid="show-previous-dot"
+              ></span>
+            </div>
+            <div>
+              <button
+                type="button"
+                class="slds-button_reset slds-p-horizontal_x-small slds-p-vertical_xx-small generated-answer-thread__show-previous-button"
+                data-testid="show-previous-button"
+                onclick={handleShowAllClick}
+              >
+                {showPreviousLabel}
+              </button>
+            </div>
+          </div>
+          <div class="slds-grid">
+            <div
+              class="slds-grid slds-grid_align-center slds-shrink-none generated-answer-thread__line-column slds-m-right_x-small"
+            >
+              <span class="generated-answer-thread__connector"></span>
+            </div>
+          </div>
+        </li>
+      </template>
+
+      <template lwc:if={hasPreviousAnswers}>
+        <template for:each={previousAnswers} for:item="answer">
+          <c-quantic-thread-item
+            key={answer.answerId}
+            title={answer.question}
+          >
+            <c-quantic-generated-answer-body
+              engine-id={engineId}
+              generated-answer={answer}
+              disable-citation-anchoring={disableCitationAnchoring}
+            ></c-quantic-generated-answer-body>
+          </c-quantic-thread-item>
+        </template>
+      </template>
+
+      <c-quantic-thread-item
+        title={lastAnswer.question}
+        hide-line
+        disable-collapse
+      >
+        <c-quantic-generated-answer-body
+          engine-id={engineId}
+          generated-answer={lastAnswer}
+          disable-citation-anchoring={disableCitationAnchoring}
+        ></c-quantic-generated-answer-body>
+      </c-quantic-thread-item>
+    </ul>
+  </template>
+</template>
