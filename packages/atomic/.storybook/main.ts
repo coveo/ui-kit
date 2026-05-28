@@ -12,8 +12,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const isVitest = process.env.VITEST !== undefined;
 const isChromatic = process.env.STORYBOOK_INVOKED_BY === 'chromatic';
-
-console.log('process.env', process.env);
+const isPlaywright = process.env.STORYBOOK_INVOKED_BY === 'playwright';
 
 const virtualCustomElementTags = (): Plugin => {
   return {
@@ -105,20 +104,28 @@ const externalizeDependencies = (
 
       const packageMapping = packageMappings[source];
 
-      if (!packageMapping || isVitest || isChromatic) {
+      if (!packageMapping) {
+        // If the package isn't in our mapping, we assume it's a local dependency and leave it as-is
         return null;
       }
 
+      // For all testing, we want to use the local versions of all packages to ensure everything is properly bundled together for testing
+      if (isVitest || isChromatic || isPlaywright) {
+        return null;
+      }
+
+      // For local Storybook development, we want to use local packages source to allow for easier debugging and HMR.
       if (configType === 'DEVELOPMENT') {
         return {
           id: packageMapping.local,
         };
-      } else {
-        return {
-          id: packageMapping.cdn,
-          external: 'absolute',
-        };
       }
+
+      // For production Storybook builds, we want to use Domain-relative URL to use the CDN versions of the packages.
+      return {
+        id: packageMapping.cdn,
+        external: 'absolute',
+      };
     },
   };
 };

@@ -54,7 +54,9 @@ export default defineConfig({
         command: isCDN
           ? 'pnpm exec turbo start --filter=@coveo/cdn'
           : `pnpm exec ws -d ./dist-storybook -p ${storybookPort}`,
-
+        env: {
+          STORYBOOK_INVOKED_BY: 'playwright',
+        },
         stdout: 'pipe',
         url: isCDN
           ? 'http://localhost:3000/atomic/v3/storybook/'
