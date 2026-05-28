@@ -140,9 +140,14 @@ describe('atomic-insight-result-attach-to-case-action', () => {
   });
 
   describe('when not attached', () => {
-    it('should have "Attach to case" as title', async () => {
-      const {button} = await renderComponent({isAttached: false});
-      await expect.element(button).toHaveAttribute('title', 'Attach to case');
+    it('should have tooltip semantics for "Attach to case"', async () => {
+      const {button, element} = await renderComponent({isAttached: false});
+      await button.focus();
+      await expect.element(button).toHaveAttribute('aria-describedby');
+      const tooltipId = await button.getAttribute('aria-describedby');
+      const tooltip = element.querySelector(`#${tooltipId}`);
+      expect(tooltip).toHaveAttribute('role', 'tooltip');
+      expect(tooltip?.textContent?.trim()).toBe('Attach to case');
     });
 
     it('should have "Attach to case" as aria-label', async () => {
@@ -183,9 +188,14 @@ describe('atomic-insight-result-attach-to-case-action', () => {
   });
 
   describe('when attached', () => {
-    it('should have "Detach from case" as title', async () => {
-      const {button} = await renderComponent({isAttached: true});
-      await expect.element(button).toHaveAttribute('title', 'Detach from case');
+    it('should have tooltip semantics for "Detach from case"', async () => {
+      const {button, element} = await renderComponent({isAttached: true});
+      await button.focus();
+      await expect.element(button).toHaveAttribute('aria-describedby');
+      const tooltipId = await button.getAttribute('aria-describedby');
+      const tooltip = element.querySelector(`#${tooltipId}`);
+      expect(tooltip).toHaveAttribute('role', 'tooltip');
+      expect(tooltip?.textContent?.trim()).toBe('Detach from case');
     });
 
     it('should have "Detach from case" as aria-label', async () => {
@@ -244,5 +254,17 @@ describe('atomic-insight-result-attach-to-case-action', () => {
     const event = await eventPromise;
     expect(event.detail.callback).toBeInstanceOf(Function);
     expect(event.detail.result).toBeDefined();
+  });
+
+  it('should dismiss tooltip on Escape and keep focus on trigger', async () => {
+    const {button, element} = await renderComponent({isAttached: false});
+    await button.focus();
+    const tooltipId = await button.getAttribute('aria-describedby');
+    const tooltip = element.querySelector(`#${tooltipId}`);
+
+    await userEvent.keyboard('{Escape}');
+
+    expect(tooltip).toHaveAttribute('hidden');
+    await expect.element(button).toHaveFocus();
   });
 });

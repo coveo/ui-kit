@@ -16,6 +16,9 @@ describe('#renderSwitch', () => {
     get handle() {
       return element.querySelector('button > div > div');
     },
+    get tooltip() {
+      return element.querySelector('[role="tooltip"]');
+    },
   });
 
   const renderComponent = async (props: Partial<SwitchProps> = {}) => {
@@ -142,9 +145,15 @@ describe('#renderSwitch', () => {
     expect(button).toHaveAttribute('tabindex', '0');
   });
 
-  it('should apply title attribute', async () => {
+  it('should render tooltip semantics when title is provided', async () => {
     const element = await renderComponent({title: 'Toggle tooltip'});
     const button = locators(element).button;
-    expect(button).toHaveAttribute('title', 'Toggle tooltip');
+    const tooltip = locators(element).tooltip as HTMLElement;
+
+    button.focus();
+
+    expect(button).toHaveAttribute('aria-describedby');
+    expect(tooltip).toHaveAttribute('role', 'tooltip');
+    expect(tooltip.textContent?.trim()).toBe('Toggle tooltip');
   });
 });

@@ -14,6 +14,12 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {LightDomMixin} from '@/src/mixins/light-dom';
+import {
+  createTooltipId,
+  dismissTooltipOnEscape,
+  hideTooltip,
+  showTooltip,
+} from '@/src/components/common/tooltip-utils';
 import AttachIcon from '../../../images/attach.svg';
 import DetachIcon from '../../../images/detach.svg';
 
@@ -41,6 +47,9 @@ export class AtomicInsightResultAttachToCaseAction
 {
   @state() public bindings!: InsightBindings;
   @state() public error!: Error;
+  private readonly tooltipId = createTooltipId(
+    'atomic-insight-result-attach-to-case-action'
+  );
 
   public attachedResults!: AttachedResults;
 
@@ -132,16 +141,34 @@ export class AtomicInsightResultAttachToCaseAction
       return html``;
     }
 
-    return renderIconButton({
-      props: {
-        partPrefix: 'result-action',
-        style: 'outline-neutral',
-        icon: this.getIcon(),
-        ariaLabel: this.getTooltip(),
-        title: this.getTooltip(),
-        onClick: () => this.onClick(),
-      },
-    });
+    const tooltip = this.getTooltip();
+
+    return html`<div class="relative inline-flex">
+      ${renderIconButton({
+        props: {
+          partPrefix: 'result-action',
+          style: 'outline-neutral',
+          icon: this.getIcon(),
+          ariaLabel: tooltip,
+          onClick: () => this.onClick(),
+          onFocus: (event) => showTooltip(event, this.tooltipId),
+          onBlur: (event) => hideTooltip(event, this.tooltipId),
+          onMouseEnter: (event) => showTooltip(event, this.tooltipId),
+          onMouseLeave: (event) => hideTooltip(event, this.tooltipId),
+          onKeyDown: (event) => dismissTooltipOnEscape(event, this.tooltipId),
+        },
+      })}
+      ${tooltip
+        ? html`<span
+            id=${this.tooltipId}
+            role="tooltip"
+            class="pointer-events-none bg-neutral-dark text-on-primary absolute top-full left-1/2 z-10 mt-1 -translate-x-1/2 whitespace-nowrap rounded px-2 py-1 text-xs"
+            hidden
+          >
+            ${tooltip}
+          </span>`
+        : null}
+    </div>`;
   }
 }
 

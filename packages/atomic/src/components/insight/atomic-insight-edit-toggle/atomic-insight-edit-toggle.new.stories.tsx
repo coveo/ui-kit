@@ -1,5 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {testTooltipA11y} from '@/storybook-utils/a11y/tooltip.js';
 import {MockInsightApi} from '@/storybook-utils/api/insight/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
@@ -46,5 +47,11 @@ export const WithTooltip: Story = {
   name: 'With tooltip',
   args: {
     tooltip: 'Click to edit this item',
+  },
+  play: async (context) => {
+    await play(context);
+    await testTooltipA11y(context, {
+      trigger: {role: 'button', name: /edit/i},
+    });
   },
 };

@@ -13,6 +13,11 @@ import {
 export interface ButtonProps {
   style: ButtonStyle;
   onClick?(event?: MouseEvent): void;
+  onFocus?(event: FocusEvent): void;
+  onBlur?(event: FocusEvent): void;
+  onMouseEnter?(event: MouseEvent): void;
+  onMouseLeave?(event: MouseEvent): void;
+  onKeyDown?(event: KeyboardEvent): void;
   class?: string;
   text?: string;
   part?: string;
@@ -66,6 +71,11 @@ export const renderButton: FunctionalComponentWithChildren<ButtonProps> =
       aria-checked=${ifDefined(props.ariaChecked)}
       @mousedown=${(e: MouseEvent) => createRipple(e, {color: rippleColor})}
       @click=${props.onClick}
+      @focus=${props.onFocus}
+      @blur=${props.onBlur}
+      @mouseenter=${props.onMouseEnter}
+      @mouseleave=${props.onMouseLeave}
+      @keydown=${props.onKeyDown}
       ?disabled=${props.disabled}
       ${props.ref ? ref(props.ref) : nothing}
     >

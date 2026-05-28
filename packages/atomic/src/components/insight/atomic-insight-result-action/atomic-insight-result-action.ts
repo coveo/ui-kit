@@ -3,7 +3,7 @@ import {
   type InsightAnalyticsActionCreators,
   loadInsightAnalyticsActions,
 } from '@coveo/headless/insight';
-import {css, LitElement} from 'lit';
+import {css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {renderIconButton} from '@/src/components/common/icon-button';
 import {ItemContextController} from '@/src/components/common/item-list/context/item-context-controller';
@@ -13,6 +13,12 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {LightDomMixin} from '@/src/mixins/light-dom';
+import {
+  createTooltipId,
+  dismissTooltipOnEscape,
+  hideTooltip,
+  showTooltip,
+} from '@/src/components/common/tooltip-utils';
 import AttachIcon from '../../../images/attach.svg';
 import CopyIcon from '../../../images/copy-dark.svg';
 import EmailIcon from '../../../images/email.svg';
@@ -79,6 +85,7 @@ export class AtomicInsightResultAction
   @state() public bindings!: InsightBindings;
   @state() public error!: Error;
   @state() private currentTooltip = '';
+  private readonly tooltipId = createTooltipId('atomic-insight-result-action');
 
   private itemContextController!: ItemContextController<Result>;
   private actions!: InsightAnalyticsActionCreators;
@@ -180,15 +187,32 @@ export class AtomicInsightResultAction
       return null;
     }
 
-    return renderIconButton({
-      props: {
-        partPrefix: 'result-action',
-        style: 'outline-neutral',
-        icon: this.getIcon(),
-        title: this.currentTooltip,
-        onClick: () => this.onClick(),
-      },
-    });
+    return html`<div class="relative inline-flex">
+      ${renderIconButton({
+        props: {
+          partPrefix: 'result-action',
+          style: 'outline-neutral',
+          icon: this.getIcon(),
+          ariaLabel: this.currentTooltip,
+          onClick: () => this.onClick(),
+          onFocus: (event) => showTooltip(event, this.tooltipId),
+          onBlur: (event) => hideTooltip(event, this.tooltipId),
+          onMouseEnter: (event) => showTooltip(event, this.tooltipId),
+          onMouseLeave: (event) => hideTooltip(event, this.tooltipId),
+          onKeyDown: (event) => dismissTooltipOnEscape(event, this.tooltipId),
+        },
+      })}
+      ${this.currentTooltip
+        ? html`<span
+            id=${this.tooltipId}
+            role="tooltip"
+            class="pointer-events-none bg-neutral-dark text-on-primary absolute top-full left-1/2 z-10 mt-1 -translate-x-1/2 whitespace-nowrap rounded px-2 py-1 text-xs"
+            hidden
+          >
+            ${this.currentTooltip}
+          </span>`
+        : null}
+    </div>`;
   }
 }
 

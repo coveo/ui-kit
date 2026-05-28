@@ -14,6 +14,9 @@ describe('#renderCopyButton', () => {
     get iconContainer() {
       return element.querySelector('.icon-container');
     },
+    get tooltip() {
+      return element.querySelector('[role="tooltip"]');
+    },
   });
 
   const renderComponent = async (props: Partial<CopyButtonProps> = {}) => {
@@ -36,13 +39,17 @@ describe('#renderCopyButton', () => {
     expect(button).toBeInTheDocument();
   });
 
-  it('should render a copy button with the correct title', async () => {
+  it('should render tooltip semantics for the copy button', async () => {
     const element = await renderComponent({
       title: 'Copy to clipboard',
     });
     const button = locators(element).button;
+    const tooltip = locators(element).tooltip as HTMLElement;
 
-    expect(button).toHaveAttribute('title', 'Copy to clipboard');
+    button?.focus();
+    expect(button).toHaveAttribute('aria-describedby');
+    expect(tooltip).toHaveAttribute('role', 'tooltip');
+    expect(tooltip.textContent?.trim()).toBe('Copy to clipboard');
   });
 
   it('should render a copy button with the correct part attribute', async () => {

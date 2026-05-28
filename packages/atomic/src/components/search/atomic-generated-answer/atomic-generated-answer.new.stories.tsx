@@ -7,6 +7,7 @@ import type {
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
 import {userEvent} from 'storybook/test';
+import {testTooltipA11y} from '@/storybook-utils/a11y/tooltip.js';
 import {MockAgentApi} from '@/storybook-utils/api/agent/mock';
 import {MockAnswerApi} from '@/storybook-utils/api/answer/mock';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
@@ -148,5 +149,22 @@ export const WithAgentId: Story = {
   play: async (storyContext) => {
     await playWithLegacyAnalytics(storyContext);
     await submitGeneratedAnswerQuery(storyContext);
+  },
+};
+
+export const A11yTooltip: Story = {
+  tags: ['a11y', 'test'],
+  args: {
+    'answer-configuration-id': 'fc581be0-6e61-4039-ab26-a3f2f52f308f',
+  },
+  play: async (storyContext) => {
+    await play(storyContext);
+    await submitGeneratedAnswerQuery(storyContext);
+    await testTooltipA11y(storyContext, {
+      trigger: {role: 'switch', name: /generated answer/i},
+    });
+    await testTooltipA11y(storyContext, {
+      trigger: {role: 'button', name: /copy/i},
+    });
   },
 };

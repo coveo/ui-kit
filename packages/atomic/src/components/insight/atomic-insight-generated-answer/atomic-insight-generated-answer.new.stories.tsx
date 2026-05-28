@@ -5,6 +5,7 @@ import type {
 } from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
+import {testTooltipA11y} from '@/storybook-utils/a11y/tooltip.js';
 import {MockAnswerApi} from '@/storybook-utils/api/answer/mock';
 import {MockInsightApi} from '@/storybook-utils/api/insight/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
@@ -94,5 +95,42 @@ export const DisableCitationAnchoring: Story = {
   name: 'Citation anchoring disabled',
   args: {
     'disable-citation-anchoring': true,
+  },
+};
+
+export const A11yTooltip: Story = {
+  tags: ['a11y', 'test'],
+  play: async (storyContext) => {
+    await play(storyContext);
+    const searchBox =
+      await storyContext.canvas.findAllByShadowPlaceholderText('Search');
+    const query = 'how to resolve netflix connection with tivo';
+    const input = searchBox[0] as HTMLTextAreaElement;
+    input.scrollIntoView({block: 'center'});
+    input.focus();
+    input.value = query;
+    input.dispatchEvent(
+      new InputEvent('input', {
+        bubbles: true,
+        composed: true,
+        data: query,
+        inputType: 'insertText',
+      })
+    );
+    input.dispatchEvent(
+      new KeyboardEvent('keydown', {
+        bubbles: true,
+        composed: true,
+        key: 'Enter',
+        code: 'Enter',
+      })
+    );
+
+    await testTooltipA11y(storyContext, {
+      trigger: {role: 'switch', name: /generated answer/i},
+    });
+    await testTooltipA11y(storyContext, {
+      trigger: {role: 'button', name: /copy/i},
+    });
   },
 };

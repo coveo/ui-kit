@@ -1,6 +1,6 @@
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
-import {page} from 'vitest/browser';
+import {page, userEvent} from 'vitest/browser';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import './atomic-insight-edit-toggle';
 import type {AtomicInsightEditToggle} from './atomic-insight-edit-toggle';
@@ -39,11 +39,17 @@ describe('atomic-insight-edit-toggle', () => {
     expect(clickCallback).toHaveBeenCalledOnce();
   });
 
-  it('should apply tooltip to button', async () => {
+  it('should render tooltip semantics when focused', async () => {
     const tooltip = 'Edit this item';
-    const {button} = await renderComponent({tooltip});
+    const {button, element} = await renderComponent({tooltip});
 
-    await expect.element(button).toHaveAttribute('title', tooltip);
+    await button.focus();
+
+    await expect.element(button).toHaveAttribute('aria-describedby');
+    const tooltipId = await button.getAttribute('aria-describedby');
+    const tooltipElement = element.shadowRoot?.getElementById(tooltipId!);
+    expect(tooltipElement).toHaveAttribute('role', 'tooltip');
+    expect(tooltipElement).not.toHaveAttribute('hidden');
   });
 
   it('should have correct aria-label', async () => {
@@ -51,8 +57,17 @@ describe('atomic-insight-edit-toggle', () => {
     await expect.element(button).toHaveAttribute('aria-label', 'Edit');
   });
 
-  it('should render with default empty tooltip', async () => {
-    const {button} = await renderComponent();
-    await expect.element(button).toHaveAttribute('title', '');
+  it('should dismiss tooltip on Escape and keep focus on trigger', async () => {
+    const {button, element} = await renderComponent({
+      tooltip: 'Edit this item',
+    });
+    await button.focus();
+    const tooltipId = await button.getAttribute('aria-describedby');
+    const tooltipElement = element.shadowRoot?.getElementById(tooltipId!);
+
+    await userEvent.keyboard('{Escape}');
+
+    expect(tooltipElement).toHaveAttribute('hidden');
+    await expect.element(button).toHaveFocus();
   });
 });

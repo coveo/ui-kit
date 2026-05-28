@@ -17,3 +17,8 @@ export {
   testRadioGroupA11y,
   type RadioGroupA11yOptions,
 } from './radiogroup.js';
+export {
+  COVERED_CRITERIA as TOOLTIP_COVERED_CRITERIA,
+  testTooltipA11y,
+  type TooltipA11yOptions,
+} from './tooltip.js';

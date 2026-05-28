@@ -106,9 +106,16 @@ describe('atomic-insight-result-action', () => {
       }
     });
 
-    it('should display the tooltip as title', async () => {
-      const {button} = await renderComponent({tooltip: 'My Tooltip'});
-      await expect.element(button).toHaveAttribute('title', 'My Tooltip');
+    it('should link button to tooltip on focus', async () => {
+      const {button, element} = await renderComponent({
+        tooltip: 'My Tooltip',
+      });
+      await button.focus();
+      await expect.element(button).toHaveAttribute('aria-describedby');
+      const tooltipId = await button.getAttribute('aria-describedby');
+      const tooltip = element.querySelector(`#${tooltipId}`);
+      expect(tooltip).toHaveAttribute('role', 'tooltip');
+      expect(tooltip?.textContent?.trim()).toBe('My Tooltip');
     });
   });
 
@@ -231,11 +238,11 @@ describe('atomic-insight-result-action', () => {
       await button.click();
 
       const buttonEl = element.querySelector('button');
-      expect(buttonEl?.getAttribute('title')).toBe('Copied!');
+      expect(buttonEl?.getAttribute('aria-label')).toBe('Copied!');
 
       await vi.advanceTimersByTimeAsync(1000);
 
-      expect(buttonEl?.getAttribute('title')).toBe('Copy');
+      expect(buttonEl?.getAttribute('aria-label')).toBe('Copy');
 
       vi.useRealTimers();
     });
@@ -252,20 +259,22 @@ describe('atomic-insight-result-action', () => {
       await button.click();
 
       const buttonEl = element.querySelector('button');
-      expect(buttonEl?.getAttribute('title')).toBe('Copied!');
+      expect(buttonEl?.getAttribute('aria-label')).toBe('Copied!');
 
       element.disconnectedCallback();
 
       await vi.advanceTimersByTimeAsync(1000);
 
-      expect(buttonEl?.getAttribute('title')).toBe('Copied!');
+      expect(buttonEl?.getAttribute('aria-label')).toBe('Copied!');
 
       vi.useRealTimers();
     });
   });
 
   it('should emit event when activated via keyboard', async () => {
-    const {element} = await renderComponent({action: Actions.CopyToClipboard});
+    const {element} = await renderComponent({
+      action: Actions.CopyToClipboard,
+    });
 
     const eventPromise = new Promise<
       CustomEvent<InsightResultActionClickedEvent>
@@ -283,5 +292,19 @@ describe('atomic-insight-result-action', () => {
     const event = await eventPromise;
     expect(event.detail.action).toBe(Actions.CopyToClipboard);
     expect(event.detail.result).toBeDefined();
+  });
+
+  it('should dismiss tooltip on Escape and keep focus on trigger', async () => {
+    const {button, element} = await renderComponent({
+      tooltip: 'My Tooltip',
+    });
+    await button.focus();
+    const tooltipId = await button.getAttribute('aria-describedby');
+    const tooltip = element.querySelector(`#${tooltipId}`);
+
+    await userEvent.keyboard('{Escape}');
+
+    expect(tooltip).toHaveAttribute('hidden');
+    await expect.element(button).toHaveFocus();
   });
 });
