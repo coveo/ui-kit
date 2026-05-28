@@ -11,7 +11,9 @@ import {generateExternalPackageMappings} from '../scripts/externalPackageMapping
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const isVitest = process.env.VITEST !== undefined;
-const isChromatic = process.env.IS_CHROMATIC === 'true';
+const isChromatic = process.env.STORYBOOK_INVOKED_BY === 'chromatic';
+
+console.log('process.env', process.env);
 
 const virtualCustomElementTags = (): Plugin => {
   return {

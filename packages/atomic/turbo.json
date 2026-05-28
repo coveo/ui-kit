@@ -1,4 +1,5 @@
 {
+  "$schema": "https://turbo.build/schema.json",
   "extends": ["//"],
   "tasks": {
     "build": {
@@ -28,7 +29,8 @@
     },
     "build:storybook": {
       "dependsOn": ["^build", "pre:storybook"],
-      "outputs": ["./dist-storybook/**"]
+      "outputs": ["./dist-storybook/**"],
+      "env": ["STORYBOOK_INVOKED_BY"]
     },
     "chromatic": {
       "dependsOn": [],
