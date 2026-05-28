@@ -83,15 +83,16 @@ jobs:
       - uses: ./.github/actions/setup-sfdx
       - name: Promote SFDX package to production
         run: |
-          echo "${{ secrets.SFDX_AUTH_JWT_KEY }}" > ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
+          echo "${{ secrets.SFDX_AUTH_JWT_KEY }}" > ${VARS_SFDX_AUTH_JWT_KEY_FILE}
           pnpm exec turbo run @coveo/quantic#promote:sfdx:ci
-          rm ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
+          rm ${VARS_SFDX_AUTH_JWT_KEY_FILE}
         env:
           SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
           SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
           SFDX_AUTH_JWT_USERNAME: ${{ vars.SFDX_AUTH_JWT_USERNAME }}
           SFDX_AUTH_JWT_KEY_FILE: ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VARS_SFDX_AUTH_JWT_KEY_FILE: ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
         working-directory: ./packages/quantic
   typedoc-headless:
     if: ${{ needs.release.outputs.published == 'true' }}
@@ -125,9 +126,9 @@ jobs:
 
       - name: Copy the docs into the version folder
         run: |
-          mkdir -p typedoc-headless-site/${{ env.version }}/
-          cp -r packages/headless/docs/* typedoc-headless-site/${{ env.version }}/
-          echo "Copied docs to: typedoc-headless-site/${{ env.version }}/"
+          mkdir -p typedoc-headless-site/${version}/
+          cp -r packages/headless/docs/* typedoc-headless-site/${version}/
+          echo "Copied docs to: typedoc-headless-site/${version}/"
 
       - name: Upload documentation artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
@@ -166,9 +167,9 @@ jobs:
 
       - name: Copy the docs into the version folder
         run: |
-          mkdir -p typedoc-headless-react-site/${{ env.version }}/
-          cp -r packages/headless-react/docs/* typedoc-headless-react-site/${{ env.version }}/
-          echo "Copied docs to: typedoc-headless-react-site/${{ env.version }}/"
+          mkdir -p typedoc-headless-react-site/${version}/
+          cp -r packages/headless-react/docs/* typedoc-headless-react-site/${version}/
+          echo "Copied docs to: typedoc-headless-react-site/${version}/"
 
       - name: Upload documentation artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
