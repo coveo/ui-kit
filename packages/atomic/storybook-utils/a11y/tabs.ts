@@ -1,6 +1,6 @@
 import type {StoryContext} from '@storybook/web-components-vite';
 import {within} from 'shadow-dom-testing-library';
-import {expect, waitFor} from 'storybook/test';
+import {expect, userEvent, waitFor} from 'storybook/test';
 
 /**
  * WCAG 2.2 AA criteria covered by tabs interaction tests.
@@ -13,11 +13,8 @@ import {expect, waitFor} from 'storybook/test';
 export const COVERED_CRITERIA = ['2.1.1'] as const;
 
 function getDeepActiveElement(element: Element | null): Element | null {
-  if (!element) {
-    return null;
-  }
-  if (element.shadowRoot?.activeElement) {
-    return getDeepActiveElement(element.shadowRoot.activeElement);
+  while (element?.shadowRoot?.activeElement) {
+    element = element.shadowRoot.activeElement;
   }
   return element;
 }
@@ -78,7 +75,14 @@ export async function testTabsA11y(context: StoryContext): Promise<void> {
       }
 
       const tablist = tablists[0];
-      tabs = Array.from(tablist.querySelectorAll<HTMLElement>('[role="tab"]'));
+      const tablistRoot = within(tablist);
+      try {
+        tabs = await tablistRoot.findAllByShadowRole('tab', undefined, {
+          timeout: 5000,
+        });
+      } catch {
+        tabs = [];
+      }
 
       if (tabs.length === 0) {
         throw new Error(
@@ -94,7 +98,8 @@ export async function testTabsA11y(context: StoryContext): Promise<void> {
       const activeTab =
         tabs.find((t) => t.getAttribute('aria-selected') === 'true') ?? tabs[0];
 
-      activeTab.focus();
+      canvasElement.focus();
+      await userEvent.tab();
 
       await waitFor(
         () => {
@@ -117,13 +122,7 @@ export async function testTabsA11y(context: StoryContext): Promise<void> {
         {timeout: 3000}
       );
 
-      firstTab.dispatchEvent(
-        new KeyboardEvent('keydown', {
-          key: 'ArrowRight',
-          bubbles: true,
-          composed: true,
-        })
-      );
+      await userEvent.keyboard('{ArrowRight}');
 
       await waitFor(
         () => {
@@ -146,13 +145,7 @@ export async function testTabsA11y(context: StoryContext): Promise<void> {
         {timeout: 3000}
       );
 
-      secondTab.dispatchEvent(
-        new KeyboardEvent('keydown', {
-          key: 'ArrowLeft',
-          bubbles: true,
-          composed: true,
-        })
-      );
+      await userEvent.keyboard('{ArrowLeft}');
 
       await waitFor(
         () => {
