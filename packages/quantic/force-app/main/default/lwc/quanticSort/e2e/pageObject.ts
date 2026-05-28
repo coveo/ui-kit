@@ -32,11 +32,9 @@ export class SortObject {
     } else {
       await this.sortDropDown.press('Space');
     }
-    await this.page
-      .locator('div[part="dropdown overlay"]')
-      .waitFor({state: 'visible'});
-    await this.sortButton('Oldest').waitFor({state: 'visible'});
-  }
+    const overlay = this.page.locator('div[part="dropdown overlay"]');
+    await overlay.waitFor({state: 'visible'});
+    await overlay.locator('[role="option"]').first().waitFor({state: 'visible'});
 
   async selectNextSortOptionUsingKeyboard(expectedLabel: string): Promise<void> {
     await this.sortDropDown.press('ArrowDown');
