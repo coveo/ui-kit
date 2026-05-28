@@ -26,3 +26,8 @@ export {
   testCarouselA11y,
   type CarouselA11yOptions,
 } from './carousel.js';
+export {
+  COVERED_CRITERIA as TABLE_COVERED_CRITERIA,
+  testTableA11y,
+  type TableA11yOptions,
+} from './table.js';
