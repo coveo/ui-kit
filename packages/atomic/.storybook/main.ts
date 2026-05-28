@@ -7,11 +7,11 @@ import remarkGfm from 'remark-gfm';
 import type {Plugin} from 'vite';
 import {mergeConfig} from 'vite';
 import {generateExternalPackageMappings} from '../scripts/externalPackageMappings.mjs';
-import isChromatic from 'chromatic/isChromatic';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const isVitest = process.env.VITEST !== undefined;
+const isChromatic = process.env.IS_CHROMATIC === 'true';
 
 const virtualCustomElementTags = (): Plugin => {
   return {
