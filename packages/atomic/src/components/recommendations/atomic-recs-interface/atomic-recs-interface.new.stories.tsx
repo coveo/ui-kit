@@ -22,7 +22,7 @@ import '@/src/components/search/atomic-result-section-visual/atomic-result-secti
 import '@/src/components/search/atomic-result-text/atomic-result-text.js';
 import '@/src/components/search/atomic-text/atomic-text.js';
 
-const mockRecommendationApi = new MockRecommendationApi();
+const recommendationApiHarness = new MockRecommendationApi();
 const {decorator, play} = wrapInRecommendationInterface();
 
 const {events, args, argTypes} = getStorybookHelpers('atomic-recs-interface', {
@@ -38,7 +38,7 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     msw: {
-      handlers: [...mockRecommendationApi.handlers],
+      handlers: [...recommendationApiHarness.handlers],
     },
     actions: {
       handles: events,

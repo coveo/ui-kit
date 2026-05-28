@@ -11,7 +11,7 @@ import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interfac
 import '@/src/components/insight/atomic-insight-facet/atomic-insight-facet.js';
 import '@/src/components/insight/atomic-insight-refine-toggle/atomic-insight-refine-toggle.js';
 
-const mockInsightApi = new MockInsightApi();
+const insightApiHarness = new MockInsightApi();
 
 const {decorator, play} = wrapInInsightInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -30,13 +30,13 @@ const meta: Meta = {
       handles: events,
     },
     msw: {
-      handlers: [...mockInsightApi.handlers],
+      handlers: [...insightApiHarness.handlers],
     },
   },
   args,
   argTypes,
   beforeEach: async () => {
-    mockInsightApi.searchEndpoint.mock(
+    insightApiHarness.searchEndpoint.mock(
       () => richResponse as unknown as typeof baseResponse
     );
   },

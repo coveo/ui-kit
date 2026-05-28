@@ -51,8 +51,8 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
-const mockedInsightApi = new MockInsightApi();
-mockedInsightApi.searchEndpoint.mock((response) => ({
+const insightApiHarness = new MockInsightApi();
+insightApiHarness.searchEndpoint.mock((response) => ({
   ...response,
   results: response.results.map((result: Record<string, unknown>) => ({
     ...result,
@@ -82,12 +82,12 @@ const meta: Meta = {
       handles: events,
     },
     msw: {
-      handlers: [...mockedInsightApi.handlers],
+      handlers: [...insightApiHarness.handlers],
     },
   },
   beforeEach: () => {
-    mockedInsightApi.searchEndpoint.clear();
-    mockedInsightApi.querySuggestEndpoint.clear();
+    insightApiHarness.searchEndpoint.clear();
+    insightApiHarness.querySuggestEndpoint.clear();
   },
   args,
   argTypes,

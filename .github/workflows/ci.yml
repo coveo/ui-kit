@@ -31,8 +31,10 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
-      - run: git branch ${{ github.event.pull_request.base.ref }} origin/${{ github.event.pull_request.base.ref }}
+      - run: git branch ${GITHUB_EVENT_PULL_REQUEST_BASE_REF} origin/${GITHUB_EVENT_PULL_REQUEST_BASE_REF}
         if: ${{ github.event_name == 'pull_request' }}
+        env:
+          GITHUB_EVENT_PULL_REQUEST_BASE_REF: ${{ github.event.pull_request.base.ref }}
       - run: git branch main origin/main
         if: ${{ github.event_name != 'pull_request' }}
       - uses: ./.github/actions/setup
@@ -144,8 +146,10 @@ jobs:
         with:
           fetch-depth: 0
           filter: blob:none
-      - run: git branch ${{ github.event.pull_request.base.ref }} origin/${{ github.event.pull_request.base.ref }}
+      - run: git branch ${GITHUB_EVENT_PULL_REQUEST_BASE_REF} origin/${GITHUB_EVENT_PULL_REQUEST_BASE_REF}
         if: ${{ github.event_name == 'pull_request' }}
+        env:
+          GITHUB_EVENT_PULL_REQUEST_BASE_REF: ${{ github.event.pull_request.base.ref }}
       - run: git branch main origin/main
         if: ${{ github.event_name != 'pull_request' }}
       - uses: ./.github/actions/setup
@@ -158,7 +162,9 @@ jobs:
           echo "projects=$AFFECTED" >> "$GITHUB_OUTPUT"
       - name: Log affected projects
         run: |
-          echo "Affected projects: ${{ steps.set.outputs.projects }}"
+          echo "Affected projects: ${STEPS_SET_OUTPUTS_PROJECTS}"
+        env:
+          STEPS_SET_OUTPUTS_PROJECTS: ${{ steps.set.outputs.projects }}
   knip:
     name: 'Look for unused code or dependencies'
     runs-on: ubuntu-latest
@@ -250,8 +256,10 @@ jobs:
         with:
           fetch-depth: 0
           filter: blob:none
-      - run: git branch ${{ github.event.pull_request.base.ref }} origin/${{ github.event.pull_request.base.ref }}
+      - run: git branch ${GITHUB_EVENT_PULL_REQUEST_BASE_REF} origin/${GITHUB_EVENT_PULL_REQUEST_BASE_REF}
         if: ${{ github.event_name == 'pull_request' }}
+        env:
+          GITHUB_EVENT_PULL_REQUEST_BASE_REF: ${{ github.event.pull_request.base.ref }}
       - run: git branch main origin/main
         if: ${{ github.event_name != 'pull_request' }}
       - uses: ./.github/actions/setup
