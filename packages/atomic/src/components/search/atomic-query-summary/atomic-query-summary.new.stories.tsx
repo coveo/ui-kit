@@ -1,9 +1,14 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {buildSearchResponseWithResults} from '@/storybook-utils/api/search/search-response-mocks';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import type {AtomicSearchInterface} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
+
+const mockSearchApi = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -21,12 +26,16 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     chromatic: {disableSnapshot: true},
+    msw: {handlers: [...mockSearchApi.handlers]},
     actions: {
       handles: events,
     },
   },
   args,
   argTypes,
+  beforeEach: async () => {
+    mockSearchApi.clearAll();
+  },
 
   play,
 };
@@ -40,17 +49,19 @@ export const Default: Story = {
 export const A11yStatusMessage: Story = {
   name: 'A11y Status Message',
   tags: ['a11y', 'test'],
+  beforeEach: async () => {
+    mockSearchApi.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
+    mockSearchApi.searchEndpoint.mockOnce(buildSearchResponseWithResults(42));
+  },
   play: async (context) => {
-    // The initial search already triggers a status message in atomic-aria-live.
-    // We just need to verify the live region gets populated after the search completes.
     await play(context);
     await testStatusMessageA11y(context, {
-      triggerAction: async () => {
-        // The search already executed during play(). The aria-live region
-        // should already be populated with "Results 1-10 of X" or similar.
-        // We trigger nothing extra — just verify the live region has content.
+      triggerAction: async (canvasElement) => {
+        await canvasElement
+          .querySelector<AtomicSearchInterface>('atomic-search-interface')!
+          .executeFirstSearch();
       },
-      expectedText: /TODO:/i,
+      expectedText: 'Results loaded. Results 1-10 of 42',
       timeout: 5000,
     });
   },

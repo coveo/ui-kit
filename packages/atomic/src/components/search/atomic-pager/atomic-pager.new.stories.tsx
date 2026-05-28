@@ -1,11 +1,16 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {within} from 'shadow-dom-testing-library';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {buildSearchResponseWithResults} from '@/storybook-utils/api/search/search-response-mocks';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-pager/atomic-pager.js';
 import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
+
+const mockSearchApi = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers('atomic-pager', {
@@ -22,6 +27,7 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     chromatic: {disableSnapshot: true},
+    msw: {handlers: [...mockSearchApi.handlers]},
     actions: {
       handles: events,
     },
@@ -34,6 +40,9 @@ const meta: Meta = {
       '<svg viewBox="0 0 20 20"><path d="m8.5 15.2 4.3-4.6c.3-.4.3-.9 0-1.3l-4.4-4.5c-.3-.4-.9-.4-1.2 0s-.3.9 0 1.3l3.7 4-3.7 3.9c-.3.4-.3.9 0 1.3.4.3 1 .3 1.3-.1z"/></svg>',
   },
   argTypes,
+  beforeEach: async () => {
+    mockSearchApi.clearAll();
+  },
   play,
 };
 
@@ -64,16 +73,20 @@ export const A11yStatusMessage: Story = {
   decorators: [
     (story) => html`<atomic-query-summary></atomic-query-summary>${story()}`,
   ],
+  beforeEach: async () => {
+    mockSearchApi.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
+    mockSearchApi.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
+  },
 
   play: async (context) => {
     await play(context);
     await testStatusMessageA11y(context, {
       triggerAction: async () => {
-        const {canvas} = context;
+        const canvas = within(context.canvasElement);
         const nextButton = await canvas.findByShadowLabelText(/next/i);
         nextButton.click();
       },
-      expectedText: /Results loaded. Results .* of .*/i, // TODO: use msw to return a fixed number of results and assert against that for a more deterministic test
+      expectedText: 'Results loaded. Results 11-20 of 120',
       timeout: 5000,
     });
   },

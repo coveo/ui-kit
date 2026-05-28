@@ -1,8 +1,13 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {html} from 'lit';
+import {within} from 'shadow-dom-testing-library';
+import {userEvent} from 'storybook/test';
+import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-search-box/atomic-search-box.js';
 import '@/src/components/search/atomic-query-error/atomic-query-error.js';
 
 const mockSearchApi = new MockSearchApi();
@@ -109,5 +114,39 @@ export const WithOrganizationPaused: Story = {
       }),
       {status: 503}
     );
+  },
+};
+
+export const A11yStatusMessage: Story = {
+  name: 'A11y Status Message',
+  tags: ['a11y', 'test'],
+  decorators: [
+    (story) => html`<atomic-search-box></atomic-search-box>${story()}`,
+  ],
+  beforeEach: async () => {
+    mockSearchApi.searchEndpoint.mockOnce((response) => response);
+    mockSearchApi.searchEndpoint.mockOnce(
+      () => ({
+        ok: false,
+        status: 418,
+        message: 'Something very weird just happened',
+        statusCode: 418,
+        type: 'ClientError',
+      }),
+      {status: 418}
+    );
+  },
+  play: async (context) => {
+    await play(context);
+    await testStatusMessageA11y(context, {
+      triggerAction: async () => {
+        const canvas = within(context.canvasElement);
+        const searchBox = await canvas.findByShadowPlaceholderText('Search');
+        await userEvent.type(searchBox, 'error{enter}');
+      },
+      expectedText:
+        'Something went wrong. If the problem persists contact the administrator.',
+      timeout: 5000,
+    });
   },
 };

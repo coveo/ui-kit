@@ -1,6 +1,9 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {within} from 'shadow-dom-testing-library';
+import {userEvent} from 'storybook/test';
+import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -43,4 +46,21 @@ export default meta;
 
 export const Default: Story = {
   name: 'atomic-search-box-query-suggestions',
+};
+
+export const A11yStatusMessage: Story = {
+  name: 'A11y Status Message',
+  tags: ['a11y', 'test'],
+  play: async (context) => {
+    await play(context);
+    await testStatusMessageA11y(context, {
+      triggerAction: async () => {
+        const canvas = within(context.canvasElement);
+        const searchBox = await canvas.findByShadowPlaceholderText('Search');
+        await userEvent.type(searchBox, 'coveo');
+      },
+      expectedText: '5 search suggestions are available for coveo.',
+      timeout: 5000,
+    });
+  },
 };

@@ -1,8 +1,10 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import type {AtomicSearchInterface} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import '@/src/components/search/atomic-notifications/atomic-notifications.js';
 
 const mockSearchApi = new MockSearchApi();
@@ -13,6 +15,24 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 );
 
 const {decorator, play} = wrapInSearchInterface();
+
+const mockNotificationsResponse = () => {
+  mockSearchApi.searchEndpoint.mockOnce((response) => ({
+    ...response,
+    triggers: [
+      {
+        type: 'notify',
+        content:
+          'This is a demo notification. It contains text that may span over a different number of lines depending on your screen width. Notifications are returned by the Coveo Search API.',
+      },
+      {
+        type: 'notify',
+        content:
+          'This is a different notification. Any number of notifications can be returned by the Coveo Search API.',
+      },
+    ],
+  }));
+};
 
 const meta: Meta = {
   component: 'atomic-notifications',
@@ -32,32 +52,46 @@ const meta: Meta = {
   argTypes,
   beforeEach: async () => {
     mockSearchApi.searchEndpoint.clear();
-    mockSearchApi.searchEndpoint.mockOnce((response) => ({
-      ...response,
-      triggers: [
-        {
-          type: 'notify',
-          content:
-            'This is a demo notification. It contains text that may span over a different number of lines depending on your screen width. Notifications are returned by the Coveo Search API.',
-        },
-        {
-          type: 'notify',
-          content:
-            'This is a different notification. Any number of notifications can be returned by the Coveo Search API.',
-        },
-      ],
-    }));
   },
   play,
 };
 
 export default meta;
 
-export const Default: Story = {};
+export const Default: Story = {
+  beforeEach: async () => {
+    mockNotificationsResponse();
+  },
+};
 
 export const CustomIcon: Story = {
   name: 'With a custom icon',
   args: {
     icon: 'https://raw.githubusercontent.com/coveo/ui-kit/main/packages/atomic/src/images/arrow-top-rounded.svg',
+  },
+  beforeEach: async () => {
+    mockNotificationsResponse();
+  },
+};
+
+export const A11yStatusMessage: Story = {
+  name: 'A11y Status Message',
+  tags: ['a11y', 'test'],
+  beforeEach: async () => {
+    mockSearchApi.searchEndpoint.mockOnce((response) => response);
+    mockNotificationsResponse();
+  },
+  play: async (context) => {
+    await play(context);
+    await testStatusMessageA11y(context, {
+      triggerAction: async () => {
+        const searchInterface = context.canvasElement.querySelector(
+          'atomic-search-interface'
+        ) as AtomicSearchInterface;
+        await searchInterface.executeFirstSearch();
+      },
+      expectedText: 'Notification 1: This is a demo notification.',
+      timeout: 5000,
+    });
   },
 };

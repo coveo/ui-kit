@@ -1,10 +1,15 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {html} from 'lit';
+import {within} from 'shadow-dom-testing-library';
+import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {buildSearchResponseWithResults} from '@/storybook-utils/api/search/search-response-mocks';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-category-facet/atomic-category-facet.js';
+import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 
 const searchApiHarness = new MockSearchApi();
 
@@ -305,6 +310,23 @@ const mockSelectedChildValueWithMoreAvailable = (
   });
 };
 
+const mockCategoryFacetResponseWithResults = (
+  totalCount: number,
+  categoryFacetResponse: ReturnType<typeof createCategoryFacetResponse>
+) => {
+  searchApiHarness.searchEndpoint.mockOnce((response) => {
+    const responseWithResults =
+      buildSearchResponseWithResults(totalCount)(response);
+    if ('facets' in responseWithResults) {
+      return {
+        ...responseWithResults,
+        facets: [...(responseWithResults.facets || []), categoryFacetResponse],
+      };
+    }
+    return responseWithResults;
+  });
+};
+
 const {decorator, play} = wrapInSearchInterface();
 
 const {events, argTypes} = getStorybookHelpers('atomic-category-facet', {
@@ -412,5 +434,47 @@ export const WithSelectedChildValueAndMoreAvailable: Story = {
   decorators: [facetDecorator],
   beforeEach: () => {
     mockSelectedChildValueWithMoreAvailable();
+  },
+};
+
+export const A11yStatusMessage: Story = {
+  name: 'A11y Status Message',
+  tags: ['a11y', 'test'],
+  args: {
+    field: 'geographicalhierarchy',
+    label: 'Geographical Hierarchy',
+    'with-search': true,
+  },
+  decorators: [
+    facetDecorator,
+    (story) => html`<atomic-query-summary></atomic-query-summary>${story()}`,
+  ],
+  beforeEach: () => {
+    mockCategoryFacetResponseWithResults(
+      120,
+      createCategoryFacetResponse(baseCategoryFacetValues)
+    );
+    mockCategoryFacetResponseWithResults(
+      42,
+      createSelectedCategoryFacetResponse(
+        ['North America'],
+        northAmericaChildValues
+      )
+    );
+  },
+  play: async (context) => {
+    await play(context);
+    await testStatusMessageA11y(context, {
+      triggerAction: async () => {
+        const canvas = within(context.canvasElement);
+        const button = await canvas.findByShadowLabelText(
+          'Inclusion filter on North America',
+          {exact: false}
+        );
+        button.click();
+      },
+      expectedText: 'Results loaded. Results 1-10 of 42',
+      timeout: 5000,
+    });
   },
 };
