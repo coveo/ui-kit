@@ -21,6 +21,7 @@ export interface TableLayoutProps extends TableColumnsProps {
   host: HTMLElement;
   listClasses: string;
   logger: Pick<Console, 'error'>;
+  label?: string;
 }
 
 export interface TableDataProps extends TableColumnsProps {
@@ -37,7 +38,7 @@ export interface TableRowProps {
 export const renderTableLayout: FunctionalComponentWithChildren<
   TableLayoutProps
 > = ({props}) => {
-  const {host, listClasses, logger} = props;
+  const {host, listClasses, logger, label} = props;
 
   const fieldColumns = getFieldTableColumns(props);
 
@@ -49,7 +50,11 @@ export const renderTableLayout: FunctionalComponentWithChildren<
   }
 
   return (children) =>
-    html`<table class="list-root ${listClasses}" part="result-table">
+    html`<table
+      class="list-root ${listClasses}"
+      part="result-table"
+      aria-label=${label ?? 'Results'}
+    >
       <thead part="result-table-heading">
         <tr part="result-table-heading-row">
           ${map(fieldColumns, (column) => {
