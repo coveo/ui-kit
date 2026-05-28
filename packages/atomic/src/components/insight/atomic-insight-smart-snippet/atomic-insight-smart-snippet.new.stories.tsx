@@ -6,7 +6,7 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import '@/src/components/insight/atomic-insight-smart-snippet/atomic-insight-smart-snippet.js';
 
-const mockInsightApi = new MockInsightApi();
+const insightApiHarness = new MockInsightApi();
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-insight-smart-snippet',
@@ -27,14 +27,14 @@ const meta: Meta = {
       handles: events,
     },
     msw: {
-      handlers: [...mockInsightApi.handlers],
+      handlers: [...insightApiHarness.handlers],
     },
   },
   args,
   argTypes,
   beforeEach: async () => {
-    mockInsightApi.searchEndpoint.clear();
-    mockInsightApi.searchEndpoint.mockOnce((response) => {
+    insightApiHarness.searchEndpoint.clear();
+    insightApiHarness.searchEndpoint.mockOnce((response) => {
       if (!('results' in response)) return response;
       const [result] = response.results as Result[];
       return {

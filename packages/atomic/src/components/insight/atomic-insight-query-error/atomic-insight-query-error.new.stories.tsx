@@ -5,7 +5,7 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import '@/src/components/insight/atomic-insight-query-error/atomic-insight-query-error.js';
 
-const mockInsightApi = new MockInsightApi();
+const insightApiHarness = new MockInsightApi();
 
 const {decorator, play} = wrapInInsightInterface({
   accessToken: 'invalidtoken',
@@ -29,12 +29,12 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
-    msw: {handlers: [...mockInsightApi.handlers]},
+    msw: {handlers: [...insightApiHarness.handlers]},
   },
   args,
   argTypes,
   beforeEach: async () => {
-    mockInsightApi.searchEndpoint.clear();
+    insightApiHarness.searchEndpoint.clear();
   },
   play,
 };
@@ -43,14 +43,14 @@ export default meta;
 
 export const Default: Story = {
   beforeEach: async () => {
-    mockInsightApi.searchEndpoint.mockErrorOnce();
+    insightApiHarness.searchEndpoint.mockErrorOnce();
   },
 };
 
 export const WithInvalidToken: Story = {
   name: 'With Invalid Token Error',
   beforeEach: async () => {
-    mockInsightApi.searchEndpoint.mockOnce(
+    insightApiHarness.searchEndpoint.mockOnce(
       () => ({
         ok: false,
         status: 401,
@@ -66,7 +66,7 @@ export const WithInvalidToken: Story = {
 export const WithDisconnected: Story = {
   name: 'With Disconnected Error',
   beforeEach: async () => {
-    mockInsightApi.searchEndpoint.mockOnce(
+    insightApiHarness.searchEndpoint.mockOnce(
       () => ({
         ok: false,
         status: 0,
@@ -82,7 +82,7 @@ export const WithDisconnected: Story = {
 export const WithOrganizationPaused: Story = {
   name: 'With Organization Paused Error',
   beforeEach: async () => {
-    mockInsightApi.searchEndpoint.mockOnce(
+    insightApiHarness.searchEndpoint.mockOnce(
       () => ({
         ok: false,
         status: 503,
