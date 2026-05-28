@@ -93,6 +93,18 @@ const renderIndicators = (numberOfPages: number, currentPage: number) => {
   `;
 };
 
+const getSlideAriaLabel = (
+  bindings: AnyBindings,
+  label: string,
+  currentPage: number,
+  numberOfPages: number
+) =>
+  bindings.i18n.t('search-suggestion-single-list', {
+    label,
+    position: currentPage + 1,
+    count: numberOfPages,
+  });
+
 export const renderCarousel: FunctionalComponentWithChildren<CarouselProps> =
   ({props}) =>
   (children) => {
@@ -115,7 +127,26 @@ export const renderCarousel: FunctionalComponentWithChildren<CarouselProps> =
             ${renderPreviousButton(numberOfPages, previousPage, props.bindings)}
             ${renderNextButton(numberOfPages, nextPage, props.bindings)}
           </div>
-          <div class="carousel-items">${children}</div>
+          <div
+            part="slides"
+            class="carousel-items"
+            aria-live="polite"
+            aria-atomic="false"
+          >
+            <div
+              part="slide"
+              role="group"
+              aria-roledescription="slide"
+              aria-label=${getSlideAriaLabel(
+                props.bindings,
+                props.ariaLabel,
+                currentPage,
+                numberOfPages
+              )}
+            >
+              ${children}
+            </div>
+          </div>
         </div>
         ${renderIndicators(numberOfPages, currentPage)}
       </div>

@@ -1,6 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {testCarouselA11y} from '@/storybook-utils/a11y/carousel.js';
 import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
@@ -89,6 +90,14 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {};
+
+export const A11yCarousel: Story = {
+  tags: ['a11y', 'test'],
+  play: async (context) => {
+    await play(context);
+    await testCarouselA11y(context);
+  },
+};
 
 export const withAFallbackImage: Story = {
   name: 'With a fallback image',

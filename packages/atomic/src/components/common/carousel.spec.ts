@@ -108,6 +108,26 @@ describe('carousel', () => {
     expect(locators.carousel).toHaveAttribute('aria-label', 'carousel');
   });
 
+  it('should expose the slide wrapper as a polite live region', async () => {
+    const carouselElement = await renderComponent();
+    const slides = carouselElement.querySelector('[part="slides"]');
+
+    expect(slides).toHaveAttribute('aria-live', 'polite');
+    expect(slides).toHaveAttribute('aria-atomic', 'false');
+  });
+
+  it('should expose the current page as a labeled slide', async () => {
+    const carouselElement = await renderComponent({
+      numberOfPages: 3,
+      currentPage: 0,
+    });
+    const slide = carouselElement.querySelector('[part="slide"]');
+
+    expect(slide).toHaveAttribute('role', 'group');
+    expect(slide).toHaveAttribute('aria-roledescription', 'slide');
+    expect(slide).toHaveAttribute('aria-label', 'carousel. 1 of 3.');
+  });
+
   it('should have the correct part attribute for the "previous" button', async () => {
     await renderComponent();
     const showMoreButton = locators.previousButton;

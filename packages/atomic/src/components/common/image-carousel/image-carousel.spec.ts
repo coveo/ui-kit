@@ -47,6 +47,8 @@ describe('image-carousel', () => {
       navigateToImage: vi.fn(),
       numberOfImages: 3,
       currentImage: 0,
+      ariaLabel: 'image carousel',
+      slideAriaLabel: '1 of 3',
     };
     const mergedProps = {...defaultProps, ...props};
     return renderFunctionFixture(
@@ -61,6 +63,30 @@ describe('image-carousel', () => {
     expect(wrapper.textContent).toContain('image 1');
     expect(wrapper.textContent).toContain('image 2');
     expect(wrapper.textContent).toContain('image 3');
+  });
+
+  it('should expose the carousel container with an accessible name', async () => {
+    await renderComponent();
+    const carousel = page.getByRole('region', {name: 'image carousel'});
+
+    expect(carousel).toHaveAttribute('aria-roledescription', 'carousel');
+  });
+
+  it('should expose the slide wrapper as a polite live region', async () => {
+    const wrapper = await renderComponent();
+    const slides = wrapper.querySelector('[part="slides"]');
+
+    expect(slides).toHaveAttribute('aria-live', 'polite');
+    expect(slides).toHaveAttribute('aria-atomic', 'false');
+  });
+
+  it('should expose the current image as a labeled slide', async () => {
+    const wrapper = await renderComponent();
+    const slide = wrapper.querySelector('[part="slide"]');
+
+    expect(slide).toHaveAttribute('role', 'group');
+    expect(slide).toHaveAttribute('aria-roledescription', 'slide');
+    expect(slide).toHaveAttribute('aria-label', '1 of 3');
   });
 
   it('should render nothing when no children are passed', async () => {

@@ -13,6 +13,8 @@ export interface CarouselProps {
   navigateToImage(index: number): void;
   numberOfImages: number;
   currentImage: number;
+  ariaLabel: string;
+  slideAriaLabel: string;
 }
 
 export const renderImageCarousel: FunctionalComponentWithChildren<
@@ -81,9 +83,22 @@ export const renderImageCarousel: FunctionalComponentWithChildren<
     }
     return html` <div
       class="relative flex w-full min-w-full items-center justify-center"
+      role="region"
+      aria-roledescription="carousel"
+      aria-label=${props.ariaLabel}
     >
-      ${renderPreviousButton()} ${children} ${renderNextButton()}
-      ${renderIndicators()}
+      ${renderPreviousButton()}
+      <div part="slides" aria-live="polite" aria-atomic="false">
+        <div
+          part="slide"
+          role="group"
+          aria-roledescription="slide"
+          aria-label=${props.slideAriaLabel}
+        >
+          ${children}
+        </div>
+      </div>
+      ${renderNextButton()} ${renderIndicators()}
     </div>`;
   };
 };

@@ -236,6 +236,7 @@ export class AtomicProductImage
       : this.bindings.i18n.t('image-not-found-alt', {
           itemName: this.product.ec_name,
         });
+    const currentImage = this.images[this.currentImage];
 
     return html`
       ${when(
@@ -255,7 +256,7 @@ export class AtomicProductImage
         () =>
           when(
             this.images.length === 1,
-            () => this.renderCurrentImage(this.images[this.currentImage]),
+            () => this.renderCurrentImage(currentImage),
             () =>
               renderImageCarousel({
                 props: {
@@ -266,8 +267,12 @@ export class AtomicProductImage
                   nextImage: () => this.nextImage(),
                   previousImage: () => this.previousImage(),
                   numberOfImages: this.numberOfImages,
+                  ariaLabel: this.bindings.i18n.t('image-alt-fallback', {
+                    itemName: this.product.ec_name,
+                  }),
+                  slideAriaLabel: currentImage.alt,
                 },
-              })(this.renderCurrentImage(this.images[this.currentImage]))
+              })(this.renderCurrentImage(currentImage))
           )
       )}
     `;

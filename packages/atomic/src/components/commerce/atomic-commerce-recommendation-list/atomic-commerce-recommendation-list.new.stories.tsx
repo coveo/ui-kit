@@ -1,5 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {testCarouselA11y} from '@/storybook-utils/a11y/carousel.js';
 import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
 import {richResponse as richRecommendationResponse} from '@/storybook-utils/api/commerce/recommendation-response';
 import {wrapInCommerceRecommendationInterface} from '@/storybook-utils/commerce/commerce-recommendation-interface-wrapper';
@@ -134,6 +135,11 @@ export const AsCarousel: Story = {
   name: 'As a carousel',
   args: {
     'products-per-page': 3,
+  },
+  tags: ['a11y', 'test'],
+  play: async (context) => {
+    await play(context);
+    await testCarouselA11y(context);
   },
 };
 
