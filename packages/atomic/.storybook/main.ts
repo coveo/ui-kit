@@ -165,6 +165,7 @@ const config: StorybookConfig = {
     },
     '@storybook/addon-vitest',
     '@storybook/addon-mcp',
+    '@chromatic-com/storybook',
   ],
   framework: {
     name: '@storybook/web-components-vite',

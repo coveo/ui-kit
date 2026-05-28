@@ -1,7 +1,10 @@
 {
   "$schema": "https://www.chromatic.com/config-file.schema.json",
   "buildCommand": "turbo run build:storybook --filter=@coveo/atomic --",
+  "onlyChanged": true,
   "outputDir": "dist-storybook",
+  "projectId": "Project:6932045129665d06f74ceb8e",
+  "storybookBaseDir": "packages/atomic",
   "untraced": ["/virtual:*"],
-  "onlyChanged": true
+  "zip": true
 }

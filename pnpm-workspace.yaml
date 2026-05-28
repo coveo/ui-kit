@@ -108,6 +108,7 @@ minimumReleaseAgeExclude:
   - react-dom
   - react-router
   - '@react-router/*'
+  - chromatic
 
 # Allow using the shell emulator for all commands, which is required for some commands to work properly on Windows.
 # https://pnpm.io/cli/run#shellemulator
