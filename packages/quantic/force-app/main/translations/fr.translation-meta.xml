@@ -892,4 +892,8 @@
     <label>Aucune réponse générée disponible.</label>
     <name>quantic_NoGeneratedAnswer</name>
   </customLabels>
+  <customLabels>
+    <label>Afficher {{0}} questions précédentes</label>
+    <name>quantic_ShowPreviousQuestions_plural</name>
+  </customLabels>
 </Translations>

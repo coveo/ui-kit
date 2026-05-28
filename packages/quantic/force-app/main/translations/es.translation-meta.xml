@@ -888,4 +888,8 @@
     <label>Recursos relevantes para este caso</label>
     <name>quantic_InsightRelatedToThisCase</name>
   </customLabels>
+  <customLabels>
+    <label>Mostrar {{0}} preguntas anteriores</label>
+    <name>quantic_ShowPreviousQuestions_plural</name>
+  </customLabels>
 </Translations>
