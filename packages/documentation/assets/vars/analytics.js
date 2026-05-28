@@ -3,6 +3,10 @@
 // Mirrors the pattern used by the Jekyll docs site (assets/js/amplitude.js),
 // with the addition of pre-consent buffering and Typedoc-specific event handlers.
 
+const ALLOWED_HOSTS = ['docs.coveo.com'];
+const AMPLITUDE_PROD = 'ca7130edf650105fc3550fb538bcdd95';
+const AMPLITUDE_DEV = 'dc44628be4bc3b55860e60d1637ee897';
+
 class DocsAnalytics {
   constructor() {
     this.isInit = false;
@@ -13,11 +17,10 @@ class DocsAnalytics {
   }
 
   selectAmplitudeKey() {
-    const allowedHosts = ['docs.coveo.com'];
     const url = new URL(window.location.href);
-    return allowedHosts.includes(url.host)
-      ? 'ca7130edf650105fc3550fb538bcdd95'
-      : 'dc44628be4bc3b55860e60d1637ee897';
+    return ALLOWED_HOSTS.includes(url.host)
+      ? AMPLITUDE_PROD
+      : AMPLITUDE_DEV;
   }
 
   initAmplitude() {
@@ -59,9 +62,6 @@ class DocsAnalytics {
     eventProperties.pageUrl = url.href;
     eventProperties.pageId =
       document.documentElement?.getAttribute('data-page-id') || '';
-    eventProperties.typedocVersionConsulted = window.__TYPEDOC_VERSION__ || '';
-    eventProperties.headlessVersionConsulted =
-      document.documentElement?.getAttribute('data-headless-version') || '';
 
     if (window.amplitude) {
       window.amplitude.track(eventName, eventProperties);
