@@ -1,6 +1,8 @@
 import type {StoryContext} from '@storybook/web-components-vite';
 import {expect, userEvent, waitFor} from 'storybook/test';
 
+const HOVER_STABILITY_DELAY_MS = 200;
+
 /**
  * WCAG 2.2 AA criteria covered by hover-content tests.
  *
@@ -25,6 +27,82 @@ export interface HoverContentA11yOptions {
   findContent: (canvasElement: HTMLElement) => Promise<HTMLElement | null>;
 }
 
+function getActiveElementDeep(doc: Document): Element | null {
+  let active: Element | null = doc.activeElement;
+  while (active?.shadowRoot?.activeElement) {
+    active = active.shadowRoot.activeElement;
+  }
+  return active;
+}
+
+function isElementOrShadowDescendant(
+  container: HTMLElement,
+  element: Element | null
+): boolean {
+  let current = element;
+  while (current) {
+    if (current === container || container.contains(current)) {
+      return true;
+    }
+
+    if (current.parentElement) {
+      current = current.parentElement;
+      continue;
+    }
+
+    const root = current.getRootNode();
+    current = root instanceof ShadowRoot ? root.host : null;
+  }
+
+  return false;
+}
+
+async function expectContentVisible(
+  canvasElement: HTMLElement,
+  options: HoverContentA11yOptions
+): Promise<HTMLElement> {
+  const content = await options.findContent(canvasElement);
+  expect(
+    content,
+    'Hover content should be visible, not just mounted'
+  ).toBeVisible();
+  expect(content).not.toHaveAttribute('aria-hidden', 'true');
+  return content!;
+}
+
+async function expectContentHidden(
+  canvasElement: HTMLElement,
+  options: HoverContentA11yOptions
+): Promise<void> {
+  const content = await options.findContent(canvasElement);
+  if (content === null || content.getAttribute('aria-hidden') === 'true') {
+    return;
+  }
+
+  expect(
+    content,
+    'Hover content should be hidden after Escape'
+  ).not.toBeVisible();
+}
+
+async function waitForVisibleContent(
+  canvasElement: HTMLElement,
+  options: HoverContentA11yOptions
+): Promise<HTMLElement> {
+  return waitFor(async () => expectContentVisible(canvasElement, options), {
+    timeout: 5000,
+  });
+}
+
+async function revealContent(
+  trigger: HTMLElement,
+  canvasElement: HTMLElement,
+  options: HoverContentA11yOptions
+): Promise<HTMLElement> {
+  await userEvent.hover(trigger);
+  return waitForVisibleContent(canvasElement, options);
+}
+
 /**
  * Tests the WCAG 1.4.13 requirements for content that appears on hover/focus:
  *
@@ -41,80 +119,60 @@ export async function testHoverContentA11y(
   options: HoverContentA11yOptions
 ): Promise<void> {
   const {canvasElement, step} = context;
+  const doc = canvasElement.ownerDocument;
 
   let status: 'passed' | 'failed' = 'passed';
 
   try {
     const trigger = await options.findTrigger(canvasElement);
 
-    await step('Hover on trigger reveals additional content', async () => {
-      await userEvent.hover(trigger);
-      await waitFor(
-        async () => {
-          const content = await options.findContent(canvasElement);
-          expect(content).not.toBeNull();
-        },
-        {timeout: 5000}
+    await step('Hover on trigger reveals persistent content', async () => {
+      await revealContent(trigger, canvasElement, options);
+      await new Promise((resolve) =>
+        setTimeout(resolve, HOVER_STABILITY_DELAY_MS)
       );
+      await expectContentVisible(canvasElement, options);
+    });
+
+    await step('Content remains visible while pointer is over it', async () => {
+      const content = await expectContentVisible(canvasElement, options);
+
+      await userEvent.hover(content);
+      await new Promise((resolve) =>
+        setTimeout(resolve, HOVER_STABILITY_DELAY_MS)
+      );
+      await expectContentVisible(canvasElement, options);
     });
 
     await step(
       'Escape dismisses hover content without moving focus',
       async () => {
-        await userEvent.hover(trigger);
+        trigger.focus();
         await waitFor(
-          async () => {
-            const content = await options.findContent(canvasElement);
-            expect(content).not.toBeNull();
+          () => {
+            expect(
+              isElementOrShadowDescendant(trigger, getActiveElementDeep(doc)),
+              'Trigger should receive focus before Escape'
+            ).toBe(true);
           },
-          {timeout: 5000}
+          {timeout: 3000}
         );
+        await waitForVisibleContent(canvasElement, options);
 
-        const focusedBefore = canvasElement.ownerDocument.activeElement;
+        const focusedBefore = getActiveElementDeep(doc);
 
         await userEvent.keyboard('{Escape}');
 
         await waitFor(
           async () => {
-            const content = await options.findContent(canvasElement);
-            const isHidden =
-              content === null ||
-              content.getAttribute('aria-hidden') === 'true' ||
-              getComputedStyle(content).display === 'none' ||
-              getComputedStyle(content).visibility === 'hidden';
-            expect(isHidden).toBe(true);
-          },
-          {timeout: 5000}
-        );
-      }
-    );
-
-    await step('Content remains visible while pointer is over it', async () => {
-      // Re-trigger the content
-      await userEvent.hover(trigger);
-      await waitFor(
-        async () => {
-          const content = await options.findContent(canvasElement);
-          expect(content).not.toBeNull();
-        },
-        {timeout: 5000}
-      );
-
-      const content = await options.findContent(canvasElement);
-      if (content) {
-        // Move pointer to the content itself
-        await userEvent.hover(content);
-
-        // Content should still be visible
-        await waitFor(
-          async () => {
-            const stillVisible = await options.findContent(canvasElement);
-            expect(stillVisible).not.toBeNull();
+            await expectContentHidden(canvasElement, options);
           },
           {timeout: 3000}
         );
+
+        expect(getActiveElementDeep(doc)).toBe(focusedBefore);
       }
-    });
+    );
   } catch (error) {
     status = 'failed';
     throw error;
