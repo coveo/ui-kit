@@ -6,7 +6,8 @@ import type {
 } from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
-import {userEvent} from 'storybook/test';
+import {userEvent, waitFor} from 'storybook/test';
+import {testHoverContentA11y} from '@/storybook-utils/a11y/hover-content.js';
 import {MockAgentApi} from '@/storybook-utils/api/agent/mock';
 import {MockAnswerApi} from '@/storybook-utils/api/answer/mock';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
@@ -148,5 +149,55 @@ export const WithAgentId: Story = {
   play: async (storyContext) => {
     await playWithLegacyAnalytics(storyContext);
     await submitGeneratedAnswerQuery(storyContext);
+  },
+};
+
+export const A11yHoverContent: Story = {
+  name: 'A11y Hover Content (Citation Popover)',
+  tags: ['a11y', 'test'],
+  args: {
+    'answer-configuration-id': 'fc581be0-6e61-4039-ab26-a3f2f52f308f',
+  },
+  play: async (context) => {
+    await play(context);
+    await submitGeneratedAnswerQuery(context);
+
+    // Wait for citations to render inside atomic-generated-answer's shadow DOM
+    let citationLink!: HTMLElement;
+    await waitFor(
+      () => {
+        const genAnswer = context.canvasElement.querySelector(
+          'atomic-generated-answer'
+        );
+        const citation =
+          genAnswer?.shadowRoot?.querySelector('atomic-citation');
+        const link =
+          citation?.shadowRoot?.querySelector<HTMLElement>('[part="citation"]');
+        if (!link) throw new Error('Citation link not yet rendered');
+        citationLink = link;
+      },
+      {timeout: 10000}
+    );
+
+    await testHoverContentA11y(context, {
+      findTrigger: async () => citationLink,
+      findContent: async (canvasElement) => {
+        const genAnswer = canvasElement.querySelector(
+          'atomic-generated-answer'
+        );
+        const citation =
+          genAnswer?.shadowRoot?.querySelector('atomic-citation');
+        const popover = citation?.shadowRoot?.querySelector<HTMLElement>(
+          '[part="citation-popover"]'
+        );
+        if (!popover) return null;
+        if (popover.classList.contains('hidden')) return null;
+        const style = getComputedStyle(popover);
+        if (style.display === 'none' || style.visibility === 'hidden') {
+          return null;
+        }
+        return popover;
+      },
+    });
   },
 };

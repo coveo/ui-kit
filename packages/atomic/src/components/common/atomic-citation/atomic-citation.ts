@@ -85,6 +85,12 @@ export class AtomicCitation extends LitElement {
     super.disconnectedCallback();
     this.cleanupPopper();
     this.clearTimers();
+    document.removeEventListener('keydown', this.handleKeyDown);
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    document.addEventListener('keydown', this.handleKeyDown);
   }
 
   @watch('isOpen')
@@ -220,6 +226,12 @@ export class AtomicCitation extends LitElement {
   private closePopover = () => {
     this.clearTimers();
     this.isOpen = false;
+  };
+
+  private handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'Escape' && this.isOpen) {
+      this.closePopover();
+    }
   };
 
   private delayedClosePopover = () => {
