@@ -12,6 +12,8 @@ import {createRipple} from '@/src/utils/ripple-utils';
 
 type FeedbackVariant = 'like' | 'dislike';
 
+let feedbackButtonCounter = 0;
+
 export interface FeedbackButtonProps {
   title: string;
   variant: FeedbackVariant;
@@ -25,6 +27,7 @@ export const renderFeedbackButton: FunctionalComponent<FeedbackButtonProps> = ({
   const buttonStyle: ButtonStyle = 'text-transparent';
   const rippleColor = getRippleColorForButtonStyle(buttonStyle);
   const baseClassName = getClassNameForButtonStyle(buttonStyle);
+  const tooltipId = `feedback-tooltip-${++feedbackButtonCounter}`;
 
   const classNames = multiClassMap(
     tw({
@@ -47,15 +50,30 @@ export const renderFeedbackButton: FunctionalComponent<FeedbackButtonProps> = ({
     })
   );
 
-  return html`<button
-    type="button"
-    title=${props.title}
-    part="feedback-button"
-    class=${classNames}
-    aria-pressed=${props.active ? 'true' : 'false'}
-    @mousedown=${(e: MouseEvent) => createRipple(e, {color: rippleColor})}
-    @click=${props.onClick}
-  >
-    <atomic-icon class=${iconClassNames} .icon=${Thumbs}></atomic-icon>
-  </button>`;
+  return html`<span class="relative inline-block group">
+    <button
+      type="button"
+      aria-label=${props.title}
+      aria-describedby=${tooltipId}
+      part="feedback-button"
+      class=${classNames}
+      aria-pressed=${props.active ? 'true' : 'false'}
+      @mousedown=${(e: MouseEvent) => createRipple(e, {color: rippleColor})}
+      @click=${props.onClick}
+      @keydown=${(e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          (e.currentTarget as HTMLElement).blur();
+        }
+      }}
+    >
+      <atomic-icon class=${iconClassNames} .icon=${Thumbs}></atomic-icon>
+    </button>
+    <span
+      id=${tooltipId}
+      role="tooltip"
+      part="tooltip"
+      class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 text-xs rounded bg-neutral-dark text-on-background-inverted whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity"
+      >${props.title}</span
+    >
+  </span>`;
 };

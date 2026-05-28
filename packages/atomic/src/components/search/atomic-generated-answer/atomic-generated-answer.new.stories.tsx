@@ -150,3 +150,17 @@ export const WithAgentId: Story = {
     await submitGeneratedAnswerQuery(storyContext);
   },
 };
+
+export const A11yTooltip: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  name: 'A11y Tooltip',
+  args: {
+    'answer-configuration-id': 'fc581be0-6e61-4039-ab26-a3f2f52f308f',
+  },
+  play: async (context) => {
+    await play(context);
+    await submitGeneratedAnswerQuery(context);
+    const {testTooltipA11y} = await import('@/storybook-utils/a11y/tooltip.js');
+    await testTooltipA11y(context);
+  },
+};

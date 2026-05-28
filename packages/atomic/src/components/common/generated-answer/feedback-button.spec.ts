@@ -30,7 +30,7 @@ describe('#renderFeedbackButton', () => {
 
   it('should render a button with the correct title', async () => {
     const button = await renderComponent({title: 'This answer was helpful'});
-    expect(button.getAttribute('title')).toBe('This answer was helpful');
+    expect(button.getAttribute('aria-label')).toBe('This answer was helpful');
   });
 
   it('should render a button with the correct part attribute', async () => {
