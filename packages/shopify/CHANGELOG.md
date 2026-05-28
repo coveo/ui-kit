@@ -1,3 +1,9 @@
+## 1.9.31
+
+### Patch Changes
+
+- [#7655](https://github.com/coveo/ui-kit/pull/7655) [`0008cb8`](https://github.com/coveo/ui-kit/commit/0008cb8a35158d865e985ae16c621d3c06049b57) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update production dependencies
+
 ## 1.9.30
 
 ### Patch Changes

@@ -1,3 +1,13 @@
+## 3.59.0
+
+### Minor Changes
+
+- [#7577](https://github.com/coveo/ui-kit/pull/7577) [`d76a4db`](https://github.com/coveo/ui-kit/commit/d76a4dbcc458cce5c08f6fb5379a47192758c488) Thanks [@alexprudhomme](https://github.com/alexprudhomme)! - Added `disable-collapse` boolean attribute to `atomic-breadbox` and `atomic-commerce-breadbox` components. When set, all breadcrumbs are always displayed in a wrapping layout instead of being collapsed into a single row with a "+ N" show more button.
+
+### Patch Changes
+
+- [#7674](https://github.com/coveo/ui-kit/pull/7674) [`22d5730`](https://github.com/coveo/ui-kit/commit/22d5730333b4bc9f375a02f9072114bd26a8c077) Thanks [@y-lakhdar](https://github.com/y-lakhdar)! - Added `testStatusMessageA11y` Storybook helper for WCAG 4.1.3 (Status Messages) accessibility testing.
+
 ## 3.58.1
 
 ### Patch Changes
