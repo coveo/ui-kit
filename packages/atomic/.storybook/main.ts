@@ -103,7 +103,7 @@ const externalizeDependencies = (
 
       const packageMapping = packageMappings[source];
 
-      if (!packageMapping || isVitest || isChromatic()) {
+      if (!packageMapping || isVitest || isChromatic) {
         return null;
       }
 
@@ -370,7 +370,7 @@ function markComponentImportsAsSideEffectful(
         ) {
           const resolution = await this.resolve(id, source, options);
 
-          if (configType === 'PRODUCTION' && !isChromatic()) {
+          if (configType === 'PRODUCTION' && !isChromatic) {
             // Drop component imports for CDN builds by resolving to virtual empty module
             return {
               id: `\0virtual-empty:${resolution!.id}`,
@@ -386,7 +386,7 @@ function markComponentImportsAsSideEffectful(
     load(id) {
       if (
         configType === 'PRODUCTION' &&
-        !isChromatic() &&
+        !isChromatic &&
         id.startsWith('\0virtual-empty:')
       ) {
         // Return empty exports for stubbed components
