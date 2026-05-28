@@ -1,16 +1,11 @@
 <template>
   <template lwc:if={shouldDisplayGeneratedAnswer}>
-    <div
-      data-testid="generated-answer__card"
-      class="slds-box slds-p-around_none"
-    >
+    <div data-testid="generated-answer__card" class="slds-box slds-p-around_none">
       <header
         data-testid="generated-answer__header"
         class={generatedAnswerHeaderClass}
       >
-        <div
-          class="generated-answer__header-title slds-grid slds-grid_vertical-align-center"
-        >
+        <div class="generated-answer__header-title slds-grid slds-grid_vertical-align-center">
           <lightning-icon
             icon-name="utility:sparkles"
             size="x-small"

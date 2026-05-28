@@ -94,11 +94,8 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
   }
 
   get hasError() {
-    return !!this.generatedAnswer?.error;
-  }
-
-  get shouldDisplayError() {
-    return this.hasError && !this.hasRetryableError;
+    const error = this.generatedAnswer?.error;
+    return !!(error?.message || error?.code != null);
   }
 
   get shouldDisplayCannotAnswer() {
@@ -207,7 +204,7 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
 
   get shouldDisplayAnswer() {
     return (
-      !this.shouldDisplayError &&
+      !this.hasError &&
       !this.hasRetryableError &&
       !this.shouldDisplayCannotAnswer
     );

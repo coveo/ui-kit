@@ -12,7 +12,7 @@
       ></lightning-button>
     </section>
   </template>
-  <template lwc:if={shouldDisplayError}>
+  <template lwc:if={hasError}>
     <section
       data-testid="generated-answer-body__error"
       class="generated-answer__content slds-p-top_medium slds-p-horizontal_large"
