@@ -30,26 +30,22 @@
         </template>
       </header>
       <template lwc:if={isVisible}>
-        <c-quantic-generated-answer-body
-          data-testid="generated-answer__body"
-          engine-id={engineId}
-          answer-id={answerId}
-          answer={answer}
-          answer-content-format={answerContentFormat}
-          citations={citations}
-          is-streaming={isStreaming}
-          feedback-state={feedbackState}
-          disable-citation-anchoring={disableCitationAnchoring}
-          answer-class={generatedAnswerClass}
-          max-collapsed-height={maxCollapsedHeight}
-          show-citations={shouldDisplayCitations}
-          show-actions={shouldDisplayActions}
-          onquantic__answercontentupdated={handleAnswerContentUpdated}
-          onquantic__like={handleLike}
-          onquantic__dislike={handleDislike}
-          onquantic__generatedanswercopy={handleGeneratedAnswerCopyToClipboard}
-          onquantic__citationhover={handleCitationHover}
-        ></c-quantic-generated-answer-body>
+        <div
+          data-testid="generated-answer__answer"
+          class={generatedAnswerClass}
+        >
+          <c-quantic-generated-answer-body
+            data-testid="generated-answer__body"
+            engine-id={engineId}
+            generated-answer={state}
+            disable-citation-anchoring={disableCitationAnchoring}
+            onquantic__answercontentupdated={handleAnswerContentUpdated}
+            onquantic__like={handleLike}
+            onquantic__dislike={handleDislike}
+            onquantic__generatedanswercopy={handleGeneratedAnswerCopyToClipboard}
+            onquantic__citationhover={handleCitationHover}
+          ></c-quantic-generated-answer-body>
+        </div>
         <template lwc:if={shouldDisplayCollapseControls}>
           <div
             class={collapseControlsClass}
@@ -116,8 +112,8 @@
           class="slds-var-m-top_medium"
         >
           <c-quantic-generated-answer-body
+            generated-answer={state}
             cannot-answer
-            answer-class={generatedAnswerClass}
           ></c-quantic-generated-answer-body>
         </div>
       </div>

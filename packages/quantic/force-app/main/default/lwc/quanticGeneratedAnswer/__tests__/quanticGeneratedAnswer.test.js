@@ -74,8 +74,8 @@ const selectors = {
   initializationError: 'c-quantic-component-error',
   generatedAnswerCard: '[data-testid="generated-answer__card"]',
   generatedAnswerHeader: '[data-testid="generated-answer__header"]',
+  generatedAnswerAnswer: '[data-testid="generated-answer__answer"]',
   generatedAnswerBody: 'c-quantic-generated-answer-body',
-  generatedAnswerBodyAnswer: '[data-testid="generated-answer-body__answer"]',
   generatedAnswerFooter: '[data-testid="generated-answer__footer"]',
   generatedAnswerBadge: '[data-testid="generated-answer__header-title"]',
   generatedAnswerToggleButton: 'c-quantic-generated-answer-toggle',
@@ -641,13 +641,9 @@ describe('c-quantic-generated-answer', () => {
               });
               await flushPromises();
 
-              const generatedAnswerBody = element.shadowRoot.querySelector(
-                selectors.generatedAnswerBody
+              const generatedAnswer = element.shadowRoot.querySelector(
+                selectors.generatedAnswerAnswer
               );
-              const generatedAnswer =
-                generatedAnswerBody.shadowRoot.querySelector(
-                  selectors.generatedAnswerBodyAnswer
-                );
               expect(generatedAnswer).not.toBeNull();
 
               const generatedAnswerCollapseToggle =
@@ -656,8 +652,9 @@ describe('c-quantic-generated-answer', () => {
                 );
               expect(generatedAnswerCollapseToggle).not.toBeNull();
 
-              const maxHeightValue =
-                generatedAnswer.style.getPropertyValue('--maxHeight');
+              const maxHeightValue = generatedAnswer.style.getPropertyValue(
+                '--maxHeight'
+              );
               expect(maxHeightValue).toEqual(
                 `${expectedMaxCollapsibleAnswerHeight}px`
               );
@@ -676,13 +673,9 @@ describe('c-quantic-generated-answer', () => {
               });
               await flushPromises();
 
-              const generatedAnswerBody = element.shadowRoot.querySelector(
-                selectors.generatedAnswerBody
+              const generatedAnswer = element.shadowRoot.querySelector(
+                selectors.generatedAnswerAnswer
               );
-              const generatedAnswer =
-                generatedAnswerBody.shadowRoot.querySelector(
-                  selectors.generatedAnswerBodyAnswer
-                );
               expect(generatedAnswer).not.toBeNull();
 
               const generatedAnswerCollapseToggle =
@@ -691,8 +684,9 @@ describe('c-quantic-generated-answer', () => {
                 );
               expect(generatedAnswerCollapseToggle).not.toBeNull();
 
-              const maxHeightValue =
-                generatedAnswer.style.getPropertyValue('--maxHeight');
+              const maxHeightValue = generatedAnswer.style.getPropertyValue(
+                '--maxHeight'
+              );
               expect(maxHeightValue).toEqual(`${defaultAnswerHeight}px`);
 
               expect(mockedConsoleWarn).toHaveBeenCalledTimes(1);
@@ -712,13 +706,9 @@ describe('c-quantic-generated-answer', () => {
               });
               await flushPromises();
 
-              const generatedAnswerBody = element.shadowRoot.querySelector(
-                selectors.generatedAnswerBody
+              const generatedAnswer = element.shadowRoot.querySelector(
+                selectors.generatedAnswerAnswer
               );
-              const generatedAnswer =
-                generatedAnswerBody.shadowRoot.querySelector(
-                  selectors.generatedAnswerBodyAnswer
-                );
               expect(generatedAnswer).not.toBeNull();
 
               const generatedAnswerCollapseToggle =
@@ -727,8 +717,9 @@ describe('c-quantic-generated-answer', () => {
                 );
               expect(generatedAnswerCollapseToggle).not.toBeNull();
 
-              const maxHeightValue =
-                generatedAnswer.style.getPropertyValue('--maxHeight');
+              const maxHeightValue = generatedAnswer.style.getPropertyValue(
+                '--maxHeight'
+              );
 
               expect(maxHeightValue).toEqual(`${defaultAnswerHeight}px`);
 

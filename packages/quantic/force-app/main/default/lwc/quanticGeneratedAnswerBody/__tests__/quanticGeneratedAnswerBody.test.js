@@ -41,20 +41,20 @@ jest.mock(
 
 const defaultOptions = {
   engineId: 'example-engine',
-  answerId: 'answer-1',
-  answer: 'Example generated answer',
-  answerContentFormat: 'text/plain',
-  citations: [],
-  isStreaming: false,
-  feedbackState: 'neutral',
-  showCitations: false,
-  showActions: true,
-  answerClass: 'generated-answer__answer generated-answer__answer--collapsed',
+  generatedAnswer: {
+    answerId: 'answer-1',
+    answer: 'Example generated answer',
+    answerContentFormat: 'text/plain',
+    citations: [],
+    isStreaming: false,
+    liked: false,
+    disliked: false,
+    cannotAnswer: false,
+  },
 };
 
 const selectors = {
   body: '[data-testid="generated-answer-body"]',
-  answer: '[data-testid="generated-answer-body__answer"]',
   actions: '[data-testid="generated-answer-body__actions"]',
   citations: 'c-quantic-source-citations',
   feedback: 'c-quantic-feedback',
@@ -96,18 +96,15 @@ describe('c-quantic-generated-answer-body', () => {
     await flushPromises();
 
     const body = element.shadowRoot.querySelector(selectors.body);
-    const answer = element.shadowRoot.querySelector(selectors.answer);
     const actions = element.shadowRoot.querySelector(selectors.actions);
     const content = element.shadowRoot.querySelector(selectors.content);
 
     expect(body).not.toBeNull();
-    expect(answer).not.toBeNull();
     expect(actions).not.toBeNull();
-    expect(content.answer).toBe(defaultOptions.answer);
+    expect(content.answer).toBe(defaultOptions.generatedAnswer.answer);
     expect(content.answerContentFormat).toBe(
-      defaultOptions.answerContentFormat
+      defaultOptions.generatedAnswer.answerContentFormat
     );
-    expect(answer.style.getPropertyValue('--maxHeight')).toBe('250px');
   });
 
   it('should dispatch the answer height with answer content updates', async () => {
@@ -163,7 +160,13 @@ describe('c-quantic-generated-answer-body', () => {
   });
 
   it('should dispatch the quantic__citationhover event with the answerId', async () => {
-    const element = createTestComponent({...defaultOptions, showCitations: true});
+    const element = createTestComponent({
+      ...defaultOptions,
+      generatedAnswer: {
+        ...defaultOptions.generatedAnswer,
+        citations: [{id: 'citation-1', title: 'Citation'}],
+      },
+    });
     const handler = jest.fn();
     element.addEventListener('quantic__citationhover', handler);
     await flushPromises();
@@ -184,9 +187,10 @@ describe('c-quantic-generated-answer-body', () => {
   it('should render the retry prompt and dispatch a retry event', async () => {
     const element = createTestComponent({
       ...defaultOptions,
-      hasRetryableError: true,
-      showActions: false,
-      showCitations: false,
+      generatedAnswer: {
+        ...defaultOptions.generatedAnswer,
+        error: {isRetryable: true},
+      },
     });
     const handler = jest.fn();
     element.addEventListener('quantic__retry', handler);
@@ -206,8 +210,6 @@ describe('c-quantic-generated-answer-body', () => {
     const element = createTestComponent({
       ...defaultOptions,
       cannotAnswer: true,
-      showActions: false,
-      showCitations: false,
     });
     await flushPromises();
 

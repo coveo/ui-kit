@@ -6,6 +6,14 @@ import tryAgain from '@salesforce/label/c.quantic_TryAgain';
 import {getAbsoluteHeight} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 
+/** @typedef {import("@coveo/headless").GeneratedAnswerBase} GeneratedAnswerBase */
+/** @typedef {import("@coveo/headless").GeneratedAnswerCitation} GeneratedAnswerCitation */
+/**
+ * @typedef {Partial<GeneratedAnswerBase> & {
+ *   citations?: GeneratedAnswerCitation[];
+ * }} QuanticGeneratedAnswerBodyState
+ */
+
 /**
  * The `QuanticGeneratedAnswerBody` component renders a single generated answer unit.
  * @category Internal
@@ -24,77 +32,17 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
    */
   @api engineId;
   /**
-   * The unique identifier of the answer represented by this body.
+   * The generated answer state.
    * @api
-   * @type {string}
+    * @type {QuanticGeneratedAnswerBodyState}
    */
-  @api answerId;
-  /**
-   * The answer content to display.
-   * @api
-   * @type {string}
-   */
-  @api answer = '';
-  /**
-   * The format of the answer content.
-   * @api
-   * @type {'text/plain' | 'text/markdown'}
-   */
-  @api answerContentFormat = 'text/plain';
-  /**
-   * The citations used to generate the answer.
-   * @api
-   * @type {import("coveo").GeneratedAnswerCitation[]}
-   */
-  @api citations = [];
-  /**
-   * Whether the answer is currently streaming.
-   * @api
-   * @type {boolean}
-   */
-  @api isStreaming = false;
-  /**
-   * The current feedback state for the answer.
-   * @api
-   * @type {'neutral' | 'liked' | 'disliked'}
-   */
-  @api feedbackState = 'neutral';
+  @api generatedAnswer = {};
   /**
    * Whether to disable citation anchoring.
    * @api
    * @type {boolean}
    */
   @api disableCitationAnchoring = false;
-  /**
-   * The classes to apply to the answer container.
-   * @api
-   * @type {string}
-   */
-  @api answerClass = 'generated-answer__answer';
-  /**
-   * The maximum collapsed height in pixels.
-   * @api
-   * @type {number}
-   */
-  @api maxCollapsedHeight = 250;
-  /**
-   * Whether to show the citations section.
-   * @api
-   * @type {boolean}
-   */
-  @api showCitations = false;
-  /**
-   * Whether to show the action controls.
-   * @api
-   * @type {boolean}
-   */
-  @api showActions = false;
-  /**
-   * Whether the body should display a retryable error prompt.
-   * @api
-   * @type {boolean}
-   */
-  @api hasRetryableError = false;
   /**
    * Whether the body should display the no-answer state.
    * @api
@@ -113,8 +61,56 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
   get answerElementHeight() {
     return getAbsoluteHeight(
       // @ts-ignore
-      this.answerElement?.firstElementChild || this.answerElement
+      this.answerContentElement?.firstElementChild || this.answerContentElement
     );
+  }
+
+  get answer() {
+    return this.generatedAnswer?.answer;
+  }
+
+  get citations() {
+    return this.generatedAnswer?.citations || [];
+  }
+
+  get answerId() {
+    return this.generatedAnswer?.answerId;
+  }
+
+  get answerContentFormat() {
+    return this.generatedAnswer?.answerContentFormat;
+  }
+
+  get isStreaming() {
+    return !!this.generatedAnswer?.isStreaming;
+  }
+
+  get hasRetryableError() {
+    return !!this.generatedAnswer?.error?.isRetryable;
+  }
+
+  get computedFeedbackState() {
+    if (this.generatedAnswer?.liked) {
+      return 'liked';
+    }
+
+    if (this.generatedAnswer?.disliked) {
+      return 'disliked';
+    }
+
+    return 'neutral';
+  }
+
+  get shouldShowCitations() {
+    return this.citations.length > 0;
+  }
+
+  get shouldShowActions() {
+    return Boolean(this.answer) && !this.isStreaming;
+  }
+
+  get shouldShowFeedback() {
+    return !this.generatedAnswer?.feedbackSubmitted;
   }
 
   handleAnswerContentUpdated(event) {
@@ -183,17 +179,15 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
     );
   }
 
-  get answerStyle() {
-    return `--maxHeight: ${this.maxCollapsedHeight}px;`;
-  }
-
-  get answerElement() {
-    return this.template.querySelector(
-      '[data-testid="generated-answer-body__answer"]'
-    );
+  get answerContentElement() {
+    return this.template.querySelector('c-quantic-generated-answer-content');
   }
 
   get shouldDisplayAnswer() {
-    return !this.hasRetryableError && !this.cannotAnswer;
+    return (
+      !this.hasRetryableError &&
+      !this.cannotAnswer &&
+      !this.generatedAnswer?.cannotAnswer
+    );
   }
 }

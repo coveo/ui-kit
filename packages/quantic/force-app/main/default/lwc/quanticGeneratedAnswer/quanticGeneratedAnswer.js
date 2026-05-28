@@ -36,13 +36,13 @@ import loadingTemplate from './templates/loading.html';
 // @ts-ignore
 import retryPromptTemplate from './templates/retryPrompt.html';
 
-/** @typedef {import("coveo").SearchEngine} SearchEngine */
-/** @typedef {import("coveo").GeneratedAnswer} GeneratedAnswer */
-/** @typedef {import("coveo").GeneratedAnswerState} GeneratedAnswerState */
-/** @typedef {import("coveo").GeneratedAnswerCitation} GeneratedAnswerCitation */
+/** @typedef {import("@coveo/headless").SearchEngine} SearchEngine */
+/** @typedef {import("@coveo/headless").GeneratedAnswer} GeneratedAnswer */
+/** @typedef {import("@coveo/headless").GeneratedAnswerState} GeneratedAnswerState */
+/** @typedef {import("@coveo/headless").GeneratedAnswerCitation} GeneratedAnswerCitation */
 /** @typedef { 'neutral' | 'liked' | 'disliked'} FeedbackState */
-/** @typedef {import("coveo").SearchStatus} SearchStatus */
-/** @typedef {import("coveo").SearchStatusState} SearchStatusState */
+/** @typedef {import("@coveo/headless").SearchStatus} SearchStatus */
+/** @typedef {import("@coveo/headless").SearchStatusState} SearchStatusState */
 
 const FEEDBACK_LIKED_STATE = 'liked';
 const FEEDBACK_DISLIKED_STATE = 'disliked';
@@ -194,6 +194,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
+    this.applyGeneratedAnswerBodyStyle();
     if (this.collapsible) {
       this._exceedsMaximumHeight = this.isMaximumHeightExceeded();
     }
@@ -286,6 +287,19 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return hasAnswer
       ? I18nUtils.format(this.labels.answerGenerated, this.answer)
       : '';
+  }
+
+  applyGeneratedAnswerBodyStyle() {
+    const generatedAnswerBodyElement = this.template.querySelector(
+      '[data-testid="generated-answer__answer"]'
+    );
+
+    if (generatedAnswerBodyElement instanceof HTMLElement) {
+      generatedAnswerBodyElement.style.setProperty(
+        '--maxHeight',
+        `${this.maxCollapsedHeight}px`
+      );
+    }
   }
 
   updateSearchStatusState() {
@@ -441,17 +455,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return this?.state?.answerContentFormat;
   }
 
-  get shouldDisplayCitations() {
-    const hasCitations = !!this.citations?.length;
-    return hasCitations && !this.isAnswerCollapsed;
-  }
-
   get isStreaming() {
     return this?.state?.isStreaming;
-  }
-
-  get shouldDisplayActions() {
-    return this.isVisible && !this.isStreaming && !this.isAnswerCollapsed;
   }
 
   get isVisible() {
@@ -546,6 +551,18 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     const baseClass =
       'slds-grid slds-size_1-of-1 slds-wrap slds-grid_vertical-align-center slds-var-m-top_x-small slds-p-horizontal_large';
     return this.isStreaming ? `${baseClass} slds-p-bottom_large` : baseClass;
+  }
+
+  get shouldDisplayCollapseControls() {
+    return this.collapsible && this._exceedsMaximumHeight;
+  }
+
+  get shouldShowCollapseGeneratingMessage() {
+    return this.shouldDisplayCollapseControls && this.isStreaming;
+  }
+
+  get shouldShowToggleCollapseAnswer() {
+    return this.shouldDisplayCollapseControls && !this.isStreaming;
   }
 
   /**
