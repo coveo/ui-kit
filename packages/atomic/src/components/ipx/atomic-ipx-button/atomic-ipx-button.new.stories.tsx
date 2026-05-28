@@ -7,7 +7,7 @@ import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-w
 import '@/src/components/ipx/atomic-ipx-button/atomic-ipx-button.js';
 import '@/src/components/ipx/atomic-ipx-modal/atomic-ipx-modal.js';
 
-const mockSearchApi = new MockSearchApi();
+const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface({skipFirstSearch: true});
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -45,14 +45,14 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
-    msw: {handlers: [...mockSearchApi.handlers]},
+    msw: {handlers: [...searchApiHarness.handlers]},
   },
   args: {
     ...args,
   },
   argTypes,
   beforeEach: () => {
-    mockSearchApi.searchEndpoint.clear();
+    searchApiHarness.searchEndpoint.clear();
   },
   play,
 };

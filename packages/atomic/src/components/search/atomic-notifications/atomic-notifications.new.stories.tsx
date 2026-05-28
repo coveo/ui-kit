@@ -5,7 +5,7 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-notifications/atomic-notifications.js';
 
-const mockSearchApi = new MockSearchApi();
+const searchApiHarness = new MockSearchApi();
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-notifications',
@@ -26,13 +26,13 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
-    msw: {handlers: [...mockSearchApi.handlers]},
+    msw: {handlers: [...searchApiHarness.handlers]},
   },
   args,
   argTypes,
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.clear();
-    mockSearchApi.searchEndpoint.mockOnce((response) => ({
+    searchApiHarness.searchEndpoint.clear();
+    searchApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
       triggers: [
         {

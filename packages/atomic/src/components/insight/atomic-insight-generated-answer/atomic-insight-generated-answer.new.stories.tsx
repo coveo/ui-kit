@@ -14,9 +14,9 @@ import '@/src/components/insight/atomic-insight-layout/atomic-insight-layout.js'
 import '@/src/components/insight/atomic-insight-search-box/atomic-insight-search-box.js';
 import '@/src/components/common/atomic-layout-section/atomic-layout-section.js';
 
-const mockedAnswerApi = new MockAnswerApi();
-const mockedInsightApi = new MockInsightApi();
-mockedInsightApi.searchEndpoint.mock((response) => ({
+const answerApiHarness = new MockAnswerApi();
+const insightApiHarness = new MockInsightApi();
+insightApiHarness.searchEndpoint.mock((response) => ({
   ...response,
   extendedResults: {
     generativeQuestionAnsweringId: 'fbc64016-5f04-4a47-aad1-0bccaa2c0616',
@@ -50,7 +50,7 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     msw: {
-      handlers: [...mockedInsightApi.handlers, ...mockedAnswerApi.handlers],
+      handlers: [...insightApiHarness.handlers, ...answerApiHarness.handlers],
     },
   },
   args: {

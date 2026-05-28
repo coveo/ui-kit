@@ -1,3 +1,18 @@
+## 3.38.0
+
+### Minor Changes
+
+- [#7600](https://github.com/coveo/ui-kit/pull/7600) [`2e69b7c`](https://github.com/coveo/ui-kit/commit/2e69b7cecac201f88420bebb869c9b1b078438a1) Thanks [@mmitiche](https://github.com/mmitiche)! - Creation of the new Quantic Thread Item component
+
+### Patch Changes
+
+- [#7625](https://github.com/coveo/ui-kit/pull/7625) [`a0618c0`](https://github.com/coveo/ui-kit/commit/a0618c0b4c4e388ff782954ac6abd95885ee7ab6) Thanks [@SimonMilord](https://github.com/SimonMilord)! - Refactored the quantic generated answer layout to match atomic's
+
+- [#7637](https://github.com/coveo/ui-kit/pull/7637) [`d5d4d75`](https://github.com/coveo/ui-kit/commit/d5d4d75a882074bbeb5875ed95504a30ff84df91) Thanks [@renovate-coveo](https://github.com/apps/renovate-coveo)! - Update production dependencies
+
+- Updated dependencies [[`d5d4d75`](https://github.com/coveo/ui-kit/commit/d5d4d75a882074bbeb5875ed95504a30ff84df91), [`821d429`](https://github.com/coveo/ui-kit/commit/821d429d3cc247e387cfb3e5834ddc8b65443142)]:
+  - @coveo/headless@3.51.1
+
 ## 3.37.10
 
 ### Patch Changes

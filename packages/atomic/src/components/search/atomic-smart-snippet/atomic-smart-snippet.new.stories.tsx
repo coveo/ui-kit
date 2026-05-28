@@ -6,7 +6,7 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-smart-snippet/atomic-smart-snippet.js';
 
-const mockSearchApi = new MockSearchApi();
+const searchApiHarness = new MockSearchApi();
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-smart-snippet',
@@ -27,14 +27,14 @@ const meta: Meta = {
       handles: events,
     },
     msw: {
-      handlers: [...mockSearchApi.handlers],
+      handlers: [...searchApiHarness.handlers],
     },
   },
   args,
   argTypes,
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.clear();
-    mockSearchApi.searchEndpoint.mockOnce((response) => {
+    searchApiHarness.searchEndpoint.clear();
+    searchApiHarness.searchEndpoint.mockOnce((response) => {
       if (!('results' in response)) return response;
       const [result] = response.results as Result[];
       return {

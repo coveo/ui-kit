@@ -31,11 +31,13 @@ describe('atomic-breadbox', () => {
 
   interface RenderBreadboxOptions {
     pathLimit?: number;
+    disableCollapse?: boolean;
     breadcrumbState?: Partial<BreadcrumbManagerState>;
   }
 
   const renderBreadbox = async ({
     pathLimit = 3,
+    disableCollapse,
     breadcrumbState = {},
   }: RenderBreadboxOptions = {}) => {
     mockedBreadcrumbManager = buildFakeBreadcrumbManager({
@@ -52,6 +54,7 @@ describe('atomic-breadbox', () => {
     const {element} = await renderInAtomicSearchInterface<AtomicBreadbox>({
       template: html`<atomic-breadbox
         path-limit=${ifDefined(pathLimit)}
+        ?disable-collapse=${disableCollapse}
       ></atomic-breadbox>`,
       selector: 'atomic-breadbox',
       bindings: (bindings) => {
@@ -715,6 +718,66 @@ describe('atomic-breadbox', () => {
       expect(element).toBeDefined();
 
       window.ResizeObserver = originalResizeObserver;
+    });
+  });
+
+  describe('disable-collapse', () => {
+    const breadcrumbState: Partial<BreadcrumbManagerState> = {
+      facetBreadcrumbs: [
+        {
+          facetId: 'test-facet',
+          field: 'test-field',
+          values: Array.from({length: 5}, (_, i) => ({
+            value: {
+              value: `test-value-${i}`,
+              state: 'selected' as const,
+              numberOfResults: 1,
+            },
+            deselect: vi.fn(),
+          })),
+        },
+      ],
+    };
+
+    it('should show all breadcrumbs without a show-more button when disable-collapse is set', async () => {
+      await page.viewport(400, 100);
+      const {parts, element} = await renderBreadbox({
+        disableCollapse: true,
+        breadcrumbState,
+      });
+
+      const breadcrumbButtons = element.shadowRoot?.querySelectorAll(
+        '[part="breadcrumb-button"]'
+      );
+      expect(breadcrumbButtons?.length).toBe(5);
+
+      const partsElements = parts(element);
+      expect(partsElements.showMore).toBeNull();
+      expect(partsElements.showLess).toBeNull();
+    });
+
+    it('should use flex-wrap on the breadcrumb list when disable-collapse is set', async () => {
+      const {parts, element} = await renderBreadbox({
+        disableCollapse: true,
+        breadcrumbState,
+      });
+
+      const partsElements = parts(element);
+      expect(partsElements.breadcrumbList).toHaveClass('flex-wrap');
+      expect(partsElements.breadcrumbList).not.toHaveClass('flex-nowrap');
+    });
+
+    it('should not hide breadcrumbs when the viewport is small and disable-collapse is set', async () => {
+      await page.viewport(200, 100);
+      const {element} = await renderBreadbox({
+        disableCollapse: true,
+        breadcrumbState,
+      });
+
+      const visibleBreadcrumbs = Array.from(
+        element.shadowRoot!.querySelectorAll('li.breadcrumb')
+      ).filter((el) => (el as HTMLElement).style.display !== 'none');
+      expect(visibleBreadcrumbs.length).toBe(5);
     });
   });
 });
