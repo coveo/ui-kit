@@ -17,3 +17,8 @@ export {
   testRadioGroupA11y,
   type RadioGroupA11yOptions,
 } from './radiogroup.js';
+export {
+  COVERED_CRITERIA as HOVER_CONTENT_COVERED_CRITERIA,
+  testHoverContentA11y,
+  type HoverContentA11yOptions,
+} from './hover-content.js';
