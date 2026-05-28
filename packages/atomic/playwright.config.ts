@@ -53,7 +53,7 @@ export default defineConfig({
     ? {
         command: isCDN
           ? 'pnpm exec turbo start --filter=@coveo/cdn'
-          : `pnpm exec ws -d ./dist-storybook -p ${storybookPort}`,
+          : `pnpm exec turbo dev --filter=@coveo/atomic`,
         env: {
           STORYBOOK_INVOKED_BY: 'playwright',
         },
