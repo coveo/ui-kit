@@ -22,6 +22,11 @@ export {
   type RadioGroupA11yOptions,
 } from './radiogroup.js';
 export {
+  COVERED_CRITERIA as HOVER_CONTENT_COVERED_CRITERIA,
+  testHoverContentA11y,
+  type HoverContentA11yOptions,
+} from './hover-content.js';
+export {
   COVERED_CRITERIA as CAROUSEL_COVERED_CRITERIA,
   testCarouselA11y,
   type CarouselA11yOptions,
