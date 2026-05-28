@@ -136,7 +136,7 @@ const SLOTS_DEFAULT = `
 </atomic-result-template>
 `;
 
-const mockSearchApi = new MockSearchApi();
+const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -155,12 +155,12 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
-    msw: {handlers: [...mockSearchApi.handlers]},
+    msw: {handlers: [...searchApiHarness.handlers]},
   },
   args,
   argTypes,
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.clear();
+    searchApiHarness.searchEndpoint.clear();
   },
   play,
 };
@@ -172,7 +172,7 @@ export const Default: Story = {
     'default-slot': SLOTS_DEFAULT,
   },
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mockOnce(() => ({
+    searchApiHarness.searchEndpoint.mockOnce(() => ({
       ...baseFoldedResponse,
       results: [
         {
@@ -182,7 +182,7 @@ export const Default: Story = {
         baseFoldedResponse.results[1]!,
       ],
     }));
-    mockSearchApi.searchEndpoint.mockOnce(() => ({
+    searchApiHarness.searchEndpoint.mockOnce(() => ({
       ...baseFoldedResponse,
       results: [
         {
@@ -216,7 +216,7 @@ export const WithNoResultChildren: Story = {
     'default-slot': SLOTS_DEFAULT,
   },
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mockOnce(() => ({
+    searchApiHarness.searchEndpoint.mockOnce(() => ({
       ...baseFoldedResponse,
       results: [
         {
@@ -237,7 +237,7 @@ export const WithFewResultChildren: Story = {
     'default-slot': SLOTS_DEFAULT,
   },
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mockOnce(() => ({
+    searchApiHarness.searchEndpoint.mockOnce(() => ({
       ...baseFoldedResponse,
       results: [
         {
@@ -257,7 +257,7 @@ export const WithMoreResultsAvailableAndNoChildren: Story = {
     'default-slot': SLOTS_DEFAULT,
   },
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mockOnce(() => ({
+    searchApiHarness.searchEndpoint.mockOnce(() => ({
       ...baseFoldedResponse,
       results: [
         {

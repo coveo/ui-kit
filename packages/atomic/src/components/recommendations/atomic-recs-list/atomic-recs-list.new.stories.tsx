@@ -16,9 +16,9 @@ import '@/src/components/search/atomic-result-section-title-metadata/atomic-resu
 import '@/src/components/search/atomic-result-section-visual/atomic-result-section-visual.js';
 import '@/src/components/search/atomic-result-text/atomic-result-text.js';
 
-const mockedSearchApi = new MockSearchApi();
+const searchApiHarness = new MockSearchApi();
 
-mockedSearchApi.searchEndpoint.mock((response) => ({
+searchApiHarness.searchEndpoint.mock((response) => ({
   ...response,
   results: response.results.slice(0, 30),
   totalCount: 30,
@@ -43,11 +43,11 @@ const meta: Meta = {
       handles: events,
     },
     msw: {
-      handlers: [...mockedSearchApi.handlers],
+      handlers: [...searchApiHarness.handlers],
     },
   },
   beforeEach: () => {
-    mockedSearchApi.searchEndpoint.clear();
+    searchApiHarness.searchEndpoint.clear();
   },
   args,
   argTypes,
@@ -138,7 +138,7 @@ export const RecsAsCarousel: Story = {
 export const NotEnoughRecsForCarousel: Story = {
   name: 'Not enough recommendations for carousel',
   beforeEach: () => {
-    mockedSearchApi.searchEndpoint.mockOnce((response) => ({
+    searchApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
       results: response.results.slice(0, 3),
       totalCount: 3,
@@ -151,7 +151,7 @@ export const NotEnoughRecsForCarousel: Story = {
 export const NoRecommendations: Story = {
   name: 'No recommendations',
   beforeEach: async () => {
-    mockedSearchApi.searchEndpoint.mockOnce((response) => ({
+    searchApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
       totalCount: 0,
       totalCountFiltered: 0,

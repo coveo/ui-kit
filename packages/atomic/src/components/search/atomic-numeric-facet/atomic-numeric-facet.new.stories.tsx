@@ -11,7 +11,7 @@ import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-w
 import '@/src/components/search/atomic-facet/atomic-facet.js';
 import '@/src/components/search/atomic-numeric-facet/atomic-numeric-facet.js';
 
-const mockSearchApi = new MockSearchApi();
+const searchApiHarness = new MockSearchApi();
 
 const numericFacetValues = [
   {
@@ -72,7 +72,7 @@ const numericFacetValues = [
   },
 ];
 
-mockSearchApi.searchEndpoint.mock((response) => ({
+searchApiHarness.searchEndpoint.mock((response) => ({
   ...response,
   facets: [
     {
@@ -130,7 +130,7 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
-    msw: {handlers: [...mockSearchApi.handlers]},
+    msw: {handlers: [...searchApiHarness.handlers]},
   },
   argTypes: {
     ...argTypes,
@@ -145,7 +145,7 @@ const meta: Meta = {
     },
   },
   beforeEach: () => {
-    mockSearchApi.searchEndpoint.clear();
+    searchApiHarness.searchEndpoint.clear();
   },
   play,
   args: {
@@ -233,7 +233,7 @@ export const WithSelectedValue: Story = {
     const selectedValues = numericFacetValues.map((v, i) =>
       i === 0 ? {...v, state: 'selected'} : v
     );
-    mockSearchApi.searchEndpoint.mockOnce((response) => ({
+    searchApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
       facets: [
         {

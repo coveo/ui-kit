@@ -13,6 +13,10 @@ export {
   type DialogA11yOptions,
 } from './dialog.js';
 export {
+  COVERED_CRITERIA as TABS_COVERED_CRITERIA,
+  testTabsA11y,
+} from './tabs.js';
+export {
   COVERED_CRITERIA as RADIOGROUP_COVERED_CRITERIA,
   testRadioGroupA11y,
   type RadioGroupA11yOptions,
@@ -22,3 +26,8 @@ export {
   testStatusMessageA11y,
   type StatusMessageA11yOptions,
 } from './status-message.js';
+export {
+  COVERED_CRITERIA as CAROUSEL_COVERED_CRITERIA,
+  testCarouselA11y,
+  type CarouselA11yOptions,
+} from './carousel.js';

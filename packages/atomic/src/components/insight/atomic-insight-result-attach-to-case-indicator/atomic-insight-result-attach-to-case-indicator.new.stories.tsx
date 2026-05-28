@@ -26,7 +26,7 @@ import '@/src/components/search/atomic-result-section-title/atomic-result-sectio
 import '@/src/components/search/atomic-result-text/atomic-result-text.js';
 import '@/src/components/search/atomic-text/atomic-text.js';
 
-const mockInsightApi = new MockInsightApi();
+const insightApiHarness = new MockInsightApi();
 
 const CASE_ID = 'test-case-1234';
 
@@ -81,13 +81,13 @@ const meta: Meta = {
       handles: events,
     },
     msw: {
-      handlers: [...mockInsightApi.handlers],
+      handlers: [...insightApiHarness.handlers],
     },
   },
   args,
   argTypes,
   beforeEach: () => {
-    mockInsightApi.searchEndpoint.clear();
+    insightApiHarness.searchEndpoint.clear();
   },
 };
 
