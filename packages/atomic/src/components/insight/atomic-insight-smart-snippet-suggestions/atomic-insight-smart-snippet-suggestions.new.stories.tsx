@@ -9,7 +9,7 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import '@/src/components/insight/atomic-insight-smart-snippet-suggestions/atomic-insight-smart-snippet-suggestions.js';
 
-const mockInsightApi = new MockInsightApi();
+const insightApiHarness = new MockInsightApi();
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-insight-smart-snippet-suggestions',
@@ -30,13 +30,13 @@ const meta: Meta = {
       handles: events,
     },
     msw: {
-      handlers: [...mockInsightApi.handlers],
+      handlers: [...insightApiHarness.handlers],
     },
   },
   args,
   argTypes,
   beforeEach: async () => {
-    mockInsightApi.searchEndpoint.mock(
+    insightApiHarness.searchEndpoint.mock(
       () => smartSnippetSuggestionsResponse as unknown as typeof baseResponse
     );
   },

@@ -10,7 +10,7 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-smart-snippet-feedback-modal/atomic-smart-snippet-feedback-modal.js';
 
-const mockedSearchApi = new MockSearchApi();
+const searchApiHarness = new MockSearchApi();
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-smart-snippet-feedback-modal',
@@ -51,7 +51,7 @@ const meta: Meta = {
       handles: events,
     },
     msw: {
-      handlers: [...mockedSearchApi.handlers],
+      handlers: [...searchApiHarness.handlers],
     },
   },
   args: {
