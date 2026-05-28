@@ -21,13 +21,13 @@ jobs:
       published: ${{ steps.changesets.outputs.published }}
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
+        uses: step-security/harden-runner@ab7a9404c0f3da075243ca237b5fac12c98deaa5 # v2.19.3
         with:
           egress-policy: audit
 
       - name: Generate a token
         id: generate-token
-        uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
         with:
           app-id: ${{ secrets.RELEASER_APP_ID }}
           private-key: ${{ secrets.RELEASER_PRIVATE_KEY }}
@@ -44,7 +44,7 @@ jobs:
           cache-retention-days: 7
       - name: Create release PR or publish
         id: changesets
-        uses: changesets/action@6a0a831ff30acef54f2c6aa1cbbc1096b066edaf # v1
+        uses: step-security/changeset-action@4ec991f6d4d311458205f6954cf513f63efe15a3 # v1.7.0
         with:
           version: pnpm changeset version
           publish: pnpm run release
@@ -72,7 +72,7 @@ jobs:
       discussions: write
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
+        uses: step-security/harden-runner@ab7a9404c0f3da075243ca237b5fac12c98deaa5 # v2.19.3
         with:
           egress-policy: audit
 
@@ -83,15 +83,16 @@ jobs:
       - uses: ./.github/actions/setup-sfdx
       - name: Promote SFDX package to production
         run: |
-          echo "${{ secrets.SFDX_AUTH_JWT_KEY }}" > ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
+          echo "${{ secrets.SFDX_AUTH_JWT_KEY }}" > ${VARS_SFDX_AUTH_JWT_KEY_FILE}
           pnpm exec turbo run @coveo/quantic#promote:sfdx:ci
-          rm ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
+          rm ${VARS_SFDX_AUTH_JWT_KEY_FILE}
         env:
           SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
           SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
           SFDX_AUTH_JWT_USERNAME: ${{ vars.SFDX_AUTH_JWT_USERNAME }}
           SFDX_AUTH_JWT_KEY_FILE: ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VARS_SFDX_AUTH_JWT_KEY_FILE: ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
         working-directory: ./packages/quantic
   typedoc-headless:
     if: ${{ needs.release.outputs.published == 'true' }}
@@ -99,7 +100,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
+        uses: step-security/harden-runner@ab7a9404c0f3da075243ca237b5fac12c98deaa5 # v2.19.3
         with:
           egress-policy: audit
 
@@ -125,9 +126,9 @@ jobs:
 
       - name: Copy the docs into the version folder
         run: |
-          mkdir -p typedoc-headless-site/${{ env.version }}/
-          cp -r packages/headless/docs/* typedoc-headless-site/${{ env.version }}/
-          echo "Copied docs to: typedoc-headless-site/${{ env.version }}/"
+          mkdir -p typedoc-headless-site/${version}/
+          cp -r packages/headless/docs/* typedoc-headless-site/${version}/
+          echo "Copied docs to: typedoc-headless-site/${version}/"
 
       - name: Upload documentation artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
@@ -140,7 +141,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
+        uses: step-security/harden-runner@ab7a9404c0f3da075243ca237b5fac12c98deaa5 # v2.19.3
         with:
           egress-policy: audit
 
@@ -166,9 +167,9 @@ jobs:
 
       - name: Copy the docs into the version folder
         run: |
-          mkdir -p typedoc-headless-react-site/${{ env.version }}/
-          cp -r packages/headless-react/docs/* typedoc-headless-react-site/${{ env.version }}/
-          echo "Copied docs to: typedoc-headless-react-site/${{ env.version }}/"
+          mkdir -p typedoc-headless-react-site/${version}/
+          cp -r packages/headless-react/docs/* typedoc-headless-react-site/${version}/
+          echo "Copied docs to: typedoc-headless-react-site/${version}/"
 
       - name: Upload documentation artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
@@ -182,7 +183,7 @@ jobs:
     environment: 'Docs Production'
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
+        uses: step-security/harden-runner@ab7a9404c0f3da075243ca237b5fac12c98deaa5 # v2.19.3
         with:
           egress-policy: audit
 
@@ -192,7 +193,7 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Create GitHub App token for docs dispatch
         id: app-token
-        uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
         with:
           app-id: ${{ secrets.DOC_APP_ID }}
           private-key: ${{ secrets.DOC_APP_PRIVATE_KEY }}
@@ -208,7 +209,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
+        uses: step-security/harden-runner@ab7a9404c0f3da075243ca237b5fac12c98deaa5 # v2.19.3
         with:
           egress-policy: audit
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
@@ -217,10 +218,11 @@ jobs:
     name: Upload commit artifacts to S3
     needs: [build-cdn, release]
     runs-on: ubuntu-latest
+    # TODO(KIT-5712): Rename to 'CDN Deploy' once token vending machine is available
     environment: 'Prerelease (CDN)'
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
+        uses: step-security/harden-runner@ab7a9404c0f3da075243ca237b5fac12c98deaa5 # v2.19.3
         with:
           egress-policy: audit
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
@@ -243,7 +245,7 @@ jobs:
       CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
+        uses: step-security/harden-runner@ab7a9404c0f3da075243ca237b5fac12c98deaa5 # v2.19.3
         with:
           egress-policy: audit
 

@@ -16,6 +16,30 @@ export abstract class MockApi {
   abstract clearAll(): void;
 }
 
+export type RequestTransformer<TResponse> = (
+  body: unknown,
+  response: TResponse
+) => TResponse;
+
+/**
+ * Wraps a transformer so it skips API error responses (objects with `statusCode`).
+ * This prevents transformers from corrupting error response shapes.
+ */
+export function skipOnError<TResponse>(
+  transformer: RequestTransformer<TResponse>
+): RequestTransformer<TResponse> {
+  return (body, response) => {
+    if (
+      typeof response === 'object' &&
+      response !== null &&
+      'statusCode' in response
+    ) {
+      return response;
+    }
+    return transformer(body, response);
+  };
+}
+
 type HttpMethod = 'GET' | 'POST';
 export class EndpointHarness<TResponse extends {}> {
   private nextResponses: ('error' | ((response: TResponse) => TResponse))[] =
@@ -23,6 +47,7 @@ export class EndpointHarness<TResponse extends {}> {
   private nextResponseInit: HttpResponseInit[] = [];
   private baseResponse: Readonly<TResponse>;
   private initialBaseResponse: Readonly<TResponse>;
+  private requestTransformer?: RequestTransformer<TResponse>;
   constructor(
     private method: HttpMethod,
     private path: string,
@@ -34,6 +59,16 @@ export class EndpointHarness<TResponse extends {}> {
   ) {
     this.initialBaseResponse = initialBaseResponse;
     this.baseResponse = initialBaseResponse;
+  }
+
+  /**
+   * Sets a request transformer that modifies the response based on the request body.
+   * Unlike `mock()` which statically modifies the base response, this enables
+   * dynamic responses that react to request content (e.g., facet selections, pagination).
+   */
+  withRequestTransformer(transformer: RequestTransformer<TResponse>) {
+    this.requestTransformer = transformer;
+    return this;
   }
 
   mock(modifier: (base: TResponse) => TResponse) {
@@ -59,29 +94,41 @@ export class EndpointHarness<TResponse extends {}> {
 
   clear() {
     this.nextResponses.length = 0;
+    this.nextResponseInit.length = 0;
   }
 
-  getNextResponse(): HttpResponse<DefaultBodyType> {
+  private resolveResponse(): {
+    response: TResponse | 'error';
+    responseInit?: HttpResponseInit;
+  } {
     if (this.nextResponses.length === 0) {
-      return this.mswHttpResponseFactory(this.baseResponse);
-    } else {
-      const response = this.nextResponses.shift()!;
-      const responseInit = this.nextResponseInit.shift();
-      if (response === 'error') {
-        return HttpResponse.error();
-      } else {
-        return this.mswHttpResponseFactory(
-          response!(this.baseResponse),
-          responseInit
-        );
-      }
+      return {response: this.baseResponse};
     }
+    const response = this.nextResponses.shift()!;
+    const responseInit = this.nextResponseInit.shift();
+    if (response === 'error') {
+      return {response: 'error', responseInit};
+    }
+    return {response: response(this.baseResponse), responseInit};
   }
 
   generateHandler() {
-    return http[this.method.toLowerCase() as Lowercase<HttpMethod>]<TResponse>(
+    return http[this.method.toLowerCase() as Lowercase<HttpMethod>](
       this.path,
-      () => this.getNextResponse()
+      async ({request}) => {
+        const {response, responseInit} = this.resolveResponse();
+        if (response === 'error') {
+          return HttpResponse.error();
+        }
+
+        let finalResponse = response;
+        if (this.requestTransformer) {
+          const body = await request.json().catch(() => ({}));
+          finalResponse = this.requestTransformer(body, finalResponse);
+        }
+
+        return this.mswHttpResponseFactory(finalResponse, responseInit);
+      }
     );
   }
 }

@@ -9,6 +9,10 @@ import {
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/commerce/atomic-commerce-facet/atomic-commerce-facet.js';
 import '@/src/components/commerce/atomic-commerce-facets/atomic-commerce-facets.js';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
+
+const commerceApiHarness = new MockCommerceApi();
+commerceApiHarness.enableInteractiveFacets();
 
 const {play, decorator} = wrapInCommerceInterface({
   includeCodeRoot: false,
@@ -26,6 +30,9 @@ const meta: Meta = {
   decorators: [commerceFacetWidthDecorator, decorator],
   parameters: {
     ...parameters,
+    msw: {
+      handlers: commerceApiHarness.handlers,
+    },
     chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
@@ -33,6 +40,9 @@ const meta: Meta = {
   },
   args,
   argTypes,
+  beforeEach: () => {
+    commerceApiHarness.clearAll();
+  },
 };
 
 export default meta;

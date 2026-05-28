@@ -9,7 +9,7 @@ import {parameters} from '@/storybook-utils/common/search-box-suggestions-parame
 import '@/src/components/commerce/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products.js';
 import '@/src/components/commerce/atomic-commerce-search-box-query-suggestions/atomic-commerce-search-box-query-suggestions.js';
 
-const mockCommerceApi = new MockCommerceApi();
+const commerceApiHarness = new MockCommerceApi();
 
 const {decorator: commerceInterfaceDecorator, play: commerceInterfacePlay} =
   wrapInCommerceInterface({includeCodeRoot: false});
@@ -32,7 +32,7 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
-    msw: {handlers: [...mockCommerceApi.handlers]},
+    msw: {handlers: [...commerceApiHarness.handlers]},
   },
   args,
   argTypes,

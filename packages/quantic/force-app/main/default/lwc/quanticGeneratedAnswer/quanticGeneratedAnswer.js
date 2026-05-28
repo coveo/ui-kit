@@ -565,35 +565,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return this.isAnswerCollapsed ? 'utility:chevrondown' : 'utility:chevronup';
   }
 
-  get shouldShowCollapseGeneratingMessage() {
-    // If the answer is collapsed and is still streaming,
-    // we should show a message letting the user know it's still generating.
-    return (
-      this.collapsible &&
-      this.isVisible &&
-      this.isStreaming &&
-      this._exceedsMaximumHeight
-    );
-  }
-
-  get shouldShowToggleCollapseAnswer() {
-    // Only show the toggle collapse button if the answer is
-    // collapsible, visible, not streaming, and exceeds the maximum height.
-    return (
-      this.collapsible &&
-      this.isVisible &&
-      !this.isStreaming &&
-      this._exceedsMaximumHeight
-    );
-  }
-
-  get shouldDisplayCollapseControls() {
-    return (
-      this.shouldShowCollapseGeneratingMessage ||
-      this.shouldShowToggleCollapseAnswer
-    );
-  }
-
   /**
    * Returns the label to display in the generated answer show more|show less button.
    * @returns {string}

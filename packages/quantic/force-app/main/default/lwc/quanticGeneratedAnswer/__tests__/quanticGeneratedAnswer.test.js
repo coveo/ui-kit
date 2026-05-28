@@ -474,7 +474,7 @@ describe('c-quantic-generated-answer', () => {
         expect(generatedAnswerActions).toBeNull();
       });
 
-      it('should display the generated answer disclaimer in the footer', async () => {
+      it('should not display the generated answer disclaimer in the footer', async () => {
         const element = createTestComponent();
         await flushPromises();
 

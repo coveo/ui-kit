@@ -32,8 +32,8 @@
   "scripts": {
     "dev": "concurrently \"pnpm run build:definitions -- -w\" \"pnpm run build:bundles -- dev\"",
     "build": "pnpm run build:bundles && pnpm run build:definitions",
-    "test": "jest",
-    "test:watch": "jest --watch --colors --no-cache --silent=false",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "build:bundles": "node esbuild.mjs",
     "build:definitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "node ../../utils/ci/rm-rf.mjs dist/*",
@@ -41,9 +41,8 @@
     "e2e:saml": "vite manual-e2e/saml/"
   },
   "devDependencies": {
-    "jest": "catalog:",
-    "ts-jest": "29.4.9",
-    "vite": "catalog:"
+    "vite": "catalog:",
+    "vitest": "catalog:"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0 || ^24.11.0"

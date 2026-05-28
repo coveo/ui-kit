@@ -27,7 +27,7 @@
       <template lwc:if={isVisible}>
         <section
           data-testid="generated-answer__body"
-          class="generated-answer__content slds-p-top_large slds-p-horizontal_large"
+          class="generated-answer__content slds-p-top_medium slds-p-horizontal_large"
         >
           <div
             data-testid="generated-answer__answer"
@@ -81,10 +81,10 @@
                 </div>
               </div>
             </template>
-            <template lwc:if={shouldDisplayCollapseControls}>
+            <template lwc:if={isAnswerCollapsed}>
               <div class="slds-grid slds-size_1-of-1 slds-wrap slds-grid_vertical-align-center slds-var-m-top_x-small">
                 <div class="slds-grid slds-wrap slds-grid_vertical-align-center">
-                  <template lwc:if={shouldShowCollapseGeneratingMessage}>
+                  <template lwc:if={isStreaming}>
                     <div
                       data-testid="generated-answer__collapse-generating-message"
                       class="generated-answer__collapse-generating-message slds-var-m-right_small"
@@ -92,7 +92,7 @@
                       {labels.generatingAnswer}...
                     </div>
                   </template>
-                  <template lwc:if={shouldShowToggleCollapseAnswer}>
+                  <template lwc:else>
                     <lightning-button
                       data-testid="generated-answer__answer-toggle"
                       icon-name={toggleCollapseAnswerIcon}
@@ -112,7 +112,7 @@
         <template lwc:if={shouldShowDisclaimer}>
           <footer
             data-testid="generated-answer__footer"
-            class="generated-answer__disclaimer slds-grid slds-grid_vertical-align-center slds-grid_align-end slds-text-color_weak slds-text-body_small slds-p-horizontal_large slds-p-bottom_large"
+            class="generated-answer__disclaimer slds-grid slds-grid_vertical-align-center slds-grid_align-end slds-text-color_weak slds-text-body_small slds-p-horizontal_large slds-p-bottom_medium"
           >
             <div data-testid="generated-answer__disclaimer">
               <slot name="disclaimer"> {labels.rgaDisclaimer} </slot>

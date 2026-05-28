@@ -27,7 +27,7 @@ import '@/src/components/search/atomic-result-section-visual/atomic-result-secti
 import '@/src/components/search/atomic-result-text/atomic-result-text.js';
 import '@/src/components/search/atomic-text/atomic-text.js';
 
-const mockInsightApi = new MockInsightApi();
+const insightApiHarness = new MockInsightApi();
 
 const TEMPLATE_EXAMPLE = `<template>
   <atomic-result-section-visual>
@@ -168,7 +168,7 @@ const meta: Meta = {
       handles: events,
     },
     msw: {
-      handlers: [...mockInsightApi.handlers],
+      handlers: [...insightApiHarness.handlers],
     },
   },
   args: {
