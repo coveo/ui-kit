@@ -1,7 +1,16 @@
-import { Meta } from '@storybook/addon-docs/blocks';
-import meta, { Default, ListDisplayWithTemplate, ListDisplayBeforeQuery, GridDisplay, GridDisplayWithTemplate, GridDisplayBeforeQuery, TableDisplay, TableDisplayBeforeQuery, NoResults } from './atomic-result-list.new.stories';
-import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import { Meta } from "@storybook/addon-docs/blocks";
+import meta, {
+  Default,
+  ListDisplayWithTemplate,
+  ListDisplayBeforeQuery,
+  GridDisplay,
+  GridDisplayWithTemplate,
+  GridDisplayBeforeQuery,
+  TableDisplay,
+  TableDisplayBeforeQuery,
+  NoResults,
+} from "./atomic-result-list.new.stories";
+import { AtomicDocTemplate } from "@/storybook-utils/documentation/atomic-doc-template";
 
 <Meta of={meta} />
 
@@ -49,6 +58,8 @@ When [displaying results as a list or grid](https://docs.coveo.com/en/atomic/lat
 
 When [displaying results as a table](https://docs.coveo.com/en/atomic/latest/usage/displaying-results/table/), there is no default template. You must define a template that includes at least one `atomic-table-element` component, which serve as columns.
 
+Atomic keeps table display as a semantic table instead of applying the WAI-ARIA grid pattern. In the supported table templates, keyboard interaction is handled by the interactive elements inside cells (for example, `atomic-result-link`), while the rest of the cells contain static text that does not benefit from arrow-key cell navigation.
+
 ```html
 <atomic-result-list display="table">
   <atomic-result-template>
@@ -67,19 +78,18 @@ When [displaying results as a table](https://docs.coveo.com/en/atomic/latest/usa
 </atomic-result-list>
 ```
 
-
-
 ## Use Cases and Examples
 
 The following table outlines the key differences and best use cases for grids, lists, and tables, helping you choose the most appropriate format based on your content and user needs.
 
-| Layout | Description |
-|--------|-------------|
-| Grid | Greater emphasis on images than text.  Helps users compare items visually.  Allows displaying more results.  Use when recent, high-quality images are available. |
-| List | Use when content or description is most important.  Helps users compare textually and scan content more easily.  Fewer results but reduced cognitive load, as text is heavier than images.  Use when image quality is uncertain. |
-| Table | Use when data is best presented in a tabular format. |
-
+| Layout | Description                                                                                                                                                                                                                   |
+| ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Grid   | Greater emphasis on images than text. Helps users compare items visually. Allows displaying more results. Use when recent, high-quality images are available.                                                                 |
+| List   | Use when content or description is most important. Helps users compare textually and scan content more easily. Fewer results but reduced cognitive load, as text is heavier than images. Use when image quality is uncertain. |
+| Table  | Use when data is best presented in a tabular format.                                                                                                                                                                          |
 
 ## Reference
+
 [UI cheat sheet: list vs grid](https://uxdesign.cc/ui-cheat-sheet-list-vs-grids-48151a7262a7)
+
 </AtomicDocTemplate>

@@ -17,3 +17,8 @@ export {
   testRadioGroupA11y,
   type RadioGroupA11yOptions,
 } from './radiogroup.js';
+export {
+  COVERED_CRITERIA as GRID_COVERED_CRITERIA,
+  testGridA11y,
+  type GridA11yOptions,
+} from './grid.js';
