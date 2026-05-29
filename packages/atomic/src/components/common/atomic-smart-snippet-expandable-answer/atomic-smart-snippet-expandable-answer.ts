@@ -192,6 +192,7 @@ export class AtomicSmartSnippetExpandableAnswer
           @click=${() =>
             this.isExpanded ? this.handleCollapse() : this.handleExpand()}
           class="text-primary mb-4 hover:underline"
+          aria-expanded=${this.isExpanded ? 'true' : 'false'}
           part=${this.isExpanded ? 'show-less-button' : 'show-more-button'}
         >
           ${this.bindings.i18n.t(this.isExpanded ? 'show-less' : 'show-more')}

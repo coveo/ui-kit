@@ -2,6 +2,7 @@ import type {Result} from '@coveo/headless';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {testDisclosureA11y} from '@/storybook-utils/a11y/disclosure.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-smart-snippet/atomic-smart-snippet.js';
@@ -78,3 +79,17 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {};
+
+export const A11yDisclosure: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  args: {
+    'maximum-height': 150,
+    'collapsed-height': 80,
+  },
+  play: async (context) => {
+    await play(context);
+    await testDisclosureA11y(context, {
+      trigger: {name: /show more/i, expanded: false},
+    });
+  },
+};

@@ -97,10 +97,22 @@ describe('#renderExpandableText', () => {
     expect(button).toHaveTextContent('Show more');
   });
 
+  it('should render aria-expanded as "false" when isExpanded is false', async () => {
+    const {button} = await renderComponent({isExpanded: false});
+
+    expect(button).toHaveAttribute('aria-expanded', 'false');
+  });
+
   it('should render the correct label on the icon when isExpanded is true', async () => {
     const {button} = await renderComponent({isExpanded: true});
 
     expect(button).toHaveTextContent('Show less');
+  });
+
+  it('should render aria-expanded as "true" when isExpanded is true', async () => {
+    const {button} = await renderComponent({isExpanded: true});
+
+    expect(button).toHaveAttribute('aria-expanded', 'true');
   });
 
   it('should trigger the onToggleExpand function when the button is clicked', async () => {

@@ -55,6 +55,12 @@ describe('#renderShowButton', () => {
       await expect.element(element).toHaveTextContent('Show more');
     });
 
+    it('should render aria-expanded as "false"', async () => {
+      const {button} = await renderComponent({isCollapsed: true});
+
+      expect(button).toHaveAttribute('aria-expanded', 'false');
+    });
+
     it('should render the arrow-bottom icon', async () => {
       const {icon} = await renderComponent({isCollapsed: true});
 
@@ -67,6 +73,12 @@ describe('#renderShowButton', () => {
       const {element} = await renderComponent({isCollapsed: false});
 
       await expect.element(element).toHaveTextContent('Show less');
+    });
+
+    it('should render aria-expanded as "true"', async () => {
+      const {button} = await renderComponent({isCollapsed: false});
+
+      expect(button).toHaveAttribute('aria-expanded', 'true');
     });
 
     it('should render the arrow-top icon', async () => {

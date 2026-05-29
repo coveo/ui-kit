@@ -5,6 +5,7 @@ import type {
 } from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {testDisclosureA11y} from '@/storybook-utils/a11y/disclosure.js';
 import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
@@ -78,7 +79,20 @@ export const Default: Story = {};
 export const Collapsible: Story = {
   name: 'Collapsible',
   args: {
-    'is-collapsible': false,
+    'is-collapsible': true,
+  },
+};
+
+export const A11yDisclosure: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  args: {
+    'is-collapsible': true,
+  },
+  play: async (context) => {
+    await play(context);
+    await testDisclosureA11y(context, {
+      trigger: {name: /show more/i, expanded: false},
+    });
   },
 };
 

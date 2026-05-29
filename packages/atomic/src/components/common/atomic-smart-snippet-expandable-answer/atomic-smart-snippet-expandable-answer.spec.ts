@@ -171,6 +171,10 @@ describe('atomic-smart-snippet-expandable-answer', () => {
       await element.updateComplete;
 
       expect(parts(element).showMoreButton).toBeInTheDocument();
+      expect(parts(element).showMoreButton).toHaveAttribute(
+        'aria-expanded',
+        'false'
+      );
     });
 
     it('should not render button when answer height is below maximumHeight', async () => {
@@ -196,6 +200,10 @@ describe('atomic-smart-snippet-expandable-answer', () => {
       await element.updateComplete;
 
       expect(parts(element).showLessButton).toBeInTheDocument();
+      expect(parts(element).showLessButton).toHaveAttribute(
+        'aria-expanded',
+        'true'
+      );
     });
   });
 

@@ -10,6 +10,7 @@ import {userEvent} from 'storybook/test';
 import {MockAgentApi} from '@/storybook-utils/api/agent/mock';
 import {MockAnswerApi} from '@/storybook-utils/api/answer/mock';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {testDisclosureA11y} from '@/storybook-utils/a11y/disclosure.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-generated-answer/atomic-generated-answer.js';
@@ -148,5 +149,21 @@ export const WithAgentId: Story = {
   play: async (storyContext) => {
     await playWithLegacyAnalytics(storyContext);
     await submitGeneratedAnswerQuery(storyContext);
+  },
+};
+
+export const A11yDisclosure: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  args: {
+    'answer-configuration-id': 'fc581be0-6e61-4039-ab26-a3f2f52f308f',
+    collapsible: true,
+    'max-collapsed-height': 9,
+  },
+  play: async (storyContext) => {
+    await play(storyContext);
+    await submitGeneratedAnswerQuery(storyContext);
+    await testDisclosureA11y(storyContext, {
+      trigger: {name: /show more/i, expanded: false},
+    });
   },
 };
