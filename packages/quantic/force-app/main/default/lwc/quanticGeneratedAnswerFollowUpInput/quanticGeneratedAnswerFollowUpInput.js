@@ -17,13 +17,6 @@ export default class QuanticGeneratedAnswerFollowUpInput extends LightningElemen
   /** @type {boolean} */
   _focused = false;
 
-  /**
-   * @returns {HTMLInputElement}
-   */
-  get input() {
-    return this.template.querySelector('input');
-  }
-
   handleKeyDown(event) {
     // Let the browser commit IME text before handling shortcuts like Enter during composition.
     if (event.isComposing || event.keyCode === 229) {
@@ -37,12 +30,15 @@ export default class QuanticGeneratedAnswerFollowUpInput extends LightningElemen
   }
 
   handleSubmitFollowUp() {
-    if(this.input.value.trim() === '') {
+    if (
+      this.submitButtonDisabled ||
+      this.refs.askFollowUpInput.value.trim() === ''
+    ) {
       return;
     }
     this.sendSubmitFollowUpEvent();
-    this.input.value = '';
-    this.input.blur();
+    this.refs.askFollowUpInput.value = '';
+    this.refs.askFollowUpInput.blur();
   }
 
   handleFocus() {
@@ -62,7 +58,7 @@ export default class QuanticGeneratedAnswerFollowUpInput extends LightningElemen
         bubbles: true,
         composed: true,
         detail: {
-          value: this.input.value,
+          value: this.refs.askFollowUpInput.value,
         },
       })
     );
