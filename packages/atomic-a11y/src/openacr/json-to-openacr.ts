@@ -97,6 +97,7 @@ export interface JsonToOpenAcrOptions {
  * const report = await transformJsonToOpenAcr({
  *   inputFile: 'reports/a11y-report.json',
  *   outputFile: 'reports/openacr.yaml',
+ *   version: '3.0.0',
  * });
  * ```
  */
