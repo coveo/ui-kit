@@ -4,12 +4,13 @@ import {html} from 'lit';
 import {testTabsA11y} from '@/storybook-utils/a11y/tabs.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {searchFacetTransformer} from '@/storybook-utils/api/search/facet-transformer';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-tab/atomic-tab.js';
 import '@/src/components/search/atomic-tab-manager/atomic-tab-manager.js';
 
 const searchApiHarness = new MockSearchApi();
-searchApiHarness.enableInteractiveFacets();
+searchApiHarness.searchEndpoint.addRequestTransformer(searchFacetTransformer);
 
 const {decorator, play} = wrapInSearchInterface();
 
