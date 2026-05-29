@@ -445,7 +445,10 @@ export class AtomicCommerceCategoryFacet
     }
 
     return findCategoryFacetTreeNodeByPath(
-      [...this.facetState.selectedValueAncestry, ...this.facetState.values],
+      [
+        ...(this.facetState.selectedValueAncestry ?? []),
+        ...this.facetState.values,
+      ],
       deserializeCategoryFacetTreePath(path)
     );
   }
