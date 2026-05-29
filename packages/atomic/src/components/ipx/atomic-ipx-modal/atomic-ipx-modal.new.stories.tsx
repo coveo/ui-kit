@@ -1,6 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {testDialogA11y} from '@/storybook-utils/a11y/dialog.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -125,4 +126,18 @@ export const Closed: Story = {
           Open Modal
         </button>
       </div>`,
+};
+
+export const A11yDialog: Story = {
+  ...Closed,
+  tags: ['a11y', 'test', '!dev'],
+  play: async (context) => {
+    await play(context);
+    const {canvas, step, userEvent} = context;
+    const openButton = await canvas.findByRole('button', {name: 'Open Modal'});
+    await step('Open modal', async () => {
+      await userEvent.click(openButton);
+    });
+    await testDialogA11y(context);
+  },
 };

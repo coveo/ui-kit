@@ -3,6 +3,7 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
 import {expect} from 'storybook/test';
+import {testDialogA11y} from '@/storybook-utils/a11y/dialog.js';
 import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
@@ -16,6 +17,32 @@ const {events, args, argTypes, styleTemplate} = getStorybookHelpers(
   'atomic-commerce-refine-modal',
   {excludeCategories: ['methods']}
 );
+
+const openRefineModal = async (context: Parameters<typeof play>[0]) => {
+  await play(context);
+  const {canvasElement, canvas, step, userEvent} = context;
+  const refineToggleElement = within(
+    canvasElement.querySelector('atomic-commerce-refine-toggle')!
+  );
+  const refineToggleButton = await refineToggleElement.findByShadowRole(
+    'button',
+    {
+      name: 'Sort & Filter',
+    }
+  );
+  await step('Open refine modal', async () => {
+    await userEvent.click(refineToggleButton);
+    await expect(
+      await canvas.findByShadowText(
+        'Relevance',
+        {exact: false},
+        {timeout: 10e3}
+      )
+    ).toBeVisible();
+  });
+  // It's tough to wait exactly for the modal to be visible because of animations. Thus, we add a small delay here.
+  await new Promise((resolve) => setTimeout(resolve, 100));
+};
 
 const meta: Meta = {
   component: 'atomic-commerce-refine-modal',
@@ -76,35 +103,19 @@ const meta: Meta = {
       },
     },
   },
-  play: async (context) => {
-    await play(context);
-    const {canvasElement, canvas, step, userEvent} = context;
-    const refineToggleElement = within(
-      canvasElement.querySelector('atomic-commerce-refine-toggle')!
-    );
-    const refineToggleButton = await refineToggleElement.findByShadowRole(
-      'button',
-      {
-        name: 'Sort & Filter',
-      }
-    );
-    await step('Open refine modal', async () => {
-      await userEvent.click(refineToggleButton);
-      await expect(
-        await canvas.findByShadowText(
-          'Relevance',
-          {exact: false},
-          {timeout: 10e3}
-        )
-      ).toBeVisible();
-    });
-    // It's tough to wait exactly for the modal to be visible because of animations. Thus, we add a small delay here.
-    await new Promise((resolve) => setTimeout(resolve, 100));
-  },
+  play: openRefineModal,
 };
 
 export default meta;
 
 export const DefaultModal: Story = {
   name: 'Default modal',
+};
+
+export const A11yDialog: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  play: async (context) => {
+    await openRefineModal(context);
+    await testDialogA11y(context);
+  },
 };

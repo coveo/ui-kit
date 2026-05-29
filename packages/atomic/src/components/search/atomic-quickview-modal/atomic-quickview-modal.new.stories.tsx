@@ -2,6 +2,7 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
+import {testDialogA11y} from '@/storybook-utils/a11y/dialog.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
@@ -62,6 +63,20 @@ const {events, args, argTypes, styleTemplate} = getStorybookHelpers(
   }
 );
 
+const openQuickviewModal = async (context: Parameters<typeof play>[0]) => {
+  await play(context);
+  const {canvasElement, step, userEvent} = context;
+  // Wait for result to load and quickview button to be available
+  await new Promise((resolve) => setTimeout(resolve, 500));
+  const canvas = within(canvasElement);
+  const quickviewButton = await canvas.findByShadowTitle('Quick View');
+  await step('Open quickview modal', async () => {
+    await userEvent.click(quickviewButton);
+  });
+  // Wait for the modal animation to complete (animation duration is 500ms)
+  await new Promise((resolve) => setTimeout(resolve, 600));
+};
+
 const meta: Meta = {
   component: 'atomic-quickview-modal',
   title: 'Search/Quickview Modal',
@@ -97,21 +112,17 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  play: async (context) => {
-    await play(context);
-    const {canvasElement, step, userEvent} = context;
-    // Wait for result to load and quickview button to be available
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    const canvas = within(canvasElement);
-    const quickviewButton = await canvas.findByShadowTitle('Quick View');
-    await step('Open quickview modal', async () => {
-      await userEvent.click(quickviewButton);
-    });
-    // Wait for the modal animation to complete (animation duration is 500ms)
-    await new Promise((resolve) => setTimeout(resolve, 600));
-  },
+  play: openQuickviewModal,
 };
 
 export const Closed: Story = {
   tags: ['!dev'],
+};
+
+export const A11yDialog: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  play: async (context) => {
+    await openQuickviewModal(context);
+    await testDialogA11y(context);
+  },
 };

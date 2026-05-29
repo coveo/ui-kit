@@ -6,6 +6,7 @@ import type {
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
+import {testDialogA11y} from '@/storybook-utils/a11y/dialog.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -23,6 +24,25 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 );
 const facetWidthDecorator: Decorator = (story) =>
   html`<div style="min-width: 470px; margin: auto;">${story()}</div> `;
+
+const openRefineModal = async (context: Parameters<typeof play>[0]) => {
+  await play(context);
+  const {canvasElement, step, userEvent} = context;
+  const refineToggleElement = within(
+    canvasElement.querySelector('atomic-ipx-refine-toggle')!
+  );
+  const refineToggleButton = await refineToggleElement.findByShadowRole(
+    'button',
+    {
+      name: 'Filters',
+    }
+  );
+  await new Promise((resolve) => setTimeout(resolve, 300));
+  await step('Open refine modal', async () => {
+    await userEvent.click(refineToggleButton);
+  });
+  await new Promise((resolve) => setTimeout(resolve, 100));
+};
 
 const meta: Meta = {
   component: 'atomic-ipx-refine-modal',
@@ -48,24 +68,7 @@ const meta: Meta = {
     ...args,
   },
   argTypes,
-  play: async (context) => {
-    await play(context);
-    const {canvasElement, step, userEvent} = context;
-    const refineToggleElement = within(
-      canvasElement.querySelector('atomic-ipx-refine-toggle')!
-    );
-    const refineToggleButton = await refineToggleElement.findByShadowRole(
-      'button',
-      {
-        name: 'Filters',
-      }
-    );
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    await step('Open refine modal', async () => {
-      await userEvent.click(refineToggleButton);
-    });
-    await new Promise((resolve) => setTimeout(resolve, 100));
-  },
+  play: openRefineModal,
 };
 
 export default meta;
@@ -94,4 +97,13 @@ export const Default: Story = {
     </atomic-ipx-modal>
   `,
   decorators: [decorator, facetWidthDecorator],
+};
+
+export const A11yDialog: Story = {
+  ...Default,
+  tags: ['a11y', 'test', '!dev'],
+  play: async (context) => {
+    await openRefineModal(context);
+    await testDialogA11y(context);
+  },
 };

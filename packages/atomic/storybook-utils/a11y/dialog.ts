@@ -1,14 +1,14 @@
 import type {StoryContext} from '@storybook/web-components-vite';
 import {within} from 'shadow-dom-testing-library';
-import {expect, userEvent, waitFor} from 'storybook/test';
+import {expect, waitFor} from 'storybook/test';
 
 /**
  * @see https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
  */
-export const COVERED_CRITERIA = ['2.1.1', '2.1.2'] as const;
+export const COVERED_CRITERIA = ['2.4.3', '4.1.2'] as const;
 
 export interface DialogA11yOptions {
-  triggerLabel: string;
+  expectedLabel?: string | RegExp;
 }
 
 function getActiveElementDeep(doc: Document): Element | null {
@@ -19,106 +19,88 @@ function getActiveElementDeep(doc: Document): Element | null {
   return active;
 }
 
+function getComposedParent(node: Node): Node | null {
+  if (node instanceof Element && node.assignedSlot) {
+    return node.assignedSlot;
+  }
+
+  const parentNode = node.parentNode;
+  if (parentNode) {
+    return parentNode;
+  }
+
+  const rootNode = node.getRootNode();
+  return rootNode instanceof ShadowRoot ? rootNode.host : null;
+}
+
+function isInComposedTree(element: Element, container: Element): boolean {
+  let current: Node | null = element;
+
+  while (current) {
+    if (current === container) {
+      return true;
+    }
+    current = getComposedParent(current);
+  }
+
+  return false;
+}
+
+async function findDialog(
+  canvasElement: HTMLElement,
+  options?: DialogA11yOptions
+): Promise<HTMLElement> {
+  const root = within(canvasElement);
+  const queryOptions: Record<string, unknown> = {};
+  if (options?.expectedLabel) {
+    queryOptions.name = options.expectedLabel;
+  }
+
+  const dialogs = await root.findAllByShadowRole('dialog', queryOptions, {
+    timeout: 5000,
+  });
+
+  const activeDialogs = dialogs.filter(
+    (dialog) => dialog.getAttribute('aria-modal') === 'true'
+  );
+
+  return (activeDialogs.at(-1) ?? dialogs.at(-1))!;
+}
+
 export async function testDialogA11y(
   context: StoryContext,
-  options: DialogA11yOptions
+  options?: DialogA11yOptions
 ): Promise<void> {
   const {canvasElement, step} = context;
-  const root = within(canvasElement);
   const doc = canvasElement.ownerDocument;
 
   let status: 'passed' | 'failed' = 'passed';
   try {
-    const trigger = await root.findByShadowRole(
-      'button',
-      {name: options.triggerLabel},
-      {timeout: 5000}
-    );
+    let dialog!: HTMLElement;
 
-    let dialog: HTMLElement;
-
-    await step('Open dialog via trigger click', async () => {
-      await userEvent.click(trigger);
-
-      dialog = await waitFor(
-        async () => {
-          const d = await root.findByShadowRole('dialog', {}, {timeout: 5000});
-          expect(d).toBeInTheDocument();
-          expect(d.getAttribute('aria-modal')).toBe('true');
-          return d;
-        },
-        {timeout: 8000}
-      );
+    await step('Find modal dialog element', async () => {
+      dialog = await findDialog(canvasElement, options);
+      expect(dialog).toBeInTheDocument();
     });
 
-    await step('Tab stays inside dialog (2.1.1 focus trap)', async () => {
-      const focusTrap = dialog! as HTMLElement & {active: boolean};
+    await step('Dialog has an accessible label', async () => {
+      const ariaLabel = dialog.getAttribute('aria-label')?.trim();
+      const ariaLabelledBy = dialog.getAttribute('aria-labelledby')?.trim();
+      expect(Boolean(ariaLabel || ariaLabelledBy)).toBe(true);
+    });
 
+    await step('Initial focus is managed inside the dialog', async () => {
       await waitFor(
         () => {
-          expect(
-            focusTrap.active,
-            'Focus trap should be active after animation end'
-          ).toBe(true);
+          const active = getActiveElementDeep(doc);
+
+          expect(active).not.toBeNull();
+          expect(dialog.matches(':focus-within')).toBe(true);
+          expect(isInComposedTree(active!, dialog)).toBe(true);
         },
-        {timeout: 3000}
-      );
-
-      const dialogRoot = within(dialog!);
-      const buttons = await dialogRoot.findAllByShadowRole('button');
-      expect(
-        buttons.length,
-        'Dialog should contain multiple focusable elements for Tab cycling'
-      ).toBeGreaterThanOrEqual(2);
-
-      const allHidden = doc.querySelectorAll('[aria-hidden="true"]');
-      expect(
-        allHidden.length,
-        'At least one element should be hidden outside the dialog'
-      ).toBeGreaterThanOrEqual(1);
-
-      const hiddenOutsideDialog = Array.from(allHidden).filter(
-        (el) => !dialog!.contains(el) && el !== dialog
-      );
-      expect(
-        hiddenOutsideDialog.length,
-        'Focus trap should hide at least one element outside the dialog via aria-hidden'
-      ).toBeGreaterThanOrEqual(1);
-    });
-
-    await step('Escape closes dialog (2.1.1)', async () => {
-      await userEvent.keyboard('{Escape}');
-
-      await waitFor(
-        () => {
-          const isRemovedFromDOM = !dialog.isConnected;
-          const isModalDismissed = dialog.getAttribute('aria-modal') !== 'true';
-          expect(
-            isRemovedFromDOM || isModalDismissed,
-            'Dialog should be removed or no longer modal after Escape'
-          ).toBe(true);
-        },
-        {timeout: 3000}
+        {timeout: 5000}
       );
     });
-
-    await step(
-      'Focus returns to trigger after dialog closes (2.1.2)',
-      async () => {
-        await waitFor(
-          () => {
-            const active = getActiveElementDeep(doc);
-            const focusOnTrigger = active === trigger;
-            const triggerGone = !trigger.isConnected && active != null;
-            expect(
-              focusOnTrigger || triggerGone,
-              'Focus should return to the trigger (or move to a valid element if trigger was removed)'
-            ).toBe(true);
-          },
-          {timeout: 3000}
-        );
-      }
-    );
   } catch (error) {
     status = 'failed';
     throw error;

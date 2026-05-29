@@ -5,6 +5,7 @@ import type {
 } from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
+import {testDialogA11y} from '@/storybook-utils/a11y/dialog.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -71,5 +72,20 @@ export const OpenedModal: Story = {
   name: 'Modal Opened',
   args: {
     'is-open': true,
+  },
+};
+
+export const A11yDialog: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  play: async (context) => {
+    await play(context);
+    const {canvas, step, userEvent} = context;
+    const openButton = await canvas.findByRole('button', {
+      name: 'Open Feedback Modal',
+    });
+    await step('Open feedback modal', async () => {
+      await userEvent.click(openButton);
+    });
+    await testDialogA11y(context);
   },
 };

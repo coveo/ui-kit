@@ -6,6 +6,7 @@ import type {
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
+import {testDialogA11y} from '@/storybook-utils/a11y/dialog.js';
 import {MockInsightApi} from '@/storybook-utils/api/insight/mock';
 import {
   type baseResponse,
@@ -25,6 +26,29 @@ const {events, args, argTypes, styleTemplate} = getStorybookHelpers(
 );
 const facetWidthDecorator: Decorator = (story) =>
   html`<div style="min-width: 470px;">${story()}</div> `;
+
+const openRefineModal = async (context: Parameters<typeof play>[0]) => {
+  await play(context);
+  const {canvasElement, step, userEvent} = context;
+  const refineToggleElement = within(
+    canvasElement.querySelector('atomic-insight-refine-toggle')!
+  );
+  const refineToggleButton = await refineToggleElement.findByShadowRole(
+    'button',
+    {
+      name: 'Filters',
+    }
+  );
+  // Facets call `bindings.store.registerFacet()` during initialization to register themselves with the interface store.
+  // The refine modal uses `bindings.store.getAllFacets()` to retrieve and render these registered facets.
+  // This delay ensures facets have completed initialization and registration before the modal attempts to render them.
+  await new Promise((resolve) => setTimeout(resolve, 300));
+  await step('Open refine modal', async () => {
+    await userEvent.click(refineToggleButton);
+  });
+  // It's tough to wait exactly for the modal to be visible because of animations. Thus, we add a small delay here.
+  await new Promise((resolve) => setTimeout(resolve, 100));
+};
 
 const meta: Meta = {
   component: 'atomic-insight-refine-modal',
@@ -56,28 +80,7 @@ const meta: Meta = {
       () => richResponse as unknown as typeof baseResponse
     );
   },
-  play: async (context) => {
-    await play(context);
-    const {canvasElement, step, userEvent} = context;
-    const refineToggleElement = within(
-      canvasElement.querySelector('atomic-insight-refine-toggle')!
-    );
-    const refineToggleButton = await refineToggleElement.findByShadowRole(
-      'button',
-      {
-        name: 'Filters',
-      }
-    );
-    // Facets call `bindings.store.registerFacet()` during initialization to register themselves with the interface store.
-    // The refine modal uses `bindings.store.getAllFacets()` to retrieve and render these registered facets.
-    // This delay ensures facets have completed initialization and registration before the modal attempts to render them.
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    await step('Open refine modal', async () => {
-      await userEvent.click(refineToggleButton);
-    });
-    // It's tough to wait exactly for the modal to be visible because of animations. Thus, we add a small delay here.
-    await new Promise((resolve) => setTimeout(resolve, 100));
-  },
+  play: openRefineModal,
 };
 
 export default meta;
@@ -100,4 +103,13 @@ export const Default: Story = {
     decorator,
     facetWidthDecorator,
   ],
+};
+
+export const A11yDialog: Story = {
+  ...Default,
+  tags: ['a11y', 'test', '!dev'],
+  play: async (context) => {
+    await openRefineModal(context);
+    await testDialogA11y(context);
+  },
 };
