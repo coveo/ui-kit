@@ -110,7 +110,7 @@ export default {
         // in an upcoming PR. Knip cannot trace them yet.
         'storybook-utils/a11y/**/*.ts',
         // Request transformer modules for interactive MSW stories.
-        // Wired by downstream feature branches via withRequestTransformer().
+        // Wired by stories via addRequestTransformer().
         'storybook-utils/api/**/*-transformer.ts',
       ],
       ignore: [
