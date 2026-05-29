@@ -1,11 +1,5 @@
 <template>
   <div class={inputContainerClasses}>
-    <!-- <textarea
-      class="slds-col slds-grow follow-up-input__textarea slds-p-horizontal_medium slds-p-vertical_x-small"
-      placeholder="Ask follow-up"
-      rows="1"
-      onfocus={handleFocus}
-    ></textarea> -->
     <lightning-input
       class="slds-col slds-grow follow-up-input__input"
       type="text" 
@@ -13,6 +7,7 @@
       label={labels.askFollowUp}
       placeholder={labels.askFollowUp}
       name="ask-followup"
+      lwc:ref="askFollowUpInput"
       onfocus={handleFocus}
       onblur={handleBlur}
       onkeydown={handleKeyDown}
