@@ -139,6 +139,12 @@ describe('atomic-commerce-category-facet', () => {
       get values() {
         return element.shadowRoot!.querySelector('[part=values]')!;
       },
+      get tree() {
+        return element.shadowRoot!.querySelector('[role=tree]');
+      },
+      get treeItems() {
+        return element.shadowRoot!.querySelectorAll('[role=treeitem]');
+      },
       get valueLabel() {
         return element.shadowRoot!.querySelectorAll('[part=value-label]');
       },
@@ -199,6 +205,14 @@ describe('atomic-commerce-category-facet', () => {
   it('should render values', async () => {
     const {values} = await setupElement();
     await expect.element(values).toBeInTheDocument();
+  });
+
+  it('should render a named tree with treeitems', async () => {
+    const {tree, treeItems} = await setupElement();
+
+    expect(tree).toHaveAttribute('aria-label', 'some-category-display-name');
+    expect(treeItems.length).toBeGreaterThan(0);
+    expect(treeItems[0]).toHaveAttribute('aria-expanded', 'false');
   });
 
   it('should render value links', async () => {
@@ -381,6 +395,29 @@ describe('atomic-commerce-category-facet', () => {
 
     await facetValueButton.click();
     expect(mockedFacet.toggleSelect).toHaveBeenCalled();
+  });
+
+  it('should support tree view keyboard navigation', async () => {
+    const {element, treeItems} = await setupElement();
+    const [firstTreeItem, secondTreeItem] = Array.from(
+      treeItems
+    ) as HTMLButtonElement[];
+
+    firstTreeItem.focus();
+    await userEvent.keyboard('{ArrowDown}');
+    await expect
+      .poll(() => element.shadowRoot?.activeElement)
+      .toBe(secondTreeItem);
+
+    await userEvent.keyboard('{ArrowUp}');
+    await expect
+      .poll(() => element.shadowRoot?.activeElement)
+      .toBe(firstTreeItem);
+
+    await userEvent.keyboard('{ArrowRight}');
+    expect(mockedFacet.toggleSelect).toHaveBeenCalledWith(
+      expect.objectContaining({path: ['Electronics']})
+    );
   });
 
   it('should #showMoreValues when show more button is clicked', async () => {

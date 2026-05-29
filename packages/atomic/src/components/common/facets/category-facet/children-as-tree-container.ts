@@ -4,6 +4,10 @@ import type {FunctionalComponentWithChildren} from '@/src/utils/functional-compo
 
 export interface CategoryFacetChildrenAsTreeContainerProps {
   className?: string;
+  isTopLevel?: boolean;
+  label?: string;
+  onFocusIn?: (event: FocusEvent) => void;
+  onKeyDown?: (event: KeyboardEvent) => void;
 }
 
 export const renderCategoryFacetChildrenAsTreeContainer: FunctionalComponentWithChildren<
@@ -11,7 +15,14 @@ export const renderCategoryFacetChildrenAsTreeContainer: FunctionalComponentWith
 > =
   ({props}) =>
   (children) => {
-    return html`<ul part="values" class=${ifDefined(props.className)}>
+    return html`<ul
+      part="values"
+      class=${ifDefined(props.className)}
+      role=${props.isTopLevel ? 'tree' : 'group'}
+      aria-label=${ifDefined(props.isTopLevel ? props.label : undefined)}
+      @focusin=${props.onFocusIn}
+      @keydown=${props.onKeyDown}
+    >
       ${children}
     </ul>`;
   };

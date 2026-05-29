@@ -1,6 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {testTreeViewA11y} from '@/storybook-utils/a11y';
 import {commerceFacetWidthDecorator} from '@/storybook-utils/commerce/commerce-facet-width-decorator';
 import {
   hideFacetTypesHook,
@@ -70,5 +71,17 @@ export const Default: Story = {
   play: async (context) => {
     await play(context);
     await hideFacetTypesHook('atomic-commerce-category-facet', context);
+  },
+};
+
+export const A11yTreeView: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  render: () => html`<div id="code-root">
+    <atomic-commerce-facets></atomic-commerce-facets>
+  </div>`,
+  play: async (context) => {
+    await play(context);
+    await hideFacetTypesHook('atomic-commerce-category-facet', context);
+    await testTreeViewA11y(context);
   },
 };

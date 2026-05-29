@@ -4,6 +4,9 @@ import {html} from 'lit';
 import {renderFacetValueLabelHighlight} from '@/src/components/common/facets/facet-value-label-highlight/facet-value-label-highlight';
 import {renderFacetValueLink} from '@/src/components/common/facets/facet-value-link/facet-value-link';
 import type {FunctionalComponentWithOptionalChildren} from '@/src/utils/functional-component-utils';
+import {serializeCategoryFacetTreePath} from './tree-view';
+
+type CategoryFacetTreeItemKind = 'active-parent' | 'value';
 
 export interface CategoryFacetValueLinkProps {
   displayValue: string;
@@ -15,6 +18,10 @@ export interface CategoryFacetValueLinkProps {
   searchQuery: string;
   isLeafValue: boolean;
   setRef: (el?: Element) => void;
+  treeLevel: number;
+  treePath: string[];
+  treeKind?: CategoryFacetTreeItemKind;
+  isExpanded?: boolean;
 }
 
 export const renderCategoryFacetValueLink: FunctionalComponentWithOptionalChildren<
@@ -31,6 +38,10 @@ export const renderCategoryFacetValueLink: FunctionalComponentWithOptionalChildr
       searchQuery,
       isLeafValue,
       setRef,
+      treeLevel,
+      treePath,
+      treeKind = 'value',
+      isExpanded,
     },
   }) =>
   (children?) => {
@@ -56,6 +67,11 @@ export const renderCategoryFacetValueLink: FunctionalComponentWithOptionalChildr
         searchQuery,
         part: partNames.join(' '),
         class: 'contents',
+        role: 'treeitem',
+        ariaLevel: treeLevel,
+        ariaExpanded: isLeafValue ? undefined : isExpanded ? 'true' : 'false',
+        dataTreeKind: treeKind,
+        dataTreePath: serializeCategoryFacetTreePath(treePath),
         buttonRef: (element) => {
           setRef?.(element);
         },

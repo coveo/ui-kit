@@ -41,3 +41,7 @@ export {
   testTableA11y,
   type TableA11yOptions,
 } from './table.js';
+export {
+  COVERED_CRITERIA as TREE_VIEW_COVERED_CRITERIA,
+  testTreeViewA11y,
+} from './tree-view.js';

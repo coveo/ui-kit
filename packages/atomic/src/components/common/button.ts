@@ -29,15 +29,19 @@ export interface ButtonProps {
     | 'toolbar'
     | 'listitem'
     | 'list'
-    | 'separator';
+    | 'separator'
+    | 'treeitem';
   disabled?: boolean;
   ariaLabel?: string;
+  ariaLevel?: number;
   ariaExpanded?: 'true' | 'false';
   ariaPressed?: 'true' | 'false' | 'mixed';
   ariaChecked?: 'true' | 'false' | 'mixed';
   ariaCurrent?: 'page' | 'false';
   ariaControls?: string;
   ariaHidden?: 'true' | 'false';
+  dataTreeKind?: string;
+  dataTreePath?: string;
   tabIndex?: number;
   title?: string;
   ref?: RefOrCallback;
@@ -54,6 +58,7 @@ export const renderButton: FunctionalComponentWithChildren<ButtonProps> =
       title=${ifDefined(props.title)}
       tabindex=${ifDefined(props.tabIndex)}
       role=${ifDefined(props.role)}
+      aria-level=${ifDefined(props.ariaLevel)}
       part=${ifDefined(props.part)}
       form=${ifDefined(props.form)}
       class=${props.class ? `${className} ${props.class}` : className}
@@ -64,6 +69,8 @@ export const renderButton: FunctionalComponentWithChildren<ButtonProps> =
       aria-current=${ifDefined(props.ariaCurrent)}
       aria-controls=${ifDefined(props.ariaControls)}
       aria-checked=${ifDefined(props.ariaChecked)}
+      data-tree-kind=${ifDefined(props.dataTreeKind)}
+      data-tree-path=${ifDefined(props.dataTreePath)}
       @mousedown=${(e: MouseEvent) => createRipple(e, {color: rippleColor})}
       @click=${props.onClick}
       ?disabled=${props.disabled}

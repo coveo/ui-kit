@@ -5,12 +5,14 @@ import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import LeftArrow from '../../../../images/arrow-left-rounded.svg';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {renderButton} from '../../button';
+import {serializeCategoryFacetTreePath} from './tree-view';
 
 interface CategoryFacetParentButtonProps {
   i18n: i18n;
   field: string;
-  facetValue: {value: string; numberOfResults: number};
+  facetValue: {value: string; numberOfResults: number; path: string[]};
   onClick: () => void;
+  treeLevel: number;
 }
 
 export const renderCategoryFacetParentButton: FunctionalComponent<
@@ -33,11 +35,16 @@ export const renderCategoryFacetParentButton: FunctionalComponent<
     props: {
       style: 'text-neutral',
       part: 'parent-button',
+      role: 'treeitem',
+      ariaExpanded: 'true',
+      ariaLevel: props.treeLevel,
       ariaPressed: 'false',
       onClick: () => {
         props.onClick();
       },
       ariaLabel: ariaLabel,
+      dataTreeKind: 'parent',
+      dataTreePath: serializeCategoryFacetTreePath(props.facetValue.path),
     },
   })(html`
     <atomic-icon

@@ -41,6 +41,14 @@ import {renderCategoryFacetParentAsTreeContainer} from '../../common/facets/cate
 import {renderCategoryFacetParentButton} from '../../common/facets/category-facet/parent-button';
 import {renderCategoryFacetParentValueLink} from '../../common/facets/category-facet/parent-value-link';
 import {renderCategoryFacetSearchResultsContainer} from '../../common/facets/category-facet/search-results-container';
+import {
+  deserializeCategoryFacetTreePath,
+  findCategoryFacetTreeNodeByPath,
+  findFirstChildCategoryFacetTreeItem,
+  findParentCategoryFacetTreeItem,
+  getCategoryFacetTreeItems,
+  setActiveCategoryFacetTreeItem,
+} from '../../common/facets/category-facet/tree-view';
 import {renderCategoryFacetSearchValue} from '../../common/facets/category-facet/search-value';
 import {renderCategoryFacetTreeValueContainer} from '../../common/facets/category-facet/value-as-tree-container';
 import {renderCategoryFacetValueLink} from '../../common/facets/category-facet/value-link';
@@ -159,6 +167,7 @@ export class AtomicCommerceCategoryFacet
   @state() public error!: Error;
 
   private resultIndexToFocusOnShowMore = 0;
+  private pendingTreeItemPath?: string;
   private showLessFocus?: FocusTargetController;
   private showMoreFocus?: FocusTargetController;
   private headerFocus?: FocusTargetController;
@@ -257,12 +266,197 @@ export class AtomicCommerceCategoryFacet
     });
   }
 
+  private get treeRoot() {
+    return this.renderRoot.querySelector<HTMLElement>('[role="tree"]');
+  }
+
+  private get defaultTreeItem() {
+    const treeItems = getCategoryFacetTreeItems(this.treeRoot);
+    return (
+      treeItems.find((item) => item.getAttribute('aria-expanded') === 'true') ??
+      treeItems[0]
+    );
+  }
+
+  private syncTreeViewFocus() {
+    const treeRoot = this.treeRoot;
+    if (!treeRoot) {
+      return;
+    }
+
+    const treeItems = getCategoryFacetTreeItems(treeRoot);
+    if (!treeItems.length) {
+      return;
+    }
+
+    if (this.pendingTreeItemPath) {
+      const pendingTreeItem = treeItems.find(
+        (item) => item.dataset.treePath === this.pendingTreeItemPath
+      );
+
+      this.pendingTreeItemPath = undefined;
+
+      if (pendingTreeItem) {
+        setActiveCategoryFacetTreeItem(treeRoot, pendingTreeItem);
+        pendingTreeItem.focus();
+        return;
+      }
+    }
+
+    const activeTreeItem =
+      treeItems.find((item) => item.matches(':focus')) ?? this.defaultTreeItem;
+
+    setActiveCategoryFacetTreeItem(treeRoot, activeTreeItem ?? null);
+  }
+
+  private handleTreeFocusIn = (event: FocusEvent) => {
+    const treeItem = (event
+      .composedPath()
+      .find(
+        (target) =>
+          target instanceof HTMLElement &&
+          target.getAttribute('role') === 'treeitem'
+      ) ?? null) as HTMLElement | null;
+
+    if (!treeItem) {
+      return;
+    }
+
+    setActiveCategoryFacetTreeItem(this.treeRoot, treeItem);
+  };
+
+  private handleTreeKeyDown = (event: KeyboardEvent) => {
+    const treeItem = (event
+      .composedPath()
+      .find(
+        (target) =>
+          target instanceof HTMLElement &&
+          target.getAttribute('role') === 'treeitem'
+      ) ?? null) as HTMLElement | null;
+
+    if (!treeItem) {
+      return;
+    }
+
+    const treeItems = getCategoryFacetTreeItems(this.treeRoot);
+    const currentIndex = treeItems.indexOf(treeItem);
+    if (currentIndex === -1) {
+      return;
+    }
+
+    const focusTreeItem = (nextTreeItem?: HTMLElement) => {
+      if (!nextTreeItem) {
+        return;
+      }
+
+      setActiveCategoryFacetTreeItem(this.treeRoot, nextTreeItem);
+      nextTreeItem.focus();
+    };
+
+    switch (event.key) {
+      case 'ArrowDown':
+        event.preventDefault();
+        focusTreeItem(treeItems[currentIndex + 1]);
+        break;
+      case 'ArrowUp':
+        event.preventDefault();
+        focusTreeItem(treeItems[currentIndex - 1]);
+        break;
+      case 'Home':
+        event.preventDefault();
+        focusTreeItem(treeItems[0]);
+        break;
+      case 'End':
+        event.preventDefault();
+        focusTreeItem(treeItems.at(-1));
+        break;
+      case 'ArrowRight':
+        event.preventDefault();
+        if (treeItem.getAttribute('aria-expanded') === 'false') {
+          this.expandTreeItem(treeItem);
+          break;
+        }
+        focusTreeItem(
+          findFirstChildCategoryFacetTreeItem(treeItems, currentIndex)
+        );
+        break;
+      case 'ArrowLeft':
+        event.preventDefault();
+        if (treeItem.getAttribute('aria-expanded') === 'true') {
+          this.collapseTreeItem(treeItem);
+          break;
+        }
+        focusTreeItem(findParentCategoryFacetTreeItem(treeItems, currentIndex));
+        break;
+      case 'Enter':
+        event.preventDefault();
+        this.activateTreeItem(treeItem);
+        break;
+      default:
+        break;
+    }
+  };
+
+  private activateTreeItem(treeItem: HTMLElement) {
+    const kind = treeItem.dataset.treeKind;
+    if (kind === 'all-categories') {
+      this.facet.deselectAll();
+      return;
+    }
+
+    const facetValue = this.getFacetValueFromTreeItem(treeItem);
+    if (!facetValue) {
+      return;
+    }
+
+    this.pendingTreeItemPath = treeItem.dataset.treePath;
+    if (kind === 'active-parent') {
+      this.facet.deselectAll();
+      return;
+    }
+
+    this.facet.toggleSelect(facetValue);
+  }
+
+  private collapseTreeItem(treeItem: HTMLElement) {
+    const facetValue = this.getFacetValueFromTreeItem(treeItem);
+    if (!facetValue) {
+      return;
+    }
+
+    this.pendingTreeItemPath = treeItem.dataset.treePath;
+    this.facet.toggleSelect(facetValue);
+  }
+
+  private expandTreeItem(treeItem: HTMLElement) {
+    const facetValue = this.getFacetValueFromTreeItem(treeItem);
+    if (!facetValue) {
+      return;
+    }
+
+    this.pendingTreeItemPath = treeItem.dataset.treePath;
+    this.facet.toggleSelect(facetValue);
+  }
+
+  private getFacetValueFromTreeItem(treeItem: HTMLElement) {
+    const path = treeItem.dataset.treePath;
+    if (!path) {
+      return;
+    }
+
+    return findCategoryFacetTreeNodeByPath(
+      [...this.facetState.selectedValueAncestry, ...this.facetState.values],
+      deserializeCategoryFacetTreePath(path)
+    );
+  }
+
   private renderValuesTree(
     parents: CategoryFacetValue[],
-    isRoot: boolean
+    isRoot: boolean,
+    level = 1
   ): TemplateResult {
     if (!this.hasParents) {
-      return this.renderChildren();
+      return this.renderChildren(level);
     }
 
     if (isRoot) {
@@ -276,13 +470,14 @@ export class AtomicCommerceCategoryFacet
             },
             facetId: this.facetState.facetId,
             field: this.facet.state.field,
+            treeLevel: level,
           },
         })}
         ${renderCategoryFacetParentAsTreeContainer({
           props: {
             isTopLevel: false,
           },
-        })(html`${this.renderValuesTree(parents, false)} `)}
+        })(html`${this.renderValuesTree(parents, false, level + 1)} `)}
       `);
     }
 
@@ -295,6 +490,7 @@ export class AtomicCommerceCategoryFacet
             i18n: this.bindings.i18n,
             field: this.facetState?.field,
             facetValue: parentValue,
+            treeLevel: level,
             onClick: () => {
               this.focusTargets.activeValueFocus.focusAfterSearch();
               this.facet.toggleSelect(parentValue);
@@ -305,7 +501,7 @@ export class AtomicCommerceCategoryFacet
           props: {
             isTopLevel: false,
           },
-        })(this.renderValuesTree(parents.slice(1), false))}
+        })(this.renderValuesTree(parents.slice(1), false, level + 1))}
       `);
     }
 
@@ -323,18 +519,22 @@ export class AtomicCommerceCategoryFacet
           numberOfResults: activeParent.numberOfResults,
           i18n: this.bindings.i18n,
           isLeafValue: activeParent.isLeafValue,
+          isExpanded: !activeParent.isLeafValue,
           onClick: () => {
             this.focusTargets.activeValueFocus.focusAfterSearch();
             this.facet.deselectAll();
           },
           searchQuery: this.facetState.facetSearch.query,
+          treeKind: 'active-parent',
+          treeLevel: level,
+          treePath: activeParent.path,
           setRef: (el) => {
             this.focusTargets.activeValueFocus.setTarget(el as HTMLElement);
           },
         },
       })(html`
         ${renderCategoryFacetChildrenAsTreeContainer({props: {}})(
-          html` ${this.renderChildren()}`
+          html` ${this.renderChildren(level + 1)}`
         )}
       `)}
     `;
@@ -343,7 +543,8 @@ export class AtomicCommerceCategoryFacet
   private renderChild(
     facetValue: CategoryFacetValue,
     isShowLessFocusTarget: boolean,
-    isShowMoreFocusTarget: boolean
+    isShowMoreFocusTarget: boolean,
+    level: number
   ) {
     const displayValue = getFieldValueCaption(
       this.facetState?.field,
@@ -365,6 +566,9 @@ export class AtomicCommerceCategoryFacet
         isSelected,
         searchQuery: this.facetState.facetSearch.query,
         isLeafValue: facetValue.isLeafValue,
+        isExpanded: false,
+        treeLevel: level,
+        treePath: facetValue.path,
         setRef: (el) => {
           isShowLessFocusTarget &&
             this.focusTargets.showLessFocus.setTarget(el as HTMLElement);
@@ -375,7 +579,7 @@ export class AtomicCommerceCategoryFacet
     })()} `;
   }
 
-  private renderChildren() {
+  private renderChildren(level = 1) {
     const {values, selectedValueAncestry, hasActiveValues} = this.facetState;
     const nextValues = hasActiveValues ? selectedValueAncestry : values;
 
@@ -386,7 +590,12 @@ export class AtomicCommerceCategoryFacet
       : [];
 
     return html`${map(children, (value: CategoryFacetValue, i: number) =>
-      this.renderChild(value, i === 0, i === this.resultIndexToFocusOnShowMore)
+      this.renderChild(
+        value,
+        i === 0,
+        i === this.resultIndexToFocusOnShowMore,
+        level
+      )
     )}`;
   }
 
@@ -507,7 +716,13 @@ export class AtomicCommerceCategoryFacet
                   this.hasParents,
                   () => html`
                     ${renderCategoryFacetParentAsTreeContainer({
-                      props: {isTopLevel: true, className: 'mt-3'},
+                      props: {
+                        isTopLevel: true,
+                        className: 'mt-3',
+                        label: this.displayName,
+                        onFocusIn: this.handleTreeFocusIn,
+                        onKeyDown: this.handleTreeKeyDown,
+                      },
                     })(
                       html`${when(
                         selectedValueAncestry,
@@ -521,6 +736,10 @@ export class AtomicCommerceCategoryFacet
                     ${renderCategoryFacetChildrenAsTreeContainer({
                       props: {
                         className: 'mt-3',
+                        isTopLevel: true,
+                        label: this.displayName,
+                        onFocusIn: this.handleTreeFocusIn,
+                        onKeyDown: this.handleTreeKeyDown,
                       },
                     })(this.renderChildren())}
                   `
@@ -536,6 +755,7 @@ export class AtomicCommerceCategoryFacet
 
   public updated(changedProps: Map<string, unknown>) {
     super.updated(changedProps);
+    this.syncTreeViewFocus();
     if (changedProps.has('facet')) {
       this.validateFacet();
     }

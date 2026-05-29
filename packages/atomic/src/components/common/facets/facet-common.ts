@@ -14,6 +14,11 @@ export interface FacetValuePropsBase {
   onClick(): void;
   searchQuery?: string;
   buttonRef?: RefOrCallback;
+  role?: 'treeitem';
+  ariaLevel?: number;
+  ariaExpanded?: 'true' | 'false';
+  dataTreeKind?: string;
+  dataTreePath?: string;
 }
 
 export function shouldDisplayInputForFacetRange(facetRange: {

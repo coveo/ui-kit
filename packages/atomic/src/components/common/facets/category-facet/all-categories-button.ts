@@ -11,18 +11,22 @@ export interface CategoryFacetAllCategoryButtonProps {
   facetId?: string;
   field: string;
   onClick(): void;
+  treeLevel: number;
 }
 
 export const renderCategoryFacetAllCategoryButton: FunctionalComponent<
   CategoryFacetAllCategoryButtonProps
-> = ({props: {i18n, onClick, facetId, field}}) => {
+> = ({props: {i18n, onClick, facetId, field, treeLevel}}) => {
   const allCategories = getAllCategoriesLocalizedLabel({facetId, field, i18n});
   return html`
     ${renderButton({
       props: {
         style: 'text-neutral',
         part: 'all-categories-button',
+        role: 'treeitem',
+        ariaLevel: treeLevel,
         onClick: onClick,
+        dataTreeKind: 'all-categories',
       },
     })(
       html`<atomic-icon

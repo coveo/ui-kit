@@ -3,5 +3,5 @@ import type {FunctionalComponentWithChildrenNoProps} from '@/src/utils/functiona
 
 export const renderCategoryFacetTreeValueContainer: FunctionalComponentWithChildrenNoProps =
   () => (children) => {
-    return html`<li class="contents">${children}</li>`;
+    return html`<li class="contents" role="none">${children}</li>`;
   };

@@ -129,6 +129,12 @@ describe('atomic-category-facet', () => {
       get values() {
         return element.shadowRoot?.querySelector('[part=values]');
       },
+      get tree() {
+        return element.shadowRoot?.querySelector('[role=tree]');
+      },
+      get treeItems() {
+        return element.shadowRoot?.querySelectorAll('[role=treeitem]');
+      },
       get valueLinks() {
         return element.shadowRoot?.querySelectorAll('[part~=value-link]');
       },
@@ -296,6 +302,78 @@ describe('atomic-category-facet', () => {
         },
       });
       expect(parents).toBeInTheDocument();
+    });
+  });
+
+  describe('tree view accessibility', () => {
+    const treeValues = [
+      {
+        value: 'Electronics',
+        numberOfResults: 25,
+        moreValuesAvailable: false,
+        state: 'idle' as const,
+        path: ['Electronics'],
+        children: [],
+        isLeafValue: false,
+      },
+      {
+        value: 'Books',
+        numberOfResults: 12,
+        moreValuesAvailable: false,
+        state: 'idle' as const,
+        path: ['Books'],
+        children: [],
+        isLeafValue: true,
+      },
+    ];
+
+    it('should render a named tree with treeitems', async () => {
+      const {tree, treeItems} = await renderCategoryFacet(
+        {label: 'Product Categories'},
+        {
+          facetState: {valuesAsTrees: treeValues},
+        }
+      );
+
+      expect(tree).toHaveAttribute('aria-label', 'Product Categories');
+      expect(treeItems).toHaveLength(2);
+      expect(treeItems?.[0]).toHaveAttribute('aria-expanded', 'false');
+      expect(treeItems?.[1]).not.toHaveAttribute('aria-expanded');
+    });
+
+    it('should move focus with arrow keys and expand with ArrowRight', async () => {
+      const mockedToggleSelect = vi.fn();
+      vi.mocked(buildCategoryFacet).mockReturnValue(
+        buildFakeCategoryFacet({
+          state: {valuesAsTrees: treeValues},
+          implementation: {toggleSelect: mockedToggleSelect},
+        })
+      );
+
+      const {element, treeItems} = await renderCategoryFacet(undefined, {
+        facetState: {valuesAsTrees: treeValues},
+      });
+
+      const firstTreeItem = treeItems?.[0] as HTMLElement;
+      const secondTreeItem = treeItems?.[1] as HTMLElement;
+
+      firstTreeItem.focus();
+      firstTreeItem.dispatchEvent(
+        new KeyboardEvent('keydown', {key: 'ArrowDown', bubbles: true})
+      );
+      expect(element.shadowRoot?.activeElement).toBe(secondTreeItem);
+
+      secondTreeItem.dispatchEvent(
+        new KeyboardEvent('keydown', {key: 'ArrowUp', bubbles: true})
+      );
+      expect(element.shadowRoot?.activeElement).toBe(firstTreeItem);
+
+      firstTreeItem.dispatchEvent(
+        new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true})
+      );
+      expect(mockedToggleSelect).toHaveBeenCalledWith(
+        expect.objectContaining({path: ['Electronics']})
+      );
     });
   });
 

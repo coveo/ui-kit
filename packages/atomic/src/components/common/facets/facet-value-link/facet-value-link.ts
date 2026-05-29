@@ -33,7 +33,7 @@ export const renderFacetValueLink: FunctionalComponentWithChildren<
     return html`
       ${keyed(
         props.displayValue,
-        html`<li class=${ifDefined(props.class)}>
+        html`<li class=${ifDefined(props.class)} role="none">
           ${renderButton({
             props: {
               style: 'text-neutral',
@@ -41,8 +41,13 @@ export const renderFacetValueLink: FunctionalComponentWithChildren<
               onClick: () => props.onClick(),
               class:
                 'group flex w-full items-center truncate px-2 py-2.5 text-left focus-visible:outline-none',
+              role: props.role,
               ariaPressed: props.isSelected ? 'true' : 'false',
+              ariaLevel: props.ariaLevel,
               ariaLabel,
+              ariaExpanded: props.ariaExpanded,
+              dataTreeKind: props.dataTreeKind,
+              dataTreePath: props.dataTreePath,
               ref: props.buttonRef,
             },
           })(

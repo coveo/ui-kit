@@ -1,5 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {testTreeViewA11y} from '@/storybook-utils/a11y';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
@@ -412,5 +413,25 @@ export const WithSelectedChildValueAndMoreAvailable: Story = {
   decorators: [facetDecorator],
   beforeEach: () => {
     mockSelectedChildValueWithMoreAvailable();
+  },
+};
+
+export const A11yTreeView: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  args: {
+    field: 'geographicalhierarchy',
+    label: 'Geographical Hierarchy',
+    'with-search': true,
+  },
+  decorators: [facetDecorator],
+  beforeEach: () => {
+    mockDefaultCategoryFacetResponse();
+    mockSelectedRootValue();
+    mockDefaultCategoryFacetResponse();
+    mockSelectedRootValue();
+  },
+  play: async (context) => {
+    await play(context);
+    await testTreeViewA11y(context);
   },
 };
