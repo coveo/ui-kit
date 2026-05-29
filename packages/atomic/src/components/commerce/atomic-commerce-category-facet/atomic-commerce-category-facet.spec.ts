@@ -65,10 +65,10 @@ describe('atomic-commerce-category-facet', () => {
         return page.getByText('No label', {exact: true});
       },
       getFacetValueByPosition(valuePosition: number) {
-        return page.getByRole('listitem').nth(valuePosition);
+        return page.getByRole('treeitem').nth(valuePosition);
       },
       getFacetValueByLabel(value: string | RegExp) {
-        return page.getByRole('listitem').filter({hasText: value});
+        return page.getByRole('treeitem').filter({hasText: value});
       },
       getFacetValueButtonByLabel(value: string | RegExp) {
         return page.getByLabelText(`Inclusion filter on ${value}`);

@@ -557,7 +557,9 @@ export class AtomicCategoryFacet
     }
 
     if (isRoot) {
-      return renderCategoryFacetTreeValueContainer()(html`
+      return renderCategoryFacetTreeValueContainer({
+        props: {isExpandable: true, isExpanded: true},
+      })(html`
         ${renderCategoryFacetAllCategoryButton({
           props: {
             i18n: this.bindings.i18n,
@@ -580,7 +582,9 @@ export class AtomicCategoryFacet
     if (valuesAsTrees.length > 1) {
       const parentValue = valuesAsTrees[0];
 
-      return renderCategoryFacetTreeValueContainer()(html`
+      return renderCategoryFacetTreeValueContainer({
+        props: {isExpandable: true, isExpanded: true},
+      })(html`
         ${renderCategoryFacetParentButton({
           props: {
             facetValue: parentValue,
@@ -825,13 +829,15 @@ export class AtomicCategoryFacet
                   this.hasParents,
                   () => html`
                     ${renderCategoryFacetParentAsTreeContainer({
-                      props: {isTopLevel: true, className: 'mt-3'},
+                      props: {isTopLevel: true, className: 'mt-3', label},
                     })(this.renderValuesTree(selectedValueAncestry, true))}
                   `,
                   () => html`
                     ${renderCategoryFacetChildrenAsTreeContainer({
                       props: {
                         className: 'mt-3',
+                        isTopLevel: true,
+                        label,
                       },
                     })(this.renderChildren())}
                   `

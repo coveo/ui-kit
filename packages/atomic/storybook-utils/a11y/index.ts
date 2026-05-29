@@ -46,3 +46,7 @@ export {
   testCheckboxA11y,
   type CheckboxA11yOptions,
 } from './checkbox.js';
+export {
+  COVERED_CRITERIA as TREE_VIEW_COVERED_CRITERIA,
+  testTreeViewA11y,
+} from './tree-view.js';

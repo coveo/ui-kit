@@ -266,7 +266,9 @@ export class AtomicCommerceCategoryFacet
     }
 
     if (isRoot) {
-      return renderCategoryFacetTreeValueContainer()(html`
+      return renderCategoryFacetTreeValueContainer({
+        props: {isExpandable: true, isExpanded: true},
+      })(html`
         ${renderCategoryFacetAllCategoryButton({
           props: {
             i18n: this.bindings.i18n,
@@ -289,7 +291,9 @@ export class AtomicCommerceCategoryFacet
     if (parents.length > 1) {
       const parentValue = parents[0];
 
-      return renderCategoryFacetTreeValueContainer()(html`
+      return renderCategoryFacetTreeValueContainer({
+        props: {isExpandable: true, isExpanded: true},
+      })(html`
         ${renderCategoryFacetParentButton({
           props: {
             i18n: this.bindings.i18n,
@@ -507,7 +511,11 @@ export class AtomicCommerceCategoryFacet
                   this.hasParents,
                   () => html`
                     ${renderCategoryFacetParentAsTreeContainer({
-                      props: {isTopLevel: true, className: 'mt-3'},
+                      props: {
+                        isTopLevel: true,
+                        className: 'mt-3',
+                        label: this.displayName,
+                      },
                     })(
                       html`${when(
                         selectedValueAncestry,
@@ -521,6 +529,8 @@ export class AtomicCommerceCategoryFacet
                     ${renderCategoryFacetChildrenAsTreeContainer({
                       props: {
                         className: 'mt-3',
+                        isTopLevel: true,
+                        label: this.displayName,
                       },
                     })(this.renderChildren())}
                   `
