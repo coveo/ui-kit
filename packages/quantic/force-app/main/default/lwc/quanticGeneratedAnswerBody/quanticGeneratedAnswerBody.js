@@ -5,13 +5,7 @@ import thisAnswerWasHelpful from '@salesforce/label/c.quantic_ThisAnswerWasHelpf
 import thisAnswerWasNotHelpful from '@salesforce/label/c.quantic_ThisAnswerWasNotHelpful';
 import {LightningElement, api} from 'lwc';
 
-/** @typedef {import("@coveo/headless").GeneratedAnswerBase} GeneratedAnswerBase */
-/** @typedef {import("@coveo/headless").GeneratedAnswerCitation} GeneratedAnswerCitation */
-/**
- * @typedef {Partial<GeneratedAnswerBase> & {
- *   citations?: GeneratedAnswerCitation[];
- * }} QuanticGeneratedAnswerBodyState
- */
+/** @typedef {import("@coveo/headless").GeneratedAnswerState} GeneratedAnswerState */
 
 /**
  * The `QuanticGeneratedAnswerBody` component renders a single generated answer unit.
@@ -31,9 +25,9 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
   /**
    * The generated answer state.
    * @api
-    * @type {QuanticGeneratedAnswerBodyState}
+   * @type {GeneratedAnswerState}
    */
-  @api generatedAnswer = {};
+  @api generatedAnswer;
   /**
    * Whether to disable citation anchoring.
    * @api
