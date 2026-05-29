@@ -78,9 +78,6 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
   }
 
   get errorMessage() {
-    if (this.shouldDisplayCannotAnswer) {
-      return this.labels.couldNotGenerateAnAnswer;
-    }
     if (this.generatedAnswer?.error?.isSseTurnLimitReachedError?.()) {
       return this.labels.generatedAnswerErrorTurnLimitReached;
     }
@@ -109,6 +106,13 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
 
   get shouldShowFeedback() {
     return !this.generatedAnswer?.feedbackSubmitted;
+  }
+
+  get shouldDisplayAnswer() {
+    return (
+      !this.hasError &&
+      !this.shouldDisplayCannotAnswer
+    );
   }
 
   handleLike(event) {
@@ -149,13 +153,6 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
         bubbles: true,
         composed: true,
       })
-    );
-  }
-
-  get shouldDisplayAnswer() {
-    return (
-      !this.hasError &&
-      !this.shouldDisplayCannotAnswer
     );
   }
 }
