@@ -13,6 +13,8 @@ export interface CarouselProps {
   navigateToImage(index: number): void;
   numberOfImages: number;
   currentImage: number;
+  /** Accessible label for the carousel region. Passed by the parent component. */
+  label: string;
 }
 
 export const renderImageCarousel: FunctionalComponentWithChildren<
@@ -81,9 +83,15 @@ export const renderImageCarousel: FunctionalComponentWithChildren<
     }
     return html` <div
       class="relative flex w-full min-w-full items-center justify-center"
+      role="region"
+      aria-roledescription="carousel"
+      aria-label=${props.label}
     >
-      ${renderPreviousButton()} ${children} ${renderNextButton()}
-      ${renderIndicators()}
+      ${renderPreviousButton()}
+      <div class="w-full h-full" aria-live="polite" aria-atomic="false">
+        ${children}
+      </div>
+      ${renderNextButton()} ${renderIndicators()}
     </div>`;
   };
 };

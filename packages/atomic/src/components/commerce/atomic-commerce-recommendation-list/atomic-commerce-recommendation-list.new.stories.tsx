@@ -1,3 +1,4 @@
+import {testCarouselA11y} from '@/storybook-utils/a11y/carousel.js';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
@@ -153,5 +154,16 @@ export const NoRecommendations: Story = {
       },
       triggers: [],
     }));
+  },
+};
+
+export const A11yCarousel: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  args: {
+    'products-per-page': 3,
+  },
+  play: async (context) => {
+    await play(context);
+    await testCarouselA11y(context);
   },
 };
