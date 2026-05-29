@@ -474,6 +474,7 @@ export class AtomicResultList
             firstItem,
             host: this,
             itemRenderingFunction: this.itemRenderingFunction,
+            label: this.bindings.i18n.t('view-results'),
             listClasses,
             logger: this.bindings.engine.logger,
             templateContentForFirstItem,
