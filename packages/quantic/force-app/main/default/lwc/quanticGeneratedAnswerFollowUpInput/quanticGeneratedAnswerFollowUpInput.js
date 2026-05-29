@@ -1,13 +1,16 @@
 import submitFollowUp from '@salesforce/label/c.quantic_SubmitFollowUp';
 import askFollowUp from '@salesforce/label/c.quantic_AskFollowUp';
 import {keys} from 'c/quanticUtils';
-import { LightningElement } from 'lwc';
+import {api, LightningElement} from 'lwc';
 
-export default class QuanticAskFollowUpInput extends LightningElement {
+export default class QuanticGeneratedAnswerFollowUpInput extends LightningElement {
   labels = {
     submitFollowUp,
-    askFollowUp
-  }
+    askFollowUp,
+  };
+
+  @api
+  submitButtonDisabled = false;
 
   /** @type {string} */
   _inputValue = '';
@@ -15,14 +18,10 @@ export default class QuanticAskFollowUpInput extends LightningElement {
   _focused = false;
 
   /**
-   * @returns {HTMLInputElement|HTMLTextAreaElement}
+   * @returns {HTMLInputElement}
    */
   get input() {
     return this.template.querySelector('input');
-  }
-
-  handleValueChange() {
-    this.sendFollowUpInputValueChangeEvent(this.input.value);
   }
 
   handleKeyDown(event) {
@@ -38,7 +37,11 @@ export default class QuanticAskFollowUpInput extends LightningElement {
   }
 
   handleSubmitFollowUp() {
+    if(this.input.value.trim() === '') {
+      return;
+    }
     this.sendSubmitFollowUpEvent();
+    this.input.value = '';
     this.input.blur();
   }
 
@@ -51,32 +54,16 @@ export default class QuanticAskFollowUpInput extends LightningElement {
   }
 
   /**
-   * Sends the "quantic__followupinputvaluechange" event.
-   * @param {string} value
-   */
-  sendFollowUpInputValueChangeEvent(value) {
-    const inputValueChangeEvent = new CustomEvent('quantic__followupinputvaluechange', {
-      detail: {
-        value,
-      },
-      bubbles: true,
-      composed: true,
-    });
-    this.dispatchEvent(inputValueChangeEvent);
-  }
-
-  /**
    * Sends the "quantic__submitFollowUp" event.
    */
   sendSubmitFollowUpEvent() {
-    if (this._inputValue !== this.input.value) {
-      this.sendFollowUpInputValueChangeEvent(this.input.value);
-    }
-
     this.dispatchEvent(
       new CustomEvent('quantic__submitfollowup', {
         bubbles: true,
         composed: true,
+        detail: {
+          value: this.input.value,
+        },
       })
     );
   }
