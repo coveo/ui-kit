@@ -20,9 +20,9 @@ import '@/src/components/search/atomic-result-section-visual/atomic-result-secti
 import '@/src/components/search/atomic-result-text/atomic-result-text.js';
 import '@/src/components/search/atomic-text/atomic-text.js';
 
-const mockedSearchApi = new MockSearchApi();
+const searchApiHarness = new MockSearchApi();
 
-mockedSearchApi.searchEndpoint.mock((response) => ({
+searchApiHarness.searchEndpoint.mock((response) => ({
   ...response,
   results: response.results.slice(0, 10),
   totalCount: 10,
@@ -94,11 +94,11 @@ const meta: Meta = {
       handles: events,
     },
     msw: {
-      handlers: [...mockedSearchApi.handlers],
+      handlers: [...searchApiHarness.handlers],
     },
   },
   beforeEach: () => {
-    mockedSearchApi.searchEndpoint.clear();
+    searchApiHarness.searchEndpoint.clear();
   },
   args: {
     ...args,

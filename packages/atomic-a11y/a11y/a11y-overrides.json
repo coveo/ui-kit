@@ -4,6 +4,11 @@
   "lastUpdated": "2026-05-12",
   "overrides": [
     {
+      "criterion": "2.4.7",
+      "conformance": "supports",
+      "reason": "Focus indicators provided by design system (Tailwind focus-visible:ring-* utilities). All instances of outline:none are paired with :focus-visible alternatives."
+    },
+    {
       "criterion": "1.2.1",
       "conformance": "not-applicable",
       "reason": "Atomic does not include audio-only or video-only media components."

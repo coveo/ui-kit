@@ -5,7 +5,7 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-no-results/atomic-no-results.js';
 
-const mockSearchApi = new MockSearchApi();
+const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
 
@@ -25,12 +25,12 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
-    msw: {handlers: [...mockSearchApi.handlers]},
+    msw: {handlers: [...searchApiHarness.handlers]},
   },
   args,
   argTypes,
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.clear();
+    searchApiHarness.searchEndpoint.clear();
   },
   play,
 };
@@ -40,7 +40,7 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-no-results',
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mockOnce((response) => ({
+    searchApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
       results: [],
       totalCount: 0,

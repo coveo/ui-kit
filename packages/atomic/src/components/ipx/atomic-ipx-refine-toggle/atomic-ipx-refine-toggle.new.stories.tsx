@@ -9,7 +9,7 @@ import '@/src/components/ipx/atomic-ipx-modal/atomic-ipx-modal.js';
 import '@/src/components/ipx/atomic-ipx-refine-toggle/atomic-ipx-refine-toggle.js';
 import '@/src/components/common/atomic-layout-section/atomic-layout-section.js';
 
-const mockSearchApi = new MockSearchApi();
+const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -56,12 +56,12 @@ const meta: Meta = {
         ...parameters.docs?.story,
       },
     },
-    msw: {handlers: [...mockSearchApi.handlers]},
+    msw: {handlers: [...searchApiHarness.handlers]},
   },
   args,
   argTypes,
   beforeEach: () => {
-    mockSearchApi.searchEndpoint.clear();
+    searchApiHarness.searchEndpoint.clear();
   },
   play,
 };

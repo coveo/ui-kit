@@ -22,7 +22,7 @@ import '@/src/components/search/atomic-result-section-visual/atomic-result-secti
 import '@/src/components/search/atomic-result-template/atomic-result-template.js';
 import '@/src/components/search/atomic-result-text/atomic-result-text.js';
 
-const mockSearchApi = new MockSearchApi();
+const searchApiHarness = new MockSearchApi();
 
 const CHILD_TEMPLATE_EXAMPLE = `<template>
   <style>
@@ -129,7 +129,7 @@ const meta: Meta = {
     ...parameters,
     chromatic: {disableSnapshot: true},
     msw: {
-      handlers: [...mockSearchApi.handlers],
+      handlers: [...searchApiHarness.handlers],
     },
     actions: {
       handles: events,

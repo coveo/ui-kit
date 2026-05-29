@@ -8,7 +8,7 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-did-you-mean/atomic-did-you-mean.js';
 
-const mockSearchApi = new MockSearchApi();
+const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -31,12 +31,12 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
-    msw: {handlers: [...mockSearchApi.handlers]},
+    msw: {handlers: [...searchApiHarness.handlers]},
   },
   args,
   argTypes,
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.clear();
+    searchApiHarness.searchEndpoint.clear();
   },
   play,
 };
@@ -46,7 +46,7 @@ export default meta;
 export const WithAutomaticQueryCorrection: Story = {
   name: 'With automatic query correction',
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mockOnce((response) => ({
+    searchApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
       queryCorrection: {
         correctedQuery: 'coveo',
@@ -60,7 +60,7 @@ export const WithAutomaticQueryCorrection: Story = {
 export const WithoutAutomaticQueryCorrection: Story = {
   name: 'Without automatic query correction',
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mockOnce((response) => ({
+    searchApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
       queryCorrection: {
         corrections: [

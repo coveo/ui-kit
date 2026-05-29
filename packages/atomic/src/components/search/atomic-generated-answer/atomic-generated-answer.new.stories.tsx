@@ -18,10 +18,10 @@ import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 import '@/src/components/search/atomic-search-box/atomic-search-box.js';
 import '@/src/components/search/atomic-search-layout/atomic-search-layout.js';
 
-const mockedAgentApi = new MockAgentApi();
-const mockedAnswerApi = new MockAnswerApi();
-const mockedSearchApi = new MockSearchApi();
-mockedSearchApi.searchEndpoint.mock((response) => ({
+const agentApiHarness = new MockAgentApi();
+const answerApiHarness = new MockAnswerApi();
+const searchApiHarness = new MockSearchApi();
+searchApiHarness.searchEndpoint.mock((response) => ({
   ...response,
   extendedResults: {
     generativeQuestionAnsweringId: 'fbc64016-5f04-4a47-aad1-0bccaa2c0616',
@@ -95,9 +95,9 @@ const meta: Meta = {
     },
     msw: {
       handlers: [
-        ...mockedSearchApi.handlers,
-        ...mockedAnswerApi.handlers,
-        ...mockedAgentApi.handlers,
+        ...searchApiHarness.handlers,
+        ...answerApiHarness.handlers,
+        ...agentApiHarness.handlers,
       ],
     },
   },
