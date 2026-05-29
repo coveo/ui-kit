@@ -85,12 +85,12 @@ export class AtomicCitation extends LitElement {
     super.disconnectedCallback();
     this.cleanupPopper();
     this.clearTimers();
-    document.removeEventListener('keydown', this.handleKeyDown);
+    this.removeEventListener('keydown', this.handleKeyDown);
   }
 
   connectedCallback() {
     super.connectedCallback();
-    document.addEventListener('keydown', this.handleKeyDown);
+    this.addEventListener('keydown', this.handleKeyDown);
   }
 
   @watch('isOpen')

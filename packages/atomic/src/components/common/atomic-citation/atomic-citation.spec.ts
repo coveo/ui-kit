@@ -229,7 +229,7 @@ describe('atomic-citation', () => {
       await element.updateComplete;
       expect(locators.citationPopover).toHaveClass('desktop-only:flex');
 
-      document.dispatchEvent(
+      element.dispatchEvent(
         new KeyboardEvent('keydown', {key: 'Escape', bubbles: true})
       );
       await element.updateComplete;
@@ -243,7 +243,7 @@ describe('atomic-citation', () => {
       await element.updateComplete;
       expect(locators.citationPopover).toHaveClass('desktop-only:flex');
 
-      document.dispatchEvent(
+      element.dispatchEvent(
         new KeyboardEvent('keydown', {key: 'Enter', bubbles: true})
       );
       await element.updateComplete;
