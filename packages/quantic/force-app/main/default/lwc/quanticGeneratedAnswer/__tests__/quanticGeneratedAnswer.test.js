@@ -246,7 +246,7 @@ describe('c-quantic-generated-answer', () => {
         selectors.generatedAnswerCard
       );
       const retryButton = element.shadowRoot.querySelector(
-        '[data-testid="generated-answer-body__retry-button"]'
+        '[data-testid="generated-answer__retry-button"]'
       );
 
       expect(generatedAnswerCard).not.toBeNull();
@@ -259,7 +259,7 @@ describe('c-quantic-generated-answer', () => {
         await flushPromises();
 
         const retryButton = element.shadowRoot.querySelector(
-          '[data-testid="generated-answer-body__retry-button"]'
+          '[data-testid="generated-answer__retry-button"]'
         );
         expect(retryButton).not.toBeNull();
         retryButton.click();
