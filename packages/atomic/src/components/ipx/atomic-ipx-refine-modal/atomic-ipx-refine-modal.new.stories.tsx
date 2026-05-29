@@ -6,6 +6,7 @@ import type {
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
+import {testDialogA11y} from '@/storybook-utils/a11y/dialog.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -94,4 +95,21 @@ export const Default: Story = {
     </atomic-ipx-modal>
   `,
   decorators: [decorator, facetWidthDecorator],
+};
+
+export const A11yDialog: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  name: 'A11y Dialog',
+  render: () => html` <atomic-ipx-refine-toggle></atomic-ipx-refine-toggle> `,
+  decorators: [decorator, facetWidthDecorator],
+  play: async (context) => {
+    await play(context);
+    // Unlike the search/insight refine toggles (which open the modal directly on
+    // click), the IPX toggle gates opening behind `store.waitUntilAppLoaded`. If the
+    // click lands while the first-search loading flag is still set, opening is deferred
+    // to a store change that may have already fired, so the dialog never appears. This
+    // delay lets the loading flags settle so the open happens synchronously on click.
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    await testDialogA11y(context, {triggerLabel: 'Filters'});
+  },
 };
