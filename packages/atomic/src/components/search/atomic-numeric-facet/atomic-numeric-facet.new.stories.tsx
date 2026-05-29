@@ -1,6 +1,10 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {html} from 'lit';
+import {within} from 'shadow-dom-testing-library';
+import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {buildSearchResponseWithResults} from '@/storybook-utils/api/search/search-response-mocks';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {
   facetDecorator,
@@ -10,8 +14,9 @@ import {
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-facet/atomic-facet.js';
 import '@/src/components/search/atomic-numeric-facet/atomic-numeric-facet.js';
+import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 
-const searchApiHarness = new MockSearchApi();
+const mockSearchApi = new MockSearchApi();
 
 const numericFacetValues = [
   {
@@ -72,7 +77,7 @@ const numericFacetValues = [
   },
 ];
 
-searchApiHarness.searchEndpoint.mock((response) => ({
+mockSearchApi.searchEndpoint.mock((response) => ({
   ...response,
   facets: [
     {
@@ -130,7 +135,7 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
-    msw: {handlers: [...searchApiHarness.handlers]},
+    msw: {handlers: [...mockSearchApi.handlers]},
   },
   argTypes: {
     ...argTypes,
@@ -145,7 +150,7 @@ const meta: Meta = {
     },
   },
   beforeEach: () => {
-    searchApiHarness.searchEndpoint.clear();
+    mockSearchApi.searchEndpoint.clear();
   },
   play,
   args: {
@@ -233,7 +238,7 @@ export const WithSelectedValue: Story = {
     const selectedValues = numericFacetValues.map((v, i) =>
       i === 0 ? {...v, state: 'selected'} : v
     );
-    searchApiHarness.searchEndpoint.mockOnce((response) => ({
+    mockSearchApi.searchEndpoint.mockOnce((response) => ({
       ...response,
       facets: [
         {
@@ -246,5 +251,34 @@ export const WithSelectedValue: Story = {
         },
       ],
     }));
+  },
+};
+
+export const A11yStatusMessage: Story = {
+  name: 'A11y Status Message',
+  tags: ['a11y', 'test', '!dev'],
+  decorators: [
+    facetDecorator,
+    (story) => html`<atomic-query-summary></atomic-query-summary>${story()}`,
+  ],
+  args: {
+    field: 'ytviewcount',
+    label: 'YouTube View Count',
+  },
+  beforeEach: () => {
+    mockSearchApi.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
+    mockSearchApi.searchEndpoint.mockOnce(buildSearchResponseWithResults(42));
+  },
+  play: async (context) => {
+    await play(context);
+    await testStatusMessageA11y(context, {
+      triggerAction: async () => {
+        const canvas = within(context.canvasElement);
+        const buttons = await canvas.findAllByShadowRole('checkbox');
+        buttons[0].click();
+      },
+      expectedText: 'Results loaded. Results 1-10 of 42',
+      timeout: 5000,
+    });
   },
 };
