@@ -74,8 +74,6 @@ export interface JsonToOpenAcrOptions {
   /** Directory containing `manual-audit-*.json` baseline files.
    * @default 'a11y/reports' */
   manualAuditDir?: string;
-  /** Product version for the OpenACR report. */
-  version: string;
 }
 
 /**
@@ -97,12 +95,11 @@ export interface JsonToOpenAcrOptions {
  * const report = await transformJsonToOpenAcr({
  *   inputFile: 'reports/a11y-report.json',
  *   outputFile: 'reports/openacr.yaml',
- *   version: '3.0.0',
  * });
  * ```
  */
 export async function transformJsonToOpenAcr(
-  options: JsonToOpenAcrOptions
+  options: JsonToOpenAcrOptions = {}
 ): Promise<OpenAcrReport> {
   const inputFile = path.resolve(
     options.inputFile ??
@@ -118,6 +115,17 @@ export async function transformJsonToOpenAcr(
   );
 
   const report = await readInputReport(inputFile);
+
+  if (!report) {
+    console.warn(
+      LOG_PREFIX,
+      'No valid a11y report available. Skipping OpenACR generation.'
+    );
+    throw new Error(
+      'Cannot generate OpenACR report: a11y-report.json is missing or invalid'
+    );
+  }
+
   const overrides = await loadOverrides(overridesFile);
 
   if (overrides.size > 0) {
@@ -132,12 +140,7 @@ export async function transformJsonToOpenAcr(
   );
   const manualAggregates = await loadManualAuditData(manualAuditDir);
 
-  const openAcrReport = buildOpenAcrReport(
-    report,
-    overrides,
-    manualAggregates,
-    {version: options.version}
-  );
+  const openAcrReport = buildOpenAcrReport(report, overrides, manualAggregates);
   const serialized = stringify(openAcrReport, {version: '1.1'});
 
   await mkdir(path.dirname(outputFile), {recursive: true});

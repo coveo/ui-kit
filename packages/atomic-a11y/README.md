@@ -40,7 +40,6 @@ import {transformJsonToOpenAcr} from '@coveo/atomic-a11y';
 await transformJsonToOpenAcr({
   inputFile: 'reports/a11y-report.json',
   outputFile: 'reports/openacr.yaml',
-  version: '3.0.0',
 });
 ```
 
