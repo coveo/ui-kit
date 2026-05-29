@@ -7,7 +7,7 @@
     },
     "storybook": {
       "type": "http",
-      "url": "http://localhost:4400/mcp"
+      "url": "http://storybook.localhost:1355/mcp"
     }
   }
 }

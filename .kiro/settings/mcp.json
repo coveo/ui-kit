@@ -11,7 +11,7 @@
       "args": ["-y", "@playwright/mcp"]
     },
     "storybook": {
-      "url": "http://localhost:4400/mcp"
+      "url": "http://storybook.localhost:1355/mcp"
     }
   }
 }

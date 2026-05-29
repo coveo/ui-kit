@@ -8,6 +8,9 @@ import {playwright} from '@vitest/browser-playwright';
 import {configDefaults, defineConfig, mergeConfig} from 'vitest/config';
 import packageJsonHeadless from '../headless/package.json' with {type: 'json'};
 import packageJson from './package.json' with {type: 'json'};
+import {getStorybookUrl} from './scripts/get-storybook-url.mjs';
+
+const storybookUrl = getStorybookUrl();
 
 const port = 63315;
 const resourceUrl = `http://localhost:${port}/`;
@@ -53,8 +56,9 @@ const storybook = defineConfig({
     // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
     storybookTest({
       configDir: path.join(import.meta.dirname, '.storybook'),
-      storybookUrl: 'http://localhost:4400',
-      storybookScript: 'npx storybook dev -p 4400 --no-open',
+      storybookUrl,
+      storybookScript:
+        'portless run --name storybook node ./scripts/start-storybook.mjs',
     }),
   ],
   test: {
