@@ -26,7 +26,8 @@ jest.mock(
 jest.mock(
   '@salesforce/label/c.quantic_GeneratedAnswerErrorTurnLimitReached',
   () => ({
-    default: 'Conversation turn limit reached. Please start a new conversation.',
+    default:
+      'Conversation turn limit reached. Please start a new conversation.',
   }),
   {virtual: true}
 );
@@ -161,7 +162,7 @@ describe('c-quantic-generated-answer-body', () => {
 
     const citations = element.shadowRoot.querySelector(
       'c-quantic-source-citations'
-    );    
+    );
     citations.citationHoverHandler('citation-1', 1200);
 
     expect(handler).toHaveBeenCalledTimes(1);

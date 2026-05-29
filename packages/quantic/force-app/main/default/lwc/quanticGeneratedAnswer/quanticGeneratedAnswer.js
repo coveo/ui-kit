@@ -608,6 +608,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     ) {
       return loadingTemplate;
     }
-    return this.hasRetryableError ? retryPromptTemplate : generatedAnswerTemplate;
+    return this.hasRetryableError
+      ? retryPromptTemplate
+      : generatedAnswerTemplate;
   }
 }

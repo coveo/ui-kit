@@ -109,10 +109,7 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
   }
 
   get shouldDisplayAnswer() {
-    return (
-      !this.hasError &&
-      !this.shouldDisplayCannotAnswer
-    );
+    return !this.hasError && !this.shouldDisplayCannotAnswer;
   }
 
   handleLike(event) {

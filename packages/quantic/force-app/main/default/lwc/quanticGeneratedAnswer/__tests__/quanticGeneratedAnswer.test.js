@@ -464,7 +464,9 @@ describe('c-quantic-generated-answer', () => {
 
         expect(generatedAnswerContent).not.toBeNull();
         expect(generatedAnswerContent.generatedAnswer.isStreaming).toBe(true);
-        expect(generatedAnswerContent.generatedAnswer.answer).toBe(exampleAnswer);
+        expect(generatedAnswerContent.generatedAnswer.answer).toBe(
+          exampleAnswer
+        );
         expect(generatedAnswerContent.generatedAnswer.answerContentFormat).toBe(
           exampleAnswerContentFormat
         );
@@ -644,9 +646,8 @@ describe('c-quantic-generated-answer', () => {
                 );
               expect(generatedAnswerCollapseToggle).not.toBeNull();
 
-              const maxHeightValue = generatedAnswer.style.getPropertyValue(
-                '--maxHeight'
-              );
+              const maxHeightValue =
+                generatedAnswer.style.getPropertyValue('--maxHeight');
               expect(maxHeightValue).toEqual(
                 `${expectedMaxCollapsibleAnswerHeight}px`
               );
@@ -676,9 +677,8 @@ describe('c-quantic-generated-answer', () => {
                 );
               expect(generatedAnswerCollapseToggle).not.toBeNull();
 
-              const maxHeightValue = generatedAnswer.style.getPropertyValue(
-                '--maxHeight'
-              );
+              const maxHeightValue =
+                generatedAnswer.style.getPropertyValue('--maxHeight');
               expect(maxHeightValue).toEqual(`${defaultAnswerHeight}px`);
 
               expect(mockedConsoleWarn).toHaveBeenCalledTimes(1);
@@ -709,9 +709,8 @@ describe('c-quantic-generated-answer', () => {
                 );
               expect(generatedAnswerCollapseToggle).not.toBeNull();
 
-              const maxHeightValue = generatedAnswer.style.getPropertyValue(
-                '--maxHeight'
-              );
+              const maxHeightValue =
+                generatedAnswer.style.getPropertyValue('--maxHeight');
 
               expect(maxHeightValue).toEqual(`${defaultAnswerHeight}px`);
 
@@ -734,7 +733,9 @@ describe('c-quantic-generated-answer', () => {
 
         expect(generatedAnswerContent).not.toBeNull();
         expect(generatedAnswerContent.generatedAnswer.isStreaming).toBe(false);
-        expect(generatedAnswerContent.generatedAnswer.answer).toBe(exampleAnswer);
+        expect(generatedAnswerContent.generatedAnswer.answer).toBe(
+          exampleAnswer
+        );
         expect(generatedAnswerContent.generatedAnswer.answerContentFormat).toBe(
           exampleAnswerContentFormat
         );
