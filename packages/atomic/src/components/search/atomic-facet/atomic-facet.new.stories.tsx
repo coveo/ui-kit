@@ -5,11 +5,18 @@ import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {
+  searchFacetTransformer,
+  searchFacetSearchTransformer,
+} from '@/storybook-utils/api/search/facet-transformer';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-facet/atomic-facet.js';
 
 const searchApiHarness = new MockSearchApi();
-searchApiHarness.enableInteractiveFacets();
+searchApiHarness.searchEndpoint.addRequestTransformer(searchFacetTransformer);
+searchApiHarness.facetSearchEndpoint.addRequestTransformer(
+  searchFacetSearchTransformer
+);
 
 const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers('atomic-facet', {
@@ -37,7 +44,7 @@ const meta: Meta = {
     ...parameters,
     chromatic: {disableSnapshot: true},
     msw: {
-      handlers: searchApiHarness.handlers,
+      handlers: [...searchApiHarness.handlers],
     },
     actions: {
       handles: events,
