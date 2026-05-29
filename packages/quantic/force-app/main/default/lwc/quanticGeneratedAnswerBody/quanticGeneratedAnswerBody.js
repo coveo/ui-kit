@@ -3,7 +3,6 @@ import generatedAnswerErrorTurnLimitReached from '@salesforce/label/c.quantic_Ge
 import genericErrorTitle from '@salesforce/label/c.quantic_GenericErrorTitle';
 import thisAnswerWasHelpful from '@salesforce/label/c.quantic_ThisAnswerWasHelpful';
 import thisAnswerWasNotHelpful from '@salesforce/label/c.quantic_ThisAnswerWasNotHelpful';
-import {getAbsoluteHeight} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("@coveo/headless").GeneratedAnswerBase} GeneratedAnswerBase */
@@ -17,7 +16,6 @@ import {LightningElement, api} from 'lwc';
 /**
  * The `QuanticGeneratedAnswerBody` component renders a single generated answer unit.
  * @category Internal
- * @fires CustomEvent#quantic__answercontentupdated
  * @fires CustomEvent#quantic__like
  * @fires CustomEvent#quantic__dislike
  * @fires CustomEvent#quantic__generatedanswercopy
@@ -56,13 +54,6 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
     thisAnswerWasHelpful,
     thisAnswerWasNotHelpful,
   };
-
-  get answerElementHeight() {
-    return getAbsoluteHeight(
-      // @ts-ignore
-      this.answerContentElement?.firstElementChild || this.answerContentElement
-    );
-  }
 
   get answer() {
     return this.generatedAnswer?.answer;
@@ -126,19 +117,6 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
     return !this.generatedAnswer?.feedbackSubmitted;
   }
 
-  handleAnswerContentUpdated(event) {
-    event.stopPropagation();
-    this.dispatchEvent(
-      new CustomEvent('quantic__answercontentupdated', {
-        detail: {
-          answerElementHeight: this.answerElementHeight,
-        },
-        bubbles: true,
-        composed: true,
-      })
-    );
-  }
-
   handleLike(event) {
     event.stopPropagation();
     this.dispatchAnswerInteractionEvent('quantic__like');
@@ -178,10 +156,6 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
         composed: true,
       })
     );
-  }
-
-  get answerContentElement() {
-    return this.template.querySelector('c-quantic-generated-answer-content');
   }
 
   get shouldDisplayAnswer() {

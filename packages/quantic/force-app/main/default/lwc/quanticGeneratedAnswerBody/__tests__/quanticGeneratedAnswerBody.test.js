@@ -3,7 +3,6 @@
 import {createElement} from 'lwc';
 import QuanticGeneratedAnswerBody from 'c/quanticGeneratedAnswerBody';
 jest.mock('c/quanticUtils', () => ({
-  getAbsoluteHeight: jest.fn(() => 250),
   loadMarkdownDependencies: jest.fn(() => Promise.resolve()),
   transformMarkdownToHtml: jest.fn((answer) => answer),
   LinkUtils: {
@@ -107,19 +106,6 @@ describe('c-quantic-generated-answer-body', () => {
     expect(content.answerContentFormat).toBe(
       defaultOptions.generatedAnswer.answerContentFormat
     );
-  });
-
-  it('should dispatch the answer height with answer content updates', async () => {
-    const element = createTestComponent();
-    const handler = jest.fn();
-    element.addEventListener('quantic__answercontentupdated', handler);
-    await flushPromises();
-
-    const content = element.shadowRoot.querySelector(selectors.content);
-    content.dispatchEvent(new CustomEvent('quantic__answercontentupdated'));
-
-    expect(handler).toHaveBeenCalledTimes(1);
-    expect(handler.mock.calls[0][0].detail).toEqual({answerElementHeight: 250});
   });
 
   it('should dispatch the quantic__like event with the answerId', async () => {

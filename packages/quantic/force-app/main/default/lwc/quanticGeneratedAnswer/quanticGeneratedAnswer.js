@@ -25,7 +25,7 @@ import {
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-import {AriaLiveRegion, I18nUtils} from 'c/quanticUtils';
+import {AriaLiveRegion, I18nUtils, getAbsoluteHeight} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 // @ts-ignore
 import errorTemplate from './templates/errorTemplate.html';
@@ -179,8 +179,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   _disliked = false;
   /** @type {number} */
   _maxCollapsedHeight = DEFAULT_COLLAPSED_HEIGHT;
-  /** @type {number} */
-  _generatedAnswerElementHeight = 0;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -260,11 +258,13 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   isMaximumHeightExceeded() {
+    const body = this.template.querySelector('c-quantic-generated-answer-body');
+    const measuredHeight = getAbsoluteHeight(body);
     // If we are still streaming add a little extra height to the answer element to account for the next answer chunk.
     // This helps a lot with the jankyness of the answer fading out when the chunk is close but not yet over the max height.
     const answerElementHeight = this.isStreaming
-      ? this._generatedAnswerElementHeight + 50
-      : this._generatedAnswerElementHeight;
+      ? measuredHeight + 50
+      : measuredHeight;
 
     return answerElementHeight > this.maxCollapsedHeight;
   }
@@ -409,15 +409,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     } else {
       this.generatedAnswer.show();
       this.writeStoredDate({isVisible: true});
-    }
-  };
-
-  handleAnswerContentUpdated = (event) => {
-    event.stopPropagation();
-    this._generatedAnswerElementHeight =
-      event.detail?.answerElementHeight ?? 0;
-    if (this.collapsible) {
-      this._exceedsMaximumHeight = this.isMaximumHeightExceeded();
     }
   };
 
