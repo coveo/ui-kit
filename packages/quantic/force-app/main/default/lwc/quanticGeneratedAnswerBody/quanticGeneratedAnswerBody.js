@@ -1,10 +1,8 @@
 import couldNotGenerateAnAnswer from '@salesforce/label/c.quantic_CouldNotGenerateAnAnswer';
-import generatedAnswerCannotGenerateAnswer from '@salesforce/label/c.quantic_GeneratedAnswerCannotGenerateAnswer';
-import generatedAnswerErrorGeneric from '@salesforce/label/c.quantic_GeneratedAnswerErrorGeneric';
 import generatedAnswerErrorTurnLimitReached from '@salesforce/label/c.quantic_GeneratedAnswerErrorTurnLimitReached';
+import genericErrorTitle from '@salesforce/label/c.quantic_GenericErrorTitle';
 import thisAnswerWasHelpful from '@salesforce/label/c.quantic_ThisAnswerWasHelpful';
 import thisAnswerWasNotHelpful from '@salesforce/label/c.quantic_ThisAnswerWasNotHelpful';
-import tryAgain from '@salesforce/label/c.quantic_TryAgain';
 import {getAbsoluteHeight} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 
@@ -24,7 +22,6 @@ import {LightningElement, api} from 'lwc';
  * @fires CustomEvent#quantic__dislike
  * @fires CustomEvent#quantic__generatedanswercopy
  * @fires CustomEvent#quantic__citationhover
- * @fires CustomEvent#quantic__retry
  */
 export default class QuanticGeneratedAnswerBody extends LightningElement {
   /**
@@ -54,12 +51,10 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
 
   labels = {
     couldNotGenerateAnAnswer,
-    generatedAnswerCannotGenerateAnswer,
-    generatedAnswerErrorGeneric,
     generatedAnswerErrorTurnLimitReached,
+    genericErrorTitle,
     thisAnswerWasHelpful,
     thisAnswerWasNotHelpful,
-    tryAgain,
   };
 
   get answerElementHeight() {
@@ -89,13 +84,8 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
     return !!this.generatedAnswer?.isStreaming;
   }
 
-  get hasRetryableError() {
-    return !!this.generatedAnswer?.error?.isRetryable;
-  }
-
   get hasError() {
-    const error = this.generatedAnswer?.error;
-    return !!(error?.message || error?.code != null);
+    return !!this.generatedAnswer?.error && !this.answer;
   }
 
   get shouldDisplayCannotAnswer() {
@@ -103,9 +93,13 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
   }
 
   get errorMessage() {
-    return this.generatedAnswer?.error?.isSseTurnLimitReachedError?.()
-      ? this.labels.generatedAnswerErrorTurnLimitReached
-      : this.labels.generatedAnswerErrorGeneric;
+    if (this.shouldDisplayCannotAnswer) {
+      return this.labels.couldNotGenerateAnAnswer;
+    }
+    if (this.generatedAnswer?.error?.isSseTurnLimitReachedError?.()) {
+      return this.labels.generatedAnswerErrorTurnLimitReached;
+    }
+    return this.labels.genericErrorTitle;
   }
 
   get computedFeedbackState() {
@@ -160,18 +154,6 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
     this.dispatchAnswerInteractionEvent('quantic__generatedanswercopy');
   }
 
-  handleRetry() {
-    this.dispatchEvent(
-      new CustomEvent('quantic__retry', {
-        detail: {
-          answerId: this.answerId,
-        },
-        bubbles: true,
-        composed: true,
-      })
-    );
-  }
-
   handleCitationHover = (citationId, citationHoverTimeMs) => {
     this.dispatchEvent(
       new CustomEvent('quantic__citationhover', {
@@ -205,7 +187,6 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
   get shouldDisplayAnswer() {
     return (
       !this.hasError &&
-      !this.hasRetryableError &&
       !this.shouldDisplayCannotAnswer
     );
   }

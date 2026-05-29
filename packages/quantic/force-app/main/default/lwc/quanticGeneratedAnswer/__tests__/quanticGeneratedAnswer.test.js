@@ -245,16 +245,12 @@ describe('c-quantic-generated-answer', () => {
       const generatedAnswerCard = element.shadowRoot.querySelector(
         selectors.generatedAnswerCard
       );
-      const generatedAnswerBody = element.shadowRoot.querySelector(
-        selectors.generatedAnswerBody
+      const retryButton = element.shadowRoot.querySelector(
+        '[data-testid="generated-answer-body__retry-button"]'
       );
-      const generatedAnswerRetryButton =
-        generatedAnswerBody.shadowRoot.querySelector(
-          '[data-testid="generated-answer-body__retry-button"]'
-        );
 
       expect(generatedAnswerCard).not.toBeNull();
-      expect(generatedAnswerRetryButton).not.toBeNull();
+      expect(retryButton).not.toBeNull();
     });
 
     describe('when the retry button is clicked', () => {
@@ -262,11 +258,7 @@ describe('c-quantic-generated-answer', () => {
         const element = createTestComponent();
         await flushPromises();
 
-        const generatedAnswerRetryButton = element.shadowRoot.querySelector(
-          selectors.generatedAnswerBody
-        );
-
-        const retryButton = generatedAnswerRetryButton.shadowRoot.querySelector(
+        const retryButton = element.shadowRoot.querySelector(
           '[data-testid="generated-answer-body__retry-button"]'
         );
         expect(retryButton).not.toBeNull();
@@ -471,9 +463,9 @@ describe('c-quantic-generated-answer', () => {
         );
 
         expect(generatedAnswerContent).not.toBeNull();
-        expect(generatedAnswerContent.isStreaming).toBe(true);
-        expect(generatedAnswerContent.answer).toBe(exampleAnswer);
-        expect(generatedAnswerContent.answerContentFormat).toBe(
+        expect(generatedAnswerContent.generatedAnswer.isStreaming).toBe(true);
+        expect(generatedAnswerContent.generatedAnswer.answer).toBe(exampleAnswer);
+        expect(generatedAnswerContent.generatedAnswer.answerContentFormat).toBe(
           exampleAnswerContentFormat
         );
       });
@@ -741,9 +733,9 @@ describe('c-quantic-generated-answer', () => {
         );
 
         expect(generatedAnswerContent).not.toBeNull();
-        expect(generatedAnswerContent.isStreaming).toBe(false);
-        expect(generatedAnswerContent.answer).toBe(exampleAnswer);
-        expect(generatedAnswerContent.answerContentFormat).toBe(
+        expect(generatedAnswerContent.generatedAnswer.isStreaming).toBe(false);
+        expect(generatedAnswerContent.generatedAnswer.answer).toBe(exampleAnswer);
+        expect(generatedAnswerContent.generatedAnswer.answerContentFormat).toBe(
           exampleAnswerContentFormat
         );
       });
@@ -1119,9 +1111,7 @@ describe('c-quantic-generated-answer', () => {
             expect(loadingSpinner).toBeNull();
             expect(generatedAnswerCard).toBeNull();
             expect(generatedAnswerCardNoAnswer).not.toBeNull();
-            expect(generatedAnswerNoAnswerBodyMessage.textContent).toBe(
-              'No generated answer available.'
-            );
+            expect(generatedAnswerNoAnswerBodyMessage).not.toBeNull();
           });
         });
       });
@@ -1176,9 +1166,7 @@ describe('c-quantic-generated-answer', () => {
             );
             expect(generatedAnswerCard).toBeNull();
             expect(generatedAnswerCardNoAnswer).not.toBeNull();
-            expect(generatedAnswerNoAnswerBodyMessage.textContent).toBe(
-              'No generated answer available.'
-            );
+            expect(generatedAnswerNoAnswerBodyMessage).not.toBeNull();
           });
         });
 

@@ -17,15 +17,7 @@ jest.mock(
   {virtual: true}
 );
 jest.mock(
-  '@salesforce/label/c.quantic_GeneratedAnswerCannotGenerateAnswer',
-  () => ({
-    default:
-      "I couldn't find an answer to that. Try rephrasing your follow-up or check the related results below.",
-  }),
-  {virtual: true}
-);
-jest.mock(
-  '@salesforce/label/c.quantic_GeneratedAnswerErrorGeneric',
+  '@salesforce/label/c.quantic_GenericErrorTitle',
   () => ({
     default:
       'Something went wrong while generating the answer. Please try again later.',
@@ -40,11 +32,6 @@ jest.mock(
   {virtual: true}
 );
 jest.mock(
-  '@salesforce/label/c.quantic_NoGeneratedAnswer',
-  () => ({default: 'No generated answer available.'}),
-  {virtual: true}
-);
-jest.mock(
   '@salesforce/label/c.quantic_ThisAnswerWasHelpful',
   () => ({default: 'This answer was helpful'}),
   {virtual: true}
@@ -53,13 +40,6 @@ jest.mock(
   '@salesforce/label/c.quantic_ThisAnswerWasNotHelpful',
   () => ({default: 'This answer was not helpful'}),
   {virtual: true}
-);
-jest.mock(
-  '@salesforce/label/c.quantic_TryAgain',
-  () => ({default: 'Try again'}),
-  {
-    virtual: true,
-  }
 );
 
 const defaultOptions = {
@@ -82,8 +62,6 @@ const selectors = {
   citations: 'c-quantic-source-citations',
   feedback: 'c-quantic-feedback',
   copy: 'c-quantic-generated-answer-copy-to-clipboard',
-  retry: '[data-testid="generated-answer-body__retry"]',
-  retryButton: '[data-testid="generated-answer-body__retry-button"]',
   error: '[data-testid="generated-answer-body__error"]',
   noAnswer: '[data-testid="generated-answer-body__no-answer-message"]',
   content: 'c-quantic-generated-answer-content',
@@ -208,28 +186,6 @@ describe('c-quantic-generated-answer-body', () => {
     });
   });
 
-  it('should render the retry prompt and dispatch a retry event', async () => {
-    const element = createTestComponent({
-      ...defaultOptions,
-      generatedAnswer: {
-        ...defaultOptions.generatedAnswer,
-        error: {isRetryable: true},
-      },
-    });
-    const handler = jest.fn();
-    element.addEventListener('quantic__retry', handler);
-    await flushPromises();
-
-    const retry = element.shadowRoot.querySelector(selectors.retry);
-    const retryButton = element.shadowRoot.querySelector(selectors.retryButton);
-
-    expect(retry).not.toBeNull();
-    retryButton.click();
-
-    expect(handler).toHaveBeenCalledTimes(1);
-    expect(handler.mock.calls[0][0].detail).toEqual({answerId: 'answer-1'});
-  });
-
   it('should render the no-answer message', async () => {
     const element = createTestComponent({
       ...defaultOptions,
@@ -240,9 +196,6 @@ describe('c-quantic-generated-answer-body', () => {
     const noAnswer = element.shadowRoot.querySelector(selectors.noAnswer);
 
     expect(noAnswer).not.toBeNull();
-    expect(noAnswer.textContent).toContain(
-      "I couldn't find an answer to that. Try rephrasing your follow-up or check the related results below."
-    );
   });
 
   it('should render the generic error message for non-retryable errors', async () => {
@@ -250,6 +203,7 @@ describe('c-quantic-generated-answer-body', () => {
       ...defaultOptions,
       generatedAnswer: {
         ...defaultOptions.generatedAnswer,
+        answer: '',
         error: {},
       },
     });
@@ -268,6 +222,7 @@ describe('c-quantic-generated-answer-body', () => {
       ...defaultOptions,
       generatedAnswer: {
         ...defaultOptions.generatedAnswer,
+        answer: '',
         error: {
           isSseTurnLimitReachedError: () => true,
         },

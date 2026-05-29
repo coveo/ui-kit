@@ -1,17 +1,4 @@
 <template>
-  <template lwc:if={hasRetryableError}>
-    <section
-      data-testid="generated-answer-body__retry"
-      class="generated-answer__content slds-p-top_medium slds-p-horizontal_large"
-    >
-      <p class="slds-var-m-bottom_medium">{labels.couldNotGenerateAnAnswer}</p>
-      <lightning-button
-        data-testid="generated-answer-body__retry-button"
-        label={labels.tryAgain}
-        onclick={handleRetry}
-      ></lightning-button>
-    </section>
-  </template>
   <template lwc:if={hasError}>
     <section
       data-testid="generated-answer-body__error"
@@ -87,7 +74,7 @@
     >
       <div>
         <slot name="no-answer-message"
-          >{labels.generatedAnswerCannotGenerateAnswer}</slot
+          >{labels.couldNotGenerateAnAnswer}</slot
         >
       </div>
     </div>
