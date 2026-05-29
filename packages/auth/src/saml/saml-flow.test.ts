@@ -1,3 +1,4 @@
+import {describe, it, expect, vi, beforeEach, type Mock} from 'vitest';
 import type {BrowserHistory} from './browser-history';
 import type {BrowserLocation} from './browser-location';
 import {buildSamlFlow, type SamlFlow, type SamlFlowOptions} from './saml-flow';
@@ -5,7 +6,7 @@ import {buildSamlFlow, type SamlFlow, type SamlFlowOptions} from './saml-flow';
 describe('buildSamlFlow', () => {
   const handshakeToken = 'token';
   let options: SamlFlowOptions;
-  let request: jest.Mock;
+  let request: Mock;
   let provider: SamlFlow;
 
   function initSamlFlow() {
@@ -17,7 +18,7 @@ describe('buildSamlFlow', () => {
   }
 
   function buildMockHistory(): BrowserHistory {
-    return {replaceState: jest.fn()};
+    return {replaceState: vi.fn()};
   }
 
   function assertHandshakeTokenSent() {
@@ -28,7 +29,7 @@ describe('buildSamlFlow', () => {
   }
 
   beforeEach(() => {
-    request = jest.fn();
+    request = vi.fn();
 
     options = {
       organizationId: '',

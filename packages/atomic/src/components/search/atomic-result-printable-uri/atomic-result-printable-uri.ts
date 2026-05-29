@@ -234,6 +234,7 @@ export class AtomicResultPrintableUri
     return renderLinkWithItemAnalytics({
       props: {
         href: this.result.clickUri,
+        ariaLabel: this.result.printableUri || this.result.clickUri,
         onSelect: () => this.interactiveResult.select(),
         onBeginDelayedSelect: () => this.interactiveResult.beginDelayedSelect(),
         onCancelPendingSelect: () =>

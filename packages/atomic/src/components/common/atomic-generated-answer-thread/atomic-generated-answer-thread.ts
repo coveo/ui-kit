@@ -9,6 +9,37 @@ import type {GeneratedAnswer} from '@/src/components/common/atomic-generated-ans
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 
 const MIN_ANSWERS_TO_COLLAPSE = 2;
+const GENERATED_ANSWER_CONTENT_EXPORT_PARTS = [
+  'feedback-and-copy-buttons',
+  'feedback-button',
+  'copy-button',
+  'citations-label',
+  'citation',
+  'citation-popover',
+  'generated-text',
+  'answer-code-block',
+  'answer-emphasis',
+  'answer-inline-code',
+  'answer-heading-1',
+  'answer-heading-2',
+  'answer-heading-3',
+  'answer-heading-4',
+  'answer-heading-5',
+  'answer-heading-6',
+  'answer-list-item',
+  'answer-link',
+  'answer-link-text',
+  'answer-link-icon',
+  'answer-ordered-list',
+  'answer-paragraph',
+  'answer-quote-block',
+  'answer-unordered-list',
+  'answer-strong',
+  'answer-table',
+  'answer-table-container',
+  'answer-table-content',
+  'answer-table-header',
+].join(',');
 
 /**
  * The `atomic-generated-answer-thread` component is responsible for rendering a thread of generated answers.
@@ -115,6 +146,7 @@ export class AtomicGeneratedAnswerThread extends LitElement {
                 .onClickLike=${this.onClickLike}
                 .onClickDislike=${this.onClickDislike}
                 .onCopyToClipboard=${this.onCopyToClipboard}
+                exportparts=${GENERATED_ANSWER_CONTENT_EXPORT_PARTS}
               ></atomic-generated-answer-content>
             </atomic-generated-answer-thread-item>
           `;

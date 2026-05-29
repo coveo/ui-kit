@@ -40,6 +40,7 @@ async function main() {
     const {status, message, request} = e;
     console.error('notification failed', status, message);
     console.log(request);
+    process.exitCode = 1;
   }
 }
 

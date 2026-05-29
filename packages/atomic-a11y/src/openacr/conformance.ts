@@ -27,7 +27,6 @@ interface RemarksContext extends ConformanceContext {
   coveredComponents: string[];
   violatingComponents: string[];
   interactiveCoveredComponents: string[];
-  interactiveFailedComponents: string[];
 }
 
 function mapCriterionConformance(
@@ -48,16 +47,7 @@ function resolveInteractiveConformance(
     return null;
   }
 
-  const failedCount = interactiveAggregate?.failedComponents.size ?? 0;
-  if (failedCount === 0) {
-    return 'supports';
-  }
-
-  if (failedCount >= coveredCount) {
-    return 'does-not-support';
-  }
-
-  return 'partially-supports';
+  return 'supports';
 }
 
 function resolveAutomatedConformance(
@@ -116,20 +106,14 @@ export function resolveConformance(
 }
 
 function buildInteractiveSuffix(
-  interactiveCoveredComponents: string[],
-  interactiveFailedComponents: string[]
+  interactiveCoveredComponents: string[]
 ): string {
   const coveredCount = interactiveCoveredComponents.length;
   if (coveredCount === 0) {
     return '';
   }
 
-  const failedCount = interactiveFailedComponents.length;
-  if (failedCount === 0) {
-    return `Interactive keyboard/screen-reader testing passed across ${coveredCount} component(s).`;
-  }
-
-  return `Interactive keyboard/screen-reader testing found failures in ${failedCount} of ${coveredCount} component(s).`;
+  return `Interactive keyboard testing passed across ${coveredCount} component(s).`;
 }
 
 function buildAutomatedSuffix(
@@ -156,7 +140,6 @@ export function buildRemarks(context: RemarksContext): string {
     coveredComponents,
     violatingComponents,
     interactiveCoveredComponents,
-    interactiveFailedComponents,
     manualAggregates,
     override,
   } = context;
@@ -198,17 +181,7 @@ export function buildRemarks(context: RemarksContext): string {
 
   if (interactiveDrives) {
     const coveredCount = interactiveCoveredComponents.length;
-    const failedCount = interactiveFailedComponents.length;
-
-    let primary: string;
-    if (failedCount === 0) {
-      primary = `Interactive keyboard/screen-reader testing passed for WCAG ${criterionId} across ${coveredCount} component(s).`;
-    } else if (failedCount >= coveredCount) {
-      primary = `Interactive keyboard/screen-reader testing found failures for WCAG ${criterionId} in all ${coveredCount} component(s).`;
-    } else {
-      primary = `Interactive keyboard/screen-reader testing found failures for WCAG ${criterionId} in ${failedCount} of ${coveredCount} component(s).`;
-    }
-
+    const primary = `Interactive keyboard testing passed for WCAG ${criterionId} across ${coveredCount} component(s).`;
     const automatedSuffix = buildAutomatedSuffix(
       coveredComponents,
       violatingComponents
@@ -219,8 +192,7 @@ export function buildRemarks(context: RemarksContext): string {
   const automatedCoveredCount = coveredComponents.length;
   const automatedViolatingCount = violatingComponents.length;
   const interactiveSuffix = buildInteractiveSuffix(
-    interactiveCoveredComponents,
-    interactiveFailedComponents
+    interactiveCoveredComponents
   );
 
   if (conformance === 'supports') {

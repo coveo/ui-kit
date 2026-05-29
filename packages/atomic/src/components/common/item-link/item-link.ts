@@ -10,6 +10,7 @@ export interface ItemLinkProps {
   className?: string;
   part?: string;
   title?: string;
+  ariaLabel?: string;
   stopPropagation?: boolean;
   ref?: RefOrCallback;
   attributes?: Attr[];
@@ -36,6 +37,7 @@ export const renderLinkWithItemAnalytics: FunctionalComponentWithChildren<
       className,
       part,
       title,
+      ariaLabel,
       stopPropagation = true,
       ref: refCallback,
       attributes,
@@ -59,6 +61,7 @@ export const renderLinkWithItemAnalytics: FunctionalComponentWithChildren<
         href=${filterProtocol(href)}
         target=${target}
         title=${ifDefined(title)}
+        aria-label=${ifDefined(ariaLabel)}
         rel=${ifDefined(rel)}
         ${ref((el) => {
           if (!el) {

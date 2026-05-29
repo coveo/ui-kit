@@ -88,7 +88,7 @@ function findControlledRegion(
 }
 
 function isHidden(element: HTMLElement): boolean {
-  return (
+  return Boolean(
     element.hidden ||
     element.getAttribute('aria-hidden') === 'true' ||
     getComputedStyle(element).display === 'none'
@@ -150,6 +150,50 @@ export async function testDisclosureA11y(
         expanded: toggled === 'true' ? true : false,
       });
       await userEvent.click(trigger);
+      await waitFor(
+        () => {
+          expect(trigger).toHaveAttribute('aria-expanded', initialExpanded);
+        },
+        {timeout: 5000}
+      );
+    });
+
+    await step('Enter key toggles aria-expanded (2.1.1)', async () => {
+      trigger = await findTrigger(root, {
+        ...options.trigger,
+        expanded: initialExpanded === 'true' ? true : false,
+      });
+      trigger.focus();
+      await userEvent.keyboard('{Enter}');
+      await waitFor(
+        () => {
+          expect(trigger).toHaveAttribute('aria-expanded', toggled);
+        },
+        {timeout: 5000}
+      );
+      await userEvent.keyboard('{Enter}');
+      await waitFor(
+        () => {
+          expect(trigger).toHaveAttribute('aria-expanded', initialExpanded);
+        },
+        {timeout: 5000}
+      );
+    });
+
+    await step('Space key toggles aria-expanded (2.1.1)', async () => {
+      trigger = await findTrigger(root, {
+        ...options.trigger,
+        expanded: initialExpanded === 'true' ? true : false,
+      });
+      trigger.focus();
+      await userEvent.keyboard(' ');
+      await waitFor(
+        () => {
+          expect(trigger).toHaveAttribute('aria-expanded', toggled);
+        },
+        {timeout: 5000}
+      );
+      await userEvent.keyboard(' ');
       await waitFor(
         () => {
           expect(trigger).toHaveAttribute('aria-expanded', initialExpanded);

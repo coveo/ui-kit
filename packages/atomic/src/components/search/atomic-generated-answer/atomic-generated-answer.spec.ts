@@ -1097,6 +1097,21 @@ describe('atomic-generated-answer', () => {
       expect(threadComponent.generatedAnswers).toHaveLength(2);
     });
 
+    it('should export generated-answer parts from generated answers thread', async () => {
+      const {generatedAnswersThread} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-id'},
+        generatedAnswerState: createGeneratedAnswerWithFollowUpsState(),
+        generatedAnswerOverrides: {askFollowUp: vi.fn()},
+      });
+
+      const exportparts =
+        generatedAnswersThread?.getAttribute('exportparts') ?? '';
+
+      expect(exportparts).toContain('answer-link');
+      expect(exportparts).toContain('generated-text');
+      expect(exportparts).toContain('citation-popover');
+    });
+
     it('should not render generated answers thread when follow ups are disabled', async () => {
       const {generatedAnswersThread} = await renderGeneratedAnswer({
         props: {agentId: 'agent-id'},
@@ -1110,13 +1125,20 @@ describe('atomic-generated-answer', () => {
     });
 
     it('should render the follow up input when follow ups are enabled', async () => {
-      const {followUpInputContainer} = await renderGeneratedAnswer({
-        props: {agentId: 'agent-id'},
-        generatedAnswerState: createGeneratedAnswerWithFollowUpsState(),
-        generatedAnswerOverrides: {askFollowUp: vi.fn()},
-      });
+      const {followUpInputComponent, followUpInputContainer} =
+        await renderGeneratedAnswer({
+          props: {agentId: 'agent-id'},
+          generatedAnswerState: createGeneratedAnswerWithFollowUpsState(),
+          generatedAnswerOverrides: {askFollowUp: vi.fn()},
+        });
 
       expect(followUpInputContainer).toBeInTheDocument();
+
+      const exportparts =
+        followUpInputComponent?.getAttribute('exportparts') ?? '';
+      expect(exportparts).toContain('input-container');
+      expect(exportparts).toContain('input-field');
+      expect(exportparts).toContain('submit-button');
     });
 
     it('should not render the follow up input when follow ups are disabled', async () => {

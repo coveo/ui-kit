@@ -186,6 +186,20 @@ describe('generated-answer-thread', () => {
     expect(answerContent?.onCopyToClipboard).toBe(onCopyToClipboard);
   });
 
+  it('should export generated-answer content parts from nested answer-content', async () => {
+    const {locators} = await renderComponent({
+      generatedAnswers: createGeneratedAnswers(2),
+    });
+
+    const [answerContent] = locators().answerContents;
+    expect(answerContent).toBeDefined();
+
+    const exportparts = answerContent?.getAttribute('exportparts') ?? '';
+    expect(exportparts).toContain('answer-link');
+    expect(exportparts).toContain('generated-text');
+    expect(exportparts).toContain('citation-popover');
+  });
+
   it('should collapse back to the latest answer when the generated answers list changes', async () => {
     const {element, locators} = await renderComponent({
       generatedAnswers: createGeneratedAnswers(3),
