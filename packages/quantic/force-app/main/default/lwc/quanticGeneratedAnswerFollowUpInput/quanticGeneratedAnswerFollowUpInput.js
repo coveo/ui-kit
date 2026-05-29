@@ -11,9 +11,7 @@ export default class QuanticGeneratedAnswerFollowUpInput extends LightningElemen
 
   @api
   submitButtonDisabled = false;
-
-  /** @type {string} */
-  _inputValue = '';
+  
   /** @type {boolean} */
   _focused = false;
 
@@ -50,7 +48,7 @@ export default class QuanticGeneratedAnswerFollowUpInput extends LightningElemen
   }
 
   /**
-   * Sends the "quantic__submitFollowUp" event.
+   * Sends the "quantic__submitfollowup" event.
    */
   sendSubmitFollowUpEvent() {
     this.dispatchEvent(

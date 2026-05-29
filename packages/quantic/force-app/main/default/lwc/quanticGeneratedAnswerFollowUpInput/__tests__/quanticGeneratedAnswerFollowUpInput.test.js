@@ -3,12 +3,12 @@ import QuanticGeneratedAnswerFollowUpInput from '../quanticGeneratedAnswerFollow
 
 jest.mock(
   '@salesforce/label/c.quantic_SubmitFollowUp',
-  () => ({default: 'Submit'}),
+  () => ({default: 'Submit follow-up'}),
   {virtual: true}
 );
 jest.mock(
   '@salesforce/label/c.quantic_AskFollowUp',
-  () => ({default: 'Ask a follow up'}),
+  () => ({default: 'Ask follow-up'}),
   {virtual: true}
 );
 jest.mock('c/quanticUtils', () => ({

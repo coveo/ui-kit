@@ -8,7 +8,7 @@
   outline: none;
   width: 100%;
   --slds-c-input-color-border: transparent;
-  --slds-c-input-shadow-focus: transparent
+  --slds-c-input-shadow-focus: transparent;
   --slds-c-input-spacing-border: 0px;
 }
 
