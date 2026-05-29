@@ -4,9 +4,18 @@ import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-inter
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/commerce/atomic-commerce-sort-dropdown/atomic-commerce-sort-dropdown.js';
 import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
+import {commerceFacetTransformer} from '@/storybook-utils/api/commerce/facet-transformer';
+import {commercePaginationTransformer} from '@/storybook-utils/api/commerce/pagination-transformer';
 
 const commerceApiHarness = new MockCommerceApi();
-commerceApiHarness.enableInteractiveFacets();
+commerceApiHarness.searchEndpoint.addRequestTransformer(
+  commerceFacetTransformer,
+  commercePaginationTransformer
+);
+commerceApiHarness.productListingEndpoint.addRequestTransformer(
+  commerceFacetTransformer,
+  commercePaginationTransformer
+);
 
 const {decorator, play} = wrapInCommerceInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
