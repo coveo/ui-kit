@@ -3,6 +3,10 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {testDisclosureA11y} from '@/storybook-utils/a11y/disclosure.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {
+  searchFacetTransformer,
+  searchFacetSearchTransformer,
+} from '@/storybook-utils/api/search/facet-transformer';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-smart-snippet-suggestions/atomic-smart-snippet-suggestions.js';
 
@@ -12,7 +16,10 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 );
 
 const searchApiHarness = new MockSearchApi();
-searchApiHarness.enableInteractiveFacets();
+searchApiHarness.searchEndpoint.addRequestTransformer(searchFacetTransformer);
+searchApiHarness.facetSearchEndpoint.addRequestTransformer(
+  searchFacetSearchTransformer
+);
 
 const {decorator, play} = wrapInSearchInterface({
   config: {
