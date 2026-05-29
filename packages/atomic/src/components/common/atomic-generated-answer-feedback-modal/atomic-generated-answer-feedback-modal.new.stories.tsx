@@ -1,0 +1,89 @@
+import type {GeneratedAnswer} from '@coveo/headless';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {html} from 'lit';
+import {within} from 'shadow-dom-testing-library';
+import {expect, userEvent, waitFor} from 'storybook/test';
+import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
+import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/common/atomic-generated-answer-feedback-modal/atomic-generated-answer-feedback-modal.js';
+
+const generatedAnswer = {
+  openFeedbackModal: () => {},
+  closeFeedbackModal: () => {},
+  sendFeedback: () => {},
+} as unknown as GeneratedAnswer;
+
+const {decorator, play} = wrapInSearchInterface();
+
+async function playAfterModalAnimation(context: Parameters<typeof play>[0]) {
+  await play(context);
+  await waitForModalAnimationEnd(context.canvasElement);
+}
+
+async function waitForModalAnimationEnd(canvasElement: HTMLElement) {
+  const feedbackModal = canvasElement.querySelector(
+    'atomic-generated-answer-feedback-modal'
+  );
+  await waitFor(() => {
+    expect(
+      feedbackModal?.shadowRoot?.querySelector('atomic-modal')
+    ).toBeTruthy();
+  });
+
+  const modal = feedbackModal?.shadowRoot?.querySelector('atomic-modal');
+  const container = modal?.shadowRoot?.querySelector('[part="container"]');
+  if (!container) {
+    return;
+  }
+
+  const animations = container.getAnimations();
+  await Promise.all(animations.map((animation) => animation.finished));
+}
+
+const meta: Meta = {
+  component: 'atomic-generated-answer-feedback-modal',
+  title: 'Common/Generated Answer Feedback Modal',
+  id: 'atomic-generated-answer-feedback-modal',
+  render: () => html`
+    <atomic-generated-answer-feedback-modal
+      .generatedAnswer=${generatedAnswer}
+      is-open
+    ></atomic-generated-answer-feedback-modal>
+  `,
+  decorators: [decorator],
+  parameters: {
+    ...parameters,
+  },
+  play: playAfterModalAnimation,
+};
+
+export default meta;
+
+export const Default: Story = {};
+
+export const A11yStatusMessage: Story = {
+  name: 'A11y Status Message',
+  tags: ['a11y', 'test', '!dev'],
+  play: async (context) => {
+    await playAfterModalAnimation(context);
+    await testStatusMessageA11y(context, {
+      triggerAction: async () => {
+        const canvas = within(context.canvasElement);
+        const yesOptions = await canvas.findAllByShadowRole('radio', {
+          name: 'Yes',
+        });
+        for (const option of yesOptions) {
+          await userEvent.click(option);
+        }
+        const submitButton = await canvas.findByShadowRole('button', {
+          name: 'Send feedback',
+        });
+        await userEvent.click(submitButton);
+      },
+      expectedText:
+        'Thank you! Your feedback will help us improve the answers generated.',
+      timeout: 5000,
+    });
+  },
+};
