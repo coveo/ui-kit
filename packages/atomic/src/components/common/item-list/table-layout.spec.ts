@@ -28,6 +28,7 @@ describe('renderTableLayout', () => {
           templateContentForFirstItem: document.createDocumentFragment(),
           host: document.createElement('div'),
           listClasses: '',
+          label: 'Test table label',
           logger: {
             error: vi.fn(),
           },
@@ -57,6 +58,12 @@ describe('renderTableLayout', () => {
     const tableLayout = await tableLayoutFixture();
 
     expect(tableLayout.part.value).toBe('result-table');
+  });
+
+  it('should render the #label prop as the aria-label attribute of the table', async () => {
+    const tableLayout = await tableLayoutFixture({label: 'My custom label'});
+
+    expect(tableLayout.getAttribute('aria-label')).toBe('My custom label');
   });
 
   it('should render a thead element under the table element', async () => {

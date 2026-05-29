@@ -54,10 +54,11 @@ jobs:
       - name: Create package version
         working-directory: ./packages/quantic
         run: |
-          echo "${{ secrets.SFDX_AUTH_JWT_KEY }}" > ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
+          echo "${{ secrets.SFDX_AUTH_JWT_KEY }}" > ${VARS_SFDX_AUTH_JWT_KEY_FILE}
           pnpm exec ts-node scripts/build/create-package.ts --remove-translations --ci
-          rm ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
+          rm ${VARS_SFDX_AUTH_JWT_KEY_FILE}
         env:
           SFDX_AUTH_JWT_USERNAME: ${{ vars.SFDX_AUTH_JWT_USERNAME }}
           SFDX_AUTH_JWT_KEY_FILE: ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
           SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
+          VARS_SFDX_AUTH_JWT_KEY_FILE: ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}

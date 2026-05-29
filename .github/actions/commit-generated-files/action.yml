@@ -6,13 +6,13 @@ runs:
     - run: |
         if [ ! -z "$(git status --porcelain)" ]; then
           git fetch --depth=1
-          git switch ${{ github.head_ref }}
+          git switch ${GITHUB_HEAD_REF}
           git add 'packages/atomic/**/*.d.ts'
 
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "<>"
           git commit -m "Add generated files"
 
-          git push origin ${{ github.head_ref }}
+          git push origin ${GITHUB_HEAD_REF}
         fi
       shell: bash
