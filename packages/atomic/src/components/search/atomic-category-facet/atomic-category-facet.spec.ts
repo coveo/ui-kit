@@ -10,6 +10,8 @@ import {
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, type Mock, vi} from 'vitest';
+import {userEvent} from 'vitest/browser';
+import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeCategoryFacet} from '@/vitest-utils/testing-helpers/fixtures/headless/search/category-facet-controller';
 import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/headless/search/search-status-controller';
@@ -203,6 +205,46 @@ describe('atomic-category-facet', () => {
       facetState: {canShowLessValues: true},
     });
     expect(showLess).toBeInTheDocument();
+  });
+
+  it('should announce when show more values is clicked', async () => {
+    const setMessageSpy = vi.spyOn(
+      AriaLiveRegionController.prototype,
+      'message',
+      'set'
+    );
+    const {showMore} = await renderCategoryFacet(
+      {label: 'Category'},
+      {
+        facetState: {canShowMoreValues: true},
+      }
+    );
+
+    await userEvent.click(showMore!);
+
+    expect(setMessageSpy).toHaveBeenCalledWith(
+      'Show more values for the Category facet'
+    );
+  });
+
+  it('should announce when show less values is clicked', async () => {
+    const setMessageSpy = vi.spyOn(
+      AriaLiveRegionController.prototype,
+      'message',
+      'set'
+    );
+    const {showLess} = await renderCategoryFacet(
+      {label: 'Category'},
+      {
+        facetState: {canShowLessValues: true},
+      }
+    );
+
+    await userEvent.click(showLess!);
+
+    expect(setMessageSpy).toHaveBeenCalledWith(
+      'Show less values for the Category facet'
+    );
   });
 
   it('should not render show more button when canShowMoreValues is false', async () => {

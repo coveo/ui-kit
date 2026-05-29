@@ -3,6 +3,7 @@ import {html} from 'lit';
 import {beforeEach, describe, expect, it, type Mock, vi} from 'vitest';
 import {page} from 'vitest/browser';
 import {createAppLoadedListener} from '@/src/components/common/interface/store';
+import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
 import {buildFakeResult} from '@/vitest-utils/testing-helpers/fixtures/headless/search/result';
@@ -256,6 +257,29 @@ describe('atomic-load-more-results', () => {
         await loadMoreButton.click();
 
         expect(blurSpy).toHaveBeenCalledOnce();
+      });
+
+      it('should announce the updated result count when more results are loaded', async () => {
+        const setMessageSpy = vi.spyOn(
+          AriaLiveRegionController.prototype,
+          'message',
+          'set'
+        );
+        const {element, loadMoreButton} = await renderLoadMoreResults({
+          props: {
+            numberOfResults: 10,
+            totalNumberOfResults: 100,
+          },
+        });
+
+        await loadMoreButton.click();
+        element['querySummaryState'] = {
+          ...element['querySummaryState'],
+          lastResult: 20,
+        };
+        await element.updateComplete;
+
+        expect(setMessageSpy).toHaveBeenCalledWith('Showing 20 of 100 results');
       });
     });
   });

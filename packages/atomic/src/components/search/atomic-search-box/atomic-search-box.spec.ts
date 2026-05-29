@@ -302,6 +302,21 @@ describe('atomic-search-box', () => {
       expect(suggestions()).toHaveLength(3);
     });
 
+    it('should render actionable suggestions as labelled groups', async () => {
+      const {element, suggestions} = await renderSearchBox();
+
+      await userEvent.click(element);
+
+      await vi.waitFor(() => {
+        expect(suggestions()[0].querySelector('[role="group"]')).not.toBeNull();
+      });
+
+      const suggestionGroup = suggestions()[0].querySelector('[role="group"]');
+
+      expect(suggestionGroup).toHaveAttribute('aria-label');
+      expect(suggestionGroup).not.toHaveAttribute('tabindex');
+    });
+
     it('should announce "x search suggestions are available." to screen readers when there are suggestions', async () => {
       const setMessageSpy = vi.spyOn(
         AriaLiveRegionController.prototype,
@@ -314,6 +329,50 @@ describe('atomic-search-box', () => {
 
       expect(setMessageSpy).toHaveBeenCalledWith(
         '3 search suggestions are available.'
+      );
+    });
+
+    it('should include instant results in the suggestions availability announcement', async () => {
+      const setMessageSpy = vi.spyOn(
+        AriaLiveRegionController.prototype,
+        'message',
+        'set'
+      );
+      const {element} = await renderSearchBox({
+        noSuggestions: true,
+        additionalChildren: html`<fake-atomic-search-box-suggestions
+          suggestion-count="2"
+          without-query
+          suggestion-part="instant-results-item"
+        ></fake-atomic-search-box-suggestions>`,
+      });
+
+      await userEvent.click(element);
+
+      expect(setMessageSpy).toHaveBeenCalledWith(
+        '2 search suggestions are available.'
+      );
+    });
+
+    it('should not include the instant results show-all button in the suggestions availability announcement', async () => {
+      const setMessageSpy = vi.spyOn(
+        AriaLiveRegionController.prototype,
+        'message',
+        'set'
+      );
+      const {element} = await renderSearchBox({
+        noSuggestions: true,
+        additionalChildren: html`<fake-atomic-search-box-suggestions
+          suggestion-count="1"
+          without-query
+          suggestion-part="instant-results-show-all"
+        ></fake-atomic-search-box-suggestions>`,
+      });
+
+      await userEvent.click(element);
+
+      expect(setMessageSpy).toHaveBeenCalledWith(
+        'There are no search suggestions.'
       );
     });
 
@@ -382,6 +441,30 @@ describe('atomic-search-box', () => {
       await userEvent.click(clearButton);
 
       expect(setMessageSpy).toHaveBeenCalledWith('Search cleared');
+    });
+  });
+
+  describe('when the recent queries clear suggestion is clicked', () => {
+    it('should announce that recent searches were cleared', async () => {
+      const setMessageSpy = vi.spyOn(
+        AriaLiveRegionController.prototype,
+        'message',
+        'set'
+      );
+      const {element, suggestions} = await renderSearchBox({
+        noSuggestions: true,
+        additionalChildren: html`<fake-atomic-search-box-suggestions
+          recent-query-clear
+        ></fake-atomic-search-box-suggestions>`,
+      });
+
+      await userEvent.click(element);
+      const [clearSuggestion] = suggestions() as NodeListOf<
+        HTMLElement & {onClick(e: Event): Promise<void>}
+      >;
+      await clearSuggestion.onClick(new Event('click'));
+
+      expect(setMessageSpy).toHaveBeenCalledWith('Recent searches cleared');
     });
   });
 

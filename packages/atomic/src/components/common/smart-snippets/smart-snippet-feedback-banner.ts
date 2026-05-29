@@ -103,6 +103,9 @@ export const renderSmartSnippetFeedbackBanner: FunctionalComponent<
       () =>
         html`<div
           part="feedback-thank-you-wrapper"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
           class="flex flex-wrap gap-1"
         >
           ${renderThankYouMessage()}

@@ -17,7 +17,14 @@ import {
   type TabManager,
   type TabManagerState,
 } from '@coveo/headless';
-import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
+import {
+  type CSSResultGroup,
+  css,
+  html,
+  LitElement,
+  nothing,
+  type PropertyValues,
+} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {findSection} from '@/src/components/common/atomic-layout-section/atomic-layout-section-utils';
 import {popoverClass} from '@/src/components/common/facets/popover/popover-type';
@@ -38,6 +45,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import type {AtomicInterface} from '@/src/utils/initialization-common-utils';
 import {shouldDisplayOnCurrentTab} from '@/src/utils/tab-utils';
 import {sortByDocumentPosition} from '@/src/utils/utils';
@@ -162,6 +170,11 @@ export class AtomicRefineModal
   @state()
   public tabManagerState!: TabManagerState;
 
+  private refineModalAriaMessage = new AriaLiveRegionController(
+    this,
+    'refine-modal'
+  );
+
   public initialize() {
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
     this.sort = buildSort(this.bindings.engine);
@@ -170,6 +183,23 @@ export class AtomicRefineModal
     this.facetManager = buildFacetManager(this.bindings.engine);
     this.tabManager = buildTabManager(this.bindings.engine);
     this.watchEnabled();
+  }
+
+  protected updated(changedProperties: PropertyValues) {
+    const previousQuerySummaryState = changedProperties.get(
+      'querySummaryState'
+    ) as QuerySummaryState | undefined;
+
+    if (
+      !this.isOpen ||
+      !previousQuerySummaryState ||
+      this.querySummaryState.isLoading ||
+      previousQuerySummaryState.total === this.querySummaryState.total
+    ) {
+      return;
+    }
+
+    this.refineModalAriaMessage.message = this.footerButtonLabel;
   }
 
   @watch('isOpen')
@@ -382,6 +412,15 @@ export class AtomicRefineModal
           })
         : nothing
     );
+  }
+
+  private get footerButtonLabel() {
+    const count = this.bindings.i18n.t('between-parentheses', {
+      text: this.querySummaryState.total.toLocaleString(
+        this.bindings.i18n.language
+      ),
+    });
+    return `${this.bindings.i18n.t('view-results')} ${count}`;
   }
 
   @bindingGuard()

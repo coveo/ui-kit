@@ -9,6 +9,7 @@ import {beforeEach, describe, expect, it, type Mock, vi} from 'vitest';
 import {page} from 'vitest/browser';
 import './atomic-color-facet';
 import {ifDefined} from 'lit/directives/if-defined.js';
+import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeFacetConditionsManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/facet-conditions-manager';
 import {buildFakeFacet} from '@/vitest-utils/testing-helpers/fixtures/headless/search/facet-controller';
@@ -612,11 +613,31 @@ describe('atomic-color-facet', () => {
     expect(mockShowMoreValues).toHaveBeenCalled();
   });
 
+  it('should announce when show more values is clicked', async () => {
+    vi.mocked(buildFacet).mockReturnValue(
+      buildFakeFacet({
+        state: {canShowMoreValues: true},
+      })
+    );
+    const setMessageSpy = vi.spyOn(
+      AriaLiveRegionController.prototype,
+      'message',
+      'set'
+    );
+    const {locators} = await setupElement();
+
+    locators.showMore.click();
+
+    expect(setMessageSpy).toHaveBeenCalledWith(
+      'Show more values for the File Type facet'
+    );
+  });
+
   it('should show less values when show less is clicked', async () => {
     const mockShowLessValues = vi.fn();
     vi.mocked(buildFacet).mockReturnValue(
       buildFakeFacet({
-        state: {canShowMoreValues: true},
+        state: {canShowLessValues: true},
         implementation: {showLessValues: mockShowLessValues},
       })
     );
@@ -626,6 +647,26 @@ describe('atomic-color-facet', () => {
     showLess.click();
 
     expect(mockShowLessValues).toHaveBeenCalled();
+  });
+
+  it('should announce when show less values is clicked', async () => {
+    vi.mocked(buildFacet).mockReturnValue(
+      buildFakeFacet({
+        state: {canShowLessValues: true},
+      })
+    );
+    const setMessageSpy = vi.spyOn(
+      AriaLiveRegionController.prototype,
+      'message',
+      'set'
+    );
+    const {locators} = await setupElement();
+
+    locators.showLess.click();
+
+    expect(setMessageSpy).toHaveBeenCalledWith(
+      'Show less values for the File Type facet'
+    );
   });
 
   it('should display search results when query is entered', async () => {

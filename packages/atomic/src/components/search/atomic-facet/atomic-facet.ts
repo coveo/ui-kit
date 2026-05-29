@@ -625,14 +625,24 @@ export class AtomicFacet
         onShowMore: () => {
           this.focusTargets.showMore.focusAfterSearch();
           this.facet.showMoreValues();
+          this.announceFacetValuesVisibilityChange('show-more-facet-values');
         },
         onShowLess: () => {
           this.focusTargets.showLess.focusAfterSearch();
           this.facet.showLessValues();
+          this.announceFacetValuesVisibilityChange('show-less-facet-values');
         },
         canShowMoreValues: this.facet.state.canShowMoreValues,
         canShowLessValues: this.facet.state.canShowLessValues,
       },
+    });
+  }
+
+  private announceFacetValuesVisibilityChange(
+    i18nKey: 'show-more-facet-values' | 'show-less-facet-values'
+  ) {
+    this.facetSearchAriaLive!.message = this.bindings.i18n.t(i18nKey, {
+      label: this.bindings.i18n.t(this.definedLabel),
     });
   }
 

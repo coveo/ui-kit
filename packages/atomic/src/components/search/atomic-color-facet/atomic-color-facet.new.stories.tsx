@@ -260,13 +260,12 @@ export const A11yStatusMessage: Story = {
     await testStatusMessageA11y(context, {
       triggerAction: async () => {
         const canvas = within(context.canvasElement);
-        const buttons = await canvas.findAllByShadowLabelText(
-          /Inclusion filter on/,
-          {exact: false}
+        const showMoreButton = await canvas.findByShadowLabelText(
+          'Show more values for the File Type facet'
         );
-        buttons[0].click();
+        showMoreButton.click();
       },
-      expectedText: 'Results loaded. Results 1-10 of 42',
+      expectedText: 'Show more values for the File Type facet',
       timeout: 5000,
     });
   },

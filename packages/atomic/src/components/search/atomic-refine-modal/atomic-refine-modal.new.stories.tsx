@@ -6,7 +6,9 @@ import type {
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
+import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {buildSearchResponseWithResults} from '@/storybook-utils/api/search/search-response-mocks';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-facet/atomic-facet.js';
@@ -104,4 +106,53 @@ export const Default: Story = {
     decorator,
     commerceFacetWidthDecorator,
   ],
+};
+
+export const A11yStatusMessage: Story = {
+  name: 'A11y Status Message',
+  tags: ['a11y', 'test', '!dev'],
+  decorators: [
+    () => html`
+      <atomic-refine-toggle></atomic-refine-toggle>
+      <div style="display:none;">
+        <atomic-sort-dropdown
+          ><atomic-sort-expression
+            label="relevance"
+            expression="relevancy"
+          ></atomic-sort-expression>
+          <atomic-sort-expression
+            label="most-recent"
+            expression="date descending"
+          ></atomic-sort-expression
+        ></atomic-sort-dropdown>
+        <atomic-facet field="author" label="Authors"></atomic-facet>
+      </div>
+    `,
+    decorator,
+    commerceFacetWidthDecorator,
+  ],
+  beforeEach: () => {
+    searchApiHarness.searchEndpoint.clear();
+    searchApiHarness.searchEndpoint.mockOnce(
+      buildSearchResponseWithResults(120)
+    );
+    searchApiHarness.searchEndpoint.mockOnce(
+      buildSearchResponseWithResults(42)
+    );
+  },
+  play: async (context) => {
+    await meta.play?.(context);
+    await testStatusMessageA11y(context, {
+      triggerAction: async () => {
+        const canvas = within(context.canvasElement);
+        const [select] = await canvas.findAllByShadowRole('combobox', {
+          name: /sort by/i,
+        });
+        (select as HTMLSelectElement).value = 'date descending';
+        select.dispatchEvent(new Event('change', {bubbles: true}));
+      },
+      expectedText: 'View results (42)',
+      timeout: 5000,
+    });
+  },
 };

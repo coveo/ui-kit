@@ -78,7 +78,7 @@ export class AtomicSuggestionRenderer {
   }
 
   private get classes() {
-    return `flex px-4 min-h-10 items-center text-left text-neutral-dark cursor-pointer ${
+    return `flex w-full appearance-none border-0 bg-transparent px-4 min-h-10 items-center text-left text-neutral-dark cursor-pointer ${
       this.isSelected ? 'bg-neutral-light' : ''
     }`;
   }
@@ -143,6 +143,7 @@ export class AtomicSuggestionRenderer {
       <Host class="contents">
         {isButton ? (
           <div
+            role="group"
             id={this.id}
             key={this.suggestion.key}
             part={this.parts}
@@ -163,6 +164,7 @@ export class AtomicSuggestionRenderer {
           </div>
         ) : (
           <span
+            role="group"
             id={this.id}
             key={this.suggestion.key}
             part={this.parts}

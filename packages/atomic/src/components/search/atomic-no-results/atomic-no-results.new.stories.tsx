@@ -10,6 +10,9 @@ import '@/src/components/search/atomic-no-results/atomic-no-results.js';
 const mockSearchApi = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
+const {play: initializeSearchInterface} = wrapInSearchInterface({
+  skipFirstSearch: true,
+});
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-no-results',
@@ -55,7 +58,6 @@ export const A11yStatusMessage: Story = {
   name: 'A11y Status Message',
   tags: ['a11y', 'test', '!dev'],
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mockOnce((response) => response);
     mockSearchApi.searchEndpoint.mockOnce((response) => ({
       ...response,
       results: [],
@@ -64,7 +66,7 @@ export const A11yStatusMessage: Story = {
     }));
   },
   play: async (context) => {
-    await play(context);
+    await initializeSearchInterface(context);
     await testStatusMessageA11y(context, {
       triggerAction: async () => {
         const searchInterface = context.canvasElement.querySelector(

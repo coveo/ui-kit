@@ -21,6 +21,15 @@ export class FixtureFakeAtomicSearchBoxSuggestions
   @property({type: Number, attribute: 'suggestion-count'})
   suggestionCount = 3;
 
+  @property({type: Boolean, attribute: 'without-query'})
+  withoutQuery = false;
+
+  @property({type: Boolean, attribute: 'recent-query-clear'})
+  recentQueryClear = false;
+
+  @property({type: String, attribute: 'suggestion-part'})
+  suggestionPart = '';
+
   connectedCallback() {
     super.connectedCallback();
     dispatchSearchBoxSuggestionsEvent<SearchBox, Bindings>(
@@ -41,15 +50,32 @@ export class FixtureFakeAtomicSearchBoxSuggestions
   }
 
   private renderItems(): SearchBoxSuggestionElement[] {
+    if (this.recentQueryClear) {
+      const div = document.createElement('div');
+      div.textContent = 'clear recent searches';
+      return [
+        {
+          key: 'recent-query-clear',
+          content: div,
+        },
+      ];
+    }
+
     return Array.from({length: this.suggestionCount}, (_, i) => {
       const num = i + 1;
       const div = document.createElement('div');
       div.textContent = `suggestion ${num}`;
-      return {
+      const suggestion: SearchBoxSuggestionElement = {
         key: `suggestion-${num}`,
         content: div,
-        query: `suggestion ${num}`,
       };
+      if (!this.withoutQuery) {
+        suggestion.query = `suggestion ${num}`;
+      }
+      if (this.suggestionPart) {
+        suggestion.part = this.suggestionPart;
+      }
+      return suggestion;
     });
   }
 }

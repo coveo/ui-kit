@@ -28,6 +28,7 @@ const {decorator, play} = wrapInSearchInterface({
 });
 
 const searchApiHarness = new MockSearchApi();
+const localStorageRecentQueriesKey = 'coveo-recent-queries';
 
 const normalWidthDecorator: Decorator = (story) => html`
   <div style="min-width: 600px;" id="code-root">${story()}</div>
@@ -101,6 +102,63 @@ export const A11yStatusMessage: Story = {
         await userEvent.type(searchBox, 'accessibility{enter}');
       },
       expectedText: 'Results loaded. Results 1-10 of 42',
+      timeout: 5000,
+    });
+  },
+};
+
+export const A11yInstantResultsStatusMessage: Story = {
+  name: 'A11y Instant Results Status Message',
+  tags: ['a11y', 'test', '!dev'],
+  args: {
+    ...RichSearchBox.args,
+  },
+  beforeEach: async () => {
+    searchApiHarness.clearAll();
+    searchApiHarness.searchEndpoint.mockOnce(
+      buildSearchResponseWithResults(4, 4)
+    );
+    localStorage.removeItem(localStorageRecentQueriesKey);
+  },
+  play: async (context) => {
+    await play(context);
+    await testStatusMessageA11y(context, {
+      triggerAction: async () => {
+        const canvas = within(context.canvasElement);
+        const searchBox = await canvas.findByShadowPlaceholderText('Search');
+        await userEvent.click(searchBox);
+        await userEvent.type(searchBox, 'coveo');
+      },
+      expectedText: /9 search suggestions are available for .*coveo\./,
+      timeout: 5000,
+    });
+  },
+};
+
+export const A11yRecentQueriesClearedStatusMessage: Story = {
+  name: 'A11y Recent Queries Cleared Status Message',
+  tags: ['a11y', 'test', '!dev'],
+  beforeEach: () => {
+    localStorage.setItem(
+      localStorageRecentQueriesKey,
+      JSON.stringify(['accessibility'])
+    );
+    return () => localStorage.removeItem(localStorageRecentQueriesKey);
+  },
+  play: async (context) => {
+    await play(context);
+    await testStatusMessageA11y(context, {
+      triggerAction: async () => {
+        const canvas = within(context.canvasElement);
+        const searchBox = await canvas.findByShadowPlaceholderText('Search');
+        await userEvent.click(searchBox);
+        const clearRecentSearchesButton = await canvas.findByShadowLabelText(
+          /Clear recent searches/,
+          {exact: false}
+        );
+        await userEvent.click(clearRecentSearchesButton);
+      },
+      expectedText: 'Recent searches cleared',
       timeout: 5000,
     });
   },

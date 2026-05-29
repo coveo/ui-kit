@@ -561,10 +561,9 @@ export class AtomicSearchBox
   }
 
   private announceNewSuggestionsToScreenReader() {
-    const elsLength =
-      this.suggestionManager.allSuggestionElements.filter(
-        elementHasQuery
-      ).length;
+    const elsLength = this.suggestionManager.allSuggestionElements.filter(
+      (element) => this.shouldAnnounceSuggestion(element)
+    ).length;
 
     this.searchBoxAriaMessage.message = elsLength
       ? this.bindings.i18n.t(
@@ -579,9 +578,22 @@ export class AtomicSearchBox
       : this.bindings.i18n.t('query-suggestions-unavailable');
   }
 
+  private shouldAnnounceSuggestion(element: SearchBoxSuggestionElement) {
+    return (
+      elementHasQuery(element) ||
+      element.part?.split(' ').includes('instant-results-item')
+    );
+  }
+
   private announceClearSearchBoxToScreenReader() {
     this.searchBoxAriaMessage.message =
       this.bindings.i18n.t('search-box-cleared');
+  }
+
+  private announceRecentQueriesClearedToScreenReader() {
+    this.searchBoxAriaMessage.message = this.bindings.i18n.t(
+      'recent-search-cleared'
+    );
   }
 
   private renderAbsolutePositionSpacer() {
@@ -723,6 +735,7 @@ export class AtomicSearchBox
         .onClick=${async (e: Event) => {
           await this.suggestionManager.onSuggestionClick(item, e);
           if (item.key === 'recent-query-clear') {
+            this.announceRecentQueriesClearedToScreenReader();
             return;
           }
 

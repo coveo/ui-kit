@@ -747,10 +747,16 @@ export class AtomicCategoryFacet
                 this.facetState.valuesAsTrees.length;
               this.focusTargets.showMoreFocus.focusAfterSearch();
               this.facet.showMoreValues();
+              this.announceFacetValuesVisibilityChange(
+                'show-more-facet-values'
+              );
             },
             onShowLess: () => {
               this.focusTargets.showLessFocus.focusAfterSearch();
               this.facet.showLessValues();
+              this.announceFacetValuesVisibilityChange(
+                'show-less-facet-values'
+              );
             },
             canShowLessValues: this.facetState.canShowLessValues,
             canShowMoreValues: this.facetState.canShowMoreValues,
@@ -758,6 +764,14 @@ export class AtomicCategoryFacet
         })}
       </div>
     `;
+  }
+
+  private announceFacetValuesVisibilityChange(
+    i18nKey: 'show-more-facet-values' | 'show-less-facet-values'
+  ) {
+    this.facetSearchAriaMessage.message = this.bindings.i18n.t(i18nKey, {
+      label: this.bindings.i18n.t(this.label),
+    });
   }
 
   @bindingGuard()

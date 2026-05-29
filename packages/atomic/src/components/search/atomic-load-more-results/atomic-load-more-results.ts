@@ -6,7 +6,7 @@ import {
   type ResultList,
   type ResultListState,
 } from '@coveo/headless';
-import {html, LitElement} from 'lit';
+import {html, LitElement, type PropertyValues} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {createAppLoadedListener} from '@/src/components/common/interface/store';
@@ -20,6 +20,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -53,6 +54,12 @@ export class AtomicLoadMoreResults
   @state()
   private isAppLoaded = false;
 
+  private loadMoreAriaMessage = new AriaLiveRegionController(
+    this,
+    'load-more-results'
+  );
+  private pendingLoadMoreAnnouncement = false;
+
   @bindStateToController('querySummary')
   @state()
   private querySummaryState!: QuerySummaryState;
@@ -71,6 +78,24 @@ export class AtomicLoadMoreResults
     createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
       this.isAppLoaded = isAppLoaded;
     });
+  }
+
+  protected updated(changedProperties: PropertyValues) {
+    const previousQuerySummaryState = changedProperties.get(
+      'querySummaryState'
+    ) as QuerySummaryState | undefined;
+
+    if (
+      !this.pendingLoadMoreAnnouncement ||
+      !previousQuerySummaryState ||
+      this.querySummaryState.isLoading ||
+      previousQuerySummaryState.lastResult === this.querySummaryState.lastResult
+    ) {
+      return;
+    }
+
+    this.pendingLoadMoreAnnouncement = false;
+    this.loadMoreAriaMessage.message = this.showingResultsMessage;
   }
 
   @bindingGuard()
@@ -109,7 +134,16 @@ export class AtomicLoadMoreResults
     // The focus is set on the next new result after loading more results **without scrolling**.
     //this.bindings.store.state.resultList?.focusOnNextNewResult();
     (document.activeElement as HTMLElement)?.blur(); // Blur the active element to avoid focus issues, remove when focus mess is resolved.
+    this.pendingLoadMoreAnnouncement = true;
     this.resultList.fetchMoreResults();
+  }
+
+  private get showingResultsMessage() {
+    const locale = this.bindings.i18n.language;
+    return this.bindings.i18n.t('showing-results-of-load-more', {
+      last: this.querySummaryState.lastResult.toLocaleString(locale),
+      total: this.querySummaryState.total.toLocaleString(locale),
+    });
   }
 
   private get shouldRender() {

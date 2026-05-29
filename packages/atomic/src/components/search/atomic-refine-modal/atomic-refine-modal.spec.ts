@@ -22,6 +22,7 @@ import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import {userEvent} from 'vitest/browser';
+import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeBreadcrumbManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/breadcrumb-manager';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
@@ -327,6 +328,46 @@ describe('atomic-refine-modal', () => {
 
       expect(footerButtonCount).toBeInTheDocument();
       expect(footerButtonCount).toHaveTextContent('123');
+    });
+
+    it('should announce the updated footer count while open', async () => {
+      const setMessageSpy = vi.spyOn(
+        AriaLiveRegionController.prototype,
+        'message',
+        'set'
+      );
+      const {element} = await renderRefineModal({
+        isOpen: true,
+        querySummaryState: {total: 12},
+      });
+
+      element.querySummaryState = {
+        ...element.querySummaryState,
+        total: 24,
+      };
+      await element.updateComplete;
+
+      expect(setMessageSpy).toHaveBeenCalledWith('View results (24)');
+    });
+
+    it('should not announce footer count updates while closed', async () => {
+      const setMessageSpy = vi.spyOn(
+        AriaLiveRegionController.prototype,
+        'message',
+        'set'
+      );
+      const {element} = await renderRefineModal({
+        isOpen: false,
+        querySummaryState: {total: 12},
+      });
+
+      element.querySummaryState = {
+        ...element.querySummaryState,
+        total: 24,
+      };
+      await element.updateComplete;
+
+      expect(setMessageSpy).not.toHaveBeenCalledWith('View results (24)');
     });
   });
 

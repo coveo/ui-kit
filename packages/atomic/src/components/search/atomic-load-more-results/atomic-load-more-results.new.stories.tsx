@@ -85,7 +85,7 @@ export const A11yStatusMessage: Story = {
         });
         button.click();
       },
-      expectedText: 'Results loaded. Results 1-80 of 120',
+      expectedText: 'Showing 80 of 120 results',
       timeout: 5000,
     });
   },

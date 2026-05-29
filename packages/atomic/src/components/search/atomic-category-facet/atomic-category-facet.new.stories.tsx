@@ -152,7 +152,7 @@ const unitedStatesChildValues = [
 ];
 
 const createCategoryFacetResponse = (
-  values: typeof baseCategoryFacetValues,
+  values: CategoryFacetValue[],
   facetId = 'geographicalhierarchy'
 ) => ({
   facetId,
@@ -467,13 +467,12 @@ export const A11yStatusMessage: Story = {
     await testStatusMessageA11y(context, {
       triggerAction: async () => {
         const canvas = within(context.canvasElement);
-        const button = await canvas.findByShadowLabelText(
-          'Inclusion filter on North America',
-          {exact: false}
+        const showMoreButton = await canvas.findByShadowLabelText(
+          'Show more values for the Geographical Hierarchy facet'
         );
-        button.click();
+        showMoreButton.click();
       },
-      expectedText: 'Results loaded. Results 1-10 of 42',
+      expectedText: 'Show more values for the Geographical Hierarchy facet',
       timeout: 5000,
     });
   },

@@ -138,27 +138,23 @@ export const A11yStatusMessage: Story = {
   tags: ['a11y', 'test', '!dev'],
   args: {
     field: 'objecttype',
+    label: 'Object Type',
   },
-  decorators: [
-    facetDecorator,
-    (story) => html`<atomic-query-summary></atomic-query-summary>${story()}`,
-  ],
+  decorators: [facetDecorator],
   beforeEach: async () => {
     mockSearchApi.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
-    mockSearchApi.searchEndpoint.mockOnce(buildSearchResponseWithResults(42));
   },
   play: async (context) => {
     await play(context);
     await testStatusMessageA11y(context, {
       triggerAction: async () => {
         const canvas = within(context.canvasElement);
-        const buttons = await canvas.findAllByShadowLabelText(
-          /Inclusion filter on/,
-          {exact: false}
+        const showMoreButton = await canvas.findByShadowLabelText(
+          'Show more values for the Object Type facet'
         );
-        buttons[0].click();
+        showMoreButton.click();
       },
-      expectedText: 'Results loaded. Results 1-10 of 42',
+      expectedText: 'Show more values for the Object Type facet',
       timeout: 5000,
     });
   },

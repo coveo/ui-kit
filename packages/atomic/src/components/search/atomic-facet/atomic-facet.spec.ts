@@ -601,6 +601,26 @@ describe('atomic-facet', () => {
       expect(showMoreValues).toHaveBeenCalled();
     });
 
+    it('should announce when show more values is clicked', async () => {
+      vi.mocked(buildFacet).mockReturnValue(
+        buildFakeFacet({
+          state: {canShowMoreValues: true},
+        })
+      );
+      const setMessageSpy = vi.spyOn(
+        AriaLiveRegionController.prototype,
+        'message',
+        'set'
+      );
+      const {locators} = await setupElement();
+
+      await userEvent.click(locators.showMore);
+
+      expect(setMessageSpy).toHaveBeenCalledWith(
+        'Show more values for the Test Field facet'
+      );
+    });
+
     it('should call facet.showLessValues when the show less button is clicked', async () => {
       const showLessValues = vi.fn();
       vi.mocked(buildFacet).mockReturnValue(
@@ -617,6 +637,28 @@ describe('atomic-facet', () => {
       await userEvent.click(locators.showLess);
 
       expect(showLessValues).toHaveBeenCalled();
+    });
+
+    it('should announce when show less values is clicked', async () => {
+      vi.mocked(buildFacet).mockReturnValue(
+        buildFakeFacet({
+          state: {
+            canShowLessValues: true,
+          },
+        })
+      );
+      const setMessageSpy = vi.spyOn(
+        AriaLiveRegionController.prototype,
+        'message',
+        'set'
+      );
+      const {locators} = await setupElement();
+
+      await userEvent.click(locators.showLess);
+
+      expect(setMessageSpy).toHaveBeenCalledWith(
+        'Show less values for the Test Field facet'
+      );
     });
 
     it('should call facet.toggleSelect when a value is clicked', async () => {

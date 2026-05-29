@@ -220,6 +220,17 @@ describe('#renderSmartSnippetFeedbackBanner', () => {
     expect(wrapper).toBeInTheDocument();
   });
 
+  it('should render thank you wrapper as a polite status message', async () => {
+    const container = await renderFeedbackBanner({liked: true});
+    const wrapper = container.querySelector(
+      '[part="feedback-thank-you-wrapper"]'
+    );
+
+    expect(wrapper).toHaveAttribute('role', 'status');
+    expect(wrapper).toHaveAttribute('aria-live', 'polite');
+    expect(wrapper).toHaveAttribute('aria-atomic', 'true');
+  });
+
   it('should set explainWhyRef when provided', async () => {
     const ref = vi.fn();
     await renderFeedbackBanner({

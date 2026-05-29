@@ -1,6 +1,9 @@
 import type {Result} from '@coveo/headless';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {within} from 'shadow-dom-testing-library';
+import {userEvent} from 'storybook/test';
+import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -78,3 +81,22 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {};
+
+export const A11yStatusMessage: Story = {
+  name: 'A11y Status Message',
+  tags: ['a11y', 'test', '!dev'],
+  play: async (context) => {
+    await play(context);
+    await testStatusMessageA11y(context, {
+      triggerAction: async () => {
+        const canvas = within(context.canvasElement);
+        const helpfulRadio = await canvas.findByShadowRole('radio', {
+          name: 'Yes',
+        });
+        await userEvent.click(helpfulRadio);
+      },
+      expectedText: 'Thank you for your feedback!',
+      timeout: 5000,
+    });
+  },
+};
