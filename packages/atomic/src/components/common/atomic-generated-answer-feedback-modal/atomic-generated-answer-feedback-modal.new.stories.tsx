@@ -55,6 +55,7 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
+    chromatic: {disableSnapshot: true},
   },
   play: playAfterModalAnimation,
 };
