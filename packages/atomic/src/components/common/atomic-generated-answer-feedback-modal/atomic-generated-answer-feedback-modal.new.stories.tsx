@@ -14,7 +14,7 @@ const generatedAnswer = {
   sendFeedback: () => {},
 } as unknown as GeneratedAnswer;
 
-const {decorator, play} = wrapInSearchInterface();
+const {decorator, play} = wrapInSearchInterface({skipFirstSearch: true});
 
 async function playAfterModalAnimation(context: Parameters<typeof play>[0]) {
   await play(context);
@@ -25,19 +25,20 @@ async function waitForModalAnimationEnd(canvasElement: HTMLElement) {
   const feedbackModal = canvasElement.querySelector(
     'atomic-generated-answer-feedback-modal'
   );
+
+  let container: Element | null | undefined = null;
   await waitFor(() => {
-    expect(
-      feedbackModal?.shadowRoot?.querySelector('atomic-modal')
-    ).toBeTruthy();
+    const modal = feedbackModal?.shadowRoot?.querySelector('atomic-modal');
+    expect(modal).toBeTruthy();
+    container = modal?.shadowRoot?.querySelector('[part="container"]');
+    expect(container).toBeTruthy();
   });
 
-  const modal = feedbackModal?.shadowRoot?.querySelector('atomic-modal');
-  const container = modal?.shadowRoot?.querySelector('[part="container"]');
   if (!container) {
     return;
   }
 
-  const animations = container.getAnimations();
+  const animations = (container as Element).getAnimations();
   await Promise.all(animations.map((animation) => animation.finished));
 }
 
