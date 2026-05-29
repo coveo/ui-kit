@@ -21,7 +21,7 @@ export interface TableLayoutProps extends TableColumnsProps {
   host: HTMLElement;
   listClasses: string;
   logger: Pick<Console, 'error'>;
-  label?: string;
+  label: string;
 }
 
 export interface TableDataProps extends TableColumnsProps {
@@ -53,7 +53,7 @@ export const renderTableLayout: FunctionalComponentWithChildren<
     html`<table
       class="list-root ${listClasses}"
       part="result-table"
-      aria-label=${label ?? 'Results'}
+      aria-label=${label}
     >
       <thead part="result-table-heading">
         <tr part="result-table-heading-row">
