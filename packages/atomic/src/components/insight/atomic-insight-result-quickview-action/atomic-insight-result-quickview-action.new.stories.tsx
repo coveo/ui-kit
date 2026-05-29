@@ -17,11 +17,11 @@ import '@/src/components/search/atomic-result-section-title/atomic-result-sectio
 import '@/src/components/search/atomic-result-section-visual/atomic-result-section-visual.js';
 import '@/src/components/search/atomic-result-text/atomic-result-text.js';
 
-const mockInsightApi = new MockInsightApi();
-const mockSearchApi = new MockSearchApi();
+const insightApiHarness = new MockInsightApi();
+const searchApiHarness = new MockSearchApi();
 
 // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Mock API response types are loosely defined
-mockInsightApi.searchEndpoint.mock((response: any) => ({
+insightApiHarness.searchEndpoint.mock((response: any) => ({
   ...response,
   // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- Mock API result types are loosely defined
   results: response.results.slice(0, 3).map((result: any) => ({
@@ -87,8 +87,8 @@ const meta: Meta = {
     },
     msw: {
       handlers: [
-        ...mockInsightApi.handlers,
-        mockSearchApi.htmlEndpoint.generateHandler(),
+        ...insightApiHarness.handlers,
+        searchApiHarness.htmlEndpoint.generateHandler(),
       ],
     },
   },

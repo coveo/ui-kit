@@ -55,6 +55,16 @@ class KebabRouter extends KindRouter {
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+let headlessVersion = '';
+try {
+  const pkgPath = resolve(
+    dirname(fileURLToPath(import.meta.url)),
+    '../../headless/package.json'
+  );
+  const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
+  headlessVersion = pkg.version || '';
+} catch {}
+
 /**
  * Called by TypeDoc when loaded as a plugin.
  */
@@ -174,19 +184,27 @@ export const load = (app: Application) => {
     };
   });
 
-  app.renderer.hooks.on('head.end', (event) => (
-    <>
-      <link rel="stylesheet" href="https://use.typekit.net/bqa0xml.css" />
-      <script>
-        <JSX.Raw html={`(${insertBetaNote.toString()})();`} />
-      </script>
-      <script
-        type="module"
-        src="https://static.cloud.coveo.com/atomic/v3/atomic.esm.js"
-      ></script>
-      <script>
-        <JSX.Raw
-          html={`
+  app.renderer.hooks.on('head.end', (event) => {
+    return (
+      <>
+        {headlessVersion && (
+          <script>
+            <JSX.Raw
+              html={`document.documentElement.setAttribute('data-headless-version', '${headlessVersion}');`}
+            />
+          </script>
+        )}
+        <link rel="stylesheet" href="https://use.typekit.net/bqa0xml.css" />
+        <script>
+          <JSX.Raw html={`(${insertBetaNote.toString()})();`} />
+        </script>
+        <script
+          type="module"
+          src="https://static.cloud.coveo.com/atomic/v3/atomic.esm.js"
+        ></script>
+        <script>
+          <JSX.Raw
+            html={`
           (function() {
             const isLocalHost =
               window.location.hostname === 'localhost' ||
@@ -203,29 +221,40 @@ export const load = (app: Application) => {
             document.head.appendChild(script);
           })();
         `}
-        />
-      </script>
-      <script
-        type="module"
-        src={event.relativeURL('assets/vars/onetrust.js')}
-      ></script>
-      <script>
-        <JSX.Raw html={`(${formatTypeDocToolbar.toString()})();`} />
-      </script>
-      <script>
-        <JSX.Raw
-          html={`(${insertSiteHeaderBar.toString()})('${event.relativeURL('assets')}', '${(app.options.getValue('headerNav.activeEntry') as string) || ''}');`}
-        />
-      </script>
-      <script>
-        <JSX.Raw html={`(${insertAtomicSearchBox.toString()})();`} />
-      </script>
-      <script
-        type="text/javascript"
-        src={event.relativeURL('assets/vars/OptanonWrapper.js')}
-      ></script>
-    </>
-  ));
+          />
+        </script>
+        {/* Amplitude Browser SDK — loaded before analytics.js so window.amplitude is available */}
+        <script
+          src="https://cdn.amplitude.com/libs/analytics-browser-2.11.1-min.js.gz"
+          integrity="sha384-XxDPxKDB79eXOLF+koPFe4h9iVF6LgQ1J6Do9sdhcohvTlVMK7EJE74b1b0iK3uK"
+          crossOrigin="anonymous"
+        ></script>
+        <script
+          type="module"
+          src={event.relativeURL('assets/vars/analytics.js')}
+        ></script>
+        <script
+          type="module"
+          src={event.relativeURL('assets/vars/onetrust.js')}
+        ></script>
+        <script>
+          <JSX.Raw html={`(${formatTypeDocToolbar.toString()})();`} />
+        </script>
+        <script>
+          <JSX.Raw
+            html={`(${insertSiteHeaderBar.toString()})('${event.relativeURL('assets')}', '${(app.options.getValue('headerNav.activeEntry') as string) || ''}');`}
+          />
+        </script>
+        <script>
+          <JSX.Raw html={`(${insertAtomicSearchBox.toString()})();`} />
+        </script>
+        <script
+          type="text/javascript"
+          src={event.relativeURL('assets/vars/OptanonWrapper.js')}
+        ></script>
+      </>
+    );
+  });
 
   // data-domain-script here needs to change based on environment: needs "test" removed for prod
   app.renderer.hooks.on('footer.end', (event) => (
@@ -286,6 +315,7 @@ export const load = (app: Application) => {
       'vars/dark-mode-toggle.js',
       'vars/OptanonWrapper.js',
       'vars/onetrust.js',
+      'vars/analytics.js',
     ];
 
     filesToCopy.forEach((filePath) => {

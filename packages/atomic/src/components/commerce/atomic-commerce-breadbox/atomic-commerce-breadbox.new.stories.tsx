@@ -9,6 +9,55 @@ import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-inter
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/commerce/atomic-commerce-breadbox/atomic-commerce-breadbox.js';
 import '@/src/components/commerce/atomic-commerce-facets/atomic-commerce-facets.js';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
+import {
+  commerceFacetTransformer,
+  createFacetSearchTransformer,
+} from '@/storybook-utils/api/commerce/facet-transformer';
+import {commercePaginationTransformer} from '@/storybook-utils/api/commerce/pagination-transformer';
+import {richResponse as baseSearchResponse} from '@/storybook-utils/api/commerce/search-response';
+
+const commerceApiHarness = new MockCommerceApi();
+commerceApiHarness.searchEndpoint.addRequestTransformer(
+  commerceFacetTransformer,
+  commercePaginationTransformer
+);
+commerceApiHarness.productListingEndpoint.addRequestTransformer(
+  commerceFacetTransformer,
+  commercePaginationTransformer
+);
+commerceApiHarness.facetSearchEndpoint.addRequestTransformer(
+  createFacetSearchTransformer(baseSearchResponse)
+);
+
+// Use shorter Brand values so breadcrumbs fit at narrow viewports (640px)
+commerceApiHarness.productListingEndpoint.mock(
+  (response) =>
+    ({
+      ...response,
+      facets: response.facets.map((facet) =>
+        facet.facetId === 'ec_brand'
+          ? {
+              ...facet,
+              values: [
+                {state: 'idle', numberOfResults: 14, value: 'NRS'},
+                {state: 'idle', numberOfResults: 9, value: 'BRP'},
+                {state: 'idle', numberOfResults: 7, value: 'Fox'},
+                {
+                  state: 'idle',
+                  numberOfResults: 27,
+                  value: 'Coast Guard and Co',
+                },
+                {state: 'idle', numberOfResults: 4, value: 'Wax and More'},
+                {state: 'idle', numberOfResults: 1, value: 'Aqua Marina'},
+                {state: 'idle', numberOfResults: 1, value: 'Lockit'},
+                {state: 'idle', numberOfResults: 1, value: 'Surf and Co'},
+              ],
+            }
+          : facet
+      ),
+    }) as typeof response
+);
 
 const {context, ...restOfConfiguration} =
   getSampleCommerceEngineConfiguration();
@@ -46,6 +95,9 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
+    msw: {
+      handlers: [...commerceApiHarness.handlers],
+    },
     chromatic: {disableSnapshot: true},
     layout: 'fullscreen',
     actions: {
@@ -56,6 +108,9 @@ const meta: Meta = {
   argTypes,
 
   play,
+  beforeEach: () => {
+    commerceApiHarness.clearAll();
+  },
 };
 
 export default meta;
@@ -68,7 +123,8 @@ export const Default: Story = {
         Select facet value(s) to see the Breadbox component.
       </div>
       <div style="display: flex; justify-content: flex-start;">
-        <atomic-commerce-facets> </atomic-commerce-facets>
+        <atomic-commerce-facets collapse-facets-after="-1">
+        </atomic-commerce-facets>
       </div>
     `,
   ],

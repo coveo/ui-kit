@@ -1,13 +1,6 @@
-import {
-  copyFileSync,
-  mkdirSync,
-  readdirSync,
-  readFileSync,
-  rmSync,
-  writeFileSync,
-} from 'node:fs';
+import {readdirSync, readFileSync} from 'node:fs';
 import {createRequire} from 'node:module';
-import path, {dirname, extname, join, relative, resolve} from 'node:path';
+import path, {dirname, relative, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import type {StorybookConfig} from '@storybook/web-components-vite';
 import remarkGfm from 'remark-gfm';
@@ -17,13 +10,9 @@ import {generateExternalPackageMappings} from '../scripts/externalPackageMapping
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 const isVitest = process.env.VITEST !== undefined;
-
-// Ensure directories referenced in staticDirs exist before Storybook validates them.
-// The prepareStorybookAssets plugin populates these during buildStart, which runs later.
-mkdirSync(resolve(__dirname, 'static/assets'), {recursive: true});
-mkdirSync(resolve(__dirname, '../src/assets/lang'), {recursive: true});
+const isChromatic = process.env.STORYBOOK_INVOKED_BY === 'chromatic';
+const isPlaywright = process.env.STORYBOOK_INVOKED_BY === 'playwright';
 
 const virtualCustomElementTags = (): Plugin => {
   return {
@@ -115,24 +104,28 @@ const externalizeDependencies = (
 
       const packageMapping = packageMappings[source];
 
-      if (!packageMapping || isVitest) {
+      if (!packageMapping) {
+        // If the package isn't in our mapping, we assume it's a local dependency and leave it as-is
         return null;
       }
 
-      if (isCDN) {
-        return {
-          id: packageMapping.cdn,
-          external: 'absolute',
-        };
+      // For all testing, we want to use the local versions of all packages to ensure everything is properly bundled together for testing
+      if (isVitest || isChromatic || isPlaywright) {
+        return null;
       }
 
+      // For local Storybook development, we want to use local packages source to allow for easier debugging and HMR.
       if (configType === 'DEVELOPMENT') {
         return {
           id: packageMapping.local,
         };
       }
 
-      return null;
+      // For production Storybook builds, we want to use Domain-relative URL to use the CDN versions of the packages.
+      return {
+        id: packageMapping.cdn,
+        external: 'absolute',
+      };
     },
   };
 };
@@ -153,7 +146,7 @@ const config: StorybookConfig = {
     '../storybook-pages/**/*.mdx',
   ],
   staticDirs: [
-    {from: './static/assets', to: '/assets'},
+    {from: '../dist/assets', to: '/assets'},
     {from: '../src/assets/lang', to: '/assets/lang'},
     {from: '../src/assets/lang', to: '/lang'},
     {from: './public', to: '/'},
@@ -177,10 +170,6 @@ const config: StorybookConfig = {
     name: '@storybook/web-components-vite',
     options: {},
   },
-  env: (config) => ({
-    ...config,
-    VITE_IS_CDN: isCDN ? 'true' : 'false',
-  }),
   async viteFinal(config, {configType}) {
     const {default: tailwindcss} = await import('@tailwindcss/vite');
     const version = getPackageVersion();
@@ -214,11 +203,11 @@ const config: StorybookConfig = {
         virtualOpenApiModules(),
         tailwindcss(),
         resolvePathAliases(),
-        markComponentImportsAsSideEffectful(),
+        markComponentImportsAsSideEffectful(configType),
         processInlineCssImports(),
         forceInlineCssImports(),
         svgTransform(),
-        prepareStorybookAssets(),
+        virtualAssetsList(),
         externalizeDependencies(configType),
       ],
     });
@@ -344,108 +333,32 @@ const processInlineCssImports = (): Plugin => {
   };
 };
 
-/**
- * Generate static assets that Storybook needs at startup:
- * 1. Salesforce Design System icons → .storybook/static/assets/
- * 2. Per-locale JSON files from src/locales.json → src/assets/lang/
- * 3. dayjs locale import map → src/generated/dayjs-locales-data.ts
- */
-const prepareStorybookAssets = (): Plugin => {
-  const require = createRequire(import.meta.url);
-
+const virtualAssetsList = (): Plugin => {
+  let cachedModule: string | null = null;
   return {
-    name: 'prepare-storybook-assets',
-    buildStart() {
-      const srcDir = resolve(__dirname, '../src');
-      const assetsDir = resolve(__dirname, 'static/assets');
-
-      // ── 1. Copy Salesforce icons ──
-      const salesforceDir = dirname(
-        require.resolve('@salesforce-ux/design-system/package.json')
-      );
-      mkdirSync(assetsDir, {recursive: true});
-
-      for (const subpath of ['doctype', 'standard']) {
-        const icons = readdirSync(
-          join(salesforceDir, 'assets/icons', subpath),
-          {recursive: true, withFileTypes: true}
-        );
-        for (const icon of icons) {
-          if (icon.isFile() && extname(icon.name) === '.svg') {
-            copyFileSync(
-              join(salesforceDir, 'assets/icons', subpath, icon.name),
-              join(assetsDir, icon.name)
-            );
-          }
+    name: 'virtual-assets-list',
+    resolveId(id) {
+      if (id === 'virtual:assets-list') {
+        return id;
+      }
+      return null;
+    },
+    load(id) {
+      if (id === 'virtual:assets-list') {
+        if (!cachedModule) {
+          const assetsDir = resolve(__dirname, '../dist/assets');
+          cachedModule = `export default ${JSON.stringify({assets: readdirSync(assetsDir).sort()})};`;
         }
+        return cachedModule;
       }
-      copyFileSync(
-        join(salesforceDir, 'assets/icons/utility/sparkles.svg'),
-        join(assetsDir, 'sparkles.svg')
-      );
-
-      // Write docs/assets.json (consumed by atomic-icon stories)
-      const docsDir = resolve(__dirname, '../docs');
-      mkdirSync(docsDir, {recursive: true});
-      writeFileSync(
-        join(docsDir, 'assets.json'),
-        JSON.stringify({assets: readdirSync(assetsDir).sort()})
-      );
-
-      // ── 2. Generate locale files ──
-      const localesData = JSON.parse(
-        readFileSync(join(srcDir, 'locales.json'), 'utf8')
-      );
-      const localesMap: Record<string, Record<string, string>> = {dev: {}};
-      for (const [stringKey, stringValues] of Object.entries(localesData)) {
-        for (const [localeKey, localeStringValue] of Object.entries(
-          stringValues as Record<string, string>
-        )) {
-          if (!localesMap[localeKey]) localesMap[localeKey] = {};
-          localesMap[localeKey][stringKey] = localeStringValue;
-          localesMap.dev[stringKey] = stringKey;
-        }
-      }
-
-      const langDir = join(srcDir, 'assets/lang');
-      rmSync(langDir, {recursive: true, force: true});
-      mkdirSync(langDir, {recursive: true});
-      for (const [localeKey, localeData] of Object.entries(localesMap)) {
-        writeFileSync(
-          join(langDir, `${localeKey}.json`),
-          JSON.stringify(localeData)
-        );
-      }
-
-      const generatedDir = join(srcDir, 'generated');
-      mkdirSync(generatedDir, {recursive: true});
-      writeFileSync(
-        join(generatedDir, 'availableLocales.json'),
-        JSON.stringify(Object.keys(localesMap).map((k) => k.toLowerCase()))
-      );
-
-      // ── 3. Generate dayjs locale imports ──
-      const dayJsLocales = JSON.parse(
-        readFileSync(require.resolve('dayjs/locale.json'), 'utf8')
-      );
-      let fileContent =
-        'export const locales: Record<string, () => Promise<unknown>> = {';
-      for (const locale of dayJsLocales) {
-        const key = locale.key;
-        const parts = key.split('-');
-        const i18nKey =
-          parts.length > 1 ? `${parts[0]}-${parts[1].toUpperCase()}` : key;
-        const mapKey = i18nKey.includes('-') ? `'${i18nKey}'` : i18nKey;
-        fileContent += `\n  ${mapKey}: () => import('dayjs/locale/${key}'),`;
-      }
-      fileContent += '\n};\n';
-      writeFileSync(join(generatedDir, 'dayjs-locales-data.ts'), fileContent);
     },
   };
 };
 
 export default config;
-function markComponentImportsAsSideEffectful(): Plugin {
+function markComponentImportsAsSideEffectful(
+  configType: 'DEVELOPMENT' | 'PRODUCTION' | undefined
+): Plugin {
   const absolutePathToRoot = resolve(__dirname, '..');
   return {
     name: 'mark-components-as-side-effectful',
@@ -466,7 +379,7 @@ function markComponentImportsAsSideEffectful(): Plugin {
         ) {
           const resolution = await this.resolve(id, source, options);
 
-          if (isCDN) {
+          if (configType === 'PRODUCTION' && !isChromatic) {
             // Drop component imports for CDN builds by resolving to virtual empty module
             return {
               id: `\0virtual-empty:${resolution!.id}`,
@@ -480,7 +393,11 @@ function markComponentImportsAsSideEffectful(): Plugin {
       return null;
     },
     load(id) {
-      if (isCDN && id.startsWith('\0virtual-empty:')) {
+      if (
+        configType === 'PRODUCTION' &&
+        !isChromatic &&
+        id.startsWith('\0virtual-empty:')
+      ) {
         // Return empty exports for stubbed components
         return 'export default {};';
       }

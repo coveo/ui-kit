@@ -1,6 +1,7 @@
 import type {HttpHandler} from 'msw';
 import {EndpointHarness, type MockApi} from '../_base.js';
 import type {APIErrorWithStatusCode} from '../_common/error.js';
+import type {FacetSearchResponse} from './facet-transformer.js';
 import {richResponse as baseListingResponse} from './listing-response.js';
 import {baseResponse as baseProductSuggestResponse} from './productSuggest-response.js';
 import {baseResponse as baseQuerySuggestResponse} from './querySuggest-response.js';
@@ -10,12 +11,18 @@ import {
   type CommerceSearchResponse,
 } from './search-response.js';
 
+const baseFacetSearchResponse: FacetSearchResponse = {
+  values: [],
+  moreValuesAvailable: false,
+};
+
 export class MockCommerceApi implements MockApi {
   readonly searchEndpoint;
   readonly recommendationEndpoint;
   readonly querySuggestEndpoint;
   readonly productSuggestEndpoint;
   readonly productListingEndpoint;
+  readonly facetSearchEndpoint;
 
   constructor(basePath: string = 'https://:orgId.org.coveo.com') {
     this.searchEndpoint = new EndpointHarness<
@@ -25,6 +32,7 @@ export class MockCommerceApi implements MockApi {
       `${basePath}/rest/organizations/:orgId/commerce/v2/search`,
       baseSearchResponse
     );
+
     this.recommendationEndpoint = new EndpointHarness(
       'POST',
       `${basePath}/rest/organizations/:orgId/commerce/v2/recommendations`,
@@ -45,6 +53,12 @@ export class MockCommerceApi implements MockApi {
       `${basePath}/rest/organizations/:orgId/commerce/v2/listing`,
       baseListingResponse
     );
+
+    this.facetSearchEndpoint = new EndpointHarness<FacetSearchResponse>(
+      'POST',
+      `${basePath}/rest/organizations/:orgId/commerce/v2/facet`,
+      baseFacetSearchResponse
+    );
   }
 
   get handlers(): HttpHandler[] {
@@ -54,6 +68,7 @@ export class MockCommerceApi implements MockApi {
       this.productSuggestEndpoint.generateHandler(),
       this.recommendationEndpoint.generateHandler(),
       this.productListingEndpoint.generateHandler(),
+      this.facetSearchEndpoint.generateHandler(),
     ];
   }
 
@@ -63,5 +78,6 @@ export class MockCommerceApi implements MockApi {
     this.querySuggestEndpoint.clear();
     this.productSuggestEndpoint.clear();
     this.productListingEndpoint.clear();
+    this.facetSearchEndpoint.clear();
   }
 }

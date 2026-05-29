@@ -1,3 +1,4 @@
+import {testCarouselA11y} from '@/storybook-utils/a11y/carousel.js';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
@@ -95,5 +96,13 @@ export const withAFallbackImage: Story = {
   args: {
     field: 'invalid',
     fallback: 'https://sports.barca.group/logos/barca.svg',
+  },
+};
+
+export const A11yCarousel: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  play: async (context) => {
+    await play(context);
+    await testCarouselA11y(context);
   },
 };
