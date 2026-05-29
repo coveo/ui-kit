@@ -251,3 +251,26 @@ export const NoProducts: Story = {
     await executeFirstRequestHook(context);
   },
 };
+
+export const A11yTable: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  name: 'A11y Table',
+  args: {
+    display: 'table',
+    'default-slot': `<atomic-product-template>
+  <template>
+    <atomic-table-element label="Product">
+      <atomic-product-link></atomic-product-link>
+    </atomic-table-element>
+    <atomic-table-element label="ID">
+      <atomic-product-text field="ec_product_id"></atomic-product-text>
+    </atomic-table-element>
+  </template>
+</atomic-product-template>`,
+  },
+  play: async (context) => {
+    await play(context);
+    const {testTableA11y} = await import('@/storybook-utils/a11y/table.js');
+    await testTableA11y(context);
+  },
+};

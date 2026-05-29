@@ -12,7 +12,7 @@ export default {
     'samples/headless/rga-react/src/components/Citation.tsx',
     'samples/headless/rga-react/src/components/CitationsList.tsx',
     'samples/headless/commerce-react/src/components/instant-products/actions/on-delayed-select-product.ts',
-    'samples/pkg-new-template/**',
+    'packages/pkg-new-template/**',
   ],
   compilers: {
     // Enable the built-in MDX compiler so Knip can trace imports inside .mdx
@@ -109,6 +109,9 @@ export default {
         // Interactive a11y Storybook helpers — will be consumed by stories
         // in an upcoming PR. Knip cannot trace them yet.
         'storybook-utils/a11y/**/*.ts',
+        // Request transformer modules for interactive MSW stories.
+        // Wired by stories via addRequestTransformer().
+        'storybook-utils/api/**/*-transformer.ts',
       ],
       ignore: [
         // Ambient type declaration file, not an ES module

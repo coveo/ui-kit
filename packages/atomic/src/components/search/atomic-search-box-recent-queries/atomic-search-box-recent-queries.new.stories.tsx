@@ -3,8 +3,19 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {userEvent} from 'storybook/test';
 import {parameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
 import {wrapInSearchBox} from '@/storybook-utils/search/search-box-wrapper';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {
+  searchFacetTransformer,
+  searchFacetSearchTransformer,
+} from '@/storybook-utils/api/search/facet-transformer';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-search-box-recent-queries/atomic-search-box-recent-queries.js';
+
+const searchApiHarness = new MockSearchApi();
+searchApiHarness.searchEndpoint.addRequestTransformer(searchFacetTransformer);
+searchApiHarness.facetSearchEndpoint.addRequestTransformer(
+  searchFacetSearchTransformer
+);
 
 const {decorator: searchInterfaceDecorator, play: searchInterfacePlay} =
   wrapInSearchInterface({}, false, false);
@@ -23,6 +34,7 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     chromatic: {disableSnapshot: true},
+    msw: {handlers: [...searchApiHarness.handlers]},
     actions: {
       handles: events,
     },

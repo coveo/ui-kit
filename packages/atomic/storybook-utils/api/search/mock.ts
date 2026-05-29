@@ -24,6 +24,7 @@ export class MockSearchApi implements MockApi {
     this.searchEndpoint = new EndpointHarness<
       SearchResponse | APIErrorWithStatusCode
     >('POST', `${basePath}/rest/search/v2`, baseSearchResponse);
+
     this.querySuggestEndpoint = new EndpointHarness(
       'POST',
       `${basePath}/rest/search/v2/querySuggest`,
@@ -34,6 +35,7 @@ export class MockSearchApi implements MockApi {
       `${basePath}/rest/search/v2/facet`,
       baseFacetSearchResponse
     );
+
     this.htmlEndpoint = new EndpointHarness<string>(
       'POST',
       `${basePath}/rest/search/v2/html`,

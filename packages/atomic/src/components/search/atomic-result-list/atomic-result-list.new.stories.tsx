@@ -225,3 +225,26 @@ export const NoResults: Story = {
     await playExecuteFirstSearch(context);
   },
 };
+
+export const A11yTable: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  name: 'A11y Table',
+  args: {
+    display: 'table',
+    'default-slot': `<atomic-result-template>
+  <template>
+    <atomic-table-element label="Result">
+      <atomic-result-link></atomic-result-link>
+    </atomic-table-element>
+    <atomic-table-element label="ID">
+      <atomic-result-text field="permanentid"></atomic-result-text>
+    </atomic-table-element>
+  </template>
+</atomic-result-template>`,
+  },
+  play: async (context) => {
+    await play(context);
+    const {testTableA11y} = await import('@/storybook-utils/a11y/table.js');
+    await testTableA11y(context);
+  },
+};

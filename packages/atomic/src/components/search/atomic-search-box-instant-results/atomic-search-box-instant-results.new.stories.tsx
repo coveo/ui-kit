@@ -18,7 +18,7 @@ import '@/src/components/search/atomic-search-box/atomic-search-box.js';
 import '@/src/components/search/atomic-search-box-instant-results/atomic-search-box-instant-results.js';
 import '@/src/components/search/atomic-search-box-query-suggestions/atomic-search-box-query-suggestions.js';
 
-const mockSearchApi = new MockSearchApi();
+const searchApiHarness = new MockSearchApi();
 
 const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface();
 
@@ -44,7 +44,7 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
-    msw: {handlers: [...mockSearchApi.handlers]},
+    msw: {handlers: [...searchApiHarness.handlers]},
   },
   tags: ['!test'],
   args,
