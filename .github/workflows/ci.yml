@@ -627,11 +627,11 @@ jobs:
         with:
           load-cache: 'false'
       - name: Resolve catalog references in pkg.pr.new templates
-        run: node samples/pkg-new-template/scripts/flatten-catalog.mjs
+        run: node packages/pkg-new-template/scripts/flatten-catalog.mjs
       - name: Publish to pkg.pr.new
         run: |
           pnpm dlx pkg-pr-new publish --pnpm \
-            --template './samples/pkg-new-template' \
+            --template './packages/pkg-new-template' \
             './packages/atomic' \
             './packages/atomic-hosted-page' \
             './packages/atomic-legacy' \

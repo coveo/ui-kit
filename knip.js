@@ -12,7 +12,7 @@ export default {
     'samples/headless/rga-react/src/components/Citation.tsx',
     'samples/headless/rga-react/src/components/CitationsList.tsx',
     'samples/headless/commerce-react/src/components/instant-products/actions/on-delayed-select-product.ts',
-    'samples/pkg-new-template/**',
+    'packages/pkg-new-template/**',
   ],
   compilers: {
     // Enable the built-in MDX compiler so Knip can trace imports inside .mdx
