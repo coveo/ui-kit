@@ -13,6 +13,7 @@ const __dirname = dirname(new URL(import.meta.url).pathname).slice(
 const isDevMode = process.argv[2] === 'dev';
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 const isNightly = process.env.IS_NIGHTLY === 'true';
+const commitSha = process.env.CDN_COMMIT_SHA;
 
 const buenoJsonPath = resolve(__dirname, '../bueno/package.json');
 const buenoJson = JSON.parse(readFileSync(buenoJsonPath, 'utf-8'));
@@ -20,9 +21,10 @@ const buenoJson = JSON.parse(readFileSync(buenoJsonPath, 'utf-8'));
 const buenoVersion = isNightly
   ? `v${buenoJson.version.split('.').shift()}-nightly`
   : `v${buenoJson.version}`;
-const buenoPath = isCDN
-  ? `/bueno/${buenoVersion}/bueno.esm.js`
-  : '@coveo/bueno';
+const buenoBase = commitSha
+  ? `/bueno/commits/${commitSha}`
+  : `/bueno/${buenoVersion}`;
+const buenoPath = isCDN ? `${buenoBase}/bueno.esm.js` : '@coveo/bueno';
 
 /**
  * @type {import('esbuild').BuildOptions}

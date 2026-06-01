@@ -109,7 +109,7 @@ function buildManualAggregateIndex(
 }
 
 function buildOpenAcrCriteria(
-  report: A11yReport | null,
+  report: A11yReport,
   overrides: Map<string, A11yOverrideEntry>,
   manualAggregates: Map<string, ManualAuditAggregate[]>
 ): {
@@ -117,15 +117,13 @@ function buildOpenAcrCriteria(
   success_criteria_level_aa: OpenAcrCriterion[];
 } {
   const criteriaById = new Map(
-    (report?.criteria ?? []).map((criterion) => [criterion.id, criterion])
+    report.criteria.map((criterion) => [criterion.id, criterion])
   );
   const aggregates = buildCriterionAggregates(
-    report?.components ?? [],
-    report?.criteria ?? []
+    report.components,
+    report.criteria
   );
-  const interactiveAggregates = buildInteractiveAggregates(
-    report?.components ?? []
-  );
+  const interactiveAggregates = buildInteractiveAggregates(report.components);
   const manualByCriterion = buildManualAggregateIndex(manualAggregates);
 
   const criteriaByChapter: Record<ChapterId, OpenAcrCriterion[]> = {
@@ -177,18 +175,22 @@ function buildOpenAcrCriteria(
 }
 
 export function buildOpenAcrReport(
-  report: A11yReport | null,
+  report: A11yReport,
   overrides: Map<string, A11yOverrideEntry>,
   manualAggregates: Map<string, ManualAuditAggregate[]>
 ): OpenAcrReport {
-  const reportDate = report?.report.reportDate ?? DEFAULT_REPORT_DATE;
+  const reportDate = report.report.reportDate ?? DEFAULT_REPORT_DATE;
   const reportProductName =
-    report?.report.product ?? DEFAULT_REPORT_PRODUCT_NAME;
-  if (!report?.report.version) {
-    throw new Error('Report version is required for OpenACR generation.');
-  }
+    report.report.product ?? DEFAULT_REPORT_PRODUCT_NAME;
 
-  let evaluationMethods = report?.report.evaluationMethods?.length
+  if (!report.report.version) {
+    throw new Error(
+      'report.version is required to generate the OpenACR report'
+    );
+  }
+  const reportVersion = report.report.version;
+
+  let evaluationMethods = report.report.evaluationMethods?.length
     ? report.report.evaluationMethods.join('; ')
     : 'axe-core Storybook scans';
 
@@ -213,7 +215,7 @@ export function buildOpenAcrReport(
     title: DEFAULT_REPORT_TITLE,
     product: {
       name: reportProductName,
-      version: report.report.version,
+      version: reportVersion,
       description:
         'Coveo Atomic is a web component library for building search and commerce interfaces.',
     },

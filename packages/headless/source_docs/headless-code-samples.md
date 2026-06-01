@@ -8,7 +8,7 @@ slug: code-samples
 
 The following interactive code sample uses Coveo Headless alongside the [Material-UI React framework](https://material-ui.com/) to create a simple search page.
 
-<iframe src="https://stackblitz.com/github/coveo/headless-documentation-material-ui-react-codesandbox/tree/version-{{packageVersion}}/?embed=1&view=split&file=src%2FApp.tsx"
+<iframe src="https://stackblitz.com/github/coveo/headless-documentation-material-ui-react-codesandbox/tree/version-{{packageVersion}}/?embed=1&view=split&file=src%2FApp.tsx&ctl=1"
      style="width:100%; height:1024px; border:0; border-radius: 4px; overflow:hidden;"
      title="coveo-headless-demo-v{{packageVersion}}"
      allow=""
