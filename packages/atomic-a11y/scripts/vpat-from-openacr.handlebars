@@ -27,12 +27,16 @@
 
 | Criteria | Conformance Level | Remarks and Explanations |
 | --- | --- | --- |
-{{#each standards}}
-{{#each chapters}}
-{{#with (lookup @root.chapters chapter_id)}}
-{{#each criteria}}
-| {{num}} {{handle}} ({{level}}) | {{conformance}} | {{remarks}} |
+{{#each catalog.standards as |catalog-standard|}}
+{{#each catalog-standard.chapters as |catalog-standard-chapter|}}
+{{#with (catalogChapter catalog-standard-chapter) as |catalog-chapter|}}
+{{#with (lookup ../../../chapters catalog-chapter.id) as |data-category|}}
+{{#unless data-category.disabled}}
+{{#each data-category.criteria as |data-criteria|}}
+| {{data-criteria.num}} {{catalogCriteriaLabel catalog-chapter.id data-criteria.num}} | {{#each data-criteria.components as |data-components|}}{{levelLabel data-components.adherence.level}}{{/each}} | {{#each data-criteria.components as |data-components|}}{{data-components.adherence.notes}}{{/each}} |
 {{/each}}
+{{/unless}}
+{{/with}}
 {{/with}}
 {{/each}}
 {{/each}}
