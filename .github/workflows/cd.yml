@@ -58,11 +58,6 @@ jobs:
         run: |
           git tag -f release/v3
           git push origin refs/tags/release/v3 --force
-      - name: Call ui-kit-cd
-        if: ${{ steps.changesets.outputs.published == 'true' }}
-        run: node ./scripts/deploy/trigger-ui-kit-cd.mjs
-        env:
-          GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
   quantic-prod:
     if: ${{ needs.release.outputs.published == 'true' }}
     needs: release
