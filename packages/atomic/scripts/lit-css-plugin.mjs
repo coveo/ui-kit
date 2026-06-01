@@ -12,7 +12,6 @@ import postcss from 'postcss';
 import postcssLoadConfig from 'postcss-load-config';
 import colors from '../../../utils/ci/colors.mjs';
 import {generateCustomElementTags} from './generate-custom-element-tags.mjs';
-import {generateLitExports} from './generate-lit-exports.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const packageDir = join(__dirname, '..');
@@ -268,7 +267,6 @@ export function litCssPlugin() {
     setup(api) {
       api.onBeforeBuild(async () => {
         console.log(colors.blue('Generating Lit exports'));
-        await generateLitExports();
         generateCustomElementTags();
       });
 

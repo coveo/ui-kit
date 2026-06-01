@@ -55,7 +55,9 @@ jobs:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
       - name: Update release/v3 bookmark
         if: ${{ steps.changesets.outputs.published == 'true' }}
-        run: git push origin HEAD:refs/heads/release/v3 --force
+        run: |
+          git tag -f release/v3
+          git push origin refs/tags/release/v3 --force
       - name: Call ui-kit-cd
         if: ${{ steps.changesets.outputs.published == 'true' }}
         run: node ./scripts/deploy/trigger-ui-kit-cd.mjs
@@ -78,7 +80,7 @@ jobs:
 
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
-          ref: 'release/v3'
+          ref: 'refs/tags/release/v3'
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/setup-sfdx
       - name: Promote SFDX package to production
@@ -107,7 +109,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
-          ref: 'release/v3'
+          ref: 'refs/tags/release/v3'
 
       - name: Set up and build the project
         uses: ./.github/actions/setup
@@ -148,7 +150,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
-          ref: 'release/v3'
+          ref: 'refs/tags/release/v3'
 
       - name: Set up and build the project
         uses: ./.github/actions/setup
@@ -189,7 +191,7 @@ jobs:
 
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
-          ref: 'release/v3'
+          ref: 'refs/tags/release/v3'
       - uses: ./.github/actions/setup
       - name: Create GitHub App token for docs dispatch
         id: app-token
