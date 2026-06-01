@@ -1,14 +1,10 @@
 import {type HttpHandler, HttpResponse} from 'msw';
-import {EndpointHarness, type MockApi, skipOnError} from '../_base.js';
+import {EndpointHarness, type MockApi} from '../_base.js';
 import type {APIErrorWithStatusCode} from '../_common/error.js';
 import {
   baseResponse as baseFacetSearchResponse,
   type FacetSearchResponse,
 } from './facetSearch-response.js';
-import {
-  searchFacetSearchTransformer,
-  searchFacetTransformer,
-} from './facet-transformer.js';
 import {baseResponse as baseHtmlResponse} from './html-response.js';
 import {baseResponse as baseQuerySuggestResponse} from './querySuggest-response.js';
 import {
@@ -66,22 +62,6 @@ export class MockSearchApi implements MockApi {
     this.querySuggestEndpoint.clear();
     this.facetSearchEndpoint.clear();
     this.htmlEndpoint.clear();
-  }
-
-  /**
-   * Enables interactive facet transformers on search and facet search endpoints.
-   * Call this when stories need to reflect facet selections and facet search in responses.
-   */
-  enableInteractiveFacets(): void {
-    this.searchEndpoint.withRequestTransformer(
-      skipOnError(searchFacetTransformer) as (
-        body: unknown,
-        response: SearchResponse | APIErrorWithStatusCode
-      ) => SearchResponse | APIErrorWithStatusCode
-    );
-    this.facetSearchEndpoint.withRequestTransformer(
-      searchFacetSearchTransformer
-    );
   }
 }
 

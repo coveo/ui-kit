@@ -1,3 +1,16 @@
+## 1.9.32
+
+### Patch Changes
+
+- Updated dependencies [[`2abc0a0`](https://github.com/coveo/ui-kit/commit/2abc0a0cf854db560cf56e9337314c3736c45d88)]:
+  - @coveo/headless@3.51.2
+
+## 1.9.31
+
+### Patch Changes
+
+- [#7655](https://github.com/coveo/ui-kit/pull/7655) [`0008cb8`](https://github.com/coveo/ui-kit/commit/0008cb8a35158d865e985ae16c621d3c06049b57) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update production dependencies
+
 ## 1.9.30
 
 ### Patch Changes

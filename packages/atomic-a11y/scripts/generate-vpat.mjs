@@ -1,30 +1,20 @@
-import {execSync} from 'node:child_process';
-import {existsSync} from 'node:fs';
+import {readFileSync, writeFileSync, mkdirSync} from 'node:fs';
 import path from 'node:path';
-import {fileURLToPath} from 'node:url';
+import {parse} from 'yaml';
+import {renderVpat} from '../dist/index.js';
 
-const CATALOG_NAME = '2.5-edition-wcag-2.2-en.yaml';
 const OUTPUT_FILE = 'reports/vpat-2.5-coveo-atomic.md';
 const INPUT_FILE = 'reports/openacr.yaml';
+const CATALOG_FILE = 'a11y/catalog/2.5-edition-wcag-2.2-en.yaml';
 const TEMPLATE_FILE = 'scripts/vpat-from-openacr.handlebars';
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Ensure @openacr/openacr is available in npx cache
-execSync('npx --yes @openacr/openacr --version', {stdio: 'ignore'});
+const openAcrData = parse(readFileSync(INPUT_FILE, 'utf8'));
+const catalog = parse(readFileSync(CATALOG_FILE, 'utf8'));
+const templateSource = readFileSync(TEMPLATE_FILE, 'utf8');
 
-// Locate the catalog file from the npx cache
-const catalogPath = execSync(
-  `find ~/.npm/_npx -name "${CATALOG_NAME}" -path "*@openacr*" 2>/dev/null | head -1`,
-  {encoding: 'utf8'}
-).trim();
+const markdown = renderVpat(openAcrData, catalog, templateSource);
 
-if (!catalogPath || !existsSync(catalogPath)) {
-  throw new Error(
-    `Could not locate ${CATALOG_NAME} catalog file. Ensure @openacr/openacr is available via npx.`
-  );
-}
+mkdirSync(path.dirname(OUTPUT_FILE), {recursive: true});
+writeFileSync(OUTPUT_FILE, markdown);
 
-execSync(
-  `npx --yes @openacr/openacr output -f ${INPUT_FILE} -c "${catalogPath}" -o ${OUTPUT_FILE} -t ${TEMPLATE_FILE}`,
-  {stdio: 'inherit'}
-);
+console.log(`[generate-vpat] ✓ VPAT written to ${OUTPUT_FILE}`);

@@ -17,6 +17,7 @@
     "a11y:vpat": "pnpm build && node scripts/json-to-openacr.mjs && node scripts/validate-openacr.mjs && node scripts/generate-vpat.mjs"
   },
   "dependencies": {
+    "handlebars": "4.7.9",
     "yaml": "catalog:"
   },
   "devDependencies": {
