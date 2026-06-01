@@ -11,7 +11,7 @@ standards:
       - success_criteria_level_aaa
 chapters:
   - id: success_criteria_level_a
-    label: "Table 1: Success Criteria, Level A"
+    label: 'Table 1: Success Criteria, Level A'
     short_label: A
     order: 1
     criteria:
@@ -272,7 +272,7 @@ chapters:
           - software
           - authoring-tool
   - id: success_criteria_level_aa
-    label: "Table 2: Success Criteria, Level AA"
+    label: 'Table 2: Success Criteria, Level AA'
     short_label: AA
     order: 2
     criteria:
@@ -469,7 +469,7 @@ chapters:
           - software
           - authoring-tool
   - id: success_criteria_level_aaa
-    label: "Table 3: Success Criteria, Level AAA"
+    label: 'Table 3: Success Criteria, Level AAA'
     short_label: AAA
     order: 3
     criteria:
@@ -731,7 +731,7 @@ components:
   - id: authoring-tool
     label: Authoring Tool
   - id: none
-    label: ""
+    label: ''
 terms:
   - id: supports
     label: Supports
