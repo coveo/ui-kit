@@ -1,16 +1,18 @@
 {
-  "name": "coveo-atomic-pkg-new-template",
+  "name": "@coveo/pkg-new-template",
   "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node ./scripts/copyResources.mjs && vite"
+    "dev": "node ./scripts/copyResources.mjs && vite",
+    "test": "playwright test"
   },
   "dependencies": {
     "@coveo/atomic": "workspace:*",
     "@coveo/headless": "workspace:*"
   },
   "devDependencies": {
+    "@playwright/test": "catalog:",
     "vite": "catalog:"
   }
 }

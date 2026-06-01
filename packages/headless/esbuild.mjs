@@ -23,10 +23,16 @@ const require = createRequire(import.meta.url);
 const devMode = process.argv[2] === 'dev';
 
 const isNightly = process.env.IS_NIGHTLY === 'true';
+const commitSha = process.env.CDN_COMMIT_SHA;
 
 const buenoVersion = isNightly
   ? `v${buenoJson.version.split('.').shift()}-nightly`
   : `v${buenoJson.version}`;
+
+const buenoBase = commitSha
+  ? `/bueno/commits/${commitSha}`
+  : `/bueno/${buenoVersion}`;
+const buenoCdnPath = `${buenoBase}/bueno.esm.js`;
 
 function getUmdGlobalName(useCase) {
   const map = {
@@ -80,14 +86,12 @@ const browserEsm = Object.entries(useCaseEntries).map((entry) => {
   // ⚠️  Changing this filename affects CDN pointer files in ui-kit-cd.
   const outfile = `${outDir}/headless.esm.js`;
 
-  const buenoPath = `/bueno/${buenoVersion}/bueno.esm.js`;
-
   let config = {
     entryPoints: [entryPoint],
     outfile,
     format: 'esm',
-    external: [buenoPath],
-    plugins: [getBuenoReplacePlugin(buenoPath)],
+    external: [buenoCdnPath],
+    plugins: [getBuenoReplacePlugin(buenoCdnPath)],
   };
 
   if (devMode) {
@@ -106,7 +110,7 @@ const browserUmd = Object.entries(useCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
   const outDir = getUseCaseDir('cdn', useCase);
   const outfile = `${outDir}/headless.js`;
-  const buenoPath = `/bueno/${buenoVersion}/bueno.esm.js`;
+
   const globalName = getUmdGlobalName(useCase);
 
   return buildBrowserConfig(
@@ -117,9 +121,9 @@ const browserUmd = Object.entries(useCaseEntries).map((entry) => {
       banner: {
         js: `${base.banner.js}`,
       },
-      external: ['crypto', buenoPath],
+      external: ['crypto', buenoCdnPath],
       plugins: [
-        getBuenoReplacePlugin(buenoPath),
+        getBuenoReplacePlugin(buenoCdnPath),
         umdWrapper({libraryName: globalName}),
       ],
     },
