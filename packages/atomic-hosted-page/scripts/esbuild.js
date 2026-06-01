@@ -14,6 +14,7 @@ const headlessJson = JSON.parse(
   readFileSync(resolve(__dirname, '../../headless/package.json'), 'utf8')
 );
 const isNightly = process.env.IS_NIGHTLY === 'true';
+const commitSha = process.env.CDN_COMMIT_SHA;
 
 const headlessVersion = isNightly
   ? `v${headlessJson.version.split('.').shift()}-nightly`
@@ -21,9 +22,17 @@ const headlessVersion = isNightly
 const buenoVersion = isNightly
   ? `v${buenoJson.version.split('.').shift()}-nightly`
   : `v${buenoJson.version}`;
+
+const headlessBase = commitSha
+  ? `/headless/commits/${commitSha}`
+  : `/headless/${headlessVersion}`;
+const buenoBase = commitSha
+  ? `/bueno/commits/${commitSha}`
+  : `/bueno/${buenoVersion}`;
+
 const packageMappings = {
-  '@coveo/headless': `/headless/${headlessVersion}/headless.esm.js`,
-  '@coveo/bueno': `/bueno/${buenoVersion}/bueno.esm.js`,
+  '@coveo/headless': `${headlessBase}/headless.esm.js`,
+  '@coveo/bueno': `${buenoBase}/bueno.esm.js`,
 };
 
 const externalizeDependenciesPlugin = {
