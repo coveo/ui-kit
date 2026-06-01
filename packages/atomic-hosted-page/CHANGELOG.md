@@ -1,3 +1,12 @@
+## 1.2.44
+
+### Patch Changes
+
+- [#7717](https://github.com/coveo/ui-kit/pull/7717) [`380ad1b`](https://github.com/coveo/ui-kit/commit/380ad1bf0a79ab7dc92077af4c959d9cfa167356) Thanks [@alexprudhomme](https://github.com/alexprudhomme)! - CDN artifacts now resolve cross-package dependencies using commit-based paths, making each artifact self-contained and independent of version pointer availability.
+
+- Updated dependencies [[`380ad1b`](https://github.com/coveo/ui-kit/commit/380ad1bf0a79ab7dc92077af4c959d9cfa167356)]:
+  - @coveo/headless@3.51.3
+
 ## 1.2.43
 
 ### Patch Changes
