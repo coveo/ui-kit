@@ -203,7 +203,8 @@ export default class QuanticGeneratedAnswerContent extends LightningElement {
     icon.classList.add(
       'slds-icon_container',
       'slds-icon-utility-new_window',
-      'slds-current-color'
+      'slds-current-color',
+      'slds-m-left_xxx-small'
     );
     // eslint-disable-next-line @lwc/lwc/no-inner-html
     icon.innerHTML = INLINE_LINK_ICON;
@@ -227,8 +228,8 @@ export default class QuanticGeneratedAnswerContent extends LightningElement {
       {
         options: {
           link: {
-            url: anchor.getAttribute('href'),
-            contentText: anchor.textContent,
+            linkURL: anchor.getAttribute('href'),
+            linkText: anchor.textContent?.trim() || '',
           },
           answerId: this.answerId,
         },

@@ -276,8 +276,8 @@ describe('c-quantic-generated-answer-content', () => {
           ).toHaveBeenNthCalledWith(index + 1, exampleEngine, {
             options: {
               link: {
-                url: anchor.href,
-                contentText: anchor.text,
+                linkURL: anchor.href,
+                linkText: anchor.text,
               },
               answerId: exampleAnswerId,
             },
