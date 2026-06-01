@@ -216,6 +216,8 @@ jobs:
           egress-policy: audit
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: ./.github/actions/build-cdn
+        with:
+          commit-sha: ${{ github.sha }}
   commit-artifact-upload:
     name: Upload commit artifacts to S3
     needs: [build-cdn, release]
