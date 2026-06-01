@@ -5,7 +5,7 @@ import {
   getLastFocusableElement,
   isCustomElement,
   isParentOf,
-} from '../accessibilityUtils';
+} from 'c/quanticUtils';
 
 describe('accessibilityUtils', () => {
   describe('AriaLiveRegion', () => {

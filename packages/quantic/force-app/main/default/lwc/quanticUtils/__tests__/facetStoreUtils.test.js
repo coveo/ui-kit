@@ -1,4 +1,4 @@
-import {Store} from '../facetStoreUtils';
+import {Store} from 'c/quanticUtils';
 
 describe('storeUtils', () => {
   describe('Store.facetTypes', () => {
