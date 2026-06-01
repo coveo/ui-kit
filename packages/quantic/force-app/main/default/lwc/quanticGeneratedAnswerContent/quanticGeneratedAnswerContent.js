@@ -205,6 +205,7 @@ export default class QuanticGeneratedAnswerContent extends LightningElement {
       'slds-icon-utility-new_window',
       'slds-current-color'
     );
+    // eslint-disable-next-line @lwc/lwc/no-inner-html
     icon.innerHTML = INLINE_LINK_ICON;
     anchor.appendChild(icon);
   }

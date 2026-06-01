@@ -254,7 +254,7 @@ describe('c-quantic-generated-answer-content', () => {
         const {LinkUtils} = jest.requireMock('c/quanticUtils');
         LinkUtils.bindAnalyticsToLink.mockReturnValue(jest.fn());
 
-        const element = createTestComponent({
+        createTestComponent({
           ...defaultOptions,
           engineId: exampleEngineId,
           answerId: exampleAnswerId,
