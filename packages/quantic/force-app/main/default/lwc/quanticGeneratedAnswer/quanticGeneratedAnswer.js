@@ -456,6 +456,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return this?.state?.answer;
   }
 
+  get answerId() {
+    return this?.state?.answerId;
+  }
+
   get citations() {
     return this?.state?.citations;
   }
