@@ -493,6 +493,7 @@ export class AtomicCommerceProductList
             firstItem,
             host: this,
             itemRenderingFunction: this.itemRenderingFunction,
+            label: this.bindings.i18n.t('view-products'),
             listClasses,
             logger: this.bindings.engine.logger,
             templateContentForFirstItem,

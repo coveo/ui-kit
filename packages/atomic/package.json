@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "3.59.0",
+  "version": "3.59.1",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "license": "Apache-2.0",
@@ -56,7 +56,7 @@
   },
   "scripts": {
     "clean": "node ../../utils/ci/rm-rf.mjs dist/* dist-storybook/* www/* docs/* playwright-report/*",
-    "build:storybook": "storybook build -o dist-storybook --stats-json",
+    "build:storybook": "storybook build -o dist-storybook",
     "build:cem": "cem analyze",
     "build:locales": "node scripts/build-locales.mjs",
     "build:assets": "node scripts/build-assets.mjs",
@@ -65,6 +65,7 @@
     "build:cdn": "node rsbuild.cdn.mjs",
     "build:angular": "npx turbo gen:lit --filter=@coveo/atomic-angular-builder",
     "build:react": "npx turbo gen:lit --filter=@coveo/atomic-react",
+    "build:indexes": "node scripts/generate-lit-exports.mjs",
     "dev:storybook": "storybook dev -p 4400",
     "web:dev": "npx vite serve dev",
     "web:cdn": "node ./scripts/start-cdn.mjs",
@@ -77,7 +78,7 @@
     "generate-component": "node ./scripts/generate-component.mjs",
     "tsc:check": "tsc --noEmit -p tsconfig.check.json",
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
-    "chromatic": "chromatic -d=dist-storybook --only-changed --untraced \"/virtual:*\"",
+    "chromatic": "chromatic",
     "validate:light-dom-styles": "node ./scripts/check-light-dom-host-selectors.mjs",
     "validate:no-new-light-dom": "node ./scripts/check-no-new-light-dom-components.mjs"
   },

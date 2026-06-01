@@ -146,6 +146,17 @@ describe('atomic-generated-answer-feedback-modal', () => {
       expect(textarea?.rows).toBe(4);
       expect(textarea?.name).toBe('answer-details');
     });
+
+    it('should not add labels to visual option wrappers', async () => {
+      const {element} = await renderFeedbackModal({isOpen: true});
+
+      const optionWrappers = element.shadowRoot?.querySelectorAll('.options');
+
+      expect(optionWrappers).toHaveLength(FEEDBACK_CATEGORIES.length);
+      optionWrappers?.forEach((optionWrapper) => {
+        expect(optionWrapper).not.toHaveAttribute('aria-label');
+      });
+    });
   });
 
   describe('when submitting the form without required fields', () => {
@@ -158,6 +169,19 @@ describe('atomic-generated-answer-feedback-modal', () => {
       form?.dispatchEvent(new Event('submit'));
 
       expect(mockedGeneratedAnswer.sendFeedback).not.toHaveBeenCalled();
+    });
+
+    it('should expose the required fields error as an alert', async () => {
+      const {element} = await renderFeedbackModal({isOpen: true});
+
+      const form = element.shadowRoot?.querySelector('form');
+      form?.dispatchEvent(new Event('submit'));
+      await element.updateComplete;
+
+      const alert = element.shadowRoot?.querySelector('[role="alert"]');
+      expect(alert).toBeInTheDocument();
+      expect(alert).toHaveTextContent('This field is required.');
+      expect(alert).not.toHaveClass('hidden');
     });
   });
 
@@ -192,6 +216,31 @@ describe('atomic-generated-answer-feedback-modal', () => {
 
       const successIcon = element.shadowRoot?.querySelector('atomic-icon');
       expect(successIcon).toBeTruthy();
+    });
+
+    it('should expose the success message as a polite status message', async () => {
+      const {element} = await renderFeedbackModal({isOpen: true});
+
+      // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- accessing private property for testing
+      (element as any).currentAnswer = {
+        correctTopic: 'yes',
+        hallucinationFree: 'yes',
+        documented: 'yes',
+        readable: 'yes',
+      };
+      await element.updateComplete;
+
+      const form = element.shadowRoot?.querySelector('form');
+      form?.dispatchEvent(new Event('submit'));
+      await element.updateComplete;
+
+      const status = element.shadowRoot?.querySelector('[role="status"]');
+      expect(status).toBeInTheDocument();
+      expect(status).toHaveAttribute('aria-live', 'polite');
+      expect(status).toHaveAttribute('aria-atomic', 'true');
+      expect(status).toHaveTextContent(
+        'Thank you! Your feedback will help us improve the answers generated.'
+      );
     });
   });
 
