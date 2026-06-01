@@ -4,6 +4,12 @@ import genericErrorTitle from '@salesforce/label/c.quantic_GenericErrorTitle';
 import thisAnswerWasHelpful from '@salesforce/label/c.quantic_ThisAnswerWasHelpful';
 import thisAnswerWasNotHelpful from '@salesforce/label/c.quantic_ThisAnswerWasNotHelpful';
 import {LightningElement, api} from 'lwc';
+// @ts-ignore
+import answerTemplate from './templates/answer.html';
+// @ts-ignore
+import cannotAnswerTemplate from './templates/cannotAnswer.html';
+// @ts-ignore
+import errorTemplate from './templates/error.html';
 
 /** @typedef {import("@coveo/headless").GeneratedAnswerState} GeneratedAnswerState */
 
@@ -34,12 +40,6 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
    * @type {boolean}
    */
   @api disableCitationAnchoring = false;
-  /**
-   * Whether the body should display the no-answer state.
-   * @api
-   * @type {boolean}
-   */
-  @api cannotAnswer = false;
 
   labels = {
     couldNotGenerateAnAnswer,
@@ -74,7 +74,7 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
   }
 
   get shouldDisplayCannotAnswer() {
-    return this.cannotAnswer || !!this.generatedAnswer?.cannotAnswer;
+    return !!this.generatedAnswer?.cannotAnswer;
   }
 
   get errorMessage() {
@@ -106,10 +106,6 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
 
   get shouldShowFeedback() {
     return !this.generatedAnswer?.feedbackSubmitted;
-  }
-
-  get shouldDisplayAnswer() {
-    return !this.hasError && !this.shouldDisplayCannotAnswer;
   }
 
   handleLike(event) {
@@ -151,5 +147,15 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
         composed: true,
       })
     );
+  }
+
+  render() {
+    if (this.hasError) {
+      return errorTemplate;
+    }
+    if (this.shouldDisplayCannotAnswer) {
+      return cannotAnswerTemplate;
+    }
+    return answerTemplate;
   }
 }

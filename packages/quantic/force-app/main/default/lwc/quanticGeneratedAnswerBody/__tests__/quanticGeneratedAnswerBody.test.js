@@ -176,7 +176,10 @@ describe('c-quantic-generated-answer-body', () => {
   it('should render the no-answer message', async () => {
     const element = createTestComponent({
       ...defaultOptions,
-      cannotAnswer: true,
+      generatedAnswer: {
+        ...defaultOptions.generatedAnswer,
+        cannotAnswer: true,
+      },
     });
     await flushPromises();
 
