@@ -63,11 +63,17 @@ import '@/src/components/search/atomic-sort-dropdown/atomic-sort-dropdown.js';
 import '@/src/components/search/atomic-sort-expression/atomic-sort-expression.js';
 import '@/src/components/search/atomic-text/atomic-text.js';
 import '@/src/components/common/atomic-timeframe/atomic-timeframe.js';
-import '@/src/components/search/atomic-tab-manager/atomic-tab-manager.js';
-import '@/src/components/search/atomic-tab/atomic-tab.js';
 import '@/src/components/search/atomic-timeframe-facet/atomic-timeframe-facet.js';
 
-// const mockSearchApi = new MockSearchApi();
+async function initializeSearchInterface(canvasElement: HTMLElement) {
+  await customElements.whenDefined('atomic-search-interface');
+  const searchInterface = canvasElement.querySelector(
+    'atomic-search-interface'
+  );
+  await searchInterface!.initialize(getSampleSearchEngineConfiguration());
+}
+
+const mockSearchApi = new MockSearchApi();
 
 const meta: Meta = {
   component: 'rich-search-page',
@@ -76,12 +82,15 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     layout: 'fullscreen',
+    msw: {
+      handlers: [...mockSearchApi.handlers],
+    },
     chromatic: {disableSnapshot: false},
   },
   beforeEach: async () => {
-    // mockSearchApi.searchEndpoint.mock(
-    //   () => richResponse as unknown as typeof baseResponse
-    // );
+    mockSearchApi.searchEndpoint.mock(
+      () => richResponse as unknown as typeof baseResponse
+    );
   },
   render: () => html`
     <atomic-search-interface
@@ -98,24 +107,86 @@ const meta: Meta = {
         </atomic-layout-section>
         <atomic-layout-section section="facets">
           <atomic-facet-manager>
+            <atomic-automatic-facet-generator
+              desired-count="3"
+            ></atomic-automatic-facet-generator>
+            <atomic-category-facet
+              field="geographicalhierarchy"
+              label="World Atlas"
+              with-search
+            ></atomic-category-facet>
+            <atomic-facet field="author" label="Authors"></atomic-facet>
             <atomic-facet
-              field="year"
-              label="Year"
-              tabs-excluded='["article"]'
+              field="source"
+              label="Source"
+              display-values-as="link"
             ></atomic-facet>
+            <atomic-facet
+              field="filetype"
+              label="File Type"
+              display-values-as="box"
+            ></atomic-facet>
+            <atomic-facet field="language" label="Language"></atomic-facet>
+            <atomic-facet field="year" label="Year"></atomic-facet>
             <atomic-numeric-facet
               field="ytviewcount"
               label="YouTube Views"
               with-input="integer"
-              tabs-excluded='["article"]'
             ></atomic-numeric-facet>
+            <atomic-numeric-facet
+              field="ytlikecount"
+              label="YouTube Likes"
+              display-values-as="link"
+            >
+              <atomic-numeric-range
+                start="0"
+                end="1000"
+                label="Unpopular"
+              ></atomic-numeric-range>
+              <atomic-numeric-range
+                start="1000"
+                end="8000"
+                label="Well liked"
+              ></atomic-numeric-range>
+              <atomic-numeric-range
+                start="8000"
+                end="100000"
+                label="Popular"
+              ></atomic-numeric-range>
+              <atomic-numeric-range
+                start="100000"
+                end="999999999"
+                label="Treasured"
+              ></atomic-numeric-range>
+            </atomic-numeric-facet>
+            <atomic-timeframe-facet label="Timeframe" with-date-picker>
+              <atomic-timeframe unit="hour"></atomic-timeframe>
+              <atomic-timeframe unit="day"></atomic-timeframe>
+              <atomic-timeframe unit="week"></atomic-timeframe>
+              <atomic-timeframe unit="month"></atomic-timeframe>
+              <atomic-timeframe unit="quarter"></atomic-timeframe>
+              <atomic-timeframe unit="year"></atomic-timeframe>
+            </atomic-timeframe-facet>
+            <atomic-rating-facet
+              field="snrating"
+              label="Rating"
+              number-of-intervals="5"
+            ></atomic-rating-facet>
+            <atomic-rating-range-facet
+              facet-id="snrating_range"
+              field="snrating"
+              label="Rating Range"
+              number-of-intervals="5"
+            ></atomic-rating-range-facet>
+            <atomic-color-facet
+              field="filetype"
+              label="Files"
+              number-of-values="6"
+              sort-criteria="occurrences"
+            ></atomic-color-facet>
           </atomic-facet-manager>
         </atomic-layout-section>
         <atomic-layout-section section="main">
-          <atomic-tab-manager clear-filters-on-tab-change="false">
-            <atomic-tab name="all" label="All"></atomic-tab>
-            <atomic-tab name="article" label="Articles"></atomic-tab>
-          </atomic-tab-manager>
           <atomic-layout-section section="horizontal-facets">
             <atomic-segmented-facet-scrollable>
               <atomic-segmented-facet
@@ -305,13 +376,10 @@ const meta: Meta = {
     </atomic-search-interface>
   `,
   play: async (context) => {
-    await customElements.whenDefined('atomic-search-interface');
+    await initializeSearchInterface(context.canvasElement);
     const searchInterface = context.canvasElement.querySelector(
       'atomic-search-interface'
     );
-    console.log('Start search interface initialization');
-    await searchInterface!.initialize(getSampleSearchEngineConfiguration());
-    console.log('Search interface initialized, executing first search');
     await searchInterface!.executeFirstSearch();
   },
 };
