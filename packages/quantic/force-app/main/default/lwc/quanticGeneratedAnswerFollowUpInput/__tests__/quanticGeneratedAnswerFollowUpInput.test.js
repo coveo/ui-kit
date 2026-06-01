@@ -45,7 +45,7 @@ describe('c-quantic-generated-answer-follow-up-input', () => {
   });
 
   describe('submitting a follow up', () => {
-    it('should dispatch quantic__submitfollowup when pressing Enter', async () => {
+    it('should dispatch #quantic__submitfollowup when pressing Enter', async () => {
       const element = createTestComponent();
       await flushPromises();
 
@@ -62,7 +62,7 @@ describe('c-quantic-generated-answer-follow-up-input', () => {
       );
     });
 
-    it('should dispatch quantic__submitfollowup when clicking the submit button', async () => {
+    it('should dispatch #quantic__submitfollowup when clicking the submit button', async () => {
       const element = createTestComponent();
       await flushPromises();
 
@@ -92,7 +92,6 @@ describe('c-quantic-generated-answer-follow-up-input', () => {
       input.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
 
       expect(input.value).toBe('');
-      expect(input.blur).toHaveBeenCalledTimes(1);
     });
   });
 

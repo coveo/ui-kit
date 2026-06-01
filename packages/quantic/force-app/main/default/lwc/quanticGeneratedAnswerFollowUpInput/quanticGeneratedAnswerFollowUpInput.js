@@ -49,7 +49,6 @@ export default class QuanticGeneratedAnswerFollowUpInput extends LightningElemen
     }
     this.sendSubmitFollowUpEvent();
     this.refs.askFollowUpInput.value = '';
-    this.refs.askFollowUpInput.blur();
   }
 
   handleFocus() {
