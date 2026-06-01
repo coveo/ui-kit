@@ -890,10 +890,10 @@
   </customLabels>
   <customLabels>
     <name>quantic_AskFollowUp</name>
-    <label>Pregunta de seguimiento</label>
+    <label>Hacer una pregunta de seguimiento</label>
   </customLabels>
   <customLabels>
     <name>quantic_SubmitFollowUp</name>
-    <label>Enviar la pregunta</label>
+    <label>Enviar seguimiento</label>
   </customLabels>
 </Translations>

@@ -894,10 +894,10 @@
   </customLabels>
   <customLabels>
     <name>quantic_AskFollowUp</name>
-    <label>Question de suivi</label>
+    <label>Demander un suivi</label>
   </customLabels>
   <customLabels>
     <name>quantic_SubmitFollowUp</name>
-    <label>Envoyer la question</label>
+    <label>Soumettre un suivi</label>
   </customLabels>
 </Translations>
