@@ -36,13 +36,13 @@ import loadingTemplate from './templates/loading.html';
 // @ts-ignore
 import retryPromptTemplate from './templates/retryPrompt.html';
 
-/** @typedef {import("@coveo/headless").SearchEngine} SearchEngine */
-/** @typedef {import("@coveo/headless").GeneratedAnswer} GeneratedAnswer */
-/** @typedef {import("@coveo/headless").GeneratedAnswerState} GeneratedAnswerState */
-/** @typedef {import("@coveo/headless").GeneratedAnswerCitation} GeneratedAnswerCitation */
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").GeneratedAnswer} GeneratedAnswer */
+/** @typedef {import("coveo").GeneratedAnswerState} GeneratedAnswerState */
+/** @typedef {import("coveo").GeneratedAnswerCitation} GeneratedAnswerCitation */
 /** @typedef { 'neutral' | 'liked' | 'disliked'} FeedbackState */
-/** @typedef {import("@coveo/headless").SearchStatus} SearchStatus */
-/** @typedef {import("@coveo/headless").SearchStatusState} SearchStatusState */
+/** @typedef {import("coveo").SearchStatus} SearchStatus */
+/** @typedef {import("coveo").SearchStatusState} SearchStatusState */
 
 const FEEDBACK_LIKED_STATE = 'liked';
 const FEEDBACK_DISLIKED_STATE = 'disliked';
@@ -182,6 +182,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
+    this.template.addEventListener(
+      'quantic__generatedanswercopy',
+      this.handleGeneratedAnswerCopyToClipboard
+    );
     if (this.withToggle) {
       this.template.addEventListener(
         'quantic__generatedanswertoggle',
@@ -192,7 +196,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
-    this.applyGeneratedAnswerBodyStyle();
     if (this.collapsible) {
       this._exceedsMaximumHeight = this.isMaximumHeightExceeded();
     }
@@ -239,6 +242,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   disconnectedCallback() {
     this.unsubscribeGeneratedAnswer?.();
+    this.template.removeEventListener(
+      'quantic__generatedanswercopy',
+      this.handleGeneratedAnswerCopyToClipboard
+    );
     if (this.withToggle) {
       this.template.removeEventListener(
         'quantic__generatedanswertoggle',
@@ -253,18 +260,16 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     this.ariaLiveMessage.dispatchMessage(this.getGeneratedAnswerStatus());
 
     if (this.collapsible) {
-      this._exceedsMaximumHeight = this.isMaximumHeightExceeded();
+      this.updateGeneratedAnswerCSSVariables();
     }
   }
 
   isMaximumHeightExceeded() {
-    const body = this.template.querySelector('c-quantic-generated-answer-body');
-    const measuredHeight = getAbsoluteHeight(body);
     // If we are still streaming add a little extra height to the answer element to account for the next answer chunk.
     // This helps a lot with the jankyness of the answer fading out when the chunk is close but not yet over the max height.
     const answerElementHeight = this.isStreaming
-      ? measuredHeight + 50
-      : measuredHeight;
+      ? this.generatedAnswerElementHeight + 50
+      : this.generatedAnswerElementHeight;
 
     return answerElementHeight > this.maxCollapsedHeight;
   }
@@ -289,19 +294,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       : '';
   }
 
-  applyGeneratedAnswerBodyStyle() {
-    const generatedAnswerBodyElement = this.template.querySelector(
-      '[data-testid="generated-answer__answer"]'
-    );
-
-    if (generatedAnswerBodyElement instanceof HTMLElement) {
-      generatedAnswerBodyElement.style.setProperty(
-        '--maxHeight',
-        `${this.maxCollapsedHeight}px`
-      );
-    }
-  }
-
   updateSearchStatusState() {
     this.feedbackSubmitted = false;
     this.searchStatusState = this.searchStatus.state;
@@ -319,16 +311,11 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   /**
    * handles hovering over a citation.
-   * @param {CustomEvent} event
+   * @param {string} id
+   * @param {number} citationHoverTimeMs
    */
-  handleCitationHover = (event) => {
-    event.stopPropagation();
-    const {citationId, citationHoverTimeMs, answerId} = event.detail;
-    this.generatedAnswer.logCitationHover(
-      citationId,
-      citationHoverTimeMs,
-      answerId
-    );
+  handleCitationHover = (id, citationHoverTimeMs) => {
+    this.generatedAnswer.logCitationHover(id, citationHoverTimeMs);
   };
 
   /**
@@ -394,8 +381,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   handleGeneratedAnswerCopyToClipboard = (event) => {
     event.stopPropagation();
-    const {answerId} = event.detail || {};
-    this.generatedAnswer.logCopyToClipboard(answerId);
+    this.generatedAnswer.logCopyToClipboard();
   };
 
   handleGeneratedAnswerToggle = (event) => {
@@ -412,10 +398,19 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     }
   };
 
+  handleAnswerContentUpdated = (event) => {
+    event.stopPropagation();
+    if (this.collapsible) {
+      this._exceedsMaximumHeight = this.isMaximumHeightExceeded();
+    }
+    this.updateGeneratedAnswerCSSVariables();
+  };
+
   handleToggleCollapseAnswer() {
     this.state?.expanded
       ? this.generatedAnswer.collapse()
       : this.generatedAnswer.expand();
+    this.updateGeneratedAnswerCSSVariables();
   }
 
   readStoredData() {
@@ -430,6 +425,33 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     sessionStorage?.setItem(GENERATED_ANSWER_DATA_KEY, JSON.stringify(data));
   }
 
+  /**
+   * Returns the generated answer element.
+   * @returns {HTMLElement}
+   */
+  get generatedAnswerElement() {
+    return this.template.querySelector('.generated-answer__answer');
+  }
+
+  /**
+   * Returns the generated answer height.
+   * @returns {number}
+   */
+  get generatedAnswerElementHeight() {
+    // @ts-ignore
+    return getAbsoluteHeight(this.generatedAnswerElement?.firstChild);
+  }
+
+  /**
+   * Sets the value of the CSS variable "--maxHeight" to the value of the maxCollapsedHeight property.
+   */
+  updateGeneratedAnswerCSSVariables() {
+    if (this._exceedsMaximumHeight) {
+      const styles = this.generatedAnswerElement?.style;
+      styles?.setProperty('--maxHeight', `${this.maxCollapsedHeight}px`);
+    }
+  }
+
   get answer() {
     return this?.state?.answer;
   }
@@ -438,16 +460,21 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return this?.state?.citations;
   }
 
-  get answerId() {
-    return this?.state?.answerId;
-  }
-
   get answerContentFormat() {
     return this?.state?.answerContentFormat;
   }
 
+  get shouldDisplayCitations() {
+    const hasCitations = !!this.citations?.length;
+    return hasCitations && !this.isAnswerCollapsed;
+  }
+
   get isStreaming() {
     return this?.state?.isStreaming;
+  }
+
+  get shouldDisplayActions() {
+    return this.isVisible && !this.isStreaming && !this.isAnswerCollapsed;
   }
 
   get isVisible() {
@@ -531,29 +558,11 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get shouldShowDisclaimer() {
-    return this.isVisible && !this.hasRetryableError;
+    return this.isVisible && !this.isStreaming;
   }
 
   get toggleCollapseAnswerIcon() {
     return this.isAnswerCollapsed ? 'utility:chevrondown' : 'utility:chevronup';
-  }
-
-  get collapseControlsClass() {
-    const baseClass =
-      'slds-grid slds-size_1-of-1 slds-wrap slds-grid_vertical-align-center slds-var-m-top_x-small slds-p-horizontal_large';
-    return this.isStreaming ? `${baseClass} slds-p-bottom_large` : baseClass;
-  }
-
-  get shouldDisplayCollapseControls() {
-    return this.collapsible && this._exceedsMaximumHeight;
-  }
-
-  get shouldShowCollapseGeneratingMessage() {
-    return this.shouldDisplayCollapseControls && this.isStreaming;
-  }
-
-  get shouldShowToggleCollapseAnswer() {
-    return this.shouldDisplayCollapseControls && !this.isStreaming;
   }
 
   /**
@@ -608,8 +617,9 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     ) {
       return loadingTemplate;
     }
-    return this.hasRetryableError
-      ? retryPromptTemplate
-      : generatedAnswerTemplate;
+    if (this.hasRetryableError) {
+      return retryPromptTemplate;
+    }
+    return generatedAnswerTemplate;
   }
 }

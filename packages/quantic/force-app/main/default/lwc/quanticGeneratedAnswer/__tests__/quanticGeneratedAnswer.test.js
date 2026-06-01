@@ -74,11 +74,14 @@ const selectors = {
   initializationError: 'c-quantic-component-error',
   generatedAnswerCard: '[data-testid="generated-answer__card"]',
   generatedAnswerHeader: '[data-testid="generated-answer__header"]',
-  generatedAnswerAnswer: '[data-testid="generated-answer__answer"]',
-  generatedAnswerBody: 'c-quantic-generated-answer-body',
+  generatedAnswerBody: '[data-testid="generated-answer__body"]',
   generatedAnswerFooter: '[data-testid="generated-answer__footer"]',
+  generatedAnswer: '[data-testid="generated-answer__answer"]',
   generatedAnswerBadge: '[data-testid="generated-answer__header-title"]',
+  generatedAnswerRetryButton: '[data-testid="generated-answer__retry-button"]',
+  generatedAnswerActions: '[data-testid="generated-answer__actions"]',
   generatedAnswerToggleButton: 'c-quantic-generated-answer-toggle',
+  generatedAnswerContent: 'c-quantic-generated-answer-content',
   generatingMessageWhenAnswerCollapsed:
     '[data-testid="generated-answer__collapse-generating-message"]',
   generatedAnswerCollapseToggle:
@@ -88,6 +91,7 @@ const selectors = {
     '[data-testid="generated-answer__no-answer-card"]',
   generatedAnswerNoAnswerMessage:
     '[data-testid="generated-answer__no-answer-message"]',
+  generatedAnswerCitations: 'c-quantic-source-citations',
   loadingSpinner: 'lightning-spinner',
 };
 
@@ -104,12 +108,6 @@ const functionsMocks = {
     state: generatedAnswerState,
     subscribe: functionsMocks.generatedAnswerStateSubscriber,
     retry: functionsMocks.retry,
-    like: functionsMocks.like,
-    dislike: functionsMocks.dislike,
-    logCopyToClipboard: functionsMocks.logCopyToClipboard,
-    logCitationHover: functionsMocks.logCitationHover,
-    closeFeedbackModal: functionsMocks.closeFeedbackModal,
-    sendFeedback: functionsMocks.sendFeedback,
   })),
   buildSearchStatus: jest.fn(() => ({
     state: searchStatusState,
@@ -126,12 +124,6 @@ const functionsMocks = {
   generatedAnswerStateUnsubscriber: jest.fn(),
   searchStatusStateUnsubscriber: jest.fn(),
   retry: jest.fn(),
-  like: jest.fn(),
-  dislike: jest.fn(),
-  logCopyToClipboard: jest.fn(),
-  logCitationHover: jest.fn(),
-  closeFeedbackModal: jest.fn(),
-  sendFeedback: jest.fn(),
 };
 
 /**
@@ -245,12 +237,12 @@ describe('c-quantic-generated-answer', () => {
       const generatedAnswerCard = element.shadowRoot.querySelector(
         selectors.generatedAnswerCard
       );
-      const retryButton = element.shadowRoot.querySelector(
-        '[data-testid="generated-answer__retry-button"]'
+      const generatedAnswerRetryButton = element.shadowRoot.querySelector(
+        selectors.generatedAnswerRetryButton
       );
 
       expect(generatedAnswerCard).not.toBeNull();
-      expect(retryButton).not.toBeNull();
+      expect(generatedAnswerRetryButton).not.toBeNull();
     });
 
     describe('when the retry button is clicked', () => {
@@ -258,11 +250,12 @@ describe('c-quantic-generated-answer', () => {
         const element = createTestComponent();
         await flushPromises();
 
-        const retryButton = element.shadowRoot.querySelector(
-          '[data-testid="generated-answer__retry-button"]'
+        const generatedAnswerRetryButton = element.shadowRoot.querySelector(
+          selectors.generatedAnswerRetryButton
         );
-        expect(retryButton).not.toBeNull();
-        retryButton.click();
+
+        expect(generatedAnswerRetryButton).not.toBeNull();
+        generatedAnswerRetryButton.click();
         expect(functionsMocks.retry).toHaveBeenCalledTimes(1);
       });
     });
@@ -459,15 +452,13 @@ describe('c-quantic-generated-answer', () => {
         await flushPromises();
 
         const generatedAnswerContent = element.shadowRoot.querySelector(
-          selectors.generatedAnswerBody
+          selectors.generatedAnswerContent
         );
 
         expect(generatedAnswerContent).not.toBeNull();
-        expect(generatedAnswerContent.generatedAnswer.isStreaming).toBe(true);
-        expect(generatedAnswerContent.generatedAnswer.answer).toBe(
-          exampleAnswer
-        );
-        expect(generatedAnswerContent.generatedAnswer.answerContentFormat).toBe(
+        expect(generatedAnswerContent.isStreaming).toBe(true);
+        expect(generatedAnswerContent.answer).toBe(exampleAnswer);
+        expect(generatedAnswerContent.answerContentFormat).toBe(
           exampleAnswerContentFormat
         );
       });
@@ -477,14 +468,10 @@ describe('c-quantic-generated-answer', () => {
         await flushPromises();
 
         const generatedAnswerActions = element.shadowRoot.querySelector(
-          selectors.generatedAnswerBody
+          selectors.generatedAnswerActions
         );
 
-        expect(
-          generatedAnswerActions.shadowRoot.querySelector(
-            '[data-testid="generated-answer-body__actions"]'
-          )
-        ).toBeNull();
+        expect(generatedAnswerActions).toBeNull();
       });
 
       it('should not display the generated answer disclaimer in the footer', async () => {
@@ -495,7 +482,7 @@ describe('c-quantic-generated-answer', () => {
           selectors.generatedAnswerDisclaimer
         );
 
-        expect(generatedAnswerDisclaimer).not.toBeNull();
+        expect(generatedAnswerDisclaimer).toBeNull();
       });
     });
 
@@ -636,7 +623,7 @@ describe('c-quantic-generated-answer', () => {
               await flushPromises();
 
               const generatedAnswer = element.shadowRoot.querySelector(
-                selectors.generatedAnswerAnswer
+                selectors.generatedAnswer
               );
               expect(generatedAnswer).not.toBeNull();
 
@@ -667,7 +654,7 @@ describe('c-quantic-generated-answer', () => {
               await flushPromises();
 
               const generatedAnswer = element.shadowRoot.querySelector(
-                selectors.generatedAnswerAnswer
+                selectors.generatedAnswer
               );
               expect(generatedAnswer).not.toBeNull();
 
@@ -699,7 +686,7 @@ describe('c-quantic-generated-answer', () => {
               await flushPromises();
 
               const generatedAnswer = element.shadowRoot.querySelector(
-                selectors.generatedAnswerAnswer
+                selectors.generatedAnswer
               );
               expect(generatedAnswer).not.toBeNull();
 
@@ -728,15 +715,13 @@ describe('c-quantic-generated-answer', () => {
         await flushPromises();
 
         const generatedAnswerContent = element.shadowRoot.querySelector(
-          selectors.generatedAnswerBody
+          selectors.generatedAnswerContent
         );
 
         expect(generatedAnswerContent).not.toBeNull();
-        expect(generatedAnswerContent.generatedAnswer.isStreaming).toBe(false);
-        expect(generatedAnswerContent.generatedAnswer.answer).toBe(
-          exampleAnswer
-        );
-        expect(generatedAnswerContent.generatedAnswer.answerContentFormat).toBe(
+        expect(generatedAnswerContent.isStreaming).toBe(false);
+        expect(generatedAnswerContent.answer).toBe(exampleAnswer);
+        expect(generatedAnswerContent.answerContentFormat).toBe(
           exampleAnswerContentFormat
         );
       });
@@ -748,21 +733,14 @@ describe('c-quantic-generated-answer', () => {
         const generatedAnswerBody = element.shadowRoot.querySelector(
           selectors.generatedAnswerBody
         );
-        const generatedAnswerActions =
-          generatedAnswerBody.shadowRoot.querySelector(
-            '[data-testid="generated-answer-body__actions"]'
-          );
+        const generatedAnswerActions = element.shadowRoot.querySelector(
+          selectors.generatedAnswerActions
+        );
 
         expect(generatedAnswerBody).not.toBeNull();
         expect(generatedAnswerActions).not.toBeNull();
-        expect(
-          generatedAnswerActions.closest(
-            '[data-testid="generated-answer-body"]'
-          )
-        ).toBe(
-          generatedAnswerBody.shadowRoot.querySelector(
-            '[data-testid="generated-answer-body"]'
-          )
+        expect(generatedAnswerActions.closest('section')).toBe(
+          generatedAnswerBody
         );
       });
 
@@ -801,13 +779,10 @@ describe('c-quantic-generated-answer', () => {
         await flushPromises();
 
         const generatedAnswerCitations = element.shadowRoot.querySelector(
-          selectors.generatedAnswerBody
+          selectors.generatedAnswerCitations
         );
-        const citations = generatedAnswerCitations.shadowRoot.querySelector(
-          'c-quantic-source-citations'
-        );
-        expect(citations).not.toBeNull();
-        expect(citations.disableCitationAnchoring).toBe(false);
+        expect(generatedAnswerCitations).not.toBeNull();
+        expect(generatedAnswerCitations.disableCitationAnchoring).toBe(false);
       });
     });
 
@@ -1100,19 +1075,13 @@ describe('c-quantic-generated-answer', () => {
               element.shadowRoot.querySelector(
                 selectors.generatedAnswerNoAnswerMessage
               );
-            const generatedAnswerNoAnswerBody =
-              generatedAnswerCardNoAnswerMessage.querySelector(
-                'c-quantic-generated-answer-body'
-              );
-            const generatedAnswerNoAnswerBodyMessage =
-              generatedAnswerNoAnswerBody.shadowRoot.querySelector(
-                '[data-testid="generated-answer-body__no-answer-message"]'
-              );
 
             expect(loadingSpinner).toBeNull();
             expect(generatedAnswerCard).toBeNull();
             expect(generatedAnswerCardNoAnswer).not.toBeNull();
-            expect(generatedAnswerNoAnswerBodyMessage).not.toBeNull();
+            expect(generatedAnswerCardNoAnswerMessage.textContent).toBe(
+              'No generated answer available.'
+            );
           });
         });
       });
@@ -1154,20 +1123,14 @@ describe('c-quantic-generated-answer', () => {
               element.shadowRoot.querySelector(
                 selectors.generatedAnswerNoAnswerMessage
               );
-            const generatedAnswerNoAnswerBody =
-              generatedAnswerCardNoAnswerMessage.querySelector(
-                'c-quantic-generated-answer-body'
-              );
-            const generatedAnswerNoAnswerBodyMessage =
-              generatedAnswerNoAnswerBody.shadowRoot.querySelector(
-                '[data-testid="generated-answer-body__no-answer-message"]'
-              );
             const generatedAnswerCard = element.shadowRoot.querySelector(
               selectors.generatedAnswerCard
             );
             expect(generatedAnswerCard).toBeNull();
             expect(generatedAnswerCardNoAnswer).not.toBeNull();
-            expect(generatedAnswerNoAnswerBodyMessage).not.toBeNull();
+            expect(generatedAnswerCardNoAnswerMessage.textContent).toBe(
+              'No generated answer available.'
+            );
           });
         });
 
