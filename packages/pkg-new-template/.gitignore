@@ -2,3 +2,5 @@ node_modules
 dist
 public/lang
 public/assets
+playwright-report
+test-results
