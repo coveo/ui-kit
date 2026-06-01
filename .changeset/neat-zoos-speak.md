@@ -1,5 +1,5 @@
 ---
-"@coveo/quantic": patch
+"@coveo/quantic": minor
 ---
 
 feat(quantic): create the QuanticGeneratedAnswerFollowUpInput component
