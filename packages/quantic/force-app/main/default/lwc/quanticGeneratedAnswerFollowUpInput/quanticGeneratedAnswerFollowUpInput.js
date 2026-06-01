@@ -3,7 +3,6 @@ import askFollowUp from '@salesforce/label/c.quantic_AskFollowUp';
 import {keys} from 'c/quanticUtils';
 import {api, LightningElement} from 'lwc';
 
-
 /**
  * The `QuanticGeneratedAnswerFollowUpInput` component allows users to submit follow-up questions related to a generated answer.
  * @fires CustomEvent#quantic__submitfollowup
@@ -24,7 +23,7 @@ export default class QuanticGeneratedAnswerFollowUpInput extends LightningElemen
    */
   @api
   submitButtonDisabled = false;
-  
+
   /** @type {boolean} */
   _focused = false;
 

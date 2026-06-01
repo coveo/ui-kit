@@ -57,9 +57,7 @@ describe('c-quantic-generated-answer-follow-up-input', () => {
       input.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
 
       expect(handler).toHaveBeenCalledTimes(1);
-      expect(handler.mock.calls[0][0].detail.value).toBe(
-        'follow up question'
-      );
+      expect(handler.mock.calls[0][0].detail.value).toBe('follow up question');
     });
 
     it('should dispatch #quantic__submitfollowup when clicking the submit button', async () => {
