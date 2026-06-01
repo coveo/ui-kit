@@ -1,6 +1,5 @@
 import type {StoryContext} from '@storybook/web-components-vite';
-import {within} from 'shadow-dom-testing-library';
-import {expect, userEvent, waitFor} from 'storybook/test';
+import {userEvent, waitFor} from 'storybook/test';
 
 /**
  * WCAG 2.2 AA criteria covered by on-focus tests.
