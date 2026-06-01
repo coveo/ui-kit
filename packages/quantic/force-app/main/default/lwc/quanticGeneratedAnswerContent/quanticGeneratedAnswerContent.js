@@ -19,7 +19,7 @@ import generatedTextContentTemplate from './templates/generatedTextContent.html'
 
 const INLINE_LINK_ICON = `
   <svg
-    class="slds-icon link-icon-svg"
+    class="slds-icon answer-content__link-icon-svg"
     aria-hidden="true"
     focusable="false"
     viewBox="0 0 52 52"
