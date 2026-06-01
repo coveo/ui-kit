@@ -86,9 +86,9 @@ describe('accessibilityUtils', () => {
     });
 
     it('should return true for a contentEditable element', () => {
-      expect(
-        isFocusable(createElement('div', {contentEditable: 'true'}))
-      ).toBe(true);
+      expect(isFocusable(createElement('div', {contentEditable: 'true'}))).toBe(
+        true
+      );
     });
 
     it('should return false for a plain div', () => {
