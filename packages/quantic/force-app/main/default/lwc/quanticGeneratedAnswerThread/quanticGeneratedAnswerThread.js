@@ -65,12 +65,8 @@ export default class QuanticGeneratedAnswerThread extends LightningElement {
     );
   }
 
-  get hiddenAnswerCount() {
-    return this.generatedAnswers.length - 1;
-  }
-
-  get showPreviousLabel() {
-    return I18nUtils.format(this.labels.showPreviousQuestions_plural, this.hiddenAnswerCount);
+  get showPreviousQuestionsLabel() {
+    return I18nUtils.format(this.labels.showPreviousQuestions_plural, this.generatedAnswers.length - 1);
   }
 
   get previousAnswers() {
@@ -78,10 +74,6 @@ export default class QuanticGeneratedAnswerThread extends LightningElement {
       return [];
     }
     return this.generatedAnswers.slice(0, -1);
-  }
-
-  get hasPreviousAnswers() {
-    return this.previousAnswers.length > 0;
   }
 
   get headAnswer() {

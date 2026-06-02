@@ -27,7 +27,7 @@
                 data-testid="show-previous-button"
                 onclick={handleShowAllClick}
               >
-                {showPreviousLabel}
+                {showPreviousQuestionsLabel}
               </button>
             </div>
           </div>
@@ -41,19 +41,14 @@
         </li>
       </template>
 
-      <template lwc:if={hasPreviousAnswers}>
-        <template for:each={previousAnswers} for:item="answer">
-          <c-quantic-thread-item
-            key={answer.answerId}
-            title={answer.question}
-          >
-            <c-quantic-generated-answer-body
-              engine-id={engineId}
-              generated-answer={answer}
-              disable-citation-anchoring={disableCitationAnchoring}
-            ></c-quantic-generated-answer-body>
-          </c-quantic-thread-item>
-        </template>
+      <template for:each={previousAnswers} for:item="answer">
+        <c-quantic-thread-item key={answer.answerId} title={answer.question}>
+          <c-quantic-generated-answer-body
+            engine-id={engineId}
+            generated-answer={answer}
+            disable-citation-anchoring={disableCitationAnchoring}
+          ></c-quantic-generated-answer-body>
+        </c-quantic-thread-item>
       </template>
 
       <c-quantic-thread-item
