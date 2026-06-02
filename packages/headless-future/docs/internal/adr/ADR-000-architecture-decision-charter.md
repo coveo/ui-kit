@@ -1,7 +1,3 @@
-**Version**: 1.0  
-**Date**: June 1, 2026  
-**Status**: Proposed
-
 ## 1. Purpose
 
 This charter defines the criteria used to evaluate architecture and design decisions for headless-future.
@@ -39,6 +35,7 @@ Applies to:
 2. **Public API independence**
    Public API must be implementation-agnostic and stable.
    Internal plumbing can change mechanically without public contract changes.
+
 3. **First-class SSR**
    SSR must be supported as a primary runtime model, including:
    - server initialization
@@ -91,12 +88,11 @@ A major architecture decision is approved only if all gates below pass.
 When requirements conflict, resolve in this order:
 
 1. Full use-case support
-2. Correctness and deterministic behavior
-3. Public API independence
-4. SSR support
-5. Tree-shaking efficiency
-6. Migration simplicity
-7. Contribution readiness
+2. Public API independence
+3. SSR support
+4. Tree-shaking efficiency
+5. Migration simplicity
+6. Contribution readiness
 
 ## 8. Decision Record Template
 
@@ -109,9 +105,7 @@ Each major decision must include:
 5. Impact on **MUST** requirements
 6. Impact on **SHOULD** requirements
 7. Risks and mitigations
-8. Validation plan and owner
-9. Rollout and migration impact
-10. Review trigger and date
+8. Rollout and migration impact
 
 ## 9. Exit Criteria for Any Proposal
 

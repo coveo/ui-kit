@@ -1,9 +1,7 @@
-**Title**: Short, action-oriented decision title
-**Status**: Proposed | Accepted | Rejected | Superseded
-**Date**: YYYY-MM-DD
-**Owners**: Name(s)
-**Reviewers**: Name(s)
-**Related Docs**: RFCs, issues, PRs, design docs
+# Short, action-oriented decision title
+
+**Status**: Proposed | Accepted | Rejected | Superseded
+**Related docs**: RFCs, issues, PRs, design docs
 
 ## 1. Context
 
@@ -46,12 +44,12 @@ Map this decision to headless-future's Architecture Decision Charter requirement
 - Impact:
 - How addressed (or why deferred):
 
-1. Requirement: **Tree-shaking efficiency**
+2. Requirement: **Tree-shaking efficiency**
 
-- Impact: **External contribution readiness**
+- Impact:
 - How addressed (or why deferred):
 
-3. Requirement:
+3. Requirement: **External contribution readiness**
 
 - Impact:
 - How addressed (or why deferred):
@@ -116,19 +114,19 @@ Define objective pass/fail checks.
 - Owner:
 - Pass criteria:
 
-1. **Coverage gate**:
+2. **Coverage gate**:
 
 - Check:
 - Owner:
 - Pass criteria:
 
-1. **SSR gate (if applicable)**:
+3. **SSR gate (if applicable)**:
 
 - Check:
 - Owner:
 - Pass criteria:
 
-1. **Bundle/tree-shaking gate (if applicable)**:
+4. **Bundle/tree-shaking gate (if applicable)**:
 
 - Check:
 - Owner:
