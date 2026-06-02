@@ -32,10 +32,9 @@ This report covers the degree of conformance for the following accessibility sta
 ## Terms
 The terms used in the Conformance Level information are defined as follows:
 
-- Supports: The functionality of the product has at least one method that meets the criterion without known defects or meets with equivalent facilitation.
-- Partially Supports: Some functionality of the product does not meet the criterion.
-- Does Not Support: The majority of product functionality does not meet the criterion.
-- Not Applicable: The criterion is not relevant to the product.
+ {{#each catalog.terms as |term|}}
+ - {{term.label}}: {{term.description}}
+ {{/each}}
 
 ## WCAG 2.2 AA Conformance Table
 
