@@ -1,4 +1,4 @@
-import {ConversationEndpointState} from '@/src/core/interface/api/conversation-endpoint/conversation-endpoint-types.js';
+import type {ConversationEndpointState} from '@/src/core/interface/api/conversation-endpoint/conversation-endpoint-types.js';
 import {createSlice} from '@reduxjs/toolkit';
 import * as conversationEndpointActions from './conversation-endpoint-actions.js';
 
