@@ -7,7 +7,7 @@ import {
   configurationSlice,
   initialConfigurationState,
 } from './configuration-slice.js';
-import * as ConfigurationActions from './configuration-actions.js';
+import * as configurationActions from './configuration-actions.js';
 
 const localeDefaults = {
   trackingId: '',
@@ -31,7 +31,7 @@ describe('configurationSlice: setOrganizationId', () => {
   it('should update organization ID', () => {
     const state = configurationSlice.reducer(
       initialConfigurationState,
-      ConfigurationActions.setOrganizationId('my-org-123')
+      configurationActions.setOrganizationId('my-org-123')
     );
 
     expect(state.organizationId).toBe('my-org-123');
@@ -47,7 +47,7 @@ describe('configurationSlice: setOrganizationId', () => {
 
     const state = configurationSlice.reducer(
       initialState,
-      ConfigurationActions.setOrganizationId('new-org')
+      configurationActions.setOrganizationId('new-org')
     );
 
     expect(state.organizationId).toBe('new-org');
@@ -58,7 +58,7 @@ describe('configurationSlice: setOrganizationId', () => {
   it('should accept empty string', () => {
     const state = configurationSlice.reducer(
       {...initialConfigurationState, organizationId: 'some-org'},
-      ConfigurationActions.setOrganizationId('')
+      configurationActions.setOrganizationId('')
     );
 
     expect(state.organizationId).toBe('');
@@ -68,7 +68,7 @@ describe('configurationSlice: setOrganizationId', () => {
     const original = {...initialConfigurationState};
     configurationSlice.reducer(
       original,
-      ConfigurationActions.setOrganizationId('test')
+      configurationActions.setOrganizationId('test')
     );
 
     expect(original.organizationId).toBe('');
@@ -79,7 +79,7 @@ describe('configurationSlice: setAccessToken', () => {
   it('should update access token', () => {
     const state = configurationSlice.reducer(
       initialConfigurationState,
-      ConfigurationActions.setAccessToken('abc123token')
+      configurationActions.setAccessToken('abc123token')
     );
 
     expect(state.accessToken).toBe('abc123token');
@@ -95,7 +95,7 @@ describe('configurationSlice: setAccessToken', () => {
 
     const state = configurationSlice.reducer(
       initialState,
-      ConfigurationActions.setAccessToken('new-token')
+      configurationActions.setAccessToken('new-token')
     );
 
     expect(state.accessToken).toBe('new-token');
@@ -106,7 +106,7 @@ describe('configurationSlice: setAccessToken', () => {
   it('should accept empty string', () => {
     const state = configurationSlice.reducer(
       {...initialConfigurationState, accessToken: 'old-token'},
-      ConfigurationActions.setAccessToken('')
+      configurationActions.setAccessToken('')
     );
 
     expect(state.accessToken).toBe('');
@@ -117,7 +117,7 @@ describe('configurationSlice: setEndpoint', () => {
   it('should set endpoint', () => {
     const state = configurationSlice.reducer(
       initialConfigurationState,
-      ConfigurationActions.setEndpoint('https://custom.api.com')
+      configurationActions.setEndpoint('https://custom.api.com')
     );
 
     expect(state.endpoint).toBe('https://custom.api.com');
@@ -131,7 +131,7 @@ describe('configurationSlice: setEndpoint', () => {
 
     const state = configurationSlice.reducer(
       initialState,
-      ConfigurationActions.setEndpoint(undefined)
+      configurationActions.setEndpoint(undefined)
     );
 
     expect(state.endpoint).toBeUndefined();
@@ -147,7 +147,7 @@ describe('configurationSlice: setEndpoint', () => {
 
     const state = configurationSlice.reducer(
       initialState,
-      ConfigurationActions.setEndpoint('https://new.endpoint.com')
+      configurationActions.setEndpoint('https://new.endpoint.com')
     );
 
     expect(state.endpoint).toBe('https://new.endpoint.com');
@@ -167,7 +167,7 @@ describe('configurationSlice: setConfiguration', () => {
 
     const state = configurationSlice.reducer(
       initialConfigurationState,
-      ConfigurationActions.setConfiguration(newConfig)
+      configurationActions.setConfiguration(newConfig)
     );
 
     expect(state).toEqual(newConfig);
@@ -190,7 +190,7 @@ describe('configurationSlice: setConfiguration', () => {
 
     const state = configurationSlice.reducer(
       initialState,
-      ConfigurationActions.setConfiguration(newConfig)
+      configurationActions.setConfiguration(newConfig)
     );
 
     expect(state).toEqual(newConfig);
@@ -206,7 +206,7 @@ describe('configurationSlice: setConfiguration', () => {
 
     const state = configurationSlice.reducer(
       initialConfigurationState,
-      ConfigurationActions.setConfiguration(newConfig)
+      configurationActions.setConfiguration(newConfig)
     );
 
     expect(state.endpoint).toBeUndefined();
@@ -223,7 +223,7 @@ describe('configurationSlice: setConfiguration', () => {
 
     const state = configurationSlice.reducer(
       original,
-      ConfigurationActions.setConfiguration(newConfig)
+      configurationActions.setConfiguration(newConfig)
     );
 
     expect(state).toEqual(newConfig);
@@ -237,20 +237,20 @@ describe('configurationSlice: sequential updates', () => {
 
     state = configurationSlice.reducer(
       state,
-      ConfigurationActions.setOrganizationId('my-org')
+      configurationActions.setOrganizationId('my-org')
     );
     expect(state.organizationId).toBe('my-org');
 
     state = configurationSlice.reducer(
       state,
-      ConfigurationActions.setAccessToken('my-token')
+      configurationActions.setAccessToken('my-token')
     );
     expect(state.accessToken).toBe('my-token');
     expect(state.organizationId).toBe('my-org');
 
     state = configurationSlice.reducer(
       state,
-      ConfigurationActions.setEndpoint('https://api.example.com')
+      configurationActions.setEndpoint('https://api.example.com')
     );
     expect(state.endpoint).toBe('https://api.example.com');
     expect(state.organizationId).toBe('my-org');
@@ -264,19 +264,19 @@ describe('configurationSlice: state immutability', () => {
 
     configurationSlice.reducer(
       original,
-      ConfigurationActions.setOrganizationId('test')
+      configurationActions.setOrganizationId('test')
     );
     expect(original.organizationId).toBe('');
 
     configurationSlice.reducer(
       original,
-      ConfigurationActions.setAccessToken('token')
+      configurationActions.setAccessToken('token')
     );
     expect(original.accessToken).toBe('');
 
     configurationSlice.reducer(
       original,
-      ConfigurationActions.setEndpoint('https://api.com')
+      configurationActions.setEndpoint('https://api.com')
     );
     expect(original.endpoint).toBeUndefined();
   });

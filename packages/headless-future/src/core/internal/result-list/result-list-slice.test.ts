@@ -1,6 +1,6 @@
 import {describe, it, expect} from 'vitest';
 import {resultsSlice, initialResultListState} from './result-list-slice.js';
-import * as ResultListActions from './result-list-actions.js';
+import * as resultListActions from './result-list-actions.js';
 import type {SearchResult} from '@/src/core/interface/result-list/result-list-types.js';
 
 const mockResult = (overrides: Partial<SearchResult> = {}): SearchResult => ({
@@ -42,7 +42,7 @@ describe('resultsSlice: setResults', () => {
 
     const state = resultsSlice.reducer(
       initialResultListState,
-      ResultListActions.setResults(results)
+      resultListActions.setResults(results)
     );
 
     expect(state.results).toEqual(results);
@@ -63,7 +63,7 @@ describe('resultsSlice: setResults', () => {
 
     const state = resultsSlice.reducer(
       oldState,
-      ResultListActions.setResults(newResults)
+      resultListActions.setResults(newResults)
     );
 
     expect(state.results).toEqual(newResults);
@@ -78,7 +78,7 @@ describe('resultsSlice: setResults', () => {
 
     const state = resultsSlice.reducer(
       oldState,
-      ResultListActions.setResults([])
+      resultListActions.setResults([])
     );
 
     expect(state.results).toEqual([]);
@@ -102,7 +102,7 @@ describe('resultsSlice: clearResults', () => {
 
     const state = resultsSlice.reducer(
       stateWithResults,
-      ResultListActions.clearResults()
+      resultListActions.clearResults()
     );
 
     expect(state.results).toEqual([]);
@@ -115,7 +115,7 @@ describe('resultsSlice: state immutability', () => {
 
     resultsSlice.reducer(
       original,
-      ResultListActions.setResults([mockResult()])
+      resultListActions.setResults([mockResult()])
     );
 
     expect(original.results).toEqual([]);

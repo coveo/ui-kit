@@ -1,6 +1,6 @@
 import {describe, it, expect} from 'vitest';
 import {cartSlice, initialCartState} from './cart-slice.js';
-import * as CartActions from './cart-actions.js';
+import * as cartActions from './cart-actions.js';
 import type {CartItem} from '@/src/core/interface/cart/cart-types.js';
 
 const item = (overrides: Partial<CartItem> = {}): CartItem => ({
@@ -17,14 +17,14 @@ describe('cartSlice', () => {
       const items = [item(), item({productId: 'p2'})];
       const state = cartSlice.reducer(
         initialCartState,
-        CartActions.setItems(items)
+        cartActions.setItems(items)
       );
       expect(state.items).toEqual(items);
     });
 
     it('replaces existing items', () => {
       const old = {items: [item()]};
-      const state = cartSlice.reducer(old, CartActions.setItems([]));
+      const state = cartSlice.reducer(old, cartActions.setItems([]));
       expect(state.items).toEqual([]);
     });
   });
@@ -33,7 +33,7 @@ describe('cartSlice', () => {
     it('adds a new item when not found and quantity > 0', () => {
       const state = cartSlice.reducer(
         initialCartState,
-        CartActions.updateItemQuantity(item({quantity: 2}))
+        cartActions.updateItemQuantity(item({quantity: 2}))
       );
       expect(state.items).toEqual([item({quantity: 2})]);
     });
@@ -41,7 +41,7 @@ describe('cartSlice', () => {
     it('does not add when not found and quantity <= 0', () => {
       const state = cartSlice.reducer(
         initialCartState,
-        CartActions.updateItemQuantity(item({quantity: 0}))
+        cartActions.updateItemQuantity(item({quantity: 0}))
       );
       expect(state.items).toEqual([]);
     });
@@ -50,7 +50,7 @@ describe('cartSlice', () => {
       const existing = {items: [item({quantity: 1})]};
       const state = cartSlice.reducer(
         existing,
-        CartActions.updateItemQuantity(item({quantity: 5}))
+        cartActions.updateItemQuantity(item({quantity: 5}))
       );
       expect(state.items).toEqual([item({quantity: 5})]);
     });
@@ -59,7 +59,7 @@ describe('cartSlice', () => {
       const existing = {items: [item({quantity: 3})]};
       const state = cartSlice.reducer(
         existing,
-        CartActions.updateItemQuantity(item({quantity: 0}))
+        cartActions.updateItemQuantity(item({quantity: 0}))
       );
       expect(state.items).toEqual([]);
     });
@@ -68,7 +68,7 @@ describe('cartSlice', () => {
       const existing = {items: [item({productId: 'p1', name: 'A', price: 5})]};
       const state = cartSlice.reducer(
         existing,
-        CartActions.updateItemQuantity({
+        cartActions.updateItemQuantity({
           productId: 'p1',
           name: 'A',
           price: 5,
@@ -82,7 +82,7 @@ describe('cartSlice', () => {
       const existing = {items: [item({price: 5})]};
       const state = cartSlice.reducer(
         existing,
-        CartActions.updateItemQuantity(item({price: 10, quantity: 2}))
+        cartActions.updateItemQuantity(item({price: 10, quantity: 2}))
       );
       expect(state.items).toHaveLength(2);
     });

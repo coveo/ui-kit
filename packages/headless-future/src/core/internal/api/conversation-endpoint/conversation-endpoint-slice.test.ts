@@ -3,7 +3,7 @@ import {
   conversationEndpointSlice,
   initialConversationEndpointState,
 } from './conversation-endpoint-slice.js';
-import * as ConversationEndpointActions from './conversation-endpoint-actions.js';
+import * as conversationEndpointActions from './conversation-endpoint-actions.js';
 
 describe('conversationEndpointSlice', () => {
   it('should have the correct initial state', () => {
@@ -20,7 +20,7 @@ describe('conversationEndpointSlice', () => {
   it('should set the endpoint status', () => {
     const state = conversationEndpointSlice.reducer(
       initialConversationEndpointState,
-      ConversationEndpointActions.setStatus('pending')
+      conversationEndpointActions.setStatus('pending')
     );
 
     expect(state.status).toBe('pending');
@@ -29,11 +29,11 @@ describe('conversationEndpointSlice', () => {
   it('should set and clear endpoint error', () => {
     const withError = conversationEndpointSlice.reducer(
       initialConversationEndpointState,
-      ConversationEndpointActions.setError('boom')
+      conversationEndpointActions.setError('boom')
     );
     const cleared = conversationEndpointSlice.reducer(
       withError,
-      ConversationEndpointActions.setError(null)
+      conversationEndpointActions.setError(null)
     );
 
     expect(withError.error).toBe('boom');
@@ -43,7 +43,7 @@ describe('conversationEndpointSlice', () => {
   it('should set endpoint configuration', () => {
     const state = conversationEndpointSlice.reducer(
       initialConversationEndpointState,
-      ConversationEndpointActions.setConfiguration({
+      conversationEndpointActions.setConfiguration({
         language: 'en',
         country: 'US',
       })
@@ -58,7 +58,7 @@ describe('conversationEndpointSlice', () => {
   it('should set endpoint streaming connectivity', () => {
     const state = conversationEndpointSlice.reducer(
       initialConversationEndpointState,
-      ConversationEndpointActions.setStreamingConnected(true)
+      conversationEndpointActions.setStreamingConnected(true)
     );
 
     expect(state.streaming.isConnected).toBe(true);

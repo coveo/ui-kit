@@ -4,7 +4,7 @@
 
 import {describe, it, expect} from 'vitest';
 import {searchBoxSlice, initialSearchBoxState} from './search-box-slice.js';
-import * as SearchBoxActions from './search-box-actions.js';
+import * as searchBoxActions from './search-box-actions.js';
 
 describe('searchBoxSlice: initialState', () => {
   it('should have correct initial state', () => {
@@ -18,7 +18,7 @@ describe('searchBoxSlice: setQuery', () => {
   it('should update query string', () => {
     const state = searchBoxSlice.reducer(
       initialSearchBoxState,
-      SearchBoxActions.setQuery('laptops')
+      searchBoxActions.setQuery('laptops')
     );
 
     expect(state.query).toBe('laptops');
@@ -27,7 +27,7 @@ describe('searchBoxSlice: setQuery', () => {
   it('should accept empty string', () => {
     const state = searchBoxSlice.reducer(
       {query: 'existing'},
-      SearchBoxActions.setQuery('')
+      searchBoxActions.setQuery('')
     );
 
     expect(state.query).toBe('');
@@ -35,7 +35,7 @@ describe('searchBoxSlice: setQuery', () => {
 
   it('should maintain state immutability', () => {
     const original = {...initialSearchBoxState};
-    searchBoxSlice.reducer(original, SearchBoxActions.setQuery('test'));
+    searchBoxSlice.reducer(original, searchBoxActions.setQuery('test'));
 
     // Original should not be mutated
     expect(original.query).toBe('');

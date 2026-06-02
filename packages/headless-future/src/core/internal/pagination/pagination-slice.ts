@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {PaginationState} from '@/src/core/interface/pagination/pagination-types.js';
-import * as PaginationActions from './pagination-actions.js';
+import * as paginationActions from './pagination-actions.js';
 
 export const initialPaginationState: PaginationState = {
   currentPage: 1,
@@ -13,28 +13,28 @@ export const paginationSlice = createSlice({
   initialState: initialPaginationState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(PaginationActions.setPage, (state, action) => {
+    builder.addCase(paginationActions.setPage, (state, action) => {
       state.currentPage = action.payload;
     });
-    builder.addCase(PaginationActions.setPageSize, (state, action) => {
+    builder.addCase(paginationActions.setPageSize, (state, action) => {
       state.pageSize = action.payload;
       state.currentPage = 1;
     });
-    builder.addCase(PaginationActions.setTotalCount, (state, action) => {
+    builder.addCase(paginationActions.setTotalCount, (state, action) => {
       state.totalCount = action.payload;
     });
-    builder.addCase(PaginationActions.nextPage, (state) => {
+    builder.addCase(paginationActions.nextPage, (state) => {
       const totalPages = Math.ceil(state.totalCount / state.pageSize);
       if (state.currentPage < totalPages) {
         state.currentPage += 1;
       }
     });
-    builder.addCase(PaginationActions.previousPage, (state) => {
+    builder.addCase(paginationActions.previousPage, (state) => {
       if (state.currentPage > 1) {
         state.currentPage -= 1;
       }
     });
-    builder.addCase(PaginationActions.resetToFirstPage, (state) => {
+    builder.addCase(paginationActions.resetToFirstPage, (state) => {
       state.currentPage = 1;
     });
   },
