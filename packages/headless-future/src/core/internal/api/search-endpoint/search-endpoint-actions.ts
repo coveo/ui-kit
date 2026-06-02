@@ -1,8 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
-import type {
-  CoveoSearchEndpointResponse,
-  SearchEndpointStatus,
-} from '@/src/core/interface/api/search-endpoint/search-endpoint-types.js';
+import type {SearchEndpointStatus} from '@/src/core/interface/api/search-endpoint/search-endpoint-types.js';
 
 const ACTION_PREFIX = 'searchEndpoint';
 

@@ -1,7 +1,9 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
 import * as searchEndpointMutators from '@/src/core/interface/api/search-endpoint/search-endpoint-mutators.js';
+import * as searchEndpointSelectors from '@/src/core/interface/api/search-endpoint/search-endpoint-selectors.js';
 import {createSearchEndpointClient} from '@/src/api/interface/search-endpoint/search-endpoint-client.js';
+import {readEndpointClientConfiguration} from '@/src/core/internal/configuration/configuration-reader.js';
 import {SearchEndpointFacade} from './search-endpoint-facade.js';
 import {handleSearchEndpointResponse} from './search-endpoint-response-handler.js';
 import type {CoveoSearchEndpointResponse} from './search-endpoint-types.js';
@@ -19,6 +21,14 @@ vi.mock(
 
 vi.mock('./search-endpoint-response-handler.js', () => ({
   handleSearchEndpointResponse: vi.fn(),
+}));
+
+vi.mock('@/src/core/internal/configuration/configuration-reader.js', () => ({
+  readEndpointClientConfiguration: vi.fn(() => ({
+    organizationId: 'test-org-id',
+    accessToken: 'test-token',
+    endpoint: 'https://platform.cloud.coveo.com',
+  })),
 }));
 
 type MockEngine = FullEngine & {
@@ -76,116 +86,231 @@ describe('SearchEndpointFacade', () => {
     }));
   });
 
-  it('returns the same instance for the same engine', () => {
-    const engine = createMockEngine();
+  describe('getInstance', () => {
+    it('returns the same instance for the same engine', () => {
+      const engine = createMockEngine();
 
-    const firstInstance = SearchEndpointFacade.getInstance(engine);
-    const secondInstance = SearchEndpointFacade.getInstance(engine);
+      const firstInstance = SearchEndpointFacade.getInstance(engine);
+      const secondInstance = SearchEndpointFacade.getInstance(engine);
 
-    expect(firstInstance).toBe(secondInstance);
-    expect(createSearchEndpointClient).toHaveBeenCalledTimes(1);
-  });
-
-  it('returns different instances for different engines', () => {
-    const firstEngine = createMockEngine();
-    const secondEngine = createMockEngine();
-
-    const firstInstance = SearchEndpointFacade.getInstance(firstEngine);
-    const secondInstance = SearchEndpointFacade.getInstance(secondEngine);
-
-    expect(firstInstance).not.toBe(secondInstance);
-    expect(createSearchEndpointClient).toHaveBeenCalledTimes(2);
-  });
-
-  it('sets pending and idle status around a successful request', async () => {
-    const engine = createMockEngine();
-    const facade = SearchEndpointFacade.getInstance(engine);
-    mockClientCall.mockResolvedValue({
-      success: true,
-      data: buildMockResponse(),
+      expect(firstInstance).toBe(secondInstance);
+      expect(createSearchEndpointClient).toHaveBeenCalledTimes(1);
     });
 
-    await facade.callEndpoint();
+    it('returns different instances for different engines', () => {
+      const firstEngine = createMockEngine();
+      const secondEngine = createMockEngine();
 
-    expect(engine.mutate).toHaveBeenNthCalledWith(
-      1,
-      searchEndpointMutators.setStatus('pending')
-    );
-    expect(engine.mutate).toHaveBeenNthCalledWith(
-      2,
-      searchEndpointMutators.setError(null)
-    );
-    expect(engine.mutate).toHaveBeenLastCalledWith(
-      searchEndpointMutators.setStatus('idle')
-    );
+      const firstInstance = SearchEndpointFacade.getInstance(firstEngine);
+      const secondInstance = SearchEndpointFacade.getInstance(secondEngine);
+
+      expect(firstInstance).not.toBe(secondInstance);
+      expect(createSearchEndpointClient).toHaveBeenCalledTimes(2);
+    });
   });
 
-  it('sets error status when the client returns an unsuccessful result', async () => {
-    const engine = createMockEngine();
-    const facade = SearchEndpointFacade.getInstance(engine);
-    mockClientCall.mockResolvedValue({
-      success: false,
-      error: 'request failed',
+  describe('callEndpoint', () => {
+    describe('request building', () => {
+      it('reads the request from state using buildSearchEndpointRequest selector', async () => {
+        const engine = createMockEngine();
+        const facade = SearchEndpointFacade.getInstance(engine);
+        mockClientCall.mockResolvedValue({
+          success: true,
+          data: buildMockResponse(),
+        });
+
+        await facade.callEndpoint();
+
+        expect(engine.read).toHaveBeenCalledWith(
+          searchEndpointSelectors.buildSearchEndpointRequest
+        );
+      });
+
+      it('reads endpoint client configuration from engine', async () => {
+        const engine = createMockEngine();
+        const facade = SearchEndpointFacade.getInstance(engine);
+        mockClientCall.mockResolvedValue({
+          success: true,
+          data: buildMockResponse(),
+        });
+
+        await facade.callEndpoint();
+
+        expect(readEndpointClientConfiguration).toHaveBeenCalledWith(engine);
+      });
+
+      it('passes built request and configuration to client', async () => {
+        const mockRequest = {
+          q: 'test',
+          numberOfResults: 10,
+          firstResult: 0,
+          facets: [],
+        };
+        const engine = createMockEngine();
+        engine.read.mockImplementation((selector: any) => {
+          if (selector === searchEndpointSelectors.buildSearchEndpointRequest) {
+            return mockRequest;
+          }
+          return selector(engine);
+        });
+        const facade = SearchEndpointFacade.getInstance(engine);
+        mockClientCall.mockResolvedValue({
+          success: true,
+          data: buildMockResponse(),
+        });
+
+        await facade.callEndpoint();
+
+        expect(mockClientCall).toHaveBeenCalledWith(
+          mockRequest,
+          expect.objectContaining({organizationId: 'test-org-id'}),
+          undefined
+        );
+      });
+
+      it('passes options through to the client call', async () => {
+        const engine = createMockEngine();
+        const facade = SearchEndpointFacade.getInstance(engine);
+        const options = {signal: new AbortController().signal};
+        mockClientCall.mockResolvedValue({
+          success: true,
+          data: buildMockResponse(),
+        });
+
+        await facade.callEndpoint(options);
+
+        expect(mockClientCall).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.anything(),
+          options
+        );
+      });
     });
 
-    await facade.callEndpoint();
+    describe('success path', () => {
+      it('sets pending and idle status around a successful request', async () => {
+        const engine = createMockEngine();
+        const facade = SearchEndpointFacade.getInstance(engine);
+        mockClientCall.mockResolvedValue({
+          success: true,
+          data: buildMockResponse(),
+        });
 
-    expect(engine.mutate).toHaveBeenCalledWith(
-      searchEndpointMutators.setError('request failed')
-    );
-    expect(engine.mutate).toHaveBeenLastCalledWith(
-      searchEndpointMutators.setStatus('idle')
-    );
+        await facade.callEndpoint();
+
+        expect(engine.mutate).toHaveBeenNthCalledWith(
+          1,
+          searchEndpointMutators.setStatus('pending')
+        );
+        expect(engine.mutate).toHaveBeenNthCalledWith(
+          2,
+          searchEndpointMutators.setError(null)
+        );
+        expect(engine.mutate).toHaveBeenLastCalledWith(
+          searchEndpointMutators.setStatus('idle')
+        );
+      });
+
+      it('calls handleSearchEndpointResponse on successful response', async () => {
+        const engine = createMockEngine();
+        const facade = SearchEndpointFacade.getInstance(engine);
+        const response = buildMockResponse();
+        mockClientCall.mockResolvedValue({success: true, data: response});
+
+        await facade.callEndpoint();
+
+        expect(handleSearchEndpointResponse).toHaveBeenCalledWith(
+          engine,
+          response
+        );
+      });
+
+      it('does not call handleSearchEndpointResponse when data is falsy and sets status back to idle', async () => {
+        const engine = createMockEngine();
+        const facade = SearchEndpointFacade.getInstance(engine);
+        mockClientCall.mockResolvedValue({success: true, data: null});
+
+        await facade.callEndpoint();
+
+        expect(handleSearchEndpointResponse).not.toHaveBeenCalled();
+        expect(engine.mutate).toHaveBeenLastCalledWith(
+          searchEndpointMutators.setStatus('idle')
+        );
+      });
+    });
+
+    describe('error path', () => {
+      it('sets error when the client returns an unsuccessful result', async () => {
+        const engine = createMockEngine();
+        const facade = SearchEndpointFacade.getInstance(engine);
+        mockClientCall.mockResolvedValue({
+          success: false,
+          error: 'request failed',
+        });
+
+        await facade.callEndpoint();
+
+        expect(engine.mutate).toHaveBeenCalledWith(
+          searchEndpointMutators.setError('request failed')
+        );
+        expect(engine.mutate).toHaveBeenLastCalledWith(
+          searchEndpointMutators.setStatus('idle')
+        );
+      });
+
+      it('stores error message when request execution throws an Error', async () => {
+        const engine = createMockEngine();
+        const facade = SearchEndpointFacade.getInstance(engine);
+        mockClientCall.mockRejectedValue(new Error('boom'));
+
+        await facade.callEndpoint();
+
+        expect(engine.mutate).toHaveBeenCalledWith(
+          searchEndpointMutators.setError('boom')
+        );
+        expect(engine.mutate).toHaveBeenLastCalledWith(
+          searchEndpointMutators.setStatus('idle')
+        );
+      });
+
+      it('stores a fallback error for non-Error thrown values', async () => {
+        const engine = createMockEngine();
+        const facade = SearchEndpointFacade.getInstance(engine);
+        mockClientCall.mockRejectedValue(null);
+
+        await facade.callEndpoint();
+
+        expect(engine.mutate).toHaveBeenCalledWith(
+          searchEndpointMutators.setError('An unexpected error occurred.')
+        );
+        expect(engine.mutate).toHaveBeenLastCalledWith(
+          searchEndpointMutators.setStatus('idle')
+        );
+      });
+
+      it('does not call handleSearchEndpointResponse on error', async () => {
+        const engine = createMockEngine();
+        const facade = SearchEndpointFacade.getInstance(engine);
+        mockClientCall.mockResolvedValue({success: false, error: 'fail'});
+
+        await facade.callEndpoint();
+
+        expect(handleSearchEndpointResponse).not.toHaveBeenCalled();
+      });
+    });
   });
 
-  it('stores error when request execution throws', async () => {
-    const engine = createMockEngine();
-    const facade = SearchEndpointFacade.getInstance(engine);
-    mockClientCall.mockRejectedValue(new Error('boom'));
+  describe('getDebugInfo', () => {
+    it('returns the current request built from state', () => {
+      const engine = createMockEngine();
+      const facade = SearchEndpointFacade.getInstance(engine);
 
-    await facade.callEndpoint();
+      const debugInfo = facade.getDebugInfo();
 
-    expect(engine.mutate).toHaveBeenCalledWith(
-      searchEndpointMutators.setError('boom')
-    );
-    expect(engine.mutate).toHaveBeenLastCalledWith(
-      searchEndpointMutators.setStatus('idle')
-    );
-  });
-
-  it('stores a fallback error for non-Error thrown values', async () => {
-    const engine = createMockEngine();
-    const facade = SearchEndpointFacade.getInstance(engine);
-    mockClientCall.mockRejectedValue(null);
-
-    await facade.callEndpoint();
-
-    expect(engine.mutate).toHaveBeenCalledWith(
-      searchEndpointMutators.setError('An unexpected error occurred.')
-    );
-    expect(engine.mutate).toHaveBeenLastCalledWith(
-      searchEndpointMutators.setStatus('idle')
-    );
-  });
-
-  it('calls handleSearchEndpointResponse on successful response', async () => {
-    const engine = createMockEngine();
-    const facade = SearchEndpointFacade.getInstance(engine);
-    const response = buildMockResponse();
-    mockClientCall.mockResolvedValue({success: true, data: response});
-
-    await facade.callEndpoint();
-
-    expect(handleSearchEndpointResponse).toHaveBeenCalledWith(engine, response);
-  });
-
-  it('does not call handleSearchEndpointResponse on error', async () => {
-    const engine = createMockEngine();
-    const facade = SearchEndpointFacade.getInstance(engine);
-    mockClientCall.mockResolvedValue({success: false, error: 'fail'});
-
-    await facade.callEndpoint();
-
-    expect(handleSearchEndpointResponse).not.toHaveBeenCalled();
+      expect(engine.read).toHaveBeenCalledWith(
+        searchEndpointSelectors.buildSearchEndpointRequest
+      );
+      expect(debugInfo).toHaveProperty('currentRequest');
+    });
   });
 });

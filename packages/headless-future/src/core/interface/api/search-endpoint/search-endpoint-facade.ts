@@ -54,17 +54,14 @@ export class SearchEndpointFacade {
       const httpResponse = await this.#client.call(request, config, options);
 
       if (!httpResponse.success) {
-        engine.mutate(searchEndpointMutators.setError(httpResponse.error));
-        return;
-      }
-
-      const responseData = httpResponse.data;
-      if (!responseData) {
-        return;
+        throw new Error(httpResponse.error);
       }
 
       // 4. Distribute response data to feature slices
-      handleSearchEndpointResponse(engine, responseData);
+      const responseData = httpResponse.data;
+      if (responseData) {
+        handleSearchEndpointResponse(engine, responseData);
+      }
     } catch (error) {
       engine.mutate(
         searchEndpointMutators.setError(
