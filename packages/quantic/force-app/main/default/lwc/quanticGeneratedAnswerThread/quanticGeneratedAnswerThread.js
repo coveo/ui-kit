@@ -66,7 +66,10 @@ export default class QuanticGeneratedAnswerThread extends LightningElement {
   }
 
   get showPreviousQuestionsLabel() {
-    return I18nUtils.format(this.labels.showPreviousQuestions_plural, this.generatedAnswers.length - 1);
+    return I18nUtils.format(
+      this.labels.showPreviousQuestions_plural,
+      this.generatedAnswers.length - 1
+    );
   }
 
   get previousAnswers() {
