@@ -1,6 +1,12 @@
 import {describe, expect, it} from 'vitest';
 import type {ConversationEndpointState} from './conversation-endpoint-types.js';
-import * as selectors from './conversation-endpoint-selectors.js';
+import {
+  configuration,
+  error,
+  isLoading,
+  status,
+  streaming,
+} from './conversation-endpoint-selectors.js';
 
 describe('conversation endpoint selectors', () => {
   const idleState: ConversationEndpointState = {
@@ -20,20 +26,20 @@ describe('conversation endpoint selectors', () => {
   it('should read idle state correctly', () => {
     const state = {conversationEndpoint: idleState};
 
-    expect(selectors.status(state)).toBe('idle');
-    expect(selectors.isLoading(state)).toBe(false);
-    expect(selectors.error(state)).toBeNull();
-    expect(selectors.configuration(state)).toEqual({});
-    expect(selectors.streaming(state)).toEqual({isConnected: false});
+    expect(status(state)).toBe('idle');
+    expect(isLoading(state)).toBe(false);
+    expect(error(state)).toBeNull();
+    expect(configuration(state)).toEqual({});
+    expect(streaming(state)).toEqual({isConnected: false});
   });
 
   it('should read pending/streaming state correctly', () => {
     const state = {conversationEndpoint: pendingState};
 
-    expect(selectors.status(state)).toBe('pending');
-    expect(selectors.isLoading(state)).toBe(true);
-    expect(selectors.error(state)).toBe('boom');
-    expect(selectors.configuration(state)).toEqual({language: 'en'});
-    expect(selectors.streaming(state)).toEqual({isConnected: true});
+    expect(status(state)).toBe('pending');
+    expect(isLoading(state)).toBe(true);
+    expect(error(state)).toBe('boom');
+    expect(configuration(state)).toEqual({language: 'en'});
+    expect(streaming(state)).toEqual({isConnected: true});
   });
 });

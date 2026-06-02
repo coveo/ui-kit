@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import type {CartState} from './cart-types.js';
-import * as selectors from './cart-selectors.js';
+import {items} from './cart-selectors.js';
 
 describe('cart selectors', () => {
   const initialCartState: CartState = {
@@ -18,10 +18,10 @@ describe('cart selectors', () => {
   const populatedState = {cart: populatedCartState};
 
   it('should expose the initial items', () => {
-    expect(selectors.items(initialState)).toEqual([]);
+    expect(items(initialState)).toEqual([]);
   });
 
   it('should expose all items in cart', () => {
-    expect(selectors.items(populatedState)).toEqual(populatedCartState.items);
+    expect(items(populatedState)).toEqual(populatedCartState.items);
   });
 });

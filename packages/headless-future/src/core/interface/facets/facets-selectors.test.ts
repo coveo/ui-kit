@@ -7,8 +7,13 @@ import {
   createTestEngine,
   createMockFacetValues,
 } from '@/src/test/test-utils.js';
-import * as selectors from './facets-selectors.js';
-import * as mutations from './facets-mutators.js';
+import {
+  all as selectAll,
+  allSelectedValues,
+  byId,
+  selectedValues,
+} from './facets-selectors.js';
+import {setFacet, toggleValue} from './facets-mutators.js';
 import {FullEngine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {facetsSlice} from '@/src/core/internal/facets/facets-slice.js';
 import {FacetState} from './facets-types.js';
@@ -23,7 +28,7 @@ describe('createFacetsSelectors()', () => {
 
   describe('all selector', () => {
     it('should return empty object initially', () => {
-      const all = engine.read(selectors.all);
+      const all = engine.read(selectAll);
       expect(all).toEqual({});
     });
 
@@ -41,10 +46,10 @@ describe('createFacetsSelectors()', () => {
         selectedValues: [],
       };
 
-      engine.mutate(mutations.setFacet(facet1));
-      engine.mutate(mutations.setFacet(facet2));
+      engine.mutate(setFacet(facet1));
+      engine.mutate(setFacet(facet2));
 
-      const all = engine.read(selectors.all);
+      const all = engine.read(selectAll);
       expect(Object.keys(all)).toHaveLength(2);
       expect(all.category).toEqual(facet1);
       expect(all.brand).toEqual(facet2);
@@ -53,7 +58,7 @@ describe('createFacetsSelectors()', () => {
 
   describe('byId selector', () => {
     it('should return undefined for non-existent facet', () => {
-      const facet = engine.read(selectors.byId('category'));
+      const facet = engine.read(byId('category'));
       expect(facet).toBeUndefined();
     });
 
@@ -65,8 +70,8 @@ describe('createFacetsSelectors()', () => {
         selectedValues: [],
       };
 
-      engine.mutate(mutations.setFacet(facetState));
-      const facet = engine.read(selectors.byId('category'));
+      engine.mutate(setFacet(facetState));
+      const facet = engine.read(byId('category'));
 
       expect(facet).toEqual(facetState);
     });
@@ -85,17 +90,17 @@ describe('createFacetsSelectors()', () => {
         selectedValues: [],
       };
 
-      engine.mutate(mutations.setFacet(facet1));
-      engine.mutate(mutations.setFacet(facet2));
+      engine.mutate(setFacet(facet1));
+      engine.mutate(setFacet(facet2));
 
-      const category = engine.read(selectors.byId('category'));
+      const category = engine.read(byId('category'));
       expect(category?.id).toBe('category');
     });
   });
 
   describe('selectedValues selector', () => {
     it('should return empty array for non-existent facet', () => {
-      const selected = engine.read(selectors.selectedValues('category'));
+      const selected = engine.read(selectedValues('category'));
       expect(selected).toEqual([]);
     });
 
@@ -107,8 +112,8 @@ describe('createFacetsSelectors()', () => {
         selectedValues: [],
       };
 
-      engine.mutate(mutations.setFacet(facet));
-      const selected = engine.read(selectors.selectedValues('category'));
+      engine.mutate(setFacet(facet));
+      const selected = engine.read(selectedValues('category'));
 
       expect(selected).toEqual([]);
     });
@@ -121,8 +126,8 @@ describe('createFacetsSelectors()', () => {
         selectedValues: ['value-1', 'value-3'],
       };
 
-      engine.mutate(mutations.setFacet(facet));
-      const selected = engine.read(selectors.selectedValues('category'));
+      engine.mutate(setFacet(facet));
+      const selected = engine.read(selectedValues('category'));
 
       expect(selected).toEqual(['value-1', 'value-3']);
     });
@@ -135,17 +140,17 @@ describe('createFacetsSelectors()', () => {
         selectedValues: [],
       };
 
-      engine.mutate(mutations.setFacet(facet));
-      engine.mutate(mutations.toggleValue('category', 'value-1'));
+      engine.mutate(setFacet(facet));
+      engine.mutate(toggleValue('category', 'value-1'));
 
-      const selected = engine.read(selectors.selectedValues('category'));
+      const selected = engine.read(selectedValues('category'));
       expect(selected).toContain('value-1');
     });
   });
 
   describe('allSelectedValues selector', () => {
     it('should return empty array when no facets', () => {
-      const all = engine.read(selectors.allSelectedValues);
+      const all = engine.read(allSelectedValues);
       expect(all).toEqual([]);
     });
 
@@ -157,8 +162,8 @@ describe('createFacetsSelectors()', () => {
         selectedValues: [],
       };
 
-      engine.mutate(mutations.setFacet(facet));
-      const all = engine.read(selectors.allSelectedValues);
+      engine.mutate(setFacet(facet));
+      const all = engine.read(allSelectedValues);
 
       expect(all).toEqual([]);
     });
@@ -171,8 +176,8 @@ describe('createFacetsSelectors()', () => {
         selectedValues: ['value-1', 'value-3'],
       };
 
-      engine.mutate(mutations.setFacet(facet));
-      const all = engine.read(selectors.allSelectedValues);
+      engine.mutate(setFacet(facet));
+      const all = engine.read(allSelectedValues);
 
       expect(all).toEqual([
         {facetId: 'category', valueId: 'value-1'},
@@ -195,10 +200,10 @@ describe('createFacetsSelectors()', () => {
         selectedValues: ['apple', 'samsung'],
       };
 
-      engine.mutate(mutations.setFacet(categoryFacet));
-      engine.mutate(mutations.setFacet(brandFacet));
+      engine.mutate(setFacet(categoryFacet));
+      engine.mutate(setFacet(brandFacet));
 
-      const all = engine.read(selectors.allSelectedValues);
+      const all = engine.read(allSelectedValues);
 
       expect(all).toHaveLength(4);
       expect(all).toContainEqual({facetId: 'category', valueId: 'electronics'});
@@ -215,13 +220,13 @@ describe('createFacetsSelectors()', () => {
         selectedValues: [],
       };
 
-      engine.mutate(mutations.setFacet(facet));
+      engine.mutate(setFacet(facet));
 
-      let all = engine.read(selectors.allSelectedValues);
+      let all = engine.read(allSelectedValues);
       expect(all).toEqual([]);
 
-      engine.mutate(mutations.toggleValue('category', 'value-1'));
-      all = engine.read(selectors.allSelectedValues);
+      engine.mutate(toggleValue('category', 'value-1'));
+      all = engine.read(allSelectedValues);
 
       expect(all).toEqual([{facetId: 'category', valueId: 'value-1'}]);
     });

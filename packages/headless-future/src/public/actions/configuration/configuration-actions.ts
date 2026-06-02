@@ -1,5 +1,14 @@
 import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
-import * as configurationMutators from '@/src/core/interface/configuration/configuration-mutators.js';
+import {
+  setOrganizationId,
+  setAccessToken,
+  setTrackingId,
+  setLanguage,
+  setCountry,
+  setCurrency,
+  setEndpoint,
+  setConfiguration,
+} from '@/src/core/interface/configuration/configuration-mutators.js';
 import {configurationSlice} from '@/src/core/internal/configuration/configuration-slice.js';
 import type {ConfigurationState} from '@/src/core/interface/configuration/configuration-types.js';
 
@@ -25,36 +34,36 @@ const ensureLoaded = (engine: Engine) => {
 
 export const loadConfigurationActions = (
   engine: Engine
-): MutatorsToActions<typeof configurationMutators> => {
+): MutatorsToActions<
+  typeof import('@/src/core/interface/configuration/configuration-mutators.js')
+> => {
   ensureLoaded(engine);
   const fullEngine = getFullEngine(engine);
 
   return {
     setOrganizationId: (organizationId: string) => {
-      fullEngine.mutate(
-        configurationMutators.setOrganizationId(organizationId)
-      );
+      fullEngine.mutate(setOrganizationId(organizationId));
     },
     setAccessToken: (accessToken: string) => {
-      fullEngine.mutate(configurationMutators.setAccessToken(accessToken));
+      fullEngine.mutate(setAccessToken(accessToken));
     },
     setTrackingId: (trackingId: string) => {
-      fullEngine.mutate(configurationMutators.setTrackingId(trackingId));
+      fullEngine.mutate(setTrackingId(trackingId));
     },
     setLanguage: (language: string) => {
-      fullEngine.mutate(configurationMutators.setLanguage(language));
+      fullEngine.mutate(setLanguage(language));
     },
     setCountry: (country: string) => {
-      fullEngine.mutate(configurationMutators.setCountry(country));
+      fullEngine.mutate(setCountry(country));
     },
     setCurrency: (currency: string) => {
-      fullEngine.mutate(configurationMutators.setCurrency(currency));
+      fullEngine.mutate(setCurrency(currency));
     },
     setEndpoint: (endpoint: string | undefined) => {
-      fullEngine.mutate(configurationMutators.setEndpoint(endpoint));
+      fullEngine.mutate(setEndpoint(endpoint));
     },
     setConfiguration: (config: ConfigurationState) => {
-      fullEngine.mutate(configurationMutators.setConfiguration(config));
+      fullEngine.mutate(setConfiguration(config));
     },
   };
 };

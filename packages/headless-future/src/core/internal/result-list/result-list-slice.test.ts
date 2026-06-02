@@ -1,6 +1,6 @@
 import {describe, it, expect} from 'vitest';
 import {resultsSlice, initialResultListState} from './result-list-slice.js';
-import * as resultListActions from './result-list-actions.js';
+import {clearResults, setResults} from './result-list-actions.js';
 import type {SearchResult} from '@/src/core/interface/result-list/result-list-types.js';
 
 const mockResult = (overrides: Partial<SearchResult> = {}): SearchResult => ({
@@ -42,7 +42,7 @@ describe('resultsSlice: setResults', () => {
 
     const state = resultsSlice.reducer(
       initialResultListState,
-      resultListActions.setResults(results)
+      setResults(results)
     );
 
     expect(state.results).toEqual(results);
@@ -61,10 +61,7 @@ describe('resultsSlice: setResults', () => {
       mockResult({uniqueId: 'new', title: 'New', uri: 'new', excerpt: 'new'}),
     ];
 
-    const state = resultsSlice.reducer(
-      oldState,
-      resultListActions.setResults(newResults)
-    );
+    const state = resultsSlice.reducer(oldState, setResults(newResults));
 
     expect(state.results).toEqual(newResults);
     expect(state.results.length).toBe(1);
@@ -76,10 +73,7 @@ describe('resultsSlice: setResults', () => {
       results: [mockResult()],
     };
 
-    const state = resultsSlice.reducer(
-      oldState,
-      resultListActions.setResults([])
-    );
+    const state = resultsSlice.reducer(oldState, setResults([]));
 
     expect(state.results).toEqual([]);
   });
@@ -100,10 +94,7 @@ describe('resultsSlice: clearResults', () => {
       ],
     };
 
-    const state = resultsSlice.reducer(
-      stateWithResults,
-      resultListActions.clearResults()
-    );
+    const state = resultsSlice.reducer(stateWithResults, clearResults());
 
     expect(state.results).toEqual([]);
   });
@@ -113,10 +104,7 @@ describe('resultsSlice: state immutability', () => {
   it('should not mutate original state for any action', () => {
     const original = {...initialResultListState};
 
-    resultsSlice.reducer(
-      original,
-      resultListActions.setResults([mockResult()])
-    );
+    resultsSlice.reducer(original, setResults([mockResult()]));
 
     expect(original.results).toEqual([]);
   });

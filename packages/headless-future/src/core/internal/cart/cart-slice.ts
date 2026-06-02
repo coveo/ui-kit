@@ -3,7 +3,7 @@ import type {
   CartItem,
   CartState,
 } from '@/src/core/interface/cart/cart-types.js';
-import * as cartActions from './cart-actions.js';
+import {setItems, updateItemQuantity} from './cart-actions.js';
 
 export const initialCartState: CartState = {
   items: [],
@@ -17,10 +17,10 @@ export const cartSlice = createSlice({
   initialState: initialCartState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(cartActions.setItems, (state, action) => {
+    builder.addCase(setItems, (state, action) => {
       state.items = action.payload;
     });
-    builder.addCase(cartActions.updateItemQuantity, (state, action) => {
+    builder.addCase(updateItemQuantity, (state, action) => {
       const index = state.items.findIndex(
         (item) => cartKey(item) === cartKey(action.payload)
       );

@@ -9,7 +9,7 @@ import {
   FullEngine,
   getFullEngine,
 } from '@/src/core/interface/engine/engine.js';
-import * as searchBoxSelectors from '@/src/core/interface/search-box/search-box-selectors.js';
+import {getQuery} from '@/src/core/interface/search-box/search-box-selectors.js';
 import {buildSearchBoxController} from './search-box-controller.js';
 
 const mockExecuteSearch = vi.fn();
@@ -43,7 +43,7 @@ describe('buildSearchBoxController', () => {
     buildController();
 
     // If the slice was adopted, reading from it should not throw
-    expect(fullEngine.read(searchBoxSelectors.getQuery)).toBe('');
+    expect(fullEngine.read(getQuery)).toBe('');
   });
 
   describe('setQuery()', () => {
@@ -52,7 +52,7 @@ describe('buildSearchBoxController', () => {
 
       controller.setQuery({query: 'laptops'});
 
-      expect(fullEngine.read(searchBoxSelectors.getQuery)).toBe('laptops');
+      expect(fullEngine.read(getQuery)).toBe('laptops');
     });
 
     it('should reset the query with an empty string', () => {
@@ -61,7 +61,7 @@ describe('buildSearchBoxController', () => {
       controller.setQuery({query: 'something'});
       controller.setQuery({query: ''});
 
-      expect(fullEngine.read(searchBoxSelectors.getQuery)).toBe('');
+      expect(fullEngine.read(getQuery)).toBe('');
     });
   });
 

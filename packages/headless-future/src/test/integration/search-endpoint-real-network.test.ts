@@ -3,7 +3,7 @@ import {
   Engine,
   buildResultListController,
   buildSearchBoxController,
-  setConfiguration,
+  loadConfigurationActions,
   getSampleEngineConfiguration,
 } from '@/src/index.js';
 import {
@@ -34,7 +34,7 @@ describe('search endpoint real-network sanity check', () => {
     const engine = new Engine();
     const fullEngine = getFullEngine(engine);
 
-    setConfiguration(engine, sampleConfiguration);
+    loadConfigurationActions(engine).setConfiguration(sampleConfiguration);
 
     const searchBox = buildSearchBoxController({engine});
     const resultList = buildResultListController({engine});

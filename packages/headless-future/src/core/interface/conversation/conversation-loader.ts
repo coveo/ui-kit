@@ -2,7 +2,7 @@ import {getEndpointContributorRegistry} from '@/src/core/internal/api/base-facad
 import {conversationEndpointKey} from '@/src/core/internal/api/base-facade/endpoint-keys.js';
 import {FullEngine} from '@/src/core/interface/engine/engine.js';
 import {conversationSlice} from '@/src/core/internal/conversation/conversation-slice.js';
-import * as conversationSelectors from './conversation-selectors.js';
+import {session, activeTurnUserMessage} from './conversation-selectors.js';
 
 const conversationLoadedEngines = new WeakSet<FullEngine>();
 
@@ -15,16 +15,16 @@ export const loadConversation = (engine: FullEngine) => {
 
   const registry = getEndpointContributorRegistry(engine);
   registry.register(conversationEndpointKey, () => {
-    const session = engine.read(conversationSelectors.session);
-    const message = engine.read(conversationSelectors.activeTurnUserMessage);
+    const sess = engine.read(session);
+    const message = engine.read(activeTurnUserMessage);
 
     return {
       ...(message !== undefined ? {message} : {}),
-      ...(session.conversationSessionId !== undefined
-        ? {conversationSessionId: session.conversationSessionId}
+      ...(sess.conversationSessionId !== undefined
+        ? {conversationSessionId: sess.conversationSessionId}
         : {}),
-      ...(session.conversationToken !== undefined
-        ? {conversationToken: session.conversationToken}
+      ...(sess.conversationToken !== undefined
+        ? {conversationToken: sess.conversationToken}
         : {}),
     };
   });

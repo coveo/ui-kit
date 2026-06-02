@@ -3,7 +3,17 @@ import type {
   ConversationState,
   ConversationTurn,
 } from '@/src/core/interface/conversation/conversation-types.js';
-import * as conversationActions from './conversation-actions.js';
+import {
+  startTurn,
+  appendAgentChunk,
+  completeTurn,
+  failTurn,
+  abortTurn,
+  setSession,
+  patchSession,
+  setError,
+  setStreamingConnected,
+} from './conversation-actions.js';
 
 export const initialConversationState: ConversationState = {
   messages: [],
@@ -22,7 +32,7 @@ export const conversationSlice = createSlice({
   initialState: initialConversationState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(conversationActions.startTurn, (state, action) => {
+    builder.addCase(startTurn, (state, action) => {
       const {turnId, userMessageId, agentMessageId, input, createdAt} =
         action.payload;
 
@@ -51,7 +61,7 @@ export const conversationSlice = createSlice({
       state.error = null;
       state.streaming.isConnected = false;
     });
-    builder.addCase(conversationActions.appendAgentChunk, (state, action) => {
+    builder.addCase(appendAgentChunk, (state, action) => {
       const turnIndex = getTurnIndex(state, action.payload.turnId);
 
       if (turnIndex === -1) {
@@ -69,7 +79,7 @@ export const conversationSlice = createSlice({
       state.turns[turnIndex].status = {type: 'streaming'};
       state.streaming.isConnected = true;
     });
-    builder.addCase(conversationActions.completeTurn, (state, action) => {
+    builder.addCase(completeTurn, (state, action) => {
       const turnIndex = getTurnIndex(state, action.payload.turnId);
 
       if (turnIndex === -1) {
@@ -82,7 +92,7 @@ export const conversationSlice = createSlice({
       state.isLoading = false;
       state.streaming.isConnected = false;
     });
-    builder.addCase(conversationActions.failTurn, (state, action) => {
+    builder.addCase(failTurn, (state, action) => {
       const turnIndex = getTurnIndex(state, action.payload.turnId);
 
       if (turnIndex === -1) {
@@ -98,7 +108,7 @@ export const conversationSlice = createSlice({
       state.isLoading = false;
       state.streaming.isConnected = false;
     });
-    builder.addCase(conversationActions.abortTurn, (state, action) => {
+    builder.addCase(abortTurn, (state, action) => {
       const turnIndex = getTurnIndex(state, action.payload.turnId);
 
       if (turnIndex === -1) {
@@ -124,24 +134,21 @@ export const conversationSlice = createSlice({
       state.isLoading = false;
       state.streaming.isConnected = false;
     });
-    builder.addCase(conversationActions.setSession, (state, action) => {
+    builder.addCase(setSession, (state, action) => {
       state.session = action.payload;
     });
-    builder.addCase(conversationActions.patchSession, (state, action) => {
+    builder.addCase(patchSession, (state, action) => {
       state.session = {
         ...state.session,
         ...action.payload,
       };
     });
-    builder.addCase(conversationActions.setError, (state, action) => {
+    builder.addCase(setError, (state, action) => {
       state.error = action.payload;
     });
-    builder.addCase(
-      conversationActions.setStreamingConnected,
-      (state, action) => {
-        state.streaming.isConnected = action.payload;
-      }
-    );
+    builder.addCase(setStreamingConnected, (state, action) => {
+      state.streaming.isConnected = action.payload;
+    });
   },
   selectors: {
     messages: (state) => state.messages,

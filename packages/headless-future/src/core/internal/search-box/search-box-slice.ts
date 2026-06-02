@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import * as searchBoxActions from './search-box-actions.js';
+import {setQuery} from './search-box-actions.js';
 
 export interface SearchBoxState {
   query: string;
@@ -14,7 +14,7 @@ export const searchBoxSlice = createSlice({
   initialState: initialSearchBoxState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(searchBoxActions.setQuery, (state, action) => {
+    builder.addCase(setQuery, (state, action) => {
       state.query = action.payload;
     });
   },

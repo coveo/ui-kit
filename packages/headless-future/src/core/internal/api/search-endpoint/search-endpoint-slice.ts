@@ -1,6 +1,10 @@
 import type {SearchEndpointState} from '@/src/core/interface/api/search-endpoint/search-endpoint-types.js';
 import {createSlice} from '@reduxjs/toolkit';
-import * as searchEndpointActions from './search-endpoint-actions.js';
+import {
+  setStatus,
+  setError,
+  setConfiguration,
+} from './search-endpoint-actions.js';
 
 export const initialSearchEndpointState: SearchEndpointState = {
   configuration: {},
@@ -13,13 +17,13 @@ export const searchEndpointSlice = createSlice({
   initialState: initialSearchEndpointState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(searchEndpointActions.setStatus, (state, action) => {
+    builder.addCase(setStatus, (state, action) => {
       state.status = action.payload;
     });
-    builder.addCase(searchEndpointActions.setError, (state, action) => {
+    builder.addCase(setError, (state, action) => {
       state.error = action.payload;
     });
-    builder.addCase(searchEndpointActions.setConfiguration, (state, action) => {
+    builder.addCase(setConfiguration, (state, action) => {
       state.configuration = action.payload;
     });
   },

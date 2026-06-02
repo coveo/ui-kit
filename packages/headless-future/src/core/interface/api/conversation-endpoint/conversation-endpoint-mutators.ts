@@ -1,23 +1,28 @@
-import * as conversationEndpointActions from '@/src/core/internal/api/conversation-endpoint/conversation-endpoint-actions.js';
+import {
+  setStatus as _setStatus,
+  setError as _setError,
+  setConfiguration as _setConfiguration,
+  setStreamingConnected as _setStreamingConnected,
+} from '@/src/core/internal/api/conversation-endpoint/conversation-endpoint-actions.js';
 import type {StateMutation} from '@/src/core/interface/engine/engine-types.js';
 import type {ConversationEndpointStatus} from './conversation-endpoint-types.js';
 
 export const setStatus = (
   status: ConversationEndpointStatus
 ): StateMutation => {
-  return conversationEndpointActions.setStatus(status);
+  return _setStatus(status);
 };
 
 export const setError = (error: string | null): StateMutation => {
-  return conversationEndpointActions.setError(error);
+  return _setError(error);
 };
 
 export const setConfiguration = (
   configuration: Record<string, any>
 ): StateMutation => {
-  return conversationEndpointActions.setConfiguration(configuration);
+  return _setConfiguration(configuration);
 };
 
 export const setStreamingConnected = (isConnected: boolean): StateMutation => {
-  return conversationEndpointActions.setStreamingConnected(isConnected);
+  return _setStreamingConnected(isConnected);
 };

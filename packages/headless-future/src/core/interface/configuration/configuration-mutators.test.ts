@@ -4,8 +4,25 @@
 
 import {describe, it, expect, beforeEach} from 'vitest';
 import {createTestEngine} from '@/src/test/test-utils.js';
-import * as selectors from './configuration-selectors.js';
-import * as configurationMutations from './configuration-mutators.js';
+import {
+  accessToken,
+  country,
+  currency,
+  endpoint,
+  language,
+  organizationId,
+  trackingId,
+} from './configuration-selectors.js';
+import {
+  setAccessToken,
+  setConfiguration,
+  setCountry,
+  setCurrency,
+  setEndpoint,
+  setLanguage,
+  setOrganizationId,
+  setTrackingId,
+} from './configuration-mutators.js';
 import {configurationSlice} from '@/src/core/internal/configuration/configuration-slice.js';
 import {FullEngine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 
@@ -19,7 +36,7 @@ describe('configurationMutations', () => {
 
   describe('setOrganizationId()', () => {
     it('should return StateMutation object', () => {
-      const mutation = configurationMutations.setOrganizationId('my-org-123');
+      const mutation = setOrganizationId('my-org-123');
 
       expect(mutation).toEqual({
         type: 'configuration/setOrganizationId',
@@ -28,19 +45,19 @@ describe('configurationMutations', () => {
     });
 
     it('should update state when used with mutate()', () => {
-      engine.mutate(configurationMutations.setOrganizationId('test-org'));
-      expect(engine.read(selectors.organizationId)).toBe('test-org');
+      engine.mutate(setOrganizationId('test-org'));
+      expect(engine.read(organizationId)).toBe('test-org');
     });
 
     it('should accept empty string', () => {
-      engine.mutate(configurationMutations.setOrganizationId(''));
-      expect(engine.read(selectors.organizationId)).toBe('');
+      engine.mutate(setOrganizationId(''));
+      expect(engine.read(organizationId)).toBe('');
     });
   });
 
   describe('setAccessToken()', () => {
     it('should return StateMutation object', () => {
-      const mutation = configurationMutations.setAccessToken('abc123token');
+      const mutation = setAccessToken('abc123token');
 
       expect(mutation).toEqual({
         type: 'configuration/setAccessToken',
@@ -49,21 +66,19 @@ describe('configurationMutations', () => {
     });
 
     it('should update state when used with mutate()', () => {
-      engine.mutate(configurationMutations.setAccessToken('my-token'));
-      expect(engine.read(selectors.accessToken)).toBe('my-token');
+      engine.mutate(setAccessToken('my-token'));
+      expect(engine.read(accessToken)).toBe('my-token');
     });
 
     it('should accept empty string', () => {
-      engine.mutate(configurationMutations.setAccessToken(''));
-      expect(engine.read(selectors.accessToken)).toBe('');
+      engine.mutate(setAccessToken(''));
+      expect(engine.read(accessToken)).toBe('');
     });
   });
 
   describe('setEndpoint()', () => {
     it('should return StateMutation object with endpoint', () => {
-      const mutation = configurationMutations.setEndpoint(
-        'https://custom.api.com'
-      );
+      const mutation = setEndpoint('https://custom.api.com');
 
       expect(mutation).toEqual({
         type: 'configuration/setEndpoint',
@@ -72,7 +87,7 @@ describe('configurationMutations', () => {
     });
 
     it('should return StateMutation object with undefined', () => {
-      const mutation = configurationMutations.setEndpoint(undefined);
+      const mutation = setEndpoint(undefined);
 
       expect(mutation).toEqual({
         type: 'configuration/setEndpoint',
@@ -81,38 +96,36 @@ describe('configurationMutations', () => {
     });
 
     it('should update state when used with mutate()', () => {
-      engine.mutate(
-        configurationMutations.setEndpoint('https://api.example.com')
-      );
-      expect(engine.read(selectors.endpoint)).toBe('https://api.example.com');
+      engine.mutate(setEndpoint('https://api.example.com'));
+      expect(engine.read(endpoint)).toBe('https://api.example.com');
     });
 
     it('should clear endpoint with undefined', () => {
-      engine.mutate(configurationMutations.setEndpoint('https://api.com'));
-      engine.mutate(configurationMutations.setEndpoint(undefined));
-      expect(engine.read(selectors.endpoint)).toBeUndefined();
+      engine.mutate(setEndpoint('https://api.com'));
+      engine.mutate(setEndpoint(undefined));
+      expect(engine.read(endpoint)).toBeUndefined();
     });
   });
 
   describe('new locale and tracking mutators', () => {
     it('setTrackingId should update state', () => {
-      engine.mutate(configurationMutations.setTrackingId('tracking-123'));
-      expect(engine.read(selectors.trackingId)).toBe('tracking-123');
+      engine.mutate(setTrackingId('tracking-123'));
+      expect(engine.read(trackingId)).toBe('tracking-123');
     });
 
     it('setLanguage should update state', () => {
-      engine.mutate(configurationMutations.setLanguage('en'));
-      expect(engine.read(selectors.language)).toBe('en');
+      engine.mutate(setLanguage('en'));
+      expect(engine.read(language)).toBe('en');
     });
 
     it('setCountry should update state', () => {
-      engine.mutate(configurationMutations.setCountry('US'));
-      expect(engine.read(selectors.country)).toBe('US');
+      engine.mutate(setCountry('US'));
+      expect(engine.read(country)).toBe('US');
     });
 
     it('setCurrency should update state', () => {
-      engine.mutate(configurationMutations.setCurrency('USD'));
-      expect(engine.read(selectors.currency)).toBe('USD');
+      engine.mutate(setCurrency('USD'));
+      expect(engine.read(currency)).toBe('USD');
     });
   });
 
@@ -128,7 +141,7 @@ describe('configurationMutations', () => {
         endpoint: 'https://custom.api.com',
       };
 
-      const mutation = configurationMutations.setConfiguration(config);
+      const mutation = setConfiguration(config);
 
       expect(mutation).toEqual({
         type: 'configuration/setConfiguration',
@@ -138,7 +151,7 @@ describe('configurationMutations', () => {
 
     it('should update entire configuration when used with mutate()', () => {
       engine.mutate(
-        configurationMutations.setConfiguration({
+        setConfiguration({
           organizationId: 'complete-org',
           accessToken: 'complete-token',
           trackingId: 'tracking-1',
@@ -149,18 +162,18 @@ describe('configurationMutations', () => {
         })
       );
 
-      expect(engine.read(selectors.organizationId)).toBe('complete-org');
-      expect(engine.read(selectors.accessToken)).toBe('complete-token');
-      expect(engine.read(selectors.trackingId)).toBe('tracking-1');
-      expect(engine.read(selectors.language)).toBe('en');
-      expect(engine.read(selectors.country)).toBe('US');
-      expect(engine.read(selectors.currency)).toBe('USD');
-      expect(engine.read(selectors.endpoint)).toBe('https://complete.api.com');
+      expect(engine.read(organizationId)).toBe('complete-org');
+      expect(engine.read(accessToken)).toBe('complete-token');
+      expect(engine.read(trackingId)).toBe('tracking-1');
+      expect(engine.read(language)).toBe('en');
+      expect(engine.read(country)).toBe('US');
+      expect(engine.read(currency)).toBe('USD');
+      expect(engine.read(endpoint)).toBe('https://complete.api.com');
     });
 
     it('should accept configuration without endpoint', () => {
       engine.mutate(
-        configurationMutations.setConfiguration({
+        setConfiguration({
           organizationId: 'org',
           accessToken: 'token',
           trackingId: 'tracking-1',
@@ -170,14 +183,14 @@ describe('configurationMutations', () => {
         })
       );
 
-      expect(engine.read(selectors.organizationId)).toBe('org');
-      expect(engine.read(selectors.accessToken)).toBe('token');
-      expect(engine.read(selectors.endpoint)).toBeUndefined();
+      expect(engine.read(organizationId)).toBe('org');
+      expect(engine.read(accessToken)).toBe('token');
+      expect(engine.read(endpoint)).toBeUndefined();
     });
 
     it('should replace previous configuration completely', () => {
       engine.mutate(
-        configurationMutations.setConfiguration({
+        setConfiguration({
           organizationId: 'old-org',
           accessToken: 'old-token',
           trackingId: 'tracking-old',
@@ -189,7 +202,7 @@ describe('configurationMutations', () => {
       );
 
       engine.mutate(
-        configurationMutations.setConfiguration({
+        setConfiguration({
           organizationId: 'new-org',
           accessToken: 'new-token',
           trackingId: 'tracking-new',
@@ -199,37 +212,35 @@ describe('configurationMutations', () => {
         })
       );
 
-      expect(engine.read(selectors.organizationId)).toBe('new-org');
-      expect(engine.read(selectors.accessToken)).toBe('new-token');
-      expect(engine.read(selectors.trackingId)).toBe('tracking-new');
-      expect(engine.read(selectors.language)).toBe('fr');
-      expect(engine.read(selectors.country)).toBe('CA');
-      expect(engine.read(selectors.currency)).toBe('CAD');
-      expect(engine.read(selectors.endpoint)).toBeUndefined();
+      expect(engine.read(organizationId)).toBe('new-org');
+      expect(engine.read(accessToken)).toBe('new-token');
+      expect(engine.read(trackingId)).toBe('tracking-new');
+      expect(engine.read(language)).toBe('fr');
+      expect(engine.read(country)).toBe('CA');
+      expect(engine.read(currency)).toBe('CAD');
+      expect(engine.read(endpoint)).toBeUndefined();
     });
   });
 
   describe('Integration: configuration management', () => {
     it('should handle sequential field updates', () => {
-      engine.mutate(configurationMutations.setOrganizationId('org-1'));
-      expect(engine.read(selectors.organizationId)).toBe('org-1');
-      expect(engine.read(selectors.accessToken)).toBe('');
+      engine.mutate(setOrganizationId('org-1'));
+      expect(engine.read(organizationId)).toBe('org-1');
+      expect(engine.read(accessToken)).toBe('');
 
-      engine.mutate(configurationMutations.setAccessToken('token-1'));
-      expect(engine.read(selectors.organizationId)).toBe('org-1');
-      expect(engine.read(selectors.accessToken)).toBe('token-1');
+      engine.mutate(setAccessToken('token-1'));
+      expect(engine.read(organizationId)).toBe('org-1');
+      expect(engine.read(accessToken)).toBe('token-1');
 
-      engine.mutate(
-        configurationMutations.setEndpoint('https://api.example.com')
-      );
-      expect(engine.read(selectors.organizationId)).toBe('org-1');
-      expect(engine.read(selectors.accessToken)).toBe('token-1');
-      expect(engine.read(selectors.endpoint)).toBe('https://api.example.com');
+      engine.mutate(setEndpoint('https://api.example.com'));
+      expect(engine.read(organizationId)).toBe('org-1');
+      expect(engine.read(accessToken)).toBe('token-1');
+      expect(engine.read(endpoint)).toBe('https://api.example.com');
     });
 
     it('should allow updating individual fields after bulk set', () => {
       engine.mutate(
-        configurationMutations.setConfiguration({
+        setConfiguration({
           organizationId: 'initial-org',
           accessToken: 'initial-token',
           trackingId: 'tracking-initial',
@@ -241,29 +252,29 @@ describe('configurationMutations', () => {
       );
 
       // Update just organization ID
-      engine.mutate(configurationMutations.setOrganizationId('updated-org'));
-      expect(engine.read(selectors.organizationId)).toBe('updated-org');
-      expect(engine.read(selectors.accessToken)).toBe('initial-token');
-      expect(engine.read(selectors.endpoint)).toBe('https://initial.api.com');
+      engine.mutate(setOrganizationId('updated-org'));
+      expect(engine.read(organizationId)).toBe('updated-org');
+      expect(engine.read(accessToken)).toBe('initial-token');
+      expect(engine.read(endpoint)).toBe('https://initial.api.com');
 
       // Update just access token
-      engine.mutate(configurationMutations.setAccessToken('updated-token'));
-      expect(engine.read(selectors.organizationId)).toBe('updated-org');
-      expect(engine.read(selectors.accessToken)).toBe('updated-token');
-      expect(engine.read(selectors.endpoint)).toBe('https://initial.api.com');
+      engine.mutate(setAccessToken('updated-token'));
+      expect(engine.read(organizationId)).toBe('updated-org');
+      expect(engine.read(accessToken)).toBe('updated-token');
+      expect(engine.read(endpoint)).toBe('https://initial.api.com');
     });
 
     it('should persist through partial updates', () => {
-      engine.mutate(configurationMutations.setOrganizationId('persistent-org'));
-      engine.mutate(configurationMutations.setAccessToken('token-1'));
+      engine.mutate(setOrganizationId('persistent-org'));
+      engine.mutate(setAccessToken('token-1'));
 
       // Update token multiple times
-      engine.mutate(configurationMutations.setAccessToken('token-2'));
-      engine.mutate(configurationMutations.setAccessToken('token-3'));
+      engine.mutate(setAccessToken('token-2'));
+      engine.mutate(setAccessToken('token-3'));
 
       // Organization ID should remain unchanged
-      expect(engine.read(selectors.organizationId)).toBe('persistent-org');
-      expect(engine.read(selectors.accessToken)).toBe('token-3');
+      expect(engine.read(organizationId)).toBe('persistent-org');
+      expect(engine.read(accessToken)).toBe('token-3');
     });
   });
 });

@@ -1,7 +1,10 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import type {FullEngine} from '@/src/core/interface/engine/engine.js';
-import * as searchEndpointMutators from '@/src/core/interface/api/search-endpoint/search-endpoint-mutators.js';
-import * as searchEndpointSelectors from '@/src/core/interface/api/search-endpoint/search-endpoint-selectors.js';
+import {
+  setError,
+  setStatus,
+} from '@/src/core/interface/api/search-endpoint/search-endpoint-mutators.js';
+import {buildSearchEndpointRequest} from '@/src/core/interface/api/search-endpoint/search-endpoint-selectors.js';
 import {createSearchEndpointClient} from '@/src/api/interface/search-endpoint/search-endpoint-client.js';
 import {readEndpointClientConfiguration} from '@/src/core/internal/configuration/configuration-reader.js';
 import {SearchEndpointFacade} from './search-endpoint-facade.js';
@@ -134,9 +137,7 @@ describe('SearchEndpointFacade', () => {
 
         await facade.callEndpoint();
 
-        expect(engine.read).toHaveBeenCalledWith(
-          searchEndpointSelectors.buildSearchEndpointRequest
-        );
+        expect(engine.read).toHaveBeenCalledWith(buildSearchEndpointRequest);
       });
 
       it('reads endpoint client configuration from engine', async () => {
@@ -161,7 +162,7 @@ describe('SearchEndpointFacade', () => {
         };
         const engine = createMockEngine();
         engine.read.mockImplementation((selector: any) => {
-          if (selector === searchEndpointSelectors.buildSearchEndpointRequest) {
+          if (selector === buildSearchEndpointRequest) {
             return mockRequest;
           }
           return selector(engine);
@@ -211,17 +212,9 @@ describe('SearchEndpointFacade', () => {
 
         await facade.callEndpoint();
 
-        expect(engine.mutate).toHaveBeenNthCalledWith(
-          1,
-          searchEndpointMutators.setStatus('pending')
-        );
-        expect(engine.mutate).toHaveBeenNthCalledWith(
-          2,
-          searchEndpointMutators.setError(null)
-        );
-        expect(engine.mutate).toHaveBeenLastCalledWith(
-          searchEndpointMutators.setStatus('idle')
-        );
+        expect(engine.mutate).toHaveBeenNthCalledWith(1, setStatus('pending'));
+        expect(engine.mutate).toHaveBeenNthCalledWith(2, setError(null));
+        expect(engine.mutate).toHaveBeenLastCalledWith(setStatus('idle'));
       });
 
       it('calls handleSearchEndpointResponse on successful response', async () => {
@@ -246,9 +239,7 @@ describe('SearchEndpointFacade', () => {
         await facade.callEndpoint();
 
         expect(handleSearchEndpointResponse).not.toHaveBeenCalled();
-        expect(engine.mutate).toHaveBeenLastCalledWith(
-          searchEndpointMutators.setStatus('idle')
-        );
+        expect(engine.mutate).toHaveBeenLastCalledWith(setStatus('idle'));
       });
     });
 
@@ -263,12 +254,8 @@ describe('SearchEndpointFacade', () => {
 
         await facade.callEndpoint();
 
-        expect(engine.mutate).toHaveBeenCalledWith(
-          searchEndpointMutators.setError('request failed')
-        );
-        expect(engine.mutate).toHaveBeenLastCalledWith(
-          searchEndpointMutators.setStatus('idle')
-        );
+        expect(engine.mutate).toHaveBeenCalledWith(setError('request failed'));
+        expect(engine.mutate).toHaveBeenLastCalledWith(setStatus('idle'));
       });
 
       it('stores error message when request execution throws an Error', async () => {
@@ -278,12 +265,8 @@ describe('SearchEndpointFacade', () => {
 
         await facade.callEndpoint();
 
-        expect(engine.mutate).toHaveBeenCalledWith(
-          searchEndpointMutators.setError('boom')
-        );
-        expect(engine.mutate).toHaveBeenLastCalledWith(
-          searchEndpointMutators.setStatus('idle')
-        );
+        expect(engine.mutate).toHaveBeenCalledWith(setError('boom'));
+        expect(engine.mutate).toHaveBeenLastCalledWith(setStatus('idle'));
       });
 
       it('stores a fallback error for non-Error thrown values', async () => {
@@ -294,11 +277,9 @@ describe('SearchEndpointFacade', () => {
         await facade.callEndpoint();
 
         expect(engine.mutate).toHaveBeenCalledWith(
-          searchEndpointMutators.setError('An unexpected error occurred.')
+          setError('An unexpected error occurred.')
         );
-        expect(engine.mutate).toHaveBeenLastCalledWith(
-          searchEndpointMutators.setStatus('idle')
-        );
+        expect(engine.mutate).toHaveBeenLastCalledWith(setStatus('idle'));
       });
 
       it('does not call handleSearchEndpointResponse on error', async () => {
@@ -320,9 +301,7 @@ describe('SearchEndpointFacade', () => {
 
       const debugInfo = facade.getDebugInfo();
 
-      expect(engine.read).toHaveBeenCalledWith(
-        searchEndpointSelectors.buildSearchEndpointRequest
-      );
+      expect(engine.read).toHaveBeenCalledWith(buildSearchEndpointRequest);
       expect(debugInfo).toHaveProperty('currentRequest');
     });
   });

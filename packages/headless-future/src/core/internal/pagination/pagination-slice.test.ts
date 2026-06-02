@@ -4,7 +4,14 @@
 
 import {describe, it, expect} from 'vitest';
 import {paginationSlice, initialPaginationState} from './pagination-slice.js';
-import * as paginationActions from './pagination-actions.js';
+import {
+  nextPage,
+  previousPage,
+  resetToFirstPage,
+  setPage,
+  setPageSize,
+  setTotalCount,
+} from './pagination-actions.js';
 
 describe('paginationSlice: initialState', () => {
   it('should have correct initial state', () => {
@@ -18,10 +25,7 @@ describe('paginationSlice: initialState', () => {
 
 describe('paginationSlice: setPage', () => {
   it('should update current page', () => {
-    const state = paginationSlice.reducer(
-      initialPaginationState,
-      paginationActions.setPage(3)
-    );
+    const state = paginationSlice.reducer(initialPaginationState, setPage(3));
 
     expect(state.currentPage).toBe(3);
   });
@@ -29,7 +33,7 @@ describe('paginationSlice: setPage', () => {
   it('should not affect other fields', () => {
     const state = paginationSlice.reducer(
       {...initialPaginationState, pageSize: 20, totalCount: 100},
-      paginationActions.setPage(5)
+      setPage(5)
     );
 
     expect(state.currentPage).toBe(5);
@@ -39,7 +43,7 @@ describe('paginationSlice: setPage', () => {
 
   it('should maintain state immutability', () => {
     const original = {...initialPaginationState};
-    paginationSlice.reducer(original, paginationActions.setPage(2));
+    paginationSlice.reducer(original, setPage(2));
 
     expect(original.currentPage).toBe(1);
   });
@@ -49,7 +53,7 @@ describe('paginationSlice: setPageSize', () => {
   it('should update page size', () => {
     const state = paginationSlice.reducer(
       initialPaginationState,
-      paginationActions.setPageSize(25)
+      setPageSize(25)
     );
 
     expect(state.pageSize).toBe(25);
@@ -62,10 +66,7 @@ describe('paginationSlice: setPageSize', () => {
       totalCount: 100,
     };
 
-    const state = paginationSlice.reducer(
-      currentState,
-      paginationActions.setPageSize(20)
-    );
+    const state = paginationSlice.reducer(currentState, setPageSize(20));
 
     expect(state.pageSize).toBe(20);
     expect(state.currentPage).toBe(1);
@@ -74,7 +75,7 @@ describe('paginationSlice: setPageSize', () => {
   it('should not affect total count', () => {
     const state = paginationSlice.reducer(
       {...initialPaginationState, totalCount: 150},
-      paginationActions.setPageSize(50)
+      setPageSize(50)
     );
 
     expect(state.totalCount).toBe(150);
@@ -85,7 +86,7 @@ describe('paginationSlice: setTotalCount', () => {
   it('should update total count', () => {
     const state = paginationSlice.reducer(
       initialPaginationState,
-      paginationActions.setTotalCount(100)
+      setTotalCount(100)
     );
 
     expect(state.totalCount).toBe(100);
@@ -94,7 +95,7 @@ describe('paginationSlice: setTotalCount', () => {
   it('should not affect other fields', () => {
     const state = paginationSlice.reducer(
       {currentPage: 3, pageSize: 20, totalCount: 0},
-      paginationActions.setTotalCount(200)
+      setTotalCount(200)
     );
 
     expect(state.totalCount).toBe(200);
@@ -107,7 +108,7 @@ describe('paginationSlice: nextPage', () => {
   it('should increment current page when not on last page', () => {
     const state = paginationSlice.reducer(
       {currentPage: 2, pageSize: 10, totalCount: 100},
-      paginationActions.nextPage()
+      nextPage()
     );
 
     expect(state.currentPage).toBe(3);
@@ -117,7 +118,7 @@ describe('paginationSlice: nextPage', () => {
     // 100 total, 10 per page = 10 pages
     const state = paginationSlice.reducer(
       {currentPage: 10, pageSize: 10, totalCount: 100},
-      paginationActions.nextPage()
+      nextPage()
     );
 
     expect(state.currentPage).toBe(10); // Should stay on page 10
@@ -126,7 +127,7 @@ describe('paginationSlice: nextPage', () => {
   it('should handle edge case with 0 total count', () => {
     const state = paginationSlice.reducer(
       {currentPage: 1, pageSize: 10, totalCount: 0},
-      paginationActions.nextPage()
+      nextPage()
     );
 
     expect(state.currentPage).toBe(1); // Can't go beyond page 1
@@ -136,7 +137,7 @@ describe('paginationSlice: nextPage', () => {
     // 95 total, 10 per page = 10 pages (ceiling)
     const state = paginationSlice.reducer(
       {currentPage: 9, pageSize: 10, totalCount: 95},
-      paginationActions.nextPage()
+      nextPage()
     );
 
     expect(state.currentPage).toBe(10);
@@ -147,7 +148,7 @@ describe('paginationSlice: previousPage', () => {
   it('should decrement current page when not on first page', () => {
     const state = paginationSlice.reducer(
       {currentPage: 3, pageSize: 10, totalCount: 100},
-      paginationActions.previousPage()
+      previousPage()
     );
 
     expect(state.currentPage).toBe(2);
@@ -156,7 +157,7 @@ describe('paginationSlice: previousPage', () => {
   it('should not go below page 1', () => {
     const state = paginationSlice.reducer(
       {currentPage: 1, pageSize: 10, totalCount: 100},
-      paginationActions.previousPage()
+      previousPage()
     );
 
     expect(state.currentPage).toBe(1);
@@ -165,7 +166,7 @@ describe('paginationSlice: previousPage', () => {
   it('should work when on page 2', () => {
     const state = paginationSlice.reducer(
       {currentPage: 2, pageSize: 10, totalCount: 100},
-      paginationActions.previousPage()
+      previousPage()
     );
 
     expect(state.currentPage).toBe(1);
@@ -176,7 +177,7 @@ describe('paginationSlice: resetToFirstPage', () => {
   it('should reset to page 1', () => {
     const state = paginationSlice.reducer(
       {currentPage: 5, pageSize: 10, totalCount: 100},
-      paginationActions.resetToFirstPage()
+      resetToFirstPage()
     );
 
     expect(state.currentPage).toBe(1);
@@ -185,7 +186,7 @@ describe('paginationSlice: resetToFirstPage', () => {
   it('should not affect other fields', () => {
     const state = paginationSlice.reducer(
       {currentPage: 10, pageSize: 25, totalCount: 200},
-      paginationActions.resetToFirstPage()
+      resetToFirstPage()
     );
 
     expect(state.currentPage).toBe(1);
@@ -196,7 +197,7 @@ describe('paginationSlice: resetToFirstPage', () => {
   it('should work when already on first page', () => {
     const state = paginationSlice.reducer(
       initialPaginationState,
-      paginationActions.resetToFirstPage()
+      resetToFirstPage()
     );
 
     expect(state.currentPage).toBe(1);
@@ -208,22 +209,19 @@ describe('paginationSlice: pagination flow', () => {
     let state = {currentPage: 1, pageSize: 10, totalCount: 100};
 
     // Go to page 5
-    state = paginationSlice.reducer(state, paginationActions.setPage(5));
+    state = paginationSlice.reducer(state, setPage(5));
     expect(state.currentPage).toBe(5);
 
     // Next page
-    state = paginationSlice.reducer(state, paginationActions.nextPage());
+    state = paginationSlice.reducer(state, nextPage());
     expect(state.currentPage).toBe(6);
 
     // Previous page
-    state = paginationSlice.reducer(state, paginationActions.previousPage());
+    state = paginationSlice.reducer(state, previousPage());
     expect(state.currentPage).toBe(5);
 
     // Reset
-    state = paginationSlice.reducer(
-      state,
-      paginationActions.resetToFirstPage()
-    );
+    state = paginationSlice.reducer(state, resetToFirstPage());
     expect(state.currentPage).toBe(1);
   });
 
@@ -231,12 +229,12 @@ describe('paginationSlice: pagination flow', () => {
     let state = {currentPage: 5, pageSize: 10, totalCount: 100};
 
     // Change page size (should reset to page 1)
-    state = paginationSlice.reducer(state, paginationActions.setPageSize(25));
+    state = paginationSlice.reducer(state, setPageSize(25));
     expect(state.currentPage).toBe(1);
     expect(state.pageSize).toBe(25);
 
     // Go to page 2
-    state = paginationSlice.reducer(state, paginationActions.setPage(2));
+    state = paginationSlice.reducer(state, setPage(2));
     expect(state.currentPage).toBe(2);
   });
 });
@@ -245,13 +243,13 @@ describe('paginationSlice: state immutability', () => {
   it('should not mutate original state for any action', () => {
     const original = {...initialPaginationState};
 
-    paginationSlice.reducer(original, paginationActions.setPage(5));
+    paginationSlice.reducer(original, setPage(5));
     expect(original.currentPage).toBe(1);
 
-    paginationSlice.reducer(original, paginationActions.setPageSize(20));
+    paginationSlice.reducer(original, setPageSize(20));
     expect(original.pageSize).toBe(10);
 
-    paginationSlice.reducer(original, paginationActions.nextPage());
+    paginationSlice.reducer(original, nextPage());
     expect(original.currentPage).toBe(1);
   });
 });

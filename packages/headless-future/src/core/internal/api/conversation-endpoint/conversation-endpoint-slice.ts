@@ -1,6 +1,11 @@
 import type {ConversationEndpointState} from '@/src/core/interface/api/conversation-endpoint/conversation-endpoint-types.js';
 import {createSlice} from '@reduxjs/toolkit';
-import * as conversationEndpointActions from './conversation-endpoint-actions.js';
+import {
+  setStatus,
+  setError,
+  setConfiguration,
+  setStreamingConnected,
+} from './conversation-endpoint-actions.js';
 
 export const initialConversationEndpointState: ConversationEndpointState = {
   configuration: {},
@@ -16,24 +21,18 @@ export const conversationEndpointSlice = createSlice({
   initialState: initialConversationEndpointState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(conversationEndpointActions.setStatus, (state, action) => {
+    builder.addCase(setStatus, (state, action) => {
       state.status = action.payload;
     });
-    builder.addCase(conversationEndpointActions.setError, (state, action) => {
+    builder.addCase(setError, (state, action) => {
       state.error = action.payload;
     });
-    builder.addCase(
-      conversationEndpointActions.setConfiguration,
-      (state, action) => {
-        state.configuration = action.payload;
-      }
-    );
-    builder.addCase(
-      conversationEndpointActions.setStreamingConnected,
-      (state, action) => {
-        state.streaming.isConnected = action.payload;
-      }
-    );
+    builder.addCase(setConfiguration, (state, action) => {
+      state.configuration = action.payload;
+    });
+    builder.addCase(setStreamingConnected, (state, action) => {
+      state.streaming.isConnected = action.payload;
+    });
   },
   selectors: {
     status: (state) => state.status,

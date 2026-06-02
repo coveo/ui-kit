@@ -1,26 +1,33 @@
-import * as paginationActions from '@/src/core/internal/pagination/pagination-actions.js';
+import {
+  setPage as _setPage,
+  setPageSize as _setPageSize,
+  setTotalCount as _setTotalCount,
+  nextPage as _nextPage,
+  previousPage as _previousPage,
+  resetToFirstPage as _resetToFirstPage,
+} from '@/src/core/internal/pagination/pagination-actions.js';
 import type {StateMutation} from '@/src/core/interface/engine/engine-types.js';
 
 export const setPage = (page: number): StateMutation => {
-  return paginationActions.setPage(page);
+  return _setPage(page);
 };
 
 export const setPageSize = (pageSize: number): StateMutation => {
-  return paginationActions.setPageSize(pageSize);
+  return _setPageSize(pageSize);
 };
 
 export const setTotalCount = (totalCount: number): StateMutation => {
-  return paginationActions.setTotalCount(totalCount);
+  return _setTotalCount(totalCount);
 };
 
 export const nextPage = (): StateMutation => {
-  return paginationActions.nextPage();
+  return _nextPage();
 };
 
 export const previousPage = (): StateMutation => {
-  return paginationActions.previousPage();
+  return _previousPage();
 };
 
 export const resetToFirstPage = (): StateMutation => {
-  return paginationActions.resetToFirstPage();
+  return _resetToFirstPage();
 };

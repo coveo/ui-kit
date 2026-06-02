@@ -1,35 +1,44 @@
-import * as configurationActions from '@/src/core/internal/configuration/configuration-actions.js';
+import {
+  setOrganizationId as _setOrganizationId,
+  setAccessToken as _setAccessToken,
+  setTrackingId as _setTrackingId,
+  setLanguage as _setLanguage,
+  setCountry as _setCountry,
+  setCurrency as _setCurrency,
+  setEndpoint as _setEndpoint,
+  setConfiguration as _setConfiguration,
+} from '@/src/core/internal/configuration/configuration-actions.js';
 import type {StateMutation} from '@/src/core/interface/engine/engine-types.js';
 import type {ConfigurationState} from './configuration-types.js';
 
 export const setOrganizationId = (organizationId: string): StateMutation => {
-  return configurationActions.setOrganizationId(organizationId);
+  return _setOrganizationId(organizationId);
 };
 
 export const setAccessToken = (accessToken: string): StateMutation => {
-  return configurationActions.setAccessToken(accessToken);
+  return _setAccessToken(accessToken);
 };
 
 export const setTrackingId = (trackingId: string): StateMutation => {
-  return configurationActions.setTrackingId(trackingId);
+  return _setTrackingId(trackingId);
 };
 
 export const setLanguage = (language: string): StateMutation => {
-  return configurationActions.setLanguage(language);
+  return _setLanguage(language);
 };
 
 export const setCountry = (country: string): StateMutation => {
-  return configurationActions.setCountry(country);
+  return _setCountry(country);
 };
 
 export const setCurrency = (currency: string): StateMutation => {
-  return configurationActions.setCurrency(currency);
+  return _setCurrency(currency);
 };
 
 export const setEndpoint = (endpoint: string | undefined): StateMutation => {
-  return configurationActions.setEndpoint(endpoint);
+  return _setEndpoint(endpoint);
 };
 
 export const setConfiguration = (config: ConfigurationState): StateMutation => {
-  return configurationActions.setConfiguration(config);
+  return _setConfiguration(config);
 };

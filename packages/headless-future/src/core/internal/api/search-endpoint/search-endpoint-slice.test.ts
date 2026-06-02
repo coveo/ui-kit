@@ -3,7 +3,11 @@ import {
   searchEndpointSlice,
   initialSearchEndpointState,
 } from './search-endpoint-slice.js';
-import * as searchEndpointActions from './search-endpoint-actions.js';
+import {
+  setConfiguration,
+  setError,
+  setStatus,
+} from './search-endpoint-actions.js';
 
 describe('searchEndpointSlice', () => {
   it('has correct initial state', () => {
@@ -17,7 +21,7 @@ describe('searchEndpointSlice', () => {
   it('setStatus updates status', () => {
     const state = searchEndpointSlice.reducer(
       initialSearchEndpointState,
-      searchEndpointActions.setStatus('pending')
+      setStatus('pending')
     );
     expect(state.status).toBe('pending');
   });
@@ -25,7 +29,7 @@ describe('searchEndpointSlice', () => {
   it('setError updates error', () => {
     const state = searchEndpointSlice.reducer(
       initialSearchEndpointState,
-      searchEndpointActions.setError('something failed')
+      setError('something failed')
     );
     expect(state.error).toBe('something failed');
   });
@@ -33,7 +37,7 @@ describe('searchEndpointSlice', () => {
   it('setError clears error with null', () => {
     const state = searchEndpointSlice.reducer(
       {...initialSearchEndpointState, error: 'old'},
-      searchEndpointActions.setError(null)
+      setError(null)
     );
     expect(state.error).toBeNull();
   });
@@ -42,7 +46,7 @@ describe('searchEndpointSlice', () => {
     const config = {orgId: 'test', token: 'abc'};
     const state = searchEndpointSlice.reducer(
       initialSearchEndpointState,
-      searchEndpointActions.setConfiguration(config)
+      setConfiguration(config)
     );
     expect(state.configuration).toEqual(config);
   });

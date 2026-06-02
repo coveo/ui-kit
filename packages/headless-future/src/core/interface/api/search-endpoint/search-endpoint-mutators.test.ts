@@ -1,10 +1,14 @@
 import {describe, expect, it} from 'vitest';
-import * as searchEndpointMutators from './search-endpoint-mutators.js';
+import {
+  setConfiguration,
+  setError,
+  setStatus,
+} from './search-endpoint-mutators.js';
 
 describe('search-endpoint mutators', () => {
   describe('setStatus', () => {
     it('returns a mutation with the given status', () => {
-      const mutation = searchEndpointMutators.setStatus('pending');
+      const mutation = setStatus('pending');
 
       expect(mutation).toEqual({
         type: 'searchEndpoint/setStatus',
@@ -15,7 +19,7 @@ describe('search-endpoint mutators', () => {
 
   describe('setError', () => {
     it('returns a mutation with the given error', () => {
-      const mutation = searchEndpointMutators.setError('something failed');
+      const mutation = setError('something failed');
 
       expect(mutation).toEqual({
         type: 'searchEndpoint/setError',
@@ -24,7 +28,7 @@ describe('search-endpoint mutators', () => {
     });
 
     it('returns a mutation with null to clear the error', () => {
-      const mutation = searchEndpointMutators.setError(null);
+      const mutation = setError(null);
 
       expect(mutation).toEqual({
         type: 'searchEndpoint/setError',
@@ -36,7 +40,7 @@ describe('search-endpoint mutators', () => {
   describe('setConfiguration', () => {
     it('returns a mutation with the given configuration', () => {
       const config = {pipeline: 'default', searchHub: 'main'};
-      const mutation = searchEndpointMutators.setConfiguration(config);
+      const mutation = setConfiguration(config);
 
       expect(mutation).toEqual({
         type: 'searchEndpoint/setConfiguration',
