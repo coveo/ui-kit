@@ -50,12 +50,16 @@ export const activeTurnUserMessage = createMemoizedStateSelector(
   getConversationState,
   (conversation): string | undefined => {
     const currentActiveTurnId = conversation.activeTurnId;
-    if (!currentActiveTurnId) return undefined;
+    if (!currentActiveTurnId) {
+      return undefined;
+    }
 
     const activeTurn = conversation.turns.find(
       (turn) => turn.id === currentActiveTurnId
     );
-    if (!activeTurn) return undefined;
+    if (!activeTurn) {
+      return undefined;
+    }
 
     const messageById = new Map(
       conversation.messages.map((message) => [message.id, message])

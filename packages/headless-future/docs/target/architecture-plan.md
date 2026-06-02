@@ -513,7 +513,9 @@ export const loadResultList = (
   engine: FullEngine,
   facade: { registerResponseHandler: (h: (response: CoveoSearchEndpointResponse) => void) => void }
 ) => {
-  if (loaded.has(engine)) return;
+  if (loaded.has(engine)) {
+    return;
+  }
 
   engine.adoptSlice(resultsSlice);
 
@@ -541,7 +543,9 @@ import { searchBoxSlice } from '@/src/core/internal/search-box/search-box-slice.
 const loaded = new WeakSet<FullEngine>();
 
 export const loadSearchBox = (engine: FullEngine) => {
-  if (loaded.has(engine)) return;
+  if (loaded.has(engine)) {
+    return;
+  }
   engine.adoptSlice(searchBoxSlice);
   loaded.add(engine);
 };
@@ -688,7 +692,9 @@ export class SearchEndpointFacade {
         return;
       }
 
-      if (!httpResponse.data) return;
+      if (!httpResponse.data) {
+        return;
+      }
 
       // 5. Notify response handlers (loaders write to state)
       this.#responseHandlers.forEach((handler) => handler(httpResponse.data!));
