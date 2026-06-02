@@ -61,8 +61,9 @@ export const activeTurnUserMessage = createMemoizedStateSelector(
       return undefined;
     }
 
-    const messageById = new Map(
-      conversation.messages.map((message) => [message.id, message])
+    const messageById = conversation.messages.reduce(
+      (map, message) => map.set(message.id, message),
+      new Map()
     );
 
     for (const messageId of activeTurn.messageIds) {
