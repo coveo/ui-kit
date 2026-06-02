@@ -2,7 +2,7 @@ import {State} from '@/src/core/interface/engine/engine-types.js';
 import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
 import type {FacetState, FacetsState} from './facets-types.js';
 import {initialFacetsState} from '@/src/core/internal/facets/facets-slice.js';
-import {CoveoFacetRequest} from '@/src/core/interface/api/search-endpoint/search-endpoint-types.js';
+import type {CoveoFacetRequest} from '@/src/core/interface/api/search-endpoint/search-endpoint-types.js';
 
 const getFacetsState = (state: State) => state.facets ?? initialFacetsState;
 
