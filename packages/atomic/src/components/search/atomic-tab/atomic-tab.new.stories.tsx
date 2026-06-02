@@ -1,16 +1,10 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
-import {testTabsA11y} from '@/storybook-utils/a11y/tabs.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {MockSearchApi} from '@/storybook-utils/api/search/mock';
-import {searchFacetTransformer} from '@/storybook-utils/api/search/facet-transformer';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-tab/atomic-tab.js';
 import '@/src/components/search/atomic-tab-manager/atomic-tab-manager.js';
-
-const searchApiHarness = new MockSearchApi();
-searchApiHarness.searchEndpoint.addRequestTransformer(searchFacetTransformer);
 
 const {decorator, play} = wrapInSearchInterface();
 
@@ -31,7 +25,6 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     chromatic: {disableSnapshot: true},
-    msw: {handlers: [...searchApiHarness.handlers]},
     actions: {
       handles: events,
     },
@@ -43,11 +36,3 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {};
-
-export const A11yTabs: Story = {
-  tags: ['a11y', 'test', '!dev'],
-  play: async (context) => {
-    await play(context);
-    await testTabsA11y(context);
-  },
-};

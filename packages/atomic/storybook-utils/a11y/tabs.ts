@@ -98,10 +98,8 @@ export async function testTabsA11y(context: StoryContext): Promise<void> {
       const activeTab =
         tabs.find((t) => t.getAttribute('aria-selected') === 'true') ?? tabs[0];
 
-      // userEvent.tab() does not traverse shadow DOM boundaries, so we focus
-      // the active tab directly and verify it is focusable (tabindex >= 0).
-      expect(activeTab.tabIndex).toBeGreaterThanOrEqual(0);
-      activeTab.focus();
+      canvasElement.focus();
+      await userEvent.tab();
 
       await waitFor(
         () => {

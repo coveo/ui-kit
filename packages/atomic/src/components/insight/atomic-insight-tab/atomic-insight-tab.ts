@@ -6,7 +6,6 @@ import {buildTab as buildInsightTab} from '@coveo/headless/insight';
 import {css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
-import {renderButton} from '@/src/components/common/button';
 import {createAppLoadedListener} from '@/src/components/common/interface/store';
 import {
   dispatchTabLoaded,
@@ -33,18 +32,36 @@ export class AtomicInsightTab
   extends LitElement
   implements TabCommon, InitializableComponent<InsightBindings>
 {
+  static shadowRootOptions = {
+    ...LitElement.shadowRootOptions,
+    delegatesFocus: true,
+  };
+
   static styles = css`
     @reference '../../../utils/tailwind.global.tw.css';
-    .active::after {
-      @apply bg-primary absolute bottom-0 block h-1 w-full rounded;
-      content: '';
+
+    :host {
+      display: flex;
+      @apply cursor-pointer;
+      @apply focus-visible:outline-none;
     }
 
     [part='tab'] {
       @apply relative mt-1 mr-6 pb-3 font-semibold;
+      @apply text-on-background;
       max-width: 150px;
       text-overflow: ellipsis;
       overflow: hidden;
+    }
+
+    :host(:hover) [part='tab'],
+    :host(:focus-visible) [part='tab'] {
+      @apply text-primary-light;
+    }
+
+    :host([active]) [part='tab']::after {
+      @apply bg-primary absolute bottom-0 block h-1 w-full rounded;
+      content: '';
     }
   `;
 
@@ -76,6 +93,19 @@ export class AtomicInsightTab
 
   private tabId = randomID('insight-tab');
 
+  connectedCallback() {
+    super.connectedCallback();
+    this.addEventListener('click', this.handleClick);
+    this.addEventListener('keydown', this.handleKeydown);
+    this.updateHostAttributes();
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.removeEventListener('click', this.handleClick);
+    this.removeEventListener('keydown', this.handleKeydown);
+  }
+
   public initialize() {
     this.tab = buildInsightTab(this.bindings.engine, {
       options: {expression: this.expression, id: this.tabId},
@@ -91,34 +121,69 @@ export class AtomicInsightTab
    * Activates the tab.
    */
   public select() {
-    this.tab.select();
+    this.tab?.select();
   }
 
   protected updated() {
     if (this.tabState) {
       this.active = this.tabState.isActive;
+      this.updateHostAttributes();
     }
     dispatchTabLoaded(this);
   }
 
+  private updateHostAttributes() {
+    this.setAttribute('role', 'tab');
+    this.setAttribute('aria-selected', this.active ? 'true' : 'false');
+    this.tabIndex = this.active ? 0 : -1;
+  }
+
+  private handleClick = () => {
+    this.tab?.select();
+  };
+
+  private handleKeydown = (event: KeyboardEvent) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.tab?.select();
+      return;
+    }
+
+    const tablist = this.closest('[role="tablist"]');
+    if (!tablist) {
+      return;
+    }
+    const tabs = Array.from(
+      tablist.querySelectorAll<HTMLElement>('[role="tab"]')
+    );
+    const currentIndex = tabs.indexOf(this);
+    if (currentIndex === -1) {
+      return;
+    }
+
+    let nextIndex: number | null = null;
+    if (event.key === 'ArrowRight') {
+      nextIndex = (currentIndex + 1) % tabs.length;
+    } else if (event.key === 'ArrowLeft') {
+      nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+    } else if (event.key === 'Home') {
+      nextIndex = 0;
+    } else if (event.key === 'End') {
+      nextIndex = tabs.length - 1;
+    }
+
+    if (nextIndex !== null) {
+      event.preventDefault();
+      tabs[nextIndex].focus();
+    }
+  };
+
   @errorGuard()
   @bindingGuard()
   render() {
-    return html`${when(this.isAppLoaded, () =>
-      renderButton({
-        props: {
-          style: 'text-transparent',
-          part: 'tab',
-          class: this.tabState.isActive ? 'active' : '',
-          ariaLabel: this.bindings.i18n.t('tab-search', {label: this.label}),
-          title: this.label,
-          ariaPressed: this.tabState.isActive ? 'true' : 'false',
-          onClick: () => {
-            this.tab.select();
-          },
-        },
-      })(html`${this.label}`)
-    )}`;
+    return html`<span part="tab" tabindex="-1" title=${this.label}
+      >${when(this.isAppLoaded, () => this.label)}</span
+    >`;
   }
 }
 

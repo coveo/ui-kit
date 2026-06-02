@@ -1,9 +1,8 @@
 import type {Tab, TabState} from '@coveo/headless';
 import {buildTab} from '@coveo/headless';
-import {css, html, LitElement, nothing} from 'lit';
+import {css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
-import {renderButton} from '@/src/components/common/button';
 import {createAppLoadedListener} from '@/src/components/common/interface/store';
 import {
   dispatchTabLoaded,
@@ -27,18 +26,36 @@ export class AtomicIpxTab
   extends LitElement
   implements TabCommon, InitializableComponent<Bindings>
 {
+  static shadowRootOptions = {
+    ...LitElement.shadowRootOptions,
+    delegatesFocus: true,
+  };
+
   static styles = css`
     @reference '../../../utils/tailwind.global.tw.css';
 
-    .active::after {
-      @apply bg-primary absolute bottom-0 block h-1 w-full rounded;
-      content: '';
+    :host {
+      display: flex;
+      @apply cursor-pointer;
+      @apply focus-visible:outline-none;
     }
 
     [part='tab'] {
+      @apply relative mt-1 mr-6 pb-3 font-semibold;
+      @apply text-on-background;
       max-width: 150px;
       text-overflow: ellipsis;
       overflow: hidden;
+    }
+
+    :host(:hover) [part='tab'],
+    :host(:focus-visible) [part='tab'] {
+      @apply text-primary-light;
+    }
+
+    :host([active]) [part='tab']::after {
+      @apply bg-primary absolute bottom-0 block h-1 w-full rounded;
+      content: '';
     }
   `;
 
@@ -68,6 +85,19 @@ export class AtomicIpxTab
 
   @state() private isAppLoaded = false;
 
+  connectedCallback() {
+    super.connectedCallback();
+    this.addEventListener('click', this.handleClick);
+    this.addEventListener('keydown', this.handleKeydown);
+    this.updateHostAttributes();
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.removeEventListener('click', this.handleClick);
+    this.removeEventListener('keydown', this.handleKeydown);
+  }
+
   public initialize() {
     this.tab = buildTab(this.bindings.engine, {
       options: {expression: this.expression, id: this.label},
@@ -82,45 +112,67 @@ export class AtomicIpxTab
    * Activates the tab.
    */
   public select() {
-    this.tab.select();
+    this.tab?.select();
   }
 
   protected updated() {
     if (this.tabState) {
       this.active = this.tabState.isActive;
+      this.updateHostAttributes();
     }
     dispatchTabLoaded(this);
   }
 
-  render() {
-    return when(
-      this.isAppLoaded,
-      () => {
-        const buttonClasses = [
-          'relative',
-          'pb-3',
-          'mt-1',
-          'mr-6',
-          'font-semibold',
-        ];
-        if (this.tabState.isActive) {
-          buttonClasses.push('active');
-        }
+  private updateHostAttributes() {
+    this.setAttribute('role', 'tab');
+    this.setAttribute('aria-selected', this.active ? 'true' : 'false');
+    this.tabIndex = this.active ? 0 : -1;
+  }
 
-        return renderButton({
-          props: {
-            style: 'text-transparent',
-            part: 'tab',
-            class: buttonClasses.join(' '),
-            ariaLabel: this.bindings.i18n.t('tab-search', {label: this.label}),
-            title: this.label,
-            ariaPressed: this.tabState.isActive ? 'true' : 'false',
-            onClick: () => this.tab.select(),
-          },
-        })(html`${this.label}`);
-      },
-      () => nothing
+  private handleClick = () => {
+    this.tab?.select();
+  };
+
+  private handleKeydown = (event: KeyboardEvent) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.tab?.select();
+      return;
+    }
+
+    const tablist = this.closest('[role="tablist"]');
+    if (!tablist) {
+      return;
+    }
+    const tabs = Array.from(
+      tablist.querySelectorAll<HTMLElement>('[role="tab"]')
     );
+    const currentIndex = tabs.indexOf(this);
+    if (currentIndex === -1) {
+      return;
+    }
+
+    let nextIndex: number | null = null;
+    if (event.key === 'ArrowRight') {
+      nextIndex = (currentIndex + 1) % tabs.length;
+    } else if (event.key === 'ArrowLeft') {
+      nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+    } else if (event.key === 'Home') {
+      nextIndex = 0;
+    } else if (event.key === 'End') {
+      nextIndex = tabs.length - 1;
+    }
+
+    if (nextIndex !== null) {
+      event.preventDefault();
+      tabs[nextIndex].focus();
+    }
+  };
+
+  render() {
+    return html`<span part="tab" tabindex="-1" title=${this.label}
+      >${when(this.isAppLoaded, () => this.label)}</span
+    >`;
   }
 }
 
