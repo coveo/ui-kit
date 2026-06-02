@@ -13,7 +13,31 @@ export {
   type DialogA11yOptions,
 } from './dialog.js';
 export {
+  COVERED_CRITERIA as TABS_COVERED_CRITERIA,
+  testTabsA11y,
+} from './tabs.js';
+export {
   COVERED_CRITERIA as RADIOGROUP_COVERED_CRITERIA,
   testRadioGroupA11y,
   type RadioGroupA11yOptions,
 } from './radiogroup.js';
+export {
+  COVERED_CRITERIA as STATUS_MESSAGE_COVERED_CRITERIA,
+  testStatusMessageA11y,
+  type StatusMessageA11yOptions,
+} from './status-message.js';
+export {
+  COVERED_CRITERIA as HOVER_CONTENT_COVERED_CRITERIA,
+  testHoverContentA11y,
+  type HoverContentA11yOptions,
+} from './hover-content.js';
+export {
+  COVERED_CRITERIA as CAROUSEL_COVERED_CRITERIA,
+  testCarouselA11y,
+  type CarouselA11yOptions,
+} from './carousel.js';
+export {
+  COVERED_CRITERIA as TABLE_COVERED_CRITERIA,
+  testTableA11y,
+  type TableA11yOptions,
+} from './table.js';

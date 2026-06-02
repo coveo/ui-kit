@@ -1,5 +1,5 @@
 import {orderBy} from 'natural-orderby';
-import type {RequestTransformer} from '../_base.js';
+import type {RequestTransformer} from '../_request-transformer.js';
 import type {FacetSearchResponse} from './facetSearch-response.js';
 import type {SearchResponse} from './search-response.js';
 

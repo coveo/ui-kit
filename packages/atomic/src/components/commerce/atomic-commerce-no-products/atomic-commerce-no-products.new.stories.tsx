@@ -10,6 +10,15 @@ import '@/src/components/commerce/atomic-commerce-layout/atomic-commerce-layout.
 import '@/src/components/commerce/atomic-commerce-no-products/atomic-commerce-no-products.js';
 import '@/src/components/commerce/atomic-commerce-search-box/atomic-commerce-search-box.js';
 import '@/src/components/common/atomic-layout-section/atomic-layout-section.js';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
+
+const commerceApiHarness = new MockCommerceApi();
+
+commerceApiHarness.searchEndpoint.mock((response) => ({
+  ...response,
+  products: [],
+  pagination: {...response.pagination, totalEntries: 0, totalPages: 0},
+}));
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-commerce-no-products',
@@ -36,6 +45,7 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
+    msw: {handlers: [...commerceApiHarness.handlers]},
     chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
@@ -45,6 +55,9 @@ const meta: Meta = {
   argTypes,
 
   play: preprocessedPlayed,
+  beforeEach: () => {
+    commerceApiHarness.clearAll();
+  },
 };
 
 export default meta;

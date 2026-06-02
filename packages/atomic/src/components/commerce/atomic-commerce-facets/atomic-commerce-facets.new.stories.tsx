@@ -6,6 +6,26 @@ import {
 } from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/commerce/atomic-commerce-facets/atomic-commerce-facets.js';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
+import {
+  commerceFacetTransformer,
+  createFacetSearchTransformer,
+} from '@/storybook-utils/api/commerce/facet-transformer';
+import {commercePaginationTransformer} from '@/storybook-utils/api/commerce/pagination-transformer';
+import {richResponse as baseSearchResponse} from '@/storybook-utils/api/commerce/search-response';
+
+const commerceApiHarness = new MockCommerceApi();
+commerceApiHarness.searchEndpoint.addRequestTransformer(
+  commerceFacetTransformer,
+  commercePaginationTransformer
+);
+commerceApiHarness.productListingEndpoint.addRequestTransformer(
+  commerceFacetTransformer,
+  commercePaginationTransformer
+);
+commerceApiHarness.facetSearchEndpoint.addRequestTransformer(
+  createFacetSearchTransformer(baseSearchResponse)
+);
 
 const {decorator, play} = wrapInCommerceInterface({
   skipFirstRequest: true,
@@ -23,6 +43,7 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
+    msw: {handlers: [...commerceApiHarness.handlers]},
     chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
@@ -32,6 +53,9 @@ const meta: Meta = {
   argTypes,
 
   play,
+  beforeEach: () => {
+    commerceApiHarness.clearAll();
+  },
 };
 
 export default meta;

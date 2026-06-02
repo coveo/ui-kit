@@ -1,3 +1,11 @@
+## 3.51.1
+
+### Patch Changes
+
+- [#7637](https://github.com/coveo/ui-kit/pull/7637) [`d5d4d75`](https://github.com/coveo/ui-kit/commit/d5d4d75a882074bbeb5875ed95504a30ff84df91) Thanks [@renovate-coveo](https://github.com/apps/renovate-coveo)! - Update production dependencies
+
+- [#7598](https://github.com/coveo/ui-kit/pull/7598) [`821d429`](https://github.com/coveo/ui-kit/commit/821d429d3cc247e387cfb3e5834ddc8b65443142) Thanks [@SimonMilord](https://github.com/SimonMilord)! - Forward `aq`, `cq`, `referrer`, and `tab` to Search Agent head answer requests.
+
 ## 3.51.0
 
 ### Minor Changes
