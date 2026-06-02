@@ -5,6 +5,7 @@ import {
 } from '@/src/api/index.js';
 import {readEndpointClientConfiguration} from '@/src/core/internal/configuration/configuration-reader.js';
 import {FullEngine} from '@/src/core/interface/engine/engine.js';
+import {loadSearchEndpoint} from './search-endpoint-loader.js';
 import * as searchEndpointMutators from './search-endpoint-mutators.js';
 import * as searchEndpointSelectors from './search-endpoint-selectors.js';
 import {handleSearchEndpointResponse} from './search-endpoint-response-handler.js';
@@ -18,6 +19,7 @@ export class SearchEndpointFacade {
   private constructor(engine: FullEngine) {
     this.#engine = engine;
     this.#client = createSearchEndpointClient();
+    loadSearchEndpoint(engine);
   }
 
   /**

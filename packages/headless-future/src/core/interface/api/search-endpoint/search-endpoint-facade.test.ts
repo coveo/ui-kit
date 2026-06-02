@@ -6,6 +6,7 @@ import {createSearchEndpointClient} from '@/src/api/interface/search-endpoint/se
 import {readEndpointClientConfiguration} from '@/src/core/internal/configuration/configuration-reader.js';
 import {SearchEndpointFacade} from './search-endpoint-facade.js';
 import {handleSearchEndpointResponse} from './search-endpoint-response-handler.js';
+import {loadSearchEndpoint} from './search-endpoint-loader.js';
 import type {CoveoSearchEndpointResponse} from './search-endpoint-types.js';
 
 const mockClientCall = vi.fn();
@@ -18,6 +19,10 @@ vi.mock(
     })),
   })
 );
+
+vi.mock('./search-endpoint-loader.js', () => ({
+  loadSearchEndpoint: vi.fn(),
+}));
 
 vi.mock('./search-endpoint-response-handler.js', () => ({
   handleSearchEndpointResponse: vi.fn(),
@@ -106,6 +111,14 @@ describe('SearchEndpointFacade', () => {
 
       expect(firstInstance).not.toBe(secondInstance);
       expect(createSearchEndpointClient).toHaveBeenCalledTimes(2);
+    });
+
+    it('adopts the search endpoint slice on first instantiation', () => {
+      const engine = createMockEngine();
+
+      SearchEndpointFacade.getInstance(engine);
+
+      expect(loadSearchEndpoint).toHaveBeenCalledWith(engine);
     });
   });
 
