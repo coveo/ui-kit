@@ -2,6 +2,7 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {testCheckboxA11y} from '@/storybook-utils/a11y/checkbox.js';
+import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {searchFacetTransformer} from '@/storybook-utils/api/search/facet-transformer';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
@@ -241,5 +242,33 @@ export const A11yCheckbox: Story = {
   play: async (context) => {
     await play(context);
     await testCheckboxA11y(context);
+  },
+};
+
+export const A11yStatusMessage: Story = {
+  name: 'A11y Status Message',
+  tags: ['a11y', 'test', '!dev'],
+  args: {
+    field: 'filetype',
+    label: 'File Type',
+    'display-values-as': 'checkbox',
+  },
+  decorators: [facetDecorator, colorFacetStylesDecorator],
+  beforeEach: () => {
+    mockDefaultFacetResponse();
+  },
+  play: async (context) => {
+    await play(context);
+    await testStatusMessageA11y(context, {
+      triggerAction: async () => {
+        const checkbox = await context.canvas.findByShadowLabelText(
+          'Inclusion filter on',
+          {exact: false}
+        );
+        checkbox.click();
+      },
+      expectedText: /results/i,
+      timeout: 10000,
+    });
   },
 };

@@ -1,5 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
@@ -73,4 +74,26 @@ export const Default: Story = {
     field: 'snrating',
   },
   decorators: [facetDecorator],
+};
+
+export const A11yStatusMessage: Story = {
+  name: 'A11y Status Message',
+  tags: ['a11y', 'test', '!dev'],
+  args: {
+    field: 'snrating',
+  },
+  decorators: [facetDecorator],
+  play: async (context) => {
+    await play(context);
+    await testStatusMessageA11y(context, {
+      triggerAction: async () => {
+        const link = await context.canvas.findByShadowRole('link', {
+          name: /\d/,
+        });
+        link.click();
+      },
+      expectedText: /results/i,
+      timeout: 10000,
+    });
+  },
 };
