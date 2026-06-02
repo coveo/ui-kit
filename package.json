@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@actions/github": "9.1.1",
-    "@changesets/changelog-github": "0.6.0",
+    "@changesets/changelog-github": "0.7.0",
     "@changesets/cli": "2.31.0",
     "@cspell/dict-fr-fr": "2.3.2",
     "@playwright/mcp": "catalog:",
