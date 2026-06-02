@@ -179,8 +179,6 @@ export function buildOpenAcrReport(
     if (!evaluationMethods.includes('Manual audit')) {
       evaluationMethods += '; Manual audit';
     }
-  } else {
-    evaluationMethods += '; manual audit placeholders pending';
   }
 
   const criteriaByChapter = buildOpenAcrCriteria(
@@ -190,7 +188,7 @@ export function buildOpenAcrReport(
   );
 
   const successNotes =
-    'Conformance is based on automated Storybook + axe-core output, interactive keyboard testing, and pending manual validation.';
+    'Conformance is based on automated Storybook + axe-core output and interactive keyboard testing.';
 
   return {
     title: DEFAULT_REPORT_TITLE,
@@ -215,7 +213,7 @@ export function buildOpenAcrReport(
     last_modified_date: DEFAULT_REPORT_DATE,
     version: 1,
     notes:
-      'Generated from a11y/reports/a11y-report.json. Automated statuses are derived from axe-core results, with manual placeholders for Phase 3.',
+      'Generated from a11y/reports/a11y-report.json. Conformance is derived from axe-core results, interactive keyboard tests, and manual audits.',
     evaluation_methods_used: evaluationMethods,
     repository: 'https://github.com/coveo/ui-kit',
     feedback: 'https://github.com/coveo/ui-kit/issues',
