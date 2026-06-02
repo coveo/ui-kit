@@ -1,0 +1,101 @@
+<template>
+  <template lwc:if={hasSteps}>
+    <div class="slds-grid slds-grid_vertical">
+      <template lwc:if={showCollapsed}>
+        <button
+          data-testid="collapsed-summary"
+          class="stream-of-thought__collapsed-summary slds-grid slds-grid_vertical-align-center slds-p-around_none"
+          type="button"
+          aria-expanded={_expanded}
+          onclick={handleToggle}
+        >
+          <span class="slds-m-right_x-small" data-testid="checkmark">
+            <lightning-icon
+              icon-name="utility:check"
+              size="xx-small"
+              variant="success"
+              aria-hidden="true"
+            ></lightning-icon>
+          </span>
+          <span
+            class="slds-text-body_small slds-text-color_weak"
+            data-testid="collapsed-summary-label"
+            >{collapsedSummaryLabel}</span
+          >
+          <span
+            class="slds-m-left_x-small"
+            data-testid="chevron"
+            aria-hidden="true"
+          >
+            <lightning-icon
+              icon-name="utility:chevrondown"
+              size="xx-small"
+              aria-hidden="true"
+            ></lightning-icon>
+          </span>
+        </button>
+      </template>
+      <template lwc:else>
+        <template for:each={resolvedSteps} for:item="step">
+          <div
+            key={step.key}
+            data-testid="step-item"
+            class="slds-grid slds-grid_vertical-align-center slds-m-vertical_xxx-small"
+          >
+            <template lwc:if={step.isActive}>
+              <span
+                class="stream-of-thought__step-icon slds-is-relative slds-m-right_x-small"
+                aria-hidden="true"
+                data-testid="spinner"
+              >
+                <lightning-spinner
+                  alternative-text={labels.loading}
+                  size="xx-small"
+                ></lightning-spinner>
+              </span>
+            </template>
+            <template lwc:else>
+              <span
+                class="stream-of-thought__step-icon slds-m-right_x-small"
+                data-testid="checkmark"
+              >
+                <lightning-icon
+                  icon-name="utility:check"
+                  size="xx-small"
+                  variant="success"
+                  aria-hidden="true"
+                ></lightning-icon>
+              </span>
+            </template>
+            <span
+              class="slds-text-body_small slds-text-color_weak"
+              data-testid="step-label"
+              >{step.label}</span
+            >
+          </div>
+        </template>
+        <template lwc:if={showExpandedToggle}>
+          <button
+            data-testid="toggle-button"
+            class="stream-of-thought__toggle-button slds-grid slds-grid_vertical-align-center slds-p-around_none"
+            type="button"
+            aria-expanded={_expanded}
+            onclick={handleToggle}
+          >
+            <span
+              class="slds-text-body_small slds-text-color_weak slds-m-right_xx-small"
+              >{labels.collapse}</span
+            >
+            <span data-testid="chevron" aria-hidden="true">
+              <lightning-icon
+                icon-name="utility:chevronup"
+                size="xx-small"
+                aria-hidden="true"
+              ></lightning-icon>
+            </span>
+          </button>
+        </template>
+      </template>
+    </div>
+  </template>
+</template>

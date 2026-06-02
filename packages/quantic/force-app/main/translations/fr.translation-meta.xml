@@ -213,6 +213,10 @@
     <name>quantic_Collapse</name>
   </customLabels>
   <customLabels>
+    <label>Réduire</label>
+    <name>quantic_CollapseButton</name>
+  </customLabels>
+  <customLabels>
     <label>Agrandir {{0}}</label>
     <name>quantic_Expand</name>
   </customLabels>
@@ -899,5 +903,37 @@
   <customLabels>
     <name>quantic_SubmitFollowUp</name>
     <label>Soumettre un suivi</label>
+  </customLabels>
+  <customLabels>
+    <label>Analyse de votre question</label>
+    <name>quantic_AgentGenerationStepAnalyzingQuestion</name>
+  </customLabels>
+  <customLabels>
+    <label>Question analysée</label>
+    <name>quantic_AgentGenerationStepAnalyzingQuestionCompleted</name>
+  </customLabels>
+  <customLabels>
+    <label>Recherche en cours</label>
+    <name>quantic_AgentGenerationStepSearch</name>
+  </customLabels>
+  <customLabels>
+    <label>Recherche effectuée</label>
+    <name>quantic_AgentGenerationStepSearchCompleted</name>
+  </customLabels>
+  <customLabels>
+    <label>Analyse des résultats</label>
+    <name>quantic_AgentGenerationStepAnalyzingResults</name>
+  </customLabels>
+  <customLabels>
+    <label>Résultats analysés</label>
+    <name>quantic_AgentGenerationStepAnalyzingResultsCompleted</name>
+  </customLabels>
+  <customLabels>
+    <label>Génération de la réponse</label>
+    <name>quantic_AgentGenerationStepAnswering</name>
+  </customLabels>
+  <customLabels>
+    <label>Réponse générée</label>
+    <name>quantic_AgentGenerationStepAnsweringCompleted</name>
   </customLabels>
 </Translations>

@@ -1,0 +1,21 @@
+.stream-of-thought__collapsed-summary,
+.stream-of-thought__toggle-button {
+  border: none;
+  background: transparent;
+}
+
+.stream-of-thought__collapsed-summary:focus-visible,
+.stream-of-thought__toggle-button:focus-visible {
+  border-radius: 0.25rem;
+  outline: 2px solid var(--lwc-brandPrimary, #1b96ff);
+  outline-offset: 2px;
+}
+
+.stream-of-thought__step-icon {
+  width: 1rem;
+  height: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
