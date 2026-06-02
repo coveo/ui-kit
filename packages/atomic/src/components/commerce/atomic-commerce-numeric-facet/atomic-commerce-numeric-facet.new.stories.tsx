@@ -1,6 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {testCheckboxA11y} from '@/storybook-utils/a11y/checkbox.js';
 import {commerceFacetWidthDecorator} from '@/storybook-utils/commerce/commerce-facet-width-decorator';
 import {
   hideFacetTypesHook,
@@ -74,5 +75,21 @@ export const Default: Story = {
   play: async (context) => {
     await play(context);
     await hideFacetTypesHook('atomic-commerce-numeric-facet', context);
+  },
+};
+
+export const A11yCheckbox: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  decorators: [
+    (_) => {
+      return html`<div id="code-root">
+        <atomic-commerce-facets></atomic-commerce-facets>
+      </div>`;
+    },
+  ],
+  play: async (context) => {
+    await play(context);
+    await hideFacetTypesHook('atomic-commerce-numeric-facet', context);
+    await testCheckboxA11y(context, {checkboxName: /\$\d/});
   },
 };

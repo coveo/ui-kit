@@ -71,7 +71,7 @@ catalog:
   local-web-server: 5.4.0
   next: 16.2.6
   prettier: 3.8.3
-  puppeteer: 24.42.0
+  puppeteer: 24.43.1
   playwright: 1.60.0
   react: 19.2.6
   react-dom: 19.2.6
