@@ -1,55 +1,73 @@
-import {conversationSlice} from '@/src/core/internal/conversation/conversation-slice.js';
-import type {ConversationState} from './conversation-types.js';
+import {State} from '@/src/core/interface/engine/engine-types.js';
+import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
+import type {
+  ConversationMessage,
+  ConversationSession,
+  ConversationStreaming,
+  ConversationTurn,
+} from './conversation-types.js';
+import {initialConversationState} from '@/src/core/internal/conversation/conversation-slice.js';
 
-type StateWithConversationSlice = {conversation: ConversationState};
+const getConversationState = (state: State) =>
+  state.conversation ?? initialConversationState;
 
-export const messages = (state: StateWithConversationSlice) =>
-  conversationSlice.selectors.messages(state);
+export const messages = createMemoizedStateSelector(
+  getConversationState,
+  (conversation): ConversationMessage[] => conversation.messages
+);
 
-export const turns = (state: StateWithConversationSlice) =>
-  conversationSlice.selectors.turns(state);
+export const turns = createMemoizedStateSelector(
+  getConversationState,
+  (conversation): ConversationTurn[] => conversation.turns
+);
 
-export const activeTurnId = (state: StateWithConversationSlice) =>
-  conversationSlice.selectors.activeTurnId(state);
+export const activeTurnId = createMemoizedStateSelector(
+  getConversationState,
+  (conversation): string | null => conversation.activeTurnId
+);
 
-export const activeTurnUserMessage = (state: StateWithConversationSlice) => {
-  const currentActiveTurnId = activeTurnId(state);
+export const session = createMemoizedStateSelector(
+  getConversationState,
+  (conversation): ConversationSession => conversation.session
+);
 
-  if (!currentActiveTurnId) {
-    return undefined;
-  }
+export const isLoading = createMemoizedStateSelector(
+  getConversationState,
+  (conversation): boolean => conversation.isLoading
+);
 
-  const activeTurn = turns(state).find(
-    (turn) => turn.id === currentActiveTurnId
-  );
+export const error = createMemoizedStateSelector(
+  getConversationState,
+  (conversation): string | null => conversation.error
+);
 
-  if (!activeTurn) {
-    return undefined;
-  }
+export const streaming = createMemoizedStateSelector(
+  getConversationState,
+  (conversation): ConversationStreaming => conversation.streaming
+);
 
-  const messageById = new Map(
-    messages(state).map((message) => [message.id, message])
-  );
+export const activeTurnUserMessage = createMemoizedStateSelector(
+  getConversationState,
+  (conversation): string | undefined => {
+    const currentActiveTurnId = conversation.activeTurnId;
+    if (!currentActiveTurnId) return undefined;
 
-  for (const messageId of activeTurn.messageIds) {
-    const message = messageById.get(messageId);
+    const activeTurn = conversation.turns.find(
+      (turn) => turn.id === currentActiveTurnId
+    );
+    if (!activeTurn) return undefined;
 
-    if (message?.role === 'user') {
-      return message.content;
+    const messageById = new Map(
+      conversation.messages.map((message) => [message.id, message])
+    );
+
+    for (const messageId of activeTurn.messageIds) {
+      const message = messageById.get(messageId);
+      if (message?.role === 'user') {
+        return message.content;
+      }
     }
+
+    return undefined;
   }
-
-  return undefined;
-};
-
-export const session = (state: StateWithConversationSlice) =>
-  conversationSlice.selectors.session(state);
-
-export const isLoading = (state: StateWithConversationSlice) =>
-  conversationSlice.selectors.isLoading(state);
-
-export const error = (state: StateWithConversationSlice) =>
-  conversationSlice.selectors.error(state);
-
-export const streaming = (state: StateWithConversationSlice) =>
-  conversationSlice.selectors.streaming(state);
+);

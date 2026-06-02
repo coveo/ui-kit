@@ -4,6 +4,7 @@
 
 import {describe, it, expect} from 'vitest';
 import {facetsSlice, initialFacetsState} from './facets-slice.js';
+import * as FacetsActions from './facets-actions.js';
 import type {
   FacetState,
   FacetValue,
@@ -26,7 +27,7 @@ describe('facetsSlice: setFacet', () => {
 
     const state = facetsSlice.reducer(
       initialFacetsState,
-      facetsSlice.actions.setFacet(facet)
+      FacetsActions.setFacet(facet)
     );
 
     expect(state.category).toEqual(facet);
@@ -51,7 +52,7 @@ describe('facetsSlice: setFacet', () => {
 
     const state = facetsSlice.reducer(
       initialState,
-      facetsSlice.actions.setFacet(updatedFacet)
+      FacetsActions.setFacet(updatedFacet)
     );
 
     expect(state.category).toEqual(updatedFacet);
@@ -82,7 +83,7 @@ describe('facetsSlice: setFacet', () => {
 
     const state = facetsSlice.reducer(
       initialState,
-      facetsSlice.actions.setFacet(newFacet)
+      FacetsActions.setFacet(newFacet)
     );
 
     expect(state.category).toEqual(initialState.category);
@@ -107,7 +108,7 @@ describe('facetsSlice: toggleFacetValue', () => {
   it('should add value to selectedValues when not selected', () => {
     const state = facetsSlice.reducer(
       facetWithValues,
-      facetsSlice.actions.toggleFacetValue({
+      FacetsActions.toggleFacetValue({
         facetId: 'category',
         valueId: 'electronics',
       })
@@ -128,7 +129,7 @@ describe('facetsSlice: toggleFacetValue', () => {
 
     const state = facetsSlice.reducer(
       initialState,
-      facetsSlice.actions.toggleFacetValue({
+      FacetsActions.toggleFacetValue({
         facetId: 'category',
         valueId: 'electronics',
       })
@@ -144,7 +145,7 @@ describe('facetsSlice: toggleFacetValue', () => {
     // Add electronics
     state = facetsSlice.reducer(
       state,
-      facetsSlice.actions.toggleFacetValue({
+      FacetsActions.toggleFacetValue({
         facetId: 'category',
         valueId: 'electronics',
       })
@@ -154,7 +155,7 @@ describe('facetsSlice: toggleFacetValue', () => {
     // Add books
     state = facetsSlice.reducer(
       state,
-      facetsSlice.actions.toggleFacetValue({
+      FacetsActions.toggleFacetValue({
         facetId: 'category',
         valueId: 'books',
       })
@@ -164,7 +165,7 @@ describe('facetsSlice: toggleFacetValue', () => {
     // Remove electronics
     state = facetsSlice.reducer(
       state,
-      facetsSlice.actions.toggleFacetValue({
+      FacetsActions.toggleFacetValue({
         facetId: 'category',
         valueId: 'electronics',
       })
@@ -175,7 +176,7 @@ describe('facetsSlice: toggleFacetValue', () => {
   it('should handle non-existent facet gracefully', () => {
     const state = facetsSlice.reducer(
       initialFacetsState,
-      facetsSlice.actions.toggleFacetValue({
+      FacetsActions.toggleFacetValue({
         facetId: 'nonexistent',
         valueId: 'value',
       })
@@ -202,7 +203,7 @@ describe('facetsSlice: toggleFacetValue', () => {
 
     const state = facetsSlice.reducer(
       initialState,
-      facetsSlice.actions.toggleFacetValue({
+      FacetsActions.toggleFacetValue({
         facetId: 'category',
         valueId: 'electronics',
       })
@@ -225,7 +226,7 @@ describe('facetsSlice: clearFacetSelections', () => {
 
     const state = facetsSlice.reducer(
       initialState,
-      facetsSlice.actions.clearFacetSelections('category')
+      FacetsActions.clearFacetSelections('category')
     );
 
     expect(state.category.selectedValues).toEqual([]);
@@ -243,7 +244,7 @@ describe('facetsSlice: clearFacetSelections', () => {
 
     const state = facetsSlice.reducer(
       initialState,
-      facetsSlice.actions.clearFacetSelections('category')
+      FacetsActions.clearFacetSelections('category')
     );
 
     expect(state.category.id).toBe('category');
@@ -254,7 +255,7 @@ describe('facetsSlice: clearFacetSelections', () => {
   it('should handle non-existent facet gracefully', () => {
     const state = facetsSlice.reducer(
       initialFacetsState,
-      facetsSlice.actions.clearFacetSelections('nonexistent')
+      FacetsActions.clearFacetSelections('nonexistent')
     );
 
     expect(state).toEqual(initialFacetsState);
@@ -278,7 +279,7 @@ describe('facetsSlice: clearFacetSelections', () => {
 
     const state = facetsSlice.reducer(
       initialState,
-      facetsSlice.actions.clearFacetSelections('category')
+      FacetsActions.clearFacetSelections('category')
     );
 
     expect(state.category.selectedValues).toEqual([]);
@@ -304,7 +305,7 @@ describe('facetsSlice: updateFacetValues', () => {
 
     const state = facetsSlice.reducer(
       initialState,
-      facetsSlice.actions.updateFacetValues({
+      FacetsActions.updateFacetValues({
         facetId: 'category',
         values: newValues,
       })
@@ -330,7 +331,7 @@ describe('facetsSlice: updateFacetValues', () => {
 
     const state = facetsSlice.reducer(
       initialState,
-      facetsSlice.actions.updateFacetValues({
+      FacetsActions.updateFacetValues({
         facetId: 'category',
         values: newValues,
       })
@@ -356,7 +357,7 @@ describe('facetsSlice: updateFacetValues', () => {
 
     const state = facetsSlice.reducer(
       initialState,
-      facetsSlice.actions.updateFacetValues({
+      FacetsActions.updateFacetValues({
         facetId: 'category',
         values: newValues,
       })
@@ -368,7 +369,7 @@ describe('facetsSlice: updateFacetValues', () => {
   it('should handle non-existent facet gracefully', () => {
     const state = facetsSlice.reducer(
       initialFacetsState,
-      facetsSlice.actions.updateFacetValues({
+      FacetsActions.updateFacetValues({
         facetId: 'nonexistent',
         values: [],
       })
@@ -391,7 +392,7 @@ describe('facetsSlice: state immutability', () => {
 
     facetsSlice.reducer(
       original,
-      facetsSlice.actions.toggleFacetValue({
+      FacetsActions.toggleFacetValue({
         facetId: 'category',
         valueId: 'val1',
       })
@@ -400,7 +401,7 @@ describe('facetsSlice: state immutability', () => {
 
     facetsSlice.reducer(
       original,
-      facetsSlice.actions.clearFacetSelections('category')
+      FacetsActions.clearFacetSelections('category')
     );
     expect(original.category.selectedValues).toEqual([]);
   });

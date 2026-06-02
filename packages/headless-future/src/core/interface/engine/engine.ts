@@ -2,6 +2,7 @@ import {configureStore, combineSlices} from '@reduxjs/toolkit';
 import type {Slice} from '@reduxjs/toolkit';
 import type {ConfigurationState} from '@/src/core/interface/configuration/configuration-types.js';
 import {configurationSlice} from '@/src/core/internal/configuration/configuration-slice.js';
+import * as configurationActions from '@/src/core/internal/configuration/configuration-actions.js';
 import type {NavigatorContextProvider} from '@/src/core/interface/navigator-context/navigator-context-types.js';
 import {
   EngineOptions,
@@ -146,7 +147,7 @@ export class Engine {
     }
 
     this.#adoptSlice(configurationSlice);
-    this.#mutate(configurationSlice.actions.setConfiguration(configuration));
+    this.#mutate(configurationActions.setConfiguration(configuration));
   }
 
   #_initializeNavigatorContext(provider?: NavigatorContextProvider) {

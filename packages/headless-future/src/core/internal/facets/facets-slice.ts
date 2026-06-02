@@ -1,36 +1,18 @@
-/**
- * Facets Feature Slice (Redux Implementation)
- *
- * This file contains Redux-specific implementation for the facets feature.
- * It is INTERNAL to Layer 0 and must NEVER be exported from core/index.ts.
- */
+import {createSlice} from '@reduxjs/toolkit';
+import type {FacetsState} from '@/src/core/interface/facets/facets-types.js';
+import * as facetsActions from './facets-actions.js';
 
-import {createSlice, type PayloadAction} from '@reduxjs/toolkit';
-import type {
-  FacetsState,
-  FacetState,
-  FacetValue,
-} from '@/src/core/interface/facets/facets-types.js';
-
-/**
- * Initial facets state
- */
 export const initialFacetsState: FacetsState = {};
 
-/**
- * Facets slice manages facet definitions and selections
- */
 export const facetsSlice = createSlice({
   name: 'facets',
   initialState: initialFacetsState,
-  reducers: {
-    setFacet: (state, action: PayloadAction<FacetState>) => {
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(facetsActions.setFacet, (state, action) => {
       state[action.payload.id] = action.payload;
-    },
-    toggleFacetValue: (
-      state,
-      action: PayloadAction<{facetId: string; valueId: string}>
-    ) => {
+    });
+    builder.addCase(facetsActions.toggleFacetValue, (state, action) => {
       const {facetId, valueId} = action.payload;
       const facet = state[facetId];
       if (facet) {
@@ -41,23 +23,36 @@ export const facetsSlice = createSlice({
           facet.selectedValues.splice(index, 1);
         }
       }
-    },
-    clearFacetSelections: (state, action: PayloadAction<string>) => {
+    });
+    builder.addCase(facetsActions.clearFacetSelections, (state, action) => {
       const facet = state[action.payload];
       if (facet) {
         facet.selectedValues = [];
       }
-    },
-    updateFacetValues: (
-      state,
-      action: PayloadAction<{facetId: string; values: FacetValue[]}>
-    ) => {
+    });
+    builder.addCase(facetsActions.updateFacetValues, (state, action) => {
       const {facetId, values} = action.payload;
       const facet = state[facetId];
       if (facet) {
         facet.values = values;
       }
-    },
+    });
+    builder.addCase(facetsActions.updateFromResponse, (state, action) => {
+      const responseFacets = action.payload;
+      if (!responseFacets) {
+        return;
+      }
+      for (const responseFacet of responseFacets) {
+        const existingFacet = state[responseFacet.facetId];
+        if (existingFacet) {
+          existingFacet.values = responseFacet.values.map((v) => ({
+            id: v.value,
+            label: v.value,
+            count: v.numberOfResults,
+          }));
+        }
+      }
+    });
   },
   selectors: {
     all: (state) => state,

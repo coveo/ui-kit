@@ -1,13 +1,9 @@
-import {createSlice, type PayloadAction} from '@reduxjs/toolkit';
+import {createSlice} from '@reduxjs/toolkit';
 import type {
-  AppendAgentChunkPayload,
-  ConversationSession,
   ConversationState,
   ConversationTurn,
-  FailTurnPayload,
-  FinalizeTurnPayload,
-  StartTurnPayload,
 } from '@/src/core/interface/conversation/conversation-types.js';
+import * as conversationActions from './conversation-actions.js';
 
 export const initialConversationState: ConversationState = {
   messages: [],
@@ -24,8 +20,9 @@ export const initialConversationState: ConversationState = {
 export const conversationSlice = createSlice({
   name: 'conversation',
   initialState: initialConversationState,
-  reducers: {
-    startTurn: (state, action: PayloadAction<StartTurnPayload>) => {
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(conversationActions.startTurn, (state, action) => {
       const {turnId, userMessageId, agentMessageId, input, createdAt} =
         action.payload;
 
@@ -53,11 +50,8 @@ export const conversationSlice = createSlice({
       state.isLoading = true;
       state.error = null;
       state.streaming.isConnected = false;
-    },
-    appendAgentChunk: (
-      state,
-      action: PayloadAction<AppendAgentChunkPayload>
-    ) => {
+    });
+    builder.addCase(conversationActions.appendAgentChunk, (state, action) => {
       const turnIndex = getTurnIndex(state, action.payload.turnId);
 
       if (turnIndex === -1) {
@@ -74,8 +68,8 @@ export const conversationSlice = createSlice({
       state.messages[messageIndex].content += action.payload.chunk;
       state.turns[turnIndex].status = {type: 'streaming'};
       state.streaming.isConnected = true;
-    },
-    completeTurn: (state, action: PayloadAction<FinalizeTurnPayload>) => {
+    });
+    builder.addCase(conversationActions.completeTurn, (state, action) => {
       const turnIndex = getTurnIndex(state, action.payload.turnId);
 
       if (turnIndex === -1) {
@@ -87,8 +81,8 @@ export const conversationSlice = createSlice({
       state.activeTurnId = null;
       state.isLoading = false;
       state.streaming.isConnected = false;
-    },
-    failTurn: (state, action: PayloadAction<FailTurnPayload>) => {
+    });
+    builder.addCase(conversationActions.failTurn, (state, action) => {
       const turnIndex = getTurnIndex(state, action.payload.turnId);
 
       if (turnIndex === -1) {
@@ -103,8 +97,8 @@ export const conversationSlice = createSlice({
       state.activeTurnId = null;
       state.isLoading = false;
       state.streaming.isConnected = false;
-    },
-    abortTurn: (state, action: PayloadAction<FinalizeTurnPayload>) => {
+    });
+    builder.addCase(conversationActions.abortTurn, (state, action) => {
       const turnIndex = getTurnIndex(state, action.payload.turnId);
 
       if (turnIndex === -1) {
@@ -129,22 +123,25 @@ export const conversationSlice = createSlice({
       state.activeTurnId = null;
       state.isLoading = false;
       state.streaming.isConnected = false;
-    },
-    setSession: (state, action: PayloadAction<ConversationSession>) => {
+    });
+    builder.addCase(conversationActions.setSession, (state, action) => {
       state.session = action.payload;
-    },
-    patchSession: (state, action: PayloadAction<ConversationSession>) => {
+    });
+    builder.addCase(conversationActions.patchSession, (state, action) => {
       state.session = {
         ...state.session,
         ...action.payload,
       };
-    },
-    setError: (state, action: PayloadAction<string | null>) => {
+    });
+    builder.addCase(conversationActions.setError, (state, action) => {
       state.error = action.payload;
-    },
-    setStreamingConnected: (state, action: PayloadAction<boolean>) => {
-      state.streaming.isConnected = action.payload;
-    },
+    });
+    builder.addCase(
+      conversationActions.setStreamingConnected,
+      (state, action) => {
+        state.streaming.isConnected = action.payload;
+      }
+    );
   },
   selectors: {
     messages: (state) => state.messages,

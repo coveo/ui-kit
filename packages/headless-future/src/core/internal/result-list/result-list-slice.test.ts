@@ -1,10 +1,19 @@
-/**
- * Results Slice Tests
- */
-
 import {describe, it, expect} from 'vitest';
 import {resultsSlice, initialResultListState} from './result-list-slice.js';
+import * as ResultListActions from './result-list-actions.js';
 import type {SearchResult} from '@/src/core/interface/result-list/result-list-types.js';
+
+const mockResult = (overrides: Partial<SearchResult> = {}): SearchResult => ({
+  uniqueId: '1',
+  title: 'Test',
+  uri: 'test',
+  excerpt: 'test',
+  printableUri: 'test',
+  clickUri: 'test',
+  raw: {},
+  score: 0,
+  ...overrides,
+});
 
 describe('resultsSlice: initialState', () => {
   it('should have correct initial state', () => {
@@ -17,13 +26,23 @@ describe('resultsSlice: initialState', () => {
 describe('resultsSlice: setResults', () => {
   it('should update results array', () => {
     const results: SearchResult[] = [
-      {id: '1', title: 'Result 1', uri: 'uri1', excerpt: 'excerpt1'},
-      {id: '2', title: 'Result 2', uri: 'uri2', excerpt: 'excerpt2'},
+      mockResult({
+        uniqueId: '1',
+        title: 'Result 1',
+        uri: 'uri1',
+        excerpt: 'excerpt1',
+      }),
+      mockResult({
+        uniqueId: '2',
+        title: 'Result 2',
+        uri: 'uri2',
+        excerpt: 'excerpt2',
+      }),
     ];
 
     const state = resultsSlice.reducer(
       initialResultListState,
-      resultsSlice.actions.setResults(results)
+      ResultListActions.setResults(results)
     );
 
     expect(state.results).toEqual(results);
@@ -33,16 +52,18 @@ describe('resultsSlice: setResults', () => {
   it('should replace previous results completely', () => {
     const oldState = {
       ...initialResultListState,
-      results: [{id: 'old', title: 'Old', uri: 'old', excerpt: 'old'}],
+      results: [
+        mockResult({uniqueId: 'old', title: 'Old', uri: 'old', excerpt: 'old'}),
+      ],
     };
 
     const newResults: SearchResult[] = [
-      {id: 'new', title: 'New', uri: 'new', excerpt: 'new'},
+      mockResult({uniqueId: 'new', title: 'New', uri: 'new', excerpt: 'new'}),
     ];
 
     const state = resultsSlice.reducer(
       oldState,
-      resultsSlice.actions.setResults(newResults)
+      ResultListActions.setResults(newResults)
     );
 
     expect(state.results).toEqual(newResults);
@@ -52,12 +73,12 @@ describe('resultsSlice: setResults', () => {
   it('should accept empty array', () => {
     const oldState = {
       ...initialResultListState,
-      results: [{id: '1', title: 'Test', uri: 'test', excerpt: 'test'}],
+      results: [mockResult()],
     };
 
     const state = resultsSlice.reducer(
       oldState,
-      resultsSlice.actions.setResults([])
+      ResultListActions.setResults([])
     );
 
     expect(state.results).toEqual([]);
@@ -69,14 +90,19 @@ describe('resultsSlice: clearResults', () => {
     const stateWithResults = {
       ...initialResultListState,
       results: [
-        {id: '1', title: 'Test', uri: 'test', excerpt: 'test'},
-        {id: '2', title: 'Test 2', uri: 'test2', excerpt: 'test2'},
+        mockResult({uniqueId: '1'}),
+        mockResult({
+          uniqueId: '2',
+          title: 'Test 2',
+          uri: 'test2',
+          excerpt: 'test2',
+        }),
       ],
     };
 
     const state = resultsSlice.reducer(
       stateWithResults,
-      resultsSlice.actions.clearResults()
+      ResultListActions.clearResults()
     );
 
     expect(state.results).toEqual([]);
@@ -89,9 +115,7 @@ describe('resultsSlice: state immutability', () => {
 
     resultsSlice.reducer(
       original,
-      resultsSlice.actions.setResults([
-        {id: '1', title: 'Test', uri: 'test', excerpt: 'test'},
-      ])
+      ResultListActions.setResults([mockResult()])
     );
 
     expect(original.results).toEqual([]);

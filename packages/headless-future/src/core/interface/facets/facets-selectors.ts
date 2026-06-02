@@ -1,29 +1,57 @@
-/**
- * Facets Feature Selectors
- *
- * Provides library-agnostic selectors for reading facets state.
- * CRITICAL: NO Redux or Immer types exposed.
- */
+import {State} from '@/src/core/interface/engine/engine-types.js';
+import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
+import type {FacetState, FacetsState} from './facets-types.js';
+import {initialFacetsState} from '@/src/core/internal/facets/facets-slice.js';
+import {CoveoFacetRequest} from '@/src/core/interface/api/search-endpoint/search-endpoint-types.js';
 
-import {facetsSlice} from '@/src/core/internal/facets/facets-slice.js';
-facetsSlice;
-import type {FacetsState} from './facets-types.js';
+const getFacetsState = (state: State) => state.facets ?? initialFacetsState;
 
-type StateWithFacetsSlice = {facets: FacetsState};
+export const all = createMemoizedStateSelector(
+  getFacetsState,
+  (facets): FacetsState => facets
+);
 
-export const all = (state: StateWithFacetsSlice) => {
-  return facetsSlice.selectors.all(state);
-};
+export const byId = (facetId: string) =>
+  createMemoizedStateSelector(
+    getFacetsState,
+    (facets): FacetState | undefined => facets[facetId]
+  );
 
-export const byId = (facetId: string) => (state: StateWithFacetsSlice) => {
-  return facetsSlice.selectors.byId(state, facetId);
-};
+export const selectedValues = (facetId: string) =>
+  createMemoizedStateSelector(
+    getFacetsState,
+    (facets): string[] => facets[facetId]?.selectedValues ?? []
+  );
 
-export const selectedValues =
-  (facetId: string) => (state: StateWithFacetsSlice) => {
-    return facetsSlice.selectors.selectedValues(state, facetId);
-  };
+export const allSelectedValues = createMemoizedStateSelector(
+  getFacetsState,
+  (facets): Array<{facetId: string; valueId: string}> => {
+    const result: Array<{facetId: string; valueId: string}> = [];
+    Object.entries(facets).forEach(([facetId, facet]) => {
+      facet.selectedValues.forEach((valueId) => {
+        result.push({facetId, valueId});
+      });
+    });
+    return result;
+  }
+);
 
-export const allSelectedValues = (state: StateWithFacetsSlice) => {
-  return facetsSlice.selectors.allSelectedValues(state);
-};
+export const buildFacetsRequest = createMemoizedStateSelector(
+  all,
+  (facets): CoveoFacetRequest[] | undefined => {
+    const entries = Object.values(facets);
+
+    if (entries.length === 0) {
+      return undefined;
+    }
+
+    return entries.map((facet) => ({
+      facetId: facet.id,
+      field: facet.id,
+      currentValues: facet.selectedValues.map((value) => ({
+        value,
+        state: 'selected',
+      })),
+    }));
+  }
+);

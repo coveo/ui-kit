@@ -12,10 +12,14 @@ const stateSelect = createSelector(
   [resultsSelectors.results],
   (results): ResultListControllerState => ({
     results: results.map((result) => ({
-      id: result.id,
+      uniqueId: result.uniqueId,
       title: result.title,
       uri: result.uri,
       excerpt: result.excerpt,
+      printableUri: result.printableUri,
+      clickUri: result.clickUri,
+      raw: result.raw,
+      score: result.score,
     })),
   })
 );
