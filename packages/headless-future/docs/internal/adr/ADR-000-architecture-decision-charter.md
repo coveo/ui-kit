@@ -2,7 +2,9 @@
 
 This charter defines the criteria used to evaluate architecture and design decisions for headless-future.
 
-A decision is acceptable only if it satisfies all **MUST** requirements and clearly addresses **SHOULD** requirements.
+A decision is acceptable only if it satisfies all **MUST** requirements and clearly addresses **SHOULD** requirements (see https://www.rfc-editor.org/rfc/rfc2119.html).
+
+**Note**: This charter is a work-in-progress and assumes that the reader has knowledge of the current version of headless.
 
 ## 2. Scope
 
@@ -16,41 +18,33 @@ Applies to:
 
 ## 3. Canonical Definitions
 
-1. **Single use case**: commerce-only or knowledge-only.
-2. **Hybrid use case**: commerce and knowledge in the same experience.
-3. **Generative use case**: conversational interaction mode, over single or hybrid scope.
-4. **Public API surface**: all exported runtime behavior, types, options, and guarantees visible to consumers.
+- **Public API surface**: all exported runtime behavior, types, options, and guarantees visible to consumers.
 
 ## 4. Decision Requirements
 
 ### MUST
 
-1. **Full use-case support**
-   Architecture must support:
-   - non-generative single
-   - non-generative hybrid
-   - generative single
-   - generative hybrid
+- **Full use-case support**
+  All known and predictable implementation use cases **MUST** be supported.
 
-2. **Public API independence**
-   Public API must be implementation-agnostic and stable.
-   Internal plumbing can change mechanically without public contract changes.
+- **Public API independence**
+  Public API **MUST** be implementation-agnostic and stable.
 
-3. **First-class SSR**
-   SSR must be supported as a primary runtime model, including:
-   - server initialization
-   - state transfer
-   - client hydration
-   - deterministic contract-level behavior across server and client
+- **First-class SSR**
+  SSR **MUST** be supported as a primary runtime model.
 
 ### SHOULD
 
-1. **Migration simplicity**
-   Common migrations from current headless should be straightforward and well-documented.
-2. **Tree-shaking efficiency**
-   Consumers should ship only what they import, with packaging and exports optimized for dead-code elimination.
+From highest to lowest priority:
+
+1. **Tree-shaking efficiency**
+   Consumers **SHOULD** ship only what they import, with packaging and exports optimized for dead-code elimination.
+
+2. **Migration simplicity**
+   Common migrations from current headless **SHOULD** be straightforward and well-documented.
+
 3. **External contribution readiness**
-   Architecture boundaries and contribution workflow should be clear enough for non-core contributors to deliver safe changes.
+   Architecture boundaries and contribution workflow **SHOULD** be straightforward enough for non-core contributors to deliver safe changes.
 
 ## 5. Non-Leakage Policy (Public API)
 
@@ -72,27 +66,29 @@ Public API must not expose implementation concepts from internal state libraries
 
 A major architecture decision is approved only if all gates below pass.
 
-1. **API gate**
-   No unintended public API changes; all intentional changes are reviewed and documented.
-2. **Leakage gate**
-   No prohibited implementation concepts or types in the public contract.
-3. **Coverage gate**
-   Automated validation exists for all required use-case combinations.
-4. **SSR gate**
-   Server-to-client lifecycle is documented and verified for deterministic behavior.
-5. **Tradeoff gate**
-   If a SHOULD is not met, rationale and mitigation are explicitly recorded.
+- **API gate**
+  No unintended public API changes; all intentional changes are reviewed and documented.
+
+- **Leakage gate**
+  No prohibited implementation concepts or types in the public contract.
+
+- **Coverage gate**
+  Automated validation exists for all required use-case combinations.
+
+- **SSR gate**
+  Server-to-client lifecycle is documented and verified for deterministic behavior.
+
+- **Tradeoff gate**
+  If a **SHOULD** is not met, rationale and mitigation are explicitly recorded.
 
 ## 7. Decision Priority Order
 
 When requirements conflict, resolve in this order:
 
-1. Full use-case support
-2. Public API independence
-3. SSR support
-4. Tree-shaking efficiency
-5. Migration simplicity
-6. Contribution readiness
+1. All **MUST** requirements
+2. Tree-shaking efficiency
+3. Migration simplicity
+4. Contribution readiness
 
 ## 8. Decision Record Template
 
