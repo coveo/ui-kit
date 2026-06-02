@@ -3,6 +3,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
+import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -78,5 +79,31 @@ export const WithoutAutomaticQueryCorrection: Story = {
         ],
       },
     }));
+  },
+};
+
+export const A11yStatusMessage: Story = {
+  name: 'A11y Status Message',
+  tags: ['a11y', 'test', '!dev'],
+  beforeEach: async () => {
+    searchApiHarness.searchEndpoint.mockOnce((response) => ({
+      ...response,
+      queryCorrection: {
+        correctedQuery: 'coveo',
+        originalQuery: 'coveoo',
+        corrections: [],
+      },
+    }));
+  },
+  play: async (context) => {
+    await play(context);
+    await testStatusMessageA11y(context, {
+      triggerAction: async () => {
+        // Auto-correction is triggered by the mock response during play().
+        // atomic-did-you-mean announces the correction via AriaLiveRegionController.
+      },
+      expectedText: /coveo/i,
+      timeout: 10000,
+    });
   },
 };

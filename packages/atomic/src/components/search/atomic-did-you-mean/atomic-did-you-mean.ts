@@ -18,6 +18,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {renderAutoCorrection} from '../../common/query-correction/auto-correction';
 import {renderCorrection} from '../../common/query-correction/correction';
 import {renderTriggerCorrection} from '../../common/query-correction/trigger-correction';
@@ -51,6 +52,8 @@ export class AtomicDidYouMean
   public bindings!: Bindings;
   didYouMean!: DidYouMean;
   queryTrigger!: QueryTrigger;
+
+  protected ariaMessage = new AriaLiveRegionController(this, 'did-you-mean');
 
   @bindStateToController('didYouMean')
   @state()
@@ -165,7 +168,37 @@ export class AtomicDidYouMean
       this.didYouMeanState.hasQueryCorrection ||
       this.queryTriggerState.wasQueryModified;
 
+    if (hasCorrection) {
+      this.ariaMessage.message = this.getAriaLiveMessage();
+    }
+
     return html`${when(hasCorrection, () => this.content)}`;
+  }
+
+  private getAriaLiveMessage(): string {
+    const {hasQueryCorrection, wasAutomaticallyCorrected} =
+      this.didYouMeanState;
+    const hasTrigger = this.queryTriggerState.wasQueryModified;
+
+    if (hasQueryCorrection && wasAutomaticallyCorrected) {
+      return this.bindings.i18n.t('query-auto-corrected-to', {
+        query: this.didYouMeanState.wasCorrectedTo,
+      });
+    }
+
+    if (hasQueryCorrection) {
+      return this.bindings.i18n.t('did-you-mean', {
+        query: this.didYouMeanState.queryCorrection.correctedQuery,
+      });
+    }
+
+    if (hasTrigger) {
+      return this.bindings.i18n.t('showing-results-for', {
+        query: this.queryTriggerState.newQuery,
+      });
+    }
+
+    return '';
   }
 }
 
