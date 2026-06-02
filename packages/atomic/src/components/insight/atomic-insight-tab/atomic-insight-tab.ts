@@ -32,11 +32,6 @@ export class AtomicInsightTab
   extends LitElement
   implements TabCommon, InitializableComponent<InsightBindings>
 {
-  static shadowRootOptions = {
-    ...LitElement.shadowRootOptions,
-    delegatesFocus: true,
-  };
-
   static styles = css`
     @reference '../../../utils/tailwind.global.tw.css';
 
@@ -56,7 +51,7 @@ export class AtomicInsightTab
 
     :host(:hover) [part='tab'],
     :host(:focus-visible) [part='tab'] {
-      @apply text-primary-light;
+      @apply text-primary;
     }
 
     :host([active]) [part='tab']::after {
@@ -174,6 +169,9 @@ export class AtomicInsightTab
 
     if (nextIndex !== null) {
       event.preventDefault();
+      tabs.forEach((tab, index) => {
+        tab.tabIndex = index === nextIndex ? 0 : -1;
+      });
       tabs[nextIndex].focus();
     }
   };

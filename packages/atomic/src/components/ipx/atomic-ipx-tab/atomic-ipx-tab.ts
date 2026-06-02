@@ -26,11 +26,6 @@ export class AtomicIpxTab
   extends LitElement
   implements TabCommon, InitializableComponent<Bindings>
 {
-  static shadowRootOptions = {
-    ...LitElement.shadowRootOptions,
-    delegatesFocus: true,
-  };
-
   static styles = css`
     @reference '../../../utils/tailwind.global.tw.css';
 
@@ -50,7 +45,7 @@ export class AtomicIpxTab
 
     :host(:hover) [part='tab'],
     :host(:focus-visible) [part='tab'] {
-      @apply text-primary-light;
+      @apply text-primary;
     }
 
     :host([active]) [part='tab']::after {
@@ -165,6 +160,9 @@ export class AtomicIpxTab
 
     if (nextIndex !== null) {
       event.preventDefault();
+      tabs.forEach((tab, index) => {
+        tab.tabIndex = index === nextIndex ? 0 : -1;
+      });
       tabs[nextIndex].focus();
     }
   };
