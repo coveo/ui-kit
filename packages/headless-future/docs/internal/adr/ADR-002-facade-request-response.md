@@ -1,7 +1,7 @@
 # ADR-002: Centralized Request Building and Response Handling for Endpoint Facades
 
 **Status**: Proposed  
-**Related Docs**: -
+**Related docs**: -
 
 ## 1. Context
 
@@ -15,7 +15,7 @@ Endpoint facades (e.g., `SearchEndpointFacade`, `ConversationEndpointFacade`) or
 
 Endpoint facades should use symmetric centralized patterns for both request building and response handling: a composed memoized selector to build the request from state, and a centralized response handler to distribute the response via standalone actions.
 
-## 3. Requirements Mapping
+## 3. Requirements & Considerations Mapping
 
 Map this decision to headless-future's Architecture Decision Charter requirements.
 
