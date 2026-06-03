@@ -2,6 +2,7 @@ import {expect, userEvent, waitFor} from '@storybook/test';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit/static-html.js';
 import {within} from 'shadow-dom-testing-library';
+import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -92,4 +93,48 @@ export const WithRatingFacet: Story = {
       </div>
     `,
   ],
+};
+
+export const A11yStatusMessage: Story = {
+  name: 'A11y Status Message',
+  tags: ['a11y', 'test', '!dev'],
+  decorators: [
+    (story) => html`
+      ${story()}
+      <div style="display: flex; justify-content: flex-start;">
+        <atomic-facet
+          field="objecttype"
+          style="flex-grow:1"
+          label="Object type"
+        ></atomic-facet>
+      </div>
+    `,
+  ],
+  play: async (context) => {
+    await play(context);
+    const canvas = within(context.canvasElement);
+    await waitFor(
+      () => expect(canvas.getByShadowTitle('People')).toBeInTheDocument(),
+      {timeout: 30e3}
+    );
+    await userEvent.click(canvas.getByShadowTitle('People'));
+    await waitFor(
+      () =>
+        expect(
+          canvas.getByShadowTitle('Object type: People')
+        ).toBeInTheDocument(),
+      {timeout: 30e3}
+    );
+    await testStatusMessageA11y(context, {
+      triggerAction: async () => {
+        const clearButton = await context.canvas.findByShadowLabelText(
+          'Clear',
+          {exact: false}
+        );
+        clearButton.click();
+      },
+      expectedText: /results/i,
+      timeout: 10000,
+    });
+  },
 };
