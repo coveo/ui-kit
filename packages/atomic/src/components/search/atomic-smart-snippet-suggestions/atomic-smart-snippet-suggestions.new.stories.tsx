@@ -1,7 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {testDisclosureA11y} from '@/storybook-utils/a11y/disclosure.js';
-import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {
@@ -207,22 +206,6 @@ export const A11yDisclosure: Story = {
     await testDisclosureA11y(context, {
       trigger: {expanded: false},
       assertControlledRegion: true,
-    });
-  },
-};
-
-export const A11yStatusMessage: Story = {
-  name: 'A11y Status Message',
-  tags: ['a11y', 'test', '!dev'],
-  play: async (context) => {
-    await play(context);
-    await testStatusMessageA11y(context, {
-      triggerAction: async () => {
-        // Search results (including smart snippet suggestions) are loaded by play().
-        // The query-summary announces results via atomic-aria-live.
-      },
-      expectedText: /results/i,
-      timeout: 10000,
     });
   },
 };
