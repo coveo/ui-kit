@@ -1,7 +1,9 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {testCheckboxA11y} from '@/storybook-utils/a11y/checkbox.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {searchFacetTransformer} from '@/storybook-utils/api/search/facet-transformer';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -215,5 +217,29 @@ export const WithSelectedValue: Story = {
       }
       return response;
     });
+  },
+};
+
+export const A11yCheckbox: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  args: {
+    field: 'filetype',
+    label: 'File Type',
+    'display-values-as': 'checkbox',
+  },
+  decorators: [facetDecorator, colorFacetStylesDecorator],
+  beforeEach: () => {
+    searchApiHarness.searchEndpoint.addRequestTransformer(
+      searchFacetTransformer
+    );
+    return () => {
+      searchApiHarness.searchEndpoint.removeRequestTransformer(
+        searchFacetTransformer
+      );
+    };
+  },
+  play: async (context) => {
+    await play(context);
+    await testCheckboxA11y(context);
   },
 };

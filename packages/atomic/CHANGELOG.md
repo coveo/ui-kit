@@ -1,3 +1,9 @@
+## 3.59.3
+
+### Patch Changes
+
+- [#7659](https://github.com/coveo/ui-kit/pull/7659) [`fa08790`](https://github.com/coveo/ui-kit/commit/fa08790a38921292579a8e0bcf6b98a6b6e81323) - Implement the WAI-ARIA Tabs APG pattern for `atomic-insight-tab` and `atomic-ipx-tab`, including host-level tab semantics and keyboard navigation in the associated tablists.
+
 ## 3.59.2
 
 ### Patch Changes

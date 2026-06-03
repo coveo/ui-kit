@@ -1,3 +1,9 @@
+## 3.39.0
+
+### Minor Changes
+
+- [#7704](https://github.com/coveo/ui-kit/pull/7704) [`0b83ae1`](https://github.com/coveo/ui-kit/commit/0b83ae1c531da479fed8f30283db0bda8272ba14) - feat(quantic): create the QuanticGeneratedAnswerFollowUpInput component
+
 ## 3.38.2
 
 ### Patch Changes
