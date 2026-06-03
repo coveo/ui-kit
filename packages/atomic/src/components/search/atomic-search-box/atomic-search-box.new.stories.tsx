@@ -7,6 +7,7 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {userEvent} from 'storybook/test';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
+import {testComboboxA11y} from '@/storybook-utils/a11y/combobox.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -91,5 +92,17 @@ export const A11yStatusMessage: Story = {
       expectedText: '5 search suggestions are available for test.',
       timeout: 10000,
     });
+  },
+};
+
+export const A11yCombobox: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  name: 'A11y Combobox',
+  args: {
+    'default-slot': `<atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>`,
+  },
+  play: async (context) => {
+    await play(context);
+    await testComboboxA11y(context);
   },
 };
