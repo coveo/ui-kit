@@ -74,8 +74,12 @@ export const A11yStatusMessage: Story = {
     (story) => html`<atomic-query-summary></atomic-query-summary>${story()}`,
   ],
   beforeEach: async () => {
-    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
-    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
+    searchApiHarness.searchEndpoint.mockOnce(
+      buildSearchResponseWithResults(120)
+    );
+    searchApiHarness.searchEndpoint.mockOnce(
+      buildSearchResponseWithResults(120)
+    );
   },
   play: async (context) => {
     await play(context);

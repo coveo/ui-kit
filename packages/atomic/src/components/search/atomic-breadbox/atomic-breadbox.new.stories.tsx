@@ -110,9 +110,15 @@ export const A11yStatusMessage: Story = {
     `,
   ],
   beforeEach: async () => {
-    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
-    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(42));
-    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
+    searchApiHarness.searchEndpoint.mockOnce(
+      buildSearchResponseWithResults(120)
+    );
+    searchApiHarness.searchEndpoint.mockOnce(
+      buildSearchResponseWithResults(42)
+    );
+    searchApiHarness.searchEndpoint.mockOnce(
+      buildSearchResponseWithResults(120)
+    );
   },
   play: async (context) => {
     await play(context);

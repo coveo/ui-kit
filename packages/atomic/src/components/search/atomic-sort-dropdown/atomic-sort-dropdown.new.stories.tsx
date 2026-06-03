@@ -90,8 +90,12 @@ export const A11yStatusMessage: Story = {
     `,
   ],
   beforeEach: async () => {
-    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
-    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(84));
+    searchApiHarness.searchEndpoint.mockOnce(
+      buildSearchResponseWithResults(120)
+    );
+    searchApiHarness.searchEndpoint.mockOnce(
+      buildSearchResponseWithResults(84)
+    );
   },
   play: async (context) => {
     await play(context);
