@@ -1,4 +1,3 @@
-import {DEFAULT_MANUAL_PLACEHOLDER_NOTE} from '../shared/constants.js';
 import type {A11yCriterionReport} from '../shared/types.js';
 import {
   countManualConformances,
@@ -186,7 +185,7 @@ export function buildRemarks(context: RemarksContext): string {
       coveredComponents,
       violatingComponents
     );
-    return `${primary}${automatedSuffix} ${DEFAULT_MANUAL_PLACEHOLDER_NOTE}`;
+    return automatedSuffix ? `${primary} ${automatedSuffix}` : primary;
   }
 
   const automatedCoveredCount = coveredComponents.length;
@@ -196,20 +195,20 @@ export function buildRemarks(context: RemarksContext): string {
   );
 
   if (conformance === 'supports') {
-    return `Automated testing found no axe-core violations for WCAG ${criterionId} across ${automatedCoveredCount} mapped component(s).${interactiveSuffix} ${DEFAULT_MANUAL_PLACEHOLDER_NOTE}`;
+    return `Automated testing found no axe-core violations for WCAG ${criterionId} across ${automatedCoveredCount} mapped component(s).${interactiveSuffix}`;
   }
 
   if (conformance === 'partially-supports') {
-    return `Automated testing found violations for WCAG ${criterionId} in ${automatedViolatingCount} of ${automatedCoveredCount} mapped component(s).${interactiveSuffix} ${DEFAULT_MANUAL_PLACEHOLDER_NOTE}`;
+    return `Automated testing found violations for WCAG ${criterionId} in ${automatedViolatingCount} of ${automatedCoveredCount} mapped component(s).${interactiveSuffix}`;
   }
 
   if (conformance === 'does-not-support') {
-    return `Automated testing found violations for WCAG ${criterionId} in all ${automatedCoveredCount} mapped component(s).${interactiveSuffix} ${DEFAULT_MANUAL_PLACEHOLDER_NOTE}`;
+    return `Automated testing found violations for WCAG ${criterionId} in all ${automatedCoveredCount} mapped component(s).${interactiveSuffix}`;
   }
 
   if (conformance === 'not-applicable') {
     return `WCAG ${criterionId} is not applicable for the tested component scope.`;
   }
 
-  return `WCAG ${criterionId} has no automated mapping evidence in the JSON report. ${DEFAULT_MANUAL_PLACEHOLDER_NOTE}`;
+  return `WCAG ${criterionId} has no automated or interactive coverage.`;
 }

@@ -42,6 +42,8 @@ export interface A11yAutomatedResults {
   incomplete: number;
   inapplicable: number;
   criteriaCovered: string[];
+  criteriaViolated: string[];
+  criteriaPassed: string[];
   incompleteDetails: A11yIncompleteDetail[];
 }
 
@@ -82,7 +84,8 @@ export interface A11yCriterionReport {
   interactiveCoverage: boolean;
   interactiveStatus?: 'passed';
   manualVerified: boolean;
-  affectedComponents: string[];
+  coveredComponents: string[];
+  violatingComponents: string[];
 }
 
 /**
