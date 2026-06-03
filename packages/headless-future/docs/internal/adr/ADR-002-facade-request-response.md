@@ -8,7 +8,7 @@
 Endpoint facades (e.g., `SearchEndpointFacade`, `ConversationEndpointFacade`) orchestrate the full API lifecycle: build a request from state, execute the HTTP call, and write the response back to state. Multiple state slices participate in both directions.
 
 - **Business/context drivers**: Endpoint requests have finite, well-known schemas defined at design time. Internal wiring should be simple, traceable, and type-safe.
-- **Technical constraints**: A decentralized contributor approach uses zero-argument closures that can read from anything, violating the architectural rule that all state access goes through the Engine. Contributors are anonymous, order-dependent, and produce an opaque merged request that is hard to inspect or test.
+- **Technical constraints**: A decentralized contributor approach produces an opaque merged request from anonymous, order-dependent functions that is hard to inspect or test.
 - **Known assumptions**: Non-adopted slices are safe to read (selectors fall back to initial state) and safe to write to (dispatched actions are ignored when no reducer is injected). This eliminates the need for guards or lazy registration.
 
 ## 2. Decision Statement
@@ -40,8 +40,8 @@ Map this decision to headless-future's Architecture Decision Charter requirement
    - **How addressed (or why deferred)**: Non-adopted slices contribute safe defaults (no dead code retained at runtime).
 
 2. **Requirement**: Migration simplicity
-   - **Impact**: Positive
-   - **How addressed (or why deferred)**: The pattern is simpler to learn and use than a contributor registry. Adding a new feature requires modifying two well-known files per endpoint (the request selector and the response handler).
+   - **Impact**: None
+   - **How addressed (or why deferred)**: This is an internal architectural pattern with no effect on the public API surface; consumers migrating from headless to headless-future are unaffected by how request composition is wired internally.
 
 3. **Requirement**: External contribution readiness
    - **Impact**: Positive
@@ -59,12 +59,12 @@ Map this decision to headless-future's Architecture Decision Charter requirement
   // search-endpoint-selectors.ts
   export const buildSearchEndpointRequest = createMemoizedStateSelector(
     searchBoxSelectors.query,
-    paginationSelectors.currentPage,
+    paginationSelectors.firstResult,
     paginationSelectors.pageSize,
     facetsSelectors.buildFacetsRequest,
-    (query, currentPage, pageSize, facets): CoveoSearchEndpointRequest => ({
+    (query, firstResult, pageSize, facets): CoveoSearchEndpointRequest => ({
       q: query,
-      firstResult: (currentPage - 1) * pageSize,
+      firstResult: firstResult,
       numberOfResults: pageSize,
       facets: facets,
     })
@@ -93,7 +93,7 @@ Map this decision to headless-future's Architecture Decision Charter requirement
   - **Symmetry** — one mental model for both directions (composed selector ↔ composed handler)
 - **Cons**:
   - **Central modification required** — adding a new feature requires modifying the centralized selector/handler for the relevant endpoint
-  - **Cross-feature imports** — the selector file imports from all contributing feature modules
+  - **Cross-feature coupling** — the selector file is aware of all contributing feature modules
 - **Risks**:
   - **File growth** — the selector file may grow large if many features are added (mitigated by keeping each sub-selector in its own feature module)
 
@@ -134,9 +134,8 @@ Map this decision to headless-future's Architecture Decision Charter requirement
   - **Lazy composition** — unloaded features contribute nothing
   - **Separation of concerns** — each feature owns its request-to-state and response-to-state mappings
 - **Cons**:
-  - **Unconstrained closures** — zero-argument closures can read from anything, violating the Layer 0 state-access rule
   - **Opaque request shape** — scattered across loaders, no single place to inspect the full request
-  - **Opaque response flow** — "what happens on response?" requires tracing all loaders
+  - **Opaque response flow** — "what happens on request/response?" requires tracing all loaders
   - **Silent field collisions** — overlapping fields resolved by implicit registration order
   - **Array replacement** — `deepMerge` replaces arrays instead of merging them, causing silent data loss
   - **Registration timing** — calling the endpoint before a loader registers means params silently missing or response data silently lost
@@ -186,9 +185,9 @@ Map this decision to headless-future's Architecture Decision Charter requirement
 
 Endpoint request schemas are finite, well-known, and defined at design time. There is no internal scenario requiring dynamic composition — every feature always contributes its fields. The decentralized contributor pattern's complexity (registry, merge semantics, implicit ordering) buys composability that is not needed for internal wiring.
 
-**Option A** is recommended because it provides one mental model (state-driven selectors for request, standalone actions for response), full type safety, single-file debuggability per direction, and eliminates the architectural flaw of zero-argument closures. The key insight that makes symmetric centralization viable is that non-adopted slices are safe no-ops in both directions: selectors fall back to initial state, and dispatched actions are ignored without a reducer.
+**Option A** is recommended because it provides one mental model (state-driven selectors for request, standalone actions for response), full type safety, and single-file debuggability per direction. The key insight that makes symmetric centralization viable is that non-adopted slices are safe no-ops in both directions: selectors fall back to initial state, and dispatched actions are ignored without a reducer.
 
-**Option B** was rejected because its costs (opacity, silent collisions, ordering fragility, hidden side effects) outweigh its benefits for fixed-schema endpoints.
+**Option B** was rejected because its costs (opacity, silent collisions, ordering fragility, hidden side effects) outweigh its benefits for fixed-schema endpoints. Most of these concerns could technically be mitigated, but each mitigation adds complexity to a pattern whose purpose is to solve a problem we don't have: dynamic composition of a fixed schema.
 
 **Option C** was rejected because its asymmetry adds cognitive overhead without justification — the same safe no-op property that makes the centralized selector work also makes the centralized response handler work.
 
