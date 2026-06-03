@@ -1,4 +1,5 @@
 {
+  "$schema": "https://turbo.build/schema.json",
   "extends": ["//"],
   "tasks": {
     "build": {
@@ -17,12 +18,22 @@
       "outputs": ["dist/themes/**"],
       "inputs": ["src/themes/**"]
     },
+    "pre:storybook": {
+      "dependsOn": [
+        "build:cem",
+        "build:locales",
+        "build:assets",
+        "build:indexes"
+      ],
+      "outputs": []
+    },
     "build:storybook": {
-      "dependsOn": ["^build", "build:cem", "build:locales"],
-      "outputs": ["./dist-storybook/**"]
+      "dependsOn": ["^build", "pre:storybook"],
+      "outputs": ["./dist-storybook/**"],
+      "env": ["STORYBOOK_INVOKED_BY"]
     },
     "chromatic": {
-      "dependsOn": ["build:storybook"],
+      "dependsOn": [],
       "outputs": [],
       "env": [
         "CHROMATIC_PROJECT_TOKEN",
@@ -43,11 +54,24 @@
         "!./src/**/e2e/**"
       ]
     },
-    "build:lit": {
-      "dependsOn": ["^build", "build:locales"],
+    "build:indexes": {
       "outputs": [
         "src/components/*/index.ts",
-        "src/components/*/lazy-index.ts",
+        "src/components/*/lazy-index.ts"
+      ],
+      "inputs": [
+        "./src/**/*.ts",
+        "!./src/components/*/index.ts",
+        "!./src/components/*/lazy-index.ts",
+        "!./src/utils/custom-element-tags.ts",
+        "!./src/**/*.spec.ts",
+        "!./src/**/*.d.ts",
+        "!./src/**/e2e/**"
+      ]
+    },
+    "build:lit": {
+      "dependsOn": ["^build", "build:locales", "build:indexes"],
+      "outputs": [
         "src/utils/custom-element-tags.ts",
         "dist/esm/**",
         "dist/cjs/**",
@@ -103,7 +127,7 @@
       "persistent": true
     },
     "dev:storybook": {
-      "dependsOn": ["build:locales"],
+      "dependsOn": ["@coveo/atomic-legacy#build", "pre:storybook"],
       "cache": false,
       "persistent": true
     },

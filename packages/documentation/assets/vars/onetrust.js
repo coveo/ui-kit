@@ -49,3 +49,45 @@ export function isActiveGroup(groupsToVerify) {
   }
   return true;
 }
+
+// Auto-initialize docs analytics when OneTrust functional cookies are active.
+// Uses window.docsAnalytics (our event-handler wrapper) which in turn delegates
+// to the Amplitude Browser SDK via window.amplitude.
+(function initAnalyticsWhenAllowed() {
+  try {
+    const analytics = window.docsAnalytics;
+    if (!analytics) return;
+
+    function handleConsentChange() {
+      if (isActiveGroup('C0003')) {
+        analytics.setOptOut(false);
+      } else {
+        analytics.setOptOut(true);
+      }
+    }
+
+    // If C0003 consent already present (returning visitor), init immediately
+    if (isActiveGroup('C0003')) {
+      analytics.initAmplitude();
+      return;
+    }
+
+    // OneTrust integrations in this repo rely on the global OptanonWrapper callback.
+    // Preserve any existing wrapper and run the analytics consent handler after it.
+    const existingOptanonWrapper = window.OptanonWrapper;
+    window.OptanonWrapper = function () {
+      if (typeof existingOptanonWrapper === 'function') {
+        existingOptanonWrapper();
+      }
+      handleConsentChange();
+    };
+
+    // Keep listening for the custom event as a compatibility fallback in case
+    // another integration dispatches it.
+    window.addEventListener('consent.onetrust', handleConsentChange);
+  } catch (e) {
+    // don't break the page if analytics fails
+    // eslint-disable-next-line no-console
+    console.warn('[docs-analytics] Failed to initialize', e);
+  }
+})();

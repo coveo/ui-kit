@@ -1,4 +1,4 @@
-import type {RequestTransformer} from '../_base.js';
+import type {RequestTransformer} from '../_request-transformer.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyResponse = Record<string, any>;

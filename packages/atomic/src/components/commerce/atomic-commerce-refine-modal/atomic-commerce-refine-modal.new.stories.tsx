@@ -9,7 +9,7 @@ import {parameters as commonParameters} from '@/storybook-utils/common/common-me
 import '@/src/components/commerce/atomic-commerce-refine-modal/atomic-commerce-refine-modal.js';
 import '@/src/components/commerce/atomic-commerce-refine-toggle/atomic-commerce-refine-toggle.js';
 
-const mockCommerceApi = new MockCommerceApi();
+const commerceApiHarness = new MockCommerceApi();
 
 const {decorator, play} = wrapInCommerceInterface();
 const {events, args, argTypes, styleTemplate} = getStorybookHelpers(
@@ -30,7 +30,7 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
-    msw: {handlers: [...mockCommerceApi.handlers]},
+    msw: {handlers: [...commerceApiHarness.handlers]},
   },
   args: {
     ...args,

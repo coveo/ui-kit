@@ -176,6 +176,7 @@ declare module 'lwc' {
 
         readonly template: ShadowRootTheGoodPart;
         readonly shadowRoot: null;
+        readonly refs: Record<string, HTMLElement & Record<string, any>>;
     }
 
     /**
