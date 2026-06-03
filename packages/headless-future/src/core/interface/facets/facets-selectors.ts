@@ -25,15 +25,10 @@ export const selectedValues = (facetId: string) =>
 
 export const allSelectedValues = createMemoizedStateSelector(
   getFacetsState,
-  (facets): Array<{facetId: string; valueId: string}> => {
-    const result: Array<{facetId: string; valueId: string}> = [];
-    Object.entries(facets).forEach(([facetId, facet]) => {
-      facet.selectedValues.forEach((valueId) => {
-        result.push({facetId, valueId});
-      });
-    });
-    return result;
-  }
+  (facets): Array<{facetId: string; valueId: string}> =>
+    Object.entries(facets).flatMap(([facetId, facet]) =>
+      facet.selectedValues.map((valueId) => ({facetId, valueId}))
+    )
 );
 
 export const buildFacetsRequest = createMemoizedStateSelector(
