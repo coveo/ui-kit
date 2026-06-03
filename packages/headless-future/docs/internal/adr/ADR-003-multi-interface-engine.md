@@ -31,7 +31,7 @@ Map this decision to headless-future's Architecture Decision Charter requirement
 
 - **Requirement**: First-class SSR
   - **Impact**: Medium. Deferred but not blocked.
-  - **How satisfied**: Optional explicit Interface_IDs enable deterministic hydration matching. Serializable-state constraint ensures state can be transferred across runtime boundaries. No SSR machinery is implemented now.
+  - **How satisfied**: Optional explicit interface IDs enable deterministic hydration matching. Serializable-state constraint ensures state can be transferred across runtime boundaries. No SSR machinery is implemented now.
 
 1. **Consideration**: Tree-shaking efficiency
    - **Impact**: High. Per-type register functions ensure unused interface types are dead-code eliminated.
@@ -49,7 +49,7 @@ Map this decision to headless-future's Architecture Decision Charter requirement
 
 ### Option A (Selected): Per-type register functions with keyed state partitions
 
-- **Summary**: Typed register functions (`registerSearchInterface`, etc.) return interface objects. State is keyed by Interface_ID in a single Redux store. Controllers accept `interface` (singular) or `interfaces` (array).
+- **Summary**: Typed register functions (`registerSearchInterface`, etc.) return interface objects. State is keyed by interface ID in a single Redux store. Controllers accept `interface` (singular) or `interfaces` (array).
 - **Pros**: Full type inference without generics annotations. Tree-shakeable. Unified devtools/middleware. Simple common case (single interface per controller).
 - **Cons**: Introduces a new concept. Keyed partitions add indirection in selectors/mutators.
 - **Risks**: Multi-interface controllers (search box spanning search + commerce) have complex state aggregation logic.
@@ -163,16 +163,16 @@ Option A provides the best balance of type safety, tree-shaking, and DX. Per-typ
 - **Public API changes**: Yes. New `registerXInterface` functions, `interface`/`interfaces` options on controller build functions and action loaders, per-feature state getters (`getXState`), and `Interface` object type with `id`, `type`, and hook registration methods.
 - **Backward compatibility impact**: Breaking. Existing code that passes `Engine` directly to controllers will need to register an interface and pass it explicitly.
 - **Deprecations required**: None (clean break in a new major).
-- **Type/contract stability notes**: Interface_Type union is extensible. New types can be added without breaking existing consumers.
+- **Type/contract stability notes**: `InterfaceType` union is extensible. New types can be added without breaking existing consumers.
 - **Non-leakage check (implementation details not exposed)**: Pass. Redux store structure, slice names, and partition keys are not observable through the public API.
 
 ## 7. Operational and Runtime Impact
 
-- **Performance impact**: Negligible. Keyed state lookup is O(1). Subscription filtering by Interface_ID adds minimal overhead.
+- **Performance impact**: Negligible. Keyed state lookup is O(1). Subscription filtering by interface ID adds minimal overhead.
 - **Reliability impact**: Improved. State isolation prevents cross-interface interference that could occur in a flat state model.
 - **Security/privacy impact**: None.
 - **SSR impact (if applicable)**: Deferred. Optional explicit IDs and serializable state constraint preserve future compatibility.
-- **Observability impact (logs/metrics/traces)**: Dev-mode warnings for singleton controller duplicates. Interface_ID appears in warning messages for debuggability.
+- **Observability impact (logs/metrics/traces)**: Dev-mode warnings for singleton controller duplicates. Interface ID appears in warning messages for debuggability.
 
 ## 8. Migration and Rollout Plan
 
