@@ -63,7 +63,7 @@ export const A11yStatusMessage: Story = {
       triggerAction: async () => {
         const searchBox =
           await context.canvas.findByShadowPlaceholderText('Search');
-        await userEvent.type(searchBox, 'test');
+        await userEvent.click(searchBox);
       },
       expectedText: '5 search suggestions are available.',
       timeout: 10000,
