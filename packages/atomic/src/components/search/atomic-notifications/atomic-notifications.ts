@@ -29,6 +29,8 @@ import type {Bindings} from '../atomic-search-interface/interfaces';
  * @part notification - The wrapper around a single notification.
  * @part icon - The icon of the notification.
  * @part text - The text of the notification.
+ *
+ * @cssState empty - Hides the element when there are no notifications to display.
  */
 @customElement('atomic-notifications')
 @bindings()

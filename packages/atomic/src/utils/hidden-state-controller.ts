@@ -6,6 +6,12 @@ shadowSheet.replaceSync(':host(:state(empty)) { display: none }');
 const lightSheet = new CSSStyleSheet();
 lightSheet.replaceSync(':state(empty) { display: none }');
 
+/**
+ * A reactive controller that manages the `:state(empty)` custom state on a host element
+ * using `ElementInternals`. When `isEmpty` is `true`, the host is hidden via `display: none`.
+ *
+ * @cssState empty - Hides the host element when it has no content to display.
+ */
 export class HiddenStateController implements ReactiveController {
   private internals: ElementInternals;
 

@@ -35,6 +35,8 @@ import type {Bindings} from '../atomic-search-interface/atomic-search-interface'
  * @part correction-btn - The button used to manually correct a query.
  * @part undo-btn - The button used to undo a query changed by a query trigger.
  * @part highlight - The query highlights.
+ *
+ * @cssState empty - Hides the element when there is no query correction to display.
  */
 @customElement('atomic-did-you-mean')
 @withTailwindStyles

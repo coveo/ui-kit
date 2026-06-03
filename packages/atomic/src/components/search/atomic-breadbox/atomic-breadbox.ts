@@ -45,6 +45,8 @@ import {HiddenStateController} from '@/src/utils/hidden-state-controller';
  * @part show-less - The button to display less breadcrumbs.
  * @part label - The "Filters" label.
  * @part clear - The button to clear all filters.
+ *
+ * @cssState empty - Hides the element when there are no breadcrumbs to display.
  */
 @customElement('atomic-breadbox')
 @bindings()

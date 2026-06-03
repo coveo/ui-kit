@@ -85,6 +85,8 @@ import '@/src/components/search/atomic-automatic-facet-generator/atomic-automati
  * @part backdrop - The transparent backdrop hiding the content behind the modal.
  *
  * @cssprop --atomic-refine-modal-facet-margin - The margin between facets in the refine modal. Default is `20px`.
+ *
+ * @cssState empty - Hides the element when the modal is closed.
  */
 @customElement('atomic-refine-modal')
 @bindings()
