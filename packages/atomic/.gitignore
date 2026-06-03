@@ -1,6 +1,5 @@
 dist/
 www/
-loader/
 docs/
 cdn/
 
@@ -29,10 +28,12 @@ UserInterfaceState.xcuserstate
 .env
 
 src/external-builds
-src/components/search/atomic-search-interface/lang/
+src/assets/lang/
 src/generated
 
-cypress/screenshots/*
+src/components/*/lazy-index.ts
+src/components/*/index.ts
+src/utils/custom-element-tags.ts
 
 /test-results/
 /playwright-report/
@@ -40,6 +41,11 @@ cypress/screenshots/*
 /playwright/.cache/
 
 dist-storybook/
+dist-chromatic/
+
+.storybook/static/
+storybook-static/
 
 /dev/bueno/
 /dev/headless/
+

@@ -1,4 +1,5 @@
 import {createRelay} from '@coveo/relay';
+import {CoveoInsightClient} from 'coveo.analytics';
 import type {InsightEngine} from '../../app/insight-engine/insight-engine.js';
 import type {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {buildMockInsightEngine} from '../../test/mock-engine-v2.js';
@@ -18,18 +19,12 @@ const emit = vi.fn();
 
 vi.mock('@coveo/relay');
 
-vi.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = vi.fn(() => ({
-    disable: vi.fn(),
-    logExpandToFullUI: mockLogExpandtoFullUI,
-    logCreateArticle: mockLogCreateArticle,
-    logOpenUserActions: mockLogOpenUserActions,
-  }));
-
-  return {
-    CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: vi.fn()},
-  };
+vi.mock('coveo.analytics');
+vi.mocked(CoveoInsightClient).mockImplementation(function () {
+  this.disable = vi.fn();
+  this.logExpandToFullUI = mockLogExpandtoFullUI;
+  this.logCreateArticle = mockLogCreateArticle;
+  this.logOpenUserActions = mockLogOpenUserActions;
 });
 
 vi.mocked(createRelay).mockReturnValue({

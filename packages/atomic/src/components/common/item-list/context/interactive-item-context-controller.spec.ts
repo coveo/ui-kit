@@ -1,8 +1,8 @@
 import {LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import type {AnyItem} from '@/src/components/common/interface/item.js';
 import type {LitElementWithError} from '@/src/decorators/types.js';
+import type {AnyItem} from '../unfolded-item';
 import {InteractiveItemContextController} from './interactive-item-context-controller';
 
 @customElement('test-element')
@@ -13,7 +13,7 @@ class TestElement extends LitElement implements LitElementWithError {
 
 describe('#InteractiveItemContextController', () => {
   let mockElement: TestElement;
-  let controller: InteractiveItemContextController;
+  let controller: InteractiveItemContextController<TestElement>;
 
   beforeEach(() => {
     mockElement = new TestElement();

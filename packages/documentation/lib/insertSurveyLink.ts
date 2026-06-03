@@ -1,4 +1,4 @@
-export function insertSurveyLink() {
+export const insertSurveyLink = () => {
   document.addEventListener('DOMContentLoaded', () => {
     const toolbarWidgets = document.getElementById('tsd-widgets');
     if (toolbarWidgets) {
@@ -13,4 +13,4 @@ export function insertSurveyLink() {
       toolbarWidgets.appendChild(feedbackDiv);
     }
   });
-}
+};

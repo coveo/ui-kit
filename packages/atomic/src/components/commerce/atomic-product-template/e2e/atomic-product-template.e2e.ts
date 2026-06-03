@@ -1,6 +1,6 @@
 import {expect, test} from './fixture';
 
-test.describe('default', async () => {
+test.describe('atomic-product-template', async () => {
   test('should display atomic product components when a child of a product list', async ({
     productTemplate,
   }) => {
@@ -23,13 +23,5 @@ test.describe('default', async () => {
     await productTemplate.load({story: 'in-a-search-box-instant-products'});
 
     await expect(productTemplate.product).toBeVisible();
-  });
-
-  test('should display an error when not a child of a valid parent component', async ({
-    productTemplate,
-  }) => {
-    await productTemplate.load({story: 'without-valid-parent'});
-
-    await expect(productTemplate.error).toBeVisible();
   });
 });

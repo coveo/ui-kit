@@ -5,6 +5,7 @@ exports[`result preview analytics actions > #logDocumentQuickview > when analyti
   {
     "collectionName": "example collectionName",
     "documentAuthor": "unknown",
+    "documentCategory": "example objectType",
     "documentPosition": 1,
     "documentTitle": "example documentTitle",
     "documentUri": "example documentUri",

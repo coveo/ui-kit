@@ -26,7 +26,7 @@ export interface RecommendationEngineConfiguration extends EngineConfiguration {
   searchHub?: string;
 
   /**
-   * The locale of the current user. Must comply with IETF’s BCP 47 definition: https://www.rfc-editor.org/rfc/bcp/bcp47.txt.
+   * The locale of the current user. Must comply with IETF’s BCP 47 definition: https://www.rfc-editor.org/info/bcp47.
    *
    * Notes:
    *  Coveo Machine Learning models use this information to provide contextually relevant output.
@@ -46,7 +46,7 @@ export interface RecommendationEngineConfiguration extends EngineConfiguration {
    */
   preprocessSearchResponseMiddleware?: PostprocessSearchResponseMiddleware;
   /**
-   * The base URL to use to proxy Coveo search requests (e.g., `https://example.com/search`).
+   * The base URL to use to proxy Coveo search requests (for example, `https://example.com/search`).
    *
    * This is an advanced option that you only set if you proxy Coveo search requests through your own
    * server. In most cases, you should not set this option.

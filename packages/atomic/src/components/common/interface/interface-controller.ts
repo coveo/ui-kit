@@ -6,8 +6,9 @@ import {setCoveoGlobal} from '@/src/global/environment';
 import {loadDayjsLocale} from '@/src/utils/dayjs-locales';
 import type {AnyBindings, AnyEngineType} from './bindings';
 import {i18nBackendOptions, i18nTranslationNamespace, init18n} from './i18n';
+import '@/src/components/common/atomic-aria-live/atomic-aria-live';
 
-export type InitializeEventHandler = (bindings: AnyBindings) => void;
+type InitializeEventHandler = (bindings: AnyBindings) => void;
 export type InitializeEvent = CustomEvent<InitializeEventHandler>;
 
 export interface BaseAtomicInterface<EngineType extends AnyEngineType> {
@@ -24,20 +25,21 @@ export interface BaseAtomicInterface<EngineType extends AnyEngineType> {
   registerFieldsToInclude?: () => void;
 }
 
-export class InterfaceController<EngineType extends AnyEngineType>
-  implements ReactiveController
-{
+export class InterfaceController<
+  EngineType extends AnyEngineType,
+> implements ReactiveController {
   private host: LitElement & BaseAtomicInterface<EngineType>;
   private i18nPromise!: Promise<TFunction>;
   private hangingComponentsInitialization: InitializeEvent[] = [];
 
   constructor(
     host: LitElement & BaseAtomicInterface<EngineType>,
-    globalVariableName: string
+    globalVariableName: string,
+    headlessVersion: string
   ) {
     this.host = host;
     this.host.addController(this);
-    setCoveoGlobal(globalVariableName);
+    setCoveoGlobal(globalVariableName, headlessVersion);
   }
 
   hostConnected() {
@@ -64,8 +66,7 @@ export class InterfaceController<EngineType extends AnyEngineType>
   public async onInitialization(initEngine: () => void) {
     if (this.host.engine) {
       this.host.engine.logger.warn(
-        `The ${this.interfaceTagname} component "initialize" has already been called.`,
-        this.host
+        `The ${this.interfaceTagname} component "initialize" has already been called.`
       );
       return;
     }

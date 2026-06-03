@@ -1,5 +1,5 @@
+import type {BaseFacetElement} from '../facets/facet-common';
 import {popoverClass} from '../facets/popover/popover-type';
-import type {BaseFacetElement} from '../facets/stencil-facet-common';
 import {isRefineModalFacet} from '../interface/store';
 
 export function getClonedFacetElements(

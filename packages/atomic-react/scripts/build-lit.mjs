@@ -1,4 +1,3 @@
-import {execSync} from 'node:child_process';
 import {writeFileSync} from 'node:fs';
 import cem from '@coveo/atomic/custom-elements-manifest' with {type: 'json'};
 
@@ -15,7 +14,11 @@ const entries = [
       'atomic-field-condition',
     ],
     declarations: [],
-    excludedComponentDirectories: ['src/components/commerce'],
+    excludedComponentDirectories: [
+      'src/components/commerce',
+      'src/components/insight',
+      'src/components/ipx',
+    ],
     computedComponentImports: [],
   },
   {
@@ -30,6 +33,8 @@ const entries = [
     excludedComponentDirectories: [
       'src/components/search',
       'src/components/recommendations',
+      'src/components/insight',
+      'src/components/ipx',
     ],
     computedComponentImports: [],
   },
@@ -40,7 +45,7 @@ const declarationToLitImport = (declaration) =>
 
 const declarationToComponent = (declaration) =>
   `
-export const ${declaration.name} = createComponent({
+export const ${declaration.name} = /*@__PURE__*/ createComponent({
   tagName: '${declaration.tagName}',
   react: React,
   elementClass: Lit${declaration.name},
@@ -84,10 +89,6 @@ for (const entry of entries) {
 for (const entry of entries) {
   if (entry.computedComponentImports.length === 0) {
     writeFileSync(entry.path, 'export {}');
-    // Format with Biome, like the original prettier.format() calls
-    execSync(`npx @biomejs/biome format --write "${entry.path}"`, {
-      stdio: 'pipe',
-    });
     continue;
   }
 
@@ -105,6 +106,4 @@ for (const entry of entries) {
       entry.content,
     ].join('\n')
   );
-  // Format with Biome, like the original prettier.format() calls
-  execSync(`npx @biomejs/biome check --write "${entry.path}"`, {stdio: 'pipe'});
 }

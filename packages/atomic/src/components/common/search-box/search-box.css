@@ -1,0 +1,38 @@
+@reference '../../.././utils/tailwind-utilities/hide-scrollbar.css';
+.loading {
+  @apply from-primary-dark;
+  @apply to-primary-light;
+}
+
+.loading::after {
+  content: '';
+  @apply bg-background absolute h-5/6 w-5/6 rounded-full;
+}
+
+[part='textarea-expander'] {
+  &::after {
+    /* Space needed to prevent jumpy behavior */
+    content: attr(data-replicated-value) ' ';
+    visibility: hidden;
+  }
+
+  > [part='textarea'] {
+    @apply hide-scrollbar;
+  }
+
+  > [part='textarea'],
+  &::after {
+    @apply text-neutral-dark z-10 h-full grow resize-none overflow-hidden bg-transparent px-4 py-3.5 text-lg whitespace-nowrap outline-none;
+    /* Place on top of each other */
+    grid-area: 1 / 1 / 2 / 2;
+  }
+
+  &.expanded {
+    > [part='textarea'],
+    &::after {
+      @apply whitespace-pre-wrap;
+      @apply overflow-y-auto;
+      max-height: 8em;
+    }
+  }
+}

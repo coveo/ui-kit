@@ -22,12 +22,12 @@ import {
 } from '../../../controller/headless-controller.js';
 import type {FetchProductsActionCreator} from '../common.js';
 
-export type {SortByRelevance, SortByFields, SortByFieldsFields, SortCriterion};
+export type {SortByFields, SortByFieldsFields, SortByRelevance, SortCriterion};
 export {
+  buildFieldsSortCriterion,
+  buildRelevanceSortCriterion,
   SortBy,
   SortDirection,
-  buildRelevanceSortCriterion,
-  buildFieldsSortCriterion,
 };
 
 export interface SortProps {

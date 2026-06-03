@@ -13,7 +13,7 @@ interface CommerceState {
    *
    * By default, will append `/rest/organizations/{organizationId}/commerce/v2` to the automatically resolved
    * platform [organization endpoint](https://docs.coveo.com/en/mcc80216)
-   * (i.e., `https;://<ORG_ID>.org<hipaa|dev|stg|>.coveo.com`)
+   * (that is, `https;://<ORG_ID>.org<hipaa|dev|stg|>.coveo.com`)
    *
    * If necessary, you can override this value by specifying a `commerce.proxyBaseUrl` in the configuration of your
    * commerce engine, or by manually dispatching the `updateProxyBaseUrl` action.

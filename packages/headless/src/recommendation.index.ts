@@ -15,8 +15,6 @@
  */
 import * as HighlightUtils from './utils/highlight.js';
 
-export {HighlightUtils};
-
 export type {Relay} from '@coveo/relay';
 export type {Middleware, Unsubscribe} from '@reduxjs/toolkit';
 export {
@@ -98,7 +96,6 @@ export * from './features/pipeline/pipeline-actions-loader.js';
 export * from './features/recommendation/recommendation-actions-loader.js';
 export * from './features/recommendation/recommendation-click-analytics-actions-loader.js';
 export {ResultTemplatesHelpers} from './features/result-templates/result-templates-helpers.js';
-
 // Features
 export type {
   ResultTemplate,
@@ -108,5 +105,5 @@ export type {
 export {buildResultTemplatesManager} from './features/result-templates/result-templates-manager.js';
 export * from './features/search-hub/search-hub-actions-loader.js';
 export type {HighlightKeyword} from './utils/highlight.js';
-
 export type {PlatformEnvironment} from './utils/url-utils.js';
+export {HighlightUtils};

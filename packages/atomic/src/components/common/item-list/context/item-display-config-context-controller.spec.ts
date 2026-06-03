@@ -22,6 +22,7 @@ class TestElement extends LitElement {
 
 describe('item-display-config-context', () => {
   beforeEach(() => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
     vi.clearAllMocks();
   });
 
@@ -107,69 +108,6 @@ describe('item-display-config-context', () => {
         element.controller.hostConnected();
 
         expect(element.controller.config).toEqual(mockConfig);
-      });
-    });
-
-    describe('when #hostUpdated is called', () => {
-      it('should dispatch the resolveResultDisplayConfig event', () => {
-        const dispatchEventSpy = vi
-          .spyOn(element, 'dispatchEvent')
-          .mockReturnValue(false);
-
-        element.controller.hostUpdated();
-
-        expect(dispatchEventSpy).toHaveBeenCalledWith(
-          expect.objectContaining({
-            type: 'atomic/resolveResultDisplayConfig',
-          })
-        );
-      });
-
-      it('should set config to null when event is cancelled', () => {
-        vi.spyOn(element, 'dispatchEvent').mockReturnValue(true);
-
-        element.controller.hostUpdated();
-
-        expect(element.controller.config).toBeNull();
-      });
-
-      it('should set config when event handler provides config', () => {
-        const mockConfig: DisplayConfig = {
-          density: 'comfortable',
-          imageSize: 'large',
-        };
-
-        vi.spyOn(element, 'dispatchEvent').mockImplementation((event) => {
-          const customEvent = event as CustomEvent;
-          if (customEvent.detail) {
-            customEvent.detail(mockConfig);
-          }
-          return false;
-        });
-
-        element.controller.hostUpdated();
-
-        expect(element.controller.config).toEqual(mockConfig);
-      });
-
-      it('should request update when config is set', () => {
-        const requestUpdateSpy = vi.spyOn(element, 'requestUpdate');
-        const mockConfig: DisplayConfig = {
-          density: 'comfortable',
-          imageSize: 'large',
-        };
-
-        vi.spyOn(element, 'dispatchEvent').mockImplementation((event) => {
-          const customEvent = event as CustomEvent;
-          if (customEvent.detail) {
-            customEvent.detail(mockConfig);
-          }
-          return false;
-        });
-
-        element.controller.hostUpdated();
-
-        expect(requestUpdateSpy).toHaveBeenCalled();
       });
     });
   });

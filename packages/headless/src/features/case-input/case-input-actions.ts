@@ -7,7 +7,7 @@ import {
 
 export interface SetCaseInputActionCreatorPayload {
   /**
-   * The name of the field whose value is being updated (e.g., subject, description, product, category).
+   * The name of the field whose value is being updated (for example, subject, description, product, category).
    */
   fieldName: string;
   /**

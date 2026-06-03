@@ -1,0 +1,17 @@
+description: Generative Answering (RGA) features
+file_patterns:
+  # Headless Generated Answer
+  - packages/headless/src/api/knowledge/**
+  - packages/headless/src/api/generated-answer/**
+  - packages/headless/src/api/service/**
+  - packages/headless/src/features/generated-answer/**
+  - packages/headless/src/controllers/knowledge/generated-answer/**
+  - packages/headless/src/features/question-answering/**
+
+  # Atomic Generated Answer
+  - packages/atomic/src/components/common/generated-answer/**
+  - packages/atomic/src/components/search/atomic-generated-answer/**
+
+reviewers:
+  knowledge-ui-kit-reviewers: ~
+  dxui: ~

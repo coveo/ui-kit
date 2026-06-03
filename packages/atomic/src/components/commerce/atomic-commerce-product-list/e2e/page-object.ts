@@ -21,18 +21,4 @@ export class ProductListObject extends BasePageObject {
   get excerpts() {
     return this.page.locator('atomic-product-excerpt');
   }
-
-  async withNoProducts() {
-    await this.page.route('**/commerce/v2/listing', async (route) => {
-      const response = await route.fetch();
-      const body = await response.json();
-      body.products = [];
-      await route.fulfill({
-        response,
-        json: body,
-      });
-    });
-
-    return this;
-  }
 }

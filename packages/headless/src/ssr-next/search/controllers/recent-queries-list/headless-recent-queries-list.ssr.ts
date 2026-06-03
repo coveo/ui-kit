@@ -4,12 +4,14 @@ import {
   type RecentQueriesList,
   type RecentQueriesListProps,
 } from '../../../../controllers/recent-queries-list/headless-recent-queries-list.js';
-import type {ControllerDefinitionWithoutProps} from '../../../common/types/controllers.js';
+import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/recent-queries-list/headless-recent-queries-list.js';
 
-export interface RecentQueriesListDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, RecentQueriesList> {}
+export interface RecentQueriesListDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  RecentQueriesList
+> {}
 
 /**
  * Defines a `RecentQueriesList` controller instance.

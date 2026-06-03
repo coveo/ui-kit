@@ -55,9 +55,9 @@ function isSortOrder(order?: string): order is SortOrder {
  * - `relevancy`
  * - `date ascending`/`date descending`
  * - `qre`
- * - `field ascending`/`field descending`, where you replace `field` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).
+ * - `field ascending`/`field descending`, where you replace `field` with the name of a sortable field in your index (for example, `criteria="size ascending"`).
  *
- * You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"` ).
+ * You can specify multiple sort criteria to be used in the same request by separating them with a comma (for example, `criteria="size ascending, date ascending"` ).
  */
 export function parseCriterionExpression(expression: string) {
   const criteria = expression.split(',');

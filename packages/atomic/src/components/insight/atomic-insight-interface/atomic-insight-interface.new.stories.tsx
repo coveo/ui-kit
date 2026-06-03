@@ -1,28 +1,102 @@
 /* eslint-disable @cspell/spellchecker */
 
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {MockInsightApi} from '@/storybook-utils/api/insight/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
+import '@/src/components/search/atomic-field-condition/atomic-field-condition.js';
+import '@/src/components/common/atomic-icon/atomic-icon.js';
+import '@/src/components/insight/atomic-insight-facet/atomic-insight-facet.js';
+import '@/src/components/insight/atomic-insight-folded-result-list/atomic-insight-folded-result-list.js';
+import '@/src/components/insight/atomic-insight-generated-answer/atomic-insight-generated-answer.js';
+import '@/src/components/insight/atomic-insight-interface/atomic-insight-interface.js';
+import '@/src/components/insight/atomic-insight-layout/atomic-insight-layout.js';
+import '@/src/components/insight/atomic-insight-no-results/atomic-insight-no-results.js';
+import '@/src/components/insight/atomic-insight-pager/atomic-insight-pager.js';
+import '@/src/components/insight/atomic-insight-query-error/atomic-insight-query-error.js';
+import '@/src/components/insight/atomic-insight-query-summary/atomic-insight-query-summary.js';
+import '@/src/components/insight/atomic-insight-refine-toggle/atomic-insight-refine-toggle.js';
+import '@/src/components/insight/atomic-insight-result-action/atomic-insight-result-action.js';
+import '@/src/components/insight/atomic-insight-result-action-bar/atomic-insight-result-action-bar.js';
+import '@/src/components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action.js';
+import '@/src/components/insight/atomic-insight-result-children/atomic-insight-result-children.js';
+import '@/src/components/insight/atomic-insight-result-children-template/atomic-insight-result-children-template.js';
+import '@/src/components/insight/atomic-insight-result-quickview-action/atomic-insight-result-quickview-action.js';
+import '@/src/components/insight/atomic-insight-result-template/atomic-insight-result-template.js';
+import '@/src/components/insight/atomic-insight-search-box/atomic-insight-search-box.js';
+import '@/src/components/insight/atomic-insight-tab/atomic-insight-tab.js';
+import '@/src/components/insight/atomic-insight-tabs/atomic-insight-tabs.js';
+import '@/src/components/insight/atomic-insight-timeframe-facet/atomic-insight-timeframe-facet.js';
+import '@/src/components/insight/atomic-insight-user-actions-toggle/atomic-insight-user-actions-toggle.js';
+import '@/src/components/common/atomic-layout-section/atomic-layout-section.js';
+import '@/src/components/search/atomic-result-badge/atomic-result-badge.js';
+import '@/src/components/search/atomic-result-fields-list/atomic-result-fields-list.js';
+import '@/src/components/search/atomic-result-link/atomic-result-link.js';
+import '@/src/components/search/atomic-result-number/atomic-result-number.js';
+import '@/src/components/search/atomic-result-section-badges/atomic-result-section-badges.js';
+import '@/src/components/search/atomic-result-section-bottom-metadata/atomic-result-section-bottom-metadata.js';
+import '@/src/components/search/atomic-result-section-children/atomic-result-section-children.js';
+import '@/src/components/search/atomic-result-section-excerpt/atomic-result-section-excerpt.js';
+import '@/src/components/search/atomic-result-section-title/atomic-result-section-title.js';
+import '@/src/components/search/atomic-result-section-title-metadata/atomic-result-section-title-metadata.js';
+import '@/src/components/search/atomic-result-text/atomic-result-text.js';
+import '@/src/components/search/atomic-text/atomic-text.js';
+import '@/src/components/common/atomic-timeframe/atomic-timeframe.js';
 
 const {decorator, play} = wrapInInsightInterface();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-insight-interface',
+  {excludeCategories: ['methods']}
+);
+
+const insightApiHarness = new MockInsightApi();
+insightApiHarness.searchEndpoint.mock((response) => ({
+  ...response,
+  results: response.results.map((result: Record<string, unknown>) => ({
+    ...result,
+    isTopResult: false,
+    isRecommendation: false,
+    raw: {
+      ...(result.raw as Record<string, unknown>),
+      sourcetype: 'YouTube',
+      syssourcetype: 'YouTube',
+      ytchanneltitle: 'Coveo Support Channel',
+      ytviewcount: 1234,
+    },
+  })),
+}));
 
 const meta: Meta = {
   component: 'atomic-insight-interface',
-  title: 'Atomic/Insight/InsightInterface',
+  title: 'Insight/Interface',
   id: 'atomic-insight-interface',
 
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
+  parameters: {
+    ...parameters,
+    chromatic: {disableSnapshot: true},
+    actions: {
+      handles: events,
+    },
+    msw: {
+      handlers: [...insightApiHarness.handlers],
+    },
+  },
+  beforeEach: () => {
+    insightApiHarness.searchEndpoint.clear();
+    insightApiHarness.querySuggestEndpoint.clear();
+  },
+  args,
+  argTypes,
   play,
 };
 
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-insight-panel',
   decorators: [
     () =>
       html`<atomic-insight-layout>
@@ -55,12 +129,12 @@ export const Default: Story = {
               label="All"
               expression=""
               active="true"
-            ></atomic-insight-tab
-            ><atomic-insight-tab
+            ></atomic-insight-tab>
+            <atomic-insight-tab
               label="Videos"
               expression="@ytchanneltitle"
-            ></atomic-insight-tab
-            ><atomic-insight-tab
+            ></atomic-insight-tab>
+            <atomic-insight-tab
               label="Documentation"
               expression='@documenttype==("WebPage")'
             ></atomic-insight-tab>
@@ -231,7 +305,7 @@ export const Default: Story = {
                   </atomic-field-condition>
                 </atomic-result-section-badges>
                 <atomic-result-section-title>
-                  <atomic-result-link>
+                  <atomic-result-link data-testid="video-insight-result-link">
                     <a slot="attributes" target="_self"></a>
                   </atomic-result-link>
                 </atomic-result-section-title>
@@ -314,8 +388,8 @@ export const Default: Story = {
                           }
 
                           .result-root:has(
-                              atomic-result-section-children:hover
-                            ) {
+                            atomic-result-section-children:hover
+                          ) {
                             atomic-insight-result-action-bar {
                               visibility: hidden;
                             }
@@ -673,8 +747,8 @@ export const Default: Story = {
                           }
 
                           .result-root:has(
-                              atomic-result-section-children:hover
-                            ) {
+                            atomic-result-section-children:hover
+                          ) {
                             atomic-insight-result-action-bar {
                               visibility: hidden;
                             }

@@ -7,9 +7,9 @@ import {
 } from '../../core/facets/facet-conditions-manager/headless-facet-conditions-manager.js';
 
 export type {
+  AnyFacetValuesCondition,
   FacetConditionsManager,
   FacetConditionsManagerProps,
-  AnyFacetValuesCondition,
 };
 
 /**

@@ -5,17 +5,10 @@
     "includeFolders": true
   },
   "categorizeByGroup": true,
-  "groupOrder": [
-    "Engine",
-    "Controllers",
-    "Buildable controllers",
-    "Sub-controllers",
-    "Actions",
-    "*"
-  ],
+  "groupOrder": ["*"],
   "name": "Commerce",
   "readme": "none",
   "entryPoints": ["../src/commerce.index.ts"],
-  "gitRevision": "master",
+  "gitRevision": "main",
   "plugin": ["@coveo/documentation"]
 }

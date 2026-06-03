@@ -9,7 +9,7 @@
           class="insight-panel_header slds-var-p-horizontal_medium slds-var-p-bottom_x-small slds-var-p-top_medium slds-theme_shade"
         >
           <div class="slds-grid">
-            <div class="insight-panel_search-box">
+            <div class="slds-grow">
               <c-quantic-search-box
                 without-submit-button
                 engine-id={engineId}
@@ -137,14 +137,17 @@
           </c-quantic-tab-bar>
         </div>
 
-        <c-quantic-insight-summary
-          engine-id={engineId}
-        ></c-quantic-insight-summary>
+        <div class="slds-grid">
+          <div class="slds-grow">
+            <c-quantic-insight-summary engine-id={engineId}></c-quantic-insight-summary>
+          </div>
+          <c-generate-answer-button engine-id={engineId}></c-generate-answer-button>
+        </div>
 
-        <div class="slds-var-p-horizontal_medium">
-          <c-quantic-generated-answer
-            engine-id={engineId}
-          ></c-quantic-generated-answer>
+        <div class="slds-var-p-horizontal_medium slds-var-p-vertical_xx-small">
+          <c-quantic-generated-answer engine-id={engineId} answer-configuration-id={answerConfigurationId} collapsible={genQACollapsible}>
+            <div slot="no-answer-message">{labels.noGeneratedAnswer}</div>
+          </c-quantic-generated-answer>
         </div>
 
         <div class="slds-var-p-bottom_medium insight-panel_body">

@@ -387,7 +387,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
   }
 
   get datepickerFormat() {
-    return I18nUtils.getShortDatePattern();
+    return DateUtils.getShortDatePattern();
   }
 
   /**
@@ -621,10 +621,10 @@ export default class QuanticTimeframeFacet extends LightningElement {
     }
 
     const start = fromSearchApiDate(facetValue.start);
-    const startDate = I18nUtils.formatDate(new Date(start));
+    const startDate = DateUtils.formatDate(new Date(start));
 
     const end = fromSearchApiDate(facetValue.end);
-    const endDate = I18nUtils.formatDate(new Date(end));
+    const endDate = DateUtils.formatDate(new Date(end));
 
     return `${startDate} - ${endDate}`;
   };

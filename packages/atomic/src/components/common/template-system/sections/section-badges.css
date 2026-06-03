@@ -1,0 +1,55 @@
+@reference './sections-utilities.css';
+
+@utility section-badges {
+  text-align: left;
+  @apply section-base-overflow;
+
+  &.with-sections {
+    grid-area: badges;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    max-height: calc(2 * var(--row-height, 2rem) + 0.5rem);
+
+    margin-bottom: 1rem;
+    --row-height: 2rem;
+
+    @media (width >= theme(--breakpoint-desktop)) {
+      &.display-list {
+        &.density-comfortable {
+          margin-bottom: 1.5rem;
+        }
+      }
+
+      &.display-grid {
+        &.image-icon {
+          &.density-comfortable {
+            margin-bottom: 2rem;
+          }
+          &.density-normal {
+            margin-bottom: 1.5rem;
+          }
+        }
+        @apply set-font-size-sm;
+      }
+    }
+
+    @media not all and (width >= theme(--breakpoint-desktop)) {
+      &.display-list {
+        @apply set-font-size-sm;
+      }
+      &.display-grid {
+        &.image-small,
+        &.image-icon,
+        &.image-none {
+          @apply set-font-size-sm;
+        }
+      }
+    }
+    &.display-table {
+      &.density-comfortable {
+        margin-bottom: 1.5rem;
+      }
+    }
+  }
+}

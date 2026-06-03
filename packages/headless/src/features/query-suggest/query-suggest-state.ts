@@ -3,7 +3,7 @@ import type {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-err
 
 export interface QuerySuggestState {
   /**
-   * The unique identifier of the query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
+   * The unique identifier of the query suggest entity (for example, `b953ab2e-022b-4de4-903f-68b2c0682942`).
    */
   id: string;
   /**
@@ -19,7 +19,7 @@ export interface QuerySuggestState {
    */
   partialQueries: string[];
   /**
-   * The number of query suggestions requested from Coveo ML (e.g., `3`).
+   * The number of query suggestions requested from Coveo ML (for example, `3`).
    */
   count: number;
   /**

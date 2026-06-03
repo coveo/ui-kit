@@ -5,7 +5,7 @@ import type {
   PreprocessRequest,
 } from '../../api/preprocess-request.js';
 import * as loggerModule from '../../app/logger.js';
-import type {NavigatorContextProvider} from '../../app/navigator-context-provider.js';
+import type {NavigatorContext} from '../../app/navigator-context-provider.js';
 import {
   type AugmentPreprocessRequestOptions,
   augmentPreprocessRequestWithForwardedFor,
@@ -22,11 +22,11 @@ function buildMockRequest(
 }
 
 describe('#augmentPreprocessRequestWithForwardedFor', () => {
-  it('should inject x-forwarded-for header if provided by navigatorContextProvider', async () => {
+  it('should inject x-forwarded-for header if provided by navigatorContext', async () => {
     const options: AugmentPreprocessRequestOptions = {
-      navigatorContextProvider: (() => ({
+      navigatorContext: {
         forwardedFor: '1.2.3.4',
-      })) as NavigatorContextProvider,
+      } as NavigatorContext,
     };
     const augmented = augmentPreprocessRequestWithForwardedFor(options);
     const request = buildMockRequest();
@@ -43,7 +43,7 @@ describe('#augmentPreprocessRequestWithForwardedFor', () => {
     } as unknown as Logger);
 
     const options: AugmentPreprocessRequestOptions = {
-      navigatorContextProvider: (() => ({})) as NavigatorContextProvider,
+      navigatorContext: {} as NavigatorContext,
       loggerOptions: {level: 'warn'},
     };
 
@@ -63,9 +63,9 @@ describe('#augmentPreprocessRequestWithForwardedFor', () => {
     });
     const options: AugmentPreprocessRequestOptions = {
       preprocessRequest: original,
-      navigatorContextProvider: (() => ({
+      navigatorContext: {
         forwardedFor: '5.6.7.8',
-      })) as NavigatorContextProvider,
+      } as NavigatorContext,
     };
     const augmented = augmentPreprocessRequestWithForwardedFor(options);
     const request = buildMockRequest();
@@ -79,9 +79,9 @@ describe('#augmentPreprocessRequestWithForwardedFor', () => {
 
   it('should return the request if no original preprocessRequest is provided', async () => {
     const options: AugmentPreprocessRequestOptions = {
-      navigatorContextProvider: (() => ({
+      navigatorContext: {
         forwardedFor: '9.9.9.9',
-      })) as NavigatorContextProvider,
+      } as NavigatorContext,
     };
     const augmented = augmentPreprocessRequestWithForwardedFor(options);
     const request = buildMockRequest();
@@ -89,5 +89,24 @@ describe('#augmentPreprocessRequestWithForwardedFor', () => {
 
     const headers = new Headers(result.headers);
     expect(headers.get('x-forwarded-for')).toBe('9.9.9.9');
+  });
+
+  describe('augmentation prevention', () => {
+    it('should not augment an already augmented function', () => {
+      const options: AugmentPreprocessRequestOptions = {
+        navigatorContext: {
+          forwardedFor: '127.0.0.1',
+        } as NavigatorContext,
+      };
+
+      const firstAugmented = augmentPreprocessRequestWithForwardedFor(options);
+
+      const secondAugmented = augmentPreprocessRequestWithForwardedFor({
+        ...options,
+        preprocessRequest: firstAugmented,
+      });
+
+      expect(firstAugmented).toBe(secondAugmented);
+    });
   });
 });

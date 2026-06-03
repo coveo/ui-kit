@@ -7,7 +7,7 @@ export const buildMockNavigatorContextProvider = (
   context?: Partial<NavigatorContext>
 ): NavigatorContextProvider => {
   return () => ({
-    referrer: '',
+    referrer: 'some-test-referrer',
     userAgent: '',
     location: '',
     clientId: '',

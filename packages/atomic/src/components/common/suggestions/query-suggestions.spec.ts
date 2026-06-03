@@ -1,16 +1,16 @@
 import type {i18n as I18n} from 'i18next';
 import {html} from 'lit';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
+import {encodeForDomAttribute} from '@/src/utils/string-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {encodeForDomAttribute} from '../../../utils/string-utils';
 import {
   getPartialSearchBoxSuggestionElement,
   type RenderQuerySuggestionOptions,
   renderQuerySuggestion,
 } from './query-suggestions';
 
-vi.mock('../../../utils/string-utils', () => ({
+vi.mock('@/src/utils/string-utils', () => ({
   encodeForDomAttribute: vi.fn((value) => value),
 }));
 
@@ -94,6 +94,29 @@ describe('#renderQuerySuggestion', () => {
     expect(icon).not.toBeInTheDocument();
   });
 
+  it('should render the icon when alwaysShowIcon is true even if hasMultipleKindOfSuggestions is false', async () => {
+    const suggestion = await renderSuggestion({
+      hasMultipleKindOfSuggestions: false,
+      alwaysShowIcon: true,
+    });
+
+    const icon = suggestion.querySelector('atomic-icon');
+
+    expect(icon).toBeInTheDocument();
+    expect(icon).toHaveAttribute('part', 'query-suggestion-icon');
+  });
+
+  it('should not render the icon when alwaysShowIcon is false and hasMultipleKindOfSuggestions is false', async () => {
+    const suggestion = await renderSuggestion({
+      hasMultipleKindOfSuggestions: false,
+      alwaysShowIcon: false,
+    });
+
+    const icon = suggestion.querySelector('atomic-icon');
+
+    expect(icon).not.toBeInTheDocument();
+  });
+
   it('should render the highlighted value if hasQuery is true', async () => {
     const suggestion = await renderSuggestion({hasQuery: true});
 
@@ -112,5 +135,11 @@ describe('#renderQuerySuggestion', () => {
     expect(text).toBeInTheDocument();
     expect(text).toHaveAttribute('part', 'query-suggestion-text');
     expect(text).toHaveTextContent('raw');
+  });
+
+  it('container should have pointer-events-none class to allow clicks on parent', async () => {
+    const suggestion = await renderSuggestion();
+
+    expect(suggestion).toHaveClass('pointer-events-none');
   });
 });

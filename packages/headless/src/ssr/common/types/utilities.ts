@@ -36,11 +36,15 @@ type ExtractRequiredOptions<TOptions> = {
     : never]: TOptions[TKey];
 };
 
-export type OptionsTuple<TOptions> = HasKeys<TOptions> extends false
-  ? []
-  : HasKeys<ExtractRequiredOptions<TOptions>> extends false
-    ? [options?: TOptions]
-    : [options: TOptions];
+/**
+ * @deprecated This type will be removed in the next major version.
+ */
+export type OptionsTuple<TOptions> =
+  HasKeys<TOptions> extends false
+    ? []
+    : HasKeys<ExtractRequiredOptions<TOptions>> extends false
+      ? [options?: TOptions]
+      : [options: TOptions];
 
 export type OptionsExtender<TOptions> = (
   options: TOptions

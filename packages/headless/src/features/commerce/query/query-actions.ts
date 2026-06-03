@@ -4,7 +4,7 @@ import {validatePayload} from '../../../utils/validate-payload.js';
 
 export interface UpdateQueryPayload {
   /**
-   * The new basic query expression (e.g., `red surfboards`).
+   * The new basic query expression (for example, `red surfboards`).
    */
   query?: string;
 }

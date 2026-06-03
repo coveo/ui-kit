@@ -4,12 +4,14 @@ import {
   type ResultsPerPage,
   type ResultsPerPageProps,
 } from '../../../../controllers/results-per-page/headless-results-per-page.js';
-import type {ControllerDefinitionWithoutProps} from '../../../common/types/controllers.js';
+import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/results-per-page/headless-results-per-page.js';
 
-export interface ResultsPerPageDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, ResultsPerPage> {}
+export interface ResultsPerPageDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  ResultsPerPage
+> {}
 
 /**
  * Defines a `ResultsPerPage` controller instance.

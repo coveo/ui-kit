@@ -1,14 +1,20 @@
 import * as InsightInterfaceActions from '../../features/insight-interface/insight-interface-actions.js';
+import * as ConfigurationActions from '../../features/configuration/configuration-actions.js';
 import {nextAnalyticsUsageWithServiceFeatureWarning} from '../engine.js';
 import {getSampleEngineConfiguration} from '../engine-configuration.js';
 import {
   buildInsightEngine,
   type InsightEngine,
   type InsightEngineConfiguration,
+  type InsightEngineSearchConfigurationOptions,
   type InsightEngineOptions,
 } from './insight-engine.js';
 
 const fetchInterfaceSpy = vi.spyOn(InsightInterfaceActions, 'fetchInterface');
+const updateSearchConfigurationSpy = vi.spyOn(
+  ConfigurationActions,
+  'updateSearchConfiguration'
+);
 
 function getSampleInsightEngineConfiguration(): InsightEngineConfiguration {
   return {
@@ -147,6 +153,25 @@ describe('buildInsightEngine', () => {
 
   it('sets the locale correctly', () => {
     expect(engine.state.configuration?.search?.locale).toEqual('en-US');
+  });
+
+  it('dispatches only serializable search configuration fields', () => {
+    options.configuration.search = {
+      locale: 'fr-CA',
+      proxyBaseUrl: 'https://example.com/insight',
+      preprocessSearchResponseMiddleware: () => ({}) as never,
+    } as unknown as InsightEngineSearchConfigurationOptions;
+
+    updateSearchConfigurationSpy.mockClear();
+    initEngine();
+
+    expect(updateSearchConfigurationSpy).toHaveBeenCalledTimes(1);
+    const [payload] = updateSearchConfigurationSpy.mock.calls[0];
+
+    expect(payload).toEqual({
+      locale: 'fr-CA',
+      proxyBaseUrl: 'https://example.com/insight',
+    });
   });
 
   it('should dispatch the fetchInterface action', () => {

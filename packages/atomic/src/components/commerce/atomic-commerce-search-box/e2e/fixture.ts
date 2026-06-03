@@ -1,7 +1,6 @@
-import {test as base, type Page} from '@playwright/test';
-import {type AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
+import {test as base} from '@playwright/test';
+import {FacetsPageObject} from '../../atomic-commerce-facets/e2e/page-object';
 import {LoadMoreProductsPageObject} from '../../atomic-commerce-load-more-products/e2e/page-object';
-import {FacetsPageObject} from '../../facets/atomic-commerce-facets/e2e/page-object';
 import {SearchBoxPageObject} from './page-object';
 
 type MyFixtures = {
@@ -9,34 +8,8 @@ type MyFixtures = {
   facets: FacetsPageObject;
   loadMore: LoadMoreProductsPageObject;
 };
-export async function setRecentQueries(page: Page, count: number) {
-  await page.evaluate((count: number) => {
-    const recentQueries = Array.from(
-      {length: count},
-      (_, i) => `recent query ${i}`
-    );
-    const stringified = JSON.stringify(recentQueries);
-    localStorage.setItem('coveo-recent-queries', stringified);
-  }, count);
-}
 
-export async function setSuggestions(page: Page, numberOfSuggestions: number) {
-  await page.route('**/v2/search/querySuggest', async (route) => {
-    const completions = Array.from({length: numberOfSuggestions}, (_, i) => ({
-      expression: `query-suggestion-${i}`,
-      highlighted: `query-suggestion-${i}`,
-    }));
-
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify({completions}),
-    });
-  });
-}
-
-export const test = base.extend<MyFixtures & AxeFixture>({
-  makeAxeBuilder,
+export const test = base.extend<MyFixtures>({
   searchBox: async ({page}, use) => {
     await use(new SearchBoxPageObject(page));
   },

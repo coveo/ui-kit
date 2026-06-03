@@ -675,5 +675,92 @@ describe('folding slice', () => {
         /Unable to create collection totally_does_not_exists/
       );
     });
+
+    describe('moreResultsAvailable', () => {
+      it('should be false when totalNumberOfChildResults equals resolved children count + 1', () => {
+        const indexedResults = buildMockResultsFromHierarchy(
+          'thread',
+          testThreadHierarchy
+        );
+        const rootResult = emulateAPIFolding(indexedResults);
+        // testThreadHierarchy root has 2 direct children, so children.length = 2
+        // moreResultsAvailable = totalNumberOfChildResults > 2 + 1 = 3
+        rootResult.totalNumberOfChildResults = 3;
+
+        dispatchSearch([rootResult]);
+
+        expect(state.collections.thread.moreResultsAvailable).toBe(false);
+      });
+
+      it('should be true when totalNumberOfChildResults exceeds resolved children count + 1', () => {
+        const indexedResults = buildMockResultsFromHierarchy(
+          'thread',
+          testThreadHierarchy
+        );
+        const rootResult = emulateAPIFolding(indexedResults);
+        rootResult.totalNumberOfChildResults = 100;
+
+        dispatchSearch([rootResult]);
+
+        expect(state.collections.thread.moreResultsAvailable).toBe(true);
+      });
+
+      it('should be false when totalNumberOfChildResults is less than resolved children count + 1', () => {
+        const indexedResults = buildMockResultsFromHierarchy(
+          'thread',
+          testThreadHierarchy
+        );
+        const rootResult = emulateAPIFolding(indexedResults);
+        rootResult.totalNumberOfChildResults = 0;
+
+        dispatchSearch([rootResult]);
+
+        expect(state.collections.thread.moreResultsAvailable).toBe(false);
+      });
+
+      it('should be false when there are no resolved children and totalNumberOfChildResults is 1', () => {
+        const result = buildMockResultWithFolding({
+          uniqueId: 'lonely',
+          title: 'lonely',
+          raw: {
+            urihash: '',
+            collection: 'solo',
+            id: 'lonely',
+            parent: 'lonely',
+          },
+        });
+        const rootResult: ResultWithFolding = {
+          ...result,
+          childResults: [],
+          totalNumberOfChildResults: 1,
+        };
+
+        dispatchSearch([rootResult]);
+
+        expect(state.collections.solo.moreResultsAvailable).toBe(false);
+      });
+
+      it('should be true when there are no resolved children but totalNumberOfChildResults indicates more exist', () => {
+        const result = buildMockResultWithFolding({
+          uniqueId: 'lonely',
+          title: 'lonely',
+          raw: {
+            urihash: '',
+            collection: 'solo',
+            id: 'lonely',
+            parent: 'lonely',
+          },
+        });
+        const rootResult: ResultWithFolding = {
+          ...result,
+          childResults: [],
+          totalNumberOfChildResults: 5,
+        };
+
+        dispatchSearch([rootResult]);
+
+        expect(state.collections.solo.moreResultsAvailable).toBe(true);
+      });
+    });
   });
 });

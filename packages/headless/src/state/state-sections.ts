@@ -1,3 +1,12 @@
+import type {
+  BaseQueryFn,
+  CombinedState,
+  FetchArgs,
+  FetchBaseQueryError,
+  QueryDefinition,
+  RetryOptions,
+} from '@reduxjs/toolkit/query';
+import type {GeneratedAnswerStream} from '../api/knowledge/generated-answer-stream.js';
 import type {StateWithHistory} from '../app/undoable.js';
 import type {AdvancedSearchQueriesState} from '../features/advanced-search-queries/advanced-search-queries-state.js';
 import type {AttachedResultsState} from '../features/attached-results/attached-results-state.js';
@@ -15,6 +24,7 @@ import type {ManualNumericFacetSetState} from '../features/commerce/facets/numer
 import type {InstantProductsState} from '../features/commerce/instant-products/instant-products-state.js';
 import type {CommercePaginationState} from '../features/commerce/pagination/pagination-state.js';
 import type {CommerceParametersState} from '../features/commerce/parameters/parameters-state.js';
+import type {ProductEnrichmentState} from '../features/commerce/product-enrichment/product-enrichment-state.js';
 import type {ProductListingState} from '../features/commerce/product-listing/product-listing-state.js';
 import type {CommerceQueryState} from '../features/commerce/query/query-state.js';
 import type {RecommendationsState as CommerceRecommendationsState} from '../features/commerce/recommendations/recommendations-state.js';
@@ -38,6 +48,8 @@ import type {DateFacetSetState} from '../features/facets/range-facets/date-facet
 import type {NumericFacetSetState} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-state.js';
 import type {FieldsState} from '../features/fields/fields-state.js';
 import type {FoldingState} from '../features/folding/folding-state.js';
+import type {FollowUpAnswersState} from '../features/follow-up-answers/follow-up-answers-state.js';
+import type {AnswerApiQueryParams} from '../features/generated-answer/generated-answer-request.js';
 import type {GeneratedAnswerState} from '../features/generated-answer/generated-answer-state.js';
 import type {HistoryState} from '../features/history/history-state.js';
 import type {InsightConfigurationState} from '../features/insight-configuration/insight-configuration-state.js';
@@ -413,6 +425,13 @@ export interface RecentQueriesSection {
   recentQueries: RecentQueriesState;
 }
 
+export interface ProductEnrichmentSection {
+  /**
+   * The product enrichment state containing badge placements.
+   */
+  productEnrichment: ProductEnrichmentState;
+}
+
 export interface CaseAssistConfigurationSection {
   /**
    * The case assist engine configuration
@@ -491,6 +510,13 @@ export interface GeneratedAnswerSection {
   generatedAnswer: GeneratedAnswerState;
 }
 
+export interface FollowUpAnswersSection {
+  /**
+   * The properties related to follow-up answers.
+   */
+  followUpAnswers: FollowUpAnswersState;
+}
+
 export interface InsightUserActionsSection {
   /**
    * The insight user actions state.
@@ -500,4 +526,29 @@ export interface InsightUserActionsSection {
 
 export interface ManualRangeSection {
   manualNumericFacetSet: ManualNumericFacetSetState;
+}
+
+export interface GetAnswerQuerySection {
+  // CombinedState is an internal type from RTK Query that is used directly to break dependency on actual
+  // use of RTK Query for the Stream Answer API. This exposes the internal state of RTKQ but allows us to
+  // type this object over using an `unknown` type.
+  answer: CombinedState<
+    {
+      getAnswer: QueryDefinition<
+        AnswerApiQueryParams,
+        BaseQueryFn<
+          string | FetchArgs,
+          unknown,
+          FetchBaseQueryError,
+          {} & RetryOptions,
+          {}
+        >,
+        never,
+        GeneratedAnswerStream,
+        'answer'
+      >;
+    },
+    never,
+    'answer'
+  >;
 }

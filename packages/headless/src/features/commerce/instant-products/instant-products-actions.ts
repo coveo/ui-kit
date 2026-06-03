@@ -41,8 +41,7 @@ const promoteChildToParentDefinition = {
   ...instantProductsQueryDefinition,
 };
 
-export interface PromoteChildToParentPayload
-  extends UpdateInstantProductQueryPayload {
+export interface PromoteChildToParentPayload extends UpdateInstantProductQueryPayload {
   child: ChildProduct;
 }
 
@@ -52,8 +51,7 @@ export const promoteChildToParent = createAction(
     validatePayload(payload, promoteChildToParentDefinition)
 );
 
-export interface UpdateInstantProductQueryPayload
-  extends CoreInstantProductPayload {
+export interface UpdateInstantProductQueryPayload extends CoreInstantProductPayload {
   /**
    * The initial basic query expression for instant products.
    */

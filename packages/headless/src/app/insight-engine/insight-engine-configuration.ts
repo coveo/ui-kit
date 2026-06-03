@@ -28,7 +28,7 @@ export interface InsightEngineConfiguration extends EngineConfiguration {
  */
 export interface InsightEngineSearchConfigurationOptions {
   /**
-   * The locale of the current user. Must comply with IETF’s BCP 47 definition: https://www.rfc-editor.org/rfc/bcp/bcp47.txt.
+   * The locale of the current user. Must comply with IETF’s BCP 47 definition: https://www.rfc-editor.org/info/bcp47.
    *
    * Notes:
    *  Coveo Machine Learning models use this information to provide contextually relevant output.
@@ -36,7 +36,7 @@ export interface InsightEngineSearchConfigurationOptions {
    */
   locale?: string;
   /**
-   * The base URL to use to proxy Coveo insight requests (e.g., `https://example.com/insight`).
+   * The base URL to use to proxy Coveo insight requests (for example, `https://example.com/insight`).
    *
    * This is an advanced option that you only set if you proxy Coveo insight requests through your own
    * server. In most cases, you should not set this option.

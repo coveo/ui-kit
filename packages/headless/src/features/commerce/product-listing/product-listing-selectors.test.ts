@@ -1,6 +1,7 @@
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {buildMockCommerceEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockProduct} from '../../../test/mock-product.js';
+import {buildMockSpotlightContent} from '../../../test/mock-spotlight-content.js';
 import {
   errorSelector,
   isLoadingSelector,
@@ -17,6 +18,7 @@ describe('commerce product listing selectors', () => {
       productListing: {
         responseId: 'some-response-id',
         products: [],
+        results: [],
         isLoading: false,
         error: null,
         facets: [],
@@ -31,6 +33,7 @@ describe('commerce product listing selectors', () => {
       productListing: {
         responseId: 'some-response-id',
         products: [],
+        results: [],
         isLoading: false,
         error: null,
         facets: [],
@@ -52,6 +55,7 @@ describe('commerce product listing selectors', () => {
       productListing: {
         responseId: 'some-response-id',
         products: [],
+        results: [],
         isLoading: false,
         error: null,
         facets: [],
@@ -71,6 +75,7 @@ describe('commerce product listing selectors', () => {
       productListing: {
         responseId: 'some-response-id',
         products: [buildMockProduct(), buildMockProduct()],
+        results: [],
         isLoading: false,
         error: null,
         facets: [],
@@ -80,7 +85,27 @@ describe('commerce product listing selectors', () => {
     expect(numberOfProductsSelector(state)).toEqual(2);
   });
 
-  it('#numberOfProductsSelector should return 0 when the products are not set', () => {
+  it('#numberOfProductsSelector should return the number of results when products is empty', () => {
+    const state = buildMockCommerceState({
+      productListing: {
+        responseId: 'some-response-id',
+        products: [],
+        results: [
+          buildMockProduct(),
+          buildMockSpotlightContent(),
+          buildMockProduct(),
+          buildMockProduct(),
+        ],
+        isLoading: false,
+        error: null,
+        facets: [],
+        requestId: 'some-request-id',
+      },
+    });
+    expect(numberOfProductsSelector(state)).toEqual(4);
+  });
+
+  it('#numberOfProductsSelector should return 0 when both products and results are empty', () => {
     const state = buildMockCommerceState();
     expect(numberOfProductsSelector(state)).toEqual(0);
   });
@@ -90,6 +115,7 @@ describe('commerce product listing selectors', () => {
       productListing: {
         responseId: 'some-response-id',
         products: [buildMockProduct(), buildMockProduct()],
+        results: [],
         isLoading: false,
         error: null,
         facets: [],
@@ -108,6 +134,7 @@ describe('commerce product listing selectors', () => {
       productListing: {
         responseId: 'some-response-id',
         products: [buildMockProduct(), buildMockProduct()],
+        results: [],
         isLoading: false,
         error: null,
         facets: [],
@@ -126,6 +153,7 @@ describe('commerce product listing selectors', () => {
       productListing: {
         responseId: 'some-response-id',
         products: [buildMockProduct(), buildMockProduct()],
+        results: [],
         isLoading: false,
         error: null,
         facets: [],
@@ -144,6 +172,7 @@ describe('commerce product listing selectors', () => {
       productListing: {
         responseId: 'some-response-id',
         products: [buildMockProduct(), buildMockProduct()],
+        results: [],
         isLoading: false,
         error: null,
         facets: [],
@@ -158,6 +187,7 @@ describe('commerce product listing selectors', () => {
       productListing: {
         responseId: 'some-response-id',
         products: [],
+        results: [],
         isLoading: true,
         error: null,
         facets: [],
@@ -177,6 +207,7 @@ describe('commerce product listing selectors', () => {
       productListing: {
         responseId: 'some-response-id',
         products: [],
+        results: [],
         isLoading: false,
         error: {message: 'some-error', statusCode: 500, type: 'some-type'},
         facets: [],

@@ -1,9 +1,13 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
 import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product-template-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
+import '@/src/components/commerce/atomic-product-rating/atomic-product-rating.js';
+
+const commerceApiHarness = new MockCommerceApi();
 
 const {
   decorator: commerceInterfaceDecorator,
@@ -26,44 +30,45 @@ const {
       return request;
     },
   },
+  includeCodeRoot: false,
 });
-const {decorator: commerceProductListDecorator} = wrapInCommerceProductList();
+const {decorator: commerceProductListDecorator} = wrapInCommerceProductList(
+  'list',
+  false
+);
 const {decorator: productTemplateDecorator} = wrapInProductTemplate();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-product-rating',
+  {
+    excludeCategories: ['methods'],
+    containerSelector: 'atomic-product-template template',
+  }
+);
 
 const meta: Meta = {
   component: 'atomic-product-rating',
-  title: 'Commerce/atomic-product-rating',
+  title: 'Commerce/Product Rating',
   id: 'atomic-product-rating',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [
     productTemplateDecorator,
     commerceProductListDecorator,
     commerceInterfaceDecorator,
   ],
-  parameters,
+  parameters: {
+    ...parameters,
+    msw: {handlers: [...commerceApiHarness.handlers]},
+    chromatic: {disableSnapshot: true},
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
   play: initializeCommerceInterface,
-  argTypes: {
-    'attributes-field': {
-      name: 'field',
-      type: 'string',
-      description: 'The field to use for the rating value',
-    },
-    'attributes-rating-details-field': {
-      name: 'rating-details-field',
-      type: 'string',
-      description:
-        'The field to use for rating details (e.g., number of reviews)',
-    },
-    'attributes-max-value-in-index': {
-      name: 'max-value-in-index',
-      type: 'number',
-      description: 'The maximum rating value in the index',
-    },
-    'attributes-icon': {
-      name: 'icon',
-      type: 'string',
-      description: 'The URL of the icon to use for rating display',
-    },
+  beforeEach: () => {
+    commerceApiHarness.clearAll();
   },
 };
 
@@ -74,21 +79,20 @@ export const Default: Story = {};
 export const WithARatingDetailsField: Story = {
   name: 'With a rating details field',
   args: {
-    'attributes-rating-details-field': 'ec_rating',
+    'rating-details-field': 'ec_rating',
   },
 };
 
 export const WithAMaxValueInIndex: Story = {
   name: 'With a custom max value',
   args: {
-    'attributes-max-value-in-index': 10,
+    'max-value-in-index': 10,
   },
 };
 
 export const WithADifferentIcon: Story = {
   name: 'With a custom icon',
   args: {
-    'attributes-icon':
-      'https://raw.githubusercontent.com/Rush/Font-Awesome-SVG-PNG/master/black/svg/circle.svg',
+    icon: 'https://raw.githubusercontent.com/Rush/Font-Awesome-SVG-PNG/master/black/svg/circle.svg',
   },
 };

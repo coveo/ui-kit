@@ -74,7 +74,7 @@ export interface BreadcrumbManagerState {
   staticFilterBreadcrumbs: StaticFilterBreadcrumb[];
 
   /**
-   * Returns `true` if there are any available breadcrumbs (i.e., if there are any active facet values), and `false` if not.
+   * Returns `true` if there are any available breadcrumbs (that is, if there are any active facet values), and `false` if not.
    */
   hasBreadcrumbs: boolean;
 }

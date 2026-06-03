@@ -50,14 +50,14 @@ export interface ResultListProps {
    * The action creator to build the `fetchMoreResults` action.
    */
 
-  // biome-ignore lint/suspicious/noExplicitAny: third-party type uses 'any'
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- third-party type uses 'any'
   fetchMoreResultsActionCreator?: () => AsyncThunkAction<unknown, void, any>;
 }
 
 /**
  * The `ResultList` headless controller offers a high-level interface for designing a common result list UI controller.
  *
- * Example: [result-list.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/result-list/result-list.fn.tsx)
+ * Example: [result-list.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/result-list/result-list.fn.tsx)
  *
  * @group Controllers
  * @category ResultList

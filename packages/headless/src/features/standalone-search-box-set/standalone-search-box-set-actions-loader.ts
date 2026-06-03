@@ -18,11 +18,11 @@ import {
 } from './standalone-search-box-set-actions.js';
 
 export type {
+  FetchRedirectUrlActionCreatorPayload,
   RegisterStandaloneSearchBoxActionCreatorPayload,
   ResetStandaloneSearchBoxActionCreatorPayload,
-  FetchRedirectUrlActionCreatorPayload,
-  UpdateAnalyticsToSearchFromLinkActionCreatorPayload,
   UpdateAnalyticsToOmniboxFromLinkActionCreatorPayload,
+  UpdateAnalyticsToSearchFromLinkActionCreatorPayload,
 };
 
 /**

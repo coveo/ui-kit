@@ -1,0 +1,74 @@
+@utility result-with-sections {
+  display: grid;
+  justify-items: stretch;
+
+  /* == Common styles == */
+  atomic-result-section-visual {
+    grid-area: visual;
+  }
+
+  atomic-result-section-badges {
+    grid-area: badges;
+  }
+
+  atomic-result-section-actions {
+    grid-area: actions;
+
+    atomic-result-quickview {
+      display: inline-block;
+    }
+  }
+
+  atomic-result-section-title {
+    grid-area: title;
+    @apply text-on-background;
+  }
+
+  atomic-result-section-title-metadata {
+    grid-area: title-metadata;
+  }
+
+  atomic-result-section-emphasized {
+    grid-area: emphasized;
+  }
+
+  atomic-result-section-excerpt {
+    grid-area: excerpt;
+    @apply text-neutral-dark;
+  }
+
+  atomic-result-section-bottom-metadata {
+    grid-area: bottom-metadata;
+    @apply text-neutral-dark;
+  }
+
+  atomic-result-section-children {
+    grid-area: children;
+  }
+
+  atomic-result-section-badges,
+  atomic-result-section-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    max-height: calc(2 * var(--row-height, 2rem) + 0.5rem);
+  }
+
+  atomic-result-section-visual,
+  atomic-result-section-badges,
+  atomic-result-section-actions,
+  atomic-result-section-title,
+  atomic-result-section-title-metadata,
+  atomic-result-section-emphasized,
+  atomic-result-section-excerpt,
+  atomic-result-section-bottom-metadata {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &.image-icon {
+    atomic-result-section-visual {
+      @apply rounded-sm;
+    }
+  }
+}

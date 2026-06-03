@@ -1,13 +1,12 @@
 import type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering.js';
 
-export interface QuestionAnsweringRelatedQuestionState
-  extends QuestionAnswerDocumentIdentifier {
+export interface QuestionAnsweringRelatedQuestionState extends QuestionAnswerDocumentIdentifier {
   /**
    * Determines if the snippet is expanded.
    */
   expanded: boolean;
   /**
-   * The unique identifier for this question & answer.
+   * The unique identifier for this question and answer.
    */
   questionAnswerId: string;
 }
@@ -29,7 +28,7 @@ export interface QuestionAnsweringState {
    */
   feedbackModalOpen: boolean;
   /**
-   * The unique identifier for this question & answer.
+   * The unique identifier for this question and answer.
    */
   questionAnswerId?: string;
   relatedQuestions: QuestionAnsweringRelatedQuestionState[];

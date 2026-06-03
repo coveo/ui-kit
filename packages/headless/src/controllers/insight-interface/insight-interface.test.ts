@@ -29,7 +29,7 @@ describe('Insight Interface', () => {
   });
 
   it('adds the correct reducers to the engine', () => {
-    expect(engine.addReducers).toBeCalledWith({
+    expect(engine.addReducers).toHaveBeenCalledWith({
       configuration,
       insightConfiguration,
       insightInterface,

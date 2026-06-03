@@ -92,4 +92,89 @@ describe('MultiClassMapDirective', () => {
     const div = container.querySelector('div');
     expect(div).toHaveClass('other-class', 'another-class', 'foo');
   });
+
+  it('should skip empty class names from keys with leading spaces', () => {
+    const classMapInput = {' foo bar': true} as Record<string, boolean>;
+    render(
+      html`<div class="${multiClassMap(classMapInput)}"></div>`,
+      container
+    );
+
+    const div = container.querySelector('div');
+    expect(div).toHaveClass('foo', 'bar');
+    expect(div?.classList.length).toBe(2);
+  });
+
+  it('should skip empty class names from keys with trailing spaces', () => {
+    const classMapInput = {'foo bar ': true} as Record<string, boolean>;
+    render(
+      html`<div class="${multiClassMap(classMapInput)}"></div>`,
+      container
+    );
+
+    const div = container.querySelector('div');
+    expect(div).toHaveClass('foo', 'bar');
+    expect(div?.classList.length).toBe(2);
+  });
+
+  it('should skip empty class names from keys with multiple consecutive spaces', () => {
+    const classMapInput = {'foo  bar   baz': true} as Record<string, boolean>;
+    render(
+      html`<div class="${multiClassMap(classMapInput)}"></div>`,
+      container
+    );
+
+    const div = container.querySelector('div');
+    expect(div).toHaveClass('foo', 'bar', 'baz');
+    expect(div?.classList.length).toBe(3);
+  });
+
+  it('should handle a key that is only whitespace', () => {
+    const classMapInput = {'   ': true} as Record<string, boolean>;
+    render(
+      html`<div class="${multiClassMap(classMapInput)}"></div>`,
+      container
+    );
+
+    const div = container.querySelector('div');
+    expect(div?.className.trim()).toBe('');
+  });
+
+  it('should handle an empty string key', () => {
+    const classMapInput = {'': true} as Record<string, boolean>;
+    render(
+      html`<div class="${multiClassMap(classMapInput)}"></div>`,
+      container
+    );
+
+    const div = container.querySelector('div');
+    expect(div?.className.trim()).toBe('');
+  });
+
+  it('should handle keys with tab and space whitespace characters', () => {
+    const classMapInput = {'foo\tbar baz': true} as Record<string, boolean>;
+    render(
+      html`<div class="${multiClassMap(classMapInput)}"></div>`,
+      container
+    );
+
+    const div = container.querySelector('div');
+    expect(div).toHaveClass('foo', 'bar', 'baz');
+    expect(div?.classList.length).toBe(3);
+  });
+
+  it('should only apply true-valued keys when mixed with whitespace-padded false keys', () => {
+    const classMapInput = {
+      ' foo ': true,
+      ' bar ': false,
+    } as Record<string, boolean>;
+    render(
+      html`<div class="${multiClassMap(classMapInput)}"></div>`,
+      container
+    );
+
+    const div = container.querySelector('div');
+    expect(div).toHaveClass('foo');
+    expect(div).not.toHaveClass('bar');
+  });
 });

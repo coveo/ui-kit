@@ -1,25 +1,23 @@
-import type {LitElement, TemplateResult} from 'lit';
+import type {LitElement, nothing, TemplateResult} from 'lit';
 import type {TemplateResultType} from 'lit/directive-helpers.js';
 import type {AnyBindings} from '../components/common/interface/bindings';
-import type {SearchBoxSuggestions} from '../components/common/suggestions/suggestions-common';
+import type {SearchBoxSuggestions} from '../components/common/suggestions/suggestions-types';
 
-export type GenericRender<T extends TemplateResultType> = TemplateResult<T>;
+export type GenericRender<T extends TemplateResultType> =
+  | TemplateResult<T>
+  | typeof nothing;
 
-export type RenderGuardDecorator<
-  Component,
-  T extends TemplateResultType,
-  Descriptor = TypedPropertyDescriptor<() => GenericRender<T>>,
-> = (
+export type RenderGuardDecorator<Component, _T extends TemplateResultType> = (
   target: Component,
   propertyKey: 'render',
-  descriptor: Descriptor
-) => Descriptor;
+  descriptor: PropertyDescriptor
+) => PropertyDescriptor;
 
 /**
  * Base interface for any Atomic component that needs to be initialized with bindings
  * and supports error handling and cleanup.
  */
-export interface BaseInitializableComponent<
+interface BaseInitializableComponent<
   SpecificBindings extends AnyBindings = AnyBindings,
   ReturnType = void,
 > {
@@ -66,5 +64,4 @@ export type SearchBoxSuggestionsComponent<
 > = BaseInitializableComponent<SpecificBindings, SearchBoxSuggestions>;
 
 export interface LitElementWithError
-  extends Pick<InitializableComponent, 'error'>,
-    LitElement {}
+  extends Pick<InitializableComponent, 'error'>, LitElement {}

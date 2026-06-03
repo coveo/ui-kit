@@ -6,7 +6,7 @@ import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {renderBreadcrumbContent} from './breadcrumb-content';
 import {getFirstBreadcrumbValue} from './breadcrumb-utils';
 
-vi.mock('./breadcrumb-utils');
+vi.mock('./breadcrumb-utils', {spy: true});
 
 describe('#renderBreadcrumbContent', () => {
   let i18n: i18n;

@@ -15,11 +15,11 @@ import type {
 } from '../../types/controller-definitions.js';
 
 export type {
+  CorePaginationOptions,
   Pagination,
+  PaginationOptions,
   PaginationProps,
   PaginationState,
-  PaginationOptions,
-  CorePaginationOptions,
 };
 
 /**

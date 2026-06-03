@@ -1,52 +1,188 @@
-## <small>1.7.7 (2025-07-30)</small>
+## 1.9.33
 
-* chore: allow prerelease on CI (#5756) ([de2c411](https://github.com/coveo/ui-kit/commits/de2c411)), closes [#5756](https://github.com/coveo/ui-kit/issues/5756)
-* chore(atomic-angular, atomic-react, auth, bueno, headless-react): remove unused exports, code and de ([6f8efc1](https://github.com/coveo/ui-kit/commits/6f8efc1)), closes [#5690](https://github.com/coveo/ui-kit/issues/5690)
+### Patch Changes
 
+- [#7717](https://github.com/coveo/ui-kit/pull/7717) [`380ad1b`](https://github.com/coveo/ui-kit/commit/380ad1bf0a79ab7dc92077af4c959d9cfa167356) Thanks [@alexprudhomme](https://github.com/alexprudhomme)! - CDN artifacts now resolve cross-package dependencies using commit-based paths, making each artifact self-contained and independent of version pointer availability.
 
+- Updated dependencies [[`380ad1b`](https://github.com/coveo/ui-kit/commit/380ad1bf0a79ab7dc92077af4c959d9cfa167356)]:
+  - @coveo/headless@3.51.3
 
-## <small>1.7.5 (2025-07-23)</small>
+## 1.9.32
 
-* chore: enable recommended biome rules for entire repo (#5662) ([015a764](https://github.com/coveo/ui-kit/commits/015a764)), closes [#5662](https://github.com/coveo/ui-kit/issues/5662)
-* chore: introduce knip to root (#5687) ([77cf23e](https://github.com/coveo/ui-kit/commits/77cf23e)), closes [#5687](https://github.com/coveo/ui-kit/issues/5687)
+### Patch Changes
 
+- Updated dependencies [[`2abc0a0`](https://github.com/coveo/ui-kit/commit/2abc0a0cf854db560cf56e9337314c3736c45d88)]:
+  - @coveo/headless@3.51.2
 
+## 1.9.31
 
-## <small>1.7.4 (2025-07-16)</small>
+### Patch Changes
 
-* chore(deps): Revert "chore(deps): update vite to v3.2.3 j:kit-282" (#5487) ([b9ad867](https://github.com/coveo/ui-kit/commits/b9ad867)), closes [#5487](https://github.com/coveo/ui-kit/issues/5487)
-* chore(deps): update vite to v3.2.4 j:kit-282 (#5604) ([8e8dd6a](https://github.com/coveo/ui-kit/commits/8e8dd6a)), closes [#5604](https://github.com/coveo/ui-kit/issues/5604)
-* chore(shopify): enable biome recommended rules (#5635) ([979bb01](https://github.com/coveo/ui-kit/commits/979bb01)), closes [#5635](https://github.com/coveo/ui-kit/issues/5635)
-* fix(deps): update dependency @coveo/relay to v1.2.5 j:kit-282 (#5606) ([1ff9835](https://github.com/coveo/ui-kit/commits/1ff9835)), closes [#5606](https://github.com/coveo/ui-kit/issues/5606)
+- [#7655](https://github.com/coveo/ui-kit/pull/7655) [`0008cb8`](https://github.com/coveo/ui-kit/commit/0008cb8a35158d865e985ae16c621d3c06049b57) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update production dependencies
 
+## 1.9.30
 
+### Patch Changes
 
-## <small>1.7.2 (2025-07-09)</small>
+- Updated dependencies [[`d5d4d75`](https://github.com/coveo/ui-kit/commit/d5d4d75a882074bbeb5875ed95504a30ff84df91), [`821d429`](https://github.com/coveo/ui-kit/commit/821d429d3cc247e387cfb3e5834ddc8b65443142)]:
+  - @coveo/headless@3.51.1
 
-* fix(shopify): get memoized fetch working in browsers (#5561) ([b11d812](https://github.com/coveo/ui-kit/commits/b11d812)), closes [#5561](https://github.com/coveo/ui-kit/issues/5561)
+## 1.9.29
 
+### Patch Changes
 
+- Updated dependencies [[`41fdd60`](https://github.com/coveo/ui-kit/commit/41fdd609cb0b8b0d4b821f9818189fc49f727417), [`d12be29`](https://github.com/coveo/ui-kit/commit/d12be299fa235fe6810c268f2c89be296063ee60), [`8445bf2`](https://github.com/coveo/ui-kit/commit/8445bf241db3aab5f0cd148c43ac3f4425f22cb1), [`bd4bb98`](https://github.com/coveo/ui-kit/commit/bd4bb98837c2eb0acb7f38848c0d792f8bf1efa9)]:
+  - @coveo/headless@3.51.0
 
-## <small>1.7.1 (2025-07-02)</small>
+## 1.9.28
 
-* chore(lint): integrate biome (#5507) ([53bcada](https://github.com/coveo/ui-kit/commits/53bcada)), closes [#5507](https://github.com/coveo/ui-kit/issues/5507)
+### Patch Changes
 
+- Updated dependencies [[`a191d11`](https://github.com/coveo/ui-kit/commit/a191d119ea1913c76aacb266c1345be6e4eecbe0), [`cc116bf`](https://github.com/coveo/ui-kit/commit/cc116bf10f4708d9636eb3e0279af57a1e43e050), [`925acd8`](https://github.com/coveo/ui-kit/commit/925acd8912103422c19ae02fff22972634e14a28)]:
+  - @coveo/headless@3.50.1
 
+## 1.9.27
 
-## 1.7.0 (2025-06-25)
+### Patch Changes
 
-- feat(shopify): add init function to make it easy to emit custom events on pages with no search (#552 ([5eb2d5d](https://github.com/coveo/ui-kit/commits/5eb2d5d)), closes [#5524](https://github.com/coveo/ui-kit/issues/5524)
+- Updated dependencies [[`2453994`](https://github.com/coveo/ui-kit/commit/245399483d93d17cfc0d01f2f7b9eebcf2859089), [`861d8ca`](https://github.com/coveo/ui-kit/commit/861d8cae4cb73fee10c9fd753e5874baebf539bf)]:
+  - @coveo/headless@3.50.0
 
-## 1.6.0 (2025-06-18)
+## 1.9.26
+
+### Patch Changes
+
+- Updated dependencies [[`f76c16f`](https://github.com/coveo/ui-kit/commit/f76c16f6f3dcde4e83563cebaf80c067901e5b34), [`bd26438`](https://github.com/coveo/ui-kit/commit/bd264389ad421e622ab3a4ac3d324bd8e1fce60a), [`2dd45bc`](https://github.com/coveo/ui-kit/commit/2dd45bcdabd1ec7683cc1f341a9ba4747671e222), [`6db3fdb`](https://github.com/coveo/ui-kit/commit/6db3fdbc9e669dd4f3d4a0f900401700d86f7505), [`39c2c10`](https://github.com/coveo/ui-kit/commit/39c2c102e585df4861a65d6b6350c5ff35774e35)]:
+  - @coveo/headless@3.49.4
+
+## 1.9.25
+
+### Patch Changes
+
+- Updated dependencies [[`f1924b8`](https://github.com/coveo/ui-kit/commit/f1924b800f40b0ed2f857ed18323ae85585854d3)]:
+  - @coveo/headless@3.49.3
+
+## 1.9.24
+
+### Patch Changes
+
+- Updated dependencies [[`7b7de89`](https://github.com/coveo/ui-kit/commit/7b7de897f4c06e35e9c87189c2bc56cc078e6291)]:
+  - @coveo/headless@3.49.2
+
+## 1.9.23
+
+### Patch Changes
+
+- Updated dependencies [[`5148ad6`](https://github.com/coveo/ui-kit/commit/5148ad665cdaf50a8118a45a03a48d4dbd8b456a)]:
+  - @coveo/headless@3.49.1
+
+## 1.9.22
+
+- chore: replace biome with oxlint / oxfmt (#7328) ([3b8d688](https://github.com/coveo/ui-kit/commits/3b8d688)), closes [#7328](https://github.com/coveo/ui-kit/issues/7328)
+
+## 1.9.21
+
+- chore: update relay+move to catalog (#7287) ([e7a79a1](https://github.com/coveo/ui-kit/commits/e7a79a1)), closes [#7287](https://github.com/coveo/ui-kit/issues/7287)
+
+## 1.9.19
+
+- fix(deps): update all dependencies j:kit-282 (major) (#6195) ([a5df20c](https://github.com/coveo/ui-kit/commits/a5df20c)), closes [#6195](https://github.com/coveo/ui-kit/issues/6195)
+
+## 1.9.18
+
+- fix(deps): update dependency @coveo/relay to v2 j:kit-282 (#7136) ([0e49e7c](https://github.com/coveo/ui-kit/commits/0e49e7c)), closes [#7136](https://github.com/coveo/ui-kit/issues/7136)
+- ci: migrate npm publishing to OIDC trusted publishers (#7198) ([c97eff5](https://github.com/coveo/ui-kit/commits/c97eff5)), closes [#7198](https://github.com/coveo/ui-kit/issues/7198)
+
+## 1.9.12
+
+- fix(deps): update dependency @coveo/relay to v1.2.15 j:kit-282 (#7052) ([a614dca](https://github.com/coveo/ui-kit/commits/a614dca)), closes [#7052](https://github.com/coveo/ui-kit/issues/7052)
+
+## 1.9.11
+
+- [Version Bump][skip ci]: ui-kit publish ([b2a83c4](https://github.com/coveo/ui-kit/commits/b2a83c4))
+- Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
+
+## 1.9.10
+
+- Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
+
+## 1.9.9
+
+- fix(shopify): correct malformed PR reference in CHANGELOG (#6330) ([74b1de7](https://github.com/coveo/ui-kit/commits/74b1de7)), closes [#6330](https://github.com/coveo/ui-kit/issues/6330)
+
+## 1.9.8
+
+- [Version Bump][skip ci]: ui-kit publish ([b33d02f](https://github.com/coveo/ui-kit/commits/b33d02f))
+- ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+
+## 1.9.7
+
+- ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+
+## 1.9.3
+
+- feat(shopify): minify shopify cdn output (#6120) ([1d72d4e](https://github.com/coveo/ui-kit/commits/1d72d4e)), closes [#6120](https://github.com/coveo/ui-kit/issues/6120)
+
+## 1.8.13
+
+- chore: more cleanup of dependencies in multiples packages (#6119) ([ff6c837](https://github.com/coveo/ui-kit/commits/ff6c837)), closes [#6119](https://github.com/coveo/ui-kit/issues/6119)
+
+## 1.8.10
+
+- [Version Bump][skip ci]: ui-kit publish ([a3fb13e](https://github.com/coveo/ui-kit/commits/a3fb13e))
+- fix(headless): ensure relay receive complete environment (#5962) ([78f93dd](https://github.com/coveo/ui-kit/commits/78f93dd)), closes [#5962](https://github.com/coveo/ui-kit/issues/5962)
+
+## 1.8.9
+
+- fix(headless): ensure relay receive complete environment (#5962) ([78f93dd](https://github.com/coveo/ui-kit/commits/78f93dd)), closes [#5962](https://github.com/coveo/ui-kit/issues/5962)
+
+## 1.8.8
+
+- chore: fix vitest config (#6019) ([bd83d59](https://github.com/coveo/ui-kit/commits/bd83d59)), closes [#6019](https://github.com/coveo/ui-kit/issues/6019)
+
+## 1.8.0
+
+- feat: Migrate monorepo build system from NX to Turborepo (#5733) ([e7e1237](https://github.com/coveo/ui-kit/commits/e7e1237)), closes [#5733](https://github.com/coveo/ui-kit/issues/5733)
+
+## 1.7.7
+
+- chore: allow prerelease on CI (#5756) ([de2c411](https://github.com/coveo/ui-kit/commits/de2c411)), closes [#5756](https://github.com/coveo/ui-kit/issues/5756)
+- chore(atomic-angular, atomic-react, auth, bueno, headless-react): remove unused exports, code and de ([6f8efc1](https://github.com/coveo/ui-kit/commits/6f8efc1)), closes [#5690](https://github.com/coveo/ui-kit/issues/5690)
+
+## 1.7.5
+
+- chore: enable recommended biome rules for entire repo (#5662) ([015a764](https://github.com/coveo/ui-kit/commits/015a764)), closes [#5662](https://github.com/coveo/ui-kit/issues/5662)
+- chore: introduce knip to root (#5687) ([77cf23e](https://github.com/coveo/ui-kit/commits/77cf23e)), closes [#5687](https://github.com/coveo/ui-kit/issues/5687)
+
+## 1.7.4
+
+- chore(deps): Revert "chore(deps): update vite to v3.2.3 j:kit-282" (#5487) ([b9ad867](https://github.com/coveo/ui-kit/commits/b9ad867)), closes [#5487](https://github.com/coveo/ui-kit/issues/5487)
+- chore(deps): update vite to v3.2.4 j:kit-282 (#5604) ([8e8dd6a](https://github.com/coveo/ui-kit/commits/8e8dd6a)), closes [#5604](https://github.com/coveo/ui-kit/issues/5604)
+- chore(shopify): enable biome recommended rules (#5635) ([979bb01](https://github.com/coveo/ui-kit/commits/979bb01)), closes [#5635](https://github.com/coveo/ui-kit/issues/5635)
+- fix(deps): update dependency @coveo/relay to v1.2.5 j:kit-282 (#5606) ([1ff9835](https://github.com/coveo/ui-kit/commits/1ff9835)), closes [#5606](https://github.com/coveo/ui-kit/issues/5606)
+
+## 1.7.2
+
+- fix(shopify): get memoized fetch working in browsers (#5561) ([b11d812](https://github.com/coveo/ui-kit/commits/b11d812)), closes [#5561](https://github.com/coveo/ui-kit/issues/5561)
+
+## 1.7.1
+
+- chore(lint): integrate biome (#5507) ([53bcada](https://github.com/coveo/ui-kit/commits/53bcada)), closes [#5507](https://github.com/coveo/ui-kit/issues/5507)
+
+## 1.7.0
+
+- feat(shopify): add init function to make it easy to emit custom events on pages with no search (#5524) ([5eb2d5d](https://github.com/coveo/ui-kit/commits/5eb2d5d)), closes [#5524](https://github.com/coveo/ui-kit/issues/5524)
+
+## 1.6.0
 
 - feat(shopify): emit clientId in custom event (#5472) ([cc79bee](https://github.com/coveo/ui-kit/commits/cc79bee)), closes [#5472](https://github.com/coveo/ui-kit/issues/5472)
 - chore(deps): update vite to v3.2.3 j:kit-282 (#5475) ([32f2b2e](https://github.com/coveo/ui-kit/commits/32f2b2e)), closes [#5475](https://github.com/coveo/ui-kit/issues/5475)
 
-## <small>1.5.1 (2025-06-11)</small>
+## 1.5.1
 
 - chore(deps): update vite to v3.2.1 j:kit-282 (#5410) ([02b0045](https://github.com/coveo/ui-kit/commits/02b0045)), closes [#5410](https://github.com/coveo/ui-kit/issues/5410)
 
-## 1.5.0 (2025-06-04)
+## 1.5.0
 
 - [Version Bump][skip ci]: ui-kit publish ([4c36602](https://github.com/coveo/ui-kit/commits/4c36602))
 - fix(deps): update dependency @coveo/relay to v1.2.1 j:kit-282 (#5396) ([3d9ebf9](https://github.com/coveo/ui-kit/commits/3d9ebf9)), closes [#5396](https://github.com/coveo/ui-kit/issues/5396)
@@ -54,23 +190,23 @@
 - feat(shopify): export constants in utils package (#5399) ([e644ad6](https://github.com/coveo/ui-kit/commits/e644ad6)), closes [#5399](https://github.com/coveo/ui-kit/issues/5399)
 - chore(deps): update vite j:kit-282 (#5363) ([eb41b2c](https://github.com/coveo/ui-kit/commits/eb41b2c)), closes [#5363](https://github.com/coveo/ui-kit/issues/5363)
 
-## 1.4.0 (2025-06-04)
+## 1.4.0
 
 - fix(deps): update dependency @coveo/relay to v1.2.1 j:kit-282 (#5396) ([3d9ebf9](https://github.com/coveo/ui-kit/commits/3d9ebf9)), closes [#5396](https://github.com/coveo/ui-kit/issues/5396)
 - fix(shopify): fix client id mismatch between relay and navigator context (#5393) ([7408b33](https://github.com/coveo/ui-kit/commits/7408b33)), closes [#5393](https://github.com/coveo/ui-kit/issues/5393)
 - feat(shopify): export constants in utils package (#5399) ([e644ad6](https://github.com/coveo/ui-kit/commits/e644ad6)), closes [#5399](https://github.com/coveo/ui-kit/issues/5399)
 - chore(deps): update vite j:kit-282 (#5363) ([eb41b2c](https://github.com/coveo/ui-kit/commits/eb41b2c)), closes [#5363](https://github.com/coveo/ui-kit/issues/5363)
 
-## 1.3.0 (2025-05-28)
+## 1.3.0
 
 - feat(shopify): emit custom events & support headless search api (#5353) ([49914cd](https://github.com/coveo/ui-kit/commits/49914cd)), closes [#5353](https://github.com/coveo/ui-kit/issues/5353)
 
-## 1.2.0 (2025-05-15)
+## 1.2.0
 
 - feat(shopify): support non browser environments (#5312) ([9022ce2](https://github.com/coveo/ui-kit/commits/9022ce2)), closes [#5312](https://github.com/coveo/ui-kit/issues/5312)
 - docs(shopify): update readme (#5296) ([6a91e0c](https://github.com/coveo/ui-kit/commits/6a91e0c)), closes [#5296](https://github.com/coveo/ui-kit/issues/5296)
 
-## 1.1.0 (2025-05-08)
+## 1.1.0
 
 - feat(shopify): add shopify package for integration with commerce headless (#5251) ([dd99e53](https://github.com/coveo/ui-kit/commits/dd99e53)), closes [#5251](https://github.com/coveo/ui-kit/issues/5251)
 - feat(shopify): add type definitions for shopify package (#5271) ([99bfe2d](https://github.com/coveo/ui-kit/commits/99bfe2d)), closes [#5271](https://github.com/coveo/ui-kit/issues/5271)

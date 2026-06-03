@@ -1,422 +1,221 @@
-import {randomUUID} from 'node:crypto';
-import {
-  defineProductList,
-  defineStandaloneSearchBox,
-  getSampleCommerceEngineConfiguration,
-  type InferHydratedState,
-  type InferStaticState,
-  type NavigatorContextProvider,
-  type Product,
+import type {
+  CommerceEngine,
+  ContextOptions,
 } from '@coveo/headless/ssr-commerce';
-import {act, render, renderHook, screen} from '@testing-library/react';
+import {render, renderHook, screen} from '@testing-library/react';
 import type {PropsWithChildren} from 'react';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  type MockInstance,
-  test,
-  vi,
-} from 'vitest';
+  createProductListComponent,
+  createTestComponent,
+} from '../__tests__/component-test-utils.js';
+import {createMockNavigatorContextProvider} from '../__tests__/mock-navigator-context-provider.js';
+import {
+  buildMockController,
+  defineMockCommerceController,
+} from '../__tests__/mock-ssr-controller-definitions.js';
+import {createMockCommerceEngine} from '../__tests__/mock-ssr-engine.js';
+import {
+  renderWithProvider,
+  waitForAsyncUpdates,
+} from '../__tests__/test-utils.js';
 import {MissingEngineProviderError} from '../errors.js';
 import {defineCommerceEngine} from './commerce-engine.js';
 
-describe('Headless react SSR utils', () => {
-  let errorSpy: MockInstance;
-  const mockedNavigatorContextProvider: NavigatorContextProvider = () => {
-    return {
-      clientId: '123',
-      location: 'https://www.example.com',
-      referrer: 'https://www.google.com',
-      userAgent: 'Mozilla/5.0',
-    };
-  };
-  const sampleConfig = getSampleCommerceEngineConfiguration();
+type MockControllerDefinitions = {
+  controller1: ReturnType<typeof defineMockCommerceController>;
+  controller2: ReturnType<typeof defineMockCommerceController>;
+};
+
+type MockControllers = {
+  [K in keyof MockControllerDefinitions]: ReturnType<
+    typeof buildMockController
+  >;
+};
+
+describe('Commerce Engine', () => {
+  let mockControllers: MockControllers;
+  let mockNavigatorContextProvider: ReturnType<
+    typeof createMockNavigatorContextProvider
+  >;
+  let engineDefinition: ReturnType<
+    typeof defineCommerceEngine<MockControllerDefinitions>
+  >;
+  let StateProvider: typeof engineDefinition.listingEngineDefinition.StateProvider;
+
   beforeEach(() => {
-    errorSpy = vi.spyOn(console, 'error');
-  });
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    mockNavigatorContextProvider = createMockNavigatorContextProvider();
+    mockControllers = {
+      controller1: buildMockController(),
+      controller2: buildMockController(),
+    };
 
-  afterEach(() => {
-    errorSpy.mockClear();
-  });
-
-  test('defines react commerce engine', () => {
-    const {
-      useEngine,
-      controllers,
-      listingEngineDefinition,
-      searchEngineDefinition,
-      standaloneEngineDefinition,
-      recommendationEngineDefinition,
-      ...rest
-    } = defineCommerceEngine({configuration: sampleConfig});
-    const {
-      fetchStaticState,
-      hydrateStaticState,
-      build,
-      StaticStateProvider,
-      HydratedStateProvider,
-      StateProvider,
-      setNavigatorContextProvider,
-    } = listingEngineDefinition;
-
-    const functions = [
-      fetchStaticState,
-      hydrateStaticState,
-      build,
-      useEngine,
-      StaticStateProvider,
-      HydratedStateProvider,
-      StateProvider,
-      setNavigatorContextProvider,
-    ];
-
-    const engineDefinitions = [
-      searchEngineDefinition,
-      standaloneEngineDefinition,
-      listingEngineDefinition,
-      recommendationEngineDefinition,
-    ];
-
-    functions.forEach((returnValue) =>
-      expect(typeof returnValue).toBe('function')
-    );
-
-    engineDefinitions.forEach((returnValue) =>
-      expect(typeof returnValue).toBe('object')
-    );
-
-    expect(controllers).toEqual({});
-    expect(rest).toEqual({}); // No other return values
-  });
-
-  test('creates a hook based on given controller', () => {
-    const {controllers} = defineCommerceEngine({
-      configuration: sampleConfig,
+    engineDefinition = defineCommerceEngine({
+      configuration: {
+        organizationId: 'some-org-id',
+        accessToken: 'some-token',
+        analytics: {
+          trackingId: 'xxx',
+        },
+        context: {
+          country: 'US',
+          language: 'en',
+          view: {url: 'https://example.com'},
+          currency: 'USD',
+        } as ContextOptions,
+      },
+      navigatorContextProvider: mockNavigatorContextProvider,
       controllers: {
-        productList: defineProductList(),
-        searchBox: defineStandaloneSearchBox({
-          options: {redirectionUrl: '/search'},
-        }),
+        controller1: defineMockCommerceController(),
+        controller2: defineMockCommerceController(),
       },
     });
-    expect(typeof controllers.useProductList).toEqual('function');
-    expect(typeof controllers.useSearchBox).toEqual('function');
+
+    StateProvider = engineDefinition.listingEngineDefinition.StateProvider;
   });
 
-  describe('context providers', () => {
-    const productItemTestId = 'product-item';
-    const numProducts = 10;
-    const engineDefinition = defineCommerceEngine({
-      configuration: sampleConfig,
-      controllers: {
-        productList: defineProductList(),
-        searchBox: defineStandaloneSearchBox({
-          options: {redirectionUrl: '/search'},
-        }),
-      },
+  afterEach(async () => {
+    await waitForAsyncUpdates();
+  });
+
+  describe('Engine Definition', () => {
+    it('should create engine definition with all required properties', () => {
+      expect(engineDefinition).toHaveProperty('useEngine');
+      expect(engineDefinition).toHaveProperty('controllers');
+      expect(engineDefinition).toHaveProperty('listingEngineDefinition');
+      expect(engineDefinition).toHaveProperty('searchEngineDefinition');
+      expect(engineDefinition).toHaveProperty('standaloneEngineDefinition');
+      expect(engineDefinition).toHaveProperty('recommendationEngineDefinition');
     });
-    const {
-      listingEngineDefinition: {
-        HydratedStateProvider,
-        StaticStateProvider,
-        StateProvider,
-        fetchStaticState,
-        hydrateStaticState,
-        setNavigatorContextProvider,
-      },
-      controllers,
-      useEngine,
-    } = engineDefinition;
 
-    function TestProductList() {
-      const generateMockProduct: () => Product = () => {
-        return {
-          additionalFields: {},
-          children: [],
-          clickUri: '',
-          ec_brand: '',
-          ec_category: [],
-          ec_color: '',
-          ec_description: '',
-          ec_gender: '',
-          ec_images: [],
-          ec_in_stock: false,
-          ec_item_group_id: '',
-          ec_listing: '',
-          ec_name: '',
-          ec_price: 0,
-          ec_product_id: randomUUID(),
-          ec_promo_price: 0,
-          ec_rating: 1,
-          ec_shortdesc: '',
-          ec_thumbnails: [],
-          permanentid: '',
-          position: 0,
-          totalNumberOfChildren: 0,
-        };
-      };
+    it('should create controller hooks for each controller in definition', () => {
+      const {
+        controllers: {useController1, useController2, ...rest},
+      } = engineDefinition;
 
-      const {state} = controllers.useProductList();
+      expect(typeof useController1).toBe('function');
+      expect(typeof useController2).toBe('function');
+      expect(rest).toEqual({});
+    });
 
-      state.products = Array.from({length: numProducts}, generateMockProduct);
-      return (
-        <ul>
-          {state.products.map((product) => (
-            <li key={product.ec_product_id} data-testid={productItemTestId}>
-              {product.ec_name}
-            </li>
-          ))}
-        </ul>
-      );
-    }
+    it('should provide different providers for each solution type', () => {
+      const definitions = [
+        'listingEngineDefinition',
+        'searchEngineDefinition',
+        'recommendationEngineDefinition',
+        'standaloneEngineDefinition',
+      ] as const;
 
-    async function checkRenderedProductList() {
-      const products = await screen.findAllByTestId(productItemTestId);
-      expect(errorSpy).not.toHaveBeenCalled();
-      expect(products).toHaveLength(numProducts);
-
-      products.forEach((product) => product.remove());
-    }
-
-    function checkRenderError(
-      renderFunction: CallableFunction,
-      expectedErrMsg: string
-    ) {
-      let err: Error | undefined;
-      // Prevent expected error from being thrown in console when running tests
-      const consoleErrorStub = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {});
-      try {
-        renderFunction();
-      } catch (e) {
-        err = e! as Error;
-      } finally {
-        consoleErrorStub.mockReset();
+      for (const def of definitions) {
+        expect(engineDefinition[def]).toHaveProperty('StaticStateProvider');
+        expect(engineDefinition[def]).toHaveProperty('HydratedStateProvider');
+        expect(engineDefinition[def]).toHaveProperty('StateProvider');
       }
+    });
+  });
 
-      expect(err?.message).toBe(expectedErrMsg);
-    }
+  describe('Hook Behavior', () => {
+    let useEngine: typeof engineDefinition.useEngine;
+    let controllers: typeof engineDefinition.controllers;
+    const staticProviderWrapper = ({children}: PropsWithChildren) => (
+      <StateProvider controllers={mockControllers}>{children}</StateProvider>
+    );
+    const hydratedProviderWrapper =
+      (engine: CommerceEngine) =>
+      ({children}: PropsWithChildren) => (
+        <StateProvider controllers={mockControllers} engine={engine}>
+          {children}
+        </StateProvider>
+      );
 
-    test('should throw error when controller hook is used without context', () => {
-      checkRenderError(
-        () => render(<TestProductList />),
+    beforeEach(() => {
+      useEngine = engineDefinition.useEngine;
+      controllers = engineDefinition.controllers;
+    });
+
+    describe('Error Handling', () => {
+      it('should throw error when useEngine is called outside provider', () => {
+        expect(() => {
+          renderHook(() => useEngine());
+        }).toThrow(MissingEngineProviderError);
+      });
+
+      it('should throw error when controller hooks are called outside provider', () => {
+        expect(() => {
+          renderHook(() => controllers.useController1());
+        }).toThrow(MissingEngineProviderError);
+      });
+    });
+
+    describe('Static State Behavior', () => {
+      it('useEngine should return undefined in static state', async () => {
+        const hookResult = renderHook(() => useEngine(), {
+          wrapper: staticProviderWrapper,
+        });
+
+        expect(hookResult.result.current).toBeUndefined();
+      });
+
+      it('controller hooks should have state but no methods in static state', async () => {
+        const hookResult = renderHook(() => controllers.useController1(), {
+          wrapper: staticProviderWrapper,
+        });
+
+        expect(hookResult.result.current).toHaveProperty('state');
+        expect(hookResult.result.current).toHaveProperty('methods', undefined);
+      });
+    });
+
+    describe('Hydrated State Behavior', () => {
+      it('useEngine should return engine instance in hydrated state', async () => {
+        const hookResult = renderHook(() => useEngine(), {
+          wrapper: hydratedProviderWrapper(createMockCommerceEngine()),
+        });
+
+        expect(hookResult.result.current).toBeDefined();
+        expect(hookResult.result.current).toBeDefined();
+      });
+
+      it('controller hooks should have state and methods in hydrated state', async () => {
+        const hookResult = renderHook(() => controllers.useController1(), {
+          wrapper: hydratedProviderWrapper(createMockCommerceEngine()),
+        });
+
+        expect(hookResult.result.current).toHaveProperty('state');
+        expect(hookResult.result.current).toHaveProperty('methods');
+      });
+    });
+  });
+
+  describe('Component Rendering', () => {
+    it('should throw error when component uses hooks without provider context', () => {
+      const TestComponent = createTestComponent('test-component');
+      expect(
+        () => render(<TestComponent />),
         MissingEngineProviderError.message
       );
     });
 
-    test('should render with StaticStateProvider', async () => {
-      setNavigatorContextProvider(mockedNavigatorContextProvider);
-      const staticState = await fetchStaticState();
-      render(
-        <StaticStateProvider controllers={staticState.controllers}>
-          <TestProductList />
-        </StaticStateProvider>
-      );
+    it('should render components with static state', async () => {
+      const {ProductListComponent} = createProductListComponent(5);
 
-      await checkRenderedProductList();
+      renderWithProvider(<ProductListComponent />, {provider: StateProvider});
+
+      expect(screen.getByTestId('product-list')).toBeDefined();
+      expect(screen.getAllByTestId('product-item')).toHaveLength(5);
     });
 
-    test('should hydrate products with HydratedStateProvider', async () => {
-      setNavigatorContextProvider(mockedNavigatorContextProvider);
-      const staticState = await fetchStaticState();
-      const {engine, controllers} = await hydrateStaticState(staticState);
+    it('should render components with hydrated state', async () => {
+      const {ProductListComponent} = createProductListComponent(5);
 
-      render(
-        <HydratedStateProvider engine={engine} controllers={controllers}>
-          <TestProductList />
-        </HydratedStateProvider>
-      );
-
-      await checkRenderedProductList();
-    });
-
-    test('should render with StateProvider using static state', async () => {
-      setNavigatorContextProvider(mockedNavigatorContextProvider);
-      const staticState = await fetchStaticState();
-      render(
-        <StateProvider controllers={staticState.controllers}>
-          <TestProductList />
-        </StateProvider>
-      );
-
-      await checkRenderedProductList();
-    });
-
-    test('should render with StateProvider using hydrated state', async () => {
-      setNavigatorContextProvider(mockedNavigatorContextProvider);
-      const staticState = await fetchStaticState();
-      const {engine, controllers} = await hydrateStaticState(staticState);
-
-      render(
-        <StateProvider engine={engine} controllers={controllers}>
-          <TestProductList />
-        </StateProvider>
-      );
-
-      await checkRenderedProductList();
-    });
-
-    describe('hooks', () => {
-      const {listingEngineDefinition} = engineDefinition;
-      let staticState: InferStaticState<typeof listingEngineDefinition>;
-      let hydratedState: InferHydratedState<typeof listingEngineDefinition>;
-
-      beforeEach(async () => {
-        setNavigatorContextProvider(mockedNavigatorContextProvider);
-        staticState = await fetchStaticState();
-        hydratedState = await hydrateStaticState(staticState);
+      renderWithProvider(<ProductListComponent />, {
+        provider: StateProvider,
+        engine: createMockCommerceEngine(),
       });
 
-      function staticStateProviderWrapper({children}: PropsWithChildren) {
-        return (
-          <StaticStateProvider controllers={staticState.controllers}>
-            {children}
-          </StaticStateProvider>
-        );
-      }
-
-      function hydratedStateProviderWrapper({children}: PropsWithChildren) {
-        return (
-          <HydratedStateProvider
-            controllers={hydratedState.controllers}
-            engine={hydratedState.engine}
-          >
-            {children}
-          </HydratedStateProvider>
-        );
-      }
-
-      function stateProviderWrapperWithStaticState({
-        children,
-      }: PropsWithChildren) {
-        return (
-          <StateProvider controllers={staticState.controllers}>
-            {children}
-          </StateProvider>
-        );
-      }
-
-      function stateProviderWrapperWithHydratedState({
-        children,
-      }: PropsWithChildren) {
-        return (
-          <StateProvider
-            engine={hydratedState.engine}
-            controllers={hydratedState.controllers}
-          >
-            {children}
-          </StateProvider>
-        );
-      }
-
-      describe('useEngine hook', () => {
-        test('should throw error with no context', async () => {
-          checkRenderError(
-            () => renderHook(() => useEngine()),
-            MissingEngineProviderError.message
-          );
-        });
-
-        test('should not return engine with static state provider', async () => {
-          const {result} = renderHook(() => useEngine(), {
-            wrapper: staticStateProviderWrapper,
-          });
-          expect(result.current).toBeUndefined();
-        });
-
-        test('should return engine with hydrated state provider', async () => {
-          const {result} = renderHook(() => useEngine(), {
-            wrapper: hydratedStateProviderWrapper,
-          });
-          expect(result.current).toStrictEqual(hydratedState.engine);
-        });
-
-        test('should not return engine with StateProvider using static state', async () => {
-          const {result} = renderHook(() => useEngine(), {
-            wrapper: stateProviderWrapperWithStaticState,
-          });
-          expect(result.current).toBeUndefined();
-        });
-
-        test('should return engine with StateProvider using hydrated state', async () => {
-          const {result} = renderHook(() => useEngine(), {
-            wrapper: stateProviderWrapperWithHydratedState,
-          });
-          expect(result.current).toStrictEqual(hydratedState.engine);
-        });
-      });
-
-      describe('controller hooks', () => {
-        const {useSearchBox} = engineDefinition.controllers;
-        describe('with StaticStateProvider', () => {
-          test('should define state but not controller', () => {
-            const {result} = renderHook(() => useSearchBox(), {
-              wrapper: staticStateProviderWrapper,
-            });
-            expect(result.current.state).toBeDefined();
-            expect(result.current?.methods).toBeUndefined();
-          });
-        });
-
-        describe('with HydratedStateProvider', () => {
-          test('should define both state and controller', () => {
-            const {result} = renderHook(() => useSearchBox(), {
-              wrapper: hydratedStateProviderWrapper,
-            });
-            expect(result.current.state).toBeDefined();
-            expect(result.current?.methods).toBeDefined();
-          });
-
-          test('should update state when method is called', () => {
-            const {result} = renderHook(() => useSearchBox(), {
-              wrapper: hydratedStateProviderWrapper,
-            });
-            const initialState = result.current.state;
-            act(() => {
-              result.current.methods?.updateText('foo');
-            });
-
-            expect(initialState).not.toStrictEqual(result.current.state);
-            expect(result.current.state.value).toBe('foo');
-          });
-        });
-
-        describe('with StateProvider (static state)', () => {
-          test('should define state but not controller', () => {
-            const {result} = renderHook(() => useSearchBox(), {
-              wrapper: stateProviderWrapperWithStaticState,
-            });
-            expect(result.current.state).toBeDefined();
-            expect(result.current?.methods).toBeUndefined();
-          });
-        });
-
-        describe('with StateProvider (hydrated state)', () => {
-          test('should define both state and controller', () => {
-            const {result} = renderHook(() => useSearchBox(), {
-              wrapper: stateProviderWrapperWithHydratedState,
-            });
-            expect(result.current.state).toBeDefined();
-            expect(result.current?.methods).toBeDefined();
-          });
-
-          test('should update state when method is called', () => {
-            const {result} = renderHook(() => useSearchBox(), {
-              wrapper: stateProviderWrapperWithHydratedState,
-            });
-            const initialState = result.current.state;
-            act(() => {
-              result.current.methods?.updateText('foo');
-            });
-
-            expect(initialState).not.toStrictEqual(result.current.state);
-            expect(result.current.state.value).toBe('foo');
-          });
-        });
-      });
+      expect(screen.getByTestId('product-list')).toBeDefined();
+      expect(screen.getAllByTestId('product-item')).toHaveLength(5);
     });
   });
 });

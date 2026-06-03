@@ -1,13 +1,30 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {
-  playExecuteFirstRequest,
+  executeFirstRequestHook,
   wrapInCommerceInterface,
 } from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
+import '@/src/components/commerce/atomic-commerce-layout/atomic-commerce-layout.js';
+import '@/src/components/commerce/atomic-commerce-no-products/atomic-commerce-no-products.js';
+import '@/src/components/commerce/atomic-commerce-search-box/atomic-commerce-search-box.js';
+import '@/src/components/common/atomic-layout-section/atomic-layout-section.js';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
 
-const {play} = wrapInCommerceInterface({skipFirstRequest: true});
+const commerceApiHarness = new MockCommerceApi();
+
+commerceApiHarness.searchEndpoint.mock((response) => ({
+  ...response,
+  products: [],
+  pagination: {...response.pagination, totalEntries: 0, totalPages: 0},
+}));
+
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-commerce-no-products',
+  {excludeCategories: ['methods']}
+);
+
 const {decorator, play: preprocessedPlayed} = wrapInCommerceInterface({
   skipFirstRequest: true,
   engineConfig: {
@@ -22,12 +39,25 @@ const {decorator, play: preprocessedPlayed} = wrapInCommerceInterface({
 
 const meta: Meta = {
   component: 'atomic-commerce-no-products',
-  title: 'Commerce/atomic-commerce-no-products',
+  title: 'Commerce/No Products',
   id: 'atomic-commerce-no-products',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
+  parameters: {
+    ...parameters,
+    msw: {handlers: [...commerceApiHarness.handlers]},
+    chromatic: {disableSnapshot: true},
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
   play: preprocessedPlayed,
+  beforeEach: () => {
+    commerceApiHarness.clearAll();
+  },
 };
 
 export default meta;
@@ -37,13 +67,11 @@ export const Default: Story = {
     (story) =>
       html` <atomic-commerce-layout>
         <atomic-layout-section section="search">
-          <atomic-commerce-search-box
-            role="searchbox"
-          ></atomic-commerce-search-box>
+          <atomic-commerce-search-box></atomic-commerce-search-box>
         </atomic-layout-section>
 
         <atomic-layout-section section="main">
-          <atomic-layout-section section="products">
+          <atomic-layout-section section="products" id="code-root">
             ${story()}
           </atomic-layout-section>
         </atomic-layout-section>
@@ -51,30 +79,6 @@ export const Default: Story = {
   ],
   play: async (context) => {
     await preprocessedPlayed(context);
-    await playExecuteFirstRequest(context);
-  },
-};
-
-export const WithResults: Story = {
-  name: 'With Results',
-  tags: ['test'],
-  decorators: [
-    (story) =>
-      html` <atomic-commerce-layout>
-        <atomic-layout-section section="search">
-          <atomic-commerce-search-box
-            role="searchbox"
-          ></atomic-commerce-search-box>
-        </atomic-layout-section>
-
-        <atomic-layout-section section="main">
-          <atomic-layout-section section="products">
-            ${story()}
-          </atomic-layout-section>
-        </atomic-layout-section>
-      </atomic-commerce-layout>`,
-  ],
-  play: async (context) => {
-    await play(context);
+    await executeFirstRequestHook(context);
   },
 };

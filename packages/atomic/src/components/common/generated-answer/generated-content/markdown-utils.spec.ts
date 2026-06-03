@@ -89,6 +89,48 @@ describe('markdownUtils', () => {
       );
     });
 
+    it('should transform links with the answer-link part', () => {
+      const text = '[example](https://example.com)';
+
+      const html = transformMarkdownToHtml(text);
+
+      expect(removeLineBreaks(html)).toBe(
+        removeLineBreaks(
+          unindentHtml(`
+            <p part="answer-paragraph">
+              <atomic-generated-answer-inline-link href="https://example.com" exportparts="answer-link,answer-link-text,answer-link-icon">example</atomic-generated-answer-inline-link>
+            </p>
+          `)
+        )
+      );
+    });
+
+    it('should render link text in a span when href is empty', () => {
+      const text = 'text before [example]() text after';
+
+      const html = transformMarkdownToHtml(text);
+
+      expect(removeLineBreaks(html)).toBe(
+        `<p part="answer-paragraph">text before <span>example</span> text after</p>`
+      );
+    });
+
+    it('should transform bold text inside a link', () => {
+      const text = '[**bold**](https://example.com)';
+
+      const html = transformMarkdownToHtml(text);
+
+      expect(removeLineBreaks(html)).toBe(
+        removeLineBreaks(
+          unindentHtml(`
+            <p part="answer-paragraph">
+              <atomic-generated-answer-inline-link href="https://example.com" exportparts="answer-link,answer-link-text,answer-link-icon"><strong part="answer-strong">bold</strong></atomic-generated-answer-inline-link>
+            </p>
+          `)
+        )
+      );
+    });
+
     it('should escape HTML in inline code', () => {
       const text = '`<html>`';
 

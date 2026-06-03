@@ -2,7 +2,7 @@ import type {LitElement, ReactiveController, ReactiveControllerHost} from 'lit';
 import type {
   ItemDisplayDensity,
   ItemDisplayImageSize,
-} from '@/src/components/common/layout/display-options';
+} from '@/src/components/common/layout/item-layout-utils';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 
 const itemDisplayConfigContextEventName = 'atomic/resolveResultDisplayConfig';
@@ -33,10 +33,6 @@ export class ItemDisplayConfigContextController implements ReactiveController {
     this._resolveDisplayConfig();
   }
 
-  hostUpdated(): void {
-    this._resolveDisplayConfig();
-  }
-
   private _resolveDisplayConfig(): void {
     const event = buildCustomEvent(
       itemDisplayConfigContextEventName,
@@ -52,7 +48,3 @@ export class ItemDisplayConfigContextController implements ReactiveController {
     }
   }
 }
-
-type ItemDisplayConfigContextEventHandler = (config: DisplayConfig) => void;
-export type ItemDisplayConfigContextEvent =
-  CustomEvent<ItemDisplayConfigContextEventHandler>;

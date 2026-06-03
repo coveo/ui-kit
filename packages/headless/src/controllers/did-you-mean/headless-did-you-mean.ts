@@ -17,12 +17,12 @@ import {
 } from '../core/did-you-mean/headless-core-did-you-mean.js';
 
 export type {
+  DidYouMean,
+  DidYouMeanOptions,
+  DidYouMeanProps,
+  DidYouMeanState,
   QueryCorrection,
   WordCorrection,
-  DidYouMean,
-  DidYouMeanState,
-  DidYouMeanProps,
-  DidYouMeanOptions,
 };
 
 /**

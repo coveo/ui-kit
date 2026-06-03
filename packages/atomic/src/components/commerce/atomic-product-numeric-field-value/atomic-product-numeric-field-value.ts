@@ -1,12 +1,12 @@
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
+import {createProductContextController} from '@/src/components/commerce/product-template-component-utils/context/product-context-controller.js';
 import {bindingGuard} from '@/src/decorators/binding-guard.js';
 import {bindings} from '@/src/decorators/bindings.js';
-import {createProductContextController} from '@/src/decorators/commerce/product-template-decorators.js';
 import {errorGuard} from '@/src/decorators/error-guard.js';
 import type {InitializableComponent} from '@/src/decorators/types.js';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {LightDomMixin} from '@/src/mixins/light-dom.js';
 import {
   defaultNumberFormatter,
   type NumberFormatter,
@@ -18,18 +18,13 @@ import {parseValue} from '../product-template-component-utils/product-utils.js';
  * The `atomic-product-numeric-field-value` component renders the value of a number product field.
  *
  * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
- * @alpha
  */
 @customElement('atomic-product-numeric-field-value')
 @bindings()
-@withTailwindStyles
 export class AtomicProductNumericFieldValue
-  extends LitElement
+  extends LightDomMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
-  createRenderRoot() {
-    return this;
-  }
   @state()
   bindings!: CommerceBindings;
 

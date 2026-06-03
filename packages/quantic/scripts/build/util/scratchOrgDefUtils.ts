@@ -7,8 +7,8 @@ import * as path from 'path';
  * @returns {string} - The resolved path to the scratch org definition file.
  * @throws {Error} - If the argument is missing or empty, or if the file doesn't exist.
  */
-export function getScratchOrgDefPath(args) {
-  const scratchOrgDefArg = args.find((arg) =>
+export function getScratchOrgDefPath(args: string[]): string {
+  const scratchOrgDefArg = args.find((arg: string) =>
     arg.startsWith('--scratch-org-def-path=')
   );
 
@@ -43,7 +43,7 @@ export function getScratchOrgDefPath(args) {
  * @returns {string} - The orgName value.
  * @throws If the file doesn't exist or is invalid.
  */
-export function getOrgNameFromScratchDefFile(filePath) {
+export function getOrgNameFromScratchDefFile(filePath: string): string {
   try {
     const fileContent = fs.readFileSync(filePath, 'utf8');
     const jsonData = JSON.parse(fileContent);
@@ -52,7 +52,7 @@ export function getOrgNameFromScratchDefFile(filePath) {
     }
     return jsonData.orgName;
   } catch (error) {
-    throw new Error(`Failed to read orgName: ${error.message}`);
+    throw new Error(`Failed to read orgName: ${(error as Error).message}`);
   }
 }
 

@@ -35,16 +35,16 @@ import {
 } from '../../../core/facets/category-facet/headless-core-category-facet.js';
 
 export type {
-  CategoryFacetValueCommon,
-  CategoryFacetValue,
-  CategoryFacetOptions,
-  CategoryFacetSearchOptions,
-  CategoryFacetProps,
   CategoryFacet,
-  CategoryFacetState,
+  CategoryFacetOptions,
+  CategoryFacetProps,
   CategoryFacetSearch,
-  CategoryFacetSearchState,
+  CategoryFacetSearchOptions,
   CategoryFacetSearchResult,
+  CategoryFacetSearchState,
+  CategoryFacetState,
+  CategoryFacetValue,
+  CategoryFacetValueCommon,
   CoreCategoryFacet,
   CoreCategoryFacetState,
 };

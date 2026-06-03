@@ -1,0 +1,29 @@
+{
+  "name": "@coveo/atomic-a11y",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Accessibility utilities and tools for Coveo Atomic components",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "a11y:merge-shards": "pnpm build && node scripts/merge-shards-cli.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "a11y:validate": "node scripts/validate-openacr.mjs",
+    "a11y:vpat": "pnpm build && node scripts/json-to-openacr.mjs && node scripts/validate-openacr.mjs && node scripts/generate-vpat.mjs"
+  },
+  "dependencies": {
+    "handlebars": "4.7.9",
+    "yaml": "catalog:"
+  },
+  "devDependencies": {
+    "ajv": "8.20.0",
+    "axe-core": "4.11.4",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

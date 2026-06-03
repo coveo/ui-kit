@@ -4,12 +4,14 @@ import {
   type StandaloneSearchBox,
   type StandaloneSearchBoxProps,
 } from '../../../../controllers/standalone-search-box/headless-standalone-search-box.js';
-import type {ControllerDefinitionWithoutProps} from '../../../common/types/controllers.js';
+import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/standalone-search-box/headless-standalone-search-box.js';
 
-export interface StandaloneSearchBoxDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, StandaloneSearchBox> {}
+export interface StandaloneSearchBoxDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  StandaloneSearchBox
+> {}
 
 /**
  * Defines a `StandaloneSearchBox` controller instance.

@@ -1,23 +1,40 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/common/atomic-component-error/atomic-component-error.js';
 
+const searchApiHarness = new MockSearchApi();
 const {decorator, play} = wrapInSearchInterface();
+const {events, args, argTypes} = getStorybookHelpers('atomic-component-error', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-component-error',
-  title: 'Atomic/Common',
+  title: 'Common/Component Error',
   id: 'atomic-component-error',
 
   render: (args) => {
     const element = document.createElement('atomic-component-error');
-    element.error = args['attributes-error'];
-    element.element = args['attributes-element'];
+    element.error = args.error;
+    element.element = args.element;
     return element;
   },
   decorators: [decorator],
-  parameters,
+  parameters: {
+    ...parameters,
+    msw: {handlers: [...searchApiHarness.handlers]},
+    chromatic: {disableSnapshot: true},
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
   play,
 };
 
@@ -26,8 +43,8 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-component-error',
   args: {
-    'attributes-error': new Error('This is an error'),
-    'attributes-element': document.createElement('some-element'),
+    error: new Error('This is an error'),
+    element: document.createElement('some-element'),
   },
   decorators: [(story) => html` ${story()}`],
   play: async (context) => {

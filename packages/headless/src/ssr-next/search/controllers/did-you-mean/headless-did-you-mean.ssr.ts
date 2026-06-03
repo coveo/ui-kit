@@ -3,12 +3,14 @@ import {
   buildDidYouMean,
   type DidYouMean,
 } from '../../../../controllers/did-you-mean/headless-did-you-mean.js';
-import type {ControllerDefinitionWithoutProps} from '../../../common/types/controllers.js';
+import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/did-you-mean/headless-did-you-mean.js';
 
-export interface DidYouMeanDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, DidYouMean> {}
+export interface DidYouMeanDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  DidYouMean
+> {}
 
 /**
  * Defines a `DidYouMean` controller instance.

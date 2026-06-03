@@ -4,12 +4,14 @@ import {
   type Facet,
   type FacetProps,
 } from '../../../../../controllers/facets/facet/headless-facet.js';
-import type {ControllerDefinitionWithoutProps} from '../../../../common/types/controllers.js';
+import type {ControllerDefinitionWithoutProps} from '../../../types/controller-definition.js';
 
 export * from '../../../../../controllers/facets/facet/headless-facet.js';
 
-export interface FacetDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, Facet> {}
+export interface FacetDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  Facet
+> {}
 
 /**
  * Defines a `Facet` controller instance.

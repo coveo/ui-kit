@@ -1,4 +1,5 @@
 import {clearAllCoreFacets} from '../../../features/commerce/facets/core-facet/core-facet-actions.js';
+import {commerceCategoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/commerce/facets/facet-search-set/category/commerce-category-facet-search-set-slice.js';
 import {
   executeCommerceFieldSuggest,
   getFacetIdWithCommerceFieldSuggestionNamespace,
@@ -8,7 +9,6 @@ import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../fe
 import {updateQuery} from '../../../features/commerce/query/query-actions.js';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice.js';
 import {selectCategoryFacetSearchResult} from '../../../features/facets/facet-search-set/category/category-facet-search-actions.js';
-import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice.js';
 import type {CategoryFacetSearchState} from '../../../features/facets/facet-search-set/category/category-facet-search-set-state.js';
 import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
 import type {CommerceAppState} from '../../../state/commerce-app-state.js';

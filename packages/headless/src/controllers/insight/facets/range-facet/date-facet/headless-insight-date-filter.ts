@@ -28,12 +28,12 @@ import {
 } from '../../../../core/facets/range-facet/date-facet/headless-core-date-filter.js';
 
 export type {
-  DateFilterOptions,
-  DateFilterInitialState,
-  DateFilterRange,
-  DateFilterProps,
-  DateFilterState,
   DateFilter,
+  DateFilterInitialState,
+  DateFilterOptions,
+  DateFilterProps,
+  DateFilterRange,
+  DateFilterState,
 };
 
 /**

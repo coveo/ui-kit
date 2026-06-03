@@ -1,9 +1,10 @@
+import '@/src/components/common/atomic-icon/atomic-icon';
 import {HighlightUtils} from '@coveo/headless';
 import type {i18n} from 'i18next';
 import {html, render} from 'lit';
 import {when} from 'lit/directives/when.js';
 import {encodeForDomAttribute} from '../../../utils/string-utils';
-import type {SearchBoxSuggestionElement} from './suggestions-common';
+import type {SearchBoxSuggestionElement} from './suggestions-types';
 
 export const getPartialRecentQueryElement = (
   value: string,
@@ -51,7 +52,7 @@ export const renderRecentQuery = ({
 
   const template = html`<div
     part="recent-query-content"
-    class="flex items-center text-left break-all"
+    class="pointer-events-none flex items-center text-left break-all"
   >
     <atomic-icon
       part="recent-query-icon"
@@ -93,7 +94,7 @@ export const renderRecentQuery = ({
 export const renderRecentQueryClear = ({i18n}: {i18n: i18n}): HTMLElement => {
   const template = html` <div
     part="recent-query-title-content"
-    class="flex w-full justify-between"
+    class="pointer-events-none flex w-full justify-between"
   >
     <span class="font-bold" part="recent-query-title">
       ${i18n.t('recent-searches')}

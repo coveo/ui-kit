@@ -1,34 +1,17 @@
 {
   "name": "@coveo/ci",
-  "private": true,
-  "authors": "Coveo",
   "version": "1.0.0",
+  "private": true,
+  "author": "Coveo",
   "type": "module",
-  "dependencies": {
-    "@coveo/semantic-monorepo-tools": "2.6.11",
-    "@npmcli/arborist": "9.1.2",
-    "conventional-changelog-conventionalcommits": "8.0.0",
-    "dependency-graph": "1.0.0",
-    "octokit": "4.1.4",
-    "semver": "7.7.2",
-    "ts-dedent": "2.2.0"
-  },
-  "devDependencies": {
-    "@types/npmcli__arborist": "6.3.1",
-    "@types/conventional-changelog-writer": "4.0.10",
-    "typescript": "5.8.3"
-  },
   "scripts": {
     "add-generated-files": "node ./add-generated-files.mjs",
-    "promote-npm-prod": "node ./promote-npm-tag-to-latest.mjs",
-    "git-lock": "node ./git-lock.mjs",
-    "bump": "node ./bump-package.mjs",
-    "bump:root": "node ./bump-root.mjs",
-    "npm-publish": "node ./npm-publish-package.mjs",
-    "git-publish-all": "node ./git-publish-all.mjs",
     "if-not-cdn": "node ./if-not-cdn.mjs",
     "if-cdn": "node ./if-cdn.mjs",
-    "reify": "node ./reify.mjs",
-    "test": "tsc"
+    "if-ci": "node ./if-ci.mjs"
+  },
+  "dependencies": {
+    "@coveo/semantic-monorepo-tools": "2.7.1",
+    "octokit": "5.0.5"
   }
 }

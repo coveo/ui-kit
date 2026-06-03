@@ -2,9 +2,41 @@ import {
   buildCommerceEngine,
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless/commerce';
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
+import '@/src/components/commerce/atomic-commerce-layout/atomic-commerce-layout.js';
+import '@/src/components/commerce/atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface.js';
+import '@/src/components/commerce/atomic-commerce-recommendation-list/atomic-commerce-recommendation-list.js';
+import '@/src/components/common/atomic-layout-section/atomic-layout-section.js';
+import '@/src/components/commerce/atomic-product-children/atomic-product-children.js';
+import '@/src/components/commerce/atomic-product-field-condition/atomic-product-field-condition.js';
+import '@/src/components/commerce/atomic-product-image/atomic-product-image.js';
+import '@/src/components/commerce/atomic-product-link/atomic-product-link.js';
+import '@/src/components/commerce/atomic-product-multi-value-text/atomic-product-multi-value-text.js';
+import '@/src/components/commerce/atomic-product-price/atomic-product-price.js';
+import '@/src/components/commerce/atomic-product-rating/atomic-product-rating.js';
+import '@/src/components/commerce/atomic-product-section-children/atomic-product-section-children.js';
+import '@/src/components/commerce/atomic-product-section-emphasized/atomic-product-section-emphasized.js';
+import '@/src/components/commerce/atomic-product-section-metadata/atomic-product-section-metadata.js';
+import '@/src/components/commerce/atomic-product-section-name/atomic-product-section-name.js';
+import '@/src/components/commerce/atomic-product-section-visual/atomic-product-section-visual.js';
+import '@/src/components/commerce/atomic-product-template/atomic-product-template.js';
+import '@/src/components/commerce/atomic-product-text/atomic-product-text.js';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
+import {richResponse as richRecommendationResponse} from '@/storybook-utils/api/commerce/recommendation-response';
+
+const commerceApiHarness = new MockCommerceApi();
+
+commerceApiHarness.recommendationEndpoint.mock(
+  () => richRecommendationResponse
+);
+
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-commerce-recommendation-interface',
+  {excludeCategories: ['methods']}
+);
 
 async function initializeCommerceRecommendationInterface(
   canvasElement: HTMLElement
@@ -19,25 +51,68 @@ async function initializeCommerceRecommendationInterface(
 }
 const meta: Meta = {
   component: 'atomic-commerce-recommendation-interface',
-  title: 'Commerce/atomic-commerce-recommendation-interface',
+  title: 'Commerce/Interface (Recommendation)',
   id: 'atomic-commerce-recommendation-interface',
-  render: renderComponent,
-  parameters,
+  render: (args) => template(args),
+  decorators: [(story) => html`<div id="code-root">${story()}</div>`],
+  parameters: {
+    ...parameters,
+    msw: {handlers: [...commerceApiHarness.handlers]},
+    chromatic: {disableSnapshot: true},
+    actions: {
+      handles: events,
+    },
+  },
+  args: {
+    ...args,
+    engine: undefined,
+    i18n: undefined,
+    urlManager: undefined,
+  },
+  argTypes: {
+    ...argTypes,
+    engine: {
+      ...argTypes,
+      control: {
+        disable: true,
+      },
+      table: {
+        defaultValue: {summary: undefined},
+      },
+    },
+    urlManager: {
+      ...argTypes.urlManager,
+      control: {
+        disable: true,
+      },
+      table: {
+        defaultValue: {summary: undefined},
+      },
+    },
+    i18n: {
+      ...argTypes.i18n,
+      control: {
+        disable: true,
+      },
+      table: {
+        defaultValue: {summary: undefined},
+      },
+    },
+  },
   play: async (context) => {
     await initializeCommerceRecommendationInterface(context.canvasElement);
   },
-  argTypes: {
-    'attributes-language': {
-      name: 'language',
-      type: 'string',
-    },
+  beforeEach: () => {
+    commerceApiHarness.clearAll();
   },
 };
 
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-commerce-recommendation-interface',
+  args: {
+    'default-slot': `<span>Interface content</span>`,
+  },
 };
 
 const recommendationList = `<style>
@@ -47,6 +122,7 @@ const recommendationList = `<style>
   @media only screen and (max-width: 1024px) {
     atomic-commerce-recommendation-list {
       --atomic-recs-number-of-columns: 1;
+      --atomic-recs-number-of-rows: 3;
     }
   }
 </style>
@@ -88,9 +164,9 @@ const recommendationList = `<style>
 </atomic-commerce-layout>`;
 
 export const WithRecommendationList: Story = {
-  tags: ['commerce', 'test'],
+  name: 'With a recommendation list',
   args: {
-    'slots-default': recommendationList,
+    'default-slot': recommendationList,
   },
   play: async ({canvasElement}) => {
     const recsInterface = canvasElement.querySelector(

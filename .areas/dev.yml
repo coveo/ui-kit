@@ -1,0 +1,11 @@
+description: Development environment configuration files
+file_patterns:
+  - .editorconfig
+  - .vscode/**
+  - .husky/**
+  - .dockerignore
+  - .devcontainer/**
+
+reviewers:
+  dxui:
+    minimum_approvals: 1

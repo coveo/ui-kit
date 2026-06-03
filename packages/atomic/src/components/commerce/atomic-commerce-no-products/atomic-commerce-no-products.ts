@@ -23,8 +23,6 @@ import {getSummary} from '../../common/no-items/utils.js';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface.js';
 
 /**
- * @alpha
- *
  * The `atomic-commerce-no-products` component displays search tips when there are no products. Any additional content slotted inside of its element will be displayed as well.
  *
  * @part no-results - The text indicating that no products were found for the search.
@@ -86,8 +84,7 @@ export class AtomicCommerceNoProducts
       },
       () =>
         renderNoItemsContainer()(html`
-          ${renderMagnifyingGlass()} 
-          ${this.renderNoItems()}
+          ${renderMagnifyingGlass()} ${this.renderNoItems()}
           ${this.renderSearchTips()}
         `)
     )}`;

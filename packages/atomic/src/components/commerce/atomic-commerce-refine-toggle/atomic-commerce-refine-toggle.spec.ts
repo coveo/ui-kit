@@ -7,14 +7,17 @@ import {
 } from '@coveo/headless/commerce';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
+import {userEvent} from 'vitest/browser';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
+import {buildFakeBreadcrumbManager} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/breadcrumb-manager-subcontroller';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
+import {buildFakeFacetGenerator} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/facet-generator-subcontroller';
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
+import {buildFakeSort} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/sort-subcontroller';
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
 import type {AtomicCommerceRefineToggle} from './atomic-commerce-refine-toggle';
-import './atomic-commerce-refine-toggle.js';
-import {userEvent} from '@vitest/browser/context';
+import './atomic-commerce-refine-toggle';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
@@ -34,10 +37,17 @@ describe('atomic-commerce-refine-toggle', () => {
   }: renderRefineToggleOptions = {}) => {
     mockedSummary = buildFakeSummary({state: summaryState});
 
+    const fakeSort = buildFakeSort();
+    const fakeFacetGenerator = buildFakeFacetGenerator({state: []});
+    const fakeBreadcrumbManager = buildFakeBreadcrumbManager();
+
     vi.mocked(buildProductListing).mockReturnValue(
       buildFakeProductListing({
         implementation: {
           summary: () => mockedSummary,
+          sort: () => fakeSort,
+          facetGenerator: () => fakeFacetGenerator,
+          breadcrumbManager: () => fakeBreadcrumbManager,
         },
       })
     );
@@ -45,6 +55,9 @@ describe('atomic-commerce-refine-toggle', () => {
       buildFakeSearch({
         implementation: {
           summary: () => mockedSummary as Summary<SearchSummaryState>,
+          sort: () => fakeSort,
+          facetGenerator: () => fakeFacetGenerator,
+          breadcrumbManager: () => fakeBreadcrumbManager,
         },
       })
     );

@@ -1,10 +1,5 @@
 @import '../quanticGeneratedAnswer.css';
 
-.generated-answer__header-actions {
-  align-items: center;
-  flex-wrap: wrap-reverse;
-}
-
 .generated-answer__answer {
   overflow: hidden;
   position: relative;
@@ -58,14 +53,6 @@
   clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%);
   opacity: 0.2;
   visibility: hidden;
-}
-
-.generated-answer__disclaimer {
-  min-height: var(--lwc-lineHeightButton,1.875rem);
-}
-
-.flex-one {
-  flex: 1;
 }
 
 @keyframes cursor-blink {

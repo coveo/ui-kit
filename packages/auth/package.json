@@ -1,55 +1,50 @@
 {
   "name": "@coveo/auth",
-  "version": "2.0.25",
+  "version": "2.1.9",
   "description": "Functions to help authenticate with the Coveo platform.",
+  "keywords": [
+    "authentication",
+    "coveo",
+    "saml"
+  ],
+  "homepage": "https://github.com/coveo/ui-kit/packages/auth#readme",
+  "bugs": {
+    "url": "https://github.com/coveo/ui-kit/issues"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
+    "directory": "packages/auth"
+  },
+  "files": [
+    "dist/"
+  ],
   "main": "./dist/auth.js",
   "module": "./dist/auth.esm.js",
   "browser": {
     "./dist/auth.esm.js": "./dist/auth.esm.js"
   },
   "types": "./dist/definitions/auth.d.ts",
-  "files": [
-    "dist/"
-  ],
-  "scripts": {
-    "dev": "concurrently \"npm run build:definitions -- -w\" \"npm run build:bundles -- dev\"",
-    "build": "npm run build:bundles && npm run build:definitions",
-    "test": "jest",
-    "test:watch": "jest --watch --colors --no-cache --silent=false",
-    "build:bundles": "node esbuild.mjs",
-    "build:definitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
-    "clean": "rimraf -rf dist/*",
-    "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
-    "release:phase1": "npm run-script -w=@coveo/ci bump",
-    "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod",
-    "e2e": "npm run e2e:saml",
-    "e2e:saml": "vite manual-e2e/saml/"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/coveo/ui-kit.git",
-    "directory": "packages/auth"
-  },
-  "keywords": [
-    "coveo",
-    "authentication",
-    "saml"
-  ],
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/coveo/ui-kit/issues"
-  },
-  "homepage": "https://github.com/coveo/ui-kit/packages/auth#readme",
-  "devDependencies": {
-    "jest": "29.7.0",
-    "rimraf": "6.0.1",
-    "ts-jest": "29.4.0",
-    "vite": "7.0.6"
-  },
-  "engines": {
-    "node": "^20.9.0 || ^22.11.0"
-  },
   "publishConfig": {
     "access": "public"
+  },
+  "scripts": {
+    "dev": "concurrently \"pnpm run build:definitions -- -w\" \"pnpm run build:bundles -- dev\"",
+    "build": "pnpm run build:bundles && pnpm run build:definitions",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "build:bundles": "node esbuild.mjs",
+    "build:definitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
+    "clean": "node ../../utils/ci/rm-rf.mjs dist/*",
+    "e2e": "pnpm run e2e:saml",
+    "e2e:saml": "vite manual-e2e/saml/"
+  },
+  "devDependencies": {
+    "vite": "catalog:",
+    "vitest": "catalog:"
+  },
+  "engines": {
+    "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
   }
 }

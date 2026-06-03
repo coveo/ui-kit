@@ -1,7 +1,19 @@
 import {buildInstantProducts} from '@coveo/headless/commerce';
-import {page} from '@vitest/browser/context';
 import {html} from 'lit';
-import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import {
+  beforeEach,
+  describe,
+  expect,
+  it,
+  type MockedObject,
+  type MockInstance,
+  vi,
+} from 'vitest';
+import {page} from 'vitest/browser';
+import type {
+  SearchBoxSuggestionElement,
+  SearchBoxSuggestions,
+} from '@/src/components/common/suggestions/suggestions-types';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {
@@ -9,17 +21,17 @@ import {
   renderInAtomicCommerceSearchBox,
 } from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-search-box-fixture';
 import {buildFakeInstantProducts} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/instant-products-controller';
-import type {
-  SearchBoxSuggestionElement,
-  SearchBoxSuggestions,
-} from '../../common/suggestions/suggestions-common';
+import {mockConsole} from '@/vitest-utils/testing-helpers/testing-utils/mock-console';
 import {AtomicCommerceSearchBoxInstantProducts} from './atomic-commerce-search-box-instant-products';
 import './atomic-commerce-search-box-instant-products';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
-describe('AtomicCommerceSearchBoxInstantProducts', () => {
+describe('atomic-commerce-search-box-instant-products', () => {
+  let mockedConsole: MockedObject<Console>;
+
   beforeEach(() => {
+    mockedConsole = mockConsole();
     vi.mocked(buildInstantProducts).mockReturnValue(buildFakeInstantProducts());
   });
   const renderElements = async (bindings: Record<string, unknown> = {}) => {
@@ -37,18 +49,16 @@ describe('AtomicCommerceSearchBoxInstantProducts', () => {
   };
 
   describe('when outside of a search box', () => {
-    let consoleErrorSpy: MockInstance;
     let element: AtomicCommerceSearchBoxInstantProducts;
 
     beforeEach(async () => {
-      consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       element = await fixture<AtomicCommerceSearchBoxInstantProducts>(
         html`<atomic-commerce-search-box-instant-products></atomic-commerce-search-box-instant-products>`
       );
     });
 
     it('should log an error in the console', async () => {
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
+      expect(mockedConsole.error).toHaveBeenCalledWith(
         new Error(
           'The "atomic-commerce-search-box-instant-products" component was not handled, as it is not a child of the following elements: atomic-commerce-search-box'
         ),
@@ -108,10 +118,6 @@ describe('AtomicCommerceSearchBoxInstantProducts', () => {
   });
 
   describe('#initialize', () => {
-    beforeEach(() => {
-      vi.spyOn(console, 'warn').mockImplementation(() => {});
-    });
-
     it('should create an instant products controller', async () => {
       const {element} = await renderElements();
 
@@ -149,14 +155,15 @@ describe('AtomicCommerceSearchBoxInstantProducts', () => {
 
     describe('when returning the onSuggestedQueryChange function', () => {
       it('should update the query in the instant products controller', async () => {
+        const fakeController = buildFakeInstantProducts();
+        vi.mocked(buildInstantProducts).mockReturnValue(fakeController);
+
         const {element} = await renderElements();
         const object = element.initialize();
 
         const newQuery = 'new query';
         await object.onSuggestedQueryChange?.(newQuery);
-        expect(buildFakeInstantProducts().updateQuery).toHaveBeenCalledWith(
-          newQuery
-        );
+        expect(fakeController.updateQuery).toHaveBeenCalledWith(newQuery);
       });
 
       it('should return a promise function that resolves to undefined', async () => {
@@ -215,7 +222,7 @@ describe('AtomicCommerceSearchBoxInstantProducts', () => {
           expect(items[0]).toEqual(
             expect.objectContaining({
               part: 'instant-results-item',
-              ariaLabel: ', instant result',
+              ariaLabel: 'Product 1, instant product',
               key: 'instant-result-12345',
             })
           );
@@ -225,7 +232,7 @@ describe('AtomicCommerceSearchBoxInstantProducts', () => {
           expect(items[items.length - 1]).toEqual(
             expect.objectContaining({
               part: 'instant-results-show-all',
-              ariaLabel: 'See all results',
+              ariaLabel: 'See all products',
               key: 'instant-results-show-all-button',
             })
           );
@@ -273,7 +280,7 @@ describe('AtomicCommerceSearchBoxInstantProducts', () => {
               (
                 items[items.length - 1].content as HTMLElement
               ).textContent?.trim()
-            ).toBe('See all results');
+            ).toBe('See all products');
           });
         });
       });

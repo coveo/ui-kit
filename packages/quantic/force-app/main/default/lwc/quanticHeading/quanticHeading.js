@@ -8,7 +8,7 @@ import {LightningElement, api} from 'lwc';
  */
 export default class QuanticHeading extends LightningElement {
   /**
-   * The label dsiplayed inside the heading.
+   * The label displayed inside the heading.
    * @api
    * @type {string}
    */

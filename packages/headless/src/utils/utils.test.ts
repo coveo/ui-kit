@@ -1,4 +1,4 @@
-import {removeDuplicates} from './utils.js';
+import {debounce, removeDuplicates} from './utils.js';
 
 describe('removeDuplicates', () => {
   it('should return reduced array based on received predicate', () => {
@@ -73,5 +73,147 @@ describe('removeDuplicates', () => {
       {discriminator: 'd'},
       {discriminator: '!'},
     ]);
+  });
+});
+
+describe('debounce', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.runOnlyPendingTimers();
+    vi.useRealTimers();
+  });
+
+  it('should delay the execution of the function', () => {
+    const mockFn = vi.fn();
+    const debouncedFn = debounce(mockFn, 500);
+
+    debouncedFn('test');
+
+    expect(mockFn).not.toHaveBeenCalled();
+
+    vi.advanceTimersByTime(500);
+
+    expect(mockFn).toHaveBeenCalledTimes(1);
+    expect(mockFn).toHaveBeenCalledWith('test');
+  });
+
+  it('should debounce multiple calls within the wait time', () => {
+    const mockFn = vi.fn();
+    const debouncedFn = debounce(mockFn, 500);
+
+    debouncedFn('first');
+    debouncedFn('second');
+    debouncedFn('third');
+
+    expect(mockFn).not.toHaveBeenCalled();
+
+    vi.advanceTimersByTime(500);
+
+    expect(mockFn).toHaveBeenCalledTimes(1);
+    expect(mockFn).toHaveBeenCalledWith('third');
+  });
+
+  it('should call the function immediately when isImmediate is true', () => {
+    const mockFn = vi.fn();
+    const debouncedFn = debounce(mockFn, 500, {isImmediate: true});
+
+    debouncedFn('immediate');
+
+    expect(mockFn).toHaveBeenCalledTimes(1);
+    expect(mockFn).toHaveBeenCalledWith('immediate');
+  });
+
+  it('should not call the function again during the wait period with isImmediate', () => {
+    const mockFn = vi.fn();
+    const debouncedFn = debounce(mockFn, 500, {isImmediate: true});
+
+    debouncedFn('first');
+    debouncedFn('second');
+    debouncedFn('third');
+
+    expect(mockFn).toHaveBeenCalledTimes(1);
+    expect(mockFn).toHaveBeenCalledWith('first');
+
+    // Even after advancing time, should still only have been called once
+    // because isImmediate prevents the setTimeout callback from executing
+    vi.advanceTimersByTime(500);
+
+    expect(mockFn).toHaveBeenCalledTimes(1);
+  });
+
+  it('should allow immediate execution after wait time has passed', () => {
+    const mockFn = vi.fn();
+    const debouncedFn = debounce(mockFn, 500, {isImmediate: true});
+
+    debouncedFn('first');
+    expect(mockFn).toHaveBeenCalledWith('first');
+
+    vi.advanceTimersByTime(500);
+
+    debouncedFn('second');
+    expect(mockFn).toHaveBeenCalledTimes(2);
+    expect(mockFn).toHaveBeenCalledWith('second');
+  });
+
+  it('should preserve the context and return value of the original function', () => {
+    const originalFn = function (this: {value: number}, x: number) {
+      return this.value + x;
+    };
+    const context = {value: 10};
+    const debouncedFn = debounce(originalFn.bind(context), 100, {
+      isImmediate: true,
+    });
+
+    const result = debouncedFn(5);
+
+    expect(result).toBe(15);
+  });
+
+  it('should handle functions with no arguments', () => {
+    const mockFn = vi.fn();
+    const debouncedFn = debounce(mockFn, 300);
+
+    debouncedFn();
+
+    expect(mockFn).not.toHaveBeenCalled();
+
+    vi.advanceTimersByTime(300);
+
+    expect(mockFn).toHaveBeenCalledTimes(1);
+    expect(mockFn).toHaveBeenCalledWith();
+  });
+
+  it('should handle functions with multiple arguments', () => {
+    const mockFn = vi.fn();
+    const debouncedFn = debounce(mockFn, 200);
+
+    debouncedFn('arg1', 'arg2', 'arg3');
+
+    vi.advanceTimersByTime(200);
+
+    expect(mockFn).toHaveBeenCalledTimes(1);
+    expect(mockFn).toHaveBeenCalledWith('arg1', 'arg2', 'arg3');
+  });
+
+  it('should reset the timer on each call', () => {
+    const mockFn = vi.fn();
+    const debouncedFn = debounce(mockFn, 500);
+
+    debouncedFn('first');
+    vi.advanceTimersByTime(300);
+
+    debouncedFn('second');
+    vi.advanceTimersByTime(300);
+
+    // Should not have been called yet since we reset the timer
+    expect(mockFn).not.toHaveBeenCalled();
+
+    vi.advanceTimersByTime(200);
+
+    expect(mockFn).toHaveBeenCalledTimes(1);
+    expect(mockFn).toHaveBeenCalledWith('second');
   });
 });

@@ -6,7 +6,7 @@ import type {
 } from '@coveo/headless';
 import type {InsightEngineConfiguration} from '@coveo/headless/insight';
 import type {RecommendationEngineConfiguration} from '@coveo/headless/recommendation';
-import {getAtomicEnvironment} from '../../../global/environment';
+import {getAtomicVersion} from '../../../global/environment';
 
 export type AnalyticsPayload = Parameters<AnalyticsClientSendEventHook>[1];
 
@@ -26,7 +26,7 @@ export function augmentWithExternalMiddleware(
 
 export function augmentAnalyticsWithAtomicVersion(payload: AnalyticsPayload) {
   if (payload.customData) {
-    payload.customData.coveoAtomicVersion = getAtomicEnvironment().version;
+    payload.customData.coveoAtomicVersion = getAtomicVersion();
   }
   return payload;
 }
@@ -45,8 +45,7 @@ export function augmentAnalyticsConfigWithAtomicVersion(): Required<
 > {
   return {
     source: {
-      '@coveo/atomic':
-        versionMatcher.exec(getAtomicEnvironment().version)?.[0] || '0.0.0',
+      '@coveo/atomic': versionMatcher.exec(getAtomicVersion())?.[0] || '0.0.0',
     },
   };
 }

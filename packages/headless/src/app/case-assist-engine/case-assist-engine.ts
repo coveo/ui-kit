@@ -40,24 +40,22 @@ type CaseAssistEngineState =
  * The engine for powering case assist experiences.
  *
  * For example implementations, see the following [Coveo Quantic Case Assist components](https://docs.coveo.com/en/quantic/latest/reference/case-assist-components/):
- * * [quanticCaseClassification.js](https://github.com/coveo/ui-kit/blob/master/packages/quantic/force-app/main/default/lwc/quanticCaseClassification/quanticCaseClassification.js)
- * * [quanticDocumentSuggestion](https://github.com/coveo/ui-kit/blob/master/packages/quantic/force-app/main/default/lwc/quanticDocumentSuggestion/quanticDocumentSuggestion.js)
+ * * [quanticCaseClassification.js](https://github.com/coveo/ui-kit/blob/main/packages/quantic/force-app/main/default/lwc/quanticCaseClassification/quanticCaseClassification.js)
+ * * [quanticDocumentSuggestion](https://github.com/coveo/ui-kit/blob/main/packages/quantic/force-app/main/default/lwc/quanticDocumentSuggestion/quanticDocumentSuggestion.js)
  *
  * @group Engine
  */
-export interface CaseAssistEngine<State extends object = {}>
-  extends CoreEngine<
-    State & CaseAssistEngineState,
-    CaseAssistThunkExtraArguments
-  > {}
+export interface CaseAssistEngine<State extends object = {}> extends CoreEngine<
+  State & CaseAssistEngineState,
+  CaseAssistThunkExtraArguments
+> {}
 
 /**
  * The case assist engine options.
  *
  * @group Engine
  */
-export interface CaseAssistEngineOptions
-  extends ExternalEngineOptions<CaseAssistEngineState> {
+export interface CaseAssistEngineOptions extends ExternalEngineOptions<CaseAssistEngineState> {
   /**
    * The case assist engine configuration options.
    */

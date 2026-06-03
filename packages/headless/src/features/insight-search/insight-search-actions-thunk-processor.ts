@@ -1,5 +1,5 @@
 import {isNullOrUndefined} from '@coveo/bueno';
-import type {AnyAction, ThunkDispatch} from '@reduxjs/toolkit';
+import type {ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
 import {
   isErrorResponse,
   isSuccessResponse,
@@ -42,7 +42,7 @@ export interface AsyncThunkConfig {
   dispatch: ThunkDispatch<
     StateNeededByExecuteSearch,
     ClientThunkExtraArguments<InsightAPIClient>,
-    AnyAction
+    UnknownAction
   >;
   rejectWithValue: (err: InsightAPIErrorStatusResponse) => unknown;
   extra: ClientThunkExtraArguments<InsightAPIClient>;

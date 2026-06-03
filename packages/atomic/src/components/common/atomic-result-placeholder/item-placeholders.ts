@@ -1,13 +1,14 @@
 import {html} from 'lit';
 import {keyed} from 'lit/directives/keyed.js';
 import {map} from 'lit/directives/map.js';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
+import './atomic-result-placeholder';
+import '../../search/atomic-result-table-placeholder/atomic-result-table-placeholder';
 import type {
   ItemDisplayDensity,
   ItemDisplayImageSize,
   ItemDisplayLayout,
-} from '@/src/components';
-import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
-
+} from '../layout/item-layout-utils';
 export interface ItemPlaceholdersProps {
   density: ItemDisplayDensity;
   display: ItemDisplayLayout;

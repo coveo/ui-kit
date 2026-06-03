@@ -6,11 +6,6 @@ test.describe('atomic-product-multi-value-text', () => {
     await productMultiValueText.hydrated.waitFor();
   });
 
-  test('should be accessible', async ({makeAxeBuilder}) => {
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   test('should render 3 values and 3 separators', async ({
     productMultiValueText,
   }) => {

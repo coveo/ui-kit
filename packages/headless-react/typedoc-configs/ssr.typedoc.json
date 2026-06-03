@@ -5,18 +5,9 @@
     "includeFolders": true
   },
   "categorizeByGroup": true,
-  "groupOrder": [
-    "Engine",
-    "Definers",
-    "Controllers",
-    "Buildable controllers",
-    "Sub-controllers",
-    "Actions",
-    "*"
-  ],
+  "readme": "../source_docs/ssr-search-overview.md",
   "name": "SSR Search",
-  "readme": "../SEARCHREADME.md",
   "entryPoints": ["../src/ssr/index.ts"],
-  "gitRevision": "master",
+  "gitRevision": "main",
   "plugin": ["@coveo/documentation"]
 }

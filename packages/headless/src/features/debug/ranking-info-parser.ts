@@ -104,7 +104,7 @@ interface TermWeights {
   Concept: number;
 
   /**
-   * The weight allocated when query terms are formatted in the document (e.g., heading level, bold, large, etc.).
+   * The weight allocated when query terms are formatted in the document (for example, heading level, bold, large, etc.).
    */
   Formatted: number;
 

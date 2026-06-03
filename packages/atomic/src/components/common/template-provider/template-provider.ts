@@ -1,6 +1,6 @@
 import type {Template, TemplatesManager} from '@coveo/headless';
 
-export interface TemplateElement<ItemType> extends HTMLElement {
+interface TemplateElement<ItemType> extends HTMLElement {
   getTemplate(): Promise<Template<ItemType, DocumentFragment> | null>;
 }
 

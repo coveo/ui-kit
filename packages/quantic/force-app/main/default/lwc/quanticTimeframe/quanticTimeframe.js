@@ -29,7 +29,7 @@ export default class QuanticTimeframe extends LightningElement {
   @api unit = 'day';
 
   /**
-   * The amount of the `unit` of time (e.g., `10 days`, `1 year`, etc.).
+   * The amount of the `unit` of time (for example, `10 days`, `1 year`, etc.).
    * @api
    * @type {number}
    * @defaultValue `1`
@@ -40,7 +40,7 @@ export default class QuanticTimeframe extends LightningElement {
    * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value.
    * @api
    * @type {string}
-   * @defaultValue Defaults to the formatted value based on amount, unit & period.
+   * @defaultValue Defaults to the formatted value based on amount, unit, and period.
    */
   @api label;
 }

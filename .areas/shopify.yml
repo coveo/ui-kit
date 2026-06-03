@@ -1,0 +1,7 @@
+description: Shopify integration package
+file_patterns:
+  - packages/shopify/**
+
+reviewers:
+  shopify: ~
+  dxui: ~

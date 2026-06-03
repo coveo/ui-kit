@@ -1,13 +1,13 @@
 import {LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import type {ItemTemplateProvider} from '@/src/components/common/item-list/item-template-provider';
+import type {ResultTemplateProvider} from '@/src/components/common/item-list/result-template-provider';
 import {ChildTemplatesContextController} from './child-templates-context-controller';
 
-const mockItemTemplateProvider: ItemTemplateProvider = {
+const mockResultTemplateProvider: ResultTemplateProvider = {
   getTemplateContent: vi.fn(),
   getLinkTemplateContent: vi.fn(),
-} as unknown as ItemTemplateProvider;
+} as unknown as ResultTemplateProvider;
 
 @customElement('test-element')
 class TestElement extends LitElement {
@@ -43,9 +43,9 @@ describe('#ChildTemplatesContextController', () => {
 
       const dispatchCall = vi.mocked(mockElement.dispatchEvent).mock.calls[0];
       const event = dispatchCall[0] as CustomEvent;
-      event.detail(mockItemTemplateProvider);
+      event.detail(mockResultTemplateProvider);
 
-      expect(controller.itemTemplateProvider).toBe(mockItemTemplateProvider);
+      expect(controller.itemTemplateProvider).toBe(mockResultTemplateProvider);
     });
   });
 
@@ -65,9 +65,9 @@ describe('#ChildTemplatesContextController', () => {
 
       const dispatchCall = vi.mocked(mockElement.dispatchEvent).mock.calls[0];
       const event = dispatchCall[0] as CustomEvent;
-      event.detail(mockItemTemplateProvider);
+      event.detail(mockResultTemplateProvider);
 
-      expect(controller.itemTemplateProvider).toBe(mockItemTemplateProvider);
+      expect(controller.itemTemplateProvider).toBe(mockResultTemplateProvider);
       expect(mockElement.requestUpdate).toHaveBeenCalled();
     });
 
@@ -78,31 +78,6 @@ describe('#ChildTemplatesContextController', () => {
 
       expect(controller.itemTemplateProvider).toBeNull();
       expect(mockElement.requestUpdate).toHaveBeenCalled();
-    });
-  });
-
-  describe('#hostUpdated', () => {
-    it('should dispatch the resolveChildTemplates event when template provider is null', () => {
-      controller.hostUpdated();
-
-      expect(mockElement.dispatchEvent).toHaveBeenCalledWith(
-        expect.objectContaining({
-          type: 'atomic/resolveChildTemplates',
-        })
-      );
-    });
-
-    it('should not dispatch event when template provider already exists', () => {
-      controller.hostConnected();
-      const dispatchCall = vi.mocked(mockElement.dispatchEvent).mock.calls[0];
-      const event = dispatchCall[0] as CustomEvent;
-      event.detail(mockItemTemplateProvider);
-
-      vi.clearAllMocks();
-
-      controller.hostUpdated();
-
-      expect(mockElement.dispatchEvent).not.toHaveBeenCalled();
     });
   });
 });

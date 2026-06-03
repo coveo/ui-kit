@@ -45,7 +45,7 @@ export type PlatformClientCallError =
   | DisconnectedError
   | Error;
 
-// biome-ignore lint/complexity/noStaticOnlyClass: Maybe change this into a function someday. Not worth the effort right now.
+// oxlint-disable-next-line unicorn/no-static-only-class -- Maybe change this into a function someday. Not worth the effort right now.
 export class PlatformClient {
   static async call(
     options: PlatformClientCallOptions
@@ -71,9 +71,17 @@ export class PlatformClient {
 
     try {
       const response = await backOff(request, {
-        retry: (e: Response) => {
+        startingDelay: 100,
+        timeMultiple: 2,
+        maxDelay: 800,
+        numOfAttempts: 4,
+        jitter: 'full',
+        retry: async (e: Response) => {
           const shouldRetry = e && isThrottled(e.status);
-          shouldRetry && logger.info('Platform retrying request');
+          if (shouldRetry) {
+            logger.info('Platform retrying request');
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+          }
           return shouldRetry;
         },
       });
@@ -143,6 +151,18 @@ export function getOrganizationEndpoint(
     endpointType === 'platform' ? '' : `.${endpointType}`;
 
   return `https://${organizationId}${endpointTypePart}.org${environmentSuffix}.coveo.com`;
+}
+
+/**
+ * Returns the provided API base URL (proxy) if set,
+ * otherwise falls back to the resolved organization endpoint.
+ */
+export function getApiBaseUrlOrOrganizationEndpoint(
+  apiBaseUrl: string | undefined,
+  organizationId: string,
+  environment: PlatformEnvironment = 'prod'
+) {
+  return apiBaseUrl ?? getOrganizationEndpoint(organizationId, environment);
 }
 
 export function getSearchApiBaseUrl(

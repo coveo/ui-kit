@@ -1,13 +1,29 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
-import {within} from 'shadow-dom-testing-library';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
 import {wrapInCommerceRecommendationInterface} from '@/storybook-utils/commerce/commerce-recommendation-interface-wrapper';
 import {wrapInCommerceRecommendationList} from '@/storybook-utils/commerce/commerce-recommendation-list-wrapper';
 import {wrapInCommerceSearchBoxInstantProducts} from '@/storybook-utils/commerce/commerce-searchbox-instant-products-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponentWithoutCodeRoot} from '@/storybook-utils/common/render-component';
 import {parameters as searchBoxParameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
+import '@/src/components/commerce/atomic-product-children/atomic-product-children.js';
+import '@/src/components/commerce/atomic-product-field-condition/atomic-product-field-condition.js';
+import '@/src/components/commerce/atomic-product-image/atomic-product-image.js';
+import '@/src/components/commerce/atomic-product-link/atomic-product-link.js';
+import '@/src/components/commerce/atomic-product-price/atomic-product-price.js';
+import '@/src/components/commerce/atomic-product-rating/atomic-product-rating.js';
+import '@/src/components/commerce/atomic-product-section-children/atomic-product-section-children.js';
+import '@/src/components/commerce/atomic-product-section-description/atomic-product-section-description.js';
+import '@/src/components/commerce/atomic-product-section-emphasized/atomic-product-section-emphasized.js';
+import '@/src/components/commerce/atomic-product-section-metadata/atomic-product-section-metadata.js';
+import '@/src/components/commerce/atomic-product-section-name/atomic-product-section-name.js';
+import '@/src/components/commerce/atomic-product-section-visual/atomic-product-section-visual.js';
+import '@/src/components/commerce/atomic-product-template/atomic-product-template.js';
+import '@/src/components/commerce/atomic-product-text/atomic-product-text.js';
+
+const commerceApiHarness = new MockCommerceApi();
 
 const TEMPLATE_EXAMPLE = `<template>
   <atomic-product-section-name>
@@ -43,14 +59,46 @@ const TEMPLATE_EXAMPLE = `<template>
   </atomic-product-section-children>
 </template>`;
 
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-product-template',
+  {excludeCategories: ['methods']}
+);
+
 const meta: Meta = {
   component: 'atomic-product-template',
-  title: 'Commerce/atomic-product-template',
+  title: 'Commerce/Product Template',
   id: 'atomic-product-template',
-  render: renderComponentWithoutCodeRoot,
-  parameters,
+  render: (args) => template(args),
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+    msw: {
+      handlers: [...commerceApiHarness.handlers],
+    },
+  },
+  beforeEach: () => {
+    commerceApiHarness.clearAll();
+  },
   args: {
-    'slots-default': TEMPLATE_EXAMPLE,
+    ...args,
+    'default-slot': TEMPLATE_EXAMPLE,
+  },
+  argTypes: {
+    ...argTypes,
+    'must-match': {
+      ...argTypes['must-match'],
+      control: false,
+    },
+    'must-not-match': {
+      ...argTypes['must-not-match'],
+      control: false,
+    },
+    conditions: {
+      ...argTypes.conditions,
+      control: false,
+    },
   },
 };
 
@@ -69,8 +117,10 @@ const {
       return request;
     },
   },
+  includeCodeRoot: false,
 });
-const {decorator: commerceProductListDecorator} = wrapInCommerceProductList();
+const {decorator: commerceProductListDecorator} =
+  wrapInCommerceProductList('list');
 
 export const InAProductList: Story = {
   name: 'In a product list',
@@ -91,7 +141,6 @@ export const InARecommendationList: Story = {
     commerceRecommendationListDecorator,
     commerceRecommendationInterfaceDecorator,
   ],
-
   play: initializeCommerceRecommendationInterface,
 };
 
@@ -104,11 +153,12 @@ export const InASearchBoxInstantProducts: Story = {
     commerceSearchBoxInstantsProductsDecorator,
     commerceInterfaceDecorator,
   ],
-  parameters: searchBoxParameters,
+  parameters: {
+    ...searchBoxParameters,
+  },
   play: async (context) => {
     await initializeCommerceInterface(context);
-    const {canvasElement, step} = context;
-    const canvas = within(canvasElement);
+    const {canvas, step} = context;
     await step('Click Searchbox', async () => {
       (
         await canvas.findAllByShadowTitle('Search field with suggestions.', {
@@ -119,10 +169,4 @@ export const InASearchBoxInstantProducts: Story = {
         ?.focus();
     });
   },
-};
-
-export const WithoutValidParent: Story = {
-  name: 'Without a valid parent',
-  tags: ['test'],
-  play: initializeCommerceInterface,
 };

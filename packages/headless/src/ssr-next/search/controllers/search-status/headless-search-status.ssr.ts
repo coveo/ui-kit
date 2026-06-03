@@ -3,12 +3,14 @@ import {
   buildSearchStatus,
   type SearchStatus,
 } from '../../../../controllers/search-status/headless-search-status.js';
-import type {ControllerDefinitionWithoutProps} from '../../../common/types/controllers.js';
+import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/search-status/headless-search-status.js';
 
-export interface SearchStatusDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, SearchStatus> {}
+export interface SearchStatusDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  SearchStatus
+> {}
 
 /**
  * Defines a `SearchStatus` controller instance.

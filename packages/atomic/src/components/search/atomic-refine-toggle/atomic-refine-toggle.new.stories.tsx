@@ -1,24 +1,55 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {
+  searchFacetTransformer,
+  searchFacetSearchTransformer,
+} from '@/storybook-utils/api/search/facet-transformer';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-external/atomic-external.js';
+import '@/src/components/search/atomic-facet/atomic-facet.js';
+import '@/src/components/common/atomic-layout-section/atomic-layout-section.js';
+import '@/src/components/search/atomic-refine-toggle/atomic-refine-toggle.js';
+import '@/src/components/search/atomic-search-interface/atomic-search-interface.js';
+
+const searchApiHarness = new MockSearchApi();
+searchApiHarness.searchEndpoint.addRequestTransformer(searchFacetTransformer);
+searchApiHarness.facetSearchEndpoint.addRequestTransformer(
+  searchFacetSearchTransformer
+);
 
 const {decorator, play} = wrapInSearchInterface();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-refine-toggle',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-refine-toggle',
-  title: 'Atomic/RefineToggle',
+  title: 'Search/Refine Toggle',
   id: 'atomic-refine-toggle',
-  render: renderComponent,
-  parameters,
+  render: (args) => template(args),
+  parameters: {
+    ...parameters,
+    chromatic: {disableSnapshot: true},
+    msw: {
+      handlers: [...searchApiHarness.handlers],
+    },
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
   play,
 };
 
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-refine-toggle',
   decorators: [
     (story) => html`
       ${story()}
@@ -45,7 +76,7 @@ export const WithAtomicExternals: Story = {
   name: 'With multiple atomic-external',
   decorators: [
     (story) => html`
-      <atomic-search-interface id="foo" data-testid="root-interface">
+      <atomic-search-interface id="foo">
         <h1>Search Interface</h1>
         <atomic-layout-section section="horizontal-facets">
           <atomic-facet field="author" label="facet2"></atomic-facet>
@@ -65,17 +96,7 @@ export const WithAtomicExternals: Story = {
         </atomic-layout-section>
         <atomic-facet field="author" label="facet8"></atomic-facet>
       </atomic-external>
-      <atomic-external selector="#bar">
-        <h1>External 2</h1>
-        <p>Not bound to the search interface</p>
-        <atomic-layout-section section="horizontal-facets">
-          <atomic-facet field="author" label="facet01"></atomic-facet>
-        </atomic-layout-section>
-        <atomic-layout-section section="facets">
-          <atomic-facet field="author" label="facet02"></atomic-facet>
-        </atomic-layout-section>
-        <atomic-facet field="author" label="facet03"></atomic-facet>
-      </atomic-external>
+
       <atomic-external selector="#foo">
         <h1>External 3</h1>
         <atomic-layout-section section="horizontal-facets">

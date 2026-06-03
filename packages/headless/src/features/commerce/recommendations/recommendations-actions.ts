@@ -54,7 +54,7 @@ const buildRecommendationCommerceAPIRequest = (
 
 export interface FetchRecommendationsPayload {
   /**
-   * The unique identifier of the recommendations slot (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
+   * The unique identifier of the recommendations slot (for example, `b953ab2e-022b-4de4-903f-68b2c0682942`).
    */
   slotId: string;
   productId?: string;

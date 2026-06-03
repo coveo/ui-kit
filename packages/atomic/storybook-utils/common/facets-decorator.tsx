@@ -1,5 +1,7 @@
-import {Decorator} from '@storybook/web-components';
-import {html} from 'lit';
+import '@/src/components/search/atomic-facet/atomic-facet.js';
+import '@/src/components/search/atomic-breadbox/atomic-breadbox.js';
+import {Decorator} from '@storybook/web-components-vite';
+import {html, nothing} from 'lit';
 
 export const facetDecorator: Decorator = (story, context) => html`
   <style>
@@ -10,3 +12,21 @@ export const facetDecorator: Decorator = (story, context) => html`
   </style>
   ${story()}
 `;
+
+type Position = 'before' | 'after';
+
+export const withRegularFacet: (position: Position) => Decorator =
+  (position) => (story) =>
+    html` ${html`${position === 'after' ? story() : nothing}`}
+      <atomic-facet
+        field="filetype"
+        label="File Type"
+        data-testid="regular-facet"
+      ></atomic-facet>
+      ${html`${position === 'before' ? story() : nothing}`}`;
+
+export const withBreadboxDecorator: (position: Position) => Decorator =
+  (position) => (story) =>
+    html` ${html`${position === 'after' ? story() : nothing}`}
+      <atomic-breadbox data-testid="breadbox"></atomic-breadbox>
+      ${html`${position === 'before' ? story() : nothing}`}`;

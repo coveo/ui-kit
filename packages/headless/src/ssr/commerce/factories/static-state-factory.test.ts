@@ -10,6 +10,10 @@ import {
   type Search,
 } from '../../../controllers/commerce/search/headless-search.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
+import {
+  buildMockProductListingController,
+  buildMockSearchController,
+} from '../../../test/mock-controller.js';
 import {buildMockSSRCommerceEngine} from '../../../test/mock-engine-v2.js';
 import * as augmentModule from '../../common/augment-preprocess-request.js';
 import {defineProductList} from '../controllers/product-list/headless-product-list.ssr.js';
@@ -163,6 +167,55 @@ describe('fetchStaticStateFactory', () => {
     it('should not perform any request ', async () => {
       expect(mockedExecuteFirstSearch).toHaveBeenCalledTimes(0);
       expect(mockExecuteFirstRequest).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  describe('when controllers include a ProductList controller with executeFirstRequest/executeFirstSearch', () => {
+    let mockProductListController: ReturnType<
+      typeof buildMockProductListingController
+    >;
+    let mockSearchProductListController: ReturnType<
+      typeof buildMockSearchController
+    >;
+
+    beforeEach(() => {
+      mockProductListController = buildMockProductListingController();
+      mockSearchProductListController = buildMockSearchController();
+      engineSpy = vi.spyOn(buildFactory, 'buildFactory').mockReturnValue(
+        (solutionType: SolutionType) => () =>
+          Promise.resolve({
+            engine: mockEngine,
+            controllers: {
+              productList:
+                solutionType === SolutionType.listing
+                  ? mockProductListController
+                  : mockSearchProductListController,
+            } as unknown as InferControllersMapFromDefinition<
+              CommerceControllerDefinitionsMap,
+              SolutionType
+            >,
+          })
+      );
+    });
+
+    it('should use the existing controller and not build a fallback, for the Listing solution type', async () => {
+      const factory = fetchStaticStateFactory(definition, mockEngineOptions);
+      await factory(SolutionType.listing)();
+
+      expect(
+        mockProductListController.executeFirstRequest
+      ).toHaveBeenCalledTimes(1);
+      expect(buildProductListing).not.toHaveBeenCalled();
+    });
+
+    it('should use the existing controller and not build a fallback, for the Search solution type', async () => {
+      const factory = fetchStaticStateFactory(definition, mockEngineOptions);
+      await factory(SolutionType.search)();
+
+      expect(
+        mockSearchProductListController.executeFirstSearch
+      ).toHaveBeenCalledTimes(1);
+      expect(buildSearch).not.toHaveBeenCalled();
     });
   });
 });

@@ -1,3 +1,6 @@
+// ⚠️  CDN OUTPUT: This build outputs to "dist/". If you change this path,
+// you MUST also update the corresponding "source" field in ui-kit-cd
+// (.deployment.config/{commit,dev,prd}.json) and deploy-local-cdn.mjs.
 import {readFileSync} from 'node:fs';
 import {dirname, join} from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -13,6 +16,7 @@ const __dirname = dirname(__filename);
 
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 const isNightly = process.env.IS_NIGHTLY === 'true';
+const commitSha = process.env.CDN_COMMIT_SHA;
 
 let headlessVersion;
 let atomicVersion;
@@ -51,24 +55,31 @@ if (isCDN) {
   }
 }
 
+const headlessBase = commitSha
+  ? `/headless/commits/${commitSha}`
+  : `/headless/${headlessVersion}`;
+const atomicBase = commitSha
+  ? `/atomic/commits/${commitSha}`
+  : `/atomic/${atomicVersion}`;
+
 const packageMappings = {
   '@coveo/headless/commerce': {
-    cdn: `/headless/${headlessVersion}/commerce/headless.esm.js`,
+    cdn: `${headlessBase}/commerce/headless.esm.js`,
   },
   '@coveo/headless/insight': {
-    cdn: `/headless/${headlessVersion}/insight/headless.esm.js`,
+    cdn: `${headlessBase}/insight/headless.esm.js`,
   },
   '@coveo/headless/recommendation': {
-    cdn: `/headless/${headlessVersion}/recommendation/headless.esm.js`,
+    cdn: `${headlessBase}/recommendation/headless.esm.js`,
   },
   '@coveo/headless/case-assist': {
-    cdn: `/headless/${headlessVersion}/case-assist/headless.esm.js`,
+    cdn: `${headlessBase}/case-assist/headless.esm.js`,
   },
   '@coveo/headless': {
-    cdn: `/headless/${headlessVersion}/headless.esm.js`,
+    cdn: `${headlessBase}/headless.esm.js`,
   },
   '@coveo/atomic/loader': {
-    cdn: `/atomic/${atomicVersion}/loader/index.js`,
+    cdn: `${atomicBase}/loader/index.js`,
   },
 };
 
@@ -97,7 +108,6 @@ const commonExternal = [
   'react',
   'react-dom',
   'react-dom/client',
-  'react-dom/server',
   'lit',
   /^lit\/.*/,
   /^@lit\/.*/,
@@ -114,10 +124,9 @@ const cdnExternal = [
   'react',
   'react-dom',
   'react-dom/client',
-  'react-dom/server',
-  /.*\/headless\/v.*/,
-  /.*\/atomic\/v.*/,
-  /.*\/bueno\/v.*/,
+  /.*\/headless\/(v|commits\/).*/,
+  /.*\/atomic\/(v|commits\/).*/,
+  /.*\/bueno\/(v|commits\/).*/,
 ];
 
 /** @returns {import('rollup').OutputOptions} */

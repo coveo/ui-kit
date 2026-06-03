@@ -1,0 +1,13 @@
+description: Case Assist features
+file_patterns:
+  - packages/headless/src/app/case-assist-engine/**
+  - packages/headless/src/controllers/case-field/**
+  - packages/headless/src/features/case-assist/**
+  - packages/headless/src/features/case-assist-configuration/**
+  - packages/headless/src/features/case-context/**
+  - packages/headless/src/features/case-field/**
+  - packages/headless/src/features/case-input/**
+
+reviewers:
+  knowledge-ui-kit-reviewers: ~
+  dxui: ~

@@ -1,4 +1,5 @@
 import {html} from 'lit';
+import {multiClassMap, tw} from '@/src/directives/multi-class-map';
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import MinusIcon from '../../../images/minus.svg';
 import PlusIcon from '../../../images/plus.svg';
@@ -46,38 +47,48 @@ export const renderExpandableText: FunctionalComponentWithChildren<
     },
   }) =>
   (children) => {
-    const expandableTextClass = `expandable-text ${!isExpanded ? getLineClampClass(truncateAfter) : ''} min-lines-${truncateAfter}`;
+    const expandableTextClasses = tw({
+      'expandable-text leading-[var(--line-height)]': true,
+      [getLineClampClass(truncateAfter)]: !isExpanded,
+      [`min-lines-${truncateAfter}`]: true,
+    });
 
-    let buttonClass =
-      'expandable-text-button p-1 text-xs leading-[calc(1/.75)]';
-    if (!isTruncated && !isExpanded) {
-      buttonClass += ' invisible';
-    } else if (!isCollapsible && !isTruncated && isExpanded) {
-      buttonClass += ' hidden';
-    }
+    const buttonClasses = tw({
+      'expandable-text-button p-1 text-xs leading-[calc(1/.75)]': true,
+      invisible: !isTruncated && !isExpanded,
+      hidden: isExpanded && (!isTruncated || !isCollapsible),
+    });
+
+    const buttonClassString = Object.entries(buttonClasses)
+      .filter(([, value]) => value)
+      .map(([key]) => key)
+      .join(' ');
 
     const buttonLabel = isExpanded ? showLessLabel : showMoreLabel;
     const icon = isExpanded ? MinusIcon : PlusIcon;
 
     return html`<div class="flex flex-col items-start">
-        <div part="expandable-text"
-        class="${expandableTextClass}"
+      <div
+        part="expandable-text"
+        class="${multiClassMap(expandableTextClasses)}"
         ${ref(textRef)}
-        >
+      >
         ${children}
-        </div>
+      </div>
 
-        ${renderButton({
-          props: {
-            style: 'text-primary',
-            class: buttonClass,
-            title: buttonLabel,
-            onClick: onToggleExpand,
-          },
-        })(
-          html`
-          <atomic-icon icon="${icon}" class="mx-1 w-2 align-baseline"></atomic-icon>
+      ${renderButton({
+        props: {
+          style: 'text-primary',
+          class: buttonClassString,
+          title: buttonLabel,
+          onClick: onToggleExpand,
+        },
+      })(
+        html` <atomic-icon
+            icon="${icon}"
+            class="mx-1 w-2 align-baseline"
+          ></atomic-icon>
           ${buttonLabel}`
-        )}
+      )}
     </div>`;
   };

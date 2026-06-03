@@ -2,7 +2,10 @@
 <html dir="ltr" lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"
+    />
     <title>Search</title>
 
     <script type="module">
@@ -24,7 +27,9 @@
 
       (async () => {
         await customElements.whenDefined('atomic-commerce-interface');
-        const commerceInterface = document.querySelector('atomic-commerce-interface');
+        const commerceInterface = document.querySelector(
+          'atomic-commerce-interface'
+        );
 
         await commerceInterface.initializeWithEngine(commerceEngine);
 
@@ -38,7 +43,11 @@
     <h1>Search page</h1>
     <main>
       <section>
-        <atomic-commerce-interface type="search" language-assets-path="./lang" icon-assets-path="./assets">
+        <atomic-commerce-interface
+          type="search"
+          language-assets-path="./lang"
+          icon-assets-path="./assets"
+        >
           <atomic-commerce-layout>
             <atomic-layout-section section="search">
               <atomic-commerce-search-box>
@@ -48,24 +57,37 @@
                   <atomic-product-template>
                     <template>
                       <atomic-product-section-name>
-                        <atomic-product-link class="font-bold"></atomic-product-link>
+                        <atomic-product-link
+                          class="font-bold"
+                        ></atomic-product-link>
                       </atomic-product-section-name>
                       <atomic-product-section-visual>
-                        <atomic-product-field-condition if-defined="ec_thumbnails">
-                          <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+                        <atomic-product-field-condition
+                          if-defined="ec_thumbnails"
+                        >
+                          <atomic-product-image
+                            field="ec_thumbnails"
+                          ></atomic-product-image>
                         </atomic-product-field-condition>
                       </atomic-product-section-visual>
                       <atomic-product-section-metadata>
                         <atomic-product-field-condition if-defined="ec_brand">
-                          <atomic-product-text field="ec_brand" class="text-neutral-dark block"></atomic-product-text>
+                          <atomic-product-text
+                            field="ec_brand"
+                            class="text-neutral-dark block"
+                          ></atomic-product-text>
                         </atomic-product-field-condition>
-                        <atomic-product-field-condition if-defined="cat_available_sizes">
+                        <atomic-product-field-condition
+                          if-defined="cat_available_sizes"
+                        >
                           <atomic-product-multi-value-text
                             field="cat_available_sizes"
                           ></atomic-product-multi-value-text>
                         </atomic-product-field-condition>
                         <atomic-product-field-condition if-defined="ec_rating">
-                          <atomic-product-rating field="ec_rating"></atomic-product-rating>
+                          <atomic-product-rating
+                            field="ec_rating"
+                          ></atomic-product-rating>
                         </atomic-product-field-condition>
                       </atomic-product-section-metadata>
                       <atomic-product-section-emphasized>
@@ -91,7 +113,11 @@
                 <atomic-commerce-refine-toggle></atomic-commerce-refine-toggle>
               </atomic-layout-section>
               <atomic-layout-section section="products">
-                <atomic-commerce-product-list display="grid" density="compact" image-size="small">
+                <atomic-commerce-product-list
+                  display="grid"
+                  density="compact"
+                  image-size="small"
+                >
                   <atomic-product-template>
                     <template>
                       <atomic-product-section-name id="product-name-section">
@@ -108,31 +134,48 @@
                             line-clamp: var(--product-name-line-clamp);
                           } */
                         </style>
-                        <atomic-product-link class="font-bold"></atomic-product-link>
+                        <atomic-product-link
+                          class="font-bold"
+                        ></atomic-product-link>
                       </atomic-product-section-name>
                       <atomic-product-section-visual>
-                        <atomic-product-field-condition if-defined="ec_thumbnails">
-                          <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+                        <atomic-product-field-condition
+                          if-defined="ec_thumbnails"
+                        >
+                          <atomic-product-image
+                            field="ec_thumbnails"
+                          ></atomic-product-image>
                         </atomic-product-field-condition>
                       </atomic-product-section-visual>
                       <atomic-product-section-metadata>
                         <atomic-product-field-condition if-defined="ec_brand">
-                          <atomic-product-text field="ec_brand" class="text-neutral-dark block"></atomic-product-text>
+                          <atomic-product-text
+                            field="ec_brand"
+                            class="text-neutral-dark block"
+                          ></atomic-product-text>
                         </atomic-product-field-condition>
-                        <atomic-product-field-condition if-defined="cat_available_sizes">
+                        <atomic-product-field-condition
+                          if-defined="cat_available_sizes"
+                        >
                           <atomic-product-multi-value-text
                             field="cat_available_sizes"
                           ></atomic-product-multi-value-text>
                         </atomic-product-field-condition>
                         <atomic-product-field-condition if-defined="ec_rating">
-                          <atomic-product-rating field="ec_rating"></atomic-product-rating>
+                          <atomic-product-rating
+                            field="ec_rating"
+                          ></atomic-product-rating>
                         </atomic-product-field-condition>
                         <atomic-product-field-condition if-defined="concepts">
-                          <atomic-product-multi-value-text field="concepts"></atomic-product-multi-value-text>
+                          <atomic-product-multi-value-text
+                            field="concepts"
+                          ></atomic-product-multi-value-text>
                         </atomic-product-field-condition>
                       </atomic-product-section-metadata>
                       <atomic-product-section-emphasized>
-                        <atomic-product-price currency="USD"></atomic-product-price>
+                        <atomic-product-price
+                          currency="USD"
+                        ></atomic-product-price>
                       </atomic-product-section-emphasized>
                       <atomic-product-section-description>
                         <atomic-product-excerpt></atomic-product-excerpt>
@@ -140,6 +183,21 @@
                       <atomic-product-section-children>
                         <atomic-product-children></atomic-product-children>
                       </atomic-product-section-children>
+                      <atomic-product-section-badges>
+                        <atomic-product-field-condition
+                          must-match-ec_in_stock="true"
+                        >
+                          <span
+                            class="rounded-xl border border-primary text-primary px-2"
+                            >In Stock</span
+                          >
+                        </atomic-product-field-condition>
+                      </atomic-product-section-badges>
+                      <atomic-product-section-actions>
+                        <button type="button" class="btn-primary p-2">
+                          Add to Cart
+                        </button>
+                      </atomic-product-section-actions>
                     </template>
                   </atomic-product-template>
                 </atomic-commerce-product-list>

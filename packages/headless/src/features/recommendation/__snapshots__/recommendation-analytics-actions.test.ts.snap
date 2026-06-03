@@ -5,6 +5,7 @@ exports[`recommendation analytics actions > #logRecommendationOpen > when analyt
   {
     "collectionName": "example collectionName",
     "documentAuthor": "unknown",
+    "documentCategory": "example objectType",
     "documentPosition": 0,
     "documentTitle": "example documentTitle",
     "documentUri": "example documentUri",

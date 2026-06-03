@@ -1,11 +1,13 @@
 {
   "servers": {
-    "atlassian": {
-      "url": "https://mcp.atlassian.com/v1/sse"
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["@playwright/mcp"]
     },
-    "github": {
+    "storybook": {
       "type": "http",
-      "url": "https://api.githubcopilot.com/mcp/"
+      "url": "http://localhost:4400/mcp"
     }
   }
 }

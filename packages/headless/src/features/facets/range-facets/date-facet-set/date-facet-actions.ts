@@ -188,7 +188,7 @@ export const registerDateFacet = createAction(
 
 export interface ToggleSelectDateFacetValueActionCreatorPayload {
   /**
-   * The unique identifier of the facet (e.g., `"1"`).
+   * The unique identifier of the facet (for example, `"1"`).
    */
   facetId: string;
 
@@ -218,7 +218,7 @@ export const toggleExcludeDateFacetValue = createAction(
 
 export interface UpdateDateFacetValuesActionCreatorPayload {
   /**
-   * The unique identifier of the facet (e.g., `"1"`).
+   * The unique identifier of the facet (for example, `"1"`).
    */
   facetId: string;
 
@@ -248,7 +248,7 @@ export const updateDateFacetValues = createAction(
 
 export interface UpdateDateFacetSortCriterionActionCreatorPayload {
   /**
-   * The unique identifier of the facet (e.g., `"1"`).
+   * The unique identifier of the facet (for example, `"1"`).
    */
   facetId: string;
 

@@ -1,5 +1,5 @@
 import {RecordValue, Schema, type SchemaDefinition} from '@coveo/bueno';
-import {createSelector, type UnknownAction} from '@reduxjs/toolkit';
+import type {UnknownAction} from '@reduxjs/toolkit';
 import type {
   CommerceEngine,
   CommerceEngineState,
@@ -32,8 +32,9 @@ export interface ParameterManagerProps<T extends Parameters> {
   excludeDefaultParameters?: boolean;
 }
 
-export interface CoreParameterManagerProps<T extends Parameters>
-  extends ParameterManagerProps<T> {
+export interface CoreParameterManagerProps<
+  T extends Parameters,
+> extends ParameterManagerProps<T> {
   /**
    * The definition of the parameters.
    */
@@ -68,12 +69,12 @@ const initialStateSchema = <T extends Parameters>(
   new Schema<Required<ParameterManagerInitialState<T>>>({
     parameters: new RecordValue({
       options: {required: true},
-      values: parametersDefinition as SchemaDefinition<Record<string, Object>>,
+      values: parametersDefinition as SchemaDefinition<Record<string, object>>,
     }),
   });
 
 /**
- * The `ParameterManager` sub-controller allows restoring parameters that affect the results (e.g., from the URL).
+ * The `ParameterManager` sub-controller allows restoring parameters that affect the results (for example, from the URL).
  *
  * @group Sub-controllers
  * @category ParameterManager
@@ -121,10 +122,8 @@ export function buildCoreParameterManager<T extends Parameters>(
     throw loadReducerError;
   }
 
-  const parametersSelector = createSelector(
-    (state: CommerceEngineState) => state.commerceParameters,
-    (parameters) => parameters
-  );
+  const parametersSelector = (state: CommerceEngineState) =>
+    state.commerceParameters;
 
   const {dispatch} = engine;
   const controller = buildController(engine);

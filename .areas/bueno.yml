@@ -1,0 +1,5 @@
+description: Bueno library package
+file_patterns:
+  - packages/bueno/**
+reviewers:
+  dxui: ~

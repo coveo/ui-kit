@@ -13,6 +13,8 @@ export interface CarouselProps {
   navigateToImage(index: number): void;
   numberOfImages: number;
   currentImage: number;
+  /** Accessible label for the carousel region. Passed by the parent component. */
+  label: string;
 }
 
 export const renderImageCarousel: FunctionalComponentWithChildren<
@@ -57,7 +59,11 @@ export const renderImageCarousel: FunctionalComponentWithChildren<
         class: `${commonPaginationClasses} right-0 mr-1`,
       },
     })(html`
-      <atomic-icon part="next-icon" icon=${ArrowRight} class=${commonArrowClasses}></atomic-icon>
+      <atomic-icon
+        part="next-icon"
+        icon=${ArrowRight}
+        class=${commonArrowClasses}
+      ></atomic-icon>
     `);
   };
 
@@ -75,11 +81,17 @@ export const renderImageCarousel: FunctionalComponentWithChildren<
     if (!children || children === nothing) {
       return nothing;
     }
-    return html` <div class="relative flex w-full min-w-full items-center justify-center">
-        ${renderPreviousButton()}
+    return html` <div
+      class="relative flex w-full min-w-full items-center justify-center"
+      role="region"
+      aria-roledescription="carousel"
+      aria-label=${props.label}
+    >
+      ${renderPreviousButton()}
+      <div class="w-full h-full" aria-live="polite" aria-atomic="false">
         ${children}
-        ${renderNextButton()}
-        ${renderIndicators()}
-      </div>`;
+      </div>
+      ${renderNextButton()} ${renderIndicators()}
+    </div>`;
   };
 };

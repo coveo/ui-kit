@@ -14,6 +14,10 @@ import type {
 import type {EngineStaticState} from './engine.js';
 import type {FromBuildResult} from './from-build-result.js';
 
+/**
+ * @deprecated This interface will be remove on the next major version.
+ * Use BuildConfig interface instead
+ */
 export type FetchStaticStateOptions = {};
 
 export type FetchStaticState<
@@ -40,6 +44,9 @@ export type FetchStaticState<
     >
   ): Promise<EngineStaticState<TSearchAction, TControllersStaticState>>;
 
+  /**
+   * @deprecated Use the fetchStaticState() method instead
+   */
   fromBuildResult: FromBuildResult<
     TControllers,
     FetchStaticStateOptions,

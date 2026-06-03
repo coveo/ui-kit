@@ -16,6 +16,7 @@ import type {
   FacetSection,
   FieldsSection,
   FoldingSection,
+  FollowUpAnswersSection,
   GeneratedAnswerSection,
   HistorySection,
   InstantResultSection,
@@ -78,4 +79,5 @@ export type SearchAppState = SearchParametersState &
   RecentQueriesSection &
   ExcerptLengthSection &
   GeneratedAnswerSection &
+  FollowUpAnswersSection &
   InstantResultSection;

@@ -11,7 +11,7 @@ export type InstantItemsState<Cache> = Record<
   string,
   {
     /**
-     * The basic query expression (e.g., `acme tornado seeds`).
+     * The basic query expression (for example, `acme tornado seeds`).
      */
     q: string;
     /**

@@ -2,14 +2,18 @@ import {
   getSampleInsightEngineConfiguration,
   InsightEngineConfiguration,
 } from '@coveo/headless/insight';
-import {within} from '@storybook/test';
-import {Decorator, StoryContext} from '@storybook/web-components';
+import {Decorator, StoryContext} from '@storybook/web-components-vite';
 import {html} from 'lit';
-import type * as _ from '../../src/components.js';
+import {spreadProps} from '@open-wc/lit-helpers';
+import {isTestMode} from '@/storybook-utils/common/is-test-mode';
+import type {AtomicInsightInterface} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface.js';
+import '@/src/components/insight/atomic-insight-interface/atomic-insight-interface.js';
 
 export const wrapInInsightInterface = (
   config?: Partial<InsightEngineConfiguration>,
-  skipFirstSearch = false
+  skipFirstSearch = false,
+  includeCodeRoot: boolean = true,
+  analytics = isTestMode()
 ): {
   decorator: Decorator;
   play: (context: StoryContext) => Promise<void>;
@@ -19,22 +23,24 @@ export const wrapInInsightInterface = (
       atomic-insight-interface:not([widget='false']),
       atomic-insight-layout:not([widget='false']) {
         width: 500px;
-        height: 1000px;
+        min-height: 1000px;
         margin-left: auto;
         margin-right: auto;
         box-shadow: 0px 3px 24px 0px #0000001a;
       }
     </style>
-    <atomic-insight-interface data-testid="root-interface">
+    <atomic-insight-interface
+      ${spreadProps(includeCodeRoot ? {id: 'code-root'} : {})}
+      .analytics=${analytics}
+    >
       ${story()}
     </atomic-insight-interface>
   `,
   play: async ({canvasElement, step}) => {
     await customElements.whenDefined('atomic-insight-interface');
-    const canvas = within(canvasElement);
     const insightInterface =
-      await canvas.findByTestId<HTMLAtomicInsightInterfaceElement>(
-        'root-interface'
+      canvasElement.querySelector<AtomicInsightInterface>(
+        'atomic-insight-interface'
       );
     await step('Render the Insight Interface', async () => {
       await insightInterface!.initialize({

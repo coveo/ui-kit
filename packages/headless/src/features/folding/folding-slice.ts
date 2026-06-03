@@ -116,16 +116,17 @@ function createCollectionFromResult(
     resolveRootFromParentResult(relevantResult);
 
   const extendedResultToUseAsRoot = {...resultToUseAsRoot, searchUid};
-
+  const children = resolveChildrenFromFields(
+    extendedResultToUseAsRoot,
+    resultsInCollection,
+    fields
+  );
   return {
     result: extendedResultToUseAsRoot,
-    children: resolveChildrenFromFields(
-      extendedResultToUseAsRoot,
-      resultsInCollection,
-      fields
-    ),
+    children,
     // To understand why "1" instead of "0", see here : https://coveord.atlassian.net/browse/SEARCHAPI-11075. totalNumberOfChildResults is off by 1 by the index design.
-    moreResultsAvailable: relevantResult.totalNumberOfChildResults > 1,
+    moreResultsAvailable:
+      relevantResult.totalNumberOfChildResults > children.length + 1,
     isLoadingMoreResults: false,
   };
 }

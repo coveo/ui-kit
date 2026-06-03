@@ -1,4 +1,5 @@
 import {createRelay} from '@coveo/relay';
+import {CoveoInsightClient} from 'coveo.analytics';
 import type {InsightEngine} from '../../app/insight-engine/insight-engine.js';
 import type {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {buildMockInsightEngine} from '../../test/mock-engine-v2.js';
@@ -22,18 +23,12 @@ const emit = vi.fn();
 
 vi.mock('@coveo/relay');
 
-vi.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = vi.fn(() => ({
-    disable: () => {},
-    logCopyToClipboard: mockLogCopyToClipboard,
-    logCaseSendEmail: mockLogCaseSendEmail,
-    logFeedItemTextPost: mockLogFeedItemTextPost,
-  }));
-
-  return {
-    CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: vi.fn()},
-  };
+vi.mock('coveo.analytics');
+vi.mocked(CoveoInsightClient).mockImplementation(function () {
+  this.disable = () => {};
+  this.logCopyToClipboard = mockLogCopyToClipboard;
+  this.logCaseSendEmail = mockLogCaseSendEmail;
+  this.logFeedItemTextPost = mockLogFeedItemTextPost;
 });
 
 vi.mocked(createRelay).mockReturnValue({
@@ -70,6 +65,7 @@ const expectedDocumentInfo = {
   documentUrl: 'example documentUrl',
   rankingModifier: 'example rankingModifier',
   documentAuthor: 'example author',
+  documentCategory: 'example objectType',
 };
 
 const expectedDocumentIdentifier = {
@@ -90,6 +86,7 @@ const resultParams = {
   searchUid: 'example searchUid',
   raw: buildMockRaw({
     author: 'example author',
+    objecttype: 'example objectType',
     urihash: 'example documentUriHash',
     source: 'example sourceName',
     collection: 'example collectionName',

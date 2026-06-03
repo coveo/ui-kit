@@ -31,6 +31,7 @@ import {analyticsMiddleware} from './analytics-middleware.js';
 import {configuration} from './common-reducers.js';
 import type {EngineConfiguration} from './engine-configuration.js';
 import {instantlyCallableThunkActionMiddleware} from './instantly-callable-middleware.js';
+import {createGenerateAnswerListener} from './listener-middleware/generate-answer-listener-middleware.js';
 import type {LoggerOptions} from './logger.js';
 import {logActionErrorMiddleware} from './logger-middlewares.js';
 import {
@@ -134,8 +135,9 @@ export type CoreEngineNext<
   readonly configuration: Configuration;
 };
 
-export interface EngineOptions<Reducers extends ReducersMapObject>
-  extends ExternalEngineOptions<StateFromReducersMapObject<Reducers>> {
+export interface EngineOptions<
+  Reducers extends ReducersMapObject,
+> extends ExternalEngineOptions<StateFromReducersMapObject<Reducers>> {
   /**
    * Map object of reducers.
    * A reducer is a pure function that takes the previous state and an action, and returns the next state.
@@ -346,7 +348,11 @@ function createStore<
 ) {
   const {preloadedState, configuration} = options;
   const name = configuration.name || 'coveo-headless';
-  const middlewares = createMiddleware(options, thunkExtraArguments.logger);
+  const middlewares = createMiddleware(
+    options,
+    thunkExtraArguments.logger,
+    () => thunkExtraArguments.navigatorContext
+  );
 
   return configureStore({
     preloadedState,
@@ -359,20 +365,28 @@ function createStore<
 
 function createMiddleware<Reducers extends ReducersMapObject>(
   options: EngineOptions<Reducers>,
-  logger: Logger
+  logger: Logger,
+  getNavigatorContext: () => NavigatorContext
 ) {
   const {renewAccessToken} = options.configuration;
   const renewTokenMiddleware = createRenewAccessTokenMiddleware(
     logger,
     renewAccessToken
   );
+  const generateAnswerListener = createGenerateAnswerListener({
+    getNavigatorContext,
+  });
 
   return [
     instantlyCallableThunkActionMiddleware,
     renewTokenMiddleware,
     logActionErrorMiddleware(logger),
     analyticsMiddleware,
-  ].concat(answerApi.middleware, options.middlewares || []);
+  ].concat(
+    answerApi.middleware,
+    generateAnswerListener.middleware,
+    options.middlewares || []
+  );
 }
 
 export const nextAnalyticsUsageWithServiceFeatureWarning =

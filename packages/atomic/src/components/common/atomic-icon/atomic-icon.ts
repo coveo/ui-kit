@@ -5,30 +5,13 @@ import {guard} from 'lit/directives/guard.js';
 import {unsafeSVG} from 'lit/directives/unsafe-svg.js';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {injectStylesForNoShadowDOM} from '@/src/decorators/inject-styles-for-no-shadow-dom';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {watch} from '@/src/decorators/watch';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
+import {LightDomMixin} from '@/src/mixins/light-dom';
 import {parseAssetURL} from '@/src/utils/asset-path-utils';
 import type {AnyBindings} from '../interface/bindings';
-
-class IconFetchError extends Error {
-  static fromStatusCode(url: string, statusCode: number, statusText: string) {
-    return new IconFetchError(url, `status code ${statusCode} (${statusText})`);
-  }
-
-  static fromError(url: string, error: unknown) {
-    return new IconFetchError(url, 'an error', error);
-  }
-
-  private constructor(
-    public readonly url: string,
-    errorMessage: string,
-    public readonly errorObject?: unknown
-  ) {
-    super(`Could not fetch icon from ${url}, got ${errorMessage}.`);
-  }
-}
+import {fetchIcon} from './fetch-icon';
 
 /**
  * The `atomic-icon` component displays an SVG icon with a 1:1 aspect ratio.
@@ -36,9 +19,8 @@ class IconFetchError extends Error {
  * This component can display an icon from those available in the Atomic package, from a specific location, or as an inline SVG element.
  */
 @customElement('atomic-icon')
-@injectStylesForNoShadowDOM
 export class AtomicIcon
-  extends InitializeBindingsMixin(LitElement)
+  extends LightDomMixin(InitializeBindingsMixin(LitElement))
   implements InitializableComponent<AnyBindings>
 {
   static styles = css`
@@ -78,17 +60,7 @@ export class AtomicIcon
 
   private async fetchIcon(url: string) {
     try {
-      const response = await fetch(url).catch((e) => {
-        throw IconFetchError.fromError(url, e);
-      });
-      if (response.status !== 200 && response.status !== 304) {
-        throw IconFetchError.fromStatusCode(
-          url,
-          response.status,
-          response.statusText
-        );
-      }
-      return await response.text();
+      return await fetchIcon(url);
     } catch (e) {
       this.error = e as Error;
       this.requestUpdate();
@@ -99,8 +71,7 @@ export class AtomicIcon
   private validateSVG(svg: string) {
     if (!/^<svg[\s\S]+<\/svg>$/gm.test(svg)) {
       this.bindings.engine.logger.warn(
-        'The inline "icon" prop is not an svg element. You may encounter rendering issues.',
-        this.icon
+        'The inline "icon" prop is not an svg element. You may encounter rendering issues.'
       );
     }
   }

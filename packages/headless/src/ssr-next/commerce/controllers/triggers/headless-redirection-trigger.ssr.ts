@@ -7,8 +7,8 @@ import type {SearchOnlyControllerDefinitionWithoutProps} from '../../types/contr
 
 export type {RedirectionTrigger, RedirectionTriggerState};
 
-export interface RedirectionTriggerDefinition
-  extends SearchOnlyControllerDefinitionWithoutProps<RedirectionTrigger> {}
+export type RedirectionTriggerDefinition =
+  SearchOnlyControllerDefinitionWithoutProps<RedirectionTrigger>;
 
 /**
  * Defines the `RedirectionTrigger` controller for the purpose of server-side rendering.

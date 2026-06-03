@@ -132,7 +132,7 @@ export const registerCategoryFacet = createAction(
 
 export interface ToggleSelectCategoryFacetValueActionCreatorPayload {
   /**
-   * The unique identifier of the facet (e.g., `"1"`).
+   * The unique identifier of the facet (for example, `"1"`).
    */
   facetId: string;
 
@@ -168,12 +168,12 @@ export const deselectAllCategoryFacetValues = createAction(
 
 export interface UpdateCategoryFacetNumberOfValuesActionCreatorPayload {
   /**
-   * The unique identifier of the facet (e.g., `"1"`).
+   * The unique identifier of the facet (for example, `"1"`).
    */
   facetId: string;
 
   /**
-   * The new number of facet values (e.g., `10`).
+   * The new number of facet values (for example, `10`).
    */
   numberOfValues: number;
 }
@@ -189,7 +189,7 @@ export const updateCategoryFacetNumberOfValues = createAction(
 
 export interface UpdateCategoryFacetSortCriterionActionCreatorPayload {
   /**
-   * The unique identifier of the facet (e.g., `"1"`).
+   * The unique identifier of the facet (for example, `"1"`).
    */
   facetId: string;
 
@@ -210,7 +210,7 @@ export const updateCategoryFacetSortCriterion = createAction(
 
 export interface UpdateCategoryFacetBasePathActionCreatorPayload {
   /**
-   * The unique identifier of the facet (e.g., `"1"`).
+   * The unique identifier of the facet (for example, `"1"`).
    */
   facetId: string;
 

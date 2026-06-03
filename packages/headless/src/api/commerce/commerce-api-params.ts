@@ -25,6 +25,10 @@ export interface ContextParam {
   context: ContextParams;
 }
 
+export interface EnableResultsParam {
+  enableResults?: boolean;
+}
+
 type ProductParam = {
   productId: string;
 };
@@ -37,6 +41,7 @@ type ContextParams = {
   purchased?: CartItemParam[];
   capture: boolean;
   source: string[];
+  custom?: Record<string, unknown>;
 };
 
 export interface ViewParams {
@@ -85,6 +90,10 @@ export interface FacetQueryParam {
   facetQuery: string;
 }
 
+export interface NumberOfValuesParam {
+  numberOfValues: number;
+}
+
 export interface FacetIdParam {
   facetId: string;
 }
@@ -95,4 +104,8 @@ export interface IgnorePathsParam {
 
 export interface SlotIdParam {
   slotId: string;
+}
+
+export interface PlacementIdsParam {
+  placementIds?: string[];
 }

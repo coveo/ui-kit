@@ -1,0 +1,233 @@
+@utility cell-result-mobile {
+  grid-template-areas:
+    'badges'
+    'visual'
+    'title'
+    'title-metadata'
+    'emphasized'
+    'excerpt'
+    'children'
+    'bottom-metadata'
+    'actions';
+  grid-template-columns: 100%;
+  grid-template-rows: repeat(9, auto);
+
+  /* == Density styles == */
+  &.density-comfortable {
+    atomic-result-section-visual {
+      margin-bottom: 1rem;
+    }
+
+    &.image-small {
+      atomic-result-section-visual {
+        width: 10.25rem;
+        height: 10.25rem;
+      }
+    }
+
+    atomic-result-section-badges {
+      @apply set-font-size-sm;
+
+      margin-bottom: 1rem;
+      --row-height: 2rem;
+    }
+
+    atomic-result-section-actions {
+      @apply set-font-size-base;
+
+      margin-top: 1.25rem;
+      --row-height: 2rem;
+    }
+
+    atomic-result-section-title {
+      @apply set-font-size-lg;
+
+      max-height: 3rem;
+      @apply line-clamp-2;
+    }
+
+    atomic-result-section-title-metadata {
+      @apply set-font-size-sm;
+      margin-top: 0.475rem;
+    }
+
+    atomic-result-section-emphasized {
+      font-weight: 500;
+      @apply set-font-size-2xl;
+    }
+
+    atomic-result-section-excerpt {
+      @apply set-font-size-base;
+
+      margin-top: 1.25rem;
+      @apply line-clamp-2;
+    }
+
+    atomic-result-section-bottom-metadata {
+      @apply set-font-size-sm;
+
+      margin-top: 1rem;
+      max-height: 3rem;
+    }
+
+    atomic-result-section-children {
+      @apply set-font-size-base;
+
+      margin-top: 1.25rem;
+    }
+  }
+
+  &.density-normal {
+    atomic-result-section-visual {
+      margin-bottom: 0.75rem;
+    }
+
+    &.image-small {
+      atomic-result-section-visual {
+        width: 10.25rem;
+        height: 10.25rem;
+      }
+    }
+
+    atomic-result-section-badges {
+      @apply set-font-size-sm;
+
+      margin-bottom: 1rem;
+      --row-height: 2rem;
+    }
+
+    atomic-result-section-actions {
+      @apply set-font-size-base;
+
+      margin-top: 1rem;
+      --row-height: 2rem;
+    }
+
+    atomic-result-section-title {
+      @apply set-font-size-lg;
+
+      max-height: 3rem;
+      @apply line-clamp-2;
+    }
+
+    atomic-result-section-title-metadata {
+      @apply set-font-size-sm;
+      margin-top: 0.475rem;
+    }
+
+    atomic-result-section-emphasized {
+      font-weight: 500;
+      @apply set-font-size-2xl;
+    }
+
+    atomic-result-section-excerpt {
+      @apply set-font-size-base;
+
+      margin-top: 1rem;
+      @apply line-clamp-2;
+    }
+
+    atomic-result-section-bottom-metadata {
+      @apply set-font-size-sm;
+
+      margin-top: 0.75rem;
+      max-height: 3rem;
+    }
+
+    atomic-result-section-children {
+      @apply set-font-size-base;
+
+      margin-top: 1rem;
+    }
+  }
+
+  &.density-compact {
+    atomic-result-section-visual {
+      margin-bottom: 0.5rem;
+    }
+
+    &.image-large {
+      atomic-result-section-visual {
+        width: 100%;
+      }
+    }
+    &.image-small {
+      atomic-result-section-visual {
+        width: 10.25rem;
+        height: 10.25rem;
+      }
+    }
+
+    atomic-result-section-badges {
+      @apply set-font-size-sm;
+
+      margin-bottom: 1rem;
+      --row-height: 2rem;
+    }
+
+    atomic-result-section-actions {
+      @apply set-font-size-base;
+
+      margin-top: 0.75rem;
+      --row-height: 2rem;
+    }
+
+    atomic-result-section-title {
+      @apply set-font-size-lg;
+
+      max-height: 3rem;
+      @apply line-clamp-2;
+    }
+
+    atomic-result-section-title-metadata {
+      @apply set-font-size-sm;
+      margin-top: 0.475rem;
+    }
+
+    atomic-result-section-emphasized {
+      font-weight: 500;
+      @apply set-font-size-2xl;
+    }
+
+    atomic-result-section-excerpt {
+      @apply set-font-size-base;
+
+      margin-top: 0.75rem;
+      @apply line-clamp-1;
+    }
+
+    atomic-result-section-bottom-metadata {
+      @apply set-font-size-sm;
+
+      margin-top: 0.5rem;
+      max-height: 3rem;
+    }
+
+    atomic-result-section-children {
+      @apply set-font-size-base;
+
+      margin-top: 0.75rem;
+    }
+  }
+
+  /* == Image styles == */
+  &.image-small {
+    atomic-result-section-visual {
+      @apply aspect-square-[9rem];
+      width: 100%;
+    }
+  }
+
+  &.image-icon {
+    atomic-result-section-visual {
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+
+  &.image-none {
+    atomic-result-section-visual {
+      display: none;
+    }
+  }
+}

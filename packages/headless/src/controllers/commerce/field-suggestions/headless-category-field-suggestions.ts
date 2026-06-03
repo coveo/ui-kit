@@ -4,12 +4,12 @@ import type {
   CommerceEngineState,
 } from '../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../app/state-key.js';
+import {commerceCategoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/commerce/facets/facet-search-set/category/commerce-category-facet-search-set-slice.js';
 import {getFacetIdWithCommerceFieldSuggestionNamespace} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions.js';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice.js';
 import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice.js';
 import type {FieldSuggestionsFacet} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-state.js';
 import {selectCategoryFacetSearchResult} from '../../../features/facets/facet-search-set/category/category-facet-search-actions.js';
-import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice.js';
 import type {
   CategoryFacetSearchSection,
   CommerceFacetSetSection,
@@ -53,8 +53,7 @@ export type CategoryFieldSuggestionsState = CoreCategoryFieldSuggestionsState &
  * @deprecated
  */
 export interface CategoryFieldSuggestions
-  extends Controller,
-    FacetControllerType<'hierarchical'> {
+  extends Controller, FacetControllerType<'hierarchical'> {
   /**
    * Requests field suggestions based on a query.
    *

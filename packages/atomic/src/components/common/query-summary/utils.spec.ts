@@ -60,7 +60,9 @@ describe('#getQuerySummaryI18nParameters', () => {
   it('should return the correct aria live message when isLoading is false', async () => {
     const {parameters} = await setup({isLoading: false});
 
-    expect(parameters.ariaLiveMessage).toBe('Results 1-10 of 50 for query');
+    expect(parameters.ariaLiveMessage).toBe(
+      'Results loaded. Results 1-10 of 50 for query'
+    );
   });
 
   it('should render the highlights with correct values', async () => {
@@ -143,7 +145,9 @@ describe('#getProductQuerySummaryI18nParameters', () => {
   it('should return the correct aria live message when isLoading is false', async () => {
     const {parameters} = await setup({isLoading: false});
 
-    expect(parameters.ariaLiveMessage).toBe('Products 1-10 of 50 for query');
+    expect(parameters.ariaLiveMessage).toBe(
+      'Results loaded. Products 1-10 of 50 for query'
+    );
   });
 
   it('should render the highlights with correct values', async () => {

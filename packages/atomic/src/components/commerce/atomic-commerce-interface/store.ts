@@ -3,7 +3,7 @@ import {
   type CommerceEngine,
   Selectors,
 } from '@coveo/headless/commerce';
-import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
+import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint-utils';
 import {
   type BaseStore,
   createBaseStore,
@@ -11,7 +11,7 @@ import {
   setLoadingFlag,
   unsetLoadingFlag,
 } from '../../common/interface/store';
-import {makeDesktopQuery} from '../../search/atomic-layout/search-layout';
+import {makeDesktopQuery} from '../../search/atomic-search-layout/search-layout';
 
 interface Data {
   loadingFlags: string[];

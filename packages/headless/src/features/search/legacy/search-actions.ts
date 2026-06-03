@@ -20,7 +20,6 @@ import {
   updateInstantResultsQuery,
 } from '../../instant-results/instant-results-actions.js';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../../search-and-folding/legacy/search-and-folding-request.js';
-import {updateSearchAction} from '../search-actions.js';
 import {logFetchMoreResults} from '../search-analytics-actions.js';
 import {
   type MappedSearchRequest,
@@ -156,7 +155,7 @@ const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
 
 export async function legacyFetchInstantResults(
   payload: FetchInstantResultsActionCreatorPayload,
-  // biome-ignore lint/suspicious/noExplicitAny: <>
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
   config: any
 ) {
   validatePayload(payload, {
@@ -204,7 +203,7 @@ export async function legacyFetchInstantResults(
 
 export async function legacyFetchPage(
   state: StateNeededByExecuteSearch,
-  // biome-ignore lint/suspicious/noExplicitAny: <>
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
   config: any,
   searchAction: LegacySearchAction
 ) {
@@ -232,7 +231,7 @@ export async function legacyFetchPage(
 }
 
 export async function legacyFetchMoreResults(
-  // biome-ignore lint/suspicious/noExplicitAny: <>
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
   config: any,
   state: StateNeededByExecuteSearch
 ) {
@@ -258,7 +257,7 @@ export async function legacyFetchMoreResults(
 }
 
 async function legacyFetchFacetValues(
-  // biome-ignore lint/suspicious/noExplicitAny: <>
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
   config: any,
   searchAction: LegacySearchAction,
   state: StateNeededByExecuteSearch
@@ -285,7 +284,7 @@ async function legacyFetchFacetValues(
 
 export async function legacyExecuteSearch(
   state: StateNeededByExecuteSearch,
-  // biome-ignore lint/suspicious/noExplicitAny: <>
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
   config: any,
   searchAction: LegacySearchAction
 ) {
@@ -298,14 +297,6 @@ export async function legacyExecuteSearch(
     preprocessRequest,
     logger,
   });
-
-  if (eventDescription?.actionCause) {
-    config.dispatch(
-      updateSearchAction({
-        actionCause: eventDescription.actionCause,
-      })
-    );
-  }
 
   const request = await buildSearchRequest(state, eventDescription);
 

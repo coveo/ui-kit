@@ -42,7 +42,7 @@ export type InsightQueryRequest = InsightParam &
   LocaleParam &
   PipelineRuleParams;
 
-interface CaseContextParam {
+export interface CaseContextParam {
   caseContext?: Record<string, string>;
 }
 

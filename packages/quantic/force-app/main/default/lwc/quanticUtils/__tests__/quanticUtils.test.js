@@ -2,7 +2,7 @@ import {
   I18nUtils,
   buildTemplateTextFromResult,
   copyToClipboard,
-  TimeSpan,
+  unwrapLockerProxiedObject,
 } from 'c/quanticUtils';
 
 describe('c/quanticUtils', () => {
@@ -202,22 +202,32 @@ describe('c/quanticUtils', () => {
     });
   });
 
-  describe('TimeSpan', () => {
-    describe('getYoutubeFormatTimestamp', () => {
-      it('should return the correct YouTube timestamp format for timestamps of less than a minute', () => {
-        const timeSpan = new TimeSpan(45000); // 45 seconds
-        expect(timeSpan.getYoutubeFormatTimestamp()).toBe('0:45');
-      });
+  describe('unwrapLockerObject', () => {
+    it('should deeply clone complex objects while preserving primitive values', () => {
+      const original = {
+        title: 'Example',
+        raw: {
+          foo: 'bar',
+          tags: ['a', {value: 'b'}],
+        },
+        score: 42,
+      };
 
-      it('should return the correct YouTube timestamp format for timestamps of more than an hour', () => {
-        const timeSpan = new TimeSpan(3661000); // 1 hour, 1 minute, and 1 second
-        expect(timeSpan.getYoutubeFormatTimestamp()).toBe('1:01:01');
-      });
+      const unwrapped = unwrapLockerProxiedObject(original);
 
-      it('should return the correct YouTube timestamp format for timestamps of less than an hour', () => {
-        const timeSpan = new TimeSpan(300000); // 5 minutes
-        expect(timeSpan.getYoutubeFormatTimestamp()).toBe('05:00');
-      });
+      expect(unwrapped).toEqual(original);
+      expect(unwrapped).not.toBe(original);
+      expect(unwrapped.raw).not.toBe(original.raw);
+      expect(unwrapped.raw.tags).not.toBe(original.raw.tags);
+      expect(unwrapped.raw.tags[1]).not.toBe(original.raw.tags[1]);
+    });
+
+    it('should return primitive values as-is', () => {
+      expect(unwrapLockerProxiedObject(undefined)).toBeUndefined();
+      expect(unwrapLockerProxiedObject(null)).toBeNull();
+      expect(unwrapLockerProxiedObject('value')).toBe('value');
+      expect(unwrapLockerProxiedObject(0)).toBe(0);
+      expect(unwrapLockerProxiedObject(false)).toBe(false);
     });
   });
 });

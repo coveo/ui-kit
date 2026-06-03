@@ -5,6 +5,7 @@ import type {
   InsightAction,
   LegacySearchAction,
 } from '../../../features/analytics/analytics-utils.js';
+import {updateQuery} from '../../../features/query/query-actions.js';
 import {logSearchboxSubmit} from '../../../features/query/query-analytics-actions.js';
 import {queryReducer as query} from '../../../features/query/query-slice.js';
 import {
@@ -55,7 +56,7 @@ import {
   searchBoxOptionsSchema,
 } from './headless-core-search-box-options.js';
 
-export type {SearchBoxOptions, SuggestionHighlightingOptions, Delimiters};
+export type {Delimiters, SearchBoxOptions, SuggestionHighlightingOptions};
 
 export type SearchBoxProps = SearchBoxPropsBase &
   (NextSearchBoxProps | LegacySearchBoxProps);
@@ -66,7 +67,7 @@ interface NextSearchBoxProps {
    */
   executeSearchActionCreator: (
     arg: TransitiveSearchAction
-    // biome-ignore lint/suspicious/noExplicitAny: third-party API requires 'any'
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- third-party API requires 'any'
   ) => AsyncThunkAction<any, TransitiveSearchAction, any>;
 
   isNextAnalyticsReady: true;
@@ -78,7 +79,7 @@ interface LegacySearchBoxProps {
    */
   executeSearchActionCreator: (
     arg: LegacySearchAction
-    // biome-ignore lint/suspicious/noExplicitAny: third-party API requires 'any'
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- third-party API requires 'any'
   ) => AsyncThunkAction<any, LegacySearchAction, any>;
 
   isNextAnalyticsReady: false;
@@ -96,11 +97,11 @@ interface SearchBoxPropsBase {
   executeSearchActionCreator:
     | ((
         arg: TransitiveSearchAction
-        // biome-ignore lint/suspicious/noExplicitAny: third-party API requires 'any'
+        // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- third-party API requires 'any'
       ) => AsyncThunkAction<any, TransitiveSearchAction, any>)
     | ((
         arg: LegacySearchAction
-        // biome-ignore lint/suspicious/noExplicitAny: third-party API requires 'any'
+        // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- third-party API requires 'any'
       ) => AsyncThunkAction<any, LegacySearchAction, any>);
 
   /**
@@ -108,7 +109,7 @@ interface SearchBoxPropsBase {
    */
   fetchQuerySuggestionsActionCreator: (
     arg: FetchQuerySuggestionsActionCreatorPayload
-    // biome-ignore lint/suspicious/noExplicitAny: third-party API requires 'any'
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- third-party API requires 'any'
   ) => AsyncThunkAction<any, FetchQuerySuggestionsActionCreatorPayload, any>;
   //Indicate if the executeSearchActionCreator can use the new analytics logic.
   isNextAnalyticsReady: boolean;
@@ -242,6 +243,9 @@ export function buildCoreSearchBox(
         count: options.numberOfSuggestions,
       })
     );
+  }
+  if (options.enableQuerySyntax) {
+    dispatch(updateQuery({enableQuerySyntax: options.enableQuerySyntax}));
   }
 
   const getValue = () => engine.state.querySet[options.id];

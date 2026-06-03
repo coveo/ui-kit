@@ -1,14 +1,9 @@
 import {expect, test} from './fixture';
 
-test.describe('AtomicCommerceProductsPerPage', () => {
+test.describe('atomic-commerce-products-per-page', () => {
   test.beforeEach(async ({productsPerPage}) => {
     await productsPerPage.load();
     await productsPerPage.hydrated.waitFor();
-  });
-
-  test('should be A11Y compliant', async ({makeAxeBuilder}) => {
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations.length).toEqual(0);
   });
 
   test('should display the correct number of choices', async ({

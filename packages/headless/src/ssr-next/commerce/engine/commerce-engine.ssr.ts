@@ -2,29 +2,25 @@
  * Utility functions to be used for Commerce Server Side Rendering.
  */
 
-import type {CommerceEngineOptions} from '../../../app/commerce-engine/commerce-engine.js';
-import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import {
-  buildFactory,
-  type CommerceEngineDefinitionOptions,
-} from '../factories/build-factory.js';
+import {createAccessTokenManager} from '../../common/access-token-manager.js';
+import {defineCart} from '../controllers/cart/headless-cart.ssr.js';
+import {defineContext} from '../controllers/context/headless-context.ssr.js';
+import {defineParameterManager} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
 import {hydratedStaticStateFactory} from '../factories/hydrated-state-factory.js';
 import {hydratedRecommendationStaticStateFactory} from '../factories/recommendation-hydrated-state-factory.js';
 import {fetchRecommendationStaticStateFactory} from '../factories/recommendation-static-state-factory.js';
 import {fetchStaticStateFactory} from '../factories/static-state-factory.js';
 import {SolutionType} from '../types/controller-constants.js';
-import type {ControllerDefinitionsMap} from '../types/controller-definitions.js';
-import type {EngineDefinition} from '../types/engine.js';
-
-export interface CommerceEngineDefinition<
-  TControllers extends ControllerDefinitionsMap<Controller>,
-  TSolutionType extends SolutionType,
-> extends EngineDefinition<
-    TControllers,
-    CommerceEngineOptions,
-    TSolutionType
-  > {}
+import type {
+  AugmentedControllerDefinition,
+  ControllerDefinitionsMap,
+} from '../types/controller-definitions.js';
+import type {
+  CommerceEngineDefinition,
+  CommerceEngineDefinitionOptions,
+} from '../types/engine.js';
+import {validateControllerNames} from '../validation/controller-validation.js';
 
 /**
  * Initializes a Commerce engine definition in SSR with given controllers definitions and commerce engine config.
@@ -38,9 +34,15 @@ export interface CommerceEngineDefinition<
  *
  * @example
  * ```ts
- * const engineDefinition = defineCommerceEngine(engineConfig);
- * type SearchStaticState = InferStaticState<typeof engineDefinition>;
- * type SearchHydratedState = InferHydratedState<typeof engineDefinition>;
+ * const { listingEngineDefinition } = defineCommerceEngine(engineConfig);
+ *
+ * const staticState = await listingEngineDefinition.fetchStaticState({
+ *   navigatorContext: {/*...* /},
+ *   context: {/*...* /},
+ * });
+ *
+ * type SearchStaticState = InferStaticState<typeof listingEngineDefinition>;
+ * type SearchHydratedState = InferHydratedState<typeof listingEngineDefinition>;
  * ```
  *
  * @group Engine
@@ -69,82 +71,80 @@ export function defineCommerceEngine<
 } {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
 
-  const getOptions = () => engineOptions;
+  const tokenManager = createAccessTokenManager(
+    engineOptions.configuration.accessToken
+  );
 
-  const setNavigatorContextProvider = (
-    navigatorContextProvider: NavigatorContextProvider
+  const onAccessTokenUpdate = (
+    updateCallback: (accessToken: string) => void
   ) => {
-    engineOptions.navigatorContextProvider = navigatorContextProvider;
+    tokenManager.registerCallback(updateCallback);
   };
 
-  const getAccessToken = () => engineOptions.configuration.accessToken;
+  const definitionOptions = {
+    ...engineOptions,
+    onAccessTokenUpdate,
+  };
 
+  const getAccessToken = () => tokenManager.getAccessToken();
   const setAccessToken = (accessToken: string) => {
     engineOptions.configuration.accessToken = accessToken;
+    tokenManager.setAccessToken(accessToken);
   };
 
-  const build = buildFactory<TControllerDefinitions>(
-    controllerDefinitions,
-    getOptions()
-  );
+  controllerDefinitions && validateControllerNames(controllerDefinitions);
+
+  const augmentedControllerDefinition = {
+    ...controllerDefinitions,
+    parameterManager: defineParameterManager(),
+    context: defineContext(),
+    cart: defineCart(),
+  } as AugmentedControllerDefinition<TControllerDefinitions>;
+
   const fetchStaticState = fetchStaticStateFactory<TControllerDefinitions>(
-    controllerDefinitions,
-    getOptions()
+    augmentedControllerDefinition,
+    definitionOptions
   );
   const hydrateStaticState = hydratedStaticStateFactory<TControllerDefinitions>(
-    controllerDefinitions,
-    getOptions()
+    augmentedControllerDefinition,
+    definitionOptions
   );
   const fetchRecommendationStaticState =
     fetchRecommendationStaticStateFactory<TControllerDefinitions>(
-      controllerDefinitions,
-      getOptions()
+      augmentedControllerDefinition,
+      definitionOptions
     );
   const hydrateRecommendationStaticState =
     hydratedRecommendationStaticStateFactory<TControllerDefinitions>(
-      controllerDefinitions,
-      getOptions()
+      augmentedControllerDefinition,
+      definitionOptions
     );
+  const commonMethods = {
+    getAccessToken,
+    setAccessToken,
+  };
 
   return {
     listingEngineDefinition: {
-      build: build(SolutionType.listing),
       fetchStaticState: fetchStaticState(SolutionType.listing),
       hydrateStaticState: hydrateStaticState(SolutionType.listing),
-      setNavigatorContextProvider,
-      getAccessToken,
-      setAccessToken,
-    } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.listing>,
+      ...commonMethods,
+    },
     searchEngineDefinition: {
-      build: build(SolutionType.search),
       fetchStaticState: fetchStaticState(SolutionType.search),
       hydrateStaticState: hydrateStaticState(SolutionType.search),
-      setNavigatorContextProvider,
-      getAccessToken,
-      setAccessToken,
-    } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.search>,
+      ...commonMethods,
+    },
     recommendationEngineDefinition: {
-      build: build(SolutionType.recommendation),
       fetchStaticState: fetchRecommendationStaticState,
       hydrateStaticState: hydrateRecommendationStaticState,
-      setNavigatorContextProvider,
-      getAccessToken,
-      setAccessToken,
-    } as CommerceEngineDefinition<
-      TControllerDefinitions,
-      SolutionType.recommendation
-    >,
+      ...commonMethods,
+    },
     // TODO KIT-3738 :  The standaloneEngineDefinition should not be async since no request is sent to the API
     standaloneEngineDefinition: {
-      build: build(SolutionType.standalone),
       fetchStaticState: fetchStaticState(SolutionType.standalone),
       hydrateStaticState: hydrateStaticState(SolutionType.standalone),
-      setNavigatorContextProvider,
-      getAccessToken,
-      setAccessToken,
-    } as CommerceEngineDefinition<
-      TControllerDefinitions,
-      SolutionType.standalone
-    >,
+      ...commonMethods,
+    },
   };
 }

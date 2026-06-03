@@ -8,13 +8,13 @@ import type {
 import {stateKey} from '../../../app/state-key.js';
 import {clearAllCoreFacets} from '../../../features/commerce/facets/core-facet/core-facet-actions.js';
 import {getFacetIdWithCommerceFieldSuggestionNamespace} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions.js';
+import {commerceSpecificFacetSearchSetReducer as facetSearchSet} from '../../../features/commerce/facets/facet-search-set/regular/commerce-specific-facet-search-set-slice.js';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice.js';
 import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice.js';
 import {searchSerializer} from '../../../features/commerce/parameters/parameters-serializer.js';
 import {updateQuery} from '../../../features/commerce/query/query-actions.js';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice.js';
 import {selectFacetSearchResult} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
-import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice.js';
 import type {
   CommerceFacetSetSection,
   CommerceQuerySection,
@@ -53,8 +53,7 @@ export type FilterSuggestionsState = RegularFacetSearchState &
  * @category FilterSuggestions
  */
 export interface FilterSuggestions
-  extends Controller,
-    FacetControllerType<'regular'> {
+  extends Controller, FacetControllerType<'regular'> {
   /**
    * Resets the query in the controller state and clears the filter suggestions.
    */
@@ -96,7 +95,7 @@ export interface FilterSuggestions
    * query.
    *
    * For example, if this method is called with `jeans` as an argument, it will request values from the controller's
-   * field (e.g., `ec_brand`) that would return results if selected when the search query is `jeans` (such as
+   * field (for example, `ec_brand`) that would return results if selected when the search query is `jeans` (such as
    * `Calvin Klein`, `Columbia`, and `Nautica`).
    *
    * @param query - The search query to use as context to request the category filter suggestions. In a typical
@@ -192,9 +191,8 @@ export function buildFilterSuggestions(
     },
 
     get state() {
-      const {displayName, field, facetId} = facetForFieldSuggestionsSelector(
-        getState()
-      );
+      const {displayName, field, facetId} =
+        facetForFieldSuggestionsSelector(getState());
       return {
         displayName,
         field,

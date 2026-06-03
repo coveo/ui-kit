@@ -1,9 +1,11 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions.js';
 import {disableFacet} from '../../../facet-options/facet-options-actions.js';
+import {isFacetVisibleOnTab} from '../../../facet-options/facet-options-utils.js';
 import {change} from '../../../history/history-actions.js';
 import {executeSearch} from '../../../search/search-actions.js';
 import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions.js';
+import {updateActiveTab} from '../../../tab-set/tab-set-actions.js';
 import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helpers.js';
 import {
   defaultRangeFacetOptions,
@@ -43,8 +45,12 @@ export const numericFacetSetReducer = createReducer(
     builder
       .addCase(registerNumericFacet, (state, action) => {
         const {payload} = action;
+        const {tabs} = payload;
         const request = buildNumericFacetRequest(payload);
-        registerRangeFacet(state, getNumericFacetSetSliceInitialState(request));
+        registerRangeFacet(
+          state,
+          getNumericFacetSetSliceInitialState(request, tabs)
+        );
       })
       .addCase(
         change.fulfilled,
@@ -87,6 +93,18 @@ export const numericFacetSetReducer = createReducer(
       })
       .addCase(disableFacet, (state, action) => {
         handleRangeFacetDeselectAll(state, action.payload);
+      })
+      .addCase(updateActiveTab, (state, action) => {
+        const newActiveTab = action.payload;
+        Object.keys(state).forEach((facetId) => {
+          const facetSlice = state[facetId]!;
+          const hasTabs =
+            facetSlice.tabs?.included?.length ||
+            facetSlice.tabs?.excluded?.length;
+          if (hasTabs && !isFacetVisibleOnTab(facetSlice.tabs, newActiveTab)) {
+            handleRangeFacetDeselectAll(state, facetId);
+          }
+        });
       });
   }
 );

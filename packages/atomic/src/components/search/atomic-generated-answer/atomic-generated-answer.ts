@@ -1,0 +1,846 @@
+import {NumberValue, Schema} from '@coveo/bueno';
+import {
+  buildGeneratedAnswer,
+  buildInteractiveCitation,
+  buildSearchStatus,
+  buildTabManager,
+  type GeneratedAnswer,
+  type GeneratedAnswerCitation,
+  type GeneratedAnswerState,
+  type GeneratedAnswerWithFollowUps,
+  type SearchStatus,
+  type SearchStatusState,
+  type TabManager,
+  type TabManagerState,
+} from '@coveo/headless';
+import {html, LitElement, nothing, type PropertyValueMap} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {classMap} from 'lit/directives/class-map.js';
+import {when} from 'lit/directives/when.js';
+import {GeneratedAnswerController} from '@/src/components/common/generated-answer/generated-answer-controller';
+import '@/src/components/common/atomic-generated-answer-thread/atomic-generated-answer-thread.js';
+import '@/src/components/common/atomic-ask-follow-up-input/atomic-ask-follow-up-input.js';
+import {renderAnswerContent} from '@/src/components/common/generated-answer/render-answer-content';
+import {renderCardHeader} from '@/src/components/common/generated-answer/render-card-header';
+import {renderCitations} from '@/src/components/common/generated-answer/render-citations';
+import {renderCustomNoAnswerMessage} from '@/src/components/common/generated-answer/render-custom-no-answer-message';
+import {renderDisclaimer} from '@/src/components/common/generated-answer/render-disclaimer';
+import {renderFeedbackAndCopyButtons} from '@/src/components/common/generated-answer/render-feedback-and-copy-buttons';
+import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
+import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
+import {arrayConverter} from '@/src/converters/array-converter';
+import {booleanConverter} from '@/src/converters/boolean-converter';
+import {createLegacyArrayStringConverter} from '@/src/converters/legacy-array-string-converter';
+import {bindStateToController} from '@/src/decorators/bind-state';
+import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
+import type {InitializableComponent} from '@/src/decorators/types';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
+import {debounce} from '@/src/utils/debounce-utils';
+import {getNamedSlotContent} from '@/src/utils/slot-utils';
+import {shouldDisplayOnCurrentTab} from '@/src/utils/tab-utils';
+import atomicGeneratedAnswerStyles from './atomic-generated-answer.tw.css.js';
+
+const GENERATED_ANSWER_THREAD_EXPORT_PARTS = [
+  'feedback-and-copy-buttons',
+  'feedback-button',
+  'copy-button',
+  'citations-label',
+  'citation',
+  'citation-popover',
+  'generated-text',
+  'answer-code-block',
+  'answer-emphasis',
+  'answer-inline-code',
+  'answer-heading-1',
+  'answer-heading-2',
+  'answer-heading-3',
+  'answer-heading-4',
+  'answer-heading-5',
+  'answer-heading-6',
+  'answer-list-item',
+  'answer-link',
+  'answer-link-text',
+  'answer-link-icon',
+  'answer-ordered-list',
+  'answer-paragraph',
+  'answer-quote-block',
+  'answer-unordered-list',
+  'answer-strong',
+  'answer-table',
+  'answer-table-container',
+  'answer-table-content',
+  'answer-table-header',
+].join(',');
+
+const FOLLOW_UP_INPUT_EXPORT_PARTS = [
+  'input-container',
+  'input-field',
+  'submit-button',
+  'submit-icon',
+].join(',');
+
+/**
+ * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
+ * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
+ *
+ * @slot no-answer-message - Lets you pass a custom sorry message when no answer is generated.
+ *
+ * @part container - The container displaying the generated answer.
+ * @part header -   The header container of the generated answer card.
+ * @part header-icon - The icon in the header of the generated answer card.
+ * @part header-label - The header label of the generated answer card.
+ * @part feedback-button - The "like" and "dislike" buttons.
+ * @part feedback-and-copy-buttons - The container for the feedback and copy buttons.
+ * @part toggle - The switch to toggle the visibility of the generated answer.
+ * @part copy-button - The "Copy answer" button.
+ * @part generated-content-container - The container for the generated answer content.
+ * @part generated-content - The main content of the generated answer.
+ * @part retry-container - The container for the "retry" section.
+ * @part generated-text - The text of the generated answer.
+ * @part citations-label - The header of the citations list.
+ *
+ * @part answer-code-block - The generated answer multi-line code blocks.
+ * @part answer-emphasis - The generated answer emphasized text elements.
+ * @part answer-inline-code - The generated answer inline code elements.
+ * @part answer-heading-1 - The generated answer level 1 heading elements.
+ * @part answer-heading-2 - The generated answer level 2 heading elements.
+ * @part answer-heading-3 - The generated answer level 3 heading elements.
+ * @part answer-heading-4 - The generated answer level 4 heading elements.
+ * @part answer-heading-5 - The generated answer level 5 heading elements.
+ * @part answer-heading-6 - The generated answer level 6 heading elements.
+ * @part answer-list-item - The generated answer list item elements for both ordered and unordered lists.
+ * @part answer-link - The generated answer inline link elements.
+ * @part answer-link-text - The text content of the inline link element.
+ * @part answer-link-icon - The icon of the the inline link element.
+ * @part answer-ordered-list - The generated answer ordered list elements.
+ * @part answer-paragraph - The generated answer paragraph elements.
+ * @part answer-quote-block - The generated answer quote block elements.
+ * @part answer-unordered-list - The generated answer unordered list elements.
+ * @part answer-strong - The generated answer strong text elements.
+ * @part answer-table - The generated answer table elements.
+ * @part answer-table-container - The generated answer table container elements.
+ * @part answer-table-content - The generated answer table content cell elements.
+ * @part answer-table-header - The generated answer table header cell elements.
+ *
+ * @part citation - The link that allows the user to navigate to the item.
+ * @part citation-popover - The pop-up that shows an item preview when the user hovers over the citation.
+ *
+ * @part input-container - The follow-up input container.
+ * @part input-field - The follow-up textarea input field.
+ * @part submit-button - The follow-up submit button.
+ * @part submit-icon - The icon displayed in the follow-up submit button.
+ */
+@customElement('atomic-generated-answer')
+@bindings()
+@withTailwindStyles
+export class AtomicGeneratedAnswer
+  extends LitElement
+  implements InitializableComponent<Bindings>
+{
+  static styles = [atomicGeneratedAnswerStyles];
+  private static readonly propsSchema = new Schema({
+    maxCollapsedHeight: new NumberValue({
+      min: 9,
+      max: 32,
+      required: false,
+    }),
+  });
+
+  // TODO V4 (KIT-5306): Remove converter and use arrayConverter directly.
+  private static readonly fieldsToIncludeInCitationsConverter =
+    createLegacyArrayStringConverter((value) => {
+      console.warn(
+        `Starting from Atomic v4, the "fields-to-include-in-citations" property will only accept an array of strings. Using a comma-separated string value ("${value}") is now deprecated. Please update the value to be a JSON array. For example: fields-to-include-in-citations='["fieldA","fieldB"]'`
+      );
+    });
+
+  private readonly DEFAULT_COLLAPSED_HEIGHT = 16;
+  private readonly MAX_COLLAPSED_HEIGHT = 32;
+  private readonly MIN_COLLAPSED_HEIGHT = 9;
+  private readonly REQUIRED_FIELDS_TO_INCLUDE_IN_CITATIONS = ['filetype'];
+
+  private resizeObserver?: ResizeObserver;
+  private fullAnswerHeight?: number;
+  private controller!: GeneratedAnswerController;
+
+  /**
+   * Whether to render a toggle button that lets the user hide or show the answer.
+   */
+  @property({
+    type: Boolean,
+    attribute: 'with-toggle',
+    converter: booleanConverter,
+  })
+  withToggle = false;
+
+  /**
+   * Whether to allow the answer to be collapsed when the text is taller than the specified `--atomic-crga-collapsed-height` value (16rem by default).
+   * The `collapsible` property is disabled when follow-up questions are enabled. The threaded conversation layout manages its own content display.
+   */
+  @property({type: Boolean, converter: booleanConverter})
+  collapsible = false;
+
+  /**
+   * The maximum height (in rem units) of the answer when collapsed.
+   */
+  @property({type: Number, attribute: 'max-collapsed-height'})
+  maxCollapsedHeight = this.DEFAULT_COLLAPSED_HEIGHT;
+
+  /**
+   * The unique identifier of the answer configuration to use to generate the answer.
+   */
+  @property({type: String, attribute: 'answer-configuration-id'})
+  answerConfigurationId?: string;
+
+  /**
+   * The unique identifier of the agent to use to generate answers.
+   * This is required to use an agent that can provide follow-up answers, but whether follow-ups are shown in the UI also depends on the feature being enabled in the application state.
+   * Setting both `agent-id` and `answer-configuration-id` is not supported. If both are provided, `agent-id` takes precedence and `answer-configuration-id` is ignored. Use `agent-id` for the conversational experience, or `answer-configuration-id` for single-turn answer generation via the Answer API. If neither is provided, the component falls back to the Search API for generated answers.
+   */
+  @property({type: String, attribute: 'agent-id'})
+  agentId?: string;
+
+  /**
+   * A list of fields to include with the citations used to generate the answer.
+   *
+   * Set this property as a stringified JSON array, for example:
+   * ```html
+   *  <atomic-generated-answer fields-to-include-in-citations='["fieldA", "fieldB"]'></atomic-generated-answer>
+   * ```
+   */
+  @property({
+    type: String,
+    attribute: 'fields-to-include-in-citations',
+    converter: AtomicGeneratedAnswer.fieldsToIncludeInCitationsConverter,
+  })
+  fieldsToIncludeInCitations?: string;
+
+  /**
+   * Whether to disable citation anchoring.
+   */
+  @property({
+    type: Boolean,
+    attribute: 'disable-citation-anchoring',
+    converter: booleanConverter,
+  })
+  disableCitationAnchoring = false;
+
+  /**
+   * The tabs on which the generated answer can be displayed. This property should not be used at the same time as `tabs-excluded`.
+   *
+   * Set this property as a stringified JSON array, for example:
+   * ```html
+   *  <atomic-generated-answer tabs-included='["tabIDA", "tabIDB"]'></atomic-generated-answer>
+   * ```
+   * If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer can only be displayed on the specified tabs.
+   */
+  @property({
+    type: Array,
+    attribute: 'tabs-included',
+    converter: arrayConverter,
+  })
+  tabsIncluded: string[] = [];
+
+  /**
+   * The tabs on which this generated answer must not be displayed. This property should not be used at the same time as `tabs-included`.
+   *
+   * Set this property as a stringified JSON array, for example:
+   * ```html
+   *  <atomic-generated-answer tabs-excluded='["tabIDA", "tabIDB"]'></atomic-generated-answer>
+   * ```
+   * If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer won't be displayed on any of the specified tabs.
+   */
+  @property({
+    type: Array,
+    attribute: 'tabs-excluded',
+    converter: arrayConverter,
+  })
+  tabsExcluded: string[] = [];
+
+  @state()
+  bindings!: Bindings;
+
+  @state()
+  public error!: Error;
+
+  @bindStateToController('generatedAnswer', {
+    onUpdateCallbackMethod: 'onGeneratedAnswerStateUpdate',
+  })
+  @state()
+  private generatedAnswerState!: GeneratedAnswerState;
+  public generatedAnswer!: GeneratedAnswer | GeneratedAnswerWithFollowUps;
+
+  @bindStateToController('searchStatus')
+  @state()
+  private searchStatusState!: SearchStatusState;
+  public searchStatus!: SearchStatus;
+
+  @bindStateToController('tabManager')
+  @state()
+  public tabManagerState!: TabManagerState;
+  public tabManager!: TabManager;
+
+  @state()
+  private copied = false;
+
+  @state()
+  private copyError = false;
+
+  private ariaMessage = new AriaLiveRegionController(this, 'generated-answer');
+
+  constructor() {
+    super();
+
+    new ValidatePropsController(
+      this,
+      () => ({maxCollapsedHeight: this.maxCollapsedHeight}),
+      AtomicGeneratedAnswer.propsSchema,
+      // TODO: V4: KIT-5197 - Remove skipValidation flag
+      false
+    );
+  }
+
+  public initialize() {
+    if (this.tabsIncluded.length > 0 && this.tabsExcluded.length > 0) {
+      console.warn(
+        'Values for both "tabs-included" and "tabs-excluded" have been provided. This could lead to unexpected behaviors.'
+      );
+    }
+
+    this.controller = new GeneratedAnswerController(this, {
+      withToggle: this.withToggle,
+      getGeneratedAnswer: () => this.generatedAnswer,
+      getGeneratedAnswerState: () => this.generatedAnswerState,
+      getSearchStatusState: () => this.searchStatusState,
+      getBindings: () => this.bindings,
+    });
+
+    this.generatedAnswer = buildGeneratedAnswer(this.bindings.engine, {
+      initialState: {
+        isVisible: this.controller.data.isVisible,
+        responseFormat: {
+          contentFormat: ['text/markdown', 'text/plain'],
+        },
+      },
+      ...(this.answerConfigurationId && {
+        answerConfigurationId: this.answerConfigurationId,
+      }),
+      ...(this.agentId && {
+        agentId: this.agentId,
+      }),
+      fieldsToIncludeInCitations: this.getCitationFields(),
+    });
+    this.searchStatus = buildSearchStatus(this.bindings.engine);
+    this.tabManager = buildTabManager(this.bindings.engine);
+
+    this.controller.insertFeedbackModal();
+
+    if (window.ResizeObserver && this.collapsible) {
+      const debouncedAdaptAnswerHeight = debounce(
+        () => this.adaptAnswerHeight(),
+        100
+      );
+      this.resizeObserver = new ResizeObserver(debouncedAdaptAnswerHeight);
+      this.resizeObserver.observe(this);
+    }
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.resizeObserver?.disconnect();
+  }
+
+  protected willUpdate(changedProperties: PropertyValueMap<this>) {
+    if (changedProperties.has('tabManagerState' as keyof this)) {
+      const oldValue = changedProperties.get(
+        'tabManagerState' as keyof this
+      ) as TabManagerState | undefined;
+      if (oldValue && this.tabManagerState?.activeTab !== oldValue?.activeTab) {
+        if (
+          !shouldDisplayOnCurrentTab(
+            this.tabsIncluded,
+            this.tabsExcluded,
+            this.tabManagerState?.activeTab
+          )
+        ) {
+          this.generatedAnswer.disable();
+        } else {
+          this.generatedAnswer.enable();
+        }
+      }
+    }
+
+    if (changedProperties.has('generatedAnswerState' as keyof this)) {
+      const oldState = changedProperties.get(
+        'generatedAnswerState' as keyof this
+      ) as GeneratedAnswerState | undefined;
+      if (
+        oldState &&
+        this.generatedAnswerState?.expanded !== oldState?.expanded &&
+        this.isCollapsibleEnabled
+      ) {
+        const container = this.getAnswerContainer();
+        if (container) {
+          this.toggleClass(
+            container,
+            'answer-collapsed',
+            !this.generatedAnswerState.expanded
+          );
+        }
+      }
+    }
+
+    if (
+      (changedProperties.has('collapsible') ||
+        changedProperties.has('agentId')) &&
+      !this.isCollapsibleEnabled
+    ) {
+      this.resetCollapsibleStyles();
+    }
+  }
+
+  @bindingGuard()
+  @errorGuard()
+  render() {
+    if (
+      !shouldDisplayOnCurrentTab(
+        this.tabsIncluded,
+        this.tabsExcluded,
+        this.tabManagerState?.activeTab
+      )
+    ) {
+      return nothing;
+    }
+
+    const contentClasses =
+      'mx-auto mt-0 mb-4 border border-neutral shadow-lg bg-background rounded-lg text-on-background';
+
+    if (this.hasNoAnswerGenerated) {
+      if (
+        this.generatedAnswerState?.cannotAnswer &&
+        this.hasCustomNoAnswerMessage
+      ) {
+        return html`
+          <div>
+            <aside
+              class=${contentClasses}
+              part="container"
+              aria-label=${this.bindings.i18n.t('generated-answer-title')}
+            >
+              <div part="generated-content">
+                ${this.renderCardHeaderWrapper()}
+                ${when(
+                  this.isAnswerVisible,
+                  () =>
+                    html`<article>${renderCustomNoAnswerMessage()}</article>`
+                )}
+              </div>
+            </aside>
+          </div>
+        `;
+      }
+      return nothing;
+    }
+
+    return html`
+      <div>
+        <aside
+          class=${contentClasses}
+          part="container"
+          aria-label=${this.bindings.i18n.t('generated-answer-title')}
+        >
+          <div part="generated-content">
+            ${this.renderCardHeaderWrapper()}
+            ${when(
+              this.isAnswerVisible,
+              () =>
+                html` <div part="generated-content-container" class="pb-6">
+                  <div
+                    class=${classMap({
+                      'px-6': true,
+                      'pt-6': true,
+                      'generated-answer-content-background':
+                        this.areFollowUpsEnabled,
+                      'agent-scrollable': this.areFollowUpsEnabled,
+                    })}
+                  >
+                    <article>${this.renderAnswerContent()}</article>
+                  </div>
+                  <div
+                    class=${classMap({
+                      'px-6': true,
+                      'pt-2': true,
+                      'border-t': this.areFollowUpsEnabled,
+                      'border-gray-200': this.areFollowUpsEnabled,
+                    })}
+                  >
+                    ${this.renderAskFollowUpInputWrapper()}
+                    ${renderDisclaimer({
+                      props: {
+                        i18n: this.bindings.i18n,
+                      },
+                    })}
+                  </div>
+                </div>`
+            )}
+          </div>
+        </aside>
+      </div>
+    `;
+  }
+
+  // Used by bindStateToController decorator via onUpdateCallbackMethod option
+  public onGeneratedAnswerStateUpdate = () => {
+    if (
+      this.generatedAnswerState.isVisible !== this.controller.data.isVisible
+    ) {
+      this.controller.data = {
+        ...this.controller.data,
+        isVisible: this.generatedAnswerState.isVisible,
+      };
+      this.controller.writeStoredData(this.controller.data);
+    }
+
+    this.ariaMessage.message = this.controller.getGeneratedAnswerStatus();
+  };
+
+  private get hasNoAnswerGenerated() {
+    return this.controller.hasNoAnswerGenerated;
+  }
+
+  private get isAnswerVisible() {
+    return this.controller.isAnswerVisible;
+  }
+
+  private get toggleTooltip() {
+    return this.controller.getToggleTooltip();
+  }
+
+  private get copyToClipboardTooltip() {
+    return this.controller.getCopyToClipboardTooltip(
+      this.copied,
+      this.copyError
+    );
+  }
+
+  private get hasCustomNoAnswerMessage() {
+    return getNamedSlotContent(this, 'no-answer-message').length > 0;
+  }
+
+  private async copyToClipboard(answer: string) {
+    await this.controller.copyToClipboard(
+      answer,
+      () => {
+        this.copied = true;
+        setTimeout(() => {
+          this.copied = false;
+        }, 2000);
+      },
+      () => {
+        this.copyError = true;
+        setTimeout(() => {
+          this.copyError = false;
+        }, 2000);
+      }
+    );
+  }
+
+  private clickOnShowButton() {
+    this.controller.clickOnShowButton();
+  }
+
+  private getCitationFields() {
+    // Defensive: handle both string and array for backward compatibility
+    // TODO V4 (KIT-5306): remove string handling
+    let fields: string[] = [];
+    if (Array.isArray(this.fieldsToIncludeInCitations)) {
+      fields = this.fieldsToIncludeInCitations;
+    } else if (typeof this.fieldsToIncludeInCitations === 'string') {
+      fields = this.fieldsToIncludeInCitations
+        .split(',')
+        .map((f) => f.trim())
+        .filter((f) => f.length > 0);
+    }
+    return fields.concat(this.REQUIRED_FIELDS_TO_INCLUDE_IN_CITATIONS);
+  }
+
+  private validateMaxCollapsedHeight(): number {
+    const isValid =
+      this.maxCollapsedHeight >= this.MIN_COLLAPSED_HEIGHT &&
+      this.maxCollapsedHeight <= this.MAX_COLLAPSED_HEIGHT;
+
+    if (!isValid) {
+      console.warn(
+        `max-collapsed-height (${this.maxCollapsedHeight}rem) is out of the valid range (${this.MIN_COLLAPSED_HEIGHT}rem - ${this.MAX_COLLAPSED_HEIGHT}rem). Falling back to default value (${this.DEFAULT_COLLAPSED_HEIGHT}rem).`
+      );
+    }
+
+    return isValid ? this.maxCollapsedHeight : this.DEFAULT_COLLAPSED_HEIGHT;
+  }
+
+  private toggleClass(element: Element, className: string, condition: boolean) {
+    element.classList.toggle(className, condition);
+  }
+
+  private adaptAnswerHeight() {
+    const answerHeight = this.shadowRoot
+      ?.querySelector('[part="generated-text"]')
+      ?.getBoundingClientRect().height;
+
+    if (answerHeight) {
+      const rootFontSize = parseFloat(
+        getComputedStyle(document.documentElement).fontSize
+      );
+
+      const nextFullAnswerHeight = answerHeight / rootFontSize;
+      if (this.fullAnswerHeight !== nextFullAnswerHeight) {
+        this.fullAnswerHeight = nextFullAnswerHeight;
+        this.requestUpdate();
+      }
+
+      this.updateAnswerHeight();
+    }
+  }
+
+  private getAnswerContainer() {
+    return this.shadowRoot?.querySelector('[part="generated-container"]');
+  }
+
+  private getAnswerFooter() {
+    return this.shadowRoot?.querySelector('[part="generated-answer-footer"]');
+  }
+
+  private setCSSVariable(variableName: string, value: string) {
+    const container = this.getAnswerContainer();
+    if (container) {
+      (container as HTMLElement).style.setProperty(variableName, value);
+    }
+  }
+
+  private updateAnswerHeight() {
+    const container = this.getAnswerContainer() as HTMLElement;
+    const footer = this.getAnswerFooter();
+    const maxHeight = this.validateMaxCollapsedHeight();
+
+    if (!container || !footer) {
+      return;
+    }
+
+    if (this.fullAnswerHeight! > maxHeight) {
+      this.setCSSVariable('--atomic-crga-collapsed-height', `${maxHeight}rem`);
+      this.toggleClass(
+        container,
+        'answer-collapsed',
+        !this.generatedAnswerState.expanded
+      );
+      this.toggleClass(footer, 'is-collapsible', true);
+      this.toggleClass(
+        footer,
+        'generating-label-visible',
+        this.generatedAnswerState.isStreaming
+      );
+    } else {
+      this.toggleClass(container, 'answer-collapsed', false);
+      this.toggleClass(footer, 'is-collapsible', false);
+      this.toggleClass(footer, 'generating-label-visible', false);
+    }
+  }
+
+  private clickDislike() {
+    this.controller.clickDislike();
+  }
+
+  private clickLike() {
+    this.controller.clickLike();
+  }
+
+  private renderCitationsList(
+    citations: GeneratedAnswerCitation[],
+    answerId?: string
+  ) {
+    return renderCitations({
+      props: {
+        citations,
+        i18n: this.bindings.i18n,
+        buildInteractiveCitation: (citation) =>
+          buildInteractiveCitation(this.bindings.engine, {
+            options: {citation, answerId},
+          }),
+        logCitationHover: (citationId, citationHoverTimeMs) => {
+          this.generatedAnswer?.logCitationHover(
+            citationId,
+            citationHoverTimeMs,
+            answerId
+          );
+        },
+        disableCitationAnchoring: this.disableCitationAnchoring,
+      },
+    });
+  }
+
+  private renderFeedbackAndCopyButtonsWrapper() {
+    return renderFeedbackAndCopyButtons({
+      props: {
+        i18n: this.bindings.i18n,
+        generatedAnswerActionsState: {
+          liked: this.generatedAnswerState.liked,
+          disliked: this.generatedAnswerState.disliked,
+          isStreaming: this.generatedAnswerState.isStreaming,
+          isLoading: this.generatedAnswerState.isLoading,
+          answer: this.generatedAnswerState.answer,
+        },
+        copied: this.copied,
+        copyError: this.copyError,
+        getCopyToClipboardTooltip: () => this.copyToClipboardTooltip,
+        onClickLike: () => this.clickLike(),
+        onClickDislike: () => this.clickDislike(),
+        onCopyToClipboard: (answer) => this.copyToClipboard(answer),
+      },
+    });
+  }
+
+  private renderAnswerContent() {
+    if (this.areFollowUpsEnabled) {
+      const generatedAnswerWithQuestion = {
+        ...this.generatedAnswerState,
+        question: this.bindings.engine.state.query?.q ?? '',
+      };
+
+      const allGeneratedAnswers = [
+        generatedAnswerWithQuestion,
+        ...(this.generatedAnswerWithFollowUps?.state.followUpAnswers
+          .followUpAnswers ?? []),
+      ];
+
+      return html`<atomic-generated-answer-thread
+        .generatedAnswers=${allGeneratedAnswers}
+        .i18n=${this.bindings.i18n}
+        .renderCitations=${this.renderCitationsList.bind(this)}
+        .onClickLike=${(answerId: string) =>
+          this.generatedAnswerWithFollowUps?.like(answerId)}
+        .onClickDislike=${(answerId: string) =>
+          this.generatedAnswerWithFollowUps?.dislike(answerId)}
+        .onCopyToClipboard=${(answerId: string) =>
+          this.generatedAnswerWithFollowUps?.logCopyToClipboard(answerId)}
+        exportparts=${GENERATED_ANSWER_THREAD_EXPORT_PARTS}
+      ></atomic-generated-answer-thread>`;
+    }
+
+    return renderAnswerContent({
+      props: {
+        i18n: this.bindings.i18n,
+        generatedAnswer: this.generatedAnswerState,
+        collapsible: this.isCollapsibleEnabled,
+        renderFeedbackAndCopyButtonsSlot: () =>
+          this.renderFeedbackAndCopyButtonsWrapper(),
+        renderCitationsSlot: () =>
+          html`${this.renderCitationsList(this.generatedAnswerState.citations)}`,
+        onRetry: () => this.generatedAnswer?.retry(),
+        onClickShowButton: () => this.clickOnShowButton(),
+      },
+    });
+  }
+
+  private get hasAgentId() {
+    return Boolean(this.agentId);
+  }
+
+  private get generatedAnswerWithFollowUps():
+    | GeneratedAnswerWithFollowUps
+    | undefined {
+    if (
+      !this.hasAgentId ||
+      !this.generatedAnswer ||
+      !('askFollowUp' in this.generatedAnswer)
+    ) {
+      return undefined;
+    }
+
+    return this.generatedAnswer as GeneratedAnswerWithFollowUps;
+  }
+
+  private get areFollowUpsEnabled() {
+    return (
+      this.generatedAnswerWithFollowUps?.state.followUpAnswers?.isEnabled ===
+      true
+    );
+  }
+
+  private get isCollapsibleEnabled() {
+    return (
+      this.collapsible &&
+      !this.areFollowUpsEnabled &&
+      (this.fullAnswerHeight ?? 0) > this.validateMaxCollapsedHeight()
+    );
+  }
+
+  private resetCollapsibleStyles() {
+    const container = this.getAnswerContainer();
+    const footer = this.getAnswerFooter();
+
+    if (!container || !footer) {
+      return;
+    }
+
+    this.toggleClass(container, 'answer-collapsed', false);
+    this.toggleClass(footer, 'is-collapsible', false);
+    this.toggleClass(footer, 'generating-label-visible', false);
+  }
+
+  private renderCardHeaderWrapper() {
+    return renderCardHeader({
+      props: {
+        i18n: this.bindings.i18n,
+        isAnswerVisible: this.isAnswerVisible,
+        toggleTooltip: this.toggleTooltip,
+        withToggle: this.withToggle,
+        onToggle: (checked: boolean) => {
+          checked ? this.generatedAnswer?.show() : this.generatedAnswer?.hide();
+        },
+      },
+    });
+  }
+
+  private get isAnswerGenerationOngoing() {
+    const initialAnswerPending =
+      this.generatedAnswerState.isStreaming ||
+      this.generatedAnswerState.isLoading;
+    return (
+      initialAnswerPending ||
+      (this.generatedAnswerWithFollowUps?.state.followUpAnswers?.followUpAnswers?.some(
+        (answer) => answer.isStreaming || answer.isLoading
+      ) ??
+        false)
+    );
+  }
+
+  private async handleAskFollowUp(question: string) {
+    if (this.areFollowUpsEnabled) {
+      await this.generatedAnswerWithFollowUps?.askFollowUp(question);
+    }
+  }
+
+  private renderAskFollowUpInputWrapper() {
+    if (!this.areFollowUpsEnabled) {
+      return nothing;
+    }
+    return html` <div class="my-2">
+      <atomic-ask-follow-up-input
+        .i18n=${this.bindings.i18n}
+        .askFollowUp=${this.handleAskFollowUp.bind(this)}
+        .submitButtonDisabled=${this.isAnswerGenerationOngoing}
+        exportparts=${FOLLOW_UP_INPUT_EXPORT_PARTS}
+      >
+      </atomic-ask-follow-up-input>
+    </div>`;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-generated-answer': AtomicGeneratedAnswer;
+  }
+}

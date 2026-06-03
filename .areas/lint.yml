@@ -1,0 +1,9 @@
+description: Linting configuration files
+file_patterns:
+  - .oxlintrc.json
+  - .oxfmtrc.json
+  - lint-staged.config.js
+
+reviewers:
+  dxui:
+    minimum_approvals: 1

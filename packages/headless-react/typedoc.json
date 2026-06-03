@@ -1,13 +1,51 @@
 {
   "entryPointStrategy": "merge",
+  "projectDocuments": [
+    "source_docs/getting-started-with-search-ssr.md",
+    "source_docs/getting-started-with-commerce-ssr.md",
+    "source_docs/search-hooks.md",
+    "source_docs/commerce-hooks.md",
+    "README.md",
+    "CONTRIBUTING.md"
+  ],
   "navigation": {
     "includeCategories": true,
     "includeGroups": true,
     "includeFolders": true
   },
+  "hoistOther.topLevelOrder": [
+    "Home",
+    "Getting Started",
+    "Guides",
+    "Reference",
+    "Contributing"
+  ],
   "categorizeByGroup": true,
   "entryPoints": ["./temp/ssr-commerce.json", "./temp/ssr.json"],
-  "gitRevision": "master",
+  "gitRevision": "main",
   "plugin": ["@coveo/documentation"],
-  "projectDocuments": ["./README.md"]
+  "headerNav.activeEntry": "Headless React",
+  "hoistOther.renameModulesTo": "Reference",
+  "router": "kebab",
+  "hoistOther.nestedOrder": {
+    "reference ssr commerce": [
+      "Engine",
+      "Providers",
+      "Definers",
+      "Controllers",
+      "Buildable controllers",
+      "Sub-controllers",
+      "Actions",
+      "*"
+    ],
+    "reference ssr search": [
+      "Engine",
+      "Definers",
+      "Controllers",
+      "Buildable controllers",
+      "Sub-controllers",
+      "Actions",
+      "*"
+    ]
+  }
 }

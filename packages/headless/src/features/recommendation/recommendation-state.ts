@@ -39,7 +39,7 @@ export interface RecommendationState {
    */
   searchUid: string;
   /**
-   * The version of the A/B test that applied to the related recommendation (i.e., version A or version B).
+   * The version of the A/B test that applied to the related recommendation (that is, version A or version B).
    */
   splitTestRun: string;
   /**

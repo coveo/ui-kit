@@ -1,20 +1,23 @@
 {
   "name": "@coveo/headless-react",
-  "version": "2.4.39",
+  "version": "2.9.20",
   "description": "React utilities for SSR (Server Side Rendering) with headless",
+  "keywords": [
+    "headless",
+    "nextjs",
+    "react",
+    "ssr"
+  ],
   "homepage": "https://docs.coveo.com/en/headless/latest/",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/coveo/ui-kit.git",
     "directory": "packages/headless-react"
   },
-  "keywords": [
-    "headless",
-    "react",
-    "nextjs",
-    "ssr"
+  "files": [
+    "dist"
   ],
-  "license": "Apache-2.0",
   "type": "module",
   "exports": {
     "./ssr": "./dist/ssr/index.js",
@@ -22,41 +25,34 @@
     "./ssr-next": "./dist/ssr-next/index.js",
     "./ssr-commerce-next": "./dist/ssr-commerce-next/index.js"
   },
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "build": "tsc --project ./tsconfig.build.json",
-    "clean": "rimraf dist",
+    "clean": "node ../../utils/ci/rm-rf.mjs dist",
     "test": "vitest run",
     "test:watch": "vitest",
-    "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
-    "release:phase1": "npm run-script -w=@coveo/ci bump",
-    "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod",
-    "build:typedoc": "npm run build:typedoc:docs && npm run build:typedoc:merge",
-    "build:typedoc:docs": "concurrently \"npm run build:typedoc:ssr\" \"npm run build:typedoc:ssr-commerce\"",
+    "build:typedoc": "pnpm run build:typedoc:docs && pnpm run build:typedoc:merge",
+    "build:typedoc:docs": "concurrently \"pnpm run build:typedoc:ssr\" \"pnpm run build:typedoc:ssr-commerce\"",
     "build:typedoc:ssr": "typedoc --json ./temp/ssr.json --tsconfig tsconfig.json --options typedoc-configs/ssr.typedoc.json",
     "build:typedoc:ssr-commerce": "typedoc --json ./temp/ssr-commerce.json --tsconfig tsconfig.json --options typedoc-configs/ssr-commerce.typedoc.json",
     "build:typedoc:merge": "typedoc --tsconfig tsconfig.typedoc.json",
     "serve:typedoc": "live-server ./docs"
   },
   "dependencies": {
-    "@coveo/headless": "3.27.7"
+    "@coveo/headless": "workspace:*"
   },
   "devDependencies": {
-    "@testing-library/react": "16.3.0",
+    "@coveo/documentation": "workspace:*",
+    "@testing-library/react": "catalog:",
     "live-server": "1.2.2",
-    "rimraf": "6.0.1",
-    "typescript": "5.8.3",
-    "typedoc": "0.28.7",
-    "vitest": "3.2.4",
-    "@coveo/documentation": "1.0.0"
+    "typedoc": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   },
   "peerDependencies": {
-    "react": "^18 || ^19",
-    "react-dom": "^18 || ^19",
     "@types/react": "^18 || ^19",
-    "@types/react-dom": "^18 || ^19"
+    "@types/react-dom": "^18 || ^19",
+    "react": "^18 || ^19",
+    "react-dom": "^18 || ^19"
   },
   "peerDependenciesMeta": {
     "@types/react": {
@@ -67,6 +63,6 @@
     }
   },
   "engines": {
-    "node": "^20.9.0 || ^22.11.0"
+    "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
   }
 }

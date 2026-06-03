@@ -1,5 +1,5 @@
 /**
- * @jest-environment jsdom
+ * @vitest-environment jsdom
  */
 
 import {buildMockNavigatorContextProvider} from '../test/mock-navigator-context-provider.js';
@@ -25,6 +25,8 @@ describe('engine', () => {
       },
       reducers: {},
     };
+    document.cookie = '';
+    localStorage.clear();
   });
 
   describe('navigatorContext', () => {

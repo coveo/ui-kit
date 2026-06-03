@@ -1,0 +1,106 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Recommendations/Introduction" />
+
+# Atomic Recommendation Components
+
+You can explore the individual Content Recommendation components in the sidebar. 
+Each component includes:
+
+* Interactive examples with configurable properties
+* Code snippets showing implementation details
+* Documentation for available attributes and events
+
+
+You can also find an example of a full implementation below:
+* [With Recs List](/story/atomic-recs-interface--with-recs-list)
+
+## Getting Started
+These stories provide example usages of the Coveo Atomic web components for Recommendations.
+Each of the components must be placed correctly within the component hierarchy in order to function.
+The top level of the tree must match the interface being initialized by the Headless engine.
+For example, most Coveo Recommendation interfaces must start have `atomic-recs-interface` at the top of the component hierarchy.
+
+### Initialization 
+Here is an example of how to initialize an `atomic-recs-interface`.
+This uses `getSampleRecommendationEngineConfiguration` from `@coveo/headless` as its initialization configuration.
+This will not work in a production environment.
+
+For a detailed breakdown of how to configure a recommendation engine, please refer to the Coveo Headless documentation for [`buildRecommendationEngine`](https://docs.coveo.com/en/headless/latest/reference/functions/Recommendation.buildRecommendationEngine.html).
+```html
+<html>
+  <head>
+    <title>Example Recommendations</title>
+      <script
+          type="module"
+          src="https://static.cloud.coveo.com/atomic/v3/atomic.esm.js">
+      </script>
+      <link
+          rel="stylesheet"
+          href="https://static.cloud.coveo.com/atomic/v3/themes/coveo.css" />
+
+    <script type="module">
+      const {
+        getSampleRecommendationEngineConfiguration,
+      } = await import('https://static.cloud.coveo.com/headless/v3/recommendation/headless.esm.js');
+
+      await customElements.whenDefined('atomic-recs-interface');
+      const recommendationInterface = document.querySelector('atomic-recs-interface');
+      await recommendationInterface.initialize(getSampleRecommendationEngineConfiguration());
+      recommendationInterface.getRecommendations();
+    </script>
+  </head>
+  <body>
+    <atomic-recs-interface>
+      <!-- The rest of your component hierarchy -->
+    </atomic-recs-interface>
+  </body>
+```
+
+
+### Initialization with an engine
+Here is an example of how to initialize an `atomic-recs-interface` with an engine from `@coveo/headless/recommendation` .
+The primary difference in the use cases between a standard initialization and using an engine is that an engine allows for a single instance to be shared across multiple interfaces.
+
+```javascript
+// engine.mjs
+const {
+  buildRecommendationEngine, 
+  getSampleRecommendationEngineConfiguration,
+} = await import('https://static.cloud.coveo.com/headless/v3/recommendation/headless.esm.js');
+
+export const recommendationEngine = buildRecommendationEngine({
+  configuration: getSampleRecommendationEngineConfiguration(),
+});
+```
+
+```html
+<!-- index.html -->
+<html>
+  <head>
+    <title>Example Recommendations</title>
+      <script
+          type="module"
+          src="https://static.cloud.coveo.com/atomic/v3/atomic.esm.js">
+      </script>
+      <link
+          rel="stylesheet"
+          href="https://static.cloud.coveo.com/atomic/v3/themes/coveo.css" />
+
+    <script type="module">
+      import {recommendationEngine} from './engine.mjs';
+
+      await customElements.whenDefined('atomic-recs-interface');
+      const recommendationInterface = document.querySelector('atomic-recs-interface');
+      await recommendationInterface.initializeWithRecommendationEngine(recommendationEngine);
+
+      recommendationInterface.getRecommendations();
+    </script>
+  </head>
+  <body>
+    <atomic-recs-interface>
+      <!-- The rest of your component hierarchy -->
+    </atomic-recs-interface>
+  </body>
+</html>
+```

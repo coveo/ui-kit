@@ -9,7 +9,9 @@ describe('atomic-product-numeric-field-value', () => {
   const renderProductNumericFieldValue = async (field = 'ec_rating') => {
     const {element} =
       await renderInAtomicProduct<AtomicProductNumericFieldValue>({
-        template: html`<atomic-product-numeric-field-value field="${field}"></atomic-product-numeric-field-value>`,
+        template: html`<atomic-product-numeric-field-value
+          field="${field}"
+        ></atomic-product-numeric-field-value>`,
         selector: 'atomic-product-numeric-field-value',
         product: buildFakeProduct(),
       });

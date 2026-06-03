@@ -7,8 +7,10 @@ import type {ControllerDefinitionWithoutProps} from '../../../common/types/contr
 
 export * from '../../../../controllers/search-status/headless-search-status.js';
 
-export interface SearchStatusDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, SearchStatus> {}
+export interface SearchStatusDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  SearchStatus
+> {}
 
 /**
  * Defines a `SearchStatus` controller instance.

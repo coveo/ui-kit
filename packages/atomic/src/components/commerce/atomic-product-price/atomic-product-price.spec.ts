@@ -1,12 +1,12 @@
-import {describe, expect, it, vi} from 'vitest';
-import './atomic-product-price';
 import {buildContext} from '@coveo/headless/commerce';
 import {html} from 'lit';
+import {describe, expect, it, vi} from 'vitest';
 import {renderInAtomicProduct} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-product-fixture';
 import {buildFakeContext} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/context-controller';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 import type {AtomicProductPrice} from './atomic-product-price';
+import './atomic-product-price';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 

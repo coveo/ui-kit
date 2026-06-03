@@ -1,7 +1,7 @@
 import type {AtomicCommerceRecommendationInterface} from '../atomic-commerce-recommendation-interface';
 import {expect, test} from './fixture';
 
-test.describe('AtomicCommerceRecommendationInterface', () => {
+test.describe('atomic-commerce-recommendation-interface', () => {
   test('should attach itself', async ({commerceRecommendationInterface}) => {
     await commerceRecommendationInterface.load({story: 'default'});
     await expect(commerceRecommendationInterface.interface()).toBeAttached();
@@ -17,22 +17,6 @@ test.describe('AtomicCommerceRecommendationInterface', () => {
     await expect(
       commerceRecommendationInterface.recommendationList()
     ).toBeVisible();
-  });
-
-  test('should be accessible', async ({
-    commerceRecommendationInterface,
-    makeAxeBuilder,
-  }) => {
-    await commerceRecommendationInterface.load({
-      story: 'with-recommendation-list',
-    });
-    await commerceRecommendationInterface
-      .recommendationList()
-      .waitFor({state: 'visible'});
-
-    const accessibilityResults = await makeAxeBuilder().analyze();
-
-    expect(accessibilityResults.violations).toEqual([]);
   });
 
   // TODO (KIT-4365): remove this test in v4

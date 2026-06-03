@@ -75,6 +75,15 @@ pre > code {
   border: 0;
 }
 
+li > code,
+li > a > code,
+p > a > code,
+p > code {
+  display: inline-block;
+  border-radius: 7px;
+  padding: 0 5px;
+}
+
 .settings-dropdown-menu {
   background: #525296 !important;
   border: 1px solid #e5e8e8 !important;
@@ -599,6 +608,18 @@ code.code-text-red mark {
 
 .right-toc-link {
   color: #f1f2ff !important;
+}
+
+.tsd-page-navigation {
+  background-color: #333357;
+}
+
+.tsd-page-navigation a {
+  color: #f1f2ff;
+}
+
+.tsd-page-navigation-section > .tsd-accordion-summary + h3 {
+  color: #f1f2ff;
 }
 
 .btn-outline-primary.toc-thumbs-up-btn,
@@ -1732,4 +1753,35 @@ summary:hover {
 .imageblock.bordered img,
 .image.bordered img {
   border: 1px solid #f9f9f9;
+}
+
+.code-callout-ref {
+  cursor: pointer;
+  user-select: none;
+  display: inline-block;
+  white-space: normal;
+}
+
+.code-callout-ref circle {
+  fill: #fff;
+}
+.code-callout-ref text {
+  fill: #000;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Header nav bar – dark theme */
+.header-nav-dropdown .dropdown-menu {
+  background: #525296;
+  border: 1px solid #525296;
+  box-shadow: none;
+}
+
+.header-nav-dropdown .header-nav-dropdown-item {
+  --bs-dropdown-link-color: #f1f2ff;
+  --bs-dropdown-link-hover-color: #399ffe;
+  --bs-dropdown-link-hover-bg: transparent;
+  --bs-dropdown-link-active-color: #399ffe;
+  --bs-dropdown-link-active-bg: transparent;
 }

@@ -16,7 +16,7 @@ export interface SearchBoxOptions {
   id?: string;
 
   /**
-   * Whether to interpret advanced [Coveo Cloud query syntax](https://docs.coveo.com/en/1814/) in the query.
+   * Whether to interpret advanced [Coveo query syntax](https://docs.coveo.com/en/1552/) in the query.
    *
    * @defaultValue `false`
    */
@@ -28,7 +28,7 @@ export interface SearchBoxOptions {
   highlightOptions?: SuggestionHighlightingOptions;
 
   /**
-   * The number of query suggestions to request from Coveo ML (e.g., `3`).
+   * The number of query suggestions to request from Coveo ML (for example, `3`).
    *
    * Using the value `0` disables the query suggest feature.
    *
@@ -38,7 +38,7 @@ export interface SearchBoxOptions {
 
   /**
    * Whether to clear all active query filters when the end user submits a new query from the search box.
-   * Setting this option to "false" is not recommended & can lead to an increasing number of queries returning no results.
+   * Setting this option to "false" is not recommended and can lead to an increasing number of queries returning no results.
    */
   clearFilters?: boolean;
 }

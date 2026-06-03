@@ -1,4 +1,11 @@
-# Why are multiple Headless bundles delivered?
+---
+title: Troubleshooting bundle contents
+group: Contributing
+---
+
+# Troubleshooting bundle contents
+
+## Why are multiple Headless bundles delivered?
 
 Coveo Headless is divided into several bundles, each catering to different use cases that can be powered by the Coveo platform. These bundles contain client-side features and code required to enhance the end-user experiences.
 
@@ -14,7 +21,7 @@ However, due to the internal project architecture, unnecessary code can sometime
 
 During the building process of Headless bundles using esbuild, `metafiles` are generated simultaneously and saved in the "dist" folder. This configuration can be found in `esbuild.mjs`.
 
-After executing the command `npm run build`, you should find the available `metafiles` in the `dist` folder, such as `cdn/browser.esm.stats.json` or `cdn/case-assist/browser.esm.stats.json`.
+After executing the command `pnpm run build`, you should find the available `metafiles` in the `dist` folder, such as `cdn/browser.esm.stats.json` or `cdn/case-assist/browser.esm.stats.json`.
 
 These files contain metadata about the build process, specifically providing information about the files included in the final bundle and the reasons behind their inclusion.
 

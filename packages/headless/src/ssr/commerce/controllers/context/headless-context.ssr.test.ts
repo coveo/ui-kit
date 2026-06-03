@@ -20,6 +20,14 @@ describe('define commerce context', () => {
     view: {
       url: 'https://example.org',
     },
+    custom: {
+      key1: 'value',
+      key2: 42,
+      key3: {
+        nestedKey: true,
+      },
+      key4: [1, 2, 3],
+    },
   };
   let contextDefinition: ContextDefinition;
 
@@ -50,7 +58,7 @@ describe('define commerce context', () => {
 
     contextDefinition.buildWithProps(engine, options);
 
-    expect(buildContextMock).toBeCalledWith(engine, {options});
+    expect(buildContextMock).toHaveBeenCalledWith(engine, {options});
   });
 
   it('should throw when props is undefined', () => {

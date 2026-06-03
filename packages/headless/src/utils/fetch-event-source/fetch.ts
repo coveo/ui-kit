@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/suspicious/noConfusingVoidType: <> */
+/* oxlint-disable @typescript-eslint/no-invalid-void-type -- <> */
 import {
   type EventSourceMessage,
   getBytes,

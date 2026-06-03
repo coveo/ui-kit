@@ -1,0 +1,79 @@
+@reference '../../../common/template-system/atomic-children.css';
+@reference './sections-utilities.css';
+
+@utility section-children-row-result-desktop {
+  atomic-result-children::part(children-root),
+  atomic-insight-result-children::part(children-root) {
+    @apply border-neutral border;
+    border-radius: 16px;
+  }
+
+  &.density-comfortable {
+    @apply atomic-children-desktop-[1.75rem]/[1.25rem];
+  }
+
+  &.density-normal {
+    margin-top: 1rem;
+    @apply atomic-children-desktop-[1.5rem]/[0.875rem];
+  }
+
+  &.density-compact {
+    margin-top: 0.75rem;
+    @apply atomic-children-desktop-[1rem]/[0.475rem];
+  }
+}
+@utility section-children-row-result-mobile {
+  atomic-result-children::part(children-root),
+  atomic-insight-result-children::part(children-root) {
+    @apply border-t-neutral border-t;
+  }
+}
+
+@utility section-children-cell-result-mobile {
+  &.density-comfortable {
+    margin-top: 1.25rem;
+    @apply atomic-children-mobile-[1.75rem]/[1.25rem];
+  }
+
+  &.density-normal {
+    margin-top: 1rem;
+    @apply atomic-children-mobile-[1.5rem]/[0.875rem];
+  }
+
+  &.density-compact {
+    margin-top: 0.75rem;
+    @apply atomic-children-mobile-[1rem]/[0.475rem];
+  }
+}
+
+@utility section-children {
+  &.with-sections {
+    grid-area: children;
+
+    @media (width >= theme(--breakpoint-desktop)) {
+      &.display-list {
+        @apply section-children-row-result-desktop;
+      }
+    }
+
+    @media not all and (width >= theme(--breakpoint-desktop)) {
+      &.display-list {
+        @apply section-children-row-result-mobile;
+      }
+      &.display-grid {
+        &.image-large {
+          @apply section-children-row-result-mobile;
+        }
+
+        &.image-small,
+        &.image-icon,
+        &.image-none {
+          @apply section-children-cell-result-mobile;
+        }
+      }
+    }
+    &.display-table {
+      @apply section-children-row-result-desktop;
+    }
+  }
+}

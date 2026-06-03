@@ -7,8 +7,10 @@ import type {ControllerDefinitionWithoutProps} from '../../../common/types/contr
 
 export * from '../../../../controllers/triggers/headless-execute-trigger.js';
 
-export interface ExecuteTriggerDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, ExecuteTrigger> {}
+export interface ExecuteTriggerDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  ExecuteTrigger
+> {}
 
 /**
  * Defines an `ExecuteTrigger` controller instance.

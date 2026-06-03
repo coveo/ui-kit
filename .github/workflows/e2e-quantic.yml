@@ -1,49 +1,81 @@
 on:
   workflow_call:
+    inputs:
+      event_name:
+        description: 'The event name that triggered the workflow'
+        required: false
+        type: string
+        default: 'pull_request'
     secrets:
       SFDX_AUTH_CLIENT_ID:
         required: true
       SFDX_AUTH_JWT_KEY:
         required: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   e2e-quantic-setup:
     name: 'Setup e2e tests on Quantic'
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: ${{ inputs.event_name == 'merge_group' }}
+      matrix:
+        lws-status: ['enabled', 'disabled']
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/setup-sfdx
       - uses: ./.github/actions/e2e-quantic-setup
         with:
           clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
           jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+          lws-status: ${{ matrix.lws-status }}
+  post-scratch-org-links-to-pr:
+    name: 'Post Scratch Org Links to PR'
+    needs: e2e-quantic-setup
+    if: ${{ github.event_name == 'pull_request' }}
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: ./.github/actions/post-scratch-org-links-on-pr
   e2e-quantic-playwright-test:
     name: 'Run Playwright e2e tests on Quantic'
     needs: e2e-quantic-setup
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.60.0-noble
+      options: --user 1001
     strategy:
-      fail-fast: false
+      fail-fast: ${{ inputs.event_name == 'merge_group' }}
       matrix:
         shardIndex: [1, 2, 3, 4]
         shardTotal: [4]
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-quantic-playwright
+      - uses: ./.github/actions/playwright-quantic
         with:
           shardIndex: ${{ matrix.shardIndex }}
           shardTotal: ${{ matrix.shardTotal }}
-          testsToRun: ${{ needs.prepare-playwright-atomic.outputs.testsToRun }}
   merge-quantic-playwright-reports:
     name: 'Merge Playwright reports'
     environment: PR Artifacts
@@ -53,11 +85,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: ./.github/actions/setup
       - name: Merge Playwright reports
         uses: ./.github/actions/merge-playwright-reports
@@ -72,15 +104,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/setup-sfdx
       - run: |
-          npx --no-install ts-node scripts/build/delete-org.ts --scratch-org-def-path=./config/lws-disabled-scratch-def.json
-          npx --no-install ts-node scripts/build/delete-org.ts --scratch-org-def-path=./config/lws-enabled-scratch-def.json
+          pnpm exec ts-node scripts/build/delete-org.ts --scratch-org-def-path=./config/lws-disabled-scratch-def.json
+          pnpm exec ts-node scripts/build/delete-org.ts --scratch-org-def-path=./config/lws-enabled-scratch-def.json
         shell: bash
         working-directory: ./packages/quantic

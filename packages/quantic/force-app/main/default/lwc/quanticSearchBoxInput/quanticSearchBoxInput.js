@@ -223,6 +223,11 @@ export default class QuanticSearchBoxInput extends LightningElement {
    * @param {KeyboardEvent} event
    */
   onKeyDown(event) {
+    // Let the browser commit IME text before handling shortcuts like Enter during composition.
+    if (event.isComposing || event.keyCode === 229) {
+      return;
+    }
+
     // eslint-disable-next-line default-case
     switch (event.key) {
       case keys.ESC:

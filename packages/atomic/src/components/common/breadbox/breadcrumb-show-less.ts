@@ -4,7 +4,7 @@ import {keyed} from 'lit/directives/keyed.js';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {renderButton} from '../button';
 
-export interface BreadcrumbShowLessProps {
+interface BreadcrumbShowLessProps {
   onShowLess: () => void;
   isCollapsed: boolean;
   i18n: i18n;

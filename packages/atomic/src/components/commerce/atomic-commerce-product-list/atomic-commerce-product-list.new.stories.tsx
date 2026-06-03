@@ -1,10 +1,36 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {
-  playExecuteFirstRequest,
+  executeFirstRequestHook,
   wrapInCommerceInterface,
 } from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
+import '@/src/components/commerce/atomic-commerce-product-list/atomic-commerce-product-list.js';
+import '@/src/components/commerce/atomic-product-children/atomic-product-children.js';
+import '@/src/components/commerce/atomic-product-excerpt/atomic-product-excerpt.js';
+import '@/src/components/commerce/atomic-product-field-condition/atomic-product-field-condition.js';
+import '@/src/components/commerce/atomic-product-image/atomic-product-image.js';
+import '@/src/components/commerce/atomic-product-link/atomic-product-link.js';
+import '@/src/components/commerce/atomic-product-multi-value-text/atomic-product-multi-value-text.js';
+import '@/src/components/commerce/atomic-product-price/atomic-product-price.js';
+import '@/src/components/commerce/atomic-product-rating/atomic-product-rating.js';
+import '@/src/components/commerce/atomic-product-section-children/atomic-product-section-children.js';
+import '@/src/components/commerce/atomic-product-section-description/atomic-product-section-description.js';
+import '@/src/components/commerce/atomic-product-section-emphasized/atomic-product-section-emphasized.js';
+import '@/src/components/commerce/atomic-product-section-metadata/atomic-product-section-metadata.js';
+import '@/src/components/commerce/atomic-product-section-name/atomic-product-section-name.js';
+import '@/src/components/commerce/atomic-product-section-visual/atomic-product-section-visual.js';
+import '@/src/components/commerce/atomic-product-template/atomic-product-template.js';
+import '@/src/components/commerce/atomic-product-text/atomic-product-text.js';
+import '@/src/components/search/atomic-table-element/atomic-table-element.js';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
+
+const commerceApiHarness = new MockCommerceApi();
+
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-commerce-product-list',
+  {excludeCategories: ['methods']}
+);
 
 const {decorator, play} = wrapInCommerceInterface({
   skipFirstRequest: false,
@@ -35,48 +61,43 @@ const {play: playNoProducts} = wrapInCommerceInterface({
 });
 
 const meta: Meta = {
-  argTypes: {
-    'attributes-display': {
-      options: ['grid', 'list', 'table'],
-      control: {type: 'radio'},
-      name: 'display',
-    },
-    'attributes-density': {
-      options: ['compact', 'comfortable', 'normal'],
-      control: {type: 'radio'},
-      name: 'density',
-    },
-    'attributes-image-size': {
-      options: ['small', 'large', 'icon', 'none'],
-      control: {type: 'radio'},
-      name: 'image-size',
-    },
-  },
   args: {
-    'attributes-number-of-placeholders': 4,
-    'attributes-display': 'grid',
-    'attributes-density': 'normal',
-    'attributes-image-size': 'small',
+    ...args,
+    'number-of-placeholders': 4,
+    display: 'grid',
+    density: 'normal',
+    'image-size': 'small',
   },
   component: 'atomic-commerce-product-list',
-  title: 'Commerce/atomic-commerce-product-list',
+  title: 'Commerce/Product List',
   id: 'atomic-commerce-product-list',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
+  parameters: {
+    ...parameters,
+    msw: {handlers: [...commerceApiHarness.handlers]},
+    chromatic: {disableSnapshot: true},
+    actions: {
+      handles: events,
+    },
+  },
+  argTypes,
   play,
+  beforeEach: () => {
+    commerceApiHarness.clearAll();
+  },
 };
 
 export default meta;
 
 export const Default: Story = {
-  name: 'Grid display',
+  name: 'Using grid display',
 };
 
 export const GridDisplayWithTemplate: Story = {
-  name: 'Grid display with template',
+  name: 'Using grid display with template',
   args: {
-    'slots-default': `<atomic-product-template>
+    'default-slot': `<atomic-product-template>
   <template>
     <atomic-product-section-name id="product-name-section">
       <atomic-product-link class="font-bold"></atomic-product-link>
@@ -117,24 +138,26 @@ export const GridDisplayWithTemplate: Story = {
 };
 
 export const GridDisplayBeforeQuery: Story = {
-  name: 'Grid display before query',
+  name: 'Using grid display before query',
   play: async (context) => {
     await playNoFirstQuery(context);
   },
 };
 
 export const ListDisplay: Story = {
-  name: 'List display',
+  name: 'Using list display',
+
   args: {
-    'attributes-display': 'list',
+    display: 'list',
   },
 };
 
 export const ListDisplayWithTemplate: Story = {
-  name: 'List display with template',
+  name: 'Using list display with template',
+
   args: {
-    'attributes-display': 'list',
-    'slots-default': `<atomic-product-template>
+    display: 'list',
+    'default-slot': `<atomic-product-template>
   <template>
     <atomic-product-section-name id="product-name-section">
       <atomic-product-link class="font-bold"></atomic-product-link>
@@ -175,9 +198,9 @@ export const ListDisplayWithTemplate: Story = {
 };
 
 export const ListDisplayBeforeQuery: Story = {
-  name: 'List display before query',
+  name: 'Using list display before query',
   args: {
-    'attributes-display': 'list',
+    display: 'list',
   },
   play: async (context) => {
     await playNoFirstQuery(context);
@@ -185,10 +208,11 @@ export const ListDisplayBeforeQuery: Story = {
 };
 
 export const TableDisplay: Story = {
-  name: 'Table display',
+  name: 'Using table display',
+
   args: {
-    'attributes-display': 'table',
-    'slots-default': `<atomic-product-template>
+    display: 'table',
+    'default-slot': `<atomic-product-template>
   <template>
     <atomic-table-element label="Product">
       <atomic-product-link></atomic-product-link>
@@ -209,9 +233,9 @@ export const TableDisplay: Story = {
 };
 
 export const TableDisplayBeforeQuery: Story = {
-  name: 'Table display before query',
+  name: 'Using table display before query',
   args: {
-    'attributes-display': 'table',
+    display: 'table',
   },
   play: async (context) => {
     await playNoFirstQuery(context);
@@ -219,10 +243,34 @@ export const TableDisplayBeforeQuery: Story = {
 };
 
 export const NoProducts: Story = {
+  tags: ['!dev'],
   name: 'No products',
   decorators: [(story) => story()],
   play: async (context) => {
     await playNoProducts(context);
-    await playExecuteFirstRequest(context);
+    await executeFirstRequestHook(context);
+  },
+};
+
+export const A11yTable: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  name: 'A11y Table',
+  args: {
+    display: 'table',
+    'default-slot': `<atomic-product-template>
+  <template>
+    <atomic-table-element label="Product">
+      <atomic-product-link></atomic-product-link>
+    </atomic-table-element>
+    <atomic-table-element label="ID">
+      <atomic-product-text field="ec_product_id"></atomic-product-text>
+    </atomic-table-element>
+  </template>
+</atomic-product-template>`,
+  },
+  play: async (context) => {
+    await play(context);
+    const {testTableA11y} = await import('@/storybook-utils/a11y/table.js');
+    await testTableA11y(context);
   },
 };

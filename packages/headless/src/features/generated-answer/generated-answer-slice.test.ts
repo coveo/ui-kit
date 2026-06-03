@@ -1,22 +1,28 @@
 import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client.js';
+import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
 import {buildMockCitation} from '../../test/mock-citation.js';
 import {
   closeGeneratedAnswerFeedbackModal,
   collapseGeneratedAnswer,
   dislikeGeneratedAnswer,
   expandGeneratedAnswer,
+  finishStep,
   likeGeneratedAnswer,
   openGeneratedAnswerFeedbackModal,
   registerFieldsToIncludeInCitations,
   resetAnswer,
   sendGeneratedAnswerFeedback,
+  setAnswerApiQueryParams,
   setAnswerContentFormat,
+  setAnswerGenerationMode,
+  setAnswerId,
   setCannotAnswer,
   setIsAnswerGenerated,
   setIsEnabled,
   setIsLoading,
   setIsStreaming,
   setIsVisible,
+  startStep,
   updateCitations,
   updateError,
   updateMessage,
@@ -55,6 +61,19 @@ describe('generated answer slice', () => {
 
       expect(finalState.answer).toBe('I exist therefore I am');
       expect(finalState.error).toBeUndefined();
+      expect(finalState.isLoading).toBe(false);
+      expect(finalState.isStreaming).toBe(true);
+    });
+
+    it('does not initialize the answer with blank-only text', () => {
+      const finalState = generatedAnswerReducer(
+        getGeneratedAnswerInitialState(),
+        updateMessage({
+          textDelta: '   ',
+        })
+      );
+
+      expect(finalState.answer).toBeUndefined();
       expect(finalState.isLoading).toBe(false);
       expect(finalState.isStreaming).toBe(true);
     });
@@ -532,6 +551,156 @@ describe('generated answer slice', () => {
       );
 
       expect(finalState.cannotAnswer).toEqual(false);
+    });
+  });
+
+  it('#setAnswerApiQueryParams should set the answerApiQueryParams to the new value in the state', () => {
+    const newAnswerApiQueryParams: AnswerApiQueryParams = {
+      q: 'example query',
+      fieldsToInclude: ['foo', 'bar'],
+    };
+    const finalState = generatedAnswerReducer(
+      {
+        ...getGeneratedAnswerInitialState(),
+        answerApiQueryParams: {
+          q: 'example query',
+          fieldsToInclude: ['foo', 'bar'],
+        },
+      },
+      setAnswerApiQueryParams(newAnswerApiQueryParams)
+    );
+
+    expect(finalState.answerApiQueryParams).toEqual(newAnswerApiQueryParams);
+  });
+
+  describe('#setAnswerId', () => {
+    it('should set answerId to the new value when given a new value', () => {
+      const finalState = generatedAnswerReducer(
+        {...baseState, answerId: 'old-id'},
+        setAnswerId('new-id')
+      );
+
+      expect(finalState.answerId).toEqual('new-id');
+    });
+  });
+
+  describe('#setAnswerGenerationMode', () => {
+    it('should set answerGenerationMode to the new value', () => {
+      const finalState = generatedAnswerReducer(
+        {...baseState, answerGenerationMode: 'automatic'},
+        setAnswerGenerationMode('manual')
+      );
+
+      expect(finalState.answerGenerationMode).toEqual('manual');
+    });
+  });
+
+  describe('#startStep', () => {
+    it('should append a new active step with the provided payload', () => {
+      const startedAt = 123;
+      const initialState = {
+        ...baseState,
+        generationSteps: [
+          {
+            name: 'searching' as const,
+            status: 'completed' as const,
+            startedAt: 1,
+            finishedAt: 2,
+          },
+        ],
+      };
+
+      const finalState = generatedAnswerReducer(
+        initialState,
+        startStep({name: 'Thinking', startedAt})
+      );
+
+      expect(finalState.generationSteps).toEqual([
+        {
+          name: 'searching',
+          status: 'completed',
+          startedAt: 1,
+          finishedAt: 2,
+        },
+        {
+          name: 'thinking',
+          status: 'active',
+          startedAt,
+        },
+      ]);
+    });
+  });
+
+  describe('#finishStep', () => {
+    it('should mark the most recent matching active step as completed', () => {
+      const finishedAt = 999;
+      const initialState = {
+        ...baseState,
+        generationSteps: [
+          {
+            name: 'searching' as const,
+            status: 'active' as const,
+            startedAt: 1,
+            finishedAt: 2,
+          },
+          {
+            name: 'thinking' as const,
+            status: 'completed' as const,
+            startedAt: 10,
+          },
+          {
+            name: 'searching' as const,
+            status: 'active' as const,
+            startedAt: 20,
+          },
+        ],
+      };
+
+      const finalState = generatedAnswerReducer(
+        initialState,
+        finishStep({name: 'SEARCHING', finishedAt})
+      );
+
+      expect(finalState.generationSteps).toEqual([
+        {
+          name: 'searching',
+          status: 'active',
+          startedAt: 1,
+          finishedAt: 2,
+        },
+        {
+          name: 'thinking',
+          status: 'completed',
+          startedAt: 10,
+        },
+        {
+          name: 'searching',
+          status: 'completed',
+          startedAt: 20,
+          finishedAt,
+        },
+      ]);
+    });
+
+    it('should leave steps unchanged when no matching active step is found', () => {
+      const initialState = {
+        ...baseState,
+        generationSteps: [
+          {
+            name: 'searching' as const,
+            status: 'completed' as const,
+            startedAt: 1,
+            finishedAt: 2,
+          },
+        ],
+      };
+
+      const finalState = generatedAnswerReducer(
+        initialState,
+        finishStep({name: 'thinking', finishedAt: 50})
+      );
+
+      expect(finalState.generationSteps).toEqual(initialState.generationSteps);
     });
   });
 });

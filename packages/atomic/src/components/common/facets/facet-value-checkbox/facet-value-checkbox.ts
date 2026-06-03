@@ -2,7 +2,7 @@ import {html} from 'lit';
 import {keyed} from 'lit/directives/keyed.js';
 import {ref} from 'lit/directives/ref.js';
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
-import {createRipple} from '../../../../utils/ripple';
+import {createRipple} from '../../../../utils/ripple-utils';
 import {randomID} from '../../../../utils/utils';
 import {renderCheckbox as checkbox} from '../../checkbox';
 import {renderTriStateCheckbox} from '../../triStateCheckbox';
@@ -27,6 +27,7 @@ export const renderFacetValueCheckbox: FunctionalComponentWithChildren<
     const ariaLabelAttributes = {
       value: props.displayValue,
       count: props.numberOfResults,
+      formattedCount: count,
       interpolation: {escapeValue: false},
     };
     const selectedAriaLabel = props.i18n.t('facet-value', ariaLabelAttributes);

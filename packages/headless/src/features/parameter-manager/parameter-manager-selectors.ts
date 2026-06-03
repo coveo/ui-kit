@@ -1,3 +1,5 @@
+import {deepEqual} from '../../utils/compare-utils.js';
+
 export function getQ<Section, Value>(
   section: Section | undefined,
   querySelector: (state: Section) => Value,
@@ -22,7 +24,7 @@ export function getSortCriteria<Section, Value>(
   }
 
   const sortCriteria = sortCriteriaSelector(section);
-  const shouldInclude = sortCriteria !== initialState;
+  const shouldInclude = !deepEqual(sortCriteria, initialState);
   return shouldInclude ? {sortCriteria} : {};
 }
 
@@ -42,7 +44,7 @@ export function getFacets<Value, Request, Parameters>(
       const selectedValues = valuesSelector(request);
       return selectedValues.length ? {[facetId]: selectedValues} : {};
     })
-    // biome-ignore lint/performance/noAccumulatingSpread: <>
+    // oxlint-disable-next-line oxc/no-accumulating-spread -- <>
     .reduce((acc, obj) => ({...acc, ...obj}), {});
 
   return Object.keys(facets).length ? {[out]: facets} : {};

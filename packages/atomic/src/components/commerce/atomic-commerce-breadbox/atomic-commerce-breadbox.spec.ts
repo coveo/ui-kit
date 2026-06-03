@@ -5,24 +5,25 @@ import {
   buildProductListing,
   buildSearch,
 } from '@coveo/headless/commerce';
-import {page, userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {page, userEvent} from 'vitest/browser';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeBreadcrumbManager} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/breadcrumb-manager-subcontroller';
 import {buildFakeContext} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/context-controller';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
-import './atomic-commerce-breadbox';
+import {mockConsole} from '@/vitest-utils/testing-helpers/testing-utils/mock-console';
 import type {AtomicCommerceBreadbox} from './atomic-commerce-breadbox';
+import './atomic-commerce-breadbox';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 vi.mock('@/src/utils/date-utils', () => {
   const parseDate = vi.fn((date) => {
     const d = new Date(date);
-    // biome-ignore lint/suspicious/noExplicitAny: <>
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
     (d as any).format = vi.fn((_fmt: string) => {
       return d.toISOString().split('T')[0];
     });
@@ -31,23 +32,26 @@ vi.mock('@/src/utils/date-utils', () => {
   return {parseDate};
 });
 
-describe('AtomicCommerceBreadbox', () => {
+describe('atomic-commerce-breadbox', () => {
   const mockedEngine = buildFakeCommerceEngine();
   let mockedBreadcrumbManager: BreadcrumbManager;
   const mockedDeselectAll = vi.fn();
 
   beforeEach(() => {
-    vi.spyOn(console, 'error').mockImplementation(() => {});
+    mockConsole();
   });
 
   interface RenderBreadboxOptions {
     interfaceElementType?: 'product-listing' | 'search';
     pathLimit?: number;
+    disableCollapse?: boolean;
     state?: Partial<BreadcrumbManagerState>;
   }
+
   const renderBreadbox = async ({
     interfaceElementType = 'product-listing',
     pathLimit = 3,
+    disableCollapse,
     state = {},
   }: RenderBreadboxOptions = {}) => {
     mockedBreadcrumbManager = buildFakeBreadcrumbManager({
@@ -77,6 +81,7 @@ describe('AtomicCommerceBreadbox', () => {
         template: html`<div>
           <atomic-commerce-breadbox
             path-limit=${ifDefined(pathLimit)}
+            ?disable-collapse=${disableCollapse}
           ></atomic-commerce-breadbox>
         </div>`,
         selector: 'atomic-commerce-breadbox',
@@ -90,11 +95,12 @@ describe('AtomicCommerceBreadbox', () => {
     return {
       element,
       label: () => page.getByText('Filters:'),
+      noTitle: () => page.getByTitle('No label'),
       regular: () => page.getByTitle('Regular'),
       hierarchical: () => page.getByTitle('Hierarchical'),
       numericalRange: () => page.getByTitle('Numerical Range'),
       dateRange: () => page.getByTitle('Date Range'),
-      showMore: () => page.getByLabelText(/Show \+ \d+ more filters/),
+      showMore: () => page.getByLabelText(/Show \d+ more filters/),
       showLess: () => page.getByText('Show less'),
       clearAll: () => page.getByLabelText('Clear All Filters'),
       parts: (element: AtomicCommerceBreadbox) => {
@@ -136,20 +142,29 @@ describe('AtomicCommerceBreadbox', () => {
     expect(element.breadcrumbManager).toBe(mockedBreadcrumbManager);
   });
 
-  it('should throw when pathLimit is lower than 1', async () => {
-    await expect(() =>
-      renderBreadbox({interfaceElementType: 'product-listing', pathLimit: 0})
-    ).rejects.toThrowError(/pathLimit: minimum value of 1 not respected/i);
-  });
-
-  it('should throw when pathLimit is valid but gets changed to lower than 1', async () => {
+  it('should set error when pathLimit is initially lower than 1', async () => {
     const {element} = await renderBreadbox({
       interfaceElementType: 'product-listing',
-      pathLimit: 3,
+      pathLimit: 0,
     });
 
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(
+      /pathLimit: minimum value of 1 not respected/i
+    );
+  });
+
+  it('should set error when valid pathLimit is updated to a value lower than 1', async () => {
+    const {element} = await renderBreadbox();
+
+    expect(element.error).toBeUndefined();
+
     element.pathLimit = 0;
-    await expect(element.updateComplete).rejects.toThrowError(
+
+    await element.updateComplete;
+
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(
       /pathLimit: minimum value of 1 not respected/i
     );
   });
@@ -204,6 +219,33 @@ describe('AtomicCommerceBreadbox', () => {
     expect(mockedDeselect).toHaveBeenCalled();
   });
 
+  it('should use "no-label" as the label when facetDisplayName is undefined', async () => {
+    await renderBreadbox({
+      state: {
+        facetBreadcrumbs: [
+          {
+            facetId: 'brand',
+            facetDisplayName: undefined as unknown as string,
+            field: 'brand',
+            type: 'regular',
+            values: [
+              {
+                value: {
+                  value: 'Gucci',
+                  numberOfResults: 1,
+                  state: 'selected',
+                },
+                deselect: vi.fn(),
+              },
+            ],
+          },
+        ],
+      },
+    });
+
+    await expect.element(page.getByText('No label')).toBeVisible();
+  });
+
   it('should have the correct value as the text on the  regular breadcrumb', async () => {
     const {showMore, regular} = await renderBreadbox();
     await userEvent.click(showMore()!);
@@ -245,7 +287,7 @@ describe('AtomicCommerceBreadbox', () => {
     const {showMore} = await renderBreadbox();
     await expect
       .element(showMore())
-      .toHaveAttribute('aria-label', 'Show + 3 more filters');
+      .toHaveAttribute('aria-label', 'Show 3 more filters');
   });
 
   it('should expand and collapse the number of breadcrumbs when clicking on the show more button and on the show less button', async () => {
@@ -388,5 +430,45 @@ describe('AtomicCommerceBreadbox', () => {
     const disconnectSpy = vi.spyOn(ResizeObserver.prototype, 'disconnect');
     element.disconnectedCallback();
     expect(disconnectSpy).toHaveBeenCalled();
+  });
+
+  describe('disable-collapse', () => {
+    it('should show all breadcrumbs without a show-more button when disable-collapse is set', async () => {
+      await page.viewport(400, 100);
+      const {parts, element} = await renderBreadbox({
+        disableCollapse: true,
+      });
+
+      const breadcrumbButtons = element.shadowRoot?.querySelectorAll(
+        '[part="breadcrumb-button"]'
+      );
+      expect(breadcrumbButtons?.length).toBe(4);
+
+      const partsElements = parts(element);
+      expect(partsElements.showMore).toBeNull();
+      expect(partsElements.showLess).toBeNull();
+    });
+
+    it('should use flex-wrap on the breadcrumb list when disable-collapse is set', async () => {
+      const {parts, element} = await renderBreadbox({
+        disableCollapse: true,
+      });
+
+      const partsElements = parts(element);
+      expect(partsElements.breadcrumbList).toHaveClass('flex-wrap');
+      expect(partsElements.breadcrumbList).not.toHaveClass('flex-nowrap');
+    });
+
+    it('should not hide breadcrumbs when the viewport is small and disable-collapse is set', async () => {
+      await page.viewport(200, 100);
+      const {element} = await renderBreadbox({
+        disableCollapse: true,
+      });
+
+      const visibleBreadcrumbs = Array.from(
+        element.shadowRoot!.querySelectorAll('li.breadcrumb')
+      ).filter((el) => (el as HTMLElement).style.display !== 'none');
+      expect(visibleBreadcrumbs.length).toBe(4);
+    });
   });
 });

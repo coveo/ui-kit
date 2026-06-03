@@ -1,7 +1,7 @@
-diff --git a/node_modules/@stencil/core/compiler/stencil.js b/node_modules/@stencil/core/compiler/stencil.js
+diff --git a/compiler/stencil.js b/compiler/stencil.js
 index 05c98c9..1ae35e5 100644
---- a/node_modules/@stencil/core/compiler/stencil.js
-+++ b/node_modules/@stencil/core/compiler/stencil.js
+--- a/compiler/stencil.js
++++ b/compiler/stencil.js
 @@ -234904,8 +234904,8 @@ var getTsOptionsToExtend = (config) => {
      // if the `DIST_TYPES` output target is present then we'd like to emit
      // declaration files
@@ -61,10 +61,10 @@ index 05c98c9..1ae35e5 100644
      }
    }
    if (statements.length === 0) {
-diff --git a/node_modules/@stencil/core/internal/stencil-private.d.ts b/node_modules/@stencil/core/internal/stencil-private.d.ts
+diff --git a/internal/stencil-private.d.ts b/internal/stencil-private.d.ts
 index 602cf1f..6dbb9d8 100644
---- a/node_modules/@stencil/core/internal/stencil-private.d.ts
-+++ b/node_modules/@stencil/core/internal/stencil-private.d.ts
+--- a/internal/stencil-private.d.ts
++++ b/internal/stencil-private.d.ts
 @@ -1756,103 +1756,7 @@ export interface Workbox {
      injectManifest(swConfig: any): Promise<any>;
      copyWorkboxLibraries(wwwDir: string): Promise<any>;

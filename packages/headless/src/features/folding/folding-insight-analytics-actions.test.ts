@@ -1,3 +1,4 @@
+import {CoveoInsightClient} from 'coveo.analytics';
 import type {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {
   buildMockInsightEngine,
@@ -17,17 +18,11 @@ import {getFoldingInitialState} from './folding-state.js';
 const mockLogShowMoreFoldedResults = vi.fn();
 const mockLogShowLessFoldedResults = vi.fn();
 
-vi.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = vi.fn(() => ({
-    disable: vi.fn(),
-    logShowMoreFoldedResults: mockLogShowMoreFoldedResults,
-    logShowLessFoldedResults: mockLogShowLessFoldedResults,
-  }));
-
-  return {
-    CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: vi.fn()},
-  };
+vi.mock('coveo.analytics');
+vi.mocked(CoveoInsightClient).mockImplementation(function () {
+  this.disable = () => {};
+  this.logShowMoreFoldedResults = mockLogShowMoreFoldedResults;
+  this.logShowLessFoldedResults = mockLogShowLessFoldedResults;
 });
 
 describe('folding insight analytics actions', () => {
@@ -40,6 +35,7 @@ describe('folding insight analytics actions', () => {
     documentUri: 'example documentUri',
     documentUriHash: 'example documentUriHash',
     collectionName: 'example collectionName',
+    documentCategory: 'example objectType',
     sourceName: 'example sourceName',
     documentPosition: 1,
     documentTitle: 'example documentTitle',
@@ -63,6 +59,7 @@ describe('folding insight analytics actions', () => {
       source: 'example sourceName',
       collection: 'example collectionName',
       permanentid: examplePermanentId,
+      objecttype: 'example objectType',
     }),
   };
   const exampleResult = buildMockResult(resultParams);

@@ -7,13 +7,13 @@
 /**
  * @typedef {Object} SimpleFacetValue
  * @property {string} value - The value of the facet.
- * @property {string} state - The state of the facet (e.g., "selected").
+ * @property {string} state - The state of the facet (for example, "selected").
  */
 
 /**
  * @typedef {Object} CategoryFacetValue
  * @property {string} value - The value of the facet.
- * @property {string} state - The state of the facet (e.g., "selected").
+ * @property {string} state - The state of the facet (for example, "selected").
  * @property {SimpleFacetValue[]} children - An array of SimpleFacetValue representing child categories.
  */
 

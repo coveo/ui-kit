@@ -88,6 +88,6 @@ describe('define search parameter manager', () => {
       initialState: props.initialState,
     });
 
-    expect(buildSearchParameterManagerMock).toBeCalledWith(engine, props);
+    expect(buildSearchParameterManagerMock).toHaveBeenCalledWith(engine, props);
   });
 });

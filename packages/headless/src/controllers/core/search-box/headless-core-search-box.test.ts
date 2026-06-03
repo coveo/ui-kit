@@ -1,4 +1,5 @@
 import {configuration} from '../../../app/common-reducers.js';
+import {updateQuery} from '../../../features/query/query-actions.js';
 import {logSearchboxSubmit} from '../../../features/query/query-analytics-actions.js';
 import {queryReducer as query} from '../../../features/query/query-slice.js';
 import {
@@ -35,6 +36,7 @@ import {
 vi.mock('../../../features/query/query-analytics-actions', () => ({
   logSearchboxSubmit: vi.fn(() => () => {}),
 }));
+vi.mock('../../../features/query/query-actions');
 vi.mock('../../../features/query-suggest/query-suggest-actions');
 vi.mock('../../../features/query-set/query-set-actions');
 vi.mock('../../../features/search/search-actions');
@@ -165,6 +167,26 @@ describe('headless CoreSearchBox', () => {
     expect(registerQuerySuggest).toHaveBeenCalledWith({
       id,
       count: props.options!.numberOfSuggestions,
+    });
+  });
+
+  describe('enableQuerySyntax at initialization', () => {
+    it('should dispatch updateQuery with enableQuerySyntax when option is true', () => {
+      props.options!.enableQuerySyntax = true;
+      initController();
+      expect(updateQuery).toHaveBeenCalledWith({enableQuerySyntax: true});
+    });
+
+    it('should not dispatch updateQuery when enableQuerySyntax option is false', () => {
+      props.options!.enableQuerySyntax = false;
+      initController();
+      expect(updateQuery).not.toHaveBeenCalled();
+    });
+
+    it('should not dispatch updateQuery when enableQuerySyntax option is not set', () => {
+      delete props.options!.enableQuerySyntax;
+      initController();
+      expect(updateQuery).not.toHaveBeenCalled();
     });
   });
 

@@ -7,9 +7,7 @@ import {
 } from 'lit';
 import {customElement} from 'lit/decorators.js';
 import {beforeAll, beforeEach, describe, expect, it} from 'vitest';
-import theme from '@/src/utils/coveo.tw.css';
 import globalStyles from '@/src/utils/tailwind.global.tw.css';
-import utilities from '@/src/utils/tailwind-utilities/utilities.tw.css';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {withTailwindStyles} from './with-tailwind-styles';
 
@@ -61,25 +59,20 @@ class TestTailwindElementNoStyles extends LitElement {
 
 describe('withTailwindStyles decorator', () => {
   const testCases = [
-    {description: 'include Tailwind theme styles', index: 0, expected: theme},
     {
       description: 'include Tailwind global styles',
       index: 1,
       expected: globalStyles,
     },
     {
-      description: 'include Tailwind utilities styles',
-      index: 2,
-      expected: utilities,
-    },
-    {
       description: 'preserve existing styles of the component',
-      index: 3,
+      index: 2,
       expected: componentStyles,
     },
   ];
 
   describe('when styles is an array', () => {
+    // oxlint-disable-next-line no-unassigned-vars
     let styles: CSSResultGroup | CSSStyleSheet | undefined;
 
     beforeEach(async () => {
@@ -100,6 +93,7 @@ describe('withTailwindStyles decorator', () => {
   });
 
   describe('when styles is not an array', () => {
+    // oxlint-disable-next-line no-unassigned-vars
     let styles: CSSResultGroup | CSSStyleSheet | undefined;
 
     beforeEach(async () => {
@@ -120,6 +114,7 @@ describe('withTailwindStyles decorator', () => {
   });
 
   describe('when styles is undefined', () => {
+    // oxlint-disable-next-line no-unassigned-vars
     let styles: CSSResultGroup | CSSStyleSheet | undefined;
 
     beforeEach(async () => {

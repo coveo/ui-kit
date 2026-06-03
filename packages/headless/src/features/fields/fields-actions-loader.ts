@@ -21,7 +21,7 @@ export interface FieldActionCreators {
   /**
    * Registers the fields to include in the query response.
    *
-   * @param fields - The target fields (e.g., ["field1", "field2"]).
+   * @param fields - The target fields (for example, ["field1", "field2"]).
    * @returns A dispatchable action.
    */
   registerFieldsToInclude(fields: string[]): PayloadAction<string[]>;

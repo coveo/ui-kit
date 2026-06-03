@@ -27,19 +27,17 @@ export type {
  * @group Controllers
  * @category SmartSnippetQuestionsList
  */
-export interface SmartSnippetQuestionsListState
-  extends CoreSmartSnippetQuestionsListState {}
+export interface SmartSnippetQuestionsListState extends CoreSmartSnippetQuestionsListState {}
 
 /**
  * The `SmartSnippetQuestionsList` controller allows to manage additional queries for which a SmartSnippet model can provide relevant excerpts.
  *
- * Example: [smart-snippet-questions-list.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/smart-snippet-questions-list/smart-snippet-questions-list.fn.tsx)
+ * Example: [smart-snippet-questions-list.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/smart-snippet-questions-list/smart-snippet-questions-list.fn.tsx)
  *
  * @group Controllers
  * @category SmartSnippetQuestionsList
  */
-export interface SmartSnippetQuestionsList
-  extends CoreSmartSnippetQuestionsList {
+export interface SmartSnippetQuestionsList extends CoreSmartSnippetQuestionsList {
   /**
    * The state of the SmartSnippetQuestionsList controller.
    * */

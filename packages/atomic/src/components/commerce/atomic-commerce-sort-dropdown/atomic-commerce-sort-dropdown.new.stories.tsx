@@ -1,31 +1,51 @@
-import {
-  type Meta,
-  type StoryObj as Story,
-  setCustomElementsManifest,
-} from '@storybook/web-components';
-import customElements from '@/custom-elements.json';
-import {defineCustomElements} from '@/dist/atomic/loader/index.js';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
+import '@/src/components/commerce/atomic-commerce-sort-dropdown/atomic-commerce-sort-dropdown.js';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
+import {commerceFacetTransformer} from '@/storybook-utils/api/commerce/facet-transformer';
+import {commercePaginationTransformer} from '@/storybook-utils/api/commerce/pagination-transformer';
 
-setCustomElementsManifest(customElements);
-defineCustomElements();
+const commerceApiHarness = new MockCommerceApi();
+commerceApiHarness.searchEndpoint.addRequestTransformer(
+  commerceFacetTransformer,
+  commercePaginationTransformer
+);
+commerceApiHarness.productListingEndpoint.addRequestTransformer(
+  commerceFacetTransformer,
+  commercePaginationTransformer
+);
 
 const {decorator, play} = wrapInCommerceInterface();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-commerce-sort-dropdown',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-commerce-sort-dropdown',
-  title: 'Atomic Commerce/Atomic Commerce Sort Dropdown',
+  title: 'Commerce/Sort Dropdown',
   id: 'atomic-commerce-sort-dropdown',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
+  parameters: {
+    ...parameters,
+    msw: {handlers: [...commerceApiHarness.handlers]},
+    chromatic: {disableSnapshot: true},
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
   play,
+  beforeEach: () => {
+    commerceApiHarness.clearAll();
+  },
 };
 
 export default meta;
 
-export const Default: Story = {
-  name: 'atomic-commerce-sort-dropdown',
-};
+export const Default: Story = {};

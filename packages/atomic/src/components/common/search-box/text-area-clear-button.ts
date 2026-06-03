@@ -1,3 +1,4 @@
+import '@/src/components/common/atomic-icon/atomic-icon';
 import type {i18n} from 'i18next';
 import {html} from 'lit';
 import type {Ref} from 'lit/directives/ref.js';
@@ -17,6 +18,7 @@ export const renderTextAreaClearButton: FunctionalComponent<Props> = ({
   return html`<div
     part="clear-button-wrapper"
     class="ml-2 flex items-center justify-center py-2"
+    @pointerdown=${(e: PointerEvent) => e.preventDefault()}
   >
     ${renderButton({
       props: {
@@ -28,7 +30,7 @@ export const renderTextAreaClearButton: FunctionalComponent<Props> = ({
           onClick?.();
           textAreaRef?.value?.focus();
         },
-        ariaLabel: i18n.t('clear'),
+        ariaLabel: i18n.t('clear-searchbox'),
       },
     })(
       html`<atomic-icon

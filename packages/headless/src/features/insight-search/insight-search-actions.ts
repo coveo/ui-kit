@@ -36,10 +36,9 @@ import type {
   FetchQuerySuggestionsActionCreatorPayload,
   FetchQuerySuggestionsThunkReturn,
 } from '../query-suggest/query-suggest-actions.js';
-import {
-  type ExecuteSearchThunkReturn,
-  type SearchAction,
-  updateSearchAction,
+import type {
+  ExecuteSearchThunkReturn,
+  SearchAction,
 } from '../search/search-actions.js';
 import {
   type MappedSearchRequest,
@@ -131,8 +130,6 @@ export const executeSearch = createAsyncThunk<
     const eventDescription = analyticsAction.next
       ? buildEventDescription(analyticsAction.next)
       : undefined;
-
-    config.dispatch(updateSearchAction(analyticsAction.next));
 
     const request = await buildInsightSearchRequest(state, eventDescription);
     const fetched = await processor.fetchFromAPI(request);

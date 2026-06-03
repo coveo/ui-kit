@@ -1,11 +1,11 @@
 import type {FacetSearchType} from '../../../../../api/commerce/facet-search/facet-search-request.js';
 import type {CategoryFacetSearchResult} from '../../../../../api/search/facet-search/category-facet-search/category-facet-search-response.js';
 import type {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine.js';
+import {commerceCategoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../../../features/commerce/facets/facet-search-set/category/commerce-category-facet-search-set-slice.js';
 import {
   executeCommerceFacetSearch,
   executeCommerceFieldSuggest,
 } from '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions.js';
-import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../../../features/facets/facet-search-set/category/category-facet-search-set-slice.js';
 import type {FacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-request-options.js';
 import type {CategoryFacetSearchSection} from '../../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../../utils/errors.js';
@@ -27,7 +27,7 @@ export type CategoryFacetSearchState =
 
 export type CategoryFacetSearch = Omit<
   ReturnType<typeof buildCoreCategoryFacetSearch>,
-  'showMoreResults' | 'updateCaptions' | 'state'
+  'updateCaptions' | 'state'
 >;
 
 export function buildCategoryFacetSearch(
@@ -39,7 +39,6 @@ export function buildCategoryFacetSearch(
   }
 
   const {
-    showMoreResults: _showMoreResults,
     state: _state,
     updateCaptions: _updateCaptions,
     ...restOfFacetSearch

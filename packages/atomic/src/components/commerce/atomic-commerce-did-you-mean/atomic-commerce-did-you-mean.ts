@@ -21,11 +21,9 @@ import {renderTriggerCorrection} from '../../common/query-correction/trigger-cor
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
- * @alpha
- *
  * The `atomic-commerce-did-you-mean` component is responsible for handling query corrections. When a query returns no products but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
  *
- * @part no-results - The text displayed when there are no results.
+ * @part no-results - The text displayed when there are no products.
  * @part auto-corrected - The text displayed for the automatically corrected query.
  * @part showing-results-for - The first paragraph of the text displayed when a query trigger changes a query.
  * @part search-instead-for - The second paragraph of the text displayed when a query trigger changes a query.
@@ -95,6 +93,7 @@ export class AtomicCommerceDidYouMean
       return renderTriggerCorrection({
         props: {
           i18n: this.bindings.i18n,
+          i18nKeyShowingItemsFor: 'showing-products-for',
           correctedQuery: this.queryTriggerState.newQuery,
           originalQuery: this.queryTriggerState.originalQuery,
           onClick: () => this.queryTrigger.undo(),

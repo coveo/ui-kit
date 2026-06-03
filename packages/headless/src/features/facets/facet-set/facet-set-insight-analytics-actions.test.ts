@@ -1,3 +1,4 @@
+import {CoveoInsightClient} from 'coveo.analytics';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import type {ThunkExtraArguments} from '../../../app/thunk-extra-arguments.js';
 import {buildMockInsightEngine} from '../../../test/mock-engine-v2.js';
@@ -23,22 +24,16 @@ const mockLogFacetClearAll = vi.fn();
 const mockLogFacetShowMore = vi.fn();
 const mockLogFacetShowLess = vi.fn();
 
-vi.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = vi.fn(() => ({
-    disable: () => {},
-    logBreadcrumbFacet: mockLogBreadcrumbFacet,
-    logFacetSelect: mockLogFacetSelect,
-    logFacetDeselect: mockLogFacetDeselect,
-    logFacetUpdateSort: mockLogFacetUpdateSort,
-    logFacetClearAll: mockLogFacetClearAll,
-    logFacetShowMore: mockLogFacetShowMore,
-    logFacetShowLess: mockLogFacetShowLess,
-  }));
-
-  return {
-    CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: vi.fn()},
-  };
+vi.mock('coveo.analytics');
+vi.mocked(CoveoInsightClient).mockImplementation(function () {
+  this.disable = () => {};
+  this.logBreadcrumbFacet = mockLogBreadcrumbFacet;
+  this.logFacetSelect = mockLogFacetSelect;
+  this.logFacetDeselect = mockLogFacetDeselect;
+  this.logFacetUpdateSort = mockLogFacetUpdateSort;
+  this.logFacetClearAll = mockLogFacetClearAll;
+  this.logFacetShowMore = mockLogFacetShowMore;
+  this.logFacetShowLess = mockLogFacetShowLess;
 });
 
 describe('facet set insight analytics actions', () => {

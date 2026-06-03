@@ -4,12 +4,14 @@ import {
   type InstantResultProps,
   type InstantResults,
 } from '../../../../controllers/instant-results/instant-results.js';
-import type {ControllerDefinitionWithoutProps} from '../../../common/types/controllers.js';
+import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/instant-results/instant-results.js';
 
-export interface InstantResultsDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, InstantResults> {}
+export interface InstantResultsDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  InstantResults
+> {}
 
 /**
  * Defines an `InstantResults` controller instance.

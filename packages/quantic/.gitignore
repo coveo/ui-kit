@@ -3,7 +3,7 @@
 # For useful gitignore templates see: https://github.com/github/gitignore
 
 # Salesforce cache
-.sfdx/
+.sfdx/**
 .sf/
 .localdevserver/
 
@@ -40,6 +40,7 @@ force-app/main/default/staticresources/coveoheadless
 force-app/main/default/staticresources/coveobueno
 force-app/main/default/staticresources/marked
 force-app/main/default/staticresources/dompurify
+force-app/solutionExamples/main/staticresources/coveoua
 
 # Test Coverage & Report
 coverage

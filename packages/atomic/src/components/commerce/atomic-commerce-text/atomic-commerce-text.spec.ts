@@ -52,8 +52,8 @@ describe('atomic-commerce-text', () => {
     return element;
   };
 
-  it('should be defined', () => {
-    const el = document.createElement('atomic-commerce-text');
+  it('should be defined', async () => {
+    const el = await renderComponent();
     expect(el).toBeInstanceOf(AtomicCommerceText);
   });
 

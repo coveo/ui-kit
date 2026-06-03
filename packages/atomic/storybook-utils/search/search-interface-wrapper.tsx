@@ -2,32 +2,45 @@ import {
   SearchEngineConfiguration,
   getSampleSearchEngineConfiguration,
 } from '@coveo/headless';
-import {within} from '@storybook/test';
-import {Decorator, StoryContext} from '@storybook/web-components';
+import {Decorator, StoryContext} from '@storybook/web-components-vite';
 import {html} from 'lit';
-import type * as _ from '../../src/components.js';
+import {spreadProps} from '@open-wc/lit-helpers';
+import {isTestMode} from '@/storybook-utils/common/is-test-mode';
+import type {AtomicSearchInterface} from '@/src/components/search/atomic-search-interface/atomic-search-interface.js';
+import '@/src/components/search/atomic-search-interface/atomic-search-interface.js';
 
-export const wrapInSearchInterface = (
-  config?: Partial<SearchEngineConfiguration>,
-  skipFirstSearch = false
-): {
+export const wrapInSearchInterface = ({
+  config = {},
+  skipFirstSearch = false,
+  includeCodeRoot = true,
+  disableStateReflectionInUrl = false,
+  analytics = isTestMode(),
+}: {
+  config?: Partial<SearchEngineConfiguration>;
+  skipFirstSearch?: boolean;
+  includeCodeRoot?: boolean;
+  disableStateReflectionInUrl?: boolean;
+  analytics?: boolean;
+} = {}): {
   decorator: Decorator;
   play: (context: StoryContext) => Promise<void>;
 } => ({
   decorator: (story) => html`
-    <atomic-search-interface data-testid="root-interface">
+    <atomic-search-interface
+      ${spreadProps(includeCodeRoot ? {id: 'code-root'} : {})}
+      ?disable-state-reflection-in-url=${disableStateReflectionInUrl}
+      .analytics=${analytics}
+    >
       ${story()}
     </atomic-search-interface>
   `,
   play: async ({canvasElement, step}) => {
     await customElements.whenDefined('atomic-search-interface');
-    const canvas = within(canvasElement);
-    const searchInterface =
-      await canvas.findByTestId<HTMLAtomicSearchInterfaceElement>(
-        'root-interface'
-      );
+    const searchInterface = canvasElement.querySelector<AtomicSearchInterface>(
+      'atomic-search-interface'
+    )!;
     await step('Render the Search Interface', async () => {
-      await searchInterface!.initialize({
+      await searchInterface.initialize({
         ...getSampleSearchEngineConfiguration(),
         ...config,
       });
@@ -36,7 +49,8 @@ export const wrapInSearchInterface = (
       return;
     }
     await step('Execute the first search', async () => {
-      await searchInterface!.executeFirstSearch();
+      await searchInterface.executeFirstSearch();
+      await new Promise((resolve) => requestAnimationFrame(resolve));
     });
   },
 });
@@ -44,12 +58,9 @@ export const wrapInSearchInterface = (
 export const playExecuteFirstSearch: (
   context: StoryContext
 ) => Promise<void> = async ({canvasElement, step}) => {
-  const canvas = within(canvasElement);
-
-  const searchInterface =
-    await canvas.findByTestId<HTMLAtomicSearchInterfaceElement>(
-      'root-interface'
-    );
+  const searchInterface = canvasElement.querySelector<AtomicSearchInterface>(
+    'atomic-search-interface'
+  );
   await step('Execute the first search', async () => {
     await searchInterface!.executeFirstSearch();
   });

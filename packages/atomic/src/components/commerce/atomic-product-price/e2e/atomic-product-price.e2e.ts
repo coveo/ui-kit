@@ -7,11 +7,6 @@ test.describe('atomic-product-price', () => {
       await productPrice.hydrated.first().waitFor();
     });
 
-    test('should be accessible', async ({makeAxeBuilder}) => {
-      const accessibilityResults = await makeAxeBuilder().analyze();
-      expect(accessibilityResults.violations).toEqual([]);
-    });
-
     test('should render the price', async ({productPrice}) => {
       await expect(productPrice.blueLagoonPrice).toBeVisible();
     });
@@ -21,11 +16,6 @@ test.describe('atomic-product-price', () => {
     test.beforeEach(async ({productPrice}) => {
       await productPrice.load();
       await productPrice.hydrated.first().waitFor();
-    });
-
-    test('should be accessible', async ({makeAxeBuilder}) => {
-      const accessibilityResults = await makeAxeBuilder().analyze();
-      expect(accessibilityResults.violations).toEqual([]);
     });
 
     test('should render the original price with a line-through', async ({

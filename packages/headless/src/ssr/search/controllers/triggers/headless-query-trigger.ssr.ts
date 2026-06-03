@@ -10,8 +10,10 @@ export type {
 
 export * from '../../../../controllers/triggers/headless-query-trigger.js';
 
-export interface QueryTriggerDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, QueryTrigger> {}
+export interface QueryTriggerDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  QueryTrigger
+> {}
 
 /**
  * Defines a `QueryTrigger` controller instance.

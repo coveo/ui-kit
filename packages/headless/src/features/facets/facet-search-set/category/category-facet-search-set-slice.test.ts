@@ -1,18 +1,5 @@
 import {buildMockFacetSearchResponse} from '../../../../test/mock-facet-search-response.js';
 import {
-  executeCommerceFacetSearch,
-  executeCommerceFieldSuggest,
-} from '../../../commerce/facets/facet-search-set/commerce-facet-search-actions.js';
-import {
-  fetchProductListing,
-  type QueryCommerceAPIThunkReturn,
-} from '../../../commerce/product-listing/product-listing-actions.js';
-import {fetchQuerySuggestions} from '../../../commerce/query-suggest/query-suggest-actions.js';
-import {
-  executeSearch as executeCommerceSearch,
-  type QuerySearchCommerceAPIThunkReturn,
-} from '../../../commerce/search/search-actions.js';
-import {
   type ExecuteSearchThunkReturn,
   executeSearch,
 } from '../../../search/search-actions.js';
@@ -61,32 +48,6 @@ describe('CategoryFacetSearchSet slice', () => {
     ).toHaveBeenCalledTimes(1);
   });
 
-  it('#executeCommerceFacetSearch.pending calls #handleFacetSearchPending', () => {
-    vi.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchPending');
-    const pendingAction = executeCommerceFacetSearch.pending(facetId, {
-      facetId: '',
-      facetSearchType: 'SEARCH',
-    });
-    facetSearchSetReducer(state, pendingAction);
-
-    expect(
-      FacetSearchReducerHelpers.handleFacetSearchPending
-    ).toHaveBeenCalledTimes(1);
-  });
-
-  it('#executeCommerceFieldSuggest.pending calls #handleFacetSearchPending', () => {
-    vi.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchPending');
-    const pendingAction = executeCommerceFieldSuggest.pending(facetId, {
-      facetId,
-      facetSearchType: 'SEARCH',
-    });
-    facetSearchSetReducer(state, pendingAction);
-
-    expect(
-      FacetSearchReducerHelpers.handleFacetSearchPending
-    ).toHaveBeenCalledTimes(1);
-  });
-
   it('#executeFacetSearch.pending calls #handleFacetSearchPending', () => {
     vi.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchPending');
     const pendingAction = executeFacetSearch.pending(facetId, '');
@@ -94,34 +55,6 @@ describe('CategoryFacetSearchSet slice', () => {
 
     expect(
       FacetSearchReducerHelpers.handleFacetSearchPending
-    ).toHaveBeenCalledTimes(1);
-  });
-
-  it('#executeCommerceFacetSearch.rejected calls #handleFacetSearchRejected', () => {
-    vi.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchRejected');
-    const rejectedAction = executeCommerceFacetSearch.rejected(
-      {name: 'test', message: 'test'},
-      facetId,
-      {facetId, facetSearchType: 'SEARCH'}
-    );
-    facetSearchSetReducer(state, rejectedAction);
-
-    expect(
-      FacetSearchReducerHelpers.handleFacetSearchRejected
-    ).toHaveBeenCalledTimes(1);
-  });
-
-  it('#executeCommerceFieldSuggest.rejected calls #handleFacetSearchRejected', () => {
-    vi.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchRejected');
-    const rejectedAction = executeCommerceFieldSuggest.rejected(
-      {name: 'test', message: 'test'},
-      facetId,
-      {facetId, facetSearchType: 'SEARCH'}
-    );
-    facetSearchSetReducer(state, rejectedAction);
-
-    expect(
-      FacetSearchReducerHelpers.handleFacetSearchRejected
     ).toHaveBeenCalledTimes(1);
   });
 
@@ -136,64 +69,6 @@ describe('CategoryFacetSearchSet slice', () => {
 
     expect(
       FacetSearchReducerHelpers.handleFacetSearchRejected
-    ).toHaveBeenCalledTimes(1);
-  });
-
-  it('#executeCommerceFacetSearch.fulfilled calls #handleCommerceFacetSearchFulfilled', () => {
-    vi.spyOn(FacetSearchReducerHelpers, 'handleCommerceFacetSearchFulfilled');
-    const response = buildMockFacetSearchResponse();
-    const action = executeCommerceFacetSearch.fulfilled(
-      {facetId, response: {success: response}},
-      '',
-      {facetId: '', facetSearchType: 'SEARCH'}
-    );
-
-    facetSearchSetReducer(state, action);
-    expect(
-      FacetSearchReducerHelpers.handleCommerceFacetSearchFulfilled
-    ).toHaveBeenCalledTimes(1);
-  });
-
-  it('#executeCommerceFieldSuggest.fulfilled calls #handleCommerceFacetFieldSuggestionsFulfilled', () => {
-    vi.spyOn(
-      FacetSearchReducerHelpers,
-      'handleCommerceFacetFieldSuggestionsFulfilled'
-    );
-    const response = buildMockFacetSearchResponse();
-    const action = executeCommerceFieldSuggest.fulfilled(
-      {facetId, response: {success: response}},
-      '',
-      {facetId: '', facetSearchType: 'SEARCH'}
-    );
-
-    facetSearchSetReducer(state, action);
-    expect(
-      FacetSearchReducerHelpers.handleCommerceFacetFieldSuggestionsFulfilled
-    ).toHaveBeenCalledTimes(1);
-  });
-
-  it('#fetchQuerySuggestions.fulfilled calls #handleCommerceFetchQuerySuggestionsFulfilledForCategoryFacet', () => {
-    vi.spyOn(
-      FacetSearchReducerHelpers,
-      'handleCommerceFetchQuerySuggestionsFulfilledForCategoryFacet'
-    );
-    const action = fetchQuerySuggestions.fulfilled(
-      {
-        id: '',
-        completions: [],
-        responseId: 'responseId',
-        query: 'abc',
-        fieldSuggestionsFacets: [],
-      },
-      '',
-      {
-        id: '',
-      }
-    );
-
-    facetSearchSetReducer(state, action);
-    expect(
-      FacetSearchReducerHelpers.handleCommerceFetchQuerySuggestionsFulfilledForCategoryFacet
     ).toHaveBeenCalledTimes(1);
   });
 
@@ -214,32 +89,6 @@ describe('CategoryFacetSearchSet slice', () => {
 
     expect(
       FacetSearchReducerHelpers.handleFacetSearchClear
-    ).toHaveBeenCalledTimes(1);
-  });
-
-  it('#fetchProductListing.fulfilled calls #handleFacetSearchSetClear', () => {
-    vi.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchSetClear');
-    const action = fetchProductListing.fulfilled(
-      {} as QueryCommerceAPIThunkReturn,
-      ''
-    );
-    facetSearchSetReducer(state, action);
-
-    expect(
-      FacetSearchReducerHelpers.handleFacetSearchSetClear
-    ).toHaveBeenCalledTimes(1);
-  });
-
-  it('#executeCommerceSearch.fulfilled calls #handleFacetSearchSetClear', () => {
-    vi.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchSetClear');
-    const action = executeCommerceSearch.fulfilled(
-      {} as QuerySearchCommerceAPIThunkReturn,
-      ''
-    );
-    facetSearchSetReducer(state, action);
-
-    expect(
-      FacetSearchReducerHelpers.handleFacetSearchSetClear
     ).toHaveBeenCalledTimes(1);
   });
 

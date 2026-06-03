@@ -65,7 +65,7 @@ export default function (plop: NodePlopAPI) {
     );
   }
 
-  plop.setHelper('inc', (value) => parseInt(value) + 1);
+  plop.setHelper('inc', (value) => parseInt(value, 10) + 1);
 
   plop.setGenerator('@coveo/atomic', {
     description: 'A Coveo Atomic Generator',
@@ -123,8 +123,7 @@ export default function (plop: NodePlopAPI) {
         message: 'The search hub to use',
       },
       {
-        // Custom type necessary to allow bypassing async choices
-        type: 'customList',
+        type: 'list',
         name: 'page-id',
         default: undefined,
         loop: false,

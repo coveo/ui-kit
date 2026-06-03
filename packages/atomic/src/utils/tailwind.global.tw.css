@@ -1,17 +1,10 @@
 @import "tailwindcss";
 
-@import "./tailwind-utilities/components.tw.css";
+@import "./tailwind-utilities/components.css";
+@reference './tailwind-utilities/utilities.css';
 @reference './coveo.tw.css';
 
 @layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    @apply border-gray-200;
-  }
-
   :host {
     display: block;
   }

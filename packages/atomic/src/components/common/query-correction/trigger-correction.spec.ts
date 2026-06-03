@@ -1,6 +1,6 @@
-import {userEvent} from '@storybook/test';
 import type {i18n} from 'i18next';
 import {html} from 'lit';
+import {userEvent} from 'storybook/test';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
@@ -18,6 +18,7 @@ describe('#renderTriggerCorrection', () => {
       html`${renderTriggerCorrection({
         props: {
           i18n,
+          i18nKeyShowingItemsFor: 'showing-products-for',
           correctedQuery: 'corrected query',
           originalQuery: 'original query',
           onClick: () => {},
@@ -50,7 +51,7 @@ describe('#renderTriggerCorrection', () => {
     const {paragraphShowingResultsFor} = await renderComponent();
 
     expect(paragraphShowingResultsFor).toHaveTextContent(
-      'Showing results for corrected query'
+      'Showing products for corrected query'
     );
   });
 

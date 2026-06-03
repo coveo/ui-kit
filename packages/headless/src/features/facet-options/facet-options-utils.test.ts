@@ -13,6 +13,12 @@ describe('isFacetIncludedOnTab', () => {
     expect(isFacetVisibleOnTab(facetTabs, 'tab3')).toBe(false);
   });
 
+  it('returns true when activeTab is not in facetTabs.excluded and no included list is defined', () => {
+    const facetTabs = {excluded: ['Products']};
+    expect(isFacetVisibleOnTab(facetTabs, 'All')).toBe(true);
+    expect(isFacetVisibleOnTab(facetTabs, 'Documents')).toBe(true);
+  });
+
   it('returns true when facetTabs.included is empty or activeTab is in facetTabs.included', () => {
     const facetTabs = {included: []};
     expect(isFacetVisibleOnTab(facetTabs, 'tab1')).toBe(true);

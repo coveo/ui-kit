@@ -1,0 +1,5 @@
+@import '../../../global/global.css';
+
+:host {
+  overflow: hidden;
+}

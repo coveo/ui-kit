@@ -16,9 +16,9 @@ interface GeneratedAnswerAPIClientOptions {
 export interface AsyncThunkGeneratedAnswerOptions<
   T extends Partial<SearchAppState>,
 > extends AsyncThunkOptions<
-    T,
-    ClientThunkExtraArguments<GeneratedAnswerAPIClient>
-  > {}
+  T,
+  ClientThunkExtraArguments<GeneratedAnswerAPIClient>
+> {}
 
 const buildStreamingUrl = (url: string, orgId: string, streamId: string) =>
   new URLPath(

@@ -14,10 +14,10 @@ import {buildSmartSnippetInteractiveInlineLinks} from './headless-smart-snippet-
 export type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering.js';
 export type {
   SmartSnippet,
+  SmartSnippetCore,
   SmartSnippetOptions,
   SmartSnippetProps,
   SmartSnippetState,
-  SmartSnippetCore,
 };
 
 /**

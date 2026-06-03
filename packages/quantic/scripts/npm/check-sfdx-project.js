@@ -1,5 +1,5 @@
 const pathlib = require('path');
-const fs = require('fs-extra');
+const fs = require('fs');
 const {quanticIsDependency, getProjectPath} = require('./utils');
 
 function main() {

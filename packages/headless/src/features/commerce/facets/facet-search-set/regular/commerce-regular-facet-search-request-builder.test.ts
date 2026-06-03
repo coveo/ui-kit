@@ -14,6 +14,7 @@ describe('#buildFacetSearchRequest', () => {
   let navigatorContext: NavigatorContext;
   let facetId: string;
   let query: string;
+  let numberOfValues: number;
   let buildFilterableCommerceAPIRequestMock: MockInstance;
 
   beforeEach(() => {
@@ -21,10 +22,11 @@ describe('#buildFacetSearchRequest', () => {
 
     facetId = '1';
     query = 'test';
+    numberOfValues = 5;
     state = buildMockCommerceState();
     state.commerceQuery.query = query;
     state.facetSearchSet[facetId] = buildMockFacetSearch({
-      options: {...buildMockFacetSearchRequestOptions(), query},
+      options: {...buildMockFacetSearchRequestOptions(), query, numberOfValues},
     });
 
     buildFilterableCommerceAPIRequestMock = vi.spyOn(
@@ -70,6 +72,7 @@ describe('#buildFacetSearchRequest', () => {
         facetId,
         facetQuery: `*${query}*`,
         query,
+        numberOfValues,
       });
     });
   });
@@ -97,6 +100,7 @@ describe('#buildFacetSearchRequest', () => {
         facetId,
         facetQuery: '*',
         query,
+        numberOfValues,
       });
     });
   });

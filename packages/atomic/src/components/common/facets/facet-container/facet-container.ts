@@ -4,10 +4,10 @@ import type {FunctionalComponentWithChildrenNoProps} from '@/src/utils/functiona
 export const renderFacetContainer: FunctionalComponentWithChildrenNoProps =
   () => (children) =>
     html`
-    <div
-      class="bg-background border-neutral rounded-lg border p-4"
-      part="facet"
-    >
-      ${children}
-    </div>
-  `;
+      <div
+        class="bg-background border-neutral rounded-lg border p-4"
+        part="facet"
+      >
+        ${children}
+      </div>
+    `;

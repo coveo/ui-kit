@@ -1,6 +1,7 @@
 import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {styleMap} from 'lit/directives/style-map.js';
+import {LightDomMixin} from '@/src/mixins/light-dom';
 import type {FindAriaLiveEventArgs} from '../../../utils/accessibility-utils';
 import {buildDebouncedQueue} from '../../../utils/debounce-utils';
 import {randomID} from '../../../utils/utils';
@@ -13,10 +14,7 @@ type Regions = {[regionName: string]: {assertive: boolean; message: string}};
  * @event atomic/accessibility/findAriaLive - Dispatches an event to find the `atomic-aria-live` element.
  */
 @customElement('atomic-aria-live')
-export class AtomicAriaLive extends LitElement {
-  createRenderRoot() {
-    return this;
-  }
+export class AtomicAriaLive extends LightDomMixin(LitElement) {
   @state() private regions: Readonly<Regions> = {};
 
   private messagesQueue = buildDebouncedQueue({delay: 500});

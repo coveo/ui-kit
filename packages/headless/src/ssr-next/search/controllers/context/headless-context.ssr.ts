@@ -5,12 +5,15 @@ import {
 } from '../../../../controllers/context/headless-context.js';
 import type {ContextProps} from '../../../../controllers/core/context/headless-core-context.js';
 import {MissingControllerProps} from '../../../common/errors.js';
-import type {ControllerDefinitionWithProps} from '../../../common/types/controllers.js';
+import type {ControllerDefinitionWithProps} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/context/headless-context.js';
 
-export interface ContextDefinition
-  extends ControllerDefinitionWithProps<SearchEngine, Context, ContextProps> {}
+export interface ContextDefinition extends ControllerDefinitionWithProps<
+  SearchEngine,
+  Context,
+  ContextProps
+> {}
 
 /**
  * Defines a `Context` controller instance.
@@ -20,6 +23,7 @@ export interface ContextDefinition
  * */
 export function defineContext(): ContextDefinition {
   return {
+    // TODO: KIT-5154 - Apply commerce pattern
     buildWithProps: (engine, props) => {
       if (props === undefined) {
         throw new MissingControllerProps('Context');

@@ -3,7 +3,7 @@ import type {
   InsightEngine,
   NumericFacetValue,
 } from '@coveo/headless/insight';
-import {DEFAULT_MOBILE_BREAKPOINT} from '@/src/utils/replace-breakpoint';
+import {DEFAULT_MOBILE_BREAKPOINT} from '@/src/utils/replace-breakpoint-utils';
 import type {
   FacetInfo,
   FacetStore,

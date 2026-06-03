@@ -1,16 +1,21 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client.js';
+import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
 import {
   closeGeneratedAnswerFeedbackModal,
   collapseGeneratedAnswer,
   dislikeGeneratedAnswer,
   expandGeneratedAnswer,
+  finishStep,
   likeGeneratedAnswer,
   openGeneratedAnswerFeedbackModal,
   registerFieldsToIncludeInCitations,
   resetAnswer,
   sendGeneratedAnswerFeedback,
+  setAnswerApiQueryParams,
   setAnswerContentFormat,
+  setAnswerGenerationMode,
+  setAnswerId,
   setCannotAnswer,
   setId,
   setIsAnswerGenerated,
@@ -18,6 +23,7 @@ import {
   setIsLoading,
   setIsStreaming,
   setIsVisible,
+  startStep,
   updateAnswerConfigurationId,
   updateCitations,
   updateError,
@@ -43,12 +49,17 @@ export const generatedAnswerReducer = createReducer(
       .addCase(updateMessage, (state, {payload}) => {
         state.isLoading = false;
         state.isStreaming = true;
-        if (!state.answer) {
-          state.answer = '';
+        delete state.error;
+        const incomingText = payload.textDelta;
+        const hasExistingAnswer = Boolean(state.answer?.trim());
+        const shouldStartAnswer = incomingText.trim().length > 0;
+
+        if (hasExistingAnswer) {
+          state.answer += incomingText;
+          return;
         }
 
-        state.answer += payload.textDelta;
-        delete state.error;
+        state.answer = shouldStartAnswer ? incomingText : undefined;
       })
       .addCase(updateCitations, (state, {payload}) => {
         state.isLoading = false;
@@ -129,5 +140,30 @@ export const generatedAnswerReducer = createReducer(
       })
       .addCase(setCannotAnswer, (state, {payload}) => {
         state.cannotAnswer = payload;
+      })
+      .addCase(setAnswerApiQueryParams, (state, {payload}) => {
+        state.answerApiQueryParams = payload as AnswerApiQueryParams;
+      })
+      .addCase(setAnswerId, (state, {payload}) => {
+        state.answerId = payload;
+      })
+      .addCase(setAnswerGenerationMode, (state, {payload}) => {
+        state.answerGenerationMode = payload;
+      })
+      .addCase(startStep, (state, {payload}) => {
+        state.generationSteps.push({
+          name: payload.name,
+          status: 'active',
+          startedAt: payload.startedAt,
+        });
+      })
+      .addCase(finishStep, (state, {payload}) => {
+        const step = state.generationSteps.findLast(
+          (step) => step.name === payload.name && step.status === 'active'
+        );
+        if (step) {
+          step.status = 'completed';
+          step.finishedAt = payload.finishedAt;
+        }
       })
 );

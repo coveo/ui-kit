@@ -7,7 +7,6 @@ import {
 } from '../../../../controllers/commerce/recommendations/headless-recommendations.js';
 import {recommendationInternalOptionKey} from '../../types/controller-constants.js';
 import type {RecommendationOnlyControllerDefinitionWithProps} from '../../types/controller-definitions.js';
-import {createControllerWithKind, Kind} from '../../types/kind.js';
 
 export type {Recommendations, RecommendationsState};
 
@@ -15,11 +14,10 @@ export type RecommendationsDefinitionMeta = {
   [recommendationInternalOptionKey]: {} & RecommendationsProps['options'];
 };
 
-export interface RecommendationsDefinition
-  extends RecommendationOnlyControllerDefinitionWithProps<
-    Recommendations,
-    Partial<RecommendationsOptions>
-  > {}
+export interface RecommendationsDefinition extends RecommendationOnlyControllerDefinitionWithProps<
+  Recommendations,
+  Partial<RecommendationsOptions>
+> {}
 
 /**
  * Defines a `Recommendations` controller instance.
@@ -41,10 +39,9 @@ export function defineRecommendations(
       options: Omit<RecommendationsOptions, 'slotId'>
     ) => {
       const staticOptions = props.options;
-      const controller = buildRecommendations(engine, {
+      return buildRecommendations(engine, {
         options: {...staticOptions, ...options},
       });
-      return createControllerWithKind(controller, Kind.Recommendations);
     },
   };
 }

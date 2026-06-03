@@ -1,174 +1,12 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: Just tests */
-import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
+/* oxlint-disable @typescript-eslint/no-explicit-any -- Just tests */
 import type {EventSourceMessage} from '../../../utils/fetch-event-source/parse.js';
+import type {GeneratedAnswerStream} from '../generated-answer-stream.js';
 import {
-  constructAnswerQueryParams,
-  type GeneratedAnswerStream,
+  buildAnswerEndpoint,
   updateCacheWithEvent,
 } from '../stream-answer-api.js';
-import {
-  expectedStreamAnswerAPIParam,
-  expectedStreamAnswerAPIParamForSelect,
-  expectedStreamAnswerAPIParamWithATabWithAnExpression,
-  expectedStreamAnswerAPIParamWithoutAnyTab,
-  expectedStreamAnswerAPIParamWithoutSearchAction,
-  expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression,
-  expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpressionWithoutAdvancedCQ,
-  expectedStreamAnswerAPIParamWithStaticFiltersSelected,
-  streamAnswerAPIStateMock,
-  streamAnswerAPIStateMockWithATabWithAnExpression,
-  streamAnswerAPIStateMockWithNonValidFilters,
-  streamAnswerAPIStateMockWithoutAnyFilters,
-  streamAnswerAPIStateMockWithoutAnyTab,
-  streamAnswerAPIStateMockWithoutSearchAction,
-  streamAnswerAPIStateMockWithStaticFiltersAndTabExpression,
-  streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyCQ,
-  streamAnswerAPIStateMockWithStaticFiltersSelected,
-} from './stream-answer-api-state-mock.js';
 
 describe('#streamAnswerApi', () => {
-  describe('constructAnswerQueryParams', () => {
-    beforeEach(() => {
-      vi.useFakeTimers().setSystemTime(new Date('2020-01-01'));
-    });
-    afterAll(() => {
-      vi.useRealTimers();
-    });
-
-    it('returns the correct query params with fetch usage', () => {
-      const queryParams = constructAnswerQueryParams(
-        streamAnswerAPIStateMock as any,
-        'fetch',
-        buildMockNavigatorContextProvider()()
-      );
-
-      expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
-    });
-
-    it('should create the right selector when usage is select', () => {
-      const queryParams = constructAnswerQueryParams(
-        streamAnswerAPIStateMock as any,
-        'select',
-        buildMockNavigatorContextProvider()()
-      );
-
-      expect(queryParams).toEqual(expectedStreamAnswerAPIParamForSelect);
-    });
-
-    it('should merge tab expression in request constant query when expression is not a blank string', () => {
-      const queryParams = constructAnswerQueryParams(
-        streamAnswerAPIStateMockWithATabWithAnExpression as any,
-        'fetch',
-        buildMockNavigatorContextProvider()()
-      );
-
-      expect(queryParams).toEqual(
-        expectedStreamAnswerAPIParamWithATabWithAnExpression
-      );
-    });
-
-    it('should not include tab info when there is NO tab', () => {
-      const queryParams = constructAnswerQueryParams(
-        streamAnswerAPIStateMockWithoutAnyTab as any,
-        'fetch',
-        buildMockNavigatorContextProvider()()
-      );
-
-      expect(queryParams).toEqual(expectedStreamAnswerAPIParamWithoutAnyTab);
-    });
-
-    it('should merge filter expressions in request constant query when expression is selected', () => {
-      const queryParams = constructAnswerQueryParams(
-        streamAnswerAPIStateMockWithStaticFiltersSelected as any,
-        'fetch',
-        buildMockNavigatorContextProvider()()
-      );
-
-      expect(queryParams).toEqual(
-        expectedStreamAnswerAPIParamWithStaticFiltersSelected
-      );
-    });
-
-    it('should not include filter info when there is NO filter', () => {
-      const queryParams = constructAnswerQueryParams(
-        streamAnswerAPIStateMockWithoutAnyFilters as any,
-        'fetch',
-        buildMockNavigatorContextProvider()()
-      );
-      expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
-    });
-
-    it('should not include non-selected filters and empty filters', () => {
-      const queryParams = constructAnswerQueryParams(
-        streamAnswerAPIStateMockWithNonValidFilters as any,
-        'fetch',
-        buildMockNavigatorContextProvider()()
-      );
-      expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
-    });
-
-    it('should merge multiple filter expressions and a tab expression', () => {
-      const queryParams = constructAnswerQueryParams(
-        streamAnswerAPIStateMockWithStaticFiltersAndTabExpression as any,
-        'fetch',
-        buildMockNavigatorContextProvider()()
-      );
-      expect(queryParams).toEqual(
-        expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression
-      );
-    });
-
-    it('should not include advanced search queries when there are no advanced search queries', () => {
-      const queryParams = constructAnswerQueryParams(
-        streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyCQ as any,
-        'fetch',
-        buildMockNavigatorContextProvider()()
-      );
-      expect(queryParams).toEqual(
-        expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpressionWithoutAdvancedCQ
-      );
-    });
-
-    it('should accept an undefined SearchAction', () => {
-      const queryParams = constructAnswerQueryParams(
-        streamAnswerAPIStateMockWithoutSearchAction as any,
-        'fetch',
-        buildMockNavigatorContextProvider()()
-      );
-
-      expect(queryParams).toEqual(
-        expectedStreamAnswerAPIParamWithoutSearchAction
-      );
-    });
-
-    it('should exclude analytics fields when usage is select', () => {
-      const queryParams = constructAnswerQueryParams(
-        streamAnswerAPIStateMock as any,
-        'select',
-        buildMockNavigatorContextProvider()()
-      );
-
-      // Verify that volatile fields (clientTimestamp, actionCause) are not present
-      expect(queryParams.analytics).toBeUndefined();
-    });
-
-    it('should include all analytics fields when usage is fetch', () => {
-      const queryParams = constructAnswerQueryParams(
-        streamAnswerAPIStateMock as any,
-        'fetch',
-        buildMockNavigatorContextProvider()()
-      );
-
-      // Verify that all analytics fields are present including volatile ones
-      expect(queryParams.analytics).toBeDefined();
-      expect(queryParams.analytics?.clientTimestamp).toBeDefined();
-      expect(queryParams.analytics?.actionCause).toBeDefined();
-      expect(queryParams.analytics?.capture).toBeDefined();
-      expect(queryParams.analytics?.clientId).toBeDefined();
-      expect(queryParams.analytics?.originContext).toBeDefined();
-    });
-  });
-
   describe('updateCacheWithEvent', () => {
     const buildEvent = (data: Record<string, any>): EventSourceMessage => {
       return {
@@ -274,6 +112,27 @@ describe('#streamAnswerApi', () => {
       });
     });
 
+    it('should not initialize the cached answer with blank-only first chunk', () => {
+      const dispatch = vi.fn();
+      const event = buildSuccessEvent({
+        payloadType: 'genqa.messageType',
+        payload: {
+          textDelta: '   ',
+        },
+      });
+      const draft = buildDefaultDraft({answer: undefined});
+
+      updateCacheWithEvent(event, draft, dispatch);
+
+      expect(draft.answer).toBeUndefined();
+      expect(dispatch).toHaveBeenCalledWith({
+        type: 'generatedAnswer/updateMessage',
+        payload: {
+          textDelta: '   ',
+        },
+      });
+    });
+
     it('should handle message type and append answer', () => {
       const dispatch = vi.fn();
       const event = buildSuccessEvent({
@@ -293,6 +152,21 @@ describe('#streamAnswerApi', () => {
           textDelta: 'with some more info',
         },
       });
+    });
+
+    it('should ignore message payloads when textDelta is not a string', () => {
+      const dispatch = vi.fn();
+      const event = buildSuccessEvent({
+        payloadType: 'genqa.messageType',
+        payload: {
+          textDelta: {not: 'a simple string'},
+        },
+      });
+      const draft = buildDefaultDraft({answer: 'existing answer'});
+
+      expect(() => updateCacheWithEvent(event, draft, dispatch)).not.toThrow();
+      expect(draft).toHaveProperty('answer', 'existing answer');
+      expect(dispatch).not.toHaveBeenCalled();
     });
 
     it('should handle citations message', () => {
@@ -355,6 +229,48 @@ describe('#streamAnswerApi', () => {
       expect(draft).toHaveProperty('generated', false);
       expect(draft).toHaveProperty('isStreaming', false);
       expect(dispatch).toHaveBeenCalled();
+    });
+  });
+
+  describe('buildAnswerEndpoint', () => {
+    const baseUrl = 'https://api.coveo.com';
+    const organizationId = 'test-org-123';
+    const answerConfigurationId = 'answer-config-456';
+    const insightId = 'insight-789';
+
+    it('should throw when missing answerConfiguration', () => {
+      expect(() => buildAnswerEndpoint(baseUrl, organizationId, '')).toThrow(
+        'Missing required parameters for answer endpoint'
+      );
+
+      expect(() =>
+        buildAnswerEndpoint(baseUrl, organizationId, undefined as any)
+      ).toThrow('Missing required parameters for answer endpoint');
+    });
+
+    it('should build the proper endpoint when insightId is not provided', () => {
+      const result = buildAnswerEndpoint(
+        baseUrl,
+        organizationId,
+        answerConfigurationId
+      );
+
+      expect(result).toBe(
+        `${baseUrl}/rest/organizations/${organizationId}/answer/v1/configs/${answerConfigurationId}/generate`
+      );
+    });
+
+    it('should build the proper endpoint when insightId is provided', () => {
+      const result = buildAnswerEndpoint(
+        baseUrl,
+        organizationId,
+        answerConfigurationId,
+        insightId
+      );
+
+      expect(result).toBe(
+        `${baseUrl}/rest/organizations/${organizationId}/insight/v1/configs/${insightId}/answer/${answerConfigurationId}/generate`
+      );
     });
   });
 });

@@ -1,96 +1,65 @@
 name: Create release
 on:
-  schedule:
-    # At 02:00 (UTC) Wednesday/ 21:00 (ETC) every Tuesday.
-    - cron: '0 2 * * 3'
-  workflow_dispatch:
-    inputs:
-      version:
-        description: '⚠ be sure of yourself ⚠'
-        required: false
-        default: ''
-        type: string
-      debug:
-        description: 'Add DEBUG=* to the env if true'
-        type: boolean
-        default: false
-        required: false
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
 
 jobs:
-  approve:
-    if: ${{ github.event_name == 'workflow_dispatch' }}
-    runs-on: ubuntu-latest
-    environment: 'Manual Release'
-    steps:
-      - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
-        with:
-          egress-policy: audit
-
-      - run: exit 0;
   release:
-    if: ${{ !cancelled() }}
-    needs: approve
-    environment: 'Release'
+    concurrency:
+      group: release-${{ github.ref }}
+      cancel-in-progress: false
     runs-on: ubuntu-latest
+    environment: Release
     permissions:
       contents: write
-      packages: write
+      pull-requests: write
       id-token: write
+    outputs:
+      published: ${{ steps.changesets.outputs.published }}
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-        with:
-          fetch-depth: 0
-      - uses: ./.github/actions/setup
       - name: Generate a token
         id: generate-token
-        uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
         with:
           app-id: ${{ secrets.RELEASER_APP_ID }}
           private-key: ${{ secrets.RELEASER_PRIVATE_KEY }}
           owner: coveo
           repositories: 'ui-kit'
-      - name: Release
-        run: npm run release
-        env:
-          VERSION: ${{ inputs.version }}
-          DEBUG: ${{ inputs.debug && '@coveo/semantic-monorepo-tools:*' || '' }}
-          GITHUB_INSTALLATION_TOKEN: ${{ steps.generate-token.outputs.token }}
-          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: Call ui-kit-cd
-        run: node ./scripts/deploy/trigger-ui-kit-cd.mjs
-        env:
-          GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
-  npm-prod:
-    if: ${{ !cancelled() }}
-    needs: release
-    environment: 'NPM Production'
-    runs-on: 'ubuntu-latest'
-    permissions:
-      contents: read
-      discussions: write
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
-          egress-policy: audit
-
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-        with:
-          ref: 'release/v3'
+          fetch-depth: 0
+          token: ${{ steps.generate-token.outputs.token }}
       - uses: ./.github/actions/setup
-      - name: Promote NPM package to production
-        run: npm run promote:npm:latest
+        with:
+          load-cache: false
+          save-cache: true
+          cache-retention-days: 7
+      - name: Create release PR or publish
+        id: changesets
+        uses: step-security/changeset-action@4ec991f6d4d311458205f6954cf513f63efe15a3 # v1.7.0
+        with:
+          version: pnpm changeset version
+          publish: pnpm run release
+          title: 'ci(changesets): version packages j:KIT-5605'
+          commit: 'ci(changesets): version packages j:KIT-5605'
+          commitMode: github-api
+        env:
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+      - name: Update release/v3 bookmark
+        if: ${{ steps.changesets.outputs.published == 'true' }}
+        run: |
+          git tag -f release/v3
+          git push origin refs/tags/release/v3 --force
   quantic-prod:
-    if: ${{ !cancelled() }}
+    if: ${{ needs.release.outputs.published == 'true' }}
     needs: release
     runs-on: ubuntu-latest
     environment: 'Quantic Production'
@@ -100,47 +69,48 @@ jobs:
       discussions: write
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
-          ref: 'release/v3'
+          ref: 'refs/tags/release/v3'
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/setup-sfdx
       - name: Promote SFDX package to production
         run: |
-          echo "${{ secrets.SFDX_AUTH_JWT_KEY }}" > ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
-          npx --no-install turbo run @coveo/quantic#promote:sfdx:ci
-          rm ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
+          echo "${{ secrets.SFDX_AUTH_JWT_KEY }}" > ${VARS_SFDX_AUTH_JWT_KEY_FILE}
+          pnpm exec turbo run @coveo/quantic#promote:sfdx:ci
+          rm ${VARS_SFDX_AUTH_JWT_KEY_FILE}
         env:
           SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
           SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
           SFDX_AUTH_JWT_USERNAME: ${{ vars.SFDX_AUTH_JWT_USERNAME }}
           SFDX_AUTH_JWT_KEY_FILE: ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VARS_SFDX_AUTH_JWT_KEY_FILE: ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
         working-directory: ./packages/quantic
   typedoc-headless:
-    if: ${{ !cancelled() }}
+    if: ${{ needs.release.outputs.published == 'true' }}
     needs: release
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
         with:
           egress-policy: audit
 
       - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
-          ref: 'release/v3'
+          ref: 'refs/tags/release/v3'
 
       - name: Set up and build the project
         uses: ./.github/actions/setup
 
       - name: Build typedoc site
-        run: npm run build:typedoc
+        run: pnpm run build:typedoc
         working-directory: packages/headless
         shell: bash
 
@@ -153,35 +123,35 @@ jobs:
 
       - name: Copy the docs into the version folder
         run: |
-          mkdir -p typedoc-headless-site/${{ env.version }}/
-          cp -r packages/headless/docs/* typedoc-headless-site/${{ env.version }}/
-          echo "Copied docs to: typedoc-headless-site/${{ env.version }}/"
+          mkdir -p typedoc-headless-site/${version}/
+          cp -r packages/headless/docs/* typedoc-headless-site/${version}/
+          echo "Copied docs to: typedoc-headless-site/${version}/"
 
       - name: Upload documentation artifact
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: headless-docs-${{ env.version }}
           path: typedoc-headless-site/
   typedoc-headless-react:
-    if: ${{ !cancelled() }}
+    if: ${{ needs.release.outputs.published == 'true' }}
     needs: release
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
         with:
           egress-policy: audit
 
       - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
-          ref: 'release/v3'
+          ref: 'refs/tags/release/v3'
 
       - name: Set up and build the project
         uses: ./.github/actions/setup
 
       - name: Build typedoc site
-        run: npm run build:typedoc
+        run: pnpm run build:typedoc
         working-directory: packages/headless-react
         shell: bash
 
@@ -194,31 +164,95 @@ jobs:
 
       - name: Copy the docs into the version folder
         run: |
-          mkdir -p typedoc-headless-react-site/${{ env.version }}/
-          cp -r packages/headless-react/docs/* typedoc-headless-react-site/${{ env.version }}/
-          echo "Copied docs to: typedoc-headless-react-site/${{ env.version }}/"
+          mkdir -p typedoc-headless-react-site/${version}/
+          cp -r packages/headless-react/docs/* typedoc-headless-react-site/${version}/
+          echo "Copied docs to: typedoc-headless-react-site/${version}/"
 
       - name: Upload documentation artifact
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: headless-react-docs-${{ env.version }}
           path: typedoc-headless-react-site/
   docs-prod:
-    if: ${{ !cancelled() }}
+    if: ${{ needs.release.outputs.published == 'true' }}
     needs: release
     runs-on: ubuntu-latest
     environment: 'Docs Production'
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
-          ref: 'release/v3'
+          ref: 'refs/tags/release/v3'
       - uses: ./.github/actions/setup
+      - name: Create GitHub App token for docs dispatch
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
+        with:
+          app-id: ${{ secrets.DOC_APP_ID }}
+          private-key: ${{ secrets.DOC_APP_PRIVATE_KEY }}
+          owner: coveo
+          repositories: doc_jekyll-public-site
       - name: Notify Docs
-        run: npm run notify:docs
+        continue-on-error: true
+        run: pnpm run notify:docs
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+  build-cdn:
+    name: Build CDN
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: ./.github/actions/build-cdn
+        with:
+          commit-sha: ${{ github.sha }}
+  commit-artifact-upload:
+    name: Upload commit artifacts to S3
+    needs: [build-cdn, release]
+    runs-on: ubuntu-latest
+    # TODO(KIT-5712): Rename to 'CDN Deploy' once token vending machine is available
+    environment: 'Prerelease (CDN)'
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: ./.github/actions/setup
+        with:
+          skip-build: 'true'
+          load-cache: 'false'
+      - name: Trigger commit artifact upload on ui-kit-cd
+        run: node ./scripts/deploy/trigger-commit-upload.mjs
+        env:
+          GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
+          # Comma-separated list of CDN channels to update (e.g. "private" or "private,preview").
+          # On release commits, update both private and preview pointers.
+          # On regular merges, only update private pointers.
+          CHANNELS: ${{ needs.release.outputs.published == 'true' && 'private,preview' || 'private' }}
+  chromatic-update-main:
+    name: 'Update Chromatic baseline on main'
+    runs-on: ubuntu-latest
+    env:
+      CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          fetch-depth: 0
+
+      - uses: ./.github/actions/setup
+        with:
+          load-cache: 'false'
+      - run: pnpm exec turbo chromatic --filter=@coveo/atomic -- --exit-zero-on-changes --auto-accept-changes --branchName=main

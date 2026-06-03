@@ -11,8 +11,8 @@ import {
 } from './numeric-facet-actions.js';
 
 export type {
-  ToggleSelectNumericFacetValuePayload,
   ToggleExcludeNumericFacetValuePayload,
+  ToggleSelectNumericFacetValuePayload,
   UpdateNumericFacetValuesPayload,
 };
 

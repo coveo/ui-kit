@@ -1,6 +1,6 @@
-import {userEvent} from '@storybook/test';
 import type {i18n} from 'i18next';
 import {html} from 'lit';
+import {userEvent} from 'storybook/test';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';

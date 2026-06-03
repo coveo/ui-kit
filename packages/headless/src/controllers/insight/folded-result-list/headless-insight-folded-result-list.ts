@@ -13,12 +13,12 @@ import {
 } from '../../core/folded-result-list/headless-core-folded-result-list.js';
 
 export type {
-  FoldedResultListOptions,
-  FoldedResultListState,
-  FoldedResultList,
-  FoldingOptions,
   FoldedCollection,
   FoldedResult,
+  FoldedResultList,
+  FoldedResultListOptions,
+  FoldedResultListState,
+  FoldingOptions,
 };
 
 export interface InsightFoldedResultListProps {

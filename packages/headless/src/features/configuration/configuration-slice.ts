@@ -8,6 +8,7 @@ import {updateActiveTab} from '../tab-set/tab-set-actions.js';
 import {
   disableAnalytics,
   enableAnalytics,
+  setAgentId,
   setOriginLevel2,
   setOriginLevel3,
   type UpdateAnalyticsConfigurationActionCreatorPayload,
@@ -21,7 +22,10 @@ import {
   type ConfigurationState,
   getConfigurationInitialState,
 } from './configuration-state.js';
-import getMagicCookie from './magic-cookie.js';
+import {
+  getMagicCookie,
+  getSearchAgentDebugMagicCookie,
+} from './magic-cookie.js';
 
 export const configurationReducer = createReducer(
   getConfigurationInitialState(),
@@ -58,6 +62,9 @@ export const configurationReducer = createReducer(
         if (!isNullOrUndefined(action.payload.tab)) {
           state.analytics.originLevel2 = action.payload.tab;
         }
+      })
+      .addCase(setAgentId, (state, {payload}) => {
+        handleUpdateAgentId(state, payload);
       })
 );
 
@@ -146,4 +153,14 @@ function handleUpdateAnalyticsConfiguration(
   if (!isNullOrUndefined(payload.documentLocation)) {
     state.analytics.documentLocation = payload.documentLocation;
   }
+}
+
+function handleUpdateAgentId(state: ConfigurationState, payload: string) {
+  state.knowledge.agentId = payload;
+  try {
+    const searchAgentDebugMagicCookie = getSearchAgentDebugMagicCookie();
+    if (!isNullOrUndefined(searchAgentDebugMagicCookie)) {
+      state.knowledge.debugAgentSession = true;
+    }
+  } catch (_) {}
 }

@@ -4,12 +4,14 @@ import {
   type FieldSuggestions,
   type FieldSuggestionsProps,
 } from '../../../../../controllers/field-suggestions/facet/headless-field-suggestions.js';
-import type {ControllerDefinitionWithoutProps} from '../../../../common/types/controllers.js';
+import type {ControllerDefinitionWithoutProps} from '../../../types/controller-definition.js';
 
 export * from '../../../../../controllers/field-suggestions/facet/headless-field-suggestions.js';
 
-export interface FieldSuggestionsDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, FieldSuggestions> {}
+export interface FieldSuggestionsDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  FieldSuggestions
+> {}
 
 /**
  * Defines a `FieldSuggestions` controller instance.

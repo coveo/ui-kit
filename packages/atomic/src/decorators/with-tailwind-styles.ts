@@ -1,7 +1,5 @@
 import {type CSSResult, type CSSResultGroup, unsafeCSS} from 'lit';
-import theme from '@/src/utils/coveo.tw.css';
 import styles from '@/src/utils/tailwind.global.tw.css';
-import utilities from '@/src/utils/tailwind-utilities/utilities.tw.css';
 
 const tailwindPropertiesSheet: CSSStyleSheet | null =
   typeof window !== 'undefined'
@@ -24,7 +22,7 @@ const tailwindPropertiesSheet: CSSStyleSheet | null =
       })()
     : null;
 
-// biome-ignore lint/suspicious/noExplicitAny: <>
+// oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
 function injectTailwindProperties(element: any) {
   if (typeof window === 'undefined' || !tailwindPropertiesSheet) return;
 
@@ -34,17 +32,17 @@ function injectTailwindProperties(element: any) {
 
   if (isParentDocumentOrShadowRoot) {
     if (!parent.adoptedStyleSheets.includes(tailwindPropertiesSheet)) {
-      parent.adoptedStyleSheets.push(tailwindPropertiesSheet);
+      parent.adoptedStyleSheets?.push(tailwindPropertiesSheet);
     }
   } else {
-    element.adoptedStyleSheets.push(tailwindPropertiesSheet);
+    element.adoptedStyleSheets?.push(tailwindPropertiesSheet);
   }
 }
 
 export const withTailwindStyles = <
   T extends {
     styles?: CSSResultGroup | CSSStyleSheet | undefined;
-    // biome-ignore lint/suspicious/noExplicitAny: <>
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
     new (...args: any[]): any;
   },
 >(
@@ -56,11 +54,7 @@ export const withTailwindStyles = <
       injectTailwindProperties(this);
     }
     static get styles(): CSSResultGroup {
-      const baseStyles: Array<CSSStyleSheet | CSSResult> = [
-        unsafeCSS(theme),
-        unsafeCSS(styles),
-        unsafeCSS(utilities),
-      ];
+      const baseStyles: Array<CSSStyleSheet | CSSResult> = [unsafeCSS(styles)];
 
       const customStyles = Base.styles;
 

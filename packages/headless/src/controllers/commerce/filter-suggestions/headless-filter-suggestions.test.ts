@@ -3,6 +3,7 @@ import {
   executeCommerceFieldSuggest,
   getFacetIdWithCommerceFieldSuggestionNamespace,
 } from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions.js';
+import {commerceSpecificFacetSearchSetReducer as facetSearchSet} from '../../../features/commerce/facets/facet-search-set/regular/commerce-specific-facet-search-set-slice.js';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice.js';
 import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice.js';
 import {updateQuery} from '../../../features/commerce/query/query-actions.js';
@@ -11,7 +12,6 @@ import {
   selectFacetSearchResult,
   updateFacetSearch,
 } from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
-import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice.js';
 import type {SpecificFacetSearchState} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-state.js';
 import type {CommerceAppState} from '../../../state/commerce-app-state.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';

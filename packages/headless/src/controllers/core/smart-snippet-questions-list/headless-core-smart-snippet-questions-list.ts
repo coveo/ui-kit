@@ -86,7 +86,7 @@ export interface SmartSnippetRelatedQuestion {
    */
   documentId: QuestionAnswerDocumentIdentifier;
   /**
-   * The unique identifier for this question & answer.
+   * The unique identifier for this question and answer.
    */
   questionAnswerId: string;
   /**

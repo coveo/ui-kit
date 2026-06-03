@@ -1,9 +1,11 @@
 {
+  "ignorePatterns": "staticresources/**/*",
   "extends": ["@salesforce/eslint-config-lwc/recommended", "prettier"],
   "root": true,
   "globals": {
     "CoveoHeadless": "readonly",
-    "CoveoHeadlessCaseAssist": "readonly"
+    "CoveoHeadlessCaseAssist": "readonly",
+    "coveoua": "readonly"
   },
   "overrides": [
     {

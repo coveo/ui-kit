@@ -2,16 +2,9 @@
 import type {Locator} from '@playwright/test';
 import {expect, test} from './fixture';
 
-test.describe('Default', () => {
+test.describe('atomic-commerce-breadbox', () => {
   test.beforeEach(async ({breadbox}) => {
     await breadbox.load();
-  });
-
-  test('should be A11y compliant', async ({breadbox, makeAxeBuilder}) => {
-    await breadbox.getFacetValue('regular').first().click();
-
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
   });
 
   test.describe('when restoring the state from URL', () => {
@@ -28,8 +21,8 @@ test.describe('Default', () => {
       },
       {
         facetType: 'date range',
-        filter: '&df-date=2024/05/27@14:32:01..2025/05/27@14:32:01',
-        breadcrumbLabel: 'Date: 2024-05-27 to 2025-05-27',
+        filter: '&df-cat_date_added=2021/01/01@12:00:00..2021/12/31@12:00:00',
+        breadcrumbLabel: 'Date: 2021-01-01 to 2021-12-31',
       },
       {
         facetType: 'category',
@@ -54,7 +47,7 @@ test.describe('Default', () => {
 
         const breadcrumbButton = breadbox.getBreadcrumbButtons(breadcrumbLabel);
 
-        await expect(breadcrumbButton).toHaveText(breadcrumbLabel);
+        await expect(breadcrumbButton).toContainText(breadcrumbLabel);
       });
     });
   });
@@ -73,7 +66,7 @@ test.describe('Default', () => {
       expectedBreadcrumbLabel
     );
 
-    await expect(breadcrumbButton).toHaveText(expectedBreadcrumbLabel);
+    await expect(breadcrumbButton).toContainText(expectedBreadcrumbLabel);
   });
 
   test.describe('when a regular facet value is selected', () => {
@@ -119,7 +112,7 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText(`Brand: ${firstValueText}`);
+      await expect(breadcrumbButton).toContainText(`Brand: ${firstValueText}`);
     });
   });
   test.describe('when a category facet value is selected', () => {
@@ -131,7 +124,10 @@ test.describe('Default', () => {
         .locator('span')
         .first()
         .textContent()) as string;
-      await breadbox.getFacetValue('category', firstValueText).click();
+      await breadbox
+        .getFacetValue('category', firstValueText)
+        .locator('button')
+        .click();
       await breadbox
         .getBreadcrumbButtons(firstValueText)
         .waitFor({state: 'visible'});
@@ -165,7 +161,9 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText(`Category: ${firstValueText}`);
+      await expect(breadcrumbButton).toContainText(
+        `Category: ${firstValueText}`
+      );
     });
 
     test.describe('when a nested category facet value is selected', () => {
@@ -186,7 +184,11 @@ test.describe('Default', () => {
             .locator('span')
             .first()
             .textContent());
-        await breadbox.getFacetValue('nestedCategory').first().click();
+        await breadbox
+          .getFacetValue('nestedCategory')
+          .first()
+          .locator('button')
+          .click();
         await breadbox
           .getBreadcrumbButtons()
           .first()
@@ -221,7 +223,7 @@ test.describe('Default', () => {
       }) => {
         const breadcrumbButton = breadbox.getBreadcrumbButtons().first();
 
-        await expect(breadcrumbButton).toHaveText(
+        await expect(breadcrumbButton).toContainText(
           `Category: ${breadcrumbText}`
         );
       });
@@ -270,7 +272,7 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText(`Price: ${firstValueText}`);
+      await expect(breadcrumbButton).toContainText(`Price: ${firstValueText}`);
     });
   });
 
@@ -313,15 +315,14 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText(`Price: ${firstValueText}`);
+      await expect(breadcrumbButton).toContainText(`Price: ${firstValueText}`);
     });
   });
 
   test.describe('when a date range facet value is selected', () => {
     let firstValueText: string | RegExp;
 
-    test.beforeEach(async ({breadbox, page}) => {
-      await page.getByRole('button', {name: 'Expand the Date facet'}).click();
+    test.beforeEach(async ({breadbox}) => {
       await breadbox.getFacetValue('dateRange').first().click();
       firstValueText = (await breadbox
         .getFacetValue('dateRange')
@@ -362,7 +363,7 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText(`Date: ${firstValueText}`);
+      await expect(breadcrumbButton).toContainText(`Date: ${firstValueText}`);
     });
   });
 
@@ -442,7 +443,7 @@ test.describe('Default', () => {
       });
 
       test('should update the "Show More" button count', async ({breadbox}) => {
-        await expect(breadbox.getShowMorebutton()).toContainText('+ 6');
+        await expect(breadbox.getShowMorebutton()).toContainText('+ 5');
       });
     });
 
@@ -489,6 +490,6 @@ test.describe('Default', () => {
     }
 
     await expect(breadbox.getShowMorebutton()).toBeVisible();
-    await expect(breadbox.getShowMorebutton()).toHaveText('+ 1');
+    await expect(breadbox.getShowMorebutton()).toContainText('+ 1');
   });
 });

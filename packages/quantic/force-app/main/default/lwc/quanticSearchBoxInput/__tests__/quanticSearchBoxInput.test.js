@@ -66,10 +66,17 @@ const createTestComponent = buildCreateTestComponent(
 
 describe('c-quantic-search-box-input', () => {
   beforeAll(() => {
-    // @ts-ignore
-    global.CoveoHeadless = {
-      HighlightUtils: {
-        highlightString: () => {},
+    window.coveoHeadless = {
+      test: {
+        bundle: {
+          HighlightUtils: {
+            highlightString: () => {},
+          },
+        },
+        components: [],
+        options: undefined,
+        bindings: undefined,
+        enginePromise: undefined,
       },
     };
   });

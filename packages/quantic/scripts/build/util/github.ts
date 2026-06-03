@@ -38,7 +38,7 @@ export async function getRepoCategoryData(
 export async function createDiscussion(
   args: CreateDiscussionInput,
   token: string
-): Promise<Discussion> {
+): Promise<Discussion | undefined> {
   const graphqlWithAuth = graphql.defaults({
     headers: {
       authorization: `token ${token}`,
@@ -54,5 +54,5 @@ export async function createDiscussion(
     }
   `;
   return (await graphqlWithAuth<Mutation>(query, args)).createDiscussion
-    ?.discussion;
+    ?.discussion ?? undefined;
 }

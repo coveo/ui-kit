@@ -1,6 +1,6 @@
 import type {ReactiveController, ReactiveControllerHost} from 'lit';
-import type {AnyBindings} from '../components';
-import type {AtomicAriaLive} from '../components/common/atomic-aria-live/atomic-aria-live';
+import type {AtomicAriaLive} from '@/src/components/common/atomic-aria-live/atomic-aria-live';
+import type {AnyBindings} from '@/src/components/common/interface/bindings';
 import {buildCustomEvent} from './event-utils';
 import {defer} from './utils';
 
@@ -65,7 +65,6 @@ export class FocusTargetController implements ReactiveController {
     private host: ReactiveControllerHost,
     bindings: AnyBindings
   ) {
-    this.host = host;
     this.bindings = bindings;
     this.host.addController(this);
   }
@@ -171,9 +170,7 @@ function isFocusable(element: Element) {
   }
 }
 
-export function* getFocusableDescendants(
-  element: Element
-): Generator<HTMLElement> {
+function* getFocusableDescendants(element: Element): Generator<HTMLElement> {
   if (isFocusable(element)) {
     yield element as HTMLElement;
   }

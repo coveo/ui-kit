@@ -36,7 +36,7 @@ export enum SearchPageEvents {
    */
   breadcrumbResetAll = 'breadcrumbResetAll',
   /**
-   * Identifies the click event that gets logged when a user clicks on a search result to open an item.
+   * Identifies the click event that gets logged when a user clicks a search result to open an item.
    */
   documentOpen = 'documentOpen',
   /**
@@ -54,6 +54,7 @@ export enum SearchPageEvents {
   /**
    * Identifies the custom event that gets logged when a user action triggers a new query set in the effective query pipeline on the search page.
    */
+  // oxlint-disable-next-line typescript/no-duplicate-enum-values
   triggerQuery = 'query',
   /**
    * Identifies the search cause that gets logged for pagination and other user navigation that do not express a new search intent.
@@ -102,7 +103,6 @@ export enum SearchPageEvents {
   /**
    * Identifies the custom event that gets logged when a user query encounters an error during execution.
    */
-  //eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
   queryError = 'query',
   /**
    * Identifies the search event that gets logged when a user action (that is not a query) reloads the Recommendations panel with new recommendations.
@@ -145,11 +145,11 @@ export enum SearchPageEvents {
    */
   collapseSmartSnippetSuggestion = 'collapseSmartSnippetSuggestion',
   /**
-   * Identifies the custom event that gets logged when a user clicks on the source of an answer in a smart snippet.
+   * Identifies the custom event that gets logged when a user clicks the source of an answer in a smart snippet.
    */
   openSmartSnippetSource = 'openSmartSnippetSource',
   /**
-   * Identifies the custom event that gets logged when a user clicks on the source of a snippet suggestion for a related question.
+   * Identifies the custom event that gets logged when a user clicks the source of a snippet suggestion for a related question.
    */
   openSmartSnippetSuggestionSource = 'openSmartSnippetSuggestionSource',
   /**
@@ -180,6 +180,10 @@ export enum SearchPageEvents {
    * Identifies the custom event that gets logged when a user clicks the Detach From Case result action.
    */
   caseDetach = 'caseDetach',
+  /**
+   * Identifies the click event that gets logged when a user attaches a generated answer citation to a case.
+   */
+  generatedAnswerCitationDocumentAttach = 'generatedAnswerCitationDocumentAttach',
   /**
    * Identifies the cause of a search request being retried in order to regenerate an answer stream that failed.
    */
@@ -240,4 +244,12 @@ export enum SearchPageEvents {
    * Identifies the custom event that gets logged when the user clicks the create article button.
    */
   createArticle = 'createArticle',
+  /**
+   * Identifies the search event that gets logged when the user selects a recent query.
+   */
+  recentQueriesClick = 'recentQueriesClick',
+  /**
+   * Identifies the custom event that gets logged when the user clears the recent queries.
+   */
+  clearRecentQueries = 'clearRecentQueries',
 }

@@ -1,0 +1,26 @@
+{
+  "name": "@samples/atomic-search-nextjs",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build:assets": "node ../../../utils/ci/copy-files.mjs ../../../packages/atomic-react/dist/assets public/assets ../../../packages/atomic-react/dist/lang public/lang",
+    "dev": "pnpm run build:assets && next dev",
+    "build": "pnpm --filter @coveo/ci if-not-cdn -- \"pnpm run build:assets && next build\"",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@coveo/atomic": "workspace:*",
+    "@coveo/atomic-react": "workspace:*",
+    "@coveo/headless": "workspace:*",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "typescript": "catalog:"
+  }
+}

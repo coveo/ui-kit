@@ -1,0 +1,5 @@
+@import './tailwind.properties.css';
+@import '../utils/tailwind.global.tw.css';
+
+@reference './tailwind.default.css';
+@reference '../utils/tailwind-utilities/utilities.css';

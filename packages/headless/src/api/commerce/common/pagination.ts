@@ -4,3 +4,8 @@ export interface Pagination {
   totalEntries: number;
   totalPages: number;
 }
+
+export interface PaginationWithResultTypeCounts extends Pagination {
+  totalProducts: number;
+  totalSpotlights: number;
+}

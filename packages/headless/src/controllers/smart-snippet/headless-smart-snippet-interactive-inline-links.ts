@@ -8,21 +8,12 @@ import {searchReducer as search} from '../../features/search/search-slice.js';
 import type {QuestionAnsweringSection} from '../../state/state-sections.js';
 import {loadReducerError} from '../../utils/errors.js';
 import {getObjectHash} from '../../utils/utils.js';
+import type {InlineLink} from '../../utils/inline-link.js';
 import {
   buildInteractiveResultCore,
   type InteractiveResultCore,
 } from '../core/interactive-result/headless-core-interactive-result.js';
-
-export interface InlineLink {
-  /**
-   * The text of the inline link.
-   */
-  linkText: string;
-  /**
-   * The URL of the inline link.
-   */
-  linkURL: string;
-}
+export type {InlineLink} from '../../utils/inline-link.js';
 
 /**
  * @internal

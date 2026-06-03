@@ -22,7 +22,7 @@ export interface DidYouMeanActionCreators {
   /**
    * Applies a did-you-mean correction.
    *
-   * @param correction - The target correction (e.g., "corrected string").
+   * @param correction - The target correction (for example, "corrected string").
    * @returns A dispatchable action.
    */
   applyDidYouMeanCorrection(correction: string): PayloadAction<string>;

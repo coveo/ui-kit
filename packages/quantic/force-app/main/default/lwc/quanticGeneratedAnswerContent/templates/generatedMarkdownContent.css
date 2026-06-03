@@ -28,12 +28,15 @@
   }
 }
 
+/* stylelint-disable-next-line slds/no-hardcoded-values-slds2 */
 div[data-level='answer-heading-1'] {
   font-size: 1.75rem;
 }
+/* stylelint-disable-next-line slds/no-hardcoded-values-slds2 */
 div[data-level='answer-heading-2'] {
   font-size: 1.25rem;
 }
+/* stylelint-disable-next-line slds/no-hardcoded-values-slds2 */
 div[data-level='answer-heading-3'] {
   font-size: 1rem;
 }
@@ -41,7 +44,7 @@ div[data-level='answer-heading-3'] {
 div[data-level] {
   margin-top: var(--lwc-spacingMedium, 1rem);
   margin-bottom: var(--lwc-spacingXSmall, 0.5rem);
-  font-weight: bold;
+  font-weight: var(--slds-g-font-weight-7, bold);
 }
 
 li,

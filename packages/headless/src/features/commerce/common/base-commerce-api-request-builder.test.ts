@@ -164,10 +164,24 @@ describe('#buildBaseCommerceAPIRequest', () => {
       expect(request).toHaveProperty('clientId', clientId);
     });
 
-    it('when #navigatorContext.capture is undefined, sets #context.capture to true', () => {
+    it('when #navigatorContext.capture is undefined and #navigatorContext.clientId is not empty, sets #context.capture to true', () => {
+      setNavigatorContext({
+        clientId: 'some-client-id',
+        capture: undefined,
+      });
       request = buildBaseCommerceAPIRequest(state, navigatorContext);
 
       expect(request.context.capture).toBe(true);
+    });
+
+    it('when #navigatorContext.capture is undefined and #navigatorContext.clientId is empty, sets #context.capture to false', () => {
+      setNavigatorContext({
+        clientId: '',
+        capture: undefined,
+      });
+      request = buildBaseCommerceAPIRequest(state, navigatorContext);
+
+      expect(request.context.capture).toBe(false);
     });
 
     it('when #navigatorContext.capture is defined, sets #context.capture to its specified value', () => {
@@ -418,5 +432,35 @@ describe('#buildBaseCommerceAPIRequest', () => {
       state.configuration.analytics
     );
     expect(request.context.source).toEqual(getAnalyticsSourceReturnValue);
+  });
+
+  it('when #state.commerceContext.custom is defined, sets #context.custom to its specified value', () => {
+    const custom = {
+      stringKey: 'sampleValue',
+      numberKey: 42,
+      arrayKey: [1, 2, 3],
+      objectKey: {nested: 'value'},
+    };
+    setState({
+      commerceContext: {
+        ...state.commerceContext,
+        custom,
+      },
+    });
+    request = buildBaseCommerceAPIRequest(state, navigatorContext);
+
+    expect(request.context.custom).toEqual(custom);
+  });
+
+  it('when #state.commerceContext.custom is undefined, does not set #context.custom', () => {
+    setState({
+      commerceContext: {
+        ...state.commerceContext,
+        custom: undefined,
+      },
+    });
+    request = buildBaseCommerceAPIRequest(state, navigatorContext);
+
+    expect(request.context.custom).not.toBeDefined();
   });
 });

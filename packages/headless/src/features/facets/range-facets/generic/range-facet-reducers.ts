@@ -133,6 +133,13 @@ export function handleRangeFacetSearchParameterRestoration<
       const found = !!findRange(rangesToSelect, range);
       if (found) {
         range.state = 'selected';
+      } else if (
+        typeof rangeFacets === 'object' &&
+        facetId in rangeFacets &&
+        range.state !== 'idle'
+      ) {
+        range.previousState = range.state;
+        range.state = 'idle';
       }
       return range;
     });

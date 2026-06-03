@@ -1,3 +1,6 @@
+// ⚠️  CDN OUTPUT: This build outputs to "cdn/". If you change this path,
+// you MUST also update the corresponding "source" field in ui-kit-cd
+// (.deployment.config/{commit,dev,prd}.json) and deploy-local-cdn.mjs.
 import {readFileSync, writeFileSync} from 'node:fs';
 import {createRequire} from 'node:module';
 import {dirname, resolve} from 'node:path';
@@ -12,42 +15,24 @@ const __dirname = dirname(new URL(import.meta.url).pathname).slice(
 const buenoJsonPath = resolve(__dirname, '../bueno/package.json');
 const buenoJson = JSON.parse(readFileSync(buenoJsonPath, 'utf-8'));
 
+const buildConfigPath = resolve(__dirname, 'build.config.json');
+const buildConfig = JSON.parse(readFileSync(buildConfigPath, 'utf-8'));
+const {useCaseEntries, quanticUseCaseEntries} = buildConfig;
+
 const require = createRequire(import.meta.url);
 const devMode = process.argv[2] === 'dev';
 
-const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 const isNightly = process.env.IS_NIGHTLY === 'true';
-const isPrRelease =
-  process.env.IS_PRERELEASE === 'true' && process.env.PR_NUMBER;
+const commitSha = process.env.CDN_COMMIT_SHA;
 
 const buenoVersion = isNightly
   ? `v${buenoJson.version.split('.').shift()}-nightly`
-  : isPrRelease
-    ? `v${buenoJson.version.split('-').shift()}.${process.env.PR_NUMBER}`
-    : `v${buenoJson.version}`;
-const buenoPath = isCDN
-  ? `/bueno/${buenoVersion}/bueno.esm.js`
-  : '@coveo/bueno';
+  : `v${buenoJson.version}`;
 
-const useCaseEntries = {
-  search: 'src/index.ts',
-  recommendation: 'src/recommendation.index.ts',
-  'case-assist': 'src/case-assist.index.ts',
-  insight: 'src/insight.index.ts',
-  ssr: 'src/ssr.index.ts',
-  'ssr-commerce': 'src/ssr-commerce.index.ts',
-  'ssr-next': 'src/ssr.index.ts',
-  'ssr-commerce-next': 'src/ssr-commerce.index.ts',
-  commerce: 'src/commerce.index.ts',
-};
-
-const quanticUseCaseEntries = {
-  search: 'src/index.ts',
-  recommendation: 'src/recommendation.index.ts',
-  'case-assist': 'src/case-assist.index.ts',
-  insight: 'src/insight.index.ts',
-  commerce: 'src/commerce.index.ts',
-};
+const buenoBase = commitSha
+  ? `/bueno/commits/${commitSha}`
+  : `/bueno/${buenoVersion}`;
+const buenoCdnPath = `${buenoBase}/bueno.esm.js`;
 
 function getUmdGlobalName(useCase) {
   const map = {
@@ -98,12 +83,15 @@ const base = {
 const browserEsm = Object.entries(useCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
   const outDir = getUseCaseDir('cdn', useCase);
+  // ⚠️  Changing this filename affects CDN pointer files in ui-kit-cd.
   const outfile = `${outDir}/headless.esm.js`;
 
   let config = {
     entryPoints: [entryPoint],
     outfile,
     format: 'esm',
+    external: [buenoCdnPath],
+    plugins: [getBuenoReplacePlugin(buenoCdnPath)],
   };
 
   if (devMode) {
@@ -133,7 +121,11 @@ const browserUmd = Object.entries(useCaseEntries).map((entry) => {
       banner: {
         js: `${base.banner.js}`,
       },
-      plugins: [umdWrapper({libraryName: globalName})],
+      external: ['crypto', buenoCdnPath],
+      plugins: [
+        getBuenoReplacePlugin(buenoCdnPath),
+        umdWrapper({libraryName: globalName}),
+      ],
     },
     outDir
   );
@@ -161,7 +153,6 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
   const outDir = getUseCaseDir('dist/quantic/', useCase);
   const outfile = `${outDir}/headless.js`;
-
   const globalName = getUmdGlobalName(useCase);
 
   const target = /}\)\(updatedArgs, api, extraOptions\);/g;
@@ -204,12 +195,11 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
       banner: {
         js: `${base.banner.js}`,
       },
-      external: ['crypto'],
       inject: [
         'ponyfills/headers-shim.js',
         'ponyfills/global-this-shim.js',
         'ponyfills/abortable-fetch-shim.js',
-        '../../node_modules/navigator.sendbeacon/dist/navigator.sendbeacon.cjs.js',
+        require.resolve('navigator.sendbeacon/dist/navigator.sendbeacon.cjs.js'),
       ],
       plugins: [
         umdWrapper({libraryName: globalName}),
@@ -245,36 +235,35 @@ function resolveBrowser(moduleName) {
   );
 }
 
+function getBuenoReplacePlugin(buenoPath) {
+  return {
+    name: 'replace-bueno-import',
+    setup(build) {
+      build.onResolve({filter: /^@coveo\/bueno$/}, () => {
+        return {path: buenoPath, external: true};
+      });
+    },
+  };
+}
+
 /**
  * @param {import('esbuild').BuildOptions} options
  * @returns {Promise<import('esbuild').BuildResult>}
  */
 async function buildBrowserConfig(options, outDir) {
-  const replaceBuenoImport = [
-    {
-      name: 'replace-bueno-import',
-      setup(build) {
-        build.onResolve({filter: /^@coveo\/bueno$/}, () => {
-          return {path: buenoPath, external: true};
-        });
-      },
-    },
-  ];
   const out = await build({
     ...base,
     platform: 'browser',
     minify: true,
     sourcemap: true,
     metafile: true,
-    external: ['crypto', buenoPath],
     ...options,
-
+    external: ['crypto', ...(options.external || [])],
     plugins: [
       alias({
         'coveo.analytics': resolveEsm('coveo.analytics'),
         pino: resolveBrowser('pino'),
       }),
-      ...(isCDN ? replaceBuenoImport : []),
       ...(options.plugins || []),
     ],
   });

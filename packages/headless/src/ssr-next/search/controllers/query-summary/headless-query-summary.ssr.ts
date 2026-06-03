@@ -3,12 +3,14 @@ import {
   buildQuerySummary,
   type QuerySummary,
 } from '../../../../controllers/query-summary/headless-query-summary.js';
-import type {ControllerDefinitionWithoutProps} from '../../../common/types/controllers.js';
+import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/query-summary/headless-query-summary.js';
 
-export interface QuerySummaryDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, QuerySummary> {}
+export interface QuerySummaryDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  QuerySummary
+> {}
 
 /**
  * Defines a `QuerySummary` controller instance.

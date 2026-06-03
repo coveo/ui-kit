@@ -3,12 +3,14 @@ import {
   buildTabManager,
   type TabManager,
 } from '../../../../controllers/tab-manager/headless-tab-manager.js';
-import type {ControllerDefinitionWithoutProps} from '../../../common/types/controllers.js';
+import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/tab-manager/headless-tab-manager.js';
 
-interface TabManagerDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, TabManager> {}
+interface TabManagerDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  TabManager
+> {}
 
 /**
  * Defines a `TabManager` controller instance.

@@ -14,9 +14,7 @@ export interface FacetSearchRequestOptions {
 }
 
 export interface BaseFacetSearchRequest
-  extends FacetSearchRequestOptions,
-    BaseParam,
-    AuthenticationParam {
+  extends FacetSearchRequestOptions, BaseParam, AuthenticationParam {
   field: string;
   searchContext?: SearchRequest;
   filterFacetCount: boolean;

@@ -4,6 +4,7 @@ import {
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
+import {unwrapLockerProxiedObject} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").Result} Result */
@@ -24,11 +25,17 @@ export default class QuanticResultHighlightedTextField extends LightningElement 
    */
   @api engineId;
   /**
-   * The [result item](https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#result) to use.
+   * The [result item](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.Result.html) to use.
    * @api
    * @type {Result}
    */
-  @api result;
+  @api
+  get result() {
+    return this._result;
+  }
+  set result(result) {
+    this._result = unwrapLockerProxiedObject(result);
+  }
   /**
    * (Optional) The label to display.
    * @api
@@ -49,6 +56,8 @@ export default class QuanticResultHighlightedTextField extends LightningElement 
   isInitialized = false;
   /** @type {boolean} */
   validated = false;
+  /** @type {Result} */
+  _result;
 
   connectedCallback() {
     this.validateProps();
@@ -93,12 +102,21 @@ export default class QuanticResultHighlightedTextField extends LightningElement 
       this.field
     );
     /** @type {HighlightKeyword[]} */
-    const highlights = this.headless.ResultTemplatesHelpers.getResultProperty(
-      this.result,
-      `${this.field}Highlights`
-    );
+    const proxiedHighlights =
+      this.headless.ResultTemplatesHelpers.getResultProperty(
+        this.result,
+        `${this.field}Highlights`
+      );
 
-    if (highlights && this.headless?.HighlightUtils?.highlightString) {
+    if (proxiedHighlights && this.headless?.HighlightUtils?.highlightString) {
+      // Shallow-copy each highlight keyword into a plain object to avoid the Salesforce Locker Service proxy handling.
+      // Without this, every .offset / .length access inside highlightString triggers the proxy which is expensive at scale.
+      const highlights = Array.isArray(proxiedHighlights)
+        ? proxiedHighlights.map((h) => ({
+            offset: h.offset,
+            length: h.length,
+          }))
+        : proxiedHighlights;
       const openingDelimiter = '<b class="highlighted-field__highlight">';
       const closingDelimiter = '</b>';
       const highlightedValue = this.headless.HighlightUtils.highlightString({

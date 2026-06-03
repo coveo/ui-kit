@@ -1,3 +1,6 @@
+// ⚠️  CDN OUTPUT: This build outputs to "cdn/". If you change this path,
+// you MUST also update the corresponding "source" field in ui-kit-cd
+// (.deployment.config/{commit,dev,prd}.json) and deploy-local-cdn.mjs.
 import {readFileSync} from 'node:fs';
 import {dirname, resolve} from 'node:path';
 import {build} from '../../scripts/esbuild/build.mjs';
@@ -10,20 +13,18 @@ const __dirname = dirname(new URL(import.meta.url).pathname).slice(
 const isDevMode = process.argv[2] === 'dev';
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 const isNightly = process.env.IS_NIGHTLY === 'true';
-const isPrRelease =
-  process.env.IS_PRERELEASE === 'true' && process.env.PR_NUMBER;
+const commitSha = process.env.CDN_COMMIT_SHA;
 
 const buenoJsonPath = resolve(__dirname, '../bueno/package.json');
 const buenoJson = JSON.parse(readFileSync(buenoJsonPath, 'utf-8'));
 
 const buenoVersion = isNightly
   ? `v${buenoJson.version.split('.').shift()}-nightly`
-  : isPrRelease
-    ? `v${buenoJson.version.split('-').shift()}.${process.env.PR_NUMBER}`
-    : `v${buenoJson.version}`;
-const buenoPath = isCDN
-  ? `/bueno/${buenoVersion}/bueno.esm.js`
-  : '@coveo/bueno';
+  : `v${buenoJson.version}`;
+const buenoBase = commitSha
+  ? `/bueno/commits/${commitSha}`
+  : `/bueno/${buenoVersion}`;
+const buenoPath = isCDN ? `${buenoBase}/bueno.esm.js` : '@coveo/bueno';
 
 /**
  * @type {import('esbuild').BuildOptions}
@@ -87,6 +88,8 @@ function browserEsm(base, outfile) {
     outfile: `cdn/${outfile}`,
     format: 'esm',
     watch: isDevMode,
+    minify: isCDN,
+    sourcemap: isCDN,
     external: [buenoPath],
     plugins: isCDN ? [replaceBuenoImport] : [],
   });

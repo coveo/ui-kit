@@ -1,89 +1,137 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {html} from 'lit';
+import {unsafeHTML} from 'lit/directives/unsafe-html.js';
+import {MockRecommendationApi} from '@/storybook-utils/api/recommendation/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
+import {wrapInRecommendationInterface} from '@/storybook-utils/search/recs-interface-wrapper';
+import '@/src/components/search/atomic-field-condition/atomic-field-condition.js';
+import '@/src/components/recommendations/atomic-recs-interface/atomic-recs-interface.js';
+import '@/src/components/recommendations/atomic-recs-list/atomic-recs-list.js';
+import '@/src/components/recommendations/atomic-recs-result-template/atomic-recs-result-template.js';
+import '@/src/components/search/atomic-result-badge/atomic-result-badge.js';
+import '@/src/components/search/atomic-result-date/atomic-result-date.js';
+import '@/src/components/search/atomic-result-fields-list/atomic-result-fields-list.js';
+import '@/src/components/search/atomic-result-image/atomic-result-image.js';
+import '@/src/components/search/atomic-result-link/atomic-result-link.js';
+import '@/src/components/search/atomic-result-section-badges/atomic-result-section-badges.js';
+import '@/src/components/search/atomic-result-section-bottom-metadata/atomic-result-section-bottom-metadata.js';
+import '@/src/components/search/atomic-result-section-excerpt/atomic-result-section-excerpt.js';
+import '@/src/components/search/atomic-result-section-title/atomic-result-section-title.js';
+import '@/src/components/search/atomic-result-section-visual/atomic-result-section-visual.js';
+import '@/src/components/search/atomic-result-text/atomic-result-text.js';
+import '@/src/components/search/atomic-text/atomic-text.js';
 
-async function initializeRecsInterface(canvasElement: HTMLElement) {
-  await customElements.whenDefined('atomic-recs-interface');
-  const recsInterface = canvasElement.querySelector('atomic-recs-interface');
-  await recsInterface!.initialize({
-    accessToken: 'xx149e3ec9-786f-4c6c-b64f-49a403b930de',
-    organizationId: 'fashioncoveodemocomgzh7iep8',
-  });
-}
+const recommendationApiHarness = new MockRecommendationApi();
+const {decorator, play} = wrapInRecommendationInterface();
+
+const {events, args, argTypes} = getStorybookHelpers('atomic-recs-interface', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-recs-interface',
-  title: 'Atomic/Recommendations/atomic-recs-interface',
+  title: 'Recommendations/Interface',
   id: 'atomic-recs-interface',
-  render: renderComponent,
-  parameters,
-  play: async (context) => {
-    await initializeRecsInterface(context.canvasElement);
-    const recsInterface = context.canvasElement.querySelector(
-      'atomic-recs-interface'
-    );
-    await recsInterface!.getRecommendations();
+  render: (args) => html`${unsafeHTML(args['default-slot'] || '')}`,
+  decorators: [decorator],
+  parameters: {
+    ...parameters,
+    msw: {
+      handlers: [...recommendationApiHarness.handlers],
+    },
+    actions: {
+      handles: events,
+    },
+  },
+  argTypes: {
+    ...argTypes,
+    engine: {
+      ...argTypes,
+      control: {
+        disable: true,
+      },
+      table: {
+        defaultValue: {summary: undefined},
+      },
+    },
+    i18n: {
+      ...argTypes.i18n,
+      control: {
+        disable: true,
+      },
+      table: {
+        defaultValue: {summary: undefined},
+      },
+    },
+  },
+  args: {
+    ...args,
+    engine: undefined,
+    i18n: undefined,
+    language: 'en',
+    'default-slot': `<span>Interface content</span>`,
   },
 };
 
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-recs-interface',
+  play,
+};
+
+const {play: playNoFirstQuery} = wrapInRecommendationInterface({
+  skipFirstQuery: true,
+  skipInitialization: true,
+});
+
+export const RecsBeforeInit: Story = {
+  tags: ['!dev'],
+  play: async (context) => {
+    await playNoFirstQuery(context);
+    const recsInterface = context.canvasElement.querySelector(
+      'atomic-recs-interface'
+    );
+    await recsInterface?.getRecommendations();
+  },
 };
 
 export const WithRecsList: Story = {
   args: {
-    'slots-default': `<atomic-recs-list label="Top clothing for you" display="grid" number-of-recommendations="10">
+    'default-slot': `<atomic-recs-list label="Recommended articles" display="list" density="normal" image-size="small" number-of-recommendations="10">
           <atomic-recs-result-template>
             <template>
-              <style>
-                div.result-root.with-sections.display-list.image-small atomic-result-section-visual {
-                  height: 120px;
-                }
-                .rating-wrapper {
-                  display: flex;
-                  align-items: center;
-                }
-                .rating-wrapper span {
-                  margin-left: 5px;
-                  color: #8e959d;
-                }
-              </style>
               <atomic-result-section-visual>
-                <atomic-result-image field="ec_images" aria-hidden="true"></atomic-result-image>
+                <atomic-result-image field="image" aria-hidden="true"></atomic-result-image>
               </atomic-result-section-visual>
+              <atomic-result-section-badges>
+                <atomic-result-badge field="category"></atomic-result-badge>
+              </atomic-result-section-badges>
               <atomic-result-section-title>
                 <atomic-result-link></atomic-result-link>
               </atomic-result-section-title>
-              <atomic-result-section-title-metadata>
-                <div class="rating-wrapper">
-                  <atomic-result-rating field="ec_rating"></atomic-result-rating>
-                  <atomic-field-condition class="field" if-defined="ec_rating">
-                    <span> <atomic-result-number field="cat_rating_count"></atomic-result-number> reviews </span>
+              <atomic-result-section-excerpt>
+                <atomic-result-text field="excerpt"></atomic-result-text>
+              </atomic-result-section-excerpt>
+              <atomic-result-section-bottom-metadata>
+                <atomic-result-fields-list>
+                  <atomic-field-condition class="field" if-defined="author">
+                    <span class="field-label">
+                      <atomic-text value="author"></atomic-text>:
+                    </span>
+                    <atomic-result-text field="author"></atomic-result-text>
                   </atomic-field-condition>
-                </div>
-              </atomic-result-section-title-metadata>
-              <atomic-result-section-emphasized>
-                <atomic-result-number field="ec_price">
-                  <atomic-format-currency currency="USD"></atomic-format-currency>
-                </atomic-result-number>
-              </atomic-result-section-emphasized>
-              <atomic-result-section-excerpt
-                ><atomic-result-text field="excerpt"></atomic-result-text
-              ></atomic-result-section-excerpt>
+                  <atomic-field-condition class="field" if-defined="date">
+                    <span class="field-label">
+                      <atomic-text value="date"></atomic-text>:
+                    </span>
+                    <atomic-result-date></atomic-result-date>
+                  </atomic-field-condition>
+                </atomic-result-fields-list>
+              </atomic-result-section-bottom-metadata>
             </template>
           </atomic-recs-result-template>
         </atomic-recs-list>`,
   },
-};
-
-export const RecsBeforeInit: Story = {
-  tags: ['test'],
-  play: async (context) => {
-    const recsInterface = context.canvasElement.querySelector(
-      'atomic-recs-interface'
-    );
-    await recsInterface!.getRecommendations();
-  },
+  play,
 };

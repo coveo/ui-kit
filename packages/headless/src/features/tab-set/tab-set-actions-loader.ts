@@ -26,7 +26,7 @@ export interface TabSetActionCreators {
   ): PayloadAction<RegisterTabActionCreatorPayload>;
   /**
    * Updates the active tab, deselecting other tabs.
-   * @param id - The unique identifier of the target tab (e.g., `"abc"`).
+   * @param id - The unique identifier of the target tab (for example, `"abc"`).
    * @returns A dispatchable action.
    */
   updateActiveTab(id: string): PayloadAction<string>;

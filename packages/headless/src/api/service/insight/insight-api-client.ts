@@ -42,8 +42,9 @@ interface InsightAPIClientOptions extends HtmlAPIClientOptions {
   preprocessRequest: PreprocessRequest;
 }
 
-export interface AsyncThunkInsightOptions<T extends Partial<InsightAppState>>
-  extends AsyncThunkOptions<T, ClientThunkExtraArguments<InsightAPIClient>> {
+export interface AsyncThunkInsightOptions<
+  T extends Partial<InsightAppState>,
+> extends AsyncThunkOptions<T, ClientThunkExtraArguments<InsightAPIClient>> {
   rejectValue: InsightAPIErrorStatusResponse;
 }
 

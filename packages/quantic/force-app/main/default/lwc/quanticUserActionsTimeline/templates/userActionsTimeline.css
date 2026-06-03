@@ -6,5 +6,5 @@
 
 .timeline__show-following-sessions-button,
 .timeline__show-preceding-sessions-button {
-  font-size: 12px;
+  font-size: var(--slds-g-font-scale-neg-1, 12px);
 }

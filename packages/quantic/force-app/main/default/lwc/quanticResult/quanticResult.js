@@ -23,7 +23,7 @@ export default class QuanticResult extends LightningElement {
    */
   @api engineId;
   /**
-   * The [result item](https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#result).
+   * The [result item](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.Result.html).
    * @api
    * @type {Result}
    */
@@ -94,7 +94,7 @@ export default class QuanticResult extends LightningElement {
 
   get videoTimeSpan() {
     return new TimeSpan(
-      this.result.raw.ytvideoduration,
+      Number(this.result.raw.ytvideoduration),
       false
     ).getYoutubeFormatTimestamp();
   }

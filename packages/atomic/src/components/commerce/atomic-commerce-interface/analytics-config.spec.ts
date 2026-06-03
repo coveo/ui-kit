@@ -5,9 +5,9 @@ import {
 import {describe, expect, it, vi} from 'vitest';
 import {getAnalyticsConfig} from './analytics-config';
 
-vi.mock('@coveo/headless/commerce');
+vi.mock('@coveo/headless/commerce', {spy: true});
 
-describe('getAnalyticsConfig', () => {
+describe('#getAnalyticsConfig', () => {
   it('should return default configuration when analytics is not defined in commerceEngineConfig', () => {
     const commerceEngineConfig = {} as CommerceEngineConfiguration;
     const enabled = true;

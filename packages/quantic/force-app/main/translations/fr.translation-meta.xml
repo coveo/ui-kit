@@ -681,7 +681,7 @@
     <name>quantic_Carousel</name>
   </customLabels>
   <customLabels>
-    <label>Slide</label>
+    <label>Défiler</label>
     <name>quantic_Slide</name>
   </customLabels>
   <customLabels>
@@ -887,5 +887,17 @@
   <customLabels>
     <label>Ressources pertinentes pour ce cas</label>
     <name>quantic_InsightRelatedToThisCase</name>
+  </customLabels>
+  <customLabels>
+    <label>Aucune réponse générée disponible.</label>
+    <name>quantic_NoGeneratedAnswer</name>
+  </customLabels>
+  <customLabels>
+    <name>quantic_AskFollowUp</name>
+    <label>Demander un suivi</label>
+  </customLabels>
+  <customLabels>
+    <name>quantic_SubmitFollowUp</name>
+    <label>Soumettre un suivi</label>
   </customLabels>
 </Translations>

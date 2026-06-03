@@ -7,20 +7,25 @@ import type {ProductListingSummaryState} from '../../../../controllers/commerce/
 import type {RecommendationsSummaryState} from '../../../../controllers/commerce/recommendations/summary/headless-recommendations-summary.js';
 import {buildSearch} from '../../../../controllers/commerce/search/headless-search.js';
 import type {SearchSummaryState} from '../../../../controllers/commerce/search/summary/headless-search-summary.js';
-import {ensureAtLeastOneSolutionType} from '../../../../ssr/commerce/controller-utils.js';
 import {SolutionType} from '../../types/controller-constants.js';
-import type {
-  ControllerDefinitionOption,
-  SubControllerDefinitionWithoutProps,
-} from '../../types/controller-definitions.js';
+import type {SearchAndListingControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
 
 export type {
-  Summary,
   ProductListingSummaryState,
   RecommendationsSummaryState,
   SearchSummaryState,
+  Summary,
   SummaryState,
 };
+
+export type SummaryDefinition =
+  SearchAndListingControllerDefinitionWithoutProps<
+    Summary<
+      | ProductListingSummaryState
+      | SearchSummaryState
+      | RecommendationsSummaryState
+    >
+  >;
 
 /**
  * Defines a `Summary` controller instance.
@@ -28,24 +33,13 @@ export type {
  *
  * @returns The `Summary` controller definition.
  */
-export function defineSummary<
-  TOptions extends ControllerDefinitionOption | undefined,
->(options?: TOptions) {
-  ensureAtLeastOneSolutionType(options);
+export function defineSummary(): SummaryDefinition {
   return {
     listing: true,
     search: true,
-    ...options,
     build: (engine, solutionType) =>
       solutionType === SolutionType.listing
         ? buildProductListing(engine).summary()
         : buildSearch(engine).summary(),
-  } as SubControllerDefinitionWithoutProps<
-    Summary<
-      | ProductListingSummaryState
-      | SearchSummaryState
-      | RecommendationsSummaryState
-    >,
-    TOptions
-  >;
+  };
 }

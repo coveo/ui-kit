@@ -2,6 +2,5 @@
 *.test.*
 *.stories.tsx
 scripts
-packages/samples
+samples
 .storybook
-cypress

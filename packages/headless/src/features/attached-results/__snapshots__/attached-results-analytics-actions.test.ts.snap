@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`attached results analytics actions > when analyticsMode is \`next\` > logCaseAttach > should call relay.emit properly 1`] = `
+exports[`attached results analytics actions > when analyticsMode is \`next\` > #logCaseAttach > should call relay.emit properly 1`] = `
 [
   "InsightPanel.ItemAction",
   {
@@ -23,7 +23,7 @@ exports[`attached results analytics actions > when analyticsMode is \`next\` > l
 ]
 `;
 
-exports[`attached results analytics actions > when analyticsMode is \`next\` > logCaseDetach > should call relay.emit properly 1`] = `
+exports[`attached results analytics actions > when analyticsMode is \`next\` > #logCaseDetach > should call relay.emit properly 1`] = `
 [
   "InsightPanel.DetachItem",
   {
@@ -34,6 +34,26 @@ exports[`attached results analytics actions > when analyticsMode is \`next\` > l
     },
     "itemMetadata": {
       "author": "example author",
+      "title": "example documentTitle",
+      "uniqueFieldName": "permanentid",
+      "uniqueFieldValue": "example contentIDValue",
+      "url": "example documentUri",
+    },
+  },
+]
+`;
+
+exports[`attached results analytics actions > when analyticsMode is \`next\` > #logCitationDocumentDetach > should call relay.emit properly 1`] = `
+[
+  "InsightPanel.DetachItem",
+  {
+    "context": {
+      "caseNumber": "5678",
+      "targetId": "1234",
+      "targetType": "Case",
+    },
+    "itemMetadata": {
+      "author": undefined,
       "title": "example documentTitle",
       "uniqueFieldName": "permanentid",
       "uniqueFieldValue": "example contentIDValue",

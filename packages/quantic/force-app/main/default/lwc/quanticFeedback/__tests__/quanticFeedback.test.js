@@ -106,6 +106,17 @@ describe('c-quantic-feedback', () => {
     expect(question.textContent).toBe(exampleQuestion);
   });
 
+  it('should not render the feedback question when question is empty', async () => {
+    const element = createTestComponent({...defaultOptions, question: ''});
+    await flushPromises();
+
+    const question = element.shadowRoot.querySelector(
+      selectors.feedbackQuestion
+    );
+
+    expect(question).toBeNull();
+  });
+
   describe('when the component is in a neutral state', () => {
     it('should display the feedback buttons in a neutral state', async () => {
       const element = createTestComponent();

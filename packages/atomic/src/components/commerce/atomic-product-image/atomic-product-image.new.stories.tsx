@@ -1,24 +1,31 @@
-import type {
-  Decorator,
-  Meta,
-  StoryObj as Story,
-} from '@storybook/web-components';
+import {testCarouselA11y} from '@/storybook-utils/a11y/carousel.js';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
 import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product-template-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
+import '@/src/components/commerce/atomic-product-image/atomic-product-image.js';
+import '@/src/components/commerce/atomic-product-section-visual/atomic-product-section-visual.js';
 
-const styledDivDecorator: Decorator = (story) => {
-  return html`<div style="max-width: 700px">${story()}</div>`;
-};
+const commerceApiHarness = new MockCommerceApi();
 
-const {
-  decorator: commerceInterfaceDecorator,
-  play: initializeCommerceInterface,
-} = wrapInCommerceInterface({
-  skipFirstRequest: false,
+// Order: non-carousel product first (1 image), carousel product second (2+ images)
+// This matches the e2e test page object: noCarouselImage=nth(0), carouselImage=nth(1)
+commerceApiHarness.productListingEndpoint.mock((response) => ({
+  ...response,
+  products: [response.products[1], response.products[0]],
+  pagination: {
+    ...response.pagination,
+    totalCount: 2,
+    perPage: 2,
+    totalPages: 1,
+  },
+}));
+
+const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
   type: 'product-listing',
   engineConfig: {
     context: {
@@ -29,45 +36,73 @@ const {
       country: 'US',
       currency: 'USD',
     },
+    preprocessRequest: (request) => {
+      const parsed = JSON.parse(request.body as string);
+      parsed.perPage = 2;
+      request.body = JSON.stringify(parsed);
+      return request;
+    },
   },
+  includeCodeRoot: false,
 });
-const {decorator: commerceProductListDecorator} = wrapInCommerceProductList();
-const {decorator: productTemplateDecorator} = wrapInProductTemplate();
+const {decorator: commerceProductListDecorator} = wrapInCommerceProductList(
+  'list',
+  false
+);
+const {decorator: productTemplateDecorator} = wrapInProductTemplate(false);
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-product-image',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-product-image',
-  title: 'Atomic-Commerce/Product Template Components/ProductImage',
+  title: 'Commerce/Product Image',
   id: 'atomic-product-image',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [
+    (story) => html`
+      <atomic-product-section-visual id="code-root">
+        ${story()}
+      </atomic-product-section-visual>
+    `,
     productTemplateDecorator,
     commerceProductListDecorator,
     commerceInterfaceDecorator,
-    styledDivDecorator,
   ],
-  parameters,
-  play: initializeCommerceInterface,
+  parameters: {
+    ...parameters,
+    msw: {handlers: [...commerceApiHarness.handlers]},
+    chromatic: {disableSnapshot: true},
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
+  play,
+  beforeEach: () => {
+    commerceApiHarness.clearAll();
+  },
 };
 
 export default meta;
 
-export const Default: Story = {
-  name: 'atomic-product-image',
-};
+export const Default: Story = {};
 
 export const withAFallbackImage: Story = {
   name: 'With a fallback image',
   args: {
-    'attributes-field': 'invalid',
-    'attributes-fallback': 'https://sports.barca.group/logos/barca.svg',
+    field: 'invalid',
+    fallback: 'https://sports.barca.group/logos/barca.svg',
   },
 };
 
-export const withAnAltTextField: Story = {
-  name: 'With an alt text field',
-  args: {
-    'attributes-field': 'invalid',
-    'attributes-fallback': 'invalid',
-    'attributes-image-alt-field': 'ec_name',
+export const A11yCarousel: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  play: async (context) => {
+    await play(context);
+    await testCarouselA11y(context);
   },
 };

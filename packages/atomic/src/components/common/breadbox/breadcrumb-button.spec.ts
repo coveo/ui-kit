@@ -1,15 +1,21 @@
 import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
+import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {renderBreadcrumbButton} from './breadcrumb-button';
 
 describe('#renderBreadcrumbButton', () => {
   let i18n: i18n;
-
+  let ariaController: AriaLiveRegionController;
   beforeAll(async () => {
     i18n = await createTestI18n();
+    ariaController = vi.spyOn(
+      AriaLiveRegionController.prototype,
+      'message',
+      'set'
+    ) as unknown as AriaLiveRegionController;
   });
 
   const renderComponent = async (overrides = {}) => {
@@ -27,6 +33,7 @@ describe('#renderBreadcrumbButton', () => {
             formattedValue: ['test'],
             deselect: () => {},
           },
+          ariaController: ariaController,
           ...overrides,
         },
       })(html`<span>Test</span>`)}`
@@ -122,6 +129,7 @@ describe('#renderBreadcrumbButton', () => {
     button?.click();
 
     expect(onSelectBreadcrumb).toHaveBeenCalled();
+    expect(ariaController.message).toBe('Filter removed');
   });
 
   it('should render the children', async () => {

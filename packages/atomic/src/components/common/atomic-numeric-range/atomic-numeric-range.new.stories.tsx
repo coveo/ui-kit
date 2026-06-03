@@ -1,19 +1,37 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-numeric-facet/atomic-numeric-facet.js';
+import '@/src/components/common/atomic-numeric-range/atomic-numeric-range.js';
 
+const searchApiHarness = new MockSearchApi();
 const {decorator, play} = wrapInSearchInterface();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-numeric-range',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-numeric-range',
-  title: 'Atomic/NumericFacet/Range',
+  title: 'Common/Numeric Range',
   id: 'atomic-numeric-range',
 
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
+  parameters: {
+    ...parameters,
+    msw: {handlers: [...searchApiHarness.handlers]},
+    chromatic: {disableSnapshot: true},
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
   play,
 };
 
@@ -21,7 +39,7 @@ export default meta;
 
 export const Default: Story = {
   name: 'atomic-numeric-range',
-  args: {'attributes-start': 0, 'attributes-end': 1000},
+  args: {start: 0, end: 1000},
   decorators: [
     (story) => html`  
         <atomic-numeric-facet

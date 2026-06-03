@@ -1,18 +1,42 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
+import '@/src/components/commerce/atomic-commerce-layout/atomic-commerce-layout.js';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
+
+const commerceApiHarness = new MockCommerceApi();
 
 const {decorator, play} = wrapInCommerceInterface();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-commerce-layout',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-commerce-layout',
-  title: 'Commerce/atomic-commerce-layout',
+  title: 'Commerce/Layout',
   id: 'atomic-commerce-layout',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
+  parameters: {
+    ...parameters,
+    msw: {handlers: [...commerceApiHarness.handlers]},
+    chromatic: {disableSnapshot: true},
+    actions: {
+      handles: events,
+    },
+  },
+  argTypes,
+
   play,
+  args: {
+    ...args,
+    'default-slot': `<span>Layout content</span>`,
+  },
+  beforeEach: () => {
+    commerceApiHarness.clearAll();
+  },
 };
 
 export default meta;

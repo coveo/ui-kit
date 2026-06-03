@@ -4,12 +4,14 @@ import {
   type DateFilter,
   type DateFilterProps,
 } from '../../../../../../controllers/facets/range-facet/date-facet/headless-date-filter.js';
-import type {ControllerDefinitionWithoutProps} from '../../../../../common/types/controllers.js';
+import type {ControllerDefinitionWithoutProps} from '../../../../types/controller-definition.js';
 
 export * from '../../../../../../controllers/facets/range-facet/date-facet/headless-date-filter.js';
 
-export interface DateFilterDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, DateFilter> {}
+export interface DateFilterDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  DateFilter
+> {}
 
 /**
  * Defines a `DateFilter` controller instance.

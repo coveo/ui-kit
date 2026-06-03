@@ -1,19 +1,40 @@
-import {userEvent} from '@storybook/test';
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {userEvent} from 'storybook/test';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {searchFacetTransformer} from '@/storybook-utils/api/search/facet-transformer';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import '@/src/components/search/atomic-sort-dropdown/atomic-sort-dropdown.js';
+import '@/src/components/search/atomic-sort-expression/atomic-sort-expression.js';
+
+const searchApiHarness = new MockSearchApi();
+searchApiHarness.searchEndpoint.addRequestTransformer(searchFacetTransformer);
 
 const {decorator, play} = wrapInSearchInterface();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-sort-dropdown',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-sort-dropdown',
-  title: 'Atomic/SortDropdown',
+  title: 'Search/Sort Dropdown',
   id: 'atomic-sort-dropdown',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
+  parameters: {
+    ...parameters,
+    chromatic: {disableSnapshot: true},
+    msw: {handlers: [...searchApiHarness.handlers]},
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
   play,
 };
 
@@ -22,7 +43,7 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-sort-dropdown',
   args: {
-    'slots-default': `
+    'default-slot': `
       <atomic-sort-expression
         label="relevance"
         expression="relevancy"
@@ -47,7 +68,7 @@ export const A11yStatusMessage: Story = {
   name: 'A11y Status Message',
   tags: ['a11y', 'test', '!dev'],
   args: {
-    'slots-default': `
+    'default-slot': `
       <atomic-sort-expression
         label="relevance"
         expression="relevancy"

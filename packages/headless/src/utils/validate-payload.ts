@@ -79,7 +79,7 @@ export const validatePayloadAndThrow = <P>(
 
   const asRecordValue = new RecordValue({
     options: {required: true},
-    values: definition as SchemaDefinition<Record<string, Object>>,
+    values: definition as SchemaDefinition<Record<string, object>>,
   });
 
   const isInvalid = asRecordValue.validate(payload);

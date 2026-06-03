@@ -4,26 +4,25 @@ import {
   type SearchBox,
   type Suggestion,
 } from '@coveo/headless/commerce';
-import {html, LitElement, nothing} from 'lit';
+import {LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {
   getPartialSearchBoxSuggestionElement,
   renderQuerySuggestion,
 } from '@/src/components/common/suggestions/query-suggestions';
-import {
-  dispatchSearchBoxSuggestionsEvent,
-  type SearchBoxSuggestionElement,
-  type SearchBoxSuggestions,
-  type SearchBoxSuggestionsBindings,
-} from '@/src/components/common/suggestions/suggestions-common';
+import {dispatchSearchBoxSuggestionsEvent} from '@/src/components/common/suggestions/suggestions-events';
+import type {
+  SearchBoxSuggestionElement,
+  SearchBoxSuggestions,
+  SearchBoxSuggestionsBindings,
+} from '@/src/components/common/suggestions/suggestions-types';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
 import SearchIcon from '../../../images/search.svg';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
- * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
- * @alpha
+ * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of query suggestion behavior.
  */
 @customElement('atomic-commerce-search-box-query-suggestions')
 export class AtomicCommerceSearchBoxQuerySuggestions
@@ -142,7 +141,7 @@ export class AtomicCommerceSearchBoxQuerySuggestions
 
   @errorGuard()
   render() {
-    return html`${nothing}`;
+    return nothing;
   }
 }
 

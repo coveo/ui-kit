@@ -17,6 +17,7 @@ export interface GeneratedAnswerCitation {
   source: string;
   clickUri?: string;
   text?: string;
+  filetype?: string;
   fields?: Raw;
 }
 

@@ -1,0 +1,31 @@
+<template>
+  <atomic-result-section-title>
+    <atomic-result-link></atomic-result-link>
+  </atomic-result-section-title>
+  <atomic-result-section-excerpt>
+    <atomic-result-text field="excerpt"></atomic-result-text>
+  </atomic-result-section-excerpt>
+  <atomic-result-section-bottom-metadata>
+    <atomic-result-fields-list>
+      <atomic-result-date format="ddd MMM D YYYY"></atomic-result-date>
+      <atomic-field-condition class="field" if-defined="cat_platform">
+        <result-text-field
+          label="Platform"
+          field="cat_platform"
+        ></result-text-field>
+      </atomic-field-condition>
+      <atomic-field-condition class="field" if-defined="cat_condition">
+        <result-text-field
+          label="Condition"
+          field="cat_condition"
+        ></result-text-field>
+      </atomic-field-condition>
+      <atomic-field-condition class="field" if-defined="cat_categories">
+        <result-text-field-multivalue
+          label="Tags"
+          field="cat_categories"
+        ></result-text-field-multivalue>
+      </atomic-field-condition>
+    </atomic-result-fields-list>
+  </atomic-result-section-bottom-metadata>
+</template>

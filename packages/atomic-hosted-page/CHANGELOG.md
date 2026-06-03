@@ -1,68 +1,186 @@
-## <small>1.1.33 (2025-07-30)</small>
+## 1.2.44
 
-* chore: allow prerelease on CI (#5756) ([de2c411](https://github.com/coveo/ui-kit/commits/de2c411)), closes [#5756](https://github.com/coveo/ui-kit/issues/5756)
-* chore(atomic-angular, atomic-react, auth, bueno, headless-react): remove unused exports, code and de ([6f8efc1](https://github.com/coveo/ui-kit/commits/6f8efc1)), closes [#5690](https://github.com/coveo/ui-kit/issues/5690)
+### Patch Changes
 
+- [#7717](https://github.com/coveo/ui-kit/pull/7717) [`380ad1b`](https://github.com/coveo/ui-kit/commit/380ad1bf0a79ab7dc92077af4c959d9cfa167356) Thanks [@alexprudhomme](https://github.com/alexprudhomme)! - CDN artifacts now resolve cross-package dependencies using commit-based paths, making each artifact self-contained and independent of version pointer availability.
 
+- Updated dependencies [[`380ad1b`](https://github.com/coveo/ui-kit/commit/380ad1bf0a79ab7dc92077af4c959d9cfa167356)]:
+  - @coveo/headless@3.51.3
 
-## <small>1.1.31 (2025-07-23)</small>
+## 1.2.43
 
-* fix(deps): update all dependencies j:kit-282 (#5723) ([6c032c9](https://github.com/coveo/ui-kit/commits/6c032c9)), closes [#5723](https://github.com/coveo/ui-kit/issues/5723)
-* chore: enable recommended biome rules for entire repo (#5662) ([015a764](https://github.com/coveo/ui-kit/commits/015a764)), closes [#5662](https://github.com/coveo/ui-kit/issues/5662)
+### Patch Changes
 
+- Updated dependencies [[`2abc0a0`](https://github.com/coveo/ui-kit/commit/2abc0a0cf854db560cf56e9337314c3736c45d88)]:
+  - @coveo/headless@3.51.2
 
+## 1.2.42
 
-## <small>1.1.30 (2025-07-16)</small>
+### Patch Changes
 
-* style: enable recommended biome rules in atomic-hosted-page (#5628) ([aae7fab](https://github.com/coveo/ui-kit/commits/aae7fab)), closes [#5628](https://github.com/coveo/ui-kit/issues/5628)
-* fix(deps): update all dependencies j:kit-282 (#5605) ([8132ed8](https://github.com/coveo/ui-kit/commits/8132ed8)), closes [#5605](https://github.com/coveo/ui-kit/issues/5605)
+- [#7637](https://github.com/coveo/ui-kit/pull/7637) [`d5d4d75`](https://github.com/coveo/ui-kit/commit/d5d4d75a882074bbeb5875ed95504a30ff84df91) Thanks [@renovate-coveo](https://github.com/apps/renovate-coveo)! - Update production dependencies
 
+- Updated dependencies [[`d5d4d75`](https://github.com/coveo/ui-kit/commit/d5d4d75a882074bbeb5875ed95504a30ff84df91), [`821d429`](https://github.com/coveo/ui-kit/commit/821d429d3cc247e387cfb3e5834ddc8b65443142)]:
+  - @coveo/headless@3.51.1
 
+## 1.2.41
 
-## <small>1.1.28 (2025-07-09)</small>
+### Patch Changes
 
-* fix(atomic): broaden autoloader shadowDOM sniffing (#5533) ([9833a8b](https://github.com/coveo/ui-kit/commits/9833a8b)), closes [#5533](https://github.com/coveo/ui-kit/issues/5533)
+- Updated dependencies [[`41fdd60`](https://github.com/coveo/ui-kit/commit/41fdd609cb0b8b0d4b821f9818189fc49f727417), [`d12be29`](https://github.com/coveo/ui-kit/commit/d12be299fa235fe6810c268f2c89be296063ee60), [`8445bf2`](https://github.com/coveo/ui-kit/commit/8445bf241db3aab5f0cd148c43ac3f4425f22cb1), [`bd4bb98`](https://github.com/coveo/ui-kit/commit/bd4bb98837c2eb0acb7f38848c0d792f8bf1efa9)]:
+  - @coveo/headless@3.51.0
 
+## 1.2.40
 
+### Patch Changes
 
-## <small>1.1.27 (2025-07-02)</small>
+- Updated dependencies [[`a191d11`](https://github.com/coveo/ui-kit/commit/a191d119ea1913c76aacb266c1345be6e4eecbe0), [`cc116bf`](https://github.com/coveo/ui-kit/commit/cc116bf10f4708d9636eb3e0279af57a1e43e050), [`925acd8`](https://github.com/coveo/ui-kit/commit/925acd8912103422c19ae02fff22972634e14a28)]:
+  - @coveo/headless@3.50.1
 
-* chore(lint): integrate biome (#5507) ([53bcada](https://github.com/coveo/ui-kit/commits/53bcada)), closes [#5507](https://github.com/coveo/ui-kit/issues/5507)
+## 1.2.39
 
+### Patch Changes
 
+- Updated dependencies [[`2453994`](https://github.com/coveo/ui-kit/commit/245399483d93d17cfc0d01f2f7b9eebcf2859089), [`861d8ca`](https://github.com/coveo/ui-kit/commit/861d8cae4cb73fee10c9fd753e5874baebf539bf)]:
+  - @coveo/headless@3.50.0
 
-## <small>1.1.26 (2025-06-25)</small>
+## 1.2.38
+
+### Patch Changes
+
+- Updated dependencies [[`f76c16f`](https://github.com/coveo/ui-kit/commit/f76c16f6f3dcde4e83563cebaf80c067901e5b34), [`bd26438`](https://github.com/coveo/ui-kit/commit/bd264389ad421e622ab3a4ac3d324bd8e1fce60a), [`2dd45bc`](https://github.com/coveo/ui-kit/commit/2dd45bcdabd1ec7683cc1f341a9ba4747671e222), [`6db3fdb`](https://github.com/coveo/ui-kit/commit/6db3fdbc9e669dd4f3d4a0f900401700d86f7505), [`39c2c10`](https://github.com/coveo/ui-kit/commit/39c2c102e585df4861a65d6b6350c5ff35774e35)]:
+  - @coveo/headless@3.49.4
+
+## 1.2.37
+
+### Patch Changes
+
+- Updated dependencies [[`f1924b8`](https://github.com/coveo/ui-kit/commit/f1924b800f40b0ed2f857ed18323ae85585854d3)]:
+  - @coveo/headless@3.49.3
+
+## 1.2.36
+
+### Patch Changes
+
+- Updated dependencies [[`7b7de89`](https://github.com/coveo/ui-kit/commit/7b7de897f4c06e35e9c87189c2bc56cc078e6291)]:
+  - @coveo/headless@3.49.2
+
+## 1.2.35
+
+### Patch Changes
+
+- Updated dependencies [[`5148ad6`](https://github.com/coveo/ui-kit/commit/5148ad665cdaf50a8118a45a03a48d4dbd8b456a)]:
+  - @coveo/headless@3.49.1
+
+## 1.2.34
+
+- chore: replace biome with oxlint / oxfmt (#7328) ([3b8d688](https://github.com/coveo/ui-kit/commits/3b8d688)), closes [#7328](https://github.com/coveo/ui-kit/issues/7328)
+
+## 1.2.33
+
+- fix: missing cdn outputs (#7309) ([040b1b1](https://github.com/coveo/ui-kit/commits/040b1b1)), closes [#7309](https://github.com/coveo/ui-kit/issues/7309)
+
+## 1.2.30
+
+- chore(deps): update dependency @biomejs/biome to v2.4.7 j:kit-282 (#6193) ([a72f939](https://github.com/coveo/ui-kit/commits/a72f939)), closes [#6193](https://github.com/coveo/ui-kit/issues/6193)
+- ci: migrate npm publishing to OIDC trusted publishers (#7198) ([c97eff5](https://github.com/coveo/ui-kit/commits/c97eff5)), closes [#7198](https://github.com/coveo/ui-kit/issues/7198)
+- fix(deps): update all dependencies j:kit-282 (#6191) ([9ec6cc5](https://github.com/coveo/ui-kit/commits/9ec6cc5)), closes [#6191](https://github.com/coveo/ui-kit/issues/6191)
+
+## 1.2.24
+
+- [Version Bump][skip ci]: ui-kit publish ([b2a83c4](https://github.com/coveo/ui-kit/commits/b2a83c4))
+- Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
+
+## 1.2.23
+
+- Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
+
+## 1.2.22
+
+- docs: correct JSDoc grammar and terminology across packages (#6531) ([356975a](https://github.com/coveo/ui-kit/commits/356975a)), closes [#6531](https://github.com/coveo/ui-kit/issues/6531)
+
+## 1.2.21
+
+- [Version Bump][skip ci]: ui-kit publish ([b33d02f](https://github.com/coveo/ui-kit/commits/b33d02f))
+- ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+
+## 1.2.20
+
+- ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+
+## 1.2.16
+
+- chore: use docker for faster playwright setup (#6139) ([59cab65](https://github.com/coveo/ui-kit/commits/59cab65)), closes [#6139](https://github.com/coveo/ui-kit/issues/6139)
+
+## 1.2.13
+
+- chore: more cleanup of dependencies in multiples packages (#6119) ([ff6c837](https://github.com/coveo/ui-kit/commits/ff6c837)), closes [#6119](https://github.com/coveo/ui-kit/issues/6119)
+
+## 1.2.10
+
+- [Version Bump][skip ci]: ui-kit publish ([a3fb13e](https://github.com/coveo/ui-kit/commits/a3fb13e))
+
+## 1.2.0
+
+- feat: Migrate monorepo build system from NX to Turborepo (#5733) ([e7e1237](https://github.com/coveo/ui-kit/commits/e7e1237)), closes [#5733](https://github.com/coveo/ui-kit/issues/5733)
+- chore: update dependencies (major) (#5793) ([8cbf5bc](https://github.com/coveo/ui-kit/commits/8cbf5bc)), closes [#5793](https://github.com/coveo/ui-kit/issues/5793)
+- fix(deps): update all dependencies j:kit-282 (#5770) ([214bb00](https://github.com/coveo/ui-kit/commits/214bb00)), closes [#5770](https://github.com/coveo/ui-kit/issues/5770)
+
+## 1.1.33
+
+- chore: allow prerelease on CI (#5756) ([de2c411](https://github.com/coveo/ui-kit/commits/de2c411)), closes [#5756](https://github.com/coveo/ui-kit/issues/5756)
+- chore(atomic-angular, atomic-react, auth, bueno, headless-react): remove unused exports, code and de ([6f8efc1](https://github.com/coveo/ui-kit/commits/6f8efc1)), closes [#5690](https://github.com/coveo/ui-kit/issues/5690)
+
+## 1.1.31
+
+- fix(deps): update all dependencies j:kit-282 (#5723) ([6c032c9](https://github.com/coveo/ui-kit/commits/6c032c9)), closes [#5723](https://github.com/coveo/ui-kit/issues/5723)
+- chore: enable recommended biome rules for entire repo (#5662) ([015a764](https://github.com/coveo/ui-kit/commits/015a764)), closes [#5662](https://github.com/coveo/ui-kit/issues/5662)
+
+## 1.1.30
+
+- style: enable recommended biome rules in atomic-hosted-page (#5628) ([aae7fab](https://github.com/coveo/ui-kit/commits/aae7fab)), closes [#5628](https://github.com/coveo/ui-kit/issues/5628)
+- fix(deps): update all dependencies j:kit-282 (#5605) ([8132ed8](https://github.com/coveo/ui-kit/commits/8132ed8)), closes [#5605](https://github.com/coveo/ui-kit/issues/5605)
+
+## 1.1.28
+
+- fix(atomic): broaden autoloader shadowDOM sniffing (#5533) ([9833a8b](https://github.com/coveo/ui-kit/commits/9833a8b)), closes [#5533](https://github.com/coveo/ui-kit/issues/5533)
+
+## 1.1.27
+
+- chore(lint): integrate biome (#5507) ([53bcada](https://github.com/coveo/ui-kit/commits/53bcada)), closes [#5507](https://github.com/coveo/ui-kit/issues/5507)
+
+## 1.1.26
 
 - fix(deps): update all dependencies j:kit-282 (#5522) ([ee7a9ab](https://github.com/coveo/ui-kit/commits/ee7a9ab)), closes [#5522](https://github.com/coveo/ui-kit/issues/5522)
 
-## <small>1.1.25 (2025-06-18)</small>
+## 1.1.25
 
 - fix(deps): update all dependencies j:kit-282 (#5476) ([c5ea600](https://github.com/coveo/ui-kit/commits/c5ea600)), closes [#5476](https://github.com/coveo/ui-kit/issues/5476)
 
-## <small>1.1.24 (2025-06-11)</small>
+## 1.1.24
 
 - fix(deps): update all dependencies j:kit-282 (#5068) ([2a0d833](https://github.com/coveo/ui-kit/commits/2a0d833)), closes [#5068](https://github.com/coveo/ui-kit/issues/5068)
 - fix(deps): update all dependencies j:kit-282 (#5437) ([0c87df0](https://github.com/coveo/ui-kit/commits/0c87df0)), closes [#5437](https://github.com/coveo/ui-kit/issues/5437)
 
-## <small>1.1.23 (2025-06-04)</small>
+## 1.1.23
 
 - [Version Bump][skip ci]: ui-kit publish ([4c36602](https://github.com/coveo/ui-kit/commits/4c36602))
 - chore(headless,bueno): externalize all packages on node outputs (#4921) ([bc46996](https://github.com/coveo/ui-kit/commits/bc46996)), closes [#4921](https://github.com/coveo/ui-kit/issues/4921)
 - chore(atomic): use local CDN setup for CI playwright tests (#5359) ([e6e0296](https://github.com/coveo/ui-kit/commits/e6e0296)), closes [#5359](https://github.com/coveo/ui-kit/issues/5359)
 - chore(deps): update vite j:kit-282 (#5363) ([eb41b2c](https://github.com/coveo/ui-kit/commits/eb41b2c)), closes [#5363](https://github.com/coveo/ui-kit/issues/5363)
 
-## <small>1.1.22 (2025-06-04)</small>
+## 1.1.22
 
 - chore(atomic): use local CDN setup for CI playwright tests (#5359) ([e6e0296](https://github.com/coveo/ui-kit/commits/e6e0296)), closes [#5359](https://github.com/coveo/ui-kit/issues/5359)
 - chore(deps): update vite j:kit-282 (#5363) ([eb41b2c](https://github.com/coveo/ui-kit/commits/eb41b2c)), closes [#5363](https://github.com/coveo/ui-kit/issues/5363)
 - chore(headless,bueno): externalize all packages on node outputs (#4921) ([bc46996](https://github.com/coveo/ui-kit/commits/bc46996)), closes [#4921](https://github.com/coveo/ui-kit/issues/4921)
 
-## <small>1.1.18 (2025-05-08)</small>
+## 1.1.18
 
 - chore: update vite (#5261) ([5a73a68](https://github.com/coveo/ui-kit/commits/5a73a68)), closes [#5261](https://github.com/coveo/ui-kit/issues/5261)
 - chore(deps): update vite j:kit-282 (#5031) ([532ea61](https://github.com/coveo/ui-kit/commits/532ea61)), closes [#5031](https://github.com/coveo/ui-kit/issues/5031)
 
-## <small>1.1.17 (2025-04-30)</small>
+## 1.1.17
 
 - [Version Bump][skip ci]: ui-kit publish ([084ad17](https://github.com/coveo/ui-kit/commits/084ad17))
 - [Version Bump][skip ci]: ui-kit publish ([dd9325e](https://github.com/coveo/ui-kit/commits/dd9325e))
@@ -75,45 +193,45 @@
 - chore: author & sign generated ci commit (#5149) ([1c22fb1](https://github.com/coveo/ui-kit/commits/1c22fb1)), closes [#5149](https://github.com/coveo/ui-kit/issues/5149)
 - ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [/github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com//github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json/issues/L48)
 
-## <small>1.1.16 (2025-04-30)</small>
+## 1.1.16
 
 - [Version Bump][skip ci]: ui-kit publish ([dd9325e](https://github.com/coveo/ui-kit/commits/dd9325e))
 
-## <small>1.1.14 (2025-04-23)</small>
+## 1.1.14
 
 - fix(autoloader): wrap initial discovery and observer setup in DOMContentLoaded event (#5180) ([58655b4](https://github.com/coveo/ui-kit/commits/58655b4)), closes [#5180](https://github.com/coveo/ui-kit/issues/5180)
 
-## <small>1.1.13 (2025-04-16)</small>
+## 1.1.13
 
 - chore: author & sign generated ci commit (#5149) ([1c22fb1](https://github.com/coveo/ui-kit/commits/1c22fb1)), closes [#5149](https://github.com/coveo/ui-kit/issues/5149)
 
-## <small>1.1.10 (2025-04-02)</small>
+## 1.1.10
 
 - ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [/github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com//github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json/issues/L48)
 
-## <small>1.1.8 (2025-03-19)</small>
+## 1.1.8
 
 - chore: split release:phase1 & release:phase3 in two phases (#5042) ([e00bd41](https://github.com/coveo/ui-kit/commits/e00bd41)), closes [#5042](https://github.com/coveo/ui-kit/issues/5042)
 
-## <small>1.1.7 (2025-03-12)</small>
+## 1.1.7
 
 - chore: build working again on windows (#4954) ([d406941](https://github.com/coveo/ui-kit/commits/d406941)), closes [#4954](https://github.com/coveo/ui-kit/issues/4954)
 
-## <small>1.1.6 (2025-03-06)</small>
+## 1.1.6
 
 - fix(deps): update all dependencies j:kit-282 (#5032) ([38b18f5](https://github.com/coveo/ui-kit/commits/38b18f5)), closes [#5032](https://github.com/coveo/ui-kit/issues/5032)
 
-## <small>1.1.3 (2025-02-26)</small>
+## 1.1.3
 
 - chore: update vite dependencies (#5010) ([b1f8764](https://github.com/coveo/ui-kit/commits/b1f8764)), closes [#5010](https://github.com/coveo/ui-kit/issues/5010)
 - chore(bueno): improve exports, externalize dependencies from bundles (#4987) ([ab8931e](https://github.com/coveo/ui-kit/commits/ab8931e)), closes [#4987](https://github.com/coveo/ui-kit/issues/4987)
 - fix(deps): update all dependencies j:kit-282 (#5008) ([ae6b710](https://github.com/coveo/ui-kit/commits/ae6b710)), closes [#5008](https://github.com/coveo/ui-kit/issues/5008)
 
-## <small>1.1.1 (2025-02-12)</small>
+## 1.1.1
 
 - fix(deps): update all dependencies j:kit-282 (#4957) ([8302720](https://github.com/coveo/ui-kit/commits/8302720)), closes [#4957](https://github.com/coveo/ui-kit/issues/4957)
 
-## 1.1.0 (2025-02-05)
+## 1.1.0
 
 - fix(deps): update all dependencies j:kit-282 (#4903) ([192cf67](https://github.com/coveo/ui-kit/commits/192cf67)), closes [#4903](https://github.com/coveo/ui-kit/issues/4903)
 - fix(deps): update all dependencies j:kit-282 (#4933) ([9016283](https://github.com/coveo/ui-kit/commits/9016283)), closes [#4933](https://github.com/coveo/ui-kit/issues/4933)
@@ -122,47 +240,47 @@
 - refactor(atomic-hosted-page): refactor common files into atomic-hosted-ui (#4898) ([6c74af7](https://github.com/coveo/ui-kit/commits/6c74af7)), closes [#4898](https://github.com/coveo/ui-kit/issues/4898)
 - feat(atomic-hosted-page): migrate from stencil to lit (#4897) ([bf6bed4](https://github.com/coveo/ui-kit/commits/bf6bed4)), closes [#4897](https://github.com/coveo/ui-kit/issues/4897)
 
-## <small>1.0.21 (2025-01-29)</small>
+## 1.0.21
 
 - fix(atomic-hosted-page): fix cdn import errors by externalizing headless (#4884) ([2364a8d](https://github.com/coveo/ui-kit/commits/2364a8d)), closes [#4884](https://github.com/coveo/ui-kit/issues/4884)
 
-## <small>1.0.20 (2025-01-23)</small>
+## 1.0.20
 
 - fix(deps): update all dependencies j:kit-282 (#4881) ([9cac893](https://github.com/coveo/ui-kit/commits/9cac893)), closes [#4881](https://github.com/coveo/ui-kit/issues/4881)
 
-## <small>1.0.18 (2025-01-15)</small>
+## 1.0.18
 
 - fix(deps): update all dependencies j:kit-282 (#4847) ([e42499f](https://github.com/coveo/ui-kit/commits/e42499f)), closes [#4847](https://github.com/coveo/ui-kit/issues/4847)
 
-## <small>1.0.17 (2025-01-08)</small>
+## 1.0.17
 
 - fix(deps): update all dependencies j:kit-282 (#4753) ([8a2cae4](https://github.com/coveo/ui-kit/commits/8a2cae4)), closes [#4753](https://github.com/coveo/ui-kit/issues/4753)
 
-## <small>1.0.15 (2024-12-04)</small>
+## 1.0.15
 
 - chore(deps): update all dependencies j:kit-282 (#4705) ([34921b9](https://github.com/coveo/ui-kit/commits/34921b9)), closes [#4705](https://github.com/coveo/ui-kit/issues/4705) [#8203](https://github.com/coveo/ui-kit/issues/8203)
 - chore(deps): update all dependencies j:kit-282 (major) (#4748) ([cc95ed7](https://github.com/coveo/ui-kit/commits/cc95ed7)), closes [#4748](https://github.com/coveo/ui-kit/issues/4748)
 
-## <small>1.0.11 (2024-11-06)</small>
+## 1.0.11
 
 - [Version Bump][skip ci]: ui-kit publish ([afbd8fc](https://github.com/coveo/ui-kit/commits/afbd8fc))
 - [Version Bump][skip ci]: ui-kit publish ([4e3d244](https://github.com/coveo/ui-kit/commits/4e3d244))
 - chore: allow running on node 22 (#4605) ([573b7f3](https://github.com/coveo/ui-kit/commits/573b7f3)), closes [#4605](https://github.com/coveo/ui-kit/issues/4605)
 
-## <small>1.0.10 (2024-11-06)</small>
+## 1.0.10
 
 - [Version Bump][skip ci]: ui-kit publish ([4e3d244](https://github.com/coveo/ui-kit/commits/4e3d244))
 - chore: allow running on node 22 (#4605) ([573b7f3](https://github.com/coveo/ui-kit/commits/573b7f3)), closes [#4605](https://github.com/coveo/ui-kit/issues/4605)
 
-## <small>1.0.9 (2024-11-06)</small>
+## 1.0.9
 
 - chore: allow running on node 22 (#4605) ([573b7f3](https://github.com/coveo/ui-kit/commits/573b7f3)), closes [#4605](https://github.com/coveo/ui-kit/issues/4605)
 
-## <small>1.0.8 (2024-10-30)</small>
+## 1.0.8
 
 - chore: promote the v3 branch when publishing on v3 (#4585) ([7b9144d](https://github.com/coveo/ui-kit/commits/7b9144d)), closes [#4585](https://github.com/coveo/ui-kit/issues/4585) [#4584](https://github.com/coveo/ui-kit/issues/4584)
 
-## 1.0.0 (2024-09-18)
+## 1.0.0
 
 - chore!: update node engine definition in all exported packages (#4330) ([d6d8a1a](https://github.com/coveo/ui-kit/commits/d6d8a1a)), closes [#4330](https://github.com/coveo/ui-kit/issues/4330)
 - chore(headless, atomic, quantic)!: remove deprecated functions/properties (#4350) ([8de5406](https://github.com/coveo/ui-kit/commits/8de5406)), closes [#4350](https://github.com/coveo/ui-kit/issues/4350)
@@ -175,11 +293,11 @@
 - remove the organizationEndpoints configuration option (#4339)
 - update node engine definition in all exported packages (#4330)
 
-## 0.6.3 (2024-08-07)
+## 0.6.3
 
-## 0.6.2 (2024-07-31)
+## 0.6.2
 
-# 0.6.0 (2024-07-17)
+## 0.6.0
 
 ### Bug Fixes
 
@@ -189,89 +307,89 @@
 
 - **atomic:** add atomic-hosted-ui component ([#3649](https://github.com/coveo/ui-kit/issues/3649)) ([8d52a0d](https://github.com/coveo/ui-kit/commits/8d52a0db608161a3c7036bd6979dfe8db4910cc8))
 
-## 0.5.46 (2024-06-06)
+## 0.5.46
 
-## 0.5.43 (2024-05-15)
+## 0.5.43
 
-## 0.5.41 (2024-05-06)
+## 0.5.41
 
-## 0.5.39 (2024-04-24)
+## 0.5.39
 
-## 0.5.38 (2024-04-17)
+## 0.5.38
 
 ### Bug Fixes
 
 - **deps:** update stencil j:kit-282 ([#3764](https://github.com/coveo/ui-kit/issues/3764)) ([82b6948](https://github.com/coveo/ui-kit/commits/82b694835e9e0a29859590f16bd64a8e028eb888))
 
-## 0.5.37 (2024-04-10)
+## 0.5.37
 
-## 0.5.32 (2024-03-20)
+## 0.5.32
 
 ### Bug Fixes
 
 - **deps:** update dependency @stencil/core to v4.13.0 j:kit-282 ([#3725](https://github.com/coveo/ui-kit/issues/3725)) ([aee2015](https://github.com/coveo/ui-kit/commits/aee20158c892bf1ec73ea3e66c2cdfa6823420c1))
 
-## 0.5.23 (2024-03-08)
+## 0.5.23
 
 ### Bug Fixes
 
 - **deps:** update stencil j:kit-282 ([#3635](https://github.com/coveo/ui-kit/issues/3635)) ([63b333e](https://github.com/coveo/ui-kit/commits/63b333eb5ef5b5017288883102503fd47863357b))
 
-## 0.5.22 (2024-03-06)
+## 0.5.22
 
-## 0.5.20 (2024-02-21)
+## 0.5.20
 
 ### Bug Fixes
 
 - **deps:** update stencil j:kit-282 ([#3578](https://github.com/coveo/ui-kit/issues/3578)) ([a5b645d](https://github.com/coveo/ui-kit/commits/a5b645d4f5395c9942af38feb5cfc2c08585405d))
 
-## 0.5.18 (2024-02-14)
+## 0.5.18
 
 ### Bug Fixes
 
 - **hsp:** use admin url ([#3600](https://github.com/coveo/ui-kit/issues/3600)) ([4f6ef02](https://github.com/coveo/ui-kit/commits/4f6ef02fe185ab66ac4bfc037e4d091e4fe11808))
 
-## 0.5.17 (2024-02-09)
+## 0.5.17
 
 ### Bug Fixes
 
 - **deps:** update all dependencies j:kit-282 ([#3576](https://github.com/coveo/ui-kit/issues/3576)) ([4887772](https://github.com/coveo/ui-kit/commits/48877723d6f8c5e5446a48296326519f009ae850))
 
-## 0.5.15 (2024-01-31)
+## 0.5.15
 
 ### Bug Fixes
 
 - **deps:** update all dependencies j:kit-282 ([#3535](https://github.com/coveo/ui-kit/issues/3535)) ([8cbc113](https://github.com/coveo/ui-kit/commits/8cbc113c323134c73ec9643260ee4580289e891b))
 
-## 0.5.11 (2024-01-03)
+## 0.5.11
 
 ### Bug Fixes
 
 - **deps:** update stencil j:kit-282 ([#3492](https://github.com/coveo/ui-kit/issues/3492)) ([83dfb8d](https://github.com/coveo/ui-kit/commits/83dfb8dbbd89524a694bcd39ce807143a073ac2c))
 
-## 0.5.10 (2023-12-13)
+## 0.5.10
 
-## 0.5.8 (2023-12-06)
+## 0.5.8
 
 ### Bug Fixes
 
 - **deps:** update dependency @stencil/core to v4.8.1 j:kit-282 ([#3451](https://github.com/coveo/ui-kit/issues/3451)) ([b5874d6](https://github.com/coveo/ui-kit/commits/b5874d6784ff2b7cfc71b4dc8f477592e6b0ad32))
 
-## 0.5.7 (2023-11-29)
+## 0.5.7
 
 ### Bug Fixes
 
 - **deps:** update dependency @stencil/core to v4.7.2 j:kit-282 ([#3418](https://github.com/coveo/ui-kit/issues/3418)) ([d142351](https://github.com/coveo/ui-kit/commits/d142351f38b1c8dd8cba935991e0fd70a80122d8))
 
-## 0.5.6 (2023-11-16)
+## 0.5.6
 
-## 0.5.4 (2023-11-08)
+## 0.5.4
 
 ### Bug Fixes
 
 - **deps:** update all dependencies j:kit-282 ([#3366](https://github.com/coveo/ui-kit/issues/3366)) ([da241a8](https://github.com/coveo/ui-kit/commits/da241a81d2747c57968caf6da55778fe8db9e6d5))
 
-## 0.5.3 (2023-11-02)
+## 0.5.3
 
 ### Bug Fixes
 
@@ -281,31 +399,31 @@
 
 - double publish the NPM packages into GitHub packages for use by internal repositories also using the [@coveo](https://github.com/coveo) scope ([#3251](https://github.com/coveo/ui-kit/issues/3251)) ([4d413e6](https://github.com/coveo/ui-kit/commits/4d413e6bb27065b6667f4705db17b21d6112128b))
 
-## 0.4.6 (2023-10-25)
+## 0.4.6
 
 ### Bug Fixes
 
 - **deps:** update stencil j:kit-282 ([#3322](https://github.com/coveo/ui-kit/issues/3322)) ([5f02c7e](https://github.com/coveo/ui-kit/commits/5f02c7efaf6d1de34abc5bb21da9a45b2e5061b2))
 
-## 0.4.5 (2023-10-18)
+## 0.4.5
 
-## 0.4.4 (2023-10-11)
+## 0.4.4
 
-## 0.4.3 (2023-10-04)
+## 0.4.3
 
-## 0.4.1 (2023-09-20)
+## 0.4.1
 
-# 0.4.0 (2023-09-11)
+## 0.4.0
 
 ### Features
 
 - **headless-react:** add headless react util defineSearchEngine ([#3107](https://github.com/coveo/ui-kit/issues/3107)) ([1d63e43](https://github.com/coveo/ui-kit/commits/1d63e431c427de9022238216cc5128b237b836b4))
 
-## 0.3.31 (2023-09-06)
+## 0.3.31
 
-## 0.3.18 (2023-06-20)
+## 0.3.18
 
-## 0.3.16 (2023-06-01)
+## 0.3.16
 
 # Change Log
 
@@ -382,7 +500,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 **Note:** Version bump only for package @coveo/atomic-hosted-page
 
-# 0.1.0 (2023-02-15)
+## 0.1.0
 
 ### Features
 

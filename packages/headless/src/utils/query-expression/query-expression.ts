@@ -40,19 +40,19 @@ import {
 } from './string-field/string-field.js';
 
 export type {
-  KeywordExpression,
-  NearExpression,
-  OtherTerm,
-  ExactMatchExpression,
-  FieldExistsExpression,
-  StringFieldExpression,
-  StringFacetFieldExpression,
-  NumericFieldExpression,
-  NumericRangeFieldExpression,
   DateFieldExpression,
   DateRangeFieldExpression,
-  QueryExtensionExpression,
+  ExactMatchExpression,
+  FieldExistsExpression,
+  KeywordExpression,
+  NearExpression,
   Negatable,
+  NumericFieldExpression,
+  NumericRangeFieldExpression,
+  OtherTerm,
+  QueryExtensionExpression,
+  StringFacetFieldExpression,
+  StringFieldExpression,
 };
 
 /**

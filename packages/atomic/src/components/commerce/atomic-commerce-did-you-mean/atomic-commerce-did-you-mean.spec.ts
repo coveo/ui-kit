@@ -6,16 +6,16 @@ import {
   type QueryTrigger,
   type QueryTriggerState,
 } from '@coveo/headless/commerce';
-import {userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {userEvent} from 'vitest/browser';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeDidYouMean} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/did-you-mean-subcontroller';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
 import {buildFakeQueryTrigger} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/query-trigger-controller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
-import './atomic-commerce-did-you-mean';
 import type {AtomicCommerceDidYouMean} from './atomic-commerce-did-you-mean';
+import './atomic-commerce-did-you-mean';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
@@ -232,7 +232,7 @@ describe('atomic-commerce-did-you-mean', () => {
 
     it('should display modified query in showing-results-for section', () => {
       expect(showingResultsFor).toHaveTextContent(
-        'Showing results for modified query'
+        'Showing products for modified query'
       );
       expect(
         showingResultsFor?.querySelector('b[part="highlight"]')

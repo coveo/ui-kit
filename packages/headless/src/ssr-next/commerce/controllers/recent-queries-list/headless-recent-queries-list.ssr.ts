@@ -9,15 +9,15 @@ import {
 import type {NonRecommendationControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
 
 export type {
+  RecentQueriesList,
   RecentQueriesListInitialState,
   RecentQueriesListOptions,
-  RecentQueriesState,
-  RecentQueriesList,
   RecentQueriesListProps,
+  RecentQueriesState,
 };
 
-export interface RecentQueriesListDefinition
-  extends NonRecommendationControllerDefinitionWithoutProps<RecentQueriesList> {}
+export type RecentQueriesListDefinition =
+  NonRecommendationControllerDefinitionWithoutProps<RecentQueriesList>;
 
 /**
  * Defines the `RecentQueriesList` controller for the purpose of server-side rendering.

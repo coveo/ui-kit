@@ -111,8 +111,7 @@ export const subscribeStateManager: SubscribeStateManager = {
   },
 };
 
-interface SearchAPIGeneratedAnswerAnalyticsClient
-  extends GeneratedAnswerAnalyticsClient {}
+interface SearchAPIGeneratedAnswerAnalyticsClient extends GeneratedAnswerAnalyticsClient {}
 
 /**
  * Creates a `GeneratedAnswer` controller instance using the search API stream pattern.

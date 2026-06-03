@@ -4,7 +4,7 @@ import {
   getHeadlessBundle,
   getHeadlessEnginePromise,
 } from 'c/quanticHeadlessLoader';
-import {ResultUtils} from 'c/quanticUtils';
+import {ResultUtils, unwrapLockerProxiedObject} from 'c/quanticUtils';
 import {NavigationMixin} from 'lightning/navigation';
 import {LightningElement, api} from 'lwc';
 
@@ -18,7 +18,7 @@ const documentTypesRequiringParentRecord = ['CaseComment'];
 
 /**
  * The `QuanticResultLink` component creates a clickable link from a result that points to the original item.
- * If the result is a Salesforce record or a Salesforce Knowledge article it will open the link in a new salesforce console subtab.
+ * If the result is a Salesforce record or a Salesforce Knowledge article it will open the link in a new Salesforce console subtab.
  * Otherwise, it will open the link in the browser tab.
  * @category Result Template
  * @example
@@ -34,11 +34,17 @@ export default class QuanticResultLink extends NavigationMixin(
    */
   @api engineId;
   /**
-   * The [result item](https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#result).
+   * The [result item](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.Result.html).
    * @api
    * @type {Result}
    */
-  @api result;
+  @api
+  get result() {
+    return this._result;
+  }
+  set result(result) {
+    this._result = unwrapLockerProxiedObject(result);
+  }
   /**
    * Where to display the linked URL, as the name for a browsing context (a tab, window, or <iframe>).
    * The following keywords have special meanings for where to load the URL:
@@ -75,6 +81,8 @@ export default class QuanticResultLink extends NavigationMixin(
   engine;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {Result} */
+  _result;
   /** @type {string} */
   salesforceRecordUrl;
 
@@ -113,15 +121,14 @@ export default class QuanticResultLink extends NavigationMixin(
     this.engine = engine;
     ResultUtils.bindClickEventsOnResult(
       this.engine,
-      // Destructuring transforms the Proxy object created by Salesforce to a normal object so no unexpected behaviour will occur with the Headless library.
-      {...this.result, raw: {...this.result.raw}},
+      this.result,
       this.template,
       this.headless.buildInteractiveResult
     );
   };
 
   handleClick(event) {
-    if (this.isSalesforceLink) {
+    if (this.shouldNavigateToSalesforceRecord) {
       event.preventDefault();
       this.navigateToSalesforceRecord(event);
     }
@@ -175,21 +182,15 @@ export default class QuanticResultLink extends NavigationMixin(
       : 'clickUri';
   }
 
-  /**
-   * Returns the target for the link.
-   */
-  get targetTab() {
-    if (this.isSalesforceLink) {
-      return '_blank';
-    }
-    return this.target;
+  get shouldNavigateToSalesforceRecord() {
+    return this.isSalesforceLink && this.target === '_self';
   }
 
   /**
    * Returns the aria label value for the link.
    */
   get ariaLabelValue() {
-    if (this.isSalesforceLink) {
+    if (this.shouldNavigateToSalesforceRecord) {
       return this.labels.navigateToRecord;
     }
     return this.labels.opensInBrowserTab;

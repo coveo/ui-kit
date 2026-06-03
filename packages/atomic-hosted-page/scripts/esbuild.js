@@ -1,3 +1,6 @@
+// ⚠️  CDN OUTPUT: This build outputs to "cdn/". If you change this path,
+// you MUST also update the corresponding "source" field in ui-kit-cd
+// (.deployment.config/{commit,dev,prd}.json) and deploy-local-cdn.mjs.
 import {readFileSync} from 'node:fs';
 import {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -11,22 +14,25 @@ const headlessJson = JSON.parse(
   readFileSync(resolve(__dirname, '../../headless/package.json'), 'utf8')
 );
 const isNightly = process.env.IS_NIGHTLY === 'true';
-const isPrRelease =
-  process.env.IS_PRERELEASE === 'true' && process.env.PR_NUMBER;
+const commitSha = process.env.CDN_COMMIT_SHA;
 
 const headlessVersion = isNightly
   ? `v${headlessJson.version.split('.').shift()}-nightly`
-  : isPrRelease
-    ? `v${headlessJson.version.split('-').shift()}.${process.env.PR_NUMBER}`
-    : `v${headlessJson.version}`;
+  : `v${headlessJson.version}`;
 const buenoVersion = isNightly
   ? `v${buenoJson.version.split('.').shift()}-nightly`
-  : isPrRelease
-    ? `v${buenoJson.version.split('-').shift()}.${process.env.PR_NUMBER}`
-    : `v${buenoJson.version}`;
+  : `v${buenoJson.version}`;
+
+const headlessBase = commitSha
+  ? `/headless/commits/${commitSha}`
+  : `/headless/${headlessVersion}`;
+const buenoBase = commitSha
+  ? `/bueno/commits/${commitSha}`
+  : `/bueno/${buenoVersion}`;
+
 const packageMappings = {
-  '@coveo/headless': `/headless/${headlessVersion}/headless.esm.js`,
-  '@coveo/bueno': `/bueno/${buenoVersion}/bueno.esm.js`,
+  '@coveo/headless': `${headlessBase}/headless.esm.js`,
+  '@coveo/bueno': `${buenoBase}/bueno.esm.js`,
 };
 
 const externalizeDependenciesPlugin = {

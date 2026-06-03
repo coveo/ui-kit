@@ -8,8 +8,10 @@ import type {
 import {type ButtonProps, renderButton} from '../button';
 import {type RadioButtonProps, renderRadioButton} from '../radio-button';
 
-interface PagerNavigationButtonProps
-  extends Omit<ButtonProps, 'style' | 'part' | 'class'> {
+interface PagerNavigationButtonProps extends Omit<
+  ButtonProps,
+  'style' | 'part' | 'class'
+> {
   icon: string;
   i18n: i18n;
 }
@@ -54,14 +56,18 @@ export const renderPagerNextButton: FunctionalComponent<
   );
 };
 
-interface PagerPageButtonProps
-  extends Omit<
-    RadioButtonProps,
-    'part' | 'style' | 'checked' | 'ariaCurrent' | 'key' | 'class'
-  > {
+interface PagerPageButtonProps extends Omit<
+  RadioButtonProps,
+  'part' | 'style' | 'checked' | 'ariaCurrent' | 'key' | 'class'
+> {
   page: number;
   isSelected: boolean;
   text: string;
+  onFocusCallback?: (
+    elements: HTMLInputElement[],
+    previousFocus: HTMLInputElement,
+    newFocus: HTMLInputElement
+  ) => Promise<void>;
 }
 
 export const renderPagerPageButton: FunctionalComponent<
@@ -77,6 +83,8 @@ export const renderPagerPageButton: FunctionalComponent<
       ariaCurrent: props.isSelected ? 'page' : 'false',
       class: 'btn-page focus-visible:bg-neutral-light min-h-10 min-w-10 p-1',
       part: `page-button${props.isSelected ? ' active-page-button' : ''}`,
+      onFocusCallback: props.onFocusCallback,
+      ariaRoleDescription: 'link',
     },
   });
 };

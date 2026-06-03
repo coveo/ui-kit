@@ -3,7 +3,7 @@ import {ifDefined} from 'lit/directives/if-defined.js';
 import {type RefOrCallback, ref} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
-import {createRipple} from '../../utils/ripple';
+import {createRipple} from '../../utils/ripple-utils';
 import {
   type ButtonStyle,
   getClassNameForButtonStyle,

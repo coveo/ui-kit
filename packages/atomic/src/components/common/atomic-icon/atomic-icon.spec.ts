@@ -1,17 +1,20 @@
-import {page} from '@vitest/browser/context';
-import * as assetPathUtils from '@/src/utils/asset-path-utils';
-import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import '@vitest/browser/matchers.d.ts';
 import DOMPurify from 'dompurify';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
-import './atomic-icon';
+import {page} from 'vitest/browser';
+import * as assetPathUtils from '@/src/utils/asset-path-utils';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {AtomicIcon} from './atomic-icon';
+import {clearIconCache} from './fetch-icon';
+import './atomic-icon';
 
-vi.mock('@/src/utils/asset-path-utils', () => ({
-  parseAssetURL: vi.fn(),
-}));
+// Hoist fetch mock to ensure it's in place before the following import chains:
+//  [atomic-icon.spec.ts]─►[atomic-icon.ts]─┐
+//  [atomic-icon.spec.ts]─►[atomic-icon.ts]─┴─►[fetch-icon.ts]
+// Because [fetch-icon.ts] uses fetch during its initialization to create the exported memoized function.
+const fetchMock = vi.hoisted(() => vi.spyOn(window, 'fetch'));
 
+vi.mock('@/src/utils/asset-path-utils', {spy: true});
 vi.mock('@/src/mixins/bindings-mixin', () => ({
   InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
     return class extends superClass {
@@ -29,8 +32,7 @@ vi.mock('@/src/mixins/bindings-mixin', () => ({
   }),
 }));
 
-describe('AtomicIcon', () => {
-  let fetchMock: MockInstance;
+describe('atomic-icon', () => {
   let parseAssetURLMock: MockInstance;
   let sanitizeMock: MockInstance;
   const locators = {
@@ -38,7 +40,7 @@ describe('AtomicIcon', () => {
       return page.getByTestId('mocked-icon');
     },
   };
-  const successfullResponse = {
+  const successfulResponse = {
     ok: true,
     status: 200,
     text: async () =>
@@ -46,9 +48,11 @@ describe('AtomicIcon', () => {
   } as Response;
 
   beforeEach(() => {
-    fetchMock = vi.spyOn(window, 'fetch');
     parseAssetURLMock = vi.mocked(assetPathUtils.parseAssetURL);
     sanitizeMock = vi.spyOn(DOMPurify, 'sanitize');
+    fetchMock.mockClear();
+    fetchMock.mockRejectedValue(new Error('fetch not mocked'));
+    clearIconCache();
   });
 
   const setupElement = async (icon: string) => {
@@ -56,19 +60,20 @@ describe('AtomicIcon', () => {
       html` <atomic-icon icon=${icon}></atomic-icon>`
     );
 
-    element.initialize();
-
+    await element.initialize();
+    // The atomic-icon runs asynchronous operation behind a guard, meaning the first render is _not_ the one we ought to assert on
+    await new Promise((resolve) => setTimeout(resolve, 0));
     return element;
   };
 
-  it('is defined', () => {
-    const el = document.createElement('atomic-icon');
+  it('is defined', async () => {
+    const el = await setupElement('assets://user.svg');
     expect(el).toBeInstanceOf(AtomicIcon);
   });
 
   it('renders with default values', async () => {
     parseAssetURLMock.mockReturnValue('/assets/user.svg');
-    fetchMock.mockResolvedValue(successfullResponse);
+    fetchMock.mockResolvedValue(successfulResponse);
     await setupElement('assets://user.svg');
 
     expect(fetchMock).toHaveBeenCalledWith('/assets/user.svg');
@@ -92,7 +97,7 @@ describe('AtomicIcon', () => {
 
   it('fetches and renders the SVG icon from a URL', async () => {
     parseAssetURLMock.mockReturnValue('http://example.com/icon.svg');
-    fetchMock.mockResolvedValue(successfullResponse);
+    fetchMock.mockResolvedValue(successfulResponse);
 
     await setupElement('http://example.com/icon.svg');
 
@@ -137,5 +142,76 @@ describe('AtomicIcon', () => {
         USE_PROFILES: {svg: true, svgFilters: true},
       }
     );
+  });
+
+  describe('caching', () => {
+    it('should cache fetch requests for the same URL', async () => {
+      parseAssetURLMock.mockReturnValue('/assets/star.svg');
+      fetchMock.mockResolvedValue(successfulResponse);
+
+      await setupElement('assets://star.svg');
+      await setupElement('assets://star.svg');
+      await setupElement('assets://star.svg');
+
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock).toHaveBeenCalledWith('/assets/star.svg');
+    });
+
+    it('should make separate fetch requests for different URLs', async () => {
+      const response1 = {
+        ok: true,
+        status: 200,
+        text: async () => '<svg data-testid="icon1"></svg>',
+      } as Response;
+
+      const response2 = {
+        ok: true,
+        status: 200,
+        text: async () => '<svg data-testid="icon2"></svg>',
+      } as Response;
+
+      parseAssetURLMock.mockReturnValueOnce('/assets/icon1.svg');
+      parseAssetURLMock.mockReturnValueOnce('/assets/icon2.svg');
+      fetchMock.mockResolvedValueOnce(response1);
+      fetchMock.mockResolvedValueOnce(response2);
+
+      await setupElement('assets://icon1.svg');
+      await setupElement('assets://icon2.svg');
+
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+      expect(fetchMock).toHaveBeenCalledWith('/assets/icon1.svg');
+      expect(fetchMock).toHaveBeenCalledWith('/assets/icon2.svg');
+    });
+
+    it('should not cache failed fetch requests and allow retry', async () => {
+      vi.spyOn(console, 'error').mockImplementation(() => {});
+      parseAssetURLMock.mockReturnValue('http://example.com/icon.svg');
+      fetchMock
+        .mockRejectedValueOnce(new Error('Network error'))
+        .mockResolvedValueOnce(successfulResponse);
+
+      await setupElement('http://example.com/icon.svg');
+      await expect
+        .element(page.getByText('atomic-icon component error'))
+        .toBeInTheDocument();
+
+      await setupElement('http://example.com/icon.svg');
+
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+      await expect.element(locators.svg).toBeInTheDocument();
+    });
+
+    it('should allow cache clearing and re-fetching', async () => {
+      parseAssetURLMock.mockReturnValue('/assets/icon.svg');
+      fetchMock.mockResolvedValue(successfulResponse);
+
+      await setupElement('assets://icon.svg');
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+
+      clearIconCache();
+
+      await setupElement('assets://icon.svg');
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+    });
   });
 });

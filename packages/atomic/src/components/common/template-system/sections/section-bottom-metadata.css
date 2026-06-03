@@ -1,0 +1,101 @@
+@reference './sections-utilities.css';
+
+@utility section-bottom-metadata-row-result-desktop {
+  &.density-comfortable {
+    margin-top: 1.25rem;
+    max-height: 4rem;
+  }
+
+  &.density-normal {
+    margin-top: 0.875rem;
+    max-height: 3.5rem;
+  }
+
+  &.density-compact {
+    margin-top: 0.6875rem;
+    max-height: 3.25rem;
+  }
+}
+@utility section-bottom-metadata-row-result-mobile {
+  &.density-comfortable {
+    margin-top: 0.75rem;
+    max-height: 4rem;
+  }
+  &.density-normal {
+    margin-top: 0.625rem;
+    max-height: 3.5rem;
+  }
+  &.density-compact {
+    margin-top: 0.4375rem;
+    max-height: 3.25rem;
+  }
+}
+
+@utility section-bottom-metadata-cell-result-desktop {
+  &.density-comfortable {
+    margin-top: 1.75rem;
+    max-height: 4rem;
+  }
+
+  &.density-normal {
+    margin-top: 1.375rem;
+    max-height: 3.5rem;
+  }
+
+  &.density-compact {
+    margin-top: 0.9375rem;
+    max-height: 3.25rem;
+  }
+}
+@utility section-bottom-metadata-cell-result-mobile {
+  max-height: 3rem;
+  &.density-comfortable {
+    margin-top: 1rem;
+  }
+
+  &.density-normal {
+    margin-top: 0.75rem;
+  }
+
+  &.density-compact {
+    margin-top: 0.5rem;
+  }
+}
+
+@utility section-bottom-metadata {
+  @apply section-base-overflow;
+  &.with-sections {
+    grid-area: bottom-metadata;
+    @apply text-neutral-dark;
+    @apply set-font-size-sm;
+
+    @media (width >= theme(--breakpoint-desktop)) {
+      &.display-list {
+        @apply section-bottom-metadata-row-result-desktop;
+      }
+      &.display-grid {
+        @apply section-bottom-metadata-cell-result-desktop;
+      }
+    }
+
+    @media not all and (width >= theme(--breakpoint-desktop)) {
+      &.display-list {
+        @apply section-bottom-metadata-row-result-mobile;
+      }
+      &.display-grid {
+        &.image-large {
+          @apply section-bottom-metadata-row-result-mobile;
+        }
+
+        &.image-small,
+        &.image-icon,
+        &.image-none {
+          @apply section-bottom-metadata-cell-result-mobile;
+        }
+      }
+    }
+    &.display-table {
+      @apply section-bottom-metadata-row-result-desktop;
+    }
+  }
+}

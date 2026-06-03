@@ -41,13 +41,6 @@ export interface SearchOnlyController {
   [SolutionType.search]: true;
 }
 
-export interface ListingOnlyController {
-  /**
-   * @internal
-   */
-  [SolutionType.listing]: true;
-}
-
 export interface RecommendationOnlyController {
   /**
    * @internal
@@ -71,6 +64,13 @@ export interface ListingAndStandaloneController {
    * @internal
    */
   [SolutionType.listing]: true;
+  /**
+   * @internal
+   */
+  [SolutionType.standalone]: true;
+}
+
+export interface StandaloneController {
   /**
    * @internal
    */

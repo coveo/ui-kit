@@ -8,13 +8,24 @@ import {
   HeadlessBundleNames,
   isHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-import {I18nUtils, getLastFocusableElement} from 'c/quanticUtils';
+import {
+  I18nUtils,
+  getLastFocusableElement,
+  unwrapLockerProxiedObject,
+} from 'c/quanticUtils';
 import {LightningElement, api, track} from 'lwc';
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").Quickview} Quickview */
 /** @typedef {import("coveo").QuickviewState} QuickviewState */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+
+/**
+ * @typedef {Object} ResultWithFolding
+ * @mixes Result
+ * @property {Result} parentResult
+ * @property {Result[]} childResults
+ */
 
 /**
  * The `QuanticResultQuickview` component renders a button which the end user can click to open a modal box containing certain information about a result.
@@ -33,9 +44,15 @@ export default class QuanticResultQuickview extends LightningElement {
   /**
    * The result to retrieve a quickview for.
    * @api
-   * @type {Result}
+   * @type {ResultWithFolding}
    */
-  @api result;
+  @api
+  get result() {
+    return this._result;
+  }
+  set result(result) {
+    this._result = unwrapLockerProxiedObject(result);
+  }
   /**
    * The maximum preview size to retrieve, in bytes. By default, the full preview is retrieved.
    * @api
@@ -77,6 +94,8 @@ export default class QuanticResultQuickview extends LightningElement {
 
   /** @type {Quickview} */
   quickview;
+  /** @type {ResultWithFolding} */
+  _result;
   /** @type {boolean} */
   isQuickviewOpen = false;
   /** @type {Function} */
@@ -173,10 +192,11 @@ export default class QuanticResultQuickview extends LightningElement {
       this.engine
     );
 
-    // Destructuring transforms the Proxy object created by Salesforce to a normal object so no unexpected behaviour will occur with the Headless library.
-    this.engine.dispatch(
-      pushRecentResult({...this.result, raw: {...this.result.raw}})
-    );
+    // Exclude parentResult and childResults to prevent Salesforce Proxy extensibility errors.
+    // These nested result objects remain proxied after spreading, causing 'isExtensible' trap violations when accessed by the Headless library.
+    // eslint-disable-next-line no-unused-vars
+    const {parentResult, childResults, ...result} = this.result;
+    this.engine.dispatch(pushRecentResult({...result, raw: {...result.raw}}));
   }
 
   closeQuickview() {

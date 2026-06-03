@@ -1,11 +1,11 @@
 import {type CommerceEngine, Selectors} from '@coveo/headless/commerce';
-import {describe, expect, test, vi} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import {createCommerceStore} from './store';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
 describe('CommerceStore', () => {
-  test('should set and unset loading flags correctly', () => {
+  it('should set and unset loading flags correctly', () => {
     const store = createCommerceStore('search');
     const loadingFlag = 'test-loading-flag';
 
@@ -18,7 +18,7 @@ describe('CommerceStore', () => {
     expect(store.state.loadingFlags).not.toContain(loadingFlag);
   });
 
-  test('should correctly identify mobile state', () => {
+  it('should correctly identify mobile state', () => {
     const store = createCommerceStore('search');
     const originalMatchMedia = window.matchMedia;
 
@@ -45,7 +45,7 @@ describe('CommerceStore', () => {
     window.matchMedia = originalMatchMedia;
   });
 
-  test('should return unique ID from engine based on type', () => {
+  it('should return unique ID from engine based on type', () => {
     const mockEngine = {
       state: {},
     } as unknown as CommerceEngine;

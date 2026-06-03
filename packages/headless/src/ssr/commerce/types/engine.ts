@@ -25,14 +25,14 @@ import type {
 } from './hydrate-static-state.js';
 
 export type {
+  Build,
+  BuildOptions,
+  FetchStaticState,
+  FetchStaticStateOptions,
   FromBuildResult,
   FromBuildResultOptions,
   HydrateStaticState,
   HydrateStaticStateOptions,
-  FetchStaticState,
-  FetchStaticStateOptions,
-  Build,
-  BuildOptions,
 };
 
 export interface EngineStaticState<
@@ -53,6 +53,9 @@ export type EngineDefinitionOptions<
   controllers?: TControllers;
 };
 
+/**
+ * @deprecated This type will be removed in the future. Use {@link CommerceEngineDefinition} instead.
+ */
 export interface EngineDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TEngineOptions,
@@ -83,6 +86,8 @@ export interface EngineDefinition<
     TSolutionType
   >;
   /**
+   * @deprecated This method is deprecated and will be removed in a future major version. Use the `fetchStaticState` method instead.
+   *
    * Builds an engine and its controllers from an engine definition.
    */
   build: Build<
@@ -94,6 +99,8 @@ export interface EngineDefinition<
   >;
 
   /**
+   * @deprecated This method will be removed in a future major version. Navigator context should be provided directly when fetching the static state.
+   *
    * Sets the navigator context provider.
    * This provider is essential for retrieving navigation-related data such as referrer, userAgent, location, and clientId, which are crucial for handling both server-side and client-side API requests effectively.
    *

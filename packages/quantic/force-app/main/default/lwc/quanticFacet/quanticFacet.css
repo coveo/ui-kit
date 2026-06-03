@@ -2,5 +2,5 @@
 
 .facet__search-results_more-matches{
   color: #8e959d;
-  font-size: 12px;
+  font-size: var(--slds-g-font-scale-neg-1, 12px);
 }

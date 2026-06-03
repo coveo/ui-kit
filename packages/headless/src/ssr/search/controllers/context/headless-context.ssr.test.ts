@@ -34,7 +34,7 @@ describe('define context', () => {
       initialState: props.initialState,
     });
 
-    expect(buildContextMock).toBeCalledWith(engine, props);
+    expect(buildContextMock).toHaveBeenCalledWith(engine, props);
   });
 
   it('should throw when props is undefined', () => {

@@ -6,6 +6,7 @@ import type {
 } from '../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../app/state-key.js';
 import {clearAllCoreFacets} from '../../../features/commerce/facets/core-facet/core-facet-actions.js';
+import {commerceCategoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/commerce/facets/facet-search-set/category/commerce-category-facet-search-set-slice.js';
 import {getFacetIdWithCommerceFieldSuggestionNamespace} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions.js';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice.js';
 import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice.js';
@@ -13,7 +14,6 @@ import {searchSerializer} from '../../../features/commerce/parameters/parameters
 import {updateQuery} from '../../../features/commerce/query/query-actions.js';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice.js';
 import {selectCategoryFacetSearchResult} from '../../../features/facets/facet-search-set/category/category-facet-search-actions.js';
-import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice.js';
 import type {
   CategoryFacetSearchSection,
   CommerceFacetSetSection,
@@ -55,8 +55,7 @@ export type CategoryFilterSuggestionsState = CoreCategoryFieldSuggestionsState &
  * @category CategoryFilterSuggestions
  */
 export interface CategoryFilterSuggestions
-  extends Controller,
-    FacetControllerType<'hierarchical'> {
+  extends Controller, FacetControllerType<'hierarchical'> {
   /**
    * Resets the query in the controller state and clears the category filter suggestions.
    */
@@ -98,7 +97,7 @@ export interface CategoryFilterSuggestions
    * updated query.
    *
    * For example, if this method is called with `jeans` as an argument, it will request values from the controller's
-   * field (e.g., `ec_category`) that would return results if selected when the search query is `jeans` (such as
+   * field (for example, `ec_category`) that would return results if selected when the search query is `jeans` (such as
    * `Clothing`, `Clothing;Pants`, and `Clothing;Shorts`).
    *
    * @param query - The search query to use as context to request the category filter suggestions. In a typical
@@ -199,9 +198,8 @@ export function buildCategoryFilterSuggestions(
     },
 
     get state() {
-      const {displayName, field, facetId} = facetForFieldSuggestionsSelector(
-        getState()
-      );
+      const {displayName, field, facetId} =
+        facetForFieldSuggestionsSelector(getState());
       return {
         displayName,
         field,

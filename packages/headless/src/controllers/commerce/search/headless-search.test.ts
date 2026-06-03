@@ -63,25 +63,71 @@ describe('headless search', () => {
 
     buildSearch(engine);
 
-    expect(buildSearchSubControllers).toHaveBeenCalledWith(engine, {
-      responseIdSelector,
-      fetchProductsActionCreator: SearchActions.executeSearch,
-      fetchMoreProductsActionCreator: SearchActions.fetchMoreProducts,
-      facetResponseSelector,
-      isFacetLoadingResponseSelector,
-      requestIdSelector,
-      serializer: searchSerializer,
-      parametersDefinition: searchParametersDefinition,
-      restoreActionCreator: restoreSearchParameters,
-      activeParametersSelector,
-      isLoadingSelector,
-      errorSelector,
-      pageSelector: pagePrincipalSelector,
-      perPageSelector: perPagePrincipalSelector,
-      totalEntriesSelector: totalEntriesPrincipalSelector,
-      numberOfProductsSelector,
-      enrichSummary: enrichedSummarySelector,
+    const call = buildSearchSubControllers.mock.calls[0];
+    expect(call[0]).toBe(engine);
+
+    const options = call[1];
+    expect(options.responseIdSelector).toBe(responseIdSelector);
+    expect(options.facetResponseSelector).toBe(facetResponseSelector);
+    expect(options.isFacetLoadingResponseSelector).toBe(
+      isFacetLoadingResponseSelector
+    );
+    expect(options.requestIdSelector).toBe(requestIdSelector);
+    expect(options.serializer).toBe(searchSerializer);
+    expect(options.parametersDefinition).toBe(searchParametersDefinition);
+    expect(options.restoreActionCreator).toBe(restoreSearchParameters);
+    expect(options.activeParametersSelector).toBe(activeParametersSelector);
+    expect(options.isLoadingSelector).toBe(isLoadingSelector);
+    expect(options.errorSelector).toBe(errorSelector);
+    expect(options.pageSelector).toBe(pagePrincipalSelector);
+    expect(options.perPageSelector).toBe(perPagePrincipalSelector);
+    expect(options.totalEntriesSelector).toBe(totalEntriesPrincipalSelector);
+    expect(options.numberOfProductsSelector).toBe(numberOfProductsSelector);
+    expect(options.enrichSummary).toBe(enrichedSummarySelector);
+
+    // Verify action creators are functions (wrapped with enableResults)
+    expect(typeof options.fetchProductsActionCreator).toBe('function');
+    expect(typeof options.fetchMoreProductsActionCreator).toBe('function');
+  });
+
+  it('creates closures for fetching products that capture default enableResults=false', () => {
+    const buildSearchSubControllers = vi.spyOn(
+      SubControllers,
+      'buildSearchSubControllers'
+    );
+    const executeSearchMock = vi.spyOn(SearchActions, 'executeSearch');
+    const fetchMoreProductsMock = vi.spyOn(SearchActions, 'fetchMoreProducts');
+
+    buildSearch(engine);
+
+    const callArgs = buildSearchSubControllers.mock.calls[0][1];
+    callArgs.fetchProductsActionCreator();
+    expect(executeSearchMock).toHaveBeenCalledWith({
+      enableResults: false,
     });
+
+    callArgs.fetchMoreProductsActionCreator();
+    expect(fetchMoreProductsMock).toHaveBeenCalledWith({enableResults: false});
+  });
+
+  it('creates closures for fetching products that capture enableResults=true', () => {
+    vi.clearAllMocks();
+
+    const buildSearchSubControllers = vi.spyOn(
+      SubControllers,
+      'buildSearchSubControllers'
+    );
+    const executeSearchMock = vi.spyOn(SearchActions, 'executeSearch');
+    const fetchMoreProductsMock = vi.spyOn(SearchActions, 'fetchMoreProducts');
+
+    buildSearch(engine, {enableResults: true});
+
+    const callArgs = buildSearchSubControllers.mock.calls[0][1];
+    callArgs.fetchProductsActionCreator();
+    expect(executeSearchMock).toHaveBeenCalledWith({enableResults: true});
+
+    callArgs.fetchMoreProductsActionCreator();
+    expect(fetchMoreProductsMock).toHaveBeenCalledWith({enableResults: true});
   });
 
   it('#promoteChildToParent dispatches #promoteChildToParent with the correct arguments', () => {
@@ -96,11 +142,22 @@ describe('headless search', () => {
     expect(promoteChildToParent).toHaveBeenCalledWith({child});
   });
 
-  it('executeFirstSearch dispatches #executeSearch', () => {
+  it('#executeFirstSearch dispatches #executeSearch with enableResults=false by default', () => {
     const executeSearch = vi.spyOn(SearchActions, 'executeSearch');
+    const searchController = buildSearch(engine);
+    searchController.executeFirstSearch();
 
-    search.executeFirstSearch();
+    expect(executeSearch).toHaveBeenCalledWith({enableResults: false});
+  });
 
-    expect(executeSearch).toHaveBeenCalled();
+  it('#executeFirstSearch dispatches #executeSearch with enableResults=true when specified', () => {
+    const executeSearch = vi.spyOn(SearchActions, 'executeSearch');
+    const searchWithResults = buildSearch(engine, {
+      enableResults: true,
+    });
+
+    searchWithResults.executeFirstSearch();
+
+    expect(executeSearch).toHaveBeenCalledWith({enableResults: true});
   });
 });

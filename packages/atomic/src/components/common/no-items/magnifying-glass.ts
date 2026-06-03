@@ -1,3 +1,4 @@
+import '@/src/components/common/atomic-icon/atomic-icon';
 import {html} from 'lit';
 import type {FunctionalComponentNoProps} from '@/src/utils/functional-component-utils';
 import MagnifyingGlassIcon from '../../../images/magnifying-glass.svg';

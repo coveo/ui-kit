@@ -36,10 +36,11 @@ import type {
 } from '../../recent-queries-list/headless-recent-queries-list.js';
 
 export type {
-  RecentQueriesListProps,
   RecentQueriesListInitialState,
   RecentQueriesListOptions,
+  RecentQueriesListProps,
 };
+
 const defaultRecentQueriesState: Required<RecentQueriesListInitialState> = {
   queries: [],
 };
@@ -101,7 +102,7 @@ export interface RecentQueriesState {
    */
   maxLength: number;
   /**
-   * Whether analytics & tracking are enabled.
+   * Whether analytics and tracking are enabled.
    * In the case where it is disabled, it is recommended not to save recent queries.
    */
   analyticsEnabled: boolean;

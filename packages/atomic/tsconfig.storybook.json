@@ -3,13 +3,12 @@
   "compilerOptions": {
     "emitDecoratorMetadata": true,
     "composite": true,
-    "jsxFactory": "h",
     "declaration": true
   },
   "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"],
   "include": [
-    "storybookUtils/**/*.ts",
-    "storybookUtils/**/*.tsx",
+    "storybook-utils/**/*.ts",
+    "storybook-utils/**/*.tsx",
     "src/**/*.d.ts",
     "src/**/*.stories.ts",
     "src/**/*.stories.js",

@@ -5,12 +5,12 @@ import type {
 
 export interface StaticFilterValueOptions {
   /**
-   * A human-readable caption for the expression (e.g., `Youtube`).
+   * A human-readable caption for the expression (for example, `Youtube`).
    */
   caption: string;
 
   /**
-   * The query filter expression to apply when the value is selected (e.g., `@filetype=="youtubevideo"`).
+   * The query filter expression to apply when the value is selected (for example, `@filetype=="youtubevideo"`).
    */
   expression: string;
 

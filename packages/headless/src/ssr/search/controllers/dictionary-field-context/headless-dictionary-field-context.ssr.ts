@@ -7,11 +7,10 @@ import type {ControllerDefinitionWithoutProps} from '../../../common/types/contr
 
 export * from '../../../../controllers/dictionary-field-context/headless-dictionary-field-context.js';
 
-export interface DictionaryFieldContextDefinition
-  extends ControllerDefinitionWithoutProps<
-    CoreEngine,
-    DictionaryFieldContext
-  > {}
+export interface DictionaryFieldContextDefinition extends ControllerDefinitionWithoutProps<
+  CoreEngine,
+  DictionaryFieldContext
+> {}
 
 /**
  * Defines a `DictionaryFieldContext` controller instance.

@@ -4,30 +4,35 @@ import {
   type ContextOptions,
   type ContextProps,
   type ContextState,
+  type CustomContext,
   type UserLocation,
   type View,
 } from '../../../../controllers/commerce/context/headless-context.js';
 import {MissingControllerProps} from '../../../common/errors.js';
 import type {UniversalControllerDefinitionWithProps} from '../../types/controller-definitions.js';
-import {createControllerWithKind, Kind} from '../../types/kind.js';
 
 export type {
   Context,
+  ContextOptions,
   ContextProps,
   ContextState,
-  View,
+  CustomContext,
   UserLocation,
-  ContextOptions,
+  View,
 };
 
-export interface ContextDefinition
-  extends UniversalControllerDefinitionWithProps<Context, ContextOptions> {}
+export type ContextDefinition = UniversalControllerDefinitionWithProps<
+  Context,
+  {initialState: ContextOptions}
+>;
 
 /**
  * Defines a `Context` controller instance.
  * @group Definers
  *
  * @returns The `Context` controller definition.
+ *
+ * Note: This controller is automatically included in all engine definitions. You do not need to add it manually to your engine definition configuration.
  */
 export function defineContext(): ContextDefinition {
   return {
@@ -35,12 +40,11 @@ export function defineContext(): ContextDefinition {
     search: true,
     standalone: true,
     recommendation: true,
-    buildWithProps: (engine, props) => {
+    buildWithProps: (engine, props: {initialState: ContextOptions}) => {
       if (props === undefined) {
-        throw new MissingControllerProps(Kind.Context);
+        throw new MissingControllerProps('Context');
       }
-      const controller = buildContext(engine, {options: props});
-      return createControllerWithKind(controller, Kind.Context);
+      return buildContext(engine, {options: props.initialState});
     },
   };
 }

@@ -1,46 +1,53 @@
 {
   "name": "@coveo/atomic-hosted-page",
+  "version": "1.2.44",
   "description": "Web Component used to inject a Coveo Hosted Search Page in the DOM.",
-  "version": "1.1.33",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/coveo/ui-kit.git",
     "directory": "packages/atomic-hosted-page"
   },
-  "type": "module",
-  "license": "Apache-2.0",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.js",
-  "es2015": "dist/esm/index.mjs",
-  "es2017": "dist/esm/index.mjs",
-  "types": "dist/types/components.d.ts",
-  "unpkg": "dist/atomic-page/atomic-hosted-page.esm.js",
   "files": [
     "dist/",
     "loader/",
     "docs/"
   ],
+  "type": "module",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.js",
+  "types": "dist/types/components.d.ts",
+  "unpkg": "dist/atomic-page/atomic-hosted-page.esm.js",
+  "es2015": "dist/esm/index.mjs",
+  "exports": {
+    ".": {
+      "types": "./dist/types/components.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs.js"
+    },
+    "./loader": {
+      "import": "./loader/index.js"
+    },
+    "./dist/*": "./dist/*"
+  },
   "scripts": {
-    "clean": "rimraf -rf dist/*",
-    "build": "rimraf -rf dist cdn && tsc --outdir dist && tsc --outdir cdn --project tsconfig.cdn.json && node ./scripts/esbuild.js",
+    "clean": "node ../../utils/ci/rm-rf.mjs dist/*",
+    "build": "node ../../utils/ci/rm-rf.mjs dist cdn && tsc --outdir dist && tsc --outdir cdn --project tsconfig.cdn.json && node ./scripts/esbuild.js",
     "start": "node ./scripts/start.js",
-    "e2e": "playwright test",
-    "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
-    "release:phase1": "npm run-script -w=@coveo/ci bump",
-    "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod"
+    "e2e": "playwright test"
   },
   "dependencies": {
-    "@coveo/bueno": "1.0.24",
-    "@coveo/headless": "3.27.7",
-    "lit": "3.3.1"
+    "@coveo/bueno": "workspace:*",
+    "@coveo/headless": "workspace:*",
+    "lit": "3.3.3"
   },
   "devDependencies": {
-    "@playwright/test": "1.54.1",
-    "@types/node": "22.16.5",
-    "rimraf": "3.0.2",
-    "vite": "7.0.6"
+    "@playwright/test": "catalog:",
+    "@types/node": "catalog:",
+    "local-web-server": "catalog:",
+    "vite": "catalog:"
   },
   "engines": {
-    "node": "^20.9.0 || ^22.11.0"
-  }
+    "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
+  },
+  "es2017": "dist/esm/index.mjs"
 }

@@ -14,16 +14,6 @@ test.describe('atomic-commerce-product-list', () => {
     });
 
     test.describe('when the query returns products', () => {
-      test('should be a11y compliant', async ({
-        productList,
-        makeAxeBuilder,
-      }) => {
-        await productList.load({story: 'default'});
-
-        const accessibilityResults = await makeAxeBuilder().analyze();
-        expect(accessibilityResults.violations.length).toEqual(0);
-      });
-
       test('should render the products when there is no custom template', async ({
         productList,
       }) => {
@@ -65,16 +55,6 @@ test.describe('atomic-commerce-product-list', () => {
     });
 
     test.describe('when the query returns products', () => {
-      test('should be a11y compliant', async ({
-        productList,
-        makeAxeBuilder,
-      }) => {
-        await productList.load({story: 'default'});
-
-        const accessibilityResults = await makeAxeBuilder().analyze();
-        expect(accessibilityResults.violations.length).toEqual(0);
-      });
-
       test('should render the products when there is no custom template', async ({
         productList,
       }) => {
@@ -118,11 +98,6 @@ test.describe('atomic-commerce-product-list', () => {
     test.describe('when the query returns products', () => {
       test.beforeEach(async ({productList}) => {
         await productList.load({story: 'table-display'});
-      });
-
-      test('should be a11y compliant', async ({makeAxeBuilder}) => {
-        const accessibilityResults = await makeAxeBuilder().analyze();
-        expect(accessibilityResults.violations.length).toEqual(0);
       });
 
       test('should render the products', async ({productList}) => {

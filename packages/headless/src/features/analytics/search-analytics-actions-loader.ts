@@ -91,22 +91,22 @@ import type {CustomAction, LegacySearchAction} from './analytics-utils.js';
 
 export type {
   LogCategoryFacetBreadcrumbActionCreatorPayload,
-  LogFacetBreadcrumbActionCreatorPayload,
-  LogFacetExcludeActionCreatorPayload,
-  LogFacetUnexcludeActionCreatorPayload,
-  LogFacetDeselectActionCreatorPayload,
-  LogFacetSelectActionCreatorPayload,
-  LogFacetUpdateSortActionCreatorPayload,
   LogDateFacetBreadcrumbActionCreatorPayload,
+  LogFacetBreadcrumbActionCreatorPayload,
+  LogFacetDeselectActionCreatorPayload,
+  LogFacetExcludeActionCreatorPayload,
+  LogFacetSelectActionCreatorPayload,
+  LogFacetUnexcludeActionCreatorPayload,
+  LogFacetUpdateSortActionCreatorPayload,
   LogNumericFacetBreadcrumbActionCreatorPayload,
   LogQuerySuggestionClickActionCreatorPayload,
-  QuestionAnsweringUniqueIdentifierActionCreatorPayload,
-  QuestionAnsweringInlineLinkActionCreatorPayload,
-  LogStaticFilterToggleValueActionCreatorPayload,
   LogStaticFilterClearAllActionCreatorPayload,
-  StaticFilterValueMetadata,
-  SmartSnippetFeedback,
+  LogStaticFilterToggleValueActionCreatorPayload,
   LogUndoTriggerQueryActionCreatorPayload,
+  QuestionAnsweringInlineLinkActionCreatorPayload,
+  QuestionAnsweringUniqueIdentifierActionCreatorPayload,
+  SmartSnippetFeedback,
+  StaticFilterValueMetadata,
 };
 
 /**
@@ -153,7 +153,7 @@ export interface SearchAnalyticsActionCreators {
   logInterfaceChange(): LegacySearchAction;
 
   /**
-   * The event to log when a user triggers a search by clicking on a did-you-mean suggestion.
+   * The event to log when a user triggers a search by clicking a did-you-mean suggestion.
    *
    * @returns A dispatchable action.
    */

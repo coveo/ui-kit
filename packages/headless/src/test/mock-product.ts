@@ -3,6 +3,7 @@ import type {
   ChildProduct,
   Product,
 } from '../api/commerce/common/product.js';
+import {ResultType} from '../api/commerce/common/result.js';
 
 export function buildMockChildProduct(
   config: Partial<ChildProduct> = {}
@@ -27,6 +28,7 @@ export function buildMockChildProduct(
     ec_rating: 0,
     ec_shortdesc: '',
     ec_thumbnails: [],
+    resultType: ResultType.CHILD_PRODUCT,
     ...config,
   };
 }
@@ -37,6 +39,7 @@ export function buildMockBaseProduct(
   const {children, totalNumberOfChildren, ...childProductConfig} = config;
   return {
     ...buildMockChildProduct(childProductConfig),
+    resultType: ResultType.PRODUCT,
     children: children ?? [],
     totalNumberOfChildren: totalNumberOfChildren ?? 0,
   };

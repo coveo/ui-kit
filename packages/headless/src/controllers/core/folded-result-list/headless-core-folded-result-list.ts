@@ -81,20 +81,20 @@ export interface CoreFoldedResultListProps {
    */
   loadCollectionActionCreator: (
     collectionId: CollectionId
-    // biome-ignore lint/suspicious/noExplicitAny: third-party API requires 'any'
+    // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- third-party API requires 'any'
   ) => AsyncThunkAction<any, CollectionId, any>;
   /**
    * The action creator to build the `fetchMoreResults` action.
    */
 
-  // biome-ignore lint/suspicious/noExplicitAny: third-party API requires 'any'
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- third-party API requires 'any'
   fetchMoreResultsActionCreator: () => AsyncThunkAction<unknown, void, any>;
 }
 
 /**
  * The `FoldedResultList` headless controller re-organizes results into hierarchical collections (a.k.a. threads).
  *
- * Example: [folded-result-list.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/folded-result-list/folded-result-list.fn.tsx)
+ * Example: [folded-result-list.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/folded-result-list/folded-result-list.fn.tsx)
  *
  * @group Controllers
  * @category FoldedResultList

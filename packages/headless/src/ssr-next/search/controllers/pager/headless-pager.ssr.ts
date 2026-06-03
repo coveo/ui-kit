@@ -4,12 +4,14 @@ import {
   type Pager,
   type PagerProps,
 } from '../../../../controllers/pager/headless-pager.js';
-import type {ControllerDefinitionWithoutProps} from '../../../common/types/controllers.js';
+import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/pager/headless-pager.js';
 
-export interface PagerDefinition
-  extends ControllerDefinitionWithoutProps<SearchEngine, Pager> {}
+export interface PagerDefinition extends ControllerDefinitionWithoutProps<
+  SearchEngine,
+  Pager
+> {}
 
 /**
  * Defines a `Pager` controller instance.

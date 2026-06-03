@@ -9,8 +9,8 @@ import {
 import {commerceTriggersReducer as triggers} from './triggers-slice.js';
 
 export type {
-  UpdateIgnoreQueryTriggerPayload,
   ApplyQueryTriggerModificationPayload,
+  UpdateIgnoreQueryTriggerPayload,
   updateIgnoreQueryTrigger,
 };
 

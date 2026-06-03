@@ -1,4 +1,5 @@
 import {enableDebug} from '../../features/debug/debug-actions.js';
+import * as ConfigurationActions from '../../features/configuration/configuration-actions.js';
 import {setSearchHub} from '../../features/search-hub/search-hub-actions.js';
 import {
   buildSearchEngine,
@@ -6,6 +7,11 @@ import {
   type SearchEngineOptions,
 } from './search-engine.js';
 import {getSampleSearchEngineConfiguration} from './search-engine-configuration.js';
+
+const updateSearchConfigurationSpy = vi.spyOn(
+  ConfigurationActions,
+  'updateSearchConfiguration'
+);
 
 describe('searchEngine', () => {
   let engine: SearchEngine;
@@ -183,6 +189,35 @@ describe('searchEngine', () => {
 
       it('sets the apiBaseUrl correctly', () => {
         expect(engine.state.configuration.search.apiBaseUrl).toBe(proxyBaseUrl);
+      });
+
+      it('dispatches only serializable search configuration fields', () => {
+        options.configuration.search = {
+          pipeline,
+          searchHub,
+          locale,
+          timezone,
+          proxyBaseUrl,
+          authenticationProviders: ['provider-a'],
+          preprocessSearchResponseMiddleware: (response) => response,
+          preprocessFacetSearchResponseMiddleware: (response) => response,
+          preprocessQuerySuggestResponseMiddleware: (response) => response,
+        };
+
+        updateSearchConfigurationSpy.mockClear();
+        initEngine();
+
+        expect(updateSearchConfigurationSpy).toHaveBeenCalledTimes(1);
+        const [payload] = updateSearchConfigurationSpy.mock.calls[0];
+
+        expect(payload).toEqual({
+          pipeline,
+          searchHub,
+          locale,
+          timezone,
+          proxyBaseUrl,
+          authenticationProviders: ['provider-a'],
+        });
       });
     });
 

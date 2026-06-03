@@ -21,7 +21,7 @@ import {staticFilterSetReducer as staticFilterSet} from '../../../../features/st
 import {tabSetReducer as tabSet} from '../../../../features/tab-set/tab-set-slice.js';
 import {loadReducerError} from '../../../../utils/errors.js';
 import {MissingControllerProps} from '../../../common/errors.js';
-import type {ControllerDefinitionWithProps} from '../../../common/types/controllers.js';
+import type {ControllerDefinitionWithProps} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/search-parameter-manager/headless-search-parameter-manager.js';
 
@@ -29,12 +29,11 @@ export interface SearchParameterManagerBuildProps {
   initialState: SearchParameterManagerInitialState;
 }
 
-export interface SearchParameterManagerDefinition
-  extends ControllerDefinitionWithProps<
-    SearchEngine,
-    SearchParameterManager,
-    SearchParameterManagerBuildProps
-  > {}
+export interface SearchParameterManagerDefinition extends ControllerDefinitionWithProps<
+  SearchEngine,
+  SearchParameterManager,
+  SearchParameterManagerBuildProps
+> {}
 
 /**
  * Defines a `SearchParameterManager` controller instance.
@@ -44,6 +43,7 @@ export interface SearchParameterManagerDefinition
  * */
 export function defineSearchParameterManager(): SearchParameterManagerDefinition {
   return {
+    // TODO: KIT-5154 - Apply commerce pattern
     buildWithProps: (engine, props) => {
       if (props === undefined) {
         throw new MissingControllerProps('SearchParameterManager');

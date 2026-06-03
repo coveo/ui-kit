@@ -1,13 +1,11 @@
 import {test as base} from '@playwright/test';
-import {type AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
 import {AtomicCommerceRefineTogglePageObject} from './page-object';
 
 type Fixtures = {
   commerceRefineToggle: AtomicCommerceRefineTogglePageObject;
 };
 
-export const test = base.extend<Fixtures & AxeFixture>({
-  makeAxeBuilder,
+export const test = base.extend<Fixtures>({
   commerceRefineToggle: async ({page}, use) => {
     await use(new AtomicCommerceRefineTogglePageObject(page));
   },

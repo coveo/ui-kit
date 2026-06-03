@@ -5,7 +5,6 @@ import {
   renderFunctionFixture,
 } from '@/vitest-utils/testing-helpers/fixture';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
-import type {AnyItem} from '../interface/item';
 import {
   renderTableData,
   renderTableLayout,
@@ -14,6 +13,7 @@ import {
   type TableLayoutProps,
   type TableRowProps,
 } from './table-layout';
+import type {AnyItem} from './unfolded-item';
 
 describe('renderTableLayout', () => {
   const tableLayoutFixture = async (
@@ -28,6 +28,7 @@ describe('renderTableLayout', () => {
           templateContentForFirstItem: document.createDocumentFragment(),
           host: document.createElement('div'),
           listClasses: '',
+          label: 'Test table label',
           logger: {
             error: vi.fn(),
           },
@@ -57,6 +58,12 @@ describe('renderTableLayout', () => {
     const tableLayout = await tableLayoutFixture();
 
     expect(tableLayout.part.value).toBe('result-table');
+  });
+
+  it('should render the #label prop as the aria-label attribute of the table', async () => {
+    const tableLayout = await tableLayoutFixture({label: 'My custom label'});
+
+    expect(tableLayout.getAttribute('aria-label')).toBe('My custom label');
   });
 
   it('should render a thead element under the table element', async () => {
@@ -465,6 +472,51 @@ describe('renderTableData', () => {
       expect(renderItem).toHaveBeenCalledTimes(2);
       expect(renderItem).toHaveBeenNthCalledWith(1, tableElement1);
       expect(renderItem).toHaveBeenNthCalledWith(2, tableElement2);
+    });
+
+    describe('when #firstItem and itemRenderingFunction are undefined', () => {
+      it('should use templateContentForFirstItem', async () => {
+        const renderItem = vi.fn();
+
+        await tableDataFixture({
+          itemRenderingFunction: undefined,
+          firstItem: undefined,
+          templateContentForFirstItem,
+          renderItem,
+        });
+
+        const tableElement1 = document.createElement('atomic-table-element');
+        tableElement1.setAttribute('label', 'Test Label 1');
+        const tableElement2 = document.createElement('atomic-table-element');
+        tableElement2.setAttribute('label', 'Test Label 2');
+
+        expect(renderItem).toHaveBeenCalledTimes(2);
+        expect(renderItem).toHaveBeenNthCalledWith(1, tableElement1);
+        expect(renderItem).toHaveBeenNthCalledWith(2, tableElement2);
+      });
+    });
+
+    describe('when #templateContentForFirstItem is null', () => {
+      it('should not render any td elements', async () => {
+        const tableData = await tableDataFixture({
+          templateContentForFirstItem: null as unknown as DocumentFragment,
+        });
+
+        const tdElements = tableData.querySelectorAll('td');
+
+        expect(tdElements.length).toBe(0);
+      });
+
+      it('should not call #renderItem', async () => {
+        const renderItem = vi.fn();
+
+        await tableDataFixture({
+          templateContentForFirstItem: null as unknown as DocumentFragment,
+          renderItem,
+        });
+
+        expect(renderItem).not.toHaveBeenCalled();
+      });
     });
   });
 });

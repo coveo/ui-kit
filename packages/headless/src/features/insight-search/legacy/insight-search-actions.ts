@@ -16,7 +16,7 @@ import {AsyncInsightSearchThunkProcessor} from './insight-search-actions-thunk-p
 
 export async function legacyExecuteSearch(
   state: StateNeededByExecuteSearch,
-  // biome-ignore lint/suspicious/noExplicitAny: <>
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
   config: any,
   analyticsAction: InsightAction
 ) {
@@ -48,7 +48,7 @@ export async function legacyExecuteSearch(
 
 export async function legacyFetchPage(
   state: StateNeededByExecuteSearch,
-  // biome-ignore lint/suspicious/noExplicitAny: <>
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
   config: any,
   analyticsAction: InsightAction
 ) {
@@ -80,7 +80,7 @@ export async function legacyFetchPage(
 
 export async function legacyFetchMoreResults(
   state: StateNeededByExecuteSearch,
-  // biome-ignore lint/suspicious/noExplicitAny: <>
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
   config: any
 ) {
   const processor = new AsyncInsightSearchThunkProcessor<
@@ -109,7 +109,7 @@ export async function legacyFetchMoreResults(
 
 export async function legacyFetchFacetValues(
   state: StateNeededByExecuteSearch,
-  // biome-ignore lint/suspicious/noExplicitAny: <>
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
   config: any,
   analyticsAction: InsightAction
 ) {

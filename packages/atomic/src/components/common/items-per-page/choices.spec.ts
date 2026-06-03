@@ -1,5 +1,5 @@
-import {userEvent} from '@storybook/test';
 import {html} from 'lit';
+import {userEvent} from 'storybook/test';
 import {describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {renderChoices} from './choices';

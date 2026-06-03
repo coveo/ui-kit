@@ -1,41 +1,53 @@
-import type {Meta, StoryObj} from '@storybook/web-components';
+import type {Meta, StoryObj} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import type {AtomicSearchInterface} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
+import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import '@/src/components/search/atomic-external/atomic-external.js';
+import '@/src/components/search/atomic-facet/atomic-facet.js';
+import '@/src/components/search/atomic-format-currency/atomic-format-currency.js';
+import '@/src/components/search/atomic-numeric-facet/atomic-numeric-facet.js';
+import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
+import '@/src/components/search/atomic-result-list/atomic-result-list.js';
+import '@/src/components/search/atomic-search-box/atomic-search-box.js';
+import '@/src/components/search/atomic-search-interface/atomic-search-interface.js';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 
-const meta: Meta = {
-  component: 'atomic-external',
-  title: 'Atomic/Atomic External',
-  id: 'atomic-external',
-  render: () => html`
-    <style>
-      .wrapper {
-        display: flex;
-      }
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-external',
+  {excludeCategories: ['methods']}
+);
 
-      .wrapper > div {
-        padding: 3rem;
-      }
+const searchApiHarness = new MockSearchApi();
 
-      .wrapper > div * {
-        margin-bottom: 2rem;
-      }
+const externalComponentDecorator = (story: () => unknown) => html`
+  <style>
+    .wrapper {
+      display: flex;
+    }
 
-      h1 {
-        font-size: 1rem;
-      }
-    </style>
+    .wrapper > div {
+      padding: 3rem;
+    }
+
+    .wrapper > div * {
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      font-size: 1rem;
+    }
+  </style>
+  <div id="code-root">
     <div class="wrapper">
       <div>
         <h1>External components of interface #2</h1>
-        <atomic-external selector="#interface-2">
-          <atomic-search-box></atomic-search-box>
-          <atomic-query-summary></atomic-query-summary>
-          <atomic-facet field="author" label="Author"></atomic-facet>
-        </atomic-external>
+        ${story()}
       </div>
       <div>
         <h1>Interface #1, not linked to URL</h1>
         <atomic-search-interface
-          id="interface-1"
+          data-interface-id="interface-1"
           pipeline="UI_KIT_E2E"
           search-hub="UI_KIT_E2E"
           reflect-state-in-url="false"
@@ -54,47 +66,90 @@ const meta: Meta = {
       </div>
       <div>
         <h1>Interface #2, linked to URL</h1>
-        <atomic-search-interface id="interface-2">
+        <atomic-search-interface data-interface-id="interface-2">
           <atomic-query-summary></atomic-query-summary>
           <atomic-result-list></atomic-result-list>
         </atomic-search-interface>
       </div>
     </div>
-  `,
-  play: async () => {
+  </div>
+`;
+
+const meta: Meta = {
+  component: 'atomic-external',
+  title: 'Search/External',
+  id: 'atomic-external',
+  render: (args) => template(args),
+  decorators: [externalComponentDecorator],
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+    msw: {
+      handlers: [...searchApiHarness.handlers],
+    },
+  },
+  argTypes: {
+    ...argTypes,
+  },
+  args: {
+    ...args,
+    selector: '[data-interface-id="interface-2"]',
+    'default-slot': `
+      <atomic-search-box></atomic-search-box>
+      <atomic-query-summary></atomic-query-summary>
+      <atomic-facet field="author" label="Author"></atomic-facet>
+    `,
+  },
+
+  play: async (context) => {
     await customElements.whenDefined('atomic-search-interface');
 
-    const searchInterface1 = document.querySelector(
-      '#interface-1'
-    ) as HTMLAtomicSearchInterfaceElement;
-    const searchInterface2 = document.querySelector(
-      '#interface-2'
-    ) as HTMLAtomicSearchInterfaceElement;
+    const searchInterfaces1 = context.canvasElement.querySelectorAll(
+      "[data-interface-id='interface-1']"
+    ) as NodeListOf<AtomicSearchInterface>;
+    const searchInterfaces2 = context.canvasElement.querySelectorAll(
+      "[data-interface-id='interface-2']"
+    ) as NodeListOf<AtomicSearchInterface>;
 
-    await Promise.all([
-      searchInterface1.initialize({
-        accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
-        organizationId: 'electronicscoveodemocomo0n2fu8v',
-        analytics: {
-          analyticsMode: 'legacy',
-        },
-      }),
-      searchInterface2.initialize({
-        accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-        organizationId: 'searchuisamples',
-        analytics: {
-          analyticsMode: 'legacy',
-        },
-      }),
-    ]);
+    const initPromises: Promise<void>[] = [];
 
-    searchInterface1.executeFirstSearch();
-    searchInterface2.executeFirstSearch();
+    searchInterfaces1.forEach((searchInterface1) => {
+      initPromises.push(
+        searchInterface1.initialize({
+          accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
+          organizationId: 'electronicscoveodemocomo0n2fu8v',
+          analytics: {
+            analyticsMode: 'legacy',
+          },
+        })
+      );
+    });
+
+    searchInterfaces2.forEach((searchInterface2) => {
+      initPromises.push(
+        searchInterface2.initialize({
+          accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+          organizationId: 'searchuisamples',
+          analytics: {
+            analyticsMode: 'legacy',
+          },
+        })
+      );
+    });
+
+    await Promise.all(initPromises);
+
+    searchInterfaces1.forEach((searchInterface1) => {
+      searchInterface1.executeFirstSearch();
+    });
+    searchInterfaces2.forEach((searchInterface2) => {
+      searchInterface2.executeFirstSearch();
+    });
   },
 };
 
 export default meta;
 
-export const Default: StoryObj = {
-  name: 'atomic-external',
-};
+export const Default: StoryObj = {};

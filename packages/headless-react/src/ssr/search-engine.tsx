@@ -22,6 +22,7 @@ export type ReactSearchEngineDefinition<
   TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>,
 > = ReactEngineDefinition<SearchEngine, TControllers, SearchEngineOptions>;
 
+// TODO: remove hack: KIT-5009
 // Wrapper to workaround the limitation that `createContext()` cannot be called directly during SSR in next.js
 function createSingletonContext<
   TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>,

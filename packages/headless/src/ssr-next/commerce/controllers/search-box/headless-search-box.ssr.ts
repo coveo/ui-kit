@@ -12,14 +12,14 @@ import type {SearchOnlyControllerDefinitionWithoutProps} from '../../types/contr
 export type {
   CoreSearchBox,
   SearchBox,
+  SearchBoxOptions,
   SearchBoxProps,
   SearchBoxState,
-  SearchBoxOptions,
   Suggestion,
 };
 
-export interface SearchBoxDefinition
-  extends SearchOnlyControllerDefinitionWithoutProps<SearchBox> {}
+export type SearchBoxDefinition =
+  SearchOnlyControllerDefinitionWithoutProps<SearchBox>;
 
 /**
  * Defines a `SearchBox` controller instance.

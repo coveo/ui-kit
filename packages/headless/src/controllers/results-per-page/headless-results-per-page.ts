@@ -21,8 +21,8 @@ import {
 
 export type {
   ResultsPerPage,
-  ResultsPerPageProps,
   ResultsPerPageInitialState,
+  ResultsPerPageProps,
   ResultsPerPageState,
 };
 

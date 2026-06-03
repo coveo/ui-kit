@@ -13,11 +13,11 @@ import {
 
 export type {
   Context,
-  ContextState,
-  ContextPayload,
-  ContextValue,
   ContextInitialState,
+  ContextPayload,
   ContextProps,
+  ContextState,
+  ContextValue,
 };
 
 /**

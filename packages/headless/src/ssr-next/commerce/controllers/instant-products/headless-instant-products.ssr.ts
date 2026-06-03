@@ -8,14 +8,14 @@ import {
 import type {NonRecommendationControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
 
 export type {
-  InstantProductsOptions,
-  InstantProductsState,
   InstantProducts,
+  InstantProductsOptions,
   InstantProductsProps,
+  InstantProductsState,
 };
 
-export interface InstantProductsDefinition
-  extends NonRecommendationControllerDefinitionWithoutProps<InstantProducts> {}
+export type InstantProductsDefinition =
+  NonRecommendationControllerDefinitionWithoutProps<InstantProducts>;
 
 /**
  * Defines the `InstantProducts` controller for the purpose of server-side rendering.

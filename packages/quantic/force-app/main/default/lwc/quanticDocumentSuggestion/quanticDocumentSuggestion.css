@@ -1,5 +1,5 @@
 .excerpt {
-  font-size: 14px;
+  font-size: var(--slds-g-font-scale-1, 14px);
 }
 .loading-holder {
   position: relative;

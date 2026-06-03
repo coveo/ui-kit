@@ -1,9 +1,31 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
 import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product-template-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
+import '@/src/components/commerce/atomic-product-numeric-field-value/atomic-product-numeric-field-value.js';
+
+const commerceApiHarness = new MockCommerceApi();
+
+// Limit to 1 product with no children to avoid strict mode violations in e2e tests
+commerceApiHarness.searchEndpoint.mock((response) => ({
+  ...response,
+  products: [
+    {
+      ...response.products[0],
+      children: [],
+      totalNumberOfChildren: 0,
+    },
+  ],
+  pagination: {
+    ...response.pagination,
+    totalCount: 1,
+    perPage: 1,
+    totalPages: 1,
+  },
+}));
 
 const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
   engineConfig: {
@@ -14,24 +36,45 @@ const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
       return request;
     },
   },
+  includeCodeRoot: false,
 });
-const {decorator: commerceProductListDecorator} = wrapInCommerceProductList();
+const {decorator: commerceProductListDecorator} = wrapInCommerceProductList(
+  'list',
+  false
+);
 const {decorator: productTemplateDecorator} = wrapInProductTemplate();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-product-numeric-field-value',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-product-numeric-field-value',
-  title: 'Commerce/atomic-product-numeric-field-value',
+  title: 'Commerce/Product Numeric Field Value',
   id: 'atomic-product-numeric-field-value',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [
     productTemplateDecorator,
     commerceProductListDecorator,
     commerceInterfaceDecorator,
   ],
-  parameters,
+  parameters: {
+    ...parameters,
+    msw: {handlers: [...commerceApiHarness.handlers]},
+    chromatic: {disableSnapshot: true},
+    actions: {
+      handles: events,
+    },
+  },
+  argTypes,
+
   play,
   args: {
-    'attributes-field': 'ec_rating',
+    ...args,
+    field: 'ec_rating',
+  },
+  beforeEach: () => {
+    commerceApiHarness.clearAll();
   },
 };
 

@@ -1,0 +1,145 @@
+@reference './sections-utilities.css';
+
+@utility section-visual-row-result-desktop {
+  margin-right: 1rem;
+  &.density-comfortable {
+    margin-right: 1.5rem;
+  }
+
+  &.image-large {
+    &.density-compact {
+      width: 10rem;
+      height: 10rem;
+    }
+
+    &.density-comfortable,
+    &.density-normal {
+      width: 20.375rem;
+      height: 20.375rem;
+    }
+  }
+
+  &.image-small {
+    width: 10rem;
+    height: 10rem;
+  }
+}
+
+@utility section-visual-row-result-mobile {
+  margin-right: 1rem;
+
+  &.image-large {
+    @apply aspect-square-[7.25rem];
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 1rem;
+  }
+
+  &.image-small {
+    width: 24vw;
+    height: 24vw;
+    margin-bottom: 1rem;
+  }
+
+  &.image-icon {
+    margin-bottom: 0;
+  }
+}
+
+@utility section-visual-cell-result-desktop {
+  margin-bottom: 0.5rem;
+
+  &.image-large,
+  &.image-small {
+    &.density-comfortable {
+      margin: 0 auto 2rem auto;
+    }
+    &.density-normal {
+      margin: 0 auto 1.5rem auto;
+    }
+    &.density-compact {
+      margin: 0 auto 1rem auto;
+    }
+
+    width: 100%;
+  }
+
+  &.image-large {
+    @apply aspect-square-[19.75rem];
+  }
+
+  &.image-small {
+    @apply aspect-square-[14rem];
+  }
+}
+
+@utility section-visual-cell-result-mobile {
+  &.image-large,
+  &.image-small {
+    &.density-comfortable {
+      margin-bottom: 1rem;
+    }
+    &.density-normal {
+      margin-bottom: 0.75rem;
+    }
+    &.density-compact {
+      margin-bottom: 0.5rem;
+    }
+
+    width: 100%;
+  }
+
+  &.image-small {
+    @apply aspect-square-[9rem];
+
+    width: 10.25rem;
+    height: 10.25rem;
+  }
+}
+
+@utility section-visual {
+  @apply section-base-overflow;
+  &.with-sections {
+    grid-area: visual;
+
+    &.image-icon {
+      @apply rounded-sm;
+      width: 2rem;
+      height: 2rem;
+    }
+
+    &.image-none {
+      display: none;
+    }
+
+    @media (width >= theme(--breakpoint-desktop)) {
+      &.display-list {
+        @apply section-visual-row-result-desktop;
+      }
+
+      &.display-grid {
+        @apply section-visual-cell-result-desktop;
+      }
+    }
+
+    @media not all and (width >= theme(--breakpoint-desktop)) {
+      &.display-list {
+        @apply section-visual-row-result-mobile;
+      }
+      &.display-grid {
+        &.image-large {
+          @apply section-visual-row-result-mobile;
+        }
+
+        &.image-small,
+        &.image-icon,
+        &.image-none {
+          @apply section-visual-cell-result-mobile;
+        }
+      }
+    }
+    &.display-table {
+      @apply section-visual-row-result-desktop;
+    }
+  }
+}

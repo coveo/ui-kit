@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/suspicious/noTemplateCurlyInString: <> */
+/* oxlint-disable no-template-curly-in-string -- <> */
 import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,

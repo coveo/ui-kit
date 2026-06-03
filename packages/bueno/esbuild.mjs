@@ -1,3 +1,6 @@
+// ⚠️  CDN OUTPUT: This build outputs to "cdn/". If you change this path,
+// you MUST also update the corresponding "source" field in ui-kit-cd
+// (.deployment.config/{commit,dev,prd}.json) and deploy-local-cdn.mjs.
 import {umdWrapper} from 'esbuild-plugin-umd-wrapper';
 import {build} from '../../scripts/esbuild/build.mjs';
 import {apacheLicense} from '../../scripts/license/apache.mjs';
@@ -40,6 +43,7 @@ function browserEsm() {
   return build({
     ...base,
     platform: 'browser',
+    // ⚠️  Changing this filename affects CDN pointer files in ui-kit-cd.
     outfile: 'cdn/bueno.esm.js',
     format: 'esm',
     watch: devMode,

@@ -1,7 +1,7 @@
-import {userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {createRef} from 'lit/directives/ref.js';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
+import {userEvent} from 'vitest/browser';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {renderSearchBoxTextArea} from './search-text-area';
@@ -155,6 +155,6 @@ describe('#renderSearchBoxTextArea', () => {
       textarea!.value = '';
     }
     await userEvent.click(clearButton!);
-    expect(expander!).toHaveAttribute('data-replicated-value', '');
+    expect(expander!.getAttribute('data-replicated-value')).toBeFalsy();
   });
 });
