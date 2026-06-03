@@ -3,6 +3,7 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {testCheckboxA11y} from '@/storybook-utils/a11y/checkbox.js';
+import {testDisclosureA11y} from '@/storybook-utils/a11y/disclosure.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
@@ -146,5 +147,19 @@ export const A11yCheckbox: Story = {
   play: async (context) => {
     await play(context);
     await testCheckboxA11y(context);
+  },
+};
+
+export const A11yDisclosure: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  args: {
+    field: 'objecttype',
+  },
+  decorators: [facetDecorator],
+  play: async (context) => {
+    await play(context);
+    await testDisclosureA11y(context, {
+      trigger: {expanded: true},
+    });
   },
 };

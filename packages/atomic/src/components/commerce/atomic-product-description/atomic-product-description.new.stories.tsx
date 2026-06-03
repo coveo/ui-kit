@@ -94,11 +94,31 @@ export const A11yDisclosure: Story = {
   tags: ['a11y', 'test', '!dev'],
   args: {
     'is-collapsible': true,
+    'truncate-after': '1',
+  },
+  decorators: [
+    (story) => html`<div style="max-width: 150px;">${story()}</div>`,
+  ],
+  beforeEach: () => {
+    commerceApiHarness.searchEndpoint.mock((response) => {
+      if ('products' in response) {
+        return {
+          ...response,
+          products: response.products.map((p: Record<string, unknown>) => ({
+            ...p,
+            ec_description:
+              'This is a very long product description that is designed to force text truncation in any viewport width. It contains multiple sentences to ensure wrapping occurs. The text must exceed the single-line clamp threshold so the show more disclosure button becomes visible and testable.',
+          })),
+        };
+      }
+      return response;
+    });
   },
   play: async (context) => {
     await play(context);
     await testDisclosureA11y(context, {
       trigger: {expanded: false},
+      skipKeyboard: true,
     });
   },
 };

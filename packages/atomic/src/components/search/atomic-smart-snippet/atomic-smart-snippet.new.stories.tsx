@@ -1,6 +1,7 @@
 import type {Result} from '@coveo/headless';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {html} from 'lit';
 import {testDisclosureA11y} from '@/storybook-utils/a11y/disclosure.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
@@ -82,6 +83,9 @@ export const Default: Story = {};
 
 export const A11yDisclosure: Story = {
   tags: ['a11y', 'test', '!dev'],
+  decorators: [
+    (story) => html`<div style="max-width: 200px;">${story()}</div>`,
+  ],
   play: async (context) => {
     await play(context);
     await testDisclosureA11y(context, {
