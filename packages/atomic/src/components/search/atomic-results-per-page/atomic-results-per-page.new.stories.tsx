@@ -1,16 +1,16 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {within} from 'shadow-dom-testing-library';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
-import {searchFacetTransformer} from '@/storybook-utils/api/search/facet-transformer';
+import {buildSearchResponseWithResults} from '@/storybook-utils/api/search/search-response-mocks';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-results-per-page/atomic-results-per-page.js';
 import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 
-const searchApiHarness = new MockSearchApi();
-searchApiHarness.searchEndpoint.addRequestTransformer(searchFacetTransformer);
+const mockSearchApi = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -28,13 +28,16 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     chromatic: {disableSnapshot: true},
-    msw: {handlers: [...searchApiHarness.handlers]},
+    msw: {handlers: [...mockSearchApi.handlers]},
     actions: {
       handles: events,
     },
   },
   args,
   argTypes,
+  beforeEach: async () => {
+    mockSearchApi.clearAll();
+  },
 
   play,
 };
@@ -52,15 +55,22 @@ export const A11yStatusMessage: Story = {
       ${story()}
     `,
   ],
+  beforeEach: async () => {
+    mockSearchApi.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
+    mockSearchApi.searchEndpoint.mockOnce(
+      buildSearchResponseWithResults(120, 25)
+    );
+  },
   play: async (context) => {
     await play(context);
     await testStatusMessageA11y(context, {
       triggerAction: async () => {
-        const radio = await context.canvas.findByShadowLabelText('25');
+        const canvas = within(context.canvasElement);
+        const radio = await canvas.findByShadowLabelText('25');
         radio.click();
       },
-      expectedText: /Results \d+-\d+ of \d+/i,
-      timeout: 1000,
+      expectedText: 'Results loaded. Results 1-25 of 120',
+      timeout: 5000,
     });
   },
 };

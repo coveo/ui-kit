@@ -1,6 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {within} from 'shadow-dom-testing-library';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
@@ -68,13 +69,14 @@ export const A11yStatusMessage: Story = {
     await play(context);
     await testStatusMessageA11y(context, {
       triggerAction: async () => {
-        const button = await context.canvas.findByShadowRole('button', {
-          name: /load more/i,
+        const canvas = within(context.canvasElement);
+        const button = await canvas.findByShadowRole('button', {
+          name: 'Load more results',
         });
         button.click();
       },
-      expectedText: /Results \d+-\d+ of \d+/i,
-      timeout: 1000,
+      expectedText: 'Results loaded. Results 1-80 of 120',
+      timeout: 5000,
     });
   },
 };

@@ -5,16 +5,18 @@ import type {
 } from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {within} from 'shadow-dom-testing-library';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {testTabsA11y} from '@/storybook-utils/a11y/tabs.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {buildSearchResponseWithResults} from '@/storybook-utils/api/search/search-response-mocks';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-tab/atomic-tab.js';
 import '@/src/components/search/atomic-tab-manager/atomic-tab-manager.js';
 import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 
-const searchApiHarness = new MockSearchApi();
+const mockSearchApi = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
 
@@ -39,7 +41,7 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
-    msw: {handlers: [...searchApiHarness.handlers]},
+    msw: {handlers: [...mockSearchApi.handlers]},
   },
   argTypes,
   args: {
@@ -60,7 +62,7 @@ const meta: Meta = {
   },
   play,
   beforeEach: async () => {
-    searchApiHarness.searchEndpoint.clear();
+    mockSearchApi.clearAll();
   },
 };
 
@@ -85,17 +87,22 @@ export const A11yStatusMessage: Story = {
       ${story()}
     `,
   ],
+  beforeEach: async () => {
+    mockSearchApi.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
+    mockSearchApi.searchEndpoint.mockOnce(buildSearchResponseWithResults(42));
+  },
   play: async (context) => {
     await play(context);
     await testStatusMessageA11y(context, {
       triggerAction: async () => {
-        const documentationTab = await context.canvas.findByShadowRole('tab', {
-          name: /documentation/i,
+        const canvas = within(context.canvasElement);
+        const tab = await canvas.findByShadowRole('tab', {
+          name: 'Documentation',
         });
-        documentationTab.click();
+        tab.click();
       },
-      expectedText: /Results \d+-\d+ of \d+/i,
-      timeout: 1000,
+      expectedText: 'Results loaded. Results 1-10 of 42',
+      timeout: 5000,
     });
   },
 };

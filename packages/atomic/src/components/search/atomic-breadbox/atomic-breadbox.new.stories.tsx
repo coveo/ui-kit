@@ -1,10 +1,12 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
+import {within} from 'shadow-dom-testing-library';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {expect, waitFor} from 'storybook/test';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {buildSearchResponseWithResults} from '@/storybook-utils/api/search/search-response-mocks';
 import {
   searchFacetTransformer,
   searchFacetSearchTransformer,
@@ -14,9 +16,9 @@ import '@/src/components/search/atomic-breadbox/atomic-breadbox.js';
 import '@/src/components/search/atomic-facet/atomic-facet.js';
 import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 
-const searchApiHarness = new MockSearchApi();
-searchApiHarness.searchEndpoint.addRequestTransformer(searchFacetTransformer);
-searchApiHarness.facetSearchEndpoint.addRequestTransformer(
+const mockSearchApi = new MockSearchApi();
+mockSearchApi.searchEndpoint.addRequestTransformer(searchFacetTransformer);
+mockSearchApi.facetSearchEndpoint.addRequestTransformer(
   searchFacetSearchTransformer
 );
 
@@ -37,7 +39,7 @@ const meta: Meta = {
     ...parameters,
     chromatic: {disableSnapshot: true},
     msw: {
-      handlers: [...searchApiHarness.handlers],
+      handlers: [...mockSearchApi.handlers],
     },
     actions: {
       handles: events,
@@ -107,6 +109,11 @@ export const A11yStatusMessage: Story = {
       </div>
     `,
   ],
+  beforeEach: async () => {
+    mockSearchApi.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
+    mockSearchApi.searchEndpoint.mockOnce(buildSearchResponseWithResults(42));
+    mockSearchApi.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
+  },
   play: async (context) => {
     await play(context);
     const {canvas} = context;
@@ -117,11 +124,15 @@ export const A11yStatusMessage: Story = {
 
     await testStatusMessageA11y(context, {
       triggerAction: async () => {
-        const facetValue = await context.canvas.findByShadowTitle('People');
+        const screen = within(context.canvasElement);
+        const facetValue = await screen.findByShadowLabelText(
+          'Inclusion filter on People',
+          {exact: false}
+        );
         facetValue.click();
       },
-      expectedText: /Results \d+-\d+ of \d+/i,
-      timeout: 1000,
+      expectedText: 'Results loaded. Results 1-10 of 42',
+      timeout: 5000,
     });
   },
 };
