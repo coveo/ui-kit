@@ -594,7 +594,7 @@ describe('constructGenerateHeadAnswerParams', () => {
     expect(params.tab).toBe('all');
   });
 
-  it('uses empty string referrer when navigator context has no referrer', () => {
+  it('returns null referrer when navigator context has no referrer', () => {
     const navigatorContext = buildMockNavigatorContextProvider()();
     navigatorContext.referrer = null;
 
@@ -603,7 +603,7 @@ describe('constructGenerateHeadAnswerParams', () => {
       navigatorContext
     );
 
-    expect(params.referrer).toBe('');
+    expect(params.referrer).toBeNull();
   });
 
   it('includes referrer when navigator context has one', () => {
