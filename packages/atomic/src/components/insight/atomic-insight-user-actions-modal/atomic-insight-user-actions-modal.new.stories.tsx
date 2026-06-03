@@ -59,6 +59,10 @@ export default meta;
 
 export const Default: Story = {
   name: 'Default',
+};
+
+export const OpenedModal: Story = {
+  name: 'Modal Opened',
   args: {
     'is-open': true,
   },
