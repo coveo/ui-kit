@@ -12,6 +12,7 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-tab/atomic-tab.js';
 import '@/src/components/search/atomic-tab-manager/atomic-tab-manager.js';
+import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 
 const searchApiHarness = new MockSearchApi();
 
@@ -78,6 +79,12 @@ export const A11yTabs: Story = {
 export const A11yStatusMessage: Story = {
   name: 'A11y Status Message',
   tags: ['a11y', 'test', '!dev'],
+  decorators: [
+    (story) => html`
+      <atomic-query-summary></atomic-query-summary>
+      ${story()}
+    `,
+  ],
   play: async (context) => {
     await play(context);
     await testStatusMessageA11y(context, {
@@ -87,7 +94,7 @@ export const A11yStatusMessage: Story = {
         });
         documentationTab.click();
       },
-      expectedText: /results loaded.*showing .* of .*/i,
+      expectedText: /Results \d+-\d+ of \d+/i,
       timeout: 1000,
     });
   },

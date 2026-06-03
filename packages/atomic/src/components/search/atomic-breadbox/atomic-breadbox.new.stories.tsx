@@ -12,6 +12,7 @@ import {
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-breadbox/atomic-breadbox.js';
 import '@/src/components/search/atomic-facet/atomic-facet.js';
+import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 
 const searchApiHarness = new MockSearchApi();
 searchApiHarness.searchEndpoint.addRequestTransformer(searchFacetTransformer);
@@ -96,6 +97,7 @@ export const A11yStatusMessage: Story = {
   decorators: [
     (story) => html`
       ${story()}
+      <atomic-query-summary></atomic-query-summary>
       <div style="display: flex; justify-content: flex-start;">
         <atomic-facet
           field="objecttype"
@@ -118,7 +120,7 @@ export const A11yStatusMessage: Story = {
         const facetValue = await context.canvas.findByShadowTitle('People');
         facetValue.click();
       },
-      expectedText: /results loaded.*showing .* of .*/i,
+      expectedText: /Results \d+-\d+ of \d+/i,
       timeout: 1000,
     });
   },

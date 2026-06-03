@@ -74,7 +74,7 @@ export const A11yStatusMessage: Story = {
         });
         nextButton.click();
       },
-      expectedText: /results loaded.*showing .* of .*/i,
+      expectedText: /page .* loaded/i,
       timeout: 1000,
     });
   },

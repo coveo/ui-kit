@@ -1,5 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {html} from 'lit';
 import {userEvent} from 'storybook/test';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
@@ -8,6 +9,7 @@ import {searchFacetTransformer} from '@/storybook-utils/api/search/facet-transfo
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-sort-dropdown/atomic-sort-dropdown.js';
 import '@/src/components/search/atomic-sort-expression/atomic-sort-expression.js';
+import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 
 const searchApiHarness = new MockSearchApi();
 searchApiHarness.searchEndpoint.addRequestTransformer(searchFacetTransformer);
@@ -79,14 +81,20 @@ export const A11yStatusMessage: Story = {
       ></atomic-sort-expression>
     `,
   },
+  decorators: [
+    (story) => html`
+      <atomic-query-summary></atomic-query-summary>
+      ${story()}
+    `,
+  ],
   play: async (context) => {
     await play(context);
     await testStatusMessageA11y(context, {
       triggerAction: async () => {
         const select = await context.canvas.findByShadowRole('combobox');
-        await userEvent.selectOptions(select, 'most-recent');
+        await userEvent.selectOptions(select, 'date descending');
       },
-      expectedText: /results loaded.*showing .* of .*/i,
+      expectedText: /Results \d+-\d+ of \d+/i,
       timeout: 1000,
     });
   },
