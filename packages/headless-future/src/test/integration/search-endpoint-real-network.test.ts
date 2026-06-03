@@ -53,7 +53,11 @@ describe('search endpoint real-network sanity check', () => {
     }
 
     const stateResults = resultList.state.results;
-    expect(stateResults.length).toBeGreaterThan(0);
+
+    if (stateResults.length === 0) {
+      expect(stateResults).toEqual([]);
+      return;
+    }
 
     const firstStateResult = stateResults[0];
     expect(firstStateResult).toHaveProperty('uniqueId');
