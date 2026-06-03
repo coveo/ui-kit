@@ -16,7 +16,7 @@ import '@/src/components/search/atomic-tab/atomic-tab.js';
 import '@/src/components/search/atomic-tab-manager/atomic-tab-manager.js';
 import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 
-const mockSearchApi = new MockSearchApi();
+const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
 
@@ -41,7 +41,7 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
-    msw: {handlers: [...mockSearchApi.handlers]},
+    msw: {handlers: [...searchApiHarness.handlers]},
   },
   argTypes,
   args: {
@@ -62,7 +62,7 @@ const meta: Meta = {
   },
   play,
   beforeEach: async () => {
-    mockSearchApi.clearAll();
+    searchApiHarness.clearAll();
   },
 };
 
@@ -88,8 +88,8 @@ export const A11yStatusMessage: Story = {
     `,
   ],
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
-    mockSearchApi.searchEndpoint.mockOnce(buildSearchResponseWithResults(42));
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(42));
   },
   play: async (context) => {
     await play(context);

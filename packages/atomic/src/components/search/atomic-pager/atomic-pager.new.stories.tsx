@@ -10,7 +10,7 @@ import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-w
 import '@/src/components/search/atomic-pager/atomic-pager.js';
 import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 
-const mockSearchApi = new MockSearchApi();
+const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers('atomic-pager', {
@@ -27,7 +27,7 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     chromatic: {disableSnapshot: true},
-    msw: {handlers: [...mockSearchApi.handlers]},
+    msw: {handlers: [...searchApiHarness.handlers]},
     actions: {
       handles: events,
     },
@@ -41,7 +41,7 @@ const meta: Meta = {
   },
   argTypes,
   beforeEach: async () => {
-    mockSearchApi.clearAll();
+    searchApiHarness.clearAll();
   },
   play,
 };
@@ -74,8 +74,8 @@ export const A11yStatusMessage: Story = {
     (story) => html`<atomic-query-summary></atomic-query-summary>${story()}`,
   ],
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
-    mockSearchApi.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
   },
   play: async (context) => {
     await play(context);

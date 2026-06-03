@@ -16,9 +16,9 @@ import '@/src/components/search/atomic-breadbox/atomic-breadbox.js';
 import '@/src/components/search/atomic-facet/atomic-facet.js';
 import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 
-const mockSearchApi = new MockSearchApi();
-mockSearchApi.searchEndpoint.addRequestTransformer(searchFacetTransformer);
-mockSearchApi.facetSearchEndpoint.addRequestTransformer(
+const searchApiHarness = new MockSearchApi();
+searchApiHarness.searchEndpoint.addRequestTransformer(searchFacetTransformer);
+searchApiHarness.facetSearchEndpoint.addRequestTransformer(
   searchFacetSearchTransformer
 );
 
@@ -39,7 +39,7 @@ const meta: Meta = {
     ...parameters,
     chromatic: {disableSnapshot: true},
     msw: {
-      handlers: [...mockSearchApi.handlers],
+      handlers: [...searchApiHarness.handlers],
     },
     actions: {
       handles: events,
@@ -110,9 +110,9 @@ export const A11yStatusMessage: Story = {
     `,
   ],
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
-    mockSearchApi.searchEndpoint.mockOnce(buildSearchResponseWithResults(42));
-    mockSearchApi.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(42));
+    searchApiHarness.searchEndpoint.mockOnce(buildSearchResponseWithResults(120));
   },
   play: async (context) => {
     await play(context);
