@@ -29,6 +29,7 @@ import {
   FocusTargetController,
 } from '@/src/utils/accessibility-utils';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
+import {HiddenStateController} from '@/src/utils/hidden-state-controller';
 
 /**
  * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
@@ -80,6 +81,8 @@ export class AtomicBreadbox
   private breadcrumbRemovedFocus!: FocusTargetController;
   private breadcrumbShowMoreFocus!: FocusTargetController;
   private breadcrumbShowLessFocus!: FocusTargetController;
+
+  #hiddenState = new HiddenStateController(this);
 
   public bindings!: Bindings;
   public breadcrumbManager!: BreadcrumbManager;
@@ -172,6 +175,7 @@ export class AtomicBreadbox
   render() {
     const breadcrumbs = this.allBreadcrumbs;
 
+    this.#hiddenState.isEmpty = !breadcrumbs.length;
     if (!breadcrumbs.length) {
       return nothing;
     }

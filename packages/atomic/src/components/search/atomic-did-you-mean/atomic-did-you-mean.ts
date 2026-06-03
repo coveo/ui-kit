@@ -18,6 +18,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {HiddenStateController} from '@/src/utils/hidden-state-controller';
 import {renderAutoCorrection} from '../../common/query-correction/auto-correction';
 import {renderCorrection} from '../../common/query-correction/correction';
 import {renderTriggerCorrection} from '../../common/query-correction/trigger-correction';
@@ -51,6 +52,8 @@ export class AtomicDidYouMean
   public bindings!: Bindings;
   didYouMean!: DidYouMean;
   queryTrigger!: QueryTrigger;
+
+  #hiddenState = new HiddenStateController(this);
 
   @bindStateToController('didYouMean')
   @state()
@@ -165,6 +168,7 @@ export class AtomicDidYouMean
       this.didYouMeanState.hasQueryCorrection ||
       this.queryTriggerState.wasQueryModified;
 
+    this.#hiddenState.isEmpty = !hasCorrection;
     return html`${when(hasCorrection, () => this.content)}`;
   }
 }
