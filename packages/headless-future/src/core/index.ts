@@ -70,6 +70,8 @@ export type {
   ConversationState,
   ConversationStreaming,
   ConversationTurn,
+  ConversationActivity,
+  ConversationA2UIOperation,
 } from './interface/conversation/conversation-types.js';
 
 export * as conversationMutators from './interface/conversation/conversation-mutators.js';

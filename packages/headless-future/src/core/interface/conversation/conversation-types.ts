@@ -92,6 +92,64 @@ export interface ConversationStreaming {
   isConnected: boolean;
 }
 
+/**
+ * ============================================================================
+ * Activity types (A2UI surface operations)
+ * ============================================================================
+ */
+
+export type ConversationA2UIOperation =
+  | {
+      beginRendering: {
+        surfaceId: string;
+        root: string;
+        catalogId?: string;
+      };
+    }
+  | {
+      surfaceUpdate: {
+        surfaceId: string;
+        components: Array<{
+          id: string;
+          component: Record<string, unknown>;
+        }>;
+      };
+    }
+  | {
+      dataModelUpdate: {
+        surfaceId: string;
+        contents: Array<{
+          key: string;
+          valueString?: string;
+          valueNumber?: number;
+          valueBoolean?: boolean;
+          valueMap?: Array<unknown>;
+        }>;
+      };
+    }
+  | {
+      deleteSurface: {
+        surfaceId: string;
+      };
+    };
+
+export interface ConversationActivity {
+  /**
+   * The message identifier the activity is associated with.
+   */
+  messageId: string;
+
+  /**
+   * The type of activity.
+   */
+  activityType: 'a2ui-surface';
+
+  /**
+   * The accumulated A2UI surface operations for this activity.
+   */
+  operations: ConversationA2UIOperation[];
+}
+
 export interface ConversationState {
   /**
    * The conversation messages.
@@ -127,6 +185,11 @@ export interface ConversationState {
    * The streaming connection state for the active conversation turn.
    */
   streaming: ConversationStreaming;
+
+  /**
+   * The A2UI surface activities received during the conversation.
+   */
+  activities: ConversationActivity[];
 }
 
 /**
@@ -191,4 +254,26 @@ export interface FailTurnPayload extends FinalizeTurnPayload {
    * The normalized terminal failure reason for the turn lifecycle.
    */
   reason: Extract<TurnStatus, {type: 'failed'}>['reason'];
+}
+
+export interface ApplyActivitySnapshotPayload {
+  /**
+   * The message identifier the activity is associated with.
+   */
+  messageId: string;
+
+  /**
+   * The type of activity.
+   */
+  activityType: 'a2ui-surface';
+
+  /**
+   * The A2UI surface operations from the snapshot.
+   */
+  operations: ConversationA2UIOperation[];
+
+  /**
+   * Whether to replace existing operations for this message or append.
+   */
+  replace?: boolean;
 }

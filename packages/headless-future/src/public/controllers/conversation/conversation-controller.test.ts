@@ -58,6 +58,7 @@ describe('buildConversationController', () => {
         isLoading: false,
         error: null,
         streaming: {isConnected: false},
+        activities: [],
       });
     });
 
@@ -124,6 +125,7 @@ describe('buildConversationController', () => {
         isLoading: true,
         error: 'endpoint error',
         streaming: {isConnected: true},
+        activities: [],
       });
     });
   });

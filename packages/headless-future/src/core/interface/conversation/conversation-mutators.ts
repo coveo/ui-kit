@@ -2,6 +2,7 @@ import {conversationSlice} from '@/src/core/internal/conversation/conversation-s
 import type {StateMutation} from '@/src/core/interface/engine/engine-types.js';
 import type {
   AppendAgentChunkPayload,
+  ApplyActivitySnapshotPayload,
   ConversationSession,
   FailTurnPayload,
   FinalizeTurnPayload,
@@ -46,4 +47,10 @@ export const setError = (error: string | null): StateMutation => {
 
 export const setStreamingConnected = (isConnected: boolean): StateMutation => {
   return conversationSlice.actions.setStreamingConnected(isConnected);
+};
+
+export const applyActivitySnapshot = (
+  payload: ApplyActivitySnapshotPayload
+): StateMutation => {
+  return conversationSlice.actions.applyActivitySnapshot(payload);
 };

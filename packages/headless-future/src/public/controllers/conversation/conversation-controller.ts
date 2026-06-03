@@ -1,4 +1,5 @@
 import type {
+  ConversationActivity,
   ConversationMessage,
   ConversationSession,
   ConversationStreaming,
@@ -49,6 +50,7 @@ export type ConversationControllerMessage = ConversationMessage;
 export type ConversationControllerTurn = ConversationTurn;
 export type ConversationControllerSession = ConversationSession;
 export type ConversationControllerStreaming = ConversationStreaming;
+export type ConversationControllerActivity = ConversationActivity;
 
 export interface ConversationControllerState {
   messages: ConversationControllerMessage[];
@@ -58,6 +60,7 @@ export interface ConversationControllerState {
   isLoading: boolean;
   error: string | null;
   streaming: ConversationControllerStreaming;
+  activities: ConversationControllerActivity[];
 }
 
 export interface ConversationControllerOptions extends ControllerOptions {}
@@ -92,6 +95,7 @@ const buildStateSelector = () => {
       boolean,
       string | null,
       ConversationControllerStreaming,
+      ConversationControllerActivity[],
     ],
     ConversationControllerState
   >(
@@ -103,6 +107,7 @@ const buildStateSelector = () => {
       (state) => conversationEndpointSelectors.isLoading(state),
       (state) => conversationEndpointSelectors.error(state),
       (state) => conversationEndpointSelectors.streaming(state),
+      (state) => conversationSelectors.activities(state),
     ],
     (
       messages,
@@ -111,7 +116,8 @@ const buildStateSelector = () => {
       session,
       isLoading,
       error,
-      streaming
+      streaming,
+      activities
     ): ConversationControllerState => ({
       messages,
       turns,
@@ -120,6 +126,7 @@ const buildStateSelector = () => {
       isLoading,
       error,
       streaming,
+      activities,
     })
   );
 };
@@ -156,6 +163,9 @@ export const buildConversationController: (
     },
     failTurn: (payload) => {
       fullEngine.mutate(conversationMutators.failTurn(payload));
+    },
+    applyActivitySnapshot: (payload) => {
+      fullEngine.mutate(conversationMutators.applyActivitySnapshot(payload));
     },
   });
   const stateSelect = buildStateSelector();

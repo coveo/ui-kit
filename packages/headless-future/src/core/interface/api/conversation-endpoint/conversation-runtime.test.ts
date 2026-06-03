@@ -132,6 +132,12 @@ const createConversationStatePort = (
         payload,
       });
     },
+    applyActivitySnapshot: (payload) => {
+      engine.mutate({
+        type: 'conversation/applyActivitySnapshot',
+        payload,
+      });
+    },
   };
 };
 

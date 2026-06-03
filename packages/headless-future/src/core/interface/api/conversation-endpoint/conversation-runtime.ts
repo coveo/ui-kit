@@ -3,6 +3,7 @@ import {
   readConversationEventStream,
   type ConversationStreamEvent,
 } from '@/src/api/index.js';
+import type {ApplyActivitySnapshotPayload} from '@/src/core/interface/conversation/conversation-types.js';
 import {FullEngine} from '@/src/core/interface/engine/engine.js';
 import {ConversationEndpointFacade} from './conversation-endpoint-facade.js';
 import {
@@ -74,6 +75,7 @@ export interface ConversationRuntimeStatePort {
   ) => void;
   completeTurn: (payload: ConversationRuntimeFinalizeTurnPayload) => void;
   failTurn: (payload: ConversationRuntimeFailTurnPayload) => void;
+  applyActivitySnapshot: (payload: ApplyActivitySnapshotPayload) => void;
 }
 
 export class ConversationRuntime {
@@ -318,6 +320,15 @@ export class ConversationRuntime {
           this.applyMutations([
             conversationEndpointMutators.setError(effect.error),
           ]);
+          break;
+
+        case 'apply_activity_snapshot':
+          this.conversationState.applyActivitySnapshot({
+            messageId: effect.messageId,
+            activityType: effect.activityType,
+            operations: effect.operations,
+            replace: effect.replace,
+          });
           break;
       }
     }

@@ -1,4 +1,5 @@
 import type {ConversationStreamEvent} from '@/src/api/index.js';
+import type {ConversationA2UIOperation} from '@/src/core/interface/conversation/conversation-types.js';
 import type {
   ConversationRuntimeFailReason,
   ConversationRuntimeSession,
@@ -26,6 +27,13 @@ export type ConversationDispatchEffect =
   | {
       type: 'set_endpoint_error';
       error: string;
+    }
+  | {
+      type: 'apply_activity_snapshot';
+      messageId: string;
+      activityType: 'a2ui-surface';
+      operations: ConversationA2UIOperation[];
+      replace?: boolean;
     };
 
 function readTrimmedString(value: unknown): string | null {
@@ -174,12 +182,27 @@ export function dispatchConversationEvent({
     }
 
     case 'STATE_SNAPSHOT':
-    case 'ACTIVITY_SNAPSHOT':
       return {
         effects: [],
         isTerminalEvent: false,
         isMeaningfulEvent: true,
       };
+
+    case 'ACTIVITY_SNAPSHOT': {
+      return {
+        effects: [
+          {
+            type: 'apply_activity_snapshot',
+            messageId: event.messageId,
+            activityType: event.activityType,
+            operations: event.content.operations,
+            replace: event.replace,
+          },
+        ],
+        isTerminalEvent: false,
+        isMeaningfulEvent: true,
+      };
+    }
 
     case 'RUN_STARTED': {
       const sessionPatch = getRunStartedSessionPatch(event);

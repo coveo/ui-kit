@@ -16,6 +16,7 @@ describe('conversationSlice: initialState', () => {
       streaming: {
         isConnected: false,
       },
+      activities: [],
     });
   });
 });

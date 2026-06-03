@@ -23,6 +23,7 @@ export type {
 export {buildConversationController} from './conversation/conversation-controller.js';
 export type {
   ConversationController,
+  ConversationControllerActivity,
   ConversationControllerMessage,
   ConversationControllerOptions,
   ConversationControllerSubmitTurnOptions,

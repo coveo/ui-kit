@@ -181,7 +181,23 @@ describe('dispatchConversationEvent', () => {
 
     expect(result.isMeaningfulEvent).toBe(true);
     expect(result.isTerminalEvent).toBe(false);
-    expect(result.effects).toEqual([]);
+    expect(result.effects).toEqual([
+      {
+        type: 'apply_activity_snapshot',
+        messageId: 'activity-message-1',
+        activityType: 'a2ui-surface',
+        operations: [
+          {
+            beginRendering: {
+              surfaceId: 'surface-1',
+              root: 'root',
+              catalogId: 'catalog-1',
+            },
+          },
+        ],
+        replace: true,
+      },
+    ]);
   });
 
   it('maps RUN_ERROR to a protocol_error fail_turn effect', () => {

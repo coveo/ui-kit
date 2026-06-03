@@ -1,6 +1,7 @@
 import {createSlice, type PayloadAction} from '@reduxjs/toolkit';
 import type {
   AppendAgentChunkPayload,
+  ApplyActivitySnapshotPayload,
   ConversationSession,
   ConversationState,
   ConversationTurn,
@@ -19,6 +20,7 @@ export const initialConversationState: ConversationState = {
   streaming: {
     isConnected: false,
   },
+  activities: [],
 };
 
 export const conversationSlice = createSlice({
@@ -145,6 +147,23 @@ export const conversationSlice = createSlice({
     setStreamingConnected: (state, action: PayloadAction<boolean>) => {
       state.streaming.isConnected = action.payload;
     },
+    applyActivitySnapshot: (
+      state,
+      action: PayloadAction<ApplyActivitySnapshotPayload>
+    ) => {
+      const {messageId, activityType, operations, replace} = action.payload;
+      const existingIndex = state.activities.findIndex(
+        (activity) => activity.messageId === messageId
+      );
+
+      if (existingIndex === -1) {
+        state.activities.push({messageId, activityType, operations});
+      } else if (replace) {
+        state.activities[existingIndex] = {messageId, activityType, operations};
+      } else {
+        state.activities[existingIndex].operations.push(...operations);
+      }
+    },
   },
   selectors: {
     messages: (state) => state.messages,
@@ -154,6 +173,7 @@ export const conversationSlice = createSlice({
     isLoading: (state) => state.isLoading,
     error: (state) => state.error,
     streaming: (state) => state.streaming,
+    activities: (state) => state.activities,
   },
 });
 

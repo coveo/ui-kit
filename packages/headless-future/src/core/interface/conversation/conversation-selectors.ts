@@ -53,3 +53,6 @@ export const error = (state: StateWithConversationSlice) =>
 
 export const streaming = (state: StateWithConversationSlice) =>
   conversationSlice.selectors.streaming(state);
+
+export const activities = (state: StateWithConversationSlice) =>
+  conversationSlice.selectors.activities(state);
