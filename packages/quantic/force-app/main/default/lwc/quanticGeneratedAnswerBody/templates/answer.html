@@ -1,12 +1,13 @@
 <template>
   <section
     data-testid="generated-answer-body"
-    class="generated-answer__content slds-p-top_large slds-p-horizontal_large"
+    class="generated-answer__body slds-p-top_large slds-p-horizontal_large"
   >
     <c-quantic-generated-answer-content
       answer-content-format={answerContentFormat}
       answer={answer}
       is-streaming={isStreaming}
+      onquantic__answercontentupdated={handleAnswerContentUpdated}
     >
     </c-quantic-generated-answer-content>
     <div class="slds-grid slds-grid_vertical">

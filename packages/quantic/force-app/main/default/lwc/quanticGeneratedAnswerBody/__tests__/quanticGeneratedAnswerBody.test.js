@@ -1,7 +1,9 @@
 /* eslint-disable no-import-assign */
 // @ts-ignore
 import {createElement} from 'lwc';
+// @ts-ignore
 import QuanticGeneratedAnswerBody from 'c/quanticGeneratedAnswerBody';
+import {cleanup, flushPromises} from 'c/testUtils';
 jest.mock('c/quanticUtils', () => ({
   loadMarkdownDependencies: jest.fn(() => Promise.resolve()),
   transformMarkdownToHtml: jest.fn((answer) => answer),
@@ -80,20 +82,13 @@ function createTestComponent(options = defaultOptions) {
   return element;
 }
 
-function flushPromises() {
-  // eslint-disable-next-line @lwc/lwc/no-async-operation
-  return new Promise((resolve) => setTimeout(resolve, 0));
-}
-
 describe('c-quantic-generated-answer-body', () => {
   afterEach(() => {
-    while (document.body.firstChild) {
-      document.body.removeChild(document.body.firstChild);
-    }
+    cleanup();
     jest.clearAllMocks();
   });
 
-  it('should render a single generated answer unit', async () => {
+  it('should pass answer and answerContentFormat to the content component', async () => {
     const element = createTestComponent();
     await flushPromises();
 
@@ -109,7 +104,7 @@ describe('c-quantic-generated-answer-body', () => {
     );
   });
 
-  it('should dispatch the quantic__like event with the answerId', async () => {
+  it('should send the answerId within event details when dispatching the #quantic__like event', async () => {
     const element = createTestComponent();
     const handler = jest.fn();
     element.addEventListener('quantic__like', handler);
@@ -122,7 +117,7 @@ describe('c-quantic-generated-answer-body', () => {
     expect(handler.mock.calls[0][0].detail).toEqual({answerId: 'answer-1'});
   });
 
-  it('should dispatch the quantic__dislike event with the answerId', async () => {
+  it('should send the answerId within event details when dispatching the #quantic__dislike event', async () => {
     const element = createTestComponent();
     const handler = jest.fn();
     element.addEventListener('quantic__dislike', handler);
@@ -135,7 +130,7 @@ describe('c-quantic-generated-answer-body', () => {
     expect(handler.mock.calls[0][0].detail).toEqual({answerId: 'answer-1'});
   });
 
-  it('should dispatch the quantic__generatedanswercopy event with the answerId', async () => {
+  it('should send the answerId within event details when dispatching the #quantic__generatedanswercopy event', async () => {
     const element = createTestComponent();
     const handler = jest.fn();
     element.addEventListener('quantic__generatedanswercopy', handler);
@@ -148,11 +143,12 @@ describe('c-quantic-generated-answer-body', () => {
     expect(handler.mock.calls[0][0].detail).toEqual({answerId: 'answer-1'});
   });
 
-  it('should dispatch the quantic__citationhover event with the answerId', async () => {
+  it('should send the answerId within event details when dispatching the #quantic__citationhover event', async () => {
     const element = createTestComponent({
       ...defaultOptions,
       generatedAnswer: {
         ...defaultOptions.generatedAnswer,
+        // @ts-ignore
         citations: [{id: 'citation-1', title: 'Citation'}],
       },
     });
@@ -166,65 +162,100 @@ describe('c-quantic-generated-answer-body', () => {
     citations.citationHoverHandler('citation-1', 1200);
 
     expect(handler).toHaveBeenCalledTimes(1);
-    expect(handler.mock.calls[0][0].detail).toEqual({
-      answerId: 'answer-1',
-      citationId: 'citation-1',
-      citationHoverTimeMs: 1200,
-    });
+    expect(handler.mock.calls[0][0].detail.answerId).toBe('answer-1');
   });
 
-  it('should render the no-answer message', async () => {
+  it('should send the citation data within event details when dispatching the #quantic__citationhover event', async () => {
     const element = createTestComponent({
       ...defaultOptions,
       generatedAnswer: {
         ...defaultOptions.generatedAnswer,
-        cannotAnswer: true,
+        // @ts-ignore
+        citations: [{id: 'citation-1', title: 'Citation'}],
       },
     });
+    const handler = jest.fn();
+    element.addEventListener('quantic__citationhover', handler);
     await flushPromises();
 
-    const noAnswer = element.shadowRoot.querySelector(selectors.noAnswer);
-
-    expect(noAnswer).not.toBeNull();
-  });
-
-  it('should render the generic error message for non-retryable errors', async () => {
-    const element = createTestComponent({
-      ...defaultOptions,
-      generatedAnswer: {
-        ...defaultOptions.generatedAnswer,
-        answer: '',
-        error: {},
-      },
-    });
-    await flushPromises();
-
-    const error = element.shadowRoot.querySelector(selectors.error);
-
-    expect(error).not.toBeNull();
-    expect(error.textContent).toContain(
-      'Something went wrong while generating the answer. Please try again later.'
+    const citations = element.shadowRoot.querySelector(
+      'c-quantic-source-citations'
     );
+    citations.citationHoverHandler('citation-1', 1200);
+
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler.mock.calls[0][0].detail.citationId).toBe('citation-1');
+    expect(handler.mock.calls[0][0].detail.citationHoverTimeMs).toBe(1200);
   });
 
-  it('should render the turn limit reached error message when applicable', async () => {
-    const element = createTestComponent({
-      ...defaultOptions,
-      generatedAnswer: {
-        ...defaultOptions.generatedAnswer,
-        answer: '',
-        error: {
-          isSseTurnLimitReachedError: () => true,
+  it('should forward the #quantic__answercontentupdated event', async () => {
+    const element = createTestComponent();
+    const handler = jest.fn();
+    element.addEventListener('quantic__answercontentupdated', handler);
+    await flushPromises();
+
+    const content = element.shadowRoot.querySelector(selectors.content);
+    content.dispatchEvent(new CustomEvent('quantic__answercontentupdated'));
+
+    expect(handler).toHaveBeenCalledTimes(1);
+  });
+
+  describe('when an error occurs', () => {
+    it('should render the no-answer message when the answer cannot be generated', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        generatedAnswer: {
+          ...defaultOptions.generatedAnswer,
+          cannotAnswer: true,
         },
-      },
+      });
+      await flushPromises();
+
+      const noAnswer = element.shadowRoot.querySelector(selectors.noAnswer);
+
+      expect(noAnswer).not.toBeNull();
     });
-    await flushPromises();
 
-    const error = element.shadowRoot.querySelector(selectors.error);
+    it('should render the generic error message when a non-retryable error occurs', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        generatedAnswer: {
+          ...defaultOptions.generatedAnswer,
+          answer: '',
+          // @ts-ignore
+          error: {},
+        },
+      });
+      await flushPromises();
 
-    expect(error).not.toBeNull();
-    expect(error.textContent).toContain(
-      'Conversation turn limit reached. Please start a new conversation.'
-    );
+      const error = element.shadowRoot.querySelector(selectors.error);
+
+      expect(error).not.toBeNull();
+      expect(error.textContent).toContain(
+        'Something went wrong while generating the answer. Please try again later.'
+      );
+    });
+
+    it('should render the turn limit reached error message when the SSE turn limit is exceeded', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        generatedAnswer: {
+          ...defaultOptions.generatedAnswer,
+          answer: '',
+          // @ts-ignore
+          error: {
+            isSseTurnLimitReachedError: () => true,
+          },
+        },
+      });
+      await flushPromises();
+
+      const error = element.shadowRoot.querySelector(selectors.error);
+
+      expect(error).not.toBeNull();
+      expect(error.textContent).toContain(
+        'Conversation turn limit reached. Please start a new conversation.'
+      );
+    });
   });
 });

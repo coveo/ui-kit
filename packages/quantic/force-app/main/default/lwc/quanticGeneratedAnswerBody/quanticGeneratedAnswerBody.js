@@ -13,6 +13,10 @@ import errorTemplate from './templates/error.html';
 
 /** @typedef {import("@coveo/headless").GeneratedAnswerState} GeneratedAnswerState */
 
+const FEEDBACK_NEUTRAL_STATE = 'neutral';
+const FEEDBACK_LIKED_STATE = 'liked';
+const FEEDBACK_DISLIKED_STATE = 'disliked';
+
 /**
  * The `QuanticGeneratedAnswerBody` component renders a single generated answer unit.
  * @category Internal
@@ -20,6 +24,7 @@ import errorTemplate from './templates/error.html';
  * @fires CustomEvent#quantic__dislike
  * @fires CustomEvent#quantic__generatedanswercopy
  * @fires CustomEvent#quantic__citationhover
+ * @fires CustomEvent#quantic__answercontentupdated
  */
 export default class QuanticGeneratedAnswerBody extends LightningElement {
   /**
@@ -29,7 +34,7 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
    */
   @api engineId;
   /**
-   * The generated answer state.
+   * The generated answer object to render.
    * @api
    * @type {GeneratedAnswerState}
    */
@@ -73,7 +78,7 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
     return !!this.generatedAnswer?.error && !this.answer;
   }
 
-  get shouldDisplayCannotAnswer() {
+  get cannotAnswer() {
     return !!this.generatedAnswer?.cannotAnswer;
   }
 
@@ -85,15 +90,9 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
   }
 
   get computedFeedbackState() {
-    if (this.generatedAnswer?.liked) {
-      return 'liked';
-    }
-
-    if (this.generatedAnswer?.disliked) {
-      return 'disliked';
-    }
-
-    return 'neutral';
+    if (this.generatedAnswer?.liked) return FEEDBACK_LIKED_STATE;
+    if (this.generatedAnswer?.disliked) return FEEDBACK_DISLIKED_STATE;
+    return FEEDBACK_NEUTRAL_STATE;
   }
 
   get shouldShowCitations() {
@@ -123,25 +122,23 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
     this.dispatchAnswerInteractionEvent('quantic__generatedanswercopy');
   }
 
+  handleAnswerContentUpdated() {
+    this.dispatchEvent(new CustomEvent('quantic__answercontentupdated'));
+  }
+
   handleCitationHover = (citationId, citationHoverTimeMs) => {
-    this.dispatchEvent(
-      new CustomEvent('quantic__citationhover', {
-        detail: {
-          answerId: this.answerId,
-          citationId,
-          citationHoverTimeMs,
-        },
-        bubbles: true,
-        composed: true,
-      })
-    );
+    this.dispatchAnswerInteractionEvent('quantic__citationhover', {
+      citationId,
+      citationHoverTimeMs,
+    });
   };
 
-  dispatchAnswerInteractionEvent(eventName) {
+  dispatchAnswerInteractionEvent(eventName, payload = {}) {
     this.dispatchEvent(
       new CustomEvent(eventName, {
         detail: {
           answerId: this.answerId,
+          ...payload
         },
         bubbles: true,
         composed: true,
@@ -153,7 +150,7 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
     if (this.hasError) {
       return errorTemplate;
     }
-    if (this.shouldDisplayCannotAnswer) {
+    if (this.cannotAnswer) {
       return cannotAnswerTemplate;
     }
     return answerTemplate;
