@@ -118,8 +118,8 @@ export const A11yStatusMessage: Story = {
         const facetValue = await context.canvas.findByShadowTitle('People');
         facetValue.click();
       },
-      expectedText: /results/i,
-      timeout: 10000,
+      expectedText: /results loaded.*showing .* of .*/i,
+      timeout: 1000,
     });
   },
 };

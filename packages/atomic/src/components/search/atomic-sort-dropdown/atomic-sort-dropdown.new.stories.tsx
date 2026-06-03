@@ -86,8 +86,8 @@ export const A11yStatusMessage: Story = {
         const select = await context.canvas.findByShadowRole('combobox');
         await userEvent.selectOptions(select, 'most-recent');
       },
-      expectedText: /results/i,
-      timeout: 10000,
+      expectedText: /results loaded.*showing .* of .*/i,
+      timeout: 1000,
     });
   },
 };

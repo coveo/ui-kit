@@ -87,8 +87,8 @@ export const A11yStatusMessage: Story = {
         });
         documentationTab.click();
       },
-      expectedText: /results/i,
-      timeout: 10000,
+      expectedText: /results loaded.*showing .* of .*/i,
+      timeout: 1000,
     });
   },
 };
