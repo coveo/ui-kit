@@ -172,6 +172,7 @@ export class AtomicBreadbox
   render() {
     const breadcrumbs = this.allBreadcrumbs;
 
+    this.classList.toggle('atomic-hidden', !breadcrumbs.length);
     if (!breadcrumbs.length) {
       return nothing;
     }
