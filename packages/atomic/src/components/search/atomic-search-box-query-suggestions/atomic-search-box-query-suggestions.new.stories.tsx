@@ -66,7 +66,7 @@ export const A11yStatusMessage: Story = {
         await userEvent.click(searchBox);
       },
       expectedText: '5 search suggestions are available.',
-      timeout: 10000,
+      timeout: 5000,
     });
   },
 };

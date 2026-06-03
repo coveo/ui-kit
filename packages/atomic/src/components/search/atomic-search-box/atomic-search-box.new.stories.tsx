@@ -90,7 +90,7 @@ export const A11yStatusMessage: Story = {
         await userEvent.type(searchBox, 'test');
       },
       expectedText: '5 search suggestions are available for test.',
-      timeout: 10000,
+      timeout: 5000,
     });
   },
 };
