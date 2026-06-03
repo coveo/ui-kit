@@ -39,7 +39,7 @@ Map this decision to headless-future's Architecture Decision Charter requirement
 
 2. **Consideration**: Migration simplicity
    - **Impact**: Medium. Introduces a new concept ("interface") that doesn't exist in current headless.
-   - **How addressed (or why deferred)**: Hard break accepted. Migration path is conceptually straightforward: register an interface, pass it to controllers. A Default_Interface mechanism was considered to soften migration but rejected to keep the engine fully opaque (see Option D).
+   - **How addressed (or why deferred)**: Hard break accepted. Migration path is conceptually straightforward: register an interface, pass it to controllers. A default interface mechanism was considered to soften migration but rejected to keep the engine fully opaque (see Option D).
 
 3. **Consideration**: External contribution readiness
    - **Impact**: Low-medium. Clear separation between interface registration, state partitioning, and controller logic.
