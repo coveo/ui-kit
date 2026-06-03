@@ -1,6 +1,6 @@
 # ADR-002: Centralized Request Building and Response Handling for Endpoint Facades
 
-**Status**: Proposed  
+**Status**: `🟡 Proposed`  
 **Related docs**: -
 
 ## 1. Context
