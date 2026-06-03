@@ -69,3 +69,67 @@ pre {
   background: #eef2fa;
   border-radius: 6px;
 }
+
+.surface-card {
+  border: 1px solid #d4dbe8;
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin: 12px 0;
+  background: #f9fbfe;
+}
+
+.surface-card h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+
+.surface-meta {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 12px;
+  margin: 0 0 10px;
+  font-size: 14px;
+}
+
+.surface-meta dt {
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.surface-meta dd {
+  margin: 0;
+}
+
+.component-list {
+  padding-left: 16px;
+}
+
+.component-list li {
+  margin: 6px 0;
+}
+
+.data-model-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.data-model-table th,
+.data-model-table td {
+  text-align: left;
+  padding: 6px 10px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.data-model-table th {
+  background: #edf2f7;
+  font-weight: 600;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 6px;
+}

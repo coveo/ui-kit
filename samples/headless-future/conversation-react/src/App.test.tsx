@@ -16,6 +16,7 @@ type MockConversationState = {
   isLoading: boolean;
   error: string | null;
   streaming: {isConnected: boolean};
+  activities: Array<unknown>;
 };
 
 let mockState: MockConversationState;
@@ -54,6 +55,7 @@ beforeEach(() => {
     isLoading: false,
     error: null,
     streaming: {isConnected: false},
+    activities: [],
   };
 
   mockSubmitTurn.mockReset();
@@ -73,6 +75,7 @@ beforeEach(() => {
       activeTurnId: 'turn-1',
       isLoading: true,
       streaming: {isConnected: true},
+      activities: [],
     };
     emitState();
   });
@@ -86,6 +89,7 @@ beforeEach(() => {
       turns: [
         {id: 'turn-1', status: {type: 'aborted', reason: 'user_aborted'}},
       ],
+      activities: [],
     };
     emitState();
   });

@@ -2,6 +2,7 @@ import {useMemo, useSyncExternalStore} from 'react';
 import type {ConversationControllerState} from '@coveo/headless-future';
 import {getConversationController} from './conversation-controller.js';
 import {getSampleConfiguration} from './env.js';
+import {ConversationActivities} from './components/conversation-activities.js';
 import {ConversationComposer} from './components/conversation-composer.js';
 import {ConversationEventLog} from './components/conversation-event-log.js';
 import {ConversationMessages} from './components/conversation-messages.js';
@@ -50,6 +51,8 @@ export default function App() {
       )}
 
       <ConversationMessages messages={state.messages} />
+
+      <ConversationActivities activities={state.activities} />
 
       <ConversationTurnStatuses
         turns={state.turns}
