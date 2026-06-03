@@ -64,12 +64,23 @@ export async function testDialogA11y(
         {timeout: 3000}
       );
 
-      const dialogRoot = within(dialog!);
-      const buttons = await dialogRoot.findAllByShadowRole('button');
-      expect(
-        buttons.length,
-        'Dialog should contain multiple focusable elements for Tab cycling'
-      ).toBeGreaterThanOrEqual(2);
+      // Count focusable elements from the canvas root rather than the dialog
+      // element: while the modal is open, the focus trap marks everything
+      // outside it `aria-hidden`, so the only accessible buttons are the
+      // dialog's own. Scoping to the dialog element misses content that is
+      // slotted into atomic-modal and rendered inside nested custom-element
+      // shadow roots (e.g. the user-actions timeline). Body content can load
+      // asynchronously, so poll until the focusables are present.
+      await waitFor(
+        async () => {
+          const buttons = await root.findAllByShadowRole('button');
+          expect(
+            buttons.length,
+            'Dialog should contain multiple focusable elements for Tab cycling'
+          ).toBeGreaterThanOrEqual(2);
+        },
+        {timeout: 5000}
+      );
 
       const allHidden = doc.querySelectorAll('[aria-hidden="true"]');
       expect(
