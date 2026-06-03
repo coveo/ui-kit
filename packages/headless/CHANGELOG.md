@@ -1,3 +1,15 @@
+## 3.51.3
+
+### Patch Changes
+
+- [#7717](https://github.com/coveo/ui-kit/pull/7717) [`380ad1b`](https://github.com/coveo/ui-kit/commit/380ad1bf0a79ab7dc92077af4c959d9cfa167356) Thanks [@alexprudhomme](https://github.com/alexprudhomme)! - CDN artifacts now resolve cross-package dependencies using commit-based paths, making each artifact self-contained and independent of version pointer availability.
+
+## 3.51.2
+
+### Patch Changes
+
+- [#7654](https://github.com/coveo/ui-kit/pull/7654) [`2abc0a0`](https://github.com/coveo/ui-kit/commit/2abc0a0cf854db560cf56e9337314c3736c45d88) Thanks [@Tooni](https://github.com/Tooni)! - Fix `numberOfProductsSelector` in commerce search to account for `results` when `enableResults` is true
+
 ## 3.51.1
 
 ### Patch Changes
