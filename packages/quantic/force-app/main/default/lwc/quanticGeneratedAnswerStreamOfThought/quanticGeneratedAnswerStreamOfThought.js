@@ -15,10 +15,10 @@ import streamOfThoughtTemplate from './templates/streamOfThought.html';
 import collapsedSummaryTemplate from './templates/collapsedSummary.html';
 
 /** @typedef {import("coveo").GenerationStep} GenerationStep */
-
+/** @typedef {'thinking-before-search'|'searching'|'thinking-after-search'|'answering'} ResolvedStepName */
 /**
  * @typedef {Object} ResolvedStep
- * @property {'thinking-before-search'|'searching'|'thinking-after-search'|'answering'} name
+ * @property {ResolvedStepName} name
  * @property {'active'|'completed'} status
  */
 
@@ -50,7 +50,7 @@ const STEP_LABEL_KEYS = {
 export function resolveSteps(steps) {
   let searchWasPerformed = false;
   return steps.map((step) => {
-    /** @type {ResolvedStep['name']} */
+    /** @type {ResolvedStepName} */
     let name;
     if (step.name === 'searching') {
       searchWasPerformed = true;
