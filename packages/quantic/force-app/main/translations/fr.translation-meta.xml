@@ -896,4 +896,12 @@
     <label>Aucune réponse générée disponible.</label>
     <name>quantic_NoGeneratedAnswer</name>
   </customLabels>
+  <customLabels>
+    <name>quantic_AskFollowUp</name>
+    <label>Demander un suivi</label>
+  </customLabels>
+  <customLabels>
+    <name>quantic_SubmitFollowUp</name>
+    <label>Soumettre un suivi</label>
+  </customLabels>
 </Translations>

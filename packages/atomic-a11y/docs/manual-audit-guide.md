@@ -262,6 +262,6 @@ Additionally, individual criterion entries within `wcag22Criteria` are skipped i
 
 - **Start with `"pending"`** — set `status` to `"pending"` while auditing, then flip to `"complete"` when done. Pending entries are safely ignored.
 - **One file per category** — keeps diffs small and ownership clear.
-- **You don't need every criterion** — only include criteria you've actually tested. Untested criteria remain as `"not-evaluated"` in the VPAT.
+- **You don't need every criterion** — only include criteria you've actually tested. Untested A/AA criteria are automatically emitted as **Does Not Support** with a `[Manual audit required]` remark in the VPAT, so they remain visible as pending work until audited.
 - **Component names must match** — use the exact `atomic-*` name from the automated `a11y-report.json`. Open that file to see the list of detected components and their names.
 - **Criteria keys are flexible** — only the numeric prefix matters (`1.1.1-`). The slug after the hyphen is for human readability.
