@@ -19,12 +19,6 @@ export interface DisclosureA11yOptions {
     expanded?: boolean;
   };
   /**
-   * When true, skips Enter/Space keyboard toggle tests. Use for components
-   * where the disclosure button becomes visibility:hidden (unfocusable) after
-   * collapsing, making keyboard re-activation impossible without a prior click.
-   */
-  skipKeyboard?: boolean;
-  /**
    * When true, verifies that the region referenced by `aria-controls` is
    * visible when expanded and absent/hidden when collapsed.
    *
@@ -165,49 +159,47 @@ export async function testDisclosureA11y(
       );
     });
 
-    if (!options.skipKeyboard) {
-      await step('Enter key toggles aria-expanded (2.1.1)', async () => {
-        // Start from expanded state where button is visible and focusable
-        if (trigger.getAttribute('aria-expanded') !== 'true') {
-          await userEvent.click(trigger);
-          await waitFor(
-            () => {
-              expect(trigger.getAttribute('aria-expanded')).toBe('true');
-            },
-            {timeout: 5000}
-          );
-        }
-        trigger.focus();
-        await userEvent.keyboard('{Enter}');
+    await step('Enter key toggles aria-expanded (2.1.1)', async () => {
+      // Start from expanded state where button is visible and focusable
+      if (trigger.getAttribute('aria-expanded') !== 'true') {
+        await userEvent.click(trigger);
         await waitFor(
           () => {
-            expect(trigger.getAttribute('aria-expanded')).toBe('false');
+            expect(trigger.getAttribute('aria-expanded')).toBe('true');
           },
           {timeout: 5000}
         );
-      });
+      }
+      trigger.focus();
+      await userEvent.keyboard('{Enter}');
+      await waitFor(
+        () => {
+          expect(trigger.getAttribute('aria-expanded')).toBe('false');
+        },
+        {timeout: 5000}
+      );
+    });
 
-      await step('Space key toggles aria-expanded (2.1.1)', async () => {
-        // Start from expanded state where button is visible and focusable
-        if (trigger.getAttribute('aria-expanded') !== 'true') {
-          await userEvent.click(trigger);
-          await waitFor(
-            () => {
-              expect(trigger.getAttribute('aria-expanded')).toBe('true');
-            },
-            {timeout: 5000}
-          );
-        }
-        trigger.focus();
-        await userEvent.keyboard(' ');
+    await step('Space key toggles aria-expanded (2.1.1)', async () => {
+      // Start from expanded state where button is visible and focusable
+      if (trigger.getAttribute('aria-expanded') !== 'true') {
+        await userEvent.click(trigger);
         await waitFor(
           () => {
-            expect(trigger.getAttribute('aria-expanded')).toBe('false');
+            expect(trigger.getAttribute('aria-expanded')).toBe('true');
           },
           {timeout: 5000}
         );
-      });
-    } // end skipKeyboard guard
+      }
+      trigger.focus();
+      await userEvent.keyboard(' ');
+      await waitFor(
+        () => {
+          expect(trigger.getAttribute('aria-expanded')).toBe('false');
+        },
+        {timeout: 5000}
+      );
+    });
 
     if (options.assertControlledRegion) {
       await step('Controlled region visible when expanded', async () => {
