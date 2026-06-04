@@ -246,7 +246,7 @@ describe('c-quantic-generated-answer-body', () => {
           ...defaultOptions.generatedAnswer,
           answer: '',
           // @ts-ignore
-          error: {},
+          error: {code: 500},
         },
       });
       await flushPromises();
@@ -267,6 +267,7 @@ describe('c-quantic-generated-answer-body', () => {
           answer: '',
           // @ts-ignore
           error: {
+            code: 429,
             isSseTurnLimitReachedError: () => true,
           },
         },
