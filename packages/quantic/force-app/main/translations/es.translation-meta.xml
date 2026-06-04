@@ -902,7 +902,7 @@
   </customLabels>
   <customLabels>
     <name>quantic_AgentGenerationStepAnalyzingQuestion</name>
-    <label>Analizando tu pregunta</label>
+    <label>Analizando tu pregunta…</label>
   </customLabels>
   <customLabels>
     <name>quantic_AgentGenerationStepAnalyzingQuestionCompleted</name>
@@ -910,15 +910,15 @@
   </customLabels>
   <customLabels>
     <name>quantic_AgentGenerationStepSearch</name>
-    <label>Buscando</label>
+    <label>Buscando en la base de conocimiento…</label>
   </customLabels>
   <customLabels>
     <name>quantic_AgentGenerationStepSearchCompleted</name>
-    <label>Búsqueda completada</label>
+    <label>Base de conocimiento consultada</label>
   </customLabels>
   <customLabels>
     <name>quantic_AgentGenerationStepAnalyzingResults</name>
-    <label>Analizando resultados</label>
+    <label>Analizando resultados…</label>
   </customLabels>
   <customLabels>
     <name>quantic_AgentGenerationStepAnalyzingResultsCompleted</name>
@@ -926,7 +926,7 @@
   </customLabels>
   <customLabels>
     <name>quantic_AgentGenerationStepAnswering</name>
-    <label>Generando respuesta</label>
+    <label>Generando respuesta…</label>
   </customLabels>
   <customLabels>
     <name>quantic_AgentGenerationStepAnsweringCompleted</name>
