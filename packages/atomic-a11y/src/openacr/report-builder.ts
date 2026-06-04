@@ -201,12 +201,12 @@ export function buildOpenAcrReport(
     author: {
       name: 'Coveo Accessibility Team',
       company_name: 'Coveo',
-      email: 'accessibility@coveo.com',
+      email: 'support@coveo.com',
       website: 'https://www.coveo.com',
     },
     vendor: {
       company_name: 'Coveo',
-      email: 'accessibility@coveo.com',
+      email: 'support@coveo.com',
       website: 'https://www.coveo.com',
     },
     report_date: reportDate,
