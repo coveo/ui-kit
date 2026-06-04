@@ -47,7 +47,7 @@ describe('isInteractiveReport', () => {
 });
 
 describe('interactive report aggregation', () => {
-  it('does not duplicate affected components covered by automated and interactive results', () => {
+  it('does not duplicate covered components covered by automated and interactive results', () => {
     const componentResults = new Map<string, ComponentAccumulator>([
       [
         'atomic-result-list',
@@ -60,6 +60,8 @@ describe('interactive report aggregation', () => {
             incomplete: 0,
             inapplicable: 0,
             criteriaCovered: new Set(['2.1.1']),
+            criteriaViolated: new Set(),
+            criteriaPassed: new Set(['2.1.1']),
             incompleteDetails: [],
           },
           interactive: {
@@ -77,7 +79,7 @@ describe('interactive report aggregation', () => {
       devDependencies: {'axe-core': '4.10.3', storybook: '10.3.5'},
     });
 
-    expect(report.criteria[0].affectedComponents).toEqual([
+    expect(report.criteria[0].coveredComponents).toEqual([
       'atomic-result-list',
     ]);
   });
@@ -90,23 +92,25 @@ describe('interactive report aggregation', () => {
         name: 'Keyboard',
         level: 'A',
         wcagVersion: '2.2',
-        conformance: 'notEvaluated',
+        conformance: 'doesNotSupport',
         automatedCoverage: false,
         interactiveCoverage: true,
         interactiveStatus: 'passed',
         manualVerified: false,
-        affectedComponents: [],
+        coveredComponents: [],
+        violatingComponents: [],
       },
       {
         id: '2.1.2',
         name: 'No Keyboard Trap',
         level: 'A',
         wcagVersion: '2.2',
-        conformance: 'notEvaluated',
+        conformance: 'doesNotSupport',
         automatedCoverage: false,
         interactiveCoverage: true,
         manualVerified: false,
-        affectedComponents: [],
+        coveredComponents: [],
+        violatingComponents: [],
       },
     ];
 

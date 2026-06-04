@@ -29,7 +29,9 @@ export class AtomicInsightTabs
   @errorGuard()
   protected render() {
     return html`<atomic-tab-bar
-      >${this.renderDefaultSlotContent()}</atomic-tab-bar
+      ><div role="tablist" style="display:flex;flex-direction:row;width:100%">
+        ${this.renderDefaultSlotContent()}
+      </div></atomic-tab-bar
     >`;
   }
 }
