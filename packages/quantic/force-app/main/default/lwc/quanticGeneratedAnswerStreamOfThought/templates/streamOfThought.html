@@ -9,7 +9,7 @@
         >
           <template lwc:if={step.isActive}>
             <span
-              class="stream-of-thought__step-icon slds-is-relative slds-m-right_x-small"
+              class="slds-is-relative slds-m-right_x-small slds-grid slds-grid_align-center stream-of-thought__spinner-container"
               aria-hidden="true"
               data-testid="spinner"
             >
@@ -21,7 +21,7 @@
           </template>
           <template lwc:else>
             <span
-              class="stream-of-thought__step-icon slds-m-right_x-small"
+              class="slds-m-right_x-small slds-grid slds-grid_align-center"
               data-testid="checkmark"
             >
               <lightning-icon

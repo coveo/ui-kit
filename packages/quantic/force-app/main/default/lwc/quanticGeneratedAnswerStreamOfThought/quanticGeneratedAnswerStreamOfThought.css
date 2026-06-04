@@ -11,11 +11,7 @@
   outline-offset: 2px;
 }
 
-.stream-of-thought__step-icon {
-  width: 1rem;
-  height: 1rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+.stream-of-thought__spinner-container {
+  width: 0.8rem;
+  height: 0.8rem;
 }
