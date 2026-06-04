@@ -13,13 +13,6 @@ import errorTemplate from './templates/error.html';
 
 /** @typedef {import("@coveo/headless").GeneratedAnswerBase} GeneratedAnswerBase */
 
-/**
- * @typedef GeneratedAnswer
- * @augments GeneratedAnswerBase
- * @property {string} question
- * @property {boolean} [expanded]
- */
-
 const FEEDBACK_NEUTRAL_STATE = 'neutral';
 const FEEDBACK_LIKED_STATE = 'liked';
 const FEEDBACK_DISLIKED_STATE = 'disliked';
@@ -43,7 +36,7 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
   /**
    * The generated answer object to render.
    * @api
-   * @type {GeneratedAnswer}
+   * @type {GeneratedAnswerBase}
    */
   @api generatedAnswer;
   /**
