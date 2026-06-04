@@ -70,6 +70,7 @@ const defaultOptions = {
   engineId: 'example-engine',
   generatedAnswer: {
     answerId: 'answer-1',
+    question: 'What is the meaning of life?',
     answer: 'Example generated answer',
     answerContentFormat: 'text/plain',
     citations: [],

@@ -11,7 +11,11 @@ import cannotAnswerTemplate from './templates/cannotAnswer.html';
 // @ts-ignore
 import errorTemplate from './templates/error.html';
 
-/** @typedef {import("@coveo/headless").GeneratedAnswerState} GeneratedAnswerState */
+/** @typedef {import("@coveo/headless").GeneratedAnswerBase} GeneratedAnswerBase */
+
+/**
+ * @typedef {GeneratedAnswerBase & {question: string, expanded?: boolean}} GeneratedAnswer
+ */
 
 const FEEDBACK_NEUTRAL_STATE = 'neutral';
 const FEEDBACK_LIKED_STATE = 'liked';
@@ -36,7 +40,7 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
   /**
    * The generated answer object to render.
    * @api
-   * @type {GeneratedAnswerState}
+   * @type {GeneratedAnswer}
    */
   @api generatedAnswer;
   /**
@@ -75,7 +79,7 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
   }
 
   get hasError() {
-    return !!this.generatedAnswer?.error;
+    return !!this.generatedAnswer?.error && !this.answer;
   }
 
   get cannotAnswer() {
