@@ -22,9 +22,9 @@ packages/atomic-a11y/
 
 ## Source of truth
 
-The `manual-audit-*.json` baseline files in `a11y/reports` are the source of truth for manual audits.
+The `manual-audit-*.json` baseline files in `a11y/reports` are the single source of truth for manual audits.
 
-Auditors should edit these baseline files directly. There is no separate delta merge step in the standard `pnpm a11y:vpat` workflow.
+Auditors edit these baseline files directly — there is no separate merge or delta step. Editing a file and running `pnpm a11y:vpat` is the entire workflow.
 
 ## File naming
 
@@ -239,6 +239,7 @@ Additionally, individual criterion entries within `wcag22Criteria` are skipped i
 
 - The value is neither a string nor an object with string `conformance`
 - The key doesn't match the `{numeric-id}-{slug}` pattern
+- The numeric ID is not a recognized WCAG 2.2 A/AA success criterion (validated against the WCAG catalog in `src/data/wcag-criteria.ts`)
 - The status value is not one of `pass`, `fail`, `partial`, `not-applicable`
 
 ## Workflow
