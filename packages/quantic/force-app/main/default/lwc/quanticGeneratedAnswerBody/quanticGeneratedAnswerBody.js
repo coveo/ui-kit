@@ -82,7 +82,7 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
   }
 
   get hasError() {
-    return !!this.generatedAnswer?.error && !this.answer;
+      return !!this.generatedAnswer?.error && !!this.generatedAnswer?.error?.code;
   }
 
   get cannotAnswer() {
