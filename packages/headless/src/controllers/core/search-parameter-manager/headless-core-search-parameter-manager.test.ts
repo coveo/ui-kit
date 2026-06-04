@@ -673,5 +673,81 @@ describe('search parameter manager', () => {
         });
       });
     });
+
+    describe('when there are registered range facets', () => {
+      it('should include registered date facet IDs with empty arrays in df', () => {
+        const dateFacetId = 'myDateFacet';
+        engine.state.dateFacetSet = {
+          [dateFacetId]: buildMockDateFacetSlice(),
+        };
+
+        const params = {q: 'a'};
+        manager.synchronize(params);
+
+        expect(restoreSearchParameters).toHaveBeenCalledWith(
+          expect.objectContaining({
+            df: {[dateFacetId]: []},
+          })
+        );
+      });
+
+      it('should include registered numeric facet IDs with empty arrays in nf', () => {
+        const numericFacetId = 'myNumericFacet';
+        engine.state.numericFacetSet = {
+          [numericFacetId]: buildMockNumericFacetSlice(),
+        };
+
+        const params = {q: 'a'};
+        manager.synchronize(params);
+
+        expect(restoreSearchParameters).toHaveBeenCalledWith(
+          expect.objectContaining({
+            nf: {[numericFacetId]: []},
+          })
+        );
+      });
+
+      it('should let explicit df parameter values override registered facet defaults', () => {
+        const dateFacetId = 'myDateFacet';
+        engine.state.dateFacetSet = {
+          [dateFacetId]: buildMockDateFacetSlice(),
+        };
+
+        const dateValue = buildMockDateFacetValue({
+          start: '2024/01/01',
+          end: '2024/12/31',
+          state: 'selected',
+        });
+        const params = {df: {[dateFacetId]: [dateValue]}};
+        manager.synchronize(params);
+
+        expect(restoreSearchParameters).toHaveBeenCalledWith(
+          expect.objectContaining({
+            df: {[dateFacetId]: [dateValue]},
+          })
+        );
+      });
+
+      it('should let explicit nf parameter values override registered facet defaults', () => {
+        const numericFacetId = 'myNumericFacet';
+        engine.state.numericFacetSet = {
+          [numericFacetId]: buildMockNumericFacetSlice(),
+        };
+
+        const numericValue = buildMockNumericFacetValue({
+          start: 0,
+          end: 100,
+          state: 'selected',
+        });
+        const params = {nf: {[numericFacetId]: [numericValue]}};
+        manager.synchronize(params);
+
+        expect(restoreSearchParameters).toHaveBeenCalledWith(
+          expect.objectContaining({
+            nf: {[numericFacetId]: [numericValue]},
+          })
+        );
+      });
+    });
   });
 });

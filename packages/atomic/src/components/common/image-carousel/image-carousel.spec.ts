@@ -47,6 +47,7 @@ describe('image-carousel', () => {
       navigateToImage: vi.fn(),
       numberOfImages: 3,
       currentImage: 0,
+      label: 'Test carousel',
     };
     const mergedProps = {...defaultProps, ...props};
     return renderFunctionFixture(

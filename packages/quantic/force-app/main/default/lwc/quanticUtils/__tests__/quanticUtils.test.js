@@ -2,6 +2,7 @@ import {
   I18nUtils,
   buildTemplateTextFromResult,
   copyToClipboard,
+  unwrapLockerProxiedObject,
 } from 'c/quanticUtils';
 
 describe('c/quanticUtils', () => {
@@ -198,6 +199,35 @@ describe('c/quanticUtils', () => {
       ).toBe(
         `<a href="${testResult.clickUri}">${testResult.title}</a><br/><br/><quote></quote>`
       );
+    });
+  });
+
+  describe('unwrapLockerObject', () => {
+    it('should deeply clone complex objects while preserving primitive values', () => {
+      const original = {
+        title: 'Example',
+        raw: {
+          foo: 'bar',
+          tags: ['a', {value: 'b'}],
+        },
+        score: 42,
+      };
+
+      const unwrapped = unwrapLockerProxiedObject(original);
+
+      expect(unwrapped).toEqual(original);
+      expect(unwrapped).not.toBe(original);
+      expect(unwrapped.raw).not.toBe(original.raw);
+      expect(unwrapped.raw.tags).not.toBe(original.raw.tags);
+      expect(unwrapped.raw.tags[1]).not.toBe(original.raw.tags[1]);
+    });
+
+    it('should return primitive values as-is', () => {
+      expect(unwrapLockerProxiedObject(undefined)).toBeUndefined();
+      expect(unwrapLockerProxiedObject(null)).toBeNull();
+      expect(unwrapLockerProxiedObject('value')).toBe('value');
+      expect(unwrapLockerProxiedObject(0)).toBe(0);
+      expect(unwrapLockerProxiedObject(false)).toBe(false);
     });
   });
 });

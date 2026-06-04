@@ -4,7 +4,7 @@ import {
   getHeadlessBundle,
   getHeadlessEnginePromise,
 } from 'c/quanticHeadlessLoader';
-import {ResultUtils} from 'c/quanticUtils';
+import {ResultUtils, unwrapLockerProxiedObject} from 'c/quanticUtils';
 import {NavigationMixin} from 'lightning/navigation';
 import {LightningElement, api} from 'lwc';
 
@@ -38,7 +38,13 @@ export default class QuanticResultLink extends NavigationMixin(
    * @api
    * @type {Result}
    */
-  @api result;
+  @api
+  get result() {
+    return this._result;
+  }
+  set result(result) {
+    this._result = unwrapLockerProxiedObject(result);
+  }
   /**
    * Where to display the linked URL, as the name for a browsing context (a tab, window, or <iframe>).
    * The following keywords have special meanings for where to load the URL:
@@ -75,6 +81,8 @@ export default class QuanticResultLink extends NavigationMixin(
   engine;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {Result} */
+  _result;
   /** @type {string} */
   salesforceRecordUrl;
 
@@ -113,8 +121,7 @@ export default class QuanticResultLink extends NavigationMixin(
     this.engine = engine;
     ResultUtils.bindClickEventsOnResult(
       this.engine,
-      // Destructuring transforms the Proxy object created by Salesforce to a normal object so no unexpected behaviour will occur with the Headless library.
-      {...this.result, raw: {...this.result.raw}},
+      this.result,
       this.template,
       this.headless.buildInteractiveResult
     );

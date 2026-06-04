@@ -23,6 +23,9 @@ import '@/src/components/commerce/atomic-product-section-visual/atomic-product-s
 import '@/src/components/commerce/atomic-product-template/atomic-product-template.js';
 import '@/src/components/commerce/atomic-product-text/atomic-product-text.js';
 import '@/src/components/search/atomic-table-element/atomic-table-element.js';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
+
+const commerceApiHarness = new MockCommerceApi();
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-commerce-product-list',
@@ -72,6 +75,7 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
+    msw: {handlers: [...commerceApiHarness.handlers]},
     chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
@@ -79,6 +83,9 @@ const meta: Meta = {
   },
   argTypes,
   play,
+  beforeEach: () => {
+    commerceApiHarness.clearAll();
+  },
 };
 
 export default meta;
@@ -242,5 +249,28 @@ export const NoProducts: Story = {
   play: async (context) => {
     await playNoProducts(context);
     await executeFirstRequestHook(context);
+  },
+};
+
+export const A11yTable: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  name: 'A11y Table',
+  args: {
+    display: 'table',
+    'default-slot': `<atomic-product-template>
+  <template>
+    <atomic-table-element label="Product">
+      <atomic-product-link></atomic-product-link>
+    </atomic-table-element>
+    <atomic-table-element label="ID">
+      <atomic-product-text field="ec_product_id"></atomic-product-text>
+    </atomic-table-element>
+  </template>
+</atomic-product-template>`,
+  },
+  play: async (context) => {
+    await play(context);
+    const {testTableA11y} = await import('@/storybook-utils/a11y/table.js');
+    await testTableA11y(context);
   },
 };

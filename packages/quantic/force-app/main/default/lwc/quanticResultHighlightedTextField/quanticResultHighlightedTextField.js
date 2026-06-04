@@ -4,6 +4,7 @@ import {
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
+import {unwrapLockerProxiedObject} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").Result} Result */
@@ -28,7 +29,13 @@ export default class QuanticResultHighlightedTextField extends LightningElement 
    * @api
    * @type {Result}
    */
-  @api result;
+  @api
+  get result() {
+    return this._result;
+  }
+  set result(result) {
+    this._result = unwrapLockerProxiedObject(result);
+  }
   /**
    * (Optional) The label to display.
    * @api
@@ -49,6 +56,8 @@ export default class QuanticResultHighlightedTextField extends LightningElement 
   isInitialized = false;
   /** @type {boolean} */
   validated = false;
+  /** @type {Result} */
+  _result;
 
   connectedCallback() {
     this.validateProps();

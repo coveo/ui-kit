@@ -1,10 +1,13 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
 import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product-template-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/commerce/atomic-product-field-condition/atomic-product-field-condition.js';
+
+const commerceApiHarness = new MockCommerceApi();
 
 const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
   engineConfig: {
@@ -39,6 +42,7 @@ const meta: Meta = {
   ],
   parameters: {
     ...parameters,
+    msw: {handlers: [...commerceApiHarness.handlers]},
     chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
@@ -51,6 +55,9 @@ const meta: Meta = {
     ...args,
     'default-slot': `<span>Render me if <strong>ec_name</strong> is defined.</span>`,
     'if-defined': 'ec_name',
+  },
+  beforeEach: () => {
+    commerceApiHarness.clearAll();
   },
 };
 

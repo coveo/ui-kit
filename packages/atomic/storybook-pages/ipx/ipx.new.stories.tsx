@@ -7,6 +7,7 @@ import {
   richResponse,
 } from '@/storybook-utils/api/search/search-response';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
+import {isTestMode} from '@/storybook-utils/common/is-test-mode';
 import '@/src/components/search/atomic-did-you-mean/atomic-did-you-mean.js';
 import '@/src/components/search/atomic-facet/atomic-facet.js';
 import '@/src/components/search/atomic-field-condition/atomic-field-condition.js';
@@ -113,6 +114,7 @@ const meta: Meta = {
     <atomic-search-interface
       language-assets-path="./lang"
       icon-assets-path="./assets"
+      .analytics=${isTestMode()}
     >
       <atomic-ipx-modal is-open="true">
         <div slot="header">

@@ -24,6 +24,14 @@ import '@/src/components/commerce/atomic-product-section-name/atomic-product-sec
 import '@/src/components/commerce/atomic-product-section-visual/atomic-product-section-visual.js';
 import '@/src/components/commerce/atomic-product-template/atomic-product-template.js';
 import '@/src/components/commerce/atomic-product-text/atomic-product-text.js';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
+import {richResponse as richRecommendationResponse} from '@/storybook-utils/api/commerce/recommendation-response';
+
+const commerceApiHarness = new MockCommerceApi();
+
+commerceApiHarness.recommendationEndpoint.mock(
+  () => richRecommendationResponse
+);
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-commerce-recommendation-interface',
@@ -49,6 +57,7 @@ const meta: Meta = {
   decorators: [(story) => html`<div id="code-root">${story()}</div>`],
   parameters: {
     ...parameters,
+    msw: {handlers: [...commerceApiHarness.handlers]},
     chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
@@ -92,6 +101,9 @@ const meta: Meta = {
   },
   play: async (context) => {
     await initializeCommerceRecommendationInterface(context.canvasElement);
+  },
+  beforeEach: () => {
+    commerceApiHarness.clearAll();
   },
 };
 

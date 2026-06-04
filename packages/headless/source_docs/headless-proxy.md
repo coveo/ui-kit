@@ -69,7 +69,7 @@ const searchEngine = buildSearchEngine({
 });
 ```
 
-If you’re setting the `proxyBaseUrl` option in your search engine or action configuration, you must also implement the correct proxy endpoints in your server, depending on the search API requests you want to proxy.
+If you're setting the `proxyBaseUrl` option in your search engine or action configuration, you must also implement the correct proxy endpoints in your server, depending on the search API requests you want to proxy.
 
 - `POST` `/` to proxy requests to `POST` [`<ORGANIZATION_ID>.org<ENVIRONMENT|>.coveo.com/rest/search/v2`](https://docs.coveo.com/en/13#tag/Search-V2/operation/searchUsingPost)
 - `POST` `/plan` to proxy requests to `POST` [`<ORGANIZATION_ID>.org<ENVIRONMENT|>.coveo.com/rest/search/v2/plan`](https://docs.coveo.com/en/13#tag/Search-V2/operation/planSearchUsingPost)
@@ -77,6 +77,15 @@ If you’re setting the `proxyBaseUrl` option in your search engine or action co
 - `POST` `/facet` to proxy requests to `POST` [`<ORGANIZATION_ID>.org<ENVIRONMENT|>.coveo.com/rest/search/v2/facet`](https://docs.coveo.com/en/13#tag/Search-V2/operation/facetSearch)
 - `POST` `/html` to proxy requests to `POST` [`<ORGANIZATION_ID>.org<ENVIRONMENT|>.coveo.com/rest/search/v2/html`](https://docs.coveo.com/en/13#tag/Search-V2/operation/htmlPost)
 - `GET` `/fields` to proxy requests to `GET` [`<ORGANIZATION_ID>.org<ENVIRONMENT|>.coveo.com/rest/search/v2/fields`](https://docs.coveo.com/en/13#tag/Search-V2/operation/fields)
+
+If you're using Search API-based generated answers (CRGA without an `answerConfigurationId`), you must also implement:
+
+- `GET` `/rest/organizations/<ORGANIZATION_ID>/machinelearning/streaming/<STREAM_ID>` to proxy requests to `GET` `<ORGANIZATION_ID>.org<ENVIRONMENT|>.coveo.com/rest/organizations/<ORGANIZATION_ID>/machinelearning/streaming/<STREAM_ID>`
+
+If you're using Answer API-based generated answers (CRGA with an `answerConfigurationId`), you must also implement:
+
+- `POST` `/rest/organizations/<ORGANIZATION_ID>/answer/v1/configs/<ANSWER_CONFIG_ID>/generate` to proxy requests to `POST` `<ORGANIZATION_ID>.org<ENVIRONMENT|>.coveo.com/rest/organizations/<ORGANIZATION_ID>/answer/v1/configs/<ANSWER_CONFIG_ID>/generate`
+- `POST` `/rest/organizations/<ORGANIZATION_ID>/answer/v1/configs/<ANSWER_CONFIG_ID>/evaluations` to proxy requests to `POST` `<ORGANIZATION_ID>.org<ENVIRONMENT|>.coveo.com/rest/organizations/<ORGANIZATION_ID>/answer/v1/configs/<ANSWER_CONFIG_ID>/evaluations`
 
 ## Case Assist
 

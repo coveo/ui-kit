@@ -10,7 +10,7 @@ import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interfac
 import '@/src/components/insight/atomic-insight-timeframe-facet/atomic-insight-timeframe-facet.js';
 import '@/src/components/common/atomic-timeframe/atomic-timeframe.js';
 
-const mockInsightApi = new MockInsightApi();
+const insightApiHarness = new MockInsightApi();
 
 const baseDateFacetValues = [
   {
@@ -76,7 +76,7 @@ const createDateFacetResponse = (
   label: 'Date',
 });
 
-mockInsightApi.searchEndpoint.mock((response) => ({
+insightApiHarness.searchEndpoint.mock((response) => ({
   ...response,
   facets: [
     createDateFacetResponse(baseDateFacetValues),
@@ -87,7 +87,7 @@ mockInsightApi.searchEndpoint.mock((response) => ({
 }));
 
 const mockDefaultFacetResponse = () => {
-  mockInsightApi.searchEndpoint.mockOnce((response) => ({
+  insightApiHarness.searchEndpoint.mockOnce((response) => ({
     ...response,
     facets: [
       createDateFacetResponse(baseDateFacetValues),
@@ -116,7 +116,7 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
-    msw: {handlers: [...mockInsightApi.handlers]},
+    msw: {handlers: [...insightApiHarness.handlers]},
   },
   argTypes: {
     ...argTypes,
@@ -125,7 +125,7 @@ const meta: Meta = {
     },
   },
   beforeEach: () => {
-    mockInsightApi.searchEndpoint.clear();
+    insightApiHarness.searchEndpoint.clear();
   },
   play,
   args: {
@@ -174,7 +174,7 @@ export const WithSelectedValue: Story = {
     const selectedValues = baseDateFacetValues.map((v) =>
       v.start === 'past-1-month' ? {...v, state: 'selected'} : v
     );
-    mockInsightApi.searchEndpoint.mockOnce((response) => ({
+    insightApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
       facets: [
         createDateFacetResponse(selectedValues),

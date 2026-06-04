@@ -12,6 +12,7 @@ const headlessJson = JSON.parse(
 );
 
 const isNightly = process.env.IS_NIGHTLY === 'true';
+const commitSha = process.env.CDN_COMMIT_SHA;
 
 const headlessVersion = isNightly
   ? `v${headlessJson.version.split('.').shift()}-nightly`
@@ -21,30 +22,37 @@ const buenoVersion = isNightly
   ? `v${buenoJson.version.split('.').shift()}-nightly`
   : `v${buenoJson.version}`;
 
+const headlessBase = commitSha
+  ? `/headless/commits/${commitSha}`
+  : `/headless/${headlessVersion}`;
+const buenoBase = commitSha
+  ? `/bueno/commits/${commitSha}`
+  : `/bueno/${buenoVersion}`;
+
 export function generateExternalPackageMappings() {
   return {
     '@coveo/headless/commerce': {
-      cdn: `/headless/${headlessVersion}/commerce/headless.esm.js`,
+      cdn: `${headlessBase}/commerce/headless.esm.js`,
       local: resolve(headlessBaseDir, './src/commerce.index.ts'),
     },
     '@coveo/headless/insight': {
-      cdn: `/headless/${headlessVersion}/insight/headless.esm.js`,
+      cdn: `${headlessBase}/insight/headless.esm.js`,
       local: resolve(headlessBaseDir, './src/insight.index.ts'),
     },
     '@coveo/headless/recommendation': {
-      cdn: `/headless/${headlessVersion}/recommendation/headless.esm.js`,
+      cdn: `${headlessBase}/recommendation/headless.esm.js`,
       local: resolve(headlessBaseDir, './src/recommendation.index.ts'),
     },
     '@coveo/headless/case-assist': {
-      cdn: `/headless/${headlessVersion}/case-assist/headless.esm.js`,
+      cdn: `${headlessBase}/case-assist/headless.esm.js`,
       local: resolve(headlessBaseDir, './src/case-assist.index.ts'),
     },
     '@coveo/headless': {
-      cdn: `/headless/${headlessVersion}/headless.esm.js`,
+      cdn: `${headlessBase}/headless.esm.js`,
       local: resolve(headlessBaseDir, './src/index.ts'),
     },
     '@coveo/bueno': {
-      cdn: `/bueno/${buenoVersion}/bueno.esm.js`,
+      cdn: `${buenoBase}/bueno.esm.js`,
       local: resolve(buenoBaseDir, './src/index.ts'),
     },
   };

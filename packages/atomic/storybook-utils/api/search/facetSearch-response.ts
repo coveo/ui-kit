@@ -1,4 +1,4 @@
-export interface FacetSearchValue {
+interface FacetSearchValue {
   displayValue: string;
   rawValue: string;
   count: number;

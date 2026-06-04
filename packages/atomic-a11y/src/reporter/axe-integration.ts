@@ -1,4 +1,5 @@
 import type {AxeResults, Result as AxeRuleResult} from 'axe-core';
+import {isKnownCriterion} from '../data/criterion-metadata.js';
 import {isRecord} from '../shared/guards.js';
 import {compareByNumericId} from '../shared/sorting.js';
 
@@ -26,9 +27,16 @@ export function getCriteriaForRule(rule: AxeRuleResult): string[] {
   const criteria: string[] = [];
   for (const tag of tags) {
     const match = tag.match(CRITERION_TAG_PATTERN);
-    if (match) {
-      criteria.push(`${match[1]}.${match[2]}.${match[3]}`);
+    if (!match) {
+      continue;
     }
+    const criterionId = `${match[1]}.${match[2]}.${match[3]}`;
+    // Filter out criteria not declared in WCAG 2.2 AA metadata
+    // (e.g., AAA criteria like 2.1.3 surfaced via axe rule tags).
+    if (!isKnownCriterion(criterionId)) {
+      continue;
+    }
+    criteria.push(criterionId);
   }
 
   criteria.sort(compareByNumericId);

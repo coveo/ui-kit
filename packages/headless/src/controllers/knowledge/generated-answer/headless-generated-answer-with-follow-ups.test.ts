@@ -659,6 +659,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
           ...getFollowUpAnswersInitialState(),
           conversationId,
           conversationToken,
+          isEnabled: true,
         },
       });
       const controller = createGeneratedAnswerWithFollowUps();
@@ -688,6 +689,14 @@ describe('GeneratedAnswerWithFollowUps', () => {
     });
 
     it('does not run the agent when the question is empty', () => {
+      engine = buildEngineWithGeneratedAnswer({
+        followUpAnswers: {
+          ...getFollowUpAnswersInitialState(),
+          conversationId,
+          conversationToken,
+          isEnabled: true,
+        },
+      });
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.askFollowUp('   ');
@@ -696,7 +705,32 @@ describe('GeneratedAnswerWithFollowUps', () => {
       expect(mockFollowUpAgent.runAgent).not.toHaveBeenCalled();
     });
 
+    it('does not run the follow-up agent when the follow-up capability is not enabled', () => {
+      engine = buildEngineWithGeneratedAnswer({
+        followUpAnswers: {
+          ...getFollowUpAnswersInitialState(),
+          conversationId,
+          conversationToken,
+          isEnabled: false,
+        },
+      });
+      const controller = createGeneratedAnswerWithFollowUps();
+
+      controller.askFollowUp(question);
+
+      expect(mockFollowUpAgent.abortRun).not.toHaveBeenCalled();
+      expect(mockCreateFollowUpAnswer).not.toHaveBeenCalled();
+      expect(mockFollowUpAgent.runAgent).not.toHaveBeenCalled();
+    });
+
     it('does not run the agent when the conversationId is missing', () => {
+      engine = buildEngineWithGeneratedAnswer({
+        followUpAnswers: {
+          ...getFollowUpAnswersInitialState(),
+          isEnabled: true,
+          conversationToken,
+        },
+      });
       const consoleWarnSpy = vi
         .spyOn(console, 'warn')
         .mockImplementation(() => {});
@@ -718,6 +752,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
         followUpAnswers: {
           ...getFollowUpAnswersInitialState(),
           conversationId,
+          isEnabled: true,
         },
       });
       const consoleWarnSpy = vi
@@ -742,6 +777,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
           ...getFollowUpAnswersInitialState(),
           conversationId,
           conversationToken,
+          isEnabled: true,
         },
       });
       const controller = createGeneratedAnswerWithFollowUps();

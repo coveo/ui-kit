@@ -1,3 +1,38 @@
+## 2.9.21
+
+### Patch Changes
+
+- Updated dependencies [[`9bd57e7`](https://github.com/coveo/ui-kit/commit/9bd57e7de3b5e388d52192b3f4e47009a4e7cd81)]:
+  - @coveo/headless@3.51.4
+
+## 2.9.20
+
+### Patch Changes
+
+- Updated dependencies [[`380ad1b`](https://github.com/coveo/ui-kit/commit/380ad1bf0a79ab7dc92077af4c959d9cfa167356)]:
+  - @coveo/headless@3.51.3
+
+## 2.9.19
+
+### Patch Changes
+
+- Updated dependencies [[`2abc0a0`](https://github.com/coveo/ui-kit/commit/2abc0a0cf854db560cf56e9337314c3736c45d88)]:
+  - @coveo/headless@3.51.2
+
+## 2.9.18
+
+### Patch Changes
+
+- Updated dependencies [[`d5d4d75`](https://github.com/coveo/ui-kit/commit/d5d4d75a882074bbeb5875ed95504a30ff84df91), [`821d429`](https://github.com/coveo/ui-kit/commit/821d429d3cc247e387cfb3e5834ddc8b65443142)]:
+  - @coveo/headless@3.51.1
+
+## 2.9.17
+
+### Patch Changes
+
+- Updated dependencies [[`41fdd60`](https://github.com/coveo/ui-kit/commit/41fdd609cb0b8b0d4b821f9818189fc49f727417), [`d12be29`](https://github.com/coveo/ui-kit/commit/d12be299fa235fe6810c268f2c89be296063ee60), [`8445bf2`](https://github.com/coveo/ui-kit/commit/8445bf241db3aab5f0cd148c43ac3f4425f22cb1), [`bd4bb98`](https://github.com/coveo/ui-kit/commit/bd4bb98837c2eb0acb7f38848c0d792f8bf1efa9)]:
+  - @coveo/headless@3.51.0
+
 ## 2.9.16
 
 ### Patch Changes

@@ -13,7 +13,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   }
 );
 
-const mockInsightApi = new MockInsightApi();
+const insightApiHarness = new MockInsightApi();
 
 const meta: Meta = {
   component: 'atomic-insight-pager',
@@ -25,7 +25,7 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     msw: {
-      handlers: [...mockInsightApi.handlers],
+      handlers: [...insightApiHarness.handlers],
     },
     actions: {
       handles: events,

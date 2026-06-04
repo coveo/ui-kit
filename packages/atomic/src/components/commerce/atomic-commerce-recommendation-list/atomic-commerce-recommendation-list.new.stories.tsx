@@ -1,6 +1,8 @@
+import {testCarouselA11y} from '@/storybook-utils/a11y/carousel.js';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
+import {richResponse as richRecommendationResponse} from '@/storybook-utils/api/commerce/recommendation-response';
 import {wrapInCommerceRecommendationInterface} from '@/storybook-utils/commerce/commerce-recommendation-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/commerce/atomic-commerce-recommendation-list/atomic-commerce-recommendation-list.js';
@@ -21,7 +23,11 @@ import '@/src/components/commerce/atomic-product-section-visual/atomic-product-s
 import '@/src/components/commerce/atomic-product-template/atomic-product-template.js';
 import '@/src/components/commerce/atomic-product-text/atomic-product-text.js';
 
-const mockCommerceApi = new MockCommerceApi();
+const commerceApiHarness = new MockCommerceApi();
+
+commerceApiHarness.recommendationEndpoint.mock(
+  () => richRecommendationResponse
+);
 
 const {decorator, play} = wrapInCommerceRecommendationInterface({});
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -69,10 +75,10 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
-    handlers: [...mockCommerceApi.handlers],
+    msw: {handlers: [...commerceApiHarness.handlers]},
   },
   beforeEach: async () => {
-    mockCommerceApi.recommendationEndpoint.clear();
+    commerceApiHarness.recommendationEndpoint.clear();
   },
   argTypes,
 
@@ -137,7 +143,7 @@ export const AsCarousel: Story = {
 export const NoRecommendations: Story = {
   name: 'No recommendations',
   beforeEach: async () => {
-    mockCommerceApi.recommendationEndpoint.mockOnce((response) => ({
+    commerceApiHarness.recommendationEndpoint.mockOnce((response) => ({
       ...response,
       products: [],
       pagination: {
@@ -148,5 +154,16 @@ export const NoRecommendations: Story = {
       },
       triggers: [],
     }));
+  },
+};
+
+export const A11yCarousel: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  args: {
+    'products-per-page': 3,
+  },
+  play: async (context) => {
+    await play(context);
+    await testCarouselA11y(context);
   },
 };

@@ -5,6 +5,9 @@ import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-inter
 import {wrapInCommerceSearchBox} from '@/storybook-utils/commerce/commerce-search-box-wrapper';
 import {parameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
 import '@/src/components/commerce/atomic-commerce-search-box-query-suggestions/atomic-commerce-search-box-query-suggestions.js';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
+
+const commerceApiHarness = new MockCommerceApi();
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-commerce-search-box-query-suggestions',
@@ -22,6 +25,7 @@ const meta: Meta = {
   decorators: [commerceSearchBoxDecorator, commerceInterfaceDecorator],
   parameters: {
     ...parameters,
+    msw: {handlers: [...commerceApiHarness.handlers]},
     chromatic: {disableSnapshot: true},
     actions: {
       handles: events,
@@ -35,6 +39,9 @@ const meta: Meta = {
     const searchBox =
       await context.canvas.findAllByShadowPlaceholderText('Search');
     await userEvent.click(searchBox[0]);
+  },
+  beforeEach: () => {
+    commerceApiHarness.clearAll();
   },
 };
 

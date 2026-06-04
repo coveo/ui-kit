@@ -33,6 +33,14 @@ describe('atomic-generated-answer-thread-item', () => {
           element.shadowRoot?.querySelector('[part="thread-item-title"]') ??
           null,
         titleButton: element.shadowRoot?.querySelector('button') ?? null,
+        timelineDotContainer:
+          element.shadowRoot
+            ?.querySelectorAll('div.items-center.justify-center')
+            ?.item(0) ?? null,
+        timelineLineContainer:
+          element.shadowRoot
+            ?.querySelectorAll('div.items-center.justify-center')
+            ?.item(1) ?? null,
         contentRegion:
           element.shadowRoot?.querySelector(
             'div[id^="atomic-generated-answer-thread-item-content-"]'
@@ -120,6 +128,73 @@ describe('atomic-generated-answer-thread-item', () => {
     await element.updateComplete;
 
     expect(locators().contentState).not.toHaveAttribute('hidden');
+  });
+
+  it('should toggle expanded state when the timeline dot is clicked', async () => {
+    const {element, locators} = await renderComponent({
+      disableCollapse: false,
+      isExpanded: false,
+    });
+
+    const dot = locators().timelineDot as HTMLSpanElement;
+    dot.click();
+    await element.updateComplete;
+
+    expect(locators().contentState).not.toHaveAttribute('hidden');
+  });
+
+  it('should not toggle expanded state when the timeline dot container is clicked', async () => {
+    const {element, locators} = await renderComponent({
+      disableCollapse: false,
+      isExpanded: false,
+    });
+
+    const dotContainer = locators().timelineDotContainer as HTMLDivElement;
+    dotContainer.click();
+    await element.updateComplete;
+
+    expect(locators().contentState).toHaveAttribute('hidden');
+  });
+
+  it('should not toggle expanded state when the timeline dot is hidden', async () => {
+    const {element, locators} = await renderComponent({
+      disableCollapse: false,
+      isExpanded: false,
+      showTimelineDot: false,
+    });
+
+    const dotContainer = locators().timelineDotContainer as HTMLDivElement;
+    dotContainer.click();
+    await element.updateComplete;
+
+    expect(locators().contentState).toHaveAttribute('hidden');
+  });
+
+  it('should toggle expanded state when the timeline line area is clicked', async () => {
+    const {element, locators} = await renderComponent({
+      disableCollapse: false,
+      isExpanded: false,
+    });
+
+    const lineContainer = locators().timelineLineContainer as HTMLDivElement;
+    lineContainer.click();
+    await element.updateComplete;
+
+    expect(locators().contentState).not.toHaveAttribute('hidden');
+  });
+
+  it('should not toggle expanded state when the timeline line is hidden', async () => {
+    const {element, locators} = await renderComponent({
+      disableCollapse: false,
+      isExpanded: false,
+      hideLine: true,
+    });
+
+    const lineContainer = locators().timelineLineContainer as HTMLDivElement;
+    lineContainer.click();
+    await element.updateComplete;
+
+    expect(locators().contentState).toHaveAttribute('hidden');
   });
 
   it('should update aria attributes when toggled', async () => {

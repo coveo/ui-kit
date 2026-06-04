@@ -6,6 +6,7 @@ import {
   getResultSectionArgTypes,
   getResultSectionDecorators,
 } from '@/storybook-utils/search/result-section-story-utils';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-result-section-title/atomic-result-section-title.js';
 
@@ -13,6 +14,8 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-result-section-title',
   {excludeCategories: ['methods']}
 );
+
+const searchApiHarness = new MockSearchApi();
 
 const {play} = wrapInSearchInterface({
   config: {
@@ -34,6 +37,7 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     chromatic: {disableSnapshot: true},
+    msw: {handlers: [...searchApiHarness.handlers]},
     actions: {
       handles: events,
     },

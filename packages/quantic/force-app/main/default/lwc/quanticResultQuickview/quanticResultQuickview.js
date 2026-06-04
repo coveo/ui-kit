@@ -8,7 +8,11 @@ import {
   HeadlessBundleNames,
   isHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-import {I18nUtils, getLastFocusableElement} from 'c/quanticUtils';
+import {
+  I18nUtils,
+  getLastFocusableElement,
+  unwrapLockerProxiedObject,
+} from 'c/quanticUtils';
 import {LightningElement, api, track} from 'lwc';
 
 /** @typedef {import("coveo").Result} Result */
@@ -42,7 +46,13 @@ export default class QuanticResultQuickview extends LightningElement {
    * @api
    * @type {ResultWithFolding}
    */
-  @api result;
+  @api
+  get result() {
+    return this._result;
+  }
+  set result(result) {
+    this._result = unwrapLockerProxiedObject(result);
+  }
   /**
    * The maximum preview size to retrieve, in bytes. By default, the full preview is retrieved.
    * @api
@@ -84,6 +94,8 @@ export default class QuanticResultQuickview extends LightningElement {
 
   /** @type {Quickview} */
   quickview;
+  /** @type {ResultWithFolding} */
+  _result;
   /** @type {boolean} */
   isQuickviewOpen = false;
   /** @type {Function} */

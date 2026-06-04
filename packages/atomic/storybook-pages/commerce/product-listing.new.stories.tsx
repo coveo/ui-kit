@@ -10,6 +10,7 @@ import {
 } from '@/storybook-utils/api/commerce/listing-response';
 import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
+import {isTestMode} from '@/storybook-utils/common/is-test-mode';
 import '@/src/components/commerce/atomic-commerce-breadbox/atomic-commerce-breadbox.js';
 import '@/src/components/commerce/atomic-commerce-facets/atomic-commerce-facets.js';
 import '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface.js';
@@ -80,11 +81,13 @@ const meta: Meta = {
       () => richResponse as unknown as typeof baseResponse
     );
   },
+
   render: () => html`
     <atomic-commerce-interface
       type="product-listing"
       language-assets-path="./lang"
       icon-assets-path="./assets"
+      .analytics=${isTestMode()}
     >
       <atomic-commerce-layout>
         <atomic-layout-section section="facets"

@@ -14,3 +14,7 @@ export function getCriterionMetadata(
 ): CriterionMetadata | undefined {
   return criterionMetadataMap[criterionId];
 }
+
+export function isKnownCriterion(criterionId: string): boolean {
+  return criterionId in criterionMetadataMap;
+}

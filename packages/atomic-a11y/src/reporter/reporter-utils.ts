@@ -11,7 +11,7 @@ export interface PackageMetadata {
   devDependencies?: Record<string, string>;
 }
 
-export interface StorybookReport {
+interface StorybookReport {
   type: string;
   result?: unknown;
 }
@@ -94,6 +94,8 @@ export interface ComponentAccumulator {
     incomplete: number;
     inapplicable: number;
     criteriaCovered: Set<string>;
+    criteriaViolated: Set<string>;
+    criteriaPassed: Set<string>;
     incompleteDetails: Array<{
       ruleId: string;
       impact: string;
@@ -106,9 +108,7 @@ export interface ComponentAccumulator {
     criteriaCovered: Set<string>;
     testCount: number;
     passedCount: number;
-    failedCount: number;
     passedCriteria: Set<string>;
-    failedCriteria: Set<string>;
   };
 }
 

@@ -43,6 +43,45 @@ import {getNamedSlotContent} from '@/src/utils/slot-utils';
 import {shouldDisplayOnCurrentTab} from '@/src/utils/tab-utils';
 import atomicGeneratedAnswerStyles from './atomic-generated-answer.tw.css.js';
 
+const GENERATED_ANSWER_THREAD_EXPORT_PARTS = [
+  'feedback-and-copy-buttons',
+  'feedback-button',
+  'copy-button',
+  'citations-label',
+  'citation',
+  'citation-popover',
+  'generated-text',
+  'answer-code-block',
+  'answer-emphasis',
+  'answer-inline-code',
+  'answer-heading-1',
+  'answer-heading-2',
+  'answer-heading-3',
+  'answer-heading-4',
+  'answer-heading-5',
+  'answer-heading-6',
+  'answer-list-item',
+  'answer-link',
+  'answer-link-text',
+  'answer-link-icon',
+  'answer-ordered-list',
+  'answer-paragraph',
+  'answer-quote-block',
+  'answer-unordered-list',
+  'answer-strong',
+  'answer-table',
+  'answer-table-container',
+  'answer-table-content',
+  'answer-table-header',
+].join(',');
+
+const FOLLOW_UP_INPUT_EXPORT_PARTS = [
+  'input-container',
+  'input-field',
+  'submit-button',
+  'submit-icon',
+].join(',');
+
 /**
  * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
  * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
@@ -88,6 +127,11 @@ import atomicGeneratedAnswerStyles from './atomic-generated-answer.tw.css.js';
  *
  * @part citation - The link that allows the user to navigate to the item.
  * @part citation-popover - The pop-up that shows an item preview when the user hovers over the citation.
+ *
+ * @part input-container - The follow-up input container.
+ * @part input-field - The follow-up textarea input field.
+ * @part submit-button - The follow-up submit button.
+ * @part submit-icon - The icon displayed in the follow-up submit button.
  */
 @customElement('atomic-generated-answer')
 @bindings()
@@ -417,12 +461,22 @@ export class AtomicGeneratedAnswer
                   <div
                     class=${classMap({
                       'px-6': true,
+                      'pt-6': true,
+                      'generated-answer-content-background':
+                        this.areFollowUpsEnabled,
                       'agent-scrollable': this.areFollowUpsEnabled,
                     })}
                   >
                     <article>${this.renderAnswerContent()}</article>
                   </div>
-                  <div class="px-6 pt-2">
+                  <div
+                    class=${classMap({
+                      'px-6': true,
+                      'pt-2': true,
+                      'border-t': this.areFollowUpsEnabled,
+                      'border-gray-200': this.areFollowUpsEnabled,
+                    })}
+                  >
                     ${this.renderAskFollowUpInputWrapper()}
                     ${renderDisclaimer({
                       props: {
@@ -671,6 +725,7 @@ export class AtomicGeneratedAnswer
           this.generatedAnswerWithFollowUps?.dislike(answerId)}
         .onCopyToClipboard=${(answerId: string) =>
           this.generatedAnswerWithFollowUps?.logCopyToClipboard(answerId)}
+        exportparts=${GENERATED_ANSWER_THREAD_EXPORT_PARTS}
       ></atomic-generated-answer-thread>`;
     }
 
@@ -772,11 +827,12 @@ export class AtomicGeneratedAnswer
     if (!this.areFollowUpsEnabled) {
       return nothing;
     }
-    return html` <div class="mb-2">
+    return html` <div class="my-2">
       <atomic-ask-follow-up-input
         .i18n=${this.bindings.i18n}
         .askFollowUp=${this.handleAskFollowUp.bind(this)}
         .submitButtonDisabled=${this.isAnswerGenerationOngoing}
+        exportparts=${FOLLOW_UP_INPUT_EXPORT_PARTS}
       >
       </atomic-ask-follow-up-input>
     </div>`;

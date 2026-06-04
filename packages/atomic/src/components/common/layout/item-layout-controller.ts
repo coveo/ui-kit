@@ -12,7 +12,7 @@ export interface ItemLayoutHost extends ReactiveControllerHost {
   shadowRoot?: ShadowRoot | null;
 }
 
-export interface LayoutDisplayConfig {
+interface LayoutDisplayConfig {
   display: ItemDisplayLayout;
   density: ItemDisplayDensity;
   imageSize: ItemDisplayImageSize;

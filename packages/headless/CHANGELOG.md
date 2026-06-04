@@ -1,3 +1,45 @@
+## 3.51.4
+
+### Patch Changes
+
+- [#7719](https://github.com/coveo/ui-kit/pull/7719) [`9bd57e7`](https://github.com/coveo/ui-kit/commit/9bd57e7de3b5e388d52192b3f4e47009a4e7cd81) - Fixed issue with the referrer fallback on generated answer
+
+## 3.51.3
+
+### Patch Changes
+
+- [#7717](https://github.com/coveo/ui-kit/pull/7717) [`380ad1b`](https://github.com/coveo/ui-kit/commit/380ad1bf0a79ab7dc92077af4c959d9cfa167356) Thanks [@alexprudhomme](https://github.com/alexprudhomme)! - CDN artifacts now resolve cross-package dependencies using commit-based paths, making each artifact self-contained and independent of version pointer availability.
+
+## 3.51.2
+
+### Patch Changes
+
+- [#7654](https://github.com/coveo/ui-kit/pull/7654) [`2abc0a0`](https://github.com/coveo/ui-kit/commit/2abc0a0cf854db560cf56e9337314c3736c45d88) Thanks [@Tooni](https://github.com/Tooni)! - Fix `numberOfProductsSelector` in commerce search to account for `results` when `enableResults` is true
+
+## 3.51.1
+
+### Patch Changes
+
+- [#7637](https://github.com/coveo/ui-kit/pull/7637) [`d5d4d75`](https://github.com/coveo/ui-kit/commit/d5d4d75a882074bbeb5875ed95504a30ff84df91) Thanks [@renovate-coveo](https://github.com/apps/renovate-coveo)! - Update production dependencies
+
+- [#7598](https://github.com/coveo/ui-kit/pull/7598) [`821d429`](https://github.com/coveo/ui-kit/commit/821d429d3cc247e387cfb3e5834ddc8b65443142) Thanks [@SimonMilord](https://github.com/SimonMilord)! - Forward `aq`, `cq`, `referrer`, and `tab` to Search Agent head answer requests.
+
+## 3.51.0
+
+### Minor Changes
+
+- [#7593](https://github.com/coveo/ui-kit/pull/7593) [`d12be29`](https://github.com/coveo/ui-kit/commit/d12be299fa235fe6810c268f2c89be296063ee60) Thanks [@alexprudhomme](https://github.com/alexprudhomme)! - Added `proxyBaseUrl` support for GenAI streaming endpoints:
+  - **Answer API**: Answer API requests (`/rest/organizations/{org}/answer/v1/configs/{id}/generate`) now honor the existing `search.proxyBaseUrl` configuration, routing them through the same proxy server as search requests.
+  - **Search API CRGA**: The `/rest/organizations/{org}/machinelearning/streaming/{streamId}` endpoint now correctly honors the existing `search.proxyBaseUrl` configuration, which was previously ignored.
+
+### Patch Changes
+
+- [#7500](https://github.com/coveo/ui-kit/pull/7500) [`41fdd60`](https://github.com/coveo/ui-kit/commit/41fdd609cb0b8b0d4b821f9818189fc49f727417) Thanks [@fbeaudoincoveo](https://github.com/fbeaudoincoveo)! - fix range facet URL restoration so browser back/forward clears stale range selections while preserving initial filter selections
+
+- [#7583](https://github.com/coveo/ui-kit/pull/7583) [`8445bf2`](https://github.com/coveo/ui-kit/commit/8445bf241db3aab5f0cd148c43ac3f4425f22cb1) Thanks [@mmitiche](https://github.com/mmitiche)! - fix(headless): guard follow-up requests when capability is disabled
+
+- [#7581](https://github.com/coveo/ui-kit/pull/7581) [`bd4bb98`](https://github.com/coveo/ui-kit/commit/bd4bb98837c2eb0acb7f38848c0d792f8bf1efa9) Thanks [@erocheleau](https://github.com/erocheleau)! - SFINT-6796 fix(headless): fix answer api sendFeedback logs error messages about non-serializable values
+
 ## 3.50.1
 
 ### Patch Changes

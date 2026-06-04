@@ -505,6 +505,7 @@ export class AtomicSearchBox
         }
         break;
       case 'Escape':
+        this.isExpanded = false;
         this.suggestionManager.clearSuggestions();
         break;
       case 'ArrowDown':

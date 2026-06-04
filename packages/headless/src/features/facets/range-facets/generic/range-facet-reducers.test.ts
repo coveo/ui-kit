@@ -337,7 +337,7 @@ describe('range facet reducers', () => {
       expect(value.state).toBe('selected');
     });
 
-    it('when a request #currentValues range is not found in the payload, it does not unselect it', () => {
+    it('when a request #currentValues range is not found in the payload and the facet id is not in the payload keys, it does not unselect it', () => {
       const value = buildMockNumericFacetValue({
         start: 0,
         end: 10,
@@ -353,6 +353,72 @@ describe('range facet reducers', () => {
 
       handleRangeFacetSearchParameterRestoration(state, nf);
       expect(value.state).toBe('selected');
+    });
+
+    it('when a request #currentValues range is not found in the payload but the facet id is in the payload keys, it resets it to idle', () => {
+      const id = 'size';
+      const value = buildMockNumericFacetValue({
+        start: 0,
+        end: 10,
+        state: 'selected',
+      });
+
+      state = {
+        [id]: buildMockNumericFacetSlice({
+          request: buildMockNumericFacetRequest({currentValues: [value]}),
+        }),
+      };
+      const nf = {[id]: []};
+
+      handleRangeFacetSearchParameterRestoration(state, nf);
+      expect(value.state).toBe('idle');
+    });
+
+    it('when resetting a range to idle, it sets previousState to the previous state', () => {
+      const id = 'size';
+      const value = buildMockNumericFacetValue({
+        start: 0,
+        end: 10,
+        state: 'selected',
+      });
+
+      state = {
+        [id]: buildMockNumericFacetSlice({
+          request: buildMockNumericFacetRequest({currentValues: [value]}),
+        }),
+      };
+      const nf = {[id]: []};
+
+      handleRangeFacetSearchParameterRestoration(state, nf);
+      expect(value.previousState).toBe('selected');
+    });
+
+    it('when the facet id is in the payload keys, it selects matching ranges and resets non-matching ones to idle', () => {
+      const id = 'size';
+      const matchingValue = buildMockNumericFacetValue({
+        start: 0,
+        end: 10,
+        state: 'idle',
+      });
+      const nonMatchingValue = buildMockNumericFacetValue({
+        start: 10,
+        end: 20,
+        state: 'selected',
+      });
+
+      state = {
+        [id]: buildMockNumericFacetSlice({
+          request: buildMockNumericFacetRequest({
+            currentValues: [matchingValue, nonMatchingValue],
+          }),
+        }),
+      };
+      const nf = {[id]: [matchingValue]};
+
+      handleRangeFacetSearchParameterRestoration(state, nf);
+      expect(matchingValue.state).toBe('selected');
+      expect(nonMatchingValue.state).toBe('idle');
+      expect(nonMatchingValue.previousState).toBe('selected');
     });
 
     it('when a range in the payload is not found, it adds it to #currentValues', () => {

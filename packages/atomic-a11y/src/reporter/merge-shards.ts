@@ -21,17 +21,18 @@ interface MergeShardOptions {
 
 interface MutableAutomatedResults extends Omit<
   A11yAutomatedResults,
-  'criteriaCovered'
+  'criteriaCovered' | 'criteriaViolated' | 'criteriaPassed'
 > {
   criteriaCovered: Set<string>;
+  criteriaViolated: Set<string>;
+  criteriaPassed: Set<string>;
 }
 
 interface MutableInteractiveResults extends Omit<
   A11yInteractiveResults,
-  'criteriaCovered' | 'failedCriteria'
+  'criteriaCovered'
 > {
   criteriaCovered: Set<string>;
-  failedCriteria: Set<string>;
 }
 
 interface MutableComponentReport extends Omit<
@@ -44,9 +45,10 @@ interface MutableComponentReport extends Omit<
 
 interface MutableCriterionReport extends Omit<
   A11yCriterionReport,
-  'affectedComponents'
+  'coveredComponents' | 'violatingComponents'
 > {
-  affectedComponents: Set<string>;
+  coveredComponents: Set<string>;
+  violatingComponents: Set<string>;
 }
 
 function toMutableComponent(
@@ -57,13 +59,14 @@ function toMutableComponent(
     automated: {
       ...component.automated,
       criteriaCovered: new Set(component.automated.criteriaCovered),
+      criteriaViolated: new Set(component.automated.criteriaViolated),
+      criteriaPassed: new Set(component.automated.criteriaPassed),
       incompleteDetails: [...component.automated.incompleteDetails],
     },
     interactive: component.interactive
       ? {
           ...component.interactive,
           criteriaCovered: new Set(component.interactive.criteriaCovered),
-          failedCriteria: new Set(component.interactive.failedCriteria),
         }
       : undefined,
   };
@@ -74,7 +77,8 @@ function toMutableCriterion(
 ): MutableCriterionReport {
   return {
     ...criterion,
-    affectedComponents: new Set(criterion.affectedComponents),
+    coveredComponents: new Set(criterion.coveredComponents),
+    violatingComponents: new Set(criterion.violatingComponents),
   };
 }
 
@@ -125,6 +129,14 @@ export function mergeComponents(reports: A11yReport[]): A11yComponentReport[] {
         existing.automated.criteriaCovered.add(criterion);
       }
 
+      for (const criterion of component.automated.criteriaViolated) {
+        existing.automated.criteriaViolated.add(criterion);
+      }
+
+      for (const criterion of component.automated.criteriaPassed) {
+        existing.automated.criteriaPassed.add(criterion);
+      }
+
       existing.automated.incompleteDetails.push(
         ...component.automated.incompleteDetails
       );
@@ -144,14 +156,17 @@ export function mergeComponents(reports: A11yReport[]): A11yComponentReport[] {
           criteriaCovered: [...component.automated.criteriaCovered].sort(
             compareByNumericId
           ),
+          criteriaViolated: [...component.automated.criteriaViolated].sort(
+            compareByNumericId
+          ),
+          criteriaPassed: [...component.automated.criteriaPassed].sort(
+            compareByNumericId
+          ),
         },
         interactive: component.interactive
           ? {
               ...component.interactive,
               criteriaCovered: [...component.interactive.criteriaCovered].sort(
-                compareByNumericId
-              ),
-              failedCriteria: [...component.interactive.failedCriteria].sort(
                 compareByNumericId
               ),
             }
@@ -170,22 +185,15 @@ function mergeInteractiveResults(
       criteriaCovered: new Set(source.criteriaCovered),
       testCount: source.testCount,
       passedCount: source.passedCount,
-      failedCount: source.failedCount,
-      failedCriteria: new Set(source.failedCriteria),
     };
     return;
   }
 
   target.interactive.testCount += source.testCount;
   target.interactive.passedCount += source.passedCount;
-  target.interactive.failedCount += source.failedCount;
 
   for (const criterion of source.criteriaCovered) {
     target.interactive.criteriaCovered.add(criterion);
-  }
-
-  for (const criterion of source.failedCriteria) {
-    target.interactive.failedCriteria.add(criterion);
   }
 }
 
@@ -203,8 +211,12 @@ export function mergeCriteria(
         continue;
       }
 
-      for (const componentName of criterion.affectedComponents) {
-        existing.affectedComponents.add(componentName);
+      for (const componentName of criterion.coveredComponents) {
+        existing.coveredComponents.add(componentName);
+      }
+
+      for (const componentName of criterion.violatingComponents) {
+        existing.violatingComponents.add(componentName);
       }
 
       if (criterion.interactiveCoverage) {
@@ -226,12 +238,17 @@ export function mergeCriteria(
     for (const criterionId of component.automated.criteriaCovered) {
       const existing = criteriaById.get(criterionId);
       if (existing) {
-        existing.affectedComponents.add(component.name);
+        existing.coveredComponents.add(component.name);
+        if (component.automated.criteriaViolated.includes(criterionId)) {
+          existing.violatingComponents.add(component.name);
+        }
         continue;
       }
 
       inferredCriteriaCount++;
       const metadata = getCriterionMetadata(criterionId);
+      const violating =
+        component.automated.criteriaViolated.includes(criterionId);
       criteriaById.set(criterionId, {
         id: criterionId,
         name: metadata.name,
@@ -241,7 +258,8 @@ export function mergeCriteria(
         automatedCoverage: true,
         interactiveCoverage: false,
         manualVerified: false,
-        affectedComponents: new Set([component.name]),
+        coveredComponents: new Set([component.name]),
+        violatingComponents: violating ? new Set([component.name]) : new Set(),
       });
     }
 
@@ -250,16 +268,11 @@ export function mergeCriteria(
         const existing = criteriaById.get(criterionId);
         if (existing) {
           existing.interactiveCoverage = true;
-          const isFailed =
-            component.interactive.failedCriteria.includes(criterionId);
-          const nextStatus: 'passed' | 'failed' = isFailed
-            ? 'failed'
-            : 'passed';
           existing.interactiveStatus = mergeInteractiveStatus(
             existing.interactiveStatus,
-            nextStatus
+            'passed'
           );
-          existing.affectedComponents.add(component.name);
+          existing.coveredComponents.add(component.name);
         }
       }
     }
@@ -273,29 +286,50 @@ export function mergeCriteria(
 
   return [...criteriaById.values()]
     .map((criterion): A11yCriterionReport => {
+      const coveredComponents = [...criterion.coveredComponents].sort(
+        compareByName
+      );
+      const violatingComponents = [...criterion.violatingComponents].sort(
+        compareByName
+      );
       return {
         ...criterion,
-        affectedComponents: [...criterion.affectedComponents].sort(
-          compareByName
+        coveredComponents,
+        violatingComponents,
+        conformance: resolveMergedConformance(
+          coveredComponents,
+          violatingComponents
         ),
       };
     })
     .sort((first, second) => compareByNumericId(first.id, second.id));
 }
 
+function resolveMergedConformance(
+  coveredComponents: string[],
+  violatingComponents: string[]
+): A11yCriterionReport['conformance'] {
+  const coveredCount = coveredComponents.length;
+  if (coveredCount === 0) {
+    return 'notEvaluated';
+  }
+
+  const violatingCount = violatingComponents.length;
+  if (violatingCount >= coveredCount) {
+    return 'doesNotSupport';
+  }
+  if (violatingCount > 0) {
+    return 'partiallySupports';
+  }
+
+  return 'supports';
+}
+
 function mergeInteractiveStatus(
-  current: 'passed' | 'failed' | 'mixed' | undefined,
-  incoming: 'passed' | 'failed' | 'mixed'
-): 'passed' | 'failed' | 'mixed' {
-  if (!current) {
-    return incoming;
-  }
-
-  if (current === incoming) {
-    return current;
-  }
-
-  return 'mixed';
+  current: 'passed' | undefined,
+  incoming: 'passed'
+): 'passed' {
+  return incoming;
 }
 
 function mergeEvaluationMethods(reports: A11yReport[]): string[] {

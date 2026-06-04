@@ -18,8 +18,6 @@ export interface CriterionAggregate {
 
 export interface InteractiveAggregate {
   coveredComponents: Set<string>;
-  passedComponents: Set<string>;
-  failedComponents: Set<string>;
 }
 
 export interface A11yOverrideEntry {
@@ -28,7 +26,7 @@ export interface A11yOverrideEntry {
   reason: string;
 }
 
-export interface ManualAuditCriterionValue {
+interface ManualAuditCriterionValue {
   conformance: string;
   remarks?: string;
 }

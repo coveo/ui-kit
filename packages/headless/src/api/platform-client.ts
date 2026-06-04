@@ -153,6 +153,18 @@ export function getOrganizationEndpoint(
   return `https://${organizationId}${endpointTypePart}.org${environmentSuffix}.coveo.com`;
 }
 
+/**
+ * Returns the provided API base URL (proxy) if set,
+ * otherwise falls back to the resolved organization endpoint.
+ */
+export function getApiBaseUrlOrOrganizationEndpoint(
+  apiBaseUrl: string | undefined,
+  organizationId: string,
+  environment: PlatformEnvironment = 'prod'
+) {
+  return apiBaseUrl ?? getOrganizationEndpoint(organizationId, environment);
+}
+
 export function getSearchApiBaseUrl(
   organizationId: string,
   environment: PlatformEnvironment = 'prod'

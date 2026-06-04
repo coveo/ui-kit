@@ -2,6 +2,7 @@ import type {SearchCommerceSuccessResponse} from '../../../api/commerce/search/r
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {buildMockCommerceEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockProduct} from '../../../test/mock-product.js';
+import {buildMockSpotlightContent} from '../../../test/mock-spotlight-content.js';
 import {
   moreProductsAvailableSelector,
   numberOfProductsSelector,
@@ -74,6 +75,7 @@ describe('commerce search selectors', () => {
       commerceSearch: {
         responseId: 'some-response-id',
         products: [buildMockProduct(), buildMockProduct()],
+        results: [],
         isLoading: false,
         error: null,
         requestId: 'some-request-id',
@@ -84,7 +86,28 @@ describe('commerce search selectors', () => {
     expect(numberOfProductsSelector(state)).toEqual(2);
   });
 
-  it('#numberOfProductsSelector should return 0 when the products are not set', () => {
+  it('#numberOfProductsSelector should return the number of results when products is empty', () => {
+    const state = buildMockCommerceState({
+      commerceSearch: {
+        responseId: 'some-response-id',
+        products: [],
+        results: [
+          buildMockProduct(),
+          buildMockSpotlightContent(),
+          buildMockProduct(),
+          buildMockProduct(),
+        ],
+        isLoading: false,
+        error: null,
+        requestId: 'some-request-id',
+        facets: [],
+        queryExecuted: '',
+      },
+    });
+    expect(numberOfProductsSelector(state)).toEqual(4);
+  });
+
+  it('#numberOfProductsSelector should return 0 when both products and results are empty', () => {
     const state = buildMockCommerceState();
     expect(numberOfProductsSelector(state)).toEqual(0);
   });
@@ -94,6 +117,7 @@ describe('commerce search selectors', () => {
       commerceSearch: {
         responseId: 'some-response-id',
         products: [buildMockProduct(), buildMockProduct()],
+        results: [],
         isLoading: false,
         error: null,
         requestId: 'some-request-id',
@@ -113,6 +137,7 @@ describe('commerce search selectors', () => {
       commerceSearch: {
         responseId: 'some-response-id',
         products: [buildMockProduct(), buildMockProduct()],
+        results: [],
         isLoading: false,
         error: null,
         requestId: 'some-request-id',
@@ -132,6 +157,7 @@ describe('commerce search selectors', () => {
       commerceSearch: {
         responseId: 'some-response-id',
         products: [buildMockProduct(), buildMockProduct()],
+        results: [],
         isLoading: false,
         error: null,
         requestId: 'some-request-id',
