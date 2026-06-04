@@ -1,3 +1,13 @@
+## 3.59.4
+
+### Patch Changes
+
+- [#7710](https://github.com/coveo/ui-kit/pull/7710) [`dc52580`](https://github.com/coveo/ui-kit/commit/dc52580d3022234395948d3982af7c9f22598d16) - Pressing Escape in the search box (search, commerce and insight) now collapses the suggestions popup deterministically, preventing a late asynchronous query-suggestion fetch from re-opening it after dismissal.
+
+- Updated dependencies [[`9bd57e7`](https://github.com/coveo/ui-kit/commit/9bd57e7de3b5e388d52192b3f4e47009a4e7cd81)]:
+  - @coveo/headless@3.51.4
+  - @coveo/atomic-legacy@0.0.20
+
 ## 3.59.3
 
 ### Patch Changes

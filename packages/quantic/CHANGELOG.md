@@ -1,3 +1,12 @@
+## 3.39.1
+
+### Patch Changes
+
+- [#7714](https://github.com/coveo/ui-kit/pull/7714) [`0405a9a`](https://github.com/coveo/ui-kit/commit/0405a9ae8f4f97158d27ff9f46a0d23ba3adcb7d) - refactored the quanticutils
+
+- Updated dependencies [[`9bd57e7`](https://github.com/coveo/ui-kit/commit/9bd57e7de3b5e388d52192b3f4e47009a4e7cd81)]:
+  - @coveo/headless@3.51.4
+
 ## 3.39.0
 
 ### Minor Changes
