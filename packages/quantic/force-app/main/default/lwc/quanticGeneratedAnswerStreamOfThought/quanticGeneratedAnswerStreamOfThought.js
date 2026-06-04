@@ -9,12 +9,16 @@ import answeringCompleted from '@salesforce/label/c.quantic_AgentGenerationStepA
 import collapseButton from '@salesforce/label/c.quantic_CollapseButton';
 import loadingLabel from '@salesforce/label/c.quantic_Loading';
 import {LightningElement, api} from 'lwc';
+// @ts-ignore
+import streamOfThoughtTemplate from './templates/streamOfThought.html';
+// @ts-ignore
+import collapsedSummaryTemplate from './templates/collapsedSummary.html';
 
 /** @typedef {import("coveo").GenerationStep} GenerationStep */
 
 /**
  * @typedef {Object} ResolvedStep
- * @property {'thinking-before-search'|'searching'|'thinking-after-search'|'answering'} type
+ * @property {'thinking-before-search'|'searching'|'thinking-after-search'|'answering'} name
  * @property {'active'|'completed'} status
  */
 
@@ -46,19 +50,19 @@ const STEP_LABEL_KEYS = {
 export function resolveSteps(steps) {
   let searchWasPerformed = false;
   return steps.map((step) => {
-    /** @type {ResolvedStep['type']} */
-    let type;
+    /** @type {ResolvedStep['name']} */
+    let name;
     if (step.name === 'searching') {
       searchWasPerformed = true;
-      type = 'searching';
+      name = 'searching';
     } else if (step.name === 'answering') {
-      type = 'answering';
+      name = 'answering';
     } else {
-      type = searchWasPerformed
+      name = searchWasPerformed
         ? 'thinking-after-search'
         : 'thinking-before-search';
     }
-    return {type, status: step.status};
+    return {name, status: step.status};
   });
 }
 
@@ -110,7 +114,7 @@ export default class QuanticGeneratedAnswerStreamOfThought extends LightningElem
   /** @returns {Array<{key: number, isActive: boolean, label: string}>} */
   get resolvedSteps() {
     return this.steps.map((step, index) => {
-      const labelKey = STEP_LABEL_KEYS[step.type][step.status];
+      const labelKey = STEP_LABEL_KEYS[step.name][step.status];
       return {
         key: index,
         isActive: step.status === 'active',
@@ -135,19 +139,24 @@ export default class QuanticGeneratedAnswerStreamOfThought extends LightningElem
   }
 
   /** @returns {boolean} */
-  get showCollapsed() {
+  get shouldShowCollapsedSummary() {
     return !this._isStreaming && !this._expanded && this.isCollapsible;
   }
 
   /** @returns {boolean} */
-  get showExpandedToggle() {
+  get shouldShowCollapseButton() {
     return !this._isStreaming && this._expanded && this.isCollapsible;
   }
 
   /** @returns {string} */
   get collapsedSummaryLabel() {
     const lastStep = this.steps[this.steps.length - 1];
-    const labelKey = STEP_LABEL_KEYS[lastStep.type].completed;
+    const labelKey = STEP_LABEL_KEYS[lastStep.name].completed;
     return labelKey;
+  }
+
+  render() {
+    if (this.shouldShowCollapsedSummary) return collapsedSummaryTemplate;
+    return streamOfThoughtTemplate;
   }
 }

@@ -1,0 +1,32 @@
+<template>
+  <button
+    data-testid="collapsed-summary"
+    class="stream-of-thought__collapsed-summary slds-grid slds-grid_vertical-align-center slds-p-around_none slds-m-vertical_xxx-small"
+    type="button"
+    aria-expanded={_expanded}
+    onclick={handleToggle}
+  >
+    <span
+      class="stream-of-thought__step-icon slds-m-right_x-small"
+      data-testid="checkmark"
+    >
+      <lightning-icon
+        icon-name="utility:check"
+        size="xx-small"
+        variant="success"
+        aria-hidden="true"
+      ></lightning-icon>
+    </span>
+    <span
+      class="slds-text-body_small slds-text-color_weak slds-m-right_x-small"
+      data-testid="collapsed-summary-label"
+      >{collapsedSummaryLabel}</span
+    >
+    <lightning-icon
+      data-testid="chevron-down"
+      icon-name="utility:chevrondown"
+      size="xx-small"
+      aria-hidden="true"
+    ></lightning-icon>
+  </button>
+</template>

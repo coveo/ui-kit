@@ -1,11 +1,11 @@
 .stream-of-thought__collapsed-summary,
-.stream-of-thought__toggle-button {
+.stream-of-thought__collapse-button {
   border: none;
   background: transparent;
 }
 
 .stream-of-thought__collapsed-summary:focus-visible,
-.stream-of-thought__toggle-button:focus-visible {
+.stream-of-thought__collapse-button:focus-visible {
   border-radius: 0.25rem;
   outline: 2px solid var(--lwc-brandPrimary, #1b96ff);
   outline-offset: 2px;
