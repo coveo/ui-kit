@@ -8,7 +8,7 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
 import {userEvent, waitFor} from 'storybook/test';
 import {testHoverContentA11y} from '@/storybook-utils/a11y/hover-content.js';
-import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
+import {testStatusMessageSequenceA11y} from '@/storybook-utils/a11y/status-message.js';
 import {MockAgentApi} from '@/storybook-utils/api/agent/mock';
 import {MockAnswerApi} from '@/storybook-utils/api/answer/mock';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
@@ -211,12 +211,15 @@ export const A11yStatusMessage: Story = {
   },
   play: async (context) => {
     await play(context);
-    await testStatusMessageA11y(context, {
+    await testStatusMessageSequenceA11y(context, {
       triggerAction: async () => {
         await submitGeneratedAnswerQuery(context);
       },
-      expectedText: /generat/i,
-      timeout: 15000,
+      expectedSequence: [
+        'Generating answer',
+        /Generated answer: # Resolving Netflix Connection Issues with TiVo[\s\S]*Test Internet Connection/,
+      ],
+      timeout: 12000,
     });
   },
 };
