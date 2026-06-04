@@ -892,4 +892,12 @@
     <label>Recursos relevantes para este caso</label>
     <name>quantic_InsightRelatedToThisCase</name>
   </customLabels>
+  <customLabels>
+    <name>quantic_AskFollowUp</name>
+    <label>Hacer una pregunta de seguimiento</label>
+  </customLabels>
+  <customLabels>
+    <name>quantic_SubmitFollowUp</name>
+    <label>Enviar seguimiento</label>
+  </customLabels>
 </Translations>

@@ -28,30 +28,11 @@ function buildCriterionAggregates(
 ): Map<string, CriterionAggregate> {
   const aggregates = new Map<string, CriterionAggregate>();
 
-  for (const component of components) {
-    for (const criterionId of component.automated.criteriaCovered) {
-      const aggregate = aggregates.get(criterionId) ?? {
-        coveredComponents: new Set<string>(),
-        violatingComponents: new Set<string>(),
-      };
-
-      aggregate.coveredComponents.add(component.name);
-      aggregates.set(criterionId, aggregate);
-    }
-  }
-
   for (const criterion of criteria) {
-    const aggregate = aggregates.get(criterion.id) ?? {
-      coveredComponents: new Set<string>(),
-      violatingComponents: new Set<string>(),
-    };
-
-    for (const componentName of criterion.affectedComponents) {
-      aggregate.coveredComponents.add(componentName);
-      aggregate.violatingComponents.add(componentName);
-    }
-
-    aggregates.set(criterion.id, aggregate);
+    aggregates.set(criterion.id, {
+      coveredComponents: new Set(criterion.coveredComponents),
+      violatingComponents: new Set(criterion.violatingComponents),
+    });
   }
 
   return aggregates;
@@ -198,8 +179,6 @@ export function buildOpenAcrReport(
     if (!evaluationMethods.includes('Manual audit')) {
       evaluationMethods += '; Manual audit';
     }
-  } else {
-    evaluationMethods += '; manual audit placeholders pending';
   }
 
   const criteriaByChapter = buildOpenAcrCriteria(
@@ -209,7 +188,7 @@ export function buildOpenAcrReport(
   );
 
   const successNotes =
-    'Conformance is based on automated Storybook + axe-core output, interactive keyboard testing, and pending manual validation.';
+    'Conformance is based on automated Storybook + axe-core output and interactive keyboard testing.';
 
   return {
     title: DEFAULT_REPORT_TITLE,
@@ -234,7 +213,7 @@ export function buildOpenAcrReport(
     last_modified_date: DEFAULT_REPORT_DATE,
     version: 1,
     notes:
-      'Generated from a11y/reports/a11y-report.json. Automated statuses are derived from axe-core results, with manual placeholders for Phase 3.',
+      'Generated from a11y/reports/a11y-report.json. Conformance is derived from axe-core results, interactive keyboard tests, and manual audits. Rows marked [Manual audit required] have no automated or interactive coverage and are reported as Does Not Support pending manual verification.',
     evaluation_methods_used: evaluationMethods,
     repository: 'https://github.com/coveo/ui-kit',
     feedback: 'https://github.com/coveo/ui-kit/issues',

@@ -1,4 +1,3 @@
-import {DEFAULT_MANUAL_PLACEHOLDER_NOTE} from '../shared/constants.js';
 import type {A11yCriterionReport} from '../shared/types.js';
 import {
   countManualConformances,
@@ -55,7 +54,7 @@ function resolveAutomatedConformance(
 ): OpenAcrConformance {
   const coveredCount = aggregate?.coveredComponents.size ?? 0;
   if (coveredCount === 0) {
-    return 'not-evaluated';
+    return 'does-not-support';
   }
 
   const violatingCount = aggregate?.violatingComponents.size ?? 0;
@@ -98,7 +97,7 @@ export function resolveConformance(
 
   const existingConformance = mapCriterionConformance(criterion);
 
-  if (existingConformance && existingConformance !== 'not-evaluated') {
+  if (existingConformance) {
     return existingConformance;
   }
 
@@ -186,7 +185,7 @@ export function buildRemarks(context: RemarksContext): string {
       coveredComponents,
       violatingComponents
     );
-    return `${primary}${automatedSuffix} ${DEFAULT_MANUAL_PLACEHOLDER_NOTE}`;
+    return automatedSuffix ? `${primary} ${automatedSuffix}` : primary;
   }
 
   const automatedCoveredCount = coveredComponents.length;
@@ -196,20 +195,22 @@ export function buildRemarks(context: RemarksContext): string {
   );
 
   if (conformance === 'supports') {
-    return `Automated testing found no axe-core violations for WCAG ${criterionId} across ${automatedCoveredCount} mapped component(s).${interactiveSuffix} ${DEFAULT_MANUAL_PLACEHOLDER_NOTE}`;
+    return `Automated testing found no axe-core violations for WCAG ${criterionId} across ${automatedCoveredCount} mapped component(s).${interactiveSuffix}`;
   }
 
   if (conformance === 'partially-supports') {
-    return `Automated testing found violations for WCAG ${criterionId} in ${automatedViolatingCount} of ${automatedCoveredCount} mapped component(s).${interactiveSuffix} ${DEFAULT_MANUAL_PLACEHOLDER_NOTE}`;
+    return `Automated testing found violations for WCAG ${criterionId} in ${automatedViolatingCount} of ${automatedCoveredCount} mapped component(s).${interactiveSuffix}`;
   }
 
   if (conformance === 'does-not-support') {
-    return `Automated testing found violations for WCAG ${criterionId} in all ${automatedCoveredCount} mapped component(s).${interactiveSuffix} ${DEFAULT_MANUAL_PLACEHOLDER_NOTE}`;
+    if (
+      automatedCoveredCount === 0 &&
+      interactiveCoveredComponents.length === 0
+    ) {
+      return `WCAG ${criterionId} has not been verified — no automated or interactive test coverage exists in the current test scope. [Manual audit required]`;
+    }
+    return `Automated testing found violations for WCAG ${criterionId} in all ${automatedCoveredCount} mapped component(s).${interactiveSuffix}`;
   }
 
-  if (conformance === 'not-applicable') {
-    return `WCAG ${criterionId} is not applicable for the tested component scope.`;
-  }
-
-  return `WCAG ${criterionId} has no automated mapping evidence in the JSON report. ${DEFAULT_MANUAL_PLACEHOLDER_NOTE}`;
+  return `WCAG ${criterionId} is not applicable for the tested component scope.`;
 }

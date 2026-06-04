@@ -1,5 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {testCheckboxA11y} from '@/storybook-utils/a11y/checkbox.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
@@ -82,4 +83,16 @@ export const DisplayAsLink: Story = {
     field: 'snrating',
   },
   decorators: [facetDecorator],
+};
+
+export const A11yCheckbox: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  args: {
+    field: 'snrating',
+  },
+  decorators: [facetDecorator],
+  play: async (context) => {
+    await play(context);
+    await testCheckboxA11y(context);
+  },
 };
