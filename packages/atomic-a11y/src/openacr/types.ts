@@ -8,8 +8,7 @@ export type OpenAcrConformance =
   | 'supports'
   | 'partially-supports'
   | 'does-not-support'
-  | 'not-applicable'
-  | 'not-evaluated';
+  | 'not-applicable';
 
 export interface CriterionAggregate {
   coveredComponents: Set<string>;
@@ -106,7 +105,6 @@ export const VALID_OVERRIDE_CONFORMANCE_VALUES: ReadonlySet<OpenAcrConformance> 
     'partially-supports',
     'does-not-support',
     'not-applicable',
-    'not-evaluated',
   ]);
 
 export const manualStatusToConformance: Record<string, OpenAcrConformance> = {
@@ -124,5 +122,4 @@ export const reportConformanceToOpenAcr: Record<
   partiallySupports: 'partially-supports',
   doesNotSupport: 'does-not-support',
   notApplicable: 'not-applicable',
-  notEvaluated: 'not-evaluated',
 };
