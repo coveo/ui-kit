@@ -1,14 +1,17 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {within} from 'shadow-dom-testing-library';
 import {testCheckboxA11y} from '@/storybook-utils/a11y/checkbox.js';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {searchFacetTransformer} from '@/storybook-utils/api/search/facet-transformer';
+import {buildSearchResponseWithResults} from '@/storybook-utils/api/search/search-response-mocks.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-color-facet/atomic-color-facet.js';
+import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 
 const searchApiHarness = new MockSearchApi();
 
@@ -253,22 +256,40 @@ export const A11yStatusMessage: Story = {
     label: 'File Type',
     'display-values-as': 'checkbox',
   },
-  decorators: [facetDecorator, colorFacetStylesDecorator],
+  decorators: [
+    facetDecorator,
+    colorFacetStylesDecorator,
+    (story) => html`<atomic-query-summary></atomic-query-summary>${story()}`,
+  ],
   beforeEach: () => {
-    mockDefaultFacetResponse();
+    searchApiHarness.searchEndpoint.mockOnce((response) =>
+      buildSearchResponseWithResults(120)(
+        'facets' in response
+          ? {
+              ...response,
+              facets: [
+                ...(response.facets || []),
+                createFacetResponse(baseFacetValues),
+              ],
+            }
+          : response
+      )
+    );
+    searchApiHarness.searchEndpoint.mockOnce(
+      buildSearchResponseWithResults(42)
+    );
   },
   play: async (context) => {
     await play(context);
     await testStatusMessageA11y(context, {
       triggerAction: async () => {
-        const checkbox = await context.canvas.findByShadowLabelText(
-          'Inclusion filter on',
-          {exact: false}
-        );
+        const [checkbox] = await within(
+          context.canvasElement
+        ).findAllByShadowLabelText('Inclusion filter on', {exact: false});
         checkbox.click();
       },
-      expectedText: /results/i,
-      timeout: 10000,
+      expectedText: 'Results loaded. Results 1-10 of 42',
+      timeout: 5000,
     });
   },
 };
