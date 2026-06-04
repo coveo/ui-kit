@@ -75,7 +75,7 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
   }
 
   get hasError() {
-    return !!this.generatedAnswer?.error && !this.answer;
+    return !!this.generatedAnswer?.error;
   }
 
   get cannotAnswer() {
@@ -101,10 +101,6 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
 
   get shouldShowActions() {
     return Boolean(this.answer) && !this.isStreaming;
-  }
-
-  get shouldShowFeedback() {
-    return !this.generatedAnswer?.feedbackSubmitted;
   }
 
   handleLike(event) {
@@ -138,7 +134,7 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
       new CustomEvent(eventName, {
         detail: {
           answerId: this.answerId,
-          ...payload
+          ...payload,
         },
         bubbles: true,
         composed: true,

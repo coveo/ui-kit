@@ -30,21 +30,19 @@
             data-testid="generated-answer-body__actions"
             class="slds-grid slds-grid_vertical-align-center"
           >
-            <template lwc:if={shouldShowFeedback}>
-              <c-quantic-feedback
-                state={computedFeedbackState}
-                onquantic__like={handleLike}
-                onquantic__dislike={handleDislike}
-                like-icon-name="utility:like"
-                like-label={labels.thisAnswerWasHelpful}
-                dislike-icon-name="utility:dislike"
-                dislike-label={labels.thisAnswerWasNotHelpful}
-                size="x-small"
-                question=""
-                hide-explain-why-button
-                hide-labels
-              ></c-quantic-feedback>
-            </template>
+            <c-quantic-feedback
+              state={computedFeedbackState}
+              onquantic__like={handleLike}
+              onquantic__dislike={handleDislike}
+              like-icon-name="utility:like"
+              like-label={labels.thisAnswerWasHelpful}
+              dislike-icon-name="utility:dislike"
+              dislike-label={labels.thisAnswerWasNotHelpful}
+              size="x-small"
+              question=""
+              hide-explain-why-button
+              hide-labels
+            ></c-quantic-feedback>
             <c-quantic-generated-answer-copy-to-clipboard
               data-testid="generated-answer-body__copy-to-clipboard"
               answer={answer}

@@ -3,7 +3,29 @@
 import {createElement} from 'lwc';
 // @ts-ignore
 import QuanticGeneratedAnswerBody from 'c/quanticGeneratedAnswerBody';
+import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 import {cleanup, flushPromises} from 'c/testUtils';
+
+jest.mock('c/quanticHeadlessLoader');
+
+const initializedElements = new WeakSet();
+// @ts-ignore
+mockHeadlessLoader.initializeWithHeadless = (element, _, initialize) => {
+  if (!initializedElements.has(element)) {
+    initializedElements.add(element);
+    initialize({});
+  }
+};
+// @ts-ignore
+mockHeadlessLoader.getHeadlessBundle = () => ({
+  buildInteractiveCitation: jest.fn((engine, {options}) => options.citation),
+});
+
+jest.mock(
+  '@salesforce/label/c.quantic_Citations',
+  () => ({default: 'Citations'}),
+  {virtual: true}
+);
 jest.mock('c/quanticUtils', () => ({
   loadMarkdownDependencies: jest.fn(() => Promise.resolve()),
   transformMarkdownToHtml: jest.fn((answer) => answer),
@@ -256,6 +278,58 @@ describe('c-quantic-generated-answer-body', () => {
       expect(error.textContent).toContain(
         'Conversation turn limit reached. Please start a new conversation.'
       );
+    });
+  });
+
+  describe('rendering of actions', () => {
+    it('should not display actions while the answer is streaming', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        generatedAnswer: {
+          ...defaultOptions.generatedAnswer,
+          isStreaming: true,
+        },
+      });
+      await flushPromises();
+
+      const actions = element.shadowRoot.querySelector(selectors.actions);
+
+      expect(actions).toBeNull();
+    });
+
+    it('should not display actions when there is no answer', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        generatedAnswer: {
+          ...defaultOptions.generatedAnswer,
+          answer: '',
+        },
+      });
+      await flushPromises();
+
+      const actions = element.shadowRoot.querySelector(selectors.actions);
+
+      expect(actions).toBeNull();
+    });
+  });
+
+  describe('when generatedAnswer is null', () => {
+    it('should render without errors', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        generatedAnswer: null,
+      });
+      await flushPromises();
+
+      const error = element.shadowRoot.querySelector(selectors.error);
+      const noAnswer = element.shadowRoot.querySelector(selectors.noAnswer);
+      const actions = element.shadowRoot.querySelector(selectors.actions);
+      const citations = element.shadowRoot.querySelector(selectors.citations);
+
+      expect(error).toBeNull();
+      expect(noAnswer).toBeNull();
+      expect(actions).toBeNull();
+      expect(citations).toBeNull();
     });
   });
 });
