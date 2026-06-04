@@ -167,40 +167,46 @@ export async function testDisclosureA11y(
 
     if (!options.skipKeyboard) {
       await step('Enter key toggles aria-expanded (2.1.1)', async () => {
-      // Start from expanded state where button is visible and focusable
-      if (trigger.getAttribute('aria-expanded') !== 'true') {
-        await userEvent.click(trigger);
-        await waitFor(() => {
-          expect(trigger.getAttribute('aria-expanded')).toBe('true');
-        }, {timeout: 5000});
-      }
-      trigger.focus();
-      await userEvent.keyboard('{Enter}');
-      await waitFor(
-        () => {
-          expect(trigger.getAttribute('aria-expanded')).toBe('false');
-        },
-        {timeout: 5000}
-      );
-    });
+        // Start from expanded state where button is visible and focusable
+        if (trigger.getAttribute('aria-expanded') !== 'true') {
+          await userEvent.click(trigger);
+          await waitFor(
+            () => {
+              expect(trigger.getAttribute('aria-expanded')).toBe('true');
+            },
+            {timeout: 5000}
+          );
+        }
+        trigger.focus();
+        await userEvent.keyboard('{Enter}');
+        await waitFor(
+          () => {
+            expect(trigger.getAttribute('aria-expanded')).toBe('false');
+          },
+          {timeout: 5000}
+        );
+      });
 
-    await step('Space key toggles aria-expanded (2.1.1)', async () => {
-      // Start from expanded state where button is visible and focusable
-      if (trigger.getAttribute('aria-expanded') !== 'true') {
-        await userEvent.click(trigger);
-        await waitFor(() => {
-          expect(trigger.getAttribute('aria-expanded')).toBe('true');
-        }, {timeout: 5000});
-      }
-      trigger.focus();
-      await userEvent.keyboard(' ');
-      await waitFor(
-        () => {
-          expect(trigger.getAttribute('aria-expanded')).toBe('false');
-        },
-        {timeout: 5000}
-      );
-    });
+      await step('Space key toggles aria-expanded (2.1.1)', async () => {
+        // Start from expanded state where button is visible and focusable
+        if (trigger.getAttribute('aria-expanded') !== 'true') {
+          await userEvent.click(trigger);
+          await waitFor(
+            () => {
+              expect(trigger.getAttribute('aria-expanded')).toBe('true');
+            },
+            {timeout: 5000}
+          );
+        }
+        trigger.focus();
+        await userEvent.keyboard(' ');
+        await waitFor(
+          () => {
+            expect(trigger.getAttribute('aria-expanded')).toBe('false');
+          },
+          {timeout: 5000}
+        );
+      });
     } // end skipKeyboard guard
 
     if (options.assertControlledRegion) {

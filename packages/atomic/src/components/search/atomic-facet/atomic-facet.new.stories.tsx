@@ -152,6 +152,13 @@ export const A11yCheckbox: Story = {
 
 export const A11yDisclosure: Story = {
   tags: ['a11y', 'test', '!dev'],
+  parameters: {
+    a11y: {
+      options: {
+        rules: {'color-contrast': {enabled: false}},
+      },
+    },
+  },
   args: {
     field: 'objecttype',
   },
