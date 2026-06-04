@@ -24,7 +24,7 @@ function createFacet(initial: Partial<FacetSearchState>) {
 }
 
 const i18n = {
-  t: (key: string, opts: {count: number; label: string}) =>
+  t: (_key: string, opts: {count: number; label: string}) =>
     `${opts.count} in ${opts.label}`,
 } as unknown as i18n;
 
