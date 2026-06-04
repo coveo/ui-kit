@@ -193,6 +193,7 @@ export class AtomicSmartSnippetExpandableAnswer
             this.isExpanded ? this.handleCollapse() : this.handleExpand()}
           class="text-primary mb-4 hover:underline"
           part=${this.isExpanded ? 'show-less-button' : 'show-more-button'}
+          aria-expanded=${this.isExpanded ? 'true' : 'false'}
         >
           ${this.bindings.i18n.t(this.isExpanded ? 'show-less' : 'show-more')}
           <atomic-icon
