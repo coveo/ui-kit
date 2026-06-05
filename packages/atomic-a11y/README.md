@@ -52,17 +52,34 @@ pnpm a11y:merge-shards    # Merge shard reports from parallel CI runs
 pnpm a11y:vpat            # Generate OpenACR YAML + VPAT markdown
 ```
 
-## Manual audits
+## Manual audits (QA)
 
-Automated testing covers ~30-40% of WCAG criteria. The rest requires human review. QA creates JSON baseline files that feed into the OpenACR pipeline alongside automated results.
+Automated tests can't cover every WCAG criterion. For the rest, record results per **surface** — an experience audited as a whole (search, commerce, insight, …), not per component.
 
-**→ [Manual Audit Guide](docs/manual-audit-guide.md)**
+1. **Open or create the surface file** — `a11y/reports/manual-audit-{surface}.json`. The `{surface}` label is just how you split the work into manageable files; the VPAT doesn't attach meaning to it.
+2. **Add the rules you tested** as `criterion → result`:
 
-## Accessibility strategy
+   ```json
+   {
+     "surface": "commerce",
+     "wcag22Criteria": {
+       "2.4.7-focus-visible": "pass",
+       "1.4.3-contrast-minimum": {
+         "conformance": "fail",
+         "remarks": "Focus ring fails 3:1 on the dark theme."
+       }
+     }
+   }
+   ```
 
-WCAG 2.2 A/AA criteria with no automated, interactive, or manual coverage are emitted as **Does Not Support** with a `[Manual audit required]` remark in the OpenACR/VPAT output. Contributors can mark criteria as `not-applicable` in `a11y/a11y-overrides.json` for criteria that genuinely do not apply, or provide manual audit results in `a11y/reports/manual-audit-*.json` as components are reviewed. This prevents blanket CI failures and allows teams to address accessibility debt incrementally.
+   - Result is `pass` | `fail` | `partial` | `not-applicable`, or `{conformance, remarks}` to add a note (the remark shows in the VPAT).
+   - Key is `{wcag-id}-{slug}`; the id must be a real WCAG 2.2 A/AA criterion. List only what you tested — omitted criteria stay _Does Not Support [manual audit required]_.
+3. **Run `pnpm a11y:vpat`** — regenerates the VPAT and warns on invalid keys.
+4. **Commit the file.**
 
-**→ See the [Manual Audit Guide](docs/manual-audit-guide.md) for the contributor workflow**
+Each criterion's VPAT verdict is the **worst** result across all surface files plus the automated and interactive signals (`fail > partial > pass > not-applicable`). So a manual `fail` surfaces even if axe was clean, and a manual `pass` can't hide a real axe violation. For permanent, by-design exceptions, use `a11y/a11y-overrides.json` (authoritative — it wins outright).
+
+Full reference: [Manual Audit Guide](docs/manual-audit-guide.md).
 
 ## Structure
 

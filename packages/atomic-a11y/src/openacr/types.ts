@@ -30,17 +30,17 @@ interface ManualAuditCriterionValue {
   remarks?: string;
 }
 
-export interface ManualAuditBaselineEntry {
-  name: string;
-  category: string;
-  manual: {
-    status: string;
-    wcag22Criteria: Record<string, string | ManualAuditCriterionValue>;
-  };
+/**
+ * A manual-audit file: one surface-scoped record of audited criteria.
+ * `surface` is a free-text label for QA organization only — the pipeline
+ * attaches no meaning to it and it does not appear in the VPAT.
+ */
+export interface ManualAuditFile {
+  surface?: string;
+  wcag22Criteria: Record<string, string | ManualAuditCriterionValue>;
 }
 
 export interface ManualAuditAggregate {
-  componentName: string;
   criterionId: string;
   conformance: OpenAcrConformance;
   remarks?: string;
@@ -112,6 +112,17 @@ export const manualStatusToConformance: Record<string, OpenAcrConformance> = {
   fail: 'does-not-support',
   partial: 'partially-supports',
   'not-applicable': 'not-applicable',
+};
+
+/**
+ * Severity ranking for worst-wins resolution (higher = worse).
+ * does-not-support > partially-supports > supports > not-applicable.
+ */
+export const CONFORMANCE_SEVERITY: Record<OpenAcrConformance, number> = {
+  'does-not-support': 3,
+  'partially-supports': 2,
+  supports: 1,
+  'not-applicable': 0,
 };
 
 export const reportConformanceToOpenAcr: Record<
