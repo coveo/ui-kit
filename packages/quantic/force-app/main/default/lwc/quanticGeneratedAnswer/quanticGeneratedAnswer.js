@@ -258,7 +258,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   updateState() {
     this.state = this.generatedAnswer.state;
-    this._areFollowUpsEnabled = !!this.state?.followUpAnswers?.isEnabled;
     this.updateFeedbackState();
     this.ariaLiveMessage.dispatchMessage(this.getGeneratedAnswerStatus());
 
