@@ -130,14 +130,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * @default false
    */
   @api disableCitationAnchoring = false;
-  /**
-   * Whether the generated answer content section should be scrollable with a fixed height.
-   * When enabled, the collapsible behavior is ignored.
-   * @api
-   * @type {boolean}
-   * @default false
-   */
-  @api scrollable = false;
 
   labels = {
     generatedAnswerForYou,
@@ -179,6 +171,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   ariaLiveMessage;
   /** @type {boolean} */
   hasInitializationError = false;
+  /** @type {boolean} */
+  _areFollowUpsEnabled = false;
   /** @type {boolean} */
   _exceedsMaximumHeight = false;
   /** @type {boolean} */
@@ -264,6 +258,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   updateState() {
     this.state = this.generatedAnswer.state;
+    this._areFollowUpsEnabled = !!this.state?.followUpAnswers?.isEnabled;
     this.updateFeedbackState();
     this.ariaLiveMessage.dispatchMessage(this.getGeneratedAnswerStatus());
 
@@ -489,8 +484,13 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return this.state.isVisible;
   }
 
+  get areFollowUpsEnabled() {
+    // TODO SFINT-6786: Modify this getter to return the actual value from the state for follow-up enabled/agentId.
+    return this._areFollowUpsEnabled;
+  }
+
   get isCollapsibleEnabled() {
-    return this.collapsible && !this.scrollable;
+    return this.collapsible && !this.areFollowUpsEnabled;
   }
 
   get isAnswerCollapsed() {
@@ -516,7 +516,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   get contentSectionClass() {
     const baseClass =
       'generated-answer__content slds-p-top_medium slds-p-horizontal_large';
-    return this.scrollable
+    return this.areFollowUpsEnabled
       ? `${baseClass} generated-answer__content--scrollable`
       : baseClass;
   }

@@ -785,11 +785,26 @@ describe('c-quantic-generated-answer', () => {
         expect(generatedAnswerCitations.disableCitationAnchoring).toBe(false);
       });
 
-      describe('when the scrollable property is set to true', () => {
-        it('should render the content section with the scrollable class', async () => {
+      describe('when follow-ups are enabled', () => {
+        beforeEach(() => {
+          generatedAnswerState = {
+            ...initialGeneratedAnswerState,
+            isStreaming: false,
+            answer: exampleAnswer,
+            answerContentFormat: exampleAnswerContentFormat,
+            citations: exampleCitations,
+            followUpAnswers: {
+              isEnabled: true,
+            },
+          };
+          mockSuccessfulHeadlessInitialization();
+          prepareHeadlessState();
+        });
+        it('should render the content section with the scrollable class and ignore the collapsible feature', async () => {
+          mockAnswerHeight = defaultAnswerHeight + 100;
           const element = createTestComponent({
             ...defaultOptions,
-            scrollable: true,
+            collapsible: true,
           });
           await flushPromises();
 
@@ -803,16 +818,6 @@ describe('c-quantic-generated-answer', () => {
               'generated-answer__content--scrollable'
             )
           ).toBe(true);
-        });
-
-        it('should ignore collapsible when scrollable is enabled', async () => {
-          mockAnswerHeight = defaultAnswerHeight + 100;
-          const element = createTestComponent({
-            ...defaultOptions,
-            scrollable: true,
-            collapsible: true,
-          });
-          await flushPromises();
 
           const generatedAnswerCollapseToggle =
             element.shadowRoot.querySelector(
@@ -823,7 +828,7 @@ describe('c-quantic-generated-answer', () => {
         });
       });
 
-      describe('when the scrollable property is not set', () => {
+      describe('when follow-ups are not enabled', () => {
         it('should not render the content section with the scrollable class', async () => {
           const element = createTestComponent();
           await flushPromises();
