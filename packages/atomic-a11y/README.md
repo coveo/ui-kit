@@ -66,16 +66,16 @@ Automated tests can't cover every WCAG criterion. For the rest, record results p
        "2.4.7-focus-visible": "pass",
        "1.4.3-contrast-minimum": {
          "conformance": "fail",
-         "remarks": "Focus ring fails 3:1 on the dark theme."
+         "remarks": "Chrome 124, dark theme: focus ring 2.1:1 vs surface (needs 3:1). Repro: Tab to a facet checkbox."
        }
      }
    }
    ```
 
-   - Result is `pass` | `fail` | `partial` | `not-applicable`, or `{conformance, remarks}` to add a note (the remark shows in the VPAT).
+   - Result is `pass` | `fail` | `partial` | `not-applicable`, or `{conformance, remarks}` to add a note (the remark shows in the VPAT). Put the **AT + browser** you used and a **repro for any fail** in `remarks`.
    - Key is `{wcag-id}-{slug}`; the id must be a real WCAG 2.2 A/AA criterion. List only what you tested — omitted criteria stay _Does Not Support [manual audit required]_.
 3. **Run `pnpm a11y:vpat`** — regenerates the VPAT and warns on invalid keys.
-4. **Commit the file.**
+4. **Open a PR** using the [manual-audit PR checklist](docs/manual-audit-guide.md#pr-checklist) (method, environment, criteria audited) and commit the file + regenerated VPAT.
 
 Each criterion's VPAT verdict is the **worst** result across all surface files plus the automated and interactive signals (`fail > partial > pass > not-applicable`). So a manual `fail` surfaces even if axe was clean, and a manual `pass` can't hide a real axe violation. For permanent, by-design exceptions, use `a11y/a11y-overrides.json` (authoritative — it wins outright).
 

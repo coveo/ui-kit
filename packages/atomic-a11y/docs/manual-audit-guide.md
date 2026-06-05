@@ -33,7 +33,7 @@ Each file is a **single object**: a `surface` label plus the criteria you audite
     "2.4.7-focus-visible": "pass",
     "1.4.3-contrast-minimum": {
       "conformance": "fail",
-      "remarks": "Focus ring fails 3:1 on the dark theme."
+      "remarks": "Chrome 124, dark theme: focus ring measures 2.1:1 vs surface (needs 3:1). Repro: Tab to any facet checkbox."
     }
   }
 }
@@ -61,6 +61,8 @@ Keys follow `{numeric-id}-{slug}`. Only the numeric id is parsed (regex `/^(\d+(
 | `not-applicable` | Not Applicable      | The criterion doesn't apply to this surface.                  |
 
 Use the object form `{ "conformance", "remarks" }` to document *why*; the remark is carried into the VPAT notes. **List only the criteria you tested** — omitted criteria stay *Does Not Support [manual audit required]* until audited.
+
+Put the **test conditions in `remarks`**: the assistive tech + version and browser you used for any criterion that depends on them (screen readers, focus, name/role/value), and a short **repro** for every `fail`/`partial`. A bare `pass` is fine for clearly-visual checks; an AT-dependent `pass`/`fail` without conditions isn't verifiable.
 
 ## How conformance is resolved
 
@@ -97,7 +99,23 @@ When `pnpm a11y:vpat` runs, the loader warns and skips:
 1. Pick a surface and open/create `a11y/reports/manual-audit-{surface}.json`.
 2. Add `criterion → result` entries for what you tested.
 3. Run `pnpm a11y:vpat` and check the `[json-to-openacr]` output for warnings.
-4. Commit the file.
+4. Commit the file (and the regenerated VPAT markdown).
+
+## PR checklist
+
+Paste this into the description of any manual-audit PR so a reviewer can trust the results:
+
+```markdown
+### Manual audit
+- **Surface(s):** <search / commerce / …>
+- **Method:** keyboard / screen reader / zoom-reflow / visual (delete what doesn't apply)
+- **Environment:** <e.g. NVDA 2024.1 + Chrome 124; VoiceOver + Safari 17; macOS 14>
+- **Criteria audited:** <list the WCAG ids, e.g. 1.3.1, 2.1.1, 4.1.2>
+- **Fails/partials:** repro steps captured in each criterion's `remarks`
+- [ ] `pnpm a11y:vpat` run; no "Unknown WCAG criterion" warnings
+- [ ] AT + browser recorded in `remarks` for AT-dependent criteria
+- [ ] Reviewed by an accessibility owner
+```
 
 ## Tips
 
