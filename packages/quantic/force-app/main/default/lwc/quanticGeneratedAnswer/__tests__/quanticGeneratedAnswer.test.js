@@ -784,6 +784,62 @@ describe('c-quantic-generated-answer', () => {
         expect(generatedAnswerCitations).not.toBeNull();
         expect(generatedAnswerCitations.disableCitationAnchoring).toBe(false);
       });
+
+      describe('when the scrollable property is set to true', () => {
+        it('should render the content section with the scrollable class', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            scrollable: true,
+          });
+          await flushPromises();
+
+          const generatedAnswerBody = element.shadowRoot.querySelector(
+            selectors.generatedAnswerBody
+          );
+
+          expect(generatedAnswerBody).not.toBeNull();
+          expect(
+            generatedAnswerBody.classList.contains(
+              'generated-answer__content--scrollable'
+            )
+          ).toBe(true);
+        });
+
+        it('should ignore collapsible when scrollable is enabled', async () => {
+          mockAnswerHeight = defaultAnswerHeight + 100;
+          const element = createTestComponent({
+            ...defaultOptions,
+            scrollable: true,
+            collapsible: true,
+          });
+          await flushPromises();
+
+          const generatedAnswerCollapseToggle =
+            element.shadowRoot.querySelector(
+              selectors.generatedAnswerCollapseToggle
+            );
+
+          expect(generatedAnswerCollapseToggle).toBeNull();
+        });
+      });
+
+      describe('when the scrollable property is not set', () => {
+        it('should not render the content section with the scrollable class', async () => {
+          const element = createTestComponent();
+          await flushPromises();
+
+          const generatedAnswerBody = element.shadowRoot.querySelector(
+            selectors.generatedAnswerBody
+          );
+
+          expect(generatedAnswerBody).not.toBeNull();
+          expect(
+            generatedAnswerBody.classList.contains(
+              'generated-answer__content--scrollable'
+            )
+          ).toBe(false);
+        });
+      });
     });
 
     describe('when the answer cannot be generated after a query is executed', () => {
