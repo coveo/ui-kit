@@ -1,5 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {testDisclosureA11y} from '@/storybook-utils/a11y/disclosure.js';
 import {MockInsightApi} from '@/storybook-utils/api/insight/mock.js';
 import {
   type baseResponse,
@@ -47,4 +48,15 @@ export default meta;
 
 export const Default: Story = {
   name: 'atomic-insight-smart-snippet-suggestions',
+};
+
+export const A11yDisclosure: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  play: async (context) => {
+    await play(context);
+    await testDisclosureA11y(context, {
+      trigger: {expanded: false},
+      assertControlledRegion: true,
+    });
+  },
 };
