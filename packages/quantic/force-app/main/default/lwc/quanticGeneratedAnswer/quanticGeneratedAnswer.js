@@ -130,6 +130,14 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * @default false
    */
   @api disableCitationAnchoring = false;
+  /**
+   * Whether the generated answer content section should be scrollable with a fixed height.
+   * When enabled, the collapsible behavior is ignored.
+   * @api
+   * @type {boolean}
+   * @default false
+   */
+  @api scrollable = false;
 
   labels = {
     generatedAnswerForYou,
@@ -196,7 +204,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
-    if (this.collapsible) {
+    if (this.isCollapsibleEnabled) {
       this._exceedsMaximumHeight = this.isMaximumHeightExceeded();
     }
   }
@@ -259,7 +267,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     this.updateFeedbackState();
     this.ariaLiveMessage.dispatchMessage(this.getGeneratedAnswerStatus());
 
-    if (this.collapsible) {
+    if (this.isCollapsibleEnabled) {
       this.updateGeneratedAnswerCSSVariables();
     }
   }
@@ -400,7 +408,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   handleAnswerContentUpdated = (event) => {
     event.stopPropagation();
-    if (this.collapsible) {
+    if (this.isCollapsibleEnabled) {
       this._exceedsMaximumHeight = this.isMaximumHeightExceeded();
     }
     this.updateGeneratedAnswerCSSVariables();
@@ -481,6 +489,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return this.state.isVisible;
   }
 
+  get isCollapsibleEnabled() {
+    return this.collapsible && !this.scrollable;
+  }
+
   get isAnswerCollapsed() {
     // Answer is considered collapsed only if it exceeds the maximum height and was not expanded.
     return this._exceedsMaximumHeight && !this.isExpanded;
@@ -499,6 +511,14 @@ export default class QuanticGeneratedAnswer extends LightningElement {
         : 'generated-answer__answer--collapsed';
     }
     return `generated-answer__answer ${collapsedStateClass}`;
+  }
+
+  get contentSectionClass() {
+    const baseClass =
+      'generated-answer__content slds-p-top_medium slds-p-horizontal_large';
+    return this.scrollable
+      ? `${baseClass} generated-answer__content--scrollable`
+      : baseClass;
   }
 
   get hasRetryableError() {
