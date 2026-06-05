@@ -3,6 +3,7 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
 import {expect, userEvent, waitFor} from 'storybook/test';
+import {testDialogA11y} from '@/storybook-utils/a11y/dialog.js';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -63,6 +64,34 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {};
+
+export const A11yDialog: Story = {
+  name: 'A11y Dialog',
+  tags: ['a11y', 'test', '!dev'],
+  render: () => html`
+    <div>
+      <button
+        @click=${(e: Event) => {
+          const modal = (e.target as HTMLElement)
+            .closest('div')
+            ?.querySelector('atomic-generated-answer-feedback-modal');
+          if (modal) {
+            modal.isOpen = true;
+          }
+        }}
+      >
+        Open Feedback Modal
+      </button>
+      <atomic-generated-answer-feedback-modal
+        .generatedAnswer=${generatedAnswer}
+      ></atomic-generated-answer-feedback-modal>
+    </div>
+  `,
+  play: async (context) => {
+    await play(context);
+    await testDialogA11y(context, {triggerLabel: 'Open Feedback Modal'});
+  },
+};
 
 export const A11yStatusMessage: Story = {
   name: 'A11y Status Message',
