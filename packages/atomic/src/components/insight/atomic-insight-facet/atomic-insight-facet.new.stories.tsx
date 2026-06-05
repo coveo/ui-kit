@@ -1,7 +1,9 @@
 import type {FacetSortCriterion} from '@coveo/headless/insight';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {testCheckboxA11y} from '@/storybook-utils/a11y/checkbox.js';
 import {MockInsightApi} from '@/storybook-utils/api/insight/mock';
+import {searchFacetTransformer} from '@/storybook-utils/api/search/facet-transformer';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
@@ -15,10 +17,10 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   }
 );
 
-const mockInsightApi = new MockInsightApi();
+const insightApiHarness = new MockInsightApi();
 
 const mockDefaultFacetResponse = () => {
-  mockInsightApi.searchEndpoint.mockOnce((response) => response);
+  insightApiHarness.searchEndpoint.mockOnce((response) => response);
 };
 
 const sortCriteriaOptions: FacetSortCriterion[] = [
@@ -44,7 +46,7 @@ const meta: Meta = {
       handles: events,
     },
     msw: {
-      handlers: [...mockInsightApi.handlers],
+      handlers: [...insightApiHarness.handlers],
     },
   },
   argTypes: {
@@ -57,7 +59,7 @@ const meta: Meta = {
   },
 
   beforeEach: () => {
-    mockInsightApi.searchEndpoint.clear();
+    insightApiHarness.searchEndpoint.clear();
   },
 
   play,
@@ -123,7 +125,7 @@ export const WithSelectedValue: Story = {
   decorators: [facetDecorator],
   beforeEach: () => {
     // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- MSW mock response structure is dynamic and known at runtime
-    mockInsightApi.searchEndpoint.mockOnce((response: any) => {
+    insightApiHarness.searchEndpoint.mockOnce((response: any) => {
       const selectedFacets = response.facets?.map(
         (facet: object & {field: string; values: object[]}) => {
           if (facet.field === 'objecttype') {
@@ -154,5 +156,27 @@ export const Collapsed: Story = {
   decorators: [facetDecorator],
   beforeEach: () => {
     mockDefaultFacetResponse();
+  },
+};
+
+export const A11yCheckbox: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  args: {
+    field: 'objecttype',
+  },
+  decorators: [facetDecorator],
+  beforeEach: () => {
+    insightApiHarness.searchEndpoint.addRequestTransformer(
+      searchFacetTransformer
+    );
+    return () => {
+      insightApiHarness.searchEndpoint.removeRequestTransformer(
+        searchFacetTransformer
+      );
+    };
+  },
+  play: async (context) => {
+    await play(context);
+    await testCheckboxA11y(context);
   },
 };

@@ -77,9 +77,9 @@
   ],
   "hoistOther.nestedOrder": {
     "contributing": ["Contributing", "*"],
-    "guides server-side rendering": ["Concepts", "*"],
-    "guides upgrade": ["Concepts", "*"],
-    "guides usage analytics": ["Concepts", "*"],
+    "guides server-side rendering": ["Introduction", "*"],
+    "guides upgrade": ["*"],
+    "guides usage analytics": ["Introduction", "*"],
     "getting started": [
       "Getting Started with Search",
       "Getting Started with Case Assist",
@@ -89,7 +89,7 @@
       "Getting Started with SSR Search",
       "Getting Started with SSR Commerce"
     ],
-    "guides": ["Concepts", "*"],
+    "guides": ["*"],
     "reference search": [
       "Engine",
       "Controllers",

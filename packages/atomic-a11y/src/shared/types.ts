@@ -42,6 +42,8 @@ export interface A11yAutomatedResults {
   incomplete: number;
   inapplicable: number;
   criteriaCovered: string[];
+  criteriaViolated: string[];
+  criteriaPassed: string[];
   incompleteDetails: A11yIncompleteDetail[];
 }
 
@@ -52,8 +54,6 @@ export interface A11yInteractiveResults {
   criteriaCovered: string[];
   testCount: number;
   passedCount: number;
-  failedCount: number;
-  failedCriteria: string[];
 }
 
 /**
@@ -78,13 +78,13 @@ export interface A11yCriterionReport {
     | 'supports'
     | 'partiallySupports'
     | 'doesNotSupport'
-    | 'notApplicable'
-    | 'notEvaluated';
+    | 'notApplicable';
   automatedCoverage: boolean;
   interactiveCoverage: boolean;
-  interactiveStatus?: 'passed' | 'failed' | 'mixed';
+  interactiveStatus?: 'passed';
   manualVerified: boolean;
-  affectedComponents: string[];
+  coveredComponents: string[];
+  violatingComponents: string[];
 }
 
 /**
@@ -107,7 +107,6 @@ export interface A11ySummary {
   partiallySupports: number;
   doesNotSupport: number;
   notApplicable: number;
-  notEvaluated: number;
   automatedCoverage: string;
   interactiveCoverage: string;
   interactivePassRate: string;

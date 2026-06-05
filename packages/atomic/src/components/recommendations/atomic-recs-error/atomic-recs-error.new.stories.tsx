@@ -5,7 +5,7 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInRecommendationInterface} from '@/storybook-utils/search/recs-interface-wrapper';
 import '@/src/components/recommendations/atomic-recs-error/atomic-recs-error.js';
 
-const mockSearchApi = new MockSearchApi();
+const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInRecommendationInterface({
   config: {
@@ -30,12 +30,12 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
-    msw: {handlers: [...mockSearchApi.handlers]},
+    msw: {handlers: [...searchApiHarness.handlers]},
   },
   args,
   argTypes,
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.clear();
+    searchApiHarness.searchEndpoint.clear();
   },
   play,
 };
@@ -44,7 +44,7 @@ export default meta;
 
 export const Default: Story = {
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mockOnce(
+    searchApiHarness.searchEndpoint.mockOnce(
       () => ({
         ok: false,
         status: 401,
@@ -60,7 +60,7 @@ export const Default: Story = {
 export const WithDisconnected: Story = {
   name: 'With Disconnected Error',
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mockOnce(
+    searchApiHarness.searchEndpoint.mockOnce(
       () => ({
         ok: false,
         status: 0,
@@ -76,7 +76,7 @@ export const WithDisconnected: Story = {
 export const WithOrganizationPaused: Story = {
   name: 'With Organization Paused Error',
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mockOnce(
+    searchApiHarness.searchEndpoint.mockOnce(
       () => ({
         ok: false,
         status: 503,
