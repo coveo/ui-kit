@@ -24,7 +24,9 @@ export {
 export {
   COVERED_CRITERIA as STATUS_MESSAGE_COVERED_CRITERIA,
   testStatusMessageA11y,
+  testStatusMessageSequenceA11y,
   type StatusMessageA11yOptions,
+  type StatusMessageSequenceA11yOptions,
 } from './status-message.js';
 export {
   COVERED_CRITERIA as HOVER_CONTENT_COVERED_CRITERIA,
