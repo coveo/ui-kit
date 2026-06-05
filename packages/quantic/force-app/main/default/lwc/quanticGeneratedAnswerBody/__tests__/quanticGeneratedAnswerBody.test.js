@@ -1,10 +1,8 @@
 /* eslint-disable no-import-assign */
 // @ts-ignore
-import {createElement} from 'lwc';
-// @ts-ignore
 import QuanticGeneratedAnswerBody from 'c/quanticGeneratedAnswerBody';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
-import {cleanup, flushPromises} from 'c/testUtils';
+import {buildCreateTestComponent, cleanup, flushPromises} from 'c/testUtils';
 
 jest.mock('c/quanticHeadlessLoader');
 
@@ -92,23 +90,15 @@ const selectors = {
   content: 'c-quantic-generated-answer-content',
 };
 
-function createTestComponent(options = defaultOptions) {
-  const element = createElement('c-quantic-generated-answer-body', {
-    is: QuanticGeneratedAnswerBody,
-  });
-
-  for (const [key, value] of Object.entries(options)) {
-    element[key] = value;
-  }
-
-  document.body.appendChild(element);
-  return element;
-}
+const createTestComponent = buildCreateTestComponent(
+  QuanticGeneratedAnswerBody,
+  'c-quantic-generated-answer-body',
+  defaultOptions
+);
 
 describe('c-quantic-generated-answer-body', () => {
   afterEach(() => {
     cleanup();
-    jest.clearAllMocks();
   });
 
   it('should pass answer and answerContentFormat to the content component', async () => {
@@ -185,45 +175,14 @@ describe('c-quantic-generated-answer-body', () => {
     citations.citationHoverHandler('citation-1', 1200);
 
     expect(handler).toHaveBeenCalledTimes(1);
-    expect(handler.mock.calls[0][0].detail.answerId).toBe('answer-1');
-  });
-
-  it('should send the citation data within event details when dispatching the #quantic__citationhover event', async () => {
-    const element = createTestComponent({
-      ...defaultOptions,
-      generatedAnswer: {
-        ...defaultOptions.generatedAnswer,
-        // @ts-ignore
-        citations: [{id: 'citation-1', title: 'Citation'}],
-      },
+    expect(handler.mock.calls[0][0].detail).toEqual({
+      answerId: 'answer-1',
+      citationId: 'citation-1',
+      citationHoverTimeMs: 1200,
     });
-    const handler = jest.fn();
-    element.addEventListener('quantic__citationhover', handler);
-    await flushPromises();
-
-    const citations = element.shadowRoot.querySelector(
-      'c-quantic-source-citations'
-    );
-    citations.citationHoverHandler('citation-1', 1200);
-
-    expect(handler).toHaveBeenCalledTimes(1);
-    expect(handler.mock.calls[0][0].detail.citationId).toBe('citation-1');
-    expect(handler.mock.calls[0][0].detail.citationHoverTimeMs).toBe(1200);
   });
 
-  it('should forward the #quantic__answercontentupdated event', async () => {
-    const element = createTestComponent();
-    const handler = jest.fn();
-    element.addEventListener('quantic__answercontentupdated', handler);
-    await flushPromises();
-
-    const content = element.shadowRoot.querySelector(selectors.content);
-    content.dispatchEvent(new CustomEvent('quantic__answercontentupdated'));
-
-    expect(handler).toHaveBeenCalledTimes(1);
-  });
-
-  describe('when an error occurs', () => {
+  describe('when an answer has not been generated', () => {
     it('should render the no-answer message when the answer cannot be generated', async () => {
       const element = createTestComponent({
         ...defaultOptions,
@@ -238,7 +197,9 @@ describe('c-quantic-generated-answer-body', () => {
 
       expect(noAnswer).not.toBeNull();
     });
+  });
 
+  describe('when an error occurs', () => {
     it('should render the generic error message when a non-retryable error occurs', async () => {
       const element = createTestComponent({
         ...defaultOptions,
@@ -281,9 +242,37 @@ describe('c-quantic-generated-answer-body', () => {
         'Conversation turn limit reached. Please start a new conversation.'
       );
     });
+
+    it('should render the error message even when the answer is not empty', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        generatedAnswer: {
+          ...defaultOptions.generatedAnswer,
+          answer: 'Partial answer content',
+          // @ts-ignore
+          error: {code: 500},
+        },
+      });
+      await flushPromises();
+
+      const error = element.shadowRoot.querySelector(selectors.error);
+      const content = element.shadowRoot.querySelector(selectors.content);
+
+      expect(error).not.toBeNull();
+      expect(content).toBeNull();
+    });
   });
 
   describe('rendering of actions', () => {
+    it('should display actions when the answer is not empty and done streaming', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const actions = element.shadowRoot.querySelector(selectors.actions);
+
+      expect(actions).not.toBeNull();
+    });
+
     it('should not display actions while the answer is streaming', async () => {
       const element = createTestComponent({
         ...defaultOptions,
@@ -312,6 +301,33 @@ describe('c-quantic-generated-answer-body', () => {
       const actions = element.shadowRoot.querySelector(selectors.actions);
 
       expect(actions).toBeNull();
+    });
+  });
+
+  describe('rendering of citations', () => {
+    it('should display citations when citations are not empty', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        generatedAnswer: {
+          ...defaultOptions.generatedAnswer,
+          // @ts-ignore
+          citations: [{id: 'citation-1', title: 'Citation'}],
+        },
+      });
+      await flushPromises();
+
+      const citations = element.shadowRoot.querySelector(selectors.citations);
+
+      expect(citations).not.toBeNull();
+    });
+
+    it('should not display citations when citations are empty', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const citations = element.shadowRoot.querySelector(selectors.citations);
+
+      expect(citations).toBeNull();
     });
   });
 

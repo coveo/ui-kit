@@ -1,13 +1,12 @@
 <template>
   <section
     data-testid="generated-answer-body"
-    class="generated-answer__body slds-p-top_large slds-p-horizontal_large"
+    class="generated-answer__body"
   >
     <c-quantic-generated-answer-content
       answer-content-format={answerContentFormat}
       answer={answer}
       is-streaming={isStreaming}
-      onquantic__answercontentupdated={handleAnswerContentUpdated}
     >
     </c-quantic-generated-answer-content>
     <div class="slds-grid slds-grid_vertical">
@@ -24,12 +23,9 @@
       </template>
       <template lwc:if={shouldShowActions}>
         <div
+          data-testid="generated-answer-body__actions"
           class="slds-size_1-of-1 slds-grid slds-grid_vertical-align-center slds-var-m-top_x-small slds-grid_align-start"
         >
-          <div
-            data-testid="generated-answer-body__actions"
-            class="slds-grid slds-grid_vertical-align-center"
-          >
             <c-quantic-feedback
               state={computedFeedbackState}
               onquantic__like={handleLike}
@@ -50,7 +46,6 @@
               class="slds-var-m-horizontal_xx-small"
               onquantic__generatedanswercopy={handleCopy}
             ></c-quantic-generated-answer-copy-to-clipboard>
-          </div>
         </div>
       </template>
     </div>

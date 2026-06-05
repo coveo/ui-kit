@@ -24,7 +24,6 @@ const FEEDBACK_DISLIKED_STATE = 'disliked';
  * @fires CustomEvent#quantic__dislike
  * @fires CustomEvent#quantic__generatedanswercopy
  * @fires CustomEvent#quantic__citationhover
- * @fires CustomEvent#quantic__answercontentupdated
  */
 export default class QuanticGeneratedAnswerBody extends LightningElement {
   /**
@@ -75,7 +74,7 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
   }
 
   get hasError() {
-    return !!this.generatedAnswer?.error && !!this.generatedAnswer?.error?.code;
+    return !!this.generatedAnswer?.error?.code;
   }
 
   get cannotAnswer() {
@@ -116,10 +115,6 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
   handleCopy(event) {
     event.stopPropagation();
     this.dispatchAnswerInteractionEvent('quantic__generatedanswercopy');
-  }
-
-  handleAnswerContentUpdated() {
-    this.dispatchEvent(new CustomEvent('quantic__answercontentupdated'));
   }
 
   handleCitationHover = (citationId, citationHoverTimeMs) => {
