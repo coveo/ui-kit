@@ -5,10 +5,6 @@ declare module '*.css' {
   export default content;
 }
 
-interface ImportMetaEnv {
-  readonly  VITE_IS_CDN: 'true' | 'false';
-}
-
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }

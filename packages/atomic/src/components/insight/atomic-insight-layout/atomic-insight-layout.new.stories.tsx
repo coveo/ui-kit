@@ -7,7 +7,7 @@ import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interfac
 import '@/src/components/insight/atomic-insight-layout/atomic-insight-layout.js';
 import '@/src/components/common/atomic-layout-section/atomic-layout-section.js';
 
-const mockedInsightApi = new MockInsightApi();
+const insightApiHarness = new MockInsightApi();
 
 const {decorator, play} = wrapInInsightInterface();
 const {events, args, argTypes} = getStorybookHelpers('atomic-insight-layout', {
@@ -34,12 +34,12 @@ const meta: Meta = {
       handles: events,
     },
     msw: {
-      handlers: [...mockedInsightApi.handlers],
+      handlers: [...insightApiHarness.handlers],
     },
   },
   beforeEach: () => {
-    mockedInsightApi.searchEndpoint.clear();
-    mockedInsightApi.querySuggestEndpoint.clear();
+    insightApiHarness.searchEndpoint.clear();
+    insightApiHarness.querySuggestEndpoint.clear();
   },
   argTypes,
 

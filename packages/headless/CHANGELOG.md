@@ -1,3 +1,17 @@
+## 3.51.2
+
+### Patch Changes
+
+- [#7654](https://github.com/coveo/ui-kit/pull/7654) [`2abc0a0`](https://github.com/coveo/ui-kit/commit/2abc0a0cf854db560cf56e9337314c3736c45d88) Thanks [@Tooni](https://github.com/Tooni)! - Fix `numberOfProductsSelector` in commerce search to account for `results` when `enableResults` is true
+
+## 3.51.1
+
+### Patch Changes
+
+- [#7637](https://github.com/coveo/ui-kit/pull/7637) [`d5d4d75`](https://github.com/coveo/ui-kit/commit/d5d4d75a882074bbeb5875ed95504a30ff84df91) Thanks [@renovate-coveo](https://github.com/apps/renovate-coveo)! - Update production dependencies
+
+- [#7598](https://github.com/coveo/ui-kit/pull/7598) [`821d429`](https://github.com/coveo/ui-kit/commit/821d429d3cc247e387cfb3e5834ddc8b65443142) Thanks [@SimonMilord](https://github.com/SimonMilord)! - Forward `aq`, `cq`, `referrer`, and `tab` to Search Agent head answer requests.
+
 ## 3.51.0
 
 ### Minor Changes

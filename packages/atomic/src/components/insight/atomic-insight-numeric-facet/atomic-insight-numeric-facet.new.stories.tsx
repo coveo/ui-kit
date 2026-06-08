@@ -9,7 +9,7 @@ import {
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import '@/src/components/insight/atomic-insight-numeric-facet/atomic-insight-numeric-facet.js';
 
-const mockInsightApi = new MockInsightApi();
+const insightApiHarness = new MockInsightApi();
 
 const numericFacetValues = [
   {
@@ -70,7 +70,7 @@ const numericFacetValues = [
   },
 ];
 
-mockInsightApi.searchEndpoint.mock((response) => ({
+insightApiHarness.searchEndpoint.mock((response) => ({
   ...response,
   facets: [
     {
@@ -101,7 +101,7 @@ mockInsightApi.searchEndpoint.mock((response) => ({
 }));
 
 const mockDefaultFacetResponse = () => {
-  mockInsightApi.searchEndpoint.mockOnce((response) => ({
+  insightApiHarness.searchEndpoint.mockOnce((response) => ({
     ...response,
     facets: [
       {
@@ -150,7 +150,7 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
-    msw: {handlers: [...mockInsightApi.handlers]},
+    msw: {handlers: [...insightApiHarness.handlers]},
   },
   argTypes: {
     ...argTypes,
@@ -159,7 +159,7 @@ const meta: Meta = {
     },
   },
   beforeEach: () => {
-    mockInsightApi.searchEndpoint.clear();
+    insightApiHarness.searchEndpoint.clear();
   },
   play,
   args: {
@@ -232,7 +232,7 @@ export const WithSelectedValue: Story = {
     const selectedValues = numericFacetValues.map((v, i) =>
       i === 0 ? {...v, state: 'selected'} : v
     );
-    mockInsightApi.searchEndpoint.mockOnce((response) => ({
+    insightApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
       facets: [
         {

@@ -5,7 +5,7 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import '@/src/components/insight/atomic-insight-full-search-button/atomic-insight-full-search-button.js';
 
-const mockedInsightApi = new MockInsightApi();
+const insightApiHarness = new MockInsightApi();
 
 const {decorator, play} = wrapInInsightInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -26,12 +26,12 @@ const meta: Meta = {
       handles: events,
     },
     msw: {
-      handlers: [...mockedInsightApi.handlers],
+      handlers: [...insightApiHarness.handlers],
     },
   },
   beforeEach: () => {
-    mockedInsightApi.searchEndpoint.clear();
-    mockedInsightApi.querySuggestEndpoint.clear();
+    insightApiHarness.searchEndpoint.clear();
+    insightApiHarness.querySuggestEndpoint.clear();
   },
   args,
   argTypes,
