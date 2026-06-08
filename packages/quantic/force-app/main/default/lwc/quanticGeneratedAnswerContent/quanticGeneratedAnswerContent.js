@@ -204,7 +204,8 @@ export default class QuanticGeneratedAnswerContent extends LightningElement {
       'slds-icon_container',
       'slds-icon-utility-new_window',
       'slds-current-color',
-      'slds-m-left_xxx-small'
+      'slds-m-left_xxx-small',
+      'answer-content__link-icon'
     );
     // eslint-disable-next-line @lwc/lwc/no-inner-html
     icon.innerHTML = INLINE_LINK_ICON;
