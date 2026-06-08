@@ -1,6 +1,11 @@
 name: Build CDN
 description: Build with CDN deployment environment and save turbo cache artifact
 
+inputs:
+  commit-sha:
+    description: 'Commit SHA for self-contained CDN artifacts. External dependencies resolve to /package/commits/<SHA>/ paths instead of version-based paths.'
+    required: true
+
 runs:
   using: composite
   steps:
@@ -9,5 +14,7 @@ runs:
         cache-prefix: 'cdn'
         save-cache: 'true'
         load-cache: 'false'
+        cache-retention-days: '7'
       env:
         DEPLOYMENT_ENVIRONMENT: CDN
+        CDN_COMMIT_SHA: ${{ inputs.commit-sha }}

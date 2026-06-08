@@ -1,3 +1,25 @@
+## 3.39.1
+
+### Patch Changes
+
+- [#7714](https://github.com/coveo/ui-kit/pull/7714) [`0405a9a`](https://github.com/coveo/ui-kit/commit/0405a9ae8f4f97158d27ff9f46a0d23ba3adcb7d) - refactored the quanticutils
+
+- Updated dependencies [[`9bd57e7`](https://github.com/coveo/ui-kit/commit/9bd57e7de3b5e388d52192b3f4e47009a4e7cd81)]:
+  - @coveo/headless@3.51.4
+
+## 3.39.0
+
+### Minor Changes
+
+- [#7704](https://github.com/coveo/ui-kit/pull/7704) [`0b83ae1`](https://github.com/coveo/ui-kit/commit/0b83ae1c531da479fed8f30283db0bda8272ba14) - feat(quantic): create the QuanticGeneratedAnswerFollowUpInput component
+
+## 3.38.2
+
+### Patch Changes
+
+- Updated dependencies [[`380ad1b`](https://github.com/coveo/ui-kit/commit/380ad1bf0a79ab7dc92077af4c959d9cfa167356)]:
+  - @coveo/headless@3.51.3
+
 ## 3.38.1
 
 ### Patch Changes

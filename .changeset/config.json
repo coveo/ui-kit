@@ -3,7 +3,8 @@
   "changelog": [
     "@changesets/changelog-github",
     {
-      "repo": "coveo/ui-kit"
+      "repo": "coveo/ui-kit",
+      "disableThanks": true
     }
   ],
   "commit": false,

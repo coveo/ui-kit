@@ -1,3 +1,15 @@
+## 3.51.4
+
+### Patch Changes
+
+- [#7719](https://github.com/coveo/ui-kit/pull/7719) [`9bd57e7`](https://github.com/coveo/ui-kit/commit/9bd57e7de3b5e388d52192b3f4e47009a4e7cd81) - Fixed issue with the referrer fallback on generated answer
+
+## 3.51.3
+
+### Patch Changes
+
+- [#7717](https://github.com/coveo/ui-kit/pull/7717) [`380ad1b`](https://github.com/coveo/ui-kit/commit/380ad1bf0a79ab7dc92077af4c959d9cfa167356) Thanks [@alexprudhomme](https://github.com/alexprudhomme)! - CDN artifacts now resolve cross-package dependencies using commit-based paths, making each artifact self-contained and independent of version pointer availability.
+
 ## 3.51.2
 
 ### Patch Changes
