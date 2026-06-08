@@ -44,7 +44,7 @@ export default class QuanticGeneratedAnswerContent extends LightningElement {
    */
   @api engineId;
   /**
-   * The unique identifier of the generated answer associated with the inline links.
+   * The unique identifier of the generated answer.
    * @api
    * @type {string}
    */
@@ -189,6 +189,7 @@ export default class QuanticGeneratedAnswerContent extends LightningElement {
     );
     anchors.forEach((anchor) => {
       anchor.target = '_blank';
+      anchor.rel = 'noopener';
       this.bindAnalyticsToInlineLink(anchor);
       this.appendInlineLinkIcon(anchor);
     });
@@ -229,7 +230,7 @@ export default class QuanticGeneratedAnswerContent extends LightningElement {
       {
         options: {
           link: {
-            linkURL: anchor.getAttribute('href'),
+            linkURL: anchor.getAttribute('href') || '',
             linkText: anchor.textContent?.trim() || '',
           },
           answerId: this.answerId,
