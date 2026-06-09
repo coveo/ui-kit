@@ -201,8 +201,8 @@
       "status": "complete",
       "wcag22Criteria": {
         "2.4.6-headings-and-labels": {
-          "conformance": "fail",
-          "remarks": "Tablist aria-label is 'tab-area' which is a non-descriptive technical placeholder. Does not describe the topic or purpose of the tabs. See KIT-5805."
+          "conformance": "pass",
+          "remarks": "Tablist aria-label uses localized i18n key 'tab-list' ('Content type tabs') which describes the purpose of the tabs. Tab labels are descriptive."
         }
       }
     }
