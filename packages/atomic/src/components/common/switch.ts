@@ -17,7 +17,7 @@ export const renderSwitch: FunctionalComponent<SwitchProps> = ({props}) => {
   const containerClasses = tw({
     'w-12 h-6 p-1 rounded-full': true,
     'bg-primary': props.checked,
-    'bg-neutral': !props.checked,
+    'bg-neutral-dark': !props.checked,
   });
 
   const handleClasses = tw({
