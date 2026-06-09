@@ -92,6 +92,11 @@
       "criterion": "3.3.8",
       "conformance": "not-applicable",
       "reason": "Atomic does not include authentication flows."
+    },
+    {
+      "criterion": "2.5.7",
+      "conformance": "not-applicable",
+      "reason": "No Atomic component implements custom dragging movements. Scrollable containers use native CSS overflow (user-agent scrolling, exempt per 2.5.7) with arrow button alternatives. Modal touchmove listeners only prevent background scrolling."
     }
   ]
 }
