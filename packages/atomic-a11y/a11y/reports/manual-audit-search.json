@@ -71,8 +71,8 @@
       "status": "complete",
       "wcag22Criteria": {
         "1.4.11-non-text-contrast": {
-          "conformance": "partial",
-          "remarks": "Active stars (#f6ce3c) at 1.52:1 and inactive stars (#e5e8e8) at 1.23:1 both fail 3:1 against white. Stars are graphical objects required for understanding — aria-label is not visible to sighted users. Customizable via CSS custom properties. See KIT-5808."
+          "conformance": "pass",
+          "remarks": "Active stars (#b88600) at 3.26:1 and inactive stars (#626971) at 5.56:1 both pass 3:1 against white."
         }
       }
     }
