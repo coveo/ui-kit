@@ -1,0 +1,13 @@
+## Usage
+
+The `atomic-insight-user-actions-modal` component displays a modal containing the timeline of actions performed by a specific user. It is automatically created as a child of the `atomic-insight-interface` when the `atomic-insight-user-actions-toggle` is initialized.
+
+```html
+<atomic-insight-interface>
+  <atomic-insight-user-actions-toggle></atomic-insight-user-actions-toggle>
+  <atomic-insight-user-actions-modal
+    user-id="exampleUserId"
+    ticket-creation-date-time="2024-01-01T00:00:00Z"
+  ></atomic-insight-user-actions-modal>
+</atomic-insight-interface>
+```

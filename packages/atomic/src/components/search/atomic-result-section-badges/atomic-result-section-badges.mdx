@@ -1,0 +1,15 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import meta, { Default } from './atomic-result-section-badges.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+import UsageContent from './atomic-result-section-badges.usage.mdx';
+
+<Meta of={meta} />
+
+<AtomicDocTemplate
+  stories={{ Default }}
+  githubPath="search/atomic-result-section-badges/atomic-result-section-badges.ts"
+  tagName="atomic-result-section-badges"
+  className="AtomicResultSectionBadges"
+>
+<UsageContent />
+</AtomicDocTemplate>

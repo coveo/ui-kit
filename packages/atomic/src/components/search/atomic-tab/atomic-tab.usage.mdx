@@ -1,0 +1,24 @@
+
+The `atomic-tab` component must be used as a child of the `atomic-tab-manager` component to function correctly.
+
+This component is not used standalone. It must be a child of `atomic-tab-manager`.
+
+See the [atomic-tab-manager documentation](?path=/docs/atomic-tab-manager--docs) for additional usage examples.
+
+```html
+<atomic-search-interface>
+  <!-- other components -->
+  
+  <atomic-tab-manager>
+    <atomic-tab name="all" label="All"></atomic-tab>
+    <atomic-tab name="images" label="Images" expression="@objecttype==Image"></atomic-tab>
+    <atomic-tab name="articles" label="Articles" expression="@objecttype==Article"></atomic-tab>
+  </atomic-tab-manager>
+
+  <!-- other components -->
+</atomic-search-interface>
+```
+
+## Related Components
+
+- [atomic-tab-manager](?path=/docs/atomic-tab-manager--docs): Manages a collection of tabs and allows users to switch between them

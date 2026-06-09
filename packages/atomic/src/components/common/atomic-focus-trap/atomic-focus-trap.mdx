@@ -1,0 +1,15 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import meta, { Default } from './atomic-focus-trap.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+import UsageContent from './atomic-focus-trap.usage.mdx';
+
+<Meta of={meta} />
+
+<AtomicDocTemplate
+  stories={{ Default }}
+  githubPath="common/atomic-focus-trap/atomic-focus-trap.ts"
+  tagName="atomic-focus-trap"
+  className="AtomicFocusTrap"
+>
+<UsageContent />
+</AtomicDocTemplate>

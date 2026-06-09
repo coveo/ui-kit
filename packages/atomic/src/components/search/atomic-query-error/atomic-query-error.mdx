@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import meta, { Default, WithInvalidToken, WithDisconnected, WithNoEndpoints, WithOrganizationPaused } from './atomic-query-error.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import UsageContent from './atomic-query-error.usage.mdx';
 
 <Meta of={meta} />
 
@@ -11,20 +11,5 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   tagName="atomic-query-error"
   className="AtomicQueryError"
 >
-
-This component is typically placed within the "main" section of the layout, often alongside other components that display search results.
-
-```html
-<atomic-search-interface>
-  ...
-  <atomic-search-layout>
-    ...
-    <atomic-layout-section section="main">
-      ...
-      <atomic-query-error></atomic-query-error>
-    </atomic-layout-section>
-  </atomic-search-layout>
-</atomic-search-interface>
-```
-
+  <UsageContent />
 </AtomicDocTemplate>

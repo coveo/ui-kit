@@ -1,0 +1,21 @@
+The `atomic-results-per-page` component allows users to select how many search results to display per page. It provides a set of radio button options for different page sizes.
+
+This component should be placed within an `atomic-search-interface` component usually in the "pagination" section of the layout. 
+ 
+  
+```html
+<atomic-search-interface>
+  ...
+  <atomic-search-layout>
+    ...
+    <atomic-layout-section section="main">
+      ...
+      <atomic-layout-section section="pagination">
+
+        <atomic-results-per-page></atomic-results-per-page>
+
+      </atomic-layout-section>
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
+```

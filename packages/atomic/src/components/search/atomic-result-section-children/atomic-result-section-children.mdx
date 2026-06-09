@@ -1,0 +1,15 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import meta, { Default } from './atomic-result-section-children.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+import UsageContent from './atomic-result-section-children.usage.mdx';
+
+<Meta of={meta} />
+
+<AtomicDocTemplate
+  stories={{ Default }}
+  githubPath="search/atomic-result-section-children/atomic-result-section-children.ts"
+  tagName="atomic-result-section-children"
+  className="AtomicResultSectionChildren"
+>
+<UsageContent />
+</AtomicDocTemplate>

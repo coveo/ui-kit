@@ -1,0 +1,15 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import meta, { Default } from './atomic-insight-tab.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+import UsageContent from './atomic-insight-tab.usage.mdx';
+
+<Meta of={meta} />
+
+<AtomicDocTemplate
+  stories={{ Default }}
+  githubPath="insight/atomic-insight-tab/atomic-insight-tab.ts"
+  tagName="atomic-insight-tab"
+  className="AtomicInsightTab"
+>
+<UsageContent />
+</AtomicDocTemplate>

@@ -1,0 +1,13 @@
+
+
+The `atomic-html` component renders the HTML value of a string.
+
+There is an inherent XSS security concern associated with the usage of this component.
+
+Use only with values for which you are certain the content is harmless.
+
+```html
+<atomic-search-interface>
+  <atomic-html value="<p>This is some <strong>HTML</strong> content.</p>"></atomic-html>
+</atomic-search-interface>
+```

@@ -1,0 +1,15 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import meta, { Default } from './atomic-insight-smart-snippet-suggestions.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+import UsageContent from './atomic-insight-smart-snippet-suggestions.usage.mdx';
+
+<Meta of={meta} />
+
+<AtomicDocTemplate
+  stories={{ Default }}
+  githubPath="insight/atomic-insight-smart-snippet-suggestions/atomic-insight-smart-snippet-suggestions.ts"
+  tagName="atomic-insight-smart-snippet-suggestions"
+  className="AtomicInsightSmartSnippetSuggestions"
+>
+<UsageContent />
+</AtomicDocTemplate>

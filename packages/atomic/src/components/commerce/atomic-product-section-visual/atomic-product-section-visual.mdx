@@ -1,0 +1,15 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import meta, { Default } from './atomic-product-section-visual.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+import UsageContent from './atomic-product-section-visual.usage.mdx';
+
+<Meta of={meta} />
+
+<AtomicDocTemplate
+  stories={{ Default }}
+  githubPath="commerce/atomic-product-section-visual/atomic-product-section-visual.ts"
+  tagName="atomic-product-section-visual"
+  className="AtomicProductSectionVisual"
+>
+<UsageContent />
+</AtomicDocTemplate>

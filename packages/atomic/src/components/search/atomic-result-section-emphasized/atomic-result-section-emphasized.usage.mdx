@@ -1,0 +1,15 @@
+## Usage
+
+The `atomic-result-section-emphasized` component defines the emphasized area within a result template. Use it to display a field that is particularly important for the search criteria, such as a price or key metric, rendered in a large font size.
+
+```html
+<atomic-result-template>
+  <template>
+    <atomic-result-section-emphasized>
+      <atomic-result-number field="price">
+        <atomic-format-currency currency="USD"></atomic-format-currency>
+      </atomic-result-number>
+    </atomic-result-section-emphasized>
+  </template>
+</atomic-result-template>
+```

@@ -1,0 +1,17 @@
+## Usage
+
+The `atomic-result-section-bottom-metadata` component defines the bottom metadata area within a result template. Use it to render additional descriptive information such as author, date, or source fields.
+
+```html
+<atomic-result-template>
+  <template>
+    <atomic-result-section-bottom-metadata>
+      <atomic-result-fields-list>
+        <atomic-field-condition must-match-sourcetype="Sitemap">
+          <atomic-result-text field="author"></atomic-result-text>
+        </atomic-field-condition>
+      </atomic-result-fields-list>
+    </atomic-result-section-bottom-metadata>
+  </template>
+</atomic-result-template>
+```

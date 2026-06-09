@@ -1,0 +1,13 @@
+The `atomic-ipx-tab` component represents an individual tab within the IPX interface. It allows users to filter search results by applying a constant query expression when the tab is selected.
+
+## Usage
+
+This component must be placed inside an `atomic-ipx-tabs` container within an IPX search interface:
+
+```html
+<atomic-ipx-tabs>
+  <atomic-ipx-tab label="All" expression="" active></atomic-ipx-tab>
+  <atomic-ipx-tab label="Videos" expression="@ytchanneltitle"></atomic-ipx-tab>
+  <atomic-ipx-tab label="Articles" expression='@documenttype==("WebPage")'></atomic-ipx-tab>
+</atomic-ipx-tabs>
+```
