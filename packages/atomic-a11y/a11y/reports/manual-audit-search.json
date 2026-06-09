@@ -1,0 +1,9 @@
+{
+  "surface": "search",
+  "wcag22Criteria": {
+    "2.5.3-label-in-name": {
+      "conformance": "fail",
+      "remarks": "atomic-breadbox: the show-more button displays visible text '+ N' but has accessible name 'Show N more filters'. The visible text is not contained in the accessible name. See KIT-5809. All other interactive components on this surface pass (search box, pager, facets, sort dropdown, refine toggle/modal, load-more, tabs, smart snippets, generated answer, did-you-mean, results-per-page, segmented facet)."
+    }
+  }
+}
