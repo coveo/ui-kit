@@ -56,6 +56,8 @@ export const renderCategoryFacetValueLink: FunctionalComponentWithOptionalChildr
         searchQuery,
         part: partNames.join(' '),
         class: 'contents',
+        listItemRole: 'treeitem',
+        listItemAriaExpanded: !isLeafValue ? 'false' : undefined,
         buttonRef: (element) => {
           setRef?.(element);
         },

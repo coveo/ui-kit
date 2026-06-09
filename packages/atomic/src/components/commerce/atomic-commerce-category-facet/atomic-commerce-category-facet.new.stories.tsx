@@ -72,3 +72,18 @@ export const Default: Story = {
     await hideFacetTypesHook('atomic-commerce-category-facet', context);
   },
 };
+
+export const A11yTreeView: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  name: 'A11y Tree View',
+  render: () => html`<div id="code-root">
+    <atomic-commerce-facets></atomic-commerce-facets>
+  </div>`,
+  play: async (context) => {
+    await play(context);
+    await hideFacetTypesHook('atomic-commerce-category-facet', context);
+    const {testTreeViewA11y} =
+      await import('@/storybook-utils/a11y/tree-view.js');
+    await testTreeViewA11y(context);
+  },
+};

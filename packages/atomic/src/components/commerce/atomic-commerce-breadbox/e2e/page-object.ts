@@ -45,7 +45,11 @@ export class AtomicCommerceBreadboxPageObject extends BasePageObject {
 
     const baseLocator = this.page
       .locator(facetTypeLocators[facetType])
-      .getByRole('listitem');
+      .getByRole(
+        facetType === 'category' || facetType === 'nestedCategory'
+          ? 'treeitem'
+          : 'listitem'
+      );
     return value ? baseLocator.filter({hasText: value}) : baseLocator;
   }
 

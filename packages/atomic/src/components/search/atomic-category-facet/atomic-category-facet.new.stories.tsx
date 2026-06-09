@@ -414,3 +414,22 @@ export const WithSelectedChildValueAndMoreAvailable: Story = {
     mockSelectedChildValueWithMoreAvailable();
   },
 };
+
+export const A11yTreeView: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  name: 'A11y Tree View',
+  args: {
+    field: 'geographicalhierarchy',
+    label: 'Geographical Hierarchy',
+  },
+  decorators: [facetDecorator],
+  beforeEach: () => {
+    mockDefaultCategoryFacetResponse();
+  },
+  play: async (context) => {
+    await play(context);
+    const {testTreeViewA11y} =
+      await import('@/storybook-utils/a11y/tree-view.js');
+    await testTreeViewA11y(context);
+  },
+};

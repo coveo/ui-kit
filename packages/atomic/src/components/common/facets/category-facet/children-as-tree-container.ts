@@ -4,6 +4,8 @@ import type {FunctionalComponentWithChildren} from '@/src/utils/functional-compo
 
 export interface CategoryFacetChildrenAsTreeContainerProps {
   className?: string;
+  isTopLevel?: boolean;
+  label?: string;
 }
 
 export const renderCategoryFacetChildrenAsTreeContainer: FunctionalComponentWithChildren<
@@ -11,7 +13,13 @@ export const renderCategoryFacetChildrenAsTreeContainer: FunctionalComponentWith
 > =
   ({props}) =>
   (children) => {
-    return html`<ul part="values" class=${ifDefined(props.className)}>
+    const role = props.isTopLevel ? 'tree' : 'group';
+    return html`<ul
+      part="values"
+      class=${ifDefined(props.className)}
+      role=${role}
+      aria-label=${ifDefined(props.label)}
+    >
       ${children}
     </ul>`;
   };

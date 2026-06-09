@@ -7,6 +7,8 @@ import type {FacetValuePropsBase} from '../facet-common';
 
 export interface FacetValueLinkProps extends FacetValuePropsBase {
   subList?: TemplateResult;
+  listItemRole?: string;
+  listItemAriaExpanded?: string;
 }
 
 export const renderFacetValueLink: FunctionalComponentWithChildren<
@@ -33,7 +35,11 @@ export const renderFacetValueLink: FunctionalComponentWithChildren<
     return html`
       ${keyed(
         props.displayValue,
-        html`<li class=${ifDefined(props.class)}>
+        html`<li
+          class=${ifDefined(props.class)}
+          role=${ifDefined(props.listItemRole)}
+          aria-expanded=${ifDefined(props.listItemAriaExpanded)}
+        >
           ${renderButton({
             props: {
               style: 'text-neutral',
