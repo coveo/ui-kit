@@ -8,6 +8,7 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
 import {userEvent, waitFor} from 'storybook/test';
 import {testHoverContentA11y} from '@/storybook-utils/a11y/hover-content.js';
+import {testStatusMessageSequenceA11y} from '@/storybook-utils/a11y/status-message.js';
 import {MockAgentApi} from '@/storybook-utils/api/agent/mock';
 import {MockAnswerApi} from '@/storybook-utils/api/answer/mock';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
@@ -49,6 +50,7 @@ const layoutDecorator: Decorator = (story) => html`
 `;
 
 const baseConfig = {
+  // This API key is intentionally public — it belongs to a sample organization used for samples/docs.
   accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
   organizationId: 'searchuisamples',
   search: {
@@ -198,6 +200,27 @@ export const A11yHoverContent: Story = {
         }
         return popover;
       },
+    });
+  },
+};
+
+export const A11yStatusMessage: Story = {
+  name: 'A11y Status Message',
+  tags: ['a11y', 'test', '!dev'],
+  args: {
+    'answer-configuration-id': 'fc581be0-6e61-4039-ab26-a3f2f52f308f',
+  },
+  play: async (context) => {
+    await play(context);
+    await testStatusMessageSequenceA11y(context, {
+      triggerAction: async () => {
+        await submitGeneratedAnswerQuery(context);
+      },
+      expectedSequence: [
+        'Generating answer',
+        /Generated answer: # Resolving Netflix Connection Issues with TiVo[\s\S]*Test Internet Connection/,
+      ],
+      timeout: 12000,
     });
   },
 };
