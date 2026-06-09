@@ -53,19 +53,12 @@ describe('#pagerButtons', () => {
 
   const renderPageButton = async (
     overrides: Partial<{
-      groupName: string;
       page: number;
       isSelected: boolean;
       text: string;
-      onFocusCallback?: (
-        elements: HTMLInputElement[],
-        previousFocus: HTMLInputElement,
-        newFocus: HTMLInputElement
-      ) => Promise<void>;
     }> = {}
   ) => {
     const props = {
-      groupName: 'pager',
       page: 1,
       isSelected: false,
       text: '1',
@@ -76,7 +69,7 @@ describe('#pagerButtons', () => {
     `);
     return {
       element,
-      input: element.querySelector('input'),
+      button: element.querySelector('button'),
     };
   };
 
@@ -87,7 +80,7 @@ describe('#pagerButtons', () => {
     return {
       element,
       div: element.querySelector('div'),
-      inputs: element.querySelectorAll('input'),
+      buttons: element.querySelectorAll('button'),
     };
   };
 
@@ -124,75 +117,53 @@ describe('#pagerButtons', () => {
   });
 
   describe('#pagerPageButton', () => {
-    it('should render the button with the correct attributes', async () => {
-      const {input} = await renderPageButton();
+    it('should render a button with the correct aria-label', async () => {
+      const {button} = await renderPageButton();
 
-      expect(input).toHaveAttribute('aria-label', '1');
-      expect(input).toHaveAttribute('type', 'radio');
-      expect(input).toHaveAttribute('name', 'pager');
-      expect(input).toHaveAttribute('value', '1');
+      expect(button).toHaveAttribute('aria-label', '1');
     });
 
-    it('should render with the correct attributes when not selected', async () => {
-      const {input} = await renderPageButton({isSelected: false});
+    it('should render with aria-current="false" when not selected', async () => {
+      const {button} = await renderPageButton({isSelected: false});
 
-      expect(input).toHaveAttribute('aria-current', 'false');
-      expect(input).toHaveAttribute('part', 'page-button');
+      expect(button).toHaveAttribute('aria-current', 'false');
+      expect(button).toHaveAttribute('part', 'page-button');
     });
 
-    it('should render with the correct attributes when selected', async () => {
-      const {input} = await renderPageButton({isSelected: true});
+    it('should render with aria-current="page" when selected', async () => {
+      const {button} = await renderPageButton({isSelected: true});
 
-      expect(input).toHaveAttribute('aria-current', 'page');
-      expect(input).toHaveAttribute('part', 'page-button active-page-button');
+      expect(button).toHaveAttribute('aria-current', 'page');
+      expect(button).toHaveAttribute('part', 'page-button active-page-button');
     });
   });
 
   describe('#pagerPageButtons', () => {
-    it('should render the list of buttons with the correct attributes', async () => {
+    it('should render the container with the correct attributes', async () => {
       const {div} = await renderPageButtonsGroup(html`
         ${renderPagerPageButton({
-          props: {groupName: 'pager', page: 1, isSelected: true, text: '1'},
+          props: {page: 1, isSelected: true, text: '1'},
         })}
         ${renderPagerPageButton({
-          props: {
-            groupName: 'pager',
-            page: 2,
-            isSelected: false,
-            text: '2',
-          },
+          props: {page: 2, isSelected: false, text: '2'},
         })}
       `);
 
-      expect(div).toHaveAttribute('role', 'radiogroup');
-      expect(div).toHaveAttribute('aria-label', 'Pagination');
       expect(div).toHaveAttribute('part', 'page-buttons');
+      expect(div).not.toHaveAttribute('role');
     });
 
     it('should render the list of children', async () => {
-      const {inputs} = await renderPageButtonsGroup(html`
+      const {buttons} = await renderPageButtonsGroup(html`
         ${renderPagerPageButton({
-          props: {groupName: 'pager', page: 1, isSelected: true, text: '1'},
+          props: {page: 1, isSelected: true, text: '1'},
         })}
         ${renderPagerPageButton({
-          props: {
-            groupName: 'pager',
-            page: 2,
-            isSelected: false,
-            text: '2',
-          },
+          props: {page: 2, isSelected: false, text: '2'},
         })}
       `);
 
-      expect(inputs).toHaveLength(2);
-    });
-  });
-
-  describe('accessibility', () => {
-    it('should render with aria-roledescription set to link', async () => {
-      const {input} = await renderPageButton();
-
-      expect(input).toHaveAttribute('aria-roledescription', 'link');
+      expect(buttons).toHaveLength(2);
     });
   });
 });
