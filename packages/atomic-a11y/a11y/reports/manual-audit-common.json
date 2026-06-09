@@ -19,8 +19,8 @@
       "status": "complete",
       "wcag22Criteria": {
         "1.4.11-non-text-contrast": {
-          "conformance": "partial",
-          "remarks": "Contains a switch component. OFF state track uses bg-neutral (#e5e8e8) at 1.23:1 vs white, failing 3:1. ON state passes with primary bg at 4.94:1. See KIT-5806."
+          "conformance": "pass",
+          "remarks": "Switch OFF state track uses bg-neutral-dark (#626971) at 5.56:1 vs white. ON state uses primary bg at 4.94:1. Both pass 3:1."
         }
       }
     }

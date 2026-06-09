@@ -58,10 +58,10 @@ describe('#renderSwitch', () => {
     expect(button).toHaveAttribute('aria-checked', 'true');
   });
 
-  it('should apply bg-neutral class to container when unchecked', async () => {
+  it('should apply bg-neutral-dark class to container when unchecked', async () => {
     const element = await renderComponent({checked: false});
     const container = locators(element).container;
-    expect(container).toHaveClass('bg-neutral');
+    expect(container).toHaveClass('bg-neutral-dark');
     expect(container).not.toHaveClass('bg-primary');
   });
 
@@ -69,7 +69,7 @@ describe('#renderSwitch', () => {
     const element = await renderComponent({checked: true});
     const container = locators(element).container;
     expect(container).toHaveClass('bg-primary');
-    expect(container).not.toHaveClass('bg-neutral');
+    expect(container).not.toHaveClass('bg-neutral-dark');
   });
 
   it('should apply ml-6 class to handle when checked', async () => {
