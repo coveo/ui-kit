@@ -32,8 +32,8 @@
       "status": "complete",
       "wcag22Criteria": {
         "1.4.11-non-text-contrast": {
-          "conformance": "partial",
-          "remarks": "Number input fields use border-neutral (#e5e8e8) at 1.23:1 vs white, failing 3:1 for the input boundary. Focus indicator passes. See KIT-5807."
+          "conformance": "pass",
+          "remarks": "Number input fields use border-neutral-dark (#626971) at 5.56:1 vs white, passing 3:1. Focus indicator passes."
         }
       }
     }
