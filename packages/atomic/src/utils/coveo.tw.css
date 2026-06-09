@@ -74,9 +74,9 @@
 
   --color-rating-icon-inactive: var(
     --atomic-rating-icon-inactive-color,
-    var(--atomic-neutral)
+    var(--atomic-neutral-dark)
   );
-  --color-rating-icon-active: var(--atomic-rating-icon-active-color, #f6ce3c);
+  --color-rating-icon-active: var(--atomic-rating-icon-active-color, #b88600);
 
   --color-rating-icon-outline: var(--atomic-rating-icon-outline-color, none);
 
