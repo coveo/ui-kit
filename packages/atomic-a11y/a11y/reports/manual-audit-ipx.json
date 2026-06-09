@@ -1,0 +1,15 @@
+[
+  {
+    "name": "atomic-ipx-recs-list",
+    "category": "ipx",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Configurable heading prop renders section heading describing the recommendation topic. Same pattern as atomic-recs-list."
+        }
+      }
+    }
+  }
+]

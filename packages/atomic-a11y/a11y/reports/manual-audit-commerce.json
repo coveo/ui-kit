@@ -1,0 +1,119 @@
+[
+  {
+    "name": "atomic-commerce-facet",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Facet heading uses field display name (e.g., 'Brand'). Search input, group, checkboxes all include facet name in labels."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-commerce-category-facet",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Same pattern as search category facet. Heading, search, group, and category buttons all descriptively labeled with facet name."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-commerce-numeric-facet",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Heading 'Price' is descriptive. Min/max inputs labeled 'Enter a minimum/maximum numerical value for the Price facet'. Apply button descriptive."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-commerce-search-box",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Same as atomic-search-box. Input has descriptive aria-label with suggestions and submit instructions."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-commerce-sort-dropdown",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Combobox labeled 'Sort by'. Option labels describe sort criteria."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-commerce-pager",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Navigation landmark 'Pagination'. Radio buttons 'Page N'. Previous/Next buttons descriptive."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-commerce-products-per-page",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Group and radiogroup labeled 'Products per page'. Descriptive label for the control purpose."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-commerce-refine-modal",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "H1 'Sort & Filter', H2 'Sort'/'Filters' describe sections. Sort combobox labeled 'Sort by'. Facets within modal use descriptive labels."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-commerce-recommendation-list",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Heading 'Customers often buy' describes section topic. Region landmark matches heading. Product images have descriptive alt text 'Image 1 out of 1 for [name]'. Ratings labeled 'N stars out of 5'."
+        }
+      }
+    }
+  }
+]

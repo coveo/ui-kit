@@ -1,0 +1,210 @@
+[
+  {
+    "name": "atomic-facet",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Facet heading uses the configured label prop (e.g., 'Authors'). Search input labeled 'Search for values in the [label] facet'. Group labeled 'Values for the [label] facet'. All labels descriptive and localized."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-category-facet",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Same pattern as atomic-facet. Heading describes the facet topic. Category buttons labeled 'Inclusion filter on [value]; N results'."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-numeric-facet",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Facet heading descriptive. Min/max inputs labeled 'Enter a minimum/maximum numerical value for the [label] facet'. Apply button labeled 'Apply custom numerical values for the [label] facet'."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-timeframe-facet",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Facet heading descriptive. Date inputs labeled 'Enter a start/end date for the [label] facet'. Apply button labeled 'Apply custom start and end dates for the [label] facet'."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-rating-facet",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Facet heading 'Rating' is descriptive. Checkboxes labeled 'Inclusion filter on only N stars out of 5; N results'. Rating images have aria-label 'N stars out of 5'."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-color-facet",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Same facet-header pattern. Color box buttons labeled 'Inclusion filter on [value]; N results'. Search input labeled 'Search for values in the [label] facet'."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-search-box",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Search input has descriptive aria-label explaining suggestions and submit behavior. Search button labeled 'Search'. Suggestions region labeled with keyboard instructions."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-smart-snippet",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Section labeled 'Potential answer to your question'. Question heading uses the actual question text which describes the topic. Feedback radio group labeled 'Was this information useful?'."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-smart-snippet-suggestions",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Section labeled 'People also ask'. Each expandable question uses the question text as heading, which describes the content below."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-generated-answer",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Complementary landmark labeled 'Generated answer'. Content headings from AI response describe their topics. Feedback buttons labeled 'Helpful'/'Not helpful'/'Copy answer'."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-refine-modal",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Modal heading 'Sort & Filter' describes purpose. H2 headings 'Sort' and 'Filters' describe subsections. Sort combobox labeled 'Sort by'. Facets within modal use same descriptive pattern."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-sort-dropdown",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Combobox labeled 'Sort by' with visible label 'Sort by:'. Option labels describe sort criteria (e.g., 'Relevance', 'Most recent')."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-pager",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Navigation landmark labeled 'Pagination'. Radio buttons labeled 'Page N'. Previous/Next buttons descriptive."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-results-per-page",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Group and radiogroup both labeled 'Results per page'. Numeric radio values are meaningful in context of the group label."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-notifications",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Section heading 'Notifications' describes the content area."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-tab-manager",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "fail",
+          "remarks": "Tablist aria-label is 'tab-area' which is a non-descriptive technical placeholder. Does not describe the topic or purpose of the tabs. See KIT-5805."
+        }
+      }
+    }
+  }
+]

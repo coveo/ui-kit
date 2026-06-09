@@ -1,0 +1,119 @@
+[
+  {
+    "name": "atomic-insight-facet",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Uses shared facet-header. Heading, search input, group, and checkboxes all include facet name. Same pattern as atomic-facet."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-insight-numeric-facet",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Uses shared facet-header and number input. Same descriptive label pattern as atomic-numeric-facet."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-insight-timeframe-facet",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Uses shared facet-header and date input. Same descriptive label pattern as atomic-timeframe-facet."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-insight-search-box",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Uses shared search-box internals. Same descriptive aria-label as atomic-search-box."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-insight-pager",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Uses shared pager component. Navigation labeled 'Pagination', radio buttons 'Page N'."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-insight-refine-modal",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Uses shared refine-modal. H1 'Sort & Filter', H2 subsection headings descriptive."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-insight-generated-answer",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Uses shared generated-answer internals. Landmark labeled 'Generated answer'. Content headings describe topics."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-insight-smart-snippet",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Uses shared smart-snippet internals. Section labeled 'Potential answer to your question'. Question heading descriptive."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-insight-smart-snippet-suggestions",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.4.6-headings-and-labels": {
+          "conformance": "pass",
+          "remarks": "Uses shared smart-snippet-suggestions. Section labeled 'People also ask'. Question headings descriptive."
+        }
+      }
+    }
+  }
+]
