@@ -34,6 +34,11 @@
       "reason": "Atomic does not include prerecorded video content requiring audio descriptions."
     },
     {
+      "criterion": "1.3.4",
+      "conformance": "not-applicable",
+      "reason": "Atomic does not restrict display orientation. No component uses the Screen Orientation API, @media orientation queries, or CSS transforms that lock the page to portrait or landscape."
+    },
+    {
       "criterion": "1.4.2",
       "conformance": "not-applicable",
       "reason": "Atomic does not include components that auto-play audio."
