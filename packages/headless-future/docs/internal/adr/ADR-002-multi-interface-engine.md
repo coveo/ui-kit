@@ -114,9 +114,13 @@ Controllers accept `engine` directly. Forces engine to expose public state/hooks
 
 Endpoint logic in controllers (non-tree-shakeable). State ownership ambiguous.
 
+### Option G (Rejected): Capabilities declared on controllers
+
+Controllers declare their capabilities instead of the interface. Interface becomes a minimal typed context. Rejected because it breaks the controller-less access pattern: state getters, action loaders, and hooks all scope to an interface. If the interface doesn't know its capabilities, these cannot function without a controller instance. Also reintroduces the dynamic registry problem (interface discovers capabilities at runtime as controllers register) and scatters configuration across multiple controllers bound to the same interface, making it impossible to understand an interface's behavior from a single location.
+
 ## 5. Decision Rationale
 
-Option A: one constructor, capabilities as the sole extension point. No class hierarchy. `withAll*` bundles cover the simple case without adding architectural complexity. `composeInterfaces` handles multi-interface cleanly. Options B–F each add unnecessary hierarchy, sacrifice tree-shaking, or collapse architectural boundaries.
+Option A: one constructor, capabilities as the sole extension point. No class hierarchy. `withAll*` bundles cover the simple case without adding architectural complexity. `composeInterfaces` handles multi-interface cleanly. Options B–G each add unnecessary hierarchy, sacrifice tree-shaking, collapse architectural boundaries, or break the controller-less access pattern.
 
 ## 6. Public API and Contract Impact
 
