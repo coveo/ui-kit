@@ -1,7 +1,7 @@
 {
   "$schema": "#a11y-overrides",
   "description": "Human-authored overrides for WCAG 2.2 AA conformance. These override automated axe-core results in the OpenACR YAML report. Each entry must include a reason explaining the decision.",
-  "lastUpdated": "2026-05-12",
+  "lastUpdated": "2026-06-09",
   "overrides": [
     {
       "criterion": "2.4.7",
@@ -82,6 +82,11 @@
       "criterion": "3.2.4",
       "conformance": "not-applicable",
       "reason": "Consistent identification across pages is a host application concern; individual Atomic components use consistent internal naming."
+    },
+    {
+      "criterion": "3.3.4",
+      "conformance": "not-applicable",
+      "reason": "Atomic does not cause legal commitments, financial transactions, or modifications to user-controllable data. Feedback modals submit anonymous analytics (not user-viewable data), and the attach-to-case action delegates to the host application and is inherently reversible."
     },
     {
       "criterion": "3.3.7",
