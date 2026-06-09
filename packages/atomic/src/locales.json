@@ -8534,5 +8534,32 @@
     "zh": "会话轮次限制已达。请开始新的会话。",
     "zh-CN": "会话轮次限制已达。请开始新的会话。",
     "zh-TW": "會話輪次限制已達。請開始新的會話。"
+  },
+  "tab-list": {
+    "en": "Content type tabs",
+    "fr": "Onglets de type de contenu",
+    "cs": "Záložky typu obsahu",
+    "da": "Faner for indholdstype",
+    "de": "Inhaltstyp-Tabs",
+    "el": "Καρτέλες τύπου περιεχομένου",
+    "es": "Pestañas de tipo de contenido",
+    "fi": "Sisältötyyppivälilehdet",
+    "hu": "Tartalomtípus-fülek",
+    "id": "Tab jenis konten",
+    "it": "Schede tipo di contenuto",
+    "ja": "コンテンツタイプタブ",
+    "ko": "콘텐츠 유형 탭",
+    "nl": "Tabbladen inhoudstype",
+    "no": "Faner for innholdstype",
+    "pl": "Karty typu treści",
+    "pt": "Guias de tipo de conteúdo",
+    "pt-BR": "Guias de tipo de conteúdo",
+    "ru": "Вкладки типов контента",
+    "sv": "Flikar för innehållstyp",
+    "th": "แท็บประเภทเนื้อหา",
+    "tr": "İçerik türü sekmeleri",
+    "zh": "内容类型标签",
+    "zh-CN": "内容类型标签",
+    "zh-TW": "內容類型標籤"
   }
 }

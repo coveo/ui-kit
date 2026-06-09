@@ -11,7 +11,7 @@ export class TabManagerPageObject extends BasePageObject {
   }
 
   get tabArea() {
-    return this.page.getByLabel('tab-area');
+    return this.page.getByLabel('Content type tabs');
   }
 
   get activeTab() {
