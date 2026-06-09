@@ -1,0 +1,54 @@
+[
+  {
+    "name": "atomic-insight-search-box",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "1.4.11-non-text-contrast": {
+          "conformance": "pass",
+          "remarks": "Search box border is supplementary; control is identifiable via magnifying glass icon and placeholder text. Focus indicator uses primary at 4.94:1."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-insight-facet",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "1.4.11-non-text-contrast": {
+          "conformance": "pass",
+          "remarks": "Checkboxes use neutral-dark (#626971) border at 5.56:1. Selected/excluded states pass 3:1."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-insight-numeric-facet",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "1.4.11-non-text-contrast": {
+          "conformance": "partial",
+          "remarks": "Number input fields use border-neutral (#e5e8e8) at 1.23:1 vs white, failing 3:1 for the input boundary. Focus indicator passes. See KIT-5807."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-insight-pager",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "1.4.11-non-text-contrast": {
+          "conformance": "pass",
+          "remarks": "Page buttons identified by text content. Selected state border uses primary at 4.94:1."
+        }
+      }
+    }
+  }
+]

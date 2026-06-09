@@ -1,0 +1,28 @@
+[
+  {
+    "name": "atomic-ipx-button",
+    "category": "ipx",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "1.4.11-non-text-contrast": {
+          "conformance": "pass",
+          "remarks": "Button contains text/icon content identifying it. Border is supplementary per 1.4.11 boundaries section."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-ipx-refine-toggle",
+    "category": "ipx",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "1.4.11-non-text-contrast": {
+          "conformance": "pass",
+          "remarks": "Toggle button contains text label. Focus indicator uses primary at 4.94:1."
+        }
+      }
+    }
+  }
+]

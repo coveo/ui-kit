@@ -1,0 +1,80 @@
+[
+  {
+    "name": "atomic-commerce-search-box",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "1.4.11-non-text-contrast": {
+          "conformance": "pass",
+          "remarks": "Search box border (#e5e8e8, 1.23:1) does not need 3:1 contrast because the control is identifiable via magnifying glass icon, placeholder text, and prominent positioning. Focus indicator uses primary (#126ce0) at 4.94:1."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-commerce-facet",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "1.4.11-non-text-contrast": {
+          "conformance": "pass",
+          "remarks": "Checkboxes use neutral-dark (#626971) border at 5.56:1. Selected state uses primary bg at 4.94:1. All pass 3:1."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-commerce-numeric-facet",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "1.4.11-non-text-contrast": {
+          "conformance": "partial",
+          "remarks": "Number input fields use border-neutral (#e5e8e8) at 1.23:1 vs white, failing 3:1 for the input boundary. Focus indicator passes. See KIT-5807."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-commerce-pager",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "1.4.11-non-text-contrast": {
+          "conformance": "pass",
+          "remarks": "Page buttons contain visible text numbers. Selected state border uses primary (#126ce0) at 4.94:1."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-product-rating",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "1.4.11-non-text-contrast": {
+          "conformance": "partial",
+          "remarks": "Active stars (#f6ce3c) at 1.52:1 and inactive stars (#e5e8e8) at 1.23:1 both fail 3:1 against white. Stars are graphical objects required for understanding. Customizable via CSS custom properties. See KIT-5808."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-commerce-sort-dropdown",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "1.4.11-non-text-contrast": {
+          "conformance": "pass",
+          "remarks": "Dropdown button contains visible text label. Border is supplementary for identification."
+        }
+      }
+    }
+  }
+]

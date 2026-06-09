@@ -1,0 +1,15 @@
+[
+  {
+    "name": "atomic-recs-list",
+    "category": "recommendations",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "1.4.11-non-text-contrast": {
+          "conformance": "pass",
+          "remarks": "List container has no custom UI controls with non-text contrast requirements. Individual result items use standard link/text styling."
+        }
+      }
+    }
+  }
+]

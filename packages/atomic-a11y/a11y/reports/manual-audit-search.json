@@ -1,0 +1,106 @@
+[
+  {
+    "name": "atomic-search-box",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "1.4.11-non-text-contrast": {
+          "conformance": "pass",
+          "remarks": "Search box border (#e5e8e8, 1.23:1) does not need 3:1 contrast because the control is identifiable via magnifying glass icon, placeholder text, and prominent positioning. Focus indicator uses primary (#126ce0) at 4.94:1."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-facet",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "1.4.11-non-text-contrast": {
+          "conformance": "pass",
+          "remarks": "Checkboxes use neutral-dark (#626971) border at 5.56:1. Selected state uses primary (#126ce0) bg at 4.94:1 with white tick at 4.94:1. Excluded state uses error (#ce3f00) bg at 4.84:1. All pass 3:1."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-numeric-facet",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "1.4.11-non-text-contrast": {
+          "conformance": "partial",
+          "remarks": "Number input fields use border-neutral (#e5e8e8) at 1.23:1 vs white, failing 3:1 for the input boundary. Focus indicator passes. See KIT-5807."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-rating-facet",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "1.4.11-non-text-contrast": {
+          "conformance": "pass",
+          "remarks": "Rating stars are paired with visible text labels ('3 stars out of 5'). Stars are not required for understanding per 1.4.11 graphical objects clause since equivalent text is displayed alongside."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-pager",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "1.4.11-non-text-contrast": {
+          "conformance": "pass",
+          "remarks": "Page buttons contain visible text numbers. Selected state border uses primary (#126ce0) at 4.94:1. Unselected buttons are identified by text content, not border."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-result-rating",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "1.4.11-non-text-contrast": {
+          "conformance": "partial",
+          "remarks": "Active stars (#f6ce3c) at 1.52:1 and inactive stars (#e5e8e8) at 1.23:1 both fail 3:1 against white. Stars are graphical objects required for understanding — aria-label is not visible to sighted users. Customizable via CSS custom properties. See KIT-5808."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-segmented-facet",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "1.4.11-non-text-contrast": {
+          "conformance": "pass",
+          "remarks": "Segmented facet buttons contain text labels identifying them. Border-neutral is supplementary. Selected state uses primary at 4.94:1."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-sort-dropdown",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "1.4.11-non-text-contrast": {
+          "conformance": "pass",
+          "remarks": "Dropdown button contains visible text label. Border is supplementary for identification per 1.4.11 boundaries section."
+        }
+      }
+    }
+  }
+]
