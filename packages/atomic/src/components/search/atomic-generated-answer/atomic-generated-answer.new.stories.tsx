@@ -9,6 +9,7 @@ import {html} from 'lit/static-html.js';
 import {userEvent, waitFor} from 'storybook/test';
 import {testHoverContentA11y} from '@/storybook-utils/a11y/hover-content.js';
 import {testStatusMessageSequenceA11y} from '@/storybook-utils/a11y/status-message.js';
+import {testSwitchA11y} from '@/storybook-utils/a11y/switch.js';
 import {MockAgentApi} from '@/storybook-utils/api/agent/mock';
 import {MockAnswerApi} from '@/storybook-utils/api/answer/mock';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
@@ -221,5 +222,19 @@ export const A11yStatusMessage: Story = {
       ],
       timeout: 12000,
     });
+  },
+};
+
+export const A11ySwitch: Story = {
+  name: 'A11y Switch (Toggle)',
+  tags: ['a11y', 'test'],
+  args: {
+    'with-toggle': true,
+    'answer-configuration-id': 'fc581be0-6e61-4039-ab26-a3f2f52f308f',
+  },
+  play: async (context) => {
+    await play(context);
+    await submitGeneratedAnswerQuery(context);
+    await testSwitchA11y(context);
   },
 };
