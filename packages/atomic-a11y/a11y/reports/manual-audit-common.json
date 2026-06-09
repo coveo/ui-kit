@@ -1,0 +1,28 @@
+[
+  {
+    "name": "atomic-facet-number-input",
+    "category": "common",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "1.4.11-non-text-contrast": {
+          "conformance": "partial",
+          "remarks": "Input border uses border-neutral (#e5e8e8) at 1.23:1 vs white, failing 3:1 for the input boundary. Focus indicator passes at 4.94:1. See KIT-5807."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-refine-toggle",
+    "category": "common",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "1.4.11-non-text-contrast": {
+          "conformance": "partial",
+          "remarks": "Contains a switch component. OFF state track uses bg-neutral (#e5e8e8) at 1.23:1 vs white, failing 3:1. ON state passes with primary bg at 4.94:1. See KIT-5806."
+        }
+      }
+    }
+  }
+]
