@@ -95,7 +95,6 @@ export class AtomicBreadbox
 
   @state() public error!: Error;
   @state() private isCollapsed = true;
-  @state() private showMoreText = '';
 
   /**
    * Whether to disable the collapsing behavior of breadcrumbs.
@@ -199,7 +198,9 @@ export class AtomicBreadbox
               isCollapsed: this.isCollapsed,
               i18n: this.bindings.i18n,
               numberOfCollapsedBreadcrumbs: this.numberOfCollapsedBreadcrumbs,
-              value: this.showMoreText,
+              value: this.bindings.i18n.t('show-n-more-filters', {
+                value: this.numberOfCollapsedBreadcrumbs,
+              }),
               ariaLabel: this.bindings.i18n.t('show-n-more-filters', {
                 value: this.numberOfCollapsedBreadcrumbs,
               }),
@@ -320,10 +321,6 @@ export class AtomicBreadbox
       return;
     }
     this.show(this.showMoreButton);
-
-    this.showMoreText = `+ ${value.toLocaleString(
-      this.bindings.i18n.language
-    )}`;
   }
 
   private get facetBreadcrumbs(): BreadboxBreadcrumb[] {
