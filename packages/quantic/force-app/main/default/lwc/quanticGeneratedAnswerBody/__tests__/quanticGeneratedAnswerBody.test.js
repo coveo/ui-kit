@@ -1,29 +1,8 @@
-/* eslint-disable no-import-assign */
 // @ts-ignore
 import QuanticGeneratedAnswerBody from 'c/quanticGeneratedAnswerBody';
-import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 import {buildCreateTestComponent, cleanup, flushPromises} from 'c/testUtils';
 
 jest.mock('c/quanticHeadlessLoader');
-
-const initializedElements = new WeakSet();
-// @ts-ignore
-mockHeadlessLoader.initializeWithHeadless = (element, _, initialize) => {
-  if (!initializedElements.has(element)) {
-    initializedElements.add(element);
-    initialize({});
-  }
-};
-// @ts-ignore
-mockHeadlessLoader.getHeadlessBundle = () => ({
-  buildInteractiveCitation: jest.fn((engine, {options}) => options.citation),
-});
-
-jest.mock(
-  '@salesforce/label/c.quantic_Citations',
-  () => ({default: 'Citations'}),
-  {virtual: true}
-);
 jest.mock('c/quanticUtils', () => ({
   loadMarkdownDependencies: jest.fn(() => Promise.resolve()),
   transformMarkdownToHtml: jest.fn((answer) => answer),
