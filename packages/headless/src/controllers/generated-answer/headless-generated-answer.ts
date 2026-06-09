@@ -54,17 +54,24 @@ export function buildGeneratedAnswer(
     engine.state.configuration.analytics.analyticsMode
   );
 
+  const hasAgentId = props.agentId && props.agentId.trim() !== '';
+  const hasAnswerConfigurationId =
+    props.answerConfigurationId && props.answerConfigurationId.trim() !== '';
+
+  if (hasAgentId && hasAnswerConfigurationId) {
+    engine.logger.warn(
+      'Both agentId and answerConfigurationId were provided to buildGeneratedAnswer. The agentId will take precedence and the answerConfigurationId will be ignored.'
+    );
+  }
+
   let controller: GeneratedAnswer | GeneratedAnswerWithFollowUps;
-  if (props.agentId && props.agentId.trim() !== '') {
+  if (hasAgentId) {
     controller = buildGeneratedAnswerWithFollowUps(
       engine,
       generatedAnswerAnalyticsClient,
-      {...props, agentId: props.agentId}
+      props as GeneratedAnswerProps & {agentId: string}
     );
-  } else if (
-    props.answerConfigurationId &&
-    props.answerConfigurationId.trim() !== ''
-  ) {
+  } else if (hasAnswerConfigurationId) {
     controller = buildAnswerApiGeneratedAnswer(
       engine,
       generatedAnswerAnalyticsClient,

@@ -981,6 +981,22 @@ describe('atomic-generated-answer', () => {
         })
       );
     });
+
+    it('should warn when both agentId and answerConfigurationId are provided', async () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      await renderGeneratedAnswer({
+        props: {
+          agentId: 'test-agent-id',
+          answerConfigurationId: 'test-config-id',
+        },
+        generatedAnswerState: {isVisible: true, answer: 'Test'},
+      });
+
+      expect(warnSpy).toHaveBeenCalledWith(
+        'Both "agent-id" and "answer-configuration-id" properties were provided. The "agent-id" will take precedence and the "answer-configuration-id" will be ignored. Please set only one of these properties to avoid confusion.'
+      );
+    });
   });
 
   describe('follow up capability', () => {

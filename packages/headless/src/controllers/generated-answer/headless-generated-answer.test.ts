@@ -164,6 +164,9 @@ describe('generated answer', () => {
         initGeneratedAnswer(props);
 
         expect(buildAnswerApiGeneratedAnswer).not.toHaveBeenCalled();
+        expect(engine.logger.warn).toHaveBeenCalledWith(
+          'Both agentId and answerConfigurationId were provided to buildGeneratedAnswer. The agentId will take precedence and the answerConfigurationId will be ignored.'
+        );
         expect(buildGeneratedAnswerWithFollowUps).toHaveBeenCalledWith(
           engine,
           expect.anything(),
