@@ -284,9 +284,9 @@ describe('atomic-commerce-pager', () => {
   it('should render the proper value on the page buttons', async () => {
     await renderPager();
 
-    await expect.element(locators.page1).toHaveAttribute('value', '1');
-    await expect.element(locators.page2).toHaveAttribute('value', '2');
-    await expect.element(locators.page3).toHaveAttribute('value', '3');
+    await expect.element(locators.page1).toHaveTextContent('1');
+    await expect.element(locators.page2).toHaveTextContent('2');
+    await expect.element(locators.page3).toHaveTextContent('3');
   });
 
   it('should have the selected button as active', async () => {
@@ -340,9 +340,9 @@ describe('atomic-commerce-pager', () => {
   it('should use keyed directive for page buttons', async () => {
     await renderPager();
 
-    await expect.element(locators.page1).toHaveAttribute('value', '1');
-    await expect.element(locators.page2).toHaveAttribute('value', '2');
-    await expect.element(locators.page3).toHaveAttribute('value', '3');
+    await expect.element(locators.page1).toHaveTextContent('1');
+    await expect.element(locators.page2).toHaveTextContent('2');
+    await expect.element(locators.page3).toHaveTextContent('3');
   });
 
   describe('accessibility and focus', () => {
@@ -352,64 +352,25 @@ describe('atomic-commerce-pager', () => {
       element = await renderPager({state: {page: 2, totalPages: 10}});
     });
 
-    const retrieveButtons = () => {
+    const retrievePageButtons = () => {
       return Array.from(
-        element.shadowRoot?.querySelectorAll<HTMLInputElement>(
-          'input[type="radio"]'
+        element.shadowRoot?.querySelectorAll<HTMLButtonElement>(
+          '[part*="page-button"]'
         ) || []
       );
     };
 
-    const expectFocusOnButton = async (
-      button: Element,
-      expectedFocusButton: Element
-    ) => {
-      await expect.element(button).toBe(expectedFocusButton);
-    };
-
-    it('should focus on previous button when navigating backward from first page button', async () => {
-      const buttons = retrieveButtons();
-
-      const [firstPageButton, lastPageButton] = [
-        buttons[0],
-        buttons[buttons.length - 1],
-      ];
-
-      await element.handleFocus(buttons, firstPageButton, lastPageButton);
-
-      await expectFocusOnButton(
-        locators.previous.element(),
-        document.activeElement?.shadowRoot?.activeElement
-      );
+    it('should render page buttons', async () => {
+      const buttons = retrievePageButtons();
+      expect(buttons.length).toBeGreaterThan(0);
     });
 
-    it('should focus on next button when navigating forward from last page button', async () => {
-      const buttons = retrieveButtons();
-
-      const [firstPageButton, lastPageButton] = [
-        buttons[0],
-        buttons[buttons.length - 1],
-      ];
-
-      await element.handleFocus(buttons, lastPageButton, firstPageButton);
-
-      await expectFocusOnButton(
-        locators.next.element(),
-        document.activeElement?.shadowRoot?.activeElement
+    it('should set aria-current=page on the active page button', async () => {
+      const buttons = retrievePageButtons();
+      const activeButton = buttons.find(
+        (btn) => btn.getAttribute('aria-current') === 'page'
       );
-    });
-
-    it('should focus on next page button when navigating between page buttons', async () => {
-      const buttons = retrieveButtons();
-
-      const [currentButton, nextButton] = buttons;
-
-      await element.handleFocus(buttons, currentButton, nextButton);
-
-      await expectFocusOnButton(
-        locators.page2.element(),
-        document.activeElement?.shadowRoot?.activeElement
-      );
+      expect(activeButton).toBeDefined();
     });
   });
 });

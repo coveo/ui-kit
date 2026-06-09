@@ -6,7 +6,6 @@ import type {
   FunctionalComponentWithChildren,
 } from '@/src/utils/functional-component-utils';
 import {type ButtonProps, renderButton} from '../button';
-import {type RadioButtonProps, renderRadioButton} from '../radio-button';
 
 interface PagerNavigationButtonProps extends Omit<
   ButtonProps,
@@ -56,37 +55,28 @@ export const renderPagerNextButton: FunctionalComponent<
   );
 };
 
-interface PagerPageButtonProps extends Omit<
-  RadioButtonProps,
-  'part' | 'style' | 'checked' | 'ariaCurrent' | 'key' | 'class'
-> {
+interface PagerPageButtonProps {
   page: number;
   isSelected: boolean;
   text: string;
-  onFocusCallback?: (
-    elements: HTMLInputElement[],
-    previousFocus: HTMLInputElement,
-    newFocus: HTMLInputElement
-  ) => Promise<void>;
+  ariaLabel?: string;
+  groupName?: string;
+  onChecked?(): void;
 }
 
 export const renderPagerPageButton: FunctionalComponent<
   PagerPageButtonProps
 > = ({props}) => {
-  return renderRadioButton({
+  return renderButton({
     props: {
-      ...props,
-      selectWhenFocused: false,
-      key: props.page,
       style: 'outline-neutral',
-      checked: props.isSelected,
+      ariaLabel: props.ariaLabel ?? props.text,
       ariaCurrent: props.isSelected ? 'page' : 'false',
-      class: 'btn-page focus-visible:bg-neutral-light min-h-10 min-w-10 p-1',
+      class: `btn-page focus-visible:bg-neutral-light min-h-10 min-w-10 p-1${props.isSelected ? ' selected' : ''}`,
       part: `page-button${props.isSelected ? ' active-page-button' : ''}`,
-      onFocusCallback: props.onFocusCallback,
-      ariaRoleDescription: 'link',
+      onClick: props.onChecked,
     },
-  });
+  })(html`${props.text}`);
 };
 
 interface PagerPageButtonsProps {
@@ -95,15 +85,6 @@ interface PagerPageButtonsProps {
 
 export const renderPageButtons: FunctionalComponentWithChildren<
   PagerPageButtonsProps
-> =
-  ({props}) =>
-  (children) => {
-    return html` <div
-      part="page-buttons"
-      role="radiogroup"
-      aria-label=${props.i18n.t('pagination')}
-      class="contents"
-    >
-      ${children}
-    </div>`;
-  };
+> = () => (children) => {
+  return html`<div part="page-buttons" class="contents">${children}</div>`;
+};
