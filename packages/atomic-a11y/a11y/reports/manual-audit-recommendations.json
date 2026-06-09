@@ -1,0 +1,12 @@
+[
+  {
+    "name": "atomic-recs-list",
+    "category": "recommendations",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  }
+]

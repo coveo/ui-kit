@@ -1,0 +1,215 @@
+[
+  {
+    "name": "atomic-search-box",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-pager",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-facet",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-category-facet",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-numeric-facet",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-rating-facet",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-rating-range-facet",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-timeframe-facet",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-color-facet",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-breadbox",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": {
+          "conformance": "fail",
+          "remarks": "The show-more button displays visible text '+ N' but has accessible name 'Show N more filters'. The visible text is not contained in the accessible name. See KIT-5809."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-sort-dropdown",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-refine-toggle",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-refine-modal",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-load-more-results",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-tab",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-smart-snippet",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-smart-snippet-suggestions",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-generated-answer",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-did-you-mean",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-results-per-page",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-segmented-facet",
+    "category": "search",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  }
+]

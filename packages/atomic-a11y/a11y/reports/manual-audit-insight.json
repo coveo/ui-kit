@@ -1,0 +1,102 @@
+[
+  {
+    "name": "atomic-insight-search-box",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-insight-pager",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-insight-facet",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-insight-numeric-facet",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-insight-timeframe-facet",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-insight-refine-toggle",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-insight-refine-modal",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-insight-tab",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-insight-smart-snippet",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-insight-generated-answer",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "name": "atomic-ipx-button",
+    "category": "ipx",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-ipx-refine-toggle",
+    "category": "ipx",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-ipx-refine-modal",
+    "category": "ipx",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-ipx-tab",
+    "category": "ipx",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  }
+]

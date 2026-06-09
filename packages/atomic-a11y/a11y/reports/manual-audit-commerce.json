@@ -1,0 +1,125 @@
+[
+  {
+    "name": "atomic-commerce-search-box",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-commerce-pager",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-commerce-facet",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-commerce-numeric-facet",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-commerce-category-facet",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-commerce-timeframe-facet",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-commerce-breadbox",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": {
+          "conformance": "fail",
+          "remarks": "The show-more button displays visible text '+ N' but has accessible name 'Show N more filters'. The visible text is not contained in the accessible name. See KIT-5809."
+        }
+      }
+    }
+  },
+  {
+    "name": "atomic-commerce-sort-dropdown",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-commerce-refine-toggle",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-commerce-refine-modal",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-commerce-load-more-products",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  },
+  {
+    "name": "atomic-commerce-products-per-page",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "wcag22Criteria": {
+        "2.5.3-label-in-name": "pass"
+      }
+    }
+  }
+]
