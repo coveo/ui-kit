@@ -118,6 +118,7 @@ const meta: Meta = {
     searchInterfaces1.forEach((searchInterface1) => {
       initPromises.push(
         searchInterface1.initialize({
+          // This API key is intentionally public — it belongs to a sample organization used for samples/docs.
           accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
           organizationId: 'electronicscoveodemocomo0n2fu8v',
           analytics: {
@@ -130,6 +131,7 @@ const meta: Meta = {
     searchInterfaces2.forEach((searchInterface2) => {
       initPromises.push(
         searchInterface2.initialize({
+          // This API key is intentionally public — it belongs to a sample organization used for samples/docs.
           accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
           organizationId: 'searchuisamples',
           analytics: {
