@@ -206,9 +206,7 @@ export class AtomicBreadbox
               i18n: this.bindings.i18n,
               numberOfCollapsedBreadcrumbs: this.numberOfCollapsedBreadcrumbs,
               value: this.showMoreText,
-              ariaLabel: this.bindings.i18n.t('show-n-more-filters', {
-                value: this.numberOfCollapsedBreadcrumbs,
-              }),
+              ariaLabel: this.showMoreText,
             },
           })}
           ${renderBreadcrumbShowLess({
@@ -326,10 +324,7 @@ export class AtomicBreadbox
       return;
     }
     this.show(this.showMoreButton);
-
-    this.showMoreText = `+ ${value.toLocaleString(
-      this.bindings.i18n.language
-    )}`;
+    this.showMoreText = this.bindings.i18n.t('show-n-more-filters', {value});
   }
 
   private get facetBreadcrumbs(): BreadboxBreadcrumb[] {
