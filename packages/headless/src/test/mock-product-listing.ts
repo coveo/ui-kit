@@ -17,7 +17,7 @@ export function buildFetchProductListingResponse(
         totalEntries: 0,
         totalPages: 0,
         totalProducts: 0,
-        totalSpotlights: 0,
+        totalSpotlightContent: 0,
       },
       facets: response.facets ?? [],
       products: response.products ?? [],
