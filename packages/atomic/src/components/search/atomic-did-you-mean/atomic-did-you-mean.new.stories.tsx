@@ -12,6 +12,7 @@ import '@/src/components/search/atomic-did-you-mean/atomic-did-you-mean.js';
 const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
+const {play: playInitOnly} = wrapInSearchInterface({skipFirstSearch: true});
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-did-you-mean',
   {excludeCategories: ['methods']}
@@ -96,14 +97,16 @@ export const A11yStatusMessage: Story = {
     }));
   },
   play: async (context) => {
-    await play(context);
+    await playInitOnly(context);
     await testStatusMessageA11y(context, {
-      triggerAction: async () => {
-        // Auto-correction is triggered by the mock response during play().
-        // atomic-did-you-mean announces the correction via AriaLiveRegionController.
+      triggerAction: async (canvasElement) => {
+        const searchInterface = canvasElement.querySelector(
+          'atomic-search-interface'
+        )!;
+        await (searchInterface as any).executeFirstSearch();
       },
-      expectedText: /coveo/i,
-      timeout: 10000,
+      expectedText: 'Query was automatically corrected to coveo',
+      timeout: 5000,
     });
   },
 };

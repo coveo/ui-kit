@@ -9,6 +9,7 @@ import '@/src/components/search/atomic-no-results/atomic-no-results.js';
 const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
+const {play: playInitOnly} = wrapInSearchInterface({skipFirstSearch: true});
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-no-results',
@@ -62,14 +63,16 @@ export const A11yStatusMessage: Story = {
     }));
   },
   play: async (context) => {
-    await play(context);
+    await playInitOnly(context);
     await testStatusMessageA11y(context, {
-      triggerAction: async () => {
-        // Search returning zero results is triggered by play().
-        // atomic-no-results announces via AriaLiveRegionController.
+      triggerAction: async (canvasElement) => {
+        const searchInterface = canvasElement.querySelector(
+          'atomic-search-interface'
+        )!;
+        await (searchInterface as any).executeFirstSearch();
       },
-      expectedText: /no results/i,
-      timeout: 10000,
+      expectedText: 'No results',
+      timeout: 5000,
     });
   },
 };

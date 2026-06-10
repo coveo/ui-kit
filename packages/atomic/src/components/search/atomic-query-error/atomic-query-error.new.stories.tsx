@@ -14,6 +14,13 @@ const {decorator, play} = wrapInSearchInterface({
     organizationId: 'default-org',
   },
 });
+const {play: playInitOnly} = wrapInSearchInterface({
+  config: {
+    accessToken: 'invalidtoken',
+    organizationId: 'default-org',
+  },
+  skipFirstSearch: true,
+});
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-query-error',
@@ -120,14 +127,17 @@ export const A11yStatusMessage: Story = {
     searchApiHarness.searchEndpoint.mockErrorOnce();
   },
   play: async (context) => {
-    await play(context);
+    await playInitOnly(context);
     await testStatusMessageA11y(context, {
-      triggerAction: async () => {
-        // Error is triggered by play() via the mocked error response.
-        // atomic-query-error announces via AriaLiveRegionController.
+      triggerAction: async (canvasElement) => {
+        const searchInterface = canvasElement.querySelector(
+          'atomic-search-interface'
+        )!;
+        await (searchInterface as any).executeFirstSearch();
       },
-      expectedText: /error|went wrong|something/i,
-      timeout: 10000,
+      expectedText:
+        "No access. Your query couldn't be sent to the following URL: https://default-org.org.coveo.com. Verify your connection.",
+      timeout: 5000,
     });
   },
 };
