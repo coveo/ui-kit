@@ -1,5 +1,6 @@
 import {readdir, readFile} from 'node:fs/promises';
 import path from 'node:path';
+import {isKnownCriterion} from '../data/criterion-metadata.js';
 import {BASELINE_FILE_PATTERN} from '../shared/constants.js';
 import {isRecord} from '../shared/guards.js';
 import type {
@@ -103,6 +104,15 @@ function parseCriterionEntry(
   }
 
   const criterionId = match[1];
+
+  if (!isKnownCriterion(criterionId)) {
+    console.warn(
+      LOG_PREFIX,
+      `Unknown WCAG criterion "${criterionId}" (from key "${criterionKey}") in component ${componentName}.`
+    );
+    return null;
+  }
+
   const conformance = manualStatusToConformance[extracted.status];
 
   if (!conformance) {
