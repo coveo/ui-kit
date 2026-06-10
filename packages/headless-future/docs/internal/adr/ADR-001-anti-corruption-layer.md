@@ -37,7 +37,7 @@ Map this decision to headless-future's Architecture Decision Charter requirement
    - **Impact**: None
    - **How addressed (or why deferred)**: N/A
 
-2. **Requirement**: Migration simplicity
+2. **Consideration**: Migration simplicity
    - **Impact**: Negative
    - **How addressed (or why deferred)**: Right now in Headless, Redux and Coveo REST API types and concepts leak directly into the public API surface, preventing public API independence altogether. We established public independence as a MUST of headless-future, which almost unavoidably implies introducing breaking changes. The anti-corruption layer does not cause that (the overall architectural decision does), but it confirms it.
 
