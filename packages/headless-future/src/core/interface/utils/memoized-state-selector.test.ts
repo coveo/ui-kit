@@ -11,7 +11,8 @@ describe('createMemoizedStateSelector', () => {
   it('returns the same result reference when dependencies are unchanged', () => {
     const projector = vi.fn((a: number, b: number) => ({sum: a + b}));
     const selector = createMemoizedStateSelector(
-      [(state: TestState) => state.a, (state: TestState) => state.b],
+      (state: TestState) => state.a,
+      (state: TestState) => state.b,
       projector
     );
 
@@ -25,7 +26,8 @@ describe('createMemoizedStateSelector', () => {
 
   it('recomputes and returns a new reference when at least one dependency changes', () => {
     const selector = createMemoizedStateSelector(
-      [(state: TestState) => state.a, (state: TestState) => state.b],
+      (state: TestState) => state.a,
+      (state: TestState) => state.b,
       (a, b) => ({sum: a + b})
     );
 
@@ -40,7 +42,7 @@ describe('createMemoizedStateSelector', () => {
   it('uses Object.is semantics when comparing dependency values', () => {
     const projector = vi.fn((value: number) => ({value}));
     const selector = createMemoizedStateSelector(
-      [(state: {value: number}) => state.value],
+      (state: {value: number}) => state.value,
       projector
     );
 

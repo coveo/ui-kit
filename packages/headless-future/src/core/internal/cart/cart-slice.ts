@@ -1,8 +1,9 @@
-import {createSlice, type PayloadAction} from '@reduxjs/toolkit';
+import {createSlice} from '@reduxjs/toolkit';
 import type {
   CartItem,
   CartState,
 } from '@/src/core/interface/cart/cart-types.js';
+import {setItems, updateItemQuantity} from './cart-actions.js';
 
 export const initialCartState: CartState = {
   items: [],
@@ -14,11 +15,12 @@ const cartKey = (item: CartItem) =>
 export const cartSlice = createSlice({
   name: 'cart',
   initialState: initialCartState,
-  reducers: {
-    setItems: (state, action: PayloadAction<CartItem[]>) => {
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(setItems, (state, action) => {
       state.items = action.payload;
-    },
-    updateItemQuantity: (state, action: PayloadAction<CartItem>) => {
+    });
+    builder.addCase(updateItemQuantity, (state, action) => {
       const index = state.items.findIndex(
         (item) => cartKey(item) === cartKey(action.payload)
       );
@@ -36,7 +38,7 @@ export const cartSlice = createSlice({
       }
 
       state.items[index] = action.payload;
-    },
+    });
   },
   selectors: {
     items: (state) => state.items,

@@ -10,7 +10,11 @@ import {
   type ConversationDispatchEffect,
 } from './conversation-event-dispatcher.js';
 import {loadConversationEndpoint} from './conversation-endpoint-loader.js';
-import * as conversationEndpointMutators from './conversation-endpoint-mutators.js';
+import {
+  setStatus,
+  setError,
+  setStreamingConnected,
+} from './conversation-endpoint-mutators.js';
 
 interface ActiveTurnContext {
   turnId: string;
@@ -192,10 +196,7 @@ export class ConversationRuntime {
       return;
     }
 
-    this.applyMutations([
-      conversationEndpointMutators.setStreamingConnected(true),
-      conversationEndpointMutators.setStatus('streaming'),
-    ]);
+    this.applyMutations([setStreamingConnected(true), setStatus('streaming')]);
 
     let terminalEventReceived = false;
     let streamErrored = false;
@@ -315,9 +316,7 @@ export class ConversationRuntime {
           break;
 
         case 'set_endpoint_error':
-          this.applyMutations([
-            conversationEndpointMutators.setError(effect.error),
-          ]);
+          this.applyMutations([setError(effect.error)]);
           break;
       }
     }
@@ -345,11 +344,9 @@ export class ConversationRuntime {
 
   private applyEndpointStoppedMutations(error?: string) {
     this.applyMutations([
-      ...(error !== undefined
-        ? [conversationEndpointMutators.setError(error)]
-        : []),
-      conversationEndpointMutators.setStatus('idle'),
-      conversationEndpointMutators.setStreamingConnected(false),
+      ...(error !== undefined ? [setError(error)] : []),
+      setStatus('idle'),
+      setStreamingConnected(false),
     ]);
   }
 

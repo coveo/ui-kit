@@ -13,6 +13,7 @@ export type {
 } from '@/src/api/interface/conversation-endpoint/conversation-endpoint-types.js';
 
 export type {
+  SearchEndpointCallOptions,
   SearchEndpointClient,
   SearchEndpointClientConfiguration,
   SearchEndpointClientResult,

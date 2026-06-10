@@ -4,8 +4,12 @@ export interface ResultListState {
 }
 
 export interface SearchResult {
-  id: string;
+  uniqueId: string;
   title: string;
   uri: string;
-  excerpt: string;
+  excerpt?: string;
+  printableUri: string;
+  clickUri: string;
+  raw: Record<string, unknown>;
+  score: number;
 }

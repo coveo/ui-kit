@@ -8,10 +8,11 @@ import * as engineModule from '@/src/core/interface/engine/engine.js';
 import {createTestEngine} from '@/src/test/test-utils.js';
 import {cartSlice} from '@/src/core/internal/cart/cart-slice.js';
 import {searchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
+import {setQuery} from '@/src/core/internal/search-box/search-box-actions.js';
 import {getEndpointContributorRegistry} from '@/src/core/internal/api/base-facade/endpoint-contributor-registry.js';
 import {conversationEndpointKey} from '@/src/core/internal/api/base-facade/endpoint-keys.js';
 import * as cartMutators from '@/src/core/interface/cart/cart-mutators.js';
-import * as cartSelectors from '@/src/core/interface/cart/cart-selectors.js';
+import {items as selectItems} from '@/src/core/interface/cart/cart-selectors.js';
 import {buildCartController} from './cart-controller.js';
 
 describe('buildCartController', () => {
@@ -42,7 +43,7 @@ describe('buildCartController', () => {
 
         fullEngine.adoptSlice(searchBoxSlice);
         controller.subscribe(callback);
-        fullEngine.mutate(searchBoxSlice.actions.setQuery('q'));
+        fullEngine.mutate(setQuery('q'));
 
         expect(callback).not.toHaveBeenCalled();
       });
@@ -160,7 +161,7 @@ describe('buildCartController', () => {
 
       void controller.state;
 
-      expect(fullEngine.read).toHaveBeenCalledWith(cartSelectors.items);
+      expect(fullEngine.read).toHaveBeenCalledWith(selectItems);
     });
   });
 

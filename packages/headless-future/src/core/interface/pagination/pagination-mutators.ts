@@ -1,26 +1,33 @@
-import {paginationSlice} from '@/src/core/internal/pagination/pagination-slice.js';
+import {
+  setPage as _setPage,
+  setPageSize as _setPageSize,
+  setTotalCount as _setTotalCount,
+  nextPage as _nextPage,
+  previousPage as _previousPage,
+  resetToFirstPage as _resetToFirstPage,
+} from '@/src/core/internal/pagination/pagination-actions.js';
 import type {StateMutation} from '@/src/core/interface/engine/engine-types.js';
 
 export const setPage = (page: number): StateMutation => {
-  return paginationSlice.actions.setPage(page);
+  return _setPage(page);
 };
 
 export const setPageSize = (pageSize: number): StateMutation => {
-  return paginationSlice.actions.setPageSize(pageSize);
+  return _setPageSize(pageSize);
 };
 
 export const setTotalCount = (totalCount: number): StateMutation => {
-  return paginationSlice.actions.setTotalCount(totalCount);
+  return _setTotalCount(totalCount);
 };
 
 export const nextPage = (): StateMutation => {
-  return paginationSlice.actions.nextPage();
+  return _nextPage();
 };
 
 export const previousPage = (): StateMutation => {
-  return paginationSlice.actions.previousPage();
+  return _previousPage();
 };
 
 export const resetToFirstPage = (): StateMutation => {
-  return paginationSlice.actions.resetToFirstPage();
+  return _resetToFirstPage();
 };

@@ -3,8 +3,13 @@
  */
 
 import {describe, it, expect, beforeEach} from 'vitest';
-import * as facetMutations from './facets-mutators.js';
-import * as selectors from './facets-selectors.js';
+import {
+  clearSelections,
+  setFacet,
+  toggleValue,
+  updateValues,
+} from './facets-mutators.js';
+import {all as selectAll, byId, selectedValues} from './facets-selectors.js';
 import {
   createTestEngine,
   createMockFacetValues,
@@ -30,7 +35,7 @@ describe('facetMutations', () => {
         selectedValues: [],
       };
 
-      const mutation = facetMutations.setFacet(facet);
+      const mutation = setFacet(facet);
 
       expect(mutation).toEqual({
         type: 'facets/setFacet',
@@ -46,9 +51,9 @@ describe('facetMutations', () => {
         selectedValues: [],
       };
 
-      engine.mutate(facetMutations.setFacet(facet));
+      engine.mutate(setFacet(facet));
 
-      const result = engine.read(selectors.byId('category'));
+      const result = engine.read(byId('category'));
       expect(result).toEqual(facet);
     });
 
@@ -66,10 +71,10 @@ describe('facetMutations', () => {
         selectedValues: [],
       };
 
-      engine.mutate(facetMutations.setFacet(facet1));
-      engine.mutate(facetMutations.setFacet(facet2));
+      engine.mutate(setFacet(facet1));
+      engine.mutate(setFacet(facet2));
 
-      const all = engine.read(selectors.all);
+      const all = engine.read(selectAll);
       expect(Object.keys(all)).toHaveLength(2);
     });
   });
@@ -82,11 +87,11 @@ describe('facetMutations', () => {
         values: createMockFacetValues(5),
         selectedValues: [],
       };
-      engine.mutate(facetMutations.setFacet(facet));
+      engine.mutate(setFacet(facet));
     });
 
     it('should return StateMutation object', () => {
-      const mutation = facetMutations.toggleValue('category', 'value-1');
+      const mutation = toggleValue('category', 'value-1');
 
       expect(mutation).toEqual({
         type: 'facets/toggleFacetValue',
@@ -95,26 +100,26 @@ describe('facetMutations', () => {
     });
 
     it('should add value when not selected', () => {
-      engine.mutate(facetMutations.toggleValue('category', 'value-1'));
+      engine.mutate(toggleValue('category', 'value-1'));
 
-      const selected = engine.read(selectors.selectedValues('category'));
+      const selected = engine.read(selectedValues('category'));
       expect(selected).toContain('value-1');
     });
 
     it('should remove value when already selected', () => {
-      engine.mutate(facetMutations.toggleValue('category', 'value-1'));
-      engine.mutate(facetMutations.toggleValue('category', 'value-1'));
+      engine.mutate(toggleValue('category', 'value-1'));
+      engine.mutate(toggleValue('category', 'value-1'));
 
-      const selected = engine.read(selectors.selectedValues('category'));
+      const selected = engine.read(selectedValues('category'));
       expect(selected).not.toContain('value-1');
     });
 
     it('should handle multiple toggles', () => {
-      engine.mutate(facetMutations.toggleValue('category', 'value-1'));
-      engine.mutate(facetMutations.toggleValue('category', 'value-2'));
-      engine.mutate(facetMutations.toggleValue('category', 'value-3'));
+      engine.mutate(toggleValue('category', 'value-1'));
+      engine.mutate(toggleValue('category', 'value-2'));
+      engine.mutate(toggleValue('category', 'value-3'));
 
-      const selected = engine.read(selectors.selectedValues('category'));
+      const selected = engine.read(selectedValues('category'));
       expect(selected).toHaveLength(3);
       expect(selected).toContain('value-1');
       expect(selected).toContain('value-2');
@@ -130,11 +135,11 @@ describe('facetMutations', () => {
         values: createMockFacetValues(5),
         selectedValues: ['value-1', 'value-2', 'value-3'],
       };
-      engine.mutate(facetMutations.setFacet(facet));
+      engine.mutate(setFacet(facet));
     });
 
     it('should return StateMutation object', () => {
-      const mutation = facetMutations.clearSelections('category');
+      const mutation = clearSelections('category');
 
       expect(mutation).toEqual({
         type: 'facets/clearFacetSelections',
@@ -143,16 +148,16 @@ describe('facetMutations', () => {
     });
 
     it('should clear all selections', () => {
-      engine.mutate(facetMutations.clearSelections('category'));
+      engine.mutate(clearSelections('category'));
 
-      const selected = engine.read(selectors.selectedValues('category'));
+      const selected = engine.read(selectedValues('category'));
       expect(selected).toEqual([]);
     });
 
     it('should not affect facet values', () => {
-      const initial = engine.read(selectors.byId('category'));
-      engine.mutate(facetMutations.clearSelections('category'));
-      const after = engine.read(selectors.byId('category'));
+      const initial = engine.read(byId('category'));
+      engine.mutate(clearSelections('category'));
+      const after = engine.read(byId('category'));
 
       expect(after?.values).toEqual(initial?.values);
     });
@@ -166,12 +171,12 @@ describe('facetMutations', () => {
         values: createMockFacetValues(3),
         selectedValues: [],
       };
-      engine.mutate(facetMutations.setFacet(facet));
+      engine.mutate(setFacet(facet));
     });
 
     it('should return StateMutation object', () => {
       const newValues = createMockFacetValues(5);
-      const mutation = facetMutations.updateValues('category', newValues);
+      const mutation = updateValues('category', newValues);
 
       expect(mutation).toEqual({
         type: 'facets/updateFacetValues',
@@ -181,20 +186,20 @@ describe('facetMutations', () => {
 
     it('should update facet values', () => {
       const newValues = createMockFacetValues(5);
-      engine.mutate(facetMutations.updateValues('category', newValues));
+      engine.mutate(updateValues('category', newValues));
 
-      const facet = engine.read(selectors.byId('category'));
+      const facet = engine.read(byId('category'));
       expect(facet?.values).toEqual(newValues);
       expect(facet?.values.length).toBe(5);
     });
 
     it('should not affect selected values', () => {
-      engine.mutate(facetMutations.toggleValue('category', 'value-1'));
+      engine.mutate(toggleValue('category', 'value-1'));
 
       const newValues = createMockFacetValues(2);
-      engine.mutate(facetMutations.updateValues('category', newValues));
+      engine.mutate(updateValues('category', newValues));
 
-      const selected = engine.read(selectors.selectedValues('category'));
+      const selected = engine.read(selectedValues('category'));
       expect(selected).toContain('value-1');
     });
   });
@@ -208,24 +213,24 @@ describe('facetMutations', () => {
         values: createMockFacetValues(5),
         selectedValues: [],
       };
-      engine.mutate(facetMutations.setFacet(facet));
+      engine.mutate(setFacet(facet));
 
       // Toggle some values
-      engine.mutate(facetMutations.toggleValue('category', 'value-1'));
-      engine.mutate(facetMutations.toggleValue('category', 'value-3'));
-      expect(engine.read(selectors.selectedValues('category'))).toHaveLength(2);
+      engine.mutate(toggleValue('category', 'value-1'));
+      engine.mutate(toggleValue('category', 'value-3'));
+      expect(engine.read(selectedValues('category'))).toHaveLength(2);
 
       // Update available values
       const newValues = createMockFacetValues(8);
-      engine.mutate(facetMutations.updateValues('category', newValues));
-      expect(engine.read(selectors.byId('category'))?.values.length).toBe(8);
+      engine.mutate(updateValues('category', newValues));
+      expect(engine.read(byId('category'))?.values.length).toBe(8);
 
       // Selections should persist
-      expect(engine.read(selectors.selectedValues('category'))).toHaveLength(2);
+      expect(engine.read(selectedValues('category'))).toHaveLength(2);
 
       // Clear selections
-      engine.mutate(facetMutations.clearSelections('category'));
-      expect(engine.read(selectors.selectedValues('category'))).toEqual([]);
+      engine.mutate(clearSelections('category'));
+      expect(engine.read(selectedValues('category'))).toEqual([]);
     });
 
     it('should handle multiple facets independently', () => {
@@ -243,29 +248,23 @@ describe('facetMutations', () => {
         selectedValues: [],
       };
 
-      engine.mutate(facetMutations.setFacet(categoryFacet));
-      engine.mutate(facetMutations.setFacet(brandFacet));
+      engine.mutate(setFacet(categoryFacet));
+      engine.mutate(setFacet(brandFacet));
 
       // Toggle in category
-      engine.mutate(facetMutations.toggleValue('category', 'value-1'));
+      engine.mutate(toggleValue('category', 'value-1'));
 
       // Toggle in brand
-      engine.mutate(facetMutations.toggleValue('brand', 'value-2'));
+      engine.mutate(toggleValue('brand', 'value-2'));
 
       // Verify independence
-      expect(engine.read(selectors.selectedValues('category'))).toEqual([
-        'value-1',
-      ]);
-      expect(engine.read(selectors.selectedValues('brand'))).toEqual([
-        'value-2',
-      ]);
+      expect(engine.read(selectedValues('category'))).toEqual(['value-1']);
+      expect(engine.read(selectedValues('brand'))).toEqual(['value-2']);
 
       // Clear category doesn't affect brand
-      engine.mutate(facetMutations.clearSelections('category'));
-      expect(engine.read(selectors.selectedValues('category'))).toEqual([]);
-      expect(engine.read(selectors.selectedValues('brand'))).toEqual([
-        'value-2',
-      ]);
+      engine.mutate(clearSelections('category'));
+      expect(engine.read(selectedValues('category'))).toEqual([]);
+      expect(engine.read(selectedValues('brand'))).toEqual(['value-2']);
     });
   });
 });

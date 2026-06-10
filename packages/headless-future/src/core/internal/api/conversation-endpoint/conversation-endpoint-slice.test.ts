@@ -3,6 +3,12 @@ import {
   conversationEndpointSlice,
   initialConversationEndpointState,
 } from './conversation-endpoint-slice.js';
+import {
+  setConfiguration,
+  setError,
+  setStatus,
+  setStreamingConnected,
+} from './conversation-endpoint-actions.js';
 
 describe('conversationEndpointSlice', () => {
   it('should have the correct initial state', () => {
@@ -19,7 +25,7 @@ describe('conversationEndpointSlice', () => {
   it('should set the endpoint status', () => {
     const state = conversationEndpointSlice.reducer(
       initialConversationEndpointState,
-      conversationEndpointSlice.actions.setStatus('pending')
+      setStatus('pending')
     );
 
     expect(state.status).toBe('pending');
@@ -28,11 +34,11 @@ describe('conversationEndpointSlice', () => {
   it('should set and clear endpoint error', () => {
     const withError = conversationEndpointSlice.reducer(
       initialConversationEndpointState,
-      conversationEndpointSlice.actions.setError('boom')
+      setError('boom')
     );
     const cleared = conversationEndpointSlice.reducer(
       withError,
-      conversationEndpointSlice.actions.setError(null)
+      setError(null)
     );
 
     expect(withError.error).toBe('boom');
@@ -42,7 +48,7 @@ describe('conversationEndpointSlice', () => {
   it('should set endpoint configuration', () => {
     const state = conversationEndpointSlice.reducer(
       initialConversationEndpointState,
-      conversationEndpointSlice.actions.setConfiguration({
+      setConfiguration({
         language: 'en',
         country: 'US',
       })
@@ -57,7 +63,7 @@ describe('conversationEndpointSlice', () => {
   it('should set endpoint streaming connectivity', () => {
     const state = conversationEndpointSlice.reducer(
       initialConversationEndpointState,
-      conversationEndpointSlice.actions.setStreamingConnected(true)
+      setStreamingConnected(true)
     );
 
     expect(state.streaming.isConnected).toBe(true);

@@ -9,7 +9,7 @@ import {
   getFullEngine,
 } from '@/src/core/interface/engine/engine.js';
 import {createTestEngine} from '@/src/test/test-utils.js';
-import * as selectors from '@/src/core/interface/search-box/search-box-selectors.js';
+import {getQuery} from '@/src/core/interface/search-box/search-box-selectors.js';
 import {loadSearchBoxActions, setQuery} from './search-box-actions.js';
 
 describe('search-box actions', () => {
@@ -27,7 +27,7 @@ describe('search-box actions', () => {
       // After adopting, the slice should be available and query should be default
       // Give time for adoptSlice (async) to settle
       await new Promise((r) => setTimeout(r, 0));
-      expect(fullEngine.read(selectors.getQuery)).toBe('');
+      expect(fullEngine.read(getQuery)).toBe('');
     });
 
     it('should return an object with a setQuery action', () => {
@@ -41,7 +41,7 @@ describe('search-box actions', () => {
       await new Promise((r) => setTimeout(r, 0));
 
       actions.setQuery({query: 'hello world'});
-      expect(fullEngine.read(selectors.getQuery)).toBe('hello world');
+      expect(fullEngine.read(getQuery)).toBe('hello world');
     });
 
     it('should accept empty string via setQuery action', async () => {
@@ -50,7 +50,7 @@ describe('search-box actions', () => {
 
       actions.setQuery({query: 'something'});
       actions.setQuery({query: ''});
-      expect(fullEngine.read(selectors.getQuery)).toBe('');
+      expect(fullEngine.read(getQuery)).toBe('');
     });
 
     it('should handle multiple calls to setQuery', async () => {
@@ -58,10 +58,10 @@ describe('search-box actions', () => {
       await new Promise((r) => setTimeout(r, 0));
 
       actions.setQuery({query: 'first'});
-      expect(fullEngine.read(selectors.getQuery)).toBe('first');
+      expect(fullEngine.read(getQuery)).toBe('first');
 
       actions.setQuery({query: 'second'});
-      expect(fullEngine.read(selectors.getQuery)).toBe('second');
+      expect(fullEngine.read(getQuery)).toBe('second');
     });
   });
 
@@ -74,7 +74,7 @@ describe('search-box actions', () => {
     it('should adopt the slice if not already adopted', async () => {
       setQuery(engine);
       await new Promise((r) => setTimeout(r, 0));
-      expect(fullEngine.read(selectors.getQuery)).toBe('');
+      expect(fullEngine.read(getQuery)).toBe('');
     });
 
     it('should update state when the returned function is called', async () => {
@@ -82,7 +82,7 @@ describe('search-box actions', () => {
       await new Promise((r) => setTimeout(r, 0));
 
       action({query: 'test query'});
-      expect(fullEngine.read(selectors.getQuery)).toBe('test query');
+      expect(fullEngine.read(getQuery)).toBe('test query');
     });
 
     it('should not re-adopt the slice on subsequent calls with the same engine', async () => {
@@ -91,12 +91,12 @@ describe('search-box actions', () => {
       await new Promise((r) => setTimeout(r, 0));
 
       action1({query: 'first'});
-      expect(fullEngine.read(selectors.getQuery)).toBe('first');
+      expect(fullEngine.read(getQuery)).toBe('first');
 
       // Second call should skip adoption but still work
       const action2 = setQuery(engine);
       action2({query: 'second'});
-      expect(fullEngine.read(selectors.getQuery)).toBe('second');
+      expect(fullEngine.read(getQuery)).toBe('second');
     });
 
     it('should work with different engine instances independently', async () => {
@@ -110,8 +110,8 @@ describe('search-box actions', () => {
       action1({query: 'engine1 query'});
       action2({query: 'engine2 query'});
 
-      expect(fullEngine.read(selectors.getQuery)).toBe('engine1 query');
-      expect(fullEngine2.read(selectors.getQuery)).toBe('engine2 query');
+      expect(fullEngine.read(getQuery)).toBe('engine1 query');
+      expect(fullEngine2.read(getQuery)).toBe('engine2 query');
     });
 
     it('should work after loadSearchBoxActions has already adopted the slice', async () => {
@@ -122,7 +122,7 @@ describe('search-box actions', () => {
       // Named export should still work (slice already adopted)
       const action = setQuery(engine);
       action({query: 'after load'});
-      expect(fullEngine.read(selectors.getQuery)).toBe('after load');
+      expect(fullEngine.read(getQuery)).toBe('after load');
     });
   });
 });

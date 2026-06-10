@@ -5,8 +5,16 @@ import {
   type FullEngine,
   getFullEngine,
 } from '@/src/core/interface/engine/engine.js';
-import * as conversationMutators from '@/src/core/interface/conversation/conversation-mutators.js';
-import * as conversationEndpointMutators from '@/src/core/interface/api/conversation-endpoint/conversation-endpoint-mutators.js';
+import {
+  appendAgentChunk,
+  setSession,
+  startTurn,
+} from '@/src/core/interface/conversation/conversation-mutators.js';
+import {
+  setError,
+  setStatus,
+  setStreamingConnected,
+} from '@/src/core/interface/api/conversation-endpoint/conversation-endpoint-mutators.js';
 import type {ConversationControllerSubmitTurnOptions} from './conversation-controller.js';
 import {buildConversationController} from './conversation-controller.js';
 
@@ -65,7 +73,7 @@ describe('buildConversationController', () => {
       const controller = buildController();
 
       fullEngine.mutate(
-        conversationMutators.startTurn({
+        startTurn({
           turnId: 'turn-1',
           userMessageId: 'user-1',
           agentMessageId: 'agent-1',
@@ -74,24 +82,20 @@ describe('buildConversationController', () => {
         })
       );
       fullEngine.mutate(
-        conversationMutators.appendAgentChunk({
+        appendAgentChunk({
           turnId: 'turn-1',
           chunk: 'Hi there',
         })
       );
       fullEngine.mutate(
-        conversationMutators.setSession({
+        setSession({
           conversationSessionId: 'conversation-1',
           conversationToken: 'token-1',
         })
       );
-      fullEngine.mutate(conversationEndpointMutators.setStatus('streaming'));
-      fullEngine.mutate(
-        conversationEndpointMutators.setError('endpoint error')
-      );
-      fullEngine.mutate(
-        conversationEndpointMutators.setStreamingConnected(true)
-      );
+      fullEngine.mutate(setStatus('streaming'));
+      fullEngine.mutate(setError('endpoint error'));
+      fullEngine.mutate(setStreamingConnected(true));
 
       expect(controller.state).toEqual({
         messages: [
@@ -171,7 +175,7 @@ describe('buildConversationController', () => {
 
       controller.subscribe(callback);
       fullEngine.mutate(
-        conversationMutators.startTurn({
+        startTurn({
           turnId: 'turn-1',
           userMessageId: 'user-1',
           agentMessageId: 'agent-1',
@@ -188,7 +192,7 @@ describe('buildConversationController', () => {
       const callback = vi.fn();
 
       controller.subscribe(callback);
-      fullEngine.mutate(conversationEndpointMutators.setStatus('pending'));
+      fullEngine.mutate(setStatus('pending'));
 
       expect(callback).toHaveBeenCalledTimes(1);
     });

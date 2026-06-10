@@ -1,5 +1,15 @@
-import {createSlice, type PayloadAction} from '@reduxjs/toolkit';
+import {createSlice} from '@reduxjs/toolkit';
 import type {ConfigurationState} from '@/src/core/interface/configuration/configuration-types.js';
+import {
+  setOrganizationId,
+  setAccessToken,
+  setTrackingId,
+  setLanguage,
+  setCountry,
+  setCurrency,
+  setEndpoint,
+  setConfiguration,
+} from './configuration-actions.js';
 
 export const initialConfigurationState: ConfigurationState = {
   organizationId: '',
@@ -14,31 +24,32 @@ export const initialConfigurationState: ConfigurationState = {
 export const configurationSlice = createSlice({
   name: 'configuration',
   initialState: initialConfigurationState,
-  reducers: {
-    setOrganizationId: (state, action: PayloadAction<string>) => {
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(setOrganizationId, (state, action) => {
       state.organizationId = action.payload;
-    },
-    setAccessToken: (state, action: PayloadAction<string>) => {
+    });
+    builder.addCase(setAccessToken, (state, action) => {
       state.accessToken = action.payload;
-    },
-    setTrackingId: (state, action: PayloadAction<string>) => {
+    });
+    builder.addCase(setTrackingId, (state, action) => {
       state.trackingId = action.payload;
-    },
-    setLanguage: (state, action: PayloadAction<string>) => {
+    });
+    builder.addCase(setLanguage, (state, action) => {
       state.language = action.payload;
-    },
-    setCountry: (state, action: PayloadAction<string>) => {
+    });
+    builder.addCase(setCountry, (state, action) => {
       state.country = action.payload;
-    },
-    setCurrency: (state, action: PayloadAction<string>) => {
+    });
+    builder.addCase(setCurrency, (state, action) => {
       state.currency = action.payload;
-    },
-    setEndpoint: (state, action: PayloadAction<string | undefined>) => {
+    });
+    builder.addCase(setEndpoint, (state, action) => {
       state.endpoint = action.payload;
-    },
-    setConfiguration: (_state, action: PayloadAction<ConfigurationState>) => {
+    });
+    builder.addCase(setConfiguration, (_state, action) => {
       return action.payload;
-    },
+    });
   },
   selectors: {
     organizationId: (state) => state.organizationId,

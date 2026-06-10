@@ -1,17 +1,21 @@
 import type {StateMutation} from '@/src/core/interface/engine/engine-types.js';
 import type {SearchEndpointStatus} from './search-endpoint-types.js';
-import {searchEndpointSlice} from '@/src/core/internal/api/search-endpoint/search-endpoint-slice.js';
+import {
+  setStatus as _setStatus,
+  setError as _setError,
+  setConfiguration as _setConfiguration,
+} from '@/src/core/internal/api/search-endpoint/search-endpoint-actions.js';
 
 export const setStatus = (status: SearchEndpointStatus): StateMutation => {
-  return searchEndpointSlice.actions.setStatus(status);
+  return _setStatus(status);
 };
 
 export const setError = (error: string | null): StateMutation => {
-  return searchEndpointSlice.actions.setError(error);
+  return _setError(error);
 };
 
 export const setConfiguration = (
   configuration: Record<string, any>
 ): StateMutation => {
-  return searchEndpointSlice.actions.setConfiguration(configuration);
+  return _setConfiguration(configuration);
 };
