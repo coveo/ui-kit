@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import {
   buildUserActions as buildInsightUserActions,
   type UserActions as InsightUserActions,

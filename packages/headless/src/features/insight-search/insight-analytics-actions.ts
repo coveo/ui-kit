@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import type {InsightPanel} from '@coveo/relay-event-types';
 import {
   requiredNonEmptyString,

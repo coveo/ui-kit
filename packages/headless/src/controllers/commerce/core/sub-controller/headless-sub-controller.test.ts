@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import type {Parameters} from '../../../../features/commerce/parameters/parameters-actions.js';
 import type {CommerceSearchParameters} from '../../../../features/commerce/search-parameters/search-parameters-actions.js';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';

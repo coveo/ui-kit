@@ -1,5 +1,5 @@
 import fc from 'fast-check';
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import {describe, it, expect} from 'vitest';
 import {ValidatePropsController} from './validate-props-controller';
 

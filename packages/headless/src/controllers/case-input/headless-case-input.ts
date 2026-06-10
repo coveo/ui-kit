@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import type {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine.js';
 import {configuration} from '../../app/common-reducers.js';
 import {logUpdateCaseField} from '../../features/case-assist/case-assist-analytics-actions.js';

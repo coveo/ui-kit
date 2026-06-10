@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {getSearchApiBaseUrl} from '../../api/platform-client.js';
 import {ExecutionPlan} from '../../api/search/plan/plan-endpoint.js';

@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import type {Logger} from 'pino';
 import {serializeSchemaValidationError} from '../utils/validate-payload.js';
 import {

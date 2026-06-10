@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import fc from 'fast-check';
 import {describe, expect, it, vi} from 'vitest';
 import {buildMockSearchEngine} from '../test/mock-engine-v2.js';

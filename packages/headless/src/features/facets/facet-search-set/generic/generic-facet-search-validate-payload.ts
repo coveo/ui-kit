@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import {facetIdDefinition} from '../../generic/facet-actions-validation.js';
 
 export const facetSearchOptionsDefinition = z.object({

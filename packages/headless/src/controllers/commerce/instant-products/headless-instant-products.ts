@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import type {SerializedError} from '@reduxjs/toolkit';
 import type {CommerceAPIErrorResponse} from '../../../api/commerce/commerce-api-error-response.js';
 import type {

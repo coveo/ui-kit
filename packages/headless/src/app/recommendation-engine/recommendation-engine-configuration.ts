@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import type {PostprocessSearchResponseMiddleware} from '../../api/search/search-api-client-middleware.js';
 import {nonEmptyString} from '../../utils/validate-payload.js';
 import {

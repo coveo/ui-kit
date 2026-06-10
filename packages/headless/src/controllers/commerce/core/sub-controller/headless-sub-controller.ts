@@ -1,4 +1,4 @@
-import type {z} from '@coveo/bueno/zod';
+import type * as z from '@coveo/bueno/zod';
 import type {UnknownAction} from '@reduxjs/toolkit';
 import type {CommerceAPIErrorStatusResponse} from '../../../../api/commerce/commerce-api-error-response.js';
 import type {FacetSearchType} from '../../../../api/commerce/facet-search/facet-search-request.js';

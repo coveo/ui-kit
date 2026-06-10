@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import type {PlatformEnvironment} from '@coveo/headless';
 import {html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';

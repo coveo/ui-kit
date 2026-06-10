@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import type {CurrencyCodeISO4217} from '@coveo/relay-event-types';
 import {requiredNonEmptyString} from '../../../utils/validate-payload.js';
 

@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import type {Parameters} from './parameters-actions.js';
 
 export const parametersDefinitionShape = {

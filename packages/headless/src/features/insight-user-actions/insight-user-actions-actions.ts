@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {isErrorResponse} from '../../api/search/search-api-client.js';
 import type {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client.js';

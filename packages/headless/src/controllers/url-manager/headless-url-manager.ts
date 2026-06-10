@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import {configuration} from '../../app/common-reducers.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {buildSearchParameterSerializer} from '../../features/search-parameters/search-parameter-serializer.js';

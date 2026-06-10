@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import type {CaseAssistAPIErrorStatusResponse} from '../../api/service/case-assist/case-assist-api-client.js';
 import type {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine.js';
 import {configuration} from '../../app/common-reducers.js';

@@ -1,5 +1,5 @@
 import '@/src/components/common/atomic-icon/atomic-icon';
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import {
   buildNotifyTrigger,
   type NotifyTrigger,

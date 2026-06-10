@@ -51,7 +51,7 @@ The architecture stays flat — there are no new abstraction layers. The `valida
 The central utility module is rewritten to use Zod internally while preserving the public function signatures for Redux Toolkit integration.
 
 ```typescript
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import type {SerializedError} from '@reduxjs/toolkit';
 import type {CoreEngine, CoreEngineNext} from '../app/engine.js';
 
@@ -177,7 +177,7 @@ export const updateQuery = createAction(
 
 **After (Zod):**
 ```typescript
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import {validatePayload} from '../../utils/validate-payload.js';
 
 export const updateQuery = createAction(
@@ -207,7 +207,7 @@ validateOptions(engine, optionsSchema, props.options, 'buildPager');
 
 **After (Zod):**
 ```typescript
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 
 const optionsSchema = z.object({
   numberOfPages: z.optional(z.number().check(z.minimum(1))),
@@ -257,7 +257,7 @@ const templateSchema = new Schema({
 
 **After:**
 ```typescript
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import {requiredNonEmptyString} from '../../utils/validate-payload.js';
 
 const templateSchema = z.object({
@@ -332,7 +332,7 @@ export const numberOfValues = new NumberValue({min: 1});
 
 **After:**
 ```typescript
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 
 export const facetId = z.optional(z.string().check(z.regex(/^[a-zA-Z0-9-_]+$/)));
 export const field = z.string();

@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import type {Result} from '../../api/search/search/result.js';
 import {configuration} from '../../app/common-reducers.js';
 import type {RecommendationEngine} from '../../app/recommendation-engine/recommendation-engine.js';

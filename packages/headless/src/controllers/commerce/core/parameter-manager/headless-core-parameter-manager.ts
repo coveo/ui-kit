@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import type {UnknownAction} from '@reduxjs/toolkit';
 import type {
   CommerceEngine,

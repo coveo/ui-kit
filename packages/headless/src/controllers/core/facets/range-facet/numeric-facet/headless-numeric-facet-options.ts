@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import type {CoreEngine} from '../../../../../app/engine.js';
 import {
   type FacetResultsMustMatch,

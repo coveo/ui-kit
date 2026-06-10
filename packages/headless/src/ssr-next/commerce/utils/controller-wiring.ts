@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import {contextDefinition} from '../../../features/commerce/context/context-validation.js';
 import {
   parametersDefinition,

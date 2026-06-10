@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import {
   type SearchBoxOptions as CoreSearchBoxOptions,
   searchBoxOptionDefinitions as coreSearchBoxOptionDefinitions,

@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import fc from 'fast-check';
 import {describe, expect, it, vi, beforeEach} from 'vitest';
 import {ValidatePropsController} from './validate-props-controller';

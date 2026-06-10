@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import {requiredNonEmptyString} from '../../../../utils/validate-payload.js';
 import {facetIdDefinition} from '../../generic/facet-actions-validation.js';
 import type {RangeFacetValue} from './interfaces/range-facet.js';

@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import type {CoreEngine} from '../../../../../app/engine.js';
 import {facetValueStates} from '../../../../../features/facets/facet-api/value.js';
 import {validateManualDateRanges} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions.js';

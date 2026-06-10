@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import type {FieldDescription} from '../../api/search/fields/fields-response.js';
 import type {
   ExecutionReport,

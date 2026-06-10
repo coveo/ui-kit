@@ -76,7 +76,7 @@ export class ValidatePropsController<TProps extends Record<string, unknown>>
 
 **After:**
 ```typescript
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import type {ReactiveController, ReactiveControllerHost} from 'lit';
 import {deepEqual} from '@/src/utils/compare-utils';
 
@@ -167,7 +167,7 @@ private static readonly propsSchema = new Schema({
 
 **After:**
 ```typescript
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 
 private static readonly propsSchema = z.object({
   density: z.optional(z.enum(['normal', 'comfortable', 'compact'])),
@@ -195,7 +195,7 @@ private static readonly propsSchema = new Schema({
 
 **After:**
 ```typescript
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 
 private static readonly propsSchema = z.object({
   period: z.optional(z.enum(['past', 'next'])),
@@ -222,7 +222,7 @@ private static readonly propsSchema = new Schema({
 
 **After:**
 ```typescript
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 
 private static readonly propsSchema = z.object({
   field: z.string().check(z.minLength(1)),
@@ -313,7 +313,7 @@ mockSchema = new Schema({
 schemaSpy = vi.spyOn(mockSchema, 'validate');
 
 // After
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 const mockSchema = z.object({
   name: z.optional(z.enum(['valid', 'also-valid'])),
 });

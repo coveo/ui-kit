@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import type {AnyAction, Dispatch} from '@reduxjs/toolkit';
 import type {CoreEngine} from '../../../app/engine.js';
 import {

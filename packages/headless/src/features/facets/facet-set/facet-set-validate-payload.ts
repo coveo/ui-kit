@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import {requiredNonEmptyString} from '../../../utils/validate-payload.js';
 
 export const facetValueDefinition = z.object({

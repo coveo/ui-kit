@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import type {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../../app/state-key.js';
 import {

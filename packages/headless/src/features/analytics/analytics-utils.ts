@@ -1,5 +1,5 @@
 /* oxlint-disable @typescript-eslint/no-invalid-void-type -- <> */
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import type {createRelay} from '@coveo/relay';
 import type {ItemMetaData} from '@coveo/relay-event-types';
 import {

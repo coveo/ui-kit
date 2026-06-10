@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 
 export const facetId = z.optional(
   z.string().check(z.regex(/^[a-zA-Z0-9-_]+$/))

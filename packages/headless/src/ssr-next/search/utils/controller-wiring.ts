@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {nonRequiredEmptyAllowedString} from '../../../utils/validate-payload.js';
 import type {ControllersPropsMap} from '../../common/types/controllers.js';

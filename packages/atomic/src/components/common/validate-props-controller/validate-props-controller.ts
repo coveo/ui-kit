@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import type {ReactiveController, ReactiveControllerHost} from 'lit';
 import {deepEqual} from '@/src/utils/compare-utils';
 

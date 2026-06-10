@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import type {Result} from '../../api/search/search/result.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {

@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import type {ChildProduct} from '../../../api/commerce/common/product.js';
 import {

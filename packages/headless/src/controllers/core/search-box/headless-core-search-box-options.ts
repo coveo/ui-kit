@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import type {SuggestionHighlightingOptions} from '../../../utils/highlight.js';
 import {requiredNonEmptyString} from '../../../utils/validate-payload.js';
 

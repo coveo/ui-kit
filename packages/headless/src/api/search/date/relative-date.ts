@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import dayjs, {type QUnitType} from 'dayjs';
 import quarterOfYear from 'dayjs/plugin/quarterOfYear.js';
 import {

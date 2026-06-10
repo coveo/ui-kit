@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import type {Quickview, QuickviewState, Result} from '@coveo/headless';
 import {buildQuickview} from '@coveo/headless';
 import {html, LitElement, nothing} from 'lit';

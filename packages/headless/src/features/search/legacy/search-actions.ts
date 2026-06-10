@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import type {EventDescription} from 'coveo.analytics';
 import HistoryStore from '../../../api/analytics/coveo.analytics/history-store.js';

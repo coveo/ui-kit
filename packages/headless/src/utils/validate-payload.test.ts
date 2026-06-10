@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import type {CoreEngine} from '../app/engine.js';
 import {buildMockSearchEngine} from '../test/mock-engine-v2.js';
 import {createMockState} from '../test/mock-state.js';

@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 
 export const searchParametersDefinition = z.object({
   q: z.optional(z.string()),

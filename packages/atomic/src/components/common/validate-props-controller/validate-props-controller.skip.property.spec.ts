@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import fc from 'fast-check';
 import type {ReactiveController, ReactiveControllerHost} from 'lit';
 import {describe, expect, it, vi} from 'vitest';

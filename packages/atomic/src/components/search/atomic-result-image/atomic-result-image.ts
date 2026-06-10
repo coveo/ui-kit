@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import type {Result} from '@coveo/headless';
 import {ResultTemplatesHelpers} from '@coveo/headless';
 import {css, html, LitElement, nothing} from 'lit';

@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import {parametersDefinitionShape} from '../parameters/parameters-schema.js';
 import type {CommerceSearchParameters} from './search-parameters-actions.js';
 

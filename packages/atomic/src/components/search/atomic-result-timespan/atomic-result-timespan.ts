@@ -1,4 +1,4 @@
-import {z} from '@coveo/bueno/zod';
+import * as z from '@coveo/bueno/zod';
 import {type Result, ResultTemplatesHelpers} from '@coveo/headless';
 import dayjs from 'dayjs';
 import type {DurationUnitType} from 'dayjs/plugin/duration';
