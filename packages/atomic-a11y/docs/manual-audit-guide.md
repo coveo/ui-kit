@@ -45,22 +45,22 @@ There is **no per-component dimension** — you audit the surface as a whole.
 
 Keys follow `{numeric-id}-{slug}`. Only the numeric id is parsed (regex `/^(\d+(?:\.\d+)+)-/`); the slug is free text for readability. The id **must** be a real WCAG 2.2 A/AA criterion (validated against `src/data/wcag-criteria.ts`).
 
-| Key                            | Criterion |
-| ------------------------------ | --------- |
-| `2.4.7-focus-visible`          | `2.4.7`   |
-| `1.4.3-contrast-minimum`       | `1.4.3`   |
-| `2.1.4-character-key-shortcuts`| `2.1.4`   |
+| Key                             | Criterion |
+| ------------------------------- | --------- |
+| `2.4.7-focus-visible`           | `2.4.7`   |
+| `1.4.3-contrast-minimum`        | `1.4.3`   |
+| `2.1.4-character-key-shortcuts` | `2.1.4`   |
 
 ### Result values
 
-| Value            | OpenACR Conformance | Meaning                                                       |
-| ---------------- | ------------------- | ------------------------------------------------------------- |
-| `pass`           | Supports            | The surface meets this criterion.                             |
-| `fail`           | Does Not Support    | The surface fails this criterion.                             |
-| `partial`        | Partially Supports  | Met in some scenarios but not all.                            |
-| `not-applicable` | Not Applicable      | The criterion doesn't apply to this surface.                  |
+| Value            | OpenACR Conformance | Meaning                                      |
+| ---------------- | ------------------- | -------------------------------------------- |
+| `pass`           | Supports            | The surface meets this criterion.            |
+| `fail`           | Does Not Support    | The surface fails this criterion.            |
+| `partial`        | Partially Supports  | Met in some scenarios but not all.           |
+| `not-applicable` | Not Applicable      | The criterion doesn't apply to this surface. |
 
-Use the object form `{ "conformance", "remarks" }` to document *why*; the remark is carried into the VPAT notes. **List only the criteria you tested** — omitted criteria stay *Does Not Support [manual audit required]* until audited.
+Use the object form `{ "conformance", "remarks" }` to document _why_; the remark is carried into the VPAT notes. **List only the criteria you tested** — omitted criteria stay _Does Not Support [manual audit required]_ until audited.
 
 Put the **test conditions in `remarks`**: the assistive tech + version and browser you used for any criterion that depends on them (screen readers, focus, name/role/value), and a short **repro** for every `fail`/`partial`. A bare `pass` is fine for clearly-visual checks; an AT-dependent `pass`/`fail` without conditions isn't verifiable.
 
@@ -77,14 +77,14 @@ Signals:
 1. **Overrides** (`a11y/a11y-overrides.json`) — permanent, by-design exceptions set by engineering. Authoritative: they win outright and bypass worst-wins.
 2. **Manual audits** — every result across **all** surface files. The same criterion audited in several files contributes several results; the worst wins.
 3. **Interactive** — Storybook keyboard `play()` tests.
-4. **Automated** — axe-core, **only for criteria it actually covers**. A criterion axe doesn't cover contributes *no* signal (not a failure), so manual audits can fill those gaps.
+4. **Automated** — axe-core, **only for criteria it actually covers**. A criterion axe doesn't cover contributes _no_ signal (not a failure), so manual audits can fill those gaps.
 
 Consequences:
 
 - A manual `fail` surfaces even if axe was clean.
 - A manual `pass` **cannot** hide a real axe violation — the violation still wins. Fix the code or add a documented override instead.
 - A criterion axe can't test (e.g. `2.1.4`) is driven entirely by your manual result.
-- A criterion with no signal at all is *Does Not Support [manual audit required]*.
+- A criterion with no signal at all is _Does Not Support [manual audit required]_.
 
 ## Validation
 
@@ -107,6 +107,7 @@ Paste this into the description of any manual-audit PR so a reviewer can trust t
 
 ```markdown
 ### Manual audit
+
 - **Surface(s):** <search / commerce / …>
 - **Method:** keyboard / screen reader / zoom-reflow / visual (delete what doesn't apply)
 - **Environment:** <e.g. NVDA 2024.1 + Chrome 124; VoiceOver + Safari 17; macOS 14>
@@ -120,5 +121,5 @@ Paste this into the description of any manual-audit PR so a reviewer can trust t
 ## Tips
 
 - **Split by surface, not component.** Keeps diffs small; the VPAT merges everything anyway.
-- **Only list what you tested.** Untested criteria remain visible as *[manual audit required]*.
+- **Only list what you tested.** Untested criteria remain visible as _[manual audit required]_.
 - **Don't paper over real failures.** A manual `pass` won't clear an axe violation — that's intentional. Use an override (with a reason) only for genuine by-design exceptions.

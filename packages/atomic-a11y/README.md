@@ -74,6 +74,7 @@ Automated tests can't cover every WCAG criterion. For the rest, record results p
 
    - Result is `pass` | `fail` | `partial` | `not-applicable`, or `{conformance, remarks}` to add a note (the remark shows in the VPAT). Put the **AT + browser** you used and a **repro for any fail** in `remarks`.
    - Key is `{wcag-id}-{slug}`; the id must be a real WCAG 2.2 A/AA criterion. List only what you tested — omitted criteria stay _Does Not Support [manual audit required]_.
+
 3. **Run `pnpm a11y:vpat`** — regenerates the VPAT and warns on invalid keys.
 4. **Open a PR** using the [manual-audit PR checklist](docs/manual-audit-guide.md#pr-checklist) (method, environment, criteria audited) and commit the file + regenerated VPAT.
 
