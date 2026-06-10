@@ -1,0 +1,9 @@
+{
+  "surface": "insight",
+  "wcag22Criteria": {
+    "1.4.10-reflow": {
+      "conformance": "pass",
+      "remarks": "Insight panel is a fixed-dimension widget embedded in host applications. Layout uses flex-wrap for search section. Content reflows within available width. Tab overflow managed via popover mechanism."
+    }
+  }
+}

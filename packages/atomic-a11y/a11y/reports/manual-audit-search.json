@@ -1,0 +1,9 @@
+{
+  "surface": "search",
+  "wcag22Criteria": {
+    "1.4.10-reflow": {
+      "conformance": "pass",
+      "remarks": "Layout uses responsive CSS grid (minmax(0, 1fr)), mobile breakpoint at 1024px switches to single-column. Facets hidden on mobile, accessible via refine-modal. No horizontal scrolling at 320px viewport. Result list table display uses overflow-x: auto (excepted per 1.4.10 as data tables require two-dimensional layout). Pager uses flex-wrap at narrow viewports."
+    }
+  }
+}

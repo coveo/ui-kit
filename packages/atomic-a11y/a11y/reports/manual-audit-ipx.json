@@ -1,0 +1,9 @@
+{
+  "surface": "ipx",
+  "wcag22Criteria": {
+    "1.4.10-reflow": {
+      "conformance": "pass",
+      "remarks": "IPX modal uses full-width layout. Content reflows within available viewport width."
+    }
+  }
+}
