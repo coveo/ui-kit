@@ -13,7 +13,7 @@
 
 Implement an anti-corruption layer to isolate the public API surface from the Coveo REST APIs and Redux.
 
-## 3. Requirements Mapping
+## 3. Requirements & Considerations Mapping
 
 Map this decision to headless-future's Architecture Decision Charter requirements.
 
