@@ -11,6 +11,7 @@
     "2.5.3-label-in-name": "pass",
     "1.4.10-reflow": {
       "conformance": "pass"
-    }
+    },
+    "2.4.3-focus-order": "pass"
   }
 }

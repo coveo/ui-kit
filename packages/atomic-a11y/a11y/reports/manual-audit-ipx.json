@@ -13,6 +13,10 @@
     "2.5.3-label-in-name": "pass",
     "1.4.10-reflow": {
       "conformance": "pass"
+    },
+    "2.4.3-focus-order": {
+      "conformance": "fail",
+      "remarks": "Focus escapes ipx-modal and ipx-refine-modal when tabbing, due to broken focus trap. See KIT-5811. Tab component passes."
     }
   }
 }
