@@ -19,6 +19,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
+import {HiddenStateController} from '@/src/utils/hidden-state-controller';
 import {renderAutoCorrection} from '../../common/query-correction/auto-correction';
 import {renderCorrection} from '../../common/query-correction/correction';
 import {renderTriggerCorrection} from '../../common/query-correction/trigger-correction';
@@ -35,6 +36,8 @@ import type {Bindings} from '../atomic-search-interface/atomic-search-interface'
  * @part correction-btn - The button used to manually correct a query.
  * @part undo-btn - The button used to undo a query changed by a query trigger.
  * @part highlight - The query highlights.
+ *
+ * @cssState empty - Hides the element when there is no query correction to display.
  */
 @customElement('atomic-did-you-mean')
 @withTailwindStyles
@@ -54,6 +57,7 @@ export class AtomicDidYouMean
   queryTrigger!: QueryTrigger;
 
   protected ariaMessage = new AriaLiveRegionController(this, 'did-you-mean');
+  #hiddenState = new HiddenStateController(this);
 
   @bindStateToController('didYouMean')
   @state()
@@ -172,6 +176,7 @@ export class AtomicDidYouMean
       this.ariaMessage.message = this.getAriaLiveMessage();
     }
 
+    this.#hiddenState.isEmpty = !hasCorrection;
     return html`${when(hasCorrection, () => this.content)}`;
   }
 

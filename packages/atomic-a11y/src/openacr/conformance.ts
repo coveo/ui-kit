@@ -54,7 +54,7 @@ function resolveAutomatedConformance(
 ): OpenAcrConformance {
   const coveredCount = aggregate?.coveredComponents.size ?? 0;
   if (coveredCount === 0) {
-    return 'not-evaluated';
+    return 'does-not-support';
   }
 
   const violatingCount = aggregate?.violatingComponents.size ?? 0;
@@ -97,7 +97,7 @@ export function resolveConformance(
 
   const existingConformance = mapCriterionConformance(criterion);
 
-  if (existingConformance && existingConformance !== 'not-evaluated') {
+  if (existingConformance) {
     return existingConformance;
   }
 
@@ -203,12 +203,14 @@ export function buildRemarks(context: RemarksContext): string {
   }
 
   if (conformance === 'does-not-support') {
+    if (
+      automatedCoveredCount === 0 &&
+      interactiveCoveredComponents.length === 0
+    ) {
+      return `WCAG ${criterionId} has not been verified — no automated or interactive test coverage exists in the current test scope. [Manual audit required]`;
+    }
     return `Automated testing found violations for WCAG ${criterionId} in all ${automatedCoveredCount} mapped component(s).${interactiveSuffix}`;
   }
 
-  if (conformance === 'not-applicable') {
-    return `WCAG ${criterionId} is not applicable for the tested component scope.`;
-  }
-
-  return `WCAG ${criterionId} has no automated or interactive coverage.`;
+  return `WCAG ${criterionId} is not applicable for the tested component scope.`;
 }

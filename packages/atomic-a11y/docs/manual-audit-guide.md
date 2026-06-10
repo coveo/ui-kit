@@ -22,9 +22,9 @@ packages/atomic-a11y/
 
 ## Source of truth
 
-The `manual-audit-*.json` baseline files in `a11y/reports` are the source of truth for manual audits.
+The `manual-audit-*.json` baseline files in `a11y/reports` are the single source of truth for manual audits.
 
-Auditors should edit these baseline files directly. There is no separate delta merge step in the standard `pnpm a11y:vpat` workflow.
+Auditors edit these baseline files directly — there is no separate merge or delta step. Editing a file and running `pnpm a11y:vpat` is the entire workflow.
 
 ## File naming
 
@@ -239,6 +239,7 @@ Additionally, individual criterion entries within `wcag22Criteria` are skipped i
 
 - The value is neither a string nor an object with string `conformance`
 - The key doesn't match the `{numeric-id}-{slug}` pattern
+- The numeric ID is not a recognized WCAG 2.2 A/AA success criterion (validated against the WCAG catalog in `src/data/wcag-criteria.ts`)
 - The status value is not one of `pass`, `fail`, `partial`, `not-applicable`
 
 ## Workflow
@@ -262,6 +263,6 @@ Additionally, individual criterion entries within `wcag22Criteria` are skipped i
 
 - **Start with `"pending"`** — set `status` to `"pending"` while auditing, then flip to `"complete"` when done. Pending entries are safely ignored.
 - **One file per category** — keeps diffs small and ownership clear.
-- **You don't need every criterion** — only include criteria you've actually tested. Untested criteria remain as `"not-evaluated"` in the VPAT.
+- **You don't need every criterion** — only include criteria you've actually tested. Untested A/AA criteria are automatically emitted as **Does Not Support** with a `[Manual audit required]` remark in the VPAT, so they remain visible as pending work until audited.
 - **Component names must match** — use the exact `atomic-*` name from the automated `a11y-report.json`. Open that file to see the list of detected components and their names.
 - **Criteria keys are flexible** — only the numeric prefix matters (`1.1.1-`). The slug after the hyphen is for human readability.

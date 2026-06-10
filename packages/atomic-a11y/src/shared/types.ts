@@ -78,8 +78,7 @@ export interface A11yCriterionReport {
     | 'supports'
     | 'partiallySupports'
     | 'doesNotSupport'
-    | 'notApplicable'
-    | 'notEvaluated';
+    | 'notApplicable';
   automatedCoverage: boolean;
   interactiveCoverage: boolean;
   interactiveStatus?: 'passed';
@@ -108,7 +107,6 @@ export interface A11ySummary {
   partiallySupports: number;
   doesNotSupport: number;
   notApplicable: number;
-  notEvaluated: number;
   automatedCoverage: string;
   interactiveCoverage: string;
   interactivePassRate: string;

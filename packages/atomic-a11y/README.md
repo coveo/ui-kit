@@ -60,9 +60,9 @@ Automated testing covers ~30-40% of WCAG criteria. The rest requires human revie
 
 ## Accessibility strategy
 
-All WCAG 2.2 AA criteria have been intentionally blacklisted (marked `not-evaluated`) to enable gradual compliance without breaking CI. Contributors can remove rules one-at-a-time from `a11y/a11y-overrides.json` as components become compliant. This prevents blanket CI failures and allows teams to address accessibility debt incrementally.
+WCAG 2.2 A/AA criteria with no automated, interactive, or manual coverage are emitted as **Does Not Support** with a `[Manual audit required]` remark in the OpenACR/VPAT output. Contributors can mark criteria as `not-applicable` in `a11y/a11y-overrides.json` for criteria that genuinely do not apply, or provide manual audit results in `a11y/reports/manual-audit-*.json` as components are reviewed. This prevents blanket CI failures and allows teams to address accessibility debt incrementally.
 
-**→ See [WCAG Rule Blacklist Strategy](docs/manual-audit-guide.md#wcag-rule-blacklist-strategy) for contributor workflow**
+**→ See the [Manual Audit Guide](docs/manual-audit-guide.md) for the contributor workflow**
 
 ## Structure
 
