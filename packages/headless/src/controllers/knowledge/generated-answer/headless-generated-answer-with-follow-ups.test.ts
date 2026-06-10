@@ -582,6 +582,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
           answerId: headAnswerId,
         },
       });
+      engine.state.configuration.knowledge.agentId = 'some-agent-id';
 
       const controller = createGeneratedAnswerWithFollowUps();
 

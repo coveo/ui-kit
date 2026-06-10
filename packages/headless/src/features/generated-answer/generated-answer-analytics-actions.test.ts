@@ -303,7 +303,11 @@ describe('generated answer analytics actions', () => {
       expect(
         mockMakeGeneratedAnswerFollowupOpenSource.mock.calls[0][0]
       ).toStrictEqual({
-        ...expectedCitationDocumentInfo,
+        sourceName: expectedCitationDocumentInfo.sourceName,
+        documentTitle: expectedCitationDocumentInfo.documentTitle,
+        documentUri: expectedCitationDocumentInfo.documentUri,
+        documentUrl: expectedCitationDocumentInfo.documentUrl,
+        queryPipeline: expectedCitationDocumentInfo.queryPipeline,
         generativeQuestionAnsweringId: exampleProvidedAnswerId,
         citationId: exampleCitation.id,
         permanentId: exampleCitation.permanentid,
