@@ -62,7 +62,7 @@ export const WithCustomChoicesDisplayed: Story = {
 
 export const A11yRadioGroup: Story = {
   name: 'A11y Radio Group',
-  tags: ['a11y', 'test'],
+  tags: ['a11y', 'test', '!dev'],
   play: async (context) => {
     await play(context);
     await testRadioGroupA11y(context);
