@@ -1,0 +1,9 @@
+{
+  "surface": "search",
+  "wcag22Criteria": {
+    "3.3.3-error-suggestion": {
+      "conformance": "pass",
+      "remarks": "Numeric/date facet inputs use native HTML5 constraint validation (type=number/date, required, min, max, step). Browser provides built-in error suggestions via constraint validation API (satisfies G85). atomic-did-you-mean suggests query corrections when search returns no/few results — either auto-corrects or offers a 'Did you mean' button with the corrected query."
+    }
+  }
+}
