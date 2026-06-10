@@ -219,6 +219,43 @@ describe('atomic-breadbox', () => {
       ).toBeNull();
     });
 
+    it('should have the empty custom state when there are no breadcrumbs', async () => {
+      const {element} = await renderBreadbox({
+        breadcrumbState: {
+          facetBreadcrumbs: [],
+          categoryFacetBreadcrumbs: [],
+          numericFacetBreadcrumbs: [],
+          dateFacetBreadcrumbs: [],
+          automaticFacetBreadcrumbs: [],
+        },
+      });
+      expect(element.matches(':state(empty)')).toBe(true);
+    });
+
+    it('should not have the empty custom state when there are breadcrumbs', async () => {
+      const {element} = await renderBreadbox({
+        breadcrumbState: {
+          facetBreadcrumbs: [
+            {
+              facetId: 'test-facet',
+              field: 'test-field',
+              values: [
+                {
+                  value: {
+                    value: 'test-value',
+                    state: 'selected',
+                    numberOfResults: 1,
+                  },
+                  deselect: vi.fn(),
+                },
+              ],
+            },
+          ],
+        },
+      });
+      expect(element.matches(':state(empty)')).toBe(false);
+    });
+
     it('should have the right text on the label', async () => {
       const {label} = await renderBreadbox({
         breadcrumbState: {
