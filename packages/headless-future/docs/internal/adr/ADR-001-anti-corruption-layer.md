@@ -1,7 +1,7 @@
 # ADR-001: Anti-Corruption Layer
 
-**Status**: Proposed
-**Related Docs**: -
+**Status**: Proposed
+**Related docs**: -
 
 ## 1. Context
 
@@ -33,7 +33,7 @@ Map this decision to headless-future's Architecture Decision Charter requirement
 
 ### SHOULD
 
-1. **Requirement**: Tree-shaking efficiency
+1. **Consideration**: Tree-shaking efficiency
    - **Impact**: None
    - **How addressed (or why deferred)**: N/A
 
@@ -41,9 +41,9 @@ Map this decision to headless-future's Architecture Decision Charter requirement
    - **Impact**: Negative
    - **How addressed (or why deferred)**: Right now in Headless, Redux and Coveo REST API types and concepts leak directly into the public API surface, preventing public API independence altogether. We established public independence as a MUST of headless-future, which almost unavoidably implies introducing breaking changes. The anti-corruption layer does not cause that (the overall architectural decision does), but it confirms it.
 
-3. **Requirement**: External contribution readiness
+3. **Consideration**: External contribution readiness
    - **Impact**: Negative
-   - **How addressed (or why deferred)**: An anti-corruption layer implies additional boiler-plating and cognitive overhead. In this case, we believe the benefit outweighs the cost. The boiler-plating overhead can at least be partially mitigated through code snippets, scripts, and/or AI agent instructions. The cognitive overhead is something we will have to deal with.
+   - **How addressed (or why deferred)**: An anti-corruption layer implies additional boilerplate and cognitive overhead. In this case, we believe the benefit outweighs the cost. The boilerplate overhead can at least be partially mitigated through code snippets, scripts, and/or AI agent instructions. The cognitive overhead is something we will have to deal with.
 
 ## 4. Options Considered
 
@@ -54,7 +54,7 @@ Map this decision to headless-future's Architecture Decision Charter requirement
   - Purely mechanical changes made behind the anti-corruption layer have no impact on files in the public API layer
   - Acts as a conceptual guardrail against accidental leakage of undesired types and concepts into the public API surface
 - **Cons**:
-  - Additional boiler-plating and cognitive overhead for contributors
+  - Additional boilerplate and cognitive overhead for contributors
 - **Risks**:
   - Contributor frustration
   - Loss of velocity
@@ -72,8 +72,8 @@ Map this decision to headless-future's Architecture Decision Charter requirement
 
 ## 5. Decision Rationale
 
-- Public API independence is a 2nd rate MUST
-- External contributor readiness is a 3rd rate SHOULD
+- Public API independence is a MUST (see ADR-000)
+- External contributor readiness is the 3rd-priority SHOULD (see ADR-000)
 - The positive impact on public API independence is significant enough to be worthwhile
 - The negative impact on external contributor readiness is relatively minor and can be mitigated to some extent
 
