@@ -1,13 +1,16 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
-import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import {html} from 'lit';
+import {within} from 'shadow-dom-testing-library';
+import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
-import {searchFacetTransformer} from '@/storybook-utils/api/search/facet-transformer';
+import {buildSearchResponseWithResults} from '@/storybook-utils/api/search/search-response-mocks';
+import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-pager/atomic-pager.js';
+import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 
 const searchApiHarness = new MockSearchApi();
-searchApiHarness.searchEndpoint.addRequestTransformer(searchFacetTransformer);
 
 const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers('atomic-pager', {
@@ -37,6 +40,9 @@ const meta: Meta = {
       '<svg viewBox="0 0 20 20"><path d="m8.5 15.2 4.3-4.6c.3-.4.3-.9 0-1.3l-4.4-4.5c-.3-.4-.9-.4-1.2 0s-.3.9 0 1.3l3.7 4-3.7 3.9c-.3.4-.3.9 0 1.3.4.3 1 .3 1.3-.1z"/></svg>',
   },
   argTypes,
+  beforeEach: async () => {
+    searchApiHarness.clearAll();
+  },
   play,
 };
 
@@ -58,5 +64,33 @@ export const WithACustomNumberOfPages: Story = {
   name: 'With a custom number of pages',
   args: {
     'number-of-pages': '10',
+  },
+};
+
+export const A11yStatusMessage: Story = {
+  name: 'A11y Status Message',
+  tags: ['a11y', 'test', '!dev'],
+  decorators: [
+    (story) => html`<atomic-query-summary></atomic-query-summary>${story()}`,
+  ],
+  beforeEach: async () => {
+    searchApiHarness.searchEndpoint.mockOnce(
+      buildSearchResponseWithResults(120)
+    );
+    searchApiHarness.searchEndpoint.mockOnce(
+      buildSearchResponseWithResults(120)
+    );
+  },
+  play: async (context) => {
+    await play(context);
+    await testStatusMessageA11y(context, {
+      triggerAction: async () => {
+        const canvas = within(context.canvasElement);
+        const nextButton = await canvas.findByShadowLabelText(/next/i);
+        nextButton.click();
+      },
+      expectedText: 'Page 2 loaded',
+      timeout: 5000,
+    });
   },
 };

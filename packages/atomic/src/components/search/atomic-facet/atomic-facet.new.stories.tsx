@@ -6,6 +6,7 @@ import {within} from 'shadow-dom-testing-library';
 import {userEvent} from 'storybook/test';
 import {testCheckboxA11y} from '@/storybook-utils/a11y/checkbox.js';
 import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
+import {testDisclosureA11y} from '@/storybook-utils/a11y/disclosure.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
@@ -187,14 +188,35 @@ export const A11yStatusMessage: Story = {
   },
 };
 
+export const A11yDisclosure: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  parameters: {
+    a11y: {
+      options: {
+        rules: {'color-contrast': {enabled: false}},
+      },
+    },
+  },
+  args: {
+    field: 'objecttype',
+  },
+  decorators: [facetDecorator],
+  play: async (context) => {
+    await play(context);
+    await testDisclosureA11y(context, {
+      trigger: {expanded: true},
+    });
+  },
+};
+
 export const A11yFacetSearchNoResults: Story = {
   name: 'A11y Facet Search No Results',
   tags: ['a11y', 'test', '!dev'],
   args: {
     field: 'objecttype',
     label: 'Object Type',
+    decorators: [facetDecorator],
   },
-  decorators: [facetDecorator],
   play: async (context) => {
     await play(context);
     await testStatusMessageA11y(context, {

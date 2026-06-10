@@ -208,7 +208,7 @@ export const constructGenerateHeadAnswerParams = (
   );
   const locale = selectLocale(state);
   const tab = selectActiveTab(state.tabSet) || 'default';
-  const referrer = navigatorContext.referrer || '';
+  const referrer = navigatorContext.referrer;
   const {aq, cq} = buildAdvancedSearchQueryParams(state);
 
   const searchHub = selectSearchHub(state);

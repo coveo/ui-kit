@@ -9,6 +9,11 @@
   word-wrap: break-word;
 }
 
+.generated-answer__content--scrollable {
+  overflow-y: auto;
+  height: var(--quantic-generated-answer-content-fixed-height, 50vh);
+}
+
 .generated-answer__footer {
   gap: 1rem;
 }

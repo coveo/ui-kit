@@ -254,7 +254,7 @@ export function mergeCriteria(
         name: metadata.name,
         level: metadata.level,
         wcagVersion: metadata.wcagVersion,
-        conformance: 'notEvaluated',
+        conformance: 'doesNotSupport',
         automatedCoverage: true,
         interactiveCoverage: false,
         manualVerified: false,
@@ -311,7 +311,7 @@ function resolveMergedConformance(
 ): A11yCriterionReport['conformance'] {
   const coveredCount = coveredComponents.length;
   if (coveredCount === 0) {
-    return 'notEvaluated';
+    return 'doesNotSupport';
   }
 
   const violatingCount = violatingComponents.length;

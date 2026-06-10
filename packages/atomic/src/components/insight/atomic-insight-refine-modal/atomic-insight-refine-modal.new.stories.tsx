@@ -6,6 +6,7 @@ import type {
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
+import {testDialogA11y} from '@/storybook-utils/a11y/dialog.js';
 import {MockInsightApi} from '@/storybook-utils/api/insight/mock';
 import {
   type baseResponse,
@@ -100,4 +101,30 @@ export const Default: Story = {
     decorator,
     facetWidthDecorator,
   ],
+};
+
+export const A11yDialog: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  name: 'A11y Dialog',
+  decorators: [
+    () => html`
+      <atomic-insight-refine-toggle></atomic-insight-refine-toggle>
+      <div style="display:none;">
+        <atomic-insight-facet
+          field="source"
+          label="Source"
+        ></atomic-insight-facet>
+        <atomic-insight-facet
+          field="filetype"
+          label="File Type"
+        ></atomic-insight-facet>
+      </div>
+    `,
+    decorator,
+    facetWidthDecorator,
+  ],
+  play: async (context) => {
+    await play(context);
+    await testDialogA11y(context, {triggerLabel: 'Filters'});
+  },
 };
