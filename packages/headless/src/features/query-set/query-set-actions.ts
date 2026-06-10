@@ -1,3 +1,4 @@
+import {z} from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import {
   requiredEmptyAllowedString,
@@ -5,10 +6,10 @@ import {
   validatePayload,
 } from '../../utils/validate-payload.js';
 
-export const querySetDefinition = {
+export const querySetDefinition = z.object({
   id: requiredNonEmptyString,
   query: requiredEmptyAllowedString,
-};
+});
 
 export interface RegisterQuerySetQueryActionCreatorPayload {
   /**

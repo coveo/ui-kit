@@ -1,10 +1,4 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  NumberValue,
-  RecordValue,
-  StringValue,
-} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import {
   requiredNonEmptyString,
@@ -25,6 +19,14 @@ export interface ToggleSelectNumericFacetValuePayload {
    */
   selection: NumericRangeRequest;
 }
+
+const numericFacetValueDefinition = z.object({
+  state: z.enum(['idle', 'selected', 'excluded']),
+  start: z.number(),
+  end: z.number(),
+  endInclusive: z.boolean(),
+});
+
 /**
  * Action to toggle a facet value of a NumericFacet.
  *
@@ -35,12 +37,13 @@ export interface ToggleSelectNumericFacetValuePayload {
 export const toggleSelectNumericFacetValue = createAction(
   'commerce/facets/numericFacet/toggleSelectValue',
   (payload: ToggleSelectNumericFacetValuePayload) =>
-    validatePayload(payload, {
-      facetId: requiredNonEmptyString,
-      selection: new RecordValue({
-        values: numericFacetValueDefinition,
-      }),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        facetId: requiredNonEmptyString,
+        selection: numericFacetValueDefinition,
+      })
+    )
 );
 
 export type ToggleExcludeNumericFacetValuePayload =
@@ -49,12 +52,13 @@ export type ToggleExcludeNumericFacetValuePayload =
 export const toggleExcludeNumericFacetValue = createAction(
   'commerce/facets/numericFacet/toggleExcludeValue',
   (payload: ToggleExcludeNumericFacetValuePayload) =>
-    validatePayload(payload, {
-      facetId: requiredNonEmptyString,
-      selection: new RecordValue({
-        values: numericFacetValueDefinition,
-      }),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        facetId: requiredNonEmptyString,
+        selection: numericFacetValueDefinition,
+      })
+    )
 );
 
 export interface UpdateNumericFacetValuesPayload {
@@ -72,12 +76,13 @@ export const updateNumericFacetValues = createAction(
   'commerce/facets/numericFacet/updateValues',
   (payload: UpdateNumericFacetValuesPayload) => {
     try {
-      validatePayloadAndThrow(payload, {
-        facetId: requiredNonEmptyString,
-        values: new ArrayValue({
-          each: new RecordValue({values: numericFacetValueDefinition}),
-        }),
-      });
+      validatePayloadAndThrow(
+        payload,
+        z.object({
+          facetId: requiredNonEmptyString,
+          values: z.array(numericFacetValueDefinition),
+        })
+      );
       validateManualNumericRanges({currentValues: payload.values});
       return {payload, error: null};
     } catch (error) {
@@ -96,18 +101,14 @@ export type UpdateManualNumericFacetRangePayload = {
 export const updateManualNumericFacetRange = createAction(
   'commerce/facets/numericFacet/updateManualRange',
   (payload: UpdateManualNumericFacetRangePayload) =>
-    validatePayloadAndThrow(payload, {
-      facetId: requiredNonEmptyString,
-      ...numericFacetValueDefinition,
-    })
+    validatePayloadAndThrow(
+      payload,
+      z.object({
+        facetId: requiredNonEmptyString,
+        state: z.enum(['idle', 'selected', 'excluded']),
+        start: z.number(),
+        end: z.number(),
+        endInclusive: z.boolean(),
+      })
+    )
 );
-
-const numericFacetValueDefinition = {
-  state: new StringValue<'idle' | 'selected' | 'excluded'>({
-    required: true,
-    constrainTo: ['idle', 'selected', 'excluded'],
-  }),
-  start: new NumberValue({required: true}),
-  end: new NumberValue({required: true}),
-  endInclusive: new BooleanValue({required: true}),
-};

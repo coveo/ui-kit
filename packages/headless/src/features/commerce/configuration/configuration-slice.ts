@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
 import {updateBasicConfiguration} from '../../configuration/configuration-actions.js';
 import {
@@ -45,13 +44,13 @@ function handleUpdateBasicConfiguration(
   state: ConfigurationState,
   payload: UpdateBasicConfigurationPayload
 ) {
-  if (!isNullOrUndefined(payload.accessToken)) {
+  if (payload.accessToken != null) {
     state.accessToken = payload.accessToken;
   }
 
   state.environment = payload.environment ?? 'prod';
 
-  if (!isNullOrUndefined(payload.organizationId)) {
+  if (payload.organizationId != null) {
     state.organizationId = payload.organizationId;
   }
 }
@@ -60,7 +59,7 @@ function handleUpdateCommerceProxyBaseUrl(
   state: ConfigurationState,
   payload: UpdateProxyBaseUrlPayload
 ) {
-  if (!isNullOrUndefined(payload.proxyBaseUrl)) {
+  if (payload.proxyBaseUrl != null) {
     state.commerce.apiBaseUrl = payload.proxyBaseUrl;
   }
 }
@@ -69,16 +68,16 @@ function handleupdateAnalyticsConfiguration(
   state: ConfigurationState,
   payload: UpdateAnalyticsConfigurationPayload
 ) {
-  if (!isNullOrUndefined(payload.enabled)) {
+  if (payload.enabled != null) {
     state.analytics.enabled = payload.enabled;
   }
-  if (!isNullOrUndefined(payload.proxyBaseUrl)) {
+  if (payload.proxyBaseUrl != null) {
     state.analytics.apiBaseUrl = payload.proxyBaseUrl;
   }
-  if (!isNullOrUndefined(payload.source)) {
+  if (payload.source != null) {
     state.analytics.source = payload.source;
   }
-  if (!isNullOrUndefined(payload.trackingId)) {
+  if (payload.trackingId != null) {
     state.analytics.trackingId = payload.trackingId;
   }
 }

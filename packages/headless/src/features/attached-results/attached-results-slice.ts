@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
 import {
   attachResult,
@@ -28,8 +27,8 @@ export const attachedResultsReducer = createReducer(
       })
       .addCase(attachResult, (state, action) => {
         if (
-          !isNullOrUndefined(action.payload.permanentId) ||
-          !isNullOrUndefined(action.payload.uriHash)
+          action.payload.permanentId != null ||
+          action.payload.uriHash != null
         ) {
           state.results = [...state.results, action.payload];
         }
@@ -47,11 +46,10 @@ const attachedResultsMatchIds = (
   result2: AttachedResult
 ) => {
   const isPermanentIdEqual =
-    !isNullOrUndefined(result1.permanentId) &&
+    result1.permanentId != null &&
     result1?.permanentId === result2?.permanentId;
   const isUriHashEqual =
-    !isNullOrUndefined(result1.uriHash) &&
-    result1?.uriHash === result2?.uriHash;
+    result1.uriHash != null && result1?.uriHash === result2?.uriHash;
   const isCaseIdEqual = result1.caseId === result2.caseId;
   return !isCaseIdEqual || (!isPermanentIdEqual && !isUriHashEqual);
 };

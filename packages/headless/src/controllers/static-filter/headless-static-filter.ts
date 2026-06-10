@@ -1,4 +1,4 @@
-import {Schema} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {executeSearch} from '../../features/search/search-actions.js';
 import {
@@ -38,7 +38,7 @@ export type {
 };
 export {buildStaticFilterValue};
 
-const optionsSchema = new Schema<Required<StaticFilterOptions>>({
+const optionsSchema = z.object({
   id: staticFilterIdSchema,
   values: staticFilterValuesSchema,
 });

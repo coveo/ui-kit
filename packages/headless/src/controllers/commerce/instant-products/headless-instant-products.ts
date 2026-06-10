@@ -1,4 +1,4 @@
-import {NumberValue, Schema} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import type {SerializedError} from '@reduxjs/toolkit';
 import type {CommerceAPIErrorResponse} from '../../../api/commerce/commerce-api-error-response.js';
 import type {
@@ -46,12 +46,10 @@ export interface InstantProductsOptions {
 
 const instantProductsOptionDefinitions = {
   searchBoxId: nonEmptyString,
-  cacheTimeout: new NumberValue(),
+  cacheTimeout: z.optional(z.number()),
 };
 
-const instantProductsOptionsSchema = new Schema<
-  Required<InstantProductsOptions>
->(instantProductsOptionDefinitions);
+const instantProductsOptionsSchema = z.object(instantProductsOptionDefinitions);
 
 export interface InstantProductsProps {
   options: InstantProductsOptions;

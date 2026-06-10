@@ -1,33 +1,17 @@
-import {
-  ArrayValue,
-  NumberValue,
-  RecordValue,
-  Schema,
-  StringValue,
-} from '@coveo/bueno';
-import type {CartInitialState} from '../../../../controllers/commerce/context/cart/headless-cart.js';
+import {z} from '@coveo/bueno/zod';
 import {requiredNonEmptyString} from '../../../../utils/validate-payload.js';
 
-export const itemPayloadDefinition = {
+export const itemPayloadDefinition = z.object({
   productId: requiredNonEmptyString,
-  quantity: new NumberValue({
-    required: true,
-    min: 0,
-  }),
-  name: new StringValue({required: false}),
-  price: new NumberValue({required: false, min: 0}),
-};
-
-export const setItemsPayloadDefinition = new ArrayValue({
-  each: new RecordValue({
-    values: {
-      ...itemPayloadDefinition,
-    },
-  }),
+  quantity: z.number().check(z.minimum(0)),
+  name: z.string(),
+  price: z.number().check(z.minimum(0)),
 });
 
-export const cartDefinition = {
-  items: setItemsPayloadDefinition,
-};
+export const setItemsPayloadDefinition = z.array(itemPayloadDefinition);
 
-export const cartSchema = new Schema<CartInitialState>(cartDefinition);
+export const cartDefinition = z.object({
+  items: z.optional(setItemsPayloadDefinition),
+});
+
+export const cartSchema = cartDefinition;

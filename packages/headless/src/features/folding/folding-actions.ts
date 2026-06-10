@@ -1,4 +1,4 @@
-import {NumberValue, type SchemaDefinition, StringValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import type {Result} from '../../api/search/search/result.js';
 import {
@@ -50,14 +50,12 @@ export interface LoadCollectionFulfilledReturn {
   searchUid: string;
 }
 
-export const foldingOptionsSchemaDefinition: SchemaDefinition<
-  Required<RegisterFoldingActionCreatorPayload>
-> = {
-  collectionField: new StringValue({emptyAllowed: false, required: false}),
-  parentField: new StringValue({emptyAllowed: false, required: false}),
-  childField: new StringValue({emptyAllowed: false, required: false}),
-  numberOfFoldedResults: new NumberValue({min: 0, required: false}),
-};
+export const foldingOptionsSchemaDefinition = z.object({
+  collectionField: z.optional(z.string().check(z.minLength(1))),
+  parentField: z.optional(z.string().check(z.minLength(1))),
+  childField: z.optional(z.string().check(z.minLength(1))),
+  numberOfFoldedResults: z.optional(z.number().check(z.minimum(0))),
+});
 
 export const registerFolding = createAction(
   'folding/register',

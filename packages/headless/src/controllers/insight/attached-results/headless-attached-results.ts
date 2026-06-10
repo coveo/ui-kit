@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import type {Result} from '../../../api/search/search/result.js';
 import {configuration} from '../../../app/common-reducers.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
@@ -103,24 +102,20 @@ export function buildAttachedResults(
   const {caseId} = props.options;
 
   const isResultAttached = (result: Result): boolean => {
-    if (isNullOrUndefined(caseId)) {
+    if (caseId == null) {
       return false;
     }
 
-    if (
-      isNullOrUndefined(result.raw.permanentid) &&
-      isNullOrUndefined(result.raw.urihash)
-    ) {
+    if (result.raw.permanentid == null && result.raw.urihash == null) {
       return false;
     }
     return engine.state.attachedResults.results.some((attached) => {
       const caseIdMatches = caseId === attached.caseId;
       const permanentIdMatches =
-        !isNullOrUndefined(attached.permanentId) &&
+        attached.permanentId != null &&
         attached.permanentId === result.raw.permanentid;
       const uriHashMatches =
-        !isNullOrUndefined(attached.uriHash) &&
-        attached.uriHash === result.raw.urihash;
+        attached.uriHash != null && attached.uriHash === result.raw.urihash;
       return caseIdMatches && (permanentIdMatches || uriHashMatches);
     });
   };

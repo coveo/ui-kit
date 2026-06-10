@@ -1,4 +1,4 @@
-import {BooleanValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import {validatePayload} from '../../../utils/validate-payload.js';
 
@@ -12,7 +12,10 @@ export interface UpdateFacetAutoSelectionActionCreatorPayload {
 export const updateFacetAutoSelection = createAction(
   'facet/updateFacetAutoSelection',
   (payload: UpdateFacetAutoSelectionActionCreatorPayload) =>
-    validatePayload(payload, {
-      allow: new BooleanValue({required: true}),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        allow: z.boolean(),
+      })
+    )
 );

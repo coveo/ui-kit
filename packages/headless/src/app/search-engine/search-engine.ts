@@ -199,7 +199,7 @@ function validateConfiguration(
   logger: Logger
 ) {
   try {
-    searchEngineConfigurationSchema.validate(configuration);
+    searchEngineConfigurationSchema.parse(configuration);
   } catch (error) {
     logger.error(error as Error, 'Search engine configuration error');
     throw error;

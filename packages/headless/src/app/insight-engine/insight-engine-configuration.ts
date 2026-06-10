@@ -1,4 +1,4 @@
-import {RecordValue, Schema} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {
   nonEmptyString,
   requiredNonEmptyString,
@@ -28,7 +28,7 @@ export interface InsightEngineConfiguration extends EngineConfiguration {
  */
 export interface InsightEngineSearchConfigurationOptions {
   /**
-   * The locale of the current user. Must comply with IETF’s BCP 47 definition: https://www.rfc-editor.org/info/bcp47.
+   * The locale of the current user. Must comply with IETF's BCP 47 definition: https://www.rfc-editor.org/info/bcp47.
    *
    * Notes:
    *  Coveo Machine Learning models use this information to provide contextually relevant output.
@@ -46,19 +46,15 @@ export interface InsightEngineSearchConfigurationOptions {
   proxyBaseUrl?: string;
 }
 
-export const insightEngineConfigurationSchema =
-  new Schema<InsightEngineConfiguration>({
-    ...engineConfigurationDefinitions,
-    insightId: requiredNonEmptyString,
-    search: new RecordValue({
-      options: {
-        required: false,
-      },
-      values: {
-        locale: nonEmptyString,
-      },
-    }),
-  });
+export const insightEngineConfigurationSchema = z.object({
+  ...engineConfigurationDefinitions,
+  insightId: requiredNonEmptyString,
+  search: z.optional(
+    z.object({
+      locale: nonEmptyString,
+    })
+  ),
+});
 
 const sampleInsightId = '2729db39-d7fd-4504-a06e-668c64968c95';
 

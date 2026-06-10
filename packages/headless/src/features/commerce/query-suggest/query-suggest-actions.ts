@@ -1,4 +1,4 @@
-import {NumberValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   type AsyncThunkCommerceOptions,
@@ -31,7 +31,7 @@ export type ClearQuerySuggestPayload = ClearQuerySuggestActionCreatorPayload;
 export const clearQuerySuggest = createAction(
   'commerce/querySuggest/clear',
   (payload: ClearQuerySuggestPayload) =>
-    validatePayload(payload, {id: requiredNonEmptyString})
+    validatePayload(payload, z.object({id: requiredNonEmptyString}))
 );
 
 export type FetchQuerySuggestionsPayload =
@@ -67,9 +67,12 @@ export const fetchQuerySuggestions = createAsyncThunk<
       extra: {apiClient, validatePayload, navigatorContext},
     }
   ) => {
-    validatePayload(payload, {
-      id: requiredNonEmptyString,
-    });
+    validatePayload(
+      payload,
+      z.object({
+        id: requiredNonEmptyString,
+      })
+    );
     const state = getState();
     const request = buildQuerySuggestRequest(
       payload.id,
@@ -96,10 +99,13 @@ export type RegisterQuerySuggestPayload =
 export const registerQuerySuggest = createAction(
   'commerce/querySuggest/register',
   (payload: RegisterQuerySuggestPayload) =>
-    validatePayload(payload, {
-      id: requiredNonEmptyString,
-      count: new NumberValue({min: 0}),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        id: requiredNonEmptyString,
+        count: z.optional(z.number().check(z.minimum(0))),
+      })
+    )
 );
 
 export type SelectQuerySuggestionPayload =
@@ -108,8 +114,11 @@ export type SelectQuerySuggestionPayload =
 export const selectQuerySuggestion = createAction(
   'commerce/querySuggest/selectSuggestion',
   (payload: SelectQuerySuggestionPayload) =>
-    validatePayload(payload, {
-      id: requiredNonEmptyString,
-      expression: requiredEmptyAllowedString,
-    })
+    validatePayload(
+      payload,
+      z.object({
+        id: requiredNonEmptyString,
+        expression: requiredEmptyAllowedString,
+      })
+    )
 );

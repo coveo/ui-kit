@@ -1,3 +1,4 @@
+import {z} from '@coveo/bueno/zod';
 import type {InsightPanel} from '@coveo/relay-event-types';
 import {
   requiredNonEmptyString,
@@ -54,9 +55,12 @@ export const logInsightCreateArticle = (
   makeInsightAnalyticsActionFactory(SearchPageEvents.createArticle)({
     prefix: 'analytics/insight/createArticle',
     __legacy__getBuilder: (client, state) => {
-      validatePayload(createArticleMetadata, {
-        articleType: requiredNonEmptyString,
-      });
+      validatePayload(
+        createArticleMetadata,
+        z.object({
+          articleType: requiredNonEmptyString,
+        })
+      );
       return client.logCreateArticle(
         createArticleMetadata,
         getCaseContextAnalyticsMetadata(state.insightCaseContext)

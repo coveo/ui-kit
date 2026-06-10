@@ -1,3 +1,4 @@
+import {z} from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import {
   requiredNonEmptyString,
@@ -14,5 +15,5 @@ interface SetInsightConfigurationActionCreatorPayload {
 export const setInsightConfiguration = createAction(
   'insightConfiguration/set',
   (payload: SetInsightConfigurationActionCreatorPayload) =>
-    validatePayload(payload, {insightId: requiredNonEmptyString})
+    validatePayload(payload, z.object({insightId: requiredNonEmptyString}))
 );

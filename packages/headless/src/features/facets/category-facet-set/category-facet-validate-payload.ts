@@ -1,24 +1,17 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  NumberValue,
-  StringValue,
-  Value,
-} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {
   requiredNonEmptyString,
   validatePayloadAndThrow,
 } from '../../../utils/validate-payload.js';
-import type {FacetValueState} from '../facet-api/value.js';
 import type {CategoryFacetValue} from './interfaces/response.js';
 
-const categoryFacetValueDefinition = {
-  state: new Value<FacetValueState>({required: true}),
-  numberOfResults: new NumberValue({required: true, min: 0}),
-  value: new StringValue({required: true, emptyAllowed: true}),
-  path: new ArrayValue({required: true, each: requiredNonEmptyString}),
-  moreValuesAvailable: new BooleanValue({required: false}),
-};
+const categoryFacetValueDefinition = z.object({
+  state: z.unknown(),
+  numberOfResults: z.number().check(z.minimum(0)),
+  value: z.string(),
+  path: z.array(requiredNonEmptyString),
+  moreValuesAvailable: z.optional(z.boolean()),
+});
 
 export function validateCategoryFacetValue(payload: CategoryFacetValue) {
   payload.children.forEach((child) => {

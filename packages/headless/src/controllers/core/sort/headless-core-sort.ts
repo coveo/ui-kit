@@ -1,10 +1,11 @@
-import {ArrayValue, isArray, Schema} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {configuration} from '../../../app/common-reducers.js';
 import type {CoreEngine} from '../../../app/engine.js';
 import {updatePage} from '../../../features/pagination/pagination-actions.js';
 import {
   buildCriterionExpression,
-  criterionDefinition,
+  SortBy,
+  SortOrder,
   type SortCriterion,
 } from '../../../features/sort-criteria/criteria.js';
 import {
@@ -37,6 +38,22 @@ export interface SortInitialState {
   criterion?: SortCriterion | SortCriterion[];
 }
 
+const criterionSchema = z.object({
+  by: z.enum([
+    SortBy.Relevancy,
+    SortBy.QRE,
+    SortBy.Date,
+    SortBy.Field,
+    SortBy.NoSort,
+  ]),
+  order: z.optional(z.enum([SortOrder.Ascending, SortOrder.Descending])),
+  field: z.optional(z.string()),
+});
+
+const sortInitialStateSchema = z.object({
+  criterion: z.optional(z.array(criterionSchema)),
+});
+
 function validateSortInitialState(
   engine: CoreEngine<ConfigurationSection & SortSection>,
   state: Partial<SortInitialState> | undefined
@@ -45,13 +62,15 @@ function validateSortInitialState(
     return;
   }
 
-  const schema = new Schema<SortInitialState>({
-    criterion: new ArrayValue({each: criterionDefinition}) as never,
-  });
   const criterion = getCriterionAsArray(state);
   const initialState: SortInitialState = {...state, criterion};
 
-  validateInitialState(engine, schema, initialState, 'buildSort');
+  validateInitialState(
+    engine,
+    sortInitialStateSchema,
+    initialState,
+    'buildSort'
+  );
 }
 
 function getCriterionAsArray(state: Partial<SortInitialState>) {
@@ -59,7 +78,7 @@ function getCriterionAsArray(state: Partial<SortInitialState>) {
     return [];
   }
 
-  return isArray(state.criterion) ? state.criterion : [state.criterion];
+  return Array.isArray(state.criterion) ? state.criterion : [state.criterion];
 }
 
 /**

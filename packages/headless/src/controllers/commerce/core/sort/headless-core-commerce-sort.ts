@@ -1,4 +1,4 @@
-import {Schema} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import type {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../../app/state-key.js';
 import {
@@ -56,9 +56,9 @@ function validateSortInitialState(
     return;
   }
 
-  const schema = new Schema<SortInitialState>({
+  const schema = z.object({
     criterion: sortCriterionDefinition,
-  });
+  }) as z.ZodMiniType<SortInitialState>;
 
   validateInitialState(engine, schema, state, 'buildSort');
 }

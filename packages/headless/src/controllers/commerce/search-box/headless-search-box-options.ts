@@ -1,4 +1,4 @@
-import {BooleanValue, Schema} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {
   type SearchBoxOptions as CoreSearchBoxOptions,
   searchBoxOptionDefinitions as coreSearchBoxOptionDefinitions,
@@ -31,9 +31,7 @@ export const searchBoxOptionDefinitions = {
   id,
   highlightOptions,
   clearFilters,
-  enableResults: new BooleanValue(),
+  enableResults: z.optional(z.boolean()),
 };
 
-export const searchBoxOptionsSchema = new Schema<Required<SearchBoxOptions>>(
-  searchBoxOptionDefinitions
-);
+export const searchBoxOptionsSchema = z.object(searchBoxOptionDefinitions);

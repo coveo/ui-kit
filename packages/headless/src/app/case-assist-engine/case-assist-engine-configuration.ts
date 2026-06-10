@@ -1,4 +1,4 @@
-import {Schema} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {
   nonEmptyString,
   requiredNonEmptyString,
@@ -17,7 +17,7 @@ export interface CaseAssistEngineConfiguration extends EngineConfiguration {
    */
   caseAssistId: string;
   /**
-   * The locale of the current user. Must comply with IETF’s [BCP 47](https://www.rfc-editor.org/info/bcp47) definition.
+   * The locale of the current user. Must comply with IETF's [BCP 47](https://www.rfc-editor.org/info/bcp47) definition.
    *
    * Notes:
    *  Coveo Machine Learning models use this information to provide contextually relevant output.
@@ -40,9 +40,8 @@ export interface CaseAssistEngineConfiguration extends EngineConfiguration {
   proxyBaseUrl?: string;
 }
 
-export const caseAssistEngineConfigurationSchema =
-  new Schema<CaseAssistEngineConfiguration>({
-    ...engineConfigurationDefinitions,
-    caseAssistId: requiredNonEmptyString,
-    locale: nonEmptyString,
-  });
+export const caseAssistEngineConfigurationSchema = z.object({
+  ...engineConfigurationDefinitions,
+  caseAssistId: requiredNonEmptyString,
+  locale: nonEmptyString,
+});

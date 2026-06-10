@@ -1,4 +1,4 @@
-import {ArrayValue, NumberValue, RecordValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import type {CategoryFacetSearchResult} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-response.js';
 import {
@@ -10,23 +10,23 @@ import {facetIdDefinition} from '../../generic/facet-actions-validation.js';
 import type {FacetSearchOptions} from '../facet-search-request-options.js';
 import {facetSearchOptionsDefinition} from '../generic/generic-facet-search-validate-payload.js';
 
-const categoryFacetSearchResultDefinition = {
-  path: new ArrayValue({
-    required: true,
-    each: requiredNonEmptyString,
-  }),
+const categoryFacetSearchResultDefinition = z.object({
+  path: z.array(requiredNonEmptyString),
   displayValue: requiredEmptyAllowedString,
   rawValue: requiredEmptyAllowedString,
-  count: new NumberValue({required: true, min: 0}),
-};
+  count: z.number().check(z.minimum(0)),
+});
 
 export const selectCategoryFacetSearchResult = createAction(
   'categoryFacet/selectSearchResult',
   (payload: {facetId: string; value: CategoryFacetSearchResult}) =>
-    validatePayload(payload, {
-      facetId: facetIdDefinition,
-      value: new RecordValue({values: categoryFacetSearchResultDefinition}),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        facetId: facetIdDefinition,
+        value: categoryFacetSearchResultDefinition,
+      })
+    )
 );
 
 export const registerCategoryFacetSearch = createAction(

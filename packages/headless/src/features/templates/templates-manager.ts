@@ -1,10 +1,4 @@
-import {
-  ArrayValue,
-  NumberValue,
-  Schema,
-  SchemaValidationError,
-  Value,
-} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {requiredNonEmptyString} from '../../utils/validate-payload.js';
 
 export type TemplateCondition<ItemType> = (item: ItemType) => boolean;
@@ -33,14 +27,11 @@ export interface Template<ItemType, Content = unknown, LinkContent = unknown> {
   fields?: string[];
 }
 
-const templateSchema = new Schema({
-  content: new Value({required: true}),
-  conditions: new Value({required: true}),
-  priority: new NumberValue({required: false, default: 0, min: 0}),
-  fields: new ArrayValue({
-    required: false,
-    each: requiredNonEmptyString,
-  }),
+const templateSchema = z.object({
+  content: z.unknown(),
+  conditions: z.unknown(),
+  priority: z.optional(z.number().check(z.minimum(0))),
+  fields: z.optional(z.array(requiredNonEmptyString)),
 });
 
 export interface TemplatesManager<
@@ -67,13 +58,13 @@ export function buildTemplatesManager<
   const validateTemplate = (
     template: Template<ItemType, TemplateContent, LinkTemplateContent>
   ) => {
-    const validated = templateSchema.validate(template);
+    const validated = templateSchema.parse(template);
     const areConditionsValid = template.conditions.every(
       (condition) => condition instanceof Function
     );
 
     if (!areConditionsValid) {
-      throw new SchemaValidationError(
+      throw new Error(
         'Each template condition should be a function that takes a Result or Product as an argument and returns a boolean'
       );
     }

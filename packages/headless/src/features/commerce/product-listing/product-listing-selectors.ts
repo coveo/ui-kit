@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
 import type {
   CommerceEngine,
@@ -41,7 +40,7 @@ export const moreProductsAvailableSelector = createSelector(
 
 export const isLoadingSelector = (state: Partial<ProductListingSection>) => {
   const isLoading = state.productListing?.isLoading;
-  return isNullOrUndefined(isLoading) ? false : isLoading;
+  return isLoading == null ? false : isLoading;
 };
 
 export const errorSelector = (state: Partial<ProductListingSection>) =>

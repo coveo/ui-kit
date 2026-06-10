@@ -1,4 +1,4 @@
-import {Value} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {
   requiredNonEmptyString,
   validatePayload,
@@ -70,12 +70,13 @@ export const logFacetUpdateSort = (
   makeInsightAnalyticsActionFactory(SearchPageEvents.facetUpdateSort)(
     'analytics/facet/sortChange',
     (client, state) => {
-      validatePayload(payload, {
-        facetId: facetIdDefinition,
-        sortCriterion: new Value<FacetSortCriterion | RangeFacetSortCriterion>({
-          required: true,
-        }),
-      });
+      validatePayload(
+        payload,
+        z.object({
+          facetId: facetIdDefinition,
+          sortCriterion: z.unknown(),
+        })
+      );
 
       const {facetId, sortCriterion} = payload;
       const stateForAnalytics = getStateNeededForFacetMetadata(state);
@@ -125,10 +126,13 @@ export const logFacetSelect = (
   makeInsightAnalyticsActionFactory(SearchPageEvents.facetSelect)(
     'analytics/facet/select',
     (client, state) => {
-      validatePayload(payload, {
-        facetId: facetIdDefinition,
-        facetValue: requiredNonEmptyString,
-      });
+      validatePayload(
+        payload,
+        z.object({
+          facetId: facetIdDefinition,
+          facetValue: requiredNonEmptyString,
+        })
+      );
       const stateForAnalytics = getStateNeededForFacetMetadata(state);
       const metadata = {
         ...buildFacetSelectionChangeMetadata(payload, stateForAnalytics),
@@ -157,10 +161,13 @@ export const logFacetDeselect = (
   makeInsightAnalyticsActionFactory(SearchPageEvents.facetDeselect)(
     'analytics/facet/deselect',
     (client, state) => {
-      validatePayload(payload, {
-        facetId: facetIdDefinition,
-        facetValue: requiredNonEmptyString,
-      });
+      validatePayload(
+        payload,
+        z.object({
+          facetId: facetIdDefinition,
+          facetValue: requiredNonEmptyString,
+        })
+      );
       const stateForAnalytics = getStateNeededForFacetMetadata(state);
       const metadata = {
         ...buildFacetSelectionChangeMetadata(payload, stateForAnalytics),
@@ -177,10 +184,13 @@ export const logFacetBreadcrumb = (
   makeInsightAnalyticsActionFactory(SearchPageEvents.breadcrumbFacet)(
     'analytics/facet/breadcrumb',
     (client, state) => {
-      validatePayload(payload, {
-        facetId: facetIdDefinition,
-        facetValue: requiredNonEmptyString,
-      });
+      validatePayload(
+        payload,
+        z.object({
+          facetId: facetIdDefinition,
+          facetValue: requiredNonEmptyString,
+        })
+      );
       const metadata = {
         ...buildFacetSelectionChangeMetadata(
           payload,

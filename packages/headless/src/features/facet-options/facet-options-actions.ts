@@ -1,4 +1,4 @@
-import {BooleanValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import {validatePayload} from '../../utils/validate-payload.js';
 import {facetIdDefinition} from '../facets/generic/facet-actions-validation.js';
@@ -19,9 +19,12 @@ export const updateFacetOptions = createAction(
   (
     payload: UpdateFacetOptionsActionCreatorPayload = {freezeFacetOrder: true}
   ) =>
-    validatePayload(payload, {
-      freezeFacetOrder: new BooleanValue({required: false}),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        freezeFacetOrder: z.optional(z.boolean()),
+      })
+    )
 );
 
 export const enableFacet = createAction(

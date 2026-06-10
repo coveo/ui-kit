@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import type {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import type {Logger} from 'pino';
 import {NoopPreprocessRequest} from '../../api/preprocess-request.js';
@@ -106,7 +105,7 @@ export function buildCaseAssistEngine(
     })
   );
 
-  if (!isNullOrUndefined(searchHub)) {
+  if (searchHub != null) {
     engine.dispatch(setSearchHub(searchHub));
   }
 
@@ -124,7 +123,7 @@ function validateConfiguration(
   logger: Logger
 ) {
   try {
-    caseAssistEngineConfigurationSchema.validate(configuration);
+    caseAssistEngineConfigurationSchema.parse(configuration);
   } catch (error) {
     logger.error(error as Error, 'Case Assist engine configuration error');
 

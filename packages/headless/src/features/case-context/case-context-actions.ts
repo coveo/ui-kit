@@ -1,4 +1,4 @@
-import {ArrayValue, RecordValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import {
   requiredEmptyAllowedString,
@@ -11,7 +11,7 @@ import {
 export const setCaseContext = createAction(
   'insight/caseContext/set',
   (payload: Record<string, string>) => {
-    const objSchema = new RecordValue({options: {required: true}});
+    const objSchema = z.record(z.string(), z.string());
     const objError = validatePayload(payload, objSchema).error;
 
     if (objError) {
@@ -19,7 +19,7 @@ export const setCaseContext = createAction(
     }
 
     const values = Object.values(payload);
-    const valueSchema = new ArrayValue({each: requiredEmptyAllowedString});
+    const valueSchema = z.array(requiredEmptyAllowedString);
     const valuesError = validatePayload(values, valueSchema).error;
 
     if (valuesError) {

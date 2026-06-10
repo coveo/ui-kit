@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import type {AsyncThunkOptions} from '../../app/async-thunk-options.js';
 import type {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {emptyQuestionAnswer} from '../../features/search/search-state.js';
@@ -271,7 +270,7 @@ export function isSuccessSearchResponse(
 
 export function shimResponse(response: SearchResponseSuccess) {
   const empty = emptyQuestionAnswer();
-  if (isNullOrUndefined(response.questionAnswer)) {
+  if (response.questionAnswer == null) {
     response.questionAnswer = empty;
     return response;
   }

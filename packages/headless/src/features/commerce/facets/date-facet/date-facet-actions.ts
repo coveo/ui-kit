@@ -1,4 +1,4 @@
-import {ArrayValue, RecordValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import {
   requiredNonEmptyString,
@@ -19,10 +19,13 @@ export type ToggleSelectDateFacetValuePayload =
 export const toggleSelectDateFacetValue = createAction(
   'commerce/facets/dateFacet/toggleSelectValue',
   (payload: ToggleSelectDateFacetValuePayload) =>
-    validatePayload(payload, {
-      facetId: requiredNonEmptyString,
-      selection: new RecordValue({values: dateFacetValueDefinition}),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        facetId: requiredNonEmptyString,
+        selection: dateFacetValueDefinition,
+      })
+    )
 );
 
 export type ToggleExcludeDateFacetValuePayload =
@@ -31,10 +34,13 @@ export type ToggleExcludeDateFacetValuePayload =
 export const toggleExcludeDateFacetValue = createAction(
   'commerce/facets/dateFacet/toggleExcludeValue',
   (payload: ToggleExcludeDateFacetValuePayload) =>
-    validatePayload(payload, {
-      facetId: requiredNonEmptyString,
-      selection: new RecordValue({values: dateFacetValueDefinition}),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        facetId: requiredNonEmptyString,
+        selection: dateFacetValueDefinition,
+      })
+    )
 );
 
 export type UpdateDateFacetValuesPayload =
@@ -44,12 +50,13 @@ export const updateDateFacetValues = createAction(
   'commerce/facets/dateFacet/updateValues',
   (payload: UpdateDateFacetValuesActionCreatorPayload) => {
     try {
-      validatePayloadAndThrow(payload, {
-        facetId: requiredNonEmptyString,
-        values: new ArrayValue({
-          each: new RecordValue({values: dateFacetValueDefinition}),
-        }),
-      });
+      validatePayloadAndThrow(
+        payload,
+        z.object({
+          facetId: requiredNonEmptyString,
+          values: z.array(dateFacetValueDefinition),
+        })
+      );
       validateManualDateRanges({currentValues: payload.values});
       return {payload, error: null};
     } catch (error) {

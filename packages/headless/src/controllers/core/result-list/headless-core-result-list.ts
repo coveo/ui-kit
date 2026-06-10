@@ -1,4 +1,4 @@
-import {ArrayValue, Schema, StringValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import type {AsyncThunkAction} from '@reduxjs/toolkit';
 import type {Result} from '../../../api/search/search/result.js';
 import {configuration} from '../../../app/common-reducers.js';
@@ -22,14 +22,8 @@ import {
   type SearchStatusState,
 } from '../status/headless-core-status.js';
 
-const optionsSchema = new Schema<ResultListOptions>({
-  fieldsToInclude: new ArrayValue({
-    required: false,
-    each: new StringValue<string>({
-      required: true,
-      emptyAllowed: false,
-    }),
-  }),
+const optionsSchema = z.object({
+  fieldsToInclude: z.optional(z.array(z.string().check(z.minLength(1)))),
 });
 
 export interface ResultListOptions {
@@ -127,7 +121,7 @@ export function buildCoreResultList(
     'buildCoreResultList'
   );
 
-  if (options.fieldsToInclude) {
+  if (options?.fieldsToInclude) {
     dispatch(registerFieldsToInclude(options.fieldsToInclude));
   }
 

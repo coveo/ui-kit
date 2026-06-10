@@ -1,4 +1,3 @@
-import {isString} from '@coveo/bueno';
 import type {Result} from '../../api/search/search/result.js';
 import type {AttachedResult} from './attached-results-state.js';
 
@@ -6,7 +5,7 @@ const ensureStringOrUndefined = (
   result: Result,
   key: string
 ): string | undefined =>
-  isString(result.raw[key]) ? String(result.raw[key]) : undefined;
+  typeof result.raw[key] === 'string' ? String(result.raw[key]) : undefined;
 
 /**
  * Used to build the required data of an AttachedResult from a Search Result.

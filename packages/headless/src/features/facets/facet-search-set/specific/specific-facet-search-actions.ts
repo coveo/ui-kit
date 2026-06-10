@@ -1,4 +1,4 @@
-import {NumberValue, RecordValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import type {SpecificFacetSearchResult} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
 import {
@@ -9,16 +9,14 @@ import {facetIdDefinition} from '../../generic/facet-actions-validation.js';
 import type {FacetSearchOptions} from '../facet-search-request-options.js';
 import {facetSearchOptionsDefinition} from '../generic/generic-facet-search-validate-payload.js';
 
-const selectFacetSearchResultPayloadDefinition = {
+const selectFacetSearchResultPayloadDefinition = z.object({
   facetId: facetIdDefinition,
-  value: new RecordValue({
-    values: {
-      displayValue: requiredEmptyAllowedString,
-      rawValue: requiredEmptyAllowedString,
-      count: new NumberValue({required: true, min: 0}),
-    },
+  value: z.object({
+    displayValue: requiredEmptyAllowedString,
+    rawValue: requiredEmptyAllowedString,
+    count: z.number().check(z.minimum(0)),
   }),
-};
+});
 
 type selectFacetSearchResultPayload = {
   facetId: string;

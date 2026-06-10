@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import type {EventDescription} from 'coveo.analytics';
 import {getSearchApiBaseUrl} from '../../api/platform-client.js';
 import type {SearchRequest} from '../../api/search/search/search-request.js';
@@ -71,7 +70,7 @@ export const buildSearchAndFoldingLoadCollectionRequest = (
         eventDescription
       )),
     ...(state.excerptLength &&
-      !isNullOrUndefined(state.excerptLength.length) && {
+      state.excerptLength.length != null && {
         excerptLength: state.excerptLength.length,
       }),
     ...(state.configuration.search.authenticationProviders.length && {

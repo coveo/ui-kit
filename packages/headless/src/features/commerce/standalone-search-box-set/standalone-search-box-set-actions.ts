@@ -1,4 +1,4 @@
-import {BooleanValue, StringValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   type AsyncThunkCommerceOptions,
@@ -30,7 +30,7 @@ export const fetchRedirectUrl = createAsyncThunk<
     payload,
     {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
   ) => {
-    validatePayload(payload, {id: new StringValue({emptyAllowed: false})});
+    validatePayload(payload, z.object({id: z.string().check(z.minLength(1))}));
     const state = getState();
     const request = buildPlanRequest(state, navigatorContext);
     const response = await apiClient.plan(request);
@@ -73,20 +73,26 @@ interface UpdateStandaloneSearchBoxPayload {
 export const registerStandaloneSearchBox = createAction(
   'commerce/standaloneSearchBox/register',
   (payload: RegisterStandaloneSearchBoxPayload) =>
-    validatePayload(payload, {
-      id: requiredNonEmptyString,
-      redirectionUrl: requiredNonEmptyString,
-      overwrite: new BooleanValue({required: false}),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        id: requiredNonEmptyString,
+        redirectionUrl: requiredNonEmptyString,
+        overwrite: z.optional(z.boolean()),
+      })
+    )
 );
 
 export const updateStandaloneSearchBoxRedirectionUrl = createAction(
   'commerce/standaloneSearchBox/updateRedirectionUrl',
   (payload: UpdateStandaloneSearchBoxPayload) =>
-    validatePayload(payload, {
-      id: requiredNonEmptyString,
-      redirectionUrl: requiredNonEmptyString,
-    })
+    validatePayload(
+      payload,
+      z.object({
+        id: requiredNonEmptyString,
+        redirectionUrl: requiredNonEmptyString,
+      })
+    )
 );
 
 export interface ResetStandaloneSearchBoxPayload {
@@ -99,7 +105,10 @@ export interface ResetStandaloneSearchBoxPayload {
 export const resetStandaloneSearchBox = createAction(
   'commerce/standaloneSearchBox/reset',
   (payload: ResetStandaloneSearchBoxPayload) =>
-    validatePayload(payload, {
-      id: requiredNonEmptyString,
-    })
+    validatePayload(
+      payload,
+      z.object({
+        id: requiredNonEmptyString,
+      })
+    )
 );

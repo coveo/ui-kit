@@ -1,4 +1,4 @@
-import {BooleanValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import type {CartInitialState} from '../../controllers/commerce/context/cart/headless-cart.js';
 import type {ContextOptions} from '../../controllers/commerce/context/headless-context.js';
 import {cartDefinition} from '../../features/commerce/context/cart/cart-validation.js';
@@ -41,37 +41,25 @@ export interface CommerceEngineConfiguration extends EngineConfiguration {
   proxyBaseUrl?: string;
 }
 
-export const commerceEngineConfigurationSchema =
-  new Schema<CommerceEngineConfiguration>({
-    ...engineConfigurationDefinitions,
-    analytics: new RecordValue({
-      options: {required: true},
-      values: {
-        enabled: new BooleanValue({required: false, default: true}),
-        proxyBaseUrl: new StringValue({required: false, url: true}),
-        source: new RecordValue({
-          options: {required: false},
-          values: {
-            '@coveo/atomic': nonEmptyString,
-            '@coveo/quantic': nonEmptyString,
-          },
-        }),
-        trackingId: new StringValue({
-          required: true,
-          emptyAllowed: false,
-          regex: /^[a-zA-Z0-9_\-.]{1,100}$/,
-        }),
-      },
-    }),
-    context: new RecordValue({
-      options: {required: true},
-      values: contextDefinition,
-    }),
-    cart: new RecordValue({
-      values: cartDefinition,
-    }),
-    proxyBaseUrl: new StringValue({required: false, url: true}),
-  });
+export const commerceEngineConfigurationSchema = z.object({
+  ...engineConfigurationDefinitions,
+  analytics: z.object({
+    enabled: z.optional(z.boolean()),
+    proxyBaseUrl: z.optional(z.url()),
+    source: z.optional(
+      z.object({
+        '@coveo/atomic': nonEmptyString,
+        '@coveo/quantic': nonEmptyString,
+      })
+    ),
+    trackingId: z
+      .string()
+      .check(z.minLength(1), z.regex(/^[a-zA-Z0-9_\-.]{1,100}$/)),
+  }),
+  context: contextDefinition,
+  cart: z.optional(cartDefinition),
+  proxyBaseUrl: z.optional(z.url()),
+});
 
 export function getSampleCommerceEngineConfiguration(): CommerceEngineConfiguration {
   return {

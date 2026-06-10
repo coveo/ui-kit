@@ -1,4 +1,3 @@
-import {isArray, isNullOrUndefined} from '@coveo/bueno';
 import type {
   ChildProduct,
   Product,
@@ -17,11 +16,11 @@ const getProductProperty = (
 ) => {
   const anyProduct = product as unknown as Record<string, unknown>;
 
-  if (!isNullOrUndefined(anyProduct[property])) {
+  if (anyProduct[property] != null) {
     return anyProduct[property];
   }
 
-  if (!isNullOrUndefined(product.additionalFields[property])) {
+  if (product.additionalFields[property] != null) {
     return product.additionalFields[property];
   }
 
@@ -38,7 +37,7 @@ const fieldsMustBeDefined = (
 ): ProductTemplateCondition => {
   return (product: Product) => {
     return fieldNames.every(
-      (fieldName) => !isNullOrUndefined(getProductProperty(product, fieldName))
+      (fieldName) => getProductProperty(product, fieldName) != null
     );
   };
 };
@@ -52,8 +51,8 @@ const fieldsMustNotBeDefined = (
   fieldNames: string[]
 ): ProductTemplateCondition => {
   return (product: Product) => {
-    return fieldNames.every((fieldName) =>
-      isNullOrUndefined(getProductProperty(product, fieldName))
+    return fieldNames.every(
+      (fieldName) => getProductProperty(product, fieldName) == null
     );
   };
 };
@@ -105,7 +104,7 @@ const getFieldValuesFromProduct = (
   product: Product | ChildProduct
 ) => {
   const rawValue = getProductProperty(product, fieldName);
-  return isArray(rawValue) ? rawValue : [rawValue];
+  return Array.isArray(rawValue) ? rawValue : [rawValue];
 };
 
 export const ProductTemplatesHelpers = {

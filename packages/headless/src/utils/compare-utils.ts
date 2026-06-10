@@ -1,4 +1,3 @@
-import type {PrimitivesValues} from '@coveo/bueno';
 import {createCustomEqual, deepEqual} from 'fast-equals';
 
 export {deepEqual};
@@ -14,6 +13,9 @@ export function arrayEqual<T>(
     firstArray.findIndex((val, i) => !isEqual(secondArray[i], val)) === -1
   );
 }
+
+type PrimitivesValues = string | number | boolean | Date | object;
+
 function checkUnionEquality<T extends PrimitivesValues>(
   set1: Set<T>,
   set2: Set<T>

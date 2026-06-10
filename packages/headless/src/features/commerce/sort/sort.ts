@@ -1,4 +1,4 @@
-import {ArrayValue, EnumValue, RecordValue, StringValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {
   buildRelevanceSortCriterion,
   type SortByFields as CoreSortByFields,
@@ -34,20 +34,19 @@ export const buildFieldsSortCriterion = (
   fields,
 });
 
-export const sortCriterionDefinition = new RecordValue({
-  options: {
-    required: false,
-  },
-  values: {
-    by: new EnumValue({enum: SortBy, required: true}),
-    fields: new ArrayValue({
-      each: new RecordValue({
-        values: {
-          field: new StringValue({required: true}),
-          direction: new EnumValue({enum: SortDirection}),
-          displayName: new StringValue(),
-        },
-      }),
-    }),
-  },
-});
+export const sortCriterionDefinition = z.optional(
+  z.object({
+    by: z.enum(Object.values(SortBy) as [string, ...string[]]),
+    fields: z.optional(
+      z.array(
+        z.object({
+          field: z.string(),
+          direction: z.optional(
+            z.enum(Object.values(SortDirection) as [string, ...string[]])
+          ),
+          displayName: z.optional(z.string()),
+        })
+      )
+    ),
+  })
+);

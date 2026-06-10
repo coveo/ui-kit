@@ -1,12 +1,4 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  NumberValue,
-  RecordValue,
-  Schema,
-  type SchemaDefinition,
-  StringValue,
-} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import type {CoreEngine} from '../../../../../app/engine.js';
 import {
   type FacetResultsMustMatch,
@@ -125,36 +117,40 @@ export interface NumericFacetOptions {
   rangeAlgorithm?: RangeFacetRangeAlgorithm;
 }
 
-const numericRangeRequestDefinition: SchemaDefinition<NumericRangeRequest> = {
-  start: new NumberValue(),
-  end: new NumberValue(),
-  endInclusive: new BooleanValue(),
-  state: new StringValue({constrainTo: facetValueStates}),
-};
-
-const numericFacetOptionsSchema = new Schema<Required<NumericFacetOptions>>({
-  facetId,
-  tabs: new RecordValue({
-    options: {
-      required: false,
-    },
-    values: {
-      included: new ArrayValue({each: new StringValue()}),
-      excluded: new ArrayValue({each: new StringValue()}),
-    },
-  }),
-  field,
-  generateAutomaticRanges,
-  filterFacetCount,
-  injectionDepth,
-  numberOfValues,
-  currentValues: new ArrayValue({
-    each: new RecordValue({values: numericRangeRequestDefinition}),
-  }),
-  sortCriteria: new StringValue({constrainTo: rangeFacetSortCriteria}),
-  resultsMustMatch: new StringValue({constrainTo: facetResultsMustMatch}),
-  rangeAlgorithm: new StringValue({constrainTo: rangeFacetRangeAlgorithm}),
+const numericRangeRequestSchema = z.object({
+  start: z.optional(z.number()),
+  end: z.optional(z.number()),
+  endInclusive: z.optional(z.boolean()),
+  state: z.optional(
+    z.enum(facetValueStates as unknown as [string, ...string[]])
+  ),
 });
+
+const numericFacetOptionsSchema: z.ZodMiniType<Required<NumericFacetOptions>> =
+  z.object({
+    facetId,
+    tabs: z.optional(
+      z.object({
+        included: z.optional(z.array(z.string())),
+        excluded: z.optional(z.array(z.string())),
+      })
+    ),
+    field,
+    generateAutomaticRanges,
+    filterFacetCount,
+    injectionDepth,
+    numberOfValues,
+    currentValues: z.optional(z.array(numericRangeRequestSchema)),
+    sortCriteria: z.optional(
+      z.enum(rangeFacetSortCriteria as unknown as [string, ...string[]])
+    ),
+    resultsMustMatch: z.optional(
+      z.enum(facetResultsMustMatch as unknown as [string, ...string[]])
+    ),
+    rangeAlgorithm: z.optional(
+      z.enum(rangeFacetRangeAlgorithm as unknown as [string, ...string[]])
+    ),
+  }) as unknown as z.ZodMiniType<Required<NumericFacetOptions>>;
 
 export function validateNumericFacetOptions(
   engine: CoreEngine<

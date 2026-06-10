@@ -1,4 +1,4 @@
-import {BooleanValue, StringValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {getSearchApiBaseUrl} from '../../api/platform-client.js';
 import {ExecutionPlan} from '../../api/search/plan/plan-endpoint.js';
@@ -59,20 +59,26 @@ interface UpdateStandaloneSearchBoxPayload {
 export const registerStandaloneSearchBox = createAction(
   'standaloneSearchBox/register',
   (payload: RegisterStandaloneSearchBoxActionCreatorPayload) =>
-    validatePayload(payload, {
-      id: requiredNonEmptyString,
-      redirectionUrl: requiredNonEmptyString,
-      overwrite: new BooleanValue({required: false}),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        id: requiredNonEmptyString,
+        redirectionUrl: requiredNonEmptyString,
+        overwrite: z.optional(z.boolean()),
+      })
+    )
 );
 
 export const updateStandaloneSearchBoxRedirectionUrl = createAction(
   'standaloneSearchBox/updateRedirectionUrl',
   (payload: UpdateStandaloneSearchBoxPayload) =>
-    validatePayload(payload, {
-      id: requiredNonEmptyString,
-      redirectionUrl: requiredNonEmptyString,
-    })
+    validatePayload(
+      payload,
+      z.object({
+        id: requiredNonEmptyString,
+        redirectionUrl: requiredNonEmptyString,
+      })
+    )
 );
 
 export interface ResetStandaloneSearchBoxActionCreatorPayload {
@@ -85,9 +91,12 @@ export interface ResetStandaloneSearchBoxActionCreatorPayload {
 export const resetStandaloneSearchBox = createAction(
   'standaloneSearchBox/reset',
   (payload: ResetStandaloneSearchBoxActionCreatorPayload) =>
-    validatePayload(payload, {
-      id: requiredNonEmptyString,
-    })
+    validatePayload(
+      payload,
+      z.object({
+        id: requiredNonEmptyString,
+      })
+    )
 );
 
 export interface UpdateAnalyticsToSearchFromLinkActionCreatorPayload {
@@ -100,7 +109,7 @@ export interface UpdateAnalyticsToSearchFromLinkActionCreatorPayload {
 export const updateAnalyticsToSearchFromLink = createAction(
   'standaloneSearchBox/updateAnalyticsToSearchFromLink',
   (payload: UpdateAnalyticsToSearchFromLinkActionCreatorPayload) =>
-    validatePayload(payload, {id: requiredNonEmptyString})
+    validatePayload(payload, z.object({id: requiredNonEmptyString}))
 );
 
 export interface UpdateAnalyticsToOmniboxFromLinkActionCreatorPayload {
@@ -146,7 +155,7 @@ export const fetchRedirectUrl = createAsyncThunk<
       extra: {apiClient, validatePayload, navigatorContext},
     }
   ) => {
-    validatePayload(payload, {id: new StringValue({emptyAllowed: false})});
+    validatePayload(payload, z.object({id: z.string().check(z.minLength(1))}));
     const request = await buildPlanRequest(getState(), navigatorContext);
     const response = await apiClient.plan(request);
     if (isErrorResponse(response)) {

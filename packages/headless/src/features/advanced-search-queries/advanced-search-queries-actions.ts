@@ -1,9 +1,7 @@
-import {StringValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import {validatePayload} from '../../utils/validate-payload.js';
 
-const optionalAndPossiblyEmpty = () =>
-  new StringValue({required: false, emptyAllowed: true});
 export interface AdvancedSearchQueryActionCreatorPayload {
   /**
    * The advanced query.
@@ -26,24 +24,21 @@ export interface AdvancedSearchQueryActionCreatorPayload {
   dq?: string;
 }
 
+const advancedSearchQueriesSchema = z.object({
+  aq: z.optional(z.string()),
+  cq: z.optional(z.string()),
+  lq: z.optional(z.string()),
+  dq: z.optional(z.string()),
+});
+
 export const updateAdvancedSearchQueries = createAction(
   'advancedSearchQueries/update',
   (payload: AdvancedSearchQueryActionCreatorPayload) =>
-    validatePayload(payload, {
-      aq: optionalAndPossiblyEmpty(),
-      cq: optionalAndPossiblyEmpty(),
-      lq: optionalAndPossiblyEmpty(),
-      dq: optionalAndPossiblyEmpty(),
-    })
+    validatePayload(payload, advancedSearchQueriesSchema)
 );
 
 export const registerAdvancedSearchQueries = createAction(
   'advancedSearchQueries/register',
   (payload: AdvancedSearchQueryActionCreatorPayload) =>
-    validatePayload(payload, {
-      aq: optionalAndPossiblyEmpty(),
-      cq: optionalAndPossiblyEmpty(),
-      lq: optionalAndPossiblyEmpty(),
-      dq: optionalAndPossiblyEmpty(),
-    })
+    validatePayload(payload, advancedSearchQueriesSchema)
 );

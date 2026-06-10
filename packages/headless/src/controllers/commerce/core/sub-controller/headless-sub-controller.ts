@@ -1,4 +1,4 @@
-import type {SchemaDefinition} from '@coveo/bueno';
+import type {z} from '@coveo/bueno/zod';
 import type {UnknownAction} from '@reduxjs/toolkit';
 import type {CommerceAPIErrorStatusResponse} from '../../../../api/commerce/commerce-api-error-response.js';
 import type {FacetSearchType} from '../../../../api/commerce/facet-search/facet-search-request.js';
@@ -177,7 +177,7 @@ export interface SearchAndListingSubControllerProps<
   ) => boolean;
   requestIdSelector: (state: CommerceEngine[typeof stateKey]) => string;
   serializer: Serializer<P>;
-  parametersDefinition: SchemaDefinition<Required<P>>;
+  parametersDefinition: z.ZodMiniType<Required<P>>;
   activeParametersSelector: (state: CommerceEngine[typeof stateKey]) => P;
   restoreActionCreator: (parameters: P) => UnknownAction;
   facetSearchType: FacetSearchType;

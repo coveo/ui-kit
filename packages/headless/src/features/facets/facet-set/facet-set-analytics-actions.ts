@@ -1,4 +1,4 @@
-import {Value} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {
   requiredNonEmptyString,
   validatePayload,
@@ -56,12 +56,13 @@ export const logFacetUpdateSort = (
   payload: LogFacetUpdateSortActionCreatorPayload
 ): LegacySearchAction =>
   makeAnalyticsAction('analytics/facet/sortChange', (client, state) => {
-    validatePayload(payload, {
-      facetId: facetIdDefinition,
-      criterion: new Value<FacetSortCriterion | RangeFacetSortCriterion>({
-        required: true,
-      }),
-    });
+    validatePayload(
+      payload,
+      z.object({
+        facetId: facetIdDefinition,
+        criterion: z.string(),
+      })
+    );
 
     const {facetId, criterion} = payload;
     const stateForAnalytics = getStateNeededForFacetMetadata(state);
@@ -100,10 +101,13 @@ export const logFacetSelect = (
   payload: LogFacetSelectActionCreatorPayload
 ): LegacySearchAction =>
   makeAnalyticsAction('analytics/facet/select', (client, state) => {
-    validatePayload(payload, {
-      facetId: facetIdDefinition,
-      facetValue: requiredNonEmptyString,
-    });
+    validatePayload(
+      payload,
+      z.object({
+        facetId: facetIdDefinition,
+        facetValue: requiredNonEmptyString,
+      })
+    );
 
     const stateForAnalytics = getStateNeededForFacetMetadata(state);
     const metadata = buildFacetSelectionChangeMetadata(
@@ -131,10 +135,13 @@ export const logFacetExclude = (
   payload: LogFacetExcludeActionCreatorPayload
 ): LegacySearchAction =>
   makeAnalyticsAction('analytics/facet/exclude', (client, state) => {
-    validatePayload(payload, {
-      facetId: facetIdDefinition,
-      facetValue: requiredNonEmptyString,
-    });
+    validatePayload(
+      payload,
+      z.object({
+        facetId: facetIdDefinition,
+        facetValue: requiredNonEmptyString,
+      })
+    );
 
     const stateForAnalytics = getStateNeededForFacetMetadata(state);
     const metadata = buildFacetSelectionChangeMetadata(
@@ -162,10 +169,13 @@ export const logFacetDeselect = (
   payload: LogFacetDeselectActionCreatorPayload
 ): LegacySearchAction =>
   makeAnalyticsAction('analytics/facet/deselect', (client, state) => {
-    validatePayload(payload, {
-      facetId: facetIdDefinition,
-      facetValue: requiredNonEmptyString,
-    });
+    validatePayload(
+      payload,
+      z.object({
+        facetId: facetIdDefinition,
+        facetValue: requiredNonEmptyString,
+      })
+    );
     const stateForAnalytics = getStateNeededForFacetMetadata(state);
     const metadata = buildFacetSelectionChangeMetadata(
       payload,
@@ -192,10 +202,13 @@ export const logFacetUnexclude = (
   payload: LogFacetUnexcludeActionCreatorPayload
 ): LegacySearchAction =>
   makeAnalyticsAction('analytics/facet/unexclude', (client, state) => {
-    validatePayload(payload, {
-      facetId: facetIdDefinition,
-      facetValue: requiredNonEmptyString,
-    });
+    validatePayload(
+      payload,
+      z.object({
+        facetId: facetIdDefinition,
+        facetValue: requiredNonEmptyString,
+      })
+    );
     const stateForAnalytics = getStateNeededForFacetMetadata(state);
     const metadata = buildFacetSelectionChangeMetadata(
       payload,
@@ -222,10 +235,13 @@ export const logFacetBreadcrumb = (
   payload: LogFacetBreadcrumbActionCreatorPayload
 ): LegacySearchAction =>
   makeAnalyticsAction('analytics/facet/breadcrumb', (client, state) => {
-    validatePayload(payload, {
-      facetId: facetIdDefinition,
-      facetValue: requiredNonEmptyString,
-    });
+    validatePayload(
+      payload,
+      z.object({
+        facetId: facetIdDefinition,
+        facetValue: requiredNonEmptyString,
+      })
+    );
     const metadata = buildFacetSelectionChangeMetadata(
       payload,
       getStateNeededForFacetMetadata(state)

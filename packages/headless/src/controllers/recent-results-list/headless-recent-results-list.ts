@@ -1,4 +1,4 @@
-import {ArrayValue, NumberValue, Schema} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import type {Result} from '../../api/search/search/result.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
@@ -46,8 +46,8 @@ export interface RecentResultsListInitialState {
   results: Result[];
 }
 
-const initialStateSchema = new Schema<RecentResultsListInitialState>({
-  results: new ArrayValue({required: true}),
+const initialStateSchema = z.object({
+  results: z.array(z.unknown()),
 });
 
 export interface RecentResultsListOptions {
@@ -58,8 +58,8 @@ export interface RecentResultsListOptions {
   maxLength: number;
 }
 
-const optionsSchema = new Schema<RecentResultsListOptions>({
-  maxLength: new NumberValue({required: true, min: 1}),
+const optionsSchema = z.object({
+  maxLength: z.number().check(z.minimum(1)),
 });
 
 /**

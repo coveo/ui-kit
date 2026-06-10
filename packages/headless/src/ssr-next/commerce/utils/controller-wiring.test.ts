@@ -39,58 +39,50 @@ describe('controller-wiring', () => {
     describe('when validating a listingDefinitionSchema', () => {
       it('should throw for missing required context only', () => {
         const validate = () => {
-          listingDefinitionSchema.validate({});
+          listingDefinitionSchema.parse({});
         };
-        expect(validate).toThrowError(
-          /context: value is required and is currently undefined/
-        );
+        expect(validate).toThrowError(/invalid_type/);
       });
     });
 
     describe('when validating a searchDefinitionSchema', () => {
       it('should throw for missing required search params and context', () => {
         const validate = () => {
-          searchDefinitionSchema.validate({});
+          searchDefinitionSchema.parse({});
         };
-        expect(validate).toThrowError(
-          /context: value is required and is currently undefined/
-        );
+        expect(validate).toThrowError(/invalid_type/);
       });
     });
 
     describe('when validating a standaloneDefinitionSchema', () => {
       it('should throw for missing required parameters and context', () => {
         const validate = () => {
-          standaloneDefinitionSchema.validate({});
+          standaloneDefinitionSchema.parse({});
         };
-        expect(validate).toThrowError(
-          /context: value is required and is currently undefined/
-        );
+        expect(validate).toThrowError(/invalid_type/);
       });
     });
 
     describe('when validating a recommendationsDefinitionSchema', () => {
       it('should throw for missing required parameters and context', () => {
         const validate = () => {
-          recommendationsDefinitionSchema([]).validate({});
+          recommendationsDefinitionSchema([]).parse({});
         };
-        expect(validate).toThrowError(
-          /context: value is required and is currently undefined/
-        );
+        expect(validate).toThrowError(/invalid_type/);
       });
     });
 
     it('should not throw for missing search parameters', () => {
       expect(() => {
-        searchDefinitionSchema.validate(validCommonConfig);
-      }).not.toThrowError(/searchParams: value is require/);
+        searchDefinitionSchema.parse(validCommonConfig);
+      }).not.toThrowError(/searchParams/);
 
       expect(() => {
-        searchDefinitionSchema.validate({
+        searchDefinitionSchema.parse({
           ...validCommonConfig,
           searchParams: {},
         });
-      }).not.toThrowError(/searchParams: value does not contain q/);
+      }).not.toThrowError(/q/);
     });
 
     it('should not throw for missing query', () => {
@@ -99,14 +91,14 @@ describe('controller-wiring', () => {
         searchParams: {q: 'test query'},
       };
       expect(() => {
-        searchDefinitionSchema.validate(searchConfig);
+        searchDefinitionSchema.parse(searchConfig);
       }).not.toThrow();
     });
 
     it('should throw for missing recommendations', () => {
       expect(() => {
-        recommendationsDefinitionSchema([]).validate(validCommonConfig);
-      }).toThrowError(/recommendations: value is required./);
+        recommendationsDefinitionSchema([]).parse(validCommonConfig);
+      }).toThrowError(/invalid_type/);
     });
 
     it('should throw if the user refers to recommendation controller that was not defined in the definition', () => {
@@ -115,10 +107,10 @@ describe('controller-wiring', () => {
         recommendations: ['invalid-rec'],
       };
       expect(() => {
-        recommendationsDefinitionSchema(['rec1', 'rec2']).validate(
+        recommendationsDefinitionSchema(['rec1', 'rec2']).parse(
           recommendationsConfig
         );
-      }).toThrowError(/value should be one of: rec1, rec2./);
+      }).toThrowError(/invalid_value/);
     });
 
     it('should validate recommendations config with productId', () => {
@@ -128,9 +120,7 @@ describe('controller-wiring', () => {
         productId: 'product-123',
       };
       expect(() => {
-        recommendationsDefinitionSchema(['rec1']).validate(
-          recommendationsConfig
-        );
+        recommendationsDefinitionSchema(['rec1']).parse(recommendationsConfig);
       }).not.toThrow();
     });
 
@@ -140,9 +130,7 @@ describe('controller-wiring', () => {
         recommendations: ['rec1'],
       };
       expect(() => {
-        recommendationsDefinitionSchema(['rec1']).validate(
-          recommendationsConfig
-        );
+        recommendationsDefinitionSchema(['rec1']).parse(recommendationsConfig);
       }).not.toThrow();
     });
 
@@ -153,9 +141,7 @@ describe('controller-wiring', () => {
         productId: '',
       };
       expect(() => {
-        recommendationsDefinitionSchema(['rec1']).validate(
-          recommendationsConfig
-        );
+        recommendationsDefinitionSchema(['rec1']).parse(recommendationsConfig);
       }).toThrow();
     });
   });

@@ -1,3 +1,4 @@
+import {z} from '@coveo/bueno/zod';
 import type {SearchPageEvents as LegacySearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents.js';
 import type {Result} from '../../api/search/search/result.js';
 import {
@@ -19,10 +20,13 @@ import {
 import {SearchPageEvents} from './search-action-cause.js';
 
 const validateEvent = (p: {evt: string; type?: string}) =>
-  validatePayload(p, {
-    evt: requiredNonEmptyString,
-    type: nonEmptyString,
-  });
+  validatePayload(
+    p,
+    z.object({
+      evt: requiredNonEmptyString,
+      type: nonEmptyString,
+    })
+  );
 
 export interface LogSearchEventActionCreatorPayload {
   /**

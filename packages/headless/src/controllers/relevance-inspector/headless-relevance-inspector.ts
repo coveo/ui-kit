@@ -1,4 +1,4 @@
-import {BooleanValue, Schema} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import type {FieldDescription} from '../../api/search/fields/fields-response.js';
 import type {
   ExecutionReport,
@@ -57,8 +57,8 @@ export interface RelevanceInspectorProps {
   initialState?: RelevanceInspectorInitialState;
 }
 
-const initialStateSchema = new Schema({
-  enabled: new BooleanValue({default: false}),
+const initialStateSchema = z.object({
+  enabled: z.optional(z.boolean()),
 });
 
 export interface RelevanceInspectorInitialState {
@@ -211,7 +211,7 @@ export function buildRelevanceInspector(
     'buildRelevanceInspector'
   );
 
-  if (initialState.enabled) {
+  if (initialState?.enabled) {
     dispatch(enableDebug());
   }
 

@@ -1,4 +1,4 @@
-import {BooleanValue, Schema, StringValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {
   type SearchBoxOptions,
   searchBoxOptionDefinitions,
@@ -16,15 +16,8 @@ export interface StandaloneSearchBoxOptions extends SearchBoxOptions {
   overwrite?: boolean;
 }
 
-export const standaloneSearchBoxSchema = new Schema<
-  Required<StandaloneSearchBoxOptions>
->({
+export const standaloneSearchBoxSchema = z.object({
   ...searchBoxOptionDefinitions,
-  redirectionUrl: new StringValue({
-    required: true,
-    emptyAllowed: false,
-  }),
-  overwrite: new BooleanValue({
-    required: false,
-  }),
+  redirectionUrl: z.string().check(z.minLength(1)),
+  overwrite: z.optional(z.boolean()),
 });

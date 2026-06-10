@@ -1,10 +1,4 @@
-import {
-  BooleanValue,
-  NumberValue,
-  RecordValue,
-  Schema,
-  StringValue,
-} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import type {SuggestionHighlightingOptions} from '../../../utils/highlight.js';
 import {requiredNonEmptyString} from '../../../utils/validate-payload.js';
 
@@ -54,33 +48,23 @@ export const defaultSearchBoxOptions: Required<DefaultSearchBoxOptions> = {
   clearFilters: true,
 };
 
-const openCloseDelimitersDefinition = {
-  open: new StringValue(),
-  close: new StringValue(),
-};
+const openCloseDelimitersSchema = z.object({
+  open: z.optional(z.string()),
+  close: z.optional(z.string()),
+});
 
 export const searchBoxOptionDefinitions = {
   id: requiredNonEmptyString,
-  numberOfSuggestions: new NumberValue({min: 0}),
-  enableQuerySyntax: new BooleanValue(),
-  highlightOptions: new RecordValue({
-    values: {
-      notMatchDelimiters: new RecordValue({
-        values: openCloseDelimitersDefinition,
-      }),
-
-      exactMatchDelimiters: new RecordValue({
-        values: openCloseDelimitersDefinition,
-      }),
-
-      correctionDelimiters: new RecordValue({
-        values: openCloseDelimitersDefinition,
-      }),
-    },
-  }),
-  clearFilters: new BooleanValue(),
+  numberOfSuggestions: z.optional(z.number().check(z.minimum(0))),
+  enableQuerySyntax: z.optional(z.boolean()),
+  highlightOptions: z.optional(
+    z.object({
+      notMatchDelimiters: z.optional(openCloseDelimitersSchema),
+      exactMatchDelimiters: z.optional(openCloseDelimitersSchema),
+      correctionDelimiters: z.optional(openCloseDelimitersSchema),
+    })
+  ),
+  clearFilters: z.optional(z.boolean()),
 };
 
-export const searchBoxOptionsSchema = new Schema<Required<SearchBoxOptions>>(
-  searchBoxOptionDefinitions
-);
+export const searchBoxOptionsSchema = z.object(searchBoxOptionDefinitions);

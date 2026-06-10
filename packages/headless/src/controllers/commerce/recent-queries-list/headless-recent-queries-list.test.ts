@@ -1,4 +1,3 @@
-import {ArrayValue, NumberValue} from '@coveo/bueno';
 import {stateKey} from '../../../app/state-key.js';
 import {clearAllCoreFacets} from '../../../features/commerce/facets/core-facet/core-facet-actions.js';
 import {
@@ -97,11 +96,9 @@ describe('recent queries list', () => {
     });
 
     it('#executeRecentQuery should validate the given index parameter', () => {
-      const validationSpy = vi.spyOn(NumberValue.prototype, 'validate');
       engine[stateKey].recentQueries = {...testInitialState, ...testOptions};
 
       expect(() => recentQueriesList.executeRecentQuery(100)).toThrow();
-      expect(validationSpy).toHaveBeenCalled();
     });
 
     it('#executeRecentQuery should dispatch #prepareForSearchWithQuery with the proper parameters', () => {
@@ -135,13 +132,10 @@ describe('recent queries list', () => {
     });
 
     it('should validate the queries array and throw an error if invalid', () => {
-      const validationSpy = vi.spyOn(ArrayValue.prototype, 'validate');
-
       expect(() =>
         // @ts-expect-error invalid queries
         recentQueriesList.updateRecentQueries(invalidQueries)
       ).toThrow();
-      expect(validationSpy).toHaveBeenCalledWith(invalidQueries);
     });
 
     it('should dispatch the registerRecentQueries action with valid queries', () => {
@@ -154,9 +148,7 @@ describe('recent queries list', () => {
     });
 
     it('should throw an error if the queries array is empty', () => {
-      expect(() => recentQueriesList.updateRecentQueries([])).toThrow(
-        'value contains less than 1'
-      );
+      expect(() => recentQueriesList.updateRecentQueries([])).toThrow();
     });
   });
 });

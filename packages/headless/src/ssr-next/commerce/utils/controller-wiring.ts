@@ -1,6 +1,9 @@
-import {ArrayValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {contextDefinition} from '../../../features/commerce/context/context-validation.js';
-import {parametersDefinition} from '../../../features/commerce/parameters/parameters-schema.js';
+import {
+  parametersDefinition,
+  parametersDefinitionShape,
+} from '../../../features/commerce/parameters/parameters-schema.js';
 import {
   nonEmptyString,
   nonRequiredEmptyAllowedString,
@@ -16,50 +19,40 @@ import {
   isRecommendationDefinition,
 } from './recommendation-filter.js';
 
-const requiredDefinition = {
-  context: new RecordValue({
-    options: {required: true},
-    values: contextDefinition,
-  }),
-};
-
-const listingDefinition = {
-  ...requiredDefinition,
-  searchParams: new RecordValue({
-    values: parametersDefinition,
-  }),
-};
-
-const standaloneDefinition = {
-  ...requiredDefinition,
-};
-
-const searchDefinition = {
-  ...requiredDefinition,
-  searchParams: new RecordValue({
-    options: {required: false},
-    values: {q: nonRequiredEmptyAllowedString, ...parametersDefinition},
-  }),
-};
-
-const recommendationsDefinition = (recommendationName: string[]) => ({
-  ...requiredDefinition,
-  recommendations: new ArrayValue({
-    each: new StringValue({
-      required: true,
-      constrainTo: recommendationName,
-      emptyAllowed: false,
-    }),
-    required: true,
-  }),
-  productId: nonEmptyString,
+const listingDefinitionSchema = z.object({
+  context: contextDefinition,
+  searchParams: z.optional(parametersDefinition),
 });
 
-export const listingDefinitionSchema = new Schema(listingDefinition);
-export const searchDefinitionSchema = new Schema(searchDefinition);
-export const standaloneDefinitionSchema = new Schema(standaloneDefinition);
-export const recommendationsDefinitionSchema = (recommendationName: string[]) =>
-  new Schema(recommendationsDefinition(recommendationName));
+const standaloneDefinitionSchema = z.object({
+  context: contextDefinition,
+});
+
+const searchDefinitionSchema = z.object({
+  context: contextDefinition,
+  searchParams: z.optional(
+    z.object({
+      q: nonRequiredEmptyAllowedString,
+      ...parametersDefinitionShape,
+    })
+  ),
+});
+
+const recommendationsDefinitionSchema = (recommendationName: string[]) =>
+  z.object({
+    context: contextDefinition,
+    recommendations: z.array(
+      z.enum(recommendationName as [string, ...string[]])
+    ),
+    productId: nonEmptyString,
+  });
+
+export {
+  listingDefinitionSchema,
+  searchDefinitionSchema,
+  standaloneDefinitionSchema,
+  recommendationsDefinitionSchema,
+};
 
 /**
  * Validates the build configuration based on the solution type.
@@ -71,7 +64,7 @@ function validateBuildConfig<
   controllerDefinitions: CommerceControllerDefinitionsMap,
   buildConfig: BuildConfig<TControllerDefinitions, SolutionType>
 ): void {
-  const validationMap: Record<SolutionType, Schema<object>> = {
+  const validationMap: Record<SolutionType, z.ZodMiniType> = {
     [SolutionType.listing]: listingDefinitionSchema,
     [SolutionType.search]: searchDefinitionSchema,
     [SolutionType.standalone]: standaloneDefinitionSchema,
@@ -81,7 +74,7 @@ function validateBuildConfig<
   };
 
   const schema = validationMap[solutionType as SolutionType];
-  schema.validate(buildConfig);
+  schema.parse(buildConfig);
 }
 
 /**

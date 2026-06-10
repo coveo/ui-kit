@@ -1,4 +1,4 @@
-import {NumberValue, Schema, SchemaValidationError} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import type {CoreEngine} from '../app/engine.js';
 import {buildMockSearchEngine} from '../test/mock-engine-v2.js';
 import {createMockState} from '../test/mock-state.js';
@@ -10,10 +10,10 @@ import {
   validatePayloadAndThrow,
 } from './validate-payload.js';
 
-const definition = {
-  id: new NumberValue({max: 10}),
-};
-const value = new NumberValue({max: 10});
+const definition = z.object({
+  id: z.optional(z.number().check(z.maximum(10))),
+});
+const value = z.number().check(z.maximum(10));
 
 describe('validatePayload', () => {
   it(`when SchemaDefinition payload is valid
@@ -46,7 +46,7 @@ describe('validatePayload', () => {
 
   it('when SchemaDefinition is an object, validating a payload that is not an object should be invalid', () => {
     const notAnObject = ['foo', 11, true];
-    for (const testCase in notAnObject) {
+    for (const testCase of notAnObject) {
       // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- <>
       const validatedPayload = validatePayload(testCase, definition as any);
       expect(validatedPayload.payload).toEqual(testCase);
@@ -69,8 +69,8 @@ describe('validatePayloadAndThrow', () => {
 
 describe('validateOptions', () => {
   let engine: CoreEngine;
-  const schema = new Schema({
-    id: new NumberValue({max: 10}),
+  const schema = z.object({
+    id: z.optional(z.number().check(z.maximum(10))),
   });
 
   beforeEach(() => {
@@ -85,7 +85,7 @@ describe('validateOptions', () => {
       {id: 1},
       'someFunction'
     );
-    expect(validatedOptions.id).toEqual(1);
+    expect(validatedOptions!.id).toEqual(1);
   });
 
   it(`when options are invalid
@@ -98,8 +98,8 @@ describe('validateOptions', () => {
 
 describe('validateInitialState', () => {
   let engine: CoreEngine;
-  const schema = new Schema({
-    id: new NumberValue({max: 10}),
+  const schema = z.object({
+    id: z.optional(z.number().check(z.maximum(10))),
   });
 
   beforeEach(() => {
@@ -114,7 +114,7 @@ describe('validateInitialState', () => {
       {id: 1},
       'someFunction'
     );
-    expect(validatedInitialState.id).toEqual(1);
+    expect(validatedInitialState!.id).toEqual(1);
   });
 
   it(`when initial state is invalid
@@ -126,8 +126,21 @@ describe('validateInitialState', () => {
 });
 
 describe('serializeSchemaValidationError', () => {
-  it('should serialize error correctly', () => {
-    const error = new SchemaValidationError('Hello');
+  it('should serialize a Zod error correctly', () => {
+    const result = z.number().safeParse('not a number');
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      const serialized = serializeSchemaValidationError(result.error);
+      expect(serialized).toEqual({
+        message: result.error.message,
+        name: result.error.name,
+        stack: result.error.stack,
+      });
+    }
+  });
+
+  it('should serialize a plain Error correctly', () => {
+    const error = new Error('Hello');
     expect(serializeSchemaValidationError(error)).toEqual({
       message: error.message,
       name: error.name,

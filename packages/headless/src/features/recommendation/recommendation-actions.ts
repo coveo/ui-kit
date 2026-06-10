@@ -1,3 +1,4 @@
+import {z} from '@coveo/bueno/zod';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import {getSearchApiBaseUrl} from '../../api/platform-client.js';
@@ -47,9 +48,12 @@ export interface SetRecommendationIdActionCreatorPayload {
 export const setRecommendationId = createAction(
   'recommendation/set',
   (payload: SetRecommendationIdActionCreatorPayload) =>
-    validatePayload(payload, {
-      id: requiredNonEmptyString,
-    })
+    validatePayload(
+      payload,
+      z.object({
+        id: requiredNonEmptyString,
+      })
+    )
 );
 
 export const getRecommendations = createAsyncThunk<

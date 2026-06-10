@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
 import {change} from '../history/history-actions.js';
 import {
@@ -35,7 +34,7 @@ export const tabSetReducer = createReducer(
       })
       .addCase(restoreSearchParameters, (state, action) => {
         const id = action.payload.tab;
-        if (!isNullOrUndefined(id)) {
+        if (id != null) {
           Object.keys(state).forEach((tabId) => {
             state[tabId].isActive = tabId === id;
           });

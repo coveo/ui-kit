@@ -1,4 +1,4 @@
-import {ArrayValue, isString} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import {
   requiredNonEmptyString,
@@ -6,14 +6,11 @@ import {
 } from '../../utils/validate-payload.js';
 import type {ContextPayload, ContextValue} from './context-state.js';
 
-const nonEmptyArray = new ArrayValue({
-  each: requiredNonEmptyString,
-  required: true,
-});
+const nonEmptyArray = z.array(requiredNonEmptyString);
 
 const nonEmptyPayload = (contextKey: string, contextValue: ContextValue) => {
   validatePayload(contextKey, requiredNonEmptyString);
-  if (isString(contextValue)) {
+  if (typeof contextValue === 'string') {
     validatePayload(contextValue, requiredNonEmptyString);
   } else {
     validatePayload(contextValue, nonEmptyArray);

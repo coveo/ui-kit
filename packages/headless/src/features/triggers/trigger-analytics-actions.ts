@@ -1,4 +1,4 @@
-import {RecordValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {
   requiredEmptyAllowedString,
   validatePayload,
@@ -15,11 +15,8 @@ export interface LogUndoTriggerQueryActionCreatorPayload {
   undoneQuery: string;
 }
 
-const logUndoTriggerQueryPayloadDefinition = new RecordValue({
-  values: {
-    undoneQuery: requiredEmptyAllowedString,
-  },
-  options: {required: true},
+const logUndoTriggerQueryPayloadDefinition = z.object({
+  undoneQuery: requiredEmptyAllowedString,
 });
 
 export const logTriggerQuery = (): LegacySearchAction =>

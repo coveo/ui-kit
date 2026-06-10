@@ -1,11 +1,4 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  NumberValue,
-  RecordValue,
-  StringValue,
-  Value,
-} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {createAction} from '@reduxjs/toolkit';
 import {parseDate} from '../../../../api/search/date/date-format.js';
 import {
@@ -116,37 +109,31 @@ export interface RegisterDateFacetActionCreatorPayload {
   rangeAlgorithm?: RangeFacetRangeAlgorithm;
 }
 
-const dateRangeRequestDefinition = {
+const dateRangeRequestDefinition = z.object({
   start: requiredNonEmptyString,
   end: requiredNonEmptyString,
-  endInclusive: new BooleanValue({required: true}),
-  state: requiredNonEmptyString,
-};
+  endInclusive: z.boolean(),
+  state: z.enum(['idle', 'selected', 'excluded']),
+});
 
-const dateFacetRegistrationOptionsDefinition = {
+const dateFacetRegistrationOptionsDefinition = z.object({
   facetId: facetIdDefinition,
   field: requiredNonEmptyString,
-  tabs: new RecordValue({
-    options: {
-      required: false,
-    },
-    values: {
-      included: new ArrayValue({each: new StringValue()}),
-      excluded: new ArrayValue({each: new StringValue()}),
-    },
-  }),
-  activeTab: new StringValue({required: false}),
-  currentValues: new ArrayValue({
-    required: false,
-    each: new RecordValue({values: dateRangeRequestDefinition}),
-  }),
-  generateAutomaticRanges: new BooleanValue({required: true}) as never,
-  filterFacetCount: new BooleanValue({required: false}),
-  injectionDepth: new NumberValue({required: false, min: 0}),
-  numberOfValues: new NumberValue({required: false, min: 1}),
-  sortCriteria: new Value<RangeFacetSortCriterion>({required: false}),
-  rangeAlgorithm: new Value<RangeFacetRangeAlgorithm>({required: false}),
-};
+  tabs: z.optional(
+    z.object({
+      included: z.optional(z.array(z.optional(z.string()))),
+      excluded: z.optional(z.array(z.optional(z.string()))),
+    })
+  ),
+  activeTab: z.optional(z.string()),
+  currentValues: z.optional(z.array(dateRangeRequestDefinition)),
+  generateAutomaticRanges: z.boolean(),
+  filterFacetCount: z.optional(z.boolean()),
+  injectionDepth: z.optional(z.number().check(z.minimum(0))),
+  numberOfValues: z.optional(z.number().check(z.minimum(1))),
+  sortCriteria: z.optional(z.unknown()),
+  rangeAlgorithm: z.optional(z.unknown()),
+});
 
 function getAbsoluteDate(date: string) {
   return isRelativeDateFormat(date)
@@ -201,19 +188,25 @@ export interface ToggleSelectDateFacetValueActionCreatorPayload {
 export const toggleSelectDateFacetValue = createAction(
   'dateFacet/toggleSelectValue',
   (payload: ToggleSelectDateFacetValueActionCreatorPayload) =>
-    validatePayload(payload, {
-      facetId: facetIdDefinition,
-      selection: new RecordValue({values: dateFacetValueDefinition}),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        facetId: facetIdDefinition,
+        selection: dateFacetValueDefinition,
+      })
+    )
 );
 
 export const toggleExcludeDateFacetValue = createAction(
   'dateFacet/toggleExcludeValue',
   (payload: ToggleSelectDateFacetValueActionCreatorPayload) =>
-    validatePayload(payload, {
-      facetId: facetIdDefinition,
-      selection: new RecordValue({values: dateFacetValueDefinition}),
-    })
+    validatePayload(
+      payload,
+      z.object({
+        facetId: facetIdDefinition,
+        selection: dateFacetValueDefinition,
+      })
+    )
 );
 
 export interface UpdateDateFacetValuesActionCreatorPayload {
@@ -232,12 +225,13 @@ export const updateDateFacetValues = createAction(
   'dateFacet/updateFacetValues',
   (payload: UpdateDateFacetValuesActionCreatorPayload) => {
     try {
-      validatePayloadAndThrow(payload, {
-        facetId: facetIdDefinition,
-        values: new ArrayValue({
-          each: new RecordValue({values: dateFacetValueDefinition}),
-        }),
-      });
+      validatePayloadAndThrow(
+        payload,
+        z.object({
+          facetId: facetIdDefinition,
+          values: z.array(dateFacetValueDefinition),
+        })
+      );
       validateManualDateRanges({currentValues: payload.values});
       return {payload, error: null};
     } catch (error) {

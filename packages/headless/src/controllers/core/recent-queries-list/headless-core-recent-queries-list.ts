@@ -1,11 +1,4 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  isBoolean,
-  NumberValue,
-  Schema,
-  StringValue,
-} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import type {CoreEngine} from '../../../app/engine.js';
 import type {UpdateQueryActionCreatorPayload} from '../../../features/query/query-actions.js';
 import {queryReducer as query} from '../../../features/query/query-slice.js';
@@ -62,8 +55,8 @@ export interface RecentQueriesListInitialState {
   queries: string[];
 }
 
-const initialStateSchema = new Schema<RecentQueriesListInitialState>({
-  queries: new ArrayValue({required: true}),
+const initialStateSchema = z.object({
+  queries: z.array(z.unknown()),
 });
 
 export interface RecentQueriesListOptions {
@@ -79,9 +72,9 @@ export interface RecentQueriesListOptions {
   clearFilters?: boolean;
 }
 
-const optionsSchema = new Schema<RecentQueriesListOptions>({
-  maxLength: new NumberValue({required: true, min: 1}),
-  clearFilters: new BooleanValue(),
+const optionsSchema = z.object({
+  maxLength: z.number().check(z.minimum(1)),
+  clearFilters: z.optional(z.boolean()),
 });
 
 /**
@@ -213,13 +206,12 @@ export function buildCoreRecentQueriesList(
     },
 
     updateRecentQueries(queries: string[]) {
-      const errorMessage = new ArrayValue({
-        required: true,
-        each: new StringValue({required: true}),
-        min: 1,
-      }).validate(queries);
-      if (errorMessage) {
-        throw new Error(errorMessage);
+      const result = z
+        .array(z.string())
+        .check(z.minLength(1))
+        .safeParse(queries);
+      if (!result.success) {
+        throw new Error(result.error.message);
       }
 
       dispatch(
@@ -231,20 +223,19 @@ export function buildCoreRecentQueriesList(
     },
 
     executeRecentQuery(index: number) {
-      const errorMessage = new NumberValue({
-        required: true,
-        min: 0,
-        max: this.state.queries.length,
-      }).validate(index);
-      if (errorMessage) {
-        throw new Error(errorMessage);
+      const result = z
+        .number()
+        .check(z.minimum(0), z.maximum(this.state.queries.length))
+        .safeParse(index);
+      if (!result.success) {
+        throw new Error(result.error.message);
       }
       const queryOptions: UpdateQueryActionCreatorPayload &
         PrepareForSearchWithQueryOptions = {
         q: this.state.queries[index],
         clearFilters: registrationOptions.clearFilters,
       };
-      if (isBoolean(engine.state.query?.enableQuerySyntax)) {
+      if (typeof engine.state.query?.enableQuerySyntax === 'boolean') {
         queryOptions.enableQuerySyntax = engine.state.query.enableQuerySyntax;
       }
       dispatch(prepareForSearchWithQuery(queryOptions));

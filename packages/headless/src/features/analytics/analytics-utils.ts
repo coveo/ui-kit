@@ -1,10 +1,5 @@
 /* oxlint-disable @typescript-eslint/no-invalid-void-type -- <> */
-import {
-  isNullOrUndefined,
-  RecordValue,
-  Schema,
-  StringValue,
-} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import type {createRelay} from '@coveo/relay';
 import type {ItemMetaData} from '@coveo/relay-event-types';
 import {
@@ -648,7 +643,7 @@ export const partialCitationInformation = (
 
 function getCitationSourceName(citation: GeneratedAnswerCitation) {
   const source = citation.source;
-  if (isNullOrUndefined(source)) {
+  if (source == null) {
     return 'unknown';
   }
   return source;
@@ -706,33 +701,41 @@ export const documentIdentifier = (result: Result): DocumentIdentifier => {
   };
 };
 
-const rawPartialDefinition = {
-  urihash: new StringValue(),
-  sourcetype: new StringValue(),
-  permanentid: new StringValue(),
-};
+const rawPartialDefinition = z.object({
+  urihash: z.optional(z.string()),
+  sourcetype: z.optional(z.string()),
+  permanentid: z.optional(z.string()),
+});
 
-export const resultPartialDefinition = {
+export const resultPartialDefinition = z.object({
   uniqueId: requiredNonEmptyString,
-  raw: new RecordValue({values: rawPartialDefinition}),
+  raw: rawPartialDefinition,
   title: requiredNonEmptyString,
   uri: requiredNonEmptyString,
   clickUri: requiredNonEmptyString,
-  rankingModifier: new StringValue({required: false, emptyAllowed: true}),
-};
+  rankingModifier: z.optional(z.string()),
+});
+
+const rawPartialKeys = ['urihash', 'sourcetype', 'permanentid'] as const;
 
 function partialRawPayload(raw: Raw): Partial<Raw> {
-  return Object.assign(
-    {},
-    ...Object.keys(rawPartialDefinition).map((key) => ({[key]: raw[key]}))
-  );
+  return Object.assign({}, ...rawPartialKeys.map((key) => ({[key]: raw[key]})));
 }
+
+const resultPartialKeys = [
+  'uniqueId',
+  'raw',
+  'title',
+  'uri',
+  'clickUri',
+  'rankingModifier',
+] as const;
 
 function partialResultPayload(result: Result): Partial<Result> {
   return Object.assign(
     {},
-    ...Object.keys(resultPartialDefinition).map((key) => ({
-      [key]: result[key as keyof typeof resultPartialDefinition],
+    ...resultPartialKeys.map((key) => ({
+      [key]: result[key as keyof Result],
     })),
     {raw: partialRawPayload(result.raw)}
   );
@@ -740,7 +743,7 @@ function partialResultPayload(result: Result): Partial<Result> {
 
 function getDocumentAuthor(result: Result) {
   const author = result.raw.author;
-  if (isNullOrUndefined(author)) {
+  if (author == null) {
     return 'unknown';
   }
 
@@ -749,14 +752,21 @@ function getDocumentAuthor(result: Result) {
 
 function getSourceName(result: Result) {
   const source = result.raw.source;
-  if (isNullOrUndefined(source)) {
+  if (source == null) {
     return 'unknown';
   }
   return source;
 }
 
-export const validateResultPayload = (result: Result) =>
-  new Schema(resultPartialDefinition).validate(partialResultPayload(result));
+export const validateResultPayload = (result: Result) => {
+  const parseResult = resultPartialDefinition.safeParse(
+    partialResultPayload(result)
+  );
+  if (!parseResult.success) {
+    return parseResult.error.message;
+  }
+  return '';
+};
 
 function findPositionInChildResults(
   targetResult: Result,

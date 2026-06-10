@@ -1,4 +1,4 @@
-import {RecordValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import type {AsyncThunkOptions} from '../../../../app/async-thunk-options.js';
 import type {
@@ -18,10 +18,10 @@ import {
 } from './date-facet-actions.js';
 import type {DateFacetValue} from './interfaces/response.js';
 
-const definition = {
+const definition = z.object({
   facetId: facetIdDefinition,
-  selection: new RecordValue({values: dateFacetValueDefinition}),
-};
+  selection: dateFacetValueDefinition,
+});
 
 export const executeToggleDateFacetSelect = createAsyncThunk<
   void,

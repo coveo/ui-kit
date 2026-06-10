@@ -1,4 +1,4 @@
-import {NumberValue, Schema} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {configuration} from '../../../app/common-reducers.js';
 import type {CoreEngine} from '../../../app/engine.js';
 import {
@@ -55,12 +55,12 @@ export interface PagerProps {
   initialState?: PagerInitialState;
 }
 
-const optionsSchema = new Schema({
-  numberOfPages: new NumberValue({default: 5, min: 0}),
+const optionsSchema = z.object({
+  numberOfPages: z.optional(z.number().check(z.minimum(0))),
 });
 
-const initialStateSchema = new Schema({
-  page: new NumberValue({min: 1}),
+const initialStateSchema = z.object({
+  page: z.optional(z.number().check(z.minimum(1))),
 });
 
 /**
@@ -152,14 +152,15 @@ export function buildCorePager(
     optionsSchema,
     props.options,
     'buildPager'
-  ) as Required<PagerOptions>;
+  );
+  const numberOfPages = options?.numberOfPages ?? 5;
   const initialState = validateInitialState(
     engine,
     initialStateSchema,
     props.initialState,
     'buildPager'
   );
-  const page = initialState.page;
+  const page = initialState?.page;
 
   if (page) {
     dispatch(registerPage(page));
@@ -170,7 +171,6 @@ export function buildCorePager(
   };
 
   const getCurrentPages = () => {
-    const {numberOfPages} = options;
     return currentPagesSelector(engine.state, numberOfPages);
   };
 

@@ -1,4 +1,4 @@
-import {ArrayValue, StringValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {isErrorResponse} from '../../api/search/search-api-client.js';
 import type {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client.js';
@@ -15,16 +15,15 @@ export interface RegisterUserActionsPayload {
   excludedCustomActions?: string[];
 }
 
-const registerUserActionsPayloadSchema = {
-  ticketCreationDate: new StringValue({
-    emptyAllowed: false,
-    ISODate: true,
-  }),
-  excludedCustomActions: new ArrayValue({
-    required: false,
-    each: nonEmptyString,
-  }),
-};
+const ISODateStringRegex =
+  /^\d{4}(-\d\d(-\d\d(T\d\d:\d\d(:\d\d)?(\.\d+)?(([+-]\d\d:\d\d)|Z)?)?)?)?$/i;
+
+const registerUserActionsPayloadSchema = z.object({
+  ticketCreationDate: z.optional(
+    z.string().check(z.minLength(1), z.regex(ISODateStringRegex))
+  ),
+  excludedCustomActions: z.optional(z.array(nonEmptyString)),
+});
 
 export const registerUserActions = createAction(
   'insight/userActions/registerUserActions',

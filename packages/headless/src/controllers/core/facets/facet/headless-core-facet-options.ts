@@ -1,4 +1,4 @@
-import {ArrayValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {
   type FacetResultsMustMatch,
   facetResultsMustMatch,
@@ -104,22 +104,28 @@ export interface FacetSearchOptions {
   query?: string;
 }
 
-export const facetOptionsSchema = new Schema<Required<FacetOptions>>({
+export const facetOptionsSchema = z.object({
   facetId,
-  tabs: new RecordValue({
-    options: {
-      required: false,
-    },
-    values: {
-      included: new ArrayValue({each: new StringValue()}),
-      excluded: new ArrayValue({each: new StringValue()}),
-    },
-  }),
+  tabs: z.optional(
+    z.object({
+      included: z.optional(z.array(z.string())),
+      excluded: z.optional(z.array(z.string())),
+    })
+  ),
   field,
   filterFacetCount,
   injectionDepth,
   numberOfValues,
-  sortCriteria: new StringValue({constrainTo: facetSortCriteria}),
-  resultsMustMatch: new StringValue({constrainTo: facetResultsMustMatch}),
+  sortCriteria: z.optional(
+    z.enum(facetSortCriteria as [FacetSortCriterion, ...FacetSortCriterion[]])
+  ),
+  resultsMustMatch: z.optional(
+    z.enum(
+      facetResultsMustMatch as [
+        FacetResultsMustMatch,
+        ...FacetResultsMustMatch[],
+      ]
+    )
+  ),
   facetSearch,
 });

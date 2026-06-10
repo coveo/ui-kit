@@ -1,4 +1,4 @@
-import {RecordValue, Schema} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {nonRequiredEmptyAllowedString} from '../../../utils/validate-payload.js';
 import type {ControllersPropsMap} from '../../common/types/controllers.js';
@@ -6,20 +6,21 @@ import type {BuildConfig, SSRSearchEngine} from '../types/build.js';
 import type {ControllerDefinitionsMap} from '../types/controller-definition.js';
 import type {InferControllerPropsMapFromDefinitions} from '../types/controller-inference.js';
 
-const searchDefinition = {
-  searchParams: new RecordValue({
-    options: {required: false},
-    values: {q: nonRequiredEmptyAllowedString},
-  }),
-};
+const searchDefinitionSchema = z.object({
+  searchParams: z.optional(
+    z.object({
+      q: nonRequiredEmptyAllowedString,
+    })
+  ),
+});
 
-export const searchDefinitionSchema = new Schema(searchDefinition);
+export {searchDefinitionSchema};
 
 /**
  * Validates the build configuration for search.
  */
 function validateBuildConfig(buildConfig: BuildConfig): void {
-  searchDefinitionSchema.validate(buildConfig);
+  searchDefinitionSchema.parse(buildConfig);
 }
 
 /**

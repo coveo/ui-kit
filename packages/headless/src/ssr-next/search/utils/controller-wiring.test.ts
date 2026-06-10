@@ -24,18 +24,18 @@ describe('controller-wiring', () => {
     describe('when validating a searchDefinitionSchema', () => {
       it('should not throw for empty config', () => {
         const validate = () => {
-          searchDefinitionSchema.validate({});
+          searchDefinitionSchema.parse({});
         };
         expect(validate).not.toThrow();
       });
 
       it('should not throw for missing search params', () => {
         expect(() => {
-          searchDefinitionSchema.validate({});
+          searchDefinitionSchema.parse({});
         }).not.toThrow();
 
         expect(() => {
-          searchDefinitionSchema.validate({
+          searchDefinitionSchema.parse({
             searchParams: {},
           });
         }).not.toThrow();
@@ -46,7 +46,7 @@ describe('controller-wiring', () => {
           searchParams: {q: 'test query'},
         };
         expect(() => {
-          searchDefinitionSchema.validate(searchConfig);
+          searchDefinitionSchema.parse(searchConfig);
         }).not.toThrow();
       });
 
@@ -59,7 +59,7 @@ describe('controller-wiring', () => {
           },
         };
         expect(() => {
-          searchDefinitionSchema.validate(searchConfig);
+          searchDefinitionSchema.parse(searchConfig);
         }).not.toThrow();
       });
     });

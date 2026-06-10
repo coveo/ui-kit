@@ -1,9 +1,4 @@
-import {
-  BooleanValue,
-  RecordValue,
-  type SchemaDefinition,
-  StringValue,
-} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import type {
   AnalyticsClientSendEventHook,
   IRuntimeEnvironment,
@@ -88,7 +83,7 @@ export interface AnalyticsConfiguration {
    */
   originLevel2?: string;
   /**
-   * Origin level 3 is a usage analytics event metadata whose value should typically be the URL of the page that linked to the search interface that’s making the request.
+   * Origin level 3 is a usage analytics event metadata whose value should typically be the URL of the page that linked to the search interface that's making the request.
    *
    * When logging a Search usage analytics event, originLevel3 should always be set to the same value as the corresponding referrer Search API query parameter so usage analytics reports and dashboards are coherent.
    *
@@ -153,53 +148,29 @@ export interface AnalyticsConfiguration {
 
 export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;
 
-export const engineConfigurationDefinitions: SchemaDefinition<EngineConfiguration> =
-  {
-    organizationId: requiredNonEmptyString,
-    accessToken: requiredNonEmptyString,
-    name: new StringValue({
-      required: false,
-      emptyAllowed: false,
-    }),
-    analytics: new RecordValue({
-      options: {
-        required: false,
-      },
-      values: {
-        enabled: new BooleanValue({
-          required: false,
-        }),
-        originContext: new StringValue({
-          required: false,
-        }),
-        originLevel2: new StringValue({
-          required: false,
-        }),
-        originLevel3: new StringValue({
-          required: false,
-        }),
-        analyticsMode: new StringValue<'legacy' | 'next'>({
-          constrainTo: ['legacy', 'next'],
-          required: false,
-          default: 'next',
-        }),
-        proxyBaseUrl: new StringValue({
-          required: false,
-          url: true,
-        }),
-        trackingId: new StringValue({
-          required: false,
-          emptyAllowed: false,
-          regex: /^[a-zA-Z0-9_\-.]{1,100}$/,
-        }),
-      },
-    }),
-    environment: new StringValue<PlatformEnvironment>({
-      required: false,
-      default: 'prod',
-      constrainTo: ['prod', 'hipaa', 'stg', 'dev'],
-    }),
-  };
+export const engineConfigurationDefinitions = {
+  organizationId: requiredNonEmptyString,
+  accessToken: requiredNonEmptyString,
+  name: z.optional(z.string().check(z.minLength(1))),
+  analytics: z.optional(
+    z.object({
+      enabled: z.optional(z.boolean()),
+      originContext: z.optional(z.string()),
+      originLevel2: z.optional(z.string()),
+      originLevel3: z.optional(z.string()),
+      analyticsMode: z.optional(z.enum(['legacy', 'next'])),
+      proxyBaseUrl: z.optional(z.url()),
+      trackingId: z.optional(
+        z.string().check(z.minLength(1), z.regex(/^[a-zA-Z0-9_\-.]{1,100}$/))
+      ),
+    })
+  ),
+  environment: z.optional(z.enum(['prod', 'hipaa', 'stg', 'dev'])),
+};
+
+export const engineConfigurationSchema = z.object(
+  engineConfigurationDefinitions
+);
 
 export function getSampleEngineConfiguration(): EngineConfiguration {
   return {
