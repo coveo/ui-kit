@@ -1,4 +1,4 @@
-import {NumberValue, Schema, StringValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {
   type BreadcrumbManager,
   buildBreadcrumbManager,
@@ -35,9 +35,9 @@ export class AtomicResultMultiValueText
   extends LitElement
   implements InitializableComponent<Bindings>
 {
-  private static readonly propsSchema = new Schema({
-    field: new StringValue({required: true, emptyAllowed: false}),
-    maxValuesToDisplay: new NumberValue({min: 0, required: false}),
+  private static readonly propsSchema = z.object({
+    field: z.string().check(z.minLength(1)),
+    maxValuesToDisplay: z.optional(z.number().check(z.minimum(0))),
   });
 
   public breadcrumbManager!: BreadcrumbManager;

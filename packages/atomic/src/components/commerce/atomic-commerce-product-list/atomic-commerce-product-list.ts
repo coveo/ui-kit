@@ -1,4 +1,4 @@
-import {NumberValue, Schema, StringValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {
   buildProductListing,
   buildSearch,
@@ -312,16 +312,12 @@ export class AtomicCommerceProductList
   }
 
   private validateProps() {
-    new Schema({
-      density: new StringValue({
-        constrainTo: ['normal', 'comfortable', 'compact'],
-      }),
-      display: new StringValue({constrainTo: ['grid', 'list', 'table']}),
-      imageSize: new StringValue({
-        constrainTo: ['small', 'large', 'icon', 'none'],
-      }),
-      numberOfPlaceholders: new NumberValue({min: 0}),
-    }).validate({
+    z.object({
+      density: z.optional(z.enum(['normal', 'comfortable', 'compact'])),
+      display: z.optional(z.enum(['grid', 'list', 'table'])),
+      imageSize: z.optional(z.enum(['small', 'large', 'icon', 'none'])),
+      numberOfPlaceholders: z.optional(z.number().check(z.minimum(0))),
+    }).parse({
       density: this.density,
       display: this.display,
       imageSize: this.imageSize,

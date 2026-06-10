@@ -1,4 +1,4 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {type Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
@@ -26,11 +26,8 @@ export class AtomicResultNumber
   extends LightDomMixin(InitializeBindingsMixin(LitElement))
   implements InitializableComponent<Bindings>
 {
-  private static readonly propsSchema = new Schema({
-    field: new StringValue({
-      emptyAllowed: false,
-      required: true,
-    }),
+  private static readonly propsSchema = z.object({
+    field: z.string().check(z.minLength(1)),
   });
 
   /**

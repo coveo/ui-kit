@@ -1,5 +1,5 @@
 import '@/src/components/common/atomic-icon/atomic-icon';
-import {NumberValue, Schema} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {
   buildNotifyTrigger,
   type NotifyTrigger,
@@ -39,8 +39,8 @@ export class AtomicNotifications
   extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<Bindings>
 {
-  private static readonly schema = new Schema({
-    headingLevel: new NumberValue({min: 0, max: 6, required: false}),
+  private static readonly schema = z.object({
+    headingLevel: z.optional(z.number().check(z.minimum(0), z.maximum(6))),
   });
 
   @state() public bindings!: Bindings;

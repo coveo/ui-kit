@@ -1,4 +1,4 @@
-import {NumberValue, Schema} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {
   buildPager,
   buildSearchStatus,
@@ -59,8 +59,8 @@ export class AtomicPager
   extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<Bindings>
 {
-  private static readonly propsSchema = new Schema({
-    numberOfPages: new NumberValue({min: 0}),
+  private static readonly propsSchema = z.object({
+    numberOfPages: z.optional(z.number().check(z.minimum(0))),
   });
 
   @state() public bindings!: Bindings;

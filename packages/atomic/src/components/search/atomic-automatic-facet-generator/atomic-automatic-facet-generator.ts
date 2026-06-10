@@ -1,4 +1,4 @@
-import {NumberValue, Schema} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {
   type AutomaticFacetGenerator,
   type AutomaticFacetGeneratorState,
@@ -69,9 +69,9 @@ export class AtomicAutomaticFacetGenerator
 
   @state() private collapseFacetsAfter = -1;
 
-  private static readonly propsSchema = new Schema({
-    desiredCount: new NumberValue({min: 1, max: 20, required: false}),
-    numberOfValues: new NumberValue({min: 1, required: false}),
+  private static readonly propsSchema = z.object({
+    desiredCount: z.optional(z.number().check(z.minimum(1), z.maximum(20))),
+    numberOfValues: z.optional(z.number().check(z.minimum(1))),
   });
 
   constructor() {

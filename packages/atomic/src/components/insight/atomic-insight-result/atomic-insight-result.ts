@@ -1,4 +1,4 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import type {
   FoldedResult as InsightFoldedResult,
   InteractiveResult as InsightInteractiveResult,
@@ -157,13 +157,9 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(
         density: this.density,
         imageSize: this.imageSize,
       }),
-      new Schema({
-        density: new StringValue({
-          constrainTo: ['normal', 'comfortable', 'compact'],
-        }),
-        imageSize: new StringValue({
-          constrainTo: ['small', 'large', 'icon', 'none'],
-        }),
+      z.object({
+        density: z.optional(z.enum(['normal', 'comfortable', 'compact'])),
+        imageSize: z.optional(z.enum(['small', 'large', 'icon', 'none'])),
       })
     );
   }

@@ -121,6 +121,7 @@
     "@vitest/browser-playwright": "catalog:",
     "@wc-toolkit/storybook-helpers": "10.3.0",
     "chromatic": "15.3.1",
+    "fast-check": "4.8.0",
     "handlebars": "4.7.9",
     "lit-html": "3.3.3",
     "local-web-server": "catalog:",

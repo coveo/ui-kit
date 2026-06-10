@@ -1,36 +1,21 @@
-import type {Schema} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import type {ReactiveController, ReactiveControllerHost} from 'lit';
 import {deepEqual} from '@/src/utils/compare-utils';
 
-/**
- * A reactive controller that validates the props of a Lit component against a
- * provided Bueno schema.
- *
- * It validates the props when the host is connected to the DOM and whenever
- * the host updates, re-validating only if the props have changed since the last
- * validation.
- *
- * If validation fails, the controller either sets the `error` property on the host
- * or logs a warning, depending on the `throwOnError` configuration.
- */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyZodSchema = z.ZodMiniType<any>;
+
 export class ValidatePropsController<
   TProps extends Record<string, unknown>,
 > implements ReactiveController {
   private currentProps?: TProps;
   private previousProps?: TProps;
   private lastValidationError?: Error;
-  /**
-   * Creates a `ValidatePropsController`.
-   *
-   * @param host The host element.
-   * @param getProps A function that returns the current props to validate.
-   * @param schema The Bueno schema to validate the props against.
-   * @param throwOnError Whether to throw an error (true) or log a warning (false) when validation fails. Defaults to true.
-   */
+
   constructor(
     private host: ReactiveControllerHost & HTMLElement & {error: Error},
     private getProps: () => TProps,
-    private schema: Schema<TProps>,
+    private schema: AnyZodSchema,
     private throwOnError: boolean = true
   ) {
     host.addController(this);
@@ -59,18 +44,24 @@ export class ValidatePropsController<
   }
 
   private validateProps() {
-    try {
-      this.schema.validate(this.currentProps);
-    } catch (error) {
+    const result = this.schema.safeParse(this.currentProps);
+    if (!result.success) {
+      const message = result.error.issues
+        .map((issue) => {
+          const path = issue.path.length > 0 ? issue.path.join('.') : '';
+          return path ? `${path}: ${issue.message}` : issue.message;
+        })
+        .join('; ');
+
       if (this.throwOnError) {
-        this.host.error = error as Error;
-        this.lastValidationError = error as Error;
+        const error = new Error(message);
+        this.host.error = error;
+        this.lastValidationError = error;
       } else {
-        const message = `Prop validation failed for component ${this.host.tagName?.toLowerCase()}: ${(error as Error).message}`;
-        console.warn(message, this.host);
+        const warnMsg = `Prop validation failed for component ${this.host.tagName?.toLowerCase()}: ${message}`;
+        console.warn(warnMsg, this.host);
       }
-    } finally {
-      this.previousProps = this.currentProps;
     }
+    this.previousProps = this.currentProps;
   }
 }

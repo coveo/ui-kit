@@ -1,4 +1,4 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import type {Quickview, QuickviewState, Result} from '@coveo/headless';
 import {buildQuickview} from '@coveo/headless';
 import {html, LitElement, nothing} from 'lit';
@@ -39,11 +39,8 @@ export class AtomicQuickview
   extends LitElement
   implements InitializableComponent<Bindings>
 {
-  private static readonly propsSchema = new Schema({
-    sandbox: new StringValue({
-      required: true,
-      regex: /allow-same-origin/,
-    }),
+  private static readonly propsSchema = z.object({
+    sandbox: z.string().check(z.regex(/allow-same-origin/)),
   });
 
   /**

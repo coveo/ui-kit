@@ -1,4 +1,4 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {
   buildSearchStatus,
   buildSort,
@@ -105,9 +105,9 @@ export class AtomicSortDropdown
           element.getAttribute('tabs-excluded') || '[]'
         );
 
-        new Schema({
-          label: new StringValue({emptyAllowed: false, required: true}),
-        }).validate({label});
+        z.object({
+          label: z.string().check(z.minLength(1)),
+        }).parse({label});
 
         return {
           tabs: {

@@ -1,4 +1,4 @@
-import {ArrayValue, NumberValue, Schema, StringValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {
   buildFacet,
   buildFacetConditionsManager,
@@ -106,13 +106,13 @@ export class AtomicColorFacet
   extends LitElement
   implements InitializableComponent<Bindings>
 {
-  private static readonly propsSchema = new Schema({
-    field: new StringValue({required: true, emptyAllowed: false}),
-    numberOfValues: new NumberValue({min: 1, required: false}),
-    headingLevel: new NumberValue({min: 0, max: 6, required: false}),
-    injectionDepth: new NumberValue({min: 0, required: false}),
-    sortCriteria: new StringValue({
-      constrainTo: [
+  private static readonly propsSchema = z.object({
+    field: z.string().check(z.minLength(1)),
+    numberOfValues: z.optional(z.number().check(z.minimum(1))),
+    headingLevel: z.optional(z.number().check(z.minimum(0), z.maximum(6))),
+    injectionDepth: z.optional(z.number().check(z.minimum(0))),
+    sortCriteria: z.optional(
+      z.enum([
         'score',
         'alphanumeric',
         'alphanumericDescending',
@@ -120,35 +120,14 @@ export class AtomicColorFacet
         'alphanumericNatural',
         'alphanumericNaturalDescending',
         'automatic',
-      ],
-      required: false,
-    }),
-    resultsMustMatch: new StringValue({
-      constrainTo: ['atLeastOneValue', 'allValues'],
-      required: false,
-    }),
-    displayValuesAs: new StringValue({
-      constrainTo: ['checkbox', 'box'],
-      required: false,
-    }),
-    allowedValues: new ArrayValue({
-      each: new StringValue({emptyAllowed: false}),
-      max: 25,
-      required: false,
-    }),
-    customSort: new ArrayValue({
-      each: new StringValue({emptyAllowed: false}),
-      max: 25,
-      required: false,
-    }),
-    tabsExcluded: new ArrayValue({
-      each: new StringValue({emptyAllowed: false}),
-      required: false,
-    }),
-    tabsIncluded: new ArrayValue({
-      each: new StringValue({emptyAllowed: false}),
-      required: false,
-    }),
+      ])
+    ),
+    resultsMustMatch: z.optional(z.enum(['atLeastOneValue', 'allValues'])),
+    displayValuesAs: z.optional(z.enum(['checkbox', 'box'])),
+    allowedValues: z.optional(z.array(z.string())),
+    customSort: z.optional(z.array(z.string())),
+    tabsExcluded: z.optional(z.array(z.string())),
+    tabsIncluded: z.optional(z.array(z.string())),
   });
 
   static styles = [

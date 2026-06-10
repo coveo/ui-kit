@@ -1,4 +1,4 @@
-import {NumberValue, Schema} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {
   buildGeneratedAnswer as buildInsightGeneratedAnswer,
   buildInteractiveCitation as buildInsightInteractiveCitation,
@@ -79,12 +79,10 @@ export class AtomicInsightGeneratedAnswer
   implements InitializableComponent<InsightBindings>
 {
   static styles = [atomicInsightGeneratedAnswerStyles];
-  private static readonly propsSchema = new Schema({
-    maxCollapsedHeight: new NumberValue({
-      min: 9,
-      max: 32,
-      required: false,
-    }),
+  private static readonly propsSchema = z.object({
+    maxCollapsedHeight: z.optional(
+      z.number().check(z.minimum(9), z.maximum(32))
+    ),
   });
 
   // TODO V4 (KIT-5306): Remove converter and use arrayConverter directly.

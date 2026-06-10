@@ -1,4 +1,4 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import type {Product} from '@coveo/headless/commerce';
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
@@ -69,11 +69,9 @@ export class AtomicProductExcerpt
   }
 
   private validateProps() {
-    new Schema({
-      truncateAfter: new StringValue({
-        constrainTo: ['none', '1', '2', '3', '4'],
-      }),
-    }).validate({
+    z.object({
+      truncateAfter: z.optional(z.enum(['none', '1', '2', '3', '4'])),
+    }).parse({
       truncateAfter: this.truncateAfter,
     });
   }

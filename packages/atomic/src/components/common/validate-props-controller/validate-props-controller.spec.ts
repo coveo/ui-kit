@@ -1,4 +1,4 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {
@@ -23,21 +23,20 @@ class TestElement extends LitElement {
 describe('ValidatePropsController', () => {
   let mockElement: TestElement;
   let mockGetProps: MockedFunction<() => {name: string}>;
-  let mockSchema: Schema<{name: string}>;
-  let schemaSpy: MockedFunction<Schema<{name: string}>['validate']>;
+  const mockSchema = z.object({
+    name: z.optional(z.enum(['valid', 'also-valid'])),
+  });
+  let schemaSpy: MockedFunction<typeof mockSchema.safeParse>;
   let controller: ValidatePropsController<{name: string}>;
   let consoleWarnSpy: MockedFunction<typeof console.warn>;
 
   beforeEach(() => {
     mockElement = document.createElement('test-element') as TestElement;
     mockGetProps = vi.fn();
-    mockSchema = new Schema({
-      name: new StringValue({constrainTo: ['valid', 'also-valid']}),
-    });
     consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
     vi.spyOn(mockElement, 'addController');
-    schemaSpy = vi.spyOn(mockSchema, 'validate');
+    schemaSpy = vi.spyOn(mockSchema, 'safeParse');
   });
 
   describe('when throwOnError is true (default behavior)', () => {

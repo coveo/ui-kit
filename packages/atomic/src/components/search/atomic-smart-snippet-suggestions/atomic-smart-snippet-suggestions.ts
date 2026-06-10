@@ -1,4 +1,4 @@
-import {NumberValue, Schema} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import type {
   Result,
   SmartSnippetQuestionsList,
@@ -76,8 +76,8 @@ export class AtomicSmartSnippetSuggestions
   extends LitElement
   implements InitializableComponent<Bindings>
 {
-  private static readonly propsSchema = new Schema({
-    headingLevel: new NumberValue({min: 0, max: 5, required: false}),
+  private static readonly propsSchema = z.object({
+    headingLevel: z.optional(z.number().check(z.minimum(0), z.maximum(5))),
   });
 
   static styles: CSSResultGroup = styles;

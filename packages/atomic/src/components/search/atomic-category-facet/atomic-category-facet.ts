@@ -1,4 +1,4 @@
-import {NumberValue, Schema, StringValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {
   buildCategoryFacet,
   buildFacetConditionsManager,
@@ -109,15 +109,13 @@ export class AtomicCategoryFacet
   extends LitElement
   implements InitializableComponent<Bindings>
 {
-  private static readonly propsSchema = new Schema({
-    field: new StringValue({required: true, emptyAllowed: false}),
-    numberOfValues: new NumberValue({min: 1}),
-    sortCriteria: new StringValue({
-      constrainTo: ['alphanumeric', 'occurrences'],
-    }),
-    headingLevel: new NumberValue({min: 0, max: 6}),
-    injectionDepth: new NumberValue({min: 0}),
-    delimitingCharacter: new StringValue(),
+  private static readonly propsSchema = z.object({
+    field: z.string().check(z.minLength(1)),
+    numberOfValues: z.optional(z.number().check(z.minimum(1))),
+    sortCriteria: z.optional(z.enum(['alphanumeric', 'occurrences'])),
+    headingLevel: z.optional(z.number().check(z.minimum(0), z.maximum(6))),
+    injectionDepth: z.optional(z.number().check(z.minimum(0))),
+    delimitingCharacter: z.optional(z.string()),
   });
 
   static styles = [

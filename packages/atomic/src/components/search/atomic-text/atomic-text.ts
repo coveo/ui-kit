@@ -1,4 +1,4 @@
-import {NumberValue, Schema, StringValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
@@ -17,9 +17,9 @@ export class AtomicText
   extends LitElement
   implements InitializableComponent<Bindings>
 {
-  private static readonly propsSchema = new Schema({
-    value: new StringValue({required: true, emptyAllowed: false}),
-    count: new NumberValue({required: false}),
+  private static readonly propsSchema = z.object({
+    value: z.string().check(z.minLength(1)),
+    count: z.optional(z.number()),
   });
 
   @state() public bindings!: Bindings;

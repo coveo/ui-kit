@@ -1,4 +1,4 @@
-import {NumberValue, Schema, StringValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {
   buildFacet as buildInsightFacet,
   buildFacetConditionsManager as buildInsightFacetConditionsManager,
@@ -76,10 +76,10 @@ export class AtomicInsightFacet
   extends LitElement
   implements InitializableComponent<InsightBindings>
 {
-  private static readonly propsSchema = new Schema({
-    field: new StringValue({required: true, emptyAllowed: false}),
-    numberOfValues: new NumberValue({min: 1}),
-    injectionDepth: new NumberValue({min: 0}),
+  private static readonly propsSchema = z.object({
+    field: z.string().check(z.minLength(1)),
+    numberOfValues: z.optional(z.number().check(z.minimum(1))),
+    injectionDepth: z.optional(z.number().check(z.minimum(0))),
   });
 
   static styles = [

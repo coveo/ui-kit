@@ -1,4 +1,4 @@
-import {NumberValue, Schema} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import type {
   CategoryFacet,
   DateFacet,
@@ -89,9 +89,9 @@ export class AtomicCommerceFacets
   }
 
   private validateProps() {
-    new Schema({
-      collapseFacetsAfter: new NumberValue({min: -1, required: true}),
-    }).validate({
+    z.object({
+      collapseFacetsAfter: z.number().check(z.minimum(-1)),
+    }).parse({
       collapseFacetsAfter: this.collapseFacetsAfter,
     });
   }

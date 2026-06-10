@@ -1,4 +1,4 @@
-import {NumberValue, Schema, StringValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {
   buildDateFacet,
   buildDateFilter,
@@ -67,21 +67,12 @@ export class AtomicTimeframeFacet
   extends LitElement
   implements InitializableComponent<Bindings>
 {
-  private static readonly propsSchema = new Schema({
-    injectionDepth: new NumberValue({min: 0, required: false}),
-    headingLevel: new NumberValue({min: 0, max: 6, required: false}),
-    min: new StringValue({
-      required: false,
-      emptyAllowed: true,
-    }),
-    max: new StringValue({
-      required: false,
-      emptyAllowed: true,
-    }),
-    sortCriteria: new StringValue({
-      constrainTo: ['ascending', 'descending'],
-      required: false,
-    }),
+  private static readonly propsSchema = z.object({
+    injectionDepth: z.optional(z.number().check(z.minimum(0))),
+    headingLevel: z.optional(z.number().check(z.minimum(0), z.maximum(6))),
+    min: z.optional(z.string()),
+    max: z.optional(z.string()),
+    sortCriteria: z.optional(z.enum(['ascending', 'descending'])),
   });
 
   static styles: CSSResultGroup = facetCommonStyles;

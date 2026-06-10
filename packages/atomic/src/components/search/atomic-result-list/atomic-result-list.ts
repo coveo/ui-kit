@@ -1,4 +1,4 @@
-import {ArrayValue, Schema, StringValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {
   buildInteractiveResult,
   buildResultList,
@@ -91,22 +91,12 @@ export class AtomicResultList
     gridDisplayStyles,
   ];
 
-  private static readonly propsSchema = new Schema({
-    density: new StringValue({
-      constrainTo: ['normal', 'comfortable', 'compact'],
-    }),
-    display: new StringValue({constrainTo: ['grid', 'list', 'table']}),
-    imageSize: new StringValue({
-      constrainTo: ['small', 'large', 'icon', 'none'],
-    }),
-    tabsIncluded: new ArrayValue({
-      each: new StringValue({}),
-      required: false,
-    }),
-    tabsExcluded: new ArrayValue({
-      each: new StringValue({}),
-      required: false,
-    }),
+  private static readonly propsSchema = z.object({
+    density: z.optional(z.enum(['normal', 'comfortable', 'compact'])),
+    display: z.optional(z.enum(['grid', 'list', 'table'])),
+    imageSize: z.optional(z.enum(['small', 'large', 'icon', 'none'])),
+    tabsIncluded: z.optional(z.array(z.string())),
+    tabsExcluded: z.optional(z.array(z.string())),
   });
 
   public resultList!: ResultList;

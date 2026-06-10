@@ -1,4 +1,4 @@
-import {NumberValue, Schema, StringValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import {
   buildRecommendationList,
   buildInteractiveResult as buildRecsInteractiveResult,
@@ -101,14 +101,10 @@ export class AtomicRecsList
     `,
   ];
 
-  private static readonly propsSchema = new Schema({
-    density: new StringValue({
-      constrainTo: ['normal', 'comfortable', 'compact'],
-    }),
-    display: new StringValue({constrainTo: ['grid', 'list']}),
-    imageSize: new StringValue({
-      constrainTo: ['small', 'large', 'icon', 'none'],
-    }),
+  private static readonly propsSchema = z.object({
+    density: z.optional(z.enum(['normal', 'comfortable', 'compact'])),
+    display: z.optional(z.enum(['grid', 'list'])),
+    imageSize: z.optional(z.enum(['small', 'large', 'icon', 'none'])),
   });
 
   public recommendationList!: RecommendationList;
@@ -392,12 +388,13 @@ export class AtomicRecsList
       return;
     }
 
-    const msg = new NumberValue({
-      min: 1,
-      max: this.numberOfRecommendations - 1,
-    }).validate(this.numberOfRecommendationsPerPage);
+    const result = z
+      .number()
+      .check(z.minimum(1), z.maximum(this.numberOfRecommendations - 1))
+      .safeParse(this.numberOfRecommendationsPerPage);
 
-    if (msg) {
+    if (!result.success) {
+      const msg = result.error.issues.map((i) => i.message).join('; ');
       this.error = new Error(
         `The "numberOfRecommendationsPerPage" is invalid: ${msg}`
       );

@@ -1,4 +1,4 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import type {PlatformEnvironment} from '@coveo/headless';
 import {html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
@@ -36,18 +36,15 @@ export interface InitializationOptions {
  */
 @customElement('atomic-hosted-ui')
 export class AtomicHostedUI extends LitElement {
+  static optsSchema = z.object({
+    organizationId: z.string().check(z.minLength(1)),
+    accessToken: z.string().check(z.minLength(1)),
+    environment: z._default(z.enum(['prod', 'hipaa', 'stg', 'dev']), 'prod'),
+    pageId: z.string().check(z.minLength(1)),
+  });
   private validateOptions(opts: InitializationOptions) {
     try {
-      new Schema({
-        organizationId: new StringValue({required: true, emptyAllowed: false}),
-        accessToken: new StringValue({required: true, emptyAllowed: false}),
-        environment: new StringValue<PlatformEnvironment>({
-          required: false,
-          default: 'prod',
-          constrainTo: ['prod', 'hipaa', 'stg', 'dev'],
-        }),
-        pageId: new StringValue({required: true, emptyAllowed: false}),
-      }).validate(opts);
+      AtomicHostedUI.optsSchema.parse(opts);
     } catch (e) {
       console.error(e);
     }

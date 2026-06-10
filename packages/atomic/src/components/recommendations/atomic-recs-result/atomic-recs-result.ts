@@ -1,4 +1,4 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import {z} from '@coveo/bueno/zod';
 import type {
   InteractiveResult as RecsInteractiveResult,
   Result as RecsResult,
@@ -140,14 +140,10 @@ export class AtomicRecsResult extends ChildrenUpdateCompleteMixin(LitElement) {
         density: this.density,
         imageSize: this.imageSize,
       }),
-      new Schema({
-        display: new StringValue({constrainTo: ['grid', 'list', 'table']}),
-        density: new StringValue({
-          constrainTo: ['normal', 'comfortable', 'compact'],
-        }),
-        imageSize: new StringValue({
-          constrainTo: ['small', 'large', 'icon', 'none'],
-        }),
+      z.object({
+        display: z.optional(z.enum(['grid', 'list', 'table'])),
+        density: z.optional(z.enum(['normal', 'comfortable', 'compact'])),
+        imageSize: z.optional(z.enum(['small', 'large', 'icon', 'none'])),
       })
     );
   }
