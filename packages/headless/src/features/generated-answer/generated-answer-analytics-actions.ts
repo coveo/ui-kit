@@ -4,7 +4,8 @@ import {
   citationDocumentIdentifier,
   type LegacySearchAction,
   makeAnalyticsAction,
-  partialCitationInformation,
+  partialDocumentInformationFromCitation,
+  partialFollowupCitationInformation,
 } from '../analytics/analytics-utils.js';
 import {SearchPageEvents} from '../analytics/search-action-cause.js';
 import type {SearchAction} from '../search/search-actions.js';
@@ -68,7 +69,7 @@ export function logOpenGeneratedAnswerSource(
       const conversationId = selectFollowUpAnswersConversationId(state);
 
       return client.makeGeneratedAnswerCitationClick(
-        partialCitationInformation(citation, state),
+        partialDocumentInformationFromCitation(citation, state),
         {
           generativeQuestionAnsweringId: resolvedAnswerId,
           citationId: citation.id,
@@ -470,7 +471,7 @@ export function logOpenGeneratedAnswerFollowupSource(
       const conversationId = selectFollowUpAnswersConversationId(state) ?? '';
 
       return client.makeGeneratedAnswerFollowupOpenSource({
-        ...partialCitationInformation(citation, state),
+        ...partialFollowupCitationInformation(citation, state),
         generativeQuestionAnsweringId: answerId,
         citationId: citation.id,
         permanentId: citation.permanentid,
