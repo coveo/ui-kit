@@ -252,7 +252,7 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
   }
 
   private getLinkHTML() {
-    return parentNodeToString(this.linkContent ?? new HTMLElement());
+    return this.linkContent ? parentNodeToString(this.linkContent) : '';
   }
 
   public render() {
