@@ -1,0 +1,9 @@
+{
+  "surface": "commerce",
+  "wcag22Criteria": {
+    "3.3.1-error-identification": {
+      "conformance": "pass",
+      "remarks": "Numeric facet and timeframe facet use native HTML5 constraint validation (type=number/date, required, min/max, pattern). User agents automatically prevent submission and display error messages identifying the field in error."
+    }
+  }
+}
