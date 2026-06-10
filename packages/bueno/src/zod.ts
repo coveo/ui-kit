@@ -1,1 +1,20 @@
-export * from 'zod/mini';
+export {
+  object,
+  string,
+  number,
+  boolean,
+  enum,
+  array,
+  optional,
+  unknown,
+  union,
+  url,
+  record,
+  _default,
+  minimum,
+  maximum,
+  minLength,
+  maxLength,
+  regex,
+} from 'zod/v4-mini';
+export type {ZodMiniType, core} from 'zod/v4-mini';
