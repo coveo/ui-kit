@@ -1,5 +1,3 @@
-import type {A11yCriterionReport} from '../shared/types.js';
-
 export type ChapterId =
   | 'success_criteria_level_a'
   | 'success_criteria_level_aa';
@@ -123,14 +121,4 @@ export const CONFORMANCE_SEVERITY: Record<OpenAcrConformance, number> = {
   'partially-supports': 2,
   supports: 1,
   'not-applicable': 0,
-};
-
-export const reportConformanceToOpenAcr: Record<
-  A11yCriterionReport['conformance'],
-  OpenAcrConformance
-> = {
-  supports: 'supports',
-  partiallySupports: 'partially-supports',
-  doesNotSupport: 'does-not-support',
-  notApplicable: 'not-applicable',
 };
