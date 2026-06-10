@@ -784,6 +784,54 @@ describe('c-quantic-generated-answer', () => {
         expect(generatedAnswerCitations).not.toBeNull();
         expect(generatedAnswerCitations.disableCitationAnchoring).toBe(false);
       });
+
+      describe('when follow-ups are enabled', () => {
+        // TODO SFINT-6786: Add test cases to cover the behavior of the component when follow-ups are enabled based on the actual implementation of the follow-up feature in the state.
+        it.skip('should render the content section with the scrollable class and ignore the collapsible feature', async () => {
+          mockAnswerHeight = defaultAnswerHeight + 100;
+          const element = createTestComponent({
+            ...defaultOptions,
+            collapsible: true,
+          });
+          await flushPromises();
+
+          const generatedAnswerBody = element.shadowRoot.querySelector(
+            selectors.generatedAnswerBody
+          );
+
+          expect(generatedAnswerBody).not.toBeNull();
+          expect(
+            generatedAnswerBody.classList.contains(
+              'generated-answer__content--scrollable'
+            )
+          ).toBe(true);
+
+          const generatedAnswerCollapseToggle =
+            element.shadowRoot.querySelector(
+              selectors.generatedAnswerCollapseToggle
+            );
+
+          expect(generatedAnswerCollapseToggle).toBeNull();
+        });
+      });
+
+      describe('when follow-ups are not enabled', () => {
+        it('should not render the content section with the scrollable class', async () => {
+          const element = createTestComponent();
+          await flushPromises();
+
+          const generatedAnswerBody = element.shadowRoot.querySelector(
+            selectors.generatedAnswerBody
+          );
+
+          expect(generatedAnswerBody).not.toBeNull();
+          expect(
+            generatedAnswerBody.classList.contains(
+              'generated-answer__content--scrollable'
+            )
+          ).toBe(false);
+        });
+      });
     });
 
     describe('when the answer cannot be generated after a query is executed', () => {
