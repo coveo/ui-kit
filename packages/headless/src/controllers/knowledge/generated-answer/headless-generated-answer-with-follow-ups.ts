@@ -18,6 +18,7 @@ import {
 } from '../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {followUpAnswersReducer as followUpAnswers} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import type {FollowUpAnswersState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
+import {generativeQuestionAnsweringIdSelector} from '../../../features/generated-answer/generated-answer-selectors.js';
 import {withGeneratedAnswerSseErrorHelpers} from '../../../features/generated-answer/sse-generated-answer-errors.js';
 import type {GeneratedAnswerState} from '../../../index.js';
 import type {
@@ -209,13 +210,19 @@ export function buildGeneratedAnswerWithFollowUps(
 
     // TODO: SFINT-6665
     logCitationClick(citationId: string, answerId?: string) {
-      if (!answerId || this.state.answerId === answerId) {
-        controller.logCitationClick(citationId);
-        return;
+      const headAnswerId = generativeQuestionAnsweringIdSelector(engine.state);
+      if (!answerId || answerId === headAnswerId) {
+        engine.dispatch(
+          analyticsClient.logOpenGeneratedAnswerSource(citationId, answerId)
+        );
+      } else {
+        engine.dispatch(
+          analyticsClient.logOpenGeneratedAnswerFollowupSource(
+            citationId,
+            answerId
+          )
+        );
       }
-      engine.dispatch(
-        analyticsClient.logOpenGeneratedAnswerSource(citationId, answerId)
-      );
     },
 
     // TODO: SFINT-6665
