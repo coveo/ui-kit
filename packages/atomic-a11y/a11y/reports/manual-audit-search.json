@@ -1,0 +1,9 @@
+{
+  "surface": "search",
+  "wcag22Criteria": {
+    "2.4.6-headings-and-labels": {
+      "conformance": "fail",
+      "remarks": "atomic-tab-manager tablist aria-label is 'tab-area' — a non-descriptive technical placeholder that does not describe the topic or purpose of the tabs. See KIT-5805. All other components pass: facets use descriptive headings and labeled inputs, search box has descriptive aria-label, smart snippets/generated answer use descriptive section labels, pager/sort/results-per-page have descriptive group labels, refine-modal uses descriptive headings."
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "surface": "insight",
+  "wcag22Criteria": {
+    "2.4.6-headings-and-labels": {
+      "conformance": "pass",
+      "remarks": "All headings and labels are descriptive: facets use shared facet-header with descriptive labels, search box has descriptive aria-label, pager nav labeled 'Pagination', refine-modal uses descriptive headings, generated answer landmark labeled 'Generated answer', smart snippets labeled 'Potential answer to your question' and 'People also ask'."
+    }
+  }
+}

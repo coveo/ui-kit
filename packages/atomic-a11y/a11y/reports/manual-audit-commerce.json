@@ -1,0 +1,9 @@
+{
+  "surface": "commerce",
+  "wcag22Criteria": {
+    "2.4.6-headings-and-labels": {
+      "conformance": "pass",
+      "remarks": "All headings and labels are descriptive: facets use field display names, search box has descriptive aria-label, sort combobox labeled 'Sort by', pager nav labeled 'Pagination' with 'Page N' radio buttons, products-per-page uses descriptive group label, refine-modal uses H1/H2 section headings, recommendation list uses descriptive heading."
+    }
+  }
+}
