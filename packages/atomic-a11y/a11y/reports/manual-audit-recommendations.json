@@ -1,0 +1,6 @@
+{
+  "surface": "recommendations",
+  "wcag22Criteria": {
+    "1.4.11-non-text-contrast": "pass"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "surface": "commerce",
+  "wcag22Criteria": {
+    "1.4.11-non-text-contrast": {
+      "conformance": "partial",
+      "remarks": "Numeric facet input border uses border-neutral (#e5e8e8) at 1.23:1 vs white, failing 3:1 (see KIT-5807). atomic-product-rating active stars (#f6ce3c) at 1.52:1 and inactive stars (#e5e8e8) at 1.23:1 both fail 3:1 (see KIT-5808). All other components pass: search box border is supplementary (identifiable via icon), facet checkboxes use neutral-dark at 5.56:1, pager buttons identified by text, sort dropdown identified by text label."
+    }
+  }
+}
