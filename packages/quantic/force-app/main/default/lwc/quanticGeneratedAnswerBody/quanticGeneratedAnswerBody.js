@@ -20,8 +20,8 @@ const FEEDBACK_DISLIKED_STATE = 'disliked';
 /**
  * The `QuanticGeneratedAnswerBody` component renders a single generated answer unit.
  * @category Internal
- * @fires CustomEvent#quantic__like
- * @fires CustomEvent#quantic__dislike
+ * @fires CustomEvent#quantic__generatedanswerlike
+ * @fires CustomEvent#quantic__generatedanswerdislike
  * @fires CustomEvent#quantic__generatedanswercopy
  * @fires CustomEvent#quantic__citationhover
  */
@@ -89,13 +89,17 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
   }
 
   get computedFeedbackState() {
-    if (this.generatedAnswer?.liked) return FEEDBACK_LIKED_STATE;
-    if (this.generatedAnswer?.disliked) return FEEDBACK_DISLIKED_STATE;
+    if (this.generatedAnswer?.liked) {
+      return FEEDBACK_LIKED_STATE;
+    }
+    if (this.generatedAnswer?.disliked) {
+      return FEEDBACK_DISLIKED_STATE;
+    }
     return FEEDBACK_NEUTRAL_STATE;
   }
 
   get shouldShowCitations() {
-    return this.citations.length > 0;
+    return this.citations.length > 0 && !this.isStreaming;
   }
 
   get shouldShowActions() {
@@ -104,12 +108,12 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
 
   handleLike(event) {
     event.stopPropagation();
-    this.dispatchAnswerInteractionEvent('quantic__like');
+    this.dispatchAnswerInteractionEvent('quantic__generatedanswerlike');
   }
 
   handleDislike(event) {
     event.stopPropagation();
-    this.dispatchAnswerInteractionEvent('quantic__dislike');
+    this.dispatchAnswerInteractionEvent('quantic__generatedanswerdislike');
   }
 
   handleCopy(event) {

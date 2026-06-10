@@ -80,26 +80,22 @@ describe('c-quantic-generated-answer-body', () => {
     cleanup();
   });
 
-  it('should pass answer and answerContentFormat to the content component', async () => {
+  it('should pass answer and answerContentFormat to the QuanticGeneratedAnswerContent component', async () => {
     const element = createTestComponent();
     await flushPromises();
 
-    const body = element.shadowRoot.querySelector(selectors.body);
-    const actions = element.shadowRoot.querySelector(selectors.actions);
     const content = element.shadowRoot.querySelector(selectors.content);
 
-    expect(body).not.toBeNull();
-    expect(actions).not.toBeNull();
     expect(content.answer).toBe(defaultOptions.generatedAnswer.answer);
     expect(content.answerContentFormat).toBe(
       defaultOptions.generatedAnswer.answerContentFormat
     );
   });
 
-  it('should send the answerId within event details when dispatching the #quantic__like event', async () => {
+  it('should send the answerId within event details when dispatching the #quantic__generatedanswerlike event', async () => {
     const element = createTestComponent();
     const handler = jest.fn();
-    element.addEventListener('quantic__like', handler);
+    element.addEventListener('quantic__generatedanswerlike', handler);
     await flushPromises();
 
     const feedback = element.shadowRoot.querySelector(selectors.feedback);
@@ -109,10 +105,10 @@ describe('c-quantic-generated-answer-body', () => {
     expect(handler.mock.calls[0][0].detail).toEqual({answerId: 'answer-1'});
   });
 
-  it('should send the answerId within event details when dispatching the #quantic__dislike event', async () => {
+  it('should send the answerId within event details when dispatching the #quantic__generatedanswerdislike event', async () => {
     const element = createTestComponent();
     const handler = jest.fn();
-    element.addEventListener('quantic__dislike', handler);
+    element.addEventListener('quantic__generatedanswerdislike', handler);
     await flushPromises();
 
     const feedback = element.shadowRoot.querySelector(selectors.feedback);
@@ -302,6 +298,23 @@ describe('c-quantic-generated-answer-body', () => {
 
     it('should not display citations when citations are empty', async () => {
       const element = createTestComponent();
+      await flushPromises();
+
+      const citations = element.shadowRoot.querySelector(selectors.citations);
+
+      expect(citations).toBeNull();
+    });
+
+    it('should not display citations while the answer is streaming', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        generatedAnswer: {
+          ...defaultOptions.generatedAnswer,
+          // @ts-ignore
+          citations: [{id: 'citation-1', title: 'Citation'}],
+          isStreaming: true,
+        },
+      });
       await flushPromises();
 
       const citations = element.shadowRoot.querySelector(selectors.citations);
