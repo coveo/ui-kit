@@ -21,6 +21,9 @@
     "2.5.3-label-in-name": {
       "conformance": "fail",
       "remarks": "atomic-commerce-breadbox: the show-more button displays visible text \"+ N\" but has accessible name \"Show N more filters\". Voice control users saying \"click plus 3\" will not activate the button because the visible text is not contained in the accessible name."
+    },
+    "1.4.10-reflow": {
+      "conformance": "pass"
     }
   }
 }

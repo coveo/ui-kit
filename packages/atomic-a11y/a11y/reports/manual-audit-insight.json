@@ -15,6 +15,9 @@
       "conformance": "fail",
       "remarks": "When the refine-modal is open, pressing Tab repeatedly causes focus to escape the focus trap and land on elements behind the modal backdrop. The user cannot see the focused element and loses their place in the navigation sequence."
     },
-    "2.5.3-label-in-name": "pass"
+    "2.5.3-label-in-name": "pass",
+    "1.4.10-reflow": {
+      "conformance": "pass"
+    }
   }
 }
