@@ -11,13 +11,14 @@ export function buildFetchProductListingResponse(
         appliedSort: {sortCriteria: SortBy.Relevance},
         availableSorts: [{sortCriteria: SortBy.Relevance}],
       },
-      pagination: response.pagination ?? {
+      pagination: {
         page: 0,
         perPage: 0,
         totalEntries: 0,
         totalPages: 0,
         totalProducts: 0,
         totalSpotlightContent: 0,
+        ...response.pagination,
       },
       facets: response.facets ?? [],
       products: response.products ?? [],
