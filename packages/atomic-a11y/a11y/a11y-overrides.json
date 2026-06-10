@@ -64,6 +64,11 @@
       "reason": "Multiple navigation ways are a host application concern, not a component library concern."
     },
     {
+      "criterion": "2.5.1",
+      "conformance": "not-applicable",
+      "reason": "Atomic does not implement multipoint or path-based gestures. Carousels use button-based navigation, scrollable containers use native browser scroll with arrow buttons, and touch events (touchstart/touchend) are used only as single-point tap equivalents for analytics timing."
+    },
+    {
       "criterion": "2.5.4",
       "conformance": "not-applicable",
       "reason": "Atomic does not include functionality operated by device or user motion."
