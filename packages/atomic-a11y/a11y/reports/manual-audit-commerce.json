@@ -1,0 +1,9 @@
+{
+  "surface": "commerce",
+  "wcag22Criteria": {
+    "3.2.2-on-input": {
+      "conformance": "pass",
+      "remarks": "No component causes a context change on input. Sort dropdown and products-per-page update content in place. Facets filter products in place. Search box triggers suggestions only on input; redirection only on explicit submit."
+    }
+  }
+}

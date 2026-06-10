@@ -1,0 +1,9 @@
+{
+  "surface": "insight",
+  "wcag22Criteria": {
+    "3.2.2-on-input": {
+      "conformance": "pass",
+      "remarks": "No component causes a context change on input. Facets filter results in place. Search box triggers suggestions only on input; no redirection on input change."
+    }
+  }
+}
