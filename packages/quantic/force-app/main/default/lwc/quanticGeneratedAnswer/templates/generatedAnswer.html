@@ -27,13 +27,15 @@
       <template lwc:if={isVisible}>
         <section
           data-testid="generated-answer__body"
-          class="generated-answer__content slds-p-top_medium slds-p-horizontal_large"
+          class={contentSectionClass}
         >
           <div
             data-testid="generated-answer__answer"
             class={generatedAnswerClass}
           >
             <c-quantic-generated-answer-content
+              engine-id={engineId}
+              answer-id={answerId}
               answer-content-format={answerContentFormat}
               answer={answer}
               is-streaming={isStreaming}

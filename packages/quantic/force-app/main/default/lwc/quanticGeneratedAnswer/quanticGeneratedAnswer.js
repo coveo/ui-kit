@@ -172,6 +172,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   /** @type {boolean} */
   hasInitializationError = false;
   /** @type {boolean} */
+  _areFollowUpsEnabled = false;
+  /** @type {boolean} */
   _exceedsMaximumHeight = false;
   /** @type {boolean} */
   _liked = false;
@@ -196,7 +198,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
-    if (this.collapsible) {
+    if (this.isCollapsibleEnabled) {
       this._exceedsMaximumHeight = this.isMaximumHeightExceeded();
     }
   }
@@ -259,7 +261,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     this.updateFeedbackState();
     this.ariaLiveMessage.dispatchMessage(this.getGeneratedAnswerStatus());
 
-    if (this.collapsible) {
+    if (this.isCollapsibleEnabled) {
       this.updateGeneratedAnswerCSSVariables();
     }
   }
@@ -400,7 +402,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   handleAnswerContentUpdated = (event) => {
     event.stopPropagation();
-    if (this.collapsible) {
+    if (this.isCollapsibleEnabled) {
       this._exceedsMaximumHeight = this.isMaximumHeightExceeded();
     }
     this.updateGeneratedAnswerCSSVariables();
@@ -456,6 +458,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return this?.state?.answer;
   }
 
+  get answerId() {
+    return this?.state?.answerId;
+  }
+
   get citations() {
     return this?.state?.citations;
   }
@@ -481,6 +487,15 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return this.state.isVisible;
   }
 
+  get areFollowUpsEnabled() {
+    // TODO SFINT-6786: Modify this getter to return the actual value from the state for follow-up enabled/agentId.
+    return this._areFollowUpsEnabled;
+  }
+
+  get isCollapsibleEnabled() {
+    return this.collapsible && !this.areFollowUpsEnabled;
+  }
+
   get isAnswerCollapsed() {
     // Answer is considered collapsed only if it exceeds the maximum height and was not expanded.
     return this._exceedsMaximumHeight && !this.isExpanded;
@@ -499,6 +514,14 @@ export default class QuanticGeneratedAnswer extends LightningElement {
         : 'generated-answer__answer--collapsed';
     }
     return `generated-answer__answer ${collapsedStateClass}`;
+  }
+
+  get contentSectionClass() {
+    const baseClass =
+      'generated-answer__content slds-p-top_medium slds-p-horizontal_large';
+    return this.areFollowUpsEnabled
+      ? `${baseClass} generated-answer__content--scrollable`
+      : baseClass;
   }
 
   get hasRetryableError() {
