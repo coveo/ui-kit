@@ -29,7 +29,9 @@ export function buildInteractiveCitation(
 ): InteractiveCitation {
   return buildInteractiveCitationCore(
     engine,
-    {logOpenGeneratedAnswerSource},
+    {
+      logCitationOpen: (citationId) => logOpenGeneratedAnswerSource(citationId),
+    },
     props
   );
 }

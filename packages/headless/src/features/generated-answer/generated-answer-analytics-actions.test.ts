@@ -25,6 +25,7 @@ import {
   logGeneratedAnswerStreamEnd,
   logHoverCitation,
   logLikeGeneratedAnswer,
+  logOpenGeneratedAnswerFollowupSource,
   logOpenGeneratedAnswerSource,
   logRetryGeneratedAnswer,
 } from './generated-answer-analytics-actions.js';
@@ -38,6 +39,9 @@ const mockMakeRetryGeneratedAnswer = vi.fn(() => ({
   log: mockLogFunction,
 }));
 const mockMakeGeneratedAnswerCitationClick = vi.fn((..._args) => ({
+  log: mockLogFunction,
+}));
+const mockMakeGeneratedAnswerFollowupOpenSource = vi.fn((..._args) => ({
   log: mockLogFunction,
 }));
 const mockMakeGeneratedAnswerSourceHover = vi.fn(() => ({
@@ -158,6 +162,8 @@ describe('generated answer analytics actions', () => {
           mockMakeRetryGeneratedAnswer as unknown as typeof this.makeRetryGeneratedAnswer;
         this.makeGeneratedAnswerCitationClick =
           mockMakeGeneratedAnswerCitationClick as unknown as typeof this.makeGeneratedAnswerCitationClick;
+        this.makeGeneratedAnswerFollowupOpenSource =
+          mockMakeGeneratedAnswerFollowupOpenSource as unknown as typeof this.makeGeneratedAnswerFollowupOpenSource;
         this.makeGeneratedAnswerSourceHover =
           mockMakeGeneratedAnswerSourceHover as unknown as typeof this.makeGeneratedAnswerSourceHover;
         this.makeGeneratedAnswerOpenInlineLink =
@@ -278,6 +284,29 @@ describe('generated answer analytics actions', () => {
         generativeQuestionAnsweringId: exampleProvidedAnswerId,
         citationId: exampleCitation.id,
         documentId: exampleDocumentId,
+        conversationId: exampleConversationId,
+      });
+      expect(mockLogFunction).toHaveBeenCalledTimes(1);
+    });
+
+    it('should log #logOpenGeneratedAnswerFollowupSource with the right payload', async () => {
+      setConversationIdInState();
+
+      await logOpenGeneratedAnswerFollowupSource(
+        exampleCitation.id,
+        exampleProvidedAnswerId
+      )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);
+
+      expect(mockMakeGeneratedAnswerFollowupOpenSource).toHaveBeenCalledTimes(
+        1
+      );
+      expect(
+        mockMakeGeneratedAnswerFollowupOpenSource.mock.calls[0][0]
+      ).toStrictEqual({
+        ...expectedCitationDocumentInfo,
+        generativeQuestionAnsweringId: exampleProvidedAnswerId,
+        citationId: exampleCitation.id,
+        permanentId: exampleCitation.permanentid,
         conversationId: exampleConversationId,
       });
       expect(mockLogFunction).toHaveBeenCalledTimes(1);

@@ -456,6 +456,30 @@ export function logCopyGeneratedAnswer(answerId?: string): CustomAction {
   });
 }
 
+export function logOpenGeneratedAnswerFollowupSource(
+  citationId: string,
+  answerId: string
+): CustomAction {
+  return makeAnalyticsAction({
+    prefix: 'analytics/generatedAnswer/openFollowupAnswerSource',
+    __legacy__getBuilder: (client, state) => {
+      const citation = citationSourceSelector(state, citationId);
+      if (!citation) {
+        return null;
+      }
+      const conversationId = selectFollowUpAnswersConversationId(state) ?? '';
+
+      return client.makeGeneratedAnswerFollowupOpenSource({
+        ...partialCitationInformation(citation, state),
+        generativeQuestionAnsweringId: answerId,
+        citationId: citation.id,
+        permanentId: citation.permanentid,
+        conversationId,
+      });
+    },
+  });
+}
+
 export const retryGeneratedAnswer = (): SearchAction => ({
   actionCause: SearchPageEvents.retryGeneratedAnswer,
 });
@@ -471,6 +495,7 @@ export const generatedAnswerAnalyticsClient = {
   logGeneratedAnswerOpenInlineLink,
   logHoverCitation,
   logOpenGeneratedAnswerSource,
+  logOpenGeneratedAnswerFollowupSource,
   logRetryGeneratedAnswer,
   logGeneratedAnswerExpand,
   logGeneratedAnswerCollapse,
