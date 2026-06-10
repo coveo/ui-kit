@@ -1,0 +1,9 @@
+{
+  "surface": "commerce",
+  "wcag22Criteria": {
+    "2.5.2-pointer-cancellation": {
+      "conformance": "pass",
+      "remarks": "All functional actions fire on click (up-event). mousedown/touchstart handlers are used only for focus management in search-box suggestions, analytics logging on product links, and reversible variant preview on product-children (touchstart selects a swatch preview, reversible by touching another). No down-event completes an irreversible action."
+    }
+  }
+}
