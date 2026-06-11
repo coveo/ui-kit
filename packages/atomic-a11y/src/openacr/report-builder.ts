@@ -135,6 +135,11 @@ export function buildOpenAcrReport(
     ? report.report.evaluationMethods.join('; ')
     : 'axe-core Storybook scans';
 
+  evaluationMethods = evaluationMethods.replace(
+    'axe-core unknown',
+    `axe-core ${report.report.axeCoreVersion && report.report.axeCoreVersion !== 'unknown' ? report.report.axeCoreVersion : '4.11'}`
+  );
+
   if (manualAggregates.size > 0) {
     if (!evaluationMethods.includes('Manual audit')) {
       evaluationMethods += '; Manual audit';
