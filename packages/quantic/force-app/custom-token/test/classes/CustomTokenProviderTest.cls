@@ -33,6 +33,7 @@ private class CustomTokenProviderTest {
     return settings;
   }
 
+  // This API key is intentionally public — it belongs to a sample organization used for samples/docs.
   static final String sampleHeadlessConfiguration = '{"accessToken":"xx564559b1-0045-48e1-953c-3addd1ee4457","organizationId":"searchuisamples"}';
   static final String invalidTokenSettingsExceptionMessage = 'TokenSettings invalid. Defaulting to sample organization settings.';
 
