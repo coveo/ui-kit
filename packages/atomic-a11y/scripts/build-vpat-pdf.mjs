@@ -23,6 +23,7 @@ const CATALOG_FILE = resolve(
   'a11y/catalog/2.5-edition-wcag-2.2-en.yaml'
 );
 const TEMPLATE_FILE = resolve(PKG_ROOT, 'scripts/vpat-from-openacr.handlebars');
+const TEMPLATE_FILE = resolve(PKG_ROOT, 'scripts/vpat-from-openacr.handlebars');
 
 if (!existsSync(OPENACR_FILE)) {
   console.log(
