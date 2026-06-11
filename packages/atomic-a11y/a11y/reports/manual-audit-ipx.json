@@ -1,0 +1,6 @@
+{
+  "surface": "ipx",
+  "wcag22Criteria": {
+    "2.5.2-pointer-cancellation": "pass"
+  }
+}

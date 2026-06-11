@@ -189,10 +189,25 @@ chapters:
         components:
           - name: web
             adherence:
-              level: does-not-support
+              level: supports
               notes:
-                'WCAG 2.5.2: no automated, interactive, or manual coverage. [Manual audit
-                required]'
+                'Supports — manual audit found Supports (All functional actions fire on
+                click (up-event). mousedown/touchstart handlers are used only
+                for focus management in search-box suggestions, analytics
+                logging on product links, and reversible variant preview on
+                product-children (touchstart selects a swatch preview,
+                reversible by touching another). No down-event completes an
+                irreversible action.; All functional actions fire on click
+                (up-event). mousedown on search-box suggestions container only
+                calls preventDefault to manage focus. No down-event handlers on
+                facets or pager.; Result links use mousedown/touchstart for
+                analytics only; navigation uses native link click (up-event).;
+                All functional actions fire on click (up-event).
+                mousedown/touchstart handlers are used only for non-functional
+                purposes: focus management in search-box suggestions, cosmetic
+                ripple animations on facet checkboxes/color swatches, and
+                analytics logging on result links. No down-event completes an
+                irreversible action.).'
       - num: 2.5.3
         components:
           - name: web

@@ -1,0 +1,9 @@
+{
+  "surface": "insight",
+  "wcag22Criteria": {
+    "2.5.2-pointer-cancellation": {
+      "conformance": "pass",
+      "remarks": "All functional actions fire on click (up-event). mousedown on search-box suggestions container only calls preventDefault to manage focus. No down-event handlers on facets or pager."
+    }
+  }
+}

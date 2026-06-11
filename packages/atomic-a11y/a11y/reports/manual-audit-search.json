@@ -1,0 +1,9 @@
+{
+  "surface": "search",
+  "wcag22Criteria": {
+    "2.5.2-pointer-cancellation": {
+      "conformance": "pass",
+      "remarks": "All functional actions fire on click (up-event). mousedown/touchstart handlers are used only for non-functional purposes: focus management in search-box suggestions, cosmetic ripple animations on facet checkboxes/color swatches, and analytics logging on result links. No down-event completes an irreversible action."
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "surface": "recommendations",
+  "wcag22Criteria": {
+    "2.5.2-pointer-cancellation": {
+      "conformance": "pass",
+      "remarks": "Result links use mousedown/touchstart for analytics only; navigation uses native link click (up-event)."
+    }
+  }
+}
