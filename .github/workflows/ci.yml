@@ -481,6 +481,9 @@ jobs:
           path: packages/atomic/reports/a11y-report.json
           retention-days: 7
           if-no-files-found: warn
+      - name: 'Check openacr.yaml is up to date'
+        run: node scripts/check-openacr-drift.mjs
+        working-directory: packages/atomic-a11y
   playwright-atomic-search-commerce-react-test:
     name: 'Run e2e tests on Atomic Search Commerce React'
     needs: affected

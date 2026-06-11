@@ -1,11 +1,9 @@
 /**
  * build-vpat-pdf.mjs
  *
- * Generates a VPAT PDF for CDN deployment by reusing the existing markdown
- * template, converting it to styled HTML via `marked`, and rendering to PDF
- * via Playwright.
- *
- * Skips if the rendered content hasn't changed (hash-based).
+ * Generates a VPAT PDF for CDN deployment from the committed openacr.yaml.
+ * Renders to HTML via the existing Handlebars template, then to PDF via Playwright.
+ * Skips if content hasn't changed (hash-based).
  */
 import {createHash} from 'node:crypto';
 import {existsSync, mkdirSync, readFileSync, writeFileSync} from 'node:fs';
@@ -13,43 +11,35 @@ import {dirname, resolve} from 'node:path';
 import {parse} from 'yaml';
 import {marked} from 'marked';
 import {chromium} from 'playwright';
-import {transformJsonToOpenAcr, renderVpat} from '../dist/index.js';
+import {renderVpat} from '../dist/index.js';
 
 const PKG_ROOT = resolve(import.meta.dirname, '..');
 const REPO_ROOT = resolve(PKG_ROOT, '../..');
 const OUTPUT_PATH = resolve(REPO_ROOT, 'packages/atomic/cdn/vpat.pdf');
 const HASH_FILE = resolve(PKG_ROOT, '.vpat-pdf.sha256');
+const OPENACR_FILE = resolve(PKG_ROOT, 'reports/openacr.yaml');
 const CATALOG_FILE = resolve(
   PKG_ROOT,
   'a11y/catalog/2.5-edition-wcag-2.2-en.yaml'
 );
 const TEMPLATE_FILE = resolve(PKG_ROOT, 'scripts/vpat-from-openacr.handlebars');
-const INPUT_REPORT = resolve(
-  REPO_ROOT,
-  'packages/atomic/reports/a11y-report.json'
-);
 
-if (!existsSync(INPUT_REPORT)) {
+if (!existsSync(OPENACR_FILE)) {
   console.log(
-    `[build-vpat-pdf] Skipped: input report not found at ${INPUT_REPORT}`
+    `[build-vpat-pdf] Skipped: openacr.yaml not found at ${OPENACR_FILE}`
   );
   process.exit(0);
 }
 
-// Step 1: Generate the OpenACR report
-console.log('[build-vpat-pdf] Generating OpenACR report...');
-const openAcrReport = await transformJsonToOpenAcr({
-  inputFile: INPUT_REPORT,
-  outputFile: resolve(PKG_ROOT, 'reports/openacr.yaml'),
-});
-
-// Step 2: Render markdown, convert to HTML
-console.log('[build-vpat-pdf] Rendering VPAT...');
+// Step 1: Read committed openacr.yaml and render to markdown
+console.log('[build-vpat-pdf] Rendering VPAT from committed openacr.yaml...');
+const openAcrReport = parse(readFileSync(OPENACR_FILE, 'utf8'));
 const catalog = parse(readFileSync(CATALOG_FILE, 'utf8'));
 const templateSource = readFileSync(TEMPLATE_FILE, 'utf-8');
 const markdown = renderVpat(openAcrReport, catalog, templateSource);
-const body = await marked(markdown, {gfm: true});
 
+// Step 2: Convert markdown to styled HTML
+const body = await marked(markdown, {gfm: true});
 const html = `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><title>VPAT</title>
 <style>
