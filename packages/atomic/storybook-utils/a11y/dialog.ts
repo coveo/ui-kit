@@ -130,6 +130,20 @@ export async function testDialogA11y(
         );
       }
     );
+
+    // Re-open the dialog so the addon-a11y afterEach hook runs axe on a
+    // stable, fully-visible DOM. Without this, axe may catch the close
+    // animation mid-flight and report spurious color-contrast violations.
+    await step('Re-open dialog for axe evaluation', async () => {
+      await userEvent.click(trigger);
+      await waitFor(
+        async () => {
+          const d = await root.findByShadowRole('dialog', {}, {timeout: 5000});
+          expect(d).toBeInTheDocument();
+        },
+        {timeout: 8000}
+      );
+    });
   } catch (error) {
     status = 'failed';
     throw error;

@@ -118,17 +118,13 @@ describe('c-quantic-generated-answer-body', () => {
     expect(handler.mock.calls[0][0].detail).toEqual({answerId: 'answer-1'});
   });
 
-  it('should send the answerId within event details when dispatching the #quantic__generatedanswercopy event', async () => {
+  it('should pass the answerId to the copy-to-clipboard component', async () => {
     const element = createTestComponent();
-    const handler = jest.fn();
-    element.addEventListener('quantic__generatedanswercopy', handler);
     await flushPromises();
 
     const copy = element.shadowRoot.querySelector(selectors.copy);
-    copy.dispatchEvent(new CustomEvent('quantic__generatedanswercopy'));
 
-    expect(handler).toHaveBeenCalledTimes(1);
-    expect(handler.mock.calls[0][0].detail).toEqual({answerId: 'answer-1'});
+    expect(copy.answerId).toBe('answer-1');
   });
 
   it('should send the answerId within event details when dispatching the #quantic__citationhover event', async () => {
