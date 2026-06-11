@@ -152,3 +152,13 @@ tbody tr td:first-of-type {
 tbody tr td:last-of-type td {
   border-bottom: unset;
 }
+
+.answer-content__link-icon-svg {
+  width: 0.625rem;
+  height: 0.625rem;
+  fill: currentColor;
+}
+
+.answer-content__link-icon {
+  display: inline-flex;
+}
