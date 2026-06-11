@@ -41,7 +41,7 @@
     {
       "criterion": "1.4.5",
       "conformance": "not-applicable",
-      "reason": "Atomic does not render text as images. All text is real HTML styled with CSS. SVG icons are purely symbolic (no <text> elements). Product/result images display user-provided content, not component-generated text."
+      "reason": "Atomic does not render text as images. All text is real HTML styled with CSS. SVG icons are purely symbolic (no `<text>` elements). Product/result images display user-provided content, not component-generated text."
     },
     {
       "criterion": "2.2.1",
