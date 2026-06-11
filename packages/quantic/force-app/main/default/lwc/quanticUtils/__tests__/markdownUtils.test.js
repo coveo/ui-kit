@@ -67,5 +67,43 @@ describe('c/markdownUtils', () => {
       const resultCode = transformMarkdownToHtml(textCode, marked);
       expect(removeLineBreaks(resultCode)).toEqual('<p><code>code</code></p>');
     });
+
+    it('should transform markdown link to HTML <a> with data-answer-inline-link attribute', () => {
+      const text = '[Google](https://google.com)';
+      const result = transformMarkdownToHtml(text, marked);
+      expect(removeLineBreaks(result)).toEqual(
+        '<p><a href="https://google.com" data-answer-inline-link="true">Google</a></p>'
+      );
+    });
+
+    it('should transform markdown link with title to HTML <a> with title attribute', () => {
+      const text = '[Google](https://google.com "Search Engine")';
+      const result = transformMarkdownToHtml(text, marked);
+      expect(removeLineBreaks(result)).toEqual(
+        '<p><a href="https://google.com" title="Search Engine" data-answer-inline-link="true">Google</a></p>'
+      );
+    });
+
+    it('should escape special characters in link href', () => {
+      const text = '[Link](https://example.com?param="value"&other=test)';
+      const result = transformMarkdownToHtml(text, marked);
+      expect(removeLineBreaks(result)).toEqual(
+        '<p><a href="https://example.com?param=&quot;value&quot;&amp;other=test" data-answer-inline-link="true">Link</a></p>'
+      );
+    });
+
+    it('should escape special characters in link title', () => {
+      const text = '[Link](https://example.com "Title with <script> & quotes")';
+      const result = transformMarkdownToHtml(text, marked);
+      expect(removeLineBreaks(result)).toEqual(
+        '<p><a href="https://example.com" title="Title with &amp;lt;script&amp;gt; &amp;amp; quotes" data-answer-inline-link="true">Link</a></p>'
+      );
+    });
+
+    it('should render link text as span when href is missing', () => {
+      const text = '[Link]()';
+      const result = transformMarkdownToHtml(text, marked);
+      expect(removeLineBreaks(result)).toEqual('<p><span>Link</span></p>');
+    });
   });
 });

@@ -38,6 +38,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {HiddenStateController} from '@/src/utils/hidden-state-controller';
 import type {AtomicInterface} from '@/src/utils/initialization-common-utils';
 import {shouldDisplayOnCurrentTab} from '@/src/utils/tab-utils';
 import {sortByDocumentPosition} from '@/src/utils/utils';
@@ -84,6 +85,8 @@ import '@/src/components/search/atomic-automatic-facet-generator/atomic-automati
  * @part backdrop - The transparent backdrop hiding the content behind the modal.
  *
  * @cssprop --atomic-refine-modal-facet-margin - The margin between facets in the refine modal. Default is `20px`.
+ *
+ * @cssState empty - Hides the element when the modal is closed.
  */
 @customElement('atomic-refine-modal')
 @bindings()
@@ -134,6 +137,8 @@ export class AtomicRefineModal
    */
   @property({type: Number, reflect: true, attribute: 'collapse-facets-after'})
   collapseFacetsAfter = 0;
+
+  #hiddenState = new HiddenStateController(this);
 
   public sort!: Sort;
   @bindStateToController('sort')
@@ -387,6 +392,7 @@ export class AtomicRefineModal
   @bindingGuard()
   @errorGuard()
   render() {
+    this.#hiddenState.isEmpty = !this.isOpen;
     return html`${renderRefineModal({
       props: {
         i18n: this.bindings.i18n,

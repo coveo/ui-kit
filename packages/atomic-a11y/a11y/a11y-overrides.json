@@ -34,6 +34,11 @@
       "reason": "Atomic does not include prerecorded video content requiring audio descriptions."
     },
     {
+      "criterion": "1.3.4",
+      "conformance": "not-applicable",
+      "reason": "Atomic does not restrict display orientation. No component uses the Screen Orientation API, @media orientation queries, or CSS transforms that lock the page to portrait or landscape."
+    },
+    {
       "criterion": "1.4.2",
       "conformance": "not-applicable",
       "reason": "Atomic does not include components that auto-play audio."
@@ -64,6 +69,11 @@
       "reason": "Multiple navigation ways are a host application concern, not a component library concern."
     },
     {
+      "criterion": "2.5.1",
+      "conformance": "not-applicable",
+      "reason": "Atomic does not implement multipoint or path-based gestures. Carousels use button-based navigation, scrollable containers use native browser scroll with arrow buttons, and touch events (touchstart/touchend) are used only as single-point tap equivalents for analytics timing."
+    },
+    {
       "criterion": "2.5.4",
       "conformance": "not-applicable",
       "reason": "Atomic does not include functionality operated by device or user motion."
@@ -82,6 +92,11 @@
       "criterion": "3.2.4",
       "conformance": "not-applicable",
       "reason": "Consistent identification across pages is a host application concern; individual Atomic components use consistent internal naming."
+    },
+    {
+      "criterion": "3.2.6",
+      "conformance": "not-applicable",
+      "reason": "Consistent help placement across pages is a host application concern; Atomic components do not control page-level layout or ordering of help mechanisms."
     },
     {
       "criterion": "3.3.7",
