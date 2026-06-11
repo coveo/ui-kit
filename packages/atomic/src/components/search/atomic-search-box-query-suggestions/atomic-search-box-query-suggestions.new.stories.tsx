@@ -1,6 +1,8 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {userEvent} from 'storybook/test';
+import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {
@@ -50,4 +52,21 @@ export default meta;
 
 export const Default: Story = {
   name: 'atomic-search-box-query-suggestions',
+};
+
+export const A11yStatusMessage: Story = {
+  name: 'A11y Status Message',
+  tags: ['a11y', 'test', '!dev'],
+  play: async (context) => {
+    await play(context);
+    await testStatusMessageA11y(context, {
+      triggerAction: async () => {
+        const searchBox =
+          await context.canvas.findByShadowPlaceholderText('Search');
+        await userEvent.click(searchBox);
+      },
+      expectedText: '5 search suggestions are available.',
+      timeout: 5000,
+    });
+  },
 };

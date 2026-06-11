@@ -51,12 +51,6 @@ export function createSummary(
     partiallySupports,
     doesNotSupport,
     notApplicable,
-    notEvaluated:
-      totalCriteria -
-      supports -
-      partiallySupports -
-      doesNotSupport -
-      notApplicable,
     automatedCoverage: getAutomationCoveragePercentage(
       automatedCoveredCriteria,
       totalCriteria

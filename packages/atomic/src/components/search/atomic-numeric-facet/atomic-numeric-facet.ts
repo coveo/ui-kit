@@ -276,7 +276,7 @@ export class AtomicNumericFacet
       AtomicNumericFacet.propsSchema
     );
   }
-  private filterDependenciesManager?: FacetConditionsManager;
+  private conditionManagers: FacetConditionsManager[] = [];
   private headerFocus?: FocusTargetController;
   private removeNumberFormatListener?: () => void;
   private removeNumberInputApplyListener?: () => void;
@@ -304,7 +304,7 @@ export class AtomicNumericFacet
   disconnectedCallback() {
     super.disconnectedCallback();
     if (!this.isConnected) {
-      this.filterDependenciesManager?.stopWatching();
+      this.conditionManagers.forEach((manager) => manager.stopWatching());
       this.removeNumberFormatListener?.();
       this.removeNumberInputApplyListener?.();
       this.unsubscribeFacetForRange?.();
@@ -465,6 +465,9 @@ export class AtomicNumericFacet
     this.unsubscribeFacetForRange = this.facetForRange.subscribe(() => {
       this.facetState = this.facetForRange!.state;
     });
+    this.conditionManagers.push(
+      this.initializeDependenciesManager(this.facetState.facetId)
+    );
 
     return this.facetForRange;
   }
@@ -484,11 +487,12 @@ export class AtomicNumericFacet
       },
     });
 
-    this.filterDependenciesManager = this.initializeDependenciesManager(
-      this.filter.state.facetId
+    this.filterState = this.filter.state;
+
+    this.conditionManagers.push(
+      this.initializeDependenciesManager(this.filterState.facetId)
     );
 
-    this.filterState = this.filter.state;
     this.unsubscribeFilter = this.filter.subscribe(() => {
       this.filterState = this.filter!.state;
     });

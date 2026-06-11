@@ -140,7 +140,7 @@ function resolveAutomatedConformance(
 ): A11yCriterionReport['conformance'] {
   const coveredCount = criterion.coveredComponents.length;
   if (coveredCount === 0) {
-    return 'notEvaluated';
+    return 'doesNotSupport';
   }
 
   const violatingCount = criterion.violatingComponents.length;
@@ -171,7 +171,7 @@ function getOrCreateCriterion(
     name: metadata.name,
     level: metadata.level,
     wcagVersion: metadata.wcagVersion,
-    conformance: 'notEvaluated',
+    conformance: 'doesNotSupport',
     automatedCoverage: false,
     interactiveCoverage: false,
     manualVerified: false,
