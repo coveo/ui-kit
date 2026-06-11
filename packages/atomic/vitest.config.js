@@ -10,7 +10,6 @@ import packageJsonHeadless from '../headless/package.json' with {type: 'json'};
 import packageJson from './package.json' with {type: 'json'};
 
 const port = 63315;
-const resourceUrl = `http://localhost:${port}/`;
 const isVitestVscodeExt = process.env.VITEST_VSCODE === 'true';
 
 /**
