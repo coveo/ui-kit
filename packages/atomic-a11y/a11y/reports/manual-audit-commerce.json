@@ -1,0 +1,9 @@
+{
+  "surface": "commerce",
+  "wcag22Criteria": {
+    "3.3.3-error-suggestion": {
+      "conformance": "pass",
+      "remarks": "Numeric facet inputs use native HTML5 constraint validation (type=number, required, min, max). Browser provides built-in error suggestions (satisfies G85). atomic-commerce-did-you-mean suggests query corrections when search returns no/few results."
+    }
+  }
+}

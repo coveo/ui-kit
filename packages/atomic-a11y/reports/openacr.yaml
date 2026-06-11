@@ -444,10 +444,19 @@ chapters:
         components:
           - name: web
             adherence:
-              level: does-not-support
+              level: supports
               notes:
-                'WCAG 3.3.3: no automated, interactive, or manual coverage. [Manual audit
-                required]'
+                Supports — manual audit found Supports (Numeric facet inputs use native
+                HTML5 constraint validation (type=number, required, min, max).
+                Browser provides built-in error suggestions (satisfies G85).
+                atomic-commerce-did-you-mean suggests query corrections when
+                search returns no/few results.; Numeric/date facet inputs use
+                native HTML5 constraint validation (type=number/date, required,
+                min, max, step). Browser provides built-in error suggestions via
+                constraint validation API (satisfies G85). atomic-did-you-mean
+                suggests query corrections when search returns no/few results —
+                either auto-corrects or offers a 'Did you mean' button with the
+                corrected query.).
       - num: 3.3.4
         components:
           - name: web
