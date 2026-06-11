@@ -100,7 +100,7 @@ export const DisableCitationAnchoring: Story = {
 
 export const A11ySwitch: Story = {
   name: 'A11y Switch (Toggle)',
-  tags: ['a11y', 'test'],
+  tags: ['a11y', 'test', '!dev'],
   args: {
     'with-toggle': true,
   },
