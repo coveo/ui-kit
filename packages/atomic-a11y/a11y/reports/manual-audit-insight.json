@@ -2,8 +2,8 @@
   "surface": "insight",
   "wcag22Criteria": {
     "2.4.11-focus-not-obscured-minimum": {
-      "conformance": "pass",
-      "remarks": "Refine-modal wraps atomic-modal with aria-modal and focus trap. Proper modal dialogs always pass per WCAG 2.4.11."
+      "conformance": "fail",
+      "remarks": "Refine-modal uses atomic-modal with aria-modal and focus trap, but focus can escape the trap due to KIT-5811 (scope property undefined at runtime). When focus escapes, the focused element is obscured behind the modal backdrop."
     }
   }
 }
