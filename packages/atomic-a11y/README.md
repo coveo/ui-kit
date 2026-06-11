@@ -50,7 +50,46 @@ pnpm build                # Generate WCAG data + compile TypeScript
 pnpm test                 # Run unit tests
 pnpm a11y:merge-shards    # Merge shard reports from parallel CI runs
 pnpm a11y:vpat            # Generate OpenACR YAML + VPAT markdown
+pnpm a11y:vpat-pdf        # Generate VPAT PDF for CDN (reads committed openacr.yaml)
+pnpm a11y:update-openacr  # Download a11y report from CI and regenerate openacr.yaml
 ```
+
+## Updating openacr.yaml
+
+The file `reports/openacr.yaml` is committed to the repo and represents the current WCAG conformance baseline. A CI check compares the committed version against what the latest test results would produce. If they differ, the CI fails.
+
+**Why?** This ensures conformance changes are explicit and reviewed. If a PR introduces a new axe-core violation or fixes one, the openacr will drift and the check catches it.
+
+**How to fix a failing check:**
+
+You have two options:
+
+### Option 1: Download from CI (recommended)
+
+This avoids running the full Storybook test suite locally. The CI already ran the tests and produced the report — you just download it:
+
+```bash
+pnpm --filter @coveo/atomic-a11y a11y:update-openacr -- --run-id=<RUN_ID>
+```
+
+Replace `<RUN_ID>` with the GitHub Actions run ID from the failing check (shown in the error message). This uses the `gh` CLI to download the `a11y-report.json` artifact and regenerates `openacr.yaml`.
+
+> Requires the [GitHub CLI](https://cli.github.com/) (`gh`) to be installed and authenticated.
+
+### Option 2: Run tests locally
+
+If you prefer to regenerate from scratch:
+
+```bash
+cd packages/atomic
+pnpm test:storybook          # generates a11y-report.json in packages/atomic/reports/
+cd ../atomic-a11y
+pnpm a11y:vpat               # regenerates openacr.yaml from the report
+```
+
+---
+
+After either option, review the changes to `reports/openacr.yaml` and commit the updated file. The diff shows which WCAG criteria changed conformance level — make sure the changes are intentional.
 
 ## Manual audits (QA)
 
