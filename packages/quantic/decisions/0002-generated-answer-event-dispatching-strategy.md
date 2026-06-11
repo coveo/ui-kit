@@ -30,18 +30,9 @@ On the short term, `QuanticGeneratedAnswer` will handle both `quantic__like`/`qu
 
 This component is dedicated to CRGA. It dispatches `quantic__generatedanswercopy`. Since it is not a generic component, it will accept an optional `answerId` property and include it in the event payload when present. This eliminates the need for `QuanticGeneratedAnswerBody` to intercept and re-dispatch the copy event.
 
-### QuanticSourceCitations — Accepts `answerId` property
+### QuanticSourceCitations — `QuanticGeneratedAnswerBody` passes an `answerId`-enriched `handleCitationHover` callback
 
-This component is dedicated to CRGA. It dispatches `quantic__citationhover`. It will receive an `answerId` property (required independently of this decision, because it builds the `HeadlessInteractiveCitation` controller which needs `answerId` to log citation clicks for follow-ups). The same property will be used to enrich the `quantic__citationhover` event payload directly, removing the need for `QuanticGeneratedAnswerBody` to intercept and re-dispatch citation hover events.
-
-## Summary
-
-| Component | Event(s) | Enrichment strategy |
-|-----------|----------|-------------------|
-| `QuanticFeedback` | `quantic__like`, `quantic__dislike` | None (generic component) |
-| `QuanticGeneratedAnswerBody` | `quantic__generatedanswerlike`, `quantic__generatedanswerdislike` | Intercepts generic feedback events, re-dispatches with `answerId` under dedicated event names |
-| `QuanticGeneratedAnswerCopyToClipboard` | `quantic__generatedanswercopy` | Accepts optional `answerId` prop, includes in payload |
-| `QuanticSourceCitations` | `quantic__citationhover` | Accepts `answerId` prop, includes in payload |
+This component accepts a `handleCitationHover` callback (called with `citationId` and `citationHoverTimeMs`). `QuanticGeneratedAnswerBody` will pass a `handleCitationHover` implementation that includes the logic to dispatch the `quantic__citationhover` event enriched with `answerId`.
 
 ## Consequences
 

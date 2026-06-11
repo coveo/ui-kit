@@ -116,11 +116,6 @@ export default class QuanticGeneratedAnswerBody extends LightningElement {
     this.dispatchAnswerInteractionEvent('quantic__generatedanswerdislike');
   }
 
-  handleCopy(event) {
-    event.stopPropagation();
-    this.dispatchAnswerInteractionEvent('quantic__generatedanswercopy');
-  }
-
   handleCitationHover = (citationId, citationHoverTimeMs) => {
     this.dispatchAnswerInteractionEvent('quantic__citationhover', {
       citationId,
