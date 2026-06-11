@@ -1,3 +1,13 @@
+## 3.40.0
+
+### Minor Changes
+
+- [#7718](https://github.com/coveo/ui-kit/pull/7718) [`b19e6c9`](https://github.com/coveo/ui-kit/commit/b19e6c986da6ed10fb723a43434636b7805bca6d) - Started supporting inline links with analytics in generated answers
+
+### Patch Changes
+
+- [#7758](https://github.com/coveo/ui-kit/pull/7758) [`c3ad452`](https://github.com/coveo/ui-kit/commit/c3ad452a63b2c0f76258df3932559d738d1d1cd1) - Made the quanticGeneratedAnswer content scrollable
+
 ## 3.39.1
 
 ### Patch Changes

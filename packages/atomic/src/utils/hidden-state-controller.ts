@@ -6,6 +6,12 @@ shadowSheet.replaceSync(':host(:state(empty)) { display: none }');
 const lightSheet = new CSSStyleSheet();
 lightSheet.replaceSync(':state(empty) { display: none }');
 
+/**
+ * A reactive controller that manages the `:state(empty)` custom state on a host element
+ * using `ElementInternals`. When `isEmpty` is `true`, the host is hidden via `display: none`.
+ *
+ * @cssState empty - Hides the host element when it has no content to display.
+ */
 export class HiddenStateController implements ReactiveController {
   private internals: ElementInternals;
 
@@ -16,16 +22,25 @@ export class HiddenStateController implements ReactiveController {
   }
 
   hostConnected() {
+    if (!this.internals) {
+      return;
+    }
+
     const root = this.host.shadowRoot;
     if (root) {
-      if (!root.adoptedStyleSheets.includes(shadowSheet)) {
+      if (shadowSheet && !root.adoptedStyleSheets.includes(shadowSheet)) {
         root.adoptedStyleSheets.push(shadowSheet);
       }
-    } else {
-      const parentRoot = this.host.getRootNode() as Document | ShadowRoot;
-      if (!parentRoot.adoptedStyleSheets.includes(lightSheet)) {
-        parentRoot.adoptedStyleSheets.push(lightSheet);
-      }
+      return;
+    }
+
+    const parent = this.host.getRootNode();
+    if (
+      lightSheet &&
+      (parent instanceof Document || parent instanceof ShadowRoot) &&
+      !parent.adoptedStyleSheets.includes(lightSheet)
+    ) {
+      parent.adoptedStyleSheets.push(lightSheet);
     }
   }
 
