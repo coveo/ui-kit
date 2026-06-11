@@ -372,6 +372,18 @@ describe('generated answer', () => {
       });
     });
 
+    describe('when #isEnabled is set', () => {
+      it('should dispatch setIsEnabled action when set to true', () => {
+        initGeneratedAnswer({initialState: {isEnabled: true}});
+        expect(setIsEnabled).toHaveBeenCalledWith(true);
+      });
+
+      it('should dispatch setIsEnabled action when set to false', () => {
+        initGeneratedAnswer({initialState: {isEnabled: false}});
+        expect(setIsEnabled).toHaveBeenCalledWith(false);
+      });
+    });
+
     describe('when #responseFormat is set', () => {
       it('should dispatch updateResponseFormat action', () => {
         const responseFormat: GeneratedResponseFormat = {

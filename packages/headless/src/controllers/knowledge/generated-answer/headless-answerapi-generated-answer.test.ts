@@ -603,6 +603,38 @@ describe('knowledge-generated-answer', () => {
           expect(mockGenerateAnswer).toHaveBeenCalledTimes(1);
         });
       });
+
+      describe('when isEnabled is false', () => {
+        it('should not call generateAnswer', () => {
+          engine.state.generatedAnswer.isEnabled = false;
+          mockSelectAnswerTriggerParams.mockReturnValue({
+            q: 'test query',
+            requestId: 'new-request',
+            cannotAnswer: false,
+            analyticsMode: 'legacy',
+            actionCause: 'searchboxSubmit',
+          });
+
+          listener();
+
+          expect(mockGenerateAnswer).not.toHaveBeenCalled();
+        });
+
+        it('should still reset the answer', () => {
+          engine.state.generatedAnswer.isEnabled = false;
+          mockSelectAnswerTriggerParams.mockReturnValue({
+            q: 'test query',
+            requestId: 'new-request',
+            cannotAnswer: false,
+            analyticsMode: 'legacy',
+            actionCause: 'searchboxSubmit',
+          });
+
+          listener();
+
+          expect(mockResetAnswer).toHaveBeenCalledTimes(1);
+        });
+      });
     });
 
     describe('user interaction scenarios', () => {

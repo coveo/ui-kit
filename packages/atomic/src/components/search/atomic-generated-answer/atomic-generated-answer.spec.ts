@@ -1521,6 +1521,59 @@ describe('atomic-generated-answer', () => {
     });
   });
 
+  describe('initial tab state', () => {
+    it('should pass isEnabled: false to buildGeneratedAnswer when initial tab is excluded', async () => {
+      await renderGeneratedAnswer({
+        props: {tabsExcluded: ['ExcludedTab']},
+        tabManagerState: {activeTab: 'ExcludedTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(buildGeneratedAnswer).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.objectContaining({
+          initialState: expect.objectContaining({
+            isEnabled: false,
+          }),
+        })
+      );
+    });
+
+    it('should pass isEnabled: false to buildGeneratedAnswer when initial tab is not in tabsIncluded', async () => {
+      await renderGeneratedAnswer({
+        props: {tabsIncluded: ['IncludedTab']},
+        tabManagerState: {activeTab: 'OtherTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(buildGeneratedAnswer).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.objectContaining({
+          initialState: expect.objectContaining({
+            isEnabled: false,
+          }),
+        })
+      );
+    });
+
+    it('should pass isEnabled: true to buildGeneratedAnswer when initial tab is allowed', async () => {
+      await renderGeneratedAnswer({
+        props: {tabsIncluded: ['IncludedTab']},
+        tabManagerState: {activeTab: 'IncludedTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(buildGeneratedAnswer).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.objectContaining({
+          initialState: expect.objectContaining({
+            isEnabled: true,
+          }),
+        })
+      );
+    });
+  });
+
   describe('tabsExcluded property', () => {
     it('should render when tabsExcluded is empty', async () => {
       const {container} = await renderGeneratedAnswer({
