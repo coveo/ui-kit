@@ -10,6 +10,7 @@ global with sharing class SampleTokenProvider implements ITokenProvider {
     headlessConfiguration.put('organizationId', 'searchuisamples');
     headlessConfiguration.put(
       'accessToken',
+      // This API key is intentionally public — it belongs to a sample organization used for samples/docs.
       'xx564559b1-0045-48e1-953c-3addd1ee4457'
     );
     return JSON.serialize(headlessConfiguration);

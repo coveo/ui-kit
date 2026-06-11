@@ -2,11 +2,16 @@ import type {FacetSortCriterion} from '@coveo/headless';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {within} from 'shadow-dom-testing-library';
+import {userEvent} from 'storybook/test';
 import {testCheckboxA11y} from '@/storybook-utils/a11y/checkbox.js';
+import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {testDisclosureA11y} from '@/storybook-utils/a11y/disclosure.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {buildSearchResponseWithResults} from '@/storybook-utils/api/search/search-response-mocks.js';
+import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 import {
   searchFacetTransformer,
   searchFacetSearchTransformer,
@@ -150,6 +155,39 @@ export const A11yCheckbox: Story = {
   },
 };
 
+export const A11yStatusMessage: Story = {
+  name: 'A11y Status Message',
+  tags: ['a11y', 'test', '!dev'],
+  args: {
+    field: 'objecttype',
+  },
+  decorators: [
+    facetDecorator,
+    (story) => html`<atomic-query-summary></atomic-query-summary>${story()}`,
+  ],
+  beforeEach: () => {
+    searchApiHarness.searchEndpoint.mockOnce(
+      buildSearchResponseWithResults(120)
+    );
+    searchApiHarness.searchEndpoint.mockOnce(
+      buildSearchResponseWithResults(42)
+    );
+  },
+  play: async (context) => {
+    await play(context);
+    await testStatusMessageA11y(context, {
+      triggerAction: async () => {
+        const [checkbox] = await within(
+          context.canvasElement
+        ).findAllByShadowLabelText('Inclusion filter on', {exact: false});
+        checkbox.click();
+      },
+      expectedText: 'Results loaded. Results 1-10 of 42',
+      timeout: 5000,
+    });
+  },
+};
+
 export const A11yDisclosure: Story = {
   tags: ['a11y', 'test', '!dev'],
   parameters: {
@@ -167,6 +205,30 @@ export const A11yDisclosure: Story = {
     await play(context);
     await testDisclosureA11y(context, {
       trigger: {expanded: true},
+    });
+  },
+};
+
+export const A11yFacetSearchNoResults: Story = {
+  name: 'A11y Facet Search No Results',
+  tags: ['a11y', 'test', '!dev'],
+  args: {
+    field: 'objecttype',
+    label: 'Object Type',
+    decorators: [facetDecorator],
+  },
+  play: async (context) => {
+    await play(context);
+    await testStatusMessageA11y(context, {
+      triggerAction: async (canvasElement) => {
+        const input = await within(canvasElement).findByShadowLabelText(
+          'Search for values in',
+          {exact: false}
+        );
+        await userEvent.type(input, 'zzz');
+      },
+      expectedText: '0 values found in the Object Type facet',
+      timeout: 5000,
     });
   },
 };

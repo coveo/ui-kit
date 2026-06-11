@@ -738,6 +738,53 @@ describe('atomic-numeric-facet', () => {
         }),
       });
     });
+
+    it('should create a condition manager for the range facet', async () => {
+      vi.mocked(buildFacetConditionsManager).mockClear();
+      const {element} = await setupElement();
+
+      expect(buildFacetConditionsManager).toHaveBeenCalledWith(
+        element.bindings.engine,
+        expect.objectContaining({
+          facetId: mockedNumericFacet.state.facetId,
+        })
+      );
+    });
+
+    it('should create condition managers for range facet and filter when withInput is set', async () => {
+      vi.mocked(buildFacetConditionsManager).mockClear();
+      const {element} = await setupElement({withInput: true});
+
+      expect(buildFacetConditionsManager).toHaveBeenCalledTimes(2);
+      expect(buildFacetConditionsManager).toHaveBeenCalledWith(
+        element.bindings.engine,
+        expect.objectContaining({facetId: mockedNumericFacet.state.facetId})
+      );
+      expect(buildFacetConditionsManager).toHaveBeenCalledWith(
+        element.bindings.engine,
+        expect.objectContaining({facetId: mockedNumericFilter.state.facetId})
+      );
+    });
+
+    it('should stop the condition manager when the element is disconnected', async () => {
+      const {element} = await setupElement();
+
+      element.remove();
+
+      expect(mockedFacetConditionsManager.stopWatching).toHaveBeenCalledTimes(
+        1
+      );
+    });
+
+    it('should stop all condition managers when the element is disconnected and withInput is set', async () => {
+      const {element} = await setupElement({withInput: true});
+
+      element.remove();
+
+      expect(mockedFacetConditionsManager.stopWatching).toHaveBeenCalledTimes(
+        2
+      );
+    });
   });
 
   describe('when validating props', () => {
