@@ -11,6 +11,7 @@ import packageJson from './package.json' with {type: 'json'};
 
 const port = 63315;
 const resourceUrl = `http://localhost:${port}/`;
+const isVitestVscodeExt = process.env.VITEST_VSCODE === 'true';
 
 /**
  * Custom SVG transformer to handle .svg imports.
@@ -44,36 +45,37 @@ function replace() {
     preventAssignment: true,
   });
 }
-
-// More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
-const storybook = defineConfig({
-  name: 'storybook',
-  plugins: [
-    // The plugin will run tests for the stories defined in your Storybook config
-    // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
-    storybookTest({
-      configDir: path.join(import.meta.dirname, '.storybook'),
-      storybookUrl: 'http://localhost:4400',
-      storybookScript: 'npx storybook dev -p 4400 --no-open',
-    }),
-  ],
-  test: {
+let storybook;
+if (!isVitestVscodeExt) {
+  // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
+  storybook = defineConfig({
     name: 'storybook',
-    fileParallelism: false,
-    browser: {
+    plugins: [
+      // The plugin will run tests for the stories defined in your Storybook config
+      // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
+      storybookTest({
+        configDir: path.join(import.meta.dirname, '.storybook'),
+        storybookUrl: 'http://localhost:4400',
+        storybookScript: 'npx storybook dev -p 4400 --no-open',
+      }),
+    ],
+    test: {
+      name: 'storybook',
       fileParallelism: false,
-      enabled: true,
-      headless: true,
-      provider: playwright(),
-      instances: [{browser: 'chromium'}],
-      context: {
-        actionTimeout: 3000,
+      browser: {
+        fileParallelism: false,
+        enabled: true,
+        headless: true,
+        provider: playwright(),
+        instances: [{browser: 'chromium'}],
+        context: {
+          actionTimeout: 3000,
+        },
       },
+      setupFiles: ['./vitest-utils/setup.ts', '.storybook/vitest.setup.ts'],
     },
-    setupFiles: ['./vitest-utils/setup.ts', '.storybook/vitest.setup.ts'],
-  },
-});
-
+  });
+}
 const atomicDefault = defineConfig({
   name: 'atomic-default',
   server: {
@@ -176,6 +178,10 @@ export default mergeConfig(atomicDefault, {
         packageJsonPath: path.resolve(import.meta.dirname, 'package.json'),
       }),
     ],
-    projects: [atomicDefault, storybookPure, storybook],
+    projects: [
+      atomicDefault,
+      storybookPure,
+      ...(!isVitestVscodeExt ? [storybook] : []),
+    ],
   },
 });
