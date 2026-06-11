@@ -15,25 +15,11 @@ import {isSuccessResponse, transformError} from './error-handling.js';
  * HTTP request options for Coveo API calls
  */
 export interface HttpRequestOptions {
-  /**
-   * Absolute request URL.
-   */
   url: string;
-
-  /**
-   * HTTP method
-   */
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
-
-  /**
-   * Request body (will be JSON stringified)
-   */
   body?: unknown;
-
-  /**
-   * Additional headers to merge with default headers
-   */
   headers?: Record<string, string>;
+  signal?: AbortSignal;
 }
 
 /**
@@ -70,6 +56,7 @@ export async function executeHttpRequest<T>(
     const requestInit: RequestInit = {
       method: options.method,
       headers,
+      signal: options.signal,
     };
 
     if (options.body && options.method !== 'GET') {

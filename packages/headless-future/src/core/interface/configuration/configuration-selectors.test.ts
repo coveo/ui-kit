@@ -4,8 +4,21 @@
 
 import {describe, it, expect, beforeEach} from 'vitest';
 import {createTestEngine} from '@/src/test/test-utils.js';
-import * as mutations from './configuration-mutators.js';
-import * as selectors from './configuration-selectors.js';
+import {
+  setAccessToken,
+  setConfiguration,
+  setEndpoint,
+  setOrganizationId,
+} from './configuration-mutators.js';
+import {
+  accessToken,
+  country,
+  currency,
+  endpoint as selectEndpoint,
+  language,
+  organizationId,
+  trackingId,
+} from './configuration-selectors.js';
 import {FullEngine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {configurationSlice} from '@/src/core/internal/configuration/configuration-slice.js';
 
@@ -18,57 +31,57 @@ describe('createConfigurationSelectors()', () => {
   });
 
   it('should return selector object with all selectors', () => {
-    expect(selectors.organizationId).toBeDefined();
-    expect(selectors.accessToken).toBeDefined();
-    expect(selectors.trackingId).toBeDefined();
-    expect(selectors.language).toBeDefined();
-    expect(selectors.country).toBeDefined();
-    expect(selectors.currency).toBeDefined();
-    expect(selectors.endpoint).toBeDefined();
+    expect(organizationId).toBeDefined();
+    expect(accessToken).toBeDefined();
+    expect(trackingId).toBeDefined();
+    expect(language).toBeDefined();
+    expect(country).toBeDefined();
+    expect(currency).toBeDefined();
+    expect(selectEndpoint).toBeDefined();
   });
 
   describe('organizationId selector', () => {
     it('should return empty string initially', () => {
-      const orgId = engine.read(selectors.organizationId);
+      const orgId = engine.read(organizationId);
       expect(orgId).toBe('');
     });
 
     it('should return updated organization ID after mutation', () => {
-      engine.mutate(mutations.setOrganizationId('my-org-123'));
-      const orgId = engine.read(selectors.organizationId);
+      engine.mutate(setOrganizationId('my-org-123'));
+      const orgId = engine.read(organizationId);
       expect(orgId).toBe('my-org-123');
     });
   });
 
   describe('accessToken selector', () => {
     it('should return empty string initially', () => {
-      const token = engine.read(selectors.accessToken);
+      const token = engine.read(accessToken);
       expect(token).toBe('');
     });
 
     it('should return updated access token after mutation', () => {
-      engine.mutate(mutations.setAccessToken('abc123token'));
-      const token = engine.read(selectors.accessToken);
+      engine.mutate(setAccessToken('abc123token'));
+      const token = engine.read(accessToken);
       expect(token).toBe('abc123token');
     });
   });
 
   describe('endpoint selector', () => {
     it('should return undefined initially', () => {
-      const endpoint = engine.read(selectors.endpoint);
+      const endpoint = engine.read(selectEndpoint);
       expect(endpoint).toBeUndefined();
     });
 
     it('should return updated endpoint after mutation', () => {
-      engine.mutate(mutations.setEndpoint('https://custom.api.com'));
-      const endpoint = engine.read(selectors.endpoint);
+      engine.mutate(setEndpoint('https://custom.api.com'));
+      const endpoint = engine.read(selectEndpoint);
       expect(endpoint).toBe('https://custom.api.com');
     });
 
     it('should return undefined when explicitly cleared', () => {
-      engine.mutate(mutations.setEndpoint('https://api.com'));
-      engine.mutate(mutations.setEndpoint(undefined));
-      const endpoint = engine.read(selectors.endpoint);
+      engine.mutate(setEndpoint('https://api.com'));
+      engine.mutate(setEndpoint(undefined));
+      const endpoint = engine.read(selectEndpoint);
       expect(endpoint).toBeUndefined();
     });
   });
@@ -76,7 +89,7 @@ describe('createConfigurationSelectors()', () => {
   describe('Configuration selectors integration', () => {
     it('should reflect complete configuration state', () => {
       engine.mutate(
-        mutations.setConfiguration({
+        setConfiguration({
           organizationId: 'test-org',
           accessToken: 'test-token',
           trackingId: 'tracking-1',
@@ -87,27 +100,27 @@ describe('createConfigurationSelectors()', () => {
         })
       );
 
-      expect(engine.read(selectors.organizationId)).toBe('test-org');
-      expect(engine.read(selectors.accessToken)).toBe('test-token');
-      expect(engine.read(selectors.trackingId)).toBe('tracking-1');
-      expect(engine.read(selectors.language)).toBe('en');
-      expect(engine.read(selectors.country)).toBe('US');
-      expect(engine.read(selectors.currency)).toBe('USD');
-      expect(engine.read(selectors.endpoint)).toBe('https://test.api.com');
+      expect(engine.read(organizationId)).toBe('test-org');
+      expect(engine.read(accessToken)).toBe('test-token');
+      expect(engine.read(trackingId)).toBe('tracking-1');
+      expect(engine.read(language)).toBe('en');
+      expect(engine.read(country)).toBe('US');
+      expect(engine.read(currency)).toBe('USD');
+      expect(engine.read(selectEndpoint)).toBe('https://test.api.com');
     });
 
     it('should reflect individual field updates', () => {
-      engine.mutate(mutations.setOrganizationId('org-1'));
-      expect(engine.read(selectors.organizationId)).toBe('org-1');
+      engine.mutate(setOrganizationId('org-1'));
+      expect(engine.read(organizationId)).toBe('org-1');
 
-      engine.mutate(mutations.setAccessToken('token-2'));
-      expect(engine.read(selectors.accessToken)).toBe('token-2');
-      expect(engine.read(selectors.organizationId)).toBe('org-1');
+      engine.mutate(setAccessToken('token-2'));
+      expect(engine.read(accessToken)).toBe('token-2');
+      expect(engine.read(organizationId)).toBe('org-1');
 
-      engine.mutate(mutations.setEndpoint('https://api.example.com'));
-      expect(engine.read(selectors.endpoint)).toBe('https://api.example.com');
-      expect(engine.read(selectors.organizationId)).toBe('org-1');
-      expect(engine.read(selectors.accessToken)).toBe('token-2');
+      engine.mutate(setEndpoint('https://api.example.com'));
+      expect(engine.read(selectEndpoint)).toBe('https://api.example.com');
+      expect(engine.read(organizationId)).toBe('org-1');
+      expect(engine.read(accessToken)).toBe('token-2');
     });
   });
 });

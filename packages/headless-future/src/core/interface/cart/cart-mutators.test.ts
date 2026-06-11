@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import * as mutators from './cart-mutators.js';
+import {setItems, updateItemQuantity} from './cart-mutators.js';
 import type {
   SetCartItemsPayload,
   UpdateItemQuantityPayload,
@@ -13,7 +13,7 @@ describe('cart mutators', () => {
     ];
     const payload: SetCartItemsPayload = {items};
 
-    expect(mutators.setItems(payload)).toEqual({
+    expect(setItems(payload)).toEqual({
       type: 'cart/setItems',
       payload: items,
     });
@@ -23,7 +23,7 @@ describe('cart mutators', () => {
     const item = {productId: 'p1', name: 'A', price: 10, quantity: 0};
     const payload: UpdateItemQuantityPayload = {item};
 
-    expect(mutators.updateItemQuantity(payload)).toEqual({
+    expect(updateItemQuantity(payload)).toEqual({
       type: 'cart/updateItemQuantity',
       payload: item,
     });

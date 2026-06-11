@@ -1,116 +1,86 @@
-import type {
-  CoveoSearchEndpointRequest,
-  CoveoSearchEndpointResponse,
-  CoveoSearchEndpointResponseHandler,
-} from './search-endpoint-types.js';
 import {
   createSearchEndpointClient,
+  type SearchEndpointCallOptions,
   type SearchEndpointClient,
 } from '@/src/api/index.js';
-import {EndpointFacade} from '@/src/core/internal/api/base-facade/endpoint-facade.js';
-import {buildRequest} from '@/src/core/internal/api/base-facade/endpoint-facade-request-builder.js';
 import {readEndpointClientConfiguration} from '@/src/core/internal/configuration/configuration-reader.js';
 import {FullEngine} from '@/src/core/interface/engine/engine.js';
-import * as searchEndpointMutators from './search-endpoint-mutators.js';
-import * as searchEndpointSelectors from './search-endpoint-selectors.js';
 import {loadSearchEndpoint} from './search-endpoint-loader.js';
+import {setStatus, setError} from './search-endpoint-mutators.js';
+import {buildSearchEndpointRequest} from './search-endpoint-selectors.js';
+import {handleSearchEndpointResponse} from './search-endpoint-response-handler.js';
 
-export class SearchEndpointFacade extends EndpointFacade<CoveoSearchEndpointRequest> {
+export class SearchEndpointFacade {
+  readonly #engine: FullEngine;
   readonly #client: SearchEndpointClient;
-  readonly #eventTarget: EventTarget;
-  #lastResponse: CoveoSearchEndpointResponse | null = null;
 
-  private constructor(engine: FullEngine, client: SearchEndpointClient) {
-    super(engine);
-    this.#client = client;
-    this.#eventTarget = new EventTarget();
+  static #instances = new WeakMap<FullEngine, SearchEndpointFacade>();
+
+  private constructor(engine: FullEngine) {
+    this.#engine = engine;
+    this.#client = createSearchEndpointClient();
     loadSearchEndpoint(engine);
   }
 
-  private static engineToFacadeMap = new WeakMap<
-    FullEngine,
-    SearchEndpointFacade
-  >();
-
+  /**
+   * Retrieves the singleton instance of the SearchEndpointFacade for the given engine.
+   * If no instance exists for the engine, a new one is created.
+   */
   static getInstance(engine: FullEngine): SearchEndpointFacade {
-    let instance = SearchEndpointFacade.engineToFacadeMap.get(engine);
+    let instance = SearchEndpointFacade.#instances.get(engine);
     if (!instance) {
-      instance = new SearchEndpointFacade(engine, createSearchEndpointClient());
-      SearchEndpointFacade.engineToFacadeMap.set(engine, instance);
+      instance = new SearchEndpointFacade(engine);
+      SearchEndpointFacade.#instances.set(engine, instance);
     }
     return instance;
   }
 
-  onResponse(handler: CoveoSearchEndpointResponseHandler): () => void {
-    const listener = (evt: Event) => {
-      const {response} = (evt as CustomEvent<ResponseEventDetail>).detail;
-      handler(structuredClone(response));
-    };
+  /**
+   * Executes the search endpoint call sequence.
+   */
+  async callEndpoint(options?: SearchEndpointCallOptions): Promise<void> {
+    const engine = this.#engine;
 
-    this.#eventTarget.addEventListener('response', listener);
-
-    return () => {
-      this.#eventTarget.removeEventListener('response', listener);
-    };
-  }
-
-  onStatusChange(listener: (isLoading: boolean) => void): () => void {
-    return this.engine.subscribe(searchEndpointSelectors.isLoading, listener);
-  }
-
-  async callEndpoint(): Promise<void> {
-    const engine = this.engine;
-
-    engine.mutate(searchEndpointMutators.setStatus('pending'));
-    engine.mutate(searchEndpointMutators.setError(null));
+    // 1. Set loading state
+    engine.mutate(setStatus('pending'));
+    engine.mutate(setError(null));
 
     try {
-      const finalRequest = buildRequest(this.getOrderedRequestContributors());
-      const clientConfiguration = readEndpointClientConfiguration(engine);
+      // 2. Build request from state (composed selector)
+      const request = engine.read(buildSearchEndpointRequest);
 
-      const httpResponse = await this.#client.call(
-        finalRequest,
-        clientConfiguration
-      );
+      // 3. Execute HTTP call
+      const config = readEndpointClientConfiguration(engine);
+      const httpResponse = await this.#client.call(request, config, options);
 
       if (!httpResponse.success) {
-        engine.mutate(searchEndpointMutators.setError(httpResponse.error));
-        return;
+        throw new Error(httpResponse.error);
       }
 
-      if (httpResponse.data) {
-        this.#lastResponse = httpResponse.data;
-        this.#eventTarget.dispatchEvent(
-          new CustomEvent<ResponseEventDetail>('response', {
-            detail: {response: this.#lastResponse},
-          })
-        );
+      // 4. Distribute response data to feature slices
+      const responseData = httpResponse.data;
+      if (responseData) {
+        handleSearchEndpointResponse(engine, responseData);
       }
     } catch (error) {
       engine.mutate(
-        searchEndpointMutators.setError(transformUnexpectedError(error))
+        setError(
+          error instanceof Error
+            ? error.message
+            : 'An unexpected error occurred.'
+        )
       );
-      throw error;
     } finally {
-      engine.mutate(searchEndpointMutators.setStatus('idle'));
+      engine.mutate(setStatus('idle'));
     }
   }
 
-  getRequestCompositionDebugInfo() {
+  /**
+   * For testing and debugging purposes, exposes internal information about the facade instance.
+   */
+  getDebugInfo() {
     return {
-      registeredContributorCount: this.getRegisteredRequestContributorCount(),
+      currentRequest: this.#engine.read(buildSearchEndpointRequest),
     };
   }
-}
-
-interface ResponseEventDetail {
-  response: Readonly<CoveoSearchEndpointResponse>;
-}
-
-function transformUnexpectedError(error: unknown): string {
-  if (error instanceof Error && error.message.trim()) {
-    return error.message;
-  }
-
-  return 'An unexpected error occurred. Please try again.';
 }

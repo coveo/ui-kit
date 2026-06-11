@@ -33,10 +33,10 @@ export interface CoveoSearchResult {
   title: string;
   uri: string;
   excerpt?: string;
-  printableUri?: string;
-  clickUri?: string;
-  raw?: Record<string, unknown>;
-  score?: number;
+  printableUri: string;
+  clickUri: string;
+  raw: Record<string, unknown>;
+  score: number;
 }
 
 export interface CoveoFacetResponse {

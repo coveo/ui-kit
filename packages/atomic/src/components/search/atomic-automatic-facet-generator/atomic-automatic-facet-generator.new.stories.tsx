@@ -10,7 +10,7 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-automatic-facet-generator/atomic-automatic-facet-generator.js';
 
-const mockSearchApi = new MockSearchApi();
+const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
 const facetWidthDecorator: Decorator = (story) =>
@@ -31,12 +31,12 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
-    msw: {handlers: [...mockSearchApi.handlers]},
+    msw: {handlers: [...searchApiHarness.handlers]},
   },
   argTypes,
   args,
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.clear();
+    searchApiHarness.searchEndpoint.clear();
   },
   play,
 };

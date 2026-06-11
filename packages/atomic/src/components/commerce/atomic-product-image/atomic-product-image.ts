@@ -266,6 +266,9 @@ export class AtomicProductImage
                   nextImage: () => this.nextImage(),
                   previousImage: () => this.previousImage(),
                   numberOfImages: this.numberOfImages,
+                  label: this.bindings.i18n.t('image-gallery', {
+                    itemName: this.product.ec_name,
+                  }),
                 },
               })(this.renderCurrentImage(this.images[this.currentImage]))
           )

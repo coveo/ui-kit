@@ -22,10 +22,14 @@ export function createMockSearchResult(
   overrides?: Partial<SearchResult>
 ): SearchResult {
   return {
-    id: 'result-1',
+    uniqueId: 'result-1',
     title: 'Test Result',
     uri: 'https://example.com/doc',
     excerpt: 'This is a test excerpt...',
+    printableUri: 'https://example.com/doc',
+    clickUri: 'https://example.com/doc',
+    raw: {},
+    score: 0,
     ...overrides,
   };
 }
@@ -36,7 +40,7 @@ export function createMockSearchResult(
 export function createMockSearchResults(count: number): SearchResult[] {
   return Array.from({length: count}, (_, i) =>
     createMockSearchResult({
-      id: `result-${i + 1}`,
+      uniqueId: `result-${i + 1}`,
       title: `Test Result ${i + 1}`,
       uri: `https://example.com/doc-${i + 1}`,
       excerpt: `This is test excerpt ${i + 1}...`,

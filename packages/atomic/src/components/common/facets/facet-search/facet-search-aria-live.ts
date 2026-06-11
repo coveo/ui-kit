@@ -10,18 +10,18 @@ export function announceFacetSearchResultsWithAriaLive(
 ) {
   let prevState = facet.state.facetSearch;
   facet.subscribe(() => {
+    const nextState = facet.state.facetSearch;
     if (
-      shouldUpdateFacetSearchComponent(facet.state.facetSearch, prevState) &&
-      facet.state.facetSearch.query
+      shouldUpdateFacetSearchComponent(nextState, prevState) &&
+      nextState.query
     ) {
-      prevState = facet.state.facetSearch;
-
       setAriaLive(
         i18n.t('facet-search-results-count', {
-          count: facet.state.facetSearch.values.length,
+          count: nextState.values.length,
           label,
         })
       );
     }
+    prevState = nextState;
   });
 }

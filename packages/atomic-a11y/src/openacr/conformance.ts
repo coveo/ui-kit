@@ -1,9 +1,4 @@
-import {DEFAULT_MANUAL_PLACEHOLDER_NOTE} from '../shared/constants.js';
-import type {A11yCriterionReport} from '../shared/types.js';
-import {
-  countManualConformances,
-  resolveManualConformance,
-} from './manual-audit.js';
+import {resolveManualConformance} from './manual-audit.js';
 import type {
   A11yOverrideEntry,
   CriterionAggregate,
@@ -11,10 +6,16 @@ import type {
   ManualAuditAggregate,
   OpenAcrConformance,
 } from './types.js';
-import {reportConformanceToOpenAcr} from './types.js';
+import {CONFORMANCE_SEVERITY} from './types.js';
+
+const openAcrConformanceLabel: Record<OpenAcrConformance, string> = {
+  supports: 'Supports',
+  'partially-supports': 'Partially Supports',
+  'does-not-support': 'Does Not Support',
+  'not-applicable': 'Not Applicable',
+};
 
 interface ConformanceContext {
-  criterion?: A11yCriterionReport;
   aggregate?: CriterionAggregate;
   interactiveAggregate?: InteractiveAggregate;
   manualAggregates?: ManualAuditAggregate[];
@@ -24,220 +25,120 @@ interface ConformanceContext {
 interface RemarksContext extends ConformanceContext {
   criterionId: string;
   conformance: OpenAcrConformance;
-  coveredComponents: string[];
-  violatingComponents: string[];
-  interactiveCoveredComponents: string[];
-  interactiveFailedComponents: string[];
 }
 
-function mapCriterionConformance(
-  criterion: A11yCriterionReport | undefined
-): OpenAcrConformance | null {
-  if (!criterion) {
-    return null;
-  }
-
-  return reportConformanceToOpenAcr[criterion.conformance] ?? null;
-}
-
-function resolveInteractiveConformance(
-  interactiveAggregate?: InteractiveAggregate
-): OpenAcrConformance | null {
-  const coveredCount = interactiveAggregate?.coveredComponents.size ?? 0;
-  if (coveredCount === 0) {
-    return null;
-  }
-
-  const failedCount = interactiveAggregate?.failedComponents.size ?? 0;
-  if (failedCount === 0) {
-    return 'supports';
-  }
-
-  if (failedCount >= coveredCount) {
-    return 'does-not-support';
-  }
-
-  return 'partially-supports';
-}
-
-function resolveAutomatedConformance(
-  aggregate?: CriterionAggregate
+function worst(
+  a: OpenAcrConformance,
+  b: OpenAcrConformance
 ): OpenAcrConformance {
-  const coveredCount = aggregate?.coveredComponents.size ?? 0;
-  if (coveredCount === 0) {
-    return 'not-evaluated';
+  return CONFORMANCE_SEVERITY[a] >= CONFORMANCE_SEVERITY[b] ? a : b;
+}
+
+/**
+ * Automated (axe-core) signal for a criterion, or `null` when axe does not
+ * cover it. "Uncovered" is deliberately *no signal* (not Does Not Support) so
+ * manual audits can fill the gaps axe cannot test.
+ */
+function automatedSignal(
+  aggregate?: CriterionAggregate
+): OpenAcrConformance | null {
+  const covered = aggregate?.coveredComponents.size ?? 0;
+  if (covered === 0) {
+    return null;
   }
 
-  const violatingCount = aggregate?.violatingComponents.size ?? 0;
-  if (violatingCount === 0) {
+  const violating = aggregate?.violatingComponents.size ?? 0;
+  if (violating === 0) {
     return 'supports';
   }
-
-  if (violatingCount >= coveredCount) {
+  if (violating >= covered) {
     return 'does-not-support';
   }
-
   return 'partially-supports';
 }
 
+function interactiveSignal(
+  aggregate?: InteractiveAggregate
+): OpenAcrConformance | null {
+  return (aggregate?.coveredComponents.size ?? 0) > 0 ? 'supports' : null;
+}
+
+/**
+ * Resolves a criterion's conformance.
+ *
+ * An engineering override is authoritative. Otherwise the verdict is the
+ * worst of the *real* signals present — automated (only when axe covers the
+ * criterion), interactive, and manual. When no layer has evidence, the
+ * criterion is Does Not Support, pending a manual audit.
+ */
 export function resolveConformance(
   context: ConformanceContext
 ): OpenAcrConformance {
-  const {
-    override,
-    manualAggregates,
-    interactiveAggregate,
-    criterion,
-    aggregate,
-  } = context;
+  const {override, aggregate, interactiveAggregate, manualAggregates} = context;
 
   if (override) {
     return override.conformance;
   }
 
-  const manualConformance = resolveManualConformance(manualAggregates);
-  if (manualConformance) {
-    return manualConformance;
+  const signals = [
+    automatedSignal(aggregate),
+    interactiveSignal(interactiveAggregate),
+    resolveManualConformance(manualAggregates) ?? null,
+  ].filter((signal): signal is OpenAcrConformance => signal !== null);
+
+  if (signals.length === 0) {
+    return 'does-not-support';
   }
 
-  const interactiveConformance =
-    resolveInteractiveConformance(interactiveAggregate);
-  if (interactiveConformance) {
-    return interactiveConformance;
-  }
-
-  const existingConformance = mapCriterionConformance(criterion);
-
-  if (existingConformance && existingConformance !== 'not-evaluated') {
-    return existingConformance;
-  }
-
-  return resolveAutomatedConformance(aggregate);
+  return signals.reduce(worst);
 }
 
-function buildInteractiveSuffix(
-  interactiveCoveredComponents: string[],
-  interactiveFailedComponents: string[]
-): string {
-  const coveredCount = interactiveCoveredComponents.length;
-  if (coveredCount === 0) {
-    return '';
-  }
-
-  const failedCount = interactiveFailedComponents.length;
-  if (failedCount === 0) {
-    return `Interactive keyboard/screen-reader testing passed across ${coveredCount} component(s).`;
-  }
-
-  return `Interactive keyboard/screen-reader testing found failures in ${failedCount} of ${coveredCount} component(s).`;
-}
-
-function buildAutomatedSuffix(
-  coveredComponents: string[],
-  violatingComponents: string[]
-): string {
-  const coveredCount = coveredComponents.length;
-  if (coveredCount === 0) {
-    return '';
-  }
-
-  const violatingCount = violatingComponents.length;
-  if (violatingCount === 0) {
-    return `Automated axe-core testing found no violations across ${coveredCount} component(s).`;
-  }
-
-  return `Automated axe-core testing found violations in ${violatingCount} of ${coveredCount} component(s).`;
-}
-
+/**
+ * Human-readable explanation of how the verdict was reached: the resolved
+ * conformance followed by the evidence from each contributing layer. The
+ * surface label is intentionally omitted — the VPAT is product-level.
+ */
 export function buildRemarks(context: RemarksContext): string {
-  const {
-    criterionId,
-    conformance,
-    coveredComponents,
-    violatingComponents,
-    interactiveCoveredComponents,
-    interactiveFailedComponents,
-    manualAggregates,
-    override,
-  } = context;
+  const {override, aggregate, interactiveAggregate, manualAggregates} = context;
 
   if (override) {
     return `[Override] ${override.reason}`;
   }
 
-  if (manualAggregates && manualAggregates.length > 0) {
-    const {pass, fail, partial, notApplicable} =
-      countManualConformances(manualAggregates);
+  const covered = aggregate?.coveredComponents.size ?? 0;
+  const violating = aggregate?.violatingComponents.size ?? 0;
+  const interactiveCovered = interactiveAggregate?.coveredComponents.size ?? 0;
+  const manualConformance = resolveManualConformance(manualAggregates);
+  const manualRemarks = (manualAggregates ?? [])
+    .map((aggregateEntry) => aggregateEntry.remarks)
+    .filter((remark): remark is string => Boolean(remark));
 
-    const summaryParts: string[] = [];
-    if (pass > 0) summaryParts.push(`${pass} pass`);
-    if (fail > 0) summaryParts.push(`${fail} fail`);
-    if (partial > 0) summaryParts.push(`${partial} partial`);
-    if (notApplicable > 0) summaryParts.push(`${notApplicable} not-applicable`);
+  const evidence: string[] = [];
 
-    const summary = summaryParts.join(', ');
-    let result = `Manual audit: ${summary} across ${manualAggregates.length} component(s).`;
-
-    // Append individual component remarks if available
-    const remarksLines: string[] = [];
-    for (const aggregate of manualAggregates) {
-      if (aggregate.remarks) {
-        remarksLines.push(`${aggregate.componentName}: ${aggregate.remarks}`);
-      }
-    }
-
-    if (remarksLines.length > 0) {
-      result += ` [Details: ${remarksLines.join(' | ')}]`;
-    }
-
-    return result;
-  }
-
-  const interactiveDrives =
-    resolveInteractiveConformance(context.interactiveAggregate) !== null;
-
-  if (interactiveDrives) {
-    const coveredCount = interactiveCoveredComponents.length;
-    const failedCount = interactiveFailedComponents.length;
-
-    let primary: string;
-    if (failedCount === 0) {
-      primary = `Interactive keyboard/screen-reader testing passed for WCAG ${criterionId} across ${coveredCount} component(s).`;
-    } else if (failedCount >= coveredCount) {
-      primary = `Interactive keyboard/screen-reader testing found failures for WCAG ${criterionId} in all ${coveredCount} component(s).`;
-    } else {
-      primary = `Interactive keyboard/screen-reader testing found failures for WCAG ${criterionId} in ${failedCount} of ${coveredCount} component(s).`;
-    }
-
-    const automatedSuffix = buildAutomatedSuffix(
-      coveredComponents,
-      violatingComponents
+  if (manualConformance) {
+    const base = `manual audit found ${openAcrConformanceLabel[manualConformance]}`;
+    evidence.push(
+      manualRemarks.length > 0 ? `${base} (${manualRemarks.join('; ')})` : base
     );
-    return `${primary}${automatedSuffix} ${DEFAULT_MANUAL_PLACEHOLDER_NOTE}`;
   }
 
-  const automatedCoveredCount = coveredComponents.length;
-  const automatedViolatingCount = violatingComponents.length;
-  const interactiveSuffix = buildInteractiveSuffix(
-    interactiveCoveredComponents,
-    interactiveFailedComponents
-  );
-
-  if (conformance === 'supports') {
-    return `Automated testing found no axe-core violations for WCAG ${criterionId} across ${automatedCoveredCount} mapped component(s).${interactiveSuffix} ${DEFAULT_MANUAL_PLACEHOLDER_NOTE}`;
+  if (covered > 0) {
+    evidence.push(
+      violating === 0
+        ? `automated axe-core found no violations across ${covered} component(s)`
+        : `automated axe-core found violations in ${violating} of ${covered} component(s)`
+    );
   }
 
-  if (conformance === 'partially-supports') {
-    return `Automated testing found violations for WCAG ${criterionId} in ${automatedViolatingCount} of ${automatedCoveredCount} mapped component(s).${interactiveSuffix} ${DEFAULT_MANUAL_PLACEHOLDER_NOTE}`;
+  if (interactiveCovered > 0) {
+    evidence.push(
+      `interactive keyboard testing passed across ${interactiveCovered} component(s)`
+    );
   }
 
-  if (conformance === 'does-not-support') {
-    return `Automated testing found violations for WCAG ${criterionId} in all ${automatedCoveredCount} mapped component(s).${interactiveSuffix} ${DEFAULT_MANUAL_PLACEHOLDER_NOTE}`;
+  if (evidence.length === 0) {
+    return `WCAG ${context.criterionId}: no automated, interactive, or manual coverage. [Manual audit required]`;
   }
 
-  if (conformance === 'not-applicable') {
-    return `WCAG ${criterionId} is not applicable for the tested component scope.`;
-  }
-
-  return `WCAG ${criterionId} has no automated mapping evidence in the JSON report. ${DEFAULT_MANUAL_PLACEHOLDER_NOTE}`;
+  return `${openAcrConformanceLabel[context.conformance]} — ${evidence.join('; ')}.`;
 }

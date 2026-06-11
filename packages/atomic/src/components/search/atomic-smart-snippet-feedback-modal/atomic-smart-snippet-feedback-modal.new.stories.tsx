@@ -5,12 +5,13 @@ import type {
 } from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
+import {testDialogA11y} from '@/storybook-utils/a11y/dialog.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-smart-snippet-feedback-modal/atomic-smart-snippet-feedback-modal.js';
 
-const mockedSearchApi = new MockSearchApi();
+const searchApiHarness = new MockSearchApi();
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-smart-snippet-feedback-modal',
@@ -51,7 +52,7 @@ const meta: Meta = {
       handles: events,
     },
     msw: {
-      handlers: [...mockedSearchApi.handlers],
+      handlers: [...searchApiHarness.handlers],
     },
   },
   args: {
@@ -71,5 +72,14 @@ export const OpenedModal: Story = {
   name: 'Modal Opened',
   args: {
     'is-open': true,
+  },
+};
+
+export const A11yDialog: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  name: 'A11y Dialog',
+  play: async (context) => {
+    await play(context);
+    await testDialogA11y(context, {triggerLabel: 'Open Feedback Modal'});
   },
 };

@@ -1,6 +1,10 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {html} from 'lit';
+import {within} from 'shadow-dom-testing-library';
+import {testStatusMessageA11y} from '@/storybook-utils/a11y/status-message.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {buildSearchResponseWithResults} from '@/storybook-utils/api/search/search-response-mocks.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {
   facetDecorator,
@@ -11,6 +15,7 @@ import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-w
 import '@/src/components/search/atomic-facet/atomic-facet.js';
 import '@/src/components/common/atomic-timeframe/atomic-timeframe.js';
 import '@/src/components/search/atomic-timeframe-facet/atomic-timeframe-facet.js';
+import '@/src/components/search/atomic-query-summary/atomic-query-summary.js';
 
 const searchApiHarness = new MockSearchApi();
 
@@ -272,5 +277,52 @@ export const Collapsed: Story = {
         }),
       ],
     }));
+  },
+};
+
+export const A11yStatusMessage: Story = {
+  name: 'A11y Status Message',
+  tags: ['a11y', 'test', '!dev'],
+  args: {
+    'default-slot': `
+      <atomic-timeframe unit="hour"></atomic-timeframe>
+      <atomic-timeframe unit="day"></atomic-timeframe>
+      <atomic-timeframe unit="week"></atomic-timeframe>
+      <atomic-timeframe unit="month"></atomic-timeframe>
+      <atomic-timeframe unit="quarter"></atomic-timeframe>
+      <atomic-timeframe unit="year"></atomic-timeframe>
+    `,
+  },
+  beforeEach: () => {
+    searchApiHarness.searchEndpoint.mockOnce((response) =>
+      buildSearchResponseWithResults(120)({
+        ...response,
+        facets: [
+          createDateFacetResponse(baseDateFacetValues),
+          createDateFacetResponse(baseDateFacetValues, {
+            facetId: 'date_input_range',
+          }),
+        ],
+      })
+    );
+    searchApiHarness.searchEndpoint.mockOnce(
+      buildSearchResponseWithResults(42)
+    );
+  },
+  decorators: [
+    (story) => html`<atomic-query-summary></atomic-query-summary>${story()}`,
+  ],
+  play: async (context) => {
+    await play(context);
+    await testStatusMessageA11y(context, {
+      triggerAction: async () => {
+        const [link] = await within(
+          context.canvasElement
+        ).findAllByShadowLabelText('Inclusion filter on', {exact: false});
+        link.click();
+      },
+      expectedText: 'Results loaded. Results 1-10 of 42',
+      timeout: 5000,
+    });
   },
 };

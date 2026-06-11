@@ -117,6 +117,24 @@ const customRenderer = {
   text(text) {
     return completeUnclosedElement(text);
   },
+
+  /**
+   * Custom Marked renderer for links.
+   * @param {string} href The link href.
+   * @param {string} title The link title.
+   * @param {string} text The link text.
+   * @returns {string} The link element to render.
+   */
+  link(href, title, text) {
+    const titleAttribute = title ? ` title="${escapeHtml(title)}"` : '';
+    const safeHref = href ? escapeHtml(href) : '';
+
+    if (!safeHref) {
+      return `<span>${text}</span>`;
+    }
+
+    return `<a href="${safeHref}"${titleAttribute} data-answer-inline-link="true">${text}</a>`;
+  },
 };
 
 /**

@@ -1,12 +1,13 @@
 import type {Result} from '@coveo/headless';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {testDisclosureA11y} from '@/storybook-utils/a11y/disclosure.js';
 import {MockInsightApi} from '@/storybook-utils/api/insight/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import '@/src/components/insight/atomic-insight-smart-snippet/atomic-insight-smart-snippet.js';
 
-const mockInsightApi = new MockInsightApi();
+const insightApiHarness = new MockInsightApi();
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-insight-smart-snippet',
@@ -27,14 +28,14 @@ const meta: Meta = {
       handles: events,
     },
     msw: {
-      handlers: [...mockInsightApi.handlers],
+      handlers: [...insightApiHarness.handlers],
     },
   },
   args,
   argTypes,
   beforeEach: async () => {
-    mockInsightApi.searchEndpoint.clear();
-    mockInsightApi.searchEndpoint.mockOnce((response) => {
+    insightApiHarness.searchEndpoint.clear();
+    insightApiHarness.searchEndpoint.mockOnce((response) => {
       if (!('results' in response)) return response;
       const [result] = response.results as Result[];
       return {
@@ -78,3 +79,13 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {};
+
+export const A11yDisclosure: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  play: async (context) => {
+    await play(context);
+    await testDisclosureA11y(context, {
+      trigger: {expanded: false},
+    });
+  },
+};

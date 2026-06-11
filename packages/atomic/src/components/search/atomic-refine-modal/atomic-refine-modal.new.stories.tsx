@@ -6,6 +6,7 @@ import type {
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
+import {testDialogA11y} from '@/storybook-utils/a11y/dialog.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -76,32 +77,44 @@ const meta: Meta = {
 
 export default meta;
 
+const refineModalDecorators: Decorator[] = [
+  () => html`
+    <atomic-refine-toggle></atomic-refine-toggle>
+    <div style="display:none;">
+      <atomic-sort-dropdown
+        ><atomic-sort-expression
+          label="relevance"
+          expression="relevancy"
+        ></atomic-sort-expression
+      ></atomic-sort-dropdown>
+      <atomic-facet field="author" label="Authors"></atomic-facet>
+      <atomic-facet field="language" label="Language"></atomic-facet>
+      <atomic-facet
+        field="objecttype"
+        label="Type"
+        display-values-as="link"
+      ></atomic-facet>
+      <atomic-facet
+        field="year"
+        label="Year"
+        display-values-as="box"
+      ></atomic-facet>
+    </div>
+  `,
+  decorator,
+  commerceFacetWidthDecorator,
+];
+
 export const Default: Story = {
-  decorators: [
-    () => html`
-      <atomic-refine-toggle></atomic-refine-toggle>
-      <div style="display:none;">
-        <atomic-sort-dropdown
-          ><atomic-sort-expression
-            label="relevance"
-            expression="relevancy"
-          ></atomic-sort-expression
-        ></atomic-sort-dropdown>
-        <atomic-facet field="author" label="Authors"></atomic-facet>
-        <atomic-facet field="language" label="Language"></atomic-facet>
-        <atomic-facet
-          field="objecttype"
-          label="Type"
-          display-values-as="link"
-        ></atomic-facet>
-        <atomic-facet
-          field="year"
-          label="Year"
-          display-values-as="box"
-        ></atomic-facet>
-      </div>
-    `,
-    decorator,
-    commerceFacetWidthDecorator,
-  ],
+  decorators: refineModalDecorators,
+};
+
+export const A11yDialog: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  name: 'A11y Dialog',
+  decorators: refineModalDecorators,
+  play: async (context) => {
+    await play(context);
+    await testDialogA11y(context, {triggerLabel: 'Sort & Filter'});
+  },
 };

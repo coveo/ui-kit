@@ -1,5 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {testDisclosureA11y} from '@/storybook-utils/a11y/disclosure.js';
 import {MockInsightApi} from '@/storybook-utils/api/insight/mock.js';
 import {
   type baseResponse,
@@ -9,7 +10,7 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import '@/src/components/insight/atomic-insight-smart-snippet-suggestions/atomic-insight-smart-snippet-suggestions.js';
 
-const mockInsightApi = new MockInsightApi();
+const insightApiHarness = new MockInsightApi();
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-insight-smart-snippet-suggestions',
@@ -30,13 +31,13 @@ const meta: Meta = {
       handles: events,
     },
     msw: {
-      handlers: [...mockInsightApi.handlers],
+      handlers: [...insightApiHarness.handlers],
     },
   },
   args,
   argTypes,
   beforeEach: async () => {
-    mockInsightApi.searchEndpoint.mock(
+    insightApiHarness.searchEndpoint.mock(
       () => smartSnippetSuggestionsResponse as unknown as typeof baseResponse
     );
   },
@@ -47,4 +48,15 @@ export default meta;
 
 export const Default: Story = {
   name: 'atomic-insight-smart-snippet-suggestions',
+};
+
+export const A11yDisclosure: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  play: async (context) => {
+    await play(context);
+    await testDisclosureA11y(context, {
+      trigger: {expanded: false},
+      assertControlledRegion: true,
+    });
+  },
 };

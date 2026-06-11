@@ -1,6 +1,8 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {testCheckboxA11y} from '@/storybook-utils/a11y/checkbox.js';
 import {MockInsightApi} from '@/storybook-utils/api/insight/mock';
+import {searchFacetTransformer} from '@/storybook-utils/api/search/facet-transformer';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {
   facetDecorator,
@@ -9,7 +11,7 @@ import {
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import '@/src/components/insight/atomic-insight-numeric-facet/atomic-insight-numeric-facet.js';
 
-const mockInsightApi = new MockInsightApi();
+const insightApiHarness = new MockInsightApi();
 
 const numericFacetValues = [
   {
@@ -70,7 +72,7 @@ const numericFacetValues = [
   },
 ];
 
-mockInsightApi.searchEndpoint.mock((response) => ({
+insightApiHarness.searchEndpoint.mock((response) => ({
   ...response,
   facets: [
     {
@@ -101,7 +103,7 @@ mockInsightApi.searchEndpoint.mock((response) => ({
 }));
 
 const mockDefaultFacetResponse = () => {
-  mockInsightApi.searchEndpoint.mockOnce((response) => ({
+  insightApiHarness.searchEndpoint.mockOnce((response) => ({
     ...response,
     facets: [
       {
@@ -150,7 +152,7 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
-    msw: {handlers: [...mockInsightApi.handlers]},
+    msw: {handlers: [...insightApiHarness.handlers]},
   },
   argTypes: {
     ...argTypes,
@@ -159,7 +161,7 @@ const meta: Meta = {
     },
   },
   beforeEach: () => {
-    mockInsightApi.searchEndpoint.clear();
+    insightApiHarness.searchEndpoint.clear();
   },
   play,
   args: {
@@ -232,7 +234,7 @@ export const WithSelectedValue: Story = {
     const selectedValues = numericFacetValues.map((v, i) =>
       i === 0 ? {...v, state: 'selected'} : v
     );
-    mockInsightApi.searchEndpoint.mockOnce((response) => ({
+    insightApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
       facets: [
         {
@@ -245,5 +247,28 @@ export const WithSelectedValue: Story = {
         },
       ],
     }));
+  },
+};
+
+export const A11yCheckbox: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  args: {
+    field: 'ytviewcount',
+    label: 'YouTube View Count',
+  },
+  decorators: [facetDecorator],
+  beforeEach: () => {
+    insightApiHarness.searchEndpoint.addRequestTransformer(
+      searchFacetTransformer
+    );
+    return () => {
+      insightApiHarness.searchEndpoint.removeRequestTransformer(
+        searchFacetTransformer
+      );
+    };
+  },
+  play: async (context) => {
+    await play(context);
+    await testCheckboxA11y(context);
   },
 };

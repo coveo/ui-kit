@@ -1,4 +1,14 @@
-import {conversationSlice} from '@/src/core/internal/conversation/conversation-slice.js';
+import {
+  startTurn as _startTurn,
+  appendAgentChunk as _appendAgentChunk,
+  completeTurn as _completeTurn,
+  failTurn as _failTurn,
+  abortTurn as _abortTurn,
+  setSession as _setSession,
+  patchSession as _patchSession,
+  setError as _setError,
+  setStreamingConnected as _setStreamingConnected,
+} from '@/src/core/internal/conversation/conversation-actions.js';
 import type {StateMutation} from '@/src/core/interface/engine/engine-types.js';
 import type {
   AppendAgentChunkPayload,
@@ -9,41 +19,41 @@ import type {
 } from './conversation-types.js';
 
 export const startTurn = (payload: StartTurnPayload): StateMutation => {
-  return conversationSlice.actions.startTurn(payload);
+  return _startTurn(payload);
 };
 
 export const appendAgentChunk = (
   payload: AppendAgentChunkPayload
 ): StateMutation => {
-  return conversationSlice.actions.appendAgentChunk(payload);
+  return _appendAgentChunk(payload);
 };
 
 export const completeTurn = (payload: FinalizeTurnPayload): StateMutation => {
-  return conversationSlice.actions.completeTurn(payload);
+  return _completeTurn(payload);
 };
 
 export const failTurn = (payload: FailTurnPayload): StateMutation => {
-  return conversationSlice.actions.failTurn(payload);
+  return _failTurn(payload);
 };
 
 export const abortTurn = (payload: FinalizeTurnPayload): StateMutation => {
-  return conversationSlice.actions.abortTurn(payload);
+  return _abortTurn(payload);
 };
 
 export const setSession = (session: ConversationSession): StateMutation => {
-  return conversationSlice.actions.setSession(session);
+  return _setSession(session);
 };
 
 export const patchSession = (
   sessionPatch: ConversationSession
 ): StateMutation => {
-  return conversationSlice.actions.patchSession(sessionPatch);
+  return _patchSession(sessionPatch);
 };
 
 export const setError = (error: string | null): StateMutation => {
-  return conversationSlice.actions.setError(error);
+  return _setError(error);
 };
 
 export const setStreamingConnected = (isConnected: boolean): StateMutation => {
-  return conversationSlice.actions.setStreamingConnected(isConnected);
+  return _setStreamingConnected(isConnected);
 };

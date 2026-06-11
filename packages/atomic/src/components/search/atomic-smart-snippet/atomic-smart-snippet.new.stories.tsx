@@ -1,12 +1,14 @@
 import type {Result} from '@coveo/headless';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {html} from 'lit';
+import {testDisclosureA11y} from '@/storybook-utils/a11y/disclosure.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/search/atomic-smart-snippet/atomic-smart-snippet.js';
 
-const mockSearchApi = new MockSearchApi();
+const searchApiHarness = new MockSearchApi();
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-smart-snippet',
@@ -27,14 +29,14 @@ const meta: Meta = {
       handles: events,
     },
     msw: {
-      handlers: [...mockSearchApi.handlers],
+      handlers: [...searchApiHarness.handlers],
     },
   },
   args,
   argTypes,
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.clear();
-    mockSearchApi.searchEndpoint.mockOnce((response) => {
+    searchApiHarness.searchEndpoint.clear();
+    searchApiHarness.searchEndpoint.mockOnce((response) => {
       if (!('results' in response)) return response;
       const [result] = response.results as Result[];
       return {
@@ -78,3 +80,16 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {};
+
+export const A11yDisclosure: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  decorators: [
+    (story) => html`<div style="max-width: 200px;">${story()}</div>`,
+  ],
+  play: async (context) => {
+    await play(context);
+    await testDisclosureA11y(context, {
+      trigger: {expanded: false},
+    });
+  },
+};

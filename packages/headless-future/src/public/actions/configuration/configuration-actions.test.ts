@@ -5,7 +5,15 @@ import {
   FullEngine,
   getFullEngine,
 } from '@/src/core/interface/engine/engine.js';
-import * as selectors from '@/src/core/interface/configuration/configuration-selectors.js';
+import {
+  accessToken,
+  country,
+  currency,
+  endpoint,
+  language,
+  organizationId,
+  trackingId,
+} from '@/src/core/interface/configuration/configuration-selectors.js';
 import {loadConfigurationActions} from './configuration-actions.js';
 
 describe('configuration actions', () => {
@@ -26,10 +34,10 @@ describe('configuration actions', () => {
     actions.setCountry('US');
     actions.setCurrency('USD');
 
-    expect(fullEngine.read(selectors.trackingId)).toBe('track-123');
-    expect(fullEngine.read(selectors.language)).toBe('en');
-    expect(fullEngine.read(selectors.country)).toBe('US');
-    expect(fullEngine.read(selectors.currency)).toBe('USD');
+    expect(fullEngine.read(trackingId)).toBe('track-123');
+    expect(fullEngine.read(language)).toBe('en');
+    expect(fullEngine.read(country)).toBe('US');
+    expect(fullEngine.read(currency)).toBe('USD');
   });
 
   it('replaces configuration through setConfiguration', async () => {
@@ -46,12 +54,12 @@ describe('configuration actions', () => {
       endpoint: 'https://example.com',
     });
 
-    expect(fullEngine.read(selectors.organizationId)).toBe('org-1');
-    expect(fullEngine.read(selectors.accessToken)).toBe('token-1');
-    expect(fullEngine.read(selectors.trackingId)).toBe('tracking-1');
-    expect(fullEngine.read(selectors.language)).toBe('fr');
-    expect(fullEngine.read(selectors.country)).toBe('CA');
-    expect(fullEngine.read(selectors.currency)).toBe('CAD');
-    expect(fullEngine.read(selectors.endpoint)).toBe('https://example.com');
+    expect(fullEngine.read(organizationId)).toBe('org-1');
+    expect(fullEngine.read(accessToken)).toBe('token-1');
+    expect(fullEngine.read(trackingId)).toBe('tracking-1');
+    expect(fullEngine.read(language)).toBe('fr');
+    expect(fullEngine.read(country)).toBe('CA');
+    expect(fullEngine.read(currency)).toBe('CAD');
+    expect(fullEngine.read(endpoint)).toBe('https://example.com');
   });
 });

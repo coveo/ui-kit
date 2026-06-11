@@ -1,8 +1,10 @@
+import type {SearchEndpointState} from '@/src/core/interface/api/search-endpoint/search-endpoint-types.js';
+import {createSlice} from '@reduxjs/toolkit';
 import {
-  SearchEndpointState,
-  SearchEndpointStatus,
-} from '@/src/core/interface/api/search-endpoint/search-endpoint-types.js';
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+  setStatus,
+  setError,
+  setConfiguration,
+} from './search-endpoint-actions.js';
 
 export const initialSearchEndpointState: SearchEndpointState = {
   configuration: {},
@@ -13,20 +15,16 @@ export const initialSearchEndpointState: SearchEndpointState = {
 export const searchEndpointSlice = createSlice({
   name: 'searchEndpoint',
   initialState: initialSearchEndpointState,
-  reducers: {
-    setStatus: (state, action: PayloadAction<SearchEndpointStatus>) => {
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(setStatus, (state, action) => {
       state.status = action.payload;
-    },
-    setError: (state, action: PayloadAction<string | null>) => {
+    });
+    builder.addCase(setError, (state, action) => {
       state.error = action.payload;
-    },
-    setConfiguration: (state, action: PayloadAction<Record<string, any>>) => {
+    });
+    builder.addCase(setConfiguration, (state, action) => {
       state.configuration = action.payload;
-    },
-  },
-  selectors: {
-    status: (state) => state.status,
-    error: (state) => state.error,
-    configuration: (state) => state.configuration,
+    });
   },
 });
