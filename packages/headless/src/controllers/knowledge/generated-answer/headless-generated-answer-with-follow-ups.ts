@@ -215,9 +215,9 @@ export function buildGeneratedAnswerWithFollowUps(
         engine.dispatch(
           analyticsClient.logOpenGeneratedAnswerSource(citationId, answerId)
         );
-      } else if (analyticsClient.logOpenGeneratedAnswerFollowupSource) {
+      } else if (analyticsClient.logOpenGeneratedAnswerFollowUpSource) {
         engine.dispatch(
-          analyticsClient.logOpenGeneratedAnswerFollowupSource(
+          analyticsClient.logOpenGeneratedAnswerFollowUpSource(
             citationId,
             answerId
           )

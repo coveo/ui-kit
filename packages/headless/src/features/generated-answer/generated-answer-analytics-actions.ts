@@ -457,18 +457,22 @@ export function logCopyGeneratedAnswer(answerId?: string): CustomAction {
   });
 }
 
-export function logOpenGeneratedAnswerFollowupSource(
+export function logOpenGeneratedAnswerFollowUpSource(
   citationId: string,
   answerId: string
 ): CustomAction {
   return makeAnalyticsAction({
-    prefix: 'analytics/generatedAnswer/openFollowupAnswerSource',
+    prefix: 'analytics/generatedAnswer/openFollowUpAnswerSource',
     __legacy__getBuilder: (client, state) => {
       const citation = citationSourceSelector(state, citationId);
       if (!citation) {
         return null;
       }
-      const conversationId = selectFollowUpAnswersConversationId(state) ?? '';
+      const conversationId = selectFollowUpAnswersConversationId(state);
+
+      if (!conversationId) {
+        return null;
+      }
 
       return client.makeGeneratedAnswerFollowupOpenSource({
         ...partialFollowupCitationInformation(citation, state),
@@ -496,7 +500,7 @@ export const generatedAnswerAnalyticsClient = {
   logGeneratedAnswerOpenInlineLink,
   logHoverCitation,
   logOpenGeneratedAnswerSource,
-  logOpenGeneratedAnswerFollowupSource,
+  logOpenGeneratedAnswerFollowUpSource,
   logRetryGeneratedAnswer,
   logGeneratedAnswerExpand,
   logGeneratedAnswerCollapse,

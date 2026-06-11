@@ -25,7 +25,7 @@ import {
   logGeneratedAnswerStreamEnd,
   logHoverCitation,
   logLikeGeneratedAnswer,
-  logOpenGeneratedAnswerFollowupSource,
+  logOpenGeneratedAnswerFollowUpSource,
   logOpenGeneratedAnswerSource,
   logRetryGeneratedAnswer,
 } from './generated-answer-analytics-actions.js';
@@ -289,10 +289,10 @@ describe('generated answer analytics actions', () => {
       expect(mockLogFunction).toHaveBeenCalledTimes(1);
     });
 
-    it('should log #logOpenGeneratedAnswerFollowupSource with the right payload', async () => {
+    it('should log #logOpenGeneratedAnswerFollowUpSource with the right payload', async () => {
       setConversationIdInState();
 
-      await logOpenGeneratedAnswerFollowupSource(
+      await logOpenGeneratedAnswerFollowUpSource(
         exampleCitation.id,
         exampleProvidedAnswerId
       )()(engine.dispatch, () => engine.state, {} as ThunkExtraArguments);

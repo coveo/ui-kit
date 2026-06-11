@@ -17,7 +17,7 @@ import {
   logDislikeGeneratedAnswer,
   logHoverCitation,
   logLikeGeneratedAnswer,
-  logOpenGeneratedAnswerFollowupSource,
+  logOpenGeneratedAnswerFollowUpSource,
   logOpenGeneratedAnswerSource,
 } from '../../../features/generated-answer/generated-answer-analytics-actions.js';
 import {getGeneratedAnswerInitialState} from '../../../features/generated-answer/generated-answer-state.js';
@@ -572,7 +572,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
         citationId,
         undefined
       );
-      expect(logOpenGeneratedAnswerFollowupSource).not.toHaveBeenCalled();
+      expect(logOpenGeneratedAnswerFollowUpSource).not.toHaveBeenCalled();
     });
 
     it('should dispatch logOpenGeneratedAnswerSource when answerId matches head answer', () => {
@@ -592,15 +592,15 @@ describe('GeneratedAnswerWithFollowUps', () => {
         citationId,
         headAnswerId
       );
-      expect(logOpenGeneratedAnswerFollowupSource).not.toHaveBeenCalled();
+      expect(logOpenGeneratedAnswerFollowUpSource).not.toHaveBeenCalled();
     });
 
-    it('should dispatch logOpenGeneratedAnswerFollowupSource when answerId targets a follow-up answer', () => {
+    it('should dispatch logOpenGeneratedAnswerFollowUpSource when answerId targets a follow-up answer', () => {
       const controller = createGeneratedAnswerWithFollowUps();
 
       controller.logCitationClick(citationId, followUpAnswerId);
 
-      expect(logOpenGeneratedAnswerFollowupSource).toHaveBeenCalledWith(
+      expect(logOpenGeneratedAnswerFollowUpSource).toHaveBeenCalledWith(
         citationId,
         followUpAnswerId
       );

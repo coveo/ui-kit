@@ -1,6 +1,6 @@
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
-  logOpenGeneratedAnswerFollowupSource,
+  logOpenGeneratedAnswerFollowUpSource,
   logOpenGeneratedAnswerSource,
 } from '../../features/generated-answer/generated-answer-analytics-actions.js';
 import {generativeQuestionAnsweringIdSelector} from '../../features/generated-answer/generated-answer-selectors.js';
@@ -44,7 +44,7 @@ export function buildInteractiveCitation(
           headAnswerId !== undefined &&
           answerId !== headAnswerId
         ) {
-          return logOpenGeneratedAnswerFollowupSource(citationId, answerId);
+          return logOpenGeneratedAnswerFollowUpSource(citationId, answerId);
         }
         return answerId !== undefined
           ? logOpenGeneratedAnswerSource(citationId, answerId)

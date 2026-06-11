@@ -150,7 +150,7 @@ export interface GeneratedAnswerAnalyticsClient {
     citationId: string,
     answerId?: string
   ): CustomAction;
-  logOpenGeneratedAnswerFollowupSource?(
+  logOpenGeneratedAnswerFollowUpSource?(
     citationId: string,
     answerId: string
   ): CustomAction;
