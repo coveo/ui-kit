@@ -38,7 +38,7 @@ Add a `@coveo/bueno/zod` export path that re-exports `zod/mini` APIs. This invol
     - _Requirements: 1.1, 1.3, 5.3, 6.2_
 
 - [ ] 5. Write validation tests
-  - [ ]* 5.1 Write unit tests for export completeness in `packages/bueno/src/zod.test.ts`
+  - [ ]\* 5.1 Write unit tests for export completeness in `packages/bueno/src/zod.test.ts`
     - Verify `@coveo/bueno/zod` exports match `zod/mini` exports (same set of named exports)
     - Verify existing `@coveo/bueno` exports remain unchanged (snapshot or explicit list)
     - Verify the node bundle (`dist/zod.esm.js`) uses ESM syntax and does not contain inlined Zod code
@@ -46,14 +46,14 @@ Add a `@coveo/bueno/zod` export path that re-exports `zod/mini` APIs. This invol
     - Verify neither Zod bundle references Bueno source modules
     - _Requirements: 1.2, 2.1, 3.2, 4.3, 4.5_
 
-  - [ ]* 5.2 Write integration tests for type resolution and backward compatibility
+  - [ ]\* 5.2 Write integration tests for type resolution and backward compatibility
     - Verify `tsc --noEmit` succeeds with a file importing from `@coveo/bueno/zod`
     - Verify cross-assignment between `@coveo/bueno/zod` types and `zod/mini` types compiles
     - Verify existing bundles (`dist/bueno.js`, `dist/bueno.esm.js`, `cdn/bueno.esm.js`, `cdn/bueno.js`) do not contain zod code
     - Verify CJS `require("@coveo/bueno")` and ESM `import from "@coveo/bueno"` still work
     - _Requirements: 2.2, 4.4, 4.6, 5.1, 5.3, 5.4_
 
-  - [ ]* 5.3 Write smoke tests for package validation
+  - [ ]\* 5.3 Write smoke tests for package validation
     - Run `publint` and assert zero errors/warnings for both `"."` and `"./zod"` export paths
     - Verify `npm pack --dry-run` includes `dist/zod.esm.js` and `dist/definitions/zod.d.ts`
     - Verify the `"./zod"` export conditions are in the correct order (`types` → `import` → `default`)
@@ -76,10 +76,10 @@ Add a `@coveo/bueno/zod` export path that re-exports `zod/mini` APIs. This invol
 ```json
 {
   "waves": [
-    { "id": 0, "tasks": ["1.1"] },
-    { "id": 1, "tasks": ["1.2", "2.1"] },
-    { "id": 2, "tasks": ["4.1"] },
-    { "id": 3, "tasks": ["5.1", "5.2", "5.3"] }
+    {"id": 0, "tasks": ["1.1"]},
+    {"id": 1, "tasks": ["1.2", "2.1"]},
+    {"id": 2, "tasks": ["4.1"]},
+    {"id": 3, "tasks": ["5.1", "5.2", "5.3"]}
   ]
 }
 ```

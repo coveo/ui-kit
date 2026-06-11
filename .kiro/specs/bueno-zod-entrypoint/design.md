@@ -44,10 +44,11 @@ The build graph shows how the two entrypoints are fully independent. `src/zod.ts
 ### 1. Source File: `src/zod.ts`
 
 ```typescript
-export * from "zod/mini";
+export * from 'zod/mini';
 ```
 
 A single barrel re-export. This ensures:
+
 - All public APIs from `zod/mini` are available at `@coveo/bueno/zod`
 - TypeScript generates a `.d.ts` that re-exports all types
 - No custom code to maintain or drift from upstream
@@ -73,6 +74,7 @@ function nodeZodEsm() {
 ```
 
 Key points:
+
 - `external: ['zod', 'zod/*']` prevents esbuild from bundling any `zod` import. The output contains `import ... from "zod/mini"` verbatim.
 - `platform: 'node'` aligns with how the existing node-targeted ESM build works.
 
@@ -93,6 +95,7 @@ function browserZodEsm() {
 ```
 
 Key points:
+
 - **No `external` declaration** — esbuild resolves and inline all `zod/mini` code into the output bundle. This produces a self-contained file that browser/CDN consumers can load without a bundler.
 - `platform: 'browser'` ensures browser-appropriate defaults (no Node.js built-in polyfills, `globalThis` assumptions).
 - Output goes to `cdn/` to match the existing CDN bundle pattern (`cdn/bueno.esm.js`).
@@ -120,6 +123,7 @@ Both functions run in `Promise.all` alongside the existing four builds. Existing
 ```
 
 The `"./zod"` entry:
+
 - Lists `types` first for correct TypeScript resolution under `node16`/`nodenext`/`bundler` moduleResolution.
 - Lists `import` second for ESM consumers.
 - Lists `default` last as a fallback (same file as `import` since there is no CJS variant).
@@ -154,12 +158,12 @@ This feature does not introduce any new data models. The entrypoint is a pass-th
 
 ## Error Handling
 
-| Scenario | Handling |
-|----------|----------|
-| `zod` not installed | `pnpm install` will resolve it since it's in `dependencies`; if somehow missing at build time, esbuild resolves the import and errors |
-| Consumer uses `require("@coveo/bueno/zod")` | Node.js throws `ERR_REQUIRE_ESM` because no `require` condition is exported. This is intentional — ESM-only entrypoint |
-| TypeScript can't resolve `@coveo/bueno/zod` types | Consumer must use `moduleResolution: "node16"`, `"nodenext"`, or `"bundler"` (standard for packages with `exports`) |
-| Browser bundle becomes stale vs Zod version | Both bundles are built from the same source and same `node_modules` in a single `pnpm run build` invocation, so they always ship in sync |
+| Scenario                                          | Handling                                                                                                                                 |
+| ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `zod` not installed                               | `pnpm install` will resolve it since it's in `dependencies`; if somehow missing at build time, esbuild resolves the import and errors    |
+| Consumer uses `require("@coveo/bueno/zod")`       | Node.js throws `ERR_REQUIRE_ESM` because no `require` condition is exported. This is intentional — ESM-only entrypoint                   |
+| TypeScript can't resolve `@coveo/bueno/zod` types | Consumer must use `moduleResolution: "node16"`, `"nodenext"`, or `"bundler"` (standard for packages with `exports`)                      |
+| Browser bundle becomes stale vs Zod version       | Both bundles are built from the same source and same `node_modules` in a single `pnpm run build` invocation, so they always ship in sync |
 
 ## Correctness Properties
 
@@ -192,43 +196,44 @@ The browser Zod bundle (`cdn/zod.esm.js`) must contain no unresolved external `i
 ### Why Property-Based Testing Does Not Apply
 
 This feature is a **package configuration + build tooling + re-export facade**. It does not contain pure functions with meaningful input variation, algorithms, parsers, serializers, or business logic. The acceptance criteria are all verifiable through:
+
 - Static assertions on JSON/file structure (SMOKE)
-- Import/export comparisons (EXAMPLE)  
+- Import/export comparisons (EXAMPLE)
 - Build/TypeScript compilation checks (INTEGRATION)
 
 None of these benefit from 100+ randomized iterations. Property-based testing is not appropriate here.
 
 ### Unit Tests (Vitest)
 
-| Test | Validates |
-|------|-----------|
-| `@coveo/bueno/zod` exports match `zod/mini` exports | Req 1.2, 3.2 |
-| Existing `@coveo/bueno` exports remain unchanged | Req 2.1 |
-| Node bundle output file `dist/zod.esm.js` uses ESM syntax | Req 1.3 |
-| Node bundle output does not contain inlined Zod code | Req 4.3 |
-| Browser bundle output file `cdn/zod.esm.js` uses ESM syntax | Req 1.3 |
+| Test                                                                        | Validates         |
+| --------------------------------------------------------------------------- | ----------------- |
+| `@coveo/bueno/zod` exports match `zod/mini` exports                         | Req 1.2, 3.2      |
+| Existing `@coveo/bueno` exports remain unchanged                            | Req 2.1           |
+| Node bundle output file `dist/zod.esm.js` uses ESM syntax                   | Req 1.3           |
+| Node bundle output does not contain inlined Zod code                        | Req 4.3           |
+| Browser bundle output file `cdn/zod.esm.js` uses ESM syntax                 | Req 1.3           |
 | Browser bundle output contains inlined Zod code (no external `zod` imports) | Req 4.3 (browser) |
-| Browser bundle is self-contained (no unresolved bare specifiers) | Req 1.3 |
-| Neither Zod bundle references Bueno source | Req 4.5 |
+| Browser bundle is self-contained (no unresolved bare specifiers)            | Req 1.3           |
+| Neither Zod bundle references Bueno source                                  | Req 4.5           |
 
 ### Integration Tests
 
-| Test | Validates |
-|------|-----------|
-| `tsc --noEmit` succeeds with a file importing `@coveo/bueno/zod` | Req 5.1, 5.3 |
-| Cross-assignment between `@coveo/bueno/zod` and `zod/mini` types compiles | Req 5.4 |
-| Existing bundles are byte-identical after adding zod entrypoint | Req 4.4 |
-| CJS `require("@coveo/bueno")` still works | Req 2.2 |
-| ESM `import from "@coveo/bueno"` still works | Req 2.2 |
-| Existing bundles don't contain zod code | Req 4.6 |
-| Browser bundle loads in a simulated browser environment (no Node.js APIs) | Req 1.3 |
+| Test                                                                      | Validates    |
+| ------------------------------------------------------------------------- | ------------ |
+| `tsc --noEmit` succeeds with a file importing `@coveo/bueno/zod`          | Req 5.1, 5.3 |
+| Cross-assignment between `@coveo/bueno/zod` and `zod/mini` types compiles | Req 5.4      |
+| Existing bundles are byte-identical after adding zod entrypoint           | Req 4.4      |
+| CJS `require("@coveo/bueno")` still works                                 | Req 2.2      |
+| ESM `import from "@coveo/bueno"` still works                              | Req 2.2      |
+| Existing bundles don't contain zod code                                   | Req 4.6      |
+| Browser bundle loads in a simulated browser environment (no Node.js APIs) | Req 1.3      |
 
 ### Smoke Tests
 
-| Test | Validates |
-|------|-----------|
-| `publint` passes with zero errors/warnings | Req 6.1 |
-| `"./zod"` export conditions are in correct order (`types` → `import` → `default`) | Req 6.2 |
-| `npm pack --dry-run` includes `dist/zod.esm.js` and `dist/definitions/zod.d.ts` | Req 6.3 |
-| `package.json` declares `"./zod"` in exports | Req 1.1 |
-| `package.json` has `zod: "^4.x"` in dependencies | Req 3.1 |
+| Test                                                                              | Validates |
+| --------------------------------------------------------------------------------- | --------- |
+| `publint` passes with zero errors/warnings                                        | Req 6.1   |
+| `"./zod"` export conditions are in correct order (`types` → `import` → `default`) | Req 6.2   |
+| `npm pack --dry-run` includes `dist/zod.esm.js` and `dist/definitions/zod.d.ts`   | Req 6.3   |
+| `package.json` declares `"./zod"` in exports                                      | Req 1.1   |
+| `package.json` has `zod: "^4.x"` in dependencies                                  | Req 3.1   |

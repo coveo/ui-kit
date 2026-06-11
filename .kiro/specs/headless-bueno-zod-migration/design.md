@@ -117,7 +117,13 @@ export const validateInitialState = <T extends object>(
   functionName: string
 ): T | undefined => {
   const message = `Check the initialState of ${functionName}`;
-  return validateObject(engine, schema, obj, message, 'Controller initialization error');
+  return validateObject(
+    engine,
+    schema,
+    obj,
+    message,
+    'Controller initialization error'
+  );
 };
 
 export const validateOptions = <T extends object>(
@@ -127,7 +133,13 @@ export const validateOptions = <T extends object>(
   functionName: string
 ): T | undefined => {
   const message = `Check the options of ${functionName}`;
-  return validateObject(engine, schema, obj, message, 'Controller initialization error');
+  return validateObject(
+    engine,
+    schema,
+    obj,
+    message,
+    'Controller initialization error'
+  );
 };
 
 const validateObject = <T extends object>(
@@ -153,6 +165,7 @@ const validateObject = <T extends object>(
 ```
 
 **Design rationale:**
+
 - `validatePayload` uses `safeParse` to avoid try/catch overhead in the common case (Redux action creators call this on every dispatch).
 - `validatePayloadAndThrow` uses `parse` directly since it's designed to throw.
 - `validateOptions`/`validateInitialState` wrap errors with a contextual message (`"Check the options of buildFacet"`) before logging and re-throwing — matching current behavior.
@@ -161,6 +174,7 @@ const validateObject = <T extends object>(
 ### 2. Action Creator Migration Pattern
 
 **Before (Bueno):**
+
 ```typescript
 import {BooleanValue, StringValue} from '@coveo/bueno';
 import {validatePayload} from '../../utils/validate-payload.js';
@@ -176,6 +190,7 @@ export const updateQuery = createAction(
 ```
 
 **After (Zod):**
+
 ```typescript
 import * as z from '@coveo/bueno/zod';
 import {validatePayload} from '../../utils/validate-payload.js';
@@ -183,10 +198,13 @@ import {validatePayload} from '../../utils/validate-payload.js';
 export const updateQuery = createAction(
   'query/updateQuery',
   (payload: UpdateQueryActionCreatorPayload) =>
-    validatePayload(payload, z.object({
-      q: z.optional(z.string()),
-      enableQuerySyntax: z.optional(z.boolean()),
-    }))
+    validatePayload(
+      payload,
+      z.object({
+        q: z.optional(z.string()),
+        enableQuerySyntax: z.optional(z.boolean()),
+      })
+    )
 );
 ```
 
@@ -195,6 +213,7 @@ The call site structure is identical — only the second argument to `validatePa
 ### 3. Controller Options Migration Pattern
 
 **Before (Bueno):**
+
 ```typescript
 import {NumberValue, Schema} from '@coveo/bueno';
 
@@ -206,6 +225,7 @@ validateOptions(engine, optionsSchema, props.options, 'buildPager');
 ```
 
 **After (Zod):**
+
 ```typescript
 import * as z from '@coveo/bueno/zod';
 
@@ -218,32 +238,33 @@ validateOptions(engine, optionsSchema, props.options, 'buildPager');
 
 ### 4. Bueno → Zod Mapping Reference
 
-| Bueno | Zod Mini Equivalent |
-|-------|-------------------|
-| `new StringValue()` | `z.optional(z.string())` |
-| `new StringValue({required: true})` | `z.string()` |
-| `new StringValue({required: true, emptyAllowed: false})` | `z.string().check(z.minLength(1))` |
-| `new StringValue({required: false, emptyAllowed: false})` | `z.optional(z.string().check(z.minLength(1)))` |
-| `new StringValue({constrainTo: values})` | `z.optional(z.enum(values))` |
-| `new StringValue({required: true, constrainTo: values})` | `z.enum(values)` |
-| `new StringValue({regex: pattern})` | `z.optional(z.string().check(z.regex(pattern)))` |
-| `new StringValue({required: true, regex: pattern, emptyAllowed: false})` | `z.string().check(z.minLength(1), z.regex(pattern))` |
-| `new NumberValue({min: N})` | `z.optional(z.number().check(z.minimum(N)))` |
-| `new NumberValue({required: true, min: N})` | `z.number().check(z.minimum(N))` |
-| `new BooleanValue()` | `z.optional(z.boolean())` |
-| `new BooleanValue({required: true})` | `z.boolean()` |
-| `new ArrayValue({each: X})` | `z.optional(z.array(zodEquivalent(X)))` |
-| `new ArrayValue({required: true, each: X})` | `z.array(zodEquivalent(X))` |
-| `new ArrayValue({min: M, max: N, each: X})` | `z.array(zodEquivalent(X)).check(z.minLength(M), z.maxLength(N))` |
-| `new RecordValue({values: def})` | `z.optional(z.object({...}))` |
-| `new RecordValue({options: {required: true}, values: def})` | `z.object({...})` |
-| `new Value({required: false})` | `z.optional(z.unknown())` |
-| `new Value({required: true})` | `z.unknown()` |
-| `new Schema(definition)` | `z.object({...})` |
+| Bueno                                                                    | Zod Mini Equivalent                                               |
+| ------------------------------------------------------------------------ | ----------------------------------------------------------------- |
+| `new StringValue()`                                                      | `z.optional(z.string())`                                          |
+| `new StringValue({required: true})`                                      | `z.string()`                                                      |
+| `new StringValue({required: true, emptyAllowed: false})`                 | `z.string().check(z.minLength(1))`                                |
+| `new StringValue({required: false, emptyAllowed: false})`                | `z.optional(z.string().check(z.minLength(1)))`                    |
+| `new StringValue({constrainTo: values})`                                 | `z.optional(z.enum(values))`                                      |
+| `new StringValue({required: true, constrainTo: values})`                 | `z.enum(values)`                                                  |
+| `new StringValue({regex: pattern})`                                      | `z.optional(z.string().check(z.regex(pattern)))`                  |
+| `new StringValue({required: true, regex: pattern, emptyAllowed: false})` | `z.string().check(z.minLength(1), z.regex(pattern))`              |
+| `new NumberValue({min: N})`                                              | `z.optional(z.number().check(z.minimum(N)))`                      |
+| `new NumberValue({required: true, min: N})`                              | `z.number().check(z.minimum(N))`                                  |
+| `new BooleanValue()`                                                     | `z.optional(z.boolean())`                                         |
+| `new BooleanValue({required: true})`                                     | `z.boolean()`                                                     |
+| `new ArrayValue({each: X})`                                              | `z.optional(z.array(zodEquivalent(X)))`                           |
+| `new ArrayValue({required: true, each: X})`                              | `z.array(zodEquivalent(X))`                                       |
+| `new ArrayValue({min: M, max: N, each: X})`                              | `z.array(zodEquivalent(X)).check(z.minLength(M), z.maxLength(N))` |
+| `new RecordValue({values: def})`                                         | `z.optional(z.object({...}))`                                     |
+| `new RecordValue({options: {required: true}, values: def})`              | `z.object({...})`                                                 |
+| `new Value({required: false})`                                           | `z.optional(z.unknown())`                                         |
+| `new Value({required: true})`                                            | `z.unknown()`                                                     |
+| `new Schema(definition)`                                                 | `z.object({...})`                                                 |
 
 ### 5. Template Manager Migration
 
 **Before:**
+
 ```typescript
 import {ArrayValue, NumberValue, Schema, Value} from '@coveo/bueno';
 
@@ -256,6 +277,7 @@ const templateSchema = new Schema({
 ```
 
 **After:**
+
 ```typescript
 import * as z from '@coveo/bueno/zod';
 import {requiredNonEmptyString} from '../../utils/validate-payload.js';
@@ -273,18 +295,26 @@ Note: The `default: 0` from NumberValue is handled at the application level (the
 ### 6. Relative Date Migration
 
 **Before:**
+
 ```typescript
 const buildRelativeDateDefinition = (period: RelativeDatePeriod) => {
   const isNow = period === 'now';
   return {
     amount: new NumberValue({required: !isNow, min: 1}),
-    unit: new StringValue({required: !isNow, constrainTo: validRelativeDateUnits}),
-    period: new StringValue({required: true, constrainTo: validRelativeDatePeriods}),
+    unit: new StringValue({
+      required: !isNow,
+      constrainTo: validRelativeDateUnits,
+    }),
+    period: new StringValue({
+      required: true,
+      constrainTo: validRelativeDatePeriods,
+    }),
   };
 };
 ```
 
 **After:**
+
 ```typescript
 const nowSchema = z.object({
   period: z.enum(['now']),
@@ -312,17 +342,24 @@ All `isNullOrUndefined(x)` calls become `x == null` (loose equality covers both 
 import {isNullOrUndefined, isArray, isString} from '@coveo/bueno';
 
 // After — inline checks, no import needed
-x == null           // replaces isNullOrUndefined(x)
-Array.isArray(x)    // replaces isArray(x)
-typeof x === 'string'  // replaces isString(x)
-typeof x === 'number'  // replaces isNumber(x)
+x == null; // replaces isNullOrUndefined(x)
+Array.isArray(x); // replaces isArray(x)
+typeof x === 'string'; // replaces isString(x)
+typeof x === 'number'; // replaces isNumber(x)
 ```
 
 ### 8. Facet Option Definitions Migration
 
 **Before (`facet-option-definitions.ts`):**
+
 ```typescript
-import {ArrayValue, BooleanValue, NumberValue, RecordValue, StringValue} from '@coveo/bueno';
+import {
+  ArrayValue,
+  BooleanValue,
+  NumberValue,
+  RecordValue,
+  StringValue,
+} from '@coveo/bueno';
 
 export const facetId = new StringValue({regex: /^[a-zA-Z0-9-_]+$/});
 export const field = new StringValue({required: true});
@@ -331,23 +368,30 @@ export const numberOfValues = new NumberValue({min: 1});
 ```
 
 **After:**
+
 ```typescript
 import * as z from '@coveo/bueno/zod';
 
-export const facetId = z.optional(z.string().check(z.regex(/^[a-zA-Z0-9-_]+$/)));
+export const facetId = z.optional(
+  z.string().check(z.regex(/^[a-zA-Z0-9-_]+$/))
+);
 export const field = z.string();
 export const numberOfValues = z.optional(z.number().check(z.minimum(1)));
 export const filterFacetCount = z.optional(z.boolean());
 export const injectionDepth = z.optional(z.number().check(z.minimum(0)));
 // ...
 
-export const allowedValues = z.optional(z.object({
-  type: z.enum(['simple']),
-  values: z.array(z.string().check(z.minLength(1))).check(z.maxLength(25)),
-}));
+export const allowedValues = z.optional(
+  z.object({
+    type: z.enum(['simple']),
+    values: z.array(z.string().check(z.minLength(1))).check(z.maxLength(25)),
+  })
+);
 
 export const customSort = z.optional(
-  z.array(z.string().check(z.minLength(1))).check(z.minLength(1), z.maxLength(25))
+  z
+    .array(z.string().check(z.minLength(1)))
+    .check(z.minLength(1), z.maxLength(25))
 );
 ```
 
@@ -356,61 +400,62 @@ export const customSort = z.optional(
 No new data models are introduced. All existing TypeScript interfaces (action payload types, controller option types) remain unchanged. The migration only changes the runtime validation implementation — the type system sees the same shapes.
 
 Key preserved interfaces:
+
 - `UpdateQueryActionCreatorPayload`, `RegisterFacetActionCreatorPayload`, etc.
 - `PagerOptions`, `SearchBoxOptions`, `FacetOptions`, etc.
 - `RelativeDate`, `Template<ItemType>`
 
 ## Correctness Properties
 
-*A property is a characteristic or behavior that should hold true across all valid executions of a system — essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees.*
+_A property is a characteristic or behavior that should hold true across all valid executions of a system — essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees._
 
 ### Property 1: Schema Mapping Equivalence
 
-*For any* Bueno schema definition (using StringValue, NumberValue, BooleanValue, ArrayValue, RecordValue, or Value) and *for any* input value, the translated Zod schema SHALL produce the same accept/reject verdict as the original Bueno schema.
+_For any_ Bueno schema definition (using StringValue, NumberValue, BooleanValue, ArrayValue, RecordValue, or Value) and _for any_ input value, the translated Zod schema SHALL produce the same accept/reject verdict as the original Bueno schema.
 
 **Validates: Requirements 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.10, 3.11, 4.1, 5.1, 6.1, 9.1, 9.3**
 
 ### Property 2: validatePayload Contract
 
-*For any* Zod schema and *for any* payload, `validatePayload(payload, schema)` SHALL return `{payload}` with no `error` field when the payload satisfies the schema, and SHALL return `{payload, error}` where `error` is a valid `SerializedError` (with `message`, `name`, and `stack` properties) when the payload does not satisfy the schema. The `payload` in the return is always the original input unchanged.
+_For any_ Zod schema and _for any_ payload, `validatePayload(payload, schema)` SHALL return `{payload}` with no `error` field when the payload satisfies the schema, and SHALL return `{payload, error}` where `error` is a valid `SerializedError` (with `message`, `name`, and `stack` properties) when the payload does not satisfy the schema. The `payload` in the return is always the original input unchanged.
 
 **Validates: Requirements 2.1, 2.2, 8.1, 8.2**
 
 ### Property 3: Pre-built Schema Equivalence
 
-*For any* string value (including empty string, whitespace-only strings, and strings matching/not-matching version/tracking-id patterns), the pre-built Zod schemas (`requiredNonEmptyString`, `nonEmptyString`, `requiredEmptyAllowedString`, `nonRequiredEmptyAllowedString`, `nonEmptyStringArray`, `optionalNonEmptyVersionString`, `optionalTrackingId`, `requiredTrackingId`) SHALL accept the value if and only if the original Bueno pre-built instances would have accepted it.
+_For any_ string value (including empty string, whitespace-only strings, and strings matching/not-matching version/tracking-id patterns), the pre-built Zod schemas (`requiredNonEmptyString`, `nonEmptyString`, `requiredEmptyAllowedString`, `nonRequiredEmptyAllowedString`, `nonEmptyStringArray`, `optionalNonEmptyVersionString`, `optionalTrackingId`, `requiredTrackingId`) SHALL accept the value if and only if the original Bueno pre-built instances would have accepted it.
 
 **Validates: Requirements 2.3, 2.4, 2.5**
 
 ### Property 4: Error Serialization Shape
 
-*For any* `ZodError` instance, `serializeSchemaValidationError(error)` SHALL produce an object with `message` (string), `name` (string), and `stack` (string or undefined) properties conforming to the Redux Toolkit `SerializedError` interface.
+_For any_ `ZodError` instance, `serializeSchemaValidationError(error)` SHALL produce an object with `message` (string), `name` (string), and `stack` (string or undefined) properties conforming to the Redux Toolkit `SerializedError` interface.
 
 **Validates: Requirements 2.6**
 
 ### Property 5: Controller Validation Contract
 
-*For any* Zod object schema and *for any* options/initialState object, `validateOptions`/`validateInitialState` SHALL return the parsed value when the object satisfies the schema, and SHALL throw an error and call `engine.logger.error` with a message containing the function name when the object does not satisfy the schema.
+_For any_ Zod object schema and _for any_ options/initialState object, `validateOptions`/`validateInitialState` SHALL return the parsed value when the object satisfies the schema, and SHALL throw an error and call `engine.logger.error` with a message containing the function name when the object does not satisfy the schema.
 
 **Validates: Requirements 2.7, 4.2, 4.3, 4.4, 8.3**
 
 ### Property 6: Relative Date Conditional Validation
 
-*For any* `RelativeDate` object where `period` is `'past'` or `'next'`, the schema SHALL reject the object if `amount` is missing or less than 1, or if `unit` is missing or not one of the valid units. *For any* `RelativeDate` object where `period` is `'now'`, the schema SHALL accept the object regardless of `amount` and `unit` values.
+_For any_ `RelativeDate` object where `period` is `'past'` or `'next'`, the schema SHALL reject the object if `amount` is missing or less than 1, or if `unit` is missing or not one of the valid units. _For any_ `RelativeDate` object where `period` is `'now'`, the schema SHALL accept the object regardless of `amount` and `unit` values.
 
 **Validates: Requirements 6.2, 6.3**
 
 ## Error Handling
 
-| Scenario | Handling |
-|----------|----------|
-| Invalid payload in action creator | `validatePayload` returns `{payload, error}` where `error` is a `SerializedError`. Redux Toolkit attaches it to the action's `error` field. No throw. |
-| Invalid payload in `validatePayloadAndThrow` | `ZodError` is thrown directly. Callers must catch. |
-| Invalid controller options | `validateOptions` catches the `ZodError`, wraps it with a contextual message (`"Check the options of buildFacet: ..."`), logs via `engine.logger.error`, then re-throws. |
-| Invalid controller initial state | Same as invalid options but with `"Check the initialState of ..."` message. |
-| Invalid template registration | `templateSchema.parse(template)` throws `ZodError`. Additionally, the function-condition check throws a custom `Error` with a descriptive message about conditions. |
-| Invalid relative date | `relativeDateSchema.parse(date)` throws `ZodError` with details about which fields are invalid. The wrapper `validateRelativeDate` may throw additional custom errors for format violations. |
-| Zod import failure | If `@coveo/bueno/zod` is not resolvable, the build fails at compile time (ESM import resolution). This is caught during `pnpm run build`. |
+| Scenario                                     | Handling                                                                                                                                                                                     |
+| -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Invalid payload in action creator            | `validatePayload` returns `{payload, error}` where `error` is a `SerializedError`. Redux Toolkit attaches it to the action's `error` field. No throw.                                        |
+| Invalid payload in `validatePayloadAndThrow` | `ZodError` is thrown directly. Callers must catch.                                                                                                                                           |
+| Invalid controller options                   | `validateOptions` catches the `ZodError`, wraps it with a contextual message (`"Check the options of buildFacet: ..."`), logs via `engine.logger.error`, then re-throws.                     |
+| Invalid controller initial state             | Same as invalid options but with `"Check the initialState of ..."` message.                                                                                                                  |
+| Invalid template registration                | `templateSchema.parse(template)` throws `ZodError`. Additionally, the function-condition check throws a custom `Error` with a descriptive message about conditions.                          |
+| Invalid relative date                        | `relativeDateSchema.parse(date)` throws `ZodError` with details about which fields are invalid. The wrapper `validateRelativeDate` may throw additional custom errors for format violations. |
+| Zod import failure                           | If `@coveo/bueno/zod` is not resolvable, the build fails at compile time (ESM import resolution). This is caught during `pnpm run build`.                                                    |
 
 ## Testing Strategy
 
@@ -424,16 +469,16 @@ Property-based testing is highly applicable to this migration because the core r
 
 **Tag format**: `Feature: headless-bueno-zod-migration, Property {number}: {property_text}`
 
-| Property Test | Validates |
-|---------------|-----------|
+| Property Test                                                                                          | Validates  |
+| ------------------------------------------------------------------------------------------------------ | ---------- |
 | Schema mapping equivalence for string schemas (required/optional, empty/non-empty, constrained, regex) | Property 1 |
-| Schema mapping equivalence for number schemas (required/optional, min/max) | Property 1 |
-| Schema mapping equivalence for array schemas (element types, length constraints) | Property 1 |
-| validatePayload returns correct shape for valid/invalid payloads | Property 2 |
-| Pre-built schema equivalence (requiredNonEmptyString, nonEmptyString, etc.) | Property 3 |
-| serializeSchemaValidationError produces valid SerializedError | Property 4 |
-| validateOptions/validateInitialState contract (pass/throw behavior) | Property 5 |
-| Relative date conditional validation (now vs past/next) | Property 6 |
+| Schema mapping equivalence for number schemas (required/optional, min/max)                             | Property 1 |
+| Schema mapping equivalence for array schemas (element types, length constraints)                       | Property 1 |
+| validatePayload returns correct shape for valid/invalid payloads                                       | Property 2 |
+| Pre-built schema equivalence (requiredNonEmptyString, nonEmptyString, etc.)                            | Property 3 |
+| serializeSchemaValidationError produces valid SerializedError                                          | Property 4 |
+| validateOptions/validateInitialState contract (pass/throw behavior)                                    | Property 5 |
+| Relative date conditional validation (now vs past/next)                                                | Property 6 |
 
 ### Unit Tests (Vitest)
 
