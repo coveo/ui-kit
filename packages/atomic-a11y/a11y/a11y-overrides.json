@@ -1,7 +1,7 @@
 {
   "$schema": "#a11y-overrides",
   "description": "Human-authored overrides for WCAG 2.2 AA conformance. These override automated axe-core results in the OpenACR YAML report. Each entry must include a reason explaining the decision.",
-  "lastUpdated": "2026-05-12",
+  "lastUpdated": "2026-06-09",
   "overrides": [
     {
       "criterion": "2.4.7",
@@ -42,6 +42,11 @@
       "criterion": "1.4.2",
       "conformance": "not-applicable",
       "reason": "Atomic does not include components that auto-play audio."
+    },
+    {
+      "criterion": "1.4.5",
+      "conformance": "not-applicable",
+      "reason": "Atomic does not render text as images. All text is real HTML styled with CSS. SVG icons are purely symbolic (no `<text>` elements). Product/result images display user-provided content, not component-generated text."
     },
     {
       "criterion": "2.2.1",
