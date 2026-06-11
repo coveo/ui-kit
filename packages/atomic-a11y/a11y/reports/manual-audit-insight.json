@@ -1,0 +1,9 @@
+{
+  "surface": "insight",
+  "wcag22Criteria": {
+    "3.3.1-error-identification": {
+      "conformance": "pass",
+      "remarks": "Numeric facet and timeframe facet use native HTML5 constraint validation. Generated-answer feedback modal uses custom validation with role=alert for screen readers and inline error text next to each unanswered required field."
+    }
+  }
+}

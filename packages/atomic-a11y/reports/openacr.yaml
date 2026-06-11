@@ -244,10 +244,22 @@ chapters:
         components:
           - name: web
             adherence:
-              level: does-not-support
+              level: supports
               notes:
-                'WCAG 3.3.1: no automated, interactive, or manual coverage. [Manual audit
-                required]'
+                Supports — manual audit found Supports (Numeric facet and timeframe facet
+                use native HTML5 constraint validation (type=number/date,
+                required, min/max, pattern). User agents automatically prevent
+                submission and display error messages identifying the field in
+                error.; Numeric facet and timeframe facet use native HTML5
+                constraint validation. Generated-answer feedback modal uses
+                custom validation with role=alert for screen readers and inline
+                error text next to each unanswered required field.; Numeric
+                facet and timeframe facet use native HTML5 constraint validation
+                (type=number/date, required, min/max). User agents automatically
+                prevent submission and display error messages identifying the
+                field in error. Generated-answer feedback modal uses custom
+                validation with role=alert for screen readers and inline error
+                text next to each unanswered required field.).
       - num: 3.3.2
         components:
           - name: web
