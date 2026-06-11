@@ -5,63 +5,19 @@ import {BASELINE_FILE_PATTERN} from '../shared/constants.js';
 import {isRecord} from '../shared/guards.js';
 import type {
   ManualAuditAggregate,
-  ManualAuditBaselineEntry,
+  ManualAuditFile,
   OpenAcrConformance,
 } from './types.js';
-import {manualStatusToConformance} from './types.js';
+import {CONFORMANCE_SEVERITY, manualStatusToConformance} from './types.js';
 
-interface ManualConformanceCounts {
-  pass: number;
-  fail: number;
-  partial: number;
-  notApplicable: number;
-}
-
-export function countManualConformances(
-  aggregates: ManualAuditAggregate[]
-): ManualConformanceCounts {
-  const conformanceCounts = {
-    pass: 0,
-    fail: 0,
-    partial: 0,
-    notApplicable: 0,
-  };
-
-  for (const aggregate of aggregates) {
-    switch (aggregate.conformance) {
-      case 'supports':
-        conformanceCounts.pass++;
-        break;
-      case 'does-not-support':
-        conformanceCounts.fail++;
-        break;
-      case 'partially-supports':
-        conformanceCounts.partial++;
-        break;
-      case 'not-applicable':
-        conformanceCounts.notApplicable++;
-        break;
-    }
-  }
-
-  return conformanceCounts;
-}
 const LOG_PREFIX = '[json-to-openacr]';
-const BASELINE_FILE_PREFIX = 'manual-audit-';
-const BASELINE_FILE_EXTENSION = '.json';
-
 const CRITERION_KEY_REGEX = /^(\d+(?:\.\d+)+)-/;
 
-function isValidManualBaselineEntry(
-  entry: unknown
-): entry is ManualAuditBaselineEntry {
+function isValidManualAuditFile(value: unknown): value is ManualAuditFile {
   return (
-    isRecord(entry) &&
-    typeof entry.name === 'string' &&
-    entry.name.length > 0 &&
-    isRecord(entry.manual) &&
-    typeof entry.manual.status === 'string' &&
-    isRecord(entry.manual.wcag22Criteria)
+    isRecord(value) &&
+    isRecord(value.wcag22Criteria) &&
+    (value.surface === undefined || typeof value.surface === 'string')
   );
 }
 
@@ -91,7 +47,7 @@ function extractCriterionStatus(
 function parseCriterionEntry(
   criterionKey: string,
   statusValue: unknown,
-  componentName: string
+  context: string
 ): ManualAuditAggregate | null {
   const extracted = extractCriterionStatus(statusValue);
   if (!extracted) {
@@ -108,7 +64,7 @@ function parseCriterionEntry(
   if (!isKnownCriterion(criterionId)) {
     console.warn(
       LOG_PREFIX,
-      `Unknown WCAG criterion "${criterionId}" (from key "${criterionKey}") in component ${componentName}.`
+      `Unknown WCAG criterion "${criterionId}" (from key "${criterionKey}") in ${context}.`
     );
     return null;
   }
@@ -118,170 +74,71 @@ function parseCriterionEntry(
   if (!conformance) {
     console.warn(
       LOG_PREFIX,
-      `Unknown manual status "${extracted.status}" for criterion ${criterionId} in component ${componentName}.`
+      `Unknown manual status "${extracted.status}" for criterion ${criterionId} in ${context}.`
     );
     return null;
   }
 
   return {
-    componentName,
     criterionId,
     conformance,
     ...(extracted.remarks && {remarks: extracted.remarks}),
   };
 }
 
-function collectEntryAggregates(
-  entry: ManualAuditBaselineEntry,
+function collectFileAggregates(
+  file: ManualAuditFile,
+  context: string,
   aggregates: Map<string, ManualAuditAggregate[]>
-): void {
+): number {
+  let count = 0;
+
   for (const [criterionKey, statusValue] of Object.entries(
-    entry.manual.wcag22Criteria
+    file.wcag22Criteria
   )) {
-    const aggregate = parseCriterionEntry(
-      criterionKey,
-      statusValue,
-      entry.name
-    );
+    const aggregate = parseCriterionEntry(criterionKey, statusValue, context);
     if (!aggregate) {
       continue;
     }
 
-    const key = `${entry.name}:${aggregate.criterionId}`;
-    const existing = aggregates.get(key) ?? [];
-    aggregates.set(key, [...existing, aggregate]);
+    const existing = aggregates.get(aggregate.criterionId) ?? [];
+    aggregates.set(aggregate.criterionId, [...existing, aggregate]);
+    count++;
   }
+
+  return count;
 }
 
-function parseManualBaseline(
+function parseManualFile(
   content: string,
   filePath: string
-): Map<string, ManualAuditAggregate[]> {
-  const aggregates = new Map<string, ManualAuditAggregate[]>();
-
+): ManualAuditFile | null {
   let parsed: unknown;
   try {
     parsed = JSON.parse(content);
   } catch {
     console.warn(
       LOG_PREFIX,
-      `Unable to parse manual baseline file ${filePath} as JSON.`
+      `Unable to parse manual audit file ${filePath} as JSON.`
     );
-    return aggregates;
+    return null;
   }
 
-  if (!Array.isArray(parsed)) {
+  if (!isValidManualAuditFile(parsed)) {
     console.warn(
       LOG_PREFIX,
-      `Manual baseline file ${filePath} does not contain a valid array of entries.`
+      `Manual audit file ${filePath} must be an object with a "wcag22Criteria" map.`
     );
-    return aggregates;
+    return null;
   }
 
-  for (const entry of parsed) {
-    if (!isValidManualBaselineEntry(entry)) {
-      console.warn(
-        LOG_PREFIX,
-        `Skipping invalid manual baseline entry:`,
-        entry
-      );
-      continue;
-    }
-
-    if (entry.manual.status !== 'complete') {
-      continue;
-    }
-
-    collectEntryAggregates(entry, aggregates);
-  }
-
-  return aggregates;
+  return parsed;
 }
 
-function mergeAggregates(
-  target: Map<string, ManualAuditAggregate[]>,
-  source: Map<string, ManualAuditAggregate[]>
-): number {
-  let mergedCount = 0;
-
-  for (const [key, entries] of source) {
-    const existing = target.get(key) ?? [];
-    target.set(key, [...existing, ...entries]);
-    mergedCount += entries.length;
-  }
-
-  return mergedCount;
-}
-
-function listBaselineFiles(files: string[]): string[] {
-  return files.filter((file) => BASELINE_FILE_PATTERN.test(file));
-}
-
-function getBaselineNames(files: string[]): string[] {
-  return files
-    .map((file) => file.replace(BASELINE_FILE_PREFIX, ''))
-    .map((file) =>
-      file.endsWith(BASELINE_FILE_EXTENSION)
-        ? file.slice(0, -BASELINE_FILE_EXTENSION.length)
-        : file
-    )
-    .filter(Boolean);
-}
-
-function getUniqueCriterionCount(
-  aggregates: Map<string, ManualAuditAggregate[]>
-): number {
-  const criteriaSet = new Set<string>();
-
-  for (const key of aggregates.keys()) {
-    const [, criterionId] = key.split(':');
-    criteriaSet.add(criterionId);
-  }
-
-  return criteriaSet.size;
-}
-
-function logManualAuditSummary(
-  loadedCount: number,
-  baselineFiles: string[],
-  aggregates: Map<string, ManualAuditAggregate[]>
-): void {
-  if (loadedCount <= 0) {
-    return;
-  }
-
-  const criteriaCount = getUniqueCriterionCount(aggregates);
-  const baselineList = getBaselineNames(baselineFiles).join(', ');
-
-  console.log(
-    LOG_PREFIX,
-    `Loaded ${loadedCount} manual audit entries across ${criteriaCount} criteria from ${baselineFiles.length} baseline file(s): ${baselineList}.`
-  );
-}
-
-async function readBaselineFileAggregates(
-  dirPath: string,
-  file: string
-): Promise<Map<string, ManualAuditAggregate[]>> {
-  const filePath = path.join(dirPath, file);
-
-  try {
-    const content = await readFile(filePath, 'utf8');
-    return parseManualBaseline(content, filePath);
-  } catch (error) {
-    console.warn(
-      LOG_PREFIX,
-      `Unable to read manual baseline file ${filePath}.`,
-      error
-    );
-    return new Map();
-  }
-}
-
-async function loadBaselineFiles(dirPath: string): Promise<string[] | null> {
+async function loadFileNames(dirPath: string): Promise<string[] | null> {
   try {
     const files = await readdir(dirPath);
-    return listBaselineFiles(files);
+    return files.filter((file) => BASELINE_FILE_PATTERN.test(file));
   } catch (error) {
     const errorCode =
       isRecord(error) && typeof error.code === 'string'
@@ -301,27 +158,66 @@ async function loadBaselineFiles(dirPath: string): Promise<string[] | null> {
   }
 }
 
+/**
+ * Loads every `manual-audit-*.json` file in `dirPath` and returns the audited
+ * results indexed by WCAG criterion id. Each file is one surface-scoped record;
+ * the surface label is organizational only. Files contribute independently —
+ * the same criterion may appear in several files, and worst-wins resolution is
+ * applied later across all of them plus the automated/interactive signals.
+ */
 export async function loadManualAuditData(
   dirPath: string
 ): Promise<Map<string, ManualAuditAggregate[]>> {
-  const allAggregates = new Map<string, ManualAuditAggregate[]>();
+  const aggregates = new Map<string, ManualAuditAggregate[]>();
+
+  const files = await loadFileNames(dirPath);
+  if (!files) {
+    return aggregates;
+  }
+
   let loadedCount = 0;
+  const loadedLabels: string[] = [];
 
-  const baselineFiles = await loadBaselineFiles(dirPath);
-  if (!baselineFiles) {
-    return allAggregates;
+  for (const file of files) {
+    const filePath = path.join(dirPath, file);
+
+    let content: string;
+    try {
+      content = await readFile(filePath, 'utf8');
+    } catch (error) {
+      console.warn(
+        LOG_PREFIX,
+        `Unable to read manual audit file ${filePath}.`,
+        error
+      );
+      continue;
+    }
+
+    const parsed = parseManualFile(content, filePath);
+    if (!parsed) {
+      continue;
+    }
+
+    const context = parsed.surface ?? file;
+    loadedCount += collectFileAggregates(parsed, context, aggregates);
+    loadedLabels.push(context);
   }
 
-  for (const file of baselineFiles) {
-    const fileAggregates = await readBaselineFileAggregates(dirPath, file);
-    loadedCount += mergeAggregates(allAggregates, fileAggregates);
+  if (loadedCount > 0) {
+    console.log(
+      LOG_PREFIX,
+      `Loaded ${loadedCount} manual audit result(s) across ${aggregates.size} criteria from ${loadedLabels.length} file(s): ${loadedLabels.join(', ')}.`
+    );
   }
 
-  logManualAuditSummary(loadedCount, baselineFiles, allAggregates);
-
-  return allAggregates;
+  return aggregates;
 }
 
+/**
+ * Worst-wins conformance across a criterion's manual results
+ * (does-not-support > partially-supports > supports > not-applicable).
+ * Returns `undefined` when there are no manual results.
+ */
 export function resolveManualConformance(
   manualAggregates?: ManualAuditAggregate[]
 ): OpenAcrConformance | undefined {
@@ -329,13 +225,15 @@ export function resolveManualConformance(
     return undefined;
   }
 
-  const {fail, partial, pass, notApplicable} =
-    countManualConformances(manualAggregates);
+  let worst: OpenAcrConformance | undefined;
+  for (const aggregate of manualAggregates) {
+    if (
+      worst === undefined ||
+      CONFORMANCE_SEVERITY[aggregate.conformance] > CONFORMANCE_SEVERITY[worst]
+    ) {
+      worst = aggregate.conformance;
+    }
+  }
 
-  if (fail > 0) return 'does-not-support';
-  if (partial > 0) return 'partially-supports';
-  if (pass > 0) return 'supports';
-  if (notApplicable > 0) return 'not-applicable';
-
-  return undefined;
+  return worst;
 }
