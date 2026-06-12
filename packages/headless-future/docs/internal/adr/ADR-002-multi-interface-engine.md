@@ -53,7 +53,6 @@ const commerce = buildCommerceSearchInterface({engine});
 const hybrid = composeInterfaces({interfaces: [search, commerce]});
 
 const searchBox = buildSearchBoxController({interface: hybrid});
-const searchBoxState = getSearchBoxState({interface: hybrid});
 const searchBoxActions = loadSearchBoxActions({interface: hybrid});
 
 // Inline composition also works:
@@ -65,27 +64,11 @@ const searchBox2 = buildSearchBoxController({
 // buildPaginationController({ interface: hybrid }); // TS error
 ```
 
-**State getters, action loaders, hooks:**
-
-```ts
-const search = buildSearchInterface({engine});
-
-const pagination = buildPaginationController({interface: search});
-const searchBoxState = getSearchBoxState({interface: search});
-const facetActions = loadFacetActions({interface: search});
-
-search.beforeSubmit(() => {
-  if (searchBoxState.query === 'test') {
-    facetActions.selectValue({facetId: 'category', value: 'electronics'});
-  }
-});
-```
-
 **Key details:**
 
 - Per-type functions give full type inference — no generics needed.
 - Each interface type bundles its facade code. Feature state lazy-loads on first use.
-- `composeInterfaces` ensures uniform singular `interface` across controllers, state getters, action loaders, and hooks. No `interface` vs `interfaces` inconsistency.
+- `composeInterfaces` ensures uniform singular `interface` across controllers and action loaders. No `interface` vs `interfaces` inconsistency.
 - The composed interface owns shared state for cross-interface features.
 - Only specific controllers accept composed interfaces (search box, analytics). Enforced at type level, widenable later without breaking changes.
 - Two-tier request selectors: default (static) when feature inactive, operational (live) once registered.
@@ -95,7 +78,7 @@ search.beforeSubmit(() => {
 
 Controllers that need multi-interface accept `interfaces: [...]` directly. No composition step.
 
-- Rejected because: inconsistent `interface` vs `interfaces` parameter naming across the API; breaks the action loader/state getter pattern (which interface do you pass to `loadSearchBoxActions` when the search box spans two?); widening support to new controllers later requires adding `interfaces` and deprecating `interface` (breaking).
+- Rejected because: inconsistent `interface` vs `interfaces` parameter naming across the API; breaks the action loader pattern (which interface do you pass to `loadSearchBoxActions` when the search box spans two?); widening support to new controllers later requires adding `interfaces` and deprecating `interface` (breaking).
 
 ### Option C: Per-capability tree-shaking via explicit `capabilities` array
 
@@ -113,7 +96,7 @@ Collapses engine/interface boundary.
 
 ### Option F (Rejected): Capabilities declared on controllers
 
-Breaks controller-less access. Scatters configuration.
+Breaks controller-less access. Scatters configuration across multiple controllers.
 
 ### Option G: Separate engine instances (status quo)
 
@@ -121,11 +104,11 @@ Doesn't solve the problem.
 
 ## 5. Decision Rationale
 
-Option A: per-type functions give full type inference and discoverability. `composeInterfaces` ensures a uniform singular `interface` parameter everywhere — solving the action loader/state getter ambiguity problem and providing future-proof extensibility. Facade code is bundled per interface type (acceptable trade-off); per-capability granularity deferred as additive future option. Option B creates API inconsistency. Option C adds complexity for marginal current benefit. Options D–G sacrifice type safety, boundaries, or access patterns.
+Option A: per-type functions give full type inference and discoverability. `composeInterfaces` ensures a uniform singular `interface` parameter everywhere — solving the action loader ambiguity problem and providing future-proof extensibility. Facade code is bundled per interface type (acceptable trade-off); per-capability granularity deferred as additive future option. Option B creates API inconsistency. Option C adds complexity for marginal current benefit. Options D–G sacrifice type safety, boundaries, or access patterns.
 
 ## 6. Public API and Contract Impact
 
-- **Changes**: `build*Interface` functions (per type), `composeInterfaces`, per-feature state getters/action loaders, `interface` option (always singular) on controllers.
+- **Changes**: `build*Interface` functions (per type), `composeInterfaces`, per-feature action loaders, `interface` option (always singular) on controllers.
 - **Backward compatibility**: Breaking. All access requires an explicit interface.
 - **Stability**: New interface types are additive. Per-capability options are additive. Composed-interface acceptance widenable on controllers.
 - **Non-leakage check**: Pass.
