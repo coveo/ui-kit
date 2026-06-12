@@ -260,4 +260,59 @@ const headAnswerResponse = () =>
     delayBetweenMessages: 'real',
   });
 
-export {headAnswerResponse, followUpAnswerResponse};
+declare global {
+  interface Window {
+    __resumeAgentStream?: () => void;
+  }
+}
+
+/**
+ * Builds a streaming response that pauses indefinitely after the first message
+ * until `window.__resumeAgentStream()` is called.
+ */
+const pausableHeadAnswerResponse = () => {
+  const responseMessages = cloneMessagesForResponse(headAnswerMessages);
+
+  const stream = new ReadableStream({
+    start(controller) {
+      for (const message of responseMessages) {
+        const {delayMs: _delayMs, ...messageToSend} = message;
+        controller.enqueue(
+          new TextEncoder().encode(
+            `event: message\ndata: ${JSON.stringify(messageToSend)}\nretry: 10000\n\n`
+          )
+        );
+      }
+      controller.close();
+    },
+  });
+
+  let resumed = false;
+  const resumePromise = new Promise<void>((resolve) => {
+    window.__resumeAgentStream = () => {
+      resumed = true;
+      resolve();
+    };
+  });
+
+  let messageIndex = 0;
+  const latencyStream = new TransformStream({
+    async transform(chunk, controller) {
+      if (messageIndex === 1 && !resumed) {
+        await resumePromise;
+      } else if (messageIndex > 0) {
+        await delay(50);
+      }
+      messageIndex++;
+      controller.enqueue(chunk);
+    },
+  });
+
+  return new HttpResponse(stream.pipeThrough(latencyStream), {
+    headers: {
+      'Content-Type': 'text/event-stream',
+    },
+  });
+};
+
+export {headAnswerResponse, followUpAnswerResponse, pausableHeadAnswerResponse};

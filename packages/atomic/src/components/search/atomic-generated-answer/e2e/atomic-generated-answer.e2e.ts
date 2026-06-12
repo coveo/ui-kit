@@ -340,4 +340,147 @@ test.describe('atomic-generated-answer', () => {
       expect(requestBody.actionCause).toBe('searchboxSubmit');
     });
   });
+
+  test.describe('agent follow-up experience', () => {
+    test('should disable the follow-up submit button while streaming and enable after resume', async ({
+      generatedAnswer,
+    }) => {
+      await generatedAnswer.load({story: 'with-agent-id-streaming'});
+
+      const submitButton = generatedAnswer.page.getByRole('button', {
+        name: /submit follow-up/i,
+      });
+
+      // Stream is frozen — button must be disabled
+      await expect(submitButton).toBeDisabled();
+
+      // Resume the stream
+      await generatedAnswer.page.evaluate(() =>
+        (
+          window as unknown as {__resumeAgentStream: () => void}
+        ).__resumeAgentStream()
+      );
+
+      // Answer completes rendering and button becomes interactive
+      await expect(submitButton).toBeEnabled({timeout: 15000});
+
+      // Verify initial answer rendered
+      const generatedText = generatedAnswer.page.locator(
+        '[part="generated-text"]'
+      );
+      await expect(generatedText.first()).toBeVisible();
+    });
+
+    test('should render a second thread item after submitting a follow-up', async ({
+      generatedAnswer,
+    }) => {
+      await generatedAnswer.load({story: 'with-agent-id-streaming'});
+
+      const submitButton = generatedAnswer.page.getByRole('button', {
+        name: /submit follow-up/i,
+      });
+      await generatedAnswer.page.evaluate(() =>
+        (
+          window as unknown as {__resumeAgentStream: () => void}
+        ).__resumeAgentStream()
+      );
+      await expect(submitButton).toBeEnabled({timeout: 15000});
+
+      const followUpInput = generatedAnswer.page.getByRole('textbox', {
+        name: /ask follow-up/i,
+      });
+      await followUpInput.fill('What else should I try?');
+      await submitButton.click();
+
+      const threadItems = generatedAnswer.page.locator(
+        'atomic-generated-answer-thread-item'
+      );
+      await expect(threadItems).toHaveCount(2, {timeout: 15000});
+
+      // Both answers remain visible
+      const generatedTexts = generatedAnswer.page.locator(
+        '[part="generated-text"]'
+      );
+      await expect(generatedTexts).toHaveCount(2);
+      await expect(generatedTexts.first()).toBeVisible();
+      await expect(generatedTexts.last()).toBeVisible();
+    });
+
+    test('should only show collapse controls on previous thread items, not the latest', async ({
+      generatedAnswer,
+    }) => {
+      await generatedAnswer.load({story: 'with-agent-id-streaming'});
+
+      const submitButton = generatedAnswer.page.getByRole('button', {
+        name: /submit follow-up/i,
+      });
+      await generatedAnswer.page.evaluate(() =>
+        (
+          window as unknown as {__resumeAgentStream: () => void}
+        ).__resumeAgentStream()
+      );
+      await expect(submitButton).toBeEnabled({timeout: 15000});
+
+      const followUpInput = generatedAnswer.page.getByRole('textbox', {
+        name: /ask follow-up/i,
+      });
+      await followUpInput.fill('What else should I try?');
+      await submitButton.click();
+
+      const threadItems = generatedAnswer.page.locator(
+        'atomic-generated-answer-thread-item'
+      );
+      await expect(threadItems).toHaveCount(2, {timeout: 15000});
+
+      // Previous item has collapse control
+      const collapseButton = threadItems
+        .first()
+        .locator('button[aria-expanded]');
+      await expect(collapseButton).toHaveCount(1);
+
+      // Latest item has no collapse control (always expanded)
+      const lastItemCollapseButton = threadItems
+        .last()
+        .locator('button[aria-expanded]');
+      await expect(lastItemCollapseButton).toHaveCount(0);
+    });
+
+    test('should hide content when collapsing a previous thread item', async ({
+      generatedAnswer,
+    }) => {
+      await generatedAnswer.load({story: 'with-agent-id-streaming'});
+
+      const submitButton = generatedAnswer.page.getByRole('button', {
+        name: /submit follow-up/i,
+      });
+      await generatedAnswer.page.evaluate(() =>
+        (
+          window as unknown as {__resumeAgentStream: () => void}
+        ).__resumeAgentStream()
+      );
+      await expect(submitButton).toBeEnabled({timeout: 15000});
+
+      const followUpInput = generatedAnswer.page.getByRole('textbox', {
+        name: /ask follow-up/i,
+      });
+      await followUpInput.fill('What else should I try?');
+      await submitButton.click();
+
+      const threadItems = generatedAnswer.page.locator(
+        'atomic-generated-answer-thread-item'
+      );
+      await expect(threadItems).toHaveCount(2, {timeout: 15000});
+
+      const collapseButton = threadItems
+        .first()
+        .locator('button[aria-expanded]');
+      await expect(collapseButton).toHaveAttribute('aria-expanded', 'true');
+
+      await collapseButton.click();
+
+      await expect(collapseButton).toHaveAttribute('aria-expanded', 'false');
+      const firstItemContent = threadItems.first().locator('[hidden]');
+      await expect(firstItemContent).toHaveCount(1);
+    });
+  });
 });
