@@ -5,6 +5,7 @@ import type {
 } from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {testComboboxA11y} from '@/storybook-utils/a11y/combobox.js';
 import {MockInsightApi} from '@/storybook-utils/api/insight/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
@@ -50,5 +51,14 @@ export const WithDisabledSearch: Story = {
   name: 'With disabled search',
   args: {
     'disable-search': true,
+  },
+};
+
+export const A11yCombobox: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  name: 'A11y Combobox',
+  play: async (context) => {
+    await play(context);
+    await testComboboxA11y(context);
   },
 };

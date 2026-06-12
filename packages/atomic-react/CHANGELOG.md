@@ -1,3 +1,40 @@
+## 3.11.28
+
+### Patch Changes
+
+- Updated dependencies [[`9381bed`](https://github.com/coveo/ui-kit/commit/9381bed3f7fcc4612492fc88f82a3beea255c4c0), [`9d0beef`](https://github.com/coveo/ui-kit/commit/9d0beefbdafbd482407461d1d9bf2a3419372732), [`7912a7b`](https://github.com/coveo/ui-kit/commit/7912a7b849d869a48c97a185695ff52adfecb037), [`1524af9`](https://github.com/coveo/ui-kit/commit/1524af93f0ae325bc17d1daf88c77fca10fad655), [`16cebd8`](https://github.com/coveo/ui-kit/commit/16cebd8861d71aba8e809aac672817c3bd6f0173)]:
+  - @coveo/atomic@3.59.5
+
+## 3.11.27
+
+### Patch Changes
+
+- Updated dependencies [[`dc52580`](https://github.com/coveo/ui-kit/commit/dc52580d3022234395948d3982af7c9f22598d16)]:
+  - @coveo/atomic@3.59.4
+
+## 3.11.26
+
+### Patch Changes
+
+- Updated dependencies [[`fa08790`](https://github.com/coveo/ui-kit/commit/fa08790a38921292579a8e0bcf6b98a6b6e81323)]:
+  - @coveo/atomic@3.59.3
+
+## 3.11.25
+
+### Patch Changes
+
+- [#7717](https://github.com/coveo/ui-kit/pull/7717) [`380ad1b`](https://github.com/coveo/ui-kit/commit/380ad1bf0a79ab7dc92077af4c959d9cfa167356) Thanks [@alexprudhomme](https://github.com/alexprudhomme)! - CDN artifacts now resolve cross-package dependencies using commit-based paths, making each artifact self-contained and independent of version pointer availability.
+
+- Updated dependencies [[`380ad1b`](https://github.com/coveo/ui-kit/commit/380ad1bf0a79ab7dc92077af4c959d9cfa167356)]:
+  - @coveo/atomic@3.59.2
+
+## 3.11.24
+
+### Patch Changes
+
+- Updated dependencies [[`8417d69`](https://github.com/coveo/ui-kit/commit/8417d69e8997d18a474ead04ee441c4a947d277d), [`8417d69`](https://github.com/coveo/ui-kit/commit/8417d69e8997d18a474ead04ee441c4a947d277d), [`596b13f`](https://github.com/coveo/ui-kit/commit/596b13f2e796272b3a75ce912f6b9a64c405d74f), [`00a318f`](https://github.com/coveo/ui-kit/commit/00a318fb43d2160af262650aec1b15b750cb1028), [`c869b8a`](https://github.com/coveo/ui-kit/commit/c869b8ad3eb7a147e315db932afcb56e0ec857e2), [`e3dc930`](https://github.com/coveo/ui-kit/commit/e3dc93002cda27b5ffb137a6f684561764aa0b5a)]:
+  - @coveo/atomic@3.59.1
+
 ## 3.11.23
 
 ### Patch Changes

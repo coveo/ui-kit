@@ -1,5 +1,4 @@
 import {wcagCriteriaDefinitions} from '../data/wcag-criteria.js';
-import {compareByNumericId} from '../shared/sorting.js';
 import type {
   A11yComponentReport,
   A11yCriterionReport,
@@ -23,35 +22,15 @@ const DEFAULT_REPORT_PRODUCT_NAME = 'Coveo Atomic';
 const DEFAULT_REPORT_DATE = new Date().toISOString().slice(0, 10);
 
 function buildCriterionAggregates(
-  components: A11yComponentReport[],
   criteria: A11yCriterionReport[]
 ): Map<string, CriterionAggregate> {
   const aggregates = new Map<string, CriterionAggregate>();
 
-  for (const component of components) {
-    for (const criterionId of component.automated.criteriaCovered) {
-      const aggregate = aggregates.get(criterionId) ?? {
-        coveredComponents: new Set<string>(),
-        violatingComponents: new Set<string>(),
-      };
-
-      aggregate.coveredComponents.add(component.name);
-      aggregates.set(criterionId, aggregate);
-    }
-  }
-
   for (const criterion of criteria) {
-    const aggregate = aggregates.get(criterion.id) ?? {
-      coveredComponents: new Set<string>(),
-      violatingComponents: new Set<string>(),
-    };
-
-    for (const componentName of criterion.affectedComponents) {
-      aggregate.coveredComponents.add(componentName);
-      aggregate.violatingComponents.add(componentName);
-    }
-
-    aggregates.set(criterion.id, aggregate);
+    aggregates.set(criterion.id, {
+      coveredComponents: new Set(criterion.coveredComponents),
+      violatingComponents: new Set(criterion.violatingComponents),
+    });
   }
 
   return aggregates;
@@ -96,37 +75,16 @@ function buildCriterionComponents(
   ];
 }
 
-function buildManualAggregateIndex(
-  manualAggregates: Map<string, ManualAuditAggregate[]>
-): Map<string, ManualAuditAggregate[]> {
-  const index = new Map<string, ManualAuditAggregate[]>();
-  for (const [key, entries] of manualAggregates) {
-    const criterionId = key.split(':')[1];
-    const existing = index.get(criterionId) ?? [];
-    index.set(criterionId, [...existing, ...entries]);
-  }
-  return index;
-}
-
 function buildOpenAcrCriteria(
-  report: A11yReport | null,
+  report: A11yReport,
   overrides: Map<string, A11yOverrideEntry>,
   manualAggregates: Map<string, ManualAuditAggregate[]>
 ): {
   success_criteria_level_a: OpenAcrCriterion[];
   success_criteria_level_aa: OpenAcrCriterion[];
 } {
-  const criteriaById = new Map(
-    (report?.criteria ?? []).map((criterion) => [criterion.id, criterion])
-  );
-  const aggregates = buildCriterionAggregates(
-    report?.components ?? [],
-    report?.criteria ?? []
-  );
-  const interactiveAggregates = buildInteractiveAggregates(
-    report?.components ?? []
-  );
-  const manualByCriterion = buildManualAggregateIndex(manualAggregates);
+  const aggregates = buildCriterionAggregates(report.criteria);
+  const interactiveAggregates = buildInteractiveAggregates(report.components);
 
   const criteriaByChapter: Record<ChapterId, OpenAcrCriterion[]> = {
     success_criteria_level_a: [],
@@ -134,27 +92,11 @@ function buildOpenAcrCriteria(
   };
 
   for (const definition of wcagCriteriaDefinitions) {
-    const aggregate = aggregates.get(definition.id);
-    const criterionFromReport = criteriaById.get(definition.id);
-    const override = overrides.get(definition.id);
-    const coveredComponents = [...(aggregate?.coveredComponents ?? [])].sort(
-      compareByNumericId
-    );
-    const violatingComponents = [
-      ...(aggregate?.violatingComponents ?? []),
-    ].sort(compareByNumericId);
-    const manualForCriterion = manualByCriterion.get(definition.id);
-    const interactiveAggregate = interactiveAggregates.get(definition.id);
-    const interactiveCoveredComponents = [
-      ...(interactiveAggregate?.coveredComponents ?? []),
-    ].sort(compareByNumericId);
-
     const conformanceContext = {
-      criterion: criterionFromReport,
-      aggregate,
-      interactiveAggregate,
-      manualAggregates: manualForCriterion,
-      override,
+      aggregate: aggregates.get(definition.id),
+      interactiveAggregate: interactiveAggregates.get(definition.id),
+      manualAggregates: manualAggregates.get(definition.id),
+      override: overrides.get(definition.id),
     };
 
     const conformance = resolveConformance(conformanceContext);
@@ -162,9 +104,6 @@ function buildOpenAcrCriteria(
       ...conformanceContext,
       criterionId: definition.id,
       conformance,
-      coveredComponents,
-      violatingComponents,
-      interactiveCoveredComponents,
     });
 
     criteriaByChapter[definition.chapterId].push({
@@ -177,18 +116,22 @@ function buildOpenAcrCriteria(
 }
 
 export function buildOpenAcrReport(
-  report: A11yReport | null,
+  report: A11yReport,
   overrides: Map<string, A11yOverrideEntry>,
   manualAggregates: Map<string, ManualAuditAggregate[]>
 ): OpenAcrReport {
-  const reportDate = report?.report.reportDate ?? DEFAULT_REPORT_DATE;
+  const reportDate = report.report.reportDate ?? DEFAULT_REPORT_DATE;
   const reportProductName =
-    report?.report.product ?? DEFAULT_REPORT_PRODUCT_NAME;
-  if (!report?.report.version) {
-    throw new Error('Report version is required for OpenACR generation.');
-  }
+    report.report.product ?? DEFAULT_REPORT_PRODUCT_NAME;
 
-  let evaluationMethods = report?.report.evaluationMethods?.length
+  if (!report.report.version) {
+    throw new Error(
+      'report.version is required to generate the OpenACR report'
+    );
+  }
+  const reportVersion = report.report.version;
+
+  let evaluationMethods = report.report.evaluationMethods?.length
     ? report.report.evaluationMethods.join('; ')
     : 'axe-core Storybook scans';
 
@@ -196,8 +139,6 @@ export function buildOpenAcrReport(
     if (!evaluationMethods.includes('Manual audit')) {
       evaluationMethods += '; Manual audit';
     }
-  } else {
-    evaluationMethods += '; manual audit placeholders pending';
   }
 
   const criteriaByChapter = buildOpenAcrCriteria(
@@ -207,32 +148,32 @@ export function buildOpenAcrReport(
   );
 
   const successNotes =
-    'Conformance is based on automated Storybook + axe-core output, interactive keyboard testing, and pending manual validation.';
+    'Conformance is based on automated Storybook + axe-core output and interactive keyboard testing.';
 
   return {
     title: DEFAULT_REPORT_TITLE,
     product: {
       name: reportProductName,
-      version: report.report.version,
+      version: reportVersion,
       description:
         'Coveo Atomic is a web component library for building search and commerce interfaces.',
     },
     author: {
       name: 'Coveo Accessibility Team',
       company_name: 'Coveo',
-      email: 'accessibility@coveo.com',
+      email: 'support@coveo.com',
       website: 'https://www.coveo.com',
     },
     vendor: {
       company_name: 'Coveo',
-      email: 'accessibility@coveo.com',
+      email: 'support@coveo.com',
       website: 'https://www.coveo.com',
     },
     report_date: reportDate,
     last_modified_date: DEFAULT_REPORT_DATE,
     version: 1,
     notes:
-      'Generated from a11y/reports/a11y-report.json. Automated statuses are derived from axe-core results, with manual placeholders for Phase 3.',
+      'Generated from a11y/reports/a11y-report.json. Conformance is derived from axe-core results, interactive keyboard tests, and manual audits. Rows marked [Manual audit required] have no automated or interactive coverage and are reported as Does Not Support pending manual verification.',
     evaluation_methods_used: evaluationMethods,
     repository: 'https://github.com/coveo/ui-kit',
     feedback: 'https://github.com/coveo/ui-kit/issues',

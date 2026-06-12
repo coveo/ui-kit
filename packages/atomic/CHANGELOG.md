@@ -1,3 +1,63 @@
+## 3.59.5
+
+### Patch Changes
+
+- [#7712](https://github.com/coveo/ui-kit/pull/7712) [`9381bed`](https://github.com/coveo/ui-kit/commit/9381bed3f7fcc4612492fc88f82a3beea255c4c0) - Added `aria-expanded` to expandable text buttons, smart snippet show more/less buttons, and the generated answer show more/less button to implement the WAI-ARIA disclosure pattern.
+
+- [#7742](https://github.com/coveo/ui-kit/pull/7742) [`9d0beef`](https://github.com/coveo/ui-kit/commit/9d0beefbdafbd482407461d1d9bf2a3419372732) - Fixed facet search to announce its result count through an ARIA live region when a query returns no matches (WCAG 4.1.3 Status Messages). Previously the "no matches found" state was only conveyed visually and was never announced to assistive technologies, since the announcer only fired when results were found.
+
+- [#7723](https://github.com/coveo/ui-kit/pull/7723) [`7912a7b`](https://github.com/coveo/ui-kit/commit/7912a7b849d869a48c97a185695ff52adfecb037) - Ensure atomic-numeric-facet honour conditions properly
+
+- [#7743](https://github.com/coveo/ui-kit/pull/7743) [`1524af9`](https://github.com/coveo/ui-kit/commit/1524af93f0ae325bc17d1daf88c77fca10fad655) - Fix status-message accessibility coverage by asserting exact live-region announcement strings in result-control Storybook tests, and fix pager i18n interpolation for the `pager-page-loaded` message.
+
+- [#7749](https://github.com/coveo/ui-kit/pull/7749) [`16cebd8`](https://github.com/coveo/ui-kit/commit/16cebd8861d71aba8e809aac672817c3bd6f0173) - Wire `HiddenStateController` to selected search components so hosts collapse when empty and no longer introduce layout gaps.
+
+## 3.59.4
+
+### Patch Changes
+
+- [#7710](https://github.com/coveo/ui-kit/pull/7710) [`dc52580`](https://github.com/coveo/ui-kit/commit/dc52580d3022234395948d3982af7c9f22598d16) - Pressing Escape in the search box (search, commerce and insight) now collapses the suggestions popup deterministically, preventing a late asynchronous query-suggestion fetch from re-opening it after dismissal.
+
+- Updated dependencies [[`9bd57e7`](https://github.com/coveo/ui-kit/commit/9bd57e7de3b5e388d52192b3f4e47009a4e7cd81)]:
+  - @coveo/headless@3.51.4
+  - @coveo/atomic-legacy@0.0.20
+
+## 3.59.3
+
+### Patch Changes
+
+- [#7659](https://github.com/coveo/ui-kit/pull/7659) [`fa08790`](https://github.com/coveo/ui-kit/commit/fa08790a38921292579a8e0bcf6b98a6b6e81323) - Implement the WAI-ARIA Tabs APG pattern for `atomic-insight-tab` and `atomic-ipx-tab`, including host-level tab semantics and keyboard navigation in the associated tablists.
+
+## 3.59.2
+
+### Patch Changes
+
+- [#7717](https://github.com/coveo/ui-kit/pull/7717) [`380ad1b`](https://github.com/coveo/ui-kit/commit/380ad1bf0a79ab7dc92077af4c959d9cfa167356) Thanks [@alexprudhomme](https://github.com/alexprudhomme)! - CDN artifacts now resolve cross-package dependencies using commit-based paths, making each artifact self-contained and independent of version pointer availability.
+
+- Updated dependencies [[`380ad1b`](https://github.com/coveo/ui-kit/commit/380ad1bf0a79ab7dc92077af4c959d9cfa167356)]:
+  - @coveo/headless@3.51.3
+  - @coveo/atomic-legacy@0.0.19
+
+## 3.59.1
+
+### Patch Changes
+
+- [#7680](https://github.com/coveo/ui-kit/pull/7680) [`8417d69`](https://github.com/coveo/ui-kit/commit/8417d69e8997d18a474ead04ee441c4a947d277d) Thanks [@alexprudhomme](https://github.com/alexprudhomme)! - Add WAI-ARIA Carousel pattern attributes (`role="region"`, `aria-roledescription="carousel"`, `aria-live="polite"`) to the image carousel component for screen reader accessibility.
+
+- [#7680](https://github.com/coveo/ui-kit/pull/7680) [`8417d69`](https://github.com/coveo/ui-kit/commit/8417d69e8997d18a474ead04ee441c4a947d277d) Thanks [@alexprudhomme](https://github.com/alexprudhomme)! - Add localized accessible label to the image carousel region using the product name (e.g., "Image gallery for {productName}"). The `label` prop on `CarouselProps` is now required, ensuring all callers provide a meaningful accessible name.
+
+- [#7656](https://github.com/coveo/ui-kit/pull/7656) [`596b13f`](https://github.com/coveo/ui-kit/commit/596b13f2e796272b3a75ce912f6b9a64c405d74f) Thanks [@y-lakhdar](https://github.com/y-lakhdar)! - Fix search tab accessibility by aligning `atomic-tab-manager` and `atomic-tab-button` with the WAI-ARIA Tabs pattern, including proper `tablist`/`tab` semantics and keyboard navigation in tab stories.
+
+- [#7701](https://github.com/coveo/ui-kit/pull/7701) [`00a318f`](https://github.com/coveo/ui-kit/commit/00a318fb43d2160af262650aec1b15b750cb1028) Thanks [@y-lakhdar](https://github.com/y-lakhdar)! - Improve accessibility of the generated answer feedback modal to comply with WCAG 4.1.3 (Status Messages). The success confirmation and validation errors are now announced by assistive technologies without requiring focus.
+
+- [#7677](https://github.com/coveo/ui-kit/pull/7677) [`c869b8a`](https://github.com/coveo/ui-kit/commit/c869b8ad3eb7a147e315db932afcb56e0ec857e2) Thanks [@y-lakhdar](https://github.com/y-lakhdar)! - Allow dismissing the citation popover with the Escape key (WCAG 1.4.13 Content on Hover or Focus).
+
+- [#7681](https://github.com/coveo/ui-kit/pull/7681) [`e3dc930`](https://github.com/coveo/ui-kit/commit/e3dc93002cda27b5ffb137a6f684561764aa0b5a) Thanks [@alexprudhomme](https://github.com/alexprudhomme)! - Add accessible label (`aria-label`) to the table layout used by result list and product list in table display mode.
+
+- Updated dependencies [[`2abc0a0`](https://github.com/coveo/ui-kit/commit/2abc0a0cf854db560cf56e9337314c3736c45d88)]:
+  - @coveo/headless@3.51.2
+  - @coveo/atomic-legacy@0.0.18
+
 ## 3.59.0
 
 ### Minor Changes

@@ -22,6 +22,8 @@ const exampleCitations = [
     uri: 'https://example.com/2',
   },
 ];
+const exampleEngineId = 'example engine id';
+const exampleAnswerId = 'example answer id';
 jest.mock('c/quanticHeadlessLoader');
 jest.mock('c/quanticUtils', () => ({
   AriaLiveRegion: jest.fn(() => ({
@@ -50,6 +52,7 @@ jest.mock(
 
 /** @type {Object} */
 const defaultOptions = {
+  engineId: exampleEngineId,
   fieldsToIncludeInCitations: 'sfid,sfkbid,sfkavid,filetype',
   answerConfigurationId: undefined,
   withToggle: false,
@@ -348,6 +351,7 @@ describe('c-quantic-generated-answer', () => {
           isStreaming: true,
           answer: exampleAnswer,
           answerContentFormat: exampleAnswerContentFormat,
+          answerId: exampleAnswerId,
         };
         mockSuccessfulHeadlessInitialization();
         prepareHeadlessState();
@@ -461,6 +465,8 @@ describe('c-quantic-generated-answer', () => {
         expect(generatedAnswerContent.answerContentFormat).toBe(
           exampleAnswerContentFormat
         );
+        expect(generatedAnswerContent.engineId).toBe(exampleEngineId);
+        expect(generatedAnswerContent.answerId).toBe(exampleAnswerId);
       });
 
       it('should not display the generated answer actions', async () => {
@@ -783,6 +789,54 @@ describe('c-quantic-generated-answer', () => {
         );
         expect(generatedAnswerCitations).not.toBeNull();
         expect(generatedAnswerCitations.disableCitationAnchoring).toBe(false);
+      });
+
+      describe('when follow-ups are enabled', () => {
+        // TODO SFINT-6786: Add test cases to cover the behavior of the component when follow-ups are enabled based on the actual implementation of the follow-up feature in the state.
+        it.skip('should render the content section with the scrollable class and ignore the collapsible feature', async () => {
+          mockAnswerHeight = defaultAnswerHeight + 100;
+          const element = createTestComponent({
+            ...defaultOptions,
+            collapsible: true,
+          });
+          await flushPromises();
+
+          const generatedAnswerBody = element.shadowRoot.querySelector(
+            selectors.generatedAnswerBody
+          );
+
+          expect(generatedAnswerBody).not.toBeNull();
+          expect(
+            generatedAnswerBody.classList.contains(
+              'generated-answer__content--scrollable'
+            )
+          ).toBe(true);
+
+          const generatedAnswerCollapseToggle =
+            element.shadowRoot.querySelector(
+              selectors.generatedAnswerCollapseToggle
+            );
+
+          expect(generatedAnswerCollapseToggle).toBeNull();
+        });
+      });
+
+      describe('when follow-ups are not enabled', () => {
+        it('should not render the content section with the scrollable class', async () => {
+          const element = createTestComponent();
+          await flushPromises();
+
+          const generatedAnswerBody = element.shadowRoot.querySelector(
+            selectors.generatedAnswerBody
+          );
+
+          expect(generatedAnswerBody).not.toBeNull();
+          expect(
+            generatedAnswerBody.classList.contains(
+              'generated-answer__content--scrollable'
+            )
+          ).toBe(false);
+        });
       });
     });
 

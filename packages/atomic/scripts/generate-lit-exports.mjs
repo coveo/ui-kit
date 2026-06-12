@@ -107,9 +107,7 @@ async function generateLitExportsForDir(dir) {
   writeFileSync(outputLazyIndexFile, lazyIndexFileContent);
 }
 
-export async function generateLitExports() {
-  for (const dir of directories) {
-    console.log(colors.blue('Directory:'), colors.green(dir));
-    await generateLitExportsForDir(dir);
-  }
+for (const dir of directories) {
+  console.log(colors.blue('Directory:'), colors.green(dir));
+  await generateLitExportsForDir(dir);
 }

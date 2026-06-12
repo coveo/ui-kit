@@ -1,3 +1,42 @@
+## 3.40.0
+
+### Minor Changes
+
+- [#7718](https://github.com/coveo/ui-kit/pull/7718) [`b19e6c9`](https://github.com/coveo/ui-kit/commit/b19e6c986da6ed10fb723a43434636b7805bca6d) - Started supporting inline links with analytics in generated answers
+
+### Patch Changes
+
+- [#7758](https://github.com/coveo/ui-kit/pull/7758) [`c3ad452`](https://github.com/coveo/ui-kit/commit/c3ad452a63b2c0f76258df3932559d738d1d1cd1) - Made the quanticGeneratedAnswer content scrollable
+
+## 3.39.1
+
+### Patch Changes
+
+- [#7714](https://github.com/coveo/ui-kit/pull/7714) [`0405a9a`](https://github.com/coveo/ui-kit/commit/0405a9ae8f4f97158d27ff9f46a0d23ba3adcb7d) - refactored the quanticutils
+
+- Updated dependencies [[`9bd57e7`](https://github.com/coveo/ui-kit/commit/9bd57e7de3b5e388d52192b3f4e47009a4e7cd81)]:
+  - @coveo/headless@3.51.4
+
+## 3.39.0
+
+### Minor Changes
+
+- [#7704](https://github.com/coveo/ui-kit/pull/7704) [`0b83ae1`](https://github.com/coveo/ui-kit/commit/0b83ae1c531da479fed8f30283db0bda8272ba14) - feat(quantic): create the QuanticGeneratedAnswerFollowUpInput component
+
+## 3.38.2
+
+### Patch Changes
+
+- Updated dependencies [[`380ad1b`](https://github.com/coveo/ui-kit/commit/380ad1bf0a79ab7dc92077af4c959d9cfa167356)]:
+  - @coveo/headless@3.51.3
+
+## 3.38.1
+
+### Patch Changes
+
+- Updated dependencies [[`2abc0a0`](https://github.com/coveo/ui-kit/commit/2abc0a0cf854db560cf56e9337314c3736c45d88)]:
+  - @coveo/headless@3.51.2
+
 ## 3.38.0
 
 ### Minor Changes

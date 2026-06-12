@@ -182,8 +182,8 @@ export class VitestA11yReporter implements Reporter {
         component.automated.incomplete += axeResults.incomplete.length;
         component.automated.inapplicable += axeResults.inapplicable.length;
 
-        this.collectCriteria(component, axeResults.violations);
-        this.collectCriteria(component, axeResults.passes);
+        this.collectCriteria(component, axeResults.violations, 'violated');
+        this.collectCriteria(component, axeResults.passes, 'passed');
         this.collectCriteria(component, axeResults.incomplete);
         this.collectCriteria(component, axeResults.inapplicable);
 
@@ -361,6 +361,8 @@ export class VitestA11yReporter implements Reporter {
         incomplete: 0,
         inapplicable: 0,
         criteriaCovered: new Set<string>(),
+        criteriaViolated: new Set<string>(),
+        criteriaPassed: new Set<string>(),
         incompleteDetails: [],
       },
     };
@@ -371,11 +373,17 @@ export class VitestA11yReporter implements Reporter {
 
   private collectCriteria(
     component: ComponentAccumulator,
-    rules: AxeRuleResult[]
+    rules: AxeRuleResult[],
+    category?: 'violated' | 'passed'
   ): void {
     for (const rule of rules) {
       for (const criterion of getCriteriaForRule(rule)) {
         component.automated.criteriaCovered.add(criterion);
+        if (category === 'violated') {
+          component.automated.criteriaViolated.add(criterion);
+        } else if (category === 'passed') {
+          component.automated.criteriaPassed.add(criterion);
+        }
       }
     }
   }

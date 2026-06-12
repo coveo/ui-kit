@@ -32,8 +32,6 @@ import styles from './atomic-insight-smart-snippet-feedback-modal.tw.css';
  *
  * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
  *
- * @internal
- *
  * @part backdrop - The transparent backdrop hiding the content behind the modal.
  * @part container - The modal's outermost container with the outline and background.
  * @part header-wrapper - The wrapper around the header.

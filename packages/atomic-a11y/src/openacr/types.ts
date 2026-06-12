@@ -1,5 +1,3 @@
-import type {A11yCriterionReport} from '../shared/types.js';
-
 export type ChapterId =
   | 'success_criteria_level_a'
   | 'success_criteria_level_aa';
@@ -8,8 +6,7 @@ export type OpenAcrConformance =
   | 'supports'
   | 'partially-supports'
   | 'does-not-support'
-  | 'not-applicable'
-  | 'not-evaluated';
+  | 'not-applicable';
 
 export interface CriterionAggregate {
   coveredComponents: Set<string>;
@@ -31,17 +28,17 @@ interface ManualAuditCriterionValue {
   remarks?: string;
 }
 
-export interface ManualAuditBaselineEntry {
-  name: string;
-  category: string;
-  manual: {
-    status: string;
-    wcag22Criteria: Record<string, string | ManualAuditCriterionValue>;
-  };
+/**
+ * A manual-audit file: one surface-scoped record of audited criteria.
+ * `surface` is a free-text label for QA organization only — the pipeline
+ * attaches no meaning to it and it does not appear in the VPAT.
+ */
+export interface ManualAuditFile {
+  surface?: string;
+  wcag22Criteria: Record<string, string | ManualAuditCriterionValue>;
 }
 
 export interface ManualAuditAggregate {
-  componentName: string;
   criterionId: string;
   conformance: OpenAcrConformance;
   remarks?: string;
@@ -106,7 +103,6 @@ export const VALID_OVERRIDE_CONFORMANCE_VALUES: ReadonlySet<OpenAcrConformance> 
     'partially-supports',
     'does-not-support',
     'not-applicable',
-    'not-evaluated',
   ]);
 
 export const manualStatusToConformance: Record<string, OpenAcrConformance> = {
@@ -116,13 +112,13 @@ export const manualStatusToConformance: Record<string, OpenAcrConformance> = {
   'not-applicable': 'not-applicable',
 };
 
-export const reportConformanceToOpenAcr: Record<
-  A11yCriterionReport['conformance'],
-  OpenAcrConformance
-> = {
-  supports: 'supports',
-  partiallySupports: 'partially-supports',
-  doesNotSupport: 'does-not-support',
-  notApplicable: 'not-applicable',
-  notEvaluated: 'not-evaluated',
+/**
+ * Severity ranking for worst-wins resolution (higher = worse).
+ * does-not-support > partially-supports > supports > not-applicable.
+ */
+export const CONFORMANCE_SEVERITY: Record<OpenAcrConformance, number> = {
+  'does-not-support': 3,
+  'partially-supports': 2,
+  supports: 1,
+  'not-applicable': 0,
 };

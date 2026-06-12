@@ -81,6 +81,9 @@ export const renderExpandableText: FunctionalComponentWithChildren<
           style: 'text-primary',
           class: buttonClassString,
           title: buttonLabel,
+          ...(isCollapsible && {
+            ariaExpanded: isExpanded ? 'true' : 'false',
+          }),
           onClick: onToggleExpand,
         },
       })(

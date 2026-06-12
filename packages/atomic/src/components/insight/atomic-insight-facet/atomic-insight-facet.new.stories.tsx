@@ -1,7 +1,9 @@
 import type {FacetSortCriterion} from '@coveo/headless/insight';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {testCheckboxA11y} from '@/storybook-utils/a11y/checkbox.js';
 import {MockInsightApi} from '@/storybook-utils/api/insight/mock';
+import {searchFacetTransformer} from '@/storybook-utils/api/search/facet-transformer';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
@@ -154,5 +156,27 @@ export const Collapsed: Story = {
   decorators: [facetDecorator],
   beforeEach: () => {
     mockDefaultFacetResponse();
+  },
+};
+
+export const A11yCheckbox: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  args: {
+    field: 'objecttype',
+  },
+  decorators: [facetDecorator],
+  beforeEach: () => {
+    insightApiHarness.searchEndpoint.addRequestTransformer(
+      searchFacetTransformer
+    );
+    return () => {
+      insightApiHarness.searchEndpoint.removeRequestTransformer(
+        searchFacetTransformer
+      );
+    };
+  },
+  play: async (context) => {
+    await play(context);
+    await testCheckboxA11y(context);
   },
 };

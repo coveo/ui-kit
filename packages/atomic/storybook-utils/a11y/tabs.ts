@@ -1,6 +1,6 @@
 import type {StoryContext} from '@storybook/web-components-vite';
 import {within} from 'shadow-dom-testing-library';
-import {expect, userEvent, waitFor} from 'storybook/test';
+import {expect, fireEvent, waitFor} from 'storybook/test';
 
 /**
  * WCAG 2.2 AA criteria covered by tabs interaction tests.
@@ -19,6 +19,29 @@ function getDeepActiveElement(element: Element | null): Element | null {
   return element;
 }
 
+function getTabHostFromElement(
+  element: Element | null,
+  tabs: HTMLElement[]
+): HTMLElement | null {
+  let current: Element | null = element;
+
+  while (current) {
+    if (tabs.includes(current as HTMLElement)) {
+      return current as HTMLElement;
+    }
+
+    if (current.parentElement) {
+      current = current.parentElement;
+      continue;
+    }
+
+    const root = current.getRootNode();
+    current = root instanceof ShadowRoot ? root.host : null;
+  }
+
+  return null;
+}
+
 function getActiveTab(
   tabs: HTMLElement[],
   canvasElement: HTMLElement
@@ -35,11 +58,7 @@ function getActiveTab(
   const deepActive = getDeepActiveElement(
     canvasElement.ownerDocument.activeElement
   );
-  if (deepActive && tabs.includes(deepActive as HTMLElement)) {
-    return deepActive as HTMLElement;
-  }
-
-  return null;
+  return getTabHostFromElement(deepActive, tabs);
 }
 
 /**
@@ -124,7 +143,7 @@ export async function testTabsA11y(context: StoryContext): Promise<void> {
         {timeout: 3000}
       );
 
-      await userEvent.keyboard('{ArrowRight}');
+      fireEvent.keyDown(firstTab, {key: 'ArrowRight'});
 
       await waitFor(
         () => {
@@ -147,7 +166,7 @@ export async function testTabsA11y(context: StoryContext): Promise<void> {
         {timeout: 3000}
       );
 
-      await userEvent.keyboard('{ArrowLeft}');
+      fireEvent.keyDown(secondTab, {key: 'ArrowLeft'});
 
       await waitFor(
         () => {
