@@ -24,7 +24,7 @@ evaluation_methods_used: axe-core 4.11.4; Storybook addon-a11y; Storybook
   interactive play() tests; Manual audit
 repository: https://github.com/coveo/ui-kit
 feedback: https://github.com/coveo/ui-kit/issues
-catalog: 2.5-edition-wcag-2.2-en
+catalog: 2.5-edition-wcag-2.2-508-eu-en
 chapters:
   success_criteria_level_a:
     notes: Conformance is based on automated Storybook + axe-core output and
