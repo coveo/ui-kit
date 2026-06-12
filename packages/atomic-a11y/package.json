@@ -14,10 +14,13 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "a11y:validate": "node scripts/validate-openacr.mjs",
-    "a11y:vpat": "pnpm build && node scripts/json-to-openacr.mjs && node scripts/validate-openacr.mjs && node scripts/generate-vpat.mjs"
+    "a11y:vpat": "pnpm build && node scripts/json-to-openacr.mjs && node scripts/validate-openacr.mjs && node scripts/generate-vpat.mjs",
+    "a11y:vpat-pdf": "node scripts/build-vpat-pdf.mjs",
+    "a11y:update-openacr": "pnpm build && node scripts/update-openacr.mjs"
   },
   "dependencies": {
     "handlebars": "4.7.9",
+    "marked": "12.0.2",
     "yaml": "catalog:"
   },
   "devDependencies": {
