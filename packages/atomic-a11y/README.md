@@ -69,7 +69,7 @@ You have two options:
 This avoids running the full Storybook test suite locally. The CI already ran the tests and produced the report — you just download it:
 
 ```bash
-pnpm --filter @coveo/atomic-a11y a11y:update-openacr -- --run-id=<RUN_ID>
+pnpm --filter @coveo/atomic-a11y a11y:update-openacr --run-id=<RUN_ID>
 ```
 
 Replace `<RUN_ID>` with the GitHub Actions run ID from the failing check (shown in the error message). This uses the `gh` CLI to download the `a11y-report.json` artifact and regenerates `openacr.yaml`.

@@ -34,10 +34,23 @@ await transformJsonToOpenAcr({
   outputFile: GENERATED_OPENACR,
 });
 
+// `report_date` and `last_modified_date` are regenerated to the current date on
+// every run, so a raw comparison would fail daily even with no conformance
+// change. Neutralize those volatile fields (value and quote style) before
+// comparing so the check only reacts to real conformance/coverage changes.
+const VOLATILE_FIELDS = ['report_date', 'last_modified_date'];
+function normalize(yaml) {
+  return VOLATILE_FIELDS.reduce(
+    (acc, field) =>
+      acc.replace(new RegExp(`^(\\s*${field}:).*$`, 'm'), '$1 <normalized>'),
+    yaml
+  );
+}
+
 const committed = readFileSync(COMMITTED_OPENACR, 'utf-8');
 const generated = readFileSync(GENERATED_OPENACR, 'utf-8');
 
-if (committed === generated) {
+if (normalize(committed) === normalize(generated)) {
   console.log('✅ openacr.yaml is up to date.');
   process.exit(0);
 }
@@ -54,7 +67,7 @@ conformance, or component coverage changed.
 
 To update, run:
 
-  pnpm --filter @coveo/atomic-a11y a11y:update-openacr -- --run-id=${runId}
+  pnpm --filter @coveo/atomic-a11y a11y:update-openacr --run-id=${runId}
 
 Then review the changes and commit the updated openacr.yaml.
 

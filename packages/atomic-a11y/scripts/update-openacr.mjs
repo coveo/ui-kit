@@ -20,7 +20,7 @@ const runId = process.argv
   ?.split('=')[1];
 if (!runId) {
   console.error(
-    'Usage: pnpm --filter @coveo/atomic-a11y a11y:update-openacr -- --run-id=<RUN_ID>'
+    'Usage: pnpm --filter @coveo/atomic-a11y a11y:update-openacr --run-id=<RUN_ID>'
   );
   process.exit(1);
 }
