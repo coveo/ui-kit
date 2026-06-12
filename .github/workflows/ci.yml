@@ -471,7 +471,7 @@ jobs:
           path: packages/atomic/reports
           merge-multiple: true
       - name: 'Merge a11y shard reports'
-        run: pnpm run a11y:merge-shards -- ../atomic/reports/a11y-report.json
+        run: pnpm run a11y:merge-shards ../atomic/reports/a11y-report.json
         working-directory: packages/atomic-a11y
       - name: 'Upload merged a11y report'
         if: always()
