@@ -1,6 +1,6 @@
 # Introduce multi-interface engine architecture
 
-**Status**: Proposed
+**Status**: `🟡 Proposed`  
 **Related docs**: [ADR-000 Architecture Decision Charter](./ADR-000-architecture-decision-charter.md)
 
 ## 1. Context

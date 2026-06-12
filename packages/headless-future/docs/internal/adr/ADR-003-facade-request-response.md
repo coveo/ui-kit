@@ -1,19 +1,19 @@
 # ADR-002: Centralized Request Building and Response Handling for Endpoint Facades
 
 **Status**: `🟡 Proposed`  
-**Related docs**: -
+**Related docs**: [ADR-000 Architecture Decision Charter](./ADR-000-architecture-decision-charter.md), [ADR-002 Multi-Interface Engine](./ADR-002-multi-interface-engine.md)
 
 ## 1. Context
 
-Endpoint facades (e.g., `SearchEndpointFacade`, `ConversationEndpointFacade`) orchestrate the full API lifecycle: build a request from state, execute the HTTP call, and write the response back to state. Multiple state slices participate in both directions.
+Endpoint facades (e.g., `SearchEndpointFacade`, `CommerceSearchEndpointFacade`) orchestrate the full API lifecycle: build a request from state, execute the HTTP call, and write the response back to state. Multiple state slices participate in both directions.
 
-- **Business/context drivers**: Endpoint requests have finite, well-known schemas defined at design time. Internal wiring should be simple, traceable, and type-safe.
-- **Technical constraints**: A decentralized contributor approach produces an opaque merged request from anonymous, order-dependent functions that is hard to inspect or test.
+- **Business/context drivers**: Endpoint requests have finite, well-known schemas defined at design time. Internal wiring should be simple, traceable, and type-safe. A decentralized contributor approach produces an opaque merged request from anonymous, order-dependent functions that is hard to inspect or test.
+- **Technical constraints**: Each endpoint facade is instantiated per-interface with scoped IDs, meaning request selectors and response handlers must be factory functions parameterized by interfaceId (per ADR-002).
 - **Known assumptions**: Non-adopted slices are safe to read (selectors fall back to initial state) and safe to write to (dispatched actions are ignored when no reducer is injected). This eliminates the need for guards or lazy registration.
 
 ## 2. Decision Statement
 
-Endpoint facades should use symmetric centralized patterns for both request building and response handling: a composed memoized selector to build the request from state, and a centralized response handler to distribute the response via standalone actions.
+Endpoint facades should use symmetric centralized patterns for both request building and response handling: scoped factory functions that produce per-interface memoized selectors to build the request from state, and per-interface response handlers to distribute the response via scoped standalone actions.
 
 ## 3. Requirements & Considerations Mapping
 
@@ -53,37 +53,52 @@ Map this decision to headless-future's Architecture Decision Charter requirement
 
 - **Summary**: Each endpoint facade uses a composed memoized selector to build its request from state, and a centralized handler to distribute its response via standalone actions dispatched toward relevant slices.
 
-  **Request building** — composed selector:
+  **Request building** — scoped factory producing a composed selector:
 
   ```ts
-  // search-endpoint-selectors.ts
-  export const buildSearchEndpointRequest = createMemoizedStateSelector(
-    searchBoxSelectors.query,
-    paginationSelectors.firstResult,
-    paginationSelectors.pageSize,
-    facetsSelectors.buildFacetsRequest,
-    (query, firstResult, pageSize, facets): CoveoSearchEndpointRequest => ({
-      q: query,
-      firstResult: firstResult,
-      numberOfResults: pageSize,
-      facets: facets,
-    })
-  );
+  // search-endpoint-request-selector.ts
+  function createSearchEndpointRequestSelector(interfaceId: string) {
+    const searchBoxSel = getOrCreateSearchBoxSelectors(interfaceId);
+    const paginationSel = getOrCreatePaginationSelectors(interfaceId);
+    const facetsSel = getOrCreateFacetsSelectors(interfaceId);
+
+    return createMemoizedStateSelector(
+      searchBoxSel.getQuery,
+      paginationSel.getFirstResult,
+      paginationSel.getPageSize,
+      facetsSel.buildFacetsRequest,
+      (query, firstResult, pageSize, facets): CoveoSearchEndpointRequest => ({
+        q: query,
+        firstResult,
+        numberOfResults: pageSize,
+        facets,
+      })
+    );
+  }
   ```
 
-  **Response handling** — centralized handler with standalone actions:
+  **Response handling** — scoped factory producing a handler with standalone actions:
 
   ```ts
   // search-endpoint-response-handler.ts
-  export const handleSearchEndpointResponse = (
-    engine: FullEngine,
-    response: CoveoSearchEndpointResponse
-  ) => {
-    engine.mutate(resultListActions.setResults(mapResults(response)));
-    engine.mutate(paginationActions.setTotalCount(response.totalCount));
-    engine.mutate(facetsActions.setFacets(response.facets));
-  };
+  function createSearchEndpointResponseHandler(interfaceId: string) {
+    const resultActions = getOrCreateResultsActions(interfaceId);
+    const paginationActions = getOrCreatePaginationActions(interfaceId);
+    const facetActions = getOrCreateFacetsActions(interfaceId);
+
+    return (engine: FullEngine, response: CoveoSearchEndpointResponse) => {
+      engine.mutate(resultActions.setResultsFromResponse(response.results));
+      engine.mutate(paginationActions.setTotalCount(response.totalCount));
+      engine.mutate(facetActions.updateFromResponse(response.facets));
+    };
+  }
   ```
+
+  **Key implementation details:**
+
+  - **Memoized caching** — `getOrCreate*` factories (e.g., `getOrCreateSearchBoxSelectors(interfaceId)`) are memoized per interfaceId. Multiple callers (facade, controller) sharing the same interfaceId get the same instance. This ensures selector referential equality for memoization and avoids redundant object creation.
+  - **Composed selector memoization** — `createMemoizedStateSelector` produces a selector that only recomputes when its input selectors return new values. The facade can call `engine.read(this.#buildRequest)` on every tick without performance cost — if no input state changed, the cached request object is returned.
+  - **Non-adopted slice safety** — selectors from `getOrCreate*` fall back to `initialState` when a slice is not adopted. Actions dispatched to non-adopted slices are no-ops (no reducer to handle them). This makes the pattern completely safe and aligned with lazy loading of feature states: the facade always produces a valid request and can always dispatch response actions, regardless of which controllers have been instantiated.
 
 - **Pros**:
   - **Type safety** — TypeScript guarantees the output matches the endpoint request type at compile time
@@ -91,11 +106,12 @@ Map this decision to headless-future's Architecture Decision Charter requirement
   - **No timing issues** — always runs, non-adopted slices simply produce safe no-ops
   - **Consistency** — follows how the rest of Layer 0 works (state → selectors → derived values)
   - **Symmetry** — one mental model for both directions (composed selector ↔ composed handler)
+  - **Scoped by design** — factory functions parameterized by `interfaceId` produce per-interface instances, supporting multi-interface architecture natively
 - **Cons**:
-  - **Central modification required** — adding a new feature requires modifying the centralized selector/handler for the relevant endpoint
-  - **Cross-feature coupling** — the selector file is aware of all contributing feature modules
+  - **Central modification required** — adding a new feature requires modifying the scoped factory for the relevant endpoint
+  - **Cross-feature coupling** — the factory file is aware of all contributing feature modules
 - **Risks**:
-  - **File growth** — the selector file may grow large if many features are added (mitigated by keeping each sub-selector in its own feature module)
+  - **File growth** — the factory file may grow large if many features are added (mitigated by keeping each sub-selector in its own feature module)
 
 ### Option B: Decentralized `onRequest`/`onResponse` Contributors
 
@@ -105,12 +121,12 @@ Map this decision to headless-future's Architecture Decision Charter requirement
 
   ```ts
   // search-box-loader.ts
-  export const loadSearchBox = (engine: FullEngine) => {
-    engine.adoptSlice(searchBoxSlice);
+  export const loadSearchBox = (engine: FullEngine, interfaceId: string) => {
+    engine.adoptSlice(getOrCreateSearchBoxSlice(interfaceId));
 
-    const facade = SearchEndpointFacade.getInstance(engine);
+    const facade = SearchEndpointFacade.getInstance(engine, interfaceId);
     facade.onRequest(() => ({
-      q: engine.read(searchBoxSelectors.getQuery),
+      q: engine.read(getOrCreateSearchBoxSelectors(interfaceId).getQuery),
     }));
   };
   ```
@@ -119,12 +135,12 @@ Map this decision to headless-future's Architecture Decision Charter requirement
 
   ```ts
   // result-list-loader.ts
-  export const loadResultList = (engine: FullEngine) => {
-    engine.adoptSlice(resultsSlice);
+  export const loadResultList = (engine: FullEngine, interfaceId: string) => {
+    engine.adoptSlice(getOrCreateResultsSlice(interfaceId));
 
-    const facade = SearchEndpointFacade.getInstance(engine);
+    const facade = SearchEndpointFacade.getInstance(engine, interfaceId);
     facade.onResponse((response) => {
-      engine.mutate(setResults(mapSearchEndpointResponseToResultList(response)));
+      engine.mutate(getOrCreateResultsActions(interfaceId).setResultsFromResponse(response.results));
     });
   };
   ```
@@ -149,23 +165,23 @@ Map this decision to headless-future's Architecture Decision Charter requirement
 
 - **Summary**: Use a composed selector for request building (centralized), but each feature loader registers an `onResponse` handler for response distribution (decentralized). This is an asymmetric approach — one pattern for request, another for response.
 
-  **Request** — same composed selector as Option A:
+  **Request** — same scoped factory as Option A:
 
   ```ts
   // search-endpoint-facade.ts
-  const request = engine.read(buildSearchEndpointRequest);
+  const request = engine.read(this.#buildRequest); // scoped selector from createSearchEndpointRequestSelector(interfaceId)
   ```
 
   **Response** — decentralized handlers registered per loader:
 
   ```ts
   // pagination-loader.ts
-  export const loadPagination = (engine: FullEngine) => {
-    engine.adoptSlice(paginationSlice);
+  export const loadPagination = (engine: FullEngine, interfaceId: string) => {
+    engine.adoptSlice(getOrCreatePaginationSlice(interfaceId));
 
-    const facade = SearchEndpointFacade.getInstance(engine);
+    const facade = SearchEndpointFacade.getInstance(engine, interfaceId);
     facade.onResponse((response) => {
-      engine.mutate(setTotalCount(response.totalCount));
+      engine.mutate(getOrCreatePaginationActions(interfaceId).setTotalCount(response.totalCount));
     });
   };
   ```
@@ -185,7 +201,7 @@ Map this decision to headless-future's Architecture Decision Charter requirement
 
 Endpoint request schemas are finite, well-known, and defined at design time. There is no internal scenario requiring dynamic composition — every feature always contributes its fields. The decentralized contributor pattern's complexity (registry, merge semantics, implicit ordering) buys composability that is not needed for internal wiring.
 
-**Option A** is recommended because it provides one mental model (state-driven selectors for request, standalone actions for response), full type safety, and single-file debuggability per direction. The key insight that makes symmetric centralization viable is that non-adopted slices are safe no-ops in both directions: selectors fall back to initial state, and dispatched actions are ignored without a reducer.
+**Option A** is recommended because it provides one mental model (state-driven selectors for request, standalone actions for response), full type safety, and single-file debuggability per direction. The key insight that makes symmetric centralization viable is that non-adopted slices are safe no-ops in both directions: selectors fall back to initial state, and dispatched actions are ignored without a reducer. The scoped factory pattern (`createSearchEndpointRequestSelector(interfaceId)`) makes centralization even more natural — each facade instance owns its own selector and handler, both parameterized by the same IDs the facade receives at construction time.
 
 **Option B** was rejected because its costs (opacity, silent collisions, ordering fragility, hidden side effects) outweigh its benefits for fixed-schema endpoints. Most of these concerns could technically be mitigated, but each mitigation adds complexity to a pattern whose purpose is to solve a problem we don't have: dynamic composition of a fixed schema.
 
