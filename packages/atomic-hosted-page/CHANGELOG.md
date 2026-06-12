@@ -1,3 +1,35 @@
+## 1.2.45
+
+### Patch Changes
+
+- Updated dependencies [[`9bd57e7`](https://github.com/coveo/ui-kit/commit/9bd57e7de3b5e388d52192b3f4e47009a4e7cd81)]:
+  - @coveo/headless@3.51.4
+
+## 1.2.44
+
+### Patch Changes
+
+- [#7717](https://github.com/coveo/ui-kit/pull/7717) [`380ad1b`](https://github.com/coveo/ui-kit/commit/380ad1bf0a79ab7dc92077af4c959d9cfa167356) Thanks [@alexprudhomme](https://github.com/alexprudhomme)! - CDN artifacts now resolve cross-package dependencies using commit-based paths, making each artifact self-contained and independent of version pointer availability.
+
+- Updated dependencies [[`380ad1b`](https://github.com/coveo/ui-kit/commit/380ad1bf0a79ab7dc92077af4c959d9cfa167356)]:
+  - @coveo/headless@3.51.3
+
+## 1.2.43
+
+### Patch Changes
+
+- Updated dependencies [[`2abc0a0`](https://github.com/coveo/ui-kit/commit/2abc0a0cf854db560cf56e9337314c3736c45d88)]:
+  - @coveo/headless@3.51.2
+
+## 1.2.42
+
+### Patch Changes
+
+- [#7637](https://github.com/coveo/ui-kit/pull/7637) [`d5d4d75`](https://github.com/coveo/ui-kit/commit/d5d4d75a882074bbeb5875ed95504a30ff84df91) Thanks [@renovate-coveo](https://github.com/apps/renovate-coveo)! - Update production dependencies
+
+- Updated dependencies [[`d5d4d75`](https://github.com/coveo/ui-kit/commit/d5d4d75a882074bbeb5875ed95504a30ff84df91), [`821d429`](https://github.com/coveo/ui-kit/commit/821d429d3cc247e387cfb3e5834ddc8b65443142)]:
+  - @coveo/headless@3.51.1
+
 ## 1.2.41
 
 ### Patch Changes

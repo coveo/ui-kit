@@ -1,11 +1,21 @@
 import {describe, expect, it} from 'vitest';
-import * as mutators from './conversation-mutators.js';
+import {
+  abortTurn,
+  appendAgentChunk,
+  completeTurn,
+  failTurn,
+  patchSession,
+  setError,
+  setSession,
+  setStreamingConnected,
+  startTurn,
+} from './conversation-mutators.js';
 
 describe('conversation mutators', () => {
   describe('mutation shape', () => {
     it('startTurn returns expected mutation', () => {
       expect(
-        mutators.startTurn({
+        startTurn({
           turnId: 'turn-1',
           userMessageId: 'msg-user-1',
           agentMessageId: 'msg-agent-1',
@@ -26,7 +36,7 @@ describe('conversation mutators', () => {
 
     it('appendAgentChunk returns expected mutation', () => {
       expect(
-        mutators.appendAgentChunk({
+        appendAgentChunk({
           turnId: 'turn-1',
           chunk: 'World',
         })
@@ -41,7 +51,7 @@ describe('conversation mutators', () => {
 
     it('completeTurn returns expected mutation', () => {
       expect(
-        mutators.completeTurn({
+        completeTurn({
           turnId: 'turn-1',
           finalizedAt: 200,
         })
@@ -56,7 +66,7 @@ describe('conversation mutators', () => {
 
     it('failTurn returns expected mutation', () => {
       expect(
-        mutators.failTurn({
+        failTurn({
           turnId: 'turn-1',
           reason: 'protocol_error',
           finalizedAt: 220,
@@ -73,7 +83,7 @@ describe('conversation mutators', () => {
 
     it('abortTurn returns expected mutation', () => {
       expect(
-        mutators.abortTurn({
+        abortTurn({
           turnId: 'turn-1',
           finalizedAt: 240,
         })
@@ -88,7 +98,7 @@ describe('conversation mutators', () => {
 
     it('setSession returns expected mutation', () => {
       expect(
-        mutators.setSession({
+        setSession({
           conversationSessionId: 'session-1',
           conversationToken: 'token-1',
         })
@@ -103,7 +113,7 @@ describe('conversation mutators', () => {
 
     it('patchSession returns expected mutation', () => {
       expect(
-        mutators.patchSession({
+        patchSession({
           conversationToken: 'token-2',
         })
       ).toEqual({
@@ -115,22 +125,22 @@ describe('conversation mutators', () => {
     });
 
     it('setError returns expected mutation', () => {
-      expect(mutators.setError('boom')).toEqual({
+      expect(setError('boom')).toEqual({
         type: 'conversation/setError',
         payload: 'boom',
       });
-      expect(mutators.setError(null)).toEqual({
+      expect(setError(null)).toEqual({
         type: 'conversation/setError',
         payload: null,
       });
     });
 
     it('setStreamingConnected returns expected mutation', () => {
-      expect(mutators.setStreamingConnected(true)).toEqual({
+      expect(setStreamingConnected(true)).toEqual({
         type: 'conversation/setStreamingConnected',
         payload: true,
       });
-      expect(mutators.setStreamingConnected(false)).toEqual({
+      expect(setStreamingConnected(false)).toEqual({
         type: 'conversation/setStreamingConnected',
         payload: false,
       });

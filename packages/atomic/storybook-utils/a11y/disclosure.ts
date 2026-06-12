@@ -34,7 +34,7 @@ async function findTrigger(
   options: DisclosureA11yOptions['trigger']
 ): Promise<HTMLElement> {
   const {role = 'button', name, expanded} = options;
-  const queryOptions: Record<string, unknown> = {};
+  const queryOptions: Record<string, unknown> = {hidden: true};
   if (name !== undefined) {
     queryOptions.name = name;
   }
@@ -88,7 +88,7 @@ function findControlledRegion(
 }
 
 function isHidden(element: HTMLElement): boolean {
-  return (
+  return Boolean(
     element.hidden ||
     element.getAttribute('aria-hidden') === 'true' ||
     getComputedStyle(element).display === 'none'
@@ -145,6 +145,7 @@ export async function testDisclosureA11y(
     });
 
     await step('Click toggles aria-expanded back', async () => {
+      // Re-query: Lit's functional component renderButton may create a new DOM node on re-render
       trigger = await findTrigger(root, {
         ...options.trigger,
         expanded: toggled === 'true' ? true : false,
@@ -152,7 +153,49 @@ export async function testDisclosureA11y(
       await userEvent.click(trigger);
       await waitFor(
         () => {
-          expect(trigger).toHaveAttribute('aria-expanded', initialExpanded);
+          expect(trigger.getAttribute('aria-expanded')).toBe(initialExpanded);
+        },
+        {timeout: 5000}
+      );
+    });
+
+    await step('Enter key toggles aria-expanded (2.1.1)', async () => {
+      // Start from expanded state where button is visible and focusable
+      if (trigger.getAttribute('aria-expanded') !== 'true') {
+        await userEvent.click(trigger);
+        await waitFor(
+          () => {
+            expect(trigger.getAttribute('aria-expanded')).toBe('true');
+          },
+          {timeout: 5000}
+        );
+      }
+      trigger.focus();
+      await userEvent.keyboard('{Enter}');
+      await waitFor(
+        () => {
+          expect(trigger.getAttribute('aria-expanded')).toBe('false');
+        },
+        {timeout: 5000}
+      );
+    });
+
+    await step('Space key toggles aria-expanded (2.1.1)', async () => {
+      // Start from expanded state where button is visible and focusable
+      if (trigger.getAttribute('aria-expanded') !== 'true') {
+        await userEvent.click(trigger);
+        await waitFor(
+          () => {
+            expect(trigger.getAttribute('aria-expanded')).toBe('true');
+          },
+          {timeout: 5000}
+        );
+      }
+      trigger.focus();
+      await userEvent.keyboard(' ');
+      await waitFor(
+        () => {
+          expect(trigger.getAttribute('aria-expanded')).toBe('false');
         },
         {timeout: 5000}
       );

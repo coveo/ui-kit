@@ -1,26 +1,31 @@
-import {conversationEndpointSlice} from '@/src/core/internal/api/conversation-endpoint/conversation-endpoint-slice.js';
-import {ConversationEndpointState} from './conversation-endpoint-types.js';
+import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
+import {initialConversationEndpointState} from '@/src/core/internal/api/conversation-endpoint/conversation-endpoint-slice.js';
+import {State} from '@/src/core/interface/engine/engine-types.js';
 
-type StateWithConversationEndpointSlice = {
-  conversationEndpoint: ConversationEndpointState;
-};
+const getConversationEndpointState = (state: State) =>
+  state.conversationEndpoint ?? initialConversationEndpointState;
 
-export const status = (state: StateWithConversationEndpointSlice) => {
-  return conversationEndpointSlice.selectors.status(state);
-};
+export const status = createMemoizedStateSelector(
+  getConversationEndpointState,
+  (state) => state.status
+);
 
-export const isLoading = (state: StateWithConversationEndpointSlice) => {
-  return state.conversationEndpoint.status !== 'idle';
-};
+export const isLoading = createMemoizedStateSelector(
+  getConversationEndpointState,
+  (state) => state.status !== 'idle'
+);
 
-export const error = (state: StateWithConversationEndpointSlice) => {
-  return conversationEndpointSlice.selectors.error(state);
-};
+export const error = createMemoizedStateSelector(
+  getConversationEndpointState,
+  (state) => state.error
+);
 
-export const configuration = (state: StateWithConversationEndpointSlice) => {
-  return conversationEndpointSlice.selectors.configuration(state);
-};
+export const configuration = createMemoizedStateSelector(
+  getConversationEndpointState,
+  (state) => state.configuration
+);
 
-export const streaming = (state: StateWithConversationEndpointSlice) => {
-  return conversationEndpointSlice.selectors.streaming(state);
-};
+export const streaming = createMemoizedStateSelector(
+  getConversationEndpointState,
+  (state) => state.streaming
+);

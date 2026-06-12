@@ -10,7 +10,11 @@ import {getEndpointContributorRegistry} from '@/src/core/internal/api/base-facad
 import {conversationEndpointKey} from '@/src/core/internal/api/base-facade/endpoint-keys.js';
 import {readEndpointClientConfiguration} from '@/src/core/internal/configuration/configuration-reader.js';
 import {FullEngine} from '@/src/core/interface/engine/engine.js';
-import * as conversationEndpointMutators from './conversation-endpoint-mutators.js';
+import {
+  setStatus,
+  setError,
+  setStreamingConnected,
+} from './conversation-endpoint-mutators.js';
 import type {ConversationEndpointCallResult} from './conversation-endpoint-types.js';
 import {loadConversationEndpoint} from './conversation-endpoint-loader.js';
 
@@ -46,8 +50,8 @@ export class ConversationEndpointFacade extends EndpointFacade<CoveoConversation
     const engine = this.engine;
     const contributorRegistry = getEndpointContributorRegistry(engine);
 
-    engine.mutate(conversationEndpointMutators.setStatus('pending'));
-    engine.mutate(conversationEndpointMutators.setError(null));
+    engine.mutate(setStatus('pending'));
+    engine.mutate(setError(null));
 
     try {
       const finalRequest = buildRequest<CoveoConversationEndpointRequest>([
@@ -64,20 +68,18 @@ export class ConversationEndpointFacade extends EndpointFacade<CoveoConversation
         : await this.#client.call(finalRequest, clientConfiguration);
 
       if (!result.success) {
-        engine.mutate(conversationEndpointMutators.setError(result.error));
-        engine.mutate(conversationEndpointMutators.setStatus('idle'));
-        engine.mutate(
-          conversationEndpointMutators.setStreamingConnected(false)
-        );
+        engine.mutate(setError(result.error));
+        engine.mutate(setStatus('idle'));
+        engine.mutate(setStreamingConnected(false));
         return result;
       }
 
       return result;
     } catch (error) {
       const transformedError = transformUnexpectedError(error);
-      engine.mutate(conversationEndpointMutators.setError(transformedError));
-      engine.mutate(conversationEndpointMutators.setStatus('idle'));
-      engine.mutate(conversationEndpointMutators.setStreamingConnected(false));
+      engine.mutate(setError(transformedError));
+      engine.mutate(setStatus('idle'));
+      engine.mutate(setStreamingConnected(false));
       return {
         success: false,
         error: transformedError,

@@ -249,7 +249,7 @@ export class AtomicPager
 
   private announcePageLoaded() {
     this.ariaMessage.message = this.bindings.i18n.t('pager-page-loaded', {
-      pageNumber: this.pagerState.currentPage,
+      page: this.pagerState.currentPage,
     });
   }
 }

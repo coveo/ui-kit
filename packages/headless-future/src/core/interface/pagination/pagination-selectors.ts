@@ -1,30 +1,45 @@
-/**
- * Pagination Feature Selectors
- *
- * Provides library-agnostic selectors for reading pagination state.
- * CRITICAL: NO Redux or Immer types exposed.
- */
+import {State} from '@/src/core/interface/engine/engine-types.js';
+import {createMemoizedStateSelector} from '@/src/core/interface/utils/memoized-state-selector.js';
+import {initialPaginationState} from '@/src/core/internal/pagination/pagination-slice.js';
 
-import {paginationSlice} from '@/src/core/internal/pagination/pagination-slice.js';
-import type {PaginationState} from './pagination-types.js';
+const getPaginationState = (state: State) =>
+  state.pagination ?? initialPaginationState;
 
-type StateWithPaginationSlice = {pagination: PaginationState};
+export const getCurrentPage = createMemoizedStateSelector(
+  getPaginationState,
+  (pagination) => pagination.currentPage
+);
 
-export const currentPage = (state: StateWithPaginationSlice) => {
-  return paginationSlice.selectors.currentPage(state);
-};
-export const pageSize = (state: StateWithPaginationSlice) => {
-  return paginationSlice.selectors.pageSize(state);
-};
-export const totalCount = (state: StateWithPaginationSlice) => {
-  return paginationSlice.selectors.totalCount(state);
-};
-export const totalPages = (state: StateWithPaginationSlice) => {
-  return paginationSlice.selectors.totalPages(state);
-};
-export const isFirstPage = (state: StateWithPaginationSlice) => {
-  return paginationSlice.selectors.isFirstPage(state);
-};
-export const isLastPage = (state: StateWithPaginationSlice) => {
-  return paginationSlice.selectors.isLastPage(state);
-};
+export const getPageSize = createMemoizedStateSelector(
+  getPaginationState,
+  (pagination) => pagination.pageSize
+);
+
+export const getFirstResult = createMemoizedStateSelector(
+  getCurrentPage,
+  getPageSize,
+  (currentPage, pageSize) => (currentPage - 1) * pageSize
+);
+
+export const getTotalCount = createMemoizedStateSelector(
+  getPaginationState,
+  (pagination) => pagination.totalCount
+);
+
+export const getTotalPages = createMemoizedStateSelector(
+  getPaginationState,
+  (pagination) => {
+    return Math.ceil(pagination.totalCount / pagination.pageSize);
+  }
+);
+
+export const getIsFirstPage = createMemoizedStateSelector(
+  getPaginationState,
+  (pagination) => pagination.currentPage === 1
+);
+
+export const getIsLastPage = createMemoizedStateSelector(
+  getPaginationState,
+  getTotalPages,
+  (pagination, total) => pagination.currentPage === total
+);

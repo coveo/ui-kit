@@ -5,7 +5,7 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import '@/src/components/ipx/atomic-ipx-embedded/atomic-ipx-embedded.js';
 
-const mockSearchApi = new MockSearchApi();
+const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -27,7 +27,7 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
-    msw: {handlers: [...mockSearchApi.handlers]},
+    msw: {handlers: [...searchApiHarness.handlers]},
   },
   argTypes,
   args: {
@@ -37,7 +37,7 @@ const meta: Meta = {
     'footer-slot': `<button>Action Button</button>`,
   },
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.clear();
+    searchApiHarness.searchEndpoint.clear();
   },
   play,
 };

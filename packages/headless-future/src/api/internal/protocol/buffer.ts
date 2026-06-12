@@ -14,8 +14,12 @@ export type EventProcessor = (event: RawSSEEvent) => void;
 function findEventBoundary(buffer: string): number {
   const lfIndex = buffer.indexOf('\n\n');
   const crlfIndex = buffer.indexOf('\r\n\r\n');
-  if (lfIndex === -1) return crlfIndex;
-  if (crlfIndex === -1) return lfIndex;
+  if (lfIndex === -1) {
+    return crlfIndex;
+  }
+  if (crlfIndex === -1) {
+    return lfIndex;
+  }
   return Math.min(lfIndex, crlfIndex);
 }
 
@@ -24,7 +28,9 @@ function getBoundaryLength(buffer: string, index: number): number {
 }
 
 function parseRawEvent(rawEvent: string): RawSSEEvent | null {
-  if (!rawEvent.trim()) return null;
+  if (!rawEvent.trim()) {
+    return null;
+  }
 
   const lines = rawEvent.split(/\r?\n/);
   let eventType = 'message';

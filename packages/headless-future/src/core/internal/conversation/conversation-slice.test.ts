@@ -3,6 +3,17 @@ import {
   conversationSlice,
   initialConversationState,
 } from './conversation-slice.js';
+import {
+  abortTurn,
+  appendAgentChunk,
+  completeTurn,
+  failTurn,
+  patchSession,
+  setError,
+  setSession,
+  setStreamingConnected,
+  startTurn,
+} from './conversation-actions.js';
 
 describe('conversationSlice: initialState', () => {
   it('should have the correct initial state', () => {
@@ -32,7 +43,7 @@ describe('conversationSlice: turn lifecycle', () => {
   it('should start a turn with user and placeholder agent messages', () => {
     const state = conversationSlice.reducer(
       initialConversationState,
-      conversationSlice.actions.startTurn(basePayload)
+      startTurn(basePayload)
     );
 
     expect(state.messages).toEqual([
@@ -66,12 +77,12 @@ describe('conversationSlice: turn lifecycle', () => {
   it('should append streamed content and mark the turn as streaming', () => {
     const startedState = conversationSlice.reducer(
       initialConversationState,
-      conversationSlice.actions.startTurn(basePayload)
+      startTurn(basePayload)
     );
 
     const state = conversationSlice.reducer(
       startedState,
-      conversationSlice.actions.appendAgentChunk({
+      appendAgentChunk({
         turnId: 'turn-1',
         chunk: 'General Kenobi',
       })
@@ -85,7 +96,7 @@ describe('conversationSlice: turn lifecycle', () => {
   it('should ignore appended chunks for unknown turns', () => {
     const state = conversationSlice.reducer(
       initialConversationState,
-      conversationSlice.actions.appendAgentChunk({
+      appendAgentChunk({
         turnId: 'missing-turn',
         chunk: 'ignored',
       })
@@ -98,9 +109,9 @@ describe('conversationSlice: turn lifecycle', () => {
     const streamingState = conversationSlice.reducer(
       conversationSlice.reducer(
         initialConversationState,
-        conversationSlice.actions.startTurn(basePayload)
+        startTurn(basePayload)
       ),
-      conversationSlice.actions.appendAgentChunk({
+      appendAgentChunk({
         turnId: 'turn-1',
         chunk: 'Partial answer',
       })
@@ -108,7 +119,7 @@ describe('conversationSlice: turn lifecycle', () => {
 
     const state = conversationSlice.reducer(
       streamingState,
-      conversationSlice.actions.completeTurn({
+      completeTurn({
         turnId: 'turn-1',
         finalizedAt: 150,
       })
@@ -126,12 +137,12 @@ describe('conversationSlice: turn lifecycle', () => {
   it('should fail a turn and clear terminal flags', () => {
     const startedState = conversationSlice.reducer(
       initialConversationState,
-      conversationSlice.actions.startTurn(basePayload)
+      startTurn(basePayload)
     );
 
     const state = conversationSlice.reducer(
       startedState,
-      conversationSlice.actions.failTurn({
+      failTurn({
         turnId: 'turn-1',
         reason: 'network_error',
         finalizedAt: 175,
@@ -150,12 +161,12 @@ describe('conversationSlice: turn lifecycle', () => {
   it('should abort a turn and remove the empty placeholder agent message', () => {
     const startedState = conversationSlice.reducer(
       initialConversationState,
-      conversationSlice.actions.startTurn(basePayload)
+      startTurn(basePayload)
     );
 
     const state = conversationSlice.reducer(
       startedState,
-      conversationSlice.actions.abortTurn({
+      abortTurn({
         turnId: 'turn-1',
         finalizedAt: 200,
       })
@@ -182,7 +193,7 @@ describe('conversationSlice: turn lifecycle', () => {
   it('should no-op terminal actions for unknown turns', () => {
     const state = conversationSlice.reducer(
       initialConversationState,
-      conversationSlice.actions.completeTurn({
+      completeTurn({
         turnId: 'missing-turn',
         finalizedAt: 500,
       })
@@ -194,7 +205,7 @@ describe('conversationSlice: turn lifecycle', () => {
   it('should no-op failTurn for unknown turns', () => {
     const state = conversationSlice.reducer(
       initialConversationState,
-      conversationSlice.actions.failTurn({
+      failTurn({
         turnId: 'missing-turn',
         reason: 'network_error',
         finalizedAt: 500,
@@ -207,7 +218,7 @@ describe('conversationSlice: turn lifecycle', () => {
   it('should no-op abortTurn for unknown turns', () => {
     const state = conversationSlice.reducer(
       initialConversationState,
-      conversationSlice.actions.abortTurn({
+      abortTurn({
         turnId: 'missing-turn',
         finalizedAt: 500,
       })
@@ -220,9 +231,9 @@ describe('conversationSlice: turn lifecycle', () => {
     const streamingState = conversationSlice.reducer(
       conversationSlice.reducer(
         initialConversationState,
-        conversationSlice.actions.startTurn(basePayload)
+        startTurn(basePayload)
       ),
-      conversationSlice.actions.appendAgentChunk({
+      appendAgentChunk({
         turnId: 'turn-1',
         chunk: 'Streamed content',
       })
@@ -230,7 +241,7 @@ describe('conversationSlice: turn lifecycle', () => {
 
     const state = conversationSlice.reducer(
       streamingState,
-      conversationSlice.actions.failTurn({
+      failTurn({
         turnId: 'turn-1',
         reason: 'stream_interrupted',
         finalizedAt: 175,
@@ -267,21 +278,18 @@ describe('conversationSlice: turn lifecycle', () => {
     // Start and complete first turn
     let state = conversationSlice.reducer(
       initialConversationState,
-      conversationSlice.actions.startTurn(turn1Payload)
+      startTurn(turn1Payload)
     );
     state = conversationSlice.reducer(
       state,
-      conversationSlice.actions.completeTurn({
+      completeTurn({
         turnId: 'turn-1',
         finalizedAt: 150,
       })
     );
 
     // Start second turn
-    state = conversationSlice.reducer(
-      state,
-      conversationSlice.actions.startTurn(turn2Payload)
-    );
+    state = conversationSlice.reducer(state, startTurn(turn2Payload));
 
     // Verify both turns accumulated
     expect(state.turns).toHaveLength(2);
@@ -309,7 +317,7 @@ describe('conversationSlice: session and error', () => {
           conversationToken: 'token-1',
         },
       },
-      conversationSlice.actions.setSession({conversationSessionId: 'session-2'})
+      setSession({conversationSessionId: 'session-2'})
     );
 
     expect(state.session).toEqual({conversationSessionId: 'session-2'});
@@ -323,7 +331,7 @@ describe('conversationSlice: session and error', () => {
           conversationSessionId: 'session-1',
         },
       },
-      conversationSlice.actions.patchSession({conversationToken: 'token-2'})
+      patchSession({conversationToken: 'token-2'})
     );
 
     expect(state.session).toEqual({
@@ -335,12 +343,9 @@ describe('conversationSlice: session and error', () => {
   it('should set and clear the error message', () => {
     const withError = conversationSlice.reducer(
       initialConversationState,
-      conversationSlice.actions.setError('Request failed')
+      setError('Request failed')
     );
-    const cleared = conversationSlice.reducer(
-      withError,
-      conversationSlice.actions.setError(null)
-    );
+    const cleared = conversationSlice.reducer(withError, setError(null));
 
     expect(withError.error).toBe('Request failed');
     expect(cleared.error).toBeNull();
@@ -352,7 +357,7 @@ describe('conversationSlice: session and error', () => {
         ...initialConversationState,
         error: 'Previous failure',
       },
-      conversationSlice.actions.startTurn({
+      startTurn({
         turnId: 'turn-2',
         userMessageId: 'msg-user-2',
         agentMessageId: 'msg-agent-2',
@@ -367,7 +372,7 @@ describe('conversationSlice: session and error', () => {
   it('should set streaming connectivity explicitly', () => {
     const state = conversationSlice.reducer(
       initialConversationState,
-      conversationSlice.actions.setStreamingConnected(true)
+      setStreamingConnected(true)
     );
 
     expect(state.streaming.isConnected).toBe(true);

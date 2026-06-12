@@ -1,6 +1,6 @@
 import {getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {loadResultList} from '@/src/core/index.js';
-import * as resultsSelectors from '@/src/core/interface/result-list/result-list-selectors.js';
+import {results} from '@/src/core/interface/result-list/result-list-selectors.js';
 import {createSelector} from '@reduxjs/toolkit';
 import {
   ResultListController,
@@ -9,13 +9,17 @@ import {
 } from './result-list-controller-types.js';
 
 const stateSelect = createSelector(
-  [resultsSelectors.results],
+  [results],
   (results): ResultListControllerState => ({
     results: results.map((result) => ({
-      id: result.id,
+      uniqueId: result.uniqueId,
       title: result.title,
       uri: result.uri,
       excerpt: result.excerpt,
+      printableUri: result.printableUri,
+      clickUri: result.clickUri,
+      raw: result.raw,
+      score: result.score,
     })),
   })
 );

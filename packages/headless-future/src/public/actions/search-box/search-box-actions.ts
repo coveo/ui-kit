@@ -4,7 +4,7 @@ import {
   getFullEngine,
 } from '@/src/core/interface/engine/engine.js';
 import {loadSearchBox} from '@/src/core/index.js';
-import * as searchBoxMutators from '@/src/core/interface/search-box/search-box-mutators.js';
+import {setQuery as setQueryMutation} from '@/src/core/interface/search-box/search-box-mutators.js';
 
 /**
  * Loads the search box actions.
@@ -16,7 +16,7 @@ export const loadSearchBoxActions = (engine: Engine): SearchBoxActions => {
 
   return {
     setQuery: (payload: SearchBoxSetQueryPayload) => {
-      fullEngine.mutate(searchBoxMutators.setQuery(payload.query));
+      fullEngine.mutate(setQueryMutation(payload.query));
     },
   };
 };
@@ -30,7 +30,7 @@ export const setQuery = (engine: Engine): SearchBoxActions['setQuery'] => {
   const fullEngine = getInitializedEngine(engine);
 
   return (payload: SearchBoxSetQueryPayload) => {
-    fullEngine.mutate(searchBoxMutators.setQuery(payload.query));
+    fullEngine.mutate(setQueryMutation(payload.query));
   };
 };
 

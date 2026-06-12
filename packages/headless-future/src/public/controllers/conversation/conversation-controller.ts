@@ -76,34 +76,15 @@ export interface ConversationControllerSubmitTurnOptions {
   conversationToken?: string | null;
 }
 
-type ConversationSelectionState = Parameters<
-  typeof conversationSelectors.messages
->[0] &
-  Parameters<typeof conversationEndpointSelectors.isLoading>[0];
-
 const buildStateSelector = () => {
-  return createMemoizedStateSelector<
-    ConversationSelectionState,
-    [
-      ConversationControllerMessage[],
-      ConversationControllerTurn[],
-      string | null,
-      ConversationControllerSession,
-      boolean,
-      string | null,
-      ConversationControllerStreaming,
-    ],
-    ConversationControllerState
-  >(
-    [
-      (state) => conversationSelectors.messages(state),
-      (state) => conversationSelectors.turns(state),
-      (state) => conversationSelectors.activeTurnId(state),
-      (state) => conversationSelectors.session(state),
-      (state) => conversationEndpointSelectors.isLoading(state),
-      (state) => conversationEndpointSelectors.error(state),
-      (state) => conversationEndpointSelectors.streaming(state),
-    ],
+  return createMemoizedStateSelector(
+    conversationSelectors.messages,
+    conversationSelectors.turns,
+    conversationSelectors.activeTurnId,
+    conversationSelectors.session,
+    conversationEndpointSelectors.isLoading,
+    conversationEndpointSelectors.error,
+    conversationEndpointSelectors.streaming,
     (
       messages,
       turns,

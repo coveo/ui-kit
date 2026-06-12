@@ -1,4 +1,5 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {testDisclosureA11y} from '@/storybook-utils/a11y/disclosure.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/common/atomic-generated-answer-thread-item/atomic-generated-answer-thread-item.js';
 
@@ -76,5 +77,14 @@ export const NonCollapsibleWithoutTimeline: Story = {
   args: {
     hideLine: true,
     disableCollapse: true,
+  },
+};
+
+export const A11yDisclosure: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  play: async (context) => {
+    await testDisclosureA11y(context, {
+      trigger: {expanded: false},
+    });
   },
 };

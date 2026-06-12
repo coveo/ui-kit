@@ -115,7 +115,9 @@ export const renderCarousel: FunctionalComponentWithChildren<CarouselProps> =
             ${renderPreviousButton(numberOfPages, previousPage, props.bindings)}
             ${renderNextButton(numberOfPages, nextPage, props.bindings)}
           </div>
-          <div class="carousel-items">${children}</div>
+          <div class="carousel-items" aria-live="polite" aria-atomic="false">
+            ${children}
+          </div>
         </div>
         ${renderIndicators(numberOfPages, currentPage)}
       </div>

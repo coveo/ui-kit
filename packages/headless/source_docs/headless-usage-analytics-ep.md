@@ -44,7 +44,7 @@ As a result, you generally won’t need to tinker with search or click events yo
 > We strongly recommend using the [`InteractiveResult`](../../../interfaces/Search.InteractiveResult.html) controller when implementing your result components.
 > The controller can automatically extract relevant data from result items and log click events for you, as in the following interactive example.
 
-<iframe src="https://stackblitz.com/github/coveo/headless-documentation-material-ui-react-codesandbox/tree/main?embed=1&file=src%2FComponents%2FResultLink.tsx"
+<iframe src="https://stackblitz.com/github/coveo/headless-documentation-material-ui-react-codesandbox/tree/main?embed=1&file=src%2FComponents%2FResultLink.tsx&ctl=1"
      style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
    ></iframe>
 

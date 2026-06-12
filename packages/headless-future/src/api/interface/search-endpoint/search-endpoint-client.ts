@@ -9,7 +9,8 @@ import {getOrganizationEndpoint} from '@/src/api/internal/utils/organization-end
 const createCallSearchEndpoint = (): SearchEndpointClient['call'] => {
   return async (
     request: CoveoSearchEndpointRequest,
-    configuration: SearchEndpointClientConfiguration
+    configuration: SearchEndpointClientConfiguration,
+    options?: SearchEndpointCallOptions
   ): Promise<SearchEndpointClientResult> => {
     try {
       const {organizationId, accessToken, endpoint} = configuration;
@@ -45,6 +46,7 @@ const createCallSearchEndpoint = (): SearchEndpointClient['call'] => {
             Authorization: `Bearer ${accessToken}`,
             'Coveo-Organization-Id': organizationId,
           },
+          signal: options?.signal,
         });
 
       if (!httpResponse.success) {
@@ -89,9 +91,14 @@ export type SearchEndpointClientResult =
       error: string;
     };
 
+export interface SearchEndpointCallOptions {
+  signal?: AbortSignal;
+}
+
 export interface SearchEndpointClient {
   call: (
     request: CoveoSearchEndpointRequest,
-    configuration: SearchEndpointClientConfiguration
+    configuration: SearchEndpointClientConfiguration,
+    options?: SearchEndpointCallOptions
   ) => Promise<SearchEndpointClientResult>;
 }

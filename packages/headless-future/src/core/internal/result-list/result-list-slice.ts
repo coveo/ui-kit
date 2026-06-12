@@ -1,8 +1,10 @@
-import {createSlice, type PayloadAction} from '@reduxjs/toolkit';
-import type {
-  ResultListState,
-  SearchResult,
-} from '@/src/core/interface/result-list/result-list-types.js';
+import {createSlice} from '@reduxjs/toolkit';
+import type {ResultListState} from '@/src/core/interface/result-list/result-list-types.js';
+import {
+  setResults,
+  clearResults,
+  setResultsFromResponse,
+} from './result-list-actions.js';
 
 export const initialResultListState: ResultListState = {
   results: [],
@@ -11,13 +13,26 @@ export const initialResultListState: ResultListState = {
 export const resultsSlice = createSlice({
   name: 'results',
   initialState: initialResultListState,
-  reducers: {
-    setResults: (state, action: PayloadAction<SearchResult[]>) => {
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(setResults, (state, action) => {
       state.results = action.payload;
-    },
-    clearResults: (state) => {
+    });
+    builder.addCase(clearResults, (state) => {
       state.results = [];
-    },
+    });
+    builder.addCase(setResultsFromResponse, (state, action) => {
+      state.results = action.payload.map((result) => ({
+        uniqueId: result.uniqueId,
+        title: result.title,
+        uri: result.uri,
+        excerpt: result.excerpt,
+        printableUri: result.printableUri,
+        clickUri: result.clickUri,
+        raw: result.raw,
+        score: result.score,
+      }));
+    });
   },
   selectors: {
     results: (state) => state.results,

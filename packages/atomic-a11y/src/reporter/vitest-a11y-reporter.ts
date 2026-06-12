@@ -182,8 +182,8 @@ export class VitestA11yReporter implements Reporter {
         component.automated.incomplete += axeResults.incomplete.length;
         component.automated.inapplicable += axeResults.inapplicable.length;
 
-        this.collectCriteria(component, axeResults.violations);
-        this.collectCriteria(component, axeResults.passes);
+        this.collectCriteria(component, axeResults.violations, 'violated');
+        this.collectCriteria(component, axeResults.passes, 'passed');
         this.collectCriteria(component, axeResults.incomplete);
         this.collectCriteria(component, axeResults.inapplicable);
 
@@ -216,33 +216,20 @@ export class VitestA11yReporter implements Reporter {
             criteriaCovered: new Set<string>(),
             testCount: 0,
             passedCount: 0,
-            failedCount: 0,
             passedCriteria: new Set<string>(),
-            failedCriteria: new Set<string>(),
           };
         }
 
-        const testState = testCase.result()?.state;
-        const effectiveStatus: StorybookInteractiveReport['status'] =
-          testState === 'failed' ? 'failed' : interactiveReport.status;
-
         for (const criterion of interactiveReport.result.criteriaCovered) {
           component.interactive.criteriaCovered.add(criterion);
-          if (effectiveStatus === 'passed') {
+          if (interactiveReport.status === 'passed') {
             component.interactive.passedCriteria.add(criterion);
-          }
-          if (effectiveStatus === 'failed') {
-            component.interactive.failedCriteria.add(criterion);
           }
         }
 
         component.interactive.testCount++;
-        if (effectiveStatus === 'passed') {
+        if (interactiveReport.status === 'passed') {
           component.interactive.passedCount++;
-        }
-
-        if (effectiveStatus === 'failed') {
-          component.interactive.failedCount++;
         }
       }
     } catch (error) {
@@ -374,6 +361,8 @@ export class VitestA11yReporter implements Reporter {
         incomplete: 0,
         inapplicable: 0,
         criteriaCovered: new Set<string>(),
+        criteriaViolated: new Set<string>(),
+        criteriaPassed: new Set<string>(),
         incompleteDetails: [],
       },
     };
@@ -384,11 +373,17 @@ export class VitestA11yReporter implements Reporter {
 
   private collectCriteria(
     component: ComponentAccumulator,
-    rules: AxeRuleResult[]
+    rules: AxeRuleResult[],
+    category?: 'violated' | 'passed'
   ): void {
     for (const rule of rules) {
       for (const criterion of getCriteriaForRule(rule)) {
         component.automated.criteriaCovered.add(criterion);
+        if (category === 'violated') {
+          component.automated.criteriaViolated.add(criterion);
+        } else if (category === 'passed') {
+          component.automated.criteriaPassed.add(criterion);
+        }
       }
     }
   }

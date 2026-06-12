@@ -6,6 +6,8 @@ import type {
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
+import {waitFor} from 'storybook/test';
+import {testDialogA11y} from '@/storybook-utils/a11y/dialog.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -60,7 +62,11 @@ const meta: Meta = {
         name: 'Filters',
       }
     );
-    await new Promise((resolve) => setTimeout(resolve, 300));
+    await waitFor(() => {
+      if (refineToggleButton.hasAttribute('disabled')) {
+        throw new Error('Button still disabled');
+      }
+    });
     await step('Open refine modal', async () => {
       await userEvent.click(refineToggleButton);
     });
@@ -94,4 +100,22 @@ export const Default: Story = {
     </atomic-ipx-modal>
   `,
   decorators: [decorator, facetWidthDecorator],
+};
+
+export const A11yDialog: Story = {
+  tags: ['a11y', 'test', '!dev'],
+  name: 'A11y Dialog',
+  render: () => html` <atomic-ipx-refine-toggle></atomic-ipx-refine-toggle> `,
+  decorators: [decorator, facetWidthDecorator],
+  play: async (context) => {
+    await play(context);
+    const root = within(context.canvasElement);
+    await waitFor(async () => {
+      const btn = await root.findByShadowRole('button', {name: 'Filters'});
+      if (btn.hasAttribute('disabled')) {
+        throw new Error('Button still disabled');
+      }
+    });
+    await testDialogA11y(context, {triggerLabel: 'Filters'});
+  },
 };

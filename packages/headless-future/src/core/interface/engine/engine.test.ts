@@ -6,10 +6,10 @@
 
 import {describe, it, expect, beforeEach, vi} from 'vitest';
 import {createTestEngine} from '@/src/test/test-utils.js';
-import * as searchBoxSelectors from '@/src/core/interface/search-box/search-box-selectors.js';
-import * as searchBoxMutations from '@/src/core/interface/search-box/search-box-mutators.js';
-import * as searchEndpointMutations from '@/src/core/interface/api/search-endpoint/search-endpoint-mutators.js';
-import * as searchEndpointSelectors from '@/src/core/interface/api/search-endpoint/search-endpoint-selectors.js';
+import {getQuery} from '@/src/core/interface/search-box/search-box-selectors.js';
+import {setQuery} from '@/src/core/interface/search-box/search-box-mutators.js';
+import {setStatus} from '@/src/core/interface/api/search-endpoint/search-endpoint-mutators.js';
+import {isLoading} from '@/src/core/interface/api/search-endpoint/search-endpoint-selectors.js';
 import {Engine, FullEngine, getFullEngine} from './engine.js';
 import {searchBoxSlice} from '@/src/core/internal/search-box/search-box-slice.js';
 import {resultsSlice} from '@/src/core/internal/result-list/result-list-slice.js';
@@ -29,20 +29,20 @@ describe('Engine: read()', () => {
   });
 
   it('should read values from state using a selector', () => {
-    const query = engine.read(searchBoxSelectors.getQuery);
+    const query = engine.read(getQuery);
 
     expect(query).toBe('');
   });
 
   it('should return updated values after mutations', () => {
-    engine.mutate(searchBoxMutations.setQuery('laptops'));
-    const query = engine.read(searchBoxSelectors.getQuery);
+    engine.mutate(setQuery('laptops'));
+    const query = engine.read(getQuery);
 
     expect(query).toBe('laptops');
   });
 
   it('should work with inline selector functions', () => {
-    engine.mutate(searchBoxMutations.setQuery('test'));
+    engine.mutate(setQuery('test'));
 
     const query = engine.read((state: State) => state.searchBox?.query ?? '');
 
@@ -62,8 +62,8 @@ describe('Engine: subscribe()', () => {
   it('should trigger callback when subscribed value changes', () => {
     const callback = vi.fn();
 
-    engine.subscribe(searchBoxSelectors.getQuery, callback);
-    engine.mutate(searchBoxMutations.setQuery('laptops'));
+    engine.subscribe(getQuery, callback);
+    engine.mutate(setQuery('laptops'));
 
     expect(callback).toHaveBeenCalledWith('laptops');
     expect(callback).toHaveBeenCalledTimes(1);
@@ -73,13 +73,13 @@ describe('Engine: subscribe()', () => {
     const callback = vi.fn();
 
     // Set initial value
-    engine.mutate(searchBoxMutations.setQuery('test'));
+    engine.mutate(setQuery('test'));
 
     // Subscribe after value is set
-    engine.subscribe(searchBoxSelectors.getQuery, callback);
+    engine.subscribe(getQuery, callback);
 
     // Set to same value
-    engine.mutate(searchBoxMutations.setQuery('test'));
+    engine.mutate(setQuery('test'));
 
     expect(callback).not.toHaveBeenCalled();
   });
@@ -87,9 +87,9 @@ describe('Engine: subscribe()', () => {
   it('should not trigger callback when unrelated state changes', () => {
     const callback = vi.fn();
 
-    engine.subscribe(searchBoxSelectors.getQuery, callback);
+    engine.subscribe(getQuery, callback);
 
-    engine.mutate(searchEndpointMutations.setStatus('pending'));
+    engine.mutate(setStatus('pending'));
 
     expect(callback).not.toHaveBeenCalled();
   });
@@ -97,11 +97,11 @@ describe('Engine: subscribe()', () => {
   it('should trigger callback for each distinct change', () => {
     const callback = vi.fn();
 
-    engine.subscribe(searchBoxSelectors.getQuery, callback);
+    engine.subscribe(getQuery, callback);
 
-    engine.mutate(searchBoxMutations.setQuery('first'));
-    engine.mutate(searchBoxMutations.setQuery('second'));
-    engine.mutate(searchBoxMutations.setQuery('third'));
+    engine.mutate(setQuery('first'));
+    engine.mutate(setQuery('second'));
+    engine.mutate(setQuery('third'));
 
     expect(callback).toHaveBeenCalledTimes(3);
     expect(callback).toHaveBeenNthCalledWith(1, 'first');
@@ -110,7 +110,7 @@ describe('Engine: subscribe()', () => {
   });
 
   it('should return an unsubscribe function', () => {
-    const unsubscribe = engine.subscribe(searchBoxSelectors.getQuery, vi.fn());
+    const unsubscribe = engine.subscribe(getQuery, vi.fn());
 
     expect(typeof unsubscribe).toBe('function');
   });
@@ -118,17 +118,17 @@ describe('Engine: subscribe()', () => {
   it('should stop triggering callback after unsubscribe', () => {
     const callback = vi.fn();
 
-    const unsubscribe = engine.subscribe(searchBoxSelectors.getQuery, callback);
+    const unsubscribe = engine.subscribe(getQuery, callback);
 
     // Should trigger
-    engine.mutate(searchBoxMutations.setQuery('first'));
+    engine.mutate(setQuery('first'));
     expect(callback).toHaveBeenCalledTimes(1);
 
     // Unsubscribe
     unsubscribe();
 
     // Should not trigger
-    engine.mutate(searchBoxMutations.setQuery('second'));
+    engine.mutate(setQuery('second'));
     expect(callback).toHaveBeenCalledTimes(1);
   });
 
@@ -136,10 +136,10 @@ describe('Engine: subscribe()', () => {
     const callback1 = vi.fn();
     const callback2 = vi.fn();
 
-    engine.subscribe(searchBoxSelectors.getQuery, callback1);
-    engine.subscribe(searchBoxSelectors.getQuery, callback2);
+    engine.subscribe(getQuery, callback1);
+    engine.subscribe(getQuery, callback2);
 
-    engine.mutate(searchBoxMutations.setQuery('test'));
+    engine.mutate(setQuery('test'));
 
     expect(callback1).toHaveBeenCalledWith('test');
     expect(callback2).toHaveBeenCalledWith('test');
@@ -157,26 +157,26 @@ describe('Engine: mutate()', () => {
   });
 
   it('should update state correctly', () => {
-    engine.mutate(searchBoxMutations.setQuery('test query'));
+    engine.mutate(setQuery('test query'));
 
-    expect(engine.read(searchBoxSelectors.getQuery)).toBe('test query');
+    expect(engine.read(getQuery)).toBe('test query');
   });
 
   it('should handle multiple mutations in sequence', () => {
-    engine.mutate(searchBoxMutations.setQuery('laptops'));
-    engine.mutate(searchEndpointMutations.setStatus('pending'));
+    engine.mutate(setQuery('laptops'));
+    engine.mutate(setStatus('pending'));
 
-    expect(engine.read(searchBoxSelectors.getQuery)).toBe('laptops');
-    expect(engine.read(searchEndpointSelectors.isLoading)).toBe(true);
+    expect(engine.read(getQuery)).toBe('laptops');
+    expect(engine.read(isLoading)).toBe(true);
   });
 
   it('should accept library-agnostic StateMutation objects', () => {
     // Ensure slice is adopted first
-    engine.read(searchBoxSelectors.getQuery);
+    engine.read(getQuery);
 
     engine.mutate({type: 'searchBox/setQuery', payload: 'test'});
 
-    expect(engine.read(searchBoxSelectors.getQuery)).toBe('test');
+    expect(engine.read(getQuery)).toBe('test');
   });
 });
 

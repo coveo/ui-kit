@@ -5,7 +5,7 @@ import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-inter
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/commerce/atomic-commerce-query-error/atomic-commerce-query-error.js';
 
-const mockCommerceApi = new MockCommerceApi();
+const commerceApiHarness = new MockCommerceApi();
 
 const {decorator, play} = wrapInCommerceInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -24,12 +24,12 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
-    msw: {handlers: [...mockCommerceApi.handlers]},
+    msw: {handlers: [...commerceApiHarness.handlers]},
   },
   args,
   argTypes,
   beforeEach: async () => {
-    mockCommerceApi.searchEndpoint.clear();
+    commerceApiHarness.searchEndpoint.clear();
   },
   play,
 };
@@ -38,14 +38,14 @@ export default meta;
 
 export const Default: Story = {
   beforeEach: async () => {
-    mockCommerceApi.searchEndpoint.mockErrorOnce();
+    commerceApiHarness.searchEndpoint.mockErrorOnce();
   },
 };
 
 export const With418Error: Story = {
   name: 'With 418 error',
   beforeEach: async () => {
-    mockCommerceApi.searchEndpoint.mockOnce(
+    commerceApiHarness.searchEndpoint.mockOnce(
       () => ({
         ok: false,
         status: 418,

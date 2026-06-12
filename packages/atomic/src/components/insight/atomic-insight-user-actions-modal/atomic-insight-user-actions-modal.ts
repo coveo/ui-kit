@@ -20,8 +20,6 @@ import CloseIcon from '../../../images/close.svg';
  *
  * When the modal is opened, the CSS class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
  *
- * @internal
- *
  * @part title - The title element displaying "user-actions" text.
  * @part close-button - The button used to close the modal.
  * @part close-icon - The close icon within the close button.

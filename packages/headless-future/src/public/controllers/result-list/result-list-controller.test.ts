@@ -9,7 +9,12 @@ import {
 } from '@/src/test/test-utils.js';
 import {Engine, getFullEngine} from '@/src/core/interface/engine/engine.js';
 import {resultsSlice} from '@/src/core/internal/result-list/result-list-slice.js';
+import {
+  clearResults,
+  setResults,
+} from '@/src/core/internal/result-list/result-list-actions.js';
 import {searchEndpointSlice} from '@/src/core/internal/api/search-endpoint/search-endpoint-slice.js';
+import {setStatus} from '@/src/core/internal/api/search-endpoint/search-endpoint-actions.js';
 import {buildResultListController} from './result-list-controller.js';
 
 describe('buildResultListController', () => {
@@ -41,7 +46,7 @@ describe('buildResultListController', () => {
       const controller = buildResultListController({engine});
 
       const mockResults = createMockSearchResults(3);
-      fullEngine.mutate(resultsSlice.actions.setResults(mockResults));
+      fullEngine.mutate(setResults(mockResults));
 
       expect(controller.state.results).toEqual(mockResults);
       expect(controller.state.results).toHaveLength(3);
@@ -52,10 +57,8 @@ describe('buildResultListController', () => {
       await fullEngine.adoptSlice(resultsSlice);
       const controller = buildResultListController({engine});
 
-      fullEngine.mutate(
-        resultsSlice.actions.setResults(createMockSearchResults(2))
-      );
-      fullEngine.mutate(resultsSlice.actions.clearResults());
+      fullEngine.mutate(setResults(createMockSearchResults(2)));
+      fullEngine.mutate(clearResults());
 
       expect(controller.state.results).toEqual([]);
     });
@@ -69,9 +72,7 @@ describe('buildResultListController', () => {
       const callback = vi.fn();
 
       controller.subscribe(callback);
-      fullEngine.mutate(
-        resultsSlice.actions.setResults(createMockSearchResults(1))
-      );
+      fullEngine.mutate(setResults(createMockSearchResults(1)));
 
       expect(callback).toHaveBeenCalledTimes(1);
     });
@@ -83,13 +84,9 @@ describe('buildResultListController', () => {
       const callback = vi.fn();
 
       controller.subscribe(callback);
-      fullEngine.mutate(
-        resultsSlice.actions.setResults(createMockSearchResults(1))
-      );
-      fullEngine.mutate(
-        resultsSlice.actions.setResults(createMockSearchResults(3))
-      );
-      fullEngine.mutate(resultsSlice.actions.clearResults());
+      fullEngine.mutate(setResults(createMockSearchResults(1)));
+      fullEngine.mutate(setResults(createMockSearchResults(3)));
+      fullEngine.mutate(clearResults());
 
       expect(callback).toHaveBeenCalledTimes(3);
     });
@@ -102,8 +99,8 @@ describe('buildResultListController', () => {
       const callback = vi.fn();
 
       controller.subscribe(callback);
-      fullEngine.mutate(searchEndpointSlice.actions.setStatus('pending'));
-      fullEngine.mutate(searchEndpointSlice.actions.setStatus('idle'));
+      fullEngine.mutate(setStatus('pending'));
+      fullEngine.mutate(setStatus('idle'));
 
       expect(callback).not.toHaveBeenCalled();
     });
