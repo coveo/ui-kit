@@ -17,7 +17,7 @@ State the decision in one clear paragraph.
 
 ## 3. Requirements & Considerations Mapping
 
-Map this decision to headless-future's Architecture Decision Charter requirements.
+Map this decision to thermidor's Architecture Decision Charter requirements.
 
 - **Requirement**: Full use-case support
   - **Impact**:
