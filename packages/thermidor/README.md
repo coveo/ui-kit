@@ -1,1 +1,1 @@
-# @coveo/headless-thermidor
+# @coveo/thermidor
