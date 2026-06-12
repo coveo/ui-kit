@@ -1,0 +1,19 @@
+
+The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
+
+This component is used within `atomic-result-template` components inside the result list to display fields that contain multiple values, such as tags, categories, or languages.
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-result-list>
+    <atomic-result-template>
+      <template>
+        <atomic-result-multi-value-text field="language"></atomic-result-multi-value-text>
+        <atomic-result-multi-value-text field="tags" max-values-to-display="5"></atomic-result-multi-value-text>
+      </template>
+    </atomic-result-template>
+  </atomic-result-list>
+  ...
+</atomic-search-interface>
+```

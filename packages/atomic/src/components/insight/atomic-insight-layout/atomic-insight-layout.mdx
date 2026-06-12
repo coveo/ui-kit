@@ -1,6 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import meta, { Default } from './atomic-insight-layout.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+import UsageContent from './atomic-insight-layout.usage.mdx';
 
 <Meta of={meta} />
 
@@ -10,15 +11,5 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   tagName="atomic-insight-layout"
   className="AtomicInsightLayout"
 >
-
-This component organizes the insight page layout. 
-Use `atomic-layout-section` to define the different sections of the page, such as **search**, **facets**, and **results**.
-
-```html
-<atomic-insight-layout>
-  <atomic-layout-section section="search"></atomic-layout-section>
-  <atomic-layout-section section="results"></atomic-layout-section>
-</atomic-insight-layout>
-```
-
+<UsageContent />
 </AtomicDocTemplate>

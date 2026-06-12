@@ -1,0 +1,20 @@
+
+The `atomic-product-price` component displays the price of a product. It uses the current currency set in the engine configuration.
+It is typically used within `atomic-product-template` components to show the price of a product in a product list.
+
+```html
+<atomic-commerce-interface>
+  ...
+  <atomic-commerce-product-list>
+    <atomic-product-template>
+      <template>
+        ...
+        <atomic-product-section-emphasized>
+          <atomic-product-price></atomic-product-price>
+        </atomic-product-section-emphasized>
+
+      </template>
+    </atomic-product-template>
+  </atomic-commerce-product-list>
+</atomic-commerce-interface>
+```

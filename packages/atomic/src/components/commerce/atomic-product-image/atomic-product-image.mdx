@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import meta, { Default, withAFallbackImage } from './atomic-product-image.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import UsageContent from './atomic-product-image.usage.mdx';
 
 <Meta of={meta} />
 
@@ -11,26 +11,5 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   tagName="atomic-product-image"
   className="AtomicProductImage"
 >
-
-The `atomic-product-image` component is used to display the images of a product.
-It uses the `ec_thumbnails` field by default.
-
-When more than one image is available, it will display a carousel of images instead.
-
-```html
-<atomic-commerce-interface>
-  ...
-  <atomic-commerce-product-list>
-    <atomic-product-template>
-      <template>
-        ...
-        <atomic-product-section-visual>
-          <atomic-product-image></atomic-product-image>
-        </atomic-product-section-visual>
-      </template>
-    </atomic-product-template>
-  </atomic-commerce-product-list>
-</atomic-commerce-interface>
-```
-
+<UsageContent />
 </AtomicDocTemplate>

@@ -1,6 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import meta, { Default, RecsBeforeQuery, RecsWithFullTemplate, RecsOpeningInNewTab, RecsAsCarousel, NotEnoughRecsForCarousel, NoRecommendations } from './atomic-recs-list.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+import UsageContent from './atomic-recs-list.usage.mdx';
 
 <Meta of={meta} />
 
@@ -10,38 +11,5 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   tagName="atomic-recs-list"
   className="AtomicRecsList"
 >
-
-The `atomic-recs-list` component displays recommendations by applying one or more result templates.
-
-```html
-<atomic-recs-interface>
-  <atomic-recs-list label="Recommended for you">
-    <atomic-recs-result-template>
-      <template>
-        <atomic-result-section-title>
-          <atomic-result-link></atomic-result-link>
-        </atomic-result-section-title>
-        <atomic-result-section-excerpt>
-          <atomic-result-text field="excerpt"></atomic-result-text>
-        </atomic-result-section-excerpt>
-      </template>
-    </atomic-recs-result-template>
-  </atomic-recs-list>
-</atomic-recs-interface>
-```
-
-## Carousel Mode
-
-Setting `number-of-recommendations-per-page` to a value greater than 0 and less than `number-of-recommendations` enables carousel mode, which allows users to navigate through pages of recommendations.
-
-```html
-<atomic-recs-list
-  number-of-recommendations="10"
-  number-of-recommendations-per-page="4"
-  label="Recommended for you"
->
-  ...
-</atomic-recs-list>
-```
-
+  <UsageContent />
 </AtomicDocTemplate>

@@ -1,0 +1,15 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import meta, { Default } from './atomic-ipx-tab.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+import UsageContent from './atomic-ipx-tab.usage.mdx';
+
+<Meta of={meta} name="Docs" />
+
+<AtomicDocTemplate
+  stories={{ Default }}
+  githubPath="ipx/atomic-ipx-tab/atomic-ipx-tab.ts"
+  tagName="atomic-ipx-tab"
+  className="AtomicIpxTab"
+>
+  <UsageContent />
+</AtomicDocTemplate>

@@ -1,0 +1,15 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import meta, { Default, OpenedModal } from './atomic-insight-user-actions-modal.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+import UsageContent from './atomic-insight-user-actions-modal.usage.mdx';
+
+<Meta of={meta} />
+
+<AtomicDocTemplate
+  stories={{ Default, OpenedModal }}
+  githubPath="insight/atomic-insight-user-actions-modal/atomic-insight-user-actions-modal.ts"
+  tagName="atomic-insight-user-actions-modal"
+  className="AtomicInsightUserActionsModal"
+>
+<UsageContent />
+</AtomicDocTemplate>

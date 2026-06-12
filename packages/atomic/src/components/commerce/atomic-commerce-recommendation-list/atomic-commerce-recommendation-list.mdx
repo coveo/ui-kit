@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import meta, { Default, WithFullTemplate, AsCarousel, NoRecommendations } from './atomic-commerce-recommendation-list.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import UsageContent from './atomic-commerce-recommendation-list.usage.mdx';
 
 <Meta of={meta} />
 
@@ -11,22 +11,5 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   tagName="atomic-commerce-recommendation-list"
   className="AtomicCommerceRecommendationList"
 >
-
-The `atomic-commerce-recommendation-list` component must be placed inside an `atomic-commerce-recommendation-interface` to work properly.
-
-```html
-<atomic-commerce-recommendation-interface>
-  <atomic-commerce-recommendation-list></atomic-commerce-recommendation-list>
-</atomic-commerce-recommendation-interface>
-```
-
-You can include multiple recommendation lists within a single interface:
-
-```html
-<atomic-commerce-recommendation-interface>
-  <atomic-commerce-recommendation-list></atomic-commerce-recommendation-list>
-  <atomic-commerce-recommendation-list></atomic-commerce-recommendation-list>
-</atomic-commerce-recommendation-interface>
-```
-
+<UsageContent />
 </AtomicDocTemplate>

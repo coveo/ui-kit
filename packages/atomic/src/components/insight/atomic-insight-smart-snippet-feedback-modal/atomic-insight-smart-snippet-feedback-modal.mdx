@@ -1,0 +1,15 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import meta, { Default, OpenedModal } from './atomic-insight-smart-snippet-feedback-modal.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+import UsageContent from './atomic-insight-smart-snippet-feedback-modal.usage.mdx';
+
+<Meta of={meta} />
+
+<AtomicDocTemplate
+  stories={{ Default, OpenedModal }}
+  githubPath="insight/atomic-insight-smart-snippet-feedback-modal/atomic-insight-smart-snippet-feedback-modal.ts"
+  tagName="atomic-insight-smart-snippet-feedback-modal"
+  className="AtomicInsightSmartSnippetFeedbackModal"
+>
+<UsageContent />
+</AtomicDocTemplate>

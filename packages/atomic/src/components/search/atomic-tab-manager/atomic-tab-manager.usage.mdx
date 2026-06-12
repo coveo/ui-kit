@@ -1,0 +1,18 @@
+
+The `atomic-tab-manager` component manages a collection of tabs that allow users to filter search results based on different criteria.
+
+This component must contain `atomic-tab` children to function correctly.
+
+```html
+<atomic-search-interface>
+  <!-- other components -->
+  
+  <atomic-tab-manager>
+    <atomic-tab name="all" label="All"></atomic-tab>
+    <atomic-tab name="images" label="Images" expression="@objecttype==Image"></atomic-tab>
+    <atomic-tab name="articles" label="Articles" expression="@objecttype==Article"></atomic-tab>
+  </atomic-tab-manager>
+
+  <!-- other components -->
+</atomic-search-interface>
+```

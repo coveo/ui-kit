@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import meta, { Default, WithARatingDetailsField, WithAMaxValueInIndex, WithADifferentIcon } from './atomic-product-rating.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
-
+import UsageContent from './atomic-product-rating.usage.mdx';
 
 <Meta of={meta} />
 
@@ -11,23 +11,5 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   tagName="atomic-product-rating"
   className="AtomicProductRating"
 >
-
-The `atomic-product-rating` component displays the rating of a product as a set of icons (stars by default).
-
-This component is used within `atomic-product-template` components inside the product list:
-
-```html
-<atomic-commerce-interface>
-  ...
-  <atomic-commerce-product-list>
-    <atomic-product-template>
-      <template>
-        <atomic-product-rating></atomic-product-rating>
-      </template>
-    </atomic-product-template>
-  </atomic-commerce-product-list>
-  ...
-</atomic-commerce-interface>
-```
-
+<UsageContent />
 </AtomicDocTemplate>
