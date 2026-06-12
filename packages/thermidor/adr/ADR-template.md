@@ -39,7 +39,7 @@ Map this decision to headless-future's Architecture Decision Charter requirement
    - **Impact**:
    - **How addressed (or why deferred)**:
 
-3. **Requirement**: External contribution readiness
+3. **Consideration**: External contribution readiness
    - **Impact**:
    - **How addressed (or why deferred)**:
 
