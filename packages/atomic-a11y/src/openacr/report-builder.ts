@@ -177,7 +177,7 @@ export function buildOpenAcrReport(
     evaluation_methods_used: evaluationMethods,
     repository: 'https://github.com/coveo/ui-kit',
     feedback: 'https://github.com/coveo/ui-kit/issues',
-    catalog: '2.5-edition-wcag-2.2-en',
+    catalog: '2.5-edition-wcag-2.2-508-eu-en',
     chapters: {
       success_criteria_level_a: {
         notes: successNotes,
