@@ -1,3 +1,10 @@
+## 1.9.35
+
+### Patch Changes
+
+- Updated dependencies [[`a25786a`](https://github.com/coveo/ui-kit/commit/a25786abf99c9cd1168e193bd0c6ef5b296f22e9)]:
+  - @coveo/headless@3.51.5
+
 ## 1.9.34
 
 ### Patch Changes
