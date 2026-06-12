@@ -1645,4 +1645,11 @@
     <protected>false</protected>
     <shortDescription>Submit follow-up</shortDescription>
   </labels>
+  <labels>
+    <fullName>quantic_ShowPreviousQuestions_plural</fullName>
+    <value>Show {{0}} previous questions</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Show previous questions (plural)</shortDescription>
+  </labels>
 </CustomLabels>

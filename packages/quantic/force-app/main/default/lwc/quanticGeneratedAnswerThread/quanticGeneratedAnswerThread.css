@@ -1,32 +1,25 @@
-.thread-item {
-  list-style: none;
-}
-
-.thread-item__dot-column,
-.thread-item__line-column {
+.generated-answer-thread__dot-column,
+.generated-answer-thread__line-column {
   width: 10px;
 }
 
-.thread-item__dot {
+.generated-answer-thread__dot {
   height: 8px;
   width: 8px;
   border-radius: 50%;
   background-color: var(--lwc-colorBorder, #dddbda);
 }
 
-.thread-item__dot--expanded {
-  background-color: var(--lwc-colorTextDefault, #080707);
-}
-
-.thread-item__line {
+.generated-answer-thread__connector {
   position: relative;
   width: 1px;
   height: 100%;
+  min-height: 12px;
   background-color: var(--lwc-colorBorder, #dddbda);
 }
 
-.thread-item__line::before,
-.thread-item__line::after {
+.generated-answer-thread__connector::before,
+.generated-answer-thread__connector::after {
   content: '';
   position: absolute;
   left: 0;
@@ -35,26 +28,20 @@
   background-color: var(--lwc-colorBorder, #dddbda);
 }
 
-.thread-item__line::before {
+.generated-answer-thread__connector::before {
   top: -8px;
 }
 
-.thread-item__line::after {
+.generated-answer-thread__connector::after {
   bottom: -8px;
 }
 
-.thread-item__clamped-text {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.thread-item__title-button {
+.generated-answer-thread__show-previous-button {
   width: fit-content;
   border-radius: var(--slds-g-radius-border-2, 4px);
+  cursor: pointer;
 }
 
-.thread-item__title-button:hover {
+.generated-answer-thread__show-previous-button:hover {
   background-color: var(--lwc-colorBackgroundRowHover, #f3f2f2);
 }
