@@ -1,5 +1,4 @@
 import {wcagCriteriaDefinitions} from '../data/wcag-criteria.js';
-import {compareByNumericId} from '../shared/sorting.js';
 import type {
   A11yComponentReport,
   A11yCriterionReport,
@@ -23,7 +22,6 @@ const DEFAULT_REPORT_PRODUCT_NAME = 'Coveo Atomic';
 const DEFAULT_REPORT_DATE = new Date().toISOString().slice(0, 10);
 
 function buildCriterionAggregates(
-  components: A11yComponentReport[],
   criteria: A11yCriterionReport[]
 ): Map<string, CriterionAggregate> {
   const aggregates = new Map<string, CriterionAggregate>();
@@ -77,18 +75,6 @@ function buildCriterionComponents(
   ];
 }
 
-function buildManualAggregateIndex(
-  manualAggregates: Map<string, ManualAuditAggregate[]>
-): Map<string, ManualAuditAggregate[]> {
-  const index = new Map<string, ManualAuditAggregate[]>();
-  for (const [key, entries] of manualAggregates) {
-    const criterionId = key.split(':')[1];
-    const existing = index.get(criterionId) ?? [];
-    index.set(criterionId, [...existing, ...entries]);
-  }
-  return index;
-}
-
 function buildOpenAcrCriteria(
   report: A11yReport,
   overrides: Map<string, A11yOverrideEntry>,
@@ -97,15 +83,8 @@ function buildOpenAcrCriteria(
   success_criteria_level_a: OpenAcrCriterion[];
   success_criteria_level_aa: OpenAcrCriterion[];
 } {
-  const criteriaById = new Map(
-    report.criteria.map((criterion) => [criterion.id, criterion])
-  );
-  const aggregates = buildCriterionAggregates(
-    report.components,
-    report.criteria
-  );
+  const aggregates = buildCriterionAggregates(report.criteria);
   const interactiveAggregates = buildInteractiveAggregates(report.components);
-  const manualByCriterion = buildManualAggregateIndex(manualAggregates);
 
   const criteriaByChapter: Record<ChapterId, OpenAcrCriterion[]> = {
     success_criteria_level_a: [],
@@ -113,27 +92,11 @@ function buildOpenAcrCriteria(
   };
 
   for (const definition of wcagCriteriaDefinitions) {
-    const aggregate = aggregates.get(definition.id);
-    const criterionFromReport = criteriaById.get(definition.id);
-    const override = overrides.get(definition.id);
-    const coveredComponents = [...(aggregate?.coveredComponents ?? [])].sort(
-      compareByNumericId
-    );
-    const violatingComponents = [
-      ...(aggregate?.violatingComponents ?? []),
-    ].sort(compareByNumericId);
-    const manualForCriterion = manualByCriterion.get(definition.id);
-    const interactiveAggregate = interactiveAggregates.get(definition.id);
-    const interactiveCoveredComponents = [
-      ...(interactiveAggregate?.coveredComponents ?? []),
-    ].sort(compareByNumericId);
-
     const conformanceContext = {
-      criterion: criterionFromReport,
-      aggregate,
-      interactiveAggregate,
-      manualAggregates: manualForCriterion,
-      override,
+      aggregate: aggregates.get(definition.id),
+      interactiveAggregate: interactiveAggregates.get(definition.id),
+      manualAggregates: manualAggregates.get(definition.id),
+      override: overrides.get(definition.id),
     };
 
     const conformance = resolveConformance(conformanceContext);
@@ -141,9 +104,6 @@ function buildOpenAcrCriteria(
       ...conformanceContext,
       criterionId: definition.id,
       conformance,
-      coveredComponents,
-      violatingComponents,
-      interactiveCoveredComponents,
     });
 
     criteriaByChapter[definition.chapterId].push({
@@ -201,12 +161,12 @@ export function buildOpenAcrReport(
     author: {
       name: 'Coveo Accessibility Team',
       company_name: 'Coveo',
-      email: 'accessibility@coveo.com',
+      email: 'support@coveo.com',
       website: 'https://www.coveo.com',
     },
     vendor: {
       company_name: 'Coveo',
-      email: 'accessibility@coveo.com',
+      email: 'support@coveo.com',
       website: 'https://www.coveo.com',
     },
     report_date: reportDate,

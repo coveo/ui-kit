@@ -1,5 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {testRadioGroupA11y} from '@/storybook-utils/a11y/radiogroup.js';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import '@/src/components/commerce/atomic-commerce-products-per-page/atomic-commerce-products-per-page.js';
@@ -56,5 +57,14 @@ export const WithCustomChoicesDisplayed: Story = {
   args: {
     'choices-displayed': '2,5,10,25',
     'initial-choice': '2',
+  },
+};
+
+export const A11yRadioGroup: Story = {
+  name: 'A11y Radio Group',
+  tags: ['a11y', 'test', '!dev'],
+  play: async (context) => {
+    await play(context);
+    await testRadioGroupA11y(context);
   },
 };

@@ -693,6 +693,10 @@
     <name>quantic_GeneratedAnswerForYou</name>
   </customLabels>
   <customLabels>
+    <label>Se alcanzó el límite de turnos de conversación. Por favor, inicie una nueva conversación.</label>
+    <name>quantic_GeneratedAnswerErrorTurnLimitReached</name>
+  </customLabels>
+  <customLabels>
     <label>Esta respuesta no fue útil</label>
     <name>quantic_ThisAnswerWasNotHelpful</name>
   </customLabels>
@@ -899,6 +903,10 @@
   <customLabels>
     <name>quantic_SubmitFollowUp</name>
     <label>Enviar seguimiento</label>
+  </customLabels>
+  <customLabels>
+    <label>Mostrar {{0}} preguntas anteriores</label>
+    <name>quantic_ShowPreviousQuestions_plural</name>
   </customLabels>
   <customLabels>
     <name>quantic_AgentGenerationStepAnalyzingQuestion</name>
